@@ -15,6 +15,8 @@ type CompareMeta = {
   updated_at?: string | null;
 };
 
+export const DISCOVERY_SYNC_EVENT = "tooolvibes:discovery-sync";
+
 export const DISCOVERY_STORAGE_KEYS = {
   visitedTools: "tooolvibes:visited-tools",
   exploredCategories: "tooolvibes:explored-categories",
@@ -26,6 +28,17 @@ export const DISCOVERY_STORAGE_KEYS = {
   compareMeta: "tooolvibes:compare-meta",
 } as const;
 
+export type DiscoveryLocalSnapshot = {
+  visitedTools: string[];
+  exploredCategories: string[];
+  shortlist: string[];
+  compare: string[];
+  shortlistStages: Record<string, ShortlistStage>;
+  decisionMemories: Record<string, ToolDecisionMemory>;
+  toolStateMeta: Record<string, string>;
+  compareMeta: CompareMeta;
+};
+
 function nowIso() {
   return new Date().toISOString();
 }
@@ -36,7 +49,7 @@ function dispatchDiscoverySync(source: DiscoverySyncSource = "local") {
   }
 
   window.dispatchEvent(
-    new CustomEvent("tooolvibes:discovery-sync", {
+    new CustomEvent(DISCOVERY_SYNC_EVENT, {
       detail: { source },
     }),
   );
@@ -224,11 +237,8 @@ export function getToolDecisionMemory(slug: string): ToolDecisionMemory {
   return getDecisionMemories()[slug] ?? {};
 }
 
-export function getToolUserStates(): Record<string, ToolUserState> {
-  const shortlist = getShortlist();
-  const shortlistStages = getShortlistStages();
-  const decisionMemories = getDecisionMemories();
-  const toolStateMeta = getToolStateMeta();
+function buildToolUserStates(snapshot: DiscoveryLocalSnapshot): Record<string, ToolUserState> {
+  const { shortlist, shortlistStages, decisionMemories, toolStateMeta } = snapshot;
   const allSlugs = new Set([
     ...shortlist,
     ...Object.keys(shortlistStages),
@@ -255,12 +265,31 @@ export function getToolUserStates(): Record<string, ToolUserState> {
   );
 }
 
+export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
+  return {
+    visitedTools: getVisitedTools(),
+    exploredCategories: getExploredCategories(),
+    shortlist: getShortlist(),
+    compare: getCompareTools(),
+    shortlistStages: getShortlistStages(),
+    decisionMemories: getDecisionMemories(),
+    toolStateMeta: getToolStateMeta(),
+    compareMeta: getCompareMeta(),
+  };
+}
+
+export function getToolUserStates(): Record<string, ToolUserState> {
+  return buildToolUserStates(getDiscoveryLocalSnapshot());
+}
+
 export function getLocalDiscoveryWorkspaceState(): DiscoveryWorkspaceState {
+  const snapshot = getDiscoveryLocalSnapshot();
+
   return normalizeDiscoveryWorkspaceState({
-    tool_states: getToolUserStates(),
+    tool_states: buildToolUserStates(snapshot),
     compare: {
-      slugs: getCompareTools(),
-      updated_at: getCompareMeta().updated_at ?? null,
+      slugs: snapshot.compare,
+      updated_at: snapshot.compareMeta.updated_at ?? null,
     },
   });
 }

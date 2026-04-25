@@ -19,12 +19,12 @@ export const metadata: Metadata = {
     apple: "/brand/tooolvibes-logo.png",
   },
   title: {
-    default: `${siteConfig.name} | Directory editoriale AI e SaaS`,
+    default: `${siteConfig.name} | Scopri i migliori tool AI, no-code e vibe coding`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   openGraph: {
-    title: siteConfig.name,
+    title: `${siteConfig.name} | Premium AI tools discovery platform`,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
+    title: `${siteConfig.name} | Tool AI, no-code e vibe coding`,
     description: siteConfig.description,
   },
 };

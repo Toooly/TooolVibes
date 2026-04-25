@@ -1,6 +1,5 @@
 import { AccountProvider } from "@/components/account/account-provider";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/discovery-persistence-provider";
-import { CompareTray } from "@/components/tools/compare-tray";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 
@@ -16,7 +15,6 @@ export default function MarketingLayout({
         <DiscoveryPersistenceProvider>
           <SiteHeader />
           <main>{children}</main>
-          <CompareTray />
           <SiteFooter />
         </DiscoveryPersistenceProvider>
       </AccountProvider>

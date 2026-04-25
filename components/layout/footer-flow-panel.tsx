@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { getCompareTools, getShortlist } from "@/lib/discovery/local-storage";
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
 
 type FlowMeta = {
@@ -18,24 +18,9 @@ type FlowMeta = {
 export function FooterFlowPanel() {
   const pathname = usePathname();
   const persistence = useDiscoveryPersistence();
-  const [shortlistCount, setShortlistCount] = useState(0);
-  const [compareCount, setCompareCount] = useState(0);
-
-  useEffect(() => {
-    const sync = () => {
-      setShortlistCount(getShortlist().length);
-      setCompareCount(getCompareTools().length);
-    };
-
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
-
-    return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
-    };
-  }, []);
+  const discovery = useDiscoverySnapshot();
+  const shortlistCount = discovery.shortlist.length;
+  const compareCount = discovery.compare.length;
 
   const persistenceLabel =
     persistence.mode === "remote"

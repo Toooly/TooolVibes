@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-import { getShortlist } from "@/lib/discovery/local-storage";
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { cn } from "@/lib/utils";
 
 type ShortlistLinkProps = {
@@ -19,34 +19,33 @@ export function ShortlistLink({
   active = false,
   label = "Shortlist",
 }: ShortlistLinkProps) {
-  const [count, setCount] = useState(0);
+  const discovery = useDiscoverySnapshot();
+  const count = discovery.shortlist.length;
   const [isFresh, setIsFresh] = useState(false);
   const previousCountRef = useRef(0);
   const mountedRef = useRef(false);
+  const freshTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const sync = () => {
-      const nextCount = getShortlist().length;
+    if (mountedRef.current && count !== previousCountRef.current) {
+      setIsFresh(true);
 
-      if (mountedRef.current && nextCount !== previousCountRef.current) {
-        setIsFresh(true);
-        window.setTimeout(() => setIsFresh(false), 520);
+      if (freshTimerRef.current) {
+        window.clearTimeout(freshTimerRef.current);
       }
 
-      previousCountRef.current = nextCount;
-      mountedRef.current = true;
-      setCount(nextCount);
-    };
+      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), 520);
+    }
 
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
+    previousCountRef.current = count;
+    mountedRef.current = true;
 
     return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
+      if (freshTimerRef.current) {
+        window.clearTimeout(freshTimerRef.current);
+      }
     };
-  }, []);
+  }, [count]);
 
   return (
     <Link

@@ -1,66 +1,63 @@
-import Link from "next/link";
-
-import { SectionHeading } from "@/components/sections/section-heading";
-import { ButtonLink } from "@/components/ui/button";
-import { ToolFilters } from "@/components/tools/tool-filters";
-import { getAllCategories, getFeaturedTools, getPublishedTools } from "@/lib/data/public-tools";
+import { DirectoryBrowser } from "@/components/directory/directory-browser";
+import {
+  directoryFilterGroups,
+  directoryTools,
+  type DirectoryFilterGroup,
+} from "@/lib/data/tooolvibes-directory";
 
 type ArchivePageProps = {
-  searchParams: Promise<{ tag?: string }>;
+  searchParams: Promise<{ q?: string; tag?: string; group?: string }>;
 };
 
 export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const params = await searchParams;
-  const [tools, categories, featuredTools] = await Promise.all([
-    getPublishedTools(),
-    getAllCategories(),
-    getFeaturedTools(),
-  ]);
-  const featuredCount = tools.filter((tool) => tool.is_featured).length;
-  const archiveLeadTool = featuredTools[0] ?? tools[0] ?? null;
+  const initialGroup = directoryFilterGroups.some(
+    (group) => group.key === params.group,
+  )
+    ? (params.group as DirectoryFilterGroup)
+    : "all";
 
   return (
-    <div className="tone-screen page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <section className="brand-panel brand-aura panel-lift section-stage discovery-stage relative overflow-hidden rounded-[36px] p-5 sm:p-6 lg:p-7">
-        <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.8),transparent_74%)]" />
-        <div className="absolute -right-10 top-12 h-36 w-36 rounded-full bg-[rgba(99,50,255,0.12)] blur-3xl" />
-        <div className="absolute left-8 top-16 h-[4.5rem] w-[4.5rem] rounded-full bg-[rgba(255,200,61,0.12)] blur-3xl" />
-        <div className="absolute bottom-4 right-[28%] h-20 w-20 rounded-full bg-[rgba(68,220,255,0.1)] blur-3xl" />
+    <div className="page-shell space-y-6 pb-16 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
+      <section className="overflow-hidden rounded-[38px] border border-[rgba(83,63,170,0.12)] bg-[linear-gradient(135deg,#fdfcff_0%,#f5f0ff_44%,#eef2ff_100%)] px-5 py-6 shadow-[0_24px_72px_rgba(38,21,104,0.08)] sm:px-7 sm:py-8">
+        <div className="max-w-[46rem]">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
+            Archivio dei Toools
+          </p>
+          <h1 className="mt-4 text-[2.4rem] leading-[0.95] text-[var(--foreground)] sm:max-w-[14ch] sm:text-[3.4rem]">
+            La directory in cui cerchi meglio e scegli più in fretta.
+          </h1>
+          <p className="mt-5 max-w-[40rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
+            Cerca per nome, categoria, tag e descrizione. Qui l&apos;archivio resta pulito, utile e
+            pronto a portarti direttamente al tool o alla scheda interna.
+          </p>
 
-        <div className="relative max-w-[48rem]">
-          <SectionHeading
-            eyebrow="Archivio TooolVibes"
-            title="L'archivio dove si stringe il campo."
-            description="Cerca, filtra e apri un profilo. Qui non serve altro: il compito dell'archivio e` portarti al prossimo candidato serio nel minor numero di passaggi."
-          />
-
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <ButtonLink href="#archivio-filtri">Vai ai filtri</ButtonLink>
-            <Link href="/collections" className="section-quiet-link text-sm font-semibold" style={{ color: "var(--accent-strong)" }}>
-              Se preferisci, entra da una collection
-            </Link>
-          </div>
-
-          <div className="mt-5 flex flex-wrap items-center gap-2">
-            <span className="selection-status">{tools.length} profili</span>
-            <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted-strong)" }}>
-              {categories.length} categorie
-            </span>
-            <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted-strong)" }}>
-              {featuredCount} in evidenza
-            </span>
-            {archiveLeadTool ? (
-              <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted-strong)" }}>
-                Lead: {archiveLeadTool.name}
+          <div className="mt-6 flex flex-wrap gap-3">
+            {[
+              `${directoryTools.length} tool verificati`,
+              "Filtri client-side",
+              "Link referral e article link integrati",
+            ].map((item) => (
+              <span
+                key={item}
+                className="rounded-full border border-[rgba(83,63,170,0.1)] bg-white/82 px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]"
+              >
+                {item}
               </span>
-            ) : null}
+            ))}
           </div>
         </div>
       </section>
 
-      <section id="archivio-filtri" className="brand-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
-        <ToolFilters tools={tools} categories={categories} initialTag={params.tag ?? ""} />
-      </section>
+      <DirectoryBrowser
+        tools={directoryTools}
+        eyebrow="Esplora il catalogo"
+        title="Tutti i Toools selezionati in un&apos;unica vista."
+        description="Niente rumore, niente card rotte, niente CTA vuote. Solo tool utili, categorie leggibili e un&apos;esperienza più premium."
+        initialQuery={params.q ?? ""}
+        initialTag={params.tag ?? ""}
+        initialGroup={initialGroup}
+      />
     </div>
   );
 }

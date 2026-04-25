@@ -1,128 +1,102 @@
 import Link from "next/link";
 
-import { SurfaceIntro } from "@/components/sections/surface-intro";
-import { getAllTags } from "@/lib/data/public-tools";
+import { directoryFilterGroups, directoryTools, getDirectoryTags } from "@/lib/data/tooolvibes-directory";
 
-export default async function TagsPage() {
-  const tags = await getAllTags();
-  const sortedTags = Object.entries(tags).sort((left, right) => right[1] - left[1]);
-  const topTags = sortedTags.slice(0, 6);
+export default function TagsPage() {
+  const tagCounts = Object.entries(getDirectoryTags()).sort(
+    (left, right) => right[1] - left[1],
+  );
 
   return (
-    <div className="tone-screen page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <SurfaceIntro
-        eyebrow="Esplorazione"
-        title="Tag editoriali"
-        description="Una superficie piu` utile per attraversare l'archivio per task, vibe e famiglie funzionali senza perdere il filo curatoriale."
-        helperEyebrow="Come usarli"
-        helperCopy="Usa i tag quando non stai ancora cercando un nome preciso ma vuoi restringere il territorio. Sono il layer piu` veloce per passare da curiosita` diffusa a esplorazione orientata."
-        actions={
-          <>
-            <Link
-              href="/archivio"
-              className="button-shell button-secondary text-ui-strong inline-flex rounded-full px-5 py-3.5 text-sm font-semibold"
-            >
-              Apri archivio
-            </Link>
-            <Link
-              href="/collections"
-              className="button-shell button-secondary text-ui-strong inline-flex rounded-full px-5 py-3.5 text-sm font-semibold"
-            >
-              Collection curate
-            </Link>
-          </>
-        }
-        asideEyebrow="Mappa editoriale"
-        asideTitle={`${sortedTags.length} tag per leggere meglio il catalogo.`}
-        asideCopy="Non sono etichette decorative: servono a far emergere affinita` operative e famiglie di tool che altrimenti resterebbero troppo distanti tra loro."
-      />
+    <div className="page-shell space-y-6 pb-16 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
+      <section className="overflow-hidden rounded-[38px] border border-[rgba(83,63,170,0.12)] bg-[linear-gradient(135deg,#fdfcff_0%,#f5f0ff_44%,#eef2ff_100%)] px-5 py-6 shadow-[0_24px_72px_rgba(38,21,104,0.08)] sm:px-7 sm:py-8">
+        <div className="max-w-[44rem]">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
+            Tags
+          </p>
+          <h1 className="mt-4 text-[2.3rem] leading-[0.95] text-[var(--foreground)] sm:max-w-[14ch] sm:text-[3.2rem]">
+            Esplora TooolVibes per tag, stack e famiglie di utilizzo.
+          </h1>
+          <p className="mt-5 max-w-[40rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
+            I tag qui servono davvero: ti aiutano a stringere il campo più rapidamente e a leggere
+            il catalogo da un angolo più operativo.
+          </p>
+        </div>
+      </section>
 
-      {topTags.length > 0 ? (
-        <section className="brand-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
-            <div className="max-w-[42rem]">
-              <p className="editorial-label">Tag guida</p>
-              <h2 className="text-display-card mt-2.5 max-w-none text-[1.62rem] sm:max-w-[18ch] sm:text-[1.94rem] sm:text-balance">
-                I cluster che oggi raccontano meglio il tono di TooolVibes.
-              </h2>
-            </div>
-            <span className="selection-status">{topTags.length} tag in primo piano</span>
+      <section className="rounded-[34px] border border-[rgba(83,63,170,0.12)] bg-white/86 p-5 shadow-[0_22px_64px_rgba(35,18,95,0.08)] sm:p-7">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="max-w-[40rem]">
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+              Filtri guida
+            </p>
+            <h2 className="mt-3 text-[1.8rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.4rem]">
+              Le famiglie più utili per leggere il catalogo.
+            </h2>
           </div>
+          <span className="rounded-full border border-[rgba(83,63,170,0.1)] bg-[rgba(246,244,255,0.86)] px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+            {directoryFilterGroups.length - 1} cluster attivi
+          </span>
+        </div>
 
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {topTags.map(([tag, count], index) => (
-              <Link
-                key={tag}
-                href={`/archivio?tag=${encodeURIComponent(tag)}`}
-                className="interactive-surface relative overflow-hidden rounded-[28px] border p-4.5"
-                style={{
-                  borderColor: index < 2 ? "rgba(112,82,255,0.18)" : "var(--line)",
-                  background:
-                    index < 2
-                      ? "linear-gradient(180deg, rgba(247,241,255,0.94), rgba(233,224,255,0.84))"
-                      : "linear-gradient(180deg, rgba(255,255,255,0.8), rgba(243,237,255,0.72))",
-                }}
-              >
-                <div className="card-glow absolute inset-0" />
-                <div className="relative">
-                  <p className="editorial-label">Tag editoriale</p>
-                  <h3 className="text-display-card mt-3 text-[1.34rem]">#{tag}</h3>
-                  <p className="mt-3 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
-                    {count} tool collegati in archivio. Un buon punto di partenza se vuoi leggere il catalogo per territorio, non per nome.
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {directoryFilterGroups
+            .filter((group) => group.key !== "all")
+            .map((group) => {
+              const count = directoryTools.filter((tool) =>
+                tool.segments.includes(group.key),
+              ).length;
+
+              return (
+                <Link
+                  key={group.key}
+                  href={`/archivio?group=${group.key}`}
+                  className="group rounded-[28px] border border-[rgba(83,63,170,0.1)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,241,255,0.9))] p-5 shadow-[0_16px_40px_rgba(34,19,94,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(108,76,255,0.22)]"
+                >
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                    Categoria
                   </p>
-                  <p className="mt-4 text-[0.72rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--accent-strong)" }}>
-                    Apri filtro nell&apos;archivio
+                  <h3 className="mt-3 text-[1.32rem] leading-[1.02] text-[var(--foreground)]">
+                    {group.label}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-[var(--muted-strong)]">
+                    {count} tool collegati. Apri l&apos;archivio e usa ricerca e filtri per arrivare al
+                    profilo giusto più velocemente.
                   </p>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
+        </div>
+      </section>
+
+      <section className="rounded-[34px] border border-[rgba(83,63,170,0.12)] bg-white/86 p-5 shadow-[0_22px_64px_rgba(35,18,95,0.08)] sm:p-7">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="max-w-[40rem]">
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+              Tutti i tag
+            </p>
+            <h2 className="mt-3 text-[1.8rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.4rem]">
+              Una mappa rapida per muoverti tra tool, output e use case.
+            </h2>
           </div>
-        </section>
-      ) : null}
-
-      <section className="brand-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
-        <div className="max-w-[42rem]">
-          <p className="editorial-label">Tutti i tag</p>
-          <h2 className="text-display-card mt-2.5 max-w-none text-[1.52rem] sm:max-w-[18ch] sm:text-[1.82rem] sm:text-balance">
-            Un indice leggero da attraversare rapidamente.
-          </h2>
+          <span className="rounded-full border border-[rgba(83,63,170,0.1)] bg-[rgba(246,244,255,0.86)] px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+            {tagCounts.length} tag disponibili
+          </span>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          {sortedTags.length > 0 ? (
-            sortedTags.map(([tag, count], index) => (
-              <Link
-                key={tag}
-                href={`/archivio?tag=${encodeURIComponent(tag)}`}
-                className="inline-flex items-center gap-3 rounded-full border px-4 py-3 text-sm font-medium transition-transform duration-200 hover:-translate-y-0.5"
-                style={{
-                  borderColor: "var(--line)",
-                  background:
-                    index < 4
-                      ? "linear-gradient(180deg, rgba(247,241,255,0.92), rgba(233,224,255,0.84))"
-                      : "rgba(255,255,255,0.72)",
-                }}
-              >
-                <span>#{tag}</span>
-                <span
-                  className="rounded-full px-2 py-1 text-xs"
-                  style={{ background: "rgba(255,255,255,0.8)", color: "var(--muted)" }}
-                >
-                  {count}
-                </span>
-              </Link>
-            ))
-          ) : (
-            <div
-              className="w-full rounded-[var(--radius-lg)] border px-6 py-10 text-center"
-              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.62)" }}
+          {tagCounts.map(([tag, count]) => (
+            <Link
+              key={tag}
+              href={`/archivio?tag=${encodeURIComponent(tag)}`}
+              className="inline-flex items-center gap-3 rounded-full border border-[rgba(83,63,170,0.1)] bg-[rgba(246,244,255,0.9)] px-4 py-3 text-sm font-semibold text-[var(--muted-strong)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,76,255,0.22)] hover:text-[var(--accent-strong)]"
             >
-              <h3 className="text-2xl">I tag compariranno qui.</h3>
-              <p className="mt-3 text-sm leading-7" style={{ color: "var(--muted)" }}>
-                Pubblica i primi tool per generare automaticamente il layer di tag editoriali.
-              </p>
-            </div>
-          )}
+              <span>{tag}</span>
+              <span className="rounded-full bg-white/84 px-2 py-1 text-[0.72rem] text-[var(--muted)]">
+                {count}
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
     </div>

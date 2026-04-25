@@ -1,12 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
-import {
-  getExploredCategories,
-  getShortlist,
-  getVisitedTools,
-} from "@/lib/discovery/local-storage";
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 
 type DiscoveryProgressProps = {
   totalTools: number;
@@ -21,26 +17,10 @@ export function DiscoveryProgress({
   featuredCount,
   compact = false,
 }: DiscoveryProgressProps) {
-  const [visitedCount, setVisitedCount] = useState(0);
-  const [exploredCategoriesCount, setExploredCategoriesCount] = useState(0);
-  const [shortlistCount, setShortlistCount] = useState(0);
-
-  useEffect(() => {
-    const sync = () => {
-      setVisitedCount(getVisitedTools().length);
-      setExploredCategoriesCount(getExploredCategories().length);
-      setShortlistCount(getShortlist().length);
-    };
-
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
-
-    return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
-    };
-  }, []);
+  const discovery = useDiscoverySnapshot();
+  const visitedCount = discovery.visitedTools.length;
+  const exploredCategoriesCount = discovery.exploredCategories.length;
+  const shortlistCount = discovery.shortlist.length;
 
   const steps = useMemo(
     () => [

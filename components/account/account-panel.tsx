@@ -1,16 +1,12 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 
 import { useAccount } from "@/components/account/account-provider";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
-import {
-  getCompareTools,
-  getDecisionMemories,
-  getShortlist,
-  getShortlistStages,
-} from "@/lib/discovery/local-storage";
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import type { DiscoveryLocalSnapshot } from "@/lib/discovery/local-storage";
 import { getPremiumEntitlementMeta } from "@/lib/premium/access";
 import { hasToolDecisionNote } from "@/lib/tools/discovery";
 
@@ -23,11 +19,11 @@ type WorkspaceSnapshot = {
   notes: number;
 };
 
-function readWorkspaceSnapshot(): WorkspaceSnapshot {
-  const shortlist = getShortlist();
-  const compare = getCompareTools();
-  const shortlistStages = getShortlistStages();
-  const memories = getDecisionMemories();
+function readWorkspaceSnapshot(snapshot: DiscoveryLocalSnapshot): WorkspaceSnapshot {
+  const shortlist = snapshot.shortlist;
+  const compare = snapshot.compare;
+  const shortlistStages = snapshot.shortlistStages;
+  const memories = snapshot.decisionMemories;
 
   return {
     saved: shortlist.length,
@@ -42,23 +38,9 @@ function readWorkspaceSnapshot(): WorkspaceSnapshot {
 export function AccountPanel() {
   const account = useAccount();
   const persistence = useDiscoveryPersistence();
+  const discovery = useDiscoverySnapshot();
   const [email, setEmail] = useState("");
-  const [workspace, setWorkspace] = useState<WorkspaceSnapshot>(() => readWorkspaceSnapshot());
-
-  useEffect(() => {
-    const sync = () => setWorkspace(readWorkspaceSnapshot());
-
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
-    window.addEventListener("tooolvibes:account-updated", sync);
-
-    return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
-      window.removeEventListener("tooolvibes:account-updated", sync);
-    };
-  }, []);
+  const workspace = useMemo(() => readWorkspaceSnapshot(discovery), [discovery]);
 
   const persistenceLabel =
     persistence.mode === "remote"

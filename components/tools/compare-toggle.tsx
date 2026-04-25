@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { getCompareTools, toggleCompareTool } from "@/lib/discovery/local-storage";
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import { toggleCompareTool } from "@/lib/discovery/local-storage";
 
 type CompareToggleProps = {
   slug: string;
@@ -17,48 +18,51 @@ export function CompareToggle({
   mode = "default",
   onChange,
 }: CompareToggleProps) {
-  const [isSelected, setIsSelected] = useState(false);
-  const [count, setCount] = useState(0);
+  const discovery = useDiscoverySnapshot();
+  const count = discovery.compare.length;
+  const isSelected = discovery.compare.includes(slug);
   const [isFresh, setIsFresh] = useState(false);
   const previousCountRef = useRef(0);
   const mountedRef = useRef(false);
+  const freshTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const sync = () => {
-      const compare = getCompareTools();
-      const selected = compare.includes(slug);
+    if (mountedRef.current && previousCountRef.current !== count) {
+      setIsFresh(true);
 
-      if (mountedRef.current && previousCountRef.current !== compare.length) {
-        setIsFresh(true);
-        window.setTimeout(() => setIsFresh(false), 560);
+      if (freshTimerRef.current) {
+        window.clearTimeout(freshTimerRef.current);
       }
 
-      previousCountRef.current = compare.length;
-      setIsSelected(selected);
-      setCount(compare.length);
-      onChange?.(selected);
-    };
+      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), 560);
+    }
 
-    sync();
+    previousCountRef.current = count;
     mountedRef.current = true;
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
+    onChange?.(isSelected);
 
     return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
+      if (freshTimerRef.current) {
+        window.clearTimeout(freshTimerRef.current);
+      }
     };
-  }, [onChange, slug]);
+  }, [count, isSelected, onChange]);
 
   const handleToggle = () => {
     const next = toggleCompareTool(slug);
-    const selected = next.includes(slug);
-    setIsFresh(true);
-    window.setTimeout(() => setIsFresh(false), 560);
-    previousCountRef.current = next.length;
-    setIsSelected(selected);
-    setCount(next.length);
-    onChange?.(selected);
+    const nextCount = next.length;
+
+    if (nextCount !== previousCountRef.current) {
+        setIsFresh(true);
+
+      if (freshTimerRef.current) {
+        window.clearTimeout(freshTimerRef.current);
+      }
+
+      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), 560);
+    }
+
+    previousCountRef.current = nextCount;
   };
 
   const isReady = count >= 2;

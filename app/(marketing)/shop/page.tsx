@@ -1,102 +1,75 @@
-import Link from "next/link";
-
-import { SurfaceIntro } from "@/components/sections/surface-intro";
-import { ButtonLink } from "@/components/ui/button";
-import {
-  getPremiumCollections,
-  getPremiumPreviewCollections,
-} from "@/lib/data/public-collections";
 import { siteConfig } from "@/lib/config/site";
 
-export default async function ShopPage() {
-  const [premiumCollections, premiumPreviewCollections] = await Promise.all([
-    getPremiumCollections(),
-    getPremiumPreviewCollections(),
-  ]);
-  const reservedCount = premiumCollections.filter((collection) => collection.access === "premium").length;
-
+export default function ShopPage() {
   return (
-    <div className="tone-premium page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <SurfaceIntro
-        eyebrow="Premium"
-        title="La pagina che chiarisce accesso, valore e shop esterno."
-        description="Qui il premium non va raccontato in astratto: deve chiarire subito cosa resta aperto, cosa mostra una preview e cosa appartiene davvero al layer member."
-        helperEyebrow="Come leggerlo"
-        helperCopy="Prima guarda il confine tra open, preview e member issue. Lo shop esterno ha senso solo come estensione finale, non come primo invito all'azione."
-        actions={
-          <>
-            <ButtonLink href="/collections">Apri le collection</ButtonLink>
-            <Link
-              href="/account#member-access"
-              className="section-quiet-link text-sm font-semibold"
-              style={{ color: "var(--accent-strong)" }}
+    <div className="page-shell space-y-6 pb-16 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
+      <section className="overflow-hidden rounded-[38px] border border-[rgba(83,63,170,0.12)] bg-[linear-gradient(135deg,#171129_0%,#23144d_56%,#140d28_100%)] px-5 py-6 text-white shadow-[0_28px_80px_rgba(18,10,51,0.28)] sm:px-7 sm:py-8">
+        <div className="max-w-[44rem]">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/60">
+            Digital Shop
+          </p>
+          <h1 className="mt-4 text-[2.4rem] leading-[0.95] text-white sm:max-w-[13ch] sm:text-[3.4rem]">
+            Asset, selezioni premium e shortcut per lavorare più veloce.
+          </h1>
+          <p className="mt-5 max-w-[40rem] text-[1rem] leading-7 text-white/74">
+            Il Digital Shop è il layer esterno in cui TooolVibes porta raccolte premium, risorse e
+            percorsi più densi. Qui il punto non è aggiungere rumore: è darti materiali più
+            pronti all&apos;uso.
+          </p>
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <a
+              href={siteConfig.shopUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full border border-white/24 bg-white px-5 py-3.5 text-sm font-semibold shadow-[0_16px_34px_rgba(255,255,255,0.12)] transition-transform duration-200 hover:-translate-y-0.5"
+              style={{ color: "#24144d" }}
             >
-              Vedi cosa sblocchi
-            </Link>
-          </>
-        }
-        asideEyebrow="Premium layer"
-        asideTitle="Piu` profondita`, non piu` rumore."
-        asideCopy="Il premium ha senso solo se resta collegato a collection e issue gia` credibili, con un confine netto tra open, preview e member."
-      />
-
-      <div className="px-1">
-        <Link
-          href={siteConfig.shopUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="section-quiet-link text-sm font-semibold"
-          style={{ color: "var(--accent-strong)" }}
-        >
-          Vai allo shop esterno solo dopo aver capito bene il confine premium
-        </Link>
-      </div>
-
-      <section className="brand-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
-        <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
-          <div className="max-w-[42rem]">
-            <p className="editorial-label">Cosa deve essere chiaro</p>
-            <h2 className="text-display-card mt-2.5 max-w-none text-[1.58rem] sm:max-w-[18ch] sm:text-[1.88rem] sm:text-balance">
-              Tre modi concreti in cui il member layer aggiunge valore.
-            </h2>
+              Apri il Digital Shop
+            </a>
+            <a
+              href={siteConfig.shopUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/8 px-5 py-3.5 text-sm font-semibold transition-transform duration-200 hover:-translate-y-0.5"
+              style={{ color: "#ffffff" }}
+            >
+              Vai allo shop esterno
+            </a>
           </div>
-          <span className="selection-status">Accesso leggibile</span>
         </div>
+      </section>
 
-        <div className="mt-5 grid gap-4 md:grid-cols-3">
-          {[
-            {
-              title: "Collection aperta",
-              copy: "Qui l'accesso pieno deve essere leggibile subito: entri, capisci il percorso e usi i tool senza altri strati da interpretare.",
-            },
-            {
-              title: "Preview leggibile",
-              copy: `Le ${premiumPreviewCollections.length} preview devono mostrare abbastanza per far capire il taglio, ma lasciare evidente cosa resta nel layer completo.`,
-            },
-            {
-              title: "Issue member piu` densa",
-              copy: `Le ${reservedCount} issue riservate devono aggiungere moduli, tool e profondita reale, non solo una cornice premium.`,
-            },
-          ].map((item, index) => (
-            <article
-              key={item.title}
-              className="rounded-[26px] border p-4.5"
-              style={{
-                borderColor: index === 0 ? "rgba(112,82,255,0.16)" : "var(--line)",
-                background:
-                  index === 0
-                    ? "linear-gradient(180deg, rgba(247,241,255,0.92), rgba(233,224,255,0.84))"
-                    : "linear-gradient(180deg, rgba(255,255,255,0.8), rgba(243,237,255,0.72))",
-              }}
-            >
-              <p className="editorial-label">Formato</p>
-              <h3 className="text-display-card mt-3 text-[1.24rem]">{item.title}</h3>
-              <p className="mt-3 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
-                {item.copy}
-              </p>
-            </article>
-          ))}
-        </div>
+      <section className="grid gap-5 md:grid-cols-3">
+        {[
+          {
+            title: "Stack curati",
+            copy: "Selezioni premium di tool e workflow già ragionate per creator, founder e team piccoli.",
+          },
+          {
+            title: "Risorse operative",
+            copy: "Materiali che riducono attrito: più esempi concreti, meno teoria che non porta al test.",
+          },
+          {
+            title: "Shortcut più densi",
+            copy: "Il layer premium serve quando vuoi velocizzare il passaggio tra scoperta, scelta e implementazione.",
+          },
+        ].map((item) => (
+          <article
+            key={item.title}
+            className="rounded-[30px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_18px_54px_rgba(35,18,95,0.08)]"
+          >
+            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+              Premium
+            </p>
+            <h2 className="mt-3 text-[1.38rem] leading-[1.02] text-[var(--foreground)]">
+              {item.title}
+            </h2>
+            <p className="mt-4 text-[0.98rem] leading-7 text-[var(--muted-strong)]">
+              {item.copy}
+            </p>
+          </article>
+        ))}
       </section>
     </div>
   );

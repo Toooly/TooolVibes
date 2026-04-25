@@ -1,10 +1,11 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useMemo } from "react";
 import Link from "next/link";
 
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { cn } from "@/lib/utils";
-import { clearCompareTools, getCompareTools } from "@/lib/discovery/local-storage";
+import { clearCompareTools } from "@/lib/discovery/local-storage";
 import {
   getCompareDimensionLeaders,
   getEditorialScoreDimensions,
@@ -36,20 +37,8 @@ const dimensionReadingCopy: Record<EditorialScoreDimension, string> = {
 };
 
 export function CompareBoard({ tools }: CompareBoardProps) {
-  const [compareSlugs, setCompareSlugs] = useState<string[]>([]);
-
-  useEffect(() => {
-    const sync = () => setCompareSlugs(getCompareTools());
-
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
-
-    return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
-    };
-  }, []);
+  const discovery = useDiscoverySnapshot();
+  const compareSlugs = discovery.compare;
 
   const comparedTools = useMemo(
     () =>

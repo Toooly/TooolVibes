@@ -1,19 +1,14 @@
 "use client";
 
-import { useDeferredValue, useEffect, useState } from "react";
+import { useDeferredValue, useState } from "react";
 import Link from "next/link";
 
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type {
   ShortlistStage,
   ToolDecisionMemory,
   ToolRecord,
 } from "@/lib/types/tool";
-import {
-  getCompareTools,
-  getDecisionMemories,
-  getShortlist,
-  getShortlistStages,
-} from "@/lib/discovery/local-storage";
 import {
   filterTools,
   getShortlistStageMeta,
@@ -23,7 +18,6 @@ import {
 } from "@/lib/tools/discovery";
 
 import { ToolCard } from "@/components/tools/tool-card";
-import { ToolCardSkeleton } from "@/components/tools/tool-card-skeleton";
 import { ToolWorkspacePanel } from "@/components/tools/tool-workspace-panel";
 
 type ShortlistBoardProps = {
@@ -55,47 +49,15 @@ function sortShortlistedTools(
 }
 
 export function ShortlistBoard({ tools }: ShortlistBoardProps) {
+  const discovery = useDiscoverySnapshot();
   const [query, setQuery] = useState("");
   const [stageFilter, setStageFilter] = useState<StageFilter>("all");
   const [sortKey, setSortKey] = useState<ShortlistSortKey>("workspace");
-  const [shortlistSlugs, setShortlistSlugs] = useState<string[] | null>(null);
-  const [shortlistStages, setShortlistStages] = useState<Record<string, ShortlistStage>>({});
-  const [decisionMemories, setDecisionMemories] = useState<Record<string, ToolDecisionMemory>>({});
-  const [compareSlugs, setCompareSlugs] = useState<string[]>([]);
   const deferredQuery = useDeferredValue(query);
-
-  useEffect(() => {
-    const sync = () => {
-      setShortlistSlugs(getShortlist());
-      setShortlistStages(getShortlistStages());
-      setDecisionMemories(getDecisionMemories());
-      setCompareSlugs(getCompareTools());
-    };
-
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
-
-    return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
-    };
-  }, []);
-
-  if (shortlistSlugs === null) {
-    return (
-      <div className="space-y-5">
-        <div className="brand-panel rounded-[30px] px-4 py-4 sm:px-5">
-          <div className="skeleton-block h-24 rounded-[24px]" />
-        </div>
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          <ToolCardSkeleton compact />
-          <ToolCardSkeleton compact />
-          <ToolCardSkeleton compact />
-        </div>
-      </div>
-    );
-  }
+  const shortlistSlugs = discovery.shortlist;
+  const shortlistStages = discovery.shortlistStages;
+  const decisionMemories = discovery.decisionMemories;
+  const compareSlugs = discovery.compare;
 
   const shortlistedTools = tools.filter((tool) => shortlistSlugs.includes(tool.slug));
   const workspaceFilteredTools = shortlistedTools.filter((tool) => {

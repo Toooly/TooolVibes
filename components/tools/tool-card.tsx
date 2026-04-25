@@ -1,16 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { memo, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type { ToolRecord } from "@/lib/types/tool";
-import {
-  getCompareTools,
-  getShortlist,
-  getShortlistStage,
-  getToolDecisionMemory,
-} from "@/lib/discovery/local-storage";
 import {
   getToolBestFor,
   getShortlistStageMeta,
@@ -38,7 +33,7 @@ type ToolCardProps = {
   onSelect?: (slug: string) => void;
 };
 
-export function ToolCard({
+function ToolCardComponent({
   tool,
   variant = "standard",
   priority = false,
@@ -48,28 +43,11 @@ export function ToolCard({
   swipeFriendly = false,
   onSelect,
 }: ToolCardProps) {
-  const [isSaved, setIsSaved] = useState(false);
-  const [isCompared, setIsCompared] = useState(false);
-  const [shortlistStage, setShortlistStage] = useState(getShortlistStage(tool.slug));
-  const [decisionMemory, setDecisionMemory] = useState(getToolDecisionMemory(tool.slug));
-
-  useEffect(() => {
-    const sync = () => {
-      setIsSaved(getShortlist().includes(tool.slug));
-      setIsCompared(getCompareTools().includes(tool.slug));
-      setShortlistStage(getShortlistStage(tool.slug));
-      setDecisionMemory(getToolDecisionMemory(tool.slug));
-    };
-
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
-
-    return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
-    };
-  }, [tool.slug]);
+  const discovery = useDiscoverySnapshot();
+  const isSaved = discovery.shortlist.includes(tool.slug);
+  const isCompared = discovery.compare.includes(tool.slug);
+  const shortlistStage = discovery.shortlistStages[tool.slug] ?? "saved";
+  const decisionMemory = discovery.decisionMemories[tool.slug] ?? {};
 
   const discoverySignal = useMemo(() => {
     const editorialState = getToolEditorialState(tool, index);
@@ -182,8 +160,8 @@ export function ToolCard({
                     →
                   </span>
                 </Link>
-                <ShortlistToggle slug={tool.slug} mode="compact" onChange={setIsSaved} />
-                <CompareToggle slug={tool.slug} compact onChange={setIsCompared} />
+                <ShortlistToggle slug={tool.slug} mode="compact" />
+                <CompareToggle slug={tool.slug} compact />
               </div>
             </div>
           </div>
@@ -244,8 +222,8 @@ export function ToolCard({
           </div>
 
           <div className="flex items-center gap-2">
-            <CompareToggle slug={tool.slug} mode="icon" onChange={setIsCompared} />
-            <ShortlistToggle slug={tool.slug} mode="icon" onChange={setIsSaved} />
+            <CompareToggle slug={tool.slug} mode="icon" />
+            <ShortlistToggle slug={tool.slug} mode="icon" />
           </div>
         </div>
 
@@ -440,8 +418,8 @@ export function ToolCard({
             </Link>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2">
-                <ShortlistToggle slug={tool.slug} mode="compact" onChange={setIsSaved} />
-                <CompareToggle slug={tool.slug} compact onChange={setIsCompared} />
+                <ShortlistToggle slug={tool.slug} mode="compact" />
+                <CompareToggle slug={tool.slug} compact />
               </div>
               <span className="text-[0.68rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                 {pricingLabel}
@@ -451,8 +429,8 @@ export function ToolCard({
         ) : (
           <div className="hover-reveal flex flex-wrap items-center justify-between gap-3 border-t pt-3.5 soft-divider">
             <div className="flex flex-wrap items-center gap-2">
-              <ShortlistToggle slug={tool.slug} mode="default" onChange={setIsSaved} />
-              <CompareToggle slug={tool.slug} onChange={setIsCompared} />
+              <ShortlistToggle slug={tool.slug} mode="default" />
+              <CompareToggle slug={tool.slug} />
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Link
@@ -471,3 +449,5 @@ export function ToolCard({
     </article>
   );
 }
+
+export const ToolCard = memo(ToolCardComponent);

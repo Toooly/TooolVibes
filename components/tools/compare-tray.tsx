@@ -4,27 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { clearCompareTools, getCompareTools } from "@/lib/discovery/local-storage";
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import { clearCompareTools } from "@/lib/discovery/local-storage";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
 
 export function CompareTray() {
   const pathname = usePathname();
   const persistence = useDiscoveryPersistence();
-  const [compare, setCompare] = useState<string[]>([]);
+  const discovery = useDiscoverySnapshot();
+  const compare = discovery.compare;
   const [isOpen, setIsOpen] = useState(true);
-
-  useEffect(() => {
-    const sync = () => setCompare(getCompareTools());
-
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
-
-    return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
-    };
-  }, []);
 
   useEffect(() => {
     if (compare.length > 0) {

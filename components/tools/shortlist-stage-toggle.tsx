@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import { getShortlistStage, setShortlistStage } from "@/lib/discovery/local-storage";
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import { setShortlistStage } from "@/lib/discovery/local-storage";
 import { getShortlistStageMeta } from "@/lib/tools/discovery";
 import type { ShortlistStage } from "@/lib/types/tool";
 
@@ -13,20 +12,8 @@ type ShortlistStageToggleProps = {
 const stageOptions: ShortlistStage[] = ["saved", "review", "top"];
 
 export function ShortlistStageToggle({ slug }: ShortlistStageToggleProps) {
-  const [stage, setStage] = useState<ShortlistStage>("saved");
-
-  useEffect(() => {
-    const sync = () => setStage(getShortlistStage(slug));
-
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
-
-    return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
-    };
-  }, [slug]);
+  const discovery = useDiscoverySnapshot();
+  const stage = discovery.shortlistStages[slug] ?? "saved";
 
   return (
     <div className="tool-rail -mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1">
@@ -38,10 +25,7 @@ export function ShortlistStageToggle({ slug }: ShortlistStageToggleProps) {
           <button
             key={option}
             type="button"
-            onClick={() => {
-              setShortlistStage(slug, option);
-              setStage(option);
-            }}
+            onClick={() => setShortlistStage(slug, option)}
             className={`selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.15em] ${
               active ? "quick-filter-chip is-active" : ""
             }`}

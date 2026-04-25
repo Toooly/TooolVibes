@@ -1,0 +1,228 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+import {
+  directoryFilterGroups,
+  type DirectoryFilterGroup,
+  type DirectoryTool,
+} from "@/lib/data/tooolvibes-directory";
+import { cn } from "@/lib/utils";
+
+import { DirectoryToolCard } from "@/components/directory/directory-tool-card";
+
+type DirectoryBrowserProps = {
+  tools: DirectoryTool[];
+  title: string;
+  description: string;
+  eyebrow: string;
+  initialQuery?: string;
+  initialTag?: string;
+  initialGroup?: DirectoryFilterGroup;
+  className?: string;
+};
+
+function matchesTool(tool: DirectoryTool, query: string) {
+  if (!query.trim()) {
+    return true;
+  }
+
+  const normalizedQuery = query.trim().toLowerCase();
+  const haystack = [
+    tool.name,
+    tool.category,
+    tool.categoryLabel,
+    tool.description,
+    tool.longDescription,
+    tool.whyItMatters,
+    ...tool.tags,
+    ...tool.useCases,
+    ...tool.highlights,
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  return haystack.includes(normalizedQuery);
+}
+
+export function DirectoryBrowser({
+  tools,
+  title,
+  description,
+  eyebrow,
+  initialQuery = "",
+  initialTag = "",
+  initialGroup = "all",
+  className,
+}: DirectoryBrowserProps) {
+  const [query, setQuery] = useState(initialQuery);
+  const [activeGroup, setActiveGroup] = useState<DirectoryFilterGroup>(initialGroup);
+  const [activeTag, setActiveTag] = useState(initialTag);
+
+  const sortedTags = useMemo(() => {
+    const counts = tools.reduce<Record<string, number>>((accumulator, tool) => {
+      tool.tags.forEach((tag) => {
+        accumulator[tag] = (accumulator[tag] ?? 0) + 1;
+      });
+
+      return accumulator;
+    }, {});
+
+    return Object.entries(counts)
+      .sort((left, right) => right[1] - left[1])
+      .slice(0, 8)
+      .map(([tag]) => tag);
+  }, [tools]);
+
+  const filteredTools = useMemo(() => {
+    return tools.filter((tool) => {
+      const matchesGroup =
+        activeGroup === "all" || tool.segments.includes(activeGroup);
+      const matchesTag = !activeTag || tool.tags.includes(activeTag);
+
+      return matchesGroup && matchesTag && matchesTool(tool, query);
+    });
+  }, [activeGroup, activeTag, query, tools]);
+
+  const groupCounts = useMemo(() => {
+    return Object.fromEntries(
+      directoryFilterGroups.map((group) => [
+        group.key,
+        group.key === "all"
+          ? tools.length
+          : tools.filter((tool) => tool.segments.includes(group.key)).length,
+      ]),
+    ) as Record<DirectoryFilterGroup, number>;
+  }, [tools]);
+
+  return (
+    <section className={cn("space-y-6", className)}>
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-[46rem]">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
+            {eyebrow}
+          </p>
+          <h2 className="mt-3 text-[2rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.7rem]">
+            {title}
+          </h2>
+          <p className="mt-4 max-w-[40rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
+            {description}
+          </p>
+        </div>
+
+        <div className="rounded-[26px] border border-[rgba(76,55,166,0.12)] bg-white/80 px-5 py-4 shadow-[0_18px_40px_rgba(32,19,99,0.06)]">
+          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+            Risultati visibili
+          </p>
+          <p className="mt-2 text-[2rem] font-semibold leading-none text-[var(--foreground)]">
+            {filteredTools.length}
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            {tools.length} tool curati, link verificati e CTA pronte.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-4 rounded-[32px] border border-[rgba(76,55,166,0.12)] bg-white/84 p-5 shadow-[0_18px_48px_rgba(31,19,93,0.06)] lg:grid-cols-[minmax(0,1.4fr)_auto] lg:items-center">
+        <div className="space-y-4">
+          <label className="block">
+            <span className="sr-only">Cerca tool, categoria o tag</span>
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Cerca per nome, categoria, tag o descrizione"
+              className="w-full rounded-[22px] border border-[rgba(76,55,166,0.12)] bg-[rgba(246,244,255,0.92)] px-4 py-3 text-[0.98rem] text-[var(--foreground)] outline-none transition-colors duration-200 placeholder:text-[var(--muted)] focus:border-[rgba(108,76,255,0.32)]"
+              aria-label="Cerca nei Toools"
+            />
+          </label>
+
+          <div className="flex flex-wrap gap-2">
+            {directoryFilterGroups.map((group) => {
+              const isActive = activeGroup === group.key;
+
+              return (
+                <button
+                  key={group.key}
+                  type="button"
+                  onClick={() => setActiveGroup(group.key)}
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] transition-all duration-200",
+                    isActive
+                      ? "border-[rgba(108,76,255,0.3)] bg-[rgba(109,59,255,0.1)] text-[var(--accent-strong)]"
+                      : "border-[rgba(76,55,166,0.12)] bg-white text-[var(--muted-strong)] hover:border-[rgba(108,76,255,0.2)]",
+                  )}
+                >
+                  <span>{group.label}</span>
+                  <span className="rounded-full bg-white/80 px-2 py-0.5 text-[0.66rem] text-[var(--muted)]">
+                    {groupCounts[group.key]}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+            Tag rapidi
+          </p>
+          <div className="flex flex-wrap gap-2 lg:max-w-[20rem] lg:justify-end">
+            {sortedTags.map((tag) => {
+              const isActive = activeTag === tag;
+
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => setActiveTag((current) => (current === tag ? "" : tag))}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-[0.72rem] font-medium transition-all duration-200",
+                    isActive
+                      ? "border-[rgba(108,76,255,0.28)] bg-[rgba(109,59,255,0.1)] text-[var(--accent-strong)]"
+                      : "border-[rgba(76,55,166,0.12)] bg-[rgba(246,244,255,0.86)] text-[var(--muted-strong)] hover:border-[rgba(108,76,255,0.2)]",
+                  )}
+                >
+                  {tag}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {filteredTools.length > 0 ? (
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {filteredTools.map((tool) => (
+            <DirectoryToolCard key={tool.slug} tool={tool} />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-[30px] border border-[rgba(76,55,166,0.12)] bg-white/86 px-6 py-12 text-center shadow-[0_18px_48px_rgba(31,19,93,0.06)]">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
+            Nessun match utile
+          </p>
+          <h3 className="mt-4 text-[1.75rem] leading-[1.02] text-[var(--foreground)]">
+            Nessun tool corrisponde a questa combinazione.
+          </h3>
+          <p className="mx-auto mt-3 max-w-[34rem] text-[0.98rem] leading-7 text-[var(--muted-strong)]">
+            Prova a cambiare filtro, rimuovere un tag o usare una ricerca più ampia. L&apos;idea è
+            aiutarti a stringere il campo, non a bloccarti.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setActiveGroup("all");
+                setActiveTag("");
+              }}
+              className="rounded-full border border-[rgba(76,55,166,0.12)] bg-white px-4 py-3 text-sm font-semibold text-[var(--foreground)]"
+            >
+              Reset filtri
+            </button>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}

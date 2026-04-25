@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { getShortlist, toggleShortlistItem } from "@/lib/discovery/local-storage";
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import { toggleShortlistItem } from "@/lib/discovery/local-storage";
 
 type ShortlistToggleProps = {
   slug: string;
@@ -17,32 +18,40 @@ export function ShortlistToggle({
   mode = "default",
   onChange,
 }: ShortlistToggleProps) {
-  const [isSaved, setIsSaved] = useState(false);
+  const discovery = useDiscoverySnapshot();
+  const isSaved = discovery.shortlist.includes(slug);
   const [isFresh, setIsFresh] = useState(false);
+  const wasSavedRef = useRef(isSaved);
+  const mountedRef = useRef(false);
+  const freshTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const sync = () => {
-      const saved = getShortlist().includes(slug);
-      setIsSaved(saved);
-      onChange?.(saved);
-    };
+    onChange?.(isSaved);
+  }, [isSaved, onChange]);
 
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
+  useEffect(() => {
+    if (mountedRef.current && wasSavedRef.current !== isSaved) {
+      setIsFresh(true);
+
+      if (freshTimerRef.current) {
+        window.clearTimeout(freshTimerRef.current);
+      }
+
+      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), 540);
+    }
+
+    wasSavedRef.current = isSaved;
+    mountedRef.current = true;
 
     return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
+      if (freshTimerRef.current) {
+        window.clearTimeout(freshTimerRef.current);
+      }
     };
-  }, [onChange, slug]);
+  }, [isSaved]);
 
   const handleToggle = () => {
-    const saved = toggleShortlistItem(slug).includes(slug);
-    setIsSaved(saved);
-    onChange?.(saved);
-    setIsFresh(true);
-    window.setTimeout(() => setIsFresh(false), 540);
+    toggleShortlistItem(slug);
   };
 
   if (mode === "icon") {

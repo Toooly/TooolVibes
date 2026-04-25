@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type { ToolRecord } from "@/lib/types/tool";
 import {
-  getToolDecisionMemory,
   toggleToolPin,
   updateToolDecisionMemory,
 } from "@/lib/discovery/local-storage";
@@ -24,25 +24,16 @@ type ToolWorkspacePanelProps = {
 
 export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
   const persistence = useDiscoveryPersistence();
-  const [memory, setMemory] = useState(() => getToolDecisionMemory(tool.slug));
+  const discovery = useDiscoverySnapshot();
+  const memory = useMemo(
+    () => discovery.decisionMemories[tool.slug] ?? {},
+    [discovery.decisionMemories, tool.slug],
+  );
   const [noteDraft, setNoteDraft] = useState(memory.note ?? "");
 
   useEffect(() => {
-    const sync = () => {
-      const next = getToolDecisionMemory(tool.slug);
-      setMemory(next);
-      setNoteDraft(next.note ?? "");
-    };
-
-    sync();
-    window.addEventListener("storage", sync);
-    window.addEventListener("tooolvibes:discovery-sync", sync);
-
-    return () => {
-      window.removeEventListener("storage", sync);
-      window.removeEventListener("tooolvibes:discovery-sync", sync);
-    };
-  }, [tool.slug]);
+    setNoteDraft(memory.note ?? "");
+  }, [memory.note, tool.slug]);
 
   const noteIsDirty = noteDraft.trim() !== (memory.note ?? "");
   const memorySignals = useMemo(() => getToolMemorySignals(memory), [memory]);
@@ -66,7 +57,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
         </div>
         <button
           type="button"
-          onClick={() => setMemory(toggleToolPin(tool.slug))}
+          onClick={() => toggleToolPin(tool.slug)}
           className={`selection-chip text-ui-strong inline-flex items-center gap-2 rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${
             memory.is_pinned ? "quick-filter-chip is-active" : ""
           }`}
@@ -117,11 +108,9 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
                 key={option}
                 type="button"
                 onClick={() =>
-                  setMemory(
-                    updateToolDecisionMemory(tool.slug, {
-                      save_reason: active ? undefined : option,
-                    }),
-                  )
+                  updateToolDecisionMemory(tool.slug, {
+                    save_reason: active ? undefined : option,
+                  })
                 }
               className={`selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${
                 active ? "quick-filter-chip is-active" : ""
@@ -171,7 +160,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
           </div>
           <button
             type="button"
-            onClick={() => setMemory(updateToolDecisionMemory(tool.slug, { note: noteDraft }))}
+            onClick={() => updateToolDecisionMemory(tool.slug, { note: noteDraft })}
             disabled={!noteIsDirty}
             className="selection-chip text-ui-strong inline-flex items-center rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] disabled:cursor-default disabled:opacity-55"
             style={{
