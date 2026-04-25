@@ -1,0 +1,18 @@
+export const publicToolSelect = `
+  id,
+  name,
+  slug,
+  category,
+  tags,
+  short_description_it,
+  description_it,
+  website_url,
+  tooolvibes_post_url,
+  cover_image_url,
+  source,
+  date_discovered,
+  is_featured,
+  is_published,
+  created_at,
+  updated_at
+`;

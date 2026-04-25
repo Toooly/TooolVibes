@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#26107F" />
+      <stop offset="0.56" stop-color="#5F2EFF" />
+      <stop offset="1" stop-color="#2A1494" />
+    </linearGradient>
+    <linearGradient id="loopA" x1="16" y1="18" x2="46" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8E70FF" />
+      <stop offset="0.48" stop-color="#5522FF" />
+      <stop offset="1" stop-color="#1A0D63" />
+    </linearGradient>
+    <linearGradient id="loopB" x1="20" y1="14" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6E39FF" />
+      <stop offset="0.6" stop-color="#2A1494" />
+      <stop offset="1" stop-color="#140A44" />
+    </linearGradient>
+    <linearGradient id="wave" x1="12" y1="30" x2="52" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFCB44" />
+      <stop offset="0.5" stop-color="#FFE57D" />
+      <stop offset="1" stop-color="#48DFFF" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="20" fill="#F5F2FF" />
+  <rect x="8" y="8" width="48" height="48" rx="16" fill="url(#bg)" />
+  <path
+    d="M19 27c0-8.8 6.9-15 14.6-15 7.6 0 14.4 6.2 14.4 15 0 8.6-6.8 14.8-14.4 14.8C25.9 41.8 19 35.6 19 27Z"
+    fill="none"
+    stroke="url(#loopA)"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="6"
+  />
+  <path
+    d="M31.3 14.2c6.9 0 15.1 7.6 15.1 17.6 0 10.2-8.2 18-15.1 18-7 0-15.2-7.8-15.2-18 0-10 8.2-17.6 15.2-17.6Z"
+    fill="none"
+    stroke="url(#loopB)"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="6"
+  />
+  <path
+    d="M12 34.5c4.7 5.1 9.4-3.7 14.7-3.7 5.1 0 7.8 8.4 13.2 8.4 5.1 0 8-4.8 12.1-4.8"
+    fill="none"
+    stroke="url(#wave)"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="5.5"
+  />
+</svg>

@@ -1,0 +1,1128 @@
+import Link from "next/link";
+
+import { importMockCollectionsAction } from "@/app/(admin)/admin/actions";
+import { AdminEmptyState } from "@/components/admin/admin-empty-state";
+import { SectionHeading } from "@/components/sections/section-heading";
+import {
+  getCollectionTransitionReviewMeta,
+  getCollectionTransitionReviewState,
+  getCollectionTransitionSeverity,
+  getCollectionTransitionSeverityMeta,
+} from "@/lib/admin/collection-review";
+import {
+  getCollectionSyncPreviewMeta,
+  getCollectionSyncPreviewPosture,
+} from "@/lib/admin/collection-sync-preview";
+import {
+  getCollectionEditorialStateMeta,
+  getCollectionFeaturedSlotLabel,
+  getCollectionSurfaceMeta,
+} from "@/lib/collections/editorial";
+import {
+  getCollectionAccessMeta,
+  getCollectionDifficultyLabel,
+  getCollectionToneMeta,
+} from "@/lib/collections/helpers";
+import {
+  getAdminCollectionsRuntime,
+  getCollectionStateCounts,
+} from "@/lib/admin/collection-queries";
+import { formatItalianDate } from "@/lib/utils";
+import type {
+  CollectionEditorialState,
+  CollectionTransitionEntry,
+} from "@/lib/types/collection";
+
+type AdminCollectionsPageProps = {
+  searchParams: Promise<{
+    state?: string;
+    view?: string;
+    status?: string;
+    imported?: string;
+    skipped?: string;
+    conflicts?: string;
+    scope?: string;
+    fields?: string;
+  }>;
+};
+
+const statusMessages: Record<string, string> = {
+  created: "Collection creata correttamente.",
+  updated: "Collection aggiornata correttamente.",
+  "import-unavailable":
+    "Import non disponibile: attiva il write path Supabase collections prima di migrare i mock.",
+  "review-saved": "Review state aggiornato correttamente.",
+  "review-cleared": "Review state ripulito correttamente.",
+  "review-unavailable":
+    "Review state non disponibile: applica la migration `0012-0013` per abilitarlo in modo persistente.",
+  "review-invalid": "Azione review non valida.",
+  "safe-align-unavailable":
+    "Safe align non disponibile: abilita write path Supabase e migration `0014-0015` prima di usarlo.",
+  "safe-align-ineligible":
+    "Questo caso esce dalla safe align policy attuale e resta preview-only.",
+  "safe-align-invalid": "Azione safe align non valida.",
+  "safe-align-failed":
+    "Safe align non completato: l'azione e` stata fermata prima di lasciare uno stato ambiguo.",
+};
+
+const importStatusMeta: Record<
+  CollectionTransitionEntry["import_status"],
+  { label: string; background: string; borderColor: string }
+> = {
+  "pending-import": {
+    label: "Pending import",
+    background: "rgba(255,251,235,0.96)",
+    borderColor: "rgba(161,105,47,0.18)",
+  },
+  imported: {
+    label: "Importata",
+    background: "rgba(236,253,245,0.95)",
+    borderColor: "rgba(15,118,110,0.18)",
+  },
+  conflict: {
+    label: "Conflict",
+    background: "rgba(254,242,242,0.96)",
+    borderColor: "rgba(139,58,43,0.18)",
+  },
+  "remote-only": {
+    label: "Supabase only",
+    background: "rgba(245,242,255,0.92)",
+    borderColor: "rgba(112,82,255,0.16)",
+  },
+  "content-only": {
+    label: "Content only",
+    background: "rgba(243,244,246,0.95)",
+    borderColor: "rgba(148,163,184,0.22)",
+  },
+};
+
+function getStatusMessage({
+  status,
+  imported,
+  skipped,
+  conflicts,
+  scope,
+  fields,
+}: {
+  status?: string;
+  imported?: string;
+  skipped?: string;
+  conflicts?: string;
+  scope?: string;
+  fields?: string;
+}) {
+  if (status === "imported") {
+    const importedCount = Number(imported ?? "0");
+    const skippedCount = Number(skipped ?? "0");
+    const conflictCount = Number(conflicts ?? "0");
+
+    return scope === "single"
+      ? `Import completato. Importate: ${importedCount}, saltate: ${skippedCount}, conflitti: ${conflictCount}.`
+      : `Seed mock -> Supabase completato. Importate: ${importedCount}, saltate: ${skippedCount}, conflitti: ${conflictCount}.`;
+  }
+
+  if (status === "safe-align-applied") {
+    return `Safe align applicato correttamente${fields ? ` su: ${fields.replaceAll(",", ", ")}` : "."}`;
+  }
+
+  return status ? statusMessages[status] ?? null : null;
+}
+
+function getTransitionDiffSummary(entry: CollectionTransitionEntry) {
+  const summaries: string[] = [];
+
+  if (entry.diff.editorial_state) {
+    summaries.push("stato");
+  }
+
+  if (entry.diff.editorial_order) {
+    summaries.push("ordering");
+  }
+
+  if (entry.diff.featured_slot) {
+    summaries.push("slot");
+  }
+
+  if (entry.diff.surface) {
+    summaries.push("surface");
+  }
+
+  if (entry.diff.metadata) {
+    summaries.push("metadata");
+  }
+
+  if (entry.diff.included_tools) {
+    summaries.push("tool");
+  }
+
+  return summaries;
+}
+
+export default async function AdminCollectionsPage({
+  searchParams,
+}: AdminCollectionsPageProps) {
+  const [params, runtime] = await Promise.all([
+    searchParams,
+    getAdminCollectionsRuntime(),
+  ]);
+  const { state, view } = params;
+  const statusMessage = getStatusMessage(params);
+
+  const stateCounts = getCollectionStateCounts(runtime.collections);
+  const selectedState =
+    state && ["draft", "scheduled", "published", "featured", "archived"].includes(state)
+      ? (state as CollectionEditorialState)
+      : null;
+  const hasPendingImports = runtime.transitionReport.summary.pending_import > 0;
+  const selectedView =
+    view && ["all", "ready", "review", "blocked", "conflict", "clean", "alignable"].includes(view)
+      ? view
+      : "all";
+  const transitionEntriesBySlug = new Map(
+    runtime.transitionReport.entries.map((entry) => [entry.slug, entry] as const),
+  );
+  const topActions = [
+    { href: "/admin", label: "Dashboard" },
+    { href: "/admin/collections/new", label: "Nuova collection", primary: true },
+    { href: "/admin/collections/review", label: "Conflict review" },
+  ] as const;
+  const workspaceMetrics = [
+    { label: "Collections nel workspace", value: runtime.collections.length },
+    {
+      label: "Pubbliche nel workspace",
+      value: stateCounts.published + stateCounts.featured,
+    },
+    {
+      label: "Warning aperti",
+      value: runtime.collections.filter(
+        (collection) =>
+          (runtime.workspaceSnapshot.validation[collection.slug] ?? []).length > 0,
+      ).length,
+    },
+    { label: "Source pubblica attiva", value: runtime.publicSnapshot.meta.active_source },
+  ] as const;
+  const transitionMetrics = [
+    { label: "Mock totali", value: runtime.transitionReport.summary.mock_total },
+    { label: "Gia` importate", value: runtime.transitionReport.summary.imported },
+    { label: "Da importare", value: runtime.transitionReport.summary.pending_import },
+    { label: "Conflitti", value: runtime.transitionReport.summary.conflicts },
+    { label: "Supabase only", value: runtime.transitionReport.summary.remote_only },
+  ] as const;
+  const collectionViewCounts = {
+    all: runtime.collections.length,
+    ready: runtime.collections.filter(
+      (collection) => runtime.readinessBySlug[collection.slug]?.state === "ready",
+    ).length,
+    review: runtime.collections.filter(
+      (collection) => runtime.readinessBySlug[collection.slug]?.state === "review",
+    ).length,
+    blocked: runtime.collections.filter(
+      (collection) => runtime.readinessBySlug[collection.slug]?.state === "blocked",
+    ).length,
+    conflict: runtime.collections.filter((collection) => {
+      const transitionEntry = transitionEntriesBySlug.get(collection.slug) ?? null;
+      const severity = transitionEntry
+        ? getCollectionTransitionSeverity(transitionEntry)
+        : "clean";
+
+      return severity === "critical-conflict" || severity === "minor-drift";
+    }).length,
+    alignable: runtime.collections.filter(
+      (collection) =>
+        runtime.syncPreviewBySlug[collection.slug]?.state === "safe-align-ready",
+    ).length,
+    clean: runtime.collections.filter((collection) => {
+      const transitionEntry = transitionEntriesBySlug.get(collection.slug) ?? null;
+
+      return (transitionEntry
+        ? getCollectionTransitionSeverity(transitionEntry)
+        : "clean") === "clean";
+    }).length,
+  } as const;
+  const collectionViewOptions = [
+    {
+      href: "/admin/collections",
+      label: "Workspace",
+      active: selectedView === "all",
+      count: collectionViewCounts.all,
+    },
+    {
+      href: "/admin/collections?view=ready",
+      label: "Ready",
+      active: selectedView === "ready",
+      count: collectionViewCounts.ready,
+    },
+    {
+      href: "/admin/collections?view=review",
+      label: "Review",
+      active: selectedView === "review",
+      count: collectionViewCounts.review,
+    },
+    {
+      href: "/admin/collections?view=blocked",
+      label: "Blocked",
+      active: selectedView === "blocked",
+      count: collectionViewCounts.blocked,
+    },
+    {
+      href: "/admin/collections?view=conflict",
+      label: "Conflict",
+      active: selectedView === "conflict",
+      count: collectionViewCounts.conflict,
+    },
+    {
+      href: "/admin/collections?view=alignable",
+      label: "Alignable",
+      active: selectedView === "alignable",
+      count: collectionViewCounts.alignable,
+    },
+    {
+      href: "/admin/collections?view=clean",
+      label: "Clean",
+      active: selectedView === "clean",
+      count: collectionViewCounts.clean,
+    },
+  ] as const;
+  const editorialStateOptions = [
+    {
+      href: "/admin/collections",
+      label: "Tutte",
+      active: !selectedState,
+      count: runtime.collections.length,
+    },
+    ...(
+      ["draft", "scheduled", "published", "featured", "archived"] as CollectionEditorialState[]
+    ).map((item) => ({
+      href: `/admin/collections?state=${item}`,
+      label: getCollectionEditorialStateMeta(item).label,
+      active: selectedState === item,
+      count: stateCounts[item],
+    })),
+  ];
+
+  const filteredCollections = runtime.collections.filter((collection) => {
+    const transitionEntry = transitionEntriesBySlug.get(collection.slug) ?? null;
+    const readiness = runtime.readinessBySlug[collection.slug] ?? null;
+    const severity = transitionEntry ? getCollectionTransitionSeverity(transitionEntry) : "clean";
+    const syncPreview = runtime.syncPreviewBySlug[collection.slug] ?? null;
+
+    if (selectedState && collection.editorial_state !== selectedState) {
+      return false;
+    }
+
+    if (selectedView === "ready") {
+      return readiness?.state === "ready";
+    }
+
+    if (selectedView === "review") {
+      return readiness?.state === "review";
+    }
+
+    if (selectedView === "blocked") {
+      return readiness?.state === "blocked";
+    }
+
+    if (selectedView === "conflict") {
+      return severity === "critical-conflict" || severity === "minor-drift";
+    }
+
+    if (selectedView === "clean") {
+      return severity === "clean";
+    }
+
+    if (selectedView === "alignable") {
+      return syncPreview?.state === "safe-align-ready";
+    }
+
+    return true;
+  });
+
+  return (
+    <div className="page-shell py-8 sm:py-10">
+      <div className="space-y-6">
+        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <SectionHeading
+              eyebrow="Collections tooling"
+              title="Workflow editoriale leggero e operativo."
+              description="Qui leggi source, warning, stato editoriale e dettaglio interno delle collection. Il write path resta prudente, ma la superficie gestisce gia` il ciclo editoriale essenziale senza passare solo dal codice."
+            />
+            <div className="hidden flex-wrap gap-3 sm:flex">
+              {topActions.map((action) => (
+                <Link
+                  key={action.href}
+                  href={action.href}
+                  className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[var(--muted-strong)]"} rounded-full px-4 py-2.5 text-sm font-semibold`}
+                >
+                  {action.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="tool-rail -mx-1 mt-5 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:hidden">
+            {topActions.map((action) => (
+              <Link
+                key={`mobile-${action.href}`}
+                href={action.href}
+                className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[var(--muted-strong)]"} inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold`}
+              >
+                {action.label}
+              </Link>
+            ))}
+          </div>
+
+          {statusMessage ? (
+            <div
+              className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
+              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(236,253,245,0.95)" }}
+            >
+              {statusMessage}
+            </div>
+          ) : null}
+
+          <div className="tool-rail -mx-1.5 mt-8 flex snap-x gap-3 overflow-x-auto px-1.5 pb-1 sm:hidden">
+            {workspaceMetrics.map((item) => (
+              <article
+                key={item.label}
+                className="stat-block w-[12rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-5"
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+              >
+                <p
+                  className="text-sm font-semibold uppercase tracking-[0.18em]"
+                  style={{ color: "var(--muted)" }}
+                >
+                  {item.label}
+                </p>
+                <p className="mt-3 text-4xl">{item.value}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-8 hidden gap-4 sm:grid lg:grid-cols-4">
+            {workspaceMetrics.map((item) => (
+              <article
+                key={`desktop-${item.label}`}
+                className="stat-block rounded-[var(--radius-lg)] border p-5"
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+              >
+                <p
+                  className="text-sm font-semibold uppercase tracking-[0.18em]"
+                  style={{ color: "var(--muted)" }}
+                >
+                  {item.label}
+                </p>
+                <p className="mt-3 text-4xl">{item.value}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            <div
+              className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
+              style={{
+                borderColor: runtime.canWrite
+                  ? "rgba(15,118,110,0.18)"
+                  : "rgba(161,105,47,0.18)",
+                background: runtime.canWrite
+                  ? "rgba(240,253,250,0.9)"
+                  : "rgba(255,251,235,0.96)",
+              }}
+            >
+              {runtime.writeMessage}
+            </div>
+            <div
+              className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
+              style={{
+                borderColor: "rgba(112,82,255,0.14)",
+                background: "rgba(245,242,255,0.92)",
+              }}
+            >
+              Read surface interna: <strong>{runtime.adminReadSource}</strong>. Public source:{" "}
+              <strong>{runtime.publicSnapshot.meta.active_source}</strong>.
+              {runtime.writeTarget ? (
+                <>
+                  {" "}
+                  Write target: <strong>{runtime.writeTarget}</strong>.
+                </>
+              ) : null}
+              <br />
+              {runtime.reviewMessage}
+              <br />
+              {runtime.safeAlignMessage}
+            </div>
+          </div>
+
+          <div
+            className="mt-6 rounded-[var(--radius-xl)] border p-5 sm:p-6"
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+          >
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="max-w-[44rem] space-y-2">
+                <p
+                  className="text-sm font-semibold uppercase tracking-[0.18em]"
+                  style={{ color: "var(--muted)" }}
+                >
+                  Source transition
+                </p>
+                <h2 className="text-2xl">Mock -&gt; Supabase senza stacchi nel pubblico.</h2>
+                <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
+                  In `auto`, il pubblico legge con precedence{" "}
+                  <strong>
+                    {(runtime.publicSnapshot.meta.source_precedence ??
+                      runtime.transitionReport.source_precedence
+                    ).join(" > ")}
+                  </strong>
+                  . Se uno slug esiste gia` su Supabase, quella versione prevale; gli slug non ancora
+                  migrati restano serviti da mock o content source.
+                </p>
+              </div>
+              {runtime.canWrite ? (
+                <form action={importMockCollectionsAction}>
+                  <button
+                    type="submit"
+                    disabled={!hasPendingImports}
+                    className="button-shell button-primary rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
+                  >
+                    Importa mock mancanti ({runtime.transitionReport.summary.pending_import})
+                  </button>
+                </form>
+              ) : (
+                <div
+                  className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
+                  style={{
+                    borderColor: "rgba(161,105,47,0.18)",
+                    background: "rgba(255,251,235,0.96)",
+                  }}
+                >
+                  Attiva Supabase write per eseguire il seed dal pannello interno.
+                </div>
+              )}
+            </div>
+
+            <div className="tool-rail -mx-1.5 mt-6 flex snap-x gap-3 overflow-x-auto px-1.5 pb-1 sm:hidden">
+              {transitionMetrics.map((item) => (
+                <article
+                  key={item.label}
+                  className="stat-block w-[10.5rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                >
+                  <p
+                    className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]"
+                    style={{ color: "var(--muted)" }}
+                  >
+                    {item.label}
+                  </p>
+                  <p className="mt-3 text-3xl">{item.value}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-6 hidden gap-4 sm:grid lg:grid-cols-5">
+              {transitionMetrics.map((item) => (
+                <article
+                  key={`desktop-${item.label}`}
+                  className="stat-block rounded-[var(--radius-lg)] border p-4"
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                >
+                  <p
+                    className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]"
+                    style={{ color: "var(--muted)" }}
+                  >
+                    {item.label}
+                  </p>
+                  <p className="mt-3 text-3xl">{item.value}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          {runtime.publicSnapshot.meta.warnings.length > 0 ? (
+            <div className="mt-4 grid gap-3">
+              {runtime.publicSnapshot.meta.warnings.map((warning) => (
+                <div
+                  key={warning}
+                  className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
+                  style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
+                >
+                  {warning}
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
+          <div className="flex flex-wrap items-start justify-between gap-4 border-b pb-5">
+            <div className="space-y-2">
+              <p
+                className="text-sm font-semibold uppercase tracking-[0.18em]"
+                style={{ color: "var(--muted)" }}
+              >
+                Migration visibility
+              </p>
+              <h2 className="text-2xl">Stato seed/import delle collection legacy.</h2>
+              <p className="max-w-[44rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
+                Questa vista mostra quali slug sono ancora solo mock, quali sono gia` migrati e dove
+                c&apos;e` drift tra il legacy seed e il repository reale.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 space-y-4">
+            {runtime.transitionReport.entries.map((entry) => {
+              const statusMeta = importStatusMeta[entry.import_status];
+              const diffSummary = getTransitionDiffSummary(entry);
+
+              return (
+                <article
+                  key={entry.slug}
+                  className="grid gap-4 rounded-[var(--radius-lg)] border p-5 lg:grid-cols-[1.35fr_1fr_auto]"
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+                >
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h3 className="text-xl">{entry.title}</h3>
+                      <span
+                        className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                        style={{
+                          borderColor: statusMeta.borderColor,
+                          background: statusMeta.background,
+                        }}
+                      >
+                        {statusMeta.label}
+                      </span>
+                      {entry.public_source ? (
+                        <span
+                          className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                          style={{
+                            borderColor: "rgba(112,82,255,0.16)",
+                            background: "rgba(245,242,255,0.92)",
+                          }}
+                        >
+                          Public -&gt; {entry.public_source}
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <div
+                      className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]"
+                      style={{ color: "var(--muted)" }}
+                    >
+                      <span>Slug: {entry.slug}</span>
+                      <span>Mock: {entry.mock ? "si`" : "no"}</span>
+                      <span>Supabase: {entry.supabase ? "si`" : "no"}</span>
+                      <span>Content: {entry.content ? "si`" : "no"}</span>
+                    </div>
+
+                    {diffSummary.length > 0 ? (
+                      <p className="text-sm" style={{ color: "var(--muted-strong)" }}>
+                        Drift rilevato su: {diffSummary.join(", ")}.
+                      </p>
+                    ) : (
+                      <p className="text-sm" style={{ color: "var(--muted-strong)" }}>
+                        Nessun drift rilevato sui campi chiave di transizione.
+                      </p>
+                    )}
+
+                    {entry.warnings.length > 0 ? (
+                      <div className="grid gap-2">
+                        {entry.warnings.slice(0, 2).map((warning) => (
+                          <div
+                            key={`${entry.slug}-${warning}`}
+                            className="rounded-[20px] border px-4 py-3 text-sm"
+                            style={{
+                              borderColor:
+                                entry.import_status === "conflict"
+                                  ? "rgba(139,58,43,0.18)"
+                                  : "rgba(161,105,47,0.18)",
+                              background:
+                                entry.import_status === "conflict"
+                                  ? "rgba(254,242,242,0.96)"
+                                  : "rgba(255,251,235,0.96)",
+                            }}
+                          >
+                            {warning}
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                    {[
+                      { label: "State", value: entry.supabase?.editorial_state ?? entry.mock?.editorial_state ?? "n/d" },
+                      {
+                        label: "Order",
+                        value: String(
+                          entry.supabase?.editorial_order ??
+                            entry.mock?.editorial_order ??
+                            999,
+                        ),
+                      },
+                      {
+                        label: "Slot",
+                        value:
+                          entry.supabase?.featured_slot ??
+                          entry.mock?.featured_slot ??
+                          "nessuno",
+                      },
+                    ].map((item) => (
+                      <div
+                        key={item.label}
+                        className="rounded-[22px] border px-4 py-3"
+                        style={{
+                          borderColor: "var(--line)",
+                          background: "rgba(255,255,255,0.78)",
+                        }}
+                      >
+                        <p
+                          className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]"
+                          style={{ color: "var(--muted)" }}
+                        >
+                          {item.label}
+                        </p>
+                        <p className="mt-2 text-sm" style={{ color: "var(--muted-strong)" }}>
+                          {item.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    {entry.supabase ? (
+                      <Link
+                        href={`/admin/collections/${entry.supabase.id}`}
+                        className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                      >
+                        Apri collection reale
+                      </Link>
+                    ) : null}
+                    {runtime.canWrite && entry.import_status === "pending-import" ? (
+                      <form action={importMockCollectionsAction}>
+                        <input type="hidden" name="slug" value={entry.slug} />
+                        <button
+                          type="submit"
+                          className="button-shell button-primary w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
+                        >
+                          Importa slug
+                        </button>
+                      </form>
+                    ) : null}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
+          <div className="border-b pb-5">
+            <p className="editorial-label">Workspace views</p>
+            <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
+              {collectionViewOptions.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em]"
+                  style={{
+                    borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
+                    background: item.active
+                      ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
+                      : "rgba(255,255,255,0.78)",
+                    color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
+                  }}
+                >
+                  {item.label} ({item.count})
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-4 border-b pb-5">
+            <p className="editorial-label">State filters</p>
+            <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
+              {editorialStateOptions.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em]"
+                style={{
+                  borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
+                  background: item.active
+                    ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
+                    : "rgba(255,255,255,0.78)",
+                  color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
+                }}
+              >
+                {item.label} ({item.count})
+              </Link>
+            ))}
+          </div>
+          </div>
+
+          <div className="mt-6">
+            {filteredCollections.length > 0 ? (
+              <div className="space-y-4">
+                {filteredCollections.map((collection) => {
+                  const stateMeta = getCollectionEditorialStateMeta(collection.editorial_state);
+                  const surfaceMeta = getCollectionSurfaceMeta(collection.surface);
+                  const accessMeta = getCollectionAccessMeta(collection.access);
+                  const toneMeta = getCollectionToneMeta(collection.tone);
+                  const difficultyLabel = getCollectionDifficultyLabel(collection.difficulty);
+                  const issues = runtime.workspaceSnapshot.validation[collection.slug] ?? [];
+                  const transitionEntry = transitionEntriesBySlug.get(collection.slug) ?? null;
+                  const readiness = runtime.readinessBySlug[collection.slug] ?? null;
+                  const transitionSeverity = transitionEntry
+                    ? getCollectionTransitionSeverity(transitionEntry)
+                    : "clean";
+                  const transitionSeverityMeta =
+                    transitionEntry &&
+                    getCollectionTransitionSeverityMeta(transitionSeverity);
+                  const reviewMeta =
+                    transitionEntry &&
+                    getCollectionTransitionReviewMeta(
+                        getCollectionTransitionReviewState(transitionEntry),
+                      );
+                  const syncPreview = runtime.syncPreviewBySlug[collection.slug] ?? null;
+                  const syncPreviewMeta =
+                    syncPreview && getCollectionSyncPreviewMeta(syncPreview.state);
+                  const syncPreviewPosture = getCollectionSyncPreviewPosture({
+                    preview: syncPreview,
+                    readiness,
+                    entry: transitionEntry,
+                  });
+                  const lastSafeAlign = runtime.lastSafeAlignBySlug[collection.slug] ?? null;
+
+                  return (
+                    <article
+                      key={collection.id}
+                      className="grid gap-5 rounded-[var(--radius-lg)] border p-5 lg:grid-cols-[1.4fr_1fr_auto]"
+                      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+                    >
+                      <div className="space-y-4">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <h2 className="text-2xl">{collection.title}</h2>
+                          <span
+                            className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                          >
+                            {stateMeta.label}
+                          </span>
+                          <span
+                            className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                          >
+                            {surfaceMeta.label}
+                          </span>
+                          {readiness ? (
+                            <span
+                              className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                              style={{
+                                borderColor:
+                                  readiness.state === "blocked"
+                                    ? "rgba(139,58,43,0.18)"
+                                    : readiness.state === "review"
+                                      ? "rgba(161,105,47,0.18)"
+                                      : "rgba(15,118,110,0.18)",
+                                background:
+                                  readiness.state === "blocked"
+                                    ? "rgba(254,242,242,0.96)"
+                                    : readiness.state === "review"
+                                      ? "rgba(255,251,235,0.96)"
+                                      : "rgba(236,253,245,0.95)",
+                              }}
+                            >
+                              {readiness.label}
+                            </span>
+                          ) : null}
+                          {transitionSeverityMeta ? (
+                            <span
+                              className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                              style={{
+                                borderColor:
+                                  transitionSeverity === "critical-conflict"
+                                    ? "rgba(139,58,43,0.18)"
+                                    : transitionSeverity === "minor-drift" ||
+                                        transitionSeverity === "pending"
+                                      ? "rgba(161,105,47,0.18)"
+                                      : "rgba(15,118,110,0.18)",
+                                background:
+                                  transitionSeverity === "critical-conflict"
+                                    ? "rgba(254,242,242,0.96)"
+                                    : transitionSeverity === "minor-drift" ||
+                                        transitionSeverity === "pending"
+                                      ? "rgba(255,251,235,0.96)"
+                                      : "rgba(236,253,245,0.95)",
+                              }}
+                            >
+                              {transitionSeverityMeta.label}
+                            </span>
+                          ) : null}
+                          {reviewMeta ? (
+                            <span
+                              className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                              style={{
+                                borderColor:
+                                  reviewMeta.label === "Reviewed"
+                                    ? "rgba(15,118,110,0.18)"
+                                    : reviewMeta.label === "Dismissed"
+                                      ? "rgba(112,82,255,0.16)"
+                                      : "rgba(161,105,47,0.18)",
+                                background:
+                                  reviewMeta.label === "Reviewed"
+                                    ? "rgba(236,253,245,0.95)"
+                                    : reviewMeta.label === "Dismissed"
+                                      ? "rgba(245,242,255,0.92)"
+                                      : "rgba(255,251,235,0.96)",
+                              }}
+                            >
+                              {reviewMeta.label}
+                            </span>
+                          ) : null}
+                          {syncPreviewMeta ? (
+                            <span
+                              className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                              style={{
+                                borderColor:
+                                  syncPreview?.state === "safe-align-ready"
+                                    ? "rgba(15,118,110,0.18)"
+                                    : "rgba(161,105,47,0.18)",
+                                background:
+                                  syncPreview?.state === "safe-align-ready"
+                                    ? "rgba(236,253,245,0.95)"
+                                    : "rgba(255,251,235,0.96)",
+                              }}
+                            >
+                              {syncPreviewMeta.label}
+                            </span>
+                          ) : null}
+                          {issues.length > 0 ? (
+                            <span
+                              className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
+                            >
+                              {issues.length} warning
+                            </span>
+                          ) : null}
+                          {lastSafeAlign ? (
+                            <span
+                              className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                              style={{
+                                borderColor: "rgba(112,82,255,0.16)",
+                                background: "rgba(245,242,255,0.92)",
+                              }}
+                            >
+                              Safe aligned
+                            </span>
+                          ) : null}
+                        </div>
+
+                        <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
+                          {collection.description}
+                        </p>
+
+                        {readiness ? (
+                          <div
+                            className="rounded-[22px] border px-4 py-3 text-sm"
+                            style={{
+                              borderColor:
+                                readiness.state === "blocked"
+                                  ? "rgba(139,58,43,0.18)"
+                                  : readiness.state === "review"
+                                    ? "rgba(161,105,47,0.18)"
+                                    : "rgba(15,118,110,0.18)",
+                              background:
+                                readiness.state === "blocked"
+                                  ? "rgba(254,242,242,0.96)"
+                                  : readiness.state === "review"
+                                    ? "rgba(255,251,235,0.96)"
+                                    : "rgba(236,253,245,0.95)",
+                            }}
+                          >
+                            {readiness.summary}
+                          </div>
+                        ) : null}
+
+                        {syncPreview ? (
+                          <div
+                            className="rounded-[22px] border px-4 py-3 text-sm"
+                            style={{
+                              borderColor:
+                                syncPreviewPosture.tone === "error"
+                                  ? "rgba(139,58,43,0.18)"
+                                  : syncPreviewPosture.tone === "warning"
+                                    ? "rgba(161,105,47,0.18)"
+                                    : "rgba(15,118,110,0.18)",
+                              background:
+                                syncPreviewPosture.tone === "error"
+                                  ? "rgba(254,242,242,0.96)"
+                                  : syncPreviewPosture.tone === "warning"
+                                    ? "rgba(255,251,235,0.96)"
+                                    : "rgba(236,253,245,0.95)",
+                            }}
+                          >
+                            <strong>{syncPreviewPosture.label}:</strong> {syncPreview.summary}
+                          </div>
+                        ) : null}
+
+                        {lastSafeAlign ? (
+                          <div
+                            className="rounded-[20px] border px-4 py-3 text-sm"
+                            style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(245,242,255,0.92)" }}
+                          >
+                            Ultimo safe align: {formatItalianDate(lastSafeAlign.applied_at)} ·{" "}
+                            {lastSafeAlign.aligned_fields.join(", ")}
+                          </div>
+                        ) : null}
+
+                        <div
+                          className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]"
+                          style={{ color: "var(--muted)" }}
+                        >
+                          <span>Slug: {collection.slug}</span>
+                          <span>Tone: {toneMeta.label}</span>
+                          <span>Access: {accessMeta.subtleLabel}</span>
+                          <span>Difficolta`: {difficultyLabel}</span>
+                          <span>Order: {collection.editorial_order ?? 999}</span>
+                          {collection.featured_slot ? (
+                            <span>Slot: {getCollectionFeaturedSlotLabel(collection.featured_slot)}</span>
+                          ) : null}
+                        </div>
+
+                        {issues.length > 0 ? (
+                          <div className="grid gap-2">
+                            {issues.slice(0, 3).map((issue, index) => (
+                              <div
+                                key={`${collection.slug}-${index}`}
+                                className="rounded-[20px] border px-4 py-3 text-sm"
+                                style={{
+                                  borderColor:
+                                    issue.level === "error"
+                                      ? "rgba(139,58,43,0.18)"
+                                      : "rgba(161,105,47,0.18)",
+                                  background:
+                                    issue.level === "error"
+                                      ? "rgba(254,242,242,0.96)"
+                                      : "rgba(255,251,235,0.96)",
+                                }}
+                              >
+                                {issue.message}
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+
+                        {transitionSeverityMeta &&
+                        transitionSeverity !== "clean" &&
+                        transitionEntry ? (
+                          <div
+                            className="rounded-[20px] border px-4 py-3 text-sm"
+                            style={{
+                              borderColor:
+                                transitionSeverity === "critical-conflict"
+                                  ? "rgba(139,58,43,0.18)"
+                                  : "rgba(161,105,47,0.18)",
+                              background:
+                                transitionSeverity === "critical-conflict"
+                                  ? "rgba(254,242,242,0.96)"
+                                  : "rgba(255,251,235,0.96)",
+                            }}
+                          >
+                            <strong>{transitionSeverityMeta.label}:</strong>{" "}
+                            {transitionSeverityMeta.description}
+                          </div>
+                        ) : null}
+                      </div>
+
+                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                        {[
+                          {
+                            label: "Tool inclusi",
+                            value: String(collection.included_tools.length),
+                          },
+                          {
+                            label: "Aggiornato",
+                            value: formatItalianDate(collection.updated_at),
+                          },
+                          {
+                            label: "Pubblico",
+                            value:
+                              collection.editorial_state === "published" ||
+                              collection.editorial_state === "featured"
+                                ? "Si`"
+                                : "No",
+                          },
+                        ].map((item) => (
+                          <div
+                            key={item.label}
+                            className="rounded-[22px] border px-4 py-3"
+                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                          >
+                            <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                              {item.label}
+                            </p>
+                            <p className="mt-2 text-sm" style={{ color: "var(--muted-strong)" }}>
+                              {item.value}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex flex-col gap-3">
+                        <Link
+                          href={`/admin/collections/${collection.id}`}
+                          className="button-shell button-primary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold text-white"
+                        >
+                          Apri dettaglio
+                        </Link>
+                        {(collection.editorial_state === "published" ||
+                          collection.editorial_state === "featured") && (
+                          <Link
+                            href={`/collections/${collection.slug}`}
+                            className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                          >
+                            Vedi public page
+                          </Link>
+                        )}
+                        {transitionEntry ? (
+                          <Link
+                            href={
+                              syncPreview?.state === "safe-align-ready"
+                                ? "/admin/collections/review?view=alignable"
+                                : transitionSeverity !== "clean"
+                                ? "/admin/collections/review?view=conflict"
+                                  : "/admin/collections/review"
+                            }
+                            className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                          >
+                            Apri review
+                          </Link>
+                        ) : null}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <AdminEmptyState
+                title={
+                  selectedState
+                    ? `Nessuna collection in stato ${getCollectionEditorialStateMeta(selectedState).label}`
+                    : "Nessuna collection disponibile"
+                }
+                description={
+                  runtime.canWrite
+                    ? "Puoi iniziare creando la prima collection nel repository editoriale Supabase."
+                    : "La surface interna legge ancora il source snapshot. Attiva il write path Supabase per iniziare a creare e gestire collection da qui."
+                }
+                ctaHref={runtime.canWrite ? "/admin/collections/new" : undefined}
+                ctaLabel={runtime.canWrite ? "Crea la prima collection" : undefined}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
