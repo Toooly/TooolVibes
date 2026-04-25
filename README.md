@@ -117,13 +117,15 @@ npm run dev
 
 4. Apri [http://localhost:3000](http://localhost:3000)
 
-## GitHub + Netlify deploy rapido
+## GitHub + Cloudflare deploy rapido
 
-Netlify supporta Next.js App Router con configurazione quasi zero. In questo repo ho lasciato solo il wiring minimo e pulito:
+Questo repo e` ora cablato per Cloudflare Workers usando l'adapter OpenNext ufficiale per Next.js. I file chiave sono:
 
-- `netlify.toml` con `npm run build` e publish `.next`
-- `.nvmrc` per allineare la major Node locale e di build
-- nessun pin del vecchio plugin `@netlify/plugin-nextjs`
+- `wrangler.jsonc` per runtime, assets e binding Cloudflare
+- `open-next.config.ts` per l'adapter OpenNext
+- `next.config.ts` con `initOpenNextCloudflareForDev()` per far lavorare bene `next dev`
+- `.dev.vars.example` per la preview locale nel runtime Workers
+- `.env.example` per le env applicative condivise tra sviluppo, build e deploy
 
 ### 1. Push su GitHub
 
@@ -132,7 +134,7 @@ Se il repo remoto esiste gia`, il flusso minimo e`:
 ```bash
 git status
 git add .
-git commit -m "Prepare repo for GitHub and Netlify deploy"
+git commit -m "Prepare repo for Cloudflare deploy"
 git push -u origin main
 ```
 
@@ -143,23 +145,28 @@ git remote add origin git@github.com:YOUR-USER/YOUR-REPO.git
 git push -u origin main
 ```
 
-### 2. Collega il repo a Netlify
+### 2. File env per sviluppo e preview
 
-1. Vai su Netlify e scegli `Add new project` -> `Import an existing project`
-2. Collega GitHub e seleziona il repo
-3. Netlify rilevera` Next.js automaticamente
-4. Verifica i build settings:
-   - Build command: `npm run build`
-   - Publish directory: `.next`
-5. Aggiungi le env in `Site configuration -> Environment variables`
-6. Avvia il primo deploy
+Per il normale sviluppo Next.js puoi continuare a usare `.env.local`:
 
-### 3. Env da impostare su Netlify
+```bash
+cp .env.example .env.local
+```
+
+Per testare davvero il runtime Cloudflare in locale usa invece `.dev.vars`:
+
+```bash
+cp .dev.vars.example .dev.vars
+```
+
+Cloudflare raccomanda di usare `.dev.vars` o `.env` per i secret locali, ma non entrambi nello stesso flusso di `wrangler dev`.
+
+### 3. Env da impostare su Cloudflare
 
 #### Obbligatorie
 
 ```env
-NEXT_PUBLIC_SITE_URL=https://YOUR-SITE.netlify.app
+NEXT_PUBLIC_SITE_URL=https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev
 ```
 
 #### Obbligatorie se vuoi usare Supabase come source pubblico
@@ -170,6 +177,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 ```
 
 #### Opzionali ma raccomandate per workspace persistente, auth handoff e admin reale
+
+Queste vanno trattate come secret in Cloudflare:
 
 ```env
 SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
@@ -182,7 +191,43 @@ TOOOLVIBES_ADMIN_PASSWORD=una-password-temp-solida
 TOOOLVIBES_COLLECTIONS_SOURCE=auto
 ```
 
-### 4. Checklist post-deploy
+Se usi Cloudflare Workers Builds con repo Git collegata, aggiungi queste chiavi anche nella sezione `Build Variables and secrets`, non solo nel runtime del Worker. I docs Cloudflare segnalano che il build di Next.js ha bisogno sia delle `NEXT_PUBLIC_*` sia delle env server-side per inlining e pagine statiche.
+
+### 4. Comandi locali utili
+
+```bash
+npm run dev
+```
+
+Avvia il dev server Next.js classico.
+
+```bash
+npm run preview
+```
+
+Costruisce l'app con OpenNext e la esegue localmente nel runtime Cloudflare Workers.
+
+```bash
+npm run deploy
+```
+
+Costruisce l'app e la deploya su Cloudflare Workers.
+
+```bash
+npm run cf-typegen
+```
+
+Rigenera i tipi delle binding Cloudflare se cambi `wrangler.jsonc`.
+
+### 5. Collega il repo a Cloudflare
+
+1. Vai in `Cloudflare Dashboard -> Workers & Pages`
+2. Crea un nuovo progetto Workers collegato al repo GitHub
+3. Lascia come deploy command `npm run deploy` oppure usa il default `npx wrangler deploy` se vuoi demandare tutto a Wrangler
+4. In `Build Variables and secrets` inserisci le env applicative richieste dal progetto
+5. Se usi un dominio custom, collega il dominio al Worker dopo il primo deploy
+
+### 6. Checklist post-deploy
 
 Dopo il primo deploy controlla subito:
 
@@ -191,12 +236,12 @@ Dopo il primo deploy controlla subito:
 3. `/account` e la route `/auth/callback`
 4. `/admin/login` solo se hai impostato `TOOOLVIBES_ADMIN_PASSWORD`
 5. se usi Supabase Auth, aggiungi in Supabase:
-   - `https://YOUR-SITE.netlify.app/auth/callback`
+   - `https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev/auth/callback`
    - il dominio custom equivalente, se presente
 
-### 5. Nota importante sul runtime Next.js
+### 7. Nota importante sul runtime Next.js
 
-Secondo i docs ufficiali Netlify recenti, Next.js 13.5+ e App Router sono supportati con adattatore OpenNext gestito da Netlify. Per questo repo non serve aggiungere o pinare il vecchio plugin `@netlify/plugin-nextjs`, a meno che tu non voglia deliberatamente forzare una versione specifica.
+Secondo i docs ufficiali Cloudflare aggiornati, Next.js su Workers va configurato con `@opennextjs/cloudflare`, un file `wrangler.jsonc`, `nodejs_compat` attivo e una `compatibility_date` recente. Per questo repo la build Cloudflare non passa piu` da Netlify e non usa piu` `netlify.toml`.
 
 ## Setup Supabase
 

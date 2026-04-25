@@ -8,7 +8,7 @@ const compat = new FlatCompat({ baseDirectory: __dirname });
 
 const eslintConfig = [
   {
-    ignores: [".next/**", "next-env.d.ts"],
+    ignores: [".next/**", "next-env.d.ts", "cloudflare-env.d.ts"],
   },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];

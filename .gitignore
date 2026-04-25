@@ -4,6 +4,8 @@
 # next.js
 /.next
 /out
+.open-next
+.wrangler
 .netlify
 
 # production
@@ -29,6 +31,8 @@ pnpm-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.dev.vars*
+!.dev.vars.example
 
 # vercel
 .vercel
@@ -36,3 +40,4 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+cloudflare-env.d.ts
