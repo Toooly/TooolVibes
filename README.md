@@ -223,8 +223,8 @@ Rigenera i tipi delle binding Cloudflare se cambi `wrangler.jsonc`.
 
 1. Vai in `Cloudflare Dashboard -> Workers & Pages`
 2. Crea un nuovo progetto Workers collegato al repo GitHub
-3. Usa come build command `npm run build`
-4. Usa come deploy command `npx wrangler deploy` oppure `npm run deploy`
+3. Usa come build command `npx opennextjs-cloudflare build`
+4. Usa come deploy command `npx wrangler deploy` oppure `npx opennextjs-cloudflare deploy`
 5. In `Build Variables and secrets` inserisci le env applicative richieste dal progetto
 6. Se usi un dominio custom, collega il dominio al Worker dopo il primo deploy
 
