@@ -2,11 +2,18 @@ import Link from "next/link";
 
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import { formatItalianDate } from "@/lib/utils";
+import { cn, formatItalianDate } from "@/lib/utils";
 
 type DirectoryToolCardProps = {
   tool: DirectoryTool;
   priority?: boolean;
+};
+
+const levelStyles: Record<DirectoryTool["level"], string> = {
+  featured: "bg-[rgba(109,59,255,0.12)] text-[var(--accent-strong)]",
+  beginner: "bg-[rgba(34,197,94,0.1)] text-[#157347]",
+  intermediate: "bg-[rgba(14,165,233,0.11)] text-[#075985]",
+  expert: "bg-[rgba(31,19,93,0.1)] text-[var(--foreground)]",
 };
 
 export function DirectoryToolCard({
@@ -14,54 +21,49 @@ export function DirectoryToolCard({
   priority = false,
 }: DirectoryToolCardProps) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[30px] border border-[rgba(76,55,166,0.12)] bg-white/92 shadow-[0_18px_50px_rgba(35,18,95,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(108,76,255,0.26)] hover:shadow-[0_26px_64px_rgba(40,19,112,0.14)]">
+    <article className="group flex h-full min-h-[34rem] flex-col overflow-hidden rounded-[30px] border border-[rgba(76,55,166,0.12)] bg-white/92 shadow-[0_18px_50px_rgba(35,18,95,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(108,76,255,0.26)] hover:shadow-[0_26px_64px_rgba(40,19,112,0.14)]">
       <div
         className="overflow-hidden border-b border-[rgba(76,55,166,0.08)] p-5 sm:p-6"
         style={{
           background: `radial-gradient(circle at top right, ${tool.accentFrom}22, transparent 36%), radial-gradient(circle at bottom left, ${tool.accentTo}22, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,240,255,0.94))`,
         }}
       >
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="flex min-w-0 flex-1 items-start gap-3">
-            <DirectoryToolGlyph
-              tool={tool}
-              size="lg"
-              className={
-                priority ? "shadow-[0_16px_30px_rgba(92,60,255,0.18)]" : ""
-              }
-            />
+        <div className="flex items-start gap-3">
+          <DirectoryToolGlyph
+            tool={tool}
+            size="lg"
+            className={priority ? "shadow-[0_16px_30px_rgba(92,60,255,0.18)]" : ""}
+          />
 
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                {tool.toolOfWeek ? (
-                  <span className="rounded-full bg-[rgba(109,59,255,0.12)] px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
-                    Tool della settimana
-                  </span>
-                ) : null}
-                {tool.featured && !tool.toolOfWeek ? (
-                  <span className="rounded-full bg-[rgba(67,198,255,0.12)] px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
-                    In evidenza
-                  </span>
-                ) : null}
-              </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex min-h-[2rem] flex-wrap items-center gap-2">
+              {tool.toolOfWeek ? (
+                <span className="rounded-full bg-[rgba(109,59,255,0.12)] px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+                  Tool della settimana
+                </span>
+              ) : null}
+              <span
+                className={cn(
+                  "rounded-full px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]",
+                  levelStyles[tool.level],
+                )}
+              >
+                {tool.levelLabel}
+              </span>
+            </div>
 
-              <div className="mt-3 min-h-[4.8rem]">
-                <h3 className="text-[1.45rem] leading-[1.02] text-[var(--foreground)]">
-                  {tool.name}
-                </h3>
-                <p className="mt-2 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
-                  {tool.categoryLabel}
-                </p>
-              </div>
+            <div className="mt-3 min-h-[5.2rem]">
+              <h3 className="text-[1.45rem] leading-[1.02] text-[var(--foreground)]">
+                {tool.name}
+              </h3>
+              <p className="mt-2 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+                {tool.categoryLabel}
+              </p>
             </div>
           </div>
-
-          <span className="rounded-full border border-white/50 bg-white/82 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
-            {tool.category}
-          </span>
         </div>
 
-        <div className="mt-5 flex min-h-[3rem] flex-wrap content-start gap-2">
+        <div className="mt-5 flex min-h-[3.1rem] flex-wrap content-start gap-2">
           {tool.highlights.slice(0, 3).map((item) => (
             <span
               key={item}
@@ -77,24 +79,24 @@ export function DirectoryToolCard({
         <div className="grid grid-cols-2 gap-3 rounded-[22px] border border-[rgba(76,55,166,0.08)] bg-[rgba(246,244,255,0.76)] px-4 py-3">
           <div>
             <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-              Pubblicato
+              Livello
             </p>
             <p className="mt-2 text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
-              {formatItalianDate(tool.publishedAt)}
+              {tool.levelLabel}
             </p>
           </div>
           <div>
             <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-              Lettura
+              Fonte
             </p>
-            <p className="mt-2 text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
-              {tool.readingTime}
+            <p className="mt-2 truncate text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+              {tool.domain}
             </p>
           </div>
         </div>
 
         <div className="mt-5 space-y-4">
-          <p className="text-[0.98rem] leading-7 text-[var(--muted-strong)]">
+          <p className="min-h-[5.25rem] text-[0.98rem] leading-7 text-[var(--muted-strong)]">
             {tool.description}
           </p>
 
@@ -128,9 +130,13 @@ export function DirectoryToolCard({
               href={`/toools/${tool.slug}`}
               className="inline-flex items-center justify-center rounded-full border border-[rgba(76,55,166,0.12)] bg-white px-4 py-3 text-sm font-semibold text-[var(--foreground)] transition-transform duration-200 hover:-translate-y-0.5"
             >
-              Scopri di più
+              Scopri di pi&ugrave;
             </Link>
           </div>
+
+          <p className="text-center text-[0.7rem] uppercase tracking-[0.16em] text-[var(--muted)]">
+            Aggiornato {formatItalianDate(tool.publishedAt)}
+          </p>
         </div>
       </div>
     </article>

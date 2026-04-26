@@ -1,15 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-import {
-  directoryFilterGroups,
-  type DirectoryFilterGroup,
-  type DirectoryTool,
-} from "@/lib/data/tooolvibes-directory";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 import { DirectoryToolCard } from "@/components/directory/directory-tool-card";
+import {
+  directoryFilterGroups,
+  directoryLevelFilters,
+  levelRank,
+  type DirectoryFilterGroup,
+  type DirectoryTool,
+  type DirectoryToolLevel,
+} from "@/lib/data/tooolvibes-directory";
+import { cn } from "@/lib/utils";
 
 type DirectoryBrowserProps = {
   tools: DirectoryTool[];
@@ -22,6 +25,8 @@ type DirectoryBrowserProps = {
   className?: string;
 };
 
+type SortMode = "recommended" | "name" | "level" | "category";
+
 function matchesTool(tool: DirectoryTool, query: string) {
   if (!query.trim()) {
     return true;
@@ -32,6 +37,7 @@ function matchesTool(tool: DirectoryTool, query: string) {
     tool.name,
     tool.category,
     tool.categoryLabel,
+    tool.levelLabel,
     tool.description,
     tool.longDescription,
     tool.whyItMatters,
@@ -57,7 +63,9 @@ export function DirectoryBrowser({
 }: DirectoryBrowserProps) {
   const [query, setQuery] = useState(initialQuery);
   const [activeGroup, setActiveGroup] = useState<DirectoryFilterGroup>(initialGroup);
+  const [activeLevel, setActiveLevel] = useState<DirectoryToolLevel | "all">("all");
   const [activeTag, setActiveTag] = useState(initialTag);
+  const [sortMode, setSortMode] = useState<SortMode>("recommended");
 
   const sortedTags = useMemo(() => {
     const counts = tools.reduce<Record<string, number>>((accumulator, tool) => {
@@ -70,19 +78,47 @@ export function DirectoryBrowser({
 
     return Object.entries(counts)
       .sort((left, right) => right[1] - left[1])
-      .slice(0, 8)
+      .slice(0, 10)
       .map(([tag]) => tag);
   }, [tools]);
 
   const filteredTools = useMemo(() => {
-    return tools.filter((tool) => {
+    const filtered = tools.filter((tool) => {
       const matchesGroup =
         activeGroup === "all" || tool.segments.includes(activeGroup);
+      const matchesLevel = activeLevel === "all" || tool.level === activeLevel;
       const matchesTag = !activeTag || tool.tags.includes(activeTag);
 
-      return matchesGroup && matchesTag && matchesTool(tool, query);
+      return matchesGroup && matchesLevel && matchesTag && matchesTool(tool, query);
     });
-  }, [activeGroup, activeTag, query, tools]);
+
+    return [...filtered].sort((left, right) => {
+      if (sortMode === "name") {
+        return left.name.localeCompare(right.name, "it");
+      }
+
+      if (sortMode === "level") {
+        return (
+          levelRank[left.level] - levelRank[right.level] ||
+          left.name.localeCompare(right.name, "it")
+        );
+      }
+
+      if (sortMode === "category") {
+        return (
+          left.categoryLabel.localeCompare(right.categoryLabel, "it") ||
+          left.name.localeCompare(right.name, "it")
+        );
+      }
+
+      return (
+        Number(right.toolOfWeek) - Number(left.toolOfWeek) ||
+        Number(right.featured) - Number(left.featured) ||
+        levelRank[left.level] - levelRank[right.level] ||
+        left.name.localeCompare(right.name, "it")
+      );
+    });
+  }, [activeGroup, activeLevel, activeTag, query, sortMode, tools]);
 
   const groupCounts = useMemo(() => {
     return Object.fromEntries(
@@ -93,6 +129,17 @@ export function DirectoryBrowser({
           : tools.filter((tool) => tool.segments.includes(group.key)).length,
       ]),
     ) as Record<DirectoryFilterGroup, number>;
+  }, [tools]);
+
+  const levelCounts = useMemo(() => {
+    return Object.fromEntries(
+      directoryLevelFilters.map((level) => [
+        level.key,
+        level.key === "all"
+          ? tools.length
+          : tools.filter((tool) => tool.level === level.key).length,
+      ]),
+    ) as Record<DirectoryToolLevel | "all", number>;
   }, [tools]);
 
   return (
@@ -118,23 +165,40 @@ export function DirectoryBrowser({
             {filteredTools.length}
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-            {tools.length} tool curati, link verificati e CTA pronte.
+            {tools.length} tool curati, livelli chiari e CTA pronte.
           </p>
         </div>
       </div>
 
-      <div className="grid gap-4 rounded-[32px] border border-[rgba(76,55,166,0.12)] bg-white/84 p-5 shadow-[0_18px_48px_rgba(31,19,93,0.06)] lg:grid-cols-[minmax(0,1.4fr)_auto] lg:items-center">
+      <div className="grid gap-5 rounded-[32px] border border-[rgba(76,55,166,0.12)] bg-white/84 p-5 shadow-[0_18px_48px_rgba(31,19,93,0.06)] lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-start">
         <div className="space-y-4">
-          <label className="block">
-            <span className="sr-only">Cerca tool, categoria o tag</span>
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Cerca per nome, categoria, tag o descrizione"
-              className="w-full rounded-[22px] border border-[rgba(76,55,166,0.12)] bg-[rgba(246,244,255,0.92)] px-4 py-3 text-[0.98rem] text-[var(--foreground)] outline-none transition-colors duration-200 placeholder:text-[var(--muted)] focus:border-[rgba(108,76,255,0.32)]"
-              aria-label="Cerca nei Toools"
-            />
-          </label>
+          <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_12rem]">
+            <label className="block">
+              <span className="sr-only">Cerca tool, categoria o tag</span>
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Cerca per nome, categoria, tag o descrizione"
+                className="w-full rounded-[22px] border border-[rgba(76,55,166,0.12)] bg-[rgba(246,244,255,0.92)] px-4 py-3 text-[0.98rem] text-[var(--foreground)] outline-none transition-colors duration-200 placeholder:text-[var(--muted)] focus:border-[rgba(108,76,255,0.32)]"
+                aria-label="Cerca nei Toools"
+              />
+            </label>
+
+            <label className="block">
+              <span className="sr-only">Ordina risultati</span>
+              <select
+                value={sortMode}
+                onChange={(event) => setSortMode(event.target.value as SortMode)}
+                className="h-full w-full rounded-[22px] border border-[rgba(76,55,166,0.12)] bg-white px-4 py-3 text-[0.9rem] font-semibold text-[var(--foreground)] outline-none transition-colors duration-200 focus:border-[rgba(108,76,255,0.32)]"
+                aria-label="Ordina risultati"
+              >
+                <option value="recommended">Consigliati</option>
+                <option value="name">Nome A-Z</option>
+                <option value="level">Livello</option>
+                <option value="category">Categoria</option>
+              </select>
+            </label>
+          </div>
 
           <div className="flex flex-wrap gap-2">
             {directoryFilterGroups.map((group) => {
@@ -160,13 +224,45 @@ export function DirectoryBrowser({
               );
             })}
           </div>
+
+          <div className="flex flex-wrap gap-2 border-t border-[rgba(76,55,166,0.08)] pt-4">
+            {directoryLevelFilters.map((level) => {
+              const isActive = activeLevel === level.key;
+
+              return (
+                <button
+                  key={level.key}
+                  type="button"
+                  onClick={() => setActiveLevel(level.key)}
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] transition-all duration-200",
+                    isActive
+                      ? "border-[rgba(108,76,255,0.3)] bg-[rgba(31,19,93,0.92)] text-white"
+                      : "border-[rgba(76,55,166,0.12)] bg-white text-[var(--muted-strong)] hover:border-[rgba(108,76,255,0.2)]",
+                  )}
+                >
+                  <span>{level.label}</span>
+                  <span
+                    className={cn(
+                      "rounded-full px-2 py-0.5 text-[0.66rem]",
+                      isActive
+                        ? "bg-white/14 text-white/76"
+                        : "bg-[rgba(246,244,255,0.92)] text-[var(--muted)]",
+                    )}
+                  >
+                    {levelCounts[level.key]}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="space-y-3">
           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
             Tag rapidi
           </p>
-          <div className="flex flex-wrap gap-2 lg:max-w-[20rem] lg:justify-end">
+          <div className="flex flex-wrap gap-2 lg:justify-end">
             {sortedTags.map((tag) => {
               const isActive = activeTag === tag;
 
@@ -205,8 +301,8 @@ export function DirectoryBrowser({
             Nessun tool corrisponde a questa combinazione.
           </h3>
           <p className="mx-auto mt-3 max-w-[34rem] text-[0.98rem] leading-7 text-[var(--muted-strong)]">
-            Prova a cambiare filtro, rimuovere un tag o usare una ricerca più ampia. L&apos;idea è
-            aiutarti a stringere il campo, non a bloccarti.
+            Prova a cambiare filtro, rimuovere un tag o usare una ricerca pi&ugrave;
+            ampia. L&apos;idea &egrave; aiutarti a stringere il campo, non a bloccarti.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <button
@@ -214,12 +310,19 @@ export function DirectoryBrowser({
               onClick={() => {
                 setQuery("");
                 setActiveGroup("all");
+                setActiveLevel("all");
                 setActiveTag("");
               }}
               className="rounded-full border border-[rgba(76,55,166,0.12)] bg-white px-4 py-3 text-sm font-semibold text-[var(--foreground)]"
             >
               Reset filtri
             </button>
+            <Link
+              href="/wishlist"
+              className="rounded-full bg-[linear-gradient(135deg,var(--accent),#8a61ff)] px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(95,66,255,0.18)]"
+            >
+              Suggerisci un Toool
+            </Link>
           </div>
         </div>
       )}

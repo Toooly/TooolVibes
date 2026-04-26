@@ -65,12 +65,12 @@ export function AccountPanel() {
           ? "Accesso attivabile"
           : "Sessione locale";
   const continuityCopy = account.isAttaching
-    ? "Stiamo riallineando shortlist, compare e note con l'account corrente senza perdere il lavoro gia` fatto."
+    ? "Stiamo riallineando shortlist, compare e note con l'account corrente senza perdere il lavoro già fatto."
     : account.status === "authenticated"
-      ? "La selezione e` agganciata all'account e resta pronta quando torni da un altro browser o da una nuova sessione."
+      ? "La selezione è agganciata all'account e resta pronta quando torni da un altro browser o da una nuova sessione."
       : account.authEnabled
-        ? "La selezione esiste gia` e puo` essere collegata con un magic link senza ricominciare da zero."
-        : "La selezione resta nel browser finche' auth e sync remota non vengono attivate.";
+        ? "La selezione esiste già e può essere collegata con un magic link senza ricominciare da zero."
+        : "La selezione resta nel browser finché auth e sync remota non vengono attivate.";
   const authMessageTone =
     account.authMessage?.includes("non disponibile") ||
     account.authMessage?.includes("pausa") ||

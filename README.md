@@ -191,6 +191,16 @@ TOOOLVIBES_ADMIN_PASSWORD=una-password-temp-solida
 TOOOLVIBES_COLLECTIONS_SOURCE=auto
 ```
 
+#### Opzionale per Product Hunt live ranking
+
+Imposta questo secret solo lato server/runtime. Non usare il prefisso `NEXT_PUBLIC_`.
+
+```env
+PRODUCTHUNT_TOKEN=YOUR_PRODUCT_HUNT_DEVELOPER_TOKEN
+```
+
+La home e la pagina `/product-hunt` mostrano un fallback pulito se il token non è presente.
+
 Se usi Cloudflare Workers Builds con repo Git collegata, aggiungi queste chiavi anche nella sezione `Build Variables and secrets`, non solo nel runtime del Worker. I docs Cloudflare segnalano che il build di Next.js ha bisogno sia delle `NEXT_PUBLIC_*` sia delle env server-side per inlining e pagine statiche.
 
 ### 4. Comandi locali utili

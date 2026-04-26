@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import { DirectoryToolCard } from "@/components/directory/directory-tool-card";
+import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
+import { siteConfig } from "@/lib/config/site";
 import {
   directoryTools,
   getDirectoryToolBySlug,
   getRelatedDirectoryTools,
 } from "@/lib/data/tooolvibes-directory";
-import { siteConfig } from "@/lib/config/site";
 import { formatItalianDate } from "@/lib/utils";
 
 type ToolPageProps = {
@@ -52,6 +52,10 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
   }
 
   const relatedTools = getRelatedDirectoryTools(tool, 3);
+  const sourceHref =
+    tool.sourceSite === "weblium"
+      ? "https://tooolvibes.weblium.site/all-tools"
+      : tool.originalArticleUrl;
 
   return (
     <div className="page-shell space-y-6 pb-16 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
@@ -79,6 +83,9 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               <span className="rounded-full bg-[rgba(109,59,255,0.1)] px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
                 {tool.categoryLabel}
               </span>
+              <span className="rounded-full bg-white/78 px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+                {tool.levelLabel}
+              </span>
               {tool.toolOfWeek ? (
                 <span className="rounded-full bg-[rgba(67,198,255,0.12)] px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
                   Tool della settimana
@@ -101,7 +108,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               <span>{tool.domain}</span>
             </div>
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
                 href={tool.url}
                 target="_blank"
@@ -110,13 +117,19 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               >
                 {tool.ctaLabel}
               </a>
-              <a
-                href={tool.originalArticleUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/wishlist"
                 className="inline-flex items-center justify-center rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-5 py-3.5 text-sm font-semibold text-[var(--foreground)] transition-transform duration-200 hover:-translate-y-0.5"
               >
-                Leggi l&apos;articolo originale
+                Suggerisci alternativa
+              </Link>
+              <a
+                href={sourceHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-[rgba(83,63,170,0.12)] bg-white/72 px-5 py-3.5 text-sm font-semibold text-[var(--foreground)] transition-transform duration-200 hover:-translate-y-0.5"
+              >
+                Fonte originale
               </a>
             </div>
           </div>
@@ -198,7 +211,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
             Quando usarlo
           </p>
           <h2 className="mt-3 text-[1.7rem] leading-[0.98] text-[var(--foreground)]">
-            I casi in cui {tool.name} ha più senso.
+            I casi in cui {tool.name} ha pi&ugrave; senso.
           </h2>
           <div className="mt-5 grid gap-3">
             {tool.useCases.map((item, index) => (
@@ -219,7 +232,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
 
         <article className="rounded-[32px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_18px_54px_rgba(35,18,95,0.08)] sm:p-6">
           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-            Perché conta
+            Perch&eacute; conta
           </p>
           <h2 className="mt-3 text-[1.7rem] leading-[0.98] text-[var(--foreground)]">
             Il punto editoriale dietro la selezione.
@@ -242,12 +255,12 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 {tool.ctaLabel}
               </a>
               <a
-                href={tool.originalArticleUrl}
+                href={sourceHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-4 py-3 text-sm font-semibold text-[var(--foreground)]"
               >
-                Apri la pagina originale TooolVibes
+                Apri la fonte originale TooolVibes
               </a>
             </div>
           </div>
@@ -262,7 +275,8 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 Tool correlati
               </p>
               <h2 className="mt-3 text-[1.9rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.5rem]">
-                Se ti interessa {tool.name}, questi sono i confronti più naturali.
+                Se ti interessa {tool.name}, questi sono i confronti pi&ugrave;
+                naturali.
               </h2>
             </div>
           </div>

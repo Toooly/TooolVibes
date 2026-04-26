@@ -388,11 +388,11 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               description={
                 hasFullAccess
                   ? isAdvancedIssue
-                    ? "La deep issue racconta il perche', ma il motore resta operativo: puoi salvare, confrontare e aprire i profili senza uscire dal formato."
+                    ? "La deep issue racconta il perché, ma il motore resta operativo: puoi salvare, confrontare e aprire i profili senza uscire dal formato."
                     : "Ogni slot ha un ruolo chiaro dentro la collection. Puoi salvare i tool, portarli nel compare e aprire il profilo singolo senza perdere il filo."
                   : isAdvancedIssue
-                    ? "La preview narrativa resta leggibile, ma il layer completo conserva piu' moduli editoriali e una lettura piu' profonda del ruolo di ogni tool."
-                    : "Vedi gli snodi principali della collection e puoi comunque salvare i tool piu' convincenti, portarli nel compare e capire se vale lo sblocco."
+                    ? "La preview narrativa resta leggibile, ma il layer completo conserva più moduli editoriali e una lettura più profonda del ruolo di ogni tool."
+                    : "Vedi gli snodi principali della collection e puoi comunque salvare i tool più convincenti, portarli nel compare e capire se vale lo sblocco."
               }
             />
 

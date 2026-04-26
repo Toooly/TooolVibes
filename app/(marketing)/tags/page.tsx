@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-import { directoryFilterGroups, directoryTools, getDirectoryTags } from "@/lib/data/tooolvibes-directory";
+import {
+  directoryFilterGroups,
+  directoryTools,
+  getDirectoryTags,
+} from "@/lib/data/tooolvibes-directory";
 
 export default function TagsPage() {
   const tagCounts = Object.entries(getDirectoryTags()).sort(
@@ -12,14 +16,14 @@ export default function TagsPage() {
       <section className="overflow-hidden rounded-[38px] border border-[rgba(83,63,170,0.12)] bg-[linear-gradient(135deg,#fdfcff_0%,#f5f0ff_44%,#eef2ff_100%)] px-5 py-6 shadow-[0_24px_72px_rgba(38,21,104,0.08)] sm:px-7 sm:py-8">
         <div className="max-w-[44rem]">
           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
-            Tags
+            Categories & Tags
           </p>
           <h1 className="mt-4 text-[2.3rem] leading-[0.95] text-[var(--foreground)] sm:max-w-[14ch] sm:text-[3.2rem]">
-            Esplora TooolVibes per tag, stack e famiglie di utilizzo.
+            Esplora TooolVibes per stack, livello e caso d&apos;uso.
           </h1>
           <p className="mt-5 max-w-[40rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
-            I tag qui servono davvero: ti aiutano a stringere il campo più rapidamente e a leggere
-            il catalogo da un angolo più operativo.
+            Le categorie sono pensate per farti scegliere pi&ugrave; rapidamente: AI
+            builder, no-code, automation, customer support, video, marketing e agenti.
           </p>
         </div>
       </section>
@@ -31,7 +35,7 @@ export default function TagsPage() {
               Filtri guida
             </p>
             <h2 className="mt-3 text-[1.8rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.4rem]">
-              Le famiglie più utili per leggere il catalogo.
+              Le famiglie pi&ugrave; utili per leggere il catalogo.
             </h2>
           </div>
           <span className="rounded-full border border-[rgba(83,63,170,0.1)] bg-[rgba(246,244,255,0.86)] px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
@@ -60,8 +64,8 @@ export default function TagsPage() {
                     {group.label}
                   </h3>
                   <p className="mt-3 text-sm leading-6 text-[var(--muted-strong)]">
-                    {count} tool collegati. Apri l&apos;archivio e usa ricerca e filtri per arrivare al
-                    profilo giusto più velocemente.
+                    {count} tool collegati. Apri l&apos;archivio e usa ricerca, livello e
+                    tag per arrivare al profilo giusto pi&ugrave; velocemente.
                   </p>
                 </Link>
               );

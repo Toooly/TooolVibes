@@ -181,7 +181,7 @@ export function EditorialScorecard({
             )}
           >
             {description ??
-              "Una lettura sintetica per capire dove il tool entra bene nel workflow e dove resta piu' situazionale."}
+              "Una lettura sintetica per capire dove il tool entra bene nel workflow e dove resta più situazionale."}
           </p>
         </div>
       ) : null}

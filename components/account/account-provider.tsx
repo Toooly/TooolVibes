@@ -221,15 +221,15 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
 
       if (releaseResponse.ok && payload.meta.remote_available && payload.data) {
         applyDiscoveryWorkspaceState(payload.data, { source: "remote" });
-        setAuthMessage("Sei tornato in modalita` guest senza perdere la workspace corrente.");
+        setAuthMessage("Sei tornato in modalità guest senza perdere la workspace corrente.");
         window.dispatchEvent(new CustomEvent("tooolvibes:account-updated"));
       } else {
         setAuthMessage(
-          "Sei tornato in modalita` guest. La workspace resta disponibile in locale finche' il remoto non torna attivo.",
+          "Sei tornato in modalità guest. La workspace resta disponibile in locale finché il remoto non torna attivo.",
         );
       }
     } catch {
-      setAuthMessage("Disconnessione effettuata, ma il rilascio guest non e` stato confermato dal remoto.");
+      setAuthMessage("Disconnessione effettuata, ma il rilascio guest non è stato confermato dal remoto.");
     } finally {
       try {
         const client = getBrowserSupabaseClient();

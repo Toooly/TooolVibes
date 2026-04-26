@@ -13,13 +13,23 @@ import { siteConfig } from "@/lib/config/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
+  keywords: [
+    "AI tools",
+    "SaaS tools",
+    "no-code",
+    "vibe coding",
+    "automation",
+    "Product Hunt",
+    "TooolVibes",
+  ],
   icons: {
     icon: "/brand/tooolvibes-logo.png",
     shortcut: "/brand/tooolvibes-logo.png",
     apple: "/brand/tooolvibes-logo.png",
   },
   title: {
-    default: `${siteConfig.name} | Scopri i migliori tool AI, no-code e vibe coding`,
+    default: `${siteConfig.name} | AI tools, SaaS, no-code e vibe coding`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -38,6 +48,19 @@ export const metadata: Metadata = {
   },
 };
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteConfig.name,
+  url: siteConfig.url,
+  description: siteConfig.description,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${siteConfig.url}/archivio?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -45,7 +68,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it">
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

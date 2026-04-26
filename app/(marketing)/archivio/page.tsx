@@ -25,18 +25,18 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
             Archivio dei Toools
           </p>
           <h1 className="mt-4 text-[2.4rem] leading-[0.95] text-[var(--foreground)] sm:max-w-[14ch] sm:text-[3.4rem]">
-            La directory in cui cerchi meglio e scegli più in fretta.
+            La directory in cui cerchi meglio e scegli pi&ugrave; in fretta.
           </h1>
           <p className="mt-5 max-w-[40rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
-            Cerca per nome, categoria, tag e descrizione. Qui l&apos;archivio resta pulito, utile e
-            pronto a portarti direttamente al tool o alla scheda interna.
+            Cerca per nome, categoria, tag e descrizione. Qui l&apos;archivio resta
+            pulito, utile e pronto a portarti direttamente al tool o alla scheda interna.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
             {[
               `${directoryTools.length} tool verificati`,
               "Filtri client-side",
-              "Link referral e article link integrati",
+              "Link referral e source link integrati",
             ].map((item) => (
               <span
                 key={item}
