@@ -3,6 +3,7 @@ import "server-only";
 import { createClient } from "@supabase/supabase-js";
 
 import { getSupabaseAdminEnv } from "@/lib/supabase/env";
+import { createTimeoutFetch } from "@/lib/utils/timeout-fetch";
 
 export function createAdminSupabaseClient() {
   const { url, serviceRoleKey } = getSupabaseAdminEnv();
@@ -15,6 +16,9 @@ export function createAdminSupabaseClient() {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
+    },
+    global: {
+      fetch: createTimeoutFetch(),
     },
   });
 }

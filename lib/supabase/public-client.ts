@@ -3,6 +3,7 @@ import "server-only";
 import { createClient } from "@supabase/supabase-js";
 
 import { getSupabasePublicEnv } from "@/lib/supabase/env";
+import { createTimeoutFetch } from "@/lib/utils/timeout-fetch";
 
 export function isSupabasePublicEnabled() {
   const { url, anonKey } = getSupabasePublicEnv();
@@ -20,6 +21,9 @@ export function createPublicSupabaseClient() {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
+    },
+    global: {
+      fetch: createTimeoutFetch(),
     },
   });
 }

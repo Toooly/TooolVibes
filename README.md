@@ -228,7 +228,14 @@ Costruisce l'app con OpenNext e la esegue localmente nel runtime Cloudflare Work
 npm run deploy
 ```
 
-Costruisce l'app e la deploya su Cloudflare Workers.
+Deploya su Cloudflare Workers una build OpenNext gia` generata. Questo comando e`
+pensato per la fase Deploy di Workers Builds, dove la build e` gia` stata eseguita.
+
+```bash
+npm run deploy:local
+```
+
+Costruisce l'app e poi la deploya da locale.
 
 ```bash
 npm run cf-typegen
@@ -240,10 +247,13 @@ Rigenera i tipi delle binding Cloudflare se cambi `wrangler.jsonc`.
 
 1. Vai in `Cloudflare Dashboard -> Workers & Pages`
 2. Crea un nuovo progetto Workers collegato al repo GitHub
-3. Usa come build command `npx opennextjs-cloudflare build`
-4. Usa come deploy command `npx wrangler deploy` oppure `npx opennextjs-cloudflare deploy`
-5. In `Build Variables and secrets` inserisci le env applicative richieste dal progetto
-6. Se usi un dominio custom, collega il dominio al Worker dopo il primo deploy
+3. Usa come build command `npm run build:cloudflare`
+4. Usa come deploy command `npm run cloudflare:deploy`
+5. Per branch non production usa `npx opennextjs-cloudflare upload`
+6. Non usare `npm run build` come build command Cloudflare: serve solo a Next.js ed e` richiamato internamente da OpenNext
+7. Non usare `npm run deploy:local` come deploy command Cloudflare: rilancerebbe build + deploy nello stesso step
+8. In `Build Variables and secrets` inserisci le env applicative richieste dal progetto
+9. Se usi un dominio custom, collega il dominio al Worker dopo il primo deploy
 
 ### 6. Checklist post-deploy
 

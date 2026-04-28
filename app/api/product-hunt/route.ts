@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { createTimeoutFetch } from "@/lib/utils/timeout-fetch";
+
 type ProductHuntRange = "day" | "week" | "month";
 
 type ProductHuntItem = {
@@ -53,6 +55,7 @@ type ProductHuntGraphQlResponse = {
 
 const PRODUCT_HUNT_ENDPOINT = "https://api.producthunt.com/v2/api/graphql";
 const PRODUCT_HUNT_OAUTH_ENDPOINT = "https://api.producthunt.com/v2/oauth/token";
+const productHuntFetch = createTimeoutFetch(8000);
 
 const PRODUCT_HUNT_QUERY = /* GraphQL */ `
   query TooolVibesProductHuntTop(
@@ -161,7 +164,7 @@ async function getProductHuntToken(now: number) {
     return null;
   }
 
-  const response = await fetch(PRODUCT_HUNT_OAUTH_ENDPOINT, {
+  const response = await productHuntFetch(PRODUCT_HUNT_OAUTH_ENDPOINT, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -228,7 +231,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const { postedAfter, postedBefore } = getDateWindow(range);
-    const response = await fetch(PRODUCT_HUNT_ENDPOINT, {
+    const response = await productHuntFetch(PRODUCT_HUNT_ENDPOINT, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
