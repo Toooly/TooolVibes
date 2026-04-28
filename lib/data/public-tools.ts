@@ -76,8 +76,21 @@ const loadPublicToolsSnapshot = cache(async (): Promise<PublicToolsSnapshot> => 
   }
 
   try {
+    const supabaseTools = onlyPublished(await getPublicPublishedToolsFromSupabase()).map(
+      withEditorialOverlay,
+    );
+
+    if (supabaseTools.length === 0) {
+      return {
+        tools: onlyPublished(mockTools),
+        source: "mock",
+        requestedSource: "supabase",
+        warnings: ["supabase-empty-fallback"],
+      };
+    }
+
     return {
-      tools: onlyPublished(await getPublicPublishedToolsFromSupabase()).map(withEditorialOverlay),
+      tools: supabaseTools,
       source: "supabase",
       requestedSource: "supabase",
       warnings: [],
