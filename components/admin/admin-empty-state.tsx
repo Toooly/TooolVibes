@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 
 export function AdminEmptyState({
   title,
@@ -12,26 +12,19 @@ export function AdminEmptyState({
   ctaLabel?: string;
 }) {
   return (
-    <div
-      className="brand-panel rounded-[28px] px-6 py-8 text-center sm:px-8 sm:py-10"
-    >
-      <p className="pill mx-auto">Founders workspace</p>
-      <h2 className="text-2xl">{title}</h2>
+    <PremiumPanel tone="light" className="px-6 py-8 text-center sm:px-8 sm:py-10">
+      <PremiumBadge tone="accent" className="mx-auto">
+        Founders workspace
+      </PremiumBadge>
+      <h2 className="mt-4 text-2xl text-[var(--foreground)]">{title}</h2>
       <p className="mx-auto mt-3 max-w-2xl text-sm leading-7" style={{ color: "var(--muted)" }}>
         {description}
       </p>
       {ctaHref && ctaLabel ? (
-        <Link
-          href={ctaHref}
-          className="button-shell button-primary mt-6 inline-flex rounded-full px-5 py-3 text-sm font-semibold text-white"
-          style={{
-            background:
-              "linear-gradient(135deg, var(--accent-strong), var(--accent) 72%, var(--cyan))",
-          }}
-        >
+        <PremiumLink href={ctaHref} tone="primary" className="mt-6">
           {ctaLabel}
-        </Link>
+        </PremiumLink>
       ) : null}
-    </div>
+    </PremiumPanel>
   );
 }

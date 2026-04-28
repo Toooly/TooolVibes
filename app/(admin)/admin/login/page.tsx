@@ -1,5 +1,6 @@
 import { loginAdmin } from "@/app/(admin)/admin/actions";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { PremiumButton, PremiumPanel } from "@/components/ui/premium";
 import { isAdminSessionUnlocked } from "@/lib/admin/session";
 import { marketingStrings } from "@/lib/config/strings";
 import { redirect } from "next/navigation";
@@ -24,7 +25,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
       }}
     >
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-md items-start sm:items-center">
-        <div className="dark-panel brand-aura w-full rounded-[var(--radius-xl)] p-5 text-white sm:p-7">
+        <PremiumPanel tone="dark" className="w-full p-5 text-white sm:p-7">
           <div className="flex items-center gap-3">
             <BrandLogo size={52} priority />
             <div>
@@ -45,10 +46,8 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
               <input
                 type="password"
                 name="password"
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
+                className="premium-input w-full border-white/14 bg-white/8 text-white placeholder:text-white/40 focus:border-white/34"
                 style={{
-                  borderColor: "rgba(255,255,255,0.14)",
-                  background: "rgba(255,255,255,0.08)",
                   color: "white",
                 }}
                 required
@@ -59,18 +58,11 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
               <p className="text-sm font-medium text-[#ffd1ca]">Password non valida.</p>
             ) : null}
 
-            <button
-              type="submit"
-              className="w-full rounded-full px-5 py-3 text-sm font-semibold text-white"
-              style={{
-                background:
-                  "linear-gradient(135deg, var(--accent-strong), var(--accent) 70%, var(--cyan))",
-              }}
-            >
+            <PremiumButton type="submit" tone="primary" className="w-full">
               Accedi
-            </button>
+            </PremiumButton>
           </form>
-        </div>
+        </PremiumPanel>
       </div>
     </div>
   );

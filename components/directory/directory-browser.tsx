@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 
 import { DirectoryToolCard } from "@/components/directory/directory-tool-card";
+import { PremiumBadge, PremiumButton, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import {
   directoryFilterGroups,
   directoryLevelFilters,
@@ -146,10 +146,8 @@ export function DirectoryBrowser({
     <section className={cn("space-y-6", className)}>
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-[46rem]">
-          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
-            {eyebrow}
-          </p>
-          <h2 className="mt-3 text-[2rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.7rem]">
+          <PremiumBadge tone="accent">{eyebrow}</PremiumBadge>
+          <h2 className="text-display-card mt-4 text-[2.1rem] text-[var(--foreground)] sm:text-[2.85rem]">
             {title}
           </h2>
           <p className="mt-4 max-w-[40rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
@@ -157,7 +155,7 @@ export function DirectoryBrowser({
           </p>
         </div>
 
-        <div className="rounded-[26px] border border-[rgba(76,55,166,0.12)] bg-white/80 px-5 py-4 shadow-[0_18px_40px_rgba(32,19,99,0.06)]">
+        <div className="premium-card px-5 py-4">
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
             Risultati visibili
           </p>
@@ -170,7 +168,7 @@ export function DirectoryBrowser({
         </div>
       </div>
 
-      <div className="grid gap-5 rounded-[32px] border border-[rgba(76,55,166,0.12)] bg-white/84 p-5 shadow-[0_18px_48px_rgba(31,19,93,0.06)] lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-start">
+      <PremiumPanel tone="subtle" className="grid gap-5 p-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-start">
         <div className="space-y-4">
           <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_12rem]">
             <label className="block">
@@ -179,7 +177,7 @@ export function DirectoryBrowser({
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Cerca per nome, categoria, tag o descrizione"
-                className="w-full rounded-[22px] border border-[rgba(76,55,166,0.12)] bg-[rgba(246,244,255,0.92)] px-4 py-3 text-[0.98rem] text-[var(--foreground)] outline-none transition-colors duration-200 placeholder:text-[var(--muted)] focus:border-[rgba(108,76,255,0.32)]"
+                className="premium-input px-4 py-3 text-[0.98rem] placeholder:text-[var(--muted)]"
                 aria-label="Cerca nei Toools"
               />
             </label>
@@ -189,7 +187,7 @@ export function DirectoryBrowser({
               <select
                 value={sortMode}
                 onChange={(event) => setSortMode(event.target.value as SortMode)}
-                className="h-full w-full rounded-[22px] border border-[rgba(76,55,166,0.12)] bg-white px-4 py-3 text-[0.9rem] font-semibold text-[var(--foreground)] outline-none transition-colors duration-200 focus:border-[rgba(108,76,255,0.32)]"
+                className="premium-input h-full px-4 py-3 text-[0.9rem] font-semibold"
                 aria-label="Ordina risultati"
               >
                 <option value="recommended">Consigliati</option>
@@ -284,7 +282,7 @@ export function DirectoryBrowser({
             })}
           </div>
         </div>
-      </div>
+      </PremiumPanel>
 
       {filteredTools.length > 0 ? (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -305,7 +303,7 @@ export function DirectoryBrowser({
             ampia. L&apos;idea &egrave; aiutarti a stringere il campo, non a bloccarti.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <button
+            <PremiumButton
               type="button"
               onClick={() => {
                 setQuery("");
@@ -313,16 +311,13 @@ export function DirectoryBrowser({
                 setActiveLevel("all");
                 setActiveTag("");
               }}
-              className="rounded-full border border-[rgba(76,55,166,0.12)] bg-white px-4 py-3 text-sm font-semibold text-[var(--foreground)]"
+              tone="secondary"
             >
               Reset filtri
-            </button>
-            <Link
-              href="/wishlist"
-              className="rounded-full bg-[linear-gradient(135deg,var(--accent),#8a61ff)] px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(95,66,255,0.18)]"
-            >
+            </PremiumButton>
+            <PremiumLink href="/wishlist">
               Suggerisci un Toool
-            </Link>
+            </PremiumLink>
           </div>
         </div>
       )}

@@ -1,19 +1,20 @@
 import Link from "next/link";
 
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
+import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import { cn, formatItalianDate } from "@/lib/utils";
+import { formatItalianDate } from "@/lib/utils";
 
 type DirectoryToolCardProps = {
   tool: DirectoryTool;
   priority?: boolean;
 };
 
-const levelStyles: Record<DirectoryTool["level"], string> = {
-  featured: "bg-[rgba(109,59,255,0.12)] text-[var(--accent-strong)]",
-  beginner: "bg-[rgba(34,197,94,0.1)] text-[#157347]",
-  intermediate: "bg-[rgba(14,165,233,0.11)] text-[#075985]",
-  expert: "bg-[rgba(31,19,93,0.1)] text-[var(--foreground)]",
+const levelTone: Record<DirectoryTool["level"], "accent" | "success" | "neutral" | "dark"> = {
+  featured: "accent",
+  beginner: "success",
+  intermediate: "neutral",
+  expert: "dark",
 };
 
 export function DirectoryToolCard({
@@ -21,7 +22,7 @@ export function DirectoryToolCard({
   priority = false,
 }: DirectoryToolCardProps) {
   return (
-    <article className="group flex h-full min-h-[34rem] flex-col overflow-hidden rounded-[30px] border border-[rgba(76,55,166,0.12)] bg-white/92 shadow-[0_18px_50px_rgba(35,18,95,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(108,76,255,0.26)] hover:shadow-[0_26px_64px_rgba(40,19,112,0.14)]">
+    <article className="premium-card group flex h-full min-h-[31rem] flex-col rounded-[30px]">
       <div
         className="overflow-hidden border-b border-[rgba(76,55,166,0.08)] p-5 sm:p-6"
         style={{
@@ -38,22 +39,13 @@ export function DirectoryToolCard({
           <div className="min-w-0 flex-1">
             <div className="flex min-h-[2rem] flex-wrap items-center gap-2">
               {tool.toolOfWeek ? (
-                <span className="rounded-full bg-[rgba(109,59,255,0.12)] px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
-                  Tool della settimana
-                </span>
+                <PremiumBadge tone="warning">Tool della settimana</PremiumBadge>
               ) : null}
-              <span
-                className={cn(
-                  "rounded-full px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]",
-                  levelStyles[tool.level],
-                )}
-              >
-                {tool.levelLabel}
-              </span>
+              <PremiumBadge tone={levelTone[tool.level]}>{tool.levelLabel}</PremiumBadge>
             </div>
 
-            <div className="mt-3 min-h-[5.2rem]">
-              <h3 className="text-[1.45rem] leading-[1.02] text-[var(--foreground)]">
+            <div className="mt-3 min-h-[4.7rem]">
+              <h3 className="text-display-card text-[1.5rem] text-[var(--foreground)]">
                 {tool.name}
               </h3>
               <p className="mt-2 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
@@ -96,7 +88,7 @@ export function DirectoryToolCard({
         </div>
 
         <div className="mt-5 space-y-4">
-          <p className="min-h-[5.25rem] text-[0.98rem] leading-7 text-[var(--muted-strong)]">
+            <p className="text-clamp-3 min-h-[5rem] text-[0.98rem] leading-7 text-[var(--muted-strong)]">
             {tool.description}
           </p>
 
@@ -117,21 +109,12 @@ export function DirectoryToolCard({
           <p className="text-sm leading-6 text-[var(--muted)]">{tool.whyItMatters}</p>
 
           <div className="grid gap-2 sm:grid-cols-2">
-            <a
-              href={tool.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--accent),#8a61ff)] px-4 py-3 text-sm font-semibold shadow-[0_14px_28px_rgba(95,66,255,0.18)] transition-transform duration-200 hover:-translate-y-0.5"
-              style={{ color: "#ffffff" }}
-            >
+            <PremiumLink href={tool.url} external>
               {tool.ctaLabel}
-            </a>
-            <Link
-              href={`/toools/${tool.slug}`}
-              className="inline-flex items-center justify-center rounded-full border border-[rgba(76,55,166,0.12)] bg-white px-4 py-3 text-sm font-semibold text-[var(--foreground)] transition-transform duration-200 hover:-translate-y-0.5"
-            >
+            </PremiumLink>
+            <PremiumLink href={`/toools/${tool.slug}`} tone="secondary">
               Scopri di pi&ugrave;
-            </Link>
+            </PremiumLink>
           </div>
 
           <p className="text-center text-[0.7rem] uppercase tracking-[0.16em] text-[var(--muted)]">

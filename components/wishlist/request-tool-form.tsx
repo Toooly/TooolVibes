@@ -12,6 +12,7 @@ import {
   type StoredToolRequest,
   type ToolRequestInput,
 } from "@/lib/wishlist/request-tool-store";
+import { PremiumButton } from "@/components/ui/premium";
 import { cn } from "@/lib/utils";
 
 type FormState = ToolRequestInput;
@@ -142,7 +143,7 @@ export function RequestToolForm({ className }: { className?: string }) {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-[34px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_22px_70px_rgba(35,18,95,0.08)] sm:p-6"
+        className="premium-panel premium-panel-light p-5 sm:p-6"
         noValidate
       >
         <div className="grid gap-4 md:grid-cols-2">
@@ -153,7 +154,7 @@ export function RequestToolForm({ className }: { className?: string }) {
             <input
               value={form.toolName}
               onChange={(event) => updateForm("toolName", event.target.value)}
-              className="mt-2 w-full rounded-[20px] border border-[rgba(83,63,170,0.12)] bg-[rgba(246,244,255,0.78)] px-4 py-3 text-[0.98rem] text-[var(--foreground)] outline-none transition-colors duration-200 focus:border-[rgba(108,76,255,0.34)]"
+              className="premium-input mt-2 px-4 py-3 text-[0.98rem]"
               aria-invalid={Boolean(errors.toolName)}
               aria-describedby={errors.toolName ? "tool-name-error" : undefined}
             />
@@ -172,7 +173,7 @@ export function RequestToolForm({ className }: { className?: string }) {
               value={form.toolUrl}
               onChange={(event) => updateForm("toolUrl", event.target.value)}
               inputMode="url"
-              className="mt-2 w-full rounded-[20px] border border-[rgba(83,63,170,0.12)] bg-[rgba(246,244,255,0.78)] px-4 py-3 text-[0.98rem] text-[var(--foreground)] outline-none transition-colors duration-200 focus:border-[rgba(108,76,255,0.34)]"
+              className="premium-input mt-2 px-4 py-3 text-[0.98rem]"
               aria-invalid={Boolean(errors.toolUrl)}
               aria-describedby={errors.toolUrl ? "tool-url-error" : undefined}
             />
@@ -190,7 +191,7 @@ export function RequestToolForm({ className }: { className?: string }) {
             <select
               value={form.category}
               onChange={(event) => updateForm("category", event.target.value)}
-              className="mt-2 w-full rounded-[20px] border border-[rgba(83,63,170,0.12)] bg-[rgba(246,244,255,0.78)] px-4 py-3 text-[0.98rem] font-semibold text-[var(--foreground)] outline-none transition-colors duration-200 focus:border-[rgba(108,76,255,0.34)]"
+              className="premium-input mt-2 px-4 py-3 text-[0.98rem] font-semibold"
               aria-invalid={Boolean(errors.category)}
             >
               {categoryOptions.map((category) => (
@@ -210,7 +211,7 @@ export function RequestToolForm({ className }: { className?: string }) {
               onChange={(event) =>
                 updateForm("level", event.target.value as DirectoryToolLevel)
               }
-              className="mt-2 w-full rounded-[20px] border border-[rgba(83,63,170,0.12)] bg-[rgba(246,244,255,0.78)] px-4 py-3 text-[0.98rem] font-semibold text-[var(--foreground)] outline-none transition-colors duration-200 focus:border-[rgba(108,76,255,0.34)]"
+              className="premium-input mt-2 px-4 py-3 text-[0.98rem] font-semibold"
               aria-invalid={Boolean(errors.level)}
             >
               {levelOptions.map((level) => (
@@ -229,7 +230,7 @@ export function RequestToolForm({ className }: { className?: string }) {
               value={form.email}
               onChange={(event) => updateForm("email", event.target.value)}
               inputMode="email"
-              className="mt-2 w-full rounded-[20px] border border-[rgba(83,63,170,0.12)] bg-[rgba(246,244,255,0.78)] px-4 py-3 text-[0.98rem] text-[var(--foreground)] outline-none transition-colors duration-200 focus:border-[rgba(108,76,255,0.34)]"
+              className="premium-input mt-2 px-4 py-3 text-[0.98rem]"
               aria-invalid={Boolean(errors.email)}
               aria-describedby={errors.email ? "tool-email-error" : undefined}
             />
@@ -248,7 +249,7 @@ export function RequestToolForm({ className }: { className?: string }) {
               value={form.message}
               onChange={(event) => updateForm("message", event.target.value)}
               rows={5}
-              className="mt-2 w-full resize-none rounded-[20px] border border-[rgba(83,63,170,0.12)] bg-[rgba(246,244,255,0.78)] px-4 py-3 text-[0.98rem] leading-7 text-[var(--foreground)] outline-none transition-colors duration-200 focus:border-[rgba(108,76,255,0.34)]"
+              className="premium-input mt-2 resize-none px-4 py-3 text-[0.98rem] leading-7"
               aria-invalid={Boolean(errors.message)}
               aria-describedby={errors.message ? "tool-message-error" : undefined}
             />
@@ -265,13 +266,12 @@ export function RequestToolForm({ className }: { className?: string }) {
             Valutiamo ogni proposta per qualit&agrave;, utilit&agrave; reale e coerenza con
             la directory.
           </p>
-          <button
+          <PremiumButton
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--accent),#8a61ff)] px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(95,66,255,0.18)] transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSubmitting ? "Invio in corso..." : "Suggerisci un Toool"}
-          </button>
+          </PremiumButton>
         </div>
       </form>
     </div>

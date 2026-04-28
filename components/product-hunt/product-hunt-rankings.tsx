@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
 import { cn } from "@/lib/utils";
 
 type ProductHuntRange = "day" | "week" | "month";
@@ -117,19 +118,17 @@ export function ProductHuntRankings({ className }: { className?: string }) {
     <section
       id="product-hunt"
       className={cn(
-        "rounded-[30px] border border-[rgba(83,63,170,0.12)] bg-white/86 p-4 shadow-[0_18px_48px_rgba(36,19,103,0.08)] backdrop-blur",
+        "premium-card p-4",
         className,
       )}
       aria-labelledby="product-hunt-title"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-            Product Hunt
-          </p>
+          <PremiumBadge tone="accent">Product Hunt</PremiumBadge>
           <h2
             id="product-hunt-title"
-            className="mt-1 text-[1.25rem] leading-tight text-[var(--foreground)]"
+            className="text-display-card mt-3 text-[1.32rem] text-[var(--foreground)]"
           >
             Migliori Toools su Product Hunt
           </h2>
@@ -181,7 +180,7 @@ export function ProductHuntRankings({ className }: { className?: string }) {
             {activePayload.items.map((item, index) => (
               <article
                 key={item.id}
-                className="group flex items-center gap-3 rounded-[20px] border border-[rgba(83,63,170,0.08)] bg-white/78 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,76,255,0.22)] hover:bg-white"
+                className="group flex items-center gap-3 rounded-[20px] border border-[rgba(83,63,170,0.08)] bg-white/78 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,76,255,0.22)] hover:bg-white hover:shadow-[0_14px_30px_rgba(35,18,95,0.08)]"
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-[rgba(83,63,170,0.1)] bg-[linear-gradient(135deg,#f7f3ff,#eef2ff)] text-sm font-semibold text-[var(--accent-strong)]">
                   {item.thumbnailUrl ? (
@@ -215,14 +214,15 @@ export function ProductHuntRankings({ className }: { className?: string }) {
                   </div>
                 </div>
 
-                <a
+                <PremiumLink
                   href={item.productHuntUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hidden rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-3 py-2 text-[0.72rem] font-semibold text-[var(--foreground)] transition-colors duration-200 hover:text-[var(--accent-strong)] sm:inline-flex"
+                  external
+                  tone="secondary"
+                  size="sm"
+                  className="hidden sm:inline-flex"
                 >
                   Vedi
-                </a>
+                </PremiumLink>
               </article>
             ))}
           </div>

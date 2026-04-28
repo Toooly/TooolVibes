@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import { logoutAdmin } from "@/app/(admin)/admin/actions";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { PremiumLink } from "@/components/ui/premium";
 import type { AdminCollectionsRuntime } from "@/lib/admin/collection-queries";
 import {
   getAdminToolWarningLabel,
@@ -84,24 +83,18 @@ function QuickLink({
   compact?: boolean;
 }) {
   return (
-    <Link
+    <PremiumLink
       href={href}
-      className={`button-shell ${primary ? "button-primary" : "button-secondary"} rounded-full font-semibold ${compact ? "px-3.5 py-2 text-[0.78rem]" : "px-4 py-2.5 text-sm"} ${primary ? "text-white" : "text-[var(--muted-strong)]"}`}
-      style={
+      tone={primary ? "primary" : "ghost"}
+      size={compact ? "sm" : "md"}
+      className={
         primary
-          ? {
-              background:
-                "linear-gradient(135deg, var(--accent-strong), var(--accent) 70%, var(--cyan))",
-            }
-          : {
-              borderColor: "rgba(255,255,255,0.14)",
-              background: "rgba(255,255,255,0.08)",
-              color: "rgba(245,248,255,0.88)",
-            }
+          ? "text-white"
+          : "border-white/14 bg-white/8 text-white/88 hover:bg-white/12"
       }
     >
       {label}
-    </Link>
+    </PremiumLink>
   );
 }
 
@@ -110,10 +103,9 @@ function LogoutButton({ compact = false }: { compact?: boolean }) {
     <form action={logoutAdmin}>
       <button
         type="submit"
-        className={`button-shell button-secondary rounded-full font-semibold text-white/86 ${compact ? "px-3.5 py-2 text-[0.78rem]" : "px-4 py-2.5 text-sm"}`}
+        className={`premium-button premium-button-ghost border-white/14 bg-white/8 font-semibold text-white/86 hover:bg-white/12 ${compact ? "px-3.5 py-2 text-[0.78rem]" : "px-4 py-2.5 text-sm"}`}
         style={{
           borderColor: "rgba(255,255,255,0.14)",
-          background: "rgba(255,255,255,0.08)",
         }}
       >
         Esci

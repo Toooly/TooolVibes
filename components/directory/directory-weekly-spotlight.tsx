@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import { DirectoryToolCard } from "@/components/directory/directory-tool-card";
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
+import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import { formatItalianDate } from "@/lib/utils";
 
@@ -18,9 +17,7 @@ export function DirectoryWeeklySpotlight({
     <section className="page-shell space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-[40rem]">
-          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
-            Tool della settimana
-          </p>
+          <PremiumBadge tone="accent">Tool della settimana</PremiumBadge>
           <h2 className="mt-3 text-[2rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.7rem]">
             Il focus editoriale da provare prima degli altri.
           </h2>
@@ -30,13 +27,17 @@ export function DirectoryWeeklySpotlight({
           </p>
         </div>
 
-        <Link href="/archivio" className="text-sm font-semibold text-[var(--accent-strong)]">
+        <PremiumLink href="/archivio" tone="ghost" size="sm">
           Vai a tutti i Toools
-        </Link>
+        </PremiumLink>
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(21rem,0.85fr)]">
-        <article className="overflow-hidden rounded-[34px] border border-[rgba(83,63,170,0.14)] bg-[linear-gradient(135deg,#161128_0%,#24144f_56%,#1a1037_100%)] px-5 py-5 text-white shadow-[0_28px_70px_rgba(18,10,51,0.28)] sm:px-6 sm:py-6">
+        <PremiumPanel
+          as="article"
+          tone="dark"
+          className="overflow-hidden px-5 py-5 text-white sm:px-6 sm:py-6"
+        >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <DirectoryToolGlyph tool={weeklyTool} size="lg" className="border-white/14" />
@@ -81,22 +82,21 @@ export function DirectoryWeeklySpotlight({
               </div>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <a
+                <PremiumLink
                   href={weeklyTool.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold transition-transform duration-200 hover:-translate-y-0.5"
-                  style={{ color: "#24144d" }}
+                  external
+                  tone="secondary"
+                  className="border-white/30 bg-white text-[#24144d] hover:bg-white"
                 >
                   {weeklyTool.ctaLabel}
-                </a>
-                <Link
+                </PremiumLink>
+                <PremiumLink
                   href={`/toools/${weeklyTool.slug}`}
-                  className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/8 px-5 py-3 text-sm font-semibold transition-transform duration-200 hover:-translate-y-0.5"
-                  style={{ color: "#ffffff" }}
+                  tone="ghost"
+                  className="border-white/14 bg-white/8 text-white hover:bg-white/12"
                 >
                   Apri la scheda
-                </Link>
+                </PremiumLink>
               </div>
             </div>
 
@@ -128,7 +128,7 @@ export function DirectoryWeeklySpotlight({
               </div>
             </div>
           </div>
-        </article>
+        </PremiumPanel>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-1">
           {supportingTools.map((tool) => (

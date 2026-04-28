@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { DirectoryHeaderSearch } from "@/components/directory/directory-header-search";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { PremiumLink } from "@/components/ui/premium";
 import { cn } from "@/lib/utils";
 
 const primaryNav = [
@@ -50,7 +51,7 @@ export function SiteHeader() {
 
   return (
     <header className="page-shell sticky top-0 z-40 py-2.5 sm:py-4">
-      <div className="rounded-[30px] border border-[rgba(83,63,170,0.12)] bg-white/88 px-4 py-3 shadow-[0_20px_55px_rgba(32,19,99,0.08)] backdrop-blur sm:px-5 sm:py-4">
+      <div className="rounded-[30px] border border-[rgba(83,63,170,0.13)] bg-white/90 px-4 py-3 shadow-[0_20px_55px_rgba(32,19,99,0.09)] backdrop-blur-xl sm:px-5 sm:py-4">
         <div className="flex items-center justify-between gap-3">
           <Link href="/" className="flex min-w-0 items-center gap-3" aria-label="Vai alla home TooolVibes">
             <BrandLogo size={46} priority />
@@ -91,16 +92,13 @@ export function SiteHeader() {
           <div className="hidden items-center gap-2 lg:flex">
             <Link
               href="/account"
-              className="hidden rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-4 py-2 text-sm font-semibold text-[var(--foreground)] 2xl:inline-flex"
+              className="hidden rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition-colors hover:border-[rgba(106,60,255,0.25)] 2xl:inline-flex"
             >
               Login
             </Link>
-            <Link
-              href="/wishlist"
-              className="rounded-full bg-[linear-gradient(135deg,var(--accent),#8a61ff)] px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(95,66,255,0.16)]"
-            >
+            <PremiumLink href="/wishlist" size="sm" className="px-4">
               Suggerisci
-            </Link>
+            </PremiumLink>
           </div>
 
           <button
@@ -158,12 +156,9 @@ export function SiteHeader() {
             </nav>
 
             <div className="grid gap-2 sm:grid-cols-2">
-              <Link
-                href="/wishlist"
-                className="rounded-full bg-[linear-gradient(135deg,var(--accent),#8a61ff)] px-4 py-3 text-center text-sm font-semibold text-white"
-              >
+              <PremiumLink href="/wishlist">
                 Suggerisci un Toool
-              </Link>
+              </PremiumLink>
               <Link
                 href="/account"
                 className="rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-4 py-3 text-center text-sm font-semibold text-[var(--foreground)]"

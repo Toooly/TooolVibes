@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import { siteConfig } from "@/lib/config/site";
 
 const footerNav = [
@@ -26,7 +27,7 @@ const categoryNav = [
 export function SiteFooter() {
   return (
     <footer className="page-shell pb-6 pt-10 sm:pb-8 sm:pt-14">
-      <div className="overflow-hidden rounded-[36px] border border-[rgba(83,63,170,0.12)] bg-[linear-gradient(145deg,#18112f_0%,#23144d_54%,#140d28_100%)] px-5 py-6 text-white shadow-[0_30px_90px_rgba(15,9,42,0.28)] sm:px-7 sm:py-8">
+      <PremiumPanel tone="dark" className="px-5 py-6 sm:px-7 sm:py-8">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(18rem,0.98fr)] lg:items-start">
           <div>
             <div className="flex items-center gap-3">
@@ -51,20 +52,12 @@ export function SiteFooter() {
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/wishlist"
-                className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[var(--accent-strong)] transition-transform duration-200 hover:-translate-y-0.5"
-              >
+              <PremiumLink href="/wishlist" tone="secondary">
                 Suggerisci un Toool
-              </Link>
-              <a
-                href={siteConfig.shopUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/8 px-5 py-3 text-sm font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5"
-              >
+              </PremiumLink>
+              <PremiumLink href={siteConfig.shopUrl} tone="dark" external>
                 Apri il Digital Shop
-              </a>
+              </PremiumLink>
             </div>
           </div>
 
@@ -127,7 +120,7 @@ export function SiteFooter() {
             </Link>
           </div>
         </div>
-      </div>
+      </PremiumPanel>
     </footer>
   );
 }
