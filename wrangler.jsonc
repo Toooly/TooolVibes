@@ -4,6 +4,12 @@
   "name": "tooolvibes",
   "compatibility_date": "2026-04-25",
   "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "https://tooolvibes.staff-ffa.workers.dev",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://pjyasxaebxvvmcjxvnno.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_Ac8LC9KN9Yl9YjDC7KrCVA_9328FOc0",
+    "TOOOLVIBES_COLLECTIONS_SOURCE": "auto"
+  },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"

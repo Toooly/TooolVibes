@@ -193,13 +193,20 @@ TOOOLVIBES_COLLECTIONS_SOURCE=auto
 
 #### Opzionale per Product Hunt live ranking
 
-Imposta questo secret solo lato server/runtime. Non usare il prefisso `NEXT_PUBLIC_`.
+Imposta questi secret solo lato server/runtime. Non usare il prefisso `NEXT_PUBLIC_`.
+
+```env
+PRODUCTHUNT_CLIENT_ID=YOUR_PRODUCT_HUNT_API_KEY
+PRODUCTHUNT_CLIENT_SECRET=YOUR_PRODUCT_HUNT_API_SECRET
+```
+
+In alternativa puoi usare un developer token diretto:
 
 ```env
 PRODUCTHUNT_TOKEN=YOUR_PRODUCT_HUNT_DEVELOPER_TOKEN
 ```
 
-La home e la pagina `/product-hunt` mostrano un fallback pulito se il token non è presente.
+La home e la pagina `/product-hunt` mostrano un fallback pulito se le credenziali non sono presenti.
 
 Se usi Cloudflare Workers Builds con repo Git collegata, aggiungi queste chiavi anche nella sezione `Build Variables and secrets`, non solo nel runtime del Worker. I docs Cloudflare segnalano che il build di Next.js ha bisogno sia delle `NEXT_PUBLIC_*` sia delle env server-side per inlining e pagine statiche.
 
@@ -272,6 +279,12 @@ Secondo i docs ufficiali Cloudflare aggiornati, Next.js su Workers va configurat
    - `supabase/migrations/0009_create_collections.sql`
    - `supabase/migrations/0010_collections_policies.sql`
    - `supabase/migrations/0011_collections_grants.sql`
+   - `supabase/migrations/0012_create_collection_transition_reviews.sql`
+   - `supabase/migrations/0013_collection_transition_reviews_grants.sql`
+   - `supabase/migrations/0014_create_collection_safe_align_events.sql`
+   - `supabase/migrations/0015_collection_safe_align_events_grants.sql`
+   - `supabase/migrations/0016_expand_collection_access_for_premium.sql`
+   - `supabase/migrations/0017_create_tool_requests.sql`
    - `supabase/seed.sql`
 4. Vai in `Table Editor` e verifica che la tabella `public.tools` esista e contenga i record seed.
 5. Vai in `Project Settings > API` e copia:

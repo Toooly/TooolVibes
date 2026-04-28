@@ -1,4 +1,8 @@
 import type { DirectoryToolLevel } from "@/lib/data/tooolvibes-directory";
+import {
+  getBrowserSupabaseClient,
+  isSupabaseBrowserEnabled,
+} from "@/lib/supabase/browser-client";
 
 export type ToolRequestInput = {
   toolName: string;
@@ -13,6 +17,13 @@ export type StoredToolRequest = ToolRequestInput & {
   id: string;
   createdAt: string;
   status: "received";
+  storage: "local" | "supabase";
+};
+
+type SupabaseInsertClient = {
+  from: (table: "tool_requests") => {
+    insert: (values: Record<string, unknown>) => Promise<{ error: { message: string } | null }>;
+  };
 };
 
 const STORAGE_KEY = "tooolvibes_tool_requests_v1";
@@ -50,23 +61,53 @@ export function getStoredToolRequests(): StoredToolRequest[] {
   }
 }
 
-export function saveToolRequest(input: ToolRequestInput) {
+function createStoredRequest(input: ToolRequestInput, storage: StoredToolRequest["storage"]) {
+  return {
+    ...input,
+    id: createId(),
+    createdAt: new Date().toISOString(),
+    status: "received" as const,
+    storage,
+  };
+}
+
+function saveToolRequestLocally(input: ToolRequestInput) {
   const storage = getStorage();
 
   if (!storage) {
     throw new Error("Storage non disponibile.");
   }
 
-  const request: StoredToolRequest = {
-    ...input,
-    id: createId(),
-    createdAt: new Date().toISOString(),
-    status: "received",
-  };
+  const request = createStoredRequest(input, "local");
   const existing = getStoredToolRequests();
   const nextValue = [request, ...existing].slice(0, 50);
 
   storage.setItem(STORAGE_KEY, JSON.stringify(nextValue));
 
   return request;
+}
+
+export async function saveToolRequest(input: ToolRequestInput) {
+  if (isSupabaseBrowserEnabled()) {
+    const supabase = getBrowserSupabaseClient() as unknown as SupabaseInsertClient;
+    const request = createStoredRequest(input, "supabase");
+    const { error } = await supabase
+      .from("tool_requests")
+      .insert({
+        id: request.id,
+        tool_name: input.toolName,
+        tool_url: input.toolUrl,
+        category: input.category,
+        level: input.level,
+        email: input.email ?? null,
+        message: input.message ?? null,
+        created_at: request.createdAt,
+      });
+
+    if (!error) {
+      return request;
+    }
+  }
+
+  return saveToolRequestLocally(input);
 }

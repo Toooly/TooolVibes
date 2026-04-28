@@ -20,6 +20,16 @@ type ProductHuntPayload = {
   message?: string;
 };
 
+type ProductHuntOAuthResponse = {
+  access_token?: string;
+  token_type?: string;
+  scope?: string;
+  expires_in?: number;
+  created_at?: number;
+  error?: string;
+  error_description?: string;
+};
+
 type ProductHuntGraphQlResponse = {
   data?: {
     posts?: {
@@ -42,6 +52,7 @@ type ProductHuntGraphQlResponse = {
 };
 
 const PRODUCT_HUNT_ENDPOINT = "https://api.producthunt.com/v2/api/graphql";
+const PRODUCT_HUNT_OAUTH_ENDPOINT = "https://api.producthunt.com/v2/oauth/token";
 
 const PRODUCT_HUNT_QUERY = /* GraphQL */ `
   query TooolVibesProductHuntTop(
@@ -82,6 +93,7 @@ const responseCache = new Map<
   ProductHuntRange,
   { expiresAt: number; payload: ProductHuntPayload }
 >();
+let productHuntTokenCache: { token: string; expiresAt: number } | null = null;
 
 function parseRange(value: string | null): ProductHuntRange {
   if (value === "week" || value === "month") {
@@ -131,6 +143,57 @@ function normalizeItems(data: ProductHuntGraphQlResponse): ProductHuntItem[] {
     .slice(0, 5);
 }
 
+async function getProductHuntToken(now: number) {
+  const directToken = process.env.PRODUCTHUNT_TOKEN?.trim();
+
+  if (directToken) {
+    return directToken;
+  }
+
+  if (productHuntTokenCache && productHuntTokenCache.expiresAt > now + 60 * 1000) {
+    return productHuntTokenCache.token;
+  }
+
+  const clientId = process.env.PRODUCTHUNT_CLIENT_ID?.trim();
+  const clientSecret = process.env.PRODUCTHUNT_CLIENT_SECRET?.trim();
+
+  if (!clientId || !clientSecret) {
+    return null;
+  }
+
+  const response = await fetch(PRODUCT_HUNT_OAUTH_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: "client_credentials",
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Product Hunt OAuth returned ${response.status}`);
+  }
+
+  const data = (await response.json()) as ProductHuntOAuthResponse;
+
+  if (!data.access_token) {
+    throw new Error(data.error_description ?? data.error ?? "Product Hunt OAuth token missing");
+  }
+
+  const ttlSeconds = data.expires_in ?? 60 * 60;
+  const safeTtlMs = Math.max(5 * 60 * 1000, (ttlSeconds - 60) * 1000);
+  productHuntTokenCache = {
+    token: data.access_token,
+    expiresAt: now + safeTtlMs,
+  };
+
+  return data.access_token;
+}
+
 export async function GET(request: NextRequest) {
   const range = parseRange(request.nextUrl.searchParams.get("range"));
   const settings = rangeSettings[range];
@@ -141,7 +204,13 @@ export async function GET(request: NextRequest) {
     return buildResponse(cached.payload, settings.ttlMs);
   }
 
-  const token = process.env.PRODUCTHUNT_TOKEN?.trim();
+  let token: string | null = null;
+
+  try {
+    token = await getProductHuntToken(now);
+  } catch {
+    token = null;
+  }
 
   if (!token) {
     const payload: ProductHuntPayload = {
@@ -149,7 +218,8 @@ export async function GET(request: NextRequest) {
       range,
       updatedAt: new Date().toISOString(),
       items: [],
-      message: "Product Hunt ranking non configurato. Aggiungi PRODUCTHUNT_TOKEN.",
+      message:
+        "Product Hunt ranking non configurato. Aggiungi PRODUCTHUNT_TOKEN oppure PRODUCTHUNT_CLIENT_ID e PRODUCTHUNT_CLIENT_SECRET.",
     };
 
     responseCache.set(range, { expiresAt: now + 5 * 60 * 1000, payload });

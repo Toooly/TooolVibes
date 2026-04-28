@@ -91,7 +91,7 @@ export function RequestToolForm({ className }: { className?: string }) {
     setErrors((current) => ({ ...current, [key]: undefined }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const nextErrors = validateForm(form);
@@ -103,29 +103,27 @@ export function RequestToolForm({ className }: { className?: string }) {
 
     setIsSubmitting(true);
 
-    window.setTimeout(() => {
-      try {
-        const savedRequest = saveToolRequest({
-          toolName: form.toolName.trim(),
-          toolUrl: form.toolUrl.trim(),
-          category: form.category,
-          level: form.level,
-          email: form.email?.trim() || undefined,
-          message: form.message?.trim() || undefined,
-        });
+    try {
+      const savedRequest = await saveToolRequest({
+        toolName: form.toolName.trim(),
+        toolUrl: form.toolUrl.trim(),
+        category: form.category,
+        level: form.level,
+        email: form.email?.trim() || undefined,
+        message: form.message?.trim() || undefined,
+      });
 
-        setLastRequest(savedRequest);
-        setForm(initialForm);
-        setToastVisible(true);
-        window.setTimeout(() => setToastVisible(false), 3600);
-      } catch {
-        setErrors({
-          message: "Non sono riuscito a salvare la richiesta. Riprova tra poco.",
-        });
-      } finally {
-        setIsSubmitting(false);
-      }
-    }, 420);
+      setLastRequest(savedRequest);
+      setForm(initialForm);
+      setToastVisible(true);
+      window.setTimeout(() => setToastVisible(false), 3600);
+    } catch {
+      setErrors({
+        message: "Non sono riuscito a salvare la richiesta. Riprova tra poco.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
