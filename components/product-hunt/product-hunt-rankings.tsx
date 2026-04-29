@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
 import { cn } from "@/lib/utils";
@@ -50,7 +51,13 @@ function ProductHuntSkeleton() {
   );
 }
 
-export function ProductHuntRankings({ className }: { className?: string }) {
+export function ProductHuntRankings({
+  className,
+  variant = "compact",
+}: {
+  className?: string;
+  variant?: "compact" | "wide";
+}) {
   const [activeRange, setActiveRange] = useState<ProductHuntRange>("day");
   const [payloads, setPayloads] = useState<Partial<Record<ProductHuntRange, ProductHuntPayload>>>(
     {},
@@ -118,30 +125,55 @@ export function ProductHuntRankings({ className }: { className?: string }) {
     <section
       id="product-hunt"
       className={cn(
-        "premium-card p-4",
+        "premium-card p-4 sm:p-5",
+        variant === "wide" && "rounded-[36px] p-5 sm:p-7",
         className,
       )}
       aria-labelledby="product-hunt-title"
+      aria-busy={loadingRange === activeRange && !activePayload}
     >
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+      <div className={cn(
+        "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between",
+        variant === "wide" && "lg:items-end",
+      )}>
+        <div className={variant === "wide" ? "max-w-[44rem]" : undefined}>
           <PremiumBadge tone="accent">Product Hunt</PremiumBadge>
           <h2
             id="product-hunt-title"
-            className="text-display-card mt-3 text-[1.32rem] text-[var(--foreground)]"
+            className={cn(
+              "text-display-card mt-3 text-[1.32rem] text-[var(--foreground)]",
+              variant === "wide" && "text-[2rem] sm:text-[2.65rem]",
+            )}
           >
             Migliori Toools su Product Hunt
           </h2>
+          {variant === "wide" ? (
+            <p className="mt-3 max-w-[42rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
+              Un radar esterno per intercettare i lanci più votati. Se il token non è
+              configurato, la sezione mostra uno stato pulito invece di rompersi.
+            </p>
+          ) : null}
         </div>
 
-        <a
-          href="https://www.producthunt.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)] transition-colors duration-200 hover:text-[var(--accent-strong)]"
-        >
-          Powered by Product Hunt
-        </a>
+        <div className="flex flex-col gap-1 sm:items-end">
+          <a
+            href="https://www.producthunt.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)] transition-colors duration-200 hover:text-[var(--accent-strong)]"
+          >
+            Powered by Product Hunt
+          </a>
+          <p className="text-xs text-[var(--muted)]">
+            Aggiornato:{" "}
+            {activePayload?.updatedAt
+              ? new Intl.DateTimeFormat("it-IT", {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                }).format(new Date(activePayload.updatedAt))
+              : "in caricamento"}
+          </p>
+        </div>
       </div>
 
       <div
@@ -172,15 +204,30 @@ export function ProductHuntRankings({ className }: { className?: string }) {
         })}
       </div>
 
-      <div className="mt-4 min-h-[21rem]">
+      <div className={cn("mt-4 min-h-[21rem]", variant === "wide" && "lg:min-h-0")}>
         {loadingRange === activeRange && !activePayload ? (
           <ProductHuntSkeleton />
         ) : activePayload?.status === "ok" && activePayload.items.length > 0 ? (
-          <div className="space-y-3">
+          <div
+            className={cn(
+              "space-y-3",
+              variant === "wide" && "grid gap-3 space-y-0 sm:grid-cols-3 lg:grid-cols-5",
+            )}
+          >
+            <AnimatePresence mode="popLayout">
             {activePayload.items.map((item, index) => (
-              <article
+              <motion.article
                 key={item.id}
-                className="group flex items-center gap-3 rounded-[20px] border border-[rgba(83,63,170,0.08)] bg-white/78 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,76,255,0.22)] hover:bg-white hover:shadow-[0_14px_30px_rgba(35,18,95,0.08)]"
+                layout
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.2, delay: Math.min(index * 0.025, 0.12) }}
+                className={cn(
+                  "group flex items-center gap-3 rounded-[20px] border border-[rgba(83,63,170,0.08)] bg-white/78 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,76,255,0.22)] hover:bg-white hover:shadow-[0_14px_30px_rgba(35,18,95,0.08)]",
+                  variant === "wide" && "lg:flex-col lg:items-start lg:p-4",
+                  variant === "wide" && index > 2 && "hidden lg:flex",
+                )}
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-[rgba(83,63,170,0.1)] bg-[linear-gradient(135deg,#f7f3ff,#eef2ff)] text-sm font-semibold text-[var(--accent-strong)]">
                   {item.thumbnailUrl ? (
@@ -201,6 +248,7 @@ export function ProductHuntRankings({ className }: { className?: string }) {
                     <span className="rounded-full bg-[rgba(109,59,255,0.1)] px-2 py-0.5 text-[0.66rem] font-semibold text-[var(--accent-strong)]">
                       #{index + 1}
                     </span>
+                    {index === 0 ? <PremiumBadge tone="warning">Trending</PremiumBadge> : null}
                     <h3 className="truncate text-[0.95rem] font-semibold text-[var(--foreground)]">
                       {item.name}
                     </h3>
@@ -209,7 +257,7 @@ export function ProductHuntRankings({ className }: { className?: string }) {
                     {item.tagline}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
-                    <span>{item.votesCount} votes</span>
+                    <span>{item.votesCount} voti</span>
                     <span>{item.commentsCount} commenti</span>
                   </div>
                 </div>
@@ -223,8 +271,9 @@ export function ProductHuntRankings({ className }: { className?: string }) {
                 >
                   Vedi
                 </PremiumLink>
-              </article>
+              </motion.article>
             ))}
+            </AnimatePresence>
           </div>
         ) : (
           <div className="rounded-[24px] border border-[rgba(83,63,170,0.1)] bg-[rgba(246,244,255,0.74)] px-4 py-8 text-center">

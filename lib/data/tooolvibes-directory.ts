@@ -59,7 +59,7 @@ type DirectoryToolInput = Omit<
 };
 
 export const levelLabels: Record<DirectoryToolLevel, string> = {
-  featured: "Featured",
+  featured: "In evidenza",
   beginner: "Beginner",
   intermediate: "Intermediate",
   expert: "Expert",
@@ -94,7 +94,7 @@ export const directoryFilterGroups: { key: DirectoryFilterGroup; label: string }
 
 export const directoryLevelFilters: { key: DirectoryToolLevel | "all"; label: string }[] = [
   { key: "all", label: "Tutti i livelli" },
-  { key: "featured", label: "Featured" },
+  { key: "featured", label: "In evidenza" },
   { key: "beginner", label: "Beginner" },
   { key: "intermediate", label: "Intermediate" },
   { key: "expert", label: "Expert" },

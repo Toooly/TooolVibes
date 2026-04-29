@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Fuse from "fuse.js";
 import { AnimatePresence, motion } from "motion/react";
@@ -31,9 +31,11 @@ import {
   Bookmark,
   Check,
   Columns3,
+  Filter,
   GripVertical,
   Layers3,
   Search,
+  SlidersHorizontal,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -49,6 +51,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { PremiumBadge, PremiumButton, PremiumLink, PremiumPanel } from "@/components/ui/premium";
+import { EmptyState } from "@/components/ui/premium-section";
 import {
   directoryFilterGroups,
   directoryLevelFilters,
@@ -114,6 +117,115 @@ function getToolBySlug(tools: DirectoryTool[], slug: string | null) {
   return slug ? tools.find((tool) => tool.slug === slug) ?? null : null;
 }
 
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(query.matches);
+
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return isDesktop;
+}
+
+function FilterControls({
+  activeGroup,
+  activeLevel,
+  activeTag,
+  sortedTags,
+  onGroupChange,
+  onLevelChange,
+  onTagChange,
+  dark = false,
+}: {
+  activeGroup: DirectoryFilterGroup;
+  activeLevel: DirectoryToolLevel | "all";
+  activeTag: string;
+  sortedTags: string[];
+  onGroupChange: (group: DirectoryFilterGroup) => void;
+  onLevelChange: (level: DirectoryToolLevel | "all") => void;
+  onTagChange: (tag: string) => void;
+  dark?: boolean;
+}) {
+  const activeClass = dark
+    ? "border-white/28 bg-white text-[#20124f]"
+    : "border-[rgba(106,60,255,0.24)] bg-[rgba(106,60,255,0.1)] text-[var(--accent-strong)]";
+  const idleClass = dark
+    ? "border-white/10 bg-white/6 text-white/72 hover:bg-white/10"
+    : "border-[rgba(76,55,166,0.12)] bg-white/72 text-[var(--muted-strong)] hover:border-[rgba(106,60,255,0.22)]";
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
+          Categorie
+        </p>
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap">
+          {directoryFilterGroups.map((group) => (
+            <button
+              key={group.key}
+              type="button"
+              onClick={() => onGroupChange(group.key)}
+              className={cn(
+                "shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] transition",
+                activeGroup === group.key ? activeClass : idleClass,
+              )}
+            >
+              {group.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
+          Livello
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {directoryLevelFilters.map((level) => (
+            <button
+              key={level.key}
+              type="button"
+              onClick={() => onLevelChange(level.key)}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition",
+                activeLevel === level.key ? activeClass : idleClass,
+              )}
+            >
+              {level.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
+          Tag rapidi
+        </p>
+        <div className="mt-3 flex max-h-[13rem] flex-wrap gap-2 overflow-y-auto pr-1">
+          {sortedTags.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => onTagChange(tag)}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+                activeTag === tag ? activeClass : idleClass,
+              )}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ToolActionButton({
   active,
   children,
@@ -172,14 +284,14 @@ function ToolAppCard({
       whileHover={{ y: -4, scale: 1.006 }}
       transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "premium-card group flex h-full min-h-[29rem] flex-col rounded-[30px]",
+        "premium-card group flex h-full min-h-[22rem] flex-col rounded-[26px] sm:min-h-[29rem] sm:rounded-[30px]",
         variant === "featured" && "ring-1 ring-[rgba(106,60,255,0.22)]",
         variant === "saved" && "border-[rgba(18,96,69,0.22)]",
         variant === "compared" && "border-[rgba(243,191,76,0.34)]",
       )}
     >
       <div
-        className="border-b border-[rgba(76,55,166,0.08)] p-5"
+        className="border-b border-[rgba(76,55,166,0.08)] p-4 sm:p-5"
         style={{
           background: `radial-gradient(circle at top right, ${tool.accentFrom}24, transparent 36%), radial-gradient(circle at bottom left, ${tool.accentTo}20, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,240,255,0.94))`,
         }}
@@ -188,20 +300,20 @@ function ToolAppCard({
           <DirectoryToolGlyph tool={tool} size="lg" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap gap-2">
-              {tool.toolOfWeek ? <PremiumBadge tone="warning">Weekly</PremiumBadge> : null}
+              {tool.toolOfWeek ? <PremiumBadge tone="warning">Scelta settimana</PremiumBadge> : null}
               <PremiumBadge tone={levelTone[tool.level]}>{tool.levelLabel}</PremiumBadge>
-              {saved ? <PremiumBadge tone="success">Saved</PremiumBadge> : null}
+              {saved ? <PremiumBadge tone="success">Salvato</PremiumBadge> : null}
             </div>
-            <h3 className="mt-4 text-display-card text-[1.55rem] text-[var(--foreground)]">
+            <h3 className="mt-3 text-display-card text-[1.35rem] text-[var(--foreground)] sm:mt-4 sm:text-[1.55rem]">
               {tool.name}
             </h3>
-            <p className="mt-2 text-[0.76rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+            <p className="text-clamp-2 mt-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:text-[0.76rem] sm:tracking-[0.16em]">
               {tool.categoryLabel}
             </p>
           </div>
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-5 hidden flex-wrap gap-2 sm:flex">
           {tool.highlights.slice(0, 3).map((item) => (
             <span
               key={item}
@@ -213,31 +325,31 @@ function ToolAppCard({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
-        <p className="text-clamp-3 min-h-[5rem] text-[0.98rem] leading-7 text-[var(--muted-strong)]">
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        <p className="text-clamp-2 min-h-[3.35rem] text-[0.92rem] leading-6 text-[var(--muted-strong)] sm:text-clamp-3 sm:min-h-[5rem] sm:text-[0.98rem] sm:leading-7">
           {tool.shortDescription}
         </p>
-        <div className="mt-4 grid grid-cols-2 gap-3 rounded-[22px] border border-[rgba(76,55,166,0.08)] bg-[rgba(246,244,255,0.76)] px-4 py-3">
+        <div className="mt-4 grid grid-cols-2 gap-3 rounded-[20px] border border-[rgba(76,55,166,0.08)] bg-[rgba(246,244,255,0.76)] px-3 py-2.5 sm:rounded-[22px] sm:px-4 sm:py-3">
           <div>
             <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-              Source
+              Fonte
             </p>
-            <p className="mt-2 truncate text-sm font-semibold text-[var(--foreground)]">
+            <p className="mt-1.5 truncate text-xs font-semibold text-[var(--foreground)] sm:mt-2 sm:text-sm">
               {tool.domain}
             </p>
           </div>
           <div>
             <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-              Updated
+              Aggiornato
             </p>
-            <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">
+            <p className="mt-1.5 text-xs font-semibold text-[var(--foreground)] sm:mt-2 sm:text-sm">
               {formatItalianDate(tool.publishedAt)}
             </p>
           </div>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {tool.tags.slice(0, 4).map((tag) => (
+          {tool.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
               className="rounded-full bg-[rgba(106,60,255,0.08)] px-3 py-1 text-[0.72rem] font-semibold text-[var(--accent-strong)]"
@@ -247,7 +359,7 @@ function ToolAppCard({
           ))}
         </div>
 
-        <div className="mt-auto space-y-4 border-t border-[rgba(76,55,166,0.08)] pt-5">
+        <div className="mt-auto space-y-3 border-t border-[rgba(76,55,166,0.08)] pt-4 sm:space-y-4 sm:pt-5">
           <div className="grid grid-cols-3 gap-2">
             <ToolActionButton active={saved} onClick={onSave} ariaLabel={`Salva ${tool.name}`}>
               {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
@@ -302,13 +414,15 @@ function ToolDetailDrawer({
   onCompare: () => void;
   onStack: (slug: string) => void;
 }) {
+  const isDesktop = useIsDesktop();
+
   if (!tool) {
     return null;
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange} direction="right">
-      <DrawerContent className="max-h-screen overflow-y-auto border-l border-white/20 bg-[linear-gradient(180deg,#fdfcff,#f2edff)] p-0 sm:max-w-[42rem]">
+    <Drawer open={open} onOpenChange={onOpenChange} direction={isDesktop ? "right" : "bottom"}>
+      <DrawerContent className="max-h-[88vh] overflow-y-auto border-l border-white/20 bg-[linear-gradient(180deg,#fdfcff,#f2edff)] p-0 md:max-h-screen md:max-w-[42rem]">
         <DrawerHeader className="border-b border-[rgba(76,55,166,0.1)] p-6 text-left">
           <div className="flex items-start gap-4">
             <DirectoryToolGlyph tool={tool} size="lg" />
@@ -324,7 +438,10 @@ function ToolDetailDrawer({
                 {tool.longDescription}
               </DrawerDescription>
             </div>
-            <DrawerClose className="rounded-full border border-[rgba(76,55,166,0.12)] bg-white/80 p-2">
+            <DrawerClose
+              aria-label="Chiudi scheda tool"
+              className="rounded-full border border-[rgba(76,55,166,0.12)] bg-white/80 p-2"
+            >
               <X className="size-4" />
             </DrawerClose>
           </div>
@@ -351,7 +468,7 @@ function ToolDetailDrawer({
 
           <PremiumPanel tone="subtle" className="p-5">
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-              Use cases
+              Casi d&apos;uso
             </p>
             <div className="mt-4 grid gap-3">
               {tool.useCases.map((useCase, index) => (
@@ -389,13 +506,13 @@ function ToolDetailDrawer({
               {saved ? "Salvato" : "Salva"}
             </PremiumButton>
             <PremiumButton type="button" onClick={onCompare} tone={compared ? "secondary" : "ghost"}>
-              Compare
+              Confronta
             </PremiumButton>
             <PremiumButton type="button" onClick={() => onStack(tool.slug)} tone="secondary">
               Stack
             </PremiumButton>
             <PremiumLink href={tool.url} external>
-              Website
+              Apri sito
             </PremiumLink>
           </div>
         </DrawerFooter>
@@ -463,6 +580,8 @@ export function ToolDiscoveryApp({
   const [activeTag, setActiveTag] = useState(initialTag);
   const [sortMode, setSortMode] = useState<SortMode>("recommended");
   const [activeTab, setActiveTab] = useState<WorkspaceTab>("all");
+  const [isFilterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const stackSlugs = useToolWorkspaceStore((state) => state.stackSlugs);
@@ -578,6 +697,8 @@ export function ToolDiscoveryApp({
   const stackTools = stackSlugs
     .map((slug) => getToolBySlug(tools, slug))
     .filter((tool): tool is DirectoryTool => Boolean(tool));
+  const hasActiveFilters =
+    Boolean(query.trim()) || activeGroup !== "all" || activeLevel !== "all" || Boolean(activeTag);
   const table = useReactTable({
     data: compareTools,
     columns: compareColumns,
@@ -610,6 +731,23 @@ export function ToolDiscoveryApp({
     toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool gia' nello stack");
   }
 
+  function resetFilters() {
+    setQuery("");
+    setActiveGroup("all");
+    setActiveLevel("all");
+    setActiveTag("");
+  }
+
+  function toggleTag(tag: string) {
+    setActiveTag((current) => (current === tag ? "" : tag));
+  }
+
+  function focusSearch() {
+    setActiveTab("all");
+    searchInputRef.current?.focus();
+    searchInputRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
@@ -626,7 +764,7 @@ export function ToolDiscoveryApp({
   }
 
   return (
-    <section className={cn("space-y-6", className)}>
+    <section className={cn("space-y-6 pb-24 lg:pb-0", className)}>
       <PremiumPanel tone="dark" className="grid gap-6 p-5 lg:grid-cols-[17rem_minmax(0,1fr)] lg:p-6">
         <aside className="space-y-4 border-white/10 lg:border-r lg:pr-5">
           <PremiumBadge tone="dark">{eyebrow}</PremiumBadge>
@@ -644,7 +782,7 @@ export function ToolDiscoveryApp({
           >
             <span className="inline-flex items-center gap-2">
               <Search className="size-4" />
-              Command palette
+              Cerca o apri comandi
             </span>
             <kbd className="rounded-md bg-white/10 px-2 py-1 text-[0.68rem]">Ctrl K</kbd>
           </button>
@@ -652,8 +790,8 @@ export function ToolDiscoveryApp({
           <nav className="grid gap-2" aria-label="Workspace views">
             {[
               ["all", "Tutti", tools.length],
-              ["saved", "Saved", savedSlugs.length],
-              ["compare", "Compare", compareSlugs.length],
+              ["saved", "Salvati", savedSlugs.length],
+              ["compare", "Confronta", compareSlugs.length],
               ["stack", "Stack", stackSlugs.length],
             ].map(([key, label, count]) => (
               <button
@@ -675,10 +813,11 @@ export function ToolDiscoveryApp({
         </aside>
 
         <div className="space-y-5">
-          <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_12rem_12rem]">
+          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
             <label>
               <span className="sr-only">Cerca tool</span>
               <input
+                ref={searchInputRef}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 className="premium-input px-4 py-3"
@@ -696,73 +835,73 @@ export function ToolDiscoveryApp({
               <option value="level">Livello</option>
               <option value="category">Categoria</option>
             </select>
+            <button
+              type="button"
+              onClick={() => setFilterDrawerOpen(true)}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[18px] border border-white/12 bg-white/8 px-4 text-sm font-semibold text-white/78 transition hover:bg-white/12 lg:hidden"
+            >
+              <SlidersHorizontal className="size-4" />
+              Filtri
+            </button>
             <PremiumButton
               type="button"
               tone="secondary"
-              onClick={() => {
-                setQuery("");
-                setActiveGroup("all");
-                setActiveLevel("all");
-                setActiveTag("");
-              }}
+              className="hidden lg:inline-flex"
+              onClick={resetFilters}
+              disabled={!hasActiveFilters}
             >
               Reset
             </PremiumButton>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {directoryFilterGroups.map((group) => (
-              <button
-                key={group.key}
-                type="button"
-                onClick={() => setActiveGroup(group.key)}
-                className={cn(
-                  "shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] transition",
-                  activeGroup === group.key
-                    ? "border-white/28 bg-white text-[#20124f]"
-                    : "border-white/10 bg-white/6 text-white/72 hover:bg-white/10",
-                )}
-              >
-                {group.label}
-              </button>
-            ))}
+          <div className="lg:hidden">
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {directoryFilterGroups.slice(0, 7).map((group) => (
+                <button
+                  key={group.key}
+                  type="button"
+                  onClick={() => setActiveGroup(group.key)}
+                  className={cn(
+                    "shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] transition",
+                    activeGroup === group.key
+                      ? "border-white/28 bg-white text-[#20124f]"
+                      : "border-white/10 bg-white/6 text-white/72 hover:bg-white/10",
+                  )}
+                >
+                  {group.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {directoryLevelFilters.map((level) => (
-              <button
-                key={level.key}
-                type="button"
-                onClick={() => setActiveLevel(level.key)}
-                className={cn(
-                  "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition",
-                  activeLevel === level.key
-                    ? "border-[rgba(243,191,76,0.42)] bg-[rgba(243,191,76,0.16)] text-white"
-                    : "border-white/10 bg-white/6 text-white/62 hover:bg-white/10",
-                )}
-              >
-                {level.label}
-              </button>
-            ))}
+          <div className="hidden lg:block">
+            <FilterControls
+              activeGroup={activeGroup}
+              activeLevel={activeLevel}
+              activeTag={activeTag}
+              sortedTags={sortedTags}
+              onGroupChange={setActiveGroup}
+              onLevelChange={setActiveLevel}
+              onTagChange={toggleTag}
+              dark
+            />
           </div>
-
-          <div className="flex flex-wrap gap-2 border-t border-white/10 pt-4">
-            {sortedTags.map((tag) => (
+          {hasActiveFilters ? (
+            <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-white/10 bg-white/6 px-3 py-2 text-xs text-white/70">
+              <span className="font-semibold text-white">Filtri attivi:</span>
+              {query.trim() ? <span>Ricerca: {query.trim()}</span> : null}
+              {activeGroup !== "all" ? <span>Categoria: {activeGroup}</span> : null}
+              {activeLevel !== "all" ? <span>Livello: {activeLevel}</span> : null}
+              {activeTag ? <span>Tag: {activeTag}</span> : null}
               <button
-                key={tag}
                 type="button"
-                onClick={() => setActiveTag((current) => (current === tag ? "" : tag))}
-                className={cn(
-                  "rounded-full border px-3 py-1.5 text-xs font-medium transition",
-                  activeTag === tag
-                    ? "border-white/28 bg-white text-[#20124f]"
-                    : "border-white/10 bg-white/6 text-white/62 hover:bg-white/10",
-                )}
+                onClick={resetFilters}
+                className="ml-auto rounded-full bg-white/12 px-3 py-1 font-semibold text-white transition hover:bg-white/18"
               >
-                {tag}
+                Reset
               </button>
-            ))}
-          </div>
+            </div>
+          ) : null}
         </div>
       </PremiumPanel>
 
@@ -774,7 +913,7 @@ export function ToolDiscoveryApp({
                 {visibleTools.length} risultati
               </p>
               <h3 className="mt-2 text-display-card text-[2rem] text-[var(--foreground)]">
-                Workspace dei Toools
+                Catalogo interattivo
               </h3>
             </div>
             <Link
@@ -813,18 +952,20 @@ export function ToolDiscoveryApp({
               </AnimatePresence>
             </motion.div>
           ) : (
-            <PremiumPanel tone="light" className="p-8 text-center">
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-                Empty state
-              </p>
-              <h3 className="mt-3 text-[2rem] text-[var(--foreground)]">
-                Nessun tool corrisponde ai filtri.
-              </h3>
-              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[var(--muted-strong)]">
-                Cambia ricerca o resetta i filtri. La directory resta pensata per esplorare,
-                confrontare e costruire stack senza perdere contesto.
-              </p>
-            </PremiumPanel>
+            <EmptyState
+              icon={Search}
+              eyebrow="Nessun risultato"
+              title="Nessun tool corrisponde ai filtri."
+              description="Cambia ricerca o resetta i filtri. La directory resta pensata per esplorare, confrontare e costruire stack senza perdere contesto."
+              className="p-8 text-center"
+              action={
+                hasActiveFilters ? (
+                  <PremiumButton type="button" tone="secondary" onClick={resetFilters}>
+                    Rimuovi filtri
+                  </PremiumButton>
+                ) : null
+              }
+            />
           )}
         </div>
 
@@ -833,7 +974,7 @@ export function ToolDiscoveryApp({
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-                  Saved Tools
+                  Tool salvati
                 </p>
                 <h3 className="mt-2 text-display-card text-[1.45rem] text-[var(--foreground)]">
                   {savedSlugs.length} salvati
@@ -856,16 +997,19 @@ export function ToolDiscoveryApp({
                 ) : null;
               })}
               {savedSlugs.length === 0 ? (
-                <p className="text-sm leading-6 text-[var(--muted)]">
-                  Salva i tool migliori per ritrovarli nella prossima sessione.
-                </p>
+                <EmptyState
+                  icon={Bookmark}
+                  title="Nessun tool salvato."
+                  description="Salva i migliori candidati per creare una shortlist utile e ritrovarli nella prossima sessione."
+                  className="p-4"
+                />
               ) : null}
             </div>
           </PremiumPanel>
 
           <PremiumPanel tone="subtle" className="p-5">
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-              Compare Mode
+              Confronta
             </p>
             <div className="mt-4 overflow-x-auto">
               {compareTools.length > 0 ? (
@@ -900,9 +1044,12 @@ export function ToolDiscoveryApp({
                   </tbody>
                 </table>
               ) : (
-                <p className="text-sm leading-6 text-[var(--muted)]">
-                  Aggiungi fino a 4 tool per vedere differenze e campi disponibili.
-                </p>
+                <EmptyState
+                  icon={Columns3}
+                  title="Nessun confronto attivo."
+                  description="Aggiungi fino a 4 tool per confrontare categoria, fonte, use case e link senza aprire mille tab."
+                  className="p-4"
+                />
               )}
             </div>
           </PremiumPanel>
@@ -911,7 +1058,7 @@ export function ToolDiscoveryApp({
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
-                  Stack Builder
+                  Il tuo stack
                 </p>
                 <h3 className="mt-2 text-display-card text-[1.55rem] text-white">
                   {stackTools.length} tool nello stack
@@ -937,14 +1084,105 @@ export function ToolDiscoveryApp({
                   </SortableContext>
                 </DndContext>
               ) : (
-                <p className="text-sm leading-6 text-white/64">
-                  Crea uno stack salvando tool dalla griglia. Puoi riordinarli con drag and drop.
-                </p>
+                <EmptyState
+                  icon={Layers3}
+                  title="Stack ancora vuoto."
+                  description="Aggiungi tool dalla griglia e riordinali per costruire uno stack operativo: idea, build, automazione, vendita."
+                  className="p-4"
+                  dark
+                />
               )}
             </div>
           </PremiumPanel>
         </aside>
       </div>
+
+      <Drawer open={isFilterDrawerOpen} onOpenChange={setFilterDrawerOpen} direction="bottom">
+        <DrawerContent className="max-h-[86vh] overflow-y-auto border-white/20 bg-[linear-gradient(180deg,#fdfcff,#f2edff)] p-0">
+          <DrawerHeader className="border-b border-[rgba(76,55,166,0.1)] p-5 text-left">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <PremiumBadge tone="accent">Filtri</PremiumBadge>
+                <DrawerTitle className="mt-3 text-display-card text-[2rem] text-[var(--foreground)]">
+                  Affina il catalogo
+                </DrawerTitle>
+                <DrawerDescription className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
+                  Scegli categoria, livello e tag senza trasformare il mobile in una parete di chip.
+                </DrawerDescription>
+              </div>
+              <DrawerClose
+                aria-label="Chiudi filtri"
+                className="rounded-full border border-[rgba(76,55,166,0.12)] bg-white/80 p-2"
+              >
+                <X className="size-4" />
+              </DrawerClose>
+            </div>
+          </DrawerHeader>
+          <div className="p-5">
+            <FilterControls
+              activeGroup={activeGroup}
+              activeLevel={activeLevel}
+              activeTag={activeTag}
+              sortedTags={sortedTags}
+              onGroupChange={setActiveGroup}
+              onLevelChange={setActiveLevel}
+              onTagChange={toggleTag}
+            />
+          </div>
+          <DrawerFooter className="grid grid-cols-2 gap-2 border-t border-[rgba(76,55,166,0.1)] bg-white/72 p-5">
+            <PremiumButton type="button" tone="secondary" onClick={resetFilters}>
+              Reset
+            </PremiumButton>
+            <PremiumButton type="button" onClick={() => setFilterDrawerOpen(false)}>
+              Applica
+            </PremiumButton>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
+      <nav
+        className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-4 gap-1 rounded-[24px] border border-white/28 bg-[#1e123f]/88 p-1.5 text-white shadow-[0_20px_60px_rgba(18,10,50,0.28)] backdrop-blur-xl lg:hidden"
+        aria-label="Azioni rapide catalogo"
+      >
+        <button
+          type="button"
+          onClick={focusSearch}
+          className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold text-white/74 transition hover:bg-white/10"
+        >
+          <Search className="size-4" />
+          Cerca
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilterDrawerOpen(true)}
+          className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold text-white/74 transition hover:bg-white/10"
+        >
+          <Filter className="size-4" />
+          Filtri
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("saved")}
+          className={cn(
+            "flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold transition hover:bg-white/10",
+            activeTab === "saved" ? "bg-white text-[#20124f]" : "text-white/74",
+          )}
+        >
+          <Bookmark className="size-4" />
+          Salvati
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("compare")}
+          className={cn(
+            "flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold transition hover:bg-white/10",
+            activeTab === "compare" ? "bg-white text-[#20124f]" : "text-white/74",
+          )}
+        >
+          <Columns3 className="size-4" />
+          Confronta
+        </button>
+      </nav>
 
       <ToolDetailDrawer
         tool={selectedTool}

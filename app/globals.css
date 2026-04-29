@@ -83,6 +83,13 @@
   --gold: #f3bf4c;
   --gold-soft: rgba(243, 191, 76, 0.16);
   --success-soft: rgba(92, 191, 156, 0.16);
+  --success: #158a63;
+  --warning: #b7791f;
+  --warning-soft: rgba(243, 191, 76, 0.18);
+  --danger: #b42318;
+  --danger-soft: rgba(217, 45, 32, 0.12);
+  --info: #2563eb;
+  --info-soft: rgba(37, 99, 235, 0.12);
   --highlight-soft: rgba(255, 255, 255, 0.72);
   --accent-glow: rgba(106, 60, 255, 0.2);
   --gold-glow: rgba(243, 191, 76, 0.18);
@@ -2376,6 +2383,23 @@ img {
 }
 
 @media (max-width: 767px) {
+  .page-shell {
+    padding-inline: 1rem;
+  }
+
+  .premium-panel {
+    border-radius: 28px;
+  }
+
+  .premium-card {
+    border-radius: 26px;
+  }
+
+  .premium-input {
+    min-height: 3rem;
+    border-radius: 18px;
+  }
+
   .button-shell {
     min-height: 3.1rem;
   }

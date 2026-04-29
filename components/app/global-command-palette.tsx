@@ -56,7 +56,7 @@ export function GlobalCommandPalette() {
 
   return (
     <CommandDialog open={isOpen} onOpenChange={setCommandOpen}>
-      <CommandInput placeholder="Cerca tool, azioni, sezioni..." />
+      <CommandInput placeholder="Cerca tool, azioni o sezioni..." />
       <CommandList>
         <CommandEmpty>Nessun risultato. Prova con categoria, nome o use case.</CommandEmpty>
         <CommandGroup heading="Navigazione">
@@ -76,7 +76,7 @@ export function GlobalCommandPalette() {
             }}
           >
             <Star className="size-4" />
-            Vai a Saved Tools
+            Vai ai tool salvati
           </CommandItem>
           <CommandItem
             onSelect={() => {
@@ -85,7 +85,7 @@ export function GlobalCommandPalette() {
             }}
           >
             <Table2 className="size-4" />
-            Apri Compare
+            Apri confronto
           </CommandItem>
           <CommandItem
             onSelect={() => {
@@ -94,7 +94,7 @@ export function GlobalCommandPalette() {
             }}
           >
             <Workflow className="size-4" />
-            Stack Builder
+            Apri il tuo stack
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
@@ -141,14 +141,14 @@ export function GlobalCommandPalette() {
                 } else {
                   toast.success(
                     result.added
-                      ? `${tool.name} aggiunto al compare`
-                      : `${tool.name} rimosso dal compare`,
+                      ? `${tool.name} aggiunto al confronto`
+                      : `${tool.name} rimosso dal confronto`,
                   );
                 }
                 close();
               }}
             >
-              Aggiungi {tool.name} al compare
+              Aggiungi {tool.name} al confronto
             </CommandItem>
           ))}
           {directoryTools.slice(0, 4).map((tool) => (
@@ -157,7 +157,7 @@ export function GlobalCommandPalette() {
               value={`stack ${tool.name}`}
               onSelect={() => {
                 const added = addToStack(tool.slug);
-                toast.success(added ? `${tool.name} aggiunto allo stack` : "Gia' nello stack");
+                toast.success(added ? `${tool.name} aggiunto allo stack` : "Già nello stack");
                 close();
               }}
             >

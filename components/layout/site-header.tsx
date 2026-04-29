@@ -12,9 +12,8 @@ import { cn } from "@/lib/utils";
 const primaryNav = [
   { href: "/", label: "Home" },
   { href: "/archivio", label: "Toools" },
-  { href: "/tags", label: "Categories" },
-  { href: "/wishlist", label: "Wishlist" },
-  { href: "/product-hunt", label: "Product Hunt" },
+  { href: "/product-hunt", label: "Radar" },
+  { href: "/wishlist", label: "Suggerisci" },
   { href: "/shop", label: "Shop" },
   { href: "/community", label: "Community" },
 ];
@@ -60,7 +59,7 @@ export function SiteHeader() {
                 TooolVibes
               </p>
               <p className="hidden text-[0.76rem] text-[var(--muted)] 2xl:block">
-                Premium AI tools discovery platform
+                AI tools discovery premium
               </p>
             </div>
           </Link>

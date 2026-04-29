@@ -1,6 +1,8 @@
 import { DirectoryBrowser } from "@/components/directory/directory-browser";
 import { DirectoryHero } from "@/components/directory/directory-hero";
 import { DirectoryWeeklySpotlight } from "@/components/directory/directory-weekly-spotlight";
+import { MobileQuickStart } from "@/components/directory/mobile-quick-start";
+import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
 import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import {
   directoryTools,
@@ -18,6 +20,8 @@ export default function HomePage() {
     <div className="space-y-10 pb-16 sm:space-y-14 sm:pb-20">
       <DirectoryHero tools={directoryTools} />
 
+      <MobileQuickStart />
+
       {weeklyTool ? (
         <DirectoryWeeklySpotlight
           weeklyTool={weeklyTool}
@@ -25,13 +29,17 @@ export default function HomePage() {
         />
       ) : null}
 
+      <section className="page-shell">
+        <ProductHuntRankings variant="wide" />
+      </section>
+
       <section id="toools" className="page-shell">
-        <PremiumPanel tone="tint" className="px-5 py-6 sm:px-7 sm:py-8">
+        <PremiumPanel tone="tint" className="px-4 py-5 sm:px-7 sm:py-8">
           <DirectoryBrowser
             tools={directoryTools}
             eyebrow="Tutti i Toools"
-            title="Scopri tutti i Toools che abbiamo selezionato per te."
-            description="Una vista più chiara e moderna del catalogo TooolVibes: ricerca client-side, filtri utili, card curate e link pronti al click."
+            title="Catalogo operativo per scegliere meglio, non per scorrere all'infinito."
+            description="Filtra, salva, confronta e costruisci stack: il catalogo TooolVibes è pensato per passare dalla scoperta alla decisione senza perdere contesto."
           />
         </PremiumPanel>
       </section>

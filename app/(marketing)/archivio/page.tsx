@@ -25,7 +25,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
             Archivio dei Toools
           </p>
           <h1 className="mt-4 text-[2.4rem] leading-[0.95] text-[var(--foreground)] sm:max-w-[14ch] sm:text-[3.4rem]">
-            La directory in cui cerchi meglio e scegli pi&ugrave; in fretta.
+            La directory in cui cerchi meglio e scegli più in fretta.
           </h1>
           <p className="mt-5 max-w-[40rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
             Cerca per nome, categoria, tag e descrizione. Qui l&apos;archivio resta
@@ -52,8 +52,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
       <DirectoryBrowser
         tools={directoryTools}
         eyebrow="Esplora il catalogo"
-        title="Tutti i Toools selezionati in un&apos;unica vista."
-        description="Niente rumore, niente card rotte, niente CTA vuote. Solo tool utili, categorie leggibili e un&apos;esperienza più premium."
+        title="Tutti i Toools selezionati in un'unica vista."
+        description="Niente rumore, niente card rotte, niente CTA vuote. Solo tool utili, categorie leggibili e un'esperienza più premium."
         initialQuery={params.q ?? ""}
         initialTag={params.tag ?? ""}
         initialGroup={initialGroup}
