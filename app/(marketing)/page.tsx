@@ -1,6 +1,7 @@
 import { DirectoryBrowser } from "@/components/directory/directory-browser";
 import { DirectoryHero } from "@/components/directory/directory-hero";
 import { DirectoryWeeklySpotlight } from "@/components/directory/directory-weekly-spotlight";
+import { HomeExperienceSections } from "@/components/directory/home-experience-sections";
 import { MobileQuickStart } from "@/components/directory/mobile-quick-start";
 import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
 import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
@@ -21,6 +22,8 @@ export default function HomePage() {
       <DirectoryHero tools={directoryTools} />
 
       <MobileQuickStart />
+
+      <HomeExperienceSections />
 
       {weeklyTool ? (
         <DirectoryWeeklySpotlight

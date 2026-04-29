@@ -36,7 +36,7 @@ export function FeaturedWeek({ tools }: FeaturedWeekProps) {
           <div className="col-span-12 lg:col-span-4">
             <p className="brand-kicker !text-white/62">Radar corto</p>
             <p className="mt-3 max-w-[28rem] text-sm leading-7 text-white/72">
-              Se uno di questi tiene, esci dalla home con una direzione gia` credibile. Se no, il posto giusto resta archivio.
+              Se uno di questi tiene, esci dalla home con una direzione gi? credibile. Se no, il posto giusto resta archivio.
             </p>
           </div>
 
@@ -74,9 +74,9 @@ export function FeaturedWeek({ tools }: FeaturedWeekProps) {
                 className="rounded-[28px] border px-6 py-10 text-center"
                 style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.06)" }}
               >
-                <h3 className="text-2xl text-white">Il radar settimanale e` in aggiornamento.</h3>
+                <h3 className="text-2xl text-white">Il radar settimanale ? in aggiornamento.</h3>
                 <p className="mt-3 text-sm leading-7 text-white/68">
-                  Quando non c&apos;e` ancora un focus attivo, il resto dell&apos;archivio resta comunque il punto giusto da cui partire.
+                  Quando non c&apos;? ancora un focus attivo, il resto dell&apos;archivio resta comunque il punto giusto da cui partire.
                 </p>
               </div>
             )}

@@ -109,7 +109,7 @@ export function HomeDiscoveryLayer({ tools }: HomeDiscoveryLayerProps) {
             className="mt-6 rounded-[26px] border px-5 py-8 text-center"
             style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))" }}
           >
-            <h3 className="text-display-card text-[1.46rem]">Qui non c&apos;e` ancora un profilo forte da aprire.</h3>
+            <h3 className="text-display-card text-[1.46rem]">Qui non c&apos;? ancora un profilo forte da aprire.</h3>
             <p className="text-body-soft mt-3 text-[0.9rem]" style={{ color: "var(--muted)" }}>
               Cambia taglio oppure passa direttamente all&apos;archivio pieno.
             </p>
@@ -137,7 +137,7 @@ export function HomeDiscoveryLayer({ tools }: HomeDiscoveryLayerProps) {
                 <div className="metadata-block rounded-[26px] px-4.5 py-4.5">
                   <p className="brand-kicker">Passaggio corretto</p>
                   <p className="mt-2 text-[0.96rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-                    Se il lead regge, apri il profilo. Se il set ti sembra ancora largo, l&apos;archivio e` il posto giusto per stringere meglio.
+                    Se il lead regge, apri il profilo. Se il set ti sembra ancora largo, l&apos;archivio ? il posto giusto per stringere meglio.
                   </p>
                 </div>
 

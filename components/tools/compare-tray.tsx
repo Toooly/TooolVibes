@@ -84,7 +84,7 @@ export function CompareTray() {
               <p className="text-body-soft mt-2 text-[0.9rem]" style={{ color: "var(--muted-strong)" }}>
                 {compare.length < 2
                   ? "Ti manca ancora un profilo per arrivare a un verdetto che abbia davvero contrasto."
-                  : "Apri compare e leggi i profili affiancati con un verdetto piu` netto e piu` leggibile."}
+                  : "Apri compare e leggi i profili affiancati con un verdetto più netto e più leggibile."}
               </p>
             </div>
 

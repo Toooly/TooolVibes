@@ -49,7 +49,7 @@ export function HomeEditorialPostsSection({ posts }: HomeEditorialPostsSectionPr
                 ))}
               </div>
               <p className="mt-4 text-sm leading-7 text-white/72">
-                Recuperiamo il framing utile e scartiamo il rumore: resta solo cio` che aiuta a capire il prodotto, non a decorarlo.
+                Recuperiamo il framing utile e scartiamo il rumore: resta solo ci? che aiuta a capire il prodotto, non a decorarlo.
               </p>
             </div>
 

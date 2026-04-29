@@ -103,13 +103,13 @@ export function AccountPanel() {
           </span>
         </div>
         <h1 className="text-display-card mt-4 max-w-none text-[1.8rem] sm:max-w-[20ch] sm:text-[2.24rem] sm:text-balance">
-          Continuita` della selezione e accesso member.
+          Continuit? della selezione e accesso member.
         </h1>
         <p
           className="text-body-soft mt-4 max-w-[40rem] text-[0.95rem]"
           style={{ color: "var(--muted-strong)" }}
         >
-          Qui capisci se la selezione resta nel browser o segue gia` l&apos;account, cosa sblocca il layer member e da dove conviene ripartire.
+          Qui capisci se la selezione resta nel browser o segue già l&apos;account, cosa sblocca il layer member e da dove conviene ripartire.
         </p>
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -175,7 +175,7 @@ export function AccountPanel() {
                   background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))",
                 }}
               >
-                <p className="editorial-label">Continuita`</p>
+                <p className="editorial-label">Continuit?</p>
                 <p className="text-body-strong mt-2.5 text-[1rem]">
                   {account.isAttaching
                     ? "Merge workspace in corso"
@@ -206,7 +206,7 @@ export function AccountPanel() {
               </p>
               <p className="mt-3 text-[0.88rem] leading-7" style={{ color: "var(--muted)" }}>
                 {workspace.saved > 0
-                  ? `Hai gia' ${workspace.saved} tool salvati: account e premium servono a dare continuita' e accesso, non a rimettere in discussione la selezione.`
+                  ? `Hai già ${workspace.saved} tool salvati: account e premium servono a dare continuità e accesso, non a rimettere in discussione la selezione.`
                   : "Qui si chiarisce il rapporto tra accesso, preview e member issue senza aggiungere frizione inutile."}
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -230,8 +230,8 @@ export function AccountPanel() {
               <div className="metadata-block mt-5 rounded-[26px] px-5 py-5">
                 <p className="brand-kicker">Account connesso</p>
                 <p className="mt-2.5 text-[1rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-                  {account.user?.email ?? "Account attivo"} e` collegato al viewer corrente. La
-                  selezione locale e` stata agganciata senza perdere shortlist, compare, note, pin,
+                  {account.user?.email ?? "Account attivo"} è collegato al viewer corrente. La
+                  selezione locale è stata agganciata senza perdere shortlist, compare, note, pin,
                   reason e stage.
                 </p>
                 <p className="mt-3 text-[0.9rem] leading-7" style={{ color: "var(--muted)" }}>
@@ -256,7 +256,7 @@ export function AccountPanel() {
                 <p className="brand-kicker">Continua con email</p>
                 <p className="mt-2.5 text-[0.98rem] leading-7" style={{ color: "var(--muted-strong)" }}>
                   Ti mandiamo un magic link minimale. Quando entri, la selezione locale viene
-                  collegata all&apos;account senza perdere cio` che hai gia` salvato.
+                  collegata all&apos;account senza perdere ciò che hai già salvato.
                 </p>
                 <p className="mt-3 text-[0.88rem] leading-7" style={{ color: "var(--muted)" }}>
                   {continuityCopy}
@@ -280,7 +280,7 @@ export function AccountPanel() {
                 </div>
                 <p className="mt-3 text-[0.76rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                   {account.authEnabled
-                    ? "Percorso minimale: nessun onboarding pesante, solo continuita` della selezione."
+                    ? "Percorso minimale: nessun onboarding pesante, solo continuità della selezione."
                     : "Auth Supabase non configurata: il prodotto resta in fallback locale."}
                 </p>
               </form>
@@ -303,17 +303,17 @@ export function AccountPanel() {
           <div className="brand-panel panel-lift rounded-[28px] p-4.5 sm:p-5">
             <p className="editorial-label">Workspace snapshot</p>
             <h2 className="text-display-card mt-2 text-[1.36rem] sm:text-[1.54rem]">
-              La selezione che hai gia` costruito resta leggibile.
+              La selezione che hai già costruito resta leggibile.
             </h2>
             <p className="mt-3 text-sm leading-7" style={{ color: "var(--muted)" }}>
-              La pagina account non serve solo per entrare: rende visibile quanta selezione reale hai gia` costruito e da dove conviene ripartire adesso.
+              La pagina account non serve solo per entrare: rende visibile quanta selezione reale hai già costruito e da dove conviene ripartire adesso.
             </p>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {[
                 { label: "Shortlist", value: workspace.saved, detail: "tool salvati" },
                 { label: "Compare", value: workspace.compare, detail: "profili nel tray" },
-                { label: "Priorita` alta", value: workspace.top, detail: "priorita` alte" },
+                { label: "Priorit? alta", value: workspace.top, detail: "priorit? alte" },
                 { label: "Da rivedere", value: workspace.review, detail: "tool ancora aperti" },
               ].map((item) => (
                 <div
@@ -348,7 +348,7 @@ export function AccountPanel() {
           </div>
 
           <div className="dark-panel panel-lift rounded-[28px] p-4.5 sm:p-5">
-            <p className="editorial-label !text-white/60">Percorso di continuita`</p>
+            <p className="editorial-label !text-white/60">Percorso di continuità</p>
             <div className="mt-4 grid gap-3">
               <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
                 <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">1. Sessione locale</p>

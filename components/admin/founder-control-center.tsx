@@ -222,7 +222,7 @@ export function FounderControlCenter({
                 </h1>
                 <p className="mt-3 max-w-[44rem] text-sm leading-7 text-white/72 sm:text-[0.98rem]">
                   Una vista unica su tools, collections, source attive e write path. Il pannello
-                  resta leggibile anche in fallback, ma segnala subito quando il runtime non e`
+                  resta leggibile anche in fallback, ma segnala subito quando il runtime non ?
                   pienamente live.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2.5">

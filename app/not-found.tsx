@@ -11,9 +11,9 @@ export default function NotFound() {
         <PremiumBadge tone="accent" className="mt-5">
           404
         </PremiumBadge>
-        <h1 className="mt-5 text-4xl sm:text-5xl">Questa pagina non e` disponibile.</h1>
+        <h1 className="mt-5 text-4xl sm:text-5xl">Questa pagina non è disponibile.</h1>
         <p className="mx-auto mt-4 max-w-xl text-base leading-7" style={{ color: "var(--muted)" }}>
-          Il contenuto che stai cercando non e` stato trovato oppure non e` ancora pubblicato.
+          Il contenuto che stai cercando non è stato trovato oppure non è ancora pubblicato.
         </p>
         <PremiumLink href="/" className="mt-8">
           Torna alla home

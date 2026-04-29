@@ -161,7 +161,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                     Una lettura importata per mantenere vivo il contenuto storico senza il tono da demo.
                   </h2>
                   <p className="mt-3 text-[0.98rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-                    Questa guida conserva il valore editoriale del vecchio sito ma entra qui con una gerarchia molto piu` chiara.
+                    Questa guida conserva il valore editoriale del vecchio sito ma entra qui con una gerarchia molto pi? chiara.
                   </p>
                 </div>
 

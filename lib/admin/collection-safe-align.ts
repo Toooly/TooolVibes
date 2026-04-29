@@ -54,7 +54,7 @@ export function getCollectionSafeAlignEligibility({
     return {
       eligible: false,
       label: "Nessun drift allineabile",
-      description: "Questo slug non e` in conflitto tra mock e Supabase, quindi non richiede un safe align.",
+      description: "Questo slug non ? in conflitto tra mock e Supabase, quindi non richiede un safe align.",
     };
   }
 
@@ -94,7 +94,7 @@ export function getCollectionSafeAlignEligibility({
     return {
       eligible: false,
       label: "Fuori policy",
-      description: "Questo caso richiede un sync piu` ricco: non rientra nel perimetro del safe align v15.",
+      description: "Questo caso richiede un sync pi? ricco: non rientra nel perimetro del safe align v15.",
     };
   }
 
@@ -127,7 +127,7 @@ export function getCollectionSafeAlignEligibility({
   return {
     eligible: true,
     label: "Safe align eligible",
-    description: "Il drift e` confinato ai campi operativi piu` delimitati e puo` essere riallineato in modo prudente.",
+    description: "Il drift ? confinato ai campi operativi pi? delimitati e pu? essere riallineato in modo prudente.",
   };
 }
 

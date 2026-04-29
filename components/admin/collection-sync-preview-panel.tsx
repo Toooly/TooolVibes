@@ -107,8 +107,8 @@ export function CollectionSyncPreviewPanel({
           </p>
           <h3 className="text-xl">Nessun riallineamento proposto.</h3>
           <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
-            Su questa collection non c&apos;e` un confronto legacy -&gt; Supabase abbastanza definito da
-            trasformarsi in preview. O e` gia` allineata, oppure manca uno dei due lati del confronto.
+            Su questa collection non c&apos;? un confronto legacy -&gt; Supabase abbastanza definito da
+            trasformarsi in preview. O ? gi? allineata, oppure manca uno dei due lati del confronto.
           </p>
         </div>
         {lastSafeAlign ? (
@@ -147,7 +147,7 @@ export function CollectionSyncPreviewPanel({
         <SectionHeading
           eyebrow="Sync preview"
           title={compact ? "Preview del riallineamento" : "Cosa cambierebbe prima di toccare davvero la source reale."}
-          description="Questo layer e` solo descrittivo: distingue i cambi candidati a un align prudente da quelli che restano nel perimetro di una decisione editoriale."
+          description="Questo layer ? solo descrittivo: distingue i cambi candidati a un align prudente da quelli che restano nel perimetro di una decisione editoriale."
         />
         {detailHref ? (
           <Link

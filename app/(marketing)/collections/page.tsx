@@ -57,7 +57,7 @@ export default async function CollectionsPage() {
           <SectionHeading
             eyebrow="Collections"
             title="La superficie dove la selezione diventa percorso."
-            description="Qui non stai piu` partendo da un nome o da un filtro. Stai entrando da uno scenario, una tesi o un pubblico gia` ordinati."
+            description="Qui non stai più partendo da un nome o da un filtro. Stai entrando da uno scenario, una tesi o un pubblico già ordinati."
           />
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -168,7 +168,7 @@ export default async function CollectionsPage() {
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.06),rgba(18,15,35,0.72))]" />
                 <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[rgba(15,12,31,0.36)] px-4 py-4 backdrop-blur-sm">
                   <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
-                    Perche` conta
+                    Perché conta
                   </p>
                   <p className="mt-2 text-sm leading-6 text-white/82">{specialIssue.rationale}</p>
                   {specialIssue.premium_teaser ? (
@@ -191,7 +191,7 @@ export default async function CollectionsPage() {
             <div className="max-w-[42rem]">
               <p className="editorial-label">Collection pubblicate</p>
               <h2 className="text-display-card mt-2.5 max-w-none text-[1.62rem] sm:max-w-[17ch] sm:text-[1.9rem] sm:text-balance">
-                Percorsi piu` stretti, piu` leggibili, piu` pronti da usare.
+                Percorsi più stretti, più leggibili, più pronti da usare.
               </h2>
             </div>
             <span className="selection-status">Collection attive</span>

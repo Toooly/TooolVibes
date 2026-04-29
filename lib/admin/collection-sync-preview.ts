@@ -139,7 +139,7 @@ function buildSlotChanges(entry: CollectionTransitionEntry): CollectionSyncPrevi
         risk: "high",
         current_value: formatSlotSnapshot(supabaseRecord.slot, supabaseRecord.index),
         legacy_value: "assente",
-        summary: "Supabase include un tool che il legacy mock non considera piu` parte della collection.",
+        summary: "Supabase include un tool che il legacy mock non considera pi? parte della collection.",
       });
       continue;
     }
@@ -156,7 +156,7 @@ function buildSlotChanges(entry: CollectionTransitionEntry): CollectionSyncPrevi
         risk: "medium",
         current_value: formatSlotSnapshot(supabaseRecord.slot, supabaseRecord.index),
         legacy_value: formatSlotSnapshot(mockRecord.slot, mockRecord.index),
-        summary: "Il tool e` presente in entrambe le source ma con un ordine diverso.",
+        summary: "Il tool ? presente in entrambe le source ma con un ordine diverso.",
       });
     }
 
@@ -168,7 +168,7 @@ function buildSlotChanges(entry: CollectionTransitionEntry): CollectionSyncPrevi
         risk: "medium",
         current_value: supabaseRecord.slot.role,
         legacy_value: mockRecord.slot.role,
-        summary: "Il ruolo editoriale assegnato al tool e` cambiato tra mock e Supabase.",
+        summary: "Il ruolo editoriale assegnato al tool ? cambiato tra mock e Supabase.",
       });
     }
 
@@ -180,7 +180,7 @@ function buildSlotChanges(entry: CollectionTransitionEntry): CollectionSyncPrevi
         risk: "medium",
         current_value: supabaseRecord.slot.note ?? "nessuna nota",
         legacy_value: mockRecord.slot.note ?? "nessuna nota",
-        summary: "La nota curatoriale del tool non e` allineata tra legacy e repository reale.",
+        summary: "La nota curatoriale del tool non ? allineata tra legacy e repository reale.",
       });
     }
 
@@ -229,7 +229,7 @@ export function buildCollectionSyncPreview(
 
   if (entry.public_source === "supabase") {
     notes.push(
-      "Il pubblico oggi legge gia` Supabase: un eventuale allineamento toccherebbe la versione pubblica corrente.",
+      "Il pubblico oggi legge gi? Supabase: un eventuale allineamento toccherebbe la versione pubblica corrente.",
     );
   } else if (entry.public_source === "mock") {
     notes.push(
@@ -245,7 +245,7 @@ export function buildCollectionSyncPreview(
 
   if (canSafeAlignFields) {
     notes.push(
-      "Questa preview tocca solo campi primari non conflittuali, quindi e` candidata a un safe align futuro.",
+      "Questa preview tocca solo campi primari non conflittuali, quindi ? candidata a un safe align futuro.",
     );
   }
 
@@ -274,7 +274,7 @@ export function getCollectionSyncPreviewMeta(state: CollectionSyncPreview["state
     case "safe-align-ready":
       return {
         label: "Safe align preview",
-        description: "Le differenze restano nei campi piu` delimitati. Il sync reale non e` ancora automatico, ma la preview e` pulita.",
+        description: "Le differenze restano nei campi pi? delimitati. Il sync reale non ? ancora automatico, ma la preview ? pulita.",
       };
     case "needs-editorial-decision":
     default:
@@ -301,7 +301,7 @@ export function getCollectionSyncPreviewRiskMeta(risk: CollectionSyncPreviewRisk
     default:
       return {
         label: "Low impact",
-        description: "La preview resta confinata ai campi piu` delimitati e non tocca tool slot complessi.",
+        description: "La preview resta confinata ai campi pi? delimitati e non tocca tool slot complessi.",
       };
   }
 }
@@ -317,9 +317,9 @@ export function getCollectionSyncPreviewPosture({
 }) {
   if (!preview) {
     return {
-      label: "Lascia com'e`",
+      label: "Lascia com'?",
       tone: "pass" as const,
-      description: "Non c'e` una preview di riallineamento utile: la collection e` gia` allineata o non ha un target confrontabile.",
+      description: "Non c'? una preview di riallineamento utile: la collection ? gi? allineata o non ha un target confrontabile.",
     };
   }
 
@@ -330,7 +330,7 @@ export function getCollectionSyncPreviewPosture({
     return {
       label: "Pronta a safe align",
       tone: "pass" as const,
-      description: "La preview resta prudente e la review e` gia` stata chiusa: in un pass futuro potra` diventare una vera azione sicura.",
+      description: "La preview resta prudente e la review ? gi? stata chiusa: in un pass futuro potra` diventare una vera azione sicura.",
     };
   }
 
@@ -353,6 +353,6 @@ export function getCollectionSyncPreviewPosture({
   return {
     label: "Needs editorial decision",
     tone: "warning" as const,
-    description: "La preview e` utile per decidere, ma non abbastanza delimitata da suggerire un sync automatico.",
+    description: "La preview ? utile per decidere, ma non abbastanza delimitata da suggerire un sync automatico.",
   };
 }

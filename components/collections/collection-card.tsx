@@ -136,7 +136,7 @@ export function CollectionCard({
                 {leadToolName ? `Tool guida: ${leadToolName}. ` : ""}
                 {hiddenToolCount > 0
                   ? `${visibleToolCount} tool leggibili ora, ${hiddenToolCount} nel layer completo.`
-                  : "Tutti i tool della collection sono gia` leggibili qui."}
+                  : "Tutti i tool della collection sono gi? leggibili qui."}
               </p>
             </div>
 

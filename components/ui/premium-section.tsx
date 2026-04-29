@@ -110,14 +110,14 @@ export function EmptyState({
         "rounded-[24px] border p-5",
         dark
           ? "border-white/10 bg-white/8 text-white"
-          : "border-[rgba(76,55,166,0.1)] bg-white/66 text-[var(--foreground)]",
+          : "border-white/10 bg-white/7 text-white",
         className,
       )}
     >
       {Icon ? (
         <Icon
           aria-hidden="true"
-          className={cn("size-6", dark ? "text-white/76" : "text-[var(--accent)]")}
+          className={cn("size-6", dark ? "text-white/76" : "text-[var(--accent-strong)]")}
         />
       ) : null}
       {eyebrow ? (
@@ -133,7 +133,7 @@ export function EmptyState({
       <h3 className={cn("mt-3 text-[1.35rem] leading-tight", dark && "text-white")}>
         {title}
       </h3>
-      <p className={cn("mt-3 text-sm leading-6", dark ? "text-white/64" : "text-[var(--muted)]")}>
+      <p className={cn("mt-3 text-sm leading-6", dark ? "text-white/64" : "text-white/64")}>
         {description}
       </p>
       {action ? <div className="mt-5">{action}</div> : null}

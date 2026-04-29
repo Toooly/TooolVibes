@@ -34,7 +34,7 @@ export function EditorialSelection({ tools }: EditorialSelectionProps) {
             <SectionHeading
               eyebrow="Razionale editoriale"
               title="Perche&apos; alcuni tool restano, e altri no."
-              description="La selezione TooolVibes filtra per utilita`, tono, chiarezza di posizionamento e qualita` dell’esperienza."
+              description="La selezione TooolVibes filtra per utilit?, tono, chiarezza di posizionamento e qualit? dell’esperienza."
             />
             <div className="mt-5 grid gap-3">
               {rationalePoints.map((point) => (

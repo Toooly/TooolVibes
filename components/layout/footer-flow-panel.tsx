@@ -36,7 +36,7 @@ export function FooterFlowPanel() {
       return {
         eyebrow: "Fine discovery",
         title: "Dall'archivio devi uscire con un candidato chiaro.",
-        description: "Se un profilo regge, salvalo. Se i candidati sono gia` pochi, confrontali.",
+        description: "Se un profilo regge, salvalo. Se i candidati sono già pochi, confrontali.",
         primary: { href: "/shortlist", label: shortlistCount > 0 ? "Apri shortlist" : "Inizia shortlist" },
         secondary: { href: compareCount > 1 ? "/compare" : "/collections", label: compareCount > 1 ? "Apri compare" : "Apri collections" },
       };
@@ -66,7 +66,7 @@ export function FooterFlowPanel() {
       return {
         eyebrow: "Dopo il profilo",
         title: "Il profilo non chiude la lettura: apre una decisione.",
-        description: "Da qui devi salvare, confrontare o riportare il tool dentro un percorso piu` guidato.",
+        description: "Da qui devi salvare, confrontare o riportare il tool dentro un percorso più guidato.",
         primary: { href: "/shortlist", label: "Vai a shortlist" },
         secondary: { href: "/compare", label: "Apri compare" },
       };
@@ -75,7 +75,7 @@ export function FooterFlowPanel() {
     if (pathname.startsWith("/collections")) {
       return {
         eyebrow: "Dopo la collection",
-        title: "La collection vale quando lascia in mano candidati piu` chiari.",
+        title: "La collection vale quando lascia in mano candidati più chiari.",
         description: "Usala come contesto di partenza, poi sposta i tool forti in workspace o in compare.",
         primary: { href: "/shortlist", label: "Apri shortlist" },
         secondary: { href: compareCount > 1 ? "/compare" : "/archivio", label: compareCount > 1 ? "Apri compare" : "Torna all'archivio" },
@@ -85,7 +85,7 @@ export function FooterFlowPanel() {
     if (pathname.startsWith("/account")) {
       return {
         eyebrow: "Stato account",
-        title: "L'account serve a non perdere continuita`, non a deviare il percorso.",
+        title: "L'account serve a non perdere continuit?, non a deviare il percorso.",
         description: "Dopo aver chiarito stato e accesso, il prodotto deve riportarti subito alla selezione attiva.",
         primary: { href: compareCount > 1 ? "/compare" : "/shortlist", label: compareCount > 1 ? "Continua compare" : "Apri shortlist" },
         secondary: { href: "/collections", label: "Apri collections" },

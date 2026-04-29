@@ -23,7 +23,7 @@ function HeaderSearchFallback({ compact = false }: { compact?: boolean }) {
     <div className="flex items-center gap-2" aria-hidden="true">
       <div
         className={cn(
-          "rounded-full border border-[rgba(92,72,170,0.14)] bg-white/86",
+          "rounded-full border border-white/10 bg-white/8",
           compact ? "h-[42px] flex-1" : "h-[42px] w-full",
         )}
       />
@@ -50,15 +50,15 @@ export function SiteHeader() {
 
   return (
     <header className="page-shell sticky top-0 z-40 py-2.5 sm:py-4">
-      <div className="rounded-[30px] border border-[rgba(83,63,170,0.13)] bg-white/90 px-4 py-3 shadow-[0_20px_55px_rgba(32,19,99,0.09)] backdrop-blur-xl sm:px-5 sm:py-4">
+      <div className="rounded-[30px] border border-white/10 bg-[#0c0c1b]/82 px-4 py-3 shadow-[0_20px_70px_rgba(0,0,0,0.32)] backdrop-blur-xl sm:px-5 sm:py-4">
         <div className="flex items-center justify-between gap-3">
           <Link href="/" className="flex min-w-0 items-center gap-3" aria-label="Vai alla home TooolVibes">
             <BrandLogo size={46} priority />
             <div className="min-w-0">
-              <p className="truncate text-[0.9rem] font-semibold uppercase tracking-[0.2em] text-[var(--foreground)] sm:text-[0.98rem]">
+              <p className="truncate text-[0.9rem] font-semibold uppercase tracking-[0.2em] text-white sm:text-[0.98rem]">
                 TooolVibes
               </p>
-              <p className="hidden text-[0.76rem] text-[var(--muted)] 2xl:block">
+              <p className="hidden text-[0.76rem] text-white/48 2xl:block">
                 AI tools discovery premium
               </p>
             </div>
@@ -73,8 +73,8 @@ export function SiteHeader() {
                 className={cn(
                   "rounded-full px-3 py-2 text-[0.82rem] font-semibold transition-all duration-200",
                   isActive(item.href)
-                    ? "bg-[rgba(109,59,255,0.1)] text-[var(--accent-strong)]"
-                    : "text-[var(--muted-strong)] hover:bg-[rgba(109,59,255,0.06)] hover:text-[var(--foreground)]",
+                    ? "bg-white/10 text-white"
+                    : "text-white/62 hover:bg-white/8 hover:text-white",
                 )}
               >
                 {item.label}
@@ -91,7 +91,7 @@ export function SiteHeader() {
           <div className="hidden items-center gap-2 lg:flex">
             <Link
               href="/account"
-              className="hidden rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition-colors hover:border-[rgba(106,60,255,0.25)] 2xl:inline-flex"
+              className="hidden rounded-full border border-white/10 bg-white/8 px-4 py-2 text-sm font-semibold text-white/78 transition-colors hover:border-white/20 hover:text-white 2xl:inline-flex"
             >
               Login
             </Link>
@@ -103,7 +103,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setIsOpen((current) => !current)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(83,63,170,0.12)] bg-white text-[var(--foreground)] xl:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/8 text-white xl:hidden"
             aria-label={isOpen ? "Chiudi menu" : "Apri menu"}
             aria-expanded={isOpen}
           >
@@ -131,7 +131,7 @@ export function SiteHeader() {
         </div>
 
         {isOpen ? (
-          <div className="mt-4 space-y-4 border-t border-[rgba(83,63,170,0.08)] pt-4 xl:hidden">
+          <div className="mt-4 space-y-4 border-t border-white/10 pt-4 xl:hidden">
             <Suspense fallback={<HeaderSearchFallback compact />}>
               <DirectoryHeaderSearch compact onSubmitted={() => setIsOpen(false)} />
             </Suspense>
@@ -145,8 +145,8 @@ export function SiteHeader() {
                   className={cn(
                     "rounded-[18px] border px-4 py-3 text-sm font-semibold",
                     isActive(item.href)
-                      ? "border-[rgba(108,76,255,0.2)] bg-[rgba(109,59,255,0.08)] text-[var(--accent-strong)]"
-                      : "border-[rgba(83,63,170,0.1)] bg-white text-[var(--foreground)]",
+                      ? "border-white/18 bg-white/12 text-white"
+                      : "border-white/10 bg-white/6 text-white/76",
                   )}
                 >
                   {item.label}
@@ -160,7 +160,7 @@ export function SiteHeader() {
               </PremiumLink>
               <Link
                 href="/account"
-                className="rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-4 py-3 text-center text-sm font-semibold text-[var(--foreground)]"
+                className="rounded-full border border-white/10 bg-white/8 px-4 py-3 text-center text-sm font-semibold text-white/82"
               >
                 Login
               </Link>

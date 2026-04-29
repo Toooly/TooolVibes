@@ -30,7 +30,7 @@ const editorialStateMeta: Record<
   },
   featured: {
     label: "Featured",
-    description: "Pubblicata con un ruolo piu` forte nelle superfici curate.",
+    description: "Pubblicata con un ruolo pi? forte nelle superfici curate.",
   },
   archived: {
     label: "Archived",
@@ -45,7 +45,7 @@ const surfaceMeta: Record<CollectionSurface, { label: string; description: strin
   },
   "special-issue": {
     label: "Special issue",
-    description: "Una deep curation piu` ricca, pensata per alzare il valore percepito.",
+    description: "Una deep curation pi? ricca, pensata per alzare il valore percepito.",
   },
 };
 
@@ -153,14 +153,14 @@ export function validateCollectionRecord(
   if (collection.surface === "special-issue" && collection.tone !== "special-issue") {
     issues.push({
       level: "warning",
-      message: "Le special issue dovrebbero usare il tone `special-issue`.",
+      message: "Le special issue dovrebbero usare il tone `special-issu?.",
     });
   }
 
   if (collection.surface !== "special-issue" && collection.featured_slot === "special-issue") {
     issues.push({
       level: "warning",
-      message: "Featured slot `special-issue` usato fuori da una special issue.",
+      message: "Featured slot `special-issu? usato fuori da una special issue.",
     });
   }
 
@@ -207,7 +207,7 @@ export function validateCollectionRecord(
   if (collection.advanced_issue && collection.surface !== "special-issue") {
     issues.push({
       level: "warning",
-      message: "Il formato advanced special issue dovrebbe vivere solo su `special-issue`.",
+      message: "Il formato advanced special issue dovrebbe vivere solo su `special-issu?.",
     });
   }
 

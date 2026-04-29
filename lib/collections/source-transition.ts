@@ -294,13 +294,13 @@ export function mergeCollectionsByPrecedence({
 
   if (composedSources.length > 1) {
     warnings.push(
-      "Source collections in transizione: Supabase prevale sugli slug gia` migrati, mentre le source locali restano fallback per i restanti.",
+      "Source collections in transizione: Supabase prevale sugli slug gi? migrati, mentre le source locali restano fallback per i restanti.",
     );
   }
 
   if (transition.summary.conflicts > 0) {
     warnings.push(
-      `${transition.summary.conflicts} collection hanno drift tra mock e Supabase: il pubblico usa la versione Supabase finche' il conflitto non viene riallineato.`,
+      `${transition.summary.conflicts} collection hanno drift tra mock e Supabase: il pubblico usa la versione Supabase finch? il conflitto non viene riallineato.`,
     );
   }
 

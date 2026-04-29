@@ -23,7 +23,7 @@ export function ToolGrid({
       >
         <h3 className="text-2xl">Nessun tool disponibile.</h3>
         <p className="mt-3 text-sm leading-7" style={{ color: "var(--muted)" }}>
-          Quando il catalogo e` vuoto, questo spazio resta pronto ad accogliere i tool pubblicati.
+          Quando il catalogo ? vuoto, questo spazio resta pronto ad accogliere i tool pubblicati.
         </p>
       </div>
     );

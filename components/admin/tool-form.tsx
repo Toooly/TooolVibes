@@ -129,7 +129,7 @@ export function ToolForm({
         <FormSection
           eyebrow="Identita`"
           title="Base editoriale e metadata essenziali"
-          description="Qui fissiamo naming, slug, tassonomia e provenienza. Se questi campi sono chiari, il frontend pubblico resta piu` coerente e il CMS e` molto piu` affidabile da gestire."
+          description="Qui fissiamo naming, slug, tassonomia e provenienza. Se questi campi sono chiari, il frontend pubblico resta pi? coerente e il CMS ? molto pi? affidabile da gestire."
         >
           <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
             <label className="block xl:col-span-2">
@@ -215,7 +215,7 @@ export function ToolForm({
         <FormSection
           eyebrow="Copy e delivery"
           title="Come il tool si presenta nel prodotto"
-          description="Questa parte alimenta listing, scheda tool e layer editoriale. Piuttosto che riempire campi in modo meccanico, qui conviene scrivere con una gerarchia gia` pronta per il frontend."
+          description="Questa parte alimenta listing, scheda tool e layer editoriale. Piuttosto che riempire campi in modo meccanico, qui conviene scrivere con una gerarchia gi? pronta per il frontend."
         >
           <div className="grid gap-5 lg:grid-cols-2">
             <label className="block lg:col-span-2">
@@ -286,9 +286,9 @@ export function ToolForm({
         </FormSection>
 
         <FormSection
-          eyebrow="Visibilita`"
+          eyebrow="Visibilit?"
           title="Publishing e posizionamento"
-          description="L'ultima decisione e` sempre editoriale: quando il tool e` pronto, puoi spingerlo nel feed pubblico o promuoverlo nei punti piu` forti della selezione."
+          description="L'ultima decisione ? sempre editoriale: quando il tool ? pronto, puoi spingerlo nel feed pubblico o promuoverlo nei punti pi? forti della selezione."
         >
           <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
             <div
@@ -306,7 +306,7 @@ export function ToolForm({
               <ToggleCard
                 name="is_featured"
                 title="Tool in evidenza"
-                description="Mostralo nella selezione settimanale e nei punti piu` curati del prodotto."
+                description="Mostralo nella selezione settimanale e nei punti pi? curati del prodotto."
                 defaultChecked={values.is_featured}
               />
               <ToggleCard
@@ -327,7 +327,7 @@ export function ToolForm({
               Server-side write path
             </p>
             <p className="mt-2 text-sm leading-7 text-white/72">
-              Nessuna chiave sensibile viene esposta al client. Il founder puo` lavorare qui senza
+              Nessuna chiave sensibile viene esposta al client. Il founder pu? lavorare qui senza
               perdere contesto neppure quando il runtime entra in modalita` prudente.
             </p>
           </div>

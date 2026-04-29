@@ -404,7 +404,7 @@ export function AdvancedSpecialIssue({
             <span className="selection-status">{hiddenBlockCount} moduli nel layer completo</span>
           </div>
           <p className="mt-3 max-w-[46rem] text-[0.96rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-            La preview lascia leggibile la tesi dell&apos;issue. Il layer completo conserva i moduli piu` densi: note comparative piu` lunghe, varianti di stack e chiusure editoriali piu` specifiche.
+            La preview lascia leggibile la tesi dell&apos;issue. Il layer completo conserva i moduli pi? densi: note comparative pi? lunghe, varianti di stack e chiusure editoriali pi? specifiche.
           </p>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <ButtonLink href={premiumUpgradeHref}>{premiumUpgradeLabel}</ButtonLink>

@@ -23,8 +23,8 @@ export function HomeCollectionsSection({
         <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider sm:pb-6">
           <SectionHeading
             eyebrow="Collection curate"
-            title="La curation entra solo quando un contesto ti aiuta piu` della lista."
-            description="Una collection forte basta a mostrarti che qui il percorso cambia: non stai piu` scremando, stai entrando da un angolo gia` pensato."
+            title="La curation entra solo quando un contesto ti aiuta più della lista."
+            description="Una collection forte basta a mostrarti che qui il percorso cambia: non stai più scremando, stai entrando da un angolo già pensato."
           />
 
           <div className="space-y-2 text-right">

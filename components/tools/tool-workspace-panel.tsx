@@ -112,9 +112,9 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
                     save_reason: active ? undefined : option,
                   })
                 }
-              className={`selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${
-                active ? "quick-filter-chip is-active" : ""
-              }`}
+                className={`selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${
+                  active ? "quick-filter-chip is-active" : ""
+                }`}
                 style={
                   active
                     ? {

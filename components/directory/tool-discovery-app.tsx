@@ -245,8 +245,8 @@ function ToolActionButton({
       className={cn(
         "inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-3 text-sm font-semibold transition-all duration-200",
         active
-          ? "border-[rgba(106,60,255,0.32)] bg-[rgba(106,60,255,0.12)] text-[var(--accent-strong)]"
-          : "border-[rgba(76,55,166,0.14)] bg-white/70 text-[var(--muted-strong)] hover:border-[rgba(106,60,255,0.24)]",
+          ? "border-[rgba(192,132,252,0.34)] bg-[rgba(168,85,247,0.16)] text-[var(--accent-strong)]"
+          : "border-white/10 bg-white/7 text-white/68 hover:border-white/22 hover:text-white",
       )}
     >
       {children}
@@ -291,9 +291,9 @@ function ToolAppCard({
       )}
     >
       <div
-        className="border-b border-[rgba(76,55,166,0.08)] p-4 sm:p-5"
+        className="border-b border-white/10 p-4 sm:p-5"
         style={{
-          background: `radial-gradient(circle at top right, ${tool.accentFrom}24, transparent 36%), radial-gradient(circle at bottom left, ${tool.accentTo}20, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,240,255,0.94))`,
+          background: `radial-gradient(circle at top right, ${tool.accentFrom}32, transparent 36%), radial-gradient(circle at bottom left, ${tool.accentTo}24, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045))`,
         }}
       >
         <div className="flex items-start gap-3">
@@ -304,10 +304,10 @@ function ToolAppCard({
               <PremiumBadge tone={levelTone[tool.level]}>{tool.levelLabel}</PremiumBadge>
               {saved ? <PremiumBadge tone="success">Salvato</PremiumBadge> : null}
             </div>
-            <h3 className="mt-3 text-display-card text-[1.35rem] text-[var(--foreground)] sm:mt-4 sm:text-[1.55rem]">
+            <h3 className="mt-3 text-display-card text-[1.35rem] text-white sm:mt-4 sm:text-[1.55rem]">
               {tool.name}
             </h3>
-            <p className="text-clamp-2 mt-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:text-[0.76rem] sm:tracking-[0.16em]">
+            <p className="text-clamp-2 mt-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white/52 sm:text-[0.76rem] sm:tracking-[0.16em]">
               {tool.categoryLabel}
             </p>
           </div>
@@ -317,7 +317,7 @@ function ToolAppCard({
           {tool.highlights.slice(0, 3).map((item) => (
             <span
               key={item}
-              className="rounded-full border border-white/60 bg-white/75 px-3 py-1 text-[0.68rem] font-medium text-[var(--muted-strong)]"
+              className="rounded-full border border-white/10 bg-white/8 px-3 py-1 text-[0.68rem] font-medium text-white/66"
             >
               {item}
             </span>
@@ -326,23 +326,23 @@ function ToolAppCard({
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <p className="text-clamp-2 min-h-[3.35rem] text-[0.92rem] leading-6 text-[var(--muted-strong)] sm:text-clamp-3 sm:min-h-[5rem] sm:text-[0.98rem] sm:leading-7">
+        <p className="text-clamp-2 min-h-[3.35rem] text-[0.92rem] leading-6 text-white/68 sm:text-clamp-3 sm:min-h-[5rem] sm:text-[0.98rem] sm:leading-7">
           {tool.shortDescription}
         </p>
-        <div className="mt-4 grid grid-cols-2 gap-3 rounded-[20px] border border-[rgba(76,55,166,0.08)] bg-[rgba(246,244,255,0.76)] px-3 py-2.5 sm:rounded-[22px] sm:px-4 sm:py-3">
+        <div className="mt-4 grid grid-cols-2 gap-3 rounded-[20px] border border-white/10 bg-white/7 px-3 py-2.5 sm:rounded-[22px] sm:px-4 sm:py-3">
           <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/44">
               Fonte
             </p>
-            <p className="mt-1.5 truncate text-xs font-semibold text-[var(--foreground)] sm:mt-2 sm:text-sm">
+            <p className="mt-1.5 truncate text-xs font-semibold text-white sm:mt-2 sm:text-sm">
               {tool.domain}
             </p>
           </div>
           <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/44">
               Aggiornato
             </p>
-            <p className="mt-1.5 text-xs font-semibold text-[var(--foreground)] sm:mt-2 sm:text-sm">
+            <p className="mt-1.5 text-xs font-semibold text-white sm:mt-2 sm:text-sm">
               {formatItalianDate(tool.publishedAt)}
             </p>
           </div>
@@ -352,14 +352,14 @@ function ToolAppCard({
           {tool.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
-              className="rounded-full bg-[rgba(106,60,255,0.08)] px-3 py-1 text-[0.72rem] font-semibold text-[var(--accent-strong)]"
+              className="rounded-full border border-white/10 bg-white/7 px-3 py-1 text-[0.72rem] font-semibold text-white/70"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <div className="mt-auto space-y-3 border-t border-[rgba(76,55,166,0.08)] pt-4 sm:space-y-4 sm:pt-5">
+        <div className="mt-auto space-y-3 border-t border-white/10 pt-4 sm:space-y-4 sm:pt-5">
           <div className="grid grid-cols-3 gap-2">
             <ToolActionButton active={saved} onClick={onSave} ariaLabel={`Salva ${tool.name}`}>
               {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
@@ -422,8 +422,8 @@ function ToolDetailDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction={isDesktop ? "right" : "bottom"}>
-      <DrawerContent className="max-h-[88vh] overflow-y-auto border-l border-white/20 bg-[linear-gradient(180deg,#fdfcff,#f2edff)] p-0 md:max-h-screen md:max-w-[42rem]">
-        <DrawerHeader className="border-b border-[rgba(76,55,166,0.1)] p-6 text-left">
+      <DrawerContent className="!max-h-[88vh] overflow-y-auto border-l border-white/12 bg-[linear-gradient(180deg,#11111f,#080816)] p-0 text-white md:!max-h-screen md:!max-w-[42rem]">
+        <DrawerHeader className="border-b border-white/10 p-5 text-left sm:p-6">
           <div className="flex items-start gap-4">
             <DirectoryToolGlyph tool={tool} size="lg" />
             <div className="min-w-0 flex-1">
@@ -431,16 +431,16 @@ function ToolDetailDrawer({
                 <PremiumBadge tone={levelTone[tool.level]}>{tool.levelLabel}</PremiumBadge>
                 <PremiumBadge tone="accent">{tool.category}</PremiumBadge>
               </div>
-              <DrawerTitle className="mt-4 text-[2.2rem] leading-none text-[var(--foreground)]">
+              <DrawerTitle className="mt-4 text-[1.75rem] leading-none text-white sm:text-[2.2rem]">
                 {tool.name}
               </DrawerTitle>
-              <DrawerDescription className="mt-3 text-base leading-7 text-[var(--muted-strong)]">
+              <DrawerDescription className="mt-3 text-base leading-7 text-white/66">
                 {tool.longDescription}
               </DrawerDescription>
             </div>
             <DrawerClose
               aria-label="Chiudi scheda tool"
-              className="rounded-full border border-[rgba(76,55,166,0.12)] bg-white/80 p-2"
+              className="rounded-full border border-white/10 bg-white/8 p-2"
             >
               <X className="size-4" />
             </DrawerClose>
@@ -456,12 +456,12 @@ function ToolDetailDrawer({
             ].map(([label, value]) => (
               <div
                 key={label}
-                className="rounded-[22px] border border-[rgba(76,55,166,0.1)] bg-white/78 p-4"
+                className="rounded-[22px] border border-white/10 bg-white/7 p-4"
               >
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white/44">
                   {label}
                 </p>
-                <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{value}</p>
+                <p className="mt-2 text-sm font-semibold text-white">{value}</p>
               </div>
             ))}
           </div>
@@ -472,14 +472,11 @@ function ToolDetailDrawer({
             </p>
             <div className="mt-4 grid gap-3">
               {tool.useCases.map((useCase, index) => (
-                <div
-                  key={useCase}
-                  className="rounded-[20px] border border-[rgba(76,55,166,0.08)] bg-white/72 p-4"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+                <div key={useCase} className="rounded-[20px] border border-white/10 bg-white/7 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/44">
                     Caso {String(index + 1).padStart(2, "0")}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">{useCase}</p>
+                  <p className="mt-2 text-sm leading-6 text-white/66">{useCase}</p>
                 </div>
               ))}
             </div>
@@ -491,16 +488,16 @@ function ToolDetailDrawer({
                 key={item.slug}
                 type="button"
                 onClick={() => onStack(item.slug)}
-                className="rounded-[24px] border border-[rgba(76,55,166,0.1)] bg-white/78 p-4 text-left transition hover:-translate-y-0.5 hover:border-[rgba(106,60,255,0.22)]"
+                className="rounded-[24px] border border-white/10 bg-white/7 p-4 text-left transition hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/10"
               >
-                <p className="font-semibold text-[var(--foreground)]">{item.name}</p>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{item.shortDescription}</p>
+                <p className="font-semibold text-white">{item.name}</p>
+                <p className="mt-2 text-sm leading-6 text-white/60">{item.shortDescription}</p>
               </button>
             ))}
           </div>
         </div>
 
-        <DrawerFooter className="border-t border-[rgba(76,55,166,0.1)] bg-white/70 p-5">
+        <DrawerFooter className="border-t border-white/10 bg-white/6 p-5">
           <div className="grid gap-2 sm:grid-cols-4">
             <PremiumButton type="button" onClick={onSave} tone={saved ? "secondary" : "primary"}>
               {saved ? "Salvato" : "Salva"}
@@ -699,6 +696,10 @@ export function ToolDiscoveryApp({
     .filter((tool): tool is DirectoryTool => Boolean(tool));
   const hasActiveFilters =
     Boolean(query.trim()) || activeGroup !== "all" || activeLevel !== "all" || Boolean(activeTag);
+  const activeGroupLabel =
+    directoryFilterGroups.find((group) => group.key === activeGroup)?.label ?? activeGroup;
+  const activeLevelLabel =
+    directoryLevelFilters.find((level) => level.key === activeLevel)?.label ?? activeLevel;
   const table = useReactTable({
     data: compareTools,
     columns: compareColumns,
@@ -721,14 +722,16 @@ export function ToolDiscoveryApp({
       return;
     }
     toast.success(
-      result.added ? `${tool.name} aggiunto al compare` : `${tool.name} rimosso dal compare`,
+      result.added
+        ? `${tool.name} aggiunto al confronto`
+        : `${tool.name} rimosso dal confronto`,
     );
   }
 
   function handleStack(slug: string) {
     const tool = getToolBySlug(tools, slug);
     const added = addToStack(slug);
-    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool gia' nello stack");
+    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool già nello stack");
   }
 
   function resetFilters() {
@@ -890,8 +893,8 @@ export function ToolDiscoveryApp({
             <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-white/10 bg-white/6 px-3 py-2 text-xs text-white/70">
               <span className="font-semibold text-white">Filtri attivi:</span>
               {query.trim() ? <span>Ricerca: {query.trim()}</span> : null}
-              {activeGroup !== "all" ? <span>Categoria: {activeGroup}</span> : null}
-              {activeLevel !== "all" ? <span>Livello: {activeLevel}</span> : null}
+              {activeGroup !== "all" ? <span>Categoria: {activeGroupLabel}</span> : null}
+              {activeLevel !== "all" ? <span>Livello: {activeLevelLabel}</span> : null}
               {activeTag ? <span>Tag: {activeTag}</span> : null}
               <button
                 type="button"
@@ -918,7 +921,7 @@ export function ToolDiscoveryApp({
             </div>
             <Link
               href="/wishlist"
-              className="inline-flex rounded-full border border-[rgba(76,55,166,0.14)] bg-white/76 px-4 py-2 text-sm font-semibold text-[var(--accent-strong)]"
+              className="inline-flex rounded-full border border-white/12 bg-white/7 px-4 py-2 text-sm font-semibold text-white/86 transition hover:border-white/24 hover:bg-white/10 hover:text-white"
             >
               Suggerisci un Toool
             </Link>
@@ -990,7 +993,7 @@ export function ToolDiscoveryApp({
                     key={slug}
                     type="button"
                     onClick={() => setSelectedSlug(slug)}
-                    className="w-full rounded-[18px] border border-[rgba(76,55,166,0.08)] bg-white/74 px-3 py-2 text-left text-sm font-semibold text-[var(--foreground)]"
+                    className="w-full rounded-[18px] border border-white/10 bg-white/7 px-3 py-2 text-left text-sm font-semibold text-white/86 transition hover:border-white/20 hover:bg-white/10"
                   >
                     {tool.name}
                   </button>
@@ -1098,21 +1101,21 @@ export function ToolDiscoveryApp({
       </div>
 
       <Drawer open={isFilterDrawerOpen} onOpenChange={setFilterDrawerOpen} direction="bottom">
-        <DrawerContent className="max-h-[86vh] overflow-y-auto border-white/20 bg-[linear-gradient(180deg,#fdfcff,#f2edff)] p-0">
-          <DrawerHeader className="border-b border-[rgba(76,55,166,0.1)] p-5 text-left">
+        <DrawerContent className="max-h-[86vh] overflow-y-auto border-white/12 bg-[linear-gradient(180deg,#11111f,#080816)] p-0 text-white">
+          <DrawerHeader className="border-b border-white/10 p-5 text-left">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <PremiumBadge tone="accent">Filtri</PremiumBadge>
-                <DrawerTitle className="mt-3 text-display-card text-[2rem] text-[var(--foreground)]">
+                <DrawerTitle className="mt-3 text-display-card text-[2rem] text-white">
                   Affina il catalogo
                 </DrawerTitle>
-                <DrawerDescription className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
+                <DrawerDescription className="mt-2 text-sm leading-6 text-white/62">
                   Scegli categoria, livello e tag senza trasformare il mobile in una parete di chip.
                 </DrawerDescription>
               </div>
               <DrawerClose
                 aria-label="Chiudi filtri"
-                className="rounded-full border border-[rgba(76,55,166,0.12)] bg-white/80 p-2"
+                className="rounded-full border border-white/10 bg-white/8 p-2"
               >
                 <X className="size-4" />
               </DrawerClose>
@@ -1127,9 +1130,10 @@ export function ToolDiscoveryApp({
               onGroupChange={setActiveGroup}
               onLevelChange={setActiveLevel}
               onTagChange={toggleTag}
+              dark
             />
           </div>
-          <DrawerFooter className="grid grid-cols-2 gap-2 border-t border-[rgba(76,55,166,0.1)] bg-white/72 p-5">
+          <DrawerFooter className="grid grid-cols-2 gap-2 border-t border-white/10 bg-white/6 p-5">
             <PremiumButton type="button" tone="secondary" onClick={resetFilters}>
               Reset
             </PremiumButton>
@@ -1141,7 +1145,7 @@ export function ToolDiscoveryApp({
       </Drawer>
 
       <nav
-        className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-4 gap-1 rounded-[24px] border border-white/28 bg-[#1e123f]/88 p-1.5 text-white shadow-[0_20px_60px_rgba(18,10,50,0.28)] backdrop-blur-xl lg:hidden"
+        className="fixed inset-x-3 bottom-[5.6rem] z-40 grid grid-cols-4 gap-1 rounded-[24px] border border-white/28 bg-[#1e123f]/88 p-1.5 text-white shadow-[0_20px_60px_rgba(18,10,50,0.28)] backdrop-blur-xl lg:hidden"
         aria-label="Azioni rapide catalogo"
       >
         <button

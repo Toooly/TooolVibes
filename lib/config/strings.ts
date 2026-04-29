@@ -14,14 +14,14 @@ export const marketingStrings = {
     eyebrow: "Directory editoriale italiana",
     title: "L'ingresso per capire quali tool AI e SaaS meritano davvero spazio nel tuo stack.",
     description:
-      "TooolVibes non prova a mostrarti tutto. Ti porta dal primo orientamento a una scelta piu` chiara con meno rumore e meno deviazioni.",
+      "TooolVibes non prova a mostrarti tutto. Ti porta dal primo orientamento a una scelta pi? chiara con meno rumore e meno deviazioni.",
     primaryCta: "Apri l'archivio",
     secondaryCta: "Guarda il radar settimanale",
   },
   weekly: {
     title: "RADAR DELLA SETTIMANA",
     description:
-      "Pochi tool appena emersi o tornati rilevanti. Non i piu` rumorosi, ma quelli che oggi meritano un passaggio serio.",
+      "Pochi tool appena emersi o tornati rilevanti. Non i pi? rumorosi, ma quelli che oggi meritano un passaggio serio.",
   },
   archive: {
     title: "L'archivio dove la ricerca diventa scrematura.",
@@ -34,7 +34,7 @@ export const marketingStrings = {
     allCategories: "Tutte le categorie",
     emptyTitle: "Nessun Toool trovato",
     emptyDescription:
-      "Prova a cambiare filtro oppure usa un termine piu` ampio.",
+      "Prova a cambiare filtro oppure usa un termine pi? ampio.",
   },
   tags: {
     title: "Tag editoriali",

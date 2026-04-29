@@ -55,7 +55,7 @@ export function DiscoveryProgress({
           <div>
             <p className="editorial-label">Percorso consigliato</p>
             <p className="text-body-soft mt-2 text-[0.94rem]" style={{ color: "var(--muted-strong)" }}>
-              Un percorso leggero per entrare nell&apos;archivio con piu` criterio.
+              Un percorso leggero per entrare nell&apos;archivio con più criterio.
             </p>
           </div>
           <div className="discovery-meter min-w-[11rem] rounded-[22px] px-4 py-3">
@@ -137,7 +137,7 @@ export function DiscoveryProgress({
                 {
                   label: "Categorie esplorate",
                   value: `${exploredCategoriesCount}/${totalCategories}`,
-                  note: "Aree gia` toccate",
+                  note: "Aree già toccate",
                 },
                 { label: "Shortlist salvata", value: `${shortlistCount}`, note: "Tool da rivedere" },
               ].map((item, index) => (

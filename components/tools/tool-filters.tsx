@@ -27,7 +27,7 @@ type ToolFiltersProps = {
 };
 
 const sortLabels: Record<ToolSortKey, string> = {
-  recent: "Piu` recenti",
+  recent: "Più recenti",
   featured: "Prima gli evidenza",
   name: "Ordine alfabetico",
   updated: "Aggiornati da poco",
@@ -253,7 +253,7 @@ export function ToolFilters({
                 <h3 className="mt-2 max-w-[40rem] text-[1.7rem] leading-[1.02] sm:text-[2.02rem] sm:text-balance">
                   {hasActiveTask
                     ? `${getTaskLabel(task)} con il taglio TooolVibes.`
-                    : "Tool pronti da scremare in modo piu` disciplinato."}
+                    : "Tool pronti da scremare in modo più disciplinato."}
                 </h3>
               </div>
               <p className="max-w-xl text-sm leading-7 xl:text-right" style={{ color: "var(--muted)" }}>

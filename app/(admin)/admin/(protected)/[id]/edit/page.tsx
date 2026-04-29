@@ -34,7 +34,7 @@ export default async function EditToolPage({ params }: EditToolPageProps) {
           <SectionHeading
             eyebrow="Modifica tool"
             title={tool.name}
-            description="Aggiorna metadati, copy editoriale e stati pubblici con un runtime piu` onesto: se il pannello non e` davvero live, lo dichiara e blocca le mutazioni."
+            description="Aggiorna metadati, copy editoriale e stati pubblici con un runtime pi? onesto: se il pannello non ? davvero live, lo dichiara e blocca le mutazioni."
           />
           <Link
             href="/admin"

@@ -29,7 +29,7 @@ type StageFilter = ShortlistStage | "all";
 
 const sortOptions: { value: ShortlistSortKey; label: string }[] = [
   { value: "workspace", label: "Workspace: pinned e top prima" },
-  { value: "recent", label: "Piu` recenti" },
+  { value: "recent", label: "Pi? recenti" },
   { value: "featured", label: "Prima gli evidenza" },
   { value: "name", label: "Ordine alfabetico" },
   { value: "updated", label: "Aggiornati da poco" },
@@ -99,7 +99,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))" }}>
             <p className="editorial-label">1. Salva</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
-              Parti da un profilo forte o da una collection che ha gia` il taglio giusto.
+              Parti da un profilo forte o da una collection che ha gi? il taglio giusto.
             </p>
           </div>
           <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))" }}>
@@ -111,7 +111,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))" }}>
             <p className="editorial-label">3. Confronta</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
-              Quando restano 2 o 3 candidati veri, il passaggio naturale e` compare.
+              Quando restano 2 o 3 candidati veri, il passaggio naturale ? compare.
             </p>
           </div>
         </div>

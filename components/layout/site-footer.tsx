@@ -7,11 +7,11 @@ import { siteConfig } from "@/lib/config/site";
 const footerNav = [
   { href: "/", label: "Home" },
   { href: "/archivio", label: "Toools" },
-  { href: "/tags", label: "Categories" },
-  { href: "/wishlist", label: "Wishlist" },
+  { href: "/tags", label: "Categorie" },
+  { href: "/wishlist", label: "Suggerisci" },
   { href: "/product-hunt", label: "Product Hunt" },
   { href: "/community", label: "Community" },
-  { href: "/shop", label: "Digital Shop" },
+  { href: "/shop", label: "Shop Digitale" },
   { href: "/account", label: "Login" },
 ];
 
@@ -113,7 +113,7 @@ export function SiteFooter() {
               Product Hunt
             </Link>
             <Link href="/wishlist" className="hover:text-white">
-              Wishlist
+              Suggerisci
             </Link>
             <Link href="/archivio" className="hover:text-white">
               Archivio

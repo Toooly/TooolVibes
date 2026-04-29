@@ -22,7 +22,7 @@ export function ArchiveCollectionsStrip({
             Quando non vuoi partire da un nome, entra da una collection.
           </h2>
           <p className="text-body-soft mt-3 text-[0.95rem]" style={{ color: "var(--muted-strong)" }}>
-            Le collection non sostituiscono i filtri. Ti danno un ingresso piu` guidato quando vuoi partire da un contesto coerente invece che da una lista.
+            Le collection non sostituiscono i filtri. Ti danno un ingresso più guidato quando vuoi partire da un contesto coerente invece che da una lista.
           </p>
         </div>
         <Link

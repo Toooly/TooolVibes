@@ -21,22 +21,22 @@ const toneMeta: Record<CollectionTone, { label: string; description: string }> =
   },
   "focused-bundle": {
     label: "Bundle compatto",
-    description: "Una raccolta piu` stretta, utile quando il task e` molto chiaro.",
+    description: "Una raccolta pi? stretta, utile quando il task ? molto chiaro.",
   },
   "editorial-picks": {
     label: "Scelta curatoriale",
-    description: "Una lettura curatoriale piu` orientata al fit che alla completezza.",
+    description: "Una lettura curatoriale pi? orientata al fit che alla completezza.",
   },
   "special-issue": {
     label: "Special issue",
-    description: "Una superficie piu` densa, pensata per una lettura premium davvero distinta.",
+    description: "Una superficie pi? densa, pensata per una lettura premium davvero distinta.",
   },
 };
 
 const difficultyMeta: Record<CollectionDifficulty, string> = {
   starter: "Partenza facile",
-  growing: "Gia` operativo",
-  advanced: "Piu` intenzionale",
+  growing: "Gi? operativo",
+  advanced: "Pi? intenzionale",
 };
 
 const accessMeta: Record<
@@ -51,12 +51,12 @@ const accessMeta: Record<
   "premium-preview": {
     label: "Anteprima premium",
     subtleLabel: "Anteprima",
-    description: "Una parte della lettura resta visibile, mentre il livello piu` denso e` gia` impostato nel layer member.",
+    description: "Una parte della lettura resta visibile, mentre il livello pi? denso ? gi? impostato nel layer member.",
   },
   premium: {
     label: "Member issue",
     subtleLabel: "Riservata",
-    description: "Issue member piu` densa, leggibile in teaser e pensata per una lettura completa distinta dalla parte open.",
+    description: "Issue member pi? densa, leggibile in teaser e pensata per una lettura completa distinta dalla parte open.",
   },
 };
 

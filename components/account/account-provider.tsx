@@ -96,10 +96,10 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       }
 
       setAuthMessage(
-        "Account collegato, ma la persistenza remota non e` disponibile: la workspace resta al sicuro in locale.",
+        "Account collegato, ma la persistenza remota non ? disponibile: la workspace resta al sicuro in locale.",
       );
     } catch {
-      setAuthMessage("Connessione account riuscita, ma la sync workspace e` in pausa.");
+      setAuthMessage("Connessione account riuscita, ma la sync workspace ? in pausa.");
     } finally {
       setIsAttaching(false);
     }

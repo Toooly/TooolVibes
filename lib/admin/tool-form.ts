@@ -101,7 +101,7 @@ export function parseToolFormData(formData: FormData) {
   const fieldErrors: Partial<Record<ToolFormField, string>> = {};
 
   if (rawName.length < 2) {
-    fieldErrors.name = "Inserisci un nome piu` descrittivo.";
+    fieldErrors.name = "Inserisci un nome pi? descrittivo.";
   }
 
   if (!rawSlugOrFallback || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(rawSlugOrFallback)) {
@@ -117,7 +117,7 @@ export function parseToolFormData(formData: FormData) {
   }
 
   if (rawDescription.length < 50) {
-    fieldErrors.description_it = "Aggiungi piu` contesto editoriale.";
+    fieldErrors.description_it = "Aggiungi pi? contesto editoriale.";
   }
 
   if (!isValidUrl(rawWebsiteUrl)) {

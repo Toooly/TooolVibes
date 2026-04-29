@@ -30,8 +30,8 @@ type CompareBoardProps = {
 const dimensionReadingCopy: Record<EditorialScoreDimension, string> = {
   ease_of_use: "Quanto entra in mano senza attrito iniziale.",
   versatility: "Quanto regge scenari diversi senza perdere fuoco.",
-  polish: "Quanto l'interfaccia restituisce maturita` e cura.",
-  workflow_fit: "Quanto si integra bene in un flusso gia` reale.",
+  polish: "Quanto l'interfaccia restituisce maturit? e cura.",
+  workflow_fit: "Quanto si integra bene in un flusso gi? reale.",
   experimentation_value: "Quanto apre strade nuove da provare davvero.",
   editorial_conviction: "Quanto merita di restare nel radar TooolVibes.",
 };
@@ -182,7 +182,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
           Serve un secondo profilo per un confronto utile.
         </h2>
             <p className="text-body-soft mx-auto mt-3 max-w-[31rem] text-[0.93rem]" style={{ color: "var(--muted)" }}>
-              {comparedTools[0].name} e` gia` nel tray. Aggiungi un altro profilo vicino per capire
+              {comparedTools[0].name} ? gi? nel tray. Aggiungi un altro profilo vicino per capire
               davvero dove cambia il fit di workflow.
             </p>
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">

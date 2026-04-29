@@ -64,7 +64,7 @@ export function getCollectionTransitionReviewMeta(state: CollectionConflictRevie
     case "dismissed":
       return {
         label: "Dismissed",
-        description: "Warning archiviato in attesa di un sync piu` ricco.",
+        description: "Warning archiviato in attesa di un sync pi? ricco.",
       };
     case "unreviewed":
     default:
@@ -320,7 +320,7 @@ export function buildCollectionReadinessSummary({
     return {
       state: "review",
       label: "Review",
-      summary: "La collection e` leggibile, ma conviene una revisione editoriale prima di considerarla davvero pronta.",
+      summary: "La collection ? leggibile, ma conviene una revisione editoriale prima di considerarla davvero pronta.",
       checks: [...checks],
     };
   }

@@ -10,11 +10,11 @@ export const mockTools: ToolRecord[] = [
     editorial_state: "In evidenza",
     pricing: "Freemium",
     platforms: ["Web"],
-    best_for: "Landing di lancio, micrositi e refresh visuale che devono sembrare gia` maturi",
+    best_for: "Landing di lancio, micrositi e refresh visuale che devono sembrare gi? maturi",
     editorial_note:
-      "Da aprire quando il problema non e` generare un layout, ma dare credibilita` immediata alla superficie pubblica.",
+      "Da aprire quando il problema non ? generare un layout, ma dare credibilit? immediata alla superficie pubblica.",
     why_here:
-      "Perche' accelera il passaggio da idea a pagina presentabile senza far crollare tono, gerarchia e percezione di maturita`.",
+      "Perch? accelera il passaggio da idea a pagina presentabile senza far crollare tono, gerarchia e percezione di maturit?.",
     use_cases: [
       "Landing di pre-lancio",
       "Refresh rapido di una pagina marketing",
@@ -26,7 +26,7 @@ export const mockTools: ToolRecord[] = [
       "Buon fit per founder e piccoli team che devono uscire",
     ],
     cautions: [
-      "Non e` il posto giusto se il collo di bottiglia e` la logica applicativa",
+      "Non ? il posto giusto se il collo di bottiglia ? la logica applicativa",
       "Senza criterio di copy e struttura rischia pagine belle ma intercambiabili",
     ],
     editorial_scorecard: {
@@ -40,7 +40,7 @@ export const mockTools: ToolRecord[] = [
     short_description_it:
       "Per chiudere landing e pagine di lancio con una resa forte e un time-to-polish molto corto.",
     description_it:
-      "Framer AI regge bene quando una buona idea rischia ancora di sembrare acerba. In TooolVibes conta perche' aiuta founder, designer e piccoli team a trasformare una direzione in una superficie pubblica piu` credibile senza aprire un workflow troppo pesante.",
+      "Framer AI regge bene quando una buona idea rischia ancora di sembrare acerba. In TooolVibes conta perch? aiuta founder, designer e piccoli team a trasformare una direzione in una superficie pubblica pi? credibile senza aprire un workflow troppo pesante.",
     website_url: "https://www.framer.com",
     tooolvibes_post_url: "https://tooolvibes.com/posts/framer-ai",
     cover_image_url:
@@ -65,14 +65,14 @@ export const mockTools: ToolRecord[] = [
     editorial_note:
       "Resta uno dei pochi tool AI da sviluppo che regge anche dopo il primo entusiasmo, soprattutto nei passaggi fragili.",
     why_here:
-      "Perche' accelera il lavoro senza trasformare il codice in una scatola nera, e tiene il vibe-coding piu` vicino a una pratica di sviluppo vera.",
+      "Perch? accelera il lavoro senza trasformare il codice in una scatola nera, e tiene il vibe-coding pi? vicino a una pratica di sviluppo vera.",
     use_cases: [
       "Refactor assistito su codebase reali",
       "Debugging con contesto e file multipli",
       "Scaffolding di fix o feature senza perdere il filo",
     ],
     strengths: [
-      "Ottimo equilibrio tra controllo e velocita`",
+      "Ottimo equilibrio tra controllo e velocit?",
       "Buona lettura del contesto su file e passaggi complessi",
       "Si integra bene in workflow reali, non solo in prove rapide",
     ],
@@ -91,7 +91,7 @@ export const mockTools: ToolRecord[] = [
     short_description_it:
       "Editor AI-first per scrivere, rifattorizzare e correggere codice restando dentro una lettura tecnica credibile.",
     description_it:
-      "Cursor e` uno dei riferimenti piu` solidi quando vuoi velocita` ma non vuoi mollare controllo, leggibilita` e responsabilita` sul codice. Per TooolVibes vale perche' regge bene sia il prototipo che il momento in cui il prototipo inizia davvero a sporcarsi.",
+      "Cursor ? uno dei riferimenti pi? solidi quando vuoi velocit? ma non vuoi mollare controllo, leggibilita` e responsabilita` sul codice. Per TooolVibes vale perch? regge bene sia il prototipo che il momento in cui il prototipo inizia davvero a sporcarsi.",
     website_url: "https://www.cursor.com",
     tooolvibes_post_url: "https://tooolvibes.com/posts/cursor",
     cover_image_url:
@@ -116,7 +116,7 @@ export const mockTools: ToolRecord[] = [
     editorial_note:
       "Funziona bene quando la scoperta tool si sposta dal singolo output al sistema operativo del team.",
     why_here:
-      "Perche' unisce AI e organizzazione senza far sembrare il prodotto solo un add-on di feature.",
+      "Perch? unisce AI e organizzazione senza far sembrare il prodotto solo un add-on di feature.",
     use_cases: [
       "Knowledge base team",
       "Documentazione operativa",
@@ -128,8 +128,8 @@ export const mockTools: ToolRecord[] = [
       "Buon equilibrio tra struttura e flessibilita`",
     ],
     cautions: [
-      "Puo` diventare dispersivo se non governi la struttura",
-      "L'AI qui e` utile, ma non e` il vero differenziante",
+      "Pu? diventare dispersivo se non governi la struttura",
+      "L'AI qui ? utile, ma non ? il vero differenziante",
     ],
     editorial_scorecard: {
       ease_of_use: "strong",
@@ -140,9 +140,9 @@ export const mockTools: ToolRecord[] = [
       editorial_conviction: "solid",
     },
     short_description_it:
-      "Organizza note, documentazione e task con un layer AI dentro un workspace gia` noto.",
+      "Organizza note, documentazione e task con un layer AI dentro un workspace gi? noto.",
     description_it:
-      "Per team e creator che vogliono centralizzare conoscenza e operazioni leggere. La forza non e` solo l’AI, ma la combinazione tra contenuto strutturato e collaborazione.",
+      "Per team e creator che vogliono centralizzare conoscenza e operazioni leggere. La forza non ? solo l’AI, ma la combinazione tra contenuto strutturato e collaborazione.",
     website_url: "https://www.notion.so/product/ai",
     tooolvibes_post_url: "https://tooolvibes.com/posts/notion-ai",
     cover_image_url:
@@ -165,9 +165,9 @@ export const mockTools: ToolRecord[] = [
     platforms: ["Web"],
     best_for: "Concept video, cut promozionali e post-produzione rapida per creator e launch asset",
     editorial_note:
-      "Interessante quando devi pesare insieme impatto visivo, rapidita` di esecuzione e qualita` percepita del workflow.",
+      "Interessante quando devi pesare insieme impatto visivo, rapidit? di esecuzione e qualit? percepita del workflow.",
     why_here:
-      "Perche' resta uno dei nomi piu` completi quando il criterio non e` solo AI, ma anche maturita` del prodotto e tenuta del flusso.",
+      "Perch? resta uno dei nomi pi? completi quando il criterio non ? solo AI, ma anche maturit? del prodotto e tenuta del flusso.",
     use_cases: [
       "Video concept rapidi per campagne o launch",
       "Post-produzione assistita e variazioni visuali",
@@ -191,9 +191,9 @@ export const mockTools: ToolRecord[] = [
       editorial_conviction: "strong",
     },
     short_description_it:
-      "Suite visual AI per chiudere concept, variazioni e post-produzione con un feeling prodotto molto piu` maturo della media.",
+      "Suite visual AI per chiudere concept, variazioni e post-produzione con un feeling prodotto molto pi? maturo della media.",
     description_it:
-      "Runway conta quando devi produrre asset video credibili senza costruire un workflow studio-grade. In TooolVibes e` forte perche' tiene insieme sperimentazione, velocita` e una sensazione premium che regge bene anche in contesti launch o content-first.",
+      "Runway conta quando devi produrre asset video credibili senza costruire un workflow studio-grade. In TooolVibes ? forte perch? tiene insieme sperimentazione, velocit? e una sensazione premium che regge bene anche in contesti launch o content-first.",
     website_url: "https://runwayml.com",
     tooolvibes_post_url: "https://tooolvibes.com/posts/runway",
     cover_image_url:
@@ -218,16 +218,16 @@ export const mockTools: ToolRecord[] = [
     editorial_note:
       "Funziona meglio come prima mappa che come risposta definitiva: apre bene il campo, non chiude da solo la ricerca.",
     why_here:
-      "Perche' comprime molto bene il tempo tra domanda iniziale e primo perimetro di ricerca, soprattutto quando devi ancora capire dove guardare.",
+      "Perch? comprime molto bene il tempo tra domanda iniziale e primo perimetro di ricerca, soprattutto quando devi ancora capire dove guardare.",
     use_cases: [
       "Mappare velocemente un tema nuovo",
       "Raccogliere fonti e primi riferimenti",
       "Capire cosa approfondire davvero prima della sintesi",
     ],
     strengths: [
-      "Velocita` molto alta nel first-pass",
+      "Velocit? molto alta nel first-pass",
       "Buon feeling da strumento di orientamento, non solo da chat",
-      "Molto utile quando la ricerca e` ancora aperta e poco strutturata",
+      "Molto utile quando la ricerca ? ancora aperta e poco strutturata",
     ],
     cautions: [
       "Le fonti importanti vanno comunque verificate a mano",
@@ -242,9 +242,9 @@ export const mockTools: ToolRecord[] = [
       editorial_conviction: "strong",
     },
     short_description_it:
-      "Motore di ricerca AI utile per aprire un tema, leggere le fonti e capire rapidamente dove vale la pena andare piu` a fondo.",
+      "Motore di ricerca AI utile per aprire un tema, leggere le fonti e capire rapidamente dove vale la pena andare pi? a fondo.",
     description_it:
-      "Perplexity e` forte quando devi togliere attrito alla fase iniziale della ricerca. In TooolVibes lo leggiamo come strumento di orientamento e raccolta fonti, non come verita` finale: il suo valore sta nel primo perimetro che ti consegna.",
+      "Perplexity ? forte quando devi togliere attrito alla fase iniziale della ricerca. In TooolVibes lo leggiamo come strumento di orientamento e raccolta fonti, non come verit? finale: il suo valore sta nel primo perimetro che ti consegna.",
     website_url: "https://www.perplexity.ai",
     tooolvibes_post_url: "https://tooolvibes.com/posts/perplexity",
     cover_image_url:
@@ -267,9 +267,9 @@ export const mockTools: ToolRecord[] = [
     platforms: ["Web", "Discord"],
     best_for: "Concept visivi, moodboard e direzioni creative",
     editorial_note:
-      "Da consultare quando l'obiettivo e` capire qualita` estetica, non solo produttivita`.",
+      "Da consultare quando l'obiettivo ? capire qualit? estetica, non solo produttivita`.",
     why_here:
-      "Perche' resta un riferimento quando il criterio principale e` impatto estetico e non industrializzazione del processo.",
+      "Perch? resta un riferimento quando il criterio principale ? impatto estetico e non industrializzazione del processo.",
     use_cases: [
       "Moodboard",
       "Concept creativo",
@@ -282,7 +282,7 @@ export const mockTools: ToolRecord[] = [
     ],
     cautions: [
       "Meno efficiente se cerchi precisione operativa",
-      "Il workflow non e` il piu` lineare del gruppo",
+      "Il workflow non ? il pi? lineare del gruppo",
     ],
     editorial_scorecard: {
       ease_of_use: "measured",
@@ -295,7 +295,7 @@ export const mockTools: ToolRecord[] = [
     short_description_it:
       "Generazione immagini con forte resa estetica per concept, campagne e direzioni creative.",
     description_it:
-      "Midjourney resta rilevante quando la priorita` e` l’impatto visivo. Utile per moodboard, concept editoriali e direzioni visuali in fase esplorativa.",
+      "Midjourney resta rilevante quando la priorit? ? l’impatto visivo. Utile per moodboard, concept editoriali e direzioni visuali in fase esplorativa.",
     website_url: "https://www.midjourney.com",
     tooolvibes_post_url: "https://tooolvibes.com/posts/midjourney",
     cover_image_url:
@@ -318,9 +318,9 @@ export const mockTools: ToolRecord[] = [
     platforms: ["Mac", "Windows"],
     best_for: "Walkthrough, voiceover, podcast e contenuti parlati da editare come testo",
     editorial_note:
-      "Molto forte quando vuoi abbassare la complessita` dell'editing senza dare al contenuto un feeling impoverito.",
+      "Molto forte quando vuoi abbassare la complessit? dell'editing senza dare al contenuto un feeling impoverito.",
     why_here:
-      "Perche' trasforma un workflow spesso tecnico in qualcosa di piu` editoriale, leggibile e facile da far reggere a team piccoli.",
+      "Perch? trasforma un workflow spesso tecnico in qualcosa di pi? editoriale, leggibile e facile da far reggere a team piccoli.",
     use_cases: [
       "Editing podcast e interviste",
       "Walkthrough o voiceover per launch asset",
@@ -332,7 +332,7 @@ export const mockTools: ToolRecord[] = [
       "Ottimo ponte tra editing, script e contenuto finale",
     ],
     cautions: [
-      "Non e` il piu` profondo per chi fa audio pro come mestiere",
+      "Non ? il pi? profondo per chi fa audio pro come mestiere",
       "La comodita` non basta: il risultato finale va comunque diretto",
     ],
     editorial_scorecard: {
@@ -346,7 +346,7 @@ export const mockTools: ToolRecord[] = [
     short_description_it:
       "Editing audio e video via testo, ideale per contenuti parlati, walkthrough e team molto agili.",
     description_it:
-      "Descript conta quando il collo di bottiglia non e` la post-produzione avanzata, ma la velocita` con cui devi arrivare a un contenuto parlato pulito e pubblicabile. Per TooolVibes e` prezioso perche' rende piu` accessibile un lavoro che spesso resta troppo tecnico.",
+      "Descript conta quando il collo di bottiglia non ? la post-produzione avanzata, ma la velocit? con cui devi arrivare a un contenuto parlato pulito e pubblicabile. Per TooolVibes ? prezioso perch? rende pi? accessibile un lavoro che spesso resta troppo tecnico.",
     website_url: "https://www.descript.com",
     tooolvibes_post_url: "https://tooolvibes.com/posts/descript",
     cover_image_url:
@@ -371,7 +371,7 @@ export const mockTools: ToolRecord[] = [
     editorial_note:
       "Da aprire quando devi capire se un'idea riesce a diventare interfaccia prima di diventare stack vero.",
     why_here:
-      "Perche' accorcia molto il passaggio tra intuizione e artefatto navigabile, con una sensazione piu` app-like di molti builder prompt-first.",
+      "Perch? accorcia molto il passaggio tra intuizione e artefatto navigabile, con una sensazione pi? app-like di molti builder prompt-first.",
     use_cases: [
       "Proof of concept rapidi",
       "Idea testing con interfacce navigabili",
@@ -379,12 +379,12 @@ export const mockTools: ToolRecord[] = [
     ],
     strengths: [
       "Molto veloce nel passaggio idea > interfaccia",
-      "Buon feeling di prodotto gia` nei primi output",
+      "Buon feeling di prodotto gi? nei primi output",
       "Interessante per iterazioni rapide e prime prove convincenti",
     ],
     cautions: [
-      "Va validato non appena la complessita` cresce o arrivano logiche piu` vere",
-      "Il rischio principale e` confondere velocita` con solidita` del prodotto",
+      "Va validato non appena la complessit? cresce o arrivano logiche pi? vere",
+      "Il rischio principale ? confondere velocit? con solidit? del prodotto",
     ],
     editorial_scorecard: {
       ease_of_use: "solid",
@@ -395,9 +395,9 @@ export const mockTools: ToolRecord[] = [
       editorial_conviction: "strong",
     },
     short_description_it:
-      "Per trasformare prompt, flow e UI in un prototipo navigabile con una velocita` molto allineata alla cultura vibe-coding.",
+      "Per trasformare prompt, flow e UI in un prototipo navigabile con una velocit? molto allineata alla cultura vibe-coding.",
     description_it:
-      "Lovable e` forte quando l'obiettivo e` capire in poche ore se una direzione prodotto respira davvero come interfaccia. In TooolVibes conta perche' tiene bene la prima prova, ma resta da leggere con disciplina appena serve trasformarlo in qualcosa di piu` solido.",
+      "Lovable ? forte quando l'obiettivo ? capire in poche ore se una direzione prodotto respira davvero come interfaccia. In TooolVibes conta perch? tiene bene la prima prova, ma resta da leggere con disciplina appena serve trasformarlo in qualcosa di pi? solido.",
     website_url: "https://lovable.dev",
     tooolvibes_post_url: "https://tooolvibes.com/posts/lovable",
     cover_image_url:

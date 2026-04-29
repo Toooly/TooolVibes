@@ -29,7 +29,7 @@ export default async function ComparePage() {
           </>
         }
         asideEyebrow="Decisione rapida"
-        asideTitle="Pochi candidati, differenze piu` leggibili."
+        asideTitle="Pochi candidati, differenze più leggibili."
         asideCopy="Qui non costruisci una matrice infinita. Isoli gli scarti giusti tra tool che da soli sembrano ancora troppo vicini."
       />
 

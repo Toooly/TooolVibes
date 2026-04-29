@@ -143,6 +143,48 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --background: #050510;
+  --background-strong: #080816;
+  --background-deep: #0b0b1a;
+  --foreground: #f8fafc;
+  --muted: #a1a1aa;
+  --muted-strong: #d7d7e8;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --surface: rgba(17, 17, 31, 0.72);
+  --surface-strong: rgba(21, 21, 34, 0.86);
+  --surface-tint: rgba(29, 19, 63, 0.74);
+  --surface-glass: rgba(255, 255, 255, 0.065);
+  --surface-elevated: rgba(18, 18, 32, 0.92);
+  --primary: #7c3aed;
+  --primary-foreground: #ffffff;
+  --accent: #a855f7;
+  --accent-strong: #e9d5ff;
+  --accent-soft: rgba(168, 85, 247, 0.16);
+  --card: #11111f;
+  --card-foreground: #f8fafc;
+  --popover: #11111f;
+  --popover-foreground: #f8fafc;
+  --border: rgba(255, 255, 255, 0.09);
+  --input: rgba(255, 255, 255, 0.11);
+  --ring: rgba(192, 132, 252, 0.55);
+  --gradient-primary:
+    radial-gradient(circle at 82% 12%, rgba(192, 132, 252, 0.42), transparent 30%),
+    linear-gradient(135deg, #a855f7 0%, #7c3aed 45%, #321168 100%);
+  --gradient-ink:
+    radial-gradient(circle at 16% 8%, rgba(192, 132, 252, 0.2), transparent 28%),
+    radial-gradient(circle at 84% 18%, rgba(57, 210, 246, 0.12), transparent 24%),
+    linear-gradient(145deg, #080816 0%, #15112c 52%, #050510 100%);
+  --gradient-paper:
+    radial-gradient(circle at 16% 0%, rgba(168, 85, 247, 0.16), transparent 34%),
+    radial-gradient(circle at 86% 14%, rgba(57, 210, 246, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(23, 23, 39, 0.9), rgba(11, 11, 26, 0.86));
+  --shadow: 0 24px 72px rgba(0, 0, 0, 0.28);
+  --shadow-strong: 0 38px 110px rgba(0, 0, 0, 0.42);
+  --shadow-soft: 0 16px 42px rgba(0, 0, 0, 0.2);
+  --shadow-card: 0 24px 64px rgba(0, 0, 0, 0.28);
+  --shadow-premium: 0 34px 90px rgba(0, 0, 0, 0.38);
 }
 
 * {
@@ -158,12 +200,11 @@ body {
   font-family: "Manrope", "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-weight: 400;
   background:
-    radial-gradient(circle at 14% 7%, rgba(106, 60, 255, 0.14), transparent 24%),
-    radial-gradient(circle at 84% 12%, rgba(57, 210, 246, 0.11), transparent 20%),
-    radial-gradient(circle at 22% 72%, rgba(243, 191, 76, 0.08), transparent 18%),
-    radial-gradient(circle at 76% 56%, rgba(106, 60, 255, 0.06), transparent 20%),
-    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.82), transparent 24%),
-    linear-gradient(180deg, #fcfbff 0%, #f2efff 44%, #ebe6ff 100%);
+    radial-gradient(circle at 10% -4%, rgba(168, 85, 247, 0.28), transparent 27rem),
+    radial-gradient(circle at 88% 8%, rgba(57, 210, 246, 0.12), transparent 24rem),
+    radial-gradient(circle at 76% 72%, rgba(124, 58, 237, 0.18), transparent 30rem),
+    linear-gradient(180deg, #050510 0%, #080816 42%, #0b0b1a 100%);
+  color: var(--foreground);
   min-height: 100vh;
   text-rendering: optimizeLegibility;
   line-height: 1.58;
@@ -181,9 +222,9 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid rgba(34, 16, 124, 0.44);
+  outline: 2px solid rgba(216, 180, 254, 0.9);
   outline-offset: 4px;
-  box-shadow: 0 0 0 5px rgba(68, 220, 255, 0.12);
+  box-shadow: 0 0 0 5px rgba(168, 85, 247, 0.18);
 }
 
 img {
@@ -267,14 +308,14 @@ img {
 
   .premium-panel-tint {
     background:
-      radial-gradient(circle at 84% 12%, rgba(106, 60, 255, 0.14), transparent 30%),
-      radial-gradient(circle at 12% 8%, rgba(57, 210, 246, 0.08), transparent 24%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(242, 237, 255, 0.92));
+      radial-gradient(circle at 84% 12%, rgba(168, 85, 247, 0.22), transparent 30%),
+      radial-gradient(circle at 12% 8%, rgba(57, 210, 246, 0.1), transparent 24%),
+      linear-gradient(180deg, rgba(21, 21, 34, 0.9), rgba(13, 11, 29, 0.92));
   }
 
   .premium-panel-subtle {
-    border-color: rgba(70, 54, 134, 0.1);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(247, 244, 255, 0.82));
+    border-color: rgba(255, 255, 255, 0.09);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.045));
     box-shadow: var(--shadow-soft);
   }
 
@@ -339,8 +380,8 @@ img {
 
   .premium-button-secondary {
     color: var(--foreground);
-    border-color: rgba(70, 54, 134, 0.15);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 239, 255, 0.9));
+    border-color: rgba(255, 255, 255, 0.14);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.065));
     box-shadow:
       0 10px 24px rgba(50, 28, 173, 0.07),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
@@ -348,9 +389,9 @@ img {
 
   .premium-button-ghost {
     color: var(--accent-strong);
-    border-color: rgba(106, 60, 255, 0.14);
-    background: rgba(255, 255, 255, 0.54);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.58);
+    border-color: rgba(192, 132, 252, 0.2);
+    background: rgba(255, 255, 255, 0.055);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   .premium-button-dark {
@@ -395,25 +436,25 @@ img {
 
   .premium-badge-neutral {
     color: var(--muted-strong);
-    background: rgba(255, 255, 255, 0.74);
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .premium-badge-accent {
     color: var(--accent-strong);
-    border-color: rgba(106, 60, 255, 0.2);
-    background: rgba(106, 60, 255, 0.1);
+    border-color: rgba(192, 132, 252, 0.28);
+    background: rgba(168, 85, 247, 0.14);
   }
 
   .premium-badge-success {
-    color: #126045;
-    border-color: rgba(18, 96, 69, 0.16);
-    background: rgba(92, 191, 156, 0.14);
+    color: #d1fae5;
+    border-color: rgba(110, 231, 183, 0.28);
+    background: rgba(16, 185, 129, 0.16);
   }
 
   .premium-badge-warning {
-    color: #815311;
-    border-color: rgba(243, 191, 76, 0.28);
-    background: rgba(243, 191, 76, 0.16);
+    color: #fde68a;
+    border-color: rgba(245, 158, 11, 0.3);
+    background: rgba(245, 158, 11, 0.16);
   }
 
   .premium-badge-dark {
@@ -425,8 +466,8 @@ img {
   .premium-input {
     width: 100%;
     border-radius: 20px;
-    border: 1px solid rgba(76, 55, 166, 0.13);
-    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.075);
     color: var(--foreground);
     outline: none;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
@@ -437,8 +478,8 @@ img {
   }
 
   .premium-input:focus {
-    border-color: rgba(106, 60, 255, 0.34);
-    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(192, 132, 252, 0.46);
+    background: rgba(255, 255, 255, 0.11);
     box-shadow:
       0 0 0 5px rgba(106, 60, 255, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 0.78);
@@ -448,11 +489,11 @@ img {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    border: 1px solid rgba(70, 54, 134, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.095);
     border-radius: 30px;
     background:
-      radial-gradient(circle at 88% 0%, rgba(106, 60, 255, 0.08), transparent 30%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 245, 255, 0.9));
+      radial-gradient(circle at 88% 0%, rgba(168, 85, 247, 0.16), transparent 30%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.045));
     box-shadow: var(--shadow-soft);
     transition:
       transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -463,7 +504,7 @@ img {
   .premium-card:hover,
   .premium-card:focus-within {
     transform: translateY(-2px);
-    border-color: rgba(106, 60, 255, 0.24);
+    border-color: rgba(192, 132, 252, 0.32);
     box-shadow: var(--shadow-card);
   }
 

@@ -22,7 +22,7 @@ export function getCollectionFormatMeta(
       label: "Special issue avanzata",
       subtleLabel: "Issue avanzata",
       description:
-        "Una surface narrativa piu` strutturata, con moduli editoriali, compare insight e workflow moments.",
+        "Una surface narrativa pi? strutturata, con moduli editoriali, compare insight e workflow moments.",
     };
   }
 
@@ -31,7 +31,7 @@ export function getCollectionFormatMeta(
       label: "Member issue",
       subtleLabel: "Member issue",
       description:
-        "Una special issue premium piu` densa di una collection standard, ancora leggibile dentro il prodotto.",
+        "Una special issue premium pi? densa di una collection standard, ancora leggibile dentro il prodotto.",
     };
   }
 
@@ -40,7 +40,7 @@ export function getCollectionFormatMeta(
       label: "Anteprima premium",
       subtleLabel: "Anteprima",
       description:
-        "Una superficie con una parte pubblica utile e un livello premium piu` profondo gia` impostato con chiarezza.",
+        "Una superficie con una parte pubblica utile e un livello premium pi? profondo gi? impostato con chiarezza.",
     };
   }
 
@@ -48,7 +48,7 @@ export function getCollectionFormatMeta(
     label: "Collection",
     subtleLabel: "Collection",
     description:
-      "Una collection piu` lineare, pensata come percorso curatoriale breve dentro la shell prodotto.",
+      "Una collection pi? lineare, pensata come percorso curatoriale breve dentro la shell prodotto.",
   };
 }
 

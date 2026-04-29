@@ -138,7 +138,7 @@ function ToolCardComponent({
                 </span>
               </div>
               <p className="text-display-card mt-3.5 max-w-[18ch] text-[1.26rem] sm:max-w-[19ch] sm:text-[1.42rem]">
-                Il profilo piu` forte da cui iniziare la lettura.
+                Il profilo più forte da cui iniziare la lettura.
               </p>
               <p className="text-body-soft text-clamp-3 mt-2.5 text-[0.9rem]" style={{ color: "var(--muted-strong)" }}>
                 {tool.short_description_it}
