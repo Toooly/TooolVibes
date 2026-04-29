@@ -2,21 +2,38 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
-type Tone = "primary" | "secondary" | "ghost" | "dark" | "danger";
-type Size = "sm" | "md" | "lg";
+type Tone =
+  | "primary"
+  | "premium"
+  | "secondary"
+  | "ghost"
+  | "outline"
+  | "subtle"
+  | "glow"
+  | "dark"
+  | "danger"
+  | "link";
+type Size = "sm" | "md" | "lg" | "xl" | "icon";
 
 const buttonTone: Record<Tone, string> = {
   primary: "premium-button-primary",
+  premium: "premium-button-premium",
   secondary: "premium-button-secondary",
   ghost: "premium-button-ghost",
+  outline: "premium-button-outline",
+  subtle: "premium-button-subtle",
+  glow: "premium-button-glow",
   dark: "premium-button-dark",
   danger: "premium-button-danger",
+  link: "premium-button-link",
 };
 
 const buttonSize: Record<Size, string> = {
   sm: "min-h-10 px-4 py-2 text-[0.82rem]",
   md: "min-h-12 px-5 py-3 text-sm",
   lg: "min-h-[3.35rem] px-6 py-3.5 text-[0.95rem]",
+  xl: "min-h-[3.85rem] px-7 py-4 text-[1rem]",
+  icon: "min-h-11 min-w-11 px-0 py-0 text-sm",
 };
 
 export function PremiumLink({
@@ -37,6 +54,7 @@ export function PremiumLink({
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className">) {
   const classes = cn(
     "premium-button inline-flex items-center justify-center gap-2 rounded-full font-semibold",
+    size === "icon" && "premium-button-icon",
     buttonTone[tone],
     buttonSize[size],
     className,
@@ -52,7 +70,7 @@ export function PremiumLink({
         {...props}
       >
         <span>{children}</span>
-        <span aria-hidden="true" className="premium-arrow">
+        <span aria-hidden="true" className="premium-arrow premium-button-icon-shift">
           -&gt;
         </span>
       </a>
@@ -63,7 +81,7 @@ export function PremiumLink({
     <Link href={href} className={classes} {...props}>
       <span>{children}</span>
       {tone === "primary" || tone === "dark" ? (
-        <span aria-hidden="true" className="premium-arrow">
+        <span aria-hidden="true" className="premium-arrow premium-button-icon-shift">
           -&gt;
         </span>
       ) : null}
@@ -87,6 +105,7 @@ export function PremiumButton({
     <button
       className={cn(
         "premium-button inline-flex items-center justify-center gap-2 rounded-full font-semibold",
+        size === "icon" && "premium-button-icon",
         buttonTone[tone],
         buttonSize[size],
         className,

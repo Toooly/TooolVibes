@@ -30,6 +30,8 @@ import {
 import {
   Bookmark,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Columns3,
   Filter,
   GripVertical,
@@ -82,6 +84,27 @@ const levelTone: Record<DirectoryToolLevel, "accent" | "success" | "neutral" | "
   beginner: "success",
   intermediate: "neutral",
   expert: "dark",
+};
+
+const shelfOrder: DirectoryToolLevel[] = ["featured", "beginner", "intermediate", "expert"];
+
+const shelfCopy: Record<DirectoryToolLevel, { title: string; description: string }> = {
+  featured: {
+    title: "Da guardare prima",
+    description: "La selezione editoriale più forte: pochi profili ad alto segnale, pronti da aprire o confrontare.",
+  },
+  beginner: {
+    title: "Partenza rapida",
+    description: "Tool immediati per scrittura, immagini, video e prime attività operative.",
+  },
+  intermediate: {
+    title: "Workflow in crescita",
+    description: "Soluzioni più strutturate per marketing, supporto, contenuti, siti e pagamenti.",
+  },
+  expert: {
+    title: "Stack avanzati",
+    description: "Automazioni, agenti e layer più tecnici per chi sta già costruendo processi veri.",
+  },
 };
 
 const compareColumns: ColumnDef<DirectoryTool>[] = [
@@ -243,10 +266,8 @@ function ToolActionButton({
       aria-label={ariaLabel}
       onClick={onClick}
       className={cn(
-        "inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-3 text-sm font-semibold transition-all duration-200",
-        active
-          ? "border-[rgba(192,132,252,0.34)] bg-[rgba(168,85,247,0.16)] text-[var(--accent-strong)]"
-          : "border-white/10 bg-white/7 text-white/68 hover:border-white/22 hover:text-white",
+        "premium-button premium-button-icon inline-flex min-h-10 min-w-10 items-center justify-center gap-2 text-sm font-semibold",
+        active ? "premium-button-glow text-white" : "premium-button-subtle text-white/72",
       )}
     >
       {children}
@@ -254,9 +275,8 @@ function ToolActionButton({
   );
 }
 
-function ToolAppCard({
+function ToolCompactCard({
   tool,
-  variant,
   saved,
   compared,
   stacked,
@@ -266,7 +286,6 @@ function ToolAppCard({
   onStack,
 }: {
   tool: DirectoryTool;
-  variant: "default" | "featured" | "saved" | "compared";
   saved: boolean;
   compared: boolean;
   stacked: boolean;
@@ -278,89 +297,80 @@ function ToolAppCard({
   return (
     <motion.article
       layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 8 }}
-      whileHover={{ y: -4, scale: 1.006 }}
-      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-      className={cn(
-        "premium-card group flex h-full min-h-[22rem] flex-col rounded-[26px] sm:min-h-[29rem] sm:rounded-[30px]",
-        variant === "featured" && "ring-1 ring-[rgba(106,60,255,0.22)]",
-        variant === "saved" && "border-[rgba(18,96,69,0.22)]",
-        variant === "compared" && "border-[rgba(243,191,76,0.34)]",
-      )}
+      initial={{ opacity: 0, y: 10, scale: 0.985 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 8, scale: 0.985 }}
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+      className="group/tool relative flex min-h-[20rem] w-[min(82vw,21rem)] shrink-0 snap-start flex-col overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.085),rgba(255,255,255,0.045))] shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors duration-300 hover:border-[rgba(216,180,254,0.34)]"
     >
-      <div
-        className="border-b border-white/10 p-4 sm:p-5"
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-80 transition-opacity duration-300 group-hover/tool:opacity-100"
         style={{
-          background: `radial-gradient(circle at top right, ${tool.accentFrom}32, transparent 36%), radial-gradient(circle at bottom left, ${tool.accentTo}24, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045))`,
+          background: `radial-gradient(circle at 88% 4%, ${tool.accentFrom}28, transparent 34%), radial-gradient(circle at 10% 92%, ${tool.accentTo}20, transparent 32%)`,
         }}
-      >
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-60"
+      />
+
+      <div className="relative flex flex-1 flex-col p-4">
         <div className="flex items-start gap-3">
-          <DirectoryToolGlyph tool={tool} size="lg" />
+          <DirectoryToolGlyph tool={tool} size="md" />
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap gap-2">
-              {tool.toolOfWeek ? <PremiumBadge tone="warning">Scelta settimana</PremiumBadge> : null}
-              <PremiumBadge tone={levelTone[tool.level]}>{tool.levelLabel}</PremiumBadge>
-              {saved ? <PremiumBadge tone="success">Salvato</PremiumBadge> : null}
+            <div className="flex flex-wrap gap-1.5">
+              <PremiumBadge tone={levelTone[tool.level]} className="px-2 py-1 text-[0.58rem]">
+                {tool.levelLabel}
+              </PremiumBadge>
+              {tool.toolOfWeek ? (
+                <PremiumBadge tone="warning" className="px-2 py-1 text-[0.58rem]">
+                  Scelta
+                </PremiumBadge>
+              ) : null}
             </div>
-            <h3 className="mt-3 text-display-card text-[1.35rem] text-white sm:mt-4 sm:text-[1.55rem]">
+            <h3 className="mt-2 truncate text-[1.18rem] font-semibold leading-tight text-white">
               {tool.name}
             </h3>
-            <p className="text-clamp-2 mt-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white/52 sm:text-[0.76rem] sm:tracking-[0.16em]">
+            <p className="mt-1 truncate text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-white/48">
               {tool.categoryLabel}
             </p>
           </div>
         </div>
 
-        <div className="mt-5 hidden flex-wrap gap-2 sm:flex">
-          {tool.highlights.slice(0, 3).map((item) => (
-            <span
-              key={item}
-              className="rounded-full border border-white/10 bg-white/8 px-3 py-1 text-[0.68rem] font-medium text-white/66"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <p className="text-clamp-2 min-h-[3.35rem] text-[0.92rem] leading-6 text-white/68 sm:text-clamp-3 sm:min-h-[5rem] sm:text-[0.98rem] sm:leading-7">
+        <p className="text-clamp-2 mt-4 min-h-[3rem] text-[0.9rem] leading-6 text-white/68">
           {tool.shortDescription}
         </p>
-        <div className="mt-4 grid grid-cols-2 gap-3 rounded-[20px] border border-white/10 bg-white/7 px-3 py-2.5 sm:rounded-[22px] sm:px-4 sm:py-3">
-          <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/44">
-              Fonte
-            </p>
-            <p className="mt-1.5 truncate text-xs font-semibold text-white sm:mt-2 sm:text-sm">
-              {tool.domain}
-            </p>
-          </div>
-          <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/44">
-              Aggiornato
-            </p>
-            <p className="mt-1.5 text-xs font-semibold text-white sm:mt-2 sm:text-sm">
-              {formatItalianDate(tool.publishedAt)}
-            </p>
-          </div>
-        </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 flex min-h-[2.15rem] flex-wrap content-start gap-1.5">
           {tool.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-white/10 bg-white/7 px-3 py-1 text-[0.72rem] font-semibold text-white/70"
+              className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.66rem] font-semibold text-white/66"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <div className="mt-auto space-y-3 border-t border-white/10 pt-4 sm:space-y-4 sm:pt-5">
-          <div className="grid grid-cols-3 gap-2">
+        <div className="mt-auto pt-4">
+          <div className="mb-3 flex items-center justify-between gap-2 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2">
+            <div className="min-w-0">
+              <p className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-white/40">
+                Fonte
+              </p>
+              <p className="truncate text-xs font-semibold text-white/76">{tool.domain}</p>
+            </div>
+            <span className="shrink-0 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/44">
+              {formatItalianDate(tool.publishedAt)}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2">
+            <PremiumButton type="button" size="sm" tone="premium" onClick={onOpen}>
+              Apri dettagli
+            </PremiumButton>
             <ToolActionButton active={saved} onClick={onSave} ariaLabel={`Salva ${tool.name}`}>
               {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
             </ToolActionButton>
@@ -379,17 +389,105 @@ function ToolAppCard({
               <Layers3 className="size-4" />
             </ToolActionButton>
           </div>
-          <div className="grid gap-2 sm:grid-cols-2">
-            <PremiumButton type="button" onClick={onOpen}>
-              Vedi scheda
-            </PremiumButton>
-            <PremiumLink href={tool.url} external tone="secondary">
-              Apri
-            </PremiumLink>
-          </div>
         </div>
       </div>
     </motion.article>
+  );
+}
+
+function ToolShelf({
+  title,
+  description,
+  tools,
+  savedSlugs,
+  compareSlugs,
+  stackSlugs,
+  onOpen,
+  onSave,
+  onCompare,
+  onStack,
+}: {
+  title: string;
+  description: string;
+  tools: DirectoryTool[];
+  savedSlugs: string[];
+  compareSlugs: string[];
+  stackSlugs: string[];
+  onOpen: (slug: string) => void;
+  onSave: (tool: DirectoryTool) => void;
+  onCompare: (tool: DirectoryTool) => void;
+  onStack: (slug: string) => void;
+}) {
+  const railRef = useRef<HTMLDivElement>(null);
+
+  function scrollRail(direction: -1 | 1) {
+    railRef.current?.scrollBy({
+      left: direction * 380,
+      behavior: "smooth",
+    });
+  }
+
+  return (
+    <PremiumPanel tone="subtle" className="p-4 sm:p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="max-w-[38rem]">
+          <div className="flex flex-wrap items-center gap-2">
+            <h4 className="text-display-card text-[1.45rem] text-white sm:text-[1.65rem]">
+              {title}
+            </h4>
+            <span className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-white/56">
+              {tools.length} tool
+            </span>
+          </div>
+          <p className="mt-2 text-sm leading-6 text-white/60">{description}</p>
+        </div>
+        <div className="hidden gap-2 sm:flex" aria-label={`Scorri ${title}`}>
+          <button
+            type="button"
+            onClick={() => scrollRail(-1)}
+            className="premium-button premium-button-icon premium-button-subtle min-h-10 min-w-10"
+            aria-label={`Scorri ${title} indietro`}
+          >
+            <ChevronLeft className="size-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollRail(1)}
+            className="premium-button premium-button-icon premium-button-subtle min-h-10 min-w-10"
+            aria-label={`Scorri ${title} avanti`}
+          >
+            <ChevronRight className="size-4" />
+          </button>
+        </div>
+      </div>
+
+      <div className="relative mt-4">
+        <div
+          ref={railRef}
+          className="tool-shelf-rail -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:-mx-5 sm:gap-4 sm:px-5"
+        >
+          <AnimatePresence mode="popLayout">
+            {tools.map((tool) => (
+              <ToolCompactCard
+                key={tool.slug}
+                tool={tool}
+                saved={savedSlugs.includes(tool.slug)}
+                compared={compareSlugs.includes(tool.slug)}
+                stacked={stackSlugs.includes(tool.slug)}
+                onOpen={() => onOpen(tool.slug)}
+                onSave={() => onSave(tool)}
+                onCompare={() => onCompare(tool)}
+                onStack={() => onStack(tool.slug)}
+              />
+            ))}
+          </AnimatePresence>
+        </div>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-16 bg-gradient-to-l from-[#11111f] to-transparent sm:block"
+        />
+      </div>
+    </PremiumPanel>
   );
 }
 
@@ -440,7 +538,7 @@ function ToolDetailDrawer({
             </div>
             <DrawerClose
               aria-label="Chiudi scheda tool"
-              className="rounded-full border border-white/10 bg-white/8 p-2"
+              className="premium-button premium-button-icon premium-button-subtle min-h-10 min-w-10"
             >
               <X className="size-4" />
             </DrawerClose>
@@ -552,7 +650,7 @@ function SortableStackItem({
       <button
         type="button"
         onClick={onRemove}
-        className="rounded-full bg-white/10 p-2 text-white/76 hover:text-white"
+        className="premium-button premium-button-icon premium-button-subtle min-h-10 min-w-10 text-white/76 hover:text-white"
         aria-label={`Rimuovi ${tool.name}`}
       >
         <X className="size-4" />
@@ -679,6 +777,16 @@ export function ToolDiscoveryApp({
   ]);
 
   const selectedTool = getToolBySlug(tools, selectedSlug);
+  const toolShelves = useMemo(
+    () =>
+      shelfOrder
+        .map((level) => ({
+          level,
+          tools: visibleTools.filter((tool) => tool.level === level),
+        }))
+        .filter((shelf) => shelf.tools.length > 0),
+    [visibleTools],
+  );
   const relatedTools = selectedTool
     ? tools
         .filter(
@@ -781,7 +889,7 @@ export function ToolDiscoveryApp({
           <button
             type="button"
             onClick={() => setCommandOpen(true)}
-            className="flex w-full items-center justify-between rounded-[22px] border border-white/12 bg-white/8 px-4 py-3 text-left text-sm text-white/76 transition hover:bg-white/12"
+            className="premium-button premium-button-secondary flex w-full items-center justify-between rounded-[22px] px-4 py-3 text-left text-sm text-white/82"
           >
             <span className="inline-flex items-center gap-2">
               <Search className="size-4" />
@@ -802,10 +910,10 @@ export function ToolDiscoveryApp({
                 type="button"
                 onClick={() => setActiveTab(key as WorkspaceTab)}
                 className={cn(
-                  "flex min-h-11 items-center justify-between rounded-[18px] border px-3 text-sm font-semibold transition",
+                  "premium-button flex min-h-11 items-center justify-between rounded-[18px] px-3 text-sm font-semibold",
                   activeTab === key
-                    ? "border-white/24 bg-white text-[#20124f]"
-                    : "border-white/10 bg-white/6 text-white/72 hover:bg-white/10",
+                    ? "premium-button-glow text-white"
+                    : "premium-button-subtle text-white/72",
                 )}
               >
                 <span>{label}</span>
@@ -841,7 +949,7 @@ export function ToolDiscoveryApp({
             <button
               type="button"
               onClick={() => setFilterDrawerOpen(true)}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[18px] border border-white/12 bg-white/8 px-4 text-sm font-semibold text-white/78 transition hover:bg-white/12 lg:hidden"
+              className="premium-button premium-button-secondary inline-flex min-h-12 items-center justify-center gap-2 rounded-[18px] px-4 text-sm font-semibold text-white/84 lg:hidden"
             >
               <SlidersHorizontal className="size-4" />
               Filtri
@@ -865,10 +973,10 @@ export function ToolDiscoveryApp({
                   type="button"
                   onClick={() => setActiveGroup(group.key)}
                   className={cn(
-                    "shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] transition",
+                    "premium-button shrink-0 rounded-full px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em]",
                     activeGroup === group.key
-                      ? "border-white/28 bg-white text-[#20124f]"
-                      : "border-white/10 bg-white/6 text-white/72 hover:bg-white/10",
+                      ? "premium-button-glow text-white"
+                      : "premium-button-subtle text-white/72",
                   )}
                 >
                   {group.label}
@@ -899,7 +1007,7 @@ export function ToolDiscoveryApp({
               <button
                 type="button"
                 onClick={resetFilters}
-                className="ml-auto rounded-full bg-white/12 px-3 py-1 font-semibold text-white transition hover:bg-white/18"
+                className="premium-button premium-button-subtle ml-auto rounded-full px-3 py-1 font-semibold text-white"
               >
                 Reset
               </button>
@@ -921,39 +1029,30 @@ export function ToolDiscoveryApp({
             </div>
             <Link
               href="/wishlist"
-              className="inline-flex rounded-full border border-white/12 bg-white/7 px-4 py-2 text-sm font-semibold text-white/86 transition hover:border-white/24 hover:bg-white/10 hover:text-white"
+              className="premium-button premium-button-outline inline-flex rounded-full px-4 py-2 text-sm font-semibold"
             >
               Suggerisci un Toool
             </Link>
           </div>
 
           {visibleTools.length > 0 ? (
-            <motion.div layout className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
-              <AnimatePresence mode="popLayout">
-                {visibleTools.map((tool) => (
-                  <ToolAppCard
-                    key={tool.slug}
-                    tool={tool}
-                    variant={
-                      compareSlugs.includes(tool.slug)
-                        ? "compared"
-                        : savedSlugs.includes(tool.slug)
-                          ? "saved"
-                          : tool.featured
-                            ? "featured"
-                            : "default"
-                    }
-                    saved={savedSlugs.includes(tool.slug)}
-                    compared={compareSlugs.includes(tool.slug)}
-                    stacked={stackSlugs.includes(tool.slug)}
-                    onOpen={() => setSelectedSlug(tool.slug)}
-                    onSave={() => handleSave(tool)}
-                    onCompare={() => handleCompare(tool)}
-                    onStack={() => handleStack(tool.slug)}
-                  />
-                ))}
-              </AnimatePresence>
-            </motion.div>
+            <div className="space-y-4">
+              {toolShelves.map(({ level, tools: shelfTools }) => (
+                <ToolShelf
+                  key={level}
+                  title={shelfCopy[level].title}
+                  description={shelfCopy[level].description}
+                  tools={shelfTools}
+                  savedSlugs={savedSlugs}
+                  compareSlugs={compareSlugs}
+                  stackSlugs={stackSlugs}
+                  onOpen={setSelectedSlug}
+                  onSave={handleSave}
+                  onCompare={handleCompare}
+                  onStack={handleStack}
+                />
+              ))}
+            </div>
           ) : (
             <EmptyState
               icon={Search}
@@ -1115,7 +1214,7 @@ export function ToolDiscoveryApp({
               </div>
               <DrawerClose
                 aria-label="Chiudi filtri"
-                className="rounded-full border border-white/10 bg-white/8 p-2"
+                className="premium-button premium-button-icon premium-button-subtle min-h-10 min-w-10"
               >
                 <X className="size-4" />
               </DrawerClose>
@@ -1151,7 +1250,7 @@ export function ToolDiscoveryApp({
         <button
           type="button"
           onClick={focusSearch}
-          className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold text-white/74 transition hover:bg-white/10"
+          className="premium-button premium-button-subtle flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold text-white/74"
         >
           <Search className="size-4" />
           Cerca
@@ -1159,7 +1258,7 @@ export function ToolDiscoveryApp({
         <button
           type="button"
           onClick={() => setFilterDrawerOpen(true)}
-          className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold text-white/74 transition hover:bg-white/10"
+          className="premium-button premium-button-subtle flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold text-white/74"
         >
           <Filter className="size-4" />
           Filtri
@@ -1168,8 +1267,8 @@ export function ToolDiscoveryApp({
           type="button"
           onClick={() => setActiveTab("saved")}
           className={cn(
-            "flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold transition hover:bg-white/10",
-            activeTab === "saved" ? "bg-white text-[#20124f]" : "text-white/74",
+            "premium-button flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold",
+            activeTab === "saved" ? "premium-button-glow text-white" : "premium-button-subtle text-white/74",
           )}
         >
           <Bookmark className="size-4" />
@@ -1179,8 +1278,8 @@ export function ToolDiscoveryApp({
           type="button"
           onClick={() => setActiveTab("compare")}
           className={cn(
-            "flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold transition hover:bg-white/10",
-            activeTab === "compare" ? "bg-white text-[#20124f]" : "text-white/74",
+            "premium-button flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold",
+            activeTab === "compare" ? "premium-button-glow text-white" : "premium-button-subtle text-white/74",
           )}
         >
           <Columns3 className="size-4" />

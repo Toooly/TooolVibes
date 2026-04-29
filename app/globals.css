@@ -331,15 +331,21 @@ img {
     isolation: isolate;
     overflow: hidden;
     border: 1px solid transparent;
+    background-size: 180% 180%;
+    background-position: 0% 50%;
     text-align: center;
     letter-spacing: -0.01em;
+    transform: translateZ(0);
+    -webkit-tap-highlight-color: transparent;
     transition:
-      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
-      border-color 180ms ease,
-      background 180ms ease,
+      transform 230ms cubic-bezier(0.2, 0.9, 0.2, 1),
+      box-shadow 260ms cubic-bezier(0.2, 0.9, 0.2, 1),
+      border-color 220ms ease,
+      background-position 420ms cubic-bezier(0.2, 0.9, 0.2, 1),
+      background 220ms ease,
       color 180ms ease,
-      opacity 180ms ease;
+      opacity 180ms ease,
+      filter 220ms ease;
   }
 
   .premium-button::before {
@@ -347,51 +353,188 @@ img {
     position: absolute;
     inset: 1px;
     border-radius: inherit;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 58%);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 54%),
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.26), transparent 42%);
+    opacity: 0.86;
     pointer-events: none;
+    transition:
+      opacity 220ms ease,
+      transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+
+  .premium-button::after {
+    content: "";
+    position: absolute;
+    top: -45%;
+    bottom: -45%;
+    left: -55%;
+    width: 34%;
+    border-radius: inherit;
+    background:
+      linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.08) 22%, rgba(255, 255, 255, 0.62) 48%, rgba(255, 255, 255, 0.12) 70%, transparent 100%);
+    filter: blur(0.4px);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-40%) skewX(-18deg);
+    transition:
+      transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 260ms ease;
   }
 
   .premium-button > * {
     position: relative;
-    z-index: 1;
+    z-index: 2;
+  }
+
+  .premium-button svg {
+    transition:
+      transform 240ms cubic-bezier(0.2, 0.9, 0.2, 1),
+      filter 240ms ease,
+      opacity 180ms ease;
   }
 
   .premium-button:hover {
+    transform: translateY(-2px);
+    background-position: 100% 50%;
+    filter: saturate(1.08);
+  }
+
+  .premium-button:hover::before {
+    opacity: 1;
     transform: translateY(-1px);
   }
 
+  .premium-button:hover::after {
+    opacity: 1;
+    transform: translateX(520%) skewX(-18deg);
+  }
+
+  .premium-button:hover svg,
+  .premium-button:focus-visible svg {
+    transform: translateX(1px) scale(1.045);
+    filter: drop-shadow(0 0 10px rgba(216, 180, 254, 0.34));
+  }
+
   .premium-button:active {
-    transform: translateY(0) scale(0.99);
+    transform: translateY(1px) scale(0.982);
+    filter: saturate(1);
   }
 
   .premium-button:disabled {
     cursor: not-allowed;
     opacity: 0.62;
     transform: none;
+    filter: saturate(0.82);
+  }
+
+  .premium-button:disabled::after {
+    display: none;
   }
 
   .premium-button-primary {
     color: white;
-    background: var(--gradient-primary);
+    border-color: rgba(216, 180, 254, 0.22);
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.28), transparent 30%),
+      linear-gradient(115deg, #6d28d9 0%, #a855f7 42%, #4f46e5 68%, #18115f 100%);
     box-shadow:
-      0 18px 38px rgba(67, 48, 199, 0.24),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      0 18px 42px rgba(124, 58, 237, 0.28),
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.26),
+      inset 0 -14px 30px rgba(24, 17, 95, 0.24);
+  }
+
+  .premium-button-primary:hover {
+    border-color: rgba(233, 213, 255, 0.42);
+    box-shadow:
+      0 22px 52px rgba(168, 85, 247, 0.34),
+      0 0 34px rgba(192, 132, 252, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.34),
+      inset 0 -14px 30px rgba(24, 17, 95, 0.18);
+  }
+
+  .premium-button-premium,
+  .premium-button-glow {
+    color: white;
+    border-color: rgba(233, 213, 255, 0.26);
+    background:
+      radial-gradient(circle at 82% 8%, rgba(57, 210, 246, 0.34), transparent 28%),
+      radial-gradient(circle at 18% 0%, rgba(233, 213, 255, 0.26), transparent 24%),
+      linear-gradient(118deg, #24105c 0%, #7c3aed 36%, #c084fc 62%, #2563eb 100%);
+    box-shadow:
+      0 20px 58px rgba(99, 102, 241, 0.3),
+      0 0 44px rgba(168, 85, 247, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  }
+
+  .premium-button-premium:hover,
+  .premium-button-glow:hover {
+    border-color: rgba(255, 255, 255, 0.38);
+    box-shadow:
+      0 26px 72px rgba(124, 58, 237, 0.38),
+      0 0 56px rgba(57, 210, 246, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.36);
   }
 
   .premium-button-secondary {
-    color: var(--foreground);
-    border-color: rgba(255, 255, 255, 0.14);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.065));
+    color: rgba(255, 255, 255, 0.92);
+    border-color: rgba(255, 255, 255, 0.13);
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.12), transparent 36%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.06));
     box-shadow:
-      0 10px 24px rgba(50, 28, 173, 0.07),
-      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+      0 12px 30px rgba(0, 0, 0, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(16px) saturate(1.08);
+  }
+
+  .premium-button-secondary:hover {
+    border-color: rgba(216, 180, 254, 0.3);
+    background-position: 100% 50%;
+    box-shadow:
+      0 18px 42px rgba(0, 0, 0, 0.22),
+      0 0 24px rgba(168, 85, 247, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
   }
 
   .premium-button-ghost {
-    color: var(--accent-strong);
+    color: rgba(233, 213, 255, 0.92);
     border-color: rgba(192, 132, 252, 0.2);
-    background: rgba(255, 255, 255, 0.055);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .premium-button-ghost:hover,
+  .premium-button-outline:hover,
+  .premium-button-subtle:hover {
+    color: white;
+  }
+
+  .premium-button-outline {
+    color: rgba(255, 255, 255, 0.88);
+    border-color: rgba(216, 180, 254, 0.24);
+    background:
+      linear-gradient(#11111f, #11111f) padding-box,
+      linear-gradient(115deg, rgba(168, 85, 247, 0.7), rgba(57, 210, 246, 0.32), rgba(255, 255, 255, 0.18)) border-box;
+    box-shadow:
+      0 12px 34px rgba(0, 0, 0, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .premium-button-outline:hover {
+    box-shadow:
+      0 20px 48px rgba(124, 58, 237, 0.2),
+      0 0 26px rgba(192, 132, 252, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  }
+
+  .premium-button-subtle {
+    color: rgba(255, 255, 255, 0.78);
+    border-color: rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.045);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   .premium-button-dark {
@@ -405,16 +548,47 @@ img {
 
   .premium-button-danger {
     color: white;
-    background: linear-gradient(135deg, #d92d20, #8a1f16);
-    box-shadow: 0 16px 34px rgba(185, 28, 28, 0.18);
+    border-color: rgba(254, 202, 202, 0.22);
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.18), transparent 28%),
+      linear-gradient(135deg, #b42318, #7f1d1d 58%, #3f0d12);
+    box-shadow:
+      0 16px 38px rgba(185, 28, 28, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
+
+  .premium-button-link {
+    color: var(--accent-strong);
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    padding-inline: 0;
+  }
+
+  .premium-button-link::before,
+  .premium-button-link::after {
+    display: none;
+  }
+
+  .premium-button-icon {
+    aspect-ratio: 1;
+    border-radius: 999px;
+    padding: 0;
+  }
+
+  .premium-button-icon:hover svg {
+    transform: scale(1.12) rotate(-4deg);
   }
 
   .premium-arrow {
-    transition: transform 180ms ease;
+    transition:
+      transform 240ms cubic-bezier(0.2, 0.9, 0.2, 1),
+      opacity 180ms ease;
   }
 
-  .premium-button:hover .premium-arrow {
-    transform: translateX(3px);
+  .premium-button:hover .premium-arrow,
+  .premium-button:hover .premium-button-icon-shift {
+    transform: translateX(4px);
   }
 
   .premium-badge {
@@ -506,6 +680,17 @@ img {
     transform: translateY(-2px);
     border-color: rgba(192, 132, 252, 0.32);
     box-shadow: var(--shadow-card);
+  }
+
+  .tool-shelf-rail {
+    scroll-behavior: smooth;
+    scroll-padding-inline: 1rem;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .tool-shelf-rail::-webkit-scrollbar {
+    display: none;
   }
 
   .interactive-surface {
