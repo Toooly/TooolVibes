@@ -9,6 +9,7 @@ import "@fontsource/rubik/500.css";
 import "@fontsource/rubik/600.css";
 import "@fontsource/rubik/700.css";
 import "@/app/globals.css";
+import { RootProviders } from "@/components/app/root-providers";
 import { siteConfig } from "@/lib/config/site";
 
 export const metadata: Metadata = {
@@ -73,7 +74,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        {children}
+        <RootProviders>{children}</RootProviders>
       </body>
     </html>
   );

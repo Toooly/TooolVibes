@@ -119,14 +119,17 @@ export function PremiumPanel({
   children,
   tone = "light",
   className,
-}: {
+  ...props
+}: React.HTMLAttributes<HTMLElement> & {
   as?: "div" | "section" | "article" | "aside";
   children: React.ReactNode;
   tone?: "light" | "tint" | "dark" | "subtle";
-  className?: string;
 }) {
   return (
-    <Component className={cn("premium-panel", `premium-panel-${tone}`, className)}>
+    <Component
+      className={cn("premium-panel", `premium-panel-${tone}`, className)}
+      {...props}
+    >
       {children}
     </Component>
   );
