@@ -186,14 +186,14 @@ function FilterControls({
         <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
           Categorie
         </p>
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap">
+        <div className="tool-rail mt-3 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap">
           {directoryFilterGroups.map((group) => (
             <button
               key={group.key}
               type="button"
               onClick={() => onGroupChange(group.key)}
               className={cn(
-                "shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] transition",
+                "min-h-10 shrink-0 rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3.5 sm:py-2 sm:text-[0.72rem]",
                 activeGroup === group.key ? activeClass : idleClass,
               )}
             >
@@ -207,14 +207,14 @@ function FilterControls({
         <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
           Livello
         </p>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
           {directoryLevelFilters.map((level) => (
             <button
               key={level.key}
               type="button"
               onClick={() => onLevelChange(level.key)}
               className={cn(
-                "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition",
+                "min-h-9 rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3 sm:text-xs",
                 activeLevel === level.key ? activeClass : idleClass,
               )}
             >
@@ -228,14 +228,14 @@ function FilterControls({
         <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
           Tag rapidi
         </p>
-        <div className="mt-3 flex max-h-[13rem] flex-wrap gap-2 overflow-y-auto pr-1">
+        <div className="mt-3 flex max-h-[11rem] flex-wrap gap-1.5 overflow-y-auto pr-1 sm:max-h-[13rem] sm:gap-2">
           {sortedTags.map((tag) => (
             <button
               key={tag}
               type="button"
               onClick={() => onTagChange(tag)}
               className={cn(
-                "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+                "min-h-9 rounded-full border px-2.5 py-1.5 text-[0.72rem] font-medium transition sm:px-3 sm:text-xs",
                 activeTag === tag ? activeClass : idleClass,
               )}
             >
@@ -265,7 +265,7 @@ function ToolActionButton({
       aria-label={ariaLabel}
       onClick={onClick}
       className={cn(
-        "premium-button premium-button-icon inline-flex min-h-10 min-w-10 items-center justify-center gap-2 text-sm font-semibold",
+        "premium-button premium-button-icon inline-flex min-h-10 min-w-10 items-center justify-center gap-2 text-sm font-semibold sm:min-h-11 sm:min-w-11",
         active ? "premium-button-glow text-white" : "premium-button-subtle text-white/72",
       )}
     >
@@ -301,7 +301,7 @@ function ToolCompactCard({
       exit={{ opacity: 0, y: 8, scale: 0.985 }}
       whileHover={{ y: -5 }}
       transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-      className="group/tool relative flex min-h-[18.5rem] w-[min(84vw,20rem)] shrink-0 snap-start flex-col overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.085),rgba(255,255,255,0.045))] shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors duration-300 hover:border-[rgba(216,180,254,0.34)] sm:min-h-[19.5rem] sm:w-[20rem] lg:w-[21rem]"
+      className="group/tool relative flex min-h-[17.2rem] w-[min(78vw,18.25rem)] shrink-0 snap-start flex-col overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.095),rgba(255,255,255,0.052))] shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors duration-300 hover:border-[rgba(216,180,254,0.34)] sm:min-h-[19rem] sm:w-[20rem] sm:rounded-[28px] lg:w-[21rem]"
     >
       <span
         aria-hidden="true"
@@ -315,7 +315,7 @@ function ToolCompactCard({
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-60"
       />
 
-      <div className="relative flex flex-1 flex-col p-4">
+      <div className="relative flex flex-1 flex-col p-3.5 sm:p-4">
         <div className="flex items-start gap-3">
           <DirectoryToolGlyph tool={tool} size="md" />
           <div className="min-w-0 flex-1">
@@ -329,44 +329,44 @@ function ToolCompactCard({
                 </PremiumBadge>
               ) : null}
             </div>
-            <h3 className="mt-2 truncate text-[1.18rem] font-semibold leading-tight text-white">
+            <h3 className="mt-2 truncate text-[1.08rem] font-semibold leading-tight text-white sm:text-[1.18rem]">
               {tool.name}
             </h3>
-            <p className="mt-1 truncate text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-white/48">
+            <p className="mt-1 truncate text-[0.62rem] font-semibold uppercase tracking-[0.13em] text-white/52 sm:text-[0.68rem] sm:tracking-[0.15em]">
               {tool.categoryLabel}
             </p>
           </div>
         </div>
 
-        <p className="text-clamp-2 mt-4 text-[0.9rem] leading-6 text-white/68">
+        <p className="text-clamp-2 mt-3 text-[0.86rem] leading-6 text-white/70 sm:mt-4 sm:text-[0.9rem]">
           {tool.shortDescription}
         </p>
 
-        <div className="mt-4 flex flex-wrap content-start gap-1.5">
+        <div className="mt-3 flex flex-wrap content-start gap-1.5 sm:mt-4">
           {tool.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.66rem] font-semibold text-white/66"
+              className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.62rem] font-semibold text-white/68 sm:text-[0.66rem]"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <div className="mt-auto pt-4">
-          <div className="mb-3 flex items-center justify-between gap-2 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2">
+        <div className="mt-auto pt-3 sm:pt-4">
+          <div className="mb-2.5 flex items-center justify-between gap-2 rounded-[16px] border border-white/10 bg-white/6 px-3 py-2 sm:mb-3 sm:rounded-[18px]">
             <div className="min-w-0">
               <p className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-white/40">
                 Fonte
               </p>
               <p className="truncate text-xs font-semibold text-white/76">{tool.domain}</p>
             </div>
-            <span className="shrink-0 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/44">
+            <span className="shrink-0 text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-white/48 sm:text-[0.68rem] sm:tracking-[0.14em]">
               {formatItalianDate(tool.publishedAt)}
             </span>
           </div>
 
-          <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_auto_auto] gap-1.5 sm:gap-2">
             <PremiumButton type="button" size="sm" tone="premium" onClick={onOpen}>
               Apri dettagli
             </PremiumButton>
@@ -451,18 +451,18 @@ function ToolShelf({
   }
 
   return (
-    <PremiumPanel tone="subtle" className="p-4 sm:p-5">
+    <PremiumPanel tone="subtle" className="p-3.5 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="max-w-[38rem]">
           <div className="flex flex-wrap items-center gap-2">
-            <h4 className="text-display-card text-[1.45rem] text-white sm:text-[1.65rem]">
+            <h4 className="text-display-card text-[1.24rem] leading-tight text-white sm:text-[1.65rem]">
               {title}
             </h4>
-            <span className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-white/56">
+            <span className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.13em] text-white/58 sm:text-[0.68rem] sm:tracking-[0.15em]">
               {tools.length} tool
             </span>
           </div>
-          <p className="mt-2 text-sm leading-6 text-white/60">{description}</p>
+          <p className="mt-2 text-[0.86rem] leading-6 text-white/62 sm:text-sm">{description}</p>
         </div>
         <div className="hidden gap-2 sm:flex" aria-label={`Scorri ${title}`}>
           <button
@@ -486,10 +486,10 @@ function ToolShelf({
         </div>
       </div>
 
-      <div className="relative mt-4">
+      <div className="relative mt-3 sm:mt-4">
         <div
           ref={railRef}
-          className="tool-shelf-rail catalog-carousel-rail -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-3 sm:-mx-5 sm:gap-4 sm:px-5"
+          className="tool-shelf-rail catalog-carousel-rail -mx-3.5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-3.5 pb-2 sm:-mx-5 sm:gap-4 sm:px-5 sm:pb-3"
         >
           <AnimatePresence mode="popLayout">
             {tools.map((tool) => (
@@ -894,21 +894,21 @@ export function ToolDiscoveryApp({
   }
 
   return (
-    <section className={cn("space-y-6 pb-24 lg:pb-0", className)}>
-      <PremiumPanel tone="dark" className="grid gap-6 p-5 lg:grid-cols-[17rem_minmax(0,1fr)] lg:p-6">
-        <aside className="space-y-4 border-white/10 lg:border-r lg:pr-5">
+    <section className={cn("space-y-5 pb-28 lg:space-y-6 lg:pb-0", className)}>
+      <PremiumPanel tone="dark" className="grid gap-4 p-4 sm:p-5 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-6 lg:p-6">
+        <aside className="space-y-3 border-white/10 lg:space-y-4 lg:border-r lg:pr-5">
           <PremiumBadge tone="dark">{eyebrow}</PremiumBadge>
           <div>
-            <h2 className="text-display-card text-[2.2rem] text-white sm:text-[2.7rem]">
+            <h2 className="text-display-card text-[1.48rem] leading-[1.04] text-white sm:text-[2.7rem]">
               {title}
             </h2>
-            <p className="mt-4 text-sm leading-7 text-white/68">{description}</p>
+            <p className="mt-3 hidden text-[0.92rem] leading-6 text-white/68 sm:mt-4 sm:block sm:text-sm sm:leading-7">{description}</p>
           </div>
 
           <button
             type="button"
             onClick={() => setCommandOpen(true)}
-            className="premium-button premium-button-secondary flex w-full items-center justify-between rounded-[22px] px-4 py-3 text-left text-sm text-white/82"
+            className="premium-button premium-button-secondary hidden min-h-11 w-full items-center justify-between rounded-[18px] px-3.5 py-2.5 text-left text-sm text-white/82 sm:flex sm:rounded-[22px] sm:px-4 sm:py-3"
           >
             <span className="inline-flex items-center gap-2">
               <Search className="size-4" />
@@ -917,7 +917,7 @@ export function ToolDiscoveryApp({
             <kbd className="rounded-md bg-white/10 px-2 py-1 text-[0.68rem]">Ctrl K</kbd>
           </button>
 
-          <nav className="grid gap-2" aria-label="Workspace views">
+          <nav className="grid grid-cols-4 gap-1.5 lg:grid-cols-1 lg:gap-2" aria-label="Workspace views">
             {[
               ["all", "Tutti", tools.length],
               ["saved", "Salvati", savedSlugs.length],
@@ -929,35 +929,35 @@ export function ToolDiscoveryApp({
                 type="button"
                 onClick={() => setActiveTab(key as WorkspaceTab)}
                 className={cn(
-                  "premium-button flex min-h-11 items-center justify-between rounded-[18px] px-3 text-sm font-semibold",
+                  "premium-button flex min-h-10 items-center justify-center gap-1.5 rounded-[16px] px-2 text-[0.72rem] font-semibold sm:min-h-11 sm:text-sm lg:justify-between lg:rounded-[18px] lg:px-3",
                   activeTab === key
                     ? "premium-button-glow text-white"
                     : "premium-button-subtle text-white/72",
                 )}
               >
                 <span>{label}</span>
-                <span className="rounded-full bg-black/10 px-2 py-0.5 text-xs">{count}</span>
+                <span className="rounded-full bg-black/10 px-1.5 py-0.5 text-[0.66rem] sm:px-2 sm:text-xs">{count}</span>
               </button>
             ))}
           </nav>
         </aside>
 
-        <div className="space-y-5">
-          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
+        <div className="space-y-4 lg:space-y-5">
+          <div className="grid grid-cols-[minmax(0,1fr)_7.2rem_2.75rem] gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
             <label>
               <span className="sr-only">Cerca tool</span>
               <input
                 ref={searchInputRef}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                className="premium-input px-4 py-3"
+                className="premium-input px-3.5 py-2.5 text-sm sm:px-4 sm:py-3"
                 placeholder="Cerca tool, tag, use case o categoria..."
               />
             </label>
             <select
               value={sortMode}
               onChange={(event) => setSortMode(event.target.value as SortMode)}
-              className="premium-input px-4 py-3 text-sm font-semibold"
+              className="premium-input col-span-1 px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3"
               aria-label="Ordina tool"
             >
               <option value="recommended">Consigliati</option>
@@ -968,10 +968,10 @@ export function ToolDiscoveryApp({
             <button
               type="button"
               onClick={() => setFilterDrawerOpen(true)}
-              className="premium-button premium-button-secondary inline-flex min-h-12 items-center justify-center gap-2 rounded-[18px] px-4 text-sm font-semibold text-white/84 lg:hidden"
+              className="premium-button premium-button-secondary inline-flex min-h-11 items-center justify-center gap-2 rounded-[16px] px-0 text-sm font-semibold text-white/84 sm:min-h-12 sm:w-auto sm:rounded-[18px] sm:px-4 lg:hidden"
             >
               <SlidersHorizontal className="size-4" />
-              Filtri
+              <span className="sr-only sm:not-sr-only">Filtri</span>
             </button>
             <PremiumButton
               type="button"
@@ -985,14 +985,14 @@ export function ToolDiscoveryApp({
           </div>
 
           <div className="lg:hidden">
-            <div className="tool-rail -mx-1 flex gap-2 overflow-x-auto px-1 pb-2">
+            <div className="tool-rail -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1.5 sm:gap-2 sm:pb-2">
               {directoryFilterGroups.slice(0, 7).map((group) => (
                 <button
                   key={group.key}
                   type="button"
                   onClick={() => setActiveGroup(group.key)}
                   className={cn(
-                    "premium-button shrink-0 rounded-full px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em]",
+                    "premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
                     activeGroup === group.key
                       ? "premium-button-glow text-white"
                       : "premium-button-subtle text-white/72",
@@ -1042,15 +1042,15 @@ export function ToolDiscoveryApp({
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                 {visibleTools.length} risultati
               </p>
-              <h3 className="mt-2 text-display-card text-[2rem] text-[var(--foreground)]">
+              <h3 className="mt-2 text-display-card text-[1.65rem] leading-tight text-[var(--foreground)] sm:text-[2rem]">
                 Catalogo interattivo
               </h3>
             </div>
             <Link
               href="/wishlist"
-              className="premium-button premium-button-outline inline-flex rounded-full px-4 py-2 text-sm font-semibold"
+              className="premium-button premium-button-outline inline-flex min-h-10 rounded-full px-4 py-2 text-sm font-semibold"
             >
-              Suggerisci un Toool
+              Suggerisci un tool
             </Link>
           </div>
 
@@ -1073,12 +1073,13 @@ export function ToolDiscoveryApp({
               ))}
             </div>
           ) : (
-            <EmptyState
-              icon={Search}
-              eyebrow="Nessun risultato"
-              title="Nessun tool corrisponde ai filtri."
-              description="Cambia ricerca o resetta i filtri. La directory resta pensata per esplorare, confrontare e costruire stack senza perdere contesto."
-              className="p-8 text-center"
+              <EmptyState
+                icon={Search}
+                eyebrow="Nessun risultato"
+                title="Nessun tool corrisponde ai filtri."
+                description="Cambia ricerca o resetta i filtri. La directory resta pensata per esplorare, confrontare e costruire stack senza perdere contesto."
+              className="p-5 text-center sm:p-8"
+              dark
               action={
                 hasActiveFilters ? (
                   <PremiumButton type="button" tone="secondary" onClick={resetFilters}>
@@ -1090,8 +1091,8 @@ export function ToolDiscoveryApp({
           )}
         </div>
 
-        <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-          <PremiumPanel tone="light" className="p-5">
+        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <PremiumPanel tone="light" className="light-surface p-4 sm:p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
@@ -1128,7 +1129,7 @@ export function ToolDiscoveryApp({
             </div>
           </PremiumPanel>
 
-          <PremiumPanel tone="subtle" className="p-5">
+          <PremiumPanel tone="subtle" className="p-4 sm:p-5">
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
               Confronta
             </p>
@@ -1170,18 +1171,19 @@ export function ToolDiscoveryApp({
                   title="Nessun confronto attivo."
                   description="Aggiungi fino a 4 tool per confrontare categoria, fonte, use case e link senza aprire mille tab."
                   className="p-4"
+                  dark
                 />
               )}
             </div>
           </PremiumPanel>
 
-          <PremiumPanel tone="dark" className="p-5" id="stack-builder">
+          <PremiumPanel tone="dark" className="p-4 sm:p-5" id="stack-builder">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                   Il tuo stack
                 </p>
-                <h3 className="mt-2 text-display-card text-[1.55rem] text-white">
+                <h3 className="mt-2 text-display-card text-[1.32rem] leading-tight text-white sm:text-[1.55rem]">
                   {stackTools.length} tool nello stack
                 </h3>
               </div>

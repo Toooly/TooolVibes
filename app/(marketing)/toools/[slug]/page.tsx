@@ -58,49 +58,49 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
       : tool.originalArticleUrl;
 
   return (
-    <div className="page-shell space-y-6 pb-16 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
+    <div className="page-shell space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
       <section
-        className="overflow-hidden rounded-[40px] border border-[rgba(83,63,170,0.12)] px-5 py-6 shadow-[0_28px_74px_rgba(36,19,103,0.1)] sm:px-7 sm:py-8"
+        className="light-surface overflow-hidden rounded-[30px] border border-[rgba(83,63,170,0.12)] px-5 py-5 shadow-[0_28px_74px_rgba(36,19,103,0.1)] sm:rounded-[40px] sm:px-7 sm:py-8"
         style={{
           background: `radial-gradient(circle at top right, ${tool.accentFrom}26, transparent 30%), radial-gradient(circle at bottom left, ${tool.accentTo}24, transparent 32%), linear-gradient(135deg,#fefcff 0%,#f5f0ff 44%,#eef2ff 100%)`,
         }}
       >
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:items-start">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:items-start">
           <div>
-            <div className="flex flex-wrap items-center gap-3 text-[0.8rem] uppercase tracking-[0.16em] text-[var(--muted)]">
+            <div className="flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted)] sm:gap-3 sm:text-[0.8rem]">
               <Link href="/" className="hover:text-[var(--accent-strong)]">
                 Home
               </Link>
               <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
               <Link href="/archivio" className="hover:text-[var(--accent-strong)]">
-                Archivio dei Toools
+                Archivio
               </Link>
               <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
               <span>{tool.name}</span>
             </div>
 
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              <span className="rounded-full bg-[rgba(109,59,255,0.1)] px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-[rgba(109,59,255,0.14)] bg-[rgba(109,59,255,0.1)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
                 {tool.categoryLabel}
               </span>
-              <span className="rounded-full bg-white/78 px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+              <span className="rounded-full border border-[rgba(83,63,170,0.1)] bg-white/78 px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
                 {tool.levelLabel}
               </span>
               {tool.toolOfWeek ? (
-                <span className="rounded-full bg-[rgba(67,198,255,0.12)] px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+                <span className="rounded-full border border-[rgba(67,198,255,0.16)] bg-[rgba(67,198,255,0.12)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
                   Tool della settimana
                 </span>
               ) : null}
             </div>
 
-            <h1 className="mt-6 max-w-[11ch] text-[2.6rem] leading-[0.94] text-[var(--foreground)] sm:text-[3.8rem]">
+            <h1 className="mt-5 max-w-[12ch] text-[clamp(2.15rem,14vw,3rem)] leading-[0.94] text-[var(--foreground)] sm:mt-6 sm:text-[3.8rem]">
               {tool.name}
             </h1>
-            <p className="mt-5 max-w-[42rem] text-[1.06rem] leading-8 text-[var(--muted-strong)]">
+            <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-7 text-[var(--muted-strong)] sm:mt-5 sm:text-[1.06rem] sm:leading-8">
               {tool.longDescription}
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-[0.78rem] uppercase tracking-[0.16em] text-[var(--muted)]">
+            <div className="mt-5 flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted)] sm:mt-6 sm:gap-3 sm:text-[0.78rem]">
               <span>{formatItalianDate(tool.publishedAt)}</span>
               <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
               <span>{tool.readingTime}</span>
@@ -108,18 +108,18 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               <span>{tool.domain}</span>
             </div>
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap sm:gap-3">
               <a
                 href={tool.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--accent),#8a61ff)] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(95,66,255,0.18)] transition-transform duration-200 hover:-translate-y-0.5"
+                className="premium-button premium-button-primary inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(95,66,255,0.18)]"
               >
-                {tool.ctaLabel}
+                <span>{tool.ctaLabel}</span>
               </a>
               <Link
                 href="/wishlist"
-                className="inline-flex items-center justify-center rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-5 py-3.5 text-sm font-semibold text-[var(--foreground)] transition-transform duration-200 hover:-translate-y-0.5"
+                className="inline-flex min-h-12 items-center justify-center rounded-full border border-[rgba(83,63,170,0.14)] bg-white/88 px-5 py-3 text-sm font-semibold text-[var(--foreground)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-transform duration-200 hover:-translate-y-0.5"
               >
                 Suggerisci alternativa
               </Link>
@@ -127,14 +127,14 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 href={sourceHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-[rgba(83,63,170,0.12)] bg-white/72 px-5 py-3.5 text-sm font-semibold text-[var(--foreground)] transition-transform duration-200 hover:-translate-y-0.5"
+                className="inline-flex min-h-12 items-center justify-center rounded-full border border-[rgba(83,63,170,0.14)] bg-white/70 px-5 py-3 text-sm font-semibold text-[var(--foreground)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-transform duration-200 hover:-translate-y-0.5"
               >
                 Fonte originale
               </a>
             </div>
           </div>
 
-          <aside className="rounded-[32px] border border-[rgba(83,63,170,0.12)] bg-white/82 p-5 shadow-[0_18px_48px_rgba(36,19,103,0.08)]">
+          <aside className="light-surface rounded-[26px] border border-[rgba(83,63,170,0.12)] bg-white/82 p-4 shadow-[0_18px_48px_rgba(36,19,103,0.08)] sm:rounded-[32px] sm:p-5">
             <div
               className="rounded-[28px] border border-[rgba(83,63,170,0.08)] p-5"
               style={{
@@ -158,7 +158,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               </p>
             </div>
 
-            <div className="mt-5 space-y-3">
+            <div className="mt-4 space-y-3 sm:mt-5">
               <div className="rounded-[24px] border border-[rgba(83,63,170,0.08)] bg-[rgba(246,244,255,0.88)] p-4">
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
                   Category fit
@@ -205,12 +205,12 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
         </div>
       </section>
 
-      <section className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <article className="rounded-[32px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_18px_54px_rgba(35,18,95,0.08)] sm:p-6">
+      <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <article className="light-surface rounded-[26px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_18px_54px_rgba(35,18,95,0.08)] sm:rounded-[32px] sm:p-6">
           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
             Quando usarlo
           </p>
-          <h2 className="mt-3 text-[1.7rem] leading-[0.98] text-[var(--foreground)]">
+          <h2 className="mt-3 text-[1.45rem] leading-[1.04] text-[var(--foreground)] sm:text-[1.7rem]">
             I casi in cui {tool.name} ha pi&ugrave; senso.
           </h2>
           <div className="mt-5 grid gap-3">
@@ -230,11 +230,11 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
           </div>
         </article>
 
-        <article className="rounded-[32px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_18px_54px_rgba(35,18,95,0.08)] sm:p-6">
+        <article className="light-surface rounded-[26px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_18px_54px_rgba(35,18,95,0.08)] sm:rounded-[32px] sm:p-6">
           <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
             Perch&eacute; conta
           </p>
-          <h2 className="mt-3 text-[1.7rem] leading-[0.98] text-[var(--foreground)]">
+          <h2 className="mt-3 text-[1.45rem] leading-[1.04] text-[var(--foreground)] sm:text-[1.7rem]">
             Il punto editoriale dietro la selezione.
           </h2>
           <p className="mt-5 text-[1rem] leading-8 text-[var(--muted-strong)]">

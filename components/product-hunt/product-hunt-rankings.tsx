@@ -145,7 +145,7 @@ export function ProductHuntRankings({
               variant === "wide" && "text-[2rem] sm:text-[2.65rem]",
             )}
           >
-            Migliori Toools su Product Hunt
+            Migliori tool su Product Hunt
           </h2>
           {variant === "wide" ? (
             <p className="mt-3 max-w-[42rem] text-[1rem] leading-7 text-[var(--muted-strong)]">

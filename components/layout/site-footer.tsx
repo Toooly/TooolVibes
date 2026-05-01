@@ -6,7 +6,7 @@ import { siteConfig } from "@/lib/config/site";
 
 const footerNav = [
   { href: "/", label: "Home" },
-  { href: "/archivio", label: "Toools" },
+  { href: "/archivio", label: "Catalogo" },
   { href: "/tags", label: "Categorie" },
   { href: "/wishlist", label: "Suggerisci" },
   { href: "/product-hunt", label: "Product Hunt" },
@@ -43,7 +43,7 @@ export function SiteFooter() {
             </div>
 
             <h2 className="mt-5 max-w-[14ch] text-[2rem] leading-[0.98] sm:text-[2.6rem]">
-              I Toools migliori, senza perdere tempo nel rumore.
+              I tool migliori, senza perdere tempo nel rumore.
             </h2>
             <p className="mt-4 max-w-[38rem] text-[1rem] leading-7 text-white/72">
               Directory curata di AI tools, SaaS, no-code builder, vibe coding e
@@ -53,7 +53,7 @@ export function SiteFooter() {
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <PremiumLink href="/wishlist" tone="secondary">
-                Suggerisci un Toool
+                Suggerisci un tool
               </PremiumLink>
               <PremiumLink href={siteConfig.shopUrl} tone="dark" external>
                 Apri il Digital Shop

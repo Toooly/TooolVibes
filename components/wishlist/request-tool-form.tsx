@@ -132,7 +132,7 @@ export function RequestToolForm({ className }: { className?: string }) {
       {toastVisible ? (
         <div
           role="status"
-          className="fixed bottom-5 right-5 z-50 max-w-[22rem] rounded-[24px] border border-[rgba(83,63,170,0.12)] bg-white px-5 py-4 text-sm text-[var(--foreground)] shadow-[0_24px_70px_rgba(30,18,83,0.18)]"
+          className="fixed bottom-[5.75rem] left-4 right-4 z-50 rounded-[24px] border border-[rgba(83,63,170,0.12)] bg-white px-5 py-4 text-sm text-[var(--foreground)] shadow-[0_24px_70px_rgba(30,18,83,0.18)] sm:bottom-5 sm:left-auto sm:max-w-[22rem]"
         >
           <p className="font-semibold">Richiesta ricevuta.</p>
           <p className="mt-1 leading-6 text-[var(--muted-strong)]">
@@ -143,7 +143,7 @@ export function RequestToolForm({ className }: { className?: string }) {
 
       <form
         onSubmit={handleSubmit}
-        className="premium-panel premium-panel-light p-5 sm:p-6"
+        className="premium-panel premium-panel-light light-surface p-5 sm:p-6"
         noValidate
       >
         <div className="grid gap-4 md:grid-cols-2">
@@ -270,7 +270,7 @@ export function RequestToolForm({ className }: { className?: string }) {
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Invio in corso..." : "Suggerisci un Toool"}
+            {isSubmitting ? "Invio in corso..." : "Suggerisci un tool"}
           </PremiumButton>
         </div>
       </form>

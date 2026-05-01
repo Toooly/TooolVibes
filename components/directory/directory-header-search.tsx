@@ -44,7 +44,7 @@ export function DirectoryHeaderSearch({
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-2" role="search">
       <label className="sr-only" htmlFor={compact ? "header-search-mobile" : "header-search"}>
-        Cerca nei Toools
+        Cerca nel catalogo
       </label>
       <input
         id={compact ? "header-search-mobile" : "header-search"}
@@ -52,7 +52,7 @@ export function DirectoryHeaderSearch({
         onChange={(event) => setQuery(event.target.value)}
         placeholder="Cerca tool, tag o categoria"
         className="w-full rounded-full border border-[rgba(92,72,170,0.14)] bg-white/86 px-4 py-2.5 text-sm text-[var(--foreground)] outline-none transition-colors duration-200 placeholder:text-[var(--muted)] focus:border-[rgba(108,76,255,0.3)]"
-        aria-label="Cerca nei Toools"
+        aria-label="Cerca nel catalogo"
       />
       <button
         type="submit"

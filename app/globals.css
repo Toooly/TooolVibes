@@ -281,7 +281,7 @@ img {
   h3,
   h4 {
     font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
-    letter-spacing: -0.045em;
+    letter-spacing: 0;
     font-weight: 600;
     line-height: 0.98;
   }
@@ -390,7 +390,7 @@ img {
     background-size: 180% 180%;
     background-position: 0% 50%;
     text-align: center;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
     transform: translateZ(0);
     -webkit-tap-highlight-color: transparent;
     transition:
@@ -753,6 +753,8 @@ img {
     scrollbar-color: rgba(168, 85, 247, 0.58) rgba(255, 255, 255, 0.08);
     scrollbar-width: thin;
     overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
+    touch-action: pan-x;
   }
 
   .tool-shelf-rail::-webkit-scrollbar {
@@ -903,7 +905,7 @@ img {
     @apply text-[1.8rem] leading-[0.98] sm:text-[2.54rem] lg:text-[3.06rem];
     font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
     font-weight: 600;
-    letter-spacing: -0.052em;
+    letter-spacing: 0;
   }
 
   .section-copy {
@@ -1171,6 +1173,8 @@ img {
     scrollbar-color: rgba(168, 85, 247, 0.56) rgba(20, 17, 45, 0.22);
     scrollbar-width: thin;
     -ms-overflow-style: none;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
   }
 
   .tool-rail::-webkit-scrollbar {
@@ -1741,7 +1745,7 @@ img {
     font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
     font-size: 0.96rem;
     line-height: 1.62;
-    letter-spacing: -0.012em;
+    letter-spacing: 0;
   }
 
   .compare-table-shell tbody tr:nth-child(even) .compare-table-cell,
@@ -2516,42 +2520,42 @@ img {
   .text-display-hero {
     font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
     font-weight: 600;
-    letter-spacing: -0.054em;
+    letter-spacing: 0;
     line-height: 0.94;
   }
 
   .text-display-card {
     font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
     font-weight: 500;
-    letter-spacing: -0.028em;
+    letter-spacing: 0;
     line-height: 1.03;
   }
 
   .text-ui-strong {
     font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
     font-weight: 500;
-    letter-spacing: -0.014em;
+    letter-spacing: 0;
   }
 
   .text-body-soft {
     font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
     font-weight: 400;
     line-height: 1.58;
-    letter-spacing: -0.012em;
+    letter-spacing: 0;
   }
 
   .text-body-strong {
     font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
     font-weight: 500;
     line-height: 1.52;
-    letter-spacing: -0.014em;
+    letter-spacing: 0;
   }
 
   .text-meta {
     font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
     font-weight: 500;
     line-height: 1.38;
-    letter-spacing: -0.012em;
+    letter-spacing: 0;
   }
 
   .collection-card {
@@ -2717,6 +2721,16 @@ img {
 @media (max-width: 767px) {
   .page-shell {
     padding-inline: 1rem;
+  }
+
+  .tool-shelf-rail,
+  .tool-rail {
+    scrollbar-width: none;
+  }
+
+  .tool-shelf-rail::-webkit-scrollbar,
+  .tool-rail::-webkit-scrollbar {
+    display: none;
   }
 
   .premium-panel {

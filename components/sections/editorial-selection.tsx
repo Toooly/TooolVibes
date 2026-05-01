@@ -33,8 +33,8 @@ export function EditorialSelection({ tools }: EditorialSelectionProps) {
           <div className="col-span-12 lg:col-span-4">
             <SectionHeading
               eyebrow="Razionale editoriale"
-              title="Perche&apos; alcuni tool restano, e altri no."
-              description="La selezione TooolVibes filtra per utilit?, tono, chiarezza di posizionamento e qualit? dell’esperienza."
+              title="Perch&eacute; alcuni tool restano, e altri no."
+              description="La selezione TooolVibes filtra per utilit&agrave;, tono, chiarezza di posizionamento e qualit&agrave; dell&apos;esperienza."
             />
             <div className="mt-5 grid gap-3">
               {rationalePoints.map((point) => (
@@ -132,7 +132,7 @@ export function EditorialSelection({ tools }: EditorialSelectionProps) {
                 className="rounded-[var(--radius-lg)] border px-6 py-10 text-center"
                 style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.78), rgba(243,237,255,0.7))" }}
               >
-                <h3 className="text-2xl">Il mini compare arrivera` qui.</h3>
+                <h3 className="text-2xl">Il mini compare arriver&agrave; qui.</h3>
                 <p className="mt-3 text-sm leading-7" style={{ color: "var(--muted)" }}>
                   Pubblica almeno due tool per attivare questa vista comparativa.
                 </p>

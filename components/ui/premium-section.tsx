@@ -110,7 +110,7 @@ export function EmptyState({
         "rounded-[24px] border p-5",
         dark
           ? "border-white/10 bg-white/8 text-white"
-          : "border-white/10 bg-white/7 text-white",
+          : "border-[rgba(76,55,166,0.12)] bg-white/72 text-[var(--foreground)] shadow-[inset_0_1px_0_rgba(255,255,255,0.58)]",
         className,
       )}
     >
@@ -130,10 +130,10 @@ export function EmptyState({
           {eyebrow}
         </p>
       ) : null}
-      <h3 className={cn("mt-3 text-[1.35rem] leading-tight", dark && "text-white")}>
+      <h3 className={cn("mt-3 text-[1.35rem] leading-tight", dark ? "text-white" : "text-[var(--foreground)]")}>
         {title}
       </h3>
-      <p className={cn("mt-3 text-sm leading-6", dark ? "text-white/64" : "text-white/64")}>
+      <p className={cn("mt-3 text-sm leading-6", dark ? "text-white/64" : "text-[var(--muted-strong)]")}>
         {description}
       </p>
       {action ? <div className="mt-5">{action}</div> : null}

@@ -18,7 +18,7 @@ export default function HomePage() {
   );
 
   return (
-    <div className="space-y-10 pb-16 sm:space-y-14 sm:pb-20">
+    <div className="space-y-8 pb-28 sm:space-y-14 sm:pb-20">
       <DirectoryHero tools={directoryTools} />
 
       <MobileQuickStart />
@@ -40,9 +40,9 @@ export default function HomePage() {
         <PremiumPanel tone="tint" className="px-4 py-5 sm:px-7 sm:py-8">
           <DirectoryBrowser
             tools={directoryTools}
-            eyebrow="Tutti i Toools"
+            eyebrow="Tutti i tool"
             title="Catalogo operativo per scegliere meglio, non per scorrere all'infinito."
-            description="Filtra, salva, confronta e costruisci stack: il catalogo TooolVibes è pensato per passare dalla scoperta alla decisione senza perdere contesto."
+            description="Filtra, salva, confronta e costruisci stack: il catalogo TooolVibes porta dalla scoperta alla decisione senza perdere contesto."
           />
         </PremiumPanel>
       </section>
@@ -59,7 +59,7 @@ export default function HomePage() {
               rendere la directory sempre pi&ugrave; utile.
             </p>
             <PremiumLink href="/wishlist" className="mt-5">
-              Suggerisci un Toool
+              Suggerisci un tool
             </PremiumLink>
           </PremiumPanel>
 

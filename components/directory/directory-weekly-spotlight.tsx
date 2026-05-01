@@ -14,21 +14,21 @@ export function DirectoryWeeklySpotlight({
   supportingTools,
 }: DirectoryWeeklySpotlightProps) {
   return (
-    <section className="page-shell space-y-5">
+    <section className="page-shell space-y-4 sm:space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-[40rem]">
           <PremiumBadge tone="accent">Tool della settimana</PremiumBadge>
-          <h2 className="mt-3 text-[2rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.7rem]">
+          <h2 className="mt-3 text-[1.65rem] leading-[1.02] text-[var(--foreground)] sm:text-[2.7rem]">
             Il focus editoriale da provare prima degli altri.
           </h2>
-          <p className="mt-4 text-[1rem] leading-7 text-[var(--muted-strong)]">
+          <p className="mt-3 text-[0.95rem] leading-7 text-[var(--muted-strong)] sm:mt-4 sm:text-[1rem]">
             Blink apre la selezione: rapido da capire, chiaro da testare e vicino al
             tipo di builder che trasforma un&apos;idea in qualcosa di navigabile.
           </p>
         </div>
 
         <PremiumLink href="/archivio" tone="ghost" size="sm">
-          Vai a tutti i Toools
+          Vai al catalogo
         </PremiumLink>
       </div>
 
@@ -36,7 +36,7 @@ export function DirectoryWeeklySpotlight({
         <PremiumPanel
           as="article"
           tone="dark"
-          className="overflow-hidden px-5 py-5 text-white sm:px-6 sm:py-6"
+          className="overflow-hidden px-4 py-5 text-white sm:px-6 sm:py-6"
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -58,12 +58,12 @@ export function DirectoryWeeklySpotlight({
             </div>
           </div>
 
-          <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(15rem,0.92fr)]">
+          <div className="mt-6 grid gap-5 sm:mt-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(15rem,0.92fr)] lg:gap-8">
             <div>
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                 Featured pick
               </p>
-              <h3 className="mt-3 max-w-[11ch] text-[2.4rem] leading-[0.94] sm:text-[3.2rem]">
+              <h3 className="mt-3 max-w-[11ch] text-[2rem] leading-[0.96] sm:text-[3.2rem]">
                 {weeklyTool.name}
               </h3>
               <p className="mt-4 max-w-[36rem] text-[1rem] leading-7 text-white/76">
@@ -100,7 +100,7 @@ export function DirectoryWeeklySpotlight({
               </div>
             </div>
 
-            <div className="flex h-full flex-col rounded-[28px] border border-white/10 bg-white/6 p-5">
+            <div className="flex h-full flex-col rounded-[24px] border border-white/10 bg-white/6 p-4 sm:rounded-[28px] sm:p-5">
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                 Perch&eacute; adesso
               </p>
@@ -130,9 +130,9 @@ export function DirectoryWeeklySpotlight({
           </div>
         </PremiumPanel>
 
-        <div className="tool-rail -mx-1.5 flex snap-x gap-4 overflow-x-auto px-1.5 pb-2 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-1">
+        <div className="tool-rail -mx-1.5 flex snap-x gap-3 overflow-x-auto px-1.5 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-4 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-1">
           {supportingTools.map((tool) => (
-            <div key={tool.slug} className="w-[min(84vw,21rem)] shrink-0 snap-start md:w-auto">
+            <div key={tool.slug} className="w-[min(78vw,19rem)] shrink-0 snap-start md:w-auto">
               <DirectoryToolCard tool={tool} />
             </div>
           ))}

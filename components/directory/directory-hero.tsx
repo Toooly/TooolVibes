@@ -35,7 +35,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
                 Crea il tuo stack
               </PremiumLink>
               <PremiumLink href="/wishlist" tone="ghost" size="lg" className="hidden sm:inline-flex">
-                Suggerisci un Toool
+                Suggerisci un tool
               </PremiumLink>
             </div>
 

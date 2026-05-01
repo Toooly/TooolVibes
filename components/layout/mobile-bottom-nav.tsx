@@ -24,7 +24,7 @@ export function MobileBottomNav() {
   return (
     <nav
       aria-label="Navigazione mobile principale"
-      className="fixed inset-x-3 bottom-3 z-50 rounded-[26px] border border-white/12 bg-[#0c0c1b]/90 p-1.5 shadow-[0_24px_70px_rgba(0,0,0,0.42)] backdrop-blur-xl lg:hidden"
+      className="fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 rounded-[26px] border border-white/12 bg-[#0c0c1b]/90 p-1.5 shadow-[0_24px_70px_rgba(0,0,0,0.42)] backdrop-blur-xl lg:hidden"
     >
       <div className="grid grid-cols-5 gap-1">
         {mobileItems.map((item) => {

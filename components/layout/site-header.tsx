@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 const primaryNav = [
   { href: "/", label: "Home" },
-  { href: "/archivio", label: "Toools" },
+  { href: "/archivio", label: "Catalogo" },
   { href: "/product-hunt", label: "Radar" },
   { href: "/wishlist", label: "Suggerisci" },
   { href: "/shop", label: "Shop" },
@@ -156,7 +156,7 @@ export function SiteHeader() {
 
             <div className="grid gap-2 sm:grid-cols-2">
               <PremiumLink href="/wishlist">
-                Suggerisci un Toool
+                Suggerisci un tool
               </PremiumLink>
               <Link
                 href="/account"

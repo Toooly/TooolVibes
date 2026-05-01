@@ -67,7 +67,7 @@ export function GlobalCommandPalette() {
             }}
           >
             <Search className="size-4" />
-            Apri directory Toools
+            Apri catalogo tool
           </CommandItem>
           <CommandItem
             onSelect={() => {
