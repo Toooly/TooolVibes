@@ -26,23 +26,23 @@ export function SurfaceIntro({
   asideCopy,
 }: SurfaceIntroProps) {
   return (
-    <section className="brand-panel brand-aura panel-lift section-stage surface-intro-stage relative overflow-hidden rounded-[36px] p-5 sm:p-6 lg:p-7">
-      <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.8),transparent_74%)]" />
+    <section className="dark-panel brand-aura panel-lift section-stage surface-intro-stage relative overflow-hidden rounded-[36px] p-5 text-white sm:p-6 lg:p-7">
+      <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),transparent_74%)]" />
       <div className="absolute -right-10 top-12 h-36 w-36 rounded-full bg-[rgba(99,50,255,0.12)] blur-3xl" />
       <div className="absolute left-8 top-16 h-[4.5rem] w-[4.5rem] rounded-full bg-[rgba(255,200,61,0.12)] blur-3xl" />
       <div className="absolute bottom-8 right-[32%] h-20 w-20 rounded-full bg-[rgba(68,220,255,0.1)] blur-3xl" />
 
       <div className="editorial-grid relative items-start gap-y-6">
         <div className="col-span-12 lg:col-span-8">
-          <SectionHeading eyebrow={eyebrow} title={title} description={description} />
+          <SectionHeading eyebrow={eyebrow} title={title} description={description} invert />
 
           {helperEyebrow || helperCopy || actions ? (
-            <div className="surface-intro-helper mt-5 max-w-[41rem] rounded-[24px] px-4.5 py-4 sm:px-5 sm:py-4.5">
-              {helperEyebrow ? <p className="brand-kicker">{helperEyebrow}</p> : null}
+            <div className="surface-intro-helper surface-intro-helper-dark mt-5 max-w-[41rem] rounded-[24px] px-4.5 py-4 sm:px-5 sm:py-4.5">
+              {helperEyebrow ? <p className="brand-kicker !text-white/58">{helperEyebrow}</p> : null}
               {helperCopy ? (
                 <p
                   className="mt-2 text-[0.94rem] leading-7 sm:text-[0.98rem]"
-                  style={{ color: "var(--muted-strong)" }}
+                  style={{ color: "rgba(255,255,255,0.74)" }}
                 >
                   {helperCopy}
                 </p>

@@ -22,7 +22,7 @@ export function DirectoryToolCard({
   priority = false,
 }: DirectoryToolCardProps) {
   return (
-    <article className="premium-card group flex h-full min-h-[27rem] flex-col rounded-[30px] sm:min-h-[31rem]">
+    <article className="premium-card group flex h-full min-h-[23rem] flex-col rounded-[30px] sm:min-h-[31rem]">
       <div
         className="overflow-hidden border-b border-white/10 p-5 sm:p-6"
         style={{
@@ -88,7 +88,7 @@ export function DirectoryToolCard({
         </div>
 
         <div className="mt-5 space-y-4">
-            <p className="text-clamp-3 min-h-[5rem] text-[0.98rem] leading-7 text-white/66">
+            <p className="text-clamp-3 text-[0.98rem] leading-7 text-white/66 sm:min-h-[5rem]">
             {tool.description}
           </p>
 

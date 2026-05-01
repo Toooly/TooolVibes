@@ -13,14 +13,14 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
 
   return (
     <section className="page-shell pt-3 sm:pt-5">
-      <PremiumPanel tone="dark" className="px-5 py-7 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+      <PremiumPanel tone="dark" className="px-5 py-6 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
         <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[rgba(168,85,247,0.22)] blur-3xl" />
         <div className="absolute -right-24 top-10 h-80 w-80 rounded-full bg-[rgba(57,210,246,0.12)] blur-3xl" />
 
         <div className="relative grid gap-8 xl:grid-cols-[minmax(0,1.02fr)_minmax(23rem,0.98fr)] xl:items-center">
           <div className="max-w-[45rem] xl:pt-2">
             <PremiumBadge tone="accent">AI tools discovery platform</PremiumBadge>
-            <h1 className="text-display-hero mt-5 max-w-[12ch] text-[2.85rem] text-white sm:text-[4.1rem] lg:text-[5rem]">
+            <h1 className="text-display-hero mt-5 max-w-[12ch] text-[2.62rem] text-white sm:text-[4.1rem] lg:text-[5rem]">
               Trova tool AI validi. Taglia il rumore.
             </h1>
             <p className="mt-5 max-w-[42rem] text-[1.08rem] leading-8 text-white/72 sm:text-[1.18rem]">
@@ -31,15 +31,15 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <PremiumLink href="/archivio" size="lg">Esplora i tool</PremiumLink>
-              <PremiumLink href="#stack-builder" tone="secondary" size="lg">
+              <PremiumLink href="#stack-builder" tone="secondary" size="lg" className="hidden sm:inline-flex">
                 Crea il tuo stack
               </PremiumLink>
-              <PremiumLink href="/wishlist" tone="ghost" size="lg">
+              <PremiumLink href="/wishlist" tone="ghost" size="lg" className="hidden sm:inline-flex">
                 Suggerisci un Toool
               </PremiumLink>
             </div>
 
-            <div className="mt-7 grid max-w-[42rem] gap-3 sm:grid-cols-3">
+            <div className="mt-7 hidden max-w-[42rem] gap-3 sm:grid sm:grid-cols-3">
               {[
                 [`${tools.length}`, "tool curati manualmente"],
                 [`${featuredCount}`, "selezioni editoriali"],
@@ -59,7 +59,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
               ))}
             </div>
 
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-5 hidden flex-wrap gap-2 sm:flex">
               {[
                 "Tool curati a mano",
                 "Aggiornamenti periodici",
@@ -76,7 +76,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
             </div>
           </div>
 
-          <div className="rounded-[32px] border border-white/10 bg-white/8 p-4 shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur">
+          <div className="hidden rounded-[32px] border border-white/10 bg-white/8 p-4 shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur xl:block">
             <div className="flex items-center justify-between gap-3 rounded-[24px] border border-white/10 bg-white/8 px-4 py-3">
               <div>
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/48">

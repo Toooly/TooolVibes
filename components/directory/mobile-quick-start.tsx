@@ -63,17 +63,18 @@ export function MobileQuickStart() {
           <SectionHeader
             eyebrow="Percorsi rapidi"
             title="Da dove vuoi partire?"
-            description="Su mobile non devi scorrere tutto: scegli un intento e vai subito alla sezione giusta."
+            description="Scegli un intento e arriva subito al catalogo, al confronto o alla shortlist."
             className="text-white [&_h2]:text-white [&_p]:text-white/68"
           />
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="tool-rail -mx-2 mt-5 flex snap-x gap-3 overflow-x-auto px-2 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 xl:grid-cols-3">
             {quickPaths.map((item, index) => {
               const Icon = item.icon;
 
               return (
                 <motion.div
                   key={item.title}
+                  className="w-[min(78vw,18.5rem)] shrink-0 snap-start sm:w-auto"
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
@@ -81,7 +82,7 @@ export function MobileQuickStart() {
                 >
                   <Link
                     href={item.href}
-                    className="group flex h-full min-h-[8.2rem] items-start gap-3 rounded-[24px] border border-white/10 bg-white/8 p-4 text-white transition duration-200 hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+                    className="group flex h-full min-h-[7.6rem] items-start gap-3 rounded-[24px] border border-white/10 bg-white/8 p-4 text-white transition duration-200 hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60 sm:min-h-[8.2rem]"
                   >
                     <span className="grid size-11 shrink-0 place-items-center rounded-[18px] border border-white/10 bg-white/10 text-white">
                       <Icon className="size-5" aria-hidden="true" />

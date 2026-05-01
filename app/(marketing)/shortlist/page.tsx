@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import { SurfaceIntro } from "@/components/sections/surface-intro";
 import { ButtonLink } from "@/components/ui/button";
@@ -21,10 +22,10 @@ export default async function ShortlistPage() {
             <ButtonLink href="/archivio">Apri archivio</ButtonLink>
             <Link
               href="/compare"
-              className="section-quiet-link text-sm font-semibold"
-              style={{ color: "var(--accent-strong)" }}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/14 bg-white/8 px-4 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80"
             >
               Apri compare
+              <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </>
         }

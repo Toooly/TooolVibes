@@ -146,14 +146,14 @@ export function HomeExperienceSections() {
             }
           />
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="tool-rail -mx-2 mt-5 flex snap-x gap-3 overflow-x-auto px-2 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
             {categories.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group rounded-[26px] border border-white/10 bg-white/7 p-4 transition hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+                  className="group w-[min(76vw,18rem)] shrink-0 snap-start rounded-[26px] border border-white/10 bg-white/7 p-4 transition hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60 sm:w-auto"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <span className="grid size-11 place-items-center rounded-[18px] border border-white/10 bg-white/9 text-white">
@@ -203,8 +203,8 @@ export function HomeExperienceSections() {
           <PremiumPanel tone="dark" className="p-5 sm:p-7">
             <SectionHeader
               eyebrow="Sistema"
-              title="Le feature secondarie stanno dentro accordion."
-              description="Meno blocchi verticali, più gerarchia. I dettagli si aprono quando servono."
+              title="Segnali utili, senza disperdere il percorso."
+              description="I dettagli restano raccolti: curation, workspace, radar e mobile hanno un ruolo chiaro nella scelta."
               className="[&_h2]:text-white [&_p]:text-white/66"
             />
             <div className="mt-6">
@@ -250,8 +250,8 @@ export function HomeExperienceSections() {
                   <Sparkles className="size-5" aria-hidden="true" />
                 </span>
                 <p className="text-sm leading-6 text-white/68">
-                  Design scuro, superfici glass, bottom nav mobile e dettagli secondari
-                  compressi in accordion/drawer.
+                  Un percorso più corto tra scoperta, memoria e decisione, con i
+                  candidati giusti sempre a portata di mano.
                 </p>
               </div>
             </div>

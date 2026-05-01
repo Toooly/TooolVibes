@@ -33,7 +33,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Columns3,
-  Filter,
   GripVertical,
   Layers3,
   Search,
@@ -302,7 +301,7 @@ function ToolCompactCard({
       exit={{ opacity: 0, y: 8, scale: 0.985 }}
       whileHover={{ y: -5 }}
       transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-      className="group/tool relative flex min-h-[20rem] w-[min(82vw,21rem)] shrink-0 snap-start flex-col overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.085),rgba(255,255,255,0.045))] shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors duration-300 hover:border-[rgba(216,180,254,0.34)]"
+      className="group/tool relative flex min-h-[18.5rem] w-[min(84vw,20rem)] shrink-0 snap-start flex-col overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.085),rgba(255,255,255,0.045))] shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors duration-300 hover:border-[rgba(216,180,254,0.34)] sm:min-h-[19.5rem] sm:w-[20rem] lg:w-[21rem]"
     >
       <span
         aria-hidden="true"
@@ -339,11 +338,11 @@ function ToolCompactCard({
           </div>
         </div>
 
-        <p className="text-clamp-2 mt-4 min-h-[3rem] text-[0.9rem] leading-6 text-white/68">
+        <p className="text-clamp-2 mt-4 text-[0.9rem] leading-6 text-white/68">
           {tool.shortDescription}
         </p>
 
-        <div className="mt-4 flex min-h-[2.15rem] flex-wrap content-start gap-1.5">
+        <div className="mt-4 flex flex-wrap content-start gap-1.5">
           {tool.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
@@ -419,6 +418,30 @@ function ToolShelf({
   onStack: (slug: string) => void;
 }) {
   const railRef = useRef<HTMLDivElement>(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) {
+      return;
+    }
+
+    const updateScrollState = () => {
+      const maxScroll = rail.scrollWidth - rail.clientWidth;
+      setCanScrollPrev(rail.scrollLeft > 4);
+      setCanScrollNext(rail.scrollLeft < maxScroll - 4);
+    };
+
+    updateScrollState();
+    rail.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      rail.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [tools.length]);
 
   function scrollRail(direction: -1 | 1) {
     railRef.current?.scrollBy({
@@ -445,7 +468,8 @@ function ToolShelf({
           <button
             type="button"
             onClick={() => scrollRail(-1)}
-            className="premium-button premium-button-icon premium-button-subtle min-h-10 min-w-10"
+            disabled={!canScrollPrev}
+            className="premium-button premium-button-icon premium-button-subtle grid min-h-11 min-w-11 place-items-center disabled:cursor-not-allowed disabled:opacity-40"
             aria-label={`Scorri ${title} indietro`}
           >
             <ChevronLeft className="size-4" />
@@ -453,7 +477,8 @@ function ToolShelf({
           <button
             type="button"
             onClick={() => scrollRail(1)}
-            className="premium-button premium-button-icon premium-button-subtle min-h-10 min-w-10"
+            disabled={!canScrollNext}
+            className="premium-button premium-button-icon premium-button-subtle grid min-h-11 min-w-11 place-items-center disabled:cursor-not-allowed disabled:opacity-40"
             aria-label={`Scorri ${title} avanti`}
           >
             <ChevronRight className="size-4" />
@@ -464,7 +489,7 @@ function ToolShelf({
       <div className="relative mt-4">
         <div
           ref={railRef}
-          className="tool-shelf-rail -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:-mx-5 sm:gap-4 sm:px-5"
+          className="tool-shelf-rail catalog-carousel-rail -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-3 sm:-mx-5 sm:gap-4 sm:px-5"
         >
           <AnimatePresence mode="popLayout">
             {tools.map((tool) => (
@@ -484,7 +509,7 @@ function ToolShelf({
         </div>
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-16 bg-gradient-to-l from-[#11111f] to-transparent sm:block"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-8 bg-gradient-to-l from-[#11111f]/86 to-transparent sm:block"
         />
       </div>
     </PremiumPanel>
@@ -853,12 +878,6 @@ export function ToolDiscoveryApp({
     setActiveTag((current) => (current === tag ? "" : tag));
   }
 
-  function focusSearch() {
-    setActiveTab("all");
-    searchInputRef.current?.focus();
-    searchInputRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
-  }
-
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
@@ -966,7 +985,7 @@ export function ToolDiscoveryApp({
           </div>
 
           <div className="lg:hidden">
-            <div className="flex gap-2 overflow-x-auto pb-1">
+            <div className="tool-rail -mx-1 flex gap-2 overflow-x-auto px-1 pb-2">
               {directoryFilterGroups.slice(0, 7).map((group) => (
                 <button
                   key={group.key}
@@ -1092,7 +1111,7 @@ export function ToolDiscoveryApp({
                     key={slug}
                     type="button"
                     onClick={() => setSelectedSlug(slug)}
-                    className="w-full rounded-[18px] border border-white/10 bg-white/7 px-3 py-2 text-left text-sm font-semibold text-white/86 transition hover:border-white/20 hover:bg-white/10"
+                    className="w-full rounded-[18px] border border-[rgba(76,55,166,0.12)] bg-white/76 px-3 py-2 text-left text-sm font-semibold text-[var(--muted-strong)] transition hover:border-[rgba(106,60,255,0.24)] hover:bg-white/90"
                   >
                     {tool.name}
                   </button>
@@ -1242,50 +1261,6 @@ export function ToolDiscoveryApp({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-
-      <nav
-        className="fixed inset-x-3 bottom-[5.6rem] z-40 grid grid-cols-4 gap-1 rounded-[24px] border border-white/28 bg-[#1e123f]/88 p-1.5 text-white shadow-[0_20px_60px_rgba(18,10,50,0.28)] backdrop-blur-xl lg:hidden"
-        aria-label="Azioni rapide catalogo"
-      >
-        <button
-          type="button"
-          onClick={focusSearch}
-          className="premium-button premium-button-subtle flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold text-white/74"
-        >
-          <Search className="size-4" />
-          Cerca
-        </button>
-        <button
-          type="button"
-          onClick={() => setFilterDrawerOpen(true)}
-          className="premium-button premium-button-subtle flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold text-white/74"
-        >
-          <Filter className="size-4" />
-          Filtri
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("saved")}
-          className={cn(
-            "premium-button flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold",
-            activeTab === "saved" ? "premium-button-glow text-white" : "premium-button-subtle text-white/74",
-          )}
-        >
-          <Bookmark className="size-4" />
-          Salvati
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("compare")}
-          className={cn(
-            "premium-button flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] text-[0.68rem] font-semibold",
-            activeTab === "compare" ? "premium-button-glow text-white" : "premium-button-subtle text-white/74",
-          )}
-        >
-          <Columns3 className="size-4" />
-          Confronta
-        </button>
-      </nav>
 
       <ToolDetailDrawer
         tool={selectedTool}

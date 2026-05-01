@@ -2,6 +2,7 @@
 
 import { useDeferredValue, useState } from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type {
@@ -81,7 +82,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
   if (shortlistedTools.length === 0) {
     return (
       <div
-        className="rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
+        className="light-surface rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
         style={{
           borderColor: "var(--line)",
           background: "linear-gradient(180deg, rgba(255,255,255,0.84), rgba(243,237,255,0.74))",
@@ -121,9 +122,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
             className="button-shell button-primary text-ui-strong inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
           >
             Apri l&apos;archivio
-            <span aria-hidden="true" className="button-arrow">
-              →
-            </span>
+            <ArrowRight aria-hidden="true" className="button-arrow size-4" />
           </Link>
           <Link
             href="/collections"
@@ -263,7 +262,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
         </>
       ) : (
         <div
-          className="rounded-[32px] border px-6 py-8 text-center sm:py-9"
+          className="light-surface rounded-[32px] border px-6 py-8 text-center sm:py-9"
           style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.78), rgba(243,237,255,0.7))" }}
         >
           <p className="pill mx-auto">Workspace filtrata</p>
@@ -288,9 +287,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
               className="button-shell button-primary text-ui-strong inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
             >
               {compareCount > 1 ? "Apri il compare" : "Torna all'archivio"}
-              <span aria-hidden="true" className="button-arrow">
-                →
-              </span>
+              <ArrowRight aria-hidden="true" className="button-arrow size-4" />
             </Link>
           </div>
         </div>

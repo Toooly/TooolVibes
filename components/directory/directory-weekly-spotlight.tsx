@@ -130,9 +130,11 @@ export function DirectoryWeeklySpotlight({
           </div>
         </PremiumPanel>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-1">
+        <div className="tool-rail -mx-1.5 flex snap-x gap-4 overflow-x-auto px-1.5 pb-2 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-1">
           {supportingTools.map((tool) => (
-            <DirectoryToolCard key={tool.slug} tool={tool} />
+            <div key={tool.slug} className="w-[min(84vw,21rem)] shrink-0 snap-start md:w-auto">
+              <DirectoryToolCard tool={tool} />
+            </div>
           ))}
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { memo, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type { ToolRecord } from "@/lib/types/tool";
@@ -156,9 +157,7 @@ function ToolCardComponent({
                   className="button-shell button-primary text-ui-strong inline-flex items-center gap-2 rounded-full px-4 py-2 text-[0.82rem] font-semibold text-white"
                 >
                   Apri profilo
-                  <span aria-hidden="true" className="button-arrow">
-                    →
-                  </span>
+                  <ArrowRight aria-hidden="true" className="button-arrow size-4" />
                 </Link>
                 <ShortlistToggle slug={tool.slug} mode="compact" />
                 <CompareToggle slug={tool.slug} compact />
@@ -412,9 +411,7 @@ function ToolCardComponent({
               className="button-shell button-primary text-ui-strong inline-flex w-full items-center justify-center gap-2 rounded-full px-3.5 py-2.25 text-[0.78rem] font-semibold text-white"
             >
               Apri profilo
-              <span aria-hidden="true" className="button-arrow">
-                →
-              </span>
+              <ArrowRight aria-hidden="true" className="button-arrow size-4" />
             </Link>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2">
@@ -438,9 +435,7 @@ function ToolCardComponent({
                 className="button-shell button-secondary text-ui-strong inline-flex items-center gap-2 rounded-full px-3.25 py-1.75 text-[0.74rem] font-semibold"
               >
                 Apri profilo
-                <span aria-hidden="true" className="button-arrow">
-                  →
-                </span>
+                <ArrowRight aria-hidden="true" className="button-arrow size-4" />
               </Link>
             </div>
           </div>

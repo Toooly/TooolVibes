@@ -18,7 +18,7 @@ export function ToolGrid({
   if (tools.length === 0) {
     return (
       <div
-        className="rounded-[var(--radius-lg)] border px-6 py-10 text-center"
+        className="light-surface rounded-[var(--radius-lg)] border px-6 py-10 text-center"
         style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.78), rgba(243,237,255,0.7))" }}
       >
         <h3 className="text-2xl">Nessun tool disponibile.</h3>

@@ -1,5 +1,6 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
+import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
@@ -30,11 +31,11 @@ const buttonVariants = cva(
         md: "min-h-11 gap-1.5 px-4.5 py-2.5",
         lg: "min-h-12 gap-2 px-5 py-3 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
         xl: "min-h-[3.7rem] gap-2 px-7 py-4 text-base",
-        icon: "premium-button-icon size-10",
+        icon: "premium-button-icon size-11",
         "icon-xs":
           "premium-button-icon size-7 in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
         "icon-sm":
-          "premium-button-icon size-9 in-data-[slot=button-group]:rounded-lg",
+          "premium-button-icon size-11 in-data-[slot=button-group]:rounded-lg",
         "icon-lg": "premium-button-icon size-12",
       },
     },
@@ -84,9 +85,7 @@ function ButtonLink({
     >
       <span>{props.children}</span>
       {variant === "primary" ? (
-        <span aria-hidden="true" className="button-arrow">
-          -&gt;
-        </span>
+        <ArrowRight aria-hidden="true" className="button-arrow size-4" />
       ) : null}
     </Link>
   );

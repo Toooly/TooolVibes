@@ -2,6 +2,7 @@
 
 import { Fragment, useMemo } from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { cn } from "@/lib/utils";
@@ -116,7 +117,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
   if (compareSlugs.length === 0) {
     return (
       <div
-        className="rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
+        className="light-surface rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
         style={{
           borderColor: "var(--line)",
           background: "linear-gradient(180deg, rgba(255,255,255,0.84), rgba(243,237,255,0.74))",
@@ -153,9 +154,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
             className="button-shell button-primary text-ui-strong inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
           >
             Vai all&apos;archivio
-            <span aria-hidden="true" className="button-arrow">
-              →
-            </span>
+            <ArrowRight aria-hidden="true" className="button-arrow size-4" />
           </Link>
           <Link
             href="/shortlist"
@@ -171,7 +170,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
   if (comparedTools.length === 1) {
     return (
       <div
-        className="rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
+        className="light-surface rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
         style={{
           borderColor: "var(--line)",
           background: "linear-gradient(180deg, rgba(255,255,255,0.84), rgba(243,237,255,0.74))",
@@ -191,9 +190,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
             className="button-shell button-primary text-ui-strong inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
           >
             Aggiungi un altro tool
-            <span aria-hidden="true" className="button-arrow">
-              →
-            </span>
+            <ArrowRight aria-hidden="true" className="button-arrow size-4" />
           </Link>
           <Link
             href="/shortlist"

@@ -38,8 +38,10 @@ export function MobileBottomNav() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex min-h-12 flex-col items-center justify-center gap-1 rounded-[20px] text-[0.64rem] font-semibold transition",
-                active ? "bg-white text-[#17112f]" : "text-white/62 hover:bg-white/8 hover:text-white",
+                "flex min-h-12 flex-col items-center justify-center gap-1 rounded-[20px] text-[0.64rem] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
+                active
+                  ? "bg-[linear-gradient(135deg,#a855f7_0%,#6d28d9_48%,#312e81_100%)] text-white shadow-[0_12px_28px_rgba(124,58,237,0.34),inset_0_1px_0_rgba(255,255,255,0.26)]"
+                  : "text-white/62 hover:bg-white/8 hover:text-white",
               )}
             >
               <Icon className="size-4" aria-hidden="true" />

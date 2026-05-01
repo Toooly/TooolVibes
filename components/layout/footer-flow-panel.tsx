@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
@@ -134,9 +135,7 @@ export function FooterFlowPanel() {
           className="button-shell button-primary text-ui-strong inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
         >
           {flow.primary.label}
-          <span aria-hidden="true" className="button-arrow">
-            →
-          </span>
+          <ArrowRight aria-hidden="true" className="button-arrow size-4" />
         </Link>
         <Link
           href={flow.secondary.href}

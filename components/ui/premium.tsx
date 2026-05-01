@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -70,9 +71,7 @@ export function PremiumLink({
         {...props}
       >
         <span>{children}</span>
-        <span aria-hidden="true" className="premium-arrow premium-button-icon-shift">
-          -&gt;
-        </span>
+        <ArrowRight aria-hidden="true" className="premium-arrow premium-button-icon-shift size-4" />
       </a>
     );
   }
@@ -81,9 +80,7 @@ export function PremiumLink({
     <Link href={href} className={classes} {...props}>
       <span>{children}</span>
       {tone === "primary" || tone === "dark" ? (
-        <span aria-hidden="true" className="premium-arrow premium-button-icon-shift">
-          -&gt;
-        </span>
+        <ArrowRight aria-hidden="true" className="premium-arrow premium-button-icon-shift size-4" />
       ) : null}
     </Link>
   );

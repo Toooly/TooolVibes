@@ -185,6 +185,13 @@
   --shadow-soft: 0 16px 42px rgba(0, 0, 0, 0.2);
   --shadow-card: 0 24px 64px rgba(0, 0, 0, 0.28);
   --shadow-premium: 0 34px 90px rgba(0, 0, 0, 0.38);
+  --ink: #130d31;
+  --ink-muted: #635e84;
+  --ink-strong: #251e51;
+  --ink-accent: #4c2fbc;
+  --scrollbar-track: rgba(12, 12, 27, 0.52);
+  --scrollbar-thumb: rgba(168, 85, 247, 0.62);
+  --scrollbar-thumb-hover: rgba(216, 180, 254, 0.82);
 }
 
 * {
@@ -193,6 +200,8 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
 }
 
 body {
@@ -234,6 +243,36 @@ img {
 
 ::selection {
   background: rgba(99, 50, 255, 0.22);
+}
+
+* {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 2.5rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(216, 180, 254, 0.82), rgba(124, 58, 237, 0.62)) padding-box,
+    transparent border-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(180deg, rgba(237, 233, 254, 0.92), rgba(168, 85, 247, 0.78)) padding-box,
+    transparent border-box;
 }
 
 @layer base {
@@ -304,6 +343,23 @@ img {
 
   .premium-panel-light {
     background: var(--gradient-paper);
+  }
+
+  .premium-panel-light,
+  .brand-panel,
+  .metadata-block,
+  .light-surface,
+  .tool-card-base,
+  .compare-score-shell,
+  .compare-score-grid,
+  .compare-detail-card,
+  .surface-intro-helper,
+  .stat-block {
+    --foreground: var(--ink);
+    --muted: var(--ink-muted);
+    --muted-strong: var(--ink-strong);
+    --accent-strong: var(--ink-accent);
+    color: var(--foreground);
   }
 
   .premium-panel-tint {
@@ -433,7 +489,7 @@ img {
   }
 
   .premium-button-primary {
-    color: white;
+    color: white !important;
     border-color: rgba(216, 180, 254, 0.22);
     background:
       radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.28), transparent 30%),
@@ -443,6 +499,15 @@ img {
       0 0 0 1px rgba(255, 255, 255, 0.06),
       inset 0 1px 0 rgba(255, 255, 255, 0.26),
       inset 0 -14px 30px rgba(24, 17, 95, 0.24);
+  }
+
+  .premium-button-primary > *,
+  .premium-button-premium > *,
+  .premium-button-glow > *,
+  .premium-button-danger > *,
+  .premium-button-dark > *,
+  .button-primary > * {
+    color: inherit;
   }
 
   .premium-button-primary:hover {
@@ -685,12 +750,23 @@ img {
   .tool-shelf-rail {
     scroll-behavior: smooth;
     scroll-padding-inline: 1rem;
-    scrollbar-width: none;
+    scrollbar-color: rgba(168, 85, 247, 0.58) rgba(255, 255, 255, 0.08);
+    scrollbar-width: thin;
     overscroll-behavior-x: contain;
   }
 
   .tool-shelf-rail::-webkit-scrollbar {
-    display: none;
+    height: 0.55rem;
+  }
+
+  .tool-shelf-rail::-webkit-scrollbar-track {
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .tool-shelf-rail::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.72), rgba(216, 180, 254, 0.62));
   }
 
   .interactive-surface {
@@ -965,7 +1041,7 @@ img {
   }
 
   .button-primary {
-    color: #fff;
+    color: #fff !important;
     border-color: rgba(139, 119, 255, 0.34);
     background:
       radial-gradient(circle at 80% 16%, rgba(57, 210, 246, 0.28), transparent 34%),
@@ -990,7 +1066,7 @@ img {
   }
 
   .button-secondary {
-    color: color-mix(in srgb, var(--foreground) 90%, var(--accent-strong) 10%);
+    color: #1f164f;
     border-color: rgba(78, 63, 143, 0.16);
     background:
       radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.94), transparent 44%),
@@ -1092,12 +1168,23 @@ img {
   }
 
   .tool-rail {
-    scrollbar-width: none;
+    scrollbar-color: rgba(168, 85, 247, 0.56) rgba(20, 17, 45, 0.22);
+    scrollbar-width: thin;
     -ms-overflow-style: none;
   }
 
   .tool-rail::-webkit-scrollbar {
-    display: none;
+    height: 0.5rem;
+  }
+
+  .tool-rail::-webkit-scrollbar-track {
+    border-radius: 999px;
+    background: rgba(20, 17, 45, 0.22);
+  }
+
+  .tool-rail::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.68), rgba(168, 85, 247, 0.52));
   }
 
   .skeleton-block {
@@ -1996,6 +2083,25 @@ img {
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.56),
       0 12px 26px rgba(67, 48, 199, 0.04);
+  }
+
+  .surface-intro-helper-dark {
+    --foreground: #ffffff;
+    --muted: rgba(255, 255, 255, 0.72);
+    --muted-strong: rgba(255, 255, 255, 0.84);
+    --accent-strong: #d8b4fe;
+    border-color: rgba(255, 255, 255, 0.11);
+    background:
+      radial-gradient(circle at top right, rgba(168, 85, 247, 0.12), transparent 30%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.04));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 18px 42px rgba(0, 0, 0, 0.18);
+    color: #ffffff;
+  }
+
+  .surface-intro-helper-dark a {
+    color: rgba(255, 255, 255, 0.94);
   }
 
   .surface-intro-aside {

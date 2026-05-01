@@ -19,15 +19,15 @@ export const metadata: Metadata = {
 export default function ProductHuntPage() {
   return (
     <div className="page-shell space-y-6 pb-16 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
-      <section className="overflow-hidden rounded-[38px] border border-[rgba(83,63,170,0.12)] bg-[linear-gradient(135deg,#fdfcff_0%,#f5f0ff_44%,#eef2ff_100%)] px-5 py-6 shadow-[0_24px_72px_rgba(38,21,104,0.08)] sm:px-7 sm:py-8">
+      <section className="overflow-hidden rounded-[38px] border border-white/10 bg-[radial-gradient(circle_at_86%_12%,rgba(168,85,247,0.22),transparent_32%),linear-gradient(135deg,#11111f_0%,#18122f_52%,#0b0b1a_100%)] px-5 py-6 text-white shadow-[0_24px_72px_rgba(0,0,0,0.28)] sm:px-7 sm:py-8">
         <div className="max-w-[48rem]">
-          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
+          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/58">
             Product Hunt radar
           </p>
-          <h1 className="mt-4 text-[2.4rem] leading-[0.95] text-[var(--foreground)] sm:max-w-[13ch] sm:text-[3.5rem]">
+          <h1 className="mt-4 text-[2.4rem] leading-[0.95] text-white sm:max-w-[13ch] sm:text-[3.5rem]">
             I lanci pi&ugrave; forti da tenere d&apos;occhio.
           </h1>
-          <p className="mt-5 max-w-[42rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
+          <p className="mt-5 max-w-[42rem] text-[1rem] leading-7 text-white/70">
             Una vista compatta sui prodotti pi&ugrave; votati in Product Hunt: giorno,
             settimana e mese, con token protetto lato server e cache per restare veloce
             su Cloudflare.
@@ -42,7 +42,7 @@ export default function ProductHuntPage() {
             </Link>
             <Link
               href="/wishlist"
-              className="rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-5 py-3 text-sm font-semibold text-[var(--foreground)]"
+              className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/8 px-5 py-3 text-sm font-semibold text-white/84 transition hover:border-white/24 hover:bg-white/12 hover:text-white"
             >
               Suggerisci un Toool
             </Link>

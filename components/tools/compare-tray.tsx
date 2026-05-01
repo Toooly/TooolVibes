@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { clearCompareTools } from "@/lib/discovery/local-storage";
@@ -94,9 +95,7 @@ export function CompareTray() {
                 className="button-shell button-primary text-ui-strong inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white sm:w-auto"
               >
                 Apri compare
-                <span aria-hidden="true" className="button-arrow">
-                  →
-                </span>
+                <ArrowRight aria-hidden="true" className="button-arrow size-4" />
               </Link>
               <button
                 type="button"
