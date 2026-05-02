@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Fuse from "fuse.js";
-import { AnimatePresence, motion } from "motion/react";
 import {
   closestCenter,
   DndContext,
@@ -29,9 +28,6 @@ import {
 } from "@tanstack/react-table";
 import {
   Bookmark,
-  Check,
-  ChevronLeft,
-  ChevronRight,
   Columns3,
   GripVertical,
   Layers3,
@@ -41,6 +37,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { CategoryToolCarousel } from "@/components/directory/category-tool-carousel";
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import {
   Drawer,
@@ -62,7 +59,7 @@ import {
   type DirectoryToolLevel,
 } from "@/lib/data/tooolvibes-directory";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
-import { cn, formatItalianDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 type ToolDiscoveryAppProps = {
   tools: DirectoryTool[];
@@ -90,22 +87,21 @@ const shelfOrder: DirectoryToolLevel[] = ["featured", "beginner", "intermediate"
 const shelfCopy: Record<DirectoryToolLevel, { title: string; description: string }> = {
   featured: {
     title: "Da guardare prima",
-    description: "La selezione editoriale più forte: pochi profili ad alto segnale, pronti da aprire o confrontare.",
+    description: "La selezione editoriale pi\u00f9 forte: pochi profili ad alto segnale, pronti da aprire o confrontare.",
   },
   beginner: {
     title: "Partenza rapida",
-    description: "Tool immediati per scrittura, immagini, video e prime attività operative.",
+    description: "Tool immediati per scrittura, immagini, video e prime attivit\u00e0 operative.",
   },
   intermediate: {
     title: "Workflow in crescita",
-    description: "Soluzioni più strutturate per marketing, supporto, contenuti, siti e pagamenti.",
+    description: "Soluzioni pi\u00f9 strutturate per marketing, supporto, contenuti, siti e pagamenti.",
   },
   expert: {
     title: "Stack avanzati",
-    description: "Automazioni, agenti e layer più tecnici per chi sta già costruendo processi veri.",
+    description: "Automazioni, agenti e layer pi\u00f9 tecnici per chi sta gi\u00e0 costruendo processi veri.",
   },
 };
-
 const compareColumns: ColumnDef<DirectoryTool>[] = [
   {
     header: "Tool",
@@ -245,274 +241,6 @@ function FilterControls({
         </div>
       </div>
     </div>
-  );
-}
-
-function ToolActionButton({
-  active,
-  children,
-  onClick,
-  ariaLabel,
-}: {
-  active?: boolean;
-  children: React.ReactNode;
-  onClick: () => void;
-  ariaLabel: string;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={ariaLabel}
-      onClick={onClick}
-      className={cn(
-        "premium-button premium-button-icon inline-flex min-h-10 min-w-10 items-center justify-center gap-2 text-sm font-semibold sm:min-h-11 sm:min-w-11",
-        active ? "premium-button-glow text-white" : "premium-button-subtle text-white/72",
-      )}
-    >
-      {children}
-    </button>
-  );
-}
-
-function ToolCompactCard({
-  tool,
-  saved,
-  compared,
-  stacked,
-  onOpen,
-  onSave,
-  onCompare,
-  onStack,
-}: {
-  tool: DirectoryTool;
-  saved: boolean;
-  compared: boolean;
-  stacked: boolean;
-  onOpen: () => void;
-  onSave: () => void;
-  onCompare: () => void;
-  onStack: () => void;
-}) {
-  return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, y: 10, scale: 0.985 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 8, scale: 0.985 }}
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-      className="group/tool relative flex min-h-[17.2rem] w-[min(78vw,18.25rem)] shrink-0 snap-start flex-col overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.095),rgba(255,255,255,0.052))] shadow-[0_18px_48px_rgba(0,0,0,0.22)] transition-colors duration-300 hover:border-[rgba(216,180,254,0.34)] sm:min-h-[19rem] sm:w-[20rem] sm:rounded-[28px] lg:w-[21rem]"
-    >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-80 transition-opacity duration-300 group-hover/tool:opacity-100"
-        style={{
-          background: `radial-gradient(circle at 88% 4%, ${tool.accentFrom}28, transparent 34%), radial-gradient(circle at 10% 92%, ${tool.accentTo}20, transparent 32%)`,
-        }}
-      />
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-60"
-      />
-
-      <div className="relative flex flex-1 flex-col p-3.5 sm:p-4">
-        <div className="flex items-start gap-3">
-          <DirectoryToolGlyph tool={tool} size="md" />
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap gap-1.5">
-              <PremiumBadge tone={levelTone[tool.level]} className="px-2 py-1 text-[0.58rem]">
-                {tool.levelLabel}
-              </PremiumBadge>
-              {tool.toolOfWeek ? (
-                <PremiumBadge tone="warning" className="px-2 py-1 text-[0.58rem]">
-                  Scelta
-                </PremiumBadge>
-              ) : null}
-            </div>
-            <h3 className="mt-2 truncate text-[1.08rem] font-semibold leading-tight text-white sm:text-[1.18rem]">
-              {tool.name}
-            </h3>
-            <p className="mt-1 truncate text-[0.62rem] font-semibold uppercase tracking-[0.13em] text-white/52 sm:text-[0.68rem] sm:tracking-[0.15em]">
-              {tool.categoryLabel}
-            </p>
-          </div>
-        </div>
-
-        <p className="text-clamp-2 mt-3 text-[0.86rem] leading-6 text-white/70 sm:mt-4 sm:text-[0.9rem]">
-          {tool.shortDescription}
-        </p>
-
-        <div className="mt-3 flex flex-wrap content-start gap-1.5 sm:mt-4">
-          {tool.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.62rem] font-semibold text-white/68 sm:text-[0.66rem]"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-auto pt-3 sm:pt-4">
-          <div className="mb-2.5 flex items-center justify-between gap-2 rounded-[16px] border border-white/10 bg-white/6 px-3 py-2 sm:mb-3 sm:rounded-[18px]">
-            <div className="min-w-0">
-              <p className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-white/40">
-                Fonte
-              </p>
-              <p className="truncate text-xs font-semibold text-white/76">{tool.domain}</p>
-            </div>
-            <span className="shrink-0 text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-white/48 sm:text-[0.68rem] sm:tracking-[0.14em]">
-              {formatItalianDate(tool.publishedAt)}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-[minmax(0,1fr)_auto_auto_auto] gap-1.5 sm:gap-2">
-            <PremiumButton type="button" size="sm" tone="premium" onClick={onOpen}>
-              Apri dettagli
-            </PremiumButton>
-            <ToolActionButton active={saved} onClick={onSave} ariaLabel={`Salva ${tool.name}`}>
-              {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
-            </ToolActionButton>
-            <ToolActionButton
-              active={compared}
-              onClick={onCompare}
-              ariaLabel={`Confronta ${tool.name}`}
-            >
-              <Columns3 className="size-4" />
-            </ToolActionButton>
-            <ToolActionButton
-              active={stacked}
-              onClick={onStack}
-              ariaLabel={`Aggiungi ${tool.name} allo stack`}
-            >
-              <Layers3 className="size-4" />
-            </ToolActionButton>
-          </div>
-        </div>
-      </div>
-    </motion.article>
-  );
-}
-
-function ToolShelf({
-  title,
-  description,
-  tools,
-  savedSlugs,
-  compareSlugs,
-  stackSlugs,
-  onOpen,
-  onSave,
-  onCompare,
-  onStack,
-}: {
-  title: string;
-  description: string;
-  tools: DirectoryTool[];
-  savedSlugs: string[];
-  compareSlugs: string[];
-  stackSlugs: string[];
-  onOpen: (slug: string) => void;
-  onSave: (tool: DirectoryTool) => void;
-  onCompare: (tool: DirectoryTool) => void;
-  onStack: (slug: string) => void;
-}) {
-  const railRef = useRef<HTMLDivElement>(null);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-
-  useEffect(() => {
-    const rail = railRef.current;
-    if (!rail) {
-      return;
-    }
-
-    const updateScrollState = () => {
-      const maxScroll = rail.scrollWidth - rail.clientWidth;
-      setCanScrollPrev(rail.scrollLeft > 4);
-      setCanScrollNext(rail.scrollLeft < maxScroll - 4);
-    };
-
-    updateScrollState();
-    rail.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
-
-    return () => {
-      rail.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
-    };
-  }, [tools.length]);
-
-  function scrollRail(direction: -1 | 1) {
-    railRef.current?.scrollBy({
-      left: direction * 380,
-      behavior: "smooth",
-    });
-  }
-
-  return (
-    <PremiumPanel tone="subtle" className="p-3.5 sm:p-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="max-w-[38rem]">
-          <div className="flex flex-wrap items-center gap-2">
-            <h4 className="text-display-card text-[1.24rem] leading-tight text-white sm:text-[1.65rem]">
-              {title}
-            </h4>
-            <span className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.13em] text-white/58 sm:text-[0.68rem] sm:tracking-[0.15em]">
-              {tools.length} tool
-            </span>
-          </div>
-          <p className="mt-2 text-[0.86rem] leading-6 text-white/62 sm:text-sm">{description}</p>
-        </div>
-        <div className="hidden gap-2 sm:flex" aria-label={`Scorri ${title}`}>
-          <button
-            type="button"
-            onClick={() => scrollRail(-1)}
-            disabled={!canScrollPrev}
-            className="premium-button premium-button-icon premium-button-subtle grid min-h-11 min-w-11 place-items-center disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label={`Scorri ${title} indietro`}
-          >
-            <ChevronLeft className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollRail(1)}
-            disabled={!canScrollNext}
-            className="premium-button premium-button-icon premium-button-subtle grid min-h-11 min-w-11 place-items-center disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label={`Scorri ${title} avanti`}
-          >
-            <ChevronRight className="size-4" />
-          </button>
-        </div>
-      </div>
-
-      <div className="relative mt-3 sm:mt-4">
-        <div
-          ref={railRef}
-          className="tool-shelf-rail catalog-carousel-rail -mx-3.5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-3.5 pb-2 sm:-mx-5 sm:gap-4 sm:px-5 sm:pb-3"
-        >
-          <AnimatePresence mode="popLayout">
-            {tools.map((tool) => (
-              <ToolCompactCard
-                key={tool.slug}
-                tool={tool}
-                saved={savedSlugs.includes(tool.slug)}
-                compared={compareSlugs.includes(tool.slug)}
-                stacked={stackSlugs.includes(tool.slug)}
-                onOpen={() => onOpen(tool.slug)}
-                onSave={() => onSave(tool)}
-                onCompare={() => onCompare(tool)}
-                onStack={() => onStack(tool.slug)}
-              />
-            ))}
-          </AnimatePresence>
-        </div>
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-8 bg-gradient-to-l from-[#11111f]/86 to-transparent sm:block"
-        />
-      </div>
-    </PremiumPanel>
   );
 }
 
@@ -1057,7 +785,7 @@ export function ToolDiscoveryApp({
           {visibleTools.length > 0 ? (
             <div className="space-y-4">
               {toolShelves.map(({ level, tools: shelfTools }) => (
-                <ToolShelf
+                <CategoryToolCarousel
                   key={level}
                   title={shelfCopy[level].title}
                   description={shelfCopy[level].description}
