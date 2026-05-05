@@ -109,7 +109,7 @@ export function PremiumButton({
       )}
       {...props}
     >
-      <span>{children}</span>
+      {children}
     </button>
   );
 }
@@ -139,7 +139,7 @@ export function PremiumPanel({
 }: React.HTMLAttributes<HTMLElement> & {
   as?: "div" | "section" | "article" | "aside";
   children: React.ReactNode;
-  tone?: "light" | "tint" | "dark" | "subtle";
+  tone?: "light" | "tint" | "dark" | "subtle" | "airy" | "blue" | "violet" | "warm";
 }) {
   return (
     <Component

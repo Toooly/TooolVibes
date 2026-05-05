@@ -13,33 +13,33 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
 
   return (
     <section className="page-shell pt-3 sm:pt-5">
-      <PremiumPanel tone="dark" className="px-5 py-6 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
-        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[rgba(168,85,247,0.22)] blur-3xl" />
-        <div className="absolute -right-24 top-10 h-80 w-80 rounded-full bg-[rgba(57,210,246,0.12)] blur-3xl" />
+      <PremiumPanel tone="blue" className="motion-reveal px-5 py-6 sm:px-8 sm:py-9 lg:px-10 lg:py-11">
+        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[rgba(167,139,250,0.18)] blur-3xl" />
+        <div className="absolute -right-24 top-10 h-80 w-80 rounded-full bg-[rgba(94,226,255,0.1)] blur-3xl" />
 
-        <div className="relative grid gap-8 xl:grid-cols-[minmax(0,1.02fr)_minmax(23rem,0.98fr)] xl:items-center">
+        <div className="relative grid gap-8 xl:grid-cols-[minmax(0,0.98fr)_minmax(25rem,1.02fr)] xl:items-center">
           <div className="max-w-[45rem] xl:pt-2">
             <PremiumBadge tone="accent">AI tools discovery platform</PremiumBadge>
-            <h1 className="text-display-hero mt-5 max-w-[12ch] text-[2.62rem] text-white sm:text-[4.1rem] lg:text-[5rem]">
+            <h1 className="text-display-hero mt-5 max-w-[12ch] text-[clamp(2.55rem,8vw,4.85rem)] text-white">
               Trova tool AI validi. Taglia il rumore.
             </h1>
-            <p className="mt-5 max-w-[42rem] text-[1.08rem] leading-8 text-white/72 sm:text-[1.18rem]">
+            <p className="mt-5 max-w-[42rem] text-[1.02rem] leading-8 text-white/74 sm:text-[1.13rem]">
               TooolVibes seleziona AI tools, SaaS, no-code builder, vibe coding e
               automazioni con una logica pratica: meno alternative inutili, più segnali
               per capire cosa provare davvero.
             </p>
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap sm:items-center">
               <PremiumLink href="/archivio" size="lg">Esplora i tool</PremiumLink>
-              <PremiumLink href="#stack-builder" tone="secondary" size="lg" className="hidden sm:inline-flex">
+              <PremiumLink href="/archivio#stack-builder" tone="secondary" size="lg">
                 Crea il tuo stack
               </PremiumLink>
-              <PremiumLink href="/wishlist" tone="ghost" size="lg" className="hidden sm:inline-flex">
+              <PremiumLink href="/wishlist" tone="ghost" size="lg">
                 Suggerisci un tool
               </PremiumLink>
             </div>
 
-            <div className="mt-7 hidden max-w-[42rem] gap-3 sm:grid sm:grid-cols-3">
+            <div className="motion-stagger mt-7 hidden max-w-[42rem] gap-3 sm:grid sm:grid-cols-3">
               {[
                 [`${tools.length}`, "tool curati manualmente"],
                 [`${featuredCount}`, "selezioni editoriali"],
@@ -47,7 +47,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
               ].map(([value, label]) => (
                 <div
                   key={label}
-                  className="rounded-[24px] border border-white/10 bg-white/8 px-4 py-3 shadow-[0_10px_34px_rgba(0,0,0,0.16)]"
+                  className="group rounded-[22px] border border-white/12 bg-white/9 px-4 py-3 shadow-[0_10px_34px_rgba(8,14,38,0.12)] transition duration-200 hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/13"
                 >
                   <span className="block text-[1.45rem] font-semibold leading-none text-white">
                     {value}
@@ -76,11 +76,11 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
             </div>
           </div>
 
-          <div className="hidden rounded-[32px] border border-white/10 bg-white/8 p-4 shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur xl:block">
+          <div className="hero-mini-visual hidden rounded-[32px] border border-white/12 bg-white/9 p-4 shadow-[0_22px_70px_rgba(8,14,38,0.22)] backdrop-blur xl:block">
             <div className="flex items-center justify-between gap-3 rounded-[24px] border border-white/10 bg-white/8 px-4 py-3">
               <div>
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/48">
-                  App preview
+                  Workspace preview
                 </p>
                 <p className="mt-1 text-sm text-white/68">
                   Tool, segnali e azioni operative in una vista sola.
@@ -89,32 +89,43 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
               <PremiumBadge tone="dark">Premium</PremiumBadge>
             </div>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="mt-4 grid gap-3">
               {previewTools.map((tool) => (
                 <div
                   key={tool.slug}
-                  className="premium-card flex h-full min-h-[13rem] flex-col p-4"
+                  className="group flex min-h-[7.6rem] items-start gap-3 rounded-[24px] border border-white/10 p-4 transition duration-200 hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/9"
                   style={{
                     background: `radial-gradient(circle at top right, ${tool.accentFrom}30, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.052))`,
                   }}
                 >
-                  <div className="flex items-start gap-3">
-                    <DirectoryToolGlyph tool={tool} size="md" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/46">
-                        {tool.levelLabel}
-                      </p>
-                      <p className="mt-1 text-[1rem] font-semibold text-white">
-                        {tool.name}
-                      </p>
+                  <DirectoryToolGlyph tool={tool} size="md" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/46">
+                          {tool.levelLabel}
+                        </p>
+                        <p className="mt-1 truncate text-[1rem] font-semibold text-white">
+                          {tool.name}
+                        </p>
+                      </div>
+                      <span className="rounded-full border border-white/10 bg-white/8 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/58">
+                        {formatItalianDate(tool.publishedAt)}
+                      </span>
                     </div>
-                  </div>
-                  <p className="text-clamp-3 mt-3 min-h-[4.25rem] text-sm leading-6 text-white/70">
-                    {tool.description}
-                  </p>
-                  <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-3 text-[0.7rem] uppercase tracking-[0.14em] text-white/46">
-                    <span>{formatItalianDate(tool.publishedAt)}</span>
-                    <span className="truncate">{tool.category}</span>
+                    <p className="text-clamp-2 mt-2 text-sm leading-6 text-white/70">
+                      {tool.description}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {tool.highlights.slice(0, 2).map((highlight) => (
+                        <span
+                          key={highlight}
+                          className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.62rem] font-semibold text-white/62"
+                        >
+                          {highlight}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}

@@ -1,4 +1,3 @@
-import { DirectoryToolCard } from "@/components/directory/directory-tool-card";
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
@@ -18,7 +17,7 @@ export function DirectoryWeeklySpotlight({
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-[40rem]">
           <PremiumBadge tone="accent">Tool della settimana</PremiumBadge>
-          <h2 className="mt-3 text-[1.65rem] leading-[1.02] text-[var(--foreground)] sm:text-[2.7rem]">
+          <h2 className="mt-3 text-[1.65rem] leading-[1.02] text-[var(--foreground)] sm:text-[2.45rem]">
             Il focus editoriale da provare prima degli altri.
           </h2>
           <p className="mt-3 text-[0.95rem] leading-7 text-[var(--muted-strong)] sm:mt-4 sm:text-[1rem]">
@@ -32,10 +31,10 @@ export function DirectoryWeeklySpotlight({
         </PremiumLink>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(21rem,0.85fr)]">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.18fr)_minmax(21rem,0.82fr)]">
         <PremiumPanel
           as="article"
-          tone="dark"
+          tone="violet"
           className="overflow-hidden px-4 py-5 text-white sm:px-6 sm:py-6"
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -58,19 +57,34 @@ export function DirectoryWeeklySpotlight({
             </div>
           </div>
 
-          <div className="mt-6 grid gap-5 sm:mt-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(15rem,0.92fr)] lg:gap-8">
+          <div className="mt-5 grid gap-5 sm:mt-6 lg:grid-cols-[minmax(0,1.03fr)_minmax(15rem,0.97fr)] lg:gap-6">
             <div>
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                 Featured pick
               </p>
-              <h3 className="mt-3 max-w-[11ch] text-[2rem] leading-[0.96] sm:text-[3.2rem]">
+              <h3 className="mt-3 max-w-[11ch] text-[2rem] leading-[0.96] sm:text-[2.85rem]">
                 {weeklyTool.name}
               </h3>
               <p className="mt-4 max-w-[36rem] text-[1rem] leading-7 text-white/76">
                 {weeklyTool.longDescription}
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-2">
+              <div className="mt-5 grid gap-2 sm:grid-cols-3">
+                {[
+                  ["Use case", weeklyTool.useCases.length.toString()],
+                  ["Lettura", weeklyTool.readingTime],
+                  ["Fonte", weeklyTool.domain],
+                ].map(([label, value]) => (
+                  <div key={label} className="rounded-[18px] border border-white/10 bg-white/7 px-3 py-3">
+                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/42">
+                      {label}
+                    </p>
+                    <p className="mt-1 truncate text-sm font-semibold text-white">{value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-2">
                 {weeklyTool.highlights.map((item) => (
                   <span
                     key={item}
@@ -85,8 +99,7 @@ export function DirectoryWeeklySpotlight({
                 <PremiumLink
                   href={weeklyTool.url}
                   external
-                  tone="secondary"
-                  className="border-white/30 bg-white text-[#24144d] hover:bg-white"
+                  tone="primary"
                 >
                   {weeklyTool.ctaLabel}
                 </PremiumLink>
@@ -108,11 +121,11 @@ export function DirectoryWeeklySpotlight({
                 {weeklyTool.whyItMatters}
               </p>
 
-              <div className="mt-5 space-y-3">
+              <div className="mt-5 grid gap-3">
                 {weeklyTool.useCases.slice(0, 3).map((item, index) => (
                   <div
                     key={item}
-                    className="rounded-[20px] border border-white/10 bg-white/6 px-4 py-3.5"
+                    className="rounded-[20px] border border-white/10 bg-white/6 px-4 py-3.5 transition duration-200 hover:border-white/18 hover:bg-white/8"
                   >
                     <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/44">
                       Uso {String(index + 1).padStart(2, "0")}
@@ -130,11 +143,40 @@ export function DirectoryWeeklySpotlight({
           </div>
         </PremiumPanel>
 
-        <div className="tool-rail -mx-1.5 flex snap-x gap-3 overflow-x-auto px-1.5 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-4 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-1">
+        <div className="motion-stagger tool-rail -mx-1.5 flex snap-x gap-3 overflow-x-auto px-1.5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-1">
           {supportingTools.map((tool) => (
-            <div key={tool.slug} className="w-[min(78vw,19rem)] shrink-0 snap-start md:w-auto">
-              <DirectoryToolCard tool={tool} />
-            </div>
+            <article
+              key={tool.slug}
+              className="group w-[min(78vw,19rem)] shrink-0 snap-start rounded-[26px] border border-white/12 bg-white/9 p-4 text-white transition duration-200 hover:-translate-y-1 hover:border-violet-200/36 hover:bg-white/14 hover:shadow-[0_18px_44px_rgba(8,14,38,0.2)] md:w-auto"
+            >
+              <div className="flex items-start gap-3">
+                <DirectoryToolGlyph tool={tool} size="md" />
+                <div className="min-w-0">
+                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/44">
+                    Alternativa
+                  </p>
+                  <h3 className="mt-1 truncate text-[1.05rem] font-semibold text-white">
+                    {tool.name}
+                  </h3>
+                </div>
+              </div>
+              <p className="text-clamp-3 mt-4 text-sm leading-6 text-white/66">
+                {tool.shortDescription}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {tool.highlights.slice(0, 2).map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.62rem] font-semibold text-white/58"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <PremiumLink href={`/toools/${tool.slug}`} tone="ghost" size="sm" className="mt-4 w-full">
+                Apri scheda
+              </PremiumLink>
+            </article>
           ))}
         </div>
       </div>

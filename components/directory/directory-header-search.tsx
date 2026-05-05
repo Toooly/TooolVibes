@@ -2,6 +2,9 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ArrowRight, Search } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 type DirectoryHeaderSearchProps = {
   compact?: boolean;
@@ -42,23 +45,38 @@ export function DirectoryHeaderSearch({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2" role="search">
+    <form
+      onSubmit={handleSubmit}
+      className={cn(
+        "group/header-search flex items-center gap-2 rounded-full border border-white/14 bg-white/9 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.11)] transition duration-200 focus-within:-translate-y-0.5 focus-within:border-violet-200/42 focus-within:bg-white/13 focus-within:shadow-[0_0_0_5px_rgba(139,92,246,0.14),0_14px_34px_rgba(8,14,38,0.16),inset_0_1px_0_rgba(255,255,255,0.18)]",
+        compact && "w-full",
+      )}
+      role="search"
+    >
       <label className="sr-only" htmlFor={compact ? "header-search-mobile" : "header-search"}>
         Cerca nel catalogo
       </label>
+      <Search
+        aria-hidden="true"
+        className="header-search-icon ml-2.5 size-4 shrink-0 text-white/42 transition group-focus-within/header-search:text-violet-100"
+      />
       <input
         id={compact ? "header-search-mobile" : "header-search"}
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         placeholder="Cerca tool, tag o categoria"
-        className="w-full rounded-full border border-[rgba(92,72,170,0.14)] bg-white/86 px-4 py-2.5 text-sm text-[var(--foreground)] outline-none transition-colors duration-200 placeholder:text-[var(--muted)] focus:border-[rgba(108,76,255,0.3)]"
+        className="min-h-9 w-full min-w-0 bg-transparent px-1 text-sm font-medium text-white outline-none placeholder:text-white/44"
         aria-label="Cerca nel catalogo"
       />
       <button
         type="submit"
-        className="rounded-full bg-[linear-gradient(135deg,var(--accent),#8a61ff)] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(95,66,255,0.16)] transition-transform duration-200 hover:-translate-y-0.5"
+        className={cn(
+          "premium-button premium-button-primary inline-flex min-h-9 shrink-0 items-center justify-center gap-1.5 rounded-full px-3.5 text-sm font-semibold text-white",
+          compact && "px-3",
+        )}
       >
-        Cerca
+        <span className={compact ? "sr-only sm:not-sr-only" : undefined}>Cerca</span>
+        <ArrowRight aria-hidden="true" className="size-3.5" />
       </button>
     </form>
   );

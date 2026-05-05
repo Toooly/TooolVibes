@@ -1,5 +1,5 @@
-import { DirectoryBrowser } from "@/components/directory/directory-browser";
 import { DirectoryHero } from "@/components/directory/directory-hero";
+import { HomeCatalogPreview } from "@/components/directory/home-catalog-preview";
 import { DirectoryWeeklySpotlight } from "@/components/directory/directory-weekly-spotlight";
 import { HomeExperienceSections } from "@/components/directory/home-experience-sections";
 import { MobileQuickStart } from "@/components/directory/mobile-quick-start";
@@ -37,24 +37,17 @@ export default function HomePage() {
       </section>
 
       <section id="toools" className="page-shell">
-        <PremiumPanel tone="tint" className="px-4 py-5 sm:px-7 sm:py-8">
-          <DirectoryBrowser
-            tools={directoryTools}
-            eyebrow="Tutti i tool"
-            title="Catalogo operativo per scegliere meglio, non per scorrere all'infinito."
-            description="Filtra, salva, confronta e costruisci stack: il catalogo TooolVibes porta dalla scoperta alla decisione senza perdere contesto."
-          />
-        </PremiumPanel>
+        <HomeCatalogPreview tools={directoryTools} />
       </section>
 
       <section className="page-shell">
-        <div className="grid gap-5 lg:grid-cols-2">
-          <PremiumPanel tone="light" className="p-5 sm:p-6">
+        <div className="motion-stagger grid gap-5 lg:grid-cols-2">
+          <PremiumPanel tone="violet" className="p-5 sm:p-6">
             <PremiumBadge tone="accent">Wishlist</PremiumBadge>
-            <h2 className="text-display-card mt-4 text-[1.95rem] text-[var(--foreground)] sm:text-[2.55rem]">
+            <h2 className="text-display-card mt-4 text-[1.95rem] text-white sm:text-[2.55rem]">
               Hai trovato un tool che manca?
             </h2>
-            <p className="mt-4 text-[1rem] leading-7 text-[var(--muted-strong)]">
+            <p className="mt-4 text-[1rem] leading-7 text-white/72">
               Suggerisci nuovi AI tool, SaaS, no-code builder o automazioni e aiutaci a
               rendere la directory sempre pi&ugrave; utile.
             </p>
@@ -63,7 +56,7 @@ export default function HomePage() {
             </PremiumLink>
           </PremiumPanel>
 
-          <PremiumPanel tone="dark" className="p-5 sm:p-6">
+          <PremiumPanel tone="blue" className="p-5 sm:p-6">
             <PremiumBadge tone="dark">Community</PremiumBadge>
             <h2 className="text-display-card mt-4 text-[1.95rem] sm:text-[2.55rem]">
               Una directory viva, curata con criterio.

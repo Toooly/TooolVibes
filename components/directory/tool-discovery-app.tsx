@@ -102,6 +102,16 @@ const shelfCopy: Record<DirectoryToolLevel, { title: string; description: string
     description: "Automazioni, agenti e layer pi\u00f9 tecnici per chi sta gi\u00e0 costruendo processi veri.",
   },
 };
+
+const primaryFilterGroups: DirectoryFilterGroup[] = [
+  "all",
+  "vibe-coding",
+  "ai-app-builder",
+  "automation",
+  "no-code",
+  "ai-video",
+  "marketing",
+];
 const compareColumns: ColumnDef<DirectoryTool>[] = [
   {
     header: "Tool",
@@ -175,6 +185,12 @@ function FilterControls({
   const idleClass = dark
     ? "border-white/10 bg-white/6 text-white/72 hover:bg-white/10"
     : "border-[rgba(76,55,166,0.12)] bg-white/72 text-[var(--muted-strong)] hover:border-[rgba(106,60,255,0.22)]";
+  const mainGroups = directoryFilterGroups.filter((group) =>
+    primaryFilterGroups.includes(group.key),
+  );
+  const secondaryGroups = directoryFilterGroups.filter(
+    (group) => !primaryFilterGroups.includes(group.key),
+  );
 
   return (
     <div className="space-y-4">
@@ -183,13 +199,13 @@ function FilterControls({
           Categorie
         </p>
         <div className="tool-rail mt-3 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap">
-          {directoryFilterGroups.map((group) => (
+          {mainGroups.map((group) => (
             <button
               key={group.key}
               type="button"
               onClick={() => onGroupChange(group.key)}
               className={cn(
-                "min-h-10 shrink-0 rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3.5 sm:py-2 sm:text-[0.72rem]",
+                "motion-filter-chip min-h-10 shrink-0 rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3.5 sm:py-2 sm:text-[0.72rem]",
                 activeGroup === group.key ? activeClass : idleClass,
               )}
             >
@@ -197,6 +213,26 @@ function FilterControls({
             </button>
           ))}
         </div>
+        <details className="motion-details mt-3 rounded-[20px] border border-white/10 bg-white/5 p-3">
+          <summary className="cursor-pointer text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white/58 transition hover:text-white">
+            Altre categorie
+          </summary>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {secondaryGroups.map((group) => (
+              <button
+                key={group.key}
+              type="button"
+              onClick={() => onGroupChange(group.key)}
+              className={cn(
+                  "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3 sm:text-xs",
+                  activeGroup === group.key ? activeClass : idleClass,
+                )}
+              >
+                {group.label}
+              </button>
+            ))}
+          </div>
+        </details>
       </div>
 
       <div>
@@ -210,7 +246,7 @@ function FilterControls({
               type="button"
               onClick={() => onLevelChange(level.key)}
               className={cn(
-                "min-h-9 rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3 sm:text-xs",
+                "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3 sm:text-xs",
                 activeLevel === level.key ? activeClass : idleClass,
               )}
             >
@@ -224,14 +260,14 @@ function FilterControls({
         <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
           Tag rapidi
         </p>
-        <div className="mt-3 flex max-h-[11rem] flex-wrap gap-1.5 overflow-y-auto pr-1 sm:max-h-[13rem] sm:gap-2">
+        <div className="mt-3 flex max-h-[8.5rem] flex-wrap gap-1.5 overflow-y-auto pr-1 sm:max-h-[10rem] sm:gap-2">
           {sortedTags.map((tag) => (
             <button
               key={tag}
               type="button"
               onClick={() => onTagChange(tag)}
               className={cn(
-                "min-h-9 rounded-full border px-2.5 py-1.5 text-[0.72rem] font-medium transition sm:px-3 sm:text-xs",
+                "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.72rem] font-medium transition sm:px-3 sm:text-xs",
                 activeTag === tag ? activeClass : idleClass,
               )}
             >
@@ -273,7 +309,7 @@ function ToolDetailDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction={isDesktop ? "right" : "bottom"}>
-      <DrawerContent className="!max-h-[88vh] overflow-y-auto border-l border-white/12 bg-[linear-gradient(180deg,#11111f,#080816)] p-0 text-white md:!max-h-screen md:!max-w-[42rem]">
+      <DrawerContent className="!max-h-[88vh] overflow-y-auto border-l border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white md:!max-h-screen md:!max-w-[42rem]">
         <DrawerHeader className="border-b border-white/10 p-5 text-left sm:p-6">
           <div className="flex items-start gap-4">
             <DirectoryToolGlyph tool={tool} size="lg" />
@@ -592,7 +628,7 @@ export function ToolDiscoveryApp({
   function handleStack(slug: string) {
     const tool = getToolBySlug(tools, slug);
     const added = addToStack(slug);
-    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool già nello stack");
+    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool gi? nello stack");
   }
 
   function resetFilters() {
@@ -623,11 +659,11 @@ export function ToolDiscoveryApp({
 
   return (
     <section className={cn("space-y-5 pb-28 lg:space-y-6 lg:pb-0", className)}>
-      <PremiumPanel tone="dark" className="grid gap-4 p-4 sm:p-5 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-6 lg:p-6">
-        <aside className="space-y-3 border-white/10 lg:space-y-4 lg:border-r lg:pr-5">
+      <PremiumPanel tone="blue" className="grid min-w-0 gap-4 p-4 sm:p-5 lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-6 lg:p-6">
+        <aside className="min-w-0 space-y-3 border-white/10 lg:space-y-4 lg:border-r lg:pr-5">
           <PremiumBadge tone="dark">{eyebrow}</PremiumBadge>
           <div>
-            <h2 className="text-display-card text-[1.48rem] leading-[1.04] text-white sm:text-[2.7rem]">
+            <h2 className="text-display-card text-[1.48rem] leading-[1.08] text-white sm:text-[2.25rem]">
               {title}
             </h2>
             <p className="mt-3 hidden text-[0.92rem] leading-6 text-white/68 sm:mt-4 sm:block sm:text-sm sm:leading-7">{description}</p>
@@ -645,7 +681,7 @@ export function ToolDiscoveryApp({
             <kbd className="rounded-md bg-white/10 px-2 py-1 text-[0.68rem]">Ctrl K</kbd>
           </button>
 
-          <nav className="grid grid-cols-4 gap-1.5 lg:grid-cols-1 lg:gap-2" aria-label="Workspace views">
+          <nav className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 lg:grid-cols-1 lg:gap-2" aria-label="Workspace views">
             {[
               ["all", "Tutti", tools.length],
               ["saved", "Salvati", savedSlugs.length],
@@ -664,13 +700,13 @@ export function ToolDiscoveryApp({
                 )}
               >
                 <span>{label}</span>
-                <span className="rounded-full bg-black/10 px-1.5 py-0.5 text-[0.66rem] sm:px-2 sm:text-xs">{count}</span>
+                <span className="rounded-full bg-white/12 px-1.5 py-0.5 text-[0.66rem] sm:px-2 sm:text-xs">{count}</span>
               </button>
             ))}
           </nav>
         </aside>
 
-        <div className="space-y-4 lg:space-y-5">
+        <div className="min-w-0 space-y-4 lg:space-y-5">
           <div className="grid grid-cols-[minmax(0,1fr)_7.2rem_2.75rem] gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
             <label>
               <span className="sr-only">Cerca tool</span>
@@ -678,14 +714,14 @@ export function ToolDiscoveryApp({
                 ref={searchInputRef}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                className="premium-input px-3.5 py-2.5 text-sm sm:px-4 sm:py-3"
+                className="premium-input min-h-12 px-3.5 py-2.5 text-sm sm:px-4 sm:py-3"
                 placeholder="Cerca tool, tag, use case o categoria..."
               />
             </label>
             <select
               value={sortMode}
               onChange={(event) => setSortMode(event.target.value as SortMode)}
-              className="premium-input col-span-1 px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3"
+              className="premium-input col-span-1 min-h-12 px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3"
               aria-label="Ordina tool"
             >
               <option value="recommended">Consigliati</option>
@@ -720,7 +756,7 @@ export function ToolDiscoveryApp({
                   type="button"
                   onClick={() => setActiveGroup(group.key)}
                   className={cn(
-                    "premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
+                    "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
                     activeGroup === group.key
                       ? "premium-button-glow text-white"
                       : "premium-button-subtle text-white/72",
@@ -763,8 +799,8 @@ export function ToolDiscoveryApp({
         </div>
       </PremiumPanel>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <div className="space-y-5">
+      <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <div className="min-w-0 space-y-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
@@ -819,18 +855,18 @@ export function ToolDiscoveryApp({
           )}
         </div>
 
-        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-          <PremiumPanel tone="light" className="light-surface p-4 sm:p-5">
+        <aside className="min-w-0 space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <PremiumPanel tone="airy" className="p-4 sm:p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                   Tool salvati
                 </p>
-                <h3 className="mt-2 text-display-card text-[1.45rem] text-[var(--foreground)]">
+                <h3 className="mt-2 text-display-card text-[1.45rem] text-white">
                   {savedSlugs.length} salvati
                 </h3>
               </div>
-              <Bookmark className="size-5 text-[var(--accent)]" />
+              <Bookmark className="size-5 text-violet-100" />
             </div>
             <div className="mt-4 space-y-2">
               {savedSlugs.slice(0, 4).map((slug) => {
@@ -840,7 +876,7 @@ export function ToolDiscoveryApp({
                     key={slug}
                     type="button"
                     onClick={() => setSelectedSlug(slug)}
-                    className="w-full rounded-[18px] border border-[rgba(76,55,166,0.12)] bg-white/76 px-3 py-2 text-left text-sm font-semibold text-[var(--muted-strong)] transition hover:border-[rgba(106,60,255,0.24)] hover:bg-white/90"
+                    className="w-full rounded-[18px] border border-white/10 bg-white/7 px-3 py-2 text-left text-sm font-semibold text-white/76 transition hover:border-violet-200/28 hover:bg-white/10 hover:text-white"
                   >
                     {tool.name}
                   </button>
@@ -852,13 +888,14 @@ export function ToolDiscoveryApp({
                   title="Nessun tool salvato."
                   description="Salva i migliori candidati per creare una shortlist utile e ritrovarli nella prossima sessione."
                   className="p-4"
+                  dark
                 />
               ) : null}
             </div>
           </PremiumPanel>
 
-          <PremiumPanel tone="subtle" className="p-4 sm:p-5">
-            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+          <PremiumPanel tone="violet" className="p-4 sm:p-5">
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
               Confronta
             </p>
             <div className="mt-4 overflow-x-auto">
@@ -870,7 +907,7 @@ export function ToolDiscoveryApp({
                         {headerGroup.headers.map((header) => (
                           <th
                             key={header.id}
-                            className="border-b border-[rgba(76,55,166,0.12)] px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted)]"
+                            className="border-b border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-white/46"
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
                           </th>
@@ -884,7 +921,7 @@ export function ToolDiscoveryApp({
                         {row.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
-                            className="border-b border-[rgba(76,55,166,0.08)] px-3 py-3 align-top text-[var(--muted-strong)]"
+                            className="border-b border-white/8 px-3 py-3 align-top text-white/72"
                           >
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </td>
@@ -905,7 +942,7 @@ export function ToolDiscoveryApp({
             </div>
           </PremiumPanel>
 
-          <PremiumPanel tone="dark" className="p-4 sm:p-5" id="stack-builder">
+          <PremiumPanel tone="blue" className="p-4 sm:p-5" id="stack-builder">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
@@ -949,7 +986,7 @@ export function ToolDiscoveryApp({
       </div>
 
       <Drawer open={isFilterDrawerOpen} onOpenChange={setFilterDrawerOpen} direction="bottom">
-        <DrawerContent className="max-h-[86vh] overflow-y-auto border-white/12 bg-[linear-gradient(180deg,#11111f,#080816)] p-0 text-white">
+        <DrawerContent className="max-h-[86vh] overflow-y-auto border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white">
           <DrawerHeader className="border-b border-white/10 p-5 text-left">
             <div className="flex items-start justify-between gap-4">
               <div>

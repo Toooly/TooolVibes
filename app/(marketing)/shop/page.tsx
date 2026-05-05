@@ -1,76 +1,135 @@
+import { ArrowRight, Boxes, FileText, Layers3, Sparkles, Zap } from "lucide-react";
+
+import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import { siteConfig } from "@/lib/config/site";
+
+const shopCards = [
+  {
+    title: "Stack curati",
+    copy: "Selezioni premium di tool e workflow già ragionate per creator, founder e team piccoli.",
+    example: "Esempio: MVP builder stack, AI content stack, automation starter.",
+    icon: Layers3,
+  },
+  {
+    title: "Risorse operative",
+    copy: "Materiali che riducono attrito: esempi concreti, checklist e percorsi pronti al test.",
+    example: "Esempio: brief, prompt pack, template di valutazione tool.",
+    icon: FileText,
+  },
+  {
+    title: "Shortcut più densi",
+    copy: "Il layer premium serve quando vuoi velocizzare il passaggio tra scoperta, scelta e implementazione.",
+    example: "Esempio: sequenze operative per lanciare, automatizzare o validare.",
+    icon: Zap,
+  },
+];
 
 export default function ShopPage() {
   return (
-    <div className="page-shell space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
-      <section className="overflow-hidden rounded-[30px] border border-[rgba(83,63,170,0.12)] bg-[linear-gradient(135deg,#171129_0%,#23144d_56%,#140d28_100%)] px-5 py-5 text-white shadow-[0_28px_80px_rgba(18,10,51,0.28)] sm:rounded-[38px] sm:px-7 sm:py-8">
-        <div className="max-w-[44rem]">
-          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/60">
-            Digital Shop
-          </p>
-          <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,10vw,2.75rem)] leading-[0.96] text-white sm:text-[3.4rem]">
-            Asset, selezioni premium e shortcut per lavorare più veloce.
-          </h1>
-          <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-7 text-white/74 sm:mt-5 sm:text-[1rem]">
-            Il Digital Shop è il layer esterno in cui TooolVibes porta raccolte premium, risorse e
-            percorsi più densi. Qui il punto non è aggiungere rumore: è darti materiali più
-            pronti all&apos;uso.
-          </p>
+    <div className="page-shell space-y-5 pb-24 pt-4 sm:space-y-7 sm:pb-16 sm:pt-6">
+      <section className="hero-shell hero-shell-shop motion-reveal px-5 py-5 text-white sm:rounded-[38px] sm:px-7 sm:py-8">
+        <div className="grid gap-7 lg:grid-cols-[minmax(0,0.94fr)_minmax(20rem,0.8fr)] lg:items-end">
+          <div className="max-w-[44rem]">
+            <PremiumBadge tone="warning">Digital Shop</PremiumBadge>
+            <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[0.98] text-white">
+              Asset, selezioni premium e shortcut per lavorare più veloce.
+            </h1>
+            <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-7 text-white/74 sm:mt-5 sm:text-[1rem]">
+              Il Digital Shop è il layer esterno in cui TooolVibes porta raccolte premium,
+              risorse e percorsi più densi. Il punto non è aggiungere rumore: è darti
+              materiali più pronti all&apos;uso.
+            </p>
 
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <a
-              href={siteConfig.shopUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-white/24 bg-white px-5 py-3.5 text-sm font-semibold shadow-[0_16px_34px_rgba(255,255,255,0.12)] transition-transform duration-200 hover:-translate-y-0.5"
-              style={{ color: "#24144d" }}
-            >
-              Apri il Digital Shop
-            </a>
-            <a
-              href={siteConfig.shopUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/8 px-5 py-3.5 text-sm font-semibold transition-transform duration-200 hover:-translate-y-0.5"
-              style={{ color: "#ffffff" }}
-            >
-              Vai allo shop esterno
-            </a>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <PremiumLink href={siteConfig.shopUrl} external>
+                Apri il Digital Shop
+              </PremiumLink>
+              <PremiumLink href="/archivio" tone="secondary">
+                Vedi catalogo
+              </PremiumLink>
+            </div>
+          </div>
+
+          <div className="hero-mini-visual rounded-[30px] border border-white/12 bg-white/9 p-4 shadow-[0_22px_58px_rgba(8,14,38,0.18)]">
+            <div className="flex items-center justify-between gap-3 rounded-[22px] border border-white/10 bg-white/7 p-4">
+              <div>
+                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/48">
+                  Bundle preview
+                </p>
+                <p className="mt-1 text-sm font-semibold text-white">
+                  TooolVibes Operating Kit
+                </p>
+              </div>
+              <Sparkles className="size-5 text-amber-100" aria-hidden="true" />
+            </div>
+            <div className="mt-4 grid gap-3">
+              {["Tool shortlist", "Prompt operativi", "Checklist decisionale"].map((item, index) => (
+                <div
+                  key={item}
+                  className="flex items-center justify-between rounded-[20px] border border-white/10 bg-white/7 p-3"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="grid size-9 place-items-center rounded-[14px] bg-white/10 text-xs font-semibold text-white">
+                      {index + 1}
+                    </span>
+                    <span className="text-sm font-semibold text-white/82">{item}</span>
+                  </div>
+                  <ArrowRight className="size-4 text-white/40" aria-hidden="true" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3 md:gap-5">
-        {[
-          {
-            title: "Stack curati",
-            copy: "Selezioni premium di tool e workflow già ragionate per creator, founder e team piccoli.",
-          },
-          {
-            title: "Risorse operative",
-            copy: "Materiali che riducono attrito: più esempi concreti, meno teoria che non porta al test.",
-          },
-          {
-            title: "Shortcut più densi",
-            copy: "Il layer premium serve quando vuoi velocizzare il passaggio tra scoperta, scelta e implementazione.",
-          },
-        ].map((item) => (
-          <article
-            key={item.title}
-            className="light-surface rounded-[24px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-4 shadow-[0_18px_54px_rgba(35,18,95,0.08)] sm:rounded-[30px] sm:p-5"
-          >
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-              Premium
-            </p>
-            <h2 className="mt-3 text-[1.38rem] leading-[1.02] text-[var(--foreground)]">
-              {item.title}
-            </h2>
-            <p className="mt-4 text-[0.98rem] leading-7 text-[var(--muted-strong)]">
-              {item.copy}
-            </p>
-          </article>
-        ))}
+      <section className="motion-stagger grid gap-4 md:grid-cols-3 md:gap-5">
+        {shopCards.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <PremiumPanel key={item.title} tone="airy" as="article" className="p-5">
+              <div className="flex items-start justify-between gap-4">
+                <span className="grid size-12 place-items-center rounded-[18px] border border-white/10 bg-white/8 text-white">
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+                <PremiumBadge tone="dark">Coming soon</PremiumBadge>
+              </div>
+              <h2 className="mt-5 text-[1.38rem] leading-[1.08] text-white">
+                {item.title}
+              </h2>
+              <p className="mt-4 text-[0.98rem] leading-7 text-white/68">
+                {item.copy}
+              </p>
+              <div className="mt-5 rounded-[20px] border border-white/10 bg-white/7 p-4 text-sm leading-6 text-white/64">
+                {item.example}
+              </div>
+            </PremiumPanel>
+          );
+        })}
       </section>
+
+      <PremiumPanel tone="warm" className="p-5 sm:p-6">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+          <div>
+            <PremiumBadge tone="accent">Valore reale</PremiumBadge>
+            <h2 className="mt-4 text-[1.75rem] leading-tight text-white sm:text-[2.35rem]">
+              Lo shop deve aiutarti a decidere e costruire, non solo vendere file.
+            </h2>
+            <p className="mt-3 max-w-[48rem] text-sm leading-7 text-white/66">
+              Ogni risorsa premium parte da un problema operativo: scegliere uno stack,
+              validare un tool, automatizzare un passaggio o rendere un workflow replicabile.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1">
+            {["Pronto al test", "Curato", "Operativo"].map((item) => (
+              <div key={item} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/7 px-4 py-2 text-sm font-semibold text-white/72">
+                <Boxes className="size-4 text-violet-100" aria-hidden="true" />
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </PremiumPanel>
     </div>
   );
 }

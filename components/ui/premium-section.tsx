@@ -68,16 +68,16 @@ export function DecorativeGlow({
   tone?: "violet" | "cyan" | "gold";
 }) {
   const toneClass = {
-    violet: "bg-[rgba(106,60,255,0.2)]",
-    cyan: "bg-[rgba(57,210,246,0.18)]",
-    gold: "bg-[rgba(243,191,76,0.18)]",
+    violet: "bg-[rgba(167,139,250,0.16)]",
+    cyan: "bg-[rgba(94,226,255,0.14)]",
+    gold: "bg-[rgba(246,199,97,0.14)]",
   }[tone];
 
   return (
     <span
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute h-36 w-36 rounded-full blur-3xl",
+        "hero-mini-visual pointer-events-none absolute h-36 w-36 rounded-full blur-3xl",
         toneClass,
         className,
       )}

@@ -26,52 +26,52 @@ const categoryNav = [
 
 export function SiteFooter() {
   return (
-    <footer className="page-shell pb-6 pt-10 sm:pb-8 sm:pt-14">
-      <PremiumPanel tone="dark" className="px-5 py-6 sm:px-7 sm:py-8">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(18rem,0.98fr)] lg:items-start">
+    <footer className="page-shell pb-6 pt-6 sm:pb-8 sm:pt-9">
+      <PremiumPanel tone="airy" className="footer-motion px-5 py-5 sm:px-7 sm:py-6">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(18rem,1.12fr)] lg:items-start">
           <div>
             <div className="flex items-center gap-3">
-              <BrandLogo size={46} />
+              <BrandLogo size={42} />
               <div>
-                <p className="text-[0.9rem] font-semibold uppercase tracking-[0.2em] text-white/86">
+                <p className="text-[0.84rem] font-semibold uppercase tracking-[0.18em] text-white/86">
                   TooolVibes
                 </p>
-                <p className="mt-1 text-[0.72rem] uppercase tracking-[0.16em] text-white/46">
+                <p className="mt-1 text-[0.68rem] uppercase tracking-[0.14em] text-white/46">
                   AI tools discovery platform
                 </p>
               </div>
             </div>
 
-            <h2 className="mt-5 max-w-[14ch] text-[2rem] leading-[0.98] sm:text-[2.6rem]">
+            <h2 className="mt-4 max-w-[20rem] text-[1.45rem] leading-tight text-white/94 sm:text-[1.85rem]">
               I tool migliori, senza perdere tempo nel rumore.
             </h2>
-            <p className="mt-4 max-w-[38rem] text-[1rem] leading-7 text-white/72">
+            <p className="mt-3 max-w-[36rem] text-[0.94rem] leading-7 text-white/64">
               Directory curata di AI tools, SaaS, no-code builder, vibe coding e
               automazioni con link chiari, filtri utili e una selezione pensata per
               l&apos;uso reale.
             </p>
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <PremiumLink href="/wishlist" tone="secondary">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <PremiumLink href="/wishlist" tone="secondary" size="sm">
                 Suggerisci un tool
               </PremiumLink>
-              <PremiumLink href={siteConfig.shopUrl} tone="dark" external>
+              <PremiumLink href={siteConfig.shopUrl} tone="ghost" size="sm" external>
                 Apri il Digital Shop
               </PremiumLink>
             </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/50">
+            <div className="rounded-[22px] border border-white/12 bg-white/[0.055] p-4">
+              <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/48">
                 Navigazione
               </p>
-              <div className="mt-4 grid gap-3">
+              <div className="motion-stagger mt-3 grid gap-1.5 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
                 {footerNav.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="rounded-[18px] border border-white/10 bg-white/6 px-4 py-3 text-sm font-semibold text-white/82 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                    className="animated-link rounded-[14px] px-3 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/9 hover:text-white focus-visible:bg-white/9"
                   >
                     {item.label}
                   </Link>
@@ -79,16 +79,16 @@ export function SiteFooter() {
               </div>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-white/6 p-5">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/50">
+            <div className="rounded-[22px] border border-white/12 bg-white/[0.055] p-4">
+              <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/48">
                 Categorie
               </p>
-              <div className="mt-4 grid gap-3">
+              <div className="motion-stagger mt-3 grid gap-1.5 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
                 {categoryNav.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="rounded-[18px] border border-white/10 bg-white/6 px-4 py-3 text-sm font-semibold text-white/82 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                    className="animated-link rounded-[14px] px-3 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/9 hover:text-white focus-visible:bg-white/9"
                   >
                     {item.label}
                   </Link>
@@ -98,24 +98,24 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-5 text-[0.78rem] text-white/52 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-4 text-[0.76rem] text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; 2026 TooolVibes. Directory premium per AI, SaaS, no-code e automazioni.</p>
           <div className="flex flex-wrap gap-3">
             <a
               href={siteConfig.shopUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white"
+              className="animated-link hover:text-white"
             >
               Shop
             </a>
-            <Link href="/product-hunt" className="hover:text-white">
+            <Link href="/product-hunt" className="animated-link hover:text-white">
               Product Hunt
             </Link>
-            <Link href="/wishlist" className="hover:text-white">
+            <Link href="/wishlist" className="animated-link hover:text-white">
               Suggerisci
             </Link>
-            <Link href="/archivio" className="hover:text-white">
+            <Link href="/archivio" className="animated-link hover:text-white">
               Archivio
             </Link>
           </div>

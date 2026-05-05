@@ -38,7 +38,7 @@ function ProductHuntSkeleton() {
       {Array.from({ length: 5 }).map((_, index) => (
         <div
           key={index}
-          className="flex items-center gap-3 rounded-[20px] border border-white/10 bg-white/7 p-3"
+          className="flex items-center gap-3 rounded-[20px] border border-white/12 bg-white/9 p-3"
         >
           <div className="h-10 w-10 animate-pulse rounded-2xl bg-white/10" />
           <div className="min-w-0 flex-1 space-y-2">
@@ -49,6 +49,20 @@ function ProductHuntSkeleton() {
       ))}
     </div>
   );
+}
+
+function formatMetrics(item: ProductHuntItem) {
+  const metrics = [];
+
+  if (item.votesCount > 0) {
+    metrics.push(`${item.votesCount} voti`);
+  }
+
+  if (item.commentsCount > 0) {
+    metrics.push(`${item.commentsCount} commenti`);
+  }
+
+  return metrics.length > 0 ? metrics.join(" / ") : "Segnale in verifica";
 }
 
 export function ProductHuntRankings({
@@ -125,7 +139,7 @@ export function ProductHuntRankings({
     <section
       id="product-hunt"
       className={cn(
-        "premium-card p-4 text-white sm:p-5",
+        "premium-card motion-reveal p-4 text-white sm:p-5",
         variant === "wide" && "rounded-[36px] p-5 sm:p-7",
         className,
       )}
@@ -149,7 +163,7 @@ export function ProductHuntRankings({
           </h2>
           {variant === "wide" ? (
             <p className="mt-3 max-w-[42rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
-              Un radar esterno per intercettare i lanci più votati. Se il token non è
+              Un radar esterno per intercettare i lanci pi&ugrave; votati. Se il token non &egrave;
               configurato, la sezione mostra uno stato pulito invece di rompersi.
             </p>
           ) : null}
@@ -160,7 +174,7 @@ export function ProductHuntRankings({
             href="https://www.producthunt.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-white/54 transition-colors duration-200 hover:text-white"
+            className="animated-link text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-white/58 transition-colors duration-200 hover:text-white"
           >
             Powered by Product Hunt
           </a>
@@ -177,7 +191,7 @@ export function ProductHuntRankings({
       </div>
 
       <div
-        className="mt-4 grid grid-cols-3 gap-2 rounded-[22px] border border-white/10 bg-white/7 p-1.5"
+        className="mt-4 grid grid-cols-3 gap-2 rounded-[22px] border border-white/12 bg-white/9 p-1.5"
         role="tablist"
         aria-label="Periodo classifica Product Hunt"
       >
@@ -185,21 +199,29 @@ export function ProductHuntRankings({
           const isActive = activeRange === tab.key;
 
           return (
-            <button
+            <motion.button
               key={tab.key}
               type="button"
               role="tab"
               aria-selected={isActive}
               onClick={() => setActiveRange(tab.key)}
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 520, damping: 32 }}
               className={cn(
-                "rounded-[18px] px-2.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] transition-all duration-200",
-                isActive
-                  ? "bg-white text-[#17112f] shadow-[0_10px_22px_rgba(0,0,0,0.16)]"
-                  : "text-white/62 hover:text-white",
+                "relative overflow-hidden rounded-[18px] px-2.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] transition-all duration-200",
+                isActive ? "text-white" : "text-white/64 hover:bg-white/8 hover:text-white",
               )}
             >
-              {tab.shortLabel}
-            </button>
+              {isActive ? (
+                <motion.span
+                  layoutId="product-hunt-active-tab"
+                  className="absolute inset-0 rounded-[18px] bg-[linear-gradient(135deg,rgba(167,139,250,0.95),rgba(82,104,255,0.88))] shadow-[0_12px_26px_rgba(99,102,241,0.24)]"
+                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                />
+              ) : null}
+              <span className="relative z-10">{tab.shortLabel}</span>
+            </motion.button>
           );
         })}
       </div>
@@ -208,25 +230,31 @@ export function ProductHuntRankings({
         {loadingRange === activeRange && !activePayload ? (
           <ProductHuntSkeleton />
         ) : activePayload?.status === "ok" && activePayload.items.length > 0 ? (
-          <div
-            className={cn(
-              "space-y-3",
-              variant === "wide" && "grid gap-3 space-y-0 sm:grid-cols-3 lg:grid-cols-5",
-            )}
-          >
-            <AnimatePresence mode="popLayout">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeRange}
+              initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+              transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+              className={cn(
+                "space-y-3",
+                variant === "wide" && "grid gap-3 space-y-0 sm:grid-cols-2 xl:grid-cols-3",
+              )}
+            >
             {activePayload.items.map((item, index) => (
               <motion.article
                 key={item.id}
                 layout
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 12, scale: 0.985 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.2, delay: Math.min(index * 0.025, 0.12) }}
+                whileHover={{ y: -6, scale: 1.012 }}
+                whileTap={{ scale: 0.992 }}
+                transition={{ duration: 0.22, delay: Math.min(index * 0.035, 0.16) }}
                 className={cn(
-                  "group flex items-center gap-3 rounded-[20px] border border-white/10 bg-white/7 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/10 hover:shadow-[0_14px_34px_rgba(0,0,0,0.24)]",
-                  variant === "wide" && "lg:flex-col lg:items-start lg:p-4",
-                  variant === "wide" && index > 2 && "hidden lg:flex",
+                  "group flex flex-col items-start gap-3 rounded-[20px] border border-white/12 bg-white/9 p-3 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/13 hover:shadow-[0_14px_34px_rgba(8,14,38,0.2)] sm:flex-row sm:items-center",
+                  variant === "wide" && "sm:min-h-[12.5rem] sm:flex-col sm:items-start sm:p-4",
                 )}
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-white/10 bg-white/10 text-sm font-semibold text-white">
@@ -244,12 +272,12 @@ export function ProductHuntRankings({
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-[rgba(109,59,255,0.1)] px-2 py-0.5 text-[0.66rem] font-semibold text-[var(--accent-strong)]">
+                  <div className="flex min-w-0 flex-wrap items-center gap-2">
+                    <span className="rounded-full border border-violet-200/20 bg-violet-400/12 px-2 py-0.5 text-[0.66rem] font-semibold text-violet-100">
                       #{index + 1}
                     </span>
                     {index === 0 ? <PremiumBadge tone="warning">Trending</PremiumBadge> : null}
-                    <h3 className="truncate text-[0.95rem] font-semibold text-white">
+                    <h3 className="min-w-0 truncate text-[0.95rem] font-semibold text-white">
                       {item.name}
                     </h3>
                   </div>
@@ -257,8 +285,7 @@ export function ProductHuntRankings({
                     {item.tagline}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-white/44">
-                    <span>{item.votesCount} voti</span>
-                    <span>{item.commentsCount} commenti</span>
+                    <span>{formatMetrics(item)}</span>
                   </div>
                 </div>
 
@@ -267,16 +294,16 @@ export function ProductHuntRankings({
                   external
                   tone="secondary"
                   size="sm"
-                  className="hidden sm:inline-flex"
+                  className="mt-3 self-start sm:mt-auto"
                 >
-                  Vedi
+                  Apri lancio
                 </PremiumLink>
               </motion.article>
             ))}
-            </AnimatePresence>
-          </div>
+            </motion.div>
+          </AnimatePresence>
         ) : (
-          <div className="rounded-[24px] border border-white/10 bg-white/7 px-4 py-8 text-center">
+          <div className="rounded-[24px] border border-white/12 bg-white/9 px-4 py-8 text-center">
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
               {activeTab.label}
             </p>

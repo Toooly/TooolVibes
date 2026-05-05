@@ -24,12 +24,48 @@ import { DecorativeGlow, SectionHeader } from "@/components/ui/premium-section";
 import { cn } from "@/lib/utils";
 
 const categories = [
-  { label: "Vibe Coding", href: "/archivio?group=vibe-coding", icon: Code2, detail: "Prompt-to-app, UI builder e prototipi rapidi." },
-  { label: "AI App Builder", href: "/archivio?group=ai-app-builder", icon: Bot, detail: "Da idea a prodotto navigabile con meno passaggi." },
-  { label: "Automation", href: "/archivio?group=automation", icon: Workflow, detail: "Workflow, agenti e integrazioni operative." },
-  { label: "No-Code", href: "/archivio?group=no-code", icon: Boxes, detail: "Builder visuali e stack senza codice pesante." },
-  { label: "Compare", href: "/compare", icon: GitCompare, detail: "Metti alternative una accanto all'altra." },
-  { label: "Stack", href: "/shortlist", icon: Layers3, detail: "Salva e costruisci una shortlist di lavoro." },
+  {
+    label: "Vibe Coding",
+    href: "/archivio?group=vibe-coding",
+    icon: Code2,
+    detail: "Prompt-to-app, UI builder e prototipi rapidi.",
+    badge: "Build",
+  },
+  {
+    label: "AI App Builder",
+    href: "/archivio?group=ai-app-builder",
+    icon: Bot,
+    detail: "Da idea a prodotto navigabile con meno passaggi.",
+    badge: "MVP",
+  },
+  {
+    label: "Automation",
+    href: "/archivio?group=automation",
+    icon: Workflow,
+    detail: "Workflow, agenti e integrazioni operative.",
+    badge: "Ops",
+  },
+  {
+    label: "No-Code",
+    href: "/archivio?group=no-code",
+    icon: Boxes,
+    detail: "Builder visuali e stack senza codice pesante.",
+    badge: "Stack",
+  },
+  {
+    label: "Compare",
+    href: "/compare",
+    icon: GitCompare,
+    detail: "Metti alternative una accanto all'altra.",
+    badge: "Scelta",
+  },
+  {
+    label: "Stack",
+    href: "/shortlist",
+    icon: Layers3,
+    detail: "Salva e costruisci una shortlist di lavoro.",
+    badge: "Memo",
+  },
 ];
 
 const steps = [
@@ -112,8 +148,8 @@ function AppAccordion({
           key={item.value}
           value={item.value}
           className={cn(
-            "rounded-[24px] border px-4",
-            dark ? "border-white/10 bg-white/7" : "border-white/10 bg-white/7",
+            "motion-accordion-item rounded-[24px] border px-4 transition duration-200 hover:-translate-y-0.5 hover:border-violet-200/30",
+            dark ? "border-white/12 bg-white/9" : "border-white/12 bg-white/9",
           )}
         >
           <AccordionTrigger className="py-4 text-base font-semibold text-white hover:no-underline">
@@ -132,7 +168,7 @@ export function HomeExperienceSections() {
   return (
     <>
       <section className="page-shell">
-        <PremiumPanel tone="dark" className="relative px-5 py-6 sm:px-7 sm:py-8">
+        <PremiumPanel tone="violet" className="relative px-5 py-6 sm:px-7 sm:py-8">
           <DecorativeGlow className="-right-14 top-4" tone="violet" />
           <SectionHeader
             eyebrow="Categorie"
@@ -146,20 +182,25 @@ export function HomeExperienceSections() {
             }
           />
 
-          <div className="tool-rail -mx-2 mt-5 flex snap-x gap-3 overflow-x-auto px-2 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+          <div className="motion-stagger tool-rail -mx-2 mt-5 flex snap-x gap-3 overflow-x-auto px-2 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
             {categories.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group w-[min(76vw,18rem)] shrink-0 snap-start rounded-[26px] border border-white/10 bg-white/7 p-4 transition hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60 sm:w-auto"
+                  className="group w-[min(76vw,18rem)] shrink-0 snap-start rounded-[26px] border border-white/12 bg-white/9 p-4 transition duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/14 hover:shadow-[0_18px_44px_rgba(8,14,38,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60 sm:w-auto"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <span className="grid size-11 place-items-center rounded-[18px] border border-white/10 bg-white/9 text-white">
                       <Icon className="size-5" aria-hidden="true" />
                     </span>
-                    <ChevronRight className="size-4 text-white/42 transition group-hover:translate-x-1 group-hover:text-white" />
+                    <span className="flex items-center gap-2">
+                      <span className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-white/54">
+                        {item.badge}
+                      </span>
+                      <ChevronRight className="size-4 text-white/42 transition group-hover:translate-x-1 group-hover:text-white" />
+                    </span>
                   </div>
                   <h3 className="mt-4 text-[1.1rem] font-semibold text-white">{item.label}</h3>
                   <p className="mt-2 text-sm leading-6 text-white/62">{item.detail}</p>
@@ -172,12 +213,12 @@ export function HomeExperienceSections() {
 
       <section className="page-shell">
         <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
-          <PremiumPanel tone="dark" className="p-5 sm:p-7">
+          <PremiumPanel tone="blue" className="p-5 sm:p-7">
             <PremiumBadge tone="dark">Come funziona</PremiumBadge>
             <h2 className="text-display-card mt-4 text-[2.15rem] text-white sm:text-[2.8rem]">
               Dal rumore allo stack in tre passaggi.
             </h2>
-            <div className="mt-6 grid gap-3">
+            <div className="motion-stagger mt-6 grid gap-3">
               {steps.map((step, index) => {
                 const Icon = step.icon;
                 return (
@@ -200,7 +241,7 @@ export function HomeExperienceSections() {
             </div>
           </PremiumPanel>
 
-          <PremiumPanel tone="dark" className="p-5 sm:p-7">
+          <PremiumPanel tone="airy" className="p-5 sm:p-7">
             <SectionHeader
               eyebrow="Sistema"
               title="Segnali utili, senza disperdere il percorso."
@@ -216,7 +257,7 @@ export function HomeExperienceSections() {
 
       <section className="page-shell">
         <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-          <PremiumPanel tone="dark" className="p-5 sm:p-7">
+          <PremiumPanel tone="airy" className="p-5 sm:p-7">
             <SectionHeader
               eyebrow="FAQ"
               title="Domande frequenti, senza blocchi infiniti."
@@ -228,7 +269,7 @@ export function HomeExperienceSections() {
             </div>
           </PremiumPanel>
 
-          <PremiumPanel tone="dark" className="relative overflow-hidden p-5 sm:p-7">
+          <PremiumPanel tone="warm" className="relative overflow-hidden p-5 sm:p-7">
             <DecorativeGlow className="-right-16 -top-16" tone="gold" />
             <PremiumBadge tone="warning">Ready to explore</PremiumBadge>
             <h2 className="text-display-card mt-4 text-[2.1rem] text-white sm:text-[2.75rem]">

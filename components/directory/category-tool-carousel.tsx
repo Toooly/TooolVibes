@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import {
   Bookmark,
   Check,
@@ -70,6 +70,7 @@ function CarouselIconButton({
     <button
       type="button"
       aria-label={ariaLabel}
+      title={ariaLabel}
       aria-pressed={active}
       onClick={onClick}
       className={cn("category-tool-card__icon-button", active && "is-active")}
@@ -196,12 +197,14 @@ export function CategoryToolCarousel({
   onStack,
 }: CategoryToolCarouselProps) {
   const railRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef({ active: false, startX: 0, scrollLeft: 0 });
   const [state, setState] = useState<CarouselState>({
     canPrev: false,
     canNext: false,
     currentPage: 1,
     totalPages: 1,
   });
+  const [isDragging, setIsDragging] = useState(false);
 
   const updateState = useCallback(() => {
     const rail = railRef.current;
@@ -259,8 +262,69 @@ export function CategoryToolCarousel({
     rail.scrollTo({ left: target, behavior: "smooth" });
   }, []);
 
+  const handlePointerDown = useCallback((event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+    if (target.closest("button,a,input,select,textarea")) {
+      return;
+    }
+
+    const rail = railRef.current;
+    if (!rail) {
+      return;
+    }
+
+    dragRef.current = {
+      active: true,
+      startX: event.clientX,
+      scrollLeft: rail.scrollLeft,
+    };
+    setIsDragging(true);
+    rail.setPointerCapture(event.pointerId);
+  }, []);
+
+  const handlePointerMove = useCallback((event: PointerEvent<HTMLDivElement>) => {
+    const rail = railRef.current;
+    if (!rail || !dragRef.current.active) {
+      return;
+    }
+
+    const delta = event.clientX - dragRef.current.startX;
+    rail.scrollLeft = dragRef.current.scrollLeft - delta;
+  }, []);
+
+  const endDrag = useCallback((event: PointerEvent<HTMLDivElement>) => {
+    const rail = railRef.current;
+    if (rail?.hasPointerCapture(event.pointerId)) {
+      rail.releasePointerCapture(event.pointerId);
+    }
+
+    dragRef.current.active = false;
+    setIsDragging(false);
+  }, []);
+
+  const scrollToPage = useCallback((pageIndex: number) => {
+    const rail = railRef.current;
+    if (!rail) {
+      return;
+    }
+
+    const { maxScroll, pageStep } = getRailMetrics(rail);
+    rail.scrollTo({
+      left: Math.min(maxScroll, pageStep * pageIndex),
+      behavior: "smooth",
+    });
+  }, []);
+
   return (
-    <section className="category-tool-carousel" aria-label={title}>
+    <section
+      className="category-tool-carousel"
+      aria-label={title}
+      data-active-page={state.currentPage}
+    >
       <div className="category-tool-carousel__header">
         <div className="min-w-0">
           <div className="category-tool-carousel__title-row">
@@ -279,6 +343,7 @@ export function CategoryToolCarousel({
             onClick={() => scrollByPage(-1)}
             disabled={!state.canPrev}
             aria-label={`Scorri ${title} indietro`}
+            title={`Scorri ${title} indietro`}
             className="category-tool-carousel__control"
           >
             <ChevronLeft className="size-4" />
@@ -288,15 +353,38 @@ export function CategoryToolCarousel({
             onClick={() => scrollByPage(1)}
             disabled={!state.canNext}
             aria-label={`Scorri ${title} avanti`}
+            title={`Scorri ${title} avanti`}
             className="category-tool-carousel__control"
           >
             <ChevronRight className="size-4" />
           </button>
+          <div className="category-tool-carousel__dots" aria-hidden="true">
+            {Array.from({ length: state.totalPages }).map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                tabIndex={-1}
+                onClick={() => scrollToPage(index)}
+                className={cn(
+                  "category-tool-carousel__dot",
+                  state.currentPage === index + 1 && "is-active",
+                )}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="category-tool-carousel__viewport">
-        <div ref={railRef} className="category-tool-carousel__track">
+        <div
+          ref={railRef}
+          className={cn("category-tool-carousel__track", isDragging && "is-dragging")}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+          onLostPointerCapture={endDrag}
+        >
           {tools.map((tool) => (
             <ToolCarouselCard
               key={tool.slug}
