@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { GlobalCommandPalette } from "@/components/app/global-command-palette";
+import { GlobalVibeLayer } from "@/components/app/global-vibe-layer";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -24,6 +25,7 @@ export function RootProviders({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delay={180}>
         {children}
+        <GlobalVibeLayer />
         <GlobalCommandPalette />
         <Toaster position="top-right" richColors closeButton />
       </TooltipProvider>
