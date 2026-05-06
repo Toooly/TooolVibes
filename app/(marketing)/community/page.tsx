@@ -75,7 +75,30 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      <section className="motion-stagger grid gap-4 md:grid-cols-3 md:gap-5">
+      <section className="grid gap-2 md:hidden">
+        {contributionCards.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <details
+              key={item.title}
+              className="micro-details rounded-[20px] border border-[var(--line)] bg-white/76 px-3 py-2.5"
+            >
+              <summary>
+                <span className="inline-flex min-w-0 items-center gap-2">
+                  <Icon className="size-4 shrink-0 text-[var(--accent)]" aria-hidden="true" />
+                  <span className="truncate">{item.title}</span>
+                </span>
+              </summary>
+              <p className="mt-3 text-sm leading-6 text-[var(--muted-strong)]">
+                {item.copy}
+              </p>
+            </details>
+          );
+        })}
+      </section>
+
+      <section className="motion-stagger hidden gap-4 md:grid md:grid-cols-3 md:gap-5">
         {contributionCards.map((item) => {
           const Icon = item.icon;
 
@@ -92,15 +115,15 @@ export default function CommunityPage() {
       </section>
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-        <PremiumPanel tone="airy" className="p-5 sm:p-6">
+        <PremiumPanel tone="airy" className="p-4 sm:p-6">
           <PremiumBadge tone="dark">Come contribuire</PremiumBadge>
-          <div className="mt-5 grid gap-3">
+          <div className="mt-4 grid gap-2.5 sm:mt-5 sm:gap-3">
             {[
               ["01", "Suggerisci un tool con URL ufficiale e categoria."],
               ["02", "Spiega il workflow o il problema che risolve."],
               ["03", "Noi lo valutiamo e lo trasformiamo in scheda utile."],
             ].map(([step, copy]) => (
-              <div key={step} className="flex gap-3 rounded-[22px] border border-white/10 bg-white/7 p-4">
+              <div key={step} className="flex gap-3 rounded-[18px] border border-white/10 bg-white/7 p-3 sm:rounded-[22px] sm:p-4">
                 <span className="text-sm font-semibold text-violet-100">{step}</span>
                 <p className="text-sm leading-6 text-white/70">{copy}</p>
               </div>
@@ -108,7 +131,7 @@ export default function CommunityPage() {
           </div>
         </PremiumPanel>
 
-        <PremiumPanel tone="violet" className="p-5 sm:p-6">
+        <PremiumPanel tone="violet" className="p-4 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <PremiumBadge tone="accent">Community picks</PremiumBadge>
@@ -118,9 +141,9 @@ export default function CommunityPage() {
             </div>
             <Lightbulb className="size-5 text-amber-100" aria-hidden="true" />
           </div>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid gap-2.5 sm:mt-5 sm:grid-cols-2 sm:gap-3">
             {communityPicks.map((item) => (
-              <div key={item} className="group flex items-center justify-between gap-3 rounded-[20px] border border-white/10 bg-white/7 p-4 transition hover:border-violet-200/28 hover:bg-white/10">
+              <div key={item} className="group flex items-center justify-between gap-3 rounded-[18px] border border-white/10 bg-white/7 p-3 transition hover:border-violet-200/28 hover:bg-white/10 sm:rounded-[20px] sm:p-4">
                 <p className="text-sm font-semibold leading-6 text-white/76">{item}</p>
                 <ArrowRight className="size-4 shrink-0 text-white/36 transition group-hover:translate-x-1 group-hover:text-white" aria-hidden="true" />
               </div>

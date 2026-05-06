@@ -261,7 +261,7 @@ export function ProductHuntRankings({
                 className={cn(
                   "dynamic-card group flex flex-col items-start gap-3 rounded-[20px] border border-white/12 bg-white/9 p-3 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/13 hover:shadow-[0_14px_34px_rgba(8,14,38,0.2)] sm:flex-row sm:items-center",
                   variant === "wide" && "sm:min-h-[12.5rem] sm:flex-col sm:items-start sm:p-4",
-                  variant === "wide" && index > 2 && "hidden sm:flex",
+                  variant === "wide" && index > 0 && "hidden sm:flex",
                 )}
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-white/10 bg-white/10 text-sm font-semibold text-white">
@@ -364,11 +364,11 @@ export function ProductHuntRankings({
                 </PremiumLink>
               </motion.article>
             ))}
-            {variant === "wide" && activePayload.items.length > 3 ? (
+            {variant === "wide" && activePayload.items.length > 1 ? (
               <details className="mobile-native-accordion col-span-full rounded-[22px] border border-white/12 bg-white/9 px-4 py-3 sm:hidden">
                 <summary>Altri tool Product Hunt</summary>
                 <div className="mt-3 grid gap-2">
-                  {activePayload.items.slice(3).map((item, index) => (
+                  {activePayload.items.slice(1).map((item, index) => (
                     <a
                       key={item.id}
                       href={item.productHuntUrl}
@@ -378,7 +378,7 @@ export function ProductHuntRankings({
                     >
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-semibold text-white">
-                          #{index + 4} {item.name}
+                          #{index + 2} {item.name}
                         </span>
                         <span className="block truncate text-xs text-white/58">
                           {formatMetrics(item)}

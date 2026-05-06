@@ -42,16 +42,16 @@ export function SiteFooter() {
               </div>
             </div>
 
-            <h2 className="mt-4 max-w-[20rem] text-[1.35rem] leading-tight text-white/94 sm:text-[1.85rem]">
+            <h2 className="mt-4 hidden max-w-[20rem] text-[1.35rem] leading-tight text-white/94 sm:block sm:text-[1.85rem]">
               I tool migliori, senza perdere tempo nel rumore.
             </h2>
-            <p className="mt-3 max-w-[36rem] text-[0.88rem] leading-6 text-white/64 sm:text-[0.94rem] sm:leading-7">
+            <p className="mt-3 hidden max-w-[36rem] text-[0.88rem] leading-6 text-white/64 sm:block sm:text-[0.94rem] sm:leading-7">
               Directory curata di AI tools, SaaS, no-code builder, vibe coding e
               automazioni con link chiari, filtri utili e una selezione pensata per
               l&apos;uso reale.
             </p>
 
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-5 hidden flex-col gap-3 sm:flex sm:flex-row">
               <PremiumLink href="/wishlist" tone="secondary" size="sm">
                 Suggerisci un tool
               </PremiumLink>
@@ -132,7 +132,7 @@ export function SiteFooter() {
 
         <div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-4 text-[0.76rem] text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; 2026 TooolVibes. Directory premium per AI, SaaS, no-code e automazioni.</p>
-          <div className="flex flex-wrap gap-3">
+          <div className="hidden flex-wrap gap-3 sm:flex">
             <a
               href={siteConfig.shopUrl}
               target="_blank"

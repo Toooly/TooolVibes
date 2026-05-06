@@ -58,7 +58,7 @@ export function MobileQuickStart() {
           />
 
           <motion.div
-            className="micro-popover-panel mt-4 flex items-center gap-3 px-3 py-2.5 sm:hidden"
+            className="micro-popover-panel mt-4 hidden items-center gap-3 px-3 py-2.5"
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}

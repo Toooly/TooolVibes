@@ -12,6 +12,11 @@ const sizeClasses = {
   lg: "h-14 w-14 rounded-[18px] text-[0.96rem]",
 } satisfies Record<NonNullable<DirectoryToolGlyphProps["size"]>, string>;
 
+function getToolLogoUrl(tool: DirectoryTool) {
+  const domain = tool.domain || tool.externalUrl;
+  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
+}
+
 export function DirectoryToolGlyph({
   tool,
   size = "md",
@@ -25,7 +30,15 @@ export function DirectoryToolGlyph({
         background: `linear-gradient(135deg, ${tool.accentFrom}, ${tool.accentTo})`,
       }}
     >
-      {getToolBadgeLabel(tool.name)}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={getToolLogoUrl(tool)}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="tool-glyph-logo"
+      />
+      <span className="tool-glyph-initials">{getToolBadgeLabel(tool.name)}</span>
     </span>
   );
 }

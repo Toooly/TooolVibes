@@ -241,6 +241,47 @@ export function HomeExperienceSections() {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+
+            <div className="grid gap-2 pt-1">
+              <details className="mobile-native-accordion rounded-[20px] border border-white/12 bg-white/76 px-4 py-3">
+                <summary>Come funziona</summary>
+                <div className="mt-3 grid gap-2">
+                  {steps.map((step, index) => (
+                    <div key={step.title} className="rounded-[16px] border border-[var(--line)] bg-white/72 px-3 py-2.5">
+                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)]">
+                        Step {String(index + 1).padStart(2, "0")}
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
+                        {step.title}
+                      </p>
+                      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                        {step.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </details>
+
+              <details className="mobile-native-accordion rounded-[20px] border border-white/12 bg-white/76 px-4 py-3">
+                <summary>Sistema e FAQ</summary>
+                <div className="mt-3 grid gap-2">
+                  {[features[0], features[1], faqs[0]].map((item) => (
+                    <div key={item.value} className="rounded-[16px] border border-[var(--line)] bg-white/72 px-3 py-2.5">
+                      <p className="text-sm font-semibold text-[var(--foreground)]">
+                        {"title" in item ? item.title : item.question}
+                      </p>
+                      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                        {"description" in item ? item.description : item.answer}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </details>
+
+              <PremiumLink href="/archivio" tone="dark" size="sm" className="w-full">
+                Apri il catalogo
+              </PremiumLink>
+            </div>
           </div>
 
           <div className="motion-stagger tool-rail -mx-2 mt-5 hidden snap-x gap-3 overflow-x-auto px-2 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
@@ -272,7 +313,7 @@ export function HomeExperienceSections() {
         </PremiumPanel>
       </section>
 
-      <section className="page-shell">
+      <section className="page-shell hidden sm:block">
         <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
           <PremiumPanel tone="blue" className="p-5 sm:p-7">
             <PremiumBadge tone="dark">Come funziona</PremiumBadge>
@@ -327,7 +368,7 @@ export function HomeExperienceSections() {
         </div>
       </section>
 
-      <section className="page-shell">
+      <section className="page-shell hidden sm:block">
         <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
           <PremiumPanel tone="airy" className="p-5 sm:p-7">
             <SectionHeader

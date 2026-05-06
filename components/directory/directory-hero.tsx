@@ -21,10 +21,10 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
         <div className="relative grid gap-8 xl:grid-cols-[minmax(0,0.98fr)_minmax(25rem,1.02fr)] xl:items-center">
           <div className="max-w-[45rem] xl:pt-2">
             <PremiumBadge tone="accent">AI tools discovery platform</PremiumBadge>
-            <h1 className="text-display-hero mt-4 max-w-[12ch] text-[clamp(2.25rem,8vw,4.85rem)] text-white sm:mt-5">
+            <h1 className="text-display-hero mt-4 max-w-[12ch] text-[clamp(2rem,8vw,4.85rem)] text-white sm:mt-5">
               Trova tool AI validi. Taglia il rumore.
             </h1>
-            <p className="mt-4 max-w-[42rem] text-[0.96rem] leading-7 text-white/74 sm:mt-5 sm:text-[1.13rem] sm:leading-8">
+            <p className="mt-3 max-w-[42rem] text-[0.9rem] leading-6 text-white/74 sm:mt-5 sm:text-[1.13rem] sm:leading-8">
               TooolVibes seleziona AI tools, SaaS, no-code builder, vibe coding e
               automazioni con una logica pratica: meno alternative inutili, più segnali
               per capire cosa provare davvero.
@@ -35,7 +35,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
               <PremiumLink href="/archivio#stack-builder" tone="secondary" size="md">
                 Crea il tuo stack
               </PremiumLink>
-              <PremiumLink href="/wishlist" tone="ghost" size="md">
+              <PremiumLink href="/wishlist" tone="ghost" size="md" className="hidden sm:inline-flex">
                 Suggerisci un tool
               </PremiumLink>
             </div>

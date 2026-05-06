@@ -141,9 +141,9 @@ export function RequestToolForm({ className }: { className?: string }) {
   }
 
   const fieldClass =
-    "premium-input min-h-12 px-4 py-3 text-[0.98rem] placeholder:text-[var(--muted)]";
+    "premium-input min-h-11 px-3.5 py-2.5 text-[0.92rem] placeholder:text-[var(--muted)] sm:min-h-12 sm:px-4 sm:py-3 sm:text-[0.98rem]";
   const labelClass =
-    "text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white/68";
+    "text-[0.66rem] font-semibold uppercase tracking-[0.12em] text-white/68 sm:text-[0.72rem] sm:tracking-[0.14em]";
 
   return (
     <div className={cn("relative", className)}>
@@ -164,20 +164,36 @@ export function RequestToolForm({ className }: { className?: string }) {
         </div>
       ) : null}
 
-      <PremiumPanel tone="blue" className="motion-form-panel p-5 sm:p-6">
+      <PremiumPanel tone="blue" className="motion-form-panel p-4 sm:p-6">
         <form onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-start">
-            <aside className="rounded-[26px] border border-white/12 bg-white/9 p-5">
+          <div className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-start">
+            <aside className="rounded-[22px] border border-white/12 bg-white/9 p-4 sm:rounded-[26px] sm:p-5">
               <PremiumBadge tone="accent">Invio guidato</PremiumBadge>
-              <h2 className="text-display-card mt-4 text-[1.75rem] leading-tight text-white sm:text-[2.2rem]">
+              <h2 className="text-display-card mt-3 text-[1.35rem] leading-tight text-white sm:mt-4 sm:text-[2.2rem]">
                 Bastano quattro segnali buoni.
               </h2>
-              <p className="mt-3 text-sm leading-7 text-white/66">
+              <p className="mt-2 text-[0.84rem] leading-6 text-white/66 sm:mt-3 sm:text-sm sm:leading-7">
                 Nome, link ufficiale, categoria e motivo d&apos;uso ci aiutano a capire se
                 il tool merita di entrare nella selezione.
               </p>
 
-              <div className="mt-5 grid gap-3">
+              <details className="micro-details mt-3 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2.5 sm:hidden">
+                <summary>Segnali richiesti</summary>
+                <div className="mt-3 grid gap-2">
+                  {["Nome tool", "Link ufficiale", "Categoria", "Perche e utile"].map(
+                    (item, index) => (
+                      <div key={item} className="flex items-center gap-2 rounded-[14px] bg-white/7 p-2.5">
+                        <span className="grid size-7 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white">
+                          {index + 1}
+                        </span>
+                        <span className="text-xs font-semibold text-white/76">{item}</span>
+                      </div>
+                    ),
+                  )}
+                </div>
+              </details>
+
+              <div className="mt-5 hidden gap-3 sm:grid">
                 {["Nome tool", "Link ufficiale", "Categoria", "Perché è utile"].map(
                   (item, index) => (
                     <div key={item} className="motion-form-step flex items-center gap-3 rounded-[18px] border border-white/10 bg-white/6 p-3">
@@ -191,7 +207,7 @@ export function RequestToolForm({ className }: { className?: string }) {
               </div>
             </aside>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
               <label className="motion-field block">
                 <span className={labelClass}>Nome tool</span>
                 <input
@@ -272,8 +288,8 @@ export function RequestToolForm({ className }: { className?: string }) {
                 <textarea
                   value={form.message}
                   onChange={(event) => updateForm("message", event.target.value)}
-                  rows={5}
-                  className={cn(fieldClass, "mt-2 min-h-[9rem] resize-none leading-7")}
+                  rows={4}
+                  className={cn(fieldClass, "mt-2 min-h-[7rem] resize-none leading-6 sm:min-h-[9rem] sm:leading-7")}
                   placeholder="Racconta il caso d'uso, chi lo userebbe e cosa lo rende diverso."
                   aria-invalid={Boolean(errors.message)}
                   aria-describedby={errors.message ? "tool-message-error" : undefined}
@@ -283,8 +299,8 @@ export function RequestToolForm({ className }: { className?: string }) {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-[42rem] text-sm leading-6 text-white/62">
+          <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4 sm:mt-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pt-5">
+            <p className="max-w-[42rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
               Valutiamo ogni proposta per qualità, utilità reale e coerenza con la
               directory.
             </p>
@@ -292,7 +308,7 @@ export function RequestToolForm({ className }: { className?: string }) {
               type="submit"
               disabled={isSubmitting}
               aria-busy={isSubmitting}
-              className="min-w-[13rem]"
+              className="w-full sm:min-w-[13rem] sm:w-auto"
             >
               {isSubmitting ? (
                 <>
@@ -314,7 +330,7 @@ export function RequestToolForm({ className }: { className?: string }) {
             </div>
           ) : null}
 
-          <div className="mt-5 flex items-center gap-2 rounded-[20px] border border-white/10 bg-white/6 px-4 py-3 text-sm text-white/58">
+          <div className="mt-3 flex items-center gap-2 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2.5 text-xs leading-5 text-white/58 sm:mt-5 sm:rounded-[20px] sm:px-4 sm:py-3 sm:text-sm">
             <Sparkles className="size-4 text-violet-100" aria-hidden="true" />
             Le proposte migliori diventano schede curate, non link buttati in lista.
           </div>

@@ -855,7 +855,37 @@ export function ToolDiscoveryApp({
           )}
         </div>
 
-        <aside className="min-w-0 space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <div className="grid gap-2 lg:hidden">
+          <details className="mobile-native-accordion rounded-[20px] border border-[var(--line)] bg-white/72 px-4 py-3">
+            <summary>Workspace mobile</summary>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {[
+                { label: "Salvati", count: savedSlugs.length, tab: "saved" as const },
+                { label: "Confronta", count: compareSlugs.length, tab: "compare" as const },
+                { label: "Stack", count: stackSlugs.length, tab: "stack" as const },
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setActiveTab(item.tab)}
+                  className="rounded-[16px] border border-[var(--line)] bg-white/72 px-2 py-2 text-center"
+                >
+                  <span className="block text-[1rem] font-semibold text-[var(--foreground)]">
+                    {item.count}
+                  </span>
+                  <span className="mt-1 block text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+                    {item.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+              Usa i tab sopra per vedere solo salvati, confronto o stack. Le azioni restano sulle card.
+            </p>
+          </details>
+        </div>
+
+        <aside className="hidden min-w-0 space-y-4 lg:sticky lg:top-24 lg:block lg:self-start">
           <PremiumPanel tone="airy" className="p-4 sm:p-5">
             <div className="flex items-center justify-between gap-3">
               <div>

@@ -82,7 +82,33 @@ export default function ShopPage() {
         </div>
       </section>
 
-      <section className="motion-stagger grid gap-4 md:grid-cols-3 md:gap-5">
+      <section className="grid gap-2 md:hidden">
+        {shopCards.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <details
+              key={item.title}
+              className="micro-details rounded-[20px] border border-[var(--line)] bg-white/76 px-3 py-2.5"
+            >
+              <summary>
+                <span className="inline-flex min-w-0 items-center gap-2">
+                  <Icon className="size-4 shrink-0 text-[var(--accent)]" aria-hidden="true" />
+                  <span className="truncate">{item.title}</span>
+                </span>
+              </summary>
+              <p className="mt-3 text-sm leading-6 text-[var(--muted-strong)]">
+                {item.copy}
+              </p>
+              <div className="micro-popover-panel mt-3 px-3 py-2 text-xs leading-5 text-[var(--muted)]">
+                {item.example}
+              </div>
+            </details>
+          );
+        })}
+      </section>
+
+      <section className="motion-stagger hidden gap-4 md:grid md:grid-cols-3 md:gap-5">
         {shopCards.map((item) => {
           const Icon = item.icon;
 
@@ -108,7 +134,7 @@ export default function ShopPage() {
         })}
       </section>
 
-      <PremiumPanel tone="warm" className="p-5 sm:p-6">
+      <PremiumPanel tone="warm" className="p-4 sm:p-6">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
           <div>
             <PremiumBadge tone="accent">Valore reale</PremiumBadge>
@@ -120,9 +146,9 @@ export default function ShopPage() {
               validare un tool, automatizzare un passaggio o rendere un workflow replicabile.
             </p>
           </div>
-          <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1">
+          <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-3 lg:grid-cols-1">
             {["Pronto al test", "Curato", "Operativo"].map((item) => (
-              <div key={item} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/7 px-4 py-2 text-sm font-semibold text-white/72">
+              <div key={item} className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/7 px-3 py-2 text-xs font-semibold text-white/72 sm:px-4 sm:text-sm">
                 <Boxes className="size-4 text-violet-100" aria-hidden="true" />
                 {item}
               </div>

@@ -20,7 +20,7 @@ export function DirectoryWeeklySpotlight({
           <h2 className="mt-3 text-[1.65rem] leading-[1.02] text-[var(--foreground)] sm:text-[2.45rem]">
             Il focus editoriale da provare prima degli altri.
           </h2>
-          <p className="mt-3 text-[0.95rem] leading-7 text-[var(--muted-strong)] sm:mt-4 sm:text-[1rem]">
+          <p className="mt-3 hidden text-[0.95rem] leading-7 text-[var(--muted-strong)] sm:mt-4 sm:block sm:text-[1rem]">
             Blink apre la selezione: rapido da capire, chiaro da testare e vicino al
             tipo di builder che trasforma un&apos;idea in qualcosa di navigabile.
           </p>
@@ -62,10 +62,10 @@ export function DirectoryWeeklySpotlight({
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                 Featured pick
               </p>
-              <h3 className="mt-2 max-w-[11ch] text-[1.65rem] leading-[0.96] sm:mt-3 sm:text-[2.85rem]">
+              <h3 className="mt-2 max-w-[11ch] text-[1.35rem] leading-[0.96] sm:mt-3 sm:text-[2.85rem]">
                 {weeklyTool.name}
               </h3>
-              <p className="text-clamp-3 mt-3 max-w-[36rem] text-[0.92rem] leading-6 text-white/76 sm:mt-4 sm:text-[1rem] sm:leading-7">
+              <p className="text-clamp-2 mt-3 max-w-[36rem] text-[0.92rem] leading-6 text-white/76 sm:mt-4 sm:text-[1rem] sm:leading-7">
                 {weeklyTool.longDescription}
               </p>
 
@@ -85,10 +85,10 @@ export function DirectoryWeeklySpotlight({
               </div>
 
               <div className="mt-4 flex flex-wrap gap-2 sm:mt-5">
-                {weeklyTool.highlights.map((item) => (
+                {weeklyTool.highlights.map((item, index) => (
                   <span
                     key={item}
-                    className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-white/84"
+                    className={`rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-white/84 ${index > 1 ? "hidden sm:inline-flex" : ""}`}
                   >
                     {item}
                   </span>

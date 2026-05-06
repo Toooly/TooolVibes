@@ -106,7 +106,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
               <Link
                 key={tool.slug}
                 href={`/toools/${tool.slug}`}
-                className={`dynamic-link-card group rounded-[20px] border border-white/12 bg-white/9 p-3.5 transition duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/14 sm:rounded-[24px] sm:p-4 ${index > 1 ? "hidden sm:block" : ""}`}
+                className={`dynamic-link-card group rounded-[20px] border border-white/12 bg-white/9 p-3.5 transition duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/14 sm:rounded-[24px] sm:p-4 ${index > 0 ? "hidden sm:block" : ""}`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <DirectoryToolGlyph tool={tool} size="md" />
