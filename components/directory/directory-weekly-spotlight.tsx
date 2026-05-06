@@ -35,7 +35,7 @@ export function DirectoryWeeklySpotlight({
         <PremiumPanel
           as="article"
           tone="violet"
-          className="overflow-hidden px-4 py-5 text-white sm:px-6 sm:py-6"
+          className="overflow-hidden px-4 py-4 text-white sm:px-6 sm:py-6"
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -57,25 +57,25 @@ export function DirectoryWeeklySpotlight({
             </div>
           </div>
 
-          <div className="mt-5 grid gap-5 sm:mt-6 lg:grid-cols-[minmax(0,1.03fr)_minmax(15rem,0.97fr)] lg:gap-6">
+          <div className="mt-4 grid gap-4 sm:mt-6 lg:grid-cols-[minmax(0,1.03fr)_minmax(15rem,0.97fr)] lg:gap-6">
             <div>
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                 Featured pick
               </p>
-              <h3 className="mt-3 max-w-[11ch] text-[2rem] leading-[0.96] sm:text-[2.85rem]">
+              <h3 className="mt-2 max-w-[11ch] text-[1.65rem] leading-[0.96] sm:mt-3 sm:text-[2.85rem]">
                 {weeklyTool.name}
               </h3>
-              <p className="mt-4 max-w-[36rem] text-[1rem] leading-7 text-white/76">
+              <p className="text-clamp-3 mt-3 max-w-[36rem] text-[0.92rem] leading-6 text-white/76 sm:mt-4 sm:text-[1rem] sm:leading-7">
                 {weeklyTool.longDescription}
               </p>
 
-              <div className="mt-5 grid gap-2 sm:grid-cols-3">
+              <div className="mt-4 hidden gap-2 sm:grid sm:grid-cols-3">
                 {[
                   ["Use case", weeklyTool.useCases.length.toString()],
                   ["Lettura", weeklyTool.readingTime],
                   ["Fonte", weeklyTool.domain],
                 ].map(([label, value]) => (
-                  <div key={label} className="rounded-[18px] border border-white/10 bg-white/7 px-3 py-3">
+                  <div key={label} className="dynamic-card rounded-[18px] border border-white/10 bg-white/7 px-3 py-3">
                     <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/42">
                       {label}
                     </p>
@@ -84,7 +84,7 @@ export function DirectoryWeeklySpotlight({
                 ))}
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-2 sm:mt-5">
                 {weeklyTool.highlights.map((item) => (
                   <span
                     key={item}
@@ -95,7 +95,7 @@ export function DirectoryWeeklySpotlight({
                 ))}
               </div>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-2.5 sm:mt-6 sm:flex-row sm:gap-3">
                 <PremiumLink
                   href={weeklyTool.url}
                   external
@@ -113,7 +113,21 @@ export function DirectoryWeeklySpotlight({
               </div>
             </div>
 
-            <div className="flex h-full flex-col rounded-[24px] border border-white/10 bg-white/6 p-4 sm:rounded-[28px] sm:p-5">
+            <details className="mobile-native-accordion rounded-[22px] border border-white/10 bg-white/6 px-4 py-3 sm:hidden">
+              <summary>Perche adesso</summary>
+              <p className="mt-3 text-sm leading-6 text-white/72">
+                {weeklyTool.whyItMatters}
+              </p>
+              <div className="mt-3 grid gap-2">
+                {weeklyTool.useCases.slice(0, 2).map((item, index) => (
+                  <p key={item} className="rounded-[16px] border border-white/10 bg-white/6 px-3 py-2.5 text-sm leading-6 text-white/74">
+                    Uso {String(index + 1).padStart(2, "0")}: {item}
+                  </p>
+                ))}
+              </div>
+            </details>
+
+            <div className="hidden h-full flex-col rounded-[24px] border border-white/10 bg-white/6 p-4 sm:flex sm:rounded-[28px] sm:p-5">
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                 Perch&eacute; adesso
               </p>
@@ -125,7 +139,7 @@ export function DirectoryWeeklySpotlight({
                 {weeklyTool.useCases.slice(0, 3).map((item, index) => (
                   <div
                     key={item}
-                    className="rounded-[20px] border border-white/10 bg-white/6 px-4 py-3.5 transition duration-200 hover:border-white/18 hover:bg-white/8"
+                    className="dynamic-card rounded-[20px] border border-white/10 bg-white/6 px-4 py-3.5 transition duration-200 hover:border-white/18 hover:bg-white/8"
                   >
                     <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/44">
                       Uso {String(index + 1).padStart(2, "0")}
@@ -143,11 +157,36 @@ export function DirectoryWeeklySpotlight({
           </div>
         </PremiumPanel>
 
-        <div className="motion-stagger tool-rail -mx-1.5 flex snap-x gap-3 overflow-x-auto px-1.5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-1">
+        <details className="mobile-native-accordion rounded-[24px] border border-[var(--line)] bg-white/72 px-4 py-3 shadow-[0_14px_34px_rgba(47,33,126,0.08)] md:hidden">
+          <summary>Altre candidate</summary>
+          <div className="mt-3 grid gap-2">
+            {supportingTools.map((tool) => (
+              <article
+                key={tool.slug}
+                className="dynamic-card rounded-[18px] border border-[var(--line)] bg-white/72 p-3"
+              >
+                <div className="flex items-center gap-3">
+                  <DirectoryToolGlyph tool={tool} size="sm" />
+                  <div className="min-w-0">
+                    <h3 className="truncate text-sm font-semibold text-[var(--foreground)]">
+                      {tool.name}
+                    </h3>
+                    <p className="truncate text-xs text-[var(--muted)]">{tool.categoryLabel}</p>
+                  </div>
+                </div>
+                <PremiumLink href={`/toools/${tool.slug}`} tone="ghost" size="sm" className="mt-3 w-full">
+                  Apri scheda
+                </PremiumLink>
+              </article>
+            ))}
+          </div>
+        </details>
+
+        <div className="motion-stagger tool-rail -mx-1.5 hidden snap-x gap-3 overflow-x-auto px-1.5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-1">
           {supportingTools.map((tool) => (
             <article
               key={tool.slug}
-              className="group w-[min(78vw,19rem)] shrink-0 snap-start rounded-[26px] border border-white/12 bg-white/9 p-4 text-white transition duration-200 hover:-translate-y-1 hover:border-violet-200/36 hover:bg-white/14 hover:shadow-[0_18px_44px_rgba(8,14,38,0.2)] md:w-auto"
+              className="dynamic-card group w-[min(78vw,19rem)] shrink-0 snap-start rounded-[26px] border border-white/12 bg-white/9 p-4 text-white transition duration-200 hover:-translate-y-1 hover:border-violet-200/36 hover:bg-white/14 hover:shadow-[0_18px_44px_rgba(8,14,38,0.2)] md:w-auto"
             >
               <div className="flex items-start gap-3">
                 <DirectoryToolGlyph tool={tool} size="md" />

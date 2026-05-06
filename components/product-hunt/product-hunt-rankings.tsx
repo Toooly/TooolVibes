@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { ChevronDown, Sparkles } from "lucide-react";
 
 import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
 import { cn } from "@/lib/utils";
@@ -77,6 +78,7 @@ export function ProductHuntRankings({
     {},
   );
   const [loadingRange, setLoadingRange] = useState<ProductHuntRange | null>("day");
+  const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -128,6 +130,10 @@ export function ProductHuntRankings({
       isMounted = false;
     };
   }, [activeRange, payloads]);
+
+  useEffect(() => {
+    setExpandedItemId(null);
+  }, [activeRange]);
 
   const activePayload = payloads[activeRange];
   const activeTab = useMemo(
@@ -226,7 +232,7 @@ export function ProductHuntRankings({
         })}
       </div>
 
-      <div className={cn("mt-4 min-h-[21rem]", variant === "wide" && "lg:min-h-0")}>
+      <div className={cn("mt-4 min-h-[12rem] sm:min-h-[21rem]", variant === "wide" && "lg:min-h-0")}>
         {loadingRange === activeRange && !activePayload ? (
           <ProductHuntSkeleton />
         ) : activePayload?.status === "ok" && activePayload.items.length > 0 ? (
@@ -253,8 +259,9 @@ export function ProductHuntRankings({
                 whileTap={{ scale: 0.992 }}
                 transition={{ duration: 0.22, delay: Math.min(index * 0.035, 0.16) }}
                 className={cn(
-                  "group flex flex-col items-start gap-3 rounded-[20px] border border-white/12 bg-white/9 p-3 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/13 hover:shadow-[0_14px_34px_rgba(8,14,38,0.2)] sm:flex-row sm:items-center",
+                  "dynamic-card group flex flex-col items-start gap-3 rounded-[20px] border border-white/12 bg-white/9 p-3 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/13 hover:shadow-[0_14px_34px_rgba(8,14,38,0.2)] sm:flex-row sm:items-center",
                   variant === "wide" && "sm:min-h-[12.5rem] sm:flex-col sm:items-start sm:p-4",
+                  variant === "wide" && index > 2 && "hidden sm:flex",
                 )}
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-white/10 bg-white/10 text-sm font-semibold text-white">
@@ -273,7 +280,7 @@ export function ProductHuntRankings({
 
                 <div className="min-w-0 flex-1">
                   <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <span className="rounded-full border border-violet-200/20 bg-violet-400/12 px-2 py-0.5 text-[0.66rem] font-semibold text-violet-100">
+                    <span className="animated-status-badge rounded-full border border-violet-200/20 bg-violet-400/12 px-2 py-0.5 text-[0.66rem] font-semibold text-violet-100">
                       #{index + 1}
                     </span>
                     {index === 0 ? <PremiumBadge tone="warning">Trending</PremiumBadge> : null}
@@ -287,6 +294,63 @@ export function ProductHuntRankings({
                   <div className="mt-2 flex flex-wrap gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-white/44">
                     <span>{formatMetrics(item)}</span>
                   </div>
+                  <button
+                    type="button"
+                    className="micro-expand-button mt-3"
+                    aria-expanded={expandedItemId === item.id}
+                    onClick={() =>
+                      setExpandedItemId((current) => (current === item.id ? null : item.id))
+                    }
+                  >
+                    Segnali
+                    <ChevronDown className="size-3.5" aria-hidden="true" />
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {expandedItemId === item.id ? (
+                      <motion.div
+                        className="micro-popover-panel mt-3 w-full p-3"
+                        initial={{ opacity: 0, height: 0, y: -4 }}
+                        animate={{ opacity: 1, height: "auto", y: 0 }}
+                        exit={{ opacity: 0, height: 0, y: -4 }}
+                        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <div className="flex items-start gap-2.5">
+                          <span className="grid size-8 shrink-0 place-items-center rounded-[14px] bg-[rgba(106,60,255,0.1)] text-[var(--accent-strong)]">
+                            <Sparkles className="size-3.5" aria-hidden="true" />
+                          </span>
+                          <div>
+                            <p className="text-sm font-semibold text-[var(--foreground)]">
+                              Perche guardarlo
+                            </p>
+                            <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                              {item.votesCount > 0
+                                ? `${item.votesCount} voti danno un segnale di traction.`
+                                : "Segnale ancora in verifica: apri il lancio per leggere la pagina."}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-2">
+                          <div className="rounded-[14px] border border-[var(--border-soft)] bg-white/62 px-3 py-2">
+                            <p className="text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+                              Voti
+                            </p>
+                            <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
+                              {item.votesCount || "Check"}
+                            </p>
+                          </div>
+                          <div className="rounded-[14px] border border-[var(--border-soft)] bg-white/62 px-3 py-2">
+                            <p className="text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+                              Commenti
+                            </p>
+                            <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
+                              {item.commentsCount || "Check"}
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
                 </div>
 
                 <PremiumLink
@@ -300,6 +364,34 @@ export function ProductHuntRankings({
                 </PremiumLink>
               </motion.article>
             ))}
+            {variant === "wide" && activePayload.items.length > 3 ? (
+              <details className="mobile-native-accordion col-span-full rounded-[22px] border border-white/12 bg-white/9 px-4 py-3 sm:hidden">
+                <summary>Altri tool Product Hunt</summary>
+                <div className="mt-3 grid gap-2">
+                  {activePayload.items.slice(3).map((item, index) => (
+                    <a
+                      key={item.id}
+                      href={item.productHuntUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="dynamic-link-card flex items-center justify-between gap-3 rounded-[16px] border border-white/10 bg-white/8 px-3 py-2.5 transition active:scale-[0.99]"
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-semibold text-white">
+                          #{index + 4} {item.name}
+                        </span>
+                        <span className="block truncate text-xs text-white/58">
+                          {formatMetrics(item)}
+                        </span>
+                      </span>
+                      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-white/48">
+                        Apri
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </details>
+            ) : null}
             </motion.div>
           </AnimatePresence>
         ) : (

@@ -142,13 +142,14 @@ function AppAccordion({
   dark?: boolean;
 }) {
   return (
-    <Accordion className="gap-3" defaultValue={items[0]?.value ? [items[0].value] : undefined}>
+    <Accordion className="gap-3">
       {items.map((item) => (
         <AccordionItem
           key={item.value}
           value={item.value}
           className={cn(
             "motion-accordion-item rounded-[24px] border px-4 transition duration-200 hover:-translate-y-0.5 hover:border-violet-200/30",
+            "dynamic-card",
             dark ? "border-white/12 bg-white/9" : "border-white/12 bg-white/9",
           )}
         >
@@ -165,6 +166,9 @@ function AppAccordion({
 }
 
 export function HomeExperienceSections() {
+  const visibleCategories = categories.slice(0, 3);
+  const extraCategories = categories.slice(3);
+
   return (
     <>
       <section className="page-shell">
@@ -174,7 +178,7 @@ export function HomeExperienceSections() {
             eyebrow="Categorie"
             title="Scegli il percorso, non la card a caso."
             description="Le categorie diventano ingressi operativi: sviluppo, automazione, contenuti, confronto e stack."
-            className="[&_h2]:text-white [&_p]:text-white/66"
+            className="[&_h2]:text-[var(--foreground)] [&_p]:text-[var(--muted-strong)]"
             action={
               <PremiumLink href="/tags" tone="dark" size="sm">
                 Vedi categorie
@@ -182,14 +186,71 @@ export function HomeExperienceSections() {
             }
           />
 
-          <div className="motion-stagger tool-rail -mx-2 mt-5 flex snap-x gap-3 overflow-x-auto px-2 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+          <div className="mt-4 grid gap-2.5 sm:hidden">
+            {visibleCategories.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="dynamic-link-card flex items-center justify-between gap-3 rounded-[20px] border border-white/12 bg-white/9 p-3 transition active:scale-[0.99]"
+                >
+                  <span className="flex min-w-0 items-center gap-3">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-[16px] border border-white/10 bg-white/9">
+                      <Icon className="size-4" aria-hidden="true" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-[0.94rem] font-semibold">{item.label}</span>
+                      <span className="mt-0.5 block truncate text-[0.78rem] leading-5 text-white/64">
+                        {item.detail}
+                      </span>
+                    </span>
+                  </span>
+                  <ChevronRight className="size-4 shrink-0 text-white/42" aria-hidden="true" />
+                </Link>
+              );
+            })}
+
+            <Accordion className="gap-2">
+              <AccordionItem
+                value="more-categories"
+                className="motion-accordion-item rounded-[20px] border border-white/12 bg-white/9 px-3"
+              >
+                <AccordionTrigger className="py-3 text-[0.92rem] font-semibold hover:no-underline">
+                  Altre categorie
+                </AccordionTrigger>
+                <AccordionContent className="pb-3">
+                  <div className="grid gap-2">
+                    {extraCategories.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="dynamic-link-card flex items-center justify-between gap-3 rounded-[16px] border border-white/10 bg-white/8 px-3 py-2.5 text-sm font-semibold transition active:scale-[0.99]"
+                        >
+                          <span className="flex min-w-0 items-center gap-2.5">
+                            <Icon className="size-4 shrink-0" aria-hidden="true" />
+                            <span className="truncate">{item.label}</span>
+                          </span>
+                          <ChevronRight className="size-4 shrink-0 text-white/42" aria-hidden="true" />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+
+          <div className="motion-stagger tool-rail -mx-2 mt-5 hidden snap-x gap-3 overflow-x-auto px-2 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
             {categories.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group w-[min(76vw,18rem)] shrink-0 snap-start rounded-[26px] border border-white/12 bg-white/9 p-4 transition duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/14 hover:shadow-[0_18px_44px_rgba(8,14,38,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60 sm:w-auto"
+                  className="dynamic-link-card group w-[min(76vw,18rem)] shrink-0 snap-start rounded-[26px] border border-white/12 bg-white/9 p-4 transition duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/14 hover:shadow-[0_18px_44px_rgba(8,14,38,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60 sm:w-auto"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <span className="grid size-11 place-items-center rounded-[18px] border border-white/10 bg-white/9 text-white">
@@ -218,11 +279,22 @@ export function HomeExperienceSections() {
             <h2 className="text-display-card mt-4 text-[2.15rem] text-white sm:text-[2.8rem]">
               Dal rumore allo stack in tre passaggi.
             </h2>
-            <div className="motion-stagger mt-6 grid gap-3">
+            <div className="mt-5 sm:hidden">
+              <AppAccordion
+                dark
+                items={steps.map((step, index) => ({
+                  value: step.title,
+                  title: `Step ${String(index + 1).padStart(2, "0")} - ${step.title}`,
+                  description: step.text,
+                }))}
+              />
+            </div>
+
+            <div className="motion-stagger mt-6 hidden gap-3 sm:grid">
               {steps.map((step, index) => {
                 const Icon = step.icon;
                 return (
-                  <div key={step.title} className="rounded-[24px] border border-white/10 bg-white/7 p-4">
+                  <div key={step.title} className="dynamic-card rounded-[24px] border border-white/10 bg-white/7 p-4">
                     <div className="flex items-start gap-3">
                       <span className="grid size-10 shrink-0 place-items-center rounded-[16px] bg-white text-[#17112f]">
                         <Icon className="size-5" aria-hidden="true" />
@@ -246,7 +318,7 @@ export function HomeExperienceSections() {
               eyebrow="Sistema"
               title="Segnali utili, senza disperdere il percorso."
               description="I dettagli restano raccolti: curation, workspace, radar e mobile hanno un ruolo chiaro nella scelta."
-              className="[&_h2]:text-white [&_p]:text-white/66"
+              className="[&_h2]:text-[var(--foreground)] [&_p]:text-[var(--muted-strong)]"
             />
             <div className="mt-6">
               <AppAccordion items={features} dark />
@@ -262,7 +334,7 @@ export function HomeExperienceSections() {
               eyebrow="FAQ"
               title="Domande frequenti, senza blocchi infiniti."
               description="Le risposte stanno compatte e accessibili, così la home non diventa una parete di testo."
-              className="[&_h2]:text-white [&_p]:text-white/66"
+              className="[&_h2]:text-[var(--foreground)] [&_p]:text-[var(--muted-strong)]"
             />
             <div className="mt-6">
               <AppAccordion items={faqs} dark />
@@ -285,7 +357,7 @@ export function HomeExperienceSections() {
                 Suggerisci tool
               </PremiumLink>
             </div>
-            <div className="mt-7 rounded-[24px] border border-white/10 bg-white/7 p-4">
+            <div className="dynamic-card mt-7 rounded-[24px] border border-white/10 bg-white/7 p-4">
               <div className="flex items-center gap-3">
                 <span className="grid size-10 place-items-center rounded-[16px] bg-white text-[#17112f]">
                   <Sparkles className="size-5" aria-hidden="true" />

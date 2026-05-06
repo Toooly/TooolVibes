@@ -180,10 +180,10 @@ function FilterControls({
   dark?: boolean;
 }) {
   const activeClass = dark
-    ? "border-white/28 bg-white text-[#20124f]"
+    ? "border-[rgba(106,60,255,0.24)] bg-[rgba(106,60,255,0.1)] text-[var(--accent-strong)]"
     : "border-[rgba(106,60,255,0.24)] bg-[rgba(106,60,255,0.1)] text-[var(--accent-strong)]";
   const idleClass = dark
-    ? "border-white/10 bg-white/6 text-white/72 hover:bg-white/10"
+    ? "border-[rgba(76,55,166,0.12)] bg-white/72 text-[var(--muted-strong)] hover:border-[rgba(106,60,255,0.22)]"
     : "border-[rgba(76,55,166,0.12)] bg-white/72 text-[var(--muted-strong)] hover:border-[rgba(106,60,255,0.22)]";
   const mainGroups = directoryFilterGroups.filter((group) =>
     primaryFilterGroups.includes(group.key),
@@ -195,7 +195,7 @@ function FilterControls({
   return (
     <div className="space-y-4">
       <div>
-        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
+        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
           Categorie
         </p>
         <div className="tool-rail mt-3 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap">
@@ -214,7 +214,7 @@ function FilterControls({
           ))}
         </div>
         <details className="motion-details mt-3 rounded-[20px] border border-white/10 bg-white/5 p-3">
-          <summary className="cursor-pointer text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white/58 transition hover:text-white">
+          <summary className="cursor-pointer text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] transition hover:text-[var(--accent-strong)]">
             Altre categorie
           </summary>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -236,7 +236,7 @@ function FilterControls({
       </div>
 
       <div>
-        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
+        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
           Livello
         </p>
         <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
@@ -257,7 +257,7 @@ function FilterControls({
       </div>
 
       <div>
-        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-white/52" : "text-[var(--muted)]")}>
+        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
           Tag rapidi
         </p>
         <div className="mt-3 flex max-h-[8.5rem] flex-wrap gap-1.5 overflow-y-auto pr-1 sm:max-h-[10rem] sm:gap-2">
@@ -309,7 +309,7 @@ function ToolDetailDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction={isDesktop ? "right" : "bottom"}>
-      <DrawerContent className="!max-h-[88vh] overflow-y-auto border-l border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white md:!max-h-screen md:!max-w-[42rem]">
+      <DrawerContent className="drawer-light !max-h-[88vh] overflow-y-auto border-l border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white md:!max-h-screen md:!max-w-[42rem]">
         <DrawerHeader className="border-b border-white/10 p-5 text-left sm:p-6">
           <div className="flex items-start gap-4">
             <DirectoryToolGlyph tool={tool} size="lg" />
@@ -672,7 +672,7 @@ export function ToolDiscoveryApp({
           <button
             type="button"
             onClick={() => setCommandOpen(true)}
-            className="premium-button premium-button-secondary hidden min-h-11 w-full items-center justify-between rounded-[18px] px-3.5 py-2.5 text-left text-sm text-white/82 sm:flex sm:rounded-[22px] sm:px-4 sm:py-3"
+            className="premium-button premium-button-secondary hidden min-h-11 w-full items-center justify-between rounded-[18px] px-3.5 py-2.5 text-left text-sm sm:flex sm:rounded-[22px] sm:px-4 sm:py-3"
           >
             <span className="inline-flex items-center gap-2">
               <Search className="size-4" />
@@ -696,7 +696,7 @@ export function ToolDiscoveryApp({
                   "premium-button flex min-h-10 items-center justify-center gap-1.5 rounded-[16px] px-2 text-[0.72rem] font-semibold sm:min-h-11 sm:text-sm lg:justify-between lg:rounded-[18px] lg:px-3",
                   activeTab === key
                     ? "premium-button-glow text-white"
-                    : "premium-button-subtle text-white/72",
+                    : "premium-button-subtle text-[var(--muted-strong)]",
                 )}
               >
                 <span>{label}</span>
@@ -732,7 +732,7 @@ export function ToolDiscoveryApp({
             <button
               type="button"
               onClick={() => setFilterDrawerOpen(true)}
-              className="premium-button premium-button-secondary inline-flex min-h-11 items-center justify-center gap-2 rounded-[16px] px-0 text-sm font-semibold text-white/84 sm:min-h-12 sm:w-auto sm:rounded-[18px] sm:px-4 lg:hidden"
+              className="premium-button premium-button-secondary inline-flex min-h-11 items-center justify-center gap-2 rounded-[16px] px-0 text-sm font-semibold sm:min-h-12 sm:w-auto sm:rounded-[18px] sm:px-4 lg:hidden"
             >
               <SlidersHorizontal className="size-4" />
               <span className="sr-only sm:not-sr-only">Filtri</span>
@@ -759,7 +759,7 @@ export function ToolDiscoveryApp({
                     "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
                     activeGroup === group.key
                       ? "premium-button-glow text-white"
-                      : "premium-button-subtle text-white/72",
+                      : "premium-button-subtle text-[var(--muted-strong)]",
                   )}
                 >
                   {group.label}
@@ -781,8 +781,8 @@ export function ToolDiscoveryApp({
             />
           </div>
           {hasActiveFilters ? (
-            <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-white/10 bg-white/6 px-3 py-2 text-xs text-white/70">
-              <span className="font-semibold text-white">Filtri attivi:</span>
+            <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-white/10 bg-white/6 px-3 py-2 text-xs text-[var(--muted-strong)]">
+              <span className="font-semibold text-[var(--foreground)]">Filtri attivi:</span>
               {query.trim() ? <span>Ricerca: {query.trim()}</span> : null}
               {activeGroup !== "all" ? <span>Categoria: {activeGroupLabel}</span> : null}
               {activeLevel !== "all" ? <span>Livello: {activeLevelLabel}</span> : null}
@@ -986,7 +986,7 @@ export function ToolDiscoveryApp({
       </div>
 
       <Drawer open={isFilterDrawerOpen} onOpenChange={setFilterDrawerOpen} direction="bottom">
-        <DrawerContent className="max-h-[86vh] overflow-y-auto border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white">
+        <DrawerContent className="drawer-light max-h-[86vh] overflow-y-auto border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white">
           <DrawerHeader className="border-b border-white/10 p-5 text-left">
             <div className="flex items-start justify-between gap-4">
               <div>

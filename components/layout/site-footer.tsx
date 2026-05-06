@@ -28,7 +28,7 @@ export function SiteFooter() {
   return (
     <footer className="page-shell pb-6 pt-6 sm:pb-8 sm:pt-9">
       <PremiumPanel tone="airy" className="footer-motion px-5 py-5 sm:px-7 sm:py-6">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(18rem,1.12fr)] lg:items-start">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.88fr)_minmax(18rem,1.12fr)] lg:items-start">
           <div>
             <div className="flex items-center gap-3">
               <BrandLogo size={42} />
@@ -42,10 +42,10 @@ export function SiteFooter() {
               </div>
             </div>
 
-            <h2 className="mt-4 max-w-[20rem] text-[1.45rem] leading-tight text-white/94 sm:text-[1.85rem]">
+            <h2 className="mt-4 max-w-[20rem] text-[1.35rem] leading-tight text-white/94 sm:text-[1.85rem]">
               I tool migliori, senza perdere tempo nel rumore.
             </h2>
-            <p className="mt-3 max-w-[36rem] text-[0.94rem] leading-7 text-white/64">
+            <p className="mt-3 max-w-[36rem] text-[0.88rem] leading-6 text-white/64 sm:text-[0.94rem] sm:leading-7">
               Directory curata di AI tools, SaaS, no-code builder, vibe coding e
               automazioni con link chiari, filtri utili e una selezione pensata per
               l&apos;uso reale.
@@ -61,8 +61,40 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-[22px] border border-white/12 bg-white/[0.055] p-4">
+          <div className="grid gap-3 md:hidden">
+            <details className="mobile-native-accordion dynamic-card rounded-[20px] border border-white/12 bg-white/[0.055] px-4 py-3">
+              <summary>Navigazione</summary>
+              <div className="mt-3 grid gap-1">
+                {footerNav.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="animated-link dynamic-link-card rounded-[14px] px-2 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/9 hover:text-white focus-visible:bg-white/9"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </details>
+
+            <details className="mobile-native-accordion dynamic-card rounded-[20px] border border-white/12 bg-white/[0.055] px-4 py-3">
+              <summary>Categorie</summary>
+              <div className="mt-3 grid gap-1">
+                {categoryNav.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="animated-link dynamic-link-card rounded-[14px] px-2 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/9 hover:text-white focus-visible:bg-white/9"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </details>
+          </div>
+
+          <div className="hidden gap-4 md:grid md:grid-cols-2">
+            <div className="dynamic-card rounded-[22px] border border-white/12 bg-white/[0.055] p-4">
               <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/48">
                 Navigazione
               </p>
@@ -71,7 +103,7 @@ export function SiteFooter() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="animated-link rounded-[14px] px-3 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/9 hover:text-white focus-visible:bg-white/9"
+                    className="animated-link dynamic-link-card rounded-[14px] px-3 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/9 hover:text-white focus-visible:bg-white/9"
                   >
                     {item.label}
                   </Link>
@@ -79,7 +111,7 @@ export function SiteFooter() {
               </div>
             </div>
 
-            <div className="rounded-[22px] border border-white/12 bg-white/[0.055] p-4">
+            <div className="dynamic-card rounded-[22px] border border-white/12 bg-white/[0.055] p-4">
               <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/48">
                 Categorie
               </p>
@@ -88,7 +120,7 @@ export function SiteFooter() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="animated-link rounded-[14px] px-3 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/9 hover:text-white focus-visible:bg-white/9"
+                    className="animated-link dynamic-link-card rounded-[14px] px-3 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/9 hover:text-white focus-visible:bg-white/9"
                   >
                     {item.label}
                   </Link>

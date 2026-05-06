@@ -1,4 +1,5 @@
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
+import { HomeLiveLayer } from "@/components/directory/home-live-layer";
 import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import { formatItalianDate } from "@/lib/utils";
@@ -12,32 +13,34 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
   const featuredCount = tools.filter((tool) => tool.featured).length;
 
   return (
-    <section className="page-shell pt-3 sm:pt-5">
-      <PremiumPanel tone="blue" className="motion-reveal px-5 py-6 sm:px-8 sm:py-9 lg:px-10 lg:py-11">
+    <section className="page-shell pt-2 sm:pt-5">
+      <PremiumPanel tone="blue" className="motion-reveal px-4 py-5 sm:px-8 sm:py-9 lg:px-10 lg:py-11">
         <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[rgba(167,139,250,0.18)] blur-3xl" />
         <div className="absolute -right-24 top-10 h-80 w-80 rounded-full bg-[rgba(94,226,255,0.1)] blur-3xl" />
 
         <div className="relative grid gap-8 xl:grid-cols-[minmax(0,0.98fr)_minmax(25rem,1.02fr)] xl:items-center">
           <div className="max-w-[45rem] xl:pt-2">
             <PremiumBadge tone="accent">AI tools discovery platform</PremiumBadge>
-            <h1 className="text-display-hero mt-5 max-w-[12ch] text-[clamp(2.55rem,8vw,4.85rem)] text-white">
+            <h1 className="text-display-hero mt-4 max-w-[12ch] text-[clamp(2.25rem,8vw,4.85rem)] text-white sm:mt-5">
               Trova tool AI validi. Taglia il rumore.
             </h1>
-            <p className="mt-5 max-w-[42rem] text-[1.02rem] leading-8 text-white/74 sm:text-[1.13rem]">
+            <p className="mt-4 max-w-[42rem] text-[0.96rem] leading-7 text-white/74 sm:mt-5 sm:text-[1.13rem] sm:leading-8">
               TooolVibes seleziona AI tools, SaaS, no-code builder, vibe coding e
               automazioni con una logica pratica: meno alternative inutili, più segnali
               per capire cosa provare davvero.
             </p>
 
-            <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap sm:items-center">
-              <PremiumLink href="/archivio" size="lg">Esplora i tool</PremiumLink>
-              <PremiumLink href="/archivio#stack-builder" tone="secondary" size="lg">
+            <div className="mt-5 grid gap-2.5 sm:mt-6 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
+              <PremiumLink href="/archivio" size="md">Esplora i tool</PremiumLink>
+              <PremiumLink href="/archivio#stack-builder" tone="secondary" size="md">
                 Crea il tuo stack
               </PremiumLink>
-              <PremiumLink href="/wishlist" tone="ghost" size="lg">
+              <PremiumLink href="/wishlist" tone="ghost" size="md">
                 Suggerisci un tool
               </PremiumLink>
             </div>
+
+            <HomeLiveLayer toolCount={tools.length} featuredCount={featuredCount} />
 
             <div className="motion-stagger mt-7 hidden max-w-[42rem] gap-3 sm:grid sm:grid-cols-3">
               {[
