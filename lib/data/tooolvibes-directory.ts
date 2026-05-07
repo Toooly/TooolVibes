@@ -32,6 +32,10 @@ export type DirectoryTool = {
   description: string;
   longDescription: string;
   whyItMatters: string;
+  tldr: string;
+  whatItDoes: string;
+  idealUseCase: string;
+  editorialReview: string;
   externalUrl: string;
   url: string;
   originalSourceUrl: string;
@@ -53,7 +57,15 @@ export type DirectoryTool = {
 
 type DirectoryToolInput = Omit<
   DirectoryTool,
-  "url" | "originalArticleUrl" | "description" | "levelLabel" | "domain"
+  | "url"
+  | "originalArticleUrl"
+  | "description"
+  | "levelLabel"
+  | "domain"
+  | "tldr"
+  | "whatItDoes"
+  | "idealUseCase"
+  | "editorialReview"
 > & {
   domain?: string;
 };
@@ -109,9 +121,16 @@ function getDomain(value: string) {
 }
 
 function defineTool(tool: DirectoryToolInput): DirectoryTool {
+  const idealUseCase =
+    tool.useCases[0] ?? "Capire rapidamente se il tool merita test, shortlist o confronto.";
+
   return {
     ...tool,
     description: tool.shortDescription,
+    tldr: tool.shortDescription,
+    whatItDoes: tool.longDescription,
+    idealUseCase,
+    editorialReview: tool.whyItMatters,
     url: tool.externalUrl,
     originalArticleUrl: tool.originalSourceUrl,
     levelLabel: levelLabels[tool.level],

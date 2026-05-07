@@ -133,6 +133,17 @@ function ToolCarouselCard({
 
       <p className="category-tool-card__description">{tool.shortDescription}</p>
 
+      <div className="category-tool-card__insight" aria-label={`Sintesi di ${tool.name}`}>
+        <div>
+          <p>TL;DR</p>
+          <strong>{tool.tldr}</strong>
+        </div>
+        <div>
+          <p>Review</p>
+          <span>{tool.editorialReview}</span>
+        </div>
+      </div>
+
       <div className="category-tool-card__tags" aria-label={`Tag di ${tool.name}`}>
         {visibleTags.map((tag) => (
           <span key={tag} className="category-tool-card__tag">

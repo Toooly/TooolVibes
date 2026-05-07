@@ -16,6 +16,7 @@ type ToolWorkspaceState = {
   addToStack: (slug: string) => boolean;
   removeFromStack: (slug: string) => void;
   reorderStack: (slugs: string[]) => void;
+  clearCompare: () => void;
   clearWorkspace: () => void;
 };
 
@@ -67,6 +68,7 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
         }));
       },
       reorderStack: (slugs) => set({ stackSlugs: slugs }),
+      clearCompare: () => set({ compareSlugs: [] }),
       clearWorkspace: () =>
         set({
           savedSlugs: [],

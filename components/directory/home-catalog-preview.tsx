@@ -118,6 +118,14 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
                 <p className="text-clamp-2 mt-2 text-sm leading-6 text-white/64">
                   {tool.shortDescription}
                 </p>
+                <div className="mt-3 rounded-[16px] border border-white/10 bg-white/8 p-3">
+                  <p className="text-[0.58rem] font-semibold uppercase tracking-[0.16em] text-white/44">
+                    TL;DR
+                  </p>
+                  <p className="text-clamp-2 mt-1.5 text-xs leading-5 text-white/66">
+                    {tool.editorialReview}
+                  </p>
+                </div>
                 <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-violet-100">
                   Apri scheda
                   <ArrowRight className="size-3.5 transition group-hover:translate-x-1" aria-hidden="true" />

@@ -3,8 +3,9 @@ import { ArrowRight } from "lucide-react";
 
 import { SurfaceIntro } from "@/components/sections/surface-intro";
 import { ButtonLink } from "@/components/ui/button";
-import { CompareBoard } from "@/components/tools/compare-board";
+import { UnifiedCompareBoard } from "@/components/tools/unified-compare-board";
 import { getPublishedTools } from "@/lib/data/public-tools";
+import { directoryTools } from "@/lib/data/tooolvibes-directory";
 
 export default async function ComparePage() {
   const tools = await getPublishedTools();
@@ -35,7 +36,7 @@ export default async function ComparePage() {
       />
 
       <section className="brand-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
-        <CompareBoard tools={tools} />
+        <UnifiedCompareBoard directoryTools={directoryTools} legacyTools={tools} />
       </section>
     </div>
   );

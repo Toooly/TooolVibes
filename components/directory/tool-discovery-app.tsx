@@ -353,6 +353,46 @@ function ToolDetailDrawer({
             ))}
           </div>
 
+          <div className="grid gap-3 sm:grid-cols-2">
+            <PremiumPanel tone="subtle" className="p-4">
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                TL;DR
+              </p>
+              <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
+                {tool.tldr}
+              </p>
+            </PremiumPanel>
+            <PremiumPanel tone="subtle" className="p-4">
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                Review rapida
+              </p>
+              <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
+                {tool.editorialReview}
+              </p>
+            </PremiumPanel>
+          </div>
+
+          <PremiumPanel tone="airy" className="p-5">
+            <div className="grid gap-4 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+              <div>
+                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                  Cosa fa
+                </p>
+                <p className="mt-3 text-sm leading-7 text-[var(--muted-strong)]">
+                  {tool.whatItDoes}
+                </p>
+              </div>
+              <div className="rounded-[20px] border border-[var(--line)] bg-white/72 p-4">
+                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  Per chi ha senso
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
+                  {tool.idealUseCase}
+                </p>
+              </div>
+            </div>
+          </PremiumPanel>
+
           <PremiumPanel tone="subtle" className="p-5">
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
               Casi d&apos;uso

@@ -9,6 +9,7 @@ import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type { ToolRecord } from "@/lib/types/tool";
 import {
   getToolBestFor,
+  getToolEditorialNote,
   getShortlistStageMeta,
   getToolMemorySignals,
   getToolEditorialState,
@@ -66,6 +67,7 @@ function ToolCardComponent({
   const formattedDate = formatItalianDate(tool.date_discovered);
   const pricingLabel = getToolPricing(tool);
   const bestFor = getToolBestFor(tool);
+  const editorialNote = getToolEditorialNote(tool);
   const cardMetaItems = [
     { label: "Uso ideale", value: bestFor },
     { label: "Prezzo", value: pricingLabel },
@@ -360,6 +362,19 @@ function ToolCardComponent({
         <p className={cn("text-body-soft text-[0.88rem] text-clamp-3", variant === "compact" && "text-clamp-2")} style={{ color: "var(--muted-strong)" }}>
           {tool.short_description_it}
         </p>
+
+        <div
+          className="rounded-[18px] border px-3.5 py-3"
+          style={{
+            borderColor: "var(--line)",
+            background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.72))",
+          }}
+        >
+          <p className="editorial-label">{variant === "compact" ? "Nota" : "Review rapida"}</p>
+          <p className={cn("mt-2 text-[0.82rem] leading-6", variant === "compact" ? "text-clamp-2" : "text-clamp-3")} style={{ color: "var(--muted-strong)" }}>
+            {editorialNote}
+          </p>
+        </div>
 
         {variant === "compact" ? (
           <div

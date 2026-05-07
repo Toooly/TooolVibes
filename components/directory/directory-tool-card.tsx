@@ -88,9 +88,33 @@ export function DirectoryToolCard({
         </div>
 
         <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
-            <p className="text-clamp-3 text-[0.92rem] leading-6 text-white/68 sm:min-h-[5rem] sm:text-[0.98rem] sm:leading-7">
-            {tool.description}
-          </p>
+          <div className="rounded-[22px] border border-white/10 bg-white/7 p-4">
+            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/44">
+              TL;DR
+            </p>
+            <p className="text-clamp-2 mt-2 text-[0.9rem] leading-6 text-white/72">
+              {tool.tldr}
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[20px] border border-white/10 bg-white/7 p-3.5">
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/44">
+                Cosa fa
+              </p>
+              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-white/66">
+                {tool.whatItDoes}
+              </p>
+            </div>
+            <div className="rounded-[20px] border border-white/10 bg-white/7 p-3.5">
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/44">
+                Review rapida
+              </p>
+              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-white/66">
+                {tool.editorialReview}
+              </p>
+            </div>
+          </div>
 
           <div className="flex min-h-[2.6rem] flex-wrap content-start gap-1.5 sm:min-h-[3rem] sm:gap-2">
             {tool.tags.slice(0, 3).map((tag) => (

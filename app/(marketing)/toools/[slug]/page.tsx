@@ -100,6 +100,26 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               {tool.longDescription}
             </p>
 
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {[
+                ["TL;DR", tool.tldr],
+                ["Per chi", tool.idealUseCase],
+                ["Review rapida", tool.editorialReview],
+              ].map(([label, copy]) => (
+                <div
+                  key={label}
+                  className="rounded-[22px] border border-[rgba(83,63,170,0.1)] bg-white/78 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.74)]"
+                >
+                  <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                    {label}
+                  </p>
+                  <p className="mt-2 text-[0.86rem] leading-6 text-[var(--muted-strong)]">
+                    {copy}
+                  </p>
+                </div>
+              ))}
+            </div>
+
             <div className="mt-5 flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted)] sm:mt-6 sm:gap-3 sm:text-[0.78rem]">
               <span>{formatItalianDate(tool.publishedAt)}</span>
               <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
@@ -119,7 +139,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               </a>
               <Link
                 href="/wishlist"
-                className="inline-flex min-h-12 items-center justify-center rounded-full border border-[rgba(83,63,170,0.14)] bg-white/88 px-5 py-3 text-sm font-semibold text-[var(--foreground)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-transform duration-200 hover:-translate-y-0.5"
+                className="premium-button premium-button-secondary inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
               >
                 Suggerisci alternativa
               </Link>
@@ -127,7 +147,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 href={sourceHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center rounded-full border border-[rgba(83,63,170,0.14)] bg-white/70 px-5 py-3 text-sm font-semibold text-[var(--foreground)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-transform duration-200 hover:-translate-y-0.5"
+                className="premium-button premium-button-outline inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
               >
                 Fonte originale
               </a>
