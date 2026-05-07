@@ -309,8 +309,8 @@ function ToolDetailDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction={isDesktop ? "right" : "bottom"}>
-      <DrawerContent className="drawer-light !max-h-[88vh] overflow-y-auto border-l border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white md:!max-h-screen md:!max-w-[42rem]">
-        <DrawerHeader className="border-b border-white/10 p-5 text-left sm:p-6">
+      <DrawerContent className="drawer-light h-[92dvh] !max-h-[92dvh] overflow-hidden border-l border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white md:h-screen md:!max-h-screen md:!max-w-[42rem]">
+        <DrawerHeader className="shrink-0 border-b border-white/10 p-4 text-left sm:p-6">
           <div className="flex items-start gap-4">
             <DirectoryToolGlyph tool={tool} size="lg" />
             <div className="min-w-0 flex-1">
@@ -318,10 +318,10 @@ function ToolDetailDrawer({
                 <PremiumBadge tone={levelTone[tool.level]}>{tool.levelLabel}</PremiumBadge>
                 <PremiumBadge tone="accent">{tool.category}</PremiumBadge>
               </div>
-              <DrawerTitle className="mt-4 text-[1.75rem] leading-none text-white sm:text-[2.2rem]">
+              <DrawerTitle className="mt-3 text-[1.42rem] leading-none text-white sm:mt-4 sm:text-[2.2rem]">
                 {tool.name}
               </DrawerTitle>
-              <DrawerDescription className="mt-3 text-base leading-7 text-white/66">
+              <DrawerDescription className="text-clamp-3 mt-2 text-sm leading-6 text-white/66 sm:mt-3 sm:text-base sm:leading-7">
                 {tool.longDescription}
               </DrawerDescription>
             </div>
@@ -334,7 +334,7 @@ function ToolDetailDrawer({
           </div>
         </DrawerHeader>
 
-        <div className="space-y-5 p-6">
+        <div data-vaul-no-drag className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain p-4 pb-5 touch-pan-y sm:p-6">
           <div className="grid gap-3 sm:grid-cols-3">
             {[
               ["Categoria", tool.categoryLabel],
@@ -382,24 +382,24 @@ function ToolDetailDrawer({
               </button>
             ))}
           </div>
-        </div>
 
-        <DrawerFooter className="border-t border-white/10 bg-white/6 p-5">
-          <div className="grid gap-2 sm:grid-cols-4">
-            <PremiumButton type="button" onClick={onSave} tone={saved ? "secondary" : "primary"}>
-              {saved ? "Salvato" : "Salva"}
-            </PremiumButton>
-            <PremiumButton type="button" onClick={onCompare} tone={compared ? "secondary" : "ghost"}>
-              Confronta
-            </PremiumButton>
-            <PremiumButton type="button" onClick={() => onStack(tool.slug)} tone="secondary">
-              Stack
-            </PremiumButton>
-            <PremiumLink href={tool.url} external>
-              Apri sito
-            </PremiumLink>
+          <div className="rounded-[24px] border border-white/10 bg-white/8 p-3 shadow-[0_18px_48px_rgba(6,10,30,0.22)] sm:p-4">
+            <div className="grid gap-2 sm:grid-cols-4">
+              <PremiumButton type="button" onClick={onSave} tone={saved ? "secondary" : "primary"}>
+                {saved ? "Salvato" : "Salva"}
+              </PremiumButton>
+              <PremiumButton type="button" onClick={onCompare} tone={compared ? "secondary" : "ghost"}>
+                Confronta
+              </PremiumButton>
+              <PremiumButton type="button" onClick={() => onStack(tool.slug)} tone="secondary">
+                Stack
+              </PremiumButton>
+              <PremiumLink href={tool.url} external>
+                Apri sito
+              </PremiumLink>
+            </div>
           </div>
-        </DrawerFooter>
+        </div>
       </DrawerContent>
     </Drawer>
   );

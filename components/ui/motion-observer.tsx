@@ -84,20 +84,14 @@ export function MotionObserver() {
           return;
         }
 
+        if (isInViewport(element)) {
+          return;
+        }
+
         element.dataset.motionObserved = "true";
         const delay = getMotionDelay(element);
         if (delay > 0) {
           element.style.setProperty("--motion-delay", `${delay}ms`);
-        }
-
-        if (isInViewport(element)) {
-          element.classList.add("is-visible");
-          window.setTimeout(() => {
-            element.removeAttribute("data-motion-observed");
-            element.classList.remove("is-visible");
-            element.style.removeProperty("--motion-delay");
-          }, 860 + delay);
-          return;
         }
 
         observer?.observe(element);
