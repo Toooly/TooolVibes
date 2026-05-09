@@ -5,15 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
-import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { clearCompareTools } from "@/lib/discovery/local-storage";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
 
 export function CompareTray() {
   const pathname = usePathname();
   const persistence = useDiscoveryPersistence();
-  const discovery = useDiscoverySnapshot();
-  const compare = discovery.compare;
+  const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
+  const compare = compareSlugs;
   const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {

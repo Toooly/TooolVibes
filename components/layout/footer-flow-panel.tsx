@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
 
 type FlowMeta = {
@@ -20,8 +21,9 @@ export function FooterFlowPanel() {
   const pathname = usePathname();
   const persistence = useDiscoveryPersistence();
   const discovery = useDiscoverySnapshot();
+  const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const shortlistCount = discovery.shortlist.length;
-  const compareCount = discovery.compare.length;
+  const compareCount = compareSlugs.length;
 
   const persistenceLabel =
     persistence.mode === "remote"

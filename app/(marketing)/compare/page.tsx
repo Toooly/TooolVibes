@@ -23,7 +23,7 @@ export default async function ComparePage() {
             <ButtonLink href="/archivio">Aggiungi dall&apos;archivio</ButtonLink>
             <Link
               href="/shortlist"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/14 bg-white/8 px-4 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[rgba(76,55,166,0.14)] bg-white/78 px-4 text-sm font-semibold text-[var(--foreground)] transition hover:-translate-y-0.5 hover:bg-white/92 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80"
             >
               Apri shortlist
               <ArrowRight className="size-4" aria-hidden="true" />

@@ -12,3 +12,5 @@ export function formatItalianDate(value: string) {
     year: "numeric",
   }).format(new Date(value));
 }
+
+export const TOGGLE_ANIMATION_MS = 550;

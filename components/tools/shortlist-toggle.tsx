@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { toggleShortlistItem } from "@/lib/discovery/local-storage";
+import { TOGGLE_ANIMATION_MS } from "@/lib/utils";
 
 type ShortlistToggleProps = {
   slug: string;

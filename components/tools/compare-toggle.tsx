@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
-import { toggleCompareTool } from "@/lib/discovery/local-storage";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 type CompareToggleProps = {
   slug: string;
@@ -18,9 +17,10 @@ export function CompareToggle({
   mode = "default",
   onChange,
 }: CompareToggleProps) {
-  const discovery = useDiscoverySnapshot();
-  const count = discovery.compare.length;
-  const isSelected = discovery.compare.includes(slug);
+  const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
+  const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
+  const count = compareSlugs.length;
+  const isSelected = compareSlugs.includes(slug);
   const [isFresh, setIsFresh] = useState(false);
   const previousCountRef = useRef(0);
   const mountedRef = useRef(false);
@@ -49,8 +49,8 @@ export function CompareToggle({
   }, [count, isSelected, onChange]);
 
   const handleToggle = () => {
-    const next = toggleCompareTool(slug);
-    const nextCount = next.length;
+    const result = toggleCompare(slug);
+    const nextCount = result.added ? count + 1 : count - 1;
 
     if (nextCount !== previousCountRef.current) {
         setIsFresh(true);

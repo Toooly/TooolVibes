@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolRecord } from "@/lib/types/tool";
 import {
   getToolBestFor,
@@ -46,8 +47,9 @@ function ToolCardComponent({
   onSelect,
 }: ToolCardProps) {
   const discovery = useDiscoverySnapshot();
+  const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const isSaved = discovery.shortlist.includes(tool.slug);
-  const isCompared = discovery.compare.includes(tool.slug);
+  const isCompared = compareSlugs.includes(tool.slug);
   const shortlistStage = discovery.shortlistStages[tool.slug] ?? "saved";
   const decisionMemory = discovery.decisionMemories[tool.slug] ?? {};
 
