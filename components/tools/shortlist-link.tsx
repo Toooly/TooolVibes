@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
 
 type ShortlistLinkProps = {
@@ -19,8 +19,8 @@ export function ShortlistLink({
   active = false,
   label = "Shortlist",
 }: ShortlistLinkProps) {
-  const discovery = useDiscoverySnapshot();
-  const count = discovery.shortlist.length;
+  const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
+  const count = savedSlugs.length;
   const [isFresh, setIsFresh] = useState(false);
   const previousCountRef = useRef(0);
   const mountedRef = useRef(false);

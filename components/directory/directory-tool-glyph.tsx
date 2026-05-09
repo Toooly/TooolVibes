@@ -25,7 +25,7 @@ export function DirectoryToolGlyph({
   return (
     <span
       aria-hidden="true"
-      className={`tool-glyph-motion inline-flex items-center justify-center border border-white/60 font-semibold uppercase tracking-[0.12em] text-white shadow-[0_12px_28px_rgba(60,37,152,0.14)] ${sizeClasses[size]} ${className}`.trim()}
+      className={`tool-glyph-motion inline-flex items-center justify-center border border-[rgba(76,55,166,0.2)] font-semibold uppercase tracking-[0.12em] text-[var(--foreground)] shadow-[0_12px_28px_rgba(60,37,152,0.14)] ${sizeClasses[size]} ${className}`.trim()}
       style={{
         background: `linear-gradient(135deg, ${tool.accentFrom}, ${tool.accentTo})`,
       }}

@@ -52,12 +52,13 @@ function sortShortlistedTools(
 
 export function ShortlistBoard({ tools }: ShortlistBoardProps) {
   const discovery = useDiscoverySnapshot();
+  const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const [query, setQuery] = useState("");
   const [stageFilter, setStageFilter] = useState<StageFilter>("all");
   const [sortKey, setSortKey] = useState<ShortlistSortKey>("workspace");
   const deferredQuery = useDeferredValue(query);
-  const shortlistSlugs = discovery.shortlist;
+  const shortlistSlugs = savedSlugs;
   const shortlistStages = discovery.shortlistStages;
   const decisionMemories = discovery.decisionMemories;
 

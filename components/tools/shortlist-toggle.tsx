@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
-import { toggleShortlistItem } from "@/lib/discovery/local-storage";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { TOGGLE_ANIMATION_MS } from "@/lib/utils";
 
 type ShortlistToggleProps = {
@@ -19,8 +18,9 @@ export function ShortlistToggle({
   mode = "default",
   onChange,
 }: ShortlistToggleProps) {
-  const discovery = useDiscoverySnapshot();
-  const isSaved = discovery.shortlist.includes(slug);
+  const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
+  const toggleSaved = useToolWorkspaceStore((state) => state.toggleSaved);
+  const isSaved = savedSlugs.includes(slug);
   const [isFresh, setIsFresh] = useState(false);
   const wasSavedRef = useRef(isSaved);
   const mountedRef = useRef(false);
@@ -52,7 +52,7 @@ export function ShortlistToggle({
   }, [isSaved]);
 
   const handleToggle = () => {
-    toggleShortlistItem(slug);
+    toggleSaved(slug);
   };
 
   if (mode === "icon") {

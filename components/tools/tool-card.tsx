@@ -48,7 +48,8 @@ function ToolCardComponent({
 }: ToolCardProps) {
   const discovery = useDiscoverySnapshot();
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
-  const isSaved = discovery.shortlist.includes(tool.slug);
+  const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
+  const isSaved = savedSlugs.includes(tool.slug);
   const isCompared = compareSlugs.includes(tool.slug);
   const shortlistStage = discovery.shortlistStages[tool.slug] ?? "saved";
   const decisionMemory = discovery.decisionMemories[tool.slug] ?? {};
