@@ -59,7 +59,7 @@ export function DirectoryToolCard({
           {tool.highlights.slice(0, 3).map((item) => (
             <span
               key={item}
-              className="rounded-full border border-[var(--line)] bg-white/72 px-2.5 py-1 text-[0.62rem] font-medium text-[var(--muted-strong)] sm:px-3 sm:text-[0.68rem]"
+              className="rounded-full bg-white/72 px-2.5 py-1 text-[0.62rem] font-medium text-[var(--foreground)] sm:px-3 sm:text-[0.68rem]"
             >
               {item}
             </span>
@@ -68,9 +68,9 @@ export function DirectoryToolCard({
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-6">
-        <div className="grid grid-cols-2 gap-3 rounded-[22px] border border-[var(--line)] bg-white/72 px-4 py-3">
+        <div className="grid grid-cols-2 gap-3 rounded-[22px] bg-white/72 px-4 py-3">
           <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
               Livello
             </p>
             <p className="mt-2 text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-[var(--foreground)]">
@@ -78,7 +78,7 @@ export function DirectoryToolCard({
             </p>
           </div>
           <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
               Fonte
             </p>
             <p className="mt-2 truncate text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-[var(--foreground)]">
@@ -88,29 +88,29 @@ export function DirectoryToolCard({
         </div>
 
         <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
-          <div className="rounded-[22px] border border-[var(--line)] bg-white/72 p-4">
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+          <div className="rounded-[22px] bg-white/72 p-4">
+            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
               TL;DR
             </p>
-            <p className="text-clamp-2 mt-2 text-[0.9rem] leading-6 text-[var(--muted-strong)]">
+            <p className="text-clamp-2 mt-2 text-[0.9rem] leading-6 text-[var(--foreground)]">
               {tool.tldr}
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[20px] border border-[var(--line)] bg-white/72 p-3.5">
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+            <div className="rounded-[20px] bg-white/72 p-3.5">
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
                 Cosa fa
               </p>
-              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-[var(--muted-strong)]">
+              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-[var(--foreground)]">
                 {tool.whatItDoes}
               </p>
             </div>
-            <div className="rounded-[20px] border border-[var(--line)] bg-white/72 p-3.5">
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+            <div className="rounded-[20px] bg-white/72 p-3.5">
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
                 Review rapida
               </p>
-              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-[var(--muted-strong)]">
+              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-[var(--foreground)]">
                 {tool.editorialReview}
               </p>
             </div>
@@ -121,7 +121,7 @@ export function DirectoryToolCard({
               <Link
                 key={tag}
                 href={`/archivio?tag=${encodeURIComponent(tag)}`}
-                className="rounded-full border border-[var(--line)] bg-white/72 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted-strong)] transition-colors duration-200 hover:border-[var(--accent-strong)] hover:text-[var(--accent-strong)] sm:px-3 sm:text-[0.7rem] sm:tracking-[0.14em]"
+                className="rounded-full bg-white/72 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-[var(--foreground)] transition-colors duration-200 hover:text-[var(--accent-strong)] sm:px-3 sm:text-[0.7rem] sm:tracking-[0.14em]"
               >
                 {tag}
               </Link>
@@ -129,8 +129,8 @@ export function DirectoryToolCard({
           </div>
         </div>
 
-        <div className="mt-auto space-y-3 border-t border-[var(--line)] pt-4 sm:space-y-4 sm:pt-5">
-          <p className="text-clamp-2 text-[0.86rem] leading-6 text-[var(--muted-strong)] sm:text-sm">{tool.whyItMatters}</p>
+        <div className="mt-auto space-y-3 pt-4 sm:space-y-4 sm:pt-5">
+          <p className="text-clamp-2 text-[0.86rem] leading-6 text-[var(--foreground)] sm:text-sm">{tool.whyItMatters}</p>
 
           <div className="grid gap-2 sm:grid-cols-2">
             <PremiumLink href={tool.url} external>
@@ -141,7 +141,7 @@ export function DirectoryToolCard({
             </PremiumLink>
           </div>
 
-          <p className="text-center text-[0.62rem] uppercase tracking-[0.14em] text-[var(--muted)] sm:text-[0.7rem] sm:tracking-[0.16em]">
+          <p className="text-center text-[0.62rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:text-[0.7rem] sm:tracking-[0.16em]">
             Aggiornato {formatItalianDate(tool.publishedAt)}
           </p>
         </div>

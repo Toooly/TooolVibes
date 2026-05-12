@@ -163,7 +163,7 @@ export function DirectoryWeeklySpotlight({
             {supportingTools.map((tool) => (
               <article
                 key={tool.slug}
-                className="dynamic-card rounded-[18px] border border-[var(--line)] bg-white/72 p-3"
+                className="dynamic-card rounded-[18px] bg-white/72 p-3"
               >
                 <div className="flex items-center gap-3">
                   <DirectoryToolGlyph tool={tool} size="sm" />
@@ -171,7 +171,7 @@ export function DirectoryWeeklySpotlight({
                     <h3 className="truncate text-sm font-semibold text-[var(--foreground)]">
                       {tool.name}
                     </h3>
-                    <p className="truncate text-xs text-[var(--muted)]">{tool.categoryLabel}</p>
+                    <p className="truncate text-xs text-[var(--muted-strong)]">{tool.categoryLabel}</p>
                   </div>
                 </div>
                 <PremiumLink href={`/toools/${tool.slug}`} tone="ghost" size="sm" className="mt-3 w-full">

@@ -247,14 +247,14 @@ export function HomeExperienceSections() {
                 <summary>Come funziona</summary>
                 <div className="mt-3 grid gap-2">
                   {steps.map((step, index) => (
-                    <div key={step.title} className="rounded-[16px] border border-[var(--line)] bg-white/72 px-3 py-2.5">
+                    <div key={step.title} className="rounded-[16px] bg-white/72 px-3 py-2.5">
                       <p className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)]">
                         Step {String(index + 1).padStart(2, "0")}
                       </p>
                       <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
                         {step.title}
                       </p>
-                      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                      <p className="mt-1 text-xs leading-5 text-[var(--muted-strong)]">
                         {step.text}
                       </p>
                     </div>
@@ -266,11 +266,11 @@ export function HomeExperienceSections() {
                 <summary>Sistema e FAQ</summary>
                 <div className="mt-3 grid gap-2">
                   {[features[0], features[1], faqs[0]].map((item) => (
-                    <div key={item.value} className="rounded-[16px] border border-[var(--line)] bg-white/72 px-3 py-2.5">
+                    <div key={item.value} className="rounded-[16px] bg-white/72 px-3 py-2.5">
                       <p className="text-sm font-semibold text-[var(--foreground)]">
                         {"title" in item ? item.title : item.question}
                       </p>
-                      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                      <p className="mt-1 text-xs leading-5 text-[var(--muted-strong)]">
                         {"description" in item ? item.description : item.answer}
                       </p>
                     </div>

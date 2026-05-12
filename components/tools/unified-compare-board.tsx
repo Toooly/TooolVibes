@@ -90,15 +90,15 @@ function DirectoryCompareCard({
       </div>
 
       <div className="mt-4 grid gap-3">
-        <div className="rounded-[20px] border border-[var(--line)] bg-white/72 p-3.5">
+        <div className="rounded-[20px] bg-white/72 p-3.5">
           <p className="editorial-label">TL;DR</p>
-          <p className="mt-2 text-[0.92rem] leading-6 text-[var(--muted-strong)]">
+          <p className="mt-2 text-[0.92rem] leading-6 text-[var(--foreground)]">
             {tool.tldr}
           </p>
         </div>
-        <div className="rounded-[20px] border border-[var(--line)] bg-white/64 p-3.5">
+        <div className="rounded-[20px] bg-white/64 p-3.5">
           <p className="editorial-label">Review rapida</p>
-          <p className="mt-2 text-[0.88rem] leading-6 text-[var(--muted-strong)]">
+          <p className="mt-2 text-[0.88rem] leading-6 text-[var(--foreground)]">
             {tool.editorialReview}
           </p>
         </div>
@@ -108,7 +108,7 @@ function DirectoryCompareCard({
         {tool.highlights.slice(0, 3).map((item) => (
           <span
             key={item}
-            className="rounded-full border border-[var(--line)] bg-white/72 px-3 py-1 text-[0.68rem] font-semibold text-[var(--muted-strong)]"
+            className="rounded-full bg-white/72 px-3 py-1 text-[0.68rem] font-semibold text-[var(--foreground)]"
           >
             {item}
           </span>
@@ -245,8 +245,8 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         </div>
       ) : null}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-[var(--line)] bg-white/72 px-4 py-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-[var(--muted-strong)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[24px] bg-white/72 px-4 py-3">
+        <div className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
           <Sparkles className="size-4 text-[var(--accent)]" aria-hidden="true" />
           Il confronto resta salvato anche se cambi pagina.
         </div>
@@ -289,7 +289,7 @@ export function UnifiedCompareBoard({
     );
   }
 
-  if (compareSlugs.length > 0) {
+  if (comparedDirectoryTools.length > 0) {
     return <DirectoryCompareBoard tools={comparedDirectoryTools} />;
   }
 

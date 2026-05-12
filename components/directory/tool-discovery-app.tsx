@@ -382,11 +382,11 @@ function ToolDetailDrawer({
                   {tool.whatItDoes}
                 </p>
               </div>
-              <div className="rounded-[20px] border border-[var(--line)] bg-white/72 p-4">
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+              <div className="rounded-[20px] bg-white/72 p-4">
+                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                   Per chi ha senso
                 </p>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
+                <p className="mt-2 text-sm leading-6 text-[var(--foreground)]">
                   {tool.idealUseCase}
                 </p>
               </div>
@@ -908,18 +908,18 @@ export function ToolDiscoveryApp({
                   key={item.label}
                   type="button"
                   onClick={() => setActiveTab(item.tab)}
-                  className="rounded-[16px] border border-[var(--line)] bg-white/72 px-2 py-2 text-center"
+                  className="rounded-[16px] bg-white/72 px-2 py-2 text-center"
                 >
                   <span className="block text-[1rem] font-semibold text-[var(--foreground)]">
                     {item.count}
                   </span>
-                  <span className="mt-1 block text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+                  <span className="mt-1 block text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted-strong)]">
                     {item.label}
                   </span>
                 </button>
               ))}
             </div>
-            <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-3 text-xs leading-5 text-[var(--muted-strong)]">
               Usa i tab sopra per vedere solo salvati, confronto o stack. Le azioni restano sulle card.
             </p>
           </details>

@@ -71,7 +71,7 @@
     0 20px 56px rgba(41, 28, 120, 0.14),
     0 0 54px rgba(57, 210, 246, 0.06);
   --foreground: #110d2b;
-  --muted: #635e84;
+  --muted: #4f4970;
   --muted-strong: #251e51;
   --line: rgba(56, 42, 122, 0.12);
   --line-strong: rgba(56, 42, 122, 0.22);
@@ -148,7 +148,7 @@
   --background-strong: #f0edff;
   --background-deep: #e6e0ff;
   --foreground: #120d2f;
-  --muted: #6a6387;
+  --muted: #4f4970;
   --muted-strong: #2d255d;
   --line: rgba(62, 46, 132, 0.13);
   --line-strong: rgba(62, 46, 132, 0.22);
@@ -231,7 +231,7 @@
   --shadow-card: 0 24px 64px rgba(47, 33, 126, 0.1);
   --shadow-premium: 0 34px 90px rgba(47, 33, 126, 0.14);
   --ink: #130d31;
-  --ink-muted: #635e84;
+  --ink-muted: #4f4970;
   --ink-strong: #251e51;
   --ink-accent: #4c2fbc;
   --scrollbar-track: rgba(229, 224, 255, 0.72);

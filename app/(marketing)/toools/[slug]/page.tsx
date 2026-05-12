@@ -67,15 +67,15 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
       >
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:items-start">
           <div>
-            <div className="flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted)] sm:gap-3 sm:text-[0.8rem]">
+            <div className="flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:gap-3 sm:text-[0.8rem]">
               <Link href="/" className="hover:text-[var(--accent-strong)]">
                 Home
               </Link>
-              <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
+              <span className="mx-1.5 h-1 w-1 rounded-full bg-[var(--line-strong)]" />
               <Link href="/archivio" className="hover:text-[var(--accent-strong)]">
                 Archivio
               </Link>
-              <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
+              <span className="mx-1.5 h-1 w-1 rounded-full bg-[var(--line-strong)]" />
               <span>{tool.name}</span>
             </div>
 
@@ -108,7 +108,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               ].map(([label, copy]) => (
                 <div
                   key={label}
-                  className="rounded-[22px] border border-[rgba(83,63,170,0.1)] bg-white/78 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.74)]"
+                  className="rounded-[22px] bg-white/78 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.74)]"
                 >
                   <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                     {label}
@@ -120,11 +120,11 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               ))}
             </div>
 
-            <div className="mt-5 flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted)] sm:mt-6 sm:gap-3 sm:text-[0.78rem]">
+            <div className="mt-5 flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:mt-6 sm:gap-3 sm:text-[0.78rem]">
               <span>{formatItalianDate(tool.publishedAt)}</span>
-              <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
+              <span className="mx-1.5 h-1 w-1 rounded-full bg-[var(--line-strong)]" />
               <span>{tool.readingTime}</span>
-              <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
+              <span className="mx-1.5 h-1 w-1 rounded-full bg-[var(--line-strong)]" />
               <span>{tool.domain}</span>
             </div>
 
@@ -156,7 +156,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
 
           <aside className="light-surface rounded-[26px] border border-[rgba(83,63,170,0.12)] bg-white/82 p-4 shadow-[0_18px_48px_rgba(36,19,103,0.08)] sm:rounded-[32px] sm:p-5">
             <div
-              className="rounded-[28px] border border-[rgba(83,63,170,0.08)] p-5"
+              className="rounded-[28px] p-5"
               style={{
                 background: `radial-gradient(circle at top right, ${tool.accentFrom}20, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,241,255,0.92))`,
               }}
@@ -164,7 +164,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               <div className="flex items-center gap-3">
                 <DirectoryToolGlyph tool={tool} size="lg" />
                 <div>
-                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                     Profilo rapido
                   </p>
                   <p className="mt-1 text-[1.3rem] font-semibold text-[var(--foreground)]">
@@ -179,24 +179,24 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
             </div>
 
             <div className="mt-4 space-y-3 sm:mt-5">
-              <div className="rounded-[24px] border border-[rgba(83,63,170,0.08)] bg-[rgba(246,244,255,0.88)] p-4">
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+              <div className="rounded-[24px] bg-[rgba(246,244,255,0.88)] p-4">
+                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                   Category fit
                 </p>
-                <p className="mt-2 text-[0.98rem] leading-7 text-[var(--muted-strong)]">
+                <p className="mt-2 text-[0.98rem] leading-7 text-[var(--foreground)]">
                   {tool.categoryLabel}
                 </p>
               </div>
 
-              <div className="rounded-[24px] border border-[rgba(83,63,170,0.08)] bg-[rgba(246,244,255,0.88)] p-4">
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+              <div className="rounded-[24px] bg-[rgba(246,244,255,0.88)] p-4">
+                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                   Highlights
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {tool.highlights.map((item) => (
                     <span
                       key={item}
-                      className="rounded-full border border-[rgba(83,63,170,0.1)] bg-white px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)]"
+                      className="rounded-full bg-white/80 px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--foreground)]"
                     >
                       {item}
                     </span>
@@ -204,8 +204,8 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 </div>
               </div>
 
-              <div className="rounded-[24px] border border-[rgba(83,63,170,0.08)] bg-[rgba(246,244,255,0.88)] p-4">
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+              <div className="rounded-[24px] bg-[rgba(246,244,255,0.88)] p-4">
+                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                   Tag
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -213,7 +213,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                     <Link
                       key={tag}
                       href={`/archivio?tag=${encodeURIComponent(tag)}`}
-                      className="rounded-full border border-[rgba(83,63,170,0.1)] bg-white px-3 py-1 text-[0.72rem] font-semibold text-[var(--muted-strong)]"
+                      className="rounded-full bg-white/80 px-3 py-1 text-[0.72rem] font-semibold text-[var(--foreground)]"
                     >
                       {tag}
                     </Link>
@@ -237,12 +237,12 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
             {tool.useCases.map((item, index) => (
               <div
                 key={item}
-                className="rounded-[22px] border border-[rgba(83,63,170,0.08)] bg-[rgba(246,244,255,0.86)] px-4 py-4"
+                className="rounded-[22px] bg-[rgba(246,244,255,0.86)] px-4 py-4"
               >
-                <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                   Use case {String(index + 1).padStart(2, "0")}
                 </p>
-                <p className="mt-2 text-[0.98rem] leading-7 text-[var(--muted-strong)]">
+                <p className="mt-2 text-[0.98rem] leading-7 text-[var(--foreground)]">
                   {item}
                 </p>
               </div>
@@ -257,12 +257,12 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
           <h2 className="mt-3 text-[1.45rem] leading-[1.04] text-[var(--foreground)] sm:text-[1.7rem]">
             Il punto editoriale dietro la selezione.
           </h2>
-          <p className="mt-5 text-[1rem] leading-8 text-[var(--muted-strong)]">
+          <p className="mt-5 text-[1rem] leading-8 text-[var(--foreground)]">
             {tool.longDescription}
           </p>
 
-          <div className="mt-6 rounded-[24px] border border-[rgba(83,63,170,0.08)] bg-[rgba(246,244,255,0.86)] p-4">
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+          <div className="mt-6 rounded-[24px] bg-[rgba(246,244,255,0.86)] p-4">
+            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
               Link rapidi
             </p>
             <div className="mt-4 flex flex-col gap-3">
@@ -270,7 +270,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 href={tool.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-4 py-3 text-sm font-semibold text-[var(--foreground)]"
+                className="premium-button premium-button-subtle inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
               >
                 {tool.ctaLabel}
               </a>
@@ -278,7 +278,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 href={sourceHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-[rgba(83,63,170,0.12)] bg-white px-4 py-3 text-sm font-semibold text-[var(--foreground)]"
+                className="premium-button premium-button-subtle inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
               >
                 Apri la fonte originale TooolVibes
               </a>
