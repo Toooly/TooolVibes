@@ -747,7 +747,7 @@ export function ToolDiscoveryApp({
         </aside>
 
         <div className="min-w-0 space-y-4 lg:space-y-5">
-          <div id="archive-search" className="grid grid-cols-[minmax(0,1fr)_7.2rem_2.75rem] gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
+          <div id="archive-search" className="scroll-mt-28 grid grid-cols-[minmax(0,1fr)_7.2rem_2.75rem] gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
             <label>
               <span className="sr-only">Cerca tool</span>
               <input
@@ -788,28 +788,29 @@ export function ToolDiscoveryApp({
             </PremiumButton>
           </div>
 
-          <div id="archive-filters" className="lg:hidden">
-            <div className="tool-rail -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1.5 sm:gap-2 sm:pb-2">
-              {directoryFilterGroups.slice(0, 7).map((group) => (
-                <button
-                  key={group.key}
-                  type="button"
-                  onClick={() => setActiveGroup(group.key)}
-                  className={cn(
-                    "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
-                    activeGroup === group.key
-                      ? "premium-button-glow text-white"
-                      : "premium-button-subtle text-[var(--muted-strong)]",
-                  )}
-                >
-                  {group.label}
-                </button>
-              ))}
+          <div id="archive-filters" className="scroll-mt-28">
+            <div className="lg:hidden">
+              <div className="tool-rail -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1.5 sm:gap-2 sm:pb-2">
+                {directoryFilterGroups.slice(0, 7).map((group) => (
+                  <button
+                    key={group.key}
+                    type="button"
+                    onClick={() => setActiveGroup(group.key)}
+                    className={cn(
+                      "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
+                      activeGroup === group.key
+                        ? "premium-button-glow text-white"
+                        : "premium-button-subtle text-[var(--muted-strong)]",
+                    )}
+                  >
+                    {group.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="hidden lg:block">
-            <FilterControls
+            <div className="hidden lg:block">
+              <FilterControls
               activeGroup={activeGroup}
               activeLevel={activeLevel}
               activeTag={activeTag}
@@ -819,6 +820,7 @@ export function ToolDiscoveryApp({
               onTagChange={toggleTag}
               dark
             />
+          </div>
           </div>
           {hasActiveFilters ? (
             <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-white/10 bg-white/6 px-3 py-2 text-xs text-[var(--muted-strong)]">

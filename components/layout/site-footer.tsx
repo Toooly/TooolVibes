@@ -27,25 +27,25 @@ const categoryNav = [
 export function SiteFooter() {
   return (
     <footer className="page-shell pb-6 pt-6 sm:pb-8 sm:pt-9">
-      <PremiumPanel tone="violet" className="footer-motion px-5 py-5 sm:px-7 sm:py-6">
+      <PremiumPanel as="section" tone="dark" className="footer-motion px-5 py-5 sm:px-7 sm:py-6">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,0.88fr)_minmax(18rem,1.12fr)] lg:items-start">
           <div>
             <div className="flex items-center gap-3">
               <BrandLogo size={42} />
               <div>
-                <p className="text-[0.84rem] font-semibold uppercase tracking-[0.18em]">
+                <p className="text-[0.84rem] font-semibold uppercase tracking-[0.18em] text-white">
                   TooolVibes
                 </p>
-                <p className="mt-1 text-[0.68rem] uppercase tracking-[0.14em]">
+                <p className="mt-1 text-[0.68rem] uppercase tracking-[0.14em] text-white/46">
                   AI tools discovery platform
                 </p>
               </div>
             </div>
 
-            <h2 className="mt-4 hidden max-w-[20rem] text-[1.35rem] leading-tight sm:block sm:text-[1.85rem]">
+            <h2 className="mt-4 hidden max-w-[20rem] text-[1.35rem] leading-tight text-white sm:block sm:text-[1.85rem]">
               I tool migliori, senza perdere tempo nel rumore.
             </h2>
-            <p className="mt-3 hidden max-w-[36rem] text-[0.88rem] leading-6 sm:block sm:text-[0.94rem] sm:leading-7">
+            <p className="mt-3 hidden max-w-[36rem] text-[0.88rem] leading-6 text-white/64 sm:block sm:text-[0.94rem] sm:leading-7">
               Directory curata di AI tools, SaaS, no-code builder, vibe coding e
               automazioni con link chiari, filtri utili e una selezione pensata per
               l&apos;uso reale.
@@ -95,7 +95,7 @@ export function SiteFooter() {
 
           <div className="hidden gap-4 md:grid md:grid-cols-2">
             <div className="dynamic-card rounded-[22px] border border-white/12 bg-white/8 p-4">
-              <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/56">
+              <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/48">
                 Navigazione
               </p>
               <div className="motion-stagger mt-3 grid gap-1.5 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
@@ -103,7 +103,7 @@ export function SiteFooter() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="animated-link dynamic-link-card rounded-[14px] px-3 py-2 text-sm font-semibold text-white/72 transition duration-200 hover:bg-white/12 hover:text-white focus-visible:bg-white/12"
+                    className="animated-link dynamic-link-card rounded-[14px] px-3 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/12 hover:text-white focus-visible:bg-white/12"
                   >
                     {item.label}
                   </Link>
@@ -112,7 +112,7 @@ export function SiteFooter() {
             </div>
 
             <div className="dynamic-card rounded-[22px] border border-white/12 bg-white/8 p-4">
-              <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/56">
+              <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/48">
                 Categorie
               </p>
               <div className="motion-stagger mt-3 grid gap-1.5 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
@@ -120,7 +120,7 @@ export function SiteFooter() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="animated-link dynamic-link-card rounded-[14px] px-3 py-2 text-sm font-semibold text-white/72 transition duration-200 hover:bg-white/12 hover:text-white focus-visible:bg-white/12"
+                    className="animated-link dynamic-link-card rounded-[14px] px-3 py-2 text-sm font-semibold text-white/68 transition duration-200 hover:bg-white/12 hover:text-white focus-visible:bg-white/12"
                   >
                     {item.label}
                   </Link>
@@ -131,23 +131,23 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-6 flex flex-col gap-3 border-t border-white/12 pt-4 text-[0.76rem] sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-white/60">&copy; 2026 TooolVibes. Directory premium per AI, SaaS, no-code e automazioni.</p>
+          <p className="text-white/50">&copy; 2026 TooolVibes. Directory premium per AI, SaaS, no-code e automazioni.</p>
           <div className="hidden flex-wrap gap-3 sm:flex">
             <a
               href={siteConfig.shopUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="animated-link text-white/60 hover:text-white"
+              className="animated-link text-white/50 hover:text-white"
             >
               Shop
             </a>
-            <Link href="/product-hunt" className="animated-link text-white/60 hover:text-white">
+            <Link href="/product-hunt" className="animated-link text-white/50 hover:text-white">
               Product Hunt
             </Link>
-            <Link href="/wishlist" className="animated-link text-white/60 hover:text-white">
+            <Link href="/wishlist" className="animated-link text-white/50 hover:text-white">
               Suggerisci
             </Link>
-            <Link href="/archivio" className="animated-link text-white/60 hover:text-white">
+            <Link href="/archivio" className="animated-link text-white/50 hover:text-white">
               Archivio
             </Link>
           </div>
