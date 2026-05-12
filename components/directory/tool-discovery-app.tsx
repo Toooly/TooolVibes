@@ -747,7 +747,7 @@ export function ToolDiscoveryApp({
         </aside>
 
         <div className="min-w-0 space-y-4 lg:space-y-5">
-          <div className="grid grid-cols-[minmax(0,1fr)_7.2rem_2.75rem] gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
+          <div id="archive-search" className="grid grid-cols-[minmax(0,1fr)_7.2rem_2.75rem] gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
             <label>
               <span className="sr-only">Cerca tool</span>
               <input
@@ -788,7 +788,7 @@ export function ToolDiscoveryApp({
             </PremiumButton>
           </div>
 
-          <div className="lg:hidden">
+          <div id="archive-filters" className="lg:hidden">
             <div className="tool-rail -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1.5 sm:gap-2 sm:pb-2">
               {directoryFilterGroups.slice(0, 7).map((group) => (
                 <button

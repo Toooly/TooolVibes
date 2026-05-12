@@ -134,7 +134,7 @@ export function SiteHeader() {
         </div>
 
         {isOpen ? (
-          <div className="mobile-menu-panel relative mt-4 space-y-4 border-t border-[var(--line)] pt-4 xl:hidden">
+          <div className="mobile-menu-panel relative mt-4 space-y-4 xl:hidden">
             <Suspense fallback={<HeaderSearchFallback compact />}>
               <DirectoryHeaderSearch compact onSubmitted={() => setIsOpen(false)} />
             </Suspense>
@@ -146,10 +146,10 @@ export function SiteHeader() {
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "animated-link dynamic-link-card rounded-[18px] border px-4 py-3 text-sm font-semibold transition duration-200",
+                    "animated-link dynamic-link-card rounded-[18px] px-4 py-3 text-sm font-semibold transition duration-200",
                     isActive(item.href)
-                      ? "border-[rgba(106,60,255,0.22)] bg-[rgba(106,60,255,0.1)] text-[var(--accent-strong)] shadow-[inset_0_1px_0_rgba(255,255,255,0.62)]"
-                      : "border-[var(--line)] bg-white/62 text-[var(--muted-strong)] hover:border-[rgba(106,60,255,0.2)] hover:bg-white/86 hover:text-[var(--accent-strong)]",
+                      ? "bg-[rgba(106,60,255,0.1)] text-[var(--accent-strong)] shadow-[inset_0_1px_0_rgba(255,255,255,0.62)]"
+                      : "bg-white/62 text-[var(--muted-strong)] hover:bg-white/86 hover:text-[var(--accent-strong)]",
                   )}
                 >
                   {item.label}
