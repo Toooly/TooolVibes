@@ -146,13 +146,14 @@ export function SiteHeader() {
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "animated-link dynamic-link-card rounded-[18px] px-4 py-3 text-sm font-semibold transition duration-200",
+                    "animated-link dynamic-link-card mobile-nav-link rounded-[18px] px-4 py-3 text-sm font-semibold transition duration-200",
                     isActive(item.href)
                       ? "bg-[rgba(106,60,255,0.1)] text-[var(--accent-strong)] shadow-[inset_0_1px_0_rgba(255,255,255,0.62)]"
                       : "bg-white/62 text-[var(--muted-strong)] hover:bg-white/86 hover:text-[var(--accent-strong)]",
                   )}
                 >
-                  {item.label}
+                  <span className="mobile-nav-link__signal" aria-hidden="true" />
+                  <span>{item.label}</span>
                 </Link>
               ))}
             </nav>

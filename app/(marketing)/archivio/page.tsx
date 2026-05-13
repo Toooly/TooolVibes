@@ -1,5 +1,5 @@
 import { DirectoryBrowser } from "@/components/directory/directory-browser";
-import { Layers3, Search, SlidersHorizontal } from "lucide-react";
+import { ArchiveFlowPanel } from "@/components/directory/archive-flow-panel";
 import {
   directoryFilterGroups,
   directoryTools,
@@ -9,12 +9,6 @@ import {
 type ArchivePageProps = {
   searchParams: Promise<{ q?: string; tag?: string; group?: string }>;
 };
-
-const flussoActions = [
-  { icon: Search, title: "Cerca", copy: "Nome, tag e use case.", href: "#archive-search" },
-  { icon: SlidersHorizontal, title: "Filtra", copy: "Categorie prima, tag dopo.", href: "#archive-filters" },
-  { icon: Layers3, title: "Costruisci", copy: "Salvati, confronto e stack.", href: "#stack-builder" },
-];
 
 export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const params = await searchParams;
@@ -56,32 +50,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
             </div>
           </div>
 
-          <div className="hero-mini-visual rounded-[28px] border border-white/12 bg-white/9 p-4">
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/48">
-              Flusso catalogo
-            </p>
-            <div className="mt-4 grid gap-3">
-              {flussoActions.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <a
-                    key={item.title}
-                    href={item.href}
-                    className="flex items-center gap-3 rounded-[20px] border border-white/12 bg-white/8 p-3 transition hover:-translate-y-0.5 hover:border-white/24 hover:bg-white/12"
-                  >
-                    <span className="grid size-10 place-items-center rounded-[16px] bg-white/10 text-white">
-                      <Icon className="size-4" aria-hidden="true" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-white">{item.title}</p>
-                      <p className="text-sm text-white/56">{item.copy}</p>
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
+          <ArchiveFlowPanel />
         </div>
       </section>
 

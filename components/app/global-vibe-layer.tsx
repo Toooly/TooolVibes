@@ -9,12 +9,19 @@ export function GlobalVibeLayer() {
 
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const alreadyShown = window.sessionStorage.getItem("tooolvibes:vibe-layer-shown") === "true";
+
+    if (alreadyShown) {
+      return;
+    }
+
     setDeviceLabel(isMobile ? "mobile" : "desktop");
 
     const openTimer = window.setTimeout(() => {
+      window.sessionStorage.setItem("tooolvibes:vibe-layer-shown", "true");
       setVisible(true);
-    }, 650);
-    const closeTimer = window.setTimeout(() => setVisible(false), 5200);
+    }, 900);
+    const closeTimer = window.setTimeout(() => setVisible(false), 16000);
 
     return () => {
       window.clearTimeout(openTimer);

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { Activity, BellRing, Layers3, MousePointerClick, Radar, X } from "lucide-react";
 
 import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
@@ -32,23 +32,9 @@ export function HomeLiveLayer({
   toolCount: number;
   featuredCount: number;
 }) {
-  const [activeSignal, setActiveSignal] = useState(0);
   const [showHint, setShowHint] = useState(true);
-  const reduceMotion = useReducedMotion();
-  const signal = liveSignals[activeSignal];
+  const signal = liveSignals[0];
   const SignalIcon = signal.icon;
-
-  useEffect(() => {
-    if (reduceMotion) {
-      return;
-    }
-
-    const timer = window.setInterval(() => {
-      setActiveSignal((current) => (current + 1) % liveSignals.length);
-    }, 3200);
-
-    return () => window.clearInterval(timer);
-  }, [reduceMotion]);
 
   return (
     <div className="mt-5 grid gap-3 sm:mt-6">
@@ -65,34 +51,16 @@ export function HomeLiveLayer({
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="live-signal-dot" aria-hidden="true" />
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={signal.label}
-                  className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]"
-                  initial={{ opacity: 0, y: 7, filter: "blur(5px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
-                  transition={{ duration: 0.22 }}
-                >
-                  {signal.label}
-                </motion.p>
-              </AnimatePresence>
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+                {signal.label}
+              </p>
               <PremiumBadge tone="warning" className="hidden sm:inline-flex">
                 Live
               </PremiumBadge>
             </div>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={signal.copy}
-                className="mt-1 text-sm leading-6 text-[var(--muted-strong)]"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.22 }}
-              >
-                {signal.copy}
-              </motion.p>
-            </AnimatePresence>
+            <p className="mt-1 text-sm leading-6 text-[var(--muted-strong)]">
+              {signal.copy}
+            </p>
           </div>
         </div>
 
@@ -112,9 +80,8 @@ export function HomeLiveLayer({
         </div>
       </motion.div>
 
-      <AnimatePresence>
-        {showHint ? (
-          <motion.div
+      {showHint ? (
+        <motion.div
             className="live-hint-popover"
             role="status"
             initial={{ opacity: 0, y: 12, scale: 0.97 }}
@@ -149,21 +116,17 @@ export function HomeLiveLayer({
             >
               <X className="size-3.5" aria-hidden="true" />
             </button>
-          </motion.div>
-        ) : (
-          <motion.button
-            type="button"
-            className="live-hint-restore"
-            onClick={() => setShowHint(true)}
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-          >
-            <Activity className="size-4" aria-hidden="true" />
-            Mostra hint live
-          </motion.button>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      ) : (
+        <button
+          type="button"
+          className="live-hint-restore"
+          onClick={() => setShowHint(true)}
+        >
+          <Activity className="size-4" aria-hidden="true" />
+          Mostra hint live
+        </button>
+      )}
     </div>
   );
 }

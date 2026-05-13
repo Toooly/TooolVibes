@@ -452,7 +452,7 @@ img {
   .mobile-bottom-link {
     position: relative;
     isolation: isolate;
-    transform: translateZ(0);
+    transform: none;
   }
 
   .mobile-bottom-link::after {
@@ -653,6 +653,53 @@ img {
     transform: scaleX(1);
   }
 
+  .mobile-nav-link {
+    gap: 0.65rem;
+  }
+
+  .mobile-nav-link__signal {
+    width: 0.48rem;
+    height: 0.48rem;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 38% 28%, rgba(255, 255, 255, 0.92), transparent 34%),
+      linear-gradient(135deg, rgba(106, 60, 255, 0.88), rgba(57, 210, 246, 0.82));
+    box-shadow: 0 0 0 rgba(106, 60, 255, 0);
+    opacity: 0.38;
+    transform: scale(0.78);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .mobile-nav-link:hover .mobile-nav-link__signal,
+  .mobile-nav-link:focus-visible .mobile-nav-link__signal,
+  .mobile-nav-link[aria-current="page"] .mobile-nav-link__signal {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 18px rgba(106, 60, 255, 0.28);
+  }
+
+  @media (max-width: 1279px) {
+    .mobile-menu-panel .animated-link::after,
+    .mobile-menu-panel .dynamic-link-card::after {
+      display: none;
+    }
+
+    .mobile-menu-panel .animated-link:hover,
+    .mobile-menu-panel .animated-link:focus-visible {
+      transform: none;
+    }
+
+    .mobile-nav-link::before {
+      inset: 0.18rem;
+      border-radius: 16px;
+      transform: scale(0.98);
+    }
+  }
+
   .surface-card {
     background: var(--surface-strong);
     border: 1px solid var(--line);
@@ -773,6 +820,34 @@ img {
     background: var(--gradient-panel-warm);
     box-shadow: var(--shadow-card);
     color: var(--foreground);
+  }
+
+  .footer-motion {
+    border-color: rgba(219, 211, 255, 0.24);
+    background:
+      radial-gradient(circle at 14% 8%, rgba(255, 255, 255, 0.18), transparent 22rem),
+      radial-gradient(circle at 86% 14%, rgba(57, 210, 246, 0.16), transparent 24rem),
+      linear-gradient(145deg, #5e43d6 0%, #40239d 52%, #251261 100%);
+    box-shadow:
+      0 28px 78px rgba(32, 19, 102, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    backdrop-filter: none;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+
+  .footer-motion::before {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 34%),
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.12), transparent 28%);
+    opacity: 0.26;
+  }
+
+  .footer-motion:hover::before,
+  .footer-motion:focus-within::before {
+    opacity: 0.34;
   }
 
   .hero-shell.text-white,
@@ -1741,9 +1816,8 @@ img {
       0 18px 44px rgba(47, 33, 126, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
     color: var(--foreground);
-    transform: translateZ(0);
+    transform: none;
     transition:
-      transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
       border-color 220ms ease,
       box-shadow 260ms ease,
       filter 220ms ease;
@@ -1751,7 +1825,6 @@ img {
 
   .category-tool-card:hover,
   .category-tool-card:focus-within {
-    transform: translateY(-6px) scale(1.006);
     border-color: rgba(196, 181, 253, 0.38);
     box-shadow:
       0 26px 64px rgba(47, 33, 126, 0.13),
@@ -1788,7 +1861,7 @@ img {
 
   .category-tool-card:hover .category-tool-card__tag,
   .category-tool-card:focus-within .category-tool-card__tag {
-    transform: translateY(-1px);
+    border-color: rgba(196, 181, 253, 0.28);
   }
 
   .category-tool-card__header,
@@ -1928,7 +2001,6 @@ img {
     text-overflow: ellipsis;
     white-space: nowrap;
     transition:
-      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
       border-color 180ms ease,
       background 180ms ease;
   }
@@ -1993,8 +2065,15 @@ img {
 
   .category-tool-card__cta {
     min-width: 0;
+    transform: none !important;
     width: 100%;
     white-space: nowrap;
+  }
+
+  .category-tool-card__cta:hover,
+  .category-tool-card__cta:focus-visible,
+  .category-tool-card__cta:active {
+    transform: none !important;
   }
 
   .category-tool-card__icon-button {
@@ -2336,6 +2415,32 @@ img {
 
   .brand-mark__aura {
     animation: tv-logo-aura 4.8s ease-in-out infinite;
+  }
+
+  .brand-mark__ember {
+    z-index: 2;
+    background:
+      radial-gradient(circle at 52% 68%, rgba(246, 199, 97, 0.46), transparent 34%),
+      radial-gradient(circle at 42% 42%, rgba(106, 60, 255, 0.28), transparent 48%),
+      radial-gradient(circle at 58% 34%, rgba(94, 226, 255, 0.22), transparent 54%);
+    filter: blur(4px);
+    mix-blend-mode: screen;
+    opacity: 0.62;
+    transform-origin: 50% 68%;
+    animation: tv-brand-ember 3.8s ease-in-out infinite;
+  }
+
+  .brand-mark__steam {
+    z-index: 2;
+    background:
+      radial-gradient(ellipse at 38% 70%, rgba(246, 199, 97, 0.26), transparent 32%),
+      radial-gradient(ellipse at 60% 52%, rgba(94, 226, 255, 0.18), transparent 38%),
+      linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+    filter: blur(5px);
+    mix-blend-mode: screen;
+    opacity: 0.34;
+    transform-origin: 50% 82%;
+    animation: tv-brand-steam 4.6s ease-in-out infinite;
   }
 
   a:hover .brand-mark,
@@ -5524,6 +5629,64 @@ img {
   }
 }
 
+@keyframes tv-brand-ember {
+  0%,
+  100% {
+    opacity: 0.46;
+    transform: translateY(1px) scale(0.96);
+  }
+
+  45% {
+    opacity: 0.82;
+    transform: translateY(-1px) scale(1.08);
+  }
+
+  72% {
+    opacity: 0.58;
+    transform: translateY(0) scale(1.01);
+  }
+}
+
+@keyframes tv-brand-steam {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: translateY(5px) scaleX(0.92) scaleY(0.88);
+  }
+
+  42% {
+    opacity: 0.42;
+    transform: translateY(-5px) scaleX(1.08) scaleY(1.08);
+  }
+
+  68% {
+    opacity: 0.28;
+    transform: translateY(-2px) scaleX(0.98) scaleY(1);
+  }
+}
+
+@keyframes tv-sonic-tap {
+  0% {
+    transform: scale(1);
+    filter: saturate(1);
+  }
+
+  38% {
+    transform: scale(0.975);
+    filter: saturate(1.12);
+  }
+
+  72% {
+    transform: scale(1.018);
+    filter: saturate(1.06);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: saturate(1);
+  }
+}
+
 @keyframes tv-button-shimmer {
   from {
     transform: translateX(-40%) skewX(-18deg);
@@ -5852,11 +6015,9 @@ img {
   main .page-shell > section,
   main .page-shell > .premium-panel,
   main .category-tool-carousel,
-  main .premium-card,
-  footer .premium-panel {
-    animation: tv-fade-up both;
-    animation-timeline: view();
-    animation-range: entry 0% cover 24%;
+  main .premium-card {
+    animation: none;
+    animation-timeline: auto;
   }
 
   main .page-shell > section:first-child {
@@ -5908,6 +6069,147 @@ img {
 
   100% {
     transform: scale(1);
+  }
+}
+
+@layer components {
+  .premium-button,
+  .premium-badge::after,
+  .tool-glyph-logo,
+  .tool-glyph-motion,
+  .tool-glyph-motion::before,
+  .tool-glyph-motion::after,
+  .dynamic-card,
+  .dynamic-link-card,
+  .dynamic-card:not(:hover):not(:focus-within)::before,
+  .dynamic-link-card:not(:hover):not(:focus-visible)::before,
+  .dynamic-card:not(:hover):not(:focus-within)::after,
+  .dynamic-link-card:not(:hover):not(:focus-visible)::after,
+  .category-tool-carousel__dot.is-active,
+  .live-signal-dot,
+  .live-icon-orbit::after,
+  .live-signal-card::after,
+  .live-hint-popover,
+  .animated-status-badge::after,
+  .brand-mark,
+  .brand-mark::after,
+  .brand-mark img,
+  .brand-mark__aura,
+  .hero-shell::after,
+  .global-vibe-toast,
+  .global-vibe-toast::before,
+  .global-vibe-toast__icon,
+  .global-vibe-toast__spark {
+    animation: none !important;
+  }
+
+  .premium-panel,
+  .surface-card,
+  .premium-button-secondary,
+  .micro-popover-panel,
+  .live-hint-popover,
+  .site-header-motion > div {
+    backdrop-filter: none !important;
+  }
+
+  .premium-button,
+  .dynamic-card,
+  .dynamic-link-card,
+  .category-tool-card,
+  .premium-card,
+  .animated-link {
+    transition-duration: 150ms !important;
+  }
+
+  @media (max-width: 1023px) {
+    .hero-shell::after,
+    .premium-panel::before,
+    .dynamic-card::before,
+    .dynamic-card::after,
+    .dynamic-link-card::before,
+    .dynamic-link-card::after,
+    .category-tool-card__aura,
+    .live-signal-card::after,
+    .live-icon-orbit::after,
+    .brand-mark__aura {
+      display: none !important;
+    }
+
+    .tool-glyph-logo,
+    .category-tool-card:hover .category-tool-card__glyph,
+    .category-tool-card:focus-within .category-tool-card__glyph,
+    .premium-card:hover svg,
+    .premium-card:focus-within svg,
+    .premium-panel :is(a, button):not(.premium-button):hover svg,
+    .group:hover .tool-glyph-motion {
+      filter: none !important;
+    }
+  }
+
+  @supports (content-visibility: auto) {
+    main > div > section.page-shell:not(:first-child),
+    main > div > .page-shell:not(:first-child),
+    main .category-tool-carousel {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 44rem;
+    }
+
+    main > div > section.page-shell:first-child,
+    main > div > .page-shell:first-child {
+      content-visibility: visible;
+      contain-intrinsic-size: auto;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .brand-mark::after {
+    animation: tv-logo-scan 8.8s linear infinite !important;
+  }
+
+  .brand-mark img {
+    animation: tv-logo-breathe 5.8s ease-in-out infinite !important;
+  }
+
+  .brand-mark__aura,
+  .brand-mark__ember,
+  .brand-mark__steam {
+    display: block !important;
+  }
+
+  .brand-mark__aura {
+    animation: tv-logo-aura 5.4s ease-in-out infinite !important;
+  }
+
+  .brand-mark__ember {
+    animation: tv-brand-ember 3.8s ease-in-out infinite !important;
+  }
+
+  .brand-mark__steam {
+    animation: tv-brand-steam 4.6s ease-in-out infinite !important;
+  }
+
+  .is-sonic-tap:is(.premium-button, .dynamic-link-card, .animated-link, summary, [role="button"]),
+  .brand-mark.is-sonic-tap {
+    animation: tv-sonic-tap 420ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
+  }
+
+  .premium-button.is-sonic-tap::after {
+    opacity: 0.82;
+    transform: translateX(520%) skewX(-18deg);
+    transition-duration: 420ms;
+  }
+
+  @media (max-width: 1023px) {
+    .brand-mark__steam {
+      opacity: 0.22;
+      filter: blur(4px);
+    }
+
+    .brand-mark__ember {
+      opacity: 0.48;
+      filter: blur(3px);
+    }
   }
 }
 

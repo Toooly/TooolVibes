@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown, Sparkles } from "lucide-react";
 
@@ -41,10 +41,10 @@ function ProductHuntSkeleton() {
           key={index}
           className="flex items-center gap-3 rounded-[20px] border border-white/12 bg-white/9 p-3"
         >
-          <div className="h-10 w-10 animate-pulse rounded-2xl bg-white/10" />
+          <div className="h-10 w-10 rounded-2xl bg-white/10" />
           <div className="min-w-0 flex-1 space-y-2">
-            <div className="h-3 w-2/5 animate-pulse rounded-full bg-white/14" />
-            <div className="h-3 w-4/5 animate-pulse rounded-full bg-white/8" />
+            <div className="h-3 w-2/5 rounded-full bg-white/14" />
+            <div className="h-3 w-4/5 rounded-full bg-white/8" />
           </div>
         </div>
       ))}
@@ -77,13 +77,35 @@ export function ProductHuntRankings({
   const [payloads, setPayloads] = useState<Partial<Record<ProductHuntRange, ProductHuntPayload>>>(
     {},
   );
-  const [loadingRange, setLoadingRange] = useState<ProductHuntRange | null>("day");
+  const [loadingRange, setLoadingRange] = useState<ProductHuntRange | null>(null);
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || shouldLoad) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "360px 0px" },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [shouldLoad]);
 
   useEffect(() => {
     let isMounted = true;
 
-    if (payloads[activeRange]) {
+    if (!shouldLoad || payloads[activeRange]) {
       return;
     }
 
@@ -129,7 +151,7 @@ export function ProductHuntRankings({
     return () => {
       isMounted = false;
     };
-  }, [activeRange, payloads]);
+  }, [activeRange, payloads, shouldLoad]);
 
   useEffect(() => {
     setExpandedItemId(null);
@@ -143,6 +165,7 @@ export function ProductHuntRankings({
 
   return (
     <section
+      ref={sectionRef}
       id="product-hunt"
       className={cn(
         "premium-card motion-reveal p-4 text-white sm:p-5",
@@ -150,7 +173,7 @@ export function ProductHuntRankings({
         className,
       )}
       aria-labelledby="product-hunt-title"
-      aria-busy={loadingRange === activeRange && !activePayload}
+      aria-busy={shouldLoad && loadingRange === activeRange && !activePayload}
     >
       <div className={cn(
         "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between",
@@ -233,7 +256,9 @@ export function ProductHuntRankings({
       </div>
 
       <div className={cn("mt-4 min-h-[12rem] sm:min-h-[21rem]", variant === "wide" && "lg:min-h-0")}>
-        {loadingRange === activeRange && !activePayload ? (
+        {!shouldLoad && !activePayload ? (
+          <ProductHuntSkeleton />
+        ) : shouldLoad && loadingRange === activeRange && !activePayload ? (
           <ProductHuntSkeleton />
         ) : activePayload?.status === "ok" && activePayload.items.length > 0 ? (
           <AnimatePresence mode="wait">

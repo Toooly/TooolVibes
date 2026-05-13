@@ -647,6 +647,52 @@ export function ToolDiscoveryApp({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
+  useEffect(() => {
+    function scrollToElement(id: string) {
+      document.getElementById(id)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+
+    function handleCatalogFlow(event: Event) {
+      const action = (event as CustomEvent<"search" | "filters" | "stack">).detail;
+
+      if (action === "search") {
+        setActiveTab("all");
+        scrollToElement("archive-search");
+        window.requestAnimationFrame(() => {
+          searchInputRef.current?.focus({ preventScroll: true });
+        });
+        return;
+      }
+
+      if (action === "filters") {
+        scrollToElement("archive-filters");
+        if (window.matchMedia("(max-width: 1023px)").matches) {
+          setFilterDrawerOpen(true);
+        }
+        return;
+      }
+
+      if (action === "stack") {
+        setActiveTab("stack");
+        const mobileWorkspace = document.getElementById("mobile-workspace");
+        if (mobileWorkspace instanceof HTMLDetailsElement) {
+          mobileWorkspace.open = true;
+        }
+        scrollToElement(
+          window.matchMedia("(max-width: 1023px)").matches
+            ? "mobile-workspace"
+            : "stack-builder",
+        );
+      }
+    }
+
+    window.addEventListener("tooolvibes:catalog-flow", handleCatalogFlow);
+    return () => window.removeEventListener("tooolvibes:catalog-flow", handleCatalogFlow);
+  }, []);
+
   function handleSave(tool: DirectoryTool) {
     const saved = toggleSaved(tool.slug);
     toast.success(saved ? `${tool.name} salvato` : `${tool.name} rimosso dai salvati`);
@@ -898,7 +944,10 @@ export function ToolDiscoveryApp({
         </div>
 
         <div className="grid gap-2 lg:hidden">
-          <details className="mobile-native-accordion rounded-[20px] border border-[var(--line)] bg-white/72 px-4 py-3">
+          <details
+            id="mobile-workspace"
+            className="mobile-native-accordion scroll-mt-28 rounded-[20px] border border-[var(--line)] bg-white/72 px-4 py-3"
+          >
             <summary>Workspace mobile</summary>
             <div className="mt-3 grid grid-cols-3 gap-2">
               {[
@@ -1078,7 +1127,7 @@ export function ToolDiscoveryApp({
               </DrawerClose>
             </div>
           </DrawerHeader>
-          <div className="p-5">
+          <div data-vaul-no-drag className="p-5">
             <FilterControls
               activeGroup={activeGroup}
               activeLevel={activeLevel}
@@ -1090,7 +1139,7 @@ export function ToolDiscoveryApp({
               dark
             />
           </div>
-          <DrawerFooter className="grid grid-cols-2 gap-2 border-t border-white/10 bg-white/6 p-5">
+          <DrawerFooter data-vaul-no-drag className="grid grid-cols-2 gap-2 border-t border-white/10 bg-white/6 p-5">
             <PremiumButton type="button" tone="secondary" onClick={resetFilters}>
               Reset
             </PremiumButton>

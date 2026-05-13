@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { GlobalCommandPalette } from "@/components/app/global-command-palette";
 import { GlobalVibeLayer } from "@/components/app/global-vibe-layer";
+import { InteractionSoundLayer } from "@/components/app/interaction-sound-layer";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -26,6 +27,7 @@ export function RootProviders({ children }: { children: React.ReactNode }) {
       <TooltipProvider delay={180}>
         {children}
         <GlobalVibeLayer />
+        <InteractionSoundLayer />
         <GlobalCommandPalette />
         <Toaster position="top-right" richColors closeButton />
       </TooltipProvider>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Bookmark,
   Check,
@@ -162,11 +162,15 @@ function ToolCarouselCard({
           <time dateTime={tool.publishedAt}>{formatItalianDate(tool.publishedAt)}</time>
         </div>
 
-        <div className="category-tool-card__actions">
+        <div
+          className="category-tool-card__actions"
+          onPointerDown={(event) => event.stopPropagation()}
+        >
           <PremiumButton
             type="button"
             size="sm"
             tone="premium"
+            onMouseDown={(event) => event.preventDefault()}
             onClick={onOpen}
             className="category-tool-card__cta"
           >
@@ -208,14 +212,18 @@ export function CategoryToolCarousel({
   onStack,
 }: CategoryToolCarouselProps) {
   const railRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef({ active: false, startX: 0, scrollLeft: 0 });
+  const frameRef = useRef<number | null>(null);
   const [state, setState] = useState<CarouselState>({
     canPrev: false,
     canNext: false,
     currentPage: 1,
     totalPages: 1,
   });
-  const [isDragging, setIsDragging] = useState(false);
+  const stateRef = useRef(state);
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   const updateState = useCallback(() => {
     const rail = railRef.current;
@@ -230,13 +238,35 @@ export function CategoryToolCarousel({
       Math.max(1, Math.round(rail.scrollLeft / Math.max(1, pageStep)) + 1),
     );
 
-    setState({
+    const nextState = {
       canPrev: rail.scrollLeft > 3,
       canNext: rail.scrollLeft < maxScroll - 3,
       currentPage,
       totalPages,
-    });
+    };
+
+    const current = stateRef.current;
+    if (
+      current.canPrev !== nextState.canPrev ||
+      current.canNext !== nextState.canNext ||
+      current.currentPage !== nextState.currentPage ||
+      current.totalPages !== nextState.totalPages
+    ) {
+      stateRef.current = nextState;
+      setState(nextState);
+    }
   }, [tools.length]);
+
+  const requestStateUpdate = useCallback(() => {
+    if (frameRef.current !== null) {
+      return;
+    }
+
+    frameRef.current = window.requestAnimationFrame(() => {
+      frameRef.current = null;
+      updateState();
+    });
+  }, [updateState]);
 
   useEffect(() => {
     const rail = railRef.current;
@@ -244,20 +274,21 @@ export function CategoryToolCarousel({
       return;
     }
 
-    const updateOnFrame = () => window.requestAnimationFrame(updateState);
-    const resizeObserver = new ResizeObserver(updateOnFrame);
+    const resizeObserver = new ResizeObserver(requestStateUpdate);
 
     updateState();
     resizeObserver.observe(rail);
-    rail.addEventListener("scroll", updateOnFrame, { passive: true });
-    window.addEventListener("resize", updateOnFrame);
+    rail.addEventListener("scroll", requestStateUpdate, { passive: true });
 
     return () => {
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
       resizeObserver.disconnect();
-      rail.removeEventListener("scroll", updateOnFrame);
-      window.removeEventListener("resize", updateOnFrame);
+      rail.removeEventListener("scroll", requestStateUpdate);
     };
-  }, [updateState]);
+  }, [requestStateUpdate, updateState]);
 
   const scrollByPage = useCallback((direction: -1 | 1) => {
     const rail = railRef.current;
@@ -271,50 +302,6 @@ export function CategoryToolCarousel({
       : Math.max(0, rail.scrollLeft - pageStep);
 
     rail.scrollTo({ left: target, behavior: "smooth" });
-  }, []);
-
-  const handlePointerDown = useCallback((event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === "mouse" && event.button !== 0) {
-      return;
-    }
-
-    const target = event.target as HTMLElement;
-    if (target.closest("button,a,input,select,textarea")) {
-      return;
-    }
-
-    const rail = railRef.current;
-    if (!rail) {
-      return;
-    }
-
-    dragRef.current = {
-      active: true,
-      startX: event.clientX,
-      scrollLeft: rail.scrollLeft,
-    };
-    setIsDragging(true);
-    rail.setPointerCapture(event.pointerId);
-  }, []);
-
-  const handlePointerMove = useCallback((event: PointerEvent<HTMLDivElement>) => {
-    const rail = railRef.current;
-    if (!rail || !dragRef.current.active) {
-      return;
-    }
-
-    const delta = event.clientX - dragRef.current.startX;
-    rail.scrollLeft = dragRef.current.scrollLeft - delta;
-  }, []);
-
-  const endDrag = useCallback((event: PointerEvent<HTMLDivElement>) => {
-    const rail = railRef.current;
-    if (rail?.hasPointerCapture(event.pointerId)) {
-      rail.releasePointerCapture(event.pointerId);
-    }
-
-    dragRef.current.active = false;
-    setIsDragging(false);
   }, []);
 
   const scrollToPage = useCallback((pageIndex: number) => {
@@ -389,12 +376,7 @@ export function CategoryToolCarousel({
       <div className="category-tool-carousel__viewport">
         <div
           ref={railRef}
-          className={cn("category-tool-carousel__track", isDragging && "is-dragging")}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
-          onLostPointerCapture={endDrag}
+          className="category-tool-carousel__track"
         >
           {tools.map((tool) => (
             <ToolCarouselCard

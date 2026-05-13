@@ -186,27 +186,27 @@ export function DirectoryWeeklySpotlight({
           {supportingTools.map((tool) => (
             <article
               key={tool.slug}
-              className="dynamic-card group w-[min(78vw,19rem)] shrink-0 snap-start rounded-[26px] border border-white/12 bg-white/9 p-4 text-white transition duration-200 hover:-translate-y-1 hover:border-violet-200/36 hover:bg-white/14 hover:shadow-[0_18px_44px_rgba(8,14,38,0.2)] md:w-auto"
+              className="dynamic-card group w-[min(78vw,19rem)] shrink-0 snap-start rounded-[26px] border border-[rgba(76,55,166,0.14)] bg-white/[0.82] p-4 text-[var(--foreground)] transition duration-200 hover:-translate-y-1 hover:border-[rgba(106,60,255,0.26)] hover:bg-white/95 hover:shadow-[0_18px_44px_rgba(47,33,126,0.12)] md:w-auto"
             >
               <div className="flex items-start gap-3">
                 <DirectoryToolGlyph tool={tool} size="md" />
                 <div className="min-w-0">
-                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/44">
+                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
                     Alternativa
                   </p>
-                  <h3 className="mt-1 truncate text-[1.05rem] font-semibold text-white">
+                  <h3 className="mt-1 truncate text-[1.05rem] font-semibold text-[var(--foreground)]">
                     {tool.name}
                   </h3>
                 </div>
               </div>
-              <p className="text-clamp-3 mt-4 text-sm leading-6 text-white/66">
+              <p className="text-clamp-3 mt-4 text-sm leading-6 text-[var(--muted-strong)]">
                 {tool.shortDescription}
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {tool.highlights.slice(0, 2).map((item) => (
                   <span
                     key={item}
-                    className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.62rem] font-semibold text-white/58"
+                    className="rounded-full border border-[rgba(76,55,166,0.12)] bg-[rgba(106,60,255,0.06)] px-2.5 py-1 text-[0.62rem] font-semibold text-[var(--muted-strong)]"
                   >
                     {item}
                   </span>
