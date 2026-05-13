@@ -1072,7 +1072,7 @@ export function ToolDiscoveryApp({
                 <EmptyState
                   icon={Columns3}
                   title="Nessun confronto attivo."
-                  description="Aggiungi fino a 4 tool per confrontare categoria, fonte, use case e link senza aprire mille tab."
+                  description={`Aggiungi fino a ${MAX_COMPARE_TOOLS} tool per confrontare categoria, fonte, use case e link senza aprire mille tab.`}
                   className="p-4"
                   dark
                 />

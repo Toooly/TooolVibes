@@ -6,6 +6,7 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 
 const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-v1";
 const INTRO_TEXT = "TOOOLVIBES";
+const INTRO_DURATION_MS = 4680;
 
 export function HomeBrandIntro() {
   const [phase, setPhase] = useState<"hidden" | "active" | "leaving">("hidden");
@@ -44,7 +45,7 @@ export function HomeBrandIntro() {
     setPhase("active");
 
     timersRef.current.push(
-      window.setTimeout(() => finishIntro(false), 3120),
+      window.setTimeout(() => finishIntro(false), INTRO_DURATION_MS),
     );
 
     return () => {
@@ -60,8 +61,13 @@ export function HomeBrandIntro() {
   return (
     <div className={`brand-intro ${phase === "leaving" ? "is-leaving" : ""}`}>
       <div className="brand-intro__field" aria-hidden="true">
+        <span className="brand-intro__starfield brand-intro__starfield--one" />
+        <span className="brand-intro__starfield brand-intro__starfield--two" />
+        <span className="brand-intro__comet brand-intro__comet--one" />
+        <span className="brand-intro__comet brand-intro__comet--two" />
         <span className="brand-intro__orbit brand-intro__orbit--one" />
         <span className="brand-intro__orbit brand-intro__orbit--two" />
+        <span className="brand-intro__orbit brand-intro__orbit--three" />
         <span className="brand-intro__singularity" />
         <span className="brand-intro__word" aria-label="TOOOLVIBES">
           {INTRO_TEXT.split("").map((letter, index) => (
@@ -83,6 +89,10 @@ export function HomeBrandIntro() {
         <span className="brand-intro__logo-shell">
           <span className="brand-intro__burst" />
           <BrandLogo size={118} priority className="brand-intro__logo" />
+        </span>
+        <span className="brand-intro__caption">Discovery platform online</span>
+        <span className="brand-intro__charge">
+          <span />
         </span>
       </div>
 

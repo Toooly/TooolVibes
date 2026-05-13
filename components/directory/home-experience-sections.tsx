@@ -76,7 +76,7 @@ const steps = [
   },
   {
     title: "Confronta",
-    text: "Seleziona fino a 4 tool e valuta differenze reali: fonte, categoria e use case.",
+    text: "Seleziona fino a 5 tool e valuta differenze reali: fonte, categoria e use case.",
     icon: GitCompare,
   },
   {

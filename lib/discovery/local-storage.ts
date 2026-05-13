@@ -5,6 +5,8 @@ import type {
 } from "@/lib/discovery/types";
 import { normalizeDiscoveryWorkspaceState } from "@/lib/discovery/workspace-state";
 
+const MAX_COMPARE_TOOLS = 5;
+
 type DiscoverySyncSource = "local" | "remote";
 type WriteOptions = {
   dispatch?: boolean;
@@ -486,7 +488,7 @@ export function toggleCompareTool(slug: string) {
     return next;
   }
 
-  const next = [...current, slug].slice(-3);
+  const next = [...current, slug].slice(-MAX_COMPARE_TOOLS);
   writeList(DISCOVERY_STORAGE_KEYS.compare, next, {
     dispatch: false,
     source: "local",

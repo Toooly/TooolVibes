@@ -1,10 +1,10 @@
 "use client";
 
-import { Fragment, useMemo } from "react";
+import { Fragment, type CSSProperties, useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
 import { clearCompareTools } from "@/lib/discovery/local-storage";
 import {
@@ -36,6 +36,97 @@ const dimensionReadingCopy: Record<EditorialScoreDimension, string> = {
   experimentation_value: "Quanto apre strade nuove da provare davvero.",
   editorial_conviction: "Quanto merita di restare nel radar TooolVibes.",
 };
+
+function LegacyCompareMobileDeck({
+  tools,
+  scorecardsByTool,
+  leadCountsByTool,
+}: {
+  tools: ToolRecord[];
+  scorecardsByTool: Record<string, ReturnType<typeof getEditorialScorecard>>;
+  leadCountsByTool: Record<string, number>;
+}) {
+  return (
+    <div className="compare-mobile-deck md:hidden">
+      <section className="compare-mobile-hero">
+        <p className="editorial-label">Confronto mobile</p>
+        <h3 className="text-display-card mt-1 text-[1.28rem] text-[var(--foreground)]">
+          Score card verticale, niente tabella.
+        </h3>
+        <p className="mt-3 text-[0.92rem] leading-6 text-[var(--muted-strong)]">
+          Sul telefono leggi ogni tool come una scheda decisionale: punteggio, dimensioni forti e nota.
+        </p>
+      </section>
+
+      <div className="grid gap-3">
+        {tools.map((tool, index) => {
+          const scorecard = scorecardsByTool[tool.slug] ?? [];
+          const averageStrength = scorecard.length
+            ? Math.round((scorecard.reduce((sum, item) => sum + item.strength, 0) / scorecard.length) * 20)
+            : 0;
+
+          return (
+            <article
+              key={`legacy-mobile-${tool.slug}`}
+              className="compare-mobile-card"
+              style={
+                {
+                  "--compare-a": "var(--accent)",
+                  "--compare-b": "var(--cyan)",
+                  "--compare-score-angle": `${averageStrength * 3.6}deg`,
+                } as CSSProperties
+              }
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="editorial-label">{tool.category}</p>
+                  <h3 className="text-display-card mt-2 text-[1.35rem] leading-tight">
+                    {index + 1}. {tool.name}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
+                    {getToolEditorialState(tool)}
+                  </p>
+                </div>
+                <div className="compare-mobile-score-ring" aria-label={`Score ${averageStrength} su 100`}>
+                  <span>{averageStrength}</span>
+                  <small>/100</small>
+                </div>
+              </div>
+
+              <div className="compare-mobile-metrics">
+                <div>
+                  <span>Picchi</span>
+                  <strong>{leadCountsByTool[tool.slug] ?? 0}</strong>
+                </div>
+                <div>
+                  <span>Tag</span>
+                  <strong>{tool.tags.length}</strong>
+                </div>
+                <div>
+                  <span>Fonte</span>
+                  <strong>{getToolPricing(tool)}</strong>
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-2.5">
+                {scorecard.slice(0, 3).map((entry) => (
+                  <div key={`${tool.slug}-${entry.key}`} className="compare-mobile-line">
+                    <span>{entry.label}</span>
+                    <p>{entry.descriptor}</p>
+                  </div>
+                ))}
+                <div className="compare-mobile-line">
+                  <span>Nota editoriale</span>
+                  <p>{getToolEditorialNote(tool)}</p>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export function CompareBoard({ tools }: CompareBoardProps) {
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
@@ -124,7 +215,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
       >
         <p className="pill mx-auto">Compare layer</p>
         <h2 className="text-display-card mx-auto mt-4 max-w-none text-[1.72rem] sm:max-w-[16ch] sm:text-[2.08rem] sm:text-balance">
-          Il compare ha senso solo con 2 o 3 candidati veri.
+          Il compare ha senso con pochi candidati veri.
         </h2>
         <p className="text-body-soft mx-auto mt-3 max-w-[31rem] text-[0.93rem]" style={{ color: "var(--muted)" }}>
           Aggiungi pochi tool dalle card, dai profili o dalla shortlist. Il confronto serve a far
@@ -209,7 +300,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="editorial-label">Compare attivo</span>
-              <span className="selection-status">{comparedTools.length} tool affiancati</span>
+              <span className="selection-status">{comparedTools.length}/{MAX_COMPARE_TOOLS} tool affiancati</span>
             </div>
             <p className="text-body-soft mt-2 text-[0.92rem]" style={{ color: "var(--muted)" }}>
               Prima guarda il distacco vero. Poi leggi i dettagli che chiudono il verdetto.
@@ -241,7 +332,13 @@ export function CompareBoard({ tools }: CompareBoardProps) {
             : "Il compare serve a far emergere differenze vere, non a costruire una matrice infinita."}
         </p>
 
-        <div className="compare-score-shell tool-rail mt-5 overflow-x-auto rounded-[26px] border" style={{ borderColor: "var(--line)" }}>
+        <LegacyCompareMobileDeck
+          tools={comparedTools}
+          scorecardsByTool={scorecardsByTool}
+          leadCountsByTool={leadCountsByTool}
+        />
+
+        <div className="compare-score-shell tool-rail mt-5 hidden overflow-x-auto rounded-[26px] border md:block" style={{ borderColor: "var(--line)" }}>
           <div
             className="compare-score-grid min-w-[48rem]"
             style={{
@@ -316,11 +413,11 @@ export function CompareBoard({ tools }: CompareBoardProps) {
         </div>
       </div>
 
-      <div className="tool-rail -mx-1.5 flex snap-x gap-3 overflow-x-auto px-1.5 pb-1 md:hidden">
+      <div className="grid gap-3 md:hidden">
         {comparedTools.map((tool) => (
           <article
             key={`snapshot-mobile-${tool.slug}`}
-            className="metadata-block w-[min(19.75rem,calc(100vw-2.75rem))] shrink-0 snap-start rounded-[28px] px-5 py-5"
+            className="metadata-block rounded-[28px] px-5 py-5"
           >
             <p className="editorial-label">Snapshot decisionale</p>
             <p className="text-display-card mt-2 text-[1.24rem]">{tool.name}</p>

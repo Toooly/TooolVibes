@@ -15,7 +15,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { directoryTools } from "@/lib/data/tooolvibes-directory";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 export function GlobalCommandPalette() {
   const router = useRouter();
@@ -137,7 +137,7 @@ export function GlobalCommandPalette() {
               onSelect={() => {
                 const result = toggleCompare(tool.slug);
                 if (result.limited) {
-                  toast.warning("Puoi confrontare fino a 4 tool alla volta.");
+                  toast.warning(`Puoi confrontare fino a ${MAX_COMPARE_TOOLS} tool alla volta.`);
                 } else {
                   toast.success(
                     result.added

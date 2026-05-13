@@ -38,7 +38,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
             {[
               { icon: Search, label: "Ricerca semantica", copy: "Nome, tag, use case e categoria." },
               { icon: SlidersHorizontal, label: "Filtri puliti", copy: "Solo ciò che serve all'inizio." },
-              { icon: GitCompare, label: "Confronto", copy: "Fino a 4 candidati alla volta." },
+              { icon: GitCompare, label: "Confronto", copy: "Fino a 5 candidati alla volta." },
               { icon: Bookmark, label: "Shortlist", copy: "Salva e riprendi il percorso." },
             ].map((item) => {
               const Icon = item.icon;

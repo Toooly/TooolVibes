@@ -15,7 +15,7 @@ export default async function ComparePage() {
       <SurfaceIntro
         eyebrow="Compare"
         title="Il punto in cui i candidati smettono di somigliarsi."
-        description="Metti 2 o 3 profili uno accanto all'altro e leggi il distacco vero prima di scegliere."
+        description="Metti fino a 5 profili uno accanto all'altro e leggi il distacco vero prima di scegliere."
         helperEyebrow="Come leggerlo"
         helperCopy="Parti dal workflow fit. Pricing, piattaforme e nota editoriale servono solo a chiudere il verdetto."
         actions={

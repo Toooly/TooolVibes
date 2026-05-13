@@ -66,19 +66,30 @@ function addPulse(element: HTMLElement) {
   });
 }
 
-function spawnSingularity(event: PointerEvent, kind: SoundKind) {
+function spawnSingularityAt(clientX: number, clientY: number, kind: SoundKind, isTouchLike: boolean) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return;
   }
 
   const pulse = document.createElement("span");
-  pulse.className = `sonic-singularity sonic-singularity--${kind}`;
+  pulse.className = `sonic-singularity sonic-singularity--${kind} ${
+    isTouchLike ? "sonic-singularity--touch" : "sonic-singularity--pointer"
+  }`;
   pulse.setAttribute("aria-hidden", "true");
-  pulse.style.left = `${event.clientX}px`;
-  pulse.style.top = `${event.clientY}px`;
+  pulse.style.left = `${clientX}px`;
+  pulse.style.top = `${clientY}px`;
 
   document.body.appendChild(pulse);
   window.setTimeout(() => pulse.remove(), 820);
+}
+
+function spawnSingularity(event: PointerEvent, kind: SoundKind) {
+  const isTouchLike =
+    event.pointerType === "touch" ||
+    window.innerWidth < 768 ||
+    window.matchMedia("(pointer: coarse)").matches;
+
+  spawnSingularityAt(event.clientX, event.clientY, kind, isTouchLike);
 }
 
 function playTone(context: AudioContext, kind: SoundKind) {
@@ -131,6 +142,24 @@ export function InteractionSoundLayer() {
   const lastPlayedRef = useRef(0);
 
   useEffect(() => {
+    function playInteractionTone(soundKind: SoundKind) {
+      const AudioContextConstructor =
+        window.AudioContext ??
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextConstructor) {
+        return;
+      }
+
+      const context = audioRef.current ?? new AudioContextConstructor();
+      audioRef.current = context;
+
+      if (context.state === "suspended") {
+        void context.resume();
+      }
+
+      playTone(context, soundKind);
+    }
+
     function handlePointerDown(event: PointerEvent) {
       if (event.pointerType === "mouse" && event.button !== 0) {
         return;
@@ -159,27 +188,73 @@ export function InteractionSoundLayer() {
 
       addPulse(target);
       spawnSingularity(event, soundKind);
+      playInteractionTone(soundKind);
+    }
 
-      const AudioContextConstructor =
-        window.AudioContext ??
-        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (!AudioContextConstructor) {
+    function handleTouchStart(event: TouchEvent) {
+      const touch = event.changedTouches[0];
+      const target = event.target instanceof Element
+        ? event.target.closest<HTMLElement>(INTERACTIVE_SELECTOR)
+        : null;
+
+      if (
+        !touch ||
+        !target ||
+        target.matches("input, textarea, select") ||
+        target.getAttribute("aria-disabled") === "true" ||
+        (target instanceof HTMLButtonElement && target.disabled)
+      ) {
         return;
       }
 
-      const context = audioRef.current ?? new AudioContextConstructor();
-      audioRef.current = context;
+      const now = performance.now();
+      if (now - lastPlayedRef.current < 70) {
+        return;
+      }
+      lastPlayedRef.current = now;
 
-      if (context.state === "suspended") {
-        void context.resume();
+      const soundKind = getSoundKind(target);
+
+      addPulse(target);
+      spawnSingularityAt(touch.clientX, touch.clientY, soundKind, true);
+      playInteractionTone(soundKind);
+    }
+
+    function handleClick(event: MouseEvent) {
+      const target = event.target instanceof Element
+        ? event.target.closest<HTMLElement>(INTERACTIVE_SELECTOR)
+        : null;
+
+      if (
+        !target ||
+        target.matches("input, textarea, select") ||
+        target.getAttribute("aria-disabled") === "true" ||
+        (target instanceof HTMLButtonElement && target.disabled)
+      ) {
+        return;
       }
 
-      playTone(context, soundKind);
+      const now = performance.now();
+      if (now - lastPlayedRef.current < 260) {
+        return;
+      }
+      lastPlayedRef.current = now;
+
+      const soundKind = getSoundKind(target);
+      const isTouchLike = window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches;
+
+      addPulse(target);
+      spawnSingularityAt(event.clientX, event.clientY, soundKind, isTouchLike);
+      playInteractionTone(soundKind);
     }
 
     window.addEventListener("pointerdown", handlePointerDown, { passive: true, capture: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true, capture: true });
+    window.addEventListener("click", handleClick, { passive: true, capture: true });
     return () => {
       window.removeEventListener("pointerdown", handlePointerDown, { capture: true });
+      window.removeEventListener("touchstart", handleTouchStart, { capture: true });
+      window.removeEventListener("click", handleClick, { capture: true });
       void audioRef.current?.close();
       audioRef.current = null;
     };

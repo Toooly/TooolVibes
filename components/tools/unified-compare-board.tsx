@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Columns3, Sparkles, X } from "lucide-react";
+import { ArrowRight, CheckCircle2, Columns3, Gauge, PieChart, Sparkles, X } from "lucide-react";
 
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import { PremiumBadge, PremiumButton, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import { EmptyState } from "@/components/ui/premium-section";
 import { CompareBoard } from "@/components/tools/compare-board";
 import { levelRank, type DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolRecord } from "@/lib/types/tool";
 
 type UnifiedCompareBoardProps = {
@@ -36,6 +36,23 @@ const compareRows: {
   { label: "Fonte", value: (tool) => tool.domain },
 ];
 
+const directoryScoreByLevel: Record<DirectoryTool["level"], number> = {
+  featured: 91,
+  beginner: 72,
+  intermediate: 82,
+  expert: 87,
+};
+
+function getDirectoryToolScore(tool: DirectoryTool) {
+  return Math.min(
+    98,
+    directoryScoreByLevel[tool.level] +
+      (tool.toolOfWeek ? 4 : 0) +
+      (tool.featured ? 2 : 0) +
+      Math.min(tool.highlights.length, 3),
+  );
+}
+
 function getLeadTool(tools: DirectoryTool[]) {
   return [...tools].sort((left, right) => {
     if (Number(right.toolOfWeek) !== Number(left.toolOfWeek)) {
@@ -48,6 +65,131 @@ function getLeadTool(tools: DirectoryTool[]) {
 
     return levelRank[left.level] - levelRank[right.level];
   })[0] ?? null;
+}
+
+function DirectoryCompareMobileDeck({
+  tools,
+  leadTool,
+  onRemove,
+}: {
+  tools: DirectoryTool[];
+  leadTool: DirectoryTool | null;
+  onRemove: (slug: string) => void;
+}) {
+  return (
+    <div className="compare-mobile-deck md:hidden">
+      {leadTool ? (
+        <section className="compare-mobile-hero">
+          <div className="flex items-center gap-3">
+            <span className="compare-mobile-hero__icon" aria-hidden="true">
+              <PieChart className="size-5" />
+            </span>
+            <div className="min-w-0">
+              <p className="editorial-label">Verdetto mobile</p>
+              <h3 className="text-display-card mt-1 text-[1.28rem] text-[var(--foreground)]">
+                Parti da {leadTool.name}
+              </h3>
+            </div>
+          </div>
+          <p className="mt-3 text-[0.92rem] leading-6 text-[var(--muted-strong)]">
+            Ho tolto la tabella dal telefono: qui leggi score, fit e motivi forti in verticale,
+            senza bloccare lo scroll.
+          </p>
+        </section>
+      ) : null}
+
+      <div className="grid gap-3">
+        {tools.map((tool, index) => {
+          const score = getDirectoryToolScore(tool);
+
+          return (
+            <article
+              key={`mobile-compare-${tool.slug}`}
+              className="compare-mobile-card"
+              style={
+                {
+                  "--compare-a": tool.accentFrom,
+                  "--compare-b": tool.accentTo,
+                  "--compare-score-angle": `${score * 3.6}deg`,
+                } as CSSProperties
+              }
+            >
+              <div className="flex items-start gap-3">
+                <DirectoryToolGlyph tool={tool} size="lg" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap gap-2">
+                    <PremiumBadge tone={levelTone[tool.level]}>{tool.levelLabel}</PremiumBadge>
+                    {tool.slug === leadTool?.slug ? <PremiumBadge tone="warning">Primo da leggere</PremiumBadge> : null}
+                  </div>
+                  <h3 className="text-display-card mt-2 text-[1.35rem] leading-tight text-[var(--foreground)]">
+                    {index + 1}. {tool.name}
+                  </h3>
+                  <p className="mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+                    {tool.categoryLabel}
+                  </p>
+                </div>
+                <div className="compare-mobile-score-ring" aria-label={`Score ${score} su 100`}>
+                  <span>{score}</span>
+                  <small>/100</small>
+                </div>
+              </div>
+
+              <div className="compare-mobile-metrics">
+                <div>
+                  <span>Fit</span>
+                  <strong>{tool.useCases.length}</strong>
+                </div>
+                <div>
+                  <span>Tag</span>
+                  <strong>{tool.tags.length}</strong>
+                </div>
+                <div>
+                  <span>Tempo</span>
+                  <strong>{tool.readingTime}</strong>
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-2.5">
+                <div className="compare-mobile-line">
+                  <span>Perché adesso</span>
+                  <p>{tool.tldr}</p>
+                </div>
+                <div className="compare-mobile-line">
+                  <span>Use case</span>
+                  <p>{tool.idealUseCase}</p>
+                </div>
+                <div className="compare-mobile-line">
+                  <span>Review</span>
+                  <p>{tool.editorialReview}</p>
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {tool.highlights.slice(0, 3).map((item) => (
+                  <span key={item} className="compare-mobile-chip">
+                    {item}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <PremiumLink href={`/toools/${tool.slug}`} tone="secondary" size="sm">
+                  Scheda
+                </PremiumLink>
+                <button
+                  type="button"
+                  onClick={() => onRemove(tool.slug)}
+                  className="premium-button premium-button-subtle min-h-10 rounded-full px-3 text-sm font-semibold"
+                >
+                  Rimuovi
+                </button>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function DirectoryCompareCard({
@@ -152,7 +294,7 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
           <div className="max-w-[48rem]">
             <div className="flex flex-wrap items-center gap-2">
               <span className="selection-status is-fresh">Compare attivo</span>
-              <span className="selection-chip">{tools.length}/4 tool</span>
+              <span className="selection-chip">{tools.length}/{MAX_COMPARE_TOOLS} tool</span>
             </div>
             <h2 className="section-title mt-3 text-[1.9rem] sm:text-[2.55rem] lg:text-[3rem]">
               {tools.length > 1
@@ -191,7 +333,73 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         </PremiumPanel>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <DirectoryCompareMobileDeck
+        tools={tools}
+        leadTool={leadTool}
+        onRemove={(slug) => toggleCompare(slug)}
+      />
+
+      {tools.length > 1 ? (
+        <section className="compare-desktop-matrix hidden md:block">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="compare-desktop-matrix__icon" aria-hidden="true">
+                <Gauge className="size-4" />
+              </span>
+              <div>
+                <p className="editorial-label">Matrice desktop</p>
+                <p className="text-sm font-semibold text-[var(--muted-strong)]">
+                  Tabella completa, ora subito visibile prima delle card.
+                </p>
+              </div>
+            </div>
+            <span className="selection-chip">Scroll orizzontale solo su desktop</span>
+          </div>
+          <div className="compare-score-shell tool-rail overflow-x-auto rounded-[28px] border" style={{ borderColor: "var(--line)" }}>
+            <div
+              className="compare-score-grid min-w-[54rem]"
+              style={{
+                gridTemplateColumns: `minmax(10rem, 0.8fr) repeat(${tools.length}, minmax(14.5rem, 1fr))`,
+              }}
+            >
+              <div className="compare-score-head compare-score-head-intro">
+                <p className="editorial-label">Lettura</p>
+                <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
+                  Parti dalle righe evidenziate: TL;DR, use case e review.
+                </p>
+              </div>
+              {tools.map((tool) => (
+                <div key={`head-${tool.slug}`} className="compare-score-head">
+                  <p className="editorial-label">{tool.category}</p>
+                  <p className="text-display-card mt-2 text-[1.12rem] text-[var(--foreground)]">
+                    {tool.name}
+                  </p>
+                </div>
+              ))}
+
+              {compareRows.map((row) => (
+                <div key={row.label} className="contents">
+                  <div className="compare-score-axis">
+                    <p className="font-semibold text-[var(--foreground)]">{row.label}</p>
+                  </div>
+                  {tools.map((tool) => (
+                    <div
+                      key={`${row.label}-${tool.slug}`}
+                      className={`compare-score-cell ${row.label === "TL;DR" || row.label === "Use case" ? "is-leader" : ""}`}
+                    >
+                      <p className="text-sm leading-6 text-[var(--muted-strong)]">
+                        {row.value(tool)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <div className="hidden gap-4 md:grid lg:grid-cols-2 xl:grid-cols-3">
         {tools.map((tool) => (
           <DirectoryCompareCard
             key={tool.slug}
@@ -200,50 +408,6 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
           />
         ))}
       </div>
-
-      {tools.length > 1 ? (
-        <div className="compare-score-shell tool-rail overflow-x-auto rounded-[28px] border" style={{ borderColor: "var(--line)" }}>
-          <div
-            className="compare-score-grid min-w-[54rem]"
-            style={{
-              gridTemplateColumns: `minmax(10rem, 0.8fr) repeat(${tools.length}, minmax(14.5rem, 1fr))`,
-            }}
-          >
-            <div className="compare-score-head compare-score-head-intro">
-              <p className="editorial-label">Lettura</p>
-              <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
-                Parti dalle righe evidenziate: TL;DR, use case e review.
-              </p>
-            </div>
-            {tools.map((tool) => (
-              <div key={`head-${tool.slug}`} className="compare-score-head">
-                <p className="editorial-label">{tool.category}</p>
-                <p className="text-display-card mt-2 text-[1.12rem] text-[var(--foreground)]">
-                  {tool.name}
-                </p>
-              </div>
-            ))}
-
-            {compareRows.map((row) => (
-              <div key={row.label} className="contents">
-                <div className="compare-score-axis">
-                  <p className="font-semibold text-[var(--foreground)]">{row.label}</p>
-                </div>
-                {tools.map((tool) => (
-                  <div
-                    key={`${row.label}-${tool.slug}`}
-                    className={`compare-score-cell ${row.label === "TL;DR" || row.label === "Use case" ? "is-leader" : ""}`}
-                  >
-                    <p className="text-sm leading-6 text-[var(--muted-strong)]">
-                      {row.value(tool)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
 
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-[24px] bg-white/72 px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">

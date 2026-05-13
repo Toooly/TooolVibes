@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { clearCompareTools } from "@/lib/discovery/local-storage";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
 
@@ -26,7 +26,7 @@ export function CompareTray() {
     return null;
   }
 
-  const compareProgress = Math.min(compare.length, 3);
+  const compareProgress = Math.min(compare.length, MAX_COMPARE_TOOLS);
   const isCompareReady = compare.length >= 2;
   const readinessLabel =
     compare.length === 1 ? "Manca 1 profilo" : isCompareReady ? "Pronto al verdetto" : "Riempi il confronto";
@@ -65,7 +65,7 @@ export function CompareTray() {
                   {readinessLabel}
                 </span>
                 <span className="text-[0.72rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                  {compare.length}/3 in tray
+                  {compare.length}/{MAX_COMPARE_TOOLS} in tray
                 </span>
                 <span className="text-[0.72rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {persistenceLabel}
@@ -75,7 +75,7 @@ export function CompareTray() {
                 <div className="progress-track h-2 w-[7.2rem] sm:w-[8.2rem]">
                   <div
                     className={`progress-fill ${isCompareReady ? "is-ready" : ""}`}
-                    style={{ width: `${(compareProgress / 3) * 100}%` }}
+                    style={{ width: `${(compareProgress / MAX_COMPARE_TOOLS) * 100}%` }}
                   />
                 </div>
                 <span className="text-[0.66rem] font-semibold uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>

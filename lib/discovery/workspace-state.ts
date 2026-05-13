@@ -1,6 +1,8 @@
 import type { ShortlistStage } from "@/lib/types/tool";
 import type { DiscoveryWorkspaceState, ToolUserState } from "@/lib/discovery/types";
 
+const MAX_COMPARE_TOOLS = 5;
+
 const stageRank: Record<ShortlistStage, number> = {
   saved: 1,
   review: 2,
@@ -74,7 +76,7 @@ export function normalizeDiscoveryWorkspaceState(
         .filter((entry): entry is [string, ToolUserState] => Boolean(entry[0] && entry[1])),
     ),
     compare: {
-      slugs: Array.from(new Set(compareSlugs)).slice(-3),
+      slugs: Array.from(new Set(compareSlugs)).slice(-MAX_COMPARE_TOOLS),
       updated_at: normalizeTimestamp(input?.compare?.updated_at),
     },
   };
@@ -173,7 +175,7 @@ export function mergeDiscoveryWorkspaceStates(
 
   const compareSlugs = Array.from(
     new Set([...local.compare.slugs, ...remote.compare.slugs]),
-  ).slice(-3);
+  ).slice(-MAX_COMPARE_TOOLS);
 
   return normalizeDiscoveryWorkspaceState({
     tool_states: toolStates,

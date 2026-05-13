@@ -20,7 +20,7 @@ type ToolWorkspaceState = {
   clearWorkspace: () => void;
 };
 
-export const MAX_COMPARE_TOOLS = 4;
+export const MAX_COMPARE_TOOLS = 5;
 
 function toggleItem(items: string[], slug: string) {
   return items.includes(slug)
