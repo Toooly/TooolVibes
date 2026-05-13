@@ -58,7 +58,7 @@ import {
   type DirectoryTool,
   type DirectoryToolLevel,
 } from "@/lib/data/tooolvibes-directory";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
 
 type ToolDiscoveryAppProps = {
@@ -605,7 +605,7 @@ export function ToolDiscoveryApp({
     tools,
   ]);
 
-  const selectedTool = getToolBySlug(tools, selectedSlug);
+  const selectedTool = useMemo(() => getToolBySlug(tools, selectedSlug), [selectedSlug, tools]);
   const toolShelves = useMemo(
     () =>
       shelfOrder
@@ -616,21 +616,33 @@ export function ToolDiscoveryApp({
         .filter((shelf) => shelf.tools.length > 0),
     [visibleTools],
   );
-  const relatedTools = selectedTool
-    ? tools
-        .filter(
-          (tool) =>
-            tool.slug !== selectedTool.slug &&
-            tool.segments.some((segment) => selectedTool.segments.includes(segment)),
-        )
-        .slice(0, 4)
-    : [];
-  const compareTools = compareSlugs
-    .map((slug) => getToolBySlug(tools, slug))
-    .filter((tool): tool is DirectoryTool => Boolean(tool));
-  const stackTools = stackSlugs
-    .map((slug) => getToolBySlug(tools, slug))
-    .filter((tool): tool is DirectoryTool => Boolean(tool));
+  const relatedTools = useMemo(
+    () =>
+      selectedTool
+        ? tools
+            .filter(
+              (tool) =>
+                tool.slug !== selectedTool.slug &&
+                tool.segments.some((segment) => selectedTool.segments.includes(segment)),
+            )
+            .slice(0, 4)
+        : [],
+    [selectedTool, tools],
+  );
+  const compareTools = useMemo(
+    () =>
+      compareSlugs
+        .map((slug) => getToolBySlug(tools, slug))
+        .filter((tool): tool is DirectoryTool => Boolean(tool)),
+    [compareSlugs, tools],
+  );
+  const stackTools = useMemo(
+    () =>
+      stackSlugs
+        .map((slug) => getToolBySlug(tools, slug))
+        .filter((tool): tool is DirectoryTool => Boolean(tool)),
+    [stackSlugs, tools],
+  );
   const hasActiveFilters =
     Boolean(query.trim()) || activeGroup !== "all" || activeLevel !== "all" || Boolean(activeTag);
   const activeGroupLabel =
@@ -646,6 +658,11 @@ export function ToolDiscoveryApp({
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("tool-detail-open", Boolean(selectedTool));
+    return () => document.documentElement.classList.remove("tool-detail-open");
+  }, [selectedTool]);
 
   useEffect(() => {
     function scrollToElement(id: string) {
@@ -701,7 +718,7 @@ export function ToolDiscoveryApp({
   function handleCompare(tool: DirectoryTool) {
     const result = toggleCompare(tool.slug);
     if (result.limited) {
-      toast.warning("Puoi confrontare fino a 4 tool alla volta.");
+      toast.warning(`Puoi confrontare fino a ${MAX_COMPARE_TOOLS} tool alla volta.`);
       return;
     }
     toast.success(

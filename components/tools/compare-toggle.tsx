@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 type CompareToggleProps = {
   slug: string;
@@ -50,10 +50,14 @@ export function CompareToggle({
 
   const handleToggle = () => {
     const result = toggleCompare(slug);
-    const nextCount = result.added ? count + 1 : count - 1;
+    if (result.limited) {
+      return;
+    }
+
+    const nextCount = result.added ? count + 1 : Math.max(0, count - 1);
 
     if (nextCount !== previousCountRef.current) {
-        setIsFresh(true);
+      setIsFresh(true);
 
       if (freshTimerRef.current) {
         window.clearTimeout(freshTimerRef.current);
@@ -127,7 +131,7 @@ export function CompareToggle({
         } ${isFresh ? "is-fresh" : ""}`}
         style={{ color: "var(--muted)" }}
       >
-        {count}/3
+        {count}/{MAX_COMPARE_TOOLS}
       </span>
     </button>
   );

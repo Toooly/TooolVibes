@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from "react";
 
-type SoundKind = "tap" | "nav" | "brand" | "menu";
+type SoundKind = "tap" | "nav" | "brand" | "menu" | "save" | "compare" | "detail" | "stack";
 
 const INTERACTIVE_SELECTOR =
   "a, button, summary, [role='button'], [data-sonic-action]";
 
 function getSoundKind(element: HTMLElement): SoundKind {
+  const actionText = `${element.getAttribute("aria-label") ?? ""} ${element.textContent ?? ""}`.toLowerCase();
+
   if (element.closest(".group\\/brand, .brand-mark")) {
     return "brand";
   }
@@ -17,6 +19,22 @@ function getSoundKind(element: HTMLElement): SoundKind {
     element.getAttribute("aria-label")?.toLowerCase().includes("menu")
   ) {
     return "menu";
+  }
+
+  if (actionText.includes("salva") || actionText.includes("shortlist") || actionText.includes("salvato")) {
+    return "save";
+  }
+
+  if (actionText.includes("confronta") || actionText.includes("compare")) {
+    return "compare";
+  }
+
+  if (actionText.includes("dettagli") || actionText.includes("scheda") || actionText.includes("dettaglio")) {
+    return "detail";
+  }
+
+  if (actionText.includes("stack")) {
+    return "stack";
   }
 
   if (element instanceof HTMLAnchorElement) {
@@ -34,12 +52,33 @@ function addPulse(element: HTMLElement) {
     targets.push(brandMark);
   }
 
-  targets.forEach((target) => {
-    target.classList.remove("is-sonic-tap");
-    void target.offsetWidth;
-    target.classList.add("is-sonic-tap");
-    window.setTimeout(() => target.classList.remove("is-sonic-tap"), 520);
+  window.requestAnimationFrame(() => {
+    targets.forEach((target) => {
+      if (!target.isConnected) {
+        return;
+      }
+
+      target.classList.remove("is-sonic-tap");
+      void target.offsetWidth;
+      target.classList.add("is-sonic-tap");
+      window.setTimeout(() => target.classList.remove("is-sonic-tap"), 520);
+    });
   });
+}
+
+function spawnSingularity(event: PointerEvent, kind: SoundKind) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  const pulse = document.createElement("span");
+  pulse.className = `sonic-singularity sonic-singularity--${kind}`;
+  pulse.setAttribute("aria-hidden", "true");
+  pulse.style.left = `${event.clientX}px`;
+  pulse.style.top = `${event.clientY}px`;
+
+  document.body.appendChild(pulse);
+  window.setTimeout(() => pulse.remove(), 820);
 }
 
 function playTone(context: AudioContext, kind: SoundKind) {
@@ -54,6 +93,10 @@ function playTone(context: AudioContext, kind: SoundKind) {
     nav: { attack: 0.006, decay: 0.13, start: 660, end: 440, volume: 0.026 },
     brand: { attack: 0.01, decay: 0.22, start: 330, end: 660, volume: 0.034 },
     menu: { attack: 0.006, decay: 0.16, start: 420, end: 720, volume: 0.027 },
+    save: { attack: 0.006, decay: 0.16, start: 720, end: 960, volume: 0.03 },
+    compare: { attack: 0.006, decay: 0.18, start: 360, end: 620, volume: 0.032 },
+    detail: { attack: 0.008, decay: 0.2, start: 240, end: 720, volume: 0.03 },
+    stack: { attack: 0.006, decay: 0.15, start: 580, end: 390, volume: 0.028 },
   };
   const tone = settings[kind];
 
@@ -112,7 +155,10 @@ export function InteractionSoundLayer() {
       }
       lastPlayedRef.current = now;
 
+      const soundKind = getSoundKind(target);
+
       addPulse(target);
+      spawnSingularity(event, soundKind);
 
       const AudioContextConstructor =
         window.AudioContext ??
@@ -128,7 +174,7 @@ export function InteractionSoundLayer() {
         void context.resume();
       }
 
-      playTone(context, getSoundKind(target));
+      playTone(context, soundKind);
     }
 
     window.addEventListener("pointerdown", handlePointerDown, { passive: true, capture: true });

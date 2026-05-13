@@ -1,4 +1,5 @@
 import { DirectoryHero } from "@/components/directory/directory-hero";
+import { HomeBrandIntro } from "@/components/app/home-brand-intro";
 import { HomeCatalogPreview } from "@/components/directory/home-catalog-preview";
 import { DirectoryWeeklySpotlight } from "@/components/directory/directory-weekly-spotlight";
 import { HomeExperienceSections } from "@/components/directory/home-experience-sections";
@@ -20,6 +21,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-5 pb-28 sm:space-y-14 sm:pb-20">
+      <HomeBrandIntro />
       <DirectoryHero tools={directoryTools} />
 
       <MobileQuickStart />

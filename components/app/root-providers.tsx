@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { GlobalCommandPalette } from "@/components/app/global-command-palette";
+import { GlobalExperienceLayer } from "@/components/app/global-experience-layer";
 import { GlobalVibeLayer } from "@/components/app/global-vibe-layer";
 import { InteractionSoundLayer } from "@/components/app/interaction-sound-layer";
 import { Toaster } from "@/components/ui/sonner";
@@ -26,6 +27,7 @@ export function RootProviders({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delay={180}>
         {children}
+        <GlobalExperienceLayer />
         <GlobalVibeLayer />
         <InteractionSoundLayer />
         <GlobalCommandPalette />

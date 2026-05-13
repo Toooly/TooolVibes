@@ -17,10 +17,11 @@ export function GlobalVibeLayer() {
 
     setDeviceLabel(isMobile ? "mobile" : "desktop");
 
+    const introDelay = window.location.pathname === "/" ? 3600 : 900;
     const openTimer = window.setTimeout(() => {
       window.sessionStorage.setItem("tooolvibes:vibe-layer-shown", "true");
       setVisible(true);
-    }, 900);
+    }, introDelay);
     const closeTimer = window.setTimeout(() => setVisible(false), 16000);
 
     return () => {
