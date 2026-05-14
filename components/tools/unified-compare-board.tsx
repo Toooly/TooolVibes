@@ -192,6 +192,65 @@ function DirectoryCompareMobileDeck({
   );
 }
 
+function DirectoryCompareMobileMatrix({
+  tools,
+  leadTool,
+}: {
+  tools: DirectoryTool[];
+  leadTool: DirectoryTool | null;
+}) {
+  if (tools.length < 2) {
+    return null;
+  }
+
+  const mobileRows = compareRows.filter((row) => row.label !== "Review");
+
+  return (
+    <section className="compare-mobile-matrix md:hidden" aria-label="Differenze tra tool">
+      <div className="compare-mobile-matrix__header">
+        <p className="editorial-label">Differenze vive</p>
+        <p>
+          Tocca e scorri le righe: le celle illuminate indicano dove partire nella lettura.
+        </p>
+      </div>
+
+      <div className="grid gap-2.5">
+        {mobileRows.map((row) => (
+          <article key={`mobile-row-${row.label}`} className="compare-mobile-matrix__row">
+            <div className="compare-mobile-matrix__axis">
+              <span>{row.label}</span>
+            </div>
+            <div className="compare-mobile-matrix__cells">
+              {tools.map((tool) => {
+                const isLead =
+                  tool.slug === leadTool?.slug &&
+                  (row.label === "TL;DR" || row.label === "Use case" || row.label === "Livello");
+
+                return (
+                  <div
+                    key={`${row.label}-${tool.slug}`}
+                    className={`compare-mobile-matrix__cell ${isLead ? "is-leader" : ""}`}
+                    tabIndex={0}
+                    style={
+                      {
+                        "--compare-a": tool.accentFrom,
+                        "--compare-b": tool.accentTo,
+                      } as CSSProperties
+                    }
+                  >
+                    <strong>{tool.name}</strong>
+                    <p>{row.value(tool)}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function DirectoryCompareCard({
   tool,
   onRemove,
@@ -338,6 +397,7 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         leadTool={leadTool}
         onRemove={(slug) => toggleCompare(slug)}
       />
+      <DirectoryCompareMobileMatrix tools={tools} leadTool={leadTool} />
 
       {tools.length > 1 ? (
         <section className="compare-desktop-matrix hidden md:block">

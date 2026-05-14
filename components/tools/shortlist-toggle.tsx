@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
-import { TOGGLE_ANIMATION_MS } from "@/lib/utils";
 
 type ShortlistToggleProps = {
   slug: string;

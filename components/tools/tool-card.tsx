@@ -93,7 +93,7 @@ function ToolCardComponent({
         <div className="topline-reveal absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,var(--gold),var(--accent),transparent)] opacity-85" />
 
         <div className="grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
-          <Link href={`/toools/${tool.slug}`} className="relative block min-h-[15rem] overflow-hidden sm:min-h-[19rem]">
+          <Link href={`/toools/${tool.slug}`} className="tool-card-media relative block min-h-[15rem] overflow-hidden sm:min-h-[19rem]">
             <Image
               src={tool.cover_image_url}
               alt={tool.name}
@@ -278,7 +278,7 @@ function ToolCardComponent({
       />
 
       <Link href={`/toools/${tool.slug}`} className="block">
-        <div className={cn("relative overflow-hidden", variant === "compact" ? "h-40" : "h-48")}>
+        <div className={cn("tool-card-media relative overflow-hidden", variant === "compact" ? "h-40" : "h-48")}>
           <Image
             src={tool.cover_image_url}
             alt={tool.name}

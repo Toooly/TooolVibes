@@ -128,6 +128,71 @@ function LegacyCompareMobileDeck({
   );
 }
 
+function LegacyCompareMobileMatrix({
+  tools,
+  scoreDimensions,
+  scorecardsByTool,
+}: {
+  tools: ToolRecord[];
+  scoreDimensions: ReturnType<typeof getEditorialScoreDimensions>;
+  scorecardsByTool: Record<string, ReturnType<typeof getEditorialScorecard>>;
+}) {
+  if (tools.length < 2) {
+    return null;
+  }
+
+  return (
+    <section className="compare-mobile-matrix md:hidden" aria-label="Matrice mobile del confronto">
+      <div className="compare-mobile-matrix__header">
+        <p className="editorial-label">Matrice mobile</p>
+        <p>
+          Ogni riga confronta una dimensione. Le celle illuminate sono i distacchi veri.
+        </p>
+      </div>
+
+      <div className="grid gap-2.5">
+        {scoreDimensions.map((dimension) => {
+          const leaders = getCompareDimensionLeaders(tools, dimension.key);
+
+          return (
+            <article key={`mobile-matrix-${dimension.key}`} className="compare-mobile-matrix__row">
+              <div className="compare-mobile-matrix__axis">
+                <span>{dimension.label}</span>
+                <p>{dimensionReadingCopy[dimension.key]}</p>
+              </div>
+              <div className="compare-mobile-matrix__cells">
+                {tools.map((tool) => {
+                  const entry = scorecardsByTool[tool.slug].find((item) => item.key === dimension.key);
+                  const isLeader = leaders.includes(tool.slug);
+
+                  if (!entry) {
+                    return null;
+                  }
+
+                  return (
+                    <div
+                      key={`${dimension.key}-${tool.slug}`}
+                      className={`compare-mobile-matrix__cell ${isLeader ? "is-leader" : ""}`}
+                      tabIndex={0}
+                      style={{ "--compare-strength": `${entry.strength * 20}%` } as CSSProperties}
+                    >
+                      <strong>{tool.name}</strong>
+                      <p>{entry.descriptor}</p>
+                      <span className="compare-mobile-matrix__meter">
+                        <span />
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export function CompareBoard({ tools }: CompareBoardProps) {
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
 
@@ -336,6 +401,11 @@ export function CompareBoard({ tools }: CompareBoardProps) {
           tools={comparedTools}
           scorecardsByTool={scorecardsByTool}
           leadCountsByTool={leadCountsByTool}
+        />
+        <LegacyCompareMobileMatrix
+          tools={comparedTools}
+          scoreDimensions={scoreDimensions}
+          scorecardsByTool={scorecardsByTool}
         />
 
         <div className="compare-score-shell tool-rail mt-5 hidden overflow-x-auto rounded-[26px] border md:block" style={{ borderColor: "var(--line)" }}>

@@ -80,7 +80,7 @@ function spawnSingularityAt(clientX: number, clientY: number, kind: SoundKind, i
   pulse.style.top = `${clientY}px`;
 
   document.body.appendChild(pulse);
-  window.setTimeout(() => pulse.remove(), 820);
+  window.setTimeout(() => pulse.remove(), 640);
 }
 
 function spawnSingularity(event: PointerEvent, kind: SoundKind) {
@@ -100,14 +100,14 @@ function playTone(context: AudioContext, kind: SoundKind) {
   const overtone = context.createOscillator();
 
   const settings: Record<SoundKind, { attack: number; decay: number; start: number; end: number; volume: number }> = {
-    tap: { attack: 0.004, decay: 0.085, start: 520, end: 260, volume: 0.028 },
-    nav: { attack: 0.006, decay: 0.13, start: 660, end: 440, volume: 0.026 },
-    brand: { attack: 0.01, decay: 0.22, start: 330, end: 660, volume: 0.034 },
-    menu: { attack: 0.006, decay: 0.16, start: 420, end: 720, volume: 0.027 },
-    save: { attack: 0.006, decay: 0.16, start: 720, end: 960, volume: 0.03 },
-    compare: { attack: 0.006, decay: 0.18, start: 360, end: 620, volume: 0.032 },
-    detail: { attack: 0.008, decay: 0.2, start: 240, end: 720, volume: 0.03 },
-    stack: { attack: 0.006, decay: 0.15, start: 580, end: 390, volume: 0.028 },
+    tap: { attack: 0.004, decay: 0.085, start: 520, end: 260, volume: 0.018 },
+    nav: { attack: 0.006, decay: 0.13, start: 660, end: 440, volume: 0.019 },
+    brand: { attack: 0.01, decay: 0.22, start: 330, end: 660, volume: 0.024 },
+    menu: { attack: 0.006, decay: 0.16, start: 420, end: 720, volume: 0.019 },
+    save: { attack: 0.006, decay: 0.16, start: 720, end: 960, volume: 0.021 },
+    compare: { attack: 0.006, decay: 0.18, start: 360, end: 620, volume: 0.022 },
+    detail: { attack: 0.008, decay: 0.2, start: 240, end: 720, volume: 0.022 },
+    stack: { attack: 0.006, decay: 0.15, start: 580, end: 390, volume: 0.019 },
   };
   const tone = settings[kind];
 

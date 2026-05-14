@@ -4,22 +4,6 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 const HIDDEN_PATHS = ["/admin"];
-const INTERACTIVE_SELECTOR = "a, button, summary, [role='button'], [data-sonic-action]";
-
-function spawnMobileTapBurst(clientX: number, clientY: number) {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return;
-  }
-
-  const burst = document.createElement("span");
-  burst.className = "mobile-tap-burst";
-  burst.setAttribute("aria-hidden", "true");
-  burst.style.left = `${clientX}px`;
-  burst.style.top = `${clientY}px`;
-
-  document.body.appendChild(burst);
-  window.setTimeout(() => burst.remove(), 780);
-}
 
 export function GlobalExperienceLayer() {
   const pathname = usePathname();
@@ -42,7 +26,6 @@ export function GlobalExperienceLayer() {
     let pointerTimer = 0;
     let pressTimer = 0;
     let scrollTimer = 0;
-    let tapTimer = 0;
 
     const updateScrollProgress = () => {
       frame = 0;
@@ -128,42 +111,6 @@ export function GlobalExperienceLayer() {
       }, 360);
     };
 
-    const handleMobileTouch = (event: TouchEvent) => {
-      if (window.innerWidth >= 768) {
-        return;
-      }
-
-      const touch = event.changedTouches[0];
-      const target = event.target instanceof Element
-        ? event.target.closest(INTERACTIVE_SELECTOR)
-        : null;
-
-      if (!touch || !target) {
-        return;
-      }
-
-      window.clearTimeout(tapTimer);
-      tapTimer = window.setTimeout(() => {
-        spawnMobileTapBurst(touch.clientX, touch.clientY);
-      }, 0);
-    };
-
-    const handleMobileClick = (event: MouseEvent) => {
-      if (window.innerWidth >= 768 || event.detail === 0) {
-        return;
-      }
-
-      const target = event.target instanceof Element
-        ? event.target.closest(INTERACTIVE_SELECTOR)
-        : null;
-
-      if (!target) {
-        return;
-      }
-
-      spawnMobileTapBurst(event.clientX, event.clientY);
-    };
-
     updateScrollProgress();
 
     window.addEventListener("scroll", requestScrollProgress, { passive: true });
@@ -172,8 +119,6 @@ export function GlobalExperienceLayer() {
     window.addEventListener("mousemove", updateMousePointer, { passive: true });
     window.addEventListener("pointerdown", pressPointer, { passive: true });
     window.addEventListener("mousedown", pressMousePointer, { passive: true });
-    window.addEventListener("touchstart", handleMobileTouch, { passive: true, capture: true });
-    window.addEventListener("click", handleMobileClick, { passive: true, capture: true });
 
     return () => {
       window.removeEventListener("scroll", requestScrollProgress);
@@ -182,13 +127,10 @@ export function GlobalExperienceLayer() {
       window.removeEventListener("mousemove", updateMousePointer);
       window.removeEventListener("pointerdown", pressPointer);
       window.removeEventListener("mousedown", pressMousePointer);
-      window.removeEventListener("touchstart", handleMobileTouch, { capture: true });
-      window.removeEventListener("click", handleMobileClick, { capture: true });
       window.cancelAnimationFrame(frame);
       window.clearTimeout(pointerTimer);
       window.clearTimeout(pressTimer);
       window.clearTimeout(scrollTimer);
-      window.clearTimeout(tapTimer);
       root.style.removeProperty("--tv-scroll-progress");
       root.style.removeProperty("--tv-pointer-x");
       root.style.removeProperty("--tv-pointer-y");
