@@ -72,7 +72,7 @@ export function HomeLiveLayer({
           ].map(([value, label]) => (
             <div key={label} className="rounded-[16px] border border-[var(--border-soft)] bg-white/62 px-2 py-2">
               <p className="text-[1rem] font-semibold leading-none text-[var(--foreground)]">{value}</p>
-              <p className="mt-1 text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+               <p className="mt-1 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
                 {label}
               </p>
             </div>

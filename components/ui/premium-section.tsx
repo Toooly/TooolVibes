@@ -46,7 +46,7 @@ export function SectionHeader({
     >
       <div className={cn("max-w-[46rem]", align === "center" && "mx-auto")}>
         {eyebrow ? <PremiumBadge tone="accent">{eyebrow}</PremiumBadge> : null}
-        <h2 className="text-display-card mt-4 text-[2rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.8rem]">
+        <h2 className="text-display-card mt-4 text-[2rem] leading-[1.05] text-[var(--foreground)] sm:text-[2.8rem]">
           {title}
         </h2>
         {description ? (

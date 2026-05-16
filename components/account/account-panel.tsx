@@ -103,7 +103,7 @@ export function AccountPanel() {
           </span>
         </div>
         <h1 className="text-display-card mt-4 max-w-none text-[1.8rem] sm:max-w-[20ch] sm:text-[2.24rem] sm:text-balance">
-          Continuit? della selezione e accesso member.
+          Continuità della selezione e accesso member.
         </h1>
         <p
           className="text-body-soft mt-4 max-w-[40rem] text-[0.95rem]"
@@ -165,7 +165,7 @@ export function AccountPanel() {
                   background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))",
                 }}
               >
-                <p className="editorial-label">Modalita`</p>
+                <p className="editorial-label">Modalità</p>
                 <p className="text-body-strong mt-2.5 text-[1rem]">{accountStateLabel}</p>
               </div>
               <div
@@ -175,7 +175,7 @@ export function AccountPanel() {
                   background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))",
                 }}
               >
-                <p className="editorial-label">Continuit?</p>
+                <p className="editorial-label">Continuità</p>
                 <p className="text-body-strong mt-2.5 text-[1rem]">
                   {account.isAttaching
                     ? "Merge workspace in corso"
@@ -313,7 +313,7 @@ export function AccountPanel() {
               {[
                 { label: "Shortlist", value: workspace.saved, detail: "tool salvati" },
                 { label: "Compare", value: workspace.compare, detail: "profili nel tray" },
-                { label: "Priorit? alta", value: workspace.top, detail: "priorit? alte" },
+                { label: "Priorità alta", value: workspace.top, detail: "priorità alte" },
                 { label: "Da rivedere", value: workspace.review, detail: "tool ancora aperti" },
               ].map((item) => (
                 <div

@@ -60,7 +60,7 @@ export default function TagsPage() {
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
                     Categoria
                   </p>
-                  <h3 className="mt-3 text-[1.32rem] leading-[1.02] text-[var(--foreground)]">
+                  <h3 className="mt-3 text-[1.32rem] leading-[1.1] text-[var(--foreground)]">
                     {group.label}
                   </h3>
                   <p className="mt-3 text-sm leading-6 text-[var(--muted-strong)]">

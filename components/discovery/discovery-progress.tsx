@@ -89,7 +89,7 @@ export function DiscoveryProgress({
               }}
             >
               <p className="editorial-label">{item.label}</p>
-              <p className="mt-2 text-[1.25rem] leading-[1.02]">{item.value}</p>
+              <p className="mt-2 text-[1.25rem] leading-[1.1]">{item.value}</p>
             </div>
           ))}
         </div>
@@ -153,7 +153,7 @@ export function DiscoveryProgress({
                   }}
                 >
                   <p className="editorial-label">{item.label}</p>
-                  <p className="mt-2 text-[1.58rem] leading-[1.02]">{item.value}</p>
+                  <p className="mt-2 text-[1.58rem] leading-[1.1]">{item.value}</p>
                   <p className="text-body-soft mt-2 text-[0.9rem]" style={{ color: "var(--muted)" }}>
                     {item.note}
                   </p>

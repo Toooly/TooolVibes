@@ -26,7 +26,7 @@ export default function ProductHuntPage() {
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/58">
               Product Hunt radar
             </p>
-            <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.35rem)] leading-[0.98] text-white">
+            <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.35rem)] leading-[1.05] text-white">
               I lanci pi&ugrave; forti da tenere d&apos;occhio.
             </h1>
             <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-7 text-white/70 sm:mt-5 sm:text-[1rem]">

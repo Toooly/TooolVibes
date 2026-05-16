@@ -981,7 +981,7 @@ export function ToolDiscoveryApp({
                   <span className="block text-[1rem] font-semibold text-[var(--foreground)]">
                     {item.count}
                   </span>
-                  <span className="mt-1 block text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted-strong)]">
+                   <span className="mt-1 block text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted-strong)]">
                     {item.label}
                   </span>
                 </button>

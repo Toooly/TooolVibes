@@ -44,7 +44,7 @@ export function MobileBottomNav() {
                   : "text-[var(--muted-strong)] hover:bg-white/80 hover:text-[var(--accent-strong)]",
               )}
             >
-              <Icon className="size-4" aria-hidden="true" />
+              <Icon className="size-5" aria-hidden="true" />
               <span>{item.label}</span>
             </Link>
           );

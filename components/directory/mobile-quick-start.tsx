@@ -84,7 +84,7 @@ export function MobileQuickStart() {
                 >
                   <span className="flex min-w-0 items-center gap-3">
                     <span className="grid size-10 shrink-0 place-items-center rounded-[16px] border border-white/10 bg-white/10">
-                      <Icon className="size-4" aria-hidden="true" />
+                      <Icon className="size-5" aria-hidden="true" />
                     </span>
                     <span className="min-w-0">
                       <span className="block truncate text-[0.94rem] font-semibold">

@@ -98,7 +98,7 @@ export function ToolFilters({
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="pill">Filtri archivio</p>
-                <h3 className="mt-4 max-w-[20rem] text-[1.42rem] leading-[1.02] sm:max-w-[22rem] sm:text-[1.82rem] sm:text-balance">
+                <h3 className="mt-4 max-w-[20rem] text-[1.42rem] leading-[1.1] sm:max-w-[22rem] sm:text-[1.82rem] sm:text-balance">
                   Parti da ricerca o task. Il resto serve solo a chiudere il campo.
                 </h3>
               </div>
@@ -250,7 +250,7 @@ export function ToolFilters({
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="brand-kicker">Vista archivio</p>
-                <h3 className="mt-2 max-w-[40rem] text-[1.7rem] leading-[1.02] sm:text-[2.02rem] sm:text-balance">
+                <h3 className="mt-2 max-w-[40rem] text-[1.7rem] leading-[1.1] sm:text-[2.02rem] sm:text-balance">
                   {hasActiveTask
                     ? `${getTaskLabel(task)} con il taglio TooolVibes.`
                     : "Tool pronti da scremare in modo più disciplinato."}

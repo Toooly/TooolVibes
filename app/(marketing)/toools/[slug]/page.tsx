@@ -294,7 +294,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                 Tool correlati
               </p>
-              <h2 className="mt-3 text-[1.9rem] leading-[0.98] text-[var(--foreground)] sm:text-[2.5rem]">
+              <h2 className="mt-3 text-[1.9rem] leading-[1.05] text-[var(--foreground)] sm:text-[2.5rem]">
                 Se ti interessa {tool.name}, questi sono i confronti pi&ugrave;
                 naturali.
               </h2>

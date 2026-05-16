@@ -26,7 +26,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
       <div className="grid gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:items-start">
         <div className="max-w-[39rem]">
           <PremiumBadge tone="accent">Catalogo preview</PremiumBadge>
-          <h2 className="text-display-card mt-3 text-[1.65rem] leading-[1.02] text-white sm:mt-4 sm:text-[2.65rem]">
+          <h2 className="text-display-card mt-3 text-[1.65rem] leading-[1.1] text-white sm:mt-4 sm:text-[2.65rem]">
             Una preview editoriale, non tutto l&apos;archivio in home.
           </h2>
           <p className="mt-3 text-[0.92rem] leading-6 text-white/68 sm:mt-4 sm:text-[1rem] sm:leading-7">
@@ -119,7 +119,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
                   {tool.shortDescription}
                 </p>
                 <div className="mt-3 rounded-[16px] border border-white/10 bg-white/8 p-3">
-                  <p className="text-[0.58rem] font-semibold uppercase tracking-[0.16em] text-white/44">
+                   <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-white/44">
                     TL;DR
                   </p>
                   <p className="text-clamp-2 mt-1.5 text-xs leading-5 text-white/66">

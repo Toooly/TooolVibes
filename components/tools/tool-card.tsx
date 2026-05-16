@@ -127,11 +127,11 @@ function ToolCardComponent({
               ) : null}
             </div>
             <div className="absolute bottom-4 left-4 right-4">
-              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-white/74">{tool.category}</p>
+               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/74">{tool.category}</p>
               <h3 className="text-display-card mt-2 max-w-none text-[1.62rem] text-white sm:max-w-[11.5ch] sm:text-[2.08rem] sm:text-balance">
                 {tool.name}
               </h3>
-              <p className="mt-2 text-[0.72rem] font-medium uppercase tracking-[0.16em] text-white/68">{formattedDate}</p>
+               <p className="mt-2 text-xs font-medium uppercase tracking-[0.16em] text-white/68">{formattedDate}</p>
             </div>
           </Link>
 
@@ -218,7 +218,7 @@ function ToolCardComponent({
                 </span>
               ) : null}
             </div>
-            <h3 className="text-display-card mt-1.5 text-[1.16rem] leading-[1.02]">{tool.name}</h3>
+            <h3 className="text-display-card mt-1.5 text-[1.16rem] leading-[1.1]">{tool.name}</h3>
             <p className="text-body-soft text-clamp-2 mt-1 text-[0.84rem] leading-6" style={{ color: "var(--muted-strong)" }}>
               {bestFor}
             </p>
@@ -307,15 +307,15 @@ function ToolCardComponent({
           </div>
           <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-white/72">
-                {contextLabel}
-              </p>
+               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/72">
+                 {contextLabel}
+               </p>
               <h3 className={cn("text-display-card mt-1.5 max-w-none text-white sm:max-w-[12.5ch] sm:text-balance", variant === "compact" ? "text-[1.12rem]" : "text-[1.28rem]")}>
                 {tool.name}
               </h3>
             </div>
             <span
-              className="selection-chip rounded-full px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-white"
+              className="selection-chip rounded-full px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white"
               style={{ background: "rgba(24,17,12,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)" }}
             >
               {formattedDate}

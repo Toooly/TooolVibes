@@ -6,13 +6,13 @@ import { usePathname } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
 import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
-import { clearCompareTools } from "@/lib/discovery/local-storage";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
 
 export function CompareTray() {
   const pathname = usePathname();
   const persistence = useDiscoveryPersistence();
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
+  const clearCompare = useToolWorkspaceStore((state) => state.clearCompare);
   const compare = compareSlugs;
   const [isOpen, setIsOpen] = useState(true);
 
@@ -107,7 +107,7 @@ export function CompareTray() {
               </button>
               <button
                 type="button"
-                onClick={() => clearCompareTools()}
+                onClick={clearCompare}
                 className="selection-chip text-ui-strong rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.15em] sm:w-auto"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted)" }}
               >

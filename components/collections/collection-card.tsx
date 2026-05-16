@@ -183,7 +183,7 @@ export function CollectionCard({
                   {hasAdvancedSpecialIssue(collection) ? "Issue avanzata" : "Issue"}
                 </span>
               ) : null}
-              <span className="selection-chip rounded-full border px-2.5 py-0.5 text-[0.58rem] font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: collection.access === "open" ? "rgba(255,255,255,0.76)" : "rgba(249,239,212,0.92)", color: "var(--muted-strong)" }}>
+              <span className="selection-chip rounded-full border px-2.5 py-0.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: collection.access === "open" ? "rgba(255,255,255,0.76)" : "rgba(249,239,212,0.92)", color: "var(--muted-strong)" }}>
                 {access.subtleLabel}
               </span>
             </div>

@@ -26,7 +26,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
               Archivio tool
             </p>
-            <h1 className="mt-4 max-w-[15ch] text-[clamp(2rem,9vw,3.25rem)] leading-[0.98] text-white">
+            <h1 className="mt-4 max-w-[15ch] text-[clamp(2rem,9vw,3.25rem)] leading-[1.05] text-white">
               Cerca meglio. Scegli pi&ugrave; in fretta.
             </h1>
             <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-7 text-white/68 sm:mt-5 sm:text-[1rem]">

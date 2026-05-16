@@ -62,7 +62,7 @@ export function SurfaceIntro({
               <span className="h-2 w-2 rounded-full bg-[var(--gold)] shadow-[0_0_0_5px_rgba(243,191,76,0.14)]" />
               <p className="editorial-label !text-white/60">{asideEyebrow}</p>
             </div>
-            <p className="text-display-card mt-3 text-[1.58rem] leading-[1.02] text-white sm:text-[1.86rem]">{asideTitle}</p>
+            <p className="text-display-card mt-3 text-[1.58rem] leading-[1.15] text-white sm:text-[1.86rem]">{asideTitle}</p>
             <p className="mt-3 text-sm leading-7 text-white/72">{asideCopy}</p>
           </div>
         </div>

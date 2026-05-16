@@ -143,7 +143,7 @@ export function RequestToolForm({ className }: { className?: string }) {
   const fieldClass =
     "premium-input min-h-11 px-3.5 py-2.5 text-[0.92rem] placeholder:text-[var(--muted)] sm:min-h-12 sm:px-4 sm:py-3 sm:text-[0.98rem]";
   const labelClass =
-    "text-[0.66rem] font-semibold uppercase tracking-[0.12em] text-white/68 sm:text-[0.72rem] sm:tracking-[0.14em]";
+    "text-xs font-semibold uppercase tracking-[0.12em] text-white/68 sm:text-sm sm:tracking-[0.14em]";
 
   return (
     <div className={cn("relative", className)}>
@@ -180,7 +180,7 @@ export function RequestToolForm({ className }: { className?: string }) {
               <details className="micro-details mt-3 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2.5 sm:hidden">
                 <summary>Segnali richiesti</summary>
                 <div className="mt-3 grid gap-2">
-                  {["Nome tool", "Link ufficiale", "Categoria", "Perche e utile"].map(
+                  {["Nome tool", "Link ufficiale", "Categoria", "Perché è utile"].map(
                     (item, index) => (
                       <div key={item} className="flex items-center gap-2 rounded-[14px] bg-white/7 p-2.5">
                         <span className="grid size-7 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white">

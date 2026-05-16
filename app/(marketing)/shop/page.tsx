@@ -31,7 +31,7 @@ export default function ShopPage() {
         <div className="grid gap-7 lg:grid-cols-[minmax(0,0.94fr)_minmax(20rem,0.8fr)] lg:items-center">
           <div className="max-w-[44rem]">
             <PremiumBadge tone="warning">Digital Shop</PremiumBadge>
-            <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[0.98] text-white">
+            <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[1.05] text-white">
               Asset, selezioni premium e shortcut per lavorare più veloce.
             </h1>
             <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-7 text-white/74 sm:mt-5 sm:text-[1rem]">

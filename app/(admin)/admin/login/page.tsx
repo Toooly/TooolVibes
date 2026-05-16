@@ -35,7 +35,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
               <p className="text-sm text-white/58">Founders access</p>
             </div>
           </div>
-          <h1 className="mt-4 text-[2rem] leading-[1.02] sm:text-[2.2rem]">{marketingStrings.admin.loginTitle}</h1>
+          <h1 className="mt-4 text-[2rem] leading-[1.1] sm:text-[2.2rem]">{marketingStrings.admin.loginTitle}</h1>
           <p className="mt-3 text-[0.98rem] leading-7 text-white/72">
             {marketingStrings.admin.loginDescription}
           </p>

@@ -327,7 +327,7 @@ img {
     font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
     letter-spacing: 0;
     font-weight: 600;
-    line-height: 0.98;
+    line-height: 1.1;
   }
 
   p {
@@ -3613,7 +3613,7 @@ img {
   }
 
   .selection-status {
-    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.6rem] font-medium uppercase tracking-[0.15em];
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.68rem] font-medium uppercase tracking-[0.15em];
     font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
     font-weight: 500;
     color: color-mix(in srgb, var(--foreground) 88%, var(--accent-strong) 12%);

@@ -6,7 +6,6 @@ import { ArrowRight } from "lucide-react";
 
 import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
-import { clearCompareTools } from "@/lib/discovery/local-storage";
 import {
   getCompareDimensionLeaders,
   getEditorialScoreDimensions,
@@ -195,6 +194,7 @@ function LegacyCompareMobileMatrix({
 
 export function CompareBoard({ tools }: CompareBoardProps) {
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
+  const clearCompare = useToolWorkspaceStore((state) => state.clearCompare);
 
   const comparedTools = useMemo(
     () =>
@@ -377,7 +377,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
             </Link>
             <button
               type="button"
-              onClick={() => clearCompareTools()}
+              onClick={clearCompare}
               className="selection-chip text-ui-strong rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.15em]"
               style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted)" }}
             >

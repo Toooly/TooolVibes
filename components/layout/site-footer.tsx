@@ -42,10 +42,10 @@ export function SiteFooter() {
               </div>
             </div>
 
-            <h2 className="mt-4 hidden max-w-[20rem] text-[1.35rem] leading-tight text-white sm:block sm:text-[1.85rem]">
+            <h2 className="mt-4 max-w-[20rem] text-[1.15rem] leading-tight text-white sm:text-[1.85rem]">
               I tool migliori, senza perdere tempo nel rumore.
             </h2>
-            <p className="mt-3 hidden max-w-[36rem] text-[0.88rem] leading-6 text-white/64 sm:block sm:text-[0.94rem] sm:leading-7">
+            <p className="mt-3 max-w-[36rem] text-[0.82rem] leading-6 text-white/64 sm:text-[0.94rem] sm:leading-7">
               Directory curata di AI tools, SaaS, no-code builder, vibe coding e
               automazioni con link chiari, filtri utili e una selezione pensata per
               l&apos;uso reale.
