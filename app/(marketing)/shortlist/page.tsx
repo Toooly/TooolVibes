@@ -14,7 +14,7 @@ export default async function ShortlistPage() {
       <SurfaceIntro
         eyebrow="Workspace"
         title="La memoria di lavoro dei pochi tool che restano davvero in gioco."
-        description="Qui non salvi tutto. Tieni vivi solo i profili che meritano ancora attenzione, priorit? o una nota vera."
+        description="Qui non salvi tutto. Tieni vivi solo i profili che meritano ancora attenzione, priorità o una nota vera."
         helperEyebrow="Come usarla"
         helperCopy="Salva un tool ovunque lo incontri, poi torna qui per fissare il motivo per cui resta dentro. Quando il set si restringe davvero, passa al compare."
         actions={

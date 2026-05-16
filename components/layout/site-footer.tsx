@@ -28,8 +28,8 @@ export function SiteFooter() {
   return (
     <footer className="page-shell pb-6 pt-6 sm:pb-8 sm:pt-9">
       <PremiumPanel as="section" tone="dark" className="footer-motion px-5 py-5 sm:px-7 sm:py-6">
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.88fr)_minmax(18rem,1.12fr)] lg:items-start">
-          <div>
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.88fr)_minmax(18rem,1.12fr)] lg:items-stretch">
+          <div className="min-w-0">
             <div className="flex items-center gap-3">
               <BrandLogo size={42} />
               <div>
@@ -93,8 +93,8 @@ export function SiteFooter() {
             </details>
           </div>
 
-          <div className="hidden gap-4 md:grid md:grid-cols-2">
-            <div className="dynamic-card rounded-[22px] border border-white/12 bg-white/8 p-4">
+          <div className="hidden min-w-0 gap-4 md:grid md:grid-cols-2 md:items-stretch">
+            <div className="dynamic-card h-full rounded-[22px] border border-white/12 bg-white/8 p-4">
               <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/48">
                 Navigazione
               </p>
@@ -111,7 +111,7 @@ export function SiteFooter() {
               </div>
             </div>
 
-            <div className="dynamic-card rounded-[22px] border border-white/12 bg-white/8 p-4">
+            <div className="dynamic-card h-full rounded-[22px] border border-white/12 bg-white/8 p-4">
               <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/48">
                 Categorie
               </p>
@@ -130,9 +130,9 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col gap-3 border-t border-white/12 pt-4 text-[0.76rem] sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-white/50">&copy; 2026 TooolVibes. Directory premium per AI, SaaS, no-code e automazioni.</p>
-          <div className="hidden flex-wrap gap-3 sm:flex">
+        <div className="mt-6 flex min-w-0 flex-col gap-3 border-t border-white/12 pt-4 text-[0.76rem] sm:flex-row sm:items-center sm:justify-between">
+          <p className="min-w-0 text-white/50">&copy; 2026 TooolVibes. Directory premium per AI, SaaS, no-code e automazioni.</p>
+          <div className="hidden shrink-0 flex-wrap justify-end gap-3 sm:flex">
             <a
               href={siteConfig.shopUrl}
               target="_blank"

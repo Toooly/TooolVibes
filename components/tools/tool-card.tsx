@@ -86,7 +86,7 @@ function ToolCardComponent({
           selected && "tool-card-selected",
           isSaved && "tool-card-saved",
           isCompared && "tool-card-compared",
-          swipeFriendly && "w-[22.25rem] shrink-0 snap-start",
+          swipeFriendly && "tool-card-swipe tool-card-swipe-featured",
         )}
       >
         <div className="card-glow absolute inset-0" />
@@ -101,7 +101,7 @@ function ToolCardComponent({
               sizes="(max-width: 1024px) 100vw, 44vw"
               className="image-float object-cover"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.12),rgba(26,20,64,0.66))]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.24),rgba(18,15,35,0.78))]" />
             <div className="absolute left-4 top-4 flex flex-wrap gap-2">
               <span
                 className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white"
@@ -183,7 +183,7 @@ function ToolCardComponent({
           isSaved && "tool-card-saved",
           isCompared && "tool-card-compared",
           selected && "is-selected",
-          swipeFriendly && "w-[18.25rem] shrink-0 snap-start",
+          swipeFriendly && "tool-card-swipe tool-card-swipe-scan",
         )}
       >
         <div className="card-glow absolute inset-0" />
@@ -264,7 +264,9 @@ function ToolCardComponent({
         isSaved && "tool-card-saved",
         isCompared && "tool-card-compared",
         swipeFriendly &&
-          (variant === "compact" ? "w-[20rem] shrink-0 snap-start" : "w-[22rem] shrink-0 snap-start"),
+          (variant === "compact"
+            ? "tool-card-swipe tool-card-swipe-compact"
+            : "tool-card-swipe tool-card-swipe-standard"),
       )}
     >
       <div className="card-glow absolute inset-0" />
@@ -286,7 +288,7 @@ function ToolCardComponent({
             sizes={variant === "compact" ? "(max-width: 1024px) 86vw, 26vw" : "(max-width: 1024px) 100vw, 33vw"}
             className="image-float object-cover"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.08),rgba(18,15,35,0.54))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.22),rgba(18,15,35,0.76))]" />
           <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
             <span
               className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white"

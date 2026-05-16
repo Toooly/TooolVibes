@@ -28,7 +28,7 @@ type ToolFiltersProps = {
 
 const sortLabels: Record<ToolSortKey, string> = {
   recent: "Più recenti",
-  featured: "Prima gli evidenza",
+  featured: "Prima in evidenza",
   name: "Ordine alfabetico",
   updated: "Aggiornati da poco",
 };

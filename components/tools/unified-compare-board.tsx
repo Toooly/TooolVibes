@@ -210,7 +210,7 @@ function DirectoryCompareMobileMatrix({
       <div className="compare-mobile-matrix__header">
         <p className="editorial-label">Differenze vive</p>
         <p>
-          Tocca e scorri le righe: le celle illuminate indicano dove partire nella lettura.
+          Scorri ogni asse: la card evidenziata mostra dove partire nella lettura.
         </p>
       </div>
 
@@ -240,6 +240,17 @@ function DirectoryCompareMobileMatrix({
                   >
                     <strong>{tool.name}</strong>
                     <p>{row.value(tool)}</p>
+                    <span
+                      className="compare-mobile-matrix__meter"
+                      aria-hidden="true"
+                      style={
+                        {
+                          "--compare-strength": isLead ? "92%" : `${62 - Math.min(22, tools.indexOf(tool) * 7)}%`,
+                        } as CSSProperties
+                      }
+                    >
+                      <span />
+                    </span>
                   </div>
                 );
               })}
@@ -348,12 +359,12 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
 
   return (
     <div className="space-y-5">
-      <div className="metadata-block rounded-[28px] border px-4 py-4 sm:px-5 sm:py-5" style={{ borderColor: "var(--line)" }}>
+      <div className="compare-summary-panel metadata-block rounded-[28px] border px-4 py-4 sm:px-5 sm:py-5" style={{ borderColor: "var(--line)" }}>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-[48rem]">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="compare-summary-kickers flex flex-wrap items-center gap-2">
               <span className="selection-status is-fresh">Compare attivo</span>
-              <span className="selection-chip">{tools.length}/{MAX_COMPARE_TOOLS} tool</span>
+              <span className="selection-chip compare-count-chip">{tools.length}/{MAX_COMPARE_TOOLS} tool</span>
             </div>
             <h2 className="section-title mt-3 text-[1.9rem] sm:text-[2.55rem] lg:text-[3rem]">
               {tools.length > 1
@@ -366,11 +377,11 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
                 : "Il compare del catalogo usa gli stessi tool che selezioni da Cerca, drawer e command palette."}
             </p>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <PremiumLink href="/archivio" tone="secondary">
+          <div className="compare-summary-actions flex flex-col gap-2 sm:flex-row">
+            <PremiumLink href="/archivio" tone="secondary" size="sm">
               Aggiungi tool
             </PremiumLink>
-            <PremiumButton type="button" tone="subtle" onClick={clearCompare}>
+            <PremiumButton type="button" tone="subtle" size="sm" onClick={clearCompare}>
               Svuota
             </PremiumButton>
           </div>
@@ -392,12 +403,12 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         </PremiumPanel>
       ) : null}
 
+      <DirectoryCompareMobileMatrix tools={tools} leadTool={leadTool} />
       <DirectoryCompareMobileDeck
         tools={tools}
         leadTool={leadTool}
         onRemove={(slug) => toggleCompare(slug)}
       />
-      <DirectoryCompareMobileMatrix tools={tools} leadTool={leadTool} />
 
       {tools.length > 1 ? (
         <section className="compare-desktop-matrix hidden md:block">

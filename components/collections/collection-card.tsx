@@ -76,7 +76,7 @@ export function CollectionCard({
               sizes="(max-width: 1024px) 100vw, 46vw"
               className="image-float object-cover"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.14),rgba(18,15,35,0.68))]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.24),rgba(18,15,35,0.78))]" />
             <div className="absolute left-4 top-4 flex flex-wrap gap-2">
               <span className="selection-status">{collection.cover_kicker}</span>
               {collection.surface === "special-issue" ? (
@@ -136,7 +136,7 @@ export function CollectionCard({
                 {leadToolName ? `Tool guida: ${leadToolName}. ` : ""}
                 {hiddenToolCount > 0
                   ? `${visibleToolCount} tool leggibili ora, ${hiddenToolCount} nel layer completo.`
-                  : "Tutti i tool della collection sono gi? leggibili qui."}
+                  : "Tutti i tool della collection sono già leggibili qui."}
               </p>
             </div>
 
@@ -173,7 +173,7 @@ export function CollectionCard({
               sizes="160px"
               className="image-float object-cover"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.08),rgba(18,15,35,0.48))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.22),rgba(18,15,35,0.72))]" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -224,7 +224,7 @@ export function CollectionCard({
             sizes="(max-width: 1024px) 100vw, 33vw"
             className="image-float object-cover"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.08),rgba(18,15,35,0.56))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.22),rgba(18,15,35,0.76))]" />
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">
             <span className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white" style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(24,17,12,0.28)" }}>
               {collection.cover_kicker}

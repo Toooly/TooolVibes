@@ -21,7 +21,7 @@ export default function ProductHuntPage() {
   return (
     <div className="page-shell space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
       <section className="hero-shell hero-shell-radar motion-reveal px-5 py-5 text-white sm:rounded-[38px] sm:px-7 sm:py-8">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.52fr)] lg:items-end">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.52fr)] lg:items-center">
           <div className="max-w-[48rem]">
             <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/58">
               Product Hunt radar

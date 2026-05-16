@@ -2,7 +2,9 @@
 
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
-const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-v4";
+import { BrandLogo } from "@/components/layout/brand-logo";
+
+const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-v5";
 const INTRO_TEXT = "TOOOLVIBES";
 const INTRO_DURATION_MS = 4680;
 
@@ -64,11 +66,14 @@ export function HomeBrandIntro() {
       <div className="brand-intro__field" aria-hidden="true">
         <span className="brand-intro__starfield brand-intro__starfield--one" />
         <span className="brand-intro__starfield brand-intro__starfield--two" />
-        <span className="brand-intro__toon-cloud brand-intro__toon-cloud--one" />
-        <span className="brand-intro__toon-cloud brand-intro__toon-cloud--two" />
-        <span className="brand-intro__suction brand-intro__suction--one" />
-        <span className="brand-intro__suction brand-intro__suction--two" />
-        <span className="brand-intro__suction brand-intro__suction--three" />
+        <span className="brand-intro__aurora brand-intro__aurora--one" />
+        <span className="brand-intro__aurora brand-intro__aurora--two" />
+        <span className="brand-intro__prism">
+          <span className="brand-intro__prism-ring brand-intro__prism-ring--one" />
+          <span className="brand-intro__prism-ring brand-intro__prism-ring--two" />
+          <span className="brand-intro__prism-ring brand-intro__prism-ring--three" />
+          <span className="brand-intro__prism-core" />
+        </span>
         <span className="brand-intro__word" aria-label="TOOOLVIBES">
           {INTRO_TEXT.split("").map((letter, index) => (
             <span
@@ -80,7 +85,6 @@ export function HomeBrandIntro() {
                   "--intro-drift": (INTRO_TEXT.length - 1) / 2 - index,
                   "--intro-lane": (index % 3) - 1,
                   "--intro-tilt": index % 2 === 0 ? "-1" : "1",
-                  "--intro-bounce": index % 2 === 0 ? "0.82rem" : "-0.62rem",
                   "--intro-angle": `${index * 34 - 154}deg`,
                   "--intro-angle-inverse": `${154 - index * 34}deg`,
                   "--intro-radius": `${Math.abs((INTRO_TEXT.length - 1) / 2 - index) * 0.42 + 1.4}rem`,
@@ -91,15 +95,11 @@ export function HomeBrandIntro() {
             </span>
           ))}
         </span>
-        <span className="brand-intro__cartoon-hole">
-          <span className="brand-intro__hole-shadow" />
-          <span className="brand-intro__hole-rim" />
-          <span className="brand-intro__hole-mouth" />
-          <span className="brand-intro__hole-glint" />
+        <span className="brand-intro__logo-reveal">
+          <span className="brand-intro__logo-pulse" />
+          <BrandLogo size={126} priority className="brand-intro__logo" />
         </span>
-        <span className="brand-intro__pop brand-intro__pop--one" />
-        <span className="brand-intro__pop brand-intro__pop--two" />
-        <span className="brand-intro__pop brand-intro__pop--three" />
+        <span className="brand-intro__caption">AI tools discovery platform</span>
       </div>
 
       <button

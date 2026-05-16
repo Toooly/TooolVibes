@@ -28,7 +28,7 @@ export default function ShopPage() {
   return (
     <div className="page-shell space-y-5 pb-24 pt-4 sm:space-y-7 sm:pb-16 sm:pt-6">
       <section className="hero-shell hero-shell-shop motion-reveal px-5 py-5 text-white sm:rounded-[38px] sm:px-7 sm:py-8">
-        <div className="grid gap-7 lg:grid-cols-[minmax(0,0.94fr)_minmax(20rem,0.8fr)] lg:items-end">
+        <div className="grid gap-7 lg:grid-cols-[minmax(0,0.94fr)_minmax(20rem,0.8fr)] lg:items-center">
           <div className="max-w-[44rem]">
             <PremiumBadge tone="warning">Digital Shop</PremiumBadge>
             <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[0.98] text-white">

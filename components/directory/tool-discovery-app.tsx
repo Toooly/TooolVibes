@@ -810,8 +810,8 @@ export function ToolDiscoveryApp({
         </aside>
 
         <div className="min-w-0 space-y-4 lg:space-y-5">
-          <div id="archive-search" className="scroll-mt-28 grid grid-cols-[minmax(0,1fr)_7.2rem_2.75rem] gap-2 sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
-            <label>
+          <div id="archive-search" className="scroll-mt-28 grid grid-cols-[minmax(0,1fr)_2.75rem] gap-2 sm:grid-cols-[minmax(0,1fr)_10rem_3.25rem] sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
+            <label className="col-span-2 min-w-0 sm:col-span-1">
               <span className="sr-only">Cerca tool</span>
               <input
                 ref={searchInputRef}
@@ -824,7 +824,7 @@ export function ToolDiscoveryApp({
             <select
               value={sortMode}
               onChange={(event) => setSortMode(event.target.value as SortMode)}
-              className="premium-input col-span-1 min-h-12 px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3"
+              className="premium-input col-span-1 min-h-12 min-w-0 px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3"
               aria-label="Ordina tool"
             >
               <option value="recommended">Consigliati</option>

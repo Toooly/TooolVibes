@@ -23,7 +23,7 @@ export function ToolGrid({
       >
         <h3 className="text-2xl">Nessun tool disponibile.</h3>
         <p className="mt-3 text-sm leading-7" style={{ color: "var(--muted)" }}>
-          Quando il catalogo ? vuoto, questo spazio resta pronto ad accogliere i tool pubblicati.
+          Quando il catalogo è vuoto, questo spazio resta pronto ad accogliere i tool pubblicati.
         </p>
       </div>
     );
@@ -32,7 +32,7 @@ export function ToolGrid({
   return (
     <>
       {mobileSwipe ? (
-        <div className="tool-rail -mx-1.5 flex snap-x gap-4 overflow-x-auto px-1.5 pb-2 md:hidden">
+        <div className="tool-rail -mx-1.5 flex snap-x gap-3 overflow-x-auto px-1.5 pb-2 md:hidden">
           {tools.map((tool, index) => (
             <ToolCard
               key={tool.id}

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 import { EditorialPostCard } from "@/components/editorial/editorial-post-card";
 import { SectionHeading } from "@/components/sections/section-heading";
@@ -56,10 +56,10 @@ export default async function PostsPage() {
           </div>
 
           <div className="col-span-12 lg:col-span-4">
-            <div className="space-y-3 lg:pl-4">
-              <div className="dark-panel panel-lift rounded-[28px] p-4.5 sm:p-5">
+            <div className="dark-panel panel-lift rounded-[28px] p-4.5 sm:p-5 lg:ml-4">
+              <div>
                 <p className="editorial-label !text-white/60">Importi attivi</p>
-                <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
                     <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">Tool writeup</p>
                     <p className="mt-2 text-[1.8rem] leading-none text-white">{toolWriteups.length}</p>
@@ -71,24 +71,20 @@ export default async function PostsPage() {
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                {curationCriteria.map((item) => (
-                  <div
-                    key={item}
-                    className="stat-block rounded-[22px] border p-3.5"
-                    style={{
-                      borderColor: "var(--line)",
-                      background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))",
-                    }}
-                  >
-                    <p className="editorial-label">{item}</p>
-                    <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
-                      Resta dentro del prodotto solo se aiuta a scegliere meglio e più in fretta.
-                    </p>
-                  </div>
-                ))}
+              <div className="mt-5 border-t border-white/10 pt-4">
+                <p className="editorial-label !text-white/60">Criteri di lettura</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {curationCriteria.map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border border-white/12 bg-white/8 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white/72"
+                    >
+                      {item}
+                    </span>
+                  ))}
               </div>
             </div>
+          </div>
           </div>
         </div>
       </section>
@@ -98,7 +94,7 @@ export default async function PostsPage() {
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
             <div>
               <p className="editorial-label !text-white/58">Featured</p>
-              <p className="text-display-card mt-2.5 max-w-none text-[1.4rem] text-white sm:max-w-[18ch] sm:text-[1.72rem] sm:text-balance">
+              <p className="text-display-card mt-2.5 max-w-none text-[1.4rem] text-white sm:max-w-[24ch] sm:text-[1.72rem] sm:text-balance">
                 Tre approfondimenti che fanno capire subito il taglio del layer editoriale.
               </p>
             </div>
@@ -123,8 +119,8 @@ export default async function PostsPage() {
         <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
           <SectionHeading
             eyebrow="Tool writeup"
-            title="Gli articoli collegati ai tool già presenti nel catalogo."
-            description="Ogni scheda prende il contenuto editoriale del tool e lo rimette in forma di lettura: non duplicazione, ma accesso più chiaro."
+            title="Gli articoli collegati ai tool giÃ  presenti nel catalogo."
+            description="Ogni scheda prende il contenuto editoriale del tool e lo rimette in forma di lettura: non duplicazione, ma accesso piÃ¹ chiaro."
           />
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {toolWriteups.map((post) => (
@@ -139,7 +135,7 @@ export default async function PostsPage() {
           <SectionHeading
             eyebrow="Guide legacy"
             title="Le guide storiche ripulite e riallineate al prodotto attuale."
-            description="Qui recuperiamo i pezzi più utili del vecchio sito senza portarci dietro il tono da demo o il framing promozionale troppo pesante."
+            description="Qui recuperiamo i pezzi piÃ¹ utili del vecchio sito senza portarci dietro il tono da demo o il framing promozionale troppo pesante."
           />
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {guides.map((post) => (

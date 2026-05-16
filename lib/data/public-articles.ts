@@ -1,4 +1,4 @@
-import "server-only";
+﻿import "server-only";
 
 import { cache } from "react";
 
@@ -51,7 +51,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     featured: true,
     highlights: [
       "4K headshots in meno di un'ora",
-      "Molto pi? economico di uno shooting tradizionale",
+      "Molto più economico di uno shooting tradizionale",
       "Ottimo quando il personal brand deve sembrare subito curato",
     ],
     details: [
@@ -83,10 +83,10 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     details: [
       "Integra WordPress, Google Docs e brand voice tools",
       "Aggiunge topic scoring e content gap analysis",
-      "Si chiude bene con un workflow editoriale gi? disciplinato",
+      "Si chiude bene con un workflow editoriale già disciplinato",
     ],
     cautions: [
-      "Rende meglio se il processo contenuti ? gi? chiaro",
+      "Rende meglio se il processo contenuti è già chiaro",
       "Il pricing cresce quando il lavoro diventa team-wide",
     ],
   },
@@ -95,7 +95,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     title: "Jenny AI",
     dek: "Workspace di scrittura accademica con citazioni, note e controllo.",
     summary:
-      "Jenni aiuta studenti e ricercatori a scrivere pi? velocemente, citare con precisione e tenere insieme fonti, PDF e revisioni.",
+      "Jenni aiuta studenti e ricercatori a scrivere più velocemente, citare con precisione e tenere insieme fonti, PDF e revisioni.",
     kind: "guide",
     published_at: "2025-07-16",
     source_label: "Legacy guide",
@@ -108,8 +108,8 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     ],
     details: [
       "Adatto a paper, ricerche e contenuti specialistici",
-      "Sincronizza documenti e appunti su pi? dispositivi",
-      "Lavora bene quando DOI e fonti sono gi? ordinati",
+      "Sincronizza documenti e appunti su più dispositivi",
+      "Lavora bene quando DOI e fonti sono già ordinati",
     ],
     cautions: [
       "Richiede controllo umano sul testo finale",
@@ -135,10 +135,10 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     details: [
       "Sincronizza Asana, Jira, Todoist, ClickUp e Linear",
       "Supporta buffer time, pause e scheduling intelligente",
-      "Ha senso quando la giornata ? gi? piena e va difesa",
+      "Ha senso quando la giornata è già piena e va difesa",
     ],
     cautions: [
-      "Funziona meglio se il calendario di partenza ? leggibile",
+      "Funziona meglio se il calendario di partenza è leggibile",
       "Richiede abitudine al planning e ai time block",
     ],
   },
@@ -147,7 +147,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     title: "Windsor AI",
     dek: "ELT, connector e attribution per leggere meglio il ROI.",
     summary:
-      "Windsor unifica fonti marketing, CRM e analytics per dare a growth team e BI una vista pi? affidabile della spesa e dei ritorni.",
+      "Windsor unifica fonti marketing, CRM e analytics per dare a growth team e BI una vista più affidabile della spesa e dei ritorni.",
     kind: "guide",
     published_at: "2025-07-16",
     source_label: "Legacy guide",
@@ -161,11 +161,11 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     details: [
       "Porta i dati in Sheets, BigQuery, Snowflake o Looker Studio",
       "Refresh automatici e onboarding no-code",
-      "Ha pi? senso quando i sistemi sono gi? numerosi e frammentati",
+      "Ha più senso quando i sistemi sono già numerosi e frammentati",
     ],
     cautions: [
       "Meno utile se hai una sola fonte e un solo problema",
-      "Conviene solo quando la lettura del ROI ? davvero il collo di bottiglia",
+      "Conviene solo quando la lettura del ROI è davvero il collo di bottiglia",
     ],
   },
   {
@@ -187,11 +187,11 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     details: [
       "Real-time tips per mantenere il tono coerente",
       "Input rapido via WhatsApp o email",
-      "Utile quando la produzione social ? il vero lavoro",
+      "Utile quando la produzione social è il vero lavoro",
     ],
     cautions: [
-      "? davvero focalizzato su LinkedIn",
-      "Rende meno se il posizionamento personale non ? chiaro",
+      "È davvero focalizzato su LinkedIn",
+      "Rende meno se il posizionamento personale non è chiaro",
     ],
   },
   {
@@ -213,11 +213,11 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     details: [
       "Connettori e loader per modelli, vector DB e API",
       "SDK, CLI e API per portarlo nel CI",
-      "Utile quando il problema ? orchestrare, non solo conversare",
+      "Utile quando il problema è orchestrare, non solo conversare",
     ],
     cautions: [
-      "Richiede una certa maturit? tecnica",
-      "Ha pi? senso se devi davvero orchestrare AI systems",
+      "Richiede una certa maturità tecnica",
+      "Ha più senso se devi davvero orchestrare AI systems",
     ],
   },
   {
@@ -238,12 +238,12 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     ],
     details: [
       "Supporta multi-currency e PayPal",
-      "Riduce la complessit? operativa del billing",
+      "Riduce la complessità operativa del billing",
       "Ha senso quando vendi software o asset digitali",
     ],
     cautions: [
       "Le fee vanno considerate nel margine reale",
-      "Conviene se il prodotto ? davvero vendibile via checkout",
+      "Conviene se il prodotto è davvero vendibile via checkout",
     ],
   },
   {
@@ -265,11 +265,11 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     details: [
       "Supporta multi-LLM e integrazioni esterne",
       "Buon fit per sales rep virtuali o assistenti operativi",
-      "Meglio quando il caso d'uso ? molto definito",
+      "Meglio quando il caso d'uso è molto definito",
     ],
     cautions: [
       "Non sostituisce un processo commerciale confuso",
-      "Rende pi? quando il perimetro ? stretto",
+      "Rende più quando il perimetro è stretto",
     ],
   },
   {
@@ -312,7 +312,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     highlights: [
       "Design, code e growth nello stesso flusso",
       "Publish mobile-ready molto rapido",
-      "Form e payments gi? integrati",
+      "Form e payments già integrati",
     ],
     details: [
       "Buon fit per landing e siti snelli",
@@ -347,7 +347,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     ],
     cautions: [
       "Ha senso solo se hai davvero un programma partner",
-      "Rende meglio quando la revenue motion ? gi? chiara",
+      "Rende meglio quando la revenue motion è già chiara",
     ],
   },
 ];
