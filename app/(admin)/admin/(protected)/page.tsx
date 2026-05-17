@@ -48,7 +48,7 @@ export default async function AdminDashboardPage({
             <SectionHeading
               eyebrow="Tools dashboard"
               title="Gestione strumenti, publishing e segnali runtime."
-              description="La surface tools lavora ora con fallback intenzionale, source visibility e quick actions pi? robuste. Quando Supabase non ? pienamente accessibile, il pannello resta leggibile e smette di fingere di essere live."
+              description="La surface tools lavora ora con fallback intenzionale, source visibility e quick actions più robuste. Quando Supabase non è pienamente accessibile, il pannello resta leggibile e smette di fingere di essere live."
             />
             <div className="flex flex-wrap gap-3">
               <Link
@@ -179,7 +179,7 @@ export default async function AdminDashboardPage({
                 Inventario editoriale completo, con azioni rapide.
               </h2>
               <p className="mt-3 max-w-[44rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
-                La lista sottostante ? il punto di lavoro quotidiano: stato, tag, visibilit?
+                La lista sottostante è il punto di lavoro quotidiano: stato, tag, visibilità
                 pubblica e accesso diretto alla scheda.
               </p>
             </div>
@@ -192,7 +192,7 @@ export default async function AdminDashboardPage({
             >
               {canWrite
                 ? "Quick actions attive: featured, publish e delete scrivono su Supabase."
-                : "Quick actions in pausa: il runtime tools non ? in stato scrivibile."}
+                : "Quick actions in pausa: il runtime tools non è in stato scrivibile."}
             </div>
           </div>
 

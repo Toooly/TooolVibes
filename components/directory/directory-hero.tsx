@@ -20,9 +20,9 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
 
         <div className="relative grid gap-8 xl:grid-cols-[minmax(0,0.98fr)_minmax(25rem,1.02fr)] xl:items-center">
           <div className="max-w-[45rem] xl:pt-2">
-            <PremiumBadge tone="accent">AI tools discovery platform</PremiumBadge>
+            <PremiumBadge tone="accent">AI tools discovery system</PremiumBadge>
             <h1 className="text-display-hero mt-4 max-w-[12ch] text-[clamp(2rem,8vw,4.85rem)] text-white sm:mt-5">
-              Trova tool AI validi. Taglia il rumore.
+              Trova tool AI validi. Senti la direzione.
             </h1>
             <p className="mt-3 max-w-[42rem] text-[0.9rem] leading-6 text-white/74 sm:mt-5 sm:text-[1.13rem] sm:leading-8">
               TooolVibes seleziona AI tools, SaaS, no-code builder, vibe coding e
@@ -65,9 +65,9 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
             <div className="mt-5 hidden flex-wrap gap-2 sm:flex">
               {[
                 "Tool curati a mano",
-                "Aggiornamenti periodici",
+                "Segnali ad alto contrasto",
                 "Casi d'uso reali",
-                "No rumore",
+                "Zero rumore",
               ].map((item) => (
                 <span
                   key={item}
@@ -79,14 +79,14 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
             </div>
           </div>
 
-          <div className="hero-mini-visual hidden rounded-[32px] border border-white/12 bg-white/9 p-4 shadow-[0_22px_70px_rgba(8,14,38,0.22)] backdrop-blur xl:block">
+          <div className="hero-mini-visual hidden rounded-[32px] border border-white/12 bg-[linear-gradient(145deg,rgba(255,255,255,0.13),rgba(244,239,255,0.08))] p-4 shadow-[0_22px_70px_rgba(8,14,38,0.22)] xl:block">
             <div className="flex items-center justify-between gap-3 rounded-[24px] border border-white/10 bg-white/8 px-4 py-3">
               <div>
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/48">
                   Workspace preview
                 </p>
                 <p className="mt-1 text-sm text-white/68">
-                  Tool, segnali e azioni operative in una vista sola.
+                  Tool, segnali e azioni operative nello stesso flusso.
                 </p>
               </div>
               <PremiumBadge tone="dark">Premium</PremiumBadge>

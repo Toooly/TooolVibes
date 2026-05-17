@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 const primaryNav = [
   { href: "/", label: "Home" },
   { href: "/archivio", label: "Catalogo" },
-  { href: "/product-hunt", label: "Radar" },
+  { href: "/product-hunt", label: "Radar live" },
   { href: "/wishlist", label: "Suggerisci" },
   { href: "/shop", label: "Shop" },
   { href: "/community", label: "Community" },
@@ -20,7 +20,7 @@ const primaryNav = [
 
 function HeaderSearchFallback({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/70 p-1.5" aria-hidden="true">
+    <div className="flex items-center gap-2 rounded-full border border-[var(--line)] bg-[linear-gradient(135deg,#fff,#f3efff)] p-1.5" aria-hidden="true">
       <div
         className={cn(
           "rounded-full bg-[rgba(106,60,255,0.08)]",
@@ -50,7 +50,7 @@ export function SiteHeader() {
 
   return (
     <header className="site-header-motion page-shell sticky top-0 z-40 py-2.5 sm:py-4">
-      <div className="relative overflow-hidden rounded-[30px] border border-[rgba(76,55,166,0.14)] bg-[rgba(255,255,255,0.78)] px-3.5 py-3 shadow-[0_18px_54px_rgba(47,33,126,0.11)] backdrop-blur-2xl sm:px-4 lg:px-5">
+      <div className="relative overflow-hidden rounded-[30px] border border-[rgba(76,55,166,0.14)] bg-[linear-gradient(135deg,#fffdf8_0%,#f4efff_52%,#edf7ff_100%)] px-3.5 py-3 shadow-[0_18px_54px_rgba(47,33,126,0.11)] sm:px-4 lg:px-5">
         <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(106,60,255,0.28),transparent)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_0%,rgba(168,85,247,0.1),transparent_30%),radial-gradient(circle_at_82%_0%,rgba(57,210,246,0.08),transparent_28%)]" />
         <div className="relative flex items-center justify-between gap-3">
@@ -62,7 +62,7 @@ export function SiteHeader() {
               </p>
               <p className="hidden items-center gap-1.5 text-[0.74rem] text-[var(--muted)] 2xl:flex">
                 <span className="live-signal-dot scale-[0.72]" aria-hidden="true" />
-                AI tools discovery premium
+                AI tools discovery system
               </p>
             </div>
           </Link>

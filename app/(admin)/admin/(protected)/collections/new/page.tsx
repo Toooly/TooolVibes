@@ -42,7 +42,7 @@ export default async function NewCollectionPage() {
             <SectionHeading
               eyebrow="Nuova collection"
               title="Crea una nuova surface curatoriale"
-              description="Qui costruiamo una collection come vero modulo editoriale del prodotto: framing, accesso, sequencing tool e continuit? col layer pubblico."
+              description="Qui costruiamo una collection come vero modulo editoriale del prodotto: framing, accesso, sequencing tool e continuità col layer pubblico."
             />
             <div className="hidden flex-wrap gap-3 sm:flex">
               {topActions.map((action) => (
@@ -74,7 +74,7 @@ export default async function NewCollectionPage() {
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
               style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
             >
-              Il write path collections non ? ancora attivo. Questa pagina resta visibile per
+              Il write path collections non è ancora attivo. Questa pagina resta visibile per
               mostrare il form, ma il salvataggio reale richiede Supabase collections configurato.
             </div>
           ) : null}

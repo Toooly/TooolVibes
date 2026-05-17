@@ -96,7 +96,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
   const boundarySummary =
     hiddenToolCount > 0 || hiddenHighlightCount > 0
       ? `Qui restano fuori ${hiddenToolCount} tool e ${hiddenHighlightCount} highlight del layer completo.`
-      : "Tutti i moduli della collection sono gi? visibili in questa pagina.";
+      : "Tutti i moduli della collection sono già visibili in questa pagina.";
 
   return (
     <div className="tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
@@ -263,11 +263,11 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 title={
                   premiumAccess.state === "locked"
                     ? isAdvancedIssue
-                      ? "Una issue avanzata gi? leggibile in preview, con il cuore del formato nel layer completo."
-                      : "Una member issue gi? leggibile in preview, senza perdere il suo taglio curatoriale."
+                      ? "Una issue avanzata già leggibile in preview, con il cuore del formato nel layer completo."
+                      : "Una member issue già leggibile in preview, senza perdere il suo taglio curatoriale."
                     : isAdvancedIssue
-                      ? "Un formato editoriale pi? profondo di una collection standard."
-                      : "Una collection pi? guidata di un semplice elenco tool."
+                      ? "Un formato editoriale più profondo di una collection standard."
+                      : "Una collection più guidata di un semplice elenco tool."
                 }
                 description={
                   premiumAccess.state === "locked"
@@ -339,7 +339,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                         Resta nel layer completo
                       </p>
                     <p className="mt-2 text-sm leading-6 text-white/78">
-                      {hiddenToolCount} tool e {hiddenHighlightCount} highlight con la lettura pi? densa della collection, i moduli aggiuntivi e il framing completo.
+                      {hiddenToolCount} tool e {hiddenHighlightCount} highlight con la lettura più densa della collection, i moduli aggiuntivi e il framing completo.
                     </p>
                   </div>
                 </div>
@@ -420,7 +420,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                   </h3>
                   <p className="text-body-soft mt-3 text-[0.95rem]" style={{ color: "var(--muted-strong)" }}>
                     La preview lascia visibile lo scheletro dello stack, ma tiene fuori i passaggi
-                    pi? densi, le note pi? specifiche e la lettura completa della sequenza.
+                    più densi, le note più specifiche e la lettura completa della sequenza.
                   </p>
                   <div className="mt-5 flex flex-wrap items-center gap-3">
                     <ButtonLink href={premiumAccess.upgrade_href}>{premiumAccess.upgrade_label}</ButtonLink>
@@ -524,7 +524,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
         <section className="brand-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
           <SectionHeading
             eyebrow="Raccolte correlate"
-            title="Se questa collection ti interessa, queste sono le transizioni pi? naturali."
+            title="Se questa collection ti interessa, queste sono le transizioni più naturali."
             description="Le relazioni non sono casuali: tono, audience, superficie e tool condivisi tengono insieme il passaggio tra una raccolta e l'altra."
           />
           <div className="mt-6 grid gap-5 md:grid-cols-2">

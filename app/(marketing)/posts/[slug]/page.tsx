@@ -141,7 +141,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                     {tool.category}
                   </span>
                 </div>
-                <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[rgba(15,12,31,0.36)] px-4 py-4 backdrop-blur-sm">
+                <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(24,18,54,0.88),rgba(38,31,82,0.76))] px-4 py-4">
                   <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                     Perché conta
                   </p>
@@ -161,7 +161,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                     Una lettura importata per mantenere vivo il contenuto storico senza il tono da demo.
                   </h2>
                   <p className="mt-3 text-[0.98rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-                    Questa guida conserva il valore editoriale del vecchio sito ma entra qui con una gerarchia molto pi? chiara.
+                    Questa guida conserva il valore editoriale del vecchio sito ma entra qui con una gerarchia molto più chiara.
                   </p>
                 </div>
 

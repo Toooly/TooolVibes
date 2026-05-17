@@ -137,7 +137,7 @@ export function HomeDiscoveryLayer({ tools }: HomeDiscoveryLayerProps) {
                 <div className="metadata-block rounded-[26px] px-4.5 py-4.5">
                   <p className="brand-kicker">Passaggio corretto</p>
                   <p className="mt-2 text-[0.96rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-                    Se il lead regge, apri il profilo. Se il set ti sembra ancora largo, l&apos;archivio ? il posto giusto per stringere meglio.
+                    Se il lead regge, apri il profilo. Se il set ti sembra ancora largo, l&apos;archivio è il posto giusto per stringere meglio.
                   </p>
                 </div>
 

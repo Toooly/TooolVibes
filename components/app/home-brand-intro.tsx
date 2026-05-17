@@ -99,7 +99,7 @@ export function HomeBrandIntro() {
           <span className="brand-intro__logo-pulse" />
           <BrandLogo size={126} priority className="brand-intro__logo" />
         </span>
-        <span className="brand-intro__caption">AI tools discovery platform</span>
+        <span className="brand-intro__caption">AI tools discovery system</span>
       </div>
 
       <button

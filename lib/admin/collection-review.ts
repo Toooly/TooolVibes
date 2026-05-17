@@ -64,7 +64,7 @@ export function getCollectionTransitionReviewMeta(state: CollectionConflictRevie
     case "dismissed":
       return {
         label: "Dismissed",
-        description: "Warning archiviato in attesa di un sync pi? ricco.",
+        description: "Warning archiviato in attesa di un sync più ricco.",
       };
     case "unreviewed":
     default:

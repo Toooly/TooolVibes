@@ -78,7 +78,7 @@ export async function importMockCollectionsToSupabase({
         slug: entry.slug,
         title: entry.title,
         status: "skipped",
-        reason: "Gi? presente su Supabase con lo stesso slug.",
+        reason: "Già presente su Supabase con lo stesso slug.",
         toolSlugs,
       });
       continue;
@@ -91,7 +91,7 @@ export async function importMockCollectionsToSupabase({
         status: "conflict",
         reason:
           entry.warnings[0] ??
-          "Esiste gi? una collection con questo slug su Supabase ma con metadata diversi.",
+          "Esiste già una collection con questo slug su Supabase ma con metadata diversi.",
         toolSlugs,
       });
       continue;

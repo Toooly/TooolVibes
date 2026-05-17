@@ -158,7 +158,7 @@ export function getToolEditorialNote(tool: ToolRecord) {
 export function getToolWhyHere(tool: ToolRecord) {
   return (
     tool.why_here ??
-    "? qui perch? mostra abbastanza utilit?, direzione prodotto e sostanza da meritare una scheda vera, non solo un bookmark."
+    "? qui perché mostra abbastanza utilit?, direzione prodotto e sostanza da meritare una scheda vera, non solo un bookmark."
   );
 }
 

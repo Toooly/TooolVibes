@@ -27,11 +27,11 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
               Archivio tool
             </p>
             <h1 className="mt-4 max-w-[15ch] text-[clamp(2rem,9vw,3.25rem)] leading-[1.05] text-white">
-              Cerca meglio. Scegli pi&ugrave; in fretta.
+              Cerca meglio. Scegli con più vibe.
             </h1>
             <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-7 text-white/68 sm:mt-5 sm:text-[1rem]">
-              Cerca per nome, categoria, tag e descrizione. Qui l&apos;archivio resta
-              pulito, utile e pronto a portarti direttamente al tool o alla scheda interna.
+              Cerca per nome, categoria, tag e descrizione. Qui il catalogo resta
+              pulito, vivo e pronto a portarti al tool giusto senza rumore.
             </p>
 
             <div className="mt-5 hidden gap-2 overflow-x-auto pb-1 sm:mt-6 sm:flex sm:flex-wrap sm:gap-3">
@@ -57,8 +57,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
       <DirectoryBrowser
         tools={directoryTools}
         eyebrow="Esplora il catalogo"
-        title="Tutti i tool selezionati in una vista pulita."
-        description="Filtra, salva, confronta e costruisci uno stack senza perdere contesto."
+        title="Tutti i tool selezionati in una vista che respira."
+        description="Filtra, salva, confronta e costruisci uno stack senza perdere contesto o ritmo."
         initialQuery={params.q ?? ""}
         initialTag={params.tag ?? ""}
         initialGroup={initialGroup}

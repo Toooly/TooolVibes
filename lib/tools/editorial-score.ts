@@ -105,8 +105,8 @@ const descriptorCopy: Record<EditorialScoreDimension, Record<EditorialScoreLevel
     strong: "entra subito in mano",
   },
   versatility: {
-    measured: "pi? focalizzato",
-    solid: "copre pi? scenari",
+    measured: "più focalizzato",
+    solid: "copre più scenari",
     strong: "regge bene contesti diversi",
   },
   polish: {

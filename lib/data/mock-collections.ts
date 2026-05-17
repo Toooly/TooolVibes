@@ -18,7 +18,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       "Tool che reggono sia la prima prova sia i primi giorni di lavoro reale",
     ],
     premium_teaser:
-      "Quando serve andare oltre il setup iniziale, questo stack si apre bene a una issue pi? densa su sequencing, launch notes e handoff.",
+      "Quando serve andare oltre il setup iniziale, questo stack si apre bene a una issue più densa su sequencing, launch notes e handoff.",
     theme: "founder-stack",
     audience: "Solo founders",
     difficulty: "starter",
@@ -45,7 +45,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       {
         tool_slug: "framer-ai",
         role: "Superficie di lancio",
-        note: "Per dare credibilit? visiva alla presentazione pubblica o alla landing di validazione.",
+        note: "Per dare credibilità visiva alla presentazione pubblica o alla landing di validazione.",
         order: 3,
       },
       {
@@ -76,7 +76,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Bundle compatto",
     rationale:
-      "Qui conta la qualit? della lettura pi? della quantit? dei tool. La raccolta ? costruita per esplorare, convergere e arrivare a una superficie presentabile senza perdere tono editoriale.",
+      "Qui conta la qualità della lettura più della quantità dei tool. La raccolta è costruita per esplorare, convergere e arrivare a una superficie presentabile senza perdere tono editoriale.",
     highlights: [
       "Moodboard e direzione visiva forti in poco tempo",
       "Passaggio rapido da concept a prototipo navigabile",
@@ -128,7 +128,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
     title: "Stack creator per video e voice",
     slug: "creator-video-stack",
     description:
-      "Una selezione per chi lavora su video, audio e contenuti visuali con bisogno di velocit?, resa e workflow leggibili.",
+      "Una selezione per chi lavora su video, audio e contenuti visuali con bisogno di velocità, resa e workflow leggibili.",
     cover_image_url:
       "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Scelta curatoriale",
@@ -151,14 +151,14 @@ export const mockCollections: CuratedCollectionRecord[] = [
       {
         tool_slug: "runway",
         role: "Motore visuale",
-        note: "Per concept video, generazione e rifinitura con una sensazione prodotto pi? matura della media.",
+        note: "Per concept video, generazione e rifinitura con una sensazione prodotto più matura della media.",
         featured: true,
         order: 1,
       },
       {
         tool_slug: "descript",
         role: "Editing via testo",
-        note: "Per alleggerire il lavoro su audio e video quando il contenuto conta pi? dell'editing tecnico puro.",
+        note: "Per alleggerire il lavoro su audio e video quando il contenuto conta più dell'editing tecnico puro.",
         order: 2,
       },
       {
@@ -184,16 +184,16 @@ export const mockCollections: CuratedCollectionRecord[] = [
     title: "Toolkit ricerca e sintesi",
     slug: "research-synthesis-toolkit",
     description:
-      "Una raccolta pi? asciutta per aprire una ricerca, orientarsi bene, sintetizzare e trasformare insight in materiale davvero riutilizzabile.",
+      "Una raccolta più asciutta per aprire una ricerca, orientarsi bene, sintetizzare e trasformare insight in materiale davvero riutilizzabile.",
     cover_image_url:
       "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Bundle compatto",
     rationale:
       "Questa collection da` forma a un workflow di orientamento e sintesi. I tool qui non devono stupire da soli: devono ridurre il tempo tra domanda iniziale, lettura delle fonti e conoscenza riusabile.",
     highlights: [
-      "Pi? orientamento iniziale, meno rumore da tool generici",
+      "Più orientamento iniziale, meno rumore da tool generici",
       "Passaggio fluido da search a sintesi interna e output operativo",
-      "Buon equilibrio tra velocit?, verificabilita` e leggibilita` finale",
+      "Buon equilibrio tra velocità, verificabilità e leggibilità finale",
     ],
     theme: "research-synthesis",
     audience: "Research-led teams",
@@ -201,7 +201,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
     tone: "focused-bundle",
     access: "premium-preview",
     premium_teaser:
-      "La parte pubblica resta utile anche da sola; il layer member aggiunge note di lettura, sequencing e stack commentary pi? densi.",
+      "La parte pubblica resta utile anche da sola; il layer member aggiunge note di lettura, sequencing e stack commentary più densi.",
     editorial_state: "published",
     surface: "collection",
     editorial_order: 40,
@@ -236,19 +236,19 @@ export const mockCollections: CuratedCollectionRecord[] = [
     title: "Stack di lancio indie",
     slug: "indie-launch-stack",
     description:
-      "Una special issue stretta e narrativa, costruita intorno al pre-launch e gi? leggibile come superficie premium reale.",
+      "Una special issue stretta e narrativa, costruita intorno al pre-launch e già leggibile come superficie premium reale.",
     cover_image_url:
       "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Special issue",
     rationale:
-      "Non ? un elenco di tool per fare tutto. ? una raccolta pi? stretta e pi? intenzionale che accompagna il momento del lancio con sequencing, passaggi leggibili e un ordine preciso tra concept, superficie pubblica e shipping.",
+      "Non è un elenco di tool per fare tutto. è una raccolta più stretta e più intenzionale che accompagna il momento del lancio con sequencing, passaggi leggibili e un ordine preciso tra concept, superficie pubblica e shipping.",
     highlights: [
       "Setup corto per arrivare a una prima uscita credibile",
-      "Tool che si tengono bene tra loro nel momento pi? delicato del pre-launch",
+      "Tool che si tengono bene tra loro nel momento più delicato del pre-launch",
       "Base giusta per una issue member che aggiunge profondita`, non solo framing premium",
     ],
     premium_teaser:
-      "La parte pubblica fa vedere il taglio e il setup. L'issue completa aggiunge sequencing, note operative e asset di lancio con un livello curatoriale pi? denso.",
+      "La parte pubblica fa vedere il taglio e il setup. L'issue completa aggiunge sequencing, note operative e asset di lancio con un livello curatoriale più denso.",
     theme: "indie-launch",
     audience: "Indie launchers",
     difficulty: "advanced",
@@ -262,11 +262,11 @@ export const mockCollections: CuratedCollectionRecord[] = [
       format: "advanced-special-issue",
       reading_flow: "Tesi launch -> momenti stack -> tensione compare -> workflow -> takeaway",
       intro:
-        "Questa issue non prova a coprire tutto il lancio. Isola i passaggi che fanno davvero differenza quando devi trasformare un prodotto ancora fragile in una superficie che sembra gi? pronta da mostrare.",
+        "Questa issue non prova a coprire tutto il lancio. Isola i passaggi che fanno davvero differenza quando devi trasformare un prodotto ancora fragile in una superficie che sembra già pronta da mostrare.",
       thesis:
         "Un indie launch credibile nasce quando concept, presentazione e disciplina di shipping smettono di vivere in strumenti separati e iniziano davvero a sostenersi a vicenda.",
       takeaways: [
-        "Il tool migliore non ? quello pi? brillante da solo, ma quello che regge bene il passaggio successivo.",
+        "Il tool migliore non è quello più brillante da solo, ma quello che regge bene il passaggio successivo.",
         "La superficie pubblica del lancio va progettata come parte del prodotto, non come asset finale aggiunto alla fine.",
         "Shortlist e compare servono a chiudere il cerchio dell'issue, non a uscire dal racconto.",
       ],
@@ -277,15 +277,15 @@ export const mockCollections: CuratedCollectionRecord[] = [
           eyebrow: "Nota iniziale",
           title: "Uno stack di lancio non deve sembrare grande. Deve rendere inevitabile il prossimo passo.",
           body:
-            "La forza di questa issue sta nella selezione stretta. Ogni tool incluso regge un momento preciso: concept, shipping discipline, asset di lancio e memoria operativa. Il formato pi? ricco serve a mostrare come questi passaggi si tengono insieme senza rumore.",
+            "La forza di questa issue sta nella selezione stretta. Ogni tool incluso regge un momento preciso: concept, shipping discipline, asset di lancio e memoria operativa. Il formato più ricco serve a mostrare come questi passaggi si tengono insieme senza rumore.",
         },
         {
           id: "issue-thesis",
           type: "thesis",
           eyebrow: "Tesi del launch",
-          title: "Il prodotto convince prima quando anche il racconto operativo sembra gi? allineato.",
+          title: "Il prodotto convince prima quando anche il racconto operativo sembra già allineato.",
           statement:
-              "Il launch non chiede pi? tool: chiede una sequenza leggibile in cui prova iniziale, landing, asset e memoria non si contraddicano.",
+              "Il launch non chiede più tool: chiede una sequenza leggibile in cui prova iniziale, landing, asset e memoria non si contraddicano.",
           points: [
             "Framer AI regge il momento pubblico e il tono percepito.",
             "Lovable fa da ponte tra idea e artefatto navigabile.",
@@ -298,13 +298,13 @@ export const mockCollections: CuratedCollectionRecord[] = [
           eyebrow: "Momenti chiave",
           title: "I passaggi del launch che cambiano davvero il feeling dello stack.",
           body:
-            "Qui non conta solo cosa usi, ma quando lo fai entrare. Questi sono i tre passaggi che spostano davvero la percezione del prodotto nei giorni pi? sensibili del pre-launch.",
+            "Qui non conta solo cosa usi, ma quando lo fai entrare. Questi sono i tre passaggi che spostano davvero la percezione del prodotto nei giorni più sensibili del pre-launch.",
           tool_moments: [
             {
               tool_slug: "framer-ai",
               label: "Credibilit? della superficie",
               note:
-                "Entra quando hai gi? chiaro il concept e devi trasformarlo in una landing che faccia sembrare il lancio pi? maturo del suo stadio reale.",
+                "Entra quando hai già chiaro il concept e devi trasformarlo in una landing che faccia sembrare il lancio più maturo del suo stadio reale.",
               emphasis: "anchor",
             },
             {
@@ -327,20 +327,20 @@ export const mockCollections: CuratedCollectionRecord[] = [
           id: "issue-compare",
           type: "compare-insight",
           eyebrow: "Lettura compare",
-          title: "La tensione vera qui non ? scegliere un vincitore assoluto, ma capire quale ruolo regge meglio il passaggio successivo.",
+          title: "La tensione vera qui non è scegliere un vincitore assoluto, ma capire quale ruolo regge meglio il passaggio successivo.",
           body:
-            "Lovable, Framer AI e Cursor sembrano strumenti di fasi diverse. In pratica si sfiorano molto di pi?: il punto ? capire chi regge la transizione tra prova, percezione e shipping.",
+            "Lovable, Framer AI e Cursor sembrano strumenti di fasi diverse. In pratica si sfiorano molto di più: il punto è capire chi regge la transizione tra prova, percezione e shipping.",
           compare: {
             compared_tool_slugs: ["lovable", "framer-ai", "cursor"],
             insight:
-              "Lovable vince quando devi far sembrare l'idea gi? viva. Framer AI vince quando il launch chiede una superficie credibile. Cursor vince quando la promessa deve reggere nel codice.",
+              "Lovable vince quando devi far sembrare l'idea già viva. Framer AI vince quando il launch chiede una superficie credibile. Cursor vince quando la promessa deve reggere nel codice.",
             differentiators: [
-              "Lovable: pi? rapido nella prima prova e sulla sensazione app-like",
-              "Framer AI: pi? forte sulla superficie pubblica e sul launch polish",
-              "Cursor: pi? adatto quando la prova iniziale inizia a richiedere struttura reale",
+              "Lovable: più rapido nella prima prova e sulla sensazione app-like",
+              "Framer AI: più forte sulla superficie pubblica e sul launch polish",
+              "Cursor: più adatto quando la prova iniziale inizia a richiedere struttura reale",
             ],
             recommendation:
-              "Mettili in compare quando il dubbio non ? quale sia migliore, ma quale dei tre debba entrare per primo nel tuo launch stack.",
+              "Mettili in compare quando il dubbio non è quale sia migliore, ma quale dei tre debba entrare per primo nel tuo launch stack.",
           },
         },
         {
@@ -349,7 +349,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
           eyebrow: "Sequenza operativa",
           title: "Una sequenza corta che porta da concept a launch surface senza dispersione.",
           body:
-            "Questo ? il flusso che la special issue prova a rendere leggibile: partire da un concetto vivo, consolidarlo e preparare gli asset che servono davvero per uscire.",
+            "Questo è il flusso che la special issue prova a rendere leggibile: partire da un concetto vivo, consolidarlo e preparare gli asset che servono davvero per uscire.",
           steps: [
             {
               title: "Dai corpo al concept",
@@ -359,7 +359,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
             },
             {
               title: "Rendi il launch credibile",
-              body: "Porta il concept in una superficie pubblica con tono, posizionamento e gerarchia pi? maturi.",
+              body: "Porta il concept in una superficie pubblica con tono, posizionamento e gerarchia più maturi.",
               tool_slug: "framer-ai",
               outcome: "Landing e messaggio iniziano a sembrare allineati al prodotto.",
             },
@@ -373,17 +373,17 @@ export const mockCollections: CuratedCollectionRecord[] = [
               title: "Chiudi gli asset di lancio",
               body: "Prepari walkthrough, voice e materiali che aiutano il prodotto a presentarsi bene anche fuori dalla landing.",
               tool_slug: "descript",
-              outcome: "Il launch ha un racconto pi? coeso e pi? leggibile.",
+              outcome: "Il launch ha un racconto più coeso e più leggibile.",
             },
           ],
         },
         {
           id: "issue-why",
           type: "why-this-matters",
-          eyebrow: "Perch? conta",
+          eyebrow: "Perché conta",
           title: "Il valore di questa issue ? mostrare una progressione, non solo una lista.",
           body:
-            "Per chi costruisce da solo o in team molto piccoli, la differenza la fa il ritmo tra i passaggi. Questa issue serve a rendere il launch stack meno casuale e pi? intenzionale.",
+            "Per chi costruisce da solo o in team molto piccoli, la differenza la fa il ritmo tra i passaggi. Questa issue serve a rendere il launch stack meno casuale e più intenzionale.",
           points: [
             "Riduce il rischio di passare troppo presto da concept a shipping.",
             "Aiuta a distinguere tool da presentazione, tool da costruzione e tool da supporto.",
@@ -394,9 +394,9 @@ export const mockCollections: CuratedCollectionRecord[] = [
           id: "issue-takeaway",
           type: "editorial-takeaway",
           eyebrow: "Takeaway editoriale",
-          title: "Se questa issue funziona, ti lascia con una shortlist pi? corta e con dubbi migliori.",
+          title: "Se questa issue funziona, ti lascia con una shortlist più corta e con dubbi migliori.",
           body:
-            "L'obiettivo non ? uscire con pi? tool salvati. L'obiettivo ? capire quale combinazione regge davvero il tuo momento di launch.",
+            "L'obiettivo non è uscire con più tool salvati. L'obiettivo è capire quale combinazione regge davvero il tuo momento di launch.",
           takeaways: [
             "Metti in shortlist solo i tool che spostano il passaggio successivo.",
             "Usa il compare per leggere la tensione tra prova iniziale, superficie e shipping.",
@@ -409,9 +409,9 @@ export const mockCollections: CuratedCollectionRecord[] = [
           eyebrow: "Member layer",
           title: "Il layer member deve spingersi oltre il semplice elenco dei tool.",
           body:
-            "Questa issue prepara gi? il terreno per sequencing pi? esplicito, note operative e varianti di stack per momenti di launch diversi.",
+            "Questa issue prepara già il terreno per sequencing più esplicito, note operative e varianti di stack per momenti di launch diversi.",
           member_note:
-            "Nel layer completo possono vivere handoff pi? dettagliati, micro-rubriche decisionali e passaggi alternativi per founder solo, piccoli team e launch creator-led.",
+            "Nel layer completo possono vivere handoff più dettagliati, micro-rubriche decisionali e passaggi alternativi per founder solo, piccoli team e launch creator-led.",
         },
       ],
     },
@@ -432,7 +432,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       {
         tool_slug: "cursor",
         role: "Disciplina di shipping",
-        note: "Per tenere la parte pi? tecnica sotto controllo quando la prova iniziale inizia a crescere.",
+        note: "Per tenere la parte più tecnica sotto controllo quando la prova iniziale inizia a crescere.",
         order: 3,
       },
       {
@@ -458,19 +458,19 @@ export const mockCollections: CuratedCollectionRecord[] = [
     title: "Issue di sintesi profonda",
     slug: "deep-synthesis-issue",
     description:
-      "Una special issue in coda editoriale, pensata per legare ricerca, note e trasformazione dell'insight in un output pi? denso.",
+      "Una special issue in coda editoriale, pensata per legare ricerca, note e trasformazione dell'insight in un output più denso.",
     cover_image_url:
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Issue in coda",
     rationale:
-      "Questa issue serve come prova di una superficie pi? narrativa e pi? densa, pronta a ospitare sequencing e note di lettura senza diventare magazine puro.",
+      "Questa issue serve come prova di una superficie più narrativa e più densa, pronta a ospitare sequencing e note di lettura senza diventare magazine puro.",
     highlights: [
-      "Sequencing pi? esplicito tra orientamento e sintesi",
+      "Sequencing più esplicito tra orientamento e sintesi",
       "Ritmo da special issue, non da elenco lineare",
       "Base per future note premium e operating guidance",
     ],
     premium_teaser:
-      "La preview resta gi? leggibile; l'issue completa entrera` nel layer pubblico solo quando sequencing e note saranno chiusi.",
+      "La preview resta già leggibile; l'issue completa entrerà nel layer pubblico solo quando sequencing e note saranno chiusi.",
     theme: "research-synthesis",
     audience: "Research-led teams",
     difficulty: "advanced",
@@ -505,14 +505,14 @@ export const mockCollections: CuratedCollectionRecord[] = [
     title: "Percorso creator per il lancio",
     slug: "creator-launch-cut",
     description:
-      "Un bundle pianificato per creator e piccoli team che devono passare da concept a publish moment in modo pi? disciplinato.",
+      "Un bundle pianificato per creator e piccoli team che devono passare da concept a publish moment in modo più disciplinato.",
     cover_image_url:
       "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "In programmazione",
     rationale:
-      "La raccolta ? quasi pronta: resta un ultimo giro di editing per chiarire meglio priorit?, sequencing e ruolo dei tool inclusi.",
+      "La raccolta è quasi pronta: resta un ultimo giro di editing per chiarire meglio priorità, sequencing e ruolo dei tool inclusi.",
     highlights: [
-      "Creator workflow pi? corto e pi? intenzionale",
+      "Creator workflow più corto e più intenzionale",
       "Bridge naturale tra tool visuali e memoria editoriale",
       "Buona candidata a featured strip futura",
     ],
@@ -561,7 +561,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
     highlights: [
       "Buona come memoria di tono e sequencing",
       "Non abbastanza nitida per una superficie pubblica stabile",
-      "Utile per test interni e confronto con versioni pi? mature",
+      "Utile per test interni e confronto con versioni più mature",
     ],
     theme: "design-sprint",
     audience: "Designer-builders",

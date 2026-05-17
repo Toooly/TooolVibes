@@ -142,9 +142,9 @@ function getMutationErrorState(
   if (message.includes("duplicate key value") || message.includes("tools_slug_key")) {
     return {
       status: "error",
-      message: "Esiste gi? un tool con questo slug. Scegline uno diverso.",
+      message: "Esiste già un tool con questo slug. Scegline uno diverso.",
       fieldErrors: {
-        slug: "Questo slug ? gi? in uso.",
+        slug: "Questo slug è già in uso.",
       },
       values,
     };
@@ -152,7 +152,7 @@ function getMutationErrorState(
 
   return {
     status: "error",
-    message: "Non ? stato possibile completare l'operazione su Supabase. Riprova.",
+    message: "Non è stato possibile completare l'operazione su Supabase. Riprova.",
     values,
   };
 }
@@ -175,9 +175,9 @@ function getCollectionMutationErrorState(
   if (message.includes("duplicate key value") || message.includes("collections_slug_key")) {
     return {
       status: "error",
-      message: "Esiste gi? una collection con questo slug. Scegline uno diverso.",
+      message: "Esiste già una collection con questo slug. Scegline uno diverso.",
       fieldErrors: {
-        slug: "Questo slug ? gi? in uso.",
+        slug: "Questo slug è già in uso.",
       },
       values,
     };
@@ -187,14 +187,14 @@ function getCollectionMutationErrorState(
     return {
       status: "error",
       message:
-        "Non ? stato possibile aggiornare i tool inclusi. Controlla tool, ordine e migration collections.",
+        "Non è stato possibile aggiornare i tool inclusi. Controlla tool, ordine e migration collections.",
       values,
     };
   }
 
   return {
     status: "error",
-    message: "Non ? stato possibile completare il salvataggio della collection.",
+    message: "Non è stato possibile completare il salvataggio della collection.",
     values,
   };
 }

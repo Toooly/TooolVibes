@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/config/site";
 export const metadata: Metadata = {
   title: "Wishlist",
   description:
-    "Suggerisci un nuovo Toool da inserire nella directory TooolVibes: AI tools, SaaS, no-code builder, vibe coding e automazioni.",
+    "Suggerisci un nuovo Toool da inserire nella directory TooolVibes: AI tools, SaaS, no-code builder, vibe coding e automazioni operative.",
   openGraph: {
     title: `Wishlist | ${siteConfig.name}`,
     description:
@@ -25,7 +25,7 @@ export default function WishlistPage() {
           <div className="max-w-[48rem]">
             <PremiumBadge tone="accent">Wishlist TooolVibes</PremiumBadge>
             <h1 className="mt-4 max-w-[13ch] text-[clamp(2.05rem,9vw,3.35rem)] leading-[1.05] text-white">
-              Suggerisci il prossimo tool da inserire.
+              Suggerisci il prossimo tool che merita spazio.
             </h1>
             <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-7 text-white/70 sm:mt-5 sm:text-[1rem]">
               La directory resta premium solo se la selezione cresce con criterio. Se hai

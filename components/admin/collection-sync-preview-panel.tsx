@@ -108,7 +108,7 @@ export function CollectionSyncPreviewPanel({
           <h3 className="text-xl">Nessun riallineamento proposto.</h3>
           <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
             Su questa collection non c&apos;? un confronto legacy -&gt; Supabase abbastanza definito da
-            trasformarsi in preview. O ? gi? allineata, oppure manca uno dei due lati del confronto.
+            trasformarsi in preview. O è già allineata, oppure manca uno dei due lati del confronto.
           </p>
         </div>
         {lastSafeAlign ? (

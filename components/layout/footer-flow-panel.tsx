@@ -87,7 +87,7 @@ export function FooterFlowPanel() {
     if (pathname.startsWith("/account")) {
       return {
         eyebrow: "Stato account",
-        title: "L'account serve a non perdere continuit?, non a deviare il percorso.",
+        title: "L'account serve a non perdere continuità, non a deviare il percorso.",
         description: "Dopo aver chiarito stato e accesso, il prodotto deve riportarti subito alla selezione attiva.",
         primary: { href: compareCount > 1 ? "/compare" : "/shortlist", label: compareCount > 1 ? "Continua compare" : "Apri shortlist" },
         secondary: { href: "/collections", label: "Apri collections" },

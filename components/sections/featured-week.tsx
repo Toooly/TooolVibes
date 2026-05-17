@@ -36,7 +36,7 @@ export function FeaturedWeek({ tools }: FeaturedWeekProps) {
           <div className="col-span-12 lg:col-span-4">
             <p className="brand-kicker !text-white/62">Radar corto</p>
             <p className="mt-3 max-w-[28rem] text-sm leading-7 text-white/72">
-              Se uno di questi tiene, esci dalla home con una direzione gi? credibile. Se no, il posto giusto resta archivio.
+              Se uno di questi tiene, esci dalla home con una direzione già credibile. Se no, il posto giusto resta archivio.
             </p>
           </div>
 

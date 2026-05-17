@@ -62,7 +62,7 @@ const statusMessages: Record<string, string> = {
     "Questo caso esce dalla safe align policy attuale e resta preview-only.",
   "safe-align-invalid": "Azione safe align non valida.",
   "safe-align-failed":
-    "Safe align non completato: l'azione ? stata fermata prima di lasciare uno stato ambiguo.",
+    "Safe align non completato: l'azione è stata fermata prima di lasciare uno stato ambiguo.",
 };
 
 const importStatusMeta: Record<
@@ -203,7 +203,7 @@ export default async function AdminCollectionsPage({
   ] as const;
   const transitionMetrics = [
     { label: "Mock totali", value: runtime.transitionReport.summary.mock_total },
-    { label: "Gi? importate", value: runtime.transitionReport.summary.imported },
+    { label: "Già importate", value: runtime.transitionReport.summary.imported },
     { label: "Da importare", value: runtime.transitionReport.summary.pending_import },
     { label: "Conflitti", value: runtime.transitionReport.summary.conflicts },
     { label: "Supabase only", value: runtime.transitionReport.summary.remote_only },
@@ -345,7 +345,7 @@ export default async function AdminCollectionsPage({
             <SectionHeading
               eyebrow="Collections tooling"
               title="Workflow editoriale leggero e operativo."
-              description="Qui leggi source, warning, stato editoriale e dettaglio interno delle collection. Il write path resta prudente, ma la superficie gestisce gi? il ciclo editoriale essenziale senza passare solo dal codice."
+              description="Qui leggi source, warning, stato editoriale e dettaglio interno delle collection. Il write path resta prudente, ma la superficie gestisce già il ciclo editoriale essenziale senza passare solo dal codice."
             />
             <div className="hidden flex-wrap gap-3 sm:flex">
               {topActions.map((action) => (
@@ -473,7 +473,7 @@ export default async function AdminCollectionsPage({
                       runtime.transitionReport.source_precedence
                     ).join(" > ")}
                   </strong>
-                  . Se uno slug esiste gi? su Supabase, quella versione prevale; gli slug non ancora
+                  . Se uno slug esiste già su Supabase, quella versione prevale; gli slug non ancora
                   migrati restano serviti da mock o content source.
                 </p>
               </div>
@@ -563,7 +563,7 @@ export default async function AdminCollectionsPage({
               </p>
               <h2 className="text-2xl">Stato seed/import delle collection legacy.</h2>
               <p className="max-w-[44rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
-                Questa vista mostra quali slug sono ancora solo mock, quali sono gi? migrati e dove
+                Questa vista mostra quali slug sono ancora solo mock, quali sono già migrati e dove
                 c&apos;? drift tra il legacy seed e il repository reale.
               </p>
             </div>
@@ -610,9 +610,9 @@ export default async function AdminCollectionsPage({
                       style={{ color: "var(--muted)" }}
                     >
                       <span>Slug: {entry.slug}</span>
-                      <span>Mock: {entry.mock ? "si`" : "no"}</span>
-                      <span>Supabase: {entry.supabase ? "si`" : "no"}</span>
-                      <span>Content: {entry.content ? "si`" : "no"}</span>
+                      <span>Mock: {entry.mock ? "sì" : "no"}</span>
+                      <span>Supabase: {entry.supabase ? "sì" : "no"}</span>
+                      <span>Content: {entry.content ? "sì" : "no"}</span>
                     </div>
 
                     {diffSummary.length > 0 ? (
@@ -1050,7 +1050,7 @@ export default async function AdminCollectionsPage({
                             value:
                               collection.editorial_state === "published" ||
                               collection.editorial_state === "featured"
-                                ? "Si`"
+                                ? "Sì"
                                 : "No",
                           },
                         ].map((item) => (

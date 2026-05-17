@@ -24,7 +24,7 @@ export function MobileBottomNav() {
   return (
     <nav
       aria-label="Navigazione mobile principale"
-      className="mobile-bottom-motion fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 rounded-[26px] border border-[rgba(76,55,166,0.16)] bg-[rgba(255,255,255,0.86)] p-1.5 shadow-[0_20px_58px_rgba(47,33,126,0.15)] backdrop-blur-xl lg:hidden"
+      className="mobile-bottom-motion fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 rounded-[26px] border border-[rgba(76,55,166,0.16)] bg-[linear-gradient(135deg,#fffdf8_0%,#f4efff_54%,#edf7ff_100%)] p-1.5 shadow-[0_20px_58px_rgba(47,33,126,0.15)] lg:hidden"
     >
       <div className="grid grid-cols-5 gap-1">
         {mobileItems.map((item) => {

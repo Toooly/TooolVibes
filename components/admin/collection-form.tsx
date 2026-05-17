@@ -225,7 +225,7 @@ export function CollectionForm({
           <article className="dark-panel rounded-[28px] p-5 text-white">
             <p className="editorial-label !text-white/60">Editing guidance</p>
             <h2 className="text-display-card mt-2 text-[1.42rem] text-white sm:text-[1.56rem]">
-              Una collection forte deve restare leggibile anche quando la rivedi pi? tardi
+              Una collection forte deve restare leggibile anche quando la rivedi più tardi
             </h2>
             <p className="mt-3 text-sm leading-7 text-white/72">
               Usa il rationale per spiegare la logica del set, non per ripetere i campi di base.
@@ -330,7 +330,7 @@ export function CollectionForm({
         <FormSection
           eyebrow="Narrazione"
           title="Rationale, highlights e teaser premium"
-          description="Questo blocco definisce perch? la collection esiste, quali segnali mette in evidenza e quanto del layer premium vuoi lasciare intravedere."
+          description="Questo blocco definisce perché la collection esiste, quali segnali mette in evidenza e quanto del layer premium vuoi lasciare intravedere."
         >
           <div className="grid gap-6 lg:grid-cols-2">
             <label className="block lg:col-span-2">
@@ -585,7 +585,7 @@ export function CollectionForm({
         <FormSection
           eyebrow="Tool stack"
           title="Sequenza, ruolo e anchor dei tool inclusi"
-          description="Questo ? il cuore della collection. Ogni slot deve dire chiaramente perch? il tool entra nel percorso, non solo in che categoria vive."
+          description="Questo è il cuore della collection. Ogni slot deve dire chiaramente perché il tool entra nel percorso, non solo in che categoria vive."
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
@@ -600,7 +600,7 @@ export function CollectionForm({
               </span>
             </div>
             <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
-              Un solo anchor tool rende la lettura pi? chiara anche nelle card e nei teaser.
+              Un solo anchor tool rende la lettura più chiara anche nelle card e nei teaser.
             </p>
           </div>
 
@@ -714,7 +714,7 @@ export function CollectionForm({
       <div className="brand-panel flex flex-col gap-4 rounded-[28px] p-5 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-[42rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
           Le mutazioni passano lato server con validation e write path separato dal read model
-          pubblico. Se il runtime founders non ? davvero live, il form resta leggibile ma non
+          pubblico. Se il runtime founders non è davvero live, il form resta leggibile ma non
           forza una scrittura ambigua.
         </p>
         <SubmitButton label={submitLabel} disabled={disabled} />

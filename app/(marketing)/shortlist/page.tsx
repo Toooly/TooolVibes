@@ -13,10 +13,10 @@ export default async function ShortlistPage() {
     <div className="tone-workspace page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
       <SurfaceIntro
         eyebrow="Workspace"
-        title="La memoria di lavoro dei pochi tool che restano davvero in gioco."
+        title="La memoria viva dei pochi tool che restano davvero in gioco."
         description="Qui non salvi tutto. Tieni vivi solo i profili che meritano ancora attenzione, priorità o una nota vera."
         helperEyebrow="Come usarla"
-        helperCopy="Salva un tool ovunque lo incontri, poi torna qui per fissare il motivo per cui resta dentro. Quando il set si restringe davvero, passa al compare."
+        helperCopy="Salva un tool ovunque lo incontri, poi torna qui per fissare il motivo per cui resta dentro. Quando il set si stringe davvero, passa al compare."
         actions={
           <>
             <ButtonLink href="/archivio">Apri archivio</ButtonLink>
@@ -30,7 +30,7 @@ export default async function ShortlistPage() {
           </>
         }
         asideEyebrow="Workspace personale"
-        asideTitle="Ricorda bene prima di scegliere."
+        asideTitle="Ricorda meglio prima di scegliere."
         asideCopy="La shortlist non serve a collezionare tool. Serve a tenere memoria del motivo per cui alcuni meritano ancora spazio."
       />
 

@@ -166,7 +166,7 @@ export default async function CollectionsPage() {
                   className="image-float object-cover"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.06),rgba(18,15,35,0.72))]" />
-                <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[rgba(15,12,31,0.36)] px-4 py-4 backdrop-blur-sm">
+                <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(24,18,54,0.88),rgba(38,31,82,0.76))] px-4 py-4">
                   <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
                     Perché conta
                   </p>

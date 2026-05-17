@@ -569,7 +569,7 @@ export const directoryTools: DirectoryTool[] = [
     sourceSite: "weblium",
     useCases: [
       "Creare brief SEO più velocemente",
-      "Ottimizzare contenuti gi? pubblicati",
+      "Ottimizzare contenuti già pubblicati",
       "Analizzare SERP e intenti di ricerca",
     ],
     highlights: ["SEO", "Brief", "SERP"],
@@ -620,7 +620,7 @@ export const directoryTools: DirectoryTool[] = [
     longDescription:
       "NotionApps prende database Notion e li trasforma in app utilizzabili, con permessi, interfacce e sincronizzazione pensate per team e clienti.",
     whyItMatters:
-      "È perfetto quando Notion è gi? il backend operativo e serve un front-end più pulito.",
+      "È perfetto quando Notion è già il backend operativo e serve un front-end più pulito.",
     externalUrl: "https://www.notionapps.com?via=toool",
     originalSourceUrl: "https://tooolvibes.com/all-tools/notionapps_1",
     featured: false,
@@ -649,7 +649,7 @@ export const directoryTools: DirectoryTool[] = [
     shortDescription:
       "Tool AI per trasformare video, audio, URL e contenuti in blog post SEO-ready.",
     longDescription:
-      "Blogify aiuta a riproporre contenuti gi? esistenti in articoli ottimizzati, riducendo il tempo tra video, audio o link e pubblicazione sul blog.",
+      "Blogify aiuta a riproporre contenuti già esistenti in articoli ottimizzati, riducendo il tempo tra video, audio o link e pubblicazione sul blog.",
     whyItMatters:
       "È utile quando hai asset ma manca il tempo per trasformarli in contenuti evergreen.",
     externalUrl: "https://blogify.ai?fpr=n2ogi",

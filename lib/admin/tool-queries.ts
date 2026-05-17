@@ -26,7 +26,7 @@ export type AdminToolsRuntime = {
 
 const adminToolWarningLabels: Record<string, string> = {
   "supabase-public-read-failed":
-    "Il feed pubblico tools non ? riuscito a leggere Supabase ed ? passato al fallback mock.",
+    "Il feed pubblico tools non è riuscito a leggere Supabase ed ? passato al fallback mock.",
   "supabase-admin-read-failed":
     "Il layer admin tools non riesce a leggere Supabase e resta in fallback snapshot.",
   "supabase-admin-query-failed":
@@ -92,7 +92,7 @@ export const getAdminToolsRuntime = cache(async (): Promise<AdminToolsRuntime> =
       readMessage:
         "Lettura interna in snapshot mock: le env Supabase admin non sono presenti in questo ambiente.",
       writeMessage:
-        "Scritture tools non attive: la surface founders resta su snapshot mock in sola lettura finch? Supabase admin non ? configurato.",
+        "Scritture tools non attive: la surface founders resta su snapshot mock in sola lettura finché Supabase admin non è configurato.",
     });
   }
 

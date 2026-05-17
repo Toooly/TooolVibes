@@ -150,7 +150,7 @@ export function RequestToolForm({ className }: { className?: string }) {
       {toastVisible ? (
         <div
           role="status"
-          className="motion-toast fixed bottom-[5.75rem] left-4 right-4 z-50 rounded-[24px] border border-emerald-200/40 bg-white/92 px-5 py-4 text-sm text-[var(--foreground)] shadow-[0_24px_70px_rgba(47,33,126,0.16)] backdrop-blur-xl sm:bottom-5 sm:left-auto sm:max-w-[22rem]"
+          className="motion-toast fixed bottom-[5.75rem] left-4 right-4 z-50 rounded-[24px] border border-emerald-200/40 bg-[linear-gradient(135deg,#fffdf8,#f4fff8)] px-5 py-4 text-sm text-[var(--foreground)] shadow-[0_24px_70px_rgba(47,33,126,0.16)] sm:bottom-5 sm:left-auto sm:max-w-[22rem]"
         >
           <div className="flex gap-3">
             <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-200" aria-hidden="true" />

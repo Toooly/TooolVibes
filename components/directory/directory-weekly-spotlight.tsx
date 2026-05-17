@@ -22,7 +22,7 @@ export function DirectoryWeeklySpotlight({
           </h2>
           <p className="mt-3 hidden text-[0.95rem] leading-7 text-[var(--muted-strong)] sm:mt-4 sm:block sm:text-[1rem]">
             Blink apre la selezione: rapido da capire, chiaro da testare e vicino al
-            tipo di builder che trasforma un&apos;idea in qualcosa di navigabile.
+            tipo di builder che trasforma un&apos;idea in qualcosa che si può già navigare.
           </p>
         </div>
 
@@ -114,7 +114,7 @@ export function DirectoryWeeklySpotlight({
             </div>
 
             <details className="mobile-native-accordion rounded-[22px] border border-white/10 bg-white/6 px-4 py-3 sm:hidden">
-              <summary>Perche adesso</summary>
+              <summary>Perché adesso</summary>
               <p className="mt-3 text-sm leading-6 text-white/72">
                 {weeklyTool.whyItMatters}
               </p>

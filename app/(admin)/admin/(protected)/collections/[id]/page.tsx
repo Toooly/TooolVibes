@@ -44,7 +44,7 @@ const statusMessages: Record<string, string> = {
     "Questo caso non rientra nella safe align policy attuale e resta preview-only.",
   "safe-align-invalid": "Azione safe align non valida.",
   "safe-align-failed":
-    "Safe align non completato: l'azione ? stata fermata prima di lasciare uno stato ambiguo.",
+    "Safe align non completato: l'azione è stata fermata prima di lasciare uno stato ambiguo.",
 };
 
 export default async function AdminCollectionDetailPage({
@@ -103,7 +103,7 @@ export default async function AdminCollectionDetailPage({
       label: "Tool inclusi",
       value: String(collection.included_tools.length),
       detail: collection.included_tools.some((slot) => slot.featured)
-        ? "Anchor gi? impostato nel set."
+        ? "Anchor già impostato nel set."
         : "Manca ancora un anchor tool chiaro.",
     },
     {
@@ -120,7 +120,7 @@ export default async function AdminCollectionDetailPage({
       label: "Runtime",
       value: runtime.writeTarget ?? "locked",
       detail: runtime.publicSnapshot.meta.active_source === "supabase"
-        ? "Il layer pubblico legge gi? da Supabase."
+        ? "Il layer pubblico legge già da Supabase."
         : "Il pubblico resta su source composita o snapshot.",
     },
   ] as const;
@@ -133,7 +133,7 @@ export default async function AdminCollectionDetailPage({
             <SectionHeading
               eyebrow="Collection detail"
               title={collection.title}
-              description="Qui puoi leggere warning, continuit? con il prodotto pubblico e modificare la collection dal medesimo punto di lavoro."
+              description="Qui puoi leggere warning, continuità con il prodotto pubblico e modificare la collection dal medesimo punto di lavoro."
             />
             <div className="hidden flex-wrap gap-3 sm:flex">
               {topActions.map((action) => (
@@ -174,8 +174,8 @@ export default async function AdminCollectionDetailPage({
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
               style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
             >
-              La collection ? leggibile, ma il write path reale resta disattivato finch? Supabase
-              collections non ? pronto.
+              La collection ? leggibile, ma il write path reale resta disattivato finché Supabase
+              collections non è pronto.
             </div>
           ) : null}
 

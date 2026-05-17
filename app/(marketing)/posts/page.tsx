@@ -119,8 +119,8 @@ export default async function PostsPage() {
         <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
           <SectionHeading
             eyebrow="Tool writeup"
-            title="Gli articoli collegati ai tool giÃ  presenti nel catalogo."
-            description="Ogni scheda prende il contenuto editoriale del tool e lo rimette in forma di lettura: non duplicazione, ma accesso piÃ¹ chiaro."
+            title="Gli articoli collegati ai tool già presenti nel catalogo."
+            description="Ogni scheda prende il contenuto editoriale del tool e lo rimette in forma di lettura: non duplicazione, ma accesso più chiaro."
           />
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {toolWriteups.map((post) => (
@@ -135,7 +135,7 @@ export default async function PostsPage() {
           <SectionHeading
             eyebrow="Guide legacy"
             title="Le guide storiche ripulite e riallineate al prodotto attuale."
-            description="Qui recuperiamo i pezzi piÃ¹ utili del vecchio sito senza portarci dietro il tono da demo o il framing promozionale troppo pesante."
+            description="Qui recuperiamo i pezzi più utili del vecchio sito senza portarci dietro il tono da demo o il framing promozionale troppo pesante."
           />
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {guides.map((post) => (

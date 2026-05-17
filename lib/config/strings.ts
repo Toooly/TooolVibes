@@ -11,22 +11,22 @@ export const marketingStrings = {
     { href: "/account", label: "Account" },
   ],
   hero: {
-    eyebrow: "Directory editoriale italiana",
-    title: "L'ingresso per capire quali tool AI e SaaS meritano davvero spazio nel tuo stack.",
+    eyebrow: "Sistema editoriale italiano",
+    title: "Il posto dove i tool AI smettono di essere rumore e diventano scelta.",
     description:
-      "TooolVibes non prova a mostrarti tutto. Ti porta dal primo orientamento a una scelta pi? chiara con meno rumore e meno deviazioni.",
-    primaryCta: "Apri l'archivio",
-    secondaryCta: "Guarda il radar settimanale",
+      "TooolVibes non prova a mostrarti tutto: accende i segnali giusti, ordina le alternative e ti porta verso uno stack più lucido.",
+    primaryCta: "Entra nel catalogo",
+    secondaryCta: "Apri il radar",
   },
   weekly: {
-    title: "RADAR DELLA SETTIMANA",
+    title: "Radar vivo della settimana",
     description:
-      "Pochi tool appena emersi o tornati rilevanti. Non i pi? rumorosi, ma quelli che oggi meritano un passaggio serio.",
+      "Pochi tool appena emersi o tornati rilevanti. Non i più rumorosi: quelli che oggi meritano davvero un test.",
   },
   archive: {
-    title: "L'archivio dove la ricerca diventa scrematura.",
+    title: "Il catalogo dove la ricerca diventa decisione.",
     description:
-      "Cerca, filtra e stringi il campo con pochi passaggi. Qui entri per trovare il prossimo candidato giusto, non per leggere una landing.",
+      "Cerca, filtra e stringi il campo con pochi passaggi. Qui entri per trovare il prossimo candidato giusto, non per perderti in una landing.",
     searchLabel: "Ricerca",
     searchPlaceholder: "Cerca nome, tag o caso d'uso",
     categoryLabel: "Categoria",
@@ -34,12 +34,12 @@ export const marketingStrings = {
     allCategories: "Tutte le categorie",
     emptyTitle: "Nessun Toool trovato",
     emptyDescription:
-      "Prova a cambiare filtro oppure usa un termine pi? ampio.",
+      "Prova a cambiare filtro oppure usa un termine più ampio.",
   },
   tags: {
-    title: "Tag editoriali",
+    title: "Tag operativi",
     description:
-      "Una mappa rapida per attraversare l'archivio per casi d'uso, famiglie funzionali e affinita` di prodotto.",
+      "Una mappa rapida per attraversare il catalogo per casi d'uso, famiglie funzionali e affinità di prodotto.",
   },
   shop: {
     title: "Premium",

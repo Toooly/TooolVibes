@@ -28,42 +28,42 @@ const categories = [
     label: "Vibe Coding",
     href: "/archivio?group=vibe-coding",
     icon: Code2,
-    detail: "Prompt-to-app, UI builder e prototipi rapidi.",
+    detail: "Prompt-to-app, UI builder e prototipi che respirano subito.",
     badge: "Build",
   },
   {
     label: "AI App Builder",
     href: "/archivio?group=ai-app-builder",
     icon: Bot,
-    detail: "Da idea a prodotto navigabile con meno passaggi.",
+    detail: "Da idea a prodotto navigabile con una traiettoria più chiara.",
     badge: "MVP",
   },
   {
     label: "Automation",
     href: "/archivio?group=automation",
     icon: Workflow,
-    detail: "Workflow, agenti e integrazioni operative.",
+    detail: "Workflow, agenti e integrazioni che tagliano passaggi morti.",
     badge: "Ops",
   },
   {
     label: "No-Code",
     href: "/archivio?group=no-code",
     icon: Boxes,
-    detail: "Builder visuali e stack senza codice pesante.",
+    detail: "Builder visuali e stack senza frizione tecnica inutile.",
     badge: "Stack",
   },
   {
     label: "Compare",
     href: "/compare",
     icon: GitCompare,
-    detail: "Metti alternative una accanto all'altra.",
+    detail: "Metti alternative una accanto all'altra e fai emergere lo scarto.",
     badge: "Scelta",
   },
   {
     label: "Stack",
     href: "/shortlist",
     icon: Layers3,
-    detail: "Salva e costruisci una shortlist di lavoro.",
+    detail: "Salva, ordina e tieni viva una shortlist di lavoro.",
     badge: "Memo",
   },
 ];
@@ -71,17 +71,17 @@ const categories = [
 const steps = [
   {
     title: "Scopri",
-    text: "Parti da categorie curate e segnali leggibili, non da una lista infinita.",
+    text: "Parti da categorie curate e segnali leggibili, non da una lista che ti spegne.",
     icon: Compass,
   },
   {
     title: "Confronta",
-    text: "Seleziona fino a 5 tool e valuta differenze reali: fonte, categoria e use case.",
+    text: "Seleziona fino a 5 tool e guarda le differenze che contano: fonte, categoria e use case.",
     icon: GitCompare,
   },
   {
     title: "Costruisci",
-    text: "Aggiungi allo stack i tool migliori e riordinali in base al workflow.",
+    text: "Aggiungi allo stack solo i candidati che reggono davvero il workflow.",
     icon: Layers3,
   },
 ];
@@ -89,15 +89,15 @@ const steps = [
 const features = [
   {
     value: "curation",
-    title: "Curation editoriale invece di catalogo piatto",
+    title: "Curation editoriale, non catalogo piatto",
     description:
       "Ogni tool ha categoria, livello, descrizione, link esterno e contesto. La UI spinge a scegliere, non a scorrere senza direzione.",
   },
   {
     value: "workspace",
-    title: "Workspace: salvati, confronto e stack",
+    title: "Workspace vivo: salvati, confronto e stack",
     description:
-      "La directory diventa uno spazio operativo: salvi candidati, confronti alternative e trasformi la scoperta in una shortlist utile.",
+      "La directory diventa uno spazio operativo: salvi candidati, confronti alternative e trasformi la scoperta in una shortlist leggibile.",
   },
   {
     value: "radar",
@@ -107,7 +107,7 @@ const features = [
   },
   {
     value: "mobile",
-    title: "Mobile guidato, non scroll infinito",
+    title: "Mobile guidato, niente scroll infinito",
     description:
       "Percorsi rapidi, bottom nav, filtri in sheet e card compatte riducono la fatica su schermi piccoli.",
   },
@@ -176,7 +176,7 @@ export function HomeExperienceSections() {
           <DecorativeGlow className="-right-14 top-4" tone="violet" />
           <SectionHeader
             eyebrow="Categorie"
-            title="Scegli il percorso, non la card a caso."
+            title="Scegli il percorso, non una card a caso."
             description="Le categorie diventano ingressi operativi: sviluppo, automazione, contenuti, confronto e stack."
             className="[&_h2]:text-[var(--foreground)] [&_p]:text-[var(--muted-strong)]"
             action={
@@ -357,8 +357,8 @@ export function HomeExperienceSections() {
           <PremiumPanel tone="airy" className="p-5 sm:p-7">
             <SectionHeader
               eyebrow="Sistema"
-              title="Segnali utili, senza disperdere il percorso."
-              description="I dettagli restano raccolti: curation, workspace, radar e mobile hanno un ruolo chiaro nella scelta."
+              title="Segnali utili, senza perdere il ritmo."
+              description="Curation, workspace, radar e mobile lavorano insieme: ogni blocco ha un ruolo chiaro nella scelta."
               className="[&_h2]:text-[var(--foreground)] [&_p]:text-[var(--muted-strong)]"
             />
             <div className="mt-6">
@@ -374,7 +374,7 @@ export function HomeExperienceSections() {
             <SectionHeader
               eyebrow="FAQ"
               title="Domande frequenti, senza blocchi infiniti."
-              description="Le risposte stanno compatte e accessibili, così la home non diventa una parete di testo."
+              description="Le risposte restano compatte e accessibili, così la home non diventa una parete di testo."
               className="[&_h2]:text-[var(--foreground)] [&_p]:text-[var(--muted-strong)]"
             />
             <div className="mt-6">
@@ -386,7 +386,7 @@ export function HomeExperienceSections() {
             <DecorativeGlow className="-right-16 -top-16" tone="gold" />
             <PremiumBadge tone="warning">Ready to explore</PremiumBadge>
             <h2 className="text-display-card mt-4 text-[2.1rem] text-white sm:text-[2.75rem]">
-              Costruisci una shortlist migliore oggi.
+              Costruisci una shortlist più lucida oggi.
             </h2>
             <p className="mt-4 text-[1rem] leading-7 text-white/66">
               Entra nel catalogo, salva i candidati, confronta alternative e crea uno stack

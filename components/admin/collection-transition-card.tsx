@@ -193,8 +193,8 @@ export function CollectionTransitionCard({
           >
             <span>Slug: {entry.slug}</span>
             <span>Public winner: {entry.public_source ?? "nessuno"}</span>
-            <span>Mock: {entry.mock ? "si`" : "no"}</span>
-            <span>Supabase: {entry.supabase ? "si`" : "no"}</span>
+            <span>Mock: {entry.mock ? "sì" : "no"}</span>
+            <span>Supabase: {entry.supabase ? "sì" : "no"}</span>
           </div>
           <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
             {severityMeta.description}

@@ -27,10 +27,10 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
         <div className="max-w-[39rem]">
           <PremiumBadge tone="accent">Catalogo preview</PremiumBadge>
           <h2 className="text-display-card mt-3 text-[1.65rem] leading-[1.1] text-white sm:mt-4 sm:text-[2.65rem]">
-            Una preview editoriale, non tutto l&apos;archivio in home.
+            Una preview viva, non tutto l&apos;archivio buttato in home.
           </h2>
           <p className="mt-3 text-[0.92rem] leading-6 text-white/68 sm:mt-4 sm:text-[1rem] sm:leading-7">
-            Parti da pochi segnali forti, poi apri il catalogo completo quando vuoi
+            Parti da pochi segnali forti, poi entra nel catalogo completo quando vuoi
             filtrare, salvare, confrontare e costruire il tuo stack.
           </p>
 
@@ -59,7 +59,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
               {[
                 ["Ricerca", "Nome, tag e use case."],
                 ["Filtri", "Solo i segnali utili."],
-                ["Confronto", "Fino a 4 candidati."],
+                ["Confronto", "Fino a 5 candidati."],
                 ["Shortlist", "Salva e riprendi."],
               ].map(([label, copy]) => (
                 <div key={label} className="micro-popover-panel px-3 py-2.5">

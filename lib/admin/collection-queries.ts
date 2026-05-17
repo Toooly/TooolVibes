@@ -87,7 +87,7 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
     } catch {
       canReview = false;
       reviewMessage =
-        "Review state non disponibile in questo ambiente: la surface interna resta leggibile e continua con fallback locale finch? la tabella non ? pronta.";
+        "Review state non disponibile in questo ambiente: la surface interna resta leggibile e continua con fallback locale finché la tabella non è pronta.";
     }
   }
 
@@ -103,7 +103,7 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
     } catch {
       canSafeAlign = false;
       safeAlignMessage =
-        "Safe align in pausa: la preview resta leggibile ma la traccia persistente non ? disponibile in questo ambiente.";
+        "Safe align in pausa: la preview resta leggibile ma la traccia persistente non è disponibile in questo ambiente.";
     }
   }
   const lastSafeAlignBySlug = safeAlignEvents.reduce<
@@ -153,7 +153,7 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
       canWrite: false,
       writeTarget: null,
       writeMessage:
-        "Scritture collections non attive: la surface interna usa il source snapshot corrente e resta in sola lettura finch? Supabase collections non ? pronto.",
+        "Scritture collections non attive: la surface interna usa il source snapshot corrente e resta in sola lettura finché Supabase collections non è pronto.",
       transitionReport: transitionReportFromSnapshot,
       canReview,
       reviewWriteTarget: canReview ? "supabase" : null,

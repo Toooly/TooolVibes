@@ -20,7 +20,7 @@ function getMotionDelay(element: HTMLElement) {
   }
 
   const index = Array.from(parent.children).indexOf(element);
-  return Math.min(Math.max(index, 0) * 70, 420);
+  return Math.min(Math.max(index, 0) * 52, 260);
 }
 
 function isInViewport(element: HTMLElement) {
@@ -64,14 +64,14 @@ export function MotionObserver() {
               element.removeAttribute("data-motion-observed");
               element.classList.remove("is-visible");
               element.style.removeProperty("--motion-delay");
-            }, 860 + delay);
+            }, 760 + delay);
 
             observer?.unobserve(element);
           });
         },
         {
-          rootMargin: "0px 0px -9% 0px",
-          threshold: 0.12,
+          rootMargin: "0px 0px -11% 0px",
+          threshold: 0.08,
         },
       );
 
@@ -123,7 +123,7 @@ export function MotionObserver() {
       });
     };
 
-    const startTimer = window.setTimeout(startObserver, 700);
+    const startTimer = window.setTimeout(startObserver, 360);
 
     return () => {
       window.clearTimeout(startTimer);

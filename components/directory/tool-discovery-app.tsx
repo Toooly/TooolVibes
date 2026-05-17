@@ -731,7 +731,7 @@ export function ToolDiscoveryApp({
   function handleStack(slug: string) {
     const tool = getToolBySlug(tools, slug);
     const added = addToStack(slug);
-    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool gi? nello stack");
+    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool già nello stack");
   }
 
   function resetFilters() {

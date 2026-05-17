@@ -37,18 +37,18 @@ export function SiteFooter() {
                   TooolVibes
                 </p>
                 <p className="mt-1 text-[0.68rem] uppercase tracking-[0.14em] text-white/46">
-                  AI tools discovery platform
+                  AI tools discovery system
                 </p>
               </div>
             </div>
 
             <h2 className="mt-4 max-w-[20rem] text-[1.15rem] leading-tight text-white sm:text-[1.85rem]">
-              I tool migliori, senza perdere tempo nel rumore.
+              I tool migliori, già filtrati dal rumore.
             </h2>
             <p className="mt-3 max-w-[36rem] text-[0.82rem] leading-6 text-white/64 sm:text-[0.94rem] sm:leading-7">
               Directory curata di AI tools, SaaS, no-code builder, vibe coding e
               automazioni con link chiari, filtri utili e una selezione pensata per
-              l&apos;uso reale.
+              scegliere con più lucidità.
             </p>
 
             <div className="mt-5 hidden flex-col gap-3 sm:flex sm:flex-row">
@@ -131,7 +131,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-6 flex min-w-0 flex-col gap-3 border-t border-white/12 pt-4 text-[0.76rem] sm:flex-row sm:items-center sm:justify-between">
-          <p className="min-w-0 text-white/50">&copy; 2026 TooolVibes. Directory premium per AI, SaaS, no-code e automazioni.</p>
+          <p className="min-w-0 text-white/58">&copy; 2026 TooolVibes. Directory premium per AI, SaaS, no-code e automazioni operative.</p>
           <div className="hidden shrink-0 flex-wrap justify-end gap-3 sm:flex">
             <a
               href={siteConfig.shopUrl}

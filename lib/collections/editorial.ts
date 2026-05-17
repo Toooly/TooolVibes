@@ -30,7 +30,7 @@ const editorialStateMeta: Record<
   },
   featured: {
     label: "Featured",
-    description: "Pubblicata con un ruolo pi? forte nelle superfici curate.",
+    description: "Pubblicata con un ruolo più forte nelle superfici curate.",
   },
   archived: {
     label: "Archived",
@@ -45,7 +45,7 @@ const surfaceMeta: Record<CollectionSurface, { label: string; description: strin
   },
   "special-issue": {
     label: "Special issue",
-    description: "Una deep curation pi? ricca, pensata per alzare il valore percepito.",
+    description: "Una deep curation più ricca, pensata per alzare il valore percepito.",
   },
 };
 

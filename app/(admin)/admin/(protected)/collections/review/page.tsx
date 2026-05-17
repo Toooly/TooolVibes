@@ -30,7 +30,7 @@ const reviewStatusMessages: Record<string, string> = {
     "Questo caso esce dalla safe align policy attuale e resta preview-only.",
   "safe-align-invalid": "Azione safe align non valida.",
   "safe-align-failed":
-    "Safe align non completato: l'azione ? stata fermata prima di lasciare uno stato ambiguo.",
+    "Safe align non completato: l'azione è stata fermata prima di lasciare uno stato ambiguo.",
 };
 
 function matchesView(
@@ -230,7 +230,7 @@ export default async function AdminCollectionsReviewPage({
             <SectionHeading
               eyebrow="Conflict review"
               title="Leggi il drift prima di agire."
-              description="Questa surface raccoglie conflitti, pending import e review state in un unico posto. Nessun sync distruttivo: qui decidiamo cosa ? davvero da toccare e cosa pu? restare com'?."
+              description="Questa surface raccoglie conflitti, pending import e review state in un unico posto. Nessun sync distruttivo: qui decidiamo cosa è davvero da toccare e cosa può restare com'è."
             />
             <div className="hidden flex-wrap gap-3 sm:flex">
               <Link

@@ -59,7 +59,7 @@ export function resolveCollectionPremiumAccess(
       label: "Collection aperta",
       subtle_label: "Aperta",
       chip_label: "Accesso aperto",
-      description: "La collection resta interamente leggibile: tool, highlights e percorso sono gi? aperti.",
+      description: "La collection resta interamente leggibile: tool, highlights e percorso sono già aperti.",
       entry_label: "Apri collection completa",
       upgrade_label: "Apri collection completa",
       upgrade_href: "#collection-content",
@@ -83,7 +83,7 @@ export function resolveCollectionPremiumAccess(
       description:
         entitlement === "member"
           ? "La collection ? disponibile per intero, con tutti i tool, gli highlight e il framing curatoriale completo."
-          : "La preview lascia vedere il percorso, i primi tool e gli highlight chiave. Il layer member aggiunge il resto della lettura e i moduli pi? densi.",
+          : "La preview lascia vedere il percorso, i primi tool e gli highlight chiave. Il layer member aggiunge il resto della lettura e i moduli più densi.",
       entry_label: entitlement === "member" ? "Apri issue completa" : "Apri preview",
       upgrade_label: entitlement === "member" ? "Apri issue completa" : "Vedi cosa sblocchi",
       upgrade_href: entitlement === "member" ? "#collection-content" : PREMIUM_ACCESS_HREF,
@@ -106,7 +106,7 @@ export function resolveCollectionPremiumAccess(
     description:
       entitlement === "member"
         ? "La special issue ? disponibile per intero, compresi moduli centrali, sequencing e note member."
-        : "Qui vedi il taglio della issue. Il layer completo tiene i moduli centrali, il sequencing pieno e le note member pi? operative.",
+        : "Qui vedi il taglio della issue. Il layer completo tiene i moduli centrali, il sequencing pieno e le note member più operative.",
     entry_label: entitlement === "member" ? "Apri issue completa" : "Apri teaser",
     upgrade_label: entitlement === "member" ? "Apri issue completa" : "Vedi cosa sblocchi",
     upgrade_href: entitlement === "member" ? "#collection-content" : PREMIUM_ACCESS_HREF,
@@ -143,7 +143,7 @@ export function getPremiumEntitlementMeta(
       label: "Account pronto per l'accesso premium",
       short_label: "Account",
       description:
-        "La workspace pu? gi? essere collegata a un account reale. Il layer member non ? attivo, ma il confine tra open, preview e issue completa ? gi? leggibile.",
+        "La workspace può già essere collegata a un account reale. Il layer member non è attivo, ma il confine tra open, preview e issue completa è già leggibile.",
       badge: "Sync attiva",
       cta_label: "Vedi preview e issue",
       cta_href: "/collections",

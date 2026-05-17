@@ -313,7 +313,7 @@ export function parseCollectionFormData(
   const fieldErrors: Partial<Record<CollectionFormField, string>> = {};
 
   if (rawTitle.length < 2) {
-    fieldErrors.title = "Inserisci un titolo pi? descrittivo.";
+    fieldErrors.title = "Inserisci un titolo più descrittivo.";
   }
 
   if (!slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
@@ -396,7 +396,7 @@ export function parseCollectionFormData(
 
   if (values.access !== "open" && rawPremiumTeaser.length < 24) {
     fieldErrors.premium_teaser =
-      "Le surface preview o premium hanno bisogno di un teaser pi? chiaro.";
+      "Le surface preview o premium hanno bisogno di un teaser più chiaro.";
   }
 
   const normalizedSlots = includedTools
@@ -421,7 +421,7 @@ export function parseCollectionFormData(
     }
 
     if (!availableToolSlugs.has(slot.tool_slug)) {
-      fieldErrors.included_tools = "Uno o pi? tool selezionati non sono disponibili.";
+      fieldErrors.included_tools = "Uno o più tool selezionati non sono disponibili.";
       return;
     }
 

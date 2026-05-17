@@ -126,7 +126,7 @@ function ToolCardComponent({
                 </span>
               ) : null}
             </div>
-            <div className="absolute bottom-4 left-4 right-4">
+            <div className="tool-card-media__caption absolute bottom-4 left-4 right-4">
                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/74">{tool.category}</p>
               <h3 className="text-display-card mt-2 max-w-none text-[1.62rem] text-white sm:max-w-[11.5ch] sm:text-[2.08rem] sm:text-balance">
                 {tool.name}
@@ -305,7 +305,7 @@ function ToolCardComponent({
               </span>
             ) : null}
           </div>
-          <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
+          <div className="tool-card-media__caption absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
             <div className="min-w-0">
                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/72">
                  {contextLabel}

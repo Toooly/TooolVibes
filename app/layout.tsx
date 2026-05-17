@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   openGraph: {
-    title: `${siteConfig.name} | Premium AI tools discovery platform`,
+    title: `${siteConfig.name} | Premium AI tools discovery system`,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
