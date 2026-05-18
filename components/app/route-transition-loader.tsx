@@ -3,19 +3,35 @@
 import { usePathname } from "next/navigation";
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
-const ROUTE_COPY: Record<string, { label: string; duration: number }> = {
-  "/compare": { label: "Allineo il confronto", duration: 1680 },
-  "/archivio": { label: "Apro il catalogo", duration: 1080 },
-  "/product-hunt": { label: "Sincronizzo il radar", duration: 1320 },
-  "/collections": { label: "Compongo la collection", duration: 1260 },
-  "/shortlist": { label: "Recupero la shortlist", duration: 1180 },
-  "/wishlist": { label: "Preparo il suggerimento", duration: 1040 },
-  "/tags": { label: "Ordino le categorie", duration: 980 },
-  "/posts": { label: "Apro gli approfondimenti", duration: 1160 },
-  "/toools": { label: "Carico la scheda", duration: 1180 },
-  "/account": { label: "Apro il profilo", duration: 1040 },
-  "/shop": { label: "Accendo lo shop", duration: 980 },
-  "/community": { label: "Entro nella community", duration: 1040 },
+type RouteLoaderConfig = {
+  label: string;
+  duration: number;
+  accentA: string;
+  accentB: string;
+  accentC: string;
+};
+
+const DEFAULT_ROUTE_CONFIG: RouteLoaderConfig = {
+  label: "Preparo la rotta",
+  duration: 820,
+  accentA: "94, 226, 255",
+  accentB: "124, 58, 237",
+  accentC: "246, 199, 97",
+};
+
+const ROUTE_COPY: Record<string, RouteLoaderConfig> = {
+  "/compare": { label: "Allineo il confronto", duration: 980, accentA: "246, 199, 97", accentB: "124, 58, 237", accentC: "94, 226, 255" },
+  "/archivio": { label: "Apro il catalogo", duration: 780, accentA: "94, 226, 255", accentB: "106, 60, 255", accentC: "246, 199, 97" },
+  "/product-hunt": { label: "Sincronizzo il radar", duration: 860, accentA: "255, 176, 76", accentB: "255, 99, 99", accentC: "124, 58, 237" },
+  "/collections": { label: "Compongo la collection", duration: 860, accentA: "216, 180, 254", accentB: "106, 60, 255", accentC: "94, 226, 255" },
+  "/shortlist": { label: "Recupero la shortlist", duration: 820, accentA: "246, 199, 97", accentB: "106, 60, 255", accentC: "94, 226, 255" },
+  "/wishlist": { label: "Preparo il suggerimento", duration: 760, accentA: "216, 180, 254", accentB: "124, 58, 237", accentC: "94, 226, 255" },
+  "/tags": { label: "Ordino le categorie", duration: 720, accentA: "94, 226, 255", accentB: "124, 58, 237", accentC: "246, 199, 97" },
+  "/posts": { label: "Apro gli approfondimenti", duration: 820, accentA: "246, 199, 97", accentB: "124, 58, 237", accentC: "216, 180, 254" },
+  "/toools": { label: "Carico la scheda", duration: 820, accentA: "94, 226, 255", accentB: "106, 60, 255", accentC: "246, 199, 97" },
+  "/account": { label: "Apro il profilo", duration: 760, accentA: "216, 180, 254", accentB: "106, 60, 255", accentC: "94, 226, 255" },
+  "/shop": { label: "Accendo lo shop", duration: 720, accentA: "246, 199, 97", accentB: "124, 58, 237", accentC: "94, 226, 255" },
+  "/community": { label: "Entro nella community", duration: 760, accentA: "94, 226, 255", accentB: "124, 58, 237", accentC: "246, 199, 97" },
 };
 
 function isModifiedNavigation(event: MouseEvent) {
@@ -44,7 +60,7 @@ function getInternalDestination(anchor: HTMLAnchorElement) {
 
 function getRouteLoaderConfig(pathname: string) {
   const match = Object.entries(ROUTE_COPY).find(([path]) => pathname.startsWith(path));
-  return match?.[1] ?? { label: "Preparo la rotta", duration: 1120 };
+  return match?.[1] ?? DEFAULT_ROUTE_CONFIG;
 }
 
 function canShowRouteLoader() {
@@ -57,6 +73,7 @@ export function RouteTransitionLoader() {
   const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [routeLabel, setRouteLabel] = useState("Preparo la rotta");
+  const [routeTheme, setRouteTheme] = useState(DEFAULT_ROUTE_CONFIG);
   const visibleRef = useRef(false);
   const startedAtRef = useRef(0);
   const durationRef = useRef(1120);
@@ -99,6 +116,7 @@ export function RouteTransitionLoader() {
     startedAtRef.current = performance.now();
     visibleRef.current = true;
     setRouteLabel(routeConfig.label);
+    setRouteTheme(routeConfig);
     setVisible(true);
     setProgress(4);
 
@@ -179,7 +197,14 @@ export function RouteTransitionLoader() {
     <div
       className={`route-transition-loader ${visible ? "is-visible" : ""}`}
       aria-hidden={!visible}
-      style={{ "--route-progress": `${progress}%` } as CSSProperties}
+      style={
+        {
+          "--route-progress": `${progress}%`,
+          "--route-accent-a": routeTheme.accentA,
+          "--route-accent-b": routeTheme.accentB,
+          "--route-accent-c": routeTheme.accentC,
+        } as CSSProperties
+      }
     >
       <div className="route-transition-loader__stage" role="status" aria-live="polite">
         <span className="route-transition-loader__halo" />

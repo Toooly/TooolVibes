@@ -111,7 +111,7 @@ function addPulse(element: HTMLElement) {
       target.classList.remove("is-sonic-tap");
       void target.offsetWidth;
       target.classList.add("is-sonic-tap");
-      window.setTimeout(() => target.classList.remove("is-sonic-tap"), 520);
+      window.setTimeout(() => target.classList.remove("is-sonic-tap"), 560);
     });
   });
 }
@@ -130,7 +130,7 @@ function spawnSingularityAt(clientX: number, clientY: number, kind: SoundKind, i
   pulse.style.top = `${clientY}px`;
 
   document.body.appendChild(pulse);
-  window.setTimeout(() => pulse.remove(), 640);
+  window.setTimeout(() => pulse.remove(), 740);
 }
 
 function spawnSingularity(event: PointerEvent, kind: SoundKind) {
