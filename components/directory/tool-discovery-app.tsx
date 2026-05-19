@@ -58,6 +58,7 @@ import {
   type DirectoryTool,
   type DirectoryToolLevel,
 } from "@/lib/data/tooolvibes-directory";
+import { playTooolvibesSound } from "@/lib/config/sound";
 import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
 
@@ -204,6 +205,7 @@ function FilterControls({
               key={group.key}
               type="button"
               onClick={() => onGroupChange(group.key)}
+              data-sonic-action="filterApply"
               className={cn(
                 "motion-filter-chip min-h-10 shrink-0 rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3.5 sm:py-2 sm:text-[0.72rem]",
                 activeGroup === group.key ? activeClass : idleClass,
@@ -214,15 +216,19 @@ function FilterControls({
           ))}
         </div>
         <details className="motion-details mt-3 rounded-[20px] border border-white/10 bg-white/5 p-3">
-          <summary className="cursor-pointer text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] transition hover:text-[var(--accent-strong)]">
+          <summary
+            className="cursor-pointer text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] transition hover:text-[var(--accent-strong)]"
+            data-sonic-action="expand"
+          >
             Altre categorie
           </summary>
           <div className="mt-3 flex flex-wrap gap-2">
             {secondaryGroups.map((group) => (
               <button
-                key={group.key}
+              key={group.key}
               type="button"
               onClick={() => onGroupChange(group.key)}
+              data-sonic-action="filterApply"
               className={cn(
                   "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3 sm:text-xs",
                   activeGroup === group.key ? activeClass : idleClass,
@@ -245,6 +251,7 @@ function FilterControls({
               key={level.key}
               type="button"
               onClick={() => onLevelChange(level.key)}
+              data-sonic-action="filterApply"
               className={cn(
                 "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3 sm:text-xs",
                 activeLevel === level.key ? activeClass : idleClass,
@@ -266,6 +273,7 @@ function FilterControls({
               key={tag}
               type="button"
               onClick={() => onTagChange(tag)}
+              data-sonic-action="filterApply"
               className={cn(
                 "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.72rem] font-medium transition sm:px-3 sm:text-xs",
                 activeTag === tag ? activeClass : idleClass,
@@ -415,6 +423,7 @@ function ToolDetailDrawer({
                 key={item.slug}
                 type="button"
                 onClick={() => onStack(item.slug)}
+                data-sonic-action="stack"
                 className="rounded-[24px] border border-white/10 bg-white/7 p-4 text-left transition hover:-translate-y-0.5 hover:border-white/22 hover:bg-white/10"
               >
                 <p className="font-semibold text-white">{item.name}</p>
@@ -425,13 +434,13 @@ function ToolDetailDrawer({
 
           <div className="rounded-[24px] border border-white/10 bg-white/8 p-3 shadow-[0_18px_48px_rgba(6,10,30,0.22)] sm:p-4">
             <div className="grid gap-2 sm:grid-cols-4">
-              <PremiumButton type="button" onClick={onSave} tone={saved ? "secondary" : "primary"}>
+              <PremiumButton type="button" onClick={onSave} tone={saved ? "secondary" : "primary"} data-sonic-action="save">
                 {saved ? "Salvato" : "Salva"}
               </PremiumButton>
-              <PremiumButton type="button" onClick={onCompare} tone={compared ? "secondary" : "ghost"}>
+              <PremiumButton type="button" onClick={onCompare} tone={compared ? "secondary" : "ghost"} data-sonic-action="compare">
                 Confronta
               </PremiumButton>
-              <PremiumButton type="button" onClick={() => onStack(tool.slug)} tone="secondary">
+              <PremiumButton type="button" onClick={() => onStack(tool.slug)} tone="secondary" data-sonic-action="stack">
                 Stack
               </PremiumButton>
               <PremiumLink href={tool.url} external>
@@ -466,6 +475,7 @@ function SortableStackItem({
         type="button"
         className="cursor-grab rounded-full bg-white/10 p-2 active:cursor-grabbing"
         aria-label={`Riordina ${tool.name}`}
+        data-sonic-action="update"
         {...attributes}
         {...listeners}
       >
@@ -481,6 +491,7 @@ function SortableStackItem({
         onClick={onRemove}
         className="premium-button premium-button-icon premium-button-subtle min-h-10 min-w-10 text-white/76 hover:text-white"
         aria-label={`Rimuovi ${tool.name}`}
+        data-sonic-action="update"
       >
         <X className="size-4" />
       </button>
@@ -713,12 +724,14 @@ export function ToolDiscoveryApp({
   function handleSave(tool: DirectoryTool) {
     const saved = toggleSaved(tool.slug);
     toast.success(saved ? `${tool.name} salvato` : `${tool.name} rimosso dai salvati`);
+    playTooolvibesSound(saved ? "success" : "update");
   }
 
   function handleCompare(tool: DirectoryTool) {
     const result = toggleCompare(tool.slug);
     if (result.limited) {
       toast.warning(`Puoi confrontare fino a ${MAX_COMPARE_TOOLS} tool alla volta.`);
+      playTooolvibesSound("warning");
       return;
     }
     toast.success(
@@ -726,12 +739,14 @@ export function ToolDiscoveryApp({
         ? `${tool.name} aggiunto al confronto`
         : `${tool.name} rimosso dal confronto`,
     );
+    playTooolvibesSound(result.added ? "success" : "update");
   }
 
   function handleStack(slug: string) {
     const tool = getToolBySlug(tools, slug);
     const added = addToStack(slug);
     toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool già nello stack");
+    playTooolvibesSound(added ? "success" : "update");
   }
 
   function resetFilters() {
@@ -739,10 +754,12 @@ export function ToolDiscoveryApp({
     setActiveGroup("all");
     setActiveLevel("all");
     setActiveTag("");
+    playTooolvibesSound("update");
   }
 
   function toggleTag(tag: string) {
     setActiveTag((current) => (current === tag ? "" : tag));
+    playTooolvibesSound("filterApply");
   }
 
   function handleDragEnd(event: DragEndEvent) {
@@ -758,6 +775,7 @@ export function ToolDiscoveryApp({
       return;
     }
     reorderStack(arrayMove(stackSlugs, oldIndex, newIndex));
+    playTooolvibesSound("update");
   }
 
   return (
@@ -775,6 +793,7 @@ export function ToolDiscoveryApp({
           <button
             type="button"
             onClick={() => setCommandOpen(true)}
+            data-sonic-action="search"
             className="premium-button premium-button-secondary hidden min-h-11 w-full items-center justify-between rounded-[18px] px-3.5 py-2.5 text-left text-sm sm:flex sm:rounded-[22px] sm:px-4 sm:py-3"
           >
             <span className="inline-flex items-center gap-2">
@@ -795,6 +814,7 @@ export function ToolDiscoveryApp({
                 key={key}
                 type="button"
                 onClick={() => setActiveTab(key as WorkspaceTab)}
+                data-sonic-action="tab"
                 className={cn(
                   "premium-button flex min-h-10 items-center justify-center gap-1.5 rounded-[16px] px-2 text-[0.72rem] font-semibold sm:min-h-11 sm:text-sm lg:justify-between lg:rounded-[18px] lg:px-3",
                   activeTab === key
@@ -826,6 +846,7 @@ export function ToolDiscoveryApp({
               onChange={(event) => setSortMode(event.target.value as SortMode)}
               className="premium-input col-span-1 min-h-12 min-w-0 px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3"
               aria-label="Ordina tool"
+              data-sonic-action="tab"
             >
               <option value="recommended">Consigliati</option>
               <option value="name">Nome</option>
@@ -835,6 +856,7 @@ export function ToolDiscoveryApp({
             <button
               type="button"
               onClick={() => setFilterDrawerOpen(true)}
+              data-sonic-action="filter"
               className="premium-button premium-button-secondary inline-flex min-h-11 items-center justify-center gap-2 rounded-[16px] px-0 text-sm font-semibold sm:min-h-12 sm:w-auto sm:rounded-[18px] sm:px-4 lg:hidden"
             >
               <SlidersHorizontal className="size-4" />
@@ -846,6 +868,7 @@ export function ToolDiscoveryApp({
               className="hidden lg:inline-flex"
               onClick={resetFilters}
               disabled={!hasActiveFilters}
+              data-sonic-action="update"
             >
               Reset
             </PremiumButton>
@@ -859,6 +882,7 @@ export function ToolDiscoveryApp({
                     key={group.key}
                     type="button"
                     onClick={() => setActiveGroup(group.key)}
+                    data-sonic-action="filterApply"
                     className={cn(
                       "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
                       activeGroup === group.key
@@ -895,6 +919,7 @@ export function ToolDiscoveryApp({
               <button
                 type="button"
                 onClick={resetFilters}
+                data-sonic-action="update"
                 className="premium-button premium-button-subtle ml-auto rounded-full px-3 py-1 font-semibold text-white"
               >
                 Reset
@@ -951,7 +976,7 @@ export function ToolDiscoveryApp({
               dark
               action={
                 hasActiveFilters ? (
-                  <PremiumButton type="button" tone="secondary" onClick={resetFilters}>
+                  <PremiumButton type="button" tone="secondary" onClick={resetFilters} data-sonic-action="update">
                     Rimuovi filtri
                   </PremiumButton>
                 ) : null
@@ -965,7 +990,7 @@ export function ToolDiscoveryApp({
             id="mobile-workspace"
             className="mobile-native-accordion scroll-mt-28 rounded-[20px] border border-[var(--line)] bg-white/72 px-4 py-3"
           >
-            <summary>Workspace mobile</summary>
+            <summary data-sonic-action="expand">Workspace mobile</summary>
             <div className="mt-3 grid grid-cols-3 gap-2">
               {[
                 { label: "Salvati", count: savedSlugs.length, tab: "saved" as const },
@@ -976,6 +1001,7 @@ export function ToolDiscoveryApp({
                   key={item.label}
                   type="button"
                   onClick={() => setActiveTab(item.tab)}
+                  data-sonic-action="tab"
                   className="rounded-[16px] bg-white/72 px-2 py-2 text-center"
                 >
                   <span className="block text-[1rem] font-semibold text-[var(--foreground)]">
@@ -1014,6 +1040,7 @@ export function ToolDiscoveryApp({
                     key={slug}
                     type="button"
                     onClick={() => setSelectedSlug(slug)}
+                    data-sonic-action="detail"
                     className="w-full rounded-[18px] border border-white/10 bg-white/7 px-3 py-2 text-left text-sm font-semibold text-white/76 transition hover:border-violet-200/28 hover:bg-white/10 hover:text-white"
                   >
                     {tool.name}
@@ -1157,10 +1184,10 @@ export function ToolDiscoveryApp({
             />
           </div>
           <DrawerFooter data-vaul-no-drag className="grid grid-cols-2 gap-2 border-t border-white/10 bg-white/6 p-5">
-            <PremiumButton type="button" tone="secondary" onClick={resetFilters}>
+            <PremiumButton type="button" tone="secondary" onClick={resetFilters} data-sonic-action="update">
               Reset
             </PremiumButton>
-            <PremiumButton type="button" onClick={() => setFilterDrawerOpen(false)}>
+            <PremiumButton type="button" onClick={() => setFilterDrawerOpen(false)} data-sonic-action="filterApply">
               Applica
             </PremiumButton>
           </DrawerFooter>

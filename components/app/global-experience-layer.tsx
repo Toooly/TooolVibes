@@ -22,13 +22,15 @@ export function GlobalExperienceLayer() {
       return;
     }
 
-    let frame = 0;
+    let scrollFrame = 0;
+    let pointerFrame = 0;
     let pointerTimer = 0;
     let pressTimer = 0;
     let scrollTimer = 0;
+    let latestPointer: { clientX: number; clientY: number; state: "active" | "pressed" } | null = null;
 
     const updateScrollProgress = () => {
-      frame = 0;
+      scrollFrame = 0;
       const maxScroll = Math.max(1, root.scrollHeight - window.innerHeight);
       const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
       root.style.setProperty("--tv-scroll-progress", progress.toFixed(4));
@@ -40,25 +42,43 @@ export function GlobalExperienceLayer() {
     };
 
     const requestScrollProgress = () => {
-      if (frame) {
+      if (scrollFrame) {
         return;
       }
-      frame = window.requestAnimationFrame(updateScrollProgress);
+      scrollFrame = window.requestAnimationFrame(updateScrollProgress);
     };
 
-    const setPointerPosition = (clientX: number, clientY: number) => {
+    const applyPointerPosition = () => {
+      pointerFrame = 0;
+
+      if (!latestPointer) {
+        return;
+      }
+
+      root.style.setProperty("--tv-pointer-x", `${latestPointer.clientX}px`);
+      root.style.setProperty("--tv-pointer-y", `${latestPointer.clientY}px`);
+      root.setAttribute("data-experience-pointer", latestPointer.state);
+
+      if (latestPointer.state === "active") {
+        window.clearTimeout(pointerTimer);
+        pointerTimer = window.setTimeout(() => {
+          root.removeAttribute("data-experience-pointer");
+        }, 1400);
+      }
+    };
+
+    const requestPointerPosition = (clientX: number, clientY: number, state: "active" | "pressed" = "active") => {
       if (window.innerWidth < 768) {
         return;
       }
 
-      root.style.setProperty("--tv-pointer-x", `${clientX}px`);
-      root.style.setProperty("--tv-pointer-y", `${clientY}px`);
-      root.setAttribute("data-experience-pointer", "active");
+      latestPointer = { clientX, clientY, state };
 
-      window.clearTimeout(pointerTimer);
-      pointerTimer = window.setTimeout(() => {
-        root.removeAttribute("data-experience-pointer");
-      }, 1400);
+      if (pointerFrame) {
+        return;
+      }
+
+      pointerFrame = window.requestAnimationFrame(applyPointerPosition);
     };
 
     const updatePointer = (event: PointerEvent) => {
@@ -66,11 +86,7 @@ export function GlobalExperienceLayer() {
         return;
       }
 
-      setPointerPosition(event.clientX, event.clientY);
-    };
-
-    const updateMousePointer = (event: MouseEvent) => {
-      setPointerPosition(event.clientX, event.clientY);
+      requestPointerPosition(event.clientX, event.clientY);
     };
 
     const pressPointer = (event: PointerEvent) => {
@@ -78,28 +94,7 @@ export function GlobalExperienceLayer() {
         return;
       }
 
-      root.style.setProperty("--tv-pointer-x", `${event.clientX}px`);
-      root.style.setProperty("--tv-pointer-y", `${event.clientY}px`);
-      root.setAttribute("data-experience-pointer", "pressed");
-
-      window.clearTimeout(pointerTimer);
-      window.clearTimeout(pressTimer);
-      pressTimer = window.setTimeout(() => {
-        root.setAttribute("data-experience-pointer", "active");
-        pointerTimer = window.setTimeout(() => {
-          root.removeAttribute("data-experience-pointer");
-        }, 900);
-      }, 360);
-    };
-
-    const pressMousePointer = (event: MouseEvent) => {
-      if (window.innerWidth < 768 || event.button !== 0) {
-        return;
-      }
-
-      root.style.setProperty("--tv-pointer-x", `${event.clientX}px`);
-      root.style.setProperty("--tv-pointer-y", `${event.clientY}px`);
-      root.setAttribute("data-experience-pointer", "pressed");
+      requestPointerPosition(event.clientX, event.clientY, "pressed");
 
       window.clearTimeout(pointerTimer);
       window.clearTimeout(pressTimer);
@@ -116,18 +111,15 @@ export function GlobalExperienceLayer() {
     window.addEventListener("scroll", requestScrollProgress, { passive: true });
     window.addEventListener("resize", requestScrollProgress, { passive: true });
     window.addEventListener("pointermove", updatePointer, { passive: true });
-    window.addEventListener("mousemove", updateMousePointer, { passive: true });
     window.addEventListener("pointerdown", pressPointer, { passive: true });
-    window.addEventListener("mousedown", pressMousePointer, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", requestScrollProgress);
       window.removeEventListener("resize", requestScrollProgress);
       window.removeEventListener("pointermove", updatePointer);
-      window.removeEventListener("mousemove", updateMousePointer);
       window.removeEventListener("pointerdown", pressPointer);
-      window.removeEventListener("mousedown", pressMousePointer);
-      window.cancelAnimationFrame(frame);
+      window.cancelAnimationFrame(scrollFrame);
+      window.cancelAnimationFrame(pointerFrame);
       window.clearTimeout(pointerTimer);
       window.clearTimeout(pressTimer);
       window.clearTimeout(scrollTimer);

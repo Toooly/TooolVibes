@@ -366,9 +366,9 @@ img {
     transform: translate3d(0, 0, 0) scale(1);
     filter: blur(0);
     transition:
-      opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
-      transform 620ms cubic-bezier(0.16, 1, 0.3, 1),
-      filter 460ms cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 560ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 720ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 520ms cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--motion-delay, 0ms);
   }
 
@@ -383,11 +383,11 @@ img {
   }
 
   .motion-reveal {
-    animation: tv-fade-up 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: tv-fade-up 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .motion-stagger > * {
-    animation: tv-fade-up 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: tv-fade-up 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .motion-stagger > *:nth-child(2) {
@@ -444,7 +444,7 @@ img {
   }
 
   .mobile-menu-panel {
-    animation: tv-menu-open 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: tv-menu-open 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
     transform-origin: top center;
   }
 
@@ -1409,6 +1409,33 @@ img {
 
   .premium-button-icon:hover svg {
     transform: scale(1.12) rotate(-4deg);
+  }
+
+  .sound-toggle-button {
+    flex-shrink: 0;
+    color: #251e51 !important;
+  }
+
+  .sound-toggle-button[aria-pressed="true"] {
+    border-color: rgba(106, 60, 255, 0.24);
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.88), transparent 34%),
+      radial-gradient(circle at 84% 10%, rgba(94, 226, 255, 0.16), transparent 34%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(240, 235, 255, 0.76));
+    box-shadow:
+      0 12px 30px rgba(47, 33, 126, 0.08),
+      0 0 24px rgba(94, 226, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  }
+
+  .sound-toggle-button.is-muted {
+    opacity: 0.78;
+    filter: saturate(0.78);
+  }
+
+  .sound-toggle-button:hover svg,
+  .sound-toggle-button:focus-visible svg {
+    transform: scale(1.08);
   }
 
   .premium-arrow {
@@ -3237,7 +3264,7 @@ img {
   }
 
   .route-transition-loader.is-visible .route-transition-loader__stage {
-    animation: tv-route-stage-arrive 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: tv-route-stage-arrive 580ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .route-transition-loader__stage::before {
@@ -3340,7 +3367,7 @@ img {
   }
 
   .route-transition-loader.is-visible .route-transition-loader__track {
-    animation: tv-route-track-arrive 460ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+    animation: tv-route-track-arrive 520ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
   }
 
   .route-transition-loader__track span {
@@ -3526,6 +3553,58 @@ img {
   .sonic-singularity--stack {
     --sonic-a: rgba(167, 139, 250, 0.78);
     --sonic-b: rgba(246, 199, 97, 0.58);
+  }
+
+  .sonic-singularity--filter,
+  .sonic-singularity--filterApply,
+  .sonic-singularity--tab {
+    --sonic-a: rgba(94, 226, 255, 0.82);
+    --sonic-b: rgba(167, 139, 250, 0.66);
+    --sonic-c: rgba(255, 255, 255, 0.72);
+  }
+
+  .sonic-singularity--expand,
+  .sonic-singularity--collapse,
+  .sonic-singularity--carousel,
+  .sonic-singularity--drawerOpen,
+  .sonic-singularity--drawerClose {
+    --sonic-a: rgba(216, 180, 254, 0.82);
+    --sonic-b: rgba(57, 210, 246, 0.64);
+    --sonic-c: rgba(246, 199, 97, 0.5);
+  }
+
+  .sonic-singularity--success,
+  .sonic-singularity--toast,
+  .sonic-singularity--update,
+  .sonic-singularity--reveal,
+  .sonic-singularity--route,
+  .sonic-singularity--introOpen {
+    --sonic-a: rgba(246, 199, 97, 0.78);
+    --sonic-b: rgba(94, 226, 255, 0.68);
+    --sonic-c: rgba(255, 255, 255, 0.76);
+  }
+
+  .sonic-singularity--open,
+  .sonic-singularity--close,
+  .sonic-singularity--introClose {
+    --sonic-a: rgba(216, 180, 254, 0.76);
+    --sonic-b: rgba(106, 60, 255, 0.68);
+    --sonic-c: rgba(94, 226, 255, 0.54);
+  }
+
+  .sonic-singularity--warning {
+    --sonic-a: rgba(246, 199, 97, 0.9);
+    --sonic-b: rgba(255, 132, 94, 0.64);
+    --sonic-c: rgba(255, 255, 255, 0.72);
+  }
+
+  .sonic-singularity--hover {
+    --sonic-core: rgba(255, 255, 255, 0.52);
+    --sonic-a: rgba(94, 226, 255, 0.58);
+    --sonic-b: rgba(216, 180, 254, 0.46);
+    width: 2.5rem;
+    margin: -1.25rem 0 0 -1.25rem;
+    filter: blur(2px) saturate(1.08);
   }
 
   .sonic-singularity--touch {
@@ -4534,25 +4613,6 @@ img {
       0 10px 22px rgba(17, 11, 44, 0.14);
   }
 
-  .compare-tray {
-    border-color: rgba(112, 82, 255, 0.16);
-    background:
-      radial-gradient(circle at top right, rgba(106, 60, 255, 0.12), transparent 28%),
-      radial-gradient(circle at left center, rgba(243, 191, 76, 0.1), transparent 24%),
-      radial-gradient(circle at 82% 18%, rgba(57, 210, 246, 0.08), transparent 22%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 239, 255, 0.86));
-    backdrop-filter: none;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.58),
-      0 26px 68px rgba(47, 30, 108, 0.2);
-  }
-
-  .compare-tray.is-collapsed {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.46),
-      0 18px 44px rgba(47, 30, 108, 0.12);
-  }
-
   .compare-table-shell {
     background:
       radial-gradient(circle at top right, rgba(112, 82, 255, 0.06), transparent 24%),
@@ -5179,7 +5239,7 @@ img {
   }
 
   .motion-details[open] > div {
-    animation: tv-details-open-premium 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: tv-details-open-premium 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .mobile-native-accordion {
@@ -5237,7 +5297,7 @@ img {
   }
 
   .mobile-native-accordion[open] > :not(summary) {
-    animation: tv-details-open-premium 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: tv-details-open-premium 390ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .drawer-light {
@@ -7036,7 +7096,7 @@ img {
 
   .mobile-home-expander__content {
     padding: 0 0.6rem 0.7rem;
-    animation: tv-mobile-expander-open 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: tv-mobile-expander-open 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   .mobile-home-expander__content > :is(.premium-card, .premium-panel) {
@@ -7076,11 +7136,6 @@ img {
 
   .shortlist-workspace-panel textarea {
     min-height: 5.5rem;
-  }
-
-  .compare-tray {
-    border-radius: 24px;
-    padding: 0.9rem 1rem;
   }
 
   .compare-table-shell {
@@ -8843,12 +8898,12 @@ img {
 
   [data-slot="drawer-content"][data-open],
   [data-slot="drawer-content"][data-state="open"] {
-    animation: tv-drawer-gravity-in 500ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
+    animation: tv-drawer-gravity-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
     transform-origin: 50% 100%;
   }
 
   .cn-toast {
-    animation: tv-toast-orbit-in 500ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
+    animation: tv-toast-orbit-in 540ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
     transform-origin: 16% 50%;
   }
 

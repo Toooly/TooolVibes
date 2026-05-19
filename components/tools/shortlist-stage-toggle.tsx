@@ -26,6 +26,7 @@ export function ShortlistStageToggle({ slug }: ShortlistStageToggleProps) {
             key={option}
             type="button"
             onClick={() => setShortlistStage(slug, option)}
+            data-sonic-action="tab"
             className={`selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.15em] ${
               active ? "quick-filter-chip is-active" : ""
             }`}

@@ -71,6 +71,7 @@ export function ShortlistToggle({
         }}
         aria-pressed={isSaved}
         aria-label={isSaved ? "Rimuovi dalla shortlist" : "Salva in shortlist"}
+        data-sonic-action="save"
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
           <path
@@ -105,6 +106,7 @@ export function ShortlistToggle({
         color: isSaved ? "var(--accent-strong)" : "var(--muted-strong)",
       }}
       aria-pressed={isSaved}
+      data-sonic-action="save"
     >
       <span
         className="h-1.25 w-1.25 rounded-full"

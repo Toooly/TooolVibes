@@ -14,6 +14,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { playTooolvibesSound } from "@/lib/config/sound";
 import { directoryTools } from "@/lib/data/tooolvibes-directory";
 import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
@@ -38,6 +39,7 @@ export function GlobalCommandPalette() {
     function handleKeyDown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
+        playTooolvibesSound(isOpen ? "close" : "search");
         setCommandOpen(!isOpen);
       }
     }
@@ -62,6 +64,7 @@ export function GlobalCommandPalette() {
         <CommandGroup heading="Navigazione">
           <CommandItem
             onSelect={() => {
+              playTooolvibesSound("nav");
               router.push("/archivio");
               close();
             }}
@@ -71,6 +74,7 @@ export function GlobalCommandPalette() {
           </CommandItem>
           <CommandItem
             onSelect={() => {
+              playTooolvibesSound("nav");
               router.push("/shortlist");
               close();
             }}
@@ -80,6 +84,7 @@ export function GlobalCommandPalette() {
           </CommandItem>
           <CommandItem
             onSelect={() => {
+              playTooolvibesSound("nav");
               router.push("/compare");
               close();
             }}
@@ -89,6 +94,7 @@ export function GlobalCommandPalette() {
           </CommandItem>
           <CommandItem
             onSelect={() => {
+              playTooolvibesSound("nav");
               router.push("/archivio#stack-builder");
               close();
             }}
@@ -105,6 +111,7 @@ export function GlobalCommandPalette() {
               value={`${tool.name} ${tool.categoryLabel} ${tool.tags.join(" ")}`}
               onSelect={() => {
                 setSelectedSlug(tool.slug);
+                playTooolvibesSound("detail");
                 router.push(`/archivio?tool=${tool.slug}`);
                 close();
               }}
@@ -124,6 +131,7 @@ export function GlobalCommandPalette() {
               onSelect={() => {
                 const saved = toggleSaved(tool.slug);
                 toast.success(saved ? `${tool.name} salvato` : `${tool.name} rimosso`);
+                playTooolvibesSound(saved ? "success" : "update");
                 close();
               }}
             >
@@ -138,12 +146,14 @@ export function GlobalCommandPalette() {
                 const result = toggleCompare(tool.slug);
                 if (result.limited) {
                   toast.warning(`Puoi confrontare fino a ${MAX_COMPARE_TOOLS} tool alla volta.`);
+                  playTooolvibesSound("warning");
                 } else {
                   toast.success(
                     result.added
                       ? `${tool.name} aggiunto al confronto`
                       : `${tool.name} rimosso dal confronto`,
                   );
+                  playTooolvibesSound(result.added ? "success" : "update");
                 }
                 close();
               }}
@@ -158,6 +168,7 @@ export function GlobalCommandPalette() {
               onSelect={() => {
                 const added = addToStack(tool.slug);
                 toast.success(added ? `${tool.name} aggiunto allo stack` : "Già nello stack");
+                playTooolvibesSound(added ? "success" : "update");
                 close();
               }}
             >

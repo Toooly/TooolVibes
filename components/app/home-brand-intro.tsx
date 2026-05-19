@@ -3,6 +3,7 @@
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { SOUND_PLAY_EVENT } from "@/lib/config/sound";
 
 const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-v5";
 const INTRO_TEXT = "TOOOLVIBES";
@@ -20,6 +21,7 @@ export function HomeBrandIntro() {
   const finishIntro = useCallback((quick = false) => {
     clearTimers();
     setPhase("leaving");
+    window.dispatchEvent(new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "introClose" } }));
 
     const hideTimer = window.setTimeout(
       () => {
@@ -46,6 +48,7 @@ export function HomeBrandIntro() {
     document.documentElement.classList.add("brand-intro-active");
     document.documentElement.classList.remove("brand-intro-preflight");
     setPhase("active");
+    window.dispatchEvent(new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "introOpen" } }));
 
     timersRef.current.push(
       window.setTimeout(() => finishIntro(false), INTRO_DURATION_MS),
@@ -105,6 +108,7 @@ export function HomeBrandIntro() {
       <button
         type="button"
         className="brand-intro__skip"
+        data-sonic-action="introClose"
         onClick={() => finishIntro(true)}
       >
         Salta

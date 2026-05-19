@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { DirectoryHeaderSearch } from "@/components/directory/directory-header-search";
+import { SoundToggleButton } from "@/components/app/sound-toggle-button";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { PremiumLink } from "@/components/ui/premium";
 import { cn } from "@/lib/utils";
@@ -92,6 +93,7 @@ export function SiteHeader() {
           </div>
 
           <div className="hidden items-center gap-2 lg:flex">
+            <SoundToggleButton className="hidden xl:inline-flex" />
             <Link
               href="/account"
               className="premium-button premium-button-subtle hidden min-h-10 items-center rounded-full px-4 py-2 text-sm font-semibold 2xl:inline-flex"
@@ -102,6 +104,8 @@ export function SiteHeader() {
               Suggerisci
             </PremiumLink>
           </div>
+
+          <SoundToggleButton className="xl:hidden" />
 
           <button
             type="button"

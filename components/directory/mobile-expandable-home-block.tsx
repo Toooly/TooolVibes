@@ -25,6 +25,7 @@ export function MobileExpandableHomeBlock({
           type="button"
           className="mobile-home-expander__trigger"
           aria-expanded={open}
+          data-sonic-action={open ? "collapse" : "expand"}
           onClick={() => setOpen((current) => !current)}
         >
           <span className="mobile-home-expander__icon" aria-hidden="true">

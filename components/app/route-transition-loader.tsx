@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
+import { SOUND_PLAY_EVENT } from "@/lib/config/sound";
+
 type RouteLoaderConfig = {
   label: string;
   duration: number;
@@ -119,6 +121,7 @@ export function RouteTransitionLoader() {
     setRouteTheme(routeConfig);
     setVisible(true);
     setProgress(4);
+    window.dispatchEvent(new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "route" } }));
 
     intervalRef.current = window.setInterval(() => {
       const elapsed = performance.now() - startedAtRef.current;

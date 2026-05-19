@@ -176,12 +176,14 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Cerca nella tua workspace"
+            data-sonic-action="search"
             className="filter-control w-full rounded-[22px] border px-4 py-3 outline-none"
             style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.88)" }}
           />
           <select
             value={sortKey}
             onChange={(event) => setSortKey(event.target.value as ShortlistSortKey)}
+            data-sonic-action="tab"
             className="filter-control w-full rounded-[22px] border px-4 py-3 outline-none"
             style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.88)" }}
           >
@@ -204,6 +206,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
                   setStageFilter("all");
                   setSortKey("workspace");
                 }}
+                data-sonic-action="update"
                 className="section-quiet-link text-[0.8rem] font-semibold"
                 style={{ color: "var(--muted)" }}
                 >
@@ -224,6 +227,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
                   key={item}
                   type="button"
                   onClick={() => setStageFilter(item)}
+                  data-sonic-action="tab"
                   className={`quick-filter-chip selection-chip text-ui-strong inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] ${
                     stageFilter === item ? "is-active" : ""
                   }`}
@@ -280,6 +284,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
                   setStageFilter("all");
                   setSortKey("workspace");
                 }}
+                data-sonic-action="update"
                 className="button-shell button-secondary text-ui-strong inline-flex rounded-full px-5 py-3 text-sm font-semibold"
               >
               Resetta la workspace

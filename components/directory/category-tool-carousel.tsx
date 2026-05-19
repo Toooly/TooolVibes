@@ -59,11 +59,13 @@ function CarouselIconButton({
   children,
   active,
   ariaLabel,
+  sonicAction,
   onClick,
 }: {
   children: React.ReactNode;
   active?: boolean;
   ariaLabel: string;
+  sonicAction?: "save" | "compare" | "stack" | "carousel";
   onClick: () => void;
 }) {
   return (
@@ -72,6 +74,7 @@ function CarouselIconButton({
       aria-label={ariaLabel}
       title={ariaLabel}
       aria-pressed={active}
+      data-sonic-action={sonicAction}
       onClick={onClick}
       className={cn("category-tool-card__icon-button", active && "is-active")}
     >
@@ -173,16 +176,18 @@ function ToolCarouselCard({
             onMouseDown={(event) => event.preventDefault()}
             onClick={onOpen}
             className="category-tool-card__cta"
+            data-sonic-action="detail"
           >
             Apri dettagli
           </PremiumButton>
-          <CarouselIconButton active={saved} onClick={onSave} ariaLabel={`Salva ${tool.name}`}>
+          <CarouselIconButton active={saved} onClick={onSave} ariaLabel={`Salva ${tool.name}`} sonicAction="save">
             {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
           </CarouselIconButton>
           <CarouselIconButton
             active={compared}
             onClick={onCompare}
             ariaLabel={`Confronta ${tool.name}`}
+            sonicAction="compare"
           >
             <Columns3 className="size-4" />
           </CarouselIconButton>
@@ -190,6 +195,7 @@ function ToolCarouselCard({
             active={stacked}
             onClick={onStack}
             ariaLabel={`Aggiungi ${tool.name} allo stack`}
+            sonicAction="stack"
           >
             <Layers3 className="size-4" />
           </CarouselIconButton>
@@ -343,6 +349,7 @@ export function CategoryToolCarousel({
             aria-label={`Scorri ${title} indietro`}
             title={`Scorri ${title} indietro`}
             className="category-tool-carousel__control"
+            data-sonic-action="carousel"
           >
             <ChevronLeft className="size-4" />
           </button>
@@ -353,6 +360,7 @@ export function CategoryToolCarousel({
             aria-label={`Scorri ${title} avanti`}
             title={`Scorri ${title} avanti`}
             className="category-tool-carousel__control"
+            data-sonic-action="carousel"
           >
             <ChevronRight className="size-4" />
           </button>
@@ -363,6 +371,7 @@ export function CategoryToolCarousel({
                 type="button"
                 tabIndex={-1}
                 onClick={() => scrollToPage(index)}
+                data-sonic-action="carousel"
                 className={cn(
                   "category-tool-carousel__dot",
                   state.currentPage === index + 1 && "is-active",

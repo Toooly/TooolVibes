@@ -8,6 +8,7 @@ import { GlobalExperienceLayer } from "@/components/app/global-experience-layer"
 import { GlobalVibeLayer } from "@/components/app/global-vibe-layer";
 import { InteractionSoundLayer } from "@/components/app/interaction-sound-layer";
 import { RouteTransitionLoader } from "@/components/app/route-transition-loader";
+import { MotionObserver } from "@/components/ui/motion-observer";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -29,6 +30,7 @@ export function RootProviders({ children }: { children: React.ReactNode }) {
       <TooltipProvider delay={180}>
         {children}
         <GlobalExperienceLayer />
+        <MotionObserver />
         <RouteTransitionLoader />
         <GlobalVibeLayer />
         <InteractionSoundLayer />

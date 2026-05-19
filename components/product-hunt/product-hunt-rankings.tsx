@@ -233,10 +233,11 @@ export function ProductHuntRankings({
               type="button"
               role="tab"
               aria-selected={isActive}
+              data-sonic-action="tab"
               onClick={() => setActiveRange(tab.key)}
               whileHover={{ y: -1 }}
               whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 520, damping: 32 }}
+              transition={{ type: "spring", stiffness: 460, damping: 34, mass: 0.72 }}
               className={cn(
                 "relative overflow-hidden rounded-[18px] px-2.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] transition-all duration-200",
                 isActive ? "text-white" : "text-white/64 hover:bg-white/8 hover:text-white",
@@ -246,7 +247,7 @@ export function ProductHuntRankings({
                 <motion.span
                   layoutId="product-hunt-active-tab"
                   className="absolute inset-0 rounded-[18px] bg-[linear-gradient(135deg,rgba(167,139,250,0.95),rgba(82,104,255,0.88))] shadow-[0_12px_26px_rgba(99,102,241,0.24)]"
-                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  transition={{ type: "spring", stiffness: 360, damping: 32, mass: 0.8 }}
                 />
               ) : null}
               <span className="relative z-10">{tab.shortLabel}</span>
@@ -267,7 +268,7 @@ export function ProductHuntRankings({
               initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-              transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
               className={cn(
                 "space-y-3",
                 variant === "wide" && "grid gap-3 space-y-0 sm:grid-cols-2 xl:grid-cols-3",
@@ -280,9 +281,9 @@ export function ProductHuntRankings({
                 initial={{ opacity: 0, y: 12, scale: 0.985 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
-                whileHover={{ y: -6, scale: 1.012 }}
+                whileHover={{ y: -4, scale: 1.008 }}
                 whileTap={{ scale: 0.992 }}
-                transition={{ duration: 0.22, delay: Math.min(index * 0.035, 0.16) }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1], delay: Math.min(index * 0.035, 0.16) }}
                 className={cn(
                   "dynamic-card group flex flex-col items-start gap-3 rounded-[20px] border border-white/12 bg-white/9 p-3 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/13 hover:shadow-[0_14px_34px_rgba(8,14,38,0.2)] sm:flex-row sm:items-center",
                   variant === "wide" && "sm:min-h-[12.5rem] sm:flex-col sm:items-start sm:p-4",
@@ -323,6 +324,7 @@ export function ProductHuntRankings({
                     type="button"
                     className="micro-expand-button mt-3"
                     aria-expanded={expandedItemId === item.id}
+                    data-sonic-action={expandedItemId === item.id ? "collapse" : "expand"}
                     onClick={() =>
                       setExpandedItemId((current) => (current === item.id ? null : item.id))
                     }
@@ -338,7 +340,7 @@ export function ProductHuntRankings({
                         initial={{ opacity: 0, height: 0, y: -4 }}
                         animate={{ opacity: 1, height: "auto", y: 0 }}
                         exit={{ opacity: 0, height: 0, y: -4 }}
-                        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                       >
                         <div className="flex items-start gap-2.5">
                           <span className="grid size-8 shrink-0 place-items-center rounded-[14px] bg-[rgba(106,60,255,0.1)] text-[var(--accent-strong)]">

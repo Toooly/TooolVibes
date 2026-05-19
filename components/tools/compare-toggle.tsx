@@ -88,6 +88,7 @@ export function CompareToggle({
         }}
         aria-pressed={isSelected}
         aria-label={isSelected ? "Rimuovi dal compare" : "Aggiungi al compare"}
+        data-sonic-action="compare"
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
           <path
@@ -116,6 +117,7 @@ export function CompareToggle({
         color: isSelected ? "var(--accent-strong)" : "var(--muted-strong)",
       }}
       aria-pressed={isSelected}
+      data-sonic-action="compare"
     >
       <span
         className="h-1.25 w-1.25 rounded-full"

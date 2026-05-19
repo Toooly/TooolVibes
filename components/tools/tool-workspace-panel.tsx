@@ -58,6 +58,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
         <button
           type="button"
           onClick={() => toggleToolPin(tool.slug)}
+          data-sonic-action="update"
           className={`selection-chip text-ui-strong inline-flex items-center gap-2 rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${
             memory.is_pinned ? "quick-filter-chip is-active" : ""
           }`}
@@ -112,6 +113,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
                     save_reason: active ? undefined : option,
                   })
                 }
+                data-sonic-action="tab"
                 className={`selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${
                   active ? "quick-filter-chip is-active" : ""
                 }`}
@@ -146,6 +148,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
           onChange={(event) => setNoteDraft(event.target.value)}
           rows={2}
           placeholder={`Segnati cosa ti interessa davvero di ${tool.name}...`}
+          data-sonic-action="update"
           className="filter-control mt-3 w-full rounded-[18px] border px-4 py-3 outline-none"
           style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.84)" }}
         />
@@ -162,6 +165,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
             type="button"
             onClick={() => updateToolDecisionMemory(tool.slug, { note: noteDraft })}
             disabled={!noteIsDirty}
+            data-sonic-action="save"
             className="selection-chip text-ui-strong inline-flex items-center rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] disabled:cursor-default disabled:opacity-55"
             style={{
               borderColor: noteIsDirty ? "rgba(112,82,255,0.24)" : "var(--line)",
