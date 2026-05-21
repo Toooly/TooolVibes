@@ -77,7 +77,7 @@ export function DecorativeGlow({
     <span
       aria-hidden="true"
       className={cn(
-        "hero-mini-visual pointer-events-none absolute h-36 w-36 rounded-full blur-3xl",
+        "hero-mini-visual pointer-events-none absolute h-36 w-36 rounded-[42%] opacity-80",
         toneClass,
         className,
       )}

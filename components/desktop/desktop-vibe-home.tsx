@@ -79,6 +79,9 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
         <div className="desktop-vibe-hero-stage" aria-label="Preview 3D dei tool in evidenza">
           <div className="desktop-vibe-stage-grid" aria-hidden="true" />
           <div className="desktop-vibe-stage-rail" aria-hidden="true" />
+          <div className="desktop-vibe-stage-halo desktop-vibe-stage-halo--one" aria-hidden="true" />
+          <div className="desktop-vibe-stage-halo desktop-vibe-stage-halo--two" aria-hidden="true" />
+          <div className="desktop-vibe-stage-beam" aria-hidden="true" />
           <div className="desktop-vibe-prism-core" aria-hidden="true">
             <span />
             <span />
@@ -142,9 +145,9 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
               style={
                 {
                   "--panel-index": index,
-                  "--panel-rotate-x": `${9 - index * 1.5}deg`,
-                  "--panel-rotate-y": `${-10 + index * 4}deg`,
-                  "--panel-depth": `${2.5 + index * 2}rem`,
+                  "--panel-rotate-x": `${5.5 - index * 0.7}deg`,
+                  "--panel-rotate-y": `${-6 + index * 3}deg`,
+                  "--panel-depth": `${1.8 + index * 1.45}rem`,
                 } as CSSProperties
               }
             >
@@ -185,8 +188,8 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
                   "--rail-left": `${7 + (index % 3) * 30}%`,
                   "--rail-top": `${4 + Math.floor(index / 3) * 27}%`,
                   "--rail-depth": `${2 + (index % 4) * 1.3}rem`,
-                  "--rail-tilt": `${-12 + (index % 3) * 8}deg`,
-                  "--rail-roll": `${(index % 2) * 2 - 1}deg`,
+                  "--rail-tilt": `${-7 + (index % 3) * 7}deg`,
+                  "--rail-roll": `${((index % 2) * 2 - 1) * 0.7}deg`,
                   "--tool-from": tool.accentFrom,
                   "--tool-to": tool.accentTo,
                 } as CSSProperties

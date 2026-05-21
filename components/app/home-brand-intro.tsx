@@ -5,9 +5,38 @@ import { type CSSProperties, useCallback, useEffect, useRef, useState } from "re
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { SOUND_PLAY_EVENT } from "@/lib/config/sound";
 
-const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-v5";
-const INTRO_TEXT = "TOOOLVIBES";
-const INTRO_DURATION_MS = 4680;
+const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-reactor-v1";
+const INTRO_DURATION_MS = 3640;
+
+const reactorNodes = [
+  { label: "AI app", x: -18, y: -11, z: 7, rotate: -10 },
+  { label: "Vibe code", x: 18, y: -10, z: 11, rotate: 8 },
+  { label: "No-code", x: -15, y: 11, z: 14, rotate: 7 },
+  { label: "Automation", x: 16, y: 12, z: 5, rotate: -8 },
+];
+
+const reactorRings = [
+  { scale: 0.62, z: -34, delay: 0 },
+  { scale: 0.88, z: -12, delay: 120 },
+  { scale: 1.12, z: 12, delay: 240 },
+  { scale: 1.34, z: 34, delay: 360 },
+];
+
+function hasPlayedIntro() {
+  try {
+    return window.sessionStorage.getItem(INTRO_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function markIntroPlayed() {
+  try {
+    window.sessionStorage.setItem(INTRO_STORAGE_KEY, "true");
+  } catch {
+    // Storage can be unavailable in private or embedded browser contexts.
+  }
+}
 
 export function HomeBrandIntro() {
   const [phase, setPhase] = useState<"hidden" | "active" | "leaving">("active");
@@ -25,7 +54,7 @@ export function HomeBrandIntro() {
 
     const hideTimer = window.setTimeout(
       () => {
-        window.sessionStorage.setItem(INTRO_STORAGE_KEY, "true");
+        markIntroPlayed();
         document.documentElement.classList.remove("brand-intro-active", "brand-intro-preflight");
         window.dispatchEvent(new CustomEvent("tooolvibes:brand-intro-finished"));
         setPhase("hidden");
@@ -37,10 +66,11 @@ export function HomeBrandIntro() {
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const alreadyPlayed = window.sessionStorage.getItem(INTRO_STORAGE_KEY) === "true";
+    const alreadyPlayed = hasPlayedIntro();
 
     if (prefersReducedMotion || alreadyPlayed) {
       document.documentElement.classList.remove("brand-intro-active", "brand-intro-preflight");
+      window.dispatchEvent(new CustomEvent("tooolvibes:brand-intro-finished"));
       setPhase("hidden");
       return undefined;
     }
@@ -66,73 +96,56 @@ export function HomeBrandIntro() {
 
   return (
     <div className={`brand-intro ${phase === "leaving" ? "is-leaving" : ""}`}>
-      <div className="brand-intro__field" aria-hidden="true">
-        <span className="brand-intro__starfield brand-intro__starfield--one" />
-        <span className="brand-intro__starfield brand-intro__starfield--two" />
-        <span className="brand-intro__aurora brand-intro__aurora--one" />
-        <span className="brand-intro__aurora brand-intro__aurora--two" />
-        <span className="brand-intro__depth-tunnel" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="brand-intro__glass-stack" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="brand-intro__prism">
-          <span className="brand-intro__prism-ring brand-intro__prism-ring--one" />
-          <span className="brand-intro__prism-ring brand-intro__prism-ring--two" />
-          <span className="brand-intro__prism-ring brand-intro__prism-ring--three" />
-          <span className="brand-intro__prism-core" />
-        </span>
-        <span className="brand-intro__word" aria-label="TOOOLVIBES">
-          {INTRO_TEXT.split("").map((letter, index) => {
-            const drift = (INTRO_TEXT.length - 1) / 2 - index;
-            const lane = (index % 3) - 1;
-            const tilt = index % 2 === 0 ? -1 : 1;
+      <div className="brand-intro__scene" aria-hidden="true">
+        <span className="brand-intro__backdrop" />
+        <span className="brand-intro__reactor-grid" />
 
-            return (
-              <span
-                key={`${letter}-${index}`}
-                className="brand-intro__letter"
-                style={
-                  {
-                    "--intro-index": index,
-                    "--intro-drift": drift,
-                    "--intro-lane": lane,
-                    "--intro-tilt": tilt,
-                    "--intro-angle": `${index * 34 - 154}deg`,
-                    "--intro-angle-inverse": `${154 - index * 34}deg`,
-                    "--intro-radius": `${Math.abs(drift) * 0.42 + 1.4}rem`,
-                    "--intro-start-x": `${drift * -1.2}rem`,
-                    "--intro-start-y": `${2.8 + lane * 0.45}rem`,
-                    "--intro-start-rotate": `${tilt * -8}deg`,
-                    "--intro-mid-x": `${drift * 0.72}rem`,
-                    "--intro-mid-y": `${lane * -0.62}rem`,
-                    "--intro-mid-rotate": `${tilt * 10}deg`,
-                    "--intro-fold-x": `${drift * -0.22}rem`,
-                    "--intro-fold-y": `${lane * 0.22}rem`,
-                    "--intro-fold-rotate": `${tilt * 46}deg`,
-                    "--intro-end-x": `${drift * 0.08}rem`,
-                    "--intro-end-y": `${lane * -0.08}rem`,
-                    "--intro-end-rotate": `${tilt * 80}deg`,
-                  } as CSSProperties
-                }
-              >
-                {letter}
-              </span>
-            );
-          })}
+        <span className="brand-intro__reactor-rings">
+          {reactorRings.map((ring, index) => (
+            <i
+              key={index}
+              style={
+                {
+                  "--intro-ring-scale": ring.scale,
+                  "--intro-ring-z": `${ring.z}px`,
+                  "--intro-ring-delay": `${ring.delay}ms`,
+                } as CSSProperties
+              }
+            />
+          ))}
         </span>
-        <span className="brand-intro__logo-reveal">
-          <span className="brand-intro__logo-pulse" />
-          <BrandLogo size={126} priority className="brand-intro__logo" />
+
+        <span className="brand-intro__tool-cloud">
+          {reactorNodes.map((node, index) => (
+            <i
+              key={node.label}
+              style={
+                {
+                  "--intro-node-x": `${node.x * 0.72}rem`,
+                  "--intro-node-y": `${node.y * 0.58}rem`,
+                  "--intro-node-z": `${node.z}rem`,
+                  "--intro-node-rotate": `${node.rotate}deg`,
+                  "--intro-node-delay": `${260 + index * 90}ms`,
+                } as CSSProperties
+              }
+            >
+              {node.label}
+            </i>
+          ))}
         </span>
-        <span className="brand-intro__caption">AI tools discovery system</span>
+
+        <span className="brand-intro__core">
+          <span className="brand-intro__core-shell" />
+          <BrandLogo size={116} priority className="brand-intro__logo" />
+          <span className="brand-intro__core-line brand-intro__core-line--one" />
+          <span className="brand-intro__core-line brand-intro__core-line--two" />
+        </span>
+
+        <span className="brand-intro__title" aria-label="TOOOLVIBES">
+          <span>TOOOL</span>
+          <span>VIBES</span>
+        </span>
+        <span className="brand-intro__caption">3D AI tools reactor</span>
       </div>
 
       <button

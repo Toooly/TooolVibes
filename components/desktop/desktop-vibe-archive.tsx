@@ -245,8 +245,8 @@ export function DesktopVibeArchive({
                 style={
                   {
                     "--focus-index": index,
-                    "--focus-tilt": `${-8 + index * 8}deg`,
-                    "--focus-depth": `${2 + index}rem`,
+                    "--focus-tilt": `${-5 + index * 5}deg`,
+                    "--focus-depth": `${1.6 + index * 0.85}rem`,
                     "--tool-from": tool.accentFrom,
                     "--tool-to": tool.accentTo,
                   } as CSSProperties
@@ -273,8 +273,8 @@ export function DesktopVibeArchive({
                   style={
                     {
                       "--tool-index": index,
-                      "--tool-depth": `${(index % 4) * 0.65}rem`,
-                      "--tool-tilt": `${2 + (index % 2) * 1.2}deg`,
+                      "--tool-depth": `${(index % 4) * 0.42}rem`,
+                      "--tool-tilt": `${1.3 + (index % 2) * 0.7}deg`,
                       "--tool-from": tool.accentFrom,
                       "--tool-to": tool.accentTo,
                     } as CSSProperties

@@ -49,9 +49,8 @@ export default async function CollectionsPage() {
     <div className="tone-curate page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
       <section className="brand-panel brand-aura panel-lift section-stage curation-stage relative overflow-hidden rounded-[36px] p-5 sm:p-6 lg:p-7">
         <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.8),transparent_74%)]" />
-        <div className="absolute -right-10 top-12 h-36 w-36 rounded-full bg-[rgba(99,50,255,0.12)] blur-3xl" />
-        <div className="absolute left-8 top-16 h-[4.5rem] w-[4.5rem] rounded-full bg-[rgba(255,200,61,0.12)] blur-3xl" />
-        <div className="absolute bottom-4 right-[28%] h-20 w-20 rounded-full bg-[rgba(68,220,255,0.1)] blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_82%_18%,rgba(99,50,255,0.16),transparent_34%),radial-gradient(ellipse_at_16%_25%,rgba(255,200,61,0.11),transparent_30%),radial-gradient(ellipse_at_58%_92%,rgba(68,220,255,0.1),transparent_34%)]" />
+        <div className="absolute inset-x-5 top-5 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.52),transparent)]" />
 
         <div className="relative max-w-[50rem]">
           <SectionHeading

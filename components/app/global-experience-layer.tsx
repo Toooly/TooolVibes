@@ -107,10 +107,10 @@ export function GlobalExperienceLayer() {
       root.style.setProperty("--tv-pointer-y", `${currentPointer.clientY.toFixed(2)}px`);
       const pointerX = Math.min(1, Math.max(-1, (currentPointer.clientX / window.innerWidth - 0.5) * 2));
       const pointerY = Math.min(1, Math.max(-1, (currentPointer.clientY / window.innerHeight - 0.5) * 2));
-      root.style.setProperty("--tv-pointer-shift-x", `${(pointerX * 24).toFixed(2)}px`);
-      root.style.setProperty("--tv-pointer-shift-y", `${(pointerY * 16).toFixed(2)}px`);
-      root.style.setProperty("--tv-pointer-tilt-x", `${(pointerY * -5.4).toFixed(2)}deg`);
-      root.style.setProperty("--tv-pointer-tilt-y", `${(pointerX * 6.4).toFixed(2)}deg`);
+      root.style.setProperty("--tv-pointer-shift-x", `${(pointerX * 16).toFixed(2)}px`);
+      root.style.setProperty("--tv-pointer-shift-y", `${(pointerY * 11).toFixed(2)}px`);
+      root.style.setProperty("--tv-pointer-tilt-x", `${(pointerY * -3.6).toFixed(2)}deg`);
+      root.style.setProperty("--tv-pointer-tilt-y", `${(pointerX * 4.2).toFixed(2)}deg`);
       root.setAttribute("data-experience-pointer", latestPointer.state);
 
       if (latestPointer.state === "active") {
@@ -217,10 +217,17 @@ export function GlobalExperienceLayer() {
 
     let disposed = false;
     let animationFrame = 0;
+    let hasStartedField = false;
     const cleanupCallbacks: Array<() => void> = [];
     const disposables: Array<{ dispose: () => void }> = [];
 
-    void import("three").then((THREE) => {
+    const startField = () => {
+      if (disposed || hasStartedField) {
+        return;
+      }
+      hasStartedField = true;
+
+      void import("three").then((THREE) => {
       if (disposed) {
         return;
       }
@@ -230,10 +237,10 @@ export function GlobalExperienceLayer() {
         alpha: true,
         antialias: true,
         powerPreference: "high-performance",
-        preserveDrawingBuffer: true,
+        preserveDrawingBuffer: false,
       });
       renderer.setClearColor(0x000000, 0);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.2));
 
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(39, window.innerWidth / window.innerHeight, 0.1, 80);
@@ -287,7 +294,7 @@ export function GlobalExperienceLayer() {
         phase: number;
       }> = [];
 
-      for (let index = 0; index < 10; index += 1) {
+      for (let index = 0; index < 8; index += 1) {
         const width = 6.4 + index * 0.22;
         const height = 3.7 + index * 0.12;
         const geometry = new THREE.BufferGeometry().setFromPoints([
@@ -308,8 +315,8 @@ export function GlobalExperienceLayer() {
 
       const prismShellGeometry = new THREE.IcosahedronGeometry(1.12, 1);
       const prismCoreGeometry = new THREE.OctahedronGeometry(0.56, 0);
-      const ringGeometry = new THREE.TorusGeometry(1.64, 0.008, 8, 128);
-      const ringWideGeometry = new THREE.TorusGeometry(2.08, 0.006, 8, 144);
+      const ringGeometry = new THREE.TorusGeometry(1.64, 0.008, 8, 96);
+      const ringWideGeometry = new THREE.TorusGeometry(2.08, 0.006, 8, 112);
       disposables.push(prismShellGeometry, prismCoreGeometry, ringGeometry, ringWideGeometry);
 
       const prismShell = new THREE.Mesh(prismShellGeometry, makeMeshMaterial(0x6a3cff, 0.17));
@@ -368,7 +375,7 @@ export function GlobalExperienceLayer() {
 
       railCurves.forEach((rail) => {
         const curve = new THREE.CatmullRomCurve3(rail.points);
-        const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(96));
+        const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(72));
         disposables.push(geometry);
         const material = makeLineMaterial(rail.color, rail.opacity);
         const line = new THREE.Line(geometry, material);
@@ -378,7 +385,8 @@ export function GlobalExperienceLayer() {
 
       const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
       const scroll = { current: 0, target: 0 };
-      const clock = new THREE.Clock();
+      let startRenderTime = 0;
+      let lastRenderTime = 0;
 
       const updateScroll = () => {
         const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -402,12 +410,24 @@ export function GlobalExperienceLayer() {
         camera.updateProjectionMatrix();
       };
 
-      const render = () => {
+      const render = (frameTime = 0) => {
         if (disposed) {
           return;
         }
 
-        const elapsed = clock.getElapsedTime();
+        if (document.visibilityState === "hidden") {
+          animationFrame = window.requestAnimationFrame(render);
+          return;
+        }
+
+        if (frameTime - lastRenderTime < 1000 / 60) {
+          animationFrame = window.requestAnimationFrame(render);
+          return;
+        }
+
+        lastRenderTime = frameTime;
+        startRenderTime ||= frameTime;
+        const elapsed = (frameTime - startRenderTime) / 1000;
         pointer.x += (pointer.targetX - pointer.x) * 0.06;
         pointer.y += (pointer.targetY - pointer.y) * 0.06;
         scroll.current += (scroll.target - scroll.current) * 0.055;
@@ -472,7 +492,24 @@ export function GlobalExperienceLayer() {
         renderer.dispose();
         renderer.forceContextLoss();
       });
-    });
+      });
+    };
+
+    const introIsPresent = () =>
+      document.documentElement.classList.contains("brand-intro-active") ||
+      Boolean(document.querySelector(".brand-intro"));
+
+    if (introIsPresent()) {
+      const startAfterIntro = () => startField();
+      const fallbackTimer = window.setTimeout(startField, 5200);
+      window.addEventListener("tooolvibes:brand-intro-finished", startAfterIntro, { once: true });
+      cleanupCallbacks.push(
+        () => window.clearTimeout(fallbackTimer),
+        () => window.removeEventListener("tooolvibes:brand-intro-finished", startAfterIntro),
+      );
+    } else {
+      startField();
+    }
 
     return () => {
       disposed = true;

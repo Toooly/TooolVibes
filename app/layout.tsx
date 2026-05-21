@@ -76,11 +76,10 @@ html.brand-intro-preflight body::before {
   z-index: 119;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.12), transparent 12rem),
-    radial-gradient(circle at 48% 52%, rgba(106,60,255,0.34), transparent 36%),
-    radial-gradient(circle at 18% 18%, rgba(94,226,255,0.22), transparent 32%),
-    radial-gradient(circle at 82% 76%, rgba(246,199,97,0.18), transparent 30%),
-    linear-gradient(150deg, #100a34 0%, #27137a 48%, #08051d 100%);
+    radial-gradient(circle at 50% 42%, rgba(103,227,255,0.2), transparent 18rem),
+    radial-gradient(circle at 50% 54%, rgba(106,60,255,0.32), transparent 26rem),
+    radial-gradient(circle at 78% 22%, rgba(246,199,97,0.14), transparent 22rem),
+    linear-gradient(145deg, #08051d 0%, #170b4d 48%, #050313 100%);
 }
 `;
 
@@ -89,7 +88,7 @@ const brandIntroPreflightScript = `
   try {
     const isHome = window.location.pathname === "/" || window.location.pathname === "";
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    const played = window.sessionStorage?.getItem("tooolvibes:brand-intro-v5") === "true";
+    const played = window.sessionStorage?.getItem("tooolvibes:brand-intro-reactor-v1") === "true";
 
     if (isHome && !reduced && !played) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
