@@ -71,6 +71,18 @@ export function HomeBrandIntro() {
         <span className="brand-intro__starfield brand-intro__starfield--two" />
         <span className="brand-intro__aurora brand-intro__aurora--one" />
         <span className="brand-intro__aurora brand-intro__aurora--two" />
+        <span className="brand-intro__depth-tunnel" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+        </span>
+        <span className="brand-intro__glass-stack" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
         <span className="brand-intro__prism">
           <span className="brand-intro__prism-ring brand-intro__prism-ring--one" />
           <span className="brand-intro__prism-ring brand-intro__prism-ring--two" />
@@ -78,25 +90,43 @@ export function HomeBrandIntro() {
           <span className="brand-intro__prism-core" />
         </span>
         <span className="brand-intro__word" aria-label="TOOOLVIBES">
-          {INTRO_TEXT.split("").map((letter, index) => (
-            <span
-              key={`${letter}-${index}`}
-              className="brand-intro__letter"
-              style={
-                {
-                  "--intro-index": index,
-                  "--intro-drift": (INTRO_TEXT.length - 1) / 2 - index,
-                  "--intro-lane": (index % 3) - 1,
-                  "--intro-tilt": index % 2 === 0 ? "-1" : "1",
-                  "--intro-angle": `${index * 34 - 154}deg`,
-                  "--intro-angle-inverse": `${154 - index * 34}deg`,
-                  "--intro-radius": `${Math.abs((INTRO_TEXT.length - 1) / 2 - index) * 0.42 + 1.4}rem`,
-                } as CSSProperties
-              }
-            >
-              {letter}
-            </span>
-          ))}
+          {INTRO_TEXT.split("").map((letter, index) => {
+            const drift = (INTRO_TEXT.length - 1) / 2 - index;
+            const lane = (index % 3) - 1;
+            const tilt = index % 2 === 0 ? -1 : 1;
+
+            return (
+              <span
+                key={`${letter}-${index}`}
+                className="brand-intro__letter"
+                style={
+                  {
+                    "--intro-index": index,
+                    "--intro-drift": drift,
+                    "--intro-lane": lane,
+                    "--intro-tilt": tilt,
+                    "--intro-angle": `${index * 34 - 154}deg`,
+                    "--intro-angle-inverse": `${154 - index * 34}deg`,
+                    "--intro-radius": `${Math.abs(drift) * 0.42 + 1.4}rem`,
+                    "--intro-start-x": `${drift * -1.2}rem`,
+                    "--intro-start-y": `${2.8 + lane * 0.45}rem`,
+                    "--intro-start-rotate": `${tilt * -8}deg`,
+                    "--intro-mid-x": `${drift * 0.72}rem`,
+                    "--intro-mid-y": `${lane * -0.62}rem`,
+                    "--intro-mid-rotate": `${tilt * 10}deg`,
+                    "--intro-fold-x": `${drift * -0.22}rem`,
+                    "--intro-fold-y": `${lane * 0.22}rem`,
+                    "--intro-fold-rotate": `${tilt * 46}deg`,
+                    "--intro-end-x": `${drift * 0.08}rem`,
+                    "--intro-end-y": `${lane * -0.08}rem`,
+                    "--intro-end-rotate": `${tilt * 80}deg`,
+                  } as CSSProperties
+                }
+              >
+                {letter}
+              </span>
+            );
+          })}
         </span>
         <span className="brand-intro__logo-reveal">
           <span className="brand-intro__logo-pulse" />
