@@ -67,7 +67,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
       >
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:items-start">
           <div>
-            <div className="flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:gap-3 sm:text-[0.8rem]">
+            <div className="tool-detail-breadcrumb flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:gap-3 sm:text-[0.8rem]">
               <Link href="/" className="hover:text-[var(--accent-strong)]">
                 Home
               </Link>
@@ -100,7 +100,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               {tool.longDescription}
             </p>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <div className="tool-detail-summary-grid mt-5 grid gap-3 sm:grid-cols-3">
               {[
                 ["TL;DR", tool.tldr],
                 ["Per chi", tool.idealUseCase],
@@ -108,12 +108,12 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               ].map(([label, copy]) => (
                 <div
                   key={label}
-                  className="rounded-[22px] bg-white/78 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.74)]"
+                  className="tool-detail-summary-card rounded-[22px] bg-white/78 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.74)]"
                 >
                   <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                     {label}
                   </p>
-                  <p className="mt-2 text-[0.86rem] leading-6 text-[var(--muted-strong)]">
+                  <p className="tool-detail-summary-copy mt-2 text-[0.86rem] leading-6 text-[var(--muted-strong)]">
                     {copy}
                   </p>
                 </div>
@@ -128,7 +128,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               <span>{tool.domain}</span>
             </div>
 
-            <div className="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap sm:gap-3">
+            <div className="tool-detail-actions mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap sm:gap-3">
               <a
                 href={tool.url}
                 target="_blank"

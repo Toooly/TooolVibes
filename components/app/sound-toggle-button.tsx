@@ -68,7 +68,7 @@ export function SoundToggleButton({ className }: { className?: string }) {
       aria-label={muted ? "Attiva suoni TooolVibes" : "Disattiva suoni TooolVibes"}
       aria-pressed={!muted}
       className={cn(
-        "premium-button premium-button-icon premium-button-subtle sound-toggle-button min-h-11 min-w-11",
+        "premium-button premium-button-icon premium-button-subtle sound-toggle-button inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center",
         muted && "is-muted",
         className,
       )}

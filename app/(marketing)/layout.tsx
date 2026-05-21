@@ -15,7 +15,7 @@ export default function MarketingLayout({
       <AccountProvider>
         <DiscoveryPersistenceProvider>
           <SiteHeader />
-          <main className="pb-20 lg:pb-0">{children}</main>
+          <main>{children}</main>
           <SiteFooter />
           <MobileBottomNav />
         </DiscoveryPersistenceProvider>

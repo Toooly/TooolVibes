@@ -26,7 +26,7 @@ const categoryNav = [
 
 export function SiteFooter() {
   return (
-    <footer className="page-shell pb-6 pt-6 sm:pb-8 sm:pt-9">
+    <footer className="page-shell pb-[calc(7rem+env(safe-area-inset-bottom))] pt-6 sm:pb-8 sm:pt-9">
       <PremiumPanel as="section" tone="dark" className="footer-motion px-5 py-5 sm:px-7 sm:py-6">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,0.88fr)_minmax(18rem,1.12fr)] lg:items-stretch">
           <div className="min-w-0">

@@ -22,7 +22,7 @@ export function DirectoryToolCard({
   priority = false,
 }: DirectoryToolCardProps) {
   return (
-    <article className="premium-card group flex h-full min-h-[21rem] flex-col rounded-[26px] sm:min-h-[30rem] sm:rounded-[30px]">
+    <article className="directory-tool-card premium-card group flex h-full min-h-[21rem] flex-col rounded-[26px] sm:min-h-[30rem] sm:rounded-[30px]">
       <div
         className="overflow-hidden border-b border-[var(--line)] p-4 sm:p-6"
         style={{
@@ -121,7 +121,7 @@ export function DirectoryToolCard({
               <Link
                 key={tag}
                 href={`/archivio?tag=${encodeURIComponent(tag)}`}
-                className="rounded-full bg-white/72 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-[var(--foreground)] transition-colors duration-200 hover:text-[var(--accent-strong)] sm:px-3 sm:text-[0.7rem] sm:tracking-[0.14em]"
+                className="directory-tool-card__tag-link rounded-full bg-white/72 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-[var(--foreground)] transition-colors duration-200 hover:text-[var(--accent-strong)] sm:px-3 sm:text-[0.7rem] sm:tracking-[0.14em]"
               >
                 {tag}
               </Link>

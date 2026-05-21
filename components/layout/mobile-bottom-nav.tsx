@@ -24,7 +24,7 @@ export function MobileBottomNav() {
   return (
     <nav
       aria-label="Navigazione mobile principale"
-      className="mobile-bottom-motion fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 rounded-[26px] border border-[rgba(76,55,166,0.18)] bg-[radial-gradient(circle_at_16%_0%,rgba(255,255,255,0.9),transparent_32%),radial-gradient(circle_at_84%_0%,rgba(94,226,255,0.18),transparent_34%),linear-gradient(135deg,#fffdf8_0%,#f4efff_54%,#edf7ff_100%)] p-1.5 shadow-[0_20px_58px_rgba(47,33,126,0.16),inset_0_1px_0_rgba(255,255,255,0.74)] lg:hidden"
+      className="mobile-bottom-motion fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom))] left-0 right-0 z-[45] mx-auto w-[min(calc(100vw-1.5rem),30rem)] rounded-[26px] border border-[rgba(76,55,166,0.18)] bg-[radial-gradient(circle_at_16%_0%,rgba(255,255,255,0.9),transparent_32%),radial-gradient(circle_at_84%_0%,rgba(94,226,255,0.18),transparent_34%),linear-gradient(135deg,#fffdf8_0%,#f4efff_54%,#edf7ff_100%)] p-1.5 shadow-[0_20px_58px_rgba(47,33,126,0.16),inset_0_1px_0_rgba(255,255,255,0.74)] lg:hidden"
     >
       <div className="grid grid-cols-5 gap-1">
         {mobileItems.map((item) => {

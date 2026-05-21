@@ -1151,7 +1151,7 @@ export function ToolDiscoveryApp({
       </div>
 
       <Drawer open={isFilterDrawerOpen} onOpenChange={setFilterDrawerOpen} direction="bottom">
-        <DrawerContent className="drawer-light max-h-[86vh] overflow-y-auto border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white">
+        <DrawerContent className="drawer-light max-h-[86dvh] overflow-y-auto border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white">
           <DrawerHeader className="border-b border-white/10 p-5 text-left">
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -1183,7 +1183,7 @@ export function ToolDiscoveryApp({
               dark
             />
           </div>
-          <DrawerFooter data-vaul-no-drag className="grid grid-cols-2 gap-2 border-t border-white/10 bg-white/6 p-5">
+          <DrawerFooter data-vaul-no-drag className="grid grid-cols-2 gap-2 border-t border-white/10 bg-white/6 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
             <PremiumButton type="button" tone="secondary" onClick={resetFilters} data-sonic-action="update">
               Reset
             </PremiumButton>

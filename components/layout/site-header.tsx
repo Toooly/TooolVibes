@@ -54,8 +54,8 @@ export function SiteHeader() {
       <div className="relative overflow-hidden rounded-[30px] border border-[rgba(76,55,166,0.14)] bg-[linear-gradient(135deg,#fffdf8_0%,#f4efff_52%,#edf7ff_100%)] px-3.5 py-3 shadow-[0_18px_54px_rgba(47,33,126,0.11)] sm:px-4 lg:px-5">
         <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(106,60,255,0.28),transparent)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_0%,rgba(168,85,247,0.1),transparent_30%),radial-gradient(circle_at_82%_0%,rgba(57,210,246,0.08),transparent_28%)]" />
-        <div className="relative flex items-center justify-between gap-3">
-          <Link href="/" className="group/brand flex min-w-0 items-center gap-3" aria-label="Vai alla home TooolVibes">
+        <div className="relative flex items-center justify-between gap-2 sm:gap-3">
+          <Link href="/" className="group/brand flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3" aria-label="Vai alla home TooolVibes">
             <BrandLogo size={44} priority />
             <div className="min-w-0">
               <p className="truncate text-[0.86rem] font-semibold uppercase tracking-[0.18em] text-[var(--foreground)] sm:text-[0.95rem]">
@@ -105,36 +105,38 @@ export function SiteHeader() {
             </PremiumLink>
           </div>
 
-          <SoundToggleButton className="xl:hidden" />
+          <div className="flex shrink-0 items-center gap-2 xl:hidden">
+            <SoundToggleButton />
 
-          <button
-            type="button"
-            onClick={() => setIsOpen((current) => !current)}
-            className="premium-button premium-button-subtle mobile-menu-button inline-flex h-11 w-11 items-center justify-center rounded-full xl:hidden"
-            aria-label={isOpen ? "Chiudi menu" : "Apri menu"}
-            aria-expanded={isOpen}
-          >
-            <span className="flex flex-col gap-1.5">
-              <span
-                className={cn(
-                  "h-0.5 w-5 rounded-full bg-current transition-transform duration-200",
-                  isOpen && "translate-y-2 rotate-45",
-                )}
-              />
-              <span
-                className={cn(
-                  "h-0.5 w-5 rounded-full bg-current transition-opacity duration-200",
-                  isOpen && "opacity-0",
-                )}
-              />
-              <span
-                className={cn(
-                  "h-0.5 w-5 rounded-full bg-current transition-transform duration-200",
-                  isOpen && "-translate-y-2 -rotate-45",
-                )}
-              />
-            </span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setIsOpen((current) => !current)}
+              className="premium-button premium-button-subtle mobile-menu-button inline-flex h-11 min-w-11 shrink-0 items-center justify-center rounded-full"
+              aria-label={isOpen ? "Chiudi menu" : "Apri menu"}
+              aria-expanded={isOpen}
+            >
+              <span className="flex flex-col gap-1.5">
+                <span
+                  className={cn(
+                    "h-0.5 w-5 rounded-full bg-current transition-transform duration-200",
+                    isOpen && "translate-y-2 rotate-45",
+                  )}
+                />
+                <span
+                  className={cn(
+                    "h-0.5 w-5 rounded-full bg-current transition-opacity duration-200",
+                    isOpen && "opacity-0",
+                  )}
+                />
+                <span
+                  className={cn(
+                    "h-0.5 w-5 rounded-full bg-current transition-transform duration-200",
+                    isOpen && "-translate-y-2 -rotate-45",
+                  )}
+                />
+              </span>
+            </button>
+          </div>
         </div>
 
         {isOpen ? (
