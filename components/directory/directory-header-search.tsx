@@ -64,7 +64,7 @@ export function DirectoryHeaderSearch({
         id={compact ? "header-search-mobile" : "header-search"}
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Cerca tool, tag o categoria"
+        placeholder={compact ? "Cerca tool, tag o categoria" : "Cerca tool o categoria"}
         className="min-h-9 w-full min-w-0 bg-transparent px-1 text-sm font-medium text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
         aria-label="Cerca nel catalogo"
       />

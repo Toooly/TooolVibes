@@ -94,8 +94,21 @@
   --accent-glow: rgba(106, 60, 255, 0.2);
   --gold-glow: rgba(243, 191, 76, 0.18);
   --tv-scroll-progress: 0;
+  --tv-scroll-depth: 0px;
+  --tv-scroll-lift: 0px;
+  --tv-scroll-soft: 0px;
+  --tv-scroll-rise: 0px;
+  --tv-scroll-sweep: 0px;
+  --tv-scroll-glow: 0.12;
+  --tv-depth-opacity: 0.18;
+  --tv-stage-opacity: 0.28;
+  --tv-field-opacity: 0.34;
   --tv-pointer-x: 50vw;
   --tv-pointer-y: 46vh;
+  --tv-pointer-shift-x: 0px;
+  --tv-pointer-shift-y: 0px;
+  --tv-pointer-tilt-x: 0deg;
+  --tv-pointer-tilt-y: 0deg;
   --shadow: 0 24px 72px rgba(32, 24, 88, 0.12);
   --shadow-strong: 0 38px 110px rgba(16, 10, 49, 0.3);
   --shadow-soft: 0 16px 42px rgba(30, 22, 84, 0.09);
@@ -2217,13 +2230,15 @@ img {
 
   .category-tool-card__actions {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) repeat(3, 2.5rem);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.45rem;
     align-items: center;
   }
 
   .category-tool-card__cta {
+    grid-column: 1 / -1;
     min-width: 0;
+    min-height: 2.65rem !important;
     transform: none !important;
     width: 100%;
     white-space: nowrap;
@@ -2237,7 +2252,8 @@ img {
 
   .category-tool-card__icon-button {
     display: inline-grid;
-    width: 2.5rem;
+    width: 100%;
+    min-width: 0;
     height: 2.5rem;
     place-items: center;
     border: 1px solid rgba(76, 55, 166, 0.12);
@@ -3178,6 +3194,252 @@ img {
     background: conic-gradient(from 0deg, rgba(94, 226, 255, 0.42), rgba(94, 226, 255, 0.02) 24%, transparent 25% 100%);
     mask: radial-gradient(circle, transparent 0 18%, #000 19% 100%);
     animation: tv-experience-radar 8s linear infinite;
+  }
+
+  .experience-orbit-layer__depth-grid,
+  .experience-orbit-layer__depth-ribbon,
+  .experience-orbit-layer__chroma,
+  .experience-orbit-layer__field,
+  .experience-orbit-layer__node,
+  .experience-orbit-layer__stage,
+  .experience-orbit-layer__scroll-trace {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .experience-orbit-layer {
+      perspective: 1100px;
+      transform-style: preserve-3d;
+    }
+
+    .experience-orbit-layer__field {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      opacity: var(--tv-field-opacity);
+      filter: saturate(1.08) contrast(1.03);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 11%, #000 92%, transparent 100%);
+      transform: translateZ(-260px) scale(1.015);
+      transition:
+        filter 240ms ease,
+        opacity 240ms ease;
+      will-change: opacity, filter, transform;
+    }
+
+    .experience-orbit-layer__chroma {
+      position: fixed;
+      inset: -18vh -12vw;
+      z-index: 1;
+      display: block;
+      background:
+        radial-gradient(circle at calc(50% + var(--tv-pointer-shift-x)) calc(42% + var(--tv-pointer-shift-y)), rgba(57, 210, 246, 0.16), transparent 18rem),
+        radial-gradient(circle at calc(68% - var(--tv-pointer-shift-x)) 18%, rgba(246, 199, 97, 0.11), transparent 16rem),
+        radial-gradient(circle at 18% calc(72% - var(--tv-pointer-shift-y)), rgba(106, 60, 255, 0.15), transparent 18rem);
+      mix-blend-mode: screen;
+      opacity: calc(0.24 + var(--tv-scroll-glow));
+      transform: translate3d(0, var(--tv-scroll-soft), -180px) scale(1.02);
+      transition: opacity 180ms ease;
+      will-change: transform, opacity;
+    }
+
+    .experience-orbit-layer__depth-grid {
+      position: fixed;
+      left: -12vw;
+      right: -12vw;
+      bottom: -20vh;
+      z-index: 2;
+      display: block;
+      height: 72vh;
+      border-top: 1px solid rgba(106, 60, 255, 0.08);
+      background:
+        linear-gradient(90deg, rgba(106, 60, 255, 0.11) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(57, 210, 246, 0.11) 1px, transparent 1px);
+      background-size: 5.4rem 5.4rem;
+      mask-image: linear-gradient(180deg, transparent 0%, #000 26%, #000 68%, transparent 100%);
+      opacity: var(--tv-depth-opacity);
+      transform: perspective(900px) rotateX(66deg) translate3d(var(--tv-pointer-shift-x), var(--tv-scroll-depth), -120px);
+      transform-origin: 50% 0%;
+      animation: tv-experience-grid-flow 13s linear infinite;
+      will-change: transform, background-position;
+    }
+
+    .experience-orbit-layer__depth-ribbon {
+      position: fixed;
+      z-index: 3;
+      display: block;
+      width: clamp(17rem, 32vw, 31rem);
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(106, 60, 255, 0.28), rgba(57, 210, 246, 0.36), transparent);
+      box-shadow:
+        0 0 20px rgba(57, 210, 246, 0.14),
+        0 0 36px rgba(106, 60, 255, 0.08);
+      opacity: 0.38;
+      transform-origin: center;
+      will-change: transform, opacity;
+    }
+
+    .experience-orbit-layer__depth-ribbon--one {
+      right: 8vw;
+      top: 22vh;
+      transform: translate3d(calc(0px - var(--tv-pointer-shift-x)), var(--tv-scroll-lift), 60px) rotate(-18deg);
+      animation: tv-experience-ribbon-breathe 7.8s ease-in-out infinite;
+    }
+
+    .experience-orbit-layer__depth-ribbon--two {
+      left: 7vw;
+      top: 68vh;
+      opacity: 0.25;
+      transform: translate3d(var(--tv-pointer-shift-x), calc(0px - var(--tv-scroll-lift)), 20px) rotate(12deg);
+      animation: tv-experience-ribbon-breathe 9.4s ease-in-out -3.1s infinite;
+    }
+
+    .experience-orbit-layer__depth-ribbon--three {
+      left: 32vw;
+      top: 42vh;
+      width: clamp(12rem, 22vw, 23rem);
+      opacity: 0.2;
+      background: linear-gradient(90deg, transparent, rgba(246, 199, 97, 0.28), rgba(216, 180, 254, 0.28), transparent);
+      transform: translate3d(calc(0px - var(--tv-pointer-shift-x)), var(--tv-scroll-soft), 42px) rotate(-4deg);
+      animation: tv-experience-ribbon-breathe 8.6s ease-in-out -1.7s infinite;
+    }
+
+    .experience-orbit-layer__node {
+      position: fixed;
+      z-index: 4;
+      display: block;
+      width: clamp(0.46rem, 0.72vw, 0.72rem);
+      aspect-ratio: 1;
+      border-radius: 0.18rem;
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0 22%, rgba(57, 210, 246, 0.8) 23% 58%, rgba(106, 60, 255, 0.22) 59% 100%);
+      box-shadow:
+        0 0 0 0.42rem rgba(57, 210, 246, 0.05),
+        0 0 24px rgba(57, 210, 246, 0.22),
+        0 0 42px rgba(106, 60, 255, 0.13);
+      opacity: 0.52;
+      will-change: transform, opacity;
+      animation: tv-experience-node-pulse 5.8s ease-in-out infinite;
+    }
+
+    .experience-orbit-layer__node--one {
+      left: 16vw;
+      top: 31vh;
+      transform: translate3d(var(--tv-pointer-shift-x), var(--tv-scroll-rise), 70px);
+    }
+
+    .experience-orbit-layer__node--two {
+      right: 17vw;
+      top: 62vh;
+      opacity: 0.38;
+      transform: translate3d(calc(0px - var(--tv-pointer-shift-x)), var(--tv-scroll-soft), 30px);
+      animation-delay: -2.4s;
+    }
+
+    .experience-orbit-layer__stage {
+      position: fixed;
+      right: clamp(1.4rem, 5vw, 5.6rem);
+      bottom: clamp(3.4rem, 8vh, 6.2rem);
+      z-index: 3;
+      display: block;
+      width: clamp(8.5rem, 14vw, 14rem);
+      aspect-ratio: 1.42;
+      opacity: var(--tv-stage-opacity);
+      transform:
+        perspective(920px)
+        rotateX(calc(56deg + var(--tv-pointer-tilt-x)))
+        rotateY(var(--tv-pointer-tilt-y))
+        rotateZ(-8deg)
+        translate3d(calc(0px - var(--tv-pointer-shift-x)), var(--tv-scroll-lift), 0);
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .experience-orbit-layer__stage-panel {
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(106, 60, 255, 0.16);
+      border-radius: 1.1rem;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.38), transparent 26%),
+        linear-gradient(115deg, rgba(255, 255, 255, 0.28), transparent 34%),
+        linear-gradient(135deg, rgba(106, 60, 255, 0.14), rgba(57, 210, 246, 0.1), rgba(246, 199, 97, 0.07));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.36),
+        0 18px 42px rgba(47, 33, 126, 0.08),
+        0 0 32px rgba(57, 210, 246, 0.07);
+      animation: tv-experience-stage-float 6.4s ease-in-out infinite;
+    }
+
+    .experience-orbit-layer__stage-panel--back {
+      transform: translate3d(-0.9rem, 0.7rem, -46px);
+      opacity: 0.32;
+    }
+
+    .experience-orbit-layer__stage-panel--middle {
+      transform: translate3d(-0.32rem, 0.26rem, -18px);
+      opacity: 0.54;
+      animation-delay: -1.8s;
+    }
+
+    .experience-orbit-layer__stage-panel--front {
+      transform: translateZ(18px);
+      opacity: 0.8;
+      animation-delay: -3.2s;
+    }
+
+    .experience-orbit-layer__scroll-trace {
+      position: fixed;
+      left: clamp(1.2rem, 3vw, 2.8rem);
+      top: calc(16vh + var(--tv-scroll-sweep));
+      z-index: 4;
+      display: block;
+      width: 1px;
+      height: clamp(7rem, 18vh, 13rem);
+      border-radius: 999px;
+      background: linear-gradient(180deg, transparent, rgba(106, 60, 255, 0.4), rgba(57, 210, 246, 0.32), transparent);
+      opacity: 0.34;
+      transform: translate3d(var(--tv-pointer-shift-x), 0, 0) rotate(8deg);
+      box-shadow:
+        0 0 14px rgba(57, 210, 246, 0.16),
+        0 0 26px rgba(106, 60, 255, 0.08);
+      transition: opacity 180ms ease;
+      will-change: transform, top;
+    }
+
+    html[data-experience-scroll="active"] .experience-orbit-layer__scroll-trace {
+      opacity: 0.62;
+    }
+
+    html[data-experience-scroll="active"] .experience-orbit-layer__field,
+    html[data-experience-pointer="active"] .experience-orbit-layer__field {
+      filter: saturate(1.18) contrast(1.06);
+    }
+
+    html[data-experience-pointer="pressed"] .experience-orbit-layer__field {
+      opacity: calc(var(--tv-field-opacity) + 0.08);
+      filter: saturate(1.32) contrast(1.08);
+    }
+
+    html[data-experience-depth="mid"] .experience-orbit-layer__stage {
+      opacity: 0.46;
+    }
+
+    html[data-experience-depth="mid"] .experience-orbit-layer__field {
+      opacity: calc(var(--tv-field-opacity) + 0.04);
+    }
+
+    html[data-experience-depth="deep"] .experience-orbit-layer__chroma {
+      opacity: 0.72;
+    }
+
+    html[data-experience-depth="deep"] .experience-orbit-layer__field {
+      opacity: calc(var(--tv-field-opacity) + 0.08);
+    }
   }
 
   @media (max-width: 767px) {
@@ -7635,6 +7897,17 @@ img {
   }
 }
 
+@keyframes tv-visual-depth-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -0.42rem;
+  }
+}
+
 @keyframes tv-pulse-dot {
   0%,
   100% {
@@ -7946,6 +8219,53 @@ img {
   100% {
     transform: rotate(360deg);
     opacity: 0.62;
+  }
+}
+
+@keyframes tv-experience-grid-flow {
+  from {
+    background-position: 0 0, 0 0;
+  }
+
+  to {
+    background-position: 5.4rem 0, 0 5.4rem;
+  }
+}
+
+@keyframes tv-experience-ribbon-breathe {
+  0%,
+  100% {
+    opacity: 0.22;
+    filter: saturate(1);
+  }
+
+  48% {
+    opacity: 0.48;
+    filter: saturate(1.2);
+  }
+}
+
+@keyframes tv-experience-stage-float {
+  0%,
+  100% {
+    filter: saturate(1);
+  }
+
+  50% {
+    filter: saturate(1.18);
+  }
+}
+
+@keyframes tv-experience-node-pulse {
+  0%,
+  100% {
+    opacity: 0.36;
+    filter: saturate(1);
+  }
+
+  45% {
+    opacity: 0.62;
+    filter: saturate(1.22);
   }
 }
 
@@ -9182,6 +9502,83 @@ img {
   .premium-card:hover,
   .premium-card:focus-within {
     transform: translate3d(0, -3px, 0) scale(1.004);
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-header-motion,
+  .site-header-motion nav > a,
+  .site-header-motion form,
+  .site-header-motion .premium-button,
+  .site-header-motion .brand-mark {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .hero-shell,
+  main .premium-panel,
+  main .category-tool-carousel,
+  .hero-mini-visual,
+  .category-tool-card {
+    transform-style: preserve-3d;
+  }
+
+  .hero-shell::before,
+  main .premium-panel::before,
+  main .category-tool-carousel::before {
+    transform: translate3d(var(--tv-pointer-shift-x), var(--tv-scroll-soft), 0);
+    transition: transform 120ms linear;
+  }
+
+  .hero-shell::after,
+  main .premium-panel::after {
+    transform: translate3d(calc(0px - var(--tv-pointer-shift-x)), var(--tv-scroll-rise), 0);
+  }
+
+  .hero-mini-visual {
+    animation: tv-visual-depth-float 7.2s ease-in-out infinite !important;
+    transform:
+      perspective(1200px)
+      rotateX(var(--tv-pointer-tilt-x))
+      rotateY(var(--tv-pointer-tilt-y))
+      translate3d(0, var(--tv-scroll-lift), 0);
+    transform-origin: 50% 42%;
+    will-change: transform, translate;
+  }
+
+  .hero-mini-visual > * {
+    transform: translateZ(16px);
+  }
+
+  .hero-mini-visual > :nth-child(2) {
+    transform: translateZ(34px);
+  }
+
+  .category-tool-card {
+    transform-origin: 50% 48%;
+    will-change: transform;
+  }
+
+  .category-tool-card:hover,
+  .category-tool-card:focus-within {
+    transform: perspective(980px) rotateX(1.2deg) translate3d(0, -3px, 18px);
+  }
+
+  .category-tool-card__header,
+  .category-tool-card__description,
+  .category-tool-card__insight,
+  .category-tool-card__tags,
+  .category-tool-card__footer {
+    transform: translateZ(12px);
+  }
+
+  html[data-experience-scroll="active"] main .premium-panel,
+  html[data-experience-scroll="active"] main .category-tool-carousel {
+    filter: saturate(1.018);
   }
 }
 

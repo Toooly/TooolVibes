@@ -55,7 +55,11 @@ export function SiteHeader() {
         <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(106,60,255,0.28),transparent)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_0%,rgba(168,85,247,0.1),transparent_30%),radial-gradient(circle_at_82%_0%,rgba(57,210,246,0.08),transparent_28%)]" />
         <div className="relative flex items-center justify-between gap-2 sm:gap-3">
-          <Link href="/" className="group/brand flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3" aria-label="Vai alla home TooolVibes">
+          <Link
+            href="/"
+            className="group/brand flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3 xl:w-[12.75rem] xl:flex-none 2xl:w-[14.25rem]"
+            aria-label="Vai alla home TooolVibes"
+          >
             <BrandLogo size={44} priority />
             <div className="min-w-0">
               <p className="truncate text-[0.86rem] font-semibold uppercase tracking-[0.18em] text-[var(--foreground)] sm:text-[0.95rem]">
@@ -68,14 +72,14 @@ export function SiteHeader() {
             </div>
           </Link>
 
-          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1.5 xl:flex">
+          <nav className="hidden min-w-max shrink-0 items-center justify-center gap-1 xl:flex 2xl:gap-1.5">
             {primaryNav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 aria-current={isActive(item.href) ? "page" : undefined}
                 className={cn(
-                  "animated-link dynamic-link-card relative rounded-full px-3.5 py-2.5 text-[0.86rem] font-semibold transition-all duration-200",
+                  "animated-link dynamic-link-card relative shrink-0 whitespace-nowrap rounded-full px-2.5 py-2.5 text-[0.84rem] font-semibold leading-none transition-all duration-200 2xl:px-3.5 2xl:text-[0.86rem]",
                   isActive(item.href)
                     ? "bg-[rgba(106,60,255,0.12)] text-[var(--accent-strong)] shadow-[inset_0_1px_0_rgba(255,255,255,0.62)]"
                     : "text-[var(--muted-strong)] hover:bg-white/70 hover:text-[var(--accent-strong)]",
@@ -86,13 +90,13 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <div className="hidden w-full max-w-[19rem] lg:block 2xl:max-w-[24rem]">
+          <div className="hidden w-full max-w-[18rem] shrink lg:block 2xl:max-w-[20.5rem]">
             <Suspense fallback={<HeaderSearchFallback />}>
               <DirectoryHeaderSearch />
             </Suspense>
           </div>
 
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden shrink-0 items-center gap-2 lg:flex">
             <SoundToggleButton className="hidden xl:inline-flex" />
             <Link
               href="/account"
