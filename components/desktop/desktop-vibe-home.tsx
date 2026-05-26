@@ -56,7 +56,7 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
   const focusTool = weeklyTool ?? featuredTools[0] ?? tools[0];
 
   return (
-    <div className="desktop-vibe desktop-vibe-home hidden lg:block">
+    <div className="desktop-vibe desktop-vibe-home hidden lg:block" data-home-source="desktop-vibe-home">
       <section className="desktop-vibe-hero desktop-vibe-section">
         <div className="desktop-vibe-copy">
           <p className="desktop-vibe-eyebrow">TooolVibes 3D discovery system</p>
@@ -76,7 +76,11 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
           </div>
         </div>
 
-        <div className="desktop-vibe-hero-stage" aria-label="Preview 3D dei tool in evidenza">
+        <div
+          className="desktop-vibe-hero-stage"
+          aria-label="Preview 3D dei tool in evidenza"
+          data-home-region="hero-3d-scene"
+        >
           <div className="desktop-vibe-stage-grid" aria-hidden="true" />
           <div className="desktop-vibe-stage-rail" aria-hidden="true" />
           <div className="desktop-vibe-stage-halo desktop-vibe-stage-halo--one" aria-hidden="true" />
@@ -93,6 +97,8 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
               key={tool.slug}
               href={`/toools/${tool.slug}`}
               className={`desktop-vibe-orbit-card desktop-vibe-orbit-card--${index + 1}`}
+              data-home-card="orbit"
+              data-depth-layer={index + 1}
               style={
                 {
                   "--tool-from": tool.accentFrom,
@@ -142,6 +148,7 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
             <article
               key={scene.step}
               className="desktop-vibe-depth-panel"
+              data-home-card="scroll-depth"
               style={
                 {
                   "--panel-index": index,
@@ -180,6 +187,8 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
               key={tool.slug}
               href={`/toools/${tool.slug}`}
               className="desktop-vibe-rail-card"
+              data-home-card="tool-rail"
+              data-depth-layer={(index % 4) + 1}
               style={
                 {
                   "--rail-index": index,
@@ -190,6 +199,7 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
                   "--rail-depth": `${2 + (index % 4) * 1.3}rem`,
                   "--rail-tilt": `${-7 + (index % 3) * 7}deg`,
                   "--rail-roll": `${((index % 2) * 2 - 1) * 0.7}deg`,
+                  "--rail-layer": 10 - Math.floor(index / 3),
                   "--tool-from": tool.accentFrom,
                   "--tool-to": tool.accentTo,
                 } as CSSProperties
