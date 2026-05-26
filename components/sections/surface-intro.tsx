@@ -27,8 +27,8 @@ export function SurfaceIntro({
 }: SurfaceIntroProps) {
   return (
     <section className="dark-panel brand-aura panel-lift section-stage surface-intro-stage relative overflow-hidden rounded-[36px] p-5 text-white sm:p-6 lg:p-7">
-      <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),transparent_74%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_82%_18%,rgba(99,50,255,0.18),transparent_34%),radial-gradient(ellipse_at_16%_24%,rgba(255,200,61,0.1),transparent_30%),radial-gradient(ellipse_at_58%_86%,rgba(68,220,255,0.12),transparent_36%)]" />
+      <div className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.14),transparent)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(118deg,transparent_0_40%,rgba(99,50,255,0.11)_40.15%_40.45%,transparent_40.75%_100%),linear-gradient(64deg,transparent_0_55%,rgba(68,220,255,0.08)_55.15%_55.45%,transparent_55.75%_100%)]" />
       <div className="absolute inset-x-5 top-5 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.38),transparent)]" />
 
       <div className="editorial-grid relative items-start gap-y-6">

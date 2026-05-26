@@ -178,10 +178,10 @@ export function GlobalExperienceLayer() {
       root.style.setProperty("--tv-scroll-soft", `${(progress * (isMobile ? -11 : -18)).toFixed(2)}px`);
       root.style.setProperty("--tv-scroll-rise", `${(progress * (isMobile ? -12 : -21)).toFixed(2)}px`);
       root.style.setProperty("--tv-scroll-sweep", `${(progress * (isMobile ? 92 : 180)).toFixed(2)}px`);
-      root.style.setProperty("--tv-scroll-glow", `${(0.12 + progress * (isMobile ? 0.22 : 0.34)).toFixed(3)}`);
-      root.style.setProperty("--tv-depth-opacity", `${(0.16 + Math.sin(progress * Math.PI) * (isMobile ? 0.14 : 0.22)).toFixed(3)}`);
-      root.style.setProperty("--tv-stage-opacity", `${(0.28 + progress * (isMobile ? 0.08 : 0.18)).toFixed(3)}`);
-      root.style.setProperty("--tv-field-opacity", `${((isMobile ? 0.4 : 0.3) + Math.sin(progress * Math.PI) * 0.06 + progress * 0.07).toFixed(3)}`);
+      root.style.setProperty("--tv-scroll-glow", `${(0.04 + progress * (isMobile ? 0.08 : 0.11)).toFixed(3)}`);
+      root.style.setProperty("--tv-depth-opacity", `${(0.1 + Math.sin(progress * Math.PI) * (isMobile ? 0.08 : 0.12)).toFixed(3)}`);
+      root.style.setProperty("--tv-stage-opacity", `${(0.12 + progress * (isMobile ? 0.04 : 0.07)).toFixed(3)}`);
+      root.style.setProperty("--tv-field-opacity", `${((isMobile ? 0.16 : 0.1) + Math.sin(progress * Math.PI) * 0.025 + progress * 0.025).toFixed(3)}`);
       root.dataset.experienceDepth = progress > 0.66 ? "deep" : progress > 0.28 ? "mid" : "near";
       root.setAttribute("data-experience-scroll", "active");
       window.clearTimeout(scrollTimer);
@@ -358,7 +358,7 @@ export function GlobalExperienceLayer() {
               color,
               transparent: true,
               opacity,
-              blending: THREE.AdditiveBlending,
+              blending: THREE.NormalBlending,
               depthWrite: false,
             }),
           );
@@ -371,7 +371,7 @@ export function GlobalExperienceLayer() {
               opacity,
               wireframe,
               side: THREE.DoubleSide,
-              blending: THREE.AdditiveBlending,
+              blending: THREE.NormalBlending,
               depthWrite: false,
             }),
           );
@@ -436,7 +436,7 @@ export function GlobalExperienceLayer() {
               ? Math.sin(fan) * 1.12
               : 1.28 - row * 0.88;
           const originZ = -0.8 - row * 0.42 - (index % 4) * 0.13;
-          const material = makeMeshMaterial(palette[index % palette.length], sceneTone.key === "compare" ? 0.16 : 0.13);
+          const material = makeMeshMaterial(palette[index % palette.length], sceneTone.key === "compare" ? 0.12 : 0.1, true);
           const mesh = new THREE.Mesh(cardGeometry, material);
           mesh.position.set(originX, originY, originZ);
           mesh.rotation.set(-0.05 + row * 0.025, -0.22 + column * 0.15, -0.05 + column * 0.025);
@@ -446,19 +446,19 @@ export function GlobalExperienceLayer() {
 
         const coreShell = new THREE.Mesh(
           track(new THREE.IcosahedronGeometry(0.82, 1)),
-          makeMeshMaterial(sceneTone.secondary, 0.18, true),
+          makeMeshMaterial(sceneTone.secondary, 0.08, true),
         );
         const coreInner = new THREE.Mesh(
           track(new THREE.OctahedronGeometry(0.42, 0)),
-          makeMeshMaterial(sceneTone.primary, 0.23, true),
+          makeMeshMaterial(sceneTone.primary, 0.1, true),
         );
         const ringA = new THREE.Mesh(
           track(new THREE.TorusGeometry(1.22, 0.009, 8, 104)),
-          makeMeshMaterial(sceneTone.primary, 0.18, true),
+          makeMeshMaterial(sceneTone.primary, 0.08, true),
         );
         const ringB = new THREE.Mesh(
           track(new THREE.TorusGeometry(1.74, 0.006, 8, 116)),
-          makeMeshMaterial(sceneTone.tertiary, 0.13, true),
+          makeMeshMaterial(sceneTone.tertiary, 0.07, true),
         );
         ringA.rotation.x = Math.PI / 2.4;
         ringB.rotation.y = Math.PI / 2.75;
@@ -468,7 +468,7 @@ export function GlobalExperienceLayer() {
         const railCurves = [
           {
             color: sceneTone.secondary,
-            opacity: 0.15,
+            opacity: 0.045,
             points: [
               new THREE.Vector3(-6.0, -1.42, -1.8),
               new THREE.Vector3(-3.0, -0.38, -2.8),
@@ -479,7 +479,7 @@ export function GlobalExperienceLayer() {
           },
           {
             color: sceneTone.primary,
-            opacity: 0.13,
+            opacity: 0.04,
             points: [
               new THREE.Vector3(-6.2, 1.14, -2.4),
               new THREE.Vector3(-3.4, 0.44, -1.0),
@@ -490,7 +490,7 @@ export function GlobalExperienceLayer() {
           },
           {
             color: sceneTone.tertiary,
-            opacity: 0.11,
+            opacity: 0.035,
             points: [
               new THREE.Vector3(-5.7, 0.02, -3.0),
               new THREE.Vector3(-2.2, 1.04, -1.8),
@@ -620,7 +620,7 @@ export function GlobalExperienceLayer() {
             card.mesh.position.z = card.originZ + scroll.current * (device.mobile ? -0.16 : -0.34);
             card.mesh.rotation.x += index % 2 === 0 ? 0.00024 : -0.00018;
             card.mesh.rotation.y += index % 3 === 0 ? -0.00028 : 0.00022;
-            card.material.opacity = (device.mobile ? 0.08 : 0.12) + Math.max(0, wave) * 0.038;
+            card.material.opacity = (device.mobile ? 0.045 : 0.07) + Math.max(0, wave) * 0.024;
           });
 
           core.position.x = (sceneTone.key === "compare" ? 2.95 : 3.2) + pointer.x * 0.2;
@@ -642,7 +642,7 @@ export function GlobalExperienceLayer() {
 
           particles.rotation.y = elapsed * 0.014 + scroll.current * 0.08;
           particles.rotation.z = Math.sin(elapsed * 0.11) * 0.018;
-          particleMaterial.opacity = device.mobile ? 0.22 : 0.34;
+          particleMaterial.opacity = device.mobile ? 0.09 : 0.14;
 
           renderer.render(scene, camera);
           animationFrame = window.requestAnimationFrame(render);

@@ -76,9 +76,9 @@ html.brand-intro-preflight body::before {
   z-index: 119;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 42%, rgba(103,227,255,0.2), transparent 18rem),
-    radial-gradient(circle at 50% 54%, rgba(106,60,255,0.32), transparent 26rem),
-    radial-gradient(circle at 78% 22%, rgba(246,199,97,0.14), transparent 22rem),
+    linear-gradient(116deg, transparent 0 43%, rgba(103,227,255,0.14) 43.2% 43.55%, transparent 43.8% 100%),
+    linear-gradient(64deg, transparent 0 54%, rgba(106,60,255,0.18) 54.2% 54.55%, transparent 54.85% 100%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 6rem),
     linear-gradient(145deg, #08051d 0%, #170b4d 48%, #050313 100%);
 }
 `;

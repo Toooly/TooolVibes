@@ -11,7 +11,7 @@ export default function MarketingLayout({
 }>) {
   return (
     <div className="marketing-shell relative overflow-x-clip">
-      <div className="absolute inset-x-0 top-0 -z-10 h-[36rem] bg-[radial-gradient(circle_at_22%_0%,rgba(167,139,250,0.22),transparent_58%),radial-gradient(circle_at_78%_6%,rgba(94,226,255,0.13),transparent_52%)]" />
+      <div className="marketing-shell__backplane" />
       <AccountProvider>
         <DiscoveryPersistenceProvider>
           <SiteHeader />

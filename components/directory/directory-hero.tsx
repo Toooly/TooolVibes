@@ -15,7 +15,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
   return (
     <section className="page-shell pt-2 sm:pt-5">
       <PremiumPanel tone="blue" className="motion-reveal px-4 py-5 sm:px-8 sm:py-9 lg:px-10 lg:py-11">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_10%_0%,rgba(167,139,250,0.18),transparent_34%),radial-gradient(ellipse_at_92%_18%,rgba(94,226,255,0.12),transparent_38%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(118deg,transparent_0_34%,rgba(167,139,250,0.08)_34.2%_34.45%,transparent_34.7%_100%),linear-gradient(64deg,transparent_0_58%,rgba(94,226,255,0.07)_58.2%_58.45%,transparent_58.7%_100%)]" />
         <div className="absolute inset-x-6 top-6 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.34),transparent)]" />
 
         <div className="relative grid gap-8 xl:grid-cols-[minmax(0,0.98fr)_minmax(25rem,1.02fr)] xl:items-center">
