@@ -40,6 +40,7 @@ function markIntroPlayed() {
 
 export function HomeBrandIntro() {
   const [phase, setPhase] = useState<"hidden" | "active" | "leaving">("active");
+  const introCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const timersRef = useRef<number[]>([]);
 
   const clearTimers = useCallback(() => {
@@ -90,6 +91,223 @@ export function HomeBrandIntro() {
     };
   }, [clearTimers, finishIntro]);
 
+  useEffect(() => {
+    const canvas = introCanvasRef.current;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!canvas || prefersReducedMotion || hasPlayedIntro()) {
+      return undefined;
+    }
+
+    let disposed = false;
+    let animationFrame = 0;
+    const cleanupCallbacks: Array<() => void> = [];
+    const disposables: Array<{ dispose: () => void }> = [];
+
+    void import("three").then((THREE) => {
+      if (disposed) {
+        return;
+      }
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: "high-performance",
+        preserveDrawingBuffer: false,
+      });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setPixelRatio(1);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 70);
+      camera.position.set(0, 0, 9.6);
+
+      const root = new THREE.Group();
+      scene.add(root);
+
+      const track = <T extends { dispose?: () => void }>(resource: T) => {
+        if (resource.dispose) {
+          disposables.push(resource as T & { dispose: () => void });
+        }
+        return resource;
+      };
+
+      const lineMaterial = (color: number, opacity: number) =>
+        track(
+          new THREE.LineBasicMaterial({
+            color,
+            transparent: true,
+            opacity,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+
+      const meshMaterial = (color: number, opacity: number) =>
+        track(
+          new THREE.MeshBasicMaterial({
+            color,
+            transparent: true,
+            opacity,
+            wireframe: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+
+      const rings = new THREE.Group();
+      rings.rotation.x = Math.PI / 2.55;
+      root.add(rings);
+
+      const ringGeometry = track(new THREE.TorusGeometry(1.65, 0.012, 8, 116));
+      const wideRingGeometry = track(new THREE.TorusGeometry(2.35, 0.008, 8, 132));
+      const ringMaterials = [
+        meshMaterial(0x39d2f6, 0.34),
+        meshMaterial(0x6a3cff, 0.26),
+        meshMaterial(0xf3bf4c, 0.18),
+      ];
+      const ringMeshes = [
+        new THREE.Mesh(ringGeometry, ringMaterials[0]),
+        new THREE.Mesh(wideRingGeometry, ringMaterials[1]),
+        new THREE.Mesh(track(wideRingGeometry.clone()), ringMaterials[2]),
+      ];
+      ringMeshes[1].rotation.y = Math.PI / 2.7;
+      ringMeshes[2].rotation.x = Math.PI / 3.3;
+      ringMeshes.forEach((ring) => rings.add(ring));
+
+      const core = new THREE.Group();
+      core.position.z = 0.8;
+      root.add(core);
+      const coreShell = new THREE.Mesh(
+        track(new THREE.IcosahedronGeometry(0.92, 1)),
+        meshMaterial(0x6a3cff, 0.27),
+      );
+      const coreSpark = new THREE.Mesh(
+        track(new THREE.OctahedronGeometry(0.44, 0)),
+        meshMaterial(0x39d2f6, 0.38),
+      );
+      core.add(coreShell, coreSpark);
+
+      const rails = new THREE.Group();
+      root.add(rails);
+      const railPoints = [
+        [
+          new THREE.Vector3(-3.7, -1.45, -1.8),
+          new THREE.Vector3(-1.5, -0.32, -0.4),
+          new THREE.Vector3(1.4, 0.24, -1.1),
+          new THREE.Vector3(3.6, 1.2, -2.2),
+        ],
+        [
+          new THREE.Vector3(-3.2, 1.25, -2.3),
+          new THREE.Vector3(-0.8, 0.64, -0.6),
+          new THREE.Vector3(1.6, -0.48, -1.4),
+          new THREE.Vector3(3.2, -1.0, -2.0),
+        ],
+      ];
+      const railLines = railPoints.map((points, index) => {
+        const curve = new THREE.CatmullRomCurve3(points);
+        const geometry = track(new THREE.BufferGeometry().setFromPoints(curve.getPoints(56)));
+        const material = lineMaterial(index === 0 ? 0x39d2f6 : 0xf3bf4c, index === 0 ? 0.34 : 0.2);
+        const line = new THREE.Line(geometry, material);
+        rails.add(line);
+        return { line, material };
+      });
+
+      const particleCount = 78;
+      const particlePositions = new Float32Array(particleCount * 3);
+      for (let index = 0; index < particleCount; index += 1) {
+        const angle = index * 2.399963 + 0.36;
+        const radius = 1.6 + (index % 11) * 0.22;
+        particlePositions[index * 3] = Math.cos(angle) * radius;
+        particlePositions[index * 3 + 1] = Math.sin(angle * 0.78) * (0.9 + (index % 5) * 0.18);
+        particlePositions[index * 3 + 2] = -3.5 + (index % 17) * 0.24;
+      }
+      const particleGeometry = track(new THREE.BufferGeometry());
+      particleGeometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+      const particles = new THREE.Points(
+        particleGeometry,
+        track(
+          new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.034,
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        ),
+      );
+      root.add(particles);
+
+      let isMobile = false;
+      const resize = () => {
+        const width = Math.max(1, canvas.clientWidth);
+        const height = Math.max(1, canvas.clientHeight);
+        isMobile = width < 680;
+        const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.12 : 1.35);
+        renderer.setSize(Math.floor(width * dpr), Math.floor(height * dpr), false);
+        camera.aspect = width / height;
+        camera.fov = isMobile ? 56 : 44;
+        camera.position.z = isMobile ? 8.8 : 9.6;
+        root.scale.setScalar(isMobile ? 0.78 : 1);
+        root.position.y = isMobile ? -0.16 : 0;
+        camera.updateProjectionMatrix();
+      };
+
+      let startTime = 0;
+      const render = (frameTime = 0) => {
+        if (disposed) {
+          return;
+        }
+
+        startTime ||= frameTime;
+        const elapsed = (frameTime - startTime) / 1000;
+        const introProgress = Math.min(1, elapsed / (INTRO_DURATION_MS / 1000));
+        const mobileWeight = isMobile ? 0.7 : 1;
+
+        root.rotation.y = Math.sin(elapsed * 0.34) * 0.06 * mobileWeight;
+        root.rotation.x = -0.08 + Math.cos(elapsed * 0.28) * 0.035;
+        root.position.z = -0.35 + introProgress * 0.35;
+
+        rings.rotation.z = elapsed * 0.22;
+        ringMeshes.forEach((ring, index) => {
+          ring.rotation.z += 0.002 + index * 0.0007;
+          ring.scale.setScalar(1 + Math.sin(elapsed * 0.9 + index) * 0.018);
+        });
+        core.rotation.x = elapsed * 0.28;
+        core.rotation.y = elapsed * 0.42;
+        coreSpark.rotation.z = -elapsed * 0.38;
+        particles.rotation.y = elapsed * 0.035;
+        particles.rotation.z = -elapsed * 0.012;
+        railLines.forEach((rail, index) => {
+          rail.line.position.y = Math.sin(elapsed * 0.72 + index) * 0.035;
+          rail.material.opacity = (index === 0 ? 0.24 : 0.16) + Math.sin(elapsed * 1.1 + index) * 0.04;
+        });
+
+        renderer.render(scene, camera);
+        animationFrame = window.requestAnimationFrame(render);
+      };
+
+      resize();
+      window.addEventListener("resize", resize, { passive: true });
+      cleanupCallbacks.push(() => window.removeEventListener("resize", resize));
+      animationFrame = window.requestAnimationFrame(render);
+
+      cleanupCallbacks.push(() => {
+        window.cancelAnimationFrame(animationFrame);
+        disposables.forEach((item) => item.dispose());
+        renderer.dispose();
+        renderer.forceContextLoss();
+      });
+    });
+
+    return () => {
+      disposed = true;
+      cleanupCallbacks.forEach((cleanup) => cleanup());
+    };
+  }, []);
+
   if (phase === "hidden") {
     return null;
   }
@@ -97,6 +315,7 @@ export function HomeBrandIntro() {
   return (
     <div className={`brand-intro ${phase === "leaving" ? "is-leaving" : ""}`}>
       <div className="brand-intro__scene" aria-hidden="true">
+        <canvas ref={introCanvasRef} className="brand-intro__canvas" />
         <span className="brand-intro__backdrop" />
         <span className="brand-intro__reactor-grid" />
 
@@ -146,6 +365,19 @@ export function HomeBrandIntro() {
           <span>VIBES</span>
         </span>
         <span className="brand-intro__caption">3D AI tools reactor</span>
+
+        <span className="brand-intro__mobile-composition">
+          <span className="brand-intro__mobile-orbit brand-intro__mobile-orbit--one" />
+          <span className="brand-intro__mobile-orbit brand-intro__mobile-orbit--two" />
+          <span className="brand-intro__mobile-node brand-intro__mobile-node--one">AI app</span>
+          <span className="brand-intro__mobile-node brand-intro__mobile-node--two">Radar</span>
+          <span className="brand-intro__mobile-node brand-intro__mobile-node--three">Stack</span>
+          <span className="brand-intro__mobile-device">
+            <BrandLogo size={82} priority className="brand-intro__mobile-logo" />
+            <span className="brand-intro__mobile-title">TOOOLVIBES</span>
+            <span className="brand-intro__mobile-caption">mobile 3D field</span>
+          </span>
+        </span>
       </div>
 
       <button

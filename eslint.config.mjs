@@ -11,6 +11,7 @@ const eslintConfig = [
     ignores: [
       ".next/**",
       ".open-next/**",
+      ".codex-tmp/**",
       ".wrangler/**",
       "test-results/**",
       "next-env.d.ts",
