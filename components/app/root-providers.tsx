@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import { GlobalCommandPalette } from "@/components/app/global-command-palette";
 import { GlobalExperienceLayer } from "@/components/app/global-experience-layer";
-import { GlobalVibeLayer } from "@/components/app/global-vibe-layer";
 import { InteractionSoundLayer } from "@/components/app/interaction-sound-layer";
 import { RouteTransitionLoader } from "@/components/app/route-transition-loader";
 import { MotionObserver } from "@/components/ui/motion-observer";
@@ -32,7 +31,6 @@ export function RootProviders({ children }: { children: React.ReactNode }) {
         <GlobalExperienceLayer />
         <MotionObserver />
         <RouteTransitionLoader />
-        <GlobalVibeLayer />
         <InteractionSoundLayer />
         <GlobalCommandPalette />
         <Toaster position="top-right" richColors closeButton />

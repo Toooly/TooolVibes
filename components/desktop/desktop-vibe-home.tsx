@@ -6,12 +6,12 @@ import {
   Boxes,
   Compass,
   GitCompare,
-  Layers3,
   Radar,
   Search,
   Sparkles,
 } from "lucide-react";
 
+import { DesktopDepthScene } from "@/components/desktop/desktop-depth-scene";
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 
@@ -20,180 +20,69 @@ type DesktopVibeHomeProps = {
   weeklyTool?: DirectoryTool | null;
 };
 
-const journeyCards = [
+const decisionSteps = [
   {
     icon: Search,
-    label: "Discovery",
-    title: "Filtra il rumore",
-    description: "Parti dal catalogo curato, non da una lista infinita di nomi uguali.",
+    label: "Discover",
+    title: "Parti da tool gia curati",
+    description: "Categorie leggibili, filtri utili e una selezione editoriale che tiene fuori il rumore.",
     href: "/archivio",
   },
   {
-    icon: Radar,
-    label: "Signals",
-    title: "Leggi i trend",
-    description: "Aggiungi contesto Product Hunt quando un tool sta accelerando davvero.",
-    href: "/product-hunt",
+    icon: GitCompare,
+    label: "Compare",
+    title: "Confronta solo i candidati forti",
+    description: "Porta avanti pochi tool alla volta e guarda differenze, livello e casi d'uso reali.",
+    href: "/compare",
   },
   {
     icon: Bookmark,
     label: "Shortlist",
-    title: "Chiudi il cerchio",
-    description: "Porta i candidati migliori in una selezione pronta per decidere.",
+    title: "Chiudi con una scelta rapida",
+    description: "Salva, rivedi e trasforma la ricerca in una lista operativa pronta da provare.",
     href: "/shortlist",
   },
 ];
 
 const routeCards = [
-  { icon: Compass, label: "Catalogo", href: "/archivio", tone: "catalog" },
-  { icon: Radar, label: "Radar live", href: "/product-hunt", tone: "radar" },
-  { icon: GitCompare, label: "Compare", href: "/compare", tone: "compare" },
-];
-
-const depthLayers = [
-  {
-    label: "Foreground",
-    title: "Tool da aprire ora",
-    description: "Il focus resta leggibile e cliccabile, con CTA e motivazione editoriale.",
-  },
-  {
-    label: "Midground",
-    title: "Alternative vicine",
-    description: "Le opzioni utili non spariscono: restano in scena con peso minore.",
-  },
-  {
-    label: "Background",
-    title: "Segnali e contesto",
-    description: "Radar, categorie e percorso guidano la scelta senza sporcare la UI.",
-  },
+  { icon: Compass, label: "Catalogo", href: "/archivio", detail: "Tool AI per categoria" },
+  { icon: Radar, label: "Radar live", href: "/product-hunt", detail: "Segnali Product Hunt" },
+  { icon: Boxes, label: "Collection", href: "/collections", detail: "Percorsi editoriali" },
 ];
 
 export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
   const featuredTools = tools.filter((tool) => tool.featured).slice(0, 8);
   const focusTool = weeklyTool ?? featuredTools[0] ?? tools[0];
-  const sceneTools = [
-    focusTool,
+  const supportingTools = [
     ...featuredTools.filter((tool) => tool.slug !== focusTool?.slug),
     ...tools.filter((tool) => tool.slug !== focusTool?.slug),
-  ]
-    .filter(Boolean)
-    .slice(0, 6) as DirectoryTool[];
-  const supportingTools = sceneTools.slice(1, 5);
-  const railTools = tools.filter((tool) => tool.slug !== focusTool?.slug).slice(0, 6);
+  ].slice(0, 4);
+  const catalogTools = tools.filter((tool) => tool.slug !== focusTool?.slug).slice(0, 6);
 
   return (
-    <div className="desktop-home-v2 hidden lg:block" data-home-source="desktop-home-3d-v2">
-      <section className="desktop-home-hero" aria-labelledby="desktop-home-title">
-        <div
-          className="desktop-home-stage"
-          aria-label="Sistema 3D desktop TooolVibes"
-          data-home-region="desktop-3d-system-v2"
-        >
-          <span className="desktop-home-stage__grid" aria-hidden="true" />
-          <span className="desktop-home-stage__beam desktop-home-stage__beam--one" aria-hidden="true" />
-          <span className="desktop-home-stage__beam desktop-home-stage__beam--two" aria-hidden="true" />
-
-          <div className="desktop-home-plane desktop-home-plane--background" data-depth-layer="background">
-            <span>AI App Builder</span>
-            <span>Vibe Coding</span>
-            <span>No-Code</span>
-            <span>Automation</span>
-          </div>
-
-          <div className="desktop-home-plane desktop-home-plane--midground" data-depth-layer="midground">
-            {supportingTools.map((tool, index) => (
-              <Link
-                key={tool.slug}
-                href={`/toools/${tool.slug}`}
-                className={`desktop-home-floating-card desktop-home-floating-card--${index + 1}`}
-                data-home-card="midground-tool"
-                data-depth-layer={index + 2}
-                style={
-                  {
-                    "--tool-from": tool.accentFrom,
-                    "--tool-to": tool.accentTo,
-                  } as CSSProperties
-                }
-              >
-                <DirectoryToolGlyph tool={tool} size="sm" />
-                <span>
-                  <strong>{tool.name}</strong>
-                  <small>{tool.categoryLabel}</small>
-                </span>
-              </Link>
-            ))}
-          </div>
-
-          {focusTool ? (
-            <Link
-              href={`/toools/${focusTool.slug}`}
-              className="desktop-home-focus-tool"
-              data-home-card="foreground-tool"
-              data-depth-layer="foreground"
-              style={
-                {
-                  "--tool-from": focusTool.accentFrom,
-                  "--tool-to": focusTool.accentTo,
-                } as CSSProperties
-              }
-            >
-              <div className="desktop-home-focus-tool__header">
-                <DirectoryToolGlyph tool={focusTool} size="lg" />
-                <span>
-                  <small>Tool in primo piano</small>
-                  <strong>{focusTool.name}</strong>
-                </span>
-              </div>
-              <p>{focusTool.whyItMatters}</p>
-              <div className="desktop-home-focus-tool__chips">
-                {focusTool.highlights.slice(0, 3).map((highlight) => (
-                  <span key={highlight}>{highlight}</span>
-                ))}
-              </div>
-            </Link>
-          ) : null}
-
-          <div className="desktop-home-command-panel" data-home-card="foreground-panel">
-            <div>
-              <span>Decision path</span>
-              <strong>3 rotte pulite</strong>
-            </div>
-            <div className="desktop-home-command-panel__routes">
-              {routeCards.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <Link key={item.href} href={item.href} className={`desktop-home-route-pill is-${item.tone}`}>
-                    <Icon aria-hidden="true" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        <div className="desktop-home-hero__copy">
-          <p className="desktop-home-kicker">
+    <div className="desktop-home-clean hidden lg:block" data-home-source="desktop-home-2d-clean">
+      <section className="desktop-home-clean__hero" aria-labelledby="desktop-home-title">
+        <div className="desktop-home-clean__copy">
+          <p className="desktop-home-clean__kicker">
             <Sparkles aria-hidden="true" />
-            AI discovery system
+            AI tools discovery system
           </p>
-          <h1 id="desktop-home-title">Scopri tool AI validi con una vista che dà priorità.</h1>
+          <h1 id="desktop-home-title">Scegli tool AI validi senza attraversare rumore.</h1>
           <p>
-            TooolVibes trasforma catalogo, segnali e shortlist in una scena desktop
-            ordinata: il tool giusto sta davanti, le alternative restano vicine, il rumore
-            resta dietro.
+            TooolVibes organizza catalogo, segnali e shortlist in un percorso chiaro:
+            trovi alternative credibili, confronti solo cio che conta e arrivi prima a
+            una decisione.
           </p>
-          <div className="desktop-home-actions">
-            <Link href="/archivio" className="desktop-home-action desktop-home-action--primary">
+          <div className="desktop-home-clean__actions">
+            <Link href="/archivio" className="desktop-home-clean__button desktop-home-clean__button--primary">
               Apri il catalogo
               <ArrowRight aria-hidden="true" />
             </Link>
-            <Link href="/wishlist" className="desktop-home-action desktop-home-action--secondary">
+            <Link href="/wishlist" className="desktop-home-clean__button desktop-home-clean__button--secondary">
               Suggerisci un tool
             </Link>
           </div>
-          <div className="desktop-home-proof">
+          <div className="desktop-home-clean__proof" aria-label="Dati TooolVibes">
             <span>
               <strong>{tools.length}</strong>
               tool curati
@@ -208,76 +97,77 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
             </span>
           </div>
         </div>
+
+        <div className="desktop-home-clean__visual">
+          <DesktopDepthScene focusTool={focusTool} supportingTools={supportingTools} />
+        </div>
       </section>
 
-      <section className="desktop-home-journey" aria-label="Percorso di scoperta">
-        {journeyCards.map((item) => {
+      <section className="desktop-home-clean__routes" aria-label="Percorsi principali">
+        {routeCards.map((item) => {
           const Icon = item.icon;
 
           return (
-            <Link key={item.href} href={item.href} className="desktop-home-journey-card">
-              <span className="desktop-home-journey-card__icon">
+            <Link key={item.href} href={item.href} className="desktop-home-clean__route-card">
+              <span className="desktop-home-clean__route-icon">
                 <Icon aria-hidden="true" />
               </span>
-              <small>{item.label}</small>
-              <strong>{item.title}</strong>
-              <p>{item.description}</p>
+              <span>
+                <strong>{item.label}</strong>
+                <small>{item.detail}</small>
+              </span>
+              <ArrowRight aria-hidden="true" />
             </Link>
           );
         })}
       </section>
 
-      <section className="desktop-home-depth-system" aria-labelledby="desktop-home-depth-title">
-        <div className="desktop-home-depth-copy">
-          <p className="desktop-home-kicker">
-            <Layers3 aria-hidden="true" />
-            Depth design
+      <section className="desktop-home-clean__process" aria-labelledby="desktop-home-process-title">
+        <div>
+          <p className="desktop-home-clean__kicker">
+            <Compass aria-hidden="true" />
+            Metodo
           </p>
-          <h2 id="desktop-home-depth-title">Una gerarchia, non un collage.</h2>
-          <p>
-            La home desktop usa piani visivi chiari: focus, alternative e contesto. Ogni
-            elemento ha una distanza, una funzione e una priorità.
-          </p>
+          <h2 id="desktop-home-process-title">Un flusso ordinato, non una vetrina infinita.</h2>
         </div>
+        <div className="desktop-home-clean__step-grid">
+          {decisionSteps.map((item) => {
+            const Icon = item.icon;
 
-        <div className="desktop-home-depth-board">
-          {depthLayers.map((layer, index) => (
-            <article
-              key={layer.label}
-              className={`desktop-home-depth-card desktop-home-depth-card--${index + 1}`}
-              data-home-card="depth-layer"
-              data-depth-layer={layer.label.toLowerCase()}
-            >
-              <span>{layer.label}</span>
-              <h3>{layer.title}</h3>
-              <p>{layer.description}</p>
-            </article>
-          ))}
+            return (
+              <Link key={item.href} href={item.href} className="desktop-home-clean__step-card">
+                <span className="desktop-home-clean__step-icon">
+                  <Icon aria-hidden="true" />
+                </span>
+                <small>{item.label}</small>
+                <strong>{item.title}</strong>
+                <p>{item.description}</p>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
-      <section className="desktop-home-tool-constellation" aria-label="Tool reali nel catalogo">
-        <div className="desktop-home-tool-constellation__header">
+      <section className="desktop-home-clean__catalog" aria-labelledby="desktop-home-catalog-title">
+        <div className="desktop-home-clean__section-header">
           <div>
-            <p className="desktop-home-kicker">
+            <p className="desktop-home-clean__kicker">
               <Boxes aria-hidden="true" />
               Catalogo vivo
             </p>
-            <h2>Dal segnale al tool, senza perdere contesto.</h2>
+            <h2 id="desktop-home-catalog-title">Alternative reali, ordinate per decidere meglio.</h2>
           </div>
-          <Link href="/compare" className="desktop-home-action desktop-home-action--secondary">
+          <Link href="/compare" className="desktop-home-clean__button desktop-home-clean__button--secondary">
             Apri compare
           </Link>
         </div>
 
-        <div className="desktop-home-tool-grid">
-          {railTools.map((tool, index) => (
+        <div className="desktop-home-clean__tool-grid">
+          {catalogTools.map((tool) => (
             <Link
               key={tool.slug}
               href={`/toools/${tool.slug}`}
-              className={`desktop-home-tool-tile desktop-home-tool-tile--${index + 1}`}
-              data-home-card="tool-tile"
-              data-depth-layer={(index % 3) + 1}
+              className="desktop-home-clean__tool-tile"
               style={
                 {
                   "--tool-from": tool.accentFrom,
@@ -296,20 +186,20 @@ export function DesktopVibeHome({ tools, weeklyTool }: DesktopVibeHomeProps) {
         </div>
       </section>
 
-      <section className="desktop-home-final-cta" aria-label="Azione finale">
+      <section className="desktop-home-clean__final" aria-label="Azione finale">
         <div>
-          <p className="desktop-home-kicker">
+          <p className="desktop-home-clean__kicker">
             <Sparkles aria-hidden="true" />
             Next step
           </p>
           <h2>Costruisci la tua shortlist operativa.</h2>
         </div>
-        <div className="desktop-home-final-cta__actions">
-          <Link href="/archivio" className="desktop-home-action desktop-home-action--primary">
+        <div className="desktop-home-clean__actions">
+          <Link href="/archivio" className="desktop-home-clean__button desktop-home-clean__button--primary">
             Esplora ora
             <ArrowRight aria-hidden="true" />
           </Link>
-          <Link href="/wishlist" className="desktop-home-action desktop-home-action--secondary">
+          <Link href="/wishlist" className="desktop-home-clean__button desktop-home-clean__button--secondary">
             Proponi un tool
           </Link>
         </div>

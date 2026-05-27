@@ -772,7 +772,7 @@ export function InteractionSoundLayer() {
 
       if (
         animationName.includes("toast") ||
-        target.matches(".cn-toast, .motion-toast, .global-vibe-toast")
+        target.matches(".cn-toast, .motion-toast")
       ) {
         return "toast";
       }
