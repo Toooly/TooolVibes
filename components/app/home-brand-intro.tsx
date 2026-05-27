@@ -66,10 +66,11 @@ export function HomeBrandIntro() {
   }, [clearTimers]);
 
   useEffect(() => {
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const alreadyPlayed = hasPlayedIntro();
 
-    if (prefersReducedMotion || alreadyPlayed) {
+    if (isDesktop || prefersReducedMotion || alreadyPlayed) {
       document.documentElement.classList.remove("brand-intro-active", "brand-intro-preflight");
       window.dispatchEvent(new CustomEvent("tooolvibes:brand-intro-finished"));
       setPhase("hidden");
@@ -93,9 +94,10 @@ export function HomeBrandIntro() {
 
   useEffect(() => {
     const canvas = introCanvasRef.current;
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (!canvas || prefersReducedMotion || hasPlayedIntro()) {
+    if (!canvas || isDesktop || prefersReducedMotion || hasPlayedIntro()) {
       return undefined;
     }
 

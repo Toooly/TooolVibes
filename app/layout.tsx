@@ -87,14 +87,18 @@ const brandIntroPreflightScript = `
 (() => {
   try {
     const isHome = window.location.pathname === "/" || window.location.pathname === "";
+    const desktop = window.matchMedia?.("(min-width: 1024px)")?.matches;
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const played = window.sessionStorage?.getItem("tooolvibes:brand-intro-reactor-v1") === "true";
 
-    if (isHome && !reduced && !played) {
+    if (isHome && !desktop && !reduced && !played) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
     }
   } catch {
-    if (window.location.pathname === "/" || window.location.pathname === "") {
+    const isHome = window.location.pathname === "/" || window.location.pathname === "";
+    const desktop = window.matchMedia?.("(min-width: 1024px)")?.matches;
+
+    if (isHome && !desktop) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
     }
   }

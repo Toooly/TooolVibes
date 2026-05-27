@@ -116,6 +116,8 @@ export function MobileVibeHome({ tools, weeklyTool, supportingTools }: MobileVib
                 key={tool.slug}
                 href={`/toools/${tool.slug}`}
                 className={`mobile-vibe-node mobile-vibe-node--${index + 1}`}
+                data-home-card="mobile-orbit"
+                data-depth-layer={index + 1}
                 style={
                   {
                     "--tool-from": tool.accentFrom,
