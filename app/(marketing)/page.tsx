@@ -1,4 +1,3 @@
-import { HomeBrandIntro } from "@/components/app/home-brand-intro";
 import { DesktopVibeHome } from "@/components/desktop/desktop-vibe-home";
 import { MobileVibeHome } from "@/components/home/mobile-vibe-home";
 import {
@@ -15,7 +14,6 @@ export default function HomePage() {
 
   return (
     <>
-      <HomeBrandIntro />
       <DesktopVibeHome tools={directoryTools} weeklyTool={weeklyTool} />
       <MobileVibeHome
         tools={directoryTools}

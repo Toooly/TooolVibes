@@ -168,8 +168,8 @@ export function ProductHuntRankings({
       ref={sectionRef}
       id="product-hunt"
       className={cn(
-        "premium-card motion-reveal p-4 text-white sm:p-5",
-        variant === "wide" && "rounded-[36px] p-5 sm:p-7",
+        "product-hunt-rankings premium-card motion-reveal p-4 text-white sm:p-5",
+        variant === "wide" && "product-hunt-rankings--wide rounded-[36px] p-5 sm:p-7",
         className,
       )}
       aria-labelledby="product-hunt-title"

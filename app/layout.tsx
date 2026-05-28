@@ -76,29 +76,30 @@ html.brand-intro-preflight body::before {
   z-index: 119;
   pointer-events: none;
   background:
-    linear-gradient(116deg, transparent 0 43%, rgba(103,227,255,0.14) 43.2% 43.55%, transparent 43.8% 100%),
-    linear-gradient(64deg, transparent 0 54%, rgba(106,60,255,0.18) 54.2% 54.55%, transparent 54.85% 100%),
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 6rem),
-    linear-gradient(145deg, #08051d 0%, #170b4d 48%, #050313 100%);
+    radial-gradient(circle at 50% 50%, rgba(20,184,166,0.18), transparent 18rem),
+    radial-gradient(circle at 50% 50%, rgba(6,7,18,0.9), transparent 9rem),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.065) 0 1px, transparent 1px 2.8rem),
+    linear-gradient(145deg, #040512 0%, #08111f 54%, #02030a 100%);
 }
 `;
 
 const brandIntroPreflightScript = `
 (() => {
   try {
-    const isHome = window.location.pathname === "/" || window.location.pathname === "";
-    const desktop = window.matchMedia?.("(min-width: 1024px)")?.matches;
+    const pathname = window.location.pathname || "/";
+    const excluded =
+      pathname.startsWith("/admin") ||
+      pathname.startsWith("/api") ||
+      pathname.startsWith("/auth");
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    const played = window.sessionStorage?.getItem("tooolvibes:brand-intro-reactor-v1") === "true";
+    const played = window.sessionStorage?.getItem("tooolvibes:brand-intro-singularity-v2") === "true";
 
-    if (isHome && !desktop && !reduced && !played) {
+    if (!excluded && !reduced && !played) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
     }
   } catch {
-    const isHome = window.location.pathname === "/" || window.location.pathname === "";
-    const desktop = window.matchMedia?.("(min-width: 1024px)")?.matches;
-
-    if (isHome && !desktop) {
+    const pathname = window.location.pathname || "/";
+    if (!pathname.startsWith("/admin") && !pathname.startsWith("/api") && !pathname.startsWith("/auth")) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
     }
   }

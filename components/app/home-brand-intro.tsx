@@ -1,25 +1,27 @@
 "use client";
 
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { SOUND_PLAY_EVENT } from "@/lib/config/sound";
 
-const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-reactor-v1";
-const INTRO_DURATION_MS = 3640;
+const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-singularity-v2";
+const INTRO_DURATION_MS = 3400;
+const INTRO_HIDDEN_PATHS = ["/admin", "/api", "/auth"];
 
 const reactorNodes = [
-  { label: "AI app", x: -18, y: -11, z: 7, rotate: -10 },
-  { label: "Vibe code", x: 18, y: -10, z: 11, rotate: 8 },
-  { label: "No-code", x: -15, y: 11, z: 14, rotate: 7 },
-  { label: "Automation", x: 16, y: 12, z: 5, rotate: -8 },
+  { label: "Discover", x: -20, y: -10, z: 10, rotate: -12 },
+  { label: "Compare", x: 18, y: -8, z: 14, rotate: 10 },
+  { label: "Shortlist", x: -16, y: 12, z: 18, rotate: 8 },
+  { label: "Decide", x: 17, y: 11, z: 7, rotate: -10 },
 ];
 
 const reactorRings = [
-  { scale: 0.62, z: -34, delay: 0 },
-  { scale: 0.88, z: -12, delay: 120 },
-  { scale: 1.12, z: 12, delay: 240 },
-  { scale: 1.34, z: 34, delay: 360 },
+  { scale: 0.52, z: -44, delay: 0 },
+  { scale: 0.82, z: -18, delay: 110 },
+  { scale: 1.1, z: 14, delay: 220 },
+  { scale: 1.42, z: 42, delay: 330 },
 ];
 
 function hasPlayedIntro() {
@@ -38,7 +40,8 @@ function markIntroPlayed() {
   }
 }
 
-export function HomeBrandIntro() {
+export function SiteBrandIntro() {
+  const pathname = usePathname();
   const [phase, setPhase] = useState<"hidden" | "active" | "leaving">("active");
   const introCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const timersRef = useRef<number[]>([]);
@@ -66,11 +69,11 @@ export function HomeBrandIntro() {
   }, [clearTimers]);
 
   useEffect(() => {
-    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const alreadyPlayed = hasPlayedIntro();
+    const shouldHide = INTRO_HIDDEN_PATHS.some((path) => pathname?.startsWith(path));
 
-    if (isDesktop || prefersReducedMotion || alreadyPlayed) {
+    if (shouldHide || prefersReducedMotion || alreadyPlayed) {
       document.documentElement.classList.remove("brand-intro-active", "brand-intro-preflight");
       window.dispatchEvent(new CustomEvent("tooolvibes:brand-intro-finished"));
       setPhase("hidden");
@@ -90,14 +93,14 @@ export function HomeBrandIntro() {
       clearTimers();
       document.documentElement.classList.remove("brand-intro-active", "brand-intro-preflight");
     };
-  }, [clearTimers, finishIntro]);
+  }, [clearTimers, finishIntro, pathname]);
 
   useEffect(() => {
     const canvas = introCanvasRef.current;
-    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const shouldHide = INTRO_HIDDEN_PATHS.some((path) => pathname?.startsWith(path));
 
-    if (!canvas || isDesktop || prefersReducedMotion || hasPlayedIntro()) {
+    if (!canvas || shouldHide || prefersReducedMotion || hasPlayedIntro()) {
       return undefined;
     }
 
@@ -122,8 +125,8 @@ export function HomeBrandIntro() {
       renderer.setPixelRatio(1);
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 70);
-      camera.position.set(0, 0, 9.6);
+      const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 80);
+      camera.position.set(0, 0, 10.2);
 
       const root = new THREE.Group();
       scene.add(root);
@@ -162,12 +165,12 @@ export function HomeBrandIntro() {
       rings.rotation.x = Math.PI / 2.55;
       root.add(rings);
 
-      const ringGeometry = track(new THREE.TorusGeometry(1.65, 0.012, 8, 116));
-      const wideRingGeometry = track(new THREE.TorusGeometry(2.35, 0.008, 8, 132));
+      const ringGeometry = track(new THREE.TorusGeometry(1.42, 0.01, 8, 128));
+      const wideRingGeometry = track(new THREE.TorusGeometry(2.52, 0.007, 8, 148));
       const ringMaterials = [
-        meshMaterial(0x39d2f6, 0.34),
-        meshMaterial(0x6a3cff, 0.26),
-        meshMaterial(0xf3bf4c, 0.18),
+        meshMaterial(0x14b8a6, 0.42),
+        meshMaterial(0x60a5fa, 0.24),
+        meshMaterial(0xa78bfa, 0.2),
       ];
       const ringMeshes = [
         new THREE.Mesh(ringGeometry, ringMaterials[0]),
@@ -182,12 +185,12 @@ export function HomeBrandIntro() {
       core.position.z = 0.8;
       root.add(core);
       const coreShell = new THREE.Mesh(
-        track(new THREE.IcosahedronGeometry(0.92, 1)),
-        meshMaterial(0x6a3cff, 0.27),
+        track(new THREE.TorusKnotGeometry(0.62, 0.13, 96, 10, 2, 3)),
+        meshMaterial(0x020617, 0.72),
       );
       const coreSpark = new THREE.Mesh(
-        track(new THREE.OctahedronGeometry(0.44, 0)),
-        meshMaterial(0x39d2f6, 0.38),
+        track(new THREE.IcosahedronGeometry(0.36, 1)),
+        meshMaterial(0x14b8a6, 0.34),
       );
       core.add(coreShell, coreSpark);
 
@@ -210,7 +213,7 @@ export function HomeBrandIntro() {
       const railLines = railPoints.map((points, index) => {
         const curve = new THREE.CatmullRomCurve3(points);
         const geometry = track(new THREE.BufferGeometry().setFromPoints(curve.getPoints(56)));
-        const material = lineMaterial(index === 0 ? 0x39d2f6 : 0xf3bf4c, index === 0 ? 0.34 : 0.2);
+        const material = lineMaterial(index === 0 ? 0x14b8a6 : 0x60a5fa, index === 0 ? 0.34 : 0.2);
         const line = new THREE.Line(geometry, material);
         rails.add(line);
         return { line, material };
@@ -272,16 +275,17 @@ export function HomeBrandIntro() {
         root.rotation.x = -0.08 + Math.cos(elapsed * 0.28) * 0.035;
         root.position.z = -0.35 + introProgress * 0.35;
 
-        rings.rotation.z = elapsed * 0.22;
+        rings.rotation.z = -elapsed * 0.46;
         ringMeshes.forEach((ring, index) => {
-          ring.rotation.z += 0.002 + index * 0.0007;
-          ring.scale.setScalar(1 + Math.sin(elapsed * 0.9 + index) * 0.018);
+          ring.rotation.z -= 0.003 + index * 0.0009;
+          ring.scale.setScalar(1.05 - introProgress * 0.11 + Math.sin(elapsed * 0.9 + index) * 0.018);
         });
-        core.rotation.x = elapsed * 0.28;
-        core.rotation.y = elapsed * 0.42;
-        coreSpark.rotation.z = -elapsed * 0.38;
-        particles.rotation.y = elapsed * 0.035;
-        particles.rotation.z = -elapsed * 0.012;
+        core.rotation.x = elapsed * 0.36;
+        core.rotation.y = -elapsed * 0.62;
+        core.rotation.z = -elapsed * 0.42;
+        coreSpark.rotation.z = -elapsed * 0.58;
+        particles.rotation.y = -elapsed * 0.08;
+        particles.rotation.z = -elapsed * 0.045;
         railLines.forEach((rail, index) => {
           rail.line.position.y = Math.sin(elapsed * 0.72 + index) * 0.035;
           rail.material.opacity = (index === 0 ? 0.24 : 0.16) + Math.sin(elapsed * 1.1 + index) * 0.04;
@@ -308,7 +312,7 @@ export function HomeBrandIntro() {
       disposed = true;
       cleanupCallbacks.forEach((cleanup) => cleanup());
     };
-  }, []);
+  }, [pathname]);
 
   if (phase === "hidden") {
     return null;
@@ -366,18 +370,18 @@ export function HomeBrandIntro() {
           <span>TOOOL</span>
           <span>VIBES</span>
         </span>
-        <span className="brand-intro__caption">3D AI tools reactor</span>
+        <span className="brand-intro__caption">AI tools singularity</span>
 
         <span className="brand-intro__mobile-composition">
           <span className="brand-intro__mobile-orbit brand-intro__mobile-orbit--one" />
           <span className="brand-intro__mobile-orbit brand-intro__mobile-orbit--two" />
-          <span className="brand-intro__mobile-node brand-intro__mobile-node--one">AI app</span>
+          <span className="brand-intro__mobile-node brand-intro__mobile-node--one">Discover</span>
           <span className="brand-intro__mobile-node brand-intro__mobile-node--two">Radar</span>
           <span className="brand-intro__mobile-node brand-intro__mobile-node--three">Stack</span>
           <span className="brand-intro__mobile-device">
             <BrandLogo size={82} priority className="brand-intro__mobile-logo" />
             <span className="brand-intro__mobile-title">TOOOLVIBES</span>
-            <span className="brand-intro__mobile-caption">mobile 3D field</span>
+            <span className="brand-intro__mobile-caption">singularity field</span>
           </span>
         </span>
       </div>
