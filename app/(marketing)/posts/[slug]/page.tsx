@@ -253,7 +253,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                         Apri profilo
                       </ButtonLink>
                       <Link
-                        href={tool.website_url}
+                        href={tool.affiliate_url ?? tool.website_url}
                         target="_blank"
                         rel="noreferrer"
                         className="section-quiet-link text-sm font-semibold text-white/82"

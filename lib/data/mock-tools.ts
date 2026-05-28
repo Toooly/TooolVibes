@@ -42,6 +42,7 @@ export const mockTools: ToolRecord[] = [
     description_it:
       "Framer AI regge bene quando una buona idea rischia ancora di sembrare acerba. In TooolVibes conta perché aiuta founder, designer e piccoli team a trasformare una direzione in una superficie pubblica più credibile senza aprire un workflow troppo pesante.",
     website_url: "https://www.framer.com",
+    affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/framer-ai",
     cover_image_url:
       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
@@ -93,6 +94,7 @@ export const mockTools: ToolRecord[] = [
     description_it:
       "Cursor è uno dei riferimenti più solidi quando vuoi velocità ma non vuoi mollare controllo, leggibilità e responsabilità sul codice. Per TooolVibes vale perché regge bene sia il prototipo che il momento in cui il prototipo inizia davvero a sporcarsi.",
     website_url: "https://www.cursor.com",
+    affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/cursor",
     cover_image_url:
       "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80",
@@ -144,6 +146,7 @@ export const mockTools: ToolRecord[] = [
     description_it:
       "Per team e creator che vogliono centralizzare conoscenza e operazioni leggere. La forza non è solo l’AI, ma la combinazione tra contenuto strutturato e collaborazione.",
     website_url: "https://www.notion.so/product/ai",
+    affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/notion-ai",
     cover_image_url:
       "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80",
@@ -195,6 +198,7 @@ export const mockTools: ToolRecord[] = [
     description_it:
       "Runway conta quando devi produrre asset video credibili senza costruire un workflow studio-grade. In TooolVibes è forte perché tiene insieme sperimentazione, velocità e una sensazione premium che regge bene anche in contesti launch o content-first.",
     website_url: "https://runwayml.com",
+    affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/runway",
     cover_image_url:
       "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80",
@@ -246,6 +250,7 @@ export const mockTools: ToolRecord[] = [
     description_it:
       "Perplexity ? forte quando devi togliere attrito alla fase iniziale della ricerca. In TooolVibes lo leggiamo come strumento di orientamento e raccolta fonti, non come verit? finale: il suo valore sta nel primo perimetro che ti consegna.",
     website_url: "https://www.perplexity.ai",
+    affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/perplexity",
     cover_image_url:
       "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80",
@@ -297,6 +302,7 @@ export const mockTools: ToolRecord[] = [
     description_it:
       "Midjourney resta rilevante quando la priorità è l’impatto visivo. Utile per moodboard, concept editoriali e direzioni visuali in fase esplorativa.",
     website_url: "https://www.midjourney.com",
+    affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/midjourney",
     cover_image_url:
       "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
@@ -348,6 +354,7 @@ export const mockTools: ToolRecord[] = [
     description_it:
       "Descript conta quando il collo di bottiglia non è la post-produzione avanzata, ma la velocità con cui devi arrivare a un contenuto parlato pulito e pubblicabile. Per TooolVibes è prezioso perché rende più accessibile un lavoro che spesso resta troppo tecnico.",
     website_url: "https://www.descript.com",
+    affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/descript",
     cover_image_url:
       "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=1200&q=80",
@@ -399,6 +406,7 @@ export const mockTools: ToolRecord[] = [
     description_it:
       "Lovable è forte quando l'obiettivo è capire in poche ore se una direzione prodotto respira davvero come interfaccia. In TooolVibes conta perché tiene bene la prima prova, ma resta da leggere con disciplina appena serve trasformarlo in qualcosa di più solido.",
     website_url: "https://lovable.dev",
+    affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/lovable",
     cover_image_url:
       "https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1200&q=80",

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { importMockCollectionsAction } from "@/app/(admin)/admin/actions";
+import { importMockCollectionsAction } from "@/app/(admin)/admin/actions/collections";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { SectionHeading } from "@/components/sections/section-heading";
 import {

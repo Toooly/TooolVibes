@@ -4,7 +4,7 @@ import {
   applyCollectionSafeAlignAction,
   importMockCollectionsAction,
   setCollectionTransitionReviewAction,
-} from "@/app/(admin)/admin/actions";
+} from "@/app/(admin)/admin/actions/collections";
 import { getCollectionSafeAlignEligibility } from "@/lib/admin/collection-safe-align";
 import {
   buildCollectionReadinessSummary,

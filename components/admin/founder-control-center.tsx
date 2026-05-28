@@ -1,4 +1,4 @@
-import { logoutAdmin } from "@/app/(admin)/admin/actions";
+import { logoutAdmin } from "@/app/(admin)/admin/actions/auth";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { PremiumLink } from "@/components/ui/premium";
 import type { AdminCollectionsRuntime } from "@/lib/admin/collection-queries";
@@ -132,6 +132,8 @@ export function FounderControlCenter({
   const quickLinks = [
     { href: "/admin", label: "Dashboard" },
     { href: "/admin/new", label: "Nuovo tool", primary: true },
+    { href: "/admin/suggestions", label: "Suggerimenti" },
+    { href: "/admin/affiliate-links", label: "Affiliate" },
     { href: "/admin/collections", label: "Collections" },
     { href: "/admin/collections/review", label: "Conflict review" },
     { href: "/", label: "Vai al sito" },

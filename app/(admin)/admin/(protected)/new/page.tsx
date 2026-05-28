@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { createToolFormAction } from "@/app/(admin)/admin/actions";
+import { createToolFormAction } from "@/app/(admin)/admin/actions/tools";
 import { ToolForm } from "@/components/admin/tool-form";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { getAdminToolsRuntime } from "@/lib/admin/tool-queries";

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { createCollectionFormAction } from "@/app/(admin)/admin/actions";
+import { createCollectionFormAction } from "@/app/(admin)/admin/actions/collections";
 import { CollectionForm } from "@/components/admin/collection-form";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { getAdminTools } from "@/lib/admin/tool-queries";

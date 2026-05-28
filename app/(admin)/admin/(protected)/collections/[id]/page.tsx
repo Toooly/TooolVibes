@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { updateCollectionFormAction } from "@/app/(admin)/admin/actions";
+import { updateCollectionFormAction } from "@/app/(admin)/admin/actions/collections";
 import { CollectionSyncPreviewPanel } from "@/components/admin/collection-sync-preview-panel";
 import { CollectionTransitionCard } from "@/components/admin/collection-transition-card";
 import { CollectionForm } from "@/components/admin/collection-form";

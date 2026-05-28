@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { applyCollectionSafeAlignAction } from "@/app/(admin)/admin/actions";
+import { applyCollectionSafeAlignAction } from "@/app/(admin)/admin/actions/collections";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { getCollectionSafeAlignEligibility } from "@/lib/admin/collection-safe-align";
 import {

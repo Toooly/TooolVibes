@@ -270,6 +270,19 @@ export function ToolForm({
               <FieldError error={state.fieldErrors?.tooolvibes_post_url} />
             </label>
 
+            <label className="block">
+              <FieldLabel label="Affiliate URL (opzionale)" />
+              <input
+                name="affiliate_url"
+                type="url"
+                defaultValue={values.affiliate_url ?? undefined}
+                placeholder="Se presente, sovrascrive website_url nel sito pubblico"
+                className="w-full rounded-2xl border px-4 py-3 outline-none"
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+              />
+              <FieldError error={state.fieldErrors?.affiliate_url} />
+            </label>
+
             <label className="block lg:col-span-2">
               <FieldLabel label="Cover image URL" />
               <input

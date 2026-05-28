@@ -1,4 +1,4 @@
-import { loginAdmin } from "@/app/(admin)/admin/actions";
+import { loginAdmin } from "@/app/(admin)/admin/actions/auth";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { PremiumButton, PremiumPanel } from "@/components/ui/premium";
 import { isAdminSessionUnlocked } from "@/lib/admin/session";
@@ -42,20 +42,31 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
 
           <form action={loginAdmin} className="mt-7 space-y-4">
             <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-white/86">Password temporanea</span>
+              <span className="mb-2 block text-sm font-semibold text-white/86">Email</span>
+              <input
+                type="email"
+                name="email"
+                autoComplete="email"
+                className="premium-input w-full border-white/14 bg-white/8 text-white placeholder:text-white/40 focus:border-white/34"
+                style={{ color: "white" }}
+                required
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-semibold text-white/86">Password</span>
               <input
                 type="password"
                 name="password"
+                autoComplete="current-password"
                 className="premium-input w-full border-white/14 bg-white/8 text-white placeholder:text-white/40 focus:border-white/34"
-                style={{
-                  color: "white",
-                }}
+                style={{ color: "white" }}
                 required
               />
             </label>
 
             {params.error ? (
-              <p className="text-sm font-medium text-[#ffd1ca]">Password non valida.</p>
+              <p className="text-sm font-medium text-[#ffd1ca]">Credenziali non valide.</p>
             ) : null}
 
             <PremiumButton type="submit" tone="primary" className="w-full">

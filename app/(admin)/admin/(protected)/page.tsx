@@ -4,9 +4,10 @@ import {
   deleteToolAction,
   toggleFeaturedAction,
   togglePublishedAction,
-} from "@/app/(admin)/admin/actions";
+} from "@/app/(admin)/admin/actions/tools";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusPill } from "@/components/admin/admin-status-pill";
+import { DeleteWithConfirm } from "@/components/admin/delete-with-confirm";
 import { SectionHeading } from "@/components/sections/section-heading";
 import {
   getAdminToolWarningLabel,
@@ -299,16 +300,12 @@ export default async function AdminDashboardPage({
                       </button>
                     </form>
 
-                    <form action={deleteToolAction.bind(null, tool.id)}>
-                      <button
-                        type="submit"
-                        disabled={!canWrite}
-                        className="button-shell w-full rounded-full px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
-                        style={{ background: "linear-gradient(135deg, #9a4130, #7f2f22)" }}
-                      >
-                        Elimina
-                      </button>
-                    </form>
+                    <DeleteWithConfirm
+                      action={deleteToolAction.bind(null, tool.id)}
+                      label="Elimina"
+                      disabled={!canWrite}
+                      confirmMessage="Sei sicuro di voler eliminare questo tool? L'azione è irreversibile."
+                    />
                   </div>
                 </article>
               ))}

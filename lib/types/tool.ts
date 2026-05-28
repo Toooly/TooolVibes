@@ -49,6 +49,7 @@ export type ToolRecord = {
   description_it: string;
   website_url: string;
   tooolvibes_post_url: string;
+  affiliate_url: string | null;
   cover_image_url: string;
   source: string;
   date_discovered: string;
@@ -78,6 +79,7 @@ export type ToolPreview = Pick<
   | "short_description_it"
   | "cover_image_url"
   | "website_url"
+  | "affiliate_url"
   | "tooolvibes_post_url"
   | "is_featured"
   | "date_discovered"

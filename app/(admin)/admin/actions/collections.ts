@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -30,200 +29,14 @@ import {
   canAccessSupabaseCollectionSafeAlignAdmin,
   insertCollectionSafeAlignEvent,
 } from "@/lib/supabase/collection-safe-align-repository";
-import { parseToolFormData, type ToolFormState } from "@/lib/admin/tool-form";
+import { getAdminTools } from "@/lib/admin/tool-queries";
+import { requireAdminSession } from "@/lib/admin/session";
 import {
-  getAdminToolById,
-  getAdminTools,
-  isSupabaseToolsWriteEnabled,
-} from "@/lib/admin/tool-queries";
-import { createTool, deleteTool, updateTool } from "@/lib/admin/tool-mutations";
-import {
-  adminCookieName,
-  requireAdminSession,
-  verifyAdminPassword,
-} from "@/lib/admin/session";
-
-export async function loginAdmin(formData: FormData) {
-  const password = formData.get("password");
-
-  if (typeof password !== "string" || !verifyAdminPassword(password)) {
-    redirect("/admin/login?error=1");
-  }
-
-  const cookieStore = await cookies();
-  cookieStore.set(adminCookieName, "unlocked", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 8,
-  });
-
-  redirect("/admin");
-}
-
-export async function logoutAdmin() {
-  await requireAdminSession();
-  const cookieStore = await cookies();
-  cookieStore.delete(adminCookieName);
-  redirect("/admin/login");
-}
-
-function revalidateToolPaths(slug: string, previousSlug?: string) {
-  revalidatePath("/");
-  revalidatePath("/archivio");
-  revalidatePath("/tags");
-  revalidatePath("/admin");
-  revalidatePath("/api/tools");
-  revalidatePath(`/toools/${slug}`);
-
-  if (previousSlug && previousSlug !== slug) {
-    revalidatePath(`/toools/${previousSlug}`);
-  }
-}
-
-function revalidateCollectionPaths(
-  slug: string,
-  toolSlugs: string[],
-  previous?: { slug?: string; toolSlugs?: string[] },
-) {
-  revalidatePath("/");
-  revalidatePath("/archivio");
-  revalidatePath("/collections");
-  revalidatePath("/admin/collections");
-  revalidatePath("/admin/collections/review");
-  revalidatePath(`/collections/${slug}`);
-  revalidatePath(`/admin/collections/review/${slug}`);
-
-  for (const toolSlug of toolSlugs) {
-    revalidatePath(`/toools/${toolSlug}`);
-  }
-
-  if (previous?.slug && previous.slug !== slug) {
-    revalidatePath(`/collections/${previous.slug}`);
-  }
-
-  for (const toolSlug of previous?.toolSlugs ?? []) {
-    if (!toolSlugs.includes(toolSlug)) {
-      revalidatePath(`/toools/${toolSlug}`);
-    }
-  }
-}
-
-function appendStatusParams(
-  path: string,
-  values: Record<string, string | null | undefined>,
-) {
-  const url = new URL(path, "http://localhost");
-
-  for (const [key, value] of Object.entries(values)) {
-    if (value && value.length > 0) {
-      url.searchParams.set(key, value);
-    }
-  }
-
-  return `${url.pathname}${url.search}`;
-}
-
-function getSupabaseDisabledState(): ToolFormState {
-  return {
-    status: "error",
-    message:
-      "Verifica `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` e l'accesso reale alla tabella `tools` prima di riattivare le scritture founders.",
-  };
-}
-
-function getMutationErrorState(
-  error: unknown,
-  values?: ToolFormState["values"],
-): ToolFormState {
-  const message = error instanceof Error ? error.message : "Errore inatteso durante il salvataggio.";
-
-  if (message.includes("duplicate key value") || message.includes("tools_slug_key")) {
-    return {
-      status: "error",
-      message: "Esiste già un tool con questo slug. Scegline uno diverso.",
-      fieldErrors: {
-        slug: "Questo slug è già in uso.",
-      },
-      values,
-    };
-  }
-
-  return {
-    status: "error",
-    message: "Non è stato possibile completare l'operazione su Supabase. Riprova.",
-    values,
-  };
-}
-
-function getCollectionSupabaseDisabledState(): CollectionFormState {
-  return {
-    status: "error",
-    message:
-      "Configura Supabase admin e applica le migration collections per abilitare le scritture editoriali reali.",
-  };
-}
-
-function getCollectionMutationErrorState(
-  error: unknown,
-  values: CollectionFormState["values"],
-): CollectionFormState {
-  const message =
-    error instanceof Error ? error.message : "Errore inatteso durante il salvataggio.";
-
-  if (message.includes("duplicate key value") || message.includes("collections_slug_key")) {
-    return {
-      status: "error",
-      message: "Esiste già una collection con questo slug. Scegline uno diverso.",
-      fieldErrors: {
-        slug: "Questo slug è già in uso.",
-      },
-      values,
-    };
-  }
-
-  if (message.includes("collection_tool_slots")) {
-    return {
-      status: "error",
-      message:
-        "Non è stato possibile aggiornare i tool inclusi. Controlla tool, ordine e migration collections.",
-      values,
-    };
-  }
-
-  return {
-    status: "error",
-    message: "Non è stato possibile completare il salvataggio della collection.",
-    values,
-  };
-}
-
-export async function createToolFormAction(
-  _previousState: ToolFormState,
-  formData: FormData,
-): Promise<ToolFormState> {
-  await requireAdminSession();
-
-  if (!(await isSupabaseToolsWriteEnabled())) {
-    return getSupabaseDisabledState();
-  }
-
-  const parsed = parseToolFormData(formData);
-
-  if (!parsed.ok) {
-    return parsed.state;
-  }
-
-  try {
-    await createTool(parsed.data);
-  } catch (error) {
-    return getMutationErrorState(error, parsed.values);
-  }
-
-  revalidateToolPaths(parsed.data.slug);
-  redirect("/admin?status=created");
-}
+  revalidateCollectionPaths,
+  appendStatusParams,
+  getCollectionSupabaseDisabledState,
+  getCollectionMutationErrorState,
+} from "./_helpers";
 
 export async function createCollectionFormAction(
   _previousState: CollectionFormState,
@@ -272,42 +85,6 @@ export async function createCollectionFormAction(
   } catch (error) {
     return getCollectionMutationErrorState(error, parsed.values);
   }
-}
-
-export async function updateToolFormAction(
-  id: string,
-  _previousState: ToolFormState,
-  formData: FormData,
-): Promise<ToolFormState> {
-  await requireAdminSession();
-
-  if (!(await isSupabaseToolsWriteEnabled())) {
-    return getSupabaseDisabledState();
-  }
-
-  const existingTool = await getAdminToolById(id);
-
-  if (!existingTool) {
-    return {
-      status: "error",
-      message: "Tool non trovato.",
-    };
-  }
-
-  const parsed = parseToolFormData(formData);
-
-  if (!parsed.ok) {
-    return parsed.state;
-  }
-
-  try {
-    await updateTool(id, parsed.data);
-  } catch (error) {
-    return getMutationErrorState(error, parsed.values);
-  }
-
-  revalidateToolPaths(parsed.data.slug, existingTool.slug);
-  redirect("/admin?status=updated");
 }
 
 export async function updateCollectionFormAction(
@@ -560,56 +337,4 @@ export async function applyCollectionSafeAlignAction(formData: FormData) {
       fields: plan.changes.map((change) => change.field).join(","),
     }),
   );
-}
-
-export async function toggleFeaturedAction(id: string, nextValue: boolean) {
-  await requireAdminSession();
-
-  if (!(await isSupabaseToolsWriteEnabled())) {
-    return;
-  }
-
-  const existingTool = await getAdminToolById(id);
-
-  if (!existingTool) {
-    return;
-  }
-
-  await updateTool(id, { is_featured: nextValue });
-  revalidateToolPaths(existingTool.slug);
-}
-
-export async function togglePublishedAction(id: string, nextValue: boolean) {
-  await requireAdminSession();
-
-  if (!(await isSupabaseToolsWriteEnabled())) {
-    return;
-  }
-
-  const existingTool = await getAdminToolById(id);
-
-  if (!existingTool) {
-    return;
-  }
-
-  await updateTool(id, { is_published: nextValue });
-  revalidateToolPaths(existingTool.slug);
-}
-
-export async function deleteToolAction(id: string) {
-  await requireAdminSession();
-
-  if (!(await isSupabaseToolsWriteEnabled())) {
-    return;
-  }
-
-  const existingTool = await getAdminToolById(id);
-
-  if (!existingTool) {
-    return;
-  }
-
-  await deleteTool(id);
-  revalidateToolPaths(existingTool.slug);
-  redirect("/admin?status=deleted");
 }

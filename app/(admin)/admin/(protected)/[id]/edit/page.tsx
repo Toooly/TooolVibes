@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { updateToolFormAction } from "@/app/(admin)/admin/actions";
+import { updateToolFormAction } from "@/app/(admin)/admin/actions/tools";
 import { ToolForm } from "@/components/admin/tool-form";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { getToolFormValues } from "@/lib/admin/tool-form";

@@ -6,5 +6,6 @@ export function mapSupabaseTool(row: SupabaseToolRow): ToolRecord {
   return {
     ...row,
     tags: Array.isArray(row.tags) ? row.tags : [],
+    affiliate_url: row.affiliate_url ?? null,
   };
 }

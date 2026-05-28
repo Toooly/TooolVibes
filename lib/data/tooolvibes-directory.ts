@@ -37,6 +37,7 @@ export type DirectoryTool = {
   idealUseCase: string;
   editorialReview: string;
   externalUrl: string;
+  affiliateUrl?: string;
   url: string;
   originalSourceUrl: string;
   originalArticleUrl: string;
@@ -66,8 +67,10 @@ type DirectoryToolInput = Omit<
   | "whatItDoes"
   | "idealUseCase"
   | "editorialReview"
+  | "affiliateUrl"
 > & {
   domain?: string;
+  affiliateUrl?: string;
 };
 
 export const levelLabels: Record<DirectoryToolLevel, string> = {
@@ -131,7 +134,7 @@ function defineTool(tool: DirectoryToolInput): DirectoryTool {
     whatItDoes: tool.longDescription,
     idealUseCase,
     editorialReview: tool.whyItMatters,
-    url: tool.externalUrl,
+    url: tool.affiliateUrl ?? tool.externalUrl,
     originalArticleUrl: tool.originalSourceUrl,
     levelLabel: levelLabels[tool.level],
     domain: tool.domain ?? getDomain(tool.externalUrl),

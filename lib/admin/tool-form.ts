@@ -10,6 +10,7 @@ export type ToolFormValues = {
   description_it: string;
   website_url: string;
   tooolvibes_post_url: string;
+  affiliate_url: string | null;
   cover_image_url: string;
   source: string;
   date_discovered: string;
@@ -40,6 +41,7 @@ export function getToolFormValues(tool?: ToolRecord | null): ToolFormValues {
     description_it: tool?.description_it ?? "",
     website_url: tool?.website_url ?? "",
     tooolvibes_post_url: tool?.tooolvibes_post_url ?? "",
+    affiliate_url: tool?.affiliate_url ?? "",
     cover_image_url: tool?.cover_image_url ?? "",
     source: tool?.source ?? "",
     date_discovered: tool?.date_discovered ?? new Date().toISOString().slice(0, 10),
@@ -76,6 +78,7 @@ export function parseToolFormData(formData: FormData) {
   const rawDescription = String(formData.get("description_it") ?? "").trim();
   const rawWebsiteUrl = String(formData.get("website_url") ?? "").trim();
   const rawPostUrl = String(formData.get("tooolvibes_post_url") ?? "").trim();
+  const rawAffiliateUrl = String(formData.get("affiliate_url") ?? "").trim();
   const rawCoverImageUrl = String(formData.get("cover_image_url") ?? "").trim();
   const rawSource = String(formData.get("source") ?? "").trim();
   const rawDateDiscovered = String(formData.get("date_discovered") ?? "").trim();
@@ -91,6 +94,7 @@ export function parseToolFormData(formData: FormData) {
     description_it: rawDescription,
     website_url: rawWebsiteUrl,
     tooolvibes_post_url: rawPostUrl,
+    affiliate_url: rawAffiliateUrl,
     cover_image_url: rawCoverImageUrl,
     source: rawSource,
     date_discovered: rawDateDiscovered,
@@ -126,6 +130,10 @@ export function parseToolFormData(formData: FormData) {
 
   if (!isValidUrl(rawPostUrl)) {
     fieldErrors.tooolvibes_post_url = "Inserisci un URL valido.";
+  }
+
+  if (rawAffiliateUrl && !isValidUrl(rawAffiliateUrl)) {
+    fieldErrors.affiliate_url = "Inserisci un URL valido oppure lascia vuoto.";
   }
 
   if (!isValidUrl(rawCoverImageUrl)) {
@@ -167,6 +175,7 @@ export function parseToolFormData(formData: FormData) {
       description_it: rawDescription,
       website_url: rawWebsiteUrl,
       tooolvibes_post_url: rawPostUrl,
+      affiliate_url: rawAffiliateUrl || null,
       cover_image_url: rawCoverImageUrl,
       source: rawSource,
       date_discovered: rawDateDiscovered,

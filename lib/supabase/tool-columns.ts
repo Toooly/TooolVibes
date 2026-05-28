@@ -8,6 +8,7 @@ export const publicToolSelect = `
   description_it,
   website_url,
   tooolvibes_post_url,
+  affiliate_url,
   cover_image_url,
   source,
   date_discovered,
