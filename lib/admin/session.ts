@@ -42,8 +42,16 @@ function verifySessionToken(token: string): boolean {
   const expected = createHmac("sha256", secret).update(payload).digest("hex");
 
   if (signature.length !== expected.length) return false;
+  if (!timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return false;
 
-  return timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  const issuedAtStr = payload.split(":")[0];
+  if (!issuedAtStr) return false;
+  const issuedAt = parseInt(issuedAtStr, 36);
+  if (Number.isNaN(issuedAt)) return false;
+  const maxAgeMs = 8 * 60 * 60 * 1000;
+  if (Date.now() - issuedAt > maxAgeMs) return false;
+
+  return true;
 }
 
 export async function verifyAdminCredentials(email: string, password: string): Promise<boolean> {

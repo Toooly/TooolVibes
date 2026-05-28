@@ -20,8 +20,8 @@ export function DeleteWithConfirm({
   function handleClick() {
     if (!window.confirm(confirmMessage)) return;
 
-    startTransition(() => {
-      action();
+    startTransition(async () => {
+      await action();
     });
   }
 

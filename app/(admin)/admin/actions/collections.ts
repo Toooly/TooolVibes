@@ -36,6 +36,7 @@ import {
   appendStatusParams,
   getCollectionSupabaseDisabledState,
   getCollectionMutationErrorState,
+  isValidUuid,
 } from "./_helpers";
 
 export async function createCollectionFormAction(
@@ -93,6 +94,10 @@ export async function updateCollectionFormAction(
   formData: FormData,
 ): Promise<CollectionFormState> {
   await requireAdminSession();
+
+  if (!isValidUuid(id)) {
+    return { status: "error", message: "ID collection non valido." };
+  }
 
   if (!(await isSupabaseCollectionsWriteEnabled())) {
     return getCollectionSupabaseDisabledState();
@@ -260,6 +265,10 @@ export async function applyCollectionSafeAlignAction(formData: FormData) {
     typeof collectionIdValue === "string" && collectionIdValue.trim().length > 0
       ? collectionIdValue.trim()
       : null;
+
+  if (collectionId && !isValidUuid(collectionId)) {
+    redirect(appendStatusParams(returnTo, { status: "safe-align-invalid" }));
+  }
 
   if (!(await isSupabaseCollectionsWriteEnabled())) {
     redirect(appendStatusParams(returnTo, { status: "safe-align-unavailable" }));
