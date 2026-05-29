@@ -11,13 +11,27 @@ import {
 } from "@/lib/admin/session";
 import { clearLoginAttempts, isLoginRateLimited, recordFailedLoginAttempt } from "./_helpers";
 
+function normalizeEmailInput(value: FormDataEntryValue | null): string {
+  return String(value ?? "")
+    .normalize("NFKC")
+    .replace(/\s+/g, "")
+    .trim();
+}
+
+function normalizePasswordInput(value: FormDataEntryValue | null): string {
+  return String(value ?? "")
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .trim();
+}
+
 export async function loginAdmin(formData: FormData) {
   if (await isLoginRateLimited()) {
     redirect("/admin/login?error=1");
   }
 
-  const email = String(formData.get("email") ?? "").trim();
-  const password = String(formData.get("password") ?? "").trim();
+  const email = normalizeEmailInput(formData.get("email"));
+  const password = normalizePasswordInput(formData.get("password"));
 
   if (!email || !password || !(await verifyAdminCredentials(email, password))) {
     await recordFailedLoginAttempt();
