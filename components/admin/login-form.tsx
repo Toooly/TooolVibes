@@ -1,7 +1,7 @@
 "use client";
 
 import { KeyRound } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 import { loginAdmin } from "@/app/(admin)/admin/actions/auth";
@@ -26,9 +26,15 @@ function SubmitButton() {
 
 export function LoginForm({ hasError }: LoginFormProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [hasEditedAfterError, setHasEditedAfterError] = useState(false);
+  const showError = hasError && !hasEditedAfterError;
+
+  useEffect(() => {
+    setHasEditedAfterError(false);
+  }, [hasError]);
 
   return (
-    <form action={loginAdmin} className="mt-7 space-y-4">
+    <form action={loginAdmin} className="mt-7 space-y-4" onChange={() => setHasEditedAfterError(true)}>
       <label className="block">
         <span className="mb-2 block text-sm font-semibold text-white/86">Email</span>
         <input
@@ -70,8 +76,10 @@ export function LoginForm({ hasError }: LoginFormProps) {
         </div>
       </label>
 
-      {hasError ? (
-        <p className="text-sm font-medium text-[#ffd1ca]">Credenziali non valide.</p>
+      {showError ? (
+        <p className="text-sm font-medium text-[#ffd1ca]" aria-live="polite">
+          Credenziali non valide.
+        </p>
       ) : null}
 
       <SubmitButton />
