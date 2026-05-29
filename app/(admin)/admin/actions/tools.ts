@@ -8,6 +8,7 @@ import {
   isSupabaseToolsWriteEnabled,
 } from "@/lib/admin/tool-queries";
 import { createTool, deleteTool, updateTool } from "@/lib/admin/tool-mutations";
+import { updateSuggestionStatus } from "@/lib/admin/suggestion-mutations";
 import { requireAdminSession } from "@/lib/admin/session";
 import {
   isValidUuid,
@@ -33,7 +34,16 @@ export async function createToolFormAction(
   }
 
   try {
-    await createTool(parsed.data);
+    const createdTool = await createTool(parsed.data);
+    const sourceRequestId = String(formData.get("source_request_id") ?? "").trim();
+
+    if (sourceRequestId && isValidUuid(sourceRequestId)) {
+      await updateSuggestionStatus(
+        sourceRequestId,
+        "approved",
+        `Convertito in tool: ${createdTool.name}`,
+      );
+    }
   } catch (error) {
     return getMutationErrorState(error, parsed.values);
   }

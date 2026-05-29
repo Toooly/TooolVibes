@@ -9,7 +9,7 @@ import {
   requireAdminSession,
   verifyAdminCredentials,
 } from "@/lib/admin/session";
-import { isLoginRateLimited } from "./_helpers";
+import { clearLoginAttempts, isLoginRateLimited, recordFailedLoginAttempt } from "./_helpers";
 
 export async function loginAdmin(formData: FormData) {
   if (await isLoginRateLimited()) {
@@ -20,8 +20,11 @@ export async function loginAdmin(formData: FormData) {
   const password = String(formData.get("password") ?? "").trim();
 
   if (!email || !password || !(await verifyAdminCredentials(email, password))) {
+    await recordFailedLoginAttempt();
     redirect("/admin/login?error=1");
   }
+
+  await clearLoginAttempts();
 
   const token = await createAdminSession();
   const cookieStore = await cookies();

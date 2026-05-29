@@ -13,12 +13,13 @@ import { formatItalianDate } from "@/lib/utils";
 import type { ToolRequestStatus } from "@/lib/types/tool-request";
 
 type SuggestionsPageProps = {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; view?: string }>;
 };
 
 const statusLabels: Record<string, string> = {
   created: "Suggerimento creato.",
   deleted: "Suggerimento eliminato.",
+  error: "Operazione non riuscita. Controlla il runtime e riprova.",
 };
 
 const suggestionStatusConfig: Record<
@@ -40,8 +41,32 @@ function StatusBadge({ status }: { status: ToolRequestStatus }) {
 }
 
 export default async function SuggestionsPage({ searchParams }: SuggestionsPageProps) {
-  const [{ status }, runtime] = await Promise.all([searchParams, getSuggestionsRuntime()]);
+  const [{ status, view }, runtime] = await Promise.all([searchParams, getSuggestionsRuntime()]);
   const suggestions = runtime.suggestions;
+  const activeView = view ?? "open";
+  const filteredSuggestions = suggestions.filter((suggestion) => {
+    if (activeView === "all") return true;
+    if (activeView === "open") {
+      return suggestion.status === "received" || suggestion.status === "reviewing";
+    }
+    return suggestion.status === activeView;
+  });
+  const viewLinks = [
+    { href: "/admin/suggestions", label: "Aperti", count: runtime.pendingCount, value: "open" },
+    {
+      href: "/admin/suggestions?view=approved",
+      label: "Approvati",
+      count: runtime.approvedCount,
+      value: "approved",
+    },
+    {
+      href: "/admin/suggestions?view=rejected",
+      label: "Rifiutati",
+      count: runtime.rejectedCount,
+      value: "rejected",
+    },
+    { href: "/admin/suggestions?view=all", label: "Tutti", count: suggestions.length, value: "all" },
+  ];
 
   return (
     <div className="page-shell py-8 sm:py-10">
@@ -128,11 +153,26 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                 Tutte le richieste tool
               </h2>
             </div>
+            <div className="flex flex-wrap gap-2">
+              {viewLinks.map((item) => (
+                <Link
+                  key={item.value}
+                  href={item.href}
+                  className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[var(--muted-strong)]"
+                  style={{
+                    background:
+                      activeView === item.value ? "rgba(106,60,255,0.12)" : undefined,
+                  }}
+                >
+                  {item.label} ({item.count})
+                </Link>
+              ))}
+            </div>
           </div>
 
-          {suggestions.length > 0 ? (
+          {filteredSuggestions.length > 0 ? (
             <div className="mt-6 space-y-4">
-              {suggestions.map((suggestion) => (
+              {filteredSuggestions.map((suggestion) => (
                 <article
                   key={suggestion.id}
                   className="interactive-surface relative overflow-hidden rounded-[var(--radius-xl)] border p-5"
@@ -245,6 +285,18 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                       </div>
                     </form>
                     <div className="flex flex-wrap gap-2">
+                      {suggestion.status === "approved" ? (
+                        <Link
+                          href={`/admin/new?suggestion=${suggestion.id}`}
+                          className="button-shell rounded-full px-4 py-2 text-sm font-semibold text-white"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, var(--accent-strong), var(--accent))",
+                          }}
+                        >
+                          Crea tool da suggerimento
+                        </Link>
+                      ) : null}
                       <DeleteWithConfirm
                         action={deleteSuggestionAction.bind(null, suggestion.id)}
                         label="Elimina"

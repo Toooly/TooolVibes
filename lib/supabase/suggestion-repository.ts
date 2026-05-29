@@ -5,7 +5,7 @@ import { cache } from "react";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
 import type { ToolRequestRecord, ToolRequestStatus } from "@/lib/types/tool-request";
 
-const toolRequestSelect = `
+export const toolRequestSelect = `
   id,
   tool_name,
   tool_url,
@@ -18,6 +18,34 @@ const toolRequestSelect = `
   created_at,
   updated_at
 `;
+
+export type ToolRequestCreateInput = {
+  id?: string;
+  tool_name: string;
+  tool_url: string;
+  category: string;
+  level: string;
+  email?: string | null;
+  message?: string | null;
+  created_at?: string;
+};
+
+export async function createToolRequestInSupabase(
+  input: ToolRequestCreateInput,
+): Promise<ToolRequestRecord> {
+  const client = createAdminSupabaseClient();
+  const { data, error } = await client
+    .from("tool_requests")
+    .insert(input)
+    .select(toolRequestSelect)
+    .single();
+
+  if (error) {
+    throw new Error(`Unable to create tool request: ${error.message}`);
+  }
+
+  return data;
+}
 
 export const getAdminToolRequestsFromSupabase = cache(async (): Promise<ToolRequestRecord[]> => {
   const client = createAdminSupabaseClient();
@@ -32,6 +60,23 @@ export const getAdminToolRequestsFromSupabase = cache(async (): Promise<ToolRequ
 
   return data ?? [];
 });
+
+export async function getToolRequestByIdFromSupabase(
+  id: string,
+): Promise<ToolRequestRecord | null> {
+  const client = createAdminSupabaseClient();
+  const { data, error } = await client
+    .from("tool_requests")
+    .select(toolRequestSelect)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Unable to load tool request ${id}: ${error.message}`);
+  }
+
+  return data;
+}
 
 export async function updateToolRequestStatusInSupabase(
   id: string,

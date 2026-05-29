@@ -87,7 +87,41 @@ function saveToolRequestLocally(input: ToolRequestInput) {
   return request;
 }
 
+async function saveToolRequestViaApi(input: ToolRequestInput) {
+  const response = await fetch("/api/tool-requests", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  if (!response.ok) {
+    throw new Error("API request failed.");
+  }
+
+  const payload = (await response.json()) as {
+    request?: {
+      id?: string;
+      created_at?: string;
+      status?: StoredToolRequest["status"];
+    };
+  };
+
+  return {
+    ...input,
+    id: payload.request?.id ?? createId(),
+    createdAt: payload.request?.created_at ?? new Date().toISOString(),
+    status: "received" as const,
+    storage: "supabase" as const,
+  };
+}
+
 export async function saveToolRequest(input: ToolRequestInput) {
+  try {
+    return await saveToolRequestViaApi(input);
+  } catch {
+    // Fallback for local/dev setups where the server route is not wired to Supabase yet.
+  }
+
   if (isSupabaseBrowserEnabled()) {
     const supabase = getBrowserSupabaseClient() as unknown as SupabaseInsertClient;
     const request = createStoredRequest(input, "supabase");

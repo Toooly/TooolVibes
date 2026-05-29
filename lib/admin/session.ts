@@ -7,20 +7,27 @@ import bcrypt from "bcryptjs";
 
 export const adminCookieName = "tooolvibes_admin";
 
+function cleanAdminEnvValue(value: string | undefined): string | undefined {
+  const normalized = value?.trim();
+  if (!normalized) return undefined;
+  return normalized.replace(/^["']|["']$/g, "");
+}
+
 function getAdminEmail(): string | undefined {
-  return process.env.TOOOLVIBES_ADMIN_EMAIL?.trim() || undefined;
+  return cleanAdminEnvValue(process.env.TOOOLVIBES_ADMIN_EMAIL);
 }
 
 function getAdminPasswordHash(): string | undefined {
-  return process.env.TOOOLVIBES_ADMIN_PASSWORD_HASH?.trim() || undefined;
+  const hash = cleanAdminEnvValue(process.env.TOOOLVIBES_ADMIN_PASSWORD_HASH);
+  return hash?.startsWith("$2") ? hash : undefined;
 }
 
 function getLegacyAdminPassword(): string | undefined {
-  return process.env.TOOOLVIBES_ADMIN_PASSWORD?.trim() || undefined;
+  return cleanAdminEnvValue(process.env.TOOOLVIBES_ADMIN_PASSWORD);
 }
 
 function getSessionSecret(): string {
-  const secret = process.env.TOOOLVIBES_SESSION_SECRET?.trim();
+  const secret = cleanAdminEnvValue(process.env.TOOOLVIBES_SESSION_SECRET);
   if (secret) return secret;
   const hash = getAdminPasswordHash() || getLegacyAdminPassword() || "fallback-dev-secret";
   return hash;

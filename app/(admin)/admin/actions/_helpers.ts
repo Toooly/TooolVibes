@@ -10,24 +10,43 @@ const MAX_LOGIN_ATTEMPTS = 5;
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
 
 export async function isLoginRateLimited(): Promise<boolean> {
-  const headersList = await headers();
-  const ip =
-    headersList.get("cf-connecting-ip") ??
-    headersList.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "unknown";
-
+  const key = await getLoginAttemptKey();
+  const attempt = loginAttempts.get(key);
   const now = Date.now();
-  const attempt = loginAttempts.get(ip);
 
   if (!attempt || now > attempt.resetAt) {
-    loginAttempts.set(ip, { count: 1, resetAt: now + LOGIN_WINDOW_MS });
+    loginAttempts.delete(key);
     return false;
   }
 
-  if (attempt.count >= MAX_LOGIN_ATTEMPTS) return true;
+  return attempt.count >= MAX_LOGIN_ATTEMPTS;
+}
+
+async function getLoginAttemptKey() {
+  const headersList = await headers();
+  return (
+    headersList.get("cf-connecting-ip") ??
+    headersList.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown"
+  );
+}
+
+export async function recordFailedLoginAttempt(): Promise<void> {
+  const key = await getLoginAttemptKey();
+  const now = Date.now();
+  const attempt = loginAttempts.get(key);
+
+  if (!attempt || now > attempt.resetAt) {
+    loginAttempts.set(key, { count: 1, resetAt: now + LOGIN_WINDOW_MS });
+    return;
+  }
 
   attempt.count++;
-  return false;
+}
+
+export async function clearLoginAttempts(): Promise<void> {
+  const key = await getLoginAttemptKey();
+  loginAttempts.delete(key);
 }
 
 export function isValidUuid(value: string): boolean {

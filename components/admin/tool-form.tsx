@@ -15,6 +15,7 @@ import {
 type ToolFormProps = {
   action: (state: ToolFormState, formData: FormData) => Promise<ToolFormState>;
   initialValues?: Partial<ToolFormValues>;
+  sourceRequestId?: string;
   submitLabel: string;
   disabled?: boolean;
 };
@@ -104,6 +105,7 @@ function ToggleCard({
 export function ToolForm({
   action,
   initialValues,
+  sourceRequestId,
   submitLabel,
   disabled = false,
 }: ToolFormProps) {
@@ -116,6 +118,10 @@ export function ToolForm({
 
   return (
     <form action={formAction} className="space-y-8">
+      {sourceRequestId ? (
+        <input type="hidden" name="source_request_id" value={sourceRequestId} />
+      ) : null}
+
       {state.status === "error" && state.message ? (
         <div
           className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"

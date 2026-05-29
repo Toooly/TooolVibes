@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { requireAdminSession } from "@/lib/admin/session";
 import { updateSuggestionStatus, deleteSuggestion } from "@/lib/admin/suggestion-mutations";
 import { getSuggestionsRuntime } from "@/lib/admin/suggestion-queries";
+import { sendToolRequestDecisionEmail } from "@/lib/email/resend";
 import type { ToolRequestStatus } from "@/lib/types/tool-request";
 import { isValidUuid } from "./_helpers";
 
@@ -25,7 +26,15 @@ export async function updateSuggestionStatusAction(formData: FormData) {
   if (!validStatuses.includes(status)) return;
 
   try {
-    await updateSuggestionStatus(id, status, adminNotes || undefined);
+    const previous = runtime.suggestions.find((suggestion) => suggestion.id === id);
+    const updated = await updateSuggestionStatus(id, status, adminNotes || undefined);
+
+    if (
+      (status === "approved" || status === "rejected") &&
+      previous?.status !== status
+    ) {
+      await sendToolRequestDecisionEmail(updated, status);
+    }
   } catch {
     redirect("/admin/suggestions?status=error");
   }

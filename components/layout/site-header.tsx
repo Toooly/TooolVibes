@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LockKeyhole } from "lucide-react";
 
 import { DirectoryHeaderSearch } from "@/components/directory/directory-header-search";
 import { SoundToggleButton } from "@/components/app/sound-toggle-button";
@@ -15,6 +16,7 @@ const primaryNav = [
   { href: "/archivio", label: "Catalogo" },
   { href: "/product-hunt", label: "Radar live" },
   { href: "/wishlist", label: "Suggerisci" },
+  { href: "/affiliati", label: "Affiliati" },
   { href: "/shop", label: "Shop" },
   { href: "/community", label: "Community" },
 ];
@@ -99,12 +101,18 @@ export function SiteHeader() {
           <div className="hidden shrink-0 items-center gap-2 lg:flex">
             <SoundToggleButton className="hidden xl:inline-flex" />
             <Link
-              href="/account"
-              className="premium-button premium-button-subtle hidden min-h-10 items-center rounded-full px-4 py-2 text-sm font-semibold 2xl:inline-flex"
+              href="/admin/login"
+              className="premium-button premium-button-subtle hidden min-h-10 items-center rounded-full px-3.5 py-2 text-sm font-semibold xl:inline-flex 2xl:px-4"
             >
-              Login
+              <LockKeyhole className="size-4" aria-hidden="true" />
+              Admin
             </Link>
-            <PremiumLink href="/wishlist" size="sm" tone="premium" className="px-4 shadow-[0_16px_42px_rgba(124,58,237,0.24)]">
+            <PremiumLink
+              href="/wishlist"
+              size="sm"
+              tone="premium"
+              className="hidden px-4 shadow-[0_16px_42px_rgba(124,58,237,0.24)] 2xl:inline-flex"
+            >
               Suggerisci
             </PremiumLink>
           </div>
@@ -173,10 +181,10 @@ export function SiteHeader() {
                 Suggerisci un tool
               </PremiumLink>
               <Link
-                href="/account"
+                href="/admin/login"
                 className="premium-button premium-button-subtle rounded-full px-4 py-3 text-center text-sm font-semibold"
               >
-                Login
+                Login amministratore
               </Link>
             </div>
           </div>

@@ -42,7 +42,7 @@ function markIntroPlayed() {
 
 export function SiteBrandIntro() {
   const pathname = usePathname();
-  const [phase, setPhase] = useState<"hidden" | "active" | "leaving">("active");
+  const [phase, setPhase] = useState<"hidden" | "active" | "leaving">("hidden");
   const introCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const timersRef = useRef<number[]>([]);
 

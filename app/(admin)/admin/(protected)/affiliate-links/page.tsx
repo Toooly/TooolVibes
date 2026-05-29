@@ -50,10 +50,16 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
           <div className="flex flex-wrap items-start justify-between gap-4">
             <SectionHeading
               eyebrow="Affiliate links"
-              title="Gestione link di affiliazione"
-              description="Crea e gestisci link affiliati per i tool del catalogo. I parametri UTM vengono applicati automaticamente al link di destinazione."
+              title="Link affiliati dei tool"
+              description="Questa sezione gestisce i link outbound dei tool nel catalogo. Le candidature degli affiliati esterni vivono invece nel programma affiliati."
             />
             <div className="flex flex-wrap gap-3">
+              <Link
+                href="/admin/affiliates"
+                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
+              >
+                Programma affiliati
+              </Link>
               <Link
                 href="/admin/affiliate-links/new"
                 className="button-shell button-primary rounded-full px-5 py-3 text-sm font-semibold text-white"

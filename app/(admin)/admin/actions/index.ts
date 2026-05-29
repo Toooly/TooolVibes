@@ -17,6 +17,10 @@ export {
   deleteAffiliateLinkAction,
 } from "./affiliates";
 export {
+  updateAffiliateRequestAction,
+  deleteAffiliateRequestAction,
+} from "./affiliate-requests";
+export {
   createCollectionFormAction,
   updateCollectionFormAction,
   importMockCollectionsAction,

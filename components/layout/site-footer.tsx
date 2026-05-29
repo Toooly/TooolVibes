@@ -9,10 +9,11 @@ const footerNav = [
   { href: "/archivio", label: "Catalogo" },
   { href: "/tags", label: "Categorie" },
   { href: "/wishlist", label: "Suggerisci" },
+  { href: "/affiliati", label: "Affiliati" },
   { href: "/product-hunt", label: "Product Hunt" },
   { href: "/community", label: "Community" },
   { href: "/shop", label: "Shop Digitale" },
-  { href: "/account", label: "Login" },
+  { href: "/admin/login", label: "Login amministratore" },
 ];
 
 const categoryNav = [
@@ -54,6 +55,9 @@ export function SiteFooter() {
             <div className="mt-5 hidden flex-col gap-3 sm:flex sm:flex-row">
               <PremiumLink href="/wishlist" tone="secondary" size="sm">
                 Suggerisci un tool
+              </PremiumLink>
+              <PremiumLink href="/affiliati" tone="ghost" size="sm">
+                Diventa affiliato
               </PremiumLink>
               <PremiumLink href={siteConfig.shopUrl} tone="ghost" size="sm" external>
                 Apri il Digital Shop
@@ -146,6 +150,9 @@ export function SiteFooter() {
             </Link>
             <Link href="/wishlist" className="animated-link text-white/50 hover:text-white">
               Suggerisci
+            </Link>
+            <Link href="/affiliati" className="animated-link text-white/50 hover:text-white">
+              Affiliati
             </Link>
             <Link href="/archivio" className="animated-link text-white/50 hover:text-white">
               Archivio

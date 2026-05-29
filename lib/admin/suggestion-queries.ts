@@ -2,7 +2,10 @@ import "server-only";
 
 import { cache } from "react";
 
-import { getAdminToolRequestsFromSupabase } from "@/lib/supabase/suggestion-repository";
+import {
+  getAdminToolRequestsFromSupabase,
+  getToolRequestByIdFromSupabase,
+} from "@/lib/supabase/suggestion-repository";
 import { isSupabaseAdminEnabled } from "@/lib/admin/tool-queries";
 import type { ToolRequestRecord } from "@/lib/types/tool-request";
 
@@ -49,4 +52,9 @@ export const getSuggestionsRuntime = cache(async (): Promise<SuggestionRuntime> 
 export async function getAdminSuggestions() {
   const runtime = await getSuggestionsRuntime();
   return runtime.suggestions;
+}
+
+export async function getSuggestionById(id: string) {
+  if (!isSupabaseAdminEnabled()) return null;
+  return getToolRequestByIdFromSupabase(id);
 }
