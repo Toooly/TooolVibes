@@ -182,7 +182,22 @@ Queste vanno trattate come secret in Cloudflare:
 
 ```env
 SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
-TOOOLVIBES_ADMIN_PASSWORD=una-password-temp-solida
+TOOOLVIBES_ADMIN_EMAIL=admin@example.com
+TOOOLVIBES_ADMIN_PASSWORD_HASH=\$2a\$10\$...
+TOOOLVIBES_SESSION_SECRET=un-segreto-lungo-random
+```
+
+`TOOOLVIBES_ADMIN_PASSWORD_HASH` si genera con `npx tsx scripts/generate-admin-hash.ts <password>`.
+Nei file `.env*` usati da Next.js, escape ogni `$` dell'hash bcrypt come `\$`; nei secret Cloudflare incolla invece l'hash normale.
+`TOOOLVIBES_ADMIN_PASSWORD` esiste ancora come fallback legacy server-side, ma in produzione usa l'hash bcrypt.
+Per diagnosticare temporaneamente il login senza stampare password puoi impostare `TOOOLVIBES_AUTH_DEBUG=1`.
+
+Esempio con Wrangler:
+
+```bash
+npx wrangler secret put TOOOLVIBES_ADMIN_EMAIL
+npx wrangler secret put TOOOLVIBES_ADMIN_PASSWORD_HASH
+npx wrangler secret put TOOOLVIBES_SESSION_SECRET
 ```
 
 #### Opzionale per forzare la source collections
@@ -262,7 +277,7 @@ Dopo il primo deploy controlla subito:
 1. home, archivio, collection e tool profile
 2. immagini remote (`images.unsplash.com`)
 3. `/account` e la route `/auth/callback`
-4. `/admin/login` solo se hai impostato `TOOOLVIBES_ADMIN_PASSWORD`
+4. `/admin/login` solo se hai impostato `TOOOLVIBES_ADMIN_EMAIL` e `TOOOLVIBES_ADMIN_PASSWORD_HASH`
 5. se usi Supabase Auth, aggiungi in Supabase:
    - `https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev/auth/callback`
    - il dominio custom equivalente, se presente
@@ -308,7 +323,9 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
-TOOOLVIBES_ADMIN_PASSWORD=una-password-temporanea
+TOOOLVIBES_ADMIN_EMAIL=admin@example.com
+TOOOLVIBES_ADMIN_PASSWORD_HASH=\$2a\$10\$...
+TOOOLVIBES_SESSION_SECRET=un-segreto-lungo-random
 TOOOLVIBES_COLLECTIONS_SOURCE=auto
 ```
 
@@ -378,7 +395,11 @@ SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
 - `NEXT_PUBLIC_SUPABASE_URL`: URL del progetto Supabase, usato dal layer pubblico read-only.
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: chiave anon pubblica, usata solo per leggere i tool pubblicati.
 - `SUPABASE_SERVICE_ROLE_KEY`: chiave server-side per mutazioni admin e persistenza remota della workspace.
-- `TOOOLVIBES_ADMIN_PASSWORD`: password temporanea per il gate `/admin`.
+- `TOOOLVIBES_ADMIN_EMAIL`: email amministratore accettata dal gate `/admin`.
+- `TOOOLVIBES_ADMIN_PASSWORD_HASH`: hash bcrypt della password admin, server-side.
+- `TOOOLVIBES_ADMIN_PASSWORD`: fallback legacy server-side, ignorato se l'hash bcrypt e` presente.
+- `TOOOLVIBES_SESSION_SECRET`: segreto opzionale per firmare il cookie HTTP-only `tooolvibes_admin`.
+- `TOOOLVIBES_AUTH_DEBUG`: opzionale, usa `1` solo temporaneamente per log server-side sicuri del login.
 - `NEXT_PUBLIC_SITE_URL`: URL locale dell'app, utile per metadata e ambiente locale coerente.
 - `TOOOLVIBES_COLLECTIONS_SOURCE`: controlla la source delle collection (`auto`, `mock`, `content`, `supabase`). In `auto`, Supabase prevale sugli slug gia` migrati e le source locali restano fallback per il resto.
 

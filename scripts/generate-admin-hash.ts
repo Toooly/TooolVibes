@@ -10,3 +10,5 @@ if (!password) {
 const hash = bcrypt.hashSync(password, 10);
 console.log("Password hash (set as TOOOLVIBES_ADMIN_PASSWORD_HASH):");
 console.log(hash);
+console.log("Escaped .env value for Next.js local env files:");
+console.log(hash.replace(/\$/g, "\\$"));

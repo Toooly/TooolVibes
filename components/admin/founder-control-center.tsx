@@ -1,4 +1,3 @@
-import { logoutAdmin } from "@/app/(admin)/admin/actions/auth";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { PremiumLink } from "@/components/ui/premium";
 import type { AdminCollectionsRuntime } from "@/lib/admin/collection-queries";
@@ -99,7 +98,7 @@ function QuickLink({
 
 function LogoutButton({ compact = false }: { compact?: boolean }) {
   return (
-    <form action={logoutAdmin}>
+    <form action="/api/admin/logout" method="post">
       <button
         type="submit"
         className={`premium-button premium-button-ghost border-white/14 bg-white/8 font-semibold text-white/86 hover:bg-white/12 ${compact ? "px-3.5 py-2 text-[0.78rem]" : "px-4 py-2.5 text-sm"}`}

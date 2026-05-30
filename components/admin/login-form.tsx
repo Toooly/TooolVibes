@@ -4,8 +4,6 @@ import { KeyRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 
-import { loginAdmin } from "@/app/(admin)/admin/actions/auth";
-
 type LoginFormProps = {
   hasError: boolean;
 };
@@ -34,7 +32,12 @@ export function LoginForm({ hasError }: LoginFormProps) {
   }, [hasError]);
 
   return (
-    <form action={loginAdmin} className="mt-7 space-y-4" onChange={() => setHasEditedAfterError(true)}>
+    <form
+      action="/api/admin/login"
+      method="post"
+      className="mt-7 space-y-4"
+      onChange={() => setHasEditedAfterError(true)}
+    >
       <label className="block">
         <span className="mb-2 block text-sm font-semibold text-white/86">Email</span>
         <input

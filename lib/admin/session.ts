@@ -6,6 +6,17 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 
 export const adminCookieName = "tooolvibes_admin";
+export const adminSessionMaxAgeSeconds = 60 * 60 * 8;
+
+export type AdminCredentialFailureReason =
+  | "missing_email_env"
+  | "email_mismatch"
+  | "missing_password_env"
+  | "password_mismatch";
+
+export type AdminCredentialVerification =
+  | { ok: true }
+  | { ok: false; reason: AdminCredentialFailureReason };
 
 function cleanAdminEnvValue(value: string | undefined): string | undefined {
   const normalized = value?.trim();
@@ -18,7 +29,10 @@ function getAdminEmail(): string | undefined {
 }
 
 function getAdminPasswordHash(): string | undefined {
-  const hash = cleanAdminEnvValue(process.env.TOOOLVIBES_ADMIN_PASSWORD_HASH);
+  const hash = cleanAdminEnvValue(process.env.TOOOLVIBES_ADMIN_PASSWORD_HASH)?.replace(
+    /\\\$/g,
+    "$",
+  );
   return hash?.startsWith("$2") ? hash : undefined;
 }
 
@@ -55,33 +69,77 @@ function verifySessionToken(token: string): boolean {
   if (!issuedAtStr) return false;
   const issuedAt = parseInt(issuedAtStr, 36);
   if (Number.isNaN(issuedAt)) return false;
-  const maxAgeMs = 8 * 60 * 60 * 1000;
+  const maxAgeMs = adminSessionMaxAgeSeconds * 1000;
   if (Date.now() - issuedAt > maxAgeMs) return false;
 
   return true;
 }
 
-export async function verifyAdminCredentials(email: string, password: string): Promise<boolean> {
+export function getAdminAuthDiagnostics() {
+  return {
+    adminEmailPresent: Boolean(getAdminEmail()),
+    adminPasswordHashPresent: Boolean(getAdminPasswordHash()),
+    legacyAdminPasswordPresent: Boolean(getLegacyAdminPassword()),
+    sessionSecretPresent: Boolean(cleanAdminEnvValue(process.env.TOOOLVIBES_SESSION_SECRET)),
+  };
+}
+
+export function getAdminSessionCookieOptions(requestUrl?: string) {
+  const isHttps = requestUrl
+    ? new URL(requestUrl).protocol === "https:"
+    : process.env.NODE_ENV === "production";
+
+  return {
+    httpOnly: true,
+    sameSite: "lax" as const,
+    secure: isHttps,
+    path: "/",
+    maxAge: adminSessionMaxAgeSeconds,
+  };
+}
+
+export function getExpiredAdminSessionCookieOptions(requestUrl?: string) {
+  return {
+    ...getAdminSessionCookieOptions(requestUrl),
+    maxAge: 0,
+  };
+}
+
+export async function verifyAdminCredentialsDetailed(
+  email: string,
+  password: string,
+): Promise<AdminCredentialVerification> {
   const configuredEmail = getAdminEmail();
   const configuredHash = getAdminPasswordHash();
   const legacyPassword = getLegacyAdminPassword();
 
-  if (!configuredEmail) return false;
+  if (!configuredEmail) return { ok: false, reason: "missing_email_env" };
 
-  if (email.toLowerCase().trim() !== configuredEmail.toLowerCase().trim()) return false;
+  if (email.toLowerCase().trim() !== configuredEmail.toLowerCase().trim()) {
+    return { ok: false, reason: "email_mismatch" };
+  }
 
   if (configuredHash) {
-    return bcrypt.compare(password, configuredHash);
+    const matches = await bcrypt.compare(password, configuredHash);
+    return matches ? { ok: true } : { ok: false, reason: "password_mismatch" };
   }
 
   if (legacyPassword) {
     const expected = Buffer.from(legacyPassword);
     const received = Buffer.from(password);
-    if (expected.length !== received.length) return false;
-    return timingSafeEqual(expected, received);
+    if (expected.length !== received.length) {
+      return { ok: false, reason: "password_mismatch" };
+    }
+    return timingSafeEqual(expected, received)
+      ? { ok: true }
+      : { ok: false, reason: "password_mismatch" };
   }
 
-  return false;
+  return { ok: false, reason: "missing_password_env" };
+}
+
+export async function verifyAdminCredentials(email: string, password: string): Promise<boolean> {
+  return (await verifyAdminCredentialsDetailed(email, password)).ok;
 }
 
 export async function createAdminSession(): Promise<string> {
