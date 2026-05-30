@@ -12,7 +12,7 @@ TooolVibes e` una web app editoriale costruita con Next.js App Router, TypeScrip
 
 ## Architettura
 
-### Principi veri
+### Principi veri 1
 
 - Il frontend pubblico legge da un unico data access layer in sola lettura.
 - Le scritture admin sono confinate a moduli server-side.

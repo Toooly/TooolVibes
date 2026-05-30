@@ -76,9 +76,14 @@ function verifySessionToken(token: string): boolean {
 }
 
 export function getAdminAuthDiagnostics() {
+  const rawHash = cleanAdminEnvValue(process.env.TOOOLVIBES_ADMIN_PASSWORD_HASH)?.replace(/\\\$/g, "$");
+  const hash = getAdminPasswordHash();
+
   return {
     adminEmailPresent: Boolean(getAdminEmail()),
-    adminPasswordHashPresent: Boolean(getAdminPasswordHash()),
+    adminPasswordHashPresent: Boolean(hash),
+    adminPasswordHashLength: rawHash ? rawHash.length : 0,
+    adminPasswordHashLooksValid: Boolean(rawHash?.startsWith("$2")),
     legacyAdminPasswordPresent: Boolean(getLegacyAdminPassword()),
     sessionSecretPresent: Boolean(cleanAdminEnvValue(process.env.TOOOLVIBES_SESSION_SECRET)),
   };
@@ -112,6 +117,17 @@ export async function verifyAdminCredentialsDetailed(
   const configuredEmail = getAdminEmail();
   const configuredHash = getAdminPasswordHash();
   const legacyPassword = getLegacyAdminPassword();
+
+  if (process.env.TOOOLVIBES_AUTH_DEBUG === "1") {
+    console.info("[admin-auth] verify called", {
+      emailReceivedLength: email?.length ?? 0,
+      configuredEmailPresent: Boolean(configuredEmail),
+      configuredEmailLength: configuredEmail ? configuredEmail.length : 0,
+      configuredHashPresent: Boolean(configuredHash),
+      configuredHashLength: configuredHash ? configuredHash.length : 0,
+      legacyPasswordPresent: Boolean(legacyPassword),
+    });
+  }
 
   if (!configuredEmail) return { ok: false, reason: "missing_email_env" };
 
