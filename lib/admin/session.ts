@@ -78,13 +78,15 @@ function verifySessionToken(token: string): boolean {
 export function getAdminAuthDiagnostics() {
   const rawHash = cleanAdminEnvValue(process.env.TOOOLVIBES_ADMIN_PASSWORD_HASH)?.replace(/\\\$/g, "$");
   const hash = getAdminPasswordHash();
+  const legacy = getLegacyAdminPassword();
 
   return {
     adminEmailPresent: Boolean(getAdminEmail()),
     adminPasswordHashPresent: Boolean(hash),
     adminPasswordHashLength: rawHash ? rawHash.length : 0,
     adminPasswordHashLooksValid: Boolean(rawHash?.startsWith("$2")),
-    legacyAdminPasswordPresent: Boolean(getLegacyAdminPassword()),
+    legacyAdminPasswordPresent: Boolean(legacy),
+    legacyAdminPasswordLength: legacy ? legacy.length : 0,
     sessionSecretPresent: Boolean(cleanAdminEnvValue(process.env.TOOOLVIBES_SESSION_SECRET)),
   };
 }
@@ -135,11 +137,15 @@ export async function verifyAdminCredentialsDetailed(
     return { ok: false, reason: "email_mismatch" };
   }
 
+  // Primary: try bcrypt hash if present
   if (configuredHash) {
     const matches = await bcrypt.compare(password, configuredHash);
-    return matches ? { ok: true } : { ok: false, reason: "password_mismatch" };
+    if (matches) return { ok: true };
+    // If hash is present but fails, we still try legacy as safety net
+    // (helps during migration or if the wrong hash was pasted in Cloudflare)
   }
 
+  // Fallback: legacy plain password (always attempted if hash didn't match or wasn't present)
   if (legacyPassword) {
     const expected = Buffer.from(legacyPassword);
     const received = Buffer.from(password);
@@ -149,6 +155,11 @@ export async function verifyAdminCredentialsDetailed(
     return timingSafeEqual(expected, received)
       ? { ok: true }
       : { ok: false, reason: "password_mismatch" };
+  }
+
+  // If we had a hash but it didn't match, and no legacy password is set
+  if (configuredHash) {
+    return { ok: false, reason: "password_mismatch" };
   }
 
   return { ok: false, reason: "missing_password_env" };

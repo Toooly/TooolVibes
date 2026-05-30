@@ -272,24 +272,66 @@ Rigenera i tipi delle binding Cloudflare se cambi `wrangler.jsonc`.
 
 **⚠️ IMPORTANTE - Segreti Admin e Build Git (causa principale di problemi ricorrenti)**
 
-Quando usi Workers collegato a Git (build automatiche su push), i secret **devono** essere configurati in **due posti**:
+**Il tuo problema attuale ("ho messo tutto, funziona, poi faccio una nuova build e i secret spariscono") è il classico comportamento di Cloudflare Workers Builds collegato a Git.**
 
-- **Worker → Settings → Variables and Secrets** (runtime del Worker live)
-- **Build configuration** (nella sezione del collegamento Git / "Build variables and secrets")
+Quando fai un deploy da Git (o `npm run deploy`), Cloudflare **ricrea da zero** un nuovo Worker usando la definizione della Build Configuration. I secret che aggiungi manualmente dopo il deploy (nella pagina normale del Worker) **non vengono salvati** nella definizione della build e quindi spariscono al deploy successivo.
 
-Se li metti solo nel primo posto, ogni nuovo deploy da Git o `npm run deploy` li perde o li resetta.
+### Soluzione stabile: dove mettere i secret in modo che NON spariscano mai più
 
-Devi mettere almeno questi nella sezione **Build variables and secrets** (come Secret, non Plaintext):
+Devi aggiungere i secret **dentro la Build Configuration** collegata al repository (non solo come secret runtime).
 
-- `TOOOLVIBES_ADMIN_EMAIL`
-- `TOOOLVIBES_ADMIN_PASSWORD_HASH` (l'hash bcrypt completo che inizia con `$2b$...`)
-- `TOOOLVIBES_ADMIN_PASSWORD` (password in chiaro come fallback)
-- `TOOOLVIBES_SESSION_SECRET`
-- `SUPABASE_SERVICE_ROLE_KEY`
+#### Passi precisi (2026 UI)
 
-Solo dopo averli messi in **entrambi** i posti, i deploy successivi manterranno i secret e il login admin funzionerà stabilmente.
+1. Vai su Cloudflare Dashboard → **Workers & Pages**
+2. Clicca sul progetto **tooolvibes**
+3. Nel menu laterale (o in alto) clicca su **Builds**
+4. Nella lista delle build/configurazioni, trova quella collegata al tuo repository Git e clicca su di essa (o su "Build configuration" / "Edit build settings").
+5. **Importante**: Non andare su "Variables and Secrets" del Worker normale. Devi stare dentro la configurazione della build Git.
+6. Cerca e clicca su **Build variables and secrets** (o "Environment variables" all'interno della build config).
+7. Aggiungi qui tutti i secret critici **come tipo Secret**:
 
-`TOOOLVIBES_AUTH_DEBUG` puoi lasciarlo solo quando ti serve per debug.
+   - `TOOOLVIBES_ADMIN_EMAIL`
+   - `TOOOLVIBES_ADMIN_PASSWORD_HASH`
+   - `TOOOLVIBES_ADMIN_PASSWORD`
+   - `TOOOLVIBES_SESSION_SECRET`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+
+8. Salva la Build configuration.
+
+9. Fai un nuovo deploy (`git push` o `npm run deploy`).
+
+Da questo momento, **ogni build futura** (anche quelle automatiche da Git) dovrebbe vedere questi secret.
+
+### Verifica che hai modificato il posto giusto
+
+- Se dopo un nuovo deploy i secret spariscono di nuovo → hai modificato il posto sbagliato (probabilmente solo i secret runtime del Worker).
+- Il posto corretto è dentro la **Build configuration** associata al Git repo, non nella pagina "Settings → Variables and Secrets" del Worker.
+
+Se nella UI non trovi più "Builds" o la sezione è diversa, cerca nel Worker:
+- **Deployments** tab → **Builds** → seleziona la build configuration → modifica da lì.
+
+**Helper locale**
+
+Nel repository esiste lo script:
+
+```powershell
+.\scripts\cloudflare-admin-secrets-reminder.ps1
+```
+
+Lancialo prima di ogni deploy importante. Ti ricorda esattamente dove mettere i secret in modo che non spariscano.
+
+---
+
+**Soluzione ancora più robusta (consigliata per il futuro)**
+
+Molti team che usano questo stack finiscono per gestire i secret tramite CI invece che manualmente nella dashboard:
+
+- Usare GitHub Actions + `wrangler secret put` (o Cloudflare API) durante il deploy.
+- I secret veri vengono salvati come **GitHub Secrets** (o simili) e iniettati solo al momento del deploy.
+
+Se vuoi, posso prepararti un esempio di GitHub Action minimal per fare questo in modo automatico.
+
+Per ora la cosa più importante è assicurarti di aver aggiunto i secret **dentro la Build configuration** (non solo nel Worker runtime).
 
 ### 6. Checklist post-deploy
 

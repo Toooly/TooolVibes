@@ -41,6 +41,8 @@ function logLoginFailure(
     redirect: string;
   },
 ) {
+  // Always log rich diagnostics on failure — this is critical for debugging
+  // Cloudflare secret / build configuration issues.
   console.warn("[admin-auth] login failed", {
     reason,
     ...details,
@@ -54,6 +56,9 @@ function logLoginSuccess() {
       redirect: "/admin",
       ...getAdminAuthDiagnostics(),
     });
+  } else {
+    // Light success log even without debug (helps confirm the worker saw the secrets)
+    console.info("[admin-auth] login succeeded (secrets present)");
   }
 }
 
