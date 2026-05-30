@@ -148,23 +148,26 @@ export async function sendToolRequestDecisionEmail(
 
 export async function notifyAffiliateRequestSubmitted(request: AffiliateRequestRecord) {
   const adminEmail = getAdminNotificationEmail();
+  const hasPublicReplyEmail = !request.email.endsWith("@tooolvibes.local");
 
   await sendEmail({
     to: adminEmail ? [adminEmail] : [],
     subject: `Nuova richiesta affiliato: ${request.first_name} ${request.last_name}`,
-    replyTo: request.email,
+    replyTo: hasPublicReplyEmail ? request.email : undefined,
     html: `
       <h1>Nuova richiesta affiliato</h1>
       <p><strong>${escapeHtml(request.first_name)} ${escapeHtml(request.last_name)}</strong></p>
-      <p>Email: ${escapeHtml(request.email)}</p>
+      <p>Email: ${hasPublicReplyEmail ? escapeHtml(request.email) : "Non lasciata"}</p>
       ${request.brand_name ? `<p>Brand: ${escapeHtml(request.brand_name)}</p>` : ""}
       ${request.website_url ? `<p>Sito: <a href="${escapeHtml(request.website_url)}">${escapeHtml(request.website_url)}</a></p>` : ""}
       ${paragraph(request.audience)}
       ${paragraph(request.channels)}
       ${paragraph(request.message)}
     `,
-    text: `Nuova richiesta affiliato da ${request.first_name} ${request.last_name}: ${request.email}`,
+    text: `Nuova richiesta affiliato da ${request.first_name} ${request.last_name}: ${hasPublicReplyEmail ? request.email : "email non lasciata"}`,
   });
+
+  if (!hasPublicReplyEmail) return;
 
   await sendEmail({
     to: request.email,

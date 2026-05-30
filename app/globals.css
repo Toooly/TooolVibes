@@ -4300,7 +4300,32 @@ img {
 
   .title-accent {
     height: 1px;
-    background: linear-gradient(90deg, rgba(255, 200, 61, 0.92), rgba(99, 50, 255, 0.68), rgba(68, 220, 255, 0.46), transparent);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 200, 61, 0.92),
+      rgba(99, 50, 255, 0.68),
+      rgba(68, 220, 255, 0.64),
+      rgba(255, 200, 61, 0.72),
+      transparent
+    );
+    background-size: 220% 100%;
+    animation: title-accent-flow 5.8s linear infinite;
+  }
+
+  @keyframes title-accent-flow {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    100% {
+      background-position: 220% 50%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .title-accent {
+      animation: none;
+    }
   }
 
   .soft-divider {

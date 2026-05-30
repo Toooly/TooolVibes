@@ -12,6 +12,12 @@ type FormState = {
   email: string;
   brandName: string;
   websiteUrl: string;
+  instagram: string;
+  facebook: string;
+  tiktok: string;
+  xProfile: string;
+  linkedin: string;
+  youtube: string;
   audience: string;
   channels: string;
   message: string;
@@ -25,6 +31,12 @@ const initialForm: FormState = {
   email: "",
   brandName: "",
   websiteUrl: "",
+  instagram: "",
+  facebook: "",
+  tiktok: "",
+  xProfile: "",
+  linkedin: "",
+  youtube: "",
   audience: "",
   channels: "",
   message: "",
@@ -48,11 +60,14 @@ function isValidUrl(value: string) {
 function validateForm(form: FormState): FormErrors {
   const errors: FormErrors = {};
 
-  if (form.firstName.trim().length < 2) errors.firstName = "Inserisci il nome.";
-  if (form.lastName.trim().length < 2) errors.lastName = "Inserisci il cognome.";
-  if (!isValidEmail(form.email.trim())) errors.email = "Inserisci una email valida.";
+  if (form.email.trim() && !isValidEmail(form.email.trim())) {
+    errors.email = "Inserisci una email valida oppure lascia vuoto.";
+  }
   if (!isValidUrl(form.websiteUrl.trim())) {
     errors.websiteUrl = "Inserisci un URL valido con https:// oppure lascia vuoto.";
+  }
+  if (form.message.trim().length < 12) {
+    errors.message = "Scrivi almeno due righe sul perche vuoi diventare affiliato.";
   }
 
   return errors;
@@ -143,8 +158,8 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               value={form.firstName}
               onChange={(event) => updateField("firstName", event.target.value)}
               className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+              placeholder="Opzionale"
               disabled={isSubmitting}
-              required
             />
             <FieldError message={errors.firstName} />
           </label>
@@ -155,8 +170,8 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               value={form.lastName}
               onChange={(event) => updateField("lastName", event.target.value)}
               className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+              placeholder="Opzionale"
               disabled={isSubmitting}
-              required
             />
             <FieldError message={errors.lastName} />
           </label>
@@ -169,8 +184,8 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               type="email"
               inputMode="email"
               className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+              placeholder="Opzionale, se vuoi essere ricontattato via email"
               disabled={isSubmitting}
-              required
             />
             <FieldError message={errors.email} />
           </label>
@@ -187,7 +202,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
           </label>
 
           <label className="block md:col-span-2">
-            <span className={labelClass}>Sito o profilo</span>
+            <span className={labelClass}>Sito</span>
             <input
               value={form.websiteUrl}
               onChange={(event) => updateField("websiteUrl", event.target.value)}
@@ -199,6 +214,28 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             />
             <FieldError message={errors.websiteUrl} />
           </label>
+
+          <div className="grid gap-4 md:col-span-2 md:grid-cols-2">
+            {[
+              ["instagram", "Instagram", "@profilo o URL"],
+              ["facebook", "Facebook", "Pagina, gruppo o profilo"],
+              ["tiktok", "TikTok", "@profilo o URL"],
+              ["xProfile", "X / Twitter", "@profilo o URL"],
+              ["linkedin", "LinkedIn", "Profilo o pagina"],
+              ["youtube", "YouTube", "Canale o URL"],
+            ].map(([key, label, placeholder]) => (
+              <label key={key} className="block">
+                <span className={labelClass}>{label}</span>
+                <input
+                  value={form[key as keyof FormState]}
+                  onChange={(event) => updateField(key as keyof FormState, event.target.value)}
+                  className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+                  placeholder={placeholder}
+                  disabled={isSubmitting}
+                />
+              </label>
+            ))}
+          </div>
 
           <label className="block md:col-span-2">
             <span className={labelClass}>Audience</span>
@@ -224,15 +261,17 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
           </label>
 
           <label className="block md:col-span-2">
-            <span className={labelClass}>Messaggio</span>
+            <span className={labelClass}>Messaggio obbligatorio</span>
             <textarea
               value={form.message}
               onChange={(event) => updateField("message", event.target.value)}
               rows={4}
               className={cn(inputClass, "mt-2 min-h-[8rem] resize-none border-white/14 bg-white/8 text-white")}
-              placeholder="Aggiungi dettagli utili sulla collaborazione."
+              placeholder="Raccontaci perche vorresti diventare affiliato e come presenteresti TooolVibes alla tua audience."
               disabled={isSubmitting}
+              required
             />
+            <FieldError message={errors.message} />
           </label>
         </div>
 
@@ -251,7 +290,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
 
         <div className="flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm leading-6 text-white/62">
-            Se la candidatura viene rifiutata, potrai inviarne una nuova dopo 30 giorni.
+            Nome, email e profili social sono opzionali. Il messaggio e il solo campo richiesto.
           </p>
           <PremiumButton type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
             {isSubmitting ? (

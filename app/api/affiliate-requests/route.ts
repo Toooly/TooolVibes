@@ -25,6 +25,14 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function getFallbackAffiliateEmail() {
+  return `affiliate-request+${Date.now()}@tooolvibes.local`;
+}
+
+function compactLines(lines: string[]) {
+  return lines.filter(Boolean).join("\n");
+}
+
 function addDays(dateIso: string, days: number) {
   const date = new Date(dateIso);
   date.setDate(date.getDate() + days);
@@ -32,13 +40,6 @@ function addDays(dateIso: string, days: number) {
 }
 
 export async function POST(request: Request) {
-  if (!isSupabaseAdminEnabled()) {
-    return NextResponse.json(
-      { message: "Supabase admin non configurato." },
-      { status: 503 },
-    );
-  }
-
   let body: unknown;
 
   try {
@@ -53,26 +54,55 @@ export async function POST(request: Request) {
   const email = asString(payload.email).toLowerCase();
   const brandName = asString(payload.brandName);
   const websiteUrl = asString(payload.websiteUrl);
+  const instagram = asString(payload.instagram);
+  const facebook = asString(payload.facebook);
+  const tiktok = asString(payload.tiktok);
+  const xProfile = asString(payload.xProfile);
+  const linkedin = asString(payload.linkedin);
+  const youtube = asString(payload.youtube);
   const audience = asString(payload.audience);
   const channels = asString(payload.channels);
   const message = asString(payload.message);
 
-  if (firstName.length < 2 || lastName.length < 2 || !isValidEmail(email)) {
+  if (message.length < 12) {
     return NextResponse.json(
-      { message: "Inserisci nome, cognome ed email validi." },
+      { message: "Scrivi un messaggio piu completo per inviare la candidatura." },
       { status: 422 },
     );
+  }
+
+  if (email && !isValidEmail(email)) {
+    return NextResponse.json({ message: "Email non valida." }, { status: 422 });
   }
 
   if (websiteUrl && !isValidHttpUrl(websiteUrl)) {
     return NextResponse.json({ message: "URL sito non valido." }, { status: 422 });
   }
 
+  if (!isSupabaseAdminEnabled()) {
+    return NextResponse.json(
+      { message: "Supabase admin non configurato." },
+      { status: 503 },
+    );
+  }
+
   const cooldownSince = new Date(Date.now() - cooldownDays * 24 * 60 * 60 * 1000).toISOString();
+  const socialChannels = compactLines([
+    channels ? `Canali: ${channels}` : "",
+    instagram ? `Instagram: ${instagram}` : "",
+    facebook ? `Facebook: ${facebook}` : "",
+    tiktok ? `TikTok: ${tiktok}` : "",
+    xProfile ? `X/Twitter: ${xProfile}` : "",
+    linkedin ? `LinkedIn: ${linkedin}` : "",
+    youtube ? `YouTube: ${youtube}` : "",
+  ]);
+  const storedEmail = email || getFallbackAffiliateEmail();
 
   try {
-    const recentRejected = await getRejectedAffiliateRequestCooldown(email, cooldownSince);
-    if (recentRejected?.rejected_at) {
+    const recentRejected = email
+      ? await getRejectedAffiliateRequestCooldown(email, cooldownSince)
+      : null;
+    if (email && recentRejected?.rejected_at) {
       return NextResponse.json(
         {
           message: "Hai gia ricevuto una risposta negativa da meno di 30 giorni.",
@@ -83,14 +113,14 @@ export async function POST(request: Request) {
     }
 
     const savedRequest = await createAffiliateRequestInSupabase({
-      first_name: firstName,
-      last_name: lastName,
-      email,
+      first_name: firstName || "Candidato",
+      last_name: lastName || "Affiliato",
+      email: storedEmail,
       brand_name: brandName || null,
       website_url: websiteUrl || null,
       audience: audience || null,
-      channels: channels || null,
-      message: message || null,
+      channels: socialChannels || null,
+      message,
     });
 
     await notifyAffiliateRequestSubmitted(savedRequest);

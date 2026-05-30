@@ -16,7 +16,7 @@ const primaryNav = [
   { href: "/archivio", label: "Catalogo" },
   { href: "/product-hunt", label: "Radar live" },
   { href: "/wishlist", label: "Suggerisci" },
-  { href: "/affiliati", label: "Affiliati" },
+  { href: "/affiliati", label: "Diventa affiliato" },
   { href: "/shop", label: "Shop" },
   { href: "/community", label: "Community" },
 ];
