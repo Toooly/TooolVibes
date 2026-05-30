@@ -223,7 +223,7 @@ PRODUCTHUNT_TOKEN=YOUR_PRODUCT_HUNT_DEVELOPER_TOKEN
 
 La home e la pagina `/product-hunt` mostrano un fallback pulito se le credenziali non sono presenti.
 
-Se usi Cloudflare Workers Builds con repo Git collegata, aggiungi queste chiavi anche nella sezione `Build Variables and secrets`, non solo nel runtime del Worker. I docs Cloudflare segnalano che il build di Next.js ha bisogno sia delle `NEXT_PUBLIC_*` sia delle env server-side per inlining e pagine statiche.
+**Se usi Cloudflare Workers Builds con repo Git collegata** (build automatiche), **devi** aggiungere le chiavi critiche (soprattutto quelle admin) anche nella sezione `Build Variables and secrets` del collegamento Git, **non solo** nel runtime del Worker. Altrimenti ogni nuovo push/reset dei deploy le fa sparire e il login admin smette di funzionare. Vedi la sezione "Collega il repo a Cloudflare" più avanti per i dettagli.
 
 ### 4. Comandi locali utili
 
@@ -269,6 +269,27 @@ Rigenera i tipi delle binding Cloudflare se cambi `wrangler.jsonc`.
 7. Non usare `npm run deploy:local` come deploy command Cloudflare: rilancerebbe build + deploy nello stesso step
 8. In `Build Variables and secrets` inserisci le env applicative richieste dal progetto
 9. Se usi un dominio custom, collega il dominio al Worker dopo il primo deploy
+
+**⚠️ IMPORTANTE - Segreti Admin e Build Git (causa principale di problemi ricorrenti)**
+
+Quando usi Workers collegato a Git (build automatiche su push), i secret **devono** essere configurati in **due posti**:
+
+- **Worker → Settings → Variables and Secrets** (runtime del Worker live)
+- **Build configuration** (nella sezione del collegamento Git / "Build variables and secrets")
+
+Se li metti solo nel primo posto, ogni nuovo deploy da Git o `npm run deploy` li perde o li resetta.
+
+Devi mettere almeno questi nella sezione **Build variables and secrets** (come Secret, non Plaintext):
+
+- `TOOOLVIBES_ADMIN_EMAIL`
+- `TOOOLVIBES_ADMIN_PASSWORD_HASH` (l'hash bcrypt completo che inizia con `$2b$...`)
+- `TOOOLVIBES_ADMIN_PASSWORD` (password in chiaro come fallback)
+- `TOOOLVIBES_SESSION_SECRET`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+Solo dopo averli messi in **entrambi** i posti, i deploy successivi manterranno i secret e il login admin funzionerà stabilmente.
+
+`TOOOLVIBES_AUTH_DEBUG` puoi lasciarlo solo quando ti serve per debug.
 
 ### 6. Checklist post-deploy
 
