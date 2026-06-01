@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { requireAdminSession } from "@/lib/admin/session";
-import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
+import {
+  ARTICLE_MEDIA_BUCKET,
+  ensureEditorialMediaBucket,
+} from "@/lib/supabase/article-storage-repository";
 
 const allowedMimeTypes = new Set([
   "image/jpeg",
@@ -54,10 +57,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const client = createAdminSupabaseClient();
+  const client = await ensureEditorialMediaBucket();
   const datePrefix = new Date().toISOString().slice(0, 10);
   const path = `${datePrefix}/${crypto.randomUUID()}-${safeFileName(file.name)}`;
-  const { error } = await client.storage.from("editorial-media").upload(path, file, {
+  const { error } = await client.storage.from(ARTICLE_MEDIA_BUCKET).upload(path, file, {
     cacheControl: "31536000",
     contentType: file.type,
     upsert: false,
@@ -70,7 +73,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data } = client.storage.from("editorial-media").getPublicUrl(path);
+  const { data } = client.storage.from(ARTICLE_MEDIA_BUCKET).getPublicUrl(path);
 
   return NextResponse.json({
     url: data.publicUrl,

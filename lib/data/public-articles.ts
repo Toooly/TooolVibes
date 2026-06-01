@@ -7,6 +7,7 @@ import {
   getPublishedArticlesFromSupabase,
   mapArticleToEditorialPost,
 } from "@/lib/supabase/article-repository";
+import { getPublishedArticlesFromArticleStorage } from "@/lib/supabase/article-storage-repository";
 import { isSupabasePublicEnabled } from "@/lib/supabase/public-client";
 import type { EditorialPostKind, EditorialPostRecord } from "@/lib/types/article";
 import type { ToolRecord } from "@/lib/types/tool";
@@ -389,7 +390,12 @@ async function loadAuthoredEditorialPosts(): Promise<EditorialPostRecord[]> {
     const articles = await getPublishedArticlesFromSupabase();
     return articles.map(mapArticleToEditorialPost);
   } catch {
-    return [];
+    try {
+      const articles = await getPublishedArticlesFromArticleStorage();
+      return articles.map(mapArticleToEditorialPost);
+    } catch {
+      return [];
+    }
   }
 }
 

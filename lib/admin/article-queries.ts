@@ -5,10 +5,15 @@ import { cache } from "react";
 import { loadLegacyEditorialPosts } from "@/lib/data/public-articles";
 import { getSupabaseAdminEnv } from "@/lib/supabase/env";
 import {
-  canAccessSupabaseArticlesAdmin,
   getAdminArticleByIdFromSupabase,
   getAdminArticlesFromSupabase,
 } from "@/lib/supabase/article-repository";
+import {
+  canAccessArticleStorageAdmin,
+  getArticleByIdFromArticleStorage,
+  getArticlesFromArticleStorage,
+} from "@/lib/supabase/article-storage-repository";
+import { getArticleWriteTarget, type ArticleWriteTarget } from "@/lib/supabase/article-target";
 import type { BlogArticleRecord, EditorialPostRecord } from "@/lib/types/article";
 
 export type AdminArticleRecord = BlogArticleRecord & {
@@ -20,11 +25,11 @@ export type AdminArticleRecord = BlogArticleRecord & {
 
 export type AdminArticlesRuntime = {
   articles: AdminArticleRecord[];
-  adminReadSource: "supabase" | "legacy" | "mixed" | "empty";
+  adminReadSource: "supabase" | "storage" | "legacy" | "mixed" | "empty";
   requestedAdminReadSource: "supabase" | "empty";
   readMessage: string;
   canWrite: boolean;
-  writeTarget: "supabase" | null;
+  writeTarget: ArticleWriteTarget | null;
   writeMessage: string;
   warnings: string[];
 };
@@ -79,11 +84,14 @@ function mapLegacyPostToAdminArticle(post: EditorialPostRecord): AdminArticleRec
   };
 }
 
-function mapCmsArticleToAdminArticle(article: BlogArticleRecord): AdminArticleRecord {
+function mapCmsArticleToAdminArticle(
+  article: BlogArticleRecord,
+  sourceLabel = "CMS blog",
+): AdminArticleRecord {
   return {
     ...article,
     admin_source: "cms",
-    admin_source_label: "CMS blog",
+    admin_source_label: sourceLabel,
     admin_can_edit: true,
     admin_can_mutate: true,
   };
@@ -93,7 +101,7 @@ function mergeAdminArticles(
   cmsArticles: BlogArticleRecord[],
   legacyPosts: EditorialPostRecord[],
 ) {
-  const cmsItems = cmsArticles.map(mapCmsArticleToAdminArticle);
+  const cmsItems = cmsArticles.map((article) => mapCmsArticleToAdminArticle(article));
   const cmsSlugs = new Set(cmsItems.map((article) => article.slug));
   const legacyItems = legacyPosts
     .filter((post) => !cmsSlugs.has(post.slug))
@@ -159,7 +167,7 @@ export const isSupabaseArticlesWriteEnabled = cache(async () => {
     return false;
   }
 
-  return canAccessSupabaseArticlesAdmin();
+  return Boolean(await getArticleWriteTarget());
 });
 
 export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRuntime> => {
@@ -178,7 +186,9 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
     });
   }
 
-  if (!(await canAccessSupabaseArticlesAdmin())) {
+  const writeTarget = await getArticleWriteTarget();
+
+  if (!writeTarget) {
     return buildFallbackRuntime({
       articles: legacyArticles,
       adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
@@ -186,9 +196,47 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
       readMessage:
         "Supabase admin e configurato ma il CMS blog non e raggiungibile: mostro il fallback legacy.",
       writeMessage:
-        "Scritture blog bloccate: applica la migration 0023_create_editorial_articles.sql, poi potrai creare e importare articoli.",
+        "Scritture blog non disponibili: controlla service role, storage e migration editorial_articles.",
       warnings: ["supabase-admin-read-failed"],
     });
+  }
+
+  if (writeTarget === "storage") {
+    try {
+      const storageArticles = await getArticlesFromArticleStorage();
+      const articles = mergeAdminArticles(storageArticles, legacyPosts);
+
+      return {
+        articles,
+        adminReadSource:
+          storageArticles.length > 0
+            ? (legacyPosts.length > 0 ? "mixed" : "storage")
+            : legacyArticles.length > 0
+              ? "legacy"
+              : "storage",
+        requestedAdminReadSource: "supabase",
+        readMessage:
+          "CMS blog attivo in modalita storage Supabase con articoli legacy importabili.",
+        canWrite: true,
+        writeTarget,
+        writeMessage:
+          "Salvataggi, import e upload attivi nel CMS storage Supabase.",
+        warnings: [],
+      };
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : "errore sconosciuto";
+
+      return buildFallbackRuntime({
+        articles: legacyArticles,
+        adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
+        requestedAdminReadSource: "supabase",
+        readMessage:
+          "Lettura CMS storage non disponibile: mostro gli articoli legacy.",
+        writeMessage:
+          "Scritture blog non disponibili: controlla Supabase Storage e service role.",
+        warnings: [`supabase-admin-query-failed::${detail}`],
+      });
+    }
   }
 
   try {
@@ -210,6 +258,33 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
     };
   } catch (error) {
     const detail = error instanceof Error ? error.message : "errore sconosciuto";
+
+    if (await canAccessArticleStorageAdmin()) {
+      try {
+        const storageArticles = await getArticlesFromArticleStorage();
+        const articles = mergeAdminArticles(storageArticles, legacyPosts);
+
+        return {
+          articles,
+          adminReadSource:
+            storageArticles.length > 0
+              ? (legacyPosts.length > 0 ? "mixed" : "storage")
+              : legacyArticles.length > 0
+                ? "legacy"
+                : "storage",
+          requestedAdminReadSource: "supabase",
+          readMessage:
+            "La tabella blog non risponde: uso il CMS storage Supabase per tenere attive le modifiche.",
+          canWrite: true,
+          writeTarget: "storage",
+          writeMessage:
+            "Salvataggi, import e upload attivi nel CMS storage Supabase.",
+          warnings: [],
+        };
+      } catch {
+        // Keep the original SQL error below: it is the most useful diagnostic.
+      }
+    }
 
     return buildFallbackRuntime({
       articles: legacyArticles,
@@ -234,8 +309,12 @@ export async function getAdminArticleById(id: string) {
   const articleFromRuntime =
     runtime.articles.find((article) => article.id === id && article.admin_source === "cms") ?? null;
 
-  if (articleFromRuntime || !runtime.canWrite) {
+  if (articleFromRuntime || !runtime.canWrite || !runtime.writeTarget) {
     return articleFromRuntime;
+  }
+
+  if (runtime.writeTarget === "storage") {
+    return getArticleByIdFromArticleStorage(id);
   }
 
   return getAdminArticleByIdFromSupabase(id);
