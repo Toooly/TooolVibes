@@ -1,0 +1,23 @@
+
+> tooolvibes@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+Using secrets defined in .dev.vars
+   ▲ Next.js 15.5.15
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+Using secrets defined in .dev.vars
+ ✓ Ready in 5.9s
+ ○ Compiling /archivio ...
+ ✓ Compiled /archivio in 4.9s (1604 modules)
+ GET /archivio?q=Blink 200 in 7024ms
+ GET /archivio?q=Blink 200 in 693ms
+ ○ Compiling /api/discovery-state ...
+ ✓ Compiled /api/discovery-state in 7s (1687 modules)
+ GET /api/discovery-state 200 in 7736ms
+ GET /archivio?q=Blink 200 in 1467ms
+ GET /archivio?q=Blink 200 in 1467ms
+ GET /api/discovery-state 200 in 63ms

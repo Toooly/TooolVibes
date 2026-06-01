@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Bookmark,
@@ -67,6 +67,18 @@ export function DesktopVibeArchive({
   const toggleSaved = useToolWorkspaceStore((state) => state.toggleSaved);
   const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
   const addToStack = useToolWorkspaceStore((state) => state.addToStack);
+
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
+
+  useEffect(() => {
+    setActiveGroup(initialGroup);
+  }, [initialGroup]);
+
+  useEffect(() => {
+    setActiveTag(initialTag);
+  }, [initialTag]);
 
   const visibleTools = useMemo(() => {
     return tools

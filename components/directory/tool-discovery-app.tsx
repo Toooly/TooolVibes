@@ -649,6 +649,23 @@ export function ToolDiscoveryApp({
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
 
   useEffect(() => {
+    setQuery(initialQuery);
+
+    if (directSearchMode) {
+      setActiveTab("all");
+      setSelectedSlug(null);
+    }
+  }, [directSearchMode, initialQuery, setSelectedSlug]);
+
+  useEffect(() => {
+    setActiveGroup(initialGroup);
+  }, [initialGroup]);
+
+  useEffect(() => {
+    setActiveTag(initialTag);
+  }, [initialTag]);
+
+  useEffect(() => {
     const slug = new URLSearchParams(window.location.search).get("tool");
     if (slug) {
       setSelectedSlug(slug);

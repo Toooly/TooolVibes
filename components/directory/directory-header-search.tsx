@@ -18,11 +18,12 @@ export function DirectoryHeaderSearch({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const currentSearch = searchParams.toString();
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
 
   useEffect(() => {
     setQuery(searchParams.get("q") ?? "");
-  }, [searchParams]);
+  }, [currentSearch, searchParams]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
