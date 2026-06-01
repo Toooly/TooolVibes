@@ -12,6 +12,7 @@ type DirectoryBrowserProps = {
   initialTag?: string;
   initialGroup?: DirectoryFilterGroup;
   className?: string;
+  directSearchMode?: boolean;
 };
 
 export function DirectoryBrowser(props: DirectoryBrowserProps) {

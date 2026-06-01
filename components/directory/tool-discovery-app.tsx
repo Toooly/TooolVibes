@@ -28,6 +28,7 @@ import {
 } from "@tanstack/react-table";
 import {
   Bookmark,
+  Check,
   Columns3,
   GripVertical,
   Layers3,
@@ -71,6 +72,7 @@ type ToolDiscoveryAppProps = {
   initialTag?: string;
   initialGroup?: DirectoryFilterGroup;
   className?: string;
+  directSearchMode?: boolean;
 };
 
 type SortMode = "recommended" | "name" | "level" | "category";
@@ -144,6 +146,10 @@ const compareColumns: ColumnDef<DirectoryTool>[] = [
 
 function getToolBySlug(tools: DirectoryTool[], slug: string | null) {
   return slug ? tools.find((tool) => tool.slug === slug) ?? null : null;
+}
+
+function normalizeSearchValue(value: string) {
+  return value.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "");
 }
 
 function useIsDesktop() {
@@ -285,6 +291,118 @@ function FilterControls({
         </div>
       </div>
     </div>
+  );
+}
+
+function DirectToolResultCard({
+  tool,
+  saved,
+  compared,
+  stacked,
+  onOpen,
+  onSave,
+  onCompare,
+  onStack,
+}: {
+  tool: DirectoryTool;
+  saved: boolean;
+  compared: boolean;
+  stacked: boolean;
+  onOpen: () => void;
+  onSave: () => void;
+  onCompare: () => void;
+  onStack: () => void;
+}) {
+  return (
+    <article
+      className="category-tool-card"
+      style={{
+        ["--tool-accent-from" as string]: tool.accentFrom,
+        ["--tool-accent-to" as string]: tool.accentTo,
+      }}
+    >
+      <span aria-hidden="true" className="category-tool-card__aura" />
+      <div className="category-tool-card__header">
+        <DirectoryToolGlyph tool={tool} size="md" className="category-tool-card__glyph" />
+        <div className="min-w-0 flex-1">
+          <div className="category-tool-card__badges">
+            <PremiumBadge tone={levelTone[tool.level]} className="category-tool-card__badge">
+              {tool.levelLabel}
+            </PremiumBadge>
+            <PremiumBadge tone="accent" className="category-tool-card__badge">
+              {tool.categoryLabel}
+            </PremiumBadge>
+          </div>
+          <h3 className="category-tool-card__title">{tool.name}</h3>
+          <p className="category-tool-card__category">{tool.domain}</p>
+        </div>
+      </div>
+
+      <p className="category-tool-card__description">{tool.shortDescription}</p>
+
+      <div className="category-tool-card__insight" aria-label={`Sintesi di ${tool.name}`}>
+        <div>
+          <p>TL;DR</p>
+          <strong>{tool.tldr}</strong>
+        </div>
+        <div>
+          <p>Review</p>
+          <span>{tool.editorialReview}</span>
+        </div>
+      </div>
+
+      <div className="category-tool-card__tags" aria-label={`Tag di ${tool.name}`}>
+        {tool.tags.slice(0, 4).map((tag) => (
+          <span key={tag} className="category-tool-card__tag">
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      <div className="category-tool-card__footer">
+        <PremiumLink href={`/toools/${tool.slug}`} tone="primary" className="category-tool-card__cta">
+          Apri tool
+        </PremiumLink>
+        <div className="category-tool-card__actions">
+          <button
+            type="button"
+            className={cn("category-tool-card__icon-button", saved && "is-active")}
+            onClick={onSave}
+            aria-label={`Salva ${tool.name}`}
+            data-sonic-action="save"
+          >
+            {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
+          </button>
+          <button
+            type="button"
+            className={cn("category-tool-card__icon-button", compared && "is-active")}
+            onClick={onCompare}
+            aria-label={`Confronta ${tool.name}`}
+            data-sonic-action="compare"
+          >
+            <Columns3 className="size-4" />
+          </button>
+          <button
+            type="button"
+            className={cn("category-tool-card__icon-button", stacked && "is-active")}
+            onClick={onStack}
+            aria-label={`Aggiungi ${tool.name} allo stack`}
+            data-sonic-action="stack"
+          >
+            <Layers3 className="size-4" />
+          </button>
+          <button
+            type="button"
+            className="category-tool-card__icon-button"
+            onClick={onOpen}
+            aria-label={`Apri dettagli ${tool.name}`}
+            data-sonic-action="detail"
+          >
+            <Search className="size-4" />
+          </button>
+        </div>
+      </div>
+    </article>
   );
 }
 
@@ -508,6 +626,7 @@ export function ToolDiscoveryApp({
   initialTag = "",
   initialGroup = "all",
   className,
+  directSearchMode = false,
 }: ToolDiscoveryAppProps) {
   const [query, setQuery] = useState(initialQuery);
   const [activeGroup, setActiveGroup] = useState<DirectoryFilterGroup>(initialGroup);
@@ -569,8 +688,38 @@ export function ToolDiscoveryApp({
       .map(([tag]) => tag);
   }, [tools]);
 
+  const normalizedQuery = query.trim();
+  const isDirectSearch = directSearchMode && Boolean(normalizedQuery);
+  const directExactMatches = useMemo(() => {
+    if (!isDirectSearch) {
+      return [];
+    }
+
+    const normalized = normalizeSearchValue(normalizedQuery);
+
+    return tools.filter((tool) => {
+      const candidates = [
+        tool.name,
+        tool.slug,
+        tool.domain,
+        tool.url,
+      ].map(normalizeSearchValue);
+
+      return candidates.some(
+        (candidate) =>
+          candidate === normalized ||
+          candidate === `${normalized}.com` ||
+          candidate.startsWith(`${normalized}.`),
+      );
+    });
+  }, [isDirectSearch, normalizedQuery, tools]);
+
   const visibleTools = useMemo(() => {
-    const queryPool = query.trim() ? fuse.search(query).map((result) => result.item) : tools;
+    const queryPool = query.trim()
+      ? directExactMatches.length > 0
+        ? directExactMatches
+        : fuse.search(query).map((result) => result.item)
+      : tools;
 
     const filtered = queryPool.filter((tool) => {
       const matchesGroup = activeGroup === "all" || tool.segments.includes(activeGroup);
@@ -608,6 +757,7 @@ export function ToolDiscoveryApp({
     activeTab,
     activeTag,
     compareSlugs,
+    directExactMatches,
     fuse,
     query,
     savedSlugs,
@@ -780,193 +930,221 @@ export function ToolDiscoveryApp({
 
   return (
     <section className={cn("space-y-5 pb-28 lg:space-y-6 lg:pb-0", className)}>
-      <PremiumPanel tone="blue" className="grid min-w-0 gap-4 p-4 sm:p-5 lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-6 lg:p-6">
-        <aside className="min-w-0 space-y-3 border-white/10 lg:space-y-4 lg:border-r lg:pr-5">
-          <PremiumBadge tone="dark">{eyebrow}</PremiumBadge>
-          <div>
-            <h2 className="text-display-card text-[1.48rem] leading-[1.08] text-white sm:text-[2.25rem]">
-              {title}
-            </h2>
-            <p className="mt-3 hidden text-[0.92rem] leading-6 text-white/68 sm:mt-4 sm:block sm:text-sm sm:leading-7">{description}</p>
-          </div>
+      {!isDirectSearch ? (
+        <PremiumPanel tone="blue" className="grid min-w-0 gap-4 p-4 sm:p-5 lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-6 lg:p-6">
+          <aside className="min-w-0 space-y-3 border-white/10 lg:space-y-4 lg:border-r lg:pr-5">
+            <PremiumBadge tone="dark">{eyebrow}</PremiumBadge>
+            <div>
+              <h2 className="text-display-card text-[1.48rem] leading-[1.08] text-white sm:text-[2.25rem]">
+                {title}
+              </h2>
+              <p className="mt-3 hidden text-[0.92rem] leading-6 text-white/68 sm:mt-4 sm:block sm:text-sm sm:leading-7">{description}</p>
+            </div>
 
-          <button
-            type="button"
-            onClick={() => setCommandOpen(true)}
-            data-sonic-action="search"
-            className="premium-button premium-button-secondary hidden min-h-11 w-full items-center justify-between rounded-[18px] px-3.5 py-2.5 text-left text-sm sm:flex sm:rounded-[22px] sm:px-4 sm:py-3"
-          >
-            <span className="inline-flex items-center gap-2">
-              <Search className="size-4" />
-              Cerca o apri comandi
-            </span>
-            <kbd className="rounded-md bg-white/10 px-2 py-1 text-[0.68rem]">Ctrl K</kbd>
-          </button>
-
-          <nav className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 lg:grid-cols-1 lg:gap-2" aria-label="Workspace views">
-            {[
-              ["all", "Tutti", tools.length],
-              ["saved", "Salvati", savedSlugs.length],
-              ["compare", "Confronta", compareSlugs.length],
-              ["stack", "Stack", stackSlugs.length],
-            ].map(([key, label, count]) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setActiveTab(key as WorkspaceTab)}
-                data-sonic-action="tab"
-                className={cn(
-                  "premium-button flex min-h-10 items-center justify-center gap-1.5 rounded-[16px] px-2 text-[0.72rem] font-semibold sm:min-h-11 sm:text-sm lg:justify-between lg:rounded-[18px] lg:px-3",
-                  activeTab === key
-                    ? "premium-button-glow text-white"
-                    : "premium-button-subtle text-[var(--muted-strong)]",
-                )}
-              >
-                <span>{label}</span>
-                <span className="rounded-full bg-white/12 px-1.5 py-0.5 text-[0.66rem] sm:px-2 sm:text-xs">{count}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        <div className="min-w-0 space-y-4 lg:space-y-5">
-          <div id="archive-search" className="scroll-mt-28 grid grid-cols-[minmax(0,1fr)_2.75rem] gap-2 sm:grid-cols-[minmax(0,1fr)_10rem_3.25rem] sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
-            <label className="col-span-2 min-w-0 sm:col-span-1">
-              <span className="sr-only">Cerca tool</span>
-              <input
-                ref={searchInputRef}
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                className="premium-input min-h-12 px-3.5 py-2.5 text-sm sm:px-4 sm:py-3"
-                placeholder="Cerca tool, tag, use case o categoria..."
-              />
-            </label>
-            <select
-              value={sortMode}
-              onChange={(event) => setSortMode(event.target.value as SortMode)}
-              className="premium-input col-span-1 min-h-12 min-w-0 px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3"
-              aria-label="Ordina tool"
-              data-sonic-action="tab"
-            >
-              <option value="recommended">Consigliati</option>
-              <option value="name">Nome</option>
-              <option value="level">Livello</option>
-              <option value="category">Categoria</option>
-            </select>
             <button
               type="button"
-              onClick={() => setFilterDrawerOpen(true)}
-              data-sonic-action="filter"
-              className="premium-button premium-button-secondary inline-flex min-h-11 items-center justify-center gap-2 rounded-[16px] px-0 text-sm font-semibold sm:min-h-12 sm:w-auto sm:rounded-[18px] sm:px-4 lg:hidden"
+              onClick={() => setCommandOpen(true)}
+              data-sonic-action="search"
+              className="premium-button premium-button-secondary hidden min-h-11 w-full items-center justify-between rounded-[18px] px-3.5 py-2.5 text-left text-sm sm:flex sm:rounded-[22px] sm:px-4 sm:py-3"
             >
-              <SlidersHorizontal className="size-4" />
-              <span className="sr-only sm:not-sr-only">Filtri</span>
+              <span className="inline-flex items-center gap-2">
+                <Search className="size-4" />
+                Cerca o apri comandi
+              </span>
+              <kbd className="rounded-md bg-white/10 px-2 py-1 text-[0.68rem]">Ctrl K</kbd>
             </button>
-            <PremiumButton
-              type="button"
-              tone="secondary"
-              className="hidden lg:inline-flex"
-              onClick={resetFilters}
-              disabled={!hasActiveFilters}
-              data-sonic-action="update"
-            >
-              Reset
-            </PremiumButton>
-          </div>
 
-          <div id="archive-filters" className="scroll-mt-28">
-            <div className="lg:hidden">
-              <div className="tool-rail -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1.5 sm:gap-2 sm:pb-2">
-                {directoryFilterGroups.slice(0, 7).map((group) => (
-                  <button
-                    key={group.key}
-                    type="button"
-                    onClick={() => setActiveGroup(group.key)}
-                    data-sonic-action="filterApply"
-                    className={cn(
-                      "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
-                      activeGroup === group.key
-                        ? "premium-button-glow text-white"
-                        : "premium-button-subtle text-[var(--muted-strong)]",
-                    )}
-                  >
-                    {group.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <nav className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 lg:grid-cols-1 lg:gap-2" aria-label="Workspace views">
+              {[
+                ["all", "Tutti", tools.length],
+                ["saved", "Salvati", savedSlugs.length],
+                ["compare", "Confronta", compareSlugs.length],
+                ["stack", "Stack", stackSlugs.length],
+              ].map(([key, label, count]) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setActiveTab(key as WorkspaceTab)}
+                  data-sonic-action="tab"
+                  className={cn(
+                    "premium-button flex min-h-10 items-center justify-center gap-1.5 rounded-[16px] px-2 text-[0.72rem] font-semibold sm:min-h-11 sm:text-sm lg:justify-between lg:rounded-[18px] lg:px-3",
+                    activeTab === key
+                      ? "premium-button-glow text-white"
+                      : "premium-button-subtle text-[var(--muted-strong)]",
+                  )}
+                >
+                  <span>{label}</span>
+                  <span className="rounded-full bg-white/12 px-1.5 py-0.5 text-[0.66rem] sm:px-2 sm:text-xs">{count}</span>
+                </button>
+              ))}
+            </nav>
+          </aside>
 
-            <div className="hidden lg:block">
-              <FilterControls
-              activeGroup={activeGroup}
-              activeLevel={activeLevel}
-              activeTag={activeTag}
-              sortedTags={sortedTags}
-              onGroupChange={setActiveGroup}
-              onLevelChange={setActiveLevel}
-              onTagChange={toggleTag}
-              dark
-            />
-          </div>
-          </div>
-          {hasActiveFilters ? (
-            <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-white/10 bg-white/6 px-3 py-2 text-xs text-[var(--muted-strong)]">
-              <span className="font-semibold text-[var(--foreground)]">Filtri attivi:</span>
-              {query.trim() ? <span>Ricerca: {query.trim()}</span> : null}
-              {activeGroup !== "all" ? <span>Categoria: {activeGroupLabel}</span> : null}
-              {activeLevel !== "all" ? <span>Livello: {activeLevelLabel}</span> : null}
-              {activeTag ? <span>Tag: {activeTag}</span> : null}
+          <div className="min-w-0 space-y-4 lg:space-y-5">
+            <div id="archive-search" className="scroll-mt-28 grid grid-cols-[minmax(0,1fr)_2.75rem] gap-2 sm:grid-cols-[minmax(0,1fr)_10rem_3.25rem] sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
+              <label className="col-span-2 min-w-0 sm:col-span-1">
+                <span className="sr-only">Cerca tool</span>
+                <input
+                  ref={searchInputRef}
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  className="premium-input min-h-12 px-3.5 py-2.5 text-sm sm:px-4 sm:py-3"
+                  placeholder="Cerca tool, tag, use case o categoria..."
+                />
+              </label>
+              <select
+                value={sortMode}
+                onChange={(event) => setSortMode(event.target.value as SortMode)}
+                className="premium-input col-span-1 min-h-12 min-w-0 px-3 py-2.5 text-sm font-semibold sm:px-4 sm:py-3"
+                aria-label="Ordina tool"
+                data-sonic-action="tab"
+              >
+                <option value="recommended">Consigliati</option>
+                <option value="name">Nome</option>
+                <option value="level">Livello</option>
+                <option value="category">Categoria</option>
+              </select>
               <button
                 type="button"
+                onClick={() => setFilterDrawerOpen(true)}
+                data-sonic-action="filter"
+                className="premium-button premium-button-secondary inline-flex min-h-11 items-center justify-center gap-2 rounded-[16px] px-0 text-sm font-semibold sm:min-h-12 sm:w-auto sm:rounded-[18px] sm:px-4 lg:hidden"
+              >
+                <SlidersHorizontal className="size-4" />
+                <span className="sr-only sm:not-sr-only">Filtri</span>
+              </button>
+              <PremiumButton
+                type="button"
+                tone="secondary"
+                className="hidden lg:inline-flex"
                 onClick={resetFilters}
+                disabled={!hasActiveFilters}
                 data-sonic-action="update"
-                className="premium-button premium-button-subtle ml-auto rounded-full px-3 py-1 font-semibold text-white"
               >
                 Reset
-              </button>
+              </PremiumButton>
             </div>
-          ) : null}
-        </div>
-      </PremiumPanel>
+
+            <div id="archive-filters" className="scroll-mt-28">
+              <div className="lg:hidden">
+                <div className="tool-rail -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1.5 sm:gap-2 sm:pb-2">
+                  {directoryFilterGroups.slice(0, 7).map((group) => (
+                    <button
+                      key={group.key}
+                      type="button"
+                      onClick={() => setActiveGroup(group.key)}
+                      data-sonic-action="filterApply"
+                      className={cn(
+                        "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
+                        activeGroup === group.key
+                          ? "premium-button-glow text-white"
+                          : "premium-button-subtle text-[var(--muted-strong)]",
+                      )}
+                    >
+                      {group.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hidden lg:block">
+                <FilterControls
+                  activeGroup={activeGroup}
+                  activeLevel={activeLevel}
+                  activeTag={activeTag}
+                  sortedTags={sortedTags}
+                  onGroupChange={setActiveGroup}
+                  onLevelChange={setActiveLevel}
+                  onTagChange={toggleTag}
+                  dark
+                />
+              </div>
+            </div>
+            {hasActiveFilters ? (
+              <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-white/10 bg-white/6 px-3 py-2 text-xs text-[var(--muted-strong)]">
+                <span className="font-semibold text-[var(--foreground)]">Filtri attivi:</span>
+                {query.trim() ? <span>Ricerca: {query.trim()}</span> : null}
+                {activeGroup !== "all" ? <span>Categoria: {activeGroupLabel}</span> : null}
+                {activeLevel !== "all" ? <span>Livello: {activeLevelLabel}</span> : null}
+                {activeTag ? <span>Tag: {activeTag}</span> : null}
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  data-sonic-action="update"
+                  className="premium-button premium-button-subtle ml-auto rounded-full px-3 py-1 font-semibold text-white"
+                >
+                  Reset
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </PremiumPanel>
+      ) : null}
 
       <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="min-w-0 space-y-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-                {visibleTools.length} risultati
+                {isDirectSearch
+                  ? visibleTools.length > 0
+                    ? `${visibleTools.length} ${visibleTools.length === 1 ? "risultato" : "risultati"} per "${normalizedQuery}"`
+                    : `Nessun risultato per "${normalizedQuery}"`
+                  : `${visibleTools.length} risultati`}
               </p>
               <h3 className="mt-2 text-display-card text-[1.65rem] leading-tight text-[var(--foreground)] sm:text-[2rem]">
-                Catalogo interattivo
+                {isDirectSearch
+                  ? visibleTools.length > 0
+                    ? "Eccolo."
+                    : "Questo tool non lo abbiamo ancora inserito."
+                  : "Catalogo interattivo"}
               </h3>
             </div>
             <Link
               href="/wishlist"
               className="premium-button premium-button-outline inline-flex min-h-10 rounded-full px-4 py-2 text-sm font-semibold"
             >
-              Suggerisci un tool
+              {isDirectSearch && visibleTools.length === 0 ? "Suggeriscilo" : "Suggerisci un tool"}
             </Link>
           </div>
 
           {visibleTools.length > 0 ? (
-            <div className="space-y-4">
-              {toolShelves.map(({ level, tools: shelfTools }) => (
-                <CategoryToolCarousel
-                  key={level}
-                  title={shelfCopy[level].title}
-                  description={shelfCopy[level].description}
-                  tools={shelfTools}
-                  savedSlugs={savedSlugs}
-                  compareSlugs={compareSlugs}
-                  stackSlugs={stackSlugs}
-                  onOpen={setSelectedSlug}
-                  onSave={handleSave}
-                  onCompare={handleCompare}
-                  onStack={handleStack}
-                />
-              ))}
-            </div>
-          ) : (
+            isDirectSearch ? (
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {visibleTools.map((tool) => (
+                  <DirectToolResultCard
+                    key={tool.slug}
+                    tool={tool}
+                    saved={savedSlugs.includes(tool.slug)}
+                    compared={compareSlugs.includes(tool.slug)}
+                    stacked={stackSlugs.includes(tool.slug)}
+                    onOpen={() => setSelectedSlug(tool.slug)}
+                    onSave={() => handleSave(tool)}
+                    onCompare={() => handleCompare(tool)}
+                    onStack={() => handleStack(tool.slug)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {toolShelves.map(({ level, tools: shelfTools }) => (
+                  <CategoryToolCarousel
+                    key={level}
+                    title={shelfCopy[level].title}
+                    description={shelfCopy[level].description}
+                    tools={shelfTools}
+                    savedSlugs={savedSlugs}
+                    compareSlugs={compareSlugs}
+                    stackSlugs={stackSlugs}
+                    onOpen={setSelectedSlug}
+                    onSave={handleSave}
+                    onCompare={handleCompare}
+                    onStack={handleStack}
+                  />
+                ))}
+              </div>
+            )
+          ) : isDirectSearch ? null : (
               <EmptyState
                 icon={Search}
                 eyebrow="Nessun risultato"
