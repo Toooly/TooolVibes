@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { SectionHeading } from "@/components/sections/section-heading";
 import { ButtonLink } from "@/components/ui/button";
+import { MarkdownContent } from "@/components/editorial/markdown-content";
 import { siteConfig } from "@/lib/config/site";
 import { getCollectionBySlug } from "@/lib/data/public-collections";
 import {
@@ -18,6 +19,12 @@ import { formatItalianDate } from "@/lib/utils";
 
 type EditorialPostPageProps = {
   params: Promise<{ slug: string }>;
+};
+
+const kindLabels: Record<NonNullable<Awaited<ReturnType<typeof getEditorialPostBySlug>>>["kind"], string> = {
+  "tool-writeup": "Approfondimento tool",
+  guide: "Guida legacy",
+  editorial: "Blog",
 };
 
 export async function generateMetadata({ params }: EditorialPostPageProps): Promise<Metadata> {
@@ -67,7 +74,12 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   }
 
   const sourceHref = post.source_url;
-  const sourceLabel = post.tool_slug ? "Legacy tool writeup" : "Legacy guide";
+  const sourceLabel = post.source_label;
+  const isAuthoredPost = Boolean(post.content_markdown);
+  const kindLabel =
+    post.kind === "guide" && post.source_label === "Blog TooolVibes"
+      ? "Guida"
+      : kindLabels[post.kind];
 
   return (
     <div className="tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
@@ -79,7 +91,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
         <div className="editorial-grid relative gap-y-0">
           <div className={tool ? "col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7" : "col-span-12 p-5 sm:p-6 lg:p-7"}>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="pill !bg-white/12 !text-white">{post.kind === "tool-writeup" ? "Approfondimento tool" : "Guida legacy"}</span>
+              <span className="pill !bg-white/12 !text-white">{kindLabel}</span>
               <span className="selection-chip rounded-full border border-white/14 px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-white/82">
                 {post.source_label}
               </span>
@@ -89,7 +101,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             </div>
 
             <p className="mt-5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/56">
-              Importato nel layer contenuti di TooolVibes
+              {isAuthoredPost ? "Pubblicato nel blog TooolVibes" : "Importato nel layer contenuti di TooolVibes"}
             </p>
             <h1 className="text-display-hero mt-3 max-w-none text-[2.02rem] text-white sm:max-w-[14ch] sm:text-[2.76rem] sm:text-balance">
               {post.title}
@@ -153,6 +165,25 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                   </p>
                 </div>
               </div>
+            ) : post.cover_image_url ? (
+              <div className="relative h-full min-h-[22rem] overflow-hidden lg:min-h-[100%]">
+                <Image
+                  src={post.cover_image_url}
+                  alt={post.cover_image_alt ?? post.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 42vw"
+                  className="image-float object-cover"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.08),rgba(18,15,35,0.72))]" />
+                <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(24,18,54,0.88),rgba(38,31,82,0.76))] px-4 py-4">
+                  <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                    Cover editoriale
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-white/82">
+                    {post.dek}
+                  </p>
+                </div>
+              </div>
             ) : (
               <div className="brand-panel panel-lift flex h-full min-h-[22rem] flex-col justify-between rounded-[32px] p-5 sm:p-6">
                 <div>
@@ -183,54 +214,60 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
       <section className="editorial-grid gap-y-4">
         <div className="col-span-12 lg:col-span-7">
           <div className="brand-panel panel-lift rounded-[32px] p-5 sm:p-6">
-            <SectionHeading
-              eyebrow="Lettura"
-              title="Il contenuto qui non parla da solo: ti porta verso il prossimo passo."
-              description="Ogni blocco serve a ridurre rumore e aiutare il salto giusto tra approfondimento, archivio, shortlist e collection."
-            />
+            {post.content_markdown ? (
+              <MarkdownContent content={post.content_markdown} />
+            ) : (
+              <>
+                <SectionHeading
+                  eyebrow="Lettura"
+                  title="Il contenuto qui non parla da solo: ti porta verso il prossimo passo."
+                  description="Ogni blocco serve a ridurre rumore e aiutare il salto giusto tra approfondimento, archivio, shortlist e collection."
+                />
 
-            <div className="mt-5 grid gap-3.5">
-              {post.details.map((item, index) => (
-                <div
-                  key={item}
-                  className="stat-block rounded-[22px] border px-4 py-4"
-                  style={{
-                    borderColor: "var(--line)",
-                    background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))",
-                  }}
-                >
-                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <p className="mt-2 text-body-strong text-[0.98rem]">{item}</p>
-                </div>
-              ))}
-            </div>
-
-            {post.cautions.length > 0 ? (
-              <div
-                className="mt-5 rounded-[26px] border px-5 py-5"
-                style={{
-                  borderColor: "rgba(212,177,101,0.28)",
-                  background: "linear-gradient(180deg, rgba(255,249,240,0.96), rgba(249,239,212,0.74))",
-                }}
-              >
-                <p className="brand-kicker">Limiti / attenzione</p>
-                <div className="mt-3 grid gap-3">
-                  {post.cautions.map((item) => (
+                <div className="mt-5 grid gap-3.5">
+                  {post.details.map((item, index) => (
                     <div
                       key={item}
-                      className="rounded-[20px] border px-4 py-3.5"
-                      style={{ borderColor: "rgba(212,177,101,0.22)", background: "rgba(255,255,255,0.56)" }}
+                      className="stat-block rounded-[22px] border px-4 py-4"
+                      style={{
+                        borderColor: "var(--line)",
+                        background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))",
+                      }}
                     >
-                      <p className="text-body-strong text-[0.95rem]" style={{ color: "var(--muted-strong)" }}>
-                        {item}
+                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                        {String(index + 1).padStart(2, "0")}
                       </p>
+                      <p className="mt-2 text-body-strong text-[0.98rem]">{item}</p>
                     </div>
                   ))}
                 </div>
-              </div>
-            ) : null}
+
+                {post.cautions.length > 0 ? (
+                  <div
+                    className="mt-5 rounded-[26px] border px-5 py-5"
+                    style={{
+                      borderColor: "rgba(212,177,101,0.28)",
+                      background: "linear-gradient(180deg, rgba(255,249,240,0.96), rgba(249,239,212,0.74))",
+                    }}
+                  >
+                    <p className="brand-kicker">Limiti / attenzione</p>
+                    <div className="mt-3 grid gap-3">
+                      {post.cautions.map((item) => (
+                        <div
+                          key={item}
+                          className="rounded-[20px] border px-4 py-3.5"
+                          style={{ borderColor: "rgba(212,177,101,0.22)", background: "rgba(255,255,255,0.56)" }}
+                        >
+                          <p className="text-body-strong text-[0.95rem]" style={{ color: "var(--muted-strong)" }}>
+                            {item}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </>
+            )}
           </div>
         </div>
 
@@ -264,19 +301,30 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                   </div>
                 ) : null}
 
-                <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
-                    Fonte legacy
-                  </p>
-                  <Link
-                    href={sourceHref}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-meta mt-2 block text-[0.96rem] text-white"
-                  >
-                    Apri la pagina originale
-                  </Link>
-                </div>
+                {sourceHref.startsWith("http") ? (
+                  <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
+                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                      Fonte
+                    </p>
+                    <Link
+                      href={sourceHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-meta mt-2 block text-[0.96rem] text-white"
+                    >
+                      {sourceLabel}
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
+                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                      Blog
+                    </p>
+                    <p className="text-meta mt-2 block text-[0.96rem] text-white">
+                      {post.author_name ?? "TooolVibes"}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="mt-5 border-t border-white/10 pt-4">

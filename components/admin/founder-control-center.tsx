@@ -1,11 +1,9 @@
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { PremiumLink } from "@/components/ui/premium";
-import type { AdminCollectionsRuntime } from "@/lib/admin/collection-queries";
-import type { AdminToolsRuntime } from "@/lib/admin/tool-queries";
+import type { AdminArticlesRuntime } from "@/lib/admin/article-queries";
 
 type FounderControlCenterProps = {
-  toolsRuntime: AdminToolsRuntime;
-  collectionsRuntime: AdminCollectionsRuntime;
+  articlesRuntime: AdminArticlesRuntime;
 };
 
 function RuntimeBadge({
@@ -112,37 +110,28 @@ function LogoutButton({ compact = false }: { compact?: boolean }) {
   );
 }
 
-export function FounderControlCenter({
-  toolsRuntime,
-  collectionsRuntime,
-}: FounderControlCenterProps) {
-  const publishedTools = toolsRuntime.tools.filter((tool) => tool.is_published).length;
-  const publishedCollections = collectionsRuntime.collections.filter(
-    (collection) =>
-      collection.editorial_state === "published" ||
-      collection.editorial_state === "featured",
+export function FounderControlCenter({ articlesRuntime }: FounderControlCenterProps) {
+  const publishedArticles = articlesRuntime.articles.filter(
+    (article) => article.status === "published",
   ).length;
-  const runtimeWarningCount =
-    toolsRuntime.warnings.length + collectionsRuntime.publicSnapshot.meta.warnings.length;
+  const draftArticles = articlesRuntime.articles.length - publishedArticles;
+  const runtimeWarningCount = articlesRuntime.warnings.length;
   const quickLinks = [
-    { href: "/admin", label: "Tool" },
-    { href: "/admin/new", label: "Nuovo tool", primary: true },
-    { href: "/admin/suggestions", label: "Suggerimenti" },
-    { href: "/admin/affiliates", label: "Affiliati" },
-    { href: "/admin/affiliate-links", label: "Link tool" },
-    { href: "/admin/collections", label: "Collections" },
+    { href: "/admin", label: "Blog" },
+    { href: "/admin/new", label: "Nuovo articolo", primary: true },
+    { href: "/posts", label: "Post pubblici" },
     { href: "/", label: "Sito" },
   ] as const;
   const metrics = [
     {
-      label: "Tool",
-      value: String(toolsRuntime.tools.length),
-      detail: `${publishedTools} attivi`,
+      label: "Articoli",
+      value: String(articlesRuntime.articles.length),
+      detail: `${publishedArticles} pubblicati`,
     },
     {
-      label: "Collections",
-      value: String(collectionsRuntime.collections.length),
-      detail: `${publishedCollections} pubbliche`,
+      label: "Bozze",
+      value: String(draftArticles),
+      detail: "da lavorare",
     },
     {
       label: "Avvisi",
@@ -172,32 +161,21 @@ export function FounderControlCenter({
                   Backoffice
                 </span>
                 <h1 className="mt-2 text-[1.38rem] leading-tight text-white sm:text-[1.7rem]">
-                  Gestione ToolVibes
+                  Gestione blog TooolVibes
                 </h1>
                 <p className="mt-2 max-w-[40rem] text-sm leading-6 text-white/70">
-                  Tool, suggerimenti, affiliati e collections in una navigazione compatta.
+                  Creazione, modifica e pubblicazione degli articoli in una navigazione compatta.
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <RuntimeBadge
-                    label="Tools"
-                    value={toolsRuntime.adminReadSource}
-                    tone={toolsRuntime.canWrite ? "live" : "warn"}
+                    label="Blog"
+                    value={articlesRuntime.adminReadSource}
+                    tone={articlesRuntime.canWrite ? "live" : "warn"}
                   />
                   <RuntimeBadge
-                    label="Public"
-                    value={toolsRuntime.publicSnapshot.source}
-                    tone={
-                      toolsRuntime.publicSnapshot.source === "supabase" ? "live" : "warn"
-                    }
-                  />
-                  <RuntimeBadge
-                    label="Collections"
-                    value={collectionsRuntime.publicSnapshot.meta.active_source}
-                    tone={
-                      collectionsRuntime.publicSnapshot.meta.active_source === "supabase"
-                        ? "live"
-                        : "neutral"
-                    }
+                    label="Write"
+                    value={articlesRuntime.writeTarget ?? "locked"}
+                    tone={articlesRuntime.canWrite ? "live" : "warn"}
                   />
                 </div>
               </div>

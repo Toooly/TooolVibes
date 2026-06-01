@@ -3,6 +3,11 @@
 import { cache } from "react";
 
 import { getPublishedTools } from "@/lib/data/public-tools";
+import {
+  getPublishedArticlesFromSupabase,
+  mapArticleToEditorialPost,
+} from "@/lib/supabase/article-repository";
+import { isSupabasePublicEnabled } from "@/lib/supabase/public-client";
 import type { EditorialPostKind, EditorialPostRecord } from "@/lib/types/article";
 import type { ToolRecord } from "@/lib/types/tool";
 
@@ -362,7 +367,7 @@ function sortPosts(posts: EditorialPostRecord[]) {
   });
 }
 
-async function loadEditorialPosts(): Promise<EditorialPostRecord[]> {
+export async function loadLegacyEditorialPosts(): Promise<EditorialPostRecord[]> {
   const tools = await getPublishedTools();
   const toolWriteups = tools.map(buildToolWriteup);
 
@@ -373,6 +378,47 @@ async function loadEditorialPosts(): Promise<EditorialPostRecord[]> {
     })),
     ...toolWriteups,
   ]);
+}
+
+async function loadAuthoredEditorialPosts(): Promise<EditorialPostRecord[]> {
+  if (!isSupabasePublicEnabled()) {
+    return [];
+  }
+
+  try {
+    const articles = await getPublishedArticlesFromSupabase();
+    return articles.map(mapArticleToEditorialPost);
+  } catch {
+    return [];
+  }
+}
+
+function mergeEditorialPosts(
+  authoredPosts: EditorialPostRecord[],
+  legacyPosts: EditorialPostRecord[],
+) {
+  const seen = new Set<string>();
+  const merged: EditorialPostRecord[] = [];
+
+  for (const post of [...authoredPosts, ...legacyPosts]) {
+    if (seen.has(post.slug)) {
+      continue;
+    }
+
+    seen.add(post.slug);
+    merged.push(post);
+  }
+
+  return sortPosts(merged);
+}
+
+async function loadEditorialPosts(): Promise<EditorialPostRecord[]> {
+  const [authoredPosts, legacyPosts] = await Promise.all([
+    loadAuthoredEditorialPosts(),
+    loadLegacyEditorialPosts(),
+  ]);
+
+  return mergeEditorialPosts(authoredPosts, legacyPosts);
 }
 
 export const getPublishedEditorialPosts = cache(async (): Promise<EditorialPostRecord[]> => {
@@ -394,6 +440,11 @@ export const getToolWriteupPosts = cache(async (): Promise<EditorialPostRecord[]
 export const getGuidePosts = cache(async (): Promise<EditorialPostRecord[]> => {
   const posts = await loadEditorialPosts();
   return posts.filter((post) => post.kind === "guide");
+});
+
+export const getBlogPosts = cache(async (): Promise<EditorialPostRecord[]> => {
+  const posts = await loadEditorialPosts();
+  return posts.filter((post) => post.kind === "editorial");
 });
 
 export const getEditorialPostBySlug = cache(async (slug: string): Promise<EditorialPostRecord | null> => {

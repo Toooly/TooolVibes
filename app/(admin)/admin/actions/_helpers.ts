@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
 
+import type { ArticleFormState } from "@/lib/admin/article-form";
 import type { CollectionFormState } from "@/lib/admin/collection-form";
 import type { ToolFormState } from "@/lib/admin/tool-form";
 
@@ -17,6 +18,18 @@ export function revalidateToolPaths(slug: string, previousSlug?: string) {
 
   if (previousSlug && previousSlug !== slug) {
     revalidatePath(`/toools/${previousSlug}`);
+  }
+}
+
+export function revalidateArticlePaths(slug: string, previousSlug?: string) {
+  revalidatePath("/");
+  revalidatePath("/posts");
+  revalidatePath("/admin");
+  revalidatePath("/sitemap.xml");
+  revalidatePath(`/posts/${slug}`);
+
+  if (previousSlug && previousSlug !== slug) {
+    revalidatePath(`/posts/${previousSlug}`);
   }
 }
 
@@ -133,6 +146,39 @@ export function getCollectionMutationErrorState(
   return {
     status: "error",
     message: "Non è stato possibile completare il salvataggio della collection.",
+    values,
+  };
+}
+
+export function getArticleSupabaseDisabledState(): ArticleFormState {
+  return {
+    status: "error",
+    message:
+      "Configura Supabase admin e applica la migration editorial_articles per abilitare le scritture del blog.",
+  };
+}
+
+export function getArticleMutationErrorState(
+  error: unknown,
+  values?: ArticleFormState["values"],
+): ArticleFormState {
+  const message =
+    error instanceof Error ? error.message : "Errore inatteso durante il salvataggio.";
+
+  if (message.includes("duplicate key value") || message.includes("editorial_articles_slug_key")) {
+    return {
+      status: "error",
+      message: "Esiste gia un articolo con questo slug. Scegline uno diverso.",
+      fieldErrors: {
+        slug: "Questo slug e gia in uso.",
+      },
+      values,
+    };
+  }
+
+  return {
+    status: "error",
+    message: "Non e stato possibile completare il salvataggio dell'articolo.",
     values,
   };
 }

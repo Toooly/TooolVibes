@@ -14,9 +14,15 @@ type EditorialPostCardProps = {
 const kindLabels: Record<EditorialPostRecord["kind"], string> = {
   "tool-writeup": "Approfondimento tool",
   guide: "Guida legacy",
+  editorial: "Blog",
 };
 
 export function EditorialPostCard({ post, compact = false, className }: EditorialPostCardProps) {
+  const kindLabel =
+    post.kind === "guide" && post.source_label === "Blog TooolVibes"
+      ? "Guida"
+      : kindLabels[post.kind];
+
   return (
     <article
       className={cn(
@@ -26,7 +32,7 @@ export function EditorialPostCard({ post, compact = false, className }: Editoria
       )}
     >
       <div className="flex flex-wrap items-center gap-2">
-        <span className="editorial-label">{kindLabels[post.kind]}</span>
+        <span className="editorial-label">{kindLabel}</span>
         <span className="selection-status">{post.source_label}</span>
         {post.featured ? <span className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}>In primo piano</span> : null}
       </div>

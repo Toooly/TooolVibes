@@ -1,19 +1,19 @@
 import Link from "next/link";
 
 import {
-  deleteToolAction,
-  toggleFeaturedAction,
-  togglePublishedAction,
-} from "@/app/(admin)/admin/actions/tools";
+  deleteArticleAction,
+  toggleArticleFeaturedAction,
+  toggleArticlePublishedAction,
+} from "@/app/(admin)/admin/actions/articles";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusPill } from "@/components/admin/admin-status-pill";
 import { DeleteWithConfirm } from "@/components/admin/delete-with-confirm";
 import { SectionHeading } from "@/components/sections/section-heading";
-import { getSuggestionsRuntime } from "@/lib/admin/suggestion-queries";
 import {
-  getAdminToolWarningLabel,
-  getAdminToolsRuntime,
-} from "@/lib/admin/tool-queries";
+  getAdminArticleWarningLabel,
+  getAdminArticlesRuntime,
+} from "@/lib/admin/article-queries";
+import type { BlogArticleRecord } from "@/lib/types/article";
 import { formatItalianDate } from "@/lib/utils";
 
 type AdminDashboardPageProps = {
@@ -21,80 +21,57 @@ type AdminDashboardPageProps = {
 };
 
 const statusMessages: Record<string, string> = {
-  created: "Tool creato correttamente.",
-  updated: "Tool aggiornato correttamente.",
-  deleted: "Tool eliminato correttamente.",
+  created: "Articolo creato correttamente.",
+  updated: "Articolo aggiornato correttamente.",
+  deleted: "Articolo eliminato correttamente.",
+};
+
+const kindLabels: Record<BlogArticleRecord["kind"], string> = {
+  editorial: "Blog",
+  guide: "Guida",
+  "tool-writeup": "Tool writeup",
 };
 
 export default async function AdminDashboardPage({
   searchParams,
 }: AdminDashboardPageProps) {
-  const [{ status, view }, runtime, suggestionsRuntime] = await Promise.all([
+  const [{ status, view }, runtime] = await Promise.all([
     searchParams,
-    getAdminToolsRuntime(),
-    getSuggestionsRuntime(),
+    getAdminArticlesRuntime(),
   ]);
-  const tools = runtime.tools;
-  const approvedSuggestions = suggestionsRuntime.suggestions.filter(
-    (suggestion) => suggestion.status === "approved",
-  );
+  const articles = runtime.articles;
   const canWrite = runtime.canWrite;
   const activeView = view ?? "all";
-  const publishedCount = tools.filter((tool) => tool.is_published).length;
-  const featuredCount = tools.filter((tool) => tool.is_featured).length;
-  const draftCount = tools.length - publishedCount;
-  const suggestedCount = tools.filter((tool) =>
-    `${tool.source} ${tool.tags.join(" ")}`.toLowerCase().includes("suggerimento"),
-  ).length;
-  const filteredTools = tools.filter((tool) => {
+  const publishedCount = articles.filter((article) => article.status === "published").length;
+  const featuredCount = articles.filter((article) => article.featured).length;
+  const draftCount = articles.length - publishedCount;
+  const filteredArticles = articles.filter((article) => {
     if (activeView === "all") return true;
-    if (activeView === "published") return tool.is_published;
-    if (activeView === "draft") return !tool.is_published;
-    if (activeView === "featured") return tool.is_featured;
-    if (activeView === "suggested") {
-      return `${tool.source} ${tool.tags.join(" ")}`.toLowerCase().includes("suggerimento");
-    }
-    if (activeView === "workbench") return !tool.is_published;
-    if (activeView === "approved-suggestions") return false;
+    if (activeView === "published") return article.status === "published";
+    if (activeView === "draft") return article.status === "draft";
+    if (activeView === "featured") return article.featured;
     return true;
   });
-  const visibleApprovedSuggestions =
-    activeView === "approved-suggestions" || activeView === "workbench"
-      ? approvedSuggestions
-      : [];
   const dashboardMetrics = [
-    { label: "Totale tool", value: tools.length },
-    { label: "Attivi", value: publishedCount },
+    { label: "Articoli", value: articles.length },
+    { label: "Pubblicati", value: publishedCount },
     { label: "Bozze", value: draftCount },
-    { label: "Da suggerimenti", value: approvedSuggestions.length },
+    { label: "Featured", value: featuredCount },
   ];
   const filterLinks = [
-    { href: "/admin", label: "Tutti", value: "all", count: tools.length },
+    { href: "/admin", label: "Tutti", value: "all", count: articles.length },
     {
       href: "/admin?view=published",
-      label: "Attivi",
+      label: "Pubblicati",
       value: "published",
       count: publishedCount,
     },
     { href: "/admin?view=draft", label: "Bozze", value: "draft", count: draftCount },
     {
-      href: "/admin?view=workbench",
-      label: "Da lavorare",
-      value: "workbench",
-      count: draftCount + approvedSuggestions.length,
-    },
-    {
-      href: "/admin?view=approved-suggestions",
-      label: "Approvati da modificare",
-      value: "approved-suggestions",
-      count: approvedSuggestions.length,
-    },
-    { href: "/admin?view=featured", label: "Featured", value: "featured", count: featuredCount },
-    {
-      href: "/admin?view=suggested",
-      label: "Gia da suggerimenti",
-      value: "suggested",
-      count: suggestedCount,
+      href: "/admin?view=featured",
+      label: "Featured",
+      value: "featured",
+      count: featuredCount,
     },
   ];
 
@@ -104,9 +81,9 @@ export default async function AdminDashboardPage({
         <section className="brand-panel rounded-[var(--radius-xl)] p-5 sm:p-7">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <SectionHeading
-              eyebrow="Tools dashboard"
-              title="Tool, bozze e suggerimenti approvati"
-              description="Una lista di lavoro unica: tool attivi, tool in bozza e suggerimenti approvati che devono ancora diventare schede complete."
+              eyebrow="Gestione blog"
+              title="Crea, modifica e pubblica articoli"
+              description="Una console dedicata al blog: bozze, contenuti pubblicati, featured e editing editoriale con media nel corpo articolo."
             />
             <div className="flex flex-wrap gap-3">
               <Link
@@ -117,13 +94,13 @@ export default async function AdminDashboardPage({
                     "linear-gradient(135deg, var(--accent-strong), var(--accent) 70%, var(--cyan))",
                 }}
               >
-                Crea nuovo tool
+                Nuovo articolo
               </Link>
               <Link
-                href="/admin/suggestions"
+                href="/posts"
                 className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
               >
-                Suggerimenti
+                Blog pubblico
               </Link>
             </div>
           </div>
@@ -159,16 +136,18 @@ export default async function AdminDashboardPage({
           </div>
 
           <div className="mt-5 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.7fr)]">
-            <article className="rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.68)" }}>
-              <p className="editorial-label">Flusso editoriale</p>
+            <article
+              className="rounded-[24px] border p-4"
+              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.68)" }}
+            >
+              <p className="editorial-label">Flusso blog</p>
               <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>
-                I suggerimenti approvati rimangono nella vista &quot;Approvati da modificare&quot; finche
-                non crei la scheda tool. Le bozze sono schede gia presenti nel catalogo ma non
-                ancora pubblicate.
+                Qui lavoriamo solo su articoli: creazione, modifica, media nel corpo e
+                pubblicazione. La parte tool e suggerimenti non entra in questa vista.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
-                  Approvati: {approvedSuggestions.length}
+                  Pubblicati: {publishedCount}
                 </span>
                 <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
                   Bozze: {draftCount}
@@ -179,11 +158,13 @@ export default async function AdminDashboardPage({
               </div>
             </article>
 
-            <article className="rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.68)" }}>
+            <article
+              className="rounded-[24px] border p-4"
+              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.68)" }}
+            >
               <p className="editorial-label">Stato tecnico</p>
               <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>
-                Source pubblica: <strong>{runtime.publicSnapshot.source}</strong>. Tool live:{" "}
-                <strong>{runtime.publicSnapshot.tools.length}</strong>.
+                Sorgente admin: <strong>{runtime.adminReadSource}</strong>.
               </p>
               <p className="mt-1 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
                 {runtime.writeMessage}
@@ -202,7 +183,7 @@ export default async function AdminDashboardPage({
                     background: "rgba(255,251,235,0.96)",
                   }}
                 >
-                  {getAdminToolWarningLabel(warning)}
+                  {getAdminArticleWarningLabel(warning)}
                 </div>
               ))}
             </div>
@@ -212,13 +193,12 @@ export default async function AdminDashboardPage({
         <section className="surface-card rounded-[var(--radius-xl)] p-5 sm:p-7">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
             <div>
-              <p className="editorial-label">Workspace tools</p>
+              <p className="editorial-label">Workspace articoli</p>
               <h2 className="text-display-card mt-2 text-[1.5rem] sm:text-[1.75rem]">
-                Inventario operativo
+                Inventario blog
               </h2>
               <p className="mt-3 max-w-[44rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
-                Filtra per stato e lavora nello stesso punto su tool gia creati e suggerimenti
-                approvati da trasformare.
+                Filtra per stato e rientra in modifica con un editor markdown completo.
               </p>
             </div>
             <div className="grid gap-3">
@@ -230,8 +210,8 @@ export default async function AdminDashboardPage({
                 }}
               >
                 {canWrite
-                  ? "Azioni rapide attive su Supabase."
-                  : "Azioni rapide in pausa: runtime non scrivibile."}
+                  ? "Azioni blog attive su Supabase."
+                  : "Azioni blog in pausa: runtime non scrivibile."}
               </div>
               <div className="flex flex-wrap gap-2">
                 {filterLinks.map((item) => (
@@ -251,76 +231,11 @@ export default async function AdminDashboardPage({
             </div>
           </div>
 
-          {visibleApprovedSuggestions.length > 0 ? (
-            <div className="mt-6 grid gap-4">
-              {visibleApprovedSuggestions.map((suggestion) => (
-                <article
-                  key={suggestion.id}
-                  className="relative overflow-hidden rounded-[var(--radius-xl)] border p-5"
-                  style={{
-                    borderColor: "rgba(106,60,255,0.18)",
-                    background: "rgba(246,242,255,0.82)",
-                  }}
-                >
-                  <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <AdminStatusPill
-                          active
-                          activeLabel="Suggerimento approvato"
-                          inactiveLabel=""
-                        />
-                        {suggestion.category ? (
-                          <span className="selection-chip rounded-full border px-3 py-1 text-xs font-medium">
-                            {suggestion.category}
-                          </span>
-                        ) : null}
-                      </div>
-                      <h3 className="mt-3 text-2xl">{suggestion.tool_name}</h3>
-                      <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>
-                        {suggestion.message ??
-                          "Approvato: ora va trasformato in una scheda tool completa prima della pubblicazione."}
-                      </p>
-                      <div
-                        className="mt-3 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]"
-                        style={{ color: "var(--muted)" }}
-                      >
-                        <span>Livello: {suggestion.level}</span>
-                        {suggestion.email ? <span>Da: {suggestion.email}</span> : null}
-                        <span>Ricevuto: {formatItalianDate(suggestion.created_at)}</span>
-                      </div>
-                    </div>
-                    <div className="grid gap-2 sm:grid-cols-2 lg:min-w-[14rem] lg:grid-cols-1">
-                      <Link
-                        href={`/admin/new?suggestion=${suggestion.id}`}
-                        className="button-shell rounded-full px-4 py-2 text-center text-sm font-semibold text-white"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, var(--accent-strong), var(--accent))",
-                        }}
-                      >
-                        Crea scheda tool
-                      </Link>
-                      <Link
-                        href={suggestion.tool_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
-                      >
-                        Apri sito
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          ) : null}
-
-          {filteredTools.length > 0 ? (
+          {filteredArticles.length > 0 ? (
             <div className="mt-6 space-y-4">
-              {filteredTools.map((tool) => (
+              {filteredArticles.map((article) => (
                 <article
-                  key={tool.id}
+                  key={article.id}
                   className="interactive-surface relative overflow-hidden rounded-[var(--radius-xl)] border p-5 lg:grid-cols-[1.5fr_1fr_auto]"
                   style={{
                     display: "grid",
@@ -332,35 +247,35 @@ export default async function AdminDashboardPage({
                   <div className="card-glow absolute inset-0" />
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-3">
-                      <h2 className="text-2xl">{tool.name}</h2>
+                      <h2 className="text-2xl">{article.title}</h2>
                       <AdminStatusPill
-                        active={tool.is_published}
-                        activeLabel="Attivo"
+                        active={article.status === "published"}
+                        activeLabel="Pubblicato"
                         inactiveLabel="Bozza"
                       />
                       <AdminStatusPill
-                        active={tool.is_featured}
+                        active={article.featured}
                         activeLabel="Featured"
                         inactiveLabel="Standard"
                       />
                     </div>
                     <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
-                      {tool.short_description_it}
+                      {article.dek}
                     </p>
                     <div
                       className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]"
                       style={{ color: "var(--muted)" }}
                     >
-                      <span>{tool.category}</span>
-                      <span>Slug: {tool.slug}</span>
-                      <span>Scoperto: {formatItalianDate(tool.date_discovered)}</span>
-                      <span>Fonte: {tool.source}</span>
+                      <span>{kindLabels[article.kind]}</span>
+                      <span>Slug: {article.slug}</span>
+                      <span>Data: {formatItalianDate(article.published_at)}</span>
+                      <span>Autore: {article.author_name}</span>
                     </div>
                   </div>
 
                   <div className="flex flex-wrap items-start gap-2">
-                    {tool.tags.length > 0 ? (
-                      tool.tags.map((tag) => (
+                    {article.tags.length > 0 ? (
+                      article.tags.map((tag) => (
                         <span
                           key={tag}
                           className="selection-chip rounded-full border px-3 py-1 text-xs font-medium"
@@ -387,59 +302,65 @@ export default async function AdminDashboardPage({
                   </div>
 
                   <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
-                    {tool.is_published ? (
+                    {article.status === "published" ? (
                       <Link
-                        href={`/toools/${tool.slug}`}
+                        href={`/posts/${article.slug}`}
                         className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
                       >
-                        Apri pagina pubblica
+                        Apri articolo
                       </Link>
                     ) : null}
                     <Link
-                      href={`/admin/${tool.id}/edit`}
+                      href={`/admin/${article.id}/edit`}
                       className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
                     >
                       Modifica
                     </Link>
 
-                    <form action={toggleFeaturedAction.bind(null, tool.id, !tool.is_featured)}>
+                    <form action={toggleArticleFeaturedAction.bind(null, article.id, !article.featured)}>
                       <button
                         type="submit"
                         disabled={!canWrite}
                         className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
                       >
-                        {tool.is_featured ? "Rimuovi featured" : "Metti in featured"}
+                        {article.featured ? "Rimuovi featured" : "Metti in featured"}
                       </button>
                     </form>
 
-                    <form action={togglePublishedAction.bind(null, tool.id, !tool.is_published)}>
+                    <form
+                      action={toggleArticlePublishedAction.bind(
+                        null,
+                        article.id,
+                        article.status !== "published",
+                      )}
+                    >
                       <button
                         type="submit"
                         disabled={!canWrite}
                         className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
                       >
-                        {tool.is_published ? "Torna in bozza" : "Pubblica"}
+                        {article.status === "published" ? "Torna in bozza" : "Pubblica"}
                       </button>
                     </form>
 
                     <DeleteWithConfirm
-                      action={deleteToolAction.bind(null, tool.id)}
+                      action={deleteArticleAction.bind(null, article.id)}
                       label="Elimina"
                       disabled={!canWrite}
-                      confirmMessage="Sei sicuro di voler eliminare questo tool? L'azione e irreversibile."
+                      confirmMessage="Sei sicuro di voler eliminare questo articolo? L'azione e irreversibile."
                     />
                   </div>
                 </article>
               ))}
             </div>
-          ) : visibleApprovedSuggestions.length === 0 ? (
+          ) : (
             <AdminEmptyState
-              title="Nessun elemento in questa vista"
-              description="Cambia filtro oppure crea un nuovo tool quando hai una scheda pronta da lavorare."
+              title="Nessun articolo in questa vista"
+              description="Crea un nuovo articolo oppure cambia filtro per ritrovare bozze e contenuti pubblicati."
               ctaHref="/admin/new"
-              ctaLabel="Aggiungi tool"
+              ctaLabel="Nuovo articolo"
             />
-          ) : null}
+          )}
         </section>
       </div>
     </div>

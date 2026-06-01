@@ -1,29 +1,32 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { updateToolFormAction } from "@/app/(admin)/admin/actions/tools";
-import { ToolForm } from "@/components/admin/tool-form";
+import { updateArticleFormAction } from "@/app/(admin)/admin/actions/articles";
+import { ArticleForm } from "@/components/admin/article-form";
 import { SectionHeading } from "@/components/sections/section-heading";
-import { getToolFormValues } from "@/lib/admin/tool-form";
-import { getAdminToolById, getAdminToolsRuntime } from "@/lib/admin/tool-queries";
+import { getArticleFormValues } from "@/lib/admin/article-form";
+import { getAdminArticleById, getAdminArticlesRuntime } from "@/lib/admin/article-queries";
 
-type EditToolPageProps = {
+type EditArticlePageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function EditToolPage({ params }: EditToolPageProps) {
+export default async function EditArticlePage({ params }: EditArticlePageProps) {
   const { id } = await params;
-  const [tool, runtime] = await Promise.all([getAdminToolById(id), getAdminToolsRuntime()]);
+  const [article, runtime] = await Promise.all([
+    getAdminArticleById(id),
+    getAdminArticlesRuntime(),
+  ]);
 
-  if (!tool) {
+  if (!article) {
     notFound();
   }
 
   const canWrite = runtime.canWrite;
-  const boundAction = updateToolFormAction.bind(null, tool.id);
+  const boundAction = updateArticleFormAction.bind(null, article.id);
   const runtimeHighlights = [
     { label: "Admin read", value: runtime.adminReadSource },
-    { label: "Public feed", value: runtime.publicSnapshot.source },
+    { label: "Stato", value: article.status },
     { label: "Write target", value: runtime.writeTarget ?? "locked" },
   ];
 
@@ -32,15 +35,15 @@ export default async function EditToolPage({ params }: EditToolPageProps) {
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <SectionHeading
-            eyebrow="Modifica tool"
-            title={tool.name}
-            description="Aggiorna metadati, copy editoriale e stati pubblici con un runtime più onesto: se il pannello non è davvero live, lo dichiara e blocca le mutazioni."
+            eyebrow="Modifica articolo"
+            title={article.title}
+            description="Aggiorna contenuto, media, formattazione e stato editoriale senza uscire dal workflow blog."
           />
           <Link
             href="/admin"
             className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)]"
           >
-            Torna alla dashboard
+            Torna a Gestione blog
           </Link>
         </div>
 
@@ -69,10 +72,10 @@ export default async function EditToolPage({ params }: EditToolPageProps) {
         ) : null}
 
         <div className="mt-8">
-          <ToolForm
+          <ArticleForm
             action={boundAction}
-            initialValues={getToolFormValues(tool)}
-            submitLabel="Salva modifiche"
+            initialValues={getArticleFormValues(article)}
+            submitLabel="Salva articolo"
             disabled={!canWrite}
           />
         </div>

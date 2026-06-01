@@ -4,6 +4,7 @@ import { EditorialPostCard } from "@/components/editorial/editorial-post-card";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { ButtonLink } from "@/components/ui/button";
 import {
+  getBlogPosts,
   getFeaturedEditorialPosts,
   getGuidePosts,
   getToolWriteupPosts,
@@ -18,8 +19,9 @@ const curationCriteria = [
 ];
 
 export default async function PostsPage() {
-  const [featuredPosts, toolWriteups, guides] = await Promise.all([
+  const [featuredPosts, blogPosts, toolWriteups, guides] = await Promise.all([
     getFeaturedEditorialPosts(3),
+    getBlogPosts(),
     getToolWriteupPosts(),
     getGuidePosts(),
   ]);
@@ -58,15 +60,15 @@ export default async function PostsPage() {
           <div className="col-span-12 lg:col-span-4">
             <div className="dark-panel panel-lift rounded-[28px] p-4.5 sm:p-5 lg:ml-4">
               <div>
-                <p className="editorial-label !text-white/60">Importi attivi</p>
+                <p className="editorial-label !text-white/60">Contenuti attivi</p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
+                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">Blog</p>
+                    <p className="mt-2 text-[1.8rem] leading-none text-white">{blogPosts.length}</p>
+                  </div>
                   <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
                     <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">Tool writeup</p>
                     <p className="mt-2 text-[1.8rem] leading-none text-white">{toolWriteups.length}</p>
-                  </div>
-                  <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">Guide legacy</p>
-                    <p className="mt-2 text-[1.8rem] leading-none text-white">{guides.length}</p>
                   </div>
                 </div>
               </div>
@@ -114,6 +116,23 @@ export default async function PostsPage() {
           </div>
         </div>
       </section>
+
+      {blogPosts.length > 0 ? (
+        <section className="page-shell home-section-gap">
+          <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
+            <SectionHeading
+              eyebrow="Blog"
+              title="Gli articoli pubblicati dal nuovo editor."
+              description="Qui finiscono i contenuti creati dal backoffice: markdown ricco, media interni e pubblicazione controllata."
+            />
+            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {blogPosts.map((post) => (
+                <EditorialPostCard key={post.slug} post={post} compact />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="page-shell home-section-gap">
         <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
