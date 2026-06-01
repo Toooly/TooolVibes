@@ -1,4 +1,9 @@
-import type { ArticleStatus, BlogArticleRecord, EditorialPostKind } from "@/lib/types/article";
+import type {
+  ArticleStatus,
+  BlogArticleRecord,
+  EditorialPostKind,
+  EditorialPostRecord,
+} from "@/lib/types/article";
 
 export const articleKinds: EditorialPostKind[] = ["editorial", "guide", "tool-writeup"];
 export const articleStatuses: ArticleStatus[] = ["draft", "published"];
@@ -47,6 +52,39 @@ export function getArticleFormValues(article?: BlogArticleRecord | null): Articl
     tags: article?.tags.join(", ") ?? "",
     published_at: article?.published_at ?? new Date().toISOString().slice(0, 10),
     is_featured: article?.featured ?? false,
+  };
+}
+
+export function getArticleImportFormValues(post: EditorialPostRecord): ArticleFormValues {
+  const sections = [
+    `# ${post.title}`,
+    post.dek,
+    post.summary,
+    post.highlights.length > 0
+      ? `## Punti chiave\n\n${post.highlights.map((item) => `- ${item}`).join("\n")}`
+      : "",
+    post.details.length > 0
+      ? `## Dettagli\n\n${post.details.map((item) => `- ${item}`).join("\n")}`
+      : "",
+    post.cautions.length > 0
+      ? `## Attenzione\n\n${post.cautions.map((item) => `- ${item}`).join("\n")}`
+      : "",
+  ];
+
+  return {
+    title: post.title,
+    slug: post.slug,
+    dek: post.dek,
+    summary: post.summary,
+    kind: post.kind,
+    status: "draft",
+    content_markdown: post.content_markdown ?? sections.filter(Boolean).join("\n\n"),
+    cover_image_url: post.cover_image_url ?? "",
+    cover_image_alt: post.cover_image_alt ?? post.title,
+    author_name: post.author_name ?? "TooolVibes",
+    tags: (post.tags ?? post.highlights.slice(0, 3)).join(", "),
+    published_at: new Date().toISOString().slice(0, 10),
+    is_featured: Boolean(post.featured),
   };
 }
 

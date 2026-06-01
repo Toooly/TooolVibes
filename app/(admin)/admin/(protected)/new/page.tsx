@@ -3,11 +3,22 @@ import Link from "next/link";
 import { createArticleFormAction } from "@/app/(admin)/admin/actions/articles";
 import { ArticleForm } from "@/components/admin/article-form";
 import { SectionHeading } from "@/components/sections/section-heading";
-import { getAdminArticlesRuntime } from "@/lib/admin/article-queries";
+import { getArticleImportFormValues } from "@/lib/admin/article-form";
+import { getAdminArticlesRuntime, getLegacyPostForImport } from "@/lib/admin/article-queries";
 
-export default async function NewArticlePage() {
-  const runtime = await getAdminArticlesRuntime();
+type NewArticlePageProps = {
+  searchParams: Promise<{ legacy?: string }>;
+};
+
+export default async function NewArticlePage({ searchParams }: NewArticlePageProps) {
+  const params = await searchParams;
+  const legacySlug = params.legacy?.trim();
+  const [runtime, legacyPost] = await Promise.all([
+    getAdminArticlesRuntime(),
+    legacySlug ? getLegacyPostForImport(legacySlug) : Promise.resolve(null),
+  ]);
   const canWrite = runtime.canWrite;
+  const initialValues = legacyPost ? getArticleImportFormValues(legacyPost) : undefined;
   const runtimeHighlights = [
     { label: "Admin read", value: runtime.adminReadSource },
     { label: "Articoli", value: String(runtime.articles.length) },
@@ -19,9 +30,13 @@ export default async function NewArticlePage() {
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <SectionHeading
-            eyebrow="Nuovo articolo"
-            title="Crea una nuova bozza blog"
-            description="Scrivi in Markdown, inserisci media nel corpo articolo e decidi se salvarlo come bozza o pubblicarlo subito."
+            eyebrow={legacyPost ? "Importa articolo" : "Nuovo articolo"}
+            title={legacyPost ? `Importa "${legacyPost.title}" nel CMS` : "Crea una nuova bozza blog"}
+            description={
+              legacyPost
+                ? "Ho precompilato il contenuto legacy nel nuovo editor Markdown. Salvalo come bozza per renderlo modificabile nel CMS."
+                : "Scrivi in Markdown, inserisci media nel corpo articolo e decidi se salvarlo come bozza o pubblicarlo subito."
+            }
           />
           <Link
             href="/admin"
@@ -58,6 +73,7 @@ export default async function NewArticlePage() {
         <div className="mt-8">
           <ArticleForm
             action={createArticleFormAction}
+            initialValues={initialValues}
             submitLabel="Crea articolo"
             disabled={!canWrite}
           />

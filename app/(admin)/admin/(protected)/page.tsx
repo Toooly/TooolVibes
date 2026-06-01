@@ -10,10 +10,10 @@ import { AdminStatusPill } from "@/components/admin/admin-status-pill";
 import { DeleteWithConfirm } from "@/components/admin/delete-with-confirm";
 import { SectionHeading } from "@/components/sections/section-heading";
 import {
+  type AdminArticleRecord,
   getAdminArticleWarningLabel,
   getAdminArticlesRuntime,
 } from "@/lib/admin/article-queries";
-import type { BlogArticleRecord } from "@/lib/types/article";
 import { formatItalianDate } from "@/lib/utils";
 
 type AdminDashboardPageProps = {
@@ -26,7 +26,7 @@ const statusMessages: Record<string, string> = {
   deleted: "Articolo eliminato correttamente.",
 };
 
-const kindLabels: Record<BlogArticleRecord["kind"], string> = {
+const kindLabels: Record<AdminArticleRecord["kind"], string> = {
   editorial: "Blog",
   guide: "Guida",
   "tool-writeup": "Tool writeup",
@@ -44,19 +44,23 @@ export default async function AdminDashboardPage({
   const activeView = view ?? "all";
   const publishedCount = articles.filter((article) => article.status === "published").length;
   const featuredCount = articles.filter((article) => article.featured).length;
+  const cmsCount = articles.filter((article) => article.admin_source === "cms").length;
+  const legacyCount = articles.length - cmsCount;
   const draftCount = articles.length - publishedCount;
   const filteredArticles = articles.filter((article) => {
     if (activeView === "all") return true;
     if (activeView === "published") return article.status === "published";
     if (activeView === "draft") return article.status === "draft";
     if (activeView === "featured") return article.featured;
+    if (activeView === "cms") return article.admin_source === "cms";
+    if (activeView === "legacy") return article.admin_source === "legacy";
     return true;
   });
   const dashboardMetrics = [
     { label: "Articoli", value: articles.length },
     { label: "Pubblicati", value: publishedCount },
-    { label: "Bozze", value: draftCount },
-    { label: "Featured", value: featuredCount },
+    { label: "CMS", value: cmsCount },
+    { label: "Legacy", value: legacyCount },
   ];
   const filterLinks = [
     { href: "/admin", label: "Tutti", value: "all", count: articles.length },
@@ -73,6 +77,8 @@ export default async function AdminDashboardPage({
       value: "featured",
       count: featuredCount,
     },
+    { href: "/admin?view=cms", label: "CMS", value: "cms", count: cmsCount },
+    { href: "/admin?view=legacy", label: "Legacy", value: "legacy", count: legacyCount },
   ];
 
   return (
@@ -150,7 +156,10 @@ export default async function AdminDashboardPage({
                   Pubblicati: {publishedCount}
                 </span>
                 <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
-                  Bozze: {draftCount}
+                  CMS: {cmsCount}
+                </span>
+                <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+                  Legacy: {legacyCount}
                 </span>
                 <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
                   Write: {runtime.writeTarget ?? "locked"}
@@ -211,7 +220,7 @@ export default async function AdminDashboardPage({
               >
                 {canWrite
                   ? "Azioni blog attive su Supabase."
-                  : "Azioni blog in pausa: runtime non scrivibile."}
+                  : "Vedi il fallback legacy. Applica la migration blog per salvare e importare."}
               </div>
               <div className="flex flex-wrap gap-2">
                 {filterLinks.map((item) => (
@@ -258,6 +267,9 @@ export default async function AdminDashboardPage({
                         activeLabel="Featured"
                         inactiveLabel="Standard"
                       />
+                      <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
+                        {article.admin_source === "cms" ? "CMS" : "Legacy"}
+                      </span>
                     </div>
                     <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
                       {article.dek}
@@ -270,6 +282,7 @@ export default async function AdminDashboardPage({
                       <span>Slug: {article.slug}</span>
                       <span>Data: {formatItalianDate(article.published_at)}</span>
                       <span>Autore: {article.author_name}</span>
+                      <span>Fonte: {article.admin_source_label}</span>
                     </div>
                   </div>
 
@@ -310,45 +323,69 @@ export default async function AdminDashboardPage({
                         Apri articolo
                       </Link>
                     ) : null}
-                    <Link
-                      href={`/admin/${article.id}/edit`}
-                      className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
-                    >
-                      Modifica
-                    </Link>
-
-                    <form action={toggleArticleFeaturedAction.bind(null, article.id, !article.featured)}>
-                      <button
-                        type="submit"
-                        disabled={!canWrite}
-                        className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                    {article.admin_can_edit ? (
+                      <Link
+                        href={`/admin/${article.id}/edit`}
+                        className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
                       >
-                        {article.featured ? "Rimuovi featured" : "Metti in featured"}
-                      </button>
-                    </form>
-
-                    <form
-                      action={toggleArticlePublishedAction.bind(
-                        null,
-                        article.id,
-                        article.status !== "published",
-                      )}
-                    >
-                      <button
-                        type="submit"
-                        disabled={!canWrite}
-                        className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                        Modifica
+                      </Link>
+                    ) : (
+                      <Link
+                        href={`/admin/new?legacy=${article.slug}`}
+                        className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
                       >
-                        {article.status === "published" ? "Torna in bozza" : "Pubblica"}
-                      </button>
-                    </form>
+                        Importa e modifica
+                      </Link>
+                    )}
 
-                    <DeleteWithConfirm
-                      action={deleteArticleAction.bind(null, article.id)}
-                      label="Elimina"
-                      disabled={!canWrite}
-                      confirmMessage="Sei sicuro di voler eliminare questo articolo? L'azione e irreversibile."
-                    />
+                    {article.admin_can_mutate ? (
+                      <>
+                        <form action={toggleArticleFeaturedAction.bind(null, article.id, !article.featured)}>
+                          <button
+                            type="submit"
+                            disabled={!canWrite}
+                            className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                          >
+                            {article.featured ? "Rimuovi featured" : "Metti in featured"}
+                          </button>
+                        </form>
+
+                        <form
+                          action={toggleArticlePublishedAction.bind(
+                            null,
+                            article.id,
+                            article.status !== "published",
+                          )}
+                        >
+                          <button
+                            type="submit"
+                            disabled={!canWrite}
+                            className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                          >
+                            {article.status === "published" ? "Torna in bozza" : "Pubblica"}
+                          </button>
+                        </form>
+
+                        <DeleteWithConfirm
+                          action={deleteArticleAction.bind(null, article.id)}
+                          label="Elimina"
+                          disabled={!canWrite}
+                          confirmMessage="Sei sicuro di voler eliminare questo articolo? L'azione e irreversibile."
+                        />
+                      </>
+                    ) : (
+                      <div
+                        className="rounded-[20px] border px-4 py-3 text-sm leading-6"
+                        style={{
+                          borderColor: "var(--line)",
+                          background: "rgba(255,255,255,0.72)",
+                          color: "var(--muted)",
+                        }}
+                      >
+                        Questo articolo viene dal vecchio layer. Importalo per salvarlo nel CMS.
+                      </div>
+                    )}
                   </div>
                 </article>
               ))}
