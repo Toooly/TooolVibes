@@ -35,6 +35,7 @@ export function DesktopVibeRadar() {
           <span className="desktop-vibe-radar-orbit desktop-vibe-radar-orbit--one" aria-hidden="true" />
           <span className="desktop-vibe-radar-orbit desktop-vibe-radar-orbit--two" aria-hidden="true" />
           <span className="desktop-vibe-radar-orbit desktop-vibe-radar-orbit--three" aria-hidden="true" />
+          <span className="desktop-vibe-radar-orbit desktop-vibe-radar-orbit--four" aria-hidden="true" />
           <span className="desktop-vibe-radar-core" aria-hidden="true">
             <Radar />
           </span>

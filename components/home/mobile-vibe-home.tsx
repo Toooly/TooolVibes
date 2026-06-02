@@ -90,11 +90,11 @@ export function MobileVibeHome({ tools, weeklyTool, supportingTools }: MobileVib
       <section className="page-shell mobile-vibe-section" aria-labelledby="mobile-vibe-title">
         <PremiumPanel tone="blue" className="mobile-vibe-hero-panel">
           <div className="mobile-vibe-hero-copy">
-            <PremiumBadge tone="accent">TooolVibes 3D</PremiumBadge>
-            <h1 id="mobile-vibe-title">Tool AI in uno spazio 3D.</h1>
+            <PremiumBadge tone="accent">AI tools discovery</PremiumBadge>
+            <h1 id="mobile-vibe-title">Scegli tool AI validi senza rumore.</h1>
             <p>
-              La home mobile usa lo stesso sistema 3D della versione desktop, ma lo
-              comprime in un campo piu leggibile: tool davanti, percorsi sotto, zero doppioni.
+              TooolVibes organizza catalogo, segnali e shortlist in un percorso chiaro:
+              trovi alternative credibili, confronti solo ciò che conta e decidi prima.
             </p>
             <div className="mobile-vibe-actions">
               <PremiumLink href="/archivio" size="md">

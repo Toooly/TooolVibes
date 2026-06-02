@@ -59,8 +59,12 @@ export function SiteBrandIntro() {
     const hideTimer = window.setTimeout(
       () => {
         markIntroPlayed();
-        document.documentElement.classList.remove("brand-intro-active", "brand-intro-preflight");
+        document.documentElement.classList.remove("brand-intro-active");
         window.dispatchEvent(new CustomEvent("tooolvibes:brand-intro-finished"));
+        // Rimuovi preflight con un breve delay per evitare flash durante la dissolvenza
+        window.setTimeout(() => {
+          document.documentElement.classList.remove("brand-intro-preflight");
+        }, 120);
         setPhase("hidden");
       },
       quick ? 360 : 620,
@@ -81,7 +85,7 @@ export function SiteBrandIntro() {
     }
 
     document.documentElement.classList.add("brand-intro-active");
-    document.documentElement.classList.remove("brand-intro-preflight");
+    // brand-intro-preflight stays active until the intro finishes to prevent flash
     setPhase("active");
     window.dispatchEvent(new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "introOpen" } }));
 
@@ -168,9 +172,9 @@ export function SiteBrandIntro() {
       const ringGeometry = track(new THREE.TorusGeometry(1.42, 0.01, 8, 128));
       const wideRingGeometry = track(new THREE.TorusGeometry(2.52, 0.007, 8, 148));
       const ringMaterials = [
-        meshMaterial(0x14b8a6, 0.42),
-        meshMaterial(0x60a5fa, 0.24),
-        meshMaterial(0xa78bfa, 0.2),
+        meshMaterial(0x6a3cff, 0.48),
+        meshMaterial(0x39d2f6, 0.32),
+        meshMaterial(0xf3bf4c, 0.26),
       ];
       const ringMeshes = [
         new THREE.Mesh(ringGeometry, ringMaterials[0]),
@@ -186,13 +190,26 @@ export function SiteBrandIntro() {
       root.add(core);
       const coreShell = new THREE.Mesh(
         track(new THREE.TorusKnotGeometry(0.62, 0.13, 96, 10, 2, 3)),
-        meshMaterial(0x020617, 0.72),
+        meshMaterial(0x120d2f, 0.78),
       );
       const coreSpark = new THREE.Mesh(
         track(new THREE.IcosahedronGeometry(0.36, 1)),
-        meshMaterial(0x14b8a6, 0.34),
+        meshMaterial(0x6a3cff, 0.42),
       );
-      core.add(coreShell, coreSpark);
+      const coreGlow = new THREE.Mesh(
+        track(new THREE.IcosahedronGeometry(0.58, 2)),
+        track(
+          new THREE.MeshBasicMaterial({
+            color: 0x6a3cff,
+            transparent: true,
+            opacity: 0.08,
+            wireframe: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        ),
+      );
+      core.add(coreShell, coreSpark, coreGlow);
 
       const rails = new THREE.Group();
       root.add(rails);
@@ -213,20 +230,20 @@ export function SiteBrandIntro() {
       const railLines = railPoints.map((points, index) => {
         const curve = new THREE.CatmullRomCurve3(points);
         const geometry = track(new THREE.BufferGeometry().setFromPoints(curve.getPoints(56)));
-        const material = lineMaterial(index === 0 ? 0x14b8a6 : 0x60a5fa, index === 0 ? 0.34 : 0.2);
+        const material = lineMaterial(index === 0 ? 0x6a3cff : 0x39d2f6, index === 0 ? 0.38 : 0.24);
         const line = new THREE.Line(geometry, material);
         rails.add(line);
         return { line, material };
       });
 
-      const particleCount = 78;
+      const particleCount = 140;
       const particlePositions = new Float32Array(particleCount * 3);
       for (let index = 0; index < particleCount; index += 1) {
         const angle = index * 2.399963 + 0.36;
-        const radius = 1.6 + (index % 11) * 0.22;
+        const radius = 1.4 + (index % 11) * 0.26;
         particlePositions[index * 3] = Math.cos(angle) * radius;
-        particlePositions[index * 3 + 1] = Math.sin(angle * 0.78) * (0.9 + (index % 5) * 0.18);
-        particlePositions[index * 3 + 2] = -3.5 + (index % 17) * 0.24;
+        particlePositions[index * 3 + 1] = Math.sin(angle * 0.78) * (0.9 + (index % 5) * 0.22);
+        particlePositions[index * 3 + 2] = -4.0 + (index % 17) * 0.28;
       }
       const particleGeometry = track(new THREE.BufferGeometry());
       particleGeometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
@@ -235,15 +252,41 @@ export function SiteBrandIntro() {
         track(
           new THREE.PointsMaterial({
             color: 0xffffff,
-            size: 0.034,
+            size: 0.038,
             transparent: true,
-            opacity: 0.5,
+            opacity: 0.55,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
           }),
         ),
       );
       root.add(particles);
+
+      const dustCount = 220;
+      const dustPositions = new Float32Array(dustCount * 3);
+      for (let index = 0; index < dustCount; index += 1) {
+        const angle = index * 2.618034 + 1.1;
+        const radius = 2.2 + (index % 13) * 0.34;
+        dustPositions[index * 3] = Math.cos(angle) * radius;
+        dustPositions[index * 3 + 1] = Math.sin(angle * 0.64) * (1.2 + (index % 7) * 0.26);
+        dustPositions[index * 3 + 2] = -5.5 + (index % 23) * 0.32;
+      }
+      const dustGeometry = track(new THREE.BufferGeometry());
+      dustGeometry.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
+      const dust = new THREE.Points(
+        dustGeometry,
+        track(
+          new THREE.PointsMaterial({
+            color: 0xa78bfa,
+            size: 0.018,
+            transparent: true,
+            opacity: 0.35,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        ),
+      );
+      root.add(dust);
 
       let isMobile = false;
       const resize = () => {
@@ -273,22 +316,28 @@ export function SiteBrandIntro() {
 
         root.rotation.y = Math.sin(elapsed * 0.34) * 0.06 * mobileWeight;
         root.rotation.x = -0.08 + Math.cos(elapsed * 0.28) * 0.035;
-        root.position.z = -0.35 + introProgress * 0.35;
+        root.position.z = -0.45 + introProgress * 0.45;
 
         rings.rotation.z = -elapsed * 0.46;
         ringMeshes.forEach((ring, index) => {
           ring.rotation.z -= 0.003 + index * 0.0009;
-          ring.scale.setScalar(1.05 - introProgress * 0.11 + Math.sin(elapsed * 0.9 + index) * 0.018);
+          const introScale = 0.4 + introProgress * 0.65;
+          ring.scale.setScalar(introScale + Math.sin(elapsed * 0.9 + index) * 0.018);
         });
         core.rotation.x = elapsed * 0.36;
         core.rotation.y = -elapsed * 0.62;
         core.rotation.z = -elapsed * 0.42;
         coreSpark.rotation.z = -elapsed * 0.58;
+        coreGlow.rotation.x = -elapsed * 0.28;
+        coreGlow.rotation.y = elapsed * 0.44;
+        coreGlow.scale.setScalar(1.0 + Math.sin(elapsed * 1.6) * 0.12);
         particles.rotation.y = -elapsed * 0.08;
         particles.rotation.z = -elapsed * 0.045;
+        dust.rotation.y = elapsed * 0.05;
+        dust.rotation.z = elapsed * 0.03;
         railLines.forEach((rail, index) => {
           rail.line.position.y = Math.sin(elapsed * 0.72 + index) * 0.035;
-          rail.material.opacity = (index === 0 ? 0.24 : 0.16) + Math.sin(elapsed * 1.1 + index) * 0.04;
+          rail.material.opacity = (index === 0 ? 0.28 : 0.2) + Math.sin(elapsed * 1.1 + index) * 0.04;
         });
 
         renderer.render(scene, camera);
@@ -384,6 +433,10 @@ export function SiteBrandIntro() {
             <span className="brand-intro__mobile-caption">singularity field</span>
           </span>
         </span>
+
+        <span className="brand-intro__shockwave" aria-hidden="true" />
+        <span className="brand-intro__flare" aria-hidden="true" />
+        <span className="brand-intro__atmosphere" aria-hidden="true" />
       </div>
 
       <button

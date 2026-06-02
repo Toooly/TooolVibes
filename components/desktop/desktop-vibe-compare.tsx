@@ -67,6 +67,7 @@ export function DesktopVibeCompare({
           <span className="desktop-vibe-compare-grid" aria-hidden="true" />
           <span className="desktop-vibe-compare-ring desktop-vibe-compare-ring--one" aria-hidden="true" />
           <span className="desktop-vibe-compare-ring desktop-vibe-compare-ring--two" aria-hidden="true" />
+          <span className="desktop-vibe-compare-ring desktop-vibe-compare-ring--three" aria-hidden="true" />
           <span className="desktop-vibe-compare-beam" aria-hidden="true" />
           <span className="desktop-vibe-compare-core" aria-hidden="true">
             <Columns3 />
