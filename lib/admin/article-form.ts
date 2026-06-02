@@ -77,13 +77,13 @@ export function getArticleImportFormValues(post: EditorialPostRecord): ArticleFo
     dek: post.dek,
     summary: post.summary,
     kind: post.kind,
-    status: "draft",
+    status: post.status ?? "published",
     content_markdown: post.content_markdown ?? sections.filter(Boolean).join("\n\n"),
     cover_image_url: post.cover_image_url ?? "",
     cover_image_alt: post.cover_image_alt ?? post.title,
     author_name: post.author_name ?? "TooolVibes",
     tags: (post.tags ?? post.highlights.slice(0, 3)).join(", "),
-    published_at: new Date().toISOString().slice(0, 10),
+    published_at: post.published_at,
     is_featured: Boolean(post.featured),
   };
 }

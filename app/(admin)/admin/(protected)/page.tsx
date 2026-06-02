@@ -330,13 +330,24 @@ export default async function AdminDashboardPage({
                       >
                         Modifica
                       </Link>
-                    ) : (
+                    ) : canWrite ? (
                       <Link
                         href={`/admin/new?legacy=${article.slug}`}
                         className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
                       >
                         Importa e modifica
                       </Link>
+                    ) : (
+                      <div
+                        className="rounded-full border px-4 py-2 text-center text-sm font-semibold"
+                        style={{
+                          borderColor: "rgba(161,105,47,0.2)",
+                          background: "rgba(255,251,235,0.96)",
+                          color: "var(--muted-strong)",
+                        }}
+                      >
+                        CMS da configurare
+                      </div>
                     )}
 
                     {article.admin_can_mutate ? (
@@ -383,7 +394,9 @@ export default async function AdminDashboardPage({
                           color: "var(--muted)",
                         }}
                       >
-                        Questo articolo viene dal vecchio layer. Importalo per salvarlo nel CMS.
+                        {canWrite
+                          ? "Questo articolo viene dal vecchio layer. Importalo per salvarlo nel CMS."
+                          : "Questo articolo e legacy perche manca la write key Supabase. Appena il CMS e scrivibile, viene importato automaticamente."}
                       </div>
                     )}
                   </div>

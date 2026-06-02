@@ -34,7 +34,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
             title={legacyPost ? `Importa "${legacyPost.title}" nel CMS` : "Crea una nuova bozza blog"}
             description={
               legacyPost
-                ? "Ho precompilato il contenuto legacy nel nuovo editor Markdown. Salvalo come bozza per renderlo modificabile nel CMS."
+                ? "Ho precompilato il contenuto legacy nel nuovo editor Markdown. Salvalo nel CMS per renderlo modificabile mantenendo stato e data originale."
                 : "Scrivi in Markdown, inserisci media nel corpo articolo e decidi se salvarlo come bozza o pubblicarlo subito."
             }
           />
@@ -74,7 +74,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
           <ArticleForm
             action={createArticleFormAction}
             initialValues={initialValues}
-            submitLabel="Crea articolo"
+            submitLabel={legacyPost ? "Importa nel CMS" : "Crea articolo"}
             disabled={!canWrite}
           />
         </div>
