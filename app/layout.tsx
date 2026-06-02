@@ -66,7 +66,7 @@ const brandIntroPreflightStyle = `
 html.brand-intro-preflight,
 html.brand-intro-preflight body {
   overflow: hidden;
-  background: #100a34;
+  background: #08051d;
 }
 
 html.brand-intro-preflight body::before {
@@ -76,10 +76,9 @@ html.brand-intro-preflight body::before {
   z-index: 119;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 50%, rgba(20,184,166,0.18), transparent 18rem),
-    radial-gradient(circle at 50% 50%, rgba(6,7,18,0.9), transparent 9rem),
-    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.065) 0 1px, transparent 1px 2.8rem),
-    linear-gradient(145deg, #040512 0%, #08111f 54%, #02030a 100%);
+    radial-gradient(circle at 50% 42%, rgba(103,227,255,0.16), transparent 18rem),
+    radial-gradient(circle at 50% 54%, rgba(106,60,255,0.22), transparent 26rem),
+    linear-gradient(145deg, #08051d 0%, #170b4d 48%, #050313 100%);
 }
 `;
 
@@ -92,7 +91,7 @@ const brandIntroPreflightScript = `
       pathname.startsWith("/api") ||
       pathname.startsWith("/auth");
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    const played = window.sessionStorage?.getItem("tooolvibes:brand-intro-singularity-v2") === "true";
+    const played = window.sessionStorage?.getItem("tooolvibes:brand-intro-neural-v3") === "true";
 
     if (!excluded && !reduced && !played) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");

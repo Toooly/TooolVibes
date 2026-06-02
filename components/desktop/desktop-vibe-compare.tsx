@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowRight, Columns3, Gauge, Layers3, Scale, Sparkles } from "lucide-react";
+import { DesktopCompareCanvas } from "@/components/desktop/desktop-compare-canvas";
 
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import { UnifiedCompareBoard } from "@/components/tools/unified-compare-board";
@@ -64,11 +65,7 @@ export function DesktopVibeCompare({
         </div>
 
         <div className="desktop-vibe-compare-stage" aria-label="Stanza 3D del confronto">
-          <span className="desktop-vibe-compare-grid" aria-hidden="true" />
-          <span className="desktop-vibe-compare-ring desktop-vibe-compare-ring--one" aria-hidden="true" />
-          <span className="desktop-vibe-compare-ring desktop-vibe-compare-ring--two" aria-hidden="true" />
-          <span className="desktop-vibe-compare-ring desktop-vibe-compare-ring--three" aria-hidden="true" />
-          <span className="desktop-vibe-compare-beam" aria-hidden="true" />
+          <DesktopCompareCanvas />
           <span className="desktop-vibe-compare-core" aria-hidden="true">
             <Columns3 />
           </span>

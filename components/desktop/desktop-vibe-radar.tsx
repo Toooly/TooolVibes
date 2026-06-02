@@ -1,5 +1,6 @@
 import { Activity, MessageCircle, Radar, TrendingUp } from "lucide-react";
 
+import { DesktopRadarCanvas } from "@/components/desktop/desktop-radar-canvas";
 import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
 import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
 
@@ -31,11 +32,7 @@ export function DesktopVibeRadar() {
         </div>
 
         <div className="desktop-vibe-radar-stage" aria-label="Radar 3D Product Hunt">
-          <span className="desktop-vibe-radar-sweep" aria-hidden="true" />
-          <span className="desktop-vibe-radar-orbit desktop-vibe-radar-orbit--one" aria-hidden="true" />
-          <span className="desktop-vibe-radar-orbit desktop-vibe-radar-orbit--two" aria-hidden="true" />
-          <span className="desktop-vibe-radar-orbit desktop-vibe-radar-orbit--three" aria-hidden="true" />
-          <span className="desktop-vibe-radar-orbit desktop-vibe-radar-orbit--four" aria-hidden="true" />
+          <DesktopRadarCanvas />
           <span className="desktop-vibe-radar-core" aria-hidden="true">
             <Radar />
           </span>
