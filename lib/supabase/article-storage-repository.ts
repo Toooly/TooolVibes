@@ -7,6 +7,7 @@ import type { BlogArticleRecord } from "@/lib/types/article";
 
 const ARTICLE_CONTENT_BUCKET = "editorial-content";
 const ARTICLE_CONTENT_PREFIX = "articles";
+const ARTICLE_CONTENT_INDEX_PATH = `${ARTICLE_CONTENT_PREFIX}/index.json`;
 export const ARTICLE_MEDIA_BUCKET = "editorial-media";
 
 const editorialMediaMimeTypes = [
@@ -42,6 +43,12 @@ type PartialArticleStorageInput = Partial<ArticleStorageInput>;
 type StorageArticlePayload = Partial<BlogArticleRecord> & {
   is_featured?: boolean;
 };
+
+type StorageArticleIndexPayload =
+  | {
+      articles?: StorageArticlePayload[];
+    }
+  | StorageArticlePayload[];
 
 function isAlreadyExistsError(message: string) {
   const normalized = message.toLowerCase();
@@ -81,21 +88,21 @@ async function ensureBucket(
   return client;
 }
 
-export async function ensureEditorialMediaBucket() {
+export const ensureEditorialMediaBucket = cache(async () => {
   return ensureBucket(ARTICLE_MEDIA_BUCKET, {
     public: true,
     fileSizeLimit: 50 * 1024 * 1024,
     allowedMimeTypes: editorialMediaMimeTypes,
   });
-}
+});
 
-async function ensureArticleContentBucket() {
+const ensureArticleContentBucket = cache(async () => {
   return ensureBucket(ARTICLE_CONTENT_BUCKET, {
     public: false,
     fileSizeLimit: 5 * 1024 * 1024,
     allowedMimeTypes: ["application/json"],
   });
-}
+});
 
 function storagePathForArticle(id: string) {
   return `${ARTICLE_CONTENT_PREFIX}/${id}.json`;
@@ -157,19 +164,39 @@ function orderArticles(items: BlogArticleRecord[]) {
   });
 }
 
-async function uploadStorageArticle(article: BlogArticleRecord, upsert: boolean) {
+async function uploadStorageArticleIndex(articles: BlogArticleRecord[]) {
   const client = await ensureArticleContentBucket();
-  const payload = JSON.stringify(article, null, 2);
+  const payload = JSON.stringify({ articles: orderArticles(articles) }, null, 2);
   const { error } = await client.storage
     .from(ARTICLE_CONTENT_BUCKET)
-    .upload(storagePathForArticle(article.id), new Blob([payload], { type: "application/json" }), {
+    .upload(ARTICLE_CONTENT_INDEX_PATH, new Blob([payload], { type: "application/json" }), {
       cacheControl: "60",
       contentType: "application/json",
-      upsert,
+      upsert: true,
     });
 
   if (error) {
-    throw new Error(`Unable to save article in storage CMS: ${error.message}`);
+    throw new Error(`Unable to save article index in storage CMS: ${error.message}`);
+  }
+}
+
+async function downloadStorageArticleIndex(): Promise<BlogArticleRecord[]> {
+  const client = await ensureArticleContentBucket();
+  const { data, error } = await client.storage
+    .from(ARTICLE_CONTENT_BUCKET)
+    .download(ARTICLE_CONTENT_INDEX_PATH);
+
+  if (error) {
+    return [];
+  }
+
+  try {
+    const payload = JSON.parse(await data.text()) as StorageArticleIndexPayload;
+    const rawArticles = Array.isArray(payload) ? payload : payload.articles ?? [];
+
+    return orderArticles(rawArticles.map(normalizeStorageArticle).filter(Boolean) as BlogArticleRecord[]);
+  } catch {
+    return [];
   }
 }
 
@@ -202,36 +229,15 @@ async function assertUniqueSlug(slug: string, currentId?: string) {
 
 export const canAccessArticleStorageAdmin = cache(async () => {
   try {
-    const client = await ensureArticleContentBucket();
-    const { error } = await client.storage
-      .from(ARTICLE_CONTENT_BUCKET)
-      .list(ARTICLE_CONTENT_PREFIX, { limit: 1 });
-
-    return !error;
+    await ensureArticleContentBucket();
+    return true;
   } catch {
     return false;
   }
 });
 
 export async function getArticlesFromArticleStorage(): Promise<BlogArticleRecord[]> {
-  const client = await ensureArticleContentBucket();
-  const { data, error } = await client.storage
-    .from(ARTICLE_CONTENT_BUCKET)
-    .list(ARTICLE_CONTENT_PREFIX, {
-      limit: 1000,
-      sortBy: { column: "updated_at", order: "desc" },
-    });
-
-  if (error) {
-    throw new Error(`Unable to load articles from storage CMS: ${error.message}`);
-  }
-
-  const jsonFiles = (data ?? []).filter((item) => item.name.endsWith(".json"));
-  const articles = await Promise.all(
-    jsonFiles.map((item) => downloadStorageArticle(item.name.replace(/\.json$/, ""))),
-  );
-
-  return orderArticles(articles.filter((article): article is BlogArticleRecord => Boolean(article)));
+  return downloadStorageArticleIndex();
 }
 
 export async function getPublishedArticlesFromArticleStorage(): Promise<BlogArticleRecord[]> {
@@ -240,11 +246,17 @@ export async function getPublishedArticlesFromArticleStorage(): Promise<BlogArti
 }
 
 export async function getArticleByIdFromArticleStorage(id: string) {
-  return downloadStorageArticle(id);
+  const articles = await getArticlesFromArticleStorage();
+  return articles.find((article) => article.id === id) ?? downloadStorageArticle(id);
 }
 
 export async function createArticleInStorage(input: ArticleStorageInput) {
-  await assertUniqueSlug(input.slug);
+  const articles = await getArticlesFromArticleStorage();
+  const duplicate = articles.find((article) => article.slug === input.slug);
+
+  if (duplicate) {
+    throw new Error("editorial_articles_slug_key: duplicate slug");
+  }
 
   const now = new Date().toISOString();
   const article: BlogArticleRecord = {
@@ -266,12 +278,48 @@ export async function createArticleInStorage(input: ArticleStorageInput) {
     updated_at: now,
   };
 
-  await uploadStorageArticle(article, false);
+  await uploadStorageArticleIndex([...articles, article]);
   return article;
 }
 
+export async function createArticlesInStorage(inputs: ArticleStorageInput[]) {
+  const articles = await getArticlesFromArticleStorage();
+  const existingSlugs = new Set(articles.map((article) => article.slug));
+  const now = new Date().toISOString();
+  const newArticles = inputs
+    .filter((input) => !existingSlugs.has(input.slug))
+    .map((input): BlogArticleRecord => ({
+      id: crypto.randomUUID(),
+      slug: input.slug,
+      title: input.title,
+      dek: input.dek,
+      summary: input.summary,
+      kind: input.kind,
+      status: input.status,
+      content_markdown: input.content_markdown,
+      cover_image_url: input.cover_image_url,
+      cover_image_alt: input.cover_image_alt,
+      author_name: input.author_name,
+      tags: input.tags,
+      published_at: input.published_at,
+      featured: input.is_featured,
+      created_at: now,
+      updated_at: now,
+    }));
+
+  if (newArticles.length === 0) {
+    return articles;
+  }
+
+  const nextArticles = [...articles, ...newArticles];
+  await uploadStorageArticleIndex(nextArticles);
+  return orderArticles(nextArticles);
+}
+
 export async function updateArticleInStorage(id: string, input: PartialArticleStorageInput) {
-  const existing = await getArticleByIdFromArticleStorage(id);
+  const articles = await getArticlesFromArticleStorage();
+  const existingIndex = articles.findIndex((article) => article.id === id);
+  const existing = existingIndex >= 0 ? articles[existingIndex] : null;
 
   if (!existing) {
     throw new Error("Article not found in storage CMS.");
@@ -289,17 +337,19 @@ export async function updateArticleInStorage(id: string, input: PartialArticleSt
     updated_at: new Date().toISOString(),
   };
 
-  await uploadStorageArticle(article, true);
+  const nextArticles = [...articles];
+  nextArticles[existingIndex] = article;
+  await uploadStorageArticleIndex(nextArticles);
   return article;
 }
 
 export async function deleteArticleFromStorage(id: string) {
-  const client = await ensureArticleContentBucket();
-  const { error } = await client.storage
-    .from(ARTICLE_CONTENT_BUCKET)
-    .remove([storagePathForArticle(id)]);
+  const articles = await getArticlesFromArticleStorage();
+  const nextArticles = articles.filter((article) => article.id !== id);
 
-  if (error) {
-    throw new Error(`Unable to delete article from storage CMS: ${error.message}`);
+  if (nextArticles.length === articles.length) {
+    return;
   }
+
+  await uploadStorageArticleIndex(nextArticles);
 }

@@ -11,11 +11,15 @@ import {
 } from "@/lib/supabase/article-repository";
 import {
   canAccessArticleStorageAdmin,
-  createArticleInStorage,
+  createArticlesInStorage,
   getArticleByIdFromArticleStorage,
   getArticlesFromArticleStorage,
 } from "@/lib/supabase/article-storage-repository";
-import { getArticleWriteTarget, type ArticleWriteTarget } from "@/lib/supabase/article-target";
+import {
+  getArticleWriteTarget,
+  isArticleStorageFallbackEnabled,
+  type ArticleWriteTarget,
+} from "@/lib/supabase/article-target";
 import type { BlogArticleRecord, EditorialPostRecord } from "@/lib/types/article";
 
 export type AdminArticleRecord = BlogArticleRecord & {
@@ -209,27 +213,21 @@ function getImportWarning(post: EditorialPostRecord, error: unknown) {
   return `legacy-auto-import-failed::${post.slug}: ${detail}`;
 }
 
-function isDuplicateImportError(error: unknown) {
-  const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+async function importLegacyPostsIntoSupabase(posts: EditorialPostRecord[]) {
+  if (posts.length === 0) {
+    return;
+  }
 
-  return (
-    message.includes("duplicate slug") ||
-    message.includes("duplicate key") ||
-    message.includes("editorial_articles_slug_key")
-  );
-}
-
-async function importLegacyPostIntoSupabase(post: EditorialPostRecord) {
   const client = createAdminSupabaseClient();
   const { error } = await client
     .from("editorial_articles")
-    .upsert(mapLegacyPostToImportInput(post), {
+    .upsert(posts.map(mapLegacyPostToImportInput), {
       onConflict: "slug",
       ignoreDuplicates: true,
     });
 
   if (error) {
-    throw new Error(`Unable to import ${post.slug} into Supabase CMS: ${error.message}`);
+    throw new Error(`Unable to import legacy articles into Supabase CMS: ${error.message}`);
   }
 }
 
@@ -249,17 +247,17 @@ async function materializeMissingLegacyArticles({
     return { articles: cmsArticles, warnings, importedCount: 0 };
   }
 
-  for (const post of missingLegacyPosts) {
+  if (writeTarget === "supabase") {
     try {
-      if (writeTarget === "storage") {
-        await createArticleInStorage(mapLegacyPostToImportInput(post));
-      } else {
-        await importLegacyPostIntoSupabase(post);
-      }
+      await importLegacyPostsIntoSupabase(missingLegacyPosts);
     } catch (error) {
-      if (!isDuplicateImportError(error)) {
-        warnings.push(getImportWarning(post, error));
-      }
+      warnings.push(getImportWarning({ ...missingLegacyPosts[0], slug: "batch" }, error));
+    }
+  } else {
+    try {
+      await createArticlesInStorage(missingLegacyPosts.map(mapLegacyPostToImportInput));
+    } catch (error) {
+      warnings.push(getImportWarning({ ...missingLegacyPosts[0], slug: "storage-batch" }, error));
     }
   }
 
@@ -430,7 +428,7 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
   } catch (error) {
     const detail = error instanceof Error ? error.message : "errore sconosciuto";
 
-    if (await canAccessArticleStorageAdmin()) {
+    if (isArticleStorageFallbackEnabled() && await canAccessArticleStorageAdmin()) {
       try {
         const storageArticles = await getArticlesFromArticleStorage();
         const importResult = await materializeMissingLegacyArticles({

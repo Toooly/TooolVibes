@@ -7,12 +7,16 @@ import { canAccessSupabaseArticlesAdmin } from "@/lib/supabase/article-repositor
 
 export type ArticleWriteTarget = "supabase" | "storage";
 
+export function isArticleStorageFallbackEnabled() {
+  return process.env.TOOOLVIBES_ARTICLE_CMS_STORAGE_FALLBACK === "1";
+}
+
 export const getArticleWriteTarget = cache(async (): Promise<ArticleWriteTarget | null> => {
   if (await canAccessSupabaseArticlesAdmin()) {
     return "supabase";
   }
 
-  if (await canAccessArticleStorageAdmin()) {
+  if (isArticleStorageFallbackEnabled() && await canAccessArticleStorageAdmin()) {
     return "storage";
   }
 

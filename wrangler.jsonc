@@ -8,7 +8,8 @@
     "NEXT_PUBLIC_SITE_URL": "https://tooolvibes.staff-ffa.workers.dev",
     "NEXT_PUBLIC_SUPABASE_URL": "https://pjyasxaebxvvmcjxvnno.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_Ac8LC9KN9Yl9YjDC7KrCVA_9328FOc0",
-    "TOOOLVIBES_COLLECTIONS_SOURCE": "auto"
+    "TOOOLVIBES_COLLECTIONS_SOURCE": "auto",
+    "TOOOLVIBES_ARTICLE_CMS_STORAGE_FALLBACK": "1"
   },
   "assets": {
     "directory": ".open-next/assets",
