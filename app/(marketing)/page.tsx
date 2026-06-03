@@ -1,5 +1,4 @@
-import { DesktopVibeHome } from "@/components/desktop/desktop-vibe-home";
-import { MobileVibeHome } from "@/components/home/mobile-vibe-home";
+import { VibeHomeV2 } from "@/components/home/vibe-home-v2";
 import {
   directoryTools,
   getFeaturedDirectoryTools,
@@ -13,13 +12,10 @@ export default function HomePage() {
   );
 
   return (
-    <>
-      <DesktopVibeHome tools={directoryTools} weeklyTool={weeklyTool} />
-      <MobileVibeHome
-        tools={directoryTools}
-        weeklyTool={weeklyTool}
-        supportingTools={supportingTools.slice(0, 4)}
-      />
-    </>
+    <VibeHomeV2
+      tools={directoryTools}
+      weeklyTool={weeklyTool}
+      supportingTools={supportingTools.slice(0, 4)}
+    />
   );
 }

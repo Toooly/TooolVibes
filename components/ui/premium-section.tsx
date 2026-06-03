@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 import { PremiumBadge } from "@/components/ui/premium";
 import { cn } from "@/lib/utils";
@@ -86,7 +86,7 @@ export function DecorativeGlow({
 }
 
 type EmptyStateProps = {
-  icon?: ElementType;
+  icon?: ComponentType<{ className?: string }>;
   eyebrow?: string;
   title: string;
   description: string;
