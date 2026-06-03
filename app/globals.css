@@ -10778,6 +10778,8 @@ img {
 @media (min-width: 1024px) {
   .desktop-vibe {
     position: relative;
+    isolation: isolate;
+    overflow: clip;
     color: var(--foreground);
     perspective: 1800px;
     perspective-origin: 52% 42%;
@@ -10786,9 +10788,9 @@ img {
 
   .desktop-vibe::before {
     content: "";
-    position: fixed;
+    position: absolute;
     inset: 0;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
     background:
       radial-gradient(circle at 18% 24%, rgba(106, 60, 255, 0.055), transparent 28%),
@@ -10799,7 +10801,13 @@ img {
     background-size: auto, auto, auto, 5.4rem 5.4rem, 5.4rem 5.4rem;
     mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 82%, transparent 100%);
     opacity: 0.62;
+    transform-origin: 50% 0;
     transform: perspective(900px) rotateX(66deg) translate3d(0, -6rem, -14rem);
+  }
+
+  .desktop-vibe > * {
+    position: relative;
+    z-index: 1;
   }
 
   .desktop-vibe-section {

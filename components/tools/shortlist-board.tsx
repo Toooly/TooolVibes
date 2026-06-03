@@ -250,7 +250,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
         <>
           <div className={`shortlist-mobile-rail tool-rail -mx-2 flex snap-x gap-3 overflow-x-auto px-2 pb-2 md:hidden ${isSearching ? "opacity-70 transition-opacity duration-200" : "transition-opacity duration-200"}`}>
             {filteredTools.map((tool, index) => (
-              <div key={tool.id} className="shortlist-mobile-card-shell w-[min(18.75rem,calc(100vw-1.5rem))] shrink-0 snap-start space-y-2.5">
+              <div key={tool.id} className="shortlist-mobile-card-shell grid w-[min(18.75rem,calc(100vw-1.5rem))] shrink-0 snap-start gap-2.5">
                 <ToolCard tool={tool} variant="compact" index={index} contextLabel="Workspace shortlist" />
                 <ToolWorkspacePanel tool={tool} />
               </div>
@@ -259,7 +259,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
 
           <div className={`hidden gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 ${isSearching ? "opacity-70 transition-opacity duration-200" : "transition-opacity duration-200"}`}>
             {filteredTools.map((tool, index) => (
-              <div key={tool.id} className="space-y-3">
+              <div key={tool.id} className="grid gap-3">
                 <ToolCard tool={tool} variant="standard" index={index} contextLabel="Workspace shortlist" />
                 <ToolWorkspacePanel tool={tool} />
               </div>
