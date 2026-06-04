@@ -19,6 +19,7 @@ import {
   LayoutGrid,
   Zap,
   ChevronRight,
+  LockKeyhole,
 } from "lucide-react";
 
 const navLinks = [
@@ -163,6 +164,16 @@ export function SiteHeaderV2() {
               </div>
 
               <Link
+                href="/admin/login"
+                aria-label="Apri il login amministratore"
+                className="group relative hidden items-center gap-2 rounded-xl border border-[rgba(106,60,255,0.12)] bg-white/70 px-3 py-2 text-sm font-medium text-[#4f4970] shadow-[0_4px_16px_rgba(106,60,255,0.08)] transition-all hover:border-[rgba(106,60,255,0.22)] hover:bg-white hover:text-[#6a3cff] md:flex"
+                data-sonic-action="tap"
+              >
+                <LockKeyhole size={14} className="transition-transform group-hover:scale-105" />
+                Admin
+              </Link>
+
+              <Link
                 href="/account"
                 className="group relative hidden items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-all hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)] md:flex"
                 data-sonic-action="tap"
@@ -268,6 +279,14 @@ export function SiteHeaderV2() {
               </div>
 
               <div className="mt-6 border-t border-[rgba(106,60,255,0.08)] pt-6">
+                <Link
+                  href="/admin/login"
+                  className="mb-3 flex items-center justify-center gap-2 rounded-xl border border-[rgba(106,60,255,0.12)] bg-white/72 px-4 py-3 text-sm font-medium text-[#4f4970] shadow-[0_4px_16px_rgba(106,60,255,0.08)] transition hover:bg-white hover:text-[#6a3cff]"
+                  data-sonic-action="tap"
+                >
+                  <LockKeyhole size={16} />
+                  Login amministratore
+                </Link>
                 <Link
                   href="/account"
                   className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-3 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)]"
