@@ -268,7 +268,8 @@ body {
   z-index: 2;
 }
 
-.marketing-shell > :not(.marketing-shell__backplane):not(.site-depth-system) {
+.marketing-shell > main,
+.marketing-shell > footer {
   position: relative;
   z-index: 1;
 }

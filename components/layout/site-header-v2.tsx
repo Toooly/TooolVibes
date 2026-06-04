@@ -57,6 +57,7 @@ function MagneticButton({
   return (
     <button
       ref={ref}
+      type="button"
       className={className}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -304,7 +305,7 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-[rgba(18,13,47,0.5)] backdrop-blur-md lg:hidden"
+            className="fixed inset-0 z-[48] bg-[rgba(18,13,47,0.5)] backdrop-blur-md lg:hidden"
             onClick={() => setMenuOpen(false)}
           >
             <motion.nav
