@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 
 import {
   adminCookieName,
+  getAdminRouteUrl,
   getExpiredAdminSessionCookieOptions,
 } from "@/lib/admin/session";
 
 export const dynamic = "force-dynamic";
 
 function redirectToLogin(request: Request) {
-  return NextResponse.redirect(new URL("/admin/login", request.url), 303);
+  return NextResponse.redirect(getAdminRouteUrl(request, "/admin/login"), 303);
 }
 
 export function POST(request: Request) {
@@ -17,7 +18,7 @@ export function POST(request: Request) {
   response.cookies.set(
     adminCookieName,
     "",
-    getExpiredAdminSessionCookieOptions(request.url),
+    getExpiredAdminSessionCookieOptions(request),
   );
 
   return response;

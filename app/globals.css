@@ -290,32 +290,6 @@ body {
   opacity: 0.42;
 }
 
-/* ── Site Depth System (WebGL canvas background) ── */
-.site-depth-system {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  display: block;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.site-depth-system__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.42;
-}
-
-@media (max-width: 1023px) {
-  .site-depth-system__canvas {
-    opacity: 0.28;
-  }
-}
-
 a {
   color: inherit;
   text-decoration: none;

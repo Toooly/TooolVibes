@@ -9,11 +9,15 @@ import {
   adminCookieName,
   createAdminSession,
   getAdminAuthDiagnostics,
+  getAdminRouteUrl,
   getAdminSessionCookieOptions,
   verifyAdminCredentialsDetailed,
+  type AdminCredentialFailureReason,
 } from "@/lib/admin/session";
 
 export const dynamic = "force-dynamic";
+
+type AdminLoginErrorCode = "credentials" | "missing-fields" | "rate-limited" | "config";
 
 function normalizeEmailInput(value: FormDataEntryValue | null): string {
   return String(value ?? "")
@@ -30,7 +34,19 @@ function normalizePasswordInput(value: FormDataEntryValue | null): string {
 }
 
 function redirectTo(request: Request, path: string) {
-  return NextResponse.redirect(new URL(path, request.url), 303);
+  return NextResponse.redirect(getAdminRouteUrl(request, path), 303);
+}
+
+function getLoginErrorPath(code: AdminLoginErrorCode) {
+  return `/admin/login?error=${encodeURIComponent(code)}`;
+}
+
+function getCredentialErrorCode(reason: AdminCredentialFailureReason): AdminLoginErrorCode {
+  if (reason === "missing_email_env" || reason === "missing_password_env") {
+    return "config";
+  }
+
+  return "credentials";
 }
 
 function logLoginFailure(
@@ -83,7 +99,7 @@ export async function POST(request: Request) {
       response.cookies.set(
         adminCookieName,
         token,
-        getAdminSessionCookieOptions(request.url),
+        getAdminSessionCookieOptions(request),
       );
       logLoginSuccess();
 
@@ -91,23 +107,27 @@ export async function POST(request: Request) {
     }
 
     if (await isLoginRateLimited()) {
-      logLoginFailure("rate_limited", { ...received, redirect: "/admin/login?error=1" });
-      return redirectTo(request, "/admin/login?error=1");
+      const redirect = getLoginErrorPath("rate-limited");
+      logLoginFailure("rate_limited", { ...received, redirect });
+      return redirectTo(request, redirect);
     }
 
     await recordFailedLoginAttempt();
-    logLoginFailure(credentials.reason, { ...received, redirect: "/admin/login?error=1" });
-    return redirectTo(request, "/admin/login?error=1");
+    const redirect = getLoginErrorPath(getCredentialErrorCode(credentials.reason));
+    logLoginFailure(credentials.reason, { ...received, redirect });
+    return redirectTo(request, redirect);
   }
 
   if (await isLoginRateLimited()) {
-    logLoginFailure("rate_limited", { ...received, redirect: "/admin/login?error=1" });
-    return redirectTo(request, "/admin/login?error=1");
+    const redirect = getLoginErrorPath("rate-limited");
+    logLoginFailure("rate_limited", { ...received, redirect });
+    return redirectTo(request, redirect);
   }
 
   await recordFailedLoginAttempt();
-  logLoginFailure("missing_form_fields", { ...received, redirect: "/admin/login?error=1" });
-  return redirectTo(request, "/admin/login?error=1");
+  const redirect = getLoginErrorPath("missing-fields");
+  logLoginFailure("missing_form_fields", { ...received, redirect });
+  return redirectTo(request, redirect);
 }
 
 export function GET(request: Request) {

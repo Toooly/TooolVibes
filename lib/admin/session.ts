@@ -5,7 +5,9 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 
-export const adminCookieName = "tooolvibes_admin";
+import { adminCookieName } from "@/lib/admin/constants";
+
+export { adminCookieName };
 export const adminSessionMaxAgeSeconds = 60 * 60 * 8;
 
 export type AdminCredentialFailureReason =
@@ -91,10 +93,38 @@ export function getAdminAuthDiagnostics() {
   };
 }
 
-export function getAdminSessionCookieOptions(requestUrl?: string) {
-  const isHttps = requestUrl
-    ? new URL(requestUrl).protocol === "https:"
-    : process.env.NODE_ENV === "production";
+function getRequestProtocol(request: Request) {
+  const forwardedProto = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+  if (forwardedProto === "http" || forwardedProto === "https") {
+    return forwardedProto;
+  }
+
+  return new URL(request.url).protocol.replace(":", "");
+}
+
+export function getAdminRouteUrl(request: Request, path: string) {
+  const baseUrl = new URL(request.url);
+  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const requestHost = request.headers.get("host")?.trim();
+  const host = requestHost || forwardedHost;
+  const protocol = getRequestProtocol(request);
+
+  if (host) {
+    baseUrl.host = host;
+  }
+
+  baseUrl.protocol = `${protocol}:`;
+
+  return new URL(path, baseUrl);
+}
+
+export function getAdminSessionCookieOptions(request?: Request | string) {
+  const isHttps =
+    typeof request === "string"
+      ? new URL(request).protocol === "https:"
+      : request
+        ? getRequestProtocol(request) === "https"
+        : process.env.NODE_ENV === "production";
 
   return {
     httpOnly: true,
@@ -105,9 +135,9 @@ export function getAdminSessionCookieOptions(requestUrl?: string) {
   };
 }
 
-export function getExpiredAdminSessionCookieOptions(requestUrl?: string) {
+export function getExpiredAdminSessionCookieOptions(request?: Request | string) {
   return {
-    ...getAdminSessionCookieOptions(requestUrl),
+    ...getAdminSessionCookieOptions(request),
     maxAge: 0,
   };
 }

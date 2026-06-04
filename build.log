@@ -1,0 +1,33 @@
+Using secrets defined in .dev.vars
+   ▲ Next.js 15.5.15
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+Using secrets defined in .dev.vars
+Using secrets defined in .dev.vars
+Using secrets defined in .dev.vars
+ ✓ Compiled successfully in 87s
+   Linting and checking validity of types ...
+
+./components/app/custom-cursor.tsx
+99:17  Warning: 'delay' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./components/app/interaction-sound-layer-v2.tsx
+1567:16  Warning: The ref value 'droneRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'droneRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+[Error [PageNotFoundError]: Cannot find module for page: /admin/collections/[id]] {
+  code: 'ENOENT'
+}
+[Error [PageNotFoundError]: Cannot find module for page: /admin/collections/new] {
+  code: 'ENOENT'
+}
+
+> Build error occurred
+[Error: Failed to collect page data for /admin/collections/[id]] {
+  type: 'Error'
+}
+pages-manifest.json'
+}
+BUILD_FAIL

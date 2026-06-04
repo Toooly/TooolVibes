@@ -5,9 +5,22 @@ import { isAdminSessionUnlocked } from "@/lib/admin/session";
 import { marketingStrings } from "@/lib/config/strings";
 import { redirect } from "next/navigation";
 
+const loginErrorCodes = ["credentials", "missing-fields", "rate-limited", "config"] as const;
+type LoginErrorCode = (typeof loginErrorCodes)[number];
+
 type AdminLoginPageProps = {
   searchParams: Promise<{ error?: string }>;
 };
+
+function getLoginErrorCode(value: string | undefined): LoginErrorCode | null {
+  if (value === "1") {
+    return "credentials";
+  }
+
+  return loginErrorCodes.includes(value as LoginErrorCode)
+    ? (value as LoginErrorCode)
+    : null;
+}
 
 export default async function AdminLoginPage({ searchParams }: AdminLoginPageProps) {
   if (await isAdminSessionUnlocked()) {
@@ -15,6 +28,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
   }
 
   const params = await searchParams;
+  const errorCode = getLoginErrorCode(params.error);
 
   return (
     <div
@@ -40,7 +54,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
             {marketingStrings.admin.loginDescription}
           </p>
 
-          <LoginForm hasError={params.error === "1"} />
+          <LoginForm errorCode={errorCode} />
         </PremiumPanel>
       </div>
     </div>

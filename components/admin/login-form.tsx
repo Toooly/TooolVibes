@@ -1,42 +1,67 @@
 "use client";
 
 import { KeyRound } from "lucide-react";
-import { useEffect, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 
+type LoginErrorCode = "credentials" | "missing-fields" | "rate-limited" | "config";
+
 type LoginFormProps = {
-  hasError: boolean;
+  errorCode: LoginErrorCode | null;
 };
 
-function SubmitButton() {
+const loginErrorMessages: Record<LoginErrorCode, string> = {
+  credentials: "Credenziali non valide.",
+  "missing-fields": "Inserisci email e password per accedere.",
+  "rate-limited": "Troppi tentativi. Attendi qualche minuto e riprova.",
+  config: "Login admin non configurato correttamente. Controlla le variabili ambiente.",
+};
+
+function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
   const { pending } = useFormStatus();
+  const isBusy = pending || isSubmitting;
 
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={isBusy}
+      data-sound-control="true"
       className="premium-button premium-button-primary min-h-12 w-full rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
     >
-      {pending ? "Accesso in corso..." : "Accedi"}
+      {isBusy ? "Accesso in corso..." : "Accedi"}
     </button>
   );
 }
 
-export function LoginForm({ hasError }: LoginFormProps) {
+export function LoginForm({ errorCode }: LoginFormProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [hasEditedAfterError, setHasEditedAfterError] = useState(false);
-  const showError = hasError && !hasEditedAfterError;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const showError = Boolean(errorCode) && !hasEditedAfterError;
 
   useEffect(() => {
     setHasEditedAfterError(false);
-  }, [hasError]);
+    setIsSubmitting(false);
+  }, [errorCode]);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    if (isSubmitting) {
+      event.preventDefault();
+      return;
+    }
+
+    setIsSubmitting(true);
+  }
 
   return (
     <form
       action="/api/admin/login"
       method="post"
       className="mt-7 space-y-4"
-      onChange={() => setHasEditedAfterError(true)}
+      onChange={() => {
+        setHasEditedAfterError(true);
+      }}
+      onSubmit={handleSubmit}
     >
       <label className="block">
         <span className="mb-2 block text-sm font-semibold text-white/86">Email</span>
@@ -79,13 +104,13 @@ export function LoginForm({ hasError }: LoginFormProps) {
         </div>
       </label>
 
-      {showError ? (
+      {showError && errorCode ? (
         <p className="text-sm font-medium text-[#ffd1ca]" aria-live="polite">
-          Credenziali non valide.
+          {loginErrorMessages[errorCode]}
         </p>
       ) : null}
 
-      <SubmitButton />
+      <SubmitButton isSubmitting={isSubmitting} />
     </form>
   );
 }

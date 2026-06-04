@@ -1,8 +1,6 @@
 import { AccountProvider } from "@/components/account/account-provider";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/discovery-persistence-provider";
 import { SiteUniverseBackground } from "@/components/app/site-universe-background";
-import { CustomCursor } from "@/components/app/custom-cursor";
-import { CinematicGrain } from "@/components/app/cinematic-grain";
 import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
@@ -16,8 +14,6 @@ export default function MarketingLayout({
   return (
     <div className="marketing-shell relative overflow-x-clip">
       <SiteUniverseBackground />
-      <CustomCursor />
-      <CinematicGrain />
       <AccountProvider>
         <DiscoveryPersistenceProvider>
           <SiteHeaderV2 />

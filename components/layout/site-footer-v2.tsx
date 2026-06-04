@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "motion/react";
 import { BrandLogo } from "./brand-logo";
 import {
   Sparkles,
@@ -40,9 +39,10 @@ function FooterLink({ href, label, icon: Icon }: { href: string; label: string; 
   return (
     <Link
       href={href}
-      className="group flex items-center gap-2 text-sm text-[#4f4970] transition-all duration-200 hover:text-[#6a3cff] hover:translate-x-1" data-sonic-action="nav"
+      className="group flex items-center gap-2 text-sm text-[#4f4970] transition-colors duration-200 hover:text-[#6a3cff]"
+      data-sonic-action="nav"
     >
-      {Icon && <Icon size={14} className="text-[#6a3cff] opacity-50 group-hover:opacity-100 transition-opacity" />}
+      {Icon && <Icon size={14} className="text-[#6a3cff] opacity-40 group-hover:opacity-100 transition-opacity" />}
       <span>{label}</span>
       <ArrowUpRight
         size={12}
@@ -54,31 +54,15 @@ function FooterLink({ href, label, icon: Icon }: { href: string; label: string; 
 
 export function SiteFooterV2() {
   return (
-    <footer className="relative mt-auto overflow-hidden border-t border-[rgba(106,60,255,0.1)]">
-      {/* Background effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-30"
-          style={{
-            background: "radial-gradient(circle, rgba(106,60,255,0.15) 0%, transparent 70%)",
-          }}
-        />
-        <div
-          className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-20"
-          style={{
-            background: "radial-gradient(circle, rgba(57,210,246,0.12) 0%, transparent 70%)",
-          }}
-        />
-      </div>
-
-      <div className="relative mx-auto max-w-[1440px] px-6 py-16 md:py-20">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="relative mt-auto border-t border-[rgba(106,60,255,0.08)]">
+      <div className="relative mx-auto max-w-[1440px] px-6 py-14 md:py-16">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <Link href="/" className="group inline-flex items-center gap-3 mb-6">
-              <motion.div whileHover={{ scale: 1.1, rotate: 5 }} transition={{ duration: 0.3 }}>
+            <Link href="/" className="group inline-flex items-center gap-3 mb-5">
+              <div className="transition-transform duration-300 group-hover:scale-105">
                 <BrandLogo size={40} />
-              </motion.div>
+              </div>
               <span
                 className="text-xl font-bold tracking-tight"
                 style={{
@@ -90,7 +74,7 @@ export function SiteFooterV2() {
                 TOOOLVIBES
               </span>
             </Link>
-            <p className="text-sm text-[#4f4970] leading-relaxed mb-6 max-w-xs">
+            <p className="text-sm text-[#4f4970] leading-relaxed mb-5 max-w-xs">
               Il sistema di discovery per tool AI, SaaS, no-code e vibe coding.
               Trova, confronta e costruisci il tuo stack perfetto.
             </p>
@@ -100,16 +84,14 @@ export function SiteFooterV2() {
                 { icon: Globe, href: "#", label: "GitHub" },
                 { icon: Mail, href: "mailto:hello@tooolvibes.com", label: "Email" },
               ].map((social) => (
-                <motion.a
+                <a
                   key={social.label}
                   href={social.href}
-                  whileHover={{ scale: 1.15, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.6)] text-[#4f4970] transition-colors hover:border-[#6a3cff] hover:text-[#6a3cff] hover:bg-[rgba(106,60,255,0.08)]"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.5)] text-[#4f4970] transition-all hover:border-[#6a3cff] hover:text-[#6a3cff] hover:bg-[rgba(106,60,255,0.05)]"
                   aria-label={social.label}
                 >
                   <social.icon size={18} />
-                </motion.a>
+                </a>
               ))}
             </div>
           </div>
@@ -119,7 +101,7 @@ export function SiteFooterV2() {
             <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#2d255d]">
               Esplora
             </h3>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2.5">
               {footerLinks.explore.map((link) => (
                 <FooterLink key={link.label} {...link} />
               ))}
@@ -131,7 +113,7 @@ export function SiteFooterV2() {
             <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#2d255d]">
               Community
             </h3>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2.5">
               {footerLinks.community.map((link) => (
                 <FooterLink key={link.label} {...link} />
               ))}
@@ -155,22 +137,20 @@ export function SiteFooterV2() {
               <input
                 type="email"
                 placeholder="la tua email"
-                className="flex-1 rounded-xl border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.6)] px-4 py-2.5 text-sm text-[#120d2f] placeholder:text-[#4f4970]/50 outline-none transition-all focus:border-[#6a3cff] focus:ring-2 focus:ring-[rgba(106,60,255,0.15)]"
+                className="flex-1 rounded-xl border border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.5)] px-4 py-2.5 text-sm text-[#120d2f] placeholder:text-[#4f4970]/50 outline-none transition-all focus:border-[#6a3cff] focus:ring-2 focus:ring-[rgba(106,60,255,0.1)]"
               />
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 type="submit"
-                className="rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2.5 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.35)]"
+                className="rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2.5 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-shadow hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)]"
               >
                 <Sparkles size={16} />
-              </motion.button>
+              </button>
             </form>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[rgba(106,60,255,0.08)] pt-8 md:flex-row">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[rgba(106,60,255,0.06)] pt-8 md:flex-row">
           <p className="text-xs text-[#4f4970]">
             © {new Date().getFullYear()} TooolVibes. Tutti i diritti riservati.
           </p>
@@ -179,7 +159,8 @@ export function SiteFooterV2() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-xs text-[#4f4970] transition-colors hover:text-[#6a3cff]" data-sonic-action="nav"
+                className="text-xs text-[#4f4970] transition-colors hover:text-[#6a3cff]"
+                data-sonic-action="nav"
               >
                 {link.label}
               </Link>

@@ -1,6 +1,5 @@
 import { FounderControlCenterV2 } from "@/components/admin/founder-control-center-v2";
 import { SiteUniverseBackground } from "@/components/app/site-universe-background";
-import { CustomCursor } from "@/components/app/custom-cursor";
 import { getAdminArticlesRuntime } from "@/lib/admin/article-queries";
 import { requireAdminSession } from "@/lib/admin/session";
 
@@ -15,7 +14,6 @@ export default async function ProtectedAdminLayout({
   return (
     <div className="relative min-h-screen overflow-x-clip">
       <SiteUniverseBackground />
-      <CustomCursor />
       <div className="relative z-10">
         <FounderControlCenterV2 articlesRuntime={articlesRuntime} />
         <main className="mx-auto max-w-[1440px] px-4 pb-10 pt-6">
