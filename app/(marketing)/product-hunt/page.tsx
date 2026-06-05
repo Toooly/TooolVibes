@@ -74,20 +74,19 @@ export default function ProductHuntPage() {
       <>
         <DesktopVibeRadar />
 
-        <div className="page-shell space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6 lg:hidden">
-          <section className="hero-shell hero-shell-radar motion-reveal px-5 py-5 text-white sm:rounded-[38px] sm:px-7 sm:py-8">
+        <div className="tone-radar page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9 lg:hidden">
+          <section className="hero-shell hero-shell-radar motion-reveal px-5 py-5 sm:rounded-[38px] sm:px-7 sm:py-8">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.52fr)] lg:items-center">
               <div className="max-w-[48rem]">
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/58">
                   Product Hunt radar
                 </p>
                 <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.35rem)] leading-[1.05] text-white">
-                  I lanci pi&ugrave; forti da tenere d&apos;occhio.
+                  I lanci si muovono dentro un radar 3D.
                 </h1>
                 <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-7 text-white/70 sm:mt-5 sm:text-[1rem]">
-                  Una vista compatta sui prodotti pi&ugrave; votati in Product Hunt: giorno,
-                  settimana e mese, con token protetto lato server e cache per restare veloce
-                  su Cloudflare.
+                  Il radar non è più un blocco appoggiato alla pagina: la classifica vive come
+                  una sala di segnali, con orbite, sweep e card agganciate alla profondità del sito.
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-3">

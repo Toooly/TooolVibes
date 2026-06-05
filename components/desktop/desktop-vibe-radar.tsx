@@ -14,12 +14,12 @@ export function DesktopVibeRadar() {
   return (
     <div className="desktop-vibe desktop-vibe-radar hidden lg:block">
       <section className="desktop-vibe-section desktop-vibe-radar-hero">
-        <div className="desktop-vibe-copy">
+        <div className="desktop-vibe-copy" data-orbit-shield>
           <p className="desktop-vibe-eyebrow">Product Hunt radar room</p>
           <h1>I lanci si muovono dentro un radar 3D.</h1>
           <p>
-            Il radar non e piu un blocco appoggiato alla pagina: la classifica vive come
-            una sala di segnali, con orbite, sweep e card agganciate alla profondita del sito.
+            Il radar non è più un blocco appoggiato alla pagina: la classifica vive come
+            una sala di segnali, con orbite, sweep e card agganciate alla profondità del sito.
           </p>
           <div className="desktop-vibe-actions">
             <PremiumLink href="/archivio" size="lg">
@@ -55,7 +55,7 @@ export function DesktopVibeRadar() {
 
       <section className="desktop-vibe-section desktop-vibe-radar-console">
         <div className="desktop-vibe-radar-console__header">
-          <div>
+          <div data-orbit-shield>
             <p className="desktop-vibe-eyebrow">Live rankings</p>
             <h2>Segnali Product Hunt in una plancia unica.</h2>
           </div>
