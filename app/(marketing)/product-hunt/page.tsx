@@ -122,7 +122,9 @@ export default function ProductHuntPage() {
             </div>
           </section>
 
-          <ProductHuntRankings variant="wide" className="mx-auto max-w-[70rem]" />
+          <div id="rankings">
+            <ProductHuntRankings variant="wide" className="mx-auto max-w-[70rem]" />
+          </div>
         </div>
       </>
     </PageOrbitShell>

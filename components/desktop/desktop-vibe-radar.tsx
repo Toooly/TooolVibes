@@ -61,7 +61,9 @@ export function DesktopVibeRadar() {
           </div>
           <PremiumBadge tone="warning">Radar live</PremiumBadge>
         </div>
-        <ProductHuntRankings variant="wide" />
+        <div id="rankings">
+          <ProductHuntRankings variant="wide" />
+        </div>
       </section>
     </div>
   );
