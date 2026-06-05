@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useOrbitalContext } from "./orbital-context";
-import { usePerformanceMode, useOrbitalConfig } from "./use-performance-mode";
+import { usePerformanceMode, useOrbitalConfigForItems } from "./use-performance-mode";
 import { OrbitingBadge } from "./orbiting-badge";
-import type { OrbitalItem } from "./types";
+import type { OrbitalItem, OrbitConfig } from "./types";
 
 function generateDecorItems(count: number, sectionId: string): OrbitalItem[] {
   const shapes: OrbitalItem["shapeType"][] = ["shard", "blob", "gem", "crystal", "hexagon"];
@@ -46,8 +46,18 @@ function getSafeZones(w: number, h: number, sectionId: string | null): SafeZone[
   const zones: SafeZone[] = [];
   // Header navbar zone
   zones.push({ x: w / 2, y: 32, w: w, h: 68, padding: 16 });
-  // Hero/main text zone (only when hero is visible or no specific section)
-  if (!sectionId || sectionId.startsWith("home-hero") || sectionId.startsWith("home-")) {
+  // Text safe zone — active on all floating-UI pages to protect centered anchors
+  const isMinimalSection =
+    !sectionId ||
+    sectionId.startsWith("home-") ||
+    sectionId.startsWith("archive-") ||
+    sectionId.startsWith("compare-") ||
+    sectionId.startsWith("shortlist-") ||
+    sectionId.startsWith("collections-") ||
+    sectionId.startsWith("tool-") ||
+    sectionId.startsWith("wishlist-") ||
+    sectionId.startsWith("radar-");
+  if (isMinimalSection) {
     zones.push({
       x: w / 2,
       y: h * 0.42,
@@ -105,7 +115,7 @@ function useScrollState() {
 
 function useOrbitEngine(
   items: OrbitalItem[],
-  configs: ReturnType<typeof useOrbitalConfig>,
+  configs: OrbitConfig[],
   isPaused: boolean,
   profile: ReturnType<typeof usePerformanceMode>,
   activeSectionId: string | null
@@ -269,7 +279,7 @@ export function OrbitalLayer() {
     return items.slice(0, profile.maxItems);
   }, [activeSectionId, getItemsForSection, profile.maxItems]);
 
-  const configs = useOrbitalConfig(activeItems.length, profile);
+  const configs = useOrbitalConfigForItems(activeItems, profile);
   const positions = useOrbitEngine(activeItems, configs, isPaused, profile, activeSectionId);
 
   // Click outside per chiudere il popover su mobile

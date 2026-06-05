@@ -1,5 +1,8 @@
 export type OrbitalShapeType = "hexagon" | "crystal" | "shard" | "gem" | "blob";
 
+export type OrbitalNodeVariant = "tool" | "route" | "featured" | "step" | "category";
+export type OrbitalNodeSize = "sm" | "md" | "lg";
+
 export interface OrbitalItem {
   id: string;
   title: string;
@@ -12,6 +15,16 @@ export interface OrbitalItem {
   color?: string;
   shapeType?: OrbitalShapeType;
   iconUrl?: string;
+  /** Visual variant of the node */
+  variant?: OrbitalNodeVariant;
+  /** Explicit size override */
+  size?: OrbitalNodeSize;
+  /** Lucide icon name for route/step/featured nodes */
+  iconName?: string;
+  /** Micro badge text (e.g. "NEW", "LIVE") */
+  badge?: string;
+  /** Secondary metadata label */
+  meta?: string;
 }
 
 export interface OrbitalSection {

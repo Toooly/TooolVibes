@@ -1,12 +1,24 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
-import type { OrbitalItem } from "./types";
+import { ArrowUpRight, Compass, Radar, Boxes, Search, GitCompare, Bookmark, Star, Sparkles, Zap } from "lucide-react";
+import type { OrbitalItem, OrbitalNodeVariant } from "./types";
 import { ToolPreviewPopover } from "./tool-preview-popover";
 import { useOrbitalContext } from "./orbital-context";
 import { OrbitalShape } from "./orbital-shapes";
+
+const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  Compass,
+  Radar,
+  Boxes,
+  Search,
+  GitCompare,
+  Bookmark,
+  Star,
+  Sparkles,
+  Zap,
+};
 
 interface OrbitingBadgeProps {
   item: OrbitalItem;
@@ -15,6 +27,43 @@ interface OrbitingBadgeProps {
   index: number;
   isMobile: boolean;
   enableGlow: boolean;
+}
+
+const VARIANT_SIZE: Record<OrbitalNodeVariant, { mobile: number; desktop: number }> = {
+  featured: { mobile: 56, desktop: 76 },
+  route: { mobile: 52, desktop: 68 },
+  category: { mobile: 48, desktop: 64 },
+  step: { mobile: 44, desktop: 56 },
+  tool: { mobile: 36, desktop: 48 },
+};
+
+const SIZE_MAP: Record<string, { mobile: number; desktop: number }> = {
+  sm: { mobile: 36, desktop: 44 },
+  md: { mobile: 44, desktop: 56 },
+  lg: { mobile: 52, desktop: 68 },
+};
+
+function getBaseSize(item: OrbitalItem, isMobile: boolean): number {
+  if (item.size && SIZE_MAP[item.size]) {
+    return isMobile ? SIZE_MAP[item.size].mobile : SIZE_MAP[item.size].desktop;
+  }
+  if (item.variant && VARIANT_SIZE[item.variant]) {
+    return isMobile ? VARIANT_SIZE[item.variant].mobile : VARIANT_SIZE[item.variant].desktop;
+  }
+  return isMobile ? 36 : 48;
+}
+
+function getNodeLabelMode(variant?: OrbitalNodeVariant): "always" | "hover" | "never" {
+  switch (variant) {
+    case "route":
+    case "featured":
+    case "category":
+      return "always";
+    case "step":
+      return "always";
+    default:
+      return "hover";
+  }
 }
 
 export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: OrbitingBadgeProps) {
@@ -28,6 +77,10 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
 
   const isActive = hoveredItemId === item.id || selectedItemId === item.id;
   const isRealTool = item.href !== "#";
+  const labelMode = getNodeLabelMode(item.variant);
+  const shouldShowLabel = labelMode === "always" || isActive || isHovered;
+  const baseSize = getBaseSize(item, isMobile);
+  const size = isActive ? baseSize + 6 : baseSize;
 
   useEffect(() => {
     if (selectedItemId !== item.id) {
@@ -129,8 +182,8 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
     [item.id, item.href, selectedItemId, setSelectedItemId, updatePopoverPos]
   );
 
-  const baseSize = isMobile ? 36 : 48;
-  const size = isActive ? baseSize + 6 : baseSize;
+  const iconSize = Math.max(14, Math.floor(size * 0.35));
+  const IconComponent = item.iconName ? LUCIDE_ICON_MAP[item.iconName] : null;
 
   return (
     <motion.div
@@ -216,17 +269,39 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
         size={size}
         isActive={isActive}
         isHovered={isHovered}
-        iconUrl={item.iconUrl}
-        initials={item.initials}
+        iconUrl={IconComponent ? undefined : item.iconUrl}
+        initials={IconComponent ? undefined : item.initials}
       />
 
-      {/* Label — always visible for real tools, hover-only for decorative */}
+      {/* Center icon overlay for route/step/featured variants */}
+      {IconComponent && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center">
+          <IconComponent size={iconSize} className="text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]" />
+        </div>
+      )}
+
+      {/* Micro badge */}
+      {item.badge && (isActive || isHovered || labelMode === "always") && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="pointer-events-none absolute -right-1 -top-1 z-30 rounded-full px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-white"
+          style={{
+            background: item.color ?? "#6a3cff",
+            boxShadow: `0 2px 6px ${item.color ?? "#6a3cff"}40`,
+          }}
+        >
+          {item.badge}
+        </motion.div>
+      )}
+
+      {/* Label */}
       <div className="absolute left-1/2 top-full mt-2.5 -translate-x-1/2">
         <AnimatePresence>
-          {(isRealTool || isActive || isHovered) && (
+          {shouldShowLabel && (
             <motion.div
               initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: isActive || isHovered ? 1 : isRealTool ? 0.75 : 0, y: 0 }}
+              animate={{ opacity: isActive || isHovered ? 1 : labelMode === "always" ? 0.85 : 0.75, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.18 }}
               className="flex flex-col items-center gap-1"
@@ -243,6 +318,19 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
               >
                 {item.title}
               </span>
+
+              {/* Meta line */}
+              {item.meta && (isActive || isHovered) && (
+                <motion.span
+                  initial={{ opacity: 0, y: 3 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 3 }}
+                  transition={{ delay: 0.06, duration: 0.15 }}
+                  className="whitespace-nowrap text-[9px] font-medium text-white/60"
+                >
+                  {item.meta}
+                </motion.span>
+              )}
 
               {/* Explore callout on hover */}
               {(isActive || isHovered) && isRealTool && (
