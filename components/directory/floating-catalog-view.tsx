@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, Search, X, LayoutGrid, Sparkles, Code, Boxes, Layers, Database, Palette, Zap, Globe, FileText, Cpu } from "lucide-react";
 import Fuse from "fuse.js";
-import { SectionOrbitProvider } from "@/components/app/orbital-system";
 import type { OrbitalItem, OrbitalShapeType } from "@/components/app/orbital-system";
-import { FloatingSectionAnchor } from "@/components/home/floating-section-anchor";
 import { DirectoryBrowser } from "./directory-browser";
 import type { DirectoryTool, DirectoryFilterGroup } from "@/lib/data/tooolvibes-directory";
 
@@ -28,6 +26,19 @@ const CATEGORY_META: Record<
   writing: { color: "#8b5cf6", shape: "blob", iconName: "FileText" },
   dev: { color: "#14b8a6", shape: "shard", iconName: "Globe" },
 };
+
+const CATALOG_ICON_MAP = {
+  Sparkles,
+  Code,
+  Boxes,
+  Layers,
+  Database,
+  Palette,
+  Zap,
+  Globe,
+  FileText,
+  Cpu,
+} as const;
 
 function slugToShape(slug: string): OrbitalShapeType {
   const shapes: OrbitalShapeType[] = ["hexagon", "crystal", "shard", "gem", "blob"];
@@ -72,6 +83,149 @@ function toolToOrbital(tool: DirectoryTool, sectionId: string): OrbitalItem {
     variant: "tool",
     size: "sm",
   };
+}
+
+interface CatalogOrbitStageProps {
+  items: OrbitalItem[];
+  view: "categories" | "tools";
+  label: string;
+  description: string;
+  onCategoryNavigate: (groupKey: string) => void;
+}
+
+function CatalogOrbitStage({
+  items,
+  view,
+  label,
+  description,
+  onCategoryNavigate,
+}: CatalogOrbitStageProps) {
+  const router = useRouter();
+  const [isCompact, setIsCompact] = useState(false);
+
+  useEffect(() => {
+    const update = () => setIsCompact(window.innerWidth < 768);
+    update();
+    window.addEventListener("resize", update, { passive: true });
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  const maxVisible = isCompact ? 9 : view === "categories" ? 15 : 18;
+  const visibleItems = items.slice(0, maxVisible);
+  const hiddenCount = Math.max(0, items.length - visibleItems.length);
+  const ringRadii = [118, 178, 238];
+
+  return (
+    <section
+      className="catalog-orbit-stage relative min-h-[calc(100svh-4rem)] overflow-hidden px-4 pt-28 pb-28 md:px-8 lg:px-12"
+      aria-label={label}
+    >
+      <div className="catalog-orbit-hud" data-orbit-shield>
+        <p>{view === "categories" ? "Catalogo orbitale" : "Tool in orbita"}</p>
+        <h1>{label}</h1>
+        <span>
+          {description}
+          {hiddenCount > 0 ? ` · +${hiddenCount} via ricerca` : ""}
+        </span>
+      </div>
+
+      <div className="catalog-orbit-system" aria-label={label}>
+        <div className="catalog-orbit-depth" aria-hidden="true" />
+        {ringRadii.map((radius, index) => (
+          <span
+            key={radius}
+            className="catalog-orbit-ring"
+            style={{
+              "--ring-radius": `${radius}px`,
+              "--ring-width": `${radius * 2}px`,
+              "--ring-height": `${Math.round(radius * 0.72)}px`,
+              "--ring-opacity": `${0.28 - index * 0.05}`,
+            } as CSSProperties}
+          />
+        ))}
+
+        <div className="catalog-orbit-planet" aria-hidden="true">
+          <span />
+        </div>
+
+        {visibleItems.map((item, index) => {
+          const ringIndex = index % ringRadii.length;
+          const sameRingCount = Math.ceil(visibleItems.length / ringRadii.length);
+          const stepIndex = Math.floor(index / ringRadii.length);
+          const angle = (stepIndex / Math.max(1, sameRingCount)) * 360 + ringIndex * 28;
+          const color = item.color ?? "#6a3cff";
+          const Icon =
+            item.iconName && item.iconName in CATALOG_ICON_MAP
+              ? CATALOG_ICON_MAP[item.iconName as keyof typeof CATALOG_ICON_MAP]
+              : Sparkles;
+          const isCategory = view === "categories";
+          const groupKey = isCategory ? item.id.replace(/^cat-/, "") : "";
+
+          const nodeStyle = {
+            "--orbit-angle": `${angle}deg`,
+            "--orbit-angle-back": `${-angle}deg`,
+            "--orbit-radius": `clamp(${ringRadii[ringIndex] * 0.68}px, ${18 + ringIndex * 12}vw, ${ringRadii[ringIndex]}px)`,
+            "--orbit-depth": `${ringIndex * 28}px`,
+            "--orbit-duration": `${34 + ringIndex * 9}s`,
+            "--orbit-delay": `${index * -1.35}s`,
+            "--node-color": color,
+            "--node-size": isCategory ? "4.9rem" : "4.2rem",
+          } as CSSProperties;
+
+          const content = (
+            <>
+              <span className="catalog-orbit-node__halo" aria-hidden="true" />
+              <span className="catalog-orbit-node__body">
+                {item.iconUrl ? (
+                  <img src={item.iconUrl} alt="" loading="lazy" decoding="async" />
+                ) : isCategory ? (
+                  <Icon aria-hidden="true" />
+                ) : (
+                  <strong>{item.initials.slice(0, 2)}</strong>
+                )}
+              </span>
+              <span className="catalog-orbit-node__label">
+                <strong>{item.title}</strong>
+                <small>{item.meta ?? item.category}</small>
+              </span>
+            </>
+          );
+
+          if (isCategory) {
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className={`catalog-orbit-node catalog-orbit-node--category${index >= 9 ? " catalog-orbit-node--compact-extra" : ""}`}
+                style={nodeStyle}
+                onClick={() => onCategoryNavigate(groupKey)}
+                aria-label={`${item.title}. ${item.description}`}
+              >
+                {content}
+              </button>
+            );
+          }
+
+          return (
+            <Link
+              key={item.id}
+              href={item.href}
+              className={`catalog-orbit-node catalog-orbit-node--tool${index >= 9 ? " catalog-orbit-node--compact-extra" : ""}`}
+              style={nodeStyle}
+              aria-label={`${item.title}. ${item.description}`}
+              onClick={(event) => {
+                if (!item.href.startsWith("/")) return;
+                event.preventDefault();
+                router.push(item.href);
+              }}
+            >
+              {content}
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
 }
 
 // ── Types ──
@@ -159,7 +313,6 @@ export function FloatingCatalogView({
   // Current view config
   const currentSectionId = view === "categories" ? "archive-categories" : "archive-tools";
   const currentItems = view === "categories" ? categoryItems : toolItems;
-  const currentLabel = view === "categories" ? "Categorie" : "Tool";
 
   const activeGroupLabel = useMemo(
     () => filterGroups.find((g) => g.key === activeGroup)?.label ?? "Tutti i tool",
@@ -322,7 +475,7 @@ export function FloatingCatalogView({
       </AnimatePresence>
 
       {/* ═══ Spatial Content ═══ */}
-      <div className="pt-28">
+      <div>
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSectionId}
@@ -331,22 +484,13 @@ export function FloatingCatalogView({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
           >
-            <SectionOrbitProvider
-              sectionId={currentSectionId}
-              label={currentLabel}
+            <CatalogOrbitStage
               items={currentItems}
-            >
-              <FloatingSectionAnchor
-                label={view === "categories" ? "Catalogo" : activeGroupLabel}
-                title={anchorTitle}
-                description={anchorDescription}
-                action={
-                  view === "tools" && filteredTools.length > 0
-                    ? { label: "Vedi tutti", href: "/archivio" }
-                    : undefined
-                }
-              />
-            </SectionOrbitProvider>
+              view={view}
+              label={anchorTitle}
+              description={anchorDescription}
+              onCategoryNavigate={handleCategoryNavigate}
+            />
           </motion.div>
         </AnimatePresence>
       </div>

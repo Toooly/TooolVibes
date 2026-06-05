@@ -49,17 +49,17 @@ export function HeroSection({
   return (
     <motion.section
       ref={sectionRef}
-      className="relative min-h-[85vh] flex items-center overflow-hidden px-4 md:px-6 lg:px-12"
+      className="relative flex min-h-[85vh] items-end overflow-hidden px-4 pb-36 pt-28 md:px-6 md:pb-24 lg:px-12"
       style={{ opacity, scale }}
     >
-      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center text-center">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-start text-left">
         {/* Copy */}
-        <div className="max-w-2xl pt-20 lg:pt-0">
+        <div className="max-w-[22rem] border-l border-[rgba(106,60,255,0.24)] pl-4 md:max-w-lg">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.6)] px-4 py-1.5 text-xs font-medium text-[#6a3cff] backdrop-blur-md"
+            className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.48)] px-3 py-1.5 text-[11px] font-medium text-[#6a3cff] backdrop-blur-md"
             data-orbit-shield
           >
             <Sparkles size={14} />
@@ -67,7 +67,7 @@ export function HeroSection({
           </motion.div>
 
           <h1
-            className="mb-6 text-4xl font-bold leading-tight tracking-tight text-[#120d2f] md:text-5xl lg:text-6xl drop-shadow-[0_2px_16px_rgba(255,255,255,0.8)]"
+            className="mb-4 text-3xl font-bold leading-tight tracking-tight text-[#120d2f] md:text-4xl lg:text-5xl drop-shadow-[0_2px_16px_rgba(255,255,255,0.8)]"
             data-orbit-shield
             data-orbit-shield-priority="high"
           >
@@ -86,7 +86,7 @@ export function HeroSection({
           </h1>
 
           <motion.p
-            className="mb-8 text-lg leading-relaxed text-[#4f4970] drop-shadow-[0_2px_8px_rgba(255,255,255,0.6)]"
+            className="mb-6 text-sm leading-relaxed text-[#4f4970] drop-shadow-[0_2px_8px_rgba(255,255,255,0.6)] md:text-base"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.5 }}
@@ -97,7 +97,7 @@ export function HeroSection({
           </motion.p>
 
           <motion.div
-            className="flex flex-wrap items-center justify-center gap-4"
+            className="flex flex-wrap items-center justify-start gap-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 0.5 }}
@@ -105,7 +105,7 @@ export function HeroSection({
           >
             <Link
               href="/archivio"
-              className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_6px_24px_rgba(106,60,255,0.3)] transition-all hover:shadow-[0_8px_28px_rgba(106,60,255,0.4)]"
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-5 py-3 text-sm font-semibold text-white shadow-[0_6px_24px_rgba(106,60,255,0.26)] transition-all hover:shadow-[0_8px_28px_rgba(106,60,255,0.36)]"
             >
               <Zap size={16} className="transition-transform group-hover:rotate-12" />
               Esplora il catalogo
@@ -113,14 +113,14 @@ export function HeroSection({
             </Link>
             <Link
               href="/wishlist"
-              className="inline-flex items-center gap-2 rounded-xl border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.6)] px-6 py-3.5 text-sm font-semibold text-[#120d2f] backdrop-blur-md transition-all hover:bg-[rgba(106,60,255,0.06)] hover:border-[rgba(106,60,255,0.3)]"
+              className="inline-flex items-center gap-2 rounded-full border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.48)] px-5 py-3 text-sm font-semibold text-[#120d2f] backdrop-blur-md transition-all hover:bg-[rgba(106,60,255,0.06)] hover:border-[rgba(106,60,255,0.3)]"
             >
               Suggerisci un tool
             </Link>
           </motion.div>
 
           <motion.div
-            className="mt-10 flex items-center justify-center gap-10"
+            className="mt-8 flex items-center justify-start gap-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.8, duration: 0.5 }}

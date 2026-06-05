@@ -265,6 +265,7 @@ function VisibilityPauser() {
 function Scene({ scrollRef, profile }: { scrollRef: React.MutableRefObject<typeof scrollState>; profile: ReturnType<typeof getPerformanceProfile> }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const isSpatialUiRoute = pathname === "/" || pathname?.startsWith("/archivio");
 
   if (isAdmin) {
     return (
@@ -281,7 +282,7 @@ function Scene({ scrollRef, profile }: { scrollRef: React.MutableRefObject<typeo
     <>
       <ambientLight intensity={0.12} />
       <ScrollCamera scrollRef={scrollRef} reduced={profile.reduced} />
-      <BlackHole scrollRef={scrollRef} reduced={profile.reduced} />
+      {!isSpatialUiRoute && <BlackHole scrollRef={scrollRef} reduced={profile.reduced} />}
       <Planets scrollRef={scrollRef} count={profile.planets} reduced={profile.reduced} />
       <Starfield count={profile.particles} reduced={profile.reduced} />
       <VisibilityPauser />

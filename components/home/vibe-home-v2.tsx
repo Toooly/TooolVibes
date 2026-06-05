@@ -1,11 +1,20 @@
 "use client";
 
+import { useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
-import { Sparkles, Zap } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+  ArrowRight,
+  Bookmark,
+  Boxes,
+  Compass,
+  GitCompare,
+  Radar,
+  Search,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import { HeroSection } from "./hero-section";
-import { FloatingSectionAnchor } from "./floating-section-anchor";
-import { SectionOrbitProvider } from "@/components/app/orbital-system";
 import type { OrbitalItem, OrbitalShapeType } from "@/components/app/orbital-system";
 
 type VibeHomeV2Props = {
@@ -26,7 +35,10 @@ function slugToShape(slug: string): OrbitalShapeType {
 
 function toolToOrbital(tool: DirectoryTool, sectionId: string, priority = 1): OrbitalItem {
   const words = tool.name.split(/\s+/).filter(Boolean);
-  const initials = words.length === 1 ? words[0].slice(0, 2).toUpperCase() : (words[0]?.[0] ?? "") + (words[1]?.[0] ?? "");
+  const initials =
+    words.length === 1
+      ? words[0].slice(0, 2).toUpperCase()
+      : (words[0]?.[0] ?? "") + (words[1]?.[0] ?? "");
   const domain = tool.domain || tool.externalUrl;
   const iconUrl = domain ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64` : undefined;
   return {
@@ -78,7 +90,7 @@ const decisionSteps = [
   {
     icon: "Search" as const,
     label: "Discover",
-    title: "Parti da tool già curati",
+    title: "Parti da tool gia curati",
     description: "Categorie leggibili, filtri utili e una selezione editoriale che tiene fuori il rumore.",
     href: "/archivio",
     color: "#6a3cff",
@@ -101,7 +113,162 @@ const decisionSteps = [
   },
 ];
 
-export function VibeHomeV2({ tools, weeklyTool, supportingTools: _supportingTools }: VibeHomeV2Props) {
+const HOME_ICON_MAP = {
+  Bookmark,
+  Boxes,
+  Compass,
+  GitCompare,
+  Radar,
+  Search,
+  Sparkles,
+  Zap,
+} as const;
+
+interface HomeOrbitStageProps {
+  sectionId: string;
+  label: string;
+  title: string;
+  description?: string;
+  items: OrbitalItem[];
+  align?: "left" | "right";
+  primaryAction?: {
+    label: string;
+    href: string;
+  };
+  secondaryAction?: {
+    label: string;
+    href: string;
+  };
+}
+
+function HomeOrbitStage({
+  sectionId,
+  label,
+  title,
+  description,
+  items,
+  align = "left",
+  primaryAction,
+  secondaryAction,
+}: HomeOrbitStageProps) {
+  const router = useRouter();
+  const [isCompact, setIsCompact] = useState(false);
+
+  useEffect(() => {
+    const update = () => setIsCompact(window.innerWidth < 768);
+    update();
+    window.addEventListener("resize", update, { passive: true });
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  const maxVisible = isCompact ? 5 : 7;
+  const visibleItems = items.slice(0, maxVisible);
+  const ringRadii = isCompact ? [82, 124, 166] : [138, 210, 286];
+
+  return (
+    <section
+      className={`home-orbit-stage home-orbit-stage--${align} catalog-orbit-stage relative z-10 min-h-[calc(100svh-4rem)] overflow-hidden px-4 pt-24 pb-32 md:px-8 lg:px-12`}
+      aria-label={title}
+      data-home-orbit-stage={sectionId}
+    >
+      <div className="home-orbit-hud catalog-orbit-hud" data-orbit-shield>
+        <p>{label}</p>
+        <h1>{title}</h1>
+        {description && <span>{description}</span>}
+        {(primaryAction || secondaryAction) && (
+          <div className="home-orbit-hud__actions">
+            {primaryAction && (
+              <Link href={primaryAction.href} className="home-orbit-hud__action home-orbit-hud__action--primary">
+                {primaryAction.label}
+                <ArrowRight aria-hidden="true" size={15} />
+              </Link>
+            )}
+            {secondaryAction && (
+              <Link href={secondaryAction.href} className="home-orbit-hud__action">
+                {secondaryAction.label}
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="home-orbit-system catalog-orbit-system" aria-label={`${label}: nodi interattivi`}>
+        <div className="catalog-orbit-depth" aria-hidden="true" />
+        {ringRadii.map((radius, index) => (
+          <span
+            key={radius}
+            className="catalog-orbit-ring"
+            style={{
+              "--ring-radius": `${radius}px`,
+              "--ring-width": `${radius * 2}px`,
+              "--ring-height": `${Math.round(radius * 0.72)}px`,
+              "--ring-opacity": `${0.24 - index * 0.045}`,
+            } as CSSProperties}
+          />
+        ))}
+        <div className="catalog-orbit-planet home-orbit-planet" aria-hidden="true">
+          <span />
+        </div>
+
+        {visibleItems.map((item, index) => {
+          const ringIndex = index % ringRadii.length;
+          const sameRingCount = Math.ceil(visibleItems.length / ringRadii.length);
+          const stepIndex = Math.floor(index / ringRadii.length);
+          const angle = (stepIndex / Math.max(1, sameRingCount)) * 360 + ringIndex * 34 + (align === "right" ? 18 : -10);
+          const isPrimary = item.variant === "route" || item.variant === "featured" || item.size === "lg";
+          const color = item.color ?? "#6a3cff";
+          const Icon =
+            item.iconName && item.iconName in HOME_ICON_MAP
+              ? HOME_ICON_MAP[item.iconName as keyof typeof HOME_ICON_MAP]
+              : Sparkles;
+          const nodeStyle = {
+            "--orbit-angle": `${angle}deg`,
+            "--orbit-angle-back": `${-angle}deg`,
+            "--orbit-radius": `clamp(${ringRadii[ringIndex] * 0.74}px, ${21 + ringIndex * 9}vw, ${ringRadii[ringIndex]}px)`,
+            "--orbit-depth": `${ringIndex * 24}px`,
+            "--orbit-duration": `${32 + ringIndex * 8}s`,
+            "--orbit-delay": `${index * -1.45}s`,
+            "--node-color": color,
+            "--node-size": isPrimary ? (isCompact ? "4.75rem" : "5.4rem") : (isCompact ? "4.05rem" : "4.5rem"),
+          } as CSSProperties;
+
+          return (
+            <Link
+              key={item.id}
+              href={item.href}
+              className={`catalog-orbit-node home-orbit-node home-orbit-node--${item.variant ?? "tool"}${index >= 5 ? " home-orbit-node--compact-extra" : ""}`}
+              style={nodeStyle}
+              aria-label={`${item.title}. ${item.description}`}
+              onClick={(event) => {
+                if (!item.href.startsWith("/")) return;
+                event.preventDefault();
+                router.push(item.href);
+              }}
+            >
+              <span className="catalog-orbit-node__halo" aria-hidden="true" />
+              <span className="catalog-orbit-node__body">
+                {item.iconUrl ? (
+                  <img src={item.iconUrl} alt="" loading="lazy" decoding="async" />
+                ) : item.variant === "tool" ? (
+                  <strong>{item.initials.slice(0, 2)}</strong>
+                ) : (
+                  <Icon aria-hidden="true" />
+                )}
+              </span>
+              <span className="catalog-orbit-node__label">
+                <strong>{item.title}</strong>
+                <small>{item.meta ?? item.category}</small>
+              </span>
+              {item.badge && <span className="home-orbit-node__badge">{item.badge}</span>}
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+export function VibeHomeV2({ tools, weeklyTool }: VibeHomeV2Props) {
   const featuredTools = tools.filter((tool) => tool.featured).slice(0, 8);
   const focusTool = weeklyTool ?? featuredTools[0] ?? tools[0];
   const displayTools = [
@@ -109,7 +276,6 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools: _supportingTool
     ...tools.filter((tool) => tool.slug !== focusTool?.slug),
   ].slice(0, 6);
 
-  // ── Orbital items ──
   const heroItems = featuredTools.slice(0, 5).map((t) => toolToOrbital(t, "home-hero", 1));
 
   const routeItems: OrbitalItem[] = routeCards.map((rc, i) => ({
@@ -166,99 +332,65 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools: _supportingTool
 
   return (
     <div className="relative">
-      {/* ═══════════════════════════════════════════════════════════
-          HERO — kept as the primary spatial entry point
-          The orbital items orbit around the hero text
-      ═══════════════════════════════════════════════════════════ */}
-      <SectionOrbitProvider sectionId="home-hero" label="Hero" items={heroItems}>
-        <HeroSection tools={tools} weeklyTool={weeklyTool} />
-      </SectionOrbitProvider>
+      <HomeOrbitStage
+        sectionId="home-hero"
+        label="Sistema TooolVibes"
+        title="Scegli tool AI validi senza attraversare rumore."
+        description="Le schede diventano nodi: tocca un pianeta, entra nel tool, salva o confronta senza leggere una vetrina infinita."
+        items={heroItems}
+        primaryAction={{ label: "Catalogo", href: "/archivio" }}
+        secondaryAction={{ label: "Radar", href: "/product-hunt" }}
+      />
 
-      {/* ═══════════════════════════════════════════════════════════
-          ROUTES — floating constellation of major navigation nodes
-          Traditional card grid replaced by large orbital route nodes
-      ═══════════════════════════════════════════════════════════ */}
-      <SectionOrbitProvider sectionId="home-routes" label="Percorsi" items={routeItems}>
-        <FloatingSectionAnchor
-          label="Percorsi principali"
-          title="Scegli la tua prossima rotta"
-          description="Tre direzioni per esplorare il catalogo, i segnali live e i percorsi editoriali."
-        />
-      </SectionOrbitProvider>
+      <HomeOrbitStage
+        sectionId="home-routes"
+        label="Percorsi principali"
+        title="Scegli la tua prossima rotta"
+        description="Catalogo, Radar e Collection sono nodi navigabili: non card statiche, ma orbite operative."
+        items={routeItems}
+        align="right"
+      />
 
-      {/* ═══════════════════════════════════════════════════════════
-          METHOD — orbital steps showing the decision flow
-          Traditional timeline replaced by orbital step nodes
-      ═══════════════════════════════════════════════════════════ */}
-      <SectionOrbitProvider sectionId="home-decision" label="Metodo" items={decisionItems}>
-        <FloatingSectionAnchor
-          label="Metodo"
-          title="Un flusso ordinato, non una vetrina infinita"
-          description="Discover i tool curati, confronta i candidati forti, chiudi con una shortlist operativa."
-        />
-      </SectionOrbitProvider>
+      <HomeOrbitStage
+        sectionId="home-decision"
+        label="Metodo"
+        title="Discover, Compare, Shortlist"
+        description="Il percorso decisionale diventa una traiettoria: apri la rotta giusta e vai subito al punto."
+        items={decisionItems}
+      />
 
-      {/* ═══════════════════════════════════════════════════════════
-          FEATURED TOOL — single prominent orbital node
-          Traditional large card replaced by a featured orbital node
-      ═══════════════════════════════════════════════════════════ */}
       {focusTool && (
-        <SectionOrbitProvider sectionId="home-weekly" label="Tool della settimana" items={weeklyItems}>
-          <FloatingSectionAnchor
-            label="Tool della settimana"
-            title={focusTool.name}
-            description={focusTool.whyItMatters}
-            action={{ label: "Scopri di più", href: `/toools/${focusTool.slug}` }}
-          />
-        </SectionOrbitProvider>
+        <HomeOrbitStage
+          sectionId="home-weekly"
+          label="Tool della settimana"
+          title={focusTool.name}
+          description={focusTool.whyItMatters}
+          items={weeklyItems}
+          align="right"
+          primaryAction={{ label: "Apri tool", href: `/toools/${focusTool.slug}` }}
+        />
       )}
 
-      {/* ═══════════════════════════════════════════════════════════
-          CATALOG CLUSTER — floating tool nodes
-          Traditional 6-card grid replaced by a cluster of tool orbital nodes
-      ═══════════════════════════════════════════════════════════ */}
-      <SectionOrbitProvider sectionId="home-catalog" label="Catalogo" items={catalogItems}>
-        <FloatingSectionAnchor
-          label="Catalogo vivo"
-          title="Alternative reali, ordinate per decidere meglio"
-          description="Una selezione editoriale di tool AI verificati, pronti per essere esplorati, confrontati e salvati."
-          action={{ label: "Vedi tutti i tool", href: "/archivio" }}
-        />
-      </SectionOrbitProvider>
+      <HomeOrbitStage
+        sectionId="home-catalog"
+        label="Catalogo vivo"
+        title="Alternative reali, in orbita"
+        description="Ogni nodo e un tool cliccabile. Il catalogo completo usa la stessa logica a pianeti e anelli."
+        items={catalogItems}
+        primaryAction={{ label: "Vedi tutti", href: "/archivio" }}
+        secondaryAction={{ label: "Confronta", href: "/compare" }}
+      />
 
-      {/* ═══════════════════════════════════════════════════════════
-          FINAL CTA — integrated spatial closing
-          Kept minimal, centered, part of the scene
-      ═══════════════════════════════════════════════════════════ */}
-      <section className="relative z-10 flex min-h-[50vh] items-center justify-center px-4 md:px-6 lg:px-12">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6a3cff] to-[#39d2f6] shadow-[0_0_30px_rgba(106,60,255,0.25)]">
-            <Sparkles className="h-7 w-7 text-white" />
-          </div>
-          <h2 className="mb-4 text-3xl font-bold text-[#120d2f] md:text-4xl" data-orbit-shield data-orbit-shield-priority="high">
-            Costruisci la tua <span className="text-[#6a3cff]">shortlist operativa</span>
-          </h2>
-          <p className="mx-auto mb-8 max-w-lg text-[#4f4970]/80" data-orbit-shield>
-            Inizia da un catalogo curato, confronta i candidati e salva solo quelli che contano.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4" data-orbit-shield>
-            <Link
-              href="/archivio"
-              data-sonic-action="nav"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-8 py-4 text-sm font-semibold text-white shadow-[0_6px_24px_rgba(106,60,255,0.3)] transition-all hover:shadow-[0_8px_28px_rgba(106,60,255,0.4)]"
-            >
-              <Zap size={18} />
-              Esplora ora
-            </Link>
-            <Link
-              href="/wishlist"
-              className="inline-flex items-center gap-2 rounded-xl border border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.5)] px-8 py-4 text-sm font-semibold text-[#120d2f] backdrop-blur-md transition-all hover:bg-[rgba(106,60,255,0.06)] hover:border-[rgba(106,60,255,0.25)]"
-            >
-              Suggerisci un tool
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HomeOrbitStage
+        sectionId="home-final"
+        label="Shortlist"
+        title="Costruisci la tua shortlist operativa"
+        description="Parti da un nodo, confronta i candidati e salva solo quelli che contano."
+        items={decisionItems.slice(1)}
+        align="right"
+        primaryAction={{ label: "Esplora ora", href: "/archivio" }}
+        secondaryAction={{ label: "Wishlist", href: "/wishlist" }}
+      />
     </div>
   );
 }

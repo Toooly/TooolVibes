@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { AnimatePresence } from "motion/react";
+import { usePathname } from "next/navigation";
 import { useOrbitalContext } from "./orbital-context";
 import { usePerformanceMode, useOrbitalConfigForItems, getItemWeight } from "./use-performance-mode";
 import { OrbitingBadge } from "./orbiting-badge";
@@ -519,8 +520,11 @@ function useOrbitEngine(
 
 export function OrbitalLayer() {
   const { activeSectionId, getItemsForSection, isPaused, setSelectedItemId } = useOrbitalContext();
+  const pathname = usePathname();
   const profile = usePerformanceMode();
   const [isCompactViewport, setIsCompactViewport] = useState(false);
+  const hideFloatingLayer = pathname === "/" || pathname?.startsWith("/archivio");
+  const hideCoreNode = pathname === "/" || pathname?.startsWith("/archivio");
   useScrollState();
 
   useEffect(() => {
@@ -590,7 +594,7 @@ export function OrbitalLayer() {
     };
   }, [setSelectedItemId]);
 
-  if (!profile.enableGlow && profile.reducedMotion && activeItems.length === 0) {
+  if (hideFloatingLayer || (!profile.enableGlow && profile.reducedMotion && activeItems.length === 0)) {
     return null;
   }
 
@@ -622,7 +626,9 @@ export function OrbitalLayer() {
           );
         })}
       </AnimatePresence>
-      <OrbitalCoreNode x={centerX} y={centerY} isMobile={layerIsMobile} inSafeZone={centerInSafeZone} />
+      {!hideCoreNode && (
+        <OrbitalCoreNode x={centerX} y={centerY} isMobile={layerIsMobile} inSafeZone={centerInSafeZone} />
+      )}
     </div>
   );
 }

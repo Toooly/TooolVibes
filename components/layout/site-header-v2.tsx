@@ -88,6 +88,7 @@ export function SiteHeaderV2() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const spatialRoute = pathname === "/" || pathname?.startsWith("/archivio");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -104,7 +105,7 @@ export function SiteHeaderV2() {
       <header className="fixed left-0 right-0 top-0 z-50 transition-all duration-500">
         <div
           className={`mx-auto max-w-[1440px] transition-all duration-500 ${
-            scrolled
+            scrolled || spatialRoute
               ? "mx-3 mt-3 rounded-2xl border border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.82)] shadow-[0_4px_20px_rgba(106,60,255,0.08)] backdrop-blur-xl"
               : "bg-transparent"
           }`}
