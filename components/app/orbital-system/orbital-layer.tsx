@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useOrbitalContext } from "./orbital-context";
-import { usePerformanceMode, useOrbitalConfigForItems } from "./use-performance-mode";
+import { usePerformanceMode, useOrbitalConfigForItems, getItemWeight } from "./use-performance-mode";
 import { OrbitingBadge } from "./orbiting-badge";
 import type { OrbitalItem, OrbitConfig } from "./types";
 
@@ -46,7 +46,7 @@ function getSafeZones(w: number, h: number, sectionId: string | null): SafeZone[
   const zones: SafeZone[] = [];
   // Header navbar zone
   zones.push({ x: w / 2, y: 32, w: w, h: 68, padding: 16 });
-  // Text safe zone — active on all floating-UI pages to protect centered anchors
+
   const isMinimalSection =
     !sectionId ||
     sectionId.startsWith("home-") ||
@@ -57,38 +57,93 @@ function getSafeZones(w: number, h: number, sectionId: string | null): SafeZone[
     sectionId.startsWith("tool-") ||
     sectionId.startsWith("wishlist-") ||
     sectionId.startsWith("radar-");
+
   if (isMinimalSection) {
-    zones.push({
-      x: w / 2,
-      y: h * 0.42,
-      w: Math.min(720, w * 0.8),
-      h: Math.min(480, h * 0.52),
-      padding: 48,
-    });
+    // Section-specific tighter safe zones to protect text without over-pushing
+    const map: Record<string, SafeZone> = {
+      "home-hero": { x: w / 2, y: h * 0.42, w: Math.min(640, w * 0.72), h: 280, padding: 44 },
+      "home-routes": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: 36 },
+      "home-decision": { x: w / 2, y: h * 0.44, w: Math.min(560, w * 0.66), h: 220, padding: 36 },
+      "home-weekly": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: 36 },
+      "home-catalog": { x: w / 2, y: h * 0.44, w: Math.min(600, w * 0.68), h: 220, padding: 36 },
+      "archive-categories": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: 36 },
+      "archive-tools": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: 36 },
+    };
+    const zone = sectionId ? map[sectionId] : undefined;
+    if (zone) {
+      zones.push(zone);
+    } else {
+      zones.push({ x: w / 2, y: h * 0.42, w: Math.min(560, w * 0.62), h: 220, padding: 36 });
+    }
   }
   return zones;
 }
 
-function applyRepulsion(x: number, y: number, zones: SafeZone[]): { x: number; y: number } {
+/** Horizontal offset so large nodes orbit off-center and avoid centered text */
+function getSectionOrbitOffset(sectionId: string | null, w: number): { x: number; y: number } {
+  if (!sectionId) return { x: 0, y: 0 };
+  const offsets: Record<string, { x: number; y: number }> = {
+    "home-hero": { x: w * 0.18, y: 0 },
+    "home-routes": { x: -w * 0.16, y: 0 },
+    "home-decision": { x: w * 0.16, y: 0 },
+    "home-weekly": { x: -w * 0.16, y: 0 },
+    "home-catalog": { x: w * 0.18, y: 0 },
+    "archive-categories": { x: -w * 0.14, y: 0 },
+    "archive-tools": { x: w * 0.14, y: 0 },
+  };
+  return offsets[sectionId] ?? { x: 0, y: 0 };
+}
+
+function getNodeRadius(item: OrbitalItem, isMobile: boolean): number {
+  const sizeMap: Record<string, { m: number; d: number }> = {
+    sm: { m: 36, d: 44 },
+    md: { m: 44, d: 56 },
+    lg: { m: 52, d: 68 },
+  };
+  const variantMap: Record<string, { m: number; d: number }> = {
+    featured: { m: 56, d: 76 },
+    route: { m: 52, d: 68 },
+    category: { m: 48, d: 64 },
+    step: { m: 44, d: 56 },
+    tool: { m: 36, d: 48 },
+  };
+  let s = isMobile ? 36 : 48;
+  if (item.size && sizeMap[item.size]) {
+    s = isMobile ? sizeMap[item.size].m : sizeMap[item.size].d;
+  } else if (item.variant && variantMap[item.variant]) {
+    s = isMobile ? variantMap[item.variant].m : variantMap[item.variant].d;
+  }
+  return s / 2;
+}
+
+function applyRepulsion(
+  x: number,
+  y: number,
+  zones: SafeZone[],
+  nodeRadius: number,
+  nodeWeight: number
+): { x: number; y: number; inSafeZone: boolean } {
   let nx = x;
   let ny = y;
+  let inSafeZone = false;
   for (const zone of zones) {
-    const halfW = zone.w / 2 + zone.padding;
-    const halfH = zone.h / 2 + zone.padding;
+    const halfW = zone.w / 2 + zone.padding + nodeRadius * (0.4 + nodeWeight * 0.3);
+    const halfH = zone.h / 2 + zone.padding + nodeRadius * (0.4 + nodeWeight * 0.3);
     const dx = nx - zone.x;
     const dy = ny - zone.y;
     if (Math.abs(dx) < halfW && Math.abs(dy) < halfH) {
+      inSafeZone = true;
       const distX = halfW - Math.abs(dx);
       const distY = halfH - Math.abs(dy);
-      // Push toward nearest edge
+      const force = 0.65 + nodeWeight * 0.3;
       if (distX < distY) {
-        nx += dx > 0 ? distX * 0.55 + 4 : -(distX * 0.55 + 4);
+        nx += dx > 0 ? distX * force + 6 : -(distX * force + 6);
       } else {
-        ny += dy > 0 ? distY * 0.55 + 4 : -(distY * 0.55 + 4);
+        ny += dy > 0 ? distY * force + 6 : -(distY * force + 6);
       }
     }
   }
-  return { x: nx, y: ny };
+  return { x: nx, y: ny, inSafeZone };
 }
 
 // ── Scroll State ──
@@ -113,6 +168,13 @@ function useScrollState() {
   }, []);
 }
 
+interface NodePosition {
+  x: number;
+  y: number;
+  scale: number;
+  inSafeZone: boolean;
+}
+
 function useOrbitEngine(
   items: OrbitalItem[],
   configs: OrbitConfig[],
@@ -120,8 +182,8 @@ function useOrbitEngine(
   profile: ReturnType<typeof usePerformanceMode>,
   activeSectionId: string | null
 ) {
-  const positionsRef = useRef<{ x: number; y: number; scale: number }[]>([]);
-  const [positions, setPositions] = useState<{ x: number; y: number; scale: number }[]>([]);
+  const positionsRef = useRef<NodePosition[]>([]);
+  const [positions, setPositions] = useState<NodePosition[]>([]);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
@@ -131,6 +193,8 @@ function useOrbitEngine(
   const targetCenterRef = useRef({ x: 0, y: 0 });
   const sectionShiftRef = useRef(0);
   const sectionShiftTargetRef = useRef(0);
+  const sectionOrbitOffsetRef = useRef({ x: 0, y: 0 });
+  const sectionOrbitOffsetTargetRef = useRef({ x: 0, y: 0 });
 
   // Mouse tracking
   useEffect(() => {
@@ -143,9 +207,10 @@ function useOrbitEngine(
     return () => window.removeEventListener("mousemove", onMouseMove);
   }, [profile.isMobile, profile.reducedMotion]);
 
-  // Section shift
+  // Section shift + horizontal offset
   useEffect(() => {
     sectionShiftTargetRef.current = getSectionShift(activeSectionId);
+    sectionOrbitOffsetTargetRef.current = getSectionOrbitOffset(activeSectionId, typeof window !== "undefined" ? window.innerWidth : 1200);
   }, [activeSectionId]);
 
   // Init center on mount
@@ -157,7 +222,7 @@ function useOrbitEngine(
   }, [profile.isMobile]);
 
   useEffect(() => {
-    positionsRef.current = items.map(() => ({ x: currentCenterRef.current.x, y: currentCenterRef.current.y, scale: 1 }));
+    positionsRef.current = items.map(() => ({ x: currentCenterRef.current.x, y: currentCenterRef.current.y, scale: 1, inSafeZone: false }));
     setPositions(positionsRef.current);
   }, [items]);
 
@@ -205,10 +270,12 @@ function useOrbitEngine(
 
       // Section shift lerp
       sectionShiftRef.current += (sectionShiftTargetRef.current - sectionShiftRef.current) * 0.012;
+      sectionOrbitOffsetRef.current.x += (sectionOrbitOffsetTargetRef.current.x - sectionOrbitOffsetRef.current.x) * 0.015;
+      sectionOrbitOffsetRef.current.y += (sectionOrbitOffsetTargetRef.current.y - sectionOrbitOffsetRef.current.y) * 0.015;
 
       // Build target center
-      targetCenterRef.current.x = cx + mx + breathX;
-      targetCenterRef.current.y = cyBase + my + breathY + sectionShiftRef.current;
+      targetCenterRef.current.x = cx + mx + breathX + sectionOrbitOffsetRef.current.x;
+      targetCenterRef.current.y = cyBase + my + breathY + sectionShiftRef.current + sectionOrbitOffsetRef.current.y;
 
       // Smooth lerp to target
       currentCenterRef.current.x += (targetCenterRef.current.x - currentCenterRef.current.x) * 0.04;
@@ -223,8 +290,8 @@ function useOrbitEngine(
       // Safe zones
       const zones = getSafeZones(w, h, activeSectionId);
 
-      const next = items.map((_, i) => {
-        if (i >= configs.length) return { x: ccx, y: ccy, scale: globalScale };
+      const next = items.map((item, i) => {
+        if (i >= configs.length) return { x: ccx, y: ccy, scale: globalScale, inSafeZone: false };
         const cfg = configs[i];
         const angle = cfg.phase + t * cfg.speed * 0.001;
         const rx = cfg.radiusX * (profile.isMobile ? 0.55 : 1);
@@ -234,8 +301,10 @@ function useOrbitEngine(
         let x = ccx + Math.cos(angle) * rx;
         let y = ccy + Math.sin(angle + tilt) * ry + Math.sin(angle * 0.5) * 10;
 
-        // Apply repulsion from safe zones
-        const repelled = applyRepulsion(x, y, zones);
+        // Apply repulsion from safe zones (weight-based for large nodes)
+        const nodeRadius = getNodeRadius(item, profile.isMobile);
+        const weight = getItemWeight(item);
+        const repelled = applyRepulsion(x, y, zones, nodeRadius, weight);
         x = repelled.x;
         y = repelled.y;
 
@@ -243,7 +312,10 @@ function useOrbitEngine(
         x = Math.max(30, Math.min(w - 30, x));
         y = Math.max(30, Math.min(h - 30, y));
 
-        return { x, y, scale: globalScale };
+        // Dim and shrink if pushed into safe zone
+        const nodeScale = repelled.inSafeZone ? Math.max(0.35, globalScale * (1 - weight * 0.18)) : globalScale;
+
+        return { x, y, scale: nodeScale, inSafeZone: repelled.inSafeZone };
       });
 
       positionsRef.current = next;
@@ -311,7 +383,7 @@ export function OrbitalLayer() {
     >
       <AnimatePresence mode="popLayout">
         {activeItems.map((item, i) => {
-          const pos = positions[i] ?? { x: -100, y: -100, scale: 1 };
+          const pos = positions[i] ?? { x: -100, y: -100, scale: 1, inSafeZone: false };
           // Skip rendering if way off-screen to save perf
           if (pos.x < -80 || pos.x > window.innerWidth + 80 || pos.y < -80 || pos.y > window.innerHeight + 80) {
             return null;
@@ -333,6 +405,8 @@ export function OrbitalLayer() {
                 index={i}
                 isMobile={profile.isMobile}
                 enableGlow={profile.enableGlow}
+                inSafeZone={pos.inSafeZone}
+                isSectionActive={activeSectionId === item.sectionId}
               />
             </motion.div>
           );

@@ -64,7 +64,7 @@ export function usePerformanceMode(): PerformanceProfile {
   return profile;
 }
 
-function getItemWeight(item: OrbitalItem): number {
+export function getItemWeight(item: OrbitalItem): number {
   switch (item.variant) {
     case "featured":
       return 3;

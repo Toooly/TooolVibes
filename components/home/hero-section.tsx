@@ -65,7 +65,7 @@ export function HeroSection({
             AI tools discovery system
           </motion.div>
 
-          <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-[#120d2f] md:text-5xl lg:text-6xl">
+          <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-[#120d2f] md:text-5xl lg:text-6xl drop-shadow-[0_2px_16px_rgba(255,255,255,0.8)]">
             <AnimatedText text="Scegli tool AI validi" />
             <br />
             <span
@@ -81,7 +81,7 @@ export function HeroSection({
           </h1>
 
           <motion.p
-            className="mb-8 text-lg leading-relaxed text-[#4f4970]"
+            className="mb-8 text-lg leading-relaxed text-[#4f4970] drop-shadow-[0_2px_8px_rgba(255,255,255,0.6)]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.5 }}

@@ -49,12 +49,12 @@ export function FloatingSectionAnchor({
           </motion.span>
         )}
 
-        <h2 className="mb-3 text-3xl font-bold tracking-tight text-[#120d2f] md:text-4xl lg:text-[2.75rem] lg:leading-tight">
+        <h2 className="mb-3 text-3xl font-bold tracking-tight text-[#120d2f] md:text-4xl lg:text-[2.75rem] lg:leading-tight drop-shadow-[0_2px_12px_rgba(255,255,255,0.7)]">
           {title}
         </h2>
 
         {description && (
-          <p className="mx-auto max-w-md text-base leading-relaxed text-[#4f4970]/80">
+          <p className="mx-auto max-w-md text-base leading-relaxed text-[#4f4970]/80 drop-shadow-[0_2px_8px_rgba(255,255,255,0.5)]">
             {description}
           </p>
         )}

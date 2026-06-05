@@ -2,7 +2,30 @@
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowUpRight, Compass, Radar, Boxes, Search, GitCompare, Bookmark, Star, Sparkles, Zap } from "lucide-react";
+import {
+  ArrowUpRight,
+  Compass,
+  Radar,
+  Boxes,
+  Search,
+  GitCompare,
+  Bookmark,
+  Star,
+  Sparkles,
+  Zap,
+  Code,
+  Layers,
+  Database,
+  Cpu,
+  Palette,
+  FileText,
+  Globe,
+  Image,
+  PenTool,
+  Split,
+  ListChecks,
+  Heart,
+} from "lucide-react";
 import type { OrbitalItem, OrbitalNodeVariant } from "./types";
 import { ToolPreviewPopover } from "./tool-preview-popover";
 import { useOrbitalContext } from "./orbital-context";
@@ -18,6 +41,18 @@ const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ size?: number; class
   Star,
   Sparkles,
   Zap,
+  Code,
+  Layers,
+  Database,
+  Cpu,
+  Palette,
+  FileText,
+  Globe,
+  Image,
+  PenTool,
+  Split,
+  ListChecks,
+  Heart,
 };
 
 interface OrbitingBadgeProps {
@@ -27,6 +62,8 @@ interface OrbitingBadgeProps {
   index: number;
   isMobile: boolean;
   enableGlow: boolean;
+  inSafeZone?: boolean;
+  isSectionActive?: boolean;
 }
 
 const VARIANT_SIZE: Record<OrbitalNodeVariant, { mobile: number; desktop: number }> = {
@@ -66,7 +103,16 @@ function getNodeLabelMode(variant?: OrbitalNodeVariant): "always" | "hover" | "n
   }
 }
 
-export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: OrbitingBadgeProps) {
+export function OrbitingBadge({
+  item,
+  x,
+  y,
+  index,
+  isMobile,
+  enableGlow,
+  inSafeZone = false,
+  isSectionActive = false,
+}: OrbitingBadgeProps) {
   const { hoveredItemId, setHoveredItemId, selectedItemId, setSelectedItemId, setIsPaused } = useOrbitalContext();
   const [isHovered, setIsHovered] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -80,7 +126,7 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
   const labelMode = getNodeLabelMode(item.variant);
   const shouldShowLabel = labelMode === "always" || isActive || isHovered;
   const baseSize = getBaseSize(item, isMobile);
-  const size = isActive ? baseSize + 6 : baseSize;
+  const size = isActive ? baseSize + 6 : isSectionActive ? baseSize + 4 : baseSize;
 
   useEffect(() => {
     if (selectedItemId !== item.id) {
@@ -119,15 +165,18 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
     setTilt({ x: 0, y: 0 });
   }, [isMobile, setHoveredItemId, setIsPaused]);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (isMobile || !badgeRef.current) return;
-    const rect = badgeRef.current.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const dx = (e.clientX - cx) / (rect.width / 2);
-    const dy = (e.clientY - cy) / (rect.height / 2);
-    setTilt({ x: dy * -8, y: dx * 8 });
-  }, [isMobile]);
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (isMobile || !badgeRef.current) return;
+      const rect = badgeRef.current.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) / (rect.width / 2);
+      const dy = (e.clientY - cy) / (rect.height / 2);
+      setTilt({ x: dy * -8, y: dx * 8 });
+    },
+    [isMobile]
+  );
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -140,9 +189,14 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
           updatePopoverPos();
           setPopoverOpen(true);
         }
+      } else {
+        // Desktop: direct navigation so categories/routes/tools are actually clickable
+        if (isRealTool) {
+          window.location.href = item.href;
+        }
       }
     },
-    [isMobile, item.id, item.href, selectedItemId, setSelectedItemId, updatePopoverPos]
+    [isMobile, item.id, item.href, selectedItemId, setSelectedItemId, updatePopoverPos, isRealTool]
   );
 
   const handleTouchStart = useCallback(() => {
@@ -184,6 +238,7 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
 
   const iconSize = Math.max(14, Math.floor(size * 0.35));
   const IconComponent = item.iconName ? LUCIDE_ICON_MAP[item.iconName] : null;
+  const shouldDim = inSafeZone && !isActive && !isHovered;
 
   return (
     <motion.div
@@ -200,9 +255,11 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
         willChange: "transform",
         zIndex: isActive ? 60 : 20 + index,
         perspective: 400,
+        opacity: shouldDim ? 0.3 : 1,
+        filter: shouldDim ? "blur(3px)" : "none",
       }}
       animate={{
-        scale: isActive ? 1.22 : isHovered ? 1.12 : 1,
+        scale: isActive ? 1.22 : isSectionActive ? 1.15 : isHovered ? 1.12 : 1,
         rotateX: tilt.x,
         rotateY: tilt.y,
       }}
@@ -251,8 +308,8 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
         <motion.div
           className="pointer-events-none absolute inset-0 rounded-full"
           animate={{
-            opacity: isActive ? 0.4 : 0,
-            scale: isActive ? 1.7 : 1.2,
+            opacity: isActive ? 0.45 : isSectionActive ? 0.25 : 0,
+            scale: isActive ? 1.7 : isSectionActive ? 1.5 : 1.2,
           }}
           transition={{ duration: 0.3 }}
           style={{
@@ -273,7 +330,7 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
         initials={IconComponent ? undefined : item.initials}
       />
 
-      {/* Center icon overlay for route/step/featured variants */}
+      {/* Center icon overlay for route/step/featured/category variants */}
       {IconComponent && (
         <div className="absolute inset-0 z-20 flex items-center justify-center">
           <IconComponent size={iconSize} className="text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]" />
@@ -301,32 +358,34 @@ export function OrbitingBadge({ item, x, y, index, isMobile, enableGlow }: Orbit
           {shouldShowLabel && (
             <motion.div
               initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: isActive || isHovered ? 1 : labelMode === "always" ? 0.85 : 0.75, y: 0 }}
+              animate={{ opacity: isActive || isHovered ? 1 : labelMode === "always" ? 0.9 : 0.75, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.18 }}
               className="flex flex-col items-center gap-1"
             >
               <span
-                className="whitespace-nowrap rounded-full px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-md"
+                className="whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-xl"
                 style={{
                   background: isActive
-                    ? `linear-gradient(135deg, ${item.color ?? "#6a3cff"}35, rgba(18,13,47,0.75))`
-                    : "rgba(18,13,47,0.65)",
-                  boxShadow: isActive ? `0 2px 12px ${item.color ?? "#6a3cff"}25` : "0 2px 8px rgba(0,0,0,0.15)",
-                  border: `1px solid ${isActive ? `${item.color ?? "#6a3cff"}40` : "rgba(255,255,255,0.06)"}`,
+                    ? `linear-gradient(135deg, ${item.color ?? "#6a3cff"}45, rgba(18,13,47,0.85))`
+                    : "rgba(18,13,47,0.78)",
+                  boxShadow: isActive ? `0 2px 14px ${item.color ?? "#6a3cff"}30` : "0 2px 10px rgba(0,0,0,0.2)",
+                  border: `1px solid ${isActive ? `${item.color ?? "#6a3cff"}50` : "rgba(255,255,255,0.08)"}`,
+                  textShadow: "0 1px 2px rgba(0,0,0,0.35)",
                 }}
               >
                 {item.title}
               </span>
 
               {/* Meta line */}
-              {item.meta && (isActive || isHovered) && (
+              {item.meta && (isActive || isHovered || (labelMode === "always" && isSectionActive)) && (
                 <motion.span
                   initial={{ opacity: 0, y: 3 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 3 }}
                   transition={{ delay: 0.06, duration: 0.15 }}
-                  className="whitespace-nowrap text-[9px] font-medium text-white/60"
+                  className="whitespace-nowrap text-[10px] font-medium text-white/70"
+                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.35)" }}
                 >
                   {item.meta}
                 </motion.span>

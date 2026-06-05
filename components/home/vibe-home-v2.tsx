@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Bookmark, Boxes, Compass, GitCompare, Radar, Search, Sparkles, Zap, Star } from "lucide-react";
+import { Sparkles, Zap } from "lucide-react";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import { HeroSection } from "./hero-section";
 import { FloatingSectionAnchor } from "./floating-section-anchor";
