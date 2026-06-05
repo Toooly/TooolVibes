@@ -24,8 +24,9 @@ interface OrbitalCoreNodeProps {
 export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalCoreNodeProps) {
   const { coreMenuOpen, setCoreMenuOpen, setIsPaused } = useOrbitalContext();
   const nodeRef = useRef<HTMLDivElement>(null);
-  const size = isMobile ? 56 : 68;
-  const menuRadius = isMobile ? 88 : 108;
+  const size = isMobile ? 58 : 72;
+  const hitSize = isMobile ? 76 : 82;
+  const menuRadius = isMobile ? 94 : 116;
 
   const handleOpen = useCallback(() => {
     setCoreMenuOpen(true);
@@ -73,29 +74,15 @@ export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalC
     };
   }, [coreMenuOpen, handleClose]);
 
-  // Keyboard activation
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        handleToggle();
-      }
-    },
-    [handleToggle]
-  );
-
-  // Safe-zone visual feedback: dim and shrink slightly
-  const dimOpacity = inSafeZone ? 0.35 : 1;
-  const dimScale = inSafeZone ? 0.75 : 1;
+  // Safe-zone visual feedback: the engine has already pushed the node away;
+  // this subtle state makes the "repelled by text" behavior legible.
+  const dimOpacity = inSafeZone ? 0.12 : 1;
+  const dimScale = inSafeZone ? 0.58 : 1;
 
   return (
     <motion.div
       ref={nodeRef}
-      role="button"
-      tabIndex={0}
-      aria-label={coreMenuOpen ? "Chiudi navigazione rapida" : "Apri navigazione rapida"}
-      aria-expanded={coreMenuOpen}
-      className="absolute cursor-pointer outline-none"
+      className="pointer-events-auto absolute"
       style={{
         left: x,
         top: y,
@@ -109,90 +96,93 @@ export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalC
         opacity: dimOpacity,
       }}
       transition={{ type: "spring", stiffness: 260, damping: 20, opacity: { duration: 0.35 } }}
-      onClick={(e) => {
-        e.stopPropagation();
-        handleToggle();
-      }}
-      onKeyDown={handleKeyDown}
     >
-      {/* Focus ring */}
-      <div
-        className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity focus-visible:opacity-100"
+      <button
+        type="button"
+        aria-label={coreMenuOpen ? "Chiudi navigazione rapida" : "Apri navigazione rapida"}
+        aria-expanded={coreMenuOpen}
+        className="group relative flex cursor-pointer items-center justify-center rounded-full outline-none transition-transform active:scale-95 focus-visible:ring-4 focus-visible:ring-violet-300/60"
         style={{
-          boxShadow: "0 0 0 4px rgba(106,60,255,0.35)",
-          transform: "scale(1.35)",
+          width: hitSize,
+          height: hitSize,
+          touchAction: "manipulation",
         }}
-      />
-
-      {/* Ambient glow */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 rounded-full"
-        animate={{
-          opacity: coreMenuOpen ? 0.55 : 0.25,
-          scale: coreMenuOpen ? 2.0 : 1.6,
+        onClick={(e) => {
+          e.stopPropagation();
+          handleToggle();
         }}
-        transition={{ duration: 0.4 }}
-        style={{
-          background: "radial-gradient(circle, rgba(106,60,255,0.35) 0%, transparent 70%)",
-          filter: "blur(14px)",
-        }}
-      />
-
-      {/* Pulse ring invitation */}
-      {!coreMenuOpen && (
+      >
+        {/* Ambient glow */}
         <motion.div
           className="pointer-events-none absolute inset-0 rounded-full"
           animate={{
-            scale: [1.2, 1.55, 1.2],
-            opacity: [0.2, 0, 0.2],
+            opacity: coreMenuOpen ? 0.55 : 0.28,
+            scale: coreMenuOpen ? 1.85 : 1.48,
           }}
-          transition={{
-            duration: 3.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          transition={{ duration: 0.4 }}
           style={{
-            border: "2px solid rgba(106,60,255,0.35)",
+            background: "radial-gradient(circle, rgba(106,60,255,0.38) 0%, transparent 70%)",
+            filter: "blur(14px)",
           }}
         />
-      )}
 
-      {/* Core body */}
-      <motion.div
-        className="relative flex items-center justify-center rounded-full"
-        style={{
-          width: size,
-          height: size,
-          background: "radial-gradient(circle at 35% 35%, #1a1233 0%, #0a0618 60%, #05030f 100%)",
-          border: "2px solid rgba(106,60,255,0.55)",
-          boxShadow: coreMenuOpen
-            ? "0 0 28px rgba(106,60,255,0.5), inset 0 0 14px rgba(106,60,255,0.15)"
-            : "0 0 18px rgba(106,60,255,0.3), inset 0 0 10px rgba(106,60,255,0.08)",
-        }}
-        animate={{
-          borderColor: coreMenuOpen ? "rgba(106,60,255,0.85)" : "rgba(106,60,255,0.55)",
-        }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Inner swirl */}
-        <div
-          className="absolute inset-0 rounded-full opacity-40"
+        {/* Pulse ring invitation */}
+        {!coreMenuOpen && (
+          <motion.div
+            className="pointer-events-none absolute rounded-full"
+            animate={{
+              scale: [1, 1.28, 1],
+              opacity: [0.28, 0, 0.28],
+            }}
+            transition={{
+              duration: 3.4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{
+              inset: (hitSize - size) / 2,
+              border: "2px solid rgba(106,60,255,0.42)",
+            }}
+          />
+        )}
+
+        {/* Core body */}
+        <motion.span
+          className="relative flex items-center justify-center rounded-full transition-transform group-hover:scale-105"
           style={{
-            background: "conic-gradient(from 0deg, transparent 0%, rgba(106,60,255,0.25) 40%, transparent 60%, rgba(57,210,246,0.15) 80%, transparent 100%)",
-            animation: "coreSpin 8s linear infinite",
+            width: size,
+            height: size,
+            background: "radial-gradient(circle at 35% 35%, #1a1233 0%, #0a0618 60%, #05030f 100%)",
+            border: "2px solid rgba(106,60,255,0.6)",
+            boxShadow: coreMenuOpen
+              ? "0 0 30px rgba(106,60,255,0.58), inset 0 0 14px rgba(106,60,255,0.18)"
+              : "0 0 20px rgba(106,60,255,0.34), inset 0 0 10px rgba(106,60,255,0.1)",
           }}
-        />
-        {/* Center dot */}
-        <div
-          className="relative z-10 rounded-full"
-          style={{
-            width: size * 0.22,
-            height: size * 0.22,
-            background: "radial-gradient(circle, #6a3cff 0%, #0a0618 100%)",
-            boxShadow: "0 0 8px rgba(106,60,255,0.6)",
+          animate={{
+            borderColor: coreMenuOpen ? "rgba(106,60,255,0.9)" : "rgba(106,60,255,0.6)",
           }}
-        />
-      </motion.div>
+          transition={{ duration: 0.3 }}
+        >
+          {/* Inner swirl */}
+          <span
+            className="absolute inset-0 rounded-full opacity-45"
+            style={{
+              background: "conic-gradient(from 0deg, transparent 0%, rgba(106,60,255,0.3) 40%, transparent 60%, rgba(57,210,246,0.18) 80%, transparent 100%)",
+              animation: "coreSpin 8s linear infinite",
+            }}
+          />
+          {/* Center dot */}
+          <span
+            className="relative z-10 rounded-full"
+            style={{
+              width: size * 0.22,
+              height: size * 0.22,
+              background: "radial-gradient(circle, #6a3cff 0%, #0a0618 100%)",
+              boxShadow: "0 0 8px rgba(106,60,255,0.65)",
+            }}
+          />
+        </motion.span>
+      </button>
 
       {/* Close indicator when open */}
       <AnimatePresence>
@@ -201,7 +191,7 @@ export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalC
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5 }}
-            className="pointer-events-none absolute -right-1 -top-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-white/90 shadow"
+            className="pointer-events-none absolute right-2 top-2 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-white/90 shadow"
           >
             <X size={10} className="text-[#120d2f]" />
           </motion.div>
@@ -247,7 +237,7 @@ export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalC
                   <Link
                     href={item.href}
                     onClick={() => handleClose()}
-                    className="flex flex-col items-center gap-1.5 outline-none focus-visible:ring-2 focus-visible:ring-violet-300/70 rounded-xl"
+                    className="flex flex-col items-center gap-1.5 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-violet-300/70"
                     aria-label={item.label}
                   >
                     <motion.div

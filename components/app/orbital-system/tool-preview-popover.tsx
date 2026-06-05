@@ -24,6 +24,7 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
   const popoverRef = useRef<HTMLDivElement>(null);
   const color = item.color ?? "#6a3cff";
   const [imgError, setImgError] = useState(false);
+  const actionLabel = item.variant === "tool" || item.variant === "featured" ? "Vedi tool" : "Apri percorso";
 
   useEffect(() => {
     if (!visible) return;
@@ -152,7 +153,7 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
                 className="group relative inline-flex w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold text-white transition-all hover:shadow-[0_4px_20px_rgba(106,60,255,0.35)]"
                 style={{ background: `linear-gradient(135deg, ${color}, #4f46e5)` }}
               >
-                Vedi tool
+                {actionLabel}
                 <ArrowUpRight size={12} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </motion.div>

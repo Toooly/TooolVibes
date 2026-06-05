@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import Link from "next/link";
 import {
   ArrowUpRight,
   Compass,
@@ -119,14 +120,14 @@ export function OrbitingBadge({
   const [popoverPos, setPopoverPos] = useState<"top" | "bottom" | "left" | "right">("bottom");
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const badgeRef = useRef<HTMLDivElement>(null);
-  const touchStartRef = useRef<number>(0);
 
   const isActive = hoveredItemId === item.id || selectedItemId === item.id;
   const isRealTool = item.href !== "#";
   const labelMode = getNodeLabelMode(item.variant);
-  const shouldShowLabel = labelMode === "always" || isActive || isHovered;
+  const shouldShowLabel = isMobile || labelMode === "always" || isActive || isHovered;
   const baseSize = getBaseSize(item, isMobile);
-  const size = isActive ? baseSize + 10 : isSectionActive ? baseSize + 7 : isHovered ? baseSize + 4 : baseSize;
+  const size = isActive ? baseSize + 12 : isSectionActive ? baseSize + (isMobile ? 12 : 9) : isHovered ? baseSize + 5 : baseSize;
+  const hitSize = Math.max(isMobile ? 74 : 56, size + (isMobile ? 24 : 14));
 
   useEffect(() => {
     if (selectedItemId !== item.id) {
@@ -148,13 +149,13 @@ export function OrbitingBadge({
   }, []);
 
   const handleMouseEnter = useCallback(() => {
-    if (isMobile) return;
+    if (isMobile || !isRealTool) return;
     setIsHovered(true);
     setHoveredItemId(item.id);
     setIsPaused(true);
     updatePopoverPos();
     setPopoverOpen(true);
-  }, [isMobile, item.id, setHoveredItemId, setIsPaused, updatePopoverPos]);
+  }, [isMobile, isRealTool, item.id, setHoveredItemId, setIsPaused, updatePopoverPos]);
 
   const handleMouseLeave = useCallback(() => {
     if (isMobile) return;
@@ -178,80 +179,85 @@ export function OrbitingBadge({
     [isMobile]
   );
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (isMobile) {
-        e.preventDefault();
-        if (selectedItemId === item.id) {
-          window.location.href = item.href;
-        } else {
-          setSelectedItemId(item.id);
-          updatePopoverPos();
-          setPopoverOpen(true);
-        }
-      } else {
-        // Desktop: direct navigation so categories/routes/tools are actually clickable
-        if (isRealTool) {
-          window.location.href = item.href;
-        }
-      }
-    },
-    [isMobile, item.id, item.href, selectedItemId, setSelectedItemId, updatePopoverPos, isRealTool]
-  );
+  const handleActivate = useCallback(() => {
+    setSelectedItemId(item.id);
+    setIsPaused(false);
+  }, [item.id, setIsPaused, setSelectedItemId]);
 
-  const handleTouchStart = useCallback(() => {
-    touchStartRef.current = Date.now();
-  }, []);
+  const handleFocus = useCallback(() => {
+    if (!isRealTool) return;
+    setHoveredItemId(item.id);
+    setSelectedItemId(item.id);
+    updatePopoverPos();
+    if (!isMobile) {
+      setIsHovered(true);
+      setIsPaused(true);
+      setPopoverOpen(true);
+    }
+  }, [isMobile, isRealTool, item.id, setHoveredItemId, setIsPaused, setSelectedItemId, updatePopoverPos]);
 
-  const handleTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      const duration = Date.now() - touchStartRef.current;
-      if (duration < 300) {
-        if (selectedItemId === item.id) {
-          window.location.href = item.href;
-        } else {
-          e.preventDefault();
-          setSelectedItemId(item.id);
-          updatePopoverPos();
-          setPopoverOpen(true);
-        }
-      }
-    },
-    [item.id, item.href, selectedItemId, setSelectedItemId, updatePopoverPos]
-  );
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        if (selectedItemId === item.id) {
-          window.location.href = item.href;
-        } else {
-          setSelectedItemId(item.id);
-          updatePopoverPos();
-          setPopoverOpen(true);
-        }
-      }
-    },
-    [item.id, item.href, selectedItemId, setSelectedItemId, updatePopoverPos]
-  );
+  const handleBlur = useCallback(() => {
+    if (isMobile) return;
+    setIsHovered(false);
+    setHoveredItemId(null);
+    setIsPaused(false);
+    setPopoverOpen(false);
+    setTilt({ x: 0, y: 0 });
+  }, [isMobile, setHoveredItemId, setIsPaused]);
 
   const iconSize = Math.max(14, Math.floor(size * 0.35));
   const IconComponent = item.iconName ? LUCIDE_ICON_MAP[item.iconName] : null;
   const shouldDim = inSafeZone && !isActive && !isHovered;
 
+  const nodeVisual = (
+    <>
+      {/* Shape */}
+      <OrbitalShape
+        type={item.shapeType ?? "gem"}
+        color={item.color ?? "#6a3cff"}
+        size={size}
+        isActive={isActive}
+        isHovered={isHovered}
+        iconUrl={IconComponent ? undefined : item.iconUrl}
+        initials={IconComponent ? undefined : item.initials}
+      />
+
+      {/* Center icon overlay for route/step/featured/category variants */}
+      {IconComponent && (
+        <span className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
+          <IconComponent size={iconSize} className="text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]" />
+        </span>
+      )}
+
+      {/* Micro badge */}
+      {item.badge && (isActive || isHovered || labelMode === "always" || isMobile) && (
+        <motion.span
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="pointer-events-none absolute right-1 top-1 z-30 rounded-full px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-white"
+          style={{
+            background: item.color ?? "#6a3cff",
+            boxShadow: `0 2px 6px ${item.color ?? "#6a3cff"}40`,
+          }}
+        >
+          {item.badge}
+        </motion.span>
+      )}
+    </>
+  );
+
   return (
     <motion.div
       ref={badgeRef}
-      role="button"
-      tabIndex={0}
-      aria-label={`${item.title}: ${item.description}`}
-      className="absolute cursor-pointer outline-none"
+      aria-hidden={!isRealTool}
+      className={`absolute ${isRealTool ? "pointer-events-auto" : "pointer-events-none"}`}
       style={{
         left: x,
         top: y,
         translateX: "-50%",
         translateY: "-50%",
+        width: hitSize,
+        height: hitSize,
         willChange: "transform",
         zIndex: isActive ? 60 : 20 + index,
         perspective: 400,
@@ -267,35 +273,41 @@ export function OrbitingBadge({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
-      onClick={handleClick}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      onKeyDown={handleKeyDown}
-      onFocus={handleMouseEnter}
-      onBlur={handleMouseLeave}
     >
-
-      {/* Expanded touch target */}
-      {isMobile && (
-        <div
-          className="pointer-events-auto absolute z-[100] rounded-full"
+      {isRealTool ? (
+        <Link
+          href={item.href}
+          aria-label={`${item.title}. ${item.description}`}
+          className="group relative flex cursor-pointer items-center justify-center rounded-[22px] outline-none transition-transform active:scale-95 focus-visible:ring-4 focus-visible:ring-violet-300/55"
           style={{
-            width: Math.max(72, size + 28),
-            height: Math.max(72, size + 28),
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
+            width: hitSize,
+            height: hitSize,
+            touchAction: "manipulation",
           }}
-          aria-hidden="true"
-        />
+          onClick={handleActivate}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          data-orbital-node={item.id}
+        >
+          {nodeVisual}
+        </Link>
+      ) : (
+        <div
+          className="pointer-events-none relative flex items-center justify-center"
+          style={{ width: hitSize, height: hitSize }}
+        >
+          {nodeVisual}
+        </div>
       )}
 
       {/* Focus ring */}
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity focus-visible:opacity-100"
+        className="pointer-events-none absolute left-1/2 top-1/2 rounded-2xl opacity-0 transition-opacity group-focus-visible:opacity-100"
         style={{
+          width: hitSize,
+          height: hitSize,
+          transform: "translate(-50%, -50%)",
           boxShadow: `0 0 0 3px ${item.color ?? "#6a3cff"}40`,
-          transform: "scale(1.25)",
         }}
       />
 
@@ -335,41 +347,8 @@ export function OrbitingBadge({
         />
       )}
 
-      {/* Shape */}
-      <OrbitalShape
-        type={item.shapeType ?? "gem"}
-        color={item.color ?? "#6a3cff"}
-        size={size}
-        isActive={isActive}
-        isHovered={isHovered}
-        iconUrl={IconComponent ? undefined : item.iconUrl}
-        initials={IconComponent ? undefined : item.initials}
-      />
-
-      {/* Center icon overlay for route/step/featured/category variants */}
-      {IconComponent && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center">
-          <IconComponent size={iconSize} className="text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]" />
-        </div>
-      )}
-
-      {/* Micro badge */}
-      {item.badge && (isActive || isHovered || labelMode === "always") && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="pointer-events-none absolute -right-1 -top-1 z-30 rounded-full px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-white"
-          style={{
-            background: item.color ?? "#6a3cff",
-            boxShadow: `0 2px 6px ${item.color ?? "#6a3cff"}40`,
-          }}
-        >
-          {item.badge}
-        </motion.div>
-      )}
-
       {/* Label */}
-      <div className="absolute left-1/2 top-full mt-2.5 -translate-x-1/2">
+      <div className="pointer-events-none absolute left-1/2 top-full mt-1.5 -translate-x-1/2">
         <AnimatePresence>
           {shouldShowLabel && (
             <motion.div
@@ -380,11 +359,13 @@ export function OrbitingBadge({
               className="flex flex-col items-center gap-1"
             >
               <span
-                className="whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-xl"
+                className="max-w-[8.5rem] truncate whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-xl"
                 style={{
                   background: isActive
                     ? `linear-gradient(135deg, ${item.color ?? "#6a3cff"}45, rgba(18,13,47,0.85))`
-                    : "rgba(18,13,47,0.78)",
+                    : isMobile
+                      ? "rgba(18,13,47,0.84)"
+                      : "rgba(18,13,47,0.78)",
                   boxShadow: isActive ? `0 2px 14px ${item.color ?? "#6a3cff"}30` : "0 2px 10px rgba(0,0,0,0.2)",
                   border: `1px solid ${isActive ? `${item.color ?? "#6a3cff"}50` : "rgba(255,255,255,0.08)"}`,
                   textShadow: "0 1px 2px rgba(0,0,0,0.35)",
@@ -408,7 +389,7 @@ export function OrbitingBadge({
               )}
 
               {/* Explore callout on hover */}
-              {(isActive || isHovered) && isRealTool && (
+              {(isActive || isHovered) && isRealTool && !isMobile && (
                 <motion.span
                   initial={{ opacity: 0, y: 3 }}
                   animate={{ opacity: 1, y: 0 }}
