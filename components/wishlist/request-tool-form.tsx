@@ -15,6 +15,7 @@ import {
 } from "@/lib/wishlist/request-tool-store";
 import { PremiumBadge, PremiumButton, PremiumPanel } from "@/components/ui/premium";
 import { cn } from "@/lib/utils";
+import { playTooolvibesSound } from "@/lib/config/sound";
 
 type FormState = ToolRequestInput;
 
@@ -112,6 +113,7 @@ export function RequestToolForm({ className }: { className?: string }) {
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0) {
+      playTooolvibesSound("warning");
       return;
     }
 
@@ -130,6 +132,7 @@ export function RequestToolForm({ className }: { className?: string }) {
       setLastRequest(savedRequest);
       setForm(initialForm);
       setToastVisible(true);
+      playTooolvibesSound("success");
       window.setTimeout(() => setToastVisible(false), 3600);
     } catch {
       setErrors({
