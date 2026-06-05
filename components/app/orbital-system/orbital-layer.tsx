@@ -8,10 +8,10 @@ import { OrbitingBadge } from "./orbiting-badge";
 import type { OrbitalItem } from "./types";
 
 function generateDecorItems(count: number, sectionId: string): OrbitalItem[] {
-  const labels = ["Orbita", "Nodo", "Segmento", "Punto", "Traccia", "Eco", "Vibra", "Flusso"];
+  const shapes: OrbitalItem["shapeType"][] = ["shard", "blob", "gem", "crystal", "hexagon"];
   return Array.from({ length: count }, (_, i) => ({
     id: `decor-${sectionId}-${i}`,
-    title: labels[i % labels.length],
+    title: "Elemento",
     initials: "●",
     description: "Elemento orbitale del sistema TooolVibes",
     category: "Sistema",
@@ -19,6 +19,7 @@ function generateDecorItems(count: number, sectionId: string): OrbitalItem[] {
     sectionId,
     priority: 0,
     color: "#6a3cff",
+    shapeType: shapes[i % shapes.length],
   }));
 }
 
@@ -32,6 +33,76 @@ function getSectionShift(sectionId: string | null): number {
   return ((Math.abs(hash) % 70) - 35);
 }
 
+// ── Safe Zones ──
+interface SafeZone {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  padding: number;
+}
+
+function getSafeZones(w: number, h: number, sectionId: string | null): SafeZone[] {
+  const zones: SafeZone[] = [];
+  // Header navbar zone
+  zones.push({ x: w / 2, y: 32, w: w, h: 68, padding: 16 });
+  // Hero/main text zone (only when hero is visible or no specific section)
+  if (!sectionId || sectionId.startsWith("home-hero") || sectionId.startsWith("home-")) {
+    zones.push({
+      x: w / 2,
+      y: h * 0.42,
+      w: Math.min(720, w * 0.8),
+      h: Math.min(480, h * 0.52),
+      padding: 48,
+    });
+  }
+  return zones;
+}
+
+function applyRepulsion(x: number, y: number, zones: SafeZone[]): { x: number; y: number } {
+  let nx = x;
+  let ny = y;
+  for (const zone of zones) {
+    const halfW = zone.w / 2 + zone.padding;
+    const halfH = zone.h / 2 + zone.padding;
+    const dx = nx - zone.x;
+    const dy = ny - zone.y;
+    if (Math.abs(dx) < halfW && Math.abs(dy) < halfH) {
+      const distX = halfW - Math.abs(dx);
+      const distY = halfH - Math.abs(dy);
+      // Push toward nearest edge
+      if (distX < distY) {
+        nx += dx > 0 ? distX * 0.55 + 4 : -(distX * 0.55 + 4);
+      } else {
+        ny += dy > 0 ? distY * 0.55 + 4 : -(distY * 0.55 + 4);
+      }
+    }
+  }
+  return { x: nx, y: ny };
+}
+
+// ── Scroll State ──
+const scrollState = { y: 0, progress: 0 };
+function useScrollState() {
+  useEffect(() => {
+    let rafId: number;
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        scrollState.y = window.scrollY;
+        const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        scrollState.progress = Math.min(1, Math.max(0, scrollState.y / max));
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+}
+
 function useOrbitEngine(
   items: OrbitalItem[],
   configs: ReturnType<typeof useOrbitalConfig>,
@@ -39,8 +110,8 @@ function useOrbitEngine(
   profile: ReturnType<typeof usePerformanceMode>,
   activeSectionId: string | null
 ) {
-  const positionsRef = useRef<{ x: number; y: number }[]>([]);
-  const [positions, setPositions] = useState<{ x: number; y: number }[]>([]);
+  const positionsRef = useRef<{ x: number; y: number; scale: number }[]>([]);
+  const [positions, setPositions] = useState<{ x: number; y: number; scale: number }[]>([]);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
@@ -70,13 +141,13 @@ function useOrbitEngine(
   // Init center on mount
   useEffect(() => {
     const cx = typeof window !== "undefined" ? window.innerWidth / 2 : 800;
-    const cy = typeof window !== "undefined" ? window.innerHeight * (profile.isMobile ? 0.28 : 0.35) : 300;
+    const cy = typeof window !== "undefined" ? window.innerHeight * (profile.isMobile ? 0.26 : 0.3) : 300;
     currentCenterRef.current = { x: cx, y: cy };
     targetCenterRef.current = { x: cx, y: cy };
   }, [profile.isMobile]);
 
   useEffect(() => {
-    positionsRef.current = items.map(() => ({ x: currentCenterRef.current.x, y: currentCenterRef.current.y }));
+    positionsRef.current = items.map(() => ({ x: currentCenterRef.current.x, y: currentCenterRef.current.y, scale: 1 }));
     setPositions(positionsRef.current);
   }, [items]);
 
@@ -104,22 +175,26 @@ function useOrbitEngine(
       const w = window.innerWidth;
       const h = window.innerHeight;
       const cx = w / 2;
-      const cyBase = h * (profile.isMobile ? 0.28 : 0.35);
+      const scrollY = scrollState.y;
+      const scrollProgress = scrollState.progress;
 
-      // Mouse parallax (very subtle)
+      // Base center Y: start higher (avoid hero text), drift down with scroll
+      const cyBase = h * (profile.isMobile ? 0.26 : 0.3) + scrollY * 0.12;
+
+      // Mouse parallax (subtle)
       let mx = 0;
       let my = 0;
       if (!profile.isMobile && !profile.reducedMotion) {
-        mx = (mouseRef.current.x - cx) * 0.04;
-        my = (mouseRef.current.y - cyBase) * 0.03;
+        mx = (mouseRef.current.x - cx) * 0.035;
+        my = (mouseRef.current.y - cyBase) * 0.025;
       }
 
       // Breathing
-      const breathX = Math.sin(t * 0.0007) * 6;
-      const breathY = Math.cos(t * 0.0009) * 8;
+      const breathX = Math.sin(t * 0.0006) * 5;
+      const breathY = Math.cos(t * 0.0008) * 7;
 
       // Section shift lerp
-      sectionShiftRef.current += (sectionShiftTargetRef.current - sectionShiftRef.current) * 0.015;
+      sectionShiftRef.current += (sectionShiftTargetRef.current - sectionShiftRef.current) * 0.012;
 
       // Build target center
       targetCenterRef.current.x = cx + mx + breathX;
@@ -132,17 +207,33 @@ function useOrbitEngine(
       const ccx = currentCenterRef.current.x;
       const ccy = currentCenterRef.current.y;
 
+      // Global scale: shrink slightly as user scrolls
+      const globalScale = 1 - Math.min(0.18, scrollProgress * 0.35);
+
+      // Safe zones
+      const zones = getSafeZones(w, h, activeSectionId);
+
       const next = items.map((_, i) => {
-        if (i >= configs.length) return { x: ccx, y: ccy };
+        if (i >= configs.length) return { x: ccx, y: ccy, scale: globalScale };
         const cfg = configs[i];
         const angle = cfg.phase + t * cfg.speed * 0.001;
-        const rx = cfg.radiusX * (profile.isMobile ? 0.6 : 1);
-        const ry = cfg.radiusY * (profile.isMobile ? 0.5 : 1);
+        const rx = cfg.radiusX * (profile.isMobile ? 0.55 : 1);
+        const ry = cfg.radiusY * (profile.isMobile ? 0.45 : 1) + scrollProgress * 25;
         const tilt = cfg.tilt;
 
-        const x = ccx + Math.cos(angle) * rx;
-        const y = ccy + Math.sin(angle + tilt) * ry + Math.sin(angle * 0.5) * 12;
-        return { x, y };
+        let x = ccx + Math.cos(angle) * rx;
+        let y = ccy + Math.sin(angle + tilt) * ry + Math.sin(angle * 0.5) * 10;
+
+        // Apply repulsion from safe zones
+        const repelled = applyRepulsion(x, y, zones);
+        x = repelled.x;
+        y = repelled.y;
+
+        // Clamp to viewport with margin
+        x = Math.max(30, Math.min(w - 30, x));
+        y = Math.max(30, Math.min(h - 30, y));
+
+        return { x, y, scale: globalScale };
       });
 
       positionsRef.current = next;
@@ -156,7 +247,7 @@ function useOrbitEngine(
       running = false;
       cancelAnimationFrame(rafRef.current);
     };
-  }, [items, configs, isPaused, profile.isMobile, profile.reducedMotion]);
+  }, [items, configs, isPaused, profile.isMobile, profile.reducedMotion, activeSectionId]);
 
   return positions;
 }
@@ -164,6 +255,7 @@ function useOrbitEngine(
 export function OrbitalLayer() {
   const { activeSectionId, getItemsForSection, isPaused, setSelectedItemId } = useOrbitalContext();
   const profile = usePerformanceMode();
+  useScrollState();
 
   // Calcola gli item attivi in base alla sezione
   const activeItems = useMemo<OrbitalItem[]>(() => {
@@ -209,17 +301,17 @@ export function OrbitalLayer() {
     >
       <AnimatePresence mode="popLayout">
         {activeItems.map((item, i) => {
-          const pos = positions[i] ?? { x: -100, y: -100 };
+          const pos = positions[i] ?? { x: -100, y: -100, scale: 1 };
           // Skip rendering if way off-screen to save perf
-          if (pos.x < -60 || pos.x > window.innerWidth + 60 || pos.y < -60 || pos.y > window.innerHeight + 60) {
+          if (pos.x < -80 || pos.x > window.innerWidth + 80 || pos.y < -80 || pos.y > window.innerHeight + 80) {
             return null;
           }
           return (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
+              initial={{ opacity: 0, scale: 0.5 * pos.scale }}
+              animate={{ opacity: 1, scale: pos.scale }}
+              exit={{ opacity: 0, scale: 0.5 * pos.scale }}
               transition={{ duration: 0.5, ease: "easeOut" }}
               layout
               className="pointer-events-auto"

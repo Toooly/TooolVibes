@@ -1,3 +1,5 @@
+export type OrbitalShapeType = "hexagon" | "crystal" | "shard" | "gem" | "blob";
+
 export interface OrbitalItem {
   id: string;
   title: string;
@@ -8,6 +10,8 @@ export interface OrbitalItem {
   sectionId: string;
   priority: number;
   color?: string;
+  shapeType?: OrbitalShapeType;
+  iconUrl?: string;
 }
 
 export interface OrbitalSection {

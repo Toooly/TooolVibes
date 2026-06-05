@@ -19,7 +19,7 @@ import { HeroSection } from "./hero-section";
 import { TiltCard } from "./tilt-card";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "./scroll-reveal";
 import { SectionOrbitProvider } from "@/components/app/orbital-system";
-import type { OrbitalItem } from "@/components/app/orbital-system";
+import type { OrbitalItem, OrbitalShapeType } from "@/components/app/orbital-system";
 
 type VibeHomeV2Props = {
   tools: DirectoryTool[];
@@ -27,9 +27,21 @@ type VibeHomeV2Props = {
   supportingTools: DirectoryTool[];
 };
 
+function slugToShape(slug: string): OrbitalShapeType {
+  const shapes: OrbitalShapeType[] = ["hexagon", "crystal", "shard", "gem", "blob"];
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) {
+    hash = ((hash << 5) - hash) + slug.charCodeAt(i);
+    hash |= 0;
+  }
+  return shapes[Math.abs(hash) % shapes.length];
+}
+
 function toolToOrbital(tool: DirectoryTool, sectionId: string, priority = 1): OrbitalItem {
   const words = tool.name.split(/\s+/).filter(Boolean);
   const initials = words.length === 1 ? words[0].slice(0, 2).toUpperCase() : (words[0]?.[0] ?? "") + (words[1]?.[0] ?? "");
+  const domain = tool.domain || tool.externalUrl;
+  const iconUrl = domain ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64` : undefined;
   return {
     id: `${sectionId}-${tool.slug}`,
     title: tool.name,
@@ -40,6 +52,8 @@ function toolToOrbital(tool: DirectoryTool, sectionId: string, priority = 1): Or
     sectionId,
     priority,
     color: tool.accentFrom || "#6a3cff",
+    shapeType: slugToShape(tool.slug),
+    iconUrl,
   };
 }
 
@@ -104,27 +118,29 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools: _supportingTool
   ].slice(0, 6);
 
   const heroItems = featuredTools.slice(0, 5).map((t) => toolToOrbital(t, "home-hero", 1));
-  const routeItems: OrbitalItem[] = routeCards.map((rc) => ({
+  const routeItems: OrbitalItem[] = routeCards.map((rc, i) => ({
     id: `route-${rc.label}`,
     title: rc.label,
-    initials: rc.label.slice(0, 2).toUpperCase(),
+    initials: rc.label.slice(0, 1).toUpperCase(),
     description: rc.detail,
     category: "Percorso",
     href: rc.href,
     sectionId: "home-routes",
     priority: 1,
     color: rc.color,
+    shapeType: (["gem", "hexagon", "crystal"] as OrbitalShapeType[])[i % 3],
   }));
-  const decisionItems: OrbitalItem[] = decisionSteps.map((ds) => ({
+  const decisionItems: OrbitalItem[] = decisionSteps.map((ds, i) => ({
     id: `decision-${ds.label}`,
     title: ds.title,
-    initials: ds.label.slice(0, 2).toUpperCase(),
+    initials: ds.label.slice(0, 1).toUpperCase(),
     description: ds.description,
     category: "Metodo",
     href: ds.href,
     sectionId: "home-decision",
     priority: 1,
     color: ds.color,
+    shapeType: (["crystal", "shard", "blob"] as OrbitalShapeType[])[i % 3],
   }));
   const weeklyItems = focusTool ? [toolToOrbital(focusTool, "home-weekly", 1)] : [];
   const catalogItems = displayTools.slice(0, 6).map((t) => toolToOrbital(t, "home-catalog", 1));

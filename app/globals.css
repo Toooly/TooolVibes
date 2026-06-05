@@ -2850,6 +2850,358 @@ img {
     }
   }
 
+  /* ── Vibes Portal ── */
+  .brand-intro__bg-glow {
+    position: absolute;
+    inset: -20%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(106, 60, 255, 0.18), transparent 60%);
+    filter: blur(60px);
+    opacity: 0;
+    animation: tv-portal-glow-in 1.2s ease-out 0.2s both;
+    pointer-events: none;
+  }
+
+  .brand-intro__bg-glow--secondary {
+    background: radial-gradient(circle at 50% 50%, rgba(57, 210, 246, 0.12), transparent 55%);
+    animation-delay: 0.5s;
+  }
+
+  .brand-intro__portal {
+    position: relative;
+    width: 420px;
+    height: 420px;
+    perspective: 800px;
+    transform-style: preserve-3d;
+    display: grid;
+    place-items: center;
+  }
+
+  .brand-intro__ring {
+    position: absolute;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    opacity: 0;
+    animation: tv-portal-ring-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .brand-intro__ring--inner {
+    width: 180px;
+    height: 180px;
+    border: 1.5px solid rgba(106, 60, 255, 0.6);
+    box-shadow: 0 0 30px rgba(106, 60, 255, 0.25), inset 0 0 20px rgba(106, 60, 255, 0.08);
+    animation-name: tv-portal-ring-in, tv-portal-ring-spin-1;
+    animation-duration: 0.8s, 8s;
+    animation-delay: 0.2s, 0.8s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), linear;
+    animation-iteration-count: 1, infinite;
+  }
+
+  .brand-intro__ring--mid {
+    width: 260px;
+    height: 260px;
+    border: 1.5px solid rgba(57, 210, 246, 0.45);
+    box-shadow: 0 0 30px rgba(57, 210, 246, 0.2), inset 0 0 20px rgba(57, 210, 246, 0.06);
+    animation-name: tv-portal-ring-in, tv-portal-ring-spin-2;
+    animation-duration: 0.8s, 12s;
+    animation-delay: 0.35s, 0.8s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), linear;
+    animation-iteration-count: 1, infinite;
+  }
+
+  .brand-intro__ring--outer {
+    width: 340px;
+    height: 340px;
+    border: 1.5px solid rgba(243, 191, 76, 0.35);
+    box-shadow: 0 0 30px rgba(243, 191, 76, 0.15), inset 0 0 20px rgba(243, 191, 76, 0.05);
+    animation-name: tv-portal-ring-in, tv-portal-ring-spin-3;
+    animation-duration: 0.8s, 16s;
+    animation-delay: 0.5s, 0.8s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), linear;
+    animation-iteration-count: 1, infinite;
+  }
+
+  .brand-intro__core {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9), rgba(106, 60, 255, 0.6) 40%, rgba(57, 210, 246, 0.3) 70%, transparent 100%);
+    box-shadow: 0 0 40px rgba(106, 60, 255, 0.5), 0 0 80px rgba(57, 210, 246, 0.2);
+    opacity: 0;
+    animation: tv-portal-core-in 0.6s ease-out 0.5s both, tv-portal-core-pulse 2.5s ease-in-out 1s infinite;
+  }
+
+  .brand-intro__core-inner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    animation: tv-portal-core-in 0.5s ease-out 0.7s both;
+  }
+
+  .brand-intro__fragment {
+    position: absolute;
+    width: var(--fragment-size, 12px);
+    height: var(--fragment-size, 12px);
+    background: var(--fragment-color, #6a3cff);
+    opacity: 0;
+    animation: tv-portal-fragment-in 0.5s ease-out both, tv-portal-fragment-orbit var(--orbit-duration, 6s) linear var(--orbit-delay, 0s) infinite;
+    box-shadow: 0 0 10px var(--fragment-color, #6a3cff);
+  }
+
+  .brand-intro__fragment--hex {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  .brand-intro__fragment--diamond {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
+
+  .brand-intro__fragment--triangle {
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  }
+
+  .brand-intro__fragment--blob {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+
+  .brand-intro__fragment--star {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+
+  .brand-intro__particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+    opacity: 0;
+    animation: tv-portal-particle-float 4s ease-in-out infinite, tv-portal-particle-twinkle 3s ease-in-out infinite;
+  }
+
+  .brand-intro__title {
+    display: flex;
+    gap: clamp(0.1rem, 0.4vw, 0.35rem);
+    align-items: center;
+    justify-content: center;
+    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-size: clamp(2.6rem, 6.5vw, 4.6rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: #ffffff;
+    text-shadow: 0 8px 32px rgba(106, 60, 255, 0.35), 0 2px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .brand-intro__title span {
+    display: inline-block;
+    opacity: 0;
+    transform: translate3d(0, 18px, -20px) rotateY(30deg);
+    animation: tv-portal-letter-reveal 3.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .brand-intro__caption {
+    margin-top: 0.75rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: clamp(0.72rem, 1.2vw, 0.92rem);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: tv-portal-caption-reveal 3.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .brand-intro__explosion {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .brand-intro__explosion::before {
+    content: "";
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(106, 60, 255, 0.4) 30%, transparent 70%);
+    filter: blur(20px);
+    transform: scale(0);
+  }
+
+  .is-leaving .brand-intro__explosion {
+    animation: tv-portal-explosion 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .is-leaving .brand-intro__explosion::before {
+    animation: tv-portal-explosion-core 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+  }
+
+  .is-leaving .brand-intro__ring {
+    animation: tv-portal-ring-expand 0.6s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  }
+
+  .is-leaving .brand-intro__core,
+  .is-leaving .brand-intro__core-inner {
+    animation: tv-portal-core-fade 0.4s ease-out both !important;
+  }
+
+  .is-leaving .brand-intro__fragment {
+    animation: tv-portal-fragment-scatter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  }
+
+  .is-leaving .brand-intro__title span {
+    animation: tv-portal-letter-out 0.4s ease-in both !important;
+  }
+
+  .is-leaving .brand-intro__caption {
+    animation: tv-portal-caption-out 0.35s ease-in both !important;
+  }
+
+  @keyframes tv-portal-glow-in {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes tv-portal-ring-in {
+    from { opacity: 0; transform: scale(0.3) rotateX(60deg); }
+    to { opacity: 1; transform: scale(1) rotateX(0deg); }
+  }
+
+  @keyframes tv-portal-ring-spin-1 {
+    from { transform: rotateX(60deg) rotateY(0deg) rotateZ(0deg); }
+    to { transform: rotateX(60deg) rotateY(360deg) rotateZ(0deg); }
+  }
+
+  @keyframes tv-portal-ring-spin-2 {
+    from { transform: rotateX(45deg) rotateY(0deg) rotateZ(0deg); }
+    to { transform: rotateX(45deg) rotateY(-360deg) rotateZ(0deg); }
+  }
+
+  @keyframes tv-portal-ring-spin-3 {
+    from { transform: rotateX(30deg) rotateY(0deg) rotateZ(0deg); }
+    to { transform: rotateX(30deg) rotateY(360deg) rotateZ(0deg); }
+  }
+
+  @keyframes tv-portal-core-in {
+    from { opacity: 0; transform: scale(0); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes tv-portal-core-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(106, 60, 255, 0.5), 0 0 80px rgba(57, 210, 246, 0.2); }
+    50% { transform: scale(1.12); box-shadow: 0 0 60px rgba(106, 60, 255, 0.7), 0 0 100px rgba(57, 210, 246, 0.35); }
+  }
+
+  @keyframes tv-portal-fragment-in {
+    from { opacity: 0; transform: scale(0) rotate(0deg); }
+    to { opacity: 0.85; transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes tv-portal-fragment-orbit {
+    from { transform: rotate(var(--start-angle, 0rad)) translateX(var(--orbit-radius, 100px)) rotate(calc(var(--start-angle, 0rad) * -1)); }
+    to { transform: rotate(calc(var(--start-angle, 0rad) + 360deg)) translateX(var(--orbit-radius, 100px)) rotate(calc(var(--start-angle, 0rad) * -1 - 360deg)); }
+  }
+
+  @keyframes tv-portal-particle-float {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(10px, -15px); }
+    50% { transform: translate(-5px, 10px); }
+    75% { transform: translate(15px, 5px); }
+  }
+
+  @keyframes tv-portal-particle-twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.6; }
+  }
+
+  @keyframes tv-portal-letter-reveal {
+    0% { opacity: 0; transform: translate3d(0, 18px, -20px) rotateY(30deg); filter: blur(4px); }
+    30% { opacity: 1; transform: translate3d(0, 0, 0) rotateY(0deg); filter: blur(0px); }
+    100% { opacity: 1; transform: translate3d(0, 0, 0) rotateY(0deg); filter: blur(0px); }
+  }
+
+  @keyframes tv-portal-caption-reveal {
+    0% { opacity: 0; transform: translateY(10px); filter: blur(3px); }
+    20% { opacity: 0; transform: translateY(10px); filter: blur(3px); }
+    50% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+  }
+
+  @keyframes tv-portal-explosion {
+    from { opacity: 0; }
+    30% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes tv-portal-explosion-core {
+    from { transform: scale(0); opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { transform: scale(6); opacity: 0; }
+  }
+
+  @keyframes tv-portal-ring-expand {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(2.8); }
+  }
+
+  @keyframes tv-portal-core-fade {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(1.5); }
+  }
+
+  @keyframes tv-portal-fragment-scatter {
+    from { opacity: 0.85; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.2); }
+  }
+
+  @keyframes tv-portal-letter-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-12px); }
+  }
+
+  @keyframes tv-portal-caption-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-8px); }
+  }
+
+  @media (max-width: 679px) {
+    .brand-intro__portal {
+      width: 280px;
+      height: 280px;
+    }
+
+    .brand-intro__ring--inner {
+      width: 120px;
+      height: 120px;
+    }
+
+    .brand-intro__ring--mid {
+      width: 180px;
+      height: 180px;
+    }
+
+    .brand-intro__ring--outer {
+      width: 240px;
+      height: 240px;
+    }
+
+    .brand-intro__core {
+      width: 40px;
+      height: 40px;
+    }
+
+    .brand-intro__core-inner {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
   .route-transition-loader {
     position: fixed;
     inset: 0;
@@ -13067,6 +13419,15 @@ img {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
@@ -23,6 +23,7 @@ const arrowClasses = {
 export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPreviewPopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
   const color = item.color ?? "#6a3cff";
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -40,7 +41,6 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
     right: "left-full ml-3 top-1/2 -translate-y-1/2",
   };
 
-  const isVertical = position === "top" || position === "bottom";
   const enterY = position === "bottom" ? -10 : position === "top" ? 10 : 0;
   const enterX = position === "right" ? -10 : position === "left" ? 10 : 0;
 
@@ -53,7 +53,7 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
           animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: enterY * 0.6, x: enterX * 0.6 }}
           transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          className={`absolute ${positionClasses[position]} z-[100] w-[260px] sm:w-[280px]`}
+          className={`absolute ${positionClasses[position]} z-[100] w-[260px] sm:w-[300px]`}
           onClick={(e) => e.stopPropagation()}
         >
           <div
@@ -87,9 +87,29 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
               transition={{ delay: 0.05, duration: 0.22, ease: "easeOut" }}
               className="flex items-start justify-between gap-3 border-b border-[rgba(106,60,255,0.06)] px-4 py-3"
             >
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-[#120d2f]">{item.title}</p>
-                <p className="mt-0.5 text-[11px] font-medium" style={{ color }}>{item.category}</p>
+              <div className="flex min-w-0 flex-1 items-center gap-2.5">
+                {/* Mini icon */}
+                {item.iconUrl && !imgError ? (
+                  <img
+                    src={item.iconUrl}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    onError={() => setImgError(true)}
+                    className="h-7 w-7 shrink-0 rounded-lg border border-[rgba(106,60,255,0.08)] object-contain"
+                  />
+                ) : (
+                  <div
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold text-white"
+                    style={{ background: `linear-gradient(135deg, ${color}, #4f46e5)` }}
+                  >
+                    {item.initials?.slice(0, 1)}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-[#120d2f]">{item.title}</p>
+                  <p className="mt-0.5 text-[11px] font-medium" style={{ color }}>{item.category}</p>
+                </div>
               </div>
               <button
                 onClick={onClose}
@@ -115,12 +135,21 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15, duration: 0.22, ease: "easeOut" }}
-              className="border-t border-[rgba(106,60,255,0.06)] px-4 py-2.5"
+              className="relative overflow-hidden border-t border-[rgba(106,60,255,0.06)] px-4 py-2.5"
             >
+              {/* Shimmer */}
+              <div
+                className="pointer-events-none absolute inset-0 opacity-20"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
+                  backgroundSize: "200% 100%",
+                  animation: "shimmer 2.5s infinite linear",
+                }}
+              />
               <Link
                 href={item.href}
                 onClick={onClose}
-                className="group inline-flex w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold text-white transition-all hover:shadow-[0_4px_20px_rgba(106,60,255,0.35)]"
+                className="group relative inline-flex w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold text-white transition-all hover:shadow-[0_4px_20px_rgba(106,60,255,0.35)]"
                 style={{ background: `linear-gradient(135deg, ${color}, #4f46e5)` }}
               >
                 Vedi tool

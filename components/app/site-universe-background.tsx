@@ -59,52 +59,60 @@ function useScrollTracker(enabled: boolean) {
 function BlackHole({ scrollRef, reduced }: { scrollRef: React.MutableRefObject<typeof scrollState>; reduced: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const ringsRef = useRef<THREE.Group>(null);
+  const fadeRef = useRef(0);
 
   useFrame((state) => {
     if (reduced) return;
     const t = state.clock.elapsedTime;
     const s = scrollRef.current;
     if (ringsRef.current) {
-      ringsRef.current.rotation.z = t * 0.03 + s.scrollProgress * 0.2;
-      ringsRef.current.rotation.x = Math.sin(t * 0.05) * 0.15;
+      ringsRef.current.rotation.z = t * 0.025 + s.scrollProgress * 0.15;
+      ringsRef.current.rotation.x = Math.sin(t * 0.04) * 0.1;
     }
     if (groupRef.current) {
       // Very subtle parallax: black hole stays mostly centered but shifts slightly
-      const targetY = s.scrollProgress * -1.5;
+      const targetY = -1.2 + s.scrollProgress * -1.0;
       groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.03);
+      // Gentle fade-in over first ~2s
+      fadeRef.current = THREE.MathUtils.lerp(fadeRef.current, 1, 0.015);
+      groupRef.current.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshBasicMaterial) {
+          child.material.opacity = Math.min(1, fadeRef.current) * (child.userData.baseOpacity ?? 1);
+        }
+      });
     }
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, -18]}>
-      <pointLight color="#6a3cff" intensity={1.8} distance={30} position={[0, 0, 2]} />
-      <pointLight color="#39d2f6" intensity={0.6} distance={20} position={[3, -2, 4]} />
+    <group ref={groupRef} position={[0, -1.2, -18]}>
+      <pointLight color="#6a3cff" intensity={1.4} distance={30} position={[0, 0, 2]} />
+      <pointLight color="#39d2f6" intensity={0.45} distance={20} position={[3, -2, 4]} />
 
-      {/* Event horizon */}
+      {/* Event horizon — smaller and less harsh */}
       <mesh>
-        <sphereGeometry args={[2, 32, 32]} />
-        <meshBasicMaterial color="#050208" />
+        <sphereGeometry args={[1.1, 32, 32]} />
+        <meshBasicMaterial color="#0a0618" />
       </mesh>
 
       {/* Inner glow shell (subtle) */}
       <mesh>
-        <sphereGeometry args={[2.25, 32, 32]} />
-        <meshBasicMaterial color="#6a3cff" transparent opacity={0.06} side={THREE.BackSide} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <sphereGeometry args={[1.35, 32, 32]} />
+        <meshBasicMaterial color="#6a3cff" transparent opacity={0.05} side={THREE.BackSide} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
 
       <group ref={ringsRef} rotation={[Math.PI / 2.2, 0, 0]}>
-        {/* Main accretion disk */}
-        <mesh>
-          <torusGeometry args={[3.5, 0.04, 8, 64]} />
-          <meshBasicMaterial color="#6a3cff" transparent opacity={0.35} blending={THREE.AdditiveBlending} depthWrite={false} />
+        {/* Main accretion disk — thinner and more transparent */}
+        <mesh userData={{ baseOpacity: 0.22 }}>
+          <torusGeometry args={[3.2, 0.035, 8, 64]} />
+          <meshBasicMaterial color="#6a3cff" transparent opacity={0.22} blending={THREE.AdditiveBlending} depthWrite={false} />
         </mesh>
-        <mesh>
-          <torusGeometry args={[4.2, 0.03, 8, 64]} />
-          <meshBasicMaterial color="#39d2f6" transparent opacity={0.2} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <mesh userData={{ baseOpacity: 0.14 }}>
+          <torusGeometry args={[3.9, 0.025, 8, 64]} />
+          <meshBasicMaterial color="#39d2f6" transparent opacity={0.14} blending={THREE.AdditiveBlending} depthWrite={false} />
         </mesh>
-        <mesh>
-          <torusGeometry args={[5.0, 0.02, 8, 64]} />
-          <meshBasicMaterial color="#f3bf4c" transparent opacity={0.12} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <mesh userData={{ baseOpacity: 0.08 }}>
+          <torusGeometry args={[4.6, 0.018, 8, 64]} />
+          <meshBasicMaterial color="#f3bf4c" transparent opacity={0.08} blending={THREE.AdditiveBlending} depthWrite={false} />
         </mesh>
       </group>
     </group>
