@@ -113,11 +113,11 @@ function CatalogOrbitStage({
   const maxVisible = isCompact ? 9 : view === "categories" ? 15 : 18;
   const visibleItems = items.slice(0, maxVisible);
   const hiddenCount = Math.max(0, items.length - visibleItems.length);
-  const ringRadii = [118, 178, 238];
+  const ringRadii = isCompact ? [90, 140, 190] : [118, 178, 238];
 
   return (
     <section
-      className="catalog-orbit-stage relative min-h-[calc(100svh-4rem)] overflow-hidden px-4 pt-28 pb-28 md:px-8 lg:px-12"
+      className="catalog-orbit-stage relative min-h-[calc(100svh-4rem)] overflow-visible px-4 pt-28 pb-36 md:px-8 md:pb-28 lg:px-12"
       aria-label={label}
     >
       <div className="catalog-orbit-hud" data-orbit-shield>
@@ -430,7 +430,7 @@ export function FloatingCatalogView({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-32 left-6 z-40"
+            className="fixed top-36 left-6 z-40"
           >
             <button
               onClick={handleBackToCategories}
@@ -451,7 +451,7 @@ export function FloatingCatalogView({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="fixed top-32 right-6 z-40 hidden max-w-xs flex-wrap justify-end gap-2 md:flex"
+            className="fixed top-36 right-6 z-40 flex max-w-[70vw] gap-2 overflow-x-auto md:max-w-xs md:flex-wrap md:justify-end"
           >
             {filterGroups.slice(0, 6).map((cat) => {
               const isActive =
@@ -475,7 +475,7 @@ export function FloatingCatalogView({
       </AnimatePresence>
 
       {/* ═══ Spatial Content ═══ */}
-      <div>
+      <div className="relative z-[1]">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSectionId}
@@ -522,7 +522,7 @@ export function FloatingCatalogView({
       </AnimatePresence>
 
       {/* ═══ Footer hint ═══ */}
-      <div className="pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
+      <div className="pointer-events-none absolute bottom-24 left-1/2 -translate-x-1/2 text-center md:bottom-8">
         <p className="text-[11px] text-[#4f4970]/40">
           {view === "categories"
             ? "Clicca una categoria per esplorare i tool"

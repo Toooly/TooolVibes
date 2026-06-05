@@ -20,7 +20,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
     : "all";
 
   return (
-    <main className="relative">
+    <main className="relative overflow-x-hidden">
       {/* ═══ Floating Spatial Catalog — PRIMARY UI ═══
           Replaces the dual DesktopVibeArchive + DirectoryBrowser split
           with a single floating interface that works on all breakpoints.
