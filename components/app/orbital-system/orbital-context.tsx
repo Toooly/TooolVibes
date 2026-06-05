@@ -16,6 +16,7 @@ export function OrbitalProvider({ children }: { children: ReactNode }) {
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [coreMenuOpen, setCoreMenuOpen] = useState(false);
   const sectionsRef = useRef<Map<string, OrbitalSection>>(new Map());
 
   const registerSection = useCallback((section: OrbitalSection) => {
@@ -44,8 +45,10 @@ export function OrbitalProvider({ children }: { children: ReactNode }) {
       setIsPaused,
       selectedItemId,
       setSelectedItemId,
+      coreMenuOpen,
+      setCoreMenuOpen,
     }),
-    [activeSectionId, hoveredItemId, isPaused, selectedItemId, registerSection, unregisterSection, getItemsForSection]
+    [activeSectionId, hoveredItemId, isPaused, selectedItemId, coreMenuOpen, registerSection, unregisterSection, getItemsForSection]
   );
 
   return <OrbitalContext.Provider value={value}>{children}</OrbitalContext.Provider>;

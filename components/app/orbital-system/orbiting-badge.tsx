@@ -67,17 +67,17 @@ interface OrbitingBadgeProps {
 }
 
 const VARIANT_SIZE: Record<OrbitalNodeVariant, { mobile: number; desktop: number }> = {
-  featured: { mobile: 56, desktop: 76 },
-  route: { mobile: 52, desktop: 68 },
-  category: { mobile: 48, desktop: 64 },
-  step: { mobile: 44, desktop: 56 },
-  tool: { mobile: 36, desktop: 48 },
+  featured: { mobile: 64, desktop: 80 },
+  route: { mobile: 60, desktop: 72 },
+  category: { mobile: 56, desktop: 68 },
+  step: { mobile: 52, desktop: 60 },
+  tool: { mobile: 44, desktop: 52 },
 };
 
 const SIZE_MAP: Record<string, { mobile: number; desktop: number }> = {
-  sm: { mobile: 36, desktop: 44 },
-  md: { mobile: 44, desktop: 56 },
-  lg: { mobile: 52, desktop: 68 },
+  sm: { mobile: 44, desktop: 48 },
+  md: { mobile: 52, desktop: 60 },
+  lg: { mobile: 60, desktop: 72 },
 };
 
 function getBaseSize(item: OrbitalItem, isMobile: boolean): number {
@@ -126,7 +126,7 @@ export function OrbitingBadge({
   const labelMode = getNodeLabelMode(item.variant);
   const shouldShowLabel = labelMode === "always" || isActive || isHovered;
   const baseSize = getBaseSize(item, isMobile);
-  const size = isActive ? baseSize + 6 : isSectionActive ? baseSize + 4 : baseSize;
+  const size = isActive ? baseSize + 10 : isSectionActive ? baseSize + 7 : isHovered ? baseSize + 4 : baseSize;
 
   useEffect(() => {
     if (selectedItemId !== item.id) {
@@ -257,7 +257,7 @@ export function OrbitingBadge({
         perspective: 400,
       }}
       animate={{
-        scale: isActive ? 1.22 : isSectionActive ? 1.15 : isHovered ? 1.12 : 1,
+        scale: isActive ? 1.28 : isSectionActive ? 1.2 : isHovered ? 1.14 : 1,
         rotateX: tilt.x,
         rotateY: tilt.y,
         opacity: shouldDim ? 0.25 : 1,
@@ -274,6 +274,22 @@ export function OrbitingBadge({
       onFocus={handleMouseEnter}
       onBlur={handleMouseLeave}
     >
+
+      {/* Expanded touch target */}
+      {isMobile && (
+        <div
+          className="pointer-events-auto absolute z-[100] rounded-full"
+          style={{
+            width: Math.max(72, size + 28),
+            height: Math.max(72, size + 28),
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Focus ring */}
       <div
         className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity focus-visible:opacity-100"

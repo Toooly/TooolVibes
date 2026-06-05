@@ -53,4 +53,6 @@ export interface OrbitalContextValue {
   setIsPaused: (paused: boolean) => void;
   selectedItemId: string | null;
   setSelectedItemId: (id: string | null) => void;
+  coreMenuOpen: boolean;
+  setCoreMenuOpen: (open: boolean) => void;
 }

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useOrbitalContext } from "./orbital-context";
 import { usePerformanceMode, useOrbitalConfigForItems, getItemWeight } from "./use-performance-mode";
 import { OrbitingBadge } from "./orbiting-badge";
+import { OrbitalCoreNode } from "./orbital-core-node";
 import type { OrbitalItem, OrbitConfig } from "./types";
 
 function generateDecorItems(count: number, sectionId: string): OrbitalItem[] {
@@ -45,7 +46,11 @@ interface SafeZone {
 function getStaticSafeZones(w: number, h: number, sectionId: string | null, isMobile: boolean): SafeZone[] {
   const zones: SafeZone[] = [];
   // Header navbar zone
-  zones.push({ x: w / 2, y: 32, w: w, h: 68, padding: 16 });
+  zones.push({ x: w / 2, y: 32, w: w, h: 72, padding: 20 });
+  // Mobile bottom nav zone
+  if (isMobile) {
+    zones.push({ x: w / 2, y: h - 38, w: w, h: 90, padding: 24 });
+  }
 
   const isMinimalSection =
     !sectionId ||
@@ -238,6 +243,7 @@ function useOrbitEngine(
 ) {
   const positionsRef = useRef<NodePosition[]>([]);
   const [positions, setPositions] = useState<NodePosition[]>([]);
+  const [centerState, setCenterState] = useState({ x: 0, y: 0, inSafeZone: false });
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
@@ -337,14 +343,16 @@ function useOrbitEngine(
       const allZones = staticZones.concat(dynamicZones);
 
       // Repel the orbit center itself from text safe zones
+      const centerBefore = { x: targetCenterRef.current.x, y: targetCenterRef.current.y };
       const centerRepelled = applyCenterRepulsion(
         targetCenterRef.current.x,
         targetCenterRef.current.y,
         allZones,
-        profile.isMobile ? 55 : 70
+        profile.isMobile ? 68 : 86
       );
       targetCenterRef.current.x = centerRepelled.x;
       targetCenterRef.current.y = centerRepelled.y;
+      const centerInSafeZone = Math.abs(centerBefore.x - centerRepelled.x) > 0.5 || Math.abs(centerBefore.y - centerRepelled.y) > 0.5;
 
       // Smooth lerp to target
       currentCenterRef.current.x += (targetCenterRef.current.x - currentCenterRef.current.x) * 0.04;
@@ -386,6 +394,7 @@ function useOrbitEngine(
 
       positionsRef.current = next;
       setPositions(next);
+      setCenterState({ x: currentCenterRef.current.x, y: currentCenterRef.current.y, inSafeZone: centerInSafeZone });
 
       rafRef.current = requestAnimationFrame(tick);
     };
@@ -397,7 +406,7 @@ function useOrbitEngine(
     };
   }, [items, configs, isPaused, profile.isMobile, profile.reducedMotion, activeSectionId, dynamicZonesRef]);
 
-  return positions;
+  return { positions, centerX: centerState.x, centerY: centerState.y, centerInSafeZone: centerState.inSafeZone };
 }
 
 export function OrbitalLayer() {
@@ -443,7 +452,7 @@ export function OrbitalLayer() {
   }, [activeSectionId, getItemsForSection, profile.maxItems]);
 
   const configs = useOrbitalConfigForItems(activeItems, profile);
-  const positions = useOrbitEngine(activeItems, configs, isPaused, profile, activeSectionId, dynamicZonesRef);
+  const { positions, centerX, centerY, centerInSafeZone } = useOrbitEngine(activeItems, configs, isPaused, profile, activeSectionId, dynamicZonesRef);
 
   // Click outside per chiudere il popover su mobile
   const layerRef = useRef<HTMLDivElement>(null);
@@ -503,6 +512,7 @@ export function OrbitalLayer() {
           );
         })}
       </AnimatePresence>
+      <OrbitalCoreNode x={centerX} y={centerY} isMobile={profile.isMobile} inSafeZone={centerInSafeZone} />
     </div>
   );
 }

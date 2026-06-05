@@ -235,13 +235,13 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools: _supportingTool
           <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6a3cff] to-[#39d2f6] shadow-[0_0_30px_rgba(106,60,255,0.25)]">
             <Sparkles className="h-7 w-7 text-white" />
           </div>
-          <h2 className="mb-4 text-3xl font-bold text-[#120d2f] md:text-4xl">
+          <h2 className="mb-4 text-3xl font-bold text-[#120d2f] md:text-4xl" data-orbit-shield data-orbit-shield-priority="high">
             Costruisci la tua <span className="text-[#6a3cff]">shortlist operativa</span>
           </h2>
-          <p className="mx-auto mb-8 max-w-lg text-[#4f4970]/80">
+          <p className="mx-auto mb-8 max-w-lg text-[#4f4970]/80" data-orbit-shield>
             Inizia da un catalogo curato, confronta i candidati e salva solo quelli che contano.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4" data-orbit-shield>
             <Link
               href="/archivio"
               data-sonic-action="nav"
