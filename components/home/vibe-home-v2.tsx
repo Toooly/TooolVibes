@@ -131,6 +131,7 @@ interface HomeOrbitStageProps {
   description?: string;
   items: OrbitalItem[];
   align?: "left" | "right";
+  isHero?: boolean;
   primaryAction?: {
     label: string;
     href: string;
@@ -148,6 +149,7 @@ function HomeOrbitStage({
   description,
   items,
   align = "left",
+  isHero,
   primaryAction,
   secondaryAction,
 }: HomeOrbitStageProps) {
@@ -167,13 +169,13 @@ function HomeOrbitStage({
 
   return (
     <section
-      className={`home-orbit-stage home-orbit-stage--${align} catalog-orbit-stage relative z-10 min-h-[calc(100svh-4rem)] overflow-hidden px-4 pt-24 pb-32 md:px-8 lg:px-12`}
+      className={`home-orbit-stage home-orbit-stage--${align} catalog-orbit-stage relative z-10 min-h-[calc(85svh-4rem)] overflow-x-clip px-4 pt-16 pb-20 md:px-8 md:pt-20 md:pb-24 lg:px-12`}
       aria-label={title}
       data-home-orbit-stage={sectionId}
     >
       <div className="home-orbit-hud catalog-orbit-hud" data-orbit-shield>
         <p>{label}</p>
-        <h1>{title}</h1>
+        {isHero ? <h1>{title}</h1> : <h2 className="text-[clamp(1.45rem,3.4vw,2.65rem)] font-bold leading-tight">{title}</h2>}
         {description && <span>{description}</span>}
         {(primaryAction || secondaryAction) && (
           <div className="home-orbit-hud__actions">
@@ -268,13 +270,16 @@ function HomeOrbitStage({
   );
 }
 
-export function VibeHomeV2({ tools, weeklyTool }: VibeHomeV2Props) {
+export function VibeHomeV2({ tools, weeklyTool, supportingTools }: VibeHomeV2Props) {
   const featuredTools = tools.filter((tool) => tool.featured).slice(0, 8);
   const focusTool = weeklyTool ?? featuredTools[0] ?? tools[0];
   const displayTools = [
     ...featuredTools.filter((tool) => tool.slug !== focusTool?.slug),
     ...tools.filter((tool) => tool.slug !== focusTool?.slug),
   ].slice(0, 6);
+  const heroSupportingTools = supportingTools.length > 0
+    ? supportingTools
+    : featuredTools.filter((tool) => tool.slug !== focusTool?.slug).slice(0, 4);
 
   const heroItems = featuredTools.slice(0, 5).map((t) => toolToOrbital(t, "home-hero", 1));
 
@@ -331,9 +336,10 @@ export function VibeHomeV2({ tools, weeklyTool }: VibeHomeV2Props) {
   }));
 
   return (
-    <div className="relative">
+    <div className="relative space-y-6">
       <HomeOrbitStage
         sectionId="home-hero"
+        isHero
         label="Sistema TooolVibes"
         title="Scegli tool AI validi senza attraversare rumore."
         description="Le schede diventano nodi: tocca un pianeta, entra nel tool, salva o confronta senza leggere una vetrina infinita."
