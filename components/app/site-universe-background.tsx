@@ -326,7 +326,7 @@ export function SiteUniverseBackground() {
           powerPreference: "high-performance",
         }}
         dpr={profile.dpr}
-        style={{ position: "absolute", inset: 0 }}
+        style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
         frameloop="always"
       >
         <Suspense fallback={null}>

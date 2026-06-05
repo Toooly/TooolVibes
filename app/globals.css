@@ -9784,7 +9784,7 @@ img {
       linear-gradient(180deg, #f8fafc 0%, #f4f8fb 52%, #f8fafc 100%);
   }
 
-  main,
+  .marketing-shell > main,
   .page-shell,
   .site-header-motion,
   .mobile-bottom-motion {
@@ -13439,7 +13439,7 @@ img {
   position: absolute;
   left: clamp(1rem, 4vw, 3rem);
   bottom: clamp(5.8rem, 10vh, 7.5rem);
-  z-index: 20;
+  z-index: 60;
   max-width: min(20rem, calc(100vw - 2rem));
   color: #ffffff;
   border: 1px solid rgba(190, 180, 255, 0.18);

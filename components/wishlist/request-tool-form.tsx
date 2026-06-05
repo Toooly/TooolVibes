@@ -143,7 +143,7 @@ export function RequestToolForm({ className }: { className?: string }) {
   const fieldClass =
     "premium-input min-h-11 px-3.5 py-2.5 text-[0.92rem] placeholder:text-[var(--muted)] sm:min-h-12 sm:px-4 sm:py-3 sm:text-[0.98rem]";
   const labelClass =
-    "text-xs font-semibold uppercase tracking-[0.12em] text-white/68 sm:text-sm sm:tracking-[0.14em]";
+    "text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted)] sm:text-sm sm:tracking-[0.14em]";
 
   return (
     <div className={cn("relative", className)}>
@@ -166,13 +166,13 @@ export function RequestToolForm({ className }: { className?: string }) {
 
       <PremiumPanel tone="blue" className="motion-form-panel p-4 sm:p-6">
         <form onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
-          <div className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-start">
-            <aside className="rounded-[22px] border border-white/12 bg-white/9 p-4 sm:rounded-[26px] sm:p-5">
+          <div className="grid gap-4 sm:gap-6">
+            <aside className="rounded-[22px] border border-[rgba(106,60,255,0.08)] bg-white/60 p-4 sm:rounded-[26px] sm:p-5">
               <PremiumBadge tone="accent">Invio guidato</PremiumBadge>
-              <h2 className="text-display-card mt-3 text-[1.35rem] leading-tight text-white sm:mt-4 sm:text-[2.2rem]">
+              <h2 className="text-display-card mt-3 text-[1.35rem] leading-tight text-[var(--foreground)] sm:mt-4 sm:text-[2.2rem]">
                 Bastano quattro segnali buoni.
               </h2>
-              <p className="mt-2 text-[0.84rem] leading-6 text-white/66 sm:mt-3 sm:text-sm sm:leading-7">
+              <p className="mt-2 text-[0.84rem] leading-6 text-[var(--muted-strong)] sm:mt-3 sm:text-sm sm:leading-7">
                 Nome, link ufficiale, categoria e motivo d&apos;uso ci aiutano a capire se
                 il tool merita di entrare nella selezione.
               </p>
@@ -183,10 +183,10 @@ export function RequestToolForm({ className }: { className?: string }) {
                   {["Nome tool", "Link ufficiale", "Categoria", "Perché è utile"].map(
                     (item, index) => (
                       <div key={item} className="flex items-center gap-2 rounded-[14px] bg-white/7 p-2.5">
-                        <span className="grid size-7 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white">
+                        <span className="grid size-7 place-items-center rounded-full bg-white/10 text-xs font-semibold text-[var(--foreground)]">
                           {index + 1}
                         </span>
-                        <span className="text-xs font-semibold text-white/76">{item}</span>
+                        <span className="text-xs font-semibold text-[var(--muted)]">{item}</span>
                       </div>
                     ),
                   )}
@@ -197,10 +197,10 @@ export function RequestToolForm({ className }: { className?: string }) {
                 {["Nome tool", "Link ufficiale", "Categoria", "Perché è utile"].map(
                   (item, index) => (
                     <div key={item} className="motion-form-step flex items-center gap-3 rounded-[18px] border border-white/10 bg-white/6 p-3">
-                      <span className="grid size-8 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white">
+                      <span className="grid size-8 place-items-center rounded-full bg-white/10 text-xs font-semibold text-[var(--foreground)]">
                         {index + 1}
                       </span>
-                      <span className="text-sm font-semibold text-white/76">{item}</span>
+                      <span className="text-sm font-semibold text-[var(--muted)]">{item}</span>
                     </div>
                   ),
                 )}
@@ -300,7 +300,7 @@ export function RequestToolForm({ className }: { className?: string }) {
           </div>
 
           <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4 sm:mt-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pt-5">
-            <p className="max-w-[42rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
+            <p className="max-w-[42rem] text-[0.82rem] leading-6 text-[var(--muted-strong)] sm:text-sm">
               Valutiamo ogni proposta per qualità, utilità reale e coerenza con la
               directory.
             </p>
@@ -330,7 +330,7 @@ export function RequestToolForm({ className }: { className?: string }) {
             </div>
           ) : null}
 
-          <div className="mt-3 flex items-center gap-2 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2.5 text-xs leading-5 text-white/58 sm:mt-5 sm:rounded-[20px] sm:px-4 sm:py-3 sm:text-sm">
+          <div className="mt-3 flex items-center gap-2 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2.5 text-xs leading-5 text-[var(--muted)] sm:mt-5 sm:rounded-[20px] sm:px-4 sm:py-3 sm:text-sm">
             <Sparkles className="size-4 text-violet-100" aria-hidden="true" />
             Le proposte migliori diventano schede curate, non link buttati in lista.
           </div>

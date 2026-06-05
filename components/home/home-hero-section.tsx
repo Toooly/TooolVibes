@@ -1,67 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import {
-  ArrowRight,
-  Bookmark,
-  Boxes,
-  Compass,
-  GitCompare,
-  Radar,
-  Search,
-  Sparkles,
-  Zap,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import type { OrbitalItem, OrbitalShapeType } from "@/components/app/orbital-system";
-
-const HOME_ICON_MAP = {
-  Bookmark,
-  Boxes,
-  Compass,
-  GitCompare,
-  Radar,
-  Search,
-  Sparkles,
-  Zap,
-} as const;
-
-function slugToShape(slug: string): OrbitalShapeType {
-  const shapes: OrbitalShapeType[] = ["hexagon", "crystal", "shard", "gem", "blob"];
-  let hash = 0;
-  for (let i = 0; i < slug.length; i++) {
-    hash = ((hash << 5) - hash) + slug.charCodeAt(i);
-    hash |= 0;
-  }
-  return shapes[Math.abs(hash) % shapes.length];
-}
-
-function toolToOrbital(tool: DirectoryTool, sectionId: string, priority = 1): OrbitalItem {
-  const words = tool.name.split(/\s+/).filter(Boolean);
-  const initials =
-    words.length === 1
-      ? words[0].slice(0, 2).toUpperCase()
-      : (words[0]?.[0] ?? "") + (words[1]?.[0] ?? "");
-  const domain = tool.domain || tool.externalUrl;
-  const iconUrl = domain
-    ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`
-    : undefined;
-  return {
-    id: `${sectionId}-${tool.slug}`,
-    title: tool.name,
-    initials: initials.toUpperCase(),
-    description: tool.shortDescription || tool.tldr || tool.description,
-    category: tool.categoryLabel,
-    href: `/toools/${tool.slug}`,
-    sectionId,
-    priority,
-    color: tool.accentFrom || "#6a3cff",
-    shapeType: slugToShape(tool.slug),
-    iconUrl,
-    variant: "tool",
-    size: "sm",
-  };
-}
 
 interface HomeHeroSectionProps {
   tools: DirectoryTool[];

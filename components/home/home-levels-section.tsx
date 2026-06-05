@@ -1,10 +1,18 @@
 "use client";
 
-import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import type { DirectoryFilterGroup, DirectoryTool } from "@/lib/data/tooolvibes-directory";
 
-const levels = [
+const levels: {
+  key: "beginner" | "intermediate" | "expert";
+  title: string;
+  color: string;
+  border: string;
+  bg: string;
+  description: string;
+  categories: DirectoryFilterGroup[];
+}[] = [
   {
-    key: "beginner" as const,
+    key: "beginner",
     title: "Beginner",
     color: "#10b981",
     border: "border-emerald-500/25",
@@ -13,22 +21,22 @@ const levels = [
     categories: ["no-code", "ai-app-builder"],
   },
   {
-    key: "intermediate" as const,
+    key: "intermediate",
     title: "Intermediate",
     color: "#8b5cf6",
     border: "border-violet-500/25",
     bg: "from-violet-500/10 to-transparent",
     description: "Per chi usa già tool AI/SaaS e vuole alternative migliori e workflow più efficienti.",
-    categories: ["marketing", "design", "writing", "automation"],
+    categories: ["marketing", "automation"],
   },
   {
-    key: "expert" as const,
+    key: "expert",
     title: "Expert",
     color: "#f59e0b",
     border: "border-amber-500/25",
     bg: "from-amber-500/10 to-transparent",
     description: "Per chi cerca tool avanzati, automazioni, API, stack professionali e soluzioni tecniche.",
-    categories: ["dev", "headless-cms", "vibe-coding"],
+    categories: ["headless-cms", "vibe-coding"],
   },
 ];
 
@@ -51,7 +59,7 @@ export function HomeLevelsSection({ tools }: HomeLevelsSectionProps) {
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {levels.map((level) => {
             const examples = tools
-              .filter((t) => level.categories.some((c) => t.segments.includes(c as never)))
+              .filter((t) => level.categories.some((c) => t.segments.includes(c)))
               .slice(0, 3);
 
             return (
