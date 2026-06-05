@@ -44,17 +44,25 @@ export function FloatingSectionAnchor({
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             transition={{ delay: 0.15, duration: 0.5 }}
             className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.4)] px-4 py-1.5 text-[11px] font-medium uppercase tracking-wider text-[#6a3cff] backdrop-blur-sm"
+            data-orbit-shield
           >
             {label}
           </motion.span>
         )}
 
-        <h2 className="mb-3 text-3xl font-bold tracking-tight text-[#120d2f] md:text-4xl lg:text-[2.75rem] lg:leading-tight drop-shadow-[0_2px_12px_rgba(255,255,255,0.7)]">
+        <h2
+          className="mb-3 text-3xl font-bold tracking-tight text-[#120d2f] md:text-4xl lg:text-[2.75rem] lg:leading-tight drop-shadow-[0_2px_12px_rgba(255,255,255,0.7)]"
+          data-orbit-shield
+          data-orbit-shield-priority="high"
+        >
           {title}
         </h2>
 
         {description && (
-          <p className="mx-auto max-w-md text-base leading-relaxed text-[#4f4970]/80 drop-shadow-[0_2px_8px_rgba(255,255,255,0.5)]">
+          <p
+            className="mx-auto max-w-md text-base leading-relaxed text-[#4f4970]/80 drop-shadow-[0_2px_8px_rgba(255,255,255,0.5)]"
+            data-orbit-shield
+          >
             {description}
           </p>
         )}
@@ -65,6 +73,7 @@ export function FloatingSectionAnchor({
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ delay: 0.35, duration: 0.5 }}
             className="mt-6"
+            data-orbit-shield
           >
             <Link
               href={action.href}

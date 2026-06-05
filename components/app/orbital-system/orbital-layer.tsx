@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useOrbitalContext } from "./orbital-context";
 import { usePerformanceMode, useOrbitalConfigForItems, getItemWeight } from "./use-performance-mode";
@@ -42,7 +42,7 @@ interface SafeZone {
   padding: number;
 }
 
-function getSafeZones(w: number, h: number, sectionId: string | null): SafeZone[] {
+function getStaticSafeZones(w: number, h: number, sectionId: string | null, isMobile: boolean): SafeZone[] {
   const zones: SafeZone[] = [];
   // Header navbar zone
   zones.push({ x: w / 2, y: 32, w: w, h: 68, padding: 16 });
@@ -60,23 +60,74 @@ function getSafeZones(w: number, h: number, sectionId: string | null): SafeZone[
 
   if (isMinimalSection) {
     // Section-specific tighter safe zones to protect text without over-pushing
+    const mobilePad = isMobile ? 56 : 44;
     const map: Record<string, SafeZone> = {
-      "home-hero": { x: w / 2, y: h * 0.42, w: Math.min(640, w * 0.72), h: 280, padding: 44 },
-      "home-routes": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: 36 },
-      "home-decision": { x: w / 2, y: h * 0.44, w: Math.min(560, w * 0.66), h: 220, padding: 36 },
-      "home-weekly": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: 36 },
-      "home-catalog": { x: w / 2, y: h * 0.44, w: Math.min(600, w * 0.68), h: 220, padding: 36 },
-      "archive-categories": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: 36 },
-      "archive-tools": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: 36 },
+      "home-hero": { x: w / 2, y: h * 0.42, w: Math.min(640, w * 0.72), h: 280, padding: mobilePad + 8 },
+      "home-routes": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: mobilePad },
+      "home-decision": { x: w / 2, y: h * 0.44, w: Math.min(560, w * 0.66), h: 220, padding: mobilePad },
+      "home-weekly": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: mobilePad },
+      "home-catalog": { x: w / 2, y: h * 0.44, w: Math.min(600, w * 0.68), h: 220, padding: mobilePad },
+      "archive-categories": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: mobilePad },
+      "archive-tools": { x: w / 2, y: h * 0.44, w: Math.min(520, w * 0.62), h: 200, padding: mobilePad },
     };
     const zone = sectionId ? map[sectionId] : undefined;
     if (zone) {
       zones.push(zone);
     } else {
-      zones.push({ x: w / 2, y: h * 0.42, w: Math.min(560, w * 0.62), h: 220, padding: 36 });
+      zones.push({ x: w / 2, y: h * 0.42, w: Math.min(560, w * 0.62), h: 220, padding: mobilePad });
     }
   }
   return zones;
+}
+
+function readDynamicSafeZones(): SafeZone[] {
+  const zones: SafeZone[] = [];
+  const shields = document.querySelectorAll<HTMLElement>("[data-orbit-shield]");
+  const vh = window.innerHeight;
+  const vw = window.innerWidth;
+  const basePad = vw < 768 ? 52 : 36;
+  shields.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    // Only include elements visible in viewport (with some margin)
+    if (rect.bottom < -40 || rect.top > vh + 40) return;
+    const priority = el.dataset.orbitShieldPriority === "high" ? 1.5 : 1.0;
+    zones.push({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+      w: rect.width,
+      h: rect.height,
+      padding: basePad * priority,
+    });
+  });
+  return zones;
+}
+
+function applyCenterRepulsion(
+  cx: number,
+  cy: number,
+  zones: SafeZone[],
+  centerRadius: number
+): { x: number; y: number } {
+  let nx = cx;
+  let ny = cy;
+  for (const zone of zones) {
+    const halfW = zone.w / 2 + zone.padding + centerRadius;
+    const halfH = zone.h / 2 + zone.padding + centerRadius;
+    const dx = nx - zone.x;
+    const dy = ny - zone.y;
+    if (Math.abs(dx) < halfW && Math.abs(dy) < halfH) {
+      const distX = halfW - Math.abs(dx);
+      const distY = halfH - Math.abs(dy);
+      // Push along the shortest axis with softer force
+      const force = 0.55;
+      if (distX < distY) {
+        nx += dx > 0 ? distX * force + 4 : -(distX * force + 4);
+      } else {
+        ny += dy > 0 ? distY * force + 4 : -(distY * force + 4);
+      }
+    }
+  }
+  return { x: nx, y: ny };
 }
 
 /** Horizontal offset so large nodes orbit off-center and avoid centered text */
@@ -121,25 +172,27 @@ function applyRepulsion(
   y: number,
   zones: SafeZone[],
   nodeRadius: number,
-  nodeWeight: number
+  nodeWeight: number,
+  isMobile: boolean
 ): { x: number; y: number; inSafeZone: boolean } {
   let nx = x;
   let ny = y;
   let inSafeZone = false;
+  const paddingMul = isMobile ? 1.35 : 1.0;
   for (const zone of zones) {
-    const halfW = zone.w / 2 + zone.padding + nodeRadius * (0.4 + nodeWeight * 0.3);
-    const halfH = zone.h / 2 + zone.padding + nodeRadius * (0.4 + nodeWeight * 0.3);
+    const halfW = zone.w / 2 + zone.padding * paddingMul + nodeRadius * (0.5 + nodeWeight * 0.4);
+    const halfH = zone.h / 2 + zone.padding * paddingMul + nodeRadius * (0.5 + nodeWeight * 0.4);
     const dx = nx - zone.x;
     const dy = ny - zone.y;
     if (Math.abs(dx) < halfW && Math.abs(dy) < halfH) {
       inSafeZone = true;
       const distX = halfW - Math.abs(dx);
       const distY = halfH - Math.abs(dy);
-      const force = 0.65 + nodeWeight * 0.3;
+      const force = 0.8 + nodeWeight * 0.35;
       if (distX < distY) {
-        nx += dx > 0 ? distX * force + 6 : -(distX * force + 6);
+        nx += dx > 0 ? distX * force + 8 : -(distX * force + 8);
       } else {
-        ny += dy > 0 ? distY * force + 6 : -(distY * force + 6);
+        ny += dy > 0 ? distY * force + 8 : -(distY * force + 8);
       }
     }
   }
@@ -180,7 +233,8 @@ function useOrbitEngine(
   configs: OrbitConfig[],
   isPaused: boolean,
   profile: ReturnType<typeof usePerformanceMode>,
-  activeSectionId: string | null
+  activeSectionId: string | null,
+  dynamicZonesRef: React.RefObject<SafeZone[]>
 ) {
   const positionsRef = useRef<NodePosition[]>([]);
   const [positions, setPositions] = useState<NodePosition[]>([]);
@@ -277,6 +331,21 @@ function useOrbitEngine(
       targetCenterRef.current.x = cx + mx + breathX + sectionOrbitOffsetRef.current.x;
       targetCenterRef.current.y = cyBase + my + breathY + sectionShiftRef.current + sectionOrbitOffsetRef.current.y;
 
+      // Combine static + dynamic safe zones
+      const staticZones = getStaticSafeZones(w, h, activeSectionId, profile.isMobile);
+      const dynamicZones = dynamicZonesRef.current ?? [];
+      const allZones = staticZones.concat(dynamicZones);
+
+      // Repel the orbit center itself from text safe zones
+      const centerRepelled = applyCenterRepulsion(
+        targetCenterRef.current.x,
+        targetCenterRef.current.y,
+        allZones,
+        profile.isMobile ? 55 : 70
+      );
+      targetCenterRef.current.x = centerRepelled.x;
+      targetCenterRef.current.y = centerRepelled.y;
+
       // Smooth lerp to target
       currentCenterRef.current.x += (targetCenterRef.current.x - currentCenterRef.current.x) * 0.04;
       currentCenterRef.current.y += (targetCenterRef.current.y - currentCenterRef.current.y) * 0.04;
@@ -286,9 +355,6 @@ function useOrbitEngine(
 
       // Global scale: shrink slightly as user scrolls
       const globalScale = 1 - Math.min(0.18, scrollProgress * 0.35);
-
-      // Safe zones
-      const zones = getSafeZones(w, h, activeSectionId);
 
       const next = items.map((item, i) => {
         if (i >= configs.length) return { x: ccx, y: ccy, scale: globalScale, inSafeZone: false };
@@ -304,7 +370,7 @@ function useOrbitEngine(
         // Apply repulsion from safe zones (weight-based for large nodes)
         const nodeRadius = getNodeRadius(item, profile.isMobile);
         const weight = getItemWeight(item);
-        const repelled = applyRepulsion(x, y, zones, nodeRadius, weight);
+        const repelled = applyRepulsion(x, y, allZones, nodeRadius, weight, profile.isMobile);
         x = repelled.x;
         y = repelled.y;
 
@@ -313,7 +379,7 @@ function useOrbitEngine(
         y = Math.max(30, Math.min(h - 30, y));
 
         // Dim and shrink if pushed into safe zone
-        const nodeScale = repelled.inSafeZone ? Math.max(0.35, globalScale * (1 - weight * 0.18)) : globalScale;
+        const nodeScale = repelled.inSafeZone ? Math.max(0.3, globalScale * (1 - weight * 0.22)) : globalScale;
 
         return { x, y, scale: nodeScale, inSafeZone: repelled.inSafeZone };
       });
@@ -329,7 +395,7 @@ function useOrbitEngine(
       running = false;
       cancelAnimationFrame(rafRef.current);
     };
-  }, [items, configs, isPaused, profile.isMobile, profile.reducedMotion, activeSectionId]);
+  }, [items, configs, isPaused, profile.isMobile, profile.reducedMotion, activeSectionId, dynamicZonesRef]);
 
   return positions;
 }
@@ -338,6 +404,31 @@ export function OrbitalLayer() {
   const { activeSectionId, getItemsForSection, isPaused, setSelectedItemId } = useOrbitalContext();
   const profile = usePerformanceMode();
   useScrollState();
+
+  // Dynamic safe zones from real DOM text blocks
+  const dynamicZonesRef = useRef<SafeZone[]>([]);
+  const lastZoneUpdateRef = useRef(0);
+
+  useEffect(() => {
+    let rafId = 0;
+    const updateZones = () => {
+      dynamicZonesRef.current = readDynamicSafeZones();
+      lastZoneUpdateRef.current = Date.now();
+    };
+    const throttledUpdate = () => {
+      const now = Date.now();
+      if (now - lastZoneUpdateRef.current > 120) {
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(updateZones);
+      }
+    };
+    window.addEventListener("scroll", throttledUpdate, { passive: true });
+    updateZones();
+    return () => {
+      window.removeEventListener("scroll", throttledUpdate);
+      cancelAnimationFrame(rafId);
+    };
+  }, [activeSectionId]);
 
   // Calcola gli item attivi in base alla sezione
   const activeItems = useMemo<OrbitalItem[]>(() => {
@@ -352,7 +443,7 @@ export function OrbitalLayer() {
   }, [activeSectionId, getItemsForSection, profile.maxItems]);
 
   const configs = useOrbitalConfigForItems(activeItems, profile);
-  const positions = useOrbitEngine(activeItems, configs, isPaused, profile, activeSectionId);
+  const positions = useOrbitEngine(activeItems, configs, isPaused, profile, activeSectionId, dynamicZonesRef);
 
   // Click outside per chiudere il popover su mobile
   const layerRef = useRef<HTMLDivElement>(null);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type * as THREE from "three";
 
 export function DesktopRadarCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -44,10 +45,10 @@ export function DesktopRadarCanvas() {
       const grid = new THREE.GridHelper(12, 24, 0x6a3cff, 0x1a1040);
       grid.position.y = -0.5;
       (grid.material as TMaterial).transparent = true;
-      (grid.material as TMaterial).opacity = 0.22;
+      (grid.material as TMaterial).opacity = 0.28;
       root.add(grid);
 
-      // Rings
+      // Rings — brighter and more visible
       const ringColors = [0x6a3cff, 0x39d2f6, 0xf3bf4c];
       [2.5, 4, 5.5].forEach((radius, i) => {
         const geo = track(
@@ -57,7 +58,7 @@ export function DesktopRadarCanvas() {
           new THREE.MeshBasicMaterial({
             color: ringColors[i],
             transparent: true,
-            opacity: 0.18,
+            opacity: 0.32,
             side: THREE.DoubleSide,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
@@ -68,13 +69,13 @@ export function DesktopRadarCanvas() {
         root.add(mesh);
       });
 
-      // Sweep blade
-      const sweepGeo = track(new THREE.PlaneGeometry(5.5, 0.12));
+      // Sweep blade — primary
+      const sweepGeo = track(new THREE.PlaneGeometry(5.5, 0.14));
       const sweepMat = track(
         new THREE.MeshBasicMaterial({
           color: 0x6a3cff,
           transparent: true,
-          opacity: 0.35,
+          opacity: 0.45,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           side: THREE.DoubleSide,
@@ -85,33 +86,91 @@ export function DesktopRadarCanvas() {
       sweep.position.y = -0.48;
       root.add(sweep);
 
-      // Signal points
-      const signalCount = 24;
-      const signalPos = new Float32Array(signalCount * 3);
-      for (let i = 0; i < signalCount; i += 1) {
-        const angle = Math.random() * Math.PI * 2;
-        const r = 0.5 + Math.random() * 5;
-        signalPos[i * 3] = Math.cos(angle) * r;
-        signalPos[i * 3 + 1] = -0.48;
-        signalPos[i * 3 + 2] = Math.sin(angle) * r;
-      }
-      const signalGeo = track(new THREE.BufferGeometry());
-      signalGeo.setAttribute(
-        "position",
-        new THREE.BufferAttribute(signalPos, 3),
-      );
-      const signalMat = track(
-        new THREE.PointsMaterial({
-          color: 0xffffff,
-          size: 0.08,
+      // Sweep blade — secondary fast echo
+      const sweepEchoGeo = track(new THREE.PlaneGeometry(5.5, 0.06));
+      const sweepEchoMat = track(
+        new THREE.MeshBasicMaterial({
+          color: 0x39d2f6,
           transparent: true,
-          opacity: 0.7,
+          opacity: 0.25,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
+          side: THREE.DoubleSide,
         }),
       );
-      const signals = new THREE.Points(signalGeo, signalMat);
-      root.add(signals);
+      const sweepEcho = new THREE.Mesh(sweepEchoGeo, sweepEchoMat);
+      sweepEcho.rotation.x = -Math.PI / 2;
+      sweepEcho.position.y = -0.47;
+      root.add(sweepEcho);
+
+      // Signal points — individual meshes for per-node control
+      const signalCount = 24;
+      interface SignalNode {
+        mesh: THREE.Mesh;
+        ring: THREE.Mesh;
+        baseX: number;
+        baseZ: number;
+        baseSize: number;
+        color: THREE.Color;
+        phase: number;
+        speed: number;
+      }
+      const signals: SignalNode[] = [];
+      const signalColors = [0x6a3cff, 0x39d2f6, 0xf3bf4c, 0xffffff, 0x8b6cff];
+
+      for (let i = 0; i < signalCount; i += 1) {
+        const angle = Math.random() * Math.PI * 2;
+        const r = 0.8 + Math.random() * 4.8;
+        const x = Math.cos(angle) * r;
+        const z = Math.sin(angle) * r;
+        const colorHex = signalColors[i % signalColors.length];
+        const baseSize = 0.22 + Math.random() * 0.42; // 0.22 - 0.64 units
+
+        // Core glow sprite
+        const geo = track(new THREE.PlaneGeometry(baseSize, baseSize));
+        const mat = track(
+          new THREE.MeshBasicMaterial({
+            color: colorHex,
+            transparent: true,
+            opacity: 0.85,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            side: THREE.DoubleSide,
+          }),
+        );
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.rotation.x = -Math.PI / 2;
+        mesh.position.set(x, -0.48, z);
+        root.add(mesh);
+
+        // Subtle ring around node
+        const ringGeo = track(new THREE.RingGeometry(baseSize * 0.6, baseSize * 0.75, 24));
+        const ringMat = track(
+          new THREE.MeshBasicMaterial({
+            color: colorHex,
+            transparent: true,
+            opacity: 0.35,
+            side: THREE.DoubleSide,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = -Math.PI / 2;
+        ring.position.set(x, -0.475, z);
+        root.add(ring);
+
+        signals.push({
+          mesh,
+          ring,
+          baseX: x,
+          baseZ: z,
+          baseSize,
+          color: new THREE.Color(colorHex),
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.5 + Math.random() * 1.2,
+        });
+      }
 
       const resize = () => {
         const rect = canvas.parentElement?.getBoundingClientRect();
@@ -131,8 +190,36 @@ export function DesktopRadarCanvas() {
         raf = window.requestAnimationFrame(render);
         if (disposed) return;
         time += 0.016;
-        sweep.rotation.z = -time * 0.8;
-        signals.rotation.y = time * 0.02;
+        const sweepAngle = time * 0.8;
+        sweep.rotation.z = -sweepAngle;
+        sweepEcho.rotation.z = -(sweepAngle + 0.35);
+
+        // Animate each signal node — watchOS-like pulse + sweep focus
+        signals.forEach((sig) => {
+          // Distance from center affects base scale (closer = slightly larger)
+          const distFromCenter = Math.sqrt(sig.baseX * sig.baseX + sig.baseZ * sig.baseZ);
+          const centerBoost = 1 + Math.max(0, (2.5 - distFromCenter) * 0.08);
+
+          // Breathing pulse
+          const breath = Math.sin(time * sig.speed + sig.phase) * 0.18 + 1;
+
+          // Sweep focus: when sweep passes near node's angle, flash bigger
+          const nodeAngle = Math.atan2(sig.baseZ, sig.baseX);
+          let angleDiff = Math.abs(((nodeAngle + sweepAngle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2));
+          if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
+          const sweepProximity = Math.max(0, 1 - angleDiff / 0.55);
+          const sweepBoost = 1 + sweepProximity * 0.65;
+          const sweepOpacityBoost = 1 + sweepProximity * 0.5;
+
+          const scale = sig.baseSize * centerBoost * breath * sweepBoost;
+          const scaleRatio = scale / sig.baseSize;
+          sig.mesh.scale.set(scaleRatio, scaleRatio, 1);
+
+          (sig.mesh.material as THREE.MeshBasicMaterial).opacity = Math.min(1, 0.75 * sweepOpacityBoost);
+          (sig.ring.material as THREE.MeshBasicMaterial).opacity = Math.min(1, 0.35 * sweepOpacityBoost);
+          sig.ring.scale.set(scaleRatio, scaleRatio, 1);
+        });
+
         renderer.render(scene, camera);
       };
       raf = window.requestAnimationFrame(render);

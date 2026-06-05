@@ -60,12 +60,17 @@ export function HeroSection({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.6)] px-4 py-1.5 text-xs font-medium text-[#6a3cff] backdrop-blur-md"
+            data-orbit-shield
           >
             <Sparkles size={14} />
             AI tools discovery system
           </motion.div>
 
-          <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-[#120d2f] md:text-5xl lg:text-6xl drop-shadow-[0_2px_16px_rgba(255,255,255,0.8)]">
+          <h1
+            className="mb-6 text-4xl font-bold leading-tight tracking-tight text-[#120d2f] md:text-5xl lg:text-6xl drop-shadow-[0_2px_16px_rgba(255,255,255,0.8)]"
+            data-orbit-shield
+            data-orbit-shield-priority="high"
+          >
             <AnimatedText text="Scegli tool AI validi" />
             <br />
             <span
@@ -85,6 +90,7 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.5 }}
+            data-orbit-shield
           >
             TooolVibes organizza catalogo, segnali e shortlist in un percorso chiaro:
             trovi alternative credibili, confronti solo ciò che conta e decidi prima.
@@ -95,6 +101,7 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 0.5 }}
+            data-orbit-shield
           >
             <Link
               href="/archivio"

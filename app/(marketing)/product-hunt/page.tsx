@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Activity, MessageCircle, TrendingUp } from "lucide-react";
 
 import { DesktopVibeRadar } from "@/components/desktop/desktop-vibe-radar";
+import { MobileRadarCanvas } from "@/components/radar/mobile-radar-canvas";
 import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
-import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
+import { PremiumLink } from "@/components/ui/premium";
 import { PageOrbitShell } from "@/components/app/orbital-system";
 import type { OrbitalItem } from "@/components/app/orbital-system";
 import { siteConfig } from "@/lib/config/site";
@@ -96,35 +97,28 @@ export default function ProductHuntPage() {
                   </PremiumLink>
                 </div>
               </div>
+            </div>
 
-              <div className="hero-mini-visual rounded-[28px] border border-white/12 bg-white/9 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <PremiumBadge tone="dark">Live radar</PremiumBadge>
-                  <TrendingUp className="size-5 text-violet-100" aria-hidden="true" />
-                </div>
-                <div className="mt-5 space-y-3">
-                  {[
-                    { icon: Activity, label: "Rank", value: "Giorno / settimana / mese" },
-                    { icon: MessageCircle, label: "Segnali", value: "Commenti e voti solo se validi" },
-                    { icon: TrendingUp, label: "Fallback", value: "Stati chiari se l'API non risponde" },
-                  ].map((item) => {
-                    const Icon = item.icon;
-
-                    return (
-                      <div key={item.label} className="flex items-center gap-3 rounded-[20px] border border-white/10 bg-white/7 p-3">
-                        <span className="grid size-10 place-items-center rounded-[16px] bg-white/10 text-white">
-                          <Icon className="size-4" aria-hidden="true" />
-                        </span>
-                        <div>
-                          <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-white/44">
-                            {item.label}
-                          </p>
-                          <p className="text-sm font-semibold text-white/82">{item.value}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+            {/* Mobile Radar Visual */}
+            <div className="relative mt-6 h-72 w-full overflow-hidden rounded-[28px] border border-white/12 bg-[rgba(12,8,38,0.55)] sm:h-80">
+              <MobileRadarCanvas />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center gap-4 pb-3">
+                {[
+                  { icon: Activity, label: "Rank" },
+                  { icon: MessageCircle, label: "Segnali" },
+                  { icon: TrendingUp, label: "Trend" },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <span
+                      key={item.label}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white/80 backdrop-blur-md"
+                    >
+                      <Icon className="size-3" aria-hidden="true" />
+                      {item.label}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           </section>

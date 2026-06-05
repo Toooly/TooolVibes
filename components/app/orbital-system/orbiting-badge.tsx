@@ -255,15 +255,15 @@ export function OrbitingBadge({
         willChange: "transform",
         zIndex: isActive ? 60 : 20 + index,
         perspective: 400,
-        opacity: shouldDim ? 0.3 : 1,
-        filter: shouldDim ? "blur(3px)" : "none",
       }}
       animate={{
         scale: isActive ? 1.22 : isSectionActive ? 1.15 : isHovered ? 1.12 : 1,
         rotateX: tilt.x,
         rotateY: tilt.y,
+        opacity: shouldDim ? 0.25 : 1,
+        filter: shouldDim ? "blur(4px) saturate(0.6)" : "blur(0px) saturate(1)",
       }}
-      transition={{ type: "spring", stiffness: 280, damping: 22 }}
+      transition={{ type: "spring", stiffness: 280, damping: 22, opacity: { duration: 0.35 }, filter: { duration: 0.35 } }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
