@@ -1,3 +1,6 @@
+// DEPRECATED: DesktopVibeWishlist is no longer used.
+// The wishlist page now uses RequestToolForm for both mobile and desktop.
+
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
@@ -122,7 +125,7 @@ export function DesktopVibeWishlist() {
   return (
     <div className="desktop-vibe desktop-vibe-wishlist hidden lg:block">
       <section className="desktop-vibe-section desktop-vibe-wishlist-hero">
-        <div>
+        <div data-orbit-shield>
           <p className="desktop-vibe-eyebrow">Suggerisci in 3D</p>
           <h1>Porta un nuovo tool dentro il campo editoriale.</h1>
           <p>

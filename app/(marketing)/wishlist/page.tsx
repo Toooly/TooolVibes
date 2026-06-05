@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { CheckCircle2, ClipboardList } from "lucide-react";
 
-import { DesktopVibeWishlist } from "@/components/desktop/desktop-vibe-wishlist";
 import { RequestToolForm } from "@/components/wishlist/request-tool-form";
 import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
 import { PageOrbitShell } from "@/components/app/orbital-system";
@@ -60,10 +59,30 @@ export default function WishlistPage() {
   return (
     <PageOrbitShell sectionId="wishlist-page" label="Wishlist" items={wishlistItems}>
       <>
-        <DesktopVibeWishlist />
+        <div className="hidden lg:block">
+          <div className="tone-wishlist page-shell space-y-6 pb-18 pt-9">
+            <section className="hero-shell hero-shell-wishlist motion-reveal px-7 py-8 sm:rounded-[38px]">
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(28rem,0.85fr)] lg:items-start">
+                <div className="max-w-[48rem]">
+                  <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/58">
+                    Wishlist TooolVibes
+                  </p>
+                  <h1 className="mt-4 max-w-[13ch] text-[clamp(2.05rem,4vw,3.35rem)] leading-[1.05] text-white">
+                    Suggerisci il prossimo tool che merita spazio.
+                  </h1>
+                  <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-7 text-white/70 sm:mt-5 sm:text-[1rem]">
+                    La directory resta premium solo se la selezione cresce con criterio. Se hai
+                    trovato un tool AI, SaaS, no-code o automation davvero utile, portalo qui.
+                  </p>
+                </div>
+                <RequestToolForm />
+              </div>
+            </section>
+          </div>
+        </div>
 
-        <div className="page-shell space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6 lg:hidden">
-          <section className="hero-shell hero-shell-wishlist motion-reveal px-5 py-5 text-white sm:rounded-[38px] sm:px-7 sm:py-8">
+        <div className="tone-wishlist page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9 lg:hidden">
+          <section className="hero-shell hero-shell-wishlist motion-reveal px-5 py-5 sm:rounded-[38px] sm:px-7 sm:py-8">
             <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.72fr)] lg:items-center">
               <div className="max-w-[48rem]">
                 <PremiumBadge tone="accent">Wishlist TooolVibes</PremiumBadge>
