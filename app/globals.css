@@ -13708,6 +13708,15 @@ img {
   }
 }
 
+@keyframes orbit-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 12px color-mix(in srgb, var(--node-color, #6a3cff) 40%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 28px color-mix(in srgb, var(--node-color, #6a3cff) 60%, transparent);
+  }
+}
+
 @media (max-width: 767px) {
   .catalog-orbit-hud {
     bottom: calc(5.8rem + env(safe-area-inset-bottom));
@@ -13936,6 +13945,90 @@ img {
 
   .home-orbit-node--compact-extra {
     display: none;
+  }
+
+  /* ── Expanded rings on mobile ── */
+  .catalog-orbit-ring {
+    --ring-opacity: 0.32;
+  }
+
+  /* ── Node hierarchy: principal / secondary / atmospheric ── */
+  .home-orbit-node--principal {
+    --node-size: 3.5rem !important;
+    will-change: transform;
+  }
+
+  .home-orbit-node--principal .catalog-orbit-node__body {
+    animation: orbit-pulse-glow 2.2s ease-in-out infinite;
+    border-width: 2px;
+  }
+
+  .home-orbit-node--principal .catalog-orbit-node__halo {
+    opacity: 0.72;
+  }
+
+  .home-orbit-node--secondary {
+    --node-size: 2.25rem !important;
+  }
+
+  .home-orbit-node--secondary .catalog-orbit-node__halo {
+    opacity: 0.5;
+  }
+
+  .home-orbit-node--secondary::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+    z-index: 10;
+  }
+
+  .home-orbit-node--atmospheric {
+    --node-size: 2rem !important;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  .home-orbit-node--atmospheric .catalog-orbit-node__body {
+    border-width: 1px;
+    opacity: 0.6;
+  }
+
+  .home-orbit-node--atmospheric .catalog-orbit-node__halo {
+    opacity: 0.25;
+  }
+
+  .home-orbit-node--atmospheric .catalog-orbit-node__label {
+    display: none;
+  }
+
+  /* ── Tap feedback ── */
+  @media (hover: none) and (pointer: coarse) {
+    .home-orbit-node--principal:active .catalog-orbit-node__body,
+    .home-orbit-node--secondary:active .catalog-orbit-node__body {
+      transform: scale(0.92);
+      box-shadow:
+        0 22px 56px color-mix(in srgb, var(--node-color, #6a3cff) 30%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32);
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+  }
+
+  /* ── Text avoidance ── */
+  .home-orbit-node--avoiding {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform:
+      translate(-50%, -50%)
+      rotateZ(var(--orbit-angle, 0deg))
+      translateX(var(--orbit-radius, 12rem))
+      rotateZ(var(--orbit-angle-back, 0deg))
+      translateZ(var(--orbit-depth, 0px))
+      translateX(var(--avoid-shift, 0px))
+      scale(0.6) !important;
+    opacity: 0.35 !important;
+    z-index: 1;
+    animation-play-state: paused;
   }
 }
 
