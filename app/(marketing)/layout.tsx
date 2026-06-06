@@ -13,7 +13,7 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="marketing-shell relative overflow-x-hidden">
+    <div className="marketing-shell relative overflow-x-clip">
       <SiteUniverseBackground />
       <OrbitalProvider>
         <OrbitalLayer />

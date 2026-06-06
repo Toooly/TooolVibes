@@ -45,7 +45,7 @@ export function DesktopRadarCanvas() {
       const grid = new THREE.GridHelper(12, 24, 0x6a3cff, 0x1a1040);
       grid.position.y = -0.5;
       (grid.material as TMaterial).transparent = true;
-      (grid.material as TMaterial).opacity = 0.28;
+      (grid.material as TMaterial).opacity = 0.45;
       root.add(grid);
 
       // Rings — brighter and more visible
@@ -58,7 +58,7 @@ export function DesktopRadarCanvas() {
           new THREE.MeshBasicMaterial({
             color: ringColors[i],
             transparent: true,
-            opacity: 0.32,
+            opacity: 0.55,
             side: THREE.DoubleSide,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
@@ -75,7 +75,7 @@ export function DesktopRadarCanvas() {
         new THREE.MeshBasicMaterial({
           color: 0x6a3cff,
           transparent: true,
-          opacity: 0.45,
+          opacity: 0.70,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           side: THREE.DoubleSide,
@@ -92,7 +92,7 @@ export function DesktopRadarCanvas() {
         new THREE.MeshBasicMaterial({
           color: 0x39d2f6,
           transparent: true,
-          opacity: 0.25,
+          opacity: 0.45,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           side: THREE.DoubleSide,

@@ -23,7 +23,7 @@ function getPerformanceProfile() {
   if (lowEnd) {
     return { dpr: 1 as const, particles: 300, planets: 4, enabled: true, reduced: false };
   }
-  return { dpr: Math.min(1.5, window.devicePixelRatio) as 1 | 1.5, particles: 600, planets: 5, enabled: true, reduced: false };
+  return { dpr: Math.min(1.5, window.devicePixelRatio) as 1 | 1.5, particles: 250, planets: 3, enabled: true, reduced: false };
 }
 
 // ── Shared scroll state (module-level) ──
