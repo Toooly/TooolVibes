@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import type { OrbitalItem, OrbitalShapeType } from "@/components/app/orbital-system";
+import { useTextAvoidance } from "@/lib/hooks/use-text-avoidance";
 
 type VibeHomeV2Props = {
   tools: DirectoryTool[];
@@ -155,6 +156,8 @@ function HomeOrbitStage({
 }: HomeOrbitStageProps) {
   const router = useRouter();
   const [isCompact, setIsCompact] = useState(false);
+  const orbitSystemRef = useRef<HTMLDivElement>(null);
+  useTextAvoidance(orbitSystemRef);
 
   useEffect(() => {
     const update = () => setIsCompact(window.innerWidth < 768);
@@ -165,7 +168,18 @@ function HomeOrbitStage({
 
   const maxVisible = isCompact ? 5 : 9;
   const visibleItems = items.slice(0, maxVisible);
-  const ringRadii = isCompact ? [82, 124, 166] : [150, 234, 318];
+  const ringRadii = isCompact ? [120, 186] : [150, 234, 318];
+  const ringCounts = isCompact ? [2, 3] : [3, 3, 3];
+
+  let assigned = 0;
+  const ringForIndex: number[] = [];
+  const stepForIndex: number[] = [];
+  ringCounts.forEach((count, rIdx) => {
+    for (let sIdx = 0; sIdx < count && assigned < visibleItems.length; sIdx++, assigned++) {
+      ringForIndex.push(rIdx);
+      stepForIndex.push(sIdx);
+    }
+  });
 
   return (
     <section
@@ -173,7 +187,7 @@ function HomeOrbitStage({
       aria-label={title}
       data-home-orbit-stage={sectionId}
     >
-      <div className="home-orbit-hud catalog-orbit-hud" data-orbit-shield>
+      <div className="home-orbit-hud catalog-orbit-hud" data-orbit-shield data-text-zone="true">
         <p>{label}</p>
         {isHero ? <h1>{title}</h1> : <h2>{title}</h2>}
         {description && <span>{description}</span>}
@@ -194,7 +208,11 @@ function HomeOrbitStage({
         )}
       </div>
 
-      <div className="home-orbit-system catalog-orbit-system" aria-label={`${label}: nodi interattivi`}>
+      <div
+        ref={orbitSystemRef}
+        className="home-orbit-system catalog-orbit-system"
+        aria-label={`${label}: nodi interattivi`}
+      >
         <div className="catalog-orbit-depth" aria-hidden="true" />
         {ringRadii.map((radius, index) => (
           <span
@@ -213,9 +231,10 @@ function HomeOrbitStage({
         </div>
 
         {visibleItems.map((item, index) => {
-          const ringIndex = index % ringRadii.length;
-          const sameRingCount = Math.ceil(visibleItems.length / ringRadii.length);
-          const stepIndex = Math.floor(index / ringRadii.length);
+          const ringIndex = ringForIndex[index] ?? 0;
+          const stepIndex = stepForIndex[index] ?? 0;
+          const sameRingCount = ringCounts[ringIndex] ?? 1;
+          const nodePriority = index < 2 ? "principal" : index === 2 ? "secondary" : "atmospheric";
           const angle = (stepIndex / Math.max(1, sameRingCount)) * 360 + ringIndex * 34 + (align === "right" ? 18 : -10);
           const isPrimary = item.variant === "route" || item.variant === "featured" || item.size === "lg";
           const color = item.color ?? "#6a3cff";
@@ -231,14 +250,16 @@ function HomeOrbitStage({
             "--orbit-duration": `${32 + ringIndex * 8}s`,
             "--orbit-delay": `${index * -1.45}s`,
             "--node-color": color,
-            "--node-size": isPrimary ? (isCompact ? "4.75rem" : "6rem") : (isCompact ? "4.05rem" : "5rem"),
+            "--node-size": isCompact
+              ? (nodePriority === "principal" ? "3.5rem" : nodePriority === "secondary" ? "2.25rem" : "2rem")
+              : (isPrimary ? "6rem" : "5rem"),
           } as CSSProperties;
 
           return (
             <Link
               key={item.id}
               href={item.href}
-              className={`catalog-orbit-node home-orbit-node home-orbit-node--${item.variant ?? "tool"}${index >= 5 ? " home-orbit-node--compact-extra" : ""}`}
+              className={`catalog-orbit-node home-orbit-node home-orbit-node--${nodePriority} home-orbit-node--${item.variant ?? "tool"}${index >= 5 ? " home-orbit-node--compact-extra" : ""}`}
               style={nodeStyle}
               aria-label={`${item.title}. ${item.description}`}
               onClick={(event) => {
