@@ -231,10 +231,10 @@ function HomeOrbitStage({
         </div>
 
         {visibleItems.map((item, index) => {
-          const ringIndex = ringForIndex[index] ?? 0;
-          const stepIndex = stepForIndex[index] ?? 0;
-          const sameRingCount = ringCounts[ringIndex] ?? 1;
-          const nodePriority = index < 2 ? "principal" : index === 2 ? "secondary" : "atmospheric";
+          const ringIndex = isCompact ? (ringForIndex[index] ?? 0) : (index % ringRadii.length);
+          const stepIndex = isCompact ? (stepForIndex[index] ?? 0) : Math.floor(index / ringRadii.length);
+          const sameRingCount = isCompact ? (ringCounts[ringIndex] ?? 1) : Math.ceil(visibleItems.length / ringRadii.length);
+          const nodePriority = isCompact ? (index < 2 ? "principal" : index === 2 ? "secondary" : "atmospheric") : "";
           const angle = (stepIndex / Math.max(1, sameRingCount)) * 360 + ringIndex * 34 + (align === "right" ? 18 : -10);
           const isPrimary = item.variant === "route" || item.variant === "featured" || item.size === "lg";
           const color = item.color ?? "#6a3cff";
@@ -259,7 +259,7 @@ function HomeOrbitStage({
             <Link
               key={item.id}
               href={item.href}
-              className={`catalog-orbit-node home-orbit-node home-orbit-node--${nodePriority} home-orbit-node--${item.variant ?? "tool"}${index >= 5 ? " home-orbit-node--compact-extra" : ""}`}
+              className={`catalog-orbit-node home-orbit-node${nodePriority ? ` home-orbit-node--${nodePriority}` : ""} home-orbit-node--${item.variant ?? "tool"}${index >= 5 ? " home-orbit-node--compact-extra" : ""}`}
               style={nodeStyle}
               aria-label={`${item.title}. ${item.description}`}
               onClick={(event) => {
