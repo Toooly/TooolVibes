@@ -62,6 +62,8 @@ const structuredData = {
   },
 };
 
+const brandIntroStorageKey = "tooolvibes:brand-intro-portal-v1";
+
 const brandIntroPreflightStyle = `
 html.brand-intro-preflight,
 html.brand-intro-preflight body {
@@ -91,7 +93,7 @@ const brandIntroPreflightScript = `
       pathname.startsWith("/api") ||
       pathname.startsWith("/auth");
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    const played = window.sessionStorage?.getItem("tooolvibes:brand-intro-neural-v3") === "true";
+    const played = window.sessionStorage?.getItem("${brandIntroStorageKey}") === "true";
 
     if (!excluded && !reduced && !played) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");

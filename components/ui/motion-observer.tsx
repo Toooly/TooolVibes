@@ -34,11 +34,25 @@ function isInViewport(element: HTMLElement) {
   );
 }
 
+function isRendered(element: HTMLElement) {
+  if (element.getClientRects().length === 0) {
+    return false;
+  }
+
+  const style = window.getComputedStyle(element);
+
+  return style.display !== "none" && style.visibility !== "hidden";
+}
+
 export function MotionObserver() {
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let observer: IntersectionObserver | null = null;
     let mutationObserver: MutationObserver | null = null;
+    let startTimer: number | null = null;
+    let introFallbackTimer: number | null = null;
+    let started = false;
+    let startAfterIntro: (() => void) | null = null;
 
     if (reduceMotion) {
       document.documentElement.dataset.motionReady = "false";
@@ -46,6 +60,11 @@ export function MotionObserver() {
     }
 
     const startObserver = () => {
+      if (started) {
+        return;
+      }
+
+      started = true;
       document.documentElement.dataset.motionReady = "true";
 
       observer = new IntersectionObserver(
@@ -81,6 +100,10 @@ export function MotionObserver() {
           element.closest("[data-no-motion]") ||
           element.closest("[aria-hidden='true']")
         ) {
+          return;
+        }
+
+        if (!isRendered(element)) {
           return;
         }
 
@@ -123,10 +146,44 @@ export function MotionObserver() {
       });
     };
 
-    const startTimer = window.setTimeout(startObserver, 360);
+    const queueObserverStart = () => {
+      if (document.documentElement.classList.contains("brand-intro-active")) {
+        startAfterIntro = () => {
+          if (introFallbackTimer) {
+            window.clearTimeout(introFallbackTimer);
+            introFallbackTimer = null;
+          }
+
+          startTimer = window.setTimeout(startObserver, 180);
+        };
+
+        window.addEventListener("tooolvibes:brand-intro-finished", startAfterIntro, {
+          once: true,
+        });
+        introFallbackTimer = window.setTimeout(startAfterIntro, 5200);
+        return;
+      }
+
+      startTimer = window.setTimeout(startObserver, 720);
+    };
+
+    if (document.readyState === "complete") {
+      queueObserverStart();
+    } else {
+      window.addEventListener("load", queueObserverStart, { once: true });
+    }
 
     return () => {
-      window.clearTimeout(startTimer);
+      window.removeEventListener("load", queueObserverStart);
+      if (startAfterIntro) {
+        window.removeEventListener("tooolvibes:brand-intro-finished", startAfterIntro);
+      }
+      if (startTimer) {
+        window.clearTimeout(startTimer);
+      }
+      if (introFallbackTimer) {
+        window.clearTimeout(introFallbackTimer);
+      }
       observer?.disconnect();
       mutationObserver?.disconnect();
       delete document.documentElement.dataset.motionReady;
