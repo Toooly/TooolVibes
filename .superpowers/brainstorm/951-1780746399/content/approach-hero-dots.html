@@ -1,0 +1,121 @@
+<h2>3 approcci per i pallini della Hero mobile</h2>
+<p class="subtitle">Tutti e 5 i pallini hanno una funzione, ma con gerarchia e distribuzione diverse. Clicca per selezionare quello che preferisci.</p>
+
+<div class="options">
+  <div class="option" data-choice="A" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Galassia Gerarchica</h3>
+      <div class="mockup">
+        <div class="mockup-header">Hero mobile — 375×812</div>
+        <div class="mockup-body" style="position:relative;height:220px;background:#f7f5ff;overflow:hidden;border-radius:12px;">
+          <!-- Titolo -->
+          <div style="position:absolute;top:24px;left:0;right:0;text-align:center;z-index:2;">
+            <div style="font-size:12px;font-weight:700;color:#1a1a2e;letter-spacing:0.5px;">TOOOLVIBES</div>
+            <div style="font-size:10px;color:#6b6b8a;margin-top:2px;">Scopri i tool giusti</div>
+          </div>
+          <!-- CTA -->
+          <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2;">
+            <div style="background:#2d2d44;color:#fff;padding:6px 16px;border-radius:20px;font-size:10px;font-weight:600;">Inizia</div>
+          </div>
+          <!-- Pallino grande centrale -->
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;background:rgba(88,77,240,0.18);border:2px solid rgba(88,77,240,0.55);border-radius:50%;box-shadow:0 0 20px rgba(88,77,240,0.25);display:flex;align-items:center;justify-content:center;">
+            <div style="width:8px;height:8px;background:#584df0;border-radius:50%;"></div>
+          </div>
+          <!-- Pallini medi -->
+          <div style="position:absolute;top:38%;left:18%;width:40px;height:40px;background:rgba(88,77,240,0.12);border:1.5px solid rgba(88,77,240,0.40);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <div style="width:6px;height:6px;background:#7a71f0;border-radius:50%;"></div>
+          </div>
+          <div style="position:absolute;top:58%;right:16%;width:40px;height:40px;background:rgba(88,77,240,0.12);border:1.5px solid rgba(88,77,240,0.40);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <div style="width:6px;height:6px;background:#7a71f0;border-radius:50%;"></div>
+          </div>
+          <!-- Pallini piccoli (via lattea) -->
+          <div style="position:absolute;top:32%;right:28%;width:24px;height:24px;background:rgba(88,77,240,0.08);border:1px solid rgba(88,77,240,0.25);border-radius:50%;"></div>
+          <div style="position:absolute;top:62%;left:28%;width:24px;height:24px;background:rgba(88,77,240,0.08);border:1px solid rgba(88,77,240,0.25);border-radius:50%;"></div>
+        </div>
+      </div>
+      <p style="font-size:13px;margin-top:8px;color:#444;">1 grande centrale + 2 medi laterali + 2 piccoli satelliti. Spirale aperta, nessun ammasso. I piccoli sono hint (es. "Nuovo", "Trend").</p>
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Massima gerarchia visiva</li><li>Centro chiaro, non ammassato</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Richiede più spazio verticale</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="B" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Orbita Espansa</h3>
+      <div class="mockup">
+        <div class="mockup-header">Hero mobile — 375×812</div>
+        <div class="mockup-body" style="position:relative;height:220px;background:#f7f5ff;overflow:hidden;border-radius:12px;">
+          <div style="position:absolute;top:24px;left:0;right:0;text-align:center;z-index:2;">
+            <div style="font-size:12px;font-weight:700;color:#1a1a2e;letter-spacing:0.5px;">TOOOLVIBES</div>
+            <div style="font-size:10px;color:#6b6b8a;margin-top:2px;">Scopri i tool giusti</div>
+          </div>
+          <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2;">
+            <div style="background:#2d2d44;color:#fff;padding:6px 16px;border-radius:20px;font-size:10px;font-weight:600;">Inizia</div>
+          </div>
+          <!-- Anello interno -->
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90px;height:90px;border:1px dashed rgba(88,77,240,0.15);border-radius:50%;"></div>
+          <div style="position:absolute;top:42%;left:34%;width:44px;height:44px;background:rgba(88,77,240,0.14);border:1.5px solid rgba(88,77,240,0.45);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <div style="width:7px;height:7px;background:#584df0;border-radius:50%;"></div>
+          </div>
+          <div style="position:absolute;top:54%;right:32%;width:44px;height:44px;background:rgba(88,77,240,0.14);border:1.5px solid rgba(88,77,240,0.45);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <div style="width:7px;height:7px;background:#584df0;border-radius:50%;"></div>
+          </div>
+          <!-- Anello esterno -->
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:150px;height:150px;border:1px dashed rgba(88,77,240,0.10);border-radius:50%;"></div>
+          <div style="position:absolute;top:30%;left:62%;width:28px;height:28px;background:rgba(88,77,240,0.10);border:1px solid rgba(88,77,240,0.30);border-radius:50%;"></div>
+          <div style="position:absolute;top:66%;left:22%;width:28px;height:28px;background:rgba(88,77,240,0.10);border:1px solid rgba(88,77,240,0.30);border-radius:50%;"></div>
+          <div style="position:absolute;top:48%;right:12%;width:28px;height:28px;background:rgba(88,77,240,0.10);border:1px solid rgba(88,77,240,0.30);border-radius:50%;"></div>
+        </div>
+      </div>
+      <p style="font-size:13px;margin-top:8px;color:#444;">2 anelli concentrici ben distanziati. Interno = principali, Esterno = secondari/hint. Velocità diverse per profondità.</p>
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Profondità visiva reale</li><li>Distanza garantita tra anelli</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Può sembrare meccanico</li><li>Occupa più area orizzontale</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="C" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Costellazione Guidata</h3>
+      <div class="mockup">
+        <div class="mockup-header">Hero mobile — 375×812</div>
+        <div class="mockup-body" style="position:relative;height:220px;background:#f7f5ff;overflow:hidden;border-radius:12px;">
+          <div style="position:absolute;top:24px;left:0;right:0;text-align:center;z-index:2;">
+            <div style="font-size:12px;font-weight:700;color:#1a1a2e;letter-spacing:0.5px;">TOOOLVIBES</div>
+            <div style="font-size:10px;color:#6b6b8a;margin-top:2px;">Scopri i tool giusti</div>
+          </div>
+          <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2;">
+            <div style="background:#2d2d44;color:#fff;padding:6px 16px;border-radius:20px;font-size:10px;font-weight:600;">Inizia</div>
+          </div>
+          <!-- Linee guida sottili -->
+          <svg style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.25;" viewBox="0 0 375 220">
+            <polyline points="60,140 140,100 220,110 300,80" fill="none" stroke="#584df0" stroke-width="1" stroke-dasharray="4,4"/>
+          </svg>
+          <!-- Pallini su arco -->
+          <div style="position:absolute;top:55%;left:14%;width:48px;height:48px;background:rgba(88,77,240,0.16);border:2px solid rgba(88,77,240,0.50);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1;">
+            <div style="width:7px;height:7px;background:#584df0;border-radius:50%;"></div>
+          </div>
+          <div style="position:absolute;top:38%;left:36%;width:36px;height:36px;background:rgba(88,77,240,0.12);border:1.5px solid rgba(88,77,240,0.38);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1;">
+            <div style="width:5px;height:5px;background:#7a71f0;border-radius:50%;"></div>
+          </div>
+          <div style="position:absolute;top:42%;left:56%;width:36px;height:36px;background:rgba(88,77,240,0.12);border:1.5px solid rgba(88,77,240,0.38);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1;">
+            <div style="width:5px;height:5px;background:#7a71f0;border-radius:50%;"></div>
+          </div>
+          <div style="position:absolute;top:32%;left:76%;width:26px;height:26px;background:rgba(88,77,240,0.08);border:1px solid rgba(88,77,240,0.28);border-radius:50%;z-index:1;"></div>
+          <div style="position:absolute;top:52%;left:84%;width:26px;height:26px;background:rgba(88,77,240,0.08);border:1px solid rgba(88,77,240,0.28);border-radius:50%;z-index:1;"></div>
+        </div>
+      </div>
+      <p style="font-size:13px;margin-top:8px;color:#444;">Arco decrescente che guida lo sguardo dal CTA verso l'alto. Linee sottili collegano la sequenza. Ordine massimo.</p>
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Massima chiarezza percettiva</li><li>Guida naturale dello sguardo</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Perde un po' di feeling orbitale</li><li>Linee possono sembrare troppo strutturate</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
