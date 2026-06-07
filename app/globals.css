@@ -491,7 +491,8 @@ img {
     content: "";
     position: absolute;
     inset: 0.3rem;
-    z-index: -1;
+    z-index: 0;
+    pointer-events: none;
     border-radius: inherit;
     background:
       radial-gradient(circle at 50% 0%, rgba(94, 226, 255, 0.24), transparent 48%),
@@ -14960,7 +14961,7 @@ img {
   .mobile-radar-view__header p {
     margin: 0.3rem 0 0;
     font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.72);
   }
 
   /* ── Radar Stage ── */
@@ -14972,7 +14973,7 @@ img {
     max-height: 28rem;
     margin: 0.5rem auto 0;
     border-radius: 50%;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .mobile-radar-view__canvas {
@@ -15063,7 +15064,7 @@ img {
   }
 
   .mobile-radar-view__node-label strong {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: rgba(255, 255, 255, 0.92);
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
@@ -15073,9 +15074,9 @@ img {
   }
 
   .mobile-radar-view__node-label small {
-    font-size: 0.55rem;
+    font-size: 0.68rem;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.78);
   }
 
   /* ── Center Info ── */
@@ -15093,11 +15094,11 @@ img {
   }
 
   .mobile-radar-view__center-info span {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.60);
+    color: rgba(255, 255, 255, 0.75);
   }
 
   .mobile-radar-view__center-info strong {
@@ -15125,7 +15126,7 @@ img {
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.72);
     padding: 0.35rem 0.75rem;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -15135,7 +15136,7 @@ img {
   /* ── Open List Button ── */
   .mobile-radar-view__open-list {
     position: fixed;
-    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    bottom: calc(5rem + env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%);
     z-index: 20;
@@ -15227,7 +15228,7 @@ img {
     border-radius: 999px;
     font-size: 0.72rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.70);
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 180ms ease;
@@ -16425,11 +16426,11 @@ img {
 
   .mobile-spotlight-cosmic__planet-glow {
     position: absolute;
-    inset: -12px;
+    inset: -8px;
     border-radius: 50%;
     background: radial-gradient(circle, var(--planet-a) 0%, var(--planet-b) 40%, transparent 70%);
     opacity: 0.55;
-    filter: blur(10px);
+    filter: blur(6px);
     animation: cosmic-pulse 4s ease-in-out infinite;
   }
 
@@ -16515,9 +16516,9 @@ img {
   }
 
   .mobile-spotlight-cosmic__satellite-name {
-    font-size: 0.55rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.75);
     max-width: 5rem;
     text-align: center;
     white-space: nowrap;
@@ -16564,7 +16565,7 @@ img {
     margin-top: 0.3rem;
     font-size: 0.75rem;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.60);
+    color: rgba(255, 255, 255, 0.75);
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
@@ -16573,7 +16574,7 @@ img {
     margin-top: 0.5rem;
     font-size: 0.85rem;
     line-height: 1.55;
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.78);
   }
 
   .mobile-spotlight-cosmic__stats {
@@ -16593,11 +16594,11 @@ img {
 
   .mobile-spotlight-cosmic__stats span {
     display: block;
-    font-size: 0.58rem;
+    font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.65);
   }
 
   .mobile-spotlight-cosmic__stats strong {
@@ -16655,7 +16656,7 @@ img {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.65);
     margin-bottom: 0.625rem;
   }
 
@@ -16666,6 +16667,7 @@ img {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     padding-bottom: 0.5rem;
+    padding-right: 1rem;
   }
 
   .mobile-spotlight-cosmic__candidates-scroll::-webkit-scrollbar {
@@ -16693,7 +16695,7 @@ img {
     border-radius: 50%;
     background: radial-gradient(circle, var(--candidate-a), transparent 70%);
     opacity: 0.35;
-    filter: blur(8px);
+    filter: blur(5px);
   }
 
   .mobile-spotlight-cosmic__candidate-name {
@@ -16711,11 +16713,19 @@ img {
     position: relative;
     display: block;
     margin-top: 0.2rem;
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.65);
+  }
+}
+
+@media (max-width: 767px) {
+  /* Riduce artefatto linea casuale hero-shell su mobile */
+  .hero-shell::after {
+    opacity: 0.35;
+    animation: none;
   }
 }
 

@@ -326,6 +326,7 @@ export function MobileRadarView() {
         type="button"
         onClick={() => setShowList(true)}
         className="mobile-radar-view__open-list"
+        aria-label="Vedi classifica"
       >
         <ChevronUp size={16} />
         <span>Vedi classifica</span>
