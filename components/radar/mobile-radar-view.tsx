@@ -9,6 +9,7 @@ import {
   Activity,
   MessageCircle,
   TrendingUp,
+  Zap,
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -234,8 +235,8 @@ export function MobileRadarView() {
       const angle = (index / Math.max(currentItems.length, 1)) * Math.PI * 2;
       // More votes = closer to center (strong signal)
       const radiusRatio = 0.22 + 0.58 * (1 - item.votesCount / maxVotes);
-      const size = 52 + 20 * (item.commentsCount / maxComments);
-      return { ...item, angle, radiusRatio, size: Math.min(size, 80) };
+      const size = 64 + 24 * (item.commentsCount / maxComments);
+      return { ...item, angle, radiusRatio, size: Math.min(size, 88) };
     });
   }, [currentItems]);
 
@@ -264,13 +265,14 @@ export function MobileRadarView() {
             "--node-radius": `${node.radiusRatio * 100}%`,
             "--node-size": `${node.size}px`,
           } as CSSProperties;
+          const isHot = node.votesCount > 100;
           return (
             <a
               key={node.id}
               href={node.productHuntUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mobile-radar-view__node"
+              className={`mobile-radar-view__node${isHot ? " is-hot" : ""}`}
               style={style}
               aria-label={`${node.name}. ${node.votesCount} voti, ${node.commentsCount} commenti`}
             >
@@ -293,6 +295,7 @@ export function MobileRadarView() {
                 <strong>{node.name}</strong>
                 <small>{node.votesCount} voti</small>
               </span>
+              {isHot && <span className="mobile-radar-view__node-badge">HOT</span>}
             </a>
           );
         })}
@@ -321,6 +324,9 @@ export function MobileRadarView() {
         })}
       </div>
 
+      {/* Content sections */}
+      <MobileRadarSections items={currentItems} />
+
       {/* Open list button */}
       <button
         type="button"
@@ -329,7 +335,7 @@ export function MobileRadarView() {
         aria-label="Vedi classifica"
       >
         <ChevronUp size={16} />
-        <span>Vedi classifica</span>
+        <span>Vedi classifica completa</span>
       </button>
 
       {/* Bottom Sheet */}
@@ -398,6 +404,95 @@ export function MobileRadarView() {
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MobileRadarSections — trending & hot content below canvas
+   ═══════════════════════════════════════════════════════════════ */
+
+function MobileRadarSections({ items }: { items: ProductHuntItem[] }) {
+  if (!items.length) return null;
+
+  const trending = [...items].sort((a, b) => b.votesCount - a.votesCount).slice(0, 3);
+  const hot = items.filter((i) => i.votesCount > 50).slice(0, 3);
+  const watchlist = items.slice(0, 5);
+
+  return (
+    <div className="mobile-radar-sections">
+      {trending.length > 0 && (
+        <section className="mobile-radar-section">
+          <h2>
+            <TrendingUp size={14} />
+            Trending ora
+          </h2>
+          <div className="mobile-radar-section__scroll">
+            {trending.map((item) => (
+              <a
+                key={item.id}
+                href={item.productHuntUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mobile-radar-section__card"
+              >
+                <div className="mobile-radar-section__card-visual">
+                  {item.thumbnailUrl ? (
+                    <img src={item.thumbnailUrl} alt="" loading="lazy" />
+                  ) : (
+                    <span>{item.name.slice(0, 2).toUpperCase()}</span>
+                  )}
+                </div>
+                <div className="mobile-radar-section__card-meta">
+                  <strong>{item.name}</strong>
+                  <span>{item.votesCount} voti</span>
+                </div>
+                {item.votesCount > 100 && (
+                  <span className="mobile-radar-section__card-badge">HOT</span>
+                )}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {hot.length > 0 && (
+        <section className="mobile-radar-section">
+          <h2>
+            <Zap size={14} />
+            Da tenere d&apos;occhio
+          </h2>
+          <div className="mobile-radar-section__list">
+            {watchlist.map((item, index) => (
+              <motion.a
+                key={item.id}
+                href={item.productHuntUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mobile-radar-section__row"
+                initial={{ opacity: 0, x: -8 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <span className="mobile-radar-section__row-rank">#{index + 1}</span>
+                <div className="mobile-radar-section__row-visual">
+                  {item.thumbnailUrl ? (
+                    <img src={item.thumbnailUrl} alt="" loading="lazy" />
+                  ) : (
+                    <span>{item.name.slice(0, 2).toUpperCase()}</span>
+                  )}
+                </div>
+                <div className="mobile-radar-section__row-meta">
+                  <strong>{item.name}</strong>
+                  <span>{item.tagline}</span>
+                </div>
+                <span className="mobile-radar-section__row-votes">{item.votesCount} ↑</span>
+              </motion.a>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

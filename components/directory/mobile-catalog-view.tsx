@@ -29,6 +29,7 @@ import {
   CreditCard,
   Monitor,
   Clock,
+  ChevronDown,
 } from "lucide-react";
 import Fuse from "fuse.js";
 import type {
@@ -332,6 +333,32 @@ export function MobileCatalogView({
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   CategoryGuide — visual scroll hint
+   ═══════════════════════════════════════════════════════════════ */
+
+function CategoryGuide() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.6, duration: 0.4 }}
+      className="mobile-category-map__guide"
+    >
+      <span className="mobile-category-map__guide-text">
+        Scegli un mondo per iniziare
+      </span>
+      <motion.span
+        className="mobile-category-map__guide-arrow"
+        animate={{ y: [0, 5, 0] }}
+        transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+      >
+        <ChevronDown size={16} />
+      </motion.span>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
    MobileCategoryMap
    ═══════════════════════════════════════════════════════════════ */
 
@@ -352,7 +379,16 @@ function MobileCategoryMap({ categories, onSelect }: MobileCategoryMapProps) {
       <div className="mobile-category-map__intro">
         <h1>Esplora</h1>
         <p>Scegli un mondo per scoprire i tool che lo abitano.</p>
+        <div className="mobile-category-map__steps">
+          <span className="is-active">Esplora</span>
+          <span className="mobile-category-map__steps-arrow">→</span>
+          <span>Filtra</span>
+          <span className="mobile-category-map__steps-arrow">→</span>
+          <span>Scopri</span>
+        </div>
       </div>
+
+      <CategoryGuide />
 
       <div className="mobile-category-map__grid">
         {categories.map((cat, index) => {
@@ -368,6 +404,7 @@ function MobileCategoryMap({ categories, onSelect }: MobileCategoryMapProps) {
               className="mobile-category-map__blob"
               aria-label={`${cat.label}. ${cat.count} tool`}
               style={{ "--cat-color": cat.color } as CSSProperties}
+              whileTap={{ scale: 0.96 }}
             >
               <span className="mobile-category-map__halo" aria-hidden="true" />
               <span className="mobile-category-map__body">
@@ -433,9 +470,10 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: index * 0.03 }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 0.3, delay: Math.min(index * 0.03, 0.3) }}
     >
       <Link
         href={`/toools/${tool.slug}`}
