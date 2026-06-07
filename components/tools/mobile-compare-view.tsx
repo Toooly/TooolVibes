@@ -1,8 +1,8 @@
 "use client";
 
-import { type CSSProperties, useMemo } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Scale } from "lucide-react";
+import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Scale, Info } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { DirectoryTool, DirectoryToolLevel } from "@/lib/data/tooolvibes-directory";
@@ -59,6 +59,7 @@ type NormalisedTool = {
   readingTime: string;
   url: string;
   isDirectory: boolean;
+  useCasesCount: number;
 };
 
 function normalise(
@@ -85,6 +86,7 @@ function normalise(
         readingTime: d.readingTime,
         url: d.url,
         isDirectory: true,
+        useCasesCount: d.useCases.length,
       });
       continue;
     }
@@ -106,6 +108,7 @@ function normalise(
         readingTime: "2 min",
         url: l.website_url ?? "",
         isDirectory: false,
+        useCasesCount: 0,
       });
     }
   }
@@ -145,6 +148,7 @@ function ChampionCard({
   tool: NormalisedTool;
   onRemove: () => void;
 }) {
+  const [showInfo, setShowInfo] = useState(false);
   return (
     <article
       className="mobile-compare-arena__champion"
@@ -170,16 +174,31 @@ function ChampionCard({
             <h2 className="mobile-compare-arena__champion-name">{tool.name}</h2>
             <p className="mobile-compare-arena__champion-tldr">{tool.tldr}</p>
           </div>
-          <div className="mobile-compare-arena__score">
-            <span>{tool.score}</span>
-            <small>/100</small>
+          <div className="mobile-compare-arena__score-wrap">
+            <div className="mobile-compare-arena__score">
+              <span>{tool.score}</span>
+              <small>/100</small>
+            </div>
+            <button
+              type="button"
+              aria-label="Come è calcolato il punteggio"
+              onClick={() => setShowInfo((v) => !v)}
+              className="mobile-compare-arena__info"
+            >
+              <Info className="size-3.5" />
+            </button>
+            {showInfo && (
+              <div className="mobile-compare-arena__tooltip">
+                Il punteggio è calcolato in base al livello del tool, alla visibilità in evidenza e al numero di punti di forza.
+              </div>
+            )}
           </div>
         </div>
 
         <div className="mobile-compare-arena__metrics">
           <div>
             <span>Fit</span>
-            <strong>{tool.highlights.length}</strong>
+            <strong>{tool.useCasesCount}</strong>
           </div>
           <div>
             <span>Tag</span>
@@ -276,18 +295,43 @@ function ChallengerCard({
 
 function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
   if (tools.length < 2) return null;
+  const maxScore = Math.max(...tools.map((t) => t.score), 1);
   const rows = [
-    { label: "Categoria", value: (t: NormalisedTool) => t.categoryLabel },
-    { label: "TL;DR", value: (t: NormalisedTool) => t.tldr },
-    { label: "Use case", value: (t: NormalisedTool) => t.useCase },
+    {
+      label: "Categoria",
+      render: (t: NormalisedTool) => (
+        <span className="mobile-compare-arena__matrix-badge">{t.categoryLabel}</span>
+      ),
+    },
+    {
+      label: "Punteggio",
+      render: (t: NormalisedTool) => (
+        <div className="mobile-compare-arena__matrix-bar">
+          <span style={{ width: `${(t.score / maxScore) * 100}%` }} />
+          <strong>{t.score}</strong>
+        </div>
+      ),
+    },
+    {
+      label: "Fit",
+      render: (t: NormalisedTool) => <span>{t.useCasesCount || "—"}</span>,
+    },
+    {
+      label: "Highlights",
+      render: (t: NormalisedTool) => <span>{t.highlights.length}</span>,
+    },
+    {
+      label: "Tempo",
+      render: (t: NormalisedTool) => <span>{t.readingTime}</span>,
+    },
   ];
   return (
     <section className="mobile-compare-arena__matrix">
       <div className="mobile-compare-arena__matrix-header">
         <Scale className="size-4" />
-        <span>Differenze vive</span>
+        <span>Confronto caratteristiche</span>
       </div>
-      <div className="mobile-compare-arena__matrix-scroll">
+      <div className="mobile-compare-arena__matrix-grid">
         {rows.map((row) => (
           <div key={row.label} className="mobile-compare-arena__matrix-row">
             <div className="mobile-compare-arena__matrix-axis">{row.label}</div>
@@ -303,8 +347,7 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
                     } as CSSProperties
                   }
                 >
-                  <strong>{tool.name}</strong>
-                  <p>{row.value(tool)}</p>
+                  {row.render(tool)}
                 </div>
               ))}
             </div>

@@ -100,7 +100,7 @@ export function MobileRadarView() {
     if (!ctx) return;
 
     let raf = 0;
-    let disposed = false;
+    let paused = false;
     let time = 0;
 
     const resize = () => {
@@ -120,8 +120,8 @@ export function MobileRadarView() {
     if (canvas.parentElement) ro.observe(canvas.parentElement);
 
     const render = () => {
+      if (paused) return;
       raf = requestAnimationFrame(render);
-      if (disposed) return;
       time += 0.016;
 
       const w = canvas.width / Math.min(window.devicePixelRatio, 2);
@@ -204,10 +204,24 @@ export function MobileRadarView() {
     };
 
     raf = requestAnimationFrame(render);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasPaused = paused;
+        paused = !entry.isIntersecting;
+        if (wasPaused && !paused) {
+          raf = requestAnimationFrame(render);
+        }
+      },
+      { threshold: 0 },
+    );
+    observer.observe(canvas);
+
     return () => {
-      disposed = true;
+      paused = true;
       cancelAnimationFrame(raf);
       ro.disconnect();
+      observer.disconnect();
     };
   }, []);
 

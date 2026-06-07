@@ -34,6 +34,7 @@ import Fuse from "fuse.js";
 import type {
   DirectoryTool,
   DirectoryFilterGroup,
+  DirectoryToolLevel,
 } from "@/lib/data/tooolvibes-directory";
 
 const CATEGORY_ICON_MAP = {
@@ -123,6 +124,15 @@ export function MobileCatalogView({
     initialGroup !== "all" ? initialGroup : null
   );
   const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [activeLevel, setActiveLevel] = useState<DirectoryToolLevel | "all">("all");
+
+  const levelChips: { key: DirectoryToolLevel | "all"; label: string }[] = [
+    { key: "all", label: "Tutti" },
+    { key: "featured", label: "In evidenza" },
+    { key: "beginner", label: "Beginner" },
+    { key: "intermediate", label: "Intermediate" },
+    { key: "expert", label: "Expert" },
+  ];
 
   const fuse = useMemo(
     () =>
@@ -150,8 +160,11 @@ export function MobileCatalogView({
     if (searchQuery.trim()) {
       result = fuse.search(searchQuery.trim()).map((r) => r.item);
     }
+    if (activeLevel !== "all") {
+      result = result.filter((t) => t.level === activeLevel);
+    }
     return result;
-  }, [tools, activeGroup, initialTag, searchQuery, fuse]);
+  }, [tools, activeGroup, initialTag, searchQuery, fuse, activeLevel]);
 
   const activeGroupLabel = useMemo(
     () => filterGroups.find((g) => g.key === activeGroup)?.label ?? "Tutti i tool",
@@ -245,6 +258,22 @@ export function MobileCatalogView({
           )}
         </div>
       </div>
+
+      {/* Level chips */}
+      {view === "tools" && (
+        <div className="mobile-catalog-view__chips">
+          {levelChips.map((chip) => (
+            <button
+              key={chip.key}
+              type="button"
+              onClick={() => setActiveLevel(chip.key)}
+              className={`mobile-catalog-view__chip${activeLevel === chip.key ? " is-active" : ""}`}
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Content */}
       <AnimatePresence mode="wait">
