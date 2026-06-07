@@ -92,7 +92,7 @@ export function DesktopRadarCanvas() {
         new THREE.MeshBasicMaterial({
           color: 0x39d2f6,
           transparent: true,
-          opacity: 0.45,
+          opacity: 0.60,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           side: THREE.DoubleSide,

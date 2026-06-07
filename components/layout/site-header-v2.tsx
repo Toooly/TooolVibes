@@ -231,7 +231,7 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[48] bg-[rgba(18,13,47,0.4)] backdrop-blur-md lg:hidden"
+            className="fixed inset-0 z-[55] bg-[rgba(18,13,47,0.4)] backdrop-blur-md lg:hidden"
             onClick={() => setMenuOpen(false)}
           >
             <motion.nav

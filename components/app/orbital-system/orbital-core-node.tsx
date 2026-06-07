@@ -89,7 +89,7 @@ export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalC
         translateX: "-50%",
         translateY: "-50%",
         willChange: "transform",
-        zIndex: coreMenuOpen ? 80 : 55,
+        zIndex: coreMenuOpen ? 30 : 15,
       }}
       animate={{
         scale: coreMenuOpen ? 1.15 : dimScale,

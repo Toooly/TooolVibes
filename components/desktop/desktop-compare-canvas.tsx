@@ -46,7 +46,7 @@ export function DesktopCompareCanvas() {
           new THREE.MeshBasicMaterial({
             color: planeColors[i],
             transparent: true,
-            opacity: 0.07,
+            opacity: 0.12,
             wireframe: true,
             side: THREE.DoubleSide,
             blending: THREE.AdditiveBlending,
@@ -80,7 +80,7 @@ export function DesktopCompareCanvas() {
         new THREE.LineBasicMaterial({
           color: 0x6a3cff,
           transparent: true,
-          opacity: 0.1,
+          opacity: 0.15,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
         }),
@@ -102,7 +102,7 @@ export function DesktopCompareCanvas() {
           color: 0xa78bfa,
           size: 0.04,
           transparent: true,
-          opacity: 0.35,
+          opacity: 0.45,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
         }),
