@@ -14262,9 +14262,9 @@ img {
     inset: 0;
     border-radius: inherit;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 42%),
-      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.13), transparent 34%);
-    opacity: 0.74;
+      linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 42%),
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), transparent 34%);
+    opacity: 0.40;
     pointer-events: none;
   }
 
@@ -14364,7 +14364,10 @@ img {
 
   /* ── Mobile Method Steps ── */
   .mobile-method-steps {
-    background: var(--gradient-shell);
+    background:
+      radial-gradient(circle at 14% 0%, rgba(106, 60, 255, 0.035), transparent 26%),
+      radial-gradient(circle at 86% 10%, rgba(57, 210, 246, 0.025), transparent 26%),
+      linear-gradient(180deg, #fbf9ff 0%, #f4f0ff 48%, #ece7ff 100%);
     border-top: 1px solid var(--line);
   }
 
@@ -14375,7 +14378,7 @@ img {
   .mobile-method-steps__header span {
     display: block;
     font-size: 0.7rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--accent-purple);
@@ -14386,7 +14389,7 @@ img {
     margin: 0;
     font-family: "Rubik", sans-serif;
     font-size: 1.35rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.1;
     color: var(--foreground);
   }
@@ -14395,8 +14398,8 @@ img {
     margin: 0.45rem 0 0;
     font-size: 0.82rem;
     line-height: 1.45;
-    color: var(--text-secondary);
-    max-width: 32ch;
+    color: #4a4466;
+    max-width: 36ch;
   }
 
   .mobile-method-steps__list {
@@ -14469,8 +14472,8 @@ img {
 
   .mobile-method-steps__label {
     display: block;
-    font-size: 0.65rem;
-    font-weight: 600;
+    font-size: 0.68rem;
+    font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--accent-purple);
@@ -14481,7 +14484,7 @@ img {
     margin: 0;
     font-family: "Rubik", sans-serif;
     font-size: 1.05rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.2;
     color: var(--foreground);
   }
@@ -14490,7 +14493,7 @@ img {
     margin: 0.3rem 0 0;
     font-size: 0.8rem;
     line-height: 1.45;
-    color: var(--text-secondary);
+    color: #4a4466;
   }
 
   .mobile-method-steps__link {
@@ -14498,8 +14501,8 @@ img {
     align-items: center;
     gap: 0.25rem;
     margin-top: 0.55rem;
-    font-size: 0.78rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 700;
     color: var(--accent-purple);
     transition: gap 180ms ease;
   }
