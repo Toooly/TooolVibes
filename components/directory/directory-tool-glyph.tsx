@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { getToolBadgeLabel, type DirectoryTool } from "@/lib/data/tooolvibes-directory";
 
 type DirectoryToolGlyphProps = {
@@ -22,6 +25,8 @@ export function DirectoryToolGlyph({
   size = "md",
   className = "",
 }: DirectoryToolGlyphProps) {
+  const [error, setError] = useState(false);
+
   return (
     <span
       aria-hidden="true"
@@ -30,15 +35,18 @@ export function DirectoryToolGlyph({
         background: `linear-gradient(135deg, ${tool.accentFrom}, ${tool.accentTo})`,
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={getToolLogoUrl(tool)}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        className="tool-glyph-logo"
-      />
-      <span className="tool-glyph-initials">{getToolBadgeLabel(tool.name)}</span>
+      {!error && (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={getToolLogoUrl(tool)}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="tool-glyph-logo"
+          onError={() => setError(true)}
+        />
+      )}
+      <span className={error ? "block" : "hidden"}>{getToolBadgeLabel(tool.name)}</span>
     </span>
   );
 }

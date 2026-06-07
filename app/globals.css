@@ -11966,10 +11966,52 @@ img {
     line-height: 1.55;
   }
 
+  .desktop-vibe-archive-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    border-radius: 2rem;
+    border: 1px dashed rgba(106, 60, 255, 0.18);
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.9), transparent 40%),
+      linear-gradient(180deg, rgba(244, 239, 255, 0.72), rgba(255, 255, 255, 0.62));
+  }
+
+  .desktop-vibe-archive-empty h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--foreground);
+    letter-spacing: -0.02em;
+  }
+
+  .desktop-vibe-archive-empty p {
+    font-size: 0.92rem;
+    color: var(--muted-strong);
+    max-width: 28rem;
+  }
+
+  .desktop-vibe-archive-load {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+
   .desktop-vibe-archive-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .desktop-vibe-focus-card,
+    .desktop-vibe-tool-card {
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
   }
 
   .desktop-vibe-tool-card {
@@ -12823,6 +12865,8 @@ img {
   }
 
   .desktop-vibe-radar-console .product-hunt-rankings--wide .dynamic-card {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     border-color: rgba(15, 118, 110, 0.13);
     background:
       linear-gradient(118deg, rgba(15, 118, 110, 0.075) 0 1px, transparent 1px 45%),
@@ -17245,5 +17289,313 @@ img {
 
   .mobile-collections__footer-link:active {
     transform: scale(0.97);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Desktop Compare — Champion Card + Diff Matrix
+     ═══════════════════════════════════════════════════════════════ */
+
+  .desktop-compare-champion {
+    position: relative;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(106, 60, 255, 0.14);
+    background:
+      radial-gradient(circle at 30% 0%, color-mix(in srgb, var(--champ-a) 14%, transparent) 0%, transparent 55%),
+      radial-gradient(circle at 80% 100%, color-mix(in srgb, var(--champ-b) 10%, transparent) 0%, transparent 50%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 239, 255, 0.86));
+    box-shadow:
+      0 28px 78px rgba(32, 24, 88, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .desktop-compare-champion__glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 0%, var(--champ-a) 0%, transparent 55%),
+      radial-gradient(circle at 80% 100%, var(--champ-b) 0%, transparent 50%);
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  .desktop-compare-champion__inner {
+    position: relative;
+    padding: 1.5rem;
+  }
+
+  .desktop-compare-champion__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #f3bf4c, #ff8a00);
+    color: #1a0b00;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .desktop-compare-champion__name {
+    margin-top: 0.6rem;
+    font-size: 1.72rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--foreground);
+    letter-spacing: -0.02em;
+  }
+
+  .desktop-compare-champion__category {
+    margin-top: 0.25rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-strong);
+  }
+
+  .desktop-compare-champion__tldr {
+    margin-top: 0.5rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--muted-strong);
+    max-width: 42rem;
+  }
+
+  .desktop-compare-champion__score-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .desktop-compare-champion__score {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      var(--champ-a) 0deg,
+      var(--champ-b) calc(var(--champ-score, 180deg)),
+      rgba(106, 60, 255, 0.1) calc(var(--champ-score, 180deg))
+    );
+    position: relative;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  .desktop-compare-champion__score::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 239, 255, 0.92));
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  .desktop-compare-champion__score span {
+    position: relative;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--foreground);
+    line-height: 1;
+    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+  }
+
+  .desktop-compare-champion__score small {
+    position: relative;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: -0.2rem;
+  }
+
+  .desktop-compare-champion__info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 999px;
+    background: rgba(106, 60, 255, 0.08);
+    color: var(--accent-strong);
+    border: 1px solid rgba(106, 60, 255, 0.14);
+    transition: all 180ms ease;
+    cursor: pointer;
+  }
+
+  .desktop-compare-champion__info:hover {
+    background: rgba(106, 60, 255, 0.14);
+    transform: scale(1.05);
+  }
+
+  .desktop-compare-champion__tooltip {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 10;
+    width: 15rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(106, 60, 255, 0.14);
+    box-shadow: 0 16px 48px rgba(32, 24, 88, 0.12);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--foreground);
+    backdrop-filter: blur(12px);
+  }
+
+  .desktop-compare-champion__metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+    max-width: 24rem;
+  }
+
+  .desktop-compare-champion__metrics div {
+    text-align: center;
+    padding: 0.6rem 0.5rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.62);
+    border: 1px solid rgba(106, 60, 255, 0.08);
+  }
+
+  .desktop-compare-champion__metrics span {
+    display: block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .desktop-compare-champion__metrics strong {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--foreground);
+    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+  }
+
+  .desktop-compare-champion__actions {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+  }
+
+  /* Desktop Diff Matrix */
+  .desktop-compare-matrix {
+    border-radius: 28px;
+    border: 1px solid rgba(106, 60, 255, 0.1);
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.9), transparent 28%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(246, 243, 255, 0.7));
+    padding: 1.25rem;
+    box-shadow:
+      0 20px 60px rgba(32, 24, 88, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .desktop-compare-matrix__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent-strong);
+    margin-bottom: 1rem;
+  }
+
+  .desktop-compare-matrix__grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .desktop-compare-matrix__row {
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(106, 60, 255, 0.08);
+    overflow: hidden;
+  }
+
+  .desktop-compare-matrix__axis {
+    padding: 0.65rem 1rem;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-strong);
+    border-bottom: 1px solid rgba(106, 60, 255, 0.06);
+  }
+
+  .desktop-compare-matrix__cells {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.65rem 1rem;
+  }
+
+  .desktop-compare-matrix__cell {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 0.55rem 0.75rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(106, 60, 255, 0.07);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .desktop-compare-matrix__badge {
+    display: inline-flex;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: linear-gradient(135deg, var(--champ-a), var(--champ-b));
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .desktop-compare-matrix__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .desktop-compare-matrix__bar span {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--champ-a), var(--champ-b));
+    min-width: 0;
+  }
+
+  .desktop-compare-matrix__bar strong {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--foreground);
+    white-space: nowrap;
+    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
   }
 }

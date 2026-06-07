@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type * as THREE from "three";
 
 export function DesktopRadarCanvas() {
@@ -186,7 +186,9 @@ export function DesktopRadarCanvas() {
       cleanup.push(() => ro.disconnect());
 
       let time = 0;
+      let paused = false;
       const render = () => {
+        if (paused) return;
         raf = window.requestAnimationFrame(render);
         if (disposed) return;
         time += 0.016;
@@ -224,6 +226,19 @@ export function DesktopRadarCanvas() {
       };
       raf = window.requestAnimationFrame(render);
 
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          const wasPaused = paused;
+          paused = !entry.isIntersecting;
+          if (wasPaused && !paused) {
+            raf = window.requestAnimationFrame(render);
+          }
+        },
+        { threshold: 0 },
+      );
+      observer.observe(canvas);
+      cleanup.push(() => observer.disconnect());
+
       cleanup.push(() => {
         window.cancelAnimationFrame(raf);
         disposables.forEach((d) => d.dispose());
@@ -237,5 +252,23 @@ export function DesktopRadarCanvas() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="desktop-stage-canvas" />;
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <>
+      {loading && (
+        <div className="desktop-stage-canvas desktop-stage-canvas--loading" aria-hidden="true">
+          <span className="desktop-stage-skeleton" />
+        </div>
+      )}
+      <canvas ref={canvasRef} className="desktop-stage-canvas" />
+    </>
+  );
 }

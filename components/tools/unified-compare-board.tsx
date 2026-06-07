@@ -1,8 +1,8 @@
 "use client";
 
-import { type CSSProperties, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Columns3, Gauge, PieChart, Sparkles, X } from "lucide-react";
+import { ArrowRight, CheckCircle2, Columns3, Gauge, Info, PieChart, Scale, Sparkles, Swords, Trophy, X, Zap } from "lucide-react";
 
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import { PremiumBadge, PremiumButton, PremiumLink, PremiumPanel } from "@/components/ui/premium";
@@ -65,6 +65,189 @@ function getLeadTool(tools: DirectoryTool[]) {
 
     return levelRank[left.level] - levelRank[right.level];
   })[0] ?? null;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Desktop Champion + DiffMatrix
+   ═══════════════════════════════════════════════════════════════ */
+
+function DesktopChampionCard({
+  tool,
+  score,
+  onRemove,
+}: {
+  tool: DirectoryTool;
+  score: number;
+  onRemove: () => void;
+}) {
+  const [showInfo, setShowInfo] = useState(false);
+  const scoreWrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showInfo) return;
+    function handleClick(event: MouseEvent) {
+      if (scoreWrapRef.current && !scoreWrapRef.current.contains(event.target as Node)) {
+        setShowInfo(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showInfo]);
+
+  return (
+    <article
+      className="desktop-compare-champion"
+      style={
+        {
+          "--champ-a": tool.accentFrom,
+          "--champ-b": tool.accentTo,
+          "--champ-score": `${score * 3.6}deg`,
+        } as CSSProperties
+      }
+    >
+      <div className="desktop-compare-champion__glow" />
+      <div className="desktop-compare-champion__inner">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="desktop-compare-champion__badge">
+                <Trophy className="size-3.5" />
+                Candidato #1
+              </span>
+              <PremiumBadge tone={levelTone[tool.level]}>{tool.levelLabel}</PremiumBadge>
+            </div>
+            <h3 className="desktop-compare-champion__name">{tool.name}</h3>
+            <p className="desktop-compare-champion__category">{tool.categoryLabel}</p>
+            <p className="desktop-compare-champion__tldr">{tool.tldr}</p>
+          </div>
+          <div ref={scoreWrapRef} className="desktop-compare-champion__score-wrap">
+            <div className="desktop-compare-champion__score">
+              <span>{score}</span>
+              <small>/100</small>
+            </div>
+            <button
+              type="button"
+              aria-label="Come è calcolato il punteggio"
+              onClick={() => setShowInfo((v) => !v)}
+              className="desktop-compare-champion__info"
+            >
+              <Info className="size-3.5" />
+            </button>
+            {showInfo && (
+              <div className="desktop-compare-champion__tooltip">
+                Il punteggio è calcolato in base al livello del tool, alla visibilità in evidenza e al numero di punti di forza.
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="desktop-compare-champion__metrics">
+          <div>
+            <span>Fit</span>
+            <strong>{tool.useCases.length}</strong>
+          </div>
+          <div>
+            <span>Tag</span>
+            <strong>{tool.highlights.length}</strong>
+          </div>
+          <div>
+            <span>Tempo</span>
+            <strong>{tool.readingTime}</strong>
+          </div>
+        </div>
+
+        <div className="desktop-compare-champion__actions">
+          <PremiumLink href={`/toools/${tool.slug}`} tone="secondary" size="sm">
+            Scheda
+          </PremiumLink>
+          <button
+            type="button"
+            onClick={onRemove}
+            className="premium-button premium-button-subtle min-h-10 rounded-full px-4 text-sm font-semibold"
+          >
+            <X className="size-4" />
+            Rimuovi
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function DesktopDiffMatrix({
+  tools,
+  scores,
+}: {
+  tools: DirectoryTool[];
+  scores: Map<string, number>;
+}) {
+  if (tools.length < 2) return null;
+  const maxScore = Math.max(...tools.map((t) => scores.get(t.slug) ?? 0), 1);
+
+  const rows = [
+    {
+      label: "Categoria",
+      render: (tool: DirectoryTool) => (
+        <span className="desktop-compare-matrix__badge">{tool.categoryLabel}</span>
+      ),
+    },
+    {
+      label: "Punteggio",
+      render: (tool: DirectoryTool) => {
+        const s = scores.get(tool.slug) ?? 0;
+        return (
+          <div className="desktop-compare-matrix__bar">
+            <span style={{ width: `${(s / maxScore) * 100}%` }} />
+            <strong>{s}</strong>
+          </div>
+        );
+      },
+    },
+    {
+      label: "Fit",
+      render: (tool: DirectoryTool) => <span>{tool.useCases.length || "—"}</span>,
+    },
+    {
+      label: "Highlights",
+      render: (tool: DirectoryTool) => <span>{tool.highlights.length}</span>,
+    },
+    {
+      label: "Tempo",
+      render: (tool: DirectoryTool) => <span>{tool.readingTime}</span>,
+    },
+  ];
+
+  return (
+    <section className="desktop-compare-matrix" aria-label="Confronto caratteristiche">
+      <div className="desktop-compare-matrix__header">
+        <Scale className="size-4" />
+        <span>Confronto caratteristiche</span>
+      </div>
+      <div className="desktop-compare-matrix__grid">
+        {rows.map((row) => (
+          <div key={row.label} className="desktop-compare-matrix__row">
+            <div className="desktop-compare-matrix__axis">{row.label}</div>
+            <div className="desktop-compare-matrix__cells">
+              {tools.map((tool) => (
+                <div
+                  key={tool.slug}
+                  className="desktop-compare-matrix__cell"
+                  style={
+                    {
+                      "--champ-a": tool.accentFrom,
+                      "--champ-b": tool.accentTo,
+                    } as CSSProperties
+                  }
+                >
+                  {row.render(tool)}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function DirectoryCompareMobileDeck({
@@ -342,7 +525,26 @@ function DirectoryCompareCard({
 function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
   const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
   const clearCompare = useToolWorkspaceStore((state) => state.clearCompare);
-  const leadTool = getLeadTool(tools);
+
+  const scores = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const tool of tools) {
+      map.set(tool.slug, getDirectoryToolScore(tool));
+    }
+    return map;
+  }, [tools]);
+
+  const sortedTools = useMemo(() => {
+    return [...tools].sort((a, b) => {
+      const scoreA = scores.get(a.slug) ?? 0;
+      const scoreB = scores.get(b.slug) ?? 0;
+      return scoreB - scoreA;
+    });
+  }, [tools, scores]);
+
+  const leadTool = sortedTools[0] ?? null;
+  const leadScore = leadTool ? (scores.get(leadTool.slug) ?? 0) : 0;
+  const restTools = sortedTools.slice(1);
 
   if (tools.length === 0) {
     return (
@@ -403,75 +605,25 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         </PremiumPanel>
       ) : null}
 
-      <DirectoryCompareMobileMatrix tools={tools} leadTool={leadTool} />
+      <DirectoryCompareMobileMatrix tools={sortedTools} leadTool={leadTool} />
       <DirectoryCompareMobileDeck
-        tools={tools}
+        tools={sortedTools}
         leadTool={leadTool}
         onRemove={(slug) => toggleCompare(slug)}
       />
 
-      {tools.length > 1 ? (
-        <section className="compare-desktop-matrix hidden md:block">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="compare-desktop-matrix__icon" aria-hidden="true">
-                <Gauge className="size-4" />
-              </span>
-              <div>
-                <p className="editorial-label">Matrice desktop</p>
-                <p className="text-sm font-semibold text-[var(--muted-strong)]">
-                  Tabella completa, ora subito visibile prima delle card.
-                </p>
-              </div>
-            </div>
-            <span className="selection-chip">Scroll orizzontale solo su desktop</span>
-          </div>
-          <div className="compare-score-shell tool-rail overflow-x-auto rounded-[28px] border" style={{ borderColor: "var(--line)" }}>
-            <div
-              className="compare-score-grid min-w-[54rem]"
-              style={{
-                gridTemplateColumns: `minmax(10rem, 0.8fr) repeat(${tools.length}, minmax(14.5rem, 1fr))`,
-              }}
-            >
-              <div className="compare-score-head compare-score-head-intro">
-                <p className="editorial-label">Lettura</p>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
-                  Parti dalle righe evidenziate: TL;DR, use case e review.
-                </p>
-              </div>
-              {tools.map((tool) => (
-                <div key={`head-${tool.slug}`} className="compare-score-head">
-                  <p className="editorial-label">{tool.category}</p>
-                  <p className="text-display-card mt-2 text-[1.12rem] text-[var(--foreground)]">
-                    {tool.name}
-                  </p>
-                </div>
-              ))}
-
-              {compareRows.map((row) => (
-                <div key={row.label} className="contents">
-                  <div className="compare-score-axis">
-                    <p className="font-semibold text-[var(--foreground)]">{row.label}</p>
-                  </div>
-                  {tools.map((tool) => (
-                    <div
-                      key={`${row.label}-${tool.slug}`}
-                      className={`compare-score-cell ${row.label === "TL;DR" || row.label === "Use case" ? "is-leader" : ""}`}
-                    >
-                      <p className="text-sm leading-6 text-[var(--muted-strong)]">
-                        {row.value(tool)}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+      {leadTool && tools.length >= 2 ? (
+        <DesktopChampionCard
+          tool={leadTool}
+          score={leadScore}
+          onRemove={() => toggleCompare(leadTool.slug)}
+        />
       ) : null}
 
+      <DesktopDiffMatrix tools={sortedTools} scores={scores} />
+
       <div className="hidden gap-4 md:grid lg:grid-cols-2 xl:grid-cols-3">
-        {tools.map((tool) => (
+        {sortedTools.map((tool) => (
           <DirectoryCompareCard
             key={tool.slug}
             tool={tool}

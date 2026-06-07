@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, type CSSProperties } from "react";
+import { useState, useMemo, useEffect, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowUp,
@@ -82,7 +82,7 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
   );
 
   // Sync if baseTools changes (new save/unsave)
-  useMemo(() => {
+  useEffect(() => {
     const newEvaluate = baseTools.filter((t) => !["pinned", "top"].includes(t.stage));
     const newTop = baseTools.filter((t) => ["pinned", "top"].includes(t.stage));
     // Only update if lengths differ significantly to avoid overriding user reorder

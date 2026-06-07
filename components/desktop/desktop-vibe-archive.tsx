@@ -2,6 +2,7 @@
 
 import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Bookmark,
   Check,
@@ -57,10 +58,18 @@ export function DesktopVibeArchive({
   initialTag = "",
   initialGroup = "all",
 }: DesktopVibeArchiveProps) {
-  const [query, setQuery] = useState(initialQuery);
-  const [activeGroup, setActiveGroup] = useState<DirectoryFilterGroup>(initialGroup);
-  const [activeLevel, setActiveLevel] = useState<DirectoryToolLevel | "all">("all");
-  const [activeTag, setActiveTag] = useState(initialTag);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [query, setQuery] = useState(searchParams.get("q") ?? initialQuery);
+  const [activeGroup, setActiveGroup] = useState<DirectoryFilterGroup>(
+    (searchParams.get("group") as DirectoryFilterGroup) ?? initialGroup,
+  );
+  const [activeLevel, setActiveLevel] = useState<DirectoryToolLevel | "all">(
+    (searchParams.get("level") as DirectoryToolLevel | "all") ?? "all",
+  );
+  const [activeTag, setActiveTag] = useState(searchParams.get("tag") ?? initialTag);
+  const [displayCount, setDisplayCount] = useState(18);
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const stackSlugs = useToolWorkspaceStore((state) => state.stackSlugs);
@@ -79,6 +88,22 @@ export function DesktopVibeArchive({
   useEffect(() => {
     setActiveTag(initialTag);
   }, [initialTag]);
+
+  useEffect(() => {
+    setDisplayCount(18);
+  }, [activeGroup, activeLevel, activeTag, query]);
+
+  // Sync filters to URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (query.trim()) params.set("q", query.trim());
+    if (activeGroup !== "all") params.set("group", activeGroup);
+    if (activeLevel !== "all") params.set("level", activeLevel);
+    if (activeTag) params.set("tag", activeTag);
+    const url = params.toString() ? `/archivio?${params.toString()}` : "/archivio";
+    router.replace(url, { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, activeGroup, activeLevel, activeTag]);
 
   const visibleTools = useMemo(() => {
     return tools
@@ -174,7 +199,7 @@ export function DesktopVibeArchive({
               Categorie
             </p>
             <div>
-              {directoryFilterGroups.slice(0, 9).map((group) => (
+              {directoryFilterGroups.map((group) => (
                 <button
                   key={group.key}
                   type="button"
@@ -272,8 +297,29 @@ export function DesktopVibeArchive({
             ))}
           </div>
 
-          <div className="desktop-vibe-archive-grid">
-            {visibleTools.slice(0, 18).map((tool, index) => {
+          {visibleTools.length === 0 ? (
+            <div className="desktop-vibe-archive-empty">
+              <Search className="size-8 text-[var(--accent-strong)]" aria-hidden="true" />
+              <h3>Nessun tool trovato</h3>
+              <p>Prova a modificare i filtri o la ricerca.</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery("");
+                  setActiveGroup("all");
+                  setActiveLevel("all");
+                  setActiveTag("");
+                  setDisplayCount(18);
+                }}
+                className="premium-button premium-button-secondary min-h-10 rounded-full px-5 text-sm font-semibold"
+              >
+                Resetta filtri
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="desktop-vibe-archive-grid">
+                {visibleTools.slice(0, displayCount).map((tool, index) => {
               const isSaved = savedSlugs.includes(tool.slug);
               const isCompared = compareSlugs.includes(tool.slug);
               const isStacked = stackSlugs.includes(tool.slug);
@@ -327,7 +373,21 @@ export function DesktopVibeArchive({
                 </article>
               );
             })}
-          </div>
+              </div>
+
+              {visibleTools.length > displayCount && (
+                <div className="desktop-vibe-archive-load">
+                  <button
+                    type="button"
+                    onClick={() => setDisplayCount((c) => c + 18)}
+                    className="premium-button premium-button-secondary min-h-11 rounded-full px-6 text-sm font-semibold"
+                  >
+                    Carica altri ({visibleTools.length - displayCount} rimasti)
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </section>
     </div>
