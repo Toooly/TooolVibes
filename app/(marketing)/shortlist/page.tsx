@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { SurfaceIntro } from "@/components/sections/surface-intro";
 import { ButtonLink } from "@/components/ui/button";
 import { ShortlistBoard } from "@/components/tools/shortlist-board";
+import { MobileShortlistBoard } from '@/components/tools/mobile-shortlist-board';
 import { getPublishedTools } from "@/lib/data/public-tools";
 import { PageOrbitShell } from "@/components/app/orbital-system";
 import type { OrbitalItem } from "@/components/app/orbital-system";
@@ -60,8 +61,16 @@ export default async function ShortlistPage() {
   const tools = await getPublishedTools();
 
   return (
-    <PageOrbitShell sectionId="shortlist-page" label="Shortlist" items={shortlistOrbitItems}>
-      <div className="tone-workspace page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
+    <>
+      {/* Mobile: Opzione C — Scrivania Kanban */}
+      <div className="md:hidden">
+        <MobileShortlistBoard tools={tools} />
+      </div>
+
+      {/* Desktop: Shortlist esistente */}
+      <div className="hidden md:block">
+        <PageOrbitShell sectionId="shortlist-page" label="Shortlist" items={shortlistOrbitItems}>
+          <div className="tone-workspace page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
         <SurfaceIntro
           eyebrow="Workspace"
           title="La memoria viva dei pochi tool che restano davvero in gioco."
@@ -89,6 +98,8 @@ export default async function ShortlistPage() {
           <ShortlistBoard tools={tools} />
         </section>
       </div>
-    </PageOrbitShell>
+        </PageOrbitShell>
+      </div>
+    </>
   );
 }

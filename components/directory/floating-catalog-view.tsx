@@ -8,6 +8,7 @@ import { ArrowLeft, Search, X, LayoutGrid, Sparkles, Code, Boxes, Layers, Databa
 import Fuse from "fuse.js";
 import type { OrbitalItem, OrbitalShapeType } from "@/components/app/orbital-system";
 import { DirectoryBrowser } from "./directory-browser";
+import { MobileCatalogView } from "./mobile-catalog-view";
 import type { DirectoryTool, DirectoryFilterGroup } from "@/lib/data/tooolvibes-directory";
 
 // ── Category visual metadata ──
@@ -385,7 +386,21 @@ export function FloatingCatalogView({
   }
 
   return (
-    <div className="relative min-h-screen pb-32">
+    <>
+      {/* Mobile: Opzione C — Esplorazione Full-Screen */}
+      <div className="md:hidden">
+        <MobileCatalogView
+          tools={tools}
+          filterGroups={filterGroups}
+          initialQuery={initialQuery}
+          initialGroup={initialGroup}
+          initialTag={initialTag}
+        />
+      </div>
+
+      {/* Desktop: Catalogo orbitale esistente */}
+      <div className="hidden md:block">
+        <div className="relative min-h-screen pb-32">
       {/* ═══ Floating Control Bar ═══ */}
       <div className="fixed top-20 left-1/2 z-40 w-[92%] max-w-xl -translate-x-1/2">
         <motion.div
@@ -529,6 +544,8 @@ export function FloatingCatalogView({
             : "Clicca un tool per scoprire i dettagli"}
         </p>
       </div>
-    </div>
+        </div>
+      </div>
+    </>
   );
 }

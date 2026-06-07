@@ -1,0 +1,159 @@
+"use client";
+
+import type { CSSProperties } from "react";
+import Link from "next/link";
+import { ArrowRight, Boxes, Lock, Sparkles, Star } from "lucide-react";
+import type { CuratedCollection } from "@/lib/types/collection";
+
+function hashColor(str: string): string {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h << 5) - h);
+  const hue = Math.abs(h % 360);
+  return `hsl(${hue} 75% 60%)`;
+}
+
+function accessBadge(access: string) {
+  switch (access) {
+    case "premium":
+      return { icon: Lock, label: "Member", tone: "#f3bf4c" };
+    case "preview":
+      return { icon: Sparkles, label: "Preview", tone: "#39d2f6" };
+    default:
+      return { icon: Star, label: "Free", tone: "#6a3cff" };
+  }
+}
+
+function CollectionItem({ collection }: { collection: CuratedCollection }) {
+  const c = hashColor(collection.slug);
+  const badge = accessBadge(collection.access);
+  const BadgeIcon = badge.icon;
+
+  return (
+    <Link
+      href={`/collections/${collection.slug}`}
+      className="mobile-collections__item"
+      style={{ "--col-a": c, "--col-b": badge.tone } as CSSProperties}
+    >
+      <span className="mobile-collections__item-glow" />
+      <div className="mobile-collections__item-body">
+        <div className="flex items-center gap-2">
+          <span
+            className="mobile-collections__item-badge"
+            style={{ color: badge.tone, borderColor: `${badge.tone}40`, background: `${badge.tone}12` }}
+          >
+            <BadgeIcon className="size-3" />
+            {badge.label}
+          </span>
+          <span className="mobile-collections__item-count">
+            {collection.tool_count} tool
+          </span>
+        </div>
+        <h3 className="mobile-collections__item-title">{collection.title}</h3>
+        <p className="mobile-collections__item-desc">{collection.description}</p>
+      </div>
+      <ArrowRight className="mobile-collections__item-arrow" />
+    </Link>
+  );
+}
+
+export function MobileCollectionsView({
+  collections,
+  specialIssue,
+  leadCollection,
+}: {
+  collections: CuratedCollection[];
+  specialIssue: CuratedCollection | null;
+  leadCollection: CuratedCollection | null;
+}) {
+  const main = specialIssue ?? leadCollection ?? null;
+  const others = collections.filter(
+    (c) => c.slug !== main?.slug,
+  );
+
+  return (
+    <div className="mobile-collections">
+      <div className="mobile-collections__stars" aria-hidden="true" />
+
+      <header className="mobile-collections__header">
+        <div className="mobile-collections__badge">
+          <Boxes className="size-4" />
+          <span>Percorsi</span>
+        </div>
+        <h1>La superficie dove la selezione diventa percorso.</h1>
+        <p>
+          Entra da uno scenario, una tesi o un pubblico già ordinati. Nessun filtro da costruire: il percorso è già pronto.
+        </p>
+        <div className="mobile-collections__stats">
+          <span>{collections.length} collection</span>
+          <span>·</span>
+          <span>{specialIssue ? "1 special issue" : "Nessuna special issue"}</span>
+        </div>
+      </header>
+
+      {/* Main feature */}
+      {main && (
+        <section
+          className="mobile-collections__hero"
+          style={{ "--hero-a": hashColor(main.slug) } as CSSProperties}
+        >
+          <div className="mobile-collections__hero-glow" />
+          <div className="mobile-collections__hero-inner">
+            <div className="flex flex-wrap items-center gap-2">
+              {specialIssue ? (
+                <span className="mobile-collections__hero-tag mobile-collections__hero-tag--special">
+                  <Sparkles className="size-3" />
+                  Special Issue
+                </span>
+              ) : (
+                <span className="mobile-collections__hero-tag mobile-collections__hero-tag--featured">
+                  <Star className="size-3" />
+                  In evidenza
+                </span>
+              )}
+              <span className="mobile-collections__hero-count">
+                {main.tool_count} tool
+              </span>
+            </div>
+            <h2 className="mobile-collections__hero-title">{main.title}</h2>
+            <p className="mobile-collections__hero-desc">{main.description}</p>
+            {main.highlights.length > 0 && (
+              <div className="mobile-collections__hero-highlights">
+                {main.highlights.slice(0, 3).map((h) => (
+                  <span key={h}>{h}</span>
+                ))}
+              </div>
+            )}
+            <Link
+              href={`/collections/${main.slug}`}
+              className="mobile-collections__hero-cta"
+            >
+              {specialIssue ? "Apri special issue" : "Apri collection"}
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* Others list */}
+      {others.length > 0 && (
+        <section className="mobile-collections__list">
+          <p className="mobile-collections__list-label">
+            {specialIssue ? "Altre collection" : "Tutte le collection"}
+          </p>
+          <div className="mobile-collections__list-grid">
+            {others.map((c) => (
+              <CollectionItem key={c.slug} collection={c} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <div className="mobile-collections__footer">
+        <Link href="/archivio" className="mobile-collections__footer-link">
+          Esplora l&apos;archivio
+          <ArrowRight className="size-4" />
+        </Link>
+      </div>
+    </div>
+  );
+}

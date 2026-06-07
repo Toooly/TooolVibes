@@ -17,6 +17,9 @@ import {
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import type { OrbitalItem, OrbitalShapeType } from "@/components/app/orbital-system";
 import { useTextAvoidance } from "@/lib/hooks/use-text-avoidance";
+import { MobileHeroSolar } from "./mobile-hero-solar";
+import { MobileSpotlight } from "./mobile-spotlight";
+import { MobileMethodSteps } from "./mobile-method-steps";
 
 type VibeHomeV2Props = {
   tools: DirectoryTool[];
@@ -291,7 +294,7 @@ function HomeOrbitStage({
   );
 }
 
-export function VibeHomeV2({ tools, weeklyTool }: VibeHomeV2Props) {
+export function VibeHomeV2({ tools, weeklyTool, supportingTools }: VibeHomeV2Props) {
   const featuredTools = tools.filter((tool) => tool.featured).slice(0, 8);
   const focusTool = weeklyTool ?? featuredTools[0] ?? tools[0];
   const displayTools = [
@@ -353,68 +356,126 @@ export function VibeHomeV2({ tools, weeklyTool }: VibeHomeV2Props) {
     size: "sm" as const,
   }));
 
+  const solarRoutes = [
+    {
+      id: "solar-catalogo",
+      label: "Catalogo",
+      href: "/archivio",
+      color: "#6a3cff",
+      icon: "Compass" as const,
+    },
+    {
+      id: "solar-radar",
+      label: "Radar",
+      href: "/product-hunt",
+      color: "#39d2f6",
+      icon: "Radar" as const,
+      badge: "LIVE",
+    },
+    {
+      id: "solar-shortlist",
+      label: "Shortlist",
+      href: "/shortlist",
+      color: "#f3bf4c",
+      icon: "Bookmark" as const,
+    },
+    {
+      id: "solar-confronta",
+      label: "Confronta",
+      href: "/compare",
+      color: "#10b981",
+      icon: "GitCompare" as const,
+    },
+    {
+      id: "solar-top-tool",
+      label: "Top Tool",
+      href: focusTool ? `/toools/${focusTool.slug}` : "/archivio",
+      color: "#ec4899",
+      icon: "Sparkles" as const,
+    },
+  ];
+
+  const methodSteps = decisionSteps.map((ds) => ({
+    icon: ds.icon,
+    label: ds.label,
+    title: ds.title,
+    description: ds.description,
+    href: ds.href,
+    color: ds.color,
+  }));
+
   return (
     <div className="relative">
-      <HomeOrbitStage
-        sectionId="home-hero"
-        label="Sistema TooolVibes"
-        title="Scegli tool AI validi senza attraversare il rumore."
-        description="TooolVibes seleziona e confronta tool AI e SaaS utili. Nessuna vetrina infinita: solo nodi curati da esplorare, salvare e provare."
-        items={heroItems}
-        isHero
-        primaryAction={{ label: "Catalogo", href: "/archivio" }}
-        secondaryAction={{ label: "Radar", href: "/product-hunt" }}
-      />
+      {/* Mobile: Opzione C — Sistema Solare Editoriale */}
+      <div className="md:hidden">
+        <MobileHeroSolar routes={solarRoutes} />
+        {focusTool && <MobileSpotlight tool={focusTool} supportingTools={supportingTools} />}
+        <MobileMethodSteps steps={methodSteps} />
+      </div>
 
-      <HomeOrbitStage
-        sectionId="home-routes"
-        label="Percorsi principali"
-        title="Scegli la tua prossima rotta"
-        description="Catalogo, Radar e Collection: tre orbite per scoprire, monitorare e approfondire i tool più utili."
-        items={routeItems}
-        align="right"
-      />
-
-      <HomeOrbitStage
-        sectionId="home-decision"
-        label="Metodo"
-        title="Discover, Compare, Shortlist"
-        description="Un percorso chiaro: scopri, confronta, decidi. Senza perdere tempo tra decine di schede uguali."
-        items={decisionItems}
-      />
-
-      {focusTool && (
+      {/* Desktop: 6 stage orbitali esistenti */}
+      <div className="hidden md:block">
         <HomeOrbitStage
-          sectionId="home-weekly"
-          label="Tool della settimana"
-          title={focusTool.name}
-          description={focusTool.whyItMatters}
-          items={weeklyItems}
-          align="right"
-          primaryAction={{ label: "Apri tool", href: `/toools/${focusTool.slug}` }}
+          sectionId="home-hero"
+          label="Sistema TooolVibes"
+          title="Scegli tool AI validi senza attraversare il rumore."
+          description="TooolVibes seleziona e confronta tool AI e SaaS utili. Nessuna vetrina infinita: solo nodi curati da esplorare, salvare e provare."
+          items={heroItems}
+          isHero
+          primaryAction={{ label: "Catalogo", href: "/archivio" }}
+          secondaryAction={{ label: "Radar", href: "/product-hunt" }}
         />
-      )}
 
-      <HomeOrbitStage
-        sectionId="home-catalog"
-        label="Catalogo vivo"
-        title="Alternative reali, in orbita"
-        description="Esplora nodi reali: ogni pianeta e un tool selezionato, pronto da aprire o confrontare."
-        items={catalogItems}
-        primaryAction={{ label: "Vedi tutti", href: "/archivio" }}
-        secondaryAction={{ label: "Confronta", href: "/compare" }}
-      />
+        <HomeOrbitStage
+          sectionId="home-routes"
+          label="Percorsi principali"
+          title="Scegli la tua prossima rotta"
+          description="Catalogo, Radar e Collection: tre orbite per scoprire, monitorare e approfondire i tool più utili."
+          items={routeItems}
+          align="right"
+        />
 
-      <HomeOrbitStage
-        sectionId="home-final"
-        label="Shortlist"
-        title="Costruisci la tua shortlist operativa"
-        description="Salva i tool che contano. Costruisci la tua shortlist operativa in pochi click."
-        items={decisionItems.slice(1)}
-        align="right"
-        primaryAction={{ label: "Esplora ora", href: "/archivio" }}
-        secondaryAction={{ label: "Wishlist", href: "/wishlist" }}
-      />
+        <HomeOrbitStage
+          sectionId="home-decision"
+          label="Metodo"
+          title="Discover, Compare, Shortlist"
+          description="Un percorso chiaro: scopri, confronta, decidi. Senza perdere tempo tra decine di schede uguali."
+          items={decisionItems}
+        />
+
+        {focusTool && (
+          <HomeOrbitStage
+            sectionId="home-weekly"
+            label="Tool della settimana"
+            title={focusTool.name}
+            description={focusTool.whyItMatters}
+            items={weeklyItems}
+            align="right"
+            primaryAction={{ label: "Apri tool", href: `/toools/${focusTool.slug}` }}
+          />
+        )}
+
+        <HomeOrbitStage
+          sectionId="home-catalog"
+          label="Catalogo vivo"
+          title="Alternative reali, in orbita"
+          description="Esplora nodi reali: ogni pianeta e un tool selezionato, pronto da aprire o confrontare."
+          items={catalogItems}
+          primaryAction={{ label: "Vedi tutti", href: "/archivio" }}
+          secondaryAction={{ label: "Confronta", href: "/compare" }}
+        />
+
+        <HomeOrbitStage
+          sectionId="home-final"
+          label="Shortlist"
+          title="Costruisci la tua shortlist operativa"
+          description="Salva i tool che contano. Costruisci la tua shortlist operativa in pochi click."
+          items={decisionItems.slice(1)}
+          align="right"
+          primaryAction={{ label: "Esplora ora", href: "/archivio" }}
+          secondaryAction={{ label: "Wishlist", href: "/wishlist" }}
+        />
+      </div>
     </div>
   );
 }

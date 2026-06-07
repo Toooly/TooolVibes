@@ -1,0 +1,441 @@
+"use client";
+
+import { useState, useMemo, useCallback, type CSSProperties } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  Search,
+  X,
+  ArrowLeft,
+  Sparkles,
+  Code,
+  Boxes,
+  Layers,
+  Database,
+  Palette,
+  Zap,
+  Globe,
+  FileText,
+  Cpu,
+  Layout,
+  Pen,
+  Image,
+  Video,
+  TrendingUp,
+  DollarSign,
+  Headphones,
+  Bot,
+  CreditCard,
+  Monitor,
+  Clock,
+} from "lucide-react";
+import Fuse from "fuse.js";
+import type {
+  DirectoryTool,
+  DirectoryFilterGroup,
+} from "@/lib/data/tooolvibes-directory";
+
+const CATEGORY_ICON_MAP = {
+  Sparkles,
+  Code,
+  Boxes,
+  Layers,
+  Database,
+  Palette,
+  Zap,
+  Globe,
+  FileText,
+  Cpu,
+  Layout,
+  Pen,
+  Image,
+  Video,
+  TrendingUp,
+  DollarSign,
+  Headphones,
+  Bot,
+  CreditCard,
+  Monitor,
+  Clock,
+} as const;
+
+const CATEGORY_META: Record<
+  string,
+  { color: string; iconName: keyof typeof CATEGORY_ICON_MAP }
+> = {
+  all: { color: "#6a3cff", iconName: "Sparkles" },
+  "vibe-coding": { color: "#39d2f6", iconName: "Code" },
+  "ai-app-builder": { color: "#f3bf4c", iconName: "Boxes" },
+  "no-code": { color: "#a855f7", iconName: "Layers" },
+  "headless-cms": { color: "#ec4899", iconName: "Database" },
+  "ui-builder": { color: "#f97316", iconName: "Layout" },
+  "ai-writing": { color: "#8b5cf6", iconName: "Pen" },
+  "ai-image": { color: "#06b6d4", iconName: "Image" },
+  "ai-video": { color: "#e11d48", iconName: "Video" },
+  marketing: { color: "#22c55e", iconName: "TrendingUp" },
+  sales: { color: "#14b8a6", iconName: "DollarSign" },
+  "customer-support": { color: "#6366f1", iconName: "Headphones" },
+  automation: { color: "#f59e0b", iconName: "Bot" },
+  "ai-agents": { color: "#10b981", iconName: "Cpu" },
+  payments: { color: "#84cc16", iconName: "CreditCard" },
+  "website-builder": { color: "#3b82f6", iconName: "Monitor" },
+  productivity: { color: "#d946ef", iconName: "Clock" },
+};
+
+function extractDomain(url: string): string | undefined {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return undefined;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Types
+   ═══════════════════════════════════════════════════════════════ */
+
+interface MobileCatalogViewProps {
+  tools: DirectoryTool[];
+  filterGroups: { key: DirectoryFilterGroup; label: string }[];
+  initialQuery?: string;
+  initialGroup?: DirectoryFilterGroup;
+  initialTag?: string;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MobileCatalogView — root component
+   ═══════════════════════════════════════════════════════════════ */
+
+export function MobileCatalogView({
+  tools,
+  filterGroups,
+  initialQuery = "",
+  initialGroup = "all",
+  initialTag = "",
+}: MobileCatalogViewProps) {
+  const router = useRouter();
+
+  const [view, setView] = useState<"categories" | "tools">(
+    initialGroup !== "all" || initialQuery ? "tools" : "categories"
+  );
+  const [activeGroup, setActiveGroup] = useState<DirectoryFilterGroup | null>(
+    initialGroup !== "all" ? initialGroup : null
+  );
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+
+  const fuse = useMemo(
+    () =>
+      new Fuse(tools, {
+        keys: [
+          "name",
+          "categoryLabel",
+          "tags",
+          "shortDescription",
+          "longDescription",
+        ],
+        threshold: 0.35,
+      }),
+    [tools]
+  );
+
+  const filteredTools = useMemo(() => {
+    let result = [...tools];
+    if (activeGroup && activeGroup !== "all") {
+      result = result.filter((t) => t.segments.includes(activeGroup));
+    }
+    if (initialTag) {
+      result = result.filter((t) => t.tags.includes(initialTag));
+    }
+    if (searchQuery.trim()) {
+      result = fuse.search(searchQuery.trim()).map((r) => r.item);
+    }
+    return result;
+  }, [tools, activeGroup, initialTag, searchQuery, fuse]);
+
+  const activeGroupLabel = useMemo(
+    () => filterGroups.find((g) => g.key === activeGroup)?.label ?? "Tutti i tool",
+    [filterGroups, activeGroup]
+  );
+
+  const categories = useMemo(() => {
+    return filterGroups.map((cat) => {
+      const count =
+        cat.key === "all"
+          ? tools.length
+          : tools.filter((t) => t.segments.includes(cat.key)).length;
+      const meta = CATEGORY_META[cat.key] ?? { color: "#6a3cff", iconName: "Sparkles" };
+      return { ...cat, count, ...meta };
+    });
+  }, [filterGroups, tools]);
+
+  const handleCategorySelect = useCallback(
+    (groupKey: string) => {
+      if (groupKey === "all") {
+        setActiveGroup(null);
+      } else {
+        setActiveGroup(groupKey as DirectoryFilterGroup);
+      }
+      setView("tools");
+      const url = groupKey === "all" ? "/archivio" : `/archivio?group=${groupKey}`;
+      router.push(url, { scroll: false });
+    },
+    [router]
+  );
+
+  const handleBack = useCallback(() => {
+    setView("categories");
+    setActiveGroup(null);
+    setSearchQuery("");
+    router.push("/archivio", { scroll: false });
+  }, [router]);
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchQuery(value);
+      if (value.trim() && view === "categories") {
+        setView("tools");
+      }
+    },
+    [view]
+  );
+
+  return (
+    <div className="mobile-catalog-view relative min-h-screen pb-24">
+      {/* Header sticky */}
+      <div className="mobile-catalog-view__header">
+        <AnimatePresence mode="popLayout">
+          {view === "tools" && (
+            <motion.button
+              key="back"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.2 }}
+              onClick={handleBack}
+              className="mobile-catalog-view__back"
+              aria-label="Torna alle categorie"
+            >
+              <ArrowLeft size={18} />
+              <span>Categorie</span>
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        <div className="mobile-catalog-view__search">
+          <Search size={16} className="shrink-0 text-[#6a3cff]" />
+          <input
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder={
+              view === "categories"
+                ? "Cerca categorie o tool..."
+                : "Cerca nel catalogo..."
+            }
+            aria-label="Cerca nel catalogo"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => handleSearchChange("")}
+              className="shrink-0 rounded-full p-1 transition-colors hover:bg-[rgba(106,60,255,0.08)]"
+              aria-label="Cancella ricerca"
+            >
+              <X size={14} className="text-[#4f4970]" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <AnimatePresence mode="wait">
+        {view === "categories" ? (
+          <motion.div
+            key="categories"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3 }}
+          >
+            <MobileCategoryMap
+              categories={categories}
+              onSelect={handleCategorySelect}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="tools"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3 }}
+          >
+            <MobileToolGrid
+              tools={filteredTools}
+              groupLabel={activeGroupLabel}
+              searchQuery={searchQuery}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Empty state */}
+      <AnimatePresence>
+        {view === "tools" && filteredTools.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="mobile-catalog-view__empty"
+          >
+            <div className="mobile-catalog-view__empty-icon">
+              <Search size={24} className="text-[#6a3cff]" />
+            </div>
+            <h3>Nessun tool trovato</h3>
+            <p>Prova a cambiare i filtri o la ricerca per trovare quello che cerchi.</p>
+            <button onClick={handleBack} className="mobile-catalog-view__empty-cta">
+              Torna alle categorie
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MobileCategoryMap
+   ═══════════════════════════════════════════════════════════════ */
+
+type MobileCategoryMapProps = {
+  categories: {
+    key: DirectoryFilterGroup;
+    label: string;
+    count: number;
+    color: string;
+    iconName: keyof typeof CATEGORY_ICON_MAP;
+  }[];
+  onSelect: (key: string) => void;
+};
+
+function MobileCategoryMap({ categories, onSelect }: MobileCategoryMapProps) {
+  return (
+    <section className="mobile-category-map" aria-label="Esplora per categoria">
+      <div className="mobile-category-map__intro">
+        <h1>Esplora</h1>
+        <p>Scegli un mondo per scoprire i tool che lo abitano.</p>
+      </div>
+
+      <div className="mobile-category-map__grid">
+        {categories.map((cat, index) => {
+          const Icon = CATEGORY_ICON_MAP[cat.iconName];
+          return (
+            <motion.button
+              key={cat.key}
+              type="button"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.35, delay: index * 0.04 }}
+              onClick={() => onSelect(cat.key)}
+              className="mobile-category-map__blob"
+              aria-label={`${cat.label}. ${cat.count} tool`}
+              style={{ "--cat-color": cat.color } as CSSProperties}
+            >
+              <span className="mobile-category-map__halo" aria-hidden="true" />
+              <span className="mobile-category-map__body">
+                <Icon size={28} aria-hidden="true" />
+              </span>
+              <span className="mobile-category-map__label">
+                <strong>{cat.label}</strong>
+                <small>{cat.count} tool</small>
+              </span>
+            </motion.button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MobileToolGrid
+   ═══════════════════════════════════════════════════════════════ */
+
+type MobileToolGridProps = {
+  tools: DirectoryTool[];
+  groupLabel: string;
+  searchQuery: string;
+};
+
+function MobileToolGrid({ tools, groupLabel, searchQuery }: MobileToolGridProps) {
+  const subtitle = searchQuery.trim()
+    ? `${tools.length} risultati`
+    : `${tools.length} tool`;
+
+  return (
+    <section className="mobile-tool-grid" aria-label={`Tool in ${groupLabel}`}>
+      <div className="mobile-tool-grid__header">
+        <h2>{groupLabel}</h2>
+        <span>{subtitle}</span>
+      </div>
+
+      <div className="mobile-tool-grid__list">
+        {tools.map((tool, index) => (
+          <MobileToolCard key={tool.slug} tool={tool} index={index} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MobileToolCard
+   ═══════════════════════════════════════════════════════════════ */
+
+type MobileToolCardProps = {
+  tool: DirectoryTool;
+  index: number;
+};
+
+function MobileToolCard({ tool, index }: MobileToolCardProps) {
+  const domain = extractDomain(tool.url);
+  const iconUrl = domain
+    ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`
+    : undefined;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, delay: index * 0.03 }}
+    >
+      <Link
+        href={`/toools/${tool.slug}`}
+        className="mobile-tool-card"
+        aria-label={`${tool.name}. ${tool.shortDescription || ""}`}
+      >
+        <div className="mobile-tool-card__visual">
+          {iconUrl ? (
+            <img
+              src={iconUrl}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="mobile-tool-card__icon"
+            />
+          ) : (
+            <span className="mobile-tool-card__fallback">
+              {tool.name.slice(0, 2).toUpperCase()}
+            </span>
+          )}
+        </div>
+        <div className="mobile-tool-card__meta">
+          <span className="mobile-tool-card__category">{tool.categoryLabel}</span>
+          <h3 className="mobile-tool-card__title">{tool.name}</h3>
+          <p className="mobile-tool-card__description">
+            {tool.shortDescription || tool.tldr || ""}
+          </p>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}

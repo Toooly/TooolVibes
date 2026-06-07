@@ -3,6 +3,7 @@ import { Activity, MessageCircle, TrendingUp } from "lucide-react";
 
 import { DesktopVibeRadar } from "@/components/desktop/desktop-vibe-radar";
 import { MobileRadarCanvas } from "@/components/radar/mobile-radar-canvas";
+import { MobileRadarView } from '@/components/radar/mobile-radar-view';
 import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
 import { PremiumLink } from "@/components/ui/premium";
 import { PageOrbitShell } from "@/components/app/orbital-system";
@@ -70,11 +71,19 @@ const radarItems: OrbitalItem[] = [
 
 export default function ProductHuntPage() {
   return (
-    <PageOrbitShell sectionId="radar-page" label="Radar" items={radarItems}>
-      <>
-        <DesktopVibeRadar />
+    <>
+      {/* Mobile: Opzione C — Sala Comandi Full-Screen */}
+      <div className="md:hidden">
+        <MobileRadarView />
+      </div>
 
-        <div className="tone-radar page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9 lg:hidden">
+      {/* Desktop: Radar orbitale esistente */}
+      <div className="hidden md:block">
+        <PageOrbitShell sectionId="radar-page" label="Radar" items={radarItems}>
+          <>
+            <DesktopVibeRadar />
+
+            <div className="tone-radar page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
           <section className="hero-shell hero-shell-radar motion-reveal px-5 py-5 sm:rounded-[38px] sm:px-7 sm:py-8">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.52fr)] lg:items-center">
               <div className="max-w-[48rem]">
@@ -128,5 +137,7 @@ export default function ProductHuntPage() {
         </div>
       </>
     </PageOrbitShell>
+  </div>
+</>
   );
 }

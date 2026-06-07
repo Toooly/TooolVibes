@@ -5,6 +5,7 @@ import { DesktopVibeCompare } from "@/components/desktop/desktop-vibe-compare";
 import { SurfaceIntro } from "@/components/sections/surface-intro";
 import { ButtonLink } from "@/components/ui/button";
 import { UnifiedCompareBoard } from "@/components/tools/unified-compare-board";
+import { MobileCompareView } from "@/components/tools/mobile-compare-view";
 import { getPublishedTools } from "@/lib/data/public-tools";
 import { directoryTools } from "@/lib/data/tooolvibes-directory";
 import { PageOrbitShell } from "@/components/app/orbital-system";
@@ -66,7 +67,13 @@ export default async function ComparePage() {
       <>
         <DesktopVibeCompare directoryTools={directoryTools} legacyTools={tools} />
 
-        <div className="tone-compare page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9 lg:hidden">
+        {/* Mobile — Opzione C */}
+        <div className="md:hidden">
+          <MobileCompareView directoryTools={directoryTools} legacyTools={tools} />
+        </div>
+
+        {/* Tablet / desktop small — esistente */}
+        <div className="tone-compare page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9 hidden md:block lg:hidden">
           <SurfaceIntro
             eyebrow="Compare"
             title="Il punto in cui i candidati smettono di somigliarsi."

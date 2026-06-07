@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { CollectionCard } from "@/components/collections/collection-card";
+import { MobileCollectionsView } from "@/components/collections/mobile-collections-view";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { ButtonLink } from "@/components/ui/button";
 import {
@@ -97,7 +98,11 @@ export default async function CollectionsPage() {
 
   return (
     <PageOrbitShell sectionId="collections-page" label="Collection" items={collectionsOrbitItems}>
-      <div className="tone-curate page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
+      <>
+        <div className="md:hidden">
+          <MobileCollectionsView collections={collections} specialIssue={specialIssue ?? null} leadCollection={leadCollection} />
+        </div>
+        <div className="tone-curate page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9 hidden md:block">
         <section className="brand-panel brand-aura panel-lift section-stage curation-stage relative overflow-hidden rounded-[36px] p-5 sm:p-6 lg:p-7">
           <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.8),transparent_74%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_82%_18%,rgba(99,50,255,0.16),transparent_34%),radial-gradient(ellipse_at_16%_25%,rgba(255,200,61,0.11),transparent_30%),radial-gradient(ellipse_at_58%_92%,rgba(68,220,255,0.1),transparent_34%)]" />
@@ -254,6 +259,7 @@ export default async function CollectionsPage() {
           </section>
         ) : null}
       </div>
+    </>
     </PageOrbitShell>
   );
 }
