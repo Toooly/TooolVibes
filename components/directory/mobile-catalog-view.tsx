@@ -32,6 +32,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Fuse from "fuse.js";
+import { CompareToggle } from "@/components/tools/compare-toggle";
+import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 import type {
   DirectoryTool,
   DirectoryFilterGroup,
@@ -474,6 +476,7 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
       transition={{ duration: 0.3, delay: Math.min(index * 0.03, 0.3) }}
+      className="relative"
     >
       <Link
         href={`/toools/${tool.slug}`}
@@ -503,6 +506,10 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
           </p>
         </div>
       </Link>
+      <div className="absolute right-2 top-2 z-10 flex items-center gap-1">
+        <CompareToggle slug={tool.slug} mode="icon" />
+        <ShortlistToggle slug={tool.slug} mode="icon" />
+      </div>
     </motion.div>
   );
 }

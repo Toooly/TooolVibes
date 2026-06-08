@@ -11,6 +11,8 @@ import {
   getRelatedDirectoryTools,
 } from "@/lib/data/tooolvibes-directory";
 import { formatItalianDate } from "@/lib/utils";
+import { CompareToggle } from "@/components/tools/compare-toggle";
+import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 import { PageOrbitShell } from "@/components/app/orbital-system";
 import type { OrbitalItem } from "@/components/app/orbital-system";
 
@@ -225,6 +227,10 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 >
                   Fonte originale
                 </a>
+                <div className="flex items-center gap-2">
+                  <CompareToggle slug={tool.slug} compact />
+                  <ShortlistToggle slug={tool.slug} compact />
+                </div>
               </div>
             </div>
 

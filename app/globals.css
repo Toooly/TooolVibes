@@ -15071,6 +15071,9 @@ img {
     font-size: 0.68rem;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.78);
+    max-width: 4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* ── Center Info ── */
@@ -15133,7 +15136,7 @@ img {
     bottom: calc(5rem + env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%);
-    z-index: 20;
+    z-index: 44;
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
@@ -15157,7 +15160,7 @@ img {
   .mobile-radar-view__sheet {
     position: fixed;
     inset: auto 0 0 0;
-    z-index: 40;
+    z-index: 55;
     display: flex;
     flex-direction: column;
     max-height: 85vh;
@@ -15240,7 +15243,7 @@ img {
   .mobile-radar-view__sheet-body {
     flex: 1;
     overflow-y: auto;
-    padding: 0.5rem 1rem 2rem;
+    padding: 0.5rem 1rem calc(2rem + env(safe-area-inset-bottom));
     -webkit-overflow-scrolling: touch;
   }
 
@@ -15622,12 +15625,12 @@ img {
   .mobile-shortlist-board__sheet {
     position: fixed;
     inset: auto 0 0 0;
-    z-index: 40;
+    z-index: 55;
     border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
     background: var(--surface-strong);
     border-top: 1px solid var(--line);
     box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.15);
-    padding: 0.5rem 1rem 1.5rem;
+    padding: 0.5rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
   }
 
   .mobile-shortlist-board__sheet-header {
@@ -16313,7 +16316,7 @@ img {
     gap: 0.5rem;
     padding: 0.75rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
     background: linear-gradient(0deg, #0f0618 60%, transparent);
-    z-index: 50;
+    z-index: 48;
   }
 
   .mobile-compare-arena__footer-btn {
@@ -17624,7 +17627,7 @@ img {
   }
 
   .mobile-catalog-view__header {
-    z-index: 60;
+    z-index: 45;
   }
 
   /* Guide scroll hint */

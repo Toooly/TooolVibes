@@ -16,6 +16,7 @@ import Link from "next/link";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { CompareToggle } from "@/components/tools/compare-toggle";
 import type {
   ShortlistStage,
 
@@ -240,14 +241,17 @@ function LibraryBook({ tool, index }: { tool: ToolWithMeta; index: number }) {
         <strong>{tool.name}</strong>
         <span>{tool.stage}</span>
       </div>
-      <button
-        type="button"
-        onClick={() => toggleSaved(tool.slug)}
-        className="mobile-library-book__remove"
-        aria-label="Rimuovi dai salvati"
-      >
-        <Trash2 size={12} />
-      </button>
+      <div className="absolute right-1.5 top-1.5 z-10 flex items-center gap-1">
+        <CompareToggle slug={tool.slug} mode="icon" />
+        <button
+          type="button"
+          onClick={() => toggleSaved(tool.slug)}
+          className="mobile-library-book__remove"
+          aria-label="Rimuovi dai salvati"
+        >
+          <Trash2 size={12} />
+        </button>
+      </div>
     </motion.div>
   );
 }

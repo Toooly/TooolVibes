@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { BrandLogo } from "./brand-logo";
 import { SoundToggleButton } from "../app/sound-toggle-button";
 import { DirectoryHeaderSearch } from "../directory/directory-header-search";
+import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import {
   Menu,
   X,
@@ -99,6 +100,11 @@ export function SiteHeaderV2() {
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  const setOverlayOpen = useMobileUIStore((s) => s.setOverlayOpen);
+  useEffect(() => {
+    setOverlayOpen(menuOpen || searchOpen);
+  }, [menuOpen, searchOpen, setOverlayOpen]);
 
   return (
     <>

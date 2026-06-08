@@ -11,6 +11,7 @@ import {
   TrendingUp,
   Zap,
 } from "lucide-react";
+import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 
 /* ═══════════════════════════════════════════════════════════════
    Types
@@ -100,6 +101,13 @@ export function MobileRadarView() {
     document.addEventListener("visibilitychange", onVis);
     return () => document.removeEventListener("visibilitychange", onVis);
   }, [fetchRange]);
+
+  /* ── Overlay state for floating layer ── */
+  const setOverlayOpen = useMobileUIStore((s) => s.setOverlayOpen);
+  useEffect(() => {
+    setOverlayOpen(showList);
+    return () => setOverlayOpen(false);
+  }, [showList, setOverlayOpen]);
 
   const currentPayload = payloads[activeRange];
   const currentItems = currentPayload?.items ?? [];
@@ -243,12 +251,12 @@ export function MobileRadarView() {
     if (!currentItems.length) return [];
     const maxVotes = Math.max(...currentItems.map((i) => i.votesCount), 1);
     const maxComments = Math.max(...currentItems.map((i) => i.commentsCount), 1);
-    return currentItems.slice(0, 8).map((item, index) => {
-      const angle = (index / Math.max(currentItems.length, 1)) * Math.PI * 2;
+    return currentItems.slice(0, 6).map((item, index) => {
+      const angle = (index / 6) * Math.PI * 2;
       // More votes = closer to center (strong signal)
-      const radiusRatio = 0.22 + 0.58 * (1 - item.votesCount / maxVotes);
+      const radiusRatio = 0.30 + 0.50 * (1 - item.votesCount / maxVotes);
       const size = 64 + 24 * (item.commentsCount / maxComments);
-      return { ...item, angle, radiusRatio, size: Math.min(size, 88) };
+      return { ...item, angle, radiusRatio, size: Math.min(size, 84) };
     });
   }, [currentItems]);
 
@@ -343,7 +351,7 @@ export function MobileRadarView() {
       <button
         type="button"
         onClick={() => setShowList(true)}
-        className="mobile-radar-view__open-list"
+        className="mobile-radar-view__open-list z-[44]"
         aria-label="Vedi classifica"
       >
         <ChevronUp size={16} />
@@ -358,7 +366,7 @@ export function MobileRadarView() {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            className="mobile-radar-view__sheet"
+            className="mobile-radar-view__sheet z-[55]"
           >
             {/* Sheet header */}
             <div className="mobile-radar-view__sheet-header">

@@ -64,7 +64,9 @@ export default async function ShortlistPage() {
     <>
       {/* Mobile: Opzione C — Scrivania Kanban */}
       <div className="md:hidden">
-        <MobileShortlistBoard tools={tools} />
+        <PageOrbitShell sectionId="shortlist-page" label="Shortlist" items={shortlistOrbitItems}>
+          <MobileShortlistBoard tools={tools} />
+        </PageOrbitShell>
       </div>
 
       {/* Desktop: Shortlist esistente */}

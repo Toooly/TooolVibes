@@ -8,6 +8,7 @@ import { usePerformanceMode, useOrbitalConfigForItems, getItemWeight } from "./u
 import { OrbitingBadge } from "./orbiting-badge";
 import { OrbitalCoreNode } from "./orbital-core-node";
 import type { OrbitalItem, OrbitConfig } from "./types";
+import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 
 function generateDecorItems(count: number, sectionId: string): OrbitalItem[] {
   const shapes: OrbitalItem["shapeType"][] = ["shard", "blob", "gem", "crystal", "hexagon"];
@@ -576,13 +577,16 @@ export function OrbitalLayer() {
   const configs = useOrbitalConfigForItems(activeItems, profile);
   const { positions, centerX, centerY, centerInSafeZone } = useOrbitEngine(activeItems, configs, isPaused, profile, activeSectionId, dynamicZonesRef);
   const layerIsMobile = profile.isMobile || isCompactViewport;
+  const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
 
   // Click outside per chiudere il popover su mobile
   const layerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const onDocClick = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as Node;
+      const target = e.target as Element;
       if (layerRef.current && !layerRef.current.contains(target)) {
+        const isNavTap = target.closest?.("nav, header, [role=\"dialog\"], [role=\"button\"], .mobile-bottom-motion, .mobile-radar-view__sheet, .mobile-shortlist-board__sheet");
+        if (isNavTap) return;
         setSelectedItemId(null);
       }
     };
@@ -602,6 +606,7 @@ export function OrbitalLayer() {
     <div
       ref={layerRef}
       className="fixed inset-0 z-[15] pointer-events-none"
+      style={{ opacity: isOverlayOpen ? 0 : 1, transition: "opacity 300ms ease" }}
       aria-hidden="false"
     >
       <AnimatePresence mode="popLayout">
