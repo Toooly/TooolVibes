@@ -608,7 +608,7 @@ export function OrbitalLayer() {
         {activeItems.map((item, i) => {
           const pos = positions[i] ?? { x: -100, y: -100, scale: 1, inSafeZone: false };
           // Skip rendering if way off-screen to save perf
-          if (pos.x < -80 || pos.x > window.innerWidth + 80 || pos.y < -80 || pos.y > window.innerHeight + 80) {
+          if (typeof window !== 'undefined' && (pos.x < -80 || pos.x > window.innerWidth + 80 || pos.y < -80 || pos.y > window.innerHeight + 80)) {
             return null;
           }
           return (

@@ -21,7 +21,7 @@ function getPerformanceProfile() {
     return { dpr: 1 as const, particles: 200, planets: 3, enabled: true, reduced: true };
   }
   if (lowEnd) {
-    return { dpr: 1 as const, particles: 300, planets: 4, enabled: true, reduced: false };
+    return { dpr: 1 as const, particles: 200, planets: 3, enabled: true, reduced: true };
   }
   return { dpr: Math.min(1.5, window.devicePixelRatio) as 1 | 1.5, particles: 250, planets: 3, enabled: true, reduced: false };
 }
@@ -327,7 +327,7 @@ export function SiteUniverseBackground() {
         }}
         dpr={profile.dpr}
         style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
-        frameloop="always"
+        frameloop={profile.reduced ? "demand" : "always"}
       >
         <Suspense fallback={null}>
           <Scene scrollRef={scrollRef} profile={profile} />

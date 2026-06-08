@@ -89,6 +89,18 @@ export function MobileRadarView() {
     fetchRange(activeRange);
   }, [activeRange, fetchRange]);
 
+  useEffect(() => {
+    const onVis = () => {
+      if (!document.hidden) {
+        fetchRange("day");
+        fetchRange("week");
+        fetchRange("month");
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [fetchRange]);
+
   const currentPayload = payloads[activeRange];
   const currentItems = currentPayload?.items ?? [];
 
