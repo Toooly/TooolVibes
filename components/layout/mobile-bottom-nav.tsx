@@ -27,11 +27,12 @@ export function MobileBottomNav() {
     <nav
       aria-label="Navigazione mobile principale"
       className={cn(
-        "mobile-bottom-motion fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom))] left-0 right-0 z-[45] mx-auto w-[min(calc(100vw-1.5rem),30rem)] rounded-[26px] border border-[rgba(76,55,166,0.18)] bg-[radial-gradient(circle_at_16%_0%,rgba(255,255,255,0.9),transparent_32%),radial-gradient(circle_at_84%_0%,rgba(94,226,255,0.18),transparent_34%),linear-gradient(135deg,#fffdf8_0%,#f4efff_54%,#edf7ff_100%)] p-1.5 shadow-[0_20px_58px_rgba(47,33,126,0.16),inset_0_1px_0_rgba(255,255,255,0.74)] lg:hidden transition-opacity duration-300",
+        "mobile-bottom-motion fixed bottom-0 left-0 right-0 z-[45] mx-auto w-[min(calc(100vw-1.5rem),30rem)] rounded-t-[26px] border border-b-0 border-[rgba(76,55,166,0.18)] bg-[radial-gradient(circle_at_16%_0%,rgba(255,255,255,0.9),transparent_32%),radial-gradient(circle_at_84%_0%,rgba(94,226,255,0.18),transparent_34%),linear-gradient(135deg,#fffdf8_0%,#f4efff_54%,#edf7ff_100%)] shadow-[0_-8px_40px_rgba(47,33,126,0.12),inset_0_1px_0_rgba(255,255,255,0.74)] lg:hidden transition-opacity duration-300",
         isOverlayOpen && "opacity-0 pointer-events-none"
       )}
+      style={{ paddingBottom: "env(safe-area-inset-bottom)", transform: "translateZ(0)" }}
     >
-      <div className="grid grid-cols-5 gap-1">
+      <div className="grid grid-cols-5 gap-1 p-1.5">
         {mobileItems.map((item) => {
           const Icon = item.icon;
           const active =

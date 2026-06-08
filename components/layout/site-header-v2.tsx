@@ -108,7 +108,7 @@ export function SiteHeaderV2() {
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 transition-all duration-500">
+      <header className="fixed left-0 right-0 top-0 z-50 transition-all duration-500" style={{ transform: "translateZ(0)", willChange: "transform" }}>
         <div
           className={`mx-auto max-w-[1440px] transition-all duration-500 ${
             scrolled || spatialRoute

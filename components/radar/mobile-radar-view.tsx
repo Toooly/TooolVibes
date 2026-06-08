@@ -251,12 +251,12 @@ export function MobileRadarView() {
     if (!currentItems.length) return [];
     const maxVotes = Math.max(...currentItems.map((i) => i.votesCount), 1);
     const maxComments = Math.max(...currentItems.map((i) => i.commentsCount), 1);
-    return currentItems.slice(0, 6).map((item, index) => {
-      const angle = (index / 6) * Math.PI * 2;
-      // More votes = closer to center (strong signal)
-      const radiusRatio = 0.30 + 0.50 * (1 - item.votesCount / maxVotes);
-      const size = 64 + 24 * (item.commentsCount / maxComments);
-      return { ...item, angle, radiusRatio, size: Math.min(size, 84) };
+    return currentItems.slice(0, 5).map((item, index) => {
+      const angle = (index / 5) * Math.PI * 2;
+      // More votes = closer to center (strong signal) — keep a generous minimum radius so nodes never overlap
+      const radiusRatio = 0.42 + 0.38 * (1 - item.votesCount / maxVotes);
+      const size = 48 + 16 * (item.commentsCount / maxComments);
+      return { ...item, angle, radiusRatio, size: Math.min(size, 52) };
     });
   }, [currentItems]);
 

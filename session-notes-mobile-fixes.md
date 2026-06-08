@@ -243,3 +243,77 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 - Radar canvas still runs 2D RAF animation
 - Heavy `blur()` filters remain in some mobile sections (only catalog header was reduced)
 - `mobile-shortlist-board.tsx` library layout may need scroll-snap polish on very small screens
+
+## 8. Deep Mobile UI Refinement — Radar Spacing, Arena & Library Cleanup
+
+**Date:** 2026-06-08
+
+### 8.1 Radar Product Hunt — Node Overlap Fix
+
+**Problem:** All 6 radar nodes were stacked on top of each other on small screens. The minimum radius (0.30 × 46vw ≈ 52px on 375px screens) was smaller than the node diameter (up to 84px), causing massive overlap. Angular separation at 6 nodes is only 60°, so chord distance equals radius — insufficient for the node sizes.
+
+**Fix:**
+- Reduced displayed nodes from 6 → **5** (angular separation 72°)
+- Raised minimum radius ratio from `0.30` → **`0.42`** (range now 0.42–0.80)
+- Shrunk node size formula from `64 + 24 * (comments/max)` → **`48 + 16 * (...)`**, capped at **52px**
+- Updated CSS `--node-size` default to `52px` inside mobile media query
+
+**Result:** On a 375px screen, minimum chord distance between adjacent nodes ≈ 1.18 × 0.42 × 172px ≈ **85px**. Node diameter = 52px. Margin ≈ **33px** — nodes no longer touch.
+
+**File:** `components/radar/mobile-radar-view.tsx`, `app/globals.css`
+
+### 8.2 Arena (Compare Page) — Floating Orbital Nodes Removed
+
+**Problem:** The floating orbital badges ("Confronta", "Aggiungi", "Shortlist") from `PageOrbitShell` were hovering directly over the dense compare cards, making content unreadable. User described them as "pallini in mezzo alle palle."
+
+**Fix:**
+- In `orbital-layer.tsx`, added `isDenseMobilePage` check: on mobile viewports, the entire floating orbital layer (badges + core node) is now hidden for `/compare` and `/shortlist` paths
+- Desktop keeps the orbital layer untouched
+
+**File:** `components/app/orbital-system/orbital-layer.tsx`
+
+### 8.3 Library (Shortlist Page) — Remove Invasive Toggles
+
+**Problem:** In `LibraryBook`, two buttons (`CompareToggle` icon + `Trash2`) were absolutely positioned at `top-1.5 right-1.5` directly over the small 64×84px book cover. User described them as "2 simboli in mezzo alle palle."
+
+**Fix:**
+- Removed `CompareToggle` completely from `LibraryBook` — the shortlist is not the right place for per-book compare toggles; users can manage compare from tool detail or the compare page footer
+- Moved the `Trash2` remove button from top-right → **bottom-right** of the book card (`bottom-1.5 right-1.5`)
+- Updated CSS `.mobile-library-book__remove` from `top: -6px` → `bottom: -6px`
+- The trash button remains `opacity: 0` by default and only appears on `:active` / `:focus-within`, so it no longer clutters the shelf
+
+**File:** `components/tools/mobile-shortlist-board.tsx`, `app/globals.css`
+
+### 8.4 Build Verification
+
+- `npm run build` passes with **zero errors**
+- No new lint warnings introduced
+- All changes scoped to mobile UI; desktop orbital layer and layouts untouched
+
+---
+
+## 9. Header & Bottom Nav Stabilization
+
+**Date:** 2026-06-08
+
+### 9.1 Problem
+On some mobile devices (especially iOS Safari and certain Android browsers), the bottom navigation bar would visually shift or "jump" when scrolling down, as `env(safe-area-inset-bottom)` can change dynamically when browser chrome hides/shows. This caused the nav to appear over page footers or content in an ugly way.
+
+### 9.2 Fix
+
+**Bottom Nav (`mobile-bottom-nav.tsx`):**
+- Changed `fixed bottom-[calc(0.75rem+env(safe-area-inset-bottom))]` → **`fixed bottom-0`**
+- Safe-area padding is now handled via **`paddingBottom: "env(safe-area-inset-bottom)"`** on the nav element itself, so the container always stays anchored to the true viewport bottom
+- Added **`transform: "translateZ(0)"`** to force a compositing layer and prevent sub-pixel rendering glitches on mobile GPUs
+- Adjusted border/shadow to suit the bottom-anchored bar (`rounded-t-[26px]`, `border-b-0`, top-oriented shadow)
+
+**Site Header (`site-header-v2.tsx`):**
+- Added **`style={{ transform: "translateZ(0)", willChange: "transform" }}`** to the fixed `<header>`
+- Forces a dedicated compositing layer so iOS Safari cannot "lose" the fixed element during rubber-band scrolling or address-bar collapse
+
+### 9.3 Build Verification
+
+- `npm run build` passes with **zero errors**
+- Both header and bottom nav now use GPU compositing layers for smoother, jitter-free positioning on mobile browsers
+
+---

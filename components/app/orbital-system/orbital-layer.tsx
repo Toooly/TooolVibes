@@ -524,8 +524,11 @@ export function OrbitalLayer() {
   const pathname = usePathname();
   const profile = usePerformanceMode();
   const [isCompactViewport, setIsCompactViewport] = useState(false);
-  const hideFloatingLayer = pathname === "/" || pathname?.startsWith("/archivio");
-  const hideCoreNode = pathname === "/" || pathname?.startsWith("/archivio");
+  const isDenseMobilePage = (profile.isMobile || isCompactViewport) && (
+    pathname?.startsWith("/compare") || pathname?.startsWith("/shortlist")
+  );
+  const hideFloatingLayer = pathname === "/" || pathname?.startsWith("/archivio") || isDenseMobilePage;
+  const hideCoreNode = pathname === "/" || pathname?.startsWith("/archivio") || isDenseMobilePage;
   useScrollState();
 
   useEffect(() => {

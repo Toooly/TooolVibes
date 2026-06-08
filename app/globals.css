@@ -17698,7 +17698,7 @@ img {
      ═══════════════════════════════════════════════════════════════ */
 
   .mobile-radar-view__node {
-    --node-size: 64px;
+    --node-size: 52px;
   }
 
   .mobile-radar-view__node.is-hot .mobile-radar-view__node-halo {
@@ -18158,7 +18158,7 @@ img {
 
   .mobile-library-book__remove {
     position: absolute;
-    top: -6px;
+    bottom: -6px;
     right: -2px;
     width: 1.4rem;
     height: 1.4rem;
