@@ -1,17 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback, type CSSProperties } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
-  X,
-  ChevronUp,
-  ExternalLink,
   Activity,
   MessageCircle,
   TrendingUp,
   Zap,
 } from "lucide-react";
-import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 
 /* ═══════════════════════════════════════════════════════════════
    Types
@@ -36,12 +32,6 @@ type ProductHuntPayload = {
   items: ProductHuntItem[];
   message?: string;
 };
-
-const tabs: { key: ProductHuntRange; label: string; color: string }[] = [
-  { key: "day", label: "Oggi", color: "#6a3cff" },
-  { key: "week", label: "Settimana", color: "#39d2f6" },
-  { key: "month", label: "Mese", color: "#f3bf4c" },
-];
 
 const RADAR_NODE_COUNT = 5;
 const RADAR_SWEEP_SECONDS = 2.856;
@@ -70,12 +60,11 @@ const fallbackRadarItems: ProductHuntItem[] = Array.from(
    ═══════════════════════════════════════════════════════════════ */
 
 export function MobileRadarView() {
-  const [activeRange, setActiveRange] = useState<ProductHuntRange>("day");
+  const activeRange: ProductHuntRange = "day";
   const [payloads, setPayloads] = useState<
     Partial<Record<ProductHuntRange, ProductHuntPayload>>
   >({});
-  const [loadingRange, setLoadingRange] = useState<ProductHuntRange | null>(null);
-  const [showList, setShowList] = useState(false);
+  const [, setLoadingRange] = useState<ProductHuntRange | null>(null);
 
   /* ── Fetch data ── */
   const fetchRange = useCallback(async (range: ProductHuntRange) => {
@@ -125,12 +114,6 @@ export function MobileRadarView() {
   }, [fetchRange]);
 
   /* ── Overlay state for floating layer ── */
-  const setOverlayOpen = useMobileUIStore((s) => s.setOverlayOpen);
-  useEffect(() => {
-    setOverlayOpen(showList);
-    return () => setOverlayOpen(false);
-  }, [showList, setOverlayOpen]);
-
   const currentPayload = payloads[activeRange];
   const currentItems = useMemo(
     () => currentPayload?.items ?? [],
@@ -308,8 +291,6 @@ export function MobileRadarView() {
     });
   }, [currentItems]);
 
-  const activeTab = tabs.find((t) => t.key === activeRange) ?? tabs[0];
-
   return (
     <div className="mobile-radar-view relative min-h-screen overflow-hidden bg-[#0a0a1a]">
       {/* Header */}
@@ -318,8 +299,8 @@ export function MobileRadarView() {
           <span className="mobile-radar-view__live-dot" />
           LIVE
         </span>
-        <h1>Radar Product Hunt</h1>
-        <p>I segnali più forti del momento</p>
+        <h1>Radar</h1>
+        <p>Scopri i migliori tool lanciati nelle ultime ore.</p>
       </div>
 
       {/* Radar Stage */}
@@ -395,8 +376,7 @@ export function MobileRadarView() {
 
         {/* Center badge */}
         <div className="mobile-radar-view__center-info">
-          <span>{activeTab.label}</span>
-          <strong>{currentItems.length}</strong>
+          <span>Ultima ora</span>
         </div>
       </div>
 
@@ -419,84 +399,6 @@ export function MobileRadarView() {
 
       {/* Content sections */}
       <MobileRadarSections items={currentItems} />
-
-      {/* Open list button */}
-      <button
-        type="button"
-        onClick={() => setShowList(true)}
-        className="mobile-radar-view__open-list z-[44]"
-        aria-label="Vedi classifica"
-      >
-        <ChevronUp size={16} />
-        <span>Vedi classifica completa</span>
-      </button>
-
-      {/* Bottom Sheet */}
-      <AnimatePresence>
-        {showList && (
-          <motion.div
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            className="mobile-radar-view__sheet z-[55]"
-          >
-            {/* Sheet header */}
-            <div className="mobile-radar-view__sheet-header">
-              <span className="mobile-radar-view__sheet-handle" />
-              <button
-                type="button"
-                onClick={() => setShowList(false)}
-                className="mobile-radar-view__sheet-close"
-                aria-label="Chiudi"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Tabs */}
-            <div className="mobile-radar-view__sheet-tabs" role="tablist">
-              {tabs.map((tab) => {
-                const isActive = activeRange === tab.key;
-                return (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    onClick={() => setActiveRange(tab.key)}
-                    className={`mobile-radar-view__sheet-tab${isActive ? " is-active" : ""}`}
-                    style={{ "--tab-color": tab.color } as CSSProperties}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* List */}
-            <div className="mobile-radar-view__sheet-body">
-              {!currentPayload || (loadingRange === activeRange && !currentPayload) ? (
-                <MobileRadarSkeleton />
-              ) : currentPayload.status === "error" || currentItems.length === 0 ? (
-                <div className="mobile-radar-view__sheet-empty">
-                  <p>{currentPayload.message ?? "Nessun dato disponibile"}</p>
-                </div>
-              ) : (
-                <div className="mobile-radar-view__sheet-list">
-                  {currentItems.map((item, index) => (
-                    <MobileRadarListItem
-                      key={item.id}
-                      item={item}
-                      index={index}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -586,68 +488,6 @@ function MobileRadarSections({ items }: { items: ProductHuntItem[] }) {
           </div>
         </section>
       )}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   MobileRadarListItem
-   ═══════════════════════════════════════════════════════════════ */
-
-function MobileRadarListItem({
-  item,
-  index,
-}: {
-  item: ProductHuntItem;
-  index: number;
-}) {
-  return (
-    <motion.a
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: Math.min(index * 0.04, 0.2) }}
-      href={item.productHuntUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="mobile-radar-list-item"
-    >
-      <span className="mobile-radar-list-item__rank">#{index + 1}</span>
-      <div className="mobile-radar-list-item__visual">
-        {item.thumbnailUrl ? (
-          <img src={item.thumbnailUrl} alt="" loading="lazy" />
-        ) : (
-          <span>{item.name.slice(0, 2).toUpperCase()}</span>
-        )}
-      </div>
-      <div className="mobile-radar-list-item__meta">
-        <strong>{item.name}</strong>
-        <span>{item.tagline}</span>
-        <small>
-          {item.votesCount} voti · {item.commentsCount} commenti
-        </small>
-      </div>
-      <ExternalLink size={14} className="mobile-radar-list-item__icon" />
-    </motion.a>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   MobileRadarSkeleton
-   ═══════════════════════════════════════════════════════════════ */
-
-function MobileRadarSkeleton() {
-  return (
-    <div className="mobile-radar-view__sheet-list">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="mobile-radar-list-item is-skeleton">
-          <span className="mobile-radar-list-item__rank">#</span>
-          <div className="mobile-radar-list-item__visual" />
-          <div className="mobile-radar-list-item__meta">
-            <div />
-            <div />
-          </div>
-        </div>
-      ))}
     </div>
   );
 }

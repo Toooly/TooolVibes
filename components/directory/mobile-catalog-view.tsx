@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, type CSSProperties } from "react";
+import { useState, useMemo, useCallback, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
@@ -8,6 +8,7 @@ import {
   Search,
   X,
   ArrowLeft,
+  ArrowRight,
   Sparkles,
   Code,
   Boxes,
@@ -30,6 +31,7 @@ import {
   Monitor,
   Clock,
   ChevronDown,
+  GitCompare,
 } from "lucide-react";
 import Fuse from "fuse.js";
 import { CompareToggle } from "@/components/tools/compare-toggle";
@@ -216,68 +218,49 @@ export function MobileCatalogView({
     [view]
   );
 
+  const searchControl = (
+    <div className="mobile-catalog-view__search">
+      <Search size={16} className="shrink-0 text-[#6a3cff]" />
+      <input
+        value={searchQuery}
+        onChange={(e) => handleSearchChange(e.target.value)}
+        placeholder={
+          view === "categories"
+            ? "Cerca categorie o tool..."
+            : "Cerca nel catalogo..."
+        }
+        aria-label="Cerca nel catalogo"
+      />
+      {searchQuery && (
+        <button
+          type="button"
+          onClick={() => handleSearchChange("")}
+          className="shrink-0 rounded-full p-1 transition-colors hover:bg-[rgba(106,60,255,0.08)]"
+          aria-label="Cancella ricerca"
+        >
+          <X size={14} className="text-[#4f4970]" />
+        </button>
+      )}
+    </div>
+  );
+
+  const levelControls = (
+    <div className="mobile-catalog-view__chips">
+      {levelChips.map((chip) => (
+        <button
+          key={chip.key}
+          type="button"
+          onClick={() => setActiveLevel(chip.key)}
+          className={`mobile-catalog-view__chip${activeLevel === chip.key ? " is-active" : ""}`}
+        >
+          {chip.label}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div className="mobile-catalog-view relative min-h-screen pb-24">
-      {/* Header sticky */}
-      <div className="mobile-catalog-view__header">
-        <AnimatePresence mode="popLayout">
-          {view === "tools" && (
-            <motion.button
-              key="back"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              transition={{ duration: 0.2 }}
-              onClick={handleBack}
-              className="mobile-catalog-view__back"
-              aria-label="Torna alle categorie"
-            >
-              <ArrowLeft size={18} />
-              <span>Categorie</span>
-            </motion.button>
-          )}
-        </AnimatePresence>
-
-        <div className="mobile-catalog-view__search">
-          <Search size={16} className="shrink-0 text-[#6a3cff]" />
-          <input
-            value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder={
-              view === "categories"
-                ? "Cerca categorie o tool..."
-                : "Cerca nel catalogo..."
-            }
-            aria-label="Cerca nel catalogo"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => handleSearchChange("")}
-              className="shrink-0 rounded-full p-1 transition-colors hover:bg-[rgba(106,60,255,0.08)]"
-              aria-label="Cancella ricerca"
-            >
-              <X size={14} className="text-[#4f4970]" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Level chips */}
-      {view === "tools" && (
-        <div className="mobile-catalog-view__chips">
-          {levelChips.map((chip) => (
-            <button
-              key={chip.key}
-              type="button"
-              onClick={() => setActiveLevel(chip.key)}
-              className={`mobile-catalog-view__chip${activeLevel === chip.key ? " is-active" : ""}`}
-            >
-              {chip.label}
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* Content */}
       <AnimatePresence mode="wait">
         {view === "categories" ? (
@@ -291,6 +274,7 @@ export function MobileCatalogView({
             <MobileCategoryMap
               categories={categories}
               onSelect={handleCategorySelect}
+              searchControl={searchControl}
             />
           </motion.div>
         ) : (
@@ -301,6 +285,22 @@ export function MobileCatalogView({
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3 }}
           >
+            <div className="mobile-catalog-view__tools-controls">
+              <motion.button
+                key="back"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={handleBack}
+                className="mobile-catalog-view__back"
+                aria-label="Torna alle categorie"
+              >
+                <ArrowLeft size={18} />
+                <span>Categorie</span>
+              </motion.button>
+              {searchControl}
+              {levelControls}
+            </div>
             <MobileToolGrid
               tools={filteredTools}
               groupLabel={activeGroupLabel}
@@ -373,13 +373,15 @@ type MobileCategoryMapProps = {
     iconName: keyof typeof CATEGORY_ICON_MAP;
   }[];
   onSelect: (key: string) => void;
+  searchControl: ReactNode;
 };
 
-function MobileCategoryMap({ categories, onSelect }: MobileCategoryMapProps) {
+function MobileCategoryMap({ categories, onSelect, searchControl }: MobileCategoryMapProps) {
   return (
     <section className="mobile-category-map" aria-label="Esplora per categoria">
       <div className="mobile-category-map__intro">
         <h1>Esplora</h1>
+        {searchControl}
         <p>Scegli un mondo per scoprire i tool che lo abitano.</p>
         <div className="mobile-category-map__steps">
           <span className="is-active">Esplora</span>
@@ -451,6 +453,38 @@ function MobileToolGrid({ tools, groupLabel, searchQuery }: MobileToolGridProps)
           <MobileToolCard key={tool.slug} tool={tool} index={index} />
         ))}
       </div>
+
+      <MobileCompareToolbox tools={tools.slice(0, 3)} />
+    </section>
+  );
+}
+
+function MobileCompareToolbox({ tools }: { tools: DirectoryTool[] }) {
+  if (!tools.length) return null;
+
+  return (
+    <section className="mobile-compare-toolbox" aria-label="Toolbox confronto">
+      <div className="mobile-compare-toolbox__header">
+        <span className="mobile-compare-toolbox__icon">
+          <GitCompare size={16} aria-hidden="true" />
+        </span>
+        <div>
+          <h3>Toolbox confronto</h3>
+          <p>Aggiungi candidati e apri il confronto completo.</p>
+        </div>
+      </div>
+      <div className="mobile-compare-toolbox__pills">
+        {tools.map((tool) => (
+          <span key={tool.slug} className="mobile-compare-toolbox__pill">
+            <span>{tool.name}</span>
+            <CompareToggle slug={tool.slug} mode="icon" />
+          </span>
+        ))}
+      </div>
+      <Link href="/compare" className="mobile-compare-toolbox__cta">
+        Vai al confronto
+        <ArrowRight size={14} aria-hidden="true" />
+      </Link>
     </section>
   );
 }

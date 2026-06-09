@@ -527,8 +527,9 @@ export function OrbitalLayer() {
   const isDenseMobilePage = (profile.isMobile || isCompactViewport) && (
     pathname?.startsWith("/compare") || pathname?.startsWith("/shortlist")
   );
-  const hideFloatingLayer = pathname === "/" || pathname?.startsWith("/archivio") || isDenseMobilePage;
-  const hideCoreNode = pathname === "/" || pathname?.startsWith("/archivio") || isDenseMobilePage;
+  const isProductHuntMobile = (profile.isMobile || isCompactViewport) && pathname?.startsWith("/product-hunt");
+  const hideFloatingLayer = pathname === "/" || pathname?.startsWith("/archivio") || isDenseMobilePage || isProductHuntMobile;
+  const hideCoreNode = pathname === "/" || pathname?.startsWith("/archivio") || isDenseMobilePage || isProductHuntMobile;
   useScrollState();
 
   useEffect(() => {

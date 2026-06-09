@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import type { CSSProperties } from "react";
 import {
   Bookmark,
@@ -64,9 +65,18 @@ export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
           } as CSSProperties}
         />
 
-        {/* Planet */}
-        <div className="catalog-orbit-planet home-orbit-planet" aria-hidden="true">
-          <span />
+        {/* Brand core */}
+        <div className="mobile-hero-solar__brand-core" aria-hidden="true">
+          <span className="mobile-hero-solar__brand-aura" />
+          <span className="mobile-hero-solar__brand-ring" />
+          <Image
+            src="/brand/tooolvibes-logo.png"
+            alt=""
+            width={72}
+            height={72}
+            className="mobile-hero-solar__brand-logo"
+            priority
+          />
         </div>
 
         {/* Nodes */}

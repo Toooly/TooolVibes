@@ -42,7 +42,7 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
     ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`
     : undefined;
 
-  const satellites = supportingTools.slice(0, 4);
+  const satellites = supportingTools.slice(0, 3);
 
   return (
     <section className="mobile-spotlight-cosmic" aria-label="Tool della settimana">
@@ -56,6 +56,10 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
 
       {/* Sistema centrale */}
       <div className="mobile-spotlight-cosmic__system">
+        <span className="mobile-spotlight-cosmic__weekly-pill">
+          <Sparkles className="size-3" />
+          Tool della settimana
+        </span>
         <div
           className="mobile-spotlight-cosmic__planet"
           style={
@@ -76,13 +80,15 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
         </div>
 
         {/* Satelliti */}
-        {satellites.map((sat, i) => (
-          <ToolSatellite
-            key={sat.slug}
-            tool={sat}
-            angle={45 + i * 90}
-          />
-        ))}
+        <div className="mobile-spotlight-cosmic__satellites">
+          {satellites.map((sat, i) => (
+            <ToolSatellite
+              key={sat.slug}
+              tool={sat}
+              angle={-135 + i * 120}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Info card */}
