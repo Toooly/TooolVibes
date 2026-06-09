@@ -14981,8 +14981,8 @@ img {
   /* ── Data Nodes ── */
   .mobile-radar-view__node {
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: calc(50% + var(--node-x, 0%));
+    top: calc(50% + var(--node-y, 0%));
     width: var(--node-size);
     height: var(--node-size);
     z-index: 5;
@@ -14990,26 +14990,47 @@ img {
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    transform:
-      translate(-50%, -50%)
-      rotate(var(--node-angle))
-      translateX(calc(46vw * var(--node-radius)))
-      rotate(calc(-1 * var(--node-angle)));
-    transition: transform 180ms ease;
+    translate: -50% -50%;
+    transform: scale(1);
+    animation: tv-radar-node-drift 4.8s ease-in-out infinite;
+    animation-delay: var(--node-float-delay, 0s);
+    transition: filter 180ms ease, transform 180ms ease;
+    will-change: translate, transform, filter;
+  }
+
+  .mobile-radar-view__node::before {
+    content: "";
+    position: absolute;
+    inset: -0.85rem;
+    z-index: 1;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, rgba(255, 240, 172, 0.72) 0%, rgba(243, 191, 76, 0.34) 34%, transparent 72%);
+    filter: blur(0.5px);
+    opacity: 0;
+    transform: scale(0.72);
+    pointer-events: none;
+    animation: tv-radar-node-hit 2.856s linear infinite;
+    animation-delay: var(--node-hit-delay, 0s);
   }
 
   .mobile-radar-view__node:active {
-    transform:
-      translate(-50%, -50%)
-      rotate(var(--node-angle))
-      translateX(calc(46vw * var(--node-radius)))
-      rotate(calc(-1 * var(--node-angle)))
-      scale(0.92);
+    transform: scale(0.92);
+  }
+
+  .mobile-radar-view__node.is-placeholder {
+    pointer-events: none;
+  }
+
+  .mobile-radar-view__node.is-placeholder .mobile-radar-view__node-body,
+  .mobile-radar-view__node.is-placeholder .mobile-radar-view__node-label {
+    opacity: 0.72;
   }
 
   .mobile-radar-view__node-halo {
     position: absolute;
     inset: -0.4rem;
+    z-index: 1;
     border-radius: 50%;
     background: radial-gradient(circle, rgba(106, 60, 255, 0.25), transparent 70%);
     opacity: 0.6;
@@ -15018,6 +15039,7 @@ img {
 
   .mobile-radar-view__node-body {
     position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -15048,6 +15070,7 @@ img {
     position: absolute;
     top: calc(100% + 0.35rem);
     left: 50%;
+    z-index: 3;
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
@@ -17730,6 +17753,36 @@ img {
     background: linear-gradient(135deg, #f3bf4c, #ff8c42);
     box-shadow: 0 2px 8px rgba(243, 191, 76, 0.4);
     z-index: 2;
+  }
+
+  @keyframes tv-radar-node-drift {
+    0%, 100% {
+      translate: -50% calc(-50% - 2px);
+      filter: brightness(1);
+    }
+    50% {
+      translate: -50% calc(-50% + 3px);
+      filter: brightness(1.08);
+    }
+  }
+
+  @keyframes tv-radar-node-hit {
+    0% {
+      opacity: 0;
+      transform: scale(0.68);
+    }
+    4% {
+      opacity: 0.95;
+      transform: scale(1.08);
+    }
+    10% {
+      opacity: 0.34;
+      transform: scale(1.32);
+    }
+    18%, 100% {
+      opacity: 0;
+      transform: scale(1.48);
+    }
   }
 
   /* Radar content sections */

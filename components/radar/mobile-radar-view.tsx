@@ -43,6 +43,28 @@ const tabs: { key: ProductHuntRange; label: string; color: string }[] = [
   { key: "month", label: "Mese", color: "#f3bf4c" },
 ];
 
+const RADAR_NODE_COUNT = 5;
+const RADAR_SWEEP_SECONDS = 2.856;
+const RADAR_NODE_LAYOUT = [
+  { angle: -0.2, radiusRatio: 0.54 },
+  { angle: 1.08, radiusRatio: 0.7 },
+  { angle: 2.48, radiusRatio: 0.74 },
+  { angle: 3.8, radiusRatio: 0.68 },
+  { angle: 5.27, radiusRatio: 0.76 },
+];
+
+const fallbackRadarItems: ProductHuntItem[] = Array.from(
+  { length: RADAR_NODE_COUNT },
+  (_, index) => ({
+    id: `radar-placeholder-${index + 1}`,
+    name: `Tool radar ${index + 1}`,
+    tagline: "Segnale in acquisizione",
+    votesCount: 0,
+    commentsCount: 0,
+    productHuntUrl: "#",
+  }),
+);
+
 /* ═══════════════════════════════════════════════════════════════
    MobileRadarView — root
    ═══════════════════════════════════════════════════════════════ */
@@ -110,7 +132,10 @@ export function MobileRadarView() {
   }, [showList, setOverlayOpen]);
 
   const currentPayload = payloads[activeRange];
-  const currentItems = currentPayload?.items ?? [];
+  const currentItems = useMemo(
+    () => currentPayload?.items ?? [],
+    [currentPayload?.items],
+  );
 
   /* ── Canvas animation ── */
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -248,15 +273,38 @@ export function MobileRadarView() {
 
   /* ── Node positions ── */
   const nodes = useMemo(() => {
-    if (!currentItems.length) return [];
-    const maxVotes = Math.max(...currentItems.map((i) => i.votesCount), 1);
-    const maxComments = Math.max(...currentItems.map((i) => i.commentsCount), 1);
-    return currentItems.slice(0, 5).map((item, index) => {
-      const angle = (index / 5) * Math.PI * 2;
-      // More votes = closer to center (strong signal) — keep a generous minimum radius so nodes never overlap
-      const radiusRatio = 0.42 + 0.38 * (1 - item.votesCount / maxVotes);
-      const size = 48 + 16 * (item.commentsCount / maxComments);
-      return { ...item, angle, radiusRatio, size: Math.min(size, 52) };
+    const visibleItems = currentItems.slice(0, RADAR_NODE_COUNT);
+    const items =
+      visibleItems.length >= RADAR_NODE_COUNT
+        ? visibleItems
+        : [
+            ...visibleItems,
+            ...fallbackRadarItems.slice(visibleItems.length, RADAR_NODE_COUNT),
+          ];
+    const maxComments = Math.max(...visibleItems.map((i) => i.commentsCount), 1);
+
+    return items.map((item, index) => {
+      const layout = RADAR_NODE_LAYOUT[index] ?? {
+        angle: (index / RADAR_NODE_COUNT) * Math.PI * 2,
+        radiusRatio: 0.68,
+      };
+      const normalizedAngle = (layout.angle + Math.PI * 2) % (Math.PI * 2);
+      const x = Math.cos(layout.angle) * layout.radiusRatio * 46;
+      const y = Math.sin(layout.angle) * layout.radiusRatio * 46;
+      const size = item.votesCount
+        ? 46 + 8 * (item.commentsCount / maxComments)
+        : 42;
+
+      return {
+        ...item,
+        angle: layout.angle,
+        x,
+        y,
+        size: Math.min(size, 52),
+        hitDelay: normalizedAngle * (RADAR_SWEEP_SECONDS / (Math.PI * 2)),
+        floatDelay: index * -0.55,
+        isPlaceholder: item.id.startsWith("radar-placeholder-"),
+      };
     });
   }, [currentItems]);
 
@@ -282,20 +330,16 @@ export function MobileRadarView() {
         {nodes.map((node) => {
           const style = {
             "--node-angle": `${node.angle}rad`,
-            "--node-radius": `${node.radiusRatio * 100}%`,
+            "--node-x": `${node.x}%`,
+            "--node-y": `${node.y}%`,
             "--node-size": `${node.size}px`,
+            "--node-hit-delay": `${node.hitDelay}s`,
+            "--node-float-delay": `${node.floatDelay}s`,
           } as CSSProperties;
-          const isHot = node.votesCount > 100;
-          return (
-            <a
-              key={node.id}
-              href={node.productHuntUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`mobile-radar-view__node${isHot ? " is-hot" : ""}`}
-              style={style}
-              aria-label={`${node.name}. ${node.votesCount} voti, ${node.commentsCount} commenti`}
-            >
+          const isHot = node.votesCount > 100 && !node.isPlaceholder;
+          const nodeClassName = `mobile-radar-view__node${isHot ? " is-hot" : ""}${node.isPlaceholder ? " is-placeholder" : ""}`;
+          const nodeContent = (
+            <>
               <span className="mobile-radar-view__node-halo" />
               <span className="mobile-radar-view__node-body">
                 {node.thumbnailUrl ? (
@@ -313,9 +357,38 @@ export function MobileRadarView() {
               </span>
               <span className="mobile-radar-view__node-label">
                 <strong>{node.name}</strong>
-                <small>{node.votesCount} voti</small>
+                <small>
+                  {node.isPlaceholder ? "in attesa" : `${node.votesCount} voti`}
+                </small>
               </span>
               {isHot && <span className="mobile-radar-view__node-badge">HOT</span>}
+            </>
+          );
+
+          if (node.isPlaceholder) {
+            return (
+              <span
+                key={node.id}
+                className={nodeClassName}
+                style={style}
+                aria-hidden="true"
+              >
+                {nodeContent}
+              </span>
+            );
+          }
+
+          return (
+            <a
+              key={node.id}
+              href={node.productHuntUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={nodeClassName}
+              style={style}
+              aria-label={`${node.name}. ${node.votesCount} voti, ${node.commentsCount} commenti`}
+            >
+              {nodeContent}
             </a>
           );
         })}
