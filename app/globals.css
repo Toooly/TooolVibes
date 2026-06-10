@@ -18642,3 +18642,124 @@ img {
     box-shadow: var(--shadow-soft);
   }
 }
+
+@media (max-width: 1023px) {
+  .site-header-v2 {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 60;
+    padding: max(0.45rem, env(safe-area-inset-top)) 0.75rem 0.3rem;
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  .site-header-v2 > div {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 !important;
+    border-radius: 28px !important;
+    background: rgba(255, 255, 255, 0.88) !important;
+    box-shadow: 0 14px 36px rgba(47, 33, 126, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  .site-header-v2__spacer {
+    display: block;
+    height: calc(5rem + env(safe-area-inset-top));
+  }
+
+  .site-header-v2 .flex.h-16 {
+    height: 4.25rem;
+  }
+
+  .mobile-catalog-view {
+    padding-top: 1rem !important;
+  }
+
+  .mobile-category-map {
+    padding-top: 0.45rem !important;
+  }
+
+  .mobile-catalog-view__tools-controls {
+    margin-top: 0.45rem;
+  }
+
+  .mobile-bottom-motion {
+    position: fixed !important;
+    bottom: 0 !important;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+  }
+}
+
+@media (max-width: 767px) {
+  .mobile-spotlight-cosmic__satellites {
+    animation: none !important;
+  }
+
+  .mobile-spotlight-cosmic__satellite {
+    animation: cosmic-satellite-orbit-upright 26s linear infinite;
+    will-change: transform;
+  }
+
+  .mobile-spotlight-cosmic__satellite-name {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+  }
+
+  .mobile-spotlight-cosmic__planet::after {
+    width: 1rem;
+    height: 1rem;
+    right: 0.2rem;
+    top: 0.1rem;
+    background: #ff244f;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 0 0 7px rgba(255, 36, 79, 0.2),
+      0 0 22px rgba(255, 36, 79, 0.95),
+      0 0 46px rgba(255, 80, 112, 0.58);
+  }
+
+  .mobile-spotlight-cosmic__planet::before {
+    content: "";
+    position: absolute;
+    right: -0.16rem;
+    top: -0.26rem;
+    z-index: 4;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 36, 79, 0.55);
+    animation: tv-spotlight-alert-ring 1.55s ease-out infinite;
+  }
+
+  @keyframes cosmic-satellite-orbit-upright {
+    from {
+      transform:
+        translate(-50%, -50%)
+        rotate(var(--sat-angle))
+        translateX(8.5rem)
+        rotate(var(--sat-angle-back));
+    }
+    to {
+      transform:
+        translate(-50%, -50%)
+        rotate(calc(var(--sat-angle) + 360deg))
+        translateX(8.5rem)
+        rotate(calc(var(--sat-angle-back) - 360deg));
+    }
+  }
+
+  @keyframes tv-spotlight-alert-ring {
+    0% {
+      opacity: 0.72;
+      transform: scale(0.62);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.45);
+    }
+  }
+}

@@ -20,7 +20,12 @@ function ToolSatellite({ tool, angle }: { tool: DirectoryTool; angle: number }) 
     <Link
       href={`/toools/${tool.slug}`}
       className="mobile-spotlight-cosmic__satellite"
-      style={{ "--sat-angle": `${angle}deg` } as CSSProperties}
+      style={
+        {
+          "--sat-angle": `${angle}deg`,
+          "--sat-angle-back": `${-angle}deg`,
+        } as CSSProperties
+      }
       aria-label={tool.name}
     >
       <span className="mobile-spotlight-cosmic__satellite-ring" />
