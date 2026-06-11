@@ -11,7 +11,7 @@ import {
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 
-import { recordGameInteraction } from "@/lib/gamification/actions";
+import { claimHiddenSignal } from "@/lib/gamification/actions";
 import { RadarScannerOverlay } from "@/components/gamification/radar-scanner-overlay";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -152,7 +152,7 @@ export function MobileRadarView() {
       event.preventDefault();
 
       try {
-        await recordGameInteraction(25);
+        await claimHiddenSignal(today, node.id);
         localStorage.setItem(`${HIDDEN_SIGNAL_STORAGE_KEY}:${today}`, "1");
         setHiddenDiscovered(true);
         confetti({

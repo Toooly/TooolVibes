@@ -64,6 +64,14 @@ export async function claimMission(missionId: string): Promise<GameProfile> {
   return data as GameProfile;
 }
 
+function validateToolSlug(toolSlug: string): string {
+  const normalized = toolSlug.trim();
+  if (!normalized || normalized.length > 100) {
+    throw new Error("Invalid toolSlug");
+  }
+  return normalized;
+}
+
 export async function createRadarPrediction(toolSlug: string): Promise<RadarPrediction> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -78,4 +86,31 @@ export async function createRadarPrediction(toolSlug: string): Promise<RadarPred
 
   if (error) throw error;
   return data as RadarPrediction;
+}
+
+export async function claimHiddenSignal(
+  contextDate: string,
+  toolSlug: string,
+): Promise<GameProfile> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(contextDate)) {
+    throw new Error("Invalid contextDate");
+  }
+
+  const normalizedSlug = validateToolSlug(toolSlug);
+
+  const { data, error } = await supabase.rpc("claim_hidden_signal", {
+    p_user_id: user.id,
+    p_context_date: contextDate,
+    p_tool_slug: normalizedSlug,
+  });
+
+  if (error) throw error;
+  if (!data) throw new Error("Profile not found");
+
+  revalidatePath("/");
+  return data as GameProfile;
 }
