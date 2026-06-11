@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { BrandLogo } from "./brand-logo";
 import { SoundToggleButton } from "../app/sound-toggle-button";
 import { DirectoryHeaderSearch } from "../directory/directory-header-search";
+import { GameProfileBar } from "../gamification/game-profile-bar";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import {
   Menu,
@@ -200,6 +201,8 @@ export function SiteHeaderV2() {
               <div className="hidden md:block">
                 <SoundToggleButton />
               </div>
+
+              <GameProfileBar className="hidden lg:flex" />
 
               <Link
                 href="/admin/login"
