@@ -30,7 +30,13 @@ export type TooolvibesSoundKind =
   | "reveal"
   | "introOpen"
   | "introClose"
-  | "route";
+  | "route"
+  | "battleStart"
+  | "battleHit"
+  | "battleWin"
+  | "badgeUnlock"
+  | "levelUp"
+  | "predictionLock";
 
 export function playTooolvibesSound(kind: TooolvibesSoundKind) {
   if (typeof window === "undefined") {

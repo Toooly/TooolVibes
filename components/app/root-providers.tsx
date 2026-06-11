@@ -6,7 +6,7 @@ import { useState } from "react";
 import { GlobalCommandPalette } from "@/components/app/global-command-palette";
 import { GlobalExperienceLayer } from "@/components/app/global-experience-layer";
 import { SiteBrandIntro } from "@/components/app/home-brand-intro";
-import { InteractionSoundLayer } from "@/components/app/interaction-sound-layer";
+import { InteractionSoundLayerV2 } from "@/components/app/interaction-sound-layer-v2";
 import { RouteTransitionLoader } from "@/components/app/route-transition-loader";
 import { GameEffectsLayer } from "@/components/gamification/game-effects-layer";
 import { MotionObserver } from "@/components/ui/motion-observer";
@@ -34,7 +34,7 @@ export function RootProviders({ children }: { children: React.ReactNode }) {
         <GlobalExperienceLayer />
         <MotionObserver />
         <RouteTransitionLoader />
-        <InteractionSoundLayer />
+        <InteractionSoundLayerV2 />
         <GameEffectsLayer />
         <GlobalCommandPalette />
         <Toaster position="top-right" richColors closeButton />
