@@ -260,7 +260,6 @@ export async function createArenaBattle(
   return data as ArenaBattle;
 }
 
-const MAX_SHORTLIST_SIZE = 10_000;
 const MAX_CATEGORY_TAGS = 50;
 
 function validateCategoryTags(tags: unknown): string[] {
@@ -279,7 +278,7 @@ export async function discoverTool(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return;
+  if (!user) throw new Error("Unauthorized");
 
   const normalizedSlug = validateToolSlug(toolSlug);
   const tags = validateCategoryTags(categoryTags);
@@ -303,22 +302,12 @@ export async function discoverTool(
   revalidatePath("/");
 }
 
-export async function checkAndAwardBadges(
-  shortlistSize = 0,
-): Promise<UserBadge[]> {
+export async function checkAndAwardBadges(): Promise<UserBadge[]> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
-
-  if (
-    !Number.isInteger(shortlistSize) ||
-    shortlistSize < 0 ||
-    shortlistSize > MAX_SHORTLIST_SIZE
-  ) {
-    throw new Error(`Invalid shortlistSize: ${shortlistSize}`);
-  }
 
   const [
     profileResult,
@@ -339,10 +328,7 @@ export async function checkAndAwardBadges(
       .from("game_mission_claims")
       .select("id", { count: "exact", head: true })
       .eq("user_id", user.id),
-    supabase
-      .from("arena_battles")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id),
+    supabase.from("arena_battles").select("id").eq("user_id", user.id),
     supabase
       .from("radar_predictions")
       .select("id", { count: "exact", head: true })
@@ -362,11 +348,10 @@ export async function checkAndAwardBadges(
 
   const context: BadgeContext = {
     missions_completed: missionsResult.count ?? 0,
-    battles_won: battlesResult.count ?? 0,
+    battles_played: (battlesResult.data ?? []).length,
     predictions_correct: predictionsResult.count ?? 0,
     tools_collected: collectionResult.count ?? 0,
     streak_days: profile.streak_days,
-    shortlist_size: shortlistSize,
   };
 
   const userBadges = (userBadgesResult.data ?? []) as UserBadge[];
@@ -376,22 +361,38 @@ export async function checkAndAwardBadges(
     return [];
   }
 
-  const rows = newlyAwardedBadges.map((badge) => ({
-    user_id: user.id,
-    badge_id: badge.id,
-  }));
+  const newBadgeIds = newlyAwardedBadges.map((badge) => badge.id);
 
-  const { data: inserted, error: insertError } = await supabase
+  const { data: insertedIds, error: rpcError } = await supabase.rpc(
+    "award_badges",
+    {
+      p_user_id: user.id,
+      p_badge_ids: newBadgeIds,
+    },
+  );
+
+  if (rpcError) throw rpcError;
+
+  const awardedIds = (insertedIds ?? []) as string[];
+  if (awardedIds.length === 0) {
+    return [];
+  }
+
+  const { data: awardedRows, error: selectError } = await supabase
     .from("user_badges")
-    .insert(rows)
     .select("*, badge:badges(*)")
+    .eq("user_id", user.id)
+    .in("badge_id", awardedIds)
     .returns<UserBadge[]>();
 
-  if (insertError) throw insertError;
+  if (selectError) throw selectError;
 
-  const totalXp = newlyAwardedBadges.reduce((sum, badge) => sum + badge.xp_bonus, 0);
-  await recordGameInteraction(totalXp);
+  const awardedBadges = (awardedRows ?? []) as UserBadge[];
+  const totalXp = awardedBadges.reduce((sum, ub) => sum + ub.badge.xp_bonus, 0);
+  if (totalXp > 0) {
+    await recordGameInteraction(totalXp);
+  }
 
   revalidatePath("/");
-  return inserted ?? [];
+  return awardedBadges;
 }

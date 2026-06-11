@@ -7,7 +7,6 @@ import { checkAndAwardBadges } from "@/lib/gamification/actions";
 import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
 import type { UserBadge } from "@/lib/gamification/types";
 import { getBrowserSupabaseClient } from "@/lib/supabase/browser-client";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 async function fetchUserBadges(): Promise<UserBadge[]> {
   const supabase = getBrowserSupabaseClient();
@@ -22,7 +21,6 @@ async function fetchUserBadges(): Promise<UserBadge[]> {
 
 export function useBadges() {
   const queryClient = useQueryClient();
-  const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const setBadges = useGameProgressStore((state) => state.setBadges);
   const addBadge = useGameProgressStore((state) => state.addBadge);
   const setPendingBadge = useGameProgressStore((state) => state.setPendingBadge);
@@ -41,7 +39,7 @@ export function useBadges() {
   }, [query.data, setBadges]);
 
   const checkMutation = useMutation<UserBadge[], Error, void>({
-    mutationFn: () => checkAndAwardBadges(savedSlugs.length),
+    mutationFn: () => checkAndAwardBadges(),
     onSuccess: (awarded) => {
       if (awarded.length > 0) {
         queryClient.invalidateQueries({ queryKey: ["user-badges"] });

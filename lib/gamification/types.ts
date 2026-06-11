@@ -74,11 +74,10 @@ export type RadarPrediction = {
 
 export type BadgeContext = {
   missions_completed: number;
-  battles_won: number;
+  battles_played: number;
   predictions_correct: number;
   tools_collected: number;
   streak_days: number;
-  shortlist_size: number;
 };
 
 export type Badge = {
