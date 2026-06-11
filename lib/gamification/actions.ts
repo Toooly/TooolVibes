@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
-import type { GameProfile, RadarPrediction } from "@/lib/gamification/types";
+import { simulateBattle } from "@/lib/gamification/battle-engine";
+import type { ArenaBattle, ArenaBattleMode, GameProfile, RadarPrediction } from "@/lib/gamification/types";
 
 const MAX_XP_DELTA = 10_000;
 
@@ -127,4 +128,47 @@ export async function claimHiddenSignal(
 
   revalidatePath("/");
   return data as GameProfile;
+}
+
+export async function createArenaBattle(
+  mode: ArenaBattleMode,
+  toolSlugs: string[],
+  scoreSnapshot: Record<string, number>,
+): Promise<ArenaBattle> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  if (!["1v1", "royale", "bracket"].includes(mode)) {
+    throw new Error("Invalid battle mode");
+  }
+
+  const normalizedSlugs = toolSlugs.map(validateToolSlug);
+  if (normalizedSlugs.length === 0) {
+    throw new Error("At least one tool is required");
+  }
+
+  const result = simulateBattle({
+    mode,
+    toolSlugs: normalizedSlugs,
+    scoreSnapshot,
+  });
+
+  const { data, error } = await supabase
+    .from("arena_battles")
+    .insert({
+      user_id: user.id,
+      mode,
+      tool_slugs: normalizedSlugs,
+      winner_slug: result.winner_slug,
+      score_snapshot: scoreSnapshot,
+      battle_log: result.battle_log,
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  revalidatePath("/");
+  return data as ArenaBattle;
 }
