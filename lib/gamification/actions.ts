@@ -46,3 +46,32 @@ export async function recordGameInteraction(xpDelta: number): Promise<GameProfil
   revalidatePath("/");
   return data as GameProfile;
 }
+
+export async function claimMission(missionId: string): Promise<GameProfile> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const { data: mission, error: fetchError } = await supabase
+    .from("game_missions")
+    .select("*")
+    .eq("id", missionId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (fetchError || !mission) throw new Error("Mission not found");
+  if (mission.status !== "completed") throw new Error("Mission not completed");
+
+  const { error: claimError } = await supabase
+    .from("game_mission_claims")
+    .insert({ user_id: user.id, mission_id: missionId, xp_awarded: mission.xp_reward });
+
+  if (claimError) throw claimError;
+
+  await supabase
+    .from("game_missions")
+    .update({ status: "claimed" })
+    .eq("id", missionId);
+
+  return recordGameInteraction(mission.xp_reward);
+}
