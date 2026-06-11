@@ -1,47 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import NumberFlow from "@number-flow/react";
 import { Swords, Trophy, RotateCcw } from "lucide-react";
-import { toast } from "sonner";
 
-import type { BattleResult } from "@/lib/gamification/battle-engine";
+import type { BattleResult, BattleTool } from "@/lib/gamification/battle-engine";
 import { useArenaBattle } from "@/lib/gamification/hooks/use-arena-battle";
 import type { ArenaBattleMode } from "@/lib/gamification/types";
+
+const MINIMUM_FIGHT_DURATION_MS = 5000;
 
 export function ArenaBattleStage({
   tools,
   mode,
 }: {
-  tools: { slug: string; votes: number; trend7d: number; comments: number; completeness: number }[];
+  tools: BattleTool[];
   mode: ArenaBattleMode;
 }) {
   const [status, setStatus] = useState<"idle" | "fighting" | "done">("idle");
   const [result, setResult] = useState<BattleResult | null>(null);
   const { mutateAsync } = useArenaBattle();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const startBattle = async () => {
     setStatus("fighting");
     try {
       const battlePromise = mutateAsync({ mode, tools });
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      const battle = await battlePromise;
-      setResult({
-        mode: battle.mode,
-        toolSlugs: battle.tool_slugs,
-        winnerSlug: battle.winner_slug,
-        scoreSnapshot: battle.score_snapshot,
-        battleLog: battle.battle_log,
+      const delayPromise = new Promise<void>((resolve) => {
+        timeoutRef.current = setTimeout(resolve, MINIMUM_FIGHT_DURATION_MS);
       });
-      setStatus("done");
+      const [battle] = await Promise.all([battlePromise, delayPromise]);
+      if (isMountedRef.current) {
+        setResult({
+          mode: battle.mode,
+          toolSlugs: battle.tool_slugs,
+          winnerSlug: battle.winner_slug,
+          scoreSnapshot: battle.score_snapshot,
+          battleLog: battle.battle_log,
+        });
+        setStatus("done");
+      }
     } catch {
-      toast.error("Errore durante la battaglia");
-      setStatus("idle");
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      if (isMountedRef.current) {
+        setStatus("idle");
+      }
     }
   };
 
   const reset = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
     setStatus("idle");
     setResult(null);
   };
