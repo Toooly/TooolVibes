@@ -1,14 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { SOUND_PLAY_EVENT } from "@/lib/config/sound";
 
-const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-portal-v1";
-const INTRO_DURATION_MS = 3600;
+const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-mobile-neon-v1";
+const INTRO_DURATION_MS = 5600;
 const INTRO_HIDDEN_PATHS = ["/admin", "/api", "/auth"];
+const MOBILE_INTRO_QUERY = "(max-width: 767px)";
+const INTRO_TITLE = "TooolVibes";
 
 function hasPlayedIntro() {
   try {
@@ -26,35 +29,33 @@ function markIntroPlayed() {
   }
 }
 
-/* ── Static visual data (no hydration mismatch) ── */
-const PARTICLES = Array.from({ length: 24 }, (_, i) => ({
-  id: i,
-  x: 5 + Math.random() * 90,
-  y: 5 + Math.random() * 90,
-  size: 2 + Math.random() * 3,
-  delay: Math.random() * 2,
-  duration: 3 + Math.random() * 4,
-  opacity: 0.2 + Math.random() * 0.5,
-}));
+const SPARKS = Array.from({ length: 38 }, (_, i) => {
+  const angle = (i / 38) * Math.PI * 2;
+  const radius = 22 + (i % 8) * 4.4;
 
-const FRAGMENTS = Array.from({ length: 8 }, (_, i) => {
-  const shapes = ["hex", "diamond", "triangle", "blob", "star"] as const;
-  const colors = ["#6a3cff", "#39d2f6", "#f3bf4c", "#8b6cff", "#2bb9de"];
   return {
     id: i,
-    shape: shapes[i % shapes.length],
-    color: colors[i % colors.length],
-    orbitRadius: 130 + (i % 3) * 45,
-    orbitDuration: 5 + (i % 3) * 2,
-    orbitDelay: i * 0.35,
-    size: 10 + (i % 3) * 5,
-    startAngle: (i / 8) * Math.PI * 2,
+    x: 50 + Math.cos(angle) * radius,
+    y: 36 + Math.sin(angle) * radius * 0.58,
+    driftX: Math.cos(angle) * (12 + (i % 5) * 4),
+    driftY: Math.sin(angle) * (8 + (i % 4) * 3),
+    size: 1.6 + (i % 4) * 0.7,
+    delay: 0.08 + (i % 10) * 0.055,
+    duration: 2.4 + (i % 6) * 0.28,
+    color:
+      i % 5 === 0
+        ? "255, 213, 94"
+        : i % 3 === 0
+          ? "90, 229, 255"
+          : "136, 91, 255",
   };
 });
 
 export function SiteBrandIntro() {
   const pathname = usePathname();
-  const [phase, setPhase] = useState<"hidden" | "active" | "leaving">("hidden");
+  const [phase, setPhase] = useState<"hidden" | "active" | "leaving">(
+    "hidden",
+  );
   const timersRef = useRef<number[]>([]);
 
   const clearTimers = useCallback(() => {
@@ -90,37 +91,63 @@ export function SiteBrandIntro() {
   );
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
+    const reducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
-    ).matches;
-    const alreadyPlayed = hasPlayedIntro();
+    );
+    const mobileIntroQuery = window.matchMedia(MOBILE_INTRO_QUERY);
     const shouldHide = INTRO_HIDDEN_PATHS.some((path) =>
       pathname?.startsWith(path),
     );
+    let hasStarted = false;
+    let retryTimer = 0;
 
-    if (shouldHide || prefersReducedMotion || alreadyPlayed) {
+    const skipIntro = (announceFinished = true) => {
       document.documentElement.classList.remove(
         "brand-intro-active",
         "brand-intro-preflight",
       );
-      window.dispatchEvent(
-        new CustomEvent("tooolvibes:brand-intro-finished"),
-      );
+      if (announceFinished) {
+        window.dispatchEvent(
+          new CustomEvent("tooolvibes:brand-intro-finished"),
+        );
+      }
       setPhase("hidden");
-      return undefined;
-    }
+    };
 
-    document.documentElement.classList.add("brand-intro-active");
-    setPhase("active");
-    window.dispatchEvent(
-      new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "introOpen" } }),
-    );
+    const tryStartIntro = () => {
+      if (hasStarted) return;
 
-    timersRef.current.push(
-      window.setTimeout(() => finishIntro(false), INTRO_DURATION_MS),
-    );
+      const alreadyPlayed = hasPlayedIntro();
+
+      if (shouldHide || reducedMotionQuery.matches || alreadyPlayed) {
+        skipIntro();
+        return;
+      }
+
+      if (!mobileIntroQuery.matches) {
+        skipIntro(false);
+        return;
+      }
+
+      hasStarted = true;
+      document.documentElement.classList.add("brand-intro-active");
+      setPhase("active");
+      window.dispatchEvent(
+        new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "introOpen" } }),
+      );
+
+      timersRef.current.push(
+        window.setTimeout(() => finishIntro(false), INTRO_DURATION_MS),
+      );
+    };
+
+    tryStartIntro();
+    retryTimer = window.setTimeout(tryStartIntro, 180);
+    mobileIntroQuery.addEventListener("change", tryStartIntro);
 
     return () => {
+      window.clearTimeout(retryTimer);
+      mobileIntroQuery.removeEventListener("change", tryStartIntro);
       clearTimers();
       document.documentElement.classList.remove(
         "brand-intro-active",
@@ -131,88 +158,67 @@ export function SiteBrandIntro() {
 
   const isLeaving = phase === "leaving";
 
-  /* Reduced motion: skip everything visual, just block briefly */
   if (phase === "hidden") return null;
 
   return (
     <div
-      className={`brand-intro ${isLeaving ? "is-leaving" : ""}`}
+      className={`brand-intro brand-intro--mobile ${isLeaving ? "is-leaving" : ""}`}
       aria-hidden={isLeaving}
     >
       <div className="brand-intro__scene">
-        {/* Ambient background glows */}
-        <div className="brand-intro__bg-glow" />
-        <div className="brand-intro__bg-glow brand-intro__bg-glow--secondary" />
-
-        {/* ── Portal ── */}
-        <div className="brand-intro__portal">
-          {/* Rings */}
-          <div className="brand-intro__ring brand-intro__ring--inner" />
-          <div className="brand-intro__ring brand-intro__ring--mid" />
-          <div className="brand-intro__ring brand-intro__ring--outer" />
-
-          {/* Core */}
-          <div className="brand-intro__core" />
-          <div className="brand-intro__core-inner" />
-
-          {/* Orbiting fragments */}
-          {FRAGMENTS.map((f) => (
-            <div
-              key={f.id}
-              className={`brand-intro__fragment brand-intro__fragment--${f.shape}`}
-              style={{
-                ["--orbit-radius" as string]: `${f.orbitRadius}px`,
-                ["--orbit-duration" as string]: `${f.orbitDuration}s`,
-                ["--orbit-delay" as string]: `${f.orbitDelay}s`,
-                ["--fragment-color" as string]: f.color,
-                ["--fragment-size" as string]: `${f.size}px`,
-                ["--start-angle" as string]: `${f.startAngle}rad`,
-              } as React.CSSProperties}
-            />
-          ))}
-
-          {/* Floating particles */}
-          {PARTICLES.map((p) => (
-            <div
-              key={p.id}
-              className="brand-intro__particle"
-              style={{
-                left: `${p.x}%`,
-                top: `${p.y}%`,
-                width: p.size,
-                height: p.size,
-                opacity: p.opacity,
-                animationDelay: `${p.delay}s`,
-                animationDuration: `${p.duration}s`,
-              }}
+        <div className="brand-intro__grain" />
+        <div className="brand-intro__aurora" />
+        <div className="brand-intro__spark-field" aria-hidden="true">
+          {SPARKS.map((spark) => (
+            <span
+              key={spark.id}
+              className="brand-intro__spark"
+              style={
+                {
+                  "--spark-x": `${spark.x}%`,
+                  "--spark-y": `${spark.y}%`,
+                  "--spark-drift-x": `${spark.driftX}px`,
+                  "--spark-drift-y": `${spark.driftY}px`,
+                  "--spark-size": `${spark.size}px`,
+                  "--spark-color": spark.color,
+                  "--spark-delay": `${spark.delay}s`,
+                  "--spark-duration": `${spark.duration}s`,
+                } as CSSProperties
+              }
             />
           ))}
         </div>
 
-        {/* ── Text overlay ── */}
-        <div className="brand-intro__overlay">
-          <BrandLogo size={64} priority className="brand-intro__logo" />
+        <div className="brand-intro__logo-stage" aria-hidden="true">
+          <div className="brand-intro__logo-halo brand-intro__logo-halo--violet" />
+          <div className="brand-intro__logo-halo brand-intro__logo-halo--cyan" />
+          <div className="brand-intro__logo-ring" />
+          <Image
+            src="/brand/tooolvibes-logo.png"
+            alt=""
+            width={360}
+            height={360}
+            priority
+            className="brand-intro__logo"
+          />
+        </div>
 
-          <h1 className="brand-intro__title" aria-label="TOOOLVIBES">
-            {"TOOOLVIBES".split("").map((char, i) => (
+        <div className="brand-intro__copy">
+          <p className="brand-intro__welcome">Welcome in</p>
+
+          <h1 className="brand-intro__title" aria-label={INTRO_TITLE}>
+            {INTRO_TITLE.split("").map((char, i) => (
               <span
                 key={i}
-                style={{ animationDelay: `${1.0 + i * 0.05}s` }}
+                aria-hidden="true"
+                style={{ animationDelay: `${1.72 + i * 0.04}s` }}
               >
                 {char}
               </span>
             ))}
           </h1>
-
-          <p
-            className="brand-intro__caption"
-            style={{ animationDelay: "1.55s" }}
-          >
-            Discover the tools that move the web
-          </p>
         </div>
 
-        {/* Explosion light burst */}
         <div className="brand-intro__explosion" />
       </div>
 
