@@ -132,43 +132,30 @@ export async function claimHiddenSignal(
 
 export async function createArenaBattle(
   mode: ArenaBattleMode,
-  toolSlugs: string[],
-  scoreSnapshot: Record<string, number>,
+  toolData: { slug: string; votes: number; trend7d: number; comments: number; completeness: number }[],
 ): Promise<ArenaBattle> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
-  if (!["1v1", "royale", "bracket"].includes(mode)) {
-    throw new Error("Invalid battle mode");
-  }
-
-  const normalizedSlugs = toolSlugs.map(validateToolSlug);
-  if (normalizedSlugs.length === 0) {
-    throw new Error("At least one tool is required");
-  }
-
-  const result = simulateBattle({
-    mode,
-    toolSlugs: normalizedSlugs,
-    scoreSnapshot,
-  });
+  const result = simulateBattle(toolData, mode, user.id);
 
   const { data, error } = await supabase
     .from("arena_battles")
     .insert({
       user_id: user.id,
       mode,
-      tool_slugs: normalizedSlugs,
-      winner_slug: result.winner_slug,
-      score_snapshot: scoreSnapshot,
-      battle_log: result.battle_log,
+      tool_slugs: result.toolSlugs,
+      winner_slug: result.winnerSlug,
+      score_snapshot: result.scoreSnapshot,
+      battle_log: result.battleLog,
     })
     .select()
     .single();
 
   if (error) throw error;
 
-  revalidatePath("/");
+  await recordGameInteraction(40);
+
   return data as ArenaBattle;
 }
