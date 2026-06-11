@@ -1,19 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import NumberFlow from "@number-flow/react";
 import { Crown, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 let levelUpSoundSrc: string | null = null;
 
@@ -112,54 +104,71 @@ async function fireLevelUpCelebration() {
 
 type LevelUpModalProps = {
   level: number;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onClose: () => void;
 };
 
-export function LevelUpModal({ level, open, onOpenChange }: LevelUpModalProps) {
+export function LevelUpModal({ level, onClose }: LevelUpModalProps) {
   useEffect(() => {
-    if (open && level > 0) {
-      void fireLevelUpCelebration();
-    }
-  }, [open, level]);
+    if (!level) return;
+    void fireLevelUpCelebration();
+    const timer = setTimeout(onClose, 5000);
+    return () => clearTimeout(timer);
+  }, [level, onClose]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-sm">
-        <div className="flex flex-col items-center text-center">
+    <AnimatePresence>
+      {level > 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          onClick={onClose}
+        >
           <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.8, opacity: 0, y: 20 }}
             transition={{ type: "spring", stiffness: 240, damping: 14 }}
-            className="mb-4 flex size-24 items-center justify-center rounded-full bg-gradient-to-br from-[#6a3cff] to-[#39d2f6] text-white shadow-lg shadow-[#6a3cff]/25"
+            className="w-full max-w-sm rounded-2xl border bg-[var(--card)] p-6 text-[var(--card-foreground)] shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
           >
-            <Crown aria-hidden="true" className="size-11" />
+            <div className="flex flex-col items-center text-center">
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 240, damping: 14 }}
+                className="mb-4 flex size-24 items-center justify-center rounded-full bg-gradient-to-br from-[#6a3cff] to-[#39d2f6] text-white shadow-lg shadow-[#6a3cff]/25"
+              >
+                <Crown aria-hidden="true" className="size-11" />
+              </motion.div>
+
+              <div className="space-y-1.5">
+                <h2 className="text-xl font-semibold">Level up!</h2>
+                <p className="max-w-[16rem] text-sm text-[var(--muted-foreground)]">
+                  Sei salito di livello. Continua a esplorare per sbloccare nuove ricompense.
+                </p>
+              </div>
+
+              <div className="mt-3 flex items-baseline justify-center gap-1 text-5xl font-bold text-[var(--accent-strong)]">
+                <NumberFlow value={level} />
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <Button
+                type="button"
+                variant="primary"
+                className="w-full"
+                onClick={onClose}
+              >
+                <Sparkles aria-hidden="true" />
+                Continua
+              </Button>
+            </div>
           </motion.div>
-
-          <DialogHeader className="items-center">
-            <DialogTitle className="text-xl">Level up!</DialogTitle>
-            <DialogDescription className="max-w-[16rem]">
-              Sei salito di livello. Continua a esplorare per sbloccare nuove ricompense.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="mt-3 flex items-baseline justify-center gap-1 text-5xl font-bold text-[var(--accent-strong)]">
-            <NumberFlow value={level} />
-          </div>
-        </div>
-
-        <DialogFooter className="mt-4">
-          <Button
-            type="button"
-            variant="primary"
-            className="w-full"
-            onClick={() => onOpenChange(false)}
-          >
-            <Sparkles aria-hidden="true" />
-            Continua
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

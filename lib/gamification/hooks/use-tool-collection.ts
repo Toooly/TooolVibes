@@ -26,7 +26,7 @@ export function useToolCollection() {
     staleTime: 30_000,
   });
 
-  const discoverMutation = useMutation<ToolCollection, Error, { slug: string; tags?: string[] }>({
+  const discoverMutation = useMutation<void, Error, { slug: string; tags?: string[] }>({
     mutationFn: ({ slug, tags }) => discoverTool(slug, tags),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tool-collection"] });

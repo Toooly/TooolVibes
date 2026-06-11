@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { checkAndAwardBadges } from "@/lib/gamification/actions";
 import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
-import type { GameProfile, UserBadge } from "@/lib/gamification/types";
+import type { UserBadge } from "@/lib/gamification/types";
 import { getBrowserSupabaseClient } from "@/lib/supabase/browser-client";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
@@ -40,18 +40,18 @@ export function useBadges() {
     if (query.data) setBadges(query.data);
   }, [query.data, setBadges]);
 
-  const checkMutation = useMutation<{ awarded: UserBadge[]; profile: GameProfile }, Error, void>({
+  const checkMutation = useMutation<UserBadge[], Error, void>({
     mutationFn: () => checkAndAwardBadges(savedSlugs.length),
-    onSuccess: (data) => {
-      if (data.awarded.length > 0) {
+    onSuccess: (awarded) => {
+      if (awarded.length > 0) {
         queryClient.invalidateQueries({ queryKey: ["user-badges"] });
         queryClient.invalidateQueries({ queryKey: ["game-profile"] });
 
-        data.awarded.forEach((userBadge) => {
+        awarded.forEach((userBadge) => {
           addBadge(userBadge);
         });
 
-        setPendingBadge(data.awarded[0].badge);
+        setPendingBadge(awarded[0].badge);
       }
     },
   });

@@ -7,17 +7,14 @@ import {
   simulateBattle,
 } from "@/lib/gamification/battle-engine";
 import type { BattleTool } from "@/lib/gamification/battle-engine";
-import {
-  evaluateBadges,
-  INITIAL_BADGES,
-} from "@/lib/gamification/badge-rules";
+import { evaluateBadges } from "@/lib/gamification/badge-rules";
 import type {
   ArenaBattle,
   ArenaBattleMode,
+  Badge,
   BadgeContext,
   GameProfile,
   RadarPrediction,
-  ToolCollection,
   UserBadge,
 } from "@/lib/gamification/types";
 import { getPublicPublishedToolsFromSupabase } from "@/lib/supabase/tool-repository";
@@ -277,12 +274,12 @@ function validateCategoryTags(tags: unknown): string[] {
 export async function discoverTool(
   toolSlug: string,
   categoryTags?: unknown,
-): Promise<ToolCollection> {
+): Promise<void> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized");
+  if (!user) return;
 
   const normalizedSlug = validateToolSlug(toolSlug);
   const tags = validateCategoryTags(categoryTags);
@@ -295,23 +292,20 @@ export async function discoverTool(
     .maybeSingle();
 
   if (selectError) throw selectError;
-  if (existing) return existing as ToolCollection;
+  if (existing) return;
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("tool_collections")
-    .insert({ user_id: user.id, tool_slug: normalizedSlug, category_tags: tags })
-    .select()
-    .single();
+    .insert({ user_id: user.id, tool_slug: normalizedSlug, category_tags: tags });
 
   if (error) throw error;
 
   revalidatePath("/");
-  return data as ToolCollection;
 }
 
 export async function checkAndAwardBadges(
   shortlistSize = 0,
-): Promise<{ awarded: UserBadge[]; profile: GameProfile }> {
+): Promise<UserBadge[]> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -328,6 +322,7 @@ export async function checkAndAwardBadges(
 
   const [
     profileResult,
+    badgesResult,
     userBadgesResult,
     missionsResult,
     battlesResult,
@@ -335,6 +330,7 @@ export async function checkAndAwardBadges(
     collectionResult,
   ] = await Promise.all([
     supabase.from("game_profiles").select("*").eq("user_id", user.id).single(),
+    supabase.from("badges").select("*"),
     supabase
       .from("user_badges")
       .select("*, badge:badges(*)")
@@ -361,6 +357,9 @@ export async function checkAndAwardBadges(
   if (profileResult.error) throw profileResult.error;
   const profile = profileResult.data as GameProfile;
 
+  if (badgesResult.error) throw badgesResult.error;
+  const availableBadges = (badgesResult.data ?? []) as Badge[];
+
   const context: BadgeContext = {
     missions_completed: missionsResult.count ?? 0,
     battles_won: battlesResult.count ?? 0,
@@ -371,10 +370,10 @@ export async function checkAndAwardBadges(
   };
 
   const userBadges = (userBadgesResult.data ?? []) as UserBadge[];
-  const newlyAwardedBadges = evaluateBadges(context, userBadges, INITIAL_BADGES);
+  const newlyAwardedBadges = evaluateBadges(context, userBadges, availableBadges);
 
   if (newlyAwardedBadges.length === 0) {
-    return { awarded: [], profile };
+    return [];
   }
 
   const rows = newlyAwardedBadges.map((badge) => ({
@@ -391,8 +390,8 @@ export async function checkAndAwardBadges(
   if (insertError) throw insertError;
 
   const totalXp = newlyAwardedBadges.reduce((sum, badge) => sum + badge.xp_bonus, 0);
-  const updatedProfile = await recordGameInteraction(totalXp);
+  await recordGameInteraction(totalXp);
 
   revalidatePath("/");
-  return { awarded: inserted ?? [], profile: updatedProfile };
+  return inserted ?? [];
 }

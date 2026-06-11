@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import NumberFlow from "@number-flow/react";
 import {
   Bookmark,
@@ -14,14 +14,6 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import type { Badge } from "@/lib/gamification/types";
 import { cn } from "@/lib/utils";
 
@@ -127,63 +119,78 @@ async function fireBadgeCelebration() {
 
 type BadgeUnlockModalProps = {
   badge: Badge | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onClose: () => void;
 };
 
-export function BadgeUnlockModal({ badge, open, onOpenChange }: BadgeUnlockModalProps) {
+export function BadgeUnlockModal({ badge, onClose }: BadgeUnlockModalProps) {
   useEffect(() => {
-    if (open && badge) {
-      void fireBadgeCelebration();
-    }
-  }, [open, badge]);
+    if (!badge) return;
+    void fireBadgeCelebration();
+    const timer = setTimeout(onClose, 4000);
+    return () => clearTimeout(timer);
+  }, [badge, onClose]);
 
-  if (!badge) return null;
-
-  const Icon = ICONS[badge.icon] ?? Sparkles;
+  const Icon = badge ? ICONS[badge.icon] ?? Sparkles : Sparkles;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-sm">
-        <div className="flex flex-col items-center text-center">
+    <AnimatePresence>
+      {badge && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          onClick={onClose}
+        >
           <motion.div
-            initial={{ scale: 0.5, opacity: 0, rotate: -12 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.8, opacity: 0, y: 20 }}
             transition={{ type: "spring", stiffness: 260, damping: 16 }}
-            className={cn(
-              "mb-4 flex size-24 items-center justify-center rounded-full bg-gradient-to-br from-[#f3bf4c] to-[#6a3cff] text-white shadow-lg shadow-[#6a3cff]/25",
-            )}
+            className="w-full max-w-sm rounded-2xl border bg-[var(--card)] p-6 text-[var(--card-foreground)] shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
           >
-            <Icon aria-hidden="true" className="size-11" />
+            <div className="flex flex-col items-center text-center">
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0, rotate: -12 }}
+                animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 260, damping: 16 }}
+                className={cn(
+                  "mb-4 flex size-24 items-center justify-center rounded-full bg-gradient-to-br from-[#f3bf4c] to-[#6a3cff] text-white shadow-lg shadow-[#6a3cff]/25",
+                )}
+              >
+                <Icon aria-hidden="true" className="size-11" />
+              </motion.div>
+
+              <div className="space-y-1.5">
+                <h2 className="text-xl font-semibold">Badge sbloccato!</h2>
+                <p className="max-w-[16rem] text-sm text-[var(--muted-foreground)]">
+                  {badge.description}
+                </p>
+              </div>
+
+              <div className="mt-3 space-y-1">
+                <p className="text-lg font-semibold">{badge.name}</p>
+                <p className="inline-flex items-center gap-1 rounded-full bg-[rgba(106,60,255,0.12)] px-3 py-1 text-sm font-semibold text-[var(--accent-strong)]">
+                  +<NumberFlow value={badge.xp_bonus} /> XP
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <Button
+                type="button"
+                variant="primary"
+                className="w-full"
+                onClick={onClose}
+              >
+                <Sparkles aria-hidden="true" />
+                Fantastico
+              </Button>
+            </div>
           </motion.div>
-
-          <DialogHeader className="items-center">
-            <DialogTitle className="text-xl">Badge sbloccato!</DialogTitle>
-            <DialogDescription className="max-w-[16rem]">
-              {badge.description}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="mt-3 space-y-1">
-            <p className="text-lg font-semibold">{badge.name}</p>
-            <p className="inline-flex items-center gap-1 rounded-full bg-[rgba(106,60,255,0.12)] px-3 py-1 text-sm font-semibold text-[var(--accent-strong)]">
-              +<NumberFlow value={badge.xp_bonus} /> XP
-            </p>
-          </div>
-        </div>
-
-        <DialogFooter className="mt-4">
-          <Button
-            type="button"
-            variant="primary"
-            className="w-full"
-            onClick={() => onOpenChange(false)}
-          >
-            <Sparkles aria-hidden="true" />
-            Fantastico
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
