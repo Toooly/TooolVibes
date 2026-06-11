@@ -72,13 +72,22 @@ export type RadarPrediction = {
   status: RadarPredictionStatus;
 };
 
+export type BadgeContext = {
+  missions_completed: number;
+  battles_won: number;
+  predictions_correct: number;
+  tools_collected: number;
+  streak_days: number;
+  shortlist_size: number;
+};
+
 export type Badge = {
   id: string;
   code: string;
   name: string;
   description: string;
   icon: string;
-  requirement_type: string;
+  requirement_type: keyof BadgeContext;
   requirement_value: number;
   xp_bonus: number;
 };

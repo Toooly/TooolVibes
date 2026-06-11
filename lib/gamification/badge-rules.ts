@@ -1,13 +1,6 @@
-import type { Badge, GameProfile, UserBadge } from "@/lib/gamification/types";
+import type { Badge, BadgeContext, UserBadge } from "@/lib/gamification/types";
 
-export type BadgeContext = {
-  missions_completed: number;
-  battles_won: number;
-  predictions_correct: number;
-  tools_collected: number;
-  streak_days: number;
-  shortlist_size: number;
-};
+export type { BadgeContext } from "@/lib/gamification/types";
 
 export const INITIAL_BADGES: Badge[] = [
   {
@@ -80,7 +73,7 @@ export function evaluateBadges(
   const ownedCodes = new Set(userBadges.map((ub) => ub.badge.code));
   return availableBadges.filter((badge) => {
     if (ownedCodes.has(badge.code)) return false;
-    const value = context[badge.requirement_type as keyof BadgeContext] ?? 0;
+    const value = context[badge.requirement_type] ?? 0;
     return value >= badge.requirement_value;
   });
 }

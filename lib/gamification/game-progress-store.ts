@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+import { calculateLevel } from "@/lib/gamification/level-utils";
 import type { Badge, GameMission, GameProfile, UserBadge } from "@/lib/gamification/types";
 
 type GameProgressState = {
@@ -38,9 +39,13 @@ export const useGameProgressStore = create<GameProgressState>()(
           return { didClaim: false, totalXp: current.totalXp };
         }
         const nextTotal = current.totalXp + xp;
+        const nextProfile = current.profile
+          ? { ...current.profile, xp: nextTotal, level: calculateLevel(nextTotal) }
+          : null;
         set((state) => ({
           claimedRewards: { ...state.claimedRewards, [rewardId]: xp },
           totalXp: nextTotal,
+          profile: nextProfile,
         }));
         return { didClaim: true, totalXp: nextTotal };
       },
@@ -49,15 +54,24 @@ export const useGameProgressStore = create<GameProgressState>()(
       name: "tooolvibes-game-progress",
       storage: createJSONStorage(() => localStorage),
       version: 2,
-      migrate: (persistedState: unknown) => {
-        const state = persistedState as Record<string, unknown>;
-        return {
-          ...state,
-          profile: null,
-          missions: [],
-          badges: [],
-          pendingBadge: null,
+      migrate: (persistedState: unknown, version: number) => {
+        const state = (persistedState ?? {}) as Record<string, unknown>;
+        const base = {
+          claimedRewards: (state.claimedRewards as Record<string, number>) ?? {},
+          totalXp: (state.totalXp as number) ?? 0,
         };
+
+        if (version === 1) {
+          return {
+            ...base,
+            profile: null,
+            missions: [],
+            badges: [],
+            pendingBadge: null,
+          } as unknown as GameProgressState;
+        }
+
+        return { ...state } as unknown as GameProgressState;
       },
     }
   )
