@@ -52,26 +52,14 @@ export async function claimMission(missionId: string): Promise<GameProfile> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
-  const { data: mission, error: fetchError } = await supabase
-    .from("game_missions")
-    .select("*")
-    .eq("id", missionId)
-    .eq("user_id", user.id)
-    .single();
+  const { data, error } = await supabase.rpc("claim_mission", {
+    p_mission_id: missionId,
+    p_user_id: user.id,
+  });
 
-  if (fetchError || !mission) throw new Error("Mission not found");
-  if (mission.status !== "completed") throw new Error("Mission not completed");
+  if (error) throw error;
+  if (!data) throw new Error("Profile not found");
 
-  const { error: claimError } = await supabase
-    .from("game_mission_claims")
-    .insert({ user_id: user.id, mission_id: missionId, xp_awarded: mission.xp_reward });
-
-  if (claimError) throw claimError;
-
-  await supabase
-    .from("game_missions")
-    .update({ status: "claimed" })
-    .eq("id", missionId);
-
-  return recordGameInteraction(mission.xp_reward);
+  revalidatePath("/");
+  return data as GameProfile;
 }

@@ -41,7 +41,6 @@ type GameMissionPanelProps = {
   className?: string;
   description: string;
   eyebrow: string;
-  rewardId: string;
   scope: GameScope;
   title: string;
   variant: GameScope;
@@ -157,7 +156,6 @@ export function GameMissionPanel({
   className,
   description,
   eyebrow,
-  rewardId,
   scope,
   title,
   variant,
@@ -166,8 +164,6 @@ export function GameMissionPanel({
   const { missions, isLoading } = useDailyMissions(scope);
   const claimMissionMutation = useClaimMission();
 
-  const claimedXp = useGameProgressStore((state) => state.claimedRewards[rewardId]);
-  const claimReward = useGameProgressStore((state) => state.claimReward);
   const profile = useGameProgressStore((state) => state.profile);
   const localXp = useGameProgressStore((state) => state.totalXp);
   const displayXp = profile?.xp ?? localXp;
@@ -192,7 +188,7 @@ export function GameMissionPanel({
     };
   }, [missions]);
 
-  const isClaimed = claimedXp !== undefined || totals.allClaimed;
+  const isClaimed = totals.allClaimed;
   const canClaim =
     !isLoading && !claimMissionMutation.isPending && totals.allCompleted && !isClaimed;
 
@@ -220,16 +216,12 @@ export function GameMissionPanel({
     }
 
     const xpToAward = awardedXp > 0 ? awardedXp : totals.rewardXp;
-    const result = claimReward(rewardId, xpToAward);
-
-    if (!result.didClaim) {
-      return;
-    }
+    const totalXp = (profile?.xp ?? localXp) + xpToAward;
 
     sendReward({ type: "CLAIM" });
     void fireRewardBurst(variant);
     toast.success("Ricompensa sbloccata", {
-      description: `+${xpToAward} XP. Totale: ${result.totalXp} XP.`,
+      description: `+${xpToAward} XP. Totale: ${totalXp} XP.`,
     });
   }
 
