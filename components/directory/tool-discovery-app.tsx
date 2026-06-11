@@ -372,6 +372,7 @@ function DirectToolResultCard({
             data-sonic-action="save"
           >
             {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
+            <span className="category-tool-card__icon-label">Preferiti</span>
           </button>
           <button
             type="button"
@@ -381,6 +382,7 @@ function DirectToolResultCard({
             data-sonic-action="compare"
           >
             <Columns3 className="size-4" />
+            <span className="category-tool-card__icon-label">Confronta</span>
           </button>
           <button
             type="button"
@@ -390,6 +392,7 @@ function DirectToolResultCard({
             data-sonic-action="stack"
           >
             <Layers3 className="size-4" />
+            <span className="category-tool-card__icon-label">Stack</span>
           </button>
           <button
             type="button"
@@ -399,6 +402,7 @@ function DirectToolResultCard({
             data-sonic-action="detail"
           >
             <Search className="size-4" />
+            <span className="category-tool-card__icon-label">Apri</span>
           </button>
         </div>
       </div>

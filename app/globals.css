@@ -502,8 +502,11 @@ img {
   }
 
   .mobile-bottom-link[aria-current="page"],
+  .mobile-bottom-link.mobile-bottom-link--compare-ready,
   .mobile-bottom-link[aria-current="page"] svg,
-  .mobile-bottom-link[aria-current="page"] span {
+  .mobile-bottom-link.mobile-bottom-link--compare-ready svg,
+  .mobile-bottom-link[aria-current="page"] span,
+  .mobile-bottom-link.mobile-bottom-link--compare-ready span {
     color: #ffffff !important;
   }
 
@@ -514,7 +517,8 @@ img {
 
   .mobile-bottom-link:hover::after,
   .mobile-bottom-link:focus-visible::after,
-  .mobile-bottom-link[aria-current="page"]::after {
+  .mobile-bottom-link[aria-current="page"]::after,
+  .mobile-bottom-link.mobile-bottom-link--compare-ready::after {
     opacity: 1;
     transform: scale(1);
   }
@@ -529,6 +533,35 @@ img {
     line-height: 1.05;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .mobile-bottom-link__badge {
+    position: absolute;
+    right: 0.38rem;
+    top: 0.32rem;
+    z-index: 2;
+    display: grid;
+    min-width: 1.05rem;
+    height: 1.05rem;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 999px;
+    background: linear-gradient(135deg, #f3bf4c, #39d2f6);
+    color: #171125 !important;
+    font-size: 0.58rem;
+    font-weight: 900;
+    line-height: 1;
+    box-shadow:
+      0 0 0 3px rgba(106, 60, 255, 0.18),
+      0 8px 18px rgba(47, 33, 126, 0.24);
+  }
+
+  .mobile-bottom-link--compare-ping {
+    animation: tv-bottom-compare-ping 860ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .mobile-bottom-link--compare-ping .mobile-bottom-link__badge {
+    animation: tv-bottom-compare-badge 860ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .header-search-icon {
@@ -2256,7 +2289,7 @@ img {
 
   .category-tool-card__actions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.45rem;
     align-items: center;
   }
@@ -2277,11 +2310,14 @@ img {
   }
 
   .category-tool-card__icon-button {
-    display: inline-grid;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.12rem;
     width: 100%;
     min-width: 0;
-    height: 2.5rem;
-    place-items: center;
+    min-height: 2.85rem;
+    align-items: center;
+    justify-content: center;
     border: 1px solid rgba(76, 55, 166, 0.12);
     border-radius: 999px;
     background:
@@ -2319,6 +2355,21 @@ img {
   .category-tool-card__icon-button:focus-visible {
     outline: 2px solid rgba(216, 180, 254, 0.88);
     outline-offset: 3px;
+  }
+
+  .category-tool-card__icon-button svg {
+    flex: 0 0 auto;
+  }
+
+  .category-tool-card__icon-label {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 0.48rem;
+    font-weight: 850;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   @media (min-width: 768px) {
@@ -2463,7 +2514,7 @@ img {
     }
 
     .category-tool-card__actions {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.38rem;
     }
 
@@ -8132,6 +8183,46 @@ img {
     opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0);
+  }
+}
+
+@keyframes tv-bottom-compare-ping {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: saturate(1);
+  }
+
+  38% {
+    transform: translate3d(0, -5px, 0) scale(1.08);
+    filter: saturate(1.28);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: saturate(1);
+  }
+}
+
+@keyframes tv-bottom-compare-badge {
+  0% {
+    transform: scale(0.72);
+    box-shadow:
+      0 0 0 0 rgba(243, 191, 76, 0.38),
+      0 8px 18px rgba(47, 33, 126, 0.24);
+  }
+
+  42% {
+    transform: scale(1.2);
+    box-shadow:
+      0 0 0 8px rgba(57, 210, 246, 0),
+      0 12px 26px rgba(47, 33, 126, 0.28);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 3px rgba(106, 60, 255, 0.18),
+      0 8px 18px rgba(47, 33, 126, 0.24);
   }
 }
 
@@ -14765,22 +14856,33 @@ img {
     top: calc(100% + 0.55rem);
     min-width: 5rem;
     max-width: 7rem;
+    padding: 0.22rem 0.42rem;
+    border: 1px solid rgba(76, 55, 166, 0.13);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.9), transparent 42%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(237, 244, 255, 0.72));
+    box-shadow:
+      0 8px 18px rgba(47, 33, 126, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.74);
     opacity: 0.96;
     text-align: center;
+    backdrop-filter: blur(10px);
   }
 
   .mobile-hero-solar__node .catalog-orbit-node__label strong {
     font-size: 0.72rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    font-weight: 850;
+    color: #171125;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.82);
   }
 
   .mobile-hero-solar__node .catalog-orbit-node__label small {
     display: block;
     margin-top: 0.15rem;
     font-size: 0.6rem;
-    color: rgba(218, 226, 255, 0.78);
+    color: rgba(79, 73, 112, 0.78);
+    text-shadow: none;
   }
 
   /* ── Mobile Spotlight ── */
@@ -15406,6 +15508,27 @@ img {
     overflow: hidden;
   }
 
+  .mobile-tool-card__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    gap: 0.42rem;
+    margin-top: 0.42rem;
+  }
+
+  .mobile-tool-card__actions .selection-chip {
+    min-width: 0;
+    width: 100%;
+    min-height: 2.2rem;
+    justify-content: center;
+    padding-inline: 0.5rem !important;
+    white-space: nowrap;
+  }
+
+  .mobile-tool-card__actions .count-badge-live {
+    padding-inline: 0.32rem;
+    font-size: 0.52rem;
+  }
+
   /* ── Mobile Catalog Empty ── */
   .mobile-catalog-view__empty {
     display: flex;
@@ -15473,6 +15596,7 @@ img {
   .mobile-radar-view {
     display: flex;
     flex-direction: column;
+    padding-top: 1.55rem;
     background: #0a0a1a;
     color: #ffffff;
   }
@@ -15480,23 +15604,45 @@ img {
   .mobile-radar-view__header {
     position: relative;
     z-index: 10;
-    padding: 1.25rem 1rem 0.75rem;
+    padding: 1.35rem 1rem 0.75rem;
     text-align: center;
+  }
+
+  .mobile-radar-view__powered {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.28rem;
+    margin-bottom: 0.45rem;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .mobile-radar-view__powered strong {
+    color: #ffffff;
+    font-weight: 900;
   }
 
   .mobile-radar-view__live {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: #ff4d4d;
-    background: rgba(255, 77, 77, 0.1);
-    border: 1px solid rgba(255, 77, 77, 0.25);
-    padding: 0.3rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: #49f28a;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.18), transparent 36%),
+      linear-gradient(135deg, rgba(34, 197, 94, 0.16), rgba(57, 210, 246, 0.1));
+    border: 1px solid rgba(74, 222, 128, 0.34);
+    padding: 0.42rem 0.9rem;
     border-radius: 999px;
-    margin-bottom: 0.55rem;
+    margin-bottom: 0.62rem;
+    text-transform: uppercase;
+    box-shadow: 0 0 24px rgba(34, 197, 94, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
 
   .mobile-radar-view__live-dot {
@@ -15516,15 +15662,17 @@ img {
   .mobile-radar-view__header h1 {
     margin: 0;
     font-family: "Rubik", sans-serif;
-    font-size: 1.35rem;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1.1;
     color: #ffffff;
   }
 
   .mobile-radar-view__header p {
-    margin: 0.3rem 0 0;
+    max-width: 17rem;
+    margin: 0 auto;
     font-size: 0.82rem;
+    line-height: 1.45;
     color: rgba(255, 255, 255, 0.72);
   }
 
@@ -16991,8 +17139,8 @@ img {
     top: 3.5rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 18rem;
-    height: 18rem;
+    width: min(18rem, calc(100vw - 2rem));
+    height: min(18rem, calc(100vw - 2rem));
     pointer-events: none;
   }
 
@@ -17074,7 +17222,7 @@ img {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%) rotate(var(--sat-angle)) translateX(8.5rem) rotate(calc(-1 * var(--sat-angle)));
+    transform: translate(-50%, -50%) rotate(var(--sat-angle)) translateX(7.95rem) rotate(calc(-1 * var(--sat-angle)));
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18383,6 +18531,20 @@ img {
     transform: translateX(-50%);
   }
 
+  .mobile-spotlight-cosmic__weekly-pill::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 0.35rem);
+    width: 1px;
+    height: 3.55rem;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(243, 191, 76, 0.86), rgba(57, 210, 246, 0.38), transparent);
+    box-shadow: 0 0 18px rgba(243, 191, 76, 0.34);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
   .mobile-spotlight-cosmic__planet::after {
     content: "";
     position: absolute;
@@ -18397,12 +18559,38 @@ img {
     animation: tv-spotlight-alert 1.8s ease-in-out infinite;
   }
 
+  .mobile-spotlight-cosmic__planet-label {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 0.62rem);
+    z-index: 6;
+    display: inline-flex;
+    max-width: 8rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.28rem 0.68rem;
+    color: #171125;
+    font-size: 0.74rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.76);
+    transform: translateX(-50%);
+    box-shadow:
+      0 12px 30px rgba(57, 210, 246, 0.16),
+      0 0 24px color-mix(in srgb, var(--planet-a) 28%, transparent);
+  }
+
   .mobile-spotlight-cosmic__satellites {
     position: absolute;
     inset: 0;
     z-index: 4;
     animation: cosmic-satellites-spin 26s linear infinite;
     transform-origin: 50% 50%;
+    transform-box: fill-box;
   }
 
   @keyframes cosmic-satellites-spin {
@@ -18557,9 +18745,13 @@ img {
 
   .mobile-radar-view__live {
     color: #49f28a;
-    background: rgba(34, 197, 94, 0.12);
-    border-color: rgba(74, 222, 128, 0.32);
-    box-shadow: 0 0 24px rgba(34, 197, 94, 0.16);
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.18), transparent 36%),
+      linear-gradient(135deg, rgba(34, 197, 94, 0.16), rgba(57, 210, 246, 0.1));
+    border-color: rgba(74, 222, 128, 0.34);
+    box-shadow:
+      0 0 24px rgba(34, 197, 94, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
 
   .mobile-radar-view__live-dot {
@@ -19287,6 +19479,7 @@ img {
 
   .mobile-spotlight-cosmic__satellite {
     animation: cosmic-satellite-orbit-upright 26s linear infinite;
+    transform-origin: 50% 50%;
     will-change: transform;
   }
 
@@ -19325,14 +19518,14 @@ img {
       transform:
         translate(-50%, -50%)
         rotate(var(--sat-angle))
-        translateX(8.5rem)
+        translateX(7.95rem)
         rotate(var(--sat-angle-back));
     }
     to {
       transform:
         translate(-50%, -50%)
         rotate(calc(var(--sat-angle) + 360deg))
-        translateX(8.5rem)
+        translateX(7.95rem)
         rotate(calc(var(--sat-angle-back) - 360deg));
     }
   }

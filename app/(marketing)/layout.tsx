@@ -1,6 +1,5 @@
 import { AccountProvider } from "@/components/account/account-provider";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/discovery-persistence-provider";
-import { SiteUniverseBackground } from "@/components/app/site-universe-background";
 import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
@@ -14,7 +13,14 @@ export default function MarketingLayout({
 }>) {
   return (
     <div className="marketing-shell relative overflow-x-clip">
-      <SiteUniverseBackground />
+      <div
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 28%, rgba(237, 233, 254, 0.96) 0%, rgba(247, 245, 255, 0.98) 48%, #f7f5ff 100%)",
+        }}
+        aria-hidden="true"
+      />
       <OrbitalProvider>
         <OrbitalLayer />
         <AccountProvider>

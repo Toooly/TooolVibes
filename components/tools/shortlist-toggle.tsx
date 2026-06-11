@@ -115,7 +115,7 @@ export function ShortlistToggle({
           boxShadow: isSaved ? "0 0 0 4px rgba(112,82,255,0.12)" : "0 0 0 4px rgba(242,179,71,0.12)",
         }}
       />
-      {isSaved ? "In shortlist" : mode === "compact" ? "Salva" : "Salva shortlist"}
+      {isSaved ? "Nei preferiti" : "Preferiti"}
     </button>
   );
 }

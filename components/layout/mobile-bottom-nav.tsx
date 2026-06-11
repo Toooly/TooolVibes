@@ -1,11 +1,13 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bookmark, Columns3, Home, Radar, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 const mobileItems = [
   { href: "/", label: "Home", icon: Home },
@@ -18,6 +20,21 @@ const mobileItems = [
 export function MobileBottomNav() {
   const pathname = usePathname();
   const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
+  const compareCount = useToolWorkspaceStore((s) => s.compareSlugs.length);
+  const previousCompareCountRef = useRef(compareCount);
+  const [comparePing, setComparePing] = useState(false);
+
+  useEffect(() => {
+    if (compareCount > previousCompareCountRef.current) {
+      setComparePing(true);
+      const timer = window.setTimeout(() => setComparePing(false), 860);
+      previousCompareCountRef.current = compareCount;
+      return () => window.clearTimeout(timer);
+    }
+
+    previousCompareCountRef.current = compareCount;
+    return undefined;
+  }, [compareCount]);
 
   if (pathname.startsWith("/admin")) {
     return null;
@@ -35,8 +52,10 @@ export function MobileBottomNav() {
       <div className="grid grid-cols-5 gap-1 p-1.5">
         {mobileItems.map((item) => {
           const Icon = item.icon;
+          const isCompareItem = item.href === "/compare";
           const active =
             pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+          const compareHasItems = isCompareItem && compareCount > 0;
 
           return (
             <Link
@@ -45,13 +64,20 @@ export function MobileBottomNav() {
               aria-current={active ? "page" : undefined}
               className={cn(
                 "mobile-bottom-link flex min-h-12 flex-col items-center justify-center gap-1 rounded-[20px] text-[0.64rem] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
-                active
+                active || compareHasItems
                   ? "bg-[radial-gradient(circle_at_22%_0%,rgba(255,255,255,0.32),transparent_38%),radial-gradient(circle_at_86%_10%,rgba(94,226,255,0.32),transparent_34%),linear-gradient(135deg,#24105c_0%,#7c3aed_45%,#5268ff_74%,#0f766e_100%)] text-white shadow-[0_12px_28px_rgba(99,102,241,0.34),0_0_24px_rgba(94,226,255,0.16),inset_0_1px_0_rgba(255,255,255,0.3)]"
                   : "text-[var(--muted-strong)] hover:bg-white/80 hover:text-[var(--accent-strong)]",
+                compareHasItems && "mobile-bottom-link--compare-ready",
+                isCompareItem && comparePing && "mobile-bottom-link--compare-ping",
               )}
             >
               <Icon className="size-5" aria-hidden="true" />
               <span>{item.label}</span>
+              {isCompareItem && compareCount > 0 ? (
+                <span className="mobile-bottom-link__badge" aria-label={`${compareCount} tool in confronto`}>
+                  {compareCount}
+                </span>
+              ) : null}
             </Link>
           );
         })}

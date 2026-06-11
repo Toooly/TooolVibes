@@ -26,7 +26,7 @@ type ProductHuntItem = {
 };
 
 type ProductHuntPayload = {
-  status: "ok" | "error";
+  status: "ok" | "missing-token" | "error";
   range: ProductHuntRange;
   updatedAt: string;
   items: ProductHuntItem[];
@@ -94,8 +94,6 @@ export function MobileRadarView() {
 
   useEffect(() => {
     fetchRange("day");
-    fetchRange("week");
-    fetchRange("month");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -106,8 +104,6 @@ export function MobileRadarView() {
     const onVis = () => {
       if (!document.hidden) {
         fetchRange("day");
-        fetchRange("week");
-        fetchRange("month");
       }
     };
     document.addEventListener("visibilitychange", onVis);
@@ -248,28 +244,39 @@ export function MobileRadarView() {
             ...visibleItems,
             ...fallbackRadarItems.slice(visibleItems.length, RADAR_NODE_COUNT),
           ];
-    const maxComments = Math.max(...visibleItems.map((i) => i.commentsCount), 1);
+    const voteCounts = visibleItems.map((item) => item.votesCount);
+    const minVotes = voteCounts.length ? Math.min(...voteCounts) : 0;
+    const maxVotes = voteCounts.length ? Math.max(...voteCounts) : 1;
+    const voteRange = Math.max(1, maxVotes - minVotes);
 
     return items.map((item, index) => {
       const layout = RADAR_NODE_LAYOUT[index] ?? {
         angle: (index / RADAR_NODE_COUNT) * Math.PI * 2,
         radiusRatio: 0.68,
       };
+      const voteScore = item.votesCount
+        ? (item.votesCount - minVotes) / voteRange
+        : 0;
+      const isPlaceholder = item.id.startsWith("radar-placeholder-");
+      const radiusRatio = isPlaceholder
+        ? layout.radiusRatio
+        : 0.38 + (1 - voteScore) * 0.42;
       const normalizedAngle = (layout.angle + Math.PI * 2) % (Math.PI * 2);
-      const x = Math.cos(layout.angle) * layout.radiusRatio * 46;
-      const y = Math.sin(layout.angle) * layout.radiusRatio * 46;
+      const x = Math.cos(layout.angle) * radiusRatio * 46;
+      const y = Math.sin(layout.angle) * radiusRatio * 46;
       const size = item.votesCount
-        ? 46 + 8 * (item.commentsCount / maxComments)
+        ? 43 + 9 * voteScore
         : 42;
 
       return {
         ...item,
         angle: layout.angle,
+        radiusRatio,
         x,
         y,
         size: Math.min(size, 52),
         hitDelay: normalizedAngle / RADAR_SWEEP_SPEED,
-        isPlaceholder: item.id.startsWith("radar-placeholder-"),
+        isPlaceholder,
       };
     });
   }, [currentItems]);
@@ -279,12 +286,16 @@ export function MobileRadarView() {
     <div className="mobile-radar-view relative min-h-screen overflow-hidden bg-[#0a0a1a]">
       {/* Header */}
       <div className="mobile-radar-view__header">
-        <span className="mobile-radar-view__live">
-          <span className="mobile-radar-view__live-dot" />
-          LIVE
+        <span className="mobile-radar-view__powered">
+          Powered by <strong>Product Hunt</strong>
         </span>
-        <h1>Radar</h1>
-        <p>Scopri i migliori tool lanciati nelle ultime ore.</p>
+        <h1>
+          <span className="mobile-radar-view__live">
+            <span className="mobile-radar-view__live-dot" />
+            Live Radar
+          </span>
+        </h1>
+        <p>Scopri i tool migliori di Product Hunt.</p>
       </div>
 
       {/* Radar Stage */}

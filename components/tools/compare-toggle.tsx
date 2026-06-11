@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Columns3 } from "lucide-react";
 
 import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
@@ -90,14 +91,7 @@ export function CompareToggle({
         aria-label={isSelected ? "Rimuovi dal compare" : "Aggiungi al compare"}
         data-sonic-action="compare"
       >
-        <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
-          <path
-            d="M4 7h16M4 12h10M4 17h16"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-        </svg>
+        <Columns3 className="h-4 w-4" aria-hidden="true" />
       </button>
     );
   }

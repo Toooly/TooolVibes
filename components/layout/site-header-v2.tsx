@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
@@ -89,6 +89,7 @@ export function SiteHeaderV2() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const lastMenuPointerToggleRef = useRef(0);
   const spatialRoute = pathname === "/" || pathname?.startsWith("/archivio");
 
   useEffect(() => {
@@ -106,6 +107,23 @@ export function SiteHeaderV2() {
     setOverlayOpen(menuOpen || searchOpen);
   }, [menuOpen, searchOpen, setOverlayOpen]);
 
+  const toggleMobileMenu = () => {
+    setMenuOpen((open) => !open);
+  };
+
+  const handleMobileMenuPointerUp = () => {
+    lastMenuPointerToggleRef.current = Date.now();
+    toggleMobileMenu();
+  };
+
+  const handleMobileMenuClick = () => {
+    if (Date.now() - lastMenuPointerToggleRef.current < 120) {
+      return;
+    }
+
+    toggleMobileMenu();
+  };
+
   return (
     <>
       <header className="site-header-v2 fixed left-0 right-0 top-0 z-50 transition-all duration-500" style={{ transform: "translateZ(0)", willChange: "transform" }}>
@@ -116,7 +134,7 @@ export function SiteHeaderV2() {
               : "bg-transparent"
           }`}
         >
-          <div className="flex h-16 items-center justify-between px-4 md:px-6">
+          <div className="relative flex h-16 items-center justify-between px-4 md:px-6">
             {/* Logo */}
             <Link href="/" className="group relative flex items-center gap-3" data-sonic-action="brand">
               <div className="relative transition-transform duration-300 group-hover:scale-105">
@@ -133,6 +151,19 @@ export function SiteHeaderV2() {
                 TOOOLVIBES
               </span>
             </Link>
+
+            <span
+              className="pointer-events-none absolute left-1/2 top-1/2 block -translate-x-1/2 -translate-y-1/2 text-[0.92rem] font-black uppercase tracking-[0.16em] lg:hidden"
+              aria-hidden="true"
+              style={{
+                background: "linear-gradient(110deg, #6a3cff 0%, #39d2f6 58%, #f3bf4c 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                filter: "drop-shadow(0 8px 18px rgba(106,60,255,0.16))",
+              }}
+            >
+              TooolVibes
+            </span>
 
             {/* Desktop Nav */}
             <nav className="hidden items-center gap-1 lg:flex">
@@ -192,7 +223,11 @@ export function SiteHeaderV2() {
               {/* Mobile menu toggle */}
               <button
                 className="flex rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] lg:hidden"
-                onClick={() => setMenuOpen(!menuOpen)}
+                aria-controls="mobile-site-menu"
+                aria-expanded={menuOpen}
+                aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
+                onClick={handleMobileMenuClick}
+                onPointerUp={handleMobileMenuPointerUp}
                 type="button"
               >
                 <motion.div animate={{ rotate: menuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
@@ -237,17 +272,41 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[55] bg-[rgba(18,13,47,0.4)] backdrop-blur-md lg:hidden"
+            className="fixed inset-0 z-[90] bg-[rgba(18,13,47,0.4)] backdrop-blur-md lg:hidden"
             onClick={() => setMenuOpen(false)}
-          >
+            >
             <motion.nav
+              id="mobile-site-menu"
               initial={{ x: "100%", opacity: 0.8 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0.8 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute right-0 top-0 h-full w-[300px] max-w-[85vw] border-l border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.96)] p-6 pt-20 shadow-[-16px_0_48px_rgba(106,60,255,0.08)]"
+              className="mobile-menu-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.97)] p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-16px_0_48px_rgba(106,60,255,0.08)]"
               onClick={(e) => e.stopPropagation()}
             >
+              <div className="mb-7 flex items-center justify-between gap-4">
+                <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+                  <BrandLogo size={34} priority />
+                  <span
+                    className="text-sm font-black uppercase tracking-[0.14em]"
+                    style={{
+                      background: "linear-gradient(110deg, #6a3cff 0%, #39d2f6 62%, #f3bf4c 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    TooolVibes
+                  </span>
+                </Link>
+                <button
+                  type="button"
+                  className="grid size-11 place-items-center rounded-2xl border border-[rgba(106,60,255,0.12)] bg-white/80 text-[#4f4970] shadow-[0_8px_24px_rgba(106,60,255,0.08)]"
+                  aria-label="Chiudi menu"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <X size={22} />
+                </button>
+              </div>
               <div className="mb-6 flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-[#4f4970]">
                 <Sparkles size={12} className="text-[#6a3cff]" />
                 Navigazione

@@ -55,7 +55,7 @@ type ProductHuntGraphQlResponse = {
 
 const PRODUCT_HUNT_ENDPOINT = "https://api.producthunt.com/v2/api/graphql";
 const PRODUCT_HUNT_OAUTH_ENDPOINT = "https://api.producthunt.com/v2/oauth/token";
-const productHuntFetch = createTimeoutFetch(8000);
+const productHuntFetch = createTimeoutFetch(5000);
 
 const PRODUCT_HUNT_QUERY = /* GraphQL */ `
   query TooolVibesProductHuntTop(
@@ -87,9 +87,9 @@ const PRODUCT_HUNT_QUERY = /* GraphQL */ `
 `;
 
 const rangeSettings: Record<ProductHuntRange, { days: number; ttlMs: number; first: number }> = {
-  day: { days: 1, ttlMs: 30 * 60 * 1000, first: 40 },
-  week: { days: 7, ttlMs: 3 * 60 * 60 * 1000, first: 60 },
-  month: { days: 30, ttlMs: 12 * 60 * 60 * 1000, first: 80 },
+  day: { days: 1, ttlMs: 30 * 60 * 1000, first: 20 },
+  week: { days: 7, ttlMs: 3 * 60 * 60 * 1000, first: 30 },
+  month: { days: 30, ttlMs: 12 * 60 * 60 * 1000, first: 40 },
 };
 
 const responseCache = new Map<

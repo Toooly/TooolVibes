@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { AnimatePresence } from "motion/react";
@@ -9,22 +9,6 @@ import { OrbitingBadge } from "./orbiting-badge";
 import { OrbitalCoreNode } from "./orbital-core-node";
 import type { OrbitalItem, OrbitConfig } from "./types";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
-
-function generateDecorItems(count: number, sectionId: string): OrbitalItem[] {
-  const shapes: OrbitalItem["shapeType"][] = ["shard", "blob", "gem", "crystal", "hexagon"];
-  return Array.from({ length: count }, (_, i) => ({
-    id: `decor-${sectionId}-${i}`,
-    title: "Elemento",
-    initials: "●",
-    description: "Elemento orbitale del sistema TooolVibes",
-    category: "Sistema",
-    href: "#",
-    sectionId,
-    priority: 0,
-    color: "#6a3cff",
-    shapeType: shapes[i % shapes.length],
-  }));
-}
 
 function getSectionShift(sectionId: string | null): number {
   if (!sectionId) return 0;
@@ -528,8 +512,19 @@ export function OrbitalLayer() {
     pathname?.startsWith("/compare") || pathname?.startsWith("/shortlist")
   );
   const isProductHuntMobile = (profile.isMobile || isCompactViewport) && pathname?.startsWith("/product-hunt");
-  const hideFloatingLayer = pathname === "/" || pathname?.startsWith("/archivio") || isDenseMobilePage || isProductHuntMobile;
-  const hideCoreNode = pathname === "/" || pathname?.startsWith("/archivio") || isDenseMobilePage || isProductHuntMobile;
+  const isToolDetailPage = pathname?.startsWith("/toools/");
+  const hideFloatingLayer =
+    pathname === "/" ||
+    pathname?.startsWith("/archivio") ||
+    isDenseMobilePage ||
+    isProductHuntMobile ||
+    isToolDetailPage;
+  const hideCoreNode =
+    pathname === "/" ||
+    pathname?.startsWith("/archivio") ||
+    isDenseMobilePage ||
+    isProductHuntMobile ||
+    isToolDetailPage;
   useScrollState();
 
   useEffect(() => {
@@ -569,11 +564,11 @@ export function OrbitalLayer() {
   // Calcola gli item attivi in base alla sezione
   const activeItems = useMemo<OrbitalItem[]>(() => {
     if (!activeSectionId) {
-      return generateDecorItems(Math.min(5, profile.maxItems), "decor-default");
+      return [];
     }
     const items = getItemsForSection(activeSectionId);
     if (items.length === 0) {
-      return generateDecorItems(Math.min(5, profile.maxItems), activeSectionId);
+      return [];
     }
     return items.slice(0, profile.maxItems);
   }, [activeSectionId, getItemsForSection, profile.maxItems]);

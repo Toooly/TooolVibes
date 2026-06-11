@@ -82,6 +82,9 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
               <span>{tool.name.slice(0, 2).toUpperCase()}</span>
             )}
           </div>
+          <span className="mobile-spotlight-cosmic__planet-label">
+            {tool.name}
+          </span>
         </div>
 
         {/* Satelliti */}

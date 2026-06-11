@@ -31,7 +31,7 @@ import {
   Monitor,
   Clock,
   ChevronDown,
-  GitCompare,
+  Columns3,
 } from "lucide-react";
 import Fuse from "fuse.js";
 import { CompareToggle } from "@/components/tools/compare-toggle";
@@ -466,7 +466,7 @@ function MobileCompareToolbox({ tools }: { tools: DirectoryTool[] }) {
     <section className="mobile-compare-toolbox" aria-label="Toolbox confronto">
       <div className="mobile-compare-toolbox__header">
         <span className="mobile-compare-toolbox__icon">
-          <GitCompare size={16} aria-hidden="true" />
+          <Columns3 size={16} aria-hidden="true" />
         </span>
         <div>
           <h3>Toolbox confronto</h3>
@@ -540,9 +540,9 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
           </p>
         </div>
       </Link>
-      <div className="absolute right-2 top-2 z-10 flex items-center gap-1">
-        <CompareToggle slug={tool.slug} mode="icon" />
-        <ShortlistToggle slug={tool.slug} mode="icon" />
+      <div className="mobile-tool-card__actions">
+        <CompareToggle slug={tool.slug} compact />
+        <ShortlistToggle slug={tool.slug} mode="compact" />
       </div>
     </motion.div>
   );

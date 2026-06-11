@@ -590,18 +590,6 @@ export function InteractionSoundLayer() {
       }
     }
 
-    function getEventPoint(event: MouseEvent, target: HTMLElement) {
-      if (event.clientX || event.clientY) {
-        return { clientX: event.clientX, clientY: event.clientY };
-      }
-
-      const rect = target.getBoundingClientRect();
-      return {
-        clientX: rect.left + rect.width / 2,
-        clientY: rect.top + rect.height / 2,
-      };
-    }
-
     function handleInteraction(target: HTMLElement, soundKind: SoundKind) {
       addPulse(target);
 
