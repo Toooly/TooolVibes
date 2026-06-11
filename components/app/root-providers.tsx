@@ -8,6 +8,7 @@ import { GlobalExperienceLayer } from "@/components/app/global-experience-layer"
 import { SiteBrandIntro } from "@/components/app/home-brand-intro";
 import { InteractionSoundLayer } from "@/components/app/interaction-sound-layer";
 import { RouteTransitionLoader } from "@/components/app/route-transition-loader";
+import { GameEffectsLayer } from "@/components/gamification/game-effects-layer";
 import { MotionObserver } from "@/components/ui/motion-observer";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -34,6 +35,7 @@ export function RootProviders({ children }: { children: React.ReactNode }) {
         <MotionObserver />
         <RouteTransitionLoader />
         <InteractionSoundLayer />
+        <GameEffectsLayer />
         <GlobalCommandPalette />
         <Toaster position="top-right" richColors closeButton />
       </TooltipProvider>

@@ -11,11 +11,13 @@ type GameProgressState = {
   missions: GameMission[];
   badges: UserBadge[];
   pendingBadge: Badge | null;
+  pendingLevelUp: number | null;
   setProfile: (profile: GameProfile) => void;
   setMissions: (missions: GameMission[]) => void;
   setBadges: (badges: UserBadge[]) => void;
   addBadge: (badge: UserBadge) => void;
   setPendingBadge: (badge: Badge | null) => void;
+  setPendingLevelUp: (level: number | null) => void;
   claimReward: (rewardId: string, xp: number) => { didClaim: boolean; totalXp: number };
 };
 
@@ -28,11 +30,13 @@ export const useGameProgressStore = create<GameProgressState>()(
       missions: [],
       badges: [],
       pendingBadge: null,
+      pendingLevelUp: null,
       setProfile: (profile) => set({ profile }),
       setMissions: (missions) => set({ missions }),
       setBadges: (badges) => set({ badges }),
       addBadge: (badge) => set({ badges: [...get().badges, badge] }),
       setPendingBadge: (pendingBadge) => set({ pendingBadge }),
+      setPendingLevelUp: (pendingLevelUp) => set({ pendingLevelUp }),
       claimReward: (rewardId, xp) => {
         const current = get();
         if (current.claimedRewards[rewardId] !== undefined) {

@@ -2,8 +2,9 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { checkAndAwardBadges, createRadarPrediction } from "@/lib/gamification/actions";
+import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
 import { getBrowserSupabaseClient } from "@/lib/supabase/browser-client";
-import { createRadarPrediction } from "@/lib/gamification/actions";
 import type { RadarPrediction } from "@/lib/gamification/types";
 
 async function fetchPrediction(): Promise<RadarPrediction | null> {
@@ -21,6 +22,7 @@ async function fetchPrediction(): Promise<RadarPrediction | null> {
 
 export function useRadarPrediction() {
   const queryClient = useQueryClient();
+  const setPendingBadge = useGameProgressStore((s) => s.setPendingBadge);
 
   const query = useQuery({
     queryKey: ["radar-prediction"],
@@ -30,9 +32,14 @@ export function useRadarPrediction() {
 
   const mutation = useMutation({
     mutationFn: createRadarPrediction,
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["radar-prediction"] });
       queryClient.invalidateQueries({ queryKey: ["game-profile"] });
+
+      const awarded = await checkAndAwardBadges();
+      if (awarded.length > 0) {
+        setPendingBadge(awarded[0].badge);
+      }
     },
   });
 
