@@ -34,14 +34,14 @@ export function LeaderboardStrip({ className }: LeaderboardStripProps) {
         gradient={false}
         className="leaderboard-strip__marquee"
       >
-        {entries.map((entry, index) => (
+        {entries.map((entry) => (
           <div
             key={entry.user_id}
             className="leaderboard-strip__item"
-            aria-label={`Posizione ${index + 1}, ${entry.xp_gained} XP`}
+            aria-label={`Posizione ${entry.rank ?? "-"}, ${entry.xp_gained} XP`}
           >
-            <span className="leaderboard-strip__rank">#{index + 1}</span>
-            <span className="leaderboard-strip__name">Hunter</span>
+            <span className="leaderboard-strip__rank">#{entry.rank ?? "-"}</span>
+            <span className="leaderboard-strip__name">{entry.user_id.slice(0, 6)}</span>
             <span className="leaderboard-strip__xp">
               <NumberFlow value={entry.xp_gained} /> XP
             </span>

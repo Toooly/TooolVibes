@@ -73,7 +73,7 @@ export function ArenaBattleStage({
   };
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--gradient-panel)] p-6 shadow-card">
+    <section className="arena-battle-stage">
       <header className="mb-6 flex items-center gap-3">
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-soft)] text-[var(--accent)]">
           <Swords className="h-5 w-5" aria-hidden="true" />

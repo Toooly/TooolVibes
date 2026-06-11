@@ -8334,6 +8334,20 @@ img {
   }
 }
 
+@keyframes sonic-tap {
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(0.94);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 @keyframes tv-sonic-singularity {
   0% {
     opacity: 0;
@@ -9813,6 +9827,10 @@ img {
   .is-sonic-tap:is(.premium-button, .button-shell, .dynamic-link-card, .animated-link, summary, [role="button"], .category-tool-card__icon-button, .selection-chip, .mobile-bottom-link),
   .brand-mark.is-sonic-tap {
     animation: tv-sonic-tap 500ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  }
+
+  .is-sonic-tap {
+    animation: sonic-tap 560ms ease-out;
   }
 
   .brand-intro__skip.is-sonic-tap {
@@ -19703,27 +19721,22 @@ img {
     color: var(--foreground);
   }
 
-  /* ── Leaderboard Strip ── */
-  .leaderboard-strip {
-    display: none;
+  /* ── Arena Battle Stage ── */
+  .arena-battle-stage {
+    @apply relative flex min-h-[20rem] flex-col items-center justify-center gap-6 rounded-2xl border border-white/10 bg-zinc-950/50 p-6;
   }
 
-  @media (min-width: 1024px) {
-    .leaderboard-strip {
-      position: fixed;
-      top: 4.6rem;
-      right: 1rem;
-      z-index: 45;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      width: 18rem;
-      padding: 0.45rem 0.75rem;
-      border-radius: 1rem;
-      background: var(--surface-strong);
-      border: 1px solid var(--line);
-      box-shadow: 0 4px 20px rgba(47, 33, 126, 0.06);
-    }
+  /* ── Leaderboard Strip ── */
+  .leaderboard-strip {
+    position: relative;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.45rem 0.75rem;
+    background: var(--surface-strong);
+    border-bottom: 1px solid var(--line);
   }
 
   .leaderboard-strip__badge {
