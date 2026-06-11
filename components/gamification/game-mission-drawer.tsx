@@ -29,7 +29,7 @@ function useIsMobile() {
   useEffect(() => {
     const mediaQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
     const update = (event: MediaQueryListEvent | MediaQueryList) => {
-      setIsMobile("matches" in event ? event.matches : event.matches);
+      setIsMobile(event.matches);
     };
     update(mediaQuery);
     mediaQuery.addEventListener("change", update);
@@ -66,20 +66,20 @@ export function GameMissionDrawer({ className }: GameMissionDrawerProps) {
     </>
   );
 
-  const fab = (
-    <button
-      type="button"
-      className={cn("game-mission-fab", className)}
-      aria-label="Apri le missioni giornaliere"
-    >
+  const triggerClassName = cn("game-mission-fab", className);
+  const triggerContent = (
+    <>
       <Target size={22} aria-hidden="true" />
-    </button>
+      <span className="sr-only">Apri le missioni giornaliere</span>
+    </>
   );
 
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerTrigger asChild>{fab}</DrawerTrigger>
+        <DrawerTrigger className={triggerClassName}>
+          {triggerContent}
+        </DrawerTrigger>
         <DrawerContent className="game-mission-drawer game-mission-drawer--mobile">
           <DrawerTitle className="sr-only">Missioni Radar</DrawerTitle>
           <div className="game-mission-drawer__body">
@@ -93,7 +93,9 @@ export function GameMissionDrawer({ className }: GameMissionDrawerProps) {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>{fab}</SheetTrigger>
+      <SheetTrigger className={triggerClassName}>
+        {triggerContent}
+      </SheetTrigger>
       <SheetContent side="right" className="game-mission-drawer game-mission-drawer--desktop">
         <SheetHeader className="sr-only">
           <SheetTitle>Missioni Radar</SheetTitle>
