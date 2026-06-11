@@ -14121,6 +14121,12 @@ img {
   pointer-events: none;
 }
 
+.mobile-hero-solar__system > .catalog-orbit-depth,
+.home-orbit-system > .catalog-orbit-depth,
+.home-orbit-planet {
+  display: none !important;
+}
+
 .catalog-orbit-ring {
   position: absolute;
   left: 50%;
@@ -15534,6 +15540,22 @@ img {
     border-radius: 50%;
   }
 
+  .mobile-radar-view__sweep {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    width: 49%;
+    height: 3px;
+    margin-top: -1.5px;
+    border-radius: 999px;
+    transform-origin: left center;
+    background: linear-gradient(90deg, rgba(106, 60, 255, 0.58), rgba(57, 210, 246, 0.36) 54%, rgba(106, 60, 255, 0));
+    box-shadow: 0 0 18px rgba(57, 210, 246, 0.3);
+    pointer-events: none;
+    animation: tv-radar-sweep var(--radar-sweep-duration, 2.856s) linear infinite;
+  }
+
   /* ── Data Nodes ── */
   .mobile-radar-view__node {
     position: absolute;
@@ -15548,8 +15570,6 @@ img {
     text-decoration: none;
     translate: -50% -50%;
     transform: scale(1);
-    animation: tv-radar-node-drift 4.8s ease-in-out infinite;
-    animation-delay: var(--node-float-delay, 0s);
     transition: filter 180ms ease, transform 180ms ease;
     will-change: translate, transform, filter;
   }
@@ -15566,7 +15586,7 @@ img {
     opacity: 0;
     transform: scale(0.72);
     pointer-events: none;
-    animation: tv-radar-node-hit 2.856s linear infinite;
+    animation: tv-radar-node-hit var(--radar-sweep-duration, 2.856s) linear infinite;
     animation-delay: var(--node-hit-delay, 0s);
   }
 
@@ -18625,20 +18645,22 @@ img {
 
   @keyframes tv-radar-node-hit {
     0% {
-      opacity: 0;
-      transform: scale(0.68);
+      opacity: 0.98;
+      transform: scale(1.06);
     }
-    4% {
-      opacity: 0.95;
-      transform: scale(1.08);
-    }
-    10% {
+    6% {
       opacity: 0.34;
-      transform: scale(1.32);
+      transform: scale(1.25);
     }
-    18%, 100% {
+    12%, 100% {
       opacity: 0;
-      transform: scale(1.48);
+      transform: scale(1.44);
+    }
+  }
+
+  @keyframes tv-radar-sweep {
+    to {
+      transform: rotate(360deg);
     }
   }
 

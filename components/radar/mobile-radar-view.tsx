@@ -34,7 +34,8 @@ type ProductHuntPayload = {
 };
 
 const RADAR_NODE_COUNT = 5;
-const RADAR_SWEEP_SECONDS = 2.856;
+const RADAR_SWEEP_SPEED = 2.2;
+const RADAR_SWEEP_SECONDS = (Math.PI * 2) / RADAR_SWEEP_SPEED;
 const RADAR_NODE_LAYOUT = [
   { angle: -0.2, radiusRatio: 0.54 },
   { angle: 1.08, radiusRatio: 0.7 },
@@ -190,23 +191,6 @@ export function MobileRadarView() {
       ctx.lineTo(cx, cy + maxR);
       ctx.stroke();
 
-      // Fast sweep
-      const sweepAngle = time * 2.2;
-      const sweepLen = maxR * 1.05;
-      const sx = cx + Math.cos(sweepAngle) * sweepLen;
-      const sy = cy + Math.sin(sweepAngle) * sweepLen;
-
-      const grad = ctx.createLinearGradient(cx, cy, sx, sy);
-      grad.addColorStop(0, "rgba(106, 60, 255, 0.55)");
-      grad.addColorStop(0.5, "rgba(57, 210, 246, 0.35)");
-      grad.addColorStop(1, "rgba(106, 60, 255, 0)");
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(sx, sy);
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
       // Pulsing core
       const pulse = Math.sin(time * 3) * 0.3 + 1;
       ctx.beginPath();
@@ -284,12 +268,12 @@ export function MobileRadarView() {
         x,
         y,
         size: Math.min(size, 52),
-        hitDelay: normalizedAngle * (RADAR_SWEEP_SECONDS / (Math.PI * 2)),
-        floatDelay: index * -0.55,
+        hitDelay: normalizedAngle / RADAR_SWEEP_SPEED,
         isPlaceholder: item.id.startsWith("radar-placeholder-"),
       };
     });
   }, [currentItems]);
+  const radarClockKey = nodes.map((node) => node.id).join("|");
 
   return (
     <div className="mobile-radar-view relative min-h-screen overflow-hidden bg-[#0a0a1a]">
@@ -304,8 +288,20 @@ export function MobileRadarView() {
       </div>
 
       {/* Radar Stage */}
-      <div className="mobile-radar-view__stage">
+      <div
+        className="mobile-radar-view__stage"
+        style={
+          {
+            "--radar-sweep-duration": `${RADAR_SWEEP_SECONDS}s`,
+          } as CSSProperties
+        }
+      >
         <canvas ref={canvasRef} className="mobile-radar-view__canvas" />
+        <span
+          key={radarClockKey}
+          className="mobile-radar-view__sweep"
+          aria-hidden="true"
+        />
 
         {/* Real data nodes overlaid */}
         {nodes.map((node) => {
@@ -315,7 +311,6 @@ export function MobileRadarView() {
             "--node-y": `${node.y}%`,
             "--node-size": `${node.size}px`,
             "--node-hit-delay": `${node.hitDelay}s`,
-            "--node-float-delay": `${node.floatDelay}s`,
           } as CSSProperties;
           const isHot = node.votesCount > 100 && !node.isPlaceholder;
           const nodeClassName = `mobile-radar-view__node${isHot ? " is-hot" : ""}${node.isPlaceholder ? " is-placeholder" : ""}`;

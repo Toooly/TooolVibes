@@ -52,8 +52,6 @@ export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
 
       {/* Orbit System */}
       <div className="mobile-hero-solar__system" aria-label="Nodi interattivi">
-        <div className="catalog-orbit-depth" aria-hidden="true" />
-
         {/* Single ring */}
         <span
           className="catalog-orbit-ring"

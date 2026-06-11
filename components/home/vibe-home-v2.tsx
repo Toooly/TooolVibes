@@ -216,7 +216,6 @@ function HomeOrbitStage({
         className="home-orbit-system catalog-orbit-system"
         aria-label={`${label}: nodi interattivi`}
       >
-        <div className="catalog-orbit-depth" aria-hidden="true" />
         {ringRadii.map((radius, index) => (
           <span
             key={radius}
@@ -229,9 +228,6 @@ function HomeOrbitStage({
             } as CSSProperties}
           />
         ))}
-        <div className="catalog-orbit-planet home-orbit-planet" aria-hidden="true">
-          <span />
-        </div>
 
         {visibleItems.map((item, index) => {
           const ringIndex = isCompact ? (ringForIndex[index] ?? 0) : (index % ringRadii.length);
