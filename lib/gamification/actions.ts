@@ -18,6 +18,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { ToolRecord } from "@/lib/types/tool";
 
 const MAX_XP_DELTA = 10_000;
+const ARENA_BATTLE_XP_REWARD = 40;
 const VALID_MODES: ArenaBattleMode[] = ["1v1", "royale", "bracket"];
 
 const MODE_1V1_COUNT = 2;
@@ -233,8 +234,6 @@ export async function createArenaBattle(
 
   const result = simulateBattle(tools, mode, user.id);
 
-  await recordGameInteraction(40);
-
   const { data, error } = await supabase
     .from("arena_battles")
     .insert({
@@ -249,9 +248,10 @@ export async function createArenaBattle(
     .single();
 
   if (error) {
-    console.error("Arena battle insert failed after XP was awarded:", error);
     throw new Error("Failed to save arena battle");
   }
+
+  await recordGameInteraction(ARENA_BATTLE_XP_REWARD);
 
   return data as ArenaBattle;
 }

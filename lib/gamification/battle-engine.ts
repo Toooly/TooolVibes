@@ -139,6 +139,10 @@ export function simulateBattle(
   validateModeAndToolCount(mode, tools.length);
 
   const allSlugs = tools.map((tool) => tool.slug);
+  const uniqueSlugs = new Set(allSlugs);
+  if (uniqueSlugs.size !== allSlugs.length) {
+    throw new Error("Duplicate tool slugs are not allowed");
+  }
   const normalizedVotes = normalize(tools.map((tool) => tool.votes));
   const normalizedTrend7d = normalize(tools.map((tool) => tool.trend7d));
   const normalizedComments = normalize(tools.map((tool) => tool.comments));
