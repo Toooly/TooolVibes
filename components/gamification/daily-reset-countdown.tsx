@@ -25,17 +25,33 @@ type DailyResetCountdownProps = {
 export function DailyResetCountdown({ className, size = 56 }: DailyResetCountdownProps) {
   const [key, setKey] = useState(0);
   const [duration, setDuration] = useState(24 * 60 * 60);
+  const [ariaLabel, setAriaLabel] = useState(
+    "Conto alla rovescia fino al reset giornaliero delle missioni"
+  );
 
   useEffect(() => {
     setDuration(getSecondsUntilMidnight());
     setKey((previous) => previous + 1);
   }, []);
 
+  useEffect(() => {
+    function updateLabel() {
+      const seconds = getSecondsUntilMidnight();
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const hourLabel = hours === 1 ? "ora" : "ore";
+      const minuteLabel = minutes === 1 ? "minuto" : "minuti";
+      const next = `Prossimo reset tra ${hours} ${hourLabel} e ${minutes} ${minuteLabel}`;
+      setAriaLabel((previous) => (previous === next ? previous : next));
+    }
+
+    updateLabel();
+    const interval = setInterval(updateLabel, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div
-      className={className}
-      aria-label="Conto alla rovescia fino al reset giornaliero delle missioni"
-    >
+    <div className={className} aria-label={ariaLabel}>
       <CountdownCircleTimer
         key={key}
         isPlaying
@@ -52,7 +68,7 @@ export function DailyResetCountdown({ className, size = 56 }: DailyResetCountdow
         }}
       >
         {({ remainingTime }) => (
-          <span className="daily-reset-countdown__text" aria-live="polite">
+          <span className="daily-reset-countdown__text">
             {formatRemaining(remainingTime)}
           </span>
         )}

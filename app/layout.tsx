@@ -10,8 +10,7 @@ import "@fontsource/rubik/600.css";
 import "@fontsource/rubik/700.css";
 import "@/app/globals.css";
 import { RootProviders } from "@/components/app/root-providers";
-import { GameMissionDrawer } from "@/components/gamification/game-mission-drawer";
-import { LeaderboardStrip } from "@/components/gamification/leaderboard-strip";
+import { GamificationShell } from "@/components/gamification/gamification-shell";
 import { siteConfig } from "@/lib/config/site";
 
 export const metadata: Metadata = {
@@ -146,8 +145,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         <RootProviders>
-          <LeaderboardStrip />
-          <GameMissionDrawer />
+          <GamificationShell />
           {children}
         </RootProviders>
       </body>

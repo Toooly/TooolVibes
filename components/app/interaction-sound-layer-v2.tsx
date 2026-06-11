@@ -1387,6 +1387,8 @@ export function InteractionSoundLayerV2() {
   const droneRef = useRef(new AmbientDrone());
 
   useEffect(() => {
+    const drone = droneRef.current;
+
     function setMuted(muted: boolean) {
       mutedRef.current = muted;
       document.documentElement.dataset.tvSound = muted
@@ -1394,7 +1396,7 @@ export function InteractionSoundLayerV2() {
         : audioUnlockedRef.current
           ? "on"
           : "ready";
-      droneRef.current.setMuted(muted);
+      drone.setMuted(muted);
     }
 
     function getAudioContext() {
@@ -1426,8 +1428,8 @@ export function InteractionSoundLayerV2() {
       }
       audioUnlockedRef.current = true;
       document.documentElement.dataset.tvSound = "on";
-      if (!droneRef.current.running) {
-        droneRef.current.init(context);
+      if (!drone.running) {
+        drone.init(context);
       }
       playTone(context, soundKind);
       const pendingIntroSound = pendingIntroSoundRef.current;
@@ -1743,7 +1745,7 @@ export function InteractionSoundLayerV2() {
       window.removeEventListener(SOUND_PLAY_EVENT, handleSystemSound);
       void audioRef.current?.close();
       audioRef.current = null;
-      droneRef.current.stop();
+      drone.stop();
       delete document.documentElement.dataset.tvSound;
     };
   }, []);
