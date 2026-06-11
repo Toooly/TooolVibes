@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
-import type { GameProfile } from "@/lib/gamification/types";
+import type { GameProfile, RadarPrediction } from "@/lib/gamification/types";
 
 const MAX_XP_DELTA = 10_000;
 
@@ -62,4 +62,20 @@ export async function claimMission(missionId: string): Promise<GameProfile> {
 
   revalidatePath("/");
   return data as GameProfile;
+}
+
+export async function createRadarPrediction(toolSlug: string): Promise<RadarPrediction> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const today = new Date().toISOString().slice(0, 10);
+  const { data, error } = await supabase
+    .from("radar_predictions")
+    .insert({ user_id: user.id, tool_slug: toolSlug, context_date: today })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as RadarPrediction;
 }
