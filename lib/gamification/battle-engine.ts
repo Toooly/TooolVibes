@@ -1,14 +1,19 @@
 import type { ArenaBattleMode, BattleTurn } from "@/lib/gamification/types";
 
-export type BattleInput = {
-  mode: ArenaBattleMode;
-  toolSlugs: string[];
-  scoreSnapshot: Record<string, number>;
+export type BattleTool = {
+  slug: string;
+  votes: number;
+  trend7d: number;
+  comments: number;
+  completeness: number;
 };
 
 export type BattleResult = {
-  winner_slug: string;
-  battle_log: BattleTurn[];
+  mode: ArenaBattleMode;
+  toolSlugs: string[];
+  winnerSlug: string;
+  scoreSnapshot: Record<string, number>;
+  battleLog: BattleTurn[];
 };
 
 const REASONS: BattleTurn["reason"][] = [
@@ -19,223 +24,100 @@ const REASONS: BattleTurn["reason"][] = [
   "surprise",
 ];
 
-function createSeed(
-  toolSlugs: readonly string[],
-  scoreSnapshot: Record<string, number>,
-): number {
-  const parts = toolSlugs
-    .slice()
-    .sort()
-    .map((slug) => `${slug}:${scoreSnapshot[slug] ?? 0}`);
-  const str = parts.join("|");
+function hashStringToFloat(input: string): number {
   let hash = 2166136261;
-  for (let index = 0; index < str.length; index += 1) {
-    hash ^= str.charCodeAt(index);
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
     hash = Math.imul(hash, 16777619);
   }
-  return hash >>> 0;
+  return (hash >>> 0) / 4294967296;
 }
 
-function mulberry32(seed: number) {
-  let state = seed;
-  return () => {
-    state += 0x6d2b79f5;
-    let value = state;
-    value = Math.imul(value ^ (value >>> 15), value | 1);
-    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
-    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-type Fighter = {
-  slug: string;
-  hp: number;
-  maxHp: number;
-  attack: number;
-  defense: number;
-};
-
-function createFighter(
-  slug: string,
-  scoreSnapshot: Record<string, number>,
-): Fighter {
-  const score = scoreSnapshot[slug] ?? 50;
-  const maxHp = Math.max(1, Math.round(score * 1.5));
-  return {
-    slug,
-    hp: maxHp,
-    maxHp,
-    attack: Math.max(1, score),
-    defense: Math.max(1, Math.round(score * 0.6)),
-  };
-}
-
-function calculateDamage(
-  attacker: Fighter,
-  defender: Fighter,
-  rng: () => number,
+function computeSurpriseFactor(
+  tool: BattleTool,
+  allSlugs: string[],
+  mode: ArenaBattleMode,
+  userId: string,
 ): number {
-  const variance = 0.8 + rng() * 0.4;
-  const raw = (attacker.attack - defender.defense * 0.5) * variance;
-  return Math.max(1, Math.round(raw));
+  const seed = `${userId}${tool.slug}${allSlugs.join(",")}${mode}`;
+  const raw = hashStringToFloat(seed);
+  return 0.9 + raw * 0.2;
 }
 
-function seedOrder(a: Fighter, b: Fighter): number {
-  return b.attack - a.attack || a.slug.localeCompare(b.slug);
+function normalize(values: number[]): number[] {
+  const max = Math.max(...values);
+  if (max === 0) return values.map(() => 0);
+  return values.map((value) => value / max);
 }
 
-function runDuel(
-  fighters: Fighter[],
-  rng: () => number,
-  startingTurn: number,
-): { log: BattleTurn[]; winner: Fighter } {
-  const ordered = fighters.slice().sort(seedOrder);
-  const [first, second] = ordered;
-  const log: BattleTurn[] = [];
-  let turn = startingTurn;
-
-  while (first.hp > 0 && second.hp > 0) {
-    const attacker = turn % 2 === 1 ? first : second;
-    const defender = attacker === first ? second : first;
-    const damage = calculateDamage(attacker, defender, rng);
-    defender.hp -= damage;
-    log.push({
-      turn,
-      attacker: attacker.slug,
-      defender: defender.slug,
-      damage,
-      reason: REASONS[(turn - 1) % REASONS.length],
-    });
-    turn += 1;
-  }
-
-  const winner = first.hp > 0 ? first : second;
-  return { log, winner };
-}
-
-function simulate1v1(fighters: Fighter[], rng: () => number): BattleTurn[] {
-  return runDuel(fighters, rng, 1).log;
-}
-
-function simulateRoyale(
-  fighters: Fighter[],
-  rng: () => number,
+function generateBattleLog(
+  tools: BattleTool[],
+  scoreSnapshot: Record<string, number>,
 ): BattleTurn[] {
-  const log: BattleTurn[] = [];
-  let turn = 1;
-  let aliveCount = fighters.filter((f) => f.hp > 0).length;
+  const slugs = tools.map((tool) => tool.slug);
 
-  while (aliveCount > 1) {
-    const alive = fighters
-      .filter((f) => f.hp > 0)
-      .slice()
-      .sort(seedOrder);
+  return Array.from({ length: 5 }, (_, index) => {
+    const turn = index + 1;
+    const attacker = slugs[index % slugs.length];
+    const defender = slugs[(index + 1) % slugs.length];
+    const reason = REASONS[index % REASONS.length];
+    const attackerScore = scoreSnapshot[attacker] ?? 0;
+    const defenderScore = scoreSnapshot[defender] ?? 0;
+    const damage = Math.max(
+      1,
+      Math.round(Math.abs(attackerScore - defenderScore) / 20 + 10 + turn * 2),
+    );
 
-    for (const attacker of alive) {
-      if (attacker.hp <= 0) continue;
-
-      const targets = alive.filter(
-        (target) => target.slug !== attacker.slug && target.hp > 0,
-      );
-      if (targets.length === 0) break;
-
-      const defender = targets
-        .slice()
-        .sort((a, b) => a.hp - b.hp || a.slug.localeCompare(b.slug))[0];
-      const damage = calculateDamage(attacker, defender, rng);
-      defender.hp -= damage;
-      log.push({
-        turn,
-        attacker: attacker.slug,
-        defender: defender.slug,
-        damage,
-        reason: REASONS[(turn - 1) % REASONS.length],
-      });
-      turn += 1;
-
-      aliveCount = fighters.filter((f) => f.hp > 0).length;
-      if (aliveCount <= 1) break;
-    }
-  }
-
-  return log;
+    return { turn, attacker, defender, damage, reason };
+  });
 }
 
-function simulateBracket(
-  fighters: Fighter[],
-  rng: () => number,
-): BattleTurn[] {
-  const log: BattleTurn[] = [];
-  let turn = 1;
-  let round = fighters.slice().sort(seedOrder);
-
-  while (round.length > 1) {
-    const nextRound: Fighter[] = [];
-
-    for (let index = 0; index < round.length; index += 2) {
-      if (index + 1 >= round.length) {
-        nextRound.push(round[index]);
-        continue;
-      }
-
-      const a = { ...round[index], hp: round[index].maxHp };
-      const b = { ...round[index + 1], hp: round[index + 1].maxHp };
-      const { log: duelLog, winner } = runDuel([a, b], rng, turn);
-      log.push(...duelLog);
-      turn = (duelLog.at(-1)?.turn ?? turn - 1) + 1;
-      nextRound.push({ ...winner, hp: winner.maxHp });
-    }
-
-    round = nextRound;
-  }
-
-  return log;
-}
-
-export function simulateBattle(input: BattleInput): BattleResult {
-  const { mode, toolSlugs, scoreSnapshot } = input;
-
-  if (toolSlugs.length === 0) {
-    throw new Error("At least one tool is required");
-  }
-
-  if (mode === "1v1" && toolSlugs.length !== 2) {
+export function simulateBattle(
+  tools: BattleTool[],
+  mode: ArenaBattleMode,
+  userId: string,
+): BattleResult {
+  if (mode === "1v1" && tools.length !== 2) {
     throw new Error("1v1 mode requires exactly 2 tools");
   }
-
-  if (mode !== "1v1" && toolSlugs.length < 2) {
-    throw new Error(`${mode} mode requires at least 2 tools`);
+  if (mode === "royale" && (tools.length < 2 || tools.length > 4)) {
+    throw new Error("royale mode requires 2 to 4 tools");
+  }
+  if (mode === "bracket" && tools.length !== 4) {
+    throw new Error("bracket mode requires exactly 4 tools");
   }
 
-  const fighters = toolSlugs.map((slug) => createFighter(slug, scoreSnapshot));
-  const rng = mulberry32(createSeed(toolSlugs, scoreSnapshot));
+  const allSlugs = tools.map((tool) => tool.slug);
+  const normalizedVotes = normalize(tools.map((tool) => tool.votes));
+  const normalizedTrend7d = normalize(tools.map((tool) => tool.trend7d));
+  const normalizedComments = normalize(tools.map((tool) => tool.comments));
 
-  let log: BattleTurn[];
-  switch (mode) {
-    case "1v1":
-      log = simulate1v1(fighters, rng);
-      break;
-    case "royale":
-      log = simulateRoyale(fighters, rng);
-      break;
-    case "bracket":
-      log = simulateBracket(fighters, rng);
-      break;
-    default:
-      throw new Error(`Unsupported battle mode: ${mode}`);
-  }
+  const scoreSnapshot: Record<string, number> = {};
 
-  const alive = fighters
-    .filter((f) => f.hp > 0)
-    .sort((a, b) => a.slug.localeCompare(b.slug));
-  const winner = alive[0];
+  tools.forEach((tool, index) => {
+    const surpriseFactor = computeSurpriseFactor(tool, allSlugs, mode, userId);
+    const score =
+      (normalizedVotes[index] * 0.3 +
+        normalizedTrend7d[index] * 0.25 +
+        normalizedComments[index] * 0.2 +
+        tool.completeness * 0.15 +
+        surpriseFactor * 0.1) *
+      1000;
+    scoreSnapshot[tool.slug] = score;
+  });
 
-  if (!winner) {
-    throw new Error("Battle ended without a winner");
-  }
+  const ranked = tools
+    .slice()
+    .sort((a, b) => scoreSnapshot[b.slug] - scoreSnapshot[a.slug]);
+  const winnerSlug = ranked[0].slug;
+
+  const battleLog = generateBattleLog(tools, scoreSnapshot);
 
   return {
-    winner_slug: winner.slug,
-    battle_log: log,
+    mode,
+    toolSlugs: allSlugs,
+    winnerSlug,
+    scoreSnapshot,
+    battleLog,
   };
 }
