@@ -77,14 +77,28 @@ export async function createRadarPrediction(toolSlug: string): Promise<RadarPred
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
+  const normalizedSlug = validateToolSlug(toolSlug);
   const today = new Date().toISOString().slice(0, 10);
+
+  const { data: existing, error: selectError } = await supabase
+    .from("radar_predictions")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("context_date", today)
+    .maybeSingle();
+
+  if (selectError) throw selectError;
+  if (existing) return existing as RadarPrediction;
+
   const { data, error } = await supabase
     .from("radar_predictions")
-    .insert({ user_id: user.id, tool_slug: toolSlug, context_date: today })
+    .insert({ user_id: user.id, tool_slug: normalizedSlug, context_date: today })
     .select()
     .single();
 
   if (error) throw error;
+
+  revalidatePath("/");
   return data as RadarPrediction;
 }
 
