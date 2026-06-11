@@ -186,23 +186,6 @@ function addPulse(element: HTMLElement) {
   });
 }
 
-function spawnSingularityAt(clientX: number, clientY: number, kind: SoundKind, isTouchLike: boolean) {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return;
-  }
-
-  const pulse = document.createElement("span");
-  pulse.className = `sonic-singularity sonic-singularity--${kind} ${
-    isTouchLike ? "sonic-singularity--touch" : "sonic-singularity--pointer"
-  }`;
-  pulse.setAttribute("aria-hidden", "true");
-  pulse.style.left = `${clientX}px`;
-  pulse.style.top = `${clientY}px`;
-
-  document.body.appendChild(pulse);
-  window.setTimeout(() => pulse.remove(), 740);
-}
-
 const SOUND_PROFILES: Record<SoundKind, SoundProfile> = {
   tap: {
     filterStart: 2200,
@@ -619,14 +602,13 @@ export function InteractionSoundLayer() {
       };
     }
 
-    function handleInteraction(target: HTMLElement, soundKind: SoundKind, clientX: number, clientY: number, isTouchLike: boolean) {
+    function handleInteraction(target: HTMLElement, soundKind: SoundKind) {
       addPulse(target);
 
       if (mutedRef.current) {
         return;
       }
 
-      spawnSingularityAt(clientX, clientY, soundKind, isTouchLike);
       playInteractionTone(soundKind);
     }
 
@@ -656,12 +638,7 @@ export function InteractionSoundLayer() {
       lastPlayedRef.current = now;
 
       const soundKind = getSoundKind(target);
-      const isTouchLike =
-        event.pointerType === "touch" ||
-        window.innerWidth < 768 ||
-        window.matchMedia("(pointer: coarse)").matches;
-
-      handleInteraction(target, soundKind, event.clientX, event.clientY, isTouchLike);
+      handleInteraction(target, soundKind);
     }
 
     function handleClick(event: MouseEvent) {
@@ -686,10 +663,7 @@ export function InteractionSoundLayer() {
       lastPlayedRef.current = now;
 
       const soundKind = getSoundKind(target);
-      const isTouchLike = window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches;
-      const point = getEventPoint(event, target);
-
-      handleInteraction(target, soundKind, point.clientX, point.clientY, isTouchLike);
+      handleInteraction(target, soundKind);
     }
 
     function handleMutedChange(event: Event) {

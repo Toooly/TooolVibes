@@ -4003,6 +4003,14 @@ img {
     }
   }
 
+  .mobile-tap-burst,
+  .sonic-singularity {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    animation: none !important;
+  }
+
   @media (min-width: 768px) {
     .route-transition-loader {
       display: none !important;
