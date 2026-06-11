@@ -317,3 +317,68 @@ On some mobile devices (especially iOS Safari and certain Android browsers), the
 - Both header and bottom nav now use GPU compositing layers for smoother, jitter-free positioning on mobile browsers
 
 ---
+
+## 10. Fixed Brown/Olive Blob on Mobile (3D Background Residue)
+
+**Date:** 2026-06-08
+
+### 10.1 Problem
+A large (~90 px), brown/olive-colored circular blob remained fixed at the center of the screen on mobile. It appeared on the Home page and persisted across other marketing pages during scroll. It looked like a leftover 3D/background/orbit element and ruined the layout.
+
+### 10.2 Root Cause
+- `components/app/site-universe-background.tsx` renders a `<Canvas>` with 3D planets via `@react-three/fiber`.
+- On mobile, `getPerformanceProfile()` returns `reduced: true` (low-end / save-data path).
+- The `Planets` component’s `useFrame` exits immediately when `reduced === true`:
+  ```tsx
+  useFrame((state) => {
+    if (reduced) return;
+    ...
+  });
+  ```
+- Because the `groupRefs` are never moved from their default `(0, 0, 0)` origin, the largest planet (gold, `radius: 0.55`, `emissive: "#8a6a1c"`) sits almost exactly at the viewport center.
+- With low ambient light (`0.12`) the diffuse color (`#f3bf4c`) is heavily darkened, while the emissive brown-oliva (`#8a6a1c`) dominates the perceived color.
+- The `<Canvas>` container is `fixed inset-0 z-0`, so the blob stays visually anchored while scrolling.
+
+### 10.3 Fix
+Added a `useEffect` inside `Planets` that initializes each planet group to its orbital start position **regardless of `reduced` state**. The planets are therefore placed off-center immediately on mount; the `useFrame` animation only runs when `reduced === false`.
+
+```tsx
+useEffect(() => {
+  configs.forEach((cfg, i) => {
+    const group = groupRefs.current[i];
+    if (!group) return;
+    const angle = i * 1.5;
+    group.position.set(
+      Math.cos(angle) * cfg.orbitRadius,
+      cfg.yOffset,
+      Math.sin(angle) * cfg.orbitRadius - 10
+    );
+  });
+}, [configs]);
+```
+
+**File:** `components/app/site-universe-background.tsx`
+
+---
+
+## 11. Radar Label Clipping Fix
+
+**Date:** 2026-06-08
+
+### 11.1 Problem
+In the mobile Radar page, tool names (especially in the lower-right quadrant) were partially cut off. A thin dark band or clip edge masked the text, making labels unreadable.
+
+### 11.2 Root Cause
+`.mobile-radar-view__stage` in `app/globals.css` had both `border-radius: 50%` and `overflow: hidden`. The radar node labels are positioned below the nodes (`top: calc(100% + 0.35rem)`). When a node sits near the bottom or right edge of the circular stage, its label overflows the bounding box and gets clipped by `overflow: hidden`.
+
+### 11.3 Fix
+Removed `overflow: hidden` from `.mobile-radar-view__stage`. The canvas already fills the stage with a dark background (`#0a0a1a`) that matches the page background, so the square canvas corners are invisible even without clipping. The circular border radius is retained for aesthetic framing, but labels can now render fully outside the circle without being masked.
+
+**File:** `app/globals.css`
+
+### 11.4 Build Verification
+
+- `npm run build` passes with **zero errors**
+- Both fixes are scoped to mobile UI; no desktop layouts or 3D systems were removed
+
+---

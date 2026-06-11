@@ -68,6 +68,19 @@ function Planets({ scrollRef, count, reduced }: { scrollRef: React.MutableRefObj
   const groupRefs = useRef<THREE.Group[]>([]);
   const configs = useMemo(() => PLANET_CONFIG.slice(0, count), [count]);
 
+  useEffect(() => {
+    configs.forEach((cfg, i) => {
+      const group = groupRefs.current[i];
+      if (!group) return;
+      const angle = i * 1.5;
+      group.position.set(
+        Math.cos(angle) * cfg.orbitRadius,
+        cfg.yOffset,
+        Math.sin(angle) * cfg.orbitRadius - 10
+      );
+    });
+  }, [configs]);
+
   useFrame((state) => {
     if (reduced) return;
     const t = state.clock.elapsedTime;
