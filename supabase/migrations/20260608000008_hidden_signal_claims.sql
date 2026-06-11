@@ -16,7 +16,8 @@ CREATE POLICY "Users can read own hidden signal claims"
 CREATE OR REPLACE FUNCTION public.claim_hidden_signal(
   p_user_id UUID,
   p_context_date DATE,
-  p_tool_slug TEXT
+  p_tool_slug TEXT,
+  p_expected_slug TEXT
 )
 RETURNS public.game_profiles
 LANGUAGE plpgsql
@@ -26,6 +27,10 @@ AS $$
 DECLARE
   v_profile public.game_profiles;
 BEGIN
+  IF p_tool_slug IS DISTINCT FROM p_expected_slug THEN
+    RAISE EXCEPTION 'Invalid hidden signal';
+  END IF;
+
   IF EXISTS (
     SELECT 1 FROM public.hidden_signal_claims
     WHERE user_id = p_user_id AND context_date = p_context_date
@@ -43,8 +48,8 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.claim_hidden_signal(UUID, DATE, TEXT) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.claim_hidden_signal(UUID, DATE, TEXT) TO authenticated;
+REVOKE ALL ON FUNCTION public.claim_hidden_signal(UUID, DATE, TEXT, TEXT) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.claim_hidden_signal(UUID, DATE, TEXT, TEXT) TO authenticated;
 
 -- Optional performance improvement for the prediction resolver.
 CREATE INDEX IF NOT EXISTS idx_radar_predictions_context_date_status

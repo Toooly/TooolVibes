@@ -185,9 +185,37 @@ export async function createRadarPrediction(toolSlug: string): Promise<RadarPred
   return data as RadarPrediction;
 }
 
+function validateCandidateSlugs(slugs: unknown): string[] {
+  if (!Array.isArray(slugs) || slugs.length === 0) {
+    throw new Error("candidateSlugs must be a non-empty array");
+  }
+  return slugs.map((slug) => {
+    if (typeof slug !== "string" || !slug.trim()) {
+      throw new Error("Each candidateSlug must be a non-empty string");
+    }
+    return slug.trim();
+  });
+}
+
+function computeExpectedHiddenSignal(
+  contextDate: string,
+  candidateSlugs: string[],
+): string {
+  if (candidateSlugs.length === 0) {
+    throw new Error("candidateSlugs must not be empty");
+  }
+  const index = Math.floor(hashStringToFloat(contextDate) * candidateSlugs.length);
+  const expected = candidateSlugs[index];
+  if (!expected) {
+    throw new Error("Failed to compute expected hidden signal");
+  }
+  return expected;
+}
+
 export async function claimHiddenSignal(
   contextDate: string,
   toolSlug: string,
+  candidateSlugs: unknown,
 ): Promise<GameProfile> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -198,11 +226,14 @@ export async function claimHiddenSignal(
   }
 
   const normalizedSlug = validateToolSlug(toolSlug);
+  const normalizedCandidates = validateCandidateSlugs(candidateSlugs);
+  const expectedSlug = computeExpectedHiddenSignal(contextDate, normalizedCandidates);
 
   const { data, error } = await supabase.rpc("claim_hidden_signal", {
     p_user_id: user.id,
     p_context_date: contextDate,
     p_tool_slug: normalizedSlug,
+    p_expected_slug: expectedSlug,
   });
 
   if (error) throw error;

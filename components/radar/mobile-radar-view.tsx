@@ -151,8 +151,10 @@ export function MobileRadarView() {
 
       event.preventDefault();
 
+      const candidateSlugs = currentItems.slice(0, RADAR_NODE_COUNT).map((item) => item.id);
+
       try {
-        await claimHiddenSignal(today, node.id);
+        await claimHiddenSignal(today, node.id, candidateSlugs);
         localStorage.setItem(`${HIDDEN_SIGNAL_STORAGE_KEY}:${today}`, "1");
         setHiddenDiscovered(true);
         confetti({
@@ -170,7 +172,7 @@ export function MobileRadarView() {
 
       window.open(node.productHuntUrl, "_blank", "noopener,noreferrer");
     },
-    [hiddenDiscovered, today],
+    [hiddenDiscovered, today, currentItems],
   );
 
   /* ── Canvas animation ── */
