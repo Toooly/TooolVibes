@@ -3,7 +3,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import NumberFlow from "@number-flow/react";
 import { AnimatePresence, motion } from "motion/react";
-import { Gamepad2, Sparkles, X, Zap } from "lucide-react";
+import { Play, Sparkles, X, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 
@@ -23,10 +23,13 @@ type FloatingScore = {
 
 type VibeTapMiniGameProps = {
   className?: string;
+  badge?: string;
 };
 
 const GAME_SECONDS = 12;
 const TARGET_COUNT = 5;
+const FOCUSABLE_SELECTOR =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 function createTargets(seed: number): VibeTarget[] {
   return Array.from({ length: TARGET_COUNT }).map((_, index) => {
@@ -81,7 +84,7 @@ function CircularTimer({ seconds, total }: { seconds: number; total: number }) {
   );
 }
 
-export function VibeTapMiniGame({ className }: VibeTapMiniGameProps) {
+export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   const [open, setOpen] = useState(false);
   const [running, setRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(GAME_SECONDS);
@@ -93,11 +96,13 @@ export function VibeTapMiniGame({ className }: VibeTapMiniGameProps) {
   const reducedMotion = useReducedMotion();
   const scoreRef = useRef(score);
   const floaterIdRef = useRef(0);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   scoreRef.current = score;
 
   const targets = useMemo(() => createTargets(wave), [wave]);
   const charge = Math.min(100, Math.round((score / 24) * 100));
+  const xp = Math.round(score * 1.5);
 
   useEffect(() => {
     if (!running) return undefined;
@@ -122,6 +127,39 @@ export function VibeTapMiniGame({ className }: VibeTapMiniGameProps) {
 
     return () => window.clearInterval(timer);
   }, [running]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    const focusables = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+    const first = focusables[0];
+    if (first) {
+      window.setTimeout(() => first.focus(), 0);
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Tab" || !panel) return;
+      const nodes = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+      if (nodes.length === 0) return;
+
+      const firstNode = nodes[0];
+      const lastNode = nodes[nodes.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstNode) {
+        event.preventDefault();
+        lastNode.focus();
+      } else if (!event.shiftKey && document.activeElement === lastNode) {
+        event.preventDefault();
+        firstNode.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   function startGame() {
     setScore(0);
@@ -170,8 +208,14 @@ export function VibeTapMiniGame({ className }: VibeTapMiniGameProps) {
         data-sonic-action="tap"
       >
         <span className="vibe-mini-launcher__core" aria-hidden="true">
-          <Gamepad2 size={15} />
-          <span />
+          <Play size={15} />
+          {badge ? (
+            <span className="vibe-mini-launcher__core-badge" aria-hidden="true">
+              {badge}
+            </span>
+          ) : (
+            <span aria-hidden="true" />
+          )}
         </span>
         <span className="vibe-mini-launcher__label">Vibe Rush</span>
       </button>
@@ -194,6 +238,7 @@ export function VibeTapMiniGame({ className }: VibeTapMiniGameProps) {
               onClick={closeGame}
             />
             <motion.div
+              ref={panelRef}
               className="vibe-mini-game__panel"
               initial={{ y: 18, scale: 0.96, opacity: 0 }}
               animate={{ y: 0, scale: 1, opacity: 1 }}
@@ -220,7 +265,13 @@ export function VibeTapMiniGame({ className }: VibeTapMiniGameProps) {
                   Score <strong><NumberFlow value={score} /></strong>
                 </span>
                 <span data-combo={combo}>
-                  Combo <strong>x<NumberFlow value={combo} /></strong>
+                  Combo <strong>x<motion.span
+                    key={combo}
+                    initial={{ scale: 1 }}
+                    animate={{ scale: reducedMotion ? 1 : [1, 1.2, 1] }}
+                    transition={{ duration: 0.25 }}
+                    style={{ display: "inline-block" }}
+                  ><NumberFlow value={combo} /></motion.span></strong>
                 </span>
                 <span>
                   Time <CircularTimer seconds={timeLeft} total={GAME_SECONDS} /></span>
@@ -245,8 +296,8 @@ export function VibeTapMiniGame({ className }: VibeTapMiniGameProps) {
                     }
                     initial={reducedMotion ? {} : { scale: 0, opacity: 0 }}
                     animate={reducedMotion ? {} : { scale: 1, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 380, damping: 18 }}
-                    whileTap={{ scale: 0.76 }}
+                    transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
+                    whileTap={reducedMotion ? undefined : { scale: 0.76 }}
                     onClick={() => hitTarget(target.id, target.x, target.y)}
                     aria-label={`Raccogli vibe target ${target.id}`}
                   >
@@ -259,10 +310,14 @@ export function VibeTapMiniGame({ className }: VibeTapMiniGameProps) {
                     <motion.span
                       key={f.id}
                       className="vibe-mini-game__floater"
-                      initial={{ opacity: 1, y: 0, scale: 1 }}
-                      animate={{ opacity: 0, y: -32, scale: 1.15 }}
+                      initial={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+                      animate={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -32, scale: 1.15 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.6, ease: "easeOut" }}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0.3 }
+                          : { duration: 0.6, ease: "easeOut" }
+                      }
                       style={{ left: `${f.x}%`, top: `${f.y}%` } as CSSProperties}
                     >
                       +{f.value}
@@ -285,6 +340,7 @@ export function VibeTapMiniGame({ className }: VibeTapMiniGameProps) {
                     <span className="vibe-mini-game__result-score">
                       <NumberFlow value={score} /> vibe raccolti
                     </span>
+                    <span className="vibe-mini-game__result-xp">+{xp} XP</span>
                     <div className="vibe-mini-game__result-actions">
                       <button type="button" className="vibe-mini-game__start" onClick={startGame}>
                         <Zap size={16} />
