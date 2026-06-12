@@ -45,7 +45,9 @@
 - **Stage**: area ~20 rem con griglia sottile, glow centrale dinamico.
 - **Targets**: spawnano con animazione `scale(0)` → `scale(1)` + fade da posizioni casuali, invece di saltare bruscamente.
 - **Hit feedback**: numero “+N” che vola verso l’alto; combo ×2/×3 in oro.
-- **End screen**: confetti, riepilogo “Vibe collected”, XP guadagnato, CTA “Gioca ancora” e “Chiudi”.
+- **End screen**: confetti, riepilogo “Vibe collected”, XP guadagnato (es. `score * 1.5`), CTA “Gioca ancora” e “Chiudi”.
+- **Accessibilità della modal**: focus trap (Tab/Shift+Tab ciclano nel pannello), tasto `Esc` chiude, focus ritorna al launcher alla chiusura, regione `aria-live` annuncia combo milestone e risultato finale.
+- **Reduced motion**: le animazioni Framer Motion e le keyframe CSS del target pulse sono disabilitate quando `prefers-reduced-motion: reduce` è attivo.
 
 ---
 
@@ -68,8 +70,9 @@
 
 - Core che diventa **vortice luminoso**.
 - Fighter con **shake controllato**.
-- Linee sottili di energia che collegano ogni fighter al centro.
-- Barra o testo “Clash in corso…” — preferibilmente visivo (icona + progresso), non testo grezzo.
+- Linee sottili di energia che collegano ogni fighter al centro, orientate radialmente (angolo calcolato da `Math.atan2`).
+- Core centrale che pulsa come vortice luminoso.
+- Animazioni CSS del core e delle energy lines disabilitate sotto `prefers-reduced-motion`.
 
 ### 4.3 Result
 
@@ -90,8 +93,9 @@
 
 ### 5.1 Layout
 
-- **Header sticky** in cima con i nomi dei tool.
-- **Scroll orizzontale condiviso**: scrollare una riga muove tutte le altre, mantenendo l’allineamento colonna.
+- **Header sticky** in cima con i nomi dei tool e scroll orizzontale condiviso con le righe del corpo.
+- **Scroll orizzontale condiviso**: scrollare una riga o l’header muove tutte le altre, mantenendo l’allineamento colonna. Il sync è protetto da un guard `isSyncing` per evitare feedback loop.
+- **Gestione pareggi**: se più tool hanno lo stesso valore massimo per una riga, il badge “WIN” e lo stile vincente vengono applicati a tutti i tool parimerito.
 - Ogni riga:
   - label dell’attributo **fissa a sinistra**.
   - celle scrollabili a destra.
@@ -124,10 +128,10 @@
 
 ### 6.2 Accessibilità
 
-- `prefers-reduced-motion`: disabilitare confetti, shake e pulse; mantenere solo fade/opacity.
-- `aria-live` per annunciare score/combo/tempo nel mini-game.
-- Target e fighter con `aria-label` univoco (non ripetuto).
-- Focus trap nella modal di Vibe Rush.
+- `prefers-reduced-motion`: disabilitare confetti, shake, pulse CSS e tutte le animazioni non essenziali; mantenere solo fade/opacity.
+- `aria-label` univoco per ogni target/fighter (non ripetuto).
+- Focus trap nella modal di Vibe Rush con restore del focus al launcher alla chiusura e chiusura con `Esc`.
+- Regione `aria-live` dedicata per annunciare combo milestone (×3, ×5) e risultato finale, senza annunciare ogni singolo cambio di score/tempo.
 - Contrasto WCAG 4.5:1 per testi sui chip e nelle celle.
 
 ---
@@ -137,9 +141,10 @@
 - `components/gamification/vibe-tap-mini-game.tsx`
 - `components/layout/site-header-v2.tsx`
 - `components/tools/mobile-compare-view.tsx`
-- `components/gamification/arena-battle-stage.tsx` (eventuale allineamento stili)
+- `components/gamification/arena-battle-stage.tsx`
+- `lib/gamification/battle-engine.ts` (aggiunto campo opzionale `name` a `BattleTool`)
 - `app/globals.css`
-- `lib/config/sound.ts` / sound layer (eventuali nuovi SFX per hit/combo/winner)
+- `lib/hooks/use-reduced-motion.ts` (nuovo)
 
 ---
 
@@ -157,3 +162,15 @@
 - Arena fight è scenografica, leggibile da 2 a 5 tool e celebra il vincitore.
 - Matrice mobile è leggibile senza perdere l’allineamento tra righe.
 - Test e lint passano; nessun regressione su mobile/desktop.
+
+---
+
+## 10. Implementation Notes
+
+Eseguito il 2026-06-12 con processo subagent-driven. Correzioni emerse durante l’implementazione:
+
+- **VibeTapMiniGame**: focus trap manuale (senza librerie esterne), chiusura `Esc`, restore focus, XP calcolato come `score * 1.5`, charge bar basata su `transform: scaleX` per performance, target pulse disabilitato sotto reduced motion.
+- **ArenaBattleStage**: aggiunto campo opzionale `name` a `BattleTool` per mostrare nomi leggibili; aggiunto stato `error`; hover su CTA usa variabili CSS.
+- **Mobile compare**: fighter posizionati via inline JS per evitare conflitti CSS; energy lines con angolo radiale calcolato; timeout di `handleFight` pulito all’unmount; matrice con header sync e pareggi multipli.
+- **CSS**: rimossi blocchi duplicati e un orphan block residuo; aggiunti token `--game-danger` e `--game-success` in `:root`; tutte le animazioni non essenziali rispettano `prefers-reduced-motion`.
+- **QA finale**: 19/19 test passati, lint 0 errori.

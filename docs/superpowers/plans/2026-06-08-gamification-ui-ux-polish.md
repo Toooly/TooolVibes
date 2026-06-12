@@ -1858,3 +1858,43 @@ git commit -m "chore(gamification): final UI/UX polish QA"
 - No TBD/TODO.
 - No vague instructions like "add appropriate error handling".
 - Code blocks are complete for their scope.
+
+---
+
+## Post-implementation Updates
+
+Implemented on 2026-06-12 via `superpowers:subagent-driven-development`. The following adjustments were made during review loops and are reflected in the final code but not always in the original task snippets above:
+
+1. **VibeTapMiniGame**
+   - Launcher icon changed from `Gamepad2` to `Play` (from `lucide-react`).
+   - Added manual focus trap (no external library), `Esc` close, and focus restore to launcher button.
+   - End screen shows XP computed as `Math.round(score * 1.5)`.
+   - Charge bar uses `transform: scaleX(var(--charge-scale))` instead of `width` for GPU performance.
+   - Target pulse keyframes animate only `transform`/`opacity`; disabled under `prefers-reduced-motion: reduce`.
+   - Combo pulse applied via a decorative wrapper so `NumberFlow` is not remounted.
+   - Floating `+N` feedback is reduced to a fade-only animation when reduced motion is preferred.
+   - Replaced noisy `aria-live` on stats with a dedicated `sr-only` live region for combo milestones and final result.
+
+2. **ArenaBattleStage**
+   - Added optional `name?: string` to `BattleTool` in `lib/gamification/battle-engine.ts` so readable tool names can be shown.
+   - Error state added (`"error"`) with retry CTA.
+   - Reduced-motion guards added for `animate-ping` / `animate-pulse`.
+
+3. **MobileCompareView**
+   - Renamed local `ArenaBattleStage` to `MobileArenaBattleStage` to avoid collision with the gamification component.
+   - Fighter positions are driven by inline JS coordinates; conflicting CSS position rules were removed.
+   - Energy lines are oriented radially using `--energy-angle` computed with `Math.atan2`.
+   - Fight timeout is stored in a ref and cleared on unmount/`compareSlugs` change.
+   - Matrix header is sticky and its horizontal scroll is synchronized with body rows via `cellsRef` (with `isSyncing` guard).
+   - Tie handling: multiple tools can share the winner highlight for a row.
+
+4. **app/globals.css**
+   - Removed an orphan/duplicate block near `.vibe-mini-game__result-actions`.
+   - Removed obsolete duplicate matrix CSS rules.
+   - Added `--game-danger` and `--game-success` tokens to `:root`.
+   - Added `@media (prefers-reduced-motion: reduce)` overrides for arena core/energy-line animations.
+
+5. **Final QA**
+   - `npm run test`: 19/19 passed.
+   - `npm run lint`: 0 errors (21 pre-existing warnings).
+   - `npx tsc --noEmit --pretty`: no errors.
