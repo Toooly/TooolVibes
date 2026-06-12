@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { MobileRadarView } from '@/components/radar/mobile-radar-view';
 import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
 import { PageOrbitShell } from "@/components/app/orbital-system";
+import { RadarGameMissions } from "@/components/gamification/radar-game-missions";
 import type { OrbitalItem } from "@/components/app/orbital-system";
 import { siteConfig } from "@/lib/config/site";
 
@@ -89,6 +90,10 @@ export default function ProductHuntPage() {
                   Classifica live dei prodotti più votati su Product Hunt: giorno, settimana e mese in una vista unica.
                 </p>
               </div>
+            </section>
+
+            <section className="mx-auto max-w-[70rem]">
+              <RadarGameMissions />
             </section>
 
             <div id="rankings-page">

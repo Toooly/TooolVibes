@@ -10,6 +10,14 @@ const config = {
   test: {
     environment: "node",
     globals: false,
+    exclude: [
+      "node_modules",
+      ".codex-tmp",
+      ".worktrees",
+      ".next",
+      ".open-next",
+      "dist",
+    ],
   },
   resolve: {
     alias: {

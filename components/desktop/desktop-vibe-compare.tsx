@@ -4,6 +4,7 @@ import { ArrowRight, Columns3, Gauge, Layers3, Scale, Sparkles } from "lucide-re
 import { DesktopCompareCanvas } from "@/components/desktop/desktop-compare-canvas";
 
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
+import { ArenaGameMissions } from "@/components/gamification/arena-game-missions";
 import { UnifiedCompareBoard } from "@/components/tools/unified-compare-board";
 import { PremiumLink } from "@/components/ui/premium";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
@@ -107,6 +108,10 @@ export function DesktopVibeCompare({
             </article>
           );
         })}
+      </section>
+
+      <section className="desktop-vibe-section desktop-vibe-game-strip">
+        <ArenaGameMissions featuredCount={featuredTools.length} />
       </section>
 
       <section className="desktop-vibe-section desktop-vibe-compare-console">

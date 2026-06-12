@@ -1,6 +1,7 @@
 import { Activity, MessageCircle, Radar, TrendingUp } from "lucide-react";
 
 import { DesktopRadarCanvas } from "@/components/desktop/desktop-radar-canvas";
+import { RadarGameMissions } from "@/components/gamification/radar-game-missions";
 import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
 import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
 
@@ -51,6 +52,10 @@ export function DesktopVibeRadar() {
             );
           })}
         </div>
+      </section>
+
+      <section className="desktop-vibe-section desktop-vibe-game-strip">
+        <RadarGameMissions />
       </section>
 
       <section className="desktop-vibe-section desktop-vibe-radar-console">

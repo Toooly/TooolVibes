@@ -19560,6 +19560,11 @@ img {
   }
 }
 
+.desktop-vibe-game-strip {
+  margin-top: -2.2rem;
+  padding-bottom: 4.6rem;
+}
+
 @layer components {
   /* ═══════════════════════════════════════════════════════════════
      GAMIFICATION — Phase 6 polish layer
