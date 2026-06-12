@@ -26,7 +26,7 @@ export function ArenaBattleStage({
 
   const toolNameBySlug = useMemo(() => {
     const map = new Map<string, string>();
-    for (const t of tools) map.set(t.slug, t.slug);
+    for (const t of tools) map.set(t.slug, t.name ?? t.slug);
     return map;
   }, [tools]);
 
@@ -104,7 +104,7 @@ export function ArenaBattleStage({
             <button
               type="button"
               onClick={startBattle}
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3 font-medium text-white transition hover:bg-[#5a2de6]"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3 font-medium text-white transition hover:bg-[var(--accent-strong)]"
             >
               <Swords className="h-4 w-4" />
               Inizia battaglia

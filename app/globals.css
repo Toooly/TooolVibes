@@ -88,6 +88,8 @@
   --warning-soft: rgba(243, 191, 76, 0.18);
   --danger: #b42318;
   --danger-soft: rgba(217, 45, 32, 0.12);
+  --game-danger: #ff4d6d;
+  --game-success: #00d084;
   --info: #2563eb;
   --info-soft: rgba(37, 99, 235, 0.12);
   --highlight-soft: rgba(255, 255, 255, 0.72);

@@ -2,6 +2,7 @@ import type { ArenaBattleMode, BattleTurn } from "@/lib/gamification/types";
 
 export type BattleTool = {
   slug: string;
+  name?: string;
   votes: number;
   trend7d: number;
   comments: number;

@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 
 import { GameMissionDrawer } from "@/components/gamification/game-mission-drawer";
-import { LeaderboardStrip } from "@/components/gamification/leaderboard-strip";
 
 export function GamificationShell() {
   const pathname = usePathname();
@@ -19,7 +18,6 @@ export function GamificationShell() {
 
   return (
     <>
-      <LeaderboardStrip />
       <GameMissionDrawer />
     </>
   );

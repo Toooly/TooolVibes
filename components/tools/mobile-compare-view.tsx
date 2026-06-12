@@ -1,7 +1,8 @@
 "use client";
 
-import { type CSSProperties, useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Scale, Info } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
@@ -42,6 +43,19 @@ function hashColor(name: string): string {
 
 function legacyScore(t: ToolRecord): number {
   return Math.min(95, 70 + (t.is_featured ? 10 : 0) + Math.min(t.tags?.length ?? 0, 5) * 2);
+}
+
+async function celebrateArenaFight() {
+  const { default: confetti } = await import("canvas-confetti");
+
+  confetti({
+    colors: ["#6a3cff", "#39d2f6", "#f3bf4c", "#ffffff"],
+    disableForReducedMotion: true,
+    origin: { y: 0.62 },
+    particleCount: 72,
+    scalar: 0.82,
+    spread: 66,
+  });
 }
 
 type NormalisedTool = {
@@ -347,13 +361,110 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
                     } as CSSProperties
                   }
                 >
-                  {row.render(tool)}
+                  <strong className="mobile-compare-arena__matrix-tool">{tool.name}</strong>
+                  <span className="mobile-compare-arena__matrix-value">{row.render(tool)}</span>
                 </div>
               ))}
             </div>
           </div>
         ))}
       </div>
+    </section>
+  );
+}
+
+type BattleState = "idle" | "fighting" | "result";
+
+function ArenaBattleStage({
+  battleState,
+  onFight,
+  tools,
+  winner,
+}: {
+  battleState: BattleState;
+  onFight: () => void;
+  tools: NormalisedTool[];
+  winner: NormalisedTool;
+}) {
+  const modeLabel =
+    tools.length === 2
+      ? "Duel"
+      : tools.length === 3
+        ? "Tri-clash"
+        : tools.length === 4
+          ? "Corners"
+          : "Vibe royale";
+
+  return (
+    <section
+      className="mobile-compare-arena__battle-stage"
+      data-count={tools.length}
+      data-state={battleState}
+      aria-label="Arena fight"
+    >
+      <div className="mobile-compare-arena__battle-grid" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="mobile-compare-arena__battle-core">
+        <span>{modeLabel}</span>
+        <strong>{battleState === "fighting" ? "CLASH" : battleState === "result" ? "WINNER" : "READY"}</strong>
+      </div>
+      <div className="mobile-compare-arena__fighters">
+        {tools.map((tool, index) => {
+          const isWinner = battleState === "result" && tool.slug === winner.slug;
+
+          return (
+            <motion.div
+              key={tool.slug}
+              className={cn("mobile-compare-arena__fighter", isWinner && "is-winner")}
+              style={
+                {
+                  "--arena-a": tool.accentFrom,
+                  "--arena-b": tool.accentTo,
+                  "--fighter-index": index,
+                } as CSSProperties
+              }
+              animate={
+                battleState === "fighting"
+                  ? { scale: [1, 1.12, 0.98, 1.08, 1], rotate: [0, -5, 4, -2, 0] }
+                  : { scale: isWinner ? 1.08 : 1, rotate: 0 }
+              }
+              transition={{ duration: battleState === "fighting" ? 0.82 : 0.28, repeat: battleState === "fighting" ? Infinity : 0 }}
+            >
+              <span className="mobile-compare-arena__fighter-orb">
+                {tool.name.slice(0, 2).toUpperCase()}
+              </span>
+              <span className="mobile-compare-arena__fighter-name">{tool.name}</span>
+              <small>{tool.score}</small>
+            </motion.div>
+          );
+        })}
+      </div>
+      <AnimatePresence>
+        {battleState === "result" ? (
+          <motion.div
+            className="mobile-compare-arena__battle-result"
+            initial={{ opacity: 0, y: 10, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+          >
+            <Trophy className="size-4" />
+            <span>{winner.name} vince il round</span>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      <button
+        type="button"
+        className="mobile-compare-arena__fight-button"
+        disabled={battleState === "fighting"}
+        onClick={onFight}
+        data-sonic-action="battle"
+      >
+        <Swords className="size-5" />
+        {battleState === "fighting" ? "Fighting..." : "FIGHT"}
+      </button>
     </section>
   );
 }
@@ -367,11 +478,16 @@ export function MobileCompareView({
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
   const clearCompare = useToolWorkspaceStore((s) => s.clearCompare);
+  const [battleState, setBattleState] = useState<BattleState>("idle");
 
   const tools = useMemo(
     () => normalise(directoryTools, legacyTools, compareSlugs),
     [directoryTools, legacyTools, compareSlugs],
   );
+
+  useEffect(() => {
+    setBattleState("idle");
+  }, [compareSlugs]);
 
   if (tools.length === 0) {
     return (
@@ -417,9 +533,26 @@ export function MobileCompareView({
   const lead = sorted[0];
   const rest = sorted.slice(1);
 
+  function handleFight() {
+    if (battleState === "fighting") return;
+
+    setBattleState("fighting");
+    window.setTimeout(() => {
+      setBattleState("result");
+      void celebrateArenaFight();
+    }, 1450);
+  }
+
   return (
     <div className="mobile-compare-arena">
       <ArenaHeader count={tools.length} />
+
+      <ArenaBattleStage
+        battleState={battleState}
+        onFight={handleFight}
+        tools={sorted.slice(0, MAX_COMPARE_TOOLS)}
+        winner={lead}
+      />
 
       <ChampionCard tool={lead} onRemove={() => toggleCompare(lead.slug)} />
 

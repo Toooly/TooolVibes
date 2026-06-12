@@ -8,6 +8,7 @@ import { BrandLogo } from "./brand-logo";
 import { SoundToggleButton } from "../app/sound-toggle-button";
 import { DirectoryHeaderSearch } from "../directory/directory-header-search";
 import { GameProfileBar } from "../gamification/game-profile-bar";
+import { VibeTapMiniGame } from "../gamification/vibe-tap-mini-game";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import {
   Menu,
@@ -137,11 +138,13 @@ export function SiteHeaderV2() {
         >
           <div className="relative flex h-16 items-center justify-between px-4 md:px-6">
             {/* Logo */}
-            <Link href="/" className="group relative flex items-center gap-3" data-sonic-action="brand">
-              <div className="relative transition-transform duration-300 group-hover:scale-105">
+            <div className="group relative flex items-center gap-2.5 sm:gap-3">
+              <Link href="/" className="relative transition-transform duration-300 group-hover:scale-105" data-sonic-action="brand">
                 <BrandLogo size={36} priority />
-              </div>
-              <span
+              </Link>
+              <VibeTapMiniGame className="vibe-mini-launcher" />
+              <Link
+                href="/"
                 className="hidden text-lg font-bold tracking-tight sm:inline-block"
                 style={{
                   background: "linear-gradient(135deg, #6a3cff 0%, #39d2f6 100%)",
@@ -150,8 +153,8 @@ export function SiteHeaderV2() {
                 }}
               >
                 TOOOLVIBES
-              </span>
-            </Link>
+              </Link>
+            </div>
 
             <span
               className="pointer-events-none absolute left-1/2 top-1/2 block -translate-x-1/2 -translate-y-1/2 text-[0.92rem] font-black uppercase tracking-[0.16em] lg:hidden"
