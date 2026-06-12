@@ -111,7 +111,7 @@ export function DesktopVibeCompare({
       </section>
 
       <section className="desktop-vibe-section desktop-vibe-game-strip">
-        <ArenaGameMissions featuredCount={featuredTools.length} />
+        <ArenaGameMissions />
       </section>
 
       <section className="desktop-vibe-section desktop-vibe-compare-console">
