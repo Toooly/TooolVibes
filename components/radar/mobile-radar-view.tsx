@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, useCallback, type CSSProperties } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback, type CSSProperties, type MouseEvent } from "react";
 import { motion } from "motion/react";
 import {
   Activity,
@@ -8,6 +8,11 @@ import {
   TrendingUp,
   Zap,
 } from "lucide-react";
+import { toast } from "sonner";
+import confetti from "canvas-confetti";
+
+import { claimHiddenSignal } from "@/lib/gamification/actions";
+import { RadarScannerOverlay } from "@/components/gamification/radar-scanner-overlay";
 
 /* ═══════════════════════════════════════════════════════════════
    Types
@@ -55,6 +60,21 @@ const fallbackRadarItems: ProductHuntItem[] = Array.from(
     productHuntUrl: "#",
   }),
 );
+
+function hashString(value: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function seededRandom(seed: string): number {
+  return hashString(seed) / 4294967296;
+}
+
+const HIDDEN_SIGNAL_STORAGE_KEY = "tv:hidden-signal";
 
 /* ═══════════════════════════════════════════════════════════════
    MobileRadarView — root
@@ -115,6 +135,44 @@ export function MobileRadarView() {
   const currentItems = useMemo(
     () => currentPayload?.items ?? [],
     [currentPayload?.items],
+  );
+
+  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const [hiddenDiscovered, setHiddenDiscovered] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setHiddenDiscovered(localStorage.getItem(`${HIDDEN_SIGNAL_STORAGE_KEY}:${today}`) === "1");
+  }, [today]);
+
+  const handleHiddenNodeClick = useCallback(
+    async (node: { id: string; productHuntUrl: string }, event: MouseEvent<HTMLAnchorElement>) => {
+      if (hiddenDiscovered) return;
+
+      event.preventDefault();
+
+      const candidateSlugs = currentItems.slice(0, RADAR_NODE_COUNT).map((item) => item.id);
+
+      try {
+        await claimHiddenSignal(today, node.id, candidateSlugs);
+        localStorage.setItem(`${HIDDEN_SIGNAL_STORAGE_KEY}:${today}`, "1");
+        setHiddenDiscovered(true);
+        confetti({
+          particleCount: 40,
+          spread: 50,
+          origin: { y: 0.6 },
+          disableForReducedMotion: true,
+        });
+        toast.success("Segnale nascosto!", { description: "+25 XP" });
+      } catch (error) {
+        toast.error("Segnale non registrato", {
+          description: error instanceof Error ? error.message : "Riprova più tardi.",
+        });
+      }
+
+      window.open(node.productHuntUrl, "_blank", "noopener,noreferrer");
+    },
+    [hiddenDiscovered, today, currentItems],
   );
 
   /* ── Canvas animation ── */
@@ -282,6 +340,13 @@ export function MobileRadarView() {
   }, [currentItems]);
   const radarClockKey = nodes.map((node) => node.id).join("|");
 
+  const hiddenNodeId = useMemo(() => {
+    const realNodes = nodes.filter((node) => !node.isPlaceholder);
+    if (realNodes.length === 0) return null;
+    const index = Math.floor(seededRandom(today) * realNodes.length);
+    return realNodes[index]?.id ?? null;
+  }, [nodes, today]);
+
   return (
     <div className="mobile-radar-view relative min-h-screen overflow-hidden bg-[#0a0a1a]">
       {/* Header */}
@@ -314,6 +379,8 @@ export function MobileRadarView() {
           aria-hidden="true"
         />
 
+        <RadarScannerOverlay />
+
         {/* Real data nodes overlaid */}
         {nodes.map((node) => {
           const style = {
@@ -324,10 +391,17 @@ export function MobileRadarView() {
             "--node-hit-delay": `${node.hitDelay}s`,
           } as CSSProperties;
           const isHot = node.votesCount > 100 && !node.isPlaceholder;
-          const nodeClassName = `mobile-radar-view__node${isHot ? " is-hot" : ""}${node.isPlaceholder ? " is-placeholder" : ""}`;
+          const isHidden = node.id === hiddenNodeId && !hiddenDiscovered;
+          const nodeClassName = `mobile-radar-view__node${isHot ? " is-hot" : ""}${node.isPlaceholder ? " is-placeholder" : ""}${isHidden ? " is-hidden" : ""}`;
           const nodeContent = (
             <>
               <span className="mobile-radar-view__node-halo" />
+              {isHidden && (
+                <span
+                  className="pointer-events-none absolute inset-[-0.55rem] z-0 rounded-full border-2 border-dashed border-emerald-400/70 shadow-[0_0_18px_rgba(52,211,153,0.45)] animate-[spin_4s_linear_infinite]"
+                  aria-hidden="true"
+                />
+              )}
               <span className="mobile-radar-view__node-body">
                 {node.thumbnailUrl ? (
                   <img
@@ -374,6 +448,7 @@ export function MobileRadarView() {
               className={nodeClassName}
               style={style}
               aria-label={`${node.name}. ${node.votesCount} voti, ${node.commentsCount} commenti`}
+              onClick={isHidden ? (event) => handleHiddenNodeClick(node, event) : undefined}
             >
               {nodeContent}
             </a>

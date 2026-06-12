@@ -10,6 +10,7 @@ import "@fontsource/rubik/600.css";
 import "@fontsource/rubik/700.css";
 import "@/app/globals.css";
 import { RootProviders } from "@/components/app/root-providers";
+import { GamificationShell } from "@/components/gamification/gamification-shell";
 import { siteConfig } from "@/lib/config/site";
 
 export const metadata: Metadata = {
@@ -143,7 +144,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        <RootProviders>{children}</RootProviders>
+        <RootProviders>
+          <GamificationShell />
+          {children}
+        </RootProviders>
       </body>
     </html>
   );

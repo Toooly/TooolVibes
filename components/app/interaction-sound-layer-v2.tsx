@@ -66,6 +66,12 @@ const SOUND_KINDS: readonly SoundKind[] = [
   "introOpen",
   "introClose",
   "route",
+  "battleStart",
+  "battleHit",
+  "battleWin",
+  "badgeUnlock",
+  "levelUp",
+  "predictionLock",
 ];
 
 function getInitialMuted() {
@@ -937,6 +943,236 @@ const SOUND_PROFILES: Record<SoundKind, SoundProfile> = {
       q: 8,
     },
   },
+  battleStart: {
+    filterStart: 1800,
+    filterEnd: 4200,
+    steps: [
+      {
+        at: 0,
+        duration: 0.28,
+        frequency: 82,
+        endFrequency: 165,
+        volume: 0.014,
+        type: "sawtooth",
+      },
+      {
+        at: 0.12,
+        duration: 0.22,
+        frequency: 247,
+        endFrequency: 330,
+        volume: 0.01,
+        type: "triangle",
+      },
+      {
+        at: 0.22,
+        duration: 0.34,
+        frequency: 523,
+        endFrequency: 784,
+        volume: 0.008,
+        type: "sine",
+      },
+    ],
+    noise: {
+      at: 0.08,
+      duration: 0.16,
+      volume: 0.004,
+      frequency: 2400,
+      q: 6,
+    },
+  },
+  battleHit: {
+    filterStart: 5200,
+    filterEnd: 1400,
+    steps: [
+      {
+        at: 0,
+        duration: 0.045,
+        frequency: 880,
+        endFrequency: 220,
+        volume: 0.016,
+        type: "square",
+      },
+      {
+        at: 0.025,
+        duration: 0.06,
+        frequency: 1760,
+        endFrequency: 440,
+        volume: 0.008,
+        type: "triangle",
+      },
+    ],
+    noise: {
+      at: 0,
+      duration: 0.05,
+      volume: 0.005,
+      frequency: 4200,
+      q: 10,
+    },
+  },
+  battleWin: {
+    filterStart: 4800,
+    filterEnd: 2200,
+    steps: [
+      {
+        at: 0,
+        duration: 0.16,
+        frequency: 523,
+        endFrequency: 523,
+        volume: 0.012,
+        type: "triangle",
+      },
+      {
+        at: 0.12,
+        duration: 0.18,
+        frequency: 659,
+        endFrequency: 659,
+        volume: 0.012,
+        type: "sine",
+      },
+      {
+        at: 0.24,
+        duration: 0.28,
+        frequency: 880,
+        endFrequency: 880,
+        volume: 0.014,
+        type: "sine",
+      },
+      {
+        at: 0.34,
+        duration: 0.42,
+        frequency: 1046,
+        endFrequency: 1046,
+        volume: 0.01,
+        type: "sine",
+      },
+    ],
+    noise: {
+      at: 0.18,
+      duration: 0.12,
+      volume: 0.003,
+      frequency: 5200,
+      q: 12,
+    },
+  },
+  badgeUnlock: {
+    filterStart: 6000,
+    filterEnd: 2800,
+    steps: [
+      {
+        at: 0,
+        duration: 0.07,
+        frequency: 1318,
+        endFrequency: 1760,
+        volume: 0.009,
+        type: "sine",
+      },
+      {
+        at: 0.06,
+        duration: 0.09,
+        frequency: 1760,
+        endFrequency: 2093,
+        volume: 0.008,
+        type: "sine",
+      },
+      {
+        at: 0.12,
+        duration: 0.28,
+        frequency: 2637,
+        endFrequency: 2349,
+        volume: 0.006,
+        type: "sine",
+      },
+    ],
+    noise: {
+      at: 0.04,
+      duration: 0.08,
+      volume: 0.002,
+      frequency: 6400,
+      q: 14,
+    },
+  },
+  levelUp: {
+    filterStart: 5000,
+    filterEnd: 2400,
+    steps: [
+      {
+        at: 0,
+        duration: 0.18,
+        frequency: 392,
+        endFrequency: 523,
+        volume: 0.012,
+        type: "triangle",
+      },
+      {
+        at: 0.14,
+        duration: 0.18,
+        frequency: 523,
+        endFrequency: 659,
+        volume: 0.012,
+        type: "sine",
+      },
+      {
+        at: 0.26,
+        duration: 0.24,
+        frequency: 659,
+        endFrequency: 880,
+        volume: 0.014,
+        type: "sine",
+      },
+      {
+        at: 0.4,
+        duration: 0.5,
+        frequency: 880,
+        endFrequency: 1046,
+        volume: 0.012,
+        type: "sine",
+      },
+    ],
+    noise: {
+      at: 0.2,
+      duration: 0.2,
+      volume: 0.003,
+      frequency: 4800,
+      q: 11,
+    },
+  },
+  predictionLock: {
+    filterStart: 3600,
+    filterEnd: 1200,
+    steps: [
+      {
+        at: 0,
+        duration: 0.08,
+        frequency: 880,
+        endFrequency: 659,
+        volume: 0.009,
+        type: "sine",
+      },
+      {
+        at: 0.07,
+        duration: 0.1,
+        frequency: 988,
+        endFrequency: 988,
+        volume: 0.008,
+        type: "triangle",
+      },
+      {
+        at: 0.16,
+        duration: 0.18,
+        frequency: 1318,
+        endFrequency: 1318,
+        volume: 0.006,
+        type: "sine",
+      },
+    ],
+    noise: {
+      at: 0,
+      duration: 0.04,
+      volume: 0.0025,
+      frequency: 3600,
+      q: 10,
+    },
+  },
 };
 
 function scheduleStep(
@@ -1151,6 +1387,8 @@ export function InteractionSoundLayerV2() {
   const droneRef = useRef(new AmbientDrone());
 
   useEffect(() => {
+    const drone = droneRef.current;
+
     function setMuted(muted: boolean) {
       mutedRef.current = muted;
       document.documentElement.dataset.tvSound = muted
@@ -1158,7 +1396,7 @@ export function InteractionSoundLayerV2() {
         : audioUnlockedRef.current
           ? "on"
           : "ready";
-      droneRef.current.setMuted(muted);
+      drone.setMuted(muted);
     }
 
     function getAudioContext() {
@@ -1190,8 +1428,8 @@ export function InteractionSoundLayerV2() {
       }
       audioUnlockedRef.current = true;
       document.documentElement.dataset.tvSound = "on";
-      if (!droneRef.current.running) {
-        droneRef.current.init(context);
+      if (!drone.running) {
+        drone.init(context);
       }
       playTone(context, soundKind);
       const pendingIntroSound = pendingIntroSoundRef.current;
@@ -1507,7 +1745,7 @@ export function InteractionSoundLayerV2() {
       window.removeEventListener(SOUND_PLAY_EVENT, handleSystemSound);
       void audioRef.current?.close();
       audioRef.current = null;
-      droneRef.current.stop();
+      drone.stop();
       delete document.documentElement.dataset.tvSound;
     };
   }, []);
