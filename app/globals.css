@@ -16773,6 +16773,18 @@ img {
     opacity: 0.82;
   }
 
+  .mobile-compare-arena__fight-button:hover:not(:disabled) {
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 14px 36px rgba(106, 60, 255, 0.45);
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="result"] {
+    background:
+      radial-gradient(circle at 50% 50%, rgba(243, 191, 76, 0.18), transparent 55%),
+      radial-gradient(circle at 50% 50%, rgba(106, 60, 255, 0.12), transparent 45%),
+      linear-gradient(180deg, #1a1130, #0b0720);
+  }
+
   /* Champion */
   .mobile-compare-arena__champion {
     position: relative;
@@ -17258,6 +17270,156 @@ img {
       opacity: 0.8;
       transform: translate(-50%, -50%) rotate(var(--energy-angle, 0deg)) scaleY(1.05);
     }
+  }
+
+  /* Matrix (polished) */
+  .mobile-compare-arena__matrix-grid {
+    display: block;
+  }
+
+  .mobile-compare-arena__matrix-head,
+  .mobile-compare-arena__matrix-row {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.04);
+    overflow: hidden;
+  }
+
+  .mobile-compare-arena__matrix-head {
+    border-radius: 1rem 1rem 0 0;
+    border-bottom: none;
+  }
+
+  .mobile-compare-arena__matrix-row {
+    border-top: none;
+  }
+
+  .mobile-compare-arena__matrix-row:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0 0 1rem 1rem;
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-axis,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-axis {
+    flex: 0 0 5.5rem;
+    display: flex;
+    align-items: center;
+    padding: 0 0.7rem;
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: none;
+  }
+
+  .mobile-compare-arena__matrix-axis--head {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-cells,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-cells {
+    flex: 1;
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    padding: 0;
+    scrollbar-width: none;
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-cell,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-cell {
+    flex: 0 0 7.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+    padding: 0.7rem 0.5rem;
+    border-radius: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    background: transparent;
+    text-align: center;
+  }
+
+  .mobile-compare-arena__matrix-cell--head {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .mobile-compare-arena__matrix-cell.is-winner {
+    background: rgba(243, 191, 76, 0.08);
+  }
+
+  .mobile-compare-arena__matrix-tool {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .mobile-compare-arena__matrix-value {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .mobile-compare-arena__matrix-value--winner,
+  .mobile-compare-arena__matrix-cell.is-winner .mobile-compare-arena__matrix-value {
+    color: #f3bf4c;
+  }
+
+  .mobile-compare-arena__matrix-badge {
+    display: inline-flex;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(106, 60, 255, 0.18);
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 800;
+  }
+
+  .mobile-compare-arena__matrix-badge.is-winner {
+    background: rgba(243, 191, 76, 0.2);
+    color: #f3bf4c;
+  }
+
+  .mobile-compare-arena__matrix-bar {
+    position: relative;
+    width: 100%;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+  }
+
+  .mobile-compare-arena__matrix-bar span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--arena-a, #6a3cff), var(--arena-b, #39d2f6));
+    transition: width 400ms ease-out;
+  }
+
+  .mobile-compare-arena__matrix-bar span.is-winner {
+    background: linear-gradient(90deg, #f3bf4c, #ff6b9d);
+  }
+
+  .mobile-compare-arena__matrix-bar strong {
+    position: relative;
+    z-index: 1;
+    display: block;
+    margin-top: 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #ffffff;
   }
 
   /* Empty */
@@ -20423,6 +20585,17 @@ img {
   text-transform: none;
 }
 
+.vibe-mini-game__stats > span[data-combo="2"] strong,
+.vibe-mini-game__stats > span[data-combo="3"] strong {
+  color: #f3bf4c;
+}
+
+.vibe-mini-game__stats > span[data-combo="4"] strong,
+.vibe-mini-game__stats > span[data-combo="5"] strong {
+  color: #00d084;
+  text-shadow: 0 0 12px rgba(0, 208, 132, 0.45);
+}
+
 .vibe-mini-game__timer {
   position: relative;
   display: grid;
@@ -20611,6 +20784,14 @@ img {
 }
 
 .vibe-mini-game__result-actions .vibe-mini-game__start {
+  position: static;
+  transform: none;
+}
+
+.vibe-mini-game__result-actions .vibe-mini-game__start:hover {
+  transform: scale(1.04);
+}
+
   position: static;
   transform: none;
 }
