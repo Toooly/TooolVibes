@@ -42,3 +42,5 @@ pnpm-debug.log*
 next-env.d.ts
 cloudflare-env.d.ts
 .worktrees/
+next-dev.err.log
+next-dev.out.log
