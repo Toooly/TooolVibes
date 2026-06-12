@@ -309,19 +309,30 @@ function ChallengerCard({
 }
 
 function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
-  if (tools.length < 2) return null;
-  const maxScore = Math.max(...tools.map((t) => t.score), 1);
   const cellsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const isSyncing = useRef(false);
+  if (tools.length < 2) return null;
+
+  const maxScore = Math.max(...tools.map((t) => t.score), 1);
 
   const handleScroll = (index: number) => {
+    if (isSyncing.current) return;
     const source = cellsRef.current[index];
     if (!source) return;
+    isSyncing.current = true;
     cellsRef.current.forEach((el, i) => {
       if (el && i !== index) {
         el.scrollLeft = source.scrollLeft;
       }
     });
+    requestAnimationFrame(() => {
+      isSyncing.current = false;
+    });
   };
+
+  const scoreMax = Math.max(...tools.map((t) => t.score));
+  const fitMax = Math.max(...tools.map((t) => t.useCasesCount));
+  const highlightsMax = Math.max(...tools.map((t) => t.highlights.length));
 
   const rows = [
     {
@@ -331,7 +342,7 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
           {t.categoryLabel}
         </span>
       ),
-      winnerIndex: 0, // no winner logic for category
+      winnerIndices: [] as number[],
     },
     {
       label: "Punteggio",
@@ -344,7 +355,7 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
           <strong>{t.score}</strong>
         </div>
       ),
-      winnerIndex: tools.findIndex((t) => t.score === Math.max(...tools.map((tt) => tt.score))),
+      winnerIndices: tools.flatMap((t, i) => (t.score === scoreMax ? [i] : [])),
     },
     {
       label: "Fit",
@@ -353,7 +364,7 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
           {t.useCasesCount || "—"}
         </span>
       ),
-      winnerIndex: tools.findIndex((t) => t.useCasesCount === Math.max(...tools.map((tt) => tt.useCasesCount))),
+      winnerIndices: tools.flatMap((t, i) => (t.useCasesCount === fitMax ? [i] : [])),
     },
     {
       label: "Highlights",
@@ -362,12 +373,16 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
           {t.highlights.length}
         </span>
       ),
-      winnerIndex: tools.findIndex((t) => t.highlights.length === Math.max(...tools.map((tt) => tt.highlights.length))),
+      winnerIndices: tools.flatMap((t, i) => (t.highlights.length === highlightsMax ? [i] : [])),
     },
     {
       label: "Tempo",
-      render: (t: NormalisedTool) => <span>{t.readingTime}</span>,
-      winnerIndex: -1,
+      render: (t: NormalisedTool, isWinner: boolean) => (
+        <span className={cn(isWinner && "mobile-compare-arena__matrix-value--winner")}>
+          {t.readingTime}
+        </span>
+      ),
+      winnerIndices: [] as number[],
     },
   ];
 
@@ -404,18 +419,21 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
               ref={(el) => { cellsRef.current[rowIndex] = el; }}
               onScroll={() => handleScroll(rowIndex)}
             >
-              {tools.map((tool, toolIndex) => (
-                <div
-                  key={tool.slug}
-                  className={cn(
-                    "mobile-compare-arena__matrix-cell",
-                    toolIndex === row.winnerIndex && "is-winner",
-                  )}
-                  style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
-                >
-                  <span className="mobile-compare-arena__matrix-value">{row.render(tool, toolIndex === row.winnerIndex)}</span>
-                </div>
-              ))}
+              {tools.map((tool, toolIndex) => {
+                const isWinner = row.winnerIndices.includes(toolIndex);
+                return (
+                  <div
+                    key={tool.slug}
+                    className={cn(
+                      "mobile-compare-arena__matrix-cell",
+                      isWinner && "is-winner",
+                    )}
+                    style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
+                  >
+                    <span className="mobile-compare-arena__matrix-value">{row.render(tool, isWinner)}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         ))}
@@ -581,6 +599,7 @@ export function MobileCompareView({
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
   const clearCompare = useToolWorkspaceStore((s) => s.clearCompare);
   const [battleState, setBattleState] = useState<BattleState>("idle");
+  const fightTimerRef = useRef<number | null>(null);
 
   const tools = useMemo(
     () => normalise(directoryTools, legacyTools, compareSlugs),
@@ -589,6 +608,12 @@ export function MobileCompareView({
 
   useEffect(() => {
     setBattleState("idle");
+  }, [compareSlugs]);
+
+  useEffect(() => {
+    return () => {
+      if (fightTimerRef.current) clearTimeout(fightTimerRef.current);
+    };
   }, [compareSlugs]);
 
   if (tools.length === 0) {
@@ -637,9 +662,8 @@ export function MobileCompareView({
 
   function handleFight() {
     if (battleState === "fighting") return;
-
     setBattleState("fighting");
-    window.setTimeout(() => {
+    fightTimerRef.current = window.setTimeout(() => {
       setBattleState("result");
       void celebrateArenaFight();
     }, 1450);
