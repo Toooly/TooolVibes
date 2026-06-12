@@ -397,7 +397,11 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
         <div className="mobile-compare-arena__matrix-axis mobile-compare-arena__matrix-axis--head">
           Attributo
         </div>
-        <div className="mobile-compare-arena__matrix-cells">
+        <div
+          className="mobile-compare-arena__matrix-cells"
+          ref={(el) => { cellsRef.current[rows.length] = el; }}
+          onScroll={() => handleScroll(rows.length)}
+        >
           {tools.map((tool) => (
             <div
               key={tool.slug}
@@ -469,7 +473,7 @@ const FIGHTER_POSITIONS: Record<number, Array<{ x: number; y: number; align?: st
   ],
 };
 
-function ArenaBattleStage({
+function MobileArenaBattleStage({
   battleState,
   onFight,
   tools,
@@ -514,13 +518,16 @@ function ArenaBattleStage({
 
       {battleState === "fighting" && (
         <div className="mobile-compare-arena__energy-lines" aria-hidden="true">
-          {positions.map((pos, i) => (
-            <span
-              key={i}
-              className="mobile-compare-arena__energy-line"
-              style={{ left: `${pos.x}%`, top: `${pos.y}%` } as CSSProperties}
-            />
-          ))}
+          {positions.map((pos, i) => {
+            const angle = Math.atan2(50 - pos.y, 50 - pos.x) * (180 / Math.PI);
+            return (
+              <span
+                key={i}
+                className="mobile-compare-arena__energy-line"
+                style={{ "--energy-angle": `${angle}deg`, left: `${pos.x}%`, top: `${pos.y}%` } as CSSProperties}
+              />
+            );
+          })}
         </div>
       )}
 
@@ -673,7 +680,7 @@ export function MobileCompareView({
     <div className="mobile-compare-arena">
       <ArenaHeader count={tools.length} />
 
-      <ArenaBattleStage
+      <MobileArenaBattleStage
         battleState={battleState}
         onFight={handleFight}
         tools={sorted.slice(0, MAX_COMPARE_TOOLS)}

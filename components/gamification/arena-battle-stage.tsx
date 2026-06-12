@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from "motion/react";
 import NumberFlow from "@number-flow/react";
 import { Swords, Trophy, RotateCcw, AlertCircle } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import type { BattleResult, BattleTool } from "@/lib/gamification/battle-engine";
 import { useArenaBattle } from "@/lib/gamification/hooks/use-arena-battle";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import type { ArenaBattleMode } from "@/lib/gamification/types";
 
 const MINIMUM_FIGHT_DURATION_MS = 2000;
@@ -21,6 +23,7 @@ export function ArenaBattleStage({
   const [status, setStatus] = useState<"idle" | "fighting" | "done" | "error">("idle");
   const [result, setResult] = useState<BattleResult | null>(null);
   const { mutateAsync } = useArenaBattle();
+  const reducedMotion = useReducedMotion();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isMountedRef = useRef(true);
 
@@ -121,10 +124,15 @@ export function ArenaBattleStage({
             className="flex flex-col items-center justify-center gap-4 py-16"
           >
             <span className="relative flex h-12 w-12 items-center justify-center">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent-soft)] opacity-75" />
+              <span
+                className={cn(
+                  "absolute inline-flex h-full w-full rounded-full bg-[var(--accent-soft)] opacity-75",
+                  !reducedMotion && "animate-ping",
+                )}
+              />
               <Swords className="relative h-6 w-6 text-[var(--accent)]" />
             </span>
-            <p className="animate-pulse text-base font-medium text-[var(--foreground)]">
+            <p className={cn("text-base font-medium text-[var(--foreground)]", !reducedMotion && "animate-pulse")}>
               Battaglia in corso…
             </p>
           </motion.div>
