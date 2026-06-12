@@ -20669,6 +20669,20 @@ img {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .vibe-mini-game__target {
+    animation: none;
+  }
+
+  .vibe-mini-game__timer-fill {
+    transition: none;
+  }
+
+  .vibe-mini-game__charge::after {
+    transition: none;
+  }
+}
+
 @media (max-width: 420px) {
   .vibe-mini-launcher {
     min-height: 2.15rem;
