@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Scale, Info } from "lucide-react";
@@ -9,6 +9,7 @@ import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-work
 import type { DirectoryTool, DirectoryToolLevel } from "@/lib/data/tooolvibes-directory";
 import type { ToolRecord } from "@/lib/types/tool";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 
 type MobileCompareViewProps = {
   directoryTools: DirectoryTool[];
@@ -310,59 +311,109 @@ function ChallengerCard({
 function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
   if (tools.length < 2) return null;
   const maxScore = Math.max(...tools.map((t) => t.score), 1);
+  const cellsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  const handleScroll = (index: number) => {
+    const source = cellsRef.current[index];
+    if (!source) return;
+    cellsRef.current.forEach((el, i) => {
+      if (el && i !== index) {
+        el.scrollLeft = source.scrollLeft;
+      }
+    });
+  };
+
   const rows = [
     {
       label: "Categoria",
-      render: (t: NormalisedTool) => (
-        <span className="mobile-compare-arena__matrix-badge">{t.categoryLabel}</span>
+      render: (t: NormalisedTool, isWinner: boolean) => (
+        <span className={cn("mobile-compare-arena__matrix-badge", isWinner && "is-winner")}>
+          {t.categoryLabel}
+        </span>
       ),
+      winnerIndex: 0, // no winner logic for category
     },
     {
       label: "Punteggio",
-      render: (t: NormalisedTool) => (
+      render: (t: NormalisedTool, isWinner: boolean) => (
         <div className="mobile-compare-arena__matrix-bar">
-          <span style={{ width: `${(t.score / maxScore) * 100}%` }} />
+          <span
+            className={cn(isWinner && "is-winner")}
+            style={{ width: `${(t.score / maxScore) * 100}%` }}
+          />
           <strong>{t.score}</strong>
         </div>
       ),
+      winnerIndex: tools.findIndex((t) => t.score === Math.max(...tools.map((tt) => tt.score))),
     },
     {
       label: "Fit",
-      render: (t: NormalisedTool) => <span>{t.useCasesCount || "—"}</span>,
+      render: (t: NormalisedTool, isWinner: boolean) => (
+        <span className={cn(isWinner && "mobile-compare-arena__matrix-value--winner")}>
+          {t.useCasesCount || "—"}
+        </span>
+      ),
+      winnerIndex: tools.findIndex((t) => t.useCasesCount === Math.max(...tools.map((tt) => tt.useCasesCount))),
     },
     {
       label: "Highlights",
-      render: (t: NormalisedTool) => <span>{t.highlights.length}</span>,
+      render: (t: NormalisedTool, isWinner: boolean) => (
+        <span className={cn(isWinner && "mobile-compare-arena__matrix-value--winner")}>
+          {t.highlights.length}
+        </span>
+      ),
+      winnerIndex: tools.findIndex((t) => t.highlights.length === Math.max(...tools.map((tt) => tt.highlights.length))),
     },
     {
       label: "Tempo",
       render: (t: NormalisedTool) => <span>{t.readingTime}</span>,
+      winnerIndex: -1,
     },
   ];
+
   return (
     <section className="mobile-compare-arena__matrix">
       <div className="mobile-compare-arena__matrix-header">
         <Scale className="size-4" />
         <span>Confronto caratteristiche</span>
       </div>
+
+      <div className="mobile-compare-arena__matrix-head" aria-hidden="true">
+        <div className="mobile-compare-arena__matrix-axis mobile-compare-arena__matrix-axis--head">
+          Attributo
+        </div>
+        <div className="mobile-compare-arena__matrix-cells">
+          {tools.map((tool) => (
+            <div
+              key={tool.slug}
+              className="mobile-compare-arena__matrix-cell mobile-compare-arena__matrix-cell--head"
+              style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
+            >
+              <span className="mobile-compare-arena__matrix-tool">{tool.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="mobile-compare-arena__matrix-grid">
-        {rows.map((row) => (
+        {rows.map((row, rowIndex) => (
           <div key={row.label} className="mobile-compare-arena__matrix-row">
             <div className="mobile-compare-arena__matrix-axis">{row.label}</div>
-            <div className="mobile-compare-arena__matrix-cells">
-              {tools.map((tool) => (
+            <div
+              className="mobile-compare-arena__matrix-cells"
+              ref={(el) => { cellsRef.current[rowIndex] = el; }}
+              onScroll={() => handleScroll(rowIndex)}
+            >
+              {tools.map((tool, toolIndex) => (
                 <div
                   key={tool.slug}
-                  className="mobile-compare-arena__matrix-cell"
-                  style={
-                    {
-                      "--arena-a": tool.accentFrom,
-                      "--arena-b": tool.accentTo,
-                    } as CSSProperties
-                  }
+                  className={cn(
+                    "mobile-compare-arena__matrix-cell",
+                    toolIndex === row.winnerIndex && "is-winner",
+                  )}
+                  style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
                 >
-                  <strong className="mobile-compare-arena__matrix-tool">{tool.name}</strong>
-                  <span className="mobile-compare-arena__matrix-value">{row.render(tool)}</span>
+                  <span className="mobile-compare-arena__matrix-value">{row.render(tool, toolIndex === row.winnerIndex)}</span>
                 </div>
               ))}
             </div>
@@ -374,6 +425,31 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
 }
 
 type BattleState = "idle" | "fighting" | "result";
+
+const FIGHTER_POSITIONS: Record<number, Array<{ x: number; y: number; align?: string }>> = {
+  2: [
+    { x: 18, y: 62 },
+    { x: 82, y: 62 },
+  ],
+  3: [
+    { x: 50, y: 24 },
+    { x: 20, y: 74 },
+    { x: 80, y: 74 },
+  ],
+  4: [
+    { x: 22, y: 28 },
+    { x: 78, y: 28 },
+    { x: 22, y: 76 },
+    { x: 78, y: 76 },
+  ],
+  5: [
+    { x: 50, y: 18 },
+    { x: 16, y: 50 },
+    { x: 84, y: 50 },
+    { x: 30, y: 82 },
+    { x: 70, y: 82 },
+  ],
+};
 
 function ArenaBattleStage({
   battleState,
@@ -395,10 +471,13 @@ function ArenaBattleStage({
           ? "Corners"
           : "Vibe royale";
 
+  const positions = FIGHTER_POSITIONS[tools.length] ?? FIGHTER_POSITIONS[2];
+  const reducedMotion = useReducedMotion();
+
   return (
     <section
       className="mobile-compare-arena__battle-stage"
-      data-count={tools.length}
+      data-count={Math.min(tools.length, 5)}
       data-state={battleState}
       aria-label="Arena fight"
     >
@@ -407,13 +486,30 @@ function ArenaBattleStage({
         <span />
         <span />
       </div>
+
       <div className="mobile-compare-arena__battle-core">
         <span>{modeLabel}</span>
-        <strong>{battleState === "fighting" ? "CLASH" : battleState === "result" ? "WINNER" : "READY"}</strong>
+        <strong>
+          {battleState === "fighting" ? "CLASH" : battleState === "result" ? "WINNER" : "READY"}
+        </strong>
       </div>
+
+      {battleState === "fighting" && (
+        <div className="mobile-compare-arena__energy-lines" aria-hidden="true">
+          {positions.map((pos, i) => (
+            <span
+              key={i}
+              className="mobile-compare-arena__energy-line"
+              style={{ left: `${pos.x}%`, top: `${pos.y}%` } as CSSProperties}
+            />
+          ))}
+        </div>
+      )}
+
       <div className="mobile-compare-arena__fighters">
         {tools.map((tool, index) => {
           const isWinner = battleState === "result" && tool.slug === winner.slug;
+          const pos = positions[index] ?? positions[0];
 
           return (
             <motion.div
@@ -421,27 +517,32 @@ function ArenaBattleStage({
               className={cn("mobile-compare-arena__fighter", isWinner && "is-winner")}
               style={
                 {
+                  left: `${pos.x}%`,
+                  top: `${pos.y}%`,
                   "--arena-a": tool.accentFrom,
                   "--arena-b": tool.accentTo,
                   "--fighter-index": index,
                 } as CSSProperties
               }
               animate={
-                battleState === "fighting"
+                battleState === "fighting" && !reducedMotion
                   ? { scale: [1, 1.12, 0.98, 1.08, 1], rotate: [0, -5, 4, -2, 0] }
-                  : { scale: isWinner ? 1.08 : 1, rotate: 0 }
+                  : { scale: isWinner ? 1.12 : 1, rotate: 0 }
               }
               transition={{ duration: battleState === "fighting" ? 0.82 : 0.28, repeat: battleState === "fighting" ? Infinity : 0 }}
             >
               <span className="mobile-compare-arena__fighter-orb">
                 {tool.name.slice(0, 2).toUpperCase()}
               </span>
-              <span className="mobile-compare-arena__fighter-name">{tool.name}</span>
+              <span className="mobile-compare-arena__fighter-name" title={tool.name}>
+                {tool.name}
+              </span>
               <small>{tool.score}</small>
             </motion.div>
           );
         })}
       </div>
+
       <AnimatePresence>
         {battleState === "result" ? (
           <motion.div
@@ -455,6 +556,7 @@ function ArenaBattleStage({
           </motion.div>
         ) : null}
       </AnimatePresence>
+
       <button
         type="button"
         className="mobile-compare-arena__fight-button"
