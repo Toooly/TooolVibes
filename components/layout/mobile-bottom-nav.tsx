@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bookmark, Columns3, Home, Radar, Search } from "lucide-react";
@@ -21,20 +20,6 @@ export function MobileBottomNav() {
   const pathname = usePathname();
   const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
   const compareCount = useToolWorkspaceStore((s) => s.compareSlugs.length);
-  const previousCompareCountRef = useRef(compareCount);
-  const [comparePing, setComparePing] = useState(false);
-
-  useEffect(() => {
-    if (compareCount > previousCompareCountRef.current) {
-      setComparePing(true);
-      const timer = window.setTimeout(() => setComparePing(false), 860);
-      previousCompareCountRef.current = compareCount;
-      return () => window.clearTimeout(timer);
-    }
-
-    previousCompareCountRef.current = compareCount;
-    return undefined;
-  }, [compareCount]);
 
   if (pathname.startsWith("/admin")) {
     return null;
@@ -44,7 +29,12 @@ export function MobileBottomNav() {
     <nav
       aria-label="Navigazione mobile principale"
       className={cn(
-        "mobile-bottom-motion fixed bottom-0 left-0 right-0 z-[45] mx-auto w-[min(calc(100vw-1.5rem),30rem)] rounded-t-[26px] border border-b-0 border-[rgba(76,55,166,0.18)] bg-[radial-gradient(circle_at_16%_0%,rgba(255,255,255,0.9),transparent_32%),radial-gradient(circle_at_84%_0%,rgba(94,226,255,0.18),transparent_34%),linear-gradient(135deg,#fffdf8_0%,#f4efff_54%,#edf7ff_100%)] shadow-[0_-8px_40px_rgba(47,33,126,0.12),inset_0_1px_0_rgba(255,255,255,0.74)] lg:hidden transition-opacity duration-300",
+        "fixed bottom-4 left-1/2 z-50 -translate-x-1/2",
+        "flex items-center gap-1 px-2 py-2 rounded-full",
+        "bg-white/70 backdrop-blur-xl border border-white/20",
+        "shadow-[0_-4px_20px_rgba(0,0,0,0.08)]",
+        "max-w-[calc(100%-2rem)]",
+        "lg:hidden transition-opacity duration-300",
         isOverlayOpen && "opacity-0 pointer-events-none"
       )}
       style={{ paddingBottom: "env(safe-area-inset-bottom)", transform: "translateZ(0)" }}
@@ -65,16 +55,20 @@ export function MobileBottomNav() {
               className={cn(
                 "mobile-bottom-link flex min-h-12 flex-col items-center justify-center gap-1 rounded-[20px] text-[0.64rem] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
                 active || compareHasItems
-                  ? "bg-[radial-gradient(circle_at_22%_0%,rgba(255,255,255,0.32),transparent_38%),radial-gradient(circle_at_86%_10%,rgba(94,226,255,0.32),transparent_34%),linear-gradient(135deg,#24105c_0%,#7c3aed_45%,#5268ff_74%,#0f766e_100%)] text-white shadow-[0_12px_28px_rgba(99,102,241,0.34),0_0_24px_rgba(94,226,255,0.16),inset_0_1px_0_rgba(255,255,255,0.3)]"
+                  ? "text-[#6a3cff] shadow-[0_0_12px_rgba(106,60,255,0.3)]"
                   : "text-[var(--muted-strong)] hover:bg-white/80 hover:text-[var(--accent-strong)]",
-                compareHasItems && "mobile-bottom-link--compare-ready",
-                isCompareItem && comparePing && "mobile-bottom-link--compare-ping",
+                active && "[&>svg]:scale-110",
+                compareHasItems && "mobile-bottom-link--compare-ready"
               )}
             >
-              <Icon className="size-5" aria-hidden="true" />
+              <Icon className="size-5 transition-transform" aria-hidden="true" />
               <span>{item.label}</span>
               {isCompareItem && compareCount > 0 ? (
-                <span className="mobile-bottom-link__badge" aria-label={`${compareCount} tool in confronto`}>
+                <span
+                  key={compareCount}
+                  className="mobile-bottom-link__badge animate-compare-ping"
+                  aria-label={`${compareCount} tool in confronto`}
+                >
                   {compareCount}
                 </span>
               ) : null}

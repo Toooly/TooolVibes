@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { GlobalCommandPalette } from "@/components/app/global-command-palette";
 import { GlobalExperienceLayer } from "@/components/app/global-experience-layer";
-import { SiteBrandIntro } from "@/components/app/home-brand-intro";
+import { HomeBrandIntro } from "@/components/app/home-brand-intro";
 import { InteractionSoundLayerV2 } from "@/components/app/interaction-sound-layer-v2";
 import { RouteTransitionLoader } from "@/components/app/route-transition-loader";
 import { GameEffectsLayer } from "@/components/gamification/game-effects-layer";
@@ -30,7 +30,7 @@ export function RootProviders({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delay={180}>
         {children}
-        <SiteBrandIntro />
+        <HomeBrandIntro />
         <GlobalExperienceLayer />
         <MotionObserver />
         <RouteTransitionLoader />

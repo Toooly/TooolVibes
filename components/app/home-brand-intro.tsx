@@ -1,235 +1,207 @@
 "use client";
 
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { CSSProperties } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { X } from "lucide-react";
+import { Logo3DIntro } from "@/components/3d/logo-3d-intro";
+import { SOUND_PLAY_EVENT, type TooolvibesSoundKind } from "@/lib/gamification/sound-engine";
 
-import { SOUND_PLAY_EVENT } from "@/lib/config/sound";
+const INTRO_DURATION_MS = 3800;
+const HAS_SEEN_INTRO_KEY = "tooolvibes_has_seen_intro";
+const MOBILE_BREAKPOINT = 768;
 
-const INTRO_STORAGE_KEY = "tooolvibes:brand-intro-mobile-neon-v1";
-const INTRO_DURATION_MS = 5600;
-const INTRO_HIDDEN_PATHS = ["/admin", "/api", "/auth"];
-const MOBILE_INTRO_QUERY = "(max-width: 767px)";
-const INTRO_TITLE = "TooolVibes";
+type IntroPhase = "entering" | "playing" | "leaving" | "unmounted";
 
-function hasPlayedIntro() {
-  try {
-    return window.sessionStorage.getItem(INTRO_STORAGE_KEY) === "true";
-  } catch {
-    return false;
-  }
-}
-
-function markIntroPlayed() {
-  try {
-    window.sessionStorage.setItem(INTRO_STORAGE_KEY, "true");
-  } catch {
-    // noop
-  }
-}
-
-const SPARKS = Array.from({ length: 38 }, (_, i) => {
-  const angle = (i / 38) * Math.PI * 2;
-  const radius = 22 + (i % 8) * 4.4;
-
-  return {
-    id: i,
-    x: 50 + Math.cos(angle) * radius,
-    y: 36 + Math.sin(angle) * radius * 0.58,
-    driftX: Math.cos(angle) * (12 + (i % 5) * 4),
-    driftY: Math.sin(angle) * (8 + (i % 4) * 3),
-    size: 1.6 + (i % 4) * 0.7,
-    delay: 0.08 + (i % 10) * 0.055,
-    duration: 2.4 + (i % 6) * 0.28,
-    color:
-      i % 5 === 0
-        ? "255, 213, 94"
-        : i % 3 === 0
-          ? "90, 229, 255"
-          : "136, 91, 255",
-  };
-});
-
-export function SiteBrandIntro() {
-  const pathname = usePathname();
-  const [phase, setPhase] = useState<"hidden" | "active" | "leaving">(
-    "hidden",
+function dispatchIntroFinished(skipped: boolean) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent("tooolvibes:brand-intro-finished", {
+      detail: { skipped },
+    })
   );
-  const timersRef = useRef<number[]>([]);
+}
 
-  const clearTimers = useCallback(() => {
-    timersRef.current.forEach((timer) => window.clearTimeout(timer));
-    timersRef.current = [];
+function dispatchSound(kind: TooolvibesSoundKind) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent(SOUND_PLAY_EVENT, {
+      detail: { kind },
+    })
+  );
+}
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
   }, []);
 
-  const finishIntro = useCallback(
-    (quick = false) => {
-      clearTimers();
-      setPhase("leaving");
-      window.dispatchEvent(
-        new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "introClose" } }),
-      );
+  return isMobile;
+}
 
-      const hideTimer = window.setTimeout(
-        () => {
-          markIntroPlayed();
-          document.documentElement.classList.remove("brand-intro-active");
-          window.dispatchEvent(
-            new CustomEvent("tooolvibes:brand-intro-finished"),
-          );
-          window.setTimeout(() => {
-            document.documentElement.classList.remove("brand-intro-preflight");
-          }, 120);
-          setPhase("hidden");
-        },
-        quick ? 360 : 720,
-      );
-      timersRef.current.push(hideTimer);
+function StarField() {
+  const stars = useRef(
+    Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      duration: `${2 + Math.random() * 4}s`,
+      delay: `${Math.random() * 3}s`,
+    }))
+  ).current;
+
+  return (
+    <div className="brand-intro__stars" aria-hidden="true">
+      {stars.map((star) => (
+        <span
+          key={star.id}
+          className="brand-intro__star"
+          style={{
+            left: star.left,
+            top: star.top,
+            animationDuration: star.duration,
+            animationDelay: star.delay,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function HomeBrandIntro({
+  onComplete,
+}: {
+  onComplete?: (skipped: boolean) => void;
+}) {
+  const isMobile = useIsMobile();
+  const [phase, setPhase] = useState<IntroPhase>("entering");
+  const [shouldRender, setShouldRender] = useState(false);
+  const hasFinished = useRef(false);
+
+  const finishIntro = useCallback(
+    (skipped = false) => {
+      if (hasFinished.current) return;
+      hasFinished.current = true;
+      setPhase("leaving");
+
+      setTimeout(() => {
+        setPhase("unmounted");
+        dispatchIntroFinished(skipped);
+        onComplete?.(skipped);
+      }, 700);
     },
-    [clearTimers],
+    [onComplete]
   );
 
   useEffect(() => {
-    const reducedMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+    if (typeof window === "undefined" || isMobile === null) return;
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    const hasSeen = sessionStorage.getItem(HAS_SEEN_INTRO_KEY);
+
+    if (!isMobile || reducedMotion || hasSeen === "1") {
+      setShouldRender(false);
+      dispatchIntroFinished(true);
+      onComplete?.(true);
+      return;
+    }
+
+    setShouldRender(true);
+    sessionStorage.setItem(HAS_SEEN_INTRO_KEY, "1");
+
+    const timers: number[] = [];
+    timers.push(
+      window.setTimeout(() => dispatchSound("introOpen"), 200),
+      window.setTimeout(() => dispatchSound("reveal"), 500),
+      window.setTimeout(() => setPhase("playing"), 400),
+      window.setTimeout(() => dispatchSound("introClose"), INTRO_DURATION_MS - 400),
+      window.setTimeout(() => finishIntro(false), INTRO_DURATION_MS)
     );
-    const mobileIntroQuery = window.matchMedia(MOBILE_INTRO_QUERY);
-    const shouldHide = INTRO_HIDDEN_PATHS.some((path) =>
-      pathname?.startsWith(path),
-    );
-    let hasStarted = false;
-    let retryTimer = 0;
-
-    const skipIntro = (announceFinished = true) => {
-      document.documentElement.classList.remove(
-        "brand-intro-active",
-        "brand-intro-preflight",
-      );
-      if (announceFinished) {
-        window.dispatchEvent(
-          new CustomEvent("tooolvibes:brand-intro-finished"),
-        );
-      }
-      setPhase("hidden");
-    };
-
-    const tryStartIntro = () => {
-      if (hasStarted) return;
-
-      const alreadyPlayed = hasPlayedIntro();
-
-      if (shouldHide || reducedMotionQuery.matches || alreadyPlayed) {
-        skipIntro();
-        return;
-      }
-
-      if (!mobileIntroQuery.matches) {
-        skipIntro(false);
-        return;
-      }
-
-      hasStarted = true;
-      document.documentElement.classList.add("brand-intro-active");
-      setPhase("active");
-      window.dispatchEvent(
-        new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "introOpen" } }),
-      );
-
-      timersRef.current.push(
-        window.setTimeout(() => finishIntro(false), INTRO_DURATION_MS),
-      );
-    };
-
-    tryStartIntro();
-    retryTimer = window.setTimeout(tryStartIntro, 180);
-    mobileIntroQuery.addEventListener("change", tryStartIntro);
 
     return () => {
-      window.clearTimeout(retryTimer);
-      mobileIntroQuery.removeEventListener("change", tryStartIntro);
-      clearTimers();
-      document.documentElement.classList.remove(
-        "brand-intro-active",
-        "brand-intro-preflight",
-      );
+      timers.forEach((t) => window.clearTimeout(t));
     };
-  }, [clearTimers, finishIntro, pathname]);
+  }, [finishIntro, onComplete, isMobile]);
 
-  const isLeaving = phase === "leaving";
+  if (!shouldRender || isMobile === false) return null;
 
-  if (phase === "hidden") return null;
+  const title = "TooolVibes";
 
   return (
-    <div
-      className={`brand-intro brand-intro--mobile ${isLeaving ? "is-leaving" : ""}`}
-      aria-hidden={isLeaving}
-    >
-      <div className="brand-intro__scene">
-        <div className="brand-intro__grain" />
-        <div className="brand-intro__aurora" />
-        <div className="brand-intro__spark-field" aria-hidden="true">
-          {SPARKS.map((spark) => (
-            <span
-              key={spark.id}
-              className="brand-intro__spark"
-              style={
-                {
-                  "--spark-x": `${spark.x}%`,
-                  "--spark-y": `${spark.y}%`,
-                  "--spark-drift-x": `${spark.driftX}px`,
-                  "--spark-drift-y": `${spark.driftY}px`,
-                  "--spark-size": `${spark.size}px`,
-                  "--spark-color": spark.color,
-                  "--spark-delay": `${spark.delay}s`,
-                  "--spark-duration": `${spark.duration}s`,
-                } as CSSProperties
-              }
-            />
-          ))}
-        </div>
+    <AnimatePresence>
+      {phase !== "unmounted" && (
+        <motion.div
+          className={`brand-intro brand-intro--${phase}`}
+          role="dialog"
+          aria-label="Introduzione TooolVibes"
+          aria-hidden={phase === "leaving"}
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <StarField />
 
-        <div className="brand-intro__logo-stage" aria-hidden="true">
-          <div className="brand-intro__logo-halo brand-intro__logo-halo--violet" />
-          <div className="brand-intro__logo-halo brand-intro__logo-halo--cyan" />
-          <div className="brand-intro__logo-ring" />
-          <Image
-            src="/brand/tooolvibes-logo.png"
-            alt=""
-            width={360}
-            height={360}
-            priority
-            className="brand-intro__logo"
-          />
-        </div>
+          <button
+            className="brand-intro__skip"
+            onClick={() => finishIntro(true)}
+            aria-label="Salta introduzione"
+            type="button"
+          >
+            <X size={20} />
+          </button>
 
-        <div className="brand-intro__copy">
-          <p className="brand-intro__welcome">Welcome in</p>
+          <div className="brand-intro__logo-wrapper">
+            <Logo3DIntro />
+          </div>
 
-          <h1 className="brand-intro__title" aria-label={INTRO_TITLE}>
-            {INTRO_TITLE.split("").map((char, i) => (
-              <span
-                key={i}
-                aria-hidden="true"
-                style={{ animationDelay: `${1.72 + i * 0.04}s` }}
-              >
-                {char}
-              </span>
-            ))}
-          </h1>
-        </div>
+          <div className="brand-intro__copy">
+            <motion.p
+              className="brand-intro__welcome"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+            >
+              Welcome in
+            </motion.p>
 
-        <div className="brand-intro__explosion" />
-      </div>
+            <h1 className="brand-intro__title" aria-label={title}>
+              {title.split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  style={{ display: "inline-block" }}
+                  initial={{ opacity: 0, scale: 1.4, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{
+                    duration: 0.35,
+                    delay: 0.5 + i * 0.03,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </h1>
 
-      <button
-        type="button"
-        className="brand-intro__skip"
-        data-sonic-action="introClose"
-        onClick={() => finishIntro(true)}
-      >
-        Salta
-      </button>
-    </div>
+            <motion.p
+              className="brand-intro__subtitle"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.0 }}
+            >
+              Scopri. Confronta. Vibra.
+            </motion.p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

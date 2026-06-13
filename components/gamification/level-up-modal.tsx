@@ -3,67 +3,13 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import NumberFlow from "@number-flow/react";
-import { Crown, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-
-let levelUpSoundSrc: string | null = null;
-
-function writeAscii(view: DataView, offset: number, value: string) {
-  for (let index = 0; index < value.length; index += 1) {
-    view.setUint8(offset + index, value.charCodeAt(index));
-  }
-}
-
-function getLevelUpSoundSrc() {
-  if (levelUpSoundSrc) return levelUpSoundSrc;
-
-  const sampleRate = 22050;
-  const duration = 0.45;
-  const sampleCount = Math.floor(sampleRate * duration);
-  const bytes = new Uint8Array(44 + sampleCount * 2);
-  const view = new DataView(bytes.buffer);
-
-  writeAscii(view, 0, "RIFF");
-  view.setUint32(4, 36 + sampleCount * 2, true);
-  writeAscii(view, 8, "WAVE");
-  writeAscii(view, 12, "fmt ");
-  view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
-  view.setUint16(22, 1, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, sampleRate * 2, true);
-  view.setUint16(32, 2, true);
-  view.setUint16(34, 16, true);
-  writeAscii(view, 36, "data");
-  view.setUint32(40, sampleCount * 2, true);
-
-  const notes = [523.25, 659.25, 783.99, 1046.5];
-
-  for (let index = 0; index < sampleCount; index += 1) {
-    const time = index / sampleRate;
-    const noteIndex = Math.min(notes.length - 1, Math.floor(time / 0.1));
-    const noteTime = time - noteIndex * 0.1;
-    const envelope = Math.max(0, 1 - noteTime / 0.1);
-    const frequency = notes[noteIndex];
-    const tone = Math.sin(2 * Math.PI * frequency * noteTime) * 0.22 * envelope;
-    view.setInt16(44 + index * 2, Math.max(-1, Math.min(1, tone)) * 32767, true);
-  }
-
-  let binary = "";
-  for (let index = 0; index < bytes.length; index += 1) {
-    binary += String.fromCharCode(bytes[index]);
-  }
-
-  levelUpSoundSrc = `data:audio/wav;base64,${btoa(binary)}`;
-  return levelUpSoundSrc;
-}
+import { playGameSound } from "@/lib/gamification/sound-engine";
 
 async function fireLevelUpCelebration() {
-  const [{ default: confetti }, { Howl }] = await Promise.all([
-    import("canvas-confetti"),
-    import("howler"),
-  ]);
+  const confetti = (await import("canvas-confetti")).default;
 
   const colors = ["#6a3cff", "#ff6b9a", "#39d2f6", "#f3bf4c"];
 
@@ -96,10 +42,28 @@ async function fireLevelUpCelebration() {
     spread: 60,
   });
 
-  new Howl({
-    src: [getLevelUpSoundSrc()],
-    volume: 0.32,
-  }).play();
+  playGameSound("levelUp");
+}
+
+function TrophyIcon() {
+  return (
+    <svg viewBox="0 0 64 64" className="level-up-modal__trophy" aria-hidden="true">
+      <defs>
+        <linearGradient id="trophy-gradient" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#f3bf4c" />
+          <stop offset="100%" stopColor="#d4a017" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M16 12h32M18 12v6c0 8 6 14 12 16v6H22v4h20v-4H34v-6c6-2 12-8 12-16v-6"
+        fill="none" stroke="url(#trophy-gradient)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+      />
+      <path
+        d="M14 14h-4c0 6 3 10 7 11M50 14h4c0 6-3 10-7 11"
+        fill="none" stroke="url(#trophy-gradient)" strokeWidth="3" strokeLinecap="round"
+      />
+    </svg>
+  );
 }
 
 type LevelUpModalProps = {
@@ -134,14 +98,12 @@ export function LevelUpModal({ level, onClose }: LevelUpModalProps) {
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex flex-col items-center text-center">
-              <motion.div
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 240, damping: 14 }}
-                className="mb-4 flex size-24 items-center justify-center rounded-full bg-gradient-to-br from-[#6a3cff] to-[#39d2f6] text-white shadow-lg shadow-[#6a3cff]/25"
-              >
-                <Crown aria-hidden="true" className="size-11" />
-              </motion.div>
+              <div className="relative flex items-center justify-center py-6">
+                <TrophyIcon />
+                <span className="level-up-modal__sparkle" style={{ top: "20%", left: "30%", animationDelay: "0s" }} />
+                <span className="level-up-modal__sparkle" style={{ top: "70%", right: "25%", animationDelay: "0.4s" }} />
+                <span className="level-up-modal__sparkle" style={{ top: "35%", right: "20%", animationDelay: "0.8s" }} />
+              </div>
 
               <div className="space-y-1.5">
                 <h2 className="text-xl font-semibold">Level up!</h2>

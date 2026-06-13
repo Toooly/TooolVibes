@@ -1,46 +1,44 @@
 import Image from "next/image";
 
+import { BrandLogo3D } from "@/components/3d/brand-logo-3d";
 import { cn } from "@/lib/utils";
 
-type BrandLogoProps = {
+interface BrandLogoProps {
   className?: string;
-  priority?: boolean;
   size?: number;
-};
+  fallback?: "3d" | "png";
+  priority?: boolean;
+}
 
 export function BrandLogo({
   className,
+  size = 36,
+  fallback = "3d",
   priority = false,
-  size = 48,
 }: BrandLogoProps) {
   return (
-    <span
+    <div
       className={cn(
-        "brand-mark group relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[22px]",
-        className,
+        "brand-mark relative flex items-center justify-center rounded-xl",
+        "bg-gradient-to-br from-[#6a3cff]/20 to-[#39d2f6]/10",
+        "ring-1 ring-white/20 shadow-lg shadow-[#6a3cff]/10",
+        className
       )}
-      style={{
-        width: size,
-        height: size,
-        background:
-          "radial-gradient(circle at 50% 26%, rgba(99,50,255,0.18), rgba(18,10,59,0.02) 68%)",
-      }}
+      style={{ width: size, height: size }}
+      aria-label="TooolVibes logo"
     >
-      <span className="brand-mark__ring pointer-events-none absolute inset-[6%] rounded-[20px] border border-white/18 shadow-[0_18px_44px_rgba(52,32,160,0.14)]" />
-      <span className="brand-mark__aura pointer-events-none absolute inset-[10%] rounded-[18px] bg-[radial-gradient(circle,rgba(68,220,255,0.18),transparent_64%)] blur-xl" />
-      <span className="brand-mark__ember pointer-events-none absolute inset-[16%] rounded-[18px]" />
-      <span className="brand-mark__steam pointer-events-none absolute inset-x-[18%] bottom-[14%] top-[-20%]" />
-      <span className="brand-mark__shine pointer-events-none absolute inset-[22%] rounded-[16px] bg-[radial-gradient(circle_at_50%_24%,rgba(255,255,255,0.28),transparent_58%)] blur-lg" />
-      <span className="brand-mark__glass pointer-events-none absolute inset-0 rounded-[22px] border border-white/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.16),rgba(255,255,255,0.04))]" />
-      <Image
-        src="/brand/tooolvibes-logo.png"
-        alt=""
-        aria-hidden="true"
-        width={size}
-        height={size}
-        priority={priority}
-        className="relative h-[88%] w-[88%] object-contain drop-shadow-[0_18px_30px_rgba(41,23,144,0.26)] transition-transform duration-300 ease-out group-hover:scale-[1.02]"
-      />
-    </span>
+      {fallback === "3d" ? (
+        <BrandLogo3D size={size} />
+      ) : (
+        <Image
+          src="/brand/tooolvibes-logo.png"
+          alt="TooolVibes"
+          width={size}
+          height={size}
+          className="relative z-10"
+          priority={priority}
+        />
+      )}
+    </div>
   );
 }

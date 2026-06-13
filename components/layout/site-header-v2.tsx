@@ -140,9 +140,8 @@ export function SiteHeaderV2() {
             {/* Logo */}
             <div className="group relative flex items-center gap-2.5 sm:gap-3">
               <Link href="/" className="relative transition-transform duration-300 group-hover:scale-105" data-sonic-action="brand">
-                <BrandLogo size={36} priority />
+                <BrandLogo size={36} />
               </Link>
-              <VibeTapMiniGame className="vibe-mini-launcher" />
               <Link
                 href="/"
                 className="hidden text-lg font-bold tracking-tight sm:inline-block"
@@ -287,12 +286,12 @@ export function SiteHeaderV2() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0.8 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="mobile-menu-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.97)] p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-16px_0_48px_rgba(106,60,255,0.08)]"
+              className="mobile-menu-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[rgba(106,60,255,0.1)] bg-white/70 p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-16px_0_48px_rgba(106,60,255,0.08)] backdrop-blur-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-7 flex items-center justify-between gap-4">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
-                  <BrandLogo size={34} priority />
+                  <BrandLogo size={34} />
                   <span
                     className="text-sm font-black uppercase tracking-[0.14em]"
                     style={{
@@ -317,7 +316,7 @@ export function SiteHeaderV2() {
                 <Sparkles size={12} className="text-[#6a3cff]" />
                 Navigazione
               </div>
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 border-b border-white/10 pb-4">
                 {navLinks.map((link, i) => {
                   const isActive = pathname === link.href || pathname?.startsWith(link.href + "/");
                   return (
@@ -329,7 +328,7 @@ export function SiteHeaderV2() {
                     >
                       <Link
                         href={link.href}
-                        className={`group flex items-center justify-between rounded-xl px-4 py-3 transition-all ${
+                        className={`group flex min-h-[44px] items-center justify-between rounded-xl px-4 py-3 transition-all ${
                           isActive
                             ? "bg-gradient-to-r from-[rgba(106,60,255,0.1)] to-[rgba(57,210,246,0.05)] text-[#6a3cff]"
                             : "text-[#4f4970] hover:bg-[rgba(106,60,255,0.04)] hover:text-[#120d2f]"
@@ -337,11 +336,11 @@ export function SiteHeaderV2() {
                         data-sonic-action="nav"
                       >
                         <span className="flex items-center gap-3">
-                          <link.icon size={18} />
+                          <link.icon size={20} />
                           <span className="font-medium">{link.label}</span>
                         </span>
                         <ChevronRight
-                          size={14}
+                          size={16}
                           className="opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100"
                         />
                       </Link>
@@ -350,7 +349,7 @@ export function SiteHeaderV2() {
                 })}
               </div>
 
-              <div className="mt-6 border-t border-[rgba(106,60,255,0.08)] pt-6">
+              <div className="mt-4 pt-4">
                 <Link
                   href="/admin/login"
                   className="mb-3 flex items-center justify-center gap-2 rounded-xl border border-[rgba(106,60,255,0.12)] bg-white/72 px-4 py-3 text-sm font-medium text-[#4f4970] shadow-[0_4px_16px_rgba(106,60,255,0.08)] transition hover:bg-white hover:text-[#6a3cff]"
@@ -371,6 +370,11 @@ export function SiteHeaderV2() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Vibe Rush FAB */}
+      <VibeTapMiniGame
+        className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 lg:hidden [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden"
+      />
 
       {/* Spacer */}
       <div className="site-header-v2__spacer h-16" />

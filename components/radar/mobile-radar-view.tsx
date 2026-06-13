@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback, type CSSProperties, type MouseEvent } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Torus, Sphere } from "@react-three/drei";
+import * as THREE from "three";
 import { motion } from "motion/react";
 import {
   Activity,
@@ -10,9 +13,37 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-
 import { claimHiddenSignal } from "@/lib/gamification/actions";
 import { RadarScannerOverlay } from "@/components/gamification/radar-scanner-overlay";
+
+function Radar3DOverlay() {
+  const torusRef = useRef<THREE.Mesh>(null);
+
+  useFrame(({ clock }) => {
+    if (!torusRef.current) return;
+    const s = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.1;
+    torusRef.current.scale.set(s, s, s);
+  });
+
+  return (
+    <>
+      <ambientLight intensity={0.3} />
+      <pointLight color="#39d2f6" intensity={20} />
+      <Torus ref={torusRef} args={[1.5, 0.02, 8, 64]} rotation={[Math.PI / 2, 0, 0]}>
+        <meshBasicMaterial color="#39d2f6" transparent opacity={0.4} />
+      </Torus>
+      <Sphere args={[0.06]} position={[1.2, 0.6, 0]}>
+        <meshBasicMaterial color="#6a3cff" />
+      </Sphere>
+      <Sphere args={[0.05]} position={[-1.0, -0.5, 0.2]}>
+        <meshBasicMaterial color="#f3bf4c" />
+      </Sphere>
+      <Sphere args={[0.05]} position={[0.4, 1.1, -0.2]}>
+        <meshBasicMaterial color="#39d2f6" />
+      </Sphere>
+    </>
+  );
+}
 
 /* ═══════════════════════════════════════════════════════════════
    Types
@@ -372,7 +403,17 @@ export function MobileRadarView() {
           } as CSSProperties
         }
       >
-        <canvas ref={canvasRef} className="mobile-radar-view__canvas" />
+        <div className="pointer-events-none absolute inset-0 z-10">
+          <Canvas
+            dpr={[1, 1]}
+            gl={{ antialias: false, alpha: true }}
+            camera={{ position: [0, 0, 4], fov: 50 }}
+            style={{ width: "100%", height: "100%" }}
+          >
+            <Radar3DOverlay />
+          </Canvas>
+        </div>
+        <canvas ref={canvasRef} className="mobile-radar-view__canvas relative z-0" />
         <span
           key={radarClockKey}
           className="mobile-radar-view__sweep"

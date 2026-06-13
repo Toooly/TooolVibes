@@ -1,12 +1,35 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Bookmark, GitCompare, Search } from "lucide-react";
-
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+
+function useMouseParallax() {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const rafRef = useRef<number | null>(null);
+  const pendingRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handle = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      pendingRef.current = { x, y };
+      if (rafRef.current == null) {
+        rafRef.current = requestAnimationFrame(() => {
+          setPos(pendingRef.current);
+          rafRef.current = null;
+        });
+      }
+    };
+    window.addEventListener("mousemove", handle);
+    return () => window.removeEventListener("mousemove", handle);
+  }, []);
+
+  return pos;
+}
 
 type DesktopDepthSceneProps = {
   focusTool?: DirectoryTool | null;
@@ -23,6 +46,7 @@ const contextSignals = ["AI App Builder", "Automation", "Vibe Coding", "No-Code"
 
 export function DesktopDepthScene({ focusTool, supportingTools }: DesktopDepthSceneProps) {
   const router = useRouter();
+  const { x, y } = useMouseParallax();
   const midgroundTools = supportingTools.slice(0, 3);
   const navigate = (href: string) => {
     router.push(href);
@@ -31,7 +55,7 @@ export function DesktopDepthScene({ focusTool, supportingTools }: DesktopDepthSc
   return (
     <DepthSceneRoot>
       <DepthLayerBackground />
-      <DepthLayerMidground tools={midgroundTools} onNavigate={navigate} />
+      <DepthLayerMidground tools={midgroundTools} onNavigate={navigate} parallaxX={x} parallaxY={y} />
       <DepthLayerForeground focusTool={focusTool} onNavigate={navigate} />
     </DepthSceneRoot>
   );
@@ -64,14 +88,18 @@ function DepthLayerBackground() {
 function DepthLayerMidground({
   tools,
   onNavigate,
+  parallaxX,
+  parallaxY,
 }: {
   tools: DirectoryTool[];
   onNavigate: (href: string) => void;
+  parallaxX: number;
+  parallaxY: number;
 }) {
   return (
     <div className="depth-scene__layer depth-scene__layer--midground">
       {tools.map((tool, index) => (
-        <DepthCard key={tool.slug} tool={tool} index={index} onNavigate={onNavigate} />
+        <DepthCard key={tool.slug} tool={tool} index={index} onNavigate={onNavigate} parallaxX={parallaxX} parallaxY={parallaxY} />
       ))}
     </div>
   );
@@ -119,17 +147,21 @@ function DepthCard({
   tool,
   index,
   onNavigate,
+  parallaxX,
+  parallaxY,
 }: {
   tool: DirectoryTool;
   index: number;
   onNavigate: (href: string) => void;
+  parallaxX: number;
+  parallaxY: number;
 }) {
   const href = `/toools/${tool.slug}`;
 
   return (
     <Link
       href={href}
-      className={`depth-card depth-card--${index + 1}`}
+      className={`depth-card depth-scene__card depth-card--${index + 1}`}
       onClick={(event) => {
         event.preventDefault();
         onNavigate(href);
@@ -138,6 +170,8 @@ function DepthCard({
         {
           "--tool-from": tool.accentFrom,
           "--tool-to": tool.accentTo,
+          "--parallax-ry": `${parallaxX * 6}deg`,
+          "--parallax-rx": `${-parallaxY * 6}deg`,
         } as CSSProperties
       }
     >
@@ -210,7 +244,7 @@ function SceneGlow() {
 function SceneGrid() {
   return (
     <>
-      <span className="depth-scene__grid" />
+      <span className="depth-scene__grid" style={{ filter: "blur(2px)", opacity: 0.6 }} />
       <span className="depth-scene__horizon depth-scene__horizon--one" />
       <span className="depth-scene__horizon depth-scene__horizon--two" />
     </>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import NumberFlow from "@number-flow/react";
 import { Swords, Trophy, RotateCcw, AlertCircle } from "lucide-react";
+import confetti from "canvas-confetti";
 
 import { cn } from "@/lib/utils";
 import type { BattleResult, BattleTool } from "@/lib/gamification/battle-engine";
@@ -12,6 +13,31 @@ import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import type { ArenaBattleMode } from "@/lib/gamification/types";
 
 const MINIMUM_FIGHT_DURATION_MS = 2000;
+
+function triggerVictoryConfetti() {
+  const end = Date.now() + 1200;
+  const colors = ["#6a3cff", "#39d2f6", "#f3bf4c"];
+  const frame = () => {
+    confetti({
+      particleCount: 3,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors,
+      disableForReducedMotion: true,
+    });
+    confetti({
+      particleCount: 3,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors,
+      disableForReducedMotion: true,
+    });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  };
+  frame();
+}
 
 export function ArenaBattleStage({
   tools,
@@ -22,6 +48,7 @@ export function ArenaBattleStage({
 }) {
   const [status, setStatus] = useState<"idle" | "fighting" | "done" | "error">("idle");
   const [result, setResult] = useState<BattleResult | null>(null);
+  const [impactFlash, setImpactFlash] = useState(false);
   const { mutateAsync } = useArenaBattle();
   const reducedMotion = useReducedMotion();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -42,6 +69,25 @@ export function ArenaBattleStage({
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (status === "done" && result?.winnerSlug) {
+      triggerVictoryConfetti();
+    }
+  }, [status, result]);
+
+  useEffect(() => {
+    if (status !== "fighting" || reducedMotion) return;
+    let timeoutId: number | null = null;
+    const intervalId = window.setInterval(() => {
+      setImpactFlash(true);
+      timeoutId = window.setTimeout(() => setImpactFlash(false), 150);
+    }, 450);
+    return () => {
+      window.clearInterval(intervalId);
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+  }, [status, reducedMotion]);
 
   const startBattle = async () => {
     setStatus("fighting");
@@ -79,12 +125,21 @@ export function ArenaBattleStage({
     }
     setStatus("idle");
     setResult(null);
+    setImpactFlash(false);
   };
 
   const readableName = (slug: string) => toolNameBySlug.get(slug) ?? slug;
 
   return (
     <section className="arena-battle-stage">
+      <div
+        className={cn(
+          "arena-battle-stage-pro__flash",
+          impactFlash && "arena-battle-stage-pro__flash--active"
+        )}
+        aria-hidden="true"
+      />
+
       <header className="mb-6 flex items-center gap-3">
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-soft)] text-[var(--accent)]">
           <Swords className="h-5 w-5" aria-hidden="true" />
@@ -119,7 +174,15 @@ export function ArenaBattleStage({
           <motion.div
             key="fighting"
             initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
+            animate={
+              reducedMotion
+                ? { opacity: 1, scale: 1 }
+                : {
+                    rotate: ["-8deg", "8deg", "-8deg", "8deg", "0deg"],
+                    scale: [0.95, 1.05, 0.95, 1.05, 1],
+                  }
+            }
+            transition={{ duration: 0.36, repeat: Infinity, ease: "easeInOut" }}
             exit={{ opacity: 0, scale: 0.98 }}
             className="flex flex-col items-center justify-center gap-4 py-16"
           >

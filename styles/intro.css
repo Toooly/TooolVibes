@@ -1,0 +1,163 @@
+@layer components {
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  @keyframes textReveal {
+    0% { clip-path: inset(0 100% 0 0); }
+    100% { clip-path: inset(0); }
+  }
+
+  @keyframes compare-ping {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(106, 60, 255, 0.7); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(106, 60, 255, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(106, 60, 255, 0); }
+  }
+
+  .animate-compare-ping {
+    animation: compare-ping 0.6s ease-out;
+  }
+
+  .brand-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      radial-gradient(at 40% 20%, rgba(106, 60, 255, 0.25) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba(57, 210, 246, 0.20) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgba(243, 191, 76, 0.15) 0px, transparent 50%),
+      #0a0a1a;
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+  }
+
+  @media (min-width: 768px) {
+    .brand-intro {
+      display: none;
+    }
+  }
+
+  .brand-intro__stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .brand-intro__star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+    animation: twinkle 3s ease-in-out infinite;
+  }
+
+  .brand-intro__skip {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    z-index: 10;
+  }
+
+  .brand-intro__skip:hover,
+  .brand-intro__skip:focus-visible {
+    opacity: 1;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .brand-intro__logo-wrapper {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+  }
+
+  .brand-intro__logo-stage {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+  }
+
+  .brand-intro__copy {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: 2rem;
+    pointer-events: none;
+  }
+
+  .brand-intro__welcome {
+    font-family: var(--font-manrope), system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 16px rgba(106, 60, 255, 0.3);
+  }
+
+  .brand-intro__title {
+    font-family: var(--font-rubik), system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 3rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #6a3cff 0%, #39d2f6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 20px rgba(106, 60, 255, 0.4));
+  }
+
+  .brand-intro__subtitle {
+    font-family: var(--font-manrope), system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.75rem;
+  }
+
+  .brand-intro--leaving .brand-intro__logo-stage {
+    transform: scale(0.15) translateY(-40vh);
+    opacity: 0;
+  }
+
+  .brand-intro--leaving .brand-intro__copy {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  @media (max-width: 430px) {
+    .brand-intro__title { font-size: 2.5rem; }
+  }
+
+  @media (max-width: 360px) {
+    .brand-intro__title { font-size: 2rem; }
+  }
+}
