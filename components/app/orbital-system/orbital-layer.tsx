@@ -507,6 +507,7 @@ export function OrbitalLayer() {
   const { activeSectionId, getItemsForSection, isPaused, setSelectedItemId } = useOrbitalContext();
   const pathname = usePathname();
   const profile = usePerformanceMode();
+  const [hasMounted, setHasMounted] = useState(false);
   const [isCompactViewport, setIsCompactViewport] = useState(false);
   const isDenseMobilePage = (profile.isMobile || isCompactViewport) && (
     pathname?.startsWith("/compare") || pathname?.startsWith("/shortlist")
@@ -528,6 +529,7 @@ export function OrbitalLayer() {
   useScrollState();
 
   useEffect(() => {
+    setHasMounted(true);
     const update = () => setIsCompactViewport(window.innerWidth < 768);
     update();
     window.addEventListener("resize", update, { passive: true });
@@ -597,7 +599,7 @@ export function OrbitalLayer() {
     };
   }, [setSelectedItemId]);
 
-  if (hideFloatingLayer || (!profile.enableGlow && profile.reducedMotion && activeItems.length === 0)) {
+  if (!hasMounted || hideFloatingLayer || (!profile.enableGlow && profile.reducedMotion && activeItems.length === 0)) {
     return null;
   }
 

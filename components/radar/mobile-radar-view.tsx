@@ -14,7 +14,6 @@ import {
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { claimHiddenSignal } from "@/lib/gamification/actions";
-import { RadarScannerOverlay } from "@/components/gamification/radar-scanner-overlay";
 
 function Radar3DOverlay() {
   const torusRef = useRef<THREE.Mesh>(null);
@@ -266,16 +265,6 @@ export function MobileRadarView() {
         ctx.stroke();
       });
 
-      // Grid cross
-      ctx.strokeStyle = "rgba(106, 60, 255, 0.1)";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(cx - maxR, cy);
-      ctx.lineTo(cx + maxR, cy);
-      ctx.moveTo(cx, cy - maxR);
-      ctx.lineTo(cx, cy + maxR);
-      ctx.stroke();
-
       // Pulsing core
       const pulse = Math.sin(time * 3) * 0.3 + 1;
       ctx.beginPath();
@@ -419,9 +408,6 @@ export function MobileRadarView() {
           className="mobile-radar-view__sweep"
           aria-hidden="true"
         />
-
-        <RadarScannerOverlay />
-
         {/* Real data nodes overlaid */}
         {nodes.map((node) => {
           const style = {

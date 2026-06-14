@@ -140,7 +140,7 @@ export function SiteHeaderV2() {
             {/* Logo */}
             <div className="group relative flex items-center gap-2.5 sm:gap-3">
               <Link href="/" className="relative transition-transform duration-300 group-hover:scale-105" data-sonic-action="brand">
-                <BrandLogo size={36} />
+                <BrandLogo size={36} fallback="png" priority />
               </Link>
               <Link
                 href="/"
@@ -291,7 +291,7 @@ export function SiteHeaderV2() {
             >
               <div className="mb-7 flex items-center justify-between gap-4">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
-                  <BrandLogo size={34} />
+                  <BrandLogo size={34} fallback="png" priority />
                   <span
                     className="text-sm font-black uppercase tracking-[0.14em]"
                     style={{

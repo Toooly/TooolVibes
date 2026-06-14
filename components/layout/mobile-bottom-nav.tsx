@@ -29,17 +29,16 @@ export function MobileBottomNav() {
     <nav
       aria-label="Navigazione mobile principale"
       className={cn(
-        "fixed bottom-4 left-1/2 z-50 -translate-x-1/2",
-        "flex items-center gap-1 px-2 py-2 rounded-full",
-        "bg-white/70 backdrop-blur-xl border border-white/20",
-        "shadow-[0_-4px_20px_rgba(0,0,0,0.08)]",
-        "max-w-[calc(100%-2rem)]",
+        "mobile-bottom-motion fixed inset-x-3 z-50 mx-auto w-auto max-w-[25rem]",
+        "bottom-[calc(0.75rem+env(safe-area-inset-bottom))]",
+        "rounded-[1.75rem] border border-white/35 bg-white/78 backdrop-blur-2xl",
+        "shadow-[0_14px_38px_rgba(47,33,126,0.16),inset_0_1px_0_rgba(255,255,255,0.72)]",
         "lg:hidden transition-opacity duration-300",
         isOverlayOpen && "opacity-0 pointer-events-none"
       )}
-      style={{ paddingBottom: "env(safe-area-inset-bottom)", transform: "translateZ(0)" }}
+      style={{ transform: "translateZ(0)" }}
     >
-      <div className="grid grid-cols-5 gap-1 p-1.5">
+      <div className="grid w-full grid-cols-5 gap-1.5 p-1.5">
         {mobileItems.map((item) => {
           const Icon = item.icon;
           const isCompareItem = item.href === "/compare";
@@ -53,10 +52,8 @@ export function MobileBottomNav() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "mobile-bottom-link flex min-h-12 flex-col items-center justify-center gap-1 rounded-[20px] text-[0.64rem] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
-                active || compareHasItems
-                  ? "text-[#6a3cff] shadow-[0_0_12px_rgba(106,60,255,0.3)]"
-                  : "text-[var(--muted-strong)] hover:bg-white/80 hover:text-[var(--accent-strong)]",
+                "mobile-bottom-link flex h-[3.55rem] min-w-0 flex-col items-center justify-center gap-1 rounded-[1.2rem] px-1 text-[0.66rem] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
+                active ? "is-active text-[#ffffff]" : "text-[#16112d] hover:bg-white/72 hover:text-[#6a3cff]",
                 active && "[&>svg]:scale-110",
                 compareHasItems && "mobile-bottom-link--compare-ready"
               )}

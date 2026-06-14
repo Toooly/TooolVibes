@@ -421,8 +421,10 @@ img {
   .mobile-bottom-link {
     position: relative;
     isolation: isolate;
+    overflow: visible;
     transform: none;
     will-change: transform;
+    color: #17112d;
     transition:
       transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
       color 200ms ease,
@@ -434,15 +436,16 @@ img {
   .mobile-bottom-link::after {
     content: "";
     position: absolute;
-    inset: 0.3rem;
+    inset: 0.18rem;
     z-index: 0;
     pointer-events: none;
     border-radius: inherit;
     background:
-      radial-gradient(circle at 50% 0%, rgba(94, 226, 255, 0.24), transparent 48%),
-      linear-gradient(90deg, rgba(246, 199, 97, 0.16), rgba(124, 58, 237, 0.2), rgba(94, 226, 255, 0.16));
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.28), transparent 42%),
+      linear-gradient(135deg, rgba(106, 60, 255, 0.94), rgba(57, 210, 246, 0.86));
+    box-shadow: 0 10px 24px rgba(106, 60, 255, 0.24);
     opacity: 0;
-    transform: scale(0.82);
+    transform: scale(0.9);
     transition:
       opacity 200ms ease,
       transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -455,12 +458,18 @@ img {
   }
 
   .mobile-bottom-link[aria-current="page"],
-  .mobile-bottom-link.mobile-bottom-link--compare-ready,
+  .mobile-bottom-link.is-active,
   .mobile-bottom-link[aria-current="page"] svg,
-  .mobile-bottom-link.mobile-bottom-link--compare-ready svg,
+  .mobile-bottom-link.is-active svg,
   .mobile-bottom-link[aria-current="page"] span,
-  .mobile-bottom-link.mobile-bottom-link--compare-ready span {
+  .mobile-bottom-link.is-active span {
     color: #ffffff !important;
+  }
+
+  .mobile-bottom-link.mobile-bottom-link--compare-ready:not([aria-current="page"]):not(.is-active),
+  .mobile-bottom-link.mobile-bottom-link--compare-ready:not([aria-current="page"]):not(.is-active) svg,
+  .mobile-bottom-link.mobile-bottom-link--compare-ready:not([aria-current="page"]):not(.is-active) span {
+    color: #17112d !important;
   }
 
   .mobile-bottom-link:active {
@@ -471,16 +480,28 @@ img {
   .mobile-bottom-link:hover::after,
   .mobile-bottom-link:focus-visible::after,
   .mobile-bottom-link[aria-current="page"]::after,
-  .mobile-bottom-link.mobile-bottom-link--compare-ready::after {
+  .mobile-bottom-link.is-active::after {
     opacity: 1;
     transform: scale(1);
   }
 
+  .mobile-bottom-link.mobile-bottom-link--compare-ready:not([aria-current="page"]):not(.is-active)::after {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
   .mobile-bottom-link svg {
+    position: relative;
+    z-index: 1;
     flex: 0 0 auto;
+    width: 1.32rem;
+    height: 1.32rem;
+    stroke-width: 2.35;
   }
 
   .mobile-bottom-link span {
+    position: relative;
+    z-index: 1;
     max-width: 100%;
     overflow: hidden;
     line-height: 1.05;
@@ -490,9 +511,9 @@ img {
 
   .mobile-bottom-link__badge {
     position: absolute;
-    right: 0.38rem;
-    top: 0.32rem;
-    z-index: 2;
+    right: 0.28rem;
+    top: -0.18rem;
+    z-index: 3;
     display: grid;
     min-width: 1.05rem;
     height: 1.05rem;
@@ -515,6 +536,14 @@ img {
 
   .mobile-bottom-link--compare-ping .mobile-bottom-link__badge {
     animation: tv-bottom-compare-badge 860ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  html[data-experience-route="radar"] .marketing-shell__ambient {
+    background: radial-gradient(circle at 50% 34%, rgba(24, 20, 56, 0.96) 0%, #0a0a1a 54%, #070713 100%) !important;
+  }
+
+  html[data-experience-route="compare"] .marketing-shell__ambient {
+    background: radial-gradient(circle at 50% 28%, rgba(42, 19, 74, 0.98) 0%, #13061e 58%, #08030d 100%) !important;
   }
 
   .header-search-icon {
@@ -15088,8 +15117,8 @@ img {
     width: 0.45rem;
     height: 0.45rem;
     border-radius: 999px;
-    background: #ff4d4d;
-    box-shadow: 0 0 8px #ff4d4d;
+    background: #49f28a;
+    box-shadow: 0 0 8px #49f28a;
     animation: tv-live-pulse 1.8s ease-in-out infinite;
   }
 
@@ -15138,14 +15167,15 @@ img {
     position: absolute;
     left: 50%;
     top: 50%;
-    z-index: 3;
-    width: 49%;
-    height: 3px;
-    margin-top: -1.5px;
+    z-index: 2;
+    width: 46%;
+    height: 2px;
+    margin-top: -1px;
     border-radius: 999px;
     transform-origin: left center;
-    background: linear-gradient(90deg, rgba(106, 60, 255, 0.58), rgba(57, 210, 246, 0.36) 54%, rgba(106, 60, 255, 0));
-    box-shadow: 0 0 18px rgba(57, 210, 246, 0.3);
+    background: linear-gradient(90deg, rgba(57, 210, 246, 0.58), rgba(57, 210, 246, 0.24) 52%, rgba(57, 210, 246, 0));
+    box-shadow: 0 0 12px rgba(57, 210, 246, 0.24);
+    opacity: 0.72;
     pointer-events: none;
     animation: tv-radar-sweep var(--radar-sweep-duration, 2.856s) linear infinite;
   }
@@ -16005,8 +16035,8 @@ img {
 
   .mobile-compare-arena__battle-stage {
     position: relative;
-    min-height: 19rem;
-    margin: 0 0.75rem 1rem;
+    min-height: 20.75rem;
+    margin: 0 1rem 1rem;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 30px;
@@ -16051,10 +16081,10 @@ img {
   .mobile-compare-arena__battle-core {
     position: absolute;
     left: 50%;
-    top: 46%;
+    top: 45%;
     z-index: 2;
     display: grid;
-    width: 6.4rem;
+    width: 5.9rem;
     aspect-ratio: 1;
     place-items: center;
     border: 1px solid rgba(255, 255, 255, 0.14);
@@ -16062,6 +16092,7 @@ img {
     background: radial-gradient(circle at 36% 18%, rgba(255, 255, 255, 0.18), transparent 32%), rgba(12, 5, 24, 0.7);
     box-shadow: 0 0 38px rgba(106, 60, 255, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     color: #fff;
+    translate: none;
     transform: translate(-50%, -50%);
   }
 
@@ -16096,7 +16127,7 @@ img {
     left: 50%;
     top: 50%;
     display: grid;
-    width: 5.8rem;
+    width: 5.45rem;
     justify-items: center;
     gap: 0.24rem;
     color: #fff;
@@ -16106,7 +16137,7 @@ img {
 
   .mobile-compare-arena__fighter-orb {
     display: grid;
-    width: 3.15rem;
+    width: 3rem;
     aspect-ratio: 1;
     place-items: center;
     border: 1px solid rgba(255, 255, 255, 0.18);
@@ -16167,9 +16198,10 @@ img {
   .mobile-compare-arena__fight-button {
     position: absolute;
     left: 50%;
-    bottom: 0.9rem;
+    bottom: 1rem;
     z-index: 6;
     display: inline-flex;
+    min-width: 12.25rem;
     min-height: 3.1rem;
     align-items: center;
     justify-content: center;
@@ -16182,7 +16214,8 @@ img {
     font-size: 0.9rem;
     font-weight: 1000;
     letter-spacing: 0.08em;
-    padding: 0 1.5rem;
+    padding: 0 1.65rem;
+    translate: none;
     transform: translateX(-50%);
     box-shadow: 0 12px 34px rgba(255, 79, 123, 0.26), 0 0 34px rgba(106, 60, 255, 0.28);
   }
@@ -16819,17 +16852,17 @@ img {
 
   /* Footer */
   .mobile-compare-arena__footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.75rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
-    background: linear-gradient(0deg, #0f0618 60%, transparent);
-    z-index: 48;
+    margin: 0 0.75rem calc(6.8rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.4rem;
+    background: rgba(255, 255, 255, 0.04);
+    z-index: 1;
   }
 
   .mobile-compare-arena__footer-btn {
