@@ -1,18 +1,55 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
-import { Logo3DIntro } from "@/components/3d/logo-3d-intro";
 import { SOUND_PLAY_EVENT, type TooolvibesSoundKind } from "@/lib/gamification/sound-engine";
 
 const INTRO_DURATION_MS = 3800;
-const HAS_SEEN_INTRO_KEY = "tooolvibes_has_seen_intro";
+const INTRO_EXIT_MS = 700;
+const HAS_SEEN_INTRO_KEY = "tooolvibes:brand-intro-mobile-neon-v1";
+const LEGACY_HAS_SEEN_INTRO_KEY = "tooolvibes_has_seen_intro";
 const MOBILE_BREAKPOINT = 768;
+const INTRO_DOM_CLASSES = ["brand-intro-preflight", "brand-intro-active"] as const;
 
 type IntroPhase = "entering" | "playing" | "leaving" | "unmounted";
 
+function clearIntroDomLocks() {
+  if (typeof document === "undefined") return;
+  document.documentElement.classList.remove(...INTRO_DOM_CLASSES);
+}
+
+function markIntroAsSeen() {
+  try {
+    sessionStorage.setItem(HAS_SEEN_INTRO_KEY, "true");
+    sessionStorage.setItem(LEGACY_HAS_SEEN_INTRO_KEY, "1");
+  } catch {
+    // Storage can be unavailable in restricted browser modes.
+  }
+}
+
+function hasSeenIntro() {
+  try {
+    return (
+      sessionStorage.getItem(HAS_SEEN_INTRO_KEY) === "true" ||
+      sessionStorage.getItem(LEGACY_HAS_SEEN_INTRO_KEY) === "1"
+    );
+  } catch {
+    return false;
+  }
+}
+
+function shouldForceIntro() {
+  try {
+    return new URLSearchParams(window.location.search).get("intro") === "1";
+  } catch {
+    return false;
+  }
+}
+
 function dispatchIntroFinished(skipped: boolean) {
+  clearIntroDomLocks();
   if (typeof window === "undefined") return;
   window.dispatchEvent(
     new CustomEvent("tooolvibes:brand-intro-finished", {
@@ -88,13 +125,15 @@ export function HomeBrandIntro({
     (skipped = false) => {
       if (hasFinished.current) return;
       hasFinished.current = true;
+      markIntroAsSeen();
       setPhase("leaving");
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         setPhase("unmounted");
+        setShouldRender(false);
         dispatchIntroFinished(skipped);
         onComplete?.(skipped);
-      }, 700);
+      }, INTRO_EXIT_MS);
     },
     [onComplete]
   );
@@ -105,17 +144,25 @@ export function HomeBrandIntro({
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    const hasSeen = sessionStorage.getItem(HAS_SEEN_INTRO_KEY);
+    const introAlreadySeen = hasSeenIntro();
+    const forcedIntro = shouldForceIntro();
 
-    if (!isMobile || reducedMotion || hasSeen === "1") {
+    if (!isMobile || reducedMotion || (introAlreadySeen && !forcedIntro)) {
+      if (introAlreadySeen) {
+        markIntroAsSeen();
+      }
       setShouldRender(false);
+      setPhase("unmounted");
       dispatchIntroFinished(true);
       onComplete?.(true);
       return;
     }
 
+    hasFinished.current = false;
+    setPhase("entering");
     setShouldRender(true);
-    sessionStorage.setItem(HAS_SEEN_INTRO_KEY, "1");
+    document.documentElement.classList.add("brand-intro-active");
+    document.documentElement.classList.remove("brand-intro-preflight");
 
     const timers: number[] = [];
     timers.push(
@@ -123,7 +170,12 @@ export function HomeBrandIntro({
       window.setTimeout(() => dispatchSound("reveal"), 500),
       window.setTimeout(() => setPhase("playing"), 400),
       window.setTimeout(() => dispatchSound("introClose"), INTRO_DURATION_MS - 400),
-      window.setTimeout(() => finishIntro(false), INTRO_DURATION_MS)
+      window.setTimeout(() => finishIntro(false), INTRO_DURATION_MS),
+      window.setTimeout(() => {
+        if (!hasFinished.current) {
+          finishIntro(true);
+        }
+      }, INTRO_DURATION_MS + 1800)
     );
 
     return () => {
@@ -139,7 +191,14 @@ export function HomeBrandIntro({
     <AnimatePresence>
       {phase !== "unmounted" && (
         <motion.div
-          className={`brand-intro brand-intro--${phase}`}
+          className={[
+            "brand-intro",
+            "brand-intro--mobile",
+            `brand-intro--${phase}`,
+            phase === "leaving" ? "is-leaving" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
           role="dialog"
           aria-label="Introduzione TooolVibes"
           aria-hidden={phase === "leaving"}
@@ -159,8 +218,25 @@ export function HomeBrandIntro({
             <X size={20} />
           </button>
 
-          <div className="brand-intro__logo-wrapper">
-            <Logo3DIntro />
+          <div className="brand-intro__logo-wrapper" aria-hidden="true">
+            <div className="brand-intro__logo-stage">
+              <span className="brand-intro__logo-halo brand-intro__logo-halo--violet" />
+              <span className="brand-intro__logo-halo brand-intro__logo-halo--cyan" />
+              <span className="brand-intro__logo-ring" />
+              <span className="brand-intro__logo-orbit brand-intro__logo-orbit--one" />
+              <span className="brand-intro__logo-orbit brand-intro__logo-orbit--two" />
+              <span className="brand-intro__logo-orbit brand-intro__logo-orbit--three" />
+              <Image
+                className="brand-intro__logo"
+                src="/brand/tooolvibes-logo.png"
+                alt=""
+                width={260}
+                height={260}
+                priority
+                sizes="(max-width: 767px) 72vw, 260px"
+              />
+              <span className="brand-intro__logo-flare" />
+            </div>
           </div>
 
           <div className="brand-intro__copy">
@@ -200,6 +276,8 @@ export function HomeBrandIntro({
               Scopri. Confronta. Vibra.
             </motion.p>
           </div>
+
+          <span className="brand-intro__explosion" aria-hidden="true" />
         </motion.div>
       )}
     </AnimatePresence>

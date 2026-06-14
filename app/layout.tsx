@@ -99,6 +99,10 @@ html.brand-intro-preflight body::before {
 
 const brandIntroPreflightScript = `
 (() => {
+  const clearIntroLocks = () => {
+    document.documentElement.classList.remove("brand-intro-preflight", "brand-intro-active");
+  };
+
   try {
     const pathname = window.location.pathname || "/";
     const excluded =
@@ -111,13 +115,21 @@ const brandIntroPreflightScript = `
 
     if (!excluded && !reduced && !played && mobile) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
+      window.setTimeout(clearIntroLocks, 8000);
+      return;
     }
+
+    clearIntroLocks();
   } catch {
     const pathname = window.location.pathname || "/";
     const mobile = window.innerWidth < 768;
     if (mobile && !pathname.startsWith("/admin") && !pathname.startsWith("/api") && !pathname.startsWith("/auth")) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
+      window.setTimeout(clearIntroLocks, 8000);
+      return;
     }
+
+    clearIntroLocks();
   }
 })();
 `;
