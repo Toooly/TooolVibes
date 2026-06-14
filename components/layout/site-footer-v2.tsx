@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BrandLogo } from "./brand-logo";
 import {
   Sparkles,
@@ -35,14 +36,30 @@ const footerLinks = {
   ],
 };
 
-function FooterLink({ href, label, icon: Icon }: { href: string; label: string; icon?: React.ComponentType<{ className?: string; size?: number }> }) {
+type FooterLinkProps = {
+  href: string;
+  label: string;
+  icon?: React.ComponentType<{ className?: string; size?: number }>;
+  light?: boolean;
+};
+
+function FooterLink({ href, label, icon: Icon, light = false }: FooterLinkProps) {
   return (
     <Link
       href={href}
-      className="group flex items-center gap-2 text-sm text-[#4f4970] transition-colors duration-200 hover:text-[#6a3cff]"
+      className={`group flex items-center gap-2 text-sm transition-colors duration-200 ${
+        light ? "text-violet-100/[0.78] hover:text-white" : "text-[#4f4970] hover:text-[#6a3cff]"
+      }`}
       data-sonic-action="nav"
     >
-      {Icon && <Icon size={14} className="text-[#6a3cff] opacity-40 group-hover:opacity-100 transition-opacity" />}
+      {Icon && (
+        <Icon
+          size={14}
+          className={`opacity-50 transition-opacity group-hover:opacity-100 ${
+            light ? "text-cyan-100" : "text-[#6a3cff]"
+          }`}
+        />
+      )}
       <span>{label}</span>
       <ArrowUpRight
         size={12}
@@ -53,15 +70,30 @@ function FooterLink({ href, label, icon: Icon }: { href: string; label: string; 
 }
 
 export function SiteFooterV2() {
+  const pathname = usePathname();
+  const darkFooter =
+    pathname?.startsWith("/product-hunt") ||
+    pathname?.startsWith("/shortlist") ||
+    pathname?.startsWith("/compare");
+
+  const headingClass = darkFooter
+    ? "mb-4 text-xs font-semibold uppercase tracking-widest text-violet-100"
+    : "mb-4 text-xs font-semibold uppercase tracking-widest text-[#2d255d]";
+
   return (
-    <footer className="relative mt-auto border-t border-[rgba(106,60,255,0.08)]">
+    <footer
+      className={`relative mt-auto border-t ${
+        darkFooter
+          ? "border-white/10 bg-[#0a0614]"
+          : "border-[rgba(106,60,255,0.08)]"
+      }`}
+    >
       <div className="relative mx-auto max-w-[1440px] px-6 py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
           <div className="lg:col-span-1">
-            <Link href="/" className="group inline-flex items-center gap-3 mb-5">
+            <Link href="/" className="group mb-5 inline-flex items-center gap-3">
               <div className="transition-transform duration-300 group-hover:scale-105">
-                <BrandLogo size={40} />
+                <BrandLogo size={40} fallback="png" priority />
               </div>
               <span
                 className="text-xl font-bold tracking-tight"
@@ -74,7 +106,11 @@ export function SiteFooterV2() {
                 TOOOLVIBES
               </span>
             </Link>
-            <p className="text-sm text-[#4f4970] leading-relaxed mb-5 max-w-xs">
+            <p
+              className={`mb-5 max-w-xs text-sm leading-relaxed ${
+                darkFooter ? "text-violet-100/[0.72]" : "text-[#4f4970]"
+              }`}
+            >
               Il sistema di discovery per tool AI, SaaS, no-code e vibe coding.
               Trova, confronta e costruisci il tuo stack perfetto.
             </p>
@@ -87,7 +123,11 @@ export function SiteFooterV2() {
                 <a
                   key={social.label}
                   href={social.href}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.5)] text-[#4f4970] transition-all hover:border-[#6a3cff] hover:text-[#6a3cff] hover:bg-[rgba(106,60,255,0.05)]"
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all ${
+                    darkFooter
+                      ? "border-white/[0.12] bg-white/[0.06] text-violet-100/[0.75] hover:border-cyan-200/50 hover:bg-white/[0.12] hover:text-white"
+                      : "border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.5)] text-[#4f4970] hover:border-[#6a3cff] hover:bg-[rgba(106,60,255,0.05)] hover:text-[#6a3cff]"
+                  }`}
                   aria-label={social.label}
                 >
                   <social.icon size={18} />
@@ -96,37 +136,28 @@ export function SiteFooterV2() {
             </div>
           </div>
 
-          {/* Explore */}
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#2d255d]">
-              Esplora
-            </h3>
+            <h3 className={headingClass}>Esplora</h3>
             <div className="flex flex-col gap-2.5">
               {footerLinks.explore.map((link) => (
-                <FooterLink key={link.label} {...link} />
+                <FooterLink key={link.label} {...link} light={darkFooter} />
               ))}
             </div>
           </div>
 
-          {/* Community */}
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#2d255d]">
-              Community
-            </h3>
+            <h3 className={headingClass}>Community</h3>
             <div className="flex flex-col gap-2.5">
               {footerLinks.community.map((link) => (
-                <FooterLink key={link.label} {...link} />
+                <FooterLink key={link.label} {...link} light={darkFooter} />
               ))}
             </div>
           </div>
 
-          {/* Newsletter */}
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#2d255d]">
-              Resta aggiornato
-            </h3>
-            <p className="text-sm text-[#4f4970] mb-4">
-              Ricevi ogni settimana i tool AI più innovativi direttamente nella tua inbox.
+            <h3 className={headingClass}>Resta aggiornato</h3>
+            <p className={`mb-4 text-sm ${darkFooter ? "text-violet-100/[0.72]" : "text-[#4f4970]"}`}>
+              Ricevi ogni settimana i tool AI piu innovativi direttamente nella tua inbox.
             </p>
             <form
               className="flex gap-2"
@@ -137,7 +168,11 @@ export function SiteFooterV2() {
               <input
                 type="email"
                 placeholder="la tua email"
-                className="flex-1 rounded-xl border border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.5)] px-4 py-2.5 text-sm text-[#120d2f] placeholder:text-[#4f4970]/50 outline-none transition-all focus:border-[#6a3cff] focus:ring-2 focus:ring-[rgba(106,60,255,0.1)]"
+                className={`flex-1 rounded-xl border px-4 py-2.5 text-sm outline-none transition-all focus:border-[#6a3cff] focus:ring-2 focus:ring-[rgba(106,60,255,0.1)] ${
+                  darkFooter
+                    ? "border-white/[0.12] bg-white/[0.07] text-white placeholder:text-violet-100/[0.45]"
+                    : "border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.5)] text-[#120d2f] placeholder:text-[#4f4970]/50"
+                }`}
               />
               <button
                 type="submit"
@@ -149,17 +184,22 @@ export function SiteFooterV2() {
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[rgba(106,60,255,0.06)] pt-8 md:flex-row">
-          <p className="text-xs text-[#4f4970]">
-            © {new Date().getFullYear()} TooolVibes. Tutti i diritti riservati.
+        <div
+          className={`mt-10 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row ${
+            darkFooter ? "border-white/10" : "border-[rgba(106,60,255,0.06)]"
+          }`}
+        >
+          <p className={`text-xs ${darkFooter ? "text-violet-100/[0.62]" : "text-[#4f4970]"}`}>
+            &copy; {new Date().getFullYear()} TooolVibes. Tutti i diritti riservati.
           </p>
           <div className="flex items-center gap-6">
             {footerLinks.legal.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-xs text-[#4f4970] transition-colors hover:text-[#6a3cff]"
+                className={`text-xs transition-colors ${
+                  darkFooter ? "text-violet-100/[0.68] hover:text-white" : "text-[#4f4970] hover:text-[#6a3cff]"
+                }`}
                 data-sonic-action="nav"
               >
                 {link.label}

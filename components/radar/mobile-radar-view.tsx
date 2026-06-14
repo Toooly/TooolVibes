@@ -1,9 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback, type CSSProperties, type MouseEvent } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Torus, Sphere } from "@react-three/drei";
-import * as THREE from "three";
 import { motion } from "motion/react";
 import {
   Activity,
@@ -14,35 +11,6 @@ import {
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { claimHiddenSignal } from "@/lib/gamification/actions";
-
-function Radar3DOverlay() {
-  const torusRef = useRef<THREE.Mesh>(null);
-
-  useFrame(({ clock }) => {
-    if (!torusRef.current) return;
-    const s = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.1;
-    torusRef.current.scale.set(s, s, s);
-  });
-
-  return (
-    <>
-      <ambientLight intensity={0.3} />
-      <pointLight color="#39d2f6" intensity={20} />
-      <Torus ref={torusRef} args={[1.5, 0.02, 8, 64]} rotation={[Math.PI / 2, 0, 0]}>
-        <meshBasicMaterial color="#39d2f6" transparent opacity={0.4} />
-      </Torus>
-      <Sphere args={[0.06]} position={[1.2, 0.6, 0]}>
-        <meshBasicMaterial color="#6a3cff" />
-      </Sphere>
-      <Sphere args={[0.05]} position={[-1.0, -0.5, 0.2]}>
-        <meshBasicMaterial color="#f3bf4c" />
-      </Sphere>
-      <Sphere args={[0.05]} position={[0.4, 1.1, -0.2]}>
-        <meshBasicMaterial color="#39d2f6" />
-      </Sphere>
-    </>
-  );
-}
 
 /* ═══════════════════════════════════════════════════════════════
    Types
@@ -69,8 +37,6 @@ type ProductHuntPayload = {
 };
 
 const RADAR_NODE_COUNT = 5;
-const RADAR_SWEEP_SPEED = 2.2;
-const RADAR_SWEEP_SECONDS = (Math.PI * 2) / RADAR_SWEEP_SPEED;
 const RADAR_NODE_LAYOUT = [
   { angle: -0.2, radiusRatio: 0.54 },
   { angle: 1.08, radiusRatio: 0.7 },
@@ -339,7 +305,6 @@ export function MobileRadarView() {
       const radiusRatio = isPlaceholder
         ? layout.radiusRatio
         : 0.38 + (1 - voteScore) * 0.42;
-      const normalizedAngle = (layout.angle + Math.PI * 2) % (Math.PI * 2);
       const x = Math.cos(layout.angle) * radiusRatio * 46;
       const y = Math.sin(layout.angle) * radiusRatio * 46;
       const size = item.votesCount
@@ -353,12 +318,10 @@ export function MobileRadarView() {
         x,
         y,
         size: Math.min(size, 52),
-        hitDelay: normalizedAngle / RADAR_SWEEP_SPEED,
         isPlaceholder,
       };
     });
   }, [currentItems]);
-  const radarClockKey = nodes.map((node) => node.id).join("|");
 
   const hiddenNodeId = useMemo(() => {
     const realNodes = nodes.filter((node) => !node.isPlaceholder);
@@ -384,30 +347,8 @@ export function MobileRadarView() {
       </div>
 
       {/* Radar Stage */}
-      <div
-        className="mobile-radar-view__stage"
-        style={
-          {
-            "--radar-sweep-duration": `${RADAR_SWEEP_SECONDS}s`,
-          } as CSSProperties
-        }
-      >
-        <div className="pointer-events-none absolute inset-0 z-10">
-          <Canvas
-            dpr={[1, 1]}
-            gl={{ antialias: false, alpha: true }}
-            camera={{ position: [0, 0, 4], fov: 50 }}
-            style={{ width: "100%", height: "100%" }}
-          >
-            <Radar3DOverlay />
-          </Canvas>
-        </div>
+      <div className="mobile-radar-view__stage">
         <canvas ref={canvasRef} className="mobile-radar-view__canvas relative z-0" />
-        <span
-          key={radarClockKey}
-          className="mobile-radar-view__sweep"
-          aria-hidden="true"
-        />
         {/* Real data nodes overlaid */}
         {nodes.map((node) => {
           const style = {
@@ -415,7 +356,6 @@ export function MobileRadarView() {
             "--node-x": `${node.x}%`,
             "--node-y": `${node.y}%`,
             "--node-size": `${node.size}px`,
-            "--node-hit-delay": `${node.hitDelay}s`,
           } as CSSProperties;
           const isHot = node.votesCount > 100 && !node.isPlaceholder;
           const isHidden = node.id === hiddenNodeId && !hiddenDiscovered;

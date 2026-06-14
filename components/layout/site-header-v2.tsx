@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
@@ -91,7 +91,6 @@ export function SiteHeaderV2() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const lastMenuPointerToggleRef = useRef(0);
   const spatialRoute = pathname === "/" || pathname?.startsWith("/archivio");
 
   useEffect(() => {
@@ -111,19 +110,6 @@ export function SiteHeaderV2() {
 
   const toggleMobileMenu = () => {
     setMenuOpen((open) => !open);
-  };
-
-  const handleMobileMenuPointerUp = () => {
-    lastMenuPointerToggleRef.current = Date.now();
-    toggleMobileMenu();
-  };
-
-  const handleMobileMenuClick = () => {
-    if (Date.now() - lastMenuPointerToggleRef.current < 120) {
-      return;
-    }
-
-    toggleMobileMenu();
   };
 
   return (
@@ -227,12 +213,12 @@ export function SiteHeaderV2() {
 
               {/* Mobile menu toggle */}
               <button
-                className="flex rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] lg:hidden"
+                className="relative z-20 grid size-11 touch-manipulation place-items-center rounded-2xl text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] active:scale-95 lg:hidden"
                 aria-controls="mobile-site-menu"
                 aria-expanded={menuOpen}
                 aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
-                onClick={handleMobileMenuClick}
-                onPointerUp={handleMobileMenuPointerUp}
+                onClick={toggleMobileMenu}
+                style={{ WebkitTapHighlightColor: "transparent" }}
                 type="button"
               >
                 <motion.div animate={{ rotate: menuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
