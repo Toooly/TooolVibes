@@ -32,21 +32,6 @@ type ToolWithMeta = ToolRecord & {
   isInCompare: boolean;
 };
 
-const STAGE_COLORS: Record<string, string> = {
-  saved: "#6a3cff",
-  pinned: "#39d2f6",
-  top: "#f3bf4c",
-  rejected: "#ef4444",
-};
-
-const STAGE_LABELS: Record<string, string> = {
-  saved: "Da provare",
-  review: "In valutazione",
-  pinned: "Preferito",
-  top: "Top",
-  rejected: "Scartato",
-};
-
 function getToolColor(tool: ToolRecord): string {
   const palette = ["#6a3cff","#39d2f6","#f3bf4c","#ec4899","#22c55e","#f97316","#8b5cf6","#14b8a6"];
   let hash = 0;

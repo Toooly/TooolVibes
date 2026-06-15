@@ -12,7 +12,6 @@ type ArchivePageProps = {
 export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const params = await searchParams;
   const initialQuery = params.q?.trim() ?? "";
-  const isDirectSearch = Boolean(initialQuery);
   const initialGroup = directoryFilterGroups.some(
     (group) => group.key === params.group,
   )

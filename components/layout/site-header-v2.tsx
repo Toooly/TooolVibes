@@ -359,7 +359,7 @@ export function SiteHeaderV2() {
 
       {/* Vibe Rush FAB */}
       <VibeTapMiniGame
-        className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 lg:hidden [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden"
+        className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden"
       />
 
       {/* Spacer */}

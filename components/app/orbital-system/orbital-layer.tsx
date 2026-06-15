@@ -509,22 +509,21 @@ export function OrbitalLayer() {
   const profile = usePerformanceMode();
   const [hasMounted, setHasMounted] = useState(false);
   const [isCompactViewport, setIsCompactViewport] = useState(false);
-  const isDenseMobilePage = (profile.isMobile || isCompactViewport) && (
-    pathname?.startsWith("/compare") || pathname?.startsWith("/shortlist")
-  );
-  const isProductHuntMobile = (profile.isMobile || isCompactViewport) && pathname?.startsWith("/product-hunt");
+  const isMobileOriginPage =
+    pathname === "/" ||
+    pathname?.startsWith("/archivio") ||
+    pathname?.startsWith("/compare") ||
+    pathname?.startsWith("/shortlist") ||
+    pathname?.startsWith("/product-hunt") ||
+    pathname?.startsWith("/collections") ||
+    pathname?.startsWith("/metodo") ||
+    pathname?.startsWith("/wishlist");
   const isToolDetailPage = pathname?.startsWith("/toools/");
   const hideFloatingLayer =
-    pathname === "/" ||
-    pathname?.startsWith("/archivio") ||
-    isDenseMobilePage ||
-    isProductHuntMobile ||
+    isMobileOriginPage ||
     isToolDetailPage;
   const hideCoreNode =
-    pathname === "/" ||
-    pathname?.startsWith("/archivio") ||
-    isDenseMobilePage ||
-    isProductHuntMobile ||
+    isMobileOriginPage ||
     isToolDetailPage;
   useScrollState();
 

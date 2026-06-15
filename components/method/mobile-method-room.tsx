@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import Link from "next/link";
-import { ArrowRight, Bookmark, GitCompare, Play, Rocket, Search, Zap } from "lucide-react";
+import { ArrowRight, Bookmark, GitCompare, Rocket, Search, Zap } from "lucide-react";
 
 const STEPS = [
   {
