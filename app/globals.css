@@ -22878,3 +22878,326 @@ img {
     animation: none !important;
   }
 }
+
+/* Desktop refinement pass: contrast, normal-monitor scale, radar/footer readability, arena RPG polish */
+@media (min-width: 768px) {
+  .mobile-category-map__blob {
+    min-height: clamp(8.2rem, 13vw, 9.5rem) !important;
+    border-color: color-mix(in srgb, var(--cat-color, #6a3cff) 18%, rgba(255,255,255,0.48)) !important;
+    background:
+      radial-gradient(circle at 30% 18%, rgba(255,255,255,0.38), transparent 48%),
+      linear-gradient(145deg,
+        color-mix(in srgb, var(--cat-color, #6a3cff) 19%, rgba(255,255,255,0.82)),
+        color-mix(in srgb, var(--cat-color, #6a3cff) 11%, rgba(234,229,255,0.86))) !important;
+    box-shadow:
+      0 14px 34px color-mix(in srgb, var(--cat-color, #6a3cff) 15%, transparent),
+      inset 0 1px 0 rgba(255,255,255,0.62) !important;
+  }
+
+  .mobile-category-map__body {
+    width: clamp(3.1rem, 4.8vw, 3.65rem) !important;
+    background: color-mix(in srgb, var(--cat-color, #6a3cff) 24%, rgba(255,255,255,0.44)) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
+  }
+
+  .mobile-category-map__label strong {
+    color: #100b28 !important;
+  }
+
+  .mobile-category-map__label small {
+    color: #312655 !important;
+  }
+
+  .mobile-library-empty {
+    min-height: min(32rem, calc(100vh - 12rem)) !important;
+    border-radius: 0;
+    background:
+      radial-gradient(circle at 50% 12%, rgba(255, 94, 184, 0.14), transparent 34%),
+      radial-gradient(circle at 50% 58%, rgba(106, 60, 255, 0.16), transparent 48%),
+      linear-gradient(180deg, #0b0618 0%, #1a0b2e 54%, #090513 100%);
+    padding: clamp(3rem, 7vh, 5rem) clamp(1.5rem, 5vw, 5rem);
+  }
+
+  .mobile-library-empty h2 {
+    color: #ffffff !important;
+    text-shadow: 0 12px 42px rgba(255, 94, 184, 0.28);
+  }
+
+  .mobile-library-empty p {
+    color: rgba(245, 240, 255, 0.76) !important;
+  }
+
+  .mobile-radar-sections {
+    position: relative;
+    z-index: 2;
+  }
+
+  .mobile-radar-section {
+    border-color: rgba(255, 255, 255, 0.16) !important;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(255, 94, 184, 0.14), transparent 38%),
+      linear-gradient(180deg, rgba(255,255,255,0.095), rgba(255,255,255,0.045)) !important;
+  }
+
+  .mobile-radar-section h2,
+  .mobile-radar-section__card-meta strong,
+  .mobile-radar-section__row-meta strong {
+    color: #ffffff !important;
+  }
+
+  .mobile-radar-section__card-meta span,
+  .mobile-radar-section__row-meta span,
+  .mobile-radar-section__row-votes {
+    color: rgba(245, 240, 255, 0.76) !important;
+  }
+
+  .site-footer-v2--dark {
+    background:
+      radial-gradient(circle at 10% 0%, rgba(255, 94, 184, 0.13), transparent 30%),
+      radial-gradient(circle at 86% 0%, rgba(57, 210, 246, 0.1), transparent 28%),
+      linear-gradient(180deg, #090514 0%, #05030c 100%) !important;
+    color: #f7f2ff;
+  }
+
+  .site-footer-v2--dark h3 {
+    color: #ffffff !important;
+  }
+
+  .site-footer-v2--dark a,
+  .site-footer-v2--dark p {
+    text-shadow: 0 1px 16px rgba(255, 94, 184, 0.08);
+  }
+
+  .mobile-compare-arena__fighter-orb {
+    position: relative;
+    overflow: visible !important;
+  }
+
+  .mobile-compare-arena__fighter-hand {
+    position: absolute;
+    top: 52%;
+    z-index: -1;
+    width: 1.05rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 25%, rgba(255,255,255,0.55), rgba(255,255,255,0.14));
+    box-shadow: 0 7px 14px rgba(0,0,0,0.2);
+  }
+
+  .mobile-compare-arena__fighter-hand--left {
+    left: -0.55rem;
+  }
+
+  .mobile-compare-arena__fighter-hand--right {
+    right: -0.55rem;
+  }
+
+  .mobile-compare-arena__fighter-sword {
+    position: absolute;
+    right: -1.05rem;
+    top: -1rem;
+    width: 0.28rem;
+    height: 2.7rem;
+    border-radius: 999px;
+    background:
+      linear-gradient(180deg, #fff 0%, #bfe9ff 52%, #6a3cff 100%);
+    box-shadow: 0 0 14px rgba(57,210,246,0.58);
+    transform: rotate(42deg);
+    transform-origin: 50% 92%;
+  }
+
+  .mobile-compare-arena__fighter-sword::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0.45rem;
+    width: 1.1rem;
+    height: 0.22rem;
+    border-radius: 999px;
+    background: #f3bf4c;
+    transform: translateX(-50%);
+  }
+
+  .mobile-compare-arena__fighter-shield {
+    position: absolute;
+    left: -0.82rem;
+    top: 0.55rem;
+    display: grid;
+    width: 1.5rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,0.42);
+    border-radius: 50%;
+    background: rgba(15,6,24,0.72);
+    color: #fff;
+  }
+
+  .mobile-compare-arena__fighter-health {
+    width: 4.6rem;
+    height: 0.32rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .mobile-compare-arena__fighter-health span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #39d2f6, #7cffb7);
+    transition: width 420ms ease;
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="fighting"] .mobile-compare-arena__fighter-sword {
+    animation: tv-arena-sword-clash 520ms ease-in-out infinite alternate;
+  }
+
+  .mobile-compare-arena__fighter.is-winner .mobile-compare-arena__fighter-sword {
+    right: 50%;
+    top: -2.65rem;
+    transform: translateX(50%) rotate(0deg);
+    animation: tv-arena-winner-sword 1.4s ease-in-out infinite alternate;
+  }
+
+  .mobile-compare-arena__fighter.is-winner .mobile-compare-arena__fighter-orb {
+    box-shadow:
+      0 0 0 7px rgba(243,191,76,0.18),
+      0 0 46px rgba(243,191,76,0.68),
+      0 16px 34px rgba(0,0,0,0.34) !important;
+  }
+
+  .mobile-compare-arena__fighter.is-defeated {
+    opacity: 0.68;
+    filter: saturate(0.7);
+  }
+
+  .mobile-compare-arena__fighter.is-defeated .mobile-compare-arena__fighter-sword {
+    right: 50%;
+    top: 3.8rem;
+    height: 2rem;
+    opacity: 0.72;
+    transform: translateX(50%) rotate(90deg);
+    box-shadow: none;
+  }
+
+  .mobile-compare-arena__battle-result {
+    flex-direction: column !important;
+    min-width: min(24rem, calc(100% - 2rem));
+    border-color: rgba(255, 94, 184, 0.44) !important;
+    border-radius: 26px !important;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(243,191,76,0.22), transparent 38%),
+      linear-gradient(135deg, rgba(106,60,255,0.92), rgba(255,94,184,0.88)) !important;
+    padding: 1rem 1.25rem !important;
+    box-shadow:
+      0 24px 80px rgba(255,94,184,0.28),
+      0 0 0 1px rgba(255,255,255,0.12) inset !important;
+    text-align: center;
+  }
+
+  .mobile-compare-arena__battle-result strong {
+    max-width: 20rem;
+    overflow: hidden;
+    font-size: 1.35rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-compare-arena__matrix-long {
+    display: -webkit-box;
+    min-width: 0;
+    overflow: hidden;
+    color: rgba(255,255,255,0.86);
+    line-height: 1.25;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  @keyframes tv-arena-sword-clash {
+    from {
+      transform: rotate(30deg) translateY(0);
+    }
+    to {
+      transform: rotate(62deg) translateY(-0.28rem);
+    }
+  }
+
+  @keyframes tv-arena-winner-sword {
+    from {
+      transform: translateX(50%) translateY(0) rotate(-4deg);
+    }
+    to {
+      transform: translateX(50%) translateY(-0.32rem) rotate(4deg);
+    }
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 860px) {
+  .mobile-hero-solar {
+    min-height: calc(100vh - 4rem) !important;
+    padding-top: clamp(2.4rem, 5vh, 3.2rem) !important;
+    padding-bottom: 3.1rem !important;
+  }
+
+  .mobile-hero-solar__hud h1 {
+    font-size: clamp(3.2rem, 5.1vw, 5.45rem) !important;
+    max-width: 15ch !important;
+  }
+
+  .mobile-hero-solar__system {
+    min-height: clamp(24rem, 37vw, 34rem) !important;
+  }
+
+  .mobile-hero-solar__brand-core {
+    width: clamp(6.7rem, 9vw, 8.5rem) !important;
+  }
+
+  .mobile-hero-solar__node {
+    --orbit-radius: clamp(11rem, 17vw, 17.2rem) !important;
+    --node-size: clamp(4.1rem, 5vw, 5.2rem) !important;
+  }
+
+  .mobile-category-map__intro h1,
+  .mobile-compare-arena__header h1 {
+    font-size: clamp(3rem, 5.2vw, 5rem) !important;
+  }
+
+  .mobile-category-map__grid {
+    gap: 0.78rem !important;
+  }
+
+  .mobile-radar-view {
+    min-height: calc(100vh - 4rem) !important;
+    padding-top: clamp(2.5rem, 5vh, 3.6rem) !important;
+    padding-bottom: 5rem !important;
+  }
+
+  .mobile-radar-view__stage {
+    width: min(45vw, 36rem) !important;
+  }
+
+  .mobile-radar-view__node {
+    width: calc(var(--node-size) * 1.16) !important;
+    height: calc(var(--node-size) * 1.16) !important;
+  }
+
+  .mobile-compare-arena {
+    min-height: calc(100vh - 4rem) !important;
+    gap: 0.75rem !important;
+    padding-top: clamp(2.35rem, 5vh, 3.3rem) !important;
+    padding-bottom: 5.6rem !important;
+  }
+
+  .mobile-compare-arena__battle-stage {
+    min-height: clamp(25rem, 39vw, 34rem) !important;
+  }
+
+  .mobile-compare-arena__fighter-orb {
+    width: 3.75rem !important;
+  }
+
+  .mobile-compare-arena__champion-name {
+    font-size: clamp(1.5rem, 2.4vw, 2.2rem) !important;
+  }
+}

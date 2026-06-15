@@ -48,7 +48,7 @@ function FooterLink({ href, label, icon: Icon, light = false }: FooterLinkProps)
     <Link
       href={href}
       className={`group flex items-center gap-2 text-sm transition-colors duration-200 ${
-        light ? "text-violet-100/[0.78] hover:text-white" : "text-[#4f4970] hover:text-[#6a3cff]"
+        light ? "text-[#f5f0ff] hover:text-white" : "text-[#4f4970] hover:text-[#6a3cff]"
       }`}
       data-sonic-action="nav"
     >
@@ -56,7 +56,7 @@ function FooterLink({ href, label, icon: Icon, light = false }: FooterLinkProps)
         <Icon
           size={14}
           className={`opacity-50 transition-opacity group-hover:opacity-100 ${
-            light ? "text-cyan-100" : "text-[#6a3cff]"
+            light ? "text-[#ff7ac8]" : "text-[#6a3cff]"
           }`}
         />
       )}
@@ -84,7 +84,7 @@ export function SiteFooterV2() {
     <footer
       className={`relative mt-auto border-t ${
         darkFooter
-          ? "border-white/10 bg-[#0a0614]"
+          ? "site-footer-v2--dark border-white/10 bg-[#080411]"
           : "border-[rgba(106,60,255,0.08)]"
       }`}
     >
@@ -108,7 +108,7 @@ export function SiteFooterV2() {
             </Link>
             <p
               className={`mb-5 max-w-xs text-sm leading-relaxed ${
-                darkFooter ? "text-violet-100/[0.72]" : "text-[#4f4970]"
+                darkFooter ? "text-[#eee8ff]" : "text-[#4f4970]"
               }`}
             >
               Il sistema di discovery per tool AI, SaaS, no-code e vibe coding.
@@ -125,7 +125,7 @@ export function SiteFooterV2() {
                   href={social.href}
                   className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all ${
                     darkFooter
-                      ? "border-white/[0.12] bg-white/[0.06] text-violet-100/[0.75] hover:border-cyan-200/50 hover:bg-white/[0.12] hover:text-white"
+                      ? "border-[#ff7ac8]/35 bg-[#ff5eb8]/14 text-[#ffd8ef] shadow-[0_0_22px_rgba(255,94,184,0.12)] hover:border-[#ff9bd8] hover:bg-[#ff5eb8]/24 hover:text-white"
                       : "border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.5)] text-[#4f4970] hover:border-[#6a3cff] hover:bg-[rgba(106,60,255,0.05)] hover:text-[#6a3cff]"
                   }`}
                   aria-label={social.label}
@@ -156,7 +156,7 @@ export function SiteFooterV2() {
 
           <div>
             <h3 className={headingClass}>Resta aggiornato</h3>
-            <p className={`mb-4 text-sm ${darkFooter ? "text-violet-100/[0.72]" : "text-[#4f4970]"}`}>
+            <p className={`mb-4 text-sm ${darkFooter ? "text-[#eee8ff]" : "text-[#4f4970]"}`}>
               Ricevi ogni settimana i tool AI piu innovativi direttamente nella tua inbox.
             </p>
             <form
@@ -170,7 +170,7 @@ export function SiteFooterV2() {
                 placeholder="la tua email"
                 className={`flex-1 rounded-xl border px-4 py-2.5 text-sm outline-none transition-all focus:border-[#6a3cff] focus:ring-2 focus:ring-[rgba(106,60,255,0.1)] ${
                   darkFooter
-                    ? "border-white/[0.12] bg-white/[0.07] text-white placeholder:text-violet-100/[0.45]"
+                    ? "border-white/[0.18] bg-white/[0.1] text-white placeholder:text-[#d8cfff]"
                     : "border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.5)] text-[#120d2f] placeholder:text-[#4f4970]/50"
                 }`}
               />
@@ -189,7 +189,7 @@ export function SiteFooterV2() {
             darkFooter ? "border-white/10" : "border-[rgba(106,60,255,0.06)]"
           }`}
         >
-          <p className={`text-xs ${darkFooter ? "text-violet-100/[0.62]" : "text-[#4f4970]"}`}>
+          <p className={`text-xs ${darkFooter ? "text-[#d8cfff]" : "text-[#4f4970]"}`}>
             &copy; {new Date().getFullYear()} TooolVibes. Tutti i diritti riservati.
           </p>
           <div className="flex items-center gap-6">
@@ -198,7 +198,7 @@ export function SiteFooterV2() {
                 key={link.label}
                 href={link.href}
                 className={`text-xs transition-colors ${
-                  darkFooter ? "text-violet-100/[0.68] hover:text-white" : "text-[#4f4970] hover:text-[#6a3cff]"
+                  darkFooter ? "text-[#e6ddff] hover:text-white" : "text-[#4f4970] hover:text-[#6a3cff]"
                 }`}
                 data-sonic-action="nav"
               >

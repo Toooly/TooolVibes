@@ -41,6 +41,9 @@ type ProductHuntGraphQlResponse = {
           name?: string;
           tagline?: string;
           votesCount?: number;
+          votes?: {
+            totalCount?: number;
+          } | null;
           commentsCount?: number;
           url?: string;
           thumbnail?: {
@@ -75,6 +78,9 @@ const PRODUCT_HUNT_QUERY = /* GraphQL */ `
           name
           tagline
           votesCount
+          votes {
+            totalCount
+          }
           commentsCount
           url
           thumbnail {
@@ -137,7 +143,7 @@ function normalizeItems(data: ProductHuntGraphQlResponse): ProductHuntItem[] {
       id: node.id ?? node.name ?? crypto.randomUUID(),
       name: node.name ?? "Product Hunt launch",
       tagline: node.tagline ?? "Nuovo lancio su Product Hunt",
-      votesCount: node.votesCount ?? 0,
+      votesCount: node.votesCount ?? node.votes?.totalCount ?? 0,
       commentsCount: node.commentsCount ?? 0,
       productHuntUrl: node.url ?? "https://www.producthunt.com/",
       thumbnailUrl: node.thumbnail?.url,

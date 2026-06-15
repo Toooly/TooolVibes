@@ -3,7 +3,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Scale, Info } from "lucide-react";
+import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Scale, Info, Shield, Sparkles } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { DirectoryTool, DirectoryToolLevel } from "@/lib/data/tooolvibes-directory";
@@ -367,6 +367,33 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
       winnerIndices: tools.flatMap((t, i) => (t.useCasesCount === fitMax ? [i] : [])),
     },
     {
+      label: "Uso ideale",
+      render: (t: NormalisedTool) => (
+        <span title={t.useCase} className="mobile-compare-arena__matrix-long">
+          {t.useCase || t.tldr}
+        </span>
+      ),
+      winnerIndices: [] as number[],
+    },
+    {
+      label: "Punti forti",
+      render: (t: NormalisedTool) => (
+        <span title={t.highlights.join(" · ")} className="mobile-compare-arena__matrix-long">
+          {t.highlights.length ? t.highlights.slice(0, 2).join(" · ") : "Da valutare"}
+        </span>
+      ),
+      winnerIndices: [] as number[],
+    },
+    {
+      label: "Nota editoriale",
+      render: (t: NormalisedTool) => (
+        <span title={t.review} className="mobile-compare-arena__matrix-long">
+          {t.review || t.tldr}
+        </span>
+      ),
+      winnerIndices: [] as number[],
+    },
+    {
       label: "Highlights",
       render: (t: NormalisedTool, isWinner: boolean) => (
         <span className={cn(isWinner && "mobile-compare-arena__matrix-value--winner")}>
@@ -495,6 +522,7 @@ function MobileArenaBattleStage({
 
   const positions = FIGHTER_POSITIONS[tools.length] ?? FIGHTER_POSITIONS[2];
   const reducedMotion = useReducedMotion();
+  const isResolved = battleState === "result";
 
   return (
     <section
@@ -534,12 +562,17 @@ function MobileArenaBattleStage({
       <div className="mobile-compare-arena__fighters">
         {tools.map((tool, index) => {
           const isWinner = battleState === "result" && tool.slug === winner.slug;
+          const isDefeated = isResolved && !isWinner;
           const pos = positions[index] ?? positions[0];
 
           return (
             <motion.div
               key={tool.slug}
-              className={cn("mobile-compare-arena__fighter", isWinner && "is-winner")}
+              className={cn(
+                "mobile-compare-arena__fighter",
+                isWinner && "is-winner",
+                isDefeated && "is-defeated",
+              )}
               style={
                 {
                   left: `${pos.x}%`,
@@ -551,13 +584,30 @@ function MobileArenaBattleStage({
               }
               animate={
                 battleState === "fighting" && !reducedMotion
-                  ? { scale: [1, 1.12, 0.98, 1.08, 1], rotate: [0, -5, 4, -2, 0] }
-                  : { scale: isWinner ? 1.12 : 1, rotate: 0 }
+                  ? {
+                      scale: [1, 1.1, 0.96, 1.12, 1],
+                      rotate: [0, index % 2 ? 7 : -7, index % 2 ? -5 : 5, 0],
+                      x: [0, index % 2 ? -12 : 12, 0],
+                    }
+                  : {
+                      scale: isWinner ? 1.14 : isDefeated ? 0.9 : 1,
+                      rotate: isDefeated ? (index % 2 ? 8 : -8) : 0,
+                      y: isWinner ? -8 : isDefeated ? 12 : 0,
+                    }
               }
               transition={{ duration: battleState === "fighting" ? 0.82 : 0.28, repeat: battleState === "fighting" ? Infinity : 0 }}
             >
               <span className="mobile-compare-arena__fighter-orb">
+                <span className="mobile-compare-arena__fighter-hand mobile-compare-arena__fighter-hand--left" />
+                <span className="mobile-compare-arena__fighter-hand mobile-compare-arena__fighter-hand--right" />
+                <span className="mobile-compare-arena__fighter-sword" />
+                <span className="mobile-compare-arena__fighter-shield">
+                  <Shield className="size-3" />
+                </span>
                 {tool.name.slice(0, 2).toUpperCase()}
+              </span>
+              <span className="mobile-compare-arena__fighter-health">
+                <span style={{ width: `${isDefeated ? 18 : isWinner ? 100 : Math.max(42, tool.score)}%` }} />
               </span>
               <span className="mobile-compare-arena__fighter-name" title={tool.name}>
                 {tool.name}
@@ -572,12 +622,13 @@ function MobileArenaBattleStage({
         {battleState === "result" ? (
           <motion.div
             className="mobile-compare-arena__battle-result"
-            initial={{ opacity: 0, y: 10, scale: 0.96 }}
+            initial={{ opacity: 0, y: 18, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
           >
-            <Trophy className="size-4" />
-            <span>{winner.name} vince il round</span>
+            <Sparkles className="size-5" />
+            <strong>{winner.name}</strong>
+            <span>vince il round</span>
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -586,6 +637,10 @@ function MobileArenaBattleStage({
         type="button"
         className="mobile-compare-arena__fight-button"
         disabled={battleState === "fighting"}
+        onPointerDown={(event) => {
+          event.preventDefault();
+          onFight();
+        }}
         onClick={onFight}
         data-sonic-action="battle"
       >
@@ -607,6 +662,9 @@ export function MobileCompareView({
   const clearCompare = useToolWorkspaceStore((s) => s.clearCompare);
   const [battleState, setBattleState] = useState<BattleState>("idle");
   const fightTimerRef = useRef<number | null>(null);
+  const resultTimerRef = useRef<number | null>(null);
+  const fightLockedRef = useRef(false);
+  const compareKey = compareSlugs.join("|");
 
   const tools = useMemo(
     () => normalise(directoryTools, legacyTools, compareSlugs),
@@ -614,14 +672,18 @@ export function MobileCompareView({
   );
 
   useEffect(() => {
+    if (fightTimerRef.current) clearTimeout(fightTimerRef.current);
+    if (resultTimerRef.current) clearTimeout(resultTimerRef.current);
+    fightLockedRef.current = false;
     setBattleState("idle");
-  }, [compareSlugs]);
+  }, [compareKey]);
 
   useEffect(() => {
     return () => {
       if (fightTimerRef.current) clearTimeout(fightTimerRef.current);
+      if (resultTimerRef.current) clearTimeout(resultTimerRef.current);
     };
-  }, [compareSlugs]);
+  }, []);
 
   if (tools.length === 0) {
     return (
@@ -668,12 +730,19 @@ export function MobileCompareView({
   const rest = sorted.slice(1);
 
   function handleFight() {
-    if (battleState === "fighting") return;
+    if (battleState === "fighting" || fightLockedRef.current) return;
+    fightLockedRef.current = true;
+    if (fightTimerRef.current) clearTimeout(fightTimerRef.current);
+    if (resultTimerRef.current) clearTimeout(resultTimerRef.current);
     setBattleState("fighting");
     fightTimerRef.current = window.setTimeout(() => {
       setBattleState("result");
       void celebrateArenaFight();
-    }, 1450);
+      resultTimerRef.current = window.setTimeout(() => {
+        fightLockedRef.current = false;
+        setBattleState("idle");
+      }, 3200);
+    }, 1650);
   }
 
   return (
