@@ -531,8 +531,19 @@ function MobileArenaBattleStage({
       data-state={battleState}
       aria-label="Arena fight"
     >
+      <div className="mobile-compare-arena__battle-backdrop" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+
       <div className="mobile-compare-arena__battle-grid" aria-hidden="true">
         <span />
+        <span />
+        <span />
+      </div>
+
+      <div className="mobile-compare-arena__battle-floor" aria-hidden="true">
         <span />
         <span />
       </div>
@@ -540,8 +551,14 @@ function MobileArenaBattleStage({
       <div className="mobile-compare-arena__battle-core">
         <span>{modeLabel}</span>
         <strong>
-          {battleState === "fighting" ? "CLASH" : battleState === "result" ? "WINNER" : "READY"}
+          {battleState === "fighting" ? "CLASH" : battleState === "result" ? "VICTORY" : "READY"}
         </strong>
+      </div>
+
+      <div className="mobile-compare-arena__impact-burst" aria-hidden="true">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <span key={i} style={{ "--burst-index": i } as CSSProperties} />
+        ))}
       </div>
 
       {battleState === "fighting" && (
@@ -564,6 +581,9 @@ function MobileArenaBattleStage({
           const isWinner = battleState === "result" && tool.slug === winner.slug;
           const isDefeated = isResolved && !isWinner;
           const pos = positions[index] ?? positions[0];
+          const clashX = (50 - pos.x) * 0.32;
+          const clashY = (50 - pos.y) * 0.24;
+          const side = index % 2 === 0 ? 1 : -1;
 
           return (
             <motion.div
@@ -580,39 +600,57 @@ function MobileArenaBattleStage({
                   "--arena-a": tool.accentFrom,
                   "--arena-b": tool.accentTo,
                   "--fighter-index": index,
+                  "--fighter-rank": index + 1,
                 } as CSSProperties
               }
               animate={
                 battleState === "fighting" && !reducedMotion
                   ? {
-                      scale: [1, 1.1, 0.96, 1.12, 1],
-                      rotate: [0, index % 2 ? 7 : -7, index % 2 ? -5 : 5, 0],
-                      x: [0, index % 2 ? -12 : 12, 0],
+                      scale: [1, 1.16, 0.94, 1.2, 1],
+                      rotate: [0, side * -9, side * 10, side * -4, 0],
+                      rotateX: [0, 9, -7, 0],
+                      rotateY: [0, side * -18, side * 16, 0],
+                      x: [0, clashX, clashX * -0.22, clashX * 0.82, 0],
+                      y: [0, clashY, -8, clashY * 0.48, 0],
                     }
                   : {
-                      scale: isWinner ? 1.14 : isDefeated ? 0.9 : 1,
-                      rotate: isDefeated ? (index % 2 ? 8 : -8) : 0,
-                      y: isWinner ? -8 : isDefeated ? 12 : 0,
+                      scale: isWinner ? 1.22 : isDefeated ? 0.84 : 1,
+                      rotate: isDefeated ? side * 13 : isWinner ? side * -3 : 0,
+                      rotateX: isWinner ? -8 : isDefeated ? 12 : 0,
+                      rotateY: isWinner ? side * 10 : isDefeated ? side * -14 : 0,
+                      y: isWinner ? -18 : isDefeated ? 22 : 0,
                     }
               }
-              transition={{ duration: battleState === "fighting" ? 0.82 : 0.28, repeat: battleState === "fighting" ? Infinity : 0 }}
+              transition={{
+                duration: battleState === "fighting" ? 0.76 : 0.36,
+                ease: battleState === "fighting" ? "easeInOut" : "easeOut",
+                repeat: battleState === "fighting" ? Infinity : 0,
+              }}
             >
               <span className="mobile-compare-arena__fighter-orb">
+                <span className="mobile-compare-arena__fighter-shadow" />
+                <span className="mobile-compare-arena__fighter-aura" />
                 <span className="mobile-compare-arena__fighter-hand mobile-compare-arena__fighter-hand--left" />
                 <span className="mobile-compare-arena__fighter-hand mobile-compare-arena__fighter-hand--right" />
                 <span className="mobile-compare-arena__fighter-sword" />
                 <span className="mobile-compare-arena__fighter-shield">
                   <Shield className="size-3" />
                 </span>
-                {tool.name.slice(0, 2).toUpperCase()}
+                <span className="mobile-compare-arena__fighter-face">
+                  {tool.name.slice(0, 2).toUpperCase()}
+                </span>
               </span>
               <span className="mobile-compare-arena__fighter-health">
                 <span style={{ width: `${isDefeated ? 18 : isWinner ? 100 : Math.max(42, tool.score)}%` }} />
               </span>
+              <span className="mobile-compare-arena__fighter-loadout">
+                <span>ATK {tool.score}</span>
+                <span>SKL {Math.max(1, tool.highlights.length)}</span>
+              </span>
               <span className="mobile-compare-arena__fighter-name" title={tool.name}>
                 {tool.name}
               </span>
-              <small>{tool.score}</small>
+              <small>{isWinner ? "Champion" : isDefeated ? "KO" : `Lv ${Math.round(tool.score / 10)}`}</small>
             </motion.div>
           );
         })}
@@ -623,12 +661,14 @@ function MobileArenaBattleStage({
           <motion.div
             className="mobile-compare-arena__battle-result"
             initial={{ opacity: 0, y: 18, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            animate={{ opacity: 1, y: 0, scale: [0.92, 1.05, 1] }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            transition={{ duration: 0.42, ease: "easeOut" }}
           >
             <Sparkles className="size-5" />
+            <span className="mobile-compare-arena__battle-result-kicker">Round clear</span>
             <strong>{winner.name}</strong>
-            <span>vince il round</span>
+            <span>alza la spada e conquista l&apos;arena</span>
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -643,9 +683,27 @@ function MobileArenaBattleStage({
         }}
         onClick={onFight}
         data-sonic-action="battle"
+        data-state={battleState}
       >
-        <Swords className="size-5" />
-        {battleState === "fighting" ? "Fighting..." : "FIGHT"}
+        <span className="mobile-compare-arena__fight-aura" aria-hidden="true" />
+        <span className="mobile-compare-arena__fight-icon">
+          <Swords className="size-5" />
+        </span>
+        <span className="mobile-compare-arena__fight-copy">
+          <strong>{battleState === "fighting" ? "CLASH" : battleState === "result" ? "VICTORY" : "FIGHT"}</strong>
+          <small>
+            {battleState === "fighting"
+              ? "Combo in corso"
+              : battleState === "result"
+                ? "Round risolto"
+                : "Avvia il duello"}
+          </small>
+        </span>
+        <span className="mobile-compare-arena__fight-charge" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
       </button>
     </section>
   );

@@ -23201,3 +23201,668 @@ img {
     font-size: clamp(1.5rem, 2.4vw, 2.2rem) !important;
   }
 }
+
+/* Mobile arena game-feel pass: 2D RPG staging with 3D motion cues. */
+@media (max-width: 767px) {
+  .mobile-compare-arena {
+    background:
+      radial-gradient(circle at 50% -8%, rgba(255, 94, 184, 0.22), transparent 31rem),
+      radial-gradient(circle at 12% 12%, rgba(57, 210, 246, 0.13), transparent 17rem),
+      radial-gradient(circle at 88% 30%, rgba(243, 191, 76, 0.1), transparent 16rem),
+      linear-gradient(180deg, #090414 0%, #180827 42%, #08030f 100%) !important;
+  }
+
+  .mobile-compare-arena__battle-stage {
+    isolation: isolate;
+    min-height: min(24rem, calc(100svh - 15.5rem));
+    border-color: rgba(255, 255, 255, 0.18);
+    background:
+      radial-gradient(circle at 50% 43%, rgba(255, 94, 184, 0.2), transparent 28%),
+      radial-gradient(circle at 20% 18%, rgba(57, 210, 246, 0.2), transparent 25%),
+      radial-gradient(circle at 82% 84%, rgba(243, 191, 76, 0.14), transparent 30%),
+      linear-gradient(180deg, #1a0d2b 0%, #090416 72%, #05020b 100%) !important;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.12) inset,
+      0 -32px 70px rgba(106,60,255,0.16) inset,
+      0 22px 58px rgba(0,0,0,0.34);
+    perspective: 760px;
+    transform-style: preserve-3d;
+  }
+
+  .mobile-compare-arena__battle-stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 2.6rem 2.6rem;
+    mask-image: radial-gradient(ellipse at 50% 52%, black 0%, transparent 68%);
+    opacity: 0.34;
+    transform: rotateX(66deg) translateY(5.7rem) scale(1.2);
+  }
+
+  .mobile-compare-arena__battle-stage::after {
+    content: "";
+    position: absolute;
+    inset: auto 9% 3.9rem;
+    z-index: 1;
+    height: 2.8rem;
+    border-radius: 999px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.48), transparent 72%);
+    filter: blur(8px);
+    opacity: 0.8;
+    transform: rotateX(72deg);
+  }
+
+  .mobile-compare-arena__battle-backdrop,
+  .mobile-compare-arena__battle-floor,
+  .mobile-compare-arena__impact-burst {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .mobile-compare-arena__battle-backdrop {
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .mobile-compare-arena__battle-backdrop span {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(0.2px);
+    opacity: 0.64;
+  }
+
+  .mobile-compare-arena__battle-backdrop span:nth-child(1) {
+    left: 8%;
+    top: 12%;
+    width: 4.8rem;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(57,210,246,0.45), transparent 68%);
+    animation: tv-mobile-arena-orb-drift 5.4s ease-in-out infinite alternate;
+  }
+
+  .mobile-compare-arena__battle-backdrop span:nth-child(2) {
+    right: 9%;
+    top: 9%;
+    width: 5.7rem;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(255,94,184,0.42), transparent 70%);
+    animation: tv-mobile-arena-orb-drift 6.2s ease-in-out infinite alternate-reverse;
+  }
+
+  .mobile-compare-arena__battle-backdrop span:nth-child(3) {
+    left: 34%;
+    bottom: 12%;
+    width: 9rem;
+    height: 2.2rem;
+    background: radial-gradient(ellipse, rgba(243,191,76,0.22), transparent 72%);
+    transform: rotate(-8deg);
+  }
+
+  .mobile-compare-arena__battle-floor {
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    transform: translateY(1.1rem) rotateX(64deg);
+    transform-style: preserve-3d;
+  }
+
+  .mobile-compare-arena__battle-floor span:first-child {
+    width: 18.5rem;
+    aspect-ratio: 1;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, rgba(255,255,255,0.1), transparent 22%),
+      conic-gradient(from 90deg, rgba(57,210,246,0.2), rgba(255,94,184,0.18), rgba(243,191,76,0.16), rgba(57,210,246,0.2));
+    box-shadow: 0 0 54px rgba(106,60,255,0.25);
+    animation: tv-mobile-arena-floor-pulse 2.8s ease-in-out infinite alternate;
+  }
+
+  .mobile-compare-arena__battle-floor span:last-child {
+    position: absolute;
+    width: 9.5rem;
+    aspect-ratio: 1;
+    border: 1px dashed rgba(255,255,255,0.22);
+    border-radius: 50%;
+    animation: tv-mobile-arena-floor-spin 9s linear infinite;
+  }
+
+  .mobile-compare-arena__battle-grid {
+    z-index: 2;
+    opacity: 0.88;
+    transform-style: preserve-3d;
+  }
+
+  .mobile-compare-arena__battle-grid span {
+    box-shadow: 0 0 18px rgba(57,210,246,0.1);
+  }
+
+  .mobile-compare-arena__battle-core {
+    z-index: 4;
+    width: 5.45rem;
+    background:
+      radial-gradient(circle at 35% 14%, rgba(255,255,255,0.26), transparent 30%),
+      radial-gradient(circle at 50% 50%, rgba(106,60,255,0.5), transparent 66%),
+      rgba(9,4,20,0.88);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.16) inset,
+      0 0 40px rgba(255,94,184,0.24),
+      0 16px 34px rgba(0,0,0,0.34);
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="idle"] .mobile-compare-arena__battle-core {
+    animation: tv-mobile-arena-core-idle 2.7s ease-in-out infinite alternate;
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="fighting"] {
+    animation: tv-mobile-arena-stage-hit 520ms ease-in-out infinite;
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="fighting"] .mobile-compare-arena__battle-core {
+    animation: tv-arena-core-clash 320ms ease-in-out infinite alternate;
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="result"] {
+    background:
+      radial-gradient(circle at 50% 41%, rgba(243,191,76,0.34), transparent 38%),
+      radial-gradient(circle at 50% 18%, rgba(255,94,184,0.26), transparent 32%),
+      linear-gradient(180deg, #211033 0%, #0a0414 100%) !important;
+  }
+
+  .mobile-compare-arena__impact-burst {
+    z-index: 5;
+    opacity: 0;
+  }
+
+  .mobile-compare-arena__impact-burst span {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: 0.22rem;
+    height: 3.7rem;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #fff, rgba(57,210,246,0.72), transparent);
+    transform: translate(-50%, -50%) rotate(calc(var(--burst-index) * 36deg)) translateY(-1.8rem) scaleY(0);
+    transform-origin: 50% 100%;
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="fighting"] .mobile-compare-arena__impact-burst {
+    opacity: 1;
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="fighting"] .mobile-compare-arena__impact-burst span {
+    animation: tv-mobile-arena-burst 680ms ease-out infinite;
+    animation-delay: calc(var(--burst-index) * 28ms);
+  }
+
+  .mobile-compare-arena__fighter {
+    z-index: 6;
+    width: 6.2rem;
+    gap: 0.22rem;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .mobile-compare-arena__fighter-orb {
+    width: 3.45rem;
+    border-radius: 1.25rem;
+    transform-style: preserve-3d;
+    background:
+      radial-gradient(circle at 28% 17%, rgba(255,255,255,0.55), transparent 26%),
+      radial-gradient(circle at 72% 80%, rgba(0,0,0,0.22), transparent 38%),
+      linear-gradient(135deg, var(--arena-a), var(--arena-b)) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.2) inset,
+      0 0 24px color-mix(in srgb, var(--arena-b) 38%, transparent),
+      0 15px 28px rgba(0,0,0,0.38) !important;
+  }
+
+  .mobile-compare-arena__fighter-shadow {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 0.52rem);
+    z-index: -4;
+    width: 3.8rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.44);
+    filter: blur(5px);
+    transform: translateX(-50%) rotateX(74deg);
+  }
+
+  .mobile-compare-arena__fighter-aura {
+    position: absolute;
+    inset: -0.52rem;
+    z-index: -3;
+    border-radius: 1.55rem;
+    background: conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--arena-a) 56%, transparent), transparent, color-mix(in srgb, var(--arena-b) 50%, transparent), transparent);
+    filter: blur(0.2px);
+    opacity: 0.48;
+    animation: tv-mobile-arena-aura-spin 4.8s linear infinite;
+  }
+
+  .mobile-compare-arena__fighter-face {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    width: 2.3rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border-radius: 0.82rem;
+    background: rgba(255,255,255,0.13);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.34);
+    transform: translateZ(18px);
+  }
+
+  .mobile-compare-arena__fighter-hand {
+    z-index: 1;
+    background:
+      radial-gradient(circle at 35% 24%, rgba(255,255,255,0.74), rgba(255,255,255,0.12) 67%),
+      linear-gradient(135deg, var(--arena-a), var(--arena-b));
+    transform: translateZ(8px);
+  }
+
+  .mobile-compare-arena__fighter-hand--left {
+    transform: translateZ(8px) rotate(-12deg);
+  }
+
+  .mobile-compare-arena__fighter-hand--right {
+    transform: translateZ(8px) rotate(12deg);
+  }
+
+  .mobile-compare-arena__fighter-sword {
+    z-index: 3;
+    width: 0.32rem;
+    height: 3.05rem;
+    background:
+      linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 45%, #fff 52%, rgba(57,210,246,0.72) 100%),
+      linear-gradient(180deg, #fff 0%, #b9efff 48%, #7448ff 100%) !important;
+    box-shadow:
+      0 0 16px rgba(57,210,246,0.7),
+      0 0 34px rgba(255,255,255,0.18);
+  }
+
+  .mobile-compare-arena__fighter-shield {
+    z-index: 4;
+    border-color: rgba(255,255,255,0.5);
+    background:
+      radial-gradient(circle at 35% 20%, rgba(255,255,255,0.28), transparent 36%),
+      rgba(7,3,16,0.84);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--arena-a) 28%, transparent),
+      0 10px 18px rgba(0,0,0,0.26);
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="idle"] .mobile-compare-arena__fighter {
+    animation: tv-mobile-arena-fighter-idle 2.4s ease-in-out infinite alternate;
+    animation-delay: calc(var(--fighter-index) * -280ms);
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="fighting"] .mobile-compare-arena__fighter-orb {
+    animation: tv-mobile-arena-orb-squash 520ms ease-in-out infinite;
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="fighting"] .mobile-compare-arena__fighter-hand--left {
+    animation: tv-mobile-arena-left-hand 380ms ease-in-out infinite alternate;
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="fighting"] .mobile-compare-arena__fighter-hand--right {
+    animation: tv-mobile-arena-right-hand 360ms ease-in-out infinite alternate;
+  }
+
+  .mobile-compare-arena__battle-stage[data-state="fighting"] .mobile-compare-arena__fighter-sword {
+    animation: tv-mobile-arena-sword-combo 420ms cubic-bezier(.2,.8,.2,1) infinite alternate !important;
+  }
+
+  .mobile-compare-arena__fighter.is-winner {
+    z-index: 8;
+    opacity: 1;
+    filter: saturate(1.18);
+  }
+
+  .mobile-compare-arena__fighter.is-winner .mobile-compare-arena__fighter-aura {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 16px rgba(243,191,76,0.5));
+  }
+
+  .mobile-compare-arena__fighter.is-winner .mobile-compare-arena__fighter-orb {
+    box-shadow:
+      0 0 0 8px rgba(243,191,76,0.18),
+      0 0 50px rgba(243,191,76,0.72),
+      0 22px 38px rgba(0,0,0,0.4) !important;
+  }
+
+  .mobile-compare-arena__fighter.is-defeated {
+    opacity: 0.58;
+    filter: grayscale(0.28) saturate(0.55);
+  }
+
+  .mobile-compare-arena__fighter.is-defeated .mobile-compare-arena__fighter-health span {
+    background: linear-gradient(90deg, #ff5577, #f3bf4c);
+  }
+
+  .mobile-compare-arena__fighter-loadout {
+    display: inline-flex;
+    gap: 0.22rem;
+    max-width: 6rem;
+  }
+
+  .mobile-compare-arena__fighter-loadout span {
+    padding: 0.12rem 0.32rem;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    background: rgba(5,2,11,0.5);
+    color: rgba(255,255,255,0.72);
+    font-size: 0.52rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .mobile-compare-arena__fighter-health {
+    width: 4.85rem;
+    height: 0.38rem;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.18) inset;
+  }
+
+  .mobile-compare-arena__fighter-health span {
+    background:
+      linear-gradient(90deg, #39d2f6, #7cffb7 52%, #f3bf4c),
+      linear-gradient(90deg, var(--arena-a), var(--arena-b));
+    box-shadow: 0 0 12px rgba(124,255,183,0.4);
+  }
+
+  .mobile-compare-arena__fighter-name {
+    max-width: 6rem;
+    padding: 0.12rem 0.42rem;
+    border-radius: 999px;
+    background: rgba(5,2,11,0.46);
+    backdrop-filter: blur(10px);
+  }
+
+  .mobile-compare-arena__fighter small {
+    color: rgba(255,255,255,0.72);
+    text-transform: uppercase;
+  }
+
+  .mobile-compare-arena__energy-line {
+    z-index: 4;
+    width: 3px;
+    height: 44%;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.92), rgba(57,210,246,0.64) 36%, transparent);
+    filter: drop-shadow(0 0 12px rgba(57,210,246,0.5));
+    transform-origin: 50% 0%;
+  }
+
+  .mobile-compare-arena__battle-result {
+    top: 66%;
+    z-index: 10;
+    min-width: min(20.5rem, calc(100% - 1.6rem));
+    border-color: rgba(243,191,76,0.55) !important;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,0.26), transparent 30%),
+      linear-gradient(135deg, rgba(106,60,255,0.95), rgba(255,94,184,0.94) 56%, rgba(243,191,76,0.9)) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.16) inset,
+      0 0 44px rgba(255,94,184,0.36),
+      0 26px 80px rgba(0,0,0,0.42) !important;
+    transform-style: preserve-3d;
+  }
+
+  .mobile-compare-arena__battle-result svg {
+    width: 1.65rem;
+    height: 1.65rem;
+    color: #fff;
+    filter: drop-shadow(0 0 12px rgba(243,191,76,0.72));
+  }
+
+  .mobile-compare-arena__battle-result-kicker {
+    color: rgba(255,255,255,0.78);
+    font-size: 0.62rem;
+    font-weight: 1000;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .mobile-compare-arena__battle-result strong {
+    font-size: clamp(1.18rem, 7vw, 1.62rem);
+    line-height: 1;
+  }
+
+  .mobile-compare-arena__fight-button {
+    bottom: 0.88rem;
+    min-width: min(18rem, calc(100% - 3rem));
+    min-height: 3.45rem;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.24);
+    background:
+      radial-gradient(circle at 18% 16%, rgba(255,255,255,0.28), transparent 26%),
+      linear-gradient(135deg, #f3bf4c 0%, #ff5eb8 43%, #6a3cff 72%, #39d2f6 100%) !important;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.28) inset,
+      0 16px 36px rgba(255,94,184,0.28),
+      0 0 38px rgba(106,60,255,0.26);
+    isolation: isolate;
+    transform-style: preserve-3d;
+  }
+
+  .mobile-compare-arena__fight-aura {
+    position: absolute;
+    inset: -45%;
+    z-index: -1;
+    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.4), transparent, rgba(57,210,246,0.35), transparent);
+    animation: tv-mobile-arena-aura-spin 2.8s linear infinite;
+  }
+
+  .mobile-compare-arena__fight-icon {
+    display: grid;
+    width: 2.25rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(5,2,11,0.22);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset;
+  }
+
+  .mobile-compare-arena__fight-copy {
+    display: grid;
+    justify-items: start;
+    line-height: 1;
+  }
+
+  .mobile-compare-arena__fight-copy strong {
+    font-size: 0.95rem;
+    font-weight: 1000;
+    letter-spacing: 0.12em;
+  }
+
+  .mobile-compare-arena__fight-copy small {
+    margin-top: 0.18rem;
+    color: rgba(255,255,255,0.76);
+    font-size: 0.58rem;
+    font-weight: 850;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .mobile-compare-arena__fight-charge {
+    display: inline-flex;
+    gap: 0.18rem;
+    margin-left: 0.2rem;
+  }
+
+  .mobile-compare-arena__fight-charge span {
+    width: 0.32rem;
+    height: 1.1rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.45);
+    animation: tv-mobile-arena-charge 1.2s ease-in-out infinite;
+  }
+
+  .mobile-compare-arena__fight-charge span:nth-child(2) {
+    animation-delay: 120ms;
+  }
+
+  .mobile-compare-arena__fight-charge span:nth-child(3) {
+    animation-delay: 240ms;
+  }
+
+  .mobile-compare-arena__fight-button[data-state="fighting"] {
+    animation: tv-mobile-arena-button-clash 420ms ease-in-out infinite alternate;
+  }
+
+  .mobile-compare-arena__fight-button[data-state="result"] {
+    background:
+      radial-gradient(circle at 18% 16%, rgba(255,255,255,0.32), transparent 28%),
+      linear-gradient(135deg, #ffe07a 0%, #ff8d38 42%, #ff5eb8 100%) !important;
+  }
+
+  .mobile-compare-arena__champion,
+  .mobile-compare-arena__challenger {
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.1) inset,
+      0 18px 44px rgba(0,0,0,0.18);
+    transform-style: preserve-3d;
+  }
+
+  .mobile-compare-arena__champion {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.045)),
+      radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--arena-a) 24%, transparent), transparent 36%) !important;
+  }
+
+  .mobile-compare-arena__challenger {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035)),
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--arena-b) 18%, transparent), transparent 38%) !important;
+  }
+
+  .mobile-compare-arena__score {
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.12) inset,
+      0 0 22px color-mix(in srgb, var(--arena-b) 24%, transparent),
+      0 12px 24px rgba(0,0,0,0.22);
+  }
+
+  .mobile-compare-arena__metrics div {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1), transparent 44%),
+      rgba(255,255,255,0.06);
+  }
+
+  @keyframes tv-mobile-arena-orb-drift {
+    from { transform: translate3d(-0.25rem, -0.1rem, 0) scale(0.96); }
+    to { transform: translate3d(0.45rem, 0.45rem, 0) scale(1.08); }
+  }
+
+  @keyframes tv-mobile-arena-floor-pulse {
+    from { opacity: 0.52; transform: scale(0.96); }
+    to { opacity: 0.86; transform: scale(1.03); }
+  }
+
+  @keyframes tv-mobile-arena-floor-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes tv-mobile-arena-core-idle {
+    from { transform: translate(-50%, -50%) translateZ(0) scale(0.98); }
+    to { transform: translate(-50%, -52%) translateZ(20px) scale(1.03); }
+  }
+
+  @keyframes tv-mobile-arena-stage-hit {
+    0%, 100% { filter: saturate(1); }
+    50% { filter: saturate(1.28) brightness(1.08); }
+  }
+
+  @keyframes tv-mobile-arena-burst {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) rotate(calc(var(--burst-index) * 36deg)) translateY(-0.2rem) scaleY(0);
+    }
+    35% {
+      opacity: 0.92;
+      transform: translate(-50%, -50%) rotate(calc(var(--burst-index) * 36deg)) translateY(-1.8rem) scaleY(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) rotate(calc(var(--burst-index) * 36deg)) translateY(-3.6rem) scaleY(0.18);
+    }
+  }
+
+  @keyframes tv-mobile-arena-aura-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes tv-mobile-arena-fighter-idle {
+    from { transform: translate(-50%, -50%) translateY(0) rotateX(0); }
+    to { transform: translate(-50%, -52%) translateY(-0.22rem) rotateX(4deg); }
+  }
+
+  @keyframes tv-mobile-arena-orb-squash {
+    0%, 100% { border-radius: 1.25rem; }
+    50% { border-radius: 1.55rem 1rem 1.35rem 1rem; }
+  }
+
+  @keyframes tv-mobile-arena-left-hand {
+    from { transform: translateZ(8px) rotate(-18deg) translateX(0); }
+    to { transform: translateZ(14px) rotate(-42deg) translateX(-0.18rem); }
+  }
+
+  @keyframes tv-mobile-arena-right-hand {
+    from { transform: translateZ(8px) rotate(12deg) translateX(0); }
+    to { transform: translateZ(18px) rotate(42deg) translateX(0.22rem); }
+  }
+
+  @keyframes tv-mobile-arena-sword-combo {
+    from { transform: rotate(24deg) translateY(0) translateZ(14px); }
+    to { transform: rotate(72deg) translateY(-0.36rem) translateZ(28px); }
+  }
+
+  @keyframes tv-mobile-arena-charge {
+    0%, 100% { opacity: 0.38; transform: scaleY(0.56); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  @keyframes tv-mobile-arena-button-clash {
+    from { transform: translateX(-50%) scale(1); }
+    to { transform: translateX(-50%) scale(1.035); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-compare-arena__battle-stage,
+    .mobile-compare-arena__battle-stage *,
+    .mobile-compare-arena__fight-button,
+    .mobile-compare-arena__fight-button * {
+      animation: none !important;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-compare-arena__battle-backdrop,
+  .mobile-compare-arena__battle-floor,
+  .mobile-compare-arena__impact-burst,
+  .mobile-compare-arena__fighter-shadow,
+  .mobile-compare-arena__fighter-aura,
+  .mobile-compare-arena__fighter-loadout,
+  .mobile-compare-arena__fight-aura,
+  .mobile-compare-arena__fight-charge {
+    display: none !important;
+  }
+
+  .mobile-compare-arena__fight-copy {
+    display: inline;
+  }
+
+  .mobile-compare-arena__fight-copy small {
+    display: none;
+  }
+}
