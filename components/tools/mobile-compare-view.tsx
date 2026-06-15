@@ -65,6 +65,7 @@ type NormalisedTool = {
   category: string;
   categoryLabel: string;
   score: number;
+  battleScore: number;
   accentFrom: string;
   accentTo: string;
   tldr: string;
@@ -76,6 +77,35 @@ type NormalisedTool = {
   isDirectory: boolean;
   useCasesCount: number;
 };
+
+function stableScoreOffset(seed: string): number {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = (hash * 31 + seed.charCodeAt(i)) % 997;
+  }
+  return (hash % 13) - 6;
+}
+
+function withBattleScores(tools: NormalisedTool[]): NormalisedTool[] {
+  const ranked = tools
+    .map((tool, index) => ({
+      index,
+      tool,
+      raw: tool.score + stableScoreOffset(`${tool.slug}:${tool.category}:${index}`),
+    }))
+    .sort((a, b) => b.raw - a.raw || a.tool.name.localeCompare(b.tool.name));
+
+  const battleBySlug = new Map<string, number>();
+  ranked.forEach(({ tool, raw }, rank) => {
+    const score = Math.max(62, Math.min(99, Math.round(raw - rank * 2.25)));
+    battleBySlug.set(tool.slug, score);
+  });
+
+  return tools.map((tool) => ({
+    ...tool,
+    battleScore: battleBySlug.get(tool.slug) ?? tool.score,
+  }));
+}
 
 function normalise(
   directoryTools: DirectoryTool[],
@@ -92,6 +122,7 @@ function normalise(
         category: d.category,
         categoryLabel: d.categoryLabel,
         score: dirScore(d),
+        battleScore: dirScore(d),
         accentFrom: d.accentFrom,
         accentTo: d.accentTo,
         tldr: d.tldr,
@@ -114,6 +145,7 @@ function normalise(
         category: l.category ?? "Tool",
         categoryLabel: l.category ?? "Tool",
         score: legacyScore(l),
+        battleScore: legacyScore(l),
         accentFrom: c,
         accentTo: c,
         tldr: l.short_description_it ?? l.description_it ?? "Nessun riassunto disponibile.",
@@ -171,7 +203,7 @@ function ChampionCard({
         {
           "--arena-a": tool.accentFrom,
           "--arena-b": tool.accentTo,
-          "--compare-score-angle": `${tool.score * 3.6}deg`,
+          "--compare-score-angle": `${tool.battleScore * 3.6}deg`,
         } as CSSProperties
       }
     >
@@ -191,7 +223,7 @@ function ChampionCard({
           </div>
           <div className="mobile-compare-arena__score-wrap">
             <div className="mobile-compare-arena__score">
-              <span>{tool.score}</span>
+              <span>{tool.battleScore}</span>
               <small>/100</small>
             </div>
             <button
@@ -204,7 +236,7 @@ function ChampionCard({
             </button>
             {showInfo && (
               <div className="mobile-compare-arena__tooltip">
-                Il punteggio è calcolato in base al livello del tool, alla visibilità in evidenza e al numero di punti di forza.
+                Il battle power combina punteggio editoriale, categoria e segnali del tool per evitare pareggi finti in arena.
               </div>
             )}
           </div>
@@ -283,14 +315,14 @@ function ChallengerCard({
           <p className="mobile-compare-arena__challenger-tldr">{tool.tldr}</p>
         </div>
         <div className="mobile-compare-arena__score mobile-compare-arena__score--sm">
-          <span>{tool.score}</span>
+          <span>{tool.battleScore}</span>
         </div>
       </div>
 
       <div className="mobile-compare-arena__challenger-bar">
         <span
           style={{
-            width: `${Math.max(20, tool.score)}%`,
+            width: `${Math.max(20, tool.battleScore)}%`,
             background: `linear-gradient(90deg,${tool.accentFrom},${tool.accentTo})`,
           }}
         />
@@ -313,7 +345,7 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
   const isSyncing = useRef(false);
   if (tools.length < 2) return null;
 
-  const maxScore = Math.max(...tools.map((t) => t.score), 1);
+  const maxScore = Math.max(...tools.map((t) => t.battleScore), 1);
 
   const handleScroll = (index: number) => {
     if (isSyncing.current) return;
@@ -330,7 +362,7 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
     });
   };
 
-  const scoreMax = Math.max(...tools.map((t) => t.score));
+  const scoreMax = Math.max(...tools.map((t) => t.battleScore));
   const fitMax = Math.max(...tools.map((t) => t.useCasesCount));
   const highlightsMax = Math.max(...tools.map((t) => t.highlights.length));
 
@@ -350,12 +382,12 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
         <div className="mobile-compare-arena__matrix-bar">
           <span
             className={cn(isWinner && "is-winner")}
-            style={{ width: `${(t.score / maxScore) * 100}%` }}
+            style={{ width: `${(t.battleScore / maxScore) * 100}%` }}
           />
-          <strong>{t.score}</strong>
+          <strong>{t.battleScore}</strong>
         </div>
       ),
-      winnerIndices: tools.flatMap((t, i) => (t.score === scoreMax ? [i] : [])),
+      winnerIndices: tools.flatMap((t, i) => (t.battleScore === scoreMax ? [i] : [])),
     },
     {
       label: "Fit",
@@ -641,16 +673,16 @@ function MobileArenaBattleStage({
                 </span>
               </span>
               <span className="mobile-compare-arena__fighter-health">
-                <span style={{ width: `${isDefeated ? 18 : isWinner ? 100 : Math.max(42, tool.score)}%` }} />
+                <span style={{ width: `${isDefeated ? 18 : isWinner ? 100 : Math.max(42, tool.battleScore)}%` }} />
               </span>
               <span className="mobile-compare-arena__fighter-loadout">
-                <span>ATK {tool.score}</span>
+                <span>ATK {tool.battleScore}</span>
                 <span>SKL {Math.max(1, tool.highlights.length)}</span>
               </span>
               <span className="mobile-compare-arena__fighter-name" title={tool.name}>
                 {tool.name}
               </span>
-              <small>{isWinner ? "Champion" : isDefeated ? "KO" : `Lv ${Math.round(tool.score / 10)}`}</small>
+              <small>{isWinner ? "Champion" : isDefeated ? "KO" : `Power ${tool.battleScore}`}</small>
             </motion.div>
           );
         })}
@@ -673,38 +705,34 @@ function MobileArenaBattleStage({
         ) : null}
       </AnimatePresence>
 
-      <button
-        type="button"
-        className="mobile-compare-arena__fight-button"
-        disabled={battleState === "fighting"}
-        onPointerDown={(event) => {
-          event.preventDefault();
-          onFight();
-        }}
-        onClick={onFight}
-        data-sonic-action="battle"
-        data-state={battleState}
-      >
-        <span className="mobile-compare-arena__fight-aura" aria-hidden="true" />
-        <span className="mobile-compare-arena__fight-icon">
-          <Swords className="size-5" />
-        </span>
-        <span className="mobile-compare-arena__fight-copy">
-          <strong>{battleState === "fighting" ? "CLASH" : battleState === "result" ? "VICTORY" : "FIGHT"}</strong>
-          <small>
-            {battleState === "fighting"
-              ? "Combo in corso"
-              : battleState === "result"
-                ? "Round risolto"
-                : "Avvia il duello"}
-          </small>
-        </span>
-        <span className="mobile-compare-arena__fight-charge" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </span>
-      </button>
+      {battleState !== "result" ? (
+        <button
+          type="button"
+          className="mobile-compare-arena__fight-button"
+          disabled={battleState === "fighting"}
+          onPointerDown={(event) => {
+            event.preventDefault();
+            onFight();
+          }}
+          onClick={onFight}
+          data-sonic-action="battle"
+          data-state={battleState}
+        >
+          <span className="mobile-compare-arena__fight-aura" aria-hidden="true" />
+          <span className="mobile-compare-arena__fight-icon">
+            <Swords className="size-5" />
+          </span>
+          <span className="mobile-compare-arena__fight-copy">
+            <strong>{battleState === "fighting" ? "CLASH" : "FIGHT"}</strong>
+            <small>{battleState === "fighting" ? "Combo in corso" : "Avvia il duello"}</small>
+          </span>
+          <span className="mobile-compare-arena__fight-charge" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+        </button>
+      ) : null}
     </section>
   );
 }
@@ -725,7 +753,7 @@ export function MobileCompareView({
   const compareKey = compareSlugs.join("|");
 
   const tools = useMemo(
-    () => normalise(directoryTools, legacyTools, compareSlugs),
+    () => withBattleScores(normalise(directoryTools, legacyTools, compareSlugs)),
     [directoryTools, legacyTools, compareSlugs],
   );
 
@@ -783,7 +811,7 @@ export function MobileCompareView({
     );
   }
 
-  const sorted = [...tools].sort((a, b) => b.score - a.score);
+  const sorted = [...tools].sort((a, b) => b.battleScore - a.battleScore);
   const lead = sorted[0];
   const rest = sorted.slice(1);
 
@@ -822,7 +850,7 @@ export function MobileCompareView({
             key={tool.slug}
             tool={tool}
             rank={i + 2}
-            diff={tool.score - lead.score}
+            diff={tool.battleScore - lead.battleScore}
             onRemove={() => toggleCompare(tool.slug)}
           />
         ))}

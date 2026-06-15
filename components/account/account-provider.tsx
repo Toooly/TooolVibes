@@ -21,6 +21,7 @@ import { siteConfig } from "@/lib/config/site";
 import { getBrowserSupabaseClient, isSupabaseBrowserEnabled } from "@/lib/supabase/browser-client";
 
 type AccountStatus = "loading" | "guest" | "authenticated" | "unavailable";
+type AccountMagicLinkMetadata = Record<string, string | number | boolean | null | undefined>;
 
 type AccountContextValue = {
   authEnabled: boolean;
@@ -30,7 +31,10 @@ type AccountContextValue = {
   isSendingLink: boolean;
   isAttaching: boolean;
   authMessage?: string | null;
-  sendMagicLink: (email: string) => Promise<{ ok: boolean; message: string }>;
+  sendMagicLink: (
+    email: string,
+    metadata?: AccountMagicLinkMetadata,
+  ) => Promise<{ ok: boolean; message: string }>;
   signOut: () => Promise<void>;
 };
 
@@ -152,7 +156,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
     };
   }, [attachWorkspaceToAccount]);
 
-  const sendMagicLink = useCallback(async (email: string) => {
+  const sendMagicLink = useCallback(async (email: string, metadata?: AccountMagicLinkMetadata) => {
     if (!isSupabaseBrowserEnabled()) {
       return {
         ok: false,
@@ -178,6 +182,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         email: normalizedEmail,
         options: {
           emailRedirectTo: getRedirectUrl(),
+          data: metadata,
         },
       });
 
@@ -188,7 +193,10 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         };
       }
 
-      const message = `Magic link inviato a ${normalizedEmail}. Aprilo per collegare il workspace all'account.`;
+      const message =
+        metadata?.source === "vibe-rush"
+          ? `Magic link inviato a ${normalizedEmail}. Aprilo per salvare anche il risultato Vibe Rush nel tuo account.`
+          : `Magic link inviato a ${normalizedEmail}. Aprilo per collegare il workspace all'account.`;
       setAuthMessage(message);
 
       return {

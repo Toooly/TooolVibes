@@ -1,6 +1,7 @@
 "use client";
 
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import NumberFlow from "@number-flow/react";
 import { AnimatePresence, motion } from "motion/react";
 import { Play, Sparkles, X, Zap } from "lucide-react";
@@ -12,6 +13,9 @@ type VibeTarget = {
   x: number;
   y: number;
   size: number;
+  driftX: number;
+  driftY: number;
+  delay: number;
 };
 
 type FloatingScore = {
@@ -27,20 +31,24 @@ type VibeTapMiniGameProps = {
 };
 
 const GAME_SECONDS = 12;
-const TARGET_COUNT = 5;
+const TARGET_COUNT = 4;
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 function createTargets(seed: number): VibeTarget[] {
   return Array.from({ length: TARGET_COUNT }).map((_, index) => {
     const angle = (seed * 37 + index * 71) % 360;
-    const radius = 18 + ((seed + index * 19) % 28);
+    const radius = 12 + ((seed + index * 19) % 22);
+    const direction = (seed + index) % 2 === 0 ? 1 : -1;
 
     return {
       id: seed * 10 + index,
-      x: 50 + Math.cos((angle * Math.PI) / 180) * radius,
-      y: 50 + Math.sin((angle * Math.PI) / 180) * radius,
+      x: Math.min(78, Math.max(22, 50 + Math.cos((angle * Math.PI) / 180) * radius)),
+      y: Math.min(76, Math.max(24, 50 + Math.sin((angle * Math.PI) / 180) * radius)),
       size: 2.4 + ((seed + index) % 3) * 0.35,
+      driftX: direction * (8 + ((seed * 5 + index * 3) % 8)),
+      driftY: -direction * (5 + ((seed * 7 + index * 5) % 7)),
+      delay: index * 0.14,
     };
   });
 }
@@ -85,6 +93,7 @@ function CircularTimer({ seconds, total }: { seconds: number; total: number }) {
 }
 
 export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [running, setRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(GAME_SECONDS);
@@ -94,6 +103,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   const [finished, setFinished] = useState(false);
   const [floaters, setFloaters] = useState<FloatingScore[]>([]);
   const [announcement, setAnnouncement] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
   const reducedMotion = useReducedMotion();
   const prevComboRef = useRef(1);
   const scoreRef = useRef(score);
@@ -101,6 +111,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const wasOpenRef = useRef(false);
+  const startLockedRef = useRef(false);
 
   useEffect(() => {
     scoreRef.current = score;
@@ -193,6 +204,8 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   }, [open]);
 
   function startGame() {
+    if (running || startLockedRef.current) return;
+    startLockedRef.current = true;
     setScore(0);
     setCombo(1);
     setFinished(false);
@@ -200,6 +213,9 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     setTimeLeft(GAME_SECONDS);
     setRunning(true);
     setFloaters([]);
+    window.setTimeout(() => {
+      startLockedRef.current = false;
+    }, 220);
   }
 
   function closeGame() {
@@ -210,11 +226,12 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     setCombo(1);
     setTimeLeft(GAME_SECONDS);
     setFloaters([]);
+    setSignupEmail("");
+    startLockedRef.current = false;
   }
 
-  function hitTarget(targetId: number, targetX: number, targetY: number) {
+  function hitTarget(targetX: number, targetY: number) {
     if (!running) {
-      startGame();
       return;
     }
 
@@ -227,6 +244,22 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     window.setTimeout(() => {
       setFloaters((current) => current.filter((f) => f.id !== id));
     }, 650);
+  }
+
+  function handleSignup(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const email = signupEmail.trim().toLowerCase();
+    if (!email) return;
+
+    const params = new URLSearchParams({
+      source: "vibe-rush",
+      email,
+      vibes: String(score),
+      xp: String(xp),
+    });
+
+    closeGame();
+    router.push(`/account?${params.toString()}#account-upgrade`);
   }
 
   return (
@@ -319,7 +352,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                   className="vibe-mini-game__charge"
                   style={{ "--charge-scale": `${charge / 100}` } as CSSProperties}
                 />
-                {targets.map((target) => (
+                {running ? targets.map((target) => (
                   <motion.button
                     key={target.id}
                     type="button"
@@ -332,15 +365,30 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                       } as CSSProperties
                     }
                     initial={reducedMotion ? {} : { scale: 0, opacity: 0 }}
-                    animate={reducedMotion ? {} : { scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
+                    animate={
+                      reducedMotion
+                        ? {}
+                        : {
+                            scale: [0.82, 1.28, 0.72, 1.08, 0.92],
+                            opacity: [0.84, 1, 0.88, 1, 0.9],
+                            x: [0, target.driftX, target.driftX * -0.42, 0],
+                            y: [0, target.driftY, target.driftY * -0.58, 0],
+                          }
+                    }
+                    transition={{
+                      duration: 1.45 + target.delay,
+                      ease: "easeInOut",
+                      repeat: Infinity,
+                      repeatType: "mirror",
+                      delay: target.delay,
+                    }}
                     whileTap={reducedMotion ? undefined : { scale: 0.76 }}
-                    onClick={() => hitTarget(target.id, target.x, target.y)}
+                    onClick={() => hitTarget(target.x, target.y)}
                     aria-label={`Raccogli vibe target ${target.id}`}
                   >
                     <Sparkles size={15} />
                   </motion.button>
-                ))}
+                )) : null}
 
                 <AnimatePresence>
                   {floaters.map((f) => (
@@ -363,7 +411,15 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                 </AnimatePresence>
 
                 {!running && !finished ? (
-                  <button type="button" className="vibe-mini-game__start" onClick={startGame}>
+                  <button
+                    type="button"
+                    className="vibe-mini-game__start"
+                    onPointerDown={(event) => {
+                      event.preventDefault();
+                      startGame();
+                    }}
+                    onClick={startGame}
+                  >
                     <Zap size={16} />
                     Start rush
                   </button>
@@ -379,7 +435,15 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                     </span>
                     <span className="vibe-mini-game__result-xp">+{xp} XP</span>
                     <div className="vibe-mini-game__result-actions">
-                      <button type="button" className="vibe-mini-game__start" onClick={startGame}>
+                      <button
+                        type="button"
+                        className="vibe-mini-game__start"
+                        onPointerDown={(event) => {
+                          event.preventDefault();
+                          startGame();
+                        }}
+                        onClick={startGame}
+                      >
                         <Zap size={16} />
                         Gioca ancora
                       </button>
@@ -387,6 +451,21 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                         Chiudi
                       </button>
                     </div>
+                    <form className="vibe-mini-game__signup" onSubmit={handleSignup}>
+                      <p>Salva i progressi e ricevi il riepilogo dei vibe raccolti.</p>
+                      <div>
+                        <input
+                          type="email"
+                          value={signupEmail}
+                          onChange={(event) => setSignupEmail(event.target.value)}
+                          placeholder="la tua email"
+                          autoComplete="email"
+                        />
+                        <button type="submit" disabled={!signupEmail.trim()}>
+                          Registrati
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 ) : null}
               </div>

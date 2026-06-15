@@ -349,6 +349,7 @@ export function MobileRadarView() {
       {/* Radar Stage */}
       <div className="mobile-radar-view__stage">
         <canvas ref={canvasRef} className="mobile-radar-view__canvas relative z-0" />
+        <span className="mobile-radar-view__scan-line" aria-hidden="true" />
         {/* Real data nodes overlaid */}
         {nodes.map((node) => {
           const style = {

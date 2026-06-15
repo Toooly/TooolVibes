@@ -1,4 +1,5 @@
 import { Activity, MessageCircle, Radar, TrendingUp } from "lucide-react";
+import type { CSSProperties } from "react";
 
 import { DesktopRadarCanvas } from "@/components/desktop/desktop-radar-canvas";
 import { RadarGameMissions } from "@/components/gamification/radar-game-missions";
@@ -34,6 +35,7 @@ export function DesktopVibeRadar() {
 
         <div className="desktop-vibe-radar-stage" aria-label="Radar 3D Product Hunt">
           <DesktopRadarCanvas />
+          <span className="desktop-vibe-radar-sweep-line" aria-hidden="true" />
           <span className="desktop-vibe-radar-core" aria-hidden="true">
             <Radar />
           </span>
@@ -42,7 +44,11 @@ export function DesktopVibeRadar() {
             const Icon = item.icon;
 
             return (
-              <article key={item.label} className={`desktop-vibe-radar-signal desktop-vibe-radar-signal--${index + 1}`}>
+              <article
+                key={item.label}
+                className={`desktop-vibe-radar-signal desktop-vibe-radar-signal--${index + 1}`}
+                style={{ "--signal-index": index } as CSSProperties}
+              >
                 <span>
                   <Icon aria-hidden="true" />
                 </span>

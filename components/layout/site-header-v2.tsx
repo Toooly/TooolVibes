@@ -23,6 +23,7 @@ import {
   Zap,
   ChevronRight,
   LockKeyhole,
+  UserPlus,
 } from "lucide-react";
 
 const navLinks = [
@@ -203,12 +204,12 @@ export function SiteHeaderV2() {
               </Link>
 
               <Link
-                href="/account"
+                href="/account#account-upgrade"
                 className="group relative hidden items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-all hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)] md:flex"
                 data-sonic-action="tap"
               >
-                <Sparkles size={14} className="transition-transform group-hover:rotate-12" />
-                Account
+                <UserPlus size={14} className="transition-transform group-hover:scale-110" />
+                Area utente
               </Link>
 
               {/* Mobile menu toggle */}
@@ -345,11 +346,11 @@ export function SiteHeaderV2() {
                   Login amministratore
                 </Link>
                 <Link
-                  href="/account"
+                  href="/account#account-upgrade"
                   className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-3 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)]"
                 >
-                  <Sparkles size={16} />
-                  Account
+                  <UserPlus size={16} />
+                  Area utente
                 </Link>
               </div>
             </motion.nav>

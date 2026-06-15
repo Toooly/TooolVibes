@@ -12780,6 +12780,37 @@ img {
     animation: tv-desktop-radar-sweep 8.8s linear infinite;
   }
 
+  .desktop-vibe-radar-sweep-line {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    z-index: 2;
+    width: min(25rem, 46%);
+    height: 3px;
+    border-radius: 999px;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,0.95), rgba(57,210,246,0.72) 44%, rgba(106,60,255,0.32) 76%, transparent);
+    box-shadow:
+      0 0 18px rgba(57, 210, 246, 0.58),
+      0 0 54px rgba(106, 60, 255, 0.32);
+    opacity: 0.88;
+    pointer-events: none;
+    transform: rotate(0deg);
+    transform-origin: 0 50%;
+    animation: tv-desktop-radar-visible-sweep 5.6s linear infinite;
+  }
+
+  .desktop-vibe-radar-sweep-line::after {
+    content: "";
+    position: absolute;
+    inset: -2.7rem -1rem -2.7rem 0;
+    border-radius: 50%;
+    background:
+      conic-gradient(from -14deg at 0% 50%, rgba(57,210,246,0.22), rgba(106,60,255,0.09), transparent 38%);
+    filter: blur(2px);
+    opacity: 0.72;
+  }
+
   .desktop-vibe-radar-orbit {
     width: clamp(14rem, 28vw, 30rem);
     aspect-ratio: 1;
@@ -12845,6 +12876,8 @@ img {
       0 24px 70px rgba(32, 24, 88, 0.11),
       inset 0 1px 0 rgba(255, 255, 255, 0.64);
     transform-style: preserve-3d;
+    animation: tv-desktop-radar-signal-focus 5.6s ease-in-out infinite;
+    animation-delay: calc(var(--signal-index, 0) * -0.86s);
   }
 
   .desktop-vibe-radar-signal span {
@@ -13268,6 +13301,32 @@ img {
   }
 }
 
+@keyframes tv-desktop-radar-visible-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tv-desktop-radar-signal-focus {
+  0%,
+  72%,
+  100% {
+    filter: saturate(1);
+    box-shadow:
+      0 24px 70px rgba(32, 24, 88, 0.11),
+      inset 0 1px 0 rgba(255, 255, 255, 0.64);
+  }
+
+  18% {
+    filter: saturate(1.22) brightness(1.08);
+    box-shadow:
+      0 30px 84px rgba(32, 24, 88, 0.15),
+      0 0 42px rgba(57, 210, 246, 0.22),
+      0 0 28px rgba(243, 191, 76, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.78);
+  }
+}
+
 @keyframes tv-desktop-radar-orbit {
   to {
     transform:
@@ -13275,6 +13334,18 @@ img {
       translateZ(5rem)
       rotateX(66deg)
       rotateZ(calc(var(--radar-orbit-rotate, 0deg) + 360deg));
+  }
+}
+
+@keyframes cosmic-satellites-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cosmic-satellite-counter-spin {
+  to {
+    rotate: -360deg;
   }
 }
 
@@ -13304,6 +13375,10 @@ img {
   .desktop-vibe-stage-halo,
   .desktop-vibe-stage-beam,
   .desktop-vibe-prism-core,
+  .desktop-vibe-radar-sweep-line,
+  .desktop-vibe-radar-signal,
+  .mobile-radar-view__scan-line,
+  .mobile-spotlight-cosmic__satellite,
   .mobile-vibe-field-grid {
     animation: none !important;
   }
@@ -20012,6 +20087,10 @@ img {
   background-size: auto, 2.2rem 2.2rem, 2.2rem 2.2rem, auto;
 }
 
+.vibe-mini-game__stage[data-finished="true"] {
+  height: min(25rem, calc(100svh - 12rem));
+}
+
 .vibe-mini-game__charge {
   position: absolute;
   left: 0.8rem;
@@ -20047,9 +20126,9 @@ img {
     linear-gradient(135deg, #6a3cff, #39d2f6 54%, #f3bf4c);
   color: #fff;
   cursor: pointer;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
   box-shadow: 0 0 26px rgba(57, 210, 246, 0.32), 0 12px 28px rgba(0, 0, 0, 0.28);
-  animation: tv-vibe-target-pulse 1.25s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 .vibe-mini-game__floater {
@@ -20118,6 +20197,7 @@ img {
   gap: 0.6rem;
   background: rgba(11, 7, 28, 0.72);
   backdrop-filter: blur(4px);
+  overflow-y: auto;
   text-align: center;
   padding: 1.25rem;
 }
@@ -20155,6 +20235,99 @@ img {
 
 .vibe-mini-game__result-actions .vibe-mini-game__start:hover {
   transform: scale(1.04);
+}
+
+.vibe-mini-game__signup {
+  width: min(18rem, 100%);
+  margin-top: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 0.7rem;
+}
+
+.vibe-mini-game__signup p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.vibe-mini-game__signup div {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+
+.vibe-mini-game__signup input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  outline: none;
+  padding: 0 0.78rem;
+}
+
+.vibe-mini-game__signup input::placeholder {
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.vibe-mini-game__signup button {
+  min-height: 2.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6a3cff, #39d2f6);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 900;
+  padding: 0 0.85rem;
+}
+
+.vibe-mini-game__signup button:disabled {
+  cursor: default;
+  filter: grayscale(0.4);
+  opacity: 0.58;
+}
+
+.mobile-radar-view__scan-line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  width: 47%;
+  height: 2px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.94), rgba(57,210,246,0.78) 42%, rgba(106,60,255,0.28) 76%, transparent);
+  box-shadow:
+    0 0 18px rgba(57, 210, 246, 0.6),
+    0 0 42px rgba(106, 60, 255, 0.28);
+  opacity: 0.9;
+  pointer-events: none;
+  transform-origin: 0 50%;
+  animation: tv-mobile-radar-scan-line var(--radar-sweep-duration, 3.2s) linear infinite;
+}
+
+.mobile-radar-view__scan-line::after {
+  content: "";
+  position: absolute;
+  inset: -2.6rem -0.8rem -2.6rem 0;
+  border-radius: 50%;
+  background:
+    conic-gradient(from -15deg at 0% 50%, rgba(57,210,246,0.24), rgba(106,60,255,0.1), transparent 34%);
+  filter: blur(2px);
+  opacity: 0.72;
+}
+
+@keyframes tv-mobile-radar-scan-line {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .vibe-mini-game__combo {
@@ -20862,9 +21035,38 @@ img {
   .mobile-method-steps__link {
     width: fit-content;
     margin-top: 0.9rem;
-    background: rgba(106, 60, 255, 0.1);
-    padding: 0.55rem 0.9rem;
-    color: var(--accent-purple);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(106, 60, 255, 0.12);
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.92), rgba(246,242,255,0.78));
+    padding: 0.58rem 0.92rem;
+    color: #5c34e8;
+    box-shadow:
+      0 10px 24px rgba(70, 52, 138, 0.08),
+      inset 0 1px 0 rgba(255,255,255,0.76);
+    text-decoration: none !important;
+  }
+
+  .mobile-method-steps__link::before,
+  .mobile-method-steps__link::after {
+    content: none !important;
+  }
+
+  .mobile-method-steps__link:hover,
+  .mobile-method-steps__link:focus-visible {
+    background:
+      linear-gradient(135deg, rgba(106, 60, 255, 0.12), rgba(57, 210, 246, 0.12));
+    outline: none;
+  }
+
+  .mobile-spotlight-cosmic__satellites {
+    animation: cosmic-satellites-spin 30s linear infinite !important;
+    transform-origin: 50% 50%;
+  }
+
+  .mobile-spotlight-cosmic__satellite {
+    animation: cosmic-satellite-counter-spin 30s linear infinite;
   }
 
   .mobile-catalog-view {

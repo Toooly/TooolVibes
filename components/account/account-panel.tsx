@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 
 import { useAccount } from "@/components/account/account-provider";
@@ -40,7 +40,35 @@ export function AccountPanel() {
   const persistence = useDiscoveryPersistence();
   const discovery = useDiscoverySnapshot();
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [vibeContext, setVibeContext] = useState({
+    source: "",
+    email: "",
+    vibes: "",
+    xp: "",
+  });
   const workspace = useMemo(() => readWorkspaceSnapshot(discovery), [discovery]);
+  const vibeScore = vibeContext.vibes;
+  const vibeXp = vibeContext.xp;
+  const isVibeRushSignup = vibeContext.source === "vibe-rush";
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const nextContext = {
+      source: params.get("source") ?? "",
+      email: params.get("email") ?? "",
+      vibes: params.get("vibes") ?? "",
+      xp: params.get("xp") ?? "",
+    };
+    setVibeContext(nextContext);
+
+    if (nextContext.email) {
+      setEmail(nextContext.email);
+    }
+  }, []);
 
   const persistenceLabel =
     persistence.mode === "remote"
@@ -86,10 +114,23 @@ export function AccountPanel() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const result = await account.sendMagicLink(email);
+    const metadata = isVibeRushSignup
+      ? {
+          source: "vibe-rush",
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          phone: phone.trim() || null,
+          vibe_score: vibeScore ? Number(vibeScore) : 0,
+          vibe_xp: vibeXp ? Number(vibeXp) : 0,
+        }
+      : undefined;
+    const result = await account.sendMagicLink(email, metadata);
 
     if (result.ok) {
       setEmail("");
+      setFirstName("");
+      setLastName("");
+      setPhone("");
     }
   };
 
@@ -253,14 +294,52 @@ export function AccountPanel() {
                 onSubmit={handleSubmit}
                 className="metadata-block mt-5 rounded-[26px] px-5 py-5"
               >
-                <p className="brand-kicker">Continua con email</p>
+                <p className="brand-kicker">
+                  {isVibeRushSignup ? "Salva Vibe Rush" : "Continua con email"}
+                </p>
                 <p className="mt-2.5 text-[0.98rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-                  Ti mandiamo un magic link minimale. Quando entri, la selezione locale viene
-                  collegata all&apos;account senza perdere ciò che hai già salvato.
+                  {isVibeRushSignup
+                    ? `Completa il profilo e ti mandiamo il magic link con il riepilogo: ${vibeScore || 0} vibe raccolti, ${vibeXp || 0} XP.`
+                    : "Ti mandiamo un magic link minimale. Quando entri, la selezione locale viene collegata all'account senza perdere ciò che hai già salvato."}
                 </p>
                 <p className="mt-3 text-[0.88rem] leading-7" style={{ color: "var(--muted)" }}>
                   {continuityCopy}
                 </p>
+                {isVibeRushSignup ? (
+                  <>
+                    <p className="mt-3 text-[0.88rem] leading-7" style={{ color: "var(--accent-strong)" }}>
+                      Riepilogo run: {vibeScore ?? 0} vibe raccolti, {vibeXp ?? 0} XP.
+                    </p>
+                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                      <input
+                        type="text"
+                        value={firstName}
+                        onChange={(event) => setFirstName(event.target.value)}
+                        placeholder="Nome"
+                        className="filter-control w-full rounded-[20px] border px-4 py-3 outline-none"
+                        style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.88)" }}
+                        required
+                      />
+                      <input
+                        type="text"
+                        value={lastName}
+                        onChange={(event) => setLastName(event.target.value)}
+                        placeholder="Cognome"
+                        className="filter-control w-full rounded-[20px] border px-4 py-3 outline-none"
+                        style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.88)" }}
+                        required
+                      />
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(event) => setPhone(event.target.value)}
+                        placeholder="Telefono (opzionale)"
+                        className="filter-control w-full rounded-[20px] border px-4 py-3 outline-none sm:col-span-2"
+                        style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.88)" }}
+                      />
+                    </div>
+                  </>
+                ) : null}
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                   <input
                     type="email"
@@ -275,12 +354,18 @@ export function AccountPanel() {
                     disabled={account.isSendingLink || !account.authEnabled}
                     className="button-shell button-primary text-ui-strong rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-default disabled:opacity-60"
                   >
-                    {account.isSendingLink ? "Invio..." : "Invia magic link"}
+                    {account.isSendingLink
+                      ? "Invio..."
+                      : isVibeRushSignup
+                        ? "Registrati"
+                        : "Invia magic link"}
                   </button>
                 </div>
                 <p className="mt-3 text-[0.76rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                   {account.authEnabled
-                    ? "Percorso minimale: nessun onboarding pesante, solo continuità della selezione."
+                    ? isVibeRushSignup
+                      ? "Il risultato Vibe Rush viaggia come metadata del magic link."
+                      : "Percorso minimale: nessun onboarding pesante, solo continuità della selezione."
                     : "Auth Supabase non configurata: il prodotto resta in fallback locale."}
                 </p>
               </form>
