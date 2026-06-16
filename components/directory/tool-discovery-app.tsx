@@ -321,6 +321,11 @@ function DirectToolResultCard({
         ["--tool-accent-to" as string]: tool.accentTo,
       }}
     >
+      <Link
+        href={`/toools/${tool.slug}`}
+        className="category-tool-card__link"
+        aria-label={`Apri ${tool.name}`}
+      />
       <span aria-hidden="true" className="category-tool-card__aura" />
       <div className="category-tool-card__header">
         <DirectoryToolGlyph tool={tool} size="md" className="category-tool-card__glyph" />

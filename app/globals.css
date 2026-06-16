@@ -48,6 +48,7 @@
 
   --tv-space-1: 4px;
   --tv-space-2: 8px;
+  --tv-space-2-5: 10px;
   --tv-space-3: 12px;
   --tv-space-4: 16px;
   --tv-space-5: 20px;
@@ -2283,6 +2284,12 @@ img {
     transform: scale(1.08) rotate(1deg);
   }
 
+  .category-tool-card__link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
   .category-tool-card:hover .category-tool-card__glyph,
   .category-tool-card:focus-within .category-tool-card__glyph {
     transform: translateY(-2px) rotate(-2deg) scale(1.08);
@@ -2300,6 +2307,10 @@ img {
   .category-tool-card__footer {
     position: relative;
     z-index: 1;
+  }
+
+  .category-tool-card__footer {
+    z-index: 3;
   }
 
   .category-tool-card__header {
@@ -22247,7 +22258,7 @@ img {
 
 .tool-card__tag {
   height: 28px;
-  padding: 0 var(--tv-space-3);
+  padding: 0 var(--tv-space-2-5);
   border-radius: 999px;
   background: color-mix(in srgb, var(--tv-brand-secondary) 10%, transparent);
   color: var(--tv-brand-secondary);
@@ -22298,7 +22309,7 @@ img {
   gap: var(--tv-space-3);
   align-items: center;
   min-height: 60px;
-  padding: var(--tv-space-3);
+  padding: var(--tv-space-2-5) var(--tv-space-3);
   background: color-mix(in srgb, var(--tv-surface) 96%, transparent);
   border: 1px solid color-mix(in srgb, var(--tv-brand-primary) 28%, transparent);
   border-radius: var(--tv-radius-md);
@@ -22322,7 +22333,7 @@ img {
   place-items: center;
   font-size: var(--tv-font-micro);
   font-weight: 800;
-  margin-left: calc(var(--tv-space-3) * -1);
+  margin-left: calc(var(--tv-space-2-5) * -1);
   border: 2px solid var(--tv-surface);
 }
 
