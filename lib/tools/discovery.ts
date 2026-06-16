@@ -101,7 +101,7 @@ const taskMeta: Record<
     keywords: ["design", "landing", "branding", "visual", "image", "moodboard"],
   },
   productivity: {
-    label: "Produttivita` personale",
+    label: "Produttività personale",
     keywords: ["produttivita", "workspace", "task", "knowledge base", "personale", "note"],
   },
   "founder-stack": {
@@ -158,7 +158,7 @@ export function getToolEditorialNote(tool: ToolRecord) {
 export function getToolWhyHere(tool: ToolRecord) {
   return (
     tool.why_here ??
-    "? qui perché mostra abbastanza utilit?, direzione prodotto e sostanza da meritare una scheda vera, non solo un bookmark."
+    "È qui perché mostra abbastanza utilità, direzione prodotto e sostanza da meritare una scheda vera, non solo un bookmark."
   );
 }
 
