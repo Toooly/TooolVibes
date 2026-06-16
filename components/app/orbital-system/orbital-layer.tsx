@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { AnimatePresence } from "motion/react";
@@ -515,6 +515,7 @@ export function OrbitalLayer() {
     pathname?.startsWith("/compare") ||
     pathname?.startsWith("/shortlist") ||
     pathname?.startsWith("/product-hunt") ||
+    pathname?.startsWith("/radar") ||
     pathname?.startsWith("/collections") ||
     pathname?.startsWith("/metodo") ||
     pathname?.startsWith("/wishlist");
