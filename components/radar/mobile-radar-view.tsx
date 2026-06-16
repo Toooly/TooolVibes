@@ -69,6 +69,19 @@ function seededRandom(seed: string): number {
 
 const HIDDEN_SIGNAL_STORAGE_KEY = "tv:hidden-signal";
 
+function hexToRgba(hex: string, alpha: number): string {
+  const sanitized = hex.replace("#", "");
+  if (sanitized.length === 3) {
+    const [r, g, b] = sanitized.split("").map((c) => parseInt(c + c, 16));
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+  const bigint = parseInt(sanitized, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    MobileRadarView — root
    ═══════════════════════════════════════════════════════════════ */
@@ -195,8 +208,14 @@ export function MobileRadarView() {
     };
     resize();
 
-    const bg =
-      getComputedStyle(canvas).getPropertyValue("--tv-bg").trim() || "#07111F";
+    const rootStyles = getComputedStyle(document.documentElement);
+    const brandPrimary =
+      rootStyles.getPropertyValue("--tv-brand-primary").trim() || "#7C5CFF";
+    const brandSecondary =
+      rootStyles.getPropertyValue("--tv-brand-secondary").trim() || "#4DB7FF";
+    const warning =
+      rootStyles.getPropertyValue("--tv-warning").trim() || "#FFB648";
+    const bg = rootStyles.getPropertyValue("--tv-bg").trim() || "#07111F";
 
     const drawFrame = (t: number) => {
       const w = canvas.width / Math.min(window.devicePixelRatio, 2);
@@ -213,9 +232,9 @@ export function MobileRadarView() {
 
       // Rings
       const ringColors = [
-        "rgba(106, 60, 255, 0.28)",
-        "rgba(57, 210, 246, 0.22)",
-        "rgba(243, 191, 76, 0.16)",
+        hexToRgba(brandPrimary, 0.28),
+        hexToRgba(brandSecondary, 0.22),
+        hexToRgba(warning, 0.16),
       ];
       [0.28, 0.52, 0.78].forEach((ratio, i) => {
         const r = maxR * ratio;
@@ -236,7 +255,7 @@ export function MobileRadarView() {
       // Core ring
       ctx.beginPath();
       ctx.arc(cx, cy, 16 * pulse, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(106, 60, 255, ${0.4 * pulse})`;
+      ctx.strokeStyle = hexToRgba(brandPrimary, 0.4 * pulse);
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
@@ -245,7 +264,7 @@ export function MobileRadarView() {
       if (echoPulse > 0.9) {
         ctx.beginPath();
         ctx.arc(cx, cy, 28 * echoPulse, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(57, 210, 246, ${0.25 * echoPulse})`;
+        ctx.strokeStyle = hexToRgba(brandSecondary, 0.25 * echoPulse);
         ctx.lineWidth = 1;
         ctx.stroke();
       }
