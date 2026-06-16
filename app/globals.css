@@ -34,7 +34,7 @@
   --tv-gradient-hero:
     radial-gradient(120% 120% at 20% 0%, rgba(124, 92, 255, 0.24) 0%, rgba(124, 92, 255, 0) 55%),
     radial-gradient(100% 120% at 100% 0%, rgba(77, 183, 255, 0.18) 0%, rgba(77, 183, 255, 0) 50%),
-    #07111F;
+    var(--tv-bg);
 
   --tv-shadow-1: 0 8px 24px rgba(3, 8, 20, 0.28);
   --tv-shadow-2: 0 16px 48px rgba(3, 8, 20, 0.36);
@@ -68,9 +68,6 @@
 
   --tv-tap-min: 44px;
   --tv-safe-bottom: max(16px, env(safe-area-inset-bottom));
-}
-
-:root {
   --surface-brand-panel-bg:
     radial-gradient(circle at top right, rgba(106, 60, 255, 0.11), transparent 30%),
     radial-gradient(circle at 82% 68%, rgba(57, 210, 246, 0.08), transparent 27%),
@@ -110,13 +107,13 @@
     0 20px 56px rgba(41, 28, 120, 0.14),
     0 0 54px rgba(57, 210, 246, 0.06);
   --success-soft: rgba(92, 191, 156, 0.16);
-  --success: #158a63;
-  --warning: #b7791f;
+  --success: var(--tv-success);
+  --warning: var(--tv-warning);
   --warning-soft: rgba(243, 191, 76, 0.18);
-  --danger: #b42318;
+  --danger: var(--tv-danger);
   --danger-soft: rgba(217, 45, 32, 0.12);
-  --game-danger: #ff4d6d;
-  --game-success: #00d084;
+  --game-danger: var(--tv-danger);
+  --game-success: var(--tv-success);
   --info: #2563eb;
   --info-soft: rgba(37, 99, 235, 0.12);
   --highlight-soft: rgba(255, 255, 255, 0.72);
@@ -24353,9 +24350,9 @@ img {
   *,
   *::before,
   *::after {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 1ms !important;
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
   }
 }
