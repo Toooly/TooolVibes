@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, type CSSProperties } from "react";
+import { useState, useMemo, useEffect, type CSSProperties, type ComponentType } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   X,
@@ -168,7 +168,7 @@ function MobileLibraryShelf({
   onEditNote,
 }: {
   title: string;
-  icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>;
+  icon: ComponentType<{ size?: number; className?: string; style?: CSSProperties }>;
   tools: ToolWithMeta[];
   color: string;
   emptyText: string;
@@ -308,7 +308,7 @@ function MobileNoteSheet({
       <div className="mobile-shortlist-board__sheet-header">
         <span className="mobile-shortlist-board__sheet-handle" />
         <h3>Nota per {tool?.name}</h3>
-        <button type="button" onClick={onClose}>
+        <button type="button" onClick={onClose} aria-label="Chiudi nota">
           <X size={16} />
         </button>
       </div>
