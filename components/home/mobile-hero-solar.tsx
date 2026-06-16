@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 
 type MobileHeroSolarProps = {
-  focusTool?: DirectoryTool | null;
+  focusTool: DirectoryTool | null;
   supportingTools?: DirectoryTool[];
 };
 
