@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, Fragment, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Info, Sparkles } from "lucide-react";
@@ -80,12 +80,12 @@ type NormalisedTool = {
 
 function SnapCompareBoard({ tools, onRemove }: { tools: NormalisedTool[]; onRemove: (slug: string) => void }) {
   const rows = [
-    { key: "category", label: "Categoria", render: (t: NormalisedTool) => t.categoryLabel },
-    { key: "tldr", label: "TL;DR", render: (t: NormalisedTool) => t.tldr },
-    { key: "useCase", label: "Uso ideale", render: (t: NormalisedTool) => t.useCase || t.tldr },
-    { key: "review", label: "Nota editoriale", render: (t: NormalisedTool) => t.review || t.tldr },
+    { key: "category", label: "Categoria", render: (t: NormalisedTool) => t.categoryLabel || "—" },
+    { key: "tldr", label: "TL;DR", render: (t: NormalisedTool) => t.tldr || "—" },
+    { key: "useCase", label: "Uso ideale", render: (t: NormalisedTool) => t.useCase || t.tldr || "—" },
+    { key: "review", label: "Nota editoriale", render: (t: NormalisedTool) => t.review || t.tldr || "—" },
     { key: "highlights", label: "Highlights", render: (t: NormalisedTool) => t.highlights.slice(0, 3).join(" · ") || "—" },
-    { key: "readingTime", label: "Tempo lettura", render: (t: NormalisedTool) => t.readingTime },
+    { key: "readingTime", label: "Tempo lettura", render: (t: NormalisedTool) => t.readingTime || "—" },
     { key: "actions", label: "Azioni", render: (t: NormalisedTool) => (
       <div className="compare-board__actions">
         <Link href={`/toools/${t.slug}`} className="compare-board__link">Scheda</Link>
@@ -105,14 +105,14 @@ function SnapCompareBoard({ tools, onRemove }: { tools: NormalisedTool[]; onRemo
           </div>
         ))}
         {rows.map((row) => (
-          <>
-            <div key={`${row.key}-label`} className="compare-board__label">{row.label}</div>
+          <Fragment key={row.key}>
+            <div className="compare-board__label">{row.label}</div>
             {tools.map((tool) => (
               <div key={`${row.key}-${tool.slug}`} className="compare-board__cell">
                 {row.render(tool)}
               </div>
             ))}
-          </>
+          </Fragment>
         ))}
       </div>
     </section>
