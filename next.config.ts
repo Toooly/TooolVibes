@@ -11,6 +11,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/product-hunt",
+        destination: "/radar",
+        permanent: true,
+      },
+      {
+        source: "/product-hunt/:path*",
+        destination: "/radar/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 initOpenNextCloudflareForDev();

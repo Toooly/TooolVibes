@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { MobileRadarView } from "@/components/radar/mobile-radar-view";
 
 export default function RadarPage() {
-  redirect("/product-hunt");
+  return <MobileRadarView />;
 }
