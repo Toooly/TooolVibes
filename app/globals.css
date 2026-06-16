@@ -22247,7 +22247,7 @@ img {
 
 .tool-card__tag {
   height: 28px;
-  padding: 0 10px;
+  padding: 0 var(--tv-space-3);
   border-radius: 999px;
   background: color-mix(in srgb, var(--tv-brand-secondary) 10%, transparent);
   color: var(--tv-brand-secondary);
@@ -22274,19 +22274,6 @@ img {
   white-space: nowrap;
 }
 
-.tool-card__details {
-  height: 40px;
-  padding: 0 var(--tv-space-3);
-  border: none;
-  border-radius: var(--tv-radius-xs);
-  background: var(--tv-gradient-brand);
-  color: var(--tv-text-primary);
-  font-weight: 800;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .tool-card__icon-action {
   position: relative;
   z-index: 1;
@@ -22311,7 +22298,7 @@ img {
   gap: var(--tv-space-3);
   align-items: center;
   min-height: 60px;
-  padding: 10px 12px;
+  padding: var(--tv-space-3);
   background: color-mix(in srgb, var(--tv-surface) 96%, transparent);
   border: 1px solid color-mix(in srgb, var(--tv-brand-primary) 28%, transparent);
   border-radius: var(--tv-radius-md);
@@ -22335,7 +22322,7 @@ img {
   place-items: center;
   font-size: var(--tv-font-micro);
   font-weight: 800;
-  margin-left: -10px;
+  margin-left: calc(var(--tv-space-3) * -1);
   border: 2px solid var(--tv-surface);
 }
 
