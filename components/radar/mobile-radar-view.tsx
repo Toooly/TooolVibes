@@ -37,6 +37,8 @@ type ProductHuntPayload = {
 };
 
 const RADAR_NODE_COUNT = 5;
+const RADAR_SWEEP_DURATION_MS = 3200;
+const RADAR_SCAN_THRESHOLD = 0.18;
 const RADAR_NODE_LAYOUT = [
   { angle: -0.2, radiusRatio: 0.54 },
   { angle: 1.08, radiusRatio: 0.7 },
@@ -68,6 +70,15 @@ function hashString(value: string): number {
 
 function seededRandom(seed: string): number {
   return hashString(seed) / 4294967296;
+}
+
+function normaliseAngle(angle: number): number {
+  return ((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+}
+
+function angleDistance(a: number, b: number): number {
+  const diff = Math.abs(normaliseAngle(a) - normaliseAngle(b));
+  return Math.min(diff, Math.PI * 2 - diff);
 }
 
 const HIDDEN_SIGNAL_STORAGE_KEY = "tv:hidden-signal";
@@ -135,11 +146,30 @@ export function MobileRadarView() {
 
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const [hiddenDiscovered, setHiddenDiscovered] = useState(false);
+  const [scanAngle, setScanAngle] = useState(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     setHiddenDiscovered(localStorage.getItem(`${HIDDEN_SIGNAL_STORAGE_KEY}:${today}`) === "1");
   }, [today]);
+
+  useEffect(() => {
+    let raf = 0;
+    let lastUpdate = 0;
+    const start = performance.now();
+
+    const tick = (now: number) => {
+      if (now - lastUpdate > 48) {
+        lastUpdate = now;
+        const progress = ((now - start) % RADAR_SWEEP_DURATION_MS) / RADAR_SWEEP_DURATION_MS;
+        setScanAngle(progress * Math.PI * 2);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   const handleHiddenNodeClick = useCallback(
     async (node: { id: string; productHuntUrl: string }, event: MouseEvent<HTMLAnchorElement>) => {
@@ -357,10 +387,12 @@ export function MobileRadarView() {
             "--node-x": `${node.x}%`,
             "--node-y": `${node.y}%`,
             "--node-size": `${node.size}px`,
+            "--node-hit-delay": `${(normaliseAngle(node.angle) / (Math.PI * 2)) * (RADAR_SWEEP_DURATION_MS / 1000)}s`,
           } as CSSProperties;
           const isHot = node.votesCount > 100 && !node.isPlaceholder;
           const isHidden = node.id === hiddenNodeId && !hiddenDiscovered;
-          const nodeClassName = `mobile-radar-view__node${isHot ? " is-hot" : ""}${node.isPlaceholder ? " is-placeholder" : ""}${isHidden ? " is-hidden" : ""}`;
+          const isScanned = angleDistance(node.angle, scanAngle) < RADAR_SCAN_THRESHOLD;
+          const nodeClassName = `mobile-radar-view__node${isHot ? " is-hot" : ""}${isScanned ? " is-scanned" : ""}${node.isPlaceholder ? " is-placeholder" : ""}${isHidden ? " is-hidden" : ""}`;
           const nodeContent = (
             <>
               <span className="mobile-radar-view__node-halo" />

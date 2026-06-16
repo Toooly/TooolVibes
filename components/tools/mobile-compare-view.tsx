@@ -3,7 +3,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Scale, Info, Shield, Sparkles } from "lucide-react";
+import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Scale, Info, Sparkles } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { DirectoryTool, DirectoryToolLevel } from "@/lib/data/tooolvibes-directory";
@@ -660,24 +660,10 @@ function MobileArenaBattleStage({
               }}
             >
               <span className="mobile-compare-arena__fighter-orb">
-                <span className="mobile-compare-arena__fighter-shadow" />
-                <span className="mobile-compare-arena__fighter-aura" />
-                <span className="mobile-compare-arena__fighter-hand mobile-compare-arena__fighter-hand--left" />
-                <span className="mobile-compare-arena__fighter-hand mobile-compare-arena__fighter-hand--right" />
-                <span className="mobile-compare-arena__fighter-sword" />
-                <span className="mobile-compare-arena__fighter-shield">
-                  <Shield className="size-3" />
-                </span>
                 <span className="mobile-compare-arena__fighter-face">
                   {tool.name.slice(0, 2).toUpperCase()}
                 </span>
-              </span>
-              <span className="mobile-compare-arena__fighter-health">
-                <span style={{ width: `${isDefeated ? 18 : isWinner ? 100 : Math.max(42, tool.battleScore)}%` }} />
-              </span>
-              <span className="mobile-compare-arena__fighter-loadout">
-                <span>ATK {tool.battleScore}</span>
-                <span>SKL {Math.max(1, tool.highlights.length)}</span>
+                <span className="mobile-compare-arena__fighter-sword" aria-hidden="true" />
               </span>
               <span className="mobile-compare-arena__fighter-name" title={tool.name}>
                 {tool.name}
@@ -700,7 +686,7 @@ function MobileArenaBattleStage({
             <Sparkles className="size-5" />
             <span className="mobile-compare-arena__battle-result-kicker">Round clear</span>
             <strong>{winner.name}</strong>
-            <span>alza la spada e conquista l&apos;arena</span>
+            <span>vince il confronto</span>
           </motion.div>
         ) : null}
       </AnimatePresence>
