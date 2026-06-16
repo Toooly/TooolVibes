@@ -56,26 +56,26 @@ function NavLink({
       <span
         className={`absolute inset-0 rounded-xl transition-opacity duration-200 ${
           isActive
-            ? "bg-gradient-to-r from-[rgba(106,60,255,0.12)] to-[rgba(57,210,246,0.08)] opacity-100"
-            : "bg-[rgba(106,60,255,0.06)] opacity-0 group-hover:opacity-100"
+            ? "bg-gradient-to-r from-[color-mix(in_srgb,var(--tv-brand-primary)_12%,transparent)] to-[color-mix(in_srgb,var(--tv-brand-secondary)_8%,transparent)] opacity-100"
+            : "bg-[color-mix(in_srgb,var(--tv-brand-primary)_6%,transparent)] opacity-0 group-hover:opacity-100"
         }`}
       />
       <span className="relative z-10 flex items-center gap-2">
         <Icon
           size={16}
           className={`transition-colors duration-200 ${
-            isActive ? "text-[#6a3cff]" : isHovered ? "text-[#39d2f6]" : "text-[#4f4970]"
+            isActive ? "text-[var(--tv-brand-primary)]" : isHovered ? "text-[var(--tv-brand-secondary)]" : "text-[var(--tv-text-secondary)]"
           }`}
         />
         <span
           className={`text-sm font-medium transition-colors duration-200 ${
-            isActive ? "text-[#6a3cff]" : isHovered ? "text-[#120d2f]" : "text-[#4f4970]"
+            isActive ? "text-[var(--tv-brand-primary)]" : isHovered ? "text-[#120d2f]" : "text-[var(--tv-text-secondary)]"
           }`}
         >
           {label}
         </span>
         {isActive && (
-          <span className="absolute -bottom-0.5 left-3 right-3 h-0.5 rounded-full bg-gradient-to-r from-[#6a3cff] to-[#39d2f6]" />
+          <span className="absolute -bottom-0.5 left-3 right-3 h-0.5 rounded-full bg-gradient-to-r from-[var(--tv-brand-primary)] to-[var(--tv-brand-secondary)]" />
         )}
       </span>
     </Link>
@@ -115,7 +115,7 @@ export function SiteHeaderV2() {
         <div
           className={`mx-auto max-w-[1440px] transition-all duration-500 ${
             scrolled || spatialRoute
-              ? "mx-3 mt-3 rounded-2xl border border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.82)] shadow-[0_4px_20px_rgba(106,60,255,0.08)] backdrop-blur-xl"
+              ? "mx-3 mt-3 rounded-2xl border border-[color-mix(in_srgb,var(--tv-brand-primary)_10%,transparent)] bg-[color-mix(in_srgb,var(--tv-bg-raised)_82%,transparent)] shadow-[0_4px_20px_color-mix(in_srgb,var(--tv-brand-primary)_8%,transparent)] backdrop-blur-xl"
               : "bg-transparent"
           }`}
         >
@@ -129,7 +129,7 @@ export function SiteHeaderV2() {
                 href="/"
                 className="hidden text-lg font-bold tracking-tight sm:inline-block"
                 style={{
-                  background: "linear-gradient(135deg, #6a3cff 0%, #39d2f6 100%)",
+                  background: "linear-gradient(135deg, var(--tv-brand-primary) 0%, var(--tv-brand-secondary) 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -142,10 +142,10 @@ export function SiteHeaderV2() {
               className="pointer-events-none absolute left-1/2 top-1/2 block -translate-x-1/2 -translate-y-1/2 text-[0.92rem] font-black uppercase tracking-[0.16em] lg:hidden"
               aria-hidden="true"
               style={{
-                background: "linear-gradient(110deg, #6a3cff 0%, #39d2f6 58%, #f3bf4c 100%)",
+                background: "linear-gradient(110deg, var(--tv-brand-primary) 0%, var(--tv-brand-secondary) 58%, var(--tv-warning) 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                filter: "drop-shadow(0 8px 18px rgba(106,60,255,0.16))",
+                filter: "drop-shadow(0 8px 18px color-mix(in srgb, var(--tv-brand-primary) 16%, transparent))",
               }}
             >
               TooolVibes
@@ -168,7 +168,7 @@ export function SiteHeaderV2() {
             <div className="flex items-center gap-2">
               <div className="hidden items-center gap-2 lg:flex">
                 <button
-                  className="relative hidden rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] hover:text-[#6a3cff] md:flex"
+                  className="relative hidden rounded-xl p-2.5 text-[var(--tv-text-secondary)] transition-colors hover:bg-[color-mix(in_srgb,var(--tv-brand-primary)_8%,transparent)] hover:text-[var(--tv-brand-primary)] md:flex"
                   onClick={() => setSearchOpen(!searchOpen)}
                   type="button"
                 >
@@ -190,7 +190,7 @@ export function SiteHeaderV2() {
                 <Link
                   href="/admin/login"
                   aria-label="Apri il login amministratore"
-                  className="group relative hidden items-center gap-2 rounded-xl border border-[rgba(106,60,255,0.12)] bg-white/70 px-3 py-2 text-sm font-medium text-[#4f4970] shadow-[0_4px_16px_rgba(106,60,255,0.08)] transition-all hover:border-[rgba(106,60,255,0.22)] hover:bg-white hover:text-[#6a3cff] md:flex"
+                  className="group relative hidden items-center gap-2 rounded-xl border border-[color-mix(in_srgb,var(--tv-brand-primary)_12%,transparent)] bg-[color-mix(in_srgb,var(--tv-bg-raised)_70%,transparent)] px-3 py-2 text-sm font-medium text-[var(--tv-text-secondary)] shadow-[0_4px_16px_color-mix(in_srgb,var(--tv-brand-primary)_8%,transparent)] transition-all hover:border-[color-mix(in_srgb,var(--tv-brand-primary)_22%,transparent)] hover:bg-[var(--tv-bg-raised)] hover:text-[var(--tv-brand-primary)] md:flex"
                   data-sonic-action="tap"
                 >
                   <LockKeyhole size={14} className="transition-transform group-hover:scale-105" />
@@ -199,7 +199,7 @@ export function SiteHeaderV2() {
 
                 <Link
                   href="/account#account-upgrade"
-                  className="group relative hidden items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-all hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)] md:flex"
+                  className="group relative hidden items-center gap-2 rounded-xl bg-gradient-to-r from-[var(--tv-brand-primary)] to-[var(--tv-brand-primary-press)] px-4 py-2 text-sm font-medium text-[var(--tv-text-primary)] shadow-[0_4px_16px_color-mix(in_srgb,var(--tv-brand-primary)_25%,transparent)] transition-all hover:shadow-[0_6px_20px_color-mix(in_srgb,var(--tv-brand-primary)_35%,transparent)] md:flex"
                   data-sonic-action="tap"
                 >
                   <UserPlus size={14} className="transition-transform group-hover:scale-110" />
@@ -224,7 +224,7 @@ export function SiteHeaderV2() {
 
               {/* Mobile menu toggle */}
               <button
-                className="mobile-header__menu relative z-20 grid touch-manipulation place-items-center rounded-2xl text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] active:scale-95 lg:hidden"
+                className="mobile-header__menu relative z-20 grid touch-manipulation place-items-center rounded-2xl text-[var(--tv-text-secondary)] transition-colors hover:bg-[color-mix(in_srgb,var(--tv-brand-primary)_8%,transparent)] active:scale-95 lg:hidden"
                 aria-controls="mobile-site-menu"
                 aria-expanded={menuOpen}
                 aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
@@ -248,7 +248,7 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-start justify-center bg-[rgba(18,13,47,0.5)] backdrop-blur-sm pt-24"
+            className="fixed inset-0 z-[60] flex items-start justify-center bg-[color-mix(in_srgb,var(--tv-bg)_50%,transparent)] backdrop-blur-sm pt-24"
             onClick={() => setSearchOpen(false)}
           >
             <motion.div
@@ -259,7 +259,7 @@ export function SiteHeaderV2() {
               className="w-full max-w-2xl mx-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="overflow-hidden rounded-2xl border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.95)] shadow-[0_16px_48px_rgba(106,60,255,0.12)] backdrop-blur-xl p-4">
+              <div className="overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--tv-brand-primary)_15%,transparent)] bg-[color-mix(in_srgb,var(--tv-bg-raised)_95%,transparent)] shadow-[0_16px_48px_color-mix(in_srgb,var(--tv-brand-primary)_12%,transparent)] backdrop-blur-xl p-4">
                 <DirectoryHeaderSearch onSubmitted={() => setSearchOpen(false)} />
               </div>
             </motion.div>
@@ -274,7 +274,7 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[90] bg-[rgba(18,13,47,0.4)] backdrop-blur-md lg:hidden"
+            className="fixed inset-0 z-[90] bg-[color-mix(in_srgb,var(--tv-bg)_40%,transparent)] backdrop-blur-md lg:hidden"
             onClick={() => setMenuOpen(false)}
             >
             <motion.nav
@@ -283,7 +283,7 @@ export function SiteHeaderV2() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0.8 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="mobile-menu-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[rgba(106,60,255,0.1)] bg-white/70 p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-16px_0_48px_rgba(106,60,255,0.08)] backdrop-blur-2xl"
+              className="mobile-menu-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[color-mix(in_srgb,var(--tv-brand-primary)_10%,transparent)] bg-[color-mix(in_srgb,var(--tv-bg-raised)_70%,transparent)] p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-16px_0_48px_color-mix(in_srgb,var(--tv-brand-primary)_8%,transparent)] backdrop-blur-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-7 flex items-center justify-between gap-4">
@@ -292,7 +292,7 @@ export function SiteHeaderV2() {
                   <span
                     className="text-sm font-black uppercase tracking-[0.14em]"
                     style={{
-                      background: "linear-gradient(110deg, #6a3cff 0%, #39d2f6 62%, #f3bf4c 100%)",
+                      background: "linear-gradient(110deg, var(--tv-brand-primary) 0%, var(--tv-brand-secondary) 62%, var(--tv-warning) 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                     }}
@@ -302,15 +302,15 @@ export function SiteHeaderV2() {
                 </Link>
                 <button
                   type="button"
-                  className="grid size-11 place-items-center rounded-2xl border border-[rgba(106,60,255,0.12)] bg-white/80 text-[#4f4970] shadow-[0_8px_24px_rgba(106,60,255,0.08)]"
+                  className="grid size-11 place-items-center rounded-2xl border border-[color-mix(in_srgb,var(--tv-brand-primary)_12%,transparent)] bg-[color-mix(in_srgb,var(--tv-bg-raised)_80%,transparent)] text-[var(--tv-text-secondary)] shadow-[0_8px_24px_color-mix(in_srgb,var(--tv-brand-primary)_8%,transparent)]"
                   aria-label="Chiudi menu"
                   onClick={() => setMenuOpen(false)}
                 >
                   <X size={22} />
                 </button>
               </div>
-              <div className="mb-6 flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-[#4f4970]">
-                <Sparkles size={12} className="text-[#6a3cff]" />
+              <div className="mb-6 flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-[var(--tv-text-secondary)]">
+                <Sparkles size={12} className="text-[var(--tv-brand-primary)]" />
                 Navigazione
               </div>
               <div className="flex flex-col gap-1 border-b border-white/10 pb-4">
@@ -327,8 +327,8 @@ export function SiteHeaderV2() {
                         href={link.href}
                         className={`group flex min-h-[44px] items-center justify-between rounded-xl px-4 py-3 transition-all ${
                           isActive
-                            ? "bg-gradient-to-r from-[rgba(106,60,255,0.1)] to-[rgba(57,210,246,0.05)] text-[#6a3cff]"
-                            : "text-[#4f4970] hover:bg-[rgba(106,60,255,0.04)] hover:text-[#120d2f]"
+                            ? "bg-gradient-to-r from-[color-mix(in_srgb,var(--tv-brand-primary)_10%,transparent)] to-[color-mix(in_srgb,var(--tv-brand-secondary)_5%,transparent)] text-[var(--tv-brand-primary)]"
+                            : "text-[var(--tv-text-secondary)] hover:bg-[color-mix(in_srgb,var(--tv-brand-primary)_4%,transparent)] hover:text-[#120d2f]"
                         }`}
                         data-sonic-action="nav"
                       >
@@ -349,7 +349,7 @@ export function SiteHeaderV2() {
               <div className="mt-4 pt-4">
                 <Link
                   href="/admin/login"
-                  className="mb-3 flex items-center justify-center gap-2 rounded-xl border border-[rgba(106,60,255,0.12)] bg-white/72 px-4 py-3 text-sm font-medium text-[#4f4970] shadow-[0_4px_16px_rgba(106,60,255,0.08)] transition hover:bg-white hover:text-[#6a3cff]"
+                  className="mb-3 flex items-center justify-center gap-2 rounded-xl border border-[color-mix(in_srgb,var(--tv-brand-primary)_12%,transparent)] bg-[color-mix(in_srgb,var(--tv-bg-raised)_72%,transparent)] px-4 py-3 text-sm font-medium text-[var(--tv-text-secondary)] shadow-[0_4px_16px_color-mix(in_srgb,var(--tv-brand-primary)_8%,transparent)] transition hover:bg-[var(--tv-bg-raised)] hover:text-[var(--tv-brand-primary)]"
                   data-sonic-action="tap"
                 >
                   <LockKeyhole size={16} />
@@ -357,7 +357,7 @@ export function SiteHeaderV2() {
                 </Link>
                 <Link
                   href="/account#account-upgrade"
-                  className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-3 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)]"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--tv-brand-primary)] to-[var(--tv-brand-primary-press)] px-4 py-3 text-sm font-medium text-[var(--tv-text-primary)] shadow-[0_4px_16px_color-mix(in_srgb,var(--tv-brand-primary)_25%,transparent)]"
                 >
                   <UserPlus size={16} />
                   Area utente
@@ -370,7 +370,7 @@ export function SiteHeaderV2() {
 
       {/* Vibe Rush FAB */}
       <VibeTapMiniGame
-        className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden"
+        className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-[color-mix(in_srgb,var(--tv-text-primary)_30%,transparent)] !bg-gradient-to-br !from-[var(--tv-brand-primary)] !to-[var(--tv-brand-secondary)] !p-0 text-[var(--tv-text-primary)] shadow-[0_8px_24px_color-mix(in_srgb,var(--tv-brand-primary)_35%,transparent)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden"
       />
 
       {/* Spacer */}

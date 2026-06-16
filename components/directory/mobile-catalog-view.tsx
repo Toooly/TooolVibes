@@ -69,9 +69,9 @@ const CATEGORY_META: Record<
   string,
   { color: string; iconName: keyof typeof CATEGORY_ICON_MAP }
 > = {
-  all: { color: "#6a3cff", iconName: "Sparkles" },
-  "vibe-coding": { color: "#39d2f6", iconName: "Code" },
-  "ai-app-builder": { color: "#f3bf4c", iconName: "Boxes" },
+  all: { color: "var(--tv-brand-primary)", iconName: "Sparkles" },
+  "vibe-coding": { color: "var(--tv-brand-secondary)", iconName: "Code" },
+  "ai-app-builder": { color: "var(--tv-warning)", iconName: "Boxes" },
   "no-code": { color: "#a855f7", iconName: "Layers" },
   "headless-cms": { color: "#ec4899", iconName: "Database" },
   "ui-builder": { color: "#f97316", iconName: "Layout" },

@@ -383,6 +383,7 @@ export function MobileRadarView() {
           <button
             key={tab.id}
             type="button"
+            aria-pressed={activeTab === tab.id}
             className={cn(
               "radar-segmented__item",
               activeTab === tab.id && "is-active",

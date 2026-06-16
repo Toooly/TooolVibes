@@ -50,7 +50,7 @@ async function celebrateArenaFight() {
   const { default: confetti } = await import("canvas-confetti");
 
   confetti({
-    colors: ["#6a3cff", "#39d2f6", "#f3bf4c", "#ffffff"],
+    colors: ["var(--tv-brand-primary)", "var(--tv-brand-secondary)", "var(--tv-warning)", "var(--tv-text-primary)"],
     disableForReducedMotion: true,
     origin: { y: 0.62 },
     particleCount: 72,
@@ -270,13 +270,14 @@ function ChampionCard({
             <button
               type="button"
               aria-label="Come è calcolato il punteggio"
+              aria-describedby="score-tooltip"
               onClick={() => setShowInfo((v) => !v)}
               className="mobile-compare-arena__info"
             >
               <Info className="size-3.5" />
             </button>
             {showInfo && (
-              <div className="mobile-compare-arena__tooltip">
+              <div id="score-tooltip" role="tooltip" className="mobile-compare-arena__tooltip">
                 Il battle power combina punteggio editoriale, categoria e segnali del tool per evitare pareggi finti in arena.
               </div>
             )}

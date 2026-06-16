@@ -18,7 +18,7 @@ const methodSteps = [
     title: "Parti da tool gia curati",
     description: "Categorie leggibili, filtri utili e una selezione editoriale che tiene fuori il rumore.",
     href: "/archivio",
-    color: "#6a3cff",
+    color: "var(--tv-brand-primary)",
   },
   {
     icon: "GitCompare" as const,
@@ -26,7 +26,7 @@ const methodSteps = [
     title: "Confronta solo i candidati forti",
     description: "Porta avanti pochi tool alla volta e guarda differenze, livello e casi d'uso reali.",
     href: "/compare",
-    color: "#39d2f6",
+    color: "var(--tv-brand-secondary)",
   },
   {
     icon: "Bookmark" as const,
@@ -34,7 +34,7 @@ const methodSteps = [
     title: "Chiudi con una scelta rapida",
     description: "Salva, rivedi e trasforma la ricerca in una lista operativa pronta da provare.",
     href: "/shortlist",
-    color: "#f3bf4c",
+    color: "var(--tv-warning)",
   },
 ];
 

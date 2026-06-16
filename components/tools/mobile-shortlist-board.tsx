@@ -33,7 +33,7 @@ type ToolWithMeta = ToolRecord & {
 };
 
 function getToolColor(tool: ToolRecord): string {
-  const palette = ["#6a3cff","#39d2f6","#f3bf4c","#ec4899","#22c55e","#f97316","#8b5cf6","#14b8a6"];
+  const palette = ["var(--tv-brand-primary)","var(--tv-brand-secondary)","var(--tv-warning)","var(--tv-danger)","var(--tv-success)","var(--tv-brand-tertiary)","var(--tv-brand-primary-press)","var(--tv-brand-secondary)"];
   let hash = 0;
   for (let i = 0; i < tool.slug.length; i++) hash = ((hash << 5) - hash) + tool.slug.charCodeAt(i);
   return palette[Math.abs(hash) % palette.length];
@@ -118,7 +118,7 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         title="Preferiti"
         icon={Heart}
         tools={favoriteTools}
-        color="#f3bf4c"
+        color="var(--tv-warning)"
         emptyText="I tool che ami di più appariranno qui"
         onEditNote={setNoteSlug}
       />
@@ -127,7 +127,7 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         title="Da provare"
         icon={Bookmark}
         tools={toTryTools}
-        color="#6a3cff"
+        color="var(--tv-brand-primary)"
         emptyText="Tool salvati da esplorare"
         onEditNote={setNoteSlug}
       />
@@ -136,7 +136,7 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         title="Recenti"
         icon={Clock}
         tools={recentTools}
-        color="#39d2f6"
+        color="var(--tv-brand-secondary)"
         emptyText="Gli ultimi tool aggiunti"
         onEditNote={setNoteSlug}
       />
@@ -316,6 +316,7 @@ function MobileNoteSheet({
         <textarea
           className="shortlist-note"
           placeholder="Perché resta in corsa?"
+          aria-label={`Nota per ${tool?.name}`}
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={4}
@@ -352,7 +353,7 @@ function MobileLibraryEmpty() {
           Esplora l&apos;archivio
           <ArrowRight size={14} />
         </Link>
-        <Link href="/product-hunt" className="mobile-library-empty__cta is-secondary">
+        <Link href="/radar" className="mobile-library-empty__cta is-secondary">
           Apri il Radar
           <ArrowRight size={14} />
         </Link>
