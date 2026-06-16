@@ -9357,7 +9357,7 @@ img {
   width: 56px;
   height: 56px;
   border-radius: var(--tv-radius-sm);
-  background: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--tv-text-primary) 6%, transparent);
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -9393,8 +9393,8 @@ img {
 .featured-tool-card__primary {
   height: var(--tv-space-5);
   border-radius: var(--tv-radius-sm);
-  background: #FFFFFF;
-  color: #0C1020;
+  background: var(--tv-text-primary);
+  color: var(--tv-bg);
   font-weight: 800;
   display: inline-flex;
   align-items: center;
@@ -9419,6 +9419,8 @@ img {
   grid-auto-columns: 120px;
   gap: var(--tv-space-3);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
 .featured-tool-card__mini {
@@ -17310,11 +17312,6 @@ img {
 
   /* Mobile polish pass: Home, Catalog, Radar */
 
-  @keyframes tv-spotlight-alert {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.55; transform: scale(0.72); }
-  }
-
   .mobile-method-steps__link {
     gap: 0.35rem;
     padding: 0.48rem 0.78rem;
@@ -18167,20 +18164,6 @@ img {
     bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px)) !important;
     transform: none !important;
     backface-visibility: hidden;
-  }
-}
-
-@media (max-width: 767px) {
-
-  @keyframes tv-spotlight-alert-ring {
-    0% {
-      opacity: 0.72;
-      transform: scale(0.62);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.45);
-    }
   }
 }
 

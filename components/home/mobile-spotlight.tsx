@@ -19,7 +19,7 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
     <section className="featured-tool-card" aria-label="Tool della settimana">
       <div className="featured-tool-card__top">
         <div className="featured-tool-card__logo">
-          {iconUrl ? <img src={iconUrl} alt="" /> : <span>{tool.name.slice(0, 2).toUpperCase()}</span>}
+          {iconUrl ? <img src={iconUrl} alt="" loading="eager" decoding="async" /> : <span>{tool.name.slice(0, 2).toUpperCase()}</span>}
         </div>
         <div>
           <h2 className="featured-tool-card__title">{tool.name}</h2>
