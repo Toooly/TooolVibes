@@ -24356,21 +24356,17 @@ img {
 }
 
 .section {
-  padding-inline: 16px;
+  padding-inline: var(--tv-space-4);
 }
 
 .card {
-  background: rgba(17, 29, 51, 0.92);
+  background: color-mix(in srgb, var(--tv-surface) 92%, transparent);
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-lg);
   box-shadow: var(--tv-shadow-1);
 }
 
-.button-primary,
-.button-secondary,
-.icon-button,
-.chip,
-.nav-item {
+.touch-target {
   min-height: var(--tv-tap-min);
 }
 

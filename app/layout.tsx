@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import "@fontsource/manrope/400.css";
 import "@fontsource/manrope/500.css";
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -158,14 +158,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: brandIntroPreflightScript }}
         />
       </head>
-      <body className="app-shell antialiased">
+      <body className="antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         <RootProviders>
           <GamificationShell />
-          {children}
+          <div className="app-shell">{children}</div>
         </RootProviders>
       </body>
     </html>
