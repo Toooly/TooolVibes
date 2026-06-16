@@ -440,7 +440,7 @@ function ToolDetailDrawer({
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction={isDesktop ? "right" : "bottom"}>
       <DrawerContent className="drawer-light h-[92dvh] !max-h-[92dvh] overflow-hidden border-l border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white md:h-screen md:!max-h-screen md:!max-w-[42rem]">
-        <DrawerHeader className="shrink-0 border-b border-white/10 p-4 text-left sm:p-6">
+        <DrawerHeader className="shrink-0 border-b border-white/10 p-4 sm:p-6">
           <div className="flex items-start gap-4">
             <DirectoryToolGlyph tool={tool} size="lg" />
             <div className="min-w-0 flex-1">
@@ -1348,7 +1348,7 @@ export function ToolDiscoveryApp({
 
       <Drawer open={isFilterDrawerOpen} onOpenChange={setFilterDrawerOpen} direction="bottom">
         <DrawerContent className="drawer-light max-h-[86dvh] overflow-y-auto border-white/12 bg-[linear-gradient(180deg,rgba(35,44,76,0.98),rgba(18,27,52,0.98))] p-0 text-white">
-          <DrawerHeader className="border-b border-white/10 p-5 text-left">
+          <DrawerHeader className="border-b border-white/10 p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <PremiumBadge tone="accent">Filtri</PremiumBadge>

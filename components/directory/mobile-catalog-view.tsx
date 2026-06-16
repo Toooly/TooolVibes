@@ -505,6 +505,7 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
       className="tool-card"
       aria-label={`${tool.name}. ${tool.shortDescription || ""}`}
     >
+      <Link href={`/toools/${tool.slug}`} className="tool-card__link" aria-label={`Apri ${tool.name}`} />
       <div className="tool-card__head">
         <div className="tool-card__avatar">
           {iconUrl ? <img src={iconUrl} alt="" /> : tool.name.slice(0, 2).toUpperCase()}
@@ -530,7 +531,6 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
       </div>
       <footer className="tool-card__footer">
         <span className="tool-card__source">{domain ?? tool.categoryLabel}</span>
-        <Link href={`/toools/${tool.slug}`} className="tool-card__details">Apri</Link>
       </footer>
     </motion.article>
   );
