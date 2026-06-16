@@ -966,13 +966,10 @@ export function ToolDiscoveryApp({
               type="button"
               onClick={() => setCommandOpen(true)}
               data-sonic-action="search"
-              className="premium-button premium-button-secondary hidden min-h-11 w-full items-center justify-between rounded-[18px] px-3.5 py-2.5 text-left text-sm sm:flex sm:rounded-[22px] sm:px-4 sm:py-3"
+              className="premium-button premium-button-secondary hidden min-h-11 w-full items-center justify-center gap-2 rounded-[18px] px-3.5 py-2.5 text-left text-sm sm:flex sm:rounded-[22px] sm:px-4 sm:py-3"
             >
-              <span className="inline-flex items-center gap-2">
-                <Search className="size-4" />
-                Cerca o apri comandi
-              </span>
-              <kbd className="rounded-md bg-white/10 px-2 py-1 text-[0.68rem]">Ctrl K</kbd>
+              <Search className="size-4" />
+              Cerca o apri comandi
             </button>
 
             <nav className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 lg:grid-cols-1 lg:gap-2" aria-label="Workspace views">

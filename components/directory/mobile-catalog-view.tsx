@@ -8,7 +8,6 @@ import {
   Search,
   X,
   ArrowLeft,
-  ArrowRight,
   Sparkles,
   Code,
   Boxes,
@@ -31,7 +30,6 @@ import {
   Monitor,
   Clock,
   ChevronDown,
-  Columns3,
 } from "lucide-react";
 import Fuse from "fuse.js";
 import { CompareToggle } from "@/components/tools/compare-toggle";
@@ -41,6 +39,7 @@ import type {
   DirectoryFilterGroup,
   DirectoryToolLevel,
 } from "@/lib/data/tooolvibes-directory";
+import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 const CATEGORY_ICON_MAP = {
   Sparkles,
@@ -330,6 +329,8 @@ export function MobileCatalogView({
           </motion.div>
         )}
       </AnimatePresence>
+
+      <MobileCompareDrawer tools={tools} />
     </div>
   );
 }
@@ -453,39 +454,30 @@ function MobileToolGrid({ tools, groupLabel, searchQuery }: MobileToolGridProps)
           <MobileToolCard key={tool.slug} tool={tool} index={index} />
         ))}
       </div>
-
-      <MobileCompareToolbox tools={tools.slice(0, 3)} />
     </section>
   );
 }
 
-function MobileCompareToolbox({ tools }: { tools: DirectoryTool[] }) {
-  if (!tools.length) return null;
+function MobileCompareDrawer({ tools }: { tools: DirectoryTool[] }) {
+  const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
+  const selectedTools = compareSlugs
+    .map((slug) => tools.find((tool) => tool.slug === slug))
+    .filter((tool): tool is DirectoryTool => Boolean(tool));
+
+  if (!selectedTools.length) return null;
 
   return (
-    <section className="mobile-compare-toolbox" aria-label="Toolbox confronto">
-      <div className="mobile-compare-toolbox__header">
-        <span className="mobile-compare-toolbox__icon">
-          <Columns3 size={16} aria-hidden="true" />
-        </span>
-        <div>
-          <h3>Toolbox confronto</h3>
-          <p>Aggiungi candidati e apri il confronto completo.</p>
-        </div>
-      </div>
-      <div className="mobile-compare-toolbox__pills">
-        {tools.map((tool) => (
-          <span key={tool.slug} className="mobile-compare-toolbox__pill">
-            <span>{tool.name}</span>
-            <CompareToggle slug={tool.slug} mode="icon" />
+    <aside className="compare-drawer" aria-live="polite">
+      <div className="compare-drawer__stack">
+        {selectedTools.slice(0, 4).map((tool) => (
+          <span key={tool.slug} className="compare-drawer__avatar">
+            {tool.name.slice(0, 2).toUpperCase()}
           </span>
         ))}
+        <span className="compare-drawer__count">{selectedTools.length}/{MAX_COMPARE_TOOLS}</span>
       </div>
-      <Link href="/compare" className="mobile-compare-toolbox__cta">
-        Vai al confronto
-        <ArrowRight size={14} aria-hidden="true" />
-      </Link>
-    </section>
+      <Link href="/compare" className="compare-drawer__cta">Apri compare</Link>
+    </aside>
   );
 }
 
@@ -505,45 +497,41 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
     : undefined;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
+    <motion.article
+      initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
-      transition={{ duration: 0.3, delay: Math.min(index * 0.03, 0.3) }}
-      className="relative"
+      transition={{ duration: 0.25, delay: Math.min(index * 0.03, 0.25) }}
+      className="tool-card"
+      aria-label={`${tool.name}. ${tool.shortDescription || ""}`}
     >
-      <Link
-        href={`/toools/${tool.slug}`}
-        className="mobile-tool-card"
-        aria-label={`${tool.name}. ${tool.shortDescription || ""}`}
-      >
-        <div className="mobile-tool-card__visual">
-          {iconUrl ? (
-            <img
-              src={iconUrl}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="mobile-tool-card__icon"
-            />
-          ) : (
-            <span className="mobile-tool-card__fallback">
-              {tool.name.slice(0, 2).toUpperCase()}
-            </span>
-          )}
+      <div className="tool-card__head">
+        <div className="tool-card__avatar">
+          {iconUrl ? <img src={iconUrl} alt="" /> : tool.name.slice(0, 2).toUpperCase()}
         </div>
-        <div className="mobile-tool-card__meta">
-          <span className="mobile-tool-card__category">{tool.categoryLabel}</span>
-          <h3 className="mobile-tool-card__title">{tool.name}</h3>
-          <p className="mobile-tool-card__description">
-            {tool.shortDescription || tool.tldr || ""}
-          </p>
+        <div className="min-w-0">
+          <h3 className="tool-card__name">{tool.name}</h3>
+          <p className="tool-card__category">{tool.categoryLabel}</p>
         </div>
-      </Link>
-      <div className="mobile-tool-card__actions">
-        <CompareToggle slug={tool.slug} compact />
-        <ShortlistToggle slug={tool.slug} mode="compact" />
+        <div className="flex gap-1">
+          <span className="tool-card__icon-action">
+            <CompareToggle slug={tool.slug} mode="icon" />
+          </span>
+          <span className="tool-card__icon-action">
+            <ShortlistToggle slug={tool.slug} mode="icon" />
+          </span>
+        </div>
       </div>
-    </motion.div>
+      <p className="tool-card__desc">{tool.shortDescription || tool.tldr || ""}</p>
+      <div className="tool-card__tags" aria-label="Tag principali">
+        {(tool.highlights.length ? tool.highlights : tool.tags).slice(0, 3).map((tag) => (
+          <span key={tag} className="tool-card__tag">{tag}</span>
+        ))}
+      </div>
+      <footer className="tool-card__footer">
+        <span className="tool-card__source">{domain ?? tool.categoryLabel}</span>
+        <Link href={`/toools/${tool.slug}`} className="tool-card__details">Apri</Link>
+      </footer>
+    </motion.article>
   );
 }
