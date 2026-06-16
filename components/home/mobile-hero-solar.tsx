@@ -1,120 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import type { CSSProperties } from "react";
-import {
-  Bookmark,
-  Compass,
-  GitCompare,
-  Radar,
-  Sparkles,
-} from "lucide-react";
-const HOME_ICON_MAP = {
-  Bookmark,
-  Compass,
-  GitCompare,
-  Radar,
-  Sparkles,
-} as const;
-
-export type SolarRoute = {
-  id: string;
-  label: string;
-  href: string;
-  color: string;
-  icon: keyof typeof HOME_ICON_MAP;
-  badge?: string;
-};
+import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 
 type MobileHeroSolarProps = {
-  routes: SolarRoute[];
+  focusTool?: DirectoryTool | null;
+  supportingTools?: DirectoryTool[];
 };
 
-export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
-  const orbitRadius = 130;
-  const duration = 48;
+export function MobileHeroSolar({ focusTool, supportingTools = [] }: MobileHeroSolarProps) {
+  const title = focusTool?.name
+    ? `Scopri ${focusTool.name}.`
+    : "Scopri i tool AI che meritano davvero apertura.";
+  const copy = focusTool?.tldr || focusTool?.shortDescription || "Un solo focus sopra la piega: il candidato più forte, con contesto e CTA immediata.";
 
   return (
-    <section
-      className="mobile-hero-solar relative z-10 min-h-[100svh] overflow-hidden px-4 pt-20 pb-32"
-      aria-label="Sistema TooolVibes"
-    >
-      {/* HUD */}
-      <div className="mobile-hero-solar__hud" data-text-zone="true">
-        <p>Sistema TooolVibes</p>
-        <h1>Scegli tool AI validi senza attraversare il rumore.</h1>
-        <span>
-          TooolVibes seleziona e confronta tool AI e SaaS utili.
-          Nessuna vetrina infinita: solo nodi curati da esplorare, salvare e provare.
-        </span>
-      </div>
-
-      {/* Orbit System */}
-      <div className="mobile-hero-solar__system" aria-label="Nodi interattivi">
-        {/* Single ring */}
-        <span
-          className="catalog-orbit-ring"
-          style={{
-            "--ring-radius": `${orbitRadius}px`,
-            "--ring-width": `${orbitRadius * 2}px`,
-            "--ring-height": `${Math.round(orbitRadius * 0.72)}px`,
-            "--ring-opacity": "0.38",
-          } as CSSProperties}
-        />
-
-        {/* Brand core */}
-        <div className="mobile-hero-solar__brand-core" aria-hidden="true">
-          <span className="mobile-hero-solar__brand-aura" />
-          <span className="mobile-hero-solar__brand-ring" />
-          <Image
-            src="/brand/tooolvibes-logo.png"
-            alt=""
-            width={72}
-            height={72}
-            className="mobile-hero-solar__brand-logo"
-            priority
-          />
+    <section className="hero-focus-stack" aria-label="Tool in primo piano">
+      <div className="hero-focus-stack__shell">
+        <span className="hero-focus-stack__eyebrow">Tool in primo piano</span>
+        <h1 className="hero-focus-stack__title">{title}</h1>
+        <p className="hero-focus-stack__copy">{copy}</p>
+        <div className="hero-focus-stack__actions">
+          <Link className="hero-focus-stack__cta-primary" href="/archivio">Apri il catalogo</Link>
+          <Link className="hero-focus-stack__cta-secondary" href="/radar">Vai al radar</Link>
         </div>
-
-        {/* Nodes */}
-        {routes.map((route, index) => {
-          const angle = (index / routes.length) * 360;
-          const Icon = HOME_ICON_MAP[route.icon];
-          const nodeStyle = {
-            "--orbit-angle": `${angle}deg`,
-            "--orbit-angle-back": `${-angle}deg`,
-            "--orbit-radius": `${orbitRadius}px`,
-            "--orbit-depth": "0px",
-            "--orbit-duration": `${duration}s`,
-            "--orbit-delay": `${index * -9.6}s`,
-            "--node-color": route.color,
-            "--node-size": "4.2rem",
-          } as CSSProperties;
-
-          return (
-            <Link
-              key={route.id}
-              href={route.href}
-              className="catalog-orbit-node home-orbit-node home-orbit-node--route mobile-hero-solar__node"
-              style={nodeStyle}
-              aria-label={route.label}
-            >
-              <span className="catalog-orbit-node__halo" aria-hidden="true" />
-              <span className="catalog-orbit-node__body">
-                <Icon aria-hidden="true" />
-              </span>
-              <span className="catalog-orbit-node__label">
-                <strong>{route.label}</strong>
-                {route.badge && <small>{route.badge}</small>}
-              </span>
-              {route.badge && (
-                <span className="home-orbit-node__badge">{route.badge}</span>
-              )}
-            </Link>
-          );
-        })}
       </div>
+
+      {supportingTools.length > 0 && (
+        <div className="hero-focus-stack__rail">
+          {supportingTools.slice(0, 4).map((tool) => (
+            <Link key={tool.slug} href={`/toools/${tool.slug}`} className="hero-focus-stack__mini">
+              <span>{tool.name.slice(0, 2).toUpperCase()}</span>
+              <strong>{tool.name}</strong>
+            </Link>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

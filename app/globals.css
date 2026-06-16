@@ -754,6 +754,103 @@ img {
       linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(236, 243, 255, 0.91) 54%, rgba(242, 237, 255, 0.92));
   }
 
+  .hero-focus-stack {
+    display: grid;
+    gap: 16px;
+    padding: 20px 16px 0;
+  }
+
+  .hero-focus-stack__shell {
+    background: var(--tv-gradient-hero);
+    border: 1px solid rgba(124, 92, 255, 0.18);
+    border-radius: 28px;
+    padding: 20px;
+    overflow: clip;
+  }
+
+  .hero-focus-stack__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(124, 92, 255, 0.12);
+    color: #D9D4FF;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .hero-focus-stack__title {
+    margin-top: 14px;
+    max-width: 12ch;
+    font-size: 32px;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+  }
+
+  .hero-focus-stack__copy {
+    margin-top: 10px;
+    max-width: 32ch;
+    color: var(--tv-text-secondary);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .hero-focus-stack__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .hero-focus-stack__cta-primary {
+    height: 48px;
+    border: none;
+    border-radius: 14px;
+    background: var(--tv-gradient-brand);
+    color: #FFFFFF;
+    font-weight: 700;
+    box-shadow: var(--tv-shadow-1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-focus-stack__cta-secondary {
+    height: 48px;
+    border: 1px solid var(--tv-border-subtle);
+    border-radius: 14px;
+    background: rgba(17, 29, 51, 0.72);
+    color: var(--tv-text-primary);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-focus-stack__rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 136px;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .hero-focus-stack__mini {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(17, 29, 51, 0.88);
+    border: 1px solid var(--tv-border-subtle);
+    border-radius: 18px;
+    color: var(--tv-text-primary);
+  }
+
   .hero-mini-visual {
     animation: tv-float 6s ease-in-out infinite;
   }
