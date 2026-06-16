@@ -37,8 +37,8 @@ export function MobileBottomNav() {
       aria-label="Navigazione mobile principale"
       className={cn(
         "mobile-bottom-motion fixed z-50 mx-auto w-auto max-w-[25rem]",
-        "rounded-[1.75rem] border border-white/35 bg-white/78 backdrop-blur-2xl",
-        "shadow-[0_14px_38px_rgba(47,33,126,0.16),inset_0_1px_0_rgba(255,255,255,0.72)]",
+        "rounded-[1.75rem] border border-white/10 bg-[rgba(13,23,40,0.88)] backdrop-blur-2xl",
+        "shadow-[0_14px_38px_rgba(3,8,20,0.32)]",
         "transition-opacity duration-300",
         isOverlayOpen && "opacity-0 pointer-events-none"
       )}
@@ -57,8 +57,8 @@ export function MobileBottomNav() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "mobile-bottom-link flex h-[3.55rem] min-w-0 flex-col items-center justify-center gap-1 rounded-[1.2rem] px-1 text-[0.66rem] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
-                active ? "is-active text-[#ffffff]" : "text-[#16112d] hover:bg-white/72 hover:text-[#6a3cff]",
+                "mobile-bottom-link flex h-[3.55rem] min-w-0 flex-col items-center justify-center gap-1 rounded-[1.2rem] px-1 text-[0.66rem] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/50",
+                active ? "is-active text-white" : "text-[var(--tv-text-secondary)] hover:bg-white/5 hover:text-[var(--tv-text-primary)]",
                 active && "[&_.mobile-bottom-link__icon-wrap>svg]:scale-110",
                 compareHasItems && "mobile-bottom-link--compare-ready"
               )}
