@@ -24346,6 +24346,37 @@ img {
   color: rgba(235,226,255,0.7) !important;
 }
 
+.app-shell {
+  width: 100%;
+  min-height: 100dvh;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 240px),
+    var(--tv-bg);
+  color: var(--tv-text-primary);
+}
+
+.section {
+  padding-inline: 16px;
+}
+
+.card {
+  background: rgba(17, 29, 51, 0.92);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-lg);
+  box-shadow: var(--tv-shadow-1);
+}
+
+.button-primary,
+.button-secondary,
+.icon-button,
+.chip,
+.nav-item {
+  min-height: var(--tv-tap-min);
+}
+
+.text-secondary { color: var(--tv-text-secondary); }
+.text-muted { color: var(--tv-text-muted); }
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -50,6 +50,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#07111F",
+};
+
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -151,7 +158,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: brandIntroPreflightScript }}
         />
       </head>
-      <body>
+      <body className="app-shell antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
