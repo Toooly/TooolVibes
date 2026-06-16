@@ -10,15 +10,13 @@ import { DirectoryHeaderSearch } from "../directory/directory-header-search";
 import { GameProfileBar } from "../gamification/game-profile-bar";
 import { VibeTapMiniGame } from "../gamification/vibe-tap-mini-game";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
+import { cn } from "@/lib/utils";
 import {
   Menu,
   X,
   Sparkles,
   Compass,
   Radar,
-  Heart,
-  ShoppingBag,
-  Users,
   LayoutGrid,
   Zap,
   ChevronRight,
@@ -29,12 +27,9 @@ import {
 const navLinks = [
   { href: "/", label: "Home", icon: Sparkles },
   { href: "/archivio", label: "Catalogo", icon: LayoutGrid },
-  { href: "/product-hunt", label: "Radar", icon: Radar },
-  { href: "/compare", label: "Compare", icon: Zap },
-  { href: "/shortlist", label: "Shortlist", icon: Compass },
-  { href: "/wishlist", label: "Wishlist", icon: Heart },
-  { href: "/shop", label: "Shop", icon: ShoppingBag },
-  { href: "/community", label: "Community", icon: Users },
+  { href: "/radar", label: "Radar", icon: Radar },
+  { href: "/shortlist", label: "Salvati", icon: Compass },
+  { href: "/compare", label: "Confronta", icon: Zap },
 ];
 
 function NavLink({
@@ -89,6 +84,7 @@ function NavLink({
 
 export function SiteHeaderV2() {
   const pathname = usePathname();
+  const isActiveHref = (href: string) => pathname === href || pathname?.startsWith(href + "/");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -115,7 +111,7 @@ export function SiteHeaderV2() {
 
   return (
     <>
-      <header className="site-header-v2 fixed left-0 right-0 top-0 z-50 transition-all duration-500" style={{ transform: "translateZ(0)", willChange: "transform" }}>
+      <header className="site-header-v2 mobile-header fixed left-0 right-0 top-0 z-50 transition-all duration-500" style={{ transform: "translateZ(0)", willChange: "transform" }}>
         <div
           className={`mx-auto max-w-[1440px] transition-all duration-500 ${
             scrolled || spatialRoute
@@ -170,51 +166,63 @@ export function SiteHeaderV2() {
 
             {/* Right Actions */}
             <div className="flex items-center gap-2">
-              <button
-                className="relative hidden rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] hover:text-[#6a3cff] md:flex"
-                onClick={() => setSearchOpen(!searchOpen)}
-                type="button"
-              >
-                <span className="flex items-center gap-2 text-sm">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.3-4.3" />
-                  </svg>
-                  <span className="hidden lg:inline">Cerca</span>
-                </span>
-                <kbd className="ml-1 hidden rounded-md border border-[rgba(56,42,122,0.15)] bg-[rgba(236,232,255,0.6)] px-1.5 py-0.5 text-[10px] font-medium text-[#4f4970] lg:inline">
-                  ⌘K
-                </kbd>
-              </button>
+              <div className="hidden items-center gap-2 lg:flex">
+                <button
+                  className="relative hidden rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] hover:text-[#6a3cff] md:flex"
+                  onClick={() => setSearchOpen(!searchOpen)}
+                  type="button"
+                >
+                  <span className="flex items-center gap-2 text-sm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.3-4.3" />
+                    </svg>
+                    <span className="hidden lg:inline">Cerca</span>
+                  </span>
+                </button>
 
-              <div className="hidden md:block">
-                <SoundToggleButton />
+                <div className="hidden md:block">
+                  <SoundToggleButton />
+                </div>
+
+                <GameProfileBar className="hidden lg:flex" />
+
+                <Link
+                  href="/admin/login"
+                  aria-label="Apri il login amministratore"
+                  className="group relative hidden items-center gap-2 rounded-xl border border-[rgba(106,60,255,0.12)] bg-white/70 px-3 py-2 text-sm font-medium text-[#4f4970] shadow-[0_4px_16px_rgba(106,60,255,0.08)] transition-all hover:border-[rgba(106,60,255,0.22)] hover:bg-white hover:text-[#6a3cff] md:flex"
+                  data-sonic-action="tap"
+                >
+                  <LockKeyhole size={14} className="transition-transform group-hover:scale-105" />
+                  Admin
+                </Link>
+
+                <Link
+                  href="/account#account-upgrade"
+                  className="group relative hidden items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-all hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)] md:flex"
+                  data-sonic-action="tap"
+                >
+                  <UserPlus size={14} className="transition-transform group-hover:scale-110" />
+                  Area utente
+                </Link>
               </div>
 
-              <GameProfileBar className="hidden lg:flex" />
-
               <Link
-                href="/admin/login"
-                aria-label="Apri il login amministratore"
-                className="group relative hidden items-center gap-2 rounded-xl border border-[rgba(106,60,255,0.12)] bg-white/70 px-3 py-2 text-sm font-medium text-[#4f4970] shadow-[0_4px_16px_rgba(106,60,255,0.08)] transition-all hover:border-[rgba(106,60,255,0.22)] hover:bg-white hover:text-[#6a3cff] md:flex"
-                data-sonic-action="tap"
+                href="/archivio"
+                className={cn("mobile-header__quick-link lg:hidden", isActiveHref("/archivio") && "mobile-header__quick-link--active")}
               >
-                <LockKeyhole size={14} className="transition-transform group-hover:scale-105" />
-                Admin
+                Catalogo
               </Link>
-
               <Link
-                href="/account#account-upgrade"
-                className="group relative hidden items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-all hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)] md:flex"
-                data-sonic-action="tap"
+                href="/radar"
+                className={cn("mobile-header__quick-link lg:hidden", isActiveHref("/radar") && "mobile-header__quick-link--active")}
               >
-                <UserPlus size={14} className="transition-transform group-hover:scale-110" />
-                Area utente
+                Radar
               </Link>
 
               {/* Mobile menu toggle */}
               <button
-                className="relative z-20 grid size-11 touch-manipulation place-items-center rounded-2xl text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] active:scale-95 lg:hidden"
+                className="mobile-header__menu relative z-20 grid size-11 touch-manipulation place-items-center rounded-2xl text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] active:scale-95 lg:hidden"
                 aria-controls="mobile-site-menu"
                 aria-expanded={menuOpen}
                 aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}

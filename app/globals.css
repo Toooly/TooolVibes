@@ -262,6 +262,42 @@ body {
   isolation: isolate;
 }
 
+.mobile-header {
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 8px;
+  height: 64px;
+  padding: max(12px, env(safe-area-inset-top)) 16px 12px;
+  background: rgba(7, 17, 31, 0.84);
+  border-bottom: 1px solid rgba(36, 50, 77, 0.72);
+  backdrop-filter: blur(16px);
+}
+
+.mobile-header__quick-link,
+.mobile-header__menu {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 999px;
+  background: rgba(17, 29, 51, 0.72);
+  color: var(--tv-text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-header__quick-link--active {
+  background: rgba(124, 92, 255, 0.14);
+  border-color: rgba(124, 92, 255, 0.36);
+  color: #FFFFFF;
+}
+
 .marketing-shell {
   position: relative;
   z-index: 2;
