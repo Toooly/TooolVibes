@@ -209,12 +209,14 @@ export function SiteHeaderV2() {
 
               <Link
                 href="/archivio"
+                aria-current={isActiveHref("/archivio") ? "page" : undefined}
                 className={cn("mobile-header__quick-link lg:hidden", isActiveHref("/archivio") && "mobile-header__quick-link--active")}
               >
                 Catalogo
               </Link>
               <Link
                 href="/radar"
+                aria-current={isActiveHref("/radar") ? "page" : undefined}
                 className={cn("mobile-header__quick-link lg:hidden", isActiveHref("/radar") && "mobile-header__quick-link--active")}
               >
                 Radar
@@ -222,7 +224,7 @@ export function SiteHeaderV2() {
 
               {/* Mobile menu toggle */}
               <button
-                className="mobile-header__menu relative z-20 grid size-11 touch-manipulation place-items-center rounded-2xl text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] active:scale-95 lg:hidden"
+                className="mobile-header__menu relative z-20 grid touch-manipulation place-items-center rounded-2xl text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] active:scale-95 lg:hidden"
                 aria-controls="mobile-site-menu"
                 aria-expanded={menuOpen}
                 aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
