@@ -6,6 +6,8 @@ import { TrendingUp, Zap } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { claimHiddenSignal } from "@/lib/gamification/actions";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { cn } from "@/lib/utils";
 
 /* ═══════════════════════════════════════════════════════════════
    Types
@@ -166,6 +168,8 @@ export function MobileRadarView() {
     [hiddenDiscovered, today, currentItems],
   );
 
+  const reducedMotion = useReducedMotion();
+
   /* ── Canvas animation ── */
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   useEffect(() => {
@@ -191,14 +195,10 @@ export function MobileRadarView() {
     };
     resize();
 
-    const ro = new ResizeObserver(resize);
-    if (canvas.parentElement) ro.observe(canvas.parentElement);
+    const bg =
+      getComputedStyle(canvas).getPropertyValue("--tv-bg").trim() || "#07111F";
 
-    const render = () => {
-      if (paused) return;
-      raf = requestAnimationFrame(render);
-      time += 0.016;
-
+    const drawFrame = (t: number) => {
       const w = canvas.width / Math.min(window.devicePixelRatio, 2);
       const h = canvas.height / Math.min(window.devicePixelRatio, 2);
       const cx = w / 2;
@@ -207,8 +207,8 @@ export function MobileRadarView() {
 
       ctx.clearRect(0, 0, w, h);
 
-      // Dark bg
-      ctx.fillStyle = "#0a0a1a";
+      // Design-system background
+      ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
 
       // Rings
@@ -227,7 +227,7 @@ export function MobileRadarView() {
       });
 
       // Pulsing core
-      const pulse = Math.sin(time * 3) * 0.3 + 1;
+      const pulse = Math.sin(t * 3) * 0.3 + 1;
       ctx.beginPath();
       ctx.arc(cx, cy, 8 * pulse, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
@@ -241,7 +241,7 @@ export function MobileRadarView() {
       ctx.stroke();
 
       // Echo ring
-      const echoPulse = Math.sin(time * 3 - 0.8) * 0.3 + 1;
+      const echoPulse = Math.sin(t * 3 - 0.8) * 0.3 + 1;
       if (echoPulse > 0.9) {
         ctx.beginPath();
         ctx.arc(cx, cy, 28 * echoPulse, 0, Math.PI * 2);
@@ -249,6 +249,23 @@ export function MobileRadarView() {
         ctx.lineWidth = 1;
         ctx.stroke();
       }
+    };
+
+    const ro = new ResizeObserver(resize);
+    if (canvas.parentElement) ro.observe(canvas.parentElement);
+
+    if (reducedMotion) {
+      drawFrame(0);
+      return () => {
+        ro.disconnect();
+      };
+    }
+
+    const render = () => {
+      if (paused) return;
+      raf = requestAnimationFrame(render);
+      time += 0.016;
+      drawFrame(time);
     };
 
     raf = requestAnimationFrame(render);
@@ -271,7 +288,7 @@ export function MobileRadarView() {
       ro.disconnect();
       observer.disconnect();
     };
-  }, []);
+  }, [reducedMotion]);
 
   /* ── Node positions ── */
   const nodes = useMemo(() => {
@@ -325,6 +342,9 @@ export function MobileRadarView() {
     return realNodes[index]?.id ?? null;
   }, [nodes, today]);
 
+  type RadarTab = "rank" | "segnali" | "trend";
+  const [activeTab, setActiveTab] = useState<RadarTab>("rank");
+
   return (
     <div className="radar-page">
       <header className="radar-header">
@@ -333,9 +353,26 @@ export function MobileRadarView() {
       </header>
 
       <nav className="radar-segmented" aria-label="Vista radar">
-        <button type="button" className="radar-segmented__item is-active">Rank</button>
-        <button type="button" className="radar-segmented__item">Segnali</button>
-        <button type="button" className="radar-segmented__item">Trend</button>
+        {/* TODO: collegare filtri Rank/Segnali/Trend */}
+        {(
+          [
+            { id: "rank", label: "Rank" },
+            { id: "segnali", label: "Segnali" },
+            { id: "trend", label: "Trend" },
+          ] as const
+        ).map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            className={cn(
+              "radar-segmented__item",
+              activeTab === tab.id && "is-active",
+            )}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
       </nav>
 
       <MobileRadarSections items={currentItems} />
@@ -358,7 +395,10 @@ export function MobileRadarView() {
               <span className="mobile-radar-view__node-halo" />
               {isHidden && (
                 <span
-                  className="pointer-events-none absolute inset-[-0.55rem] z-0 rounded-full border-2 border-dashed border-emerald-400/70 shadow-[0_0_18px_rgba(52,211,153,0.45)] animate-[spin_4s_linear_infinite]"
+                  className={cn(
+                    "pointer-events-none absolute inset-[-0.55rem] z-0 rounded-full border-2 border-dashed border-emerald-400/70 shadow-[0_0_18px_rgba(52,211,153,0.45)]",
+                    !reducedMotion && "radar-hidden-signal",
+                  )}
                   aria-hidden="true"
                 />
               )}

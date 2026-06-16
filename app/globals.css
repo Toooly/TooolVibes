@@ -17587,7 +17587,7 @@ img {
     padding: 0 var(--tv-space-3);
     border-radius: 999px;
     background: color-mix(in srgb, var(--tv-brand-secondary) 10%, transparent);
-    color: #CFE9FF;
+    color: var(--tv-brand-secondary);
     font-size: var(--tv-font-micro);
     font-weight: 800;
   }
@@ -17642,6 +17642,16 @@ img {
 
   .radar-mini-chart .mobile-radar-view__canvas {
     border-radius: var(--tv-radius-lg);
+  }
+
+  .radar-hidden-signal {
+    animation: spin 4s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .radar-hidden-signal {
+      animation: none;
+    }
   }
 
   .radar-page .mobile-radar-sections {
