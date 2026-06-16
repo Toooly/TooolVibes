@@ -3,7 +3,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Scale, Info, Sparkles } from "lucide-react";
+import { ArrowRight, Columns3, Swords, Trophy, X, Zap, Info, Sparkles } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { DirectoryTool, DirectoryToolLevel } from "@/lib/data/tooolvibes-directory";
@@ -77,6 +77,45 @@ type NormalisedTool = {
   isDirectory: boolean;
   useCasesCount: number;
 };
+
+function SnapCompareBoard({ tools }: { tools: NormalisedTool[] }) {
+  const rows = [
+    { key: "category", label: "Categoria", render: (t: NormalisedTool) => t.categoryLabel },
+    { key: "tldr", label: "TL;DR", render: (t: NormalisedTool) => t.tldr },
+    { key: "useCase", label: "Uso ideale", render: (t: NormalisedTool) => t.useCase },
+    { key: "review", label: "Nota editoriale", render: (t: NormalisedTool) => t.review || t.tldr },
+    { key: "highlights", label: "Highlights", render: (t: NormalisedTool) => t.highlights.slice(0, 3).join(" · ") || "—" },
+    { key: "readingTime", label: "Tempo lettura", render: (t: NormalisedTool) => t.readingTime },
+  ];
+
+  return (
+    <section className="compare-board" aria-label="Confronto tool">
+      <div className="compare-board__row compare-board__row--head">
+        <div className="compare-board__label" />
+        <div className="compare-board__track">
+          {tools.map((tool) => (
+            <div key={tool.slug} className="compare-board__cell compare-board__cell--head">
+              <strong>{tool.name}</strong>
+              <span>{tool.categoryLabel}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      {rows.map((row) => (
+        <div key={row.key} className="compare-board__row">
+          <div className="compare-board__label">{row.label}</div>
+          <div className="compare-board__track">
+            {tools.map((tool) => (
+              <article key={tool.slug} className="compare-board__cell">
+                {row.render(tool)}
+              </article>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
 
 function stableScoreOffset(seed: string): number {
   let hash = 0;
@@ -275,233 +314,6 @@ function ChampionCard({
         </div>
       </div>
     </article>
-  );
-}
-
-function ChallengerCard({
-  tool,
-  rank,
-  diff,
-  onRemove,
-}: {
-  tool: NormalisedTool;
-  rank: number;
-  diff: number;
-  onRemove: () => void;
-}) {
-  return (
-    <article
-      className="mobile-compare-arena__challenger"
-      style={
-        {
-          "--arena-a": tool.accentFrom,
-          "--arena-b": tool.accentTo,
-        } as CSSProperties
-      }
-    >
-      <div className="flex items-start gap-3">
-        <div className="mobile-compare-arena__challenger-rank">#{rank}</div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="mobile-compare-arena__cat">{tool.categoryLabel}</span>
-            {diff !== 0 && (
-              <span className="mobile-compare-arena__diff">
-                {diff > 0 ? "+" : ""}
-                {diff} vs #1
-              </span>
-            )}
-          </div>
-          <h3 className="mobile-compare-arena__challenger-name">{tool.name}</h3>
-          <p className="mobile-compare-arena__challenger-tldr">{tool.tldr}</p>
-        </div>
-        <div className="mobile-compare-arena__score mobile-compare-arena__score--sm">
-          <span>{tool.battleScore}</span>
-        </div>
-      </div>
-
-      <div className="mobile-compare-arena__challenger-bar">
-        <span
-          style={{
-            width: `${Math.max(20, tool.battleScore)}%`,
-            background: `linear-gradient(90deg,${tool.accentFrom},${tool.accentTo})`,
-          }}
-        />
-      </div>
-
-      <div className="mobile-compare-arena__challenger-actions">
-        <Link href={`/toools/${tool.slug}`} className="mobile-compare-arena__link">
-          Scheda
-        </Link>
-        <button type="button" onClick={onRemove} className="mobile-compare-arena__link mobile-compare-arena__link--muted">
-          Rimuovi
-        </button>
-      </div>
-    </article>
-  );
-}
-
-function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
-  const cellsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const isSyncing = useRef(false);
-  if (tools.length < 2) return null;
-
-  const maxScore = Math.max(...tools.map((t) => t.battleScore), 1);
-
-  const handleScroll = (index: number) => {
-    if (isSyncing.current) return;
-    const source = cellsRef.current[index];
-    if (!source) return;
-    isSyncing.current = true;
-    cellsRef.current.forEach((el, i) => {
-      if (el && i !== index) {
-        el.scrollLeft = source.scrollLeft;
-      }
-    });
-    requestAnimationFrame(() => {
-      isSyncing.current = false;
-    });
-  };
-
-  const scoreMax = Math.max(...tools.map((t) => t.battleScore));
-  const fitMax = Math.max(...tools.map((t) => t.useCasesCount));
-  const highlightsMax = Math.max(...tools.map((t) => t.highlights.length));
-
-  const rows = [
-    {
-      label: "Categoria",
-      render: (t: NormalisedTool, isWinner: boolean) => (
-        <span className={cn("mobile-compare-arena__matrix-badge", isWinner && "is-winner")}>
-          {t.categoryLabel}
-        </span>
-      ),
-      winnerIndices: [] as number[],
-    },
-    {
-      label: "Punteggio",
-      render: (t: NormalisedTool, isWinner: boolean) => (
-        <div className="mobile-compare-arena__matrix-bar">
-          <span
-            className={cn(isWinner && "is-winner")}
-            style={{ width: `${(t.battleScore / maxScore) * 100}%` }}
-          />
-          <strong>{t.battleScore}</strong>
-        </div>
-      ),
-      winnerIndices: tools.flatMap((t, i) => (t.battleScore === scoreMax ? [i] : [])),
-    },
-    {
-      label: "Fit",
-      render: (t: NormalisedTool, isWinner: boolean) => (
-        <span className={cn(isWinner && "mobile-compare-arena__matrix-value--winner")}>
-          {t.useCasesCount || "—"}
-        </span>
-      ),
-      winnerIndices: tools.flatMap((t, i) => (t.useCasesCount === fitMax ? [i] : [])),
-    },
-    {
-      label: "Uso ideale",
-      render: (t: NormalisedTool) => (
-        <span title={t.useCase} className="mobile-compare-arena__matrix-long">
-          {t.useCase || t.tldr}
-        </span>
-      ),
-      winnerIndices: [] as number[],
-    },
-    {
-      label: "Punti forti",
-      render: (t: NormalisedTool) => (
-        <span title={t.highlights.join(" · ")} className="mobile-compare-arena__matrix-long">
-          {t.highlights.length ? t.highlights.slice(0, 2).join(" · ") : "Da valutare"}
-        </span>
-      ),
-      winnerIndices: [] as number[],
-    },
-    {
-      label: "Nota editoriale",
-      render: (t: NormalisedTool) => (
-        <span title={t.review} className="mobile-compare-arena__matrix-long">
-          {t.review || t.tldr}
-        </span>
-      ),
-      winnerIndices: [] as number[],
-    },
-    {
-      label: "Highlights",
-      render: (t: NormalisedTool, isWinner: boolean) => (
-        <span className={cn(isWinner && "mobile-compare-arena__matrix-value--winner")}>
-          {t.highlights.length}
-        </span>
-      ),
-      winnerIndices: tools.flatMap((t, i) => (t.highlights.length === highlightsMax ? [i] : [])),
-    },
-    {
-      label: "Tempo",
-      render: (t: NormalisedTool, isWinner: boolean) => (
-        <span className={cn(isWinner && "mobile-compare-arena__matrix-value--winner")}>
-          {t.readingTime}
-        </span>
-      ),
-      winnerIndices: [] as number[],
-    },
-  ];
-
-  return (
-    <section className="mobile-compare-arena__matrix">
-      <div className="mobile-compare-arena__matrix-header">
-        <Scale className="size-4" />
-        <span>Confronto caratteristiche</span>
-      </div>
-
-      <div className="mobile-compare-arena__matrix-head" aria-hidden="true">
-        <div className="mobile-compare-arena__matrix-axis mobile-compare-arena__matrix-axis--head">
-          Attributo
-        </div>
-        <div
-          className="mobile-compare-arena__matrix-cells"
-          ref={(el) => { cellsRef.current[rows.length] = el; }}
-          onScroll={() => handleScroll(rows.length)}
-        >
-          {tools.map((tool) => (
-            <div
-              key={tool.slug}
-              className="mobile-compare-arena__matrix-cell mobile-compare-arena__matrix-cell--head"
-              style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
-            >
-              <span className="mobile-compare-arena__matrix-tool">{tool.name}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mobile-compare-arena__matrix-grid">
-        {rows.map((row, rowIndex) => (
-          <div key={row.label} className="mobile-compare-arena__matrix-row">
-            <div className="mobile-compare-arena__matrix-axis">{row.label}</div>
-            <div
-              className="mobile-compare-arena__matrix-cells"
-              ref={(el) => { cellsRef.current[rowIndex] = el; }}
-              onScroll={() => handleScroll(rowIndex)}
-            >
-              {tools.map((tool, toolIndex) => {
-                const isWinner = row.winnerIndices.includes(toolIndex);
-                return (
-                  <div
-                    key={tool.slug}
-                    className={cn(
-                      "mobile-compare-arena__matrix-cell",
-                      isWinner && "is-winner",
-                    )}
-                    style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
-                  >
-                    <span className="mobile-compare-arena__matrix-value">{row.render(tool, isWinner)}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -799,7 +611,6 @@ export function MobileCompareView({
 
   const sorted = [...tools].sort((a, b) => b.battleScore - a.battleScore);
   const lead = sorted[0];
-  const rest = sorted.slice(1);
 
   function handleFight() {
     if (battleState === "fighting" || fightLockedRef.current) return;
@@ -821,28 +632,14 @@ export function MobileCompareView({
     <div className="mobile-compare-arena">
       <ArenaHeader count={tools.length} />
 
+      <SnapCompareBoard tools={sorted} />
+
       <MobileArenaBattleStage
         battleState={battleState}
         onFight={handleFight}
         tools={sorted.slice(0, MAX_COMPARE_TOOLS)}
         winner={lead}
       />
-
-      <ChampionCard tool={lead} onRemove={() => toggleCompare(lead.slug)} />
-
-      <div className="mobile-compare-arena__challengers">
-        {rest.map((tool, i) => (
-          <ChallengerCard
-            key={tool.slug}
-            tool={tool}
-            rank={i + 2}
-            diff={tool.battleScore - lead.battleScore}
-            onRemove={() => toggleCompare(tool.slug)}
-          />
-        ))}
-      </div>
-
-      <DiffMatrix tools={sorted} />
 
       <div className="mobile-compare-arena__footer">
         <Link href="/archivio" className="mobile-compare-arena__footer-btn mobile-compare-arena__footer-btn--primary">
