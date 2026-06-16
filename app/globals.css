@@ -17885,28 +17885,34 @@ img {
     color: var(--text-secondary);
   }
 
-  .mobile-library-book__remove {
+  .mobile-library-book__actions {
     position: absolute;
-    bottom: -6px;
-    right: -2px;
-    width: 1.4rem;
-    height: 1.4rem;
-    border-radius: 999px;
-    border: none;
-    background: rgba(239, 68, 68, 0.9);
-    color: #fff;
+    right: var(--tv-space-2);
+    bottom: var(--tv-space-2);
+    z-index: 10;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 180ms ease, transform 180ms ease;
-    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+    gap: var(--tv-space-1);
   }
 
-  .mobile-library-book:active .mobile-library-book__remove,
-  .mobile-library-book:focus-within .mobile-library-book__remove {
-    opacity: 1;
+  .mobile-library-book__action {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--tv-radius-xs);
+    border: 1px solid var(--tv-border-subtle);
+    background: color-mix(in srgb, var(--tv-surface) 72%, transparent);
+    color: var(--tv-text-primary);
+    display: grid;
+    place-items: center;
+  }
+
+  .mobile-library-book__action.is-active {
+    background: var(--tv-gradient-brand);
+    border-color: transparent;
+    color: var(--tv-text-primary);
+  }
+
+  .mobile-library-book__action.is-danger {
+    color: var(--tv-danger);
   }
 
   /* Empty state */
@@ -20009,28 +20015,34 @@ img {
     text-transform: uppercase;
   }
 
-  .mobile-library-book__remove {
+  .mobile-library-book__actions {
     position: absolute;
-    right: 0.2rem;
-    bottom: 2.4rem;
-    display: grid;
-    width: 1.75rem;
-    aspect-ratio: 1;
-    place-items: center;
-    border: 0;
-    border-radius: 50%;
-    background: rgba(239, 68, 68, 0.9);
-    color: #fff;
-    opacity: 0;
-    transition:
-      opacity 180ms ease,
-      transform 180ms ease;
+    right: var(--tv-space-2);
+    bottom: var(--tv-space-2);
+    z-index: 10;
+    display: flex;
+    gap: var(--tv-space-1);
   }
 
-  .mobile-library-book:hover .mobile-library-book__remove,
-  .mobile-library-book:focus-within .mobile-library-book__remove {
-    opacity: 1;
-    transform: translateY(-2px);
+  .mobile-library-book__action {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--tv-radius-xs);
+    border: 1px solid var(--tv-border-subtle);
+    background: color-mix(in srgb, var(--tv-surface) 72%, transparent);
+    color: var(--tv-text-primary);
+    display: grid;
+    place-items: center;
+  }
+
+  .mobile-library-book__action.is-active {
+    background: var(--tv-gradient-brand);
+    border-color: transparent;
+    color: var(--tv-text-primary);
+  }
+
+  .mobile-library-book__action.is-danger {
+    color: var(--tv-danger);
   }
 
   .mobile-library-empty {

@@ -3,12 +3,15 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import type { ToolDecisionMemory } from "@/lib/types/tool";
+
 type ToolWorkspaceState = {
   savedSlugs: string[];
   compareSlugs: string[];
   stackSlugs: string[];
   selectedSlug: string | null;
   isCommandOpen: boolean;
+  decisionMemories: Record<string, ToolDecisionMemory>;
   setSelectedSlug: (slug: string | null) => void;
   setCommandOpen: (open: boolean) => void;
   toggleSaved: (slug: string) => boolean;
@@ -16,6 +19,7 @@ type ToolWorkspaceState = {
   addToStack: (slug: string) => boolean;
   removeFromStack: (slug: string) => void;
   reorderStack: (slugs: string[]) => void;
+  updateDecisionMemory: (slug: string, patch: Partial<ToolDecisionMemory>) => void;
   clearCompare: () => void;
   clearWorkspace: () => void;
 };
@@ -36,6 +40,7 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
       stackSlugs: [],
       selectedSlug: null,
       isCommandOpen: false,
+      decisionMemories: {},
       setSelectedSlug: (slug) => set({ selectedSlug: slug }),
       setCommandOpen: (open) => set({ isCommandOpen: open }),
       toggleSaved: (slug) => {
@@ -68,6 +73,17 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
         }));
       },
       reorderStack: (slugs) => set({ stackSlugs: slugs }),
+      updateDecisionMemory: (slug, patch) =>
+        set((state) => ({
+          decisionMemories: {
+            ...state.decisionMemories,
+            [slug]: {
+              ...(state.decisionMemories[slug] ?? {}),
+              ...patch,
+              updated_at: new Date().toISOString(),
+            },
+          },
+        })),
       clearCompare: () => set({ compareSlugs: [] }),
       clearWorkspace: () =>
         set({
@@ -75,6 +91,7 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
           compareSlugs: [],
           stackSlugs: [],
           selectedSlug: null,
+          decisionMemories: {},
         }),
     }),
     {
@@ -83,6 +100,7 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
         savedSlugs: state.savedSlugs,
         compareSlugs: state.compareSlugs,
         stackSlugs: state.stackSlugs,
+        decisionMemories: state.decisionMemories,
       }),
     },
   ),

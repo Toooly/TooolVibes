@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo,  type CSSProperties } from "react";
+import { useState, useMemo, useEffect, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   X,
-  
+  Pencil,
   GitCompare,
   Trash2,
   ArrowRight,
@@ -14,11 +14,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { cn } from "@/lib/utils";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type {
   ShortlistStage,
-
   ToolRecord,
 } from "@/lib/types/tool";
 
@@ -51,8 +51,8 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
   const discovery = useDiscoverySnapshot();
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
+  const decisionMemories = useToolWorkspaceStore((state) => state.decisionMemories);
   const shortlistStages = discovery.shortlistStages;
-  const decisionMemories = discovery.decisionMemories;
 
   const [noteSlug, setNoteSlug] = useState<string | null>(null);
 
@@ -120,6 +120,7 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         tools={favoriteTools}
         color="#f3bf4c"
         emptyText="I tool che ami di più appariranno qui"
+        onEditNote={setNoteSlug}
       />
 
       <MobileLibraryShelf
@@ -128,6 +129,7 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         tools={toTryTools}
         color="#6a3cff"
         emptyText="Tool salvati da esplorare"
+        onEditNote={setNoteSlug}
       />
 
       <MobileLibraryShelf
@@ -136,6 +138,7 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         tools={recentTools}
         color="#39d2f6"
         emptyText="Gli ultimi tool aggiunti"
+        onEditNote={setNoteSlug}
       />
 
       {/* Note Bottom Sheet */}
@@ -162,12 +165,14 @@ function MobileLibraryShelf({
   tools,
   color,
   emptyText,
+  onEditNote,
 }: {
   title: string;
   icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>;
   tools: ToolWithMeta[];
   color: string;
   emptyText: string;
+  onEditNote: (slug: string) => void;
 }) {
   return (
     <section className="mobile-library-shelf">
@@ -180,7 +185,7 @@ function MobileLibraryShelf({
       {tools.length > 0 ? (
         <div className="mobile-library-shelf__rail">
           {tools.map((tool, index) => (
-            <LibraryBook key={tool.slug} tool={tool} index={index} />
+            <LibraryBook key={tool.slug} tool={tool} index={index} onEditNote={onEditNote} />
           ))}
         </div>
       ) : (
@@ -194,13 +199,22 @@ function MobileLibraryShelf({
    LibraryBook
    ═══════════════════════════════════════════════════════════════ */
 
-function LibraryBook({ tool, index }: { tool: ToolWithMeta; index: number }) {
+function LibraryBook({
+  tool,
+  index,
+  onEditNote,
+}: {
+  tool: ToolWithMeta;
+  index: number;
+  onEditNote: (slug: string) => void;
+}) {
   const color = getToolColor(tool);
   const domain = extractDomain(tool.website_url);
   const iconUrl = domain
     ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`
     : undefined;
   const toggleSaved = useToolWorkspaceStore((state) => state.toggleSaved);
+  const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
 
   return (
     <motion.div
@@ -225,14 +239,30 @@ function LibraryBook({ tool, index }: { tool: ToolWithMeta; index: number }) {
         <strong>{tool.name}</strong>
         <span>{tool.stage}</span>
       </div>
-      <div className="absolute right-1.5 bottom-1.5 z-10">
+      <div className="mobile-library-book__actions">
+        <button
+          type="button"
+          onClick={() => onEditNote(tool.slug)}
+          className="mobile-library-book__action"
+          aria-label="Modifica nota"
+        >
+          <Pencil size={14} />
+        </button>
+        <button
+          type="button"
+          onClick={() => toggleCompare(tool.slug)}
+          className={cn("mobile-library-book__action", tool.isInCompare && "is-active")}
+          aria-label="Aggiungi o rimuovi dal confronto"
+        >
+          <GitCompare size={14} />
+        </button>
         <button
           type="button"
           onClick={() => toggleSaved(tool.slug)}
-          className="mobile-library-book__remove"
+          className="mobile-library-book__action is-danger"
           aria-label="Rimuovi dai salvati"
         >
-          <Trash2 size={12} />
+          <Trash2 size={14} />
         </button>
       </div>
     </motion.div>
@@ -252,7 +282,20 @@ function MobileNoteSheet({
   baseTools: ToolWithMeta[];
   onClose: () => void;
 }) {
-  const activeNote = baseTools.find((t) => t.slug === noteSlug)?.note;
+  const tool = baseTools.find((t) => t.slug === noteSlug);
+  const updateMemory = useToolWorkspaceStore((state) => state.updateDecisionMemory);
+  const [note, setNote] = useState(tool?.note ?? "");
+
+  useEffect(() => {
+    setNote(tool?.note ?? "");
+  }, [tool?.note]);
+
+  const save = () => {
+    if (noteSlug) {
+      updateMemory(noteSlug, { note });
+    }
+    onClose();
+  };
 
   return (
     <motion.div
@@ -264,21 +307,22 @@ function MobileNoteSheet({
     >
       <div className="mobile-shortlist-board__sheet-header">
         <span className="mobile-shortlist-board__sheet-handle" />
-        <button
-          type="button"
-          onClick={onClose}
-          className="mobile-shortlist-board__sheet-close"
-        >
+        <h3>Nota per {tool?.name}</h3>
+        <button type="button" onClick={onClose}>
           <X size={16} />
         </button>
       </div>
       <div className="mobile-shortlist-board__sheet-body">
-        <h3>Nota personale</h3>
-        {activeNote ? (
-          <p>{activeNote}</p>
-        ) : (
-          <p className="is-empty">Nessuna nota per questo tool.</p>
-        )}
+        <textarea
+          className="shortlist-note"
+          placeholder="Perché resta in corsa?"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={4}
+        />
+        <button type="button" onClick={save} className="mobile-library-empty__cta">
+          Salva nota
+        </button>
       </div>
     </motion.div>
   );
