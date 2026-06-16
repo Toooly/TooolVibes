@@ -90,7 +90,7 @@ function getExperienceTone(pathname?: string | null): ExperienceTone {
     return experienceTones.compare;
   }
 
-  if (pathname.startsWith("/product-hunt") || pathname.startsWith("/radar")) {
+  if (pathname.startsWith("/radar")) {
     return experienceTones.radar;
   }
 
