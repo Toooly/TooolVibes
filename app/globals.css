@@ -9334,6 +9334,103 @@ img {
   }
 }
 
+.featured-tool-card {
+  display: grid;
+  gap: var(--tv-space-4);
+  padding: var(--tv-space-4);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--tv-brand-primary) 12%, transparent), color-mix(in srgb, var(--tv-brand-primary) 4%, transparent)),
+    color-mix(in srgb, var(--tv-surface) 96%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-brand-primary) 22%, transparent);
+  border-radius: var(--tv-radius-lg);
+  box-shadow: var(--tv-shadow-2);
+}
+
+.featured-tool-card__top {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: var(--tv-space-3);
+  align-items: center;
+}
+
+.featured-tool-card__logo {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--tv-radius-sm);
+  background: rgba(255,255,255,0.06);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.featured-tool-card__logo img { width: 100%; height: 100%; object-fit: cover; }
+
+.featured-tool-card__title {
+  font-size: var(--tv-font-h2);
+  line-height: var(--tv-line-tight);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.featured-tool-card__meta {
+  color: var(--tv-text-secondary);
+  font-size: var(--tv-font-meta);
+  font-weight: 600;
+}
+
+.featured-tool-card__desc {
+  color: var(--tv-text-secondary);
+  font-size: var(--tv-font-body);
+  line-height: var(--tv-line-body);
+}
+
+.featured-tool-card__actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--tv-space-3);
+}
+
+.featured-tool-card__primary {
+  height: var(--tv-space-5);
+  border-radius: var(--tv-radius-sm);
+  background: #FFFFFF;
+  color: #0C1020;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.featured-tool-card__ghost {
+  height: var(--tv-space-5);
+  padding: 0 var(--tv-space-3);
+  border-radius: var(--tv-radius-sm);
+  border: 1px solid var(--tv-border-subtle);
+  background: transparent;
+  color: var(--tv-text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.featured-tool-card__rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 120px;
+  gap: var(--tv-space-3);
+  overflow-x: auto;
+}
+
+.featured-tool-card__mini {
+  display: grid;
+  gap: var(--tv-space-2);
+  padding: var(--tv-space-3);
+  background: color-mix(in srgb, var(--tv-surface) 88%, transparent);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-md);
+  color: var(--tv-text-primary);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .brand-mark::after {
     animation: tv-logo-scan 8.8s linear infinite !important;
@@ -13359,18 +13456,6 @@ img {
   }
 }
 
-@keyframes cosmic-satellites-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes cosmic-satellite-counter-spin {
-  to {
-    rotate: -360deg;
-  }
-}
-
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -13392,16 +13477,7 @@ img {
     display: none !important;
   }
 
-  .desktop-vibe-stage-grid,
-  .desktop-vibe-stage-rail,
-  .desktop-vibe-stage-halo,
-  .desktop-vibe-stage-beam,
-  .desktop-vibe-prism-core,
-  .desktop-vibe-radar-sweep-line,
-  .desktop-vibe-radar-signal,
-  .mobile-radar-view__scan-line,
-  .mobile-spotlight-cosmic__satellite,
-  .mobile-vibe-field-grid {
+  .desktop-vibe-stage-grid, .desktop-vibe-stage-rail, .desktop-vibe-stage-halo, .desktop-vibe-stage-beam, .desktop-vibe-prism-core, .desktop-vibe-radar-sweep-line, .desktop-vibe-radar-signal, .mobile-radar-view__scan-line, .mobile-vibe-field-grid {
     animation: none !important;
   }
 
@@ -16264,370 +16340,7 @@ img {
   }
 }
 
-@media (max-width: 767px) {
-  /* Mobile Spotlight — Teatro Cosmico 3D */
-  .mobile-spotlight-cosmic {
-    position: relative;
-    padding: 2rem 0 2.5rem;
-    background: linear-gradient(180deg, #0a0412 0%, #14082a 35%, #0f0618 70%, #0a0412 100%);
-    overflow: hidden;
-  }
 
-  /* Stelle */
-  .mobile-spotlight-cosmic__stars {
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(1.5px 1.5px at 12% 18%, rgba(255,255,255,0.35), transparent),
-      radial-gradient(1px 1px at 45% 12%, rgba(255,255,255,0.22), transparent),
-      radial-gradient(1.5px 1.5px at 78% 22%, rgba(255,255,255,0.3), transparent),
-      radial-gradient(1px 1px at 28% 55%, rgba(255,255,255,0.18), transparent),
-      radial-gradient(1.5px 1.5px at 65% 48%, rgba(255,255,255,0.28), transparent),
-      radial-gradient(1px 1px at 88% 62%, rgba(255,255,255,0.15), transparent),
-      radial-gradient(1.5px 1.5px at 15% 72%, rgba(255,255,255,0.25), transparent),
-      radial-gradient(1px 1px at 52% 82%, rgba(255,255,255,0.2), transparent),
-      radial-gradient(1.5px 1.5px at 82% 88%, rgba(255,255,255,0.3), transparent);
-    pointer-events: none;
-  }
-
-  /* Orbita */
-  .mobile-spotlight-cosmic__orbit {
-    position: absolute;
-    top: 3.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(18rem, calc(100vw - 2rem));
-    height: min(18rem, calc(100vw - 2rem));
-    pointer-events: none;
-  }
-
-  .mobile-spotlight-cosmic__orbit-track {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 1px dashed rgba(255, 255, 255, 0.12);
-    animation: cosmic-orbit-spin 24s linear infinite;
-  }
-
-  @keyframes cosmic-orbit-spin {
-    to { transform: rotate(360deg); }
-  }
-
-  /* Sistema centrale */
-  .mobile-spotlight-cosmic__system {
-    position: relative;
-    width: 18rem;
-    height: 18rem;
-    margin: 0 auto;
-    display: grid;
-    place-items: center;
-  }
-
-  /* Pianeta */
-  .mobile-spotlight-cosmic__planet {
-    position: relative;
-    width: 7.5rem;
-    height: 7.5rem;
-    border-radius: 50%;
-    z-index: 2;
-  }
-
-  .mobile-spotlight-cosmic__planet-glow {
-    position: absolute;
-    inset: -8px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--planet-a) 0%, var(--planet-b) 40%, transparent 70%);
-    opacity: 0.55;
-    filter: blur(6px);
-    animation: cosmic-pulse 4s ease-in-out infinite;
-  }
-
-  @keyframes cosmic-pulse {
-    0%, 100% { opacity: 0.45; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.08); }
-  }
-
-  .mobile-spotlight-cosmic__planet-core {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
-    border: 2px solid rgba(255, 255, 255, 0.18);
-    box-shadow: inset 0 0 24px rgba(255,255,255,0.06), 0 8px 32px rgba(0,0,0,0.4);
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-  }
-
-  .mobile-spotlight-cosmic__planet-core img {
-    width: 3.2rem;
-    height: 3.2rem;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-  }
-
-  .mobile-spotlight-cosmic__planet-core span {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.02em;
-  }
-
-  /* Satelliti */
-  .mobile-spotlight-cosmic__satellite {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%) rotate(var(--sat-angle)) translateX(7.95rem) rotate(calc(-1 * var(--sat-angle)));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    text-decoration: none;
-    z-index: 3;
-  }
-
-  .mobile-spotlight-cosmic__satellite-ring {
-    width: 2.6rem;
-    height: 2.6rem;
-    border-radius: 50%;
-    border: 1.5px solid rgba(255, 255, 255, 0.15);
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 60%);
-    box-shadow: 0 0 12px rgba(255,255,255,0.08);
-    display: grid;
-    place-items: center;
-  }
-
-  .mobile-spotlight-cosmic__satellite-body {
-    position: absolute;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-  }
-
-  .mobile-spotlight-cosmic__satellite-body img {
-    width: 1.1rem;
-    height: 1.1rem;
-    object-fit: contain;
-  }
-
-  .mobile-spotlight-cosmic__satellite-body small {
-    font-size: 0.55rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  .mobile-spotlight-cosmic__satellite-name {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.75);
-    max-width: 5rem;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Info card */
-  .mobile-spotlight-cosmic__info {
-    position: relative;
-    margin: 1.5rem 0.875rem 0;
-    padding: 1.25rem;
-    border-radius: 28px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    z-index: 2;
-  }
-
-  .mobile-spotlight-cosmic__badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-    background: linear-gradient(135deg, var(--planet-a), var(--planet-b));
-    color: #fff;
-    font-size: 0.65rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  .mobile-spotlight-cosmic__title {
-    margin-top: 0.625rem;
-    font-size: 1.55rem;
-    font-weight: 800;
-    line-height: 1.1;
-    color: #fff;
-    letter-spacing: -0.02em;
-  }
-
-  .mobile-spotlight-cosmic__category {
-    margin-top: 0.3rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.75);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .mobile-spotlight-cosmic__desc {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    line-height: 1.55;
-    color: rgba(255, 255, 255, 0.78);
-  }
-
-  .mobile-spotlight-cosmic__stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-
-  .mobile-spotlight-cosmic__stats div {
-    text-align: center;
-    padding: 0.5rem 0.25rem;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .mobile-spotlight-cosmic__stats span {
-    display: block;
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.65);
-  }
-
-  .mobile-spotlight-cosmic__stats strong {
-    display: block;
-    margin-top: 0.15rem;
-    font-size: 1rem;
-    font-weight: 800;
-    color: #fff;
-  }
-
-  .mobile-spotlight-cosmic__actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-
-  .mobile-spotlight-cosmic__cta {
-    flex: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    min-height: 2.6rem;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: transform 150ms ease, box-shadow 150ms ease;
-  }
-
-  .mobile-spotlight-cosmic__cta:active {
-    transform: scale(0.97);
-  }
-
-  .mobile-spotlight-cosmic__cta--primary {
-    background: linear-gradient(135deg, var(--planet-a), var(--planet-b));
-    color: #fff;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-  }
-
-  .mobile-spotlight-cosmic__cta--ghost {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-  }
-
-  /* Candidate strip */
-  .mobile-spotlight-cosmic__candidates {
-    margin-top: 1.25rem;
-    padding: 0 0.875rem;
-  }
-
-  .mobile-spotlight-cosmic__candidates-label {
-    font-size: 0.65rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.65);
-    margin-bottom: 0.625rem;
-  }
-
-  .mobile-spotlight-cosmic__candidates-scroll {
-    display: flex;
-    gap: 0.6rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 0.5rem;
-    padding-right: 1rem;
-  }
-
-  .mobile-spotlight-cosmic__candidates-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  .mobile-spotlight-cosmic__candidate {
-    position: relative;
-    flex-shrink: 0;
-    width: 7.5rem;
-    padding: 0.875rem;
-    border-radius: 20px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    text-decoration: none;
-    overflow: hidden;
-  }
-
-  .mobile-spotlight-cosmic__candidate-glow {
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--candidate-a), transparent 70%);
-    opacity: 0.35;
-    filter: blur(5px);
-  }
-
-  .mobile-spotlight-cosmic__candidate-name {
-    position: relative;
-    display: block;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.9);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .mobile-spotlight-cosmic__candidate-cat {
-    position: relative;
-    display: block;
-    margin-top: 0.2rem;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.65);
-  }
-}
 
 @media (max-width: 767px) {
   /* Riduce artefatto linea casuale hero-shell su mobile */
@@ -17597,92 +17310,6 @@ img {
 
   /* Mobile polish pass: Home, Catalog, Radar */
 
-  .mobile-spotlight-cosmic__weekly-pill {
-    position: absolute;
-    left: 50%;
-    top: 0.8rem;
-    z-index: 6;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.34rem 0.72rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.92);
-    color: #171125;
-    font-size: 0.58rem;
-    font-weight: 850;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    box-shadow: 0 10px 28px rgba(243, 191, 76, 0.22);
-    transform: translateX(-50%);
-  }
-
-  .mobile-spotlight-cosmic__weekly-pill::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: calc(100% + 0.35rem);
-    width: 1px;
-    height: 3.55rem;
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(243, 191, 76, 0.86), rgba(57, 210, 246, 0.38), transparent);
-    box-shadow: 0 0 18px rgba(243, 191, 76, 0.34);
-    transform: translateX(-50%);
-    pointer-events: none;
-  }
-
-  .mobile-spotlight-cosmic__planet::after {
-    content: "";
-    position: absolute;
-    right: 0.45rem;
-    top: 0.35rem;
-    z-index: 5;
-    width: 0.78rem;
-    height: 0.78rem;
-    border-radius: 50%;
-    background: #ff4d5e;
-    box-shadow: 0 0 0 5px rgba(255, 77, 94, 0.16), 0 0 20px rgba(255, 77, 94, 0.72);
-    animation: tv-spotlight-alert 1.8s ease-in-out infinite;
-  }
-
-  .mobile-spotlight-cosmic__planet-label {
-    position: absolute;
-    left: 50%;
-    top: calc(100% + 0.62rem);
-    z-index: 6;
-    display: inline-flex;
-    max-width: 8rem;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 0.28rem 0.68rem;
-    color: #171125;
-    font-size: 0.74rem;
-    font-weight: 900;
-    letter-spacing: 0.02em;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.76);
-    transform: translateX(-50%);
-    box-shadow:
-      0 12px 30px rgba(57, 210, 246, 0.16),
-      0 0 24px color-mix(in srgb, var(--planet-a) 28%, transparent);
-  }
-
-  .mobile-spotlight-cosmic__satellites {
-    position: absolute;
-    inset: 0;
-    z-index: 4;
-    animation: cosmic-satellites-spin 26s linear infinite;
-    transform-origin: 50% 50%;
-    transform-box: fill-box;
-  }
-
-  @keyframes cosmic-satellites-spin {
-    to { transform: rotate(360deg); }
-  }
-
   @keyframes tv-spotlight-alert {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.55; transform: scale(0.72); }
@@ -18544,62 +18171,6 @@ img {
 }
 
 @media (max-width: 767px) {
-  .mobile-spotlight-cosmic__satellites {
-    animation: none !important;
-  }
-
-  .mobile-spotlight-cosmic__satellite {
-    animation: cosmic-satellite-orbit-upright 26s linear infinite;
-    transform-origin: 50% 50%;
-    will-change: transform;
-  }
-
-  .mobile-spotlight-cosmic__satellite-name {
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
-  }
-
-  .mobile-spotlight-cosmic__planet::after {
-    width: 1rem;
-    height: 1rem;
-    right: 0.2rem;
-    top: 0.1rem;
-    background: #ff244f;
-    border: 2px solid rgba(255, 255, 255, 0.9);
-    box-shadow:
-      0 0 0 7px rgba(255, 36, 79, 0.2),
-      0 0 22px rgba(255, 36, 79, 0.95),
-      0 0 46px rgba(255, 80, 112, 0.58);
-  }
-
-  .mobile-spotlight-cosmic__planet::before {
-    content: "";
-    position: absolute;
-    right: -0.16rem;
-    top: -0.26rem;
-    z-index: 4;
-    width: 1.7rem;
-    height: 1.7rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 36, 79, 0.55);
-    animation: tv-spotlight-alert-ring 1.55s ease-out infinite;
-  }
-
-  @keyframes cosmic-satellite-orbit-upright {
-    from {
-      transform:
-        translate(-50%, -50%)
-    rotate(var(--sat-angle))
-    translateX(7.95rem)
-    rotate(var(--sat-angle-back));
-    }
-    to {
-      transform:
-        translate(-50%, -50%)
-        rotate(calc(var(--sat-angle) + 360deg))
-        translateX(7.95rem)
-        rotate(calc(var(--sat-angle-back) - 360deg));
-    }
-  }
 
   @keyframes tv-spotlight-alert-ring {
     0% {
@@ -19583,285 +19154,19 @@ img {
     letter-spacing: 0.16em;
   }
 
-  .mobile-spotlight-cosmic {
-    position: relative;
-    display: grid;
-    grid-template-columns: minmax(28rem, 1fr) minmax(24rem, 0.82fr);
-    gap: clamp(2rem, 5vw, 5rem);
-    align-items: center;
-    min-height: 44rem;
-    overflow: hidden;
-    padding: clamp(4.5rem, 8vh, 7rem) clamp(2rem, 5vw, 5.5rem);
-    background:
-      radial-gradient(circle at 24% 40%, rgba(106, 60, 255, 0.28), transparent 32%),
-      radial-gradient(circle at 72% 24%, rgba(57, 210, 246, 0.18), transparent 30%),
-      linear-gradient(180deg, #0a0412 0%, #14082a 48%, #0a0412 100%);
-    color: #fff;
-  }
-
-  .mobile-spotlight-cosmic__stars {
-    position: absolute;
-    inset: 0;
-    opacity: 0.7;
-    background-image:
-      radial-gradient(1.5px 1.5px at 12% 18%, rgba(255,255,255,0.35), transparent),
-      radial-gradient(1px 1px at 45% 12%, rgba(255,255,255,0.22), transparent),
-      radial-gradient(1.5px 1.5px at 78% 22%, rgba(255,255,255,0.3), transparent),
-      radial-gradient(1px 1px at 28% 55%, rgba(255,255,255,0.18), transparent),
-      radial-gradient(1.5px 1.5px at 65% 48%, rgba(255,255,255,0.28), transparent);
-    pointer-events: none;
-  }
-
-  .mobile-spotlight-cosmic__orbit {
-    position: absolute;
-    left: clamp(11rem, 29vw, 34rem);
-    top: 50%;
-    width: clamp(24rem, 38vw, 38rem);
-    aspect-ratio: 1;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-
-  .mobile-spotlight-cosmic__orbit-track {
-    width: 100%;
-    height: 100%;
-    border: 1px dashed rgba(255,255,255,0.14);
-    border-radius: 50%;
-    animation: cosmic-orbit-spin 28s linear infinite;
-  }
-
-  .mobile-spotlight-cosmic__system {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    width: min(42rem, 100%);
-    min-height: clamp(28rem, 38vw, 39rem);
-    place-items: center;
-  }
-
-  .mobile-spotlight-cosmic__weekly-pill {
-    position: absolute;
-    left: 50%;
-    top: 1.1rem;
-    z-index: 6;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.38rem;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.92);
-    padding: 0.42rem 0.9rem;
-    color: #171125;
-    font-size: 0.68rem;
-    font-weight: 850;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transform: translateX(-50%);
-  }
-
-  .mobile-spotlight-cosmic__planet {
-    position: relative;
-    z-index: 3;
-    width: clamp(11rem, 17vw, 15rem);
-    aspect-ratio: 1;
-    border-radius: 50%;
-  }
-
-  .mobile-spotlight-cosmic__planet-glow {
-    position: absolute;
-    inset: -14px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--planet-a), var(--planet-b) 42%, transparent 72%);
-    filter: blur(10px);
-    opacity: 0.56;
-    animation: cosmic-pulse 4.2s ease-in-out infinite;
-  }
-
-  .mobile-spotlight-cosmic__planet-core {
-    position: relative;
-    display: grid;
-    width: 100%;
-    height: 100%;
-    place-items: center;
-    overflow: hidden;
-    border: 2px solid rgba(255,255,255,0.18);
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
-    box-shadow: inset 0 0 30px rgba(255,255,255,0.08), 0 22px 64px rgba(0,0,0,0.34);
-  }
-
-  .mobile-spotlight-cosmic__planet-core img {
-    width: 42%;
-    height: 42%;
-    object-fit: contain;
-  }
-
-  .mobile-spotlight-cosmic__planet-label {
-    position: absolute;
-    left: 50%;
-    top: calc(100% + 0.8rem);
-    display: inline-flex;
-    max-width: 12rem;
-    justify-content: center;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.9);
-    padding: 0.38rem 0.85rem;
-    color: #171125;
-    font-size: 0.88rem;
-    font-weight: 900;
-    transform: translateX(-50%);
-  }
-
-  .mobile-spotlight-cosmic__satellites {
-    position: absolute;
-    inset: 0;
-    z-index: 4;
-    animation: cosmic-satellites-spin 30s linear infinite;
-  }
-
-  .mobile-spotlight-cosmic__satellite {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.35rem;
-    color: #fff;
-    text-decoration: none;
-    transform: translate(-50%, -50%) rotate(var(--sat-angle)) translateX(clamp(12rem, 18vw, 17rem)) rotate(var(--sat-angle-back));
-  }
-
-  .mobile-spotlight-cosmic__satellite-ring {
-    display: grid;
-    width: 3.4rem;
-    aspect-ratio: 1;
-    place-items: center;
-    border: 1.5px solid rgba(255,255,255,0.16);
-    border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-  }
-
-  .mobile-spotlight-cosmic__satellite-body {
-    position: absolute;
-    display: grid;
-    width: 2.6rem;
-    aspect-ratio: 1;
-    place-items: center;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-  }
-
-  .mobile-spotlight-cosmic__satellite-body img {
-    width: 1.45rem;
-    height: 1.45rem;
-    object-fit: contain;
-  }
-
-  .mobile-spotlight-cosmic__satellite-name {
-    max-width: 7rem;
-    overflow: hidden;
-    color: rgba(255,255,255,0.78);
-    font-size: 0.78rem;
-    font-weight: 750;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .mobile-spotlight-cosmic__info {
-    position: relative;
-    z-index: 3;
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 30px;
-    background: rgba(255,255,255,0.07);
-    padding: clamp(1.4rem, 2.4vw, 2rem);
-    backdrop-filter: blur(14px);
-    box-shadow: 0 28px 82px rgba(0,0,0,0.26);
-  }
-
-  .mobile-spotlight-cosmic__badge,
-  .mobile-spotlight-cosmic__hero-tag,
   .mobile-collections__hero-tag {
     display: inline-flex;
     align-items: center;
     gap: 0.38rem;
   }
 
-  .mobile-spotlight-cosmic__badge {
-    border-radius: 999px;
-    background: linear-gradient(135deg, var(--planet-a), var(--planet-b));
-    padding: 0.36rem 0.82rem;
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 850;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .mobile-spotlight-cosmic__title {
-    margin-top: 0.8rem;
-    color: #fff;
-    font-size: clamp(2.4rem, 4.5vw, 4.8rem);
-    line-height: 0.95;
-  }
-
-  .mobile-spotlight-cosmic__category,
-  .mobile-spotlight-cosmic__desc {
-    color: rgba(255,255,255,0.76);
-  }
-
-  .mobile-spotlight-cosmic__desc {
-    margin-top: 0.75rem;
-    font-size: 1rem;
-    line-height: 1.75;
-  }
-
-  .mobile-spotlight-cosmic__stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.75rem;
-    margin-top: 1.25rem;
-  }
-
-  .mobile-spotlight-cosmic__stats div {
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 18px;
-    background: rgba(255,255,255,0.06);
-    padding: 0.75rem;
-    text-align: center;
-  }
-
-  .mobile-spotlight-cosmic__stats span,
-  .mobile-spotlight-cosmic__candidate-cat {
-    color: rgba(255,255,255,0.62);
-    font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .mobile-spotlight-cosmic__stats strong {
-    display: block;
-    margin-top: 0.2rem;
-    color: #fff;
-    font-size: 1.12rem;
-  }
-
-  .mobile-spotlight-cosmic__actions,
   .mobile-library-empty__actions {
     display: flex;
     gap: 0.75rem;
     margin-top: 1.2rem;
   }
 
-  .mobile-spotlight-cosmic__cta,
-  .mobile-library-empty__cta,
-  .mobile-method-room__panel-cta,
-  .mobile-method-room__footer-cta,
-  .mobile-collections__hero-cta,
-  .mobile-collections__footer-link,
-  .mobile-compare-toolbox__cta {
+  .mobile-library-empty__cta, .mobile-method-room__panel-cta, .mobile-method-room__footer-cta, .mobile-collections__hero-cta, .mobile-collections__footer-link, .mobile-compare-toolbox__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -19876,87 +19181,16 @@ img {
       background 220ms ease;
   }
 
-  .mobile-spotlight-cosmic__cta:hover,
-  .mobile-library-empty__cta:hover,
-  .mobile-method-room__panel-cta:hover,
-  .mobile-method-room__footer-cta:hover,
-  .mobile-collections__hero-cta:hover,
-  .mobile-collections__footer-link:hover,
-  .mobile-compare-toolbox__cta:hover {
+  .mobile-library-empty__cta:hover, .mobile-method-room__panel-cta:hover, .mobile-method-room__footer-cta:hover, .mobile-collections__hero-cta:hover, .mobile-collections__footer-link:hover, .mobile-compare-toolbox__cta:hover {
     transform: translateY(-2px);
   }
 
-  .mobile-spotlight-cosmic__cta {
-    flex: 1;
-  }
-
-  .mobile-spotlight-cosmic__cta--primary {
-    background: linear-gradient(135deg, var(--planet-a), var(--planet-b));
-    color: #fff;
-    box-shadow: 0 14px 34px rgba(0,0,0,0.28);
-  }
-
-  .mobile-spotlight-cosmic__cta--ghost {
-    border: 1px solid rgba(255,255,255,0.14);
-    background: rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.82);
-  }
-
-  .mobile-spotlight-cosmic__candidates {
-    position: relative;
-    z-index: 4;
-    grid-column: 1 / -1;
-    max-width: min(1180px, calc(100vw - 4rem));
-    width: 100%;
-    margin-inline: auto;
-  }
-
-  .mobile-spotlight-cosmic__candidates-label,
-  .mobile-collections__list-label,
-  .mobile-method-room__footer-label {
+  .mobile-collections__list-label, .mobile-method-room__footer-label {
     color: rgba(255,255,255,0.66);
     font-size: 0.72rem;
     font-weight: 850;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-  }
-
-  .mobile-spotlight-cosmic__candidates-scroll {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
-    margin-top: 0.75rem;
-  }
-
-  .mobile-spotlight-cosmic__candidate {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    background: rgba(255,255,255,0.06);
-    padding: 1rem;
-  }
-
-  .mobile-spotlight-cosmic__candidate-glow {
-    position: absolute;
-    right: -2rem;
-    top: -2rem;
-    width: 7rem;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--candidate-a), transparent 70%);
-    opacity: 0.32;
-    filter: blur(8px);
-  }
-
-  .mobile-spotlight-cosmic__candidate-name {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    color: #fff;
-    font-weight: 850;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .mobile-method-steps {
@@ -20089,15 +19323,6 @@ img {
     background:
       linear-gradient(135deg, rgba(106, 60, 255, 0.12), rgba(57, 210, 246, 0.12));
     outline: none;
-  }
-
-  .mobile-spotlight-cosmic__satellites {
-    animation: cosmic-satellites-spin 30s linear infinite !important;
-    transform-origin: 50% 50%;
-  }
-
-  .mobile-spotlight-cosmic__satellite {
-    animation: cosmic-satellite-counter-spin 30s linear infinite;
   }
 
   .mobile-catalog-view {
@@ -22052,9 +21277,7 @@ img {
 }
 
 @media (min-width: 768px) and (max-width: 1180px) {
-  .mobile-spotlight-cosmic,
-  .mobile-radar-view,
-  .mobile-compare-arena {
+  .mobile-radar-view, .mobile-compare-arena {
     grid-template-columns: 1fr;
   }
 
@@ -22101,12 +21324,6 @@ img {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  
-  .mobile-spotlight-cosmic__orbit-track,
-  .mobile-spotlight-cosmic__planet-glow,
-  .mobile-spotlight-cosmic__satellites {
-    animation: none !important;
-  }
 }
 
 /* Desktop refinement pass: contrast, normal-monitor scale, radar/footer readability, arena RPG polish */
