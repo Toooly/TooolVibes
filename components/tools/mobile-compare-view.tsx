@@ -78,41 +78,43 @@ type NormalisedTool = {
   useCasesCount: number;
 };
 
-function SnapCompareBoard({ tools }: { tools: NormalisedTool[] }) {
+function SnapCompareBoard({ tools, onRemove }: { tools: NormalisedTool[]; onRemove: (slug: string) => void }) {
   const rows = [
     { key: "category", label: "Categoria", render: (t: NormalisedTool) => t.categoryLabel },
     { key: "tldr", label: "TL;DR", render: (t: NormalisedTool) => t.tldr },
-    { key: "useCase", label: "Uso ideale", render: (t: NormalisedTool) => t.useCase },
+    { key: "useCase", label: "Uso ideale", render: (t: NormalisedTool) => t.useCase || t.tldr },
     { key: "review", label: "Nota editoriale", render: (t: NormalisedTool) => t.review || t.tldr },
     { key: "highlights", label: "Highlights", render: (t: NormalisedTool) => t.highlights.slice(0, 3).join(" · ") || "—" },
     { key: "readingTime", label: "Tempo lettura", render: (t: NormalisedTool) => t.readingTime },
+    { key: "actions", label: "Azioni", render: (t: NormalisedTool) => (
+      <div className="compare-board__actions">
+        <Link href={`/toools/${t.slug}`} className="compare-board__link">Scheda</Link>
+        <button type="button" onClick={() => onRemove(t.slug)} className="compare-board__remove">Rimuovi</button>
+      </div>
+    )},
   ];
 
   return (
     <section className="compare-board" aria-label="Confronto tool">
-      <div className="compare-board__row compare-board__row--head">
-        <div className="compare-board__label" />
-        <div className="compare-board__track">
-          {tools.map((tool) => (
-            <div key={tool.slug} className="compare-board__cell compare-board__cell--head">
-              <strong>{tool.name}</strong>
-              <span>{tool.categoryLabel}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      {rows.map((row) => (
-        <div key={row.key} className="compare-board__row">
-          <div className="compare-board__label">{row.label}</div>
-          <div className="compare-board__track">
-            {tools.map((tool) => (
-              <article key={tool.slug} className="compare-board__cell">
-                {row.render(tool)}
-              </article>
-            ))}
+      <div className="compare-board__grid" style={{ gridTemplateColumns: `96px repeat(${tools.length}, minmax(220px, 1fr))` }}>
+        <div className="compare-board__cell compare-board__cell--corner" />
+        {tools.map((tool) => (
+          <div key={tool.slug} className="compare-board__cell compare-board__cell--head">
+            <strong>{tool.name}</strong>
+            <span>{tool.categoryLabel}</span>
           </div>
-        </div>
-      ))}
+        ))}
+        {rows.map((row) => (
+          <>
+            <div key={`${row.key}-label`} className="compare-board__label">{row.label}</div>
+            {tools.map((tool) => (
+              <div key={`${row.key}-${tool.slug}`} className="compare-board__cell">
+                {row.render(tool)}
+              </div>
+            ))}
+          </>
+        ))}
+      </div>
     </section>
   );
 }
@@ -632,7 +634,7 @@ export function MobileCompareView({
     <div className="mobile-compare-arena">
       <ArenaHeader count={tools.length} />
 
-      <SnapCompareBoard tools={sorted} />
+      <SnapCompareBoard tools={sorted} onRemove={(slug) => toggleCompare(slug)} />
 
       <MobileArenaBattleStage
         battleState={battleState}
