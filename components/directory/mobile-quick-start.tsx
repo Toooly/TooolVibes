@@ -35,7 +35,7 @@ const quickPaths = [
   {
     title: "Voglio tool trending",
     description: "Guarda lanci e segnali esterni dal radar Product Hunt.",
-    href: "/product-hunt",
+    href: "/radar",
     icon: TrendingUp,
   },
 ];

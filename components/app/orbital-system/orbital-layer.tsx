@@ -514,6 +514,7 @@ export function OrbitalLayer() {
     pathname?.startsWith("/archivio") ||
     pathname?.startsWith("/compare") ||
     pathname?.startsWith("/shortlist") ||
+    pathname?.startsWith("/radar") ||
     pathname?.startsWith("/product-hunt") ||
     pathname?.startsWith("/collections") ||
     pathname?.startsWith("/metodo") ||

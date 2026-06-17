@@ -9,7 +9,7 @@ import { useOrbitalContext } from "./orbital-context";
 const NAV_ITEMS = [
   { href: "/", label: "Home", icon: Home, color: "#6a3cff" },
   { href: "/archivio", label: "Cerca", icon: Search, color: "#39d2f6" },
-  { href: "/product-hunt", label: "Radar", icon: Radar, color: "#f3bf4c" },
+  { href: "/radar", label: "Radar", icon: Radar, color: "#f3bf4c" },
   { href: "/shortlist", label: "Salvati", icon: Bookmark, color: "#8b6cff" },
   { href: "/compare", label: "Confronta", icon: Columns3, color: "#2bb9de" },
 ];

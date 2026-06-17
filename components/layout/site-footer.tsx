@@ -10,7 +10,7 @@ const footerNav = [
   { href: "/tags", label: "Categorie" },
   { href: "/wishlist", label: "Suggerisci" },
   { href: "/affiliati", label: "Diventa affiliato" },
-  { href: "/product-hunt", label: "Product Hunt" },
+  { href: "/radar", label: "Radar" },
   { href: "/community", label: "Community" },
   { href: "/shop", label: "Shop Digitale" },
   { href: "/admin/login", label: "Login amministratore" },
@@ -145,7 +145,7 @@ export function SiteFooter() {
             >
               Shop
             </a>
-            <Link href="/product-hunt" className="animated-link text-white/50 hover:text-white">
+            <Link href="/radar" className="animated-link text-white/50 hover:text-white">
               Product Hunt
             </Link>
             <Link href="/wishlist" className="animated-link text-white/50 hover:text-white">

@@ -135,7 +135,7 @@ export function MobileMethodRoom() {
           <span>·</span>
           <Link href="/shortlist">Shortlist</Link>
           <span>·</span>
-          <Link href="/product-hunt">Radar</Link>
+          <Link href="/radar">Radar</Link>
         </div>
       </div>
     </div>

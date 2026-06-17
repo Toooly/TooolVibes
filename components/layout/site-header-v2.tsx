@@ -29,7 +29,7 @@ import {
 const navLinks = [
   { href: "/", label: "Home", icon: Sparkles },
   { href: "/archivio", label: "Catalogo", icon: LayoutGrid },
-  { href: "/product-hunt", label: "Radar", icon: Radar },
+  { href: "/radar", label: "Radar", icon: Radar },
   { href: "/compare", label: "Compare", icon: Zap },
   { href: "/shortlist", label: "Shortlist", icon: Compass },
   { href: "/wishlist", label: "Wishlist", icon: Heart },

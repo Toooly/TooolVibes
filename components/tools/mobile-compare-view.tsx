@@ -593,21 +593,6 @@ function MobileArenaBattleStage({
         ))}
       </div>
 
-      {battleState === "fighting" && (
-        <div className="mobile-compare-arena__energy-lines" aria-hidden="true">
-          {positions.map((pos, i) => {
-            const angle = Math.atan2(50 - pos.y, 50 - pos.x) * (180 / Math.PI);
-            return (
-              <span
-                key={i}
-                className="mobile-compare-arena__energy-line"
-                style={{ "--energy-angle": `${angle}deg`, left: `${pos.x}%`, top: `${pos.y}%` } as CSSProperties}
-              />
-            );
-          })}
-        </div>
-      )}
-
       <div className="mobile-compare-arena__fighters">
         {tools.map((tool, index) => {
           const isWinner = battleState === "result" && tool.slug === winner.slug;

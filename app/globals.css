@@ -24140,6 +24140,17 @@ img {
       linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.045)) !important;
   }
 
+  .mobile-library-shelf__rail {
+    border-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .mobile-compare-arena__energy-lines,
+  .mobile-compare-arena__energy-line {
+    display: none !important;
+  }
+
   .mobile-library-shelf__header span {
     border-color: rgba(255,255,255,0.16) !important;
     background: rgba(255,255,255,0.09) !important;

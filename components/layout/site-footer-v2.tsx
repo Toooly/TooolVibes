@@ -19,7 +19,7 @@ import {
 const footerLinks = {
   explore: [
     { label: "Catalogo", href: "/archivio", icon: LayoutGrid },
-    { label: "Radar", href: "/product-hunt", icon: Radar },
+    { label: "Radar", href: "/radar", icon: Radar },
     { label: "Compare", href: "/compare", icon: Sparkles },
     { label: "Wishlist", href: "/wishlist", icon: Heart },
   ],
@@ -73,6 +73,7 @@ export function SiteFooterV2() {
   const pathname = usePathname();
   const darkFooter =
     pathname?.startsWith("/product-hunt") ||
+    pathname?.startsWith("/radar") ||
     pathname?.startsWith("/shortlist") ||
     pathname?.startsWith("/compare");
 

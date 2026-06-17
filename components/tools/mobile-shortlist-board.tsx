@@ -308,7 +308,7 @@ function MobileLibraryEmpty() {
           Esplora l&apos;archivio
           <ArrowRight size={14} />
         </Link>
-        <Link href="/product-hunt" className="mobile-library-empty__cta is-secondary">
+        <Link href="/radar" className="mobile-library-empty__cta is-secondary">
           Apri il Radar
           <ArrowRight size={14} />
         </Link>

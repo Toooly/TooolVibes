@@ -13,7 +13,7 @@ import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 const mobileItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/archivio", label: "Cerca", icon: Search },
-  { href: "/product-hunt", label: "Radar", icon: Radar },
+  { href: "/radar", label: "Radar", icon: Radar },
   { href: "/shortlist", label: "Salvati", icon: Bookmark },
   { href: "/compare", label: "Confronta", icon: Columns3 },
 ];

@@ -53,7 +53,7 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools }: VibeHomeV2Pro
     {
       id: "solar-radar",
       label: "Radar",
-      href: "/product-hunt",
+      href: "/radar",
       color: "#39d2f6",
       icon: "Radar" as const,
       badge: "LIVE",

@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 const primaryNav = [
   { href: "/", label: "Home" },
   { href: "/archivio", label: "Catalogo" },
-  { href: "/product-hunt", label: "Radar live" },
+  { href: "/radar", label: "Radar live" },
   { href: "/wishlist", label: "Suggerisci" },
   { href: "/affiliati", label: "Diventa affiliato" },
   { href: "/shop", label: "Shop" },
