@@ -105,6 +105,53 @@ function getRedirectUrl() {
   return `${publicAuthRedirectOrigin}/auth/callback`;
 }
 
+function getSupabaseAuthErrorDetail(error: unknown) {
+  const candidate = error as {
+    code?: string | number;
+    error_code?: string | number;
+    message?: string;
+    status?: number;
+  };
+  const code = String(candidate?.code ?? candidate?.error_code ?? "").trim();
+  const message = candidate?.message?.trim() ?? "";
+  const normalized = `${code} ${message}`.toLowerCase();
+
+  if (normalized.includes("rate") || normalized.includes("too many")) {
+    return "Hai richiesto troppe mail in poco tempo: aspetta almeno 60 secondi e riprova.";
+  }
+
+  if (normalized.includes("signup") && normalized.includes("disabled")) {
+    return "I nuovi account sono disattivati nelle impostazioni Auth. Attiva i signup dal provider Email.";
+  }
+
+  if (normalized.includes("not allowed") || normalized.includes("redirect")) {
+    return "Il redirect non risulta ancora autorizzato. Salva Site URL e Redirect URL in Supabase.";
+  }
+
+  if (normalized.includes("email") && normalized.includes("disabled")) {
+    return "Il provider Email non risulta attivo nelle impostazioni Auth.";
+  }
+
+  if (
+    normalized.includes("smtp") ||
+    normalized.includes("mail") ||
+    normalized.includes("send") ||
+    normalized.includes("sending")
+  ) {
+    return "Supabase non riesce a consegnare la mail: controlla Auth logs e configurazione SMTP/email.";
+  }
+
+  if (message) {
+    return `Dettaglio auth: ${message}`;
+  }
+
+  if (code) {
+    return `Dettaglio auth: ${code}`;
+  }
+
+  return "Controlla Email Auth, redirect URL e signup su Supabase.";
+}
+
 export function AccountProvider({ children }: { children: React.ReactNode }) {
   const [authEnabled, setAuthEnabled] = useState(() => isSupabaseBrowserEnabled());
   const [status, setStatus] = useState<AccountStatus>("loading");
@@ -255,8 +302,12 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) {
-        const message =
-          "Non sono riuscito a inviare la mail di conferma. Controlla Email Auth, redirect URL e signups su Supabase.";
+        console.warn("[account-auth] magic link failed", {
+          code: error.code,
+          message: error.message,
+          status: error.status,
+        });
+        const message = `Non sono riuscito a inviare la mail di conferma. ${getSupabaseAuthErrorDetail(error)}`;
         setAuthMessage(message);
         return {
           ok: false,
