@@ -1,0 +1,8 @@
+Entra in TooolVibes
+
+Conferma l'accesso e ritrova la selezione che hai iniziato a costruire.
+
+Apri questo link per completare l'accesso:
+{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email
+
+Se non hai richiesto tu questa email, puoi ignorarla.

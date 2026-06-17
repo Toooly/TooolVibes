@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entra in TooolVibes</title>
+  </head>
+  <body style="margin:0; background:#080512; color:#f8f5ff; font-family:Inter, Arial, sans-serif;">
+    <div style="display:none; max-height:0; overflow:hidden; opacity:0;">
+      Conferma l'accesso e ritrova la tua selezione TooolVibes.
+    </div>
+
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#080512; margin:0; padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px; overflow:hidden; border:1px solid rgba(255,255,255,0.14); border-radius:28px; background:linear-gradient(145deg,#151029 0%,#0c0719 58%,#111f37 100%);">
+            <tr>
+              <td style="padding:32px 28px 12px;">
+                <p style="margin:0 0 18px; color:#6ee7ff; font-size:12px; font-weight:800; letter-spacing:0.22em; text-transform:uppercase;">
+                  TOOOLVIBES
+                </p>
+                <h1 style="margin:0; color:#ffffff; font-size:34px; line-height:1.05; letter-spacing:-0.02em;">
+                  Pronto per entrare in TooolVibes?
+                </h1>
+                <p style="margin:18px 0 0; color:rgba(248,245,255,0.76); font-size:16px; line-height:1.65;">
+                  Premi il pulsante qui sotto per confermare l'accesso e collegare shortlist, compare e tool salvati al tuo account.
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:14px 28px 8px;">
+                <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email" style="display:block; border-radius:999px; background:linear-gradient(135deg,#7c4dff 0%,#39d2f6 100%); color:#ffffff; font-size:16px; font-weight:900; line-height:52px; text-align:center; text-decoration:none; box-shadow:0 18px 44px rgba(57,210,246,0.22);">
+                  Conferma e apri TooolVibes
+                </a>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:18px 28px 30px;">
+                <p style="margin:0; color:rgba(248,245,255,0.58); font-size:13px; line-height:1.7;">
+                  Se il pulsante non funziona, copia e incolla questo link nel browser:
+                </p>
+                <p style="margin:10px 0 0; word-break:break-all; color:#9ddcff; font-size:12px; line-height:1.6;">
+                  {{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email
+                </p>
+              </td>
+            </tr>
+          </table>
+
+          <p style="max-width:520px; margin:18px auto 0; color:rgba(248,245,255,0.5); font-size:12px; line-height:1.6; text-align:center;">
+            Hai ricevuto questa email per accedere a TooolVibes con {{ .Email }}. Se non sei stato tu, puoi ignorarla.
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
