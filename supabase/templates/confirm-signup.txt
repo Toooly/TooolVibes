@@ -1,0 +1,8 @@
+Entra in TooolVibes
+
+Conferma la tua email e ritrova la selezione che hai iniziato a costruire.
+
+Apri questo link per completare l'accesso:
+{{ .ConfirmationURL }}
+
+Se non hai richiesto tu questa email, puoi ignorarla.

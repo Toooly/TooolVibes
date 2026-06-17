@@ -60,12 +60,55 @@ const AccountContext = createContext<AccountContextValue>({
   signOut: async () => {},
 });
 
-function getRedirectUrl() {
-  if (typeof window !== "undefined") {
-    return `${window.location.origin}/auth/callback`;
+const publicAuthRedirectOrigin = "https://tooolvibes.staff-ffa.workers.dev";
+
+function normalizeOrigin(value?: string | null) {
+  const trimmed = value?.trim();
+
+  if (!trimmed) {
+    return null;
   }
 
-  return `${siteConfig.url}/auth/callback`;
+  try {
+    const url = new URL(trimmed);
+    return url.origin;
+  } catch {
+    return null;
+  }
+}
+
+function isLocalOrigin(origin?: string | null) {
+  if (!origin) {
+    return true;
+  }
+
+  try {
+    const { hostname } = new URL(origin);
+    return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "0.0.0.0";
+  } catch {
+    return true;
+  }
+}
+
+function getRedirectUrl() {
+  const configuredOrigin =
+    normalizeOrigin(process.env.NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN) ??
+    normalizeOrigin(process.env.NEXT_PUBLIC_AUTH_SITE_URL) ??
+    normalizeOrigin(siteConfig.url);
+
+  if (configuredOrigin && !isLocalOrigin(configuredOrigin)) {
+    return `${configuredOrigin}/auth/callback`;
+  }
+
+  if (typeof window !== "undefined") {
+    const currentOrigin = normalizeOrigin(window.location.origin);
+
+    if (currentOrigin && !isLocalOrigin(currentOrigin)) {
+      return `${currentOrigin}/auth/callback`;
+    }
+  }
+
+  return `${publicAuthRedirectOrigin}/auth/callback`;
 }
 
 export function AccountProvider({ children }: { children: React.ReactNode }) {

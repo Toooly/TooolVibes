@@ -300,7 +300,7 @@ export function AccountPanel() {
                 <p className="mt-2.5 text-[0.98rem] leading-7" style={{ color: "var(--muted-strong)" }}>
                   {isVibeRushSignup
                     ? `Completa il profilo e ti mandiamo la mail di conferma con il riepilogo: ${vibeScore || 0} vibe raccolti, ${vibeXp || 0} XP.`
-                    : "Ti mandiamo una mail di conferma. Se l'email non esiste ancora, Supabase crea l'account; quando entri, la selezione locale viene collegata senza perdere cio che hai gia salvato."}
+                    : "Ti mandiamo una mail di conferma. Quando entri, la selezione locale viene collegata senza perdere cio che hai gia salvato."}
                 </p>
                 <p className="mt-3 text-[0.88rem] leading-7" style={{ color: "var(--muted)" }}>
                   {continuityCopy}
@@ -364,11 +364,11 @@ export function AccountPanel() {
                 <p className="mt-3 text-[0.76rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                   {account.authEnabled
                     ? isVibeRushSignup
-                      ? "Il risultato Vibe Rush viaggia come metadata della conferma email."
-                      : "Registrazione aperta: Supabase invia la mail di conferma e crea l'utente se non esiste."
+                      ? "Conferma la mail per salvare la run e ritrovare il tuo progresso."
+                      : "Conferma la mail per entrare e ritrovare la tua selezione."
                     : account.status === "loading"
-                      ? "Carico la configurazione Supabase..."
-                      : "Auth Supabase non configurata: il prodotto resta in fallback locale."}
+                      ? "Prepariamo l'accesso sicuro..."
+                      : "Accesso email non disponibile in questo momento."}
                 </p>
               </form>
             )}

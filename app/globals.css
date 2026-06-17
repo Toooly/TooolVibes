@@ -12469,6 +12469,15 @@ img {
     line-height: 0.94;
   }
 
+  .desktop-vibe-radar .desktop-vibe-copy h1 {
+    color: #f8f5ff;
+    text-shadow: 0 18px 58px rgba(106, 60, 255, 0.32);
+  }
+
+  .desktop-vibe-radar .desktop-vibe-copy p:not(.desktop-vibe-eyebrow) {
+    color: rgba(248, 245, 255, 0.72);
+  }
+
   .desktop-vibe-compare .desktop-vibe-copy p:not(.desktop-vibe-eyebrow),
   .desktop-vibe-radar .desktop-vibe-copy p:not(.desktop-vibe-eyebrow) {
     max-width: 39rem;
@@ -24146,6 +24155,68 @@ img {
 
   .mobile-compare-arena__fight-copy small {
     display: none;
+  }
+
+  .mobile-compare-arena__fight-button {
+    width: 12.75rem !important;
+    min-width: 12.75rem !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .mobile-compare-arena__fight-button[data-state="fighting"] {
+    pointer-events: none;
+  }
+
+  .mobile-compare-arena__battle-result {
+    left: calc(50% - 7.5rem) !important;
+    top: calc(50% - 3.65rem) !important;
+    z-index: 7 !important;
+    display: grid !important;
+    width: 15rem !important;
+    height: 7.3rem !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 2rem) !important;
+    min-height: auto !important;
+    place-items: center !important;
+    gap: 0.24rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 1.15rem !important;
+    background: rgba(13, 6, 28, 0.86) !important;
+    padding: 0.92rem 1.1rem !important;
+    color: #ffffff !important;
+    text-align: center !important;
+    translate: none !important;
+    transform: none !important;
+    white-space: normal !important;
+    box-shadow:
+      0 18px 52px rgba(0, 0, 0, 0.28),
+      0 0 34px rgba(106, 60, 255, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .mobile-compare-arena__battle-result svg {
+    width: 1rem !important;
+    height: 1rem !important;
+    color: #f3bf4c;
+  }
+
+  .mobile-compare-arena__battle-result-kicker {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.68rem;
+    font-weight: 850;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .mobile-compare-arena__battle-result strong {
+    color: #ffffff;
+    font-size: 1.18rem;
+    line-height: 1.05;
+  }
+
+  .mobile-compare-arena__battle-result span:last-child {
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.78rem;
   }
 }
 
