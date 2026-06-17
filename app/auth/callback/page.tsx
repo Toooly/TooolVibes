@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { getBrowserSupabaseClient, isSupabaseBrowserEnabled } from "@/lib/supabase/browser-client";
+import {
+  getBrowserSupabaseClient,
+  isSupabaseBrowserEnabled,
+  loadBrowserSupabaseRuntimeConfig,
+} from "@/lib/supabase/browser-client";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -14,6 +18,14 @@ export default function AuthCallbackPage() {
     let isActive = true;
 
     async function handleCallback() {
+      if (!isSupabaseBrowserEnabled()) {
+        if (isActive) {
+          setMessage("Verifico la configurazione auth...");
+        }
+
+        await loadBrowserSupabaseRuntimeConfig();
+      }
+
       if (!isSupabaseBrowserEnabled()) {
         if (isActive) {
           setMessage("Auth non disponibile in questo ambiente.");

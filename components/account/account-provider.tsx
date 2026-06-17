@@ -19,9 +19,9 @@ import {
 import type { DiscoveryPersistencePayload } from "@/lib/discovery/types";
 import { siteConfig } from "@/lib/config/site";
 import {
-  configureBrowserSupabaseClient,
   getBrowserSupabaseClient,
   isSupabaseBrowserEnabled,
+  loadBrowserSupabaseRuntimeConfig,
 } from "@/lib/supabase/browser-client";
 
 type AccountStatus = "loading" | "guest" | "authenticated" | "unavailable";
@@ -40,12 +40,6 @@ type AccountContextValue = {
     metadata?: AccountMagicLinkMetadata,
   ) => Promise<{ ok: boolean; message: string }>;
   signOut: () => Promise<void>;
-};
-
-type SupabaseRuntimeConfigResponse = {
-  enabled?: boolean;
-  url?: string | null;
-  anonKey?: string | null;
 };
 
 const AccountContext = createContext<AccountContextValue>({
@@ -169,21 +163,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
 
     async function bootstrap() {
       if (!isSupabaseBrowserEnabled()) {
-        try {
-          const response = await fetch("/api/auth/config", {
-            cache: "no-store",
-          });
-          const payload = (await response.json()) as SupabaseRuntimeConfigResponse;
-
-          if (payload.enabled) {
-            configureBrowserSupabaseClient({
-              url: payload.url,
-              anonKey: payload.anonKey,
-            });
-          }
-        } catch {
-          // Local fallback remains active if the runtime auth config endpoint is unavailable.
-        }
+        await loadBrowserSupabaseRuntimeConfig();
       }
 
       const enabled = isSupabaseBrowserEnabled();

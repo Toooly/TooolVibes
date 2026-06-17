@@ -6,6 +6,12 @@ type BrowserSupabaseConfig = {
   anonKey: string;
 };
 
+type SupabaseRuntimeConfigResponse = {
+  enabled?: boolean;
+  url?: string | null;
+  anonKey?: string | null;
+};
+
 let browserClient: BrowserSupabaseClient | null = null;
 let runtimeConfig: BrowserSupabaseConfig | null = null;
 
@@ -50,6 +56,35 @@ export function configureBrowserSupabaseClient(config: {
 
 export function isSupabaseBrowserEnabled() {
   return Boolean(getSupabaseBrowserConfig());
+}
+
+export async function loadBrowserSupabaseRuntimeConfig() {
+  if (isSupabaseBrowserEnabled()) {
+    return true;
+  }
+
+  try {
+    const response = await fetch("/api/auth/config", {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      return false;
+    }
+
+    const payload = (await response.json()) as SupabaseRuntimeConfigResponse;
+
+    if (!payload.enabled) {
+      return false;
+    }
+
+    return configureBrowserSupabaseClient({
+      url: payload.url,
+      anonKey: payload.anonKey,
+    });
+  } catch {
+    return false;
+  }
 }
 
 export function getBrowserSupabaseClient() {
