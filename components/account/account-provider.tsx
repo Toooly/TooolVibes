@@ -117,7 +117,7 @@ function getSupabaseAuthErrorDetail(error: unknown) {
   const normalized = `${code} ${message}`.toLowerCase();
 
   if (normalized.includes("rate") || normalized.includes("too many")) {
-    return "Hai richiesto troppe mail in poco tempo: aspetta almeno 60 secondi e riprova.";
+    return "Il limite di invio email di Supabase e stato raggiunto. Incognito non lo resetta: controlla Authentication > Rate Limits oppure configura un SMTP personalizzato.";
   }
 
   if (normalized.includes("signup") && normalized.includes("disabled")) {
