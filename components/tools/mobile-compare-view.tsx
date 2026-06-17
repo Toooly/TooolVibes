@@ -10,6 +10,7 @@ import type { DirectoryTool, DirectoryToolLevel } from "@/lib/data/tooolvibes-di
 import type { ToolRecord } from "@/lib/types/tool";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { playTooolvibesSound } from "@/lib/config/sound";
 
 type MobileCompareViewProps = {
   directoryTools: DirectoryTool[];
@@ -754,8 +755,21 @@ export function MobileCompareView({
   const [battleState, setBattleState] = useState<BattleState>("idle");
   const fightTimerRef = useRef<number | null>(null);
   const resultTimerRef = useRef<number | null>(null);
+  const fightSoundTimerRefs = useRef<number[]>([]);
   const fightLockedRef = useRef(false);
   const compareKey = compareSlugs.join("|");
+
+  function clearFightSoundTimers() {
+    fightSoundTimerRefs.current.forEach((timer) => window.clearTimeout(timer));
+    fightSoundTimerRefs.current = [];
+  }
+
+  function queueFightSound(kind: "battleHit" | "battleWin", delay: number) {
+    const timer = window.setTimeout(() => {
+      playTooolvibesSound(kind);
+    }, delay);
+    fightSoundTimerRefs.current.push(timer);
+  }
 
   const tools = useMemo(
     () => withBattleScores(normalise(directoryTools, legacyTools, compareSlugs)),
@@ -765,6 +779,7 @@ export function MobileCompareView({
   useEffect(() => {
     if (fightTimerRef.current) clearTimeout(fightTimerRef.current);
     if (resultTimerRef.current) clearTimeout(resultTimerRef.current);
+    clearFightSoundTimers();
     fightLockedRef.current = false;
     setBattleState("idle");
   }, [compareKey]);
@@ -773,6 +788,7 @@ export function MobileCompareView({
     return () => {
       if (fightTimerRef.current) clearTimeout(fightTimerRef.current);
       if (resultTimerRef.current) clearTimeout(resultTimerRef.current);
+      clearFightSoundTimers();
     };
   }, []);
 
@@ -825,9 +841,14 @@ export function MobileCompareView({
     fightLockedRef.current = true;
     if (fightTimerRef.current) clearTimeout(fightTimerRef.current);
     if (resultTimerRef.current) clearTimeout(resultTimerRef.current);
+    clearFightSoundTimers();
     setBattleState("fighting");
+    playTooolvibesSound("battleHit");
+    queueFightSound("battleHit", 460);
+    queueFightSound("battleHit", 980);
     fightTimerRef.current = window.setTimeout(() => {
       setBattleState("result");
+      playTooolvibesSound("battleWin");
       void celebrateArenaFight();
       resultTimerRef.current = window.setTimeout(() => {
         fightLockedRef.current = false;

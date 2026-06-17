@@ -75,12 +75,15 @@ export function playGameSound(name: SoundName) {
       beep(300, "square", 0.15, 0.0001, 0.12);
       break;
     case "battleHit":
-      beep(220, "sawtooth", 0.1, 0.0001, 0.15);
+      beep(1480, "square", 0.035, 0.0001, 0.14);
+      setTimeout(() => beep(2489, "triangle", 0.09, 0.0001, 0.09), 18);
+      setTimeout(() => beep(3729, "sine", 0.12, 0.0001, 0.05), 52);
       break;
     case "battleWin":
       beep(523, "triangle", 0.15, 0.0001, 0.15);
       setTimeout(() => beep(659, "triangle", 0.15, 0.0001, 0.15), 120);
       setTimeout(() => beep(784, "triangle", 0.3, 0.0001, 0.1), 240);
+      setTimeout(() => beep(1046, "sine", 0.28, 0.0001, 0.08), 380);
       break;
     case "badgeUnlock":
       beep(1000, "sine", 0.12, 0.0001, 0.12);
