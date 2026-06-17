@@ -270,7 +270,7 @@ export function DesktopVibeArchive({
         <div className="desktop-vibe-tool-space">
           <div className="desktop-vibe-tool-space__header">
             <span>{visibleTools.length} risultati in vista</span>
-            <Link href="/wishlist">Manca un tool?</Link>
+            <Link href="/shortlist#wishlist">Manca un tool?</Link>
           </div>
 
           <div className="desktop-vibe-focus-lane" aria-label="Tool in primo piano">

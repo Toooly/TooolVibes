@@ -27,7 +27,7 @@ export function DesktopVibeRadar() {
             <PremiumLink href="/archivio" size="lg">
               Esplora directory
             </PremiumLink>
-            <PremiumLink href="/wishlist" tone="secondary" size="lg">
+            <PremiumLink href="/shortlist#wishlist" tone="secondary" size="lg">
               Suggerisci un tool
             </PremiumLink>
           </div>

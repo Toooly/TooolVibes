@@ -394,7 +394,7 @@ export function HomeExperienceSections() {
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <PremiumLink href="/archivio">Apri il catalogo</PremiumLink>
-              <PremiumLink href="/wishlist" tone="secondary">
+              <PremiumLink href="/shortlist#wishlist" tone="secondary">
                 Suggerisci tool
               </PremiumLink>
             </div>

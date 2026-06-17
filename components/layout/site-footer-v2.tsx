@@ -21,7 +21,7 @@ const footerLinks = {
     { label: "Catalogo", href: "/archivio", icon: LayoutGrid },
     { label: "Radar", href: "/radar", icon: Radar },
     { label: "Compare", href: "/compare", icon: Sparkles },
-    { label: "Wishlist", href: "/wishlist", icon: Heart },
+    { label: "Wishlist", href: "/shortlist#wishlist", icon: Heart },
   ],
   community: [
     { label: "Shop", href: "/shop", icon: ShoppingBag },

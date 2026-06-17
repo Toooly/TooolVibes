@@ -72,7 +72,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
 
           <div className="mt-5 flex flex-col gap-2.5 sm:mt-6 sm:flex-row sm:gap-3">
             <PremiumLink href="/archivio">Apri catalogo</PremiumLink>
-            <PremiumLink href="/wishlist" tone="secondary">
+            <PremiumLink href="/shortlist#wishlist" tone="secondary">
               Suggerisci tool
             </PremiumLink>
           </div>

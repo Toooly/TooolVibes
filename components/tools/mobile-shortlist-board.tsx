@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { RequestToolForm } from "@/components/wishlist/request-tool-form";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type {
@@ -70,7 +71,12 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
   const totalCount = baseTools.length;
 
   if (totalCount === 0) {
-    return <MobileLibraryEmpty />;
+    return (
+      <div className="mobile-library-board">
+        <MobileLibraryEmpty />
+        <LibraryWishlistSection />
+      </div>
+    );
   }
 
   const favoriteTools = baseTools.filter((t) => t.stage === "top");
@@ -138,6 +144,8 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         emptyText="Gli ultimi tool aggiunti"
       />
 
+      <LibraryWishlistSection />
+
       {/* Note Bottom Sheet */}
       <AnimatePresence>
         {noteSlug && (
@@ -149,6 +157,25 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function LibraryWishlistSection() {
+  return (
+    <section id="wishlist" className="mobile-library-wishlist" aria-labelledby="library-wishlist-title">
+      <div className="mobile-library-wishlist__intro">
+        <span className="mobile-library-wishlist__eyebrow">
+          <Heart size={14} />
+          Wishlist TooolVibes
+        </span>
+        <h2 id="library-wishlist-title">Suggerisci un tool alla libreria.</h2>
+        <p>
+          Se manca un AI tool, SaaS o builder che merita spazio, mandalo da qui:
+          resta dentro la tua libreria e diventa parte del percorso di selezione.
+        </p>
+      </div>
+      <RequestToolForm className="mobile-library-wishlist__form" />
+    </section>
   );
 }
 

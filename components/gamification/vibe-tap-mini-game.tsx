@@ -1,12 +1,40 @@
 "use client";
 
-import { type CSSProperties, type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  type FormEvent,
+  type KeyboardEvent,
+  type PointerEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
 import NumberFlow from "@number-flow/react";
 import { AnimatePresence, motion } from "motion/react";
-import { Play, Sparkles, X, Zap } from "lucide-react";
+import {
+  Flame,
+  Gauge,
+  MousePointer2,
+  Play,
+  Rocket,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Timer,
+  Trophy,
+  X,
+  Zap,
+} from "lucide-react";
 import { toast } from "sonner";
+
+import { playTooolvibesSound } from "@/lib/config/sound";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+
+type GameModeId = "rush" | "focus" | "fever";
+type UpgradeId = "tap" | "auto" | "crit";
 
 type VibeTarget = {
   id: number;
@@ -23,46 +51,156 @@ type FloatingScore = {
   x: number;
   y: number;
   value: number;
+  label?: string;
+  critical?: boolean;
 };
+
+type GameMode = {
+  id: GameModeId;
+  label: string;
+  title: string;
+  seconds: number;
+  target: number;
+  targetCount: number;
+  scoreMultiplier: number;
+  autoMultiplier: number;
+  description: string;
+  perk: string;
+};
+
+type UpgradeDefinition = {
+  id: UpgradeId;
+  label: string;
+  description: string;
+  baseCost: number;
+  maxLevel: number;
+};
+
+type UpgradeLevels = Record<UpgradeId, number>;
 
 type VibeTapMiniGameProps = {
   className?: string;
   badge?: string;
 };
 
-const GAME_SECONDS = 12;
-const TARGET_COUNT = 4;
+const GAME_MODES: GameMode[] = [
+  {
+    id: "rush",
+    label: "Rush",
+    title: "Sprint classico",
+    seconds: 20,
+    target: 95,
+    targetCount: 4,
+    scoreMultiplier: 1,
+    autoMultiplier: 1,
+    description: "Run bilanciata: tap, combo e upgrade contano tutti.",
+    perk: "Moltiplicatore stabile",
+  },
+  {
+    id: "focus",
+    label: "Focus",
+    title: "Build lunga",
+    seconds: 30,
+    target: 125,
+    targetCount: 3,
+    scoreMultiplier: 0.9,
+    autoMultiplier: 1.25,
+    description: "Piu tempo per costruire upgrade e lasciare lavorare l'auto-pulse.",
+    perk: "Auto-pulse potenziato",
+  },
+  {
+    id: "fever",
+    label: "Fever",
+    title: "Burst veloce",
+    seconds: 15,
+    target: 115,
+    targetCount: 5,
+    scoreMultiplier: 1.35,
+    autoMultiplier: 0.75,
+    description: "Pochi secondi, tanti critici: perfetta se vuoi martellare il core.",
+    perk: "Tap piu esplosivi",
+  },
+];
+
+const UPGRADE_DEFINITIONS: UpgradeDefinition[] = [
+  {
+    id: "tap",
+    label: "Click power",
+    description: "+1 vibe base per ogni tap sul core.",
+    baseCost: 14,
+    maxLevel: 5,
+  },
+  {
+    id: "auto",
+    label: "Auto pulse",
+    description: "Genera vibe ogni secondo durante la run.",
+    baseCost: 24,
+    maxLevel: 4,
+  },
+  {
+    id: "crit",
+    label: "Crit sync",
+    description: "Aumenta la chance di colpi doppi.",
+    baseCost: 28,
+    maxLevel: 4,
+  },
+];
+
+const INITIAL_UPGRADES: UpgradeLevels = {
+  tap: 0,
+  auto: 0,
+  crit: 0,
+};
+
+const DEFAULT_MODE = GAME_MODES[0];
+const MAX_COMBO = 12;
+const BEST_SCORE_STORAGE_KEY = "tooolvibes:vibe-rush-best";
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-function createTargets(seed: number): VibeTarget[] {
-  return Array.from({ length: TARGET_COUNT }).map((_, index) => {
-    const angle = (seed * 37 + index * 71) % 360;
-    const radius = 12 + ((seed + index * 19) % 22);
+function createTargets(seed: number, count: number): VibeTarget[] {
+  return Array.from({ length: count }).map((_, index) => {
+    const angle = (seed * 41 + index * 73) % 360;
+    const radius = 13 + ((seed + index * 19) % 24);
     const direction = (seed + index) % 2 === 0 ? 1 : -1;
 
     return {
       id: seed * 10 + index,
-      x: Math.min(78, Math.max(22, 50 + Math.cos((angle * Math.PI) / 180) * radius)),
-      y: Math.min(76, Math.max(24, 50 + Math.sin((angle * Math.PI) / 180) * radius)),
-      size: 2.4 + ((seed + index) % 3) * 0.35,
-      driftX: direction * (8 + ((seed * 5 + index * 3) % 8)),
-      driftY: -direction * (5 + ((seed * 7 + index * 5) % 7)),
-      delay: index * 0.14,
+      x: Math.min(82, Math.max(18, 50 + Math.cos((angle * Math.PI) / 180) * radius)),
+      y: Math.min(78, Math.max(22, 50 + Math.sin((angle * Math.PI) / 180) * radius)),
+      size: 2.2 + ((seed + index) % 4) * 0.28,
+      driftX: direction * (7 + ((seed * 5 + index * 3) % 9)),
+      driftY: -direction * (5 + ((seed * 7 + index * 5) % 8)),
+      delay: index * 0.1,
     };
   });
 }
 
-async function celebrateMiniGame(score: number) {
+function getUpgradeCost(definition: UpgradeDefinition, level: number) {
+  return Math.round(definition.baseCost * Math.pow(level + 1, 1.42));
+}
+
+function getRank(score: number, target: number) {
+  const ratio = target > 0 ? score / target : 0;
+  if (ratio >= 1.45) return "S+";
+  if (ratio >= 1.15) return "S";
+  if (ratio >= 0.92) return "A";
+  if (ratio >= 0.68) return "B";
+  return "C";
+}
+
+async function celebrateMiniGame(score: number, rank: string) {
   const { default: confetti } = await import("canvas-confetti");
 
   confetti({
-    colors: ["#6a3cff", "#39d2f6", "#f3bf4c", "#ffffff"],
+    colors: rank.startsWith("S")
+      ? ["#f3bf4c", "#39d2f6", "#ffffff", "#ff5eb8"]
+      : ["#6a3cff", "#39d2f6", "#f3bf4c", "#ffffff"],
     disableForReducedMotion: true,
     origin: { y: 0.58 },
-    particleCount: Math.min(90, 34 + score * 2),
-    scalar: 0.78,
-    spread: 54,
+    particleCount: Math.min(130, 42 + Math.round(score * 0.72)),
+    scalar: rank.startsWith("S") ? 0.9 : 0.78,
+    spread: rank.startsWith("S") ? 70 : 54,
   });
 }
 
@@ -71,7 +209,7 @@ function CircularTimer({ seconds, total }: { seconds: number; total: number }) {
   const circumference = 2 * Math.PI * radius;
   const progress = Math.max(0, seconds / total);
   const dash = circumference * progress;
-  const urgent = seconds <= 3;
+  const urgent = seconds <= 4;
 
   return (
     <div className="vibe-mini-game__timer" data-urgent={urgent} aria-hidden="true">
@@ -94,32 +232,122 @@ function CircularTimer({ seconds, total }: { seconds: number; total: number }) {
 
 export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
+  const [modeId, setModeId] = useState<GameModeId>(DEFAULT_MODE.id);
   const [running, setRunning] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(GAME_SECONDS);
+  const [timeLeft, setTimeLeft] = useState(DEFAULT_MODE.seconds);
   const [score, setScore] = useState(0);
+  const [bank, setBank] = useState(0);
   const [combo, setCombo] = useState(1);
+  const [streak, setStreak] = useState(0);
   const [wave, setWave] = useState(1);
   const [finished, setFinished] = useState(false);
   const [floaters, setFloaters] = useState<FloatingScore[]>([]);
   const [announcement, setAnnouncement] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
-  const reducedMotion = useReducedMotion();
+  const [upgrades, setUpgrades] = useState<UpgradeLevels>(INITIAL_UPGRADES);
+  const [upgradeCount, setUpgradeCount] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
   const prevComboRef = useRef(1);
   const scoreRef = useRef(score);
+  const bankRef = useRef(bank);
+  const comboRef = useRef(combo);
   const floaterIdRef = useRef(0);
+  const comboResetRef = useRef<number | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const wasOpenRef = useRef(false);
   const startLockedRef = useRef(false);
 
+  const selectedMode = useMemo(
+    () => GAME_MODES.find((mode) => mode.id === modeId) ?? DEFAULT_MODE,
+    [modeId],
+  );
+
+  const targets = useMemo(
+    () => createTargets(wave, selectedMode.targetCount),
+    [wave, selectedMode.targetCount],
+  );
+
+  const tapPower = 1 + upgrades.tap;
+  const autoPower = Math.round(upgrades.auto * selectedMode.autoMultiplier);
+  const critChance = Math.min(42, 8 + upgrades.crit * 7 + (modeId === "fever" ? 6 : 0));
+  const charge = Math.min(100, Math.round((score / selectedMode.target) * 100));
+  const rank = getRank(score, selectedMode.target);
+  const xp = Math.round(score * (modeId === "fever" ? 1.8 : 1.5) + upgradeCount * 6);
+  const missionTargetScore = Math.min(score, selectedMode.target);
+  const missionCombo = Math.min(combo, 8);
+  const missionUpgrades = Math.min(upgradeCount, 3);
+
+  const closeGame = useCallback(() => {
+    setOpen(false);
+    setRunning(false);
+    setFinished(false);
+    setScore(0);
+    setBank(0);
+    setCombo(1);
+    setStreak(0);
+    setTimeLeft(selectedMode.seconds);
+    setFloaters([]);
+    setSignupEmail("");
+    setUpgrades(INITIAL_UPGRADES);
+    setUpgradeCount(0);
+    startLockedRef.current = false;
+    if (comboResetRef.current) {
+      window.clearTimeout(comboResetRef.current);
+      comboResetRef.current = null;
+    }
+  }, [selectedMode.seconds]);
+
+  const finishRun = useCallback(() => {
+    setRunning(false);
+    setCombo(1);
+    setStreak(0);
+    setFinished(true);
+    if (comboResetRef.current) {
+      window.clearTimeout(comboResetRef.current);
+      comboResetRef.current = null;
+    }
+
+    const finalScore = scoreRef.current;
+    const finalRank = getRank(finalScore, selectedMode.target);
+
+    if (finalScore > bestScore) {
+      setBestScore(finalScore);
+      window.localStorage.setItem(BEST_SCORE_STORAGE_KEY, String(finalScore));
+    }
+
+    void celebrateMiniGame(finalScore, finalRank);
+    toast.success(finalRank.startsWith("S") ? "Vibe Rush dominato" : "Vibe Rush completato", {
+      description: `Rank ${finalRank} - ${finalScore} vibe in ${selectedMode.seconds} secondi.`,
+    });
+  }, [bestScore, selectedMode.seconds, selectedMode.target]);
+
   useEffect(() => {
     scoreRef.current = score;
   }, [score]);
 
-  const targets = useMemo(() => createTargets(wave), [wave]);
-  const charge = Math.min(100, Math.round((score / 24) * 100));
-  const xp = Math.round(score * 1.5);
+  useEffect(() => {
+    bankRef.current = bank;
+  }, [bank]);
+
+  useEffect(() => {
+    comboRef.current = combo;
+  }, [combo]);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(BEST_SCORE_STORAGE_KEY);
+    if (stored) {
+      setBestScore(Number(stored) || 0);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!running && !finished) {
+      setTimeLeft(selectedMode.seconds);
+    }
+  }, [finished, running, selectedMode.seconds]);
 
   useEffect(() => {
     if (!running) return undefined;
@@ -132,30 +360,37 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   }, [running]);
 
   useEffect(() => {
-    if (!running || timeLeft > 0) return;
+    if (!running || autoPower <= 0) return undefined;
 
-    setRunning(false);
-    setCombo(1);
-    setFinished(true);
-    const finalScore = scoreRef.current;
-    void celebrateMiniGame(finalScore);
-    toast.success(finalScore >= 20 ? "Vibe rush completato" : "Mini run chiusa", {
-      description: `Hai raccolto ${finalScore} vibe in ${GAME_SECONDS} secondi.`,
-    });
-  }, [running, timeLeft]);
+    const timer = window.setInterval(() => {
+      const gain = Math.max(1, autoPower);
+      setScore((current) => current + gain);
+      setBank((current) => current + gain);
+      spawnFloater(18 + Math.random() * 64, 28 + Math.random() * 44, gain, "auto");
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [autoPower, running]);
 
   useEffect(() => {
-    if (combo > prevComboRef.current && (combo === 3 || combo === 5)) {
+    if (!running || timeLeft > 0) return;
+
+    finishRun();
+  }, [finishRun, running, timeLeft]);
+
+  useEffect(() => {
+    if (combo > prevComboRef.current && (combo === 4 || combo === 8 || combo === 12)) {
       setAnnouncement(`Combo x${combo}`);
+      playTooolvibesSound("battleHit");
     }
     prevComboRef.current = combo;
   }, [combo]);
 
   useEffect(() => {
     if (finished) {
-      setAnnouncement(`Gioco finito. ${score} vibe raccolti. Più ${xp} XP.`);
+      setAnnouncement(`Run finita. Rank ${rank}. ${score} vibe raccolti. Piu ${xp} XP.`);
     }
-  }, [finished, score, xp]);
+  }, [finished, rank, score, xp]);
 
   useEffect(() => {
     if (!open) return;
@@ -169,7 +404,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
       window.setTimeout(() => first.focus(), 0);
     }
 
-    function handleKeyDown(event: KeyboardEvent) {
+    function handleKeyDown(event: globalThis.KeyboardEvent) {
       if (event.key === "Escape") {
         event.preventDefault();
         closeGame();
@@ -194,7 +429,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [open]);
+  }, [closeGame, open]);
 
   useEffect(() => {
     if (!open && wasOpenRef.current) {
@@ -203,47 +438,106 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     wasOpenRef.current = open;
   }, [open]);
 
+  function spawnFloater(x: number, y: number, value: number, label?: string, critical?: boolean) {
+    const id = ++floaterIdRef.current;
+    setFloaters((current) => [...current, { id, x, y, value, label, critical }]);
+    window.setTimeout(() => {
+      setFloaters((current) => current.filter((f) => f.id !== id));
+    }, 720);
+  }
+
+  function resetComboLater() {
+    if (comboResetRef.current) {
+      window.clearTimeout(comboResetRef.current);
+    }
+    comboResetRef.current = window.setTimeout(() => {
+      setCombo(1);
+      setStreak(0);
+    }, upgrades.crit >= 3 ? 1500 : 1050);
+  }
+
   function startGame() {
     if (running || startLockedRef.current) return;
     startLockedRef.current = true;
     setScore(0);
+    setBank(0);
     setCombo(1);
+    setStreak(0);
     setFinished(false);
     setWave((current) => current + 1);
-    setTimeLeft(GAME_SECONDS);
+    setTimeLeft(selectedMode.seconds);
     setRunning(true);
     setFloaters([]);
+    setUpgrades(INITIAL_UPGRADES);
+    setUpgradeCount(0);
+    setAnnouncement(`${selectedMode.label} iniziata. Clicca il core.`);
+    playTooolvibesSound("battleStart");
     window.setTimeout(() => {
       startLockedRef.current = false;
     }, 220);
   }
 
-  function closeGame() {
-    setOpen(false);
-    setRunning(false);
-    setFinished(false);
-    setScore(0);
-    setCombo(1);
-    setTimeLeft(GAME_SECONDS);
-    setFloaters([]);
-    setSignupEmail("");
-    startLockedRef.current = false;
+  function awardTap(x: number, y: number, bonus = 0) {
+    if (!running) return;
+
+    const nextCombo = Math.min(MAX_COMBO, comboRef.current + 1);
+    const comboBonus = Math.floor(comboRef.current / 3);
+    const critical = Math.random() * 100 < critChance;
+    const rawGain = (tapPower + comboBonus + bonus) * selectedMode.scoreMultiplier;
+    const gain = Math.max(1, Math.round(rawGain * (critical ? 2 : 1)));
+
+    setScore((current) => current + gain);
+    setBank((current) => current + gain);
+    setCombo(nextCombo);
+    setStreak((current) => current + 1);
+    spawnFloater(x, y, gain, critical ? "crit" : undefined, critical);
+    resetComboLater();
+    playTooolvibesSound(critical ? "battleWin" : "tap");
+  }
+
+  function handleCorePointer(event: PointerEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    const rect = event.currentTarget.getBoundingClientRect();
+    const stage = event.currentTarget.closest<HTMLElement>(".vibe-mini-game__stage");
+    const stageRect = stage?.getBoundingClientRect();
+    const x = stageRect ? ((rect.left + rect.width / 2 - stageRect.left) / stageRect.width) * 100 : 50;
+    const y = stageRect ? ((rect.top + rect.height / 2 - stageRect.top) / stageRect.height) * 100 : 50;
+    awardTap(x, y);
+  }
+
+  function handleCoreKey(event: KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      awardTap(50, 50);
+    }
   }
 
   function hitTarget(targetX: number, targetY: number) {
-    if (!running) {
+    awardTap(targetX, targetY, 4);
+    setWave((current) => current + 1);
+  }
+
+  function buyUpgrade(definition: UpgradeDefinition) {
+    if (!running) return;
+
+    const currentLevel = upgrades[definition.id];
+    if (currentLevel >= definition.maxLevel) return;
+
+    const cost = getUpgradeCost(definition, currentLevel);
+    if (bankRef.current < cost) {
+      setAnnouncement(`Servono ${cost} vibe per ${definition.label}.`);
+      playTooolvibesSound("warning");
       return;
     }
 
-    const gain = combo;
-    setScore((current) => current + gain);
-    setCombo((current) => Math.min(5, current + 1));
-
-    const id = ++floaterIdRef.current;
-    setFloaters((current) => [...current, { id, x: targetX, y: targetY, value: gain }]);
-    window.setTimeout(() => {
-      setFloaters((current) => current.filter((f) => f.id !== id));
-    }, 650);
+    setBank((current) => current - cost);
+    setUpgrades((current) => ({
+      ...current,
+      [definition.id]: current[definition.id] + 1,
+    }));
+    setUpgradeCount((current) => current + 1);
+    setAnnouncement(`${definition.label} livello ${currentLevel + 1}.`);
+    playTooolvibesSound("levelUp");
   }
 
   function handleSignup(event: FormEvent<HTMLFormElement>) {
@@ -268,7 +562,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
         ref={launcherRef}
         type="button"
         className={className}
-        aria-label="Apri il minigioco Vibe Rush"
+        aria-label="Apri il clicker game Vibe Rush"
         onClick={() => setOpen(true)}
         data-sonic-action="tap"
       >
@@ -294,7 +588,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
             exit={{ opacity: 0 }}
             role="dialog"
             aria-modal="true"
-            aria-label="Vibe Rush"
+            aria-label="Vibe Rush clicker game"
           >
             <button
               type="button"
@@ -312,7 +606,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
             >
               <div className="vibe-mini-game__top">
                 <div>
-                  <p className="vibe-mini-game__eyebrow">Mini run</p>
+                  <p className="vibe-mini-game__eyebrow">Clicker run</p>
                   <h2>Vibe Rush</h2>
                 </div>
                 <button type="button" aria-label="Chiudi Vibe Rush" onClick={closeGame}>
@@ -324,9 +618,35 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                 {announcement}
               </span>
 
+              <div className="vibe-mini-game__modes" aria-label="Modalita Vibe Rush">
+                {GAME_MODES.map((mode) => (
+                  <button
+                    key={mode.id}
+                    type="button"
+                    className={mode.id === modeId ? "is-active" : undefined}
+                    disabled={running}
+                    onClick={() => setModeId(mode.id)}
+                  >
+                    <span>{mode.label}</span>
+                    <small>{mode.seconds}s</small>
+                  </button>
+                ))}
+              </div>
+
+              <div className="vibe-mini-game__mode-card">
+                <div>
+                  <strong>{selectedMode.title}</strong>
+                  <span>{selectedMode.description}</span>
+                </div>
+                <em>{selectedMode.perk}</em>
+              </div>
+
               <div className="vibe-mini-game__stats">
                 <span>
                   Score <strong><NumberFlow value={score} /></strong>
+                </span>
+                <span>
+                  Bank <strong><NumberFlow value={bank} /></strong>
                 </span>
                 <span data-combo={combo}>
                   Combo <strong>x
@@ -337,142 +657,246 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                         className="vibe-mini-game__combo-pulse"
                         aria-hidden="true"
                         initial={{ scale: 1, opacity: reducedMotion ? 0 : 0.5 }}
-                        animate={{ scale: reducedMotion ? 1 : [1, 1.35, 1], opacity: reducedMotion ? 0 : [0.5, 0, 0.5] }}
+                        animate={{
+                          scale: reducedMotion ? 1 : [1, 1.35, 1],
+                          opacity: reducedMotion ? 0 : [0.5, 0, 0.5],
+                        }}
                         transition={{ duration: 0.25 }}
                       />
                     </span>
                   </strong>
                 </span>
                 <span>
-                  Time <CircularTimer seconds={timeLeft} total={GAME_SECONDS} /></span>
+                  Time <CircularTimer seconds={timeLeft} total={selectedMode.seconds} />
+                </span>
               </div>
 
-              <div className="vibe-mini-game__stage" data-running={running} data-finished={finished}>
-                <span
-                  className="vibe-mini-game__charge"
-                  style={{ "--charge-scale": `${charge / 100}` } as CSSProperties}
-                />
-                {running ? targets.map((target) => (
-                  <motion.button
-                    key={target.id}
-                    type="button"
-                    className="vibe-mini-game__target"
-                    style={
-                      {
-                        left: `${target.x}%`,
-                        top: `${target.y}%`,
-                        width: `${target.size}rem`,
-                      } as CSSProperties
-                    }
-                    initial={reducedMotion ? {} : { scale: 0, opacity: 0 }}
-                    animate={
-                      reducedMotion
-                        ? {}
-                        : {
-                            scale: [0.82, 1.28, 0.72, 1.08, 0.92],
-                            opacity: [0.84, 1, 0.88, 1, 0.9],
-                            x: [0, target.driftX, target.driftX * -0.42, 0],
-                            y: [0, target.driftY, target.driftY * -0.58, 0],
-                          }
-                    }
-                    transition={{
-                      duration: 1.45 + target.delay,
-                      ease: "easeInOut",
-                      repeat: Infinity,
-                      repeatType: "mirror",
-                      delay: target.delay,
-                    }}
-                    whileTap={reducedMotion ? undefined : { scale: 0.76 }}
-                    onClick={() => hitTarget(target.x, target.y)}
-                    aria-label={`Raccogli vibe target ${target.id}`}
-                  >
-                    <Sparkles size={15} />
-                  </motion.button>
-                )) : null}
+              <div className="vibe-mini-game__body">
+                <div className="vibe-mini-game__stage" data-running={running} data-finished={finished}>
+                  <div className="vibe-mini-game__arena-hud">
+                    <span>
+                      <MousePointer2 size={13} />
+                      +{tapPower}/tap
+                    </span>
+                    <span>
+                      <Gauge size={13} />
+                      {autoPower}/sec
+                    </span>
+                    <span>
+                      <Flame size={13} />
+                      {critChance}% crit
+                    </span>
+                  </div>
 
-                <AnimatePresence>
-                  {floaters.map((f) => (
-                    <motion.span
-                      key={f.id}
-                      className="vibe-mini-game__floater"
-                      initial={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-                      animate={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -32, scale: 1.15 }}
-                      exit={{ opacity: 0 }}
-                      transition={
-                        reducedMotion
-                          ? { duration: 0.3 }
-                          : { duration: 0.6, ease: "easeOut" }
+                  <span
+                    className="vibe-mini-game__charge"
+                    style={{ "--charge-scale": `${charge / 100}` } as CSSProperties}
+                  />
+
+                  {running ? targets.map((target) => (
+                    <motion.button
+                      key={target.id}
+                      type="button"
+                      className="vibe-mini-game__target"
+                      style={
+                        {
+                          left: `${target.x}%`,
+                          top: `${target.y}%`,
+                          width: `${target.size}rem`,
+                        } as CSSProperties
                       }
-                      style={{ left: `${f.x}%`, top: `${f.y}%` } as CSSProperties}
+                      initial={reducedMotion ? {} : { scale: 0, opacity: 0 }}
+                      animate={
+                        reducedMotion
+                          ? {}
+                          : {
+                              scale: [0.82, 1.24, 0.74, 1.08, 0.92],
+                              opacity: [0.84, 1, 0.88, 1, 0.9],
+                              x: [0, target.driftX, target.driftX * -0.42, 0],
+                              y: [0, target.driftY, target.driftY * -0.58, 0],
+                            }
+                      }
+                      transition={{
+                        duration: 1.45 + target.delay,
+                        ease: "easeInOut",
+                        repeat: Infinity,
+                        repeatType: "mirror",
+                        delay: target.delay,
+                      }}
+                      whileTap={reducedMotion ? undefined : { scale: 0.76 }}
+                      onClick={() => hitTarget(target.x, target.y)}
+                      aria-label={`Bonus vibe ${target.id}`}
                     >
-                      +{f.value}
-                    </motion.span>
-                  ))}
-                </AnimatePresence>
+                      <Sparkles size={15} />
+                    </motion.button>
+                  )) : null}
 
-                {!running && !finished ? (
                   <button
                     type="button"
-                    className="vibe-mini-game__start"
-                    onPointerDown={(event) => {
-                      event.preventDefault();
-                      startGame();
-                    }}
-                    onClick={startGame}
+                    className="vibe-mini-game__core-tap"
+                    data-running={running}
+                    disabled={!running}
+                    onPointerDown={handleCorePointer}
+                    onKeyDown={handleCoreKey}
+                    aria-label="Clicca il core Vibe Rush"
                   >
-                    <Zap size={16} />
-                    Start rush
+                    <span className="vibe-mini-game__core-rings" aria-hidden="true" />
+                    <span className="vibe-mini-game__core-orb">
+                      <Zap size={24} />
+                    </span>
+                    <strong>Tap core</strong>
+                    <small>{streak > 0 ? `${streak} hit streak` : "Build vibe"}</small>
                   </button>
-                ) : null}
 
-                {finished ? (
-                  <div className="vibe-mini-game__result">
-                    <span className="vibe-mini-game__result-title">
-                      {score >= 20 ? "Vibe rush completato" : "Mini run chiusa"}
-                    </span>
-                    <span className="vibe-mini-game__result-score">
-                      <NumberFlow value={score} /> vibe raccolti
-                    </span>
-                    <span className="vibe-mini-game__result-xp">+{xp} XP</span>
-                    <div className="vibe-mini-game__result-actions">
-                      <button
-                        type="button"
-                        className="vibe-mini-game__start"
-                        onPointerDown={(event) => {
-                          event.preventDefault();
-                          startGame();
-                        }}
-                        onClick={startGame}
+                  <AnimatePresence>
+                    {floaters.map((f) => (
+                      <motion.span
+                        key={f.id}
+                        className="vibe-mini-game__floater"
+                        data-critical={f.critical}
+                        initial={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+                        animate={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -34, scale: 1.15 }}
+                        exit={{ opacity: 0 }}
+                        transition={
+                          reducedMotion
+                            ? { duration: 0.3 }
+                            : { duration: 0.62, ease: "easeOut" }
+                        }
+                        style={{ left: `${f.x}%`, top: `${f.y}%` } as CSSProperties}
                       >
-                        <Zap size={16} />
-                        Gioca ancora
-                      </button>
-                      <button type="button" className="vibe-mini-game__hint-btn" onClick={closeGame}>
-                        Chiudi
-                      </button>
-                    </div>
-                    <form className="vibe-mini-game__signup" onSubmit={handleSignup}>
-                      <p>Salva i progressi e ricevi il riepilogo dei vibe raccolti.</p>
-                      <div>
-                        <input
-                          type="email"
-                          value={signupEmail}
-                          onChange={(event) => setSignupEmail(event.target.value)}
-                          placeholder="la tua email"
-                          autoComplete="email"
-                        />
-                        <button type="submit" disabled={!signupEmail.trim()}>
-                          Registrati
+                        {f.label ? `${f.label} ` : null}+{f.value}
+                      </motion.span>
+                    ))}
+                  </AnimatePresence>
+
+                  {!running && !finished ? (
+                    <button
+                      type="button"
+                      className="vibe-mini-game__start"
+                      onPointerDown={(event) => {
+                        event.preventDefault();
+                        startGame();
+                      }}
+                      onClick={startGame}
+                    >
+                      <Rocket size={16} />
+                      Start {selectedMode.label}
+                    </button>
+                  ) : null}
+
+                  {finished ? (
+                    <div className="vibe-mini-game__result">
+                      <span className="vibe-mini-game__result-title">
+                        {rank.startsWith("S") ? "Run leggendaria" : "Run completata"}
+                      </span>
+                      <span className="vibe-mini-game__result-rank">
+                        Rank {rank}
+                      </span>
+                      <span className="vibe-mini-game__result-score">
+                        <NumberFlow value={score} /> vibe raccolti
+                      </span>
+                      <span className="vibe-mini-game__result-xp">+{xp} XP - Best {Math.max(bestScore, score)}</span>
+                      <div className="vibe-mini-game__result-actions">
+                        <button
+                          type="button"
+                          className="vibe-mini-game__start"
+                          onPointerDown={(event) => {
+                            event.preventDefault();
+                            startGame();
+                          }}
+                          onClick={startGame}
+                        >
+                          <Zap size={16} />
+                          Gioca ancora
+                        </button>
+                        <button type="button" className="vibe-mini-game__hint-btn" onClick={closeGame}>
+                          Chiudi
                         </button>
                       </div>
-                    </form>
-                  </div>
-                ) : null}
+                      <form className="vibe-mini-game__signup" onSubmit={handleSignup}>
+                        <p>Salva progressi, XP e risultato nel tuo profilo TooolVibes.</p>
+                        <div>
+                          <input
+                            type="email"
+                            value={signupEmail}
+                            onChange={(event) => setSignupEmail(event.target.value)}
+                            placeholder="la tua email"
+                            autoComplete="email"
+                          />
+                          <button type="submit" disabled={!signupEmail.trim()}>
+                            Registrati
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  ) : null}
+                </div>
+
+                <aside className="vibe-mini-game__side">
+                  <section className="vibe-mini-game__upgrades" aria-label="Upgrade clicker">
+                    <div className="vibe-mini-game__side-title">
+                      <Rocket size={14} />
+                      <span>Upgrade</span>
+                    </div>
+                    {UPGRADE_DEFINITIONS.map((definition) => {
+                      const level = upgrades[definition.id];
+                      const cost = getUpgradeCost(definition, level);
+                      const maxed = level >= definition.maxLevel;
+                      return (
+                        <button
+                          key={definition.id}
+                          type="button"
+                          disabled={!running || maxed || bank < cost}
+                          onClick={() => buyUpgrade(definition)}
+                          className="vibe-mini-game__upgrade"
+                        >
+                          <span>
+                            <strong>{definition.label}</strong>
+                            <small>{definition.description}</small>
+                          </span>
+                          <em>{maxed ? "Max" : `${cost}`}</em>
+                        </button>
+                      );
+                    })}
+                  </section>
+
+                  <section className="vibe-mini-game__missions" aria-label="Missioni run">
+                    <div className="vibe-mini-game__side-title">
+                      <Target size={14} />
+                      <span>Missioni</span>
+                    </div>
+                    <div className="vibe-mini-game__mission">
+                      <span>Obiettivo mode</span>
+                      <strong><NumberFlow value={missionTargetScore} />/{selectedMode.target}</strong>
+                      <i style={{ "--mission-progress": `${missionTargetScore / selectedMode.target}` } as CSSProperties} />
+                    </div>
+                    <div className="vibe-mini-game__mission">
+                      <span>Combo x8</span>
+                      <strong><NumberFlow value={missionCombo} />/8</strong>
+                      <i style={{ "--mission-progress": `${missionCombo / 8}` } as CSSProperties} />
+                    </div>
+                    <div className="vibe-mini-game__mission">
+                      <span>3 upgrade</span>
+                      <strong><NumberFlow value={missionUpgrades} />/3</strong>
+                      <i style={{ "--mission-progress": `${missionUpgrades / 3}` } as CSSProperties} />
+                    </div>
+                  </section>
+
+                  <section className="vibe-mini-game__facts" aria-label="Fatti della run">
+                    <div className="vibe-mini-game__side-title">
+                      <ShieldCheck size={14} />
+                      <span>Run facts</span>
+                    </div>
+                    <span><Timer size={13} /> {selectedMode.seconds}s di run</span>
+                    <span><Trophy size={13} /> Best score {bestScore}</span>
+                    <span><Flame size={13} /> Rank attuale {rank}</span>
+                  </section>
+                </aside>
               </div>
 
               {!running && !finished ? (
                 <p className="vibe-mini-game__hint">
-                  Micro run da {GAME_SECONDS}s: ritmo, tap e feedback immediato.
+                  Scegli una modalita, clicca il core, compra upgrade e completa le missioni.
                 </p>
               ) : null}
             </motion.div>

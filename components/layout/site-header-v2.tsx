@@ -32,10 +32,18 @@ const navLinks = [
   { href: "/radar", label: "Radar", icon: Radar },
   { href: "/compare", label: "Compare", icon: Zap },
   { href: "/shortlist", label: "Shortlist", icon: Compass },
-  { href: "/wishlist", label: "Wishlist", icon: Heart },
+  { href: "/shortlist#wishlist", label: "Wishlist", icon: Heart },
   { href: "/shop", label: "Shop", icon: ShoppingBag },
   { href: "/community", label: "Community", icon: Users },
 ];
+
+function matchesPathname(pathname: string | null, href: string) {
+  if (href.includes("#")) {
+    return false;
+  }
+  const path = href.split("#")[0] || "/";
+  return pathname === path || (path !== "/" && Boolean(pathname?.startsWith(path + "/")));
+}
 
 function NavLink({
   href,
@@ -163,7 +171,7 @@ export function SiteHeaderV2() {
                   href={link.href}
                   label={link.label}
                   icon={link.icon}
-                  isActive={pathname === link.href || pathname?.startsWith(link.href + "/")}
+                  isActive={matchesPathname(pathname, link.href)}
                 />
               ))}
             </nav>
@@ -305,7 +313,7 @@ export function SiteHeaderV2() {
               </div>
               <div className="flex flex-col gap-1 border-b border-white/10 pb-4">
                 {navLinks.map((link, i) => {
-                  const isActive = pathname === link.href || pathname?.startsWith(link.href + "/");
+                  const isActive = matchesPathname(pathname, link.href);
                   return (
                     <motion.div
                       key={link.href}

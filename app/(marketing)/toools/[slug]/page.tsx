@@ -214,7 +214,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   <span>{tool.ctaLabel}</span>
                 </a>
                 <Link
-                  href="/wishlist"
+                  href="/shortlist#wishlist"
                   className="premium-button premium-button-secondary inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
                 >
                   Suggerisci alternativa

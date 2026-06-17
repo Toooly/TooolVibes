@@ -68,7 +68,7 @@ export default function CommunityPage() {
               Il modo più rapido per contribuire oggi è suggerire un tool con link,
               categoria e contesto d&apos;uso.
             </p>
-            <PremiumLink href="/wishlist" className="mt-5">
+            <PremiumLink href="/shortlist#wishlist" className="mt-5">
               Suggerisci un tool
             </PremiumLink>
           </div>

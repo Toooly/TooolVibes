@@ -127,7 +127,7 @@ export function DesktopVibeCompare({
               Catalogo
               <ArrowRight aria-hidden="true" />
             </Link>
-            <Link href="/wishlist" className="desktop-vibe-plain-link">
+            <Link href="/shortlist#wishlist" className="desktop-vibe-plain-link">
               Suggerisci
               <Sparkles aria-hidden="true" />
             </Link>

@@ -8,7 +8,7 @@ const footerNav = [
   { href: "/", label: "Home" },
   { href: "/archivio", label: "Catalogo" },
   { href: "/tags", label: "Categorie" },
-  { href: "/wishlist", label: "Suggerisci" },
+  { href: "/shortlist#wishlist", label: "Suggerisci" },
   { href: "/affiliati", label: "Diventa affiliato" },
   { href: "/radar", label: "Radar" },
   { href: "/community", label: "Community" },
@@ -53,7 +53,7 @@ export function SiteFooter() {
             </p>
 
             <div className="mt-5 hidden flex-col gap-3 sm:flex sm:flex-row">
-              <PremiumLink href="/wishlist" tone="secondary" size="sm">
+              <PremiumLink href="/shortlist#wishlist" tone="secondary" size="sm">
                 Suggerisci un tool
               </PremiumLink>
               <PremiumLink href="/affiliati" tone="ghost" size="sm">
@@ -148,7 +148,7 @@ export function SiteFooter() {
             <Link href="/radar" className="animated-link text-white/50 hover:text-white">
               Product Hunt
             </Link>
-            <Link href="/wishlist" className="animated-link text-white/50 hover:text-white">
+            <Link href="/shortlist#wishlist" className="animated-link text-white/50 hover:text-white">
               Suggerisci
             </Link>
             <Link href="/affiliati" className="animated-link text-white/50 hover:text-white">

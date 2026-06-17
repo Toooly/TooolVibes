@@ -112,7 +112,7 @@ export function HeroSection({
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
-              href="/wishlist"
+              href="/shortlist#wishlist"
               className="inline-flex items-center gap-2 rounded-full border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.48)] px-5 py-3 text-sm font-semibold text-[#120d2f] backdrop-blur-md transition-all hover:bg-[rgba(106,60,255,0.06)] hover:border-[rgba(106,60,255,0.3)]"
             >
               Suggerisci un tool

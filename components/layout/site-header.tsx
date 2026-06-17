@@ -15,7 +15,7 @@ const primaryNav = [
   { href: "/", label: "Home" },
   { href: "/archivio", label: "Catalogo" },
   { href: "/radar", label: "Radar live" },
-  { href: "/wishlist", label: "Suggerisci" },
+  { href: "/shortlist#wishlist", label: "Suggerisci" },
   { href: "/affiliati", label: "Diventa affiliato" },
   { href: "/shop", label: "Shop" },
   { href: "/community", label: "Community" },
@@ -46,8 +46,10 @@ export function SiteHeader() {
   }, [pathname]);
 
   const isActive = useMemo(
-    () => (href: string) =>
-      pathname === href || (href !== "/" && pathname.startsWith(`${href}/`)),
+    () => (href: string) => {
+      const path = href.split("#")[0] || "/";
+      return pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
+    },
     [pathname],
   );
 
@@ -108,7 +110,7 @@ export function SiteHeader() {
               Admin
             </Link>
             <PremiumLink
-              href="/wishlist"
+              href="/shortlist#wishlist"
               size="sm"
               tone="premium"
               className="hidden px-4 shadow-[0_16px_42px_rgba(124,58,237,0.24)] 2xl:inline-flex"
@@ -177,7 +179,7 @@ export function SiteHeader() {
             </nav>
 
             <div className="grid gap-2 sm:grid-cols-2">
-              <PremiumLink href="/wishlist">
+              <PremiumLink href="/shortlist#wishlist">
                 Suggerisci un tool
               </PremiumLink>
               <Link

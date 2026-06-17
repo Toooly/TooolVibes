@@ -446,7 +446,7 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
   ];
 
   return (
-    <section className="mobile-compare-arena__matrix">
+    <section className="mobile-compare-arena__matrix" data-count={tools.length}>
       <div className="mobile-compare-arena__matrix-header">
         <Scale className="size-4" />
         <span>Confronto caratteristiche</span>
@@ -593,6 +593,18 @@ function MobileArenaBattleStage({
         ))}
       </div>
 
+      <div className="mobile-compare-arena__melee-cloud" aria-hidden="true">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <span key={i} style={{ "--cloud-index": i } as CSSProperties} />
+        ))}
+      </div>
+
+      <div className="mobile-compare-arena__lightning" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+
       <div className="mobile-compare-arena__fighters">
         {tools.map((tool, index) => {
           const isWinner = battleState === "result" && tool.slug === winner.slug;
@@ -644,14 +656,36 @@ function MobileArenaBattleStage({
                 repeat: battleState === "fighting" ? Infinity : 0,
               }}
             >
-              <span className="mobile-compare-arena__fighter-orb">
-                <span className="mobile-compare-arena__fighter-face">
-                  {tool.name.slice(0, 2).toUpperCase()}
+              <span className="mobile-compare-arena__fighter-shadow" aria-hidden="true" />
+              <span className="mobile-compare-arena__fighter-aura" aria-hidden="true" />
+              <span className="mobile-compare-arena__fighter-character">
+                <span className="mobile-compare-arena__fighter-head" aria-hidden="true">
+                  <span className="mobile-compare-arena__fighter-eye mobile-compare-arena__fighter-eye--left" />
+                  <span className="mobile-compare-arena__fighter-eye mobile-compare-arena__fighter-eye--right" />
                 </span>
-                <span className="mobile-compare-arena__fighter-sword" aria-hidden="true" />
+                <span className="mobile-compare-arena__fighter-orb">
+                  <span className="mobile-compare-arena__fighter-face">
+                    {tool.name.slice(0, 2).toUpperCase()}
+                  </span>
+                </span>
+                <span className="mobile-compare-arena__fighter-hand mobile-compare-arena__fighter-hand--left">
+                  <span className="mobile-compare-arena__fighter-shield" aria-hidden="true" />
+                </span>
+                <span className="mobile-compare-arena__fighter-hand mobile-compare-arena__fighter-hand--right">
+                  <span className="mobile-compare-arena__fighter-sword" aria-hidden="true" />
+                </span>
+                <span className="mobile-compare-arena__fighter-foot mobile-compare-arena__fighter-foot--left" aria-hidden="true" />
+                <span className="mobile-compare-arena__fighter-foot mobile-compare-arena__fighter-foot--right" aria-hidden="true" />
+              </span>
+              <span className="mobile-compare-arena__fighter-health" aria-hidden="true">
+                <span style={{ width: `${isDefeated ? 24 : isWinner ? 100 : Math.max(38, tool.battleScore)}%` }} />
               </span>
               <span className="mobile-compare-arena__fighter-name" title={tool.name}>
                 {tool.name}
+              </span>
+              <span className="mobile-compare-arena__fighter-loadout" aria-hidden="true">
+                <span>Shield</span>
+                <span>Blade</span>
               </span>
               <small>{isWinner ? "Champion" : isDefeated ? "KO" : `Power ${tool.battleScore}`}</small>
             </motion.div>

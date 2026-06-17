@@ -1122,7 +1122,7 @@ export function ToolDiscoveryApp({
               </h3>
             </div>
             <Link
-              href="/wishlist"
+              href="/shortlist#wishlist"
               className="premium-button premium-button-outline inline-flex min-h-10 rounded-full px-4 py-2 text-sm font-semibold"
             >
               {isDirectSearch && visibleTools.length === 0 ? "Suggeriscilo" : "Suggerisci un tool"}
