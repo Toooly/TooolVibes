@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { DesktopVibeRadar } from "@/components/desktop/desktop-vibe-radar";
 import { MobileRadarView } from "@/components/radar/mobile-radar-view";
 import { siteConfig } from "@/lib/config/site";
 
@@ -16,5 +17,12 @@ export const metadata: Metadata = {
 };
 
 export default function ProductHuntPage() {
-  return <MobileRadarView />;
+  return (
+    <>
+      <DesktopVibeRadar />
+      <div className="lg:hidden">
+        <MobileRadarView />
+      </div>
+    </>
+  );
 }

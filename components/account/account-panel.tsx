@@ -97,7 +97,7 @@ export function AccountPanel() {
     : account.status === "authenticated"
       ? "La selezione è agganciata all'account e resta pronta quando torni da un altro browser o da una nuova sessione."
       : account.authEnabled
-        ? "La selezione esiste già e può essere collegata con un magic link senza ricominciare da zero."
+        ? "La selezione esiste gia e puo essere collegata con una mail di conferma senza ricominciare da zero."
         : "La selezione resta nel browser finché auth e sync remota non vengono attivate.";
   const authMessageTone =
     account.authMessage?.includes("non disponibile") ||
@@ -299,8 +299,8 @@ export function AccountPanel() {
                 </p>
                 <p className="mt-2.5 text-[0.98rem] leading-7" style={{ color: "var(--muted-strong)" }}>
                   {isVibeRushSignup
-                    ? `Completa il profilo e ti mandiamo il magic link con il riepilogo: ${vibeScore || 0} vibe raccolti, ${vibeXp || 0} XP.`
-                    : "Ti mandiamo un magic link minimale. Quando entri, la selezione locale viene collegata all'account senza perdere ciò che hai già salvato."}
+                    ? `Completa il profilo e ti mandiamo la mail di conferma con il riepilogo: ${vibeScore || 0} vibe raccolti, ${vibeXp || 0} XP.`
+                    : "Ti mandiamo una mail di conferma. Se l'email non esiste ancora, Supabase crea l'account; quando entri, la selezione locale viene collegata senza perdere cio che hai gia salvato."}
                 </p>
                 <p className="mt-3 text-[0.88rem] leading-7" style={{ color: "var(--muted)" }}>
                   {continuityCopy}
@@ -358,15 +358,17 @@ export function AccountPanel() {
                       ? "Invio..."
                       : isVibeRushSignup
                         ? "Registrati"
-                        : "Invia magic link"}
+                        : "Registrati"}
                   </button>
                 </div>
                 <p className="mt-3 text-[0.76rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                   {account.authEnabled
                     ? isVibeRushSignup
-                      ? "Il risultato Vibe Rush viaggia come metadata del magic link."
-                      : "Percorso minimale: nessun onboarding pesante, solo continuità della selezione."
-                    : "Auth Supabase non configurata: il prodotto resta in fallback locale."}
+                      ? "Il risultato Vibe Rush viaggia come metadata della conferma email."
+                      : "Registrazione aperta: Supabase invia la mail di conferma e crea l'utente se non esiste."
+                    : account.status === "loading"
+                      ? "Carico la configurazione Supabase..."
+                      : "Auth Supabase non configurata: il prodotto resta in fallback locale."}
                 </p>
               </form>
             )}
@@ -443,7 +445,7 @@ export function AccountPanel() {
               </div>
               <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
                 <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
-                  2. Magic link
+                  2. Mail di conferma
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/82">
                   Colleghi l&apos;email con un passaggio minimo, senza schermate pesanti.

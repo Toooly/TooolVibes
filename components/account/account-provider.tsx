@@ -18,7 +18,11 @@ import {
 } from "@/lib/discovery/local-storage";
 import type { DiscoveryPersistencePayload } from "@/lib/discovery/types";
 import { siteConfig } from "@/lib/config/site";
-import { getBrowserSupabaseClient, isSupabaseBrowserEnabled } from "@/lib/supabase/browser-client";
+import {
+  configureBrowserSupabaseClient,
+  getBrowserSupabaseClient,
+  isSupabaseBrowserEnabled,
+} from "@/lib/supabase/browser-client";
 
 type AccountStatus = "loading" | "guest" | "authenticated" | "unavailable";
 type AccountMagicLinkMetadata = Record<string, string | number | boolean | null | undefined>;
@@ -36,6 +40,12 @@ type AccountContextValue = {
     metadata?: AccountMagicLinkMetadata,
   ) => Promise<{ ok: boolean; message: string }>;
   signOut: () => Promise<void>;
+};
+
+type SupabaseRuntimeConfigResponse = {
+  enabled?: boolean;
+  url?: string | null;
+  anonKey?: string | null;
 };
 
 const AccountContext = createContext<AccountContextValue>({
@@ -59,6 +69,7 @@ function getRedirectUrl() {
 }
 
 export function AccountProvider({ children }: { children: React.ReactNode }) {
+  const [authEnabled, setAuthEnabled] = useState(() => isSupabaseBrowserEnabled());
   const [status, setStatus] = useState<AccountStatus>("loading");
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -110,15 +121,42 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!isSupabaseBrowserEnabled()) {
-      setStatus("unavailable");
-      return;
-    }
-
-    const client = getBrowserSupabaseClient();
     let isActive = true;
+    let unsubscribe: (() => void) | undefined;
 
     async function bootstrap() {
+      if (!isSupabaseBrowserEnabled()) {
+        try {
+          const response = await fetch("/api/auth/config", {
+            cache: "no-store",
+          });
+          const payload = (await response.json()) as SupabaseRuntimeConfigResponse;
+
+          if (payload.enabled) {
+            configureBrowserSupabaseClient({
+              url: payload.url,
+              anonKey: payload.anonKey,
+            });
+          }
+        } catch {
+          // Local fallback remains active if the runtime auth config endpoint is unavailable.
+        }
+      }
+
+      const enabled = isSupabaseBrowserEnabled();
+
+      if (!isActive) {
+        return;
+      }
+
+      setAuthEnabled(enabled);
+
+      if (!enabled) {
+        setStatus("unavailable");
+        return;
+      }
+
+      const client = getBrowserSupabaseClient();
       const { data } = await client.auth.getSession();
 
       if (!isActive) {
@@ -133,43 +171,49 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       if (currentSession?.user) {
         void attachWorkspaceToAccount(currentSession);
       }
+
+      const { data: authListener } = client.auth.onAuthStateChange((_event, nextSession) => {
+        setSession(nextSession);
+        setUser(nextSession?.user ?? null);
+        setStatus(nextSession?.user ? "authenticated" : "guest");
+
+        if (!nextSession?.user) {
+          lastAttachedUserIdRef.current = null;
+          return;
+        }
+
+        void attachWorkspaceToAccount(nextSession);
+      });
+
+      unsubscribe = () => authListener.subscription.unsubscribe();
     }
 
     void bootstrap();
 
-    const { data } = client.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setUser(nextSession?.user ?? null);
-      setStatus(nextSession?.user ? "authenticated" : "guest");
-
-      if (!nextSession?.user) {
-        lastAttachedUserIdRef.current = null;
-        return;
-      }
-
-      void attachWorkspaceToAccount(nextSession);
-    });
-
     return () => {
       isActive = false;
-      data.subscription.unsubscribe();
+      unsubscribe?.();
     };
   }, [attachWorkspaceToAccount]);
 
   const sendMagicLink = useCallback(async (email: string, metadata?: AccountMagicLinkMetadata) => {
     if (!isSupabaseBrowserEnabled()) {
+      const message = "Auth Supabase non disponibile in questo ambiente.";
+      setAuthMessage(message);
       return {
         ok: false,
-        message: "Auth non disponibile in questo ambiente.",
+        message,
       };
     }
 
     const normalizedEmail = email.trim().toLowerCase();
 
     if (!normalizedEmail) {
+      const message = "Inserisci una email valida.";
+      setAuthMessage(message);
       return {
         ok: false,
-        message: "Inserisci una email valida.",
+        message,
       };
     }
 
@@ -181,26 +225,38 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       const { error } = await client.auth.signInWithOtp({
         email: normalizedEmail,
         options: {
+          shouldCreateUser: true,
           emailRedirectTo: getRedirectUrl(),
           data: metadata,
         },
       });
 
       if (error) {
+        const message =
+          "Non sono riuscito a inviare la mail di conferma. Controlla Email Auth, redirect URL e signups su Supabase.";
+        setAuthMessage(message);
         return {
           ok: false,
-          message: "Non sono riuscito a inviare il magic link. Controlla la configurazione auth.",
+          message,
         };
       }
 
       const message =
         metadata?.source === "vibe-rush"
-          ? `Magic link inviato a ${normalizedEmail}. Aprilo per salvare anche il risultato Vibe Rush nel tuo account.`
-          : `Magic link inviato a ${normalizedEmail}. Aprilo per collegare il workspace all'account.`;
+          ? `Email di conferma inviata a ${normalizedEmail}. Aprila per creare l'account e salvare anche il risultato Vibe Rush.`
+          : `Email di conferma inviata a ${normalizedEmail}. Aprila per creare o collegare l'account alla workspace.`;
       setAuthMessage(message);
 
       return {
         ok: true,
+        message,
+      };
+    } catch {
+      const message =
+        "Non sono riuscito a contattare Supabase Auth. Riprova tra poco o verifica la configurazione del progetto.";
+      setAuthMessage(message);
+      return {
+        ok: false,
         message,
       };
     } finally {
@@ -254,7 +310,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<AccountContextValue>(
     () => ({
-      authEnabled: isSupabaseBrowserEnabled(),
+      authEnabled,
       status,
       user,
       session,
@@ -264,7 +320,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       sendMagicLink,
       signOut,
     }),
-    [authMessage, isAttaching, isSendingLink, sendMagicLink, session, signOut, status, user],
+    [authEnabled, authMessage, isAttaching, isSendingLink, sendMagicLink, session, signOut, status, user],
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

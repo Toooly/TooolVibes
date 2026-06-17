@@ -54,13 +54,13 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
       {/* Sfondo stellato */}
       <div className="mobile-spotlight-cosmic__stars" aria-hidden="true" />
 
-      {/* Orbita esterna animata */}
-      <div className="mobile-spotlight-cosmic__orbit" aria-hidden="true">
-        <div className="mobile-spotlight-cosmic__orbit-track" />
-      </div>
-
       {/* Sistema centrale */}
       <div className="mobile-spotlight-cosmic__system">
+        {/* Orbita esterna animata */}
+        <div className="mobile-spotlight-cosmic__orbit" aria-hidden="true">
+          <div className="mobile-spotlight-cosmic__orbit-track" />
+        </div>
+
         <span className="mobile-spotlight-cosmic__weekly-pill">
           <Sparkles className="size-3" />
           Tool della settimana

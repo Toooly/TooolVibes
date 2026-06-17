@@ -1,19 +1,55 @@
 import { createClient } from "@supabase/supabase-js";
 
 type BrowserSupabaseClient = ReturnType<typeof createClient>;
+type BrowserSupabaseConfig = {
+  url: string;
+  anonKey: string;
+};
 
 let browserClient: BrowserSupabaseClient | null = null;
+let runtimeConfig: BrowserSupabaseConfig | null = null;
 
 function cleanEnvValue(value: string | undefined) {
   const normalized = value?.trim();
   return normalized ? normalized : undefined;
 }
 
-export function isSupabaseBrowserEnabled() {
+function getBuildTimeConfig(): BrowserSupabaseConfig | null {
   const url = cleanEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL);
   const anonKey = cleanEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
-  return Boolean(url && anonKey);
+  return url && anonKey ? { url, anonKey } : null;
+}
+
+function getSupabaseBrowserConfig(): BrowserSupabaseConfig | null {
+  return runtimeConfig ?? getBuildTimeConfig();
+}
+
+export function configureBrowserSupabaseClient(config: {
+  url?: string | null;
+  anonKey?: string | null;
+}) {
+  const url = cleanEnvValue(config.url ?? undefined);
+  const anonKey = cleanEnvValue(config.anonKey ?? undefined);
+
+  if (!url || !anonKey) {
+    runtimeConfig = null;
+    browserClient = null;
+    return false;
+  }
+
+  const changed = runtimeConfig?.url !== url || runtimeConfig?.anonKey !== anonKey;
+  runtimeConfig = { url, anonKey };
+
+  if (changed) {
+    browserClient = null;
+  }
+
+  return true;
+}
+
+export function isSupabaseBrowserEnabled() {
+  return Boolean(getSupabaseBrowserConfig());
 }
 
 export function getBrowserSupabaseClient() {
@@ -21,14 +57,13 @@ export function getBrowserSupabaseClient() {
     return browserClient;
   }
 
-  const url = cleanEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL);
-  const anonKey = cleanEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const config = getSupabaseBrowserConfig();
 
-  if (!url || !anonKey) {
+  if (!config) {
     throw new Error("Supabase browser environment variables are not configured.");
   }
 
-  browserClient = createClient(url, anonKey, {
+  browserClient = createClient(config.url, config.anonKey, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,

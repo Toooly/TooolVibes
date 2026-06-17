@@ -17008,11 +17008,12 @@ img {
   /* Orbita */
   .mobile-spotlight-cosmic__orbit {
     position: absolute;
-    top: 3.5rem;
     left: 50%;
-    transform: translateX(-50%);
-    width: min(18rem, calc(100vw - 2rem));
-    height: min(18rem, calc(100vw - 2rem));
+    top: 50%;
+    z-index: 1;
+    width: var(--spotlight-orbit-size);
+    height: var(--spotlight-orbit-size);
+    transform: translate(-50%, -50%);
     pointer-events: none;
   }
 
@@ -17030,12 +17031,15 @@ img {
 
   /* Sistema centrale */
   .mobile-spotlight-cosmic__system {
+    --spotlight-orbit-size: min(18rem, calc(100vw - 2rem));
+    --spotlight-satellite-radius: calc(var(--spotlight-orbit-size) / 2);
     position: relative;
     width: 18rem;
     height: 18rem;
     margin: 0 auto;
     display: grid;
     place-items: center;
+    isolation: isolate;
   }
 
   /* Pianeta */
@@ -17094,13 +17098,13 @@ img {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%) rotate(var(--sat-angle)) translateX(7.95rem) rotate(calc(-1 * var(--sat-angle)));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
+    display: grid;
+    width: 2.6rem;
+    height: 2.6rem;
+    place-items: center;
     text-decoration: none;
     z-index: 3;
+    transform: translate(-50%, -50%) rotate(var(--sat-angle)) translateX(var(--spotlight-satellite-radius)) rotate(var(--sat-angle-back));
   }
 
   .mobile-spotlight-cosmic__satellite-ring {
@@ -17116,6 +17120,8 @@ img {
 
   .mobile-spotlight-cosmic__satellite-body {
     position: absolute;
+    left: 50%;
+    top: 50%;
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
@@ -17124,6 +17130,7 @@ img {
     display: grid;
     place-items: center;
     overflow: hidden;
+    transform: translate(-50%, -50%);
   }
 
   .mobile-spotlight-cosmic__satellite-body img {
@@ -17139,6 +17146,9 @@ img {
   }
 
   .mobile-spotlight-cosmic__satellite-name {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 0.32rem);
     font-size: 0.7rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.75);
@@ -17147,6 +17157,8 @@ img {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transform: translateX(-50%);
+    pointer-events: none;
   }
 
   /* Info card */
@@ -18475,18 +18487,41 @@ img {
   }
 
   .mobile-method-steps__link {
-    gap: 0.35rem;
-    padding: 0.48rem 0.78rem;
+    min-height: 2.35rem;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0 0.9rem;
+    border: 1px solid rgba(106, 60, 255, 0.14);
     border-radius: 999px;
-    background: rgba(106, 60, 255, 0.1);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
-    animation: tv-method-cta-idle 2.8s ease-in-out infinite;
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: none;
+    line-height: 1;
+    animation: none;
+    transform: none;
     text-decoration: none;
+  }
+
+  .mobile-method-steps__link::before,
+  .mobile-method-steps__link::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .mobile-method-steps__link svg {
+    display: block;
+    width: 0.85rem;
+    height: 0.85rem;
+    flex: 0 0 auto;
+    position: static;
+    transform: none;
   }
 
   .mobile-method-steps__link:hover,
   .mobile-method-steps__link:focus-visible {
-    gap: 0.55rem;
+    gap: 0.4rem;
+    background: #ffffff;
+    box-shadow: 0 8px 18px rgba(70, 52, 138, 0.1);
+    transform: none;
     text-decoration: none;
   }
 
@@ -19391,15 +19426,15 @@ img {
     from {
       transform:
         translate(-50%, -50%)
-    rotate(var(--sat-angle))
-    translateX(7.95rem)
-    rotate(var(--sat-angle-back));
+        rotate(var(--sat-angle))
+        translateX(var(--spotlight-satellite-radius))
+        rotate(var(--sat-angle-back));
     }
     to {
       transform:
         translate(-50%, -50%)
         rotate(calc(var(--sat-angle) + 360deg))
-        translateX(7.95rem)
+        translateX(var(--spotlight-satellite-radius))
         rotate(calc(var(--sat-angle-back) - 360deg));
     }
   }
@@ -20583,9 +20618,10 @@ img {
 
   .mobile-spotlight-cosmic__orbit {
     position: absolute;
-    left: clamp(11rem, 29vw, 34rem);
+    left: 50%;
     top: 50%;
-    width: clamp(24rem, 38vw, 38rem);
+    z-index: 1;
+    width: var(--spotlight-orbit-size);
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
     pointer-events: none;
@@ -20600,12 +20636,15 @@ img {
   }
 
   .mobile-spotlight-cosmic__system {
+    --spotlight-orbit-size: clamp(24rem, 38vw, 38rem);
+    --spotlight-satellite-radius: calc(var(--spotlight-orbit-size) / 2);
     position: relative;
     z-index: 2;
     display: grid;
     width: min(42rem, 100%);
     min-height: clamp(28rem, 38vw, 39rem);
     place-items: center;
+    isolation: isolate;
   }
 
   .mobile-spotlight-cosmic__weekly-pill {
@@ -20691,13 +20730,13 @@ img {
     position: absolute;
     left: 50%;
     top: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.35rem;
+    display: grid;
+    width: 3.4rem;
+    height: 3.4rem;
+    place-items: center;
     color: #fff;
     text-decoration: none;
-    transform: translate(-50%, -50%) rotate(var(--sat-angle)) translateX(clamp(12rem, 18vw, 17rem)) rotate(var(--sat-angle-back));
+    transform: translate(-50%, -50%) rotate(var(--sat-angle)) translateX(var(--spotlight-satellite-radius)) rotate(var(--sat-angle-back));
   }
 
   .mobile-spotlight-cosmic__satellite-ring {
@@ -20712,6 +20751,8 @@ img {
 
   .mobile-spotlight-cosmic__satellite-body {
     position: absolute;
+    left: 50%;
+    top: 50%;
     display: grid;
     width: 2.6rem;
     aspect-ratio: 1;
@@ -20720,6 +20761,7 @@ img {
     border: 1px solid rgba(255,255,255,0.18);
     border-radius: 50%;
     background: rgba(255,255,255,0.08);
+    transform: translate(-50%, -50%);
   }
 
   .mobile-spotlight-cosmic__satellite-body img {
@@ -20729,6 +20771,9 @@ img {
   }
 
   .mobile-spotlight-cosmic__satellite-name {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 0.42rem);
     max-width: 7rem;
     overflow: hidden;
     color: rgba(255,255,255,0.78);
@@ -20736,6 +20781,8 @@ img {
     font-weight: 750;
     text-overflow: ellipsis;
     white-space: nowrap;
+    transform: translateX(-50%);
+    pointer-events: none;
   }
 
   .mobile-spotlight-cosmic__info {
@@ -21033,30 +21080,50 @@ img {
   }
 
   .mobile-method-steps__link {
+    display: inline-flex;
     width: fit-content;
+    min-height: 2.35rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
     margin-top: 0.9rem;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     border: 1px solid rgba(106, 60, 255, 0.12);
-    background:
-      linear-gradient(135deg, rgba(255,255,255,0.92), rgba(246,242,255,0.78));
-    padding: 0.58rem 0.92rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    padding: 0 0.92rem;
     color: #5c34e8;
-    box-shadow:
-      0 10px 24px rgba(70, 52, 138, 0.08),
-      inset 0 1px 0 rgba(255,255,255,0.76);
+    box-shadow: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1;
     text-decoration: none !important;
+    transform: none;
+    animation: none;
   }
 
   .mobile-method-steps__link::before,
   .mobile-method-steps__link::after {
     content: none !important;
+    display: none !important;
+  }
+
+  .mobile-method-steps__link svg {
+    display: block;
+    width: 0.85rem;
+    height: 0.85rem;
+    flex: 0 0 auto;
+    position: static;
+    transform: none;
   }
 
   .mobile-method-steps__link:hover,
   .mobile-method-steps__link:focus-visible {
-    background:
-      linear-gradient(135deg, rgba(106, 60, 255, 0.12), rgba(57, 210, 246, 0.12));
+    gap: 0.4rem;
+    background: #ffffff;
+    box-shadow: 0 8px 18px rgba(70, 52, 138, 0.1);
+    transform: none;
     outline: none;
   }
 
@@ -23393,6 +23460,19 @@ img {
 
   .mobile-compare-arena__battle-stage {
     min-height: clamp(25rem, 39vw, 34rem) !important;
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-compare-arena {
+      grid-template-columns: minmax(28rem, 1fr) minmax(26rem, 0.84fr) !important;
+      column-gap: clamp(0.65rem, 1.4vw, 1.2rem) !important;
+    }
+
+    .mobile-compare-arena__battle-stage {
+      align-self: start;
+      min-height: clamp(22rem, 31vw, 28rem) !important;
+      max-height: min(28rem, calc(100vh - 14rem));
+    }
   }
 
   .mobile-compare-arena__fighter-orb {

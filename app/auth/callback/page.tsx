@@ -25,7 +25,7 @@ export default function AuthCallbackPage() {
 
       if (!code) {
         if (isActive) {
-          setMessage("Magic link non valido o già usato.");
+          setMessage("Link di conferma non valido o gia usato.");
         }
         return;
       }
