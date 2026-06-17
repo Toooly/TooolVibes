@@ -17,7 +17,6 @@ import {
   getLocalDiscoveryWorkspaceState,
 } from "@/lib/discovery/local-storage";
 import type { DiscoveryPersistencePayload } from "@/lib/discovery/types";
-import { siteConfig } from "@/lib/config/site";
 import {
   getBrowserSupabaseClient,
   isSupabaseBrowserEnabled,
@@ -53,104 +52,6 @@ const AccountContext = createContext<AccountContextValue>({
   sendMagicLink: async () => ({ ok: false, message: "Auth non disponibile." }),
   signOut: async () => {},
 });
-
-const publicAuthRedirectOrigin = "https://tooolvibes.staff-ffa.workers.dev";
-
-function normalizeOrigin(value?: string | null) {
-  const trimmed = value?.trim();
-
-  if (!trimmed) {
-    return null;
-  }
-
-  try {
-    const url = new URL(trimmed);
-    return url.origin;
-  } catch {
-    return null;
-  }
-}
-
-function isLocalOrigin(origin?: string | null) {
-  if (!origin) {
-    return true;
-  }
-
-  try {
-    const { hostname } = new URL(origin);
-    return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "0.0.0.0";
-  } catch {
-    return true;
-  }
-}
-
-function getRedirectUrl() {
-  const configuredOrigin =
-    normalizeOrigin(process.env.NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN) ??
-    normalizeOrigin(process.env.NEXT_PUBLIC_AUTH_SITE_URL) ??
-    normalizeOrigin(siteConfig.url);
-
-  if (configuredOrigin && !isLocalOrigin(configuredOrigin)) {
-    return `${configuredOrigin}/auth/callback`;
-  }
-
-  if (typeof window !== "undefined") {
-    const currentOrigin = normalizeOrigin(window.location.origin);
-
-    if (currentOrigin && !isLocalOrigin(currentOrigin)) {
-      return `${currentOrigin}/auth/callback`;
-    }
-  }
-
-  return `${publicAuthRedirectOrigin}/auth/callback`;
-}
-
-function getSupabaseAuthErrorDetail(error: unknown) {
-  const candidate = error as {
-    code?: string | number;
-    error_code?: string | number;
-    message?: string;
-    status?: number;
-  };
-  const code = String(candidate?.code ?? candidate?.error_code ?? "").trim();
-  const message = candidate?.message?.trim() ?? "";
-  const normalized = `${code} ${message}`.toLowerCase();
-
-  if (normalized.includes("rate") || normalized.includes("too many")) {
-    return "Il limite di invio email di Supabase e stato raggiunto. Incognito non lo resetta: controlla Authentication > Rate Limits oppure configura un SMTP personalizzato.";
-  }
-
-  if (normalized.includes("signup") && normalized.includes("disabled")) {
-    return "I nuovi account sono disattivati nelle impostazioni Auth. Attiva i signup dal provider Email.";
-  }
-
-  if (normalized.includes("not allowed") || normalized.includes("redirect")) {
-    return "Il redirect non risulta ancora autorizzato. Salva Site URL e Redirect URL in Supabase.";
-  }
-
-  if (normalized.includes("email") && normalized.includes("disabled")) {
-    return "Il provider Email non risulta attivo nelle impostazioni Auth.";
-  }
-
-  if (
-    normalized.includes("smtp") ||
-    normalized.includes("mail") ||
-    normalized.includes("send") ||
-    normalized.includes("sending")
-  ) {
-    return "Supabase non riesce a consegnare la mail: controlla Auth logs e configurazione SMTP/email.";
-  }
-
-  if (message) {
-    return `Dettaglio auth: ${message}`;
-  }
-
-  if (code) {
-    return `Dettaglio auth: ${code}`;
-  }
-
-  return "Controlla Email Auth, redirect URL e signup su Supabase.";
-}
 
 export function AccountProvider({ children }: { children: React.ReactNode }) {
   const [authEnabled, setAuthEnabled] = useState(() => isSupabaseBrowserEnabled());
@@ -291,23 +192,25 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
     setAuthMessage(null);
 
     try {
-      const client = getBrowserSupabaseClient();
-      const { error } = await client.auth.signInWithOtp({
-        email: normalizedEmail,
-        options: {
-          shouldCreateUser: true,
-          emailRedirectTo: getRedirectUrl(),
-          data: metadata,
+      const response = await fetch("/api/auth/magic-link", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          email: normalizedEmail,
+          metadata,
+        }),
       });
+      const payload = (await response.json()) as {
+        ok?: boolean;
+        message?: string;
+      };
 
-      if (error) {
-        console.warn("[account-auth] magic link failed", {
-          code: error.code,
-          message: error.message,
-          status: error.status,
-        });
-        const message = `Non sono riuscito a inviare la mail di conferma. ${getSupabaseAuthErrorDetail(error)}`;
+      if (!response.ok || !payload.ok) {
+        const message =
+          payload.message ??
+          "Non sono riuscito a inviare la mail di conferma con Resend.";
         setAuthMessage(message);
         return {
           ok: false,
@@ -316,9 +219,10 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       }
 
       const message =
-        metadata?.source === "vibe-rush"
+        payload.message ??
+        (metadata?.source === "vibe-rush"
           ? `Email di conferma inviata a ${normalizedEmail}. Aprila per creare l'account e salvare anche il risultato Vibe Rush.`
-          : `Email di conferma inviata a ${normalizedEmail}. Aprila per creare o collegare l'account alla workspace.`;
+          : `Email di conferma inviata a ${normalizedEmail}. Aprila per creare o collegare l'account alla workspace.`);
       setAuthMessage(message);
 
       return {
