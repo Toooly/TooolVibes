@@ -163,7 +163,11 @@ export function MobileCatalogView({
       result = result.filter((t) => t.tags.includes(initialTag));
     }
     if (searchQuery.trim()) {
-      result = fuse.search(searchQuery.trim()).map((r) => r.item);
+      const allowedSlugs = new Set(result.map((tool) => tool.slug));
+      result = fuse
+        .search(searchQuery.trim())
+        .map((r) => r.item)
+        .filter((tool) => allowedSlugs.has(tool.slug));
     }
     if (activeLevel !== "all") {
       result = result.filter((t) => t.level === activeLevel);
@@ -186,6 +190,11 @@ export function MobileCatalogView({
       return { ...cat, count, ...meta };
     });
   }, [filterGroups, tools]);
+
+  const featuredTools = useMemo(() => {
+    const featured = tools.filter((tool) => tool.level === "featured");
+    return (featured.length ? featured : tools).slice(0, 6);
+  }, [tools]);
 
   const handleCategorySelect = useCallback(
     (groupKey: string) => {
@@ -275,6 +284,7 @@ export function MobileCatalogView({
               categories={categories}
               onSelect={handleCategorySelect}
               searchControl={searchControl}
+              featuredTools={featuredTools}
             />
           </motion.div>
         ) : (
@@ -374,15 +384,22 @@ type MobileCategoryMapProps = {
   }[];
   onSelect: (key: string) => void;
   searchControl: ReactNode;
+  featuredTools: DirectoryTool[];
 };
 
-function MobileCategoryMap({ categories, onSelect, searchControl }: MobileCategoryMapProps) {
+function MobileCategoryMap({
+  categories,
+  onSelect,
+  searchControl,
+  featuredTools,
+}: MobileCategoryMapProps) {
   return (
     <section className="mobile-category-map" aria-label="Esplora per categoria">
       <div className="mobile-category-map__intro">
-        <h1>Esplora</h1>
+        <span className="mobile-category-map__eyebrow">Catalogo Vibe</span>
+        <h1>Catalogo</h1>
         {searchControl}
-        <p>Scegli un mondo per scoprire i tool che lo abitano.</p>
+        <p>Scegli una rotta, filtra il livello giusto e costruisci una shortlist pulita senza perderti tra schede uguali.</p>
         <div className="mobile-category-map__steps">
           <span className="is-active">Esplora</span>
           <span className="mobile-category-map__steps-arrow">→</span>
@@ -390,6 +407,17 @@ function MobileCategoryMap({ categories, onSelect, searchControl }: MobileCatego
           <span className="mobile-category-map__steps-arrow">→</span>
           <span>Scopri</span>
         </div>
+      </div>
+
+      <div className="mobile-category-map__stats" aria-label="Statistiche catalogo">
+        <span>
+          <strong>{categories.find((cat) => cat.key === "all")?.count ?? 0}</strong>
+          tool
+        </span>
+        <span>
+          <strong>{Math.max(categories.length - 1, 0)}</strong>
+          mondi
+        </span>
       </div>
 
       <CategoryGuide />
@@ -419,6 +447,59 @@ function MobileCategoryMap({ categories, onSelect, searchControl }: MobileCatego
                 <small>{cat.count} tool</small>
               </span>
             </motion.button>
+          );
+        })}
+      </div>
+      <CatalogFeaturedRail tools={featuredTools} onSelectAll={() => onSelect("all")} />
+    </section>
+  );
+}
+
+function CatalogFeaturedRail({
+  tools,
+  onSelectAll,
+}: {
+  tools: DirectoryTool[];
+  onSelectAll: () => void;
+}) {
+  if (!tools.length) return null;
+
+  return (
+    <section className="catalog-featured-rail" aria-label="Tool consigliati">
+      <div className="catalog-featured-rail__header">
+        <div>
+          <span>Vibe picks</span>
+          <h2>Tool pronti da valutare</h2>
+        </div>
+        <button type="button" onClick={onSelectAll} className="catalog-featured-rail__cta">
+          Vedi tutti
+          <ArrowRight size={14} aria-hidden="true" />
+        </button>
+      </div>
+      <div className="catalog-featured-rail__list">
+        {tools.map((tool) => {
+          const domain = extractDomain(tool.url);
+          const iconUrl = domain
+            ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`
+            : undefined;
+
+          return (
+            <Link key={tool.slug} href={`/toools/${tool.slug}`} className="catalog-featured-card">
+              <span
+                className="catalog-featured-card__icon"
+                style={iconUrl ? { "--featured-icon": `url("${iconUrl}")` } as CSSProperties : undefined}
+              >
+                {iconUrl ? (
+                  <span className="catalog-featured-card__icon-image" aria-hidden="true" />
+                ) : (
+                  <strong>{tool.name.slice(0, 2).toUpperCase()}</strong>
+                )}
+              </span>
+              <span className="catalog-featured-card__meta">
+                <strong>{tool.name}</strong>
+                <small>{tool.categoryLabel}</small>
+              </span>
+            </Link>
           );
         })}
       </div>

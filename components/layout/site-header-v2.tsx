@@ -16,7 +16,6 @@ import {
   Sparkles,
   Compass,
   Radar,
-  Heart,
   ShoppingBag,
   Users,
   LayoutGrid,
@@ -32,7 +31,6 @@ const navLinks = [
   { href: "/radar", label: "Radar", icon: Radar },
   { href: "/compare", label: "Compare", icon: Zap },
   { href: "/shortlist", label: "Shortlist", icon: Compass },
-  { href: "/shortlist#wishlist", label: "Wishlist", icon: Heart },
   { href: "/shop", label: "Shop", icon: ShoppingBag },
   { href: "/community", label: "Community", icon: Users },
 ];
@@ -165,7 +163,7 @@ export function SiteHeaderV2() {
 
             {/* Desktop Nav */}
             <nav className="hidden items-center gap-1 lg:flex">
-              {navLinks.slice(0, 6).map((link) => (
+              {navLinks.slice(0, 5).map((link) => (
                 <NavLink
                   key={link.href}
                   href={link.href}
