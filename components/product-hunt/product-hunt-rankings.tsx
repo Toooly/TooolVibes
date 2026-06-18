@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown, Sparkles } from "lucide-react";
 
@@ -169,7 +169,7 @@ export function ProductHuntRankings({
       id="product-hunt"
       className={cn(
         "product-hunt-rankings premium-card motion-reveal p-4 text-white sm:p-5",
-        variant === "wide" && "product-hunt-rankings--wide rounded-[36px] p-5 sm:p-7",
+        variant === "wide" && "product-hunt-rankings--wide product-hunt-rankings--radar-desk rounded-[36px] p-5 sm:p-7",
         className,
       )}
       aria-labelledby="product-hunt-title"
@@ -288,9 +288,11 @@ export function ProductHuntRankings({
                   "dynamic-card group flex flex-col items-start gap-3 rounded-[20px] border border-white/12 bg-white/9 p-3 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200/34 hover:bg-white/13 hover:shadow-[0_14px_34px_rgba(8,14,38,0.2)] sm:flex-row sm:items-center",
                   variant === "wide" && "sm:min-h-[12.5rem] sm:flex-col sm:items-start sm:p-4",
                   variant === "wide" && index > 0 && "hidden sm:flex",
+                  variant === "wide" && index === 0 && "product-hunt-rankings__card--lead",
+                  variant === "wide" && index > 0 && "product-hunt-rankings__card--signal",
                 )}
               >
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-white/10 bg-white/10 text-sm font-semibold text-white">
+                <div className="product-hunt-rankings__visual flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-white/10 bg-white/10 text-sm font-semibold text-white">
                   {item.thumbnailUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -305,7 +307,7 @@ export function ProductHuntRankings({
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <div className="flex min-w-0 flex-wrap items-center gap-2">
+                  <div className="product-hunt-rankings__headline flex min-w-0 flex-wrap items-center gap-2">
                     <span className="animated-status-badge rounded-full border border-violet-200/20 bg-violet-400/12 px-2 py-0.5 text-[0.66rem] font-semibold text-violet-100">
                       #{index + 1}
                     </span>
@@ -320,6 +322,11 @@ export function ProductHuntRankings({
                   <div className="mt-2 flex flex-wrap gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-white/44">
                     <span>{formatMetrics(item)}</span>
                   </div>
+                  {variant === "wide" ? (
+                    <div className="product-hunt-rankings__signal-meter" aria-hidden="true">
+                      <span style={{ "--signal-strength": `${Math.min(100, Math.max(18, item.votesCount || 18))}%` } as CSSProperties} />
+                    </div>
+                  ) : null}
                   <button
                     type="button"
                     className="micro-expand-button mt-3"

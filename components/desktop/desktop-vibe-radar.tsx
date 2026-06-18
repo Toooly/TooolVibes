@@ -1,16 +1,10 @@
-import { Activity, MessageCircle, Radar, TrendingUp } from "lucide-react";
-import type { CSSProperties } from "react";
+import { Radar } from "lucide-react";
 
 import { DesktopRadarCanvas } from "@/components/desktop/desktop-radar-canvas";
+import { DesktopRadarNodes } from "@/components/desktop/desktop-radar-nodes";
 import { RadarGameMissions } from "@/components/gamification/radar-game-missions";
 import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
 import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
-
-const radarSignals = [
-  { icon: Activity, label: "Rank", value: "Giorno, settimana, mese" },
-  { icon: MessageCircle, label: "Segnali", value: "Voti e commenti quando disponibili" },
-  { icon: TrendingUp, label: "Fallback", value: "Stati puliti se l'API non risponde" },
-];
 
 export function DesktopVibeRadar() {
   return (
@@ -39,24 +33,7 @@ export function DesktopVibeRadar() {
           <span className="desktop-vibe-radar-core" aria-hidden="true">
             <Radar />
           </span>
-
-          {radarSignals.map((item, index) => {
-            const Icon = item.icon;
-
-            return (
-              <article
-                key={item.label}
-                className={`desktop-vibe-radar-signal desktop-vibe-radar-signal--${index + 1}`}
-                style={{ "--signal-index": index } as CSSProperties}
-              >
-                <span>
-                  <Icon aria-hidden="true" />
-                </span>
-                <p>{item.label}</p>
-                <strong>{item.value}</strong>
-              </article>
-            );
-          })}
+          <DesktopRadarNodes />
         </div>
       </section>
 

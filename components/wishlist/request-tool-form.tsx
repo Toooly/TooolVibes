@@ -167,7 +167,7 @@ export function RequestToolForm({ className }: { className?: string }) {
         </div>
       ) : null}
 
-      <PremiumPanel tone="blue" className="motion-form-panel p-4 sm:p-6">
+      <PremiumPanel tone="blue" className="motion-form-panel request-tool-form p-4 sm:p-6">
         <form onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
           <div className="grid gap-4 sm:gap-6">
             <aside className="rounded-[22px] border border-[rgba(106,60,255,0.08)] bg-white/60 p-4 sm:rounded-[26px] sm:p-5">

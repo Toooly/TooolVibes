@@ -4,13 +4,17 @@ import { useState, useMemo,  type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   X,
-  
   GitCompare,
   Trash2,
   ArrowRight,
   Bookmark,
   Heart,
   Clock,
+  Library,
+  Link2,
+  PlusCircle,
+  Sparkles,
+  Tags,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -72,8 +76,10 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
 
   if (totalCount === 0) {
     return (
-      <div className="mobile-library-board">
-        <MobileLibraryEmpty />
+      <div className="mobile-library-board mobile-library-board--empty">
+        <LibraryAmbient />
+        <MobileLibraryHero totalCount={0} compareCount={compareSlugs.length} />
+        <MobileLibraryEmpty tools={tools} />
         <LibraryWishlistSection />
       </div>
     );
@@ -86,8 +92,9 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
 
   return (
     <div className="mobile-library-board">
-      {/* Header */}
-      <div className="mobile-library-board__header">
+      <LibraryAmbient />
+      <MobileLibraryHero totalCount={totalCount} compareCount={compareSlugs.length} />
+      <div className="mobile-library-board__header mobile-library-board__header--legacy">
         <div className="mobile-library-board__icon">
           <Bookmark size={20} />
         </div>
@@ -161,6 +168,12 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
 }
 
 function LibraryWishlistSection() {
+  const signalCards = [
+    { icon: Link2, label: "Link ufficiale", copy: "Evita cloni e schede duplicate: partiamo sempre dalla fonte giusta." },
+    { icon: Tags, label: "Categoria", copy: "AI app builder, no-code, automazioni o SaaS: il contesto decide dove inserirlo." },
+    { icon: Sparkles, label: "Motivo", copy: "Una frase chiara aiuta a capire perche merita spazio nella libreria." },
+  ];
+
   return (
     <section id="wishlist" className="mobile-library-wishlist" aria-labelledby="library-wishlist-title">
       <div className="mobile-library-wishlist__intro">
@@ -173,8 +186,69 @@ function LibraryWishlistSection() {
           Se manca un AI tool, SaaS o builder che merita spazio, mandalo da qui:
           resta dentro la tua libreria e diventa parte del percorso di selezione.
         </p>
+        <div className="mobile-library-wishlist__signals" aria-label="Segnali utili per proporre un tool">
+          {signalCards.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.label} className="mobile-library-wishlist__signal-card">
+                <span aria-hidden="true">
+                  <Icon size={15} />
+                </span>
+                <strong>{item.label}</strong>
+                <small>{item.copy}</small>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <RequestToolForm className="mobile-library-wishlist__form" />
+    </section>
+  );
+}
+
+function LibraryAmbient() {
+  return (
+    <div className="mobile-library-ambient" aria-hidden="true">
+      <span className="mobile-library-ambient__ring mobile-library-ambient__ring--one" />
+      <span className="mobile-library-ambient__ring mobile-library-ambient__ring--two" />
+      <span className="mobile-library-ambient__glow mobile-library-ambient__glow--one" />
+      <span className="mobile-library-ambient__glow mobile-library-ambient__glow--two" />
+    </div>
+  );
+}
+
+function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; compareCount: number }) {
+  const stats = [
+    { label: "Salvati", value: totalCount },
+    { label: "Compare", value: compareCount },
+    { label: "Wishlist", value: "Aperta" },
+  ];
+
+  return (
+    <section className="mobile-library-hero" aria-labelledby="mobile-library-title">
+      <div className="mobile-library-board__header">
+        <div className="mobile-library-board__icon">
+          <Library size={22} />
+        </div>
+        <div>
+          <span className="mobile-library-hero__eyebrow">Biblioteca operativa</span>
+          <h1 id="mobile-library-title">La tua biblioteca</h1>
+          <p>
+            {totalCount > 0
+              ? `${totalCount} tool salvati, ordinati per tornare subito alla scelta giusta.`
+              : "Uno spazio vivo per tool salvati, wishlist e prossime scoperte."}
+          </p>
+        </div>
+      </div>
+
+      <div className="mobile-library-hero__stats">
+        {stats.map((item) => (
+          <div key={item.label} className="mobile-library-hero__stat">
+            <strong>{item.value}</strong>
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
@@ -211,7 +285,13 @@ function MobileLibraryShelf({
           ))}
         </div>
       ) : (
-        <p className="mobile-library-shelf__empty">{emptyText}</p>
+        <div className="mobile-library-shelf__empty">
+          <span aria-hidden="true">
+            <PlusCircle size={16} />
+          </span>
+          <p>{emptyText}</p>
+          <Link href="/archivio">Trova candidati</Link>
+        </div>
       )}
     </section>
   );
@@ -315,7 +395,14 @@ function MobileNoteSheet({
    MobileLibraryEmpty
    ═══════════════════════════════════════════════════════════════ */
 
-function MobileLibraryEmpty() {
+function MobileLibraryEmpty({ tools }: { tools: ToolRecord[] }) {
+  const starterTools = tools.slice(0, 3);
+  const routes = [
+    { href: "/archivio", label: "Esplora archivio", copy: "Filtra per categoria e salva i candidati davvero utili." },
+    { href: "/radar", label: "Apri Radar", copy: "Parti dai segnali live quando non sai da dove cominciare." },
+    { href: "#wishlist", label: "Suggerisci tool", copy: "Manca un nome importante? Portalo subito nella wishlist." },
+  ];
+
   return (
     <div className="mobile-library-empty">
       <div className="mobile-library-empty__visual">
@@ -330,6 +417,34 @@ function MobileLibraryEmpty() {
         Salva tool dall&apos;archivio o dal radar. Trovali qui, ordinati e pronti
         per essere esplorati.
       </p>
+      <div className="mobile-library-empty__content">
+        <span className="mobile-library-empty__kicker">Nessun tool salvato, per ora</span>
+        <h2>La tua biblioteca e pronta a riempirsi.</h2>
+        <p>
+          Inizia con pochi candidati buoni: quando salvi un tool, qui trovi categoria,
+          stato, link alla scheda e scorciatoie per confronto o wishlist.
+        </p>
+      </div>
+      <div className="mobile-library-empty__routes">
+        {routes.map((route) => (
+          <Link key={route.href} href={route.href} className="mobile-library-empty__route">
+            <strong>{route.label}</strong>
+            <span>{route.copy}</span>
+          </Link>
+        ))}
+      </div>
+      {starterTools.length > 0 ? (
+        <div className="mobile-library-empty__starter" aria-label="Tool da cui partire">
+          <span>Da provare per iniziare</span>
+          <div>
+            {starterTools.map((tool) => (
+              <Link key={tool.slug} href={`/toools/${tool.slug}`}>
+                {tool.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : null}
       <div className="mobile-library-empty__actions">
         <Link href="/archivio" className="mobile-library-empty__cta">
           Esplora l&apos;archivio

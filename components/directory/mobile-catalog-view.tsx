@@ -270,6 +270,13 @@ export function MobileCatalogView({
 
   return (
     <div className="mobile-catalog-view relative min-h-screen pb-24">
+      <div className="mobile-catalog-view__ambient" aria-hidden="true">
+        <span className="mobile-catalog-view__ambient-orbit mobile-catalog-view__ambient-orbit--one" />
+        <span className="mobile-catalog-view__ambient-orbit mobile-catalog-view__ambient-orbit--two" />
+        <span className="mobile-catalog-view__ambient-trace mobile-catalog-view__ambient-trace--one" />
+        <span className="mobile-catalog-view__ambient-trace mobile-catalog-view__ambient-trace--two" />
+        <span className="mobile-catalog-view__ambient-trace mobile-catalog-view__ambient-trace--three" />
+      </div>
       {/* Content */}
       <AnimatePresence mode="wait">
         {view === "categories" ? (
@@ -439,6 +446,7 @@ function MobileCategoryMap({
               whileTap={{ scale: 0.96 }}
             >
               <span className="mobile-category-map__halo" aria-hidden="true" />
+              <span className="mobile-category-map__orbit" aria-hidden="true" />
               <span className="mobile-category-map__body">
                 <Icon size={28} aria-hidden="true" />
               </span>
@@ -597,16 +605,11 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
         href={`/toools/${tool.slug}`}
         className="mobile-tool-card"
         aria-label={`${tool.name}. ${tool.shortDescription || ""}`}
+        style={iconUrl ? { "--tool-icon": `url("${iconUrl}")` } as CSSProperties : undefined}
       >
         <div className="mobile-tool-card__visual">
           {iconUrl ? (
-            <img
-              src={iconUrl}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="mobile-tool-card__icon"
-            />
+            <span className="mobile-tool-card__icon" aria-hidden="true" />
           ) : (
             <span className="mobile-tool-card__fallback">
               {tool.name.slice(0, 2).toUpperCase()}
@@ -614,11 +617,18 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
           )}
         </div>
         <div className="mobile-tool-card__meta">
-          <span className="mobile-tool-card__category">{tool.categoryLabel}</span>
+          <div className="mobile-tool-card__topline">
+            <span className="mobile-tool-card__category">{tool.categoryLabel}</span>
+            <span className="mobile-tool-card__level">{tool.level}</span>
+          </div>
           <h3 className="mobile-tool-card__title">{tool.name}</h3>
           <p className="mobile-tool-card__description">
             {tool.shortDescription || tool.tldr || ""}
           </p>
+          <span className="mobile-tool-card__open">
+            Apri scheda
+            <ArrowRight size={13} aria-hidden="true" />
+          </span>
         </div>
       </Link>
       <div className="mobile-tool-card__actions">
