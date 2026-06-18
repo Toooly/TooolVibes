@@ -510,26 +510,26 @@ type BattleState = "idle" | "fighting" | "result";
 
 const FIGHTER_POSITIONS: Record<number, Array<{ x: number; y: number; align?: string }>> = {
   2: [
-    { x: 24, y: 52 },
-    { x: 76, y: 52 },
+    { x: 27, y: 47 },
+    { x: 73, y: 47 },
   ],
   3: [
-    { x: 50, y: 20 },
-    { x: 22, y: 59 },
-    { x: 78, y: 59 },
+    { x: 50, y: 23 },
+    { x: 28, y: 58 },
+    { x: 72, y: 58 },
   ],
   4: [
-    { x: 24, y: 23 },
-    { x: 76, y: 23 },
-    { x: 24, y: 61 },
-    { x: 76, y: 61 },
+    { x: 30, y: 25 },
+    { x: 70, y: 25 },
+    { x: 30, y: 61 },
+    { x: 70, y: 61 },
   ],
   5: [
-    { x: 50, y: 18 },
-    { x: 18, y: 44 },
-    { x: 82, y: 44 },
-    { x: 30, y: 64 },
-    { x: 70, y: 64 },
+    { x: 50, y: 22 },
+    { x: 29, y: 42 },
+    { x: 71, y: 42 },
+    { x: 34, y: 63 },
+    { x: 66, y: 63 },
   ],
 };
 
@@ -562,6 +562,7 @@ function MobileArenaBattleStage({
       className="mobile-compare-arena__battle-stage"
       data-count={Math.min(tools.length, 5)}
       data-state={battleState}
+      style={{ "--arena-count": Math.min(tools.length, 5) } as CSSProperties}
       aria-label="Arena fight"
     >
       <div className="mobile-compare-arena__battle-backdrop" aria-hidden="true">

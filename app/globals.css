@@ -28603,3 +28603,513 @@ body:has(.tone-account) {
   0%, 100% { translate: 0 0; }
   50% { translate: 1.2rem -0.8rem; }
 }
+
+/* Mobile arena containment fix: stable positions for 3+ fighters and centered fight CTA. */
+@media (max-width: 767px) {
+  .mobile-compare-arena__battle-stage {
+    --arena-fighter-scale: 1;
+    min-height: clamp(25.5rem, 72svw, 31rem) !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    contain: layout paint;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="3"] {
+    --arena-fighter-scale: 0.92;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="4"] {
+    --arena-fighter-scale: 0.82;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="5"] {
+    --arena-fighter-scale: 0.72;
+  }
+
+  .mobile-compare-arena__fighters {
+    position: absolute !important;
+    inset: 0.85rem 0.7rem 4.75rem !important;
+    z-index: 6 !important;
+    overflow: visible !important;
+    pointer-events: none;
+  }
+
+  .mobile-compare-arena__fighter {
+    width: calc(5.35rem * var(--arena-fighter-scale)) !important;
+    max-width: 5.35rem !important;
+    transform-origin: 50% 55% !important;
+    translate: -50% -50% !important;
+    gap: calc(0.18rem * var(--arena-fighter-scale)) !important;
+    pointer-events: auto;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="4"] .mobile-compare-arena__fighter,
+  .mobile-compare-arena__battle-stage[data-count="5"] .mobile-compare-arena__fighter {
+    gap: 0.08rem !important;
+  }
+
+  .mobile-compare-arena__fighter-character {
+    width: calc(4.3rem * var(--arena-fighter-scale)) !important;
+    height: calc(5.05rem * var(--arena-fighter-scale)) !important;
+    margin-inline: auto;
+  }
+
+  .mobile-compare-arena__fighter-orb {
+    width: calc(3.05rem * var(--arena-fighter-scale)) !important;
+    min-width: calc(3.05rem * var(--arena-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-face {
+    width: calc(2rem * var(--arena-fighter-scale)) !important;
+    font-size: calc(1rem * var(--arena-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-head {
+    width: calc(1.9rem * var(--arena-fighter-scale)) !important;
+    height: calc(1.9rem * var(--arena-fighter-scale)) !important;
+    top: calc(-1.06rem * var(--arena-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-hand {
+    width: calc(1.05rem * var(--arena-fighter-scale)) !important;
+    height: calc(1.05rem * var(--arena-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-hand--left {
+    left: calc(-0.36rem * var(--arena-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-hand--right {
+    right: calc(-0.36rem * var(--arena-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-sword {
+    height: calc(2.35rem * var(--arena-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-shield {
+    width: calc(1.18rem * var(--arena-fighter-scale)) !important;
+    height: calc(1.4rem * var(--arena-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-foot {
+    width: calc(1rem * var(--arena-fighter-scale)) !important;
+    height: calc(0.55rem * var(--arena-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-health,
+  .mobile-compare-arena__fighter-loadout {
+    display: none !important;
+  }
+
+  .mobile-compare-arena__fighter-name {
+    max-width: calc(5.8rem * var(--arena-fighter-scale)) !important;
+    padding: 0.12rem 0.38rem !important;
+    font-size: clamp(0.64rem, calc(0.84rem * var(--arena-fighter-scale)), 0.84rem) !important;
+    line-height: 1.05 !important;
+    white-space: nowrap;
+  }
+
+  .mobile-compare-arena__fighter small {
+    max-width: calc(5.8rem * var(--arena-fighter-scale)) !important;
+    font-size: clamp(0.52rem, calc(0.62rem * var(--arena-fighter-scale)), 0.62rem) !important;
+    line-height: 1.05 !important;
+    white-space: nowrap;
+  }
+
+  .mobile-compare-arena__battle-core {
+    width: clamp(4.8rem, 18vw, 5.7rem) !important;
+    z-index: 4 !important;
+  }
+
+  .mobile-compare-arena__battle-core span {
+    font-size: 0.56rem !important;
+  }
+
+  .mobile-compare-arena__battle-core strong {
+    font-size: clamp(0.98rem, 4vw, 1.28rem) !important;
+  }
+
+  .mobile-compare-arena__fight-button {
+    position: absolute !important;
+    left: 50% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: max(0.9rem, env(safe-area-inset-bottom)) !important;
+    z-index: 12 !important;
+    display: inline-flex !important;
+    width: min(18rem, calc(100% - 2rem)) !important;
+    min-width: 0 !important;
+    justify-content: center !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="4"] .mobile-compare-arena__fight-button,
+  .mobile-compare-arena__battle-stage[data-count="5"] .mobile-compare-arena__fight-button {
+    width: min(16.5rem, calc(100% - 2rem)) !important;
+    min-height: 3.15rem !important;
+  }
+}
+
+/* Request tool form contrast refresh inside the library wishlist. */
+.mobile-library-wishlist .request-tool-form {
+  border-color: rgba(155, 232, 255, 0.22) !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(57, 210, 246, 0.2), transparent 22rem),
+    radial-gradient(circle at 92% 10%, rgba(243, 191, 76, 0.14), transparent 20rem),
+    linear-gradient(145deg, rgba(12, 8, 32, 0.94), rgba(23, 12, 45, 0.9)) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.mobile-library-wishlist .request-tool-form aside {
+  border-color: rgba(155, 232, 255, 0.18) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(57, 210, 246, 0.18), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.045)) !important;
+}
+
+.mobile-library-wishlist .request-tool-form .premium-badge,
+.mobile-library-wishlist .request-tool-form [class*="premium-badge"] {
+  border-color: rgba(155, 232, 255, 0.28) !important;
+  background: rgba(155, 232, 255, 0.12) !important;
+  color: #9be8ff !important;
+}
+
+.mobile-library-wishlist .request-tool-form :is(h2, summary, label span) {
+  color: #ffffff !important;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.24);
+}
+
+.mobile-library-wishlist .request-tool-form :is(p, .motion-form-step span, details span) {
+  color: rgba(234, 245, 255, 0.78) !important;
+}
+
+.mobile-library-wishlist .request-tool-form .motion-form-step,
+.mobile-library-wishlist .request-tool-form .micro-details {
+  border-color: rgba(255, 255, 255, 0.13) !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+}
+
+.mobile-library-wishlist .request-tool-form :is(input, select, textarea) {
+  border-color: rgba(155, 232, 255, 0.24) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #17112d !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 12px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+.mobile-library-wishlist .request-tool-form :is(input, select, textarea)::placeholder {
+  color: rgba(23, 17, 45, 0.46) !important;
+}
+
+.mobile-library-wishlist .request-tool-form .premium-button {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  background: linear-gradient(135deg, #6a3cff, #356cff 56%, #39d2f6) !important;
+  color: #ffffff !important;
+}
+
+/* Desktop cleanup pass: richer search, quieter radar, contained arena, readable wishlist. */
+@media (min-width: 1024px) {
+  .mobile-catalog-view {
+    background:
+      radial-gradient(circle at 12% 4%, rgba(106, 60, 255, 0.24), transparent 28rem),
+      radial-gradient(circle at 86% 10%, rgba(57, 210, 246, 0.2), transparent 30rem),
+      radial-gradient(circle at 54% 72%, rgba(255, 94, 184, 0.12), transparent 28rem),
+      linear-gradient(135deg, #13091f 0%, #171232 44%, #071522 100%) !important;
+    color: #ffffff !important;
+  }
+
+  .mobile-category-map {
+    width: min(1480px, calc(100vw - 5rem)) !important;
+  }
+
+  .mobile-category-map__intro {
+    min-height: clamp(18rem, 28vw, 26rem) !important;
+    border-color: rgba(155, 232, 255, 0.18) !important;
+    background:
+      radial-gradient(circle at 82% 18%, rgba(57, 210, 246, 0.2), transparent 22rem),
+      radial-gradient(circle at 10% 0%, rgba(106, 60, 255, 0.26), transparent 22rem),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.055)) !important;
+    box-shadow:
+      0 30px 100px rgba(0, 0, 0, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+  }
+
+  .mobile-category-map__intro h1 {
+    color: #ffffff !important;
+    text-shadow: 0 18px 54px rgba(57, 210, 246, 0.2);
+  }
+
+  .mobile-category-map__intro p {
+    color: rgba(237, 246, 255, 0.74) !important;
+  }
+
+  .mobile-category-map__eyebrow,
+  .mobile-category-map__stats span,
+  .mobile-catalog-view__search {
+    border-color: rgba(155, 232, 255, 0.18) !important;
+    background: rgba(255, 255, 255, 0.105) !important;
+    color: rgba(245, 250, 255, 0.88) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .mobile-category-map__stats strong {
+    color: #ffffff !important;
+  }
+
+  .mobile-category-map__grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 1.05rem !important;
+  }
+
+  .mobile-category-map__blob {
+    min-height: clamp(10.4rem, 13vw, 13.6rem) !important;
+    border-color: color-mix(in srgb, var(--cat-color, #6a3cff) 42%, rgba(255, 255, 255, 0.18)) !important;
+    background:
+      radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--cat-color, #6a3cff) 30%, transparent), transparent 48%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.055)) !important;
+    box-shadow:
+      0 22px 70px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+  }
+
+  .mobile-category-map__blob:nth-child(6n + 1),
+  .mobile-category-map__blob:nth-child(6n + 4) {
+    grid-column: span 2;
+  }
+
+  .mobile-category-map__body {
+    background: color-mix(in srgb, var(--cat-color, #6a3cff) 36%, rgba(255, 255, 255, 0.12)) !important;
+    box-shadow:
+      0 0 34px color-mix(in srgb, var(--cat-color, #6a3cff) 32%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.24) !important;
+  }
+
+  .mobile-category-map__label strong {
+    color: #ffffff !important;
+  }
+
+  .mobile-category-map__label small {
+    color: rgba(232, 244, 255, 0.72) !important;
+  }
+
+  .catalog-featured-rail,
+  .mobile-catalog-view__tools-controls {
+    border-color: rgba(155, 232, 255, 0.14) !important;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(57, 210, 246, 0.14), transparent 20rem),
+      rgba(255, 255, 255, 0.075) !important;
+    color: #ffffff !important;
+  }
+
+  .catalog-featured-rail__header h2,
+  .catalog-featured-card h3,
+  .mobile-tool-card h3 {
+    color: #ffffff !important;
+  }
+
+  .catalog-featured-card,
+  .mobile-tool-card {
+    border-color: rgba(255, 255, 255, 0.14) !important;
+    background:
+      radial-gradient(circle at 82% 0%, rgba(57, 210, 246, 0.14), transparent 38%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.055)) !important;
+    color: #ffffff !important;
+  }
+
+  .catalog-featured-card p,
+  .catalog-featured-card__meta small,
+  .mobile-tool-card p {
+    color: rgba(232, 244, 255, 0.68) !important;
+  }
+
+  .desktop-stage-canvas {
+    opacity: 0.8 !important;
+  }
+
+  .desktop-vibe-radar-stage {
+    background:
+      radial-gradient(circle at 50% 48%, rgba(57, 210, 246, 0.1), transparent 26rem),
+      radial-gradient(circle at 52% 50%, rgba(106, 60, 255, 0.18), transparent 34rem),
+      rgba(6, 6, 22, 0.54) !important;
+  }
+
+  .desktop-vibe-radar-stage::before {
+    opacity: 0.18 !important;
+  }
+
+  .mobile-compare-arena__battle-stage {
+    --arena-desktop-fighter-scale: 1;
+    min-height: clamp(31rem, 42vw, 41rem) !important;
+    max-height: none !important;
+    overflow: hidden !important;
+    contain: layout paint;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="3"] {
+    --arena-desktop-fighter-scale: 0.9;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="4"] {
+    --arena-desktop-fighter-scale: 0.8;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="5"] {
+    --arena-desktop-fighter-scale: 0.72;
+  }
+
+  .mobile-compare-arena__fighters {
+    position: absolute !important;
+    inset: 4.2rem 4.8rem 6.8rem !important;
+    z-index: 6 !important;
+    overflow: visible !important;
+    pointer-events: none;
+  }
+
+  .mobile-compare-arena__fighter {
+    width: calc(7.1rem * var(--arena-desktop-fighter-scale)) !important;
+    gap: calc(0.24rem * var(--arena-desktop-fighter-scale)) !important;
+    translate: -50% -50% !important;
+  }
+
+  .mobile-compare-arena__fighter-character {
+    width: calc(5.85rem * var(--arena-desktop-fighter-scale)) !important;
+    height: calc(6.9rem * var(--arena-desktop-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-orb {
+    width: calc(4rem * var(--arena-desktop-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-head {
+    width: calc(2.32rem * var(--arena-desktop-fighter-scale)) !important;
+  }
+
+  .mobile-compare-arena__fighter-health,
+  .mobile-compare-arena__fighter-loadout {
+    display: none !important;
+  }
+
+  .mobile-compare-arena__fighter-name,
+  .mobile-compare-arena__fighter small {
+    max-width: calc(7rem * var(--arena-desktop-fighter-scale)) !important;
+    line-height: 1.08 !important;
+    white-space: nowrap !important;
+  }
+
+  .mobile-compare-arena__battle-core {
+    top: 48% !important;
+    z-index: 4 !important;
+    width: clamp(6.4rem, 8.5vw, 8rem) !important;
+  }
+
+  .mobile-compare-arena__fight-button {
+    position: absolute !important;
+    left: 50% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: 1.25rem !important;
+    z-index: 14 !important;
+    width: min(18.5rem, calc(100% - 8rem)) !important;
+    justify-content: center !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .mobile-library-wishlist {
+    grid-template-columns: minmax(19rem, 0.32fr) minmax(0, 0.68fr) !important;
+    gap: clamp(1.2rem, 2.2vw, 2.2rem) !important;
+    align-items: stretch !important;
+    padding: clamp(1.25rem, 2.2vw, 2rem) !important;
+  }
+
+  .mobile-library-wishlist__intro {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 1.35rem 2.2rem 1.45rem 2rem;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(106, 60, 255, 0.22), transparent 18rem),
+      rgba(255, 255, 255, 0.055);
+    padding: clamp(1rem, 1.8vw, 1.35rem);
+  }
+
+  .mobile-library-wishlist__intro h2 {
+    max-width: 11ch !important;
+    font-size: clamp(2.75rem, 4vw, 4.35rem) !important;
+    line-height: 0.9 !important;
+  }
+
+  .mobile-library-wishlist__intro p {
+    max-width: 24rem !important;
+    color: rgba(238, 246, 255, 0.76) !important;
+    font-size: clamp(0.9rem, 1vw, 1rem) !important;
+    line-height: 1.58 !important;
+  }
+
+  .mobile-library-wishlist__signals {
+    margin-top: 0.95rem !important;
+  }
+
+  .mobile-library-wishlist .request-tool-form {
+    min-width: 0 !important;
+  }
+
+  .mobile-library-wishlist .request-tool-form aside {
+    background:
+      radial-gradient(circle at 8% 0%, rgba(155, 232, 255, 0.16), transparent 18rem),
+      linear-gradient(145deg, rgba(10, 8, 27, 0.88), rgba(30, 18, 51, 0.76)) !important;
+  }
+}
+
+/* Desktop compare and home orbit polish. */
+@media (min-width: 1024px) {
+  .mobile-compare-arena__footer {
+    position: relative !important;
+    bottom: auto !important;
+    z-index: 8 !important;
+    margin: clamp(0.9rem, 1.2vw, 1.25rem) auto 0 !important;
+    transform: translateY(0.45rem);
+  }
+
+  .mobile-spotlight-cosmic__satellites {
+    animation: none !important;
+    transform: none !important;
+    transform-origin: 50% 50% !important;
+  }
+
+  .mobile-spotlight-cosmic__satellite {
+    animation: tv-home-blink-satellite-orbit 24s linear infinite !important;
+    transform-origin: 50% 50% !important;
+    will-change: transform;
+  }
+
+  .mobile-spotlight-cosmic__satellite:nth-child(2) {
+    animation-duration: 27s !important;
+  }
+
+  .mobile-spotlight-cosmic__satellite:nth-child(3) {
+    animation-duration: 30s !important;
+  }
+}
+
+@keyframes tv-home-blink-satellite-orbit {
+  from {
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--sat-angle))
+      translateX(var(--spotlight-satellite-radius))
+      rotate(var(--sat-angle-back));
+  }
+  to {
+    transform:
+      translate(-50%, -50%)
+      rotate(calc(var(--sat-angle) + 360deg))
+      translateX(var(--spotlight-satellite-radius))
+      rotate(calc(var(--sat-angle-back) - 360deg));
+  }
+}

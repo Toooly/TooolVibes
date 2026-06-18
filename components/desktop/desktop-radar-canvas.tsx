@@ -45,7 +45,7 @@ export function DesktopRadarCanvas() {
       const grid = new THREE.GridHelper(12, 24, 0x6a3cff, 0x1a1040);
       grid.position.y = -0.5;
       (grid.material as TMaterial).transparent = true;
-      (grid.material as TMaterial).opacity = 0.45;
+      (grid.material as TMaterial).opacity = 0.16;
       root.add(grid);
 
       // Rings — brighter and more visible
@@ -103,8 +103,8 @@ export function DesktopRadarCanvas() {
       sweepEcho.position.y = -0.47;
       root.add(sweepEcho);
 
-      // Signal points — individual meshes for per-node control
-      const signalCount = 24;
+      // Ambient signal squares are disabled: the live tool nodes carry the scene.
+      const signalCount = 0;
       interface SignalNode {
         mesh: THREE.Mesh;
         ring: THREE.Mesh;
