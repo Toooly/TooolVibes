@@ -67,7 +67,7 @@ function validateForm(form: FormState): FormErrors {
     errors.websiteUrl = "Inserisci un URL valido con https:// oppure lascia vuoto.";
   }
   if (form.message.trim().length < 12) {
-    errors.message = "Scrivi almeno due righe sul perche vuoi diventare affiliato.";
+    errors.message = "Scrivi almeno due righe sul perché vuoi diventare affiliato.";
   }
 
   return errors;
@@ -244,7 +244,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               onChange={(event) => updateField("audience", event.target.value)}
               rows={3}
               className={cn(inputClass, "mt-2 min-h-[7rem] resize-none border-white/14 bg-white/8 text-white")}
-              placeholder="Chi ti segue e perche potrebbe essere interessato ai tool AI?"
+              placeholder="Chi ti segue e perché potrebbe essere interessato ai tool AI?"
               disabled={isSubmitting}
             />
           </label>
@@ -267,7 +267,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               onChange={(event) => updateField("message", event.target.value)}
               rows={4}
               className={cn(inputClass, "mt-2 min-h-[8rem] resize-none border-white/14 bg-white/8 text-white")}
-              placeholder="Raccontaci perche vorresti diventare affiliato e come presenteresti TooolVibes alla tua audience."
+              placeholder="Raccontaci perché vorresti diventare affiliato e come presenteresti TooolVibes alla tua audience."
               disabled={isSubmitting}
               required
             />

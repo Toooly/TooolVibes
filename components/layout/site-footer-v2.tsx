@@ -12,16 +12,14 @@ import {
   Users,
   ArrowUpRight,
   Mail,
-  Globe,
-  Code2,
 } from "lucide-react";
 
 const footerLinks = {
   explore: [
     { label: "Catalogo", href: "/archivio", icon: LayoutGrid },
     { label: "Radar", href: "/radar", icon: Radar },
-    { label: "Compare", href: "/compare", icon: Sparkles },
-    { label: "Wishlist", href: "/shortlist#wishlist", icon: Heart },
+    { label: "Confronto", href: "/compare", icon: Sparkles },
+    { label: "Salvati", href: "/shortlist", icon: Heart },
   ],
   community: [
     { label: "Shop", href: "/shop", icon: ShoppingBag },
@@ -30,9 +28,9 @@ const footerLinks = {
     { label: "Affiliati", href: "/affiliati", icon: Heart },
   ],
   legal: [
-    { label: "Privacy", href: "/privacy" },
-    { label: "Termini", href: "/terms" },
-    { label: "Cookie", href: "/cookies" },
+    { label: "Privacy" },
+    { label: "Termini" },
+    { label: "Cookie" },
   ],
 };
 
@@ -117,8 +115,6 @@ export function SiteFooterV2() {
             </p>
             <div className="flex items-center gap-3">
               {[
-                { icon: Code2, href: "#", label: "Twitter" },
-                { icon: Globe, href: "#", label: "GitHub" },
                 { icon: Mail, href: "mailto:hello@tooolvibes.com", label: "Email" },
               ].map((social) => (
                 <a
@@ -158,30 +154,19 @@ export function SiteFooterV2() {
           <div>
             <h3 className={headingClass}>Resta aggiornato</h3>
             <p className={`mb-4 text-sm ${darkFooter ? "text-[#eee8ff]" : "text-[#4f4970]"}`}>
-              Ricevi ogni settimana i tool AI piu innovativi direttamente nella tua inbox.
+              La newsletter non è ancora attiva. Per aggiornamenti o segnalazioni, scrivici direttamente.
             </p>
-            <form
-              className="flex gap-2"
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
+            <a
+              href="mailto:hello@tooolvibes.com"
+              className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-all ${
+                darkFooter
+                  ? "border-[#ff7ac8]/35 bg-[#ff5eb8]/14 text-[#ffd8ef] hover:border-[#ff9bd8] hover:bg-[#ff5eb8]/24 hover:text-white"
+                  : "border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.5)] text-[#4f4970] hover:border-[#6a3cff] hover:bg-[rgba(106,60,255,0.05)] hover:text-[#6a3cff]"
+              }`}
             >
-              <input
-                type="email"
-                placeholder="la tua email"
-                className={`flex-1 rounded-xl border px-4 py-2.5 text-sm outline-none transition-all focus:border-[#6a3cff] focus:ring-2 focus:ring-[rgba(106,60,255,0.1)] ${
-                  darkFooter
-                    ? "border-white/[0.18] bg-white/[0.1] text-white placeholder:text-[#d8cfff]"
-                    : "border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.5)] text-[#120d2f] placeholder:text-[#4f4970]/50"
-                }`}
-              />
-              <button
-                type="submit"
-                className="rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2.5 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-shadow hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)]"
-              >
-                <Sparkles size={16} />
-              </button>
-            </form>
+              <Mail size={16} />
+              Scrivici
+            </a>
           </div>
         </div>
 
@@ -195,16 +180,13 @@ export function SiteFooterV2() {
           </p>
           <div className="flex items-center gap-6">
             {footerLinks.legal.map((link) => (
-              <Link
+              <span
                 key={link.label}
-                href={link.href}
-                className={`text-xs transition-colors ${
-                  darkFooter ? "text-[#e6ddff] hover:text-white" : "text-[#4f4970] hover:text-[#6a3cff]"
-                }`}
-                data-sonic-action="nav"
+                className={`text-xs ${darkFooter ? "text-[#e6ddff]/70" : "text-[#4f4970]/70"}`}
+                aria-disabled="true"
               >
                 {link.label}
-              </Link>
+              </span>
             ))}
           </div>
         </div>

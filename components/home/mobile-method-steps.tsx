@@ -36,7 +36,7 @@ export function MobileMethodSteps({ steps }: MobileMethodStepsProps) {
     >
       <div className="mobile-method-steps__header">
         <span>Metodo</span>
-        <h2>Discover, Compare, Shortlist</h2>
+        <h2>Scopri, confronta, salva</h2>
         <p>
           Un percorso chiaro: scopri, confronta, decidi.
           Senza perdere tempo tra decine di schede uguali.

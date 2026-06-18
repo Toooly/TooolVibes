@@ -820,7 +820,7 @@ export function MobileCompareView({
         <ArenaHeader count={1} />
         <ChampionCard tool={tools[0]} onRemove={() => toggleCompare(tools[0].slug)} />
         <div className="mobile-compare-arena__partial">
-          <p className="mobile-compare-arena__partial-label">Compare parziale</p>
+          <p className="mobile-compare-arena__partial-label">Confronto parziale</p>
           <p>
             {tools[0].name} è già in arena. Aggiungi un altro profilo per vedere le differenze.
           </p>
@@ -898,7 +898,7 @@ export function MobileCompareView({
           Svuota arena
         </button>
         <Link href="/shortlist" className="mobile-compare-arena__footer-btn mobile-compare-arena__footer-btn--secondary">
-          Shortlist
+          Salvati
           <ArrowRight className="size-4" />
         </Link>
       </div>

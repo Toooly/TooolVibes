@@ -398,8 +398,8 @@ export function AccountPanel() {
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {[
-                { label: "Shortlist", value: workspace.saved, detail: "tool salvati" },
-                { label: "Compare", value: workspace.compare, detail: "profili nel tray" },
+                { label: "Salvati", value: workspace.saved, detail: "tool salvati" },
+                { label: "Confronto", value: workspace.compare, detail: "profili nel tray" },
                 { label: "Priorità alta", value: workspace.top, detail: "priorità alte" },
                 { label: "Da rivedere", value: workspace.review, detail: "tool ancora aperti" },
               ].map((item) => (
@@ -422,14 +422,14 @@ export function AccountPanel() {
                 href={workspace.saved > 0 ? "/shortlist" : "/archivio"}
                 className="button-shell button-secondary text-ui-strong inline-flex rounded-full px-4 py-2.5 text-sm font-semibold"
               >
-                {workspace.saved > 0 ? `Apri shortlist (${workspace.saved})` : "Inizia dall'archivio"}
+                {workspace.saved > 0 ? `Apri salvati (${workspace.saved})` : "Inizia dal catalogo"}
               </Link>
               <Link
                 href={workspace.compare > 1 ? "/compare" : "/archivio"}
                 className="section-quiet-link text-sm font-semibold"
                 style={{ color: "var(--accent-strong)" }}
               >
-                {workspace.compare > 1 ? "Continua il compare" : "Aggiungi candidati"}
+                {workspace.compare > 1 ? "Continua il confronto" : "Aggiungi candidati"}
               </Link>
             </div>
           </div>
@@ -456,7 +456,7 @@ export function AccountPanel() {
                   3. Merge sicuro
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/82">
-                  Shortlist, compare, note, pin, reason e stage vengono agganciati all&apos;account
+                  Salvati, confronto, note, pin, reason e stage vengono agganciati all&apos;account
                   senza perdere il contesto costruito da guest.
                 </p>
               </div>

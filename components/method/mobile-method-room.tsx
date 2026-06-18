@@ -7,7 +7,7 @@ import { ArrowRight, Bookmark, GitCompare, Rocket, Search, Zap } from "lucide-re
 const STEPS = [
   {
     num: "01",
-    label: "Discover",
+    label: "Scopri",
     title: "Parti da tool già curati",
     description:
       "Categorie leggibili, filtri utili e una selezione editoriale che tiene fuori il rumore. Nessuna vetrina infinita.",
@@ -21,7 +21,7 @@ const STEPS = [
   },
   {
     num: "02",
-    label: "Compare",
+    label: "Confronta",
     title: "Confronta solo i candidati forti",
     description:
       "Porta avanti pochi tool alla volta e guarda differenze, livello e casi d'uso reali. La matrice serve a isolare gli scarti.",
@@ -35,12 +35,12 @@ const STEPS = [
   },
   {
     num: "03",
-    label: "Shortlist",
+    label: "Salva",
     title: "Chiudi con una scelta rapida",
     description:
-      "Salva, rivedi e trasforma la ricerca in una lista operativa pronta da provare. Dalla shortlist si passa all'azione.",
+      "Salva, rivedi e trasforma la ricerca in una lista operativa pronta da provare. Dai salvati si passa all'azione.",
     href: "/shortlist",
-    cta: "Crea shortlist",
+    cta: "Apri salvati",
     color: "#f3bf4c",
     colorB: "#ff8a00",
     icon: Bookmark,
@@ -109,7 +109,7 @@ export function MobileMethodRoom() {
           <Rocket className="size-4" />
           <span>Metodo</span>
         </div>
-        <h1>Discover, Compare, Shortlist</h1>
+        <h1>Scopri, confronta, salva</h1>
         <p>
           Un percorso chiaro: scopri, confronta, decidi. Senza perdere tempo tra decine di schede uguali.
         </p>
@@ -133,7 +133,7 @@ export function MobileMethodRoom() {
         <div className="mobile-method-room__footer-links">
           <Link href="/compare">Arena</Link>
           <span>·</span>
-          <Link href="/shortlist">Shortlist</Link>
+          <Link href="/shortlist">Salvati</Link>
           <span>·</span>
           <Link href="/radar">Radar</Link>
         </div>

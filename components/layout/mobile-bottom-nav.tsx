@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bookmark, Columns3, Home, Radar, Search } from "lucide-react";
+import { Bookmark, Columns3, Home, LayoutGrid, Radar } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
@@ -12,10 +12,10 @@ import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 const mobileItems = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/archivio", label: "Cerca", icon: Search },
+  { href: "/archivio", label: "Catalogo", icon: LayoutGrid },
   { href: "/radar", label: "Radar", icon: Radar },
   { href: "/shortlist", label: "Salvati", icon: Bookmark },
-  { href: "/compare", label: "Confronta", icon: Columns3 },
+  { href: "/compare", label: "Confronto", icon: Columns3 },
 ];
 
 export function MobileBottomNav() {

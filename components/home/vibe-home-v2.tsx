@@ -14,7 +14,7 @@ type VibeHomeV2Props = {
 const methodSteps = [
   {
     icon: "Search" as const,
-    label: "Discover",
+    label: "Scopri",
     title: "Parti da tool gia curati",
     description: "Categorie leggibili, filtri utili e una selezione editoriale che tiene fuori il rumore.",
     href: "/archivio",
@@ -22,7 +22,7 @@ const methodSteps = [
   },
   {
     icon: "GitCompare" as const,
-    label: "Compare",
+    label: "Confronta",
     title: "Confronta solo i candidati forti",
     description: "Porta avanti pochi tool alla volta e guarda differenze, livello e casi d'uso reali.",
     href: "/compare",
@@ -30,7 +30,7 @@ const methodSteps = [
   },
   {
     icon: "Bookmark" as const,
-    label: "Shortlist",
+    label: "Salva",
     title: "Chiudi con una scelta rapida",
     description: "Salva, rivedi e trasforma la ricerca in una lista operativa pronta da provare.",
     href: "/shortlist",
@@ -60,14 +60,14 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools }: VibeHomeV2Pro
     },
     {
       id: "solar-shortlist",
-      label: "Shortlist",
+      label: "Salvati",
       href: "/shortlist",
       color: "#f3bf4c",
       icon: "Bookmark" as const,
     },
     {
       id: "solar-confronta",
-      label: "Confronta",
+      label: "Confronto",
       href: "/compare",
       color: "#10b981",
       icon: "GitCompare" as const,

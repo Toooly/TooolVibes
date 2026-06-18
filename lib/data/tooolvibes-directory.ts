@@ -75,9 +75,9 @@ type DirectoryToolInput = Omit<
 
 export const levelLabels: Record<DirectoryToolLevel, string> = {
   featured: "In evidenza",
-  beginner: "Beginner",
-  intermediate: "Intermediate",
-  expert: "Expert",
+  beginner: "Base",
+  intermediate: "Intermedio",
+  expert: "Avanzato",
 };
 
 export const levelRank: Record<DirectoryToolLevel, number> = {
@@ -110,9 +110,9 @@ export const directoryFilterGroups: { key: DirectoryFilterGroup; label: string }
 export const directoryLevelFilters: { key: DirectoryToolLevel | "all"; label: string }[] = [
   { key: "all", label: "Tutti i livelli" },
   { key: "featured", label: "In evidenza" },
-  { key: "beginner", label: "Beginner" },
-  { key: "intermediate", label: "Intermediate" },
-  { key: "expert", label: "Expert" },
+  { key: "beginner", label: "Base" },
+  { key: "intermediate", label: "Intermedio" },
+  { key: "expert", label: "Avanzato" },
 ];
 
 function getDomain(value: string) {

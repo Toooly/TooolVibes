@@ -117,7 +117,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
     },
     {
       id: "tool-detail-shortlist",
-      title: "Shortlist",
+      title: "Salvati",
       initials: "S",
       description: "Salva per dopo.",
       category: "Nav",
@@ -149,7 +149,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 </Link>
                 <span className="mx-1.5 h-1 w-1 rounded-full bg-[var(--line-strong)]" />
                 <Link href="/archivio" className="hover:text-[var(--accent-strong)]">
-                  Archivio
+                  Catalogo
                 </Link>
                 <span className="mx-1.5 h-1 w-1 rounded-full bg-[var(--line-strong)]" />
                 <span>{tool.name}</span>
@@ -217,7 +217,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   href="/shortlist#wishlist"
                   className="premium-button premium-button-secondary inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
                 >
-                  Suggerisci alternativa
+                  Suggerisci un&apos;alternativa
                 </Link>
                 <a
                   href={sourceHref}

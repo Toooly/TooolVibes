@@ -134,9 +134,9 @@ export function MobileCatalogView({
   const levelChips: { key: DirectoryToolLevel | "all"; label: string }[] = [
     { key: "all", label: "Tutti" },
     { key: "featured", label: "In evidenza" },
-    { key: "beginner", label: "Beginner" },
-    { key: "intermediate", label: "Intermediate" },
-    { key: "expert", label: "Expert" },
+    { key: "beginner", label: "Base" },
+    { key: "intermediate", label: "Intermedio" },
+    { key: "expert", label: "Avanzato" },
   ];
 
   const fuse = useMemo(
@@ -406,7 +406,7 @@ function MobileCategoryMap({
         <span className="mobile-category-map__eyebrow">Catalogo Vibe</span>
         <h1>Catalogo</h1>
         {searchControl}
-        <p>Scegli una rotta, filtra il livello giusto e costruisci una shortlist pulita senza perderti tra schede uguali.</p>
+        <p>Scegli una rotta, filtra il livello giusto e costruisci una lista pulita senza perderti tra schede uguali.</p>
         <div className="mobile-category-map__steps">
           <span className="is-active">Esplora</span>
           <span className="mobile-category-map__steps-arrow">→</span>
@@ -619,7 +619,7 @@ function MobileToolCard({ tool, index }: MobileToolCardProps) {
         <div className="mobile-tool-card__meta">
           <div className="mobile-tool-card__topline">
             <span className="mobile-tool-card__category">{tool.categoryLabel}</span>
-            <span className="mobile-tool-card__level">{tool.level}</span>
+            <span className="mobile-tool-card__level">{tool.levelLabel}</span>
           </div>
           <h3 className="mobile-tool-card__title">{tool.name}</h3>
           <p className="mobile-tool-card__description">

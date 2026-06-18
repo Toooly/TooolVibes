@@ -88,7 +88,7 @@ export function CompareToggle({
           color: isSelected ? "var(--accent-strong)" : "var(--muted-strong)",
         }}
         aria-pressed={isSelected}
-        aria-label={isSelected ? "Rimuovi dal compare" : "Aggiungi al compare"}
+        aria-label={isSelected ? "Rimuovi dal confronto" : "Aggiungi al confronto"}
         data-sonic-action="compare"
       >
         <Columns3 className="h-4 w-4" aria-hidden="true" />
@@ -120,7 +120,7 @@ export function CompareToggle({
           boxShadow: isSelected ? "0 0 0 4px rgba(112,82,255,0.12)" : "0 0 0 4px rgba(242,179,71,0.12)",
         }}
       />
-      {isSelected ? "Nel compare" : compact ? "Confronta" : "Aggiungi compare"}
+      {isSelected ? "Nel confronto" : compact ? "Confronta" : "Aggiungi al confronto"}
       <span
         className={`count-badge-live rounded-full bg-white/76 px-1.5 py-0.5 text-[0.58rem] ${count > 0 ? "is-active" : ""} ${
           isReady ? "is-ready" : ""

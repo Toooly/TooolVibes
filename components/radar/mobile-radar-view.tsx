@@ -36,6 +36,8 @@ type ProductHuntPayload = {
   message?: string;
 };
 
+type RadarDataState = "loading" | "ready" | "empty" | "missing-token" | "error";
+
 const RADAR_NODE_COUNT = 5;
 const RADAR_SWEEP_DURATION_MS = 3200;
 const RADAR_SCAN_THRESHOLD = 0.18;
@@ -51,8 +53,8 @@ const fallbackRadarItems: ProductHuntItem[] = Array.from(
   { length: RADAR_NODE_COUNT },
   (_, index) => ({
     id: `radar-placeholder-${index + 1}`,
-    name: `Tool radar ${index + 1}`,
-    tagline: "Segnale in acquisizione",
+    name: "Slot radar",
+    tagline: "In attesa dei dati reali",
     votesCount: 0,
     commentsCount: 0,
     productHuntUrl: "#",
@@ -143,6 +145,26 @@ export function MobileRadarView() {
     () => currentPayload?.items ?? [],
     [currentPayload?.items],
   );
+  const radarState: RadarDataState = !currentPayload
+    ? "loading"
+    : currentPayload.status === "ok"
+      ? currentItems.length > 0
+        ? "ready"
+        : "empty"
+      : currentPayload.status;
+  const placeholderNodeLabel =
+    radarState === "loading"
+      ? "Caricamento"
+      : radarState === "empty"
+        ? "Nessun segnale"
+        : "Radar in pausa";
+  const placeholderNodeHint =
+    radarState === "loading"
+      ? "aggiorno i dati"
+      : radarState === "empty"
+        ? "riprova più tardi"
+        : "dati non disponibili";
+  const centerLabel = radarState === "ready" ? "Ultima ora" : "Aggiorno";
 
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const [hiddenDiscovered, setHiddenDiscovered] = useState(false);
@@ -393,6 +415,11 @@ export function MobileRadarView() {
           const isHidden = node.id === hiddenNodeId && !hiddenDiscovered;
           const isScanned = angleDistance(node.angle, scanAngle) < RADAR_SCAN_THRESHOLD;
           const nodeClassName = `mobile-radar-view__node${isHot ? " is-hot" : ""}${isScanned ? " is-scanned" : ""}${node.isPlaceholder ? " is-placeholder" : ""}${isHidden ? " is-hidden" : ""}`;
+          const displayName = node.isPlaceholder ? placeholderNodeLabel : node.name;
+          const displayMeta = node.isPlaceholder ? placeholderNodeHint : `${node.votesCount} voti`;
+          const nodeInitials = node.isPlaceholder
+            ? "..."
+            : node.name.slice(0, 2).toUpperCase();
           const nodeContent = (
             <>
               <span className="mobile-radar-view__node-halo" />
@@ -412,15 +439,13 @@ export function MobileRadarView() {
                   />
                 ) : (
                   <span className="mobile-radar-view__node-initials">
-                    {node.name.slice(0, 2).toUpperCase()}
+                    {nodeInitials}
                   </span>
                 )}
               </span>
               <span className="mobile-radar-view__node-label">
-                <strong>{node.name}</strong>
-                <small>
-                  {node.isPlaceholder ? "in attesa" : `${node.votesCount} voti`}
-                </small>
+                <strong>{displayName}</strong>
+                <small>{displayMeta}</small>
               </span>
               {isHot && <span className="mobile-radar-view__node-badge">HOT</span>}
             </>
@@ -457,7 +482,7 @@ export function MobileRadarView() {
 
         {/* Center badge */}
         <div className="mobile-radar-view__center-info">
-          <span>Ultima ora</span>
+          <span>{centerLabel}</span>
         </div>
       </div>
 
@@ -479,7 +504,11 @@ export function MobileRadarView() {
       </div>
 
       {/* Content sections */}
-      <MobileRadarSections items={currentItems} />
+      <MobileRadarSections
+        items={currentItems}
+        state={radarState}
+        message={currentPayload?.message}
+      />
     </div>
   );
 }
@@ -488,8 +517,50 @@ export function MobileRadarView() {
    MobileRadarSections — trending & hot content below canvas
    ═══════════════════════════════════════════════════════════════ */
 
-function MobileRadarSections({ items }: { items: ProductHuntItem[] }) {
-  if (!items.length) return null;
+function MobileRadarSections({
+  items,
+  state,
+  message,
+}: {
+  items: ProductHuntItem[];
+  state: RadarDataState;
+  message?: string;
+}) {
+  if (!items.length) {
+    const emptyCopy: Record<Exclude<RadarDataState, "ready">, { title: string; body: string }> = {
+      loading: {
+        title: "Aggiorno il radar",
+        body: "Sto caricando i segnali reali da Product Hunt. Gli slot nel radar restano neutri finché i dati non arrivano.",
+      },
+      empty: {
+        title: "Nessun segnale disponibile",
+        body: "Product Hunt non ha restituito tool per questo intervallo. Riprova più tardi senza dati finti in pagina.",
+      },
+      "missing-token": {
+        title: "Radar non configurato",
+        body: message ?? "La chiave Product Hunt non è disponibile in questo ambiente.",
+      },
+      error: {
+        title: "Radar non disponibile",
+        body: message ?? "Il feed Product Hunt non ha risposto. Manteniamo il radar pulito finché i dati reali tornano disponibili.",
+      },
+    };
+    const copy = emptyCopy[state === "ready" ? "empty" : state];
+
+    return (
+      <div className="mobile-radar-sections">
+        <section className="mobile-radar-section">
+          <h2>
+            <Activity size={14} />
+            {copy.title}
+          </h2>
+          <p className="rounded-[18px] border border-white/10 bg-white/[0.055] p-4 text-sm leading-6 text-white/70">
+            {copy.body}
+          </p>
+        </section>
+      </div>
+    );
+  }
 
   const trending = [...items].sort((a, b) => b.votesCount - a.votesCount).slice(0, 3);
   const hot = items.filter((i) => i.votesCount > 50).slice(0, 3);

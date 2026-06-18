@@ -70,7 +70,7 @@ export function ShortlistToggle({
           color: isSaved ? "var(--accent-strong)" : "var(--muted-strong)",
         }}
         aria-pressed={isSaved}
-        aria-label={isSaved ? "Rimuovi dalla shortlist" : "Salva in shortlist"}
+        aria-label={isSaved ? "Rimuovi dai salvati" : "Salva tool"}
         data-sonic-action="save"
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
@@ -115,7 +115,7 @@ export function ShortlistToggle({
           boxShadow: isSaved ? "0 0 0 4px rgba(112,82,255,0.12)" : "0 0 0 4px rgba(242,179,71,0.12)",
         }}
       />
-      {isSaved ? "Nei preferiti" : "Preferiti"}
+      {isSaved ? "Salvato" : "Salva"}
     </button>
   );
 }

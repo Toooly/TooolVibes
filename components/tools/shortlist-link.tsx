@@ -17,7 +17,7 @@ export function ShortlistLink({
   className,
   variant = "nav",
   active = false,
-  label = "Shortlist",
+  label = "Salvati",
 }: ShortlistLinkProps) {
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const count = savedSlugs.length;

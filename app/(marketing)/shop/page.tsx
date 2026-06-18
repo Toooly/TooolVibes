@@ -118,7 +118,7 @@ export default function ShopPage() {
                 <span className="grid size-12 place-items-center rounded-[18px] border border-white/10 bg-white/8 text-white">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
-                <PremiumBadge tone="dark">Coming soon</PremiumBadge>
+                <PremiumBadge tone="dark">In preparazione</PremiumBadge>
               </div>
               <h2 className="mt-5 text-[1.38rem] leading-[1.08] text-white">
                 {item.title}

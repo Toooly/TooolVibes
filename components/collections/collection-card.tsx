@@ -56,7 +56,7 @@ export function CollectionCard({
         : premium.entry_label;
   const secondaryAction =
     premium.state === "open" || premium.state === "unlocked"
-      ? { href: "/shortlist", label: "Shortlist" }
+      ? { href: "/shortlist", label: "Salvati" }
       : { href: premium.upgrade_href, label: "Cosa sblocchi" };
 
   if (variant === "featured") {
