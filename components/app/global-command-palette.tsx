@@ -60,7 +60,7 @@ export function GlobalCommandPalette() {
     <CommandDialog open={isOpen} onOpenChange={setCommandOpen}>
       <CommandInput placeholder="Cerca tool, azioni o sezioni..." />
       <CommandList>
-        <CommandEmpty>Nessun risultato. Prova con categoria, nome o use case.</CommandEmpty>
+        <CommandEmpty>Nessun risultato. Prova con categoria, nome o caso d’uso.</CommandEmpty>
         <CommandGroup heading="Navigazione">
           <CommandItem
             onSelect={() => {
@@ -100,7 +100,7 @@ export function GlobalCommandPalette() {
             }}
           >
             <Workflow className="size-4" />
-            Apri il tuo stack
+            Apri la tua lista
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
@@ -164,15 +164,15 @@ export function GlobalCommandPalette() {
           {directoryTools.slice(0, 4).map((tool) => (
             <CommandItem
               key={`stack-${tool.slug}`}
-              value={`stack ${tool.name}`}
+              value={`lista ${tool.name}`}
               onSelect={() => {
                 const added = addToStack(tool.slug);
-                toast.success(added ? `${tool.name} aggiunto allo stack` : "Già nello stack");
+                toast.success(added ? `${tool.name} aggiunto alla lista` : "Già nella lista");
                 playTooolvibesSound(added ? "success" : "update");
                 close();
               }}
             >
-              Inserisci {tool.name} nello stack
+              Inserisci {tool.name} nella lista
             </CommandItem>
           ))}
         </CommandGroup>

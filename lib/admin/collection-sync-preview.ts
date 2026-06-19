@@ -25,7 +25,7 @@ function formatSlotSnapshot(slot: CollectionToolSlot | null, index: number | nul
   ];
 
   if (slot.featured) {
-    parts.push("anchor");
+    parts.push("tool guida");
   }
 
   if (slot.note) {
@@ -47,19 +47,19 @@ function normalizeSlots(collection: CuratedCollectionRecord | null) {
 function buildFieldSummary(change: CollectionSyncPreviewFieldChange) {
   switch (change.key) {
     case "editorial_order":
-      return "Riallineerebbe l'ordering editoriale del repository reale al legacy mock.";
+      return "Riallineerebbe l'ordine editoriale dell'archivio reale alla sorgente locale.";
     case "featured_slot":
-      return "Riallineerebbe il featured slot del repository reale al framing legacy.";
+      return "Riallineerebbe lo spazio in evidenza dell'archivio reale al taglio locale.";
     case "metadata":
-      return "Toccherebbe copy e framing editoriali: meglio leggerlo come decisione, non come sync automatico.";
+      return "Toccherebbe copy e taglio editoriale: meglio leggerlo come decisione, non come sincronizzazione automatica.";
     case "editorial_state":
       return "Cambierebbe lo stato editoriale pubblico: fuori da un allineamento prudente.";
     case "surface":
       return "Cambierebbe il tipo di superficie curatoriale: richiede decisione esplicita.";
     case "included_tools":
-      return "Cambierebbe i tool inclusi o il sequencing della collection.";
+      return "Cambierebbe i tool inclusi o la sequenza della raccolta.";
     default:
-      return "Differenza rilevata tra legacy mock e repository reale.";
+      return "Differenza rilevata tra sorgente locale e archivio reale.";
   }
 }
 
@@ -126,7 +126,7 @@ function buildSlotChanges(entry: CollectionTransitionEntry): CollectionSyncPrevi
         risk: "high",
         current_value: "assente",
         legacy_value: formatSlotSnapshot(mockRecord.slot, mockRecord.index),
-        summary: "Il legacy mock include un tool che oggi non esiste nella collection Supabase.",
+        summary: "La sorgente locale include un tool che oggi non esiste nell'archivio reale.",
       });
       continue;
     }
@@ -139,7 +139,7 @@ function buildSlotChanges(entry: CollectionTransitionEntry): CollectionSyncPrevi
         risk: "high",
         current_value: formatSlotSnapshot(supabaseRecord.slot, supabaseRecord.index),
         legacy_value: "assente",
-        summary: "Supabase include un tool che il legacy mock non considera più parte della collection.",
+        summary: "L'archivio reale include un tool che la sorgente locale non considera più parte della raccolta.",
       });
       continue;
     }
@@ -151,12 +151,12 @@ function buildSlotChanges(entry: CollectionTransitionEntry): CollectionSyncPrevi
     if (mockRecord.index !== supabaseRecord.index) {
       changes.push({
         key: "reordered",
-        label: "Sequencing diverso",
+        label: "Sequenza diversa",
         tool_slug: slug,
         risk: "medium",
         current_value: formatSlotSnapshot(supabaseRecord.slot, supabaseRecord.index),
         legacy_value: formatSlotSnapshot(mockRecord.slot, mockRecord.index),
-        summary: "Il tool ? presente in entrambe le source ma con un ordine diverso.",
+        summary: "Il tool è presente in entrambe le sorgenti ma con un ordine diverso.",
       });
     }
 
@@ -168,7 +168,7 @@ function buildSlotChanges(entry: CollectionTransitionEntry): CollectionSyncPrevi
         risk: "medium",
         current_value: supabaseRecord.slot.role,
         legacy_value: mockRecord.slot.role,
-        summary: "Il ruolo editoriale assegnato al tool ? cambiato tra mock e Supabase.",
+        summary: "Il ruolo editoriale assegnato al tool è cambiato tra sorgente locale e archivio reale.",
       });
     }
 
@@ -180,19 +180,19 @@ function buildSlotChanges(entry: CollectionTransitionEntry): CollectionSyncPrevi
         risk: "medium",
         current_value: supabaseRecord.slot.note ?? "nessuna nota",
         legacy_value: mockRecord.slot.note ?? "nessuna nota",
-        summary: "La nota curatoriale del tool non è allineata tra legacy e repository reale.",
+        summary: "La nota curatoriale del tool non è allineata tra sorgente locale e archivio reale.",
       });
     }
 
     if ((mockRecord.slot.featured ?? false) !== (supabaseRecord.slot.featured ?? false)) {
       changes.push({
         key: "anchor",
-        label: "Anchor diverso",
+        label: "Tool guida diverso",
         tool_slug: slug,
         risk: "high",
-        current_value: supabaseRecord.slot.featured ? "anchor" : "non anchor",
-        legacy_value: mockRecord.slot.featured ? "anchor" : "non anchor",
-        summary: "L'anchor tool cambia tra mock e Supabase, quindi tocca il framing della collection.",
+        current_value: supabaseRecord.slot.featured ? "tool guida" : "non guida",
+        legacy_value: mockRecord.slot.featured ? "tool guida" : "non guida",
+        summary: "Il tool guida cambia tra sorgente locale e archivio reale, quindi tocca il taglio della raccolta.",
       });
     }
   }
@@ -229,23 +229,23 @@ export function buildCollectionSyncPreview(
 
   if (entry.public_source === "supabase") {
     notes.push(
-      "Il pubblico oggi legge già Supabase: un eventuale allineamento toccherebbe la versione pubblica corrente.",
+      "Il pubblico oggi legge già l'archivio principale: un eventuale allineamento toccherebbe la versione pubblica corrente.",
     );
   } else if (entry.public_source === "mock") {
     notes.push(
-      "Il pubblico legge ancora il legacy mock per questo slug: l'allineamento serve soprattutto a portare coerenza nel repository reale.",
+      "Il pubblico legge ancora la sorgente locale per questo slug: l'allineamento serve soprattutto a portare coerenza nell'archivio reale.",
     );
   }
 
   if (editorialChangeCount > 0) {
     notes.push(
-      "La preview include differenze che restano fuori da un sync prudente: servono decisione editoriale o un futuro merge assistito.",
+      "L'anteprima include differenze che restano fuori da un riallineamento prudente: servono decisione editoriale o un futuro passaggio assistito.",
     );
   }
 
   if (canSafeAlignFields) {
     notes.push(
-      "Questa preview tocca solo campi primari non conflittuali, quindi ? candidata a un safe align futuro.",
+      "Questa anteprima tocca solo campi primari non conflittuali, quindi è candidata a un riallineamento sicuro futuro.",
     );
   }
 
@@ -258,8 +258,8 @@ export function buildCollectionSyncPreview(
     legacy_source: "mock",
     target: "supabase",
     summary: canSafeAlignFields
-      ? "Le differenze aperte restano nel perimetro di un possibile safe align futuro."
-      : "La preview tocca anche elementi editoriali o di sequencing, quindi resta preview-only.",
+      ? "Le differenze aperte restano nel perimetro di un possibile riallineamento sicuro futuro."
+      : "L'anteprima tocca anche elementi editoriali o di sequenza, quindi resta solo informativa.",
     notes,
     field_changes: fieldChanges,
     slot_changes: slotChanges,
@@ -273,14 +273,14 @@ export function getCollectionSyncPreviewMeta(state: CollectionSyncPreview["state
   switch (state) {
     case "safe-align-ready":
       return {
-        label: "Safe align preview",
-        description: "Le differenze restano nei campi più delimitati. Il sync reale non è ancora automatico, ma la preview è pulita.",
+        label: "Anteprima riallineabile",
+        description: "Le differenze restano nei campi più delimitati. Il riallineamento reale non è automatico, ma l'anteprima è pulita.",
       };
     case "needs-editorial-decision":
     default:
       return {
-        label: "Needs editorial decision",
-        description: "La preview tocca copy, surface o tool inclusi: va trattata come decisione editoriale esplicita.",
+        label: "Decisione editoriale",
+        description: "L'anteprima tocca copy, formato o tool inclusi: va trattata come decisione editoriale esplicita.",
       };
   }
 }
@@ -289,19 +289,19 @@ export function getCollectionSyncPreviewRiskMeta(risk: CollectionSyncPreviewRisk
   switch (risk) {
     case "high":
       return {
-        label: "High impact",
-        description: "L'align modificherebbe aspetti che cambiano davvero la lettura pubblica della collection.",
+        label: "Impatto alto",
+        description: "Il riallineamento modificherebbe aspetti che cambiano davvero la lettura pubblica della raccolta.",
       };
     case "medium":
       return {
-        label: "Medium impact",
+        label: "Impatto medio",
         description: "Le differenze sono leggibili e non distruttive, ma restano abbastanza rilevanti da meritare una scelta editoriale.",
       };
     case "low":
     default:
       return {
-        label: "Low impact",
-        description: "La preview resta confinata ai campi più delimitati e non tocca tool slot complessi.",
+        label: "Impatto basso",
+        description: "L'anteprima resta confinata ai campi più delimitati e non tocca spazi tool complessi.",
       };
   }
 }
@@ -319,7 +319,7 @@ export function getCollectionSyncPreviewPosture({
     return {
       label: "Lascia com'è",
       tone: "pass" as const,
-      description: "Non c'è una preview di riallineamento utile: la collection è già allineata o non ha un target confrontabile.",
+      description: "Non c'è un'anteprima di riallineamento utile: la raccolta è già allineata o non ha una destinazione confrontabile.",
     };
   }
 
@@ -328,9 +328,9 @@ export function getCollectionSyncPreviewPosture({
 
   if (preview.can_safe_align_fields && readiness?.state !== "blocked" && reviewState === "reviewed") {
     return {
-      label: "Pronta a safe align",
+      label: "Pronta al riallineamento sicuro",
       tone: "pass" as const,
-      description: "La preview resta prudente e la review è già stata chiusa: in un pass futuro potrà diventare una vera azione sicura.",
+      description: "L'anteprima resta prudente e la revisione è già stata chiusa: in un passaggio futuro potrà diventare una vera azione sicura.",
     };
   }
 
@@ -338,21 +338,21 @@ export function getCollectionSyncPreviewPosture({
     return {
       label: "Solo da rivedere",
       tone: "warning" as const,
-      description: "La preview sembra sicura, ma conviene confermarla editorialmente prima di introdurre qualunque sync applicato.",
+      description: "L'anteprima sembra sicura, ma conviene confermarla editorialmente prima di introdurre qualunque riallineamento applicato.",
     };
   }
 
   if (severity === "critical-conflict" || preview.risk === "high") {
     return {
-      label: "Troppo ambigua per sync prudente",
+      label: "Troppo ambigua per un riallineamento prudente",
       tone: "error" as const,
-      description: "Le differenze toccano il framing editoriale o i tool inclusi: meglio fermarsi alla preview.",
+      description: "Le differenze toccano il taglio editoriale o i tool inclusi: meglio fermarsi all'anteprima.",
     };
   }
 
   return {
-    label: "Needs editorial decision",
+    label: "Decisione editoriale",
     tone: "warning" as const,
-    description: "La preview ? utile per decidere, ma non abbastanza delimitata da suggerire un sync automatico.",
+    description: "L'anteprima è utile per decidere, ma non abbastanza delimitata da suggerire un riallineamento automatico.",
   };
 }

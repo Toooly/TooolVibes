@@ -117,7 +117,7 @@ function validateModeAndToolCount(
   toolCount: number,
 ): void {
   if (!VALID_MODES.includes(mode)) {
-    throw new Error(`Invalid mode: ${mode}`);
+    throw new Error(`Modalità non valida: ${mode}`);
   }
   if (mode === "1v1" && toolCount !== MODE_1V1_COUNT) {
     throw new Error(`1v1 mode requires exactly ${MODE_1V1_COUNT} tools`);

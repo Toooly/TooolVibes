@@ -361,7 +361,7 @@ export function parseCollectionFormData(
   }
 
   if (!collectionSurfaces.includes(rawSurface as CollectionSurface)) {
-    fieldErrors.surface = "Seleziona una surface valida.";
+    fieldErrors.surface = "Seleziona un formato valido.";
   }
 
   if (
@@ -378,11 +378,11 @@ export function parseCollectionFormData(
   }
 
   if (values.editorial_state === "scheduled" && !normalizeDateTimeValue(rawScheduledFor)) {
-    fieldErrors.scheduled_for = "Una collection scheduled richiede una data.";
+    fieldErrors.scheduled_for = "Una raccolta programmata richiede una data.";
   }
 
   if (values.editorial_state === "featured" && !rawFeaturedSlot) {
-    fieldErrors.featured_slot = "Una collection featured ha bisogno di uno slot.";
+    fieldErrors.featured_slot = "Una raccolta in evidenza ha bisogno di uno spazio dedicato.";
   }
 
   const highlights = rawHighlights
@@ -396,7 +396,7 @@ export function parseCollectionFormData(
 
   if (values.access !== "open" && rawPremiumTeaser.length < 24) {
     fieldErrors.premium_teaser =
-      "Le surface preview o premium hanno bisogno di un teaser più chiaro.";
+      "Le raccolte in anteprima o premium hanno bisogno di un teaser più chiaro.";
   }
 
   const normalizedSlots = includedTools
@@ -407,7 +407,7 @@ export function parseCollectionFormData(
     .filter((slot) => Boolean(slot.tool_slug || slot.role || slot.note));
 
   if (normalizedSlots.length === 0) {
-    fieldErrors.included_tools = "Aggiungi almeno un tool alla collection.";
+    fieldErrors.included_tools = "Aggiungi almeno un tool alla raccolta.";
   }
 
   const usedToolSlugs = new Set<string>();
@@ -426,7 +426,7 @@ export function parseCollectionFormData(
     }
 
     if (usedToolSlugs.has(slot.tool_slug)) {
-      fieldErrors.included_tools = "Non puoi usare lo stesso tool due volte nella stessa collection.";
+      fieldErrors.included_tools = "Non puoi usare lo stesso tool due volte nella stessa raccolta.";
       return;
     }
 
@@ -446,7 +446,7 @@ export function parseCollectionFormData(
       ok: false as const,
       state: {
         status: "error" as const,
-        message: "Controlla i campi evidenziati prima di salvare la collection.",
+        message: "Controlla i campi evidenziati prima di salvare la raccolta.",
         fieldErrors,
         values: {
           ...values,

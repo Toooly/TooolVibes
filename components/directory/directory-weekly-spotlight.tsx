@@ -42,7 +42,7 @@ export function DirectoryWeeklySpotlight({
               <DirectoryToolGlyph tool={weeklyTool} size="lg" className="border-white/14" />
               <div>
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/60">
-                  Card principale
+                  Scheda principale
                 </p>
                 <p className="mt-1 text-[1.3rem] font-semibold">{weeklyTool.name}</p>
               </div>
@@ -60,7 +60,7 @@ export function DirectoryWeeklySpotlight({
           <div className="mt-4 grid gap-4 sm:mt-6 lg:grid-cols-[minmax(0,1.03fr)_minmax(15rem,0.97fr)] lg:gap-6">
             <div>
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
-                Featured pick
+                Scelta in evidenza
               </p>
               <h3 className="mt-2 max-w-[11ch] text-[1.35rem] leading-[0.96] sm:mt-3 sm:text-[2.85rem]">
                 {weeklyTool.name}
@@ -71,7 +71,7 @@ export function DirectoryWeeklySpotlight({
 
               <div className="mt-4 hidden gap-2 sm:grid sm:grid-cols-3">
                 {[
-                  ["Use case", weeklyTool.useCases.length.toString()],
+                  ["Casi d'uso", weeklyTool.useCases.length.toString()],
                   ["Lettura", weeklyTool.readingTime],
                   ["Fonte", weeklyTool.domain],
                 ].map(([label, value]) => (
@@ -158,7 +158,7 @@ export function DirectoryWeeklySpotlight({
         </PremiumPanel>
 
         <details className="mobile-native-accordion rounded-[24px] border border-[var(--line)] bg-white/72 px-4 py-3 shadow-[0_14px_34px_rgba(47,33,126,0.08)] md:hidden">
-          <summary>Altre candidate</summary>
+          <summary>Altri tool da valutare</summary>
           <div className="mt-3 grid gap-2">
             {supportingTools.map((tool) => (
               <article

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Radar | ${siteConfig.name}`,
     description:
-      "Scopri i lanci e i segnali esterni piu interessanti selezionati da TooolVibes.",
+      "Scopri i lanci e i segnali esterni più interessanti selezionati da TooolVibes.",
     url: `${siteConfig.url}/radar`,
   },
 };

@@ -26,7 +26,7 @@ type FounderControlCenterV2Props = {
 const navItems = [
   { href: "/admin", label: "Blog", icon: FileText },
   { href: "/admin/new", label: "Nuovo", icon: Plus, primary: true },
-  { href: "/admin/collections", label: "Collections", icon: LayoutGrid },
+  { href: "/admin/collections", label: "Raccolte", icon: LayoutGrid },
   { href: "/admin/affiliates", label: "Affiliati", icon: Sparkles },
   { href: "/admin/affiliate-links", label: "Link", icon: LayoutGrid },
   { href: "/admin/suggestions", label: "Suggerimenti", icon: AlertCircle },
@@ -126,8 +126,8 @@ export function FounderControlCenterV2({ articlesRuntime }: FounderControlCenter
     },
     {
       label: "Stato",
-      value: runtimeWarningCount > 0 ? "Warn" : "OK",
-      detail: runtimeWarningCount > 0 ? `${runtimeWarningCount} avvisi` : "runtime pulito",
+      value: runtimeWarningCount > 0 ? "Avvisi" : "OK",
+      detail: runtimeWarningCount > 0 ? `${runtimeWarningCount} da verificare` : "tutto in ordine",
       color: runtimeWarningCount > 0 ? "#f3bf4c" : "#5cbf9c",
     },
   ];
@@ -150,7 +150,7 @@ export function FounderControlCenterV2({ articlesRuntime }: FounderControlCenter
               <div className="hidden sm:block">
                 <span className="text-sm font-bold text-white">TOOOLVIBES</span>
                 <span className="ml-2 text-[10px] font-semibold uppercase tracking-wider text-white/40">
-                  Admin
+                  Area admin
                 </span>
               </div>
             </Link>
@@ -189,7 +189,7 @@ export function FounderControlCenterV2({ articlesRuntime }: FounderControlCenter
             <div className="flex items-center gap-3">
               <StatusIndicator
                 active={articlesRuntime.canWrite}
-                label={articlesRuntime.canWrite ? "CMS Live" : "Read Only"}
+                label={articlesRuntime.canWrite ? "Modifica attiva" : "Sola lettura"}
               />
               <form action="/api/admin/logout" method="post" className="hidden sm:block">
                 <motion.button

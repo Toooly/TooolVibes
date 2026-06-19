@@ -46,7 +46,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
             <div className="border-b pb-4 soft-divider">
               <p className="editorial-label">Link</p>
               <h2 className="text-display-card mt-2 text-[1.32rem] sm:text-[1.46rem]">
-                Destinazione e etichetta
+                Destinazione ed etichetta
               </h2>
             </div>
             <div className="mt-5 grid gap-5 lg:grid-cols-2">
@@ -91,7 +91,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
               </label>
 
               <label className="block lg:col-span-2">
-                <span className="mb-2 block text-sm font-semibold">Tracking URL (opzionale)</span>
+                <span className="mb-2 block text-sm font-semibold">URL tracciato (opzionale)</span>
                 <input
                   name="tracking_url"
                   type="url"
@@ -112,7 +112,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
             </div>
             <div className="mt-5 grid gap-5 lg:grid-cols-3">
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold">UTM Campaign</span>
+                <span className="mb-2 block text-sm font-semibold">Campagna UTM</span>
                 <input
                   name="campaign"
                   defaultValue={link.campaign ?? ""}
@@ -122,7 +122,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold">UTM Source</span>
+                <span className="mb-2 block text-sm font-semibold">Sorgente UTM</span>
                 <input
                   name="source"
                   defaultValue={link.source ?? ""}
@@ -132,7 +132,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold">UTM Medium</span>
+                <span className="mb-2 block text-sm font-semibold">Canale UTM</span>
                 <input
                   name="medium"
                   defaultValue={link.medium ?? ""}
@@ -158,7 +158,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
                 <div>
                   <p className="text-sm font-semibold">Link attivo</p>
                   <p className="mt-1 text-sm leading-6" style={{ color: "var(--muted)" }}>
-                    Se attivo, il link sar&agrave; usato nel sito pubblico.
+                    Se attivo, il link sarà usato nel sito pubblico.
                   </p>
                 </div>
                 <input
@@ -175,7 +175,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/58">
-                  Server-side write path
+                  Salvataggio protetto
                 </p>
               </div>
               <button

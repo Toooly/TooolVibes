@@ -8,27 +8,27 @@ import { PremiumBadge, PremiumPanel } from "@/components/ui/premium";
 export const metadata: Metadata = {
   title: "Programma affiliati",
   description:
-    "Candidati al programma affiliati TooolVibes e ricevi un link referral con QR code se la richiesta viene approvata.",
+    "Candidati al programma affiliati TooolVibes e scopri come condividere la piattaforma con la tua community.",
 };
 
 const programSteps = [
   {
     icon: ShieldCheck,
-    title: "Candidatura manuale",
+    title: "Valutazione personale",
     description:
-      "Rivediamo ogni richiesta dal backoffice per capire fit, audience e qualita del canale.",
+      "Leggiamo ogni candidatura per capire pubblico, canali e modo in cui racconteresti TooolVibes.",
   },
   {
     icon: BadgeCheck,
-    title: "Approvazione founder",
+    title: "Conferma dedicata",
     description:
-      "Se il profilo e adatto, attiviamo manualmente il codice referral e inviamo la conferma via email.",
+      "Se il profilo è in linea, ti inviamo via email il codice e le indicazioni per iniziare.",
   },
   {
     icon: QrCode,
     title: "Link e QR code",
     description:
-      "Ogni affiliato approvato riceve il proprio link referral e un QR code pronto da condividere.",
+      "Ricevi un link personale e un QR code pronti da usare nei tuoi canali.",
   },
 ];
 
@@ -41,10 +41,10 @@ export default function AffiliatiPage() {
             <BrandLogo size={58} priority />
             <div>
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">
-                TooolVibes partner system
+                Programma partner TooolVibes
               </p>
               <p className="mt-1 text-sm" style={{ color: "var(--muted-strong)" }}>
-                Affiliate program
+                Candidature affiliate
               </p>
             </div>
           </div>
@@ -57,14 +57,14 @@ export default function AffiliatiPage() {
           </h1>
           <p className="mt-5 max-w-[44rem] text-[1rem] leading-8" style={{ color: "var(--muted)" }}>
             Cerchiamo creator, newsletter, community e consulenti che parlano con persone
-            interessate a tool AI, automazioni, no-code e scelte software piu lucide.
+            interessate a tool AI, automazioni, no-code e scelte software più lucide.
           </p>
 
           <div className="mt-7 grid gap-3 sm:grid-cols-3">
             {[
-              { label: "Review", value: "Manuale" },
-              { label: "Codice", value: "Scelto da admin" },
-              { label: "Cooldown", value: "30 giorni" },
+              { label: "Valutazione", value: "Personale" },
+              { label: "Codice", value: "Dedicato" },
+              { label: "Nuovo invio", value: "Dopo 30 giorni" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -108,9 +108,9 @@ export default function AffiliatiPage() {
           <div>
             <p className="editorial-label">Come funziona dopo l&apos;approvazione</p>
             <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>
-              Dal backoffice creiamo manualmente il codice referral, generiamo il link dedicato e
-              il QR code, poi inviamo tutto via email. Se una candidatura non e adatta, blocchiamo
-              un nuovo invio per 30 giorni.
+              Dopo l’approvazione prepariamo il codice referral, generiamo il link dedicato e
+              il QR code, poi ti inviamo tutto via email. Se la candidatura non è adatta,
+              potrai riprovare dopo 30 giorni.
             </p>
           </div>
         </div>

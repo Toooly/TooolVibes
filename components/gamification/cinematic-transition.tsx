@@ -6,9 +6,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { playGameSound } from "@/lib/gamification/sound-engine";
 
 const LABELS: Record<string, string> = {
-  "/radar": "SCAN",
-  "/confronta": "FIGHT",
-  "/compare": "FIGHT",
+  "/radar": "SCANSIONE",
+  "/confronta": "CONFRONTO",
+  "/compare": "CONFRONTO",
 };
 
 export function CinematicTransition() {

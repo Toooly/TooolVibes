@@ -56,12 +56,12 @@ export function resolveCollectionPremiumAccess(
       tier: "free",
       entitlement,
       state: "open",
-      label: "Collection aperta",
+      label: "Raccolta aperta",
       subtle_label: "Aperta",
       chip_label: "Accesso aperto",
-      description: "La collection resta interamente leggibile: tool, highlights e percorso sono già aperti.",
-      entry_label: "Apri collection completa",
-      upgrade_label: "Apri collection completa",
+      description: "La raccolta è interamente leggibile: tool, punti chiave e percorso sono già aperti.",
+      entry_label: "Apri raccolta completa",
+      upgrade_label: "Apri raccolta completa",
       upgrade_href: "#collection-content",
       is_premium: false,
       is_previewable: false,
@@ -77,15 +77,15 @@ export function resolveCollectionPremiumAccess(
       tier: "member",
       entitlement,
       state: entitlement === "member" ? "unlocked" : "preview",
-      label: entitlement === "member" ? "Accesso member" : "Preview premium",
+      label: entitlement === "member" ? "Accesso riservato" : "Anteprima premium",
       subtle_label: entitlement === "member" ? "Sbloccata" : "Anteprima",
-      chip_label: entitlement === "member" ? "Accesso member" : "Accesso preview",
+      chip_label: entitlement === "member" ? "Accesso riservato" : "Anteprima aperta",
       description:
         entitlement === "member"
-          ? "La collection ? disponibile per intero, con tutti i tool, gli highlight e il framing curatoriale completo."
-          : "La preview lascia vedere il percorso, i primi tool e gli highlight chiave. Il layer member aggiunge il resto della lettura e i moduli più densi.",
-      entry_label: entitlement === "member" ? "Apri issue completa" : "Apri preview",
-      upgrade_label: entitlement === "member" ? "Apri issue completa" : "Vedi cosa sblocchi",
+          ? "La raccolta è disponibile per intero, con tutti i tool, i punti chiave e la lettura completa."
+          : "L'anteprima mostra il percorso, i primi tool e i punti chiave. L'accesso riservato aggiunge il resto della lettura e gli approfondimenti più utili.",
+      entry_label: entitlement === "member" ? "Apri raccolta completa" : "Apri anteprima",
+      upgrade_label: entitlement === "member" ? "Apri raccolta completa" : "Vedi cosa sblocchi",
       upgrade_href: entitlement === "member" ? "#collection-content" : PREMIUM_ACCESS_HREF,
       is_premium: true,
       is_previewable: true,
@@ -100,15 +100,15 @@ export function resolveCollectionPremiumAccess(
     tier: "member",
     entitlement,
     state: entitlement === "member" ? "unlocked" : "locked",
-    label: entitlement === "member" ? "Accesso member" : "Member issue",
+    label: entitlement === "member" ? "Accesso riservato" : "Raccolta riservata",
     subtle_label: entitlement === "member" ? "Sbloccata" : "Riservata",
-    chip_label: entitlement === "member" ? "Accesso member" : "Issue riservata",
+    chip_label: entitlement === "member" ? "Accesso riservato" : "Raccolta riservata",
     description:
       entitlement === "member"
-        ? "La special issue ? disponibile per intero, compresi moduli centrali, sequencing e note member."
-        : "Qui vedi il taglio della issue. Il layer completo tiene i moduli centrali, il sequencing pieno e le note member più operative.",
-    entry_label: entitlement === "member" ? "Apri issue completa" : "Apri teaser",
-    upgrade_label: entitlement === "member" ? "Apri issue completa" : "Vedi cosa sblocchi",
+        ? "La raccolta speciale è disponibile per intero, compresi i moduli centrali, l'ordine di lettura e le note operative."
+        : "Qui vedi il taglio della raccolta. La versione completa include i moduli centrali, il percorso completo e le note più operative.",
+    entry_label: entitlement === "member" ? "Apri raccolta completa" : "Apri anteprima",
+    upgrade_label: entitlement === "member" ? "Apri raccolta completa" : "Vedi cosa sblocchi",
     upgrade_href: entitlement === "member" ? "#collection-content" : PREMIUM_ACCESS_HREF,
     is_premium: true,
     is_previewable: false,
@@ -126,12 +126,12 @@ export function getPremiumEntitlementMeta(
     return {
       status,
       tier: "member",
-      label: "Accesso member attivo",
-      short_label: "Member",
+      label: "Accesso riservato attivo",
+      short_label: "Riservato",
       description:
-        "Preview, member issue e special issue complete sono sbloccate. Puoi passare da archivio, collection e workspace senza perdere il contesto della selezione.",
-      badge: "Accesso member",
-      cta_label: "Apri issue e preview",
+        "Anteprime, raccolte riservate e speciali complete sono sbloccate. Puoi passare da archivio, raccolte e selezione personale senza perdere il filo.",
+      badge: "Accesso riservato",
+      cta_label: "Apri raccolte e anteprime",
       cta_href: "/collections",
     };
   }
@@ -143,9 +143,9 @@ export function getPremiumEntitlementMeta(
       label: "Account pronto per l'accesso premium",
       short_label: "Account",
       description:
-        "La workspace può già essere collegata a un account reale. Il layer member non è attivo, ma il confine tra open, preview e issue completa è già leggibile.",
-      badge: "Sync attiva",
-      cta_label: "Vedi preview e issue",
+        "La tua selezione può già seguire il tuo account. L'accesso riservato non è attivo, ma puoi vedere cosa resta aperto e cosa si sblocca dopo.",
+      badge: "Account attivo",
+      cta_label: "Vedi anteprime e raccolte",
       cta_href: "/collections",
     };
   }
@@ -153,11 +153,11 @@ export function getPremiumEntitlementMeta(
   return {
     status,
     tier: "free",
-    label: "Preview disponibili",
-    short_label: "Guest",
+    label: "Anteprime disponibili",
+    short_label: "Visitatore",
     description:
-      "Da guest puoi usare archivio, shortlist, compare e note senza attrito. Le superfici premium mostrano il taglio e il boundary prima di chiederti un account.",
-    badge: "Preview attive",
+      "Puoi usare archivio, salvati, confronto e note senza attrito. Le raccolte premium mostrano il taglio prima di chiederti un account.",
+    badge: "Anteprime attive",
     cta_label: "Capisci cosa sblocchi",
     cta_href: PREMIUM_ACCESS_HREF,
   };

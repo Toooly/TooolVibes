@@ -30,7 +30,7 @@ const initialForm: FormState = {
   message: "",
 };
 
-const checklist = ["Nome tool", "Link ufficiale", "Categoria", "Perche merita"];
+const checklist = ["Nome tool", "Link ufficiale", "Categoria", "Perché merita"];
 
 function isValidUrl(value: string) {
   try {
@@ -218,11 +218,11 @@ export function DesktopVibeWishlist() {
             </label>
 
             <label className="desktop-vibe-form-wide">
-              <span>Perche merita attenzione</span>
+              <span>Perché merita attenzione</span>
               <textarea
                 value={form.message}
                 onChange={(event) => updateForm("message", event.target.value)}
-                placeholder="Cosa fa, per chi e perche dovrebbe entrare in TooolVibes."
+                placeholder="Cosa fa, per chi è utile e perché dovrebbe entrare in TooolVibes."
                 rows={5}
               />
               {errors.message ? <small>{errors.message}</small> : null}
@@ -233,7 +233,7 @@ export function DesktopVibeWishlist() {
             {lastRequest ? (
               <p>
                 <CheckCircle2 aria-hidden="true" />
-                {lastRequest.toolName} e stato ricevuto.
+                {lastRequest.toolName} è stato ricevuto.
               </p>
             ) : (
               <p>

@@ -40,19 +40,19 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
   const persistenceLabel =
     persistence.mode === "remote"
       ? persistence.phase === "saving"
-        ? "Sync in corso"
+        ? "Salvataggio in corso"
         : persistence.phase === "error"
-          ? "Sync in pausa"
-          : "Workspace sincronizzata"
-      : "Salvato nel browser";
+          ? "Salvataggio in pausa"
+          : "Dati aggiornati"
+      : "Salvato su questo dispositivo";
 
   return (
     <div className="metadata-block shortlist-workspace-panel rounded-[24px] px-3.5 py-3.5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="editorial-label">Workspace personale</p>
+          <p className="editorial-label">Spazio personale</p>
           <p className="mt-2 text-[0.86rem] leading-6" style={{ color: "var(--muted-strong)" }}>
-            Il punto in cui segnare perche&apos; {tool.name} merita ancora un passaggio nel tuo stack.
+            Il punto in cui segnare perché {tool.name} merita ancora un passaggio nella tua lista.
           </p>
         </div>
         <button

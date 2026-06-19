@@ -84,7 +84,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                 <span className="mb-2 block text-sm font-semibold">Etichetta *</span>
                 <input
                   name="label"
-                  placeholder="es. Homepage link, Pricing page"
+                  placeholder="es. Link homepage o pagina prezzi"
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
                   style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
                   required
@@ -96,7 +96,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                 <input
                   name="destination_url"
                   type="url"
-                  placeholder="https://example.com/pricing"
+                  placeholder="https://tuodominio.it/prezzi"
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
                   style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
                   required
@@ -104,7 +104,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
               </label>
 
               <label className="block lg:col-span-2">
-                <span className="mb-2 block text-sm font-semibold">Tracking URL (opzionale)</span>
+                <span className="mb-2 block text-sm font-semibold">URL tracciato (opzionale)</span>
                 <input
                   name="tracking_url"
                   type="url"
@@ -132,7 +132,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
             </div>
             <div className="mt-5 grid gap-5 lg:grid-cols-3">
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold">UTM Campaign</span>
+                <span className="mb-2 block text-sm font-semibold">Campagna UTM</span>
                 <input
                   name="campaign"
                   placeholder="es. spring-launch"
@@ -142,7 +142,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold">UTM Source</span>
+                <span className="mb-2 block text-sm font-semibold">Sorgente UTM</span>
                 <input
                   name="source"
                   placeholder="es. tooolvibes"
@@ -152,7 +152,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold">UTM Medium</span>
+                <span className="mb-2 block text-sm font-semibold">Canale UTM</span>
                 <input
                   name="medium"
                   placeholder="es. affiliate"
@@ -178,7 +178,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                 <div>
                   <p className="text-sm font-semibold">Link attivo</p>
                   <p className="mt-1 text-sm leading-6" style={{ color: "var(--muted)" }}>
-                    Se attivo, il link sar&agrave; usato nel sito pubblico.
+                    Se attivo, il link sarà usato nel sito pubblico.
                   </p>
                 </div>
                 <input name="is_active" type="checkbox" defaultChecked className="h-5 w-5" />
@@ -190,7 +190,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/58">
-                  Server-side write path
+                  Salvataggio protetto
                 </p>
                 <p className="mt-2 text-sm leading-7 text-white/72">
                   Nessun dato sensibile viene esposto al client.

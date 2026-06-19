@@ -19,18 +19,18 @@ type AdminCollectionsReviewPageProps = {
 };
 
 const reviewStatusMessages: Record<string, string> = {
-  "review-saved": "Review state aggiornato correttamente.",
-  "review-cleared": "Review state ripulito correttamente.",
+  "review-saved": "Revisione aggiornata correttamente.",
+  "review-cleared": "Revisione ripulita correttamente.",
   "review-unavailable":
-    "Review state non disponibile: applica la migration delle collection transition reviews per salvarlo in modo persistente.",
-  "review-invalid": "Azione review non valida.",
+    "Revisione non disponibile: completa la configurazione delle raccolte per salvarla.",
+  "review-invalid": "Azione di revisione non valida.",
   "safe-align-unavailable":
-    "Safe align non disponibile: abilita write path Supabase e migration `0014-0015` per tracciarlo in modo persistente.",
+    "Riallineamento sicuro non disponibile: abilita salvataggio e registro modifiche prima di applicarlo.",
   "safe-align-ineligible":
-    "Questo caso esce dalla safe align policy attuale e resta preview-only.",
-  "safe-align-invalid": "Azione safe align non valida.",
+    "Questo caso esce dalle regole di riallineamento automatico e resta solo in anteprima.",
+  "safe-align-invalid": "Azione di riallineamento non valida.",
   "safe-align-failed":
-    "Safe align non completato: l'azione è stata fermata prima di lasciare uno stato ambiguo.",
+    "Riallineamento non completato: l'azione è stata fermata prima di lasciare uno stato ambiguo.",
 };
 
 function matchesView(
@@ -80,7 +80,7 @@ export default async function AdminCollectionsReviewPage({
   ]);
   const statusMessage =
     params.status === "safe-align-applied"
-      ? `Safe align applicato correttamente${params.fields ? ` su: ${params.fields.replaceAll(",", ", ")}` : "."}`
+      ? `Riallineamento sicuro applicato correttamente${params.fields ? ` su: ${params.fields.replaceAll(",", ", ")}` : "."}`
       : params.status
         ? reviewStatusMessages[params.status] ?? null
         : null;
@@ -114,19 +114,19 @@ export default async function AdminCollectionsReviewPage({
     });
   const reviewMetrics = [
     {
-      label: "Open review",
+      label: "Revisioni aperte",
       value: reviewItems.filter((item) => item.reviewState === "unreviewed").length,
     },
     {
-      label: "Critical conflict",
+      label: "Conflitti critici",
       value: reviewItems.filter((item) => item.severity === "critical-conflict").length,
     },
     {
-      label: "Pending import",
+      label: "Importazioni in attesa",
       value: reviewItems.filter((item) => item.severity === "pending").length,
     },
     {
-      label: "Alignable preview",
+      label: "Anteprime riallineabili",
       value: reviewItems.filter((item) => item.preview?.state === "safe-align-ready").length,
     },
   ] as const;
@@ -182,33 +182,33 @@ export default async function AdminCollectionsReviewPage({
     all: reviewItems.length,
   } as const;
   const reviewViewOptions = [
-    { href: "/admin/collections/review", label: "Open", count: reviewViewCounts.open },
+    { href: "/admin/collections/review", label: "Aperte", count: reviewViewCounts.open },
     {
       href: "/admin/collections/review?view=alignable",
-      label: "Alignable",
+      label: "Riallineabili",
       count: reviewViewCounts.alignable,
     },
     {
       href: "/admin/collections/review?view=conflict",
-      label: "Conflict",
+      label: "Conflitti",
       count: reviewViewCounts.conflict,
     },
     {
       href: "/admin/collections/review?view=pending",
-      label: "Pending",
+      label: "Da importare",
       count: reviewViewCounts.pending,
     },
     {
       href: "/admin/collections/review?view=reviewed",
-      label: "Reviewed",
+      label: "Riviste",
       count: reviewViewCounts.reviewed,
     },
     {
       href: "/admin/collections/review?view=ready",
-      label: "Ready",
+      label: "Pronte",
       count: reviewViewCounts.ready,
     },
-    { href: "/admin/collections/review?view=all", label: "All", count: reviewViewCounts.all },
+    { href: "/admin/collections/review?view=all", label: "Tutte", count: reviewViewCounts.all },
   ] as const;
   const selectedViewHref = params.view
     ? `/admin/collections/review?view=${params.view}`
@@ -228,16 +228,16 @@ export default async function AdminCollectionsReviewPage({
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <SectionHeading
-              eyebrow="Conflict review"
-              title="Leggi il drift prima di agire."
-              description="Questa surface raccoglie conflitti, pending import e review state in un unico posto. Nessun sync distruttivo: qui decidiamo cosa è davvero da toccare e cosa può restare com'è."
+              eyebrow="Revisione conflitti"
+              title="Leggi le differenze prima di agire."
+              description="Qui trovi conflitti, importazioni in attesa e revisioni nello stesso posto. Nessun riallineamento distruttivo: prima decidiamo cosa va davvero toccato e cosa può restare com'è."
             />
             <div className="hidden flex-wrap gap-3 sm:flex">
               <Link
                 href="/admin/collections"
                 className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2.5 text-sm font-semibold"
               >
-                Torna alle collections
+                Torna alle raccolte
               </Link>
             </div>
           </div>
@@ -247,7 +247,7 @@ export default async function AdminCollectionsReviewPage({
               href="/admin/collections"
               className="button-shell button-secondary text-ui-strong inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold"
             >
-              Torna alle collections
+              Torna alle raccolte
             </Link>
           </div>
 
@@ -297,7 +297,7 @@ export default async function AdminCollectionsReviewPage({
           </div>
 
           <div className="mt-6 border-b pb-5">
-            <p className="editorial-label">Review filters</p>
+            <p className="editorial-label">Filtri revisione</p>
             <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
               {reviewViewOptions.map((item) => (
                 <Link
@@ -343,10 +343,10 @@ export default async function AdminCollectionsReviewPage({
           </div>
         ) : (
           <AdminEmptyState
-            title="Nessun item da rivedere in questa vista"
-            description="Il conflict review layer ? pulito per questo filtro. Puoi tornare alla lista collections o allargare la vista a `All`."
+            title="Nessun elemento da rivedere in questa vista"
+            description="Questo filtro non mostra conflitti aperti. Puoi tornare alla lista raccolte o allargare la vista a tutte le revisioni."
             ctaHref="/admin/collections/review?view=all"
-            ctaLabel="Apri tutte le review"
+            ctaLabel="Apri tutte le revisioni"
           />
         )}
       </div>

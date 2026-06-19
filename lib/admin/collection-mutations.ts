@@ -52,7 +52,7 @@ export async function createCollection(input: CollectionMutationInput) {
     .single();
 
   if (error) {
-    throw new Error(`Unable to create collection: ${error.message}`);
+    throw new Error(`Non è stato possibile creare la raccolta. Dettaglio: ${error.message}`);
   }
 
   const slots = mapCollectionSlots(data.id, input);
@@ -62,7 +62,7 @@ export async function createCollection(input: CollectionMutationInput) {
 
     if (slotsError) {
       await client.from("collections").delete().eq("id", data.id);
-      throw new Error(`Unable to create collection slots: ${slotsError.message}`);
+      throw new Error(`Non è stato possibile salvare i tool della raccolta. Dettaglio: ${slotsError.message}`);
     }
   }
 
@@ -78,13 +78,13 @@ export async function updateCollection(id: string, input: CollectionMutationInpu
     .order("position", { ascending: true });
 
   if (previousSlotsResponse.error) {
-    throw new Error(`Unable to read current collection slots: ${previousSlotsResponse.error.message}`);
+    throw new Error(`Non è stato possibile leggere i tool già presenti nella raccolta. Dettaglio: ${previousSlotsResponse.error.message}`);
   }
 
   const { error } = await client.from("collections").update(mapCollectionRow(input)).eq("id", id);
 
   if (error) {
-    throw new Error(`Unable to update collection: ${error.message}`);
+    throw new Error(`Non è stato possibile aggiornare la raccolta. Dettaglio: ${error.message}`);
   }
 
   const { error: deleteSlotsError } = await client
@@ -93,7 +93,7 @@ export async function updateCollection(id: string, input: CollectionMutationInpu
     .eq("collection_id", id);
 
   if (deleteSlotsError) {
-    throw new Error(`Unable to reset collection slots: ${deleteSlotsError.message}`);
+    throw new Error(`Non è stato possibile aggiornare l'elenco dei tool della raccolta. Dettaglio: ${deleteSlotsError.message}`);
   }
 
   const slots = mapCollectionSlots(id, input);
@@ -115,7 +115,7 @@ export async function updateCollection(id: string, input: CollectionMutationInpu
         await client.from("collection_tool_slots").insert(previousSlots);
       }
 
-      throw new Error(`Unable to update collection slots: ${slotsError.message}`);
+      throw new Error(`Non è stato possibile salvare l'elenco dei tool della raccolta. Dettaglio: ${slotsError.message}`);
     }
   }
 
@@ -137,13 +137,13 @@ export async function applyCollectionSafeAlignment(
   };
 
   if (Object.keys(payload).length === 0) {
-    throw new Error("Unable to apply safe align: no supported fields were provided.");
+    throw new Error("Impossibile applicare il riallineamento: non ci sono campi supportati.");
   }
 
   const { error } = await client.from("collections").update(payload).eq("id", id);
 
   if (error) {
-    throw new Error(`Unable to apply safe collection alignment: ${error.message}`);
+    throw new Error(`Non è stato possibile riallineare la raccolta. Dettaglio: ${error.message}`);
   }
 
   return { id };

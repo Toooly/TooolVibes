@@ -16,20 +16,20 @@ import type { ToolRecord } from "@/lib/types/tool";
 
 const toneMeta: Record<CollectionTone, { label: string; description: string }> = {
   "starter-stack": {
-    label: "Stack essenziale",
+    label: "Kit essenziale",
     description: "Una sequenza corta per partire bene senza accumulare rumore.",
   },
   "focused-bundle": {
-    label: "Bundle compatto",
-    description: "Una raccolta più stretta, utile quando il task è molto chiaro.",
+    label: "Selezione compatta",
+    description: "Una raccolta più stretta, utile quando l'obiettivo è già chiaro.",
   },
   "editorial-picks": {
     label: "Scelta curatoriale",
-    description: "Una lettura curatoriale più orientata al fit che alla completezza.",
+    description: "Una lettura curatoriale più orientata all'uso giusto che alla completezza.",
   },
   "special-issue": {
-    label: "Special issue",
-    description: "Una superficie più densa, pensata per una lettura premium davvero distinta.",
+    label: "Speciale",
+    description: "Una raccolta più ricca, pensata per guidare la scelta con più contesto.",
   },
 };
 
@@ -44,32 +44,32 @@ const accessMeta: Record<
   { label: string; subtleLabel: string; description: string }
 > = {
   open: {
-    label: "Collection aperta",
+    label: "Raccolta aperta",
     subtleLabel: "Aperta",
-    description: "Accesso pieno alla collection.",
+    description: "Accesso pieno alla raccolta.",
   },
   "premium-preview": {
     label: "Anteprima premium",
     subtleLabel: "Anteprima",
-    description: "Una parte della lettura resta visibile, mentre il livello più denso è già impostato nel layer member.",
+    description: "Una parte della raccolta resta visibile, mentre la lettura completa è riservata agli utenti iscritti.",
   },
   premium: {
-    label: "Member issue",
+    label: "Raccolta riservata",
     subtleLabel: "Riservata",
-    description: "Issue member più densa, leggibile in teaser e pensata per una lettura completa distinta dalla parte open.",
+    description: "Raccolta più approfondita, leggibile in anteprima e pensata per una consultazione completa riservata.",
   },
 };
 
 const audienceMeta: Record<CollectionAudience, string> = {
   "Solo founders": "Per founder indipendenti e builder snelli",
-  "Designer-builders": "Per chi deve passare da concept a superficie navigabile",
-  "Creator teams": "Per creator e team contenuto con workflow visuale",
+  "Designer-builders": "Per chi deve passare da idea a prototipo navigabile",
+  "Creator teams": "Per creator e team contenuto con flussi visuali",
   "Research-led teams": "Per chi trasforma orientamento e insight in conoscenza riusabile",
   "Indie launchers": "Per lanci piccoli ma molto curati",
 };
 
 const themeMeta: Record<CollectionTheme, string> = {
-  "founder-stack": "Stack founder",
+  "founder-stack": "Kit founder",
   "design-sprint": "Design sprint",
   "creator-video": "Creator video",
   "research-synthesis": "Ricerca e sintesi",

@@ -97,12 +97,12 @@ const shelfCopy: Record<DirectoryToolLevel, { title: string; description: string
     description: "Tool immediati per scrittura, immagini, video e prime attivit\u00e0 operative.",
   },
   intermediate: {
-    title: "Workflow in crescita",
+    title: "Flussi in crescita",
     description: "Soluzioni pi\u00f9 strutturate per marketing, supporto, contenuti, siti e pagamenti.",
   },
   expert: {
-    title: "Stack avanzati",
-    description: "Automazioni, agenti e layer pi\u00f9 tecnici per chi sta gi\u00e0 costruendo processi veri.",
+    title: "Percorsi avanzati",
+    description: "Automazioni, agenti e strumenti più tecnici per chi sta già costruendo processi veri.",
   },
 };
 
@@ -135,7 +135,7 @@ const compareColumns: ColumnDef<DirectoryTool>[] = [
     accessorKey: "levelLabel",
   },
   {
-    header: "Use case",
+    header: "Caso d'uso",
     cell: ({ row }) => row.original.useCases[0] ?? "Non disponibile",
   },
   {
@@ -342,11 +342,11 @@ function DirectToolResultCard({
 
       <div className="category-tool-card__insight" aria-label={`Sintesi di ${tool.name}`}>
         <div>
-          <p>TL;DR</p>
+          <p>In breve</p>
           <strong>{tool.tldr}</strong>
         </div>
         <div>
-          <p>Review</p>
+          <p>Lettura</p>
           <span>{tool.editorialReview}</span>
         </div>
       </div>
@@ -388,11 +388,11 @@ function DirectToolResultCard({
             type="button"
             className={cn("category-tool-card__icon-button", stacked && "is-active")}
             onClick={onStack}
-            aria-label={`Aggiungi ${tool.name} allo stack`}
+            aria-label={`Aggiungi ${tool.name} alla lista`}
             data-sonic-action="stack"
           >
             <Layers3 className="size-4" />
-            <span className="category-tool-card__icon-label">Stack</span>
+            <span className="category-tool-card__icon-label">Lista</span>
           </button>
           <button
             type="button"
@@ -486,7 +486,7 @@ function ToolDetailDrawer({
           <div className="grid gap-3 sm:grid-cols-2">
             <PremiumPanel tone="subtle" className="p-4">
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-                TL;DR
+                In breve
               </p>
               <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
                 {tool.tldr}
@@ -494,7 +494,7 @@ function ToolDetailDrawer({
             </PremiumPanel>
             <PremiumPanel tone="subtle" className="p-4">
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-                Review rapida
+                Lettura rapida
               </p>
               <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
                 {tool.editorialReview}
@@ -563,7 +563,7 @@ function ToolDetailDrawer({
                 Confronta
               </PremiumButton>
               <PremiumButton type="button" onClick={() => onStack(tool.slug)} tone="secondary" data-sonic-action="stack">
-                Stack
+                Lista
               </PremiumButton>
               <PremiumLink href={tool.url} external>
                 Apri sito
@@ -916,7 +916,7 @@ export function ToolDiscoveryApp({
   function handleStack(slug: string) {
     const tool = getToolBySlug(tools, slug);
     const added = addToStack(slug);
-    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool già nello stack");
+    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto alla lista` : "Tool già nella lista");
     playTooolvibesSound(added ? "success" : "update");
   }
 
@@ -975,12 +975,12 @@ export function ToolDiscoveryApp({
               <kbd className="rounded-md bg-white/10 px-2 py-1 text-[0.68rem]">Ctrl K</kbd>
             </button>
 
-            <nav className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 lg:grid-cols-1 lg:gap-2" aria-label="Workspace views">
+            <nav className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 lg:grid-cols-1 lg:gap-2" aria-label="Viste della selezione">
               {[
                 ["all", "Tutti", tools.length],
                 ["saved", "Salvati", savedSlugs.length],
                 ["compare", "Confronta", compareSlugs.length],
-                ["stack", "Stack", stackSlugs.length],
+                ["stack", "Lista", stackSlugs.length],
               ].map(([key, label, count]) => (
                 <button
                   key={key}
@@ -1010,7 +1010,7 @@ export function ToolDiscoveryApp({
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   className="premium-input min-h-12 px-3.5 py-2.5 text-sm sm:px-4 sm:py-3"
-                  placeholder="Cerca tool, tag, use case o categoria..."
+                  placeholder="Cerca tool, tag, casi d'uso o categoria..."
                 />
               </label>
               <select
@@ -1170,7 +1170,7 @@ export function ToolDiscoveryApp({
                 icon={Search}
                 eyebrow="Nessun risultato"
                 title="Nessun tool corrisponde ai filtri."
-                description="Cambia ricerca o resetta i filtri. La directory resta pensata per esplorare, confrontare e costruire stack senza perdere contesto."
+                description="Cambia ricerca o resetta i filtri. Il catalogo resta pensato per esplorare, confrontare e costruire una lista senza perdere contesto."
               className="p-5 text-center sm:p-8"
               dark
               action={
@@ -1189,12 +1189,12 @@ export function ToolDiscoveryApp({
             id="mobile-workspace"
             className="mobile-native-accordion scroll-mt-28 rounded-[20px] border border-[var(--line)] bg-white/72 px-4 py-3"
           >
-            <summary data-sonic-action="expand">Workspace mobile</summary>
+            <summary data-sonic-action="expand">Selezione mobile</summary>
             <div className="mt-3 grid grid-cols-3 gap-2">
               {[
                 { label: "Salvati", count: savedSlugs.length, tab: "saved" as const },
                 { label: "Confronta", count: compareSlugs.length, tab: "compare" as const },
-                { label: "Stack", count: stackSlugs.length, tab: "stack" as const },
+                { label: "Lista", count: stackSlugs.length, tab: "stack" as const },
               ].map((item) => (
                 <button
                   key={item.label}
@@ -1213,7 +1213,7 @@ export function ToolDiscoveryApp({
               ))}
             </div>
             <p className="mt-3 text-xs leading-5 text-[var(--muted-strong)]">
-              Usa i tab sopra per vedere solo salvati, confronto o stack. Le azioni restano sulle card.
+              Usa i tab sopra per vedere solo salvati, confronto o lista. Le azioni restano sulle schede.
             </p>
           </details>
         </div>
@@ -1250,7 +1250,7 @@ export function ToolDiscoveryApp({
                 <EmptyState
                   icon={Bookmark}
                   title="Nessun tool salvato."
-                  description="Salva i migliori candidati per creare una shortlist utile e ritrovarli nella prossima sessione."
+                  description="Salva i migliori candidati per creare una lista utile e ritrovarli nella prossima sessione."
                   className="p-4"
                   dark
                 />
@@ -1298,7 +1298,7 @@ export function ToolDiscoveryApp({
                 <EmptyState
                   icon={Columns3}
                   title="Nessun confronto attivo."
-                  description={`Aggiungi fino a ${MAX_COMPARE_TOOLS} tool per confrontare categoria, fonte, use case e link senza aprire mille tab.`}
+                  description={`Aggiungi fino a ${MAX_COMPARE_TOOLS} tool per confrontare categoria, fonte, casi d'uso e link senza aprire mille tab.`}
                   className="p-4"
                   dark
                 />
@@ -1310,10 +1310,10 @@ export function ToolDiscoveryApp({
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
-                  Il tuo stack
+                  La tua lista
                 </p>
                 <h3 className="mt-2 text-display-card text-[1.32rem] leading-tight text-white sm:text-[1.55rem]">
-                  {stackTools.length} tool nello stack
+                  {stackTools.length} tool nella lista
                 </h3>
               </div>
               <Layers3 className="size-5 text-white/72" />
@@ -1338,8 +1338,8 @@ export function ToolDiscoveryApp({
               ) : (
                 <EmptyState
                   icon={Layers3}
-                  title="Stack ancora vuoto."
-                  description="Aggiungi tool dalla griglia e riordinali per costruire uno stack operativo: idea, build, automazione, vendita."
+                  title="Lista ancora vuota."
+                  description="Aggiungi tool dalla griglia e riordinali per costruire un percorso operativo: idea, build, automazione, vendita."
                   className="p-4"
                   dark
                 />

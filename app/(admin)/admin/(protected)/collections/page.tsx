@@ -47,30 +47,49 @@ type AdminCollectionsPageProps = {
 };
 
 const statusMessages: Record<string, string> = {
-  created: "Collection creata correttamente.",
-  updated: "Collection aggiornata correttamente.",
+  created: "Raccolta creata correttamente.",
+  updated: "Raccolta aggiornata correttamente.",
   "import-unavailable":
-    "Import non disponibile: attiva il write path Supabase collections prima di migrare i mock.",
-  "review-saved": "Review state aggiornato correttamente.",
-  "review-cleared": "Review state ripulito correttamente.",
+    "Importazione non disponibile: attiva il salvataggio prima di importare le raccolte locali.",
+  "review-saved": "Revisione aggiornata correttamente.",
+  "review-cleared": "Revisione ripulita correttamente.",
   "review-unavailable":
-    "Review state non disponibile: applica la migration `0012-0013` per abilitarlo in modo persistente.",
-  "review-invalid": "Azione review non valida.",
+    "Revisione non disponibile: completa la configurazione delle raccolte per salvarla.",
+  "review-invalid": "Azione di revisione non valida.",
   "safe-align-unavailable":
-    "Safe align non disponibile: abilita write path Supabase e migration `0014-0015` prima di usarlo.",
+    "Riallineamento sicuro non disponibile: abilita salvataggio e registro modifiche prima di usarlo.",
   "safe-align-ineligible":
-    "Questo caso esce dalla safe align policy attuale e resta preview-only.",
-  "safe-align-invalid": "Azione safe align non valida.",
+    "Questo caso esce dalle regole di riallineamento automatico e resta solo in anteprima.",
+  "safe-align-invalid": "Azione di riallineamento non valida.",
   "safe-align-failed":
-    "Safe align non completato: l'azione è stata fermata prima di lasciare uno stato ambiguo.",
+    "Riallineamento non completato: l'azione è stata fermata prima di lasciare uno stato ambiguo.",
 };
+
+function getSourceLabel(source: string | null | undefined) {
+  switch (source) {
+    case "supabase":
+      return "Archivio principale";
+    case "mock":
+      return "Sorgente locale";
+    case "content":
+      return "Contenuto editoriale";
+    case "snapshot":
+      return "Snapshot locale";
+    default:
+      return "Non disponibile";
+  }
+}
+
+function getWriteTargetLabel(target: string | null | undefined) {
+  return target === "supabase" ? "Archivio principale" : "Sola lettura";
+}
 
 const importStatusMeta: Record<
   CollectionTransitionEntry["import_status"],
   { label: string; background: string; borderColor: string }
 > = {
   "pending-import": {
-    label: "Pending import",
+    label: "Da importare",
     background: "rgba(255,251,235,0.96)",
     borderColor: "rgba(161,105,47,0.18)",
   },
@@ -80,17 +99,17 @@ const importStatusMeta: Record<
     borderColor: "rgba(15,118,110,0.18)",
   },
   conflict: {
-    label: "Conflict",
+    label: "Conflitto",
     background: "rgba(254,242,242,0.96)",
     borderColor: "rgba(139,58,43,0.18)",
   },
   "remote-only": {
-    label: "Supabase only",
+    label: "Solo archivio reale",
     background: "rgba(245,242,255,0.92)",
     borderColor: "rgba(112,82,255,0.16)",
   },
   "content-only": {
-    label: "Content only",
+    label: "Solo contenuto",
     background: "rgba(243,244,246,0.95)",
     borderColor: "rgba(148,163,184,0.22)",
   },
@@ -118,11 +137,11 @@ function getStatusMessage({
 
     return scope === "single"
       ? `Import completato. Importate: ${importedCount}, saltate: ${skippedCount}, conflitti: ${conflictCount}.`
-      : `Seed mock -> Supabase completato. Importate: ${importedCount}, saltate: ${skippedCount}, conflitti: ${conflictCount}.`;
+      : `Importazione dalla sorgente locale completata. Importate: ${importedCount}, saltate: ${skippedCount}, conflitti: ${conflictCount}.`;
   }
 
   if (status === "safe-align-applied") {
-    return `Safe align applicato correttamente${fields ? ` su: ${fields.replaceAll(",", ", ")}` : "."}`;
+    return `Riallineamento sicuro applicato correttamente${fields ? ` su: ${fields.replaceAll(",", ", ")}` : "."}`;
   }
 
   return status ? statusMessages[status] ?? null : null;
@@ -136,7 +155,7 @@ function getTransitionDiffSummary(entry: CollectionTransitionEntry) {
   }
 
   if (entry.diff.editorial_order) {
-    summaries.push("ordering");
+    summaries.push("ordine");
   }
 
   if (entry.diff.featured_slot) {
@@ -144,11 +163,11 @@ function getTransitionDiffSummary(entry: CollectionTransitionEntry) {
   }
 
   if (entry.diff.surface) {
-    summaries.push("surface");
+    summaries.push("formato");
   }
 
   if (entry.diff.metadata) {
-    summaries.push("metadata");
+    summaries.push("contenuti");
   }
 
   if (entry.diff.included_tools) {
@@ -183,30 +202,30 @@ export default async function AdminCollectionsPage({
   );
   const topActions = [
     { href: "/admin", label: "Dashboard" },
-    { href: "/admin/collections/new", label: "Nuova collection", primary: true },
-    { href: "/admin/collections/review", label: "Conflict review" },
+    { href: "/admin/collections/new", label: "Nuova raccolta", primary: true },
+    { href: "/admin/collections/review", label: "Revisione conflitti" },
   ] as const;
   const workspaceMetrics = [
-    { label: "Collections nel workspace", value: runtime.collections.length },
+    { label: "Raccolte nell'area", value: runtime.collections.length },
     {
-      label: "Pubbliche nel workspace",
+      label: "Raccolte pubbliche",
       value: stateCounts.published + stateCounts.featured,
     },
     {
-      label: "Warning aperti",
+      label: "Segnali aperti",
       value: runtime.collections.filter(
         (collection) =>
           (runtime.workspaceSnapshot.validation[collection.slug] ?? []).length > 0,
       ).length,
     },
-    { label: "Source pubblica attiva", value: runtime.publicSnapshot.meta.active_source },
+    { label: "Sorgente pubblica attiva", value: getSourceLabel(runtime.publicSnapshot.meta.active_source) },
   ] as const;
   const transitionMetrics = [
-    { label: "Mock totali", value: runtime.transitionReport.summary.mock_total },
+    { label: "Raccolte locali", value: runtime.transitionReport.summary.mock_total },
     { label: "Già importate", value: runtime.transitionReport.summary.imported },
     { label: "Da importare", value: runtime.transitionReport.summary.pending_import },
     { label: "Conflitti", value: runtime.transitionReport.summary.conflicts },
-    { label: "Supabase only", value: runtime.transitionReport.summary.remote_only },
+    { label: "Solo archivio reale", value: runtime.transitionReport.summary.remote_only },
   ] as const;
   const collectionViewCounts = {
     all: runtime.collections.length,
@@ -242,43 +261,43 @@ export default async function AdminCollectionsPage({
   const collectionViewOptions = [
     {
       href: "/admin/collections",
-      label: "Workspace",
+      label: "Area raccolte",
       active: selectedView === "all",
       count: collectionViewCounts.all,
     },
     {
       href: "/admin/collections?view=ready",
-      label: "Ready",
+      label: "Pronte",
       active: selectedView === "ready",
       count: collectionViewCounts.ready,
     },
     {
       href: "/admin/collections?view=review",
-      label: "Review",
+      label: "Da rivedere",
       active: selectedView === "review",
       count: collectionViewCounts.review,
     },
     {
       href: "/admin/collections?view=blocked",
-      label: "Blocked",
+      label: "Bloccate",
       active: selectedView === "blocked",
       count: collectionViewCounts.blocked,
     },
     {
       href: "/admin/collections?view=conflict",
-      label: "Conflict",
+      label: "Conflitti",
       active: selectedView === "conflict",
       count: collectionViewCounts.conflict,
     },
     {
       href: "/admin/collections?view=alignable",
-      label: "Alignable",
+      label: "Riallineabili",
       active: selectedView === "alignable",
       count: collectionViewCounts.alignable,
     },
     {
       href: "/admin/collections?view=clean",
-      label: "Clean",
+      label: "Pulite",
       active: selectedView === "clean",
       count: collectionViewCounts.clean,
     },
@@ -343,9 +362,9 @@ export default async function AdminCollectionsPage({
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <SectionHeading
-              eyebrow="Collections tooling"
-              title="Workflow editoriale leggero e operativo."
-              description="Qui leggi source, warning, stato editoriale e dettaglio interno delle collection. Il write path resta prudente, ma la superficie gestisce già il ciclo editoriale essenziale senza passare solo dal codice."
+              eyebrow="Gestione raccolte"
+              title="Un flusso editoriale leggero e operativo."
+              description="Qui leggi sorgente, segnali aperti, stato editoriale e dettaglio interno delle raccolte. La scrittura resta prudente, ma il pannello gestisce già il ciclo editoriale essenziale senza passare dal codice."
             />
             <div className="hidden flex-wrap gap-3 sm:flex">
               {topActions.map((action) => (
@@ -438,12 +457,12 @@ export default async function AdminCollectionsPage({
                 background: "rgba(245,242,255,0.92)",
               }}
             >
-              Read surface interna: <strong>{runtime.adminReadSource}</strong>. Public source:{" "}
-              <strong>{runtime.publicSnapshot.meta.active_source}</strong>.
+              Lettura interna: <strong>{getSourceLabel(runtime.adminReadSource)}</strong>. Sorgente pubblica:{" "}
+              <strong>{getSourceLabel(runtime.publicSnapshot.meta.active_source)}</strong>.
               {runtime.writeTarget ? (
                 <>
                   {" "}
-                  Write target: <strong>{runtime.writeTarget}</strong>.
+                  Destinazione salvataggio: <strong>{getWriteTargetLabel(runtime.writeTarget)}</strong>.
                 </>
               ) : null}
               <br />
@@ -463,18 +482,20 @@ export default async function AdminCollectionsPage({
                   className="text-sm font-semibold uppercase tracking-[0.18em]"
                   style={{ color: "var(--muted)" }}
                 >
-                  Source transition
+                  Transizione sorgenti
                 </p>
-                <h2 className="text-2xl">Mock -&gt; Supabase senza stacchi nel pubblico.</h2>
+                <h2 className="text-2xl">Dalla sorgente locale all’archivio reale senza stacchi nel pubblico.</h2>
                 <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
-                  In `auto`, il pubblico legge con precedence{" "}
+                  In automatico, il pubblico sceglie la sorgente con questa priorità:{" "}
                   <strong>
                     {(runtime.publicSnapshot.meta.source_precedence ??
                       runtime.transitionReport.source_precedence
-                    ).join(" > ")}
+                    )
+                      .map(getSourceLabel)
+                      .join(" > ")}
                   </strong>
-                  . Se uno slug esiste già su Supabase, quella versione prevale; gli slug non ancora
-                  migrati restano serviti da mock o content source.
+                  . Se una raccolta esiste già nell’archivio reale, quella versione prevale; le raccolte non ancora
+                  importate restano servite dalla sorgente locale o dai contenuti statici.
                 </p>
               </div>
               {runtime.canWrite ? (
@@ -484,7 +505,7 @@ export default async function AdminCollectionsPage({
                     disabled={!hasPendingImports}
                     className="button-shell button-primary rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
                   >
-                    Importa mock mancanti ({runtime.transitionReport.summary.pending_import})
+                    Importa raccolte locali mancanti ({runtime.transitionReport.summary.pending_import})
                   </button>
                 </form>
               ) : (
@@ -495,7 +516,7 @@ export default async function AdminCollectionsPage({
                     background: "rgba(255,251,235,0.96)",
                   }}
                 >
-                  Attiva Supabase write per eseguire il seed dal pannello interno.
+                  Attiva il salvataggio per importare dal pannello interno.
                 </div>
               )}
             </div>
@@ -559,12 +580,12 @@ export default async function AdminCollectionsPage({
                 className="text-sm font-semibold uppercase tracking-[0.18em]"
                 style={{ color: "var(--muted)" }}
               >
-                Migration visibility
+                Stato importazione
               </p>
-              <h2 className="text-2xl">Stato seed/import delle collection legacy.</h2>
+              <h2 className="text-2xl">Stato importazione delle raccolte</h2>
               <p className="max-w-[44rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
-                Questa vista mostra quali slug sono ancora solo mock, quali sono già migrati e dove
-                c&apos;? drift tra il legacy seed e il repository reale.
+                Questa vista mostra quali raccolte sono ancora nella sorgente locale, quali sono
+                già state importate e dove esistono differenze con l’archivio reale.
               </p>
             </div>
           </div>
@@ -600,7 +621,7 @@ export default async function AdminCollectionsPage({
                             background: "rgba(245,242,255,0.92)",
                           }}
                         >
-                          Public -&gt; {entry.public_source}
+                          Pubblico -&gt; {getSourceLabel(entry.public_source)}
                         </span>
                       ) : null}
                     </div>
@@ -610,9 +631,9 @@ export default async function AdminCollectionsPage({
                       style={{ color: "var(--muted)" }}
                     >
                       <span>Slug: {entry.slug}</span>
-                      <span>Mock: {entry.mock ? "sì" : "no"}</span>
-                      <span>Supabase: {entry.supabase ? "sì" : "no"}</span>
-                      <span>Content: {entry.content ? "sì" : "no"}</span>
+                      <span>Locale: {entry.mock ? "sì" : "no"}</span>
+                      <span>Archivio reale: {entry.supabase ? "sì" : "no"}</span>
+                      <span>Contenuto: {entry.content ? "sì" : "no"}</span>
                     </div>
 
                     {diffSummary.length > 0 ? (
@@ -621,7 +642,7 @@ export default async function AdminCollectionsPage({
                       </p>
                     ) : (
                       <p className="text-sm" style={{ color: "var(--muted-strong)" }}>
-                        Nessun drift rilevato sui campi chiave di transizione.
+                        Nessuna differenza rilevata sui campi chiave.
                       </p>
                     )}
 
@@ -651,9 +672,9 @@ export default async function AdminCollectionsPage({
 
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
                     {[
-                      { label: "State", value: entry.supabase?.editorial_state ?? entry.mock?.editorial_state ?? "n/d" },
+                      { label: "Stato", value: entry.supabase?.editorial_state ?? entry.mock?.editorial_state ?? "n/d" },
                       {
-                        label: "Order",
+                        label: "Ordine",
                         value: String(
                           entry.supabase?.editorial_order ??
                             entry.mock?.editorial_order ??
@@ -661,7 +682,7 @@ export default async function AdminCollectionsPage({
                         ),
                       },
                       {
-                        label: "Slot",
+                        label: "Spazio",
                         value:
                           entry.supabase?.featured_slot ??
                           entry.mock?.featured_slot ??
@@ -695,7 +716,7 @@ export default async function AdminCollectionsPage({
                         href={`/admin/collections/${entry.supabase.id}`}
                         className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
                       >
-                        Apri collection reale
+                        Apri raccolta
                       </Link>
                     ) : null}
                     {runtime.canWrite && entry.import_status === "pending-import" ? (
@@ -705,7 +726,7 @@ export default async function AdminCollectionsPage({
                           type="submit"
                           className="button-shell button-primary w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
                         >
-                          Importa slug
+                          Importa raccolta
                         </button>
                       </form>
                     ) : null}
@@ -718,7 +739,7 @@ export default async function AdminCollectionsPage({
 
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="border-b pb-5">
-            <p className="editorial-label">Workspace views</p>
+            <p className="editorial-label">Viste raccolte</p>
             <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
               {collectionViewOptions.map((item) => (
                 <Link
@@ -740,7 +761,7 @@ export default async function AdminCollectionsPage({
           </div>
 
           <div className="mt-4 border-b pb-5">
-            <p className="editorial-label">State filters</p>
+            <p className="editorial-label">Filtri per stato</p>
             <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
               {editorialStateOptions.map((item) => (
               <Link
@@ -902,7 +923,7 @@ export default async function AdminCollectionsPage({
                               className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                               style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
                             >
-                              {issues.length} warning
+                              {issues.length} avvisi
                             </span>
                           ) : null}
                           {lastSafeAlign ? (
@@ -913,7 +934,7 @@ export default async function AdminCollectionsPage({
                                 background: "rgba(245,242,255,0.92)",
                               }}
                             >
-                              Safe aligned
+                              Riallineata
                             </span>
                           ) : null}
                         </div>
@@ -971,7 +992,7 @@ export default async function AdminCollectionsPage({
                             className="rounded-[20px] border px-4 py-3 text-sm"
                             style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(245,242,255,0.92)" }}
                           >
-                            Ultimo safe align: {formatItalianDate(lastSafeAlign.applied_at)} ·{" "}
+                            Ultimo riallineamento: {formatItalianDate(lastSafeAlign.applied_at)} -{" "}
                             {lastSafeAlign.aligned_fields.join(", ")}
                           </div>
                         ) : null}
@@ -981,12 +1002,12 @@ export default async function AdminCollectionsPage({
                           style={{ color: "var(--muted)" }}
                         >
                           <span>Slug: {collection.slug}</span>
-                          <span>Tone: {toneMeta.label}</span>
-                          <span>Access: {accessMeta.subtleLabel}</span>
-                          <span>Difficolta`: {difficultyLabel}</span>
-                          <span>Order: {collection.editorial_order ?? 999}</span>
+                          <span>Tono: {toneMeta.label}</span>
+                          <span>Accesso: {accessMeta.subtleLabel}</span>
+                          <span>Difficoltà: {difficultyLabel}</span>
+                          <span>Ordine: {collection.editorial_order ?? 999}</span>
                           {collection.featured_slot ? (
-                            <span>Slot: {getCollectionFeaturedSlotLabel(collection.featured_slot)}</span>
+                            <span>Spazio: {getCollectionFeaturedSlotLabel(collection.featured_slot)}</span>
                           ) : null}
                         </div>
 
@@ -1082,7 +1103,7 @@ export default async function AdminCollectionsPage({
                             href={`/collections/${collection.slug}`}
                             className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
                           >
-                            Vedi public page
+                            Vedi pagina pubblica
                           </Link>
                         )}
                         {transitionEntry ? (
@@ -1096,7 +1117,7 @@ export default async function AdminCollectionsPage({
                             }
                             className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
                           >
-                            Apri review
+                            Apri revisione
                           </Link>
                         ) : null}
                       </div>
@@ -1108,16 +1129,16 @@ export default async function AdminCollectionsPage({
               <AdminEmptyState
                 title={
                   selectedState
-                    ? `Nessuna collection in stato ${getCollectionEditorialStateMeta(selectedState).label}`
-                    : "Nessuna collection disponibile"
+                    ? `Nessuna raccolta in stato ${getCollectionEditorialStateMeta(selectedState).label}`
+                    : "Nessuna raccolta disponibile"
                 }
                 description={
                   runtime.canWrite
-                    ? "Puoi iniziare creando la prima collection nel repository editoriale Supabase."
-                    : "La surface interna legge ancora il source snapshot. Attiva il write path Supabase per iniziare a creare e gestire collection da qui."
+                    ? "Puoi iniziare creando la prima raccolta nell'archivio editoriale."
+                    : "Il pannello interno legge ancora la sorgente locale. Attiva il salvataggio per iniziare a creare e gestire raccolte da qui."
                 }
                 ctaHref={runtime.canWrite ? "/admin/collections/new" : undefined}
-                ctaLabel={runtime.canWrite ? "Crea la prima collection" : undefined}
+                ctaLabel={runtime.canWrite ? "Crea la prima raccolta" : undefined}
               />
             )}
           </div>

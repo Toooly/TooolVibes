@@ -24,7 +24,7 @@ type ArticleFormProps = {
 const kindLabels: Record<(typeof articleKinds)[number], string> = {
   editorial: "Blog",
   guide: "Guida",
-  "tool-writeup": "Tool writeup",
+  "tool-writeup": "Scheda tool",
 };
 
 const statusLabels: Record<(typeof articleStatuses)[number], string> = {
@@ -211,13 +211,13 @@ export function ArticleForm({
         </FormSection>
 
         <FormSection
-          eyebrow="Media e metadata"
-          title="Cover, autore, tag e stato"
-          description="La cover resta separata dal corpo articolo; i media interni vengono invece inseriti direttamente nel Markdown."
+          eyebrow="Media e informazioni"
+          title="Copertina, autore, tag e stato"
+          description="L'immagine di copertina resta separata dal corpo articolo; i media interni vengono invece inseriti direttamente nel testo."
         >
           <div className="grid gap-5 lg:grid-cols-2">
             <label className="block lg:col-span-2">
-              <FieldLabel label="Cover image URL" />
+              <FieldLabel label="URL immagine di copertina" />
               <input
                 name="cover_image_url"
                 type="url"
@@ -230,7 +230,7 @@ export function ArticleForm({
             </label>
 
             <label className="block lg:col-span-2">
-              <FieldLabel label="Alt text cover" />
+              <FieldLabel label="Testo alternativo immagine" />
               <input
                 name="cover_image_alt"
                 defaultValue={values.cover_image_alt}
@@ -257,7 +257,7 @@ export function ArticleForm({
               <input
                 name="tags"
                 defaultValue={values.tags}
-                placeholder="ai, seo, workflow"
+                placeholder="ai, seo, automazione"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
               />
@@ -314,7 +314,7 @@ export function ArticleForm({
             <ToggleCard
               name="is_featured"
               title="In primo piano"
-              description="Porta l'articolo nei blocchi featured del blog pubblico."
+              description="Porta l'articolo nei blocchi in evidenza del blog pubblico."
               defaultChecked={values.is_featured}
             />
           </div>
@@ -325,11 +325,11 @@ export function ArticleForm({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/58">
-              Blog write path
+              Salvataggio articolo
             </p>
             <p className="mt-2 text-sm leading-7 text-white/72">
-              Testo, media interni e stato passano lato server; l&apos;articolo resta modificabile come
-              una bozza CMS.
+              Testo, media interni e stato vengono salvati in modo protetto; l&apos;articolo resta
+              modificabile come bozza.
             </p>
           </div>
           <SubmitButton label={submitLabel} disabled={disabled} />

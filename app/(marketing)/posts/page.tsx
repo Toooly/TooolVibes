@@ -11,10 +11,10 @@ import {
 } from "@/lib/data/public-articles";
 
 const curationCriteria = [
-  "Speed-to-value",
-  "Clarity",
-  "Interoperabilita`",
-  "Pricing sanity",
+  "Valore rapido",
+  "Chiarezza",
+  "Interoperabilità",
+  "Prezzo sensato",
   "Privacy",
 ];
 
@@ -37,21 +37,21 @@ export default async function PostsPage() {
           <div className="col-span-12 lg:col-span-8">
             <SectionHeading
               eyebrow="Approfondimenti"
-              title="Il contenuto legacy importato, ripulito e messo nel sistema giusto."
-              description="Qui non trovi un magazine generico: trovi i writeup dei tool e le guide storiche che aiutano a leggere meglio archive, tool profile, collections e premium."
+              title="Guide e articoli per capire meglio cosa scegliere."
+              description="Qui non trovi un magazine generico: trovi letture brevi, guide e approfondimenti collegati ai tool, alle raccolte e ai casi d'uso più concreti."
             />
 
             <div className="metadata-block mt-4 rounded-[24px] px-4.5 py-4">
               <p className="brand-kicker">Come li leggiamo</p>
               <p className="mt-2.5 max-w-[42rem] text-[0.98rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-                I writeup tool ti portano dal catalogo al giudizio. Le guide legacy servono a spiegare un tema, un flusso o una scelta di prodotto senza aprire una nuova area del sistema.
+                Gli approfondimenti sui tool ti portano dal catalogo a un giudizio più chiaro. Le guide spiegano temi, flussi e scelte di prodotto senza farti ricominciare la ricerca da zero.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <ButtonLink href="/archivio" variant="secondary">
                   Apri l&apos;archivio
                 </ButtonLink>
                 <ButtonLink href="/collections" variant="secondary">
-                  Vai alle collection
+                  Vai alle raccolte
                 </ButtonLink>
               </div>
             </div>
@@ -67,7 +67,7 @@ export default async function PostsPage() {
                     <p className="mt-2 text-[1.8rem] leading-none text-white">{blogPosts.length}</p>
                   </div>
                   <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">Tool writeup</p>
+                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">Approfondimenti tool</p>
                     <p className="mt-2 text-[1.8rem] leading-none text-white">{toolWriteups.length}</p>
                   </div>
                 </div>
@@ -95,9 +95,9 @@ export default async function PostsPage() {
         <div className="dark-panel brand-aura section-stage rounded-[38px] p-6 sm:p-8 lg:p-9">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
             <div>
-              <p className="editorial-label !text-white/58">Featured</p>
+              <p className="editorial-label !text-white/58">In evidenza</p>
               <p className="text-display-card mt-2.5 max-w-none text-[1.4rem] text-white sm:max-w-[24ch] sm:text-[1.72rem] sm:text-balance">
-                Tre approfondimenti che fanno capire subito il taglio del layer editoriale.
+                Tre approfondimenti che fanno capire subito il taglio editoriale di TooolVibes.
               </p>
             </div>
             <Link
@@ -105,7 +105,7 @@ export default async function PostsPage() {
               className="selection-chip rounded-full border px-4 py-2 text-sm font-semibold text-white/86"
               style={{ borderColor: "rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.06)" }}
             >
-              Vai alle guide legacy
+              Vai alle guide
             </Link>
           </div>
 
@@ -122,8 +122,8 @@ export default async function PostsPage() {
           <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
             <SectionHeading
               eyebrow="Blog"
-              title="Gli articoli pubblicati dal nuovo editor."
-              description="Qui finiscono i contenuti creati dal backoffice: markdown ricco, media interni e pubblicazione controllata."
+              title="Articoli pubblicati da TooolVibes."
+              description="Contenuti originali, aggiornamenti e letture nate per aiutarti a scegliere con più criterio."
             />
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {blogPosts.map((post) => (
@@ -137,9 +137,9 @@ export default async function PostsPage() {
       <section className="page-shell home-section-gap">
         <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
           <SectionHeading
-            eyebrow="Tool writeup"
-            title="Gli articoli collegati ai tool già presenti nel catalogo."
-            description="Ogni scheda prende il contenuto editoriale del tool e lo rimette in forma di lettura: non duplicazione, ma accesso più chiaro."
+            eyebrow="Approfondimenti tool"
+            title="Gli approfondimenti collegati ai tool già presenti nel catalogo."
+            description="Ogni articolo aggiunge contesto alla scheda del tool: non una duplicazione, ma una lettura più chiara del perché può servirti."
           />
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {toolWriteups.map((post) => (
@@ -152,9 +152,9 @@ export default async function PostsPage() {
       <section id="legacy-guides" className="page-shell home-section-gap">
         <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
           <SectionHeading
-            eyebrow="Guide legacy"
-            title="Le guide storiche ripulite e riallineate al prodotto attuale."
-            description="Qui recuperiamo i pezzi più utili del vecchio sito senza portarci dietro il tono da demo o il framing promozionale troppo pesante."
+            eyebrow="Guide"
+            title="Le guide più utili, riscritte per il TooolVibes di oggi."
+            description="Recuperiamo i pezzi ancora validi e li rendiamo più chiari, pratici e coerenti con il catalogo attuale."
           />
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {guides.map((post) => (

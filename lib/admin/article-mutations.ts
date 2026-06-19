@@ -38,7 +38,7 @@ export async function createArticle(input: ArticleMutationInput) {
   }
 
   if (!target) {
-    throw new Error("Article CMS write target is not available.");
+    throw new Error("Il salvataggio degli articoli non è disponibile.");
   }
 
   const client = createAdminSupabaseClient();
@@ -49,7 +49,7 @@ export async function createArticle(input: ArticleMutationInput) {
     .single();
 
   if (error) {
-    throw new Error(`Unable to create article: ${error.message}`);
+    throw new Error(`Non è stato possibile creare l'articolo. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -63,7 +63,7 @@ export async function updateArticle(id: string, input: Partial<ArticleMutationIn
   }
 
   if (!target) {
-    throw new Error("Article CMS write target is not available.");
+    throw new Error("Il salvataggio degli articoli non è disponibile.");
   }
 
   const client = createAdminSupabaseClient();
@@ -81,7 +81,7 @@ export async function updateArticle(id: string, input: Partial<ArticleMutationIn
       return updateArticleInStorage(id, input);
     }
 
-    throw new Error(`Unable to update article: ${error.message}`);
+    throw new Error(`Non è stato possibile aggiornare l'articolo. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -95,7 +95,7 @@ export async function deleteArticle(id: string) {
   }
 
   if (!target) {
-    throw new Error("Article CMS write target is not available.");
+    throw new Error("Il salvataggio degli articoli non è disponibile.");
   }
 
   const client = createAdminSupabaseClient();
@@ -108,7 +108,7 @@ export async function deleteArticle(id: string) {
       return deleteArticleFromStorage(id);
     }
 
-    throw new Error(`Unable to delete article: ${error.message}`);
+    throw new Error(`Non è stato possibile eliminare l'articolo. Dettaglio: ${error.message}`);
   }
 }
 

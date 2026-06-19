@@ -45,7 +45,7 @@ async function trySource(
 
     if (!hasCollections(collections) && source !== "mock") {
       if (warnIfEmpty) {
-        warnings.push(`Source ${source} non ha restituito collection, fallback alla successiva.`);
+        warnings.push(`La sorgente ${source} non ha restituito raccolte: passo alla sorgente successiva.`);
       }
       return null;
     }
@@ -53,7 +53,7 @@ async function trySource(
     return collections;
   } catch (error) {
     warnings.push(
-      `Source ${source} non disponibile: ${
+      `Sorgente ${source} non disponibile: ${
         error instanceof Error ? error.message : String(error)
       }`,
     );
@@ -94,7 +94,7 @@ export const getCollectionRepositorySnapshot = cache(
         : null;
 
       if (!isSupabasePublicEnabled()) {
-        warnings.push("Env pubbliche Supabase mancanti: fallback alla source locale.");
+        warnings.push("Archivio pubblico non disponibile: uso la sorgente locale.");
       }
 
       if (collections) {
@@ -124,7 +124,7 @@ export const getCollectionRepositorySnapshot = cache(
       : null;
 
     if (!isSupabasePublicEnabled()) {
-      warnings.push("Env pubbliche Supabase mancanti: la transizione collections resta locale.");
+      warnings.push("Archivio pubblico non disponibile: la transizione delle raccolte resta locale.");
     }
 
     const structuredContentCollections = await trySource("content", warnings, {

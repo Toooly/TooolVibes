@@ -49,7 +49,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
         <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <SectionHeading
-              eyebrow="Affiliate links"
+              eyebrow="Link affiliati"
               title="Link affiliati dei tool"
               description="Questa sezione gestisce i link outbound dei tool nel catalogo. Le candidature degli affiliati esterni vivono invece nel programma affiliati."
             />
@@ -116,7 +116,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
 
         <section className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="border-b pb-5 soft-divider">
-            <p className="editorial-label">Workspace affiliate</p>
+              <p className="editorial-label">Area link affiliati</p>
             <h2 className="text-display-card mt-2 text-[1.58rem] sm:text-[1.82rem]">
               Tutti i link affiliati
             </h2>
@@ -164,7 +164,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
                       </p>
                       {(link.campaign || link.source || link.medium) ? (
                         <p>
-                          Preview:{" "}
+                          Anteprima:{" "}
                           <span
                             className="break-all text-xs"
                             style={{ color: "var(--muted-strong)" }}
@@ -173,9 +173,9 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
                           </span>
                         </p>
                       ) : null}
-                      {link.campaign ? <p>UTM Campaign: {link.campaign}</p> : null}
-                      {link.source ? <p>UTM Source: {link.source}</p> : null}
-                      {link.medium ? <p>UTM Medium: {link.medium}</p> : null}
+                      {link.campaign ? <p>Campagna UTM: {link.campaign}</p> : null}
+                      {link.source ? <p>Sorgente UTM: {link.source}</p> : null}
+                      {link.medium ? <p>Canale UTM: {link.medium}</p> : null}
                       <p>Creato: {formatItalianDate(link.created_at)}</p>
                     </div>
 

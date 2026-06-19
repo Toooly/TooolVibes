@@ -30,9 +30,9 @@ const compareRows: {
 }[] = [
   { label: "Categoria", value: (tool) => tool.categoryLabel },
   { label: "Livello", value: (tool) => tool.levelLabel },
-  { label: "TL;DR", value: (tool) => tool.tldr },
-  { label: "Use case", value: (tool) => tool.idealUseCase },
-  { label: "Review", value: (tool) => tool.editorialReview },
+  { label: "In breve", value: (tool) => tool.tldr },
+  { label: "Caso d'uso", value: (tool) => tool.idealUseCase },
+  { label: "Lettura", value: (tool) => tool.editorialReview },
   { label: "Fonte", value: (tool) => tool.domain },
 ];
 
@@ -135,7 +135,7 @@ function DesktopChampionCard({
             </button>
             {showInfo && (
               <div className="desktop-compare-champion__tooltip">
-                Il punteggio è calcolato in base al livello del tool, alla visibilità in evidenza e al numero di punti di forza.
+                Il punteggio combina livello del tool, presenza in evidenza e numero di punti di forza.
               </div>
             )}
           </div>
@@ -143,7 +143,7 @@ function DesktopChampionCard({
 
         <div className="desktop-compare-champion__metrics">
           <div>
-            <span>Fit</span>
+            <span>Uso</span>
             <strong>{tool.useCases.length}</strong>
           </div>
           <div>
@@ -158,7 +158,7 @@ function DesktopChampionCard({
 
         <div className="desktop-compare-champion__actions">
           <PremiumLink href={`/toools/${tool.slug}`} tone="secondary" size="sm">
-            Scheda
+            Apri scheda
           </PremiumLink>
           <button
             type="button"
@@ -204,11 +204,11 @@ function DesktopDiffMatrix({
       },
     },
     {
-      label: "Fit",
+      label: "Uso",
       render: (tool: DirectoryTool) => <span>{tool.useCases.length || "—"}</span>,
     },
     {
-      label: "Highlights",
+      label: "Punti forti",
       render: (tool: DirectoryTool) => <span>{tool.highlights.length}</span>,
     },
     {
@@ -275,7 +275,7 @@ function DirectoryCompareMobileDeck({
             </div>
           </div>
           <p className="mt-3 text-[0.92rem] leading-6 text-[var(--muted-strong)]">
-            Ho tolto la tabella dal telefono: qui leggi score, fit e motivi forti in verticale,
+            Ho tolto la tabella dal telefono: qui leggi punteggio, aderenza e motivi forti in verticale,
             senza bloccare lo scroll.
           </p>
         </section>
@@ -311,7 +311,7 @@ function DirectoryCompareMobileDeck({
                     {tool.categoryLabel}
                   </p>
                 </div>
-                <div className="compare-mobile-score-ring" aria-label={`Score ${score} su 100`}>
+                <div className="compare-mobile-score-ring" aria-label={`Punteggio ${score} su 100`}>
                   <span>{score}</span>
                   <small>/100</small>
                 </div>
@@ -319,7 +319,7 @@ function DirectoryCompareMobileDeck({
 
               <div className="compare-mobile-metrics">
                 <div>
-                  <span>Fit</span>
+                  <span>Uso</span>
                   <strong>{tool.useCases.length}</strong>
                 </div>
                 <div>
@@ -338,11 +338,11 @@ function DirectoryCompareMobileDeck({
                   <p>{tool.tldr}</p>
                 </div>
                 <div className="compare-mobile-line">
-                  <span>Use case</span>
+                  <span>Caso d&apos;uso</span>
                   <p>{tool.idealUseCase}</p>
                 </div>
                 <div className="compare-mobile-line">
-                  <span>Review</span>
+                  <span>Lettura</span>
                   <p>{tool.editorialReview}</p>
                 </div>
               </div>
@@ -357,7 +357,7 @@ function DirectoryCompareMobileDeck({
 
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <PremiumLink href={`/toools/${tool.slug}`} tone="secondary" size="sm">
-                  Scheda
+                  Apri scheda
                 </PremiumLink>
                 <button
                   type="button"
@@ -386,7 +386,7 @@ function DirectoryCompareMobileMatrix({
     return null;
   }
 
-  const mobileRows = compareRows.filter((row) => row.label !== "Review");
+  const mobileRows = compareRows.filter((row) => row.label !== "Lettura");
 
   return (
     <section className="compare-mobile-matrix md:hidden" aria-label="Differenze tra tool">
@@ -407,7 +407,7 @@ function DirectoryCompareMobileMatrix({
               {tools.map((tool) => {
                 const isLead =
                   tool.slug === leadTool?.slug &&
-                  (row.label === "TL;DR" || row.label === "Use case" || row.label === "Livello");
+                  (row.label === "In breve" || row.label === "Caso d'uso" || row.label === "Livello");
 
                 return (
                   <div
@@ -486,13 +486,13 @@ function DirectoryCompareCard({
 
       <div className="mt-4 grid gap-3">
         <div className="rounded-[20px] bg-white/72 p-3.5">
-          <p className="editorial-label">TL;DR</p>
+          <p className="editorial-label">In breve</p>
           <p className="mt-2 text-[0.92rem] leading-6 text-[var(--foreground)]">
             {tool.tldr}
           </p>
         </div>
         <div className="rounded-[20px] bg-white/64 p-3.5">
-          <p className="editorial-label">Review rapida</p>
+          <p className="editorial-label">Lettura rapida</p>
           <p className="mt-2 text-[0.88rem] leading-6 text-[var(--foreground)]">
             {tool.editorialReview}
           </p>
@@ -512,7 +512,7 @@ function DirectoryCompareCard({
 
       <div className="mt-5 grid gap-2 sm:grid-cols-2">
         <PremiumLink href={`/toools/${tool.slug}`} tone="secondary" size="sm">
-          Scheda
+          Apri scheda
         </PremiumLink>
         <PremiumLink href={tool.url} external size="sm">
           Apri sito
@@ -550,9 +550,9 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
     return (
       <EmptyState
         icon={Columns3}
-        eyebrow="Compare catalogo"
+        eyebrow="Confronto catalogo"
         title="Aggiungi 2 tool dal catalogo per far partire il confronto."
-        description="Premi Confronta sulle card dei tool: qui leggerai differenze, use case, TL;DR e review in una vista unica."
+        description="Premi Confronta sulle schede dei tool: qui leggerai differenze, casi d'uso, sintesi e lettura rapida in una vista unica."
         className="p-6 text-center sm:p-8"
         action={<PremiumLink href="/archivio">Apri catalogo</PremiumLink>}
       />
@@ -565,7 +565,7 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-[48rem]">
             <div className="compare-summary-kickers flex flex-wrap items-center gap-2">
-              <span className="selection-status is-fresh">Compare attivo</span>
+              <span className="selection-status is-fresh">Confronto attivo</span>
               <span className="selection-chip compare-count-chip">{tools.length}/{MAX_COMPARE_TOOLS} tool</span>
             </div>
             <h2 className="section-title mt-3 text-[1.9rem] sm:text-[2.55rem] lg:text-[3rem]">
@@ -575,8 +575,8 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
             </h2>
             <p className="section-copy mt-3">
               {leadTool
-                ? `${leadTool.name} è il candidato da leggere per primo: poi confronta use case, review e fonte con gli altri profili.`
-                : "Il compare del catalogo usa gli stessi tool che selezioni da Cerca, drawer e command palette."}
+                ? `${leadTool.name} è il candidato da leggere per primo: poi confronta casi d'uso, lettura rapida e fonte con gli altri profili.`
+                : "Il confronto del catalogo usa gli stessi tool che selezioni dalla ricerca e dalle schede."}
             </p>
           </div>
           <div className="compare-summary-actions flex flex-col gap-2 sm:flex-row">
@@ -594,7 +594,7 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         <PremiumPanel tone="warm" className="grid gap-4 p-5 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center">
           <CheckCircle2 className="size-9 text-[var(--warning)]" aria-hidden="true" />
           <div>
-            <p className="editorial-label">Compare parziale</p>
+            <p className="editorial-label">Confronto parziale</p>
             <p className="mt-2 text-[1.08rem] font-semibold leading-6 text-[var(--foreground)]">
               {tools[0].name} è dentro. Aggiungi un tool simile per vedere una matrice utile.
             </p>

@@ -53,8 +53,8 @@ const fallbackRadarItems: ProductHuntItem[] = Array.from(
   { length: RADAR_NODE_COUNT },
   (_, index) => ({
     id: `radar-placeholder-${index + 1}`,
-    name: "Slot radar",
-    tagline: "In attesa dei dati reali",
+    name: "Segnale in arrivo",
+    tagline: "In attesa dei dati aggiornati",
     votesCount: 0,
     commentsCount: 0,
     productHuntUrl: "#",
@@ -387,12 +387,12 @@ export function MobileRadarView() {
       {/* Header */}
       <div className="mobile-radar-view__header">
         <span className="mobile-radar-view__powered">
-          Powered by <strong>Product Hunt</strong>
+          Dati da <strong>Product Hunt</strong>
         </span>
         <h1>
           <span className="mobile-radar-view__live">
             <span className="mobile-radar-view__live-dot" />
-            Live Radar
+            Radar live
           </span>
         </h1>
         <p>Scopri i tool migliori di Product Hunt.</p>
@@ -447,7 +447,7 @@ export function MobileRadarView() {
                 <strong>{displayName}</strong>
                 <small>{displayMeta}</small>
               </span>
-              {isHot && <span className="mobile-radar-view__node-badge">HOT</span>}
+              {isHot && <span className="mobile-radar-view__node-badge">In crescita</span>}
             </>
           );
 
@@ -489,7 +489,7 @@ export function MobileRadarView() {
       {/* Legend */}
       <div className="mobile-radar-view__legend">
         {[
-          { icon: Activity, label: "Rank" },
+          { icon: Activity, label: "Posizione" },
           { icon: MessageCircle, label: "Segnali" },
           { icon: TrendingUp, label: "Trend" },
         ].map((item) => {
@@ -537,8 +537,8 @@ function MobileRadarSections({
         body: "Product Hunt non ha restituito tool per questo intervallo. Riprova più tardi senza dati finti in pagina.",
       },
       "missing-token": {
-        title: "Radar non configurato",
-        body: message ?? "La chiave Product Hunt non è disponibile in questo ambiente.",
+        title: "Radar in pausa",
+        body: message ?? "I dati Product Hunt non sono disponibili in questo momento.",
       },
       error: {
         title: "Radar non disponibile",
@@ -595,7 +595,7 @@ function MobileRadarSections({
                   <span>{item.votesCount} voti</span>
                 </div>
                 {item.votesCount > 100 && (
-                  <span className="mobile-radar-section__card-badge">HOT</span>
+                  <span className="mobile-radar-section__card-badge">In crescita</span>
                 )}
               </a>
             ))}

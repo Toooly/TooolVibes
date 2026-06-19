@@ -22,7 +22,7 @@ const quickPaths = [
   },
   {
     title: "Voglio automatizzare",
-    description: "Workflow, agenti e integrazioni per processi ripetibili.",
+    description: "Flussi, agenti e integrazioni per processi ripetibili.",
     href: "/archivio?group=automation",
     icon: Workflow,
   },
@@ -161,7 +161,7 @@ export function MobileQuickStart() {
                         <span className="text-[1rem] font-semibold leading-tight">
                           {item.title}
                         </span>
-                        {index === 0 ? <PremiumBadge tone="dark">Start</PremiumBadge> : null}
+                        {index === 0 ? <PremiumBadge tone="dark">Inizia qui</PremiumBadge> : null}
                       </span>
                       <span className="mt-2 block text-sm leading-6 text-white/64">
                         {item.description}

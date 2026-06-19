@@ -90,7 +90,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
       title: "Archivio",
       initials: "A",
       description: "Torna al catalogo completo.",
-      category: "Nav",
+      category: "Navigazione",
       href: "/archivio",
       sectionId: "tool-detail",
       priority: 1,
@@ -105,7 +105,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
       title: "Confronta",
       initials: "C",
       description: "Aggiungi al confronto.",
-      category: "Nav",
+      category: "Navigazione",
       href: "/compare",
       sectionId: "tool-detail",
       priority: 1,
@@ -120,7 +120,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
       title: "Salvati",
       initials: "S",
       description: "Salva per dopo.",
-      category: "Nav",
+      category: "Navigazione",
       href: "/shortlist",
       sectionId: "tool-detail",
       priority: 1,
@@ -178,9 +178,9 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
 
               <div className="tool-detail-summary-grid mt-5 grid gap-3 sm:grid-cols-3">
                 {[
-                  ["TL;DR", tool.tldr],
+                  ["In breve", tool.tldr],
                   ["Per chi", tool.idealUseCase],
-                  ["Review rapida", tool.editorialReview],
+                  ["Lettura rapida", tool.editorialReview],
                 ].map(([label, copy]) => (
                   <div
                     key={label}
@@ -225,7 +225,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   rel="noopener noreferrer"
                   className="premium-button premium-button-outline inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
                 >
-                  Fonte originale
+                  Fonte TooolVibes
                 </a>
                 <div className="flex items-center gap-2">
                   <CompareToggle slug={tool.slug} compact />
@@ -261,7 +261,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               <div className="mt-4 space-y-3 sm:mt-5">
                 <div className="rounded-[24px] bg-[rgba(246,244,255,0.88)] p-4">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
-                    Category fit
+                    Categoria
                   </p>
                   <p className="mt-2 text-[0.98rem] leading-7 text-[var(--foreground)]">
                     {tool.categoryLabel}
@@ -270,7 +270,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
 
                 <div className="rounded-[24px] bg-[rgba(246,244,255,0.88)] p-4">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
-                    Highlights
+                    Punti forti
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {tool.highlights.map((item) => (
@@ -320,7 +320,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   className="rounded-[22px] bg-[rgba(246,244,255,0.86)] px-4 py-4"
                 >
                   <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
-                    Use case {String(index + 1).padStart(2, "0")}
+                    Caso d&apos;uso {String(index + 1).padStart(2, "0")}
                   </p>
                   <p className="mt-2 text-[0.98rem] leading-7 text-[var(--foreground)]">
                     {item}

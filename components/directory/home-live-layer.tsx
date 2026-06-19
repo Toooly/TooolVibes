@@ -14,12 +14,12 @@ const liveSignals = [
     icon: Radar,
   },
   {
-    label: "Stack guidato",
-    copy: "Salva, confronta e trasforma pochi candidati in un workflow piu chiaro.",
+    label: "Lista guidata",
+    copy: "Salva, confronta e trasforma pochi candidati in un flusso più chiaro.",
     icon: Layers3,
   },
   {
-    label: "Tap feedback",
+    label: "Risposta ai tocchi",
     copy: "Ogni percorso risponde meglio: hover, tap, aperture e dettagli in contesto.",
     icon: MousePointerClick,
   },
@@ -55,7 +55,7 @@ export function HomeLiveLayer({
                 {signal.label}
               </p>
               <PremiumBadge tone="warning" className="hidden sm:inline-flex">
-                Live
+                Ora
               </PremiumBadge>
             </div>
             <p className="mt-1 text-sm leading-6 text-[var(--muted-strong)]">
@@ -67,7 +67,7 @@ export function HomeLiveLayer({
         <div className="mt-3 grid grid-cols-3 gap-2 text-center sm:hidden">
           {[
             [`${toolCount}`, "Tool"],
-            [`${featuredCount}`, "Pick"],
+            [`${featuredCount}`, "Scelte"],
             ["3", "Azioni"],
           ].map(([value, label]) => (
             <div key={label} className="rounded-[16px] border border-[var(--border-soft)] bg-white/62 px-2 py-2">
@@ -95,16 +95,16 @@ export function HomeLiveLayer({
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-[var(--foreground)]">Vuoi una scorciatoia?</p>
               <p className="mt-0.5 text-xs leading-5 text-[var(--muted)]">
-                Apri lo stack builder e scegli una combinazione invece di scorrere tutto.
+                Apri la lista guidata e scegli una combinazione invece di scorrere tutto.
               </p>
             </div>
             <PremiumLink href="/archivio#stack-builder" tone="secondary" size="sm" className="hidden shrink-0 sm:inline-flex">
-              Stack
+              Lista
             </PremiumLink>
             <Link
               href="/archivio#stack-builder"
               className="live-hint-mini-link sm:hidden"
-              aria-label="Apri stack builder"
+              aria-label="Apri la lista guidata"
             >
               Vai
             </Link>
@@ -124,7 +124,7 @@ export function HomeLiveLayer({
           onClick={() => setShowHint(true)}
         >
           <Activity className="size-4" aria-hidden="true" />
-          Mostra hint live
+          Mostra suggerimento
         </button>
       )}
     </div>

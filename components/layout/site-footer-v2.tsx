@@ -110,8 +110,8 @@ export function SiteFooterV2() {
                 darkFooter ? "text-[#eee8ff]" : "text-[#4f4970]"
               }`}
             >
-              Il sistema di discovery per tool AI, SaaS, no-code e vibe coding.
-              Trova, confronta e costruisci il tuo stack perfetto.
+              Il sistema per scoprire tool AI, SaaS, no-code e vibe coding.
+              Trova, confronta e costruisci la lista giusta per te.
             </p>
             <div className="flex items-center gap-3">
               {[

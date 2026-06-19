@@ -24,7 +24,7 @@ export const getPublicPublishedToolsFromSupabase = cache(async (): Promise<ToolR
       .order("date_discovered", { ascending: false });
 
     if (error) {
-      throw new Error(`Unable to load published tools from Supabase: ${error.message}`);
+      throw new Error(`Non è stato possibile caricare i tool pubblicati. Dettaglio: ${error.message}`);
     }
 
     return orderByDiscoveryDate((data ?? []).map(mapSupabaseTool));
@@ -55,7 +55,7 @@ export async function getAdminToolsFromSupabase(): Promise<ToolRecord[]> {
     .order("date_discovered", { ascending: false });
 
   if (error) {
-    throw new Error(`Unable to load admin tools from Supabase: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare i tool dell'area admin. Dettaglio: ${error.message}`);
   }
 
   return orderByDiscoveryDate((data ?? []).map(mapSupabaseTool));
@@ -70,7 +70,7 @@ export async function getAdminToolByIdFromSupabase(id: string): Promise<ToolReco
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Unable to load tool ${id} from Supabase: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare questo tool. Dettaglio: ${error.message}`);
   }
 
   return data ? mapSupabaseTool(data) : null;

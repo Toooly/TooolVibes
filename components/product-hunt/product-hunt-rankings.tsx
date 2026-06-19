@@ -138,7 +138,7 @@ export function ProductHuntRankings({
             range: activeRange,
             updatedAt: new Date().toISOString(),
             items: [],
-            message: "Product Hunt ranking temporaneamente non disponibile.",
+            message: "Classifica Product Hunt temporaneamente non disponibile.",
           },
         }));
       })
@@ -192,8 +192,8 @@ export function ProductHuntRankings({
           </h2>
           {variant === "wide" ? (
             <p className="mt-3 max-w-[42rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
-              Un radar esterno per intercettare i lanci pi&ugrave; votati. Se il token non &egrave;
-              configurato, la sezione mostra uno stato pulito invece di rompersi.
+              Un radar esterno per intercettare i lanci pi&ugrave; votati. Se i dati non sono
+              disponibili, la sezione resta leggibile e ti avvisa senza mostrare risultati finti.
             </p>
           ) : null}
         </div>
@@ -205,7 +205,7 @@ export function ProductHuntRankings({
             rel="noopener noreferrer"
             className="animated-link text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-white/58 transition-colors duration-200 hover:text-white"
           >
-            Powered by Product Hunt
+            Dati da Product Hunt
           </a>
           <p className="text-xs text-white/46">
             Aggiornato:{" "}
@@ -297,7 +297,7 @@ export function ProductHuntRankings({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={item.thumbnailUrl}
-                      alt={`${item.name} thumbnail`}
+                      alt={`Anteprima di ${item.name}`}
                       className="h-full w-full object-cover"
                       loading="lazy"
                     />
@@ -311,7 +311,7 @@ export function ProductHuntRankings({
                     <span className="animated-status-badge rounded-full border border-violet-200/20 bg-violet-400/12 px-2 py-0.5 text-[0.66rem] font-semibold text-violet-100">
                       #{index + 1}
                     </span>
-                    {index === 0 ? <PremiumBadge tone="warning">Trending</PremiumBadge> : null}
+                    {index === 0 ? <PremiumBadge tone="warning">In crescita</PremiumBadge> : null}
                     <h3 className="min-w-0 truncate text-[0.95rem] font-semibold text-white">
                       {item.name}
                     </h3>
@@ -355,11 +355,11 @@ export function ProductHuntRankings({
                           </span>
                           <div>
                             <p className="text-sm font-semibold text-[var(--foreground)]">
-                              Perche guardarlo
+                              Perché guardarlo
                             </p>
                             <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
                               {item.votesCount > 0
-                                ? `${item.votesCount} voti danno un segnale di traction.`
+                                ? `${item.votesCount} voti danno un segnale di interesse reale.`
                                 : "Segnale ancora in verifica: apri il lancio per leggere la pagina."}
                             </p>
                           </div>
@@ -370,7 +370,7 @@ export function ProductHuntRankings({
                               Voti
                             </p>
                             <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
-                              {item.votesCount || "Check"}
+                              {item.votesCount || "In verifica"}
                             </p>
                           </div>
                           <div className="rounded-[14px] border border-[var(--border-soft)] bg-white/62 px-3 py-2">
@@ -378,7 +378,7 @@ export function ProductHuntRankings({
                               Commenti
                             </p>
                             <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
-                              {item.commentsCount || "Check"}
+                              {item.commentsCount || "In verifica"}
                             </p>
                           </div>
                         </div>
@@ -435,11 +435,11 @@ export function ProductHuntRankings({
             </p>
             <h3 className="mt-3 text-[1.25rem] leading-tight text-white">
               {activePayload?.message ??
-                "Product Hunt ranking non configurato. Aggiungi PRODUCTHUNT_TOKEN."}
+                "Classifica Product Hunt non disponibile in questo momento."}
             </h3>
             <p className="mx-auto mt-3 max-w-[26rem] text-sm leading-6 text-white/62">
-              La classifica viene caricata dal server, con cache e token protetto. Appena
-              configuri la variabile, questa sezione mostra i 5 lanci pi&ugrave; votati.
+              Appena i dati tornano disponibili, questa sezione mostra i 5 lanci pi&ugrave;
+              votati senza riempire la pagina con informazioni inventate.
             </p>
           </div>
         )}

@@ -23,7 +23,7 @@ type EditorialPostPageProps = {
 
 const kindLabels: Record<NonNullable<Awaited<ReturnType<typeof getEditorialPostBySlug>>>["kind"], string> = {
   "tool-writeup": "Approfondimento tool",
-  guide: "Guida legacy",
+  guide: "Guida",
   editorial: "Blog",
 };
 
@@ -101,7 +101,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             </div>
 
             <p className="mt-5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/56">
-              {isAuthoredPost ? "Pubblicato nel blog TooolVibes" : "Importato nel layer contenuti di TooolVibes"}
+              {isAuthoredPost ? "Pubblicato nel blog TooolVibes" : "Aggiornato e integrato in TooolVibes"}
             </p>
             <h1 className="text-display-hero mt-3 max-w-none text-[2.02rem] text-white sm:max-w-[14ch] sm:text-[2.76rem] sm:text-balance">
               {post.title}
@@ -129,7 +129,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 Apri l&apos;archivio
               </ButtonLink>
               <ButtonLink href="/collections" variant="secondary">
-                Vai alle collection
+                Vai alle raccolte
               </ButtonLink>
             </div>
           </div>
@@ -187,22 +187,22 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             ) : (
               <div className="brand-panel panel-lift flex h-full min-h-[22rem] flex-col justify-between rounded-[32px] p-5 sm:p-6">
                 <div>
-                  <p className="editorial-label">Guida legacy</p>
+                  <p className="editorial-label">Guida TooolVibes</p>
                   <h2 className="text-display-card mt-3 text-[1.62rem] sm:text-[1.9rem] sm:text-balance">
-                    Una lettura importata per mantenere vivo il contenuto storico senza il tono da demo.
+                    Una lettura aggiornata per mantenere vivo il contenuto utile senza rumore promozionale.
                   </h2>
                   <p className="mt-3 text-[0.98rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-                    Questa guida conserva il valore editoriale del vecchio sito ma entra qui con una gerarchia molto più chiara.
+                    Questa guida conserva ciò che serve davvero e lo riorganizza in una gerarchia più chiara.
                   </p>
                 </div>
 
                 <div className="metadata-block rounded-[24px] px-4.5 py-4">
-                  <p className="brand-kicker">Source</p>
+                  <p className="brand-kicker">Fonte</p>
                   <p className="mt-2.5 text-sm leading-7" style={{ color: "var(--muted-strong)" }}>
                     {sourceLabel}
                   </p>
                   <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted-strong)" }}>
-                    {formatItalianDate(post.published_at)} · {guideCount} guide legacy · {writeupCount} writeup tool
+                    {formatItalianDate(post.published_at)} · {guideCount} guide · {writeupCount} approfondimenti tool
                   </p>
                 </div>
               </div>
@@ -221,7 +221,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 <SectionHeading
                   eyebrow="Lettura"
                   title="Il contenuto qui non parla da solo: ti porta verso il prossimo passo."
-                  description="Ogni blocco serve a ridurre rumore e aiutare il salto giusto tra approfondimento, archivio, shortlist e collection."
+                  description="Ogni blocco serve a ridurre rumore e aiutare il salto giusto tra approfondimento, archivio, salvati e raccolte."
                 />
 
                 <div className="mt-5 grid gap-3.5">
@@ -331,7 +331,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 <p className="editorial-label !text-white/60">Prossimo passo</p>
                 <div className="mt-3 flex flex-col gap-3">
                   <ButtonLink href="/shortlist" variant="secondary">
-                    Porta il tema in shortlist
+                    Porta il tema nei salvati
                   </ButtonLink>
                   <ButtonLink href="/compare" variant="secondary">
                     Confronta il contesto
@@ -342,7 +342,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
 
             {relatedCollections.length > 0 ? (
               <div className="brand-panel panel-lift rounded-[28px] p-4 sm:p-4.5">
-                <p className="editorial-label">Collection collegate</p>
+                <p className="editorial-label">Raccolte collegate</p>
                 <div className="mt-4 grid gap-3">
                   {relatedCollections.map((collection) => (
                     <Link

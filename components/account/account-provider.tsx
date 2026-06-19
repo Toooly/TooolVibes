@@ -49,7 +49,7 @@ const AccountContext = createContext<AccountContextValue>({
   isSendingLink: false,
   isAttaching: false,
   authMessage: null,
-  sendMagicLink: async () => ({ ok: false, message: "Auth non disponibile." }),
+  sendMagicLink: async () => ({ ok: false, message: "Accesso email non disponibile." }),
   signOut: async () => {},
 });
 
@@ -90,16 +90,16 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       if (response.ok && payload.meta.remote_available && payload.data) {
         applyDiscoveryWorkspaceState(payload.data, { source: "remote" });
         lastAttachedUserIdRef.current = currentSession.user.id;
-        setAuthMessage("Workspace collegata all'account senza perdere il contesto guest.");
+        setAuthMessage("Selezione collegata all'account senza perdere ciò che avevi salvato.");
         window.dispatchEvent(new CustomEvent("tooolvibes:account-updated"));
         return;
       }
 
       setAuthMessage(
-        "Account collegato, ma la persistenza remota non è disponibile: la workspace resta al sicuro in locale.",
+        "Account collegato, ma il salvataggio online non è disponibile: la selezione resta al sicuro su questo browser.",
       );
     } catch {
-      setAuthMessage("Connessione account riuscita, ma la sync workspace ? in pausa.");
+      setAuthMessage("Account collegato, ma il salvataggio della selezione è temporaneamente in pausa.");
     } finally {
       setIsAttaching(false);
     }
@@ -169,7 +169,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
 
   const sendMagicLink = useCallback(async (email: string, metadata?: AccountMagicLinkMetadata) => {
     if (!isSupabaseBrowserEnabled()) {
-      const message = "Auth Supabase non disponibile in questo ambiente.";
+      const message = "Accesso email non disponibile in questo momento.";
       setAuthMessage(message);
       return {
         ok: false,
@@ -210,7 +210,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       if (!response.ok || !payload.ok) {
         const message =
           payload.message ??
-          "Non sono riuscito a inviare la mail di conferma con Resend.";
+          "Non siamo riusciti a inviare la mail di conferma. Riprova tra poco.";
         setAuthMessage(message);
         return {
           ok: false,
@@ -222,7 +222,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         payload.message ??
         (metadata?.source === "vibe-rush"
           ? `Email di conferma inviata a ${normalizedEmail}. Aprila per creare l'account e salvare anche il risultato Vibe Rush.`
-          : `Email di conferma inviata a ${normalizedEmail}. Aprila per creare o collegare l'account alla workspace.`);
+          : `Email di conferma inviata a ${normalizedEmail}. Aprila per creare o collegare l'account alla tua selezione.`);
       setAuthMessage(message);
 
       return {
@@ -231,7 +231,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       };
     } catch {
       const message =
-        "Non sono riuscito a contattare Supabase Auth. Riprova tra poco o verifica la configurazione del progetto.";
+        "Non siamo riusciti a preparare il link di accesso. Riprova tra poco.";
       setAuthMessage(message);
       return {
         ok: false,
@@ -263,15 +263,15 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
 
       if (releaseResponse.ok && payload.meta.remote_available && payload.data) {
         applyDiscoveryWorkspaceState(payload.data, { source: "remote" });
-        setAuthMessage("Sei tornato in modalità guest senza perdere la workspace corrente.");
+        setAuthMessage("Sei uscito dall'account senza perdere la selezione corrente.");
         window.dispatchEvent(new CustomEvent("tooolvibes:account-updated"));
       } else {
         setAuthMessage(
-          "Sei tornato in modalità guest. La workspace resta disponibile in locale finché il remoto non torna attivo.",
+          "Sei uscito dall'account. La selezione resta disponibile su questo browser.",
         );
       }
     } catch {
-      setAuthMessage("Disconnessione effettuata, ma il rilascio guest non è stato confermato dal remoto.");
+      setAuthMessage("Disconnessione effettuata. La selezione resta disponibile su questo browser.");
     } finally {
       try {
         const client = getBrowserSupabaseClient();

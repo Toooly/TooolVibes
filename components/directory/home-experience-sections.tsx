@@ -28,43 +28,43 @@ const categories = [
     label: "Vibe Coding",
     href: "/archivio?group=vibe-coding",
     icon: Code2,
-    detail: "Prompt-to-app, UI builder e prototipi che respirano subito.",
-    badge: "Build",
+    detail: "Da prompt ad app, builder di interfacce e prototipi subito navigabili.",
+    badge: "Crea",
   },
   {
-    label: "AI App Builder",
+    label: "Builder app AI",
     href: "/archivio?group=ai-app-builder",
     icon: Bot,
     detail: "Da idea a prodotto navigabile con una traiettoria più chiara.",
     badge: "MVP",
   },
   {
-    label: "Automation",
+    label: "Automazioni",
     href: "/archivio?group=automation",
     icon: Workflow,
-    detail: "Workflow, agenti e integrazioni che tagliano passaggi morti.",
-    badge: "Ops",
+    detail: "Flussi, agenti e integrazioni che tagliano passaggi morti.",
+    badge: "Flussi",
   },
   {
-    label: "No-Code",
+    label: "No-code",
     href: "/archivio?group=no-code",
     icon: Boxes,
-    detail: "Builder visuali e stack senza frizione tecnica inutile.",
-    badge: "Stack",
+    detail: "Builder visuali e strumenti senza frizione tecnica inutile.",
+    badge: "Lista",
   },
   {
-    label: "Compare",
+    label: "Confronto",
     href: "/compare",
     icon: GitCompare,
     detail: "Metti alternative una accanto all'altra e fai emergere lo scarto.",
     badge: "Scelta",
   },
   {
-    label: "Stack",
+    label: "Salvati",
     href: "/shortlist",
     icon: Layers3,
-    detail: "Salva, ordina e tieni viva una shortlist di lavoro.",
-    badge: "Memo",
+    detail: "Salva, ordina e tieni viva una lista di lavoro.",
+    badge: "Note",
   },
 ];
 
@@ -76,12 +76,12 @@ const steps = [
   },
   {
     title: "Confronta",
-    text: "Seleziona fino a 5 tool e guarda le differenze che contano: fonte, categoria e use case.",
+    text: "Seleziona fino a 5 tool e guarda le differenze che contano: fonte, categoria e casi d'uso.",
     icon: GitCompare,
   },
   {
     title: "Costruisci",
-    text: "Aggiungi allo stack solo i candidati che reggono davvero il workflow.",
+    text: "Aggiungi alla lista solo i candidati che reggono davvero il tuo flusso di lavoro.",
     icon: Layers3,
   },
 ];
@@ -89,21 +89,21 @@ const steps = [
 const features = [
   {
     value: "curation",
-    title: "Curation editoriale, non catalogo piatto",
+    title: "Selezione editoriale, non catalogo piatto",
     description:
       "Ogni tool ha categoria, livello, descrizione, link esterno e contesto. La UI spinge a scegliere, non a scorrere senza direzione.",
   },
   {
     value: "workspace",
-    title: "Workspace vivo: salvati, confronto e stack",
+    title: "Selezione viva: salvati, confronto e lista finale",
     description:
-      "La directory diventa uno spazio operativo: salvi candidati, confronti alternative e trasformi la scoperta in una shortlist leggibile.",
+      "Il catalogo diventa uno spazio operativo: salvi candidati, confronti alternative e trasformi la scoperta in una lista leggibile.",
   },
   {
     value: "radar",
-    title: "Radar Product Hunt con fallback pulito",
+    title: "Radar Product Hunt con stato sempre chiaro",
     description:
-      "Il ranking viene letto lato server con token protetto. Se l'integrazione non risponde, l'utente vede uno stato chiaro e non una sezione rotta.",
+      "Quando i dati sono disponibili, il radar mostra i lanci più interessanti. Se l'integrazione non risponde, la sezione resta chiara e leggibile.",
   },
   {
     value: "mobile",
@@ -118,19 +118,19 @@ const faqs = [
     value: "how",
     question: "TooolVibes è solo una lista di link?",
     answer:
-      "No. La directory unisce selezione editoriale, azioni workspace, filtri, confronto e stack builder per aiutarti a decidere cosa provare davvero.",
+      "No. Il catalogo unisce selezione editoriale, salvati, filtri e confronto per aiutarti a decidere cosa provare davvero.",
   },
   {
     value: "product-hunt",
     question: "I dati Product Hunt sono reali?",
     answer:
-      "Quando PRODUCTHUNT_TOKEN è configurato, la sezione usa l'API Product Hunt lato server. Se manca o fallisce, viene mostrato un fallback dichiarato.",
+      "Quando i dati sono disponibili, la sezione mostra i lanci reali da Product Hunt. Se non lo sono, viene mostrato uno stato chiaro.",
   },
   {
     value: "suggest",
     question: "Posso suggerire un tool?",
     answer:
-      "Sì. La wishlist raccoglie nome, URL, categoria, livello suggerito, email opzionale e messaggio, pronta per essere collegata a Supabase.",
+      "Sì. Puoi inviare nome, URL, categoria, livello suggerito, email opzionale e un breve messaggio.",
   },
 ];
 
@@ -177,7 +177,7 @@ export function HomeExperienceSections() {
           <SectionHeader
             eyebrow="Categorie"
             title="Scegli il percorso, non una card a caso."
-            description="Le categorie diventano ingressi operativi: sviluppo, automazione, contenuti, confronto e stack."
+            description="Le categorie diventano ingressi operativi: sviluppo, automazione, contenuti, confronto e lista finale."
             className="[&_h2]:text-[var(--foreground)] [&_p]:text-[var(--muted-strong)]"
             action={
               <PremiumLink href="/tags" tone="dark" size="sm">
@@ -249,7 +249,7 @@ export function HomeExperienceSections() {
                   {steps.map((step, index) => (
                     <div key={step.title} className="rounded-[16px] bg-white/72 px-3 py-2.5">
                       <p className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)]">
-                        Step {String(index + 1).padStart(2, "0")}
+                        Passo {String(index + 1).padStart(2, "0")}
                       </p>
                       <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
                         {step.title}
@@ -318,14 +318,14 @@ export function HomeExperienceSections() {
           <PremiumPanel tone="blue" className="p-5 sm:p-7">
             <PremiumBadge tone="dark">Come funziona</PremiumBadge>
             <h2 className="text-display-card mt-4 text-[2.15rem] text-white sm:text-[2.8rem]">
-              Dal rumore allo stack in tre passaggi.
+              Dal rumore alla lista finale in tre passaggi.
             </h2>
             <div className="mt-5 sm:hidden">
               <AppAccordion
                 dark
                 items={steps.map((step, index) => ({
                   value: step.title,
-                  title: `Step ${String(index + 1).padStart(2, "0")} - ${step.title}`,
+                  title: `Passo ${String(index + 1).padStart(2, "0")} - ${step.title}`,
                   description: step.text,
                 }))}
               />
@@ -342,7 +342,7 @@ export function HomeExperienceSections() {
                       </span>
                       <div>
                         <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-white/44">
-                          Step {String(index + 1).padStart(2, "0")}
+                          Passo {String(index + 1).padStart(2, "0")}
                         </p>
                         <h3 className="mt-1 text-lg font-semibold text-white">{step.title}</h3>
                         <p className="mt-2 text-sm leading-6 text-white/64">{step.text}</p>
@@ -358,7 +358,7 @@ export function HomeExperienceSections() {
             <SectionHeader
               eyebrow="Sistema"
               title="Segnali utili, senza perdere il ritmo."
-              description="Curation, workspace, radar e mobile lavorano insieme: ogni blocco ha un ruolo chiaro nella scelta."
+              description="Selezione, salvati, radar e mobile lavorano insieme: ogni blocco ha un ruolo chiaro nella scelta."
               className="[&_h2]:text-[var(--foreground)] [&_p]:text-[var(--muted-strong)]"
             />
             <div className="mt-6">
@@ -384,13 +384,13 @@ export function HomeExperienceSections() {
 
           <PremiumPanel tone="warm" className="relative overflow-hidden p-5 sm:p-7">
             <DecorativeGlow className="-right-16 -top-16" tone="gold" />
-            <PremiumBadge tone="warning">Ready to explore</PremiumBadge>
+            <PremiumBadge tone="warning">Pronto a esplorare</PremiumBadge>
             <h2 className="text-display-card mt-4 text-[2.1rem] text-white sm:text-[2.75rem]">
-              Costruisci una shortlist più lucida oggi.
+              Costruisci una lista più lucida oggi.
             </h2>
             <p className="mt-4 text-[1rem] leading-7 text-white/66">
-              Entra nel catalogo, salva i candidati, confronta alternative e crea uno stack
-              pronto da testare senza perdere contesto.
+              Entra nel catalogo, salva i candidati, confronta alternative e crea una lista
+              pronta da testare senza perdere contesto.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <PremiumLink href="/archivio">Apri il catalogo</PremiumLink>

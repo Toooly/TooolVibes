@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ message: "Payload non valido." }, { status: 400 });
+    return NextResponse.json({ message: "Richiesta non valida." }, { status: 400 });
   }
 
   const payload = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 
   if (message.length < 12) {
     return NextResponse.json(
-      { message: "Scrivi un messaggio piu completo per inviare la candidatura." },
+      { message: "Scrivi un messaggio più completo per inviare la candidatura." },
       { status: 422 },
     );
   }
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
 
   if (!isSupabaseAdminEnabled()) {
     return NextResponse.json(
-      { message: "Supabase admin non configurato." },
+      { message: "Candidature non disponibili in questo momento. Riprova più tardi." },
       { status: 503 },
     );
   }
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
     if (email && recentRejected?.rejected_at) {
       return NextResponse.json(
         {
-          message: "Hai gia ricevuto una risposta negativa da meno di 30 giorni.",
+          message: "Hai già ricevuto una risposta negativa da meno di 30 giorni.",
           nextAllowedAt: addDays(recentRejected.rejected_at, cooldownDays),
         },
         { status: 409 },

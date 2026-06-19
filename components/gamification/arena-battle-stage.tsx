@@ -144,7 +144,7 @@ export function ArenaBattleStage({
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-soft)] text-[var(--accent)]">
           <Swords className="h-5 w-5" aria-hidden="true" />
         </span>
-        <h3 className="text-lg font-semibold text-[var(--foreground)]">Arena</h3>
+        <h3 className="text-lg font-semibold text-[var(--foreground)]">Confronto</h3>
       </header>
 
       <AnimatePresence mode="wait">

@@ -1,11 +1,11 @@
 export type ToolCategory =
   | "Assistente AI"
   | "Design"
-  | "Developer"
+  | "Sviluppo"
   | "Marketing"
-  | "Produttivita"
+  | "Produttività"
   | "Video"
-  | "Writing";
+  | "Scrittura";
 
 export type ToolEditorialState =
   | "In evidenza"

@@ -170,7 +170,7 @@ function ArenaHeader({ count }: { count: number }) {
     <header className="mobile-compare-arena__header">
       <div className="mobile-compare-arena__badge">
         <Swords className="size-5" />
-        <span>Arena</span>
+        <span>Confronto</span>
       </div>
       <h1>Il punto in cui i candidati smettono di somigliarsi.</h1>
       <p>Metti i tool uno accanto all&apos;altro e fai emergere il distacco vero.</p>
@@ -237,7 +237,7 @@ function ChampionCard({
             </button>
             {showInfo && (
               <div className="mobile-compare-arena__tooltip">
-                Il battle power combina punteggio editoriale, categoria e segnali del tool per evitare pareggi finti in arena.
+                Il punteggio combina valutazione editoriale, categoria e segnali del tool per evitare pareggi poco utili.
               </div>
             )}
           </div>
@@ -245,7 +245,7 @@ function ChampionCard({
 
         <div className="mobile-compare-arena__metrics">
           <div>
-            <span>Fit</span>
+            <span>Uso</span>
             <strong>{tool.useCasesCount}</strong>
           </div>
           <div>
@@ -263,7 +263,7 @@ function ChampionCard({
             href={`/toools/${tool.slug}`}
             className="mobile-compare-arena__btn mobile-compare-arena__btn--primary"
           >
-            Scheda
+            Apri scheda
           </Link>
           <button
             type="button"
@@ -331,7 +331,7 @@ function ChallengerCard({
 
       <div className="mobile-compare-arena__challenger-actions">
         <Link href={`/toools/${tool.slug}`} className="mobile-compare-arena__link">
-          Scheda
+          Apri scheda
         </Link>
         <button type="button" onClick={onRemove} className="mobile-compare-arena__link mobile-compare-arena__link--muted">
           Rimuovi
@@ -391,7 +391,7 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
       winnerIndices: tools.flatMap((t, i) => (t.battleScore === scoreMax ? [i] : [])),
     },
     {
-      label: "Fit",
+      label: "Uso",
       render: (t: NormalisedTool, isWinner: boolean) => (
         <span className={cn(isWinner && "mobile-compare-arena__matrix-value--winner")}>
           {t.useCasesCount || "—"}
@@ -427,7 +427,7 @@ function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
       winnerIndices: [] as number[],
     },
     {
-      label: "Highlights",
+      label: "Punti forti",
       render: (t: NormalisedTool, isWinner: boolean) => (
         <span className={cn(isWinner && "mobile-compare-arena__matrix-value--winner")}>
           {t.highlights.length}
@@ -546,12 +546,12 @@ function MobileArenaBattleStage({
 }) {
   const modeLabel =
     tools.length === 2
-      ? "Duel"
+      ? "Duello"
       : tools.length === 3
-        ? "Tri-clash"
+        ? "Sfida a tre"
         : tools.length === 4
-          ? "Corners"
-          : "Vibe royale";
+          ? "Quattro candidati"
+          : "Sfida multipla";
 
   const positions = FIGHTER_POSITIONS[tools.length] ?? FIGHTER_POSITIONS[2];
   const reducedMotion = useReducedMotion();
@@ -563,7 +563,7 @@ function MobileArenaBattleStage({
       data-count={Math.min(tools.length, 5)}
       data-state={battleState}
       style={{ "--arena-count": Math.min(tools.length, 5) } as CSSProperties}
-      aria-label="Arena fight"
+      aria-label="Area di confronto"
     >
       <div className="mobile-compare-arena__battle-backdrop" aria-hidden="true">
         <span />
@@ -585,7 +585,7 @@ function MobileArenaBattleStage({
       <div className="mobile-compare-arena__battle-core">
         <span>{modeLabel}</span>
         <strong>
-          {battleState === "fighting" ? "CLASH" : battleState === "result" ? "VICTORY" : "READY"}
+          {battleState === "fighting" ? "Scontro" : battleState === "result" ? "Vittoria" : "Pronto"}
         </strong>
       </div>
 
@@ -686,10 +686,10 @@ function MobileArenaBattleStage({
                 {tool.name}
               </span>
               <span className="mobile-compare-arena__fighter-loadout" aria-hidden="true">
-                <span>Shield</span>
-                <span>Blade</span>
+                <span>Difesa</span>
+                <span>Spinta</span>
               </span>
-              <small>{isWinner ? "Champion" : isDefeated ? "KO" : `Power ${tool.battleScore}`}</small>
+              <small>{isWinner ? "Vincitore" : isDefeated ? "Superato" : `Punteggio ${tool.battleScore}`}</small>
             </motion.div>
           );
         })}
@@ -705,7 +705,7 @@ function MobileArenaBattleStage({
             transition={{ duration: 0.42, ease: "easeOut" }}
           >
             <Sparkles className="size-5" />
-            <span className="mobile-compare-arena__battle-result-kicker">Round clear</span>
+            <span className="mobile-compare-arena__battle-result-kicker">Verdetto pronto</span>
             <strong>{winner.name}</strong>
             <span>vince il confronto</span>
           </motion.div>
@@ -730,7 +730,7 @@ function MobileArenaBattleStage({
             <Swords className="size-5" />
           </span>
           <span className="mobile-compare-arena__fight-copy">
-            <strong>{battleState === "fighting" ? "CLASH" : "FIGHT"}</strong>
+            <strong>{battleState === "fighting" ? "Scontro" : "Confronta"}</strong>
             <small>{battleState === "fighting" ? "Combo in corso" : "Avvia il duello"}</small>
           </span>
           <span className="mobile-compare-arena__fight-charge" aria-hidden="true">
@@ -801,9 +801,9 @@ export function MobileCompareView({
           <div className="mobile-compare-arena__empty-icon">
             <Columns3 className="size-10" />
           </div>
-          <h2>Nessun candidato in arena.</h2>
+          <h2>Nessun candidato nel confronto.</h2>
           <p>
-            Aggiungi 2 o pi&ugrave; tool dal catalogo per far emergere il distacco vero.
+            Aggiungi 2 o pi&ugrave; tool dal catalogo per far emergere le differenze vere.
           </p>
           <Link href="/archivio" className="mobile-compare-arena__cta">
             Scegli i tool
@@ -822,7 +822,7 @@ export function MobileCompareView({
         <div className="mobile-compare-arena__partial">
           <p className="mobile-compare-arena__partial-label">Confronto parziale</p>
           <p>
-            {tools[0].name} è già in arena. Aggiungi un altro profilo per vedere le differenze.
+            {tools[0].name} è già nel confronto. Aggiungi un altro profilo per vedere le differenze.
           </p>
           <Link href="/archivio" className="mobile-compare-arena__cta">
             Aggiungi sfidante
@@ -895,7 +895,7 @@ export function MobileCompareView({
           onClick={clearCompare}
           className="mobile-compare-arena__footer-btn mobile-compare-arena__footer-btn--ghost"
         >
-          Svuota arena
+          Svuota confronto
         </button>
         <Link href="/shortlist" className="mobile-compare-arena__footer-btn mobile-compare-arena__footer-btn--secondary">
           Salvati

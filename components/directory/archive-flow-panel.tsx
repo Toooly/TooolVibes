@@ -15,7 +15,7 @@ const catalogFlowActions: Array<{
     action: "search",
     icon: Search,
     title: "Cerca",
-    copy: "Nome, tag e use case.",
+    copy: "Nome, tag e casi d'uso.",
     href: "#archive-search",
   },
   {
@@ -29,7 +29,7 @@ const catalogFlowActions: Array<{
     action: "stack",
     icon: Layers3,
     title: "Costruisci",
-    copy: "Salvati, confronto e stack.",
+    copy: "Salvati, confronto e lista.",
     href: "#stack-builder",
   },
 ];

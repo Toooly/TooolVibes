@@ -103,7 +103,7 @@ async function getOrCreateViewerProfile() {
     const viewer = (data ?? null) as ViewerProfileRow | null;
 
     if (error) {
-      throw new Error(`Unable to load viewer profile: ${error.message}`);
+      throw new Error(`Non è stato possibile caricare il profilo di navigazione. Dettaglio: ${error.message}`);
     }
 
     if (viewer) {
@@ -129,7 +129,7 @@ async function getOrCreateViewerProfile() {
   const createdViewer = (data ?? null) as ViewerProfileRow | null;
 
   if (error || !createdViewer) {
-    throw new Error(`Unable to create viewer profile: ${error?.message ?? "Unknown error"}`);
+    throw new Error(`Non è stato possibile creare il profilo di navigazione. Dettaglio: ${error?.message ?? "Errore sconosciuto"}`);
   }
 
   await setViewerCookie(accessToken);
@@ -146,7 +146,7 @@ async function getViewerProfileByAuthUserId(authUserId: string) {
   const viewer = (data ?? null) as ViewerProfileRow | null;
 
   if (error) {
-    throw new Error(`Unable to load account viewer profile: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare il profilo collegato all'account. Dettaglio: ${error.message}`);
   }
 
   return viewer;
@@ -167,7 +167,7 @@ async function createGuestViewerProfile() {
   const viewer = (data ?? null) as ViewerProfileRow | null;
 
   if (error || !viewer) {
-    throw new Error(`Unable to create guest viewer profile: ${error?.message ?? "Unknown error"}`);
+    throw new Error(`Non è stato possibile creare il profilo ospite. Dettaglio: ${error?.message ?? "Errore sconosciuto"}`);
   }
 
   return viewer;
@@ -188,7 +188,7 @@ async function assignViewerToAuthUser(viewerId: string, authUserId: string) {
   const viewer = (data ?? null) as ViewerProfileRow | null;
 
   if (error || !viewer) {
-    throw new Error(`Unable to attach viewer to auth user: ${error?.message ?? "Unknown error"}`);
+    throw new Error(`Non è stato possibile collegare il profilo al tuo account. Dettaglio: ${error?.message ?? "Errore sconosciuto"}`);
   }
 
   return viewer;
@@ -212,7 +212,7 @@ async function persistWorkspaceStateForViewer(
   );
 
   if (workspaceError) {
-    throw new Error(`Unable to save workspace compare state: ${workspaceError.message}`);
+    throw new Error(`Non è stato possibile salvare il confronto. Dettaglio: ${workspaceError.message}`);
   }
 
   const { data: existingRows, error: existingRowsError } = await client
@@ -222,7 +222,7 @@ async function persistWorkspaceStateForViewer(
     .returns<Array<Pick<ViewerToolStateRow, "tool_slug">>>();
 
   if (existingRowsError) {
-    throw new Error(`Unable to inspect existing tool state rows: ${existingRowsError.message}`);
+    throw new Error(`Non è stato possibile controllare i tool già salvati. Dettaglio: ${existingRowsError.message}`);
   }
 
   if (incomingToolSlugs.length > 0) {
@@ -245,7 +245,7 @@ async function persistWorkspaceStateForViewer(
     );
 
     if (upsertError) {
-      throw new Error(`Unable to save tool user state: ${upsertError.message}`);
+      throw new Error(`Non è stato possibile salvare le preferenze sui tool. Dettaglio: ${upsertError.message}`);
     }
   }
 
@@ -261,7 +261,7 @@ async function persistWorkspaceStateForViewer(
       .in("tool_slug", staleSlugs);
 
     if (deleteError) {
-      throw new Error(`Unable to prune stale tool user state: ${deleteError.message}`);
+      throw new Error(`Non è stato possibile aggiornare i tool rimossi dai salvati. Dettaglio: ${deleteError.message}`);
     }
   }
 
@@ -272,7 +272,7 @@ async function persistWorkspaceStateForViewer(
       .eq("viewer_id", viewerId);
 
     if (clearError) {
-      throw new Error(`Unable to clear tool user state: ${clearError.message}`);
+      throw new Error(`Non è stato possibile svuotare i tool salvati. Dettaglio: ${clearError.message}`);
     }
   }
 }
@@ -296,11 +296,11 @@ async function loadWorkspaceStateForViewer(viewerId: string): Promise<DiscoveryW
   const rows = (toolRows ?? []) as ViewerToolStateRow[];
 
   if (workspaceError) {
-    throw new Error(`Unable to load workspace compare state: ${workspaceError.message}`);
+    throw new Error(`Non è stato possibile caricare il confronto salvato. Dettaglio: ${workspaceError.message}`);
   }
 
   if (toolRowsError) {
-    throw new Error(`Unable to load workspace tool state: ${toolRowsError.message}`);
+    throw new Error(`Non è stato possibile caricare i tool salvati. Dettaglio: ${toolRowsError.message}`);
   }
 
   const toolStates = Object.fromEntries(
@@ -399,7 +399,7 @@ export async function attachAuthenticatedViewer(
     } = await client.auth.getUser(authAccessToken);
 
     if (error || !user) {
-      throw new Error(`Unable to resolve authenticated user: ${error?.message ?? "Unknown error"}`);
+      throw new Error(`Non è stato possibile riconoscere l'utente autenticato. Dettaglio: ${error?.message ?? "Errore sconosciuto"}`);
     }
 
     const currentViewer = await getOrCreateViewerProfile();

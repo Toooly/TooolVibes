@@ -54,7 +54,7 @@ function getSignupHtml(confirmUrl: string) {
 
     <p>
       Conferma la tua email e collega il tuo spazio TooolVibes:
-      shortlist, confronti e tool salvati resteranno agganciati al tuo account.
+      tool salvati, confronti e note resteranno agganciati al tuo account.
     </p>
 
     <p>
@@ -75,7 +75,7 @@ function getSignupText(confirmUrl: string) {
   return [
     "Pronto per diventare un TooolViber?",
     "",
-    "Conferma la tua email e collega il tuo spazio TooolVibes: shortlist, confronti e tool salvati resteranno agganciati al tuo account.",
+    "Conferma la tua email e collega il tuo spazio TooolVibes: tool salvati, confronti e note resteranno agganciati al tuo account.",
     "",
     `Conferma e apri TooolVibes: ${confirmUrl}`,
     "",
@@ -88,14 +88,14 @@ function getErrorMessage(error: unknown) {
   const detail = `${candidate?.code ?? ""} ${candidate?.message ?? ""}`.toLowerCase();
 
   if (detail.includes("signup") && detail.includes("disabled")) {
-    return "I nuovi account sono disattivati nelle impostazioni Auth di Supabase.";
+    return "I nuovi account non sono disponibili in questo momento.";
   }
 
   if (detail.includes("not allowed") || detail.includes("redirect")) {
-    return "Il redirect auth non risulta autorizzato in Supabase.";
+    return "Il link di conferma non è configurato correttamente. Riprova tra poco.";
   }
 
-  return "Non sono riuscito a generare il link di accesso Supabase.";
+  return "Non siamo riusciti a generare il link di accesso. Riprova tra poco.";
 }
 
 export async function POST(request: Request) {
@@ -127,7 +127,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        message: "Auth server non configurata: manca la chiave Supabase service role.",
+        message: "Accesso email non disponibile in questo momento.",
       },
       { status: 503 },
     );
@@ -165,14 +165,14 @@ export async function POST(request: Request) {
   if (!result.sent) {
     const message =
       result.reason === "disabled"
-        ? "Resend non configurato: manca RESEND_API_KEY nell'ambiente server."
-        : "Non sono riuscito a inviare la mail con Resend. Verifica che il dominio mittente sia approvato su Resend.";
+        ? "Invio email non disponibile in questo momento."
+        : "Non siamo riusciti a inviare la mail di conferma. Riprova tra poco.";
 
     return NextResponse.json({ ok: false, message }, { status: 503 });
   }
 
   return NextResponse.json({
     ok: true,
-    message: `Email di conferma inviata a ${email}. Aprila per creare o collegare l'account alla workspace.`,
+    message: `Email di conferma inviata a ${email}. Aprila per creare o collegare l'account alla tua selezione.`,
   });
 }

@@ -19,19 +19,19 @@ export function getCollectionFormatMeta(
 ) {
   if (hasAdvancedSpecialIssue(collection)) {
     return {
-      label: "Special issue avanzata",
-      subtleLabel: "Issue avanzata",
+      label: "Speciale avanzato",
+      subtleLabel: "Speciale",
       description:
-        "Una surface narrativa più strutturata, con moduli editoriali, compare insight e workflow moments.",
+        "Una raccolta più strutturata, con letture guidate, confronti e passaggi operativi.",
     };
   }
 
   if (collection.surface === "special-issue" && collection.access === "premium") {
     return {
-      label: "Member issue",
-      subtleLabel: "Member issue",
+      label: "Raccolta riservata",
+      subtleLabel: "Riservata",
       description:
-        "Una special issue premium più densa di una collection standard, ancora leggibile dentro il prodotto.",
+        "Una raccolta premium più ricca di una selezione standard, consultabile dentro TooolVibes.",
     };
   }
 
@@ -40,15 +40,15 @@ export function getCollectionFormatMeta(
       label: "Anteprima premium",
       subtleLabel: "Anteprima",
       description:
-        "Una superficie con una parte pubblica utile e un livello premium più profondo già impostato con chiarezza.",
+        "Una raccolta con una parte pubblica utile e un approfondimento premium già chiaro.",
     };
   }
 
   return {
-    label: "Collection",
-    subtleLabel: "Collection",
+    label: "Raccolta",
+    subtleLabel: "Raccolta",
     description:
-      "Una collection più lineare, pensata come percorso curatoriale breve dentro la shell prodotto.",
+      "Una raccolta lineare, pensata come percorso breve per scegliere meglio.",
   };
 }
 

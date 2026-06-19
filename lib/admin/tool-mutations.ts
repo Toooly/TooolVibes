@@ -12,7 +12,7 @@ export async function createTool(input: ToolMutationInput) {
   const { data, error } = await client.from("tools").insert(input).select().single();
 
   if (error) {
-    throw new Error(`Unable to create tool: ${error.message}`);
+    throw new Error(`Non è stato possibile creare il tool. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -23,7 +23,7 @@ export async function updateTool(id: string, input: Partial<ToolMutationInput>) 
   const { data, error } = await client.from("tools").update(input).eq("id", id).select().single();
 
   if (error) {
-    throw new Error(`Unable to update tool: ${error.message}`);
+    throw new Error(`Non è stato possibile aggiornare il tool. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -34,6 +34,6 @@ export async function deleteTool(id: string) {
   const { error } = await client.from("tools").delete().eq("id", id);
 
   if (error) {
-    throw new Error(`Unable to delete tool: ${error.message}`);
+    throw new Error(`Non è stato possibile eliminare il tool. Dettaglio: ${error.message}`);
   }
 }

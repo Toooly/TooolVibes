@@ -3,9 +3,9 @@ import type { ToolCategory } from "@/lib/types/tool";
 export const toolCategories: ToolCategory[] = [
   "Assistente AI",
   "Design",
-  "Developer",
+  "Sviluppo",
   "Marketing",
-  "Produttivita",
+  "Produttività",
   "Video",
-  "Writing",
+  "Scrittura",
 ];

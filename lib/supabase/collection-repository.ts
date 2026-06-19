@@ -122,7 +122,7 @@ export const getCollectionsFromSupabase = cache(async (): Promise<CuratedCollect
     .order("position", { ascending: true, foreignTable: "collection_tool_slots" });
 
   if (error) {
-    throw new Error(`Unable to load collections from Supabase: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare le raccolte pubbliche. Dettaglio: ${error.message}`);
   }
 
   return ((data ?? []) as SupabaseCollectionRow[]).map(mapSupabaseCollection);
@@ -155,7 +155,7 @@ export async function getAdminCollectionsFromSupabase(): Promise<CuratedCollecti
     .order("position", { ascending: true, foreignTable: "collection_tool_slots" });
 
   if (error) {
-    throw new Error(`Unable to load admin collections from Supabase: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare le raccolte dell'area admin. Dettaglio: ${error.message}`);
   }
 
   return ((data ?? []) as SupabaseCollectionRow[]).map(mapSupabaseCollection);
@@ -172,7 +172,7 @@ export async function getAdminCollectionByIdFromSupabase(
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Unable to load collection ${id} from Supabase: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare questa raccolta. Dettaglio: ${error.message}`);
   }
 
   return data ? mapSupabaseCollection(data as SupabaseCollectionRow) : null;

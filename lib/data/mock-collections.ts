@@ -3,22 +3,22 @@ import type { CuratedCollectionRecord } from "@/lib/types/collection";
 export const mockCollections: CuratedCollectionRecord[] = [
   {
     id: "collection-01",
-    title: "Stack AI per founder solo",
+    title: "Kit AI per founder solo",
     slug: "ai-stack-solo-founders",
     description:
-      "Una raccolta per chi vuole passare da idea a prodotto leggibile con pochi strumenti ma con un buon equilibrio tra ricerca, prova iniziale e shipping.",
+      "Una raccolta per chi vuole passare da idea a prodotto leggibile con pochi strumenti ma con un buon equilibrio tra ricerca, prova iniziale e pubblicazione.",
     cover_image_url:
       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80",
-    cover_kicker: "Stack essenziale",
+    cover_kicker: "Kit essenziale",
     rationale:
-      "Questa collection tiene insieme orientamento, prova iniziale, superficie pubblica e memoria operativa. Non prova a fare tutto: serve a chiudere bene i primi passaggi che contano davvero quando lavori da solo e vuoi evitare uno stack troppo frammentato.",
+      "Questa raccolta tiene insieme orientamento, prova iniziale, presenza pubblica e memoria operativa. Non prova a fare tutto: serve a chiudere bene i primi passaggi che contano davvero quando lavori da solo e vuoi evitare strumenti troppo frammentati.",
     highlights: [
       "Passaggio corto da idea a prototipo condivisibile",
       "Attrito operativo basso per chi lavora solo o con team molto piccoli",
       "Tool che reggono sia la prima prova sia i primi giorni di lavoro reale",
     ],
     premium_teaser:
-      "Quando serve andare oltre il setup iniziale, questo stack si apre bene a una issue più densa su sequencing, launch notes e handoff.",
+      "Quando serve andare oltre la configurazione iniziale, questo kit si apre bene a una raccolta più densa su sequenza, note di lancio e passaggi operativi.",
     theme: "founder-stack",
     audience: "Solo founders",
     difficulty: "starter",
@@ -38,7 +38,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       },
       {
         tool_slug: "cursor",
-        role: "Build e rifinitura",
+        role: "Costruzione e rifinitura",
         note: "Quando il prototipo inizia a chiedere struttura, refactor e controllo vero del codice.",
         order: 2,
       },
@@ -56,7 +56,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       },
       {
         tool_slug: "perplexity",
-        role: "Layer di ricerca",
+        role: "Ricerca",
         note: "Da usare come orientamento rapido prima di decidere cosa approfondire davvero.",
         order: 5,
       },
@@ -71,7 +71,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
     title: "Essenziali per design sprint",
     slug: "design-sprint-essentials",
     description:
-      "Una sequenza corta per concept, moodboard, prova iniziale e landing quando vuoi validare velocemente una direzione prodotto o campagna.",
+      "Una sequenza corta per idea, moodboard, prova iniziale e landing quando vuoi validare velocemente una direzione prodotto o campagna.",
     cover_image_url:
       "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Bundle compatto",
@@ -79,8 +79,8 @@ export const mockCollections: CuratedCollectionRecord[] = [
       "Qui conta la qualità della lettura più della quantità dei tool. La raccolta è costruita per esplorare, convergere e arrivare a una superficie presentabile senza perdere tono editoriale.",
     highlights: [
       "Moodboard e direzione visiva forti in poco tempo",
-      "Passaggio rapido da concept a prototipo navigabile",
-      "Landing e superficie finale coerenti col tono del concept",
+      "Passaggio rapido da idea a prototipo navigabile",
+      "Landing e presenza finale coerenti col tono dell'idea",
     ],
     theme: "design-sprint",
     audience: "Designer-builders",
@@ -102,7 +102,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       {
         tool_slug: "framer-ai",
         role: "Rifinitura landing",
-        note: "Per consolidare il concept in una pagina leggibile e credibile.",
+        note: "Per consolidare l'idea in una pagina leggibile e credibile.",
         order: 2,
       },
       {
@@ -125,15 +125,15 @@ export const mockCollections: CuratedCollectionRecord[] = [
   },
   {
     id: "collection-03",
-    title: "Stack creator per video e voice",
+    title: "Kit creator per video e voce",
     slug: "creator-video-stack",
     description:
-      "Una selezione per chi lavora su video, audio e contenuti visuali con bisogno di velocità, resa e workflow leggibili.",
+      "Una selezione per chi lavora su video, audio e contenuti visuali con bisogno di velocità, resa e flussi leggibili.",
     cover_image_url:
       "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Scelta curatoriale",
     rationale:
-      "La raccolta non guarda solo alla generazione. Tiene insieme ideazione visuale, post-produzione e contenuto text-first, cosi` il creator stack non si spezza tra tool brillanti ma scollegati.",
+      "La raccolta non guarda solo alla generazione. Tiene insieme ideazione visuale, post-produzione e contenuto testuale, così il percorso creator non si spezza tra tool brillanti ma scollegati.",
     highlights: [
       "Video e post-produzione con un taglio creator-first",
       "Bridge naturale tra contenuto parlato, visual e publishing",
@@ -151,7 +151,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       {
         tool_slug: "runway",
         role: "Motore visuale",
-        note: "Per concept video, generazione e rifinitura con una sensazione prodotto più matura della media.",
+        note: "Per idee video, generazione e rifinitura con una sensazione prodotto più matura della media.",
         featured: true,
         order: 1,
       },
@@ -163,7 +163,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       },
       {
         tool_slug: "midjourney",
-        role: "Frame di concept",
+        role: "Frame dell'idea",
         note: "Per visual direction, moodboard e frame references prima della produzione finale.",
         order: 3,
       },
@@ -189,10 +189,10 @@ export const mockCollections: CuratedCollectionRecord[] = [
       "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Bundle compatto",
     rationale:
-      "Questa collection da` forma a un workflow di orientamento e sintesi. I tool qui non devono stupire da soli: devono ridurre il tempo tra domanda iniziale, lettura delle fonti e conoscenza riusabile.",
+      "Questa raccolta dà forma a un flusso di orientamento e sintesi. I tool qui non devono stupire da soli: devono ridurre il tempo tra domanda iniziale, lettura delle fonti e conoscenza riusabile.",
     highlights: [
       "Più orientamento iniziale, meno rumore da tool generici",
-      "Passaggio fluido da search a sintesi interna e output operativo",
+      "Passaggio fluido da ricerca a sintesi interna e risultato operativo",
       "Buon equilibrio tra velocità, verificabilità e leggibilità finale",
     ],
     theme: "research-synthesis",
@@ -201,7 +201,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
     tone: "focused-bundle",
     access: "premium-preview",
     premium_teaser:
-      "La parte pubblica resta utile anche da sola; il layer member aggiunge note di lettura, sequencing e stack commentary più densi.",
+      "La parte pubblica resta utile anche da sola; l'accesso riservato aggiunge note di lettura, sequenze e commenti più densi sulla scelta dei tool.",
     editorial_state: "published",
     surface: "collection",
     editorial_order: 40,
@@ -222,7 +222,7 @@ export const mockCollections: CuratedCollectionRecord[] = [
       {
         tool_slug: "cursor",
         role: "Trasformazione finale",
-        note: "Quando la sintesi deve diventare specifica, strutturata o pronta a entrare in un output tecnico.",
+        note: "Quando la sintesi deve diventare specifica, strutturata o pronta a entrare in una consegna tecnica.",
         order: 3,
       },
     ],
@@ -233,22 +233,22 @@ export const mockCollections: CuratedCollectionRecord[] = [
   },
   {
     id: "collection-05",
-    title: "Stack di lancio indie",
+    title: "Kit di lancio indie",
     slug: "indie-launch-stack",
     description:
-      "Una special issue stretta e narrativa, costruita intorno al pre-launch e già leggibile come superficie premium reale.",
+      "Una raccolta speciale, stretta e narrativa, costruita intorno al pre-lancio e già leggibile come esperienza premium reale.",
     cover_image_url:
       "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1400&q=80",
-    cover_kicker: "Special issue",
+    cover_kicker: "Raccolta speciale",
     rationale:
-      "Non è un elenco di tool per fare tutto. è una raccolta più stretta e più intenzionale che accompagna il momento del lancio con sequencing, passaggi leggibili e un ordine preciso tra concept, superficie pubblica e shipping.",
+      "Non è un elenco di tool per fare tutto. È una raccolta più stretta e più intenzionale che accompagna il momento del lancio con una sequenza chiara, passaggi leggibili e un ordine preciso tra idea, presenza pubblica e pubblicazione.",
     highlights: [
       "Setup corto per arrivare a una prima uscita credibile",
-      "Tool che si tengono bene tra loro nel momento più delicato del pre-launch",
-      "Base giusta per una issue member che aggiunge profondita`, non solo framing premium",
+      "Tool che si tengono bene tra loro nel momento più delicato del pre-lancio",
+      "Base giusta per una raccolta riservata che aggiunge profondità, non solo una veste premium",
     ],
     premium_teaser:
-      "La parte pubblica fa vedere il taglio e il setup. L'issue completa aggiunge sequencing, note operative e asset di lancio con un livello curatoriale più denso.",
+      "La parte pubblica fa vedere taglio e impostazione. La raccolta completa aggiunge sequenza, note operative e materiali di lancio con un livello curatoriale più denso.",
     theme: "indie-launch",
     audience: "Indie launchers",
     difficulty: "advanced",
@@ -260,32 +260,32 @@ export const mockCollections: CuratedCollectionRecord[] = [
     editorial_order: 15,
     advanced_issue: {
       format: "advanced-special-issue",
-      reading_flow: "Tesi launch -> momenti stack -> tensione compare -> workflow -> takeaway",
+      reading_flow: "Tesi del lancio -> momenti chiave -> tensione del confronto -> flusso -> cosa portare via",
       intro:
-        "Questa issue non prova a coprire tutto il lancio. Isola i passaggi che fanno davvero differenza quando devi trasformare un prodotto ancora fragile in una superficie che sembra già pronta da mostrare.",
+        "Questa raccolta non prova a coprire tutto il lancio. Isola i passaggi che fanno davvero differenza quando devi trasformare un prodotto ancora fragile in una presenza che sembra già pronta da mostrare.",
       thesis:
-        "Un indie launch credibile nasce quando concept, presentazione e disciplina di shipping smettono di vivere in strumenti separati e iniziano davvero a sostenersi a vicenda.",
+        "Un lancio indie credibile nasce quando idea, presentazione e disciplina di pubblicazione smettono di vivere in strumenti separati e iniziano davvero a sostenersi a vicenda.",
       takeaways: [
         "Il tool migliore non è quello più brillante da solo, ma quello che regge bene il passaggio successivo.",
-        "La superficie pubblica del lancio va progettata come parte del prodotto, non come asset finale aggiunto alla fine.",
-        "Shortlist e compare servono a chiudere il cerchio dell'issue, non a uscire dal racconto.",
+        "La presenza pubblica del lancio va progettata come parte del prodotto, non come materiale finale aggiunto alla fine.",
+        "Salvati e confronto servono a chiudere il cerchio della raccolta, non a uscire dal racconto.",
       ],
       blocks: [
         {
           id: "issue-opening",
           type: "opening-note",
           eyebrow: "Nota iniziale",
-          title: "Uno stack di lancio non deve sembrare grande. Deve rendere inevitabile il prossimo passo.",
+          title: "Un kit di lancio non deve sembrare grande. Deve rendere inevitabile il prossimo passo.",
           body:
-            "La forza di questa issue sta nella selezione stretta. Ogni tool incluso regge un momento preciso: concept, shipping discipline, asset di lancio e memoria operativa. Il formato più ricco serve a mostrare come questi passaggi si tengono insieme senza rumore.",
+            "La forza di questa raccolta sta nella selezione stretta. Ogni tool incluso regge un momento preciso: idea, disciplina di pubblicazione, materiali di lancio e memoria operativa. Il formato più ricco serve a mostrare come questi passaggi si tengono insieme senza rumore.",
         },
         {
           id: "issue-thesis",
           type: "thesis",
-          eyebrow: "Tesi del launch",
+          eyebrow: "Tesi del lancio",
           title: "Il prodotto convince prima quando anche il racconto operativo sembra già allineato.",
           statement:
-              "Il launch non chiede più tool: chiede una sequenza leggibile in cui prova iniziale, landing, asset e memoria non si contraddicano.",
+              "Il lancio non chiede più tool: chiede una sequenza leggibile in cui prova iniziale, landing, materiali e memoria non si contraddicano.",
           points: [
             "Framer AI regge il momento pubblico e il tono percepito.",
             "Lovable fa da ponte tra idea e artefatto navigabile.",
@@ -296,29 +296,29 @@ export const mockCollections: CuratedCollectionRecord[] = [
           id: "issue-picks",
           type: "curated-picks",
           eyebrow: "Momenti chiave",
-          title: "I passaggi del launch che cambiano davvero il feeling dello stack.",
+          title: "I passaggi del lancio che cambiano davvero la percezione del kit.",
           body:
-            "Qui non conta solo cosa usi, ma quando lo fai entrare. Questi sono i tre passaggi che spostano davvero la percezione del prodotto nei giorni più sensibili del pre-launch.",
+            "Qui non conta solo cosa usi, ma quando lo fai entrare. Questi sono i tre passaggi che spostano davvero la percezione del prodotto nei giorni più sensibili del pre-lancio.",
           tool_moments: [
             {
               tool_slug: "framer-ai",
-              label: "Credibilit? della superficie",
+              label: "Credibilità della presenza pubblica",
               note:
-                "Entra quando hai già chiaro il concept e devi trasformarlo in una landing che faccia sembrare il lancio più maturo del suo stadio reale.",
+                "Entra quando hai già chiara l'idea e devi trasformarla in una landing che faccia sembrare il lancio più maturo del suo stadio reale.",
               emphasis: "anchor",
             },
             {
               tool_slug: "lovable",
               label: "Narrazione del prototipo",
               note:
-                "Tiene insieme il prodotto raccontato e il prodotto navigabile, cosi` la prima prova non resta solo una promessa.",
+                "Tiene insieme il prodotto raccontato e il prodotto navigabile, così la prima prova non resta solo una promessa.",
               emphasis: "support",
             },
             {
               tool_slug: "descript",
               label: "Asset di lancio",
               note:
-                "Fa da ponte tra walkthrough, voice e asset di contenuto senza costringerti a un workflow media troppo tecnico.",
+                "Fa da ponte tra walkthrough, voce e materiali di contenuto senza costringerti a un flusso media troppo tecnico.",
               emphasis: "watch",
             },
           ],
@@ -326,54 +326,54 @@ export const mockCollections: CuratedCollectionRecord[] = [
         {
           id: "issue-compare",
           type: "compare-insight",
-          eyebrow: "Lettura compare",
+          eyebrow: "Lettura del confronto",
           title: "La tensione vera qui non è scegliere un vincitore assoluto, ma capire quale ruolo regge meglio il passaggio successivo.",
           body:
-            "Lovable, Framer AI e Cursor sembrano strumenti di fasi diverse. In pratica si sfiorano molto di più: il punto è capire chi regge la transizione tra prova, percezione e shipping.",
+            "Lovable, Framer AI e Cursor sembrano strumenti di fasi diverse. In pratica si sfiorano molto di più: il punto è capire chi regge la transizione tra prova, percezione e pubblicazione.",
           compare: {
             compared_tool_slugs: ["lovable", "framer-ai", "cursor"],
             insight:
-              "Lovable vince quando devi far sembrare l'idea già viva. Framer AI vince quando il launch chiede una superficie credibile. Cursor vince quando la promessa deve reggere nel codice.",
+              "Lovable vince quando devi far sembrare l'idea già viva. Framer AI vince quando il lancio chiede una presenza credibile. Cursor vince quando la promessa deve reggere nel codice.",
             differentiators: [
               "Lovable: più rapido nella prima prova e sulla sensazione app-like",
-              "Framer AI: più forte sulla superficie pubblica e sul launch polish",
+              "Framer AI: più forte sulla presenza pubblica e sulla cura del lancio",
               "Cursor: più adatto quando la prova iniziale inizia a richiedere struttura reale",
             ],
             recommendation:
-              "Mettili in compare quando il dubbio non è quale sia migliore, ma quale dei tre debba entrare per primo nel tuo launch stack.",
+              "Mettili a confronto quando il dubbio non è quale sia migliore, ma quale dei tre debba entrare per primo nel tuo kit di lancio.",
           },
         },
         {
           id: "issue-workflow",
           type: "workflow",
           eyebrow: "Sequenza operativa",
-          title: "Una sequenza corta che porta da concept a launch surface senza dispersione.",
+          title: "Una sequenza corta che porta dall'idea alla presenza di lancio senza dispersione.",
           body:
-            "Questo è il flusso che la special issue prova a rendere leggibile: partire da un concetto vivo, consolidarlo e preparare gli asset che servono davvero per uscire.",
+            "Questo è il flusso che la raccolta speciale prova a rendere leggibile: partire da un concetto vivo, consolidarlo e preparare i materiali che servono davvero per uscire.",
           steps: [
             {
-              title: "Dai corpo al concept",
+              title: "Dai corpo all'idea",
               body: "Usa la prova iniziale per rendere l'idea spiegabile prima ancora di renderla perfetta.",
               tool_slug: "lovable",
               outcome: "Hai un artefatto navigabile e condivisibile.",
             },
             {
-              title: "Rendi il launch credibile",
-              body: "Porta il concept in una superficie pubblica con tono, posizionamento e gerarchia più maturi.",
+              title: "Rendi il lancio credibile",
+              body: "Porta l'idea in una presenza pubblica con tono, posizionamento e gerarchia più maturi.",
               tool_slug: "framer-ai",
               outcome: "Landing e messaggio iniziano a sembrare allineati al prodotto.",
             },
             {
               title: "Proteggi la parte fragile",
-              body: "Quando la prova iniziale tocca codice reale, usa disciplina e refactor minimo per non perdere fluidita`.",
+              body: "Quando la prova iniziale tocca codice reale, usa disciplina e rifinitura minima per non perdere fluidità.",
               tool_slug: "cursor",
               outcome: "La prima prova non collassa appena provi a evolverla.",
             },
             {
-              title: "Chiudi gli asset di lancio",
-              body: "Prepari walkthrough, voice e materiali che aiutano il prodotto a presentarsi bene anche fuori dalla landing.",
+              title: "Chiudi i materiali di lancio",
+              body: "Prepara walkthrough, voce e materiali che aiutano il prodotto a presentarsi bene anche fuori dalla landing.",
               tool_slug: "descript",
-              outcome: "Il launch ha un racconto più coeso e più leggibile.",
+              outcome: "Il lancio ha un racconto più coeso e più leggibile.",
             },
           ],
         },
@@ -381,37 +381,37 @@ export const mockCollections: CuratedCollectionRecord[] = [
           id: "issue-why",
           type: "why-this-matters",
           eyebrow: "Perché conta",
-          title: "Il valore di questa issue ? mostrare una progressione, non solo una lista.",
+          title: "Il valore di questa raccolta è mostrare una progressione, non solo una lista.",
           body:
-            "Per chi costruisce da solo o in team molto piccoli, la differenza la fa il ritmo tra i passaggi. Questa issue serve a rendere il launch stack meno casuale e più intenzionale.",
+            "Per chi costruisce da solo o in team molto piccoli, la differenza la fa il ritmo tra i passaggi. Questa raccolta serve a rendere il kit di lancio meno casuale e più intenzionale.",
           points: [
-            "Riduce il rischio di passare troppo presto da concept a shipping.",
+            "Riduce il rischio di passare troppo presto dall'idea alla pubblicazione.",
             "Aiuta a distinguere tool da presentazione, tool da costruzione e tool da supporto.",
-            "Tiene shortlist e compare dentro il racconto, invece di farli sembrare feature parallele.",
+            "Tiene salvati e confronto dentro il racconto, invece di farli sembrare funzioni parallele.",
           ],
         },
         {
           id: "issue-takeaway",
           type: "editorial-takeaway",
           eyebrow: "Takeaway editoriale",
-          title: "Se questa issue funziona, ti lascia con una shortlist più corta e con dubbi migliori.",
+          title: "Se questa raccolta funziona, ti lascia con una lista più corta e con dubbi migliori.",
           body:
-            "L'obiettivo non è uscire con più tool salvati. L'obiettivo è capire quale combinazione regge davvero il tuo momento di launch.",
+            "L'obiettivo non è uscire con più tool salvati. L'obiettivo è capire quale combinazione regge davvero il tuo momento di lancio.",
           takeaways: [
-            "Metti in shortlist solo i tool che spostano il passaggio successivo.",
-            "Usa il compare per leggere la tensione tra prova iniziale, superficie e shipping.",
-            "Torna ai profili singoli solo dopo aver capito il ruolo di ciascun tool nello stack.",
+            "Salva solo i tool che spostano il passaggio successivo.",
+            "Usa il confronto per leggere la tensione tra prova iniziale, presenza e pubblicazione.",
+            "Torna ai profili singoli solo dopo aver capito il ruolo di ciascun tool nel kit.",
           ],
         },
         {
           id: "issue-closing",
           type: "premium-closing",
-          eyebrow: "Member layer",
-          title: "Il layer member deve spingersi oltre il semplice elenco dei tool.",
+          eyebrow: "Accesso riservato",
+          title: "La parte riservata deve andare oltre il semplice elenco dei tool.",
           body:
-            "Questa issue prepara già il terreno per sequencing più esplicito, note operative e varianti di stack per momenti di launch diversi.",
+            "Questa raccolta prepara già il terreno per sequenze più esplicite, note operative e varianti del kit per momenti di lancio diversi.",
           member_note:
-            "Nel layer completo possono vivere handoff più dettagliati, micro-rubriche decisionali e passaggi alternativi per founder solo, piccoli team e launch creator-led.",
+            "Nella versione completa possono vivere passaggi più dettagliati, micro-rubriche decisionali e alternative per founder solo, piccoli team e lanci guidati dai creator.",
         },
       ],
     },
@@ -431,14 +431,14 @@ export const mockCollections: CuratedCollectionRecord[] = [
       },
       {
         tool_slug: "cursor",
-        role: "Disciplina di shipping",
+        role: "Disciplina di pubblicazione",
         note: "Per tenere la parte più tecnica sotto controllo quando la prova iniziale inizia a crescere.",
         order: 3,
       },
       {
         tool_slug: "descript",
         role: "Asset di lancio",
-        note: "Per voice, walkthrough e materiali di contenuto a supporto del lancio.",
+        note: "Per voce, walkthrough e materiali di contenuto a supporto del lancio.",
         order: 4,
       },
       {
@@ -455,22 +455,22 @@ export const mockCollections: CuratedCollectionRecord[] = [
   },
   {
     id: "collection-06",
-    title: "Issue di sintesi profonda",
+    title: "Raccolta di sintesi profonda",
     slug: "deep-synthesis-issue",
     description:
-      "Una special issue in coda editoriale, pensata per legare ricerca, note e trasformazione dell'insight in un output più denso.",
+      "Una raccolta speciale in coda editoriale, pensata per legare ricerca, note e trasformazione dell'insight in un risultato più denso.",
     cover_image_url:
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
-    cover_kicker: "Issue in coda",
+    cover_kicker: "Raccolta in coda",
     rationale:
-      "Questa issue serve come prova di una superficie più narrativa e più densa, pronta a ospitare sequencing e note di lettura senza diventare magazine puro.",
+      "Questa raccolta serve come prova di una lettura più narrativa e più densa, pronta a ospitare sequenze e note senza diventare un magazine generico.",
     highlights: [
       "Sequencing più esplicito tra orientamento e sintesi",
-      "Ritmo da special issue, non da elenco lineare",
+      "Ritmo da raccolta speciale, non da elenco lineare",
       "Base per future note premium e operating guidance",
     ],
     premium_teaser:
-      "La preview resta già leggibile; l'issue completa entrerà nel layer pubblico solo quando sequencing e note saranno chiusi.",
+      "L'anteprima resta già leggibile; la raccolta completa entrerà nel catalogo pubblico solo quando sequenza e note saranno chiuse.",
     theme: "research-synthesis",
     audience: "Research-led teams",
     difficulty: "advanced",
@@ -482,18 +482,18 @@ export const mockCollections: CuratedCollectionRecord[] = [
     included_tools: [
       {
         tool_slug: "perplexity",
-        role: "Question shaping",
+        role: "Definizione della domanda",
         featured: true,
         order: 1,
       },
       {
         tool_slug: "notion-ai",
-        role: "Synthesis spine",
+        role: "Struttura della sintesi",
         order: 2,
       },
       {
         tool_slug: "cursor",
-        role: "Output handoff",
+        role: "Passaggio finale",
         order: 3,
       },
     ],
@@ -505,14 +505,14 @@ export const mockCollections: CuratedCollectionRecord[] = [
     title: "Percorso creator per il lancio",
     slug: "creator-launch-cut",
     description:
-      "Un bundle pianificato per creator e piccoli team che devono passare da concept a publish moment in modo più disciplinato.",
+      "Un bundle pianificato per creator e piccoli team che devono passare da idea a momento di pubblicazione in modo più disciplinato.",
     cover_image_url:
       "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "In programmazione",
     rationale:
-      "La raccolta è quasi pronta: resta un ultimo giro di editing per chiarire meglio priorità, sequencing e ruolo dei tool inclusi.",
+      "La raccolta è quasi pronta: resta un ultimo giro di editing per chiarire meglio priorità, sequenza e ruolo dei tool inclusi.",
     highlights: [
-      "Creator workflow più corto e più intenzionale",
+      "Flusso creator più corto e più intenzionale",
       "Bridge naturale tra tool visuali e memoria editoriale",
       "Buona candidata a featured strip futura",
     ],
@@ -528,18 +528,18 @@ export const mockCollections: CuratedCollectionRecord[] = [
     included_tools: [
       {
         tool_slug: "runway",
-        role: "Visual build",
+        role: "Costruzione visuale",
         featured: true,
         order: 1,
       },
       {
         tool_slug: "descript",
-        role: "Narrative edit",
+        role: "Editing narrativo",
         order: 2,
       },
       {
         tool_slug: "notion-ai",
-        role: "Publishing memory",
+        role: "Memoria di pubblicazione",
         order: 3,
       },
     ],
@@ -552,14 +552,14 @@ export const mockCollections: CuratedCollectionRecord[] = [
     title: "Primo bundle operativo",
     slug: "first-prototype-bundle",
     description:
-      "Una vecchia raccolta di transizione usata per testare il framing stack-first nelle prime iterazioni editoriali.",
+      "Una vecchia raccolta di transizione usata per testare un taglio centrato sulla scelta dei tool nelle prime iterazioni editoriali.",
     cover_image_url:
       "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Percorso archiviato",
     rationale:
-      "Resta come traccia interna del percorso editoriale: utile a capire cosa ha funzionato, ma non abbastanza solida per restare nel layer pubblico.",
+      "Resta come traccia interna del percorso editoriale: utile a capire cosa ha funzionato, ma non abbastanza solida per restare nel catalogo pubblico.",
     highlights: [
-      "Buona come memoria di tono e sequencing",
+      "Buona come memoria di tono e sequenza",
       "Non abbastanza nitida per una superficie pubblica stabile",
       "Utile per test interni e confronto con versioni più mature",
     ],
@@ -574,18 +574,18 @@ export const mockCollections: CuratedCollectionRecord[] = [
     included_tools: [
       {
         tool_slug: "lovable",
-        role: "Prototype shell",
+        role: "Base prototipo",
         featured: true,
         order: 1,
       },
       {
         tool_slug: "framer-ai",
-        role: "Landing polish",
+        role: "Rifinitura landing",
         order: 2,
       },
       {
         tool_slug: "midjourney",
-        role: "Visual reference",
+        role: "Riferimento visuale",
         order: 3,
       },
     ],

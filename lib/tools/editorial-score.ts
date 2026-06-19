@@ -19,10 +19,10 @@ type ScoreDimensionMeta = {
 };
 
 const scoreDimensions: ScoreDimensionMeta[] = [
-  { key: "ease_of_use", label: "Facilita` d'uso" },
-  { key: "versatility", label: "Versatilita`" },
-  { key: "polish", label: "Cura UI" },
-  { key: "workflow_fit", label: "Fit nel workflow" },
+  { key: "ease_of_use", label: "Facilità d'uso" },
+  { key: "versatility", label: "Versatilità" },
+  { key: "polish", label: "Cura dell'interfaccia" },
+  { key: "workflow_fit", label: "Integrazione nel flusso" },
   { key: "experimentation_value", label: "Valore sperimentale" },
   { key: "editorial_conviction", label: "Convinzione editoriale" },
 ];
@@ -56,7 +56,7 @@ const categoryScoreBase: Record<ToolCategory, Record<EditorialScoreDimension, nu
     experimentation_value: 3,
     editorial_conviction: 2,
   },
-  Developer: {
+  Sviluppo: {
     ease_of_use: 1,
     versatility: 3,
     polish: 2,
@@ -72,7 +72,7 @@ const categoryScoreBase: Record<ToolCategory, Record<EditorialScoreDimension, nu
     experimentation_value: 2,
     editorial_conviction: 2,
   },
-  Produttivita: {
+  Produttività: {
     ease_of_use: 3,
     versatility: 3,
     polish: 2,
@@ -88,7 +88,7 @@ const categoryScoreBase: Record<ToolCategory, Record<EditorialScoreDimension, nu
     experimentation_value: 3,
     editorial_conviction: 2,
   },
-  Writing: {
+  Scrittura: {
     ease_of_use: 3,
     versatility: 2,
     polish: 2,

@@ -141,7 +141,7 @@ function normalizeItems(data: ProductHuntGraphQlResponse): ProductHuntItem[] {
     .filter((node): node is NonNullable<typeof node> => Boolean(node?.id && node?.name))
     .map((node) => ({
       id: node.id ?? node.name ?? crypto.randomUUID(),
-      name: node.name ?? "Product Hunt launch",
+      name: node.name ?? "Lancio su Product Hunt",
       tagline: node.tagline ?? "Nuovo lancio su Product Hunt",
       votesCount: node.votesCount ?? node.votes?.totalCount ?? 0,
       commentsCount: node.commentsCount ?? 0,
@@ -184,13 +184,13 @@ async function getProductHuntToken(now: number) {
   });
 
   if (!response.ok) {
-    throw new Error(`Product Hunt OAuth returned ${response.status}`);
+    throw new Error(`OAuth Product Hunt non disponibile: ${response.status}`);
   }
 
   const data = (await response.json()) as ProductHuntOAuthResponse;
 
   if (!data.access_token) {
-    throw new Error(data.error_description ?? data.error ?? "Product Hunt OAuth token missing");
+    throw new Error(data.error_description ?? data.error ?? "Token OAuth Product Hunt mancante");
   }
 
   const ttlSeconds = data.expires_in ?? 60 * 60;
@@ -228,7 +228,7 @@ export async function GET(request: NextRequest) {
       updatedAt: new Date().toISOString(),
       items: [],
       message:
-        "Product Hunt ranking non configurato. Aggiungi PRODUCTHUNT_TOKEN oppure PRODUCTHUNT_CLIENT_ID e PRODUCTHUNT_CLIENT_SECRET.",
+        "Classifica Product Hunt non configurata.",
     };
 
     responseCache.set(range, { expiresAt: now + 5 * 60 * 1000, payload });
@@ -254,7 +254,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!response.ok) {
-      throw new Error(`Product Hunt API returned ${response.status}`);
+      throw new Error(`API Product Hunt non disponibile: ${response.status}`);
     }
 
     const data = (await response.json()) as ProductHuntGraphQlResponse;
@@ -278,7 +278,7 @@ export async function GET(request: NextRequest) {
       range,
       updatedAt: new Date().toISOString(),
       items: [],
-      message: "Product Hunt ranking temporaneamente non disponibile.",
+      message: "Classifica Product Hunt temporaneamente non disponibile.",
     };
 
     responseCache.set(range, { expiresAt: now + 5 * 60 * 1000, payload });

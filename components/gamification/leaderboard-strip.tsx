@@ -46,7 +46,7 @@ function LeaderboardSkeleton() {
 function LeaderboardEmpty() {
   return (
     <div className="leaderboard-strip__marquee flex flex-1 items-center overflow-hidden text-xs text-muted-foreground">
-      Classifica settimanale in aggiornamento…
+      Classifica settimanale in aggiornamento...
     </div>
   );
 }
@@ -64,7 +64,7 @@ export function LeaderboardStrip({ className }: LeaderboardStripProps) {
       >
         <span className="leaderboard-strip__rank">#{entry.rank ?? "-"}</span>
         <span className="leaderboard-strip__name">
-          Hunter #{entry.rank ?? "-"}
+          Utente #{entry.rank ?? "-"}
         </span>
         <span className="leaderboard-strip__xp">
           <NumberFlow value={entry.xp_gained} /> XP
@@ -80,7 +80,7 @@ export function LeaderboardStrip({ className }: LeaderboardStripProps) {
     >
       <div className="leaderboard-strip__badge">
         <Trophy size={14} aria-hidden="true" />
-        <span>Top weekly</span>
+        <span>Top settimana</span>
       </div>
       {isLoading ? (
         <LeaderboardSkeleton />

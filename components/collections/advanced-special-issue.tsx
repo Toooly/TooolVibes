@@ -190,13 +190,13 @@ function renderIssueBlock(
           </p>
         </div>
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <ButtonLink href="/compare">Apri compare</ButtonLink>
+          <ButtonLink href="/compare">Apri confronto</ButtonLink>
           <Link
             href="/shortlist"
             className="section-quiet-link text-sm font-semibold"
             style={{ color: "white" }}
           >
-            Porta i candidati in shortlist
+            Porta i candidati nei salvati
           </Link>
         </div>
       </article>
@@ -295,7 +295,7 @@ function renderIssueBlock(
             className="section-quiet-link text-sm font-semibold"
             style={{ color: "var(--accent-strong)" }}
           >
-            Apri compare
+            Apri confronto
           </Link>
         </div>
       </article>
@@ -350,12 +350,12 @@ export function AdvancedSpecialIssue({
     <section className="tone-issue brand-panel brand-aura panel-lift rounded-[36px] p-5 sm:p-6 lg:p-7">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
         <SectionHeading
-          eyebrow="Special issue avanzata"
+          eyebrow="Raccolta speciale avanzata"
           title="Il formato lungo in cui la selezione diventa tesi."
           description={issue.intro}
         />
         <div className="space-y-2">
-          <span className="selection-status">Formato issue</span>
+          <span className="selection-status">Formato speciale</span>
           <p className="text-[0.74rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
             {issue.reading_flow}
           </p>
@@ -363,7 +363,7 @@ export function AdvancedSpecialIssue({
       </div>
 
       <div className="metadata-block mt-5 rounded-[28px] px-4.5 py-4.5">
-        <p className="brand-kicker">Tesi dell&apos;issue</p>
+        <p className="brand-kicker">Tesi della raccolta</p>
         <p className="mt-3 max-w-[46rem] text-[1.02rem] leading-7" style={{ color: "var(--muted-strong)" }}>
           {issue.thesis}
         </p>
@@ -400,21 +400,21 @@ export function AdvancedSpecialIssue({
           }}
         >
           <div className="flex flex-wrap items-center gap-2">
-            <p className="pill pill-premium">Confine preview</p>
-            <span className="selection-status">{hiddenBlockCount} moduli nel layer completo</span>
+            <p className="pill pill-premium">Anteprima premium</p>
+            <span className="selection-status">{hiddenBlockCount} moduli nella versione completa</span>
           </div>
           <p className="mt-3 max-w-[46rem] text-[0.96rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-            La preview lascia leggibile la tesi dell&apos;issue. Il layer completo conserva i moduli più densi: note comparative più lunghe, varianti di stack e chiusure editoriali più specifiche.
+            L&apos;anteprima lascia leggibile la tesi della raccolta. La versione completa aggiunge i passaggi più densi: note comparative più lunghe, varianti di percorso e chiusure editoriali più specifiche.
           </p>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <ButtonLink href={premiumUpgradeHref}>{premiumUpgradeLabel}</ButtonLink>
             <Link
               href="/account#member-access"
               className="section-quiet-link text-sm font-semibold"
-              style={{ color: "var(--accent-strong)" }}
-            >
-              Capisci il member layer
-            </Link>
+            style={{ color: "var(--accent-strong)" }}
+          >
+              Scopri l&apos;accesso riservato
+          </Link>
           </div>
         </div>
       ) : null}

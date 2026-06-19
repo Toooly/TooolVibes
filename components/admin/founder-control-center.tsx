@@ -110,6 +110,34 @@ function LogoutButton({ compact = false }: { compact?: boolean }) {
   );
 }
 
+function getReadSourceLabel(source: AdminArticlesRuntime["adminReadSource"]) {
+  switch (source) {
+    case "supabase":
+      return "Archivio principale";
+    case "storage":
+      return "Archivio alternativo";
+    case "mixed":
+      return "Archivio misto";
+    case "legacy":
+      return "Articoli importati";
+    case "empty":
+      return "Nessun articolo";
+    default:
+      return source;
+  }
+}
+
+function getWriteTargetLabel(target: AdminArticlesRuntime["writeTarget"]) {
+  switch (target) {
+    case "supabase":
+      return "Archivio principale";
+    case "storage":
+      return "Archivio alternativo";
+    default:
+      return "Sola lettura";
+  }
+}
+
 export function FounderControlCenter({ articlesRuntime }: FounderControlCenterProps) {
   const publishedArticles = articlesRuntime.articles.filter(
     (article) => article.status === "published",
@@ -136,7 +164,7 @@ export function FounderControlCenter({ articlesRuntime }: FounderControlCenterPr
     {
       label: "Avvisi",
       value: String(runtimeWarningCount),
-      detail: runtimeWarningCount > 0 ? "da verificare" : "runtime pulito",
+      detail: runtimeWarningCount > 0 ? "da verificare" : "tutto in ordine",
     },
   ];
 
@@ -168,13 +196,13 @@ export function FounderControlCenter({ articlesRuntime }: FounderControlCenterPr
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <RuntimeBadge
-                    label="Blog"
-                    value={articlesRuntime.adminReadSource}
+                    label="Lettura"
+                    value={getReadSourceLabel(articlesRuntime.adminReadSource)}
                     tone={articlesRuntime.canWrite ? "live" : "warn"}
                   />
                   <RuntimeBadge
-                    label="Write"
-                    value={articlesRuntime.writeTarget ?? "locked"}
+                    label="Salvataggio"
+                    value={getWriteTargetLabel(articlesRuntime.writeTarget)}
                     tone={articlesRuntime.canWrite ? "live" : "warn"}
                   />
                 </div>

@@ -58,18 +58,18 @@ export function getCollectionTransitionReviewMeta(state: CollectionConflictRevie
   switch (state) {
     case "reviewed":
       return {
-        label: "Reviewed",
-        description: "Drift letto e accettato editorialmente.",
+        label: "Rivista",
+        description: "Differenza letta e accettata editorialmente.",
       };
     case "dismissed":
       return {
-        label: "Dismissed",
-        description: "Warning archiviato in attesa di un sync più ricco.",
+        label: "Archiviata",
+        description: "Segnale archiviato in attesa di un riallineamento più ricco.",
       };
     case "unreviewed":
     default:
       return {
-        label: "Unreviewed",
+        label: "Da leggere",
         description: "Richiede ancora una decisione editoriale esplicita.",
       };
   }
@@ -100,23 +100,23 @@ export function getCollectionTransitionSeverityMeta(
     case "critical-conflict":
       return {
         label: "Conflitto critico",
-        description: "Il drift tocca stato, surface o tool inclusi e merita attenzione prima di fidarsi della pubblicazione.",
+        description: "Le differenze toccano stato, formato o tool inclusi e meritano attenzione prima di fidarsi della pubblicazione.",
       };
     case "minor-drift":
       return {
-        label: "Drift lieve",
+        label: "Differenza lieve",
         description: "Le differenze sono editoriali ma non ancora strutturalmente bloccanti.",
       };
     case "pending":
       return {
-        label: "Pending import",
-        description: "La collection esiste ancora solo nella source legacy e va importata se vuoi gestirla nel repository reale.",
+        label: "Da importare",
+        description: "La raccolta esiste ancora solo nella sorgente locale e va importata se vuoi gestirla nell'archivio reale.",
       };
     case "clean":
     default:
       return {
-        label: "Clean",
-        description: "Nessun drift operativo rilevato tra legacy e repository reale.",
+        label: "Pulita",
+        description: "Nessuna differenza operativa rilevata tra sorgente locale e archivio reale.",
       };
   }
 }
@@ -146,7 +146,7 @@ export function getCollectionTransitionDiffItems(
   if (entry.diff.editorial_order) {
     items.push({
       key: "editorial_order",
-      label: "Ordering",
+      label: "Ordine",
       severity: "minor",
       mock_value: String(entry.mock?.editorial_order ?? 999),
       supabase_value: String(entry.supabase?.editorial_order ?? 999),
@@ -157,7 +157,7 @@ export function getCollectionTransitionDiffItems(
   if (entry.diff.featured_slot) {
     items.push({
       key: "featured_slot",
-      label: "Featured slot",
+      label: "Spazio in evidenza",
       severity: "minor",
       mock_value: entry.mock?.featured_slot ?? "nessuno",
       supabase_value: entry.supabase?.featured_slot ?? "nessuno",
@@ -168,7 +168,7 @@ export function getCollectionTransitionDiffItems(
   if (entry.diff.surface) {
     items.push({
       key: "surface",
-      label: "Surface",
+      label: "Formato",
       severity: "critical",
       mock_value: entry.mock?.surface ?? "n/d",
       supabase_value: entry.supabase?.surface ?? "n/d",
@@ -179,7 +179,7 @@ export function getCollectionTransitionDiffItems(
   if (entry.diff.metadata) {
     items.push({
       key: "metadata",
-      label: "Metadata chiave",
+      label: "Informazioni chiave",
       severity: "minor",
       mock_value: formatMetadataSnapshot(entry.mock),
       supabase_value: formatMetadataSnapshot(entry.supabase),
@@ -224,7 +224,7 @@ export function buildCollectionReadinessSummary({
 
   const checks = [
     {
-      label: "Validation",
+      label: "Controlli",
       state:
         errors.length > 0
           ? "error"
@@ -235,11 +235,11 @@ export function buildCollectionReadinessSummary({
         errors.length > 0
           ? `${errors.length} errore/i aperti.`
           : warnings.length > 0
-            ? `${warnings.length} warning da rivedere.`
-            : "Nessun warning o errore aperto.",
+            ? `${warnings.length} avvisi da rivedere.`
+            : "Nessun avviso o errore aperto.",
     },
     {
-      label: "Publish state",
+      label: "Stato pubblicazione",
       state:
         isPublic && !collection.published_at
           ? "warning"
@@ -248,13 +248,13 @@ export function buildCollectionReadinessSummary({
             : "pass",
       detail:
         isPublic && !collection.published_at
-          ? "Collection pubblica senza published_at esplicito."
+          ? "Raccolta pubblica senza data di pubblicazione esplicita."
           : collection.editorial_state === "scheduled" && !collection.scheduled_for
-            ? "Scheduled senza scheduled_for."
+            ? "Raccolta programmata senza data di uscita."
             : "Stato editoriale coerente con i timestamp principali.",
     },
     {
-      label: "Structure",
+      label: "Struttura",
       state:
         collection.included_tools.length === 0
           ? "error"
@@ -265,11 +265,11 @@ export function buildCollectionReadinessSummary({
         collection.included_tools.length === 0
           ? "Nessun tool incluso."
           : hasFeaturedAnchor
-            ? "Sequenza tool con anchor chiara."
-            : "Manca un tool anchor esplicito nella sequenza.",
+            ? "Sequenza tool con guida chiara."
+            : "Manca un tool guida esplicito nella sequenza.",
     },
     {
-      label: "Transition review",
+      label: "Revisione transizione",
       state:
         transitionSeverity === "critical-conflict" &&
         reviewState === "unreviewed"
@@ -282,25 +282,25 @@ export function buildCollectionReadinessSummary({
       detail:
         transitionSeverity === "critical-conflict" &&
         reviewState === "unreviewed"
-          ? "Conflitto critico aperto tra mock e Supabase."
+          ? "Conflitto critico aperto tra sorgente locale e archivio reale."
           : transitionSeverity === "minor-drift" && reviewState === "unreviewed"
-            ? "Drift lieve non ancora rivisto."
+            ? "Differenza lieve non ancora rivista."
             : transitionSeverity === "pending"
-              ? "Collection ancora solo legacy o non pienamente migrata."
+              ? "Raccolta ancora solo locale o non pienamente migrata."
               : reviewState === "dismissed"
-                ? "Drift archiviato editorialmente in attesa di sync futuro."
-                : "Nessun rischio aperto sul boundary di transizione.",
+                ? "Differenza archiviata editorialmente in attesa di un riallineamento futuro."
+                : "Nessun rischio aperto nel passaggio di transizione.",
     },
     {
-      label: "Special issue",
+      label: "Raccolta speciale",
       state:
         collection.surface === "special-issue" && !collection.premium_teaser
           ? "warning"
           : "pass",
       detail:
         collection.surface === "special-issue" && !collection.premium_teaser
-          ? "Special issue senza premium teaser."
-          : "Framing surface coerente.",
+          ? "Raccolta speciale senza teaser premium."
+          : "Formato coerente.",
     },
   ] as const;
 
@@ -310,7 +310,7 @@ export function buildCollectionReadinessSummary({
   if (hasError) {
     return {
       state: "blocked",
-      label: "Blocked",
+      label: "Bloccata",
       summary: "Prima di fidarti della pubblicazione va chiuso almeno un rischio strutturale o di transizione.",
       checks: [...checks],
     };
@@ -319,16 +319,16 @@ export function buildCollectionReadinessSummary({
   if (hasWarning) {
     return {
       state: "review",
-      label: "Review",
-      summary: "La collection ? leggibile, ma conviene una revisione editoriale prima di considerarla davvero pronta.",
+      label: "Da rivedere",
+      summary: "La raccolta è leggibile, ma conviene una revisione editoriale prima di considerarla davvero pronta.",
       checks: [...checks],
     };
   }
 
   return {
     state: "ready",
-    label: "Ready",
-    summary: "La collection ha segnali coerenti e nessun blocco aperto sul flusso editoriale corrente.",
+    label: "Pronta",
+    summary: "La raccolta ha segnali coerenti e nessun blocco aperto sul flusso editoriale corrente.",
     checks: [...checks],
   };
 }

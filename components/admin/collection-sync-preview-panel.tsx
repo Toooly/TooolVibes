@@ -69,6 +69,19 @@ function getChangeStyles(kind: "safe" | "editorial") {
       };
 }
 
+function getSourceLabel(source: string | null | undefined) {
+  switch (source) {
+    case "supabase":
+      return "Archivio principale";
+    case "mock":
+      return "Sorgente locale";
+    case "content":
+      return "Contenuto editoriale";
+    default:
+      return "n/d";
+  }
+}
+
 export function CollectionSyncPreviewPanel({
   preview,
   entry,
@@ -103,12 +116,12 @@ export function CollectionSyncPreviewPanel({
             className="text-sm font-semibold uppercase tracking-[0.18em]"
             style={{ color: "var(--muted)" }}
           >
-            Sync preview
+            Anteprima riallineamento
           </p>
           <h3 className="text-xl">Nessun riallineamento proposto.</h3>
           <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
-            Su questa collection non c&apos;? un confronto legacy -&gt; Supabase abbastanza definito da
-            trasformarsi in preview. O è già allineata, oppure manca uno dei due lati del confronto.
+            Su questa raccolta non c&apos;è un confronto tra sorgente locale e archivio reale abbastanza definito da
+            trasformarsi in anteprima. O è già allineata, oppure manca uno dei due lati del confronto.
           </p>
         </div>
         {lastSafeAlign ? (
@@ -116,7 +129,7 @@ export function CollectionSyncPreviewPanel({
             className="mt-5 rounded-[18px] border px-4 py-3 text-sm"
             style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(245,242,255,0.92)" }}
           >
-            Ultimo safe align registrato: {new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")} ·{" "}
+            Ultimo riallineamento registrato: {new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")} -{" "}
             {lastSafeAlign.aligned_fields.join(", ")}
           </div>
         ) : null}
@@ -145,16 +158,16 @@ export function CollectionSyncPreviewPanel({
     >
       <div className="flex flex-wrap items-start justify-between gap-4">
         <SectionHeading
-          eyebrow="Sync preview"
-          title={compact ? "Preview del riallineamento" : "Cosa cambierebbe prima di toccare davvero la source reale."}
-          description="Questo layer ? solo descrittivo: distingue i cambi candidati a un align prudente da quelli che restano nel perimetro di una decisione editoriale."
+          eyebrow="Anteprima riallineamento"
+          title={compact ? "Anteprima del riallineamento" : "Cosa cambierebbe prima di toccare davvero la sorgente reale."}
+          description="Questo pannello è solo descrittivo: distingue i cambi candidati a un riallineamento prudente da quelli che restano nel perimetro di una decisione editoriale."
         />
         {detailHref ? (
           <Link
             href={detailHref}
             className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-sm font-semibold"
           >
-            Vedi preview
+            Vedi anteprima
           </Link>
         ) : null}
       </div>
@@ -179,13 +192,13 @@ export function CollectionSyncPreviewPanel({
             background: "rgba(245,242,255,0.92)",
           }}
         >
-          Public winner -&gt; {preview.public_winner ?? "n/d"}
+            Sorgente pubblica -&gt; {getSourceLabel(preview.public_winner)}
         </span>
         <span
           className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
           style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
         >
-          Align target -&gt; {preview.target}
+          Destinazione -&gt; {getSourceLabel(preview.target)}
         </span>
       </div>
 
@@ -202,11 +215,11 @@ export function CollectionSyncPreviewPanel({
 
       <div className="mt-5 grid gap-4 sm:grid-cols-3">
         {[
-          { label: "Safe changes", value: preview.safe_change_count },
-          { label: "Editorial changes", value: preview.editorial_change_count },
+          { label: "Modifiche sicure", value: preview.safe_change_count },
+          { label: "Modifiche editoriali", value: preview.editorial_change_count },
           {
-            label: "Sync posture",
-            value: preview.can_safe_align_fields ? "preview pronta" : "preview-only",
+            label: "Stato anteprima",
+            value: preview.can_safe_align_fields ? "anteprima pronta" : "solo anteprima",
           },
         ].map((item) => (
           <article
@@ -243,7 +256,7 @@ export function CollectionSyncPreviewPanel({
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-semibold">{change.label}</p>
                   <span className="rounded-full border px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]" style={getChangeStyles(change.kind)}>
-                    {change.kind === "safe" ? "safe align candidate" : "needs decision"}
+                    {change.kind === "safe" ? "candidato al riallineamento" : "richiede decisione"}
                   </span>
                 </div>
                 <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted-strong)" }}>
@@ -252,9 +265,9 @@ export function CollectionSyncPreviewPanel({
                 {!compact ? (
                   <div className="mt-3 grid gap-3 lg:grid-cols-3">
                     {[
-                      { label: "Current supabase", value: change.current_value },
-                      { label: "Legacy mock", value: change.legacy_value },
-                      { label: "Preview target", value: change.target_value },
+                      { label: "Archivio attuale", value: change.current_value },
+                      { label: "Sorgente locale", value: change.legacy_value },
+                      { label: "Valore proposto", value: change.target_value },
                     ].map((field) => (
                       <div
                         key={`${change.key}-${field.label}`}
@@ -284,7 +297,7 @@ export function CollectionSyncPreviewPanel({
             className="text-sm font-semibold uppercase tracking-[0.18em]"
             style={{ color: "var(--muted)" }}
           >
-            Tool slot che cambierebbero
+            Spazi tool che cambierebbero
           </p>
           <div className="grid gap-3">
             {preview.slot_changes.map((change, index) => (
@@ -319,7 +332,7 @@ export function CollectionSyncPreviewPanel({
                           : "rgba(255,251,235,0.96)",
                     }}
                   >
-                    {change.risk === "high" ? "high impact" : "needs review"}
+                    {change.risk === "high" ? "impatto alto" : "da rivedere"}
                   </span>
                 </div>
                 <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted-strong)" }}>
@@ -328,8 +341,8 @@ export function CollectionSyncPreviewPanel({
                 {!compact ? (
                   <div className="mt-3 grid gap-3 lg:grid-cols-2">
                     {[
-                      { label: "Current supabase", value: change.current_value },
-                      { label: "Legacy mock", value: change.legacy_value },
+                      { label: "Archivio attuale", value: change.current_value },
+                      { label: "Sorgente locale", value: change.legacy_value },
                     ].map((field) => (
                       <div
                         key={`${change.tool_slug}-${field.label}`}
@@ -372,7 +385,7 @@ export function CollectionSyncPreviewPanel({
           className="mt-6 rounded-[18px] border px-4 py-3 text-sm"
           style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(245,242,255,0.92)" }}
         >
-          Ultimo safe align registrato: {new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")} ·{" "}
+          Ultimo riallineamento registrato: {new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")} -{" "}
           {lastSafeAlign.aligned_fields.join(", ")}
         </div>
       ) : null}
@@ -399,13 +412,13 @@ export function CollectionSyncPreviewPanel({
               type="submit"
               className="button-shell button-primary rounded-full px-4 py-2 text-sm font-semibold text-white"
             >
-              Apply safe align
+              Applica riallineamento sicuro
             </button>
           </form>
         ) : safeAlignEligibility.eligible ? (
           <p className="mt-4" style={{ color: "var(--muted)" }}>
             {safeAlignMessage ??
-              "Safe align non disponibile in questa istanza: serve write path e audit persistente attivi."}
+              "Riallineamento sicuro non disponibile in questa istanza: servono salvataggio e registro modifiche attivi."}
           </p>
         ) : null}
       </div>

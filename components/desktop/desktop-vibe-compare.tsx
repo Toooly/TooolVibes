@@ -18,21 +18,21 @@ type DesktopVibeCompareProps = {
 const compareAxis = [
   {
     icon: Gauge,
-    label: "Fit",
-    title: "Workflow prima",
-    description: "La lettura parte dall'uso reale, poi scende su pricing, piattaforme e note.",
+    label: "Uso",
+    title: "Prima l'uso reale",
+    description: "La lettura parte dall'uso reale, poi scende su prezzi, piattaforme e note.",
   },
   {
     icon: Scale,
     label: "Scarto",
     title: "Differenze visibili",
-    description: "Ogni colonna ha profondita propria: il confronto non diventa una tabella piatta.",
+    description: "Ogni colonna ha profondità propria: il confronto non diventa una tabella piatta.",
   },
   {
     icon: Layers3,
-    label: "Stack",
+    label: "Lista",
     title: "Decisione agganciata",
-    description: "Dal compare puoi tornare al catalogo o portare i candidati dentro il tuo stack.",
+    description: "Dal confronto puoi tornare al catalogo o portare i candidati dentro la tua lista.",
   },
 ];
 
@@ -48,11 +48,11 @@ export function DesktopVibeCompare({
     <div className="desktop-vibe desktop-vibe-compare hidden lg:block">
       <section className="desktop-vibe-section desktop-vibe-compare-hero">
         <div className="desktop-vibe-copy">
-          <p className="desktop-vibe-eyebrow">Compare 3D decision room</p>
+          <p className="desktop-vibe-eyebrow">Stanza decisionale 3D</p>
           <h1>Il confronto diventa una stanza, non una tabella.</h1>
           <p>
-            I candidati entrano su piani diversi: davanti il fit operativo, dietro le note
-            che chiudono il verdetto. La UI resta leggibile, ma vive dentro lo stesso campo
+            I candidati entrano su piani diversi: davanti l’aderenza all’uso, dietro le note
+            che chiudono il verdetto. L’interfaccia resta leggibile, ma vive dentro lo stesso campo
             3D del resto di TooolVibes.
           </p>
           <div className="desktop-vibe-actions">
@@ -60,7 +60,7 @@ export function DesktopVibeCompare({
               Aggiungi tool
             </PremiumLink>
             <PremiumLink href="/shortlist" tone="secondary" size="lg">
-              Apri shortlist
+              Apri salvati
             </PremiumLink>
           </div>
         </div>
@@ -116,10 +116,10 @@ export function DesktopVibeCompare({
 
       <section className="desktop-vibe-section desktop-vibe-compare-console">
         <aside className="desktop-vibe-compare-guidance">
-          <p className="desktop-vibe-eyebrow">Compare console</p>
-          <h2>Leggi pochi tool con profondita, poi decidi.</h2>
+          <p className="desktop-vibe-eyebrow">Guida al confronto</p>
+          <h2>Leggi pochi tool con profondità, poi decidi.</h2>
           <p>
-            Se il compare e vuoto, parti dal catalogo. Quando aggiungi candidati, la matrice
+            Se il confronto è vuoto, parti dal catalogo. Quando aggiungi candidati, la matrice
             resta qui dentro come plancia decisionale, con la scena 3D dietro e non sopra.
           </p>
           <div className="desktop-vibe-final-actions">

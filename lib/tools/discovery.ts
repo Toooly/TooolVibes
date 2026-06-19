@@ -51,12 +51,12 @@ const saveReasonMeta: Record<
     background: "linear-gradient(180deg, rgba(255,248,239,0.96), rgba(249,239,212,0.9))",
   },
   "design-fit": {
-    label: "Fit visuale",
+    label: "Uso visuale",
     tone: "var(--muted-strong)",
     background: "linear-gradient(180deg, rgba(242,248,255,0.96), rgba(228,240,255,0.88))",
   },
   "marketing-fit": {
-    label: "Fit lancio",
+    label: "Uso nel lancio",
     tone: "var(--muted-strong)",
     background: "linear-gradient(180deg, rgba(244,251,239,0.96), rgba(232,245,220,0.88))",
   },
@@ -101,11 +101,11 @@ const taskMeta: Record<
     keywords: ["design", "landing", "branding", "visual", "image", "moodboard"],
   },
   productivity: {
-    label: "Produttivita` personale",
+    label: "Produttività personale",
     keywords: ["produttivita", "workspace", "task", "knowledge base", "personale", "note"],
   },
   "founder-stack": {
-    label: "Founder / solopreneur stack",
+    label: "Founder e solopreneur",
     keywords: ["founder", "marketing", "landing", "research", "workspace", "brand", "solo", "team piccoli"],
   },
 };
@@ -145,7 +145,7 @@ export function getToolPlatforms(tool: ToolRecord) {
 }
 
 export function getToolBestFor(tool: ToolRecord) {
-  return tool.best_for ?? "Capire in fretta se merita davvero shortlist o compare.";
+  return tool.best_for ?? "Capire in fretta se merita davvero un salvataggio o un confronto.";
 }
 
 export function getToolEditorialNote(tool: ToolRecord) {
@@ -158,7 +158,7 @@ export function getToolEditorialNote(tool: ToolRecord) {
 export function getToolWhyHere(tool: ToolRecord) {
   return (
     tool.why_here ??
-    "? qui perché mostra abbastanza utilit?, direzione prodotto e sostanza da meritare una scheda vera, non solo un bookmark."
+    "È qui perché mostra abbastanza utilità, direzione prodotto e sostanza da meritare una scheda vera, non solo un link salvato."
   );
 }
 
@@ -171,13 +171,13 @@ export function getToolUseCases(tool: ToolRecord) {
 export function getToolStrengths(tool: ToolRecord) {
   return tool.strengths?.length
     ? tool.strengths
-    : ["Ruolo chiaro", "Lettura rapida del prodotto", "Potenziale reale nel workflow"];
+    : ["Ruolo chiaro", "Lettura rapida del prodotto", "Potenziale reale nel flusso di lavoro"];
 }
 
 export function getToolCautions(tool: ToolRecord) {
   return tool.cautions?.length
     ? tool.cautions
-    : ["Va verificato sul caso d'uso giusto", "Merita confronto prima di entrare nello stack"];
+    : ["Va verificato sul caso d'uso giusto", "Merita confronto prima di entrare nella lista"];
 }
 
 export function getShortlistStageMeta(stage: ShortlistStage) {
@@ -296,7 +296,7 @@ export function matchesToolShortcut(
     case "watch":
       return getToolEditorialState(tool, index) === "Da tenere d'occhio";
     case "developer":
-      return tool.category === "Developer";
+      return tool.category === "Sviluppo";
     case "design":
       return tool.category === "Design";
     case "assistant":
@@ -330,21 +330,21 @@ export function matchesToolTask(
 
   switch (task) {
     case "writing":
-      return tool.category === "Writing" || keywordHits > 0;
+      return tool.category === "Scrittura" || keywordHits > 0;
     case "prototyping":
-      return keywordHits > 0 || tool.category === "Design" || tool.category === "Developer";
+      return keywordHits > 0 || tool.category === "Design" || tool.category === "Sviluppo";
     case "video-content":
       return tool.category === "Video" || keywordHits > 0;
     case "research":
       return tool.category === "Assistente AI" || keywordHits > 0;
     case "automation":
-      return keywordHits > 0 || tool.category === "Developer";
+      return keywordHits > 0 || tool.category === "Sviluppo";
     case "design-landing":
       return keywordHits > 0 || tool.category === "Design" || tool.category === "Marketing";
     case "productivity":
-      return tool.category === "Produttivita" || keywordHits > 0;
+      return tool.category === "Produttività" || keywordHits > 0;
     case "founder-stack":
-      return keywordHits > 0 || tool.category === "Marketing" || tool.category === "Produttivita";
+      return keywordHits > 0 || tool.category === "Marketing" || tool.category === "Produttività";
     default:
       return true;
   }

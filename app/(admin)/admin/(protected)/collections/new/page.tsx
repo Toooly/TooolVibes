@@ -6,6 +6,19 @@ import { SectionHeading } from "@/components/sections/section-heading";
 import { getAdminTools } from "@/lib/admin/tool-queries";
 import { getAdminCollectionsRuntime } from "@/lib/admin/collection-queries";
 
+function getSourceLabel(source: string | null | undefined) {
+  switch (source) {
+    case "supabase":
+      return "Archivio principale";
+    case "content":
+      return "Contenuto editoriale";
+    case "mock":
+      return "Sorgente locale";
+    default:
+      return "Non disponibile";
+  }
+}
+
 export default async function NewCollectionPage() {
   const [runtime, tools] = await Promise.all([
     getAdminCollectionsRuntime(),
@@ -13,23 +26,23 @@ export default async function NewCollectionPage() {
   ]);
   const publishedTools = tools.filter((tool) => tool.is_published).length;
   const topActions = [
-    { href: "/admin/collections", label: "Torna alle collections" },
-    { href: "/admin/collections/review", label: "Conflict review" },
+    { href: "/admin/collections", label: "Torna alle raccolte" },
+    { href: "/admin/collections/review", label: "Revisione conflitti" },
   ] as const;
   const metrics = [
     {
       label: "Tool disponibili",
       value: String(tools.length),
-      detail: `${publishedTools} gia pubblicati, ${tools.length - publishedTools} ancora in lavorazione.`,
+      detail: `${publishedTools} già pubblicati, ${tools.length - publishedTools} ancora in lavorazione.`,
     },
     {
-      label: "Write target",
-      value: runtime.writeTarget ?? "locked",
+      label: "Salvataggio",
+      value: runtime.canWrite ? "Attivo" : "Sola lettura",
       detail: runtime.writeMessage,
     },
     {
-      label: "Public source",
-      value: runtime.publicSnapshot.meta.active_source,
+      label: "Sorgente pubblica",
+      value: getSourceLabel(runtime.publicSnapshot.meta.active_source),
       detail: runtime.reviewMessage,
     },
   ] as const;
@@ -40,9 +53,9 @@ export default async function NewCollectionPage() {
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <SectionHeading
-              eyebrow="Nuova collection"
-              title="Crea una nuova surface curatoriale"
-              description="Qui costruiamo una collection come vero modulo editoriale del prodotto: framing, accesso, sequencing tool e continuità col layer pubblico."
+              eyebrow="Nuova raccolta"
+              title="Crea una nuova raccolta curatoriale"
+              description="Qui costruisci una raccolta come modulo editoriale del prodotto: taglio, accesso, sequenza dei tool e continuità con la pagina pubblica."
             />
             <div className="hidden flex-wrap gap-3 sm:flex">
               {topActions.map((action) => (
@@ -74,8 +87,8 @@ export default async function NewCollectionPage() {
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
               style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
             >
-              Il write path collections non è ancora attivo. Questa pagina resta visibile per
-              mostrare il form, ma il salvataggio reale richiede Supabase collections configurato.
+              Il salvataggio delle raccolte non è ancora attivo. Questa pagina resta visibile per
+              mostrare il modulo, ma le modifiche richiedono l’area admin configurata.
             </div>
           ) : null}
 
@@ -119,7 +132,7 @@ export default async function NewCollectionPage() {
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
           <CollectionForm
             action={createCollectionFormAction}
-            submitLabel="Crea collection"
+            submitLabel="Crea raccolta"
             disabled={!runtime.canWrite}
             availableTools={tools.map((tool) => ({
               slug: tool.slug,

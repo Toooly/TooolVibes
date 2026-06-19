@@ -15,11 +15,11 @@ function hashColor(str: string): string {
 function accessBadge(access: string) {
   switch (access) {
     case "premium":
-      return { icon: Lock, label: "Member", tone: "#f3bf4c" };
-    case "preview":
-      return { icon: Sparkles, label: "Preview", tone: "#39d2f6" };
+      return { icon: Lock, label: "Riservata", tone: "#f3bf4c" };
+    case "premium-preview":
+      return { icon: Sparkles, label: "Anteprima", tone: "#39d2f6" };
     default:
-      return { icon: Star, label: "Free", tone: "#6a3cff" };
+      return { icon: Star, label: "Aperta", tone: "#6a3cff" };
   }
 }
 
@@ -79,14 +79,14 @@ export function MobileCollectionsView({
           <Boxes className="size-4" />
           <span>Percorsi</span>
         </div>
-        <h1>La superficie dove la selezione diventa percorso.</h1>
+        <h1>Il posto dove la selezione diventa percorso.</h1>
         <p>
           Entra da uno scenario, una tesi o un pubblico già ordinati. Nessun filtro da costruire: il percorso è già pronto.
         </p>
         <div className="mobile-collections__stats">
-          <span>{collections.length} collection</span>
-          <span>·</span>
-          <span>{specialIssue ? "1 special issue" : "Nessuna special issue"}</span>
+          <span>{collections.length} raccolte</span>
+          <span>/</span>
+          <span>{specialIssue ? "1 raccolta speciale" : "Nessuna raccolta speciale"}</span>
         </div>
       </header>
 
@@ -102,7 +102,7 @@ export function MobileCollectionsView({
               {specialIssue ? (
                 <span className="mobile-collections__hero-tag mobile-collections__hero-tag--special">
                   <Sparkles className="size-3" />
-                  Special Issue
+                  Speciale
                 </span>
               ) : (
                 <span className="mobile-collections__hero-tag mobile-collections__hero-tag--featured">
@@ -127,7 +127,7 @@ export function MobileCollectionsView({
               href={`/collections/${main.slug}`}
               className="mobile-collections__hero-cta"
             >
-              {specialIssue ? "Apri special issue" : "Apri collection"}
+              {specialIssue ? "Apri raccolta speciale" : "Apri raccolta"}
               <ArrowRight className="size-4" />
             </Link>
           </div>
@@ -138,7 +138,7 @@ export function MobileCollectionsView({
       {others.length > 0 && (
         <section className="mobile-collections__list">
           <p className="mobile-collections__list-label">
-            {specialIssue ? "Altre collection" : "Tutte le collection"}
+            {specialIssue ? "Altre raccolte" : "Tutte le raccolte"}
           </p>
           <div className="mobile-collections__list-grid">
             {others.map((c) => (

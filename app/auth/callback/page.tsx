@@ -13,7 +13,7 @@ import {
 
 export default function AuthCallbackPage() {
   const router = useRouter();
-  const [message, setMessage] = useState("Sto collegando il workspace al tuo account...");
+  const [message, setMessage] = useState("Sto collegando il tuo accesso...");
 
   useEffect(() => {
     let isActive = true;
@@ -27,7 +27,7 @@ export default function AuthCallbackPage() {
 
       if (!isSupabaseBrowserEnabled()) {
         if (isActive) {
-          setMessage("Verifico la configurazione auth...");
+          setMessage("Verifico l'accesso...");
         }
 
         await loadBrowserSupabaseRuntimeConfig();
@@ -35,7 +35,7 @@ export default function AuthCallbackPage() {
 
       if (!isSupabaseBrowserEnabled()) {
         if (isActive) {
-          setMessage("Auth non disponibile in questo ambiente.");
+          setMessage("Accesso non disponibile in questo momento.");
         }
         return;
       }
@@ -51,7 +51,7 @@ export default function AuthCallbackPage() {
 
       if (authError) {
         if (isActive) {
-          setMessage(`Supabase non ha confermato il link: ${authError}`);
+          setMessage(`Non siamo riusciti a confermare il link: ${authError}`);
         }
         return;
       }
@@ -64,7 +64,7 @@ export default function AuthCallbackPage() {
         if (error) {
           if (isActive) {
             setMessage(
-              "Non sono riuscito a completare il collegamento account. Il link potrebbe essere scaduto o gia usato.",
+              "Non siamo riusciti a completare il collegamento. Il link potrebbe essere scaduto o già usato.",
             );
           }
           return;
@@ -105,7 +105,7 @@ export default function AuthCallbackPage() {
 
         if (error) {
           if (isActive) {
-            setMessage("Non sono riuscito a salvare la sessione. Il link potrebbe essere scaduto o gia usato.");
+            setMessage("Non siamo riusciti a salvare l'accesso. Il link potrebbe essere scaduto o già usato.");
           }
           return;
         }
@@ -122,7 +122,7 @@ export default function AuthCallbackPage() {
       }
 
       if (isActive) {
-        setMessage("Link di conferma non valido o gia usato. Apri l'ultima email ricevuta oppure richiedine una nuova.");
+        setMessage("Link di conferma non valido o già usato. Apri l'ultima email ricevuta oppure richiedine una nuova.");
       }
     }
 
@@ -151,7 +151,7 @@ export default function AuthCallbackPage() {
             />
           </div>
         </div>
-        <p className="pill mx-auto">Auth callback</p>
+        <p className="pill mx-auto">Accesso</p>
         <h1 className="text-display-card mt-4 text-[2rem] sm:text-[2.3rem]">
           Collegamento in corso
         </h1>

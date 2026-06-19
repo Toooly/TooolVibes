@@ -50,7 +50,7 @@ function LegacyCompareMobileDeck({
       <section className="compare-mobile-hero">
         <p className="editorial-label">Confronto mobile</p>
         <h3 className="text-display-card mt-1 text-[1.28rem] text-[var(--foreground)]">
-          Score card verticale, niente tabella.
+          Scheda punteggio verticale, niente tabella.
         </h3>
         <p className="mt-3 text-[0.92rem] leading-6 text-[var(--muted-strong)]">
           Sul telefono leggi ogni tool come una scheda decisionale: punteggio, dimensioni forti e nota.
@@ -86,7 +86,7 @@ function LegacyCompareMobileDeck({
                     {getToolEditorialState(tool)}
                   </p>
                 </div>
-                <div className="compare-mobile-score-ring" aria-label={`Score ${averageStrength} su 100`}>
+                <div className="compare-mobile-score-ring" aria-label={`Punteggio ${averageStrength} su 100`}>
                   <span>{averageStrength}</span>
                   <small>/100</small>
                 </div>
@@ -278,19 +278,19 @@ export function CompareBoard({ tools }: CompareBoardProps) {
           background: "linear-gradient(180deg, rgba(255,255,255,0.84), rgba(243,237,255,0.74))",
         }}
       >
-        <p className="pill mx-auto">Compare layer</p>
+        <p className="pill mx-auto">Confronto</p>
         <h2 className="text-display-card mx-auto mt-4 max-w-none text-[1.72rem] sm:max-w-[16ch] sm:text-[2.08rem] sm:text-balance">
-          Il compare ha senso con pochi candidati veri.
+          Il confronto ha senso con pochi candidati veri.
         </h2>
         <p className="text-body-soft mx-auto mt-3 max-w-[31rem] text-[0.93rem]" style={{ color: "var(--muted)" }}>
-          Aggiungi pochi tool dalle card, dai profili o dalla shortlist. Il confronto serve a far
+          Aggiungi pochi tool dalle schede, dai profili o dai salvati. Il confronto serve a far
           emergere differenze reali, non a costruire una matrice infinita.
         </p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            "1. Parti dall'archivio o da una collection coerente.",
-            "2. Tieni nel tray solo i profili davvero vicini.",
-            "3. Leggi prima workflow fit, poi pricing e nota editoriale.",
+            "1. Parti dall'archivio o da una raccolta coerente.",
+            "2. Tieni nel confronto solo i profili davvero vicini.",
+            "3. Leggi prima integrazione nel flusso, poi prezzo e nota editoriale.",
           ].map((item) => (
             <div
               key={item}
@@ -315,7 +315,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
             href="/shortlist"
             className="button-shell button-secondary text-ui-strong inline-flex rounded-full px-5 py-3 text-sm font-semibold"
           >
-            Apri la shortlist
+            Apri i salvati
           </Link>
         </div>
       </div>
@@ -331,13 +331,13 @@ export function CompareBoard({ tools }: CompareBoardProps) {
           background: "linear-gradient(180deg, rgba(255,255,255,0.84), rgba(243,237,255,0.74))",
         }}
       >
-        <p className="pill mx-auto">Compare parziale</p>
+        <p className="pill mx-auto">Confronto parziale</p>
         <h2 className="text-display-card mx-auto mt-4 max-w-none text-[1.72rem] sm:max-w-[16ch] sm:text-[2.08rem] sm:text-balance">
           Serve un secondo profilo per un confronto utile.
         </h2>
             <p className="text-body-soft mx-auto mt-3 max-w-[31rem] text-[0.93rem]" style={{ color: "var(--muted)" }}>
-              {comparedTools[0].name} è già nel tray. Aggiungi un altro profilo vicino per capire
-              davvero dove cambia il fit di workflow.
+              {comparedTools[0].name} è già nel confronto. Aggiungi un altro profilo vicino per capire
+              davvero dove cambia l&apos;integrazione nel flusso.
             </p>
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
@@ -351,7 +351,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
             href="/shortlist"
             className="button-shell button-secondary text-ui-strong inline-flex rounded-full px-5 py-3 text-sm font-semibold"
           >
-            Apri shortlist
+            Apri i salvati
           </Link>
         </div>
       </div>
@@ -364,7 +364,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="editorial-label">Compare attivo</span>
+              <span className="editorial-label">Confronto attivo</span>
               <span className="selection-status">{comparedTools.length}/{MAX_COMPARE_TOOLS} tool affiancati</span>
             </div>
             <p className="text-body-soft mt-2 text-[0.92rem]" style={{ color: "var(--muted)" }}>
@@ -392,9 +392,9 @@ export function CompareBoard({ tools }: CompareBoardProps) {
         <p className="mt-2 max-w-[42rem] text-[0.96rem] leading-7" style={{ color: "var(--muted-strong)" }}>
           {topDecisionLead
             ? hasTopLeadTie
-              ? `Il set resta vicino: ${topDecisionLead.tool.name} non stacca davvero e conviene leggere prima workflow fit, pricing e nota editoriale.`
+              ? `Il gruppo resta vicino: ${topDecisionLead.tool.name} non stacca davvero e conviene leggere prima integrazione nel flusso, prezzo e nota editoriale.`
               : `${topDecisionLead.tool.name} spicca in ${topDecisionLead.leadCount} dimensioni su ${scoreDimensions.length}. Parti da qui e poi conferma il verdetto nei dettagli.`
-            : "Il compare serve a far emergere differenze vere, non a costruire una matrice infinita."}
+            : "Il confronto serve a far emergere differenze vere, non a costruire una matrice infinita."}
         </p>
 
         <LegacyCompareMobileDeck

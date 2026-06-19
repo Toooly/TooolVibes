@@ -163,7 +163,7 @@ export function DesktopVibeArchive({
           <h1>Cerca, filtra e attraversa i tool come livelli.</h1>
           <p>
             Il catalogo desktop diventa una console: ricerca davanti, categorie in
-            prospettiva, tool card su piani diversi e workspace sempre agganciato.
+            prospettiva, schede tool su piani diversi e salvati sempre a portata.
           </p>
         </div>
         <div className="desktop-vibe-archive-stats" aria-label="Statistiche catalogo">
@@ -177,7 +177,7 @@ export function DesktopVibeArchive({
           </span>
           <span>
             <strong>{compareSlugs.length}/{MAX_COMPARE_TOOLS}</strong>
-            compare
+            in confronto
           </span>
         </div>
       </section>
@@ -189,7 +189,7 @@ export function DesktopVibeArchive({
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Cerca tool, use case o categoria"
+              placeholder="Cerca tool, caso d'uso o categoria"
             />
           </label>
 
@@ -218,7 +218,7 @@ export function DesktopVibeArchive({
           <div className="desktop-vibe-filter-group">
             <p>
               <Layers3 aria-hidden="true" />
-              Profondita
+              Profondità
             </p>
             <div>
               {directoryLevelFilters.map((level) => (
@@ -240,7 +240,7 @@ export function DesktopVibeArchive({
           <div className="desktop-vibe-filter-group">
             <p>
               <Sparkles aria-hidden="true" />
-              Tag orbit
+              Tag rapidi
             </p>
             <div>
               <button
@@ -365,7 +365,7 @@ export function DesktopVibeArchive({
                       type="button"
                       className={isStacked ? "is-active" : ""}
                       onClick={() => handleStack(tool.slug)}
-                      aria-label={`Aggiungi ${tool.name} allo stack`}
+                      aria-label={`Aggiungi ${tool.name} alla lista`}
                     >
                       <Layers3 aria-hidden="true" />
                     </button>

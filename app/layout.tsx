@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   applicationName: siteConfig.name,
   keywords: [
-    "AI tools",
-    "SaaS tools",
+    "tool AI",
+    "tool SaaS",
     "no-code",
     "vibe coding",
     "automation",
@@ -31,12 +31,12 @@ export const metadata: Metadata = {
     apple: "/brand/tooolvibes-logo.png",
   },
   title: {
-    default: `${siteConfig.name} | AI tools, SaaS, no-code e vibe coding`,
+    default: `${siteConfig.name} | Tool AI, SaaS, no-code e vibe coding`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   openGraph: {
-    title: `${siteConfig.name} | Premium AI tools discovery system`,
+    title: `${siteConfig.name} | Tool AI selezionati senza rumore`,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} | Tool AI, no-code e vibe coding`,
+    title: `${siteConfig.name} | Tool AI, no-code e automazioni`,
     description: siteConfig.description,
   },
 };

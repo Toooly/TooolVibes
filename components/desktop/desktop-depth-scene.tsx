@@ -37,12 +37,12 @@ type DesktopDepthSceneProps = {
 };
 
 const sceneRoutes = [
-  { icon: Search, label: "Discover", href: "/archivio" },
-  { icon: GitCompare, label: "Compare", href: "/compare" },
-  { icon: Bookmark, label: "Shortlist", href: "/shortlist" },
+  { icon: Search, label: "Scopri", href: "/archivio" },
+  { icon: GitCompare, label: "Confronta", href: "/compare" },
+  { icon: Bookmark, label: "Salvati", href: "/shortlist" },
 ];
 
-const contextSignals = ["AI App Builder", "Automation", "Vibe Coding", "No-Code"];
+const contextSignals = ["Builder app AI", "Automazioni", "Vibe coding", "No-code"];
 
 export function DesktopDepthScene({ focusTool, supportingTools }: DesktopDepthSceneProps) {
   const router = useRouter();
@@ -116,7 +116,7 @@ function DepthLayerForeground({
     <div className="depth-scene__layer depth-scene__layer--foreground">
       {focusTool ? <FloatingToolPanel tool={focusTool} onNavigate={onNavigate} /> : null}
       <div className="depth-scene__decision-panel">
-        <span>Decision path</span>
+        <span>Percorso decisionale</span>
         <strong>3 passaggi, zero rumore</strong>
         <div className="depth-scene__route-stack">
           {sceneRoutes.map((item) => {

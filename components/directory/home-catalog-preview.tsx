@@ -10,10 +10,10 @@ type HomeCatalogPreviewProps = {
 };
 
 const previewFilters = [
-  { label: "App builder", href: "/archivio?group=ai-app-builder" },
-  { label: "Automation", href: "/archivio?group=automation" },
+  { label: "Builder app", href: "/archivio?group=ai-app-builder" },
+  { label: "Automazioni", href: "/archivio?group=automation" },
   { label: "Vibe coding", href: "/archivio?group=vibe-coding" },
-  { label: "AI Video", href: "/archivio?group=ai-video" },
+  { label: "Video AI", href: "/archivio?group=ai-video" },
 ];
 
 export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
@@ -25,21 +25,21 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
     <PremiumPanel tone="airy" className="px-4 py-5 sm:px-7 sm:py-8">
       <div className="grid gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:items-start">
         <div className="max-w-[39rem]">
-          <PremiumBadge tone="accent">Catalogo preview</PremiumBadge>
+          <PremiumBadge tone="accent">Anteprima catalogo</PremiumBadge>
           <h2 className="text-display-card mt-3 text-[1.65rem] leading-[1.1] text-white sm:mt-4 sm:text-[2.65rem]">
-            Una preview viva, non tutto l&apos;archivio buttato in home.
+            Un&apos;anteprima viva, non l&apos;intero archivio messo in home.
           </h2>
           <p className="mt-3 text-[0.92rem] leading-6 text-white/68 sm:mt-4 sm:text-[1rem] sm:leading-7">
             Parti da pochi segnali forti, poi entra nel catalogo completo quando vuoi
-            filtrare, salvare, confrontare e costruire il tuo stack.
+            filtrare, salvare, confrontare e costruire la tua lista.
           </p>
 
           <div className="mt-5 hidden gap-2 sm:grid sm:grid-cols-2">
             {[
-              { icon: Search, label: "Ricerca semantica", copy: "Nome, tag, use case e categoria." },
+              { icon: Search, label: "Ricerca intelligente", copy: "Nome, tag, casi d'uso e categoria." },
               { icon: SlidersHorizontal, label: "Filtri puliti", copy: "Solo ciò che serve all'inizio." },
               { icon: GitCompare, label: "Confronto", copy: "Fino a 5 candidati alla volta." },
-              { icon: Bookmark, label: "Shortlist", copy: "Salva e riprendi il percorso." },
+              { icon: Bookmark, label: "Salvati", copy: "Salva e riprendi il percorso." },
             ].map((item) => {
               const Icon = item.icon;
 
@@ -57,10 +57,10 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
             <summary>Mostra funzioni catalogo</summary>
             <div className="mt-3 grid gap-2">
               {[
-                ["Ricerca", "Nome, tag e use case."],
+                ["Ricerca", "Nome, tag e casi d'uso."],
                 ["Filtri", "Solo i segnali utili."],
                 ["Confronto", "Fino a 5 candidati."],
-                ["Shortlist", "Salva e riprendi."],
+                ["Salvati", "Salva e riprendi."],
               ].map(([label, copy]) => (
                 <div key={label} className="micro-popover-panel px-3 py-2.5">
                   <p className="text-sm font-semibold text-[var(--foreground)]">{label}</p>
@@ -120,7 +120,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
                 </p>
                 <div className="mt-3 rounded-[16px] border border-white/10 bg-white/8 p-3">
                    <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-white/44">
-                    TL;DR
+                    In breve
                   </p>
                   <p className="text-clamp-2 mt-1.5 text-xs leading-5 text-white/66">
                     {tool.editorialReview}

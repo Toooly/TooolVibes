@@ -19,7 +19,7 @@ type SuggestionsPageProps = {
 const statusLabels: Record<string, string> = {
   created: "Suggerimento creato.",
   deleted: "Suggerimento eliminato.",
-  error: "Operazione non riuscita. Controlla il runtime e riprova.",
+  error: "Operazione non riuscita. Controlla lo stato dell'area admin e riprova.",
 };
 
 const suggestionStatusConfig: Record<
@@ -148,7 +148,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
         <section className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
             <div>
-              <p className="editorial-label">Workspace suggerimenti</p>
+              <p className="editorial-label">Area suggerimenti</p>
               <h2 className="text-display-card mt-2 text-[1.58rem] sm:text-[1.82rem]">
                 Tutte le richieste tool
               </h2>
@@ -211,7 +211,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                       ) : null}
                       {suggestion.admin_notes ? (
                         <p>
-                          Note admin:{" "}
+                          Note interne:{" "}
                           <span style={{ color: "var(--muted-strong)" }}>
                             {suggestion.admin_notes}
                           </span>
@@ -223,7 +223,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                     <form action={updateSuggestionStatusAction} className="space-y-3">
                       <input type="hidden" name="id" value={suggestion.id} />
                       <label className="block">
-                        <span className="mb-2 block text-sm font-semibold">Note admin</span>
+                        <span className="mb-2 block text-sm font-semibold">Note interne</span>
                         <textarea
                           name="admin_notes"
                           rows={2}

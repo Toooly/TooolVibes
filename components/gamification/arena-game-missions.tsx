@@ -7,9 +7,9 @@ export function ArenaGameMissions() {
     <GameMissionPanel
       scope="arena"
       variant="arena"
-      eyebrow="Battle pass arena"
-      title="La stanza confronto ha il suo XP."
-      description="Ogni tool entra come contendente: il confronto puo crescere in sfide, livelli e verdetti sempre piu leggibili."
+      eyebrow="Missioni confronto"
+      title="Anche il confronto fa crescere il tuo XP."
+      description="Ogni tool entra come contendente: il confronto può crescere in sfide, livelli e verdetti sempre più leggibili."
     />
   );
 }

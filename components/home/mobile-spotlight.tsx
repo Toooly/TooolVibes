@@ -111,7 +111,7 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
 
         <div className="mobile-spotlight-cosmic__stats">
           <div>
-            <span>Use case</span>
+            <span>Casi d&apos;uso</span>
             <strong>{tool.useCases.length}</strong>
           </div>
           <div>
@@ -138,16 +138,16 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
             href={`/toools/${tool.slug}`}
             className="mobile-spotlight-cosmic__cta mobile-spotlight-cosmic__cta--ghost"
           >
-            Scheda
+            Apri scheda
             <ArrowRight className="size-3.5" />
           </Link>
         </div>
       </div>
 
-      {/* Altre candidate */}
+      {/* Altri tool da valutare */}
       {satellites.length > 0 && (
         <div className="mobile-spotlight-cosmic__candidates">
-          <p className="mobile-spotlight-cosmic__candidates-label">Altre candidate</p>
+          <p className="mobile-spotlight-cosmic__candidates-label">Altri tool da valutare</p>
           <div className="mobile-spotlight-cosmic__candidates-scroll">
             {satellites.map((sat) => (
               <Link

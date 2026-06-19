@@ -96,7 +96,7 @@ export async function updateCollectionFormAction(
   await requireAdminSession();
 
   if (!isValidUuid(id)) {
-    return { status: "error", message: "ID collection non valido." };
+    return { status: "error", message: "ID raccolta non valido." };
   }
 
   if (!(await isSupabaseCollectionsWriteEnabled())) {
@@ -108,7 +108,7 @@ export async function updateCollectionFormAction(
   if (!existingCollection) {
     return {
       status: "error",
-      message: "Collection non trovata.",
+      message: "Raccolta non trovata.",
     };
   }
 

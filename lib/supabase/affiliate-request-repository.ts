@@ -60,7 +60,7 @@ export const getAdminAffiliateRequestsFromSupabase = cache(
       .order("created_at", { ascending: false });
 
     if (error) {
-      throw new Error(`Unable to load affiliate requests: ${error.message}`);
+      throw new Error(`Non è stato possibile caricare le richieste di affiliazione. Dettaglio: ${error.message}`);
     }
 
     return data ?? [];
@@ -78,7 +78,7 @@ export async function getAffiliateRequestByIdFromSupabase(
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Unable to load affiliate request ${id}: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare questa richiesta di affiliazione. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -100,7 +100,7 @@ export async function getRecentRejectedAffiliateRequestByEmail(
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Unable to load rejected affiliate request for ${email}: ${error.message}`);
+    throw new Error(`Non è stato possibile verificare le richieste di affiliazione già respinte. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -117,7 +117,7 @@ export async function createAffiliateRequestInSupabase(
     .single();
 
   if (error) {
-    throw new Error(`Unable to create affiliate request: ${error.message}`);
+    throw new Error(`Non è stato possibile inviare la richiesta di affiliazione. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -136,7 +136,7 @@ export async function updateAffiliateRequestInSupabase(
     .single();
 
   if (error) {
-    throw new Error(`Unable to update affiliate request ${id}: ${error.message}`);
+    throw new Error(`Non è stato possibile aggiornare questa richiesta di affiliazione. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -147,6 +147,6 @@ export async function deleteAffiliateRequestFromSupabase(id: string): Promise<vo
   const { error } = await client.from("affiliate_requests").delete().eq("id", id);
 
   if (error) {
-    throw new Error(`Unable to delete affiliate request ${id}: ${error.message}`);
+    throw new Error(`Non è stato possibile eliminare questa richiesta di affiliazione. Dettaglio: ${error.message}`);
   }
 }

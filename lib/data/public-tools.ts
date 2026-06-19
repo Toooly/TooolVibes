@@ -96,7 +96,7 @@ const loadPublicToolsSnapshot = cache(async (): Promise<PublicToolsSnapshot> => 
       warnings: [],
     };
   } catch (error) {
-    console.error("[tools:data] Supabase public read failed, fallback to mock tools.", {
+    console.error("[tools:data] Lettura archivio pubblico non riuscita, uso la sorgente locale.", {
       error: error instanceof Error ? error.message : String(error),
     });
 

@@ -14,7 +14,7 @@ export function AdminEmptyState({
   return (
     <PremiumPanel tone="light" className="px-6 py-8 text-center sm:px-8 sm:py-10">
       <PremiumBadge tone="accent" className="mx-auto">
-        Founders workspace
+        Area operativa founder
       </PremiumBadge>
       <h2 className="mt-4 text-2xl text-[var(--foreground)]">{title}</h2>
       <p className="mx-auto mt-3 max-w-2xl text-sm leading-7" style={{ color: "var(--muted)" }}>

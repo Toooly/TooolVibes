@@ -26,11 +26,11 @@ export type AdminToolsRuntime = {
 
 const adminToolWarningLabels: Record<string, string> = {
   "supabase-public-read-failed":
-    "Il feed pubblico tools non è riuscito a leggere Supabase ed ? passato al fallback mock.",
+    "Il feed pubblico dei tool non è riuscito a leggere l'archivio principale ed è passato alla sorgente locale.",
   "supabase-admin-read-failed":
-    "Il layer admin tools non riesce a leggere Supabase e resta in fallback snapshot.",
+    "Il pannello tool non riesce a leggere l'archivio principale e resta sulla copia locale.",
   "supabase-admin-query-failed":
-    "La query admin tools ha fallito dopo il bootstrap della connessione e il workspace ? degradato.",
+    "La lettura interna dei tool non è riuscita e l'area resta in modalità ridotta.",
 };
 
 function sortTools(items: ToolRecord[]) {
@@ -90,9 +90,9 @@ export const getAdminToolsRuntime = cache(async (): Promise<AdminToolsRuntime> =
       publicSnapshot,
       requestedAdminReadSource: "snapshot",
       readMessage:
-        "Lettura interna in snapshot mock: le env Supabase admin non sono presenti in questo ambiente.",
+        "Lettura interna su copia locale: l'archivio principale non è configurato in questo ambiente.",
       writeMessage:
-        "Scritture tools non attive: la surface founders resta su snapshot mock in sola lettura finché Supabase admin non è configurato.",
+        "Salvataggio tool non attivo: l'area resta sulla copia locale in sola lettura finché l'archivio principale non è configurato.",
     });
   }
 
@@ -101,9 +101,9 @@ export const getAdminToolsRuntime = cache(async (): Promise<AdminToolsRuntime> =
       publicSnapshot,
       requestedAdminReadSource: "supabase",
       readMessage:
-        "Lettura interna degradata su snapshot mock: connessione admin richiesta ma non accessibile in questo ambiente.",
+        "Lettura interna ridotta su copia locale: connessione admin richiesta ma non accessibile in questo ambiente.",
       writeMessage:
-        "Supabase admin tools non accessibile: il workspace founders blocca le mutazioni e continua in fallback leggibile per non lasciare stati ambigui.",
+        "L'archivio principale dei tool non è accessibile: l'area blocca i salvataggi e continua con una copia leggibile per non lasciare stati ambigui.",
       warnings: ["supabase-admin-read-failed"],
     });
   }
@@ -114,11 +114,11 @@ export const getAdminToolsRuntime = cache(async (): Promise<AdminToolsRuntime> =
       publicSnapshot,
       adminReadSource: "supabase",
       requestedAdminReadSource: "supabase",
-      readMessage: "Lettura interna live da Supabase con inventario tools completo.",
+      readMessage: "Lettura interna attiva con inventario tool completo.",
       canWrite: true,
       writeTarget: "supabase",
       writeMessage:
-        "Scritture tools attive su Supabase. Dashboard, edit e quick actions operano sul repository persistente.",
+        "Salvataggio tool attivo. Dashboard, modifica e azioni rapide operano sull'archivio principale.",
       warnings: publicSnapshot.warnings,
     };
   } catch {
@@ -126,9 +126,9 @@ export const getAdminToolsRuntime = cache(async (): Promise<AdminToolsRuntime> =
       publicSnapshot,
       requestedAdminReadSource: "supabase",
       readMessage:
-        "Lettura interna degradata su snapshot mock: la query admin tools ha fallito dopo il bootstrap della connessione.",
+        "Lettura interna ridotta su copia locale: la query admin tool ha fallito dopo l'avvio della connessione.",
       writeMessage:
-        "Runtime tools in modalita` prudente: fino a quando la lettura admin non torna stabile, le mutazioni restano bloccate e il pannello usa un fallback consistente.",
+        "Area tool in modalità prudente: finché la lettura interna non torna stabile, i salvataggi restano bloccati e il pannello usa una copia coerente.",
       warnings: ["supabase-admin-query-failed"],
     });
   }

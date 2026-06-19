@@ -65,7 +65,7 @@ export async function getCollectionSafeAlignEventsFromSupabase(): Promise<
       return [];
     }
 
-    throw new Error(`Unable to load collection safe align events: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare i riallineamenti delle raccolte. Dettaglio: ${error.message}`);
   }
 
   return ((data ?? []) as CollectionSafeAlignEventRow[]).map(mapSafeAlignRow);
@@ -90,6 +90,6 @@ export async function insertCollectionSafeAlignEvent({
   });
 
   if (error) {
-    throw new Error(`Unable to record collection safe align event: ${error.message}`);
+    throw new Error(`Non è stato possibile registrare il riallineamento della raccolta. Dettaglio: ${error.message}`);
   }
 }

@@ -15,7 +15,7 @@ const methodSteps = [
   {
     icon: "Search" as const,
     label: "Scopri",
-    title: "Parti da tool gia curati",
+    title: "Parti da tool già curati",
     description: "Categorie leggibili, filtri utili e una selezione editoriale che tiene fuori il rumore.",
     href: "/archivio",
     color: "#6a3cff",
@@ -56,7 +56,7 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools }: VibeHomeV2Pro
       href: "/radar",
       color: "#39d2f6",
       icon: "Radar" as const,
-      badge: "LIVE",
+      badge: "Ora",
     },
     {
       id: "solar-shortlist",
@@ -74,7 +74,7 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools }: VibeHomeV2Pro
     },
     {
       id: "solar-top-tool",
-      label: "Top Tool",
+      label: "Tool scelto",
       href: focusTool ? `/toools/${focusTool.slug}` : "/archivio",
       color: "#ec4899",
       icon: "Sparkles" as const,

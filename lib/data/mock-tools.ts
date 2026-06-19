@@ -40,7 +40,7 @@ export const mockTools: ToolRecord[] = [
     short_description_it:
       "Per chiudere landing e pagine di lancio con una resa forte e un time-to-polish molto corto.",
     description_it:
-      "Framer AI regge bene quando una buona idea rischia ancora di sembrare acerba. In TooolVibes conta perché aiuta founder, designer e piccoli team a trasformare una direzione in una superficie pubblica più credibile senza aprire un workflow troppo pesante.",
+      "Framer AI regge bene quando una buona idea rischia ancora di sembrare acerba. In TooolVibes conta perché aiuta founder, designer e piccoli team a trasformare una direzione in una presenza pubblica più credibile senza aprire un flusso troppo pesante.",
     website_url: "https://www.framer.com",
     affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/framer-ai",
@@ -57,7 +57,7 @@ export const mockTools: ToolRecord[] = [
     id: "2",
     name: "Cursor",
     slug: "cursor",
-    category: "Developer",
+    category: "Sviluppo",
     tags: ["vibe-coding", "code editor", "agentic"],
     editorial_state: "In evidenza",
     pricing: "Freemium",
@@ -75,7 +75,7 @@ export const mockTools: ToolRecord[] = [
     strengths: [
       "Ottimo equilibrio tra controllo e velocità",
       "Buona lettura del contesto su file e passaggi complessi",
-      "Si integra bene in workflow reali, non solo in prove rapide",
+      "Si integra bene in flussi reali, non solo in prove rapide",
     ],
     cautions: [
       "Richiede comunque disciplina tecnica e senso del limite",
@@ -109,8 +109,8 @@ export const mockTools: ToolRecord[] = [
     id: "3",
     name: "Notion AI",
     slug: "notion-ai",
-    category: "Produttivita",
-    tags: ["knowledge base", "workspace", "team"],
+    category: "Produttività",
+    tags: ["base conoscenza", "spazio condiviso", "team"],
     editorial_state: "Selezione core",
     pricing: "Paid",
     platforms: ["Web", "Mac", "Windows"],
@@ -122,12 +122,12 @@ export const mockTools: ToolRecord[] = [
     use_cases: [
       "Knowledge base team",
       "Documentazione operativa",
-      "Workspace condivisi",
+      "Spazi condivisi",
     ],
     strengths: [
       "Forte come sistema, non solo come singolo tool",
       "Adottabile rapidamente",
-      "Buon equilibrio tra struttura e flessibilita`",
+      "Buon equilibrio tra struttura e flessibilità",
     ],
     cautions: [
       "Può diventare dispersivo se non governi la struttura",
@@ -142,7 +142,7 @@ export const mockTools: ToolRecord[] = [
       editorial_conviction: "solid",
     },
     short_description_it:
-      "Organizza note, documentazione e task con un layer AI dentro un workspace già noto.",
+      "Organizza note, documentazione e attività con un supporto AI dentro uno spazio già noto.",
     description_it:
       "Per team e creator che vogliono centralizzare conoscenza e operazioni leggere. La forza non è solo l’AI, ma la combinazione tra contenuto strutturato e collaborazione.",
     website_url: "https://www.notion.so/product/ai",
@@ -168,7 +168,7 @@ export const mockTools: ToolRecord[] = [
     platforms: ["Web"],
     best_for: "Concept video, cut promozionali e post-produzione rapida per creator e launch asset",
     editorial_note:
-      "Interessante quando devi pesare insieme impatto visivo, rapidità di esecuzione e qualità percepita del workflow.",
+      "Interessante quando devi pesare insieme impatto visivo, rapidità di esecuzione e qualità percepita del flusso.",
     why_here:
       "Perché resta uno dei nomi più completi quando il criterio non è solo AI, ma anche maturità del prodotto e tenuta del flusso.",
     use_cases: [
@@ -178,7 +178,7 @@ export const mockTools: ToolRecord[] = [
     ],
     strengths: [
       "Output moderni e subito leggibili",
-      "Buona fluidita` tra generazione e rifinitura",
+      "Buona fluidità tra generazione e rifinitura",
       "Percezione prodotto premium sopra la media della categoria",
     ],
     cautions: [
@@ -196,7 +196,7 @@ export const mockTools: ToolRecord[] = [
     short_description_it:
       "Suite visual AI per chiudere concept, variazioni e post-produzione con un feeling prodotto molto più maturo della media.",
     description_it:
-      "Runway conta quando devi produrre asset video credibili senza costruire un workflow studio-grade. In TooolVibes è forte perché tiene insieme sperimentazione, velocità e una sensazione premium che regge bene anche in contesti launch o content-first.",
+      "Runway conta quando devi produrre materiali video credibili senza costruire un flusso da studio. In TooolVibes è forte perché tiene insieme sperimentazione, velocità e una sensazione premium che regge bene anche in contesti di lancio o contenuto.",
     website_url: "https://runwayml.com",
     affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/runway",
@@ -231,11 +231,11 @@ export const mockTools: ToolRecord[] = [
     strengths: [
       "Velocità molto alta nel first-pass",
       "Buon feeling da strumento di orientamento, non solo da chat",
-      "Molto utile quando la ricerca ? ancora aperta e poco strutturata",
+      "Molto utile quando la ricerca è ancora aperta e poco strutturata",
     ],
     cautions: [
       "Le fonti importanti vanno comunque verificate a mano",
-      "Rischia overtrust se lo usi come risposta finale e non come primo layer",
+      "Rischia fiducia eccessiva se lo usi come risposta finale e non come primo passaggio",
     ],
     editorial_scorecard: {
       ease_of_use: "strong",
@@ -248,13 +248,13 @@ export const mockTools: ToolRecord[] = [
     short_description_it:
       "Motore di ricerca AI utile per aprire un tema, leggere le fonti e capire rapidamente dove vale la pena andare più a fondo.",
     description_it:
-      "Perplexity ? forte quando devi togliere attrito alla fase iniziale della ricerca. In TooolVibes lo leggiamo come strumento di orientamento e raccolta fonti, non come verit? finale: il suo valore sta nel primo perimetro che ti consegna.",
+      "Perplexity è forte quando devi togliere attrito alla fase iniziale della ricerca. In TooolVibes lo leggiamo come strumento di orientamento e raccolta fonti, non come verità finale: il suo valore sta nel primo perimetro che ti consegna.",
     website_url: "https://www.perplexity.ai",
     affiliate_url: null,
     tooolvibes_post_url: "https://tooolvibes.com/posts/perplexity",
     cover_image_url:
       "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80",
-    source: "AI workflow digest",
+    source: "Digest flussi AI",
     date_discovered: "2026-01-25",
     is_featured: false,
     is_published: true,
@@ -274,7 +274,7 @@ export const mockTools: ToolRecord[] = [
     editorial_note:
       "Da consultare quando l'obiettivo è capire qualità estetica, non solo produttività.",
     why_here:
-      "Perché resta un riferimento quando il criterio principale ? impatto estetico e non industrializzazione del processo.",
+      "Perché resta un riferimento quando il criterio principale è impatto estetico e non industrializzazione del processo.",
     use_cases: [
       "Moodboard",
       "Concept creativo",
@@ -283,11 +283,11 @@ export const mockTools: ToolRecord[] = [
     strengths: [
       "Resa estetica molto forte",
       "Ottimo per fasi divergenti",
-      "Identita` visuale riconoscibile",
+      "Identità visuale riconoscibile",
     ],
     cautions: [
       "Meno efficiente se cerchi precisione operativa",
-      "Il workflow non è il più lineare del gruppo",
+      "Il flusso non è il più lineare del gruppo",
     ],
     editorial_scorecard: {
       ease_of_use: "measured",
@@ -317,7 +317,7 @@ export const mockTools: ToolRecord[] = [
     id: "7",
     name: "Descript",
     slug: "descript",
-    category: "Writing",
+    category: "Scrittura",
     tags: ["audio", "podcast", "editing"],
     editorial_state: "In evidenza",
     pricing: "Freemium",
@@ -326,7 +326,7 @@ export const mockTools: ToolRecord[] = [
     editorial_note:
       "Molto forte quando vuoi abbassare la complessità dell'editing senza dare al contenuto un feeling impoverito.",
     why_here:
-      "Perché trasforma un workflow spesso tecnico in qualcosa di più editoriale, leggibile e facile da far reggere a team piccoli.",
+      "Perché trasforma un flusso spesso tecnico in qualcosa di più editoriale, leggibile e facile da far reggere a team piccoli.",
     use_cases: [
       "Editing podcast e interviste",
       "Walkthrough o voiceover per launch asset",
@@ -339,7 +339,7 @@ export const mockTools: ToolRecord[] = [
     ],
     cautions: [
       "Non è il più profondo per chi fa audio pro come mestiere",
-      "La comodita` non basta: il risultato finale va comunque diretto",
+      "La comodità non basta: il risultato finale va comunque diretto",
     ],
     editorial_scorecard: {
       ease_of_use: "strong",
@@ -369,14 +369,14 @@ export const mockTools: ToolRecord[] = [
     id: "8",
     name: "Lovable",
     slug: "lovable",
-    category: "Developer",
+    category: "Sviluppo",
     tags: ["app builder", "vibe-coding", "prototype"],
     editorial_state: "Nuovo in archivio",
     pricing: "Freemium",
     platforms: ["Web"],
     best_for: "Prime versioni di prodotto, proof of concept e superfici navigabili da prompt",
     editorial_note:
-      "Da aprire quando devi capire se un'idea riesce a diventare interfaccia prima di diventare stack vero.",
+      "Da aprire quando devi capire se un'idea riesce a diventare interfaccia prima di diventare prodotto completo.",
     why_here:
       "Perché accorcia molto il passaggio tra intuizione e artefatto navigabile, con una sensazione più app-like di molti builder prompt-first.",
     use_cases: [
@@ -391,7 +391,7 @@ export const mockTools: ToolRecord[] = [
     ],
     cautions: [
       "Va validato non appena la complessità cresce o arrivano logiche più vere",
-      "Il rischio principale ? confondere velocità con solidità del prodotto",
+      "Il rischio principale è confondere velocità con solidità del prodotto",
     ],
     editorial_scorecard: {
       ease_of_use: "solid",

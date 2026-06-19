@@ -95,7 +95,7 @@ async function saveToolRequestViaApi(input: ToolRequestInput) {
   });
 
   if (!response.ok) {
-    throw new Error("API request failed.");
+    throw new Error("Richiesta non riuscita.");
   }
 
   const payload = (await response.json()) as {

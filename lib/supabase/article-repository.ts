@@ -125,7 +125,7 @@ export const getPublishedArticlesFromSupabase = cache(async (): Promise<BlogArti
     .order("published_at", { ascending: false });
 
   if (error) {
-    throw new Error(`Unable to load published articles from Supabase: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare gli articoli pubblicati. Dettaglio: ${error.message}`);
   }
 
   return orderArticles(((data ?? []) as unknown as SupabaseArticleRow[]).map(mapSupabaseArticle));
@@ -139,7 +139,7 @@ export async function getAdminArticlesFromSupabase(): Promise<BlogArticleRecord[
     .order("updated_at", { ascending: false });
 
   if (error) {
-    throw new Error(`Unable to load admin articles from Supabase: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare gli articoli dell'area admin. Dettaglio: ${error.message}`);
   }
 
   return orderArticles(((data ?? []) as unknown as SupabaseArticleRow[]).map(mapSupabaseArticle));
@@ -154,7 +154,7 @@ export async function getAdminArticleByIdFromSupabase(id: string): Promise<BlogA
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Unable to load article ${id} from Supabase: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare questo articolo. Dettaglio: ${error.message}`);
   }
 
   return data ? mapSupabaseArticle(data as unknown as SupabaseArticleRow) : null;

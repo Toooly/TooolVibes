@@ -77,8 +77,8 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
     ? await canAccessSupabaseCollectionTransitionReviewsAdmin()
     : false;
   let reviewMessage = canReview
-    ? "Review state persistente attivo su Supabase per conflitti e drift."
-    : "Review state non persistente: applica la migration `0012-0013` per abilitare reviewed/dismissed persistenti.";
+    ? "Revisione salvata attiva per conflitti e differenze."
+    : "Revisione non ancora salvata: completa la configurazione per mantenere gli stati rivista/archiviata.";
   let transitionReviews: CollectionTransitionReviewRecord[] = [];
 
   if (canReview) {
@@ -87,14 +87,14 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
     } catch {
       canReview = false;
       reviewMessage =
-        "Review state non disponibile in questo ambiente: la surface interna resta leggibile e continua con fallback locale finché la tabella non è pronta.";
+        "Revisione non disponibile in questo ambiente: il pannello interno resta leggibile e continua con dati locali finché l'archivio non è pronto.";
     }
   }
 
   let canSafeAlign = canWrite && (await canAccessSupabaseCollectionSafeAlignAdmin());
   let safeAlignMessage = canSafeAlign
-    ? "Safe align attivo per i drift minori: applica solo i campi delimitati dalla policy e registra un audit persistente."
-    : "Safe align disattivato: applica la migration `0014-0015` per abilitare la traccia persistente prima di usare l'azione.";
+    ? "Riallineamento sicuro attivo per le differenze minori: applica solo i campi ammessi e registra la modifica."
+    : "Riallineamento sicuro disattivato: completa la configurazione prima di usare l'azione.";
   let safeAlignEvents: CollectionSafeAlignEventRecord[] = [];
 
   if (canSafeAlign) {
@@ -103,7 +103,7 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
     } catch {
       canSafeAlign = false;
       safeAlignMessage =
-        "Safe align in pausa: la preview resta leggibile ma la traccia persistente non è disponibile in questo ambiente.";
+        "Riallineamento sicuro in pausa: l'anteprima resta leggibile ma il registro modifiche non è disponibile in questo ambiente.";
     }
   }
   const lastSafeAlignBySlug = safeAlignEvents.reduce<
@@ -153,7 +153,7 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
       canWrite: false,
       writeTarget: null,
       writeMessage:
-        "Scritture collections non attive: la surface interna usa il source snapshot corrente e resta in sola lettura finché Supabase collections non è pronto.",
+        "Salvataggio raccolte non attivo: il pannello interno usa la sorgente locale corrente e resta in sola lettura finché l'archivio non è pronto.",
       transitionReport: transitionReportFromSnapshot,
       canReview,
       reviewWriteTarget: canReview ? "supabase" : null,
@@ -163,7 +163,7 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
       syncPreviewBySlug: syncPreviewFromSnapshot,
       canSafeAlign: false,
       safeAlignMessage:
-        "Safe align non attivo: serve il write path Supabase collections e la migration `0014-0015` per tracciare l'azione in modo persistente.",
+        "Riallineamento sicuro non attivo: servono salvataggio raccolte e registro modifiche prima di usare questa azione.",
       safeAlignEvents: [],
       lastSafeAlignBySlug: {},
     };
@@ -207,7 +207,7 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
     canWrite: true,
     writeTarget: "supabase",
     writeMessage:
-      "Scritture collections attive su Supabase. Questa surface modifica il repository editoriale persistente.",
+      "Salvataggio raccolte attivo. Questo pannello modifica l'archivio editoriale principale.",
     transitionReport,
     canReview,
     reviewWriteTarget: canReview ? "supabase" : null,

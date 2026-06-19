@@ -1,20 +1,20 @@
 export const marketingStrings = {
   nav: [
     { href: "/archivio", label: "Archivio" },
-    { href: "/collections", label: "Collections" },
+    { href: "/collections", label: "Raccolte" },
   ],
   footerNav: [
     { href: "/", label: "Home" },
     { href: "/archivio", label: "Archivio" },
-    { href: "/collections", label: "Collections" },
-    { href: "/shortlist", label: "Workspace" },
+    { href: "/collections", label: "Raccolte" },
+    { href: "/shortlist", label: "Salvati" },
     { href: "/account", label: "Account" },
   ],
   hero: {
     eyebrow: "Sistema editoriale italiano",
     title: "Il posto dove i tool AI smettono di essere rumore e diventano scelta.",
     description:
-      "TooolVibes non prova a mostrarti tutto: accende i segnali giusti, ordina le alternative e ti porta verso uno stack più lucido.",
+      "TooolVibes non prova a mostrarti tutto: seleziona i segnali giusti, ordina le alternative e ti aiuta a costruire una scelta più lucida.",
     primaryCta: "Entra nel catalogo",
     secondaryCta: "Apri il radar",
   },
@@ -26,7 +26,7 @@ export const marketingStrings = {
   archive: {
     title: "Il catalogo dove la ricerca diventa decisione.",
     description:
-      "Cerca, filtra e stringi il campo con pochi passaggi. Qui entri per trovare il prossimo candidato giusto, non per perderti in una landing.",
+      "Cerca, filtra e stringi il campo con pochi passaggi. Qui entri per trovare il prossimo tool da provare, non per perderti tra pagine promozionali.",
     searchLabel: "Ricerca",
     searchPlaceholder: "Cerca nome, tag o caso d'uso",
     categoryLabel: "Categoria",
@@ -44,7 +44,7 @@ export const marketingStrings = {
   shop: {
     title: "Premium",
     description:
-      "Panoramica concreta su preview, member issue e accesso: cosa resta aperto, cosa si sblocca davvero e quando ha senso uscire verso lo shop.",
+      "Risorse e percorsi premium per trasformare la scoperta in scelte più rapide, test più ordinati e materiali pronti all'uso.",
     cta: "Vai allo shop esterno",
   },
   detail: {
@@ -58,9 +58,9 @@ export const marketingStrings = {
   admin: {
     title: "Area editoriale interna",
     description:
-      "Superficie interna per governare catalogo, publish state e flusso editoriale senza passare ogni volta dal codice.",
+      "Area riservata per aggiornare catalogo, contenuti e flusso editoriale.",
     loginTitle: "Accesso interno",
     loginDescription:
-      "Usa la password configurata in ambiente per entrare nella dashboard editoriale.",
+      "Inserisci la password riservata per entrare nella dashboard editoriale.",
   },
 } as const;

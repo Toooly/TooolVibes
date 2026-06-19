@@ -17,43 +17,43 @@ const editorialStateMeta: Record<
   { label: string; description: string }
 > = {
   draft: {
-    label: "Draft",
+    label: "Bozza",
     description: "Pronta per essere rifinita ma non ancora esposta pubblicamente.",
   },
   scheduled: {
-    label: "Scheduled",
-    description: "Impostata per una pubblicazione futura o per un issue prossimo.",
+    label: "Programmata",
+    description: "Impostata per una pubblicazione futura.",
   },
   published: {
-    label: "Published",
-    description: "Visibile nelle superfici pubbliche standard.",
+    label: "Pubblicata",
+    description: "Visibile nelle pagine pubbliche.",
   },
   featured: {
-    label: "Featured",
-    description: "Pubblicata con un ruolo più forte nelle superfici curate.",
+    label: "In evidenza",
+    description: "Pubblicata con un ruolo più forte nelle aree curate.",
   },
   archived: {
-    label: "Archived",
+    label: "Archiviata",
     description: "Tenuta come memoria editoriale, fuori dal flusso pubblico attivo.",
   },
 };
 
 const surfaceMeta: Record<CollectionSurface, { label: string; description: string }> = {
   collection: {
-    label: "Collection",
-    description: "Una raccolta curatoriale dentro il flusso prodotto standard.",
+    label: "Raccolta",
+    description: "Una raccolta curatoriale pensata per orientare la scelta.",
   },
   "special-issue": {
-    label: "Special issue",
-    description: "Una deep curation più ricca, pensata per alzare il valore percepito.",
+    label: "Speciale",
+    description: "Una selezione più ricca, pensata per spiegare meglio uno scenario.",
   },
 };
 
 const featuredSlotMeta: Record<CollectionFeaturedSlot, string> = {
-  "home-hero": "Home hero",
-  "home-secondary": "Home secondary",
-  "archive-strip": "Archive strip",
-  "special-issue": "Special issue",
+  "home-hero": "Apertura home",
+  "home-secondary": "Sezione home",
+  "archive-strip": "Fascia archivio",
+  "special-issue": "Speciale",
 };
 
 export function getCollectionEditorialStateMeta(state: CollectionEditorialState) {
@@ -115,14 +115,14 @@ export function validateCollectionRecord(
   if (collection.included_tools.length === 0) {
     issues.push({
       level: "error",
-      message: "Collection senza tool inclusi.",
+      message: "Raccolta senza tool inclusi.",
     });
   }
 
   if (collection.editorial_state === "scheduled" && !collection.scheduled_for) {
     issues.push({
       level: "warning",
-      message: "Collection scheduled senza `scheduled_for`.",
+      message: "Raccolta programmata senza data di pubblicazione.",
     });
   }
 
@@ -132,35 +132,35 @@ export function validateCollectionRecord(
   ) {
     issues.push({
       level: "warning",
-      message: "Collection pubblica senza `published_at` esplicito.",
+      message: "Raccolta pubblica senza data di pubblicazione esplicita.",
     });
   }
 
   if (collection.editorial_state === "archived" && !collection.archived_at) {
     issues.push({
       level: "warning",
-      message: "Collection archiviata senza `archived_at`.",
+      message: "Raccolta archiviata senza data di archiviazione.",
     });
   }
 
   if (collection.editorial_state === "featured" && !collection.featured_slot) {
     issues.push({
       level: "warning",
-      message: "Collection featured senza `featured_slot`.",
+      message: "Raccolta in evidenza senza spazio dedicato.",
     });
   }
 
   if (collection.surface === "special-issue" && collection.tone !== "special-issue") {
     issues.push({
       level: "warning",
-      message: "Le special issue dovrebbero usare il tone `special-issu?.",
+      message: "Le raccolte speciali dovrebbero usare il tono dedicato.",
     });
   }
 
   if (collection.surface !== "special-issue" && collection.featured_slot === "special-issue") {
     issues.push({
       level: "warning",
-      message: "Featured slot `special-issu? usato fuori da una special issue.",
+      message: "Spazio speciale usato fuori da una raccolta speciale.",
     });
   }
 
@@ -179,42 +179,42 @@ export function validateCollectionRecord(
   if (repeatedTools.length > 0) {
     issues.push({
       level: "error",
-      message: `Tool duplicati nella collection: ${repeatedTools.join(", ")}.`,
+      message: `Tool duplicati nella raccolta: ${repeatedTools.join(", ")}.`,
     });
   }
 
   if (collection.highlights.length === 0) {
     issues.push({
       level: "warning",
-      message: "Collection senza highlights editoriali leggibili.",
+      message: "Raccolta senza punti chiave editoriali leggibili.",
     });
   }
 
   if (collection.surface === "special-issue" && !collection.premium_teaser) {
     issues.push({
       level: "warning",
-      message: "Special issue senza premium teaser o framing evolutivo.",
+      message: "Raccolta speciale senza anteprima premium o contesto dedicato.",
     });
   }
 
   if (collection.access !== "open" && !collection.premium_teaser) {
     issues.push({
       level: "warning",
-      message: "Surface premium o preview senza teaser leggibile per il pubblico.",
+      message: "Raccolta premium senza anteprima leggibile per il pubblico.",
     });
   }
 
   if (collection.advanced_issue && collection.surface !== "special-issue") {
     issues.push({
       level: "warning",
-      message: "Il formato advanced special issue dovrebbe vivere solo su `special-issu?.",
+      message: "Il formato speciale avanzato dovrebbe vivere solo in una raccolta speciale.",
     });
   }
 
   if (advancedIssue && advancedIssue.blocks.length < 4) {
     issues.push({
       level: "warning",
-      message: "Advanced special issue con pochi blocchi: rischia di sembrare una collection standard estesa.",
+      message: "Raccolta speciale avanzata con pochi blocchi: rischia di sembrare una raccolta standard estesa.",
     });
   }
 
@@ -227,7 +227,7 @@ export function validateCollectionRecord(
     if (missingSlugs.length > 0) {
       issues.push({
         level: "warning",
-        message: `Issue avanzata con riferimenti tool fuori dalla collection: ${Array.from(new Set(missingSlugs)).join(", ")}.`,
+        message: `Raccolta avanzata con riferimenti tool fuori dalla raccolta: ${Array.from(new Set(missingSlugs)).join(", ")}.`,
       });
     }
   }
@@ -336,7 +336,7 @@ export function buildCollectionRepositorySnapshot(
         if ((slugCounts[collection.slug] ?? 0) > 1) {
           issuesMap[collection.slug]?.push({
             level: "error",
-            message: "Slug duplicato nel repository collections.",
+            message: "Slug duplicato nel repository raccolte.",
           });
         }
 
@@ -345,7 +345,7 @@ export function buildCollectionRepositorySnapshot(
         if ((orderingCounts[orderingKey] ?? 0) > 1) {
           issuesMap[collection.slug]?.push({
             level: "warning",
-            message: "Ordering condiviso con un'altra collection nello stesso stato editoriale.",
+            message: "Ordine condiviso con un'altra raccolta nello stesso stato editoriale.",
           });
         }
 
@@ -355,7 +355,7 @@ export function buildCollectionRepositorySnapshot(
         ) {
           issuesMap[collection.slug]?.push({
             level: "warning",
-            message: "Featured slot condiviso con un'altra collection.",
+            message: "Spazio in evidenza condiviso con un'altra raccolta.",
           });
         }
       }

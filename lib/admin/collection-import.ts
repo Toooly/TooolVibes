@@ -78,7 +78,7 @@ export async function importMockCollectionsToSupabase({
         slug: entry.slug,
         title: entry.title,
         status: "skipped",
-        reason: "Già presente su Supabase con lo stesso slug.",
+        reason: "Già presente nell'archivio reale con lo stesso slug.",
         toolSlugs,
       });
       continue;
@@ -91,7 +91,7 @@ export async function importMockCollectionsToSupabase({
         status: "conflict",
         reason:
           entry.warnings[0] ??
-          "Esiste già una collection con questo slug su Supabase ma con metadata diversi.",
+          "Esiste già una raccolta con questo slug nell'archivio reale, ma con contenuti diversi.",
         toolSlugs,
       });
       continue;
@@ -102,7 +102,7 @@ export async function importMockCollectionsToSupabase({
         slug: entry.slug,
         title: entry.title,
         status: "skipped",
-        reason: "Dry run: pronta per import.",
+        reason: "Anteprima: pronta per l'importazione.",
         toolSlugs,
       });
       continue;

@@ -86,61 +86,61 @@ type VibeTapMiniGameProps = {
 const GAME_MODES: GameMode[] = [
   {
     id: "rush",
-    label: "Rush",
+    label: "Sprint",
     title: "Sprint classico",
     seconds: 20,
     target: 95,
     targetCount: 4,
     scoreMultiplier: 1,
     autoMultiplier: 1,
-    description: "Run bilanciata: tap, combo e upgrade contano tutti.",
+    description: "Partita bilanciata: tocchi, combo e potenziamenti contano tutti.",
     perk: "Moltiplicatore stabile",
   },
   {
     id: "focus",
-    label: "Focus",
-    title: "Build lunga",
+    label: "Concentrazione",
+    title: "Preparazione lunga",
     seconds: 30,
     target: 125,
     targetCount: 3,
     scoreMultiplier: 0.9,
     autoMultiplier: 1.25,
-    description: "Piu tempo per costruire upgrade e lasciare lavorare l'auto-pulse.",
-    perk: "Auto-pulse potenziato",
+    description: "Più tempo per costruire potenziamenti e lasciare lavorare l'impulso automatico.",
+    perk: "Impulso automatico potenziato",
   },
   {
     id: "fever",
-    label: "Fever",
-    title: "Burst veloce",
+    label: "Frenesia",
+    title: "Scatto veloce",
     seconds: 15,
     target: 115,
     targetCount: 5,
     scoreMultiplier: 1.35,
     autoMultiplier: 0.75,
-    description: "Pochi secondi, tanti critici: perfetta se vuoi martellare il core.",
-    perk: "Tap piu esplosivi",
+    description: "Pochi secondi, tanti colpi doppi: perfetta se vuoi spingere sul centro.",
+    perk: "Tocchi più esplosivi",
   },
 ];
 
 const UPGRADE_DEFINITIONS: UpgradeDefinition[] = [
   {
     id: "tap",
-    label: "Click power",
-    description: "+1 vibe base per ogni tap sul core.",
+    label: "Tocco potenziato",
+    description: "+1 vibe base per ogni tocco sul centro.",
     baseCost: 14,
     maxLevel: 5,
   },
   {
     id: "auto",
-    label: "Auto pulse",
-    description: "Genera vibe ogni secondo durante la run.",
+    label: "Impulso automatico",
+    description: "Genera vibe ogni secondo durante la partita.",
     baseCost: 24,
     maxLevel: 4,
   },
   {
     id: "crit",
-    label: "Crit sync",
-    description: "Aumenta la chance di colpi doppi.",
+    label: "Colpi doppi",
+    description: "Aumenta la probabilità di ottenere colpi doppi.",
     baseCost: 28,
     maxLevel: 4,
   },
@@ -320,7 +320,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
 
     void celebrateMiniGame(finalScore, finalRank);
     toast.success(finalRank.startsWith("S") ? "Vibe Rush dominato" : "Vibe Rush completato", {
-      description: `Rank ${finalRank} - ${finalScore} vibe in ${selectedMode.seconds} secondi.`,
+      description: `Grado ${finalRank} - ${finalScore} vibe in ${selectedMode.seconds} secondi.`,
     });
   }, [bestScore, selectedMode.seconds, selectedMode.target]);
 
@@ -366,7 +366,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
       const gain = Math.max(1, autoPower);
       setScore((current) => current + gain);
       setBank((current) => current + gain);
-      spawnFloater(18 + Math.random() * 64, 28 + Math.random() * 44, gain, "auto");
+      spawnFloater(18 + Math.random() * 64, 28 + Math.random() * 44, gain, "automatico");
     }, 1000);
 
     return () => window.clearInterval(timer);
@@ -388,7 +388,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
 
   useEffect(() => {
     if (finished) {
-      setAnnouncement(`Run finita. Rank ${rank}. ${score} vibe raccolti. Piu ${xp} XP.`);
+      setAnnouncement(`Partita finita. Grado ${rank}. ${score} vibe raccolti. Più ${xp} XP.`);
     }
   }, [finished, rank, score, xp]);
 
@@ -470,7 +470,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     setFloaters([]);
     setUpgrades(INITIAL_UPGRADES);
     setUpgradeCount(0);
-    setAnnouncement(`${selectedMode.label} iniziata. Clicca il core.`);
+    setAnnouncement(`${selectedMode.label} iniziata. Tocca il centro.`);
     playTooolvibesSound("battleStart");
     window.setTimeout(() => {
       startLockedRef.current = false;
@@ -490,7 +490,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     setBank((current) => current + gain);
     setCombo(nextCombo);
     setStreak((current) => current + 1);
-    spawnFloater(x, y, gain, critical ? "crit" : undefined, critical);
+    spawnFloater(x, y, gain, critical ? "doppio" : undefined, critical);
     resetComboLater();
     playTooolvibesSound(critical ? "battleWin" : "tap");
   }
@@ -562,7 +562,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
         ref={launcherRef}
         type="button"
         className={className}
-        aria-label="Apri il clicker game Vibe Rush"
+        aria-label="Apri il minigioco Vibe Rush"
         onClick={() => setOpen(true)}
         data-sonic-action="tap"
       >
@@ -588,7 +588,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
             exit={{ opacity: 0 }}
             role="dialog"
             aria-modal="true"
-            aria-label="Vibe Rush clicker game"
+            aria-label="Minigioco Vibe Rush"
           >
             <button
               type="button"
@@ -606,7 +606,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
             >
               <div className="vibe-mini-game__top">
                 <div>
-                  <p className="vibe-mini-game__eyebrow">Clicker run</p>
+                  <p className="vibe-mini-game__eyebrow">Minigioco a tocchi</p>
                   <h2>Vibe Rush</h2>
                 </div>
                 <button type="button" aria-label="Chiudi Vibe Rush" onClick={closeGame}>
@@ -618,7 +618,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                 {announcement}
               </span>
 
-              <div className="vibe-mini-game__modes" aria-label="Modalita Vibe Rush">
+              <div className="vibe-mini-game__modes" aria-label="Modalità Vibe Rush">
                 {GAME_MODES.map((mode) => (
                   <button
                     key={mode.id}
@@ -643,10 +643,10 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
 
               <div className="vibe-mini-game__stats">
                 <span>
-                  Score <strong><NumberFlow value={score} /></strong>
+                  Punti <strong><NumberFlow value={score} /></strong>
                 </span>
                 <span>
-                  Bank <strong><NumberFlow value={bank} /></strong>
+                  Riserva <strong><NumberFlow value={bank} /></strong>
                 </span>
                 <span data-combo={combo}>
                   Combo <strong>x
@@ -667,7 +667,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                   </strong>
                 </span>
                 <span>
-                  Time <CircularTimer seconds={timeLeft} total={selectedMode.seconds} />
+                  Tempo <CircularTimer seconds={timeLeft} total={selectedMode.seconds} />
                 </span>
               </div>
 
@@ -676,15 +676,15 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                   <div className="vibe-mini-game__arena-hud">
                     <span>
                       <MousePointer2 size={13} />
-                      +{tapPower}/tap
+                      +{tapPower}/tocco
                     </span>
                     <span>
                       <Gauge size={13} />
-                      {autoPower}/sec
+                      {autoPower}/s
                     </span>
                     <span>
                       <Flame size={13} />
-                      {critChance}% crit
+                      {critChance}% doppio
                     </span>
                   </div>
 
@@ -725,7 +725,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                       }}
                       whileTap={reducedMotion ? undefined : { scale: 0.76 }}
                       onClick={() => hitTarget(target.x, target.y)}
-                      aria-label={`Bonus vibe ${target.id}`}
+                      aria-label={`Bonus Vibe Rush ${target.id}`}
                     >
                       <Sparkles size={15} />
                     </motion.button>
@@ -738,14 +738,14 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                     disabled={!running}
                     onPointerDown={handleCorePointer}
                     onKeyDown={handleCoreKey}
-                    aria-label="Clicca il core Vibe Rush"
+                    aria-label="Tocca il centro Vibe Rush"
                   >
                     <span className="vibe-mini-game__core-rings" aria-hidden="true" />
                     <span className="vibe-mini-game__core-orb">
                       <Zap size={24} />
                     </span>
-                    <strong>Tap core</strong>
-                    <small>{streak > 0 ? `${streak} hit streak` : "Build vibe"}</small>
+                    <strong>Tocca il centro</strong>
+                    <small>{streak > 0 ? `Serie da ${streak}` : "Carica vibe"}</small>
                   </button>
 
                   <AnimatePresence>
@@ -780,22 +780,22 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                       onClick={startGame}
                     >
                       <Rocket size={16} />
-                      Start {selectedMode.label}
+                      Avvia {selectedMode.label}
                     </button>
                   ) : null}
 
                   {finished ? (
                     <div className="vibe-mini-game__result">
                       <span className="vibe-mini-game__result-title">
-                        {rank.startsWith("S") ? "Run leggendaria" : "Run completata"}
+                        {rank.startsWith("S") ? "Partita leggendaria" : "Partita completata"}
                       </span>
                       <span className="vibe-mini-game__result-rank">
-                        Rank {rank}
+                        Grado {rank}
                       </span>
                       <span className="vibe-mini-game__result-score">
                         <NumberFlow value={score} /> vibe raccolti
                       </span>
-                      <span className="vibe-mini-game__result-xp">+{xp} XP - Best {Math.max(bestScore, score)}</span>
+                      <span className="vibe-mini-game__result-xp">+{xp} XP - Record {Math.max(bestScore, score)}</span>
                       <div className="vibe-mini-game__result-actions">
                         <button
                           type="button"
@@ -833,10 +833,10 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                 </div>
 
                 <aside className="vibe-mini-game__side">
-                  <section className="vibe-mini-game__upgrades" aria-label="Upgrade clicker">
+                  <section className="vibe-mini-game__upgrades" aria-label="Potenziamenti Vibe Rush">
                     <div className="vibe-mini-game__side-title">
                       <Rocket size={14} />
-                      <span>Upgrade</span>
+                      <span>Potenziamenti</span>
                     </div>
                     {UPGRADE_DEFINITIONS.map((definition) => {
                       const level = upgrades[definition.id];
@@ -854,19 +854,19 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                             <strong>{definition.label}</strong>
                             <small>{definition.description}</small>
                           </span>
-                          <em>{maxed ? "Max" : `${cost}`}</em>
+                          <em>{maxed ? "Massimo" : `${cost}`}</em>
                         </button>
                       );
                     })}
                   </section>
 
-                  <section className="vibe-mini-game__missions" aria-label="Missioni run">
+                  <section className="vibe-mini-game__missions" aria-label="Missioni partita">
                     <div className="vibe-mini-game__side-title">
                       <Target size={14} />
                       <span>Missioni</span>
                     </div>
                     <div className="vibe-mini-game__mission">
-                      <span>Obiettivo mode</span>
+                      <span>Obiettivo modalità</span>
                       <strong><NumberFlow value={missionTargetScore} />/{selectedMode.target}</strong>
                       <i style={{ "--mission-progress": `${missionTargetScore / selectedMode.target}` } as CSSProperties} />
                     </div>
@@ -876,27 +876,27 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                       <i style={{ "--mission-progress": `${missionCombo / 8}` } as CSSProperties} />
                     </div>
                     <div className="vibe-mini-game__mission">
-                      <span>3 upgrade</span>
+                      <span>3 potenziamenti</span>
                       <strong><NumberFlow value={missionUpgrades} />/3</strong>
                       <i style={{ "--mission-progress": `${missionUpgrades / 3}` } as CSSProperties} />
                     </div>
                   </section>
 
-                  <section className="vibe-mini-game__facts" aria-label="Fatti della run">
+                  <section className="vibe-mini-game__facts" aria-label="Dati della partita">
                     <div className="vibe-mini-game__side-title">
                       <ShieldCheck size={14} />
-                      <span>Run facts</span>
+                      <span>Dati partita</span>
                     </div>
-                    <span><Timer size={13} /> {selectedMode.seconds}s di run</span>
-                    <span><Trophy size={13} /> Best score {bestScore}</span>
-                    <span><Flame size={13} /> Rank attuale {rank}</span>
+                    <span><Timer size={13} /> {selectedMode.seconds}s a disposizione</span>
+                    <span><Trophy size={13} /> Record {bestScore}</span>
+                    <span><Flame size={13} /> Grado attuale {rank}</span>
                   </section>
                 </aside>
               </div>
 
               {!running && !finished ? (
                 <p className="vibe-mini-game__hint">
-                  Scegli una modalita, clicca il core, compra upgrade e completa le missioni.
+                  Scegli una modalità, tocca il centro, compra potenziamenti e completa le missioni.
                 </p>
               ) : null}
             </motion.div>

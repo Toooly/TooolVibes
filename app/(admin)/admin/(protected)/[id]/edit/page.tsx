@@ -11,6 +11,23 @@ type EditArticlePageProps = {
   params: Promise<{ id: string }>;
 };
 
+function getReadSourceLabel(source: string) {
+  switch (source) {
+    case "supabase":
+      return "Archivio principale";
+    case "storage":
+      return "Archivio alternativo";
+    case "mixed":
+      return "Archivio misto";
+    case "legacy":
+      return "Articoli da importare";
+    case "empty":
+      return "Nessun articolo";
+    default:
+      return source;
+  }
+}
+
 export default async function EditArticlePage({ params }: EditArticlePageProps) {
   const { id } = await params;
   const [article, runtime] = await Promise.all([
@@ -25,9 +42,9 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
   const canWrite = runtime.canWrite;
   const boundAction = updateArticleFormAction.bind(null, article.id);
   const runtimeHighlights = [
-    { label: "Admin read", value: runtime.adminReadSource },
-    { label: "Stato", value: article.status },
-    { label: "Write target", value: runtime.writeTarget ?? "locked" },
+    { label: "Lettura", value: getReadSourceLabel(runtime.adminReadSource) },
+    { label: "Stato", value: article.status === "published" ? "Pubblicato" : "Bozza" },
+    { label: "Salvataggio", value: canWrite ? "Attivo" : "Sola lettura" },
   ];
 
   return (
@@ -37,7 +54,7 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
           <SectionHeading
             eyebrow="Modifica articolo"
             title={article.title}
-            description="Aggiorna contenuto, media, formattazione e stato editoriale senza uscire dal workflow blog."
+            description="Aggiorna contenuto, media, formattazione e stato editoriale senza uscire dal flusso blog."
           />
           <Link
             href="/admin"

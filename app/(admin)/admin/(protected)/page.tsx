@@ -29,8 +29,29 @@ const statusMessages: Record<string, string> = {
 const kindLabels: Record<AdminArticleRecord["kind"], string> = {
   editorial: "Blog",
   guide: "Guida",
-  "tool-writeup": "Tool writeup",
+  "tool-writeup": "Scheda tool",
 };
+
+function getArticleSourceLabel(source: AdminArticleRecord["admin_source"]) {
+  return source === "cms" ? "Archivio" : "Da importare";
+}
+
+function getReadSourceLabel(source: string) {
+  switch (source) {
+    case "supabase":
+      return "Archivio principale";
+    case "storage":
+      return "Archivio alternativo";
+    case "mixed":
+      return "Archivio misto";
+    case "legacy":
+      return "Articoli da importare";
+    case "empty":
+      return "Nessun articolo";
+    default:
+      return source;
+  }
+}
 
 export default async function AdminDashboardPage({
   searchParams,
@@ -59,8 +80,8 @@ export default async function AdminDashboardPage({
   const dashboardMetrics = [
     { label: "Articoli", value: articles.length },
     { label: "Pubblicati", value: publishedCount },
-    { label: "CMS", value: cmsCount },
-    { label: "Legacy", value: legacyCount },
+    { label: "In archivio", value: cmsCount },
+    { label: "Da importare", value: legacyCount },
   ];
   const filterLinks = [
     { href: "/admin", label: "Tutti", value: "all", count: articles.length },
@@ -73,12 +94,12 @@ export default async function AdminDashboardPage({
     { href: "/admin?view=draft", label: "Bozze", value: "draft", count: draftCount },
     {
       href: "/admin?view=featured",
-      label: "Featured",
+      label: "In evidenza",
       value: "featured",
       count: featuredCount,
     },
-    { href: "/admin?view=cms", label: "CMS", value: "cms", count: cmsCount },
-    { href: "/admin?view=legacy", label: "Legacy", value: "legacy", count: legacyCount },
+    { href: "/admin?view=cms", label: "In archivio", value: "cms", count: cmsCount },
+    { href: "/admin?view=legacy", label: "Da importare", value: "legacy", count: legacyCount },
   ];
 
   return (
@@ -89,7 +110,7 @@ export default async function AdminDashboardPage({
             <SectionHeading
               eyebrow="Gestione blog"
               title="Crea, modifica e pubblica articoli"
-              description="Una console dedicata al blog: bozze, contenuti pubblicati, featured e editing editoriale con media nel corpo articolo."
+              description="Un'area dedicata al blog: bozze, contenuti pubblicati, articoli in evidenza e modifica editoriale con media nel corpo articolo."
             />
             <div className="flex flex-wrap gap-3">
               <Link
@@ -149,20 +170,20 @@ export default async function AdminDashboardPage({
               <p className="editorial-label">Flusso blog</p>
               <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>
                 Qui lavoriamo solo su articoli: creazione, modifica, media nel corpo e
-                pubblicazione. La parte tool e suggerimenti non entra in questa vista.
+                pubblicazione. Le altre aree del catalogo restano separate da questa vista.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
                   Pubblicati: {publishedCount}
                 </span>
                 <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
-                  CMS: {cmsCount}
+                  In archivio: {cmsCount}
                 </span>
                 <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
-                  Legacy: {legacyCount}
+                  Da importare: {legacyCount}
                 </span>
                 <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
-                  Write: {runtime.writeTarget ?? "locked"}
+                  Salvataggio: {canWrite ? "attivo" : "sola lettura"}
                 </span>
               </div>
             </article>
@@ -171,9 +192,9 @@ export default async function AdminDashboardPage({
               className="rounded-[24px] border p-4"
               style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.68)" }}
             >
-              <p className="editorial-label">Stato tecnico</p>
+              <p className="editorial-label">Stato salvataggi</p>
               <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>
-                Sorgente admin: <strong>{runtime.adminReadSource}</strong>.
+                Lettura interna: <strong>{getReadSourceLabel(runtime.adminReadSource)}</strong>.
               </p>
               <p className="mt-1 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
                 {runtime.writeMessage}
@@ -202,12 +223,12 @@ export default async function AdminDashboardPage({
         <section className="surface-card rounded-[var(--radius-xl)] p-5 sm:p-7">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
             <div>
-              <p className="editorial-label">Workspace articoli</p>
+              <p className="editorial-label">Area articoli</p>
               <h2 className="text-display-card mt-2 text-[1.5rem] sm:text-[1.75rem]">
                 Inventario blog
               </h2>
               <p className="mt-3 max-w-[44rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
-                Filtra per stato e rientra in modifica con un editor markdown completo.
+                Filtra per stato e rientra in modifica con un editor di testo completo.
               </p>
             </div>
             <div className="grid gap-3">
@@ -219,8 +240,8 @@ export default async function AdminDashboardPage({
                 }}
               >
                 {canWrite
-                  ? "Azioni blog attive su Supabase."
-                  : "Vedi il fallback legacy. Applica la migration blog per salvare e importare."}
+                  ? "Salvataggi blog attivi."
+                  : "Stai vedendo gli articoli da importare. Completa la configurazione per salvare nuove modifiche."}
               </div>
               <div className="flex flex-wrap gap-2">
                 {filterLinks.map((item) => (
@@ -264,11 +285,11 @@ export default async function AdminDashboardPage({
                       />
                       <AdminStatusPill
                         active={article.featured}
-                        activeLabel="Featured"
+                        activeLabel="In evidenza"
                         inactiveLabel="Standard"
                       />
                       <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
-                        {article.admin_source === "cms" ? "CMS" : "Legacy"}
+                        {getArticleSourceLabel(article.admin_source)}
                       </span>
                     </div>
                     <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
@@ -358,7 +379,7 @@ export default async function AdminDashboardPage({
                             disabled={!canWrite}
                             className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
                           >
-                            {article.featured ? "Rimuovi featured" : "Metti in featured"}
+                            {article.featured ? "Rimuovi da evidenza" : "Metti in evidenza"}
                           </button>
                         </form>
 
@@ -382,7 +403,7 @@ export default async function AdminDashboardPage({
                           action={deleteArticleAction.bind(null, article.id)}
                           label="Elimina"
                           disabled={!canWrite}
-                          confirmMessage="Sei sicuro di voler eliminare questo articolo? L'azione e irreversibile."
+                          confirmMessage="Sei sicuro di voler eliminare questo articolo? L'azione è irreversibile."
                         />
                       </>
                     ) : (
@@ -395,8 +416,8 @@ export default async function AdminDashboardPage({
                         }}
                       >
                         {canWrite
-                          ? "Questo articolo viene dal vecchio layer. Importalo per salvarlo nel CMS."
-                          : "Questo articolo e legacy perche manca la write key Supabase. Appena il CMS e scrivibile, viene importato automaticamente."}
+                          ? "Questo articolo viene da un archivio precedente. Importalo per modificarlo da qui."
+                          : "Questo articolo è in sola lettura finché il salvataggio non viene attivato. Appena sarà disponibile, verrà importato automaticamente."}
                       </div>
                     )}
                   </div>

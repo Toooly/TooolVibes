@@ -41,7 +41,7 @@ export async function createToolRequestInSupabase(
     .single();
 
   if (error) {
-    throw new Error(`Unable to create tool request: ${error.message}`);
+    throw new Error(`Non è stato possibile inviare il suggerimento. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -55,7 +55,7 @@ export const getAdminToolRequestsFromSupabase = cache(async (): Promise<ToolRequ
     .order("created_at", { ascending: false });
 
   if (error) {
-    throw new Error(`Unable to load tool requests: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare i suggerimenti. Dettaglio: ${error.message}`);
   }
 
   return data ?? [];
@@ -72,7 +72,7 @@ export async function getToolRequestByIdFromSupabase(
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Unable to load tool request ${id}: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare questo suggerimento. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -97,7 +97,7 @@ export async function updateToolRequestStatusInSupabase(
     .single();
 
   if (error) {
-    throw new Error(`Unable to update tool request ${id}: ${error.message}`);
+    throw new Error(`Non è stato possibile aggiornare questo suggerimento. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -108,6 +108,6 @@ export async function deleteToolRequestFromSupabase(id: string): Promise<void> {
   const { error } = await client.from("tool_requests").delete().eq("id", id);
 
   if (error) {
-    throw new Error(`Unable to delete tool request ${id}: ${error.message}`);
+    throw new Error(`Non è stato possibile eliminare questo suggerimento. Dettaglio: ${error.message}`);
   }
 }

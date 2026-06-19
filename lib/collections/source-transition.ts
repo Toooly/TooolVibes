@@ -106,41 +106,41 @@ function getTransitionWarnings({
   const warnings: string[] = [];
 
   if (mockCollection && !supabaseCollection) {
-    warnings.push("Presente solo nella mock source: pronta per import verso Supabase.");
+    warnings.push("Presente solo nella sorgente locale: pronta per l'importazione verso l'archivio reale.");
   }
 
   if (mockCollection && supabaseCollection) {
     if (diff.editorial_state) {
-      warnings.push("Stato editoriale diverso tra mock e Supabase.");
+      warnings.push("Stato editoriale diverso tra sorgente locale e archivio reale.");
     }
 
     if (diff.editorial_order) {
-      warnings.push("Ordering diverso tra mock e Supabase.");
+      warnings.push("Ordine editoriale diverso tra sorgente locale e archivio reale.");
     }
 
     if (diff.featured_slot) {
-      warnings.push("Featured slot diverso tra mock e Supabase.");
+      warnings.push("Spazio in evidenza diverso tra sorgente locale e archivio reale.");
     }
 
     if (diff.surface) {
-      warnings.push("Surface diversa tra mock e Supabase.");
+      warnings.push("Formato diverso tra sorgente locale e archivio reale.");
     }
 
     if (diff.metadata) {
-      warnings.push("Metadata editoriali diversi tra mock e Supabase.");
+      warnings.push("Informazioni editoriali diverse tra sorgente locale e archivio reale.");
     }
 
     if (diff.included_tools) {
-      warnings.push("Tool inclusi o sequencing diversi tra mock e Supabase.");
+      warnings.push("Tool inclusi o sequenza diversi tra sorgente locale e archivio reale.");
     }
   }
 
   if (!mockCollection && supabaseCollection) {
-    warnings.push("Collection presente solo su Supabase.");
+    warnings.push("Raccolta presente solo nell'archivio reale.");
   }
 
   if (!mockCollection && contentCollection && !supabaseCollection) {
-    warnings.push("Collection presente solo nella content source strutturata.");
+    warnings.push("Raccolta presente solo nella sorgente contenuti strutturata.");
   }
 
   return warnings;
@@ -294,13 +294,13 @@ export function mergeCollectionsByPrecedence({
 
   if (composedSources.length > 1) {
     warnings.push(
-      "Source collections in transizione: Supabase prevale sugli slug già migrati, mentre le source locali restano fallback per i restanti.",
+      "Sorgenti raccolte in transizione: l'archivio reale prevale sulle raccolte già importate, mentre le sorgenti locali restano come riserva per le altre.",
     );
   }
 
   if (transition.summary.conflicts > 0) {
     warnings.push(
-      `${transition.summary.conflicts} collection hanno drift tra mock e Supabase: il pubblico usa la versione Supabase finché il conflitto non viene riallineato.`,
+      `${transition.summary.conflicts} raccolte hanno differenze tra sorgente locale e archivio reale: il pubblico usa la versione dell'archivio reale finché il conflitto non viene riallineato.`,
     );
   }
 

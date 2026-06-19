@@ -73,11 +73,11 @@ export function AccountPanel() {
   const persistenceLabel =
     persistence.mode === "remote"
       ? persistence.phase === "saving"
-        ? "Sync in corso"
+        ? "Salvataggio in corso"
         : persistence.phase === "error"
-          ? "Sync in pausa"
-          : "Workspace sincronizzata"
-      : "Solo browser";
+          ? "Salvataggio in pausa"
+          : "Selezione sincronizzata"
+      : "Salvato su questo dispositivo";
   const premiumStatus = account.status === "authenticated" ? "account" : "guest";
   const premiumMeta = getPremiumEntitlementMeta(premiumStatus);
   const premiumActionHref =
@@ -93,12 +93,12 @@ export function AccountPanel() {
           ? "Accesso attivabile"
           : "Sessione locale";
   const continuityCopy = account.isAttaching
-    ? "Stiamo riallineando shortlist, compare e note con l'account corrente senza perdere il lavoro già fatto."
+    ? "Stiamo collegando salvati, confronto e note all'account corrente senza perdere il lavoro già fatto."
     : account.status === "authenticated"
       ? "La selezione è agganciata all'account e resta pronta quando torni da un altro browser o da una nuova sessione."
       : account.authEnabled
-        ? "La selezione esiste gia e puo essere collegata con una mail di conferma senza ricominciare da zero."
-        : "La selezione resta nel browser finché auth e sync remota non vengono attivate.";
+        ? "La selezione esiste già e può essere collegata con una mail di conferma senza ricominciare da zero."
+        : "La selezione resta in questo browser finché l'accesso email non viene attivato.";
   const authMessageTone =
     account.authMessage?.includes("non disponibile") ||
     account.authMessage?.includes("pausa") ||
@@ -140,17 +140,17 @@ export function AccountPanel() {
         <div className="flex flex-wrap items-center gap-2">
           <span className="pill">Account</span>
           <span className="selection-status">
-            {account.isAttaching ? "Merge in corso" : accountStateLabel}
+            {account.isAttaching ? "Collegamento in corso" : accountStateLabel}
           </span>
         </div>
         <h1 className="text-display-card mt-4 max-w-none text-[1.8rem] sm:max-w-[20ch] sm:text-[2.24rem] sm:text-balance">
-          Continuità della selezione e accesso member.
+          Continuità della selezione e accesso riservato.
         </h1>
         <p
           className="text-body-soft mt-4 max-w-[40rem] text-[0.95rem]"
           style={{ color: "var(--muted-strong)" }}
         >
-          Qui capisci se la selezione resta nel browser o segue già l&apos;account, cosa sblocca il layer member e da dove conviene ripartire.
+          Qui capisci se la selezione resta solo in questo browser o segue il tuo account, cosa sblocca l&apos;accesso riservato e da dove conviene ripartire.
         </p>
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -160,14 +160,14 @@ export function AccountPanel() {
                 href={workspace.compare > 1 ? "/compare" : "/shortlist"}
                 className="button-shell button-primary text-ui-strong inline-flex rounded-full px-5 py-3 text-sm font-semibold text-white"
               >
-                {workspace.compare > 1 ? "Continua il compare" : "Apri la shortlist"}
+                {workspace.compare > 1 ? "Continua il confronto" : "Apri i salvati"}
               </Link>
               <Link
                 href="/collections"
                 className="section-quiet-link text-sm font-semibold"
                 style={{ color: "var(--accent-strong)" }}
               >
-                Apri le collection
+                Apri le raccolte
               </Link>
             </>
           ) : (
@@ -183,14 +183,14 @@ export function AccountPanel() {
                 className="section-quiet-link text-sm font-semibold"
                 style={{ color: "var(--accent-strong)" }}
               >
-                Vedi preview e issue
+                Vedi raccolte e anteprime
               </Link>
             </>
           )}
         </div>
 
         <p className="mt-4 text-[0.84rem] leading-6" style={{ color: "var(--muted)" }}>
-          {persistenceLabel} · {workspace.saved} tool salvati · {workspace.compare} nel compare.
+          {persistenceLabel} · {workspace.saved} tool salvati · {workspace.compare} nel confronto.
         </p>
       </div>
 
@@ -219,7 +219,7 @@ export function AccountPanel() {
                 <p className="editorial-label">Continuità</p>
                 <p className="text-body-strong mt-2.5 text-[1rem]">
                   {account.isAttaching
-                    ? "Merge workspace in corso"
+                    ? "Collegamento in corso"
                     : account.status === "authenticated"
                       ? "Account agganciato"
                       : "Sessione pronta da collegare"}
@@ -236,7 +236,7 @@ export function AccountPanel() {
               }}
             >
               <div className="flex flex-wrap items-center gap-2">
-                <span className="pill pill-premium">Accesso member</span>
+                <span className="pill pill-premium">Accesso riservato</span>
                 <span className="selection-status">{premiumMeta.short_label}</span>
               </div>
               <p className="text-display-card mt-3 max-w-[18ch] text-[1.34rem] sm:max-w-[19ch] sm:text-[1.54rem]">
@@ -248,7 +248,7 @@ export function AccountPanel() {
               <p className="mt-3 text-[0.88rem] leading-7" style={{ color: "var(--muted)" }}>
                 {workspace.saved > 0
                   ? `Hai già ${workspace.saved} tool salvati: account e premium servono a dare continuità e accesso, non a rimettere in discussione la selezione.`
-                  : "Qui si chiarisce il rapporto tra accesso, preview e member issue senza aggiungere frizione inutile."}
+                  : "Qui si chiarisce il rapporto tra accesso, anteprime e raccolte riservate senza aggiungere frizione inutile."}
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <Link
@@ -262,7 +262,7 @@ export function AccountPanel() {
                   className="section-quiet-link text-sm font-semibold"
                   style={{ color: "var(--accent-strong)" }}
                 >
-                  Vedi preview e issue
+                  Vedi raccolte e anteprime
                 </Link>
               </div>
             </div>
@@ -271,9 +271,8 @@ export function AccountPanel() {
               <div className="metadata-block mt-5 rounded-[26px] px-5 py-5">
                 <p className="brand-kicker">Account connesso</p>
                 <p className="mt-2.5 text-[1rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-                  {account.user?.email ?? "Account attivo"} è collegato al viewer corrente. La
-                  selezione locale è stata agganciata senza perdere shortlist, compare, note, pin,
-                  reason e stage.
+                  {account.user?.email ?? "Account attivo"} è collegato alla selezione corrente. I
+                  tool salvati, il confronto e le note sono rimasti al loro posto.
                 </p>
                 <p className="mt-3 text-[0.9rem] leading-7" style={{ color: "var(--muted)" }}>
                   {continuityCopy}
@@ -284,7 +283,7 @@ export function AccountPanel() {
                     onClick={() => void account.signOut()}
                     className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-sm font-semibold"
                   >
-                    Esci e torna guest
+                    Esci dall&apos;account
                   </button>
                 </div>
               </div>
@@ -300,7 +299,7 @@ export function AccountPanel() {
                 <p className="mt-2.5 text-[0.98rem] leading-7" style={{ color: "var(--muted-strong)" }}>
                   {isVibeRushSignup
                     ? `Completa il profilo e ti mandiamo la mail di conferma con il riepilogo: ${vibeScore || 0} vibe raccolti, ${vibeXp || 0} XP.`
-                    : "Ti mandiamo una mail di conferma. Quando entri, la selezione locale viene collegata senza perdere cio che hai gia salvato."}
+                    : "Ti mandiamo una mail di conferma. Quando entri, la selezione viene collegata senza perdere ciò che hai già salvato."}
                 </p>
                 <p className="mt-3 text-[0.88rem] leading-7" style={{ color: "var(--muted)" }}>
                   {continuityCopy}
@@ -308,7 +307,7 @@ export function AccountPanel() {
                 {isVibeRushSignup ? (
                   <>
                     <p className="mt-3 text-[0.88rem] leading-7" style={{ color: "var(--accent-strong)" }}>
-                      Riepilogo run: {vibeScore ?? 0} vibe raccolti, {vibeXp ?? 0} XP.
+                      Riepilogo partita: {vibeScore ?? 0} vibe raccolti, {vibeXp ?? 0} XP.
                     </p>
                     <div className="mt-5 grid gap-3 sm:grid-cols-2">
                       <input
@@ -358,13 +357,13 @@ export function AccountPanel() {
                       ? "Invio..."
                       : isVibeRushSignup
                         ? "Registrati"
-                        : "Registrati"}
+                        : "Invia link"}
                   </button>
                 </div>
                 <p className="mt-3 text-[0.76rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                   {account.authEnabled
                     ? isVibeRushSignup
-                      ? "Conferma la mail per salvare la run e ritrovare il tuo progresso."
+                      ? "Conferma la mail per salvare la partita e ritrovare il tuo progresso."
                       : "Conferma la mail per entrare e ritrovare la tua selezione."
                     : account.status === "loading"
                       ? "Prepariamo l'accesso sicuro..."
@@ -388,7 +387,7 @@ export function AccountPanel() {
 
         <aside className="col-span-12 space-y-4 lg:col-span-5">
           <div className="brand-panel panel-lift rounded-[28px] p-4.5 sm:p-5">
-            <p className="editorial-label">Workspace snapshot</p>
+            <p className="editorial-label">La tua selezione</p>
             <h2 className="text-display-card mt-2 text-[1.36rem] sm:text-[1.54rem]">
               La selezione che hai già costruito resta leggibile.
             </h2>
@@ -399,7 +398,7 @@ export function AccountPanel() {
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {[
                 { label: "Salvati", value: workspace.saved, detail: "tool salvati" },
-                { label: "Confronto", value: workspace.compare, detail: "profili nel tray" },
+                { label: "Confronto", value: workspace.compare, detail: "profili da confrontare" },
                 { label: "Priorità alta", value: workspace.top, detail: "priorità alte" },
                 { label: "Da rivedere", value: workspace.review, detail: "tool ancora aperti" },
               ].map((item) => (
@@ -453,11 +452,11 @@ export function AccountPanel() {
               </div>
               <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
                 <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
-                  3. Merge sicuro
+                  3. Collegamento sicuro
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/82">
-                  Salvati, confronto, note, pin, reason e stage vengono agganciati all&apos;account
-                  senza perdere il contesto costruito da guest.
+                  Salvati, confronto, note e priorità vengono agganciati all&apos;account
+                  senza perdere il contesto costruito in questo browser.
                 </p>
               </div>
             </div>

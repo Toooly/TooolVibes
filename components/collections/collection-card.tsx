@@ -47,10 +47,10 @@ export function CollectionCard({
   const boundaryLabel =
     hiddenToolCount > 0
       ? `${visibleToolCount}/${collection.tool_count} tool aperti`
-      : "Layer completo";
+      : "Tutto visibile";
   const entryLabel =
     premium.state === "locked"
-      ? "Apri teaser"
+      ? "Apri anteprima"
       : premium.state === "preview"
         ? "Apri anteprima"
         : premium.entry_label;
@@ -81,7 +81,7 @@ export function CollectionCard({
               <span className="selection-status">{collection.cover_kicker}</span>
               {collection.surface === "special-issue" ? (
                 <span className="selection-status">
-                  {hasAdvancedSpecialIssue(collection) ? "Special issue avanzata" : "Special issue"}
+                  {hasAdvancedSpecialIssue(collection) ? "Speciale avanzato" : "Speciale"}
                 </span>
               ) : null}
               <span
@@ -111,13 +111,13 @@ export function CollectionCard({
           <div className="flex flex-col justify-between p-4.5 sm:p-5 lg:p-6">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="pill">Stack editoriali</span>
+                <span className="pill">Percorsi curati</span>
                 {collection.surface === "special-issue" ? (
                   <span className="selection-status">{formatMeta.label}</span>
                 ) : null}
                 {collection.access !== "open" ? (
                   <span className="selection-status">
-                    {collection.access === "premium" ? "Member issue" : "Anteprima premium"}
+                    {collection.access === "premium" ? "Raccolta riservata" : "Anteprima premium"}
                   </span>
                 ) : null}
               </div>
@@ -135,8 +135,8 @@ export function CollectionCard({
               <p className="mt-4 text-[0.86rem] leading-6" style={{ color: "var(--muted)" }}>
                 {leadToolName ? `Tool guida: ${leadToolName}. ` : ""}
                 {hiddenToolCount > 0
-                  ? `${visibleToolCount} tool leggibili ora, ${hiddenToolCount} nel layer completo.`
-                  : "Tutti i tool della collection sono già leggibili qui."}
+                  ? `${visibleToolCount} tool leggibili ora, ${hiddenToolCount} nella raccolta completa.`
+                  : "Tutti i tool della raccolta sono già leggibili qui."}
               </p>
             </div>
 
@@ -180,7 +180,7 @@ export function CollectionCard({
               <span className="editorial-label">{collection.cover_kicker}</span>
               {collection.surface === "special-issue" ? (
                 <span className="selection-status">
-                  {hasAdvancedSpecialIssue(collection) ? "Issue avanzata" : "Issue"}
+                  {hasAdvancedSpecialIssue(collection) ? "Speciale avanzato" : "Speciale"}
                 </span>
               ) : null}
               <span className="selection-chip rounded-full border px-2.5 py-0.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: collection.access === "open" ? "rgba(255,255,255,0.76)" : "rgba(249,239,212,0.92)", color: "var(--muted-strong)" }}>
@@ -231,7 +231,7 @@ export function CollectionCard({
             </span>
             {collection.surface === "special-issue" ? (
               <span className="selection-status">
-                {hasAdvancedSpecialIssue(collection) ? "Special issue avanzata" : "Special issue"}
+                {hasAdvancedSpecialIssue(collection) ? "Speciale avanzato" : "Speciale"}
               </span>
             ) : null}
             <span className="selection-chip rounded-full px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]" style={{ background: collection.access === "open" ? "rgba(255,255,255,0.82)" : "rgba(249,239,212,0.94)", color: "var(--muted-strong)" }}>
@@ -279,14 +279,14 @@ export function CollectionCard({
           <div>
             <p className="editorial-label">Tool guida</p>
             <p className="text-meta mt-1 text-[0.8rem]" style={{ color: "var(--muted-strong)" }}>
-              {leadToolName ?? "Stack editoriale"}
+              {leadToolName ?? "Percorso editoriale"}
             </p>
           </div>
           <div>
-            <p className="editorial-label">Confine</p>
+            <p className="editorial-label">Accesso</p>
             <p className="text-meta mt-1 text-[0.8rem]" style={{ color: "var(--muted-strong)" }}>
               {hiddenToolCount > 0
-                ? `${visibleToolCount} aperti, ${hiddenToolCount} nel layer completo`
+                ? `${visibleToolCount} aperti, ${hiddenToolCount} nella raccolta completa`
                 : "Tutti i tool sono visibili"}
             </p>
           </div>

@@ -8,8 +8,8 @@ export function RadarGameMissions() {
       scope="radar"
       variant="radar"
       eyebrow="Missioni radar"
-      title="Daily scan pronto al claim."
-      description="Il radar diventa una routine giornaliera: intercetta, leggi i segnali, porta i tool migliori verso la directory."
+      title="Scansione giornaliera pronta."
+      description="Il radar diventa una routine giornaliera: intercetta i segnali, leggili con calma e porta i tool migliori verso il catalogo."
     />
   );
 }

@@ -63,7 +63,7 @@ export function HeroSection({
             data-orbit-shield
           >
             <Sparkles size={14} />
-            AI tools discovery system
+            Guida italiana ai tool AI
           </motion.div>
 
           <h1
@@ -92,7 +92,7 @@ export function HeroSection({
             transition={{ delay: 1.2, duration: 0.5 }}
             data-orbit-shield
           >
-            TooolVibes organizza catalogo, segnali e shortlist in un percorso chiaro:
+            TooolVibes organizza catalogo, segnali e salvati in un percorso chiaro:
             trovi alternative credibili, confronti solo ciò che conta e decidi prima.
           </motion.p>
 

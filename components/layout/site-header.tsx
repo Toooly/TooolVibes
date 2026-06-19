@@ -71,7 +71,7 @@ export function SiteHeader() {
               </p>
               <p className="hidden items-center gap-1.5 text-[0.74rem] text-[var(--muted)] 2xl:flex">
                 <span className="live-signal-dot scale-[0.72]" aria-hidden="true" />
-                AI tools discovery system
+                Guida italiana ai tool AI
               </p>
             </div>
           </Link>

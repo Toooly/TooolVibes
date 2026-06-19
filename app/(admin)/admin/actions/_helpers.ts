@@ -80,7 +80,7 @@ export function getSupabaseDisabledState(): ToolFormState {
   return {
     status: "error",
     message:
-      "Verifica `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` e l'accesso reale alla tabella `tools` prima di riattivare le scritture founders.",
+      "Il salvataggio dei tool non è ancora attivo. Controlla la configurazione dell'area admin prima di riprovare.",
   };
 }
 
@@ -103,7 +103,7 @@ export function getMutationErrorState(
 
   return {
     status: "error",
-    message: "Non è stato possibile completare l'operazione su Supabase. Riprova.",
+    message: "Non è stato possibile completare il salvataggio. Riprova.",
     values,
   };
 }
@@ -112,7 +112,7 @@ export function getCollectionSupabaseDisabledState(): CollectionFormState {
   return {
     status: "error",
     message:
-      "Configura Supabase admin e applica le migration collections per abilitare le scritture editoriali reali.",
+      "Il salvataggio delle raccolte non è ancora attivo. Completa la configurazione dell'area admin prima di riprovare.",
   };
 }
 
@@ -126,7 +126,7 @@ export function getCollectionMutationErrorState(
   if (message.includes("duplicate key value") || message.includes("collections_slug_key")) {
     return {
       status: "error",
-      message: "Esiste già una collection con questo slug. Scegline uno diverso.",
+      message: "Esiste già una raccolta con questo slug. Scegline uno diverso.",
       fieldErrors: {
         slug: "Questo slug è già in uso.",
       },
@@ -138,14 +138,14 @@ export function getCollectionMutationErrorState(
     return {
       status: "error",
       message:
-        "Non è stato possibile aggiornare i tool inclusi. Controlla tool, ordine e migration collections.",
+        "Non è stato possibile aggiornare i tool inclusi. Controlla tool e ordine, poi riprova.",
       values,
     };
   }
 
   return {
     status: "error",
-    message: "Non è stato possibile completare il salvataggio della collection.",
+    message: "Non è stato possibile completare il salvataggio della raccolta.",
     values,
   };
 }
@@ -154,7 +154,7 @@ export function getArticleSupabaseDisabledState(): ArticleFormState {
   return {
     status: "error",
     message:
-      "Configura Supabase admin e applica la migration editorial_articles per abilitare le scritture del blog.",
+      "Il salvataggio del blog non è ancora attivo. Completa la configurazione dell'area admin prima di riprovare.",
   };
 }
 
@@ -168,9 +168,9 @@ export function getArticleMutationErrorState(
   if (message.includes("duplicate key value") || message.includes("editorial_articles_slug_key")) {
     return {
       status: "error",
-      message: "Esiste gia un articolo con questo slug. Scegline uno diverso.",
+      message: "Esiste già un articolo con questo slug. Scegline uno diverso.",
       fieldErrors: {
-        slug: "Questo slug e gia in uso.",
+        slug: "Questo slug è già in uso.",
       },
       values,
     };
@@ -178,7 +178,7 @@ export function getArticleMutationErrorState(
 
   return {
     status: "error",
-    message: "Non e stato possibile completare il salvataggio dell'articolo.",
+    message: "Non è stato possibile completare il salvataggio dell'articolo.",
     values,
   };
 }

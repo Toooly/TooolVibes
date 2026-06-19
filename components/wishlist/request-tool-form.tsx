@@ -160,7 +160,7 @@ export function RequestToolForm({ className }: { className?: string }) {
             <div>
               <p className="font-semibold">Richiesta ricevuta.</p>
               <p className="mt-1 leading-6 text-[var(--muted-strong)]">
-                {lastRequest?.toolName} entra nella wishlist TooolVibes.
+                {lastRequest?.toolName} entra tra i suggerimenti TooolVibes.
               </p>
             </div>
           </div>
@@ -304,8 +304,8 @@ export function RequestToolForm({ className }: { className?: string }) {
 
           <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4 sm:mt-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pt-5">
             <p className="max-w-[42rem] text-[0.82rem] leading-6 text-[var(--muted-strong)] sm:text-sm">
-              Valutiamo ogni proposta per qualità, utilità reale e coerenza con la
-              directory.
+              Valutiamo ogni proposta per qualità, utilità reale e coerenza con il
+              catalogo.
             </p>
             <PremiumButton
               type="submit"
@@ -335,7 +335,7 @@ export function RequestToolForm({ className }: { className?: string }) {
 
           <div className="mt-3 flex items-center gap-2 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2.5 text-xs leading-5 text-[var(--muted)] sm:mt-5 sm:rounded-[20px] sm:px-4 sm:py-3 sm:text-sm">
             <Sparkles className="size-4 text-violet-100" aria-hidden="true" />
-            Le proposte migliori diventano schede curate, non link buttati in lista.
+            Le proposte migliori diventano schede curate, non semplici link in elenco.
           </div>
         </form>
       </PremiumPanel>

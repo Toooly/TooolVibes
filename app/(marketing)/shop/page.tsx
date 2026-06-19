@@ -5,20 +5,20 @@ import { siteConfig } from "@/lib/config/site";
 
 const shopCards = [
   {
-    title: "Stack curati",
-    copy: "Selezioni premium di tool e workflow già ragionate per creator, founder e team piccoli.",
-    example: "Esempio: MVP builder stack, AI content stack, automation starter.",
+    title: "Kit curati",
+    copy: "Selezioni premium di tool e flussi già ragionate per creator, founder e team piccoli.",
+    example: "Esempio: kit per MVP, contenuti AI e automazioni di partenza.",
     icon: Layers3,
   },
   {
     title: "Risorse operative",
     copy: "Materiali che riducono attrito: esempi concreti, checklist e percorsi pronti al test.",
-    example: "Esempio: brief, prompt pack, template di valutazione tool.",
+    example: "Esempio: brief, prompt pronti e schede per valutare i tool.",
     icon: FileText,
   },
   {
-    title: "Shortcut più densi",
-    copy: "Il layer premium serve quando vuoi velocizzare il passaggio tra scoperta, scelta e implementazione.",
+    title: "Percorsi più rapidi",
+    copy: "Le risorse premium servono quando vuoi passare più in fretta da scoperta, scelta e implementazione.",
     example: "Esempio: sequenze operative per lanciare, automatizzare o validare.",
     icon: Zap,
   },
@@ -30,19 +30,19 @@ export default function ShopPage() {
       <section className="hero-shell hero-shell-shop motion-reveal px-5 py-5 text-white sm:rounded-[38px] sm:px-7 sm:py-8">
         <div className="grid gap-7 lg:grid-cols-[minmax(0,0.94fr)_minmax(20rem,0.8fr)] lg:items-center">
           <div className="max-w-[44rem]">
-            <PremiumBadge tone="warning">Digital Shop</PremiumBadge>
+            <PremiumBadge tone="warning">Shop digitale</PremiumBadge>
             <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[1.05] text-white">
-              Asset, selezioni premium e shortcut per lavorare più veloce.
+              Risorse, selezioni premium e percorsi pronti per lavorare più veloce.
             </h1>
             <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-7 text-white/74 sm:mt-5 sm:text-[1rem]">
-              Il Digital Shop è il layer esterno in cui TooolVibes porta raccolte premium,
-              risorse e percorsi più densi. Il punto non è aggiungere rumore: è darti
+              Lo shop digitale raccoglie selezioni premium,
+              risorse e percorsi più approfonditi. Il punto non è aggiungere rumore: è darti
               materiali più pronti all&apos;uso.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <PremiumLink href={siteConfig.shopUrl} external>
-                Apri il Digital Shop
+                Apri lo shop digitale
               </PremiumLink>
               <PremiumLink href="/archivio" tone="secondary">
                 Vedi catalogo
@@ -54,16 +54,16 @@ export default function ShopPage() {
             <div className="flex items-center justify-between gap-3 rounded-[22px] border border-white/10 bg-white/7 p-4">
               <div>
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/48">
-                  Bundle preview
+                  Anteprima kit
                 </p>
                 <p className="mt-1 text-sm font-semibold text-white">
-                  TooolVibes Operating Kit
+                  Kit operativo TooolVibes
                 </p>
               </div>
               <Sparkles className="size-5 text-amber-100" aria-hidden="true" />
             </div>
             <div className="mt-4 grid gap-3">
-              {["Tool shortlist", "Prompt operativi", "Checklist decisionale"].map((item, index) => (
+              {["Tool salvati", "Prompt operativi", "Checklist decisionale"].map((item, index) => (
                 <div
                   key={item}
                   className="flex items-center justify-between rounded-[20px] border border-white/10 bg-white/7 p-3"
@@ -142,8 +142,8 @@ export default function ShopPage() {
               Lo shop deve aiutarti a decidere e costruire, non solo vendere file.
             </h2>
             <p className="mt-3 max-w-[48rem] text-sm leading-7 text-white/66">
-              Ogni risorsa premium parte da un problema operativo: scegliere uno stack,
-              validare un tool, automatizzare un passaggio o rendere un workflow replicabile.
+              Ogni risorsa premium parte da un problema operativo: scegliere una combinazione di tool,
+              validare una scelta, automatizzare un passaggio o rendere un flusso replicabile.
             </p>
           </div>
           <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-3 lg:grid-cols-1">

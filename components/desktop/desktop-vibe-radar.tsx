@@ -19,7 +19,7 @@ export function DesktopVibeRadar() {
           </p>
           <div className="desktop-vibe-actions">
             <PremiumLink href="/archivio" size="lg">
-              Esplora directory
+              Esplora catalogo
             </PremiumLink>
             <PremiumLink href="/shortlist#wishlist" tone="secondary" size="lg">
               Suggerisci un tool

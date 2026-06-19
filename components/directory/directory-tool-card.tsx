@@ -90,7 +90,7 @@ export function DirectoryToolCard({
         <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
           <div className="rounded-[22px] bg-white/72 p-4">
             <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
-              TL;DR
+              In breve
             </p>
             <p className="text-clamp-2 mt-2 text-[0.9rem] leading-6 text-[var(--foreground)]">
               {tool.tldr}
@@ -108,7 +108,7 @@ export function DirectoryToolCard({
             </div>
             <div className="rounded-[20px] bg-white/72 p-3.5">
               <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
-                Review rapida
+                Lettura rapida
               </p>
               <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-[var(--foreground)]">
                 {tool.editorialReview}

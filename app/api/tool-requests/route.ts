@@ -27,7 +27,7 @@ function isValidEmail(value: string) {
 export async function POST(request: Request) {
   if (!isSupabaseAdminEnabled()) {
     return NextResponse.json(
-      { message: "Supabase admin non configurato." },
+      { message: "Suggerimenti non disponibili in questo momento. Riprova più tardi." },
       { status: 503 },
     );
   }
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ message: "Payload non valido." }, { status: 400 });
+    return NextResponse.json({ message: "Richiesta non valida." }, { status: 400 });
   }
 
   const payload = body && typeof body === "object" ? (body as Record<string, unknown>) : {};

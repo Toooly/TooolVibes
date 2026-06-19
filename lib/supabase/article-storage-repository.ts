@@ -82,7 +82,7 @@ async function ensureBucket(
   });
 
   if (error && !isAlreadyExistsError(error.message)) {
-    throw new Error(`Unable to prepare storage bucket ${bucket}: ${error.message}`);
+    throw new Error(`Non è stato possibile preparare lo spazio per i contenuti. Dettaglio: ${error.message}`);
   }
 
   return client;
@@ -176,7 +176,7 @@ async function uploadStorageArticleIndex(articles: BlogArticleRecord[]) {
     });
 
   if (error) {
-    throw new Error(`Unable to save article index in storage CMS: ${error.message}`);
+    throw new Error(`Non è stato possibile salvare l'indice degli articoli. Dettaglio: ${error.message}`);
   }
 }
 
@@ -322,7 +322,7 @@ export async function updateArticleInStorage(id: string, input: PartialArticleSt
   const existing = existingIndex >= 0 ? articles[existingIndex] : null;
 
   if (!existing) {
-    throw new Error("Article not found in storage CMS.");
+    throw new Error("Articolo non trovato nell'archivio.");
   }
 
   if (input.slug) {

@@ -29,7 +29,7 @@ export const getAffiliateLinksByToolId = cache(
       .order("created_at", { ascending: false });
 
     if (error) {
-      throw new Error(`Unable to load affiliate links for tool ${toolId}: ${error.message}`);
+      throw new Error(`Non è stato possibile caricare i link affiliati di questo tool. Dettaglio: ${error.message}`);
     }
 
     return data ?? [];
@@ -46,7 +46,7 @@ export const getAllAffiliateLinksFromSupabase = cache(async (): Promise<
     .order("created_at", { ascending: false });
 
   if (linksError) {
-    throw new Error(`Unable to load affiliate links: ${linksError.message}`);
+    throw new Error(`Non è stato possibile caricare i link affiliati. Dettaglio: ${linksError.message}`);
   }
 
   if (!links || links.length === 0) return [];
@@ -58,7 +58,7 @@ export const getAllAffiliateLinksFromSupabase = cache(async (): Promise<
     .in("id", toolIds);
 
   if (toolsError) {
-    throw new Error(`Unable to load tool names for affiliate links: ${toolsError.message}`);
+    throw new Error(`Non è stato possibile completare i nomi dei tool collegati ai link affiliati. Dettaglio: ${toolsError.message}`);
   }
 
   const toolNameMap = new Map((toolsData ?? []).map((t) => [t.id, t.name]));
@@ -78,7 +78,7 @@ export async function getAffiliateLinkById(id: string): Promise<AffiliateLinkRec
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Unable to load affiliate link ${id}: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare questo link affiliato. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -108,7 +108,7 @@ export async function createAffiliateLinkInSupabase(
     .single();
 
   if (error) {
-    throw new Error(`Unable to create affiliate link: ${error.message}`);
+    throw new Error(`Non è stato possibile creare il link affiliato. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -127,7 +127,7 @@ export async function updateAffiliateLinkInSupabase(
     .single();
 
   if (error) {
-    throw new Error(`Unable to update affiliate link ${id}: ${error.message}`);
+    throw new Error(`Non è stato possibile aggiornare questo link affiliato. Dettaglio: ${error.message}`);
   }
 
   return data;
@@ -138,6 +138,6 @@ export async function deleteAffiliateLinkFromSupabase(id: string): Promise<void>
   const { error } = await client.from("affiliate_links").delete().eq("id", id);
 
   if (error) {
-    throw new Error(`Unable to delete affiliate link ${id}: ${error.message}`);
+    throw new Error(`Non è stato possibile eliminare questo link affiliato. Dettaglio: ${error.message}`);
   }
 }

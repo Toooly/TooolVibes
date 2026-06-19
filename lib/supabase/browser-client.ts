@@ -95,7 +95,7 @@ export function getBrowserSupabaseClient() {
   const config = getSupabaseBrowserConfig();
 
   if (!config) {
-    throw new Error("Supabase browser environment variables are not configured.");
+    throw new Error("L'accesso all'account non è configurato.");
   }
 
   browserClient = createClient(config.url, config.anonKey, {

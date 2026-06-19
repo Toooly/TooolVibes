@@ -30,7 +30,7 @@ type ShortlistSortKey = ToolSortKey | "workspace";
 type StageFilter = ShortlistStage | "all";
 
 const sortOptions: { value: ShortlistSortKey; label: string }[] = [
-  { value: "workspace", label: "Workspace: pinned e top prima" },
+  { value: "workspace", label: "Salvati: preferiti e prime scelte" },
   { value: "recent", label: "Più recenti" },
   { value: "featured", label: "Prima gli evidenziati" },
   { value: "name", label: "Ordine alfabetico" },
@@ -90,19 +90,19 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           background: "linear-gradient(180deg, rgba(255,255,255,0.84), rgba(243,237,255,0.74))",
         }}
       >
-        <p className="pill mx-auto">Workspace personale</p>
+        <p className="pill mx-auto">Salvati personali</p>
         <h2 className="text-display-card mx-auto mt-4 max-w-none text-[1.72rem] sm:max-w-[16ch] sm:text-[2.08rem] sm:text-balance">
-          La shortlist parte dal primo tool che vuoi tenere vivo.
+          I salvati partono dal primo tool che vuoi tenere a portata di mano.
         </h2>
         <p className="text-body-soft mx-auto mt-3 max-w-[34rem] text-[0.93rem]" style={{ color: "var(--muted)" }}>
-          Salva un tool dall&apos;archivio o da una collection. Poi torna qui per ricordarti in fretta
-          perche&apos; vale restare nel radar e quando ha senso confrontarlo.
+          Salva un tool dal catalogo o da una raccolta. Poi torna qui per ricordarti in fretta
+          perché vale tenerlo d&apos;occhio e quando ha senso confrontarlo.
         </p>
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))" }}>
             <p className="editorial-label">1. Salva</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
-              Parti da un profilo forte o da una collection che ha già il taglio giusto.
+              Parti da un profilo forte o da una raccolta che ha già il taglio giusto.
             </p>
           </div>
           <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))" }}>
@@ -114,7 +114,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))" }}>
             <p className="editorial-label">3. Confronta</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
-              Quando restano 2 o 3 candidati veri, il passaggio naturale è compare.
+              Quando restano 2 o 3 candidati veri, il passaggio naturale è il confronto.
             </p>
           </div>
         </div>
@@ -130,7 +130,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
             href="/collections"
             className="button-shell button-secondary text-ui-strong inline-flex rounded-full px-5 py-3 text-sm font-semibold"
           >
-            Apri collections
+            Apri raccolte
           </Link>
         </div>
       </div>
@@ -143,7 +143,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="editorial-label">Workspace shortlist</span>
+              <span className="editorial-label">Salvati personali</span>
               <span className="selection-status">{shortlistedTools.length} candidati salvati</span>
             </div>
             <p className="text-body-soft mt-2 text-[0.92rem]" style={{ color: "var(--muted)" }}>
@@ -166,7 +166,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
                 color: compareCount > 1 ? "var(--accent-strong)" : "var(--muted-strong)",
               }}
             >
-              {compareCount > 1 ? `Apri compare (${compareCount})` : "Servono 2 tool per compare"}
+              {compareCount > 1 ? `Apri confronto (${compareCount})` : "Servono 2 tool per confrontare"}
             </Link>
           </div>
         </div>
@@ -175,7 +175,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Cerca nella tua workspace"
+            placeholder="Cerca nei tuoi salvati"
             data-sonic-action="search"
             className="filter-control w-full rounded-[22px] border px-4 py-3 outline-none"
             style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.88)" }}
@@ -197,7 +197,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
 
         <div className="mt-4 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="editorial-label">Filtro per stage</p>
+            <p className="editorial-label">Filtro per stato</p>
             {activeWorkspaceFilters > 0 ? (
               <button
                 type="button"
@@ -210,7 +210,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
                 className="section-quiet-link text-[0.8rem] font-semibold"
                 style={{ color: "var(--muted)" }}
                 >
-                Reset workspace
+                Resetta vista
               </button>
             ) : null}
           </div>
@@ -251,7 +251,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           <div className={`shortlist-mobile-rail tool-rail -mx-2 flex snap-x gap-3 overflow-x-auto px-2 pb-2 md:hidden ${isSearching ? "opacity-70 transition-opacity duration-200" : "transition-opacity duration-200"}`}>
             {filteredTools.map((tool, index) => (
               <div key={tool.id} className="shortlist-mobile-card-shell grid w-[min(18.75rem,calc(100vw-1.5rem))] shrink-0 snap-start gap-2.5">
-                <ToolCard tool={tool} variant="compact" index={index} contextLabel="Workspace shortlist" />
+                <ToolCard tool={tool} variant="compact" index={index} contextLabel="Salvati personali" />
                 <ToolWorkspacePanel tool={tool} />
               </div>
             ))}
@@ -260,7 +260,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           <div className={`hidden gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 ${isSearching ? "opacity-70 transition-opacity duration-200" : "transition-opacity duration-200"}`}>
             {filteredTools.map((tool, index) => (
               <div key={tool.id} className="grid gap-3">
-                <ToolCard tool={tool} variant="standard" index={index} contextLabel="Workspace shortlist" />
+                <ToolCard tool={tool} variant="standard" index={index} contextLabel="Salvati personali" />
                 <ToolWorkspacePanel tool={tool} />
               </div>
             ))}
@@ -271,10 +271,10 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           className="light-surface rounded-[32px] border px-6 py-8 text-center sm:py-9"
           style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.78), rgba(243,237,255,0.7))" }}
         >
-          <p className="pill mx-auto">Workspace filtrata</p>
+          <p className="pill mx-auto">Salvati filtrati</p>
           <h3 className="text-display-card mt-4 text-[1.8rem]">Nessun tool corrisponde a questa vista personale.</h3>
           <p className="mt-3 text-sm leading-7" style={{ color: "var(--muted)" }}>
-            Prova a riaprire stage, memoria o categoria. Qui restano solo i profili che hanno ancora un ruolo chiaro nella tua selezione.
+            Prova ad allargare stato, nota o categoria. Qui restano solo i profili che hanno ancora un ruolo chiaro nella tua selezione.
           </p>
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <button
@@ -287,13 +287,13 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
                 data-sonic-action="update"
                 className="button-shell button-secondary text-ui-strong inline-flex rounded-full px-5 py-3 text-sm font-semibold"
               >
-              Resetta la workspace
+              Resetta la vista
             </button>
             <Link
               href={compareCount > 1 ? "/compare" : "/archivio"}
               className="button-shell button-primary text-ui-strong inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
             >
-              {compareCount > 1 ? "Apri il compare" : "Torna all'archivio"}
+              {compareCount > 1 ? "Apri il confronto" : "Torna al catalogo"}
               <ArrowRight aria-hidden="true" className="button-arrow size-4" />
             </Link>
           </div>

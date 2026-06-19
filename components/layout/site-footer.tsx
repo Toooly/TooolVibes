@@ -12,17 +12,17 @@ const footerNav = [
   { href: "/affiliati", label: "Diventa affiliato" },
   { href: "/radar", label: "Radar" },
   { href: "/community", label: "Community" },
-  { href: "/shop", label: "Shop Digitale" },
+  { href: "/shop", label: "Shop digitale" },
   { href: "/admin/login", label: "Login amministratore" },
 ];
 
 const categoryNav = [
-  { href: "/archivio?group=vibe-coding", label: "Vibe Coding" },
-  { href: "/archivio?group=ai-app-builder", label: "AI App Builder" },
-  { href: "/archivio?group=no-code", label: "No-Code" },
-  { href: "/archivio?group=automation", label: "Automation" },
-  { href: "/archivio?group=ai-agents", label: "AI Agents" },
-  { href: "/archivio?group=ai-video", label: "AI Video" },
+  { href: "/archivio?group=vibe-coding", label: "Vibe coding" },
+  { href: "/archivio?group=ai-app-builder", label: "Builder app AI" },
+  { href: "/archivio?group=no-code", label: "No-code" },
+  { href: "/archivio?group=automation", label: "Automazioni" },
+  { href: "/archivio?group=ai-agents", label: "Agenti AI" },
+  { href: "/archivio?group=ai-video", label: "Video AI" },
 ];
 
 export function SiteFooter() {
@@ -38,7 +38,7 @@ export function SiteFooter() {
                   TooolVibes
                 </p>
                 <p className="mt-1 text-[0.68rem] uppercase tracking-[0.14em] text-white/58">
-                  AI tools discovery system
+                  Guida italiana ai tool AI
                 </p>
               </div>
             </div>
@@ -47,8 +47,8 @@ export function SiteFooter() {
               I tool migliori, già filtrati dal rumore.
             </h2>
             <p className="mt-3 max-w-[36rem] text-[0.82rem] leading-6 text-white/64 sm:text-[0.94rem] sm:leading-7">
-              Directory curata di AI tools, SaaS, no-code builder, vibe coding e
-              automazioni con link chiari, filtri utili e una selezione pensata per
+              Catalogo curato di tool AI, SaaS, no-code, vibe coding e
+              automazioni, con link chiari, filtri utili e una selezione pensata per
               scegliere con più lucidità.
             </p>
 
@@ -60,7 +60,7 @@ export function SiteFooter() {
                 Diventa affiliato
               </PremiumLink>
               <PremiumLink href={siteConfig.shopUrl} tone="ghost" size="sm" external>
-                Apri il Digital Shop
+                Apri lo shop digitale
               </PremiumLink>
             </div>
           </div>
@@ -135,7 +135,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-6 flex min-w-0 flex-col gap-3 border-t border-white/12 pt-4 text-[0.76rem] sm:flex-row sm:items-center sm:justify-between">
-          <p className="min-w-0 text-white/58">&copy; 2026 TooolVibes. Directory premium per AI, SaaS, no-code e automazioni operative.</p>
+          <p className="min-w-0 text-white/58">&copy; 2026 TooolVibes. Catalogo premium per AI, SaaS, no-code e automazioni operative.</p>
           <div className="hidden shrink-0 flex-wrap justify-end gap-3 sm:flex">
             <a
               href={siteConfig.shopUrl}

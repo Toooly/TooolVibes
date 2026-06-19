@@ -65,7 +65,7 @@ export async function getCollectionTransitionReviewsFromSupabase(): Promise<
       return [];
     }
 
-    throw new Error(`Unable to load collection transition reviews: ${error.message}`);
+    throw new Error(`Non è stato possibile caricare le revisioni delle raccolte. Dettaglio: ${error.message}`);
   }
 
   return ((data ?? []) as CollectionTransitionReviewRow[]).map(mapReviewRow);
@@ -92,7 +92,7 @@ export async function upsertCollectionTransitionReview({
   );
 
   if (error) {
-    throw new Error(`Unable to save collection transition review: ${error.message}`);
+    throw new Error(`Non è stato possibile salvare la revisione della raccolta. Dettaglio: ${error.message}`);
   }
 }
 
@@ -104,6 +104,6 @@ export async function clearCollectionTransitionReview(slug: string) {
     .eq("slug", slug);
 
   if (error) {
-    throw new Error(`Unable to clear collection transition review: ${error.message}`);
+    throw new Error(`Non è stato possibile rimuovere la revisione della raccolta. Dettaglio: ${error.message}`);
   }
 }

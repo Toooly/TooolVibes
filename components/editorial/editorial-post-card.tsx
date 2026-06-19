@@ -13,7 +13,7 @@ type EditorialPostCardProps = {
 
 const kindLabels: Record<EditorialPostRecord["kind"], string> = {
   "tool-writeup": "Approfondimento tool",
-  guide: "Guida legacy",
+  guide: "Guida",
   editorial: "Blog",
 };
 

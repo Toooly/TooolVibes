@@ -20,7 +20,7 @@ type AffiliatesPageProps = {
 const statusLabels: Record<string, string> = {
   reviewing: "Richiesta spostata in revisione.",
   approved: "Affiliato approvato e notificato via email.",
-  rejected: "Richiesta rifiutata. L'utente potra inviarne una nuova tra 30 giorni.",
+  rejected: "Richiesta rifiutata. L'utente potrà inviarne una nuova tra 30 giorni.",
   deleted: "Richiesta affiliato eliminata.",
   error: "Operazione non riuscita. Riprova.",
   validation: "Richiesta non valida.",
@@ -193,7 +193,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
         <section className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
             <div>
-              <p className="editorial-label">Workspace affiliati</p>
+              <p className="editorial-label">Area affiliati</p>
               <h2 className="text-display-card mt-2 text-[1.58rem] sm:text-[1.82rem]">
                 Candidature ricevute
               </h2>
@@ -258,7 +258,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                         {request.message ? <p>Messaggio: {request.message}</p> : null}
                         {request.admin_notes ? (
                           <p>
-                            Note admin:{" "}
+                            Note interne:{" "}
                             <span style={{ color: "var(--muted-strong)" }}>
                               {request.admin_notes}
                             </span>
@@ -316,7 +316,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                           />
                         </label>
                         <label className="block">
-                          <span className="mb-2 block text-sm font-semibold">Note admin</span>
+                          <span className="mb-2 block text-sm font-semibold">Note interne</span>
                           <textarea
                             name="admin_notes"
                             rows={3}

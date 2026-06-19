@@ -169,8 +169,8 @@ export function RadarConsole({ items, hiddenDiscovered = false, className }: Rad
 
     createPrediction(leader.id);
     playGameSound("battleWin");
-    toast.success("Predizione agganciata", {
-      description: `${leader.name} entra nella tua run giornaliera.`,
+    toast.success("Pronostico salvato", {
+      description: `${leader.name} entra nella tua giornata.`,
     });
   };
 
@@ -247,7 +247,7 @@ export function RadarConsole({ items, hiddenDiscovered = false, className }: Rad
                 exit={{ opacity: 0, scale: 0.94 }}
               >
                 <ScanLine aria-hidden="true" size={18} />
-                {scanState === "revealed" ? "Riscansiona" : "Avvia scan"}
+                {scanState === "revealed" ? "Riscansiona" : "Avvia scansione"}
               </motion.button>
             )}
           </AnimatePresence>
@@ -307,7 +307,7 @@ export function RadarConsole({ items, hiddenDiscovered = false, className }: Rad
       <footer className="radar-console__prediction">
         <span>
           <Target aria-hidden="true" size={15} />
-          Predizione daily
+          Pronostico del giorno
         </span>
         <strong>{prediction ? prediction.tool_slug : leader.name}</strong>
         <button
@@ -316,7 +316,7 @@ export function RadarConsole({ items, hiddenDiscovered = false, className }: Rad
           disabled={isLocked || isCreating || leader.id === fallbackItem.id}
         >
           <CheckCircle2 aria-hidden="true" size={15} />
-          {isLocked ? "Bloccata" : isCreating ? "Aggancio" : "Lock"}
+          {isLocked ? "Bloccata" : isCreating ? "Salvataggio" : "Blocca"}
         </button>
       </footer>
     </section>

@@ -34,8 +34,8 @@ function Command({
 }
 
 function CommandDialog({
-  title = "Command Palette",
-  description = "Search for a command to run...",
+  title = "Comandi rapidi",
+  description = "Cerca una sezione, un tool o un'azione.",
   children,
   className,
   showCloseButton = false,

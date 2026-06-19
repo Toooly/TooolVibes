@@ -30,20 +30,20 @@ function getReadinessMeta(state: CollectionReadinessSummary["state"]) {
   switch (state) {
     case "blocked":
       return {
-        label: "Blocked",
+        label: "Bloccata",
         borderColor: "rgba(139,58,43,0.18)",
         background: "rgba(254,242,242,0.96)",
       };
     case "review":
       return {
-        label: "Review",
+        label: "Da rivedere",
         borderColor: "rgba(161,105,47,0.18)",
         background: "rgba(255,251,235,0.96)",
       };
     case "ready":
     default:
       return {
-        label: "Ready",
+        label: "Pronta",
         borderColor: "rgba(15,118,110,0.18)",
         background: "rgba(236,253,245,0.95)",
       };
@@ -68,6 +68,19 @@ function getReviewMetaStyles(reviewState: ReturnType<typeof getCollectionTransit
         borderColor: "rgba(161,105,47,0.18)",
         background: "rgba(255,251,235,0.96)",
       };
+  }
+}
+
+function getSourceLabel(source: string | null | undefined) {
+  switch (source) {
+    case "supabase":
+      return "Archivio reale";
+    case "mock":
+      return "Sorgente locale";
+    case "content":
+      return "Contenuto editoriale";
+    default:
+      return "nessuna";
   }
 }
 
@@ -192,9 +205,9 @@ export function CollectionTransitionCard({
             style={{ color: "var(--muted)" }}
           >
             <span>Slug: {entry.slug}</span>
-            <span>Public winner: {entry.public_source ?? "nessuno"}</span>
-            <span>Mock: {entry.mock ? "sì" : "no"}</span>
-            <span>Supabase: {entry.supabase ? "sì" : "no"}</span>
+            <span>Sorgente pubblica: {getSourceLabel(entry.public_source)}</span>
+            <span>Locale: {entry.mock ? "sì" : "no"}</span>
+            <span>Archivio reale: {entry.supabase ? "sì" : "no"}</span>
           </div>
           <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
             {severityMeta.description}
@@ -207,14 +220,14 @@ export function CollectionTransitionCard({
               href={`/admin/collections/${entry.supabase.id}`}
               className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
             >
-              Apri detail
+              Apri dettaglio
             </Link>
           ) : null}
           <Link
             href={returnTo}
             className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
           >
-            Aggiorna confronto
+            Ricarica confronto
           </Link>
         </div>
       </div>
@@ -256,7 +269,7 @@ export function CollectionTransitionCard({
                 {syncPreview.summary}
               </p>
               <p style={{ color: "var(--muted)" }}>
-                Safe changes: {syncPreview.safe_change_count} · Editorial changes:{" "}
+                Modifiche sicure: {syncPreview.safe_change_count} - Modifiche editoriali:{" "}
                 {syncPreview.editorial_change_count}
               </p>
             </div>
@@ -265,7 +278,7 @@ export function CollectionTransitionCard({
                 href={`/admin/collections/${collectionId}#sync-preview`}
                 className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
               >
-                Vedi preview
+                Vedi anteprima
               </Link>
             ) : null}
           </div>
@@ -292,14 +305,14 @@ export function CollectionTransitionCard({
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em]">{item.label}</p>
                 <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                  {item.severity === "critical" ? "critical" : "minor"}
+                  {item.severity === "critical" ? "critico" : "minore"}
                 </span>
               </div>
               <div className="mt-3 grid gap-3 lg:grid-cols-3">
                 {[
-                  { label: "Mock", value: item.mock_value },
-                  { label: "Supabase", value: item.supabase_value },
-                  { label: "Public winner", value: item.winner_value },
+                  { label: "Sorgente locale", value: item.mock_value },
+                  { label: "Archivio reale", value: item.supabase_value },
+                  { label: "Sorgente pubblica", value: item.winner_value },
                 ].map((field) => (
                   <div
                     key={`${item.key}-${field.label}`}
@@ -323,7 +336,7 @@ export function CollectionTransitionCard({
           className="mt-5 rounded-[22px] border px-4 py-4 text-sm"
           style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(236,253,245,0.95)" }}
         >
-          Nessun drift aperto sui campi chiave di transizione.
+          Nessuna differenza aperta sui campi chiave di transizione.
         </div>
       )}
 
@@ -381,7 +394,7 @@ export function CollectionTransitionCard({
               type="submit"
               className="button-shell button-primary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white"
             >
-              Apply safe align
+              Applica riallineamento sicuro
             </button>
           </form>
         ) : null}
@@ -401,7 +414,7 @@ export function CollectionTransitionCard({
                   background: "rgba(236,253,245,0.95)",
                 }}
               >
-                Mark as reviewed
+                Segna come rivista
               </button>
             </form>
 
@@ -418,7 +431,7 @@ export function CollectionTransitionCard({
                   background: "rgba(245,242,255,0.92)",
                 }}
               >
-                Dismiss warning
+                Ignora segnale
               </button>
             </form>
 
@@ -432,7 +445,7 @@ export function CollectionTransitionCard({
                   type="submit"
                   className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[var(--muted-strong)]"
                 >
-                  Clear review state
+                  Riapri revisione
                 </button>
               </form>
             ) : null}
@@ -455,7 +468,7 @@ export function CollectionTransitionCard({
       {safeAlignEligibility.eligible && !canSafeAlign ? (
         <p className="mt-3 text-sm" style={{ color: "var(--muted)" }}>
           {safeAlignMessage ??
-            "Safe align non disponibile: abilita audit persistente e write path prima di applicarlo."}
+            "Riallineamento sicuro non disponibile: abilita salvataggio e registro modifiche prima di applicarlo."}
         </p>
       ) : null}
     </article>

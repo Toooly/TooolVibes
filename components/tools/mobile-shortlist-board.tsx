@@ -191,10 +191,10 @@ function LibraryWishlistSection() {
           <Heart size={14} />
           Segnalazioni TooolVibes
         </span>
-        <h2 id="library-wishlist-title">Suggerisci un tool alla libreria.</h2>
+        <h2 id="library-wishlist-title">Suggerisci un tool alla selezione.</h2>
         <p>
-          Se manca un AI tool, SaaS o builder che merita spazio, segnalalo da qui:
-          resta dentro la tua libreria e diventa parte del percorso di selezione.
+          Se manca un tool AI, SaaS o builder che merita spazio, segnalalo da qui:
+          resta tra i tuoi suggerimenti e diventa parte del percorso di selezione.
         </p>
         <div className="mobile-library-wishlist__signals" aria-label="Segnali utili per proporre un tool">
           {signalCards.map((item) => {
@@ -410,7 +410,7 @@ function MobileLibraryEmpty({ tools }: { tools: ToolRecord[] }) {
   const routes = [
     { href: "/archivio", label: "Esplora catalogo", copy: "Filtra per categoria e salva i candidati davvero utili." },
     { href: "/radar", label: "Apri Radar", copy: "Parti dai segnali live quando non sai da dove cominciare." },
-    { href: "#wishlist", label: "Suggerisci tool", copy: "Manca un nome importante? Segnalalo alla libreria." },
+    { href: "#wishlist", label: "Suggerisci tool", copy: "Manca un nome importante? Segnalalo alla selezione." },
   ];
 
   return (

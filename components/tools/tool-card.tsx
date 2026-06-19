@@ -122,7 +122,7 @@ function ToolCardComponent({
                   className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]"
                   style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(112,82,255,0.18)", color: "white" }}
                 >
-                  Compare
+                  Confronto
                 </span>
               ) : null}
             </div>
@@ -138,7 +138,7 @@ function ToolCardComponent({
           <div className="flex flex-col justify-between p-4.5 sm:p-5 lg:p-6">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="selection-status">Lead selezione</span>
+                <span className="selection-status">Prima scelta</span>
                 <span className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}>
                   {formattedIndex}
                 </span>
@@ -240,7 +240,7 @@ function ToolCardComponent({
               selected ? "button-primary text-white" : "button-secondary",
             )}
           >
-            {selected ? "In focus" : "Metti a fuoco"}
+            {selected ? "In primo piano" : "Metti a fuoco"}
           </button>
           <div className="flex items-center gap-3">
             <span className="text-[0.66rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
@@ -375,7 +375,7 @@ function ToolCardComponent({
             background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.72))",
           }}
         >
-          <p className="editorial-label">{variant === "compact" ? "Nota" : "Review rapida"}</p>
+          <p className="editorial-label">{variant === "compact" ? "Nota" : "Lettura rapida"}</p>
           <p className={cn("mt-2 text-[0.82rem] leading-6", variant === "compact" ? "text-clamp-2" : "text-clamp-3")} style={{ color: "var(--muted-strong)" }}>
             {editorialNote}
           </p>
@@ -389,7 +389,7 @@ function ToolCardComponent({
               background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.72))",
             }}
           >
-            <p className="editorial-label">Best for</p>
+            <p className="editorial-label">Ideale per</p>
             <p className="mt-2 text-[0.82rem] leading-6" style={{ color: "var(--muted-strong)" }}>
               {bestFor}
             </p>

@@ -211,6 +211,6 @@ export async function sendAffiliateDecisionEmail(request: AffiliateRequestRecord
       <p>Ciao ${escapeHtml(request.first_name)}, per ora non possiamo approvare la tua richiesta affiliato.</p>
       <p>Potrai inviarne una nuova tra 30 giorni.</p>
     `,
-    text: "La tua richiesta affiliato non e stata approvata. Potrai inviarne una nuova tra 30 giorni.",
+    text: "La tua richiesta affiliato non è stata approvata. Potrai inviarne una nuova tra 30 giorni.",
   });
 }

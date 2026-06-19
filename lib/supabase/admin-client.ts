@@ -9,7 +9,7 @@ export function createAdminSupabaseClient() {
   const { url, serviceRoleKey } = getSupabaseAdminEnv();
 
   if (!url || !serviceRoleKey) {
-    throw new Error("Supabase admin environment variables are not configured.");
+    throw new Error("Il salvataggio dell'area admin non è configurato.");
   }
 
   return createClient(url, serviceRoleKey, {

@@ -35,7 +35,7 @@ function validateArenaBattleInput(
   toolSlugs: unknown,
 ): { mode: ArenaBattleMode; toolSlugs: string[] } {
   if (typeof mode !== "string" || !VALID_MODES.includes(mode as ArenaBattleMode)) {
-    throw new Error(`Invalid mode: ${mode}. Must be one of ${VALID_MODES.join(", ")}`);
+    throw new Error(`Modalità non valida: ${mode}. Scegli una delle modalità disponibili.`);
   }
   const validatedMode = mode as ArenaBattleMode;
 
@@ -115,7 +115,7 @@ export async function recordGameInteraction(xpDelta: number): Promise<GameProfil
     xpDelta < 0 ||
     xpDelta > MAX_XP_DELTA
   ) {
-    throw new Error(`Invalid xpDelta: ${xpDelta}`);
+    throw new Error(`Punti esperienza non validi: ${xpDelta}`);
   }
 
   const { data, error } = await supabase.rpc("record_game_interaction", {
@@ -150,7 +150,7 @@ export async function claimMission(missionId: string): Promise<GameProfile> {
 function validateToolSlug(toolSlug: string): string {
   const normalized = toolSlug.trim();
   if (!normalized || normalized.length > 100) {
-    throw new Error("Invalid toolSlug");
+    throw new Error("Tool non valido.");
   }
   return normalized;
 }
@@ -207,7 +207,7 @@ function computeExpectedHiddenSignal(
   const index = Math.floor(hashStringToFloat(contextDate) * candidateSlugs.length);
   const expected = candidateSlugs[index];
   if (!expected) {
-    throw new Error("Failed to compute expected hidden signal");
+    throw new Error("Non è stato possibile calcolare il segnale nascosto atteso.");
   }
   return expected;
 }
@@ -222,7 +222,7 @@ export async function claimHiddenSignal(
   if (!user) throw new Error("Unauthorized");
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(contextDate)) {
-    throw new Error("Invalid contextDate");
+    throw new Error("Data non valida.");
   }
 
   const normalizedSlug = validateToolSlug(toolSlug);
@@ -283,7 +283,7 @@ export async function createArenaBattle(
     .single();
 
   if (error) {
-    throw new Error("Failed to save arena battle");
+    throw new Error("Impossibile salvare la sfida di confronto");
   }
 
   await recordGameInteraction(ARENA_BATTLE_XP_REWARD);

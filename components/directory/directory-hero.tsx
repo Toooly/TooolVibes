@@ -20,12 +20,12 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
 
         <div className="relative grid gap-8 xl:grid-cols-[minmax(0,0.98fr)_minmax(25rem,1.02fr)] xl:items-center">
           <div className="max-w-[45rem] xl:pt-2">
-            <PremiumBadge tone="accent">AI tools discovery system</PremiumBadge>
+            <PremiumBadge tone="accent">Guida italiana ai tool AI</PremiumBadge>
             <h1 className="text-display-hero mt-4 max-w-[12ch] text-[clamp(2rem,8vw,4.85rem)] text-white sm:mt-5">
               Trova tool AI validi. Senti la direzione.
             </h1>
             <p className="mt-3 max-w-[42rem] text-[0.9rem] leading-6 text-white/74 sm:mt-5 sm:text-[1.13rem] sm:leading-8">
-              TooolVibes seleziona AI tools, SaaS, no-code builder, vibe coding e
+              TooolVibes seleziona tool AI, SaaS, no-code, vibe coding e
               automazioni con una logica pratica: meno alternative inutili, più segnali
               per capire cosa provare davvero.
             </p>
@@ -33,7 +33,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
             <div className="mt-5 grid gap-2.5 sm:mt-6 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
               <PremiumLink href="/archivio" size="md">Esplora i tool</PremiumLink>
               <PremiumLink href="/archivio#stack-builder" tone="secondary" size="md">
-                Crea il tuo stack
+                Crea la tua lista
               </PremiumLink>
               <PremiumLink href="/shortlist#wishlist" tone="ghost" size="md" className="hidden sm:inline-flex">
                 Suggerisci un tool
@@ -46,7 +46,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
               {[
                 [`${tools.length}`, "tool curati manualmente"],
                 [`${featuredCount}`, "selezioni editoriali"],
-                ["3", "azioni workspace"],
+                ["3", "azioni per scegliere"],
               ].map(([value, label]) => (
                 <div
                   key={label}
@@ -83,7 +83,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
             <div className="flex items-center justify-between gap-3 rounded-[24px] border border-white/10 bg-white/8 px-4 py-3">
               <div>
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/48">
-                  Workspace preview
+                  Anteprima selezione
                 </p>
                 <p className="mt-1 text-sm text-white/68">
                   Tool, segnali e azioni operative nello stesso flusso.

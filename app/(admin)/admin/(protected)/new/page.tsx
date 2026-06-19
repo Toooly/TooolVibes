@@ -10,6 +10,23 @@ type NewArticlePageProps = {
   searchParams: Promise<{ legacy?: string }>;
 };
 
+function getReadSourceLabel(source: string) {
+  switch (source) {
+    case "supabase":
+      return "Archivio principale";
+    case "storage":
+      return "Archivio alternativo";
+    case "mixed":
+      return "Archivio misto";
+    case "legacy":
+      return "Articoli da importare";
+    case "empty":
+      return "Nessun articolo";
+    default:
+      return source;
+  }
+}
+
 export default async function NewArticlePage({ searchParams }: NewArticlePageProps) {
   const params = await searchParams;
   const legacySlug = params.legacy?.trim();
@@ -20,9 +37,9 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
   const canWrite = runtime.canWrite;
   const initialValues = legacyPost ? getArticleImportFormValues(legacyPost) : undefined;
   const runtimeHighlights = [
-    { label: "Admin read", value: runtime.adminReadSource },
+    { label: "Lettura", value: getReadSourceLabel(runtime.adminReadSource) },
     { label: "Articoli", value: String(runtime.articles.length) },
-    { label: "Write target", value: runtime.writeTarget ?? "locked" },
+    { label: "Salvataggio", value: canWrite ? "Attivo" : "Sola lettura" },
   ];
 
   return (
@@ -31,11 +48,11 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
         <div className="flex flex-wrap items-center justify-between gap-4">
           <SectionHeading
             eyebrow={legacyPost ? "Importa articolo" : "Nuovo articolo"}
-            title={legacyPost ? `Importa "${legacyPost.title}" nel CMS` : "Crea una nuova bozza blog"}
+            title={legacyPost ? `Importa "${legacyPost.title}" nel blog` : "Crea una nuova bozza blog"}
             description={
               legacyPost
-                ? "Ho precompilato il contenuto legacy nel nuovo editor Markdown. Salvalo nel CMS per renderlo modificabile mantenendo stato e data originale."
-                : "Scrivi in Markdown, inserisci media nel corpo articolo e decidi se salvarlo come bozza o pubblicarlo subito."
+                ? "Ho precompilato il contenuto dell'articolo precedente nel nuovo editor. Salvalo per renderlo modificabile mantenendo stato e data originale."
+                : "Scrivi il testo, inserisci media nel corpo articolo e decidi se salvarlo come bozza o pubblicarlo subito."
             }
           />
           <Link
@@ -74,7 +91,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
           <ArticleForm
             action={createArticleFormAction}
             initialValues={initialValues}
-            submitLabel={legacyPost ? "Importa nel CMS" : "Crea articolo"}
+            submitLabel={legacyPost ? "Importa nel blog" : "Crea articolo"}
             disabled={!canWrite}
           />
         </div>

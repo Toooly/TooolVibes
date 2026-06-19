@@ -33,7 +33,7 @@ function buildToolWriteup(tool: ToolRecord): EditorialPostRecord {
     kind: "tool-writeup",
     published_at: tool.date_discovered,
     updated_at: tool.updated_at,
-    source_label: "Legacy tool writeup",
+    source_label: "Archivio TooolVibes",
     source_url: tool.tooolvibes_post_url,
     tool_slug: tool.slug,
     featured: false,
@@ -49,10 +49,10 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     title: "BetterPic",
     dek: "Headshot AI credibili in meno di un'ora, senza studio fotografico.",
     summary:
-      "BetterPic trasforma selfie casuali in ritratti professionali rapidi e convenienti, con output adatti a LinkedIn, curriculum e press kit.",
+      "BetterPic trasforma selfie casuali in ritratti professionali rapidi e convenienti, pronti per LinkedIn, curriculum e press kit.",
     kind: "guide",
     published_at: "2025-07-14",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/betterpic_1",
     featured: true,
     highlights: [
@@ -63,7 +63,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     details: [
       "Funziona bene con 15-25 selfie diversi e ben esposti",
       "Include preset di stile e ritocchi umani opzionali",
-      "Si presta a LinkedIn, CV e press kit senza workflow lunghi",
+      "Si presta a LinkedIn, CV e press kit senza flussi lunghi",
     ],
     cautions: [
       "Richiede un set di foto vario per restare credibile",
@@ -75,42 +75,42 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     title: "Frase AI",
     dek: "Brief SEO, drafting e ottimizzazione nello stesso flusso.",
     summary:
-      "Frase unisce SERP analysis, content brief e scrittura assistita per team che devono produrre contenuti utili e ben posizionati.",
+      "Frase unisce analisi SERP, brief contenuti e scrittura assistita per team che devono produrre contenuti utili e ben posizionati.",
     kind: "guide",
     published_at: "2025-07-14",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/frase-ai_1",
     featured: true,
     highlights: [
       "Brief SEO guidati dai risultati SERP",
-      "Scrittura e ottimizzazione nello stesso workspace",
+      "Scrittura e ottimizzazione nello stesso spazio",
       "Buon fit per content team, agenzie e in-house",
     ],
     details: [
-      "Integra WordPress, Google Docs e brand voice tools",
-      "Aggiunge topic scoring e content gap analysis",
-      "Si chiude bene con un workflow editoriale già disciplinato",
+      "Integra WordPress, Google Docs e strumenti per la voce del brand",
+      "Aggiunge punteggio dei topic e analisi dei gap contenuti",
+      "Si chiude bene con un flusso editoriale già disciplinato",
     ],
     cautions: [
       "Rende meglio se il processo contenuti è già chiaro",
-      "Il pricing cresce quando il lavoro diventa team-wide",
+      "Il prezzo cresce quando il lavoro coinvolge tutto il team",
     ],
   },
   {
     slug: "jenny-ai",
     title: "Jenny AI",
-    dek: "Workspace di scrittura accademica con citazioni, note e controllo.",
+    dek: "Spazio di scrittura accademica con citazioni, note e controllo.",
     summary:
       "Jenni aiuta studenti e ricercatori a scrivere più velocemente, citare con precisione e tenere insieme fonti, PDF e revisioni.",
     kind: "guide",
     published_at: "2025-07-16",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/jenny-ai_2",
     featured: true,
     highlights: [
       "Autocomplete per sbloccare la bozza",
       "Citazioni in migliaia di stili",
-      "PDF, notes e plagiarism check nello stesso flusso",
+      "PDF, note e controllo antiplagio nello stesso flusso",
     ],
     details: [
       "Adatto a paper, ricerche e contenuti specialistici",
@@ -119,50 +119,50 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     ],
     cautions: [
       "Richiede controllo umano sul testo finale",
-      "Funziona meglio in un workflow di ricerca serio, non improvvisato",
+      "Funziona meglio in un flusso di ricerca serio, non improvvisato",
     ],
   },
   {
     slug: "reclaim-ai",
     title: "Reclaim AI",
-    dek: "Scheduling layer che protegge focus time, task e routine.",
+    dek: "Pianificazione intelligente che protegge concentrazione, task e routine.",
     summary:
       "Reclaim si innesta su Google e Outlook per difendere il tempo di lavoro profondo e alleggerire il calendario di team e singoli.",
     kind: "guide",
     published_at: "2025-07-17",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/reclaim-ai_1",
     featured: true,
     highlights: [
-      "Blocca focus time e abitudini automatiche",
-      "Si collega a Google, Outlook e ai task system",
+      "Blocca tempo di concentrazione e abitudini automatiche",
+      "Si collega a Google, Outlook e agli strumenti per le attività",
       "Riduce il burnout senza cambiare calendario",
     ],
     details: [
       "Sincronizza Asana, Jira, Todoist, ClickUp e Linear",
-      "Supporta buffer time, pause e scheduling intelligente",
+      "Supporta margini tra riunioni, pause e pianificazione intelligente",
       "Ha senso quando la giornata è già piena e va difesa",
     ],
     cautions: [
       "Funziona meglio se il calendario di partenza è leggibile",
-      "Richiede abitudine al planning e ai time block",
+      "Richiede abitudine alla pianificazione e ai blocchi di tempo",
     ],
   },
   {
     slug: "windsor-ai",
     title: "Windsor AI",
-    dek: "ELT, connector e attribution per leggere meglio il ROI.",
+    dek: "Connettori, dati e attribuzione per leggere meglio il ROI.",
     summary:
       "Windsor unifica fonti marketing, CRM e analytics per dare a growth team e BI una vista più affidabile della spesa e dei ritorni.",
     kind: "guide",
     published_at: "2025-07-16",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/windsor-ai_2",
     featured: true,
     highlights: [
-      "300+ connector inclusi nel piano",
-      "Pricing senza fee nascoste per singola sorgente",
-      "Multi-touch attribution nello stesso stack",
+      "Oltre 300 connettori inclusi nel piano",
+      "Prezzi senza costi nascosti per singola sorgente",
+      "Attribuzione multi-touch nello stesso spazio dati",
     ],
     details: [
       "Porta i dati in Sheets, BigQuery, Snowflake o Looker Studio",
@@ -182,7 +182,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
       "ReachifyMe aiuta professionisti e creator a trasformare idee sparse in post LinkedIn pubblicabili, con un flusso rapido e orientato alla reach.",
     kind: "guide",
     published_at: "2025-07-16",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/reachifyme",
     featured: false,
     highlights: [
@@ -203,12 +203,12 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
   {
     slug: "flowise-ai",
     title: "Flowise AI",
-    dek: "Canvas visuale per agenti AI, workflow RAG e orchestration.",
+    dek: "Canvas visuale per agenti AI, flussi RAG e orchestrazione.",
     summary:
       "Flowise permette a team tecnici di costruire agenti e pipeline senza scrivere tutto da zero, ma restando vicini al controllo operativo.",
     kind: "guide",
     published_at: "2025-07-16",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/flowise-ai_1",
     featured: false,
     highlights: [
@@ -231,10 +231,10 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
     title: "Lemon Squeezy",
     dek: "Merchant of record per SaaS, tasse e billing internazionale.",
     summary:
-      "Lemon Squeezy alleggerisce vendite, imposte e abbonamenti per founder e team digitali che vogliono evitare lo stack DIY.",
+      "Lemon Squeezy alleggerisce vendite, imposte e abbonamenti per founder e team digitali che vogliono evitare un sistema fai-da-te.",
     kind: "guide",
     published_at: "2025-07-16",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/lemon-squeezy_2",
     featured: false,
     highlights: [
@@ -248,25 +248,25 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
       "Ha senso quando vendi software o asset digitali",
     ],
     cautions: [
-      "Le fee vanno considerate nel margine reale",
+      "Le commissioni vanno considerate nel margine reale",
       "Conviene se il prodotto è davvero vendibile via checkout",
     ],
   },
   {
     slug: "agentxai",
     title: "AgentX",
-    dek: "Builder no-code per agenti, lead capture e workflow autonomi.",
+    dek: "Builder no-code per agenti, raccolta lead e flussi autonomi.",
     summary:
       "AgentX permette di mettere in piedi chatbot e agenti di vendita o supporto con un setup rapido e una logica molto orientata all'azione.",
     kind: "guide",
     published_at: "2025-07-08",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/agentxai",
     featured: false,
     highlights: [
       "Setup in pochi minuti",
       "Tool calling e azioni autonome",
-      "Pensato per conversione e workflow reali",
+      "Pensato per conversioni e flussi reali",
     ],
     details: [
       "Supporta multi-LLM e integrazioni esterne",
@@ -286,7 +286,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
       "Omi porta la memoria AI fuori dallo schermo: ascolta, trascrive e trasforma conversazioni in azioni e promemoria.",
     kind: "guide",
     published_at: "2025-07-16",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/omi-app-ai",
     featured: false,
     highlights: [
@@ -312,7 +312,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
       "Wegic combina design, code e growth in una superficie conversazionale che punta a portarti online in pochi minuti.",
     kind: "guide",
     published_at: "2025-07-16",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/wegic_1",
     featured: true,
     highlights: [
@@ -338,7 +338,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
       "Tolt semplifica il lancio di un programma affiliate con portal white-label, payout automatici e integrazione rapida con i principali billing system.",
     kind: "guide",
     published_at: "2025-07-15",
-    source_label: "Legacy guide",
+    source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/all-tools/tolt",
     featured: false,
     highlights: [

@@ -37,7 +37,7 @@ const desktopFallbackItems: ProductHuntItem[] = [
   {
     id: "desktop-radar-fallback-3",
     name: "WeWeb",
-    tagline: "No-code front-end builder.",
+    tagline: "Builder no-code per interfacce web.",
     votesCount: 112,
     commentsCount: 15,
     productHuntUrl: "/toools/weweb",
@@ -77,7 +77,7 @@ export function DesktopRadarNodes() {
 
     fetch("/api/product-hunt?range=day")
       .then(async (response) => {
-        if (!response.ok) throw new Error("Product Hunt request failed");
+        if (!response.ok) throw new Error("Classifica Product Hunt non disponibile");
         return (await response.json()) as ProductHuntPayload;
       })
       .then((payload) => {
@@ -150,9 +150,9 @@ export function DesktopRadarNodes() {
             </span>
             <span className="desktop-radar-node__label">
               <strong>{node.name}</strong>
-              <small>{node.votesCount || "scan"} voti</small>
+              <small>{node.votesCount || "in scansione"} voti</small>
             </span>
-            {node.index === 0 ? <span className="desktop-radar-node__badge">HOT</span> : null}
+            {node.index === 0 ? <span className="desktop-radar-node__badge">Caldo</span> : null}
           </a>
         );
       })}

@@ -133,9 +133,9 @@ export function ToolForm({
 
       <fieldset disabled={disabled} className="space-y-6 disabled:opacity-60">
         <FormSection
-          eyebrow="Identita`"
-          title="Base editoriale e metadata essenziali"
-          description="Qui fissiamo naming, slug, tassonomia e provenienza. Se questi campi sono chiari, il frontend pubblico resta più coerente e il CMS è molto più affidabile da gestire."
+          eyebrow="Identità"
+          title="Nome, categoria e informazioni essenziali"
+          description="Qui definisci nome, slug, categoria e provenienza del tool. Se questi campi sono chiari, il sito pubblico resta più coerente e l'archivio è più semplice da gestire."
         >
           <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
             <label className="block xl:col-span-2">
@@ -184,7 +184,7 @@ export function ToolForm({
               <input
                 name="tags"
                 defaultValue={values.tags}
-                placeholder="ai, automation, vibe-coding"
+                placeholder="ai, automazione, scrittura"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
               />
@@ -219,9 +219,9 @@ export function ToolForm({
         </FormSection>
 
         <FormSection
-          eyebrow="Copy e delivery"
+          eyebrow="Testi"
           title="Come il tool si presenta nel prodotto"
-          description="Questa parte alimenta listing, scheda tool e layer editoriale. Piuttosto che riempire campi in modo meccanico, qui conviene scrivere con una gerarchia già pronta per il frontend."
+          description="Questa parte alimenta catalogo, scheda tool e contenuti editoriali. Scrivi testi chiari, già pronti per chi scopre il tool dal sito."
         >
           <div className="grid gap-5 lg:grid-cols-2">
             <label className="block lg:col-span-2">
@@ -251,7 +251,7 @@ export function ToolForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Website URL" />
+              <FieldLabel label="URL del sito" />
               <input
                 name="website_url"
                 type="url"
@@ -264,7 +264,7 @@ export function ToolForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Post TooolVibes URL" />
+              <FieldLabel label="URL articolo TooolVibes" />
               <input
                 name="tooolvibes_post_url"
                 type="url"
@@ -277,12 +277,12 @@ export function ToolForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Affiliate URL (opzionale)" />
+              <FieldLabel label="URL affiliato (opzionale)" />
               <input
                 name="affiliate_url"
                 type="url"
                 defaultValue={values.affiliate_url ?? undefined}
-                placeholder="Se presente, sovrascrive website_url nel sito pubblico"
+                placeholder="Se presente, viene usato come link principale nel sito pubblico"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
               />
@@ -290,7 +290,7 @@ export function ToolForm({
             </label>
 
             <label className="block lg:col-span-2">
-              <FieldLabel label="Cover image URL" />
+              <FieldLabel label="URL immagine di copertina" />
               <input
                 name="cover_image_url"
                 type="url"
@@ -305,9 +305,9 @@ export function ToolForm({
         </FormSection>
 
         <FormSection
-          eyebrow="Visibilit?"
-          title="Publishing e posizionamento"
-          description="L'ultima decisione è sempre editoriale: quando il tool è pronto, puoi spingerlo nel feed pubblico o promuoverlo nei punti più forti della selezione."
+          eyebrow="Visibilità"
+          title="Pubblicazione e posizionamento"
+          description="L'ultima decisione è sempre editoriale: quando il tool è pronto, puoi pubblicarlo nel catalogo o promuoverlo nei punti più forti della selezione."
         >
           <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
             <div
@@ -316,8 +316,8 @@ export function ToolForm({
             >
               <p className="text-sm font-semibold">Nota operativa</p>
               <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>
-                Le scritture passano sempre lato server e il form mantiene i dati inseriti anche in
-                caso di errore di validazione o di risposta non riuscita da Supabase.
+                Il salvataggio avviene in modo protetto e il form mantiene i dati inseriti anche
+                se manca un campo o il servizio non risponde.
               </p>
             </div>
 
@@ -331,7 +331,7 @@ export function ToolForm({
               <ToggleCard
                 name="is_published"
                 title="Pubblicato"
-                description="Rende il tool visibile sul frontend pubblico e nelle superfici discovery."
+                description="Rende il tool visibile nel sito pubblico e nelle aree di scoperta."
                 defaultChecked={values.is_published}
               />
             </div>
@@ -343,11 +343,11 @@ export function ToolForm({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/58">
-              Server-side write path
+              Salvataggio protetto
             </p>
             <p className="mt-2 text-sm leading-7 text-white/72">
-              Nessuna chiave sensibile viene esposta al client. Il founder può lavorare qui senza
-              perdere contesto neppure quando il runtime entra in modalita` prudente.
+              Nessuna chiave sensibile viene esposta. Puoi lavorare qui senza perdere contesto,
+              anche quando l’area entra in modalità prudente.
             </p>
           </div>
           <SubmitButton label={submitLabel} disabled={disabled} />

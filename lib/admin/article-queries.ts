@@ -42,15 +42,15 @@ export type AdminArticlesRuntime = {
 
 const warningLabels: Record<string, string> = {
   "supabase-service-role-missing":
-    "Manca SUPABASE_SERVICE_ROLE_KEY nell'ambiente server: il CMS resta in sola lettura e non puo importare o modificare articoli.",
+    "Il salvataggio degli articoli non è ancora attivo: l'area blog resta in sola lettura.",
   "supabase-admin-read-failed":
-    "Il CMS blog non e ancora raggiungibile su Supabase. Intanto vedi gli articoli legacy e puoi importarli appena la migration e applicata.",
+    "L'archivio del blog non è ancora raggiungibile. Intanto vedi gli articoli da importare e potrai salvarli appena l'area sarà pronta.",
   "supabase-admin-query-failed":
-    "La lettura CMS blog ha fallito dopo il bootstrap. Sto mostrando il fallback legacy per non svuotare il backoffice.",
+    "La lettura dell'archivio blog non è riuscita. Mostro gli articoli da importare per non lasciare l'area vuota.",
   "legacy-auto-import-failed":
-    "Un articolo legacy non e stato importato automaticamente nel CMS.",
+    "Un articolo precedente non è stato importato automaticamente.",
   "legacy-auto-import-refresh-failed":
-    "Import legacy completato solo in parte: non sono riuscito a rileggere il CMS dopo il bootstrap automatico.",
+    "Importazione completata solo in parte: non sono riuscito a rileggere l'archivio dopo il tentativo automatico.",
 };
 
 function isSupabaseAdminEnabled() {
@@ -227,7 +227,7 @@ async function importLegacyPostsIntoSupabase(posts: EditorialPostRecord[]) {
     });
 
   if (error) {
-    throw new Error(`Unable to import legacy articles into Supabase CMS: ${error.message}`);
+    throw new Error(`Non è stato possibile importare gli articoli storici nel blog. Dettaglio: ${error.message}`);
   }
 }
 
@@ -335,9 +335,9 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
       adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
       requestedAdminReadSource: "empty",
       readMessage:
-        "Lettura CMS blog non attiva: mostro gli articoli legacy disponibili.",
+        "Archivio blog non attivo: mostro gli articoli già disponibili per l'importazione.",
       writeMessage:
-        "Scritture blog non attive: aggiungi SUPABASE_SERVICE_ROLE_KEY nell'ambiente server. Appena il CMS diventa scrivibile, gli articoli legacy vengono importati automaticamente.",
+        "Il salvataggio blog non è ancora attivo. Appena sarà disponibile, gli articoli precedenti verranno importati automaticamente.",
       warnings: getMissingSupabaseAdminWarnings(),
     });
   }
@@ -350,9 +350,9 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
       adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
       requestedAdminReadSource: "supabase",
       readMessage:
-        "Supabase admin e configurato ma il CMS blog non e raggiungibile: mostro il fallback legacy.",
+        "L'archivio principale è configurato ma il blog non è raggiungibile: mostro gli articoli da importare.",
       writeMessage:
-        "Scritture blog non disponibili: controlla service role, storage e migration editorial_articles.",
+        "Il salvataggio blog non è disponibile in questo momento. Controlla la configurazione prima di riprovare.",
       warnings: ["supabase-admin-read-failed"],
     });
   }
@@ -374,14 +374,14 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
         requestedAdminReadSource: "supabase",
         readMessage:
           importResult.importedCount > 0
-            ? "CMS storage Supabase attivo: ho importato automaticamente gli articoli legacy mancanti."
+            ? "Archivio blog attivo: ho importato automaticamente gli articoli precedenti mancanti."
             : hasLegacyFallback
-              ? "CMS storage Supabase attivo con fallback legacy residuo da verificare."
-              : "CMS storage Supabase attivo con archivio articoli modificabile.",
+              ? "Archivio blog attivo con alcuni articoli precedenti ancora da verificare."
+              : "Archivio blog attivo con articoli modificabili.",
         canWrite: true,
         writeTarget,
         writeMessage:
-          "Salvataggi, import e upload attivi nel CMS storage Supabase.",
+          "Salvataggi, import e upload attivi nell'archivio blog.",
         warnings: importResult.warnings,
       };
     } catch (error) {
@@ -391,10 +391,10 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
         articles: legacyArticles,
         adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
         requestedAdminReadSource: "supabase",
-        readMessage:
-          "Lettura CMS storage non disponibile: mostro gli articoli legacy.",
-        writeMessage:
-          "Scritture blog non disponibili: controlla Supabase Storage e service role.",
+      readMessage:
+          "Lettura dell'archivio alternativo non disponibile: mostro gli articoli da importare.",
+      writeMessage:
+          "Il salvataggio blog non è disponibile in questo momento. Controlla la configurazione e riprova.",
         warnings: [`supabase-admin-query-failed::${detail}`],
       });
     }
@@ -416,13 +416,13 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
       requestedAdminReadSource: "supabase",
       readMessage:
         importResult.importedCount > 0
-          ? "Lettura live da Supabase: ho importato automaticamente gli articoli legacy mancanti."
+          ? "Lettura attiva: ho importato automaticamente gli articoli precedenti mancanti."
           : hasLegacyFallback
-            ? "Lettura live da Supabase con fallback legacy residuo da verificare."
-          : "Lettura live da Supabase con articoli e bozze del blog.",
+            ? "Lettura attiva con alcuni articoli precedenti ancora da verificare."
+          : "Lettura attiva con articoli e bozze del blog.",
       canWrite: true,
       writeTarget: "supabase",
-      writeMessage: "Scritture blog attive su Supabase.",
+      writeMessage: "Salvataggi blog attivi.",
       warnings: importResult.warnings,
     };
   } catch (error) {
@@ -445,14 +445,14 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
           requestedAdminReadSource: "supabase",
           readMessage:
             importResult.importedCount > 0
-              ? "La tabella blog non risponde: uso il CMS storage Supabase e ho importato i legacy mancanti."
+              ? "L'archivio principale non risponde: uso l'archivio alternativo e ho importato gli articoli precedenti mancanti."
               : hasLegacyFallback
-                ? "La tabella blog non risponde: uso il CMS storage Supabase con fallback legacy residuo."
-                : "La tabella blog non risponde: uso il CMS storage Supabase per tenere attive le modifiche.",
+                ? "L'archivio principale non risponde: uso l'archivio alternativo con alcuni articoli precedenti da verificare."
+                : "L'archivio principale non risponde: uso l'archivio alternativo per tenere attive le modifiche.",
           canWrite: true,
           writeTarget: "storage",
           writeMessage:
-            "Salvataggi, import e upload attivi nel CMS storage Supabase.",
+            "Salvataggi, import e upload attivi nell'archivio blog.",
           warnings: importResult.warnings,
         };
       } catch {
@@ -465,9 +465,9 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
       adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
       requestedAdminReadSource: "supabase",
       readMessage:
-        "Lettura CMS blog degradata: mostro gli articoli legacy per non svuotare il backoffice.",
+        "Lettura blog degradata: mostro gli articoli da importare per non lasciare l'area vuota.",
       writeMessage:
-        "Runtime blog in modalita prudente: correggi la tabella editorial_articles per riattivare salvataggi e upload.",
+        "Area blog in modalità prudente: completa la configurazione per riattivare salvataggi e upload.",
       warnings: [`supabase-admin-query-failed::${detail}`],
     });
   }

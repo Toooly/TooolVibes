@@ -45,24 +45,24 @@ export function getCollectionSafeAlignEligibility({
   if (!entry) {
     return {
       eligible: false,
-      label: "Preview non disponibile",
-      description: "Manca il contesto di source transition necessario a proporre un align prudente.",
+      label: "Anteprima non disponibile",
+      description: "Manca il contesto di transizione necessario a proporre un riallineamento prudente.",
     };
   }
 
   if (entry.import_status !== "conflict") {
     return {
       eligible: false,
-      label: "Nessun drift allineabile",
-      description: "Questo slug non è in conflitto tra mock e Supabase, quindi non richiede un safe align.",
+      label: "Nessuna differenza allineabile",
+      description: "Questa raccolta non è in conflitto tra sorgente locale e archivio reale, quindi non richiede un riallineamento sicuro.",
     };
   }
 
   if (!entry.mock || !entry.supabase) {
     return {
       eligible: false,
-      label: "Source incompleta",
-      description: "Serve sia il legacy mock sia la collection Supabase reale per allineare in sicurezza.",
+      label: "Sorgente incompleta",
+      description: "Servono sia la sorgente locale sia la raccolta nell'archivio reale per allineare in sicurezza.",
     };
   }
 
@@ -71,16 +71,16 @@ export function getCollectionSafeAlignEligibility({
   if (!resolvedPreview) {
     return {
       eligible: false,
-      label: "Preview non definita",
-      description: "Il drift esiste, ma non rientra ancora in una preview abbastanza chiara da diventare azione.",
+      label: "Anteprima non definita",
+      description: "La differenza esiste, ma non rientra ancora in un'anteprima abbastanza chiara da diventare azione.",
     };
   }
 
   if (!resolvedPreview.can_safe_align_fields) {
     return {
       eligible: false,
-      label: "Needs editorial decision",
-      description: "La preview tocca campi fuori policy o slot tool: resta volutamente preview-only.",
+      label: "Richiede una decisione editoriale",
+      description: "L'anteprima tocca campi fuori regola o spazi tool: resta volutamente solo informativa.",
     };
   }
 
@@ -93,8 +93,8 @@ export function getCollectionSafeAlignEligibility({
   if (unsafeFields.length > 0 || resolvedPreview.slot_changes.length > 0) {
     return {
       eligible: false,
-      label: "Fuori policy",
-      description: "Questo caso richiede un sync più ricco: non rientra nel perimetro del safe align v15.",
+      label: "Fuori perimetro",
+      description: "Questo caso richiede un riallineamento più ricco: non rientra nel perimetro dell'azione sicura attuale.",
     };
   }
 
@@ -103,8 +103,8 @@ export function getCollectionSafeAlignEligibility({
   if (!projectedCollection) {
     return {
       eligible: false,
-      label: "Source incompleta",
-      description: "Il safe align richiede sia il record mock sia il record Supabase completi.",
+      label: "Sorgente incompleta",
+      description: "Il riallineamento sicuro richiede dati completi sia nella sorgente locale sia nell'archivio reale.",
     };
   }
 
@@ -119,15 +119,15 @@ export function getCollectionSafeAlignEligibility({
   if (introducedIssues.length > 0) {
     return {
       eligible: false,
-      label: "Validation delta aperto",
-      description: `Il safe align introdurrebbe nuovi warning o errori: ${introducedIssues[0]}`,
+      label: "Nuovi controlli aperti",
+      description: `Il riallineamento sicuro introdurrebbe nuovi avvisi o errori: ${introducedIssues[0]}`,
     };
   }
 
   return {
     eligible: true,
-    label: "Safe align eligible",
-    description: "Il drift è confinato ai campi operativi più delimitati e può essere riallineato in modo prudente.",
+    label: "Riallineamento sicuro possibile",
+    description: "La differenza è confinata ai campi operativi più delimitati e può essere riallineata in modo prudente.",
   };
 }
 
@@ -155,7 +155,7 @@ export function buildCollectionSafeAlignPlan({
   if (!resolvedPreview) {
     return {
       eligible: false,
-      reason: "Preview non disponibile per questo slug.",
+      reason: "Anteprima non disponibile per questo slug.",
       changes: [] as CollectionSafeAlignChange[],
       payload: null,
       preview: null,
@@ -175,7 +175,7 @@ export function buildCollectionSafeAlignPlan({
   if (uniqueFields.length === 0) {
     return {
       eligible: false,
-      reason: "La preview non contiene campi allineabili secondo la policy attuale.",
+      reason: "L'anteprima non contiene campi allineabili secondo le regole attuali.",
       changes: [] as CollectionSafeAlignChange[],
       payload: null,
       preview: resolvedPreview,

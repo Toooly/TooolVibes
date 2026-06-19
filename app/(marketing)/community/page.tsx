@@ -7,7 +7,7 @@ import { siteConfig } from "@/lib/config/site";
 export const metadata: Metadata = {
   title: "Community",
   description:
-    "La community TooolVibes per scoprire, proporre e discutere i migliori AI tools, SaaS tools, no-code builder e automazioni.",
+    "La community TooolVibes per scoprire, proporre e discutere tool AI, SaaS, no-code e automazioni.",
   openGraph: {
     title: `Community | ${siteConfig.name}`,
     description:
@@ -23,7 +23,7 @@ const contributionCards = [
     icon: Sparkles,
   },
   {
-    title: "Workflow pratici",
+    title: "Flussi pratici",
     copy: "Condividi sequenze reali: cosa usi, in che ordine, con quale risultato.",
     icon: Workflow,
   },
@@ -37,7 +37,7 @@ const contributionCards = [
 const communityPicks = [
   "AI app builder da testare in meno di un'ora",
   "Automazioni per content repurposing",
-  "Stack no-code per landing e database",
+  "Kit no-code per landing e database",
   "Tool Product Hunt da monitorare dopo il lancio",
 ];
 
@@ -49,11 +49,11 @@ export default function CommunityPage() {
           <div className="max-w-[48rem]">
             <PremiumBadge tone="accent">Community TooolVibes</PremiumBadge>
             <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.35rem)] leading-[1.05] text-white">
-              Tool, workflow e idee migliori restano condivisi.
+              Tool, flussi e idee migliori restano condivisi.
             </h1>
             <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-7 text-white/70 sm:mt-5 sm:text-[1rem]">
-              La community raccoglie suggerimenti, use case e tool emergenti per rendere
-              la directory più utile a creator, founder e team.
+              La community raccoglie suggerimenti, casi d&apos;uso e tool emergenti per rendere
+              il catalogo più utile a creator, founder e team.
             </p>
           </div>
 
@@ -120,7 +120,7 @@ export default function CommunityPage() {
           <div className="mt-4 grid gap-2.5 sm:mt-5 sm:gap-3">
             {[
               ["01", "Suggerisci un tool con URL ufficiale e categoria."],
-              ["02", "Spiega il workflow o il problema che risolve."],
+              ["02", "Spiega il flusso o il problema che risolve."],
               ["03", "Noi lo valutiamo e lo trasformiamo in scheda utile."],
             ].map(([step, copy]) => (
               <div key={step} className="flex gap-3 rounded-[18px] border border-white/10 bg-white/7 p-3 sm:rounded-[22px] sm:p-4">
@@ -134,7 +134,7 @@ export default function CommunityPage() {
         <PremiumPanel tone="violet" className="p-4 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <PremiumBadge tone="accent">Community picks</PremiumBadge>
+              <PremiumBadge tone="accent">Scelte community</PremiumBadge>
               <h2 className="mt-4 text-[1.65rem] leading-tight text-white sm:text-[2.25rem]">
                 Temi che vale la pena raccogliere.
               </h2>

@@ -138,11 +138,11 @@ function ToolCarouselCard({
 
       <div className="category-tool-card__insight" aria-label={`Sintesi di ${tool.name}`}>
         <div>
-          <p>TL;DR</p>
+          <p>In breve</p>
           <strong>{tool.tldr}</strong>
         </div>
         <div>
-          <p>Review</p>
+          <p>Lettura</p>
           <span>{tool.editorialReview}</span>
         </div>
       </div>
@@ -194,7 +194,7 @@ function ToolCarouselCard({
           <CarouselIconButton
             active={stacked}
             onClick={onStack}
-            ariaLabel={`Aggiungi ${tool.name} allo stack`}
+            ariaLabel={`Aggiungi ${tool.name} alla lista`}
             sonicAction="stack"
           >
             <Layers3 className="size-4" />
@@ -338,7 +338,7 @@ export function CategoryToolCarousel({
           <p>{description}</p>
         </div>
 
-        <div className="category-tool-carousel__controls" aria-label={`Controlli carousel ${title}`}>
+        <div className="category-tool-carousel__controls" aria-label={`Controlli carosello ${title}`}>
           <span aria-live="polite" className="category-tool-carousel__page-count">
             {state.currentPage} / {state.totalPages}
           </span>

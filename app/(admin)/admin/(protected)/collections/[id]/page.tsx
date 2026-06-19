@@ -31,20 +31,20 @@ type AdminCollectionDetailPageProps = {
 };
 
 const statusMessages: Record<string, string> = {
-  created: "Collection creata correttamente.",
-  updated: "Collection aggiornata correttamente.",
-  "review-saved": "Review state aggiornato correttamente.",
-  "review-cleared": "Review state ripulito correttamente.",
+  created: "Raccolta creata correttamente.",
+  updated: "Raccolta aggiornata correttamente.",
+  "review-saved": "Revisione aggiornata correttamente.",
+  "review-cleared": "Revisione ripulita correttamente.",
   "review-unavailable":
-    "Review state non disponibile: applica la migration `0012-0013` per abilitarlo in modo persistente.",
-  "review-invalid": "Azione review non valida.",
+    "Revisione non disponibile: completa la configurazione delle raccolte per salvarla.",
+  "review-invalid": "Azione di revisione non valida.",
   "safe-align-unavailable":
-    "Safe align non disponibile: attiva write path Supabase e migration `0014-0015` prima di applicarlo.",
+    "Riallineamento sicuro non disponibile: abilita salvataggio e registro modifiche prima di applicarlo.",
   "safe-align-ineligible":
-    "Questo caso non rientra nella safe align policy attuale e resta preview-only.",
-  "safe-align-invalid": "Azione safe align non valida.",
+    "Questo caso non rientra nelle regole di riallineamento automatico e resta solo in anteprima.",
+  "safe-align-invalid": "Azione di riallineamento non valida.",
   "safe-align-failed":
-    "Safe align non completato: l'azione è stata fermata prima di lasciare uno stato ambiguo.",
+    "Riallineamento non completato: l'azione è stata fermata prima di lasciare uno stato ambiguo.",
 };
 
 export default async function AdminCollectionDetailPage({
@@ -81,19 +81,19 @@ export default async function AdminCollectionDetailPage({
   const lastSafeAlign = runtime.lastSafeAlignBySlug[collection.slug] ?? null;
   const statusMessage =
     status === "safe-align-applied"
-      ? `Safe align applicato correttamente${fields ? ` su: ${fields.replaceAll(",", ", ")}` : "."}`
+      ? `Riallineamento sicuro applicato correttamente${fields ? ` su: ${fields.replaceAll(",", ", ")}` : "."}`
       : status
         ? statusMessages[status] ?? null
         : null;
   const topActions: Array<{ href: string; label: string; primary?: boolean }> = [
     { href: "/admin/collections", label: "Torna alla lista" },
-    { href: "#sync-preview", label: "Vai a sync preview" },
+    { href: "#sync-preview", label: "Vai all'anteprima" },
   ];
 
   if (isPublic) {
     topActions.push({
       href: `/collections/${collection.slug}`,
-      label: "Apri public page",
+      label: "Apri pagina pubblica",
       primary: true,
     });
   }
@@ -103,25 +103,25 @@ export default async function AdminCollectionDetailPage({
       label: "Tool inclusi",
       value: String(collection.included_tools.length),
       detail: collection.included_tools.some((slot) => slot.featured)
-        ? "Anchor già impostato nel set."
-        : "Manca ancora un anchor tool chiaro.",
+        ? "Tool guida già impostato nella raccolta."
+        : "Manca ancora un tool guida chiaro.",
     },
     {
-      label: "Warnings",
+      label: "Segnali",
       value: String(warnings.length),
-      detail: warnings.length > 0 ? "Restano segnali da chiudere prima di promuoverla." : "Nessun warning aperto sulla collection.",
+      detail: warnings.length > 0 ? "Restano segnali da chiudere prima di promuoverla." : "Nessun segnale aperto sulla raccolta.",
     },
     {
-      label: "Readiness",
-      value: readiness?.label ?? "Snapshot",
+      label: "Prontezza",
+      value: readiness?.label ?? "Anteprima",
       detail: readiness?.summary ?? runtime.writeMessage,
     },
     {
-      label: "Runtime",
-      value: runtime.writeTarget ?? "locked",
+      label: "Salvataggio",
+      value: runtime.canWrite ? "Attivo" : "Sola lettura",
       detail: runtime.publicSnapshot.meta.active_source === "supabase"
-        ? "Il layer pubblico legge già da Supabase."
-        : "Il pubblico resta su source composita o snapshot.",
+        ? "Il sito pubblico legge già l'archivio principale."
+        : "Il pubblico resta su una sorgente composita o locale.",
     },
   ] as const;
 
@@ -131,9 +131,9 @@ export default async function AdminCollectionDetailPage({
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <SectionHeading
-              eyebrow="Collection detail"
+              eyebrow="Dettaglio raccolta"
               title={collection.title}
-              description="Qui puoi leggere warning, continuità con il prodotto pubblico e modificare la collection dal medesimo punto di lavoro."
+              description="Qui puoi leggere i segnali aperti, verificare la continuità con il prodotto pubblico e modificare la raccolta dallo stesso punto di lavoro."
             />
             <div className="hidden flex-wrap gap-3 sm:flex">
               {topActions.map((action) => (
@@ -174,8 +174,8 @@ export default async function AdminCollectionDetailPage({
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
               style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
             >
-              La collection ? leggibile, ma il write path reale resta disattivato finché Supabase
-              collections non è pronto.
+              La raccolta è leggibile, ma il salvataggio reale resta disattivato finché l’archivio
+              non è pronto.
             </div>
           ) : null}
 
@@ -238,7 +238,7 @@ export default async function AdminCollectionDetailPage({
                 </div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/64">
-                    Internal preview
+                    Anteprima interna
                   </p>
                   <h2 className="mt-2 text-[2rem] leading-tight text-white">{collection.title}</h2>
                   <p className="mt-3 max-w-[32rem] text-sm leading-6 text-white/78">
@@ -249,17 +249,17 @@ export default async function AdminCollectionDetailPage({
 
               <div className="grid gap-3 p-5 sm:grid-cols-2">
                 {[
-                  { label: "Tone", value: toneMeta.label },
-                  { label: "Access", value: accessMeta.label },
-                  { label: "Difficulty", value: difficultyLabel },
-                  { label: "Order", value: String(collection.editorial_order ?? 999) },
+                  { label: "Tono", value: toneMeta.label },
+                  { label: "Accesso", value: accessMeta.label },
+                  { label: "Difficoltà", value: difficultyLabel },
+                  { label: "Ordine", value: String(collection.editorial_order ?? 999) },
                   {
-                    label: "Featured slot",
+                    label: "Spazio in evidenza",
                     value: collection.featured_slot
                       ? getCollectionFeaturedSlotLabel(collection.featured_slot)
                       : "nessuno",
                   },
-                  { label: "Updated", value: formatItalianDate(collection.updated_at) },
+                  { label: "Aggiornata", value: formatItalianDate(collection.updated_at) },
                 ].map((item) => (
                   <div
                     key={item.label}
@@ -279,7 +279,7 @@ export default async function AdminCollectionDetailPage({
 
             <section className="surface-card rounded-[var(--radius-xl)] p-5 sm:p-6">
               <p className="text-sm font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                Warning & checks
+                Segnali e controlli
               </p>
               <div className="mt-4 grid gap-3">
                 {warnings.length > 0 ? (
@@ -298,7 +298,7 @@ export default async function AdminCollectionDetailPage({
                             : "rgba(255,251,235,0.96)",
                       }}
                     >
-                      <strong>{issue.level === "error" ? "Errore" : "Warning"}:</strong>{" "}
+                      <strong>{issue.level === "error" ? "Errore" : "Avviso"}:</strong>{" "}
                       {issue.message}
                     </div>
                   ))
@@ -307,7 +307,7 @@ export default async function AdminCollectionDetailPage({
                     className="rounded-[20px] border px-4 py-3 text-sm"
                     style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(236,253,245,0.95)" }}
                   >
-                    Nessun warning aperto su questa collection.
+                    Nessun segnale aperto su questa raccolta.
                   </div>
                 )}
               </div>
@@ -344,11 +344,11 @@ export default async function AdminCollectionDetailPage({
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="font-semibold">
-                          {String(index + 1).padStart(2, "0")} · {tool?.name ?? slot.tool_slug}
+                          {String(index + 1).padStart(2, "0")} - {tool?.name ?? slot.tool_slug}
                         </p>
                         {slot.featured ? (
                           <span className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: "rgba(243,237,255,0.92)" }}>
-                            Anchor
+                            Tool guida
                           </span>
                         ) : null}
                       </div>
@@ -404,7 +404,7 @@ export default async function AdminCollectionDetailPage({
             <CollectionForm
               action={boundAction}
               initialValues={getCollectionFormValues(collection)}
-              submitLabel="Salva collection"
+              submitLabel="Salva raccolta"
               disabled={!runtime.canWrite}
               availableTools={tools.map((tool) => ({
                 slug: tool.slug,

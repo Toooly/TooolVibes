@@ -363,8 +363,8 @@ function CategoryGuide() {
       transition={{ delay: 0.6, duration: 0.4 }}
       className="mobile-category-map__guide"
     >
-      <span className="mobile-category-map__guide-text">
-        Scegli un mondo per iniziare
+        <span className="mobile-category-map__guide-text">
+        Scegli una categoria per iniziare
       </span>
       <motion.span
         className="mobile-category-map__guide-arrow"
@@ -403,7 +403,7 @@ function MobileCategoryMap({
   return (
     <section className="mobile-category-map" aria-label="Esplora per categoria">
       <div className="mobile-category-map__intro">
-        <span className="mobile-category-map__eyebrow">Catalogo Vibe</span>
+        <span className="mobile-category-map__eyebrow">Catalogo curato</span>
         <h1>Catalogo</h1>
         {searchControl}
         <p>Scegli una rotta, filtra il livello giusto e costruisci una lista pulita senza perderti tra schede uguali.</p>
@@ -423,7 +423,7 @@ function MobileCategoryMap({
         </span>
         <span>
           <strong>{Math.max(categories.length - 1, 0)}</strong>
-          mondi
+          categorie
         </span>
       </div>
 
@@ -476,7 +476,7 @@ function CatalogFeaturedRail({
     <section className="catalog-featured-rail" aria-label="Tool consigliati">
       <div className="catalog-featured-rail__header">
         <div>
-          <span>Vibe picks</span>
+          <span>Scelte consigliate</span>
           <h2>Tool pronti da valutare</h2>
         </div>
         <button type="button" onClick={onSelectAll} className="catalog-featured-rail__cta">
@@ -552,13 +552,13 @@ function MobileCompareToolbox({ tools }: { tools: DirectoryTool[] }) {
   if (!tools.length) return null;
 
   return (
-    <section className="mobile-compare-toolbox" aria-label="Toolbox confronto">
+    <section className="mobile-compare-toolbox" aria-label="Confronto rapido">
       <div className="mobile-compare-toolbox__header">
         <span className="mobile-compare-toolbox__icon">
           <Columns3 size={16} aria-hidden="true" />
         </span>
         <div>
-          <h3>Toolbox confronto</h3>
+          <h3>Confronto rapido</h3>
           <p>Aggiungi candidati e apri il confronto completo.</p>
         </div>
       </div>

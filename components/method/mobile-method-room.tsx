@@ -26,12 +26,12 @@ const STEPS = [
     description:
       "Porta avanti pochi tool alla volta e guarda differenze, livello e casi d'uso reali. La matrice serve a isolare gli scarti.",
     href: "/compare",
-    cta: "Vai all'arena",
+    cta: "Vai al confronto",
     color: "#39d2f6",
     colorB: "#0ea5e9",
     icon: GitCompare,
     stat: "5",
-    statLabel: "Max in arena",
+    statLabel: "Al massimo",
   },
   {
     num: "03",
@@ -44,7 +44,7 @@ const STEPS = [
     color: "#f3bf4c",
     colorB: "#ff8a00",
     icon: Bookmark,
-    stat: "∞",
+    stat: "Senza limite",
     statLabel: "Salvabili",
   },
 ];
@@ -128,10 +128,10 @@ export function MobileMethodRoom() {
           className="mobile-method-room__footer-cta"
         >
           <Zap className="size-4" />
-          Lancia il percorso
+          Inizia il percorso
         </Link>
         <div className="mobile-method-room__footer-links">
-          <Link href="/compare">Arena</Link>
+          <Link href="/compare">Confronto</Link>
           <span>·</span>
           <Link href="/shortlist">Salvati</Link>
           <span>·</span>

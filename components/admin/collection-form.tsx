@@ -19,6 +19,10 @@ import {
   type CollectionFormToolSlotValues,
   type CollectionFormValues,
 } from "@/lib/admin/collection-form";
+import {
+  getCollectionEditorialStateMeta,
+  getCollectionSurfaceMeta,
+} from "@/lib/collections/editorial";
 import { getCollectionAccessMeta } from "@/lib/collections/helpers";
 
 type CollectionFormAction = (
@@ -163,6 +167,8 @@ export function CollectionForm({
   ).length;
   const draftFilledSlots = Math.max(filledSlots.length - publishedFilledSlots, 0);
   const accessMeta = getCollectionAccessMeta(values.access);
+  const surfaceMeta = getCollectionSurfaceMeta(values.surface);
+  const editorialStateMeta = getCollectionEditorialStateMeta(values.editorial_state);
 
   return (
     <form action={formAction} className="space-y-8">
@@ -180,56 +186,56 @@ export function CollectionForm({
       <fieldset disabled={disabled} className="space-y-8 disabled:opacity-60">
         <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
           <article className="brand-panel rounded-[28px] p-5">
-            <p className="editorial-label">Collection posture</p>
+            <p className="editorial-label">Postura della raccolta</p>
             <h2 className="text-display-card mt-2 text-[1.42rem] sm:text-[1.56rem]">
-              Framing, accesso e densita` del set nello stesso colpo d&apos;occhio
+              Taglio, accesso e densità della selezione nello stesso colpo d&apos;occhio
             </h2>
             <p className="mt-3 text-sm leading-7" style={{ color: "var(--muted)" }}>
-              Questa sintesi ti aiuta a capire subito se la collection ? leggera, densa, pubblica
-              o ancora in costruzione prima di entrare nei dettagli del form.
+              Questa sintesi ti aiuta a capire subito se la raccolta è leggera, densa, pubblica
+              o ancora in costruzione prima di entrare nei dettagli del modulo.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
-                Access: {accessMeta.label}
+                Accesso: {accessMeta.label}
               </span>
               <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
-                Stato: {values.editorial_state}
+                Stato: {editorialStateMeta.label}
               </span>
               <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
-                Surface: {values.surface}
+                Formato: {surfaceMeta.label}
               </span>
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               <StatCard
                 label="Tool selezionati"
                 value={String(filledSlots.length)}
-                detail={`${availableTools.length} tool disponibili nel workspace.`}
+                detail={`${availableTools.length} tool disponibili nell'area interna.`}
               />
               <StatCard
-                label="Anchor attivi"
+                label="Tool guida"
                 value={String(anchorCount)}
                 detail={
                   anchorCount === 1
-                    ? "Un solo anchor, come previsto."
-                    : "Conviene lasciare un solo anchor tool."
+                    ? "Un solo tool guida, come previsto."
+                    : "Conviene lasciare un solo tool guida."
                 }
               />
               <StatCard
-                label="Bozze nel set"
+                label="Bozze nella sequenza"
                 value={String(draftFilledSlots)}
-                detail={`${publishedFilledSlots} tool gia pubblicati nel mix corrente.`}
+                detail={`${publishedFilledSlots} tool già pubblicati nella selezione corrente.`}
               />
             </div>
           </article>
 
           <article className="dark-panel rounded-[28px] p-5 text-white">
-            <p className="editorial-label !text-white/60">Editing guidance</p>
+            <p className="editorial-label !text-white/60">Guida editoriale</p>
             <h2 className="text-display-card mt-2 text-[1.42rem] text-white sm:text-[1.56rem]">
-              Una collection forte deve restare leggibile anche quando la rivedi più tardi
+              Una raccolta forte deve restare leggibile anche quando la rivedi più tardi
             </h2>
             <p className="mt-3 text-sm leading-7 text-white/72">
-              Usa il rationale per spiegare la logica del set, non per ripetere i campi di base.
-              Nei tool inclusi, ogni ruolo dovrebbe raccontare il perche&apos; del tool nel percorso.
+              Usa la tesi per spiegare la logica della selezione, non per ripetere i campi di base.
+              Nei tool inclusi, ogni ruolo dovrebbe raccontare il perché del tool nel percorso.
             </p>
             <div className="mt-4 grid gap-3">
               <div
@@ -239,10 +245,10 @@ export function CollectionForm({
                   background: "rgba(255,255,255,0.08)",
                 }}
               >
-                Ordering editoriale corrente: <strong>{values.editorial_order || "999"}</strong>.
+                Ordine editoriale corrente: <strong>{values.editorial_order || "999"}</strong>.
                 {values.featured_slot
-                  ? ` Featured slot impostato su ${values.featured_slot}.`
-                  : " Nessun featured slot attivo."}
+                  ? ` Spazio in evidenza impostato su ${values.featured_slot}.`
+                  : " Nessuno spazio in evidenza attivo."}
               </div>
               <div
                 className="rounded-[20px] border px-4 py-3 text-sm"
@@ -258,9 +264,9 @@ export function CollectionForm({
         </div>
 
         <FormSection
-          eyebrow="Identita`"
-          title="Base curatoriale e cover framing"
-          description="Titolo, slug e cover devono reggere sia nella pagina collection sia nei punti di promozione pubblica. Qui conviene essere netti e riconoscibili."
+          eyebrow="Identità"
+          title="Base curatoriale e copertina"
+          description="Titolo, slug e copertina devono reggere sia nella pagina raccolta sia nei punti di promozione pubblica. Qui conviene essere netti e riconoscibili."
         >
           <div className="grid gap-6 lg:grid-cols-2">
             <label className="block">
@@ -301,7 +307,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Cover image URL" />
+              <FieldLabel label="URL immagine di copertina" />
               <input
                 name="cover_image_url"
                 type="url"
@@ -314,7 +320,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Cover kicker" />
+              <FieldLabel label="Etichetta di copertina" />
               <input
                 name="cover_kicker"
                 defaultValue={values.cover_kicker}
@@ -329,12 +335,12 @@ export function CollectionForm({
 
         <FormSection
           eyebrow="Narrazione"
-          title="Rationale, highlights e teaser premium"
-          description="Questo blocco definisce perché la collection esiste, quali segnali mette in evidenza e quanto del layer premium vuoi lasciare intravedere."
+          title="Tesi, punti chiave e teaser premium"
+          description="Questo blocco definisce perché la raccolta esiste, quali segnali mette in evidenza e quanto dell'approfondimento premium vuoi lasciare intravedere."
         >
           <div className="grid gap-6 lg:grid-cols-2">
             <label className="block lg:col-span-2">
-              <FieldLabel label="Rationale editoriale" />
+              <FieldLabel label="Tesi editoriale" />
               <textarea
                 name="rationale"
                 defaultValue={values.rationale}
@@ -347,7 +353,7 @@ export function CollectionForm({
             </label>
 
             <label className="block lg:col-span-2">
-              <FieldLabel label="Highlights" />
+              <FieldLabel label="Punti chiave" />
               <textarea
                 name="highlights"
                 defaultValue={values.highlights}
@@ -376,7 +382,7 @@ export function CollectionForm({
         <FormSection
           eyebrow="Postura"
           title="Tema, accesso e stato editoriale"
-          description="Qui decidiamo dove la collection vive nel prodotto, per chi ? pensata e se ? pronta per stare nel layer pubblico o restare in lavorazione."
+          description="Qui decidi dove vive la raccolta nel prodotto, per chi è pensata e se è pronta per stare nella parte pubblica o restare in lavorazione."
         >
           <div className="grid gap-6 lg:grid-cols-3">
             <label className="block">
@@ -414,7 +420,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Difficulty" />
+              <FieldLabel label="Difficoltà" />
               <select
                 name="difficulty"
                 defaultValue={values.difficulty}
@@ -431,7 +437,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Tone" />
+              <FieldLabel label="Tono" />
               <select
                 name="tone"
                 defaultValue={values.tone}
@@ -448,7 +454,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Access" />
+              <FieldLabel label="Accesso" />
               <select
                 name="access"
                 defaultValue={values.access}
@@ -465,7 +471,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Surface" />
+              <FieldLabel label="Formato" />
               <select
                 name="surface"
                 defaultValue={values.surface}
@@ -474,7 +480,7 @@ export function CollectionForm({
               >
                 {collectionSurfaces.map((surface) => (
                   <option key={surface} value={surface}>
-                    {surface}
+                    {getCollectionSurfaceMeta(surface).label}
                   </option>
                 ))}
               </select>
@@ -491,7 +497,7 @@ export function CollectionForm({
               >
                 {collectionEditorialStates.map((editorialState) => (
                   <option key={editorialState} value={editorialState}>
-                    {editorialState}
+                    {getCollectionEditorialStateMeta(editorialState).label}
                   </option>
                 ))}
               </select>
@@ -499,7 +505,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Featured slot" />
+              <FieldLabel label="Spazio in evidenza" />
               <select
                 name="featured_slot"
                 defaultValue={values.featured_slot}
@@ -516,7 +522,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Ordering" />
+              <FieldLabel label="Ordine" />
               <input
                 name="editorial_order"
                 type="number"
@@ -532,11 +538,11 @@ export function CollectionForm({
         <FormSection
           eyebrow="Timing"
           title="Programmazione e date pubbliche"
-          description="Non servono sempre tutte, ma quando una collection esce o viene archiviata conviene lasciare un ritmo leggibile nel repository."
+          description="Non servono sempre tutte, ma quando una raccolta esce o viene archiviata conviene lasciare un ritmo leggibile nell'archivio editoriale."
         >
           <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
             <label className="block">
-              <FieldLabel label="Scheduled for" />
+              <FieldLabel label="Programmato per" />
               <input
                 name="scheduled_for"
                 type="datetime-local"
@@ -548,7 +554,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="First published" />
+              <FieldLabel label="Prima pubblicazione" />
               <input
                 name="first_published_at"
                 type="datetime-local"
@@ -559,7 +565,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Published at" />
+              <FieldLabel label="Pubblicata il" />
               <input
                 name="published_at"
                 type="datetime-local"
@@ -570,7 +576,7 @@ export function CollectionForm({
             </label>
 
             <label className="block">
-              <FieldLabel label="Archived at" />
+              <FieldLabel label="Archiviata il" />
               <input
                 name="archived_at"
                 type="datetime-local"
@@ -583,9 +589,9 @@ export function CollectionForm({
         </FormSection>
 
         <FormSection
-          eyebrow="Tool stack"
-          title="Sequenza, ruolo e anchor dei tool inclusi"
-          description="Questo è il cuore della collection. Ogni slot deve dire chiaramente perché il tool entra nel percorso, non solo in che categoria vive."
+          eyebrow="Sequenza tool"
+          title="Sequenza, ruolo e tool guida"
+          description="Questo è il cuore della raccolta. Ogni spazio deve dire chiaramente perché il tool entra nel percorso, non solo in che categoria vive."
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
@@ -593,14 +599,14 @@ export function CollectionForm({
                 {availableTools.length} tool disponibili
               </span>
               <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
-                {filledSlots.length} slot compilati
+                {filledSlots.length} spazi compilati
               </span>
               <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
                 {publishedFilledSlots} pubblicati
               </span>
             </div>
             <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
-              Un solo anchor tool rende la lettura più chiara anche nelle card e nei teaser.
+              Un solo tool guida rende la lettura più chiara anche nelle card e nei teaser.
             </p>
           </div>
 
@@ -634,7 +640,7 @@ export function CollectionForm({
                       ) : null}
                       {slot.featured ? (
                         <span className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]">
-                          anchor
+                          tool guida
                         </span>
                       ) : null}
                     </div>
@@ -680,7 +686,7 @@ export function CollectionForm({
                     </label>
 
                     <label className="block xl:max-w-[8rem]">
-                      <FieldLabel label="Order" />
+                      <FieldLabel label="Ordine" />
                       <input
                         name={`tool_order_${index}`}
                         type="number"
@@ -694,7 +700,7 @@ export function CollectionForm({
                       className="flex items-center justify-between rounded-[20px] border px-4 py-3 xl:mt-7"
                       style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.92)" }}
                     >
-                      <span className="text-sm font-semibold">Anchor</span>
+                      <span className="text-sm font-semibold">Tool guida</span>
                       <input
                         name={`tool_featured_${index}`}
                         type="checkbox"
@@ -713,9 +719,8 @@ export function CollectionForm({
 
       <div className="brand-panel flex flex-col gap-4 rounded-[28px] p-5 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-[42rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
-          Le mutazioni passano lato server con validation e write path separato dal read model
-          pubblico. Se il runtime founders non è davvero live, il form resta leggibile ma non
-          forza una scrittura ambigua.
+          I salvataggi passano da controlli protetti, separati dalla lettura pubblica.
+          Se l’archivio non è davvero attivo, il modulo resta leggibile ma non forza salvataggi ambigui.
         </p>
         <SubmitButton label={submitLabel} disabled={disabled} />
       </div>

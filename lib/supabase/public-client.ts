@@ -14,7 +14,7 @@ export function createPublicSupabaseClient() {
   const { url, anonKey } = getSupabasePublicEnv();
 
   if (!url || !anonKey) {
-    throw new Error("Supabase public environment variables are not configured.");
+    throw new Error("L'archivio pubblico non è configurato.");
   }
 
   return createClient(url, anonKey, {
