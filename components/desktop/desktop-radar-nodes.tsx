@@ -61,11 +61,11 @@ const desktopFallbackItems: ProductHuntItem[] = [
 ];
 
 const nodeLayout = [
-  { x: 50, y: 24, delay: -0.1, size: 1.05 },
-  { x: 75, y: 37, delay: -1.08, size: 0.95 },
-  { x: 63, y: 66, delay: -2.02, size: 0.92 },
-  { x: 33, y: 61, delay: -3.05, size: 0.88 },
-  { x: 27, y: 35, delay: -4.18, size: 0.84 },
+  { x: 50, y: 52, delay: -0.1, size: 0.66 },
+  { x: 59, y: 45, delay: -1.08, size: 0.62 },
+  { x: 61, y: 58, delay: -2.02, size: 0.6 },
+  { x: 41, y: 59, delay: -3.05, size: 0.58 },
+  { x: 40, y: 46, delay: -4.18, size: 0.56 },
 ];
 
 export function DesktopRadarNodes() {

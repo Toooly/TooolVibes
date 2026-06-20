@@ -75,7 +75,7 @@ export function DesktopRadarCanvas() {
         new THREE.MeshBasicMaterial({
           color: 0x6a3cff,
           transparent: true,
-          opacity: 0.70,
+          opacity: 0,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           side: THREE.DoubleSide,
@@ -92,7 +92,7 @@ export function DesktopRadarCanvas() {
         new THREE.MeshBasicMaterial({
           color: 0x39d2f6,
           transparent: true,
-          opacity: 0.60,
+          opacity: 0,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           side: THREE.DoubleSide,
@@ -193,8 +193,8 @@ export function DesktopRadarCanvas() {
         if (disposed) return;
         time += 0.016;
         const sweepAngle = time * 0.8;
-        sweep.rotation.z = -sweepAngle;
-        sweepEcho.rotation.z = -(sweepAngle + 0.35);
+        sweep.rotation.z = 0;
+        sweepEcho.rotation.z = 0;
 
         // Animate each signal node — watchOS-like pulse + sweep focus
         signals.forEach((sig) => {

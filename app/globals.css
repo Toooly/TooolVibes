@@ -29113,3 +29113,334 @@ body:has(.tone-account) {
       rotate(calc(var(--sat-angle-back) - 360deg));
   }
 }
+
+/* Compare arena anti-spoiler pass. */
+.mobile-compare-arena__fighter-face {
+  display: grid !important;
+  place-items: center !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  background:
+    radial-gradient(circle at 35% 18%, rgba(255, 255, 255, 0.34), transparent 38%),
+    rgba(8, 5, 22, 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 10px 22px rgba(0, 0, 0, 0.28) !important;
+}
+
+.mobile-compare-arena__fighter-logo {
+  display: block;
+  width: 72%;
+  height: 72%;
+  border-radius: 0.48rem;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.34));
+}
+
+.mobile-compare-arena__fighter-initials {
+  color: #ffffff;
+  font-size: 0.72em;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.mobile-compare-arena__score--hidden {
+  --compare-score-angle: 212deg;
+  background:
+    conic-gradient(from 28deg, rgba(255, 255, 255, 0.18), rgba(57, 210, 246, 0.45), rgba(243, 191, 76, 0.28), rgba(255, 255, 255, 0.18)) !important;
+}
+
+.mobile-compare-arena__score--hidden span {
+  animation: tv-compare-hidden-pulse 1.4s ease-in-out infinite;
+}
+
+.mobile-compare-arena__mystery-roster {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0 0.75rem;
+}
+
+.mobile-compare-arena__mystery-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.78rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--arena-b) 22%, transparent), transparent 38%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035));
+  padding: 1rem;
+  animation: tv-compare-mystery-drift 4.8s ease-in-out infinite;
+  animation-delay: var(--mystery-delay, 0ms);
+}
+
+.mobile-compare-arena__mystery-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--arena-a), var(--arena-b));
+  opacity: 0.85;
+}
+
+.mobile-compare-arena__mystery-rank {
+  display: grid;
+  width: 2.2rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 1rem;
+  font-weight: 1000;
+}
+
+.mobile-compare-arena__mystery-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.075);
+  color: rgba(255, 255, 255, 0.68);
+  padding: 0 0.5rem;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mobile-compare-arena__mystery-actions {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@keyframes tv-compare-hidden-pulse {
+  0%, 100% { opacity: 0.58; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes tv-compare-mystery-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.22rem); }
+}
+
+@media (max-width: 767px) {
+  .mobile-compare-arena__battle-stage[data-count="4"],
+  .mobile-compare-arena__battle-stage[data-count="5"] {
+    min-height: 24.75rem !important;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="5"] .mobile-compare-arena__fighters {
+    inset: 1rem 0.65rem 4.85rem !important;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="5"] .mobile-compare-arena__battle-core {
+    top: 49% !important;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="4"] .mobile-compare-arena__battle-core {
+    top: 48% !important;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="4"] .mobile-compare-arena__fighter-name,
+  .mobile-compare-arena__battle-stage[data-count="5"] .mobile-compare-arena__fighter-name {
+    max-width: 4.75rem !important;
+    font-size: 0.62rem !important;
+  }
+
+  .mobile-compare-arena__battle-result {
+    top: auto !important;
+    bottom: 4.75rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-compare-arena {
+    min-height: 100vh;
+    padding: clamp(5.5rem, 8vw, 7.4rem) clamp(1.25rem, 4vw, 4rem) 5rem;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(57, 210, 246, 0.16), transparent 28rem),
+      radial-gradient(circle at 88% 20%, rgba(243, 191, 76, 0.12), transparent 24rem),
+      linear-gradient(135deg, #11061d 0%, #1d1138 48%, #0f0618 100%);
+  }
+
+  .mobile-compare-arena__header {
+    max-width: 56rem;
+    margin: 0 auto 1.2rem;
+    text-align: center;
+  }
+
+  .mobile-compare-arena__header h1 {
+    color: #ffffff;
+    font-size: clamp(2rem, 3vw, 3.45rem);
+    font-weight: 900;
+    line-height: 0.98;
+  }
+
+  .mobile-compare-arena__header p {
+    margin-top: 0.8rem;
+    color: rgba(238, 246, 255, 0.7);
+  }
+
+  .mobile-compare-arena__battle-stage,
+  .mobile-compare-arena__champion,
+  .mobile-compare-arena__challengers,
+  .mobile-compare-arena__mystery-roster,
+  .mobile-compare-arena__matrix {
+    width: min(76rem, 100%);
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .mobile-compare-arena__mystery-roster,
+  .mobile-compare-arena__challengers {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 0.95rem;
+    padding: 0 !important;
+  }
+
+  .mobile-compare-arena__mystery-card {
+    min-height: 10.4rem;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="4"],
+  .mobile-compare-arena__battle-stage[data-count="5"] {
+    min-height: clamp(34rem, 44vw, 42rem) !important;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="5"] .mobile-compare-arena__fighters {
+    inset: 4.6rem 5.2rem 7.4rem !important;
+  }
+
+  .mobile-compare-arena__battle-stage[data-count="5"] .mobile-compare-arena__battle-core {
+    top: 49% !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-compare-arena__mystery-card,
+  .mobile-compare-arena__score--hidden span {
+    animation: none !important;
+  }
+}
+
+/* Desktop radar gravity pass: full-bleed field, compact nodes, no diagonal blades. */
+@media (min-width: 1024px) {
+  .desktop-vibe-radar .desktop-vibe-radar-hero {
+    width: 100%;
+    min-height: calc(100vh - 4.5rem);
+    grid-template-columns: minmax(25rem, 0.43fr) minmax(0, 0.57fr);
+    gap: clamp(0.5rem, 2vw, 2rem);
+    margin-inline: 0;
+    padding-left: max(4.5rem, calc((100vw - 1188px) / 2));
+    padding-right: 0;
+    overflow: visible;
+  }
+
+  .desktop-vibe-radar .desktop-vibe-copy {
+    z-index: 8;
+    max-width: 43rem;
+  }
+
+  .desktop-vibe-radar-stage {
+    min-height: clamp(38rem, 58vw, 49rem) !important;
+    margin-right: 0;
+    overflow: visible !important;
+    background: transparent !important;
+    contain: none !important;
+    perspective-origin: 50% 52%;
+    transform:
+      rotateX(calc(2deg - var(--tv-pointer-tilt-x)))
+      rotateY(calc(-3deg + var(--tv-pointer-tilt-y)))
+      translateZ(34px) !important;
+  }
+
+  .desktop-vibe-radar-stage::after {
+    inset: -16% -10% -12% -20% !important;
+    z-index: -2;
+    background:
+      radial-gradient(circle at 50% 52%, rgba(57, 210, 246, 0.14), transparent 23rem),
+      radial-gradient(circle at 50% 52%, rgba(106, 60, 255, 0.18), transparent 31rem),
+      radial-gradient(circle at 82% 20%, rgba(243, 191, 76, 0.08), transparent 26rem) !important;
+    filter: blur(10px) !important;
+    opacity: 0.92 !important;
+  }
+
+  .desktop-vibe-radar-stage::before,
+  .desktop-vibe-radar-sweep,
+  .desktop-vibe-radar-sweep-line,
+  .desktop-vibe-radar-core {
+    display: none !important;
+  }
+
+  .desktop-vibe-radar-stage .desktop-stage-canvas {
+    left: -16%;
+    width: 126%;
+    opacity: 0.58 !important;
+  }
+
+  .desktop-radar-nodes {
+    z-index: 7;
+  }
+
+  .desktop-radar-node {
+    --node-size: calc(clamp(3.25rem, 4.05vw, 4.85rem) * var(--node-scale, 1));
+    min-height: calc(var(--node-size) + 2.55rem);
+    transform: translateZ(104px);
+    filter: saturate(0.94) drop-shadow(0 12px 22px rgba(5, 7, 24, 0.18));
+  }
+
+  .desktop-radar-node:hover,
+  .desktop-radar-node:focus-visible {
+    transform: translateZ(132px) scale(1.06);
+  }
+
+  .desktop-radar-node__halo {
+    width: calc(var(--node-size) * 1.38);
+    opacity: 0.36;
+  }
+
+  .desktop-radar-node__ring {
+    width: calc(var(--node-size) * 1.1);
+    opacity: 0.5;
+  }
+
+  .desktop-radar-node__body {
+    box-shadow:
+      0 14px 26px rgba(5, 7, 24, 0.26),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .desktop-radar-node__label {
+    max-width: 7.6rem;
+    margin-top: 0.38rem;
+    padding: 0.3rem 0.56rem;
+  }
+
+  .desktop-radar-node__label strong,
+  .desktop-radar-node__label small {
+    max-width: 7.1rem;
+  }
+
+  .desktop-radar-node__label strong {
+    font-size: 0.76rem;
+  }
+
+  .desktop-radar-node__label small {
+    font-size: 0.58rem;
+  }
+
+  .desktop-radar-node__badge {
+    right: -0.52rem;
+    top: 0.08rem;
+    padding: 0.18rem 0.38rem;
+    font-size: 0.52rem;
+  }
+}
