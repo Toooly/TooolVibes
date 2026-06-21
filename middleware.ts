@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { adminCookieName } from "@/lib/admin/constants";
+import { verifySessionToken } from "@/lib/admin/session-token";
 
 function getRedirectUrl(request: NextRequest, path: string) {
   const redirectUrl = request.nextUrl.clone();
@@ -22,14 +23,16 @@ function getRedirectUrl(request: NextRequest, path: string) {
   return redirectUrl;
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (!pathname.startsWith("/admin") || pathname === "/admin/login") {
     return NextResponse.next();
   }
 
-  if (!request.cookies.has(adminCookieName)) {
+  const token = request.cookies.get(adminCookieName)?.value;
+
+  if (!token || !(await verifySessionToken(token))) {
     return NextResponse.redirect(getRedirectUrl(request, "/admin/login"));
   }
 

@@ -8,6 +8,7 @@ import {
 } from "@/lib/collections/editorial";
 import { mergeCollectionsByPrecedence } from "@/lib/collections/source-transition";
 import { contentCollections } from "@/lib/data/content-collections";
+import { canUseMockDataFallback } from "@/lib/data/mock-fallback";
 import { mockCollections } from "@/lib/data/mock-collections";
 import { isSupabasePublicEnabled } from "@/lib/supabase/public-client";
 import { getCollectionsFromSupabase } from "@/lib/supabase/collection-repository";
@@ -65,8 +66,19 @@ export const getCollectionRepositorySnapshot = cache(
   async (): Promise<CollectionRepositorySnapshot> => {
     const requestedSource = getRequestedCollectionsSource();
     const warnings: string[] = [];
+    const mockFallbackEnabled = canUseMockDataFallback();
 
     if (requestedSource === "mock") {
+      if (!mockFallbackEnabled) {
+        return buildCollectionRepositorySnapshot([], {
+          requestedSource,
+          activeSource: "mock",
+          warnings: ["mock-source-disabled-in-production"],
+          composedSources: [],
+          sourcePrecedence: ["mock"],
+        });
+      }
+
       return buildCollectionRepositorySnapshot(mockCollections, {
         requestedSource,
         activeSource: "mock",
@@ -78,14 +90,17 @@ export const getCollectionRepositorySnapshot = cache(
     if (requestedSource === "content") {
       const collections = await trySource("content", warnings);
 
-      return buildCollectionRepositorySnapshot(collections ?? mockCollections, {
+      return buildCollectionRepositorySnapshot(
+        collections ?? (mockFallbackEnabled ? mockCollections : []),
+        {
         requestedSource,
-        activeSource: collections ? "content" : "mock",
-        fallbackSource: collections ? null : "mock",
+        activeSource: collections ? "content" : mockFallbackEnabled ? "mock" : "content",
+        fallbackSource: collections ? null : mockFallbackEnabled ? "mock" : null,
         warnings,
-        composedSources: collections ? ["content"] : ["mock"],
-        sourcePrecedence: ["content", "mock"],
-      });
+        composedSources: collections ? ["content"] : mockFallbackEnabled ? ["mock"] : [],
+        sourcePrecedence: mockFallbackEnabled ? ["content", "mock"] : ["content"],
+        },
+      );
     }
 
     if (requestedSource === "supabase") {
@@ -109,14 +124,19 @@ export const getCollectionRepositorySnapshot = cache(
 
       const fallbackContent = await trySource("content", warnings);
 
-      return buildCollectionRepositorySnapshot(fallbackContent ?? mockCollections, {
+      return buildCollectionRepositorySnapshot(
+        fallbackContent ?? (mockFallbackEnabled ? mockCollections : []),
+        {
         requestedSource,
-        activeSource: fallbackContent ? "content" : "mock",
-        fallbackSource: fallbackContent ? "content" : "mock",
+        activeSource: fallbackContent ? "content" : mockFallbackEnabled ? "mock" : "supabase",
+        fallbackSource: fallbackContent ? "content" : mockFallbackEnabled ? "mock" : null,
         warnings,
-        composedSources: fallbackContent ? ["content"] : ["mock"],
-        sourcePrecedence: ["supabase", "content", "mock"],
-      });
+        composedSources: fallbackContent ? ["content"] : mockFallbackEnabled ? ["mock"] : [],
+        sourcePrecedence: mockFallbackEnabled
+          ? ["supabase", "content", "mock"]
+          : ["supabase", "content"],
+        },
+      );
     }
 
     const supabaseCollections = isSupabasePublicEnabled()
@@ -131,7 +151,7 @@ export const getCollectionRepositorySnapshot = cache(
       warnIfEmpty: false,
     });
     const merged = mergeCollectionsByPrecedence({
-      mockCollections,
+      mockCollections: mockFallbackEnabled ? mockCollections : [],
       contentCollections: structuredContentCollections ?? [],
       supabaseCollections: supabaseCollections ?? [],
     });

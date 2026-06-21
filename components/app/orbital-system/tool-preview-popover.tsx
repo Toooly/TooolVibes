@@ -54,7 +54,7 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
           animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: enterY * 0.6, x: enterX * 0.6 }}
           transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          className={`absolute ${positionClasses[position]} z-[100] w-[260px] sm:w-[300px]`}
+          className={`absolute ${positionClasses[position]} z-[var(--z-modal)] w-[260px] sm:w-[300px]`}
           onClick={(e) => e.stopPropagation()}
         >
           <div
@@ -114,7 +114,7 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
               </div>
               <button
                 onClick={onClose}
-                className="shrink-0 rounded-lg p-1 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.06)] hover:text-[#120d2f]"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.06)] hover:text-[#120d2f]"
                 aria-label="Chiudi anteprima"
               >
                 <X size={14} />

@@ -18,7 +18,7 @@ function getPerformanceProfile() {
   const lowEnd = isMobile || saveData || (memory && memory < 4);
 
   if (reduced) {
-    return { dpr: 1 as const, particles: 200, planets: 3, enabled: true, reduced: true };
+    return { dpr: 1 as const, particles: 0, planets: 0, enabled: false, reduced: true };
   }
   if (lowEnd) {
     return { dpr: 1 as const, particles: 200, planets: 3, enabled: true, reduced: true };

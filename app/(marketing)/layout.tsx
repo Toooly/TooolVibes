@@ -26,7 +26,7 @@ export default function MarketingLayout({
         <AccountProvider>
           <DiscoveryPersistenceProvider>
             <SiteHeaderV2 />
-            <main className="relative z-10">
+            <main className="relative z-10 pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom)+1.5rem)] md:pb-0">
               <PageTransition>{children}</PageTransition>
             </main>
             <SiteFooterV2 />

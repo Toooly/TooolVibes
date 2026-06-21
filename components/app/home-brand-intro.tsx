@@ -206,6 +206,7 @@ export function HomeBrandIntro({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
+          onPointerDown={() => finishIntro(true)}
         >
           <StarField />
 

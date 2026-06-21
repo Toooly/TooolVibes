@@ -1,19 +1,27 @@
 import "server-only";
 
-import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 
 import { adminCookieName } from "@/lib/admin/constants";
+import {
+  adminSessionMaxAgeSeconds,
+  getRequiredSessionSecret,
+  revokeSessionToken,
+  signSessionPayload,
+  verifySessionToken,
+} from "@/lib/admin/session-token";
 
 export { adminCookieName };
-export const adminSessionMaxAgeSeconds = 60 * 60 * 8;
+export { adminSessionMaxAgeSeconds, verifySessionToken };
 
 export type AdminCredentialFailureReason =
   | "missing_email_env"
   | "email_mismatch"
   | "missing_password_env"
+  | "missing_session_secret_env"
   | "password_mismatch";
 
 export type AdminCredentialVerification =
@@ -38,57 +46,14 @@ function getAdminPasswordHash(): string | undefined {
   return hash?.startsWith("$2") ? hash : undefined;
 }
 
-function getLegacyAdminPassword(): string | undefined {
-  return cleanAdminEnvValue(process.env.TOOOLVIBES_ADMIN_PASSWORD);
-}
-
-function getSessionSecret(): string {
-  const secret = cleanAdminEnvValue(process.env.TOOOLVIBES_SESSION_SECRET);
-  if (secret) return secret;
-  const hash = getAdminPasswordHash() || getLegacyAdminPassword() || "fallback-dev-secret";
-  return hash;
-}
-
-function signSessionToken(payload: string): string {
-  const secret = getSessionSecret();
-  const signature = createHmac("sha256", secret).update(payload).digest("hex");
-  return `${payload}.${signature}`;
-}
-
-function verifySessionToken(token: string): boolean {
-  const dotIndex = token.lastIndexOf(".");
-  if (dotIndex === -1) return false;
-
-  const payload = token.slice(0, dotIndex);
-  const signature = token.slice(dotIndex + 1);
-  const secret = getSessionSecret();
-  const expected = createHmac("sha256", secret).update(payload).digest("hex");
-
-  if (signature.length !== expected.length) return false;
-  if (!timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return false;
-
-  const issuedAtStr = payload.split(":")[0];
-  if (!issuedAtStr) return false;
-  const issuedAt = parseInt(issuedAtStr, 36);
-  if (Number.isNaN(issuedAt)) return false;
-  const maxAgeMs = adminSessionMaxAgeSeconds * 1000;
-  if (Date.now() - issuedAt > maxAgeMs) return false;
-
-  return true;
-}
-
 export function getAdminAuthDiagnostics() {
   const rawHash = cleanAdminEnvValue(process.env.TOOOLVIBES_ADMIN_PASSWORD_HASH)?.replace(/\\\$/g, "$");
   const hash = getAdminPasswordHash();
-  const legacy = getLegacyAdminPassword();
 
   return {
     adminEmailPresent: Boolean(getAdminEmail()),
     adminPasswordHashPresent: Boolean(hash),
-    adminPasswordHashLength: rawHash ? rawHash.length : 0,
     adminPasswordHashLooksValid: Boolean(rawHash?.startsWith("$2")),
-    legacyAdminPasswordPresent: Boolean(legacy),
-    legacyAdminPasswordLength: legacy ? legacy.length : 0,
     sessionSecretPresent: Boolean(cleanAdminEnvValue(process.env.TOOOLVIBES_SESSION_SECRET)),
   };
 }
@@ -148,51 +113,30 @@ export async function verifyAdminCredentialsDetailed(
 ): Promise<AdminCredentialVerification> {
   const configuredEmail = getAdminEmail();
   const configuredHash = getAdminPasswordHash();
-  const legacyPassword = getLegacyAdminPassword();
 
   if (process.env.TOOOLVIBES_AUTH_DEBUG === "1") {
     console.info("[admin-auth] verify called", {
-      emailReceivedLength: email?.length ?? 0,
       configuredEmailPresent: Boolean(configuredEmail),
-      configuredEmailLength: configuredEmail ? configuredEmail.length : 0,
       configuredHashPresent: Boolean(configuredHash),
-      configuredHashLength: configuredHash ? configuredHash.length : 0,
-      legacyPasswordPresent: Boolean(legacyPassword),
+      sessionSecretPresent: Boolean(cleanAdminEnvValue(process.env.TOOOLVIBES_SESSION_SECRET)),
     });
   }
 
   if (!configuredEmail) return { ok: false, reason: "missing_email_env" };
+  if (!cleanAdminEnvValue(process.env.TOOOLVIBES_SESSION_SECRET)) {
+    return { ok: false, reason: "missing_session_secret_env" };
+  }
 
   if (email.toLowerCase().trim() !== configuredEmail.toLowerCase().trim()) {
     return { ok: false, reason: "email_mismatch" };
   }
 
-  // Primary: try bcrypt hash if present
-  if (configuredHash) {
-    const matches = await bcrypt.compare(password, configuredHash);
-    if (matches) return { ok: true };
-    // If hash is present but fails, we still try legacy as safety net
-    // (helps during migration or if the wrong hash was pasted in Cloudflare)
+  if (!configuredHash) {
+    return { ok: false, reason: "missing_password_env" };
   }
 
-  // Fallback: legacy plain password (always attempted if hash didn't match or wasn't present)
-  if (legacyPassword) {
-    const expected = Buffer.from(legacyPassword);
-    const received = Buffer.from(password);
-    if (expected.length !== received.length) {
-      return { ok: false, reason: "password_mismatch" };
-    }
-    return timingSafeEqual(expected, received)
-      ? { ok: true }
-      : { ok: false, reason: "password_mismatch" };
-  }
-
-  // If we had a hash but it didn't match, and no legacy password is set
-  if (configuredHash) {
-    return { ok: false, reason: "password_mismatch" };
-  }
-
-  return { ok: false, reason: "missing_password_env" };
+  const matches = await bcrypt.compare(password, configuredHash);
+  return matches ? { ok: true } : { ok: false, reason: "password_mismatch" };
 }
 
 export async function verifyAdminCredentials(email: string, password: string): Promise<boolean> {
@@ -200,10 +144,15 @@ export async function verifyAdminCredentials(email: string, password: string): P
 }
 
 export async function createAdminSession(): Promise<string> {
+  getRequiredSessionSecret();
   const issuedAt = Date.now().toString(36);
   const nonce = randomBytes(8).toString("hex");
   const payload = `${issuedAt}:${nonce}`;
-  return signSessionToken(payload);
+  return signSessionPayload(payload);
+}
+
+export async function revokeAdminSession(token: string): Promise<void> {
+  await revokeSessionToken(token);
 }
 
 export async function isAdminSessionUnlocked(): Promise<boolean> {

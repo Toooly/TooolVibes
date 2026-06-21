@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
+
 import { FloatingCatalogView } from "@/components/directory/floating-catalog-view";
 import {
   directoryFilterGroups,
   directoryTools,
   type DirectoryFilterGroup,
 } from "@/lib/data/tooolvibes-directory";
+
+export const metadata: Metadata = {
+  title: "Archivio tool",
+  description: "Esplora tool AI, SaaS, no-code e vibe coding selezionati da TooolVibes.",
+  alternates: { canonical: "/archivio" },
+};
 
 type ArchivePageProps = {
   searchParams: Promise<{ q?: string; tag?: string; group?: string }>;

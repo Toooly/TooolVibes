@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import Link from "next/link";
 
 import {
@@ -5,6 +7,12 @@ import {
   directoryTools,
   getDirectoryTags,
 } from "@/lib/data/tooolvibes-directory";
+
+export const metadata: Metadata = {
+  title: "Tag",
+  description: "Esplora i tool TooolVibes per tag, categoria e scenario d'uso.",
+  alternates: { canonical: "/tags" },
+};
 
 export default function TagsPage() {
   const tagCounts = Object.entries(getDirectoryTags()).sort(

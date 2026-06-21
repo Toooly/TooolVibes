@@ -1,7 +1,17 @@
+"use client";
+
+import dynamic from "next/dynamic";
 import Image from "next/image";
 
-import { BrandLogo3D } from "@/components/3d/brand-logo-3d";
 import { cn } from "@/lib/utils";
+
+const BrandLogo3D = dynamic(
+  () => import("@/components/3d/brand-logo-3d").then((mod) => mod.BrandLogo3D),
+  {
+    ssr: false,
+    loading: () => null,
+  },
+);
 
 interface BrandLogoProps {
   className?: string;

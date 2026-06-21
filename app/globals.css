@@ -11,6 +11,14 @@
 @import "../styles/depth-scene.css";
 
 :root {
+  --bottom-nav-height: 3.55rem;
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-nav: 50;
+  --z-overlay: 60;
+  --z-modal: 100;
+  --z-toast: 110;
+  --z-cursor: 120;
   --surface-brand-panel-bg:
     radial-gradient(circle at top right, rgba(106, 60, 255, 0.11), transparent 30%),
     radial-gradient(circle at 82% 68%, rgba(57, 210, 246, 0.08), transparent 27%),
@@ -2722,7 +2730,7 @@ img {
 
   html.brand-intro-active,
   html.brand-intro-active body {
-    overflow: hidden;
+    overflow: visible;
   }
 
   .brand-intro {
@@ -19376,6 +19384,11 @@ img {
   }
 }
 
+[data-admin-shell] :is(input, textarea, select):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(106, 60, 255, 0.42);
+}
+
 @media (max-width: 1023px) {
   .site-header-v2 {
     position: fixed !important;
@@ -29728,5 +29741,266 @@ body:has(.tone-account) {
 
   .mobile-library-wishlist .request-tool-form {
     border-radius: 1.15rem !important;
+  }
+}
+
+/* Desktop radar reboot: mobile-inspired live scan, brighter copy, bigger tool signals. */
+@media (min-width: 1024px) {
+  .desktop-vibe-radar .desktop-vibe-copy > .desktop-vibe-eyebrow {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.48rem;
+    width: fit-content;
+    border: 1px solid rgba(74, 222, 128, 0.38);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.18), transparent 36%),
+      linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(57, 210, 246, 0.12));
+    padding: 0.48rem 0.95rem;
+    color: #5cff9d !important;
+    font-size: 0.78rem !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.14em !important;
+    text-shadow: 0 0 18px rgba(53, 242, 127, 0.35);
+    box-shadow:
+      0 0 0 1px rgba(53, 242, 127, 0.08),
+      0 0 30px rgba(53, 242, 127, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
+
+  .desktop-vibe-radar .desktop-vibe-copy > .desktop-vibe-eyebrow::before {
+    content: "";
+    width: 0.48rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #35f27f;
+    box-shadow:
+      0 0 10px #35f27f,
+      0 0 24px rgba(53, 242, 127, 0.5);
+    animation: tv-live-pulse 1.8s ease-in-out infinite;
+  }
+
+  .desktop-vibe-radar .desktop-vibe-radar-hero {
+    grid-template-columns: minmax(26rem, 0.4fr) minmax(44rem, 0.6fr) !important;
+    gap: clamp(1.2rem, 2.6vw, 3.4rem) !important;
+  }
+
+  .desktop-vibe-radar-stage {
+    width: min(54vw, 52rem) !important;
+    min-height: auto !important;
+    aspect-ratio: 1 !important;
+    justify-self: center !important;
+    border-radius: 50%;
+    overflow: visible !important;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(57, 210, 246, 0.15), transparent 19%),
+      radial-gradient(circle at 50% 50%, rgba(106, 60, 255, 0.2), transparent 43%),
+      radial-gradient(circle at 50% 50%, rgba(8, 9, 33, 0.72), transparent 65%) !important;
+    filter: drop-shadow(0 38px 96px rgba(0, 0, 0, 0.36));
+    perspective-origin: 50% 50% !important;
+    transform:
+      rotateX(calc(1deg - var(--tv-pointer-tilt-x)))
+      rotateY(calc(-2deg + var(--tv-pointer-tilt-y)))
+      translateZ(30px) !important;
+  }
+
+  .desktop-vibe-radar-stage::before {
+    content: "" !important;
+    position: absolute;
+    inset: 8% !important;
+    z-index: 1 !important;
+    display: block !important;
+    border: 1px solid rgba(106, 60, 255, 0.44);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(57, 210, 246, 0.11), transparent 18%),
+      linear-gradient(90deg, transparent calc(50% - 1px), rgba(57, 210, 246, 0.1) 50%, transparent calc(50% + 1px)),
+      linear-gradient(0deg, transparent calc(50% - 1px), rgba(57, 210, 246, 0.09) 50%, transparent calc(50% + 1px));
+    box-shadow:
+      0 0 0 5.8rem rgba(106, 60, 255, 0.035),
+      0 0 0 11.8rem rgba(57, 210, 246, 0.025),
+      inset 0 0 46px rgba(57, 210, 246, 0.08),
+      0 0 70px rgba(106, 60, 255, 0.16);
+    opacity: 1 !important;
+    pointer-events: none;
+  }
+
+  .desktop-vibe-radar-stage::after {
+    inset: -18% !important;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(57, 210, 246, 0.2), transparent 19rem),
+      radial-gradient(circle at 50% 50%, rgba(106, 60, 255, 0.2), transparent 31rem),
+      radial-gradient(circle at 74% 18%, rgba(243, 191, 76, 0.12), transparent 28rem) !important;
+    filter: blur(8px) !important;
+  }
+
+  .desktop-vibe-radar-sweep-line {
+    position: absolute !important;
+    left: 50%;
+    top: 50%;
+    z-index: 4 !important;
+    display: block !important;
+    width: 46%;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(57, 210, 246, 0.95), rgba(57, 210, 246, 0.18), transparent);
+    box-shadow:
+      0 0 16px rgba(57, 210, 246, 0.7),
+      0 0 44px rgba(106, 60, 255, 0.38);
+    opacity: 0.82 !important;
+    transform-origin: left center;
+    animation: tv-desktop-radar-visible-sweep 5.6s linear infinite;
+    pointer-events: none;
+  }
+
+  .desktop-vibe-radar-core {
+    left: 50% !important;
+    top: 50% !important;
+    z-index: 6 !important;
+    display: grid !important;
+    width: clamp(6.2rem, 6.8vw, 7.6rem) !important;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid rgba(155, 232, 255, 0.22);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 38%, rgba(57, 210, 246, 0.14), transparent 32%),
+      radial-gradient(circle at 50% 58%, rgba(106, 60, 255, 0.26), transparent 62%),
+      rgba(8, 7, 28, 0.76) !important;
+    color: rgba(232, 246, 255, 0.82) !important;
+    box-shadow:
+      0 0 0 0.9rem rgba(57, 210, 246, 0.045),
+      0 0 54px rgba(57, 210, 246, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    transform: translate(-50%, -50%) translateZ(82px) !important;
+  }
+
+  .desktop-vibe-radar-core::after {
+    content: "Live scan";
+    position: absolute;
+    left: 50%;
+    top: calc(50% + 1.6rem);
+    width: max-content;
+    color: rgba(155, 232, 255, 0.78);
+    font-size: 0.58rem;
+    font-weight: 950;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transform: translateX(-50%);
+  }
+
+  .desktop-vibe-radar-core svg {
+    width: 2rem !important;
+    height: 2rem !important;
+    color: #9be8ff;
+    filter: drop-shadow(0 0 16px rgba(57, 210, 246, 0.52));
+  }
+
+  .desktop-vibe-radar-stage .desktop-stage-canvas {
+    left: -10% !important;
+    top: -10% !important;
+    width: 120% !important;
+    height: 120% !important;
+    opacity: 0.72 !important;
+  }
+
+  .desktop-radar-nodes {
+    z-index: 8 !important;
+    inset: 0 !important;
+  }
+
+  .desktop-radar-node {
+    --node-size: calc(clamp(5rem, 5.35vw, 6.8rem) * var(--node-scale, 1)) !important;
+    min-height: calc(var(--node-size) + 3.35rem) !important;
+    filter:
+      saturate(1.1)
+      brightness(1.04)
+      drop-shadow(0 18px 32px rgba(5, 7, 24, 0.32))
+      drop-shadow(0 0 26px rgba(57, 210, 246, 0.16)) !important;
+    transform: translateZ(132px) !important;
+  }
+
+  .desktop-radar-node:hover,
+  .desktop-radar-node:focus-visible {
+    filter:
+      saturate(1.28)
+      brightness(1.12)
+      drop-shadow(0 22px 40px rgba(5, 7, 24, 0.36))
+      drop-shadow(0 0 42px rgba(57, 210, 246, 0.34)) !important;
+    transform: translateZ(172px) scale(1.08) !important;
+  }
+
+  .desktop-radar-node__halo {
+    width: calc(var(--node-size) * 1.82) !important;
+    background:
+      radial-gradient(circle, rgba(57, 210, 246, calc(0.28 * var(--node-heat, 1))), transparent 58%),
+      radial-gradient(circle, rgba(106, 60, 255, calc(0.22 * var(--node-heat, 1))), transparent 72%) !important;
+    opacity: 0.78 !important;
+  }
+
+  .desktop-radar-node__ring {
+    width: calc(var(--node-size) * 1.22) !important;
+    border-color: rgba(155, 232, 255, 0.38) !important;
+    box-shadow:
+      0 0 24px rgba(57, 210, 246, 0.26),
+      0 0 56px rgba(106, 60, 255, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.32) !important;
+    opacity: 0.86 !important;
+  }
+
+  .desktop-radar-node__body {
+    border-width: 1.5px !important;
+    border-color: rgba(255, 255, 255, 0.32) !important;
+    background:
+      radial-gradient(circle at 34% 22%, rgba(255, 255, 255, 0.25), transparent 28%),
+      linear-gradient(145deg, rgba(106, 60, 255, 0.76), rgba(57, 210, 246, 0.42)),
+      var(--node-img) !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    box-shadow:
+      0 18px 36px rgba(5, 7, 24, 0.34),
+      0 0 24px rgba(57, 210, 246, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+  }
+
+  .desktop-radar-node__label {
+    max-width: 10.75rem !important;
+    margin-top: 0.62rem !important;
+    border-color: rgba(155, 232, 255, 0.2) !important;
+    background: rgba(5, 6, 22, 0.72) !important;
+    padding: 0.42rem 0.78rem !important;
+    box-shadow:
+      0 12px 28px rgba(0, 0, 0, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .desktop-radar-node__label strong,
+  .desktop-radar-node__label small {
+    max-width: 10rem !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.78);
+  }
+
+  .desktop-radar-node__label strong {
+    color: #ffffff !important;
+    font-size: 0.94rem !important;
+  }
+
+  .desktop-radar-node__label small {
+    color: rgba(232, 246, 255, 0.76) !important;
+    font-size: 0.7rem !important;
+  }
+
+  .desktop-radar-node__badge {
+    right: -0.75rem !important;
+    top: 0.05rem !important;
+    border-color: rgba(255, 229, 154, 0.48) !important;
+    background: linear-gradient(135deg, rgba(243, 191, 76, 0.94), rgba(255, 140, 66, 0.86)) !important;
+    padding: 0.24rem 0.5rem !important;
+    color: #1b1024 !important;
+    font-size: 0.6rem !important;
+    box-shadow:
+      0 0 20px rgba(243, 191, 76, 0.36),
+      0 8px 18px rgba(0, 0, 0, 0.22) !important;
   }
 }

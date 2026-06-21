@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
+import { Manrope, Rubik } from "next/font/google";
 
-import "@fontsource/manrope/400.css";
-import "@fontsource/manrope/500.css";
-import "@fontsource/manrope/600.css";
-import "@fontsource/manrope/700.css";
-import "@fontsource/rubik/400.css";
-import "@fontsource/rubik/500.css";
-import "@fontsource/rubik/600.css";
-import "@fontsource/rubik/700.css";
 import "@/app/globals.css";
 import { RootProviders } from "@/components/app/root-providers";
 import { GamificationShell } from "@/components/gamification/gamification-shell";
 import { siteConfig } from "@/lib/config/site";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  display: "swap",
+});
+
+const rubik = Rubik({
+  subsets: ["latin"],
+  variable: "--font-rubik",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -68,20 +73,11 @@ const brandIntroStorageKey = "tooolvibes:brand-intro-mobile-neon-v1";
 const brandIntroPreflightStyle = `
 html.brand-intro-preflight,
 html.brand-intro-preflight body {
-  overflow: hidden;
-  background: #07070a;
+  overflow: visible;
 }
 
 html.brand-intro-preflight body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 119;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(116,78,255,0.2), transparent 13rem),
-    radial-gradient(circle at 50% 42%, rgba(73,224,255,0.12), transparent 16rem),
-    linear-gradient(180deg, #0b0b0f 0%, #050507 100%);
+  content: none;
 }
 
 @media (min-width: 768px) {
@@ -115,7 +111,7 @@ const brandIntroPreflightScript = `
 
     if (!excluded && !reduced && !played && mobile) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
-      window.setTimeout(clearIntroLocks, 8000);
+      window.setTimeout(clearIntroLocks, 5200);
       return;
     }
 
@@ -125,7 +121,7 @@ const brandIntroPreflightScript = `
     const mobile = window.innerWidth < 768;
     if (mobile && !pathname.startsWith("/admin") && !pathname.startsWith("/api") && !pathname.startsWith("/auth")) {
       document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
-      window.setTimeout(clearIntroLocks, 8000);
+      window.setTimeout(clearIntroLocks, 5200);
       return;
     }
 
@@ -140,7 +136,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="it" suppressHydrationWarning>
+    <html lang="it" className={`${manrope.variable} ${rubik.variable}`} suppressHydrationWarning>
       <head>
         <style
           id="tooolvibes-brand-intro-preflight-style"

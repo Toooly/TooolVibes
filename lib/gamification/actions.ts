@@ -18,6 +18,7 @@ import type {
   UserBadge,
 } from "@/lib/gamification/types";
 import { getPublicPublishedToolsFromSupabase } from "@/lib/supabase/tool-repository";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
 import { createClient } from "@/lib/supabase/server";
 import type { ToolRecord } from "@/lib/types/tool";
 
@@ -118,7 +119,8 @@ export async function recordGameInteraction(xpDelta: number): Promise<GameProfil
     throw new Error(`Punti esperienza non validi: ${xpDelta}`);
   }
 
-  const { data, error } = await supabase.rpc("record_game_interaction", {
+  const adminSupabase = createAdminSupabaseClient();
+  const { data, error } = await adminSupabase.rpc("record_game_interaction", {
     p_user_id: user.id,
     p_xp_delta: xpDelta,
   });
@@ -394,7 +396,8 @@ export async function checkAndAwardBadges(): Promise<UserBadge[]> {
 
   const newBadgeIds = newlyAwardedBadges.map((badge) => badge.id);
 
-  const { data: insertedIds, error: rpcError } = await supabase.rpc(
+  const adminSupabase = createAdminSupabaseClient();
+  const { data: insertedIds, error: rpcError } = await adminSupabase.rpc(
     "award_badges",
     {
       p_user_id: user.id,

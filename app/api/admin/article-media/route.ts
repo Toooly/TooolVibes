@@ -16,7 +16,31 @@ const allowedMimeTypes = new Set([
   "video/quicktime",
 ]);
 
-const maxFileSize = 50 * 1024 * 1024;
+const maxFileSize = 20 * 1024 * 1024;
+
+function startsWith(bytes: Uint8Array, signature: number[]) {
+  return signature.every((value, index) => bytes[index] === value);
+}
+
+async function detectMediaMimeType(file: File) {
+  const header = new Uint8Array(await file.slice(0, 16).arrayBuffer());
+
+  if (startsWith(header, [0xff, 0xd8, 0xff])) return "image/jpeg";
+  if (startsWith(header, [0x89, 0x50, 0x4e, 0x47])) return "image/png";
+  if (startsWith(header, [0x47, 0x49, 0x46, 0x38])) return "image/gif";
+  if (
+    startsWith(header, [0x52, 0x49, 0x46, 0x46]) &&
+    String.fromCharCode(...header.slice(8, 12)) === "WEBP"
+  ) {
+    return "image/webp";
+  }
+  if (String.fromCharCode(...header.slice(4, 8)) === "ftyp") {
+    return file.type === "video/quicktime" ? "video/quicktime" : "video/mp4";
+  }
+  if (startsWith(header, [0x1a, 0x45, 0xdf, 0xa3])) return "video/webm";
+
+  return null;
+}
 
 function safeFileName(value: string) {
   const [name = "media", extension = ""] = value.split(/\.([^.]+)$/);
@@ -50,9 +74,18 @@ export async function POST(request: Request) {
     );
   }
 
+  const detectedMimeType = await detectMediaMimeType(file);
+
+  if (!detectedMimeType || !allowedMimeTypes.has(detectedMimeType)) {
+    return NextResponse.json(
+      { message: "Il contenuto del file non corrisponde a un media supportato." },
+      { status: 400 },
+    );
+  }
+
   if (file.size > maxFileSize) {
     return NextResponse.json(
-      { message: "File troppo grande. Limite massimo: 50 MB." },
+      { message: "File troppo grande. Limite massimo: 20 MB." },
       { status: 400 },
     );
   }
@@ -62,7 +95,7 @@ export async function POST(request: Request) {
   const path = `${datePrefix}/${crypto.randomUUID()}-${safeFileName(file.name)}`;
   const { error } = await client.storage.from(ARTICLE_MEDIA_BUCKET).upload(path, file, {
     cacheControl: "31536000",
-    contentType: file.type,
+    contentType: detectedMimeType,
     upsert: false,
   });
 
@@ -78,6 +111,6 @@ export async function POST(request: Request) {
   return NextResponse.json({
     url: data.publicUrl,
     path,
-    mimeType: file.type,
+    mimeType: detectedMimeType,
   });
 }

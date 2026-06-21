@@ -8,7 +8,6 @@ import {
 import {
   adminCookieName,
   createAdminSession,
-  getAdminAuthDiagnostics,
   getAdminRouteUrl,
   getAdminSessionCookieOptions,
   verifyAdminCredentialsDetailed,
@@ -42,7 +41,11 @@ function getLoginErrorPath(code: AdminLoginErrorCode) {
 }
 
 function getCredentialErrorCode(reason: AdminCredentialFailureReason): AdminLoginErrorCode {
-  if (reason === "missing_email_env" || reason === "missing_password_env") {
+  if (
+    reason === "missing_email_env" ||
+    reason === "missing_password_env" ||
+    reason === "missing_session_secret_env"
+  ) {
     return "config";
   }
 
@@ -59,22 +62,14 @@ function logLoginFailure(
 ) {
   // Always log rich diagnostics on failure — this is critical for debugging
   // Cloudflare secret / build configuration issues.
-  console.warn("[admin-auth] login failed", {
-    reason,
-    ...details,
-    ...getAdminAuthDiagnostics(),
-  });
+  if (process.env.TOOOLVIBES_AUTH_DEBUG === "1") {
+    console.warn("[admin-auth] login failed", { reason, ...details });
+  }
 }
 
 function logLoginSuccess() {
   if (process.env.TOOOLVIBES_AUTH_DEBUG === "1") {
-    console.info("[admin-auth] login succeeded", {
-      redirect: "/admin",
-      ...getAdminAuthDiagnostics(),
-    });
-  } else {
-    // Light success log even without debug (helps confirm the worker saw the secrets)
-    console.info("[admin-auth] login succeeded (secrets present)");
+    console.info("[admin-auth] login succeeded", { redirect: "/admin" });
   }
 }
 

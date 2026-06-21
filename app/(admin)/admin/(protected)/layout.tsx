@@ -12,7 +12,7 @@ export default async function ProtectedAdminLayout({
   const articlesRuntime = await getAdminArticlesRuntime();
 
   return (
-    <div className="relative min-h-screen overflow-x-clip">
+    <div className="relative min-h-screen overflow-x-clip" data-admin-shell>
       <SiteUniverseBackground />
       <div className="relative z-10">
         <FounderControlCenterV2 articlesRuntime={articlesRuntime} />

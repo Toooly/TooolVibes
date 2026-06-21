@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 
+import { canUseMockDataFallback } from "@/lib/data/mock-fallback";
 import { mockTools } from "@/lib/data/mock-tools";
 import { getPublicPublishedToolsFromSupabase } from "@/lib/supabase/tool-repository";
 import { isSupabasePublicEnabled } from "@/lib/supabase/public-client";
@@ -23,6 +24,15 @@ function sortTools(items: ToolRecord[]) {
 
 function onlyPublished(items: ToolRecord[]) {
   return items.filter((tool) => tool.is_published);
+}
+
+function emptySupabaseSnapshot(warning: string): PublicToolsSnapshot {
+  return {
+    tools: [],
+    source: "supabase",
+    requestedSource: "supabase",
+    warnings: [warning],
+  };
 }
 
 const toolEditorialOverlayBySlug = new Map(
@@ -67,6 +77,10 @@ export const getPublicToolsDataSource = cache(async (): Promise<PublicToolsDataS
 
 const loadPublicToolsSnapshot = cache(async (): Promise<PublicToolsSnapshot> => {
   if (!isSupabasePublicEnabled()) {
+    if (!canUseMockDataFallback()) {
+      return emptySupabaseSnapshot("supabase-public-env-missing");
+    }
+
     return {
       tools: onlyPublished(mockTools),
       source: "mock",
@@ -77,10 +91,14 @@ const loadPublicToolsSnapshot = cache(async (): Promise<PublicToolsSnapshot> => 
 
   try {
     const supabaseTools = onlyPublished(await getPublicPublishedToolsFromSupabase()).map(
-      withEditorialOverlay,
+      canUseMockDataFallback() ? withEditorialOverlay : (tool) => tool,
     );
 
     if (supabaseTools.length === 0) {
+      if (!canUseMockDataFallback()) {
+        return emptySupabaseSnapshot("supabase-empty");
+      }
+
       return {
         tools: onlyPublished(mockTools),
         source: "mock",
@@ -96,9 +114,13 @@ const loadPublicToolsSnapshot = cache(async (): Promise<PublicToolsSnapshot> => 
       warnings: [],
     };
   } catch (error) {
-    console.error("[tools:data] Lettura archivio pubblico non riuscita, uso la sorgente locale.", {
+    console.error("[tools:data] Lettura archivio pubblico non riuscita.", {
       error: error instanceof Error ? error.message : String(error),
     });
+
+    if (!canUseMockDataFallback()) {
+      return emptySupabaseSnapshot("supabase-public-read-failed");
+    }
 
     return {
       tools: onlyPublished(mockTools),

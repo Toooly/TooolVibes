@@ -136,6 +136,54 @@ async function getOrCreateViewerProfile() {
   return createdViewer;
 }
 
+async function getViewerProfileFromCookie() {
+  if (!isDiscoveryRemoteEnabled()) {
+    return null;
+  }
+
+  const client = createAdminSupabaseClient();
+  const cookieStore = await cookies();
+  const existingToken = cookieStore.get(discoveryViewerCookieName)?.value;
+
+  if (!existingToken) {
+    return null;
+  }
+
+  const { data, error } = await client
+    .from("viewer_profiles")
+    .select("id, access_token, kind, auth_user_id")
+    .eq("access_token", existingToken)
+    .maybeSingle();
+  const viewer = (data ?? null) as ViewerProfileRow | null;
+
+  if (error) {
+    throw new Error(`Non è stato possibile caricare il profilo di navigazione. Dettaglio: ${error.message}`);
+  }
+
+  if (viewer) {
+    await client
+      .from("viewer_profiles")
+      .update({ last_seen_at: nowIso() })
+      .eq("id", viewer.id);
+  }
+
+  return viewer;
+}
+
+async function getAuthenticatedUserId(authAccessToken: string) {
+  const client = createAdminSupabaseClient();
+  const {
+    data: { user },
+    error,
+  } = await client.auth.getUser(authAccessToken);
+
+  if (error || !user) {
+    throw new Error(`Non è stato possibile riconoscere l'utente autenticato. Dettaglio: ${error?.message ?? "Errore sconosciuto"}`);
+  }
+
+  return user.id;
+}
+
 async function getViewerProfileByAuthUserId(authUserId: string) {
   const client = createAdminSupabaseClient();
   const { data, error } = await client
@@ -354,24 +402,33 @@ export async function loadRemoteDiscoveryWorkspace() {
   }
 }
 
-export async function saveRemoteDiscoveryWorkspace(workspaceState: DiscoveryWorkspaceState) {
+export async function saveRemoteDiscoveryWorkspace(
+  workspaceState: DiscoveryWorkspaceState,
+  authAccessToken: string,
+) {
   if (!isDiscoveryRemoteEnabled()) {
     return getRemoteDisabledState();
   }
 
   try {
-    const viewer = await getOrCreateViewerProfile();
+    const authUserId = await getAuthenticatedUserId(authAccessToken);
+    let viewer = await getViewerProfileByAuthUserId(authUserId);
 
     if (!viewer) {
-      return getRemoteDisabledState();
+      const currentViewer = await getViewerProfileFromCookie();
+      viewer =
+        currentViewer?.kind === "guest"
+          ? await assignViewerToAuthUser(currentViewer.id, authUserId)
+          : await assignViewerToAuthUser((await createGuestViewerProfile()).id, authUserId);
     }
 
     const normalized = normalizeDiscoveryWorkspaceState(workspaceState);
     await persistWorkspaceStateForViewer(viewer.id, normalized);
+    await setViewerCookie(viewer.access_token);
 
     return {
       remoteAvailable: true,
-      viewerKind: viewer.kind,
+      viewerKind: "account" as const,
       state: await loadWorkspaceStateForViewer(viewer.id),
     };
   } catch (error) {
@@ -462,30 +519,24 @@ export async function attachAuthenticatedViewer(
   }
 }
 
-export async function releaseAuthenticatedViewer(localWorkspaceState?: DiscoveryWorkspaceState) {
+export async function releaseAuthenticatedViewer(
+  authAccessToken: string,
+  localWorkspaceState?: DiscoveryWorkspaceState,
+) {
   if (!isDiscoveryRemoteEnabled()) {
     return getRemoteDisabledState();
   }
 
   try {
-    const currentViewer = await getOrCreateViewerProfile();
+    const authUserId = await getAuthenticatedUserId(authAccessToken);
+    const currentViewer = await getViewerProfileFromCookie();
 
     if (!currentViewer) {
       return getRemoteDisabledState();
     }
 
-    if (currentViewer.kind === "guest") {
-      const mergedGuestState = mergeDiscoveryWorkspaceStates(
-        normalizeDiscoveryWorkspaceState(localWorkspaceState),
-        await loadWorkspaceStateForViewer(currentViewer.id),
-      );
-      await persistWorkspaceStateForViewer(currentViewer.id, mergedGuestState);
-
-      return {
-        remoteAvailable: true,
-        viewerKind: "guest" as const,
-        state: await loadWorkspaceStateForViewer(currentViewer.id),
-      };
+    if (currentViewer.kind !== "account" || currentViewer.auth_user_id !== authUserId) {
+      throw new Error("Il profilo di navigazione non appartiene all'utente autenticato.");
     }
 
     const currentState = mergeDiscoveryWorkspaceStates(

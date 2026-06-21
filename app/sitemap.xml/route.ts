@@ -33,7 +33,6 @@ export async function GET() {
     "/compare",
     "/tags",
     "/shop",
-    "/account",
   ].map((path) => urlEntry(`${siteConfig.url}${path}`, now));
 
   const toolPages = tools.map((tool) => urlEntry(`${siteConfig.url}/toools/${tool.slug}`, new Date(tool.updated_at)));
@@ -52,6 +51,7 @@ export async function GET() {
   return new Response(body, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
+      "Cache-Control": "public, max-age=3600",
     },
   });
 }

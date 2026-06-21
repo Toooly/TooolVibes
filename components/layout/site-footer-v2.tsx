@@ -28,9 +28,9 @@ const footerLinks = {
     { label: "Affiliati", href: "/affiliati", icon: Heart },
   ],
   legal: [
-    { label: "Privacy" },
-    { label: "Termini" },
-    { label: "Cookie" },
+    { label: "Privacy", href: "/privacy" },
+    { label: "Termini", href: "/termini" },
+    { label: "Cookie", href: "/cookie" },
   ],
 };
 
@@ -180,13 +180,13 @@ export function SiteFooterV2() {
           </p>
           <div className="flex items-center gap-6">
             {footerLinks.legal.map((link) => (
-              <span
+              <Link
                 key={link.label}
+                href={link.href}
                 className={`text-xs ${darkFooter ? "text-[#e6ddff]/70" : "text-[#4f4970]/70"}`}
-                aria-disabled="true"
               >
                 {link.label}
-              </span>
+              </Link>
             ))}
           </div>
         </div>

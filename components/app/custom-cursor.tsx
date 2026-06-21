@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useMounted } from "@/lib/hooks/use-mounted";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 
 export function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -12,6 +13,7 @@ export function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     // Check for touch device
@@ -96,7 +98,6 @@ export function CustomCursor() {
       // Trail effect
       trailRefs.current.forEach((trail, i) => {
         if (trail) {
-          const delay = (i + 1) * 0.08;
           const trailX = currentX - velRef.current.x * (i + 1) * 3;
           const trailY = currentY - velRef.current.y * (i + 1) * 3;
           const trailScale = 1 - (i + 1) * 0.15;
@@ -125,13 +126,17 @@ export function CustomCursor() {
   const mounted = useMounted();
 
   // Don't render on touch devices or during SSR
-  if (!mounted || (typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0))) {
+  if (
+    reducedMotion ||
+    !mounted ||
+    (typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0))
+  ) {
     return null;
   }
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[9999]"
+      className="pointer-events-none fixed inset-0 z-[var(--z-cursor)]"
       style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.3s" }}
     >
       {/* Trail particles */}

@@ -236,7 +236,7 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-start justify-center bg-[rgba(18,13,47,0.5)] backdrop-blur-sm pt-24"
+            className="fixed inset-0 z-[var(--z-overlay)] flex items-start justify-center bg-[rgba(18,13,47,0.5)] backdrop-blur-sm pt-24"
             onClick={() => setSearchOpen(false)}
           >
             <motion.div

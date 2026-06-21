@@ -10,6 +10,12 @@ import {
   getToolWriteupPosts,
 } from "@/lib/data/public-articles";
 
+export const metadata = {
+  title: "Post",
+  description: "Guide, note editoriali e analisi TooolVibes sui tool da provare.",
+  alternates: { canonical: "/posts" },
+};
+
 const curationCriteria = [
   "Valore rapido",
   "Chiarezza",

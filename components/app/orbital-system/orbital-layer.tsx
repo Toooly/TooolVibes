@@ -304,15 +304,15 @@ function useOrbitEngine(
   }, [items]);
 
   useEffect(() => {
+    if (items.length === 0 || document.hidden) {
+      setPositions([]);
+      return undefined;
+    }
+
     let running = true;
 
     const tick = (now: number) => {
       if (!running) return;
-      if (document.hidden) {
-        rafRef.current = requestAnimationFrame(tick);
-        return;
-      }
-
       if (lastTimeRef.current === 0) lastTimeRef.current = now;
       const delta = now - lastTimeRef.current;
       lastTimeRef.current = now;
@@ -509,6 +509,7 @@ export function OrbitalLayer() {
   const profile = usePerformanceMode();
   const [hasMounted, setHasMounted] = useState(false);
   const [isCompactViewport, setIsCompactViewport] = useState(false);
+  const [pageHidden, setPageHidden] = useState(false);
   const isMobileOriginPage =
     pathname === "/" ||
     pathname?.startsWith("/archivio") ||
@@ -534,6 +535,13 @@ export function OrbitalLayer() {
     update();
     window.addEventListener("resize", update, { passive: true });
     return () => window.removeEventListener("resize", update);
+  }, []);
+
+  useEffect(() => {
+    const updateVisibility = () => setPageHidden(document.hidden);
+    updateVisibility();
+    document.addEventListener("visibilitychange", updateVisibility);
+    return () => document.removeEventListener("visibilitychange", updateVisibility);
   }, []);
 
   // Dynamic safe zones from real DOM text blocks
@@ -576,7 +584,7 @@ export function OrbitalLayer() {
   }, [activeSectionId, getItemsForSection, profile.maxItems]);
 
   const configs = useOrbitalConfigForItems(activeItems, profile);
-  const { positions, centerX, centerY, centerInSafeZone } = useOrbitEngine(activeItems, configs, isPaused, profile, activeSectionId, dynamicZonesRef);
+  const { positions, centerX, centerY, centerInSafeZone } = useOrbitEngine(activeItems, configs, isPaused || pageHidden, profile, activeSectionId, dynamicZonesRef);
   const layerIsMobile = profile.isMobile || isCompactViewport;
   const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
 

@@ -1,31 +1,27 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 import { notifyToolRequestSubmitted } from "@/lib/email/resend";
-import { isSupabaseAdminEnabled } from "@/lib/admin/tool-queries";
+import { isSupabasePublicEnabled } from "@/lib/supabase/public-client";
 import { createToolRequestInSupabase } from "@/lib/supabase/suggestion-repository";
 
-const validLevels = new Set(["featured", "beginner", "intermediate", "expert"]);
-
-function asString(value: unknown) {
-  return typeof value === "string" ? value.trim() : "";
-}
-
-function isValidHttpUrl(value: string) {
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
-
-function isValidEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
+const toolRequestSchema = z
+  .object({
+    toolName: z.string().trim().min(2),
+    toolUrl: z.string().trim().url().refine((value) => {
+      const url = new URL(value);
+      return url.protocol === "http:" || url.protocol === "https:";
+    }),
+    category: z.string().trim().min(2),
+    level: z.enum(["featured", "beginner", "intermediate", "expert"]),
+    email: z.string().trim().email().or(z.literal("")).optional(),
+    message: z.string().trim().optional(),
+  })
+  .strict();
 
 export async function POST(request: Request) {
-  if (!isSupabaseAdminEnabled()) {
+  if (!isSupabasePublicEnabled()) {
     return NextResponse.json(
       { message: "Suggerimenti non disponibili in questo momento. Riprova più tardi." },
       { status: 503 },
@@ -40,34 +36,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Richiesta non valida." }, { status: 400 });
   }
 
-  const payload = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
-  const toolName = asString(payload.toolName);
-  const toolUrl = asString(payload.toolUrl);
-  const category = asString(payload.category);
-  const level = asString(payload.level);
-  const email = asString(payload.email).toLowerCase();
-  const message = asString(payload.message);
+  const parsed = toolRequestSchema.safeParse(body);
 
-  if (toolName.length < 2 || !isValidHttpUrl(toolUrl) || category.length < 2) {
-    return NextResponse.json({ message: "Compila nome, URL e categoria." }, { status: 422 });
+  if (!parsed.success) {
+    return NextResponse.json(
+      { message: "Richiesta non valida.", issues: parsed.error.issues },
+      { status: 400 },
+    );
   }
 
-  if (!validLevels.has(level)) {
-    return NextResponse.json({ message: "Livello non valido." }, { status: 422 });
-  }
-
-  if (email && !isValidEmail(email)) {
-    return NextResponse.json({ message: "Email non valida." }, { status: 422 });
-  }
+  const payload = parsed.data;
+  const email = (payload.email ?? "").toLowerCase();
 
   try {
     const savedRequest = await createToolRequestInSupabase({
-      tool_name: toolName,
-      tool_url: toolUrl,
-      category,
-      level,
+      tool_name: payload.toolName,
+      tool_url: payload.toolUrl,
+      category: payload.category,
+      level: payload.level,
       email: email || null,
-      message: message || null,
+      message: payload.message || null,
     });
 
     await notifyToolRequestSubmitted(savedRequest);

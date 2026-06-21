@@ -3,6 +3,12 @@ import { ArrowRight, Boxes, FileText, Layers3, Sparkles, Zap } from "lucide-reac
 import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import { siteConfig } from "@/lib/config/site";
 
+export const metadata = {
+  title: "Shop",
+  description: "Kit, risorse operative e raccolte premium TooolVibes.",
+  alternates: { canonical: "/shop" },
+};
+
 const shopCards = [
   {
     title: "Kit curati",

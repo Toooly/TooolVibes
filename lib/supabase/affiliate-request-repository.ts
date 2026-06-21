@@ -3,6 +3,7 @@ import "server-only";
 import { cache } from "react";
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 import type {
   AffiliateRequestRecord,
   AffiliateRequestStatus,
@@ -109,7 +110,7 @@ export async function getRecentRejectedAffiliateRequestByEmail(
 export async function createAffiliateRequestInSupabase(
   input: AffiliateRequestCreateInput,
 ): Promise<AffiliateRequestRecord> {
-  const client = createAdminSupabaseClient();
+  const client = createPublicSupabaseClient();
   const { data, error } = await client
     .from("affiliate_requests")
     .insert(input)

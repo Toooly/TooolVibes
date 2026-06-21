@@ -16,24 +16,17 @@ const sanitizeSchema = {
     ...(defaultSchema.tagNames ?? []),
     "article",
     "aside",
-    "audio",
     "div",
     "figure",
     "figcaption",
-    "iframe",
     "mark",
     "section",
-    "source",
     "span",
-    "video",
   ],
   attributes: {
     ...defaultSchema.attributes,
     "*": [
       ...(defaultSchema.attributes?.["*"] ?? []),
-      "className",
-      "id",
-      "style",
       "title",
       "aria-label",
     ],
@@ -52,14 +45,10 @@ const sanitizeSchema = {
       "height",
       "loading",
     ],
-    iframe: ["src", "title", "width", "height", "allow", "allowFullScreen", "loading"],
-    source: ["src", "type"],
-    video: ["src", "controls", "poster", "width", "height", "title", "playsInline"],
-    audio: ["src", "controls", "title"],
   },
   protocols: {
     ...defaultSchema.protocols,
-    src: ["http", "https", "data"],
+    src: ["http", "https"],
     href: ["http", "https", "mailto", "tel"],
   },
 };
@@ -72,18 +61,18 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
         rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
         components={{
           a: ({ href, children, ...props }) => (
-            <a href={href} target={href?.startsWith("http") ? "_blank" : undefined} rel="noreferrer" {...props}>
+            <a
+              href={href}
+              target={href?.startsWith("http") ? "_blank" : undefined}
+              rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+              {...props}
+            >
               {children}
             </a>
           ),
           img: ({ alt, ...props }) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img alt={alt ?? ""} loading="lazy" {...props} />
-          ),
-          video: ({ children, ...props }) => (
-            <video controls playsInline {...props}>
-              {children}
-            </video>
           ),
         }}
       >

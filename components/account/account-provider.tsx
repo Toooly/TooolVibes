@@ -256,6 +256,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
         },
         body: JSON.stringify(localSnapshot),
       });
@@ -284,7 +285,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         setIsAttaching(false);
       }
     }
-  }, []);
+  }, [session?.access_token]);
 
   const value = useMemo<AccountContextValue>(
     () => ({

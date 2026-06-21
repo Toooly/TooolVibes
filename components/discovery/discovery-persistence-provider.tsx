@@ -14,6 +14,7 @@ import {
   applyDiscoveryWorkspaceState,
   getLocalDiscoveryWorkspaceState,
 } from "@/lib/discovery/local-storage";
+import { useAccount } from "@/components/account/account-provider";
 import type {
   DiscoveryPersistencePhase,
   DiscoveryWorkspaceState,
@@ -76,12 +77,25 @@ export function DiscoveryPersistenceProvider({
   const saveTimerRef = useRef<number | null>(null);
   const saveInFlightRef = useRef(false);
   const queuedSnapshotRef = useRef<DiscoveryWorkspaceState | null>(null);
+  const { session } = useAccount();
+  const accessToken = session?.access_token ?? null;
 
   useEffect(() => {
     statusRef.current = status;
   }, [status]);
 
   const persistSnapshot = useCallback(async (snapshot: DiscoveryWorkspaceState) => {
+    if (!accessToken) {
+      setStatus((current) => ({
+        ...current,
+        mode: "local",
+        phase: "local-only",
+        remoteAvailable: false,
+        viewerKind: "guest",
+      }));
+      return;
+    }
+
     saveInFlightRef.current = true;
     setStatus((current) => ({
       ...current,
@@ -93,6 +107,7 @@ export function DiscoveryPersistenceProvider({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(snapshot),
       });
@@ -135,9 +150,20 @@ export function DiscoveryPersistenceProvider({
         void persistSnapshot(nextSnapshot);
       }
     }
-  }, []);
+  }, [accessToken]);
 
   const hydrateFromRemote = useCallback(async () => {
+    if (!accessToken) {
+      setStatus({
+        mode: "local",
+        phase: "local-only",
+        remoteAvailable: false,
+        viewerKind: "guest",
+        lastSyncedAt: null,
+      });
+      return;
+    }
+
     const localSnapshot = getLocalDiscoveryWorkspaceState();
 
     const response = await fetch("/api/discovery-state", {
@@ -177,7 +203,7 @@ export function DiscoveryPersistenceProvider({
     if (shouldPushMergedState) {
       void persistSnapshot(mergedState);
     }
-  }, [persistSnapshot]);
+  }, [accessToken, persistSnapshot]);
 
   useEffect(() => {
     let cancelled = false;

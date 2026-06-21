@@ -1,16 +1,41 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 import { getRejectedAffiliateRequestCooldown } from "@/lib/admin/affiliate-request-queries";
-import { isSupabaseAdminEnabled } from "@/lib/admin/tool-queries";
 import { notifyAffiliateRequestSubmitted } from "@/lib/email/resend";
 import { createAffiliateRequestInSupabase } from "@/lib/supabase/affiliate-request-repository";
+import { isSupabasePublicEnabled } from "@/lib/supabase/public-client";
 
 const cooldownDays = 30;
-
-function asString(value: unknown) {
-  return typeof value === "string" ? value.trim() : "";
-}
+const optionalText = z.string().trim().optional();
+const affiliateRequestSchema = z
+  .object({
+    firstName: optionalText,
+    lastName: optionalText,
+    email: z.string().trim().email().or(z.literal("")).optional(),
+    brandName: optionalText,
+    websiteUrl: z
+      .string()
+      .trim()
+      .url()
+      .refine((value) => {
+        const url = new URL(value);
+        return url.protocol === "http:" || url.protocol === "https:";
+      })
+      .or(z.literal(""))
+      .optional(),
+    instagram: optionalText,
+    facebook: optionalText,
+    tiktok: optionalText,
+    xProfile: optionalText,
+    linkedin: optionalText,
+    youtube: optionalText,
+    audience: optionalText,
+    channels: optionalText,
+    message: z.string().trim().min(12),
+  })
+  .strict();
 
 function isValidHttpUrl(value: string) {
   try {
@@ -48,21 +73,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Richiesta non valida." }, { status: 400 });
   }
 
-  const payload = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
-  const firstName = asString(payload.firstName);
-  const lastName = asString(payload.lastName);
-  const email = asString(payload.email).toLowerCase();
-  const brandName = asString(payload.brandName);
-  const websiteUrl = asString(payload.websiteUrl);
-  const instagram = asString(payload.instagram);
-  const facebook = asString(payload.facebook);
-  const tiktok = asString(payload.tiktok);
-  const xProfile = asString(payload.xProfile);
-  const linkedin = asString(payload.linkedin);
-  const youtube = asString(payload.youtube);
-  const audience = asString(payload.audience);
-  const channels = asString(payload.channels);
-  const message = asString(payload.message);
+  const parsed = affiliateRequestSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      { message: "Richiesta non valida.", issues: parsed.error.issues },
+      { status: 400 },
+    );
+  }
+
+  const payload = parsed.data;
+  const email = (payload.email ?? "").toLowerCase();
+  const websiteUrl = payload.websiteUrl ?? "";
+  const message = payload.message;
 
   if (message.length < 12) {
     return NextResponse.json(
@@ -79,7 +102,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "URL sito non valido." }, { status: 422 });
   }
 
-  if (!isSupabaseAdminEnabled()) {
+  if (!isSupabasePublicEnabled()) {
     return NextResponse.json(
       { message: "Candidature non disponibili in questo momento. Riprova più tardi." },
       { status: 503 },
@@ -88,13 +111,13 @@ export async function POST(request: Request) {
 
   const cooldownSince = new Date(Date.now() - cooldownDays * 24 * 60 * 60 * 1000).toISOString();
   const socialChannels = compactLines([
-    channels ? `Canali: ${channels}` : "",
-    instagram ? `Instagram: ${instagram}` : "",
-    facebook ? `Facebook: ${facebook}` : "",
-    tiktok ? `TikTok: ${tiktok}` : "",
-    xProfile ? `X/Twitter: ${xProfile}` : "",
-    linkedin ? `LinkedIn: ${linkedin}` : "",
-    youtube ? `YouTube: ${youtube}` : "",
+    payload.channels ? `Canali: ${payload.channels}` : "",
+    payload.instagram ? `Instagram: ${payload.instagram}` : "",
+    payload.facebook ? `Facebook: ${payload.facebook}` : "",
+    payload.tiktok ? `TikTok: ${payload.tiktok}` : "",
+    payload.xProfile ? `X/Twitter: ${payload.xProfile}` : "",
+    payload.linkedin ? `LinkedIn: ${payload.linkedin}` : "",
+    payload.youtube ? `YouTube: ${payload.youtube}` : "",
   ]);
   const storedEmail = email || getFallbackAffiliateEmail();
 
@@ -113,12 +136,12 @@ export async function POST(request: Request) {
     }
 
     const savedRequest = await createAffiliateRequestInSupabase({
-      first_name: firstName || "Candidato",
-      last_name: lastName || "Affiliato",
+      first_name: payload.firstName || "Candidato",
+      last_name: payload.lastName || "Affiliato",
       email: storedEmail,
-      brand_name: brandName || null,
+      brand_name: payload.brandName || null,
       website_url: websiteUrl || null,
-      audience: audience || null,
+      audience: payload.audience || null,
       channels: socialChannels || null,
       message,
     });

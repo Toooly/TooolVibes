@@ -3,6 +3,7 @@ import "server-only";
 import { cache } from "react";
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
+import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 import type { ToolRequestRecord, ToolRequestStatus } from "@/lib/types/tool-request";
 
 export const toolRequestSelect = `
@@ -33,7 +34,7 @@ export type ToolRequestCreateInput = {
 export async function createToolRequestInSupabase(
   input: ToolRequestCreateInput,
 ): Promise<ToolRequestRecord> {
-  const client = createAdminSupabaseClient();
+  const client = createPublicSupabaseClient();
   const { data, error } = await client
     .from("tool_requests")
     .insert(input)
