@@ -442,6 +442,7 @@ function MobileCategoryMap({
               onClick={() => onSelect(cat.key)}
               className="mobile-category-map__blob"
               aria-label={`${cat.label}. ${cat.count} tool`}
+              data-category-key={cat.key}
               style={{ "--cat-color": cat.color } as CSSProperties}
               whileTap={{ scale: 0.96 }}
             >

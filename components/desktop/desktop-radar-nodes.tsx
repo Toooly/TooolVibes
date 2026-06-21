@@ -61,11 +61,11 @@ const desktopFallbackItems: ProductHuntItem[] = [
 ];
 
 const nodeLayout = [
-  { x: 50, y: 32, delay: -0.1, size: 1.06 },
-  { x: 67, y: 47, delay: -1.08, size: 0.98 },
-  { x: 61, y: 62, delay: -2.02, size: 1 },
-  { x: 40, y: 62, delay: -3.05, size: 0.96 },
-  { x: 33, y: 47, delay: -4.18, size: 0.92 },
+  { x: 50, y: 22, angle: -90, radius: "clamp(10.8rem, 14vw, 13rem)", delay: -0.1, size: 1.06 },
+  { x: 76, y: 41, angle: -18, radius: "clamp(11.6rem, 15vw, 14.4rem)", delay: -1.08, size: 0.98 },
+  { x: 66, y: 72, angle: 42, radius: "clamp(10.4rem, 13.2vw, 12.8rem)", delay: -2.02, size: 1 },
+  { x: 34, y: 72, angle: 138, radius: "clamp(10.4rem, 13.2vw, 12.8rem)", delay: -3.05, size: 0.96 },
+  { x: 24, y: 41, angle: 198, radius: "clamp(11.6rem, 15vw, 14.4rem)", delay: -4.18, size: 0.92 },
 ];
 
 export function DesktopRadarNodes() {
@@ -124,6 +124,9 @@ export function DesktopRadarNodes() {
         const nodeStyle = {
           "--node-x": `${node.layout.x}%`,
           "--node-y": `${node.layout.y}%`,
+          "--node-angle": `${node.layout.angle}deg`,
+          "--node-counter-angle": `${-node.layout.angle}deg`,
+          "--node-radius": node.layout.radius,
           "--node-delay": `${node.layout.delay}s`,
           "--node-scale": node.layout.size,
           "--node-heat": node.heat,

@@ -212,6 +212,7 @@ function FilterControls({
               type="button"
               onClick={() => onGroupChange(group.key)}
               data-sonic-action="filterApply"
+              data-category-key={group.key}
               className={cn(
                 "motion-filter-chip min-h-10 shrink-0 rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3.5 sm:py-2 sm:text-[0.72rem]",
                 activeGroup === group.key ? activeClass : idleClass,
@@ -235,6 +236,7 @@ function FilterControls({
               type="button"
               onClick={() => onGroupChange(group.key)}
               data-sonic-action="filterApply"
+              data-category-key={group.key}
               className={cn(
                   "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3 sm:text-xs",
                   activeGroup === group.key ? activeClass : idleClass,
@@ -1055,6 +1057,7 @@ export function ToolDiscoveryApp({
                       type="button"
                       onClick={() => setActiveGroup(group.key)}
                       data-sonic-action="filterApply"
+                      data-category-key={group.key}
                       className={cn(
                         "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
                         activeGroup === group.key

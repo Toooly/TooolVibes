@@ -30365,3 +30365,326 @@ body:has(.tone-account) {
       0 8px 18px rgba(0, 0, 0, 0.22) !important;
   }
 }
+
+/* User pass: quieter footer, contextual catalog filters, radar nodes centered on Live scan. */
+@keyframes tv-catalog-chip-trend {
+  0%, 100% { transform: translate(0, 0) rotate(-12deg); }
+  45% { transform: translate(0.32rem, -0.18rem) rotate(-12deg); }
+}
+
+@keyframes tv-catalog-chip-swipe {
+  0%, 100% { transform: translateX(-0.16rem) scaleX(0.72); opacity: 0.42; }
+  50% { transform: translateX(0.24rem) scaleX(1.18); opacity: 0.92; }
+}
+
+@keyframes tv-catalog-chip-pulse {
+  0%, 100% { transform: scale(0.72); opacity: 0.38; }
+  50% { transform: scale(1.18); opacity: 0.92; }
+}
+
+@keyframes tv-catalog-chip-loop {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes tv-catalog-card-market {
+  0%, 100% { transform: translateZ(32px) rotate(-2deg); }
+  50% { transform: translateZ(38px) rotate(3deg) translateY(-0.12rem); }
+}
+
+@keyframes tv-catalog-card-payments {
+  0%, 100% { transform: translateZ(32px) translateX(-0.1rem); filter: saturate(1); }
+  45% { transform: translateZ(40px) translateX(0.28rem); filter: saturate(1.28); }
+}
+
+@keyframes tv-catalog-card-productivity {
+  0%, 100% { transform: translateZ(32px) rotate(0deg); }
+  38% { transform: translateZ(40px) rotate(9deg); }
+  62% { transform: translateZ(36px) rotate(-5deg); }
+}
+
+@keyframes tv-catalog-card-automation {
+  to { transform: translateZ(36px) rotate(360deg); }
+}
+
+@keyframes tv-catalog-card-support {
+  0%, 100% { box-shadow: 0 0 28px color-mix(in srgb, var(--cat-color, #6366f1) 24%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.24); }
+  50% { box-shadow: 0 0 46px color-mix(in srgb, var(--cat-color, #6366f1) 42%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+}
+
+@keyframes tv-desktop-radar-node-orbit-path {
+  0%, 100% {
+    transform:
+      rotate(var(--node-angle, 0deg))
+      translateX(var(--node-radius, 28%))
+      rotate(var(--node-counter-angle, 0deg))
+      translateZ(132px);
+  }
+  50% {
+    transform:
+      rotate(calc(var(--node-angle, 0deg) + 7deg))
+      translateX(calc(var(--node-radius, 28%) + 0.35rem))
+      rotate(calc(var(--node-counter-angle, 0deg) - 7deg))
+      translateZ(142px);
+  }
+}
+
+@keyframes tv-desktop-radar-node-orbit-path-hover {
+  0%, 100% {
+    transform:
+      rotate(var(--node-angle, 0deg))
+      translateX(var(--node-radius, 28%))
+      rotate(var(--node-counter-angle, 0deg))
+      translateZ(172px)
+      scale(1.08);
+  }
+  50% {
+    transform:
+      rotate(calc(var(--node-angle, 0deg) + 5deg))
+      translateX(calc(var(--node-radius, 28%) + 0.28rem))
+      rotate(calc(var(--node-counter-angle, 0deg) - 5deg))
+      translateZ(182px)
+      scale(1.1);
+  }
+}
+
+.site-mobile-footer-nav::before {
+  display: none !important;
+  animation: none !important;
+}
+
+.motion-filter-chip[data-category-key] {
+  --chip-color: #6a3cff;
+  --chip-deep: #221253;
+  border-color: color-mix(in srgb, var(--chip-color) 34%, rgba(255, 255, 255, 0.16)) !important;
+  background:
+    radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--chip-color) 20%, transparent), transparent 42%),
+    color-mix(in srgb, var(--chip-deep) 18%, rgba(255, 255, 255, 0.78)) !important;
+  color: color-mix(in srgb, var(--chip-color) 46%, #f7fbff) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.motion-filter-chip[data-category-key]::before {
+  content: "";
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  z-index: 0;
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--chip-color) 72%, rgba(255, 255, 255, 0.4));
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) scale(0.7);
+  transition: opacity 180ms ease;
+}
+
+.motion-filter-chip[data-category-key]::after {
+  background:
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--chip-color) 34%, rgba(255, 255, 255, 0.16)), transparent) !important;
+}
+
+.motion-filter-chip[data-category-key]:hover,
+.motion-filter-chip[data-category-key]:focus-visible {
+  border-color: color-mix(in srgb, var(--chip-color) 58%, rgba(255, 255, 255, 0.24)) !important;
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--chip-color) 20%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.motion-filter-chip[data-category-key]:hover::before,
+.motion-filter-chip[data-category-key]:focus-visible::before {
+  opacity: 0.9;
+}
+
+.motion-filter-chip[data-category-key="all"] { --chip-color: #9b8cff; --chip-deep: #1b1540; }
+.motion-filter-chip[data-category-key="vibe-coding"] { --chip-color: #39d2f6; --chip-deep: #08283a; }
+.motion-filter-chip[data-category-key="ai-app-builder"] { --chip-color: #f3bf4c; --chip-deep: #35210b; }
+.motion-filter-chip[data-category-key="no-code"] { --chip-color: #a855f7; --chip-deep: #2a1244; }
+.motion-filter-chip[data-category-key="headless-cms"] { --chip-color: #ec4899; --chip-deep: #351226; }
+.motion-filter-chip[data-category-key="ui-builder"] { --chip-color: #f97316; --chip-deep: #3a1a07; }
+.motion-filter-chip[data-category-key="ai-writing"] { --chip-color: #8b5cf6; --chip-deep: #24143f; }
+.motion-filter-chip[data-category-key="ai-image"] { --chip-color: #06b6d4; --chip-deep: #062b34; }
+.motion-filter-chip[data-category-key="ai-video"] { --chip-color: #e11d48; --chip-deep: #380b18; }
+.motion-filter-chip[data-category-key="marketing"] { --chip-color: #22c55e; --chip-deep: #0b2d1a; }
+.motion-filter-chip[data-category-key="sales"] { --chip-color: #14b8a6; --chip-deep: #082d2b; }
+.motion-filter-chip[data-category-key="customer-support"] { --chip-color: #6366f1; --chip-deep: #151944; }
+.motion-filter-chip[data-category-key="automation"] { --chip-color: #f59e0b; --chip-deep: #352207; }
+.motion-filter-chip[data-category-key="ai-agents"] { --chip-color: #10b981; --chip-deep: #063224; }
+.motion-filter-chip[data-category-key="payments"] { --chip-color: #84cc16; --chip-deep: #223307; }
+.motion-filter-chip[data-category-key="website-builder"] { --chip-color: #3b82f6; --chip-deep: #0c2148; }
+.motion-filter-chip[data-category-key="productivity"] { --chip-color: #d946ef; --chip-deep: #32113b; }
+
+.motion-filter-chip[data-category-key="marketing"]:hover::before,
+.motion-filter-chip[data-category-key="sales"]:hover::before,
+.motion-filter-chip[data-category-key="marketing"]:focus-visible::before,
+.motion-filter-chip[data-category-key="sales"]:focus-visible::before {
+  width: 0.8rem;
+  height: 0.42rem;
+  border-bottom: 2px solid var(--chip-color);
+  border-left: 0;
+  border-radius: 0;
+  animation: tv-catalog-chip-trend 740ms ease-in-out infinite;
+}
+
+.motion-filter-chip[data-category-key="payments"]:hover::before,
+.motion-filter-chip[data-category-key="website-builder"]:hover::before,
+.motion-filter-chip[data-category-key="payments"]:focus-visible::before,
+.motion-filter-chip[data-category-key="website-builder"]:focus-visible::before {
+  width: 0.9rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: var(--chip-color);
+  animation: tv-catalog-chip-swipe 760ms ease-in-out infinite;
+}
+
+.motion-filter-chip[data-category-key="automation"]:hover::before,
+.motion-filter-chip[data-category-key="ai-agents"]:hover::before,
+.motion-filter-chip[data-category-key="automation"]:focus-visible::before,
+.motion-filter-chip[data-category-key="ai-agents"]:focus-visible::before {
+  border-radius: 0.18rem;
+  animation: tv-catalog-chip-loop 1.1s linear infinite;
+}
+
+.motion-filter-chip[data-category-key="customer-support"]:hover::before,
+.motion-filter-chip[data-category-key="productivity"]:hover::before,
+.motion-filter-chip[data-category-key="customer-support"]:focus-visible::before,
+.motion-filter-chip[data-category-key="productivity"]:focus-visible::before {
+  animation: tv-catalog-chip-pulse 820ms ease-in-out infinite;
+}
+
+.mobile-category-map__blob[data-category-key] {
+  --cat-a: color-mix(in srgb, var(--cat-color, #6a3cff) 42%, rgba(255, 255, 255, 0.08));
+  --cat-b: rgba(13, 12, 38, 0.7);
+  --cat-line: color-mix(in srgb, var(--cat-color, #6a3cff) 56%, rgba(255, 255, 255, 0.16));
+  border-color: var(--cat-line) !important;
+  background:
+    radial-gradient(circle at 25% 10%, var(--cat-a), transparent 42%),
+    radial-gradient(circle at 78% 32%, color-mix(in srgb, var(--cat-color, #6a3cff) 20%, transparent), transparent 38%),
+    linear-gradient(145deg, color-mix(in srgb, var(--cat-b) 74%, rgba(255, 255, 255, 0.1)), rgba(16, 19, 44, 0.82)) !important;
+}
+
+.mobile-category-map__blob[data-category-key="all"] { --cat-color: #9b8cff; --cat-b: #171038; }
+.mobile-category-map__blob[data-category-key="marketing"] { --cat-color: #22c55e; --cat-b: #0b2519; }
+.mobile-category-map__blob[data-category-key="sales"] { --cat-color: #14b8a6; --cat-b: #082626; }
+.mobile-category-map__blob[data-category-key="customer-support"] { --cat-color: #6366f1; --cat-b: #141738; }
+.mobile-category-map__blob[data-category-key="automation"] { --cat-color: #f59e0b; --cat-b: #302009; }
+.mobile-category-map__blob[data-category-key="ai-agents"] { --cat-color: #10b981; --cat-b: #06291f; }
+.mobile-category-map__blob[data-category-key="payments"] { --cat-color: #84cc16; --cat-b: #1f2b09; }
+.mobile-category-map__blob[data-category-key="website-builder"] { --cat-color: #3b82f6; --cat-b: #0b1e3e; }
+.mobile-category-map__blob[data-category-key="productivity"] { --cat-color: #d946ef; --cat-b: #2c1035; }
+.mobile-category-map__blob[data-category-key="vibe-coding"] { --cat-color: #39d2f6; --cat-b: #072838; }
+.mobile-category-map__blob[data-category-key="ai-app-builder"] { --cat-color: #f3bf4c; --cat-b: #2f210c; }
+.mobile-category-map__blob[data-category-key="no-code"] { --cat-color: #a855f7; --cat-b: #25133d; }
+.mobile-category-map__blob[data-category-key="headless-cms"] { --cat-color: #ec4899; --cat-b: #311224; }
+.mobile-category-map__blob[data-category-key="ui-builder"] { --cat-color: #f97316; --cat-b: #331807; }
+.mobile-category-map__blob[data-category-key="ai-writing"] { --cat-color: #8b5cf6; --cat-b: #21133a; }
+.mobile-category-map__blob[data-category-key="ai-image"] { --cat-color: #06b6d4; --cat-b: #062932; }
+.mobile-category-map__blob[data-category-key="ai-video"] { --cat-color: #e11d48; --cat-b: #350b17; }
+
+@media (min-width: 768px) {
+  .mobile-category-map__blob[data-category-key="marketing"]:hover .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="marketing"]:focus-visible .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="sales"]:hover .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="sales"]:focus-visible .mobile-category-map__body {
+    animation: tv-catalog-card-market 900ms ease-in-out infinite !important;
+  }
+
+  .mobile-category-map__blob[data-category-key="payments"]:hover .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="payments"]:focus-visible .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="website-builder"]:hover .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="website-builder"]:focus-visible .mobile-category-map__body {
+    animation: tv-catalog-card-payments 860ms ease-in-out infinite !important;
+  }
+
+  .mobile-category-map__blob[data-category-key="productivity"]:hover .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="productivity"]:focus-visible .mobile-category-map__body {
+    animation: tv-catalog-card-productivity 980ms ease-in-out infinite !important;
+  }
+
+  .mobile-category-map__blob[data-category-key="automation"]:hover .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="automation"]:focus-visible .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="ai-agents"]:hover .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="ai-agents"]:focus-visible .mobile-category-map__body {
+    animation: tv-catalog-card-automation 1.6s linear infinite !important;
+  }
+
+  .mobile-category-map__blob[data-category-key="customer-support"]:hover .mobile-category-map__body,
+  .mobile-category-map__blob[data-category-key="customer-support"]:focus-visible .mobile-category-map__body {
+    animation: tv-catalog-card-support 1s ease-in-out infinite !important;
+  }
+
+  .mobile-category-map__blob[data-category-key]:hover .mobile-category-map__orbit,
+  .mobile-category-map__blob[data-category-key]:focus-visible .mobile-category-map__orbit {
+    border-color: color-mix(in srgb, var(--cat-color, #6a3cff) 54%, rgba(255, 255, 255, 0.22));
+    animation-duration: 2.8s !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .desktop-vibe-radar-stage {
+    transform:
+      translateY(-6.6rem)
+      rotateX(calc(1deg - var(--tv-pointer-tilt-x)))
+      rotateY(calc(-2deg + var(--tv-pointer-tilt-y)))
+      translateZ(30px) !important;
+  }
+
+  .desktop-radar-node {
+    left: 50% !important;
+    top: 50% !important;
+    translate: -50% -50% !important;
+    transform:
+      rotate(var(--node-angle, 0deg))
+      translateX(var(--node-radius, 28%))
+      rotate(var(--node-counter-angle, 0deg))
+      translateZ(132px) !important;
+    animation: tv-desktop-radar-node-orbit-path 13s ease-in-out infinite !important;
+    animation-delay: var(--node-delay, 0s) !important;
+  }
+
+  .desktop-radar-node:hover,
+  .desktop-radar-node:focus-visible {
+    transform:
+      rotate(var(--node-angle, 0deg))
+      translateX(var(--node-radius, 28%))
+      rotate(var(--node-counter-angle, 0deg))
+      translateZ(172px)
+      scale(1.08) !important;
+    animation: tv-desktop-radar-node-orbit-path-hover 4.6s ease-in-out infinite !important;
+  }
+
+  .desktop-radar-node__label {
+    max-width: 9.8rem !important;
+  }
+
+  .desktop-radar-node__label strong,
+  .desktop-radar-node__label small {
+    max-width: 9.2rem !important;
+  }
+
+  .desktop-radar-node:nth-child(3) .desktop-radar-node__label,
+  .desktop-radar-node:nth-child(4) .desktop-radar-node__label {
+    position: absolute;
+    top: 50%;
+    bottom: auto;
+    margin-top: 0 !important;
+    transform: translateY(-50%) translateZ(42px) !important;
+  }
+
+  .desktop-radar-node:nth-child(3) .desktop-radar-node__label {
+    left: calc(100% + 0.25rem);
+  }
+
+  .desktop-radar-node:nth-child(4) .desktop-radar-node__label {
+    left: auto;
+    right: calc(100% + 0.25rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-filter-chip[data-category-key]::before,
+  .desktop-radar-node {
+    animation: none !important;
+  }
+}
