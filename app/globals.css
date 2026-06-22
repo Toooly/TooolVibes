@@ -28124,7 +28124,7 @@ body:has(.tone-account) {
 .site-header-v2__nav {
   justify-self: center;
   gap: 0.18rem !important;
-  min-width: min(43vw, 31rem);
+  min-width: min(47vw, 36.5rem);
   border-radius: 1.08rem 2.05rem 1.18rem 2.25rem !important;
   padding: 0.4rem 0.48rem 0.55rem !important;
 }
@@ -28147,7 +28147,7 @@ body:has(.tone-account) {
 }
 
 .site-header-v2__nav-link {
-  min-width: 5.05rem;
+  min-width: 4.82rem;
   min-height: 3.06rem;
   padding: 0.36rem 0.58rem 0.48rem !important;
   border-radius: 0.88rem 1.35rem 0.92rem 1.25rem !important;
@@ -28221,7 +28221,7 @@ body:has(.tone-account) {
 }
 
 .site-mobile-footer-nav {
-  max-width: min(26.5rem, calc(100vw - 1.5rem)) !important;
+  max-width: min(27.75rem, calc(100vw - 1.5rem)) !important;
   border-radius: 1.12rem 2.35rem 1.22rem 2.15rem !important;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(248, 244, 255, 0.86) 44%, rgba(234, 249, 255, 0.88)),
@@ -28248,16 +28248,25 @@ body:has(.tone-account) {
 }
 
 .site-mobile-footer-nav > div {
-  grid-template-columns: 0.82fr 0.98fr 0.82fr 0.98fr 1.34fr !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
   align-items: end;
-  gap: 0.28rem !important;
-  padding: 0.5rem !important;
+  gap: 0.2rem !important;
+  padding: 0.42rem !important;
 }
 
 .site-mobile-footer-nav .mobile-bottom-link {
-  height: 3.92rem !important;
+  height: 3.96rem !important;
   border-radius: 0.86rem 1.42rem 0.96rem 1.32rem !important;
   padding: 0.34rem 0.12rem !important;
+}
+
+.site-mobile-footer-nav .mobile-bottom-link__label {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+  font-size: 0.56rem;
+  line-height: 0.95;
+  text-overflow: clip;
 }
 
 .site-mobile-footer-nav .mobile-bottom-link:nth-child(even) {
@@ -28275,11 +28284,11 @@ body:has(.tone-account) {
 }
 
 .site-mobile-footer-nav .mobile-bottom-link:nth-child(5) .mobile-bottom-link__label {
-  max-width: none;
+  max-width: 100%;
   overflow: visible;
-  font-size: 0.62rem;
+  font-size: 0.56rem;
   text-overflow: clip;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 @media (max-width: 1200px) and (min-width: 1024px) {
