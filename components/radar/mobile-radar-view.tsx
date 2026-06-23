@@ -414,7 +414,8 @@ export function MobileRadarView() {
           const isHot = node.votesCount > 100 && !node.isPlaceholder;
           const isHidden = node.id === hiddenNodeId && !hiddenDiscovered;
           const isScanned = angleDistance(node.angle, scanAngle) < RADAR_SCAN_THRESHOLD;
-          const nodeClassName = `mobile-radar-view__node${isHot ? " is-hot" : ""}${isScanned ? " is-scanned" : ""}${node.isPlaceholder ? " is-placeholder" : ""}${isHidden ? " is-hidden" : ""}`;
+          const nodeSideClass = node.x >= 0 ? " is-right-side" : " is-left-side";
+          const nodeClassName = `mobile-radar-view__node${nodeSideClass}${isHot ? " is-hot" : ""}${isScanned ? " is-scanned" : ""}${node.isPlaceholder ? " is-placeholder" : ""}${isHidden ? " is-hidden" : ""}`;
           const displayName = node.isPlaceholder ? placeholderNodeLabel : node.name;
           const displayMeta = node.isPlaceholder ? placeholderNodeHint : `${node.votesCount} voti`;
           const nodeInitials = node.isPlaceholder

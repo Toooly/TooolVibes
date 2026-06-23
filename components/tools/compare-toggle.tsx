@@ -116,11 +116,11 @@ export function CompareToggle({
       <span
         className="h-1.25 w-1.25 rounded-full"
         style={{
-          background: isSelected ? "var(--accent)" : "var(--gold)",
-          boxShadow: isSelected ? "0 0 0 4px rgba(112,82,255,0.12)" : "0 0 0 4px rgba(242,179,71,0.12)",
+          background: isSelected ? "#22c55e" : "#ef4444",
+          boxShadow: isSelected ? "0 0 0 4px rgba(34,197,94,0.14)" : "0 0 0 4px rgba(239,68,68,0.14)",
         }}
       />
-      {isSelected ? "Nel confronto" : compact ? "Confronta" : "Aggiungi al confronto"}
+      {compact ? "Confronta" : isSelected ? "Confronto" : "Aggiungi al confronto"}
       <span
         className={`count-badge-live rounded-full bg-white/76 px-1.5 py-0.5 text-[0.58rem] ${count > 0 ? "is-active" : ""} ${
           isReady ? "is-ready" : ""

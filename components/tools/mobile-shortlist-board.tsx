@@ -149,7 +149,7 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         title="Da provare"
         icon={Bookmark}
         tools={toTryTools}
-        color="#6a3cff"
+        color="#9be8ff"
         emptyText="Tool salvati da esplorare"
       />
 
@@ -157,7 +157,7 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
         title="Recenti"
         icon={Clock}
         tools={recentTools}
-        color="#39d2f6"
+        color="#ff8ecb"
         emptyText="Gli ultimi tool aggiunti"
       />
 
@@ -281,7 +281,7 @@ function MobileLibraryShelf({
   emptyText: string;
 }) {
   return (
-    <section className="mobile-library-shelf">
+    <section className="mobile-library-shelf" style={{ "--shelf-color": color } as CSSProperties}>
       <div className="mobile-library-shelf__header">
         <Icon size={14} style={{ color }} />
         <h2 style={{ color }}>{title}</h2>
@@ -329,7 +329,6 @@ function LibraryBook({ tool, index }: { tool: ToolWithMeta; index: number }) {
       style={{ "--book-color": color } as CSSProperties}
     >
       <Link href={`/toools/${tool.slug}`} className="mobile-library-book__cover">
-        <span className="mobile-library-book__spine" aria-hidden="true" />
         <span className="mobile-library-book__face">
           {iconUrl ? (
             <img src={iconUrl} alt="" loading="lazy" />
@@ -342,7 +341,7 @@ function LibraryBook({ tool, index }: { tool: ToolWithMeta; index: number }) {
         <strong>{tool.name}</strong>
         <span>{getStageLabel(tool.stage)}</span>
       </div>
-      <div className="absolute right-1.5 bottom-1.5 z-10">
+      <div className="mobile-library-book__remove-wrap">
         <button
           type="button"
           onClick={() => toggleSaved(tool.slug)}

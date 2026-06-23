@@ -111,11 +111,11 @@ export function ShortlistToggle({
       <span
         className="h-1.25 w-1.25 rounded-full"
         style={{
-          background: isSaved ? "var(--accent)" : "var(--gold)",
-          boxShadow: isSaved ? "0 0 0 4px rgba(112,82,255,0.12)" : "0 0 0 4px rgba(242,179,71,0.12)",
+          background: isSaved ? "#22c55e" : "#ef4444",
+          boxShadow: isSaved ? "0 0 0 4px rgba(34,197,94,0.14)" : "0 0 0 4px rgba(239,68,68,0.14)",
         }}
       />
-      {isSaved ? "Salvato" : "Salva"}
+      {isSaved ? "Salvato" : "Da salvare"}
     </button>
   );
 }

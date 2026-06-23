@@ -30979,6 +30979,52 @@ body:has(.tone-account) {
   }
 }
 
+@media (max-width: 767.98px) {
+  .mobile-category-map__label strong {
+    color: #f8fbff !important;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-shadow:
+      0 1px 2px rgba(4, 3, 18, 0.9),
+      0 0 14px color-mix(in srgb, var(--cat-color, #6a3cff) 34%, transparent);
+  }
+
+  .mobile-category-map__label small {
+    color: color-mix(in srgb, var(--cat-color, #39d2f6) 24%, #eafcff 76%) !important;
+    font-size: 0.68rem;
+    font-weight: 750;
+    opacity: 0.96;
+    text-shadow:
+      0 1px 2px rgba(4, 3, 18, 0.82),
+      0 0 12px rgba(57, 210, 246, 0.2);
+  }
+
+  .mobile-radar-view__node-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.9rem;
+    min-height: 1.68rem;
+    padding: 0.28rem 0.58rem !important;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .mobile-radar-view__node.is-left-side .mobile-radar-view__node-badge {
+    top: -1.18rem !important;
+    right: auto !important;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .mobile-radar-view__node.is-right-side .mobile-radar-view__node-badge {
+    top: 50% !important;
+    right: auto !important;
+    left: calc(100% + 0.38rem);
+    transform: translateY(-50%);
+  }
+}
+
 /* Catalog category icons: stronger desktop hover pass. */
 @keyframes tv-cat-icon-spark {
   0%, 100% { transform: translateZ(52px) rotate(0deg) scale(1); filter: drop-shadow(0 0 0 transparent); }
@@ -31131,4 +31177,169 @@ body:has(.tone-account) {
     width: 1.85rem;
     height: 0.72rem;
   }
+}
+
+/* Final desktop cleanup: header fit, compact saved shelves, catalog controls. */
+@media (min-width: 1024px) {
+  .site-header-v2__inner {
+    grid-template-columns: minmax(11rem, 1fr) max-content minmax(16rem, 1fr) !important;
+  }
+
+  .site-header-v2__nav {
+    width: max-content !important;
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    justify-self: center !important;
+    padding-inline: 0.42rem !important;
+  }
+
+  .site-header-v2__nav-link {
+    min-width: 4.58rem !important;
+    padding-inline: 0.52rem !important;
+  }
+
+  .site-header-v2__actions {
+    min-width: 0 !important;
+  }
+}
+
+.mobile-library-shelf__rail {
+  display: flex !important;
+  min-height: 6.75rem !important;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.78rem !important;
+  border-color: color-mix(in srgb, var(--shelf-color, #9be8ff) 28%, rgba(255, 255, 255, 0.16)) !important;
+  background:
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--shelf-color, #9be8ff) 26%, transparent), transparent 34%),
+    linear-gradient(135deg, color-mix(in srgb, var(--shelf-color, #9be8ff) 14%, rgba(255, 255, 255, 0.08)), rgba(255, 255, 255, 0.045)) !important;
+  box-shadow:
+    0 18px 52px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.mobile-library-book {
+  width: 6.25rem !important;
+  min-width: 6.25rem;
+  gap: 0.38rem !important;
+}
+
+.mobile-library-book__cover {
+  display: grid !important;
+  width: 4.15rem !important;
+  height: 4.15rem !important;
+  place-items: center;
+  border-radius: 50% !important;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.22), transparent 34%),
+    linear-gradient(135deg, color-mix(in srgb, var(--book-color, #6a3cff) 38%, #111328), #0f1022) !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--book-color, #6a3cff) 34%, rgba(255, 255, 255, 0.18)),
+    0 12px 28px color-mix(in srgb, var(--book-color, #6a3cff) 24%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+.mobile-library-book__face {
+  display: grid !important;
+  width: 2.55rem !important;
+  height: 2.55rem !important;
+  place-items: center;
+  padding: 0 !important;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--book-color, #6a3cff) 18%, rgba(8, 9, 22, 0.9));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 0 18px color-mix(in srgb, var(--book-color, #6a3cff) 30%, transparent);
+}
+
+.mobile-library-book__face img {
+  width: 1.55rem !important;
+  height: 1.55rem !important;
+  border-radius: 0.35rem;
+  filter:
+    drop-shadow(0 1px 1px rgba(255, 255, 255, 0.85))
+    drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.78));
+}
+
+.mobile-library-book__face span {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.72);
+}
+
+.mobile-library-book__meta {
+  max-width: 6.25rem !important;
+}
+
+.mobile-library-book__meta strong {
+  font-size: 0.76rem !important;
+  line-height: 1.12 !important;
+}
+
+.mobile-library-book__meta span {
+  font-size: 0.56rem !important;
+}
+
+.mobile-library-book__remove-wrap {
+  position: absolute;
+  right: 0.34rem;
+  top: 0.1rem;
+  z-index: 10;
+}
+
+.mobile-library-book__remove {
+  right: auto !important;
+  bottom: auto !important;
+}
+
+.mobile-tool-card__actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0.5rem !important;
+}
+
+.mobile-tool-card__actions .selection-chip {
+  min-height: 2.42rem !important;
+  justify-content: center !important;
+  gap: 0.46rem !important;
+  padding: 0.42rem 0.58rem !important;
+  text-align: center;
+}
+
+.mobile-tool-card__actions .selection-chip > span:first-child {
+  width: 0.44rem !important;
+  height: 0.44rem !important;
+  flex: 0 0 auto;
+}
+
+.mobile-tool-card__actions .count-badge-live {
+  display: none !important;
+}
+
+.mobile-tool-card__category {
+  color: #ff5eb8 !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.12em !important;
+  text-shadow: 0 0 14px rgba(255, 94, 184, 0.34);
+}
+
+.mobile-tool-card__open {
+  color: #9be8ff !important;
+  text-shadow: 0 0 12px rgba(57, 210, 246, 0.28);
+}
+
+.mobile-tool-card__open svg {
+  stroke-width: 2.8;
+}
+
+.mobile-tool-card__visual {
+  border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow:
+    0 0 0 1px rgba(106, 60, 255, 0.28),
+    0 0 22px rgba(106, 60, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+.mobile-tool-card__visual::after {
+  border-color: rgba(155, 232, 255, 0.28) !important;
+  border-width: 1.5px !important;
 }
