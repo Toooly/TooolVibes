@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Volume2, VolumeX } from "lucide-react";
+import { Volume1, VolumeX } from "lucide-react";
 
 import {
   SOUND_MUTED_CHANGE_EVENT,
@@ -29,7 +29,7 @@ function getInitialMuted() {
 
 export function SoundToggleButton({ className }: { className?: string }) {
   const [muted, setMuted] = useState(false);
-  const Icon = muted ? VolumeX : Volume2;
+  const Icon = muted ? VolumeX : Volume1;
 
   useEffect(() => {
     setMuted(getInitialMuted());

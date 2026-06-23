@@ -1504,18 +1504,21 @@ img {
     transform: scale(1.12) rotate(-4deg);
   }
 
-  .sound-toggle-button {
+  .sound-toggle-button,
+  .music-toggle-button {
     flex-shrink: 0;
     color: #251e51 !important;
   }
 
-  .sound-toggle-button svg {
+  .sound-toggle-button svg,
+  .music-toggle-button svg {
     display: block;
     flex: 0 0 auto;
     margin: auto;
   }
 
-  .sound-toggle-button[aria-pressed="true"] {
+  .sound-toggle-button[aria-pressed="true"],
+  .music-toggle-button[aria-pressed="true"] {
     border-color: rgba(106, 60, 255, 0.24);
     background:
       radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.88), transparent 34%),
@@ -1532,8 +1535,23 @@ img {
     filter: saturate(0.78);
   }
 
+  .music-toggle-button.is-playing {
+    color: #5133ff !important;
+    border-color: rgba(57, 210, 246, 0.28) !important;
+    background:
+      radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.9), transparent 34%),
+      radial-gradient(circle at 78% 18%, rgba(57, 210, 246, 0.28), transparent 38%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(236, 232, 255, 0.84)) !important;
+    box-shadow:
+      0 12px 30px rgba(47, 33, 126, 0.1),
+      0 0 26px rgba(57, 210, 246, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.76) !important;
+  }
+
   .sound-toggle-button:hover svg,
-  .sound-toggle-button:focus-visible svg {
+  .sound-toggle-button:focus-visible svg,
+  .music-toggle-button:hover svg,
+  .music-toggle-button:focus-visible svg {
     transform: scale(1.08);
   }
 
@@ -7602,6 +7620,7 @@ img {
   }
 
   .site-header-motion .sound-toggle-button,
+  .site-header-motion .music-toggle-button,
   .site-header-motion .mobile-menu-button {
     width: 2.8rem;
     min-width: 2.8rem;
@@ -28034,6 +28053,29 @@ body:has(.tone-account) {
   100% { transform: translateY(-50%) rotate(360deg); border-left-color: rgba(243, 191, 76, 0.82); }
 }
 
+@keyframes tv-header-inner-run {
+  0%, 100% {
+    left: var(--marker-pad);
+    top: var(--marker-pad);
+    transform: rotate(0deg) scale(0.9);
+  }
+  24% {
+    left: calc(100% - var(--marker-pad) - var(--marker-size));
+    top: var(--marker-pad);
+    transform: rotate(180deg) scale(1);
+  }
+  50% {
+    left: calc(100% - var(--marker-pad) - var(--marker-size));
+    top: calc(100% - var(--marker-pad) - var(--marker-size));
+    transform: rotate(360deg) scale(0.92);
+  }
+  76% {
+    left: var(--marker-pad);
+    top: calc(100% - var(--marker-pad) - var(--marker-size));
+    transform: rotate(540deg) scale(1);
+  }
+}
+
 .site-header-v2__shell {
   overflow: visible !important;
   border: 0 !important;
@@ -28077,6 +28119,8 @@ body:has(.tone-account) {
   justify-self: start;
   width: min(100%, 18rem);
   min-width: 14.5rem;
+  --marker-pad: 0.72rem;
+  --marker-size: 0.64rem;
   border-radius: 1.45rem 0.9rem 1.72rem 1.08rem !important;
   padding: 0.42rem 2rem 0.42rem 0.48rem !important;
 }
@@ -28084,21 +28128,22 @@ body:has(.tone-account) {
 .site-header-v2__brand::before {
   content: "";
   position: absolute;
-  right: 0.8rem;
-  top: 50%;
-  z-index: 2;
-  width: 0;
-  height: 0;
-  border-bottom: 0.46rem solid transparent;
-  border-left: 0.78rem solid rgba(106, 60, 255, 0.76);
-  border-top: 0.46rem solid transparent;
-  filter: drop-shadow(0 0 12px rgba(57, 210, 246, 0.36));
-  animation: tv-nav-brand-triangle 6.4s linear infinite;
+  left: var(--marker-pad);
+  top: var(--marker-pad);
+  z-index: 4;
+  width: var(--marker-size);
+  height: var(--marker-size);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 0.14rem;
+  background: linear-gradient(135deg, #6a3cff, #39d2f6 58%, #f3bf4c);
+  clip-path: polygon(50% 4%, 96% 90%, 4% 90%);
+  filter: drop-shadow(0 0 10px rgba(57, 210, 246, 0.42));
+  pointer-events: none;
+  animation: tv-header-inner-run 6.8s cubic-bezier(0.62, 0, 0.28, 1) infinite;
 }
 
 .site-header-v2__brand::after,
 .site-header-v2__nav::before,
-.site-header-v2__actions::before,
 .site-mobile-footer-nav::before {
   content: "";
   position: absolute;
@@ -28115,6 +28160,10 @@ body:has(.tone-account) {
   animation: tv-nav-border-spin 7.5s linear infinite;
 }
 
+.site-header-v2__brand::after {
+  display: none !important;
+}
+
 .site-header-v2__brand-aura {
   background:
     radial-gradient(circle, rgba(57, 210, 246, 0.3), transparent 64%),
@@ -28125,25 +28174,35 @@ body:has(.tone-account) {
   justify-self: center;
   gap: 0.18rem !important;
   min-width: min(47vw, 36.5rem);
+  --marker-pad: 0.7rem;
+  --marker-size: 0.58rem;
   border-radius: 1.08rem 2.05rem 1.18rem 2.25rem !important;
   padding: 0.4rem 0.48rem 0.55rem !important;
 }
 
-.site-header-v2__nav::after {
+.site-header-v2__nav::before {
   content: "";
   position: absolute;
-  left: 0;
-  bottom: 0.34rem;
-  z-index: 2;
-  width: 46%;
-  height: 0.24rem;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, transparent, rgba(106, 60, 255, 0.88) 18%, rgba(57, 210, 246, 0.92) 48%, rgba(243, 191, 76, 0.9) 68%, transparent),
-    repeating-linear-gradient(135deg, transparent 0 0.32rem, rgba(255, 255, 255, 0.9) 0.34rem 0.4rem);
-  clip-path: polygon(0 70%, 8% 70%, 12% 18%, 17% 82%, 24% 34%, 31% 74%, 42% 74%, 48% 24%, 55% 76%, 66% 40%, 74% 72%, 100% 72%);
-  filter: drop-shadow(0 0 10px rgba(57, 210, 246, 0.34));
-  animation: tv-nav-signal-run 4.4s cubic-bezier(0.58, 0, 0.22, 1) infinite;
+  inset: auto !important;
+  left: var(--marker-pad);
+  top: var(--marker-pad);
+  z-index: 4;
+  width: var(--marker-size);
+  height: var(--marker-size);
+  padding: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 0.12rem;
+  background: linear-gradient(135deg, #39d2f6, #6a3cff 54%, #ff5eb8);
+  -webkit-mask: none !important;
+  mask: none !important;
+  opacity: 1 !important;
+  box-shadow: 0 0 14px rgba(106, 60, 255, 0.34);
+  pointer-events: none;
+  animation: tv-header-inner-run 7.4s cubic-bezier(0.62, 0, 0.28, 1) infinite;
+}
+
+.site-header-v2__nav::after {
+  display: none !important;
 }
 
 .site-header-v2__nav-link {
@@ -28189,24 +28248,32 @@ body:has(.tone-account) {
 .site-header-v2__actions {
   justify-self: end;
   min-width: 21.5rem;
+  --marker-pad: 0.78rem;
+  --marker-size: 0.58rem;
   align-items: center;
   justify-content: flex-end;
   border-radius: 1.95rem 1.1rem 1.52rem 0.9rem !important;
   padding: 0.44rem !important;
 }
 
+.site-header-v2__actions::before {
+  display: none !important;
+}
+
 .site-header-v2__actions::after {
   content: "";
   position: absolute;
+  left: var(--marker-pad);
+  top: var(--marker-pad);
   z-index: 3;
-  width: 0.62rem;
-  height: 0.62rem;
+  width: var(--marker-size);
+  height: var(--marker-size);
   border: 1px solid rgba(255, 255, 255, 0.86);
-  border-radius: 0.14rem;
+  border-radius: 999px;
   background: linear-gradient(135deg, #f3bf4c, #39d2f6 58%, #6a3cff);
   box-shadow: 0 0 14px rgba(57, 210, 246, 0.38);
   pointer-events: none;
-  animation: tv-nav-action-marker 7.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation: tv-header-inner-run 7.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
 .site-header-v2__search-trigger,
@@ -28299,17 +28366,14 @@ body:has(.tone-account) {
   .site-header-v2__brand {
     min-width: 4.4rem;
     width: 4.6rem;
+    --marker-pad: 0.58rem;
+    --marker-size: 0.48rem;
     padding-right: 1.15rem !important;
   }
 
-  .site-header-v2__brand::before {
-    right: 0.45rem;
-    border-bottom-width: 0.34rem;
-    border-left-width: 0.58rem;
-    border-top-width: 0.34rem;
-  }
-
   .site-header-v2__nav {
+    --marker-pad: 0.58rem;
+    --marker-size: 0.48rem;
     min-width: auto;
   }
 
@@ -28319,6 +28383,8 @@ body:has(.tone-account) {
   }
 
   .site-header-v2__actions {
+    --marker-pad: 0.62rem;
+    --marker-size: 0.5rem;
     min-width: 16.5rem;
   }
 }
@@ -28340,15 +28406,10 @@ body:has(.tone-account) {
   .site-header-v2__brand {
     width: 4.05rem;
     min-width: 4.05rem;
+    --marker-pad: 0.52rem;
+    --marker-size: 0.44rem;
     padding: 0.32rem 1.1rem 0.32rem 0.36rem !important;
     border-radius: 1.2rem 0.78rem 1.45rem 0.9rem !important;
-  }
-
-  .site-header-v2__brand::before {
-    right: 0.44rem;
-    border-bottom-width: 0.3rem;
-    border-left-width: 0.52rem;
-    border-top-width: 0.3rem;
   }
 
   .site-header-v2__mobile-title {
@@ -28356,6 +28417,8 @@ body:has(.tone-account) {
   }
 
   .site-header-v2__actions {
+    --marker-pad: 0.5rem;
+    --marker-size: 0.46rem;
     min-width: 3.9rem;
     padding: 0.28rem !important;
     border-radius: 1.42rem 0.84rem 1.18rem 0.78rem !important;

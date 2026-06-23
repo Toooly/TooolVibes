@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { BrandLogo } from "./brand-logo";
+import { MusicToggleButton } from "../app/music-toggle-button";
 import { SoundToggleButton } from "../app/sound-toggle-button";
 import { DirectoryHeaderSearch } from "../directory/directory-header-search";
 import { GameProfileBar } from "../gamification/game-profile-bar";
@@ -193,8 +194,9 @@ export function SiteHeaderV2() {
                 </kbd>
               </button>
 
-              <div className="site-header-v2__sound hidden md:block">
+              <div className="site-header-v2__sound hidden items-center gap-1.5 md:flex">
                 <SoundToggleButton />
+                <MusicToggleButton />
               </div>
 
               <GameProfileBar className="hidden lg:flex" />
