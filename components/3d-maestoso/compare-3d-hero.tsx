@@ -10,11 +10,11 @@ import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import Link from "next/link";
 
-function ArenaParticles() {
+function ArenaParticles({ count = 300 }: { count?: number }) {
   const meshRef = useRef<THREE.Points>(null);
   const positions = useMemo(() => {
-    const pos = new Float32Array(300 * 3);
-    for (let i = 0; i < 300; i++) {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
       const r = 4 * Math.cbrt(Math.random());
@@ -23,7 +23,7 @@ function ArenaParticles() {
       pos[i * 3 + 2] = r * Math.cos(phi);
     }
     return pos;
-  }, []);
+  }, [count]);
 
   useFrame((_, delta) => {
     if (!meshRef.current) return;
@@ -41,15 +41,16 @@ function ArenaParticles() {
 }
 
 export function Compare3DHero({ featuredTools }: { featuredTools: DirectoryTool[] }) {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   return (
-    <div className="relative flex min-h-[70vh] items-center justify-center overflow-hidden">
+    <div className={`relative flex ${isMobile ? 'min-h-[50vh]' : 'min-h-[70vh]'} items-center justify-center overflow-hidden`}>
       <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, rgba(255,215,64,0.08) 0%, transparent 60%)" }} />
       <div className="absolute inset-0">
-        <Canvas camera={{ position: [0, 0, 7], fov: 55 }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
+        <Canvas camera={{ position: [0, 0, 7], fov: 55 }} dpr={isMobile ? 1 : [1, 1.5]} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
           <ambientLight intensity={0.3} />
           <pointLight position={[5, 5, 5]} intensity={0.6} color="#FFD740" />
           <pointLight position={[-5, -3, 5]} intensity={0.4} color="#FF4081" />
-          <ArenaParticles />
+          <ArenaParticles count={isMobile ? 120 : 300} />
         </Canvas>
       </div>
       <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">

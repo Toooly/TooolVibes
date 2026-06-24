@@ -173,9 +173,12 @@ function ReactorCore({
 /* ─── Main Scene ─── */
 export function VibesReactorScene({
   orbs,
+  isMobile = false,
 }: {
   orbs: ToolOrb[];
+  isMobile?: boolean;
 }) {
+  const visibleOrbs = isMobile ? orbs.slice(0, 4) : orbs;
   return (
     <>
       <ambientLight intensity={0.3} />
@@ -184,13 +187,13 @@ export function VibesReactorScene({
       <pointLight position={[0, 5, -10]} intensity={0.3} color="#FF4081" />
 
       <ReactorCore />
-      {orbs.map((orb, i) => (
+      {visibleOrbs.map((orb, i) => (
         <OrbNode key={orb.name} tool={orb} timeOffset={i * 1.5} />
       ))}
 
-      <ParticleSphere count={300} color="#7C4DFF" size={0.03} spread={8} speed={1} />
-      <ParticleSphere count={150} color="#00E5FF" size={0.02} spread={6} speed={0.5} />
-      <ParticleSphere count={100} color="#FF4081" size={0.015} spread={10} speed={0.3} />
+      <ParticleSphere count={isMobile ? 120 : 300} color="#7C4DFF" size={0.03} spread={8} speed={1} />
+      <ParticleSphere count={isMobile ? 60 : 150} color="#00E5FF" size={0.02} spread={6} speed={0.5} />
+      <ParticleSphere count={isMobile ? 40 : 100} color="#FF4081" size={0.015} spread={10} speed={0.3} />
     </>
   );
 }
@@ -205,15 +208,16 @@ export function VibesReactor({
   className?: string;
   style?: React.CSSProperties;
 }) {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   return (
     <div className={`${className}`} style={{ position: "absolute", inset: 0, ...style }}>
       <Canvas
         camera={{ position: [0, 0, 7], fov: 50 }}
-        dpr={[1, 1.5]}
+        dpr={isMobile ? 1 : [1, 1.5]}
         gl={{ antialias: true, alpha: true }}
         style={{ background: "transparent" }}
       >
-        <VibesReactorScene orbs={orbs} />
+        <VibesReactorScene orbs={orbs} isMobile={isMobile} />
       </Canvas>
     </div>
   );

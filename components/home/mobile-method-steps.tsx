@@ -31,55 +31,51 @@ type MobileMethodStepsProps = {
 export function MobileMethodSteps({ steps }: MobileMethodStepsProps) {
   return (
     <section
-      className="mobile-method-steps relative z-10 px-4 py-16"
+      className="v-method-section relative z-10 overflow-hidden"
       aria-label="Metodo TooolVibes"
     >
-      <div className="mobile-method-steps__header">
-        <span>Metodo</span>
-        <h2>Scopri, confronta, salva</h2>
-        <p>
-          Un percorso chiaro: scopri, confronta, decidi.
-          Senza perdere tempo tra decine di schede uguali.
-        </p>
-      </div>
+      {/* Particle background */}
+      <div className="v-method-particles" aria-hidden="true" />
 
-      <div className="mobile-method-steps__list">
-        {steps.map((step, index) => {
-          const Icon = STEP_ICON_MAP[step.icon];
-          return (
-            <div key={step.label} className="mobile-method-steps__item">
-              <div className="mobile-method-steps__line">
-                <span
-                  className="mobile-method-steps__dot"
-                  style={{ "--step-color": step.color } as CSSProperties}
-                >
-                  {index + 1}
-                </span>
-                {index < steps.length - 1 && (
-                  <span className="mobile-method-steps__connector" />
-                )}
-              </div>
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 md:py-20">
+        <div className="v-method-header text-center mb-10 md:mb-12">
+          <span className="v-method-eyebrow">Metodo</span>
+          <h2 className="v-method-title">Scopri, confronta, salva</h2>
+          <p className="v-method-subtitle">
+            Un percorso chiaro: scopri, confronta, decidi.
+            Senza perdere tempo tra decine di schede uguali.
+          </p>
+        </div>
 
-              <div className="mobile-method-steps__content">
-                <div className="mobile-method-steps__icon">
-                  <Icon aria-hidden="true" size={18} />
+        <div className="v-method-grid">
+          {steps.map((step, index) => {
+            const Icon = STEP_ICON_MAP[step.icon];
+            return (
+              <div
+                key={step.label}
+                className="v-method-card"
+                style={{ "--step-color": step.color } as CSSProperties}
+              >
+                <div className="v-method-card-glow" aria-hidden="true" />
+                <div className="v-method-card-inner">
+                  <div className="v-method-card-top">
+                    <span className="v-method-number">{index + 1}</span>
+                    <div className="v-method-icon">
+                      <Icon aria-hidden="true" size={22} />
+                    </div>
+                  </div>
+                  <span className="v-method-label">{step.label}</span>
+                  <h3 className="v-method-card-title">{step.title}</h3>
+                  <p className="v-method-card-desc">{step.description}</p>
+                  <Link href={step.href} className="v-method-link">
+                    Esplora
+                    <ArrowRight aria-hidden="true" size={14} />
+                  </Link>
                 </div>
-                <span className="mobile-method-steps__label">{step.label}</span>
-                <h3 className="mobile-method-steps__title">{step.title}</h3>
-                <p className="mobile-method-steps__description">
-                  {step.description}
-                </p>
-                <Link
-                  href={step.href}
-                  className="mobile-method-steps__link"
-                >
-                  Esplora
-                  <ArrowRight aria-hidden="true" size={12} />
-                </Link>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );

@@ -26,7 +26,7 @@ export function Home3DHero({
   }));
 
   return (
-    <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden">
+    <section className="relative flex min-h-[60vh] sm:min-h-[85vh] items-center justify-center overflow-hidden">
       <VibesReactor orbs={orbs} />
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
         <motion.p
@@ -38,7 +38,7 @@ export function Home3DHero({
           Sistema TooolVibes
         </motion.p>
         <motion.h1
-          className="v-text-gradient-purple text-4xl font-bold leading-tight sm:text-5xl md:text-6xl lg:text-7xl"
+          className="v-text-gradient-purple text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}

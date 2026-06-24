@@ -32,29 +32,23 @@ type MobileHeroSolarProps = {
 };
 
 export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
-  const orbitRadius = 130;
-  const duration = 48;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  const orbitRadius = isMobile ? 80 : 130;
+  const duration = isMobile ? 32 : 48;
 
   return (
     <section
-      className="mobile-hero-solar relative z-10 min-h-[100svh] overflow-hidden px-4 pt-20 pb-32"
+      className="v-hero-solar-section relative z-10 overflow-hidden px-4 py-16 md:py-24"
       aria-label="Sistema TooolVibes"
     >
-      {/* HUD */}
-      <div className="mobile-hero-solar__hud" data-text-zone="true">
-        <p>Sistema TooolVibes</p>
-        <h1>Scegli tool AI validi senza attraversare il rumore.</h1>
-        <span>
-          TooolVibes seleziona e confronta tool AI e SaaS utili.
-          Nessuna vetrina infinita: solo nodi curati da esplorare, salvare e provare.
-        </span>
-      </div>
+      {/* Dark ambient glow */}
+      <div className="v-hero-solar-ambient" aria-hidden="true" />
 
-      {/* Orbit System */}
-      <div className="mobile-hero-solar__system" aria-label="Nodi interattivi">
+      {/* Orbit System — centered */}
+      <div className="v-hero-solar-system" aria-label="Nodi interattivi">
         {/* Single ring */}
         <span
-          className="catalog-orbit-ring"
+          className="catalog-orbit-ring v-hero-solar-ring"
           style={{
             "--ring-radius": `${orbitRadius}px`,
             "--ring-width": `${orbitRadius * 2}px`,
@@ -64,7 +58,7 @@ export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
         />
 
         {/* Brand core */}
-        <div className="mobile-hero-solar__brand-core" aria-hidden="true">
+        <div className="mobile-hero-solar__brand-core v-hero-solar-core" aria-hidden="true">
           <span className="mobile-hero-solar__brand-aura" />
           <span className="mobile-hero-solar__brand-ring" />
           <Image
@@ -89,14 +83,14 @@ export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
             "--orbit-duration": `${duration}s`,
             "--orbit-delay": `${index * -9.6}s`,
             "--node-color": route.color,
-            "--node-size": "4.2rem",
+            "--node-size": isMobile ? '3rem' : '4.2rem',
           } as CSSProperties;
 
           return (
             <Link
               key={route.id}
               href={route.href}
-              className="catalog-orbit-node home-orbit-node home-orbit-node--route mobile-hero-solar__node"
+              className="catalog-orbit-node home-orbit-node home-orbit-node--route mobile-hero-solar__node v-hero-solar-node"
               style={nodeStyle}
               aria-label={route.label}
             >

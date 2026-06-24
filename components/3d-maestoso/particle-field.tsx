@@ -35,12 +35,13 @@ function ParticleCloud({ count, color, size, spread }: { count: number; color: s
 }
 
 export function ParticleField({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   return (
-    <div className={`${className}`} style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", ...style }}>
-      <Canvas camera={{ position: [0, 0, 10], fov: 60 }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
-        <ParticleCloud count={400} color="#7C4DFF" size={0.025} spread={15} />
-        <ParticleCloud count={200} color="#00E5FF" size={0.018} spread={12} />
-        <ParticleCloud count={100} color="#FF4081" size={0.012} spread={18} />
+    <div className={`${className}`} style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", touchAction: 'none', ...style }}>
+      <Canvas camera={{ position: [0, 0, 10], fov: 60 }} dpr={isMobile ? 1 : [1, 1.5]} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
+        <ParticleCloud count={isMobile ? 150 : 400} color="#7C4DFF" size={0.025} spread={15} />
+        <ParticleCloud count={isMobile ? 80 : 200} color="#00E5FF" size={0.018} spread={12} />
+        <ParticleCloud count={isMobile ? 40 : 100} color="#FF4081" size={0.012} spread={18} />
       </Canvas>
     </div>
   );

@@ -55,14 +55,10 @@ function NavLink({
   icon: React.ComponentType<{ className?: string; size?: number }>;
   isActive: boolean;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <Link
       href={href}
       className={`site-header-v2__nav-link group${isActive ? " is-active" : ""}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       data-sonic-action="nav"
       aria-current={isActive ? "page" : undefined}
     >
@@ -71,12 +67,14 @@ function NavLink({
         <Icon
           size={16}
           className={`site-header-v2__nav-icon transition-colors duration-200 ${
-            isActive ? "text-[#6a3cff]" : isHovered ? "text-[#39d2f6]" : "text-[#4f4970]"
+            isActive ? "text-[#7C4DFF]" : "text-[#B388FF]"
           }`}
         />
         <span
           className={`site-header-v2__nav-label text-sm font-medium transition-colors duration-200 ${
-            isActive ? "text-[#6a3cff]" : isHovered ? "text-[#120d2f]" : "text-[#4f4970]"
+            isActive
+              ? "text-[#F0EFFF]"
+              : "text-[#B388FF]"
           }`}
         >
           {label}

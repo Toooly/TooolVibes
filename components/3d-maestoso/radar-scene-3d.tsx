@@ -13,12 +13,12 @@ export type RadarSignal = {
 };
 
 /* ─── Radar grid ─── */
-function RadarGrid({ rings = 4 }: { rings?: number }) {
+function RadarGrid({ rings = 4, segments = 64 }: { rings?: number; segments?: number }) {
   const lines = useMemo(() => {
     const pts: number[] = [];
     for (let r = 1; r <= rings; r++) {
-      for (let i = 0; i <= 64; i++) {
-        const a = (i / 64) * Math.PI * 2;
+      for (let i = 0; i <= segments; i++) {
+        const a = (i / segments) * Math.PI * 2;
         pts.push(r * Math.cos(a), r * Math.sin(a), 0);
       }
     }
@@ -27,7 +27,7 @@ function RadarGrid({ rings = 4 }: { rings?: number }) {
       pts.push(0, 0, 0, rings * Math.cos(a), rings * Math.sin(a), 0);
     }
     return new Float32Array(pts);
-  }, [rings]);
+  }, [rings, segments]);
 
   return (
     <lineSegments>
@@ -82,9 +82,11 @@ function SweepBeam() {
 function SignalNode({
   signal,
   timeOffset,
+  isMobile = false,
 }: {
   signal: RadarSignal;
   timeOffset: number;
+  isMobile?: boolean;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
@@ -128,7 +130,7 @@ function SignalNode({
   return (
     <group position={[x, 0, 0]}>
       <mesh ref={glowRef} position={[0, y, 0]}>
-        <sphereGeometry args={[0.35, 32, 32]} />
+        <sphereGeometry args={[0.35, isMobile ? 16 : 32, isMobile ? 16 : 32]} />
         <meshBasicMaterial
           color={signal.color}
           transparent
@@ -138,7 +140,7 @@ function SignalNode({
         />
       </mesh>
       <mesh ref={meshRef} position={[0, y, 0]}>
-        <sphereGeometry args={[0.15, 32, 32]} />
+        <sphereGeometry args={[0.15, isMobile ? 16 : 32, isMobile ? 16 : 32]} />
         <meshStandardMaterial
           color={signal.color}
           emissive={signal.color}
@@ -172,10 +174,11 @@ function CenterHub() {
 }
 
 /* ─── Scene ─── */
-export function RadarScene({ signals }: { signals: RadarSignal[] }) {
+export function RadarScene({ signals, isMobile = false }: { signals: RadarSignal[]; isMobile?: boolean }) {
   const radarParticles = useMemo(() => {
-    const pos = new Float32Array(200 * 3);
-    for (let i = 0; i < 200; i++) {
+    const count = isMobile ? 80 : 200;
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
       const a = Math.random() * Math.PI * 2;
       const r = 0.5 + Math.random() * 3.5;
       pos[i * 3] = r * Math.cos(a);
@@ -183,7 +186,7 @@ export function RadarScene({ signals }: { signals: RadarSignal[] }) {
       pos[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
     }
     return pos;
-  }, []);
+  }, [isMobile]);
 
   return (
     <>
@@ -191,12 +194,12 @@ export function RadarScene({ signals }: { signals: RadarSignal[] }) {
       <pointLight position={[0, 0, 8]} intensity={0.6} color="#7C4DFF" />
       <pointLight position={[0, 0, -4]} intensity={0.3} color="#00E5FF" />
 
-      <RadarGrid rings={4} />
+      <RadarGrid rings={isMobile ? 3 : 4} segments={isMobile ? 32 : 64} />
       <SweepBeam />
       <CenterHub />
 
       {signals.map((s, i) => (
-        <SignalNode key={s.name} signal={s} timeOffset={i * 0.5} />
+        <SignalNode key={s.name} signal={s} timeOffset={i * 0.5} isMobile={isMobile} />
       ))}
 
       {/* Particelle radar */}
@@ -223,20 +226,23 @@ export function RadarScene3D({
   signals,
   className = "",
   style,
+  isMobile,
 }: {
   signals: RadarSignal[];
   className?: string;
   style?: React.CSSProperties;
+  isMobile?: boolean;
 }) {
+  const isMobileDetected = isMobile ?? (typeof window !== 'undefined' && window.innerWidth < 768);
   return (
     <div className={`${className}`} style={{ position: "absolute", inset: 0, ...style }}>
       <Canvas
         camera={{ position: [0, 0, 8], fov: 50 }}
-        dpr={[1, 1.5]}
+        dpr={isMobileDetected ? 1 : [1, 1.5]}
         gl={{ antialias: true, alpha: true }}
         style={{ background: "transparent" }}
       >
-        <RadarScene signals={signals} />
+        <RadarScene signals={signals} isMobile={isMobileDetected} />
       </Canvas>
     </div>
   );
