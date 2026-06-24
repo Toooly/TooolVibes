@@ -5,6 +5,8 @@ import { VibesReactor } from "./vibes-reactor";
 import { PremiumLink } from "@/components/ui/premium";
 import { siteConfig } from "@/lib/config/site";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export function Home3DHero({
   tools,
@@ -62,9 +64,12 @@ export function Home3DHero({
           <PremiumLink href="/archivio" size="lg">
             Esplora catalogo
           </PremiumLink>
-          <PremiumLink href="/radar" tone="secondary" size="lg">
+          <Link href="/radar" className="v-btn-radar-live">
+            <span className="v-btn-radar-live__dot" aria-hidden="true" />
+            <span className="v-btn-radar-live__glow" aria-hidden="true" />
             Radar live
-          </PremiumLink>
+            <ArrowRight size={16} />
+          </Link>
         </motion.div>
       </div>
     </section>

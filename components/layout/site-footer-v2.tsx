@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { BrandLogo } from "./brand-logo";
 import {
   Sparkles,
@@ -34,28 +33,21 @@ const footerLinks = {
   ],
 };
 
-type FooterLinkProps = {
+function FooterLink({ href, label, icon: Icon }: {
   href: string;
   label: string;
   icon?: React.ComponentType<{ className?: string; size?: number }>;
-  light?: boolean;
-};
-
-function FooterLink({ href, label, icon: Icon, light = false }: FooterLinkProps) {
+}) {
   return (
     <Link
       href={href}
-      className={`group flex items-center gap-2 text-sm transition-colors duration-200 ${
-        light ? "text-[#f5f0ff] hover:text-white" : "text-[#4f4970] hover:text-[#6a3cff]"
-      }`}
+      className="group flex items-center gap-2 text-sm transition-colors duration-200 text-[#9E99B8] hover:text-[#B388FF]"
       data-sonic-action="nav"
     >
       {Icon && (
         <Icon
           size={14}
-          className={`opacity-50 transition-opacity group-hover:opacity-100 ${
-            light ? "text-[#ff7ac8]" : "text-[#6a3cff]"
-          }`}
+          className="text-[#B388FF]/60 opacity-70 transition-opacity group-hover:opacity-100"
         />
       )}
       <span>{label}</span>
@@ -68,25 +60,8 @@ function FooterLink({ href, label, icon: Icon, light = false }: FooterLinkProps)
 }
 
 export function SiteFooterV2() {
-  const pathname = usePathname();
-  const darkFooter =
-    pathname?.startsWith("/product-hunt") ||
-    pathname?.startsWith("/radar") ||
-    pathname?.startsWith("/shortlist") ||
-    pathname?.startsWith("/compare");
-
-  const headingClass = darkFooter
-    ? "mb-4 text-xs font-semibold uppercase tracking-widest text-violet-100"
-    : "mb-4 text-xs font-semibold uppercase tracking-widest text-[#2d255d]";
-
   return (
-    <footer
-      className={`relative mt-auto border-t ${
-        darkFooter
-          ? "site-footer-v2--dark border-white/10 bg-[#080411]"
-          : "border-[rgba(106,60,255,0.08)]"
-      }`}
-    >
+    <footer className="site-footer-v2 relative mt-auto border-t border-[rgba(124,77,255,0.08)] bg-[#06060E]">
       <div className="relative mx-auto max-w-[1440px] px-6 py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
@@ -105,11 +80,7 @@ export function SiteFooterV2() {
                 TOOOLVIBES
               </span>
             </Link>
-            <p
-              className={`mb-5 max-w-xs text-sm leading-relaxed ${
-                darkFooter ? "text-[#eee8ff]" : "text-[#4f4970]"
-              }`}
-            >
+            <p className="mb-5 max-w-xs text-sm leading-relaxed text-[#9E99B8]">
               Il sistema per scoprire tool AI, SaaS, no-code e vibe coding.
               Trova, confronta e costruisci la lista giusta per te.
             </p>
@@ -120,11 +91,7 @@ export function SiteFooterV2() {
                 <a
                   key={social.label}
                   href={social.href}
-                  className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all ${
-                    darkFooter
-                      ? "border-[#ff7ac8]/35 bg-[#ff5eb8]/14 text-[#ffd8ef] shadow-[0_0_22px_rgba(255,94,184,0.12)] hover:border-[#ff9bd8] hover:bg-[#ff5eb8]/24 hover:text-white"
-                      : "border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.5)] text-[#4f4970] hover:border-[#6a3cff] hover:bg-[rgba(106,60,255,0.05)] hover:text-[#6a3cff]"
-                  }`}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[rgba(124,77,255,0.15)] bg-[rgba(124,77,255,0.08)] text-[#B388FF] transition-all hover:border-[rgba(124,77,255,0.3)] hover:bg-[rgba(124,77,255,0.15)] hover:text-white hover:shadow-[0_0_16px_rgba(124,77,255,0.2)]"
                   aria-label={social.label}
                 >
                   <social.icon size={18} />
@@ -134,35 +101,31 @@ export function SiteFooterV2() {
           </div>
 
           <div>
-            <h3 className={headingClass}>Esplora</h3>
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#B388FF]">Esplora</h3>
             <div className="flex flex-col gap-2.5">
               {footerLinks.explore.map((link) => (
-                <FooterLink key={link.label} {...link} light={darkFooter} />
+                <FooterLink key={link.label} {...link} />
               ))}
             </div>
           </div>
 
           <div>
-            <h3 className={headingClass}>Community</h3>
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#B388FF]">Community</h3>
             <div className="flex flex-col gap-2.5">
               {footerLinks.community.map((link) => (
-                <FooterLink key={link.label} {...link} light={darkFooter} />
+                <FooterLink key={link.label} {...link} />
               ))}
             </div>
           </div>
 
           <div>
-            <h3 className={headingClass}>Resta aggiornato</h3>
-            <p className={`mb-4 text-sm ${darkFooter ? "text-[#eee8ff]" : "text-[#4f4970]"}`}>
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#B388FF]">Resta aggiornato</h3>
+            <p className="mb-4 text-sm text-[#9E99B8]">
               La newsletter non è ancora attiva. Per aggiornamenti o segnalazioni, scrivici direttamente.
             </p>
             <a
               href="mailto:hello@tooolvibes.com"
-              className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-all ${
-                darkFooter
-                  ? "border-[#ff7ac8]/35 bg-[#ff5eb8]/14 text-[#ffd8ef] hover:border-[#ff9bd8] hover:bg-[#ff5eb8]/24 hover:text-white"
-                  : "border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.5)] text-[#4f4970] hover:border-[#6a3cff] hover:bg-[rgba(106,60,255,0.05)] hover:text-[#6a3cff]"
-              }`}
+              className="inline-flex items-center gap-2 rounded-xl border border-[rgba(124,77,255,0.15)] bg-[rgba(124,77,255,0.08)] px-4 py-2.5 text-sm font-medium text-[#B388FF] transition-all hover:border-[rgba(124,77,255,0.3)] hover:bg-[rgba(124,77,255,0.15)] hover:text-white hover:shadow-[0_0_16px_rgba(124,77,255,0.15)]"
             >
               <Mail size={16} />
               Scrivici
@@ -170,12 +133,8 @@ export function SiteFooterV2() {
           </div>
         </div>
 
-        <div
-          className={`mt-10 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row ${
-            darkFooter ? "border-white/10" : "border-[rgba(106,60,255,0.06)]"
-          }`}
-        >
-          <p className={`text-xs ${darkFooter ? "text-[#d8cfff]" : "text-[#4f4970]"}`}>
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[rgba(124,77,255,0.08)] pt-8 md:flex-row">
+          <p className="text-xs text-[#9E99B8]">
             &copy; {new Date().getFullYear()} TooolVibes. Tutti i diritti riservati.
           </p>
           <div className="flex items-center gap-6">
@@ -183,7 +142,7 @@ export function SiteFooterV2() {
               <Link
                 key={link.label}
                 href={link.href}
-                className={`text-xs ${darkFooter ? "text-[#e6ddff]/70" : "text-[#4f4970]/70"}`}
+                className="text-xs text-[#9E99B8]/80 hover:text-[#B388FF] transition-colors"
               >
                 {link.label}
               </Link>

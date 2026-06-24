@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import NumberFlow from "@number-flow/react";
 import { Swords, Trophy, RotateCcw, AlertCircle } from "lucide-react";
@@ -11,6 +11,13 @@ import type { BattleResult, BattleTool } from "@/lib/gamification/battle-engine"
 import { useArenaBattle } from "@/lib/gamification/hooks/use-arena-battle";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import type { ArenaBattleMode } from "@/lib/gamification/types";
+import type { FighterState } from "@/components/3d-maestoso/arena-fighter";
+
+const ArenaScene3D = lazy(() =>
+  import("@/components/3d-maestoso/arena-scene-3d").then((mod) => ({
+    default: mod.ArenaScene3D,
+  }))
+);
 
 const MINIMUM_FIGHT_DURATION_MS = 2000;
 
@@ -39,6 +46,37 @@ function triggerVictoryConfetti() {
   frame();
 }
 
+function getFighterState(
+  status: "idle" | "fighting" | "done" | "error",
+  toolSlug: string,
+  winnerSlug?: string
+): FighterState {
+  if (status === "fighting") return "combat";
+  if (status === "done") {
+    if (toolSlug === winnerSlug) return "victory";
+    return "defeat";
+  }
+  return "idle";
+}
+
+function getFighterColors(tool: BattleTool) {
+  // Try to extract colors from tool data or generate from name
+  const anyTool = tool as BattleTool & { accentFrom?: string; accentTo?: string };
+  if (anyTool.accentFrom && anyTool.accentTo) {
+    return { primary: anyTool.accentFrom, secondary: anyTool.accentTo };
+  }
+  // Generate from name hash
+  let h = 0;
+  const name = tool.name ?? tool.slug;
+  for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
+  const hue1 = Math.abs(h % 360);
+  const hue2 = (hue1 + 40) % 360;
+  return {
+    primary: `hsl(${hue1} 70% 45%)`,
+    secondary: `hsl(${hue2} 80% 55%)`,
+  };
+}
+
 export function ArenaBattleStage({
   tools,
   mode,
@@ -53,12 +91,43 @@ export function ArenaBattleStage({
   const reducedMotion = useReducedMotion();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isMountedRef = useRef(true);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const toolNameBySlug = useMemo(() => {
     const map = new Map<string, string>();
     for (const t of tools) map.set(t.slug, t.name ?? t.slug);
     return map;
   }, [tools]);
+
+  const fighterData = useMemo(() => {
+    const first = tools[0];
+    const second = tools[1];
+    if (!first || !second) return null;
+    const aColors = getFighterColors(first);
+    const bColors = getFighterColors(second);
+    return {
+      a: {
+        name: first.name ?? first.slug,
+        primaryColor: aColors.primary,
+        secondaryColor: aColors.secondary,
+        state: getFighterState(status, first.slug, result?.winnerSlug) as FighterState,
+        isWinner: status === "done" && result?.winnerSlug === first.slug,
+        isDefeated: status === "done" && result?.winnerSlug !== first.slug,
+      },
+      b: {
+        name: second.name ?? second.slug,
+        primaryColor: bColors.primary,
+        secondaryColor: bColors.secondary,
+        state: getFighterState(status, second.slug, result?.winnerSlug) as FighterState,
+        isWinner: status === "done" && result?.winnerSlug === second.slug,
+        isDefeated: status === "done" && result?.winnerSlug !== second.slug,
+      },
+    };
+  }, [tools, status, result]);
 
   useEffect(() => {
     return () => {
@@ -130,6 +199,8 @@ export function ArenaBattleStage({
 
   const readableName = (slug: string) => toolNameBySlug.get(slug) ?? slug;
 
+  const show3D = isClient && tools.length >= 2 && !reducedMotion && fighterData;
+
   return (
     <section className="arena-battle-stage">
       <div
@@ -146,6 +217,26 @@ export function ArenaBattleStage({
         </span>
         <h3 className="text-lg font-semibold text-[var(--foreground)]">Confronto</h3>
       </header>
+
+      {/* 3D Arena Scene */}
+      {show3D ? (
+        <div className="arena-3d-wrapper">
+          <Suspense
+            fallback={
+              <div className="arena-3d-fallback">
+                <Swords className="size-8 animate-pulse text-[var(--accent)]" />
+                <p className="mt-2 text-sm text-[var(--muted)]">Caricamento arena...</p>
+              </div>
+            }
+          >
+            <ArenaScene3D
+              fighterA={fighterData.a}
+              fighterB={fighterData.b}
+              impactFlash={impactFlash}
+            />
+          </Suspense>
+        </div>
+      ) : null}
 
       <AnimatePresence mode="wait">
         {status === "idle" && (
