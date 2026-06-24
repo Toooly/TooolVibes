@@ -1,0 +1,644 @@
+/* ─── TOOOLVIBES 3D MAESTOSO — Design System Dark Premium ─── */
+
+:root {
+  /* Void palette */
+  --v-void: #06060E;
+  --v-void-deep: #03030A;
+  --v-midnight: #0A0A18;
+  --v-nebula: #12122A;
+  --v-surface: #1A1A33;
+  --v-surface-raised: #24244A;
+
+  /* Glow accents */
+  --v-purple: #7C4DFF;
+  --v-purple-soft: #B388FF;
+  --v-cyan: #00E5FF;
+  --v-cyan-soft: #84FFFF;
+  --v-indigo: #536DFE;
+  --v-pink: #FF4081;
+  --v-amber: #FFD740;
+  --v-rose: #FF5252;
+  --v-teal: #64FFDA;
+
+  /* Text */
+  --v-text: #F0EFFF;
+  --v-text-muted: #9E99B8;
+  --v-text-dim: #6B6690;
+
+  /* Gradients */
+  --v-gradient-purple-cyan: linear-gradient(135deg, #7C4DFF 0%, #00E5FF 100%);
+  --v-gradient-amber-pink: linear-gradient(135deg, #FFD740 0%, #FF4081 100%);
+  --v-gradient-void-nebula: linear-gradient(180deg, #06060E 0%, #12122A 100%);
+  --v-gradient-glow-purple: radial-gradient(circle, rgba(124,77,255,0.35) 0%, transparent 70%);
+  --v-gradient-glow-cyan: radial-gradient(circle, rgba(0,229,255,0.25) 0%, transparent 70%);
+
+  /* Shadows */
+  --v-shadow-glow-purple: 0 0 40px rgba(124,77,255,0.3), 0 0 80px rgba(124,77,255,0.1);
+  --v-shadow-glow-cyan: 0 0 40px rgba(0,229,255,0.25), 0 0 80px rgba(0,229,255,0.08);
+  --v-shadow-glow-amber: 0 0 40px rgba(255,215,64,0.25), 0 0 80px rgba(255,215,64,0.08);
+  --v-shadow-card: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,77,255,0.08);
+  --v-shadow-card-hover: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,77,255,0.2), 0 0 40px rgba(124,77,255,0.15);
+
+  /* Glass */
+  --v-glass: rgba(10,10,24,0.65);
+  --v-glass-border: rgba(124,77,255,0.12);
+  --v-glass-hover: rgba(18,18,42,0.8);
+
+  /* Spacing / radius */
+  --v-radius: 1rem;
+  --v-radius-lg: 1.5rem;
+  --v-radius-xl: 2rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--v-void);
+  color: var(--v-text);
+}
+
+::selection {
+  background: rgba(124,77,255,0.4);
+  color: #fff;
+}
+
+/* ─── Text gradients ─── */
+.v-text-gradient-purple {
+  background: var(--v-gradient-purple-cyan);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.v-text-gradient-amber {
+  background: var(--v-gradient-amber-pink);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.v-text-gradient-rose {
+  background: linear-gradient(135deg, #FF5252 0%, #FF4081 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Glow borders ─── */
+.v-glow-border-purple {
+  border: 1px solid rgba(124,77,255,0.15);
+  box-shadow: inset 0 0 20px rgba(124,77,255,0.04), 0 0 0 1px rgba(124,77,255,0.08);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.v-glow-border-purple:hover {
+  border-color: rgba(124,77,255,0.35);
+  box-shadow: inset 0 0 30px rgba(124,77,255,0.08), 0 0 0 1px rgba(124,77,255,0.18), var(--v-shadow-glow-purple);
+}
+.v-glow-border-cyan {
+  border: 1px solid rgba(0,229,255,0.15);
+  box-shadow: inset 0 0 20px rgba(0,229,255,0.04), 0 0 0 1px rgba(0,229,255,0.08);
+}
+.v-glow-border-cyan:hover {
+  border-color: rgba(0,229,255,0.35);
+  box-shadow: inset 0 0 30px rgba(0,229,255,0.08), 0 0 0 1px rgba(0,229,255,0.18), var(--v-shadow-glow-cyan);
+}
+.v-glow-border-amber {
+  border: 1px solid rgba(255,215,64,0.15);
+  box-shadow: inset 0 0 20px rgba(255,215,64,0.04), 0 0 0 1px rgba(255,215,64,0.08);
+}
+.v-glow-border-amber:hover {
+  border-color: rgba(255,215,64,0.35);
+  box-shadow: inset 0 0 30px rgba(255,215,64,0.08), 0 0 0 1px rgba(255,215,64,0.18), var(--v-shadow-glow-amber);
+}
+
+/* ─── Glass morphism ─── */
+.v-glass {
+  background: var(--v-glass);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid var(--v-glass-border);
+}
+.v-glass-strong {
+  background: rgba(6,6,14,0.85);
+  backdrop-filter: blur(40px) saturate(1.4);
+  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+  border: 1px solid rgba(124,77,255,0.15);
+}
+
+/* ─── Card 3D ─── */
+.v-card-3d {
+  background: linear-gradient(145deg, rgba(26,26,51,0.9) 0%, rgba(10,10,24,0.95) 100%);
+  border: 1px solid rgba(124,77,255,0.1);
+  border-radius: var(--v-radius-lg);
+  box-shadow: var(--v-shadow-card);
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease, border-color 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+.v-card-3d:hover {
+  transform: translateY(-4px) rotateX(2deg) rotateY(2deg);
+  box-shadow: var(--v-shadow-card-hover);
+  border-color: rgba(124,77,255,0.25);
+}
+
+/* ─── Button 3D ─── */
+.v-btn-3d {
+  position: relative;
+  background: linear-gradient(135deg, rgba(124,77,255,0.15) 0%, rgba(0,229,255,0.1) 100%);
+  border: 1px solid rgba(124,77,255,0.2);
+  color: var(--v-text);
+  border-radius: var(--v-radius);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+.v-btn-3d::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(124,77,255,0.3) 0%, rgba(0,229,255,0.2) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.v-btn-3d:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(124,77,255,0.4);
+  box-shadow: 0 8px 32px rgba(124,77,255,0.2), 0 0 0 1px rgba(124,77,255,0.15);
+}
+.v-btn-3d:hover::before { opacity: 1; }
+.v-btn-3d:active { transform: translateY(0) scale(0.98); }
+
+.v-btn-primary-3d {
+  background: linear-gradient(135deg, #7C4DFF 0%, #536DFE 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 24px rgba(124,77,255,0.35);
+}
+.v-btn-primary-3d:hover {
+  box-shadow: 0 8px 40px rgba(124,77,255,0.5), 0 0 60px rgba(124,77,255,0.2);
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* ─── Animations ─── */
+@keyframes v-pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(124,77,255,0.2); }
+  50% { box-shadow: 0 0 40px rgba(124,77,255,0.4), 0 0 80px rgba(124,77,255,0.1); }
+}
+@keyframes v-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes v-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes v-radar-sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes v-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes v-glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@keyframes v-star-twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.v-animate-pulse-glow {
+  animation: v-pulse-glow 3s ease-in-out infinite;
+}
+.v-animate-float {
+  animation: v-float 4s ease-in-out infinite;
+}
+.v-animate-orbit {
+  animation: v-orbit 20s linear infinite;
+}
+.v-animate-radar-sweep {
+  animation: v-radar-sweep 4s linear infinite;
+}
+.v-animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(124,77,255,0.1) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: v-shimmer 2s infinite;
+}
+
+/* ─── Perspective utilities ─── */
+.v-perspective { perspective: 1200px; }
+.v-preserve-3d { transform-style: preserve-3d; }
+.v-backface-hidden { backface-visibility: hidden; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--v-void); }
+::-webkit-scrollbar-thumb { background: rgba(124,77,255,0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(124,77,255,0.5); }
+
+/* ─── Override existing components for dark 3D ─── */
+/* Header dark glass */
+.site-header-v2 .site-header-v2__shell,
+.site-header-v2.is-elevated .site-header-v2__shell {
+  background: rgba(6,6,14,0.82) !important;
+  border-color: rgba(124,77,255,0.12) !important;
+  backdrop-filter: blur(20px) saturate(1.2) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.2) !important;
+}
+.site-header-v2__brand-word,
+.site-header-v2__mobile-title,
+.site-header-v2__nav-label,
+.site-header-v2__mobile-link {
+  color: #F0EFFF !important;
+}
+.site-header-v2__nav-icon {
+  color: #9E99B8 !important;
+}
+.site-header-v2__nav-link.is-active .site-header-v2__nav-label,
+.site-header-v2__nav-link.is-active .site-header-v2__nav-icon {
+  color: #7C4DFF !important;
+}
+.site-header-v2__menu-button {
+  color: #F0EFFF !important;
+}
+.site-header-v2__search-trigger {
+  color: #9E99B8 !important;
+}
+.site-header-v2__search-trigger:hover {
+  color: #7C4DFF !important;
+}
+.site-header-v2__kbd {
+  border-color: rgba(124,77,255,0.2) !important;
+  background: rgba(124,77,255,0.1) !important;
+  color: #9E99B8 !important;
+}
+.site-header-v2__mobile-panel {
+  background: rgba(6,6,14,0.9) !important;
+  border-color: rgba(124,77,255,0.12) !important;
+}
+.site-header-v2__mobile-close {
+  background: rgba(6,6,14,0.8) !important;
+  border-color: rgba(124,77,255,0.15) !important;
+  color: #F0EFFF !important;
+}
+.site-header-v2__mobile-eyebrow {
+  color: #9E99B8 !important;
+}
+.site-header-v2__mobile-link.is-active {
+  background: linear-gradient(90deg, rgba(124,77,255,0.1) 0%, rgba(0,229,255,0.05) 100%) !important;
+  color: #7C4DFF !important;
+}
+
+/* Footer dark */
+.site-footer-v2 {
+  background: var(--v-void) !important;
+  border-color: rgba(124,77,255,0.08) !important;
+}
+.site-footer-v2--dark {
+  background: var(--v-void) !important;
+}
+.site-footer-v2 p,
+.site-footer-v2 a,
+.site-footer-v2 span {
+  color: #F0EFFF !important;
+}
+.site-footer-v2 a:hover {
+  color: #7C4DFF !important;
+}
+.site-footer-v2 h3 {
+  color: #B388FF !important;
+}
+.site-footer-v2 .border-t {
+  border-color: rgba(124,77,255,0.08) !important;
+}
+
+/* Mobile menu panel dark */
+.mobile-menu-panel {
+  background: rgba(6,6,14,0.95) !important;
+  border-color: rgba(124,77,255,0.12) !important;
+}
+
+/* Bottom nav dark */
+.mobile-bottom-nav {
+  background: rgba(6,6,14,0.9) !important;
+  border-color: rgba(124,77,255,0.1) !important;
+  backdrop-filter: blur(20px) !important;
+}
+.mobile-bottom-nav a,
+.mobile-bottom-nav span {
+  color: #9E99B8 !important;
+}
+.mobile-bottom-nav a.is-active,
+.mobile-bottom-nav a.is-active span {
+  color: #7C4DFF !important;
+}
+
+/* Existing cards on dark */
+.desktop-vibe-tool-card,
+.desktop-vibe-focus-card,
+.desktop-vibe-signal-card {
+  background: linear-gradient(145deg, rgba(26,26,51,0.9) 0%, rgba(10,10,24,0.95) 100%) !important;
+  border: 1px solid rgba(124,77,255,0.1) !important;
+  color: #F0EFFF !important;
+}
+.desktop-vibe-tool-card:hover,
+.desktop-vibe-focus-card:hover {
+  border-color: rgba(124,77,255,0.25) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,77,255,0.2) !important;
+}
+.desktop-vibe-tool-card h2,
+.desktop-vibe-focus-card strong,
+.desktop-vibe-signal-card h2 {
+  color: #F0EFFF !important;
+}
+.desktop-vibe-tool-card p,
+.desktop-vibe-focus-card p,
+.desktop-vibe-signal-card span {
+  color: #9E99B8 !important;
+}
+
+/* Compare board dark */
+.compare-board,
+.unified-compare-board {
+  background: rgba(10,10,24,0.8) !important;
+  border-color: rgba(124,77,255,0.1) !important;
+}
+
+/* Shortlist board dark */
+.shortlist-board {
+  background: rgba(10,10,24,0.8) !important;
+  border-color: rgba(124,77,255,0.1) !important;
+}
+
+/* Search overlay dark */
+.site-header-v2__mobile-backdrop {
+  background: rgba(6,6,14,0.6) !important;
+}
+.site-header-v2__mobile-backdrop > div {
+  background: rgba(10,10,24,0.95) !important;
+  border-color: rgba(124,77,255,0.15) !important;
+}
+
+/* Directory hero / sections on dark */
+.directory-hero,
+.desktop-vibe-section,
+.desktop-vibe-copy h1,
+.desktop-vibe-copy p {
+  color: #F0EFFF !important;
+}
+.desktop-vibe-eyebrow {
+  color: #B388FF !important;
+}
+.desktop-vibe-archive-stats strong {
+  color: #7C4DFF !important;
+}
+.desktop-vibe-archive-stats span {
+  color: #9E99B8 !important;
+}
+.desktop-vibe-filter-deck {
+  background: rgba(10,10,24,0.8) !important;
+  border-color: rgba(124,77,255,0.1) !important;
+}
+.desktop-vibe-filter-group p {
+  color: #B388FF !important;
+}
+.desktop-vibe-filter-group button {
+  background: rgba(124,77,255,0.08) !important;
+  color: #9E99B8 !important;
+  border-color: rgba(124,77,255,0.1) !important;
+}
+.desktop-vibe-filter-group button.is-active {
+  background: rgba(124,77,255,0.25) !important;
+  color: #F0EFFF !important;
+  border-color: rgba(124,77,255,0.35) !important;
+}
+.desktop-vibe-search {
+  background: rgba(10,10,24,0.8) !important;
+  border-color: rgba(124,77,255,0.15) !important;
+}
+.desktop-vibe-search input {
+  color: #F0EFFF !important;
+}
+.desktop-vibe-search input::placeholder {
+  color: #6B6690 !important;
+}
+
+/* Account panel dark */
+.account-panel,
+.tone-account {
+  background: transparent !important;
+}
+.account-panel h1,
+.account-panel h2,
+.account-panel p,
+.account-panel label,
+.tone-account h1,
+.tone-account h2,
+.tone-account p,
+.tone-account label {
+  color: #F0EFFF !important;
+}
+.account-panel input,
+.tone-account input {
+  background: rgba(10,10,24,0.8) !important;
+  border-color: rgba(124,77,255,0.15) !important;
+  color: #F0EFFF !important;
+}
+.account-panel input::placeholder,
+.tone-account input::placeholder {
+  color: #6B6690 !important;
+}
+
+/* Radar specific dark */
+.desktop-vibe-radar-stage {
+  background: rgba(10,10,24,0.6) !important;
+  border-color: rgba(124,77,255,0.1) !important;
+}
+.desktop-vibe-radar-sweep-line {
+  background: linear-gradient(90deg, transparent, rgba(0,229,255,0.6), transparent) !important;
+}
+.desktop-vibe-radar-core {
+  color: #00E5FF !important;
+}
+.radar-console,
+.radar-scanner-overlay {
+  background: rgba(6,6,14,0.9) !important;
+}
+
+/* Compare specific dark */
+.desktop-vibe-compare-stage {
+  background: rgba(10,10,24,0.6) !important;
+  border-color: rgba(255,215,64,0.1) !important;
+}
+.desktop-vibe-compare-core {
+  color: #FFD740 !important;
+}
+.desktop-vibe-compare-float {
+  background: rgba(26,26,51,0.9) !important;
+  border-color: rgba(124,77,255,0.1) !important;
+}
+.desktop-vibe-compare-float strong {
+  color: #F0EFFF !important;
+}
+.desktop-vibe-compare-float small {
+  color: #9E99B8 !important;
+}
+
+/* Shortlist specific dark */
+.shortlist-slot-card {
+  background: rgba(26,26,51,0.9) !important;
+  border-color: rgba(124,77,255,0.1) !important;
+}
+.shortlist-slot-card.empty {
+  border-style: dashed !important;
+  border-color: rgba(124,77,255,0.2) !important;
+}
+
+/* Gamification dark */
+.gamification-shell,
+.game-effects-layer,
+.gamer-hud {
+  background: transparent !important;
+}
+.game-profile-bar,
+.leaderboard-strip {
+  background: rgba(10,10,24,0.8) !important;
+  border-color: rgba(124,77,255,0.1) !important;
+}
+.arena-battle-stage {
+  background: rgba(10,10,24,0.8) !important;
+  border-color: rgba(255,215,64,0.1) !important;
+}
+.badge-unlock-modal,
+.level-up-modal {
+  background: rgba(6,6,14,0.95) !important;
+  border-color: rgba(124,77,255,0.15) !important;
+}
+
+/* Not found / error pages dark */
+.not-found-page,
+.error-page {
+  background: var(--v-void) !important;
+  color: #F0EFFF !important;
+}
+
+/* Premium components dark override */
+.premium-section,
+.premium-section-inner {
+  background: transparent !important;
+}
+.premium-badge {
+  background: rgba(124,77,255,0.15) !important;
+  border-color: rgba(124,77,255,0.25) !important;
+  color: #B388FF !important;
+}
+.premium-link {
+  color: #F0EFFF !important;
+}
+.premium-button {
+  background: linear-gradient(135deg, #7C4DFF 0%, #536DFE 100%) !important;
+  color: white !important;
+}
+.premium-button-secondary {
+  background: rgba(124,77,255,0.1) !important;
+  color: #B388FF !important;
+  border-color: rgba(124,77,255,0.2) !important;
+}
+
+/* Mobile catalog view dark */
+.mobile-catalog-view,
+.mobile-compare-view,
+.mobile-shortlist-board {
+  background: var(--v-void) !important;
+}
+.mobile-catalog-view h1,
+.mobile-compare-view h1,
+.mobile-shortlist-board h1,
+.mobile-catalog-view p,
+.mobile-compare-view p,
+.mobile-shortlist-board p {
+  color: #F0EFFF !important;
+}
+.mobile-tool-card {
+  background: rgba(26,26,51,0.9) !important;
+  border-color: rgba(124,77,255,0.1) !important;
+}
+.mobile-tool-card h2,
+.mobile-tool-card p {
+  color: #F0EFFF !important;
+}
+
+/* Card tilt 3D effect for existing cards */
+.desktop-vibe-tool-card,
+.desktop-vibe-focus-card,
+.desktop-vibe-signal-card,
+.desktop-vibe-compare-float,
+.shortlist-slot-card,
+.mobile-tool-card {
+  transform-style: preserve-3d !important;
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease, border-color 0.3s ease !important;
+}
+.desktop-vibe-tool-card:hover,
+.desktop-vibe-focus-card:hover,
+.desktop-vibe-signal-card:hover,
+.desktop-vibe-compare-float:hover,
+.shortlist-slot-card:hover,
+.mobile-tool-card:hover {
+  transform: translateY(-4px) rotateX(2deg) rotateY(2deg) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,77,255,0.2), 0 0 40px rgba(124,77,255,0.15) !important;
+}
+
+/* Focus cards glow */
+.desktop-vibe-focus-card:hover {
+  border-color: rgba(0,229,255,0.3) !important;
+}
+.desktop-vibe-tool-card:hover {
+  border-color: rgba(124,77,255,0.25) !important;
+}
+
+/* Float animation for compare cards */
+@keyframes v-compare-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.desktop-vibe-compare-float {
+  animation: v-compare-float 5s ease-in-out infinite;
+}
+.desktop-vibe-compare-float:nth-child(2) { animation-delay: 1s; }
+.desktop-vibe-compare-float:nth-child(3) { animation-delay: 2s; }
+.desktop-vibe-compare-float:nth-child(4) { animation-delay: 3s; }
+.desktop-vibe-compare-float:nth-child(5) { animation-delay: 4s; }
+
+/* Hero section glow underlay */
+.desktop-vibe-section:first-child::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(124,77,255,0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Smooth scroll for all sections */
+.desktop-vibe-section {
+  position: relative;
+}
+
+/* Reduced motion for tilt */
+@media (prefers-reduced-motion: reduce) {
+  .desktop-vibe-tool-card:hover,
+  .desktop-vibe-focus-card:hover,
+  .desktop-vibe-signal-card:hover,
+  .desktop-vibe-compare-float:hover,
+  .shortlist-slot-card:hover,
+  .mobile-tool-card:hover {
+    transform: none !important;
+  }
+  .desktop-vibe-compare-float {
+    animation: none !important;
+  }
+}

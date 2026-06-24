@@ -1,6 +1,6 @@
 import { Radar } from "lucide-react";
 
-import { DesktopRadarCanvas } from "@/components/desktop/desktop-radar-canvas";
+import { Radar3DLayer } from "@/components/3d-maestoso/radar-3d-layer";
 import { DesktopRadarNodes } from "@/components/desktop/desktop-radar-nodes";
 import { RadarGameMissions } from "@/components/gamification/radar-game-missions";
 import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
@@ -28,7 +28,7 @@ export function DesktopVibeRadar() {
         </div>
 
         <div className="desktop-vibe-radar-stage" aria-label="Radar 3D Product Hunt">
-          <DesktopRadarCanvas />
+          <Radar3DLayer />
           <span className="desktop-vibe-radar-sweep-line" aria-hidden="true" />
           <span className="desktop-vibe-radar-core" aria-hidden="true">
             <Radar />

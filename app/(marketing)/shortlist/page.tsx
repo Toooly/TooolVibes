@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Shortlist3DWrapper } from "@/components/3d-maestoso/shortlist-3d-wrapper";
 import { MobileShortlistBoard } from "@/components/tools/mobile-shortlist-board";
 import { getPublishedTools } from "@/lib/data/public-tools";
 import { directoryTools } from "@/lib/data/tooolvibes-directory";
@@ -55,5 +56,10 @@ export default async function ShortlistPage() {
     toolsBySlug.set(tool.slug, tool);
   }
 
-  return <MobileShortlistBoard tools={[...toolsBySlug.values()]} />;
+  return (
+    <>
+      <Shortlist3DWrapper />
+      <MobileShortlistBoard tools={[...toolsBySlug.values()]} />
+    </>
+  );
 }

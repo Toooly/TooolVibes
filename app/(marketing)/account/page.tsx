@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Account3DPortal } from "@/components/3d-maestoso/account-3d-portal";
 import { AccountPanel } from "@/components/account/account-panel";
 
 export const metadata: Metadata = {
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function AccountPage() {
   return (
-    <div className="tone-account page-shell space-y-6 pb-18 pt-8 sm:space-y-8 sm:pb-22 sm:pt-10">
+    <Account3DPortal>
       <AccountPanel />
-    </div>
+    </Account3DPortal>
   );
 }

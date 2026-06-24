@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Rubik } from "next/font/google";
 
 import "@/app/globals.css";
+import "@/styles/vibes-3d-maestoso.css";
 import { RootProviders } from "@/components/app/root-providers";
 import { GamificationShell } from "@/components/gamification/gamification-shell";
 import { siteConfig } from "@/lib/config/site";
@@ -130,6 +131,8 @@ const brandIntroPreflightScript = `
 })();
 `;
 
+import { IntroCinematic3D } from "@/components/3d-maestoso/intro-cinematic";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -154,6 +157,7 @@ export default function RootLayout({
         />
         <RootProviders>
           <GamificationShell />
+          <IntroCinematic3D />
           {children}
         </RootProviders>
       </body>

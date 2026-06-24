@@ -1,3 +1,4 @@
+import { Home3DHero } from "@/components/3d-maestoso/home-3d-hero";
 import { VibeHomeV2 } from "@/components/home/vibe-home-v2";
 import {
   directoryTools,
@@ -12,10 +13,13 @@ export default function HomePage() {
   );
 
   return (
-    <VibeHomeV2
-      tools={directoryTools}
-      weeklyTool={weeklyTool}
-      supportingTools={supportingTools.slice(0, 4)}
-    />
+    <>
+      <Home3DHero tools={directoryTools} weeklyTool={weeklyTool} />
+      <VibeHomeV2
+        tools={directoryTools}
+        weeklyTool={weeklyTool}
+        supportingTools={supportingTools.slice(0, 4)}
+      />
+    </>
   );
 }

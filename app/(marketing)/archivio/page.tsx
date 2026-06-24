@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Archive3DHero } from "@/components/3d-maestoso/archive-3d-hero";
 import { FloatingCatalogView } from "@/components/directory/floating-catalog-view";
 import {
   directoryFilterGroups,
@@ -28,10 +29,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
 
   return (
     <main className="relative overflow-x-hidden">
-      {/* ═══ Floating Spatial Catalog — PRIMARY UI ═══
-          Replaces the dual DesktopVibeArchive + DirectoryBrowser split
-          with a single floating interface that works on all breakpoints.
-      */}
+      <Archive3DHero />
       <FloatingCatalogView
         tools={directoryTools}
         filterGroups={directoryFilterGroups}
