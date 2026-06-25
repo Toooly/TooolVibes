@@ -3,9 +3,12 @@ import { Manrope, Rubik } from "next/font/google";
 
 import "@/app/globals.css";
 import "@/styles/vibes-3d-maestoso.css";
+import { cookies } from "next/headers";
 import { RootProviders } from "@/components/app/root-providers";
 import { GamificationShell } from "@/components/gamification/gamification-shell";
 import { siteConfig } from "@/lib/config/site";
+import { gateCookieName } from "@/lib/gate/constants";
+import { verifyGateToken } from "@/lib/gate/session";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -133,31 +136,40 @@ const brandIntroPreflightScript = `
 
 import { IntroCinematic3D } from "@/components/3d-maestoso/intro-cinematic";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const gateCookie = cookieStore.get(gateCookieName);
+  const isGateOpen = gateCookie ? await verifyGateToken(gateCookie.value) : false;
   return (
     <html lang="it" className={`${manrope.variable} ${rubik.variable}`} suppressHydrationWarning>
       <head>
-        <style
-          id="tooolvibes-brand-intro-preflight-style"
-          dangerouslySetInnerHTML={{ __html: brandIntroPreflightStyle }}
-        />
-        <script
-          id="tooolvibes-brand-intro-preflight"
-          dangerouslySetInnerHTML={{ __html: brandIntroPreflightScript }}
-        />
+        {isGateOpen && (
+          <>
+            <style
+              id="tooolvibes-brand-intro-preflight-style"
+              dangerouslySetInnerHTML={{ __html: brandIntroPreflightStyle }}
+            />
+            <script
+              id="tooolvibes-brand-intro-preflight"
+              dangerouslySetInnerHTML={{ __html: brandIntroPreflightScript }}
+            />
+          </>
+        )}
       </head>
       <body>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-        <RootProviders>
-          <GamificationShell />
-          <IntroCinematic3D />
+        {isGateOpen && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          />
+        )}
+        <RootProviders enableExperience={isGateOpen}>
+          {isGateOpen && <GamificationShell />}
+          {isGateOpen && <IntroCinematic3D />}
           {children}
         </RootProviders>
       </body>

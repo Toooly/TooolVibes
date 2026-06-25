@@ -264,17 +264,29 @@ export function MobileRadarView() {
 
       ctx.clearRect(0, 0, w, h);
 
-      // Dark bg
-      ctx.fillStyle = "#0a0a1a";
+      // Deep void background
+      const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 1.2);
+      bgGrad.addColorStop(0, "#0a0a1a");
+      bgGrad.addColorStop(0.7, "#070714");
+      bgGrad.addColorStop(1, "#06060E");
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
 
-      // Rings
+      // Outer rim glow
+      ctx.beginPath();
+      ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(0, 229, 255, 0.08)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Concentric rings with depth colors
       const ringColors = [
-        "rgba(106, 60, 255, 0.28)",
-        "rgba(57, 210, 246, 0.22)",
-        "rgba(243, 191, 76, 0.16)",
+        "rgba(106, 60, 255, 0.22)",
+        "rgba(57, 210, 246, 0.18)",
+        "rgba(243, 191, 76, 0.14)",
+        "rgba(124, 77, 255, 0.1)",
       ];
-      [0.28, 0.52, 0.78].forEach((ratio, i) => {
+      [0.22, 0.45, 0.68, 0.88].forEach((ratio, i) => {
         const r = maxR * ratio;
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -283,26 +295,74 @@ export function MobileRadarView() {
         ctx.stroke();
       });
 
-      // Pulsing core
-      const pulse = Math.sin(time * 3) * 0.3 + 1;
+      // Cross grid lines
+      ctx.strokeStyle = "rgba(106, 60, 255, 0.06)";
+      ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.arc(cx, cy, 8 * pulse, 0, Math.PI * 2);
+      ctx.moveTo(cx - maxR, cy);
+      ctx.lineTo(cx + maxR, cy);
+      ctx.moveTo(cx, cy - maxR);
+      ctx.lineTo(cx, cy + maxR);
+      ctx.stroke();
+
+      // Sweep angle
+      const sweepAngle = time * 1.96;
+      const sweepLen = maxR * 1.05;
+      const sx = cx + Math.cos(sweepAngle) * sweepLen;
+      const sy = cy + Math.sin(sweepAngle) * sweepLen;
+
+      // Main sweep glow
+      const grad = ctx.createLinearGradient(cx, cy, sx, sy);
+      grad.addColorStop(0, "rgba(0, 229, 255, 0.55)");
+      grad.addColorStop(0.4, "rgba(57, 210, 246, 0.3)");
+      grad.addColorStop(0.8, "rgba(124, 77, 255, 0.1)");
+      grad.addColorStop(1, "rgba(124, 77, 255, 0)");
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(sx, sy);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Sweep echo trail
+      const echoAngle = sweepAngle + 0.4;
+      const ex = cx + Math.cos(echoAngle) * sweepLen * 0.85;
+      const ey = cy + Math.sin(echoAngle) * sweepLen * 0.85;
+      const echoGrad = ctx.createLinearGradient(cx, cy, ex, ey);
+      echoGrad.addColorStop(0, "rgba(57, 210, 246, 0.25)");
+      echoGrad.addColorStop(1, "rgba(57, 210, 246, 0)");
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(ex, ey);
+      ctx.strokeStyle = echoGrad;
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+
+      // Pulsing core with layered rings
+      const pulse = Math.sin(time * 2.5) * 0.3 + 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 7 * pulse, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
       ctx.fill();
 
-      // Core ring
       ctx.beginPath();
-      ctx.arc(cx, cy, 16 * pulse, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(106, 60, 255, ${0.4 * pulse})`;
+      ctx.arc(cx, cy, 14 * pulse, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(0, 229, 255, ${0.45 * pulse})`;
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // Echo ring
-      const echoPulse = Math.sin(time * 3 - 0.8) * 0.3 + 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 22 * pulse, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(124, 77, 255, ${0.25 * pulse})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Echo ring from center
+      const echoPulse = Math.sin(time * 2.5 - 0.8) * 0.3 + 1;
       if (echoPulse > 0.9) {
         ctx.beginPath();
-        ctx.arc(cx, cy, 28 * echoPulse, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(57, 210, 246, ${0.25 * echoPulse})`;
+        ctx.arc(cx, cy, 32 * echoPulse, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(57, 210, 246, ${0.2 * echoPulse})`;
         ctx.lineWidth = 1;
         ctx.stroke();
       }

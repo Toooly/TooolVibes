@@ -2,6 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { adminCookieName } from "@/lib/admin/constants";
 import { verifySessionToken } from "@/lib/admin/session-token";
+import { gateCookieName } from "@/lib/gate/constants";
+import { verifyGateToken } from "@/lib/gate/session";
 
 function getRedirectUrl(request: NextRequest, path: string) {
   const redirectUrl = request.nextUrl.clone();
@@ -26,19 +28,55 @@ function getRedirectUrl(request: NextRequest, path: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (!pathname.startsWith("/admin") || pathname === "/admin/login") {
+  // Admin gate (esistente)
+  if (pathname.startsWith("/admin")) {
+    if (pathname === "/admin/login") {
+      return NextResponse.next();
+    }
+    const token = request.cookies.get(adminCookieName)?.value;
+    if (!token || !(await verifySessionToken(token))) {
+      return NextResponse.redirect(getRedirectUrl(request, "/admin/login"));
+    }
     return NextResponse.next();
   }
 
-  const token = request.cookies.get(adminCookieName)?.value;
-
-  if (!token || !(await verifySessionToken(token))) {
-    return NextResponse.redirect(getRedirectUrl(request, "/admin/login"));
+  // Public access gate
+  const gateCookie = request.cookies.get(gateCookieName)?.value;
+  let isGateOpen = false;
+  if (gateCookie) {
+    try {
+      isGateOpen = await verifyGateToken(gateCookie);
+    } catch {
+      isGateOpen = false;
+    }
   }
 
-  return NextResponse.next();
+  if (isGateOpen) {
+    return NextResponse.next();
+  }
+
+  // Always allow these paths
+  if (
+    pathname.startsWith("/api/gate") ||
+    pathname === "/api/waitlist" ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/brand") ||
+    pathname.startsWith("/images") ||
+    pathname === "/favicon.ico" ||
+    pathname === "/coming-soon"
+  ) {
+    return NextResponse.next();
+  }
+
+  // If not authenticated, only allow /
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
+
+  // Block everything else
+  return NextResponse.redirect(new URL("/", request.url));
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|brand|images).*)"],
 };

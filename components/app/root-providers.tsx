@@ -14,7 +14,13 @@ import { MotionObserver } from "@/components/ui/motion-observer";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-export function RootProviders({ children }: { children: React.ReactNode }) {
+export function RootProviders({
+  children,
+  enableExperience = true,
+}: {
+  children: React.ReactNode;
+  enableExperience?: boolean;
+}) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -31,14 +37,18 @@ export function RootProviders({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delay={180}>
         {children}
-        <HomeBrandIntro />
-        <GlobalExperienceLayer />
-        <MotionObserver />
-        <RouteTransitionLoader />
-        <InteractionSoundLayerV2 />
-        <MusicAmbienceLayer />
-        <GameEffectsLayer />
-        <GlobalCommandPalette />
+        {enableExperience && (
+          <>
+            <HomeBrandIntro />
+            <GlobalExperienceLayer />
+            <MotionObserver />
+            <RouteTransitionLoader />
+            <InteractionSoundLayerV2 />
+            <MusicAmbienceLayer />
+            <GameEffectsLayer />
+            <GlobalCommandPalette />
+          </>
+        )}
         <Toaster position="top-right" richColors closeButton />
       </TooltipProvider>
     </QueryClientProvider>

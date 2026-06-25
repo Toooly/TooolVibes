@@ -55,7 +55,15 @@
   .mobile-radar-view__node-label strong{text-shadow:0 1px 4px #0000008c,0 0 8px #00000059;font-size:.72rem;font-weight:700}
   .mobile-radar-view__node-label small{text-shadow:0 1px 3px #00000080;font-size:.62rem;font-weight:600}
   .mobile-radar-view__node-badge{letter-spacing:.04em;color:#0a0a1a;z-index:2;background:linear-gradient(135deg,#f3bf4c,#ff8c42);border-radius:999px;padding:.15rem .35rem;font-size:.55rem;font-weight:800;position:absolute;top:-6px;right:-6px;box-shadow:0 2px 8px #f3bf4c66}
+  /* ─── Scanned state — sonar hit glow ─── */
+  .mobile-radar-view__node.is-scanned .mobile-radar-view__node-body{box-shadow:0 0 24px rgba(0,229,255,.45),0 8px 24px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.45);border-color:rgba(0,229,255,.55);transform:scale(1.12);transition:box-shadow .25s ease,border-color .25s ease,transform .25s cubic-bezier(.16,1,.3,1)}
+  .mobile-radar-view__node.is-scanned .mobile-radar-view__node-label strong{color:#fff;text-shadow:0 0 12px rgba(0,229,255,.8),0 1px 4px rgba(0,0,0,.9)}
+  .mobile-radar-view__node.is-scanned .mobile-radar-view__node-halo{opacity:1;background:radial-gradient(circle,rgba(0,229,255,.35),transparent 70%)}
+  .mobile-radar-view__node.is-scanned .mobile-radar-view__node-initials{color:#00e5ff}
+  /* ─── Slow orb pulse ─── */
+  .mobile-radar-view__node-body{animation:tv-sonar-orb-pulse 4s ease-in-out infinite;animation-delay:calc(var(--node-hit-delay,0s) * -1)}
 }
+@keyframes tv-sonar-orb-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
 
 
 .mobile-radar-view__console{width:min(28rem,100vw - 1.5rem);margin:1rem auto 0}
