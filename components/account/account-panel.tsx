@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 
 import { useAccount } from "@/components/account/account-provider";
+import { AccountVibesBackground } from "@/components/account/account-vibes-background";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type { DiscoveryLocalSnapshot } from "@/lib/discovery/local-storage";
@@ -152,9 +153,11 @@ export function AccountPanel() {
   };
 
   return (
-    <div className="tone-account space-y-5">
-      {/* Hero */}
-      <div className="account-hero p-6 sm:p-8">
+    <>
+      <AccountVibesBackground />
+      <div className="tone-account relative z-10 space-y-5 px-4 py-6 sm:px-6 sm:py-8">
+        {/* Hero */}
+        <div className="account-hero p-6 sm:p-8">
         <div className="flex flex-wrap items-center gap-2">
           <span className="account-status-badge">Account</span>
           <span className="account-status-badge">
@@ -493,5 +496,6 @@ export function AccountPanel() {
         </aside>
       </div>
     </div>
+    </>
   );
 }
