@@ -641,6 +641,7 @@ export function ToolDiscoveryApp({
   const [sortMode, setSortMode] = useState<SortMode>("recommended");
   const [activeTab, setActiveTab] = useState<WorkspaceTab>("all");
   const [isFilterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [filterFlash, setFilterFlash] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
@@ -930,6 +931,12 @@ export function ToolDiscoveryApp({
     playTooolvibesSound("update");
   }
 
+  useEffect(() => {
+    setFilterFlash(true);
+    const t = setTimeout(() => setFilterFlash(false), 400);
+    return () => clearTimeout(t);
+  }, [activeGroup, activeLevel, activeTag, query, activeTab]);
+
   function toggleTag(tag: string) {
     setActiveTag((current) => (current === tag ? "" : tag));
     playTooolvibesSound("filterApply");
@@ -953,6 +960,7 @@ export function ToolDiscoveryApp({
 
   return (
     <section className={cn("space-y-5 pb-28 lg:space-y-6 lg:pb-0", className)}>
+      {filterFlash ? <div className="catalog-filter-flash" aria-hidden="true" /> : null}
       {!isDirectSearch ? (
         <PremiumPanel tone="blue" className="grid min-w-0 gap-4 p-4 sm:p-5 lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-6 lg:p-6">
           <aside className="min-w-0 space-y-3 border-white/10 lg:space-y-4 lg:border-r lg:pr-5">
@@ -1135,18 +1143,23 @@ export function ToolDiscoveryApp({
           {visibleTools.length > 0 ? (
             isDirectSearch ? (
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {visibleTools.map((tool) => (
-                  <DirectToolResultCard
+                {visibleTools.map((tool, index) => (
+                  <div
                     key={tool.slug}
-                    tool={tool}
-                    saved={savedSlugs.includes(tool.slug)}
-                    compared={compareSlugs.includes(tool.slug)}
-                    stacked={stackSlugs.includes(tool.slug)}
-                    onOpen={() => setSelectedSlug(tool.slug)}
-                    onSave={() => handleSave(tool)}
-                    onCompare={() => handleCompare(tool)}
-                    onStack={() => handleStack(tool.slug)}
-                  />
+                    className="catalog-card-enter"
+                    style={{ animationDelay: `${Math.min(index * 50, 600)}ms` }}
+                  >
+                    <DirectToolResultCard
+                      tool={tool}
+                      saved={savedSlugs.includes(tool.slug)}
+                      compared={compareSlugs.includes(tool.slug)}
+                      stacked={stackSlugs.includes(tool.slug)}
+                      onOpen={() => setSelectedSlug(tool.slug)}
+                      onSave={() => handleSave(tool)}
+                      onCompare={() => handleCompare(tool)}
+                      onStack={() => handleStack(tool.slug)}
+                    />
+                  </div>
                 ))}
               </div>
             ) : (

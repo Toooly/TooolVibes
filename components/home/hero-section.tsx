@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
-import { ArrowRight, Sparkles, Zap, ChevronDown } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, ChevronDown, Plus } from "lucide-react";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 
 function AnimatedText({ text, className = "" }: { text: string; className?: string }) {
@@ -113,8 +113,9 @@ export function HeroSection({
             </Link>
             <Link
               href="/shortlist#wishlist"
-              className="inline-flex items-center gap-2 rounded-full border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.48)] px-5 py-3 text-sm font-semibold text-[#120d2f] backdrop-blur-md transition-all hover:bg-[rgba(106,60,255,0.06)] hover:border-[rgba(106,60,255,0.3)]"
+              className="group inline-flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.25)] bg-[rgba(10,10,24,0.6)] px-5 py-3 text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-[rgba(124,77,255,0.1)] hover:border-[rgba(124,77,255,0.4)] hover:shadow-[0_0_20px_rgba(124,77,255,0.15)]"
             >
+              <Plus size={16} className="transition-transform group-hover:rotate-90" />
               Suggerisci un tool
             </Link>
           </motion.div>

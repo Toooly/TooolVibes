@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
@@ -10,6 +10,7 @@ import { SoundToggleButton } from "../app/sound-toggle-button";
 import { DirectoryHeaderSearch } from "../directory/directory-header-search";
 import { GameProfileBar } from "../gamification/game-profile-bar";
 import { VibeTapMiniGame } from "../gamification/vibe-tap-mini-game";
+import { NavbarCircuitMarkers, CircuitPill, PILL_CONFIGS } from "./navbar-circuit-markers";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import {
   X,
@@ -91,6 +92,10 @@ export function SiteHeaderV2() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const spatialRoute = pathname === "/" || pathname?.startsWith("/archivio");
+  const brandRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
+  
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -128,7 +133,7 @@ export function SiteHeaderV2() {
         >
           <div className="site-header-v2__inner relative flex h-16 items-center justify-between px-4 md:px-6">
             {/* Logo */}
-            <div className="site-header-v2__brand group relative flex items-center gap-2.5 sm:gap-3">
+            <div ref={brandRef} className="site-header-v2__brand navbar-circuit-pill group relative flex items-center gap-2.5 sm:gap-3">
               <span className="site-header-v2__brand-aura" aria-hidden="true" />
               <Link href="/" className="site-header-v2__brand-logo relative transition-transform duration-300 group-hover:scale-105" data-sonic-action="brand">
                 <BrandLogo size={36} fallback="png" priority />
@@ -160,7 +165,8 @@ export function SiteHeaderV2() {
             </span>
 
             {/* Desktop Nav */}
-            <nav className="site-header-v2__nav hidden items-center gap-1 lg:flex" aria-label="Navigazione principale">
+            <nav ref={navRef} className="site-header-v2__nav navbar-circuit-pill hidden items-center gap-1 lg:flex" aria-label="Navigazione principale">
+              <CircuitPill config={PILL_CONFIGS.nav} containerRef={navRef} />
               {navLinks.slice(0, 6).map((link) => (
                 <NavLink
                   key={link.href}
@@ -173,7 +179,8 @@ export function SiteHeaderV2() {
             </nav>
 
             {/* Right Actions */}
-            <div className="site-header-v2__actions flex items-center gap-2">
+            <div ref={actionsRef} className="site-header-v2__actions navbar-circuit-pill flex items-center gap-2">
+              <CircuitPill config={PILL_CONFIGS.actions} containerRef={actionsRef} />
               <button
                 className="site-header-v2__search-trigger relative hidden rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] hover:text-[#6a3cff] md:flex"
                 onClick={() => setSearchOpen(!searchOpen)}

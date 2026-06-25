@@ -387,18 +387,23 @@ export function CategoryToolCarousel({
           ref={railRef}
           className="category-tool-carousel__track"
         >
-          {tools.map((tool) => (
-            <ToolCarouselCard
+          {tools.map((tool, index) => (
+            <div
               key={tool.slug}
-              tool={tool}
-              saved={savedSlugs.includes(tool.slug)}
-              compared={compareSlugs.includes(tool.slug)}
-              stacked={stackSlugs.includes(tool.slug)}
-              onOpen={() => onOpen(tool.slug)}
-              onSave={() => onSave(tool)}
-              onCompare={() => onCompare(tool)}
-              onStack={() => onStack(tool.slug)}
-            />
+              className="catalog-card-enter"
+              style={{ animationDelay: `${Math.min(index * 40, 500)}ms` }}
+            >
+              <ToolCarouselCard
+                tool={tool}
+                saved={savedSlugs.includes(tool.slug)}
+                compared={compareSlugs.includes(tool.slug)}
+                stacked={stackSlugs.includes(tool.slug)}
+                onOpen={() => onOpen(tool.slug)}
+                onSave={() => onSave(tool)}
+                onCompare={() => onCompare(tool)}
+                onStack={() => onStack(tool.slug)}
+              />
+            </div>
           ))}
         </div>
       </div>
