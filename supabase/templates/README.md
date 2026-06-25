@@ -20,7 +20,7 @@ The app passes the public auth callback URL from `components/account/account-pro
 Also add the public callback to Supabase Authentication > URL Configuration > Redirect URLs:
 
 ```text
-https://tooolvibes.staff-ffa.workers.dev/auth/callback
+https://tooolvibes.eu/auth/callback
 ```
 
 If you deploy on another public domain, set `NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN` to that domain and add the matching `/auth/callback` URL in Supabase.

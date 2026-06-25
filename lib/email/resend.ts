@@ -26,7 +26,7 @@ function getResendApiKey() {
 }
 
 function getEmailFrom() {
-  return clean(process.env.TOOOLVIBES_EMAIL_FROM) ?? "TooolVibes <noreply@tooolvibes.com>";
+  return clean(process.env.TOOOLVIBES_EMAIL_FROM) ?? "TooolVibes <noreply@tooolvibes.eu>";
 }
 
 function getAdminNotificationEmail() {
@@ -75,6 +75,11 @@ export async function sendEmail(input: SendEmailInput): Promise<EmailResult> {
     });
 
     if (!response.ok) {
+      const detail = await response.text().catch(() => "");
+      console.error("Resend email send failed", {
+        status: response.status,
+        detail,
+      });
       return { sent: false, reason: "failed" };
     }
 

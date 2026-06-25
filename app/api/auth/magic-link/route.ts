@@ -38,14 +38,23 @@ function normalizeOrigin(value?: string | null) {
 }
 
 function getAllowedAuthOrigins() {
-  return (process.env.ALLOWED_AUTH_ORIGINS ?? process.env.NEXT_PUBLIC_SITE_URL ?? "")
-    .split(",")
-    .map((origin) => normalizeOrigin(origin))
-    .filter(Boolean) as string[];
+  return Array.from(
+    new Set(
+      [
+        ...(process.env.ALLOWED_AUTH_ORIGINS ?? "").split(","),
+        process.env.NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN,
+        process.env.NEXT_PUBLIC_SITE_URL,
+      ]
+        .map((origin) => normalizeOrigin(origin))
+        .filter(Boolean) as string[],
+    ),
+  );
 }
 
 function getCallbackOrigin() {
-  const origin = normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL);
+  const origin =
+    normalizeOrigin(process.env.NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN) ??
+    normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL);
   const allowedOrigins = getAllowedAuthOrigins();
 
   if (!origin || !allowedOrigins.includes(origin)) {
@@ -102,7 +111,7 @@ function getSignupHtml(confirmUrl: string) {
 
     <p>
       Conferma la tua email e collega il tuo spazio TooolVibes:
-      tool salvati, confronti e note resteranno agganciati al tuo account.
+      shortlist, confronti e tool salvati resteranno agganciati al tuo account.
     </p>
 
     <p>
@@ -123,7 +132,7 @@ function getSignupText(confirmUrl: string) {
   return [
     "Pronto per diventare un TooolViber?",
     "",
-    "Conferma la tua email e collega il tuo spazio TooolVibes: tool salvati, confronti e note resteranno agganciati al tuo account.",
+    "Conferma la tua email e collega il tuo spazio TooolVibes: shortlist, confronti e tool salvati resteranno agganciati al tuo account.",
     "",
     `Conferma e apri TooolVibes: ${confirmUrl}`,
     "",
