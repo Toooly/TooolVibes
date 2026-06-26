@@ -49,10 +49,10 @@ export function Shortlist3DVault({
                   </div>
                 </TiltCard3D>
               ) : (
-                <div className="flex min-h-[200px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.5)] p-6">
-                  <span className="text-2xl font-bold text-[rgba(124,77,255,0.25)]">#{String(i + 1).padStart(2, "0")}</span>
-                  <span className="text-sm text-[#6B6690]">Slot libero</span>
-                  <Bookmark size={20} className="text-[rgba(124,77,255,0.15)]" />
+                <div className="v-slot-empty">
+                  <span className="v-slot-empty__number">#{String(i + 1).padStart(2, "0")}</span>
+                  <span className="v-slot-empty__label">Slot libero</span>
+                  <Bookmark size={20} className="v-slot-empty__icon" />
                 </div>
               )}
             </motion.div>

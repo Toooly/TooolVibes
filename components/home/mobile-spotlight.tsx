@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowRight, ExternalLink, Sparkles, Trophy, Medal } from "lucide-react";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
@@ -24,21 +23,9 @@ function PodiumTool({
     ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`
     : undefined;
 
-  const rankColors: Record<number, string> = {
-    1: "linear-gradient(135deg, #FFD740 0%, #FF8F00 100%)",
-    2: "linear-gradient(135deg, #C0C0C0 0%, #808080 100%)",
-    3: "linear-gradient(135deg, #CD7F32 0%, #8B4513 100%)",
-  };
-
-  const rankHeight: Record<number, string> = {
-    1: "h-48 md:h-64",
-    2: "h-36 md:h-48",
-    3: "h-28 md:h-36",
-  };
-
   return (
-    <div className={`v-podium-step ${rankHeight[rank]} ${className || ""}`}>
-      <div className="v-podium-step-glow" style={{ background: rankColors[rank] }} />
+    <div className={`v-podium-step v-podium-step--rank-${rank} ${className || ""}`}>
+      <div className="v-podium-step-glow" />
       <div className="v-podium-step-inner">
         <div className="v-podium-rank">
           {rank === 1 ? (
