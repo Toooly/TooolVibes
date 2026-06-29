@@ -114,15 +114,13 @@ function OrbNode({
 }
 
 /* ─── Central Reactor (hero centerpiece) ─── */
-function ReactorCore({
-  color = "#7C4DFF",
-}: {
-  color?: string;
-}) {
+function ReactorCore() {
   const meshRef = useRef<THREE.Mesh>(null);
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
   const ring3Ref = useRef<THREE.Mesh>(null);
+  const coreColor = "#4D22C7";
+  const coreEmissive = "#2D126F";
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
@@ -141,9 +139,9 @@ function ReactorCore({
       <mesh ref={meshRef}>
         <icosahedronGeometry args={[1.2, 2]} />
         <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={0.4}
+          color={coreColor}
+          emissive={coreEmissive}
+          emissiveIntensity={0.55}
           metalness={0.9}
           roughness={0.1}
         />
@@ -151,20 +149,20 @@ function ReactorCore({
       {/* Inner wireframe */}
       <mesh>
         <icosahedronGeometry args={[1.25, 1]} />
-        <meshBasicMaterial color={color} transparent opacity={0.15} wireframe />
+        <meshBasicMaterial color="#C4B5FD" transparent opacity={0.18} wireframe />
       </mesh>
       {/* Rings */}
       <mesh ref={ring1Ref}>
         <torusGeometry args={[1.8, 0.02, 16, 100]} />
-        <meshBasicMaterial color="#00E5FF" transparent opacity={0.6} />
+        <meshBasicMaterial color="#64FFDA" transparent opacity={0.56} />
       </mesh>
       <mesh ref={ring2Ref}>
         <torusGeometry args={[2.3, 0.015, 16, 100]} />
-        <meshBasicMaterial color="#7C4DFF" transparent opacity={0.4} />
+        <meshBasicMaterial color="#FFD166" transparent opacity={0.34} />
       </mesh>
       <mesh ref={ring3Ref}>
         <torusGeometry args={[2.8, 0.01, 16, 100]} />
-        <meshBasicMaterial color="#FF4081" transparent opacity={0.3} />
+        <meshBasicMaterial color="#FF6B9D" transparent opacity={0.28} />
       </mesh>
     </group>
   );

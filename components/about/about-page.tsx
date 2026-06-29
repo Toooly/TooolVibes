@@ -66,9 +66,154 @@ const serviceCards = [
 
 const signals = ["Discovery", "Design", "Build", "Deploy"];
 
+const mobileStats = [
+  ["3", "founder operativi"],
+  ["0", "fumo"],
+  ["1", "sistema chiaro"],
+];
+
+const mobileFeatures = [
+  [Sparkles, "Pensiero chiaro", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."],
+  [Workflow, "Metodo operativo", "Donec id elit non mi porta gravida at eget metus."],
+  [Handshake, "Partner veri", "Maecenas faucibus mollis interdum. Sed posuere consectetur est."],
+];
+
+function MobileAboutPage() {
+  return (
+    <div className="v-about-mobile page-shell pb-8 pt-3 md:hidden">
+      <section className="v-about-mobile-hero">
+        <div className="v-about-mobile-hero__copy">
+          <PremiumBadge tone="accent">Chi siamo</PremiumBadge>
+          <h1>Persone vere, prodotti digitali vivi.</h1>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus
+            suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed.
+          </p>
+        </div>
+
+        <div className="v-about-mobile-scene" aria-label="Team TooolVibes al lavoro">
+          <div className="v-about-mobile-scene__halo" aria-hidden="true" />
+          <div className="v-about-mobile-scene__image">
+            <Image
+              src="/about/team-working.jpg"
+              alt="Team TooolVibes al lavoro intorno a un laptop"
+              fill
+              priority
+              unoptimized
+              sizes="100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="v-about-mobile-scene__caption">
+            <span>
+              <UsersRound className="size-4" aria-hidden="true" />
+              Team reale
+            </span>
+            <small>Discovery, design e build nello stesso flusso.</small>
+          </div>
+        </div>
+      </section>
+
+      <div className="v-about-mobile-stats" aria-label="Metriche TooolVibes">
+        {mobileStats.map(([value, label]) => (
+          <div key={label} className="v-about-mobile-stat">
+            <strong>{value}</strong>
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      <section className="v-about-mobile-panel v-about-mobile-panel--dark">
+        <div className="v-about-mobile-section-head">
+          <PremiumBadge tone="dark" className="bg-white/14 text-white">
+            I servizi che offriamo
+          </PremiumBadge>
+          <h2>Dal caos al sistema.</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam porta sem
+            malesuada magna mollis euismod.
+          </p>
+        </div>
+
+        <div className="v-about-mobile-services" id="servizi-mobile">
+          {serviceCards.map((service, index) => {
+            const Icon = service.icon;
+
+            return (
+              <motion.article
+                key={service.title}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.46, delay: Math.min(index * 0.04, 0.18), ease: [0.16, 1, 0.3, 1] }}
+                className="v-about-mobile-service"
+                style={
+                  {
+                    "--card-accent": service.accent,
+                    "--card-accent-glow": `${service.accent}22`,
+                  } as React.CSSProperties
+                }
+              >
+                <span className="v-about-mobile-service__icon" style={{ color: service.accent }}>
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+                <div>
+                  <span className="v-about-mobile-service__label">{service.label}</span>
+                  <h3>{service.title}</h3>
+                  <p>{service.copy}</p>
+                </div>
+              </motion.article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="v-about-mobile-panel">
+        <div className="v-about-mobile-section-head">
+          <PremiumBadge tone="accent">Come lavoriamo</PremiumBadge>
+          <h2>Una rotta, non una pila di card.</h2>
+        </div>
+
+        <div className="v-about-mobile-features">
+          {mobileFeatures.map(([Icon, title, copy]) => {
+            const FeatureIcon = Icon as typeof Sparkles;
+
+            return (
+              <article key={title as string} className="v-about-mobile-feature">
+                <FeatureIcon className="v-about-mobile-feature__icon" aria-hidden="true" />
+                <div>
+                  <h3>{title as string}</h3>
+                  <p>{copy as string}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="v-about-mobile-cta">
+        <PremiumBadge tone="accent">
+          <ShieldCheck className="mr-1 inline size-3.5" aria-hidden="true" />
+          Placeholder pronto per il copy finale
+        </PremiumBadge>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a
+          ante venenatis dapibus posuere velit aliquet.
+        </p>
+        <PremiumLink href="/community" tone="premium" className="w-full">
+          Entra nella community
+        </PremiumLink>
+      </section>
+    </div>
+  );
+}
+
 export function AboutPage() {
   return (
-    <div className="page-shell pb-24 pt-4 sm:pb-18 sm:pt-6">
+    <>
+      <MobileAboutPage />
+
+      <div className="page-shell hidden pb-24 pt-4 sm:pb-18 sm:pt-6 md:block">
       {/* ─── Hero ─── */}
       <section className="v-about-hero motion-reveal overflow-hidden px-4 py-6 sm:px-7 sm:py-8 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.88fr)_minmax(24rem,1.12fr)] lg:items-center">
@@ -118,6 +263,7 @@ export function AboutPage() {
               alt="Team TooolVibes al lavoro intorno a un laptop"
               fill
               priority
+              unoptimized
               sizes="(min-width: 1024px) 54vw, 100vw"
               className="object-cover"
             />
@@ -252,6 +398,7 @@ export function AboutPage() {
           Entra nella community
         </PremiumLink>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

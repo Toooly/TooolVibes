@@ -23,7 +23,6 @@ import {
   Zap,
   ChevronRight,
   UserPlus,
-  UsersRound,
 } from "lucide-react";
 
 const navLinks = [
@@ -32,7 +31,6 @@ const navLinks = [
   { href: "/radar", label: "Radar", icon: Radar },
   { href: "/compare", label: "Confronto", icon: Zap },
   { href: "/shortlist", label: "Salvati", icon: Compass },
-  { href: "/chi-siamo", label: "Chi siamo", icon: UsersRound },
   { href: "/shop", label: "Shop", icon: ShoppingBag },
   { href: "/community", label: "Community", icon: Users },
 ];
@@ -167,7 +165,7 @@ export function SiteHeaderV2() {
             {/* Desktop Nav */}
             <nav ref={navRef} className="site-header-v2__nav navbar-circuit-pill hidden items-center gap-1 lg:flex" aria-label="Navigazione principale">
               <CircuitPill config={PILL_CONFIGS.nav} containerRef={navRef} />
-              {navLinks.slice(0, 6).map((link) => (
+              {navLinks.slice(0, 5).map((link) => (
                 <NavLink
                   key={link.href}
                   href={link.href}
