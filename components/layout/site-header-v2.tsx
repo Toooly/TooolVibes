@@ -23,16 +23,22 @@ import {
   Zap,
   ChevronRight,
   UserPlus,
+  UsersRound,
 } from "lucide-react";
 
 const navLinks = [
-  { href: "/", label: "Home", icon: Sparkles },
-  { href: "/archivio", label: "Catalogo", icon: LayoutGrid },
-  { href: "/radar", label: "Radar", icon: Radar },
-  { href: "/compare", label: "Confronto", icon: Zap },
-  { href: "/shortlist", label: "Salvati", icon: Compass },
-  { href: "/shop", label: "Shop", icon: ShoppingBag },
-  { href: "/community", label: "Community", icon: Users },
+  { href: "/", label: "Home", icon: Sparkles, tone: ["#7C4DFF", "#39D2F6", "#B388FF"] },
+  { href: "/archivio", label: "Catalogo", icon: LayoutGrid, tone: ["#6A3CFF", "#00E5FF", "#8B6CFF"] },
+  { href: "/radar", label: "Radar", icon: Radar, tone: ["#7C4DFF", "#39D2F6", "#F3BF4C"] },
+  { href: "/compare", label: "Confronto", icon: Zap, tone: ["#8B6CFF", "#FF5EB8", "#39D2F6"] },
+  { href: "/shortlist", label: "Salvati", icon: Compass, tone: ["#6A3CFF", "#B388FF", "#00E5FF"] },
+  { href: "/shop", label: "Shop", icon: ShoppingBag, tone: ["#7C4DFF", "#F3BF4C", "#39D2F6"] },
+  { href: "/community", label: "Community", icon: Users, tone: ["#8B6CFF", "#39D2F6", "#FF5EB8"] },
+];
+
+const desktopNavLinks = [
+  ...navLinks.slice(0, 5),
+  { href: "/chi-siamo", label: "Chi siamo", icon: UsersRound },
 ];
 
 function matchesPathname(pathname: string | null, href: string) {
@@ -165,7 +171,7 @@ export function SiteHeaderV2() {
             {/* Desktop Nav */}
             <nav ref={navRef} className="site-header-v2__nav navbar-circuit-pill hidden items-center gap-1 lg:flex" aria-label="Navigazione principale">
               <CircuitPill config={PILL_CONFIGS.nav} containerRef={navRef} />
-              {navLinks.slice(0, 5).map((link) => (
+              {desktopNavLinks.map((link) => (
                 <NavLink
                   key={link.href}
                   href={link.href}
@@ -326,6 +332,11 @@ export function SiteHeaderV2() {
                             ? "is-active bg-gradient-to-r from-[rgba(106,60,255,0.1)] to-[rgba(57,210,246,0.05)] text-[#6a3cff]"
                             : "text-[#4f4970] hover:bg-[rgba(106,60,255,0.04)] hover:text-[#120d2f]"
                         }`}
+                        style={{
+                          "--mobile-link-a": link.tone[0],
+                          "--mobile-link-b": link.tone[1],
+                          "--mobile-link-c": link.tone[2],
+                        } as React.CSSProperties}
                         data-sonic-action="nav"
                         aria-current={isActive ? "page" : undefined}
                       >

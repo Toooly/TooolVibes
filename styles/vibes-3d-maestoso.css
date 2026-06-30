@@ -1028,7 +1028,13 @@ body {
   color: #7C4DFF !important;
 }
 .site-header-v2__menu-button {
+  color: #6A3CFF !important;
+}
+.site-header-v2__menu-button.is-open {
   color: #F0EFFF !important;
+}
+.site-header-v2__menu-button .site-header-v2__menu-glyph span {
+  background: currentColor !important;
 }
 .site-header-v2__search-trigger {
   color: #9E99B8 !important;
