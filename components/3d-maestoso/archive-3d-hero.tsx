@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Search, SlidersHorizontal, Layers3 } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import * as THREE from "three";
@@ -37,20 +37,8 @@ function GalaxyParticles() {
 }
 
 export function Archive3DHero() {
-  const handleJump = (target: "search" | "filters" | "categories") => {
-    const selector =
-      target === "search"
-        ? "[data-catalog-search]"
-        : target === "filters"
-          ? "[data-catalog-filters]"
-          : "[data-catalog-categories]";
-    const element = document.querySelector<HTMLElement>(selector);
-
-    element?.scrollIntoView({ behavior: "smooth", block: "center" });
-
-    if (target === "search" && element instanceof HTMLInputElement) {
-      window.setTimeout(() => element.focus({ preventScroll: true }), 320);
-    }
+  const openCatalogPanel = (panel: "search" | "filters") => {
+    window.dispatchEvent(new CustomEvent("tooolvibes:catalog-panel", { detail: panel }));
   };
 
   return (
@@ -86,24 +74,17 @@ export function Archive3DHero() {
         >
           <button
             type="button"
-            onClick={() => handleJump("search")}
+            onClick={() => openCatalogPanel("search")}
             className="archive-3d-hero__pill flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.6)] px-4 py-2 text-sm text-[#9E99B8]"
           >
             <Search size={14} /> Ricerca
           </button>
           <button
             type="button"
-            onClick={() => handleJump("filters")}
+            onClick={() => openCatalogPanel("filters")}
             className="archive-3d-hero__pill flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.6)] px-4 py-2 text-sm text-[#9E99B8]"
           >
             <SlidersHorizontal size={14} /> Filtri
-          </button>
-          <button
-            type="button"
-            onClick={() => handleJump("categories")}
-            className="archive-3d-hero__pill flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.6)] px-4 py-2 text-sm text-[#9E99B8]"
-          >
-            <Layers3 size={14} /> Categorie
           </button>
         </motion.div>
       </div>

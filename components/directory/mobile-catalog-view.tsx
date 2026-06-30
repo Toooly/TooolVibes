@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo, useCallback, type CSSProperties, type ReactNode } from "react";
+import { useState, useMemo, useCallback, useEffect, type CSSProperties } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Search,
+  SlidersHorizontal,
   X,
   ArrowLeft,
   ArrowRight,
@@ -90,23 +91,23 @@ const CATEGORY_META: Record<
 };
 
 const CATEGORY_SIGNAL_MAP: Record<string, string[]> = {
-  all: ["AI", "SaaS", "No-code"],
-  "vibe-coding": ["</>", "SQL", "Next.js"],
-  "ai-app-builder": ["MVP", "UI", "API"],
-  "no-code": ["Flow", "Zap", "DB"],
-  "headless-cms": ["CMS", "GraphQL", "API"],
-  "ui-builder": ["Figma", "CSS", "Layout"],
-  "ai-writing": ["Copy", "SEO", "Brief"],
-  "ai-image": ["Prompt", "PNG", "Style"],
-  "ai-video": ["Scene", "Edit", "Render"],
-  marketing: ["Funnel", "Ads", "UTM"],
-  sales: ["CRM", "Lead", "Deal"],
-  "customer-support": ["Chat", "Ticket", "SLA"],
-  automation: ["Webhook", "n8n", "Zap"],
-  "ai-agents": ["Agent", "Memory", "Tool"],
-  payments: ["Stripe", "MRR", "Checkout"],
-  "website-builder": ["Landing", "SEO", "Deploy"],
-  productivity: ["Tasks", "Focus", "Calendar"],
+  all: ["Panoramica", "Idee", "Scelta"],
+  "vibe-coding": ["Crea app", "Scrivi codice", "Prototipi"],
+  "ai-app-builder": ["App pronte", "Schermate", "Funzioni"],
+  "no-code": ["Senza codice", "Blocchi", "Flussi"],
+  "headless-cms": ["Contenuti", "Pagine", "Archivio"],
+  "ui-builder": ["Interfacce", "Layout", "Componenti"],
+  "ai-writing": ["Testi", "Idee", "Revisioni"],
+  "ai-image": ["Immagini", "Stili", "Visual"],
+  "ai-video": ["Video", "Scene", "Montaggio"],
+  marketing: ["Promozione", "Pubblico", "Campagne"],
+  sales: ["Clienti", "Preventivi", "Trattative"],
+  "customer-support": ["Assistenza", "Richieste", "Risposte"],
+  automation: ["Automatizza", "Collega app", "Risparmia tempo"],
+  "ai-agents": ["Assistenti", "Compiti", "Decisioni"],
+  payments: ["Pagamenti", "Incassi", "Ordini"],
+  "website-builder": ["Siti web", "Pagine", "Pubblica"],
+  productivity: ["Organizza", "Tempo", "Priorita"],
 };
 
 function extractDomain(url: string): string | undefined {
@@ -150,6 +151,7 @@ export function MobileCatalogView({
   );
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [activeLevel, setActiveLevel] = useState<DirectoryToolLevel | "all">("all");
+  const [openPanel, setOpenPanel] = useState<"search" | "filters" | null>(null);
 
   const levelChips: { key: DirectoryToolLevel | "all"; label: string }[] = [
     { key: "all", label: "Tutti" },
@@ -211,22 +213,12 @@ export function MobileCatalogView({
           ? tools.length
           : categoryTools.length;
       const meta = CATEGORY_META[cat.key] ?? { color: "#6a3cff", iconName: "Sparkles" };
-      const visualTools = categoryTools.slice(0, 3).map((tool) => {
-        const domain = extractDomain(tool.url);
-        return {
-          name: tool.name,
-          iconUrl: domain
-            ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`
-            : undefined,
-        };
-      });
 
       return {
         ...cat,
         count,
         ...meta,
-        signals: CATEGORY_SIGNAL_MAP[cat.key] ?? ["AI", "Tool", "Flow"],
-        visualTools,
+        signals: CATEGORY_SIGNAL_MAP[cat.key] ?? ["Scopri", "Valuta", "Scegli"],
       };
     });
   }, [filterGroups, tools]);
@@ -266,6 +258,27 @@ export function MobileCatalogView({
     },
     [view]
   );
+
+  useEffect(() => {
+    const handleCatalogPanel = (event: Event) => {
+      const panel = (event as CustomEvent<"search" | "filters">).detail;
+      if (panel !== "search" && panel !== "filters") return;
+      setOpenPanel(panel);
+      window.setTimeout(() => {
+        document
+          .querySelector<HTMLElement>("[data-catalog-panel]")
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (panel === "search") {
+          document
+            .querySelector<HTMLInputElement>("[data-catalog-search]")
+            ?.focus({ preventScroll: true });
+        }
+      }, 80);
+    };
+
+    window.addEventListener("tooolvibes:catalog-panel", handleCatalogPanel as EventListener);
+    return () => window.removeEventListener("tooolvibes:catalog-panel", handleCatalogPanel as EventListener);
+  }, []);
 
   const searchControl = (
     <div className="mobile-catalog-view__search">
@@ -318,6 +331,71 @@ export function MobileCatalogView({
         <span className="mobile-catalog-view__ambient-trace mobile-catalog-view__ambient-trace--two" />
         <span className="mobile-catalog-view__ambient-trace mobile-catalog-view__ambient-trace--three" />
       </div>
+      <AnimatePresence>
+        {openPanel && (
+          <motion.section
+            key="catalog-panel"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22 }}
+            className="mobile-catalog-command-panel"
+            data-catalog-panel
+            aria-label={openPanel === "search" ? "Ricerca catalogo" : "Filtri catalogo"}
+          >
+            <div className="mobile-catalog-command-panel__header">
+              <span className="mobile-catalog-command-panel__icon">
+                {openPanel === "search" ? (
+                  <Search size={16} aria-hidden="true" />
+                ) : (
+                  <SlidersHorizontal size={16} aria-hidden="true" />
+                )}
+              </span>
+              <strong>{openPanel === "search" ? "Ricerca" : "Filtri"}</strong>
+              <button
+                type="button"
+                onClick={() => setOpenPanel(null)}
+                className="mobile-catalog-command-panel__close"
+                aria-label="Chiudi pannello"
+              >
+                <X size={15} aria-hidden="true" />
+              </button>
+            </div>
+
+            {openPanel === "search" ? (
+              <div className="mobile-catalog-command-panel__search">
+                {searchControl}
+              </div>
+            ) : (
+              <div className="mobile-catalog-command-panel__filters">
+                <div className="mobile-catalog-command-panel__group">
+                  <span>Categoria</span>
+                  <div className="mobile-catalog-command-panel__category-list">
+                    {filterGroups.map((group) => {
+                      const isActive =
+                        group.key === "all" ? !activeGroup : activeGroup === group.key;
+                      return (
+                        <button
+                          key={group.key}
+                          type="button"
+                          onClick={() => handleCategorySelect(group.key)}
+                          className={`mobile-catalog-command-panel__category${isActive ? " is-active" : ""}`}
+                        >
+                          {group.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="mobile-catalog-command-panel__group">
+                  <span>Livello</span>
+                  {levelControls}
+                </div>
+              </div>
+            )}
+          </motion.section>
+        )}
+      </AnimatePresence>
       {/* Content */}
       <AnimatePresence mode="wait">
         {view === "categories" ? (
@@ -331,7 +409,6 @@ export function MobileCatalogView({
             <MobileCategoryMap
               categories={categories}
               onSelect={handleCategorySelect}
-              searchControl={searchControl}
               featuredTools={featuredTools}
             />
           </motion.div>
@@ -430,35 +507,18 @@ type MobileCategoryMapProps = {
     color: string;
     iconName: keyof typeof CATEGORY_ICON_MAP;
     signals: string[];
-    visualTools: { name: string; iconUrl?: string }[];
   }[];
   onSelect: (key: string) => void;
-  searchControl: ReactNode;
   featuredTools: DirectoryTool[];
 };
 
 function MobileCategoryMap({
   categories,
   onSelect,
-  searchControl,
   featuredTools,
 }: MobileCategoryMapProps) {
   return (
     <section className="mobile-category-map" aria-label="Esplora per categoria">
-      <div className="mobile-category-map__intro">
-        <span className="mobile-category-map__eyebrow">Catalogo curato</span>
-        <h1>Catalogo</h1>
-        {searchControl}
-        <p>Scegli una rotta, filtra il livello giusto e costruisci una lista pulita senza perderti tra schede uguali.</p>
-        <div className="mobile-category-map__steps">
-          <span className="is-active">Esplora</span>
-          <span className="mobile-category-map__steps-arrow">→</span>
-          <span>Filtra</span>
-          <span className="mobile-category-map__steps-arrow">→</span>
-          <span>Scopri</span>
-        </div>
-      </div>
-
       <div className="mobile-category-map__stats" aria-label="Statistiche catalogo" data-catalog-filters>
         <span>
           <strong>{categories.find((cat) => cat.key === "all")?.count ?? 0}</strong>
@@ -491,25 +551,6 @@ function MobileCategoryMap({
             >
               <span className="mobile-category-map__halo" aria-hidden="true" />
               <span className="mobile-category-map__orbit" aria-hidden="true" />
-              <span className="mobile-category-map__tool-orbit" aria-hidden="true">
-                {cat.visualTools.map((tool) => (
-                  <span
-                    key={tool.name}
-                    className="mobile-category-map__tool-dot"
-                    style={
-                      tool.iconUrl
-                        ? { "--tool-dot-icon": `url("${tool.iconUrl}")` } as CSSProperties
-                        : undefined
-                    }
-                  >
-                    {tool.iconUrl ? (
-                      <span className="mobile-category-map__tool-dot-image" />
-                    ) : (
-                      <span>{tool.name.slice(0, 2).toUpperCase()}</span>
-                    )}
-                  </span>
-                ))}
-              </span>
               <span className="mobile-category-map__signals" aria-hidden="true">
                 {cat.signals.map((signal) => (
                   <span key={signal}>{signal}</span>
