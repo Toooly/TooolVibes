@@ -89,6 +89,26 @@ const CATEGORY_META: Record<
   productivity: { color: "#d946ef", iconName: "Clock" },
 };
 
+const CATEGORY_SIGNAL_MAP: Record<string, string[]> = {
+  all: ["AI", "SaaS", "No-code"],
+  "vibe-coding": ["</>", "SQL", "Next.js"],
+  "ai-app-builder": ["MVP", "UI", "API"],
+  "no-code": ["Flow", "Zap", "DB"],
+  "headless-cms": ["CMS", "GraphQL", "API"],
+  "ui-builder": ["Figma", "CSS", "Layout"],
+  "ai-writing": ["Copy", "SEO", "Brief"],
+  "ai-image": ["Prompt", "PNG", "Style"],
+  "ai-video": ["Scene", "Edit", "Render"],
+  marketing: ["Funnel", "Ads", "UTM"],
+  sales: ["CRM", "Lead", "Deal"],
+  "customer-support": ["Chat", "Ticket", "SLA"],
+  automation: ["Webhook", "n8n", "Zap"],
+  "ai-agents": ["Agent", "Memory", "Tool"],
+  payments: ["Stripe", "MRR", "Checkout"],
+  "website-builder": ["Landing", "SEO", "Deploy"],
+  productivity: ["Tasks", "Focus", "Calendar"],
+};
+
 function extractDomain(url: string): string | undefined {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -182,12 +202,32 @@ export function MobileCatalogView({
 
   const categories = useMemo(() => {
     return filterGroups.map((cat) => {
+      const categoryTools =
+        cat.key === "all"
+          ? tools
+          : tools.filter((tool) => tool.segments.includes(cat.key));
       const count =
         cat.key === "all"
           ? tools.length
-          : tools.filter((t) => t.segments.includes(cat.key)).length;
+          : categoryTools.length;
       const meta = CATEGORY_META[cat.key] ?? { color: "#6a3cff", iconName: "Sparkles" };
-      return { ...cat, count, ...meta };
+      const visualTools = categoryTools.slice(0, 3).map((tool) => {
+        const domain = extractDomain(tool.url);
+        return {
+          name: tool.name,
+          iconUrl: domain
+            ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`
+            : undefined,
+        };
+      });
+
+      return {
+        ...cat,
+        count,
+        ...meta,
+        signals: CATEGORY_SIGNAL_MAP[cat.key] ?? ["AI", "Tool", "Flow"],
+        visualTools,
+      };
     });
   }, [filterGroups, tools]);
 
@@ -231,6 +271,7 @@ export function MobileCatalogView({
     <div className="mobile-catalog-view__search">
       <Search size={16} className="shrink-0 text-[#6a3cff]" />
       <input
+        data-catalog-search
         value={searchQuery}
         onChange={(e) => handleSearchChange(e.target.value)}
         placeholder={
@@ -254,7 +295,7 @@ export function MobileCatalogView({
   );
 
   const levelControls = (
-    <div className="mobile-catalog-view__chips">
+    <div className="mobile-catalog-view__chips" data-catalog-filters>
       {levelChips.map((chip) => (
         <button
           key={chip.key}
@@ -388,6 +429,8 @@ type MobileCategoryMapProps = {
     count: number;
     color: string;
     iconName: keyof typeof CATEGORY_ICON_MAP;
+    signals: string[];
+    visualTools: { name: string; iconUrl?: string }[];
   }[];
   onSelect: (key: string) => void;
   searchControl: ReactNode;
@@ -416,7 +459,7 @@ function MobileCategoryMap({
         </div>
       </div>
 
-      <div className="mobile-category-map__stats" aria-label="Statistiche catalogo">
+      <div className="mobile-category-map__stats" aria-label="Statistiche catalogo" data-catalog-filters>
         <span>
           <strong>{categories.find((cat) => cat.key === "all")?.count ?? 0}</strong>
           tool
@@ -429,7 +472,7 @@ function MobileCategoryMap({
 
       <CategoryGuide />
 
-      <div className="mobile-category-map__grid">
+      <div className="mobile-category-map__grid" data-catalog-categories>
         {categories.map((cat, index) => {
           const Icon = CATEGORY_ICON_MAP[cat.iconName];
           return (
@@ -448,6 +491,30 @@ function MobileCategoryMap({
             >
               <span className="mobile-category-map__halo" aria-hidden="true" />
               <span className="mobile-category-map__orbit" aria-hidden="true" />
+              <span className="mobile-category-map__tool-orbit" aria-hidden="true">
+                {cat.visualTools.map((tool) => (
+                  <span
+                    key={tool.name}
+                    className="mobile-category-map__tool-dot"
+                    style={
+                      tool.iconUrl
+                        ? { "--tool-dot-icon": `url("${tool.iconUrl}")` } as CSSProperties
+                        : undefined
+                    }
+                  >
+                    {tool.iconUrl ? (
+                      <span className="mobile-category-map__tool-dot-image" />
+                    ) : (
+                      <span>{tool.name.slice(0, 2).toUpperCase()}</span>
+                    )}
+                  </span>
+                ))}
+              </span>
+              <span className="mobile-category-map__signals" aria-hidden="true">
+                {cat.signals.map((signal) => (
+                  <span key={signal}>{signal}</span>
+                ))}
+              </span>
               <span className="mobile-category-map__body">
                 <Icon size={28} aria-hidden="true" />
               </span>

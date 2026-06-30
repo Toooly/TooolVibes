@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ExternalLink, Sparkles, Trophy, Medal } from "lucide-react";
+import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 
 type MobileSpotlightProps = {
@@ -25,16 +25,11 @@ function PodiumTool({
 
   return (
     <div className={`v-podium-step v-podium-step--rank-${rank} ${className || ""}`}>
+      <div className="v-podium-rank" aria-label={`Posizione ${rank}`}>
+        <span>{rank}</span>
+      </div>
       <div className="v-podium-step-glow" />
       <div className="v-podium-step-inner">
-        <div className="v-podium-rank">
-          {rank === 1 ? (
-            <Trophy size={18} />
-          ) : (
-            <Medal size={16} />
-          )}
-          <span>#{rank}</span>
-        </div>
         <div className="v-podium-avatar">
           {iconUrl ? (
             <img src={iconUrl} alt="" loading="eager" decoding="async" />
@@ -50,11 +45,6 @@ function PodiumTool({
 }
 
 export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightProps) {
-  const domain = tool.domain || tool.externalUrl;
-  const iconUrl = domain
-    ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`
-    : undefined;
-
   const podiumTools = [tool, ...supportingTools.slice(0, 2)];
   const [first, second, third] = [
     podiumTools[0],

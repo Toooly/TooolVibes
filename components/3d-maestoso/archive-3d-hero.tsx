@@ -37,8 +37,24 @@ function GalaxyParticles() {
 }
 
 export function Archive3DHero() {
+  const handleJump = (target: "search" | "filters" | "categories") => {
+    const selector =
+      target === "search"
+        ? "[data-catalog-search]"
+        : target === "filters"
+          ? "[data-catalog-filters]"
+          : "[data-catalog-categories]";
+    const element = document.querySelector<HTMLElement>(selector);
+
+    element?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    if (target === "search" && element instanceof HTMLInputElement) {
+      window.setTimeout(() => element.focus({ preventScroll: true }), 320);
+    }
+  };
+
   return (
-    <section className="relative flex min-h-[50vh] items-center justify-center overflow-hidden py-16">
+    <section className="archive-3d-hero relative flex min-h-[24rem] items-center justify-center overflow-hidden py-10 sm:py-12">
       <div className="absolute inset-0">
         <Canvas camera={{ position: [0, 0, 10], fov: 60 }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
           <ambientLight intensity={0.2} />
@@ -47,44 +63,48 @@ export function Archive3DHero() {
       </div>
       <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
         <motion.p
-          className="mb-3 text-sm font-semibold uppercase tracking-widest text-[#7C4DFF]"
+          className="archive-3d-hero__title mb-3 text-sm font-semibold uppercase tracking-widest text-[#7C4DFF]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          Catalogo 3D
+          Catalogo TooolVibes
         </motion.p>
         <motion.h1
-          className="v-text-gradient-purple text-4xl font-bold sm:text-5xl md:text-6xl"
+          className="sr-only"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
         >
-          Cerca, filtra e attraversa i tool come livelli
+          Catalogo TooolVibes
         </motion.h1>
-        <motion.p
-          className="mx-auto mt-5 max-w-xl text-lg text-[#9E99B8]"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-        >
-          Il catalogo diventa una console: ricerca davanti, categorie in prospettiva, schede tool su piani diversi.
-        </motion.p>
         <motion.div
-          className="mt-8 flex flex-wrap items-center justify-center gap-4"
+          className="mt-5 flex flex-wrap items-center justify-center gap-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
+          transition={{ delay: 0.45, duration: 0.6 }}
         >
-          <div className="flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.6)] px-4 py-2 text-sm text-[#9E99B8]">
+          <button
+            type="button"
+            onClick={() => handleJump("search")}
+            className="archive-3d-hero__pill flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.6)] px-4 py-2 text-sm text-[#9E99B8]"
+          >
             <Search size={14} /> Ricerca
-          </div>
-          <div className="flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.6)] px-4 py-2 text-sm text-[#9E99B8]">
+          </button>
+          <button
+            type="button"
+            onClick={() => handleJump("filters")}
+            className="archive-3d-hero__pill flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.6)] px-4 py-2 text-sm text-[#9E99B8]"
+          >
             <SlidersHorizontal size={14} /> Filtri
-          </div>
-          <div className="flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.6)] px-4 py-2 text-sm text-[#9E99B8]">
+          </button>
+          <button
+            type="button"
+            onClick={() => handleJump("categories")}
+            className="archive-3d-hero__pill flex items-center gap-2 rounded-full border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.6)] px-4 py-2 text-sm text-[#9E99B8]"
+          >
             <Layers3 size={14} /> Categorie
-          </div>
+          </button>
         </motion.div>
       </div>
     </section>
