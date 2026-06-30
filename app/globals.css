@@ -31334,6 +31334,357 @@ body:has(.tone-account) {
   }
 }
 
+/* Desktop radar: simple live hero and stable Product Hunt table. */
+@media (min-width: 1024px) {
+  .desktop-vibe-radar .desktop-vibe-radar-hero--simple {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    justify-items: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-height: calc(100vh - 6rem) !important;
+    gap: clamp(0.4rem, 1.4vw, 1rem) !important;
+    margin-inline: 0 !important;
+    padding: clamp(5.4rem, 7.4vh, 6.4rem) clamp(2rem, 5vw, 4.5rem) clamp(1.4rem, 3vh, 2.2rem) !important;
+    overflow: visible !important;
+  }
+
+  .desktop-vibe-radar-title {
+    display: grid !important;
+    justify-items: center !important;
+    max-width: none !important;
+    text-align: center !important;
+  }
+
+  .desktop-vibe-radar-title h1 {
+    margin: 0 !important;
+    background: linear-gradient(105deg, #8f6cff 0%, #39d2f6 58%, #5cff9d 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    font-size: clamp(2.2rem, 5vw, 4.8rem) !important;
+    font-weight: 950 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.02 !important;
+    text-align: center !important;
+    text-shadow: 0 24px 80px rgba(57, 210, 246, 0.18);
+  }
+
+  .desktop-vibe-radar-title h1::before {
+    content: "";
+    display: inline-block;
+    width: 0.58rem;
+    aspect-ratio: 1;
+    margin-right: 0.72rem;
+    border-radius: 50%;
+    background: #35f27f;
+    box-shadow:
+      0 0 10px #35f27f,
+      0 0 28px rgba(53, 242, 127, 0.5);
+    vertical-align: 0.18em;
+    animation: tv-live-pulse 1.8s ease-in-out infinite;
+  }
+
+  .desktop-vibe-radar-hero--simple .desktop-vibe-radar-stage {
+    width: min(34vw, 31rem) !important;
+    min-width: 26rem !important;
+    min-height: auto !important;
+    aspect-ratio: 1 !important;
+    justify-self: center !important;
+    align-self: center !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
+    transform:
+      translateY(-1.05rem)
+      rotateX(calc(1deg - var(--tv-pointer-tilt-x)))
+      rotateY(calc(-2deg + var(--tv-pointer-tilt-y)))
+      translateZ(24px) !important;
+  }
+
+  .desktop-vibe-radar-hero--simple .desktop-vibe-radar-stage::before {
+    inset: 10% !important;
+    box-shadow:
+      0 0 0 4.8rem rgba(106, 60, 255, 0.032),
+      0 0 0 9.8rem rgba(57, 210, 246, 0.022),
+      inset 0 0 38px rgba(57, 210, 246, 0.08),
+      0 0 58px rgba(106, 60, 255, 0.15) !important;
+  }
+
+  .desktop-vibe-radar-hero--simple .desktop-vibe-radar-stage::after {
+    inset: -12% !important;
+    filter: blur(7px) !important;
+    opacity: 0.78 !important;
+  }
+
+  .desktop-vibe-radar-hero--simple .desktop-vibe-radar-stage .desktop-stage-canvas {
+    left: -6% !important;
+    top: -6% !important;
+    width: 112% !important;
+    height: 112% !important;
+    opacity: 0.68 !important;
+  }
+
+  .desktop-vibe-radar-hero--simple .desktop-radar-node {
+    --node-size: calc(clamp(3.7rem, 4.25vw, 5.25rem) * var(--node-scale, 1)) !important;
+    min-height: calc(var(--node-size) + 2.9rem) !important;
+  }
+
+  .desktop-vibe-radar-hero--simple .desktop-radar-node__label {
+    max-width: 8.8rem !important;
+    padding: 0.34rem 0.62rem !important;
+  }
+
+  .desktop-vibe-radar-hero--simple .desktop-radar-node__label strong,
+  .desktop-vibe-radar-hero--simple .desktop-radar-node__label small {
+    max-width: 8rem !important;
+  }
+
+  .desktop-vibe-radar-hero--simple .desktop-radar-node__label strong {
+    font-size: 0.8rem !important;
+  }
+
+  .desktop-vibe-radar-hero--simple .desktop-radar-node__label small {
+    font-size: 0.62rem !important;
+  }
+
+  .desktop-vibe-radar-console {
+    width: min(1120px, calc(100% - 4rem)) !important;
+    margin: clamp(1.2rem, 3vw, 2.2rem) auto clamp(4rem, 7vw, 6rem) !important;
+    padding: clamp(1.1rem, 2vw, 1.55rem) !important;
+    border: 1px solid rgba(155, 232, 255, 0.13) !important;
+    border-radius: 1.45rem !important;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(57, 210, 246, 0.12), transparent 34%),
+      radial-gradient(circle at 88% 16%, rgba(106, 60, 255, 0.13), transparent 32%),
+      rgba(8, 9, 22, 0.82) !important;
+    box-shadow:
+      0 28px 76px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .desktop-vibe-radar-console__header {
+    margin-bottom: 1rem !important;
+  }
+
+  .desktop-vibe-radar-console__header h2 {
+    margin: 0.2rem 0 0 !important;
+    color: #ffffff !important;
+    font-size: clamp(1.35rem, 2.2vw, 2rem) !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+.desktop-radar-table {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.2rem;
+  background: rgba(4, 6, 18, 0.56);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.desktop-radar-table__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.86rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.desktop-radar-table__tabs {
+  display: inline-flex;
+  gap: 0.38rem;
+  padding: 0.24rem;
+  border: 1px solid rgba(155, 232, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.desktop-radar-table__tabs button {
+  min-height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(240, 239, 255, 0.62);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  padding: 0 0.84rem;
+  transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.desktop-radar-table__tabs button:hover,
+.desktop-radar-table__tabs button:focus-visible,
+.desktop-radar-table__tabs button.is-active {
+  background: linear-gradient(135deg, rgba(106, 60, 255, 0.9), rgba(57, 210, 246, 0.72));
+  color: #ffffff;
+  outline: none;
+  box-shadow: 0 10px 24px rgba(57, 210, 246, 0.16);
+}
+
+.desktop-radar-table__updated {
+  color: rgba(240, 239, 255, 0.55);
+  font-size: 0.76rem;
+  font-weight: 760;
+}
+
+.desktop-radar-table__head,
+.desktop-radar-table__row {
+  display: grid;
+  grid-template-columns: 4.2rem 4.2rem minmax(0, 1fr) minmax(11rem, 0.32fr) 5.8rem;
+  align-items: center;
+  column-gap: 0.82rem;
+}
+
+.desktop-radar-table__head {
+  padding: 0.72rem 1rem;
+  color: rgba(155, 232, 255, 0.58);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.desktop-radar-table__head span:nth-child(2) {
+  grid-column: span 2;
+}
+
+.desktop-radar-table__body {
+  display: grid;
+}
+
+.desktop-radar-table__row {
+  min-height: 4.65rem;
+  padding: 0.78rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  color: inherit;
+  text-decoration: none;
+  transition: background 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+
+.desktop-radar-table__row:hover,
+.desktop-radar-table__row:focus-visible {
+  border-color: rgba(57, 210, 246, 0.16);
+  background: rgba(57, 210, 246, 0.07);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.desktop-radar-table__rank {
+  color: rgba(155, 232, 255, 0.72);
+  font-size: 0.86rem;
+  font-weight: 950;
+}
+
+.desktop-radar-table__visual {
+  display: grid;
+  width: 2.7rem;
+  aspect-ratio: 1;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.16), transparent 32%),
+    rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 950;
+}
+
+.desktop-radar-table__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.desktop-radar-table__copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.24rem;
+}
+
+.desktop-radar-table__copy strong {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 0.94rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-radar-table__copy small {
+  overflow: hidden;
+  color: rgba(240, 239, 255, 0.58);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktop-radar-table__metric {
+  color: rgba(240, 239, 255, 0.72);
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+.desktop-radar-table__open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.34rem;
+  color: rgba(94, 226, 255, 0.82);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.desktop-radar-table__empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.42rem;
+  padding: 2.4rem 1rem;
+  text-align: center;
+}
+
+.desktop-radar-table__empty strong {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.desktop-radar-table__empty span {
+  color: rgba(240, 239, 255, 0.58);
+  font-size: 0.84rem;
+}
+
+.desktop-radar-table__row.is-loading span {
+  border-radius: 999px;
+  color: transparent;
+  background: linear-gradient(90deg, rgba(255,255,255,0.055), rgba(255,255,255,0.12), rgba(255,255,255,0.055));
+  background-size: 200% 100%;
+  animation: tv-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+.desktop-radar-table__row.is-loading .desktop-radar-table__visual {
+  border-radius: 1rem;
+}
+
+.desktop-radar-table__row.is-loading .desktop-radar-table__copy {
+  gap: 0.48rem;
+  background: transparent;
+}
+
+.desktop-radar-table__row.is-loading .desktop-radar-table__copy span,
+.desktop-radar-table__row.is-loading .desktop-radar-table__copy small {
+  display: block;
+  height: 0.72rem;
+}
+
+.desktop-radar-table__row.is-loading .desktop-radar-table__copy small {
+  width: 74%;
+}
+
 /* Final desktop cleanup: header fit, compact saved shelves, catalog controls. */
 @media (min-width: 1024px) {
   .site-header-v2__inner {

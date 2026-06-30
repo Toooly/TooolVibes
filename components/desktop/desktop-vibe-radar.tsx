@@ -2,29 +2,14 @@ import { Radar } from "lucide-react";
 
 import { Radar3DLayer } from "@/components/3d-maestoso/radar-3d-layer";
 import { DesktopRadarNodes } from "@/components/desktop/desktop-radar-nodes";
-import { RadarGameMissions } from "@/components/gamification/radar-game-missions";
-import { ProductHuntRankings } from "@/components/product-hunt/product-hunt-rankings";
-import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
+import { DesktopRadarTable } from "@/components/desktop/desktop-radar-table";
 
 export function DesktopVibeRadar() {
   return (
     <div className="desktop-vibe desktop-vibe-radar hidden lg:block">
-      <section className="desktop-vibe-section desktop-vibe-radar-hero">
-        <div className="desktop-vibe-copy" data-orbit-shield>
-          <p className="desktop-vibe-eyebrow">Radar live</p>
-          <h1>I lanci si muovono dentro un radar 3D.</h1>
-          <p>
-            La classifica Product Hunt come una sala di segnali: orbite, sweep e card
-            agganciate alla profondità del sito. Nessun blocco statico, solo segnali in movimento.
-          </p>
-          <div className="desktop-vibe-actions">
-            <PremiumLink href="/archivio" size="lg">
-              Esplora catalogo
-            </PremiumLink>
-            <PremiumLink href="/shortlist#wishlist" tone="secondary" size="lg">
-              Suggerisci un tool
-            </PremiumLink>
-          </div>
+      <section className="desktop-vibe-section desktop-vibe-radar-hero desktop-vibe-radar-hero--simple">
+        <div className="desktop-vibe-copy desktop-vibe-radar-title" data-orbit-shield>
+          <h1>Radar Live</h1>
         </div>
 
         <div className="desktop-vibe-radar-stage" aria-label="Radar 3D Product Hunt">
@@ -37,20 +22,15 @@ export function DesktopVibeRadar() {
         </div>
       </section>
 
-      <section className="desktop-vibe-section desktop-vibe-game-strip">
-        <RadarGameMissions />
-      </section>
-
       <section className="desktop-vibe-section desktop-vibe-radar-console">
         <div className="desktop-vibe-radar-console__header">
           <div data-orbit-shield>
             <p className="desktop-vibe-eyebrow">Classifica live</p>
-            <h2>Tutti i segnali Product Hunt in una plancia unica.</h2>
+            <h2>Classifica Product Hunt</h2>
           </div>
-          <PremiumBadge tone="warning">Radar live</PremiumBadge>
         </div>
         <div id="rankings">
-          <ProductHuntRankings variant="wide" />
+          <DesktopRadarTable />
         </div>
       </section>
     </div>
