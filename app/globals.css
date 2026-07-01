@@ -31992,6 +31992,19 @@ body:has(.tone-account) {
   border-color: rgba(91, 242, 166, 0.28) !important;
 }
 
+.mobile-tool-card__visual::after {
+  content: none !important;
+  display: none !important;
+}
+
+.mobile-catalog-view__tools-controls + .mobile-tool-grid {
+  margin-top: clamp(1.25rem, 2vw, 1.8rem) !important;
+}
+
+.mobile-catalog-view__tools-controls + .mobile-tool-grid .mobile-tool-grid__list {
+  margin-top: 0.4rem !important;
+}
+
 .mobile-tool-card__category {
   color: #9be8ff !important;
   text-shadow: none !important;
