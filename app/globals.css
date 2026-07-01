@@ -31877,3 +31877,245 @@ body:has(.tone-account) {
   border-color: rgba(155, 232, 255, 0.28) !important;
   border-width: 1.5px !important;
 }
+
+/* Catalog selected view refresh: stronger TooolVibes cards and controls. */
+.mobile-catalog-view__tools-controls {
+  border-color: rgba(155, 232, 255, 0.18) !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(91, 242, 166, 0.12), transparent 18rem),
+    radial-gradient(circle at 86% 0%, rgba(57, 210, 246, 0.18), transparent 20rem),
+    linear-gradient(145deg, rgba(17, 12, 38, 0.78), rgba(7, 21, 34, 0.62)) !important;
+  box-shadow:
+    0 22px 56px rgba(3, 8, 22, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+}
+
+.mobile-catalog-view__back {
+  border: 1px solid rgba(155, 232, 255, 0.2) !important;
+  background: rgba(155, 232, 255, 0.12) !important;
+  color: #dff9ff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.mobile-catalog-view__search {
+  border-color: rgba(155, 232, 255, 0.2) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.07)) !important;
+  color: #f6fbff !important;
+}
+
+.mobile-catalog-view__search svg {
+  color: #9be8ff !important;
+}
+
+.mobile-catalog-view__search input {
+  color: #ffffff !important;
+}
+
+.mobile-catalog-view__search input::placeholder {
+  color: rgba(226, 243, 255, 0.62) !important;
+}
+
+.mobile-catalog-view__chip {
+  border-color: rgba(155, 232, 255, 0.17) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.07)) !important;
+  color: rgba(239, 248, 255, 0.78) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.mobile-catalog-view__chip:hover,
+.mobile-catalog-view__chip.is-active {
+  border-color: rgba(91, 242, 166, 0.36) !important;
+  background:
+    linear-gradient(135deg, rgba(91, 242, 166, 0.95), rgba(57, 210, 246, 0.95)) !important;
+  color: #061421 !important;
+  box-shadow:
+    0 10px 24px rgba(57, 210, 246, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
+}
+
+.mobile-tool-grid__header {
+  border-bottom-color: rgba(155, 232, 255, 0.16) !important;
+}
+
+.mobile-tool-grid__header h2 {
+  color: #ffffff !important;
+  text-shadow: 0 18px 48px rgba(57, 210, 246, 0.2);
+}
+
+.mobile-tool-grid__header span {
+  color: rgba(224, 244, 255, 0.72) !important;
+}
+
+.mobile-tool-card {
+  border-color: rgba(155, 232, 255, 0.2) !important;
+  background:
+    radial-gradient(circle at 88% -8%, rgba(57, 210, 246, 0.2), transparent 36%),
+    radial-gradient(circle at 14% 10%, rgba(91, 242, 166, 0.12), transparent 28%),
+    linear-gradient(145deg, rgba(34, 24, 70, 0.9), rgba(10, 22, 39, 0.9)) !important;
+  box-shadow:
+    0 24px 58px rgba(3, 8, 22, 0.34),
+    0 0 0 1px rgba(106, 60, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+.mobile-tool-card:hover,
+.mobile-tool-card:focus-visible {
+  border-color: rgba(91, 242, 166, 0.36) !important;
+  box-shadow:
+    0 30px 70px rgba(3, 8, 22, 0.42),
+    0 0 34px rgba(57, 210, 246, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.mobile-tool-card::before {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.mobile-tool-card::after {
+  border-color: rgba(91, 242, 166, 0.2) !important;
+}
+
+.mobile-tool-card__visual {
+  border-color: rgba(155, 232, 255, 0.28) !important;
+  background:
+    radial-gradient(circle at 36% 24%, rgba(255, 255, 255, 0.18), transparent 42%),
+    linear-gradient(135deg, rgba(106, 60, 255, 0.46), rgba(57, 210, 246, 0.22)) !important;
+  box-shadow:
+    0 0 0 1px rgba(91, 242, 166, 0.12),
+    0 16px 36px rgba(57, 210, 246, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+.mobile-tool-card__visual::after {
+  border-color: rgba(91, 242, 166, 0.28) !important;
+}
+
+.mobile-tool-card__category {
+  color: #9be8ff !important;
+  text-shadow: none !important;
+}
+
+.mobile-tool-card__level {
+  border-color: rgba(91, 242, 166, 0.24) !important;
+  background: rgba(91, 242, 166, 0.12) !important;
+  color: #d7ffe9 !important;
+}
+
+.mobile-tool-card__title,
+.mobile-tool-card h3 {
+  color: #ffffff !important;
+}
+
+.mobile-tool-card__description,
+.mobile-tool-card p {
+  color: rgba(231, 243, 255, 0.76) !important;
+}
+
+.mobile-tool-card__open {
+  color: #5bf2a6 !important;
+  text-shadow: 0 0 14px rgba(91, 242, 166, 0.22) !important;
+}
+
+.mobile-tool-card__actions .selection-chip {
+  border-color: rgba(155, 232, 255, 0.22) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.07)) !important;
+  color: #ecf8ff !important;
+  box-shadow:
+    0 10px 24px rgba(3, 8, 22, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+.mobile-tool-card__actions .selection-chip:first-child {
+  border-color: rgba(57, 210, 246, 0.32) !important;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(57, 210, 246, 0.28), transparent 64%),
+    linear-gradient(180deg, rgba(57, 210, 246, 0.18), rgba(106, 60, 255, 0.12)) !important;
+  color: #e5fbff !important;
+}
+
+.mobile-tool-card__actions .selection-chip:last-child {
+  border-color: rgba(91, 242, 166, 0.3) !important;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(91, 242, 166, 0.25), transparent 64%),
+    linear-gradient(180deg, rgba(91, 242, 166, 0.16), rgba(243, 191, 76, 0.09)) !important;
+  color: #effff7 !important;
+}
+
+.mobile-tool-card__actions .selection-chip:first-child > span:first-child {
+  background: #39d2f6 !important;
+  box-shadow:
+    0 0 0 4px rgba(57, 210, 246, 0.14),
+    0 0 14px rgba(57, 210, 246, 0.42) !important;
+}
+
+.mobile-tool-card__actions .selection-chip:last-child > span:first-child {
+  background: #5bf2a6 !important;
+  box-shadow:
+    0 0 0 4px rgba(91, 242, 166, 0.14),
+    0 0 14px rgba(91, 242, 166, 0.38) !important;
+}
+
+.mobile-tool-card__actions .selection-chip:hover,
+.mobile-tool-card__actions .selection-chip:focus-visible,
+.mobile-tool-card__actions .selection-chip.is-active,
+.mobile-compare-toolbox .selection-chip:hover,
+.mobile-compare-toolbox .selection-chip:focus-visible,
+.mobile-compare-toolbox .selection-chip.is-active {
+  border-color: rgba(91, 242, 166, 0.48) !important;
+  background:
+    linear-gradient(135deg, rgba(91, 242, 166, 0.95), rgba(57, 210, 246, 0.95)) !important;
+  color: #061421 !important;
+  box-shadow:
+    0 14px 30px rgba(57, 210, 246, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52) !important;
+}
+
+.mobile-compare-toolbox {
+  border-color: rgba(155, 232, 255, 0.2) !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(91, 242, 166, 0.14), transparent 17rem),
+    radial-gradient(circle at 88% 0%, rgba(57, 210, 246, 0.2), transparent 20rem),
+    linear-gradient(145deg, rgba(20, 14, 42, 0.92), rgba(8, 20, 35, 0.9)) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 24px 62px rgba(3, 8, 22, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+.mobile-compare-toolbox__icon {
+  background:
+    linear-gradient(135deg, #5bf2a6, #39d2f6) !important;
+  color: #061421 !important;
+  box-shadow: 0 12px 28px rgba(57, 210, 246, 0.26) !important;
+}
+
+.mobile-compare-toolbox h3 {
+  color: #ffffff !important;
+}
+
+.mobile-compare-toolbox p {
+  color: rgba(231, 243, 255, 0.72) !important;
+}
+
+.mobile-compare-toolbox__pill {
+  border-color: rgba(155, 232, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.mobile-compare-toolbox__pill > span {
+  color: #ffffff !important;
+}
+
+.mobile-compare-toolbox__cta {
+  border: 1px solid rgba(91, 242, 166, 0.28);
+  background:
+    linear-gradient(135deg, #5bf2a6, #39d2f6) !important;
+  color: #061421 !important;
+  box-shadow:
+    0 16px 34px rgba(57, 210, 246, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+}
