@@ -13,12 +13,11 @@ export const metadata: Metadata = {
 
 export default async function ComparePage() {
   const tools = await getPublishedTools();
-  const featuredTools = directoryTools.filter((t) => t.featured || t.toolOfWeek).slice(0, 5);
 
   return (
-    <>
-      <Compare3DHero featuredTools={featuredTools} />
+    <div className="compare-space-page">
+      <Compare3DHero />
       <MobileCompareView directoryTools={directoryTools} legacyTools={tools} />
-    </>
+    </div>
   );
 }

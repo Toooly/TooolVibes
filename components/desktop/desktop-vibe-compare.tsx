@@ -48,13 +48,7 @@ export function DesktopVibeCompare({
     <div className="desktop-vibe desktop-vibe-compare hidden lg:block">
       <section className="desktop-vibe-section desktop-vibe-compare-hero">
         <div className="desktop-vibe-copy">
-          <p className="desktop-vibe-eyebrow">Stanza decisionale 3D</p>
-          <h1>Il confronto diventa una stanza, non una tabella.</h1>
-          <p>
-            I candidati entrano su piani diversi: davanti l’aderenza all’uso, dietro le note
-            che chiudono il verdetto. L’interfaccia resta leggibile, ma vive dentro lo stesso campo
-            3D del resto di TooolVibes.
-          </p>
+          <h1>La stanza dove puoi confrontare tutti i tool che ti interessano.</h1>
           <div className="desktop-vibe-actions">
             <PremiumLink href="/archivio" size="lg">
               Aggiungi tool

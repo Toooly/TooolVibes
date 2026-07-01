@@ -567,7 +567,11 @@ img {
   }
 
   html[data-experience-route="compare"] .marketing-shell__ambient {
-    background: radial-gradient(circle at 50% 28%, rgba(42, 19, 74, 0.98) 0%, #13061e 58%, #08030d 100%) !important;
+    background:
+      radial-gradient(circle at 50% 22%, rgba(255, 215, 64, 0.08), transparent 18rem),
+      radial-gradient(circle at 18% 38%, rgba(255, 64, 129, 0.08), transparent 22rem),
+      radial-gradient(circle at 82% 30%, rgba(0, 229, 255, 0.065), transparent 24rem),
+      linear-gradient(180deg, #060612 0%, #0b0718 52%, #05040c 100%) !important;
   }
 
   .header-search-icon {

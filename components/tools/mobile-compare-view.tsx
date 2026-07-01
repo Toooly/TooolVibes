@@ -203,30 +203,6 @@ function ToolFighterLogo({ tool }: { tool: NormalisedTool }) {
 
 /* ---------- sub-components ---------- */
 
-function ArenaHeader({ count }: { count: number }) {
-  return (
-    <header className="mobile-compare-arena__header">
-      <div className="mobile-compare-arena__badge">
-        <Swords className="size-5" />
-        <span>Confronto</span>
-      </div>
-      <h1>Il punto in cui i candidati smettono di somigliarsi.</h1>
-      <p>Metti i tool uno accanto all&apos;altro e fai emergere il distacco vero.</p>
-      <div className="mobile-compare-arena__dots">
-        {Array.from({ length: MAX_COMPARE_TOOLS }).map((_, i) => (
-          <span
-            key={i}
-            className={cn(
-              "mobile-compare-arena__dot",
-              i < count && "is-active",
-            )}
-          />
-        ))}
-      </div>
-    </header>
-  );
-}
-
 function ChampionCard({
   tool,
   onRemove,
@@ -902,7 +878,6 @@ export function MobileCompareView({
   if (tools.length === 0) {
     return (
       <div className="mobile-compare-arena">
-        <ArenaHeader count={0} />
         <div className="mobile-compare-arena__empty">
           <div className="mobile-compare-arena__empty-icon">
             <Columns3 className="size-10" />
@@ -923,7 +898,6 @@ export function MobileCompareView({
   if (tools.length === 1) {
     return (
       <div className="mobile-compare-arena">
-        <ArenaHeader count={1} />
         <ChampionCard tool={tools[0]} onRemove={() => toggleCompare(tools[0].slug)} />
         <div className="mobile-compare-arena__partial">
           <p className="mobile-compare-arena__partial-label">Confronto parziale</p>
@@ -964,8 +938,6 @@ export function MobileCompareView({
 
   return (
     <div className="mobile-compare-arena">
-      <ArenaHeader count={tools.length} />
-
       <MobileArenaBattleStage
         battleState={battleState}
         onFight={handleFight}

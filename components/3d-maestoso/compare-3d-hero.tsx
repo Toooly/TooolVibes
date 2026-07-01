@@ -1,14 +1,13 @@
 "use client";
 
-import { motion } from "motion/react";
-import { Columns3 } from "lucide-react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef, useMemo } from "react";
-import * as THREE from "three";
-import { TiltCard3D } from "./tilt-card-3d";
-import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import Link from "next/link";
+import { useMemo, useRef } from "react";
+import * as THREE from "three";
+
+import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
+import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import { TiltCard3D } from "./tilt-card-3d";
 
 function ArenaParticles({ count = 300 }: { count?: number }) {
   const meshRef = useRef<THREE.Points>(null);
@@ -35,18 +34,39 @@ function ArenaParticles({ count = 300 }: { count?: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial color="#FFD740" size={0.025} transparent opacity={0.4} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+      <pointsMaterial
+        color="#FFD740"
+        size={0.025}
+        transparent
+        opacity={0.4}
+        sizeAttenuation
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
     </points>
   );
 }
 
-export function Compare3DHero({ featuredTools }: { featuredTools: DirectoryTool[] }) {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+export function Compare3DHero() {
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
   return (
-    <div className={`relative flex ${isMobile ? 'min-h-[50vh]' : 'min-h-[70vh]'} items-center justify-center overflow-hidden`}>
-      <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, rgba(255,215,64,0.08) 0%, transparent 60%)" }} />
+    <div
+      className={`compare-space-hero relative flex ${
+        isMobile ? "min-h-[38vh]" : "min-h-[58vh]"
+      } items-center justify-center overflow-hidden`}
+    >
+      <div
+        className="absolute inset-0"
+        style={{ background: "radial-gradient(circle at 50% 50%, rgba(255,215,64,0.08) 0%, transparent 60%)" }}
+      />
       <div className="absolute inset-0">
-        <Canvas camera={{ position: [0, 0, 7], fov: 55 }} dpr={isMobile ? 1 : [1, 1.5]} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
+        <Canvas
+          camera={{ position: [0, 0, 7], fov: 55 }}
+          dpr={isMobile ? 1 : [1, 1.5]}
+          gl={{ antialias: true, alpha: true }}
+          style={{ background: "transparent" }}
+        >
           <ambientLight intensity={0.3} />
           <pointLight position={[5, 5, 5]} intensity={0.6} color="#FFD740" />
           <pointLight position={[-5, -3, 5]} intensity={0.4} color="#FF4081" />
@@ -54,13 +74,9 @@ export function Compare3DHero({ featuredTools }: { featuredTools: DirectoryTool[
         </Canvas>
       </div>
       <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-[#FFD740]">Stanza decisionale 3D</p>
-        <h1 className="v-text-gradient-amber text-4xl font-bold sm:text-5xl md:text-6xl">
-          Il confronto diventa una stanza, non una tabella
+        <h1 className="compare-space-hero__title v-text-gradient-amber text-4xl font-bold sm:text-5xl md:text-6xl">
+          La stanza dove puoi confrontare tutti i tool che ti interessano.
         </h1>
-        <p className="mx-auto mt-5 max-w-xl text-lg text-[#9E99B8]">
-          I candidati entrano su piani diversi: davanti l’aderenza all’uso, dietro le note che chiudono il verdetto.
-        </p>
       </div>
     </div>
   );
