@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bookmark, Columns3, Home, LayoutGrid, Radar, UsersRound } from "lucide-react";
+import { Bookmark, Columns3, Home, LayoutGrid, Radar } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
@@ -16,7 +16,6 @@ const mobileItems = [
   { href: "/radar", label: "Radar", icon: Radar },
   { href: "/shortlist", label: "Salvati", icon: Bookmark },
   { href: "/compare", label: "Confronto", icon: Columns3 },
-  { href: "/chi-siamo", label: "Chi siamo", icon: UsersRound },
 ];
 
 export function MobileBottomNav() {
@@ -45,7 +44,7 @@ export function MobileBottomNav() {
         isOverlayOpen && "opacity-0 pointer-events-none"
       )}
     >
-      <div className="grid w-full grid-cols-6 gap-1.5 p-1.5">
+      <div className="grid w-full grid-cols-5 gap-1.5 p-1.5">
         {mobileItems.map((item) => {
           const Icon = item.icon;
           const isCompareItem = item.href === "/compare";
