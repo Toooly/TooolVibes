@@ -10,7 +10,7 @@ import { SoundToggleButton } from "../app/sound-toggle-button";
 import { DirectoryHeaderSearch } from "../directory/directory-header-search";
 import { GameProfileBar } from "../gamification/game-profile-bar";
 import { VibeTapMiniGame } from "../gamification/vibe-tap-mini-game";
-import { NavbarCircuitMarkers, CircuitPill, PILL_CONFIGS } from "./navbar-circuit-markers";
+import { CircuitPill, PILL_CONFIGS } from "./navbar-circuit-markers";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import {
   X,
@@ -23,7 +23,6 @@ import {
   Zap,
   ChevronRight,
   UserPlus,
-  UsersRound,
 } from "lucide-react";
 
 const navLinks = [
@@ -38,7 +37,6 @@ const navLinks = [
 
 const desktopNavLinks = [
   ...navLinks.slice(0, 5),
-  { href: "/chi-siamo", label: "Chi siamo", icon: UsersRound },
 ];
 
 function matchesPathname(pathname: string | null, href: string) {

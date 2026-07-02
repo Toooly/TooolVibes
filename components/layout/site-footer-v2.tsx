@@ -21,6 +21,7 @@ const footerLinks = {
     { label: "Salvati", href: "/shortlist", icon: Heart },
   ],
   community: [
+    { label: "Chi siamo", href: "/chi-siamo", icon: Users },
     { label: "Shop", href: "/shop", icon: ShoppingBag },
     { label: "Community", href: "/community", icon: Users },
     { label: "Blog", href: "/posts", icon: Sparkles },

@@ -19538,8 +19538,8 @@ img {
 }
 
 .desktop-vibe-game-strip {
-  margin-top: -2.2rem;
-  padding-bottom: 4.6rem;
+  margin-top: clamp(0.8rem, 2.4vw, 1.8rem);
+  padding-bottom: clamp(5.2rem, 7vw, 6.4rem);
 }
 
 @layer components {

@@ -88,7 +88,6 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
     return (
       <div className="mobile-library-board mobile-library-board--empty">
         <LibraryAmbient />
-        <MobileLibraryHero totalCount={0} compareCount={compareSlugs.length} />
         <MobileLibraryEmpty tools={tools} />
         <LibraryWishlistSection />
       </div>
