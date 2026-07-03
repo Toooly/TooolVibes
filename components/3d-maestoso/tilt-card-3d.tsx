@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 interface TiltCard3DProps {
   children: ReactNode;
@@ -20,6 +20,22 @@ export function TiltCard3D({
   const cardRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState("rotateX(0deg) rotateY(0deg)");
   const [shine, setShine] = useState({ x: 50, y: 50, opacity: 0 });
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const touch =
+      window.matchMedia("(hover: none)").matches || navigator.maxTouchPoints > 0;
+    setIsTouch(touch);
+  }, []);
+
+  if (isTouch) {
+    return (
+      <div className={className} style={style}>
+        {children}
+      </div>
+    );
+  }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;

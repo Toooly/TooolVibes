@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -33,8 +33,23 @@ type ToolCardProps = {
   contextLabel?: string;
   selected?: boolean;
   swipeFriendly?: boolean;
+  isMobile?: boolean;
   onSelect?: (slug: string) => void;
 };
+
+function useViewportMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  return isMobile;
+}
 
 function ToolCardComponent({
   tool,
@@ -44,8 +59,11 @@ function ToolCardComponent({
   contextLabel = "Archivio curato",
   selected = false,
   swipeFriendly = false,
+  isMobile: isMobileProp,
   onSelect,
 }: ToolCardProps) {
+  const viewportMobile = useViewportMobile();
+  const mobile = isMobileProp ?? viewportMobile;
   const discovery = useDiscoverySnapshot();
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
@@ -75,8 +93,9 @@ function ToolCardComponent({
     { label: "Uso ideale", value: bestFor },
     { label: "Prezzo", value: pricingLabel },
   ];
-  const visibleCardMetaItems = variant === "compact" ? [] : cardMetaItems;
-  const visibleTags = variant === "compact" ? [] : tool.tags.slice(0, 1);
+  const effectiveVariant = mobile && variant === "standard" ? "compact" : variant;
+  const visibleCardMetaItems = effectiveVariant === "compact" ? [] : cardMetaItems;
+  const visibleTags = effectiveVariant === "compact" ? [] : tool.tags.slice(0, 1);
 
   if (variant === "featured") {
     return (
@@ -258,18 +277,19 @@ function ToolCardComponent({
   return (
     <article
       className={cn(
-        "tool-card-base group interactive-surface surface-sheen relative overflow-hidden rounded-[28px]",
-        variant === "compact" ? "tool-card-compact" : "tool-card-standard",
+        "tool-card-base group interactive-surface relative overflow-hidden rounded-[28px]",
+        !mobile && "surface-sheen",
+        effectiveVariant === "compact" ? "tool-card-compact" : "tool-card-standard",
         selected && "tool-card-selected",
         isSaved && "tool-card-saved",
         isCompared && "tool-card-compared",
         swipeFriendly &&
-          (variant === "compact"
+          (effectiveVariant === "compact"
             ? "tool-card-swipe tool-card-swipe-compact"
             : "tool-card-swipe tool-card-swipe-standard"),
       )}
     >
-      <div className="card-glow absolute inset-0" />
+      {!mobile && <div className="card-glow absolute inset-0" />}
       <div
         className="topline-reveal absolute inset-x-0 top-0 h-1"
         style={{
@@ -280,13 +300,13 @@ function ToolCardComponent({
       />
 
       <Link href={`/toools/${tool.slug}`} className="block">
-        <div className={cn("tool-card-media relative overflow-hidden", variant === "compact" ? "h-40" : "h-48")}>
+        <div className={cn("tool-card-media relative overflow-hidden", effectiveVariant === "compact" ? "h-40" : "h-48")}>
           <Image
             src={tool.cover_image_url}
             alt={tool.name}
             fill
-            sizes={variant === "compact" ? "(max-width: 1024px) 86vw, 26vw" : "(max-width: 1024px) 100vw, 33vw"}
-            className="image-float object-cover"
+            sizes={effectiveVariant === "compact" ? "(max-width: 1024px) 86vw, 26vw" : "(max-width: 1024px) 100vw, 33vw"}
+            className={cn("object-cover", !mobile && "image-float")}
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.22),rgba(18,15,35,0.76))]" />
           <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
@@ -310,21 +330,23 @@ function ToolCardComponent({
                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/72">
                  {contextLabel}
                </p>
-              <h3 className={cn("text-display-card mt-1.5 max-w-none text-white sm:max-w-[12.5ch] sm:text-balance", variant === "compact" ? "text-[1.12rem]" : "text-[1.28rem]")}>
+              <h3 className={cn("text-display-card mt-1.5 max-w-none text-white sm:max-w-[12.5ch] sm:text-balance", effectiveVariant === "compact" ? "text-[1.12rem]" : "text-[1.28rem]")}>
                 {tool.name}
               </h3>
             </div>
-            <span
-              className="selection-chip rounded-full px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white"
-              style={{ background: "rgba(24,17,12,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)" }}
-            >
-              {formattedDate}
-            </span>
+            {!mobile && (
+              <span
+                className="selection-chip rounded-full px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white"
+                style={{ background: "rgba(24,17,12,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)" }}
+              >
+                {formattedDate}
+              </span>
+            )}
           </div>
         </div>
       </Link>
 
-      <div className={cn("space-y-3.5 p-4 sm:p-4.5", variant === "compact" && "space-y-3")}>
+      <div className={cn("space-y-3.5 p-4 sm:p-4.5", effectiveVariant === "compact" && "space-y-3")}>
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="editorial-label">Profilo</p>
@@ -364,7 +386,7 @@ function ToolCardComponent({
           </p>
         </div>
 
-        <p className={cn("text-body-soft text-[0.88rem] text-clamp-3", variant === "compact" && "text-clamp-2")} style={{ color: "var(--muted-strong)" }}>
+        <p className={cn("text-body-soft text-[0.88rem] text-clamp-3", effectiveVariant === "compact" && "text-clamp-2")} style={{ color: "var(--muted-strong)" }}>
           {tool.short_description_it}
         </p>
 
@@ -375,13 +397,13 @@ function ToolCardComponent({
             background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.72))",
           }}
         >
-          <p className="editorial-label">{variant === "compact" ? "Nota" : "Lettura rapida"}</p>
-          <p className={cn("mt-2 text-[0.82rem] leading-6", variant === "compact" ? "text-clamp-2" : "text-clamp-3")} style={{ color: "var(--muted-strong)" }}>
+          <p className="editorial-label">{effectiveVariant === "compact" ? "Nota" : "Lettura rapida"}</p>
+          <p className={cn("mt-2 text-[0.82rem] leading-6", effectiveVariant === "compact" ? "text-clamp-2" : "text-clamp-3")} style={{ color: "var(--muted-strong)" }}>
             {editorialNote}
           </p>
         </div>
 
-        {variant === "compact" ? (
+        {effectiveVariant === "compact" ? (
           <div
             className="rounded-[18px] border px-3.5 py-3"
             style={{
@@ -399,7 +421,7 @@ function ToolCardComponent({
         <EditorialScorecard
           tool={tool}
           variant="signals"
-          limit={variant === "compact" ? 1 : 2}
+          limit={effectiveVariant === "compact" ? 1 : 2}
           showHeading={false}
         />
 
@@ -424,8 +446,8 @@ function ToolCardComponent({
           </div>
         ) : null}
 
-        {variant === "compact" ? (
-          <div className="hover-reveal space-y-3 border-t pt-3.5 soft-divider">
+        {effectiveVariant === "compact" ? (
+          <div className={cn("space-y-3 border-t pt-3.5 soft-divider", !mobile && "hover-reveal")}>
             <Link
               href={`/toools/${tool.slug}`}
               className="button-shell button-primary text-ui-strong inline-flex w-full items-center justify-center gap-2 rounded-full px-3.5 py-2.25 text-[0.78rem] font-semibold text-white"
@@ -444,7 +466,7 @@ function ToolCardComponent({
             </div>
           </div>
         ) : (
-          <div className="hover-reveal flex flex-wrap items-center justify-between gap-3 border-t pt-3.5 soft-divider">
+          <div className={cn("flex flex-wrap items-center justify-between gap-3 border-t pt-3.5 soft-divider", !mobile && "hover-reveal")}>
             <div className="flex flex-wrap items-center gap-2">
               <ShortlistToggle slug={tool.slug} mode="default" />
               <CompareToggle slug={tool.slug} />
