@@ -23810,8 +23810,7 @@ img {
     padding: 1rem;
   }
 
-  .mobile-collections__item-glow,
-  .mobile-method-room__panel-glow {
+  .mobile-collections__item-glow {
     position: absolute;
     inset: -30% -20% auto auto;
     width: 10rem;

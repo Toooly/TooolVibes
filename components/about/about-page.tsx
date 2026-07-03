@@ -123,7 +123,7 @@ function MobileAboutPage() {
         ))}
       </div>
 
-      <section className="v-about-mobile-panel v-about-mobile-panel--dark backdrop-blur-none">
+      <section className="v-about-mobile-panel v-about-mobile-panel--dark">
         <div className="v-about-mobile-section-head">
           <PremiumBadge tone="dark" className="bg-white/14 text-white">
             I servizi che offriamo

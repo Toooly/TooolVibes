@@ -825,6 +825,14 @@ body {
     linear-gradient(180deg, rgba(255,255,255,0.08), transparent);
 }
 
+@media (max-width: 767px) {
+  .v-about-mobile-panel,
+  .v-about-mobile-panel--dark {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 .v-about-mobile-section-head h2 {
   margin-top: 0.85rem;
   color: #ffffff;
