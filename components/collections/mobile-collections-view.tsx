@@ -34,7 +34,6 @@ function CollectionItem({ collection }: { collection: CuratedCollection }) {
       className="mobile-collections__item"
       style={{ "--col-a": c, "--col-b": badge.tone } as CSSProperties}
     >
-      <span className="mobile-collections__item-glow" />
       <div className="mobile-collections__item-body">
         <div className="flex items-center gap-2">
           <span
@@ -72,8 +71,6 @@ export function MobileCollectionsView({
 
   return (
     <div className="mobile-collections">
-      <div className="mobile-collections__stars" aria-hidden="true" />
-
       <header className="mobile-collections__header">
         <div className="mobile-collections__badge">
           <Boxes className="size-4" />

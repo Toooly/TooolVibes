@@ -87,7 +87,6 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
   if (totalCount === 0) {
     return (
       <div className="mobile-library-board mobile-library-board--empty">
-        <LibraryAmbient />
         <MobileLibraryEmpty tools={tools} />
         <LibraryWishlistSection />
       </div>
@@ -101,7 +100,6 @@ export function MobileShortlistBoard({ tools }: MobileShortlistBoardProps) {
 
   return (
     <div className="mobile-library-board">
-      <LibraryAmbient />
       <MobileLibraryHero totalCount={totalCount} compareCount={compareSlugs.length} />
       <div className="mobile-library-board__header mobile-library-board__header--legacy">
         <div className="mobile-library-board__icon">
@@ -212,17 +210,6 @@ function LibraryWishlistSection() {
       </div>
       <RequestToolForm className="mobile-library-wishlist__form" />
     </section>
-  );
-}
-
-function LibraryAmbient() {
-  return (
-    <div className="mobile-library-ambient" aria-hidden="true">
-      <span className="mobile-library-ambient__ring mobile-library-ambient__ring--one" />
-      <span className="mobile-library-ambient__ring mobile-library-ambient__ring--two" />
-      <span className="mobile-library-ambient__glow mobile-library-ambient__glow--one" />
-      <span className="mobile-library-ambient__glow mobile-library-ambient__glow--two" />
-    </div>
   );
 }
 

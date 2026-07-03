@@ -20,7 +20,7 @@ export function CollectionSlotCard({
 
   return (
     <article
-      className={`metadata-block collection-slot-panel surface-sheen rounded-[26px] p-3.5 sm:p-4.5 ${
+      className={`metadata-block collection-slot-panel collection-slot-card surface-sheen rounded-[26px] p-3.5 sm:p-4.5 ${
         slot.featured ? "ring-1 ring-[rgba(112,82,255,0.12)]" : ""
       }`}
     >

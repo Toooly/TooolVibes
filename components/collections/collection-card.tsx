@@ -63,7 +63,8 @@ export function CollectionCard({
     return (
       <article
         className={cn(
-          "collection-card collection-card-featured brand-panel brand-aura panel-lift relative overflow-hidden rounded-[34px]",
+          "collection-card collection-card-featured brand-panel relative overflow-hidden rounded-[34px]",
+          !swipeFriendly && "brand-aura panel-lift",
           swipeFriendly && "w-[22.5rem] shrink-0 snap-start",
         )}
       >
@@ -160,7 +161,7 @@ export function CollectionCard({
     return (
       <article
         className={cn(
-          "collection-card brand-panel panel-lift relative overflow-hidden rounded-[28px] p-3.5 sm:p-4.5",
+          "collection-card brand-panel relative overflow-hidden rounded-[28px] p-3.5 sm:p-4.5",
           swipeFriendly && "w-[18.75rem] shrink-0 snap-start",
         )}
       >

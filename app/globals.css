@@ -15905,7 +15905,7 @@ img {
     border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
     background: var(--surface-strong);
     border-top: 1px solid var(--line);
-    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 -8px 24px rgba(47, 33, 126, 0.1);
     padding: 0.5rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
   }
 
@@ -19176,14 +19176,15 @@ img {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    opacity: 0;
-    transition: opacity 180ms ease, transform 180ms ease;
-    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+    opacity: 1;
+    transition: opacity 180ms ease, transform 180ms ease, background 180ms ease;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
   }
 
-  .mobile-library-book:active .mobile-library-book__remove,
-  .mobile-library-book:focus-within .mobile-library-book__remove {
-    opacity: 1;
+  .mobile-library-book__remove:hover,
+  .mobile-library-book__remove:focus-visible {
+    transform: scale(1.08);
+    background: rgba(239, 68, 68, 1);
   }
 
   /* Empty state */
@@ -33166,5 +33167,36 @@ body:has(.tone-account) {
   .v-spotlight-info {
     width: 100% !important;
     margin-inline: auto !important;
+  }
+}
+
+
+/* Mobile polish: collections & shortlist */
+@media (max-width: 767px) {
+  .collection-card.brand-aura,
+  .collection-card.panel-lift {
+    box-shadow: none;
+    transform: none;
+    transition: none;
+    filter: none;
+  }
+
+  .collection-card.panel-lift:hover,
+  .collection-card.panel-lift:focus-within {
+    transform: none;
+    box-shadow: none;
+    filter: none;
+  }
+
+  .collection-card .surface-sheen::after {
+    display: none;
+  }
+
+  .collection-slot-panel.collection-slot-card::before {
+    display: none;
+  }
+
+  .collection-slot-card .surface-sheen::after {
+    display: none;
   }
 }
