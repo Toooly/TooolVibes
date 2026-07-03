@@ -163,6 +163,16 @@ export function RouteTransitionLoader() {
       safetyTimerRef.current = null;
     }
 
+    if (hideTimerRef.current) {
+      window.clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+
+    if (completeTimerRef.current) {
+      window.clearTimeout(completeTimerRef.current);
+      completeTimerRef.current = null;
+    }
+
     const elapsed = performance.now() - startedAtRef.current;
     const remaining = Math.max(0, durationRef.current - elapsed);
 

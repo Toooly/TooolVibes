@@ -109,8 +109,10 @@ export function SiteHeaderV2() {
     setMenuOpen(false);
   }, [pathname]);
 
-  const setOverlayOpen = useMobileUIStore((s) => s.setOverlayOpen);
-  const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
+  const { isOverlayOpen, setOverlayOpen } = useMobileUIStore((s) => ({
+    isOverlayOpen: s.isOverlayOpen,
+    setOverlayOpen: s.setOverlayOpen,
+  }));
   useEffect(() => {
     setOverlayOpen(menuOpen || searchOpen);
   }, [menuOpen, searchOpen, setOverlayOpen]);
