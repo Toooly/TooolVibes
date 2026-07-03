@@ -148,6 +148,7 @@ export function RouteTransitionLoader() {
         visibleRef.current = false;
         setVisible(false);
         setProgress(0);
+        startedAtRef.current = 0;
       }, 420);
     }, 3000);
   }, [clearTimers]);
@@ -177,6 +178,7 @@ export function RouteTransitionLoader() {
         visibleRef.current = false;
         setVisible(false);
         setProgress(0);
+        startedAtRef.current = 0;
       }, 420);
     }, Math.max(180, remaining));
   }, []);
