@@ -158,20 +158,7 @@ export function RouteTransitionLoader() {
       return;
     }
 
-    if (safetyTimerRef.current) {
-      window.clearTimeout(safetyTimerRef.current);
-      safetyTimerRef.current = null;
-    }
-
-    if (hideTimerRef.current) {
-      window.clearTimeout(hideTimerRef.current);
-      hideTimerRef.current = null;
-    }
-
-    if (completeTimerRef.current) {
-      window.clearTimeout(completeTimerRef.current);
-      completeTimerRef.current = null;
-    }
+    clearTimers();
 
     const elapsed = performance.now() - startedAtRef.current;
     const remaining = Math.max(0, durationRef.current - elapsed);
@@ -191,7 +178,7 @@ export function RouteTransitionLoader() {
         startedAtRef.current = 0;
       }, 420);
     }, Math.max(180, remaining));
-  }, []);
+  }, [clearTimers]);
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
