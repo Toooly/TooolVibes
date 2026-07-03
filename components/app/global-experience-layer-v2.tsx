@@ -162,6 +162,17 @@ export function GlobalExperienceLayerV2() {
       experienceTone.tertiaryCss
     );
 
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      root.style.removeProperty("--tv-pointer-x");
+      root.style.removeProperty("--tv-pointer-y");
+      root.style.removeProperty("--tv-pointer-shift-x");
+      root.style.removeProperty("--tv-pointer-shift-y");
+      root.style.removeProperty("--tv-pointer-tilt-x");
+      root.style.removeProperty("--tv-pointer-tilt-y");
+      root.removeAttribute("data-experience-pointer");
+    }
+
     let scrollFrame = 0;
     let pointerFrame = 0;
     let pointerTimer = 0;
@@ -234,18 +245,24 @@ export function GlobalExperienceLayerV2() {
         "--tv-field-opacity",
         `${((isMobile ? 0.16 : 0.1) + Math.sin(progress * Math.PI) * 0.025 + progress * 0.025).toFixed(3)}`
       );
-      root.style.setProperty(
-        "--tv-parallax-slow",
-        `${(progress * -30).toFixed(2)}px`
-      );
-      root.style.setProperty(
-        "--tv-parallax-mid",
-        `${(progress * -60).toFixed(2)}px`
-      );
-      root.style.setProperty(
-        "--tv-parallax-fast",
-        `${(progress * -120).toFixed(2)}px`
-      );
+      if (!isMobile) {
+        root.style.setProperty(
+          "--tv-parallax-slow",
+          `${(progress * -30).toFixed(2)}px`
+        );
+        root.style.setProperty(
+          "--tv-parallax-mid",
+          `${(progress * -60).toFixed(2)}px`
+        );
+        root.style.setProperty(
+          "--tv-parallax-fast",
+          `${(progress * -120).toFixed(2)}px`
+        );
+      } else {
+        root.style.removeProperty("--tv-parallax-slow");
+        root.style.removeProperty("--tv-parallax-mid");
+        root.style.removeProperty("--tv-parallax-fast");
+      }
       root.style.setProperty(
         "--tv-velocity",
         `${Math.min(1, Math.abs(scrollVelocity) / 50).toFixed(3)}`
@@ -401,18 +418,22 @@ export function GlobalExperienceLayerV2() {
     window.addEventListener("resize", requestScrollProgress, {
       passive: true,
     });
-    window.addEventListener("pointermove", updatePointer, {
-      passive: true,
-    });
-    window.addEventListener("pointerdown", pressPointer, {
-      passive: true,
-    });
+    if (!isMobile) {
+      window.addEventListener("pointermove", updatePointer, {
+        passive: true,
+      });
+      window.addEventListener("pointerdown", pressPointer, {
+        passive: true,
+      });
+    }
 
     return () => {
       window.removeEventListener("scroll", requestScrollProgress);
       window.removeEventListener("resize", requestScrollProgress);
-      window.removeEventListener("pointermove", updatePointer);
-      window.removeEventListener("pointerdown", pressPointer);
+      if (!isMobile) {
+        window.removeEventListener("pointermove", updatePointer);
+        window.removeEventListener("pointerdown", pressPointer);
+      }
       window.cancelAnimationFrame(scrollFrame);
       window.cancelAnimationFrame(pointerFrame);
       window.clearTimeout(pointerTimer);

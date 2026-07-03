@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { AnimatePresence } from "motion/react";
@@ -518,9 +518,10 @@ export function OrbitalLayer() {
     pathname?.startsWith("/radar") ||
     pathname?.startsWith("/product-hunt") ||
     pathname?.startsWith("/collections") ||
-    pathname?.startsWith("/metodo") ||
     pathname?.startsWith("/wishlist");
   const isToolDetailPage = pathname?.startsWith("/toools/");
+  const textPages = ["/chi-siamo", "/community", "/shop", "/privacy", "/termini", "/metodo"];
+  const isTextPage = textPages.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
   const hideFloatingLayer =
     isMobileOriginPage ||
     isToolDetailPage;
@@ -607,7 +608,7 @@ export function OrbitalLayer() {
     };
   }, [setSelectedItemId]);
 
-  if (!hasMounted || hideFloatingLayer || (!profile.enableGlow && profile.reducedMotion && activeItems.length === 0)) {
+  if (!hasMounted || hideFloatingLayer || (layerIsMobile && isTextPage) || (!profile.enableGlow && profile.reducedMotion && activeItems.length === 0)) {
     return null;
   }
 
