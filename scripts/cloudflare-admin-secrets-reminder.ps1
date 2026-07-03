@@ -19,7 +19,7 @@ Write-Host "4. Add / update these as SECRETS inside 'Build variables and secrets
 Write-Host ""
 Write-Host "   - TOOOLVIBES_ADMIN_EMAIL"
 Write-Host "   - TOOOLVIBES_ADMIN_PASSWORD_HASH   (the real \$2b\$10\$... value)"
-Write-Host "   - TOOOLVIBES_ADMIN_PASSWORD        (plain: TooolDemo2026$)"
+Write-Host "   - TOOOLVIBES_ADMIN_PASSWORD        (optional legacy plain secret; keep aligned if present)"
 Write-Host "   - TOOOLVIBES_SESSION_SECRET"
 Write-Host "   - SUPABASE_SERVICE_ROLE_KEY"
 Write-Host ""

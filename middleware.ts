@@ -57,6 +57,7 @@ export async function middleware(request: NextRequest) {
 
   // Always allow these paths
   if (
+    pathname.startsWith("/api/admin") ||
     pathname.startsWith("/api/gate") ||
     pathname === "/api/waitlist" ||
     pathname.startsWith("/_next") ||
