@@ -4119,10 +4119,6 @@ img {
 
 
 
-  @media (max-width: 767px) {
-    }
-
-
   @media (min-width: 768px) {
     .route-transition-loader {
       display: none !important;
@@ -32754,4 +32750,4 @@ body:has(.tone-account) {
     backdrop-filter: none !important;
     transition: backdrop-filter 0.01ms !important;
   }
-
+}
