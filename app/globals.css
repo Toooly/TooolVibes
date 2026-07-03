@@ -665,6 +665,22 @@ img {
       linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(236, 243, 255, 0.91) 54%, rgba(242, 237, 255, 0.92));
   }
 
+  @media (max-width: 639px) {
+    .hero-shell-community,
+    .hero-shell-shop {
+      background:
+        linear-gradient(180deg, rgba(18, 13, 47, 0.92) 0%, rgba(28, 22, 75, 0.96) 100%),
+        radial-gradient(circle at 84% 8%, rgba(94, 226, 255, 0.12), transparent 31%),
+        radial-gradient(circle at 14% 0%, rgba(196, 181, 253, 0.14), transparent 34%);
+    }
+
+    .hero-shell-community::after,
+    .hero-shell-shop::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
   .hero-mini-visual {
     animation: tv-float 6s ease-in-out infinite;
   }
@@ -17415,19 +17431,6 @@ img {
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .mobile-method-room__panel-glow {
-    position: absolute;
-    top: -40px;
-    right: -40px;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--method-a) 0%, transparent 65%);
-    opacity: 0.3;
-    filter: blur(16px);
-    pointer-events: none;
-  }
-
   .mobile-method-room__panel-inner {
     position: relative;
     padding: 1.25rem;
@@ -17479,7 +17482,7 @@ img {
     margin-top: 0.4rem;
     font-size: 0.8rem;
     line-height: 1.55;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.7);
   }
 
   .mobile-method-room__panel-stat {

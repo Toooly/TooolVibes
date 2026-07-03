@@ -68,7 +68,6 @@ function MethodPanel({
         } as CSSProperties
       }
     >
-      <div className="mobile-method-room__panel-glow" />
       <div className="mobile-method-room__panel-inner">
         <div className="mobile-method-room__panel-top">
           <span className="mobile-method-room__panel-num">{step.num}</span>

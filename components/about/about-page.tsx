@@ -80,7 +80,7 @@ const mobileFeatures = [
 
 function MobileAboutPage() {
   return (
-    <div className="v-about-mobile page-shell pb-8 pt-3 md:hidden">
+    <div className="v-about-mobile page-shell space-y-5 pb-10 pt-5 md:hidden">
       <section className="v-about-mobile-hero">
         <div className="v-about-mobile-hero__copy">
           <PremiumBadge tone="accent">Chi siamo</PremiumBadge>
@@ -123,7 +123,7 @@ function MobileAboutPage() {
         ))}
       </div>
 
-      <section className="v-about-mobile-panel v-about-mobile-panel--dark">
+      <section className="v-about-mobile-panel v-about-mobile-panel--dark backdrop-blur-none">
         <div className="v-about-mobile-section-head">
           <PremiumBadge tone="dark" className="bg-white/14 text-white">
             I servizi che offriamo
