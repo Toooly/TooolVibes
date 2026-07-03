@@ -3963,12 +3963,9 @@ img {
     opacity: 0;
     visibility: hidden;
     color: white;
-    background:
-      linear-gradient(118deg, transparent 0 36%, rgba(var(--route-accent-a), 0.1) 36.15% 36.45%, transparent 36.75% 100%),
-      linear-gradient(64deg, transparent 0 57%, rgba(var(--route-accent-c), 0.08) 57.15% 57.45%, transparent 57.75% 100%),
-      linear-gradient(145deg, rgba(16, 9, 48, 0.94), rgba(34, 17, 105, 0.9) 48%, rgba(6, 4, 25, 0.95));
+    background: rgba(6, 6, 14, 0.92);
     transform: translate3d(0, 0.45rem, 0) scale(1.008);
-    backdrop-filter: none;
+    backdrop-filter: blur(16px) saturate(1.1);
     will-change: opacity, transform;
     transition:
       opacity 170ms ease,
@@ -3983,52 +3980,20 @@ img {
     transform: translate3d(0, 0, 0) scale(1);
   }
 
-  .route-transition-loader::before,
-  .route-transition-loader::after {
-    content: "";
-    position: absolute;
-    inset: -18%;
-    pointer-events: none;
-  }
-
-  .route-transition-loader::before {
-    background:
-      linear-gradient(90deg, transparent 0 46%, rgba(var(--route-accent-a), 0.14) 49%, transparent 53% 100%),
-      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 74px);
-    opacity: 0.16;
-    transform: perspective(780px) rotateX(66deg) translateY(14%);
-    animation: tv-route-loader-grid 1.45s ease-in-out infinite alternate;
-  }
-
-  .route-transition-loader::after {
-    background:
-      conic-gradient(from 0deg at 50% 50%, transparent 0 8%, rgba(var(--route-accent-a), 0.24) 13%, transparent 19% 34%, rgba(var(--route-accent-c), 0.2) 43%, transparent 51% 69%, rgba(var(--route-accent-b), 0.26) 78%, transparent 88% 100%);
-    filter: none;
-    mix-blend-mode: normal;
-    opacity: 0.16;
-    animation: tv-route-loader-field 2.35s linear infinite;
-  }
-
   .route-transition-loader__stage {
     position: relative;
     z-index: 1;
     display: grid;
     place-items: center;
-    width: min(92vw, 48rem);
-    min-height: clamp(14rem, 38vh, 22rem);
+    width: min(92vw, 28rem);
+    min-height: clamp(14rem, 38vh, 20rem);
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 28px;
-    background:
-      linear-gradient(118deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 44%),
-      linear-gradient(64deg, rgba(var(--route-accent-a), 0.08) 0 1px, transparent 1px 52%),
-      linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035));
+    background: rgba(16, 14, 36, 0.75);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.18),
-      0 22px 70px rgba(7, 4, 24, 0.28),
-      0 0 42px rgba(var(--route-accent-a), 0.14),
-      0 0 78px rgba(var(--route-accent-b), 0.12);
-    backdrop-filter: none;
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 22px 70px rgba(0, 0, 0, 0.35);
     transform: translateZ(0);
     will-change: transform, opacity, filter;
   }
@@ -4037,50 +4002,18 @@ img {
     animation: tv-route-stage-arrive 580ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .route-transition-loader__stage::before {
-    content: "";
-    position: absolute;
-    inset: auto -20% -35% -20%;
-    height: 58%;
-    background: linear-gradient(90deg, transparent, rgba(var(--route-accent-a), 0.16), transparent);
-    opacity: 0.3;
-  }
-
-  .route-transition-loader__halo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: clamp(11rem, 34vw, 21rem);
-    aspect-ratio: 1;
-    border-radius: 999px;
-    background:
-      linear-gradient(90deg, transparent 0 48%, rgba(var(--route-accent-a), 0.24) 49% 51%, transparent 52%),
-      linear-gradient(0deg, transparent 0 48%, rgba(var(--route-accent-b), 0.2) 49% 51%, transparent 52%),
-      linear-gradient(135deg, rgba(var(--route-accent-c), 0.08), transparent 44%, rgba(var(--route-accent-a), 0.1));
-    border: 1px solid rgba(var(--route-accent-a), 0.24);
-    box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.09),
-      0 0 40px rgba(var(--route-accent-a), 0.18),
-      0 0 76px rgba(var(--route-accent-b), 0.16);
-    filter: saturate(1.08);
-    opacity: 0.28;
-    transform: translate(-50%, -50%) rotate(-28deg) scale(0.92);
-    animation: tv-route-loader-halo 2.05s linear infinite;
-  }
-
   .route-transition-loader__word {
     position: relative;
     z-index: 1;
     display: inline-grid;
     place-items: center;
     font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: clamp(2.35rem, 6.6vw, 5.35rem);
+    font-size: clamp(2.35rem, 6.6vw, 4rem);
     font-weight: 700;
     letter-spacing: 0.045em;
     line-height: 0.92;
     text-transform: uppercase;
-    text-shadow: 0 22px 70px rgba(var(--route-accent-a), 0.34);
-    animation: tv-route-word-breathe 1.35s ease-in-out infinite;
+    text-shadow: 0 12px 40px rgba(var(--route-accent-a), 0.34);
   }
 
   .route-transition-loader__word::before,
@@ -4093,9 +4026,6 @@ img {
 
   .route-transition-loader__word::before {
     color: rgba(255, 255, 255, 0.18);
-    text-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.1),
-      0 18px 60px rgba(7, 4, 24, 0.42);
   }
 
   .route-transition-loader__word::after {
@@ -4106,7 +4036,7 @@ img {
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    filter: drop-shadow(0 0 20px rgba(var(--route-accent-a), 0.36));
+    filter: drop-shadow(0 0 16px rgba(var(--route-accent-a), 0.36));
     transition: width 120ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -4115,26 +4045,23 @@ img {
     z-index: 1;
     margin-top: clamp(1.05rem, 2.8vw, 1.65rem);
     color: rgba(255, 255, 255, 0.8);
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.18em;
     text-align: center;
     text-transform: uppercase;
-    animation: tv-route-label-float 1.2s ease-in-out infinite;
   }
 
   .route-transition-loader__track {
     position: relative;
     z-index: 1;
     display: block;
-    width: min(64vw, 24rem);
+    width: min(64vw, 18rem);
     height: 4px;
-    margin-top: 1rem;
+    margin-top: 1.2rem;
     overflow: hidden;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.12);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.16);
-    transform-origin: left;
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .route-transition-loader.is-visible .route-transition-loader__track {
@@ -4146,10 +4073,8 @@ img {
     width: var(--route-progress);
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, rgba(var(--route-accent-b), 0.9), rgba(var(--route-accent-a), 1), rgba(var(--route-accent-c), 0.94));
-    box-shadow:
-      0 0 18px rgba(var(--route-accent-a), 0.38),
-      0 0 30px rgba(var(--route-accent-c), 0.16);
+    background: linear-gradient(90deg, rgb(var(--route-accent-b)), rgb(var(--route-accent-a)), rgb(var(--route-accent-c)));
+    box-shadow: 0 0 14px rgba(var(--route-accent-a), 0.35);
     transition: width 120ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 

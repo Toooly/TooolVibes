@@ -5300,3 +5300,280 @@ canvas {
     margin-top: 1.82rem !important;
   }
 }
+
+/* Mobile podium cleanup: clean vertical podium with numbered cards */
+@media (max-width: 640px) {
+  .v-podium-stage {
+    max-width: min(22rem, calc(100% - 1.5rem)) !important;
+    min-height: auto !important;
+    margin-inline: auto !important;
+  }
+
+  .v-podium-stage::before,
+  .v-podium-floor {
+    display: none !important;
+  }
+
+  .v-podium-platform {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.85rem !important;
+    min-height: auto !important;
+    padding: 0.5rem 0 1rem !important;
+    transform: none !important;
+  }
+
+  .v-podium-step {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 20rem !important;
+    min-height: 5.2rem !important;
+    height: auto !important;
+    padding: 0.9rem 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0.9rem !important;
+    border-radius: 1.1rem !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+
+  .v-podium-step--first { order: -3 !important; }
+  .v-podium-step--second { order: -2 !important; }
+  .v-podium-step--third { order: -1 !important; }
+
+  .v-podium-step--rank-1 {
+    background: linear-gradient(135deg, rgba(255, 215, 64, 0.14), rgba(255, 143, 0, 0.08)) !important;
+    border: 1px solid rgba(255, 215, 64, 0.45) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .v-podium-step--rank-2 {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.14), rgba(124, 77, 255, 0.08)) !important;
+    border: 1px solid rgba(139, 92, 246, 0.4) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .v-podium-step--rank-3 {
+    background: linear-gradient(135deg, rgba(57, 210, 246, 0.12), rgba(14, 165, 233, 0.06)) !important;
+    border: 1px solid rgba(57, 210, 246, 0.35) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .v-podium-step-glow {
+    display: none !important;
+  }
+
+  .v-podium-rank {
+    position: absolute !important;
+    top: -0.55rem !important;
+    right: 0.75rem !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 1.75rem !important;
+    height: 1.75rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 999px !important;
+    font-size: 0.85rem !important;
+    font-weight: 900 !important;
+    background: rgba(6, 6, 14, 0.85) !important;
+    border: 1px solid currentColor !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    transform: none !important;
+  }
+
+  .v-podium-step--rank-1 .v-podium-rank { color: #FFD740 !important; }
+  .v-podium-step--rank-2 .v-podium-rank { color: #C4B5FD !important; }
+  .v-podium-step--rank-3 .v-podium-rank { color: #67E8F9 !important; }
+
+  .v-podium-step-inner,
+  .v-podium-step--rank-1 .v-podium-step-inner {
+    position: static !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0.85rem !important;
+    width: 100% !important;
+    padding: 0 !important;
+    transform: none !important;
+    margin: 0 !important;
+  }
+
+  .v-podium-step--rank-1 .v-podium-step-inner::after {
+    content: none !important;
+  }
+
+  .v-podium-avatar,
+  .v-podium-step--rank-1 .v-podium-avatar {
+    flex-shrink: 0 !important;
+    width: 3rem !important;
+    height: 3rem !important;
+    border-radius: 0.85rem !important;
+    margin: 0 !important;
+    animation: none !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .v-podium-step--rank-1 .v-podium-avatar {
+    width: 3.2rem !important;
+    height: 3.2rem !important;
+  }
+
+  .v-podium-avatar img {
+    width: 1.6rem !important;
+    height: 1.6rem !important;
+  }
+
+  .v-podium-step--rank-1 .v-podium-avatar img {
+    width: 1.8rem !important;
+    height: 1.8rem !important;
+  }
+
+  .v-podium-name {
+    font-size: 0.98rem !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+    color: #F0EFFF !important;
+  }
+
+  .v-podium-cat {
+    font-size: 0.72rem !important;
+    text-align: left !important;
+    color: rgba(240, 239, 255, 0.62) !important;
+  }
+}
+
+/* Mobile header: always-visible glass + centered TOOOLVIBES */
+@media (max-width: 1023px) {
+  .site-header-v2__shell {
+    background: rgba(6, 6, 14, 0.88) !important;
+    border: 1px solid rgba(124, 77, 255, 0.14) !important;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35) !important;
+    backdrop-filter: blur(20px) saturate(1.2) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(1.2) !important;
+  }
+
+  .site-header-v2__brand-word {
+    display: none !important;
+  }
+
+  .site-header-v2__mobile-title {
+    display: block !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: auto !important;
+    max-width: calc(100% - 7rem) !important;
+    text-align: center !important;
+    font-size: 0.92rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.08em !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: none !important;
+    filter: none !important;
+  }
+}
+
+/* Mobile menu cleanup: consistent dark style */
+@media (max-width: 1023px) {
+  .site-header-v2__mobile-panel,
+  .mobile-menu-panel {
+    background: rgba(6, 6, 14, 0.96) !important;
+    border-color: rgba(124, 77, 255, 0.18) !important;
+    box-shadow: -16px 0 48px rgba(0, 0, 0, 0.35) !important;
+  }
+
+  .site-header-v2__mobile-panel-head {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .site-header-v2__mobile-brand span {
+    background: linear-gradient(110deg, #6a3cff 0%, #39d2f6 62%, #f3bf4c 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+  }
+
+  .site-header-v2__mobile-close {
+    background: rgba(124, 77, 255, 0.12) !important;
+    border-color: rgba(124, 77, 255, 0.25) !important;
+    color: #F0EFFF !important;
+  }
+
+  .site-header-v2__mobile-eyebrow {
+    color: #9E99B8 !important;
+  }
+
+  .site-header-v2__mobile-links {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    gap: 0.5rem !important;
+  }
+
+  .site-header-v2__mobile-link {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #F0EFFF !important;
+    border-radius: 1rem !important;
+  }
+
+  .site-header-v2__mobile-link:hover,
+  .site-header-v2__mobile-link:focus-visible {
+    background: rgba(124, 77, 255, 0.12) !important;
+    border-color: rgba(124, 77, 255, 0.28) !important;
+  }
+
+  .site-header-v2__mobile-link.is-active {
+    background: linear-gradient(135deg, rgba(106, 60, 255, 0.22), rgba(57, 210, 246, 0.1)) !important;
+    border-color: rgba(124, 77, 255, 0.45) !important;
+    color: #ffffff !important;
+  }
+
+  .site-header-v2__mobile-link.is-active svg {
+    color: #7C4DFF !important;
+  }
+
+  .site-header-v2__mobile-primary {
+    background: linear-gradient(135deg, #6a3cff 0%, #4f46e5 100%) !important;
+    border: 1px solid rgba(124, 77, 255, 0.35) !important;
+    box-shadow: 0 8px 24px rgba(106, 60, 255, 0.25) !important;
+  }
+}
+
+/* Route transition loader: clean mobile overrides */
+@media (max-width: 640px) {
+  .route-transition-loader {
+    padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .route-transition-loader__stage {
+    width: min(94vw, 24rem);
+    min-height: 16rem;
+    border-radius: 24px;
+  }
+
+  .route-transition-loader__word {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+    letter-spacing: 0.035em;
+  }
+
+  .route-transition-loader__label {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+
+  .route-transition-loader__track {
+    width: min(72vw, 15rem);
+    height: 3px;
+  }
+}
