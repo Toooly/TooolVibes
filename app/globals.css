@@ -15233,10 +15233,6 @@ img {
     border-radius: 50%;
   }
 
-  .mobile-radar-view__sweep {
-    display: none !important;
-  }
-
   /* ── Data Nodes ── */
   .mobile-radar-view__node {
     position: absolute;

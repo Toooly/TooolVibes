@@ -234,6 +234,11 @@ export function MobileRadarView() {
     let raf = 0;
     let paused = false;
     let time = 0;
+    let running = false;
+
+    let lastFrameTime = 0;
+    const FRAME_INTERVAL = 1000 / 30; // ~30 fps on mobile
+
 
     const resize = () => {
       const rect = canvas.parentElement?.getBoundingClientRect();
@@ -251,8 +256,19 @@ export function MobileRadarView() {
     const ro = new ResizeObserver(resize);
     if (canvas.parentElement) ro.observe(canvas.parentElement);
 
-    const render = () => {
-      if (paused) return;
+    const render = (now: number) => {
+      if (paused) {
+        running = false;
+        return;
+      }
+
+      // Throttle to ~30 fps to keep mobile canvas light
+      if (now - lastFrameTime < FRAME_INTERVAL) {
+        raf = requestAnimationFrame(render);
+        return;
+      }
+      lastFrameTime = now;
+
       raf = requestAnimationFrame(render);
       time += 0.016;
 
@@ -368,14 +384,21 @@ export function MobileRadarView() {
       }
     };
 
-    raf = requestAnimationFrame(render);
+    const start = () => {
+      if (!running) {
+        running = true;
+        raf = requestAnimationFrame(render);
+      }
+    };
+
+    start();
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         const wasPaused = paused;
         paused = !entry.isIntersecting;
         if (wasPaused && !paused) {
-          raf = requestAnimationFrame(render);
+          start();
         }
       },
       { threshold: 0 },
@@ -384,6 +407,7 @@ export function MobileRadarView() {
 
     return () => {
       paused = true;
+      running = false;
       cancelAnimationFrame(raf);
       ro.disconnect();
       observer.disconnect();

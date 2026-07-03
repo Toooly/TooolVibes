@@ -90,25 +90,7 @@ const CATEGORY_META: Record<
   productivity: { color: "#d946ef", iconName: "Clock" },
 };
 
-const CATEGORY_SIGNAL_MAP: Record<string, string[]> = {
-  all: ["Panoramica", "Idee", "Scelta"],
-  "vibe-coding": ["Crea app", "Scrivi codice", "Prototipi"],
-  "ai-app-builder": ["App pronte", "Schermate", "Funzioni"],
-  "no-code": ["Senza codice", "Blocchi", "Flussi"],
-  "headless-cms": ["Contenuti", "Pagine", "Archivio"],
-  "ui-builder": ["Interfacce", "Layout", "Componenti"],
-  "ai-writing": ["Testi", "Idee", "Revisioni"],
-  "ai-image": ["Immagini", "Stili", "Visual"],
-  "ai-video": ["Video", "Scene", "Montaggio"],
-  marketing: ["Promozione", "Pubblico", "Campagne"],
-  sales: ["Clienti", "Preventivi", "Trattative"],
-  "customer-support": ["Assistenza", "Richieste", "Risposte"],
-  automation: ["Automatizza", "Collega app", "Risparmia tempo"],
-  "ai-agents": ["Assistenti", "Compiti", "Decisioni"],
-  payments: ["Pagamenti", "Incassi", "Ordini"],
-  "website-builder": ["Siti web", "Pagine", "Pubblica"],
-  productivity: ["Organizza", "Tempo", "Priorita"],
-};
+
 
 function extractDomain(url: string): string | undefined {
   try {
@@ -218,7 +200,6 @@ export function MobileCatalogView({
         ...cat,
         count,
         ...meta,
-        signals: CATEGORY_SIGNAL_MAP[cat.key] ?? ["Scopri", "Valuta", "Scegli"],
       };
     });
   }, [filterGroups, tools]);
@@ -324,13 +305,6 @@ export function MobileCatalogView({
 
   return (
     <div className="mobile-catalog-view relative min-h-screen pb-24">
-      <div className="mobile-catalog-view__ambient" aria-hidden="true">
-        <span className="mobile-catalog-view__ambient-orbit mobile-catalog-view__ambient-orbit--one" />
-        <span className="mobile-catalog-view__ambient-orbit mobile-catalog-view__ambient-orbit--two" />
-        <span className="mobile-catalog-view__ambient-trace mobile-catalog-view__ambient-trace--one" />
-        <span className="mobile-catalog-view__ambient-trace mobile-catalog-view__ambient-trace--two" />
-        <span className="mobile-catalog-view__ambient-trace mobile-catalog-view__ambient-trace--three" />
-      </div>
       <AnimatePresence>
         {openPanel && (
           <motion.section
@@ -506,7 +480,6 @@ type MobileCategoryMapProps = {
     count: number;
     color: string;
     iconName: keyof typeof CATEGORY_ICON_MAP;
-    signals: string[];
   }[];
   onSelect: (key: string) => void;
   featuredTools: DirectoryTool[];
@@ -551,11 +524,6 @@ function MobileCategoryMap({
             >
               <span className="mobile-category-map__halo" aria-hidden="true" />
               <span className="mobile-category-map__orbit" aria-hidden="true" />
-              <span className="mobile-category-map__signals" aria-hidden="true">
-                {cat.signals.map((signal) => (
-                  <span key={signal}>{signal}</span>
-                ))}
-              </span>
               <span className="mobile-category-map__body">
                 <Icon size={28} aria-hidden="true" />
               </span>
