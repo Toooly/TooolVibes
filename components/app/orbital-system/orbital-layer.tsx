@@ -608,7 +608,7 @@ export function OrbitalLayer() {
     };
   }, [setSelectedItemId]);
 
-  if (!hasMounted || hideFloatingLayer || (layerIsMobile && isTextPage) || (!profile.enableGlow && profile.reducedMotion && activeItems.length === 0)) {
+  if (!hasMounted || hideFloatingLayer || (isCompactViewport && isTextPage) || (!profile.enableGlow && profile.reducedMotion && activeItems.length === 0)) {
     return null;
   }
 

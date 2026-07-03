@@ -170,7 +170,22 @@ export function GlobalExperienceLayerV2() {
       root.style.removeProperty("--tv-pointer-shift-y");
       root.style.removeProperty("--tv-pointer-tilt-x");
       root.style.removeProperty("--tv-pointer-tilt-y");
+      root.style.removeProperty("--tv-scroll-depth");
+      root.style.removeProperty("--tv-scroll-lift");
+      root.style.removeProperty("--tv-scroll-soft");
+      root.style.removeProperty("--tv-scroll-rise");
+      root.style.removeProperty("--tv-scroll-sweep");
+      root.style.removeProperty("--tv-scroll-glow");
+      root.style.removeProperty("--tv-depth-opacity");
+      root.style.removeProperty("--tv-stage-opacity");
+      root.style.removeProperty("--tv-field-opacity");
+      root.style.removeProperty("--tv-velocity");
+      root.style.removeProperty("--tv-scroll-direction");
+      root.style.removeProperty("--tv-parallax-slow");
+      root.style.removeProperty("--tv-parallax-mid");
+      root.style.removeProperty("--tv-parallax-fast");
       root.removeAttribute("data-experience-pointer");
+      delete root.dataset.experienceDepth;
     }
 
     let scrollFrame = 0;
@@ -209,43 +224,45 @@ export function GlobalExperienceLayerV2() {
 
       root.dataset.experienceDevice = isMobile ? "mobile" : "desktop";
       root.style.setProperty("--tv-scroll-progress", progress.toFixed(4));
-      root.style.setProperty(
-        "--tv-scroll-depth",
-        `${(progress * (isMobile ? -46 : -92)).toFixed(2)}px`
-      );
-      root.style.setProperty(
-        "--tv-scroll-lift",
-        `${(progress * (isMobile ? -24 : -42)).toFixed(2)}px`
-      );
-      root.style.setProperty(
-        "--tv-scroll-soft",
-        `${(progress * (isMobile ? -11 : -18)).toFixed(2)}px`
-      );
-      root.style.setProperty(
-        "--tv-scroll-rise",
-        `${(progress * (isMobile ? -12 : -21)).toFixed(2)}px`
-      );
-      root.style.setProperty(
-        "--tv-scroll-sweep",
-        `${(progress * (isMobile ? 92 : 180)).toFixed(2)}px`
-      );
-      root.style.setProperty(
-        "--tv-scroll-glow",
-        `${(0.04 + progress * (isMobile ? 0.08 : 0.11)).toFixed(3)}`
-      );
-      root.style.setProperty(
-        "--tv-depth-opacity",
-        `${(0.1 + Math.sin(progress * Math.PI) * (isMobile ? 0.08 : 0.12)).toFixed(3)}`
-      );
-      root.style.setProperty(
-        "--tv-stage-opacity",
-        `${(0.12 + progress * (isMobile ? 0.04 : 0.07)).toFixed(3)}`
-      );
-      root.style.setProperty(
-        "--tv-field-opacity",
-        `${((isMobile ? 0.16 : 0.1) + Math.sin(progress * Math.PI) * 0.025 + progress * 0.025).toFixed(3)}`
-      );
+      root.setAttribute("data-experience-scroll", "active");
+
       if (!isMobile) {
+        root.style.setProperty(
+          "--tv-scroll-depth",
+          `${(progress * -92).toFixed(2)}px`
+        );
+        root.style.setProperty(
+          "--tv-scroll-lift",
+          `${(progress * -42).toFixed(2)}px`
+        );
+        root.style.setProperty(
+          "--tv-scroll-soft",
+          `${(progress * -18).toFixed(2)}px`
+        );
+        root.style.setProperty(
+          "--tv-scroll-rise",
+          `${(progress * -21).toFixed(2)}px`
+        );
+        root.style.setProperty(
+          "--tv-scroll-sweep",
+          `${(progress * 180).toFixed(2)}px`
+        );
+        root.style.setProperty(
+          "--tv-scroll-glow",
+          `${(0.04 + progress * 0.11).toFixed(3)}`
+        );
+        root.style.setProperty(
+          "--tv-depth-opacity",
+          `${(0.1 + Math.sin(progress * Math.PI) * 0.12).toFixed(3)}`
+        );
+        root.style.setProperty(
+          "--tv-stage-opacity",
+          `${(0.12 + progress * 0.07).toFixed(3)}`
+        );
+        root.style.setProperty(
+          "--tv-field-opacity",
+          `${(0.1 + Math.sin(progress * Math.PI) * 0.025 + progress * 0.025).toFixed(3)}`
+        );
         root.style.setProperty(
           "--tv-parallax-slow",
           `${(progress * -30).toFixed(2)}px`
@@ -258,19 +275,30 @@ export function GlobalExperienceLayerV2() {
           "--tv-parallax-fast",
           `${(progress * -120).toFixed(2)}px`
         );
+        root.style.setProperty(
+          "--tv-velocity",
+          `${Math.min(1, Math.abs(scrollVelocity) / 50).toFixed(3)}`
+        );
+        root.style.setProperty("--tv-scroll-direction", scrollDir);
+        root.dataset.experienceDepth =
+          progress > 0.66 ? "deep" : progress > 0.28 ? "mid" : "near";
       } else {
+        root.style.removeProperty("--tv-scroll-depth");
+        root.style.removeProperty("--tv-scroll-lift");
+        root.style.removeProperty("--tv-scroll-soft");
+        root.style.removeProperty("--tv-scroll-rise");
+        root.style.removeProperty("--tv-scroll-sweep");
+        root.style.removeProperty("--tv-scroll-glow");
+        root.style.removeProperty("--tv-depth-opacity");
+        root.style.removeProperty("--tv-stage-opacity");
+        root.style.removeProperty("--tv-field-opacity");
         root.style.removeProperty("--tv-parallax-slow");
         root.style.removeProperty("--tv-parallax-mid");
         root.style.removeProperty("--tv-parallax-fast");
+        root.style.removeProperty("--tv-velocity");
+        root.style.removeProperty("--tv-scroll-direction");
+        delete root.dataset.experienceDepth;
       }
-      root.style.setProperty(
-        "--tv-velocity",
-        `${Math.min(1, Math.abs(scrollVelocity) / 50).toFixed(3)}`
-      );
-      root.style.setProperty("--tv-scroll-direction", scrollDir);
-      root.dataset.experienceDepth =
-        progress > 0.66 ? "deep" : progress > 0.28 ? "mid" : "near";
-      root.setAttribute("data-experience-scroll", "active");
 
       window.clearTimeout(scrollTimer);
       scrollTimer = window.setTimeout(() => {

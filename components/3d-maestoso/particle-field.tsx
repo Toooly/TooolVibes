@@ -38,7 +38,7 @@ export function ParticleField({ className = "", style }: { className?: string; s
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   return (
     <div className={`${className}`} style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", touchAction: 'none', ...style }}>
-      <Canvas camera={{ position: [0, 0, 10], fov: 60 }} dpr={1} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
+      <Canvas camera={{ position: [0, 0, 10], fov: 60 }} dpr={isMobile ? 1 : [1, 1.5]} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
         <ParticleCloud count={isMobile ? 80 : 400} color="#7C4DFF" size={0.025} spread={15} />
         <ParticleCloud count={isMobile ? 40 : 200} color="#00E5FF" size={0.018} spread={12} />
         <ParticleCloud count={isMobile ? 20 : 100} color="#FF4081" size={0.012} spread={18} />
