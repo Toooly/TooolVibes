@@ -1006,63 +1006,7 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: rgba(124,77,255,0.5); }
 
 /* ─── Override existing components for dark 3D ─── */
-/* Header dark glass */
-.site-header-v2 .site-header-v2__shell,
-.site-header-v2.is-elevated .site-header-v2__shell {
-  background: rgba(6,6,14,0.82) !important;
-  border-color: rgba(124,77,255,0.12) !important;
-  backdrop-filter: blur(20px) saturate(1.2) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(1.2) !important;
-}
-.site-header-v2__brand-word,
-.site-header-v2__mobile-title,
-.site-header-v2__nav-label,
-.site-header-v2__mobile-link {
-  color: #F0EFFF !important;
-}
-.site-header-v2__nav-icon {
-  color: #9E99B8 !important;
-}
-.site-header-v2__nav-link.is-active .site-header-v2__nav-label,
-.site-header-v2__nav-link.is-active .site-header-v2__nav-icon {
-  color: #7C4DFF !important;
-}
-.site-header-v2__menu-button {
-  color: #6A3CFF !important;
-}
-.site-header-v2__menu-button.is-open {
-  color: #F0EFFF !important;
-}
-.site-header-v2__menu-button .site-header-v2__menu-glyph span {
-  background: currentColor !important;
-}
-.site-header-v2__search-trigger {
-  color: #9E99B8 !important;
-}
-.site-header-v2__search-trigger:hover {
-  color: #7C4DFF !important;
-}
-.site-header-v2__kbd {
-  border-color: rgba(124,77,255,0.2) !important;
-  background: rgba(124,77,255,0.1) !important;
-  color: #9E99B8 !important;
-}
-.site-header-v2__mobile-panel {
-  background: rgba(6,6,14,0.9) !important;
-  border-color: rgba(124,77,255,0.12) !important;
-}
-.site-header-v2__mobile-close {
-  background: rgba(6,6,14,0.8) !important;
-  border-color: rgba(124,77,255,0.15) !important;
-  color: #F0EFFF !important;
-}
-.site-header-v2__mobile-eyebrow {
-  color: #9E99B8 !important;
-}
-.site-header-v2__mobile-link.is-active {
-  background: linear-gradient(90deg, rgba(124,77,255,0.1) 0%, rgba(0,229,255,0.05) 100%) !important;
-  color: #7C4DFF !important;
-}
+/* (Header/mobile menu overrides moved to the dedicated mobile section below) */
 
 /* Footer dark */
 .site-footer-v2 {
@@ -1085,12 +1029,6 @@ body {
 }
 .site-footer-v2 .border-t {
   border-color: rgba(124,77,255,0.08) !important;
-}
-
-/* Mobile menu panel dark */
-.mobile-menu-panel {
-  background: rgba(6,6,14,0.95) !important;
-  border-color: rgba(124,77,255,0.12) !important;
 }
 
 /* Bottom nav dark */
@@ -1143,15 +1081,6 @@ body {
 .shortlist-board {
   background: rgba(10,10,24,0.8) !important;
   border-color: rgba(124,77,255,0.1) !important;
-}
-
-/* Search overlay dark */
-.site-header-v2__mobile-backdrop {
-  background: rgba(6,6,14,0.6) !important;
-}
-.site-header-v2__mobile-backdrop > div {
-  background: rgba(10,10,24,0.95) !important;
-  border-color: rgba(124,77,255,0.15) !important;
 }
 
 /* Directory hero / sections on dark */
@@ -3302,7 +3231,7 @@ canvas {
   .site-header-v2__mobile-title {
     font-size: clamp(0.75rem, 4.2vw, 0.95rem) !important;
     letter-spacing: 0.06em !important;
-    max-width: 42vw !important;
+    max-width: calc(100% - 5.5rem) !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -5449,14 +5378,16 @@ canvas {
   }
 }
 
-/* Mobile header: always-visible glass + centered TOOOLVIBES */
+/* Mobile header & menu — clean contrast overrides */
 @media (max-width: 1023px) {
   .site-header-v2__shell {
-    background: rgba(6, 6, 14, 0.88) !important;
-    border: 1px solid rgba(124, 77, 255, 0.14) !important;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35) !important;
-    backdrop-filter: blur(20px) saturate(1.2) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(1.2) !important;
+    background: #060612 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    margin: 0 !important;
   }
 
   .site-header-v2__brand-word {
@@ -5464,13 +5395,14 @@ canvas {
   }
 
   .site-header-v2__mobile-title {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    translate: none !important;
+    grid-column: auto !important;
+    justify-self: auto !important;
     display: block !important;
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: auto !important;
-    max-width: calc(100% - 7rem) !important;
     text-align: center !important;
     font-size: 0.92rem !important;
     font-weight: 900 !important;
@@ -5480,22 +5412,55 @@ canvas {
     text-overflow: ellipsis !important;
     color: #ffffff !important;
     -webkit-text-fill-color: #ffffff !important;
+    text-shadow: none !important;
     background: none !important;
     filter: none !important;
+    max-width: calc(100% - 5.5rem) !important;
   }
-}
 
-/* Mobile menu cleanup: consistent dark style */
-@media (max-width: 1023px) {
+  .site-header-v2__menu-button {
+    color: #ffffff !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .site-header-v2__mobile-backdrop {
+    background: rgba(6, 6, 14, 0.55) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
   .site-header-v2__mobile-panel,
   .mobile-menu-panel {
-    background: rgba(6, 6, 14, 0.96) !important;
-    border-color: rgba(124, 77, 255, 0.18) !important;
-    box-shadow: -16px 0 48px rgba(0, 0, 0, 0.35) !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    left: auto !important;
+    height: 100% !important;
+    width: 300px !important;
+    max-width: 85vw !important;
+    border-radius: 0 !important;
+    padding-bottom: 1.5rem !important;
+    background: #f8f7ff !important;
+    border-color: rgba(106, 60, 255, 0.12) !important;
+    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.18) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .site-header-v2__mobile-panel::before {
+    content: none !important;
+    display: none !important;
   }
 
   .site-header-v2__mobile-panel-head {
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 1.25rem !important;
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
   }
 
   .site-header-v2__mobile-brand span {
@@ -5506,47 +5471,76 @@ canvas {
   }
 
   .site-header-v2__mobile-close {
-    background: rgba(124, 77, 255, 0.12) !important;
-    border-color: rgba(124, 77, 255, 0.25) !important;
-    color: #F0EFFF !important;
+    background: #ffffff !important;
+    border-color: rgba(106, 60, 255, 0.2) !important;
+    color: #120d2f !important;
+    box-shadow: none !important;
   }
 
   .site-header-v2__mobile-eyebrow {
-    color: #9E99B8 !important;
+    color: #6b6580 !important;
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
   }
 
   .site-header-v2__mobile-links {
-    border-color: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(18, 13, 47, 0.08) !important;
     gap: 0.5rem !important;
   }
 
   .site-header-v2__mobile-link {
-    background: rgba(255, 255, 255, 0.04) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    color: #F0EFFF !important;
-    border-radius: 1rem !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(106, 60, 255, 0.12) !important;
+    color: #120d2f !important;
+    border-radius: 0.875rem !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
+
+  .site-header-v2__mobile-link::before,
+  .site-header-v2__mobile-link::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .site-header-v2__mobile-link span {
+    color: inherit !important;
+  }
+
+  .site-header-v2__mobile-link svg {
+    color: #6a3cff !important;
+    filter: none !important;
   }
 
   .site-header-v2__mobile-link:hover,
   .site-header-v2__mobile-link:focus-visible {
-    background: rgba(124, 77, 255, 0.12) !important;
-    border-color: rgba(124, 77, 255, 0.28) !important;
+    background: #f0edff !important;
+    border-color: rgba(106, 60, 255, 0.28) !important;
   }
 
   .site-header-v2__mobile-link.is-active {
-    background: linear-gradient(135deg, rgba(106, 60, 255, 0.22), rgba(57, 210, 246, 0.1)) !important;
-    border-color: rgba(124, 77, 255, 0.45) !important;
-    color: #ffffff !important;
+    background: #ede9fe !important;
+    border-color: rgba(106, 60, 255, 0.45) !important;
+    color: #4c1d95 !important;
   }
 
   .site-header-v2__mobile-link.is-active svg {
-    color: #7C4DFF !important;
+    color: #6a3cff !important;
   }
 
   .site-header-v2__mobile-primary {
-    background: linear-gradient(135deg, #6a3cff 0%, #4f46e5 100%) !important;
-    border: 1px solid rgba(124, 77, 255, 0.35) !important;
-    box-shadow: 0 8px 24px rgba(106, 60, 255, 0.25) !important;
+    background: #6a3cff !important;
+    border: 1px solid rgba(106, 60, 255, 0.35) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(106, 60, 255, 0.22) !important;
+    border-radius: 0.875rem !important;
+  }
+
+  .site-header-v2__mobile-primary::before,
+  .site-header-v2__mobile-primary::after {
+    content: none !important;
+    display: none !important;
   }
 }
 

@@ -27365,13 +27365,7 @@ img {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-.site-header-v2__mobile-backdrop {
-  z-index: 160 !important;
-  background:
-    radial-gradient(circle at 16% 12%, rgba(57, 210, 246, 0.24), transparent 32%),
-    radial-gradient(circle at 86% 18%, rgba(124, 77, 255, 0.22), transparent 34%),
-    rgba(7, 5, 22, 0.72) !important;
-}
+
 
 body:has(.site-header-v2__mobile-backdrop) .mobile-bottom-motion {
   opacity: 0 !important;

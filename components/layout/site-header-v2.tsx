@@ -127,15 +127,15 @@ export function SiteHeaderV2() {
         style={{ transform: "translateZ(0)", willChange: "transform" }}
       >
         <div
-          className={`site-header-v2__shell mx-auto max-w-[1440px] transition-all duration-500 ${
+          className={`site-header-v2__shell mx-auto max-w-[1440px] bg-[#060612] transition-all duration-500 lg:bg-transparent ${
             scrolled || spatialRoute
-              ? "mx-3 mt-3 rounded-2xl border border-[rgba(106,60,255,0.1)] bg-[rgba(255,255,255,0.82)] shadow-[0_4px_20px_rgba(106,60,255,0.08)] backdrop-blur-xl"
-              : "bg-transparent"
+              ? "lg:mx-3 lg:mt-3 lg:rounded-2xl lg:border lg:border-[rgba(106,60,255,0.12)] lg:bg-[rgba(6,6,14,0.82)] lg:shadow-[0_4px_20px_rgba(0,0,0,0.35)] lg:backdrop-blur-xl"
+              : ""
           }`}
         >
-          <div className="site-header-v2__inner relative flex h-16 items-center justify-between px-4 md:px-6">
+          <div className="site-header-v2__inner relative grid h-16 grid-cols-[auto_1fr_auto] items-center px-4 md:flex md:items-center md:justify-between md:px-6">
             {/* Logo */}
-            <div ref={brandRef} className="site-header-v2__brand navbar-circuit-pill group relative flex items-center gap-2.5 sm:gap-3">
+            <div ref={brandRef} className="site-header-v2__brand navbar-circuit-pill group relative flex items-center gap-2.5 justify-self-start sm:gap-3">
               <span className="site-header-v2__brand-aura" aria-hidden="true" />
               <Link href="/" className="site-header-v2__brand-logo relative transition-transform duration-300 group-hover:scale-105" data-sonic-action="brand">
                 <BrandLogo size={36} fallback="png" priority />
@@ -153,18 +153,15 @@ export function SiteHeaderV2() {
               </Link>
             </div>
 
-            <span
-              className="site-header-v2__mobile-title pointer-events-none absolute left-1/2 top-1/2 block -translate-x-1/2 -translate-y-1/2 text-[0.92rem] font-black uppercase lg:hidden"
-              aria-hidden="true"
-              style={{
-                background: "linear-gradient(110deg, #6a3cff 0%, #39d2f6 58%, #f3bf4c 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                filter: "drop-shadow(0 8px 18px rgba(106,60,255,0.16))",
-              }}
-            >
-              TooolVibes
-            </span>
+            {/* Mobile title */}
+            <div className="col-start-2 flex justify-center md:hidden">
+              <span
+                className="site-header-v2__mobile-title pointer-events-none text-[0.92rem] font-black uppercase text-white"
+                aria-hidden="true"
+              >
+                TooolVibes
+              </span>
+            </div>
 
             {/* Desktop Nav */}
             <nav ref={navRef} className="site-header-v2__nav navbar-circuit-pill hidden items-center gap-1 lg:flex" aria-label="Navigazione principale">
@@ -181,7 +178,7 @@ export function SiteHeaderV2() {
             </nav>
 
             {/* Right Actions */}
-            <div ref={actionsRef} className="site-header-v2__actions navbar-circuit-pill flex items-center gap-2">
+            <div ref={actionsRef} className="site-header-v2__actions navbar-circuit-pill flex items-center gap-2 justify-self-end">
               <CircuitPill config={PILL_CONFIGS.actions} containerRef={actionsRef} />
               <button
                 className="site-header-v2__search-trigger relative hidden rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] hover:text-[#6a3cff] md:flex"
@@ -219,7 +216,7 @@ export function SiteHeaderV2() {
 
               {/* Mobile menu toggle */}
               <button
-                className={`site-header-v2__menu-button relative z-20 grid size-11 touch-manipulation place-items-center rounded-2xl text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] active:scale-95 lg:hidden${
+                className={`site-header-v2__menu-button relative z-20 grid size-11 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 lg:hidden${
                   menuOpen ? " is-open" : ""
                 }`}
                 aria-controls="mobile-site-menu"
@@ -273,7 +270,7 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="site-header-v2__mobile-backdrop fixed inset-0 z-[90] bg-[rgba(18,13,47,0.4)] backdrop-blur-md lg:hidden"
+            className="site-header-v2__mobile-backdrop fixed inset-0 z-[90] bg-[rgba(6,6,14,0.55)] lg:hidden"
             onClick={() => setMenuOpen(false)}
             >
             <motion.nav
@@ -282,10 +279,10 @@ export function SiteHeaderV2() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0.8 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="mobile-menu-panel site-header-v2__mobile-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[rgba(106,60,255,0.1)] bg-white/70 p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-16px_0_48px_rgba(106,60,255,0.08)] backdrop-blur-2xl"
+              className="mobile-menu-panel site-header-v2__mobile-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[rgba(106,60,255,0.12)] bg-[#f8f7ff] p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-12px_0_40px_rgba(0,0,0,0.18)]"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="site-header-v2__mobile-panel-head mb-7 flex items-center justify-between gap-4">
+              <div className="site-header-v2__mobile-panel-head mb-6 flex items-center justify-between gap-4">
                 <Link href="/" className="site-header-v2__mobile-brand flex items-center gap-2" onClick={() => setMenuOpen(false)}>
                   <BrandLogo size={34} fallback="png" priority />
                   <span
@@ -301,18 +298,18 @@ export function SiteHeaderV2() {
                 </Link>
                 <button
                   type="button"
-                  className="site-header-v2__mobile-close grid size-11 place-items-center rounded-2xl border border-[rgba(106,60,255,0.12)] bg-white/80 text-[#4f4970] shadow-[0_8px_24px_rgba(106,60,255,0.08)]"
+                  className="site-header-v2__mobile-close grid size-11 place-items-center rounded-xl border border-[rgba(106,60,255,0.2)] bg-white text-[#120d2f]"
                   aria-label="Chiudi menu"
                   onClick={() => setMenuOpen(false)}
                 >
                   <X size={22} />
                 </button>
               </div>
-              <div className="site-header-v2__mobile-eyebrow mb-6 flex items-center gap-2 text-xs font-medium uppercase text-[#4f4970]">
+              <div className="site-header-v2__mobile-eyebrow mb-5 flex items-center gap-2 text-xs font-medium uppercase text-[#6b6580]">
                 <Sparkles size={12} className="text-[#6a3cff]" />
                 Navigazione
               </div>
-              <div className="site-header-v2__mobile-links flex flex-col gap-1 border-b border-white/10 pb-4">
+              <div className="site-header-v2__mobile-links flex flex-col gap-1 border-b border-[rgba(18,13,47,0.08)] pb-4">
                 {navLinks.map((link, i) => {
                   const isActive = matchesPathname(pathname, link.href);
                   return (
@@ -325,10 +322,10 @@ export function SiteHeaderV2() {
                       <Link
                         href={link.href}
                         onClick={() => setMenuOpen(false)}
-                        className={`site-header-v2__mobile-link group flex min-h-[44px] items-center justify-between rounded-xl px-4 py-3 transition-all ${
+                        className={`site-header-v2__mobile-link group flex min-h-[44px] items-center justify-between rounded-xl border px-4 py-3 transition-all ${
                           isActive
-                            ? "is-active bg-gradient-to-r from-[rgba(106,60,255,0.1)] to-[rgba(57,210,246,0.05)] text-[#6a3cff]"
-                            : "text-[#4f4970] hover:bg-[rgba(106,60,255,0.04)] hover:text-[#120d2f]"
+                            ? "is-active border-[rgba(106,60,255,0.45)] bg-[#ede9fe] text-[#4c1d95]"
+                            : "border-[rgba(106,60,255,0.12)] bg-white text-[#120d2f] hover:border-[rgba(106,60,255,0.28)] hover:bg-[#f0edff]"
                         }`}
                         style={{
                           "--mobile-link-a": link.tone[0],
@@ -339,12 +336,12 @@ export function SiteHeaderV2() {
                         aria-current={isActive ? "page" : undefined}
                       >
                         <span className="flex items-center gap-3">
-                          <link.icon size={20} />
+                          <link.icon size={20} className="text-[#6a3cff]" />
                           <span className="font-medium">{link.label}</span>
                         </span>
                         <ChevronRight
                           size={16}
-                          className="opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100"
+                          className="text-[#6a3cff] opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100"
                         />
                       </Link>
                     </motion.div>
@@ -356,7 +353,7 @@ export function SiteHeaderV2() {
                 <Link
                   href="/account#account-upgrade"
                   onClick={() => setMenuOpen(false)}
-                  className="site-header-v2__mobile-primary flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-3 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)]"
+                  className="site-header-v2__mobile-primary flex items-center justify-center gap-2 rounded-xl bg-[#6a3cff] px-4 py-3 text-sm font-medium text-white shadow-[0_6px_18px_rgba(106,60,255,0.22)]"
                 >
                   <UserPlus size={16} />
                   Accedi / Registrati
