@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 interface TiltCard3DProps {
   children: ReactNode;
@@ -20,22 +20,6 @@ export function TiltCard3D({
   const cardRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState("rotateX(0deg) rotateY(0deg)");
   const [shine, setShine] = useState({ x: 50, y: 50, opacity: 0 });
-  const [isTouch, setIsTouch] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const touch =
-      window.matchMedia("(hover: none)").matches || navigator.maxTouchPoints > 0;
-    setIsTouch(touch);
-  }, []);
-
-  if (isTouch) {
-    return (
-      <div className={className} style={style}>
-        {children}
-      </div>
-    );
-  }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
@@ -70,7 +54,7 @@ export function TiltCard3D({
       >
         {/* Shine overlay */}
         <div
-          className="pointer-events-none absolute inset-0 z-10 rounded-[inherit]"
+          className="tilt-card-shine pointer-events-none absolute inset-0 z-10 rounded-[inherit]"
           style={{
             background: `radial-gradient(circle at ${shine.x}% ${shine.y}%, rgba(255,255,255,${shine.opacity}), transparent 60%)`,
             transition: "background 0.1s ease",
@@ -78,7 +62,7 @@ export function TiltCard3D({
         />
         {/* Glow border */}
         <div
-          className="pointer-events-none absolute inset-0 z-0 rounded-[inherit] opacity-0 transition-opacity duration-300"
+          className="tilt-card-glow pointer-events-none absolute inset-0 z-0 rounded-[inherit] opacity-0 transition-opacity duration-300"
           style={{
             boxShadow: `0 0 30px ${glowColor}, 0 0 60px ${glowColor}`,
             opacity: shine.opacity > 0 ? 0.6 : 0,

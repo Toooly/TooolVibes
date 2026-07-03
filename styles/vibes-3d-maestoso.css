@@ -1007,6 +1007,25 @@ body {
 .v-preserve-3d { transform-style: preserve-3d; }
 .v-backface-hidden { backface-visibility: hidden; }
 
+/* Touch devices: disable 3D tilt to avoid SSR mismatch */
+@media (hover: none) {
+  .v-perspective .v-preserve-3d {
+    transform: none !important;
+  }
+
+  .tilt-card-shine,
+  .tilt-card-glow {
+    display: none;
+  }
+
+  .v-perspective,
+  .v-perspective .v-preserve-3d,
+  .v-perspective .tilt-card-shine,
+  .v-perspective .tilt-card-glow {
+    transition: none !important;
+  }
+}
+
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--v-void); }

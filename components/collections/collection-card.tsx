@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import type { CuratedCollection } from "@/lib/types/collection";
 import {
@@ -22,32 +21,13 @@ type CollectionCardProps = {
   collection: CuratedCollection;
   variant?: CollectionCardVariant;
   swipeFriendly?: boolean;
-  isMobile?: boolean;
 };
-
-function useViewportMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  return isMobile;
-}
 
 export function CollectionCard({
   collection,
   variant = "standard",
   swipeFriendly = false,
-  isMobile: isMobileProp,
 }: CollectionCardProps) {
-  const viewportMobile = useViewportMobile();
-  const mobile = isMobileProp ?? viewportMobile;
-  const effectiveVariant = mobile && variant === "standard" ? "compact" : variant;
   const tone = getCollectionToneMeta(collection.tone);
   const access = getCollectionAccessMeta(collection.access);
   const formatMeta = getCollectionFormatMeta(collection);
@@ -79,12 +59,11 @@ export function CollectionCard({
       ? { href: "/shortlist", label: "Salvati" }
       : { href: premium.upgrade_href, label: "Cosa sblocchi" };
 
-  if (effectiveVariant === "featured") {
+  if (variant === "featured") {
     return (
       <article
         className={cn(
-          "collection-card collection-card-featured brand-panel relative overflow-hidden rounded-[34px]",
-          !mobile && !swipeFriendly && "brand-aura panel-lift",
+          "collection-card collection-card-featured brand-panel brand-aura panel-lift relative overflow-hidden rounded-[34px]",
           swipeFriendly && "w-[22.5rem] shrink-0 snap-start",
         )}
       >
@@ -95,7 +74,7 @@ export function CollectionCard({
               alt={collection.title}
               fill
               sizes="(max-width: 1024px) 100vw, 46vw"
-              className={cn("object-cover", !mobile && "image-float")}
+              className="image-float object-cover"
             />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.24),rgba(18,15,35,0.78))]" />
             <div className="absolute left-4 top-4 flex flex-wrap gap-2">
@@ -177,7 +156,7 @@ export function CollectionCard({
     );
   }
 
-  if (effectiveVariant === "compact") {
+  if (variant === "compact") {
     return (
       <article
         className={cn(
@@ -192,7 +171,7 @@ export function CollectionCard({
               alt={collection.title}
               fill
               sizes="160px"
-              className={cn("object-cover", !mobile && "image-float")}
+              className="image-float object-cover"
             />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.22),rgba(18,15,35,0.72))]" />
           </div>
@@ -235,7 +214,7 @@ export function CollectionCard({
   }
 
   return (
-    <article className={cn("collection-card brand-panel relative flex h-full flex-col overflow-hidden rounded-[30px]", !mobile && "panel-lift")}>
+    <article className="collection-card brand-panel panel-lift relative flex h-full flex-col overflow-hidden rounded-[30px]">
       <Link href={`/collections/${collection.slug}`} className="block">
         <div className="relative h-44 overflow-hidden">
           <Image
@@ -243,7 +222,7 @@ export function CollectionCard({
             alt={collection.title}
             fill
             sizes="(max-width: 1024px) 100vw, 33vw"
-            className={cn("object-cover", !mobile && "image-float")}
+            className="image-float object-cover"
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.22),rgba(18,15,35,0.76))]" />
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">

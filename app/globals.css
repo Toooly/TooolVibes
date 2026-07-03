@@ -33219,3 +33219,36 @@ body:has(.tone-account) {
     filter: none;
   }
 }
+
+/* Mobile polish: ToolCard SSR-safe — effetti desktop disabilitati via CSS */
+@media (max-width: 767px) {
+  .tool-card-base .card-glow {
+    display: none;
+  }
+
+  .tool-card-base .image-float {
+    animation: none;
+    transform: none;
+  }
+
+  .tool-card-base .surface-sheen::after {
+    display: none;
+  }
+
+  .tool-card-base .tool-card__date-chip {
+    display: none;
+  }
+
+  .tool-card-base .hover-reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile polish: CollectionCard image-float disabilitato */
+@media (max-width: 767px) {
+  .collection-card .image-float {
+    animation: none;
+    transform: none;
+  }
+}
