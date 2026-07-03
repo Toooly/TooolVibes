@@ -431,6 +431,10 @@ img {
     will-change: opacity;
   }
 
+  .pb-mobile-nav {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 1rem);
+  }
+
   .mobile-bottom-link {
     position: relative;
     isolation: isolate;
@@ -456,7 +460,7 @@ img {
     background:
       radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.28), transparent 42%),
       linear-gradient(135deg, rgba(106, 60, 255, 0.94), rgba(57, 210, 246, 0.86));
-    box-shadow: 0 10px 24px rgba(106, 60, 255, 0.24);
+    box-shadow: 0 6px 16px rgba(106, 60, 255, 0.18);
     opacity: 0;
     transform: scale(0.9);
     transition:
@@ -550,7 +554,7 @@ img {
     line-height: 1;
     box-shadow:
       0 0 0 3px rgba(106, 60, 255, 0.18),
-      0 8px 18px rgba(47, 33, 126, 0.24);
+      0 4px 12px rgba(47, 33, 126, 0.18);
   }
 
   .mobile-bottom-link--compare-ping {

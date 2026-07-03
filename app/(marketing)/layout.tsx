@@ -32,7 +32,7 @@ export default async function MarketingLayout({
         <AccountProvider>
           <DiscoveryPersistenceProvider>
             <SiteHeaderV2 />
-            <main className="relative z-10 pb-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom)+1.5rem)] md:pb-0">
+            <main className="relative z-10 pb-mobile-nav md:pb-0">
               <PageTransition>{children}</PageTransition>
             </main>
             <SiteFooterV2 />

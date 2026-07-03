@@ -84,6 +84,7 @@ export function RouteTransitionLoader() {
   const hideTimerRef = useRef<number | null>(null);
   const completeTimerRef = useRef<number | null>(null);
   const samePathTimerRef = useRef<number | null>(null);
+  const safetyTimerRef = useRef<number | null>(null);
   const previousPathRef = useRef(pathname);
 
   const clearTimers = useCallback(() => {
@@ -105,6 +106,11 @@ export function RouteTransitionLoader() {
     if (samePathTimerRef.current) {
       window.clearTimeout(samePathTimerRef.current);
       samePathTimerRef.current = null;
+    }
+
+    if (safetyTimerRef.current) {
+      window.clearTimeout(safetyTimerRef.current);
+      safetyTimerRef.current = null;
     }
   }, []);
 
@@ -129,11 +135,31 @@ export function RouteTransitionLoader() {
       const nextProgress = Math.min(94, 4 + (elapsed / durationRef.current) * 90);
       setProgress(nextProgress);
     }, 70);
+
+    safetyTimerRef.current = window.setTimeout(() => {
+      if (intervalRef.current) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+
+      setProgress(100);
+
+      completeTimerRef.current = window.setTimeout(() => {
+        visibleRef.current = false;
+        setVisible(false);
+        setProgress(0);
+      }, 420);
+    }, 3000);
   }, [clearTimers]);
 
   const finishLoading = useCallback(() => {
     if (!visibleRef.current) {
       return;
+    }
+
+    if (safetyTimerRef.current) {
+      window.clearTimeout(safetyTimerRef.current);
+      safetyTimerRef.current = null;
     }
 
     const elapsed = performance.now() - startedAtRef.current;

@@ -110,6 +110,7 @@ export function SiteHeaderV2() {
   }, [pathname]);
 
   const setOverlayOpen = useMobileUIStore((s) => s.setOverlayOpen);
+  const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
   useEffect(() => {
     setOverlayOpen(menuOpen || searchOpen);
   }, [menuOpen, searchOpen, setOverlayOpen]);
@@ -156,7 +157,7 @@ export function SiteHeaderV2() {
             {/* Mobile title */}
             <div className="col-start-2 flex justify-center md:hidden">
               <span
-                className="site-header-v2__mobile-title pointer-events-none text-[0.92rem] font-black uppercase text-white"
+                className="site-header-v2__mobile-title pointer-events-none hidden text-[0.92rem] font-black uppercase text-white min-[430px]:inline"
                 aria-hidden="true"
               >
                 TooolVibes
@@ -366,7 +367,7 @@ export function SiteHeaderV2() {
 
       {/* Vibe Rush FAB */}
       <VibeTapMiniGame
-        className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden"
+        className={`fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden ${isOverlayOpen ? "max-md:pointer-events-none max-md:scale-90 max-md:opacity-0" : ""}`}
       />
 
       {/* Spacer */}
