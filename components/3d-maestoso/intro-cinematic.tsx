@@ -11,6 +11,19 @@ import { SOUND_PLAY_EVENT, type TooolvibesSoundKind } from "@/lib/config/sound";
 const INTRO_DURATION_MS = 4000;
 const INTRO_EXIT_MS = 800;
 const HAS_SEEN_INTRO_KEY = "tooolvibes:intro-3d-v1";
+const INTRO_FINISHED_EVENT = "tooolvibes:brand-intro-finished";
+
+type IntroViewport = {
+  cameraZ: number;
+  fov: number;
+  sceneScale: number;
+};
+
+const desktopViewport: IntroViewport = {
+  cameraZ: 7,
+  fov: 50,
+  sceneScale: 1,
+};
 
 function dispatchSound(kind: TooolvibesSoundKind) {
   if (typeof window === "undefined") return;
@@ -19,7 +32,47 @@ function dispatchSound(kind: TooolvibesSoundKind) {
   );
 }
 
-function IntroScene() {
+function getIntroViewport(): IntroViewport {
+  if (typeof window === "undefined") return desktopViewport;
+
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const isLandscapePhone = width < 940 && height < 520;
+
+  if (width < 380) {
+    return { cameraZ: 8.9, fov: 54, sceneScale: isLandscapePhone ? 0.62 : 0.7 };
+  }
+
+  if (width < 768) {
+    return { cameraZ: 8.3, fov: 52, sceneScale: isLandscapePhone ? 0.66 : 0.78 };
+  }
+
+  if (width < 1024) {
+    return { cameraZ: 7.6, fov: 51, sceneScale: 0.9 };
+  }
+
+  return desktopViewport;
+}
+
+function useIntroViewport() {
+  const [viewport, setViewport] = useState<IntroViewport>(desktopViewport);
+
+  useEffect(() => {
+    const update = () => setViewport(getIntroViewport());
+
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
+  }, []);
+
+  return viewport;
+}
+
+function IntroScene({ scale = 1 }: { scale?: number }) {
   const groupRef = useThreeRef<THREE.Group>(null);
   const particlesRef = useThreeRef<THREE.Points>(null);
 
@@ -48,7 +101,7 @@ function IntroScene() {
   });
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} scale={scale}>
       <ambientLight intensity={0.2} />
       <pointLight position={[5, 5, 5]} intensity={0.8} color="#7C4DFF" />
       <pointLight position={[-5, -3, 5]} intensity={0.5} color="#00E5FF" />
@@ -116,6 +169,7 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
   const [phase, setPhase] = useState<"entering" | "playing" | "leaving" | "unmounted">("entering");
   const [shouldRender, setShouldRender] = useState(false);
   const hasFinished = useRef(false);
+  const viewport = useIntroViewport();
 
   const finishIntro = useCallback(
     (skipped = false) => {
@@ -128,6 +182,11 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
       setTimeout(() => {
         setPhase("unmounted");
         setShouldRender(false);
+        window.dispatchEvent(
+          new CustomEvent(INTRO_FINISHED_EVENT, {
+            detail: { skipped },
+          })
+        );
         onComplete?.(skipped);
       }, INTRO_EXIT_MS);
     },
@@ -143,6 +202,11 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
     if (reduced || (played && !forced)) {
       setShouldRender(false);
       setPhase("unmounted");
+      window.dispatchEvent(
+        new CustomEvent(INTRO_FINISHED_EVENT, {
+          detail: { skipped: true },
+        })
+      );
       onComplete?.(true);
       return;
     }
@@ -171,7 +235,7 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[100] flex items-center justify-center"
+        className="fixed inset-0 z-[100] flex min-h-[100dvh] items-center justify-center overflow-hidden px-[clamp(1rem,4vw,2rem)] py-[calc(env(safe-area-inset-top)+1rem)]"
         style={{ background: "var(--v-void)" }}
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
@@ -180,7 +244,7 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
         onPointerDown={() => finishIntro(true)}
       >
           <button
-            className="absolute right-6 top-6 z-20 flex h-11 w-11 items-center justify-center rounded-2xl border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.8)] text-[#F0EFFF] transition-colors hover:border-[rgba(124,77,255,0.4)]"
+            className="absolute right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))] z-20 flex h-11 w-11 items-center justify-center rounded-2xl border border-[rgba(124,77,255,0.2)] bg-[rgba(10,10,24,0.8)] text-[#F0EFFF] transition-colors hover:border-[rgba(124,77,255,0.4)]"
             onClick={() => finishIntro(true)}
             aria-label="Salta introduzione"
             type="button"
@@ -190,18 +254,19 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
 
           <div className="absolute inset-0">
             <Canvas
-              camera={{ position: [0, 0, 7], fov: 50 }}
+              key={`${viewport.cameraZ}-${viewport.fov}-${viewport.sceneScale}`}
+              camera={{ position: [0, 0, viewport.cameraZ], fov: viewport.fov }}
               dpr={[1, 1.5]}
               gl={{ antialias: true, alpha: true }}
               style={{ background: "transparent" }}
             >
-              <IntroScene />
+              <IntroScene scale={viewport.sceneScale} />
             </Canvas>
           </div>
 
-          <div className="relative z-10 text-center px-4">
+          <div className="relative z-10 max-w-[min(92vw,46rem)] px-4 text-center">
             <motion.p
-              className="mb-3 text-sm font-semibold uppercase tracking-widest text-[#B388FF]"
+              className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#B388FF] sm:text-sm"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
@@ -209,7 +274,7 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
               Welcome in
             </motion.p>
             <motion.h1
-              className="v-text-gradient-purple text-5xl font-bold sm:text-6xl md:text-7xl"
+              className="v-text-gradient-purple text-[clamp(2.65rem,15vw,4.5rem)] font-bold leading-[0.95] sm:text-6xl md:text-7xl"
               initial={{ opacity: 0, scale: 1.2, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -217,7 +282,7 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
               TooolVibes
             </motion.h1>
             <motion.p
-              className="mt-4 text-lg text-[#9E99B8]"
+              className="mx-auto mt-4 max-w-[24rem] text-sm leading-relaxed text-[#9E99B8] sm:text-lg"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.0 }}

@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import { GlobalCommandPalette } from "@/components/app/global-command-palette";
 import { GlobalExperienceLayer } from "@/components/app/global-experience-layer";
-import { HomeBrandIntro } from "@/components/app/home-brand-intro";
 import { InteractionSoundLayerV2 } from "@/components/app/interaction-sound-layer-v2";
 import { MusicAmbienceLayer } from "@/components/app/music-ambience-layer";
 import { RouteTransitionLoader } from "@/components/app/route-transition-loader";
@@ -39,7 +38,6 @@ export function RootProviders({
         {children}
         {enableExperience && (
           <>
-            <HomeBrandIntro />
             <GlobalExperienceLayer />
             <MotionObserver />
             <RouteTransitionLoader />

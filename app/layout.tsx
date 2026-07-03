@@ -72,68 +72,6 @@ const structuredData = {
   },
 };
 
-const brandIntroStorageKey = "tooolvibes:brand-intro-mobile-neon-v1";
-
-const brandIntroPreflightStyle = `
-html.brand-intro-preflight,
-html.brand-intro-preflight body {
-  overflow: visible;
-}
-
-html.brand-intro-preflight body::before {
-  content: none;
-}
-
-@media (min-width: 768px) {
-  html.brand-intro-preflight,
-  html.brand-intro-preflight body {
-    overflow: auto;
-    background: inherit;
-  }
-
-  html.brand-intro-preflight body::before {
-    content: none;
-  }
-}
-`;
-
-const brandIntroPreflightScript = `
-(() => {
-  const clearIntroLocks = () => {
-    document.documentElement.classList.remove("brand-intro-preflight", "brand-intro-active");
-  };
-
-  try {
-    const pathname = window.location.pathname || "/";
-    const excluded =
-      pathname.startsWith("/admin") ||
-      pathname.startsWith("/api") ||
-      pathname.startsWith("/auth");
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    const mobile = window.matchMedia?.("(max-width: 767px)")?.matches;
-    const played = window.sessionStorage?.getItem("${brandIntroStorageKey}") === "true";
-
-    if (!excluded && !reduced && !played && mobile) {
-      document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
-      window.setTimeout(clearIntroLocks, 5200);
-      return;
-    }
-
-    clearIntroLocks();
-  } catch {
-    const pathname = window.location.pathname || "/";
-    const mobile = window.innerWidth < 768;
-    if (mobile && !pathname.startsWith("/admin") && !pathname.startsWith("/api") && !pathname.startsWith("/auth")) {
-      document.documentElement.classList.add("brand-intro-preflight", "brand-intro-active");
-      window.setTimeout(clearIntroLocks, 5200);
-      return;
-    }
-
-    clearIntroLocks();
-  }
-})();
-`;
-
 import { IntroCinematic3D } from "@/components/3d-maestoso/intro-cinematic";
 
 export default async function RootLayout({
@@ -146,20 +84,7 @@ export default async function RootLayout({
   const isGateOpen = gateCookie ? await verifyGateToken(gateCookie.value) : false;
   return (
     <html lang="it" className={`${manrope.variable} ${rubik.variable}`} suppressHydrationWarning>
-      <head>
-        {isGateOpen && (
-          <>
-            <style
-              id="tooolvibes-brand-intro-preflight-style"
-              dangerouslySetInnerHTML={{ __html: brandIntroPreflightStyle }}
-            />
-            <script
-              id="tooolvibes-brand-intro-preflight"
-              dangerouslySetInnerHTML={{ __html: brandIntroPreflightScript }}
-            />
-          </>
-        )}
-      </head>
+      <head />
       <body>
         {isGateOpen && (
           <script
