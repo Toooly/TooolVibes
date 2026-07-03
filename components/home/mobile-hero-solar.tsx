@@ -85,6 +85,31 @@ export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
           })}
         </div>
       </div>
+
+      <div className="v-discovery-grid" aria-label="Percorsi discovery">
+        {routes.map((route) => {
+          const Icon = HOME_ICON_MAP[route.icon];
+
+          return (
+            <Link
+              key={`grid-${route.id}`}
+              href={route.href}
+              className="v-discovery-grid-node"
+              style={
+                {
+                  "--card-color": route.color,
+                } as React.CSSProperties
+              }
+              aria-label={route.label}
+            >
+              <span className="v-discovery-grid-node__icon">
+                <Icon aria-hidden="true" size={20} />
+              </span>
+              <span className="v-discovery-grid-node__label">{route.label}</span>
+            </Link>
+          );
+        })}
+      </div>
     </section>
   );
 }

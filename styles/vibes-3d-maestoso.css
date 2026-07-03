@@ -1539,6 +1539,13 @@ body {
   pointer-events: none;
   z-index: 0;
 }
+
+@media (max-width: 640px) {
+  .v-method-particles {
+    opacity: 0.5;
+  }
+}
+
 .v-method-eyebrow {
   display: inline-block;
   font-size: 0.72rem;
@@ -1588,6 +1595,13 @@ body {
   border-color: rgba(124,77,255,0.25);
   box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,77,255,0.2), 0 0 40px rgba(124,77,255,0.15);
 }
+
+@media (hover: none) {
+  .v-method-card:hover {
+    transform: translateY(-6px);
+  }
+}
+
 .v-method-card-glow {
   position: absolute;
   inset: -40%;
@@ -1758,6 +1772,13 @@ body {
   0% { transform: translateX(-50%) scale(1); opacity: 0.5; }
   50% { transform: translateX(-50%) scale(1.15); opacity: 0.25; }
   100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+}
+
+@media (hover: none) {
+  .v-podium-step--rank-1 .v-podium-avatar,
+  .v-podium-step--rank-1 .v-podium-step-inner::after {
+    animation: none;
+  }
 }
 
 .v-podium-stage {
@@ -3947,6 +3968,28 @@ canvas {
   }
 }
 
+@media (max-width: 429px) {
+  .home-3d-hero__reactor {
+    opacity: 0.35;
+  }
+
+  .marketing-shell .home-3d-hero__cta {
+    box-shadow:
+      0 8px 20px color-mix(in srgb, var(--hero-cta-accent) 10%, transparent),
+      0 0 0 1px rgba(255, 255, 255, 0.045),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      inset 0 -10px 24px rgba(3, 3, 10, 0.08) !important;
+  }
+
+  .marketing-shell .home-3d-hero__cta:hover,
+  .marketing-shell .home-3d-hero__cta:focus-visible {
+    box-shadow:
+      0 12px 30px color-mix(in srgb, var(--hero-cta-accent) 16%, transparent),
+      0 0 20px color-mix(in srgb, var(--hero-cta-accent) 10%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+  }
+}
+
 /* Homepage sample section: simple orbital navigation */
 .v-discovery-stage--orbital {
   min-height: clamp(30rem, 58vh, 42rem);
@@ -4237,6 +4280,96 @@ canvas {
   }
 }
 
+@media (hover: none) {
+  .v-discovery-orbit-node {
+    animation: none;
+  }
+}
+
+.v-discovery-grid {
+  display: none;
+}
+
+@media (max-width: 389px) {
+  .v-discovery-stage--orbital {
+    min-height: auto;
+    padding: 2.5rem 0.75rem;
+  }
+
+  .v-discovery-orbit-shell {
+    width: auto;
+    height: auto;
+    min-height: 0;
+  }
+
+  .v-discovery-orbit-ring,
+  .v-discovery-orbit-track {
+    display: none;
+  }
+
+  .v-discovery-stage--orbital .v-discovery-brand {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 4.25rem;
+    height: 4.25rem;
+  }
+
+  .v-discovery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 20rem;
+    margin-top: 1.25rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .v-discovery-grid-node {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--card-color, #7c4dff) 30%, transparent);
+    background:
+      radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.12), transparent 36%),
+      color-mix(in srgb, var(--card-color, #7c4dff) 14%, rgba(10, 10, 24, 0.72));
+    color: rgba(240, 239, 255, 0.92);
+    text-decoration: none;
+    box-shadow: 0 0 16px color-mix(in srgb, var(--card-color, #7c4dff) 12%, transparent);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .v-discovery-grid-node:active {
+    transform: scale(0.98);
+  }
+
+  .v-discovery-grid-node__icon {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    aspect-ratio: 1;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--card-color, #7c4dff) 42%, transparent);
+    background:
+      radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.16), transparent 36%),
+      color-mix(in srgb, var(--card-color, #7c4dff) 18%, rgba(10, 10, 24, 0.66));
+    color: color-mix(in srgb, var(--card-color, #b388ff) 72%, white 18%);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--card-color, #7c4dff) 18%, transparent);
+    flex-shrink: 0;
+  }
+
+  .v-discovery-grid-node__label {
+    font-size: 0.78rem;
+    font-weight: 760;
+    line-height: 1.1;
+  }
+}
+
 /* Homepage weekly podium: readable hierarchy and controlled 3D depth */
 .v-spotlight-section {
   padding: clamp(5.25rem, 8vw, 7.25rem) 0 clamp(4.5rem, 7vw, 6.5rem) !important;
@@ -4304,6 +4437,12 @@ canvas {
   opacity: 0.76;
   transform: translateX(-50%) rotateX(68deg);
   pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .v-podium-stage::before {
+    filter: blur(6px);
+  }
 }
 
 .v-podium-platform {
