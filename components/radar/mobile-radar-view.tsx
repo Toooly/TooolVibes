@@ -282,8 +282,8 @@ export function MobileRadarView() {
 
       // Deep void background
       const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 1.2);
-      bgGrad.addColorStop(0, "#0a0a1a");
-      bgGrad.addColorStop(0.7, "#070714");
+      bgGrad.addColorStop(0, "#0d0d18");
+      bgGrad.addColorStop(0.7, "#090914");
       bgGrad.addColorStop(1, "#06060E");
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
@@ -467,7 +467,7 @@ export function MobileRadarView() {
   }, [nodes, today]);
 
   return (
-    <div className="mobile-radar-view relative min-h-screen overflow-hidden bg-[#0a0a1a]">
+    <div className="mobile-radar-view relative min-h-screen overflow-hidden">
       {/* Header */}
       <div className="mobile-radar-view__header">
         <span className="mobile-radar-view__powered">
