@@ -1097,13 +1097,6 @@ body {
   color: #9E99B8 !important;
 }
 
-/* Compare board dark */
-.compare-board,
-.unified-compare-board {
-  background: rgba(10,10,24,0.8) !important;
-  border-color: rgba(124,77,255,0.1) !important;
-}
-
 /* Shortlist board dark */
 .shortlist-board {
   background: rgba(10,10,24,0.8) !important;
@@ -1196,25 +1189,6 @@ body {
   background: rgba(6,6,14,0.9) !important;
 }
 
-/* Compare specific dark */
-.desktop-vibe-compare-stage {
-  background: rgba(10,10,24,0.6) !important;
-  border-color: rgba(255,215,64,0.1) !important;
-}
-.desktop-vibe-compare-core {
-  color: #FFD740 !important;
-}
-.desktop-vibe-compare-float {
-  background: rgba(26,26,51,0.9) !important;
-  border-color: rgba(124,77,255,0.1) !important;
-}
-.desktop-vibe-compare-float strong {
-  color: #F0EFFF !important;
-}
-.desktop-vibe-compare-float small {
-  color: #9E99B8 !important;
-}
-
 /* Shortlist specific dark */
 .shortlist-slot-card {
   background: rgba(26,26,51,0.9) !important;
@@ -1235,10 +1209,6 @@ body {
 .leaderboard-strip {
   background: rgba(10,10,24,0.8) !important;
   border-color: rgba(124,77,255,0.1) !important;
-}
-.arena-battle-stage {
-  background: rgba(10,10,24,0.8) !important;
-  border-color: rgba(255,215,64,0.1) !important;
 }
 .badge-unlock-modal,
 .level-up-modal {
@@ -1278,15 +1248,12 @@ body {
 
 /* Mobile catalog view dark */
 .mobile-catalog-view,
-.mobile-compare-view,
 .mobile-shortlist-board {
   background: var(--v-void) !important;
 }
 .mobile-catalog-view h1,
-.mobile-compare-view h1,
 .mobile-shortlist-board h1,
 .mobile-catalog-view p,
-.mobile-compare-view p,
 .mobile-shortlist-board p {
   color: #F0EFFF !important;
 }
@@ -1475,7 +1442,6 @@ body {
 .desktop-vibe-tool-card,
 .desktop-vibe-focus-card,
 .desktop-vibe-signal-card,
-.desktop-vibe-compare-float,
 .shortlist-slot-card,
 .mobile-tool-card {
   transform-style: preserve-3d !important;
@@ -1484,7 +1450,6 @@ body {
 .desktop-vibe-tool-card:hover,
 .desktop-vibe-focus-card:hover,
 .desktop-vibe-signal-card:hover,
-.desktop-vibe-compare-float:hover,
 .shortlist-slot-card:hover,
 .mobile-tool-card:hover {
   transform: translateY(-4px) rotateX(2deg) rotateY(2deg) !important;
@@ -1498,19 +1463,6 @@ body {
 .desktop-vibe-tool-card:hover {
   border-color: rgba(124,77,255,0.25) !important;
 }
-
-/* Float animation for compare cards */
-@keyframes v-compare-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-.desktop-vibe-compare-float {
-  animation: v-compare-float 5s ease-in-out infinite;
-}
-.desktop-vibe-compare-float:nth-child(2) { animation-delay: 1s; }
-.desktop-vibe-compare-float:nth-child(3) { animation-delay: 2s; }
-.desktop-vibe-compare-float:nth-child(4) { animation-delay: 3s; }
-.desktop-vibe-compare-float:nth-child(5) { animation-delay: 4s; }
 
 /* Hero section glow underlay */
 .desktop-vibe-section:first-child::before {
@@ -1532,13 +1484,9 @@ body {
   .desktop-vibe-tool-card:hover,
   .desktop-vibe-focus-card:hover,
   .desktop-vibe-signal-card:hover,
-  .desktop-vibe-compare-float:hover,
   .shortlist-slot-card:hover,
   .mobile-tool-card:hover {
     transform: none !important;
-  }
-  .desktop-vibe-compare-float {
-    animation: none !important;
   }
 }
 
@@ -6196,5 +6144,124 @@ canvas {
     font-size: clamp(0.56rem, 2.45vw, 0.62rem) !important;
     font-weight: 800 !important;
     line-height: 1.05 !important;
+  }
+}
+
+/* Mobile home corrections from QA video. */
+@media (max-width: 767px) {
+  .v-hero-mobile {
+    justify-content: center !important;
+    min-height: 100svh !important;
+    padding-top: calc(5rem + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: calc(3.75rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .v-hero-mobile__explore-wrap {
+    position: relative !important;
+    left: auto !important;
+    bottom: auto !important;
+    z-index: 10 !important;
+    margin-top: 1.05rem !important;
+    transform: none !important;
+  }
+
+  .v-hero-mobile__explore {
+    min-height: 2.35rem !important;
+    padding: 0.42rem 0.95rem !important;
+  }
+
+  .v-discovery-stage--orbital {
+    display: grid !important;
+    min-height: 100svh !important;
+    place-items: center !important;
+    padding: calc(4.9rem + env(safe-area-inset-top, 0px)) 0.75rem calc(5.8rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .v-discovery-orbit-shell {
+    --orbit-width: min(22rem, calc(100vw - 1.35rem)) !important;
+    --orbit-height: min(22rem, calc(100vw - 1.35rem)) !important;
+    --orbit-x: calc(var(--orbit-width) * 0.41) !important;
+    --orbit-y: calc(var(--orbit-height) * 0.41) !important;
+    display: grid !important;
+    width: var(--orbit-width) !important;
+    height: var(--orbit-height) !important;
+    min-height: var(--orbit-height) !important;
+    place-items: center !important;
+  }
+
+  .v-discovery-orbit-ring,
+  .v-discovery-orbit-track,
+  .v-discovery-orbit-node {
+    display: inline-flex !important;
+  }
+
+  .v-discovery-orbit-ring {
+    display: block !important;
+  }
+
+  .v-discovery-stage--orbital .v-discovery-brand {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: clamp(5.15rem, 23vw, 5.85rem) !important;
+    height: clamp(5.15rem, 23vw, 5.85rem) !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .v-discovery-orbit-track {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: 0 !important;
+    height: 0 !important;
+    transform: none !important;
+  }
+
+  .v-discovery-orbit-node {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    min-width: 5.45rem !important;
+    min-height: 3.05rem !important;
+    animation: v-discovery-node-orbit 54s linear infinite !important;
+    animation-delay: var(--orbit-delay, 0s) !important;
+  }
+
+  .v-discovery-orbit-node__content {
+    flex-direction: column !important;
+    gap: 0.22rem !important;
+    min-height: 3rem !important;
+    padding: 0.26rem 0.4rem !important;
+  }
+
+  .v-discovery-orbit-node__icon {
+    width: 2.08rem !important;
+  }
+
+  .v-discovery-orbit-node__label {
+    max-width: 5.45rem !important;
+    font-size: 0.68rem !important;
+    line-height: 1.05 !important;
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  .v-discovery-grid {
+    display: none !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .v-discovery-stage--orbital {
+    padding-inline: 0.55rem !important;
+  }
+
+  .v-discovery-orbit-node {
+    min-width: 5.05rem !important;
+  }
+
+  .v-discovery-orbit-node__label {
+    max-width: 5.05rem !important;
+    font-size: 0.64rem !important;
   }
 }

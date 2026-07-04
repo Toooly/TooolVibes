@@ -99,7 +99,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
       : "Tutti i moduli della raccolta sono già visibili in questa pagina.";
 
   return (
-    <div className="tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
+    <div className="internal-page internal-collection-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
       <section className="brand-panel brand-aura panel-lift section-stage relative overflow-hidden rounded-[36px]">
         <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.8),transparent_74%)]" />
         <div className="editorial-grid relative gap-y-0">

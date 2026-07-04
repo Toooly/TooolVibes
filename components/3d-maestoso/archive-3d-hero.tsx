@@ -98,7 +98,7 @@ export function Archive3DHero() {
       className="absolute inset-0"
       style={{
         background:
-          "radial-gradient(circle at 50% 40%, rgba(124, 77, 255, 0.12), transparent 60%), linear-gradient(135deg, #f7f5ff 0%, #ede9ff 50%, #f0edff 100%)",
+          "radial-gradient(circle at 50% 40%, rgba(124, 77, 255, 0.18), transparent 58%), radial-gradient(circle at 76% 18%, rgba(57, 210, 246, 0.12), transparent 44%), linear-gradient(180deg, #06060e 0%, #08030f 56%, #06060e 100%)",
       }}
     />
   );

@@ -134,7 +134,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
 
   return (
     <PageOrbitShell sectionId="tool-detail" label={tool.name} items={toolOrbitItems}>
-      <div className="page-shell space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
+      <div className="internal-page internal-tool-page page-shell space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
         <section
           className="light-surface overflow-hidden rounded-[30px] border border-[rgba(83,63,170,0.12)] px-5 py-5 shadow-[0_28px_74px_rgba(36,19,103,0.1)] sm:rounded-[40px] sm:px-7 sm:py-8"
           style={{
@@ -184,7 +184,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 ].map(([label, copy]) => (
                   <div
                     key={label}
-                    className="tool-detail-summary-card rounded-[22px] bg-white/78 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.74)]"
+                    className="tool-detail-summary-card rounded-[22px] border border-white/10 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
                   >
                     <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                       {label}

@@ -46,7 +46,7 @@ export async function createArticleFormAction(
   }
 
   revalidateArticlePaths(parsed.data.slug);
-  redirect("/admin?status=created");
+  redirect("/admin/articles?status=created");
 }
 
 export async function updateArticleFormAction(
@@ -86,7 +86,7 @@ export async function updateArticleFormAction(
   }
 
   revalidateArticlePaths(parsed.data.slug, existingArticle.slug);
-  redirect("/admin?status=updated");
+  redirect("/admin/articles?status=updated");
 }
 
 export async function toggleArticleFeaturedAction(id: string, nextValue: boolean) {
@@ -144,5 +144,5 @@ export async function deleteArticleAction(id: string) {
 
   await deleteArticle(id);
   revalidateArticlePaths(existingArticle.slug);
-  redirect("/admin?status=deleted");
+  redirect("/admin/articles?status=deleted");
 }

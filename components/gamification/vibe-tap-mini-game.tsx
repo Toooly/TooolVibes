@@ -29,9 +29,14 @@ import {
   Zap,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { playTooolvibesSound } from "@/lib/config/sound";
+import { recordGameInteraction, checkAndAwardBadges } from "@/lib/gamification/actions";
+import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
+import { useGameProfile } from "@/lib/gamification/hooks/use-game-profile";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { cn } from "@/lib/utils";
 
 type GameModeId = "rush" | "focus" | "fever";
 type UpgradeId = "tap" | "auto" | "crit";
@@ -82,6 +87,8 @@ type VibeTapMiniGameProps = {
   className?: string;
   badge?: string;
 };
+
+type AwardState = "idle" | "guest" | "saving" | "saved" | "error";
 
 const GAME_MODES: GameMode[] = [
   {
@@ -232,7 +239,13 @@ function CircularTimer({ seconds, total }: { seconds: number; total: number }) {
 
 export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const reducedMotion = useReducedMotion();
+  const { profile } = useGameProfile();
+  const setProfile = useGameProgressStore((state) => state.setProfile);
+  const setPendingLevelUp = useGameProgressStore((state) => state.setPendingLevelUp);
+  const addBadge = useGameProgressStore((state) => state.addBadge);
+  const setPendingBadge = useGameProgressStore((state) => state.setPendingBadge);
   const [open, setOpen] = useState(false);
   const [modeId, setModeId] = useState<GameModeId>(DEFAULT_MODE.id);
   const [running, setRunning] = useState(false);
@@ -249,6 +262,8 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   const [upgrades, setUpgrades] = useState<UpgradeLevels>(INITIAL_UPGRADES);
   const [upgradeCount, setUpgradeCount] = useState(0);
   const [bestScore, setBestScore] = useState(0);
+  const [awardState, setAwardState] = useState<AwardState>("idle");
+  const [awardedXp, setAwardedXp] = useState(0);
   const prevComboRef = useRef(1);
   const scoreRef = useRef(score);
   const bankRef = useRef(bank);
@@ -280,6 +295,59 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   const missionCombo = Math.min(combo, 8);
   const missionUpgrades = Math.min(upgradeCount, 3);
 
+  const badgeMutation = useMutation({
+    mutationFn: checkAndAwardBadges,
+    onSuccess: (awarded) => {
+      if (awarded.length === 0) return;
+      awarded.forEach((userBadge) => addBadge(userBadge));
+      setPendingBadge(awarded[0].badge);
+      void queryClient.invalidateQueries({ queryKey: ["user-badges"] });
+    },
+  });
+
+  const awardMutation = useMutation({
+    mutationFn: recordGameInteraction,
+    onMutate: (xpDelta) => {
+      setAwardState("saving");
+      setAwardedXp(xpDelta);
+    },
+    onSuccess: (nextProfile, xpDelta) => {
+      const previousLevel = profile?.level ?? 1;
+      setProfile(nextProfile);
+      if (nextProfile.level > previousLevel) {
+        setPendingLevelUp(nextProfile.level);
+      }
+      setAwardState("saved");
+      void queryClient.invalidateQueries({ queryKey: ["game-profile"] });
+      void badgeMutation.mutateAsync().catch(() => undefined);
+      toast.success("XP salvati nel profilo", {
+        description: `+${xpDelta} XP. Livello ${nextProfile.level}.`,
+      });
+    },
+    onError: () => {
+      setAwardState("error");
+      toast.error("XP non salvati", {
+        description: "La partita resta visibile qui. Riprova quando la sessione e stabile.",
+      });
+    },
+  });
+
+  const awardRunToProfile = useCallback((finalScore: number, finalXp: number) => {
+    if (finalScore <= 0 || finalXp <= 0) {
+      setAwardState("idle");
+      setAwardedXp(0);
+      return;
+    }
+
+    if (!profile) {
+      setAwardState("guest");
+      setAwardedXp(finalXp);
+      return;
+    }
+
+    awardMutation.mutate(finalXp);
+  }, [awardMutation, profile]);
+
   const closeGame = useCallback(() => {
     setOpen(false);
     setRunning(false);
@@ -293,6 +361,8 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     setSignupEmail("");
     setUpgrades(INITIAL_UPGRADES);
     setUpgradeCount(0);
+    setAwardState("idle");
+    setAwardedXp(0);
     startLockedRef.current = false;
     if (comboResetRef.current) {
       window.clearTimeout(comboResetRef.current);
@@ -312,6 +382,9 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
 
     const finalScore = scoreRef.current;
     const finalRank = getRank(finalScore, selectedMode.target);
+    const finalXp = Math.round(
+      finalScore * (modeId === "fever" ? 1.8 : 1.5) + upgradeCount * 6,
+    );
 
     if (finalScore > bestScore) {
       setBestScore(finalScore);
@@ -322,7 +395,15 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     toast.success(finalRank.startsWith("S") ? "Vibe Rush dominato" : "Vibe Rush completato", {
       description: `Grado ${finalRank} - ${finalScore} vibe in ${selectedMode.seconds} secondi.`,
     });
-  }, [bestScore, selectedMode.seconds, selectedMode.target]);
+    awardRunToProfile(finalScore, finalXp);
+  }, [
+    awardRunToProfile,
+    bestScore,
+    modeId,
+    selectedMode.seconds,
+    selectedMode.target,
+    upgradeCount,
+  ]);
 
   useEffect(() => {
     scoreRef.current = score;
@@ -470,6 +551,8 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     setFloaters([]);
     setUpgrades(INITIAL_UPGRADES);
     setUpgradeCount(0);
+    setAwardState("idle");
+    setAwardedXp(0);
     setAnnouncement(`${selectedMode.label} iniziata. Tocca il centro.`);
     playTooolvibesSound("battleStart");
     window.setTimeout(() => {
@@ -561,7 +644,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
       <button
         ref={launcherRef}
         type="button"
-        className={className}
+        className={cn("vibe-mini-launcher", className)}
         aria-label="Apri il minigioco Vibe Rush"
         onClick={() => setOpen(true)}
         data-sonic-action="tap"
@@ -796,6 +879,17 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                         <NumberFlow value={score} /> vibe raccolti
                       </span>
                       <span className="vibe-mini-game__result-xp">+{xp} XP - Record {Math.max(bestScore, score)}</span>
+                      <span className="vibe-mini-game__result-save" data-state={awardState}>
+                        {awardState === "saving"
+                          ? "Salvataggio XP in corso..."
+                          : awardState === "saved"
+                            ? `XP salvati nel profilo: +${awardedXp || xp}`
+                            : awardState === "error"
+                              ? "XP non salvati. Riprova dalla tua area utente."
+                              : awardState === "guest"
+                                ? "Accedi per salvare XP, progressione e reward."
+                                : "Completa la partita per salvare gli XP."}
+                      </span>
                       <div className="vibe-mini-game__result-actions">
                         <button
                           type="button"
@@ -813,21 +907,23 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                           Chiudi
                         </button>
                       </div>
-                      <form className="vibe-mini-game__signup" onSubmit={handleSignup}>
-                        <p>Salva progressi, XP e risultato nel tuo profilo TooolVibes.</p>
-                        <div>
-                          <input
-                            type="email"
-                            value={signupEmail}
-                            onChange={(event) => setSignupEmail(event.target.value)}
-                            placeholder="la tua email"
-                            autoComplete="email"
-                          />
-                          <button type="submit" disabled={!signupEmail.trim()}>
-                            Registrati
-                          </button>
-                        </div>
-                      </form>
+                      {!profile ? (
+                        <form className="vibe-mini-game__signup" onSubmit={handleSignup}>
+                          <p>Salva progressi, XP e risultato nel tuo profilo TooolVibes.</p>
+                          <div>
+                            <input
+                              type="email"
+                              value={signupEmail}
+                              onChange={(event) => setSignupEmail(event.target.value)}
+                              placeholder="la tua email"
+                              autoComplete="email"
+                            />
+                            <button type="submit" disabled={!signupEmail.trim()}>
+                              Registrati
+                            </button>
+                          </div>
+                        </form>
+                      ) : null}
                     </div>
                   ) : null}
                 </div>

@@ -49,7 +49,7 @@ export async function createToolFormAction(
   }
 
   revalidateToolPaths(parsed.data.slug);
-  redirect("/admin?status=created");
+  redirect("/admin/tools?status=created");
 }
 
 export async function updateToolFormAction(
@@ -89,7 +89,7 @@ export async function updateToolFormAction(
   }
 
   revalidateToolPaths(parsed.data.slug, existingTool.slug);
-  redirect("/admin?status=updated");
+  redirect("/admin/tools?status=updated");
 }
 
 export async function toggleFeaturedAction(id: string, nextValue: boolean) {
@@ -147,5 +147,5 @@ export async function deleteToolAction(id: string) {
 
   await deleteTool(id);
   revalidateToolPaths(existingTool.slug);
-  redirect("/admin?status=deleted");
+  redirect("/admin/tools?status=deleted");
 }

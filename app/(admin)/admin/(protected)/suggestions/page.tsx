@@ -287,7 +287,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                     <div className="flex flex-wrap gap-2">
                       {suggestion.status === "approved" ? (
                         <Link
-                          href={`/admin/new?suggestion=${suggestion.id}`}
+                          href={`/admin/tools/new?suggestion=${suggestion.id}`}
                           className="button-shell rounded-full px-4 py-2 text-sm font-semibold text-white"
                           style={{
                             background:

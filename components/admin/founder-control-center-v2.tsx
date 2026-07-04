@@ -16,16 +16,26 @@ import {
   ChevronRight,
   Sparkles,
   AlertCircle,
+  Gauge,
+  Wrench,
 } from "lucide-react";
 import type { AdminArticlesRuntime } from "@/lib/admin/article-queries";
 
 type FounderControlCenterV2Props = {
   articlesRuntime: AdminArticlesRuntime;
+  adminMetrics?: {
+    tools: number;
+    publishedTools: number;
+    openSuggestions: number;
+    writeReady: boolean;
+  };
 };
 
 const navItems = [
-  { href: "/admin", label: "Blog", icon: FileText },
-  { href: "/admin/new", label: "Nuovo", icon: Plus, primary: true },
+  { href: "/admin", label: "Dashboard", icon: Gauge },
+  { href: "/admin/tools", label: "Tool", icon: Wrench },
+  { href: "/admin/tools/new", label: "Nuovo tool", icon: Plus, primary: true },
+  { href: "/admin/articles", label: "Articoli", icon: FileText },
   { href: "/admin/collections", label: "Raccolte", icon: LayoutGrid },
   { href: "/admin/affiliates", label: "Affiliati", icon: Sparkles },
   { href: "/admin/affiliate-links", label: "Link", icon: LayoutGrid },
@@ -101,7 +111,7 @@ function MetricOrb({
   );
 }
 
-export function FounderControlCenterV2({ articlesRuntime }: FounderControlCenterV2Props) {
+export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: FounderControlCenterV2Props) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -113,22 +123,27 @@ export function FounderControlCenterV2({ articlesRuntime }: FounderControlCenter
 
   const metrics = [
     {
-      label: "Articoli",
-      value: String(articlesRuntime.articles.length),
-      detail: `${publishedArticles} pubblicati`,
+      label: "Tool",
+      value: String(adminMetrics?.tools ?? 0),
+      detail: `${adminMetrics?.publishedTools ?? 0} pubblicati`,
       color: "#6a3cff",
     },
     {
-      label: "Bozze",
-      value: String(draftArticles),
-      detail: "in lavorazione",
+      label: "Articoli",
+      value: String(articlesRuntime.articles.length),
+      detail: `${draftArticles} bozze`,
       color: "#39d2f6",
     },
     {
-      label: "Stato",
-      value: runtimeWarningCount > 0 ? "Avvisi" : "OK",
-      detail: runtimeWarningCount > 0 ? `${runtimeWarningCount} da verificare` : "tutto in ordine",
-      color: runtimeWarningCount > 0 ? "#f3bf4c" : "#5cbf9c",
+      label: "Submission",
+      value: String(adminMetrics?.openSuggestions ?? 0),
+      detail:
+        runtimeWarningCount > 0
+          ? `${runtimeWarningCount} avvisi`
+          : adminMetrics?.writeReady
+            ? "scrittura attiva"
+            : "verifica salvataggi",
+      color: runtimeWarningCount > 0 || !adminMetrics?.writeReady ? "#f3bf4c" : "#5cbf9c",
     },
   ];
 
@@ -158,7 +173,10 @@ export function FounderControlCenterV2({ articlesRuntime }: FounderControlCenter
             {/* Desktop Nav */}
             <nav className="hidden items-center gap-1 md:flex">
               {navItems.map((item) => {
-                const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
+                const isActive =
+                  item.href === "/admin"
+                    ? pathname === "/admin"
+                    : pathname === item.href || pathname?.startsWith(item.href + "/");
                 return (
                   <Link
                     key={item.href}
@@ -242,7 +260,10 @@ export function FounderControlCenterV2({ articlesRuntime }: FounderControlCenter
             >
               <div className="flex flex-col gap-2">
                 {navItems.map((item, i) => {
-                  const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
+                  const isActive =
+                    item.href === "/admin"
+                      ? pathname === "/admin"
+                      : pathname === item.href || pathname?.startsWith(item.href + "/");
                   return (
                     <motion.div
                       key={item.href}

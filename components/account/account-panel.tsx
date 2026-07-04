@@ -7,24 +7,38 @@ import {
   BookOpen,
   CheckCircle2,
   Clock,
+  ExternalLink,
   GitCompare,
   Layers,
   LogOut,
   Mail,
   RotateCcw,
   Save,
+  Send,
+  Settings,
   Shield,
   Sparkles,
   Star,
+  Target,
+  Trophy,
   User,
   Zap,
 } from "lucide-react";
+import NumberFlow from "@number-flow/react";
 
 import { useAccount } from "@/components/account/account-provider";
 import { AccountVibesBackground } from "@/components/account/account-vibes-background";
 import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
+import { GameMissionPanel } from "@/components/gamification/game-mission-panel";
+import { GameProfileBar } from "@/components/gamification/game-profile-bar";
+import { VibeTapMiniGame } from "@/components/gamification/vibe-tap-mini-game";
+import { directoryTools } from "@/lib/data/tooolvibes-directory";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type { DiscoveryLocalSnapshot } from "@/lib/discovery/local-storage";
+import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
+import { useBadges } from "@/lib/gamification/hooks/use-badges";
+import { useGameProfile } from "@/lib/gamification/hooks/use-game-profile";
+import { xpProgressInLevel } from "@/lib/gamification/level-utils";
 import { getPremiumEntitlementMeta } from "@/lib/premium/access";
 import { hasToolDecisionNote } from "@/lib/tools/discovery";
 
@@ -35,6 +49,24 @@ type WorkspaceSnapshot = {
   review: number;
   pinned: number;
   notes: number;
+};
+
+type AccountSubmissionsPayload = {
+  toolRequests: Array<{
+    id: string;
+    tool_name: string;
+    tool_url: string;
+    status: string;
+    created_at: string;
+  }>;
+  affiliateRequests: Array<{
+    id: string;
+    brand_name: string | null;
+    status: string;
+    referral_url: string | null;
+    created_at: string;
+  }>;
+  remoteAvailable: boolean;
 };
 
 function readWorkspaceSnapshot(snapshot: DiscoveryLocalSnapshot): WorkspaceSnapshot {
@@ -57,10 +89,16 @@ export function AccountPanel() {
   const account = useAccount();
   const persistence = useDiscoveryPersistence();
   const discovery = useDiscoverySnapshot();
+  const { profile: gameProfile, isLoading: isGameProfileLoading } = useGameProfile();
+  const { badges } = useBadges();
+  const localXp = useGameProgressStore((state) => state.totalXp);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
+  const [submissions, setSubmissions] = useState<AccountSubmissionsPayload | null>(null);
+  const [submissionsLoading, setSubmissionsLoading] = useState(false);
+  const [vibeRushBest, setVibeRushBest] = useState(0);
   const [vibeContext, setVibeContext] = useState({
     source: "",
     email: "",
@@ -68,9 +106,48 @@ export function AccountPanel() {
     xp: "",
   });
   const workspace = useMemo(() => readWorkspaceSnapshot(discovery), [discovery]);
+  const savedToolCards = useMemo(() => {
+    return discovery.shortlist
+      .map((slug) => {
+        const tool = directoryTools.find((item) => item.slug === slug);
+        const memory = discovery.decisionMemories[slug];
+
+        return {
+          slug,
+          name: tool?.name ?? slug,
+          category: tool?.categoryLabel ?? tool?.category ?? "Tool",
+          description: tool?.shortDescription ?? "Tool salvato nella tua selezione.",
+          stage: discovery.shortlistStages[slug] ?? "saved",
+          pinned: Boolean(memory?.is_pinned),
+          note: memory?.note ?? "",
+        };
+      })
+      .slice(0, 4);
+  }, [discovery.decisionMemories, discovery.shortlist, discovery.shortlistStages]);
+  const recommendedTools = useMemo(() => {
+    const savedSlugs = new Set(discovery.shortlist);
+    const savedCategories = new Set(
+      savedToolCards.map((tool) => tool.category).filter(Boolean),
+    );
+
+    return directoryTools
+      .filter((tool) => !savedSlugs.has(tool.slug))
+      .filter((tool) => savedCategories.size === 0 || savedCategories.has(tool.categoryLabel))
+      .slice(0, 3);
+  }, [discovery.shortlist, savedToolCards]);
   const vibeScore = vibeContext.vibes;
   const vibeXp = vibeContext.xp;
   const isVibeRushSignup = vibeContext.source === "vibe-rush";
+  const gameXp = Math.max(gameProfile?.xp ?? 0, localXp);
+  const gameLevel = gameProfile?.level ?? 1;
+  const gameStreak = gameProfile?.streak_days ?? 0;
+  const { current: currentLevelXp, needed: neededLevelXp } = xpProgressInLevel(gameXp);
+  const gameProgressPercent = Math.min(
+    100,
+    Math.max(0, Math.round((currentLevelXp / neededLevelXp) * 100)),
+  );
+  const totalSubmissions =
+    (submissions?.toolRequests.length ?? 0) + (submissions?.affiliateRequests.length ?? 0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -86,7 +163,52 @@ export function AccountPanel() {
     if (nextContext.email) {
       setEmail(nextContext.email);
     }
+
+    const storedBest = Number(window.localStorage.getItem("tooolvibes:vibe-rush-best") ?? "0");
+    if (Number.isFinite(storedBest)) {
+      setVibeRushBest(storedBest);
+    }
   }, []);
+
+  useEffect(() => {
+    if (account.status !== "authenticated" || !account.session?.access_token) {
+      setSubmissions(null);
+      return;
+    }
+
+    let isActive = true;
+    setSubmissionsLoading(true);
+
+    fetch("/api/account/submissions", {
+      headers: {
+        Authorization: `Bearer ${account.session.access_token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((payload: AccountSubmissionsPayload) => {
+        if (isActive) {
+          setSubmissions(payload);
+        }
+      })
+      .catch(() => {
+        if (isActive) {
+          setSubmissions({
+            toolRequests: [],
+            affiliateRequests: [],
+            remoteAvailable: false,
+          });
+        }
+      })
+      .finally(() => {
+        if (isActive) {
+          setSubmissionsLoading(false);
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [account.session?.access_token, account.status]);
 
   const persistenceLabel =
     persistence.mode === "remote"
@@ -222,6 +344,110 @@ export function AccountPanel() {
       <div className="editorial-grid gap-y-5">
         {/* Left column */}
         <section className="col-span-12 space-y-5 lg:col-span-7">
+          <div className="account-game-panel p-5 sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="account-status-badge">Gamification</span>
+                  <span className="account-status-badge">Punti reali</span>
+                </div>
+                <h2 className="account-title mt-4 text-[1.55rem] sm:text-[1.9rem]">
+                  Gioca, accumula XP, sblocca reward.
+                </h2>
+                <p className="account-subtitle mt-3 max-w-[42rem]">
+                  I minigame tornano dentro l&apos;esperienza utente: ogni run completata da loggato salva XP nel profilo e alimenta livello, missioni e badge.
+                </p>
+              </div>
+              <GameProfileBar className="account-game-panel__profile" />
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              <div className="account-game-stat">
+                <span>Livello</span>
+                <strong>
+                  <NumberFlow value={gameLevel} />
+                </strong>
+              </div>
+              <div className="account-game-stat">
+                <span>XP totali</span>
+                <strong>
+                  <NumberFlow value={gameXp} />
+                </strong>
+              </div>
+              <div className="account-game-stat">
+                <span>Reward</span>
+                <strong>
+                  <NumberFlow value={badges.length} />
+                </strong>
+              </div>
+            </div>
+
+            <div className="account-game-meter mt-4" aria-label={`${gameProgressPercent}% verso il prossimo livello`}>
+              <span style={{ width: `${gameProgressPercent}%` }} />
+            </div>
+
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <VibeTapMiniGame className="account-game-launcher" badge="+XP" />
+              <Link href="/radar" className="account-btn-secondary">
+                <Target size={16} />
+                Missioni Radar
+              </Link>
+              <Link href="/compare" className="account-link">
+                Sfide confronto
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+
+            <p className="mt-4 text-[0.82rem] leading-6" style={{ color: "var(--account-muted)" }}>
+              {isGameProfileLoading
+                ? "Caricamento progressione..."
+                : `Serie attuale: ${gameStreak} giorni. Mancano ${Math.max(0, neededLevelXp - currentLevelXp)} XP al prossimo livello.`}
+            </p>
+          </div>
+
+          <GameMissionPanel
+            eyebrow="Missioni giornaliere"
+            title="Azioni concrete per guadagnare punti"
+            description="Le missioni tengono insieme radar, raccolta tool e progressione: quando sono completate puoi riscattare XP e reward."
+            scope="radar"
+            variant="radar"
+          />
+
+          <div className="account-section-panel p-5 sm:p-6">
+            <div className="flex items-center gap-2">
+              <Trophy size={16} className="text-[var(--accent-purple)]" />
+              <p className="account-label">Progressi e attivita</p>
+            </div>
+            <h2 className="account-title mt-3 text-[1.3rem] sm:text-[1.5rem]">
+              I punti devono raccontare cosa stai facendo davvero.
+            </h2>
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              <div className="account-selection-card p-4">
+                <p className="account-label">Best Vibe Rush</p>
+                <p className="account-number mt-3">{vibeRushBest}</p>
+                <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
+                  Record locale rilevato sul dispositivo.
+                </p>
+              </div>
+              <div className="account-selection-card p-4">
+                <p className="account-label">Badge</p>
+                <p className="account-number mt-3">{badges.length}</p>
+                <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
+                  Reward gia sbloccati sul profilo.
+                </p>
+              </div>
+              <div className="account-selection-card p-4">
+                <p className="account-label">Submission</p>
+                <p className="account-number mt-3">
+                  {submissionsLoading ? "..." : totalSubmissions}
+                </p>
+                <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
+                  Richieste collegate alla tua email.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Stato attuale */}
           <div className="account-section-panel p-5 sm:p-6">
             <div className="flex items-center gap-2">
@@ -439,6 +665,67 @@ export function AccountPanel() {
               ))}
             </div>
 
+            <div className="mt-6 space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <p className="account-label">Tool salvati recenti</p>
+                {workspace.saved > 0 ? (
+                  <Link href="/shortlist" className="account-link text-sm">
+                    Vedi tutti
+                    <ArrowRight size={14} />
+                  </Link>
+                ) : null}
+              </div>
+              {savedToolCards.length > 0 ? (
+                <div className="grid gap-3">
+                  {savedToolCards.map((tool) => (
+                    <Link
+                      key={tool.slug}
+                      href={`/toools/${tool.slug}`}
+                      className="account-selection-card block p-4 transition hover:-translate-y-0.5"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-[var(--account-ink)]">{tool.name}</p>
+                          <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em]" style={{ color: "var(--muted)" }}>
+                            {tool.category} · {tool.stage === "top" ? "Priorita alta" : tool.stage === "review" ? "Da rivedere" : "Salvato"}
+                          </p>
+                        </div>
+                        {tool.pinned ? <Star size={15} className="shrink-0 text-[var(--accent-purple)]" /> : <ExternalLink size={15} className="shrink-0 text-[var(--muted)]" />}
+                      </div>
+                      <p className="mt-3 line-clamp-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
+                        {tool.note || tool.description}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="account-selection-card p-4">
+                  <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
+                    Nessun tool salvato ancora. Parti dal catalogo e questa area diventera la tua base di lavoro.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 space-y-3">
+              <p className="account-label">Consigliati per continuare</p>
+              <div className="grid gap-2">
+                {recommendedTools.map((tool) => (
+                  <Link
+                    key={tool.slug}
+                    href={`/toools/${tool.slug}`}
+                    className="flex items-center justify-between gap-3 rounded-[18px] border px-4 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+                    style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.66)" }}
+                  >
+                    <span className="min-w-0 truncate">{tool.name}</span>
+                    <span className="shrink-0 text-xs uppercase tracking-[0.14em]" style={{ color: "var(--muted)" }}>
+                      {tool.categoryLabel}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
                 href={workspace.saved > 0 ? "/shortlist" : "/archivio"}
@@ -454,6 +741,111 @@ export function AccountPanel() {
                 {workspace.compare > 1 ? "Continua il confronto" : "Aggiungi candidati"}
                 <ArrowRight size={14} />
               </Link>
+            </div>
+          </div>
+
+          <div className="account-section-panel p-5 sm:p-6">
+            <div className="flex items-center gap-2">
+              <Send size={16} className="text-[var(--accent-purple)]" />
+              <p className="account-label">Submission inviate</p>
+            </div>
+            <h2 className="account-title mt-3 text-[1.3rem] sm:text-[1.5rem]">
+              Le richieste non spariscono dopo l&apos;invio.
+            </h2>
+            <p className="account-subtitle mt-3">
+              Quando sei loggato, recuperiamo suggerimenti tool e candidature affiliate collegate alla tua email.
+            </p>
+
+            <div className="mt-5 grid gap-3">
+              {account.status !== "authenticated" ? (
+                <div className="account-selection-card p-4">
+                  <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
+                    Accedi per vedere lo stato delle submission associate alla tua email.
+                  </p>
+                </div>
+              ) : submissionsLoading ? (
+                <div className="account-selection-card p-4">
+                  <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
+                    Caricamento submission...
+                  </p>
+                </div>
+              ) : totalSubmissions > 0 ? (
+                <>
+                  {submissions?.toolRequests.slice(0, 3).map((request) => (
+                    <div key={request.id} className="account-selection-card p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-[var(--account-ink)]">{request.tool_name}</p>
+                          <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
+                            Suggerimento tool
+                          </p>
+                        </div>
+                        <span className="account-status-badge">{request.status}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {submissions?.affiliateRequests.slice(0, 2).map((request) => (
+                    <div key={request.id} className="account-selection-card p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-[var(--account-ink)]">
+                            {request.brand_name ?? "Richiesta affiliato"}
+                          </p>
+                          <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
+                            Programma affiliati
+                          </p>
+                        </div>
+                        <span className="account-status-badge">{request.status}</span>
+                      </div>
+                      {request.referral_url ? (
+                        <a
+                          href={request.referral_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="account-link mt-3 text-sm"
+                        >
+                          Apri referral
+                          <ExternalLink size={14} />
+                        </a>
+                      ) : null}
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <div className="account-selection-card p-4">
+                  <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
+                    Nessuna submission collegata. Quando suggerisci un tool o invii una candidatura, la ritrovi qui.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="account-section-panel p-5 sm:p-6">
+            <div className="flex items-center gap-2">
+              <Settings size={16} className="text-[var(--accent-purple)]" />
+              <p className="account-label">Preferenze</p>
+            </div>
+            <h2 className="account-title mt-3 text-[1.3rem] sm:text-[1.5rem]">
+              Il prossimo passo e&apos; personalizzare il ritorno.
+            </h2>
+            <div className="mt-5 grid gap-3">
+              {[
+                ["Interessi", workspace.saved > 0 ? `${workspace.saved} segnali dai tool salvati` : "Da costruire"],
+                ["Notifiche", account.status === "authenticated" ? "Email collegata" : "Richiede login"],
+                ["Shop", "Acquisti digitali in roadmap"],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between gap-3 rounded-[18px] border px-4 py-3"
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.66)" }}
+                >
+                  <span className="text-sm font-semibold text-[var(--account-ink)]">{label}</span>
+                  <span className="text-right text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: "var(--muted)" }}>
+                    {value}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 

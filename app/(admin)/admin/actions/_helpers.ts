@@ -13,6 +13,7 @@ export function revalidateToolPaths(slug: string, previousSlug?: string) {
   revalidatePath("/archivio");
   revalidatePath("/tags");
   revalidatePath("/admin");
+  revalidatePath("/admin/tools");
   revalidatePath("/api/tools");
   revalidatePath(`/toools/${slug}`);
 
@@ -25,6 +26,7 @@ export function revalidateArticlePaths(slug: string, previousSlug?: string) {
   revalidatePath("/");
   revalidatePath("/posts");
   revalidatePath("/admin");
+  revalidatePath("/admin/articles");
   revalidatePath("/sitemap.xml");
   revalidatePath(`/posts/${slug}`);
 

@@ -82,7 +82,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
       : kindLabels[post.kind];
 
   return (
-    <div className="tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
+    <div className="internal-page internal-editorial-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
       <section className="dark-panel brand-aura section-stage group relative overflow-hidden rounded-[36px]">
         <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),transparent_72%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_84%_18%,rgba(112,82,255,0.2),transparent_34%),radial-gradient(ellipse_at_14%_28%,rgba(68,220,255,0.14),transparent_32%)]" />
