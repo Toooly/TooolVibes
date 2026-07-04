@@ -7,6 +7,8 @@ import { siteConfig } from "@/lib/config/site";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useIsMobile } from "@/lib/hooks/use-is-mobile";
+import { MobileMarketingHero } from "@/components/home/mobile-marketing-hero";
 
 const heroOrbPalette = [
   "#64FFDA",
@@ -37,6 +39,12 @@ export function Home3DHero({
     position: [2.2 + (i % 3) * 0.6, ((i % 2) - 0.5) * 0.8, 2.2 + Math.floor(i / 3) * 0.6] as [number, number, number],
     speed: 0.15 + i * 0.04,
   }));
+
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <MobileMarketingHero />;
+  }
 
   return (
     <section className="home-3d-hero relative flex min-h-[60vh] items-center justify-center overflow-hidden sm:min-h-[85vh]">

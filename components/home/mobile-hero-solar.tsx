@@ -34,6 +34,7 @@ type MobileHeroSolarProps = {
 export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
   return (
     <section
+      id="v-discovery-stage"
       className="v-discovery-stage v-discovery-stage--orbital relative z-10 overflow-hidden px-4 py-16 md:py-24"
       aria-label="Discovery Stage"
     >
@@ -47,14 +48,16 @@ export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
         <div className="v-discovery-brand" aria-hidden="true">
           <span className="v-discovery-brand-aura" />
           <span className="v-discovery-brand-ring" />
-          <Image
-            src="/brand/tooolvibes-logo.png"
-            alt=""
-            width={72}
-            height={72}
-            className="v-discovery-brand-logo"
-            priority
-          />
+          <span className="v-discovery-brand-hologram">
+            <Image
+              src="/brand/tooolvibes-logo.png"
+              alt=""
+              width={72}
+              height={72}
+              className="v-discovery-brand-logo"
+              priority
+            />
+          </span>
         </div>
 
         <div className="v-discovery-orbit-track">

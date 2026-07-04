@@ -22,9 +22,9 @@ function PodiumTool({
   const iconUrl = domain
     ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`
     : undefined;
-
-  return (
-    <div className={`v-podium-step v-podium-step--rank-${rank} ${className || ""}`}>
+  const podiumClassName = `v-podium-step v-podium-step--rank-${rank} ${className || ""}`;
+  const renderContent = () => (
+    <>
       <div className="v-podium-rank" aria-label={`Posizione ${rank}`}>
         <span>{rank}</span>
       </div>
@@ -40,7 +40,22 @@ function PodiumTool({
         <span className="v-podium-name">{tool.name}</span>
         <span className="v-podium-cat">{tool.categoryLabel}</span>
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      <Link
+        href={`/toools/${tool.slug}`}
+        className={`${podiumClassName} v-podium-step--mobile-link`}
+        aria-label={`Apri la scheda di ${tool.name}, posizione ${rank}`}
+      >
+        {renderContent()}
+      </Link>
+      <div className={`${podiumClassName} v-podium-step--desktop-static`}>
+        {renderContent()}
+      </div>
+    </>
   );
 }
 
