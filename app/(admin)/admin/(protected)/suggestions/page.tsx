@@ -40,6 +40,23 @@ function StatusBadge({ status }: { status: ToolRequestStatus }) {
   return <AdminStatusPill active={false} activeLabel="" inactiveLabel={config.inactiveLabel} />;
 }
 
+function RequestTypeBadge({ type }: { type?: string | null }) {
+  const isFounder = type === "founder";
+
+  return (
+    <span
+      className="rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em]"
+      style={{
+        borderColor: isFounder ? "rgba(243,191,76,0.28)" : "rgba(57,210,246,0.22)",
+        background: isFounder ? "rgba(243,191,76,0.1)" : "rgba(57,210,246,0.08)",
+        color: isFounder ? "#9a6a12" : "var(--accent-strong)",
+      }}
+    >
+      {isFounder ? "Founder" : "Community"}
+    </span>
+  );
+}
+
 export default async function SuggestionsPage({ searchParams }: SuggestionsPageProps) {
   const [{ status, view }, runtime] = await Promise.all([searchParams, getSuggestionsRuntime()]);
   const suggestions = runtime.suggestions;
@@ -67,6 +84,8 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
     },
     { href: "/admin/suggestions?view=all", label: "Tutti", count: suggestions.length, value: "all" },
   ];
+  const founderCount = suggestions.filter((suggestion) => suggestion.submitter_type === "founder").length;
+  const communityCount = suggestions.length - founderCount;
 
   return (
     <div className="page-shell py-8 sm:py-10">
@@ -102,8 +121,8 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
             {[
               { label: "Totali", value: suggestions.length },
               { label: "In attesa", value: runtime.pendingCount },
-              { label: "Approvati", value: runtime.approvedCount },
-              { label: "Rifiutati", value: runtime.rejectedCount },
+              { label: "Founder", value: founderCount },
+              { label: "Community", value: communityCount },
             ].map((item) => (
               <article
                 key={item.label}
@@ -125,8 +144,8 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
             {[
               { label: "Totali", value: suggestions.length },
               { label: "In attesa", value: runtime.pendingCount },
-              { label: "Approvati", value: runtime.approvedCount },
-              { label: "Rifiutati", value: runtime.rejectedCount },
+              { label: "Founder", value: founderCount },
+              { label: "Community", value: communityCount },
             ].map((item) => (
               <article
                 key={item.label}
@@ -185,6 +204,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-3">
                       <h2 className="text-2xl">{suggestion.tool_name}</h2>
+                      <RequestTypeBadge type={suggestion.submitter_type} />
                       <StatusBadge status={suggestion.status} />
                     </div>
 
@@ -208,6 +228,58 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                       {suggestion.email ? <p>Email: {suggestion.email}</p> : null}
                       {suggestion.message ? (
                         <p>Messaggio: {suggestion.message}</p>
+                      ) : null}
+                      {suggestion.use_case ? <p>Use case: {suggestion.use_case}</p> : null}
+                      {suggestion.referral_url ? (
+                        <p>
+                          Referral personale:{" "}
+                          <a
+                            href={suggestion.referral_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline hover:no-underline"
+                            style={{ color: "var(--accent-strong)" }}
+                          >
+                            {suggestion.referral_url}
+                          </a>
+                        </p>
+                      ) : null}
+                      {suggestion.media_url ? (
+                        <p>
+                          Screenshot/video:{" "}
+                          <a
+                            href={suggestion.media_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline hover:no-underline"
+                            style={{ color: "var(--accent-strong)" }}
+                          >
+                            {suggestion.media_url}
+                          </a>
+                        </p>
+                      ) : null}
+                      {suggestion.personal_notes ? <p>Note personali: {suggestion.personal_notes}</p> : null}
+                      {suggestion.submitter_type === "founder" ? (
+                        <div
+                          className="rounded-[22px] border px-4 py-3"
+                          style={{
+                            borderColor: "rgba(243,191,76,0.24)",
+                            background: "rgba(255,249,240,0.72)",
+                          }}
+                        >
+                          <p className="font-semibold" style={{ color: "var(--foreground)" }}>
+                            Dettagli founder
+                          </p>
+                          <div className="mt-2 grid gap-2">
+                            {suggestion.founder_name ? <p>Founder: {suggestion.founder_name}</p> : null}
+                            {suggestion.company_role ? <p>Ruolo/team: {suggestion.company_role}</p> : null}
+                            {suggestion.launch_stage ? <p>Fase: {suggestion.launch_stage}</p> : null}
+                            {suggestion.budget_range ? <p>Budget: {suggestion.budget_range}</p> : null}
+                            {suggestion.requested_services?.length ? (
+                              <p>Servizi: {suggestion.requested_services.join(", ")}</p>
+                            ) : null}
+                          </div>
+                        </div>
                       ) : null}
                       {suggestion.admin_notes ? (
                         <p>

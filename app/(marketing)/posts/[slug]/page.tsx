@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { ButtonLink } from "@/components/ui/button";
 import { MarkdownContent } from "@/components/editorial/markdown-content";
+import { NativePlacement } from "@/components/monetization/native-placement";
 import { siteConfig } from "@/lib/config/site";
 import { getCollectionBySlug } from "@/lib/data/public-collections";
 import {
@@ -269,6 +270,9 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               </>
             )}
           </div>
+          <div className="mt-4">
+            <NativePlacement placementKey="guide-inline-promo" variant="inline" />
+          </div>
         </div>
 
         <div className="col-span-12 lg:col-span-5">
@@ -339,6 +343,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 </div>
               </div>
             </div>
+
+            <NativePlacement placementKey="article-sidebar-sponsor" variant="rail" dark />
 
             {relatedCollections.length > 0 ? (
               <div className="brand-panel panel-lift rounded-[28px] p-4 sm:p-4.5">

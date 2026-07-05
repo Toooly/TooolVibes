@@ -8,6 +8,7 @@ import { createToolRequestInSupabase } from "@/lib/supabase/suggestion-repositor
 
 const toolRequestSchema = z
   .object({
+    submitterType: z.enum(["community", "founder"]).default("community"),
     toolName: z.string().trim().min(2),
     toolUrl: z.string().trim().url().refine((value) => {
       const url = new URL(value);
@@ -17,6 +18,15 @@ const toolRequestSchema = z
     level: z.enum(["featured", "beginner", "intermediate", "expert"]),
     email: z.string().trim().email().or(z.literal("")).optional(),
     message: z.string().trim().optional(),
+    useCase: z.string().trim().optional(),
+    referralUrl: z.string().trim().url().or(z.literal("")).optional(),
+    mediaUrl: z.string().trim().url().or(z.literal("")).optional(),
+    personalNotes: z.string().trim().optional(),
+    founderName: z.string().trim().optional(),
+    companyRole: z.string().trim().optional(),
+    launchStage: z.string().trim().optional(),
+    budgetRange: z.string().trim().optional(),
+    requestedServices: z.array(z.string().trim().min(2)).max(12).optional(),
   })
   .strict();
 
@@ -50,12 +60,22 @@ export async function POST(request: Request) {
 
   try {
     const savedRequest = await createToolRequestInSupabase({
+      submitter_type: payload.submitterType,
       tool_name: payload.toolName,
       tool_url: payload.toolUrl,
       category: payload.category,
       level: payload.level,
       email: email || null,
       message: payload.message || null,
+      use_case: payload.useCase || null,
+      referral_url: payload.referralUrl || null,
+      media_url: payload.mediaUrl || null,
+      personal_notes: payload.personalNotes || null,
+      founder_name: payload.founderName || null,
+      company_role: payload.companyRole || null,
+      launch_stage: payload.launchStage || null,
+      budget_range: payload.budgetRange || null,
+      requested_services: payload.requestedServices ?? [],
     });
 
     await notifyToolRequestSubmitted(savedRequest);

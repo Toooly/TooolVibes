@@ -56,6 +56,7 @@ type AccountSubmissionsPayload = {
     id: string;
     tool_name: string;
     tool_url: string;
+    submitter_type?: "community" | "founder";
     status: string;
     created_at: string;
   }>;
@@ -777,7 +778,7 @@ export function AccountPanel() {
                         <div>
                           <p className="font-semibold text-[var(--account-ink)]">{request.tool_name}</p>
                           <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-                            Suggerimento tool
+                            {request.submitter_type === "founder" ? "Proposta founder" : "Suggerimento tool"}
                           </p>
                         </div>
                         <span className="account-status-badge">{request.status}</span>

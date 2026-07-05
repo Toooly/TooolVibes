@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import {
+  BadgeDollarSign,
   LayoutGrid,
   FileText,
   Plus,
@@ -37,6 +38,7 @@ const navItems = [
   { href: "/admin/tools/new", label: "Nuovo tool", icon: Plus, primary: true },
   { href: "/admin/articles", label: "Articoli", icon: FileText },
   { href: "/admin/collections", label: "Raccolte", icon: LayoutGrid },
+  { href: "/admin/monetization", label: "Monetizzazione", icon: BadgeDollarSign },
   { href: "/admin/affiliates", label: "Affiliati", icon: Sparkles },
   { href: "/admin/affiliate-links", label: "Link", icon: LayoutGrid },
   { href: "/admin/suggestions", label: "Suggerimenti", icon: AlertCircle },

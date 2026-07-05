@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { AdvancedSpecialIssue } from "@/components/collections/advanced-special-issue";
 import { CollectionCard } from "@/components/collections/collection-card";
 import { CollectionSlotCard } from "@/components/collections/collection-slot-card";
+import { NativePlacement } from "@/components/monetization/native-placement";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { ButtonLink } from "@/components/ui/button";
 import { siteConfig } from "@/lib/config/site";
@@ -242,6 +243,8 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 </p>
               </div>
             </div>
+
+            <NativePlacement placementKey="collection-native-sponsor" variant="rail" />
           </div>
         </div>
       </section>

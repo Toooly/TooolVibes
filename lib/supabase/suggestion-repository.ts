@@ -8,12 +8,22 @@ import type { ToolRequestRecord, ToolRequestStatus } from "@/lib/types/tool-requ
 
 export const toolRequestSelect = `
   id,
+  submitter_type,
   tool_name,
   tool_url,
   category,
   level,
   email,
   message,
+  use_case,
+  referral_url,
+  media_url,
+  personal_notes,
+  founder_name,
+  company_role,
+  launch_stage,
+  budget_range,
+  requested_services,
   status,
   admin_notes,
   created_at,
@@ -22,12 +32,22 @@ export const toolRequestSelect = `
 
 export type ToolRequestCreateInput = {
   id?: string;
+  submitter_type?: ToolRequestRecord["submitter_type"];
   tool_name: string;
   tool_url: string;
   category: string;
   level: string;
   email?: string | null;
   message?: string | null;
+  use_case?: string | null;
+  referral_url?: string | null;
+  media_url?: string | null;
+  personal_notes?: string | null;
+  founder_name?: string | null;
+  company_role?: string | null;
+  launch_stage?: string | null;
+  budget_range?: string | null;
+  requested_services?: string[] | null;
   created_at?: string;
 };
 

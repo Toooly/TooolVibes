@@ -1,6 +1,7 @@
 "use client";
 
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import { NativePlacement } from "@/components/monetization/native-placement";
 import { MobileHeroSolar } from "./mobile-hero-solar";
 import { MobileMethodSteps } from "./mobile-method-steps";
 import { MobileSpotlight } from "./mobile-spotlight";
@@ -85,6 +86,9 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools }: VibeHomeV2Pro
     <div className="vibe-home-mobile-origin relative">
       <MobileHeroSolar routes={solarRoutes} />
       {focusTool && <MobileSpotlight tool={focusTool} supportingTools={supportingTools} />}
+      <section className="page-shell sm:hidden">
+        <NativePlacement placementKey="home-featured-tool" variant="compact" />
+      </section>
       <MobileMethodSteps steps={methodSteps} />
     </div>
   );

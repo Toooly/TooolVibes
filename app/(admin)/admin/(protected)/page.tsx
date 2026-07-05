@@ -22,6 +22,7 @@ import { getAdminArticlesRuntime } from "@/lib/admin/article-queries";
 import { getAdminCollectionsRuntime } from "@/lib/admin/collection-queries";
 import { getSuggestionsRuntime } from "@/lib/admin/suggestion-queries";
 import { getAdminToolsRuntime, isSupabaseAdminEnabled } from "@/lib/admin/tool-queries";
+import { getMonetizationPlacementStats } from "@/lib/monetization/placements";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
 
 type AdminDashboardPageProps = {
@@ -202,6 +203,7 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
   const openAffiliateRequests =
     affiliateRequestsRuntime.pendingCount + affiliateRequestsRuntime.reviewingCount;
   const activeAffiliateLinks = affiliateRuntime.activeCount;
+  const monetizationStats = getMonetizationPlacementStats();
   const collectionPublicCount = collectionsRuntime.collections.filter(
     (collection) => collection.editorial_state === "published" || collection.editorial_state === "featured",
   ).length;
@@ -354,12 +356,17 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
             tone="missing"
           />
           <AdminAreaCard
+            href="/admin/monetization"
             title="Sponsorship e listing"
-            description="Serve inventory placement, banner, campagne, date, asset, contratti e tracking."
-            value={sponsorshipPlacementCount === null ? "-" : String(sponsorshipPlacementCount)}
-            meta="Placement sponsor"
+            description="Inventory placement, pacchetti nativi e superfici pronte per sponsor, banner, listing e founder pack."
+            value={`${monetizationStats.visible}/${monetizationStats.total}`}
+            meta={
+              sponsorshipPlacementCount === null
+                ? `${monetizationStats.reserved} prenotabili, ${monetizationStats.planned} pianificati`
+                : `${sponsorshipPlacementCount} placement nel database`
+            }
             icon={Sparkles}
-            tone="missing"
+            tone="partial"
           />
           <AdminAreaCard
             title="Shop digitale"

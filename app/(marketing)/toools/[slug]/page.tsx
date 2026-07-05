@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { DirectoryToolCard } from "@/components/directory/directory-tool-card";
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
+import { NativePlacement } from "@/components/monetization/native-placement";
 import { siteConfig } from "@/lib/config/site";
 import {
   directoryTools,
@@ -304,6 +305,8 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
             </aside>
           </div>
         </section>
+
+        <NativePlacement placementKey="tool-sponsored-alternative" variant="band" />
 
         <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <article className="light-surface rounded-[26px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_18px_54px_rgba(35,18,95,0.08)] sm:rounded-[32px] sm:p-6">

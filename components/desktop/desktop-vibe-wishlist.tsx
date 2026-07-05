@@ -22,6 +22,7 @@ type FormState = ToolRequestInput;
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
 const initialForm: FormState = {
+  submitterType: "community",
   toolName: "",
   toolUrl: "",
   category: "ai-app-builder",
@@ -104,6 +105,7 @@ export function DesktopVibeWishlist() {
 
     try {
       const savedRequest = await saveToolRequest({
+        submitterType: form.submitterType,
         toolName: form.toolName.trim(),
         toolUrl: form.toolUrl.trim(),
         category: form.category,

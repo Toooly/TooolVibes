@@ -5,12 +5,22 @@ import {
 } from "@/lib/supabase/browser-client";
 
 export type ToolRequestInput = {
+  submitterType: "community" | "founder";
   toolName: string;
   toolUrl: string;
   category: string;
   level: DirectoryToolLevel;
   email?: string;
   message?: string;
+  useCase?: string;
+  referralUrl?: string;
+  mediaUrl?: string;
+  personalNotes?: string;
+  founderName?: string;
+  companyRole?: string;
+  launchStage?: string;
+  budgetRange?: string;
+  requestedServices?: string[];
 };
 
 export type StoredToolRequest = ToolRequestInput & {
@@ -129,12 +139,22 @@ export async function saveToolRequest(input: ToolRequestInput) {
       .from("tool_requests")
       .insert({
         id: request.id,
+        submitter_type: input.submitterType,
         tool_name: input.toolName,
         tool_url: input.toolUrl,
         category: input.category,
         level: input.level,
         email: input.email ?? null,
         message: input.message ?? null,
+        use_case: input.useCase ?? null,
+        referral_url: input.referralUrl ?? null,
+        media_url: input.mediaUrl ?? null,
+        personal_notes: input.personalNotes ?? null,
+        founder_name: input.founderName ?? null,
+        company_role: input.companyRole ?? null,
+        launch_stage: input.launchStage ?? null,
+        budget_range: input.budgetRange ?? null,
+        requested_services: input.requestedServices ?? [],
         created_at: request.createdAt,
       });
 

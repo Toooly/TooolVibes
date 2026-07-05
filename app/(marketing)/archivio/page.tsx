@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Archive3DHero } from "@/components/3d-maestoso/archive-3d-hero";
 import { FloatingCatalogView } from "@/components/directory/floating-catalog-view";
+import { NativePlacement } from "@/components/monetization/native-placement";
 import {
   directoryFilterGroups,
   directoryTools,
@@ -30,6 +31,9 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   return (
     <main className="relative overflow-x-hidden">
       <Archive3DHero />
+      <section className="page-shell relative z-10 -mt-5 pb-3 sm:-mt-8 sm:pb-5">
+        <NativePlacement placementKey="catalog-native-sponsor" variant="band" />
+      </section>
       <FloatingCatalogView
         tools={directoryTools}
         filterGroups={directoryFilterGroups}
