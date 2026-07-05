@@ -7,7 +7,7 @@ import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import type { ToolRecord } from "@/lib/types/tool";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
-import { celebrateArenaFight, normalise, withBattleScores } from "./tool-battle-shared";
+import { celebrateArenaFight, getBattleVerdict, normalise, withBattleScores } from "./tool-battle-shared";
 import { ToolFighter } from "./tool-fighter";
 import { DiffMatrix } from "./mobile-compare-view";
 
@@ -56,7 +56,8 @@ export function DesktopCompareView({
   );
 
   const sorted = useMemo(() => [...tools].sort((a, b) => b.battleScore - a.battleScore), [tools]);
-  const winner = sorted[0];
+  const verdict = useMemo(() => getBattleVerdict(tools), [tools]);
+  const winner = verdict.winner;
 
   function handleFight() {
     if (battleState === "fighting" || tools.length < 2) return;
@@ -132,6 +133,7 @@ export function DesktopCompareView({
             >
               <Sparkles className="size-4" />
               <span>{winner.name} vince il confronto</span>
+              <span className="desktop-compare__verdict-label">{verdict.label}</span>
             </motion.div>
           )}
         </AnimatePresence>

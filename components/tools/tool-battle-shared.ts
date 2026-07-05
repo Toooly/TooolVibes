@@ -157,3 +157,74 @@ export function normalise(
   }
   return out;
 }
+
+export type BattleVerdict = {
+  winner: NormalisedTool;
+  scores: { tool: NormalisedTool; score: number; rank: number }[];
+  reasons: string[];
+  label: "Verdetto tecnico" | "Verdetto editoriale" | "Verdetto basato sui dati disponibili";
+};
+
+export function getBattleVerdict(tools: NormalisedTool[]): BattleVerdict {
+  const sorted = [...tools].sort((a, b) => b.battleScore - a.battleScore);
+  const winner = sorted[0];
+  const runnerUp = sorted[1];
+
+  const scores = sorted.map((tool, index) => ({
+    tool,
+    score: tool.battleScore,
+    rank: index + 1,
+  }));
+
+  const reasons: string[] = [];
+  const dimensions: { name: string; value: number; max: number }[] = [];
+
+  for (const tool of tools) {
+    dimensions.push({ name: `${tool.name} — punteggio`, value: tool.battleScore, max: 99 });
+  }
+
+  if (runnerUp) {
+    const gap = winner.battleScore - runnerUp.battleScore;
+    if (gap >= 8) {
+      reasons.push(`${winner.name} distanzia ${runnerUp.name} di ${gap} punti nel punteggio complessivo.`);
+    } else if (gap >= 3) {
+      reasons.push(`${winner.name} supera ${runnerUp.name} di ${gap} punti: il vantaggio è netto.`);
+    } else {
+      reasons.push(`${winner.name} vince per un margine ridotto: la scelta dipende dal caso d'uso.`);
+    }
+  }
+
+  const winnerHighlights = winner.highlights.length;
+  const avgHighlights = tools.reduce((sum, t) => sum + t.highlights.length, 0) / tools.length;
+  if (winnerHighlights >= avgHighlights + 1) {
+    reasons.push(`${winner.name} ha più punti di forza evidenziati rispetto agli altri.`);
+  }
+
+  const winnerUseCases = winner.useCasesCount;
+  const avgUseCases = tools.reduce((sum, t) => sum + t.useCasesCount, 0) / tools.length;
+  if (winnerUseCases >= avgUseCases + 1) {
+    reasons.push(`${winner.name} copre più casi d'uso pratici nel catalogo.`);
+  }
+
+  if (reasons.length < 3) {
+    reasons.push(`${winner.name} ha ottenuto il miglior punteggio nella combinazione di dimensioni confrontate.`);
+  }
+
+  const hasRealData =
+    tools.some((t) => t.isDirectory) ||
+    tools.some((t) => t.highlights.length > 0 || t.useCasesCount > 0);
+
+  let label: BattleVerdict["label"] = "Verdetto basato sui dati disponibili";
+  if (hasRealData && tools.every((t) => t.isDirectory)) {
+    label = "Verdetto editoriale";
+  } else if (hasRealData && tools.some((t) => t.isDirectory)) {
+    label = "Verdetto tecnico";
+  }
+
+  return {
+    winner,
+    scores,
+    reasons: reasons.slice(0, 3),
+    label,
+  };
+}
