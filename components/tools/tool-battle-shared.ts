@@ -47,6 +47,25 @@ export function stableScoreOffset(seed: string): number {
   return (hash % 13) - 6;
 }
 
+export type BattleObjective =
+  | "save-time"
+  | "quality"
+  | "save-money"
+  | "learn-fast"
+  | "collaborate"
+  | "scale"
+  | "experiment";
+
+export const BATTLE_OBJECTIVES: { key: BattleObjective; label: string }[] = [
+  { key: "save-time", label: "Risparmiare tempo" },
+  { key: "quality", label: "Aumentare qualità" },
+  { key: "save-money", label: "Ridurre costi" },
+  { key: "learn-fast", label: "Imparare velocemente" },
+  { key: "collaborate", label: "Collaborare" },
+  { key: "scale", label: "Scalare" },
+  { key: "experiment", label: "Sperimentare" },
+];
+
 export type NormalisedTool = {
   slug: string;
   name: string;
@@ -54,12 +73,16 @@ export type NormalisedTool = {
   categoryLabel: string;
   score: number;
   battleScore: number;
+  objectiveScore?: number;
+  objectiveDelta?: number;
   accentFrom: string;
   accentTo: string;
   tldr: string;
   useCase: string;
   review: string;
   highlights: string[];
+  useCases: string[];
+  tags: string[];
   readingTime: string;
   url: string;
   logoUrl: string;
@@ -88,19 +111,23 @@ export function withBattleScores(tools: NormalisedTool[]): NormalisedTool[] {
   }));
 }
 
-export async function celebrateArenaFight() {
+export async function celebrateArenaFight(winner?: NormalisedTool) {
   const { default: confetti } = await import("canvas-confetti");
 
+  const colors = winner
+    ? [winner.accentFrom, winner.accentTo, "#f3bf4c"]
+    : ["#6a3cff", "#39d2f6", "#f3bf4c"];
+
   confetti({
-    colors: ["#6a3cff", "#39d2f6", "#f3bf4c"],
+    colors,
     disableForReducedMotion: true,
-    origin: { y: 0.58 },
-    particleCount: 28,
-    scalar: 0.65,
-    spread: 44,
-    startVelocity: 22,
-    gravity: 1.1,
-    ticks: 120,
+    origin: { y: 0.62 },
+    particleCount: 18,
+    scalar: 0.6,
+    spread: 38,
+    startVelocity: 18,
+    gravity: 1.2,
+    ticks: 100,
   });
 }
 
@@ -126,6 +153,8 @@ export function normalise(
         useCase: d.idealUseCase,
         review: d.editorialReview,
         highlights: d.highlights,
+        useCases: d.useCases,
+        tags: d.tags,
         readingTime: d.readingTime,
         url: d.url,
         logoUrl: getToolLogoUrl(d.domain || d.externalUrl),
@@ -149,45 +178,239 @@ export function normalise(
         tldr: l.short_description_it ?? l.description_it ?? "Nessun riassunto disponibile.",
         useCase: l.description_it ?? "",
         review: l.editorial_note ?? "",
-        highlights: l.tags?.slice(0, 3) ?? [],
+        highlights: l.strengths?.slice(0, 3).length ? l.strengths.slice(0, 3) : (l.tags?.slice(0, 3) ?? []),
+        useCases: l.use_cases ?? [],
+        tags: l.tags ?? [],
         readingTime: "2 min",
         url: l.website_url ?? "",
         logoUrl: getToolLogoUrl(l.website_url),
         isDirectory: false,
-        useCasesCount: 0,
+        useCasesCount: l.use_cases?.length ?? 0,
       });
     }
   }
   return out;
 }
 
+const OBJECTIVE_KEYWORDS: Record<BattleObjective, string[]> = {
+  "save-time": [
+    "automation",
+    "automazione",
+    "productivity",
+    "produttività",
+    "no-code",
+    "low-code",
+    "workflow",
+    "save time",
+    "risparmiare tempo",
+    "faster",
+    "quick",
+    "rapid",
+    "velocizza",
+    "ai writing",
+    "ai image",
+    "ai video",
+    "generate fast",
+    "veloce",
+  ],
+  quality: [
+    "design",
+    "video",
+    "polish",
+    "professional",
+    "high quality",
+    "high-quality",
+    "refined",
+    "pixel-perfect",
+    "creative",
+    "craft",
+    "visuals",
+    "production",
+    "qualità",
+    "professionale",
+  ],
+  "save-money": [
+    "free",
+    "freemium",
+    "open source",
+    "affordable",
+    "cheap",
+    "low cost",
+    "cost-effective",
+    "budget",
+    "gratis",
+    "senza costi",
+    "economico",
+    "risparmiare",
+  ],
+  "learn-fast": [
+    "beginner",
+    "intuitive",
+    "intuitivo",
+    "easy",
+    "facile",
+    "simple",
+    "template",
+    "tutorial",
+    "onboarding",
+    "gentle",
+    "low learning curve",
+    "impara velocemente",
+  ],
+  collaborate: [
+    "team",
+    "collaboration",
+    "collaborazione",
+    "collaborare",
+    "share",
+    "condividi",
+    "feedback",
+    "comment",
+    "workspace",
+    "customer support",
+    "comunicazione",
+  ],
+  scale: [
+    "expert",
+    "enterprise",
+    "scalability",
+    "scalabilità",
+    "scalare",
+    "api",
+    "integration",
+    "enterprise-grade",
+    "growth",
+    "infra",
+    "performante",
+    "grandi volumi",
+  ],
+  experiment: [
+    "vibe-coding",
+    "ai-app-builder",
+    "prototype",
+    "prototipo",
+    "beta",
+    "experiment",
+    "test",
+    "hackathon",
+    "try",
+    "playful",
+    "sandbox",
+    "new tech",
+    "sperimentare",
+  ],
+};
+
+const OBJECTIVE_SOURCE_LABELS: Record<string, string> = {
+  highlights: "i punti di forza evidenziati",
+  useCases: "i casi d'uso pratici",
+  tags: "i tag del catalogo",
+  category: "la categoria",
+};
+
+type ObjectiveMatch = {
+  rawScore: number;
+  topSource: string | null;
+  topKeyword: string | null;
+};
+
+function getObjectiveMatch(tool: NormalisedTool, objective: BattleObjective): ObjectiveMatch {
+  const keywords = OBJECTIVE_KEYWORDS[objective];
+  const sources: { key: string; items: string[]; weight: number }[] = [
+    { key: "highlights", items: tool.highlights, weight: 1.5 },
+    { key: "useCases", items: tool.useCases, weight: 1 },
+    { key: "tags", items: tool.tags, weight: 0.75 },
+    { key: "category", items: [tool.category, tool.categoryLabel].filter(Boolean), weight: 0.5 },
+  ];
+
+  let rawScore = 0;
+  const sourceScores = new Map<string, number>();
+  const keywordHits = new Map<string, number>();
+
+  for (const source of sources) {
+    sourceScores.set(source.key, 0);
+    for (const item of source.items) {
+      const text = String(item).toLowerCase();
+      for (const keyword of keywords) {
+        if (text.includes(keyword.toLowerCase())) {
+          rawScore += source.weight;
+          sourceScores.set(source.key, (sourceScores.get(source.key) ?? 0) + source.weight);
+          keywordHits.set(keyword, (keywordHits.get(keyword) ?? 0) + 1);
+        }
+      }
+    }
+  }
+
+  const topSource =
+    [...sourceScores.entries()].filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  const topKeyword =
+    [...keywordHits.entries()].filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+
+  return { rawScore, topSource, topKeyword };
+}
+
+export function getObjectiveScore(tool: NormalisedTool, objective: BattleObjective): number {
+  const { rawScore } = getObjectiveMatch(tool, objective);
+  return Math.min(15, rawScore * 2.5);
+}
+
+export function withObjectiveScores(
+  tools: NormalisedTool[],
+  objective: BattleObjective | null,
+): NormalisedTool[] {
+  if (!objective) {
+    return tools.map((tool) => ({
+      ...tool,
+      objectiveScore: undefined,
+      objectiveDelta: undefined,
+    }));
+  }
+
+  const deltas = tools.map((tool) => Math.round(getObjectiveScore(tool, objective)));
+  const hasAnyMatch = deltas.some((delta) => delta !== 0);
+
+  if (!hasAnyMatch) {
+    return tools.map((tool) => ({
+      ...tool,
+      objectiveScore: tool.battleScore,
+      objectiveDelta: 0,
+    }));
+  }
+
+  return tools.map((tool, index) => {
+    const delta = deltas[index];
+    const objectiveScore = Math.max(62, Math.min(99, tool.battleScore + delta));
+    return { ...tool, objectiveScore, objectiveDelta: objectiveScore - tool.battleScore };
+  });
+}
+
 export type BattleVerdict = {
   winner: NormalisedTool;
   scores: { tool: NormalisedTool; score: number; rank: number }[];
   reasons: string[];
-  label: "Verdetto tecnico" | "Verdetto editoriale" | "Verdetto basato sui dati disponibili";
+  label: string;
 };
 
-export function getBattleVerdict(tools: NormalisedTool[]): BattleVerdict {
-  const sorted = [...tools].sort((a, b) => b.battleScore - a.battleScore);
+export function getBattleVerdict(
+  tools: NormalisedTool[],
+  objective: BattleObjective | null = null,
+): BattleVerdict {
+  const sorted = [...tools].sort(
+    (a, b) => (b.objectiveScore ?? b.battleScore) - (a.objectiveScore ?? a.battleScore),
+  );
   const winner = sorted[0];
   const runnerUp = sorted[1];
 
   const scores = sorted.map((tool, index) => ({
     tool,
-    score: tool.battleScore,
+    score: tool.objectiveScore ?? tool.battleScore,
     rank: index + 1,
   }));
 
   const reasons: string[] = [];
-  const dimensions: { name: string; value: number; max: number }[] = [];
-
-  for (const tool of tools) {
-    dimensions.push({ name: `${tool.name} — punteggio`, value: tool.battleScore, max: 99 });
-  }
 
   if (runnerUp) {
-    const gap = winner.battleScore - runnerUp.battleScore;
+    const gap = (winner.objectiveScore ?? winner.battleScore) - (runnerUp.objectiveScore ?? runnerUp.battleScore);
     if (gap >= 8) {
       reasons.push(`${winner.name} vince con un margine di ${gap} punti su ${runnerUp.name}.`);
     } else if (gap >= 3) {
@@ -218,7 +441,26 @@ export function getBattleVerdict(tools: NormalisedTool[]): BattleVerdict {
     tools.some((t) => t.highlights.length > 0 || t.useCasesCount > 0);
 
   let label: BattleVerdict["label"] = "Verdetto basato sui dati disponibili";
-  if (hasRealData && tools.every((t) => t.isDirectory)) {
+  const objectiveLabel = objective ? BATTLE_OBJECTIVES.find((o) => o.key === objective)?.label : null;
+
+  if (objective && objectiveLabel) {
+    const hasObjectiveMatch = tools.some((t) => (t.objectiveDelta ?? 0) !== 0);
+    if (hasObjectiveMatch) {
+      label = `Verdetto orientato a ${objectiveLabel}`;
+      const winnerMatch = getObjectiveMatch(winner, objective);
+      if (winnerMatch.rawScore > 0 && winnerMatch.topSource) {
+        reasons.unshift(`${winner.name} è il migliore per ${objectiveLabel} grazie a ${OBJECTIVE_SOURCE_LABELS[winnerMatch.topSource] ?? "i segnali raccolti"}.`);
+      }
+
+      const baseSorted = [...tools].sort((a, b) => b.battleScore - a.battleScore);
+      const baseWinner = baseSorted[0];
+      if (baseWinner && baseWinner.slug !== winner.slug) {
+        reasons.unshift(`Con l'obiettivo ${objectiveLabel}, ${winner.name} supera ${baseWinner.name}.`);
+      }
+    } else {
+      reasons.unshift(`Nessun dato specifico per ${objectiveLabel}: il verdetto si basa sul punteggio generale.`);
+    }
+  } else if (hasRealData && tools.every((t) => t.isDirectory)) {
     label = "Verdetto editoriale";
   } else if (hasRealData && tools.some((t) => t.isDirectory)) {
     label = "Verdetto tecnico";

@@ -15,6 +15,9 @@ export function ToolFighter({
   isWinner,
   isDefeated,
   isFighting,
+  isAnalyzing,
+  isCharging,
+  isClash,
   layoutId,
   style,
 }: {
@@ -23,6 +26,9 @@ export function ToolFighter({
   isWinner?: boolean;
   isDefeated?: boolean;
   isFighting?: boolean;
+  isAnalyzing?: boolean;
+  isCharging?: boolean;
+  isClash?: boolean;
   layoutId?: string;
   style?: CSSProperties;
 }) {
@@ -74,6 +80,9 @@ export function ToolFighter({
         data-winner={isWinner}
         data-defeated={isDefeated}
         data-fighting={isFighting}
+        data-analyzing={isAnalyzing}
+        data-charging={isCharging}
+        data-clash={isClash}
         layoutId={reducedMotion ? undefined : layoutId}
         style={fighterStyle}
       >
@@ -121,6 +130,9 @@ export function ToolFighter({
       data-winner={isWinner}
       data-defeated={isDefeated}
       data-fighting={isFighting}
+      data-analyzing={isAnalyzing}
+      data-charging={isCharging}
+      data-clash={isClash}
       layoutId={reducedMotion ? undefined : layoutId}
       style={fighterStyle}
     >

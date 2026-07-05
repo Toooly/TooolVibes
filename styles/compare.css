@@ -44,7 +44,7 @@
   padding:
     1.25rem
     1rem
-    calc(10rem + env(safe-area-inset-bottom));
+    calc(12rem + env(safe-area-inset-bottom));
   background: var(--mobile-bg-section);
 }
 
@@ -198,12 +198,12 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 6rem;
-  height: 6rem;
+  width: 8rem;
+  height: 8rem;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.9);
   opacity: 0;
-  animation: compare-flash 0.35s ease-out forwards;
+  animation: compare-flash 0.4s ease-out forwards;
   pointer-events: none;
 }
 
@@ -333,17 +333,52 @@
   background: #7C4DFF;
 }
 
+/* ─── Objective chips ─── */
+.mobile-compare-arena__objectives {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0.25rem;
+  padding-bottom: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mobile-compare-arena__objectives::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-compare-arena__chip {
+  flex: 0 0 auto;
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #CBD5E1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mobile-compare-arena__chip.is-active {
+  color: #0F172A;
+  background: linear-gradient(135deg, #7C4DFF, #39D2F6);
+  border-color: transparent;
+}
+
 /* ─── Sticky action area ─── */
 .mobile-compare-arena__action-area {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 1rem);
+  bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 0.75rem);
   z-index: 45;
   display: flex;
   justify-content: center;
   padding: 0.75rem calc(1rem + env(safe-area-inset-right)) calc(0.75rem + env(safe-area-inset-bottom));
-  padding-right: calc(5rem + env(safe-area-inset-right));
+  padding-right: calc(5.25rem + env(safe-area-inset-right));
   background: linear-gradient(180deg, transparent 0%, rgba(6, 6, 14, 0.92) 40%, rgba(6, 6, 14, 1) 100%);
   pointer-events: none;
 }
@@ -1060,8 +1095,24 @@
   animation: fighter-pulse 0.8s ease-in-out infinite;
 }
 
+.tool-fighter[data-analyzing="true"] .tool-fighter__orb {
+  animation: fighter-analyze 1s ease-in-out infinite;
+}
+
+.tool-fighter[data-charging="true"] .tool-fighter__orb {
+  animation: fighter-charge 0.5s ease-in-out forwards;
+}
+
+.tool-fighter[data-clash="true"] .tool-fighter__orb {
+  animation: fighter-clash 0.35s ease-in-out;
+}
+
 .tool-fighter[data-winner="true"] .tool-fighter__orb {
   animation: winner-glow 1.5s ease-in-out infinite;
+}
+
+.tool-fighter[data-winner="true"] {
+  animation: winner-bounce 0.6s ease-out forwards;
 }
 
 .tool-fighter[data-defeated="true"] {
@@ -1074,9 +1125,42 @@
   50% { transform: scale(1.06); }
 }
 
+@keyframes fighter-analyze {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(124, 77, 255, 0); }
+  50% { box-shadow: 0 0 20px 4px rgba(124, 77, 255, 0.25); }
+}
+
+@keyframes fighter-charge {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(var(--charge-x, 20%)); }
+}
+
+@keyframes fighter-clash {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
 @keyframes winner-glow {
   0%, 100% { box-shadow: 0 0 0 0 rgba(100, 255, 218, 0); }
   50% { box-shadow: 0 0 24px 4px rgba(100, 255, 218, 0.25); }
+}
+
+@keyframes winner-bounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.12); }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1.08); }
+}
+
+.mobile-compare-arena__ring[data-clash="true"] {
+  animation: arena-shake 0.35s ease-in-out;
+}
+
+@keyframes arena-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-1px); }
 }
 
 /* ─── Empty / partial states ─── */
@@ -1350,7 +1434,12 @@
   .desktop-compare__flash,
   .compare-flash,
   .tool-fighter[data-fighting="true"] .tool-fighter__orb,
-  .tool-fighter[data-winner="true"] .tool-fighter__orb {
+  .tool-fighter[data-analyzing="true"] .tool-fighter__orb,
+  .tool-fighter[data-charging="true"] .tool-fighter__orb,
+  .tool-fighter[data-clash="true"] .tool-fighter__orb,
+  .tool-fighter[data-winner="true"] .tool-fighter__orb,
+  .tool-fighter[data-winner="true"],
+  .mobile-compare-arena__ring[data-clash="true"] {
     animation: none;
   }
 }

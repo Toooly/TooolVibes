@@ -65,7 +65,7 @@ export function DesktopCompareView({
     window.setTimeout(() => {
       setBattleState("result");
       if (!reducedMotion) {
-        void celebrateArenaFight();
+        void celebrateArenaFight(winner);
       }
     }, 1200);
   }
