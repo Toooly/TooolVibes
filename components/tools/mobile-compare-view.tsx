@@ -3,7 +3,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Columns3, Trophy, X, Scale, Info, Sparkles } from "lucide-react";
+import { ArrowRight, Columns3, Trophy, X, Scale, Info, Sparkles, Swords } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import { type DirectoryTool } from "@/lib/data/tooolvibes-directory";
@@ -499,15 +499,24 @@ function MobileArenaBattleStage({
   battleState,
   tools,
   winner,
+  onFight,
 }: {
   battleState: BattleState;
   tools: NormalisedTool[];
   winner: NormalisedTool;
+  onFight: () => void;
 }) {
   const reducedMotion = useReducedMotion();
+  const fightLabel = battleState === "fighting" ? "In corso..." : battleState === "result" ? "Nuovo scontro" : "Combatti";
+  const statusLabel = battleState === "idle" ? "Pronti" : battleState === "fighting" ? "Scontro..." : "Vincitore";
 
   return (
-    <section className="mobile-compare-arena__stage" aria-label="Area di confronto">
+    <section
+      className="mobile-compare-arena__stage"
+      data-state={battleState}
+      data-count={tools.length}
+      aria-label="Area di confronto"
+    >
       <div className="mobile-compare-arena__bg" aria-hidden="true" />
 
       <header className="mobile-compare-arena__hud">
@@ -516,6 +525,7 @@ function MobileArenaBattleStage({
           className={cn("mobile-compare-arena__status", `mobile-compare-arena__status--${battleState}`)}
           aria-live="polite"
           aria-atomic="true"
+          aria-label={battleState === "result" ? `${statusLabel}: ${winner.name}` : statusLabel}
         >
           {battleState === "idle" && "Pronti"}
           {battleState === "fighting" && "Scontro…"}
@@ -533,8 +543,10 @@ function MobileArenaBattleStage({
             <ToolFighter
               tool={tool}
               isWinner={battleState === "result" && tool.slug === winner.slug}
+              isDefeated={battleState === "result" && tool.slug !== winner.slug}
               isFighting={battleState === "fighting"}
               layoutId={`fighter-${tool.slug}`}
+              style={{ "--fighter-index": i } as CSSProperties}
             />
           </div>
         ))}
@@ -548,9 +560,9 @@ function MobileArenaBattleStage({
         {battleState === "result" && (
           <motion.div
             className="mobile-compare-arena__verdict"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, x: "-50%", y: 12 }}
+            animate={{ opacity: 1, x: "-50%", y: 0 }}
+            exit={{ opacity: 0, x: "-50%", y: 8 }}
             transition={reducedMotion ? { duration: 0 } : { duration: 0.35, ease: "easeOut" }}
           >
             <Sparkles className="size-4" />
@@ -558,6 +570,30 @@ function MobileArenaBattleStage({
           </motion.div>
         )}
       </AnimatePresence>
+
+      <button
+        type="button"
+        className="mobile-compare-arena__fight-button"
+        data-state={battleState}
+        disabled={battleState === "fighting"}
+        onClick={onFight}
+      >
+        <span className="mobile-compare-arena__fight-aura" aria-hidden="true" />
+        <span className="mobile-compare-arena__fight-icon" aria-hidden="true">
+          <Swords className="size-4" />
+        </span>
+        <span className="mobile-compare-arena__fight-copy">
+          <strong>{fightLabel}</strong>
+          <small>{battleState === "result" ? "rilancia il ring" : "scopri chi domina"}</small>
+        </span>
+        {battleState === "fighting" && (
+          <span className="mobile-compare-arena__fight-charge" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+        )}
+      </button>
     </section>
   );
 }
@@ -674,6 +710,7 @@ export function MobileCompareView({
         battleState={battleState}
         tools={arenaTools.slice(0, MAX_COMPARE_TOOLS)}
         winner={lead}
+        onFight={handleFight}
       />
 
       {isRevealed ? (
