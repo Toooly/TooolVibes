@@ -92,12 +92,15 @@ export async function celebrateArenaFight() {
   const { default: confetti } = await import("canvas-confetti");
 
   confetti({
-    colors: ["#6a3cff", "#39d2f6", "#f3bf4c", "#ffffff"],
+    colors: ["#6a3cff", "#39d2f6", "#f3bf4c"],
     disableForReducedMotion: true,
-    origin: { y: 0.62 },
-    particleCount: 72,
-    scalar: 0.82,
-    spread: 66,
+    origin: { y: 0.58 },
+    particleCount: 28,
+    scalar: 0.65,
+    spread: 44,
+    startVelocity: 22,
+    gravity: 1.1,
+    ticks: 120,
   });
 }
 
@@ -186,9 +189,9 @@ export function getBattleVerdict(tools: NormalisedTool[]): BattleVerdict {
   if (runnerUp) {
     const gap = winner.battleScore - runnerUp.battleScore;
     if (gap >= 8) {
-      reasons.push(`${winner.name} distanzia ${runnerUp.name} di ${gap} punti nel punteggio complessivo.`);
+      reasons.push(`${winner.name} vince con un margine di ${gap} punti su ${runnerUp.name}.`);
     } else if (gap >= 3) {
-      reasons.push(`${winner.name} supera ${runnerUp.name} di ${gap} punti: il vantaggio è netto.`);
+      reasons.push(`${winner.name} supera ${runnerUp.name} di ${gap} punti.`);
     } else {
       reasons.push(`${winner.name} vince per un margine ridotto: la scelta dipende dal caso d'uso.`);
     }

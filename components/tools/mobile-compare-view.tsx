@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Columns3, Trophy, X, Scale, Sparkles, Swords, TrendingUp } from "lucide-react";
+import { ArrowRight, Columns3, X, Scale, Sparkles, Swords, TrendingUp } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import { type DirectoryTool } from "@/lib/data/tooolvibes-directory";
@@ -301,12 +301,13 @@ function MobileArenaBattleStage({
   const statusLabel = battleState === "idle" ? "Pronti" : battleState === "fighting" ? "Scontro..." : "Vincitore";
 
   return (
-    <section
-      className="mobile-compare-arena__stage"
-      data-state={battleState}
-      data-count={tools.length}
-      aria-label="Area di confronto"
-    >
+    <>
+      <section
+        className="mobile-compare-arena__stage"
+        data-state={battleState}
+        data-count={tools.length}
+        aria-label="Area di confronto"
+      >
       <div className="mobile-compare-arena__bg" aria-hidden="true" />
 
       <header className="mobile-compare-arena__hud">
@@ -326,60 +327,104 @@ function MobileArenaBattleStage({
         </span>
       </header>
 
-      <div className="mobile-compare-arena__ring">
-        {tools.slice(0, MAX_COMPARE_TOOLS).map((tool, i) => (
-          <div
-            key={tool.slug}
-            className="mobile-compare-arena__fighter-slot"
-            data-index={i}
-            data-count={tools.length}
-          >
-            <ToolFighter
-              tool={tool}
-              variant="compact"
-              isWinner={battleState === "result" && tool.slug === verdict.winner.slug}
-              isDefeated={battleState === "result" && tool.slug !== verdict.winner.slug}
-              isFighting={battleState === "fighting"}
-              layoutId={`fighter-${tool.slug}`}
-            />
-          </div>
-        ))}
-
-        <div className="mobile-compare-arena__vs" aria-hidden="true">
-          <span>VS</span>
-        </div>
+      <div className="mobile-compare-arena__ring" data-count={tools.length}>
+        {tools.length <= 2 ? (
+          <>
+            <div className="mobile-compare-arena__fighter-side mobile-compare-arena__fighter-side--left">
+              <ToolFighter
+                tool={tools[0]}
+                variant="compact"
+                isWinner={battleState === "result" && tools[0].slug === verdict.winner.slug}
+                isDefeated={battleState === "result" && tools[0].slug !== verdict.winner.slug}
+                isFighting={battleState === "fighting"}
+                layoutId={`fighter-${tools[0].slug}`}
+              />
+            </div>
+            <div className="mobile-compare-arena__vs" aria-hidden="true">
+              <span>VS</span>
+            </div>
+            <div className="mobile-compare-arena__fighter-side mobile-compare-arena__fighter-side--right">
+              <ToolFighter
+                tool={tools[1]}
+                variant="compact"
+                isWinner={battleState === "result" && tools[1].slug === verdict.winner.slug}
+                isDefeated={battleState === "result" && tools[1].slug !== verdict.winner.slug}
+                isFighting={battleState === "fighting"}
+                layoutId={`fighter-${tools[1].slug}`}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            {tools.slice(0, MAX_COMPARE_TOOLS).map((tool, i) => (
+              <div
+                key={tool.slug}
+                className="mobile-compare-arena__fighter-slot"
+                data-index={i}
+              >
+                <ToolFighter
+                  tool={tool}
+                  variant="compact"
+                  isWinner={battleState === "result" && tool.slug === verdict.winner.slug}
+                  isDefeated={battleState === "result" && tool.slug !== verdict.winner.slug}
+                  isFighting={battleState === "fighting"}
+                  layoutId={`fighter-${tool.slug}`}
+                />
+              </div>
+            ))}
+            <div className="mobile-compare-arena__vs" aria-hidden="true">
+              <span>VS</span>
+            </div>
+          </>
+        )}
 
         {battleState === "fighting" && !reducedMotion && (
           <div className="mobile-compare-arena__flash" aria-hidden="true" />
         )}
       </div>
-
-      <AnimatePresence>
-        {battleState === "result" && (
-          <motion.div
-            className="mobile-compare-arena__verdict"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={reducedMotion ? { duration: 0 } : { duration: 0.35, ease: "easeOut" }}
-          >
-            <div className="mobile-compare-arena__verdict-badge">
-              <Trophy className="size-4" />
-              {verdict.label}
-            </div>
-            <h3 className="mobile-compare-arena__verdict-name">
-              <Sparkles className="size-4" />
-              {verdict.winner.name} vince il confronto
-            </h3>
-            <ul className="mobile-compare-arena__verdict-reasons">
-              {verdict.reasons.map((reason, index) => (
-                <li key={index}>{reason}</li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
+
+    <AnimatePresence>
+      {battleState === "result" && (
+        <motion.div
+          className="mobile-compare-arena__verdict"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 8 }}
+          transition={reducedMotion ? { duration: 0 } : { duration: 0.35, ease: "easeOut" }}
+        >
+          <div className="mobile-compare-arena__verdict-head">
+            <div className="mobile-compare-arena__verdict-winner">
+              <span className="mobile-compare-arena__verdict-rank">#1</span>
+              <div>
+                <span className="mobile-compare-arena__verdict-label">{verdict.label}</span>
+                <h3 className="mobile-compare-arena__verdict-name">
+                  <Sparkles className="size-4" />
+                  {verdict.winner.name}
+                </h3>
+              </div>
+            </div>
+            <div className="mobile-compare-arena__verdict-score">
+              <span>{verdict.winner.battleScore}</span>
+              <small>/100</small>
+            </div>
+          </div>
+
+          {verdict.scores[1] && (
+            <div className="mobile-compare-arena__verdict-gap">
+              +{verdict.winner.battleScore - verdict.scores[1].score} punti rispetto a {verdict.scores[1].tool.name}
+            </div>
+          )}
+
+          <ul className="mobile-compare-arena__verdict-reasons">
+            {verdict.reasons.slice(0, 3).map((reason, index) => (
+              <li key={index}>{reason}</li>
+            ))}
+          </ul>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </>
   );
 }
 
