@@ -2037,3 +2037,123 @@
     min-height: 4.1rem;
   }
 }
+
+/* Desktop compare: arena above, decision matrix full width below. */
+@media (min-width: 768px) {
+  .desktop-compare {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1.35rem;
+    width: 100%;
+    max-width: min(118rem, calc(100vw - 2rem));
+    padding: 1rem 1rem 2rem;
+  }
+
+  .desktop-compare__arena {
+    width: 100%;
+    padding: clamp(1.15rem, 1.45vw, 1.65rem);
+  }
+
+  .desktop-compare__arena-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(21rem, 0.55fr);
+    gap: clamp(1rem, 1.4vw, 1.45rem);
+    align-items: stretch;
+  }
+
+  .desktop-compare__battle-zone {
+    min-width: 0;
+  }
+
+  .desktop-compare__battle-zone .desktop-compare__ring {
+    gap: 1rem;
+  }
+
+  .desktop-compare__battle-zone .desktop-compare__duel {
+    grid-template-columns: repeat(2, minmax(14rem, 1fr));
+    gap: clamp(0.9rem, 1.2vw, 1.35rem);
+  }
+
+  .desktop-compare__battle-zone .desktop-compare__duel-card {
+    min-height: clamp(15rem, 18vw, 20rem);
+    padding: clamp(1rem, 1.35vw, 1.45rem);
+  }
+
+  .desktop-compare__battle-zone .desktop-compare__duel-card .tool-fighter {
+    width: min(9.2rem, 100%);
+  }
+
+  .desktop-compare__battle-zone .desktop-compare__roster {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.75rem;
+  }
+
+  .desktop-compare__battle-zone .desktop-compare__roster-card {
+    min-height: 5.8rem;
+  }
+
+  .desktop-compare__arena-layout > .desktop-compare__scoreboard {
+    align-self: stretch;
+    justify-content: center;
+    min-width: 0;
+    padding: clamp(0.85rem, 1.1vw, 1.1rem);
+  }
+
+  .desktop-compare__arena-layout .desktop-compare__score-row {
+    min-height: 3.45rem;
+  }
+
+  .desktop-compare__matrix-panel--full {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix {
+    margin: 0;
+    padding: clamp(1rem, 1.35vw, 1.35rem);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1.15rem;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(57, 210, 246, 0.08), transparent 34%),
+      rgba(6, 6, 14, 0.5);
+  }
+
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix-scroll-wrap {
+    overflow-x: visible;
+  }
+
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix-axis {
+    flex: 0 0 clamp(9.5rem, 10vw, 13rem);
+    width: clamp(9.5rem, 10vw, 13rem);
+    min-width: clamp(9.5rem, 10vw, 13rem);
+    max-width: clamp(9.5rem, 10vw, 13rem);
+  }
+
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix-cells {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix-cell {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    min-height: clamp(5.6rem, 6vw, 7.2rem);
+    padding: clamp(0.85rem, 1vw, 1.05rem);
+  }
+
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-cell {
+    min-height: 4.6rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1050px) {
+  .desktop-compare__arena-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .desktop-compare__arena-layout > .desktop-compare__scoreboard {
+    justify-content: initial;
+  }
+}

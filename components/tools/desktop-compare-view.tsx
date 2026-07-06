@@ -148,93 +148,95 @@ export function DesktopCompareView({
           </span>
         </header>
 
-        <div className="desktop-compare__ring">
-          <div className="desktop-compare__duel">
-            {duelTools.map((tool, i) => (
-              <DesktopDuelCard
-                key={tool.slug}
-                tool={tool}
-                rank={i + 1}
-                isWinner={battleState === "result" && tool.slug === winner?.slug}
-                isFighting={battleState === "fighting"}
-              />
-            ))}
+        <div className="desktop-compare__arena-layout">
+          <div className="desktop-compare__battle-zone">
+            <div className="desktop-compare__ring">
+              <div className="desktop-compare__duel">
+                {duelTools.map((tool, i) => (
+                  <DesktopDuelCard
+                    key={tool.slug}
+                    tool={tool}
+                    rank={i + 1}
+                    isWinner={battleState === "result" && tool.slug === winner?.slug}
+                    isFighting={battleState === "fighting"}
+                  />
+                ))}
+              </div>
+
+              {sorted.length > 2 ? (
+                <div className="desktop-compare__roster" aria-label="Altri candidati nel confronto">
+                  {sorted.slice(2).map((tool, i) => (
+                    <DesktopRosterCard
+                      key={tool.slug}
+                      tool={tool}
+                      rank={i + 3}
+                      isWinner={battleState === "result" && tool.slug === winner?.slug}
+                      isFighting={battleState === "fighting"}
+                    />
+                  ))}
+                </div>
+              ) : null}
+
+              {battleState === "fighting" && !reducedMotion && (
+                <div className="desktop-compare__flash" aria-hidden="true" />
+              )}
+            </div>
+
+            <div className="desktop-compare__actions">
+              <button
+                type="button"
+                className="desktop-compare__fight-btn"
+                disabled={battleState === "fighting"}
+                onClick={handleFight}
+              >
+                <Swords className="size-5" aria-hidden="true" />
+                {battleState === "fighting" ? "In corso..." : battleState === "result" ? "Nuovo scontro" : "Combatti"}
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {battleState === "result" && verdict && winner && (
+                <motion.div
+                  className="desktop-compare__verdict"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={reducedMotion ? { duration: 0 } : { duration: 0.35, ease: "easeOut" }}
+                >
+                  <div className="desktop-compare__verdict-title">
+                    <Sparkles className="size-4" aria-hidden="true" />
+                    <span>{winner.name} vince il confronto</span>
+                  </div>
+                  <span className="desktop-compare__verdict-label">{verdict.label}</span>
+                  <ul className="desktop-compare__verdict-reasons">
+                    {verdict.reasons.map((reason) => (
+                      <li key={reason}>{reason}</li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          {sorted.length > 2 ? (
-            <div className="desktop-compare__roster" aria-label="Altri candidati nel confronto">
-              {sorted.slice(2).map((tool, i) => (
-                <DesktopRosterCard
-                  key={tool.slug}
-                  tool={tool}
-                  rank={i + 3}
-                  isWinner={battleState === "result" && tool.slug === winner?.slug}
-                  isFighting={battleState === "fighting"}
-                />
-              ))}
-            </div>
-          ) : null}
-
-          {battleState === "fighting" && !reducedMotion && (
-            <div className="desktop-compare__flash" aria-hidden="true" />
-          )}
+          <aside className="desktop-compare__scoreboard" aria-label="Classifica confronto">
+            {sorted.map((tool, i) => {
+              const isWinner = i === 0;
+              const diff = isWinner ? 0 : (winner?.battleScore ?? tool.battleScore) - tool.battleScore;
+              return (
+                <div key={tool.slug} className="desktop-compare__score-row" data-winner={isWinner}>
+                  <span className="desktop-compare__rank">#{i + 1}</span>
+                  <span className="desktop-compare__name">{tool.name}</span>
+                  <span className="desktop-compare__score">{tool.battleScore}</span>
+                  {!isWinner && <span className="desktop-compare__diff">-{diff}</span>}
+                </div>
+              );
+            })}
+          </aside>
         </div>
-
-        <div className="desktop-compare__actions">
-          <button
-            type="button"
-            className="desktop-compare__fight-btn"
-            disabled={battleState === "fighting"}
-            onClick={handleFight}
-          >
-            <Swords className="size-5" aria-hidden="true" />
-            {battleState === "fighting" ? "In corso..." : battleState === "result" ? "Nuovo scontro" : "Combatti"}
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {battleState === "result" && verdict && winner && (
-            <motion.div
-              className="desktop-compare__verdict"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={reducedMotion ? { duration: 0 } : { duration: 0.35, ease: "easeOut" }}
-            >
-              <div className="desktop-compare__verdict-title">
-                <Sparkles className="size-4" aria-hidden="true" />
-                <span>{winner.name} vince il confronto</span>
-              </div>
-              <span className="desktop-compare__verdict-label">{verdict.label}</span>
-              <ul className="desktop-compare__verdict-reasons">
-                {verdict.reasons.map((reason) => (
-                  <li key={reason}>{reason}</li>
-                ))}
-              </ul>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
-      <div className="desktop-compare__sidebar">
-        <div className="desktop-compare__scoreboard" aria-label="Classifica confronto">
-          {sorted.map((tool, i) => {
-            const isWinner = i === 0;
-            const diff = isWinner ? 0 : (winner?.battleScore ?? tool.battleScore) - tool.battleScore;
-            return (
-              <div key={tool.slug} className="desktop-compare__score-row" data-winner={isWinner}>
-                <span className="desktop-compare__rank">#{i + 1}</span>
-                <span className="desktop-compare__name">{tool.name}</span>
-                <span className="desktop-compare__score">{tool.battleScore}</span>
-                {!isWinner && <span className="desktop-compare__diff">-{diff}</span>}
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="desktop-compare__matrix-panel">
-          <DiffMatrix tools={sorted} />
-        </div>
+      <div className="desktop-compare__matrix-panel desktop-compare__matrix-panel--full">
+        <DiffMatrix tools={sorted} />
       </div>
     </section>
   );

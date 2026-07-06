@@ -33092,4 +33092,21 @@ body:has(.tone-account) {
     min-width: 13.5rem !important;
     max-width: 18rem !important;
   }
+
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix-scroll-wrap {
+    overflow-x: visible !important;
+  }
+
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix-cells {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix-cell {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
 }
