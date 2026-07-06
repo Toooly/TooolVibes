@@ -17,10 +17,8 @@ import {
   withBattleScores,
   withObjectiveScores,
   getBattleVerdict,
-  BATTLE_OBJECTIVES,
   type NormalisedTool,
   type BattleVerdict,
-  type BattleObjective,
 } from "./tool-battle-shared";
 import { ToolFighter } from "./tool-fighter";
 import { CompareTrendList } from "./compare-trend-list";
@@ -384,25 +382,21 @@ function MobileArenaBattleStage({
   battleState,
   tools,
   verdict,
-  objective,
-  onObjectiveChange,
 }: {
   battleState: BattleState;
   tools: NormalisedTool[];
   verdict: BattleVerdict;
-  objective: BattleObjective | null;
-  onObjectiveChange: (objective: BattleObjective | null) => void;
 }) {
   const reducedMotion = useReducedMotion();
   const statusLabel =
     battleState === "idle"
       ? "Pronti"
       : battleState === "analyzing"
-        ? "Analisi obiettivo…"
+        ? "Analisi..."
         : battleState === "charging"
-          ? "Carica…"
+          ? "Carica..."
           : battleState === "clash"
-            ? "Scontro…"
+            ? "Scontro..."
             : "Vincitore";
 
   const isAnimating = battleState === "analyzing" || battleState === "charging" || battleState === "clash";
@@ -422,35 +416,18 @@ function MobileArenaBattleStage({
             <span className="mobile-compare-arena__eyebrow">Tool Battle</span>
             <h2 className="mobile-compare-arena__title">Arena</h2>
           </div>
-          <span
-            className={cn("mobile-compare-arena__status", `mobile-compare-arena__status--${battleState}`)}
-            aria-live="polite"
-            aria-atomic="true"
-            aria-label={battleState === "result" ? `${statusLabel}: ${verdict.winner.name}` : statusLabel}
-          >
-            {statusLabel}
-          </span>
-        </header>
-
-        <div className="mobile-compare-arena__objectives" role="group" aria-label="Obiettivo">
-          <button
-            type="button"
-            className={cn("mobile-compare-arena__chip", objective === null && "is-active")}
-            onClick={() => onObjectiveChange(null)}
-          >
-            Generale
-          </button>
-          {BATTLE_OBJECTIVES.map((obj) => (
-            <button
-              key={obj.key}
-              type="button"
-              className={cn("mobile-compare-arena__chip", objective === obj.key && "is-active")}
-              onClick={() => onObjectiveChange(obj.key)}
+          <div className="mobile-compare-arena__hud-pills">
+            <span className="mobile-compare-arena__mode">Generale</span>
+            <span
+              className={cn("mobile-compare-arena__status", `mobile-compare-arena__status--${battleState}`)}
+              aria-live="polite"
+              aria-atomic="true"
+              aria-label={battleState === "result" ? `${statusLabel}: ${verdict.winner.name}` : statusLabel}
             >
-              {obj.label}
-            </button>
-          ))}
-        </div>
+              {statusLabel}
+            </span>
+          </div>
+        </header>
 
         <div
           className="mobile-compare-arena__ring"
@@ -577,7 +554,6 @@ export function MobileCompareView({
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
   const [battleState, setBattleState] = useState<BattleState>("idle");
-  const [objective, setObjective] = useState<BattleObjective | null>(null);
   const fightTimerRefs = useRef<number[]>([]);
   const fightLockedRef = useRef(false);
   const compareKey = compareSlugs.join("|");
@@ -593,20 +569,20 @@ export function MobileCompareView({
   }
 
   const tools = useMemo(
-    () => withObjectiveScores(withBattleScores(normalise(directoryTools, legacyTools, compareSlugs)), objective),
-    [directoryTools, legacyTools, compareSlugs, objective],
+    () => withObjectiveScores(withBattleScores(normalise(directoryTools, legacyTools, compareSlugs)), null),
+    [directoryTools, legacyTools, compareSlugs],
   );
 
   const verdict = useMemo(
-    () => (tools.length >= 2 ? getBattleVerdict(tools, objective) : null),
-    [tools, objective],
+    () => (tools.length >= 2 ? getBattleVerdict(tools, null) : null),
+    [tools],
   );
 
   useEffect(() => {
     clearFightTimers();
     fightLockedRef.current = false;
     setBattleState("idle");
-  }, [compareKey, objective]);
+  }, [compareKey]);
 
   useEffect(() => {
     return () => {
@@ -649,7 +625,7 @@ export function MobileCompareView({
   }
 
   const sorted = [...tools].sort((a, b) => (b.objectiveScore ?? b.battleScore) - (a.objectiveScore ?? a.battleScore));
-  const activeVerdict = verdict ?? getBattleVerdict(sorted, objective);
+  const activeVerdict = verdict ?? getBattleVerdict(sorted, null);
   const rest = sorted.slice(1);
   const isRevealed = battleState === "result";
 
@@ -684,9 +660,24 @@ export function MobileCompareView({
         battleState={battleState}
         tools={sorted}
         verdict={activeVerdict}
-        objective={objective}
-        onObjectiveChange={setObjective}
       />
+
+      <div className="mobile-compare-arena__action-area" data-state={battleState}>
+        <button
+          type="button"
+          className="mobile-compare-arena__fight-btn"
+          disabled={battleState !== "idle" && battleState !== "result"}
+          onClick={handleFight}
+        >
+          <span className="mobile-compare-arena__fight-icon" aria-hidden="true">
+            <Swords className="size-5" />
+          </span>
+          <span className="mobile-compare-arena__fight-copy">
+            <strong>{battleState === "result" ? "Nuovo scontro" : battleState === "idle" ? "Combatti" : "In corso..."}</strong>
+            <small>{battleState === "result" ? "rilancia il ring" : "scopri chi domina"}</small>
+          </span>
+        </button>
+      </div>
 
       {isRevealed ? (
         <>
@@ -733,23 +724,6 @@ export function MobileCompareView({
           </div>
         </div>
       )}
-
-      <div className="mobile-compare-arena__action-area" data-state={battleState}>
-        <button
-          type="button"
-          className="mobile-compare-arena__fight-btn"
-          disabled={battleState !== "idle" && battleState !== "result"}
-          onClick={handleFight}
-        >
-          <span className="mobile-compare-arena__fight-icon" aria-hidden="true">
-            <Swords className="size-5" />
-          </span>
-          <span className="mobile-compare-arena__fight-copy">
-            <strong>{battleState === "result" ? "Nuovo scontro" : battleState === "idle" ? "Combatti" : "In corso…"}</strong>
-            <small>{battleState === "result" ? "rilancia il ring" : "scopri chi domina"}</small>
-          </span>
-        </button>
-      </div>
     </div>
   );
 }

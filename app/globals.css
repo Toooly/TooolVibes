@@ -33110,3 +33110,246 @@ body:has(.tone-account) {
     max-width: none !important;
   }
 }
+
+/* Mobile compare arena/table final pass: keep the ring readable and the matrix off the bottom nav. */
+@media (max-width: 767px) {
+  .mobile-compare-arena {
+    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom)) !important;
+  }
+
+  .mobile-compare-arena__stage {
+    padding: 0.95rem 0.85rem 1.05rem !important;
+  }
+
+  .mobile-compare-arena__hud {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: start !important;
+    gap: 0.55rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .mobile-compare-arena__title-wrap {
+    min-width: 0 !important;
+  }
+
+  .mobile-compare-arena__eyebrow {
+    font-size: clamp(0.56rem, 2.55vw, 0.68rem) !important;
+    letter-spacing: 0.14em !important;
+  }
+
+  .mobile-compare-arena__title {
+    font-size: clamp(1.15rem, 5.8vw, 1.8rem) !important;
+    line-height: 0.95 !important;
+  }
+
+  .mobile-compare-arena__hud-pills {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    min-width: 0 !important;
+  }
+
+  .mobile-compare-arena__mode,
+  .mobile-compare-arena__status {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 2.15rem !important;
+    max-width: 6.4rem !important;
+    padding: 0.44rem 0.68rem !important;
+    border-radius: 999px !important;
+    font-size: clamp(0.62rem, 2.7vw, 0.76rem) !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  .mobile-compare-arena__mode {
+    color: #0F172A !important;
+    border: 1px solid rgba(100, 255, 218, 0.54) !important;
+    background: linear-gradient(135deg, #64FFDA, #39D2F6) !important;
+    box-shadow: 0 0 22px rgba(57, 210, 246, 0.22) !important;
+  }
+
+  .mobile-compare-arena__status {
+    color: #EDE9FE !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.11) !important;
+  }
+
+  .mobile-compare-arena__status--analyzing,
+  .mobile-compare-arena__status--charging,
+  .mobile-compare-arena__status--clash {
+    color: #F3BF4C !important;
+    border-color: rgba(243, 191, 76, 0.5) !important;
+    background: rgba(243, 191, 76, 0.13) !important;
+  }
+
+  .mobile-compare-arena__status--result {
+    color: #64FFDA !important;
+    border-color: rgba(100, 255, 218, 0.5) !important;
+    background: rgba(100, 255, 218, 0.12) !important;
+  }
+
+  .mobile-compare-arena__objectives {
+    display: none !important;
+  }
+
+  .mobile-compare-arena__ring {
+    min-height: clamp(17rem, 52svh, 26rem) !important;
+    padding-top: 0.7rem !important;
+  }
+
+  .mobile-compare-arena__action-area {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 5 !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin: 0.8rem 0.35rem 1.15rem !important;
+    padding: 0 !important;
+    background: transparent !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .mobile-compare-arena__fight-btn {
+    position: relative !important;
+    isolation: isolate !important;
+    width: min(100%, 22.5rem) !important;
+    min-height: 4.2rem !important;
+    overflow: hidden !important;
+    gap: 0.78rem !important;
+    padding: 0.95rem 1.25rem !important;
+    color: #07111F !important;
+    border: 1px solid transparent !important;
+    background:
+      linear-gradient(135deg, rgba(138, 106, 255, 0.98), rgba(57, 210, 246, 0.99)) padding-box,
+      linear-gradient(120deg, #FFFFFF, #64FFDA, #39D2F6, #FF7AB8) border-box !important;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.24) inset,
+      0 0 26px rgba(57, 210, 246, 0.24),
+      0 16px 36px rgba(0, 0, 0, 0.36) !important;
+  }
+
+  .mobile-compare-arena__fight-btn::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: -1px !important;
+    z-index: -1 !important;
+    border-radius: inherit !important;
+    background: linear-gradient(112deg, transparent 12%, rgba(255,255,255,0.45) 32%, transparent 54%) !important;
+    transform: translateX(-66%) !important;
+    animation: mobile-compare-fight-sheen 3.4s ease-in-out infinite !important;
+  }
+
+  .mobile-compare-arena__fight-btn::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0.32rem !important;
+    z-index: -1 !important;
+    border: 1px solid rgba(255, 255, 255, 0.32) !important;
+    border-radius: inherit !important;
+  }
+
+  .mobile-compare-arena__fight-copy strong {
+    font-size: clamp(1.04rem, 4.6vw, 1.34rem) !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.18em !important;
+    line-height: 1.02 !important;
+    text-transform: uppercase !important;
+  }
+
+  .mobile-compare-arena__fight-copy small {
+    color: rgba(7, 17, 31, 0.74) !important;
+    font-size: clamp(0.62rem, 2.65vw, 0.78rem) !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.13em !important;
+    text-transform: uppercase !important;
+  }
+
+  .mobile-compare-arena__matrix {
+    margin: 1rem 0.35rem 0 !important;
+    padding: 0.7rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 1.35rem !important;
+    background:
+      radial-gradient(circle at 28% 0%, rgba(57, 210, 246, 0.11), transparent 33%),
+      rgba(255, 255, 255, 0.035) !important;
+  }
+
+  .mobile-compare-arena__matrix-scroll-hint {
+    display: none !important;
+  }
+
+  .mobile-compare-arena__matrix-scroll-wrap {
+    scroll-snap-type: x proximity !important;
+    overscroll-behavior-x: contain !important;
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-axis,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-axis {
+    flex-basis: 6.25rem !important;
+    width: 6.25rem !important;
+    min-width: 6.25rem !important;
+    max-width: 6.25rem !important;
+    padding: 0.68rem 0.5rem !important;
+    font-size: clamp(0.55rem, 2.35vw, 0.68rem) !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  .mobile-compare-arena__matrix-cell {
+    scroll-snap-align: start !important;
+  }
+
+  .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-scroll-wrap {
+    overflow-x: visible !important;
+  }
+
+  .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-cells {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-cell {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 0.68rem 0.45rem !important;
+  }
+
+  .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-tool,
+  .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-value {
+    font-size: clamp(0.66rem, 2.72vw, 0.86rem) !important;
+    line-height: 1.25 !important;
+  }
+
+  .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-long {
+    font-size: clamp(0.72rem, 3.05vw, 0.96rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-badge {
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+}
+
+@keyframes mobile-compare-fight-sheen {
+  0%, 46% {
+    opacity: 0.25;
+    transform: translateX(-66%);
+  }
+  62% {
+    opacity: 0.82;
+    transform: translateX(66%);
+  }
+  100% {
+    opacity: 0.18;
+    transform: translateX(66%);
+  }
+}
