@@ -37,6 +37,7 @@ import {
 import Fuse from "fuse.js";
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
+import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type {
   DirectoryTool,
   DirectoryFilterGroup,
@@ -626,6 +627,15 @@ function MobileToolGrid({ tools, groupLabel, searchQuery }: MobileToolGridProps)
 }
 
 function MobileCompareToolbox({ tools }: { tools: DirectoryTool[] }) {
+  const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
+  const selectedTools = compareSlugs
+    .map((slug) => tools.find((tool) => tool.slug === slug))
+    .filter((tool): tool is DirectoryTool => Boolean(tool));
+  const toolboxTools = [
+    ...selectedTools,
+    ...tools.filter((tool) => !compareSlugs.includes(tool.slug)),
+  ].slice(0, MAX_COMPARE_TOOLS);
+
   if (!tools.length) return null;
 
   return (
@@ -636,19 +646,23 @@ function MobileCompareToolbox({ tools }: { tools: DirectoryTool[] }) {
         </span>
         <div>
           <h3>Confronto rapido</h3>
-          <p>Aggiungi candidati e apri il confronto completo.</p>
+          <p>
+            {compareSlugs.length >= 2
+              ? `${compareSlugs.length} candidati pronti. Apri il confronto completo.`
+              : "Aggiungi almeno 2 candidati e apri il confronto completo."}
+          </p>
         </div>
       </div>
       <div className="mobile-compare-toolbox__pills">
-        {tools.map((tool) => (
+        {toolboxTools.map((tool) => (
           <span key={tool.slug} className="mobile-compare-toolbox__pill">
             <span>{tool.name}</span>
-            <CompareToggle slug={tool.slug} mode="icon" />
+            <CompareToggle slug={tool.slug} compact />
           </span>
         ))}
       </div>
       <Link href="/compare" className="mobile-compare-toolbox__cta">
-        Vai al confronto
+        {compareSlugs.length >= 2 ? "Vai al confronto" : "Apri confronto"}
         <ArrowRight size={14} aria-hidden="true" />
       </Link>
     </section>

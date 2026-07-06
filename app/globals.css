@@ -32997,3 +32997,99 @@ body:has(.tone-account) {
     display: none !important;
   }
 }
+
+/* Final catalog compare tap targets. Keep this at EOF so older mobile blocks cannot shrink them again. */
+@media (max-width: 767px) {
+  .mobile-catalog-view .mobile-tool-card__actions {
+    position: relative !important;
+    z-index: 5 !important;
+    isolation: isolate;
+  }
+
+  .mobile-catalog-view .mobile-tool-card__actions .selection-chip,
+  .mobile-catalog-view .mobile-compare-toolbox .selection-chip {
+    min-height: 3rem !important;
+    border-radius: 999px !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+  }
+
+  .mobile-catalog-view .mobile-tool-card__actions .selection-chip {
+    width: 100% !important;
+    padding-inline: 0.7rem !important;
+    font-size: clamp(0.68rem, 3.25vw, 0.82rem) !important;
+  }
+
+  .mobile-catalog-view .mobile-tool-card__actions .selection-chip.is-active,
+  .mobile-catalog-view .mobile-compare-toolbox .selection-chip.is-active {
+    border-color: rgba(57, 210, 246, 0.42) !important;
+    background: linear-gradient(135deg, rgba(82, 245, 191, 0.96), rgba(57, 210, 246, 0.92)) !important;
+    color: #06101c !important;
+  }
+
+  .mobile-catalog-view .mobile-compare-toolbox {
+    position: relative !important;
+    z-index: 4 !important;
+  }
+
+  .mobile-catalog-view .mobile-compare-toolbox__pill {
+    min-height: 3.4rem !important;
+    padding: 0.5rem 0.55rem 0.5rem 0.9rem !important;
+  }
+
+  .mobile-catalog-view .mobile-compare-toolbox__pill .selection-chip {
+    flex: 0 0 auto !important;
+    justify-content: center !important;
+    min-width: 8.5rem !important;
+    padding-inline: 0.7rem !important;
+    white-space: nowrap !important;
+  }
+
+  .mobile-catalog-view .mobile-compare-toolbox__pill .count-badge-live {
+    display: none !important;
+  }
+
+  .mobile-catalog-view .mobile-compare-toolbox__cta {
+    min-height: 3.25rem !important;
+    touch-action: manipulation !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .mobile-catalog-view .mobile-compare-toolbox__pill {
+    align-items: stretch !important;
+    flex-direction: column !important;
+    border-radius: 1.2rem !important;
+  }
+
+  .mobile-catalog-view .mobile-compare-toolbox__pill .selection-chip {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* Final decision-matrix sizing override. globals.css loads after styles/compare.css. */
+.mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-cells,
+.mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-cells {
+  flex: 0 0 max-content !important;
+  width: max-content !important;
+  min-width: max-content !important;
+}
+
+.mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-cell,
+.mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-cell {
+  flex: 0 0 11.4rem !important;
+  width: 11.4rem !important;
+  min-width: 11.4rem !important;
+  max-width: 11.4rem !important;
+  white-space: normal !important;
+}
+
+@media (min-width: 768px) {
+  .desktop-compare__matrix-panel .mobile-compare-arena__matrix-cell {
+    flex: 0 0 clamp(13.5rem, calc((100vw - 48rem) / 2), 18rem) !important;
+    width: clamp(13.5rem, calc((100vw - 48rem) / 2), 18rem) !important;
+    min-width: 13.5rem !important;
+    max-width: 18rem !important;
+  }
+}

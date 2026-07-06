@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { Columns3 } from "lucide-react";
 
 import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
@@ -49,7 +49,10 @@ export function CompareToggle({
     };
   }, [count, isSelected, onChange]);
 
-  const handleToggle = () => {
+  const handleToggle = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     const result = toggleCompare(slug);
     if (result.limited) {
       return;

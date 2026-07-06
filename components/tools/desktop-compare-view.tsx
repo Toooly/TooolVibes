@@ -1,42 +1,96 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Sparkles } from "lucide-react";
+import { Swords, Sparkles, Trophy } from "lucide-react";
+
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import type { ToolRecord } from "@/lib/types/tool";
-import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
-import { celebrateArenaFight, getBattleVerdict, normalise, withBattleScores } from "./tool-battle-shared";
+import {
+  celebrateArenaFight,
+  getBattleVerdict,
+  normalise,
+  withBattleScores,
+  type NormalisedTool,
+} from "./tool-battle-shared";
 import { ToolFighter } from "./tool-fighter";
 import { DiffMatrix } from "./mobile-compare-view";
 
-function getDesktopFighterSlotStyle(count: number, index: number) {
-  const positions: Record<number, Array<{ top: string; left: string }>> = {
-    2: [
-      { top: "55%", left: "25%" },
-      { top: "55%", left: "75%" },
-    ],
-    3: [
-      { top: "40%", left: "20%" },
-      { top: "40%", left: "50%" },
-      { top: "40%", left: "80%" },
-    ],
-    4: [
-      { top: "35%", left: "20%" },
-      { top: "35%", left: "45%" },
-      { top: "35%", left: "70%" },
-      { top: "65%", left: "35%" },
-    ],
-    5: [
-      { top: "35%", left: "15%" },
-      { top: "30%", left: "38%" },
-      { top: "30%", left: "62%" },
-      { top: "35%", left: "85%" },
-      { top: "70%", left: "50%" },
-    ],
-  };
-  return positions[count]?.[index] ?? { top: "50%", left: "50%" };
+function DesktopDuelCard({
+  tool,
+  rank,
+  isWinner,
+  isFighting,
+}: {
+  tool: NormalisedTool;
+  rank: number;
+  isWinner: boolean;
+  isFighting: boolean;
+}) {
+  return (
+    <article
+      className="desktop-compare__duel-card"
+      data-winner={isWinner}
+      style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
+    >
+      <div className="desktop-compare__duel-rank">
+        {rank === 1 ? (
+          <Trophy className="size-4" aria-hidden="true" />
+        ) : (
+          <Swords className="size-4" aria-hidden="true" />
+        )}
+        <span>#{rank}</span>
+      </div>
+
+      <ToolFighter
+        tool={tool}
+        variant="compact"
+        isWinner={isWinner}
+        isFighting={isFighting}
+        layoutId={`desktop-fighter-${tool.slug}`}
+      />
+
+      <div className="desktop-compare__duel-copy">
+        <strong>{tool.name}</strong>
+        <span>{tool.categoryLabel}</span>
+      </div>
+    </article>
+  );
+}
+
+function DesktopRosterCard({
+  tool,
+  rank,
+  isWinner,
+  isFighting,
+}: {
+  tool: NormalisedTool;
+  rank: number;
+  isWinner: boolean;
+  isFighting: boolean;
+}) {
+  return (
+    <article
+      className="desktop-compare__roster-card"
+      data-winner={isWinner}
+      style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
+    >
+      <span className="desktop-compare__roster-rank">#{rank}</span>
+      <ToolFighter
+        tool={tool}
+        variant="micro"
+        isWinner={isWinner}
+        isFighting={isFighting}
+        layoutId={`desktop-roster-${tool.slug}`}
+      />
+      <div className="desktop-compare__roster-copy">
+        <strong>{tool.name}</strong>
+        <span>{tool.battleScore}/100</span>
+      </div>
+    </article>
+  );
 }
 
 export function DesktopCompareView({
@@ -56,18 +110,19 @@ export function DesktopCompareView({
   );
 
   const sorted = useMemo(() => [...tools].sort((a, b) => b.battleScore - a.battleScore), [tools]);
-  const verdict = useMemo(() => getBattleVerdict(tools), [tools]);
-  const winner = verdict.winner;
+  const verdict = useMemo(() => (tools.length >= 2 ? getBattleVerdict(tools) : null), [tools]);
+  const winner = verdict?.winner;
+  const duelTools = sorted.slice(0, 2);
 
   function handleFight() {
     if (battleState === "fighting" || tools.length < 2) return;
     setBattleState("fighting");
     window.setTimeout(() => {
       setBattleState("result");
-      if (!reducedMotion) {
+      if (!reducedMotion && winner) {
         void celebrateArenaFight(winner);
       }
-    }, 1200);
+    }, 900);
   }
 
   if (tools.length < 2) {
@@ -82,29 +137,43 @@ export function DesktopCompareView({
     <section className="desktop-compare" aria-label="Confronto desktop">
       <div className="desktop-compare__arena">
         <header className="desktop-compare__hud">
-          <h2 className="desktop-compare__title">Arena</h2>
+          <div>
+            <p className="desktop-compare__eyebrow">Arena confronto</p>
+            <h2 className="desktop-compare__title">Scontro guidato</h2>
+          </div>
           <span className="desktop-compare__status" aria-live="polite" aria-atomic="true">
             {battleState === "idle" && "Pronti"}
-            {battleState === "fighting" && "Scontro…"}
-            {battleState === "result" && `Vincitore: ${winner.name}`}
+            {battleState === "fighting" && "Scontro..."}
+            {battleState === "result" && winner && `Vincitore: ${winner.name}`}
           </span>
         </header>
 
         <div className="desktop-compare__ring">
-          {tools.map((tool, i) => (
-            <div
-              key={tool.slug}
-              className="desktop-compare__fighter-slot"
-              style={getDesktopFighterSlotStyle(tools.length, i)}
-            >
-              <ToolFighter
+          <div className="desktop-compare__duel">
+            {duelTools.map((tool, i) => (
+              <DesktopDuelCard
+                key={tool.slug}
                 tool={tool}
-                isWinner={battleState === "result" && tool.slug === winner.slug}
+                rank={i + 1}
+                isWinner={battleState === "result" && tool.slug === winner?.slug}
                 isFighting={battleState === "fighting"}
-                layoutId={`desktop-fighter-${tool.slug}`}
               />
+            ))}
+          </div>
+
+          {sorted.length > 2 ? (
+            <div className="desktop-compare__roster" aria-label="Altri candidati nel confronto">
+              {sorted.slice(2).map((tool, i) => (
+                <DesktopRosterCard
+                  key={tool.slug}
+                  tool={tool}
+                  rank={i + 3}
+                  isWinner={battleState === "result" && tool.slug === winner?.slug}
+                  isFighting={battleState === "fighting"}
+                />
+              ))}
             </div>
-          ))}
+          ) : null}
 
           {battleState === "fighting" && !reducedMotion && (
             <div className="desktop-compare__flash" aria-hidden="true" />
@@ -118,12 +187,13 @@ export function DesktopCompareView({
             disabled={battleState === "fighting"}
             onClick={handleFight}
           >
-            {battleState === "fighting" ? "In corso…" : battleState === "result" ? "Nuovo scontro" : "Combatti"}
+            <Swords className="size-5" aria-hidden="true" />
+            {battleState === "fighting" ? "In corso..." : battleState === "result" ? "Nuovo scontro" : "Combatti"}
           </button>
         </div>
 
         <AnimatePresence>
-          {battleState === "result" && (
+          {battleState === "result" && verdict && winner && (
             <motion.div
               className="desktop-compare__verdict"
               initial={{ opacity: 0, y: 12 }}
@@ -131,25 +201,28 @@ export function DesktopCompareView({
               exit={{ opacity: 0, y: 8 }}
               transition={reducedMotion ? { duration: 0 } : { duration: 0.35, ease: "easeOut" }}
             >
-              <Sparkles className="size-4" />
-              <span>{winner.name} vince il confronto</span>
+              <div className="desktop-compare__verdict-title">
+                <Sparkles className="size-4" aria-hidden="true" />
+                <span>{winner.name} vince il confronto</span>
+              </div>
               <span className="desktop-compare__verdict-label">{verdict.label}</span>
+              <ul className="desktop-compare__verdict-reasons">
+                {verdict.reasons.map((reason) => (
+                  <li key={reason}>{reason}</li>
+                ))}
+              </ul>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
       <div className="desktop-compare__sidebar">
-        <div className="desktop-compare__scoreboard">
+        <div className="desktop-compare__scoreboard" aria-label="Classifica confronto">
           {sorted.map((tool, i) => {
             const isWinner = i === 0;
-            const diff = isWinner ? 0 : winner.battleScore - tool.battleScore;
+            const diff = isWinner ? 0 : (winner?.battleScore ?? tool.battleScore) - tool.battleScore;
             return (
-              <div
-                key={tool.slug}
-                className="desktop-compare__score-row"
-                data-winner={isWinner}
-              >
+              <div key={tool.slug} className="desktop-compare__score-row" data-winner={isWinner}>
                 <span className="desktop-compare__rank">#{i + 1}</span>
                 <span className="desktop-compare__name">{tool.name}</span>
                 <span className="desktop-compare__score">{tool.battleScore}</span>
@@ -159,7 +232,9 @@ export function DesktopCompareView({
           })}
         </div>
 
-        <DiffMatrix tools={sorted} />
+        <div className="desktop-compare__matrix-panel">
+          <DiffMatrix tools={sorted} />
+        </div>
       </div>
     </section>
   );
