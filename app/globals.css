@@ -33353,3 +33353,42 @@ body:has(.tone-account) {
     transform: translateX(66%);
   }
 }
+
+/* Final width alignment: radar table and compare decision matrix follow their main arena blocks. */
+@media (min-width: 1024px) {
+  .desktop-vibe-radar .desktop-vibe-radar-console {
+    box-sizing: border-box !important;
+    width: min(118rem, calc(100vw - 2rem)) !important;
+    max-width: min(118rem, calc(100vw - 2rem)) !important;
+  }
+
+  .desktop-vibe-radar .desktop-radar-table {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .desktop-compare,
+  .desktop-compare__arena,
+  .desktop-compare__matrix-panel--full,
+  .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .mobile-compare-arena__stage,
+  .mobile-compare-arena__matrix {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mobile-compare-arena__matrix {
+    margin: 1rem 0 0 !important;
+  }
+}
