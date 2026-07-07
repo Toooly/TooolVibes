@@ -648,11 +648,54 @@ function MobileRadarSections({
   }
 
   const trending = [...items].sort((a, b) => b.votesCount - a.votesCount).slice(0, 3);
-  const hot = items.filter((i) => i.votesCount > 50).slice(0, 3);
-  const watchlist = items.slice(0, 5);
+  const watchlist = items.slice(0, 8);
 
   return (
     <div className="mobile-radar-sections">
+      <section className="mobile-radar-section mobile-radar-section--table">
+        <h2>
+          <Zap size={14} />
+          Classifica radar
+        </h2>
+        <div className="mobile-radar-section__table-head" aria-hidden="true">
+          <span>#</span>
+          <span>Tool</span>
+          <span>Segnale</span>
+        </div>
+        <div className="mobile-radar-section__list mobile-radar-section__table">
+          {watchlist.map((item, index) => (
+            <motion.a
+              key={item.id}
+              href={item.productHuntUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mobile-radar-section__row mobile-radar-section__row--table"
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.04 }}
+            >
+              <span className="mobile-radar-section__row-rank">#{index + 1}</span>
+              <div className="mobile-radar-section__row-visual">
+                {item.thumbnailUrl ? (
+                  <img src={item.thumbnailUrl} alt="" loading="lazy" />
+                ) : (
+                  <span>{item.name.slice(0, 2).toUpperCase()}</span>
+                )}
+              </div>
+              <div className="mobile-radar-section__row-meta">
+                <strong>{item.name}</strong>
+                <span>{item.tagline}</span>
+              </div>
+              <span className="mobile-radar-section__row-votes">
+                <strong>{item.votesCount}</strong>
+                <small>{item.commentsCount} commenti</small>
+              </span>
+            </motion.a>
+          ))}
+        </div>
+      </section>
+
       {trending.length > 0 && (
         <section className="mobile-radar-section">
           <h2>
@@ -683,44 +726,6 @@ function MobileRadarSections({
                   <span className="mobile-radar-section__card-badge">In crescita</span>
                 )}
               </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {hot.length > 0 && (
-        <section className="mobile-radar-section">
-          <h2>
-            <Zap size={14} />
-            Da tenere d&apos;occhio
-          </h2>
-          <div className="mobile-radar-section__list">
-            {watchlist.map((item, index) => (
-              <motion.a
-                key={item.id}
-                href={item.productHuntUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mobile-radar-section__row"
-                initial={{ opacity: 0, x: -8 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <span className="mobile-radar-section__row-rank">#{index + 1}</span>
-                <div className="mobile-radar-section__row-visual">
-                  {item.thumbnailUrl ? (
-                    <img src={item.thumbnailUrl} alt="" loading="lazy" />
-                  ) : (
-                    <span>{item.name.slice(0, 2).toUpperCase()}</span>
-                  )}
-                </div>
-                <div className="mobile-radar-section__row-meta">
-                  <strong>{item.name}</strong>
-                  <span>{item.tagline}</span>
-                </div>
-                <span className="mobile-radar-section__row-votes">{item.votesCount} ↑</span>
-              </motion.a>
             ))}
           </div>
         </section>
