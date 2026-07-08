@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TooolVibes — Wireframe Reference</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:#0f0f12;color:#f3f3f7;padding:40px 20px}
+.container{max-width:1400px;margin:0 auto}
+h1{text-align:center;margin-bottom:40px;font-size:36px}
+h2{margin-top:48px;margin-bottom:20px;color:#8b5cf6;font-size:24px;border-bottom:1px solid #25252b;padding-bottom:8px}
+.frame{background:#1a1a1e;border:1px solid #25252b;border-radius:10px;padding:24px;margin-bottom:24px;position:relative}
+.frame-title{font-size:14px;color:#a0a0b0;margin-bottom:16px;font-weight:600}
+.header{background:#25252b;border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.logo{font-weight:700;color:#8b5cf6;font-size:18px}
+.nav-links{display:flex;gap:20px;font-size:14px;color:#a0a0b0}
+.search-bar{background:#0f0f12;border-radius:6px;padding:8px 12px;flex:0.3;font-size:13px;color:#6e6e7e}
+.hero-section{display:flex;gap:24px;margin-bottom:16px}
+.hero-text{flex:1}
+.hero-title{font-size:28px;font-weight:700;margin-bottom:8px}
+.hero-subtitle{font-size:16px;color:#a0a0b0;margin-bottom:16px}
+.hero-cta{background:#8b5cf6;color:#fff;padding:10px 20px;border-radius:999px;display:inline-block;font-size:14px;font-weight:600}
+.hero-img{background:#25252b;border-radius:8px;flex:1;height:140px;display:flex;align-items:center;justify-content:center;color:#6e6e7e;font-size:13px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+.card{background:#25252b;border-radius:10px;padding:16px}
+.card-img{background:#1a1a1e;border-radius:6px;height:80px;margin-bottom:10px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.card-meta{font-size:12px;color:#6e6e7e}
+.card-actions{display:flex;gap:8px;margin-top:10px}
+.btn-sm{background:#8b5cf6;color:#fff;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.btn-ghost{background:transparent;border:1px solid #6e6e7e;color:#a0a0b0;padding:4px 10px;border-radius:999px;font-size:11px}
+.sidebar{background:#25252b;border-radius:10px;padding:16px}
+.sidebar-title{font-size:14px;font-weight:600;margin-bottom:12px}
+.sidebar-item{font-size:13px;color:#a0a0b0;padding:6px 0;border-bottom:1px solid #1a1a1e}
+.tabs{display:flex;gap:4px;border-bottom:1px solid #25252b;margin-bottom:16px}
+.tab{padding:8px 16px;font-size:13px;color:#a0a0b0;border-bottom:2px solid transparent}
+.tab.active{color:#8b5cf6;border-bottom-color:#8b5cf6;font-weight:600}
+.content-body{font-size:14px;line-height:1.7;color:#a0a0b0}
+.content-body p{margin-bottom:12px}
+.footer{background:#1a1a1e;border-radius:10px;padding:20px;margin-top:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:20px;font-size:13px;color:#6e6e7e}
+.footer-col h5{color:#a0a0b0;margin-bottom:8px;font-size:13px}
+.footer-col ul{list-style:none}
+.footer-col li{padding:3px 0}
+.mobile-frame{max-width:375px;margin:0 auto}
+.mobile-nav{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#25252b;border-radius:8px;margin-bottom:16px}
+.mobile-hero{text-align:center;padding:24px 16px}
+.mobile-hero-title{font-size:28px;font-weight:700;margin-bottom:8px}
+.mobile-hero-sub{font-size:14px;color:#a0a0b0;margin-bottom:16px}
+.mobile-cta{background:#8b5cf6;color:#fff;padding:12px 24px;border-radius:999px;font-size:14px;font-weight:600;display:inline-block;width:100%}
+.mobile-search{background:#0f0f12;border-radius:6px;padding:10px 12px;font-size:13px;color:#6e6e7e;margin-top:12px}
+.mobile-card{background:#25252b;border-radius:10px;padding:16px;margin-bottom:12px}
+.mobile-card-img{background:#1a1a1e;border-radius:6px;height:60px;margin-bottom:8px}
+.chips{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;padding-bottom:4px}
+.chip{background:#25252b;padding:6px 12px;border-radius:999px;font-size:12px;color:#a0a0b0;white-space:nowrap}
+.chip.active{background:#8b5cf6;color:#fff}
+.badge-accent{background:rgba(139,92,246,0.15);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;display:inline-block;margin-bottom:6px}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+.compare-table th{background:#25252b;padding:10px;text-align:left;color:#a0a0b0;font-weight:600}
+.compare-table td{padding:10px;border-bottom:1px solid #25252b}
+.compare-table .feature-col{background:#1a1a1e;font-weight:600;color:#f3f3f7}
+.winner{border-left:3px solid #8b5cf6;background:rgba(139,92,246,0.05)}
+.empty-state{text-align:center;padding:48px 24px}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-title{font-size:18px;font-weight:600;margin-bottom:8px}
+.empty-text{font-size:14px;color:#a0a0b0;margin-bottom:16px}
+@media(max-width:768px){.grid-4,.grid-3{grid-template-columns:1fr}.hero-section{flex-direction:column}.footer{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎨 TooolVibes — Wireframe Reference</h1>
+
+<!-- DESKTOP WIREFRAMES -->
+<h2>💻 Desktop Pages (1280px)</h2>
+
+<!-- HOME -->
+<div class="frame">
+<div class="frame-title">🏠 HOME — Desktop @1280px</div>
+<div class="header">
+<div class="logo">⚡ TooolVibes</div>
+<div class="nav-links">Discovery · Radar · Editorial · Compare</div>
+<div class="search-bar">🔍 Cerca tool...</div>
+<div style="font-size:13px;color:#a0a0b0">👤 Account</div>
+</div>
+<div class="hero-section">
+<div class="hero-text">
+<div class="hero-title">Trova il tool perfetto per il tuo workflow</div>
+<div class="hero-subtitle">Scopri, confronta e salva i migliori strumenti digitali in un unico posto.</div>
+<div class="hero-cta">Inizia a esplorare</div>
+</div>
+<div class="hero-img">[Illustrazione Hero]</div>
+</div>
+<div style="font-size:14px;font-weight:600;margin-bottom:8px">📂 Catalogo</div>
+<div class="grid-4">
+<div class="card"><div class="card-img"></div><div class="card-title">Notion</div><div class="card-meta">Productivity · 4.8★</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Figma</div><div class="card-meta">Design · 4.9★</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Linear</div><div class="card-meta">Dev · 4.7★</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Raycast</div><div class="card-meta">Mac · 4.6★</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+</div>
+<div style="margin-top:16px;font-size:14px;font-weight:600">📰 Ultimi articoli</div>
+<div class="grid-3" style="margin-top:8px">
+<div class="card"><div class="card-img" style="height:100px"></div><div class="card-title">Guida completa a Notion AI</div><div class="card-meta">5 min read · Mattia Rossi</div></div>
+<div class="card"><div class="card-img" style="height:100px"></div><div class="card-title">Figma vs Sketch 2026</div><div class="card-meta">8 min read · Sara Bianchi</div></div>
+<div class="card"><div class="card-img" style="height:100px"></div><div class="card-title">10 tool per designer UI</div><div class="card-meta">6 min read · Luca Verdi</div></div>
+</div>
+</div>
+
+<!-- DISCOVERY -->
+<div class="frame">
+<div class="frame-title">🔍 TOOL DISCOVERY — Desktop @1280px</div>
+<div class="header">
+<div class="logo">⚡ TooolVibes</div>
+<div class="nav-links">Discovery · Radar · Editorial · Compare</div>
+<div class="search-bar">🔍 Cerca tool...</div>
+</div>
+<div style="font-size:12px;color:#6e6e7e;margin-bottom:12px">Home > Productivity > Note-taking</div>
+<div style="font-size:20px;font-weight:700;margin-bottom:4px">Note-taking Tools</div>
+<div style="font-size:13px;color:#a0a0b0;margin-bottom:16px">124 tool trovati · Ordina per: Popolarità ▾</div>
+<div class="grid-2" style="grid-template-columns:280px 1fr;gap:24px">
+<div class="sidebar">
+<div class="sidebar-title">Filtri</div>
+<div class="sidebar-item">Categoria ▾</div>
+<div class="sidebar-item">Prezzo ▾</div>
+<div class="sidebar-item">Feature ▾</div>
+<div class="sidebar-item">Rating ▾</div>
+</div>
+<div class="grid-3">
+<div class="card"><div class="card-img"></div><span class="badge-accent">Editor's Choice</span><div class="card-title">Notion</div><div class="card-meta">Gratis · 4.8★ · 2M+ utenti</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Obsidian</div><div class="card-meta">Freemium · 4.7★ · 500K+ utenti</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Roam Research</div><div class="card-meta">Paid · 4.5★ · 100K+ utenti</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Craft</div><div class="card-meta">Freemium · 4.6★ · 200K+ utenti</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Logseq</div><div class="card-meta">Gratis · 4.4★ · 300K+ utenti</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Anytype</div><div class="card-meta">Gratis · 4.3★ · 50K+ utenti</div><div class="card-actions"><span class="btn-sm">Salva</span><span class="btn-ghost">Confronta</span></div></div>
+</div>
+</div>
+</div>
+
+<!-- TOOL DETAIL -->
+<div class="frame">
+<div class="frame-title">📋 TOOL DETAIL — Desktop @1280px</div>
+<div class="header">
+<div class="logo">⚡ TooolVibes</div>
+<div class="nav-links">Discovery · Radar · Editorial · Compare</div>
+<div class="search-bar">🔍 Cerca tool...</div>
+</div>
+<div class="grid-2" style="grid-template-columns:1fr 320px;gap:32px;margin-top:16px">
+<div>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><div style="width:48px;height:48px;background:#25252b;border-radius:8px"></div><div><div style="font-size:24px;font-weight:700">Notion</div><div style="font-size:13px;color:#6e6e7e">Productivity · Note-taking · Wiki</div></div></div>
+<div style="display:flex;gap:8px;margin-bottom:16px"><span class="btn-sm">❤️ Salva</span><span class="btn-sm">⚔️ Confronta</span><span class="btn-ghost">🔗 Share</span></div>
+<div class="tabs">
+<div class="tab active">Panoramica</div>
+<div class="tab">Recensione</div>
+<div class="tab">Pricing</div>
+<div class="tab">Alternative</div>
+</div>
+<div class="content-body">
+<p>Notion è l'all-in-one workspace che combina note, database, wiki e project management in un'unica piattaforma flessibile e potente.</p>
+<p>Con la sua interfaccia a blocchi e le infinite possibilità di personalizzazione, Notion si adatta a qualsiasi workflow: dalla semplice lista della spesa al complesso sistema di gestione aziendale.</p>
+<div style="background:#25252b;border-radius:8px;padding:16px;margin:16px 0">
+<div style="font-weight:600;margin-bottom:8px">✅ Punti di forza</div>
+<ul style="margin-left:20px;color:#a0a0b0;font-size:13px"><li>Infinitamente flessibile</li><li>Template community enorme</li><li>Integrazioni con tutto</li><li>Notion AI integrata</li></ul>
+</div>
+<div style="background:#25252b;border-radius:8px;padding:16px;margin:16px 0">
+<div style="font-weight:600;margin-bottom:8px">❌ Punti deboli</div>
+<ul style="margin-left:20px;color:#a0a0b0;font-size:13px"><li>Curva di apprendimento ripida</li><li>App mobile a volte lenta</li><li>Offline limitato</li></ul>
+</div>
+</div>
+</div>
+<div class="sidebar">
+<div class="sidebar-title">ℹ️ Info</div>
+<div class="sidebar-item">💰 Prezzo: Freemium</div>
+<div class="sidebar-item">⭐ Rating: 4.8/5</div>
+<div class="sidebar-item">👥 Utenti: 2M+</div>
+<div class="sidebar-item">🔗 Sito: notion.so</div>
+<div style="margin-top:16px">
+<div class="sidebar-title">🔧 Tool simili</div>
+<div class="card" style="margin-bottom:8px"><div class="card-title" style="font-size:13px">Obsidian</div><div class="card-meta" style="font-size:11px">4.7★ · Markdown-first</div></div>
+<div class="card"><div class="card-title" style="font-size:13px">Craft</div><div class="card-meta" style="font-size:11px">4.6★ · Beautiful docs</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- COMPARE -->
+<div class="frame">
+<div class="frame-title">⚔️ COMPARE / ARENA — Desktop @1280px</div>
+<div class="header">
+<div class="logo">⚡ TooolVibes</div>
+<div class="nav-links">Discovery · Radar · Editorial · Compare</div>
+</div>
+<div style="margin:16px 0"><span style="font-size:20px;font-weight:700">Confronto tool</span><span style="float:right;font-size:13px;color:#a0a0b0">Confrontando 3 tool</span></div>
+<table class="compare-table">
+<tr><th class="feature-col">Feature</th><th>Notion</th><th>Obsidian</th><th class="winner">Craft 🏆</th></tr>
+<tr><td class="feature-col">Prezzo</td><td>Freemium</td><td>Gratis</td><td class="winner">Freemium</td></tr>
+<tr><td class="feature-col">Offline</td><td>❌ Limitato</td><td>✅ Sì</td><td class="winner">✅ Sì</td></tr>
+<tr><td class="feature-col">Collaborazione</td><td>✅ Sì</td><td>❌ No</td><td class="winner">✅ Sì</td></tr>
+<tr><td class="feature-col">Mobile App</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td class="winner">⭐⭐⭐⭐⭐</td></tr>
+<tr><td class="feature-col">API / Integrazioni</td><td>✅ Ricca</td><td>✅ Plugin</td><td class="winner">✅ Moderata</td></tr>
+<tr><td class="feature-col">Curva apprendimento</td><td>Ripida</td><td>Media</td><td class="winner">Facile</td></tr>
+</table>
+<div style="display:flex;gap:8px;margin-top:16px"><span class="btn-sm">+ Aggiungi tool</span><span class="btn-ghost">💾 Salva confronto</span></div>
+</div>
+
+<!-- SHORTLIST -->
+<div class="frame">
+<div class="frame-title">💾 SHORTLIST / SALVATI — Desktop @1280px</div>
+<div class="header">
+<div class="logo">⚡ TooolVibes</div>
+<div class="nav-links">Discovery · Radar · Editorial · Compare</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0">
+<div><span style="font-size:20px;font-weight:700">I tuoi tool salvati</span><span style="color:#a0a0b0;font-size:13px;margin-left:8px">6 tool</span></div>
+<div><span class="btn-sm">⚔️ Confronta selezionati</span><span class="btn-ghost" style="margin-left:8px">🗑️ Rimuovi tutti</span></div>
+</div>
+<div class="grid-4">
+<div class="card" style="border:2px solid #8b5cf6"><div class="card-img"></div><div class="card-title">Notion</div><div class="card-meta">Productivity · 4.8★</div><div class="card-actions"><span class="btn-sm">✓ Selezionato</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Figma</div><div class="card-meta">Design · 4.9★</div><div class="card-actions"><span class="btn-ghost">☐ Seleziona</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Linear</div><div class="card-meta">Dev · 4.7★</div><div class="card-actions"><span class="btn-ghost">☐ Seleziona</span></div></div>
+<div class="card"><div class="card-img"></div><div class="card-title">Raycast</div><div class="card-meta">Mac · 4.6★</div><div class="card-actions"><span class="btn-ghost">☐ Seleziona</span></div></div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="frame">
+<div class="frame-title">📎 FOOTER — Desktop @1280px</div>
+<div class="footer">
+<div class="footer-col"><h5>⚡ TooolVibes</h5><p style="font-size:12px;margin-top:8px">Trova il tool perfetto per il tuo workflow</p></div>
+<div class="footer-col"><h5>Esplora</h5><ul><li>Discovery</li><li>Radar</li><li>Editorial</li><li>Compare</li></ul></div>
+<div class="footer-col"><h5>Account</h5><ul><li>Shortlist</li><li>Impostazioni</li><li>Login</li><li>Signup</li></ul></div>
+<div class="footer-col"><h5>Legale</h5><ul><li>Privacy</li><li>Terms</li><li>Cookie</li><li>Affiliate Disclosure</li></ul></div>
+<div class="footer-col"><h5>Newsletter</h5><div style="background:#0f0f12;border-radius:6px;padding:8px 12px;font-size:12px;margin-top:8px">email@example.com</div><div style="background:#8b5cf6;color:#fff;padding:6px 12px;border-radius:6px;text-align:center;margin-top:8px;font-size:12px">Iscriviti</div></div>
+</div>
+<div style="text-align:center;padding-top:12px;font-size:11px;color:#6e6e7e;border-top:1px solid #25252b;margin-top:12px">© 2026 TooolVibes · Questo sito contiene link affiliate</div>
+</div>
+
+<!-- MOBILE WIREFRAMES -->
+<h2 style="margin-top:64px">📱 Mobile Pages (375px)</h2>
+
+<div class="frame mobile-frame">
+<div class="frame-title">🏠 HOME — Mobile @375px</div>
+<div class="mobile-nav"><div class="logo">⚡</div><div style="font-size:18px">☰</div></div>
+<div class="mobile-hero">
+<div class="mobile-hero-title">Trova il tool perfetto</div>
+<div class="mobile-hero-sub">Scopri, confronta e salva i migliori strumenti digitali.</div>
+<div class="mobile-cta">Inizia a esplorare</div>
+<div class="mobile-search">🔍 Cerca tool...</div>
+</div>
+<div style="padding:16px">
+<div style="font-size:14px;font-weight:600;margin-bottom:10px">📂 Catalogo</div>
+<div class="mobile-card"><div class="mobile-card-img"></div><div style="font-size:14px;font-weight:600">Notion</div><div style="font-size:12px;color:#6e6e7e">Productivity · 4.8★</div></div>
+<div class="mobile-card"><div class="mobile-card-img"></div><div style="font-size:14px;font-weight:600">Figma</div><div style="font-size:12px;color:#6e6e7e">Design · 4.9★</div></div>
+<div class="mobile-card"><div class="mobile-card-img"></div><div style="font-size:14px;font-weight:600">Linear</div><div style="font-size:12px;color:#6e6e7e">Dev · 4.7★</div></div>
+</div>
+</div>
+
+<div class="frame mobile-frame">
+<div class="frame-title">🔍 DISCOVERY — Mobile @375px</div>
+<div class="mobile-nav"><div class="logo">⚡</div><div style="font-size:18px">☰</div></div>
+<div style="padding:16px">
+<div style="font-size:12px;color:#6e6e7e;margin-bottom:4px">Home > Productivity</div>
+<div style="font-size:18px;font-weight:700;margin-bottom:8px">Note-taking</div>
+<div class="chips"><span class="chip active">Tutti</span><span class="chip">Gratis</span><span class="chip">Freemium</span><span class="chip">Paid</span></div>
+<div style="background:#8b5cf6;color:#fff;padding:10px;border-radius:10px;text-align:center;font-size:14px;font-weight:600;margin-bottom:12px">⚙️ Filtri avanzati</div>
+<div class="mobile-card"><div class="mobile-card-img"></div><span class="badge-accent">Editor's Choice</span><div style="font-size:14px;font-weight:600">Notion</div><div style="font-size:12px;color:#6e6e7e">Gratis · 4.8★ · 2M+</div></div>
+<div class="mobile-card"><div class="mobile-card-img"></div><div style="font-size:14px;font-weight:600">Obsidian</div><div style="font-size:12px;color:#6e6e7e">Freemium · 4.7★ · 500K+</div></div>
+</div>
+</div>
+
+<div class="frame mobile-frame">
+<div class="frame-title">📋 TOOL DETAIL — Mobile @375px</div>
+<div class="mobile-nav"><div class="logo">⚡</div><div style="font-size:18px">☰</div></div>
+<div style="padding:16px">
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><div style="width:40px;height:40px;background:#25252b;border-radius:8px"></div><div><div style="font-size:18px;font-weight:700">Notion</div><div style="font-size:12px;color:#6e6e7e">Productivity</div></div></div>
+<div style="display:flex;gap:8px;margin-bottom:12px"><span class="btn-sm">❤️ Salva</span><span class="btn-ghost">⚔️ Confronta</span></div>
+<div class="tabs"><div class="tab active">Panoramica</div><div class="tab">Recensione</div></div>
+<div style="font-size:13px;color:#a0a0b0;line-height:1.6">Notion è l'all-in-one workspace che combina note, database, wiki e project management...</div>
+<div style="background:#25252b;border-radius:8px;padding:12px;margin-top:12px"><div style="font-size:13px;font-weight:600;margin-bottom:6px">🔧 Tool simili</div><div style="display:flex;gap:8px;overflow-x:auto"><div style="min-width:100px"><div style="height:50px;background:#1a1a1e;border-radius:6px"></div><div style="font-size:11px;margin-top:4px">Obsidian</div></div><div style="min-width:100px"><div style="height:50px;background:#1a1a1e;border-radius:6px"></div><div style="font-size:11px;margin-top:4px">Craft</div></div></div></div>
+</div>
+<div style="position:sticky;bottom:0;background:#1a1a1e;padding:12px 16px;display:flex;gap:8px;border-top:1px solid #25252b">
+<span class="btn-sm" style="flex:1;text-align:center">❤️ Salva</span>
+<span class="btn-sm" style="flex:1;text-align:center">⚔️ Confronta</span>
+</div>
+</div>
+
+<div class="frame mobile-frame">
+<div class="frame-title">⚔️ COMPARE — Mobile @375px</div>
+<div class="mobile-nav"><div class="logo">⚡</div><div style="font-size:18px">☰</div></div>
+<div style="padding:16px">
+<div style="font-size:18px;font-weight:700;margin-bottom:8px">Confronto</div>
+<div class="tabs"><div class="tab active">Notion</div><div class="tab">Obsidian</div></div>
+<div style="margin-top:12px">
+<div style="background:#25252b;border-radius:8px;padding:12px;margin-bottom:8px"><div style="font-size:12px;color:#6e6e7e">Prezzo</div><div style="font-size:14px;font-weight:600">Freemium</div></div>
+<div style="background:#25252b;border-radius:8px;padding:12px;margin-bottom:8px"><div style="font-size:12px;color:#6e6e7e">Offline</div><div style="font-size:14px;font-weight:600">❌ Limitato</div></div>
+<div style="background:#25252b;border-radius:8px;padding:12px;margin-bottom:8px"><div style="font-size:12px;color:#6e6e7e">Collaborazione</div><div style="font-size:14px;font-weight:600">✅ Sì</div></div>
+<div style="background:#25252b;border-radius:8px;padding:12px;margin-bottom:8px"><div style="font-size:12px;color:#6e6e7e">Rating</div><div style="font-size:14px;font-weight:600">⭐⭐⭐⭐ 4.8</div></div>
+</div>
+</div>
+</div>
+
+<div class="frame mobile-frame">
+<div class="frame-title">💾 SHORTLIST — Mobile @375px</div>
+<div class="mobile-nav"><div class="logo">⚡</div><div style="font-size:18px">☰</div></div>
+<div style="padding:16px">
+<div style="font-size:18px;font-weight:700;margin-bottom:4px">Salvati</div>
+<div style="font-size:13px;color:#6e6e7e;margin-bottom:12px">6 tool salvati</div>
+<div class="mobile-card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:#25252b;border-radius:6px"></div><div><div style="font-size:14px;font-weight:600">Notion</div><div style="font-size:12px;color:#6e6e7e">Productivity</div></div></div><span style="font-size:18px;color:#6e6e7e">✕</span></div></div>
+<div class="mobile-card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:#25252b;border-radius:6px"></div><div><div style="font-size:14px;font-weight:600">Figma</div><div style="font-size:12px;color:#6e6e7e">Design</div></div></div><span style="font-size:18px;color:#6e6e7e">✕</span></div></div>
+</div>
+</div>
+
+<div class="frame mobile-frame">
+<div class="frame-title">📝 EDITORIAL — Mobile @375px</div>
+<div class="mobile-nav"><div class="logo">⚡</div><div style="font-size:18px">☰</div></div>
+<div style="padding:16px">
+<div style="font-size:20px;font-weight:700;line-height:1.3;margin-bottom:8px">Guida completa a Notion AI: come aumentare la produttività del 300%</div>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><div style="width:28px;height:28px;background:#8b5cf6;border-radius:999px"></div><div style="font-size:13px;color:#a0a0b0">Mattia Rossi · 12 Gen 2026 · 8 min</div></div>
+<div style="background:#25252b;border-radius:8px;height:150px;margin-bottom:16px"></div>
+<div style="font-size:14px;color:#a0a0b0;line-height:1.7">
+<p style="margin-bottom:12px">Notion AI ha rivoluzionato il modo in cui milioni di persone organizzano il proprio lavoro. In questa guida completa, esploreremo tutte le funzionalità...</p>
+<p style="margin-bottom:12px">La chiave del successo con Notion AI sta nel saper formulare i prompt corretti. Ecco i 10 template che uso ogni giorno...</p>
+</div>
+<div style="background:#25252b;border-radius:8px;padding:16px;margin:16px 0;border-left:3px solid #8b5cf6">
+<div style="font-style:italic;color:#a0a0b0;font-size:14px">"Notion AI non sostituisce il pensiero critico, ma lo amplifica in modi che non avrei mai immaginato."</div>
+</div>
+</div>
+</div>
+
+<div class="frame mobile-frame">
+<div class="frame-title">💔 EMPTY STATE — Mobile @375px</div>
+<div class="mobile-nav"><div class="logo">⚡</div><div style="font-size:18px">☰</div></div>
+<div class="empty-state">
+<div class="empty-icon">📭</div>
+<div class="empty-title">Nessun tool salvato</div>
+<div class="empty-text">Inizia a esplorare e salva i tool che ti interessano per confrontarli in seguito.</div>
+<div class="mobile-cta">Scopri i tool</div>
+</div>
+</div>
+
+<p style="text-align:center;margin-top:48px;color:#6e6e7e;font-size:13px">TooolVibes Wireframe Reference · v1.0 · 2026-01-12</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TooolVibes — Design System &amp; Handoff Spec</title>
+<style>
+:root{--bg:#0f0f12;--surface:#1a1a1e;--surface-raised:#25252b;--ink:#f3f3f7;--ink-secondary:#a0a0b0;--ink-muted:#6e6e7e;--accent:#8b5cf6;--accent-hover:#7c3aed;--accent-pressed:#6d28d9;--success:#22c55e;--warning:#f59e0b;--danger:#ef4444;--info:#3b82f6;--focus:#06b6d4;--radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-pill:999px;--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;--space-16:64px;--space-24:96px;--space-32:128px;}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:40px 24px}
+h1{font-size:48px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px}
+h2{font-size:28px;font-weight:600;margin-top:48px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--surface-raised);color:var(--accent)}
+h3{font-size:20px;font-weight:600;margin-top:32px;margin-bottom:12px;color:var(--ink-secondary)}
+h4{font-size:16px;font-weight:600;margin-top:20px;margin-bottom:8px;color:var(--ink-muted)}
+p{margin-bottom:12px;color:var(--ink-secondary)}
+.badge{display:inline-block;padding:2px 10px;border-radius:var(--radius-pill);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-right:6px}
+.badge-p0{background:rgba(139,92,246,0.15);color:var(--accent)}.badge-p1{background:rgba(34,197,94,0.15);color:var(--success)}.badge-p2{background:rgba(245,158,11,0.15);color:var(--warning)}
+.token-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:16px}
+.token-card{background:var(--surface);border-radius:var(--radius-md);padding:16px;border:1px solid var(--surface-raised)}
+.token-name{font-family:'SF Mono',monospace;font-size:13px;color:var(--accent);margin-bottom:4px}
+.token-value{font-size:14px;color:var(--ink-muted)}
+.token-usage{font-size:13px;color:var(--ink-secondary);margin-top:8px}
+.color-swatch{width:100%;height:48px;border-radius:var(--radius-sm);margin-bottom:8px;border:1px solid rgba(255,255,255,0.05)}
+.comp-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px}
+.comp-table th{text-align:left;padding:12px 16px;background:var(--surface-raised);font-weight:600;color:var(--ink-secondary);border-bottom:2px solid var(--accent)}
+.comp-table td{padding:12px 16px;border-bottom:1px solid var(--surface-raised);vertical-align:top}
+.comp-table tr:hover{background:rgba(139,92,246,0.03)}
+.comp-tag{font-size:11px;padding:2px 8px;border-radius:var(--radius-sm);background:var(--surface-raised);color:var(--ink-muted);white-space:nowrap}
+.note{background:var(--surface-raised);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:16px 0;font-size:14px;color:var(--ink-secondary)}
+.warning{background:rgba(239,68,68,0.08);border-left-color:var(--danger)}
+.page-frame{background:var(--surface);border-radius:var(--radius-md);padding:20px;margin-top:16px;border:1px solid var(--surface-raised)}
+.page-frame h4{margin-top:0;color:var(--accent)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:768px){.two-col{grid-template-columns:1fr}.token-grid{grid-template-columns:1fr}}
+.toc{position:sticky;top:0;background:var(--bg);padding:16px 0;z-index:10;border-bottom:1px solid var(--surface-raised);margin-bottom:24px}
+.toc a{color:var(--ink-muted);text-decoration:none;margin-right:20px;font-size:14px;font-weight:500}
+.toc a:hover{color:var(--accent)}
+.hero{display:flex;align-items:center;gap:24px;margin-bottom:40px}
+.hero-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--accent),var(--accent-hover));border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:28px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="hero">
+<div class="hero-icon">🎨</div>
+<div>
+<h1>TooolVibes Design System</h1>
+<p>Complete Figma Handoff Specification &middot; v1.0 &middot; 2026-01-12</p>
+</div>
+</div>
+
+<div class="toc">
+<a href="#tokens">Tokens</a>
+<a href="#primitives">Primitives</a>
+<a href="#components">Components</a>
+<a href="#pages-mobile">Mobile Pages</a>
+<a href="#pages-desktop">Desktop Pages</a>
+<a href="#structure">File Structure</a>
+<a href="#questions">Open Questions</a>
+</div>
+
+<h2 id="tokens">Tokens (Figma Variables)</h2>
+
+<h3>Color Tokens</h3>
+<div class="token-grid">
+  <div class="token-card"><div class="color-swatch" style="background:#0f0f12"></div><div class="token-name">color/bg/base</div><div class="token-value">#0F0F12</div><div class="token-usage">Sfondo pagina, canvas app</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#1a1a1e"></div><div class="token-name">color/surface/raised</div><div class="token-value">#1A1A1E</div><div class="token-usage">Card, modal, dropdown, toast</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#25252b"></div><div class="token-name">color/surface/elevated</div><div class="token-value">#25252B</div><div class="token-usage">Hover states, dropdown open</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#f3f3f7"></div><div class="token-name">color/ink/primary</div><div class="token-value">#F3F3F7</div><div class="token-usage">Testo principale, titoli, label</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#a0a0b0"></div><div class="token-name">color/ink/secondary</div><div class="token-value">#A0A0B0</div><div class="token-usage">Sottotitoli, meta, breadcrumb</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#6e6e7e"></div><div class="token-name">color/ink/muted</div><div class="token-value">#6E6E7E</div><div class="token-usage">Placeholder, caption, disabled</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#8b5cf6"></div><div class="token-name">color/accent/primary</div><div class="token-value">#8B5CF6</div><div class="token-usage">CTA primari, link, badge accent</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#7c3aed"></div><div class="token-name">color/accent/hover</div><div class="token-value">#7C3AED</div><div class="token-usage">Hover button primary, link hover</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#6d28d9"></div><div class="token-name">color/accent/pressed</div><div class="token-value">#6D28D9</div><div class="token-usage">Stato pressed/active CTA</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#22c55e"></div><div class="token-name">color/status/success</div><div class="token-value">#22C55E</div><div class="token-usage">Conferme, toast success, badge ok</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#f59e0b"></div><div class="token-name">color/status/warning</div><div class="token-value">#F59E0B</div><div class="token-usage">Avvisi, azioni che richiedono attenzione</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#ef4444"></div><div class="token-name">color/status/danger</div><div class="token-value">#EF4444</div><div class="token-usage">Errori, azioni distruttive, rimozione</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#3b82f6"></div><div class="token-name">color/status/info</div><div class="token-value">#3B82F6</div><div class="token-usage">Info neutre, tooltip informativi</div></div>
+  <div class="token-card"><div class="color-swatch" style="background:#06b6d4"></div><div class="token-name">color/focus/ring</div><div class="token-value">#06B6D4</div><div class="token-usage">Focus ring accessibilità, keyboard nav</div></div>
+</div>
+
+<h3>Typography Tokens</h3>
+<div class="token-grid">
+  <div class="token-card"><div class="token-name">font/ui/family</div><div class="token-value">Inter</div><div class="token-usage">Tutto il testo UI</div></div>
+  <div class="token-card"><div class="token-name">font/ui/weight/400</div><div class="token-value">Regular</div><div class="token-usage">Body text, descrizioni</div></div>
+  <div class="token-card"><div class="token-name">font/ui/weight/500</div><div class="token-value">Medium</div><div class="token-usage">Label, button text, nav item</div></div>
+  <div class="token-card"><div class="token-name">font/ui/weight/600</div><div class="token-value">SemiBold</div><div class="token-usage">Button CTA primario, nav active</div></div>
+  <div class="token-card"><div class="token-name">font/display/family</div><div class="token-value">Fraunces (o GT Sectra)</div><div class="token-usage">Heading editoriali, titoli hero</div></div>
+  <div class="token-card"><div class="token-name">type/size/caption</div><div class="token-value">12px / 0.75rem</div><div class="token-usage">Caption, meta-info, footnote</div></div>
+  <div class="token-card"><div class="token-name">type/size/body</div><div class="token-value">16px / 1rem</div><div class="token-usage">Corpo testo principale</div></div>
+  <div class="token-card"><div class="token-name">type/size/lead</div><div class="token-value">18-20px</div><div class="token-usage">Intro/lead paragraph</div></div>
+  <div class="token-card"><div class="token-name">type/size/h3</div><div class="token-value">20-24px</div><div class="token-usage">Sezione heading, card title</div></div>
+  <div class="token-card"><div class="token-name">type/size/h2</div><div class="token-value">28-32px</div><div class="token-usage">Page section heading</div></div>
+  <div class="token-card"><div class="token-name">type/size/h1</div><div class="token-value">36-40px</div><div class="token-usage">Page title (non hero)</div></div>
+  <div class="token-card"><div class="token-name">type/size/display</div><div class="token-value">48-64px</div><div class="token-usage">Hero title, mega-heading</div></div>
+</div>
+
+<h3>Spacing Tokens</h3>
+<div class="token-grid">
+  <div class="token-card"><div class="token-name">space/1</div><div class="token-value">4px</div><div class="token-usage">Micro-gap, icona-testo stretto</div></div>
+  <div class="token-card"><div class="token-name">space/2</div><div class="token-value">8px</div><div class="token-usage">Padding interno badge, gap compatti</div></div>
+  <div class="token-card"><div class="token-name">space/3</div><div class="token-value">12px</div><div class="token-usage">Gap standard componenti</div></div>
+  <div class="token-card"><div class="token-name">space/4</div><div class="token-value">16px</div><div class="token-usage">Padding componente standard</div></div>
+  <div class="token-card"><div class="token-name">space/6</div><div class="token-value">24px</div><div class="token-usage">Spazio tra sezioni interne</div></div>
+  <div class="token-card"><div class="token-name">space/8</div><div class="token-value">32px</div><div class="token-usage">Spazio sezione-card</div></div>
+  <div class="token-card"><div class="token-name">space/12</div><div class="token-value">48px</div><div class="token-usage">Spazio tra sezioni pagina</div></div>
+  <div class="token-card"><div class="token-name">space/16</div><div class="token-value">64px</div><div class="token-usage">Grande spazio sezione</div></div>
+  <div class="token-card"><div class="token-name">space/24</div><div class="token-value">96px</div><div class="token-usage">Spazio hero/sezione</div></div>
+  <div class="token-card"><div class="token-name">space/32</div><div class="token-value">128px</div><div class="token-usage">Spazio massimo pagina</div></div>
+</div>
+
+<h3>Radius Tokens</h3>
+<div class="token-grid">
+  <div class="token-card"><div class="token-name">radius/sm</div><div class="token-value">6px</div><div class="token-usage">Badge, tag, chip</div></div>
+  <div class="token-card"><div class="token-name">radius/md</div><div class="token-value">10px</div><div class="token-usage">Button, input, card (valore più usato)</div></div>
+  <div class="token-card"><div class="token-name">radius/lg</div><div class="token-value">16px</div><div class="token-usage">Modal, bottom sheet, pannelli grandi</div></div>
+  <div class="token-card"><div class="token-name">radius/pill</div><div class="token-value">999px</div><div class="token-usage">Button pill, chip selezionabili, avatar</div></div>
+</div>
+
+<h3>Elevation Tokens</h3>
+<div class="token-grid">
+  <div class="token-card"><div class="token-name">elevation/rest</div><div class="token-value">none o 0 1px 2px rgba(0,0,0,0.05)</div><div class="token-usage">Card a riposo, button a riposo</div></div>
+  <div class="token-card"><div class="token-name">elevation/raised</div><div class="token-value">Ombra media</div><div class="token-usage">Card hover, dropdown aperto</div></div>
+  <div class="token-card"><div class="token-name">elevation/modal</div><div class="token-value">Ombra forte + backdrop</div><div class="token-usage">Modal, bottom sheet, toast overlay</div></div>
+</div>
+
+<h3>Motion Tokens (Code-Only)</h3>
+<div class="token-grid">
+  <div class="token-card"><div class="token-name">motion/duration/fast</div><div class="token-value">120ms</div><div class="token-usage">Micro-interazioni: hover color, focus ring</div></div>
+  <div class="token-card"><div class="token-name">motion/duration/base</div><div class="token-value">180ms</div><div class="token-usage">Transizioni standard: modal, toggle</div></div>
+  <div class="token-card"><div class="token-name">motion/duration/slow</div><div class="token-value">280ms</div><div class="token-usage">Animazioni page-level, hero entrance</div></div>
+  <div class="token-card"><div class="token-name">motion/easing/standard</div><div class="token-value">cubic-bezier(.2,0,0,1)</div><div class="token-usage">Maggior parte delle transizioni</div></div>
+  <div class="token-card"><div class="token-name">motion/easing/emphasis</div><div class="token-value">cubic-bezier(.4,0,.2,1)</div><div class="token-usage">Bottom sheet, toast entrance</div></div>
+</div>
+
+<h2 id="primitives">Primitives (Figma-SoT)</h2>
+<table class="comp-table">
+<thead><tr><th>Componente</th><th>Varianti</th><th>Stati</th><th>Size</th><th>Priorità</th></tr></thead>
+<tbody>
+<tr><td><strong>Button</strong><br><span class="comp-tag">primitive</span></td><td>primary, secondary, ghost, destructive, icon-only</td><td>default, hover, focus, active, disabled, loading</td><td>sm(32), md(40), lg(48)</td><td><span class="badge badge-p0">P0</span></td></tr>
+<tr><td><strong>Badge</strong><br><span class="comp-tag">primitive</span></td><td>neutral, accent, success, warning, danger, info</td><td>default, hover</td><td>—</td><td><span class="badge badge-p0">P0</span></td></tr>
+<tr><td><strong>Input</strong><br><span class="comp-tag">primitive</span></td><td>text, search, textarea, select, checkbox, radio, switch</td><td>default, hover, focus, active, disabled, error, valid</td><td>—</td><td><span class="badge badge-p0">P0</span></td></tr>
+<tr><td><strong>Modal</strong><br><span class="comp-tag">primitive</span></td><td>default, large, confirmation, form</td><td>default, entrance, exit (annotati)</td><td>—</td><td><span class="badge badge-p0">P0</span></td></tr>
+<tr><td><strong>Tooltip</strong><br><span class="comp-tag">primitive</span></td><td>top, bottom, left, right</td><td>default</td><td>—</td><td><span class="badge badge-p1">P1</span></td></tr>
+<tr><td><strong>BottomSheet</strong><br><span class="comp-tag">primitive</span></td><td>default, expanded, peek</td><td>default, drag (annotato)</td><td>—</td><td><span class="badge badge-p1">P1</span></td></tr>
+<tr><td><strong>Toast</strong><br><span class="comp-tag">primitive</span></td><td>success, error, warning, info</td><td>default, entrance, exit (annotati)</td><td>—</td><td><span class="badge badge-p1">P1</span></td></tr>
+<tr><td><strong>Avatar</strong><br><span class="comp-tag">primitive</span></td><td>image, fallback (iniziali)</td><td>default, hover</td><td>sm(24), md(32), lg(48)</td><td><span class="badge badge-p1">P1</span></td></tr>
+<tr><td><strong>Tabs</strong><br><span class="comp-tag">primitive</span></td><td>default, pills, underline</td><td>default, hover, active, disabled</td><td>—</td><td><span class="badge badge-p1">P1</span></td></tr>
+<tr><td><strong>Accordion</strong><br><span class="comp-tag">primitive</span></td><td>default, bordered, filled</td><td>collapsed, expanded, hover, disabled</td><td>—</td><td><span class="badge badge-p2">P2</span></td></tr>
+</tbody>
+</table>
+
+<div class="note"><strong>Button notes:</strong> Icon-only = quadrato fisso, aria-label annotato. Loading = spinner 16px centrato + label opacizzata. Disabled = opacity 50%.</div>
+<div class="note"><strong>Input notes:</strong> Search = icona lente + padding-left aumentato. Error = bordo danger + caption messaggio. Switch = on/off con token accent/surface.</div>
+<div class="note"><strong>Modal notes:</strong> Header = titolo + close icon-only. Footer = azioni primarie dx (desktop), stack full-width (mobile). Backdrop annotato. Max-width: 480px mobile, 640px desktop.</div>
+
+<h2 id="components">Components (Compositi)</h2>
+<table class="comp-table">
+<thead><tr><th>Componente</th><th>Varianti</th><th>Stati</th><th>Dipendenze</th><th>Priorità</th></tr></thead>
+<tbody>
+<tr><td><strong>Tool Card</strong><br><span class="comp-tag">composite</span></td><td>default, compact, featured, horizontal</td><td>default, hover, focus, selected, loading skeleton</td><td>Badge, Button icon-only, Avatar</td><td><span class="badge badge-p0">P0</span></td></tr>
+<tr><td><strong>Editorial Card</strong><br><span class="comp-tag">composite</span></td><td>default, featured (hero), compact</td><td>default, hover, focus</td><td>Badge (opz), Avatar</td><td><span class="badge badge-p1">P1</span></td></tr>
+<tr><td><strong>Compare Row</strong><br><span class="comp-tag">composite</span></td><td>default, highlight-winner, category-header</td><td>default, hover</td><td>Tool Card compact, Badge</td><td><span class="badge badge-p1">P1</span></td></tr>
+<tr><td><strong>Header / Nav</strong><br><span class="comp-tag">composite</span></td><td>default, scrolled, mobile (hamburger), auth</td><td>default, hover, active, focus, mobile-open</td><td>Button, Input search, Avatar</td><td><span class="badge badge-p0">P0</span></td></tr>
+<tr><td><strong>Footer</strong><br><span class="comp-tag">composite</span></td><td>default, minimal</td><td>default, hover (link)</td><td>Input, Button, Icon</td><td><span class="badge badge-p1">P1</span></td></tr>
+</tbody>
+</table>
+
+<h2 id="pages-mobile">Pages Mobile (375px)</h2>
+<div class="page-frame"><h4>🏠 Home — P0</h4><p>Stack verticale. Titolo display ridotto (max 36px). CTA button lg full-width. Search bar sotto CTA. Sezioni: Hero → Catalogo (1 col) → Radar → Editorial → Footer.</p></div>
+<div class="page-frame"><h4>🔍 Tool Discovery — P0</h4><p>Filtri rapidi: scroll orizzontale chip/pill. Button "Filtri" → BottomSheet. Grid 1 colonna, card full-width. Card verticale: logo sopra, info sotto.</p></div>
+<div class="page-frame"><h4>📋 Tool Detail — P0 (Hero #1)</h4><p>Colonna singola. Header: logo + titolo h2/h3 + meta. CTA sticky bottom (salva + confronta). Tabs scroll orizzontale. Contenuto: stack verticale. "Tool simili": horizontal scroll card compact. Safe-area bottom 34px.</p></div>
+<div class="page-frame"><h4>⚔️ Compare — P1</h4><p>Header + toggle tabs. Tabella righe impilate verticalmente. Max 3 tool. Swipe/tab per cambiare tool visibile.</p></div>
+<div class="page-frame"><h4>💾 Shortlist — P1</h4><p>Header + contatore. Lista card verticali full-width. Swipe-left rimuovi. Stato vuoto: illustrazione + CTA discovery.</p></div>
+<div class="page-frame"><h4>📝 Editorial — P1</h4><p>Colonna singola centrata. Header: titolo h1, byline avatar + data. Immagine hero full-width. Body: testo, immagini, quote. Fine: tag, share, articoli correlati.</p></div>
+<div class="page-frame"><h4>🎯 Service — P1</h4><p>Hero centrato: titolo display + CTA primario + secondario. Blocchi feature 2-col alternati. Trust logos row. Pricing 2-3 card. CTA finale banner full-width.</p></div>
+
+<h2 id="pages-desktop">Pages Desktop (1280px)</h2>
+<div class="page-frame"><h4>🏠 Home — P0</h4><p>Hero 2-col (testo sx, illustrazione dx). Container max-width 1280px. Catalogo: grid 3-4 colonne. Radar: cerchi concentrici + leggenda. Editorial: 2-3 card affiancate. Space/12 tra sezioni.</p></div>
+<div class="page-frame"><h4>🔍 Discovery — P0</h4><p>2-col: sidebar filtri 280px sx (sticky top 80px), griglia 3 colonne dx. Gap 24px. Header: breadcrumb + titolo + contatore + ordinamento.</p></div>
+<div class="page-frame"><h4>📋 Tool Detail — P0 (Hero #1)</h4><p>2-col: contenuto ~70% sx, sidebar ~30% dx. Header: logo grande + h1/display + badge + meta. CTA row prominente. Tabs full-width underline. Sidebar: info box, "Tool simili" 2-3 card. Line-length max 75ch.</p></div>
+<div class="page-frame"><h4>⚔️ Compare — P1</h4><p>Tabella: colonne uguali + colonna fissa sx feature names. Cella: testo/badge/icona check-cross. Header colonna: logo + nome + rimuovi. Highlight winner = bordo accent. Max 4 colonne.</p></div>
+<div class="page-frame"><h4>💾 Shortlist — P1</h4><p>Header + contatore + azioni bulk. Grid 3-4 colonne, gap 24px. Card stato selected visibile. Sidebar opzionale suggerimenti. Stato vuoto centrato.</p></div>
+<div class="page-frame"><h4>📝 Editorial — P1</h4><p>Colonna singola centrata, max-width 720px testo. Immagine hero full-bleed o 1280px. Sidebar opzionale destra: indice sticky, articoli correlati. Fine: griglia 3 colonne articoli correlati.</p></div>
+<div class="page-frame"><h4>🎯 Service — P1</h4><p>Hero centrato/2-col. Blocchi feature 2-col alternati. Trust row. Pricing 2-3 card. CTA finale banner. Disclosure affiliate obbligatoria.</p></div>
+
+<h2 id="structure">File Figma Structure</h2>
+<pre style="background:var(--surface);padding:20px;border-radius:var(--radius-md);font-family:'SF Mono',monospace;font-size:13px;overflow:auto;line-height:1.8;color:var(--ink-secondary)">
+Tooolvibes Design System
+├── 00_Cover
+├── 01_Foundations (Design Principles, Accessibility, Grid & Breakpoints)
+├── 02_Tokens (Color, Typography, Spacing, Radius, Elevation, Motion)
+├── 03_Primitives (Button, Badge, Input, Modal, Tooltip, BottomSheet, Toast, Avatar, Tabs, Accordion)
+├── 04_Components (Tool Card, Editorial Card, Compare Row, Header/Nav, Footer)
+├── 05_Sections (Hero, Filters, Grid, CTA Banner, Editorial Body)
+├── 06_Pages_Mobile (7 hero pages @375px)
+├── 07_Pages_Desktop (7 hero pages @1280px)
+├── 08_Prototype_Flows (Save→Shortlist, Compare, Auth)
+└── 09_Archive (Snapshots, Deprecated)
+</pre>
+
+<h2 id="questions">Open Questions</h2>
+<table class="comp-table">
+<thead><tr><th>#</th><th>Domanda</th><th>Impatto</th><th>Decisione provvisoria</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Colore accent esatto?</td><td><span class="badge badge-p0">Alto</span></td><td>Violet-600 (#8B5CF6) default, verificare con codice</td></tr>
+<tr><td>2</td><td>Dark mode richiesto? Default?</td><td><span class="badge badge-p0">Alto</span></td><td>Preparare Figma Modes, popolare solo light</td></tr>
+<tr><td>3</td><td>Font display: GT Sectra o Fraunces?</td><td><span class="badge badge-p1">Medio</span></td><td>Fraunces (open source, facile in Figma)</td></tr>
+<tr><td>4</td><td>Tailwind theme con nomi non semantici?</td><td><span class="badge badge-p0">Alto</span></td><td>Creare shim traduzione Figma semantic → Tailwind visual</td></tr>
+<tr><td>5</td><td>Libreria Modal/BottomSheet in uso?</td><td><span class="badge badge-p1">Medio</span></td><td>Specificare target in handoff</td></tr>
+<tr><td>6</td><td>Hero pages ordinate per traffico reale?</td><td><span class="badge badge-p1">Medio</span></td><td>Mantenere 7 pagine, ordinare per dati</td></tr>
+<tr><td>7</td><td>Card multiple in codice?</td><td><span class="badge badge-p1">Medio</span></td><td>Audit e unificare prima di Figma-SoT</td></tr>
+<tr><td>8</td><td>Radar: custom o libreria?</td><td><span class="badge badge-p2">Basso</span></td><td>Trattare come Figma-Reference illustrativo</td></tr>
+<tr><td>9</td><td>Second human reviewer designato?</td><td><span class="badge badge-p0">Alto</span></td><td>Designare frontend lead o designer peer</td></tr>
+<tr><td>10</td><td>Frequenza release attuale?</td><td><span class="badge badge-p1">Medio</span></td><td>Per-release milestone, valutare weekly</td></tr>
+</tbody>
+</table>
+
+<div class="warning note" style="margin-top:32px"><strong>IMPORTANTE:</strong> I valori token colori sono scelti professionalmente (tema dark con accent violet). Devono essere confermati dal team prima di iniziare su Figma.</div>
+
+<p style="margin-top:48px;text-align:center;color:var(--ink-muted);font-size:13px">Generato da Kimi Work &middot; TooolVibes Design System Handoff &middot; v1.0 &middot; 2026-01-12</p>
+</div>
+</body>
+</html>

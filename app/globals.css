@@ -9,6 +9,7 @@
 @import "../styles/compare.css";
 @import "../styles/depth-scene.css";
 @import "../styles/account.css";
+@import "../styles/figma-implementation.css";
 
 :root {
   --bottom-nav-height: 3.55rem;

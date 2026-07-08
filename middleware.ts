@@ -57,6 +57,7 @@ export async function middleware(request: NextRequest) {
 
   // Always allow these paths
   if (
+    (process.env.NODE_ENV !== "production" && pathname.startsWith("/dev")) ||
     pathname.startsWith("/api/admin") ||
     pathname.startsWith("/api/gate") ||
     pathname === "/api/waitlist" ||

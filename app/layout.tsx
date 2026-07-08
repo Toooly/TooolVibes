@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Rubik } from "next/font/google";
+import { Fraunces, Inter, Manrope, Rubik } from "next/font/google";
 
 import "@/app/globals.css";
 import "@/styles/vibes-3d-maestoso.css";
@@ -19,6 +19,18 @@ const manrope = Manrope({
 const rubik = Rubik({
   subsets: ["latin"],
   variable: "--font-rubik",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
   display: "swap",
 });
 
@@ -83,7 +95,7 @@ export default async function RootLayout({
   const gateCookie = cookieStore.get(gateCookieName);
   const isGateOpen = gateCookie ? await verifyGateToken(gateCookie.value) : false;
   return (
-    <html lang="it" className={`${manrope.variable} ${rubik.variable}`} suppressHydrationWarning>
+    <html lang="it" className={`${manrope.variable} ${rubik.variable} ${inter.variable} ${fraunces.variable}`} suppressHydrationWarning>
       <head />
       <body>
         {isGateOpen && (

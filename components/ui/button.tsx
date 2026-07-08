@@ -1,7 +1,8 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Loader2 } from "lucide-react"
 import Link from "next/link"
+import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -46,19 +47,35 @@ const buttonVariants = cva(
   }
 )
 
+type ButtonProps = ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & {
+    loading?: boolean
+  }
+
 function Button({
   className,
+  children,
+  disabled,
+  loading = false,
   variant = "default",
   size = "default",
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+}: ButtonProps) {
+  const { "aria-busy": ariaBusy, ...buttonProps } = props
+
   return (
     <ButtonPrimitive
+      {...buttonProps}
       data-slot="button"
       data-size={size ?? undefined}
+      data-loading={loading ? "" : undefined}
+      aria-busy={loading ? true : ariaBusy}
+      disabled={loading || disabled}
       className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
+    >
+      {loading ? <Loader2 aria-hidden="true" className="size-4 animate-spin" /> : null}
+      {loading ? <span className="opacity-70">{children}</span> : children}
+    </ButtonPrimitive>
   )
 }
 
@@ -74,7 +91,7 @@ function ButtonLink({
   return (
     <Link
       className={cn(
-        "premium-button text-ui-strong group/button inline-flex w-full items-center justify-center gap-2 rounded-full px-4.5 py-2.9 text-center text-[0.95rem] font-semibold tracking-[-0.012em] sm:w-auto",
+        "premium-button text-ui-strong group/button inline-flex w-full items-center justify-center gap-2 rounded-full px-4.5 py-2.9 text-center text-[0.95rem] font-semibold tracking-normal sm:w-auto",
         variant === "primary" && "premium-button-primary text-white sm:min-w-[11.75rem]",
         variant === "premium" && "premium-button-premium text-white sm:min-w-[11.75rem]",
         variant === "secondary" && "premium-button-secondary sm:min-w-[10.5rem]",

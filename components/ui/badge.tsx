@@ -10,6 +10,10 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        neutral:
+          "border-[rgba(243,243,247,0.12)] bg-[rgba(37,37,43,0.86)] text-[var(--tv-ink-secondary)]",
+        accent:
+          "border-[rgba(139,92,246,0.34)] bg-[rgba(139,92,246,0.16)] text-[var(--tv-ink-primary)]",
         secondary:
           "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
         trust:
@@ -26,6 +30,8 @@ const badgeVariants = cva(
           "border-emerald-500/20 bg-emerald-50 text-emerald-700 dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-emerald-100",
         destructive:
           "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
+        danger:
+          "border-[rgba(239,68,68,0.32)] bg-[rgba(239,68,68,0.12)] text-red-100",
         outline:
           "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
         ghost:
