@@ -69,6 +69,19 @@ function toolToOrbital(tool: typeof directoryTools[0], sectionId: string): Orbit
   };
 }
 
+function hasAffiliateSignal(href: string | null | undefined) {
+  if (!href) {
+    return false;
+  }
+
+  try {
+    const url = new URL(href);
+    return ["aff", "affiliate", "ref", "referral", "via"].some((key) => url.searchParams.has(key));
+  } catch {
+    return false;
+  }
+}
+
 export default async function ToolDetailPage({ params }: ToolPageProps) {
   const { slug } = await params;
   const tool = getDirectoryToolBySlug(slug);
@@ -82,6 +95,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
     tool.sourceSite === "weblium"
       ? "https://tooolvibes.weblium.site/all-tools"
       : tool.originalArticleUrl;
+  const isAffiliateLink = Boolean(tool.affiliateUrl) || hasAffiliateSignal(tool.url);
 
   // Build orbital items: related tools + navigation nodes
   const toolOrbitItems: OrbitalItem[] = [
@@ -205,7 +219,23 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 <span>{tool.domain}</span>
               </div>
 
+              <div className="mt-4 rounded-[22px] border border-[rgba(83,63,170,0.12)] bg-white/68 px-4 py-3.5 text-[0.82rem] leading-6 text-[var(--muted-strong)]">
+                <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                  Nota editoriale
+                </p>
+                <div className="mt-2 grid gap-1 sm:grid-cols-3">
+                  <p>Pubblicato: {formatItalianDate(tool.publishedAt)}</p>
+                  <p>Fonte: {tool.sourceSite === "weblium" ? "Archivio Weblium" : "TooolVibes"}</p>
+                  <p>Revisione: dati editoriali in aggiornamento.</p>
+                </div>
+              </div>
+
               <div className="tool-detail-actions mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap sm:gap-3">
+                {isAffiliateLink ? (
+                  <p className="basis-full text-[0.76rem] leading-5 text-[var(--muted-strong)]">
+                    Link partner: potremmo ricevere una commissione senza costi extra per te.
+                  </p>
+                ) : null}
                 <a
                   href={tool.url}
                   target="_blank"
@@ -349,6 +379,11 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 Link rapidi
               </p>
               <div className="mt-4 flex flex-col gap-3">
+                {isAffiliateLink ? (
+                  <p className="text-[0.76rem] leading-5 text-[var(--muted-strong)]">
+                    Link partner: potremmo ricevere una commissione senza costi extra per te.
+                  </p>
+                ) : null}
                 <a
                   href={tool.url}
                   target="_blank"

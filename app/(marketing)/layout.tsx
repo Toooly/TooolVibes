@@ -26,13 +26,16 @@ export default async function MarketingLayout({
 
   return (
     <div className="marketing-shell relative isolate overflow-x-clip" style={{ background: "var(--v-void)" }}>
+      <a href="#main-content" className="skip-link">
+        Salta al contenuto
+      </a>
       <Global3DLayer />
       <OrbitalProvider>
         <OrbitalLayer />
         <AccountProvider>
           <DiscoveryPersistenceProvider>
             <SiteHeaderV2 />
-            <main className="relative z-10 pb-mobile-nav md:pb-0">
+            <main id="main-content" tabIndex={-1} className="relative z-10 pb-mobile-nav md:pb-0">
               <PageTransition>{children}</PageTransition>
             </main>
             <SiteFooterV2 />

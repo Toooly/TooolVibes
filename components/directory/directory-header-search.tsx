@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 type DirectoryHeaderSearchProps = {
+  autoFocus?: boolean;
   compact?: boolean;
   onSubmitted?: () => void;
 };
 
 export function DirectoryHeaderSearch({
+  autoFocus = false,
   compact = false,
   onSubmitted,
 }: DirectoryHeaderSearchProps) {
@@ -20,10 +22,19 @@ export function DirectoryHeaderSearch({
   const searchParams = useSearchParams();
   const currentSearch = searchParams.toString();
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setQuery(searchParams.get("q") ?? "");
   }, [currentSearch, searchParams]);
+
+  useEffect(() => {
+    if (!autoFocus) {
+      return;
+    }
+
+    inputRef.current?.focus({ preventScroll: true });
+  }, [autoFocus]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -55,19 +66,21 @@ export function DirectoryHeaderSearch({
       role="search"
     >
       <label className="sr-only" htmlFor={compact ? "header-search-mobile" : "header-search"}>
-        Cerca nel catalogo
+        Cerca nel catalogo completo
       </label>
       <Search
         aria-hidden="true"
         className="header-search-icon ml-2.5 size-4 shrink-0 text-[var(--muted)] transition group-focus-within/header-search:text-[var(--accent-strong)]"
       />
       <input
+        ref={inputRef}
         id={compact ? "header-search-mobile" : "header-search"}
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder={compact ? "Cerca tool, tag o categoria" : "Cerca tool o categoria"}
+        placeholder={compact ? "Cerca nel catalogo" : "Cerca tool, tag o categoria"}
         className="min-h-9 w-full min-w-0 bg-transparent px-1 text-sm font-medium text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
-        aria-label="Cerca nel catalogo"
+        aria-label="Cerca nel catalogo completo"
+        enterKeyHint="search"
       />
       <button
         type="submit"

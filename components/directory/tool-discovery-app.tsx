@@ -1014,13 +1014,14 @@ export function ToolDiscoveryApp({
           <div className="min-w-0 space-y-4 lg:space-y-5">
             <div id="archive-search" className="scroll-mt-28 grid grid-cols-[minmax(0,1fr)_2.75rem] gap-2 sm:grid-cols-[minmax(0,1fr)_10rem_3.25rem] sm:gap-3 lg:grid-cols-[minmax(0,1fr)_12rem_auto]">
               <label className="col-span-2 min-w-0 sm:col-span-1">
-                <span className="sr-only">Cerca tool</span>
+                <span className="sr-only">Affina i risultati del catalogo</span>
                 <input
                   ref={searchInputRef}
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   className="premium-input min-h-12 px-3.5 py-2.5 text-sm sm:px-4 sm:py-3"
-                  placeholder="Cerca tool, tag, casi d'uso o categoria..."
+                  placeholder="Filtra tool, tag, casi d'uso o categoria..."
+                  aria-label="Affina i risultati del catalogo"
                 />
               </label>
               <select
@@ -1095,7 +1096,7 @@ export function ToolDiscoveryApp({
             {hasActiveFilters ? (
               <div className="flex flex-wrap items-center gap-2 rounded-[20px] border border-white/10 bg-white/6 px-3 py-2 text-xs text-[var(--muted-strong)]">
                 <span className="font-semibold text-[var(--foreground)]">Filtri attivi:</span>
-                {query.trim() ? <span>Ricerca: {query.trim()}</span> : null}
+                {query.trim() ? <span>Filtro testo: {query.trim()}</span> : null}
                 {activeGroup !== "all" ? <span>Categoria: {activeGroupLabel}</span> : null}
                 {activeLevel !== "all" ? <span>Livello: {activeLevelLabel}</span> : null}
                 {activeTag ? <span>Tag: {activeTag}</span> : null}
@@ -1121,7 +1122,7 @@ export function ToolDiscoveryApp({
                 {isDirectSearch
                   ? visibleTools.length > 0
                     ? `${visibleTools.length} ${visibleTools.length === 1 ? "risultato" : "risultati"} per "${normalizedQuery}"`
-                    : `Nessun risultato per "${normalizedQuery}"`
+                    : `Nessun risultato nel catalogo per "${normalizedQuery}"`
                   : `${visibleTools.length} risultati`}
               </p>
               <h3 className="mt-2 text-display-card text-[1.65rem] leading-tight text-[var(--foreground)] sm:text-[2rem]">

@@ -272,9 +272,9 @@ export function MobileCatalogView({
         placeholder={
           view === "categories"
             ? "Cerca categorie o tool..."
-            : "Cerca nel catalogo..."
+            : "Filtra i tool visibili..."
         }
-        aria-label="Cerca nel catalogo"
+        aria-label={view === "categories" ? "Cerca categorie o tool nel catalogo" : "Affina i tool visibili"}
       />
       {searchQuery && (
         <button
@@ -326,7 +326,7 @@ export function MobileCatalogView({
                   <SlidersHorizontal size={16} aria-hidden="true" />
                 )}
               </span>
-              <strong>{openPanel === "search" ? "Ricerca" : "Filtri"}</strong>
+              <strong>{openPanel === "search" ? "Affina" : "Filtri"}</strong>
               <button
                 type="button"
                 onClick={() => setOpenPanel(null)}
@@ -432,8 +432,8 @@ export function MobileCatalogView({
             <div className="mobile-catalog-view__empty-icon">
               <Search size={24} className="text-[#6a3cff]" />
             </div>
-            <h3>Nessun tool trovato</h3>
-            <p>Prova a cambiare i filtri o la ricerca per trovare quello che cerchi.</p>
+            <h3>Nessun tool in questa vista</h3>
+            <p>Prova a togliere un filtro o ad ampliare il testo di affinamento.</p>
             <button onClick={handleBack} className="mobile-catalog-view__empty-cta">
               Torna alle categorie
             </button>

@@ -387,6 +387,15 @@ export function CompareBoard({ tools }: CompareBoardProps) {
         </div>
       </div>
 
+      {comparedTools.length >= MAX_COMPARE_TOOLS ? (
+        <div className="rounded-[24px] border border-amber-500/20 bg-amber-50/80 px-4 py-3 text-sm leading-6 text-amber-900">
+          <p className="font-semibold">Confronto al limite: 2-4 tool restano la lettura piu chiara.</p>
+          <p className="mt-1">
+            Usa il quinto come candidato da togliere o confermare dopo aver letto il verdetto iniziale.
+          </p>
+        </div>
+      ) : null}
+
       <div className="metadata-block rounded-[28px] px-4 py-4 sm:px-5 sm:py-4.5">
         <p className="brand-kicker">Verdetto iniziale</p>
         <p className="mt-2 max-w-[42rem] text-[0.96rem] leading-7" style={{ color: "var(--muted-strong)" }}>

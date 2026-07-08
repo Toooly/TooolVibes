@@ -590,6 +590,15 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         </div>
       </div>
 
+      {tools.length >= MAX_COMPARE_TOOLS ? (
+        <div className="rounded-[24px] border border-amber-500/20 bg-amber-50/80 px-4 py-3 text-sm leading-6 text-amber-900">
+          <p className="font-semibold">Confronto al limite: 2-4 tool restano la lettura piu chiara.</p>
+          <p className="mt-1">
+            Usa il quinto come candidato da togliere o confermare dopo aver letto differenze e casi d&apos;uso.
+          </p>
+        </div>
+      ) : null}
+
       {tools.length === 1 ? (
         <PremiumPanel tone="warm" className="grid gap-4 p-5 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center">
           <CheckCircle2 className="size-9 text-[var(--warning)]" aria-hidden="true" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
@@ -14,6 +14,7 @@ import { CircuitPill, PILL_CONFIGS } from "./navbar-circuit-markers";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import {
   X,
+  Search,
   Sparkles,
   Compass,
   Radar,
@@ -97,6 +98,8 @@ export function SiteHeaderV2() {
   const brandRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
+  const activeSearchTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   
 
   useEffect(() => {
@@ -115,9 +118,49 @@ export function SiteHeaderV2() {
     setOverlayOpen(menuOpen || searchOpen);
   }, [menuOpen, searchOpen, setOverlayOpen]);
 
+  const closeSearch = useCallback((restoreFocus = true) => {
+    setSearchOpen(false);
+
+    if (restoreFocus) {
+      window.requestAnimationFrame(() => activeSearchTriggerRef.current?.focus());
+    }
+  }, []);
+
+  const closeMenu = useCallback((restoreFocus = true) => {
+    setMenuOpen(false);
+
+    if (restoreFocus) {
+      window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+    }
+  }, []);
+
   const toggleMobileMenu = () => {
+    setSearchOpen(false);
     setMenuOpen((open) => !open);
   };
+
+  useEffect(() => {
+    if (!menuOpen && !searchOpen) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      if (searchOpen) {
+        closeSearch();
+      }
+
+      if (menuOpen) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [closeMenu, closeSearch, menuOpen, searchOpen]);
 
   return (
     <>
@@ -183,8 +226,13 @@ export function SiteHeaderV2() {
               <CircuitPill config={PILL_CONFIGS.actions} containerRef={actionsRef} />
               <button
                 className="site-header-v2__search-trigger relative hidden rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] hover:text-[#6a3cff] md:flex"
-                onClick={() => setSearchOpen(!searchOpen)}
+                onClick={(event) => {
+                  activeSearchTriggerRef.current = event.currentTarget;
+                  setMenuOpen(false);
+                  setSearchOpen(!searchOpen);
+                }}
                 type="button"
+                aria-controls="site-search-overlay"
                 aria-expanded={searchOpen}
               >
                 <span className="flex items-center gap-2 text-sm">
@@ -215,8 +263,25 @@ export function SiteHeaderV2() {
                 Accedi / Registrati
               </Link>
 
+              <button
+                className="site-header-v2__mobile-search grid size-11 shrink-0 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 md:hidden"
+                onClick={(event) => {
+                  activeSearchTriggerRef.current = event.currentTarget;
+                  setMenuOpen(false);
+                  setSearchOpen(true);
+                }}
+                type="button"
+                aria-controls="site-search-overlay"
+                aria-expanded={searchOpen}
+                aria-label="Cerca nel catalogo"
+                style={{ WebkitTapHighlightColor: "transparent" }}
+              >
+                <Search size={19} aria-hidden="true" />
+              </button>
+
               {/* Mobile menu toggle */}
               <button
+                ref={menuButtonRef}
                 className={`site-header-v2__menu-button relative z-20 grid size-11 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 lg:hidden${
                   menuOpen ? " is-open" : ""
                 }`}
@@ -245,19 +310,23 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[var(--z-overlay)] flex items-start justify-center bg-[rgba(18,13,47,0.5)] backdrop-blur-sm pt-24"
-            onClick={() => setSearchOpen(false)}
+            id="site-search-overlay"
+            className="fixed inset-0 z-[var(--z-overlay)] flex items-end justify-center bg-[rgba(18,13,47,0.5)] p-3 pt-[calc(5rem+env(safe-area-inset-top))] backdrop-blur-sm md:items-start md:p-0 md:pt-24"
+            onClick={() => closeSearch()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Cerca nel catalogo TooolVibes"
           >
             <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              exit={{ opacity: 0, y: 24, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="w-full max-w-2xl mx-4"
+              className="mx-0 w-full max-w-none md:mx-4 md:max-w-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="overflow-hidden rounded-2xl border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.95)] shadow-[0_16px_48px_rgba(106,60,255,0.12)] backdrop-blur-xl p-4">
-                <DirectoryHeaderSearch onSubmitted={() => setSearchOpen(false)} />
+              <div className="overflow-hidden rounded-t-[24px] border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.97)] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_16px_48px_rgba(106,60,255,0.12)] backdrop-blur-xl md:rounded-2xl md:pb-4">
+                <DirectoryHeaderSearch compact autoFocus onSubmitted={() => closeSearch(false)} />
               </div>
             </motion.div>
           </motion.div>
@@ -272,7 +341,7 @@ export function SiteHeaderV2() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="site-header-v2__mobile-backdrop fixed inset-0 z-[90] bg-[rgba(6,6,14,0.55)] lg:hidden"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => closeMenu()}
             >
             <motion.nav
               id="mobile-site-menu"
@@ -280,7 +349,7 @@ export function SiteHeaderV2() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0.8 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="mobile-menu-panel site-header-v2__mobile-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[rgba(106,60,255,0.12)] bg-[#f8f7ff] p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-12px_0_40px_rgba(0,0,0,0.18)]"
+              className="mobile-menu-panel site-header-v2__mobile-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[rgba(106,60,255,0.12)] bg-[#f8f7ff] p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-12px_0_40px_rgba(0,0,0,0.18)] max-[374px]:w-screen max-[374px]:max-w-none"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="site-header-v2__mobile-panel-head mb-6 flex items-center justify-between gap-4">
@@ -301,7 +370,7 @@ export function SiteHeaderV2() {
                   type="button"
                   className="site-header-v2__mobile-close grid size-11 place-items-center rounded-xl border border-[rgba(106,60,255,0.2)] bg-white text-[#120d2f]"
                   aria-label="Chiudi menu"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() => closeMenu()}
                 >
                   <X size={22} />
                 </button>

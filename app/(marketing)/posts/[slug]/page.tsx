@@ -28,6 +28,19 @@ const kindLabels: Record<NonNullable<Awaited<ReturnType<typeof getEditorialPostB
   editorial: "Blog",
 };
 
+function hasAffiliateSignal(href: string | null | undefined) {
+  if (!href) {
+    return false;
+  }
+
+  try {
+    const url = new URL(href);
+    return ["aff", "affiliate", "ref", "referral", "via"].some((key) => url.searchParams.has(key));
+  } catch {
+    return false;
+  }
+}
+
 export async function generateMetadata({ params }: EditorialPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getEditorialPostBySlug(slug);
@@ -77,6 +90,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   const sourceHref = post.source_url;
   const sourceLabel = post.source_label;
   const isAuthoredPost = Boolean(post.content_markdown);
+  const relatedToolHref = tool ? (tool.affiliate_url ?? tool.website_url) : null;
+  const isRelatedToolAffiliate = Boolean(tool?.affiliate_url) || hasAffiliateSignal(relatedToolHref);
   const kindLabel =
     post.kind === "guide" && post.source_label === "Blog TooolVibes"
       ? "Guida"
@@ -293,8 +308,13 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                       <ButtonLink href={`/toools/${tool.slug}`} variant="secondary" className="sm:min-w-0">
                         Apri profilo
                       </ButtonLink>
+                      {isRelatedToolAffiliate ? (
+                        <p className="basis-full text-[0.72rem] leading-5 text-white/62">
+                          Link partner: potremmo ricevere una commissione senza costi extra per te.
+                        </p>
+                      ) : null}
                       <Link
-                        href={tool.affiliate_url ?? tool.website_url}
+                        href={relatedToolHref ?? tool.website_url}
                         target="_blank"
                         rel="noreferrer"
                         className="section-quiet-link text-sm font-semibold text-white/82"
@@ -304,6 +324,18 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                     </div>
                   </div>
                 ) : null}
+
+                <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
+                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                    Nota editoriale
+                  </p>
+                  <div className="mt-3 grid gap-1.5 text-[0.82rem] leading-6 text-white/70">
+                    <p>Pubblicato: {formatItalianDate(post.published_at)}</p>
+                    <p>Aggiornato: {formatItalianDate(post.updated_at)}</p>
+                    <p>Autore: {post.author_name ?? "TooolVibes"}</p>
+                    <p>Revisione: dati editoriali in aggiornamento.</p>
+                  </div>
+                </div>
 
                 {sourceHref.startsWith("http") ? (
                   <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
