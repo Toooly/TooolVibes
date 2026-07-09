@@ -32918,6 +32918,126 @@ body:has(.tone-account) {
   filter: saturate(0.98) contrast(1.02);
 }
 
+.internal-tool-page .tool-detail-hero-badge {
+  border-color: rgba(183, 168, 255, 0.28) !important;
+  background:
+    linear-gradient(180deg, rgba(92, 66, 202, 0.54), rgba(49, 34, 126, 0.72)) !important;
+  color: #f7f3ff !important;
+  -webkit-text-fill-color: #f7f3ff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 10px 24px rgba(17, 10, 56, 0.18);
+}
+
+.internal-tool-page .tool-detail-hero-badge-muted {
+  border-color: rgba(148, 226, 255, 0.3) !important;
+  background:
+    linear-gradient(180deg, rgba(236, 250, 255, 0.94), rgba(195, 232, 246, 0.84)) !important;
+  color: #23465e !important;
+  -webkit-text-fill-color: #23465e !important;
+}
+
+.internal-tool-page .tool-detail-profile-panel {
+  --foreground: #171235;
+  --muted-strong: #51487a;
+  --accent-strong: #5b36d6;
+  border: 1px solid rgba(106, 60, 255, 0.12);
+  color: var(--foreground) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 18px 42px rgba(38, 25, 94, 0.1);
+}
+
+.internal-tool-page .tool-detail-profile-panel :is(p, span, strong) {
+  color: var(--muted-strong) !important;
+  -webkit-text-fill-color: var(--muted-strong) !important;
+}
+
+.internal-tool-page .tool-detail-profile-title {
+  color: var(--foreground) !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+}
+
+.internal-tool-page .tool-detail-profile-label {
+  color: var(--accent-strong) !important;
+  -webkit-text-fill-color: var(--accent-strong) !important;
+}
+
+.internal-tool-page .tool-detail-profile-copy {
+  color: var(--muted-strong) !important;
+  -webkit-text-fill-color: var(--muted-strong) !important;
+}
+
+.internal-page .directory-tool-card .directory-tool-card__actions {
+  align-items: stretch;
+  border: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.internal-page .directory-tool-card__action {
+  min-width: 0;
+  min-height: 2.75rem !important;
+  height: 100%;
+  width: 100%;
+  padding: 0.55rem 0.82rem !important;
+  font-size: 0.82rem;
+  line-height: 1.12;
+  white-space: normal;
+}
+
+.internal-page .directory-tool-card__action-primary {
+  border-color: rgba(124, 151, 255, 0.42) !important;
+  background:
+    linear-gradient(135deg, #8258ff 0%, #4e7dff 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.internal-page .directory-tool-card__action-secondary {
+  border-color: rgba(167, 214, 232, 0.22) !important;
+  background:
+    linear-gradient(180deg, rgba(134, 153, 172, 0.32), rgba(28, 48, 66, 0.46)) !important;
+  color: #f6fbff !important;
+  -webkit-text-fill-color: #f6fbff !important;
+}
+
+.internal-page .directory-tool-card__action :is(span, svg) {
+  color: inherit !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta) :is(span, svg) {
+  color: inherit !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+.internal-tool-page .tool-detail-main-cta {
+  border-color: rgba(124, 151, 255, 0.42) !important;
+  background:
+    linear-gradient(135deg, #8057ff 0%, #437cff 100%) !important;
+  box-shadow:
+    0 16px 32px rgba(81, 91, 255, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+.internal-tool-page .tool-detail-secondary-cta {
+  border-color: rgba(158, 230, 255, 0.28) !important;
+  background:
+    linear-gradient(180deg, rgba(90, 111, 132, 0.42), rgba(24, 42, 61, 0.58)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 12px 26px rgba(0, 0, 0, 0.16) !important;
+}
+
 .internal-tool-page .tool-detail-meta-block {
   border: 1px solid rgba(216, 208, 255, 0.16);
   background:
@@ -33937,4 +34057,17 @@ body:has(.tone-account) {
     width: min(4rem, 19vw) !important;
     max-width: min(4rem, 19vw) !important;
   }
+}
+
+.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta),
+.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta):is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline),
+.internal-page .directory-tool-card__action:is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta) :is(span, svg),
+.internal-page .directory-tool-card__action :is(span, svg) {
+  color: inherit !important;
+  -webkit-text-fill-color: currentColor !important;
 }

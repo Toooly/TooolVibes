@@ -121,7 +121,7 @@ export function DirectoryToolCard({
               <Link
                 key={tag}
                 href={`/archivio?tag=${encodeURIComponent(tag)}`}
-                className="directory-tool-card__tag-link rounded-full bg-white/72 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-[var(--foreground)] transition-colors duration-200 hover:text-[var(--accent-strong)] sm:px-3 sm:text-[0.7rem] sm:tracking-[0.14em]"
+                className="directory-tool-card__tag-link rounded-full px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] transition-colors duration-200 sm:px-3 sm:text-[0.7rem] sm:tracking-[0.14em]"
               >
                 {tag}
               </Link>
@@ -132,13 +132,21 @@ export function DirectoryToolCard({
         <div className="mt-auto space-y-3 pt-4 sm:space-y-4 sm:pt-5">
           <p className="text-clamp-2 text-[0.86rem] leading-6 text-[var(--foreground)] sm:text-sm">{tool.whyItMatters}</p>
 
-          <div className="grid gap-2 sm:grid-cols-2">
-            <PremiumLink href={tool.url} external>
+          <div className="directory-tool-card__actions grid gap-2 sm:grid-cols-2">
+            <PremiumLink
+              href={tool.url}
+              external
+              size="sm"
+              className="directory-tool-card__action directory-tool-card__action-primary"
+            >
               {tool.ctaLabel}
             </PremiumLink>
-            <PremiumLink href={`/toools/${tool.slug}`} tone="secondary">
+            <Link
+              href={`/toools/${tool.slug}`}
+              className="directory-tool-card__action directory-tool-card__action-secondary premium-button inline-flex items-center justify-center gap-2 rounded-full font-semibold"
+            >
               Scopri di pi&ugrave;
-            </PremiumLink>
+            </Link>
           </div>
 
           <p className="text-center text-[0.62rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:text-[0.7rem] sm:tracking-[0.16em]">

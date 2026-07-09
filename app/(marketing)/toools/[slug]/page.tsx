@@ -171,14 +171,14 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               </div>
 
               <div className="mt-5 flex flex-wrap items-center gap-2">
-                <span className="rounded-full border border-[rgba(109,59,255,0.14)] bg-[rgba(109,59,255,0.1)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
+                <span className="tool-detail-hero-badge rounded-full border border-[rgba(109,59,255,0.14)] bg-[rgba(109,59,255,0.1)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
                   {tool.categoryLabel}
                 </span>
-                <span className="rounded-full border border-[rgba(83,63,170,0.1)] bg-white/78 px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
+                <span className="tool-detail-hero-badge tool-detail-hero-badge-muted rounded-full border border-[rgba(83,63,170,0.1)] bg-white/78 px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
                   {tool.levelLabel}
                 </span>
                 {tool.toolOfWeek ? (
-                  <span className="rounded-full border border-[rgba(67,198,255,0.16)] bg-[rgba(67,198,255,0.12)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
+                  <span className="tool-detail-hero-badge rounded-full border border-[rgba(67,198,255,0.16)] bg-[rgba(67,198,255,0.12)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
                     Tool della settimana
                   </span>
                 ) : null}
@@ -240,13 +240,13 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   href={tool.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="premium-button premium-button-primary inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(95,66,255,0.18)]"
+                  className="tool-detail-main-cta premium-button premium-button-primary inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(95,66,255,0.18)]"
                 >
                   <span>{tool.ctaLabel}</span>
                 </a>
                 <Link
                   href="/shortlist#wishlist"
-                  className="premium-button premium-button-secondary inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
+                  className="tool-detail-secondary-cta premium-button inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
                 >
                   Suggerisci un&apos;alternativa
                 </Link>
@@ -254,7 +254,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   href={sourceHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="premium-button premium-button-outline inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
+                  className="tool-detail-secondary-cta premium-button inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
                 >
                   Fonte TooolVibes
                 </a>
@@ -267,7 +267,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
 
             <aside className="light-surface rounded-[26px] border border-[rgba(83,63,170,0.12)] bg-white/82 p-4 shadow-[0_18px_48px_rgba(36,19,103,0.08)] sm:rounded-[32px] sm:p-5">
               <div
-                className="rounded-[28px] p-5"
+                className="tool-detail-profile-panel rounded-[28px] p-5"
                 style={{
                   background: `radial-gradient(circle at top right, ${tool.accentFrom}20, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,241,255,0.92))`,
                 }}
@@ -275,16 +275,16 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 <div className="flex items-center gap-3">
                   <DirectoryToolGlyph tool={tool} size="lg" />
                   <div>
-                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                    <p className="tool-detail-profile-label text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                       Profilo rapido
                     </p>
-                    <p className="mt-1 text-[1.3rem] font-semibold text-[var(--foreground)]">
+                    <p className="tool-detail-profile-title mt-1 text-[1.3rem] font-semibold text-[var(--foreground)]">
                       {tool.name}
                     </p>
                   </div>
                 </div>
 
-                <p className="mt-5 text-sm leading-7 text-[var(--muted-strong)]">
+                <p className="tool-detail-profile-copy mt-5 text-sm leading-7 text-[var(--muted-strong)]">
                   {tool.whyItMatters}
                 </p>
               </div>
@@ -392,7 +392,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   href={tool.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="premium-button premium-button-subtle inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
+                  className="tool-detail-main-cta premium-button premium-button-subtle inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
                 >
                   {tool.ctaLabel}
                 </a>
@@ -400,7 +400,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   href={sourceHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="premium-button premium-button-subtle inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
+                  className="tool-detail-secondary-cta premium-button inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
                 >
                   Apri la fonte originale TooolVibes
                 </a>

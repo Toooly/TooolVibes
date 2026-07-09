@@ -150,6 +150,10 @@ export function SiteFooterV2() {
             ))}
           </div>
         </div>
+        <p className="site-footer-v2__disclosure mt-5 border-t border-[rgba(124,77,255,0.08)] pt-5">
+          Alcuni link possono essere affiliate: se acquisti tramite quei collegamenti, TooolVibes
+          potrebbe ricevere una commissione senza costi extra per te.
+        </p>
       </div>
     </footer>
   );
