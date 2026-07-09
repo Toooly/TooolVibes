@@ -32918,6 +32918,87 @@ body:has(.tone-account) {
   filter: saturate(0.98) contrast(1.02);
 }
 
+.internal-tool-page .tool-detail-meta-block {
+  border: 1px solid rgba(216, 208, 255, 0.16);
+  background:
+    radial-gradient(circle at 92% 0%, rgba(57, 210, 246, 0.1), transparent 34%),
+    linear-gradient(180deg, rgba(31, 26, 61, 0.94), rgba(20, 17, 44, 0.96)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.internal-tool-page .tool-detail-meta-label {
+  color: rgba(238, 234, 255, 0.9) !important;
+}
+
+.internal-tool-page :is(.tool-detail-highlight-badge, .tool-detail-tag-chip) {
+  border: 1px solid rgba(216, 208, 255, 0.2);
+  background:
+    linear-gradient(180deg, rgba(183, 168, 255, 0.24), rgba(124, 77, 255, 0.18)) !important;
+  background-color: rgba(82, 65, 174, 0.52) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  color: #fbfaff !important;
+  text-shadow: 0 1px 8px rgba(5, 4, 18, 0.28);
+}
+
+.internal-tool-page .tool-detail-highlight-badge,
+.internal-tool-page .tool-detail-highlight-badge *,
+.internal-tool-page .tool-detail-tag-chip,
+.internal-tool-page .tool-detail-tag-chip * {
+  animation: none !important;
+  color: #fbfaff !important;
+  -webkit-text-fill-color: #fbfaff !important;
+}
+
+.internal-tool-page .tool-detail-tag-chip {
+  background:
+    linear-gradient(180deg, rgba(57, 210, 246, 0.2), rgba(93, 73, 226, 0.2)) !important;
+  background-color: rgba(28, 107, 151, 0.46) !important;
+}
+
+.internal-tool-page .tool-detail-tag-chip:hover,
+.internal-tool-page .tool-detail-tag-chip:focus-visible {
+  border-color: rgba(94, 226, 255, 0.4);
+  background:
+    linear-gradient(180deg, rgba(94, 226, 255, 0.28), rgba(124, 77, 255, 0.26)) !important;
+  color: #ffffff !important;
+}
+
+.internal-tool-page .tool-detail-sponsored-placement.native-placement-light {
+  --foreground: #171235;
+  --muted-strong: #3c356b;
+  --accent-strong: #5130c4;
+  border-color: rgba(106, 60, 255, 0.2) !important;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(57, 210, 246, 0.18), transparent 34%),
+    radial-gradient(circle at 8% 8%, rgba(124, 77, 255, 0.14), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #f3f0ff 58%, #eaf8ff 100%) !important;
+  box-shadow:
+    0 22px 58px rgba(38, 25, 94, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
+}
+
+.internal-tool-page .tool-detail-sponsored-placement :is(h2, p) {
+  color: var(--foreground) !important;
+}
+
+.internal-tool-page .tool-detail-sponsored-placement p {
+  color: var(--muted-strong) !important;
+}
+
+.internal-tool-page .tool-detail-sponsored-placement .native-placement-label {
+  border-color: rgba(106, 60, 255, 0.2);
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--accent-strong);
+}
+
+.internal-tool-page .tool-detail-sponsored-placement .native-placement-status {
+  border-color: rgba(28, 173, 205, 0.28);
+  background: rgba(57, 210, 246, 0.14);
+  color: #28556d;
+}
+
 @media (max-width: 767px) {
   .internal-page.page-shell {
     max-width: min(100%, calc(100vw - 1rem));
