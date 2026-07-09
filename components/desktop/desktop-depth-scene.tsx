@@ -193,10 +193,26 @@ function FloatingToolPanel({
   onNavigate: (href: string) => void;
 }) {
   const href = `/toools/${tool.slug}`;
+  const openTool = () => onNavigate(href);
 
   return (
     <article
+      role="link"
+      tabIndex={0}
       className="depth-scene__focus-panel"
+      onClick={(event) => {
+        if ((event.target as HTMLElement).closest("a, button")) {
+          return;
+        }
+
+        openTool();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openTool();
+        }
+      }}
       style={
         {
           "--tool-from": tool.accentFrom,
@@ -222,7 +238,7 @@ function FloatingToolPanel({
         className="depth-scene__focus-open"
         onClick={(event) => {
           event.preventDefault();
-          onNavigate(href);
+          openTool();
         }}
       >
         Apri scheda

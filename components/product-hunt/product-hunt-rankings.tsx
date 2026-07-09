@@ -66,6 +66,19 @@ function formatMetrics(item: ProductHuntItem) {
   return metrics.length > 0 ? metrics.join(" / ") : "Segnale in verifica";
 }
 
+function isExternalHref(href: string) {
+  return /^https?:\/\//i.test(href);
+}
+
+function openRankingHref(href: string) {
+  if (isExternalHref(href)) {
+    window.open(href, "_blank", "noopener,noreferrer");
+    return;
+  }
+
+  window.location.assign(href);
+}
+
 export function ProductHuntRankings({
   className,
   variant = "compact",
@@ -278,6 +291,23 @@ export function ProductHuntRankings({
                 whileHover={{ y: -4, scale: 1.008 }}
                 whileTap={{ scale: 0.992 }}
                 transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1], delay: Math.min(index * 0.035, 0.16) }}
+                role="link"
+                tabIndex={0}
+                onClick={(event) => {
+                  if ((event.target as HTMLElement).closest("a, button")) {
+                    return;
+                  }
+
+                  openRankingHref(item.productHuntUrl);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key !== "Enter" && event.key !== " ") {
+                    return;
+                  }
+
+                  event.preventDefault();
+                  openRankingHref(item.productHuntUrl);
+                }}
                 className={cn(
                   "v-ph-card group flex flex-col items-start gap-3 sm:flex-row sm:items-center",
                   variant === "wide" && "sm:min-h-[12.5rem] sm:flex-col sm:items-start",
@@ -397,8 +427,8 @@ export function ProductHuntRankings({
                 {/* Link */}
                 <a
                   href={item.productHuntUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isExternalHref(item.productHuntUrl) ? "_blank" : undefined}
+                  rel={isExternalHref(item.productHuntUrl) ? "noopener noreferrer" : undefined}
                   className="v-ph-link mt-3 self-start sm:mt-auto"
                 >
                   Apri lancio
@@ -414,8 +444,8 @@ export function ProductHuntRankings({
                     <a
                       key={item.id}
                       href={item.productHuntUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target={isExternalHref(item.productHuntUrl) ? "_blank" : undefined}
+                      rel={isExternalHref(item.productHuntUrl) ? "noopener noreferrer" : undefined}
                       className="flex items-center justify-between gap-3 rounded-[1rem] border border-[rgba(124,77,255,0.1)] bg-[rgba(26,26,51,0.6)] px-3 py-2.5 transition hover:border-[rgba(124,77,255,0.2)] hover:bg-[rgba(26,26,51,0.8)] active:scale-[0.99]"
                     >
                       <span className="min-w-0">
