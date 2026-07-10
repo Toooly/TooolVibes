@@ -588,3 +588,76 @@ body:has(.tv-figma-theme) .site-mobile-footer-nav .mobile-bottom-link__badge {
     width: min(21rem, 100vw) !important;
   }
 }
+
+.site-header-v2__sound :where(.sound-toggle-button, .music-toggle-button) {
+  border-color: rgba(243, 243, 247, 0.16) !important;
+  background:
+    linear-gradient(180deg, rgba(37, 37, 43, 0.96), rgba(15, 15, 18, 0.98)) !important;
+  color: #f8fafc !important;
+  -webkit-text-fill-color: #f8fafc !important;
+}
+
+.site-header-v2__sound :where(.sound-toggle-button, .music-toggle-button) svg {
+  color: #f8fafc !important;
+  stroke: currentColor !important;
+  fill: none !important;
+}
+
+.mobile-category-map__stats {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.mobile-category-map__stats span {
+  border: 1px solid rgba(243, 243, 247, 0.14) !important;
+  background: rgba(37, 37, 43, 0.9) !important;
+  color: rgba(248, 250, 252, 0.72) !important;
+  -webkit-text-fill-color: rgba(248, 250, 252, 0.72) !important;
+}
+
+.mobile-category-map__stats strong {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.directory-tool-card .grid:has(> .rounded-\[20px\]) {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.directory-tool-card :where(.rounded-\[22px\], .rounded-\[20px\], [class~="bg-white/72"]) {
+  border: 1px solid rgba(243, 243, 247, 0.1) !important;
+  background-color: rgba(37, 37, 43, 0.88) !important;
+  background-image: none !important;
+  color: #f8fafc !important;
+  -webkit-text-fill-color: #f8fafc !important;
+}
+
+.directory-tool-card :where(.rounded-\[22px\], .rounded-\[20px\]) :where(p, span):not(.directory-tool-card__tag-link) {
+  color: rgba(248, 250, 252, 0.72) !important;
+  -webkit-text-fill-color: rgba(248, 250, 252, 0.72) !important;
+}
+
+.directory-tool-card :where(.rounded-\[22px\], .rounded-\[20px\]) :where(strong, .text-\[var\(--foreground\)\]) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.request-tool-form :where(aside, .motion-form-step, .micro-details, button[type="button"], label:has(input[type="checkbox"])) {
+  border-color: rgba(243, 243, 247, 0.1) !important;
+  background: rgba(37, 37, 43, 0.9) !important;
+  color: #f8fafc !important;
+  -webkit-text-fill-color: #f8fafc !important;
+}
+
+.request-tool-form :where(h1, h2, h3, strong, summary, label span) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.request-tool-form :where(p, small):not(.premium-badge *):not(.premium-button *) {
+  color: rgba(248, 250, 252, 0.68) !important;
+  -webkit-text-fill-color: rgba(248, 250, 252, 0.68) !important;
+}

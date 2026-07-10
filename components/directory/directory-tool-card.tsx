@@ -59,7 +59,7 @@ export function DirectoryToolCard({
           {tool.highlights.slice(0, 3).map((item) => (
             <span
               key={item}
-              className="rounded-full bg-white/72 px-2.5 py-1 text-[0.62rem] font-medium text-[var(--foreground)] sm:px-3 sm:text-[0.68rem]"
+              className="rounded-full border border-white/10 bg-[rgba(37,37,43,0.86)] px-2.5 py-1 text-[0.62rem] font-medium text-white/86 sm:px-3 sm:text-[0.68rem]"
             >
               {item}
             </span>
@@ -68,49 +68,49 @@ export function DirectoryToolCard({
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-6">
-        <div className="grid grid-cols-2 gap-3 rounded-[22px] bg-white/72 px-4 py-3">
+        <div className="grid grid-cols-2 gap-3 rounded-[22px] border border-white/10 bg-[rgba(37,37,43,0.86)] px-4 py-3">
           <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/58">
               Livello
             </p>
-            <p className="mt-2 text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-[var(--foreground)]">
+            <p className="mt-2 text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-white/88">
               {tool.levelLabel}
             </p>
           </div>
           <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/58">
               Fonte
             </p>
-            <p className="mt-2 truncate text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-[var(--foreground)]">
+            <p className="mt-2 truncate text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-white/88">
               {tool.domain}
             </p>
           </div>
         </div>
 
         <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
-          <div className="rounded-[22px] bg-white/72 p-4">
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+          <div className="rounded-[22px] border border-white/10 bg-[rgba(37,37,43,0.86)] p-4">
+            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/58">
               In breve
             </p>
-            <p className="text-clamp-2 mt-2 text-[0.9rem] leading-6 text-[var(--foreground)]">
+            <p className="text-clamp-2 mt-2 text-[0.9rem] leading-6 text-white/82">
               {tool.tldr}
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[20px] bg-white/72 p-3.5">
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+            <div className="rounded-[20px] border border-white/10 bg-[rgba(37,37,43,0.86)] p-3.5">
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/58">
                 Cosa fa
               </p>
-              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-[var(--foreground)]">
+              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-white/82">
                 {tool.whatItDoes}
               </p>
             </div>
-            <div className="rounded-[20px] bg-white/72 p-3.5">
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+            <div className="rounded-[20px] border border-white/10 bg-[rgba(37,37,43,0.86)] p-3.5">
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/58">
                 Lettura rapida
               </p>
-              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-[var(--foreground)]">
+              <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-white/82">
                 {tool.editorialReview}
               </p>
             </div>

@@ -249,7 +249,7 @@ export function RequestToolForm({ className }: { className?: string }) {
   const fieldClass =
     "premium-input min-h-11 px-3.5 py-2.5 text-[0.92rem] placeholder:text-[var(--muted)] sm:min-h-12 sm:px-4 sm:py-3 sm:text-[0.98rem]";
   const labelClass =
-    "text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted)] sm:text-sm sm:tracking-[0.14em]";
+    "text-xs font-semibold uppercase tracking-[0.12em] text-white/62 sm:text-sm sm:tracking-[0.14em]";
   const flowSteps = isFounderFlow
     ? ["Contatto founder", "Fase e obiettivo", "Pacchetto utile", "Prossimo passo"]
     : ["Nome tool", "Link ufficiale", "Categoria", "Perche' e' utile"];
@@ -277,14 +277,14 @@ export function RequestToolForm({ className }: { className?: string }) {
       <PremiumPanel tone={isFounderFlow ? "warm" : "blue"} className="motion-form-panel request-tool-form p-4 sm:p-6">
         <form onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
           <div className="grid gap-4 sm:gap-6">
-            <aside className="rounded-[22px] border border-[rgba(106,60,255,0.08)] bg-white/60 p-4 sm:rounded-[26px] sm:p-5">
+            <aside className="rounded-[22px] border border-white/10 bg-[rgba(37,37,43,0.9)] p-4 text-white sm:rounded-[26px] sm:p-5">
               <PremiumBadge tone={isFounderFlow ? "warning" : "accent"}>
                 {isFounderFlow ? "Founder flow" : "Community flow"}
               </PremiumBadge>
-              <h2 className="text-display-card mt-3 text-[1.35rem] leading-tight text-[var(--foreground)] sm:mt-4 sm:text-[2.2rem]">
+              <h2 className="text-display-card mt-3 text-[1.35rem] leading-tight text-white sm:mt-4 sm:text-[2.2rem]">
                 {isFounderFlow ? "Proponi il tuo tool a TooolVibes." : "Consiglia un tool che usi davvero."}
               </h2>
-              <p className="mt-2 text-[0.84rem] leading-6 text-[var(--muted-strong)] sm:mt-3 sm:text-sm sm:leading-7">
+              <p className="mt-2 text-[0.84rem] leading-6 text-white/68 sm:mt-3 sm:text-sm sm:leading-7">
                 {isFounderFlow
                   ? "Se sei founder, qui puoi aprire una conversazione commerciale su listing, contenuti, lancio e sponsorship."
                   : "Se lo usi e ti ha convinto, lascia il contesto giusto: caso d'uso, link e motivo per cui merita spazio."}
@@ -316,15 +316,15 @@ export function RequestToolForm({ className }: { className?: string }) {
                       className={cn(
                         "rounded-[20px] border p-3 text-left transition duration-200 active:scale-[0.99]",
                         active
-                          ? "border-[rgba(106,60,255,0.24)] bg-white/88 shadow-[0_12px_28px_rgba(67,48,199,0.08)]"
-                          : "border-white/10 bg-white/45 hover:bg-white/68",
+                          ? "border-violet-300/36 bg-[rgba(106,60,255,0.24)] shadow-[0_12px_28px_rgba(67,48,199,0.18)]"
+                          : "border-white/10 bg-[rgba(26,26,30,0.72)] hover:bg-[rgba(37,37,43,0.92)]",
                       )}
                     >
-                      <span className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
+                      <span className="flex items-center gap-2 text-sm font-semibold text-white">
                         <Icon size={16} aria-hidden="true" />
                         {item.title}
                       </span>
-                      <span className="mt-1 block text-xs leading-5 text-[var(--muted-strong)]">
+                      <span className="mt-1 block text-xs leading-5 text-white/64">
                         {item.copy}
                       </span>
                     </button>
@@ -332,15 +332,15 @@ export function RequestToolForm({ className }: { className?: string }) {
                 })}
               </div>
 
-              <details className="micro-details mt-3 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2.5 sm:hidden">
+              <details className="micro-details mt-3 rounded-[18px] border border-white/10 bg-[rgba(26,26,30,0.72)] px-3 py-2.5 text-white sm:hidden">
                 <summary>{isFounderFlow ? "Opzioni business" : "Segnali richiesti"}</summary>
                 <div className="mt-3 grid gap-2">
                   {flowSteps.map((item, index) => (
                     <div key={item} className="flex items-center gap-2 rounded-[14px] bg-white/7 p-2.5">
-                      <span className="grid size-7 place-items-center rounded-full bg-white/10 text-xs font-semibold text-[var(--foreground)]">
+                      <span className="grid size-7 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white">
                         {index + 1}
                       </span>
-                      <span className="text-xs font-semibold text-[var(--muted)]">{item}</span>
+                      <span className="text-xs font-semibold text-white/66">{item}</span>
                     </div>
                   ))}
                 </div>
@@ -348,11 +348,11 @@ export function RequestToolForm({ className }: { className?: string }) {
 
               <div className="mt-5 hidden gap-3 sm:grid">
                 {flowSteps.map((item, index) => (
-                  <div key={item} className="motion-form-step flex items-center gap-3 rounded-[18px] border border-white/10 bg-white/6 p-3">
-                    <span className="grid size-8 place-items-center rounded-full bg-white/10 text-xs font-semibold text-[var(--foreground)]">
+                  <div key={item} className="motion-form-step flex items-center gap-3 rounded-[18px] border border-white/10 bg-[rgba(26,26,30,0.72)] p-3">
+                    <span className="grid size-8 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white">
                       {index + 1}
                     </span>
-                    <span className="text-sm font-semibold text-[var(--muted)]">{item}</span>
+                    <span className="text-sm font-semibold text-white/66">{item}</span>
                   </div>
                 ))}
               </div>
@@ -520,8 +520,8 @@ export function RequestToolForm({ className }: { className?: string }) {
                             className={cn(
                               "flex min-h-11 items-center gap-2 rounded-[18px] border px-3 py-2.5 text-sm font-semibold transition",
                               checked
-                                ? "border-[rgba(106,60,255,0.24)] bg-white/88 text-[var(--foreground)]"
-                                : "border-white/10 bg-white/45 text-[var(--muted-strong)]",
+                                ? "border-violet-300/36 bg-[rgba(106,60,255,0.24)] text-white"
+                                : "border-white/10 bg-[rgba(26,26,30,0.72)] text-white/66",
                             )}
                           >
                             <input
@@ -592,7 +592,7 @@ export function RequestToolForm({ className }: { className?: string }) {
           </div>
 
           <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4 sm:mt-6 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pt-5">
-            <p className="max-w-[42rem] text-[0.82rem] leading-6 text-[var(--muted-strong)] sm:text-sm">
+            <p className="max-w-[42rem] text-[0.82rem] leading-6 text-white/66 sm:text-sm">
               Valutiamo ogni proposta per qualit&agrave;, utilit&agrave; reale e coerenza con il catalogo
               {isFounderFlow ? ", poi decidiamo se aprire un percorso commerciale." : "."}
             </p>
@@ -622,7 +622,7 @@ export function RequestToolForm({ className }: { className?: string }) {
             </div>
           ) : null}
 
-          <div className="mt-3 flex items-center gap-2 rounded-[18px] border border-white/10 bg-white/6 px-3 py-2.5 text-xs leading-5 text-[var(--muted)] sm:mt-5 sm:rounded-[20px] sm:px-4 sm:py-3 sm:text-sm">
+          <div className="mt-3 flex items-center gap-2 rounded-[18px] border border-white/10 bg-[rgba(26,26,30,0.72)] px-3 py-2.5 text-xs leading-5 text-white/66 sm:mt-5 sm:rounded-[20px] sm:px-4 sm:py-3 sm:text-sm">
             {isFounderFlow ? (
               <>
                 <Rocket className="size-4 text-violet-100" aria-hidden="true" />

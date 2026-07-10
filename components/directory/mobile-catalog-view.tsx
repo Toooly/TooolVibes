@@ -493,7 +493,12 @@ function MobileCategoryMap({
 }: MobileCategoryMapProps) {
   return (
     <section className="mobile-category-map" aria-label="Esplora per categoria">
-      <div className="mobile-category-map__stats" aria-label="Statistiche catalogo" data-catalog-filters>
+      <div
+        className="mobile-category-map__stats"
+        aria-label="Statistiche catalogo"
+        data-catalog-filters
+        style={{ background: "transparent", borderColor: "transparent", boxShadow: "none" }}
+      >
         <span>
           <strong>{categories.find((cat) => cat.key === "all")?.count ?? 0}</strong>
           tool
