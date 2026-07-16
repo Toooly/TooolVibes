@@ -18,7 +18,17 @@ export async function POST(request: NextRequest) {
   const token = request.cookies.get(adminCookieName)?.value;
 
   if (token) {
-    await revokeAdminSession(token);
+    try {
+      await revokeAdminSession(token);
+    } catch {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Logout non disponibile in questo momento. Riprova tra poco.",
+        },
+        { status: 503, headers: { "Cache-Control": "no-store" } },
+      );
+    }
   }
 
   response.cookies.set(
