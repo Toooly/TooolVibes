@@ -28,11 +28,13 @@ describe("browser security header policy", () => {
     const csp = headers.get("Content-Security-Policy-Report-Only");
 
     expect(csp).toContain("default-src 'self'");
-    expect(csp).toContain("frame-ancestors 'none'");
+    expect(csp).not.toContain("frame-ancestors");
     expect(csp).toContain("object-src 'none'");
     expect(csp).toContain("report-uri /api/security/csp-report");
     expect(csp).toContain("report-to csp-endpoint");
-    expect(headers.has("Content-Security-Policy")).toBe(false);
+    expect(headers.get("Content-Security-Policy")).toBe(
+      "frame-ancestors 'none'",
+    );
     expect(headers.get("X-Frame-Options")).toBe("DENY");
   });
 

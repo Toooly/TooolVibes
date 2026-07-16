@@ -19,16 +19,21 @@ const sessionSecret =
   process.env.TOOOLVIBES_E2E_SESSION_SECRET ??
   "tooolvibes-e2e-session-secret-at-least-32-characters";
 const gateStorageState = "test-results/.auth/gate.json";
-const startCommand = `npm run start -- --hostname 127.0.0.1 --port ${port}`;
+const npmCommand = process.env.npm_execpath
+  ? `"${process.execPath}" "${process.env.npm_execpath}"`
+  : "npm";
+const startCommand = `${npmCommand} run start -- --hostname 127.0.0.1 --port ${port}`;
 const webServerCommand =
   process.env.PLAYWRIGHT_REUSE_BUILD === "1"
     ? startCommand
-    : `npm run build && ${startCommand}`;
+    : `${npmCommand} run build && ${startCommand}`;
+const webServerEnvironment = { ...process.env };
+delete webServerEnvironment.NO_COLOR;
 
 const smokeProjects = [
   {
     name: "chromium",
-    testMatch: /core-routes\.spec\.ts/,
+    testMatch: /(?:core-routes|security-boundaries)\.spec\.ts/,
     use: {
       ...devices["Desktop Chrome"],
       viewport: { width: 1440, height: 1000 },
@@ -38,7 +43,7 @@ const smokeProjects = [
   },
   {
     name: "firefox",
-    testMatch: /core-routes\.spec\.ts/,
+    testMatch: /(?:core-routes|security-boundaries)\.spec\.ts/,
     use: {
       ...devices["Desktop Firefox"],
       viewport: { width: 1440, height: 1000 },
@@ -48,7 +53,7 @@ const smokeProjects = [
   },
   {
     name: "webkit",
-    testMatch: /core-routes\.spec\.ts/,
+    testMatch: /(?:core-routes|security-boundaries)\.spec\.ts/,
     use: {
       ...devices["iPhone 13"],
       viewport: { width: 390, height: 844 },
@@ -127,7 +132,7 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 600_000,
     env: {
-      ...process.env,
+      ...webServerEnvironment,
       NEXT_PUBLIC_SITE_URL: baseURL,
       NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN: baseURL,
       ALLOWED_AUTH_ORIGINS: baseURL,

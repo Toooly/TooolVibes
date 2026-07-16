@@ -17,6 +17,7 @@ const config = {
       ".next",
       ".open-next",
       "dist",
+      "tests/e2e/**",
     ],
   },
   resolve: {

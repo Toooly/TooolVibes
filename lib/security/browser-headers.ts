@@ -94,7 +94,6 @@ function buildContentSecurityPolicy(environment: SecurityHeaderEnvironment) {
     "default-src 'self'",
     "base-uri 'self'",
     "object-src 'none'",
-    "frame-ancestors 'none'",
     "form-action 'self'",
     `script-src ${scriptSources.join(" ")}`,
     "style-src 'self' 'unsafe-inline'",
@@ -117,6 +116,10 @@ export function buildBrowserSecurityHeaders(
     {
       key: "Content-Security-Policy-Report-Only",
       value: buildContentSecurityPolicy(environment),
+    },
+    {
+      key: "Content-Security-Policy",
+      value: "frame-ancestors 'none'",
     },
     {
       key: "Reporting-Endpoints",
