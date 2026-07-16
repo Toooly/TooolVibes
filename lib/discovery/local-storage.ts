@@ -4,8 +4,7 @@ import type {
   ToolUserState,
 } from "@/lib/discovery/types";
 import { normalizeDiscoveryWorkspaceState } from "@/lib/discovery/workspace-state";
-
-const MAX_COMPARE_TOOLS = 5;
+import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 
 type DiscoverySyncSource = "local" | "remote";
 type WriteOptions = {

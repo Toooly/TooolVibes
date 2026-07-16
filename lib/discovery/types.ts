@@ -2,6 +2,70 @@ import type { SaveReason, ShortlistStage } from "@/lib/types/tool";
 
 export type ViewerKind = "guest" | "account";
 
+export const workspaceDecisionOutcomeValues = [
+  "selected",
+  "rejected",
+  "deferred",
+] as const;
+
+export type WorkspaceDecisionOutcome =
+  (typeof workspaceDecisionOutcomeValues)[number];
+
+export type WorkspaceDecision = {
+  outcome: WorkspaceDecisionOutcome | null;
+  updatedAt: string;
+};
+
+export type WorkspaceToolState = {
+  stage: ShortlistStage;
+  note: string | null;
+  saveReason: SaveReason | null;
+  pinned: boolean;
+  decision: WorkspaceDecision | null;
+  updatedAt: string | null;
+};
+
+export type WorkspaceOrderedList = {
+  slugs: string[];
+  updatedAt: string | null;
+};
+
+export type WorkspaceStateV1 = {
+  schemaVersion: 1;
+  clearedAt: string | null;
+  saved: WorkspaceOrderedList;
+  compare: WorkspaceOrderedList;
+  stack: WorkspaceOrderedList;
+  toolStates: Record<string, WorkspaceToolState>;
+};
+
+export type WorkspaceState = WorkspaceStateV1;
+
+export type WorkspaceAction =
+  | { type: "saved/set"; slug: string; saved: boolean; at: string }
+  | { type: "saved/toggle"; slug: string; at: string }
+  | { type: "compare/toggle"; slug: string; at: string }
+  | { type: "compare/clear"; at: string }
+  | { type: "stack/add"; slug: string; at: string }
+  | { type: "stack/remove"; slug: string; at: string }
+  | { type: "stack/reorder"; slugs: string[]; at: string }
+  | { type: "tool/stage"; slug: string; stage: ShortlistStage; at: string }
+  | { type: "tool/note"; slug: string; note: string | null; at: string }
+  | { type: "tool/save-reason"; slug: string; saveReason: SaveReason | null; at: string }
+  | { type: "tool/pin"; slug: string; pinned: boolean; at: string }
+  | {
+      type: "tool/decision";
+      slug: string;
+      outcome: WorkspaceDecisionOutcome | null;
+      at: string;
+    }
+  | { type: "workspace/clear"; at: string };
+
+export type LegacyToolWorkspacePersistedState = {
+  savedSlugs?: string[];
+  compareSlugs?: string[];
+  stackSlugs?: string[];
+};
 export type ToolUserState = {
   is_saved: boolean;
   shortlist_stage: ShortlistStage;
@@ -20,6 +84,8 @@ export type DiscoveryWorkspaceState = {
   tool_states: Record<string, ToolUserState>;
   compare: DiscoveryCompareState;
 };
+export type LegacyDiscoveryWorkspaceState = DiscoveryWorkspaceState;
+
 
 export type DiscoveryPersistenceMode = "local" | "remote";
 export type DiscoveryPersistencePhase =

@@ -3,7 +3,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type ToolWorkspaceState = {
+import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
+import { adaptLegacyToolWorkspaceState } from "@/lib/discovery/workspace-legacy-adapters";
+import { reduceWorkspaceState } from "@/lib/discovery/workspace-state";
+import type { WorkspaceAction, WorkspaceStateV1 } from "@/lib/discovery/types";
+
+export { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
+
+export type ToolWorkspaceState = {
   savedSlugs: string[];
   compareSlugs: string[];
   stackSlugs: string[];
@@ -20,12 +27,38 @@ type ToolWorkspaceState = {
   clearWorkspace: () => void;
 };
 
-export const MAX_COMPARE_TOOLS = 5;
+type ToolWorkspaceCollections = Pick<
+  ToolWorkspaceState,
+  "savedSlugs" | "compareSlugs" | "stackSlugs"
+>;
 
-function toggleItem(items: string[], slug: string) {
-  return items.includes(slug)
-    ? items.filter((item) => item !== slug)
-    : [...items, slug];
+function nowIso() {
+  return new Date().toISOString();
+}
+
+export function selectCanonicalWorkspaceState(
+  state: ToolWorkspaceCollections,
+): WorkspaceStateV1 {
+  return adaptLegacyToolWorkspaceState(state);
+}
+
+function projectWorkspaceCollections(
+  state: WorkspaceStateV1,
+): ToolWorkspaceCollections {
+  return {
+    savedSlugs: state.saved.slugs,
+    compareSlugs: state.compare.slugs,
+    stackSlugs: state.stack.slugs,
+  };
+}
+
+function reduceCollections(
+  state: ToolWorkspaceCollections,
+  action: WorkspaceAction,
+) {
+  return projectWorkspaceCollections(
+    reduceWorkspaceState(selectCanonicalWorkspaceState(state), action),
+  );
 }
 
 export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
@@ -39,43 +72,82 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
       setSelectedSlug: (slug) => set({ selectedSlug: slug }),
       setCommandOpen: (open) => set({ isCommandOpen: open }),
       toggleSaved: (slug) => {
-        const willSave = !get().savedSlugs.includes(slug);
-        set((state) => ({ savedSlugs: toggleItem(state.savedSlugs, slug) }));
-        return willSave;
+        const current = selectCanonicalWorkspaceState(get());
+        const next = reduceWorkspaceState(current, {
+          type: "saved/toggle",
+          slug,
+          at: nowIso(),
+        });
+        set(projectWorkspaceCollections(next));
+        return next.saved.slugs.includes(slug);
       },
       toggleCompare: (slug) => {
-        const compareSlugs = get().compareSlugs;
-        const alreadyAdded = compareSlugs.includes(slug);
-
-        if (!alreadyAdded && compareSlugs.length >= MAX_COMPARE_TOOLS) {
-          return { added: false, limited: true };
-        }
-
-        set((state) => ({ compareSlugs: toggleItem(state.compareSlugs, slug) }));
-        return { added: !alreadyAdded, limited: false };
+        const current = selectCanonicalWorkspaceState(get());
+        const alreadyAdded = current.compare.slugs.includes(slug);
+        const next = reduceWorkspaceState(current, {
+          type: "compare/toggle",
+          slug,
+          at: nowIso(),
+        });
+        const added = next.compare.slugs.includes(slug);
+        const limited =
+          !alreadyAdded &&
+          !added &&
+          current.compare.slugs.length >= MAX_COMPARE_TOOLS;
+        set(projectWorkspaceCollections(next));
+        return { added, limited };
       },
       addToStack: (slug) => {
-        if (get().stackSlugs.includes(slug)) {
+        const current = selectCanonicalWorkspaceState(get());
+
+        if (current.stack.slugs.includes(slug)) {
           return false;
         }
 
-        set((state) => ({ stackSlugs: [...state.stackSlugs, slug] }));
-        return true;
+        const next = reduceWorkspaceState(current, {
+          type: "stack/add",
+          slug,
+          at: nowIso(),
+        });
+        set(projectWorkspaceCollections(next));
+        return next.stack.slugs.includes(slug);
       },
       removeFromStack: (slug) => {
-        set((state) => ({
-          stackSlugs: state.stackSlugs.filter((item) => item !== slug),
-        }));
+        set(
+          reduceCollections(get(), {
+            type: "stack/remove",
+            slug,
+            at: nowIso(),
+          }),
+        );
       },
-      reorderStack: (slugs) => set({ stackSlugs: slugs }),
-      clearCompare: () => set({ compareSlugs: [] }),
-      clearWorkspace: () =>
+      reorderStack: (slugs) => {
+        set(
+          reduceCollections(get(), {
+            type: "stack/reorder",
+            slugs,
+            at: nowIso(),
+          }),
+        );
+      },
+      clearCompare: () => {
+        set(
+          reduceCollections(get(), {
+            type: "compare/clear",
+            at: nowIso(),
+          }),
+        );
+      },
+      clearWorkspace: () => {
+        const next = reduceCollections(get(), {
+          type: "workspace/clear",
+          at: nowIso(),
+        });
         set({
-          savedSlugs: [],
-          compareSlugs: [],
-          stackSlugs: [],
+          ...next,
           selectedSlug: null,
-        }),
+        });
+      },
     }),
     {
       name: "tooolvibes-tool-workspace",

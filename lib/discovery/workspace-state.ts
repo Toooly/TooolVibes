@@ -1,7 +1,15 @@
 import type { ShortlistStage } from "@/lib/types/tool";
 import type { DiscoveryWorkspaceState, ToolUserState } from "@/lib/discovery/types";
+import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 
-const MAX_COMPARE_TOOLS = 5;
+export {
+  createEmptyWorkspaceState,
+  hasWorkspaceData,
+  mergeWorkspaceStates,
+  normalizeWorkspaceState,
+  parseWorkspaceState,
+  reduceWorkspaceState,
+} from "@/lib/discovery/workspace-contract";
 
 const stageRank: Record<ShortlistStage, number> = {
   saved: 1,
