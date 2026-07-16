@@ -6,8 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Columns3, X, Scale, Sparkles, Swords, TrendingUp } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
-import { type DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import type { ToolRecord } from "@/lib/types/tool";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { playTooolvibesSound } from "@/lib/config/sound";
@@ -24,8 +23,7 @@ import { ToolFighter } from "./tool-fighter";
 import { CompareTrendList } from "./compare-trend-list";
 
 type MobileCompareViewProps = {
-  directoryTools: DirectoryTool[];
-  legacyTools: ToolRecord[];
+  tools: ToolPublicView[];
 };
 
 type BattleState = "idle" | "analyzing" | "charging" | "clash" | "result";
@@ -547,10 +545,7 @@ function MobileArenaBattleStage({
 
 /* ---------- main ---------- */
 
-export function MobileCompareView({
-  directoryTools,
-  legacyTools,
-}: MobileCompareViewProps) {
+export function MobileCompareView({ tools: catalogTools }: MobileCompareViewProps) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
   const [battleState, setBattleState] = useState<BattleState>("idle");
@@ -569,8 +564,8 @@ export function MobileCompareView({
   }
 
   const tools = useMemo(
-    () => withObjectiveScores(withBattleScores(normalise(directoryTools, legacyTools, compareSlugs)), null),
-    [directoryTools, legacyTools, compareSlugs],
+    () => withObjectiveScores(withBattleScores(normalise(catalogTools, compareSlugs)), null),
+    [catalogTools, compareSlugs],
   );
 
   const verdict = useMemo(

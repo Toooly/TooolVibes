@@ -2,20 +2,23 @@ import Link from "next/link";
 
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import { PremiumBadge, PremiumLink } from "@/components/ui/premium";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+
+type DirectoryToolCardData = DirectoryTool | ToolPublicView;
 import { formatItalianDate } from "@/lib/utils";
 
 type DirectoryToolCardProps = {
-  tool: DirectoryTool;
+  tool: DirectoryToolCardData;
   priority?: boolean;
 };
 
-const levelTone: Record<DirectoryTool["level"], "accent" | "success" | "neutral" | "dark"> = {
-  featured: "accent",
-  beginner: "success",
-  intermediate: "neutral",
-  expert: "dark",
-};
+function getLevelTone(level: string | null): "accent" | "success" | "neutral" | "dark" {
+  if (level === "featured") return "accent";
+  if (level === "beginner") return "success";
+  if (level === "expert") return "dark";
+  return "neutral";
+}
 
 export function DirectoryToolCard({
   tool,
@@ -26,7 +29,7 @@ export function DirectoryToolCard({
       <div
         className="overflow-hidden border-b border-[var(--line)] p-4 sm:p-6"
         style={{
-          background: `radial-gradient(circle at top right, ${tool.accentFrom}18, transparent 36%), radial-gradient(circle at bottom left, ${tool.accentTo}14, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244,239,255,0.88))`,
+          background: `radial-gradient(circle at top right, ${tool.accentFrom ?? "#6a3cff"}18, transparent 36%), radial-gradient(circle at bottom left, ${tool.accentTo ?? "#43c6ff"}14, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244,239,255,0.88))`,
         }}
       >
         <div className="flex items-start gap-3">
@@ -41,7 +44,9 @@ export function DirectoryToolCard({
               {tool.toolOfWeek ? (
                 <PremiumBadge tone="warning">Tool della settimana</PremiumBadge>
               ) : null}
-              <PremiumBadge tone={levelTone[tool.level]}>{tool.levelLabel}</PremiumBadge>
+              {tool.levelLabel ? (
+                <PremiumBadge tone={getLevelTone(tool.level)}>{tool.levelLabel}</PremiumBadge>
+              ) : null}
             </div>
 
             <div className="mt-2 min-h-[3.8rem] sm:mt-3 sm:min-h-[4.7rem]">
@@ -74,7 +79,7 @@ export function DirectoryToolCard({
               Livello
             </p>
             <p className="mt-2 text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-white/88">
-              {tool.levelLabel}
+              {tool.levelLabel ?? "Non specificato"}
             </p>
           </div>
           <div>
@@ -139,7 +144,7 @@ export function DirectoryToolCard({
               size="sm"
               className="directory-tool-card__action directory-tool-card__action-primary"
             >
-              {tool.ctaLabel}
+              {tool.ctaLabel ?? "Apri il sito"}
             </PremiumLink>
             <Link
               href={`/toools/${tool.slug}`}
@@ -150,7 +155,7 @@ export function DirectoryToolCard({
           </div>
 
           <p className="text-center text-[0.62rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:text-[0.7rem] sm:tracking-[0.16em]">
-            Aggiornato {formatItalianDate(tool.publishedAt)}
+            {tool.publishedAt ? `Aggiornato ${formatItalianDate(tool.publishedAt)}` : "Data non disponibile"}
           </p>
         </div>
       </div>

@@ -38,11 +38,9 @@ import Fuse from "fuse.js";
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
-import type {
-  DirectoryTool,
-  DirectoryFilterGroup,
-  DirectoryToolLevel,
-} from "@/lib/data/tooolvibes-directory";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
+
+type CatalogToolLevel = "featured" | "beginner" | "intermediate" | "expert";
 
 const CATEGORY_ICON_MAP = {
   Sparkles,
@@ -106,10 +104,10 @@ function extractDomain(url: string): string | undefined {
    ═══════════════════════════════════════════════════════════════ */
 
 interface MobileCatalogViewProps {
-  tools: DirectoryTool[];
-  filterGroups: { key: DirectoryFilterGroup; label: string }[];
+  tools: ToolPublicView[];
+  filterGroups: { key: string; label: string }[];
   initialQuery?: string;
-  initialGroup?: DirectoryFilterGroup;
+  initialGroup?: string;
   initialTag?: string;
 }
 
@@ -129,14 +127,14 @@ export function MobileCatalogView({
   const [view, setView] = useState<"categories" | "tools">(
     initialGroup !== "all" || initialQuery ? "tools" : "categories"
   );
-  const [activeGroup, setActiveGroup] = useState<DirectoryFilterGroup | null>(
+  const [activeGroup, setActiveGroup] = useState<string | null>(
     initialGroup !== "all" ? initialGroup : null
   );
   const [searchQuery, setSearchQuery] = useState(initialQuery);
-  const [activeLevel, setActiveLevel] = useState<DirectoryToolLevel | "all">("all");
+  const [activeLevel, setActiveLevel] = useState<CatalogToolLevel | "all">("all");
   const [openPanel, setOpenPanel] = useState<"search" | "filters" | null>(null);
 
-  const levelChips: { key: DirectoryToolLevel | "all"; label: string }[] = [
+  const levelChips: { key: CatalogToolLevel | "all"; label: string }[] = [
     { key: "all", label: "Tutti" },
     { key: "featured", label: "In evidenza" },
     { key: "beginner", label: "Base" },
@@ -215,7 +213,7 @@ export function MobileCatalogView({
       if (groupKey === "all") {
         setActiveGroup(null);
       } else {
-        setActiveGroup(groupKey as DirectoryFilterGroup);
+        setActiveGroup(groupKey);
       }
       setView("tools");
       const url = groupKey === "all" ? "/archivio" : `/archivio?group=${groupKey}`;
@@ -476,14 +474,14 @@ function CategoryGuide() {
 
 type MobileCategoryMapProps = {
   categories: {
-    key: DirectoryFilterGroup;
+    key: string;
     label: string;
     count: number;
     color: string;
     iconName: keyof typeof CATEGORY_ICON_MAP;
   }[];
   onSelect: (key: string) => void;
-  featuredTools: DirectoryTool[];
+  featuredTools: ToolPublicView[];
 };
 
 function MobileCategoryMap({
@@ -550,7 +548,7 @@ function CatalogFeaturedRail({
   tools,
   onSelectAll,
 }: {
-  tools: DirectoryTool[];
+  tools: ToolPublicView[];
   onSelectAll: () => void;
 }) {
   if (!tools.length) return null;
@@ -603,7 +601,7 @@ function CatalogFeaturedRail({
    ═══════════════════════════════════════════════════════════════ */
 
 type MobileToolGridProps = {
-  tools: DirectoryTool[];
+  tools: ToolPublicView[];
   groupLabel: string;
   searchQuery: string;
 };
@@ -631,11 +629,11 @@ function MobileToolGrid({ tools, groupLabel, searchQuery }: MobileToolGridProps)
   );
 }
 
-function MobileCompareToolbox({ tools }: { tools: DirectoryTool[] }) {
+function MobileCompareToolbox({ tools }: { tools: ToolPublicView[] }) {
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const selectedTools = compareSlugs
     .map((slug) => tools.find((tool) => tool.slug === slug))
-    .filter((tool): tool is DirectoryTool => Boolean(tool));
+    .filter((tool): tool is ToolPublicView => Boolean(tool));
   const toolboxTools = [
     ...selectedTools,
     ...tools.filter((tool) => !compareSlugs.includes(tool.slug)),
@@ -679,7 +677,7 @@ function MobileCompareToolbox({ tools }: { tools: DirectoryTool[] }) {
    ═══════════════════════════════════════════════════════════════ */
 
 type MobileToolCardProps = {
-  tool: DirectoryTool;
+  tool: ToolPublicView;
   index: number;
 };
 

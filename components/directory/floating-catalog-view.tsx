@@ -1,13 +1,13 @@
 "use client";
 
 import { MobileCatalogView } from "./mobile-catalog-view";
-import type { DirectoryFilterGroup, DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import type { ToolFilterGroup, ToolPublicView } from "@/lib/data/tool-public-view";
 
 interface FloatingCatalogViewProps {
-  tools: DirectoryTool[];
-  filterGroups: { key: DirectoryFilterGroup; label: string }[];
+  tools: ToolPublicView[];
+  filterGroups: ToolFilterGroup[];
   initialQuery?: string;
-  initialGroup?: DirectoryFilterGroup;
+  initialGroup?: string;
   initialTag?: string;
 }
 

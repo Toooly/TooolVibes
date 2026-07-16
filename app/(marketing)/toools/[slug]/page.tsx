@@ -7,10 +7,11 @@ import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph"
 import { NativePlacement } from "@/components/monetization/native-placement";
 import { siteConfig } from "@/lib/config/site";
 import {
-  directoryTools,
-  getDirectoryToolBySlug,
-  getRelatedDirectoryTools,
-} from "@/lib/data/tooolvibes-directory";
+  getPublicToolViews,
+  getRelatedToolViewsBySlug,
+  getToolViewBySlug,
+} from "@/lib/data/public-tools";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { formatItalianDate } from "@/lib/utils";
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
@@ -21,17 +22,16 @@ type ToolPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return directoryTools.map((tool) => ({
-    slug: tool.slug,
-  }));
+export async function generateStaticParams() {
+  const tools = await getPublicToolViews();
+  return tools.map((tool) => ({ slug: tool.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: ToolPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const tool = getDirectoryToolBySlug(slug);
+  const tool = await getToolViewBySlug(slug);
 
   if (!tool) {
     return {};
@@ -48,7 +48,7 @@ export async function generateMetadata({
   };
 }
 
-function toolToOrbital(tool: typeof directoryTools[0], sectionId: string): OrbitalItem {
+function toolToOrbital(tool: ToolPublicView, sectionId: string): OrbitalItem {
   const words = tool.name.split(/\s+/).filter(Boolean);
   const initials = words.length === 1
     ? words[0].slice(0, 2).toUpperCase()
@@ -62,7 +62,7 @@ function toolToOrbital(tool: typeof directoryTools[0], sectionId: string): Orbit
     href: `/toools/${tool.slug}`,
     sectionId,
     priority: 1,
-    color: tool.accentFrom || "#6a3cff",
+    color: tool.accentFrom ?? "#6a3cff",
     shapeType: "gem",
     variant: "tool",
     size: "sm",
@@ -84,18 +84,29 @@ function hasAffiliateSignal(href: string | null | undefined) {
 
 export default async function ToolDetailPage({ params }: ToolPageProps) {
   const { slug } = await params;
-  const tool = getDirectoryToolBySlug(slug);
+  const tool = await getToolViewBySlug(slug);
 
   if (!tool) {
     notFound();
   }
 
-  const relatedTools = getRelatedDirectoryTools(tool, 3);
+  const relatedTools = await getRelatedToolViewsBySlug(tool.slug, 3);
   const sourceHref =
-    tool.sourceSite === "weblium"
+    tool.presentationKind === "directory" && tool.sourceSite === "weblium"
       ? "https://tooolvibes.weblium.site/all-tools"
       : tool.originalArticleUrl;
   const isAffiliateLink = Boolean(tool.affiliateUrl) || hasAffiliateSignal(tool.url);
+  const accentFrom = tool.accentFrom ?? "#6a3cff";
+  const accentTo = tool.accentTo ?? "#43c6ff";
+  const formattedPublishedAt = tool.publishedAt
+    ? formatItalianDate(tool.publishedAt)
+    : "Data non disponibile";
+  const sourceLabel =
+    tool.presentationKind === "directory"
+      ? tool.sourceSite === "weblium"
+        ? "Archivio Weblium"
+        : "TooolVibes"
+      : tool.sourceSite ?? "Archivio TooolVibes";
 
   // Build orbital items: related tools + navigation nodes
   const toolOrbitItems: OrbitalItem[] = [
@@ -153,7 +164,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
         <section
           className="light-surface overflow-hidden rounded-[30px] border border-[rgba(83,63,170,0.12)] px-5 py-5 shadow-[0_28px_74px_rgba(36,19,103,0.1)] sm:rounded-[40px] sm:px-7 sm:py-8"
           style={{
-            background: `radial-gradient(circle at top right, ${tool.accentFrom}26, transparent 30%), radial-gradient(circle at bottom left, ${tool.accentTo}24, transparent 32%), linear-gradient(135deg,#fefcff 0%,#f5f0ff 44%,#eef2ff 100%)`,
+            background: `radial-gradient(circle at top right, ${accentFrom}26, transparent 30%), radial-gradient(circle at bottom left, ${accentTo}24, transparent 32%), linear-gradient(135deg,#fefcff 0%,#f5f0ff 44%,#eef2ff 100%)`,
           }}
         >
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:items-start">
@@ -174,9 +185,11 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 <span className="tool-detail-hero-badge rounded-full border border-[rgba(109,59,255,0.14)] bg-[rgba(109,59,255,0.1)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
                   {tool.categoryLabel}
                 </span>
-                <span className="tool-detail-hero-badge tool-detail-hero-badge-muted rounded-full border border-[rgba(83,63,170,0.1)] bg-white/78 px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
-                  {tool.levelLabel}
-                </span>
+                {tool.levelLabel ? (
+                  <span className="tool-detail-hero-badge tool-detail-hero-badge-muted rounded-full border border-[rgba(83,63,170,0.1)] bg-white/78 px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
+                    {tool.levelLabel}
+                  </span>
+                ) : null}
                 {tool.toolOfWeek ? (
                   <span className="tool-detail-hero-badge rounded-full border border-[rgba(67,198,255,0.16)] bg-[rgba(67,198,255,0.12)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
                     Tool della settimana
@@ -212,9 +225,9 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               </div>
 
               <div className="mt-5 flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:mt-6 sm:gap-3 sm:text-[0.78rem]">
-                <span>{formatItalianDate(tool.publishedAt)}</span>
+                <span>{formattedPublishedAt}</span>
                 <span className="mx-1.5 h-1 w-1 rounded-full bg-[var(--line-strong)]" />
-                <span>{tool.readingTime}</span>
+                <span>{tool.readingTime ?? "Tempo non disponibile"}</span>
                 <span className="mx-1.5 h-1 w-1 rounded-full bg-[var(--line-strong)]" />
                 <span>{tool.domain}</span>
               </div>
@@ -224,8 +237,8 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   Nota editoriale
                 </p>
                 <div className="mt-2 grid gap-1 sm:grid-cols-3">
-                  <p>Pubblicato: {formatItalianDate(tool.publishedAt)}</p>
-                  <p>Fonte: {tool.sourceSite === "weblium" ? "Archivio Weblium" : "TooolVibes"}</p>
+                  <p>Pubblicato: {formattedPublishedAt}</p>
+                  <p>Fonte: {sourceLabel}</p>
                   <p>Revisione: dati editoriali in aggiornamento.</p>
                 </div>
               </div>
@@ -242,7 +255,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   rel="noopener noreferrer"
                   className="tool-detail-main-cta premium-button premium-button-primary inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(95,66,255,0.18)]"
                 >
-                  <span>{tool.ctaLabel}</span>
+                  <span>{tool.ctaLabel ?? "Apri il sito"}</span>
                 </a>
                 <Link
                   href="/shortlist#wishlist"
@@ -250,14 +263,16 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 >
                   Suggerisci un&apos;alternativa
                 </Link>
-                <a
-                  href={sourceHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="tool-detail-secondary-cta premium-button inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
-                >
-                  Fonte TooolVibes
-                </a>
+                {sourceHref ? (
+                  <a
+                    href={sourceHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="tool-detail-secondary-cta premium-button inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
+                  >
+                    Fonte TooolVibes
+                  </a>
+                ) : null}
                 <div className="flex items-center gap-2">
                   <CompareToggle slug={tool.slug} compact />
                   <ShortlistToggle slug={tool.slug} compact />
@@ -269,7 +284,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               <div
                 className="tool-detail-profile-panel rounded-[28px] p-5"
                 style={{
-                  background: `radial-gradient(circle at top right, ${tool.accentFrom}20, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,241,255,0.92))`,
+                  background: `radial-gradient(circle at top right, ${accentFrom}20, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,241,255,0.92))`,
                 }}
               >
                 <div className="flex items-center gap-3">
@@ -394,16 +409,18 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   rel="noopener noreferrer"
                   className="tool-detail-main-cta premium-button premium-button-subtle inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
                 >
-                  {tool.ctaLabel}
+                  {tool.ctaLabel ?? "Apri il sito"}
                 </a>
-                <a
-                  href={sourceHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="tool-detail-secondary-cta premium-button inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
-                >
-                  Apri la fonte originale TooolVibes
-                </a>
+                {sourceHref ? (
+                  <a
+                    href={sourceHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="tool-detail-secondary-cta premium-button inline-flex min-h-12 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
+                  >
+                    Apri la fonte originale TooolVibes
+                  </a>
+                ) : null}
               </div>
             </div>
           </article>

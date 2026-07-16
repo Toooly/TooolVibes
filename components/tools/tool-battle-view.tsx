@@ -1,24 +1,17 @@
 "use client";
 
-import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import type { ToolRecord } from "@/lib/types/tool";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { MobileCompareView } from "./mobile-compare-view";
 import { DesktopCompareView } from "./desktop-compare-view";
 
-export function ToolBattleView({
-  directoryTools,
-  legacyTools,
-}: {
-  directoryTools: DirectoryTool[];
-  legacyTools: ToolRecord[];
-}) {
+export function ToolBattleView({ tools }: { tools: ToolPublicView[] }) {
   return (
     <>
       <div className="md:hidden">
-        <MobileCompareView directoryTools={directoryTools} legacyTools={legacyTools} />
+        <MobileCompareView tools={tools} />
       </div>
       <div className="hidden md:block">
-        <DesktopCompareView directoryTools={directoryTools} legacyTools={legacyTools} />
+        <DesktopCompareView tools={tools} />
       </div>
     </>
   );

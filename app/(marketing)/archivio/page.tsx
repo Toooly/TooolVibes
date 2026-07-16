@@ -5,10 +5,9 @@ import { FloatingCatalogView } from "@/components/directory/floating-catalog-vie
 import { NativePlacement } from "@/components/monetization/native-placement";
 import { releaseFeatures } from "@/lib/config/release-features";
 import {
-  directoryFilterGroups,
-  directoryTools,
-  type DirectoryFilterGroup,
-} from "@/lib/data/tooolvibes-directory";
+  getPublicToolFilterGroups,
+  getPublicToolViews,
+} from "@/lib/data/public-tools";
 
 export const metadata: Metadata = {
   title: "Archivio tool",
@@ -22,11 +21,13 @@ type ArchivePageProps = {
 
 export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const params = await searchParams;
+  const [tools, filterGroups] = await Promise.all([
+    getPublicToolViews(),
+    getPublicToolFilterGroups(),
+  ]);
   const initialQuery = params.q?.trim() ?? "";
-  const initialGroup = directoryFilterGroups.some(
-    (group) => group.key === params.group,
-  )
-    ? (params.group as DirectoryFilterGroup)
+  const initialGroup = filterGroups.some((group) => group.key === params.group)
+    ? params.group ?? "all"
     : "all";
 
   return (
@@ -36,8 +37,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
         <NativePlacement placementKey="catalog-native-sponsor" variant="band" />
       </section>
       <FloatingCatalogView
-        tools={directoryTools}
-        filterGroups={directoryFilterGroups}
+        tools={tools}
+        filterGroups={filterGroups}
         initialQuery={initialQuery}
         initialGroup={initialGroup}
         initialTag={params.tag ?? ""}
@@ -49,9 +50,9 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
       */}
       <section className="sr-only" aria-label="Catalogo tool in formato lista accessibile">
         <h1>Archivio Tool AI — TooolVibes</h1>
-        <p>{directoryTools.length} tool curati nel catalogo.</p>
+        <p>{tools.length} tool curati nel catalogo.</p>
         <ul>
-          {directoryTools.slice(0, 20).map((tool) => (
+          {tools.slice(0, 20).map((tool) => (
             <li key={tool.slug}>
               <a href={`/toools/${tool.slug}`}>{tool.name}</a>
               <span>{tool.categoryLabel}</span>

@@ -15,11 +15,12 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { playTooolvibesSound } from "@/lib/config/sound";
-import { directoryTools } from "@/lib/data/tooolvibes-directory";
+import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 export function GlobalCommandPalette() {
   const router = useRouter();
+  const tools = usePublicToolCatalog();
   const [mounted, setMounted] = useState(false);
   const isOpen = useToolWorkspaceStore((state) => state.isCommandOpen);
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
@@ -29,8 +30,8 @@ export function GlobalCommandPalette() {
   const addToStack = useToolWorkspaceStore((state) => state.addToStack);
 
   const featuredTools = useMemo(
-    () => directoryTools.filter((tool) => tool.featured || tool.toolOfWeek).slice(0, 8),
-    [],
+    () => tools.filter((tool) => tool.featured || tool.toolOfWeek).slice(0, 8),
+    [tools],
   );
 
   useEffect(() => setMounted(true), []);
@@ -124,7 +125,7 @@ export function GlobalCommandPalette() {
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Azioni rapide">
-          {directoryTools.slice(0, 6).map((tool) => (
+          {tools.slice(0, 6).map((tool) => (
             <CommandItem
               key={`save-${tool.slug}`}
               value={`salva ${tool.name}`}
@@ -138,7 +139,7 @@ export function GlobalCommandPalette() {
               Salva {tool.name}
             </CommandItem>
           ))}
-          {directoryTools.slice(0, 4).map((tool) => (
+          {tools.slice(0, 4).map((tool) => (
             <CommandItem
               key={`compare-${tool.slug}`}
               value={`compare ${tool.name}`}
@@ -161,7 +162,7 @@ export function GlobalCommandPalette() {
               Aggiungi {tool.name} al confronto
             </CommandItem>
           ))}
-          {directoryTools.slice(0, 4).map((tool) => (
+          {tools.slice(0, 4).map((tool) => (
             <CommandItem
               key={`stack-${tool.slug}`}
               value={`lista ${tool.name}`}

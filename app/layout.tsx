@@ -9,6 +9,7 @@ import { releaseFeatures } from "@/lib/config/release-features";
 import type { GamificationClientModes } from "@/lib/gamification/release-context";
 import { siteConfig } from "@/lib/config/site";
 import { gateCookieName } from "@/lib/gate/constants";
+import { getPublicToolsSnapshot } from "@/lib/data/public-tools";
 import { verifyGateToken } from "@/lib/gate/session";
 
 const manrope = Manrope({
@@ -97,6 +98,19 @@ export default async function RootLayout({
   const isGateOpen =
     !releaseFeatures.publicGate.enabled ||
     (gateCookie ? await verifyGateToken(gateCookie.value) : false);
+  const toolSnapshot = isGateOpen ? await getPublicToolsSnapshot() : null;
+  const toolCatalog = toolSnapshot?.status === "ready"
+    ? toolSnapshot.views.map((tool) => ({
+        slug: tool.slug,
+        name: tool.name,
+        categoryLabel: tool.categoryLabel,
+        shortDescription: tool.shortDescription,
+        featured: tool.featured,
+        toolOfWeek: tool.toolOfWeek,
+        tags: tool.tags,
+        levelLabel: tool.levelLabel,
+      }))
+    : [];
   const missionsEnabled =
     releaseFeatures.gamification.surfaces.missions.persistentRewardsEnabled;
   const gamificationModes = {
@@ -125,6 +139,7 @@ export default async function RootLayout({
           }
           enableThreeD={isGateOpen && releaseFeatures.threeD.enabled}
           gamificationModes={gamificationModes}
+          toolCatalog={toolCatalog}
         >
           {isGateOpen && missionsEnabled && (
             <GamificationShell missionsEnabled={missionsEnabled} />

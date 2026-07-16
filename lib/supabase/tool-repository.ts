@@ -10,7 +10,8 @@ import type { ToolRecord } from "@/lib/types/tool";
 
 function orderByDiscoveryDate(items: ToolRecord[]) {
   return [...items].sort((left, right) =>
-    right.date_discovered.localeCompare(left.date_discovered),
+    right.date_discovered.localeCompare(left.date_discovered) ||
+    left.slug.localeCompare(right.slug),
   );
 }
 
@@ -21,7 +22,8 @@ export const getPublicPublishedToolsFromSupabase = cache(async (): Promise<ToolR
       .from("tools")
       .select(publicToolSelect)
       .eq("is_published", true)
-      .order("date_discovered", { ascending: false });
+      .order("date_discovered", { ascending: false })
+      .order("slug", { ascending: true });
 
     if (error) {
       throw new Error(`Non è stato possibile caricare i tool pubblicati. Dettaglio: ${error.message}`);
@@ -52,7 +54,8 @@ export async function getAdminToolsFromSupabase(): Promise<ToolRecord[]> {
   const { data, error } = await client
     .from("tools")
     .select(publicToolSelect)
-    .order("date_discovered", { ascending: false });
+    .order("date_discovered", { ascending: false })
+    .order("slug", { ascending: true });
 
   if (error) {
     throw new Error(`Non è stato possibile caricare i tool dell'area admin. Dettaglio: ${error.message}`);

@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import { getToolBadgeLabel, type DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
+
+type DirectoryToolGlyphData = DirectoryTool | ToolPublicView;
 
 type DirectoryToolGlyphProps = {
-  tool: DirectoryTool;
+  tool: DirectoryToolGlyphData;
   size?: "sm" | "md" | "lg";
   className?: string;
 };
@@ -15,7 +18,7 @@ const sizeClasses = {
   lg: "h-14 w-14 rounded-[18px] text-[0.96rem]",
 } satisfies Record<NonNullable<DirectoryToolGlyphProps["size"]>, string>;
 
-function getToolLogoUrl(tool: DirectoryTool) {
+function getToolLogoUrl(tool: DirectoryToolGlyphData) {
   const domain = tool.domain || tool.externalUrl;
   return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
 }
@@ -32,7 +35,7 @@ export function DirectoryToolGlyph({
       aria-hidden="true"
       className={`tool-glyph-motion inline-flex items-center justify-center border border-[rgba(76,55,166,0.2)] font-semibold uppercase tracking-[0.12em] text-[var(--foreground)] shadow-[0_12px_28px_rgba(60,37,152,0.14)] ${sizeClasses[size]} ${className}`.trim()}
       style={{
-        background: `linear-gradient(135deg, ${tool.accentFrom}, ${tool.accentTo})`,
+        background: `linear-gradient(135deg, ${tool.accentFrom ?? "#6a3cff"}, ${tool.accentTo ?? "#43c6ff"})`,
       }}
     >
       {!error && (

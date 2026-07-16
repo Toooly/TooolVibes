@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { VibesReactor } from "./vibes-reactor";
 import { PremiumLink } from "@/components/ui/premium";
 import { siteConfig } from "@/lib/config/site";
-import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useIsMobile } from "@/lib/hooks/use-is-mobile";
@@ -25,8 +25,8 @@ export function Home3DHero({
   tools,
   weeklyTool,
 }: {
-  tools: DirectoryTool[];
-  weeklyTool?: DirectoryTool | null;
+  tools: ToolPublicView[];
+  weeklyTool?: ToolPublicView | null;
 }) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
   const orbTools = tools.filter((t) => t.featured).slice(0, 7);

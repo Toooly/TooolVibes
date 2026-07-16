@@ -14,7 +14,7 @@ import {
   getPublishedEditorialPosts,
 } from "@/lib/data/public-articles";
 import { getCollectionsByToolSlug } from "@/lib/data/public-collections";
-import { getToolBySlug } from "@/lib/data/public-tools";
+import { getLegacyEditorialToolBySlug } from "@/lib/data/legacy-editorial-tool-repository";
 import type { CuratedCollection } from "@/lib/types/collection";
 import { formatItalianDate } from "@/lib/utils";
 
@@ -71,12 +71,12 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   const guideCount = editorialPosts.filter((item) => item.kind === "guide").length;
   const writeupCount = editorialPosts.filter((item) => item.kind === "tool-writeup").length;
 
-  let tool: Awaited<ReturnType<typeof getToolBySlug>> = null;
+  let tool: Awaited<ReturnType<typeof getLegacyEditorialToolBySlug>> = null;
   let relatedCollections: CuratedCollection[] = [];
 
   if (post.tool_slug) {
     [tool, relatedCollections] = await Promise.all([
-      getToolBySlug(post.tool_slug),
+      getLegacyEditorialToolBySlug(post.tool_slug),
       getCollectionsByToolSlug(post.tool_slug),
     ]);
   } else {

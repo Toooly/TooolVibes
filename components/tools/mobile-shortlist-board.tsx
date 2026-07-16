@@ -21,23 +21,20 @@ import Link from "next/link";
 import { RequestToolForm } from "@/components/wishlist/request-tool-form";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
-import type {
-  ShortlistStage,
-
-  ToolRecord,
-} from "@/lib/types/tool";
+import type { ShortlistStage } from "@/lib/types/tool";
+import type { ToolPublic } from "@/lib/types/tool-public";
 
 type MobileShortlistBoardProps = {
-  tools: ToolRecord[];
+  tools: ToolPublic[];
 };
 
-type ToolWithMeta = ToolRecord & {
+type ToolWithMeta = ToolPublic & {
   stage: ShortlistStage;
   note?: string;
   isInCompare: boolean;
 };
 
-function getToolColor(tool: ToolRecord): string {
+function getToolColor(tool: ToolPublic): string {
   const palette = ["#6a3cff","#39d2f6","#f3bf4c","#ec4899","#22c55e","#f97316","#8b5cf6","#14b8a6"];
   let hash = 0;
   for (let i = 0; i < tool.slug.length; i++) hash = ((hash << 5) - hash) + tool.slug.charCodeAt(i);
@@ -299,7 +296,7 @@ function MobileLibraryShelf({
 
 function LibraryBook({ tool, index }: { tool: ToolWithMeta; index: number }) {
   const color = getToolColor(tool);
-  const domain = extractDomain(tool.website_url);
+  const domain = extractDomain(tool.urls.website);
   const iconUrl = domain
     ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`
     : undefined;
@@ -391,7 +388,7 @@ function MobileNoteSheet({
    MobileLibraryEmpty
    ═══════════════════════════════════════════════════════════════ */
 
-function MobileLibraryEmpty({ tools }: { tools: ToolRecord[] }) {
+function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
   const starterTools = tools.slice(0, 3);
   const routes = [
     { href: "/archivio", label: "Esplora catalogo", copy: "Filtra per categoria e salva i candidati davvero utili." },

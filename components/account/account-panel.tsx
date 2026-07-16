@@ -32,7 +32,7 @@ import { useDiscoveryPersistence } from "@/components/discovery/discovery-persis
 import { GameMissionPanel } from "@/components/gamification/game-mission-panel";
 import { GameProfileBar } from "@/components/gamification/game-profile-bar";
 import { VibeTapMiniGame } from "@/components/gamification/vibe-tap-mini-game";
-import { directoryTools } from "@/lib/data/tooolvibes-directory";
+import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type { DiscoveryLocalSnapshot } from "@/lib/discovery/local-storage";
 import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
@@ -92,6 +92,7 @@ function readWorkspaceSnapshot(snapshot: DiscoveryLocalSnapshot): WorkspaceSnaps
 
 export function AccountPanel() {
   const account = useAccount();
+  const toolCatalog = usePublicToolCatalog();
   const persistence = useDiscoveryPersistence();
   const discovery = useDiscoverySnapshot();
   const { hasRewardedSurface, firstRewardedSurface } =
@@ -121,13 +122,13 @@ export function AccountPanel() {
   const savedToolCards = useMemo(() => {
     return discovery.shortlist
       .map((slug) => {
-        const tool = directoryTools.find((item) => item.slug === slug);
+        const tool = toolCatalog.find((item) => item.slug === slug);
         const memory = discovery.decisionMemories[slug];
 
         return {
           slug,
           name: tool?.name ?? slug,
-          category: tool?.categoryLabel ?? tool?.category ?? "Tool",
+          category: tool?.categoryLabel ?? "Tool",
           description: tool?.shortDescription ?? "Tool salvato nella tua selezione.",
           stage: discovery.shortlistStages[slug] ?? "saved",
           pinned: Boolean(memory?.is_pinned),
@@ -135,18 +136,18 @@ export function AccountPanel() {
         };
       })
       .slice(0, 4);
-  }, [discovery.decisionMemories, discovery.shortlist, discovery.shortlistStages]);
+  }, [discovery.decisionMemories, discovery.shortlist, discovery.shortlistStages, toolCatalog]);
   const recommendedTools = useMemo(() => {
     const savedSlugs = new Set(discovery.shortlist);
     const savedCategories = new Set(
       savedToolCards.map((tool) => tool.category).filter(Boolean),
     );
 
-    return directoryTools
+    return toolCatalog
       .filter((tool) => !savedSlugs.has(tool.slug))
       .filter((tool) => savedCategories.size === 0 || savedCategories.has(tool.categoryLabel))
       .slice(0, 3);
-  }, [discovery.shortlist, savedToolCards]);
+  }, [discovery.shortlist, savedToolCards, toolCatalog]);
   const vibeScore = vibeContext.vibes;
   const vibeXp = vibeContext.xp;
   const isVibeRushSignup = vibeContext.source === "vibe-rush";

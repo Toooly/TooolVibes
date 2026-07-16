@@ -1,15 +1,15 @@
 "use client";
 
-import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { NativePlacement } from "@/components/monetization/native-placement";
 import { MobileHeroSolar } from "./mobile-hero-solar";
 import { MobileMethodSteps } from "./mobile-method-steps";
 import { MobileSpotlight } from "./mobile-spotlight";
 
 type VibeHomeV2Props = {
-  tools: DirectoryTool[];
-  weeklyTool?: DirectoryTool | null;
-  supportingTools: DirectoryTool[];
+  tools: ToolPublicView[];
+  weeklyTool?: ToolPublicView | null;
+  supportingTools: ToolPublicView[];
 };
 
 const methodSteps = [

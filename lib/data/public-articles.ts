@@ -1,8 +1,8 @@
-﻿import "server-only";
+import "server-only";
 
 import { cache } from "react";
 
-import { getPublishedTools } from "@/lib/data/public-tools";
+import { getLegacyEditorialPublishedTools } from "@/lib/data/legacy-editorial-tool-repository";
 import {
   getPublishedArticlesFromSupabase,
   mapArticleToEditorialPost,
@@ -369,7 +369,7 @@ function sortPosts(posts: EditorialPostRecord[]) {
 }
 
 export async function loadLegacyEditorialPosts(): Promise<EditorialPostRecord[]> {
-  const tools = await getPublishedTools();
+  const tools = await getLegacyEditorialPublishedTools();
   const toolWriteups = tools.map(buildToolWriteup);
 
   return sortPosts([

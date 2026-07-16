@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
-import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 
 type MobileSpotlightProps = {
-  tool: DirectoryTool;
-  supportingTools?: DirectoryTool[];
+  tool: ToolPublicView;
+  supportingTools?: ToolPublicView[];
 };
 
 function PodiumTool({
@@ -14,7 +14,7 @@ function PodiumTool({
   rank,
   className,
 }: {
-  tool: DirectoryTool;
+  tool: ToolPublicView;
   rank: number;
   className?: string;
 }) {
@@ -78,11 +78,11 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
         <div className="v-spotlight-header">
           <span className="v-spotlight-eyebrow">
             <Sparkles className="size-3.5" />
-            Tool della settimana
+            {tool.toolOfWeek ? "Tool della settimana" : "Tool in evidenza"}
           </span>
           <h2 className="v-spotlight-title">{tool.name}</h2>
           <p className="v-spotlight-category">
-            {tool.categoryLabel} · {tool.levelLabel}
+            {tool.categoryLabel}{tool.levelLabel ? ` · ${tool.levelLabel}` : ""}
           </p>
           <p className="v-spotlight-desc">
             {tool.tldr || tool.shortDescription}
@@ -115,7 +115,7 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
             </div>
             <div>
               <span>Lettura</span>
-              <strong>{tool.readingTime}</strong>
+              <strong>{tool.readingTime ?? "—"}</strong>
             </div>
             <div>
               <span>Tag</span>
@@ -130,7 +130,7 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
               rel="noopener noreferrer"
               className="v-spotlight-cta v-spotlight-cta--primary"
             >
-              {tool.ctaLabel}
+              {tool.ctaLabel ?? "Apri il sito"}
               <ExternalLink className="size-3.5" />
             </Link>
             <Link

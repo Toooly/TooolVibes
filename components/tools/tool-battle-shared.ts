@@ -1,17 +1,27 @@
-import type { ToolRecord } from "@/lib/types/tool";
-import type { DirectoryTool, DirectoryToolLevel } from "@/lib/data/tooolvibes-directory";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 
-export const levelScoreBase: Record<DirectoryToolLevel, number> = {
+type CatalogScoreLevel = "featured" | "beginner" | "intermediate" | "expert";
+
+function isCatalogScoreLevel(value: string | null): value is CatalogScoreLevel {
+  return value === "featured" || value === "beginner" || value === "intermediate" || value === "expert";
+}
+
+export const levelScoreBase: Record<CatalogScoreLevel, number> = {
   featured: 91,
   beginner: 72,
   intermediate: 82,
   expert: 87,
 };
 
-export function dirScore(t: DirectoryTool) {
+export function dirScore(t: ToolPublicView) {
+  const levelBase =
+    isCatalogScoreLevel(t.level)
+      ? levelScoreBase[t.level]
+      : 70;
+
   return Math.min(
     98,
-    levelScoreBase[t.level] +
+    levelBase +
       (t.toolOfWeek ? 4 : 0) +
       (t.featured ? 2 : 0) +
       Math.min(t.highlights.length, 3),
@@ -25,8 +35,8 @@ export function hashColor(name: string): string {
   return `hsl(${hue} 80% 55%)`;
 }
 
-export function legacyScore(t: ToolRecord): number {
-  return Math.min(95, 70 + (t.is_featured ? 10 : 0) + Math.min(t.tags?.length ?? 0, 5) * 2);
+export function legacyScore(t: ToolPublicView): number {
+  return Math.min(95, 70 + (t.featured ? 10 : 0) + Math.min(t.tags.length, 5) * 2);
 }
 
 export function getToolLogoUrl(value: string | null | undefined) {
@@ -132,67 +142,43 @@ export async function celebrateArenaFight(winner?: NormalisedTool) {
 }
 
 export function normalise(
-  directoryTools: DirectoryTool[],
-  legacyTools: ToolRecord[],
+  tools: ToolPublicView[],
   compareSlugs: string[],
 ): NormalisedTool[] {
-  const out: NormalisedTool[] = [];
-  for (const slug of compareSlugs) {
-    const d = directoryTools.find((t) => t.slug === slug);
-    if (d) {
-      out.push({
-        slug: d.slug,
-        name: d.name,
-        category: d.category,
-        categoryLabel: d.categoryLabel,
-        score: dirScore(d),
-        battleScore: dirScore(d),
-        accentFrom: d.accentFrom,
-        accentTo: d.accentTo,
-        tldr: d.tldr,
-        useCase: d.idealUseCase,
-        review: d.editorialReview,
-        highlights: d.highlights,
-        useCases: d.useCases,
-        tags: d.tags,
-        readingTime: d.readingTime,
-        url: d.url,
-        logoUrl: getToolLogoUrl(d.domain || d.externalUrl),
-        isDirectory: true,
-        useCasesCount: d.useCases.length,
-      });
-      continue;
-    }
-    const l = legacyTools.find((t) => t.slug === slug);
-    if (l) {
-      const c = hashColor(l.name);
-      out.push({
-        slug: l.slug,
-        name: l.name,
-        category: l.category ?? "Tool",
-        categoryLabel: l.category ?? "Tool",
-        score: legacyScore(l),
-        battleScore: legacyScore(l),
-        accentFrom: c,
-        accentTo: c,
-        tldr: l.short_description_it ?? l.description_it ?? "Nessun riassunto disponibile.",
-        useCase: l.description_it ?? "",
-        review: l.editorial_note ?? "",
-        highlights: l.strengths?.slice(0, 3).length ? l.strengths.slice(0, 3) : (l.tags?.slice(0, 3) ?? []),
-        useCases: l.use_cases ?? [],
-        tags: l.tags ?? [],
-        readingTime: "2 min",
-        url: l.website_url ?? "",
-        logoUrl: getToolLogoUrl(l.website_url),
-        isDirectory: false,
-        useCasesCount: l.use_cases?.length ?? 0,
-      });
-    }
-  }
-  return out;
-}
+  return compareSlugs.flatMap((slug) => {
+    const tool = tools.find((item) => item.slug === slug);
+    if (!tool) return [];
 
-const OBJECTIVE_KEYWORDS: Record<BattleObjective, string[]> = {
+    const isDirectory = tool.presentationKind === "directory";
+    const score = isDirectory ? dirScore(tool) : legacyScore(tool);
+    const fallbackColor = hashColor(tool.name);
+    const highlights = tool.highlights.length > 0
+      ? tool.highlights.slice(0, 3)
+      : tool.tags.slice(0, 3);
+
+    return [{
+      slug: tool.slug,
+      name: tool.name,
+      category: tool.category,
+      categoryLabel: tool.categoryLabel,
+      score,
+      battleScore: score,
+      accentFrom: tool.accentFrom ?? fallbackColor,
+      accentTo: tool.accentTo ?? fallbackColor,
+      tldr: tool.tldr,
+      useCase: tool.idealUseCase ?? tool.longDescription,
+      review: tool.editorialReview ?? "",
+      highlights,
+      useCases: tool.useCases,
+      tags: tool.tags,
+      readingTime: tool.readingTime ?? "",
+      url: tool.url,
+      logoUrl: getToolLogoUrl(tool.domain || tool.externalUrl),
+      isDirectory,
+      useCasesCount: tool.useCases.length,
+    }];
+  });
+}const OBJECTIVE_KEYWORDS: Record<BattleObjective, string[]> = {
   "save-time": [
     "automation",
     "automazione",

@@ -10,12 +10,12 @@ import {
   sortCollections,
 } from "@/lib/collections/helpers";
 import { getCollectionRepositorySnapshot } from "@/lib/data/collection-repository";
-import { getPublishedTools } from "@/lib/data/public-tools";
+import { getLegacyEditorialPublishedTools } from "@/lib/data/legacy-editorial-tool-repository";
 import type { CuratedCollection } from "@/lib/types/collection";
 
 const loadCollections = cache(async (): Promise<CuratedCollection[]> => {
   const [tools, snapshot] = await Promise.all([
-    getPublishedTools(),
+    getLegacyEditorialPublishedTools(),
     getCollectionRepositorySnapshot(),
   ]);
 

@@ -3,13 +3,13 @@ import { Home3DHero } from "@/components/3d-maestoso/home-3d-hero";
 import { VibeHomeV2 } from "@/components/home/vibe-home-v2";
 import { ComingSoonPage } from "@/components/coming-soon/coming-soon-page";
 import { releaseFeatures } from "@/lib/config/release-features";
+import {
+  getFeaturedToolViews,
+  getPublicToolViews,
+  getToolSpotlightView,
+} from "@/lib/data/public-tools";
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
-import {
-  directoryTools,
-  getFeaturedDirectoryTools,
-  getToolOfTheWeek,
-} from "@/lib/data/tooolvibes-directory";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -42,19 +42,23 @@ export default async function HomePage() {
     return <ComingSoonPage />;
   }
 
-  const weeklyTool = getToolOfTheWeek();
-  const supportingTools = getFeaturedDirectoryTools(4).filter(
-    (tool) => tool.slug !== weeklyTool?.slug,
+  const [tools, spotlightTool, featuredTools] = await Promise.all([
+    getPublicToolViews(),
+    getToolSpotlightView(),
+    getFeaturedToolViews(5),
+  ]);
+  const supportingTools = featuredTools.filter(
+    (tool) => tool.slug !== spotlightTool?.slug,
   );
 
   return (
     <>
       {releaseFeatures.threeD.enabled && (
-        <Home3DHero tools={directoryTools} weeklyTool={weeklyTool} />
+        <Home3DHero tools={tools} weeklyTool={spotlightTool} />
       )}
       <VibeHomeV2
-        tools={directoryTools}
-        weeklyTool={weeklyTool}
+        tools={tools}
+        weeklyTool={spotlightTool}
         supportingTools={supportingTools.slice(0, 4)}
       />
     </>

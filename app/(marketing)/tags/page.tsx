@@ -3,10 +3,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import {
-  directoryFilterGroups,
-  directoryTools,
-  getDirectoryTags,
-} from "@/lib/data/tooolvibes-directory";
+  getAllTags,
+  getPublicToolFilterGroups,
+  getPublicToolViews,
+} from "@/lib/data/public-tools";
 
 export const metadata: Metadata = {
   title: "Tag",
@@ -14,8 +14,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tags" },
 };
 
-export default function TagsPage() {
-  const tagCounts = Object.entries(getDirectoryTags()).sort(
+export default async function TagsPage() {
+  const [tags, filterGroups, tools] = await Promise.all([
+    getAllTags(),
+    getPublicToolFilterGroups(),
+    getPublicToolViews(),
+  ]);
+  const tagCounts = Object.entries(tags).sort(
     (left, right) => right[1] - left[1],
   );
 
@@ -47,16 +52,16 @@ export default function TagsPage() {
             </h2>
           </div>
           <span className="rounded-full border border-[rgba(83,63,170,0.1)] bg-[rgba(246,244,255,0.86)] px-4 py-2 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted-strong)]">
-            {directoryFilterGroups.length - 1} categorie attive
+            {filterGroups.length - 1} categorie attive
           </span>
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {directoryFilterGroups
+          {filterGroups
             .filter((group) => group.key !== "all")
             .map((group) => {
-              const count = directoryTools.filter((tool) =>
-                tool.segments.includes(group.key),
+              const count = tools.filter((tool) =>
+                tool.filterGroups.includes(group.key),
               ).length;
 
               return (

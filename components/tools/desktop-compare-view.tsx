@@ -6,8 +6,7 @@ import { Swords, Sparkles, Trophy } from "lucide-react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
-import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import type { ToolRecord } from "@/lib/types/tool";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import {
   celebrateArenaFight,
   getBattleVerdict,
@@ -94,19 +93,17 @@ function DesktopRosterCard({
 }
 
 export function DesktopCompareView({
-  directoryTools,
-  legacyTools,
+  tools: catalogTools,
 }: {
-  directoryTools: DirectoryTool[];
-  legacyTools: ToolRecord[];
+  tools: ToolPublicView[];
 }) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const [battleState, setBattleState] = useState<"idle" | "fighting" | "result">("idle");
   const reducedMotion = useReducedMotion();
 
   const tools = useMemo(
-    () => withBattleScores(normalise(directoryTools, legacyTools, compareSlugs)),
-    [directoryTools, legacyTools, compareSlugs],
+    () => withBattleScores(normalise(catalogTools, compareSlugs)),
+    [catalogTools, compareSlugs],
   );
 
   const sorted = useMemo(() => [...tools].sort((a, b) => b.battleScore - a.battleScore), [tools]);

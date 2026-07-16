@@ -17,6 +17,10 @@ import {
 import { MotionObserver } from "@/components/ui/motion-observer";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+  PublicToolCatalogProvider,
+  type PublicToolCatalogItem,
+} from "@/lib/data/public-tool-catalog-context";
 
 export function RootProviders({
   children,
@@ -25,6 +29,7 @@ export function RootProviders({
   enableGamificationEffects = true,
   enableThreeD = false,
   gamificationModes,
+  toolCatalog,
 }: {
   children: React.ReactNode;
   enableExperience?: boolean;
@@ -32,6 +37,7 @@ export function RootProviders({
   enableGamificationEffects?: boolean;
   gamificationModes: GamificationClientModes;
   enableThreeD?: boolean;
+  toolCatalog: PublicToolCatalogItem[];
 }) {
   const [queryClient] = useState(
     () =>
@@ -46,7 +52,8 @@ export function RootProviders({
   );
 
   return (
-    <ExperienceReleaseProvider
+    <PublicToolCatalogProvider tools={toolCatalog}>
+      <ExperienceReleaseProvider
       audioEnabled={enableAudio}
       threeDEnabled={enableThreeD}
     >
@@ -73,6 +80,7 @@ export function RootProviders({
           </TooltipProvider>
         </QueryClientProvider>
       </GamificationReleaseProvider>
-    </ExperienceReleaseProvider>
+      </ExperienceReleaseProvider>
+    </PublicToolCatalogProvider>
   );
 }
