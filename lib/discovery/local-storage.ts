@@ -5,6 +5,9 @@ import type {
 } from "@/lib/discovery/types";
 import { normalizeDiscoveryWorkspaceState } from "@/lib/discovery/workspace-state";
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
+import { DISCOVERY_STORAGE_KEYS } from "@/lib/discovery/workspace-storage-keys";
+
+export { DISCOVERY_STORAGE_KEYS } from "@/lib/discovery/workspace-storage-keys";
 
 type DiscoverySyncSource = "local" | "remote";
 type WriteOptions = {
@@ -18,16 +21,6 @@ type CompareMeta = {
 
 export const DISCOVERY_SYNC_EVENT = "tooolvibes:discovery-sync";
 
-export const DISCOVERY_STORAGE_KEYS = {
-  visitedTools: "tooolvibes:visited-tools",
-  exploredCategories: "tooolvibes:explored-categories",
-  shortlist: "tooolvibes:shortlist",
-  shortlistState: "tooolvibes:shortlist-state",
-  decisionMemory: "tooolvibes:decision-memory",
-  compare: "tooolvibes:compare",
-  toolStateMeta: "tooolvibes:tool-state-meta",
-  compareMeta: "tooolvibes:compare-meta",
-} as const;
 
 export type DiscoveryLocalSnapshot = {
   visitedTools: string[];

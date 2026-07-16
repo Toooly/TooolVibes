@@ -1,11 +1,18 @@
 "use client";
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, type PersistStorage } from "zustand/middleware";
 
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 import { adaptLegacyToolWorkspaceState } from "@/lib/discovery/workspace-legacy-adapters";
 import { reduceWorkspaceState } from "@/lib/discovery/workspace-state";
+import {
+  getBrowserWorkspaceStorage,
+  loadWorkspaceStateFromStorage,
+  persistWorkspaceStateToStorage,
+  updateWorkspaceCollections,
+} from "@/lib/discovery/workspace-storage";
+import { WORKSPACE_STORAGE_KEY } from "@/lib/discovery/workspace-storage-keys";
 import type { WorkspaceAction, WorkspaceStateV1 } from "@/lib/discovery/types";
 
 export { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
@@ -52,14 +59,96 @@ function projectWorkspaceCollections(
   };
 }
 
+function canonicalStatesMatch(
+  left: WorkspaceStateV1,
+  right: WorkspaceStateV1,
+) {
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
+function resolveCanonicalWorkspaceState(state: ToolWorkspaceCollections) {
+  const storage = getBrowserWorkspaceStorage();
+
+  if (!storage) {
+    return selectCanonicalWorkspaceState(state);
+  }
+
+  return loadWorkspaceStateFromStorage(storage).state;
+}
+
+function persistCanonicalWorkspaceState(state: WorkspaceStateV1) {
+  const storage = getBrowserWorkspaceStorage();
+
+  if (!storage) {
+    return;
+  }
+
+  persistWorkspaceStateToStorage(storage, state);
+}
+
 function reduceCollections(
   state: ToolWorkspaceCollections,
   action: WorkspaceAction,
 ) {
-  return projectWorkspaceCollections(
-    reduceWorkspaceState(selectCanonicalWorkspaceState(state), action),
-  );
+  const current = resolveCanonicalWorkspaceState(state);
+  const next = reduceWorkspaceState(current, action);
+
+  if (!canonicalStatesMatch(current, next)) {
+    persistCanonicalWorkspaceState(next);
+  }
+
+  return next;
 }
+
+export const canonicalToolWorkspacePersistStorage: PersistStorage<ToolWorkspaceCollections> = {
+  getItem: () => {
+    const storage = getBrowserWorkspaceStorage();
+
+    if (!storage) {
+      return null;
+    }
+
+    const result = loadWorkspaceStateFromStorage(storage);
+
+    return {
+      state: projectWorkspaceCollections(result.state),
+      version: 1,
+    };
+  },
+  setItem: (_name, value) => {
+    const storage = getBrowserWorkspaceStorage();
+
+    if (!storage) {
+      return;
+    }
+
+    const current = loadWorkspaceStateFromStorage(storage).state;
+    const next = updateWorkspaceCollections(
+      current,
+      value.state,
+      nowIso(),
+    );
+
+    if (!canonicalStatesMatch(current, next)) {
+      persistWorkspaceStateToStorage(storage, next);
+    }
+  },
+  removeItem: () => {
+    const storage = getBrowserWorkspaceStorage();
+
+    if (!storage) {
+      return;
+    }
+
+    const current = loadWorkspaceStateFromStorage(storage).state;
+    const cleared = reduceWorkspaceState(current, {
+      type: "workspace/clear",
+      at: nowIso(),
+    });
+
+    persistWorkspaceStateToStorage(storage, cleared);
+  },
+};
 
 export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
   persist(
@@ -72,8 +161,7 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
       setSelectedSlug: (slug) => set({ selectedSlug: slug }),
       setCommandOpen: (open) => set({ isCommandOpen: open }),
       toggleSaved: (slug) => {
-        const current = selectCanonicalWorkspaceState(get());
-        const next = reduceWorkspaceState(current, {
+        const next = reduceCollections(get(), {
           type: "saved/toggle",
           slug,
           at: nowIso(),
@@ -82,9 +170,9 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
         return next.saved.slugs.includes(slug);
       },
       toggleCompare: (slug) => {
-        const current = selectCanonicalWorkspaceState(get());
+        const current = resolveCanonicalWorkspaceState(get());
         const alreadyAdded = current.compare.slugs.includes(slug);
-        const next = reduceWorkspaceState(current, {
+        const next = reduceCollections(get(), {
           type: "compare/toggle",
           slug,
           at: nowIso(),
@@ -98,13 +186,13 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
         return { added, limited };
       },
       addToStack: (slug) => {
-        const current = selectCanonicalWorkspaceState(get());
+        const current = resolveCanonicalWorkspaceState(get());
 
         if (current.stack.slugs.includes(slug)) {
           return false;
         }
 
-        const next = reduceWorkspaceState(current, {
+        const next = reduceCollections(get(), {
           type: "stack/add",
           slug,
           at: nowIso(),
@@ -114,28 +202,34 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
       },
       removeFromStack: (slug) => {
         set(
-          reduceCollections(get(), {
-            type: "stack/remove",
-            slug,
-            at: nowIso(),
-          }),
+          projectWorkspaceCollections(
+            reduceCollections(get(), {
+              type: "stack/remove",
+              slug,
+              at: nowIso(),
+            }),
+          ),
         );
       },
       reorderStack: (slugs) => {
         set(
-          reduceCollections(get(), {
-            type: "stack/reorder",
-            slugs,
-            at: nowIso(),
-          }),
+          projectWorkspaceCollections(
+            reduceCollections(get(), {
+              type: "stack/reorder",
+              slugs,
+              at: nowIso(),
+            }),
+          ),
         );
       },
       clearCompare: () => {
         set(
-          reduceCollections(get(), {
-            type: "compare/clear",
-            at: nowIso(),
-          }),
+          projectWorkspaceCollections(
+            reduceCollections(get(), {
+              type: "compare/clear",
+              at: nowIso(),
+            }),
+          ),
         );
       },
       clearWorkspace: () => {
@@ -144,13 +238,15 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
           at: nowIso(),
         });
         set({
-          ...next,
+          ...projectWorkspaceCollections(next),
           selectedSlug: null,
         });
       },
     }),
     {
-      name: "tooolvibes-tool-workspace",
+      name: WORKSPACE_STORAGE_KEY,
+      version: 1,
+      storage: canonicalToolWorkspacePersistStorage,
       partialize: (state) => ({
         savedSlugs: state.savedSlugs,
         compareSlugs: state.compareSlugs,
