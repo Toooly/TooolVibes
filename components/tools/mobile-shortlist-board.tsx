@@ -317,6 +317,7 @@ function LibraryBook({ tool, index }: { tool: ToolWithMeta; index: number }) {
       <Link href={`/toools/${tool.slug}`} className="mobile-library-book__cover">
         <span className="mobile-library-book__face">
           {iconUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
             <img src={iconUrl} alt="" loading="lazy" />
           ) : (
             <span>{tool.name.slice(0, 2).toUpperCase()}</span>

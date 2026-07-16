@@ -142,6 +142,7 @@ export function CompareTrendList() {
               <span className="compare-trend-list__rank">#{index + 1}</span>
               <span className="compare-trend-list__visual">
                 {item.thumbnailUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
                   <img src={item.thumbnailUrl} alt="" loading="lazy" />
                 ) : (
                   <span>{item.name.slice(0, 2).toUpperCase()}</span>

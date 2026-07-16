@@ -297,6 +297,7 @@ function RewardedRadarConsole({ items, hiddenDiscovered = false, className }: Ra
             <span className="radar-console__signal-rank">#{index + 1}</span>
             <span className="radar-console__signal-visual">
               {item.thumbnailUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
                 <img src={item.thumbnailUrl} alt="" loading="lazy" />
               ) : (
                 item.name.slice(0, 2).toUpperCase()

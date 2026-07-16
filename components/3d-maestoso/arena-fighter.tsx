@@ -23,8 +23,6 @@ export function ArenaFighter({
   primaryColor,
   secondaryColor,
   state,
-  isWinner = false,
-  isDefeated = false,
   side = "left",
 }: ArenaFighterProps) {
   const groupRef = useRef<THREE.Group>(null);

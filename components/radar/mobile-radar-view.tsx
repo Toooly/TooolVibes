@@ -519,6 +519,7 @@ export function MobileRadarView() {
               )}
               <span className="mobile-radar-view__node-body">
                 {node.thumbnailUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
                   <img
                     src={node.thumbnailUrl}
                     alt=""
@@ -681,6 +682,7 @@ function MobileRadarSections({
               <span className="mobile-radar-section__row-rank">#{index + 1}</span>
               <div className="mobile-radar-section__row-visual">
                 {item.thumbnailUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
                   <img src={item.thumbnailUrl} alt="" loading="lazy" />
                 ) : (
                   <span>{item.name.slice(0, 2).toUpperCase()}</span>
@@ -716,6 +718,7 @@ function MobileRadarSections({
               >
                 <div className="mobile-radar-section__card-visual">
                   {item.thumbnailUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
                     <img src={item.thumbnailUrl} alt="" loading="lazy" />
                   ) : (
                     <span>{item.name.slice(0, 2).toUpperCase()}</span>

@@ -32,6 +32,7 @@ function PodiumTool({
       <div className="v-podium-step-inner">
         <div className="v-podium-avatar">
           {iconUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
             <img src={iconUrl} alt="" loading="eager" decoding="async" />
           ) : (
             <span>{tool.name.slice(0, 2).toUpperCase()}</span>

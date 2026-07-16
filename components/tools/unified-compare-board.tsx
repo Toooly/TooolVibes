@@ -2,13 +2,13 @@
 
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Columns3, Gauge, Info, PieChart, Scale, Sparkles, Swords, Trophy, X, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle2, Columns3, Info, PieChart, Scale, Sparkles, Trophy, X } from "lucide-react";
 
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import { PremiumBadge, PremiumButton, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import { EmptyState } from "@/components/ui/premium-section";
 import { CompareBoard } from "@/components/tools/compare-board";
-import { levelRank, type DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolRecord } from "@/lib/types/tool";
 
@@ -53,19 +53,6 @@ function getDirectoryToolScore(tool: DirectoryTool) {
   );
 }
 
-function getLeadTool(tools: DirectoryTool[]) {
-  return [...tools].sort((left, right) => {
-    if (Number(right.toolOfWeek) !== Number(left.toolOfWeek)) {
-      return Number(right.toolOfWeek) - Number(left.toolOfWeek);
-    }
-
-    if (Number(right.featured) !== Number(left.featured)) {
-      return Number(right.featured) - Number(left.featured);
-    }
-
-    return levelRank[left.level] - levelRank[right.level];
-  })[0] ?? null;
-}
 
 /* ═══════════════════════════════════════════════════════════════
    Desktop Champion + DiffMatrix
@@ -544,7 +531,6 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
 
   const leadTool = sortedTools[0] ?? null;
   const leadScore = leadTool ? (scores.get(leadTool.slug) ?? 0) : 0;
-  const restTools = sortedTools.slice(1);
 
   if (tools.length === 0) {
     return (

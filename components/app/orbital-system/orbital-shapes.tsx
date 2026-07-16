@@ -140,6 +140,7 @@ function CenterContent({
 
   if (iconUrl && !imgError) {
     return (
+      // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
       <img
         src={iconUrl}
         alt=""

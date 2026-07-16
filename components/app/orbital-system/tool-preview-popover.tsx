@@ -91,6 +91,7 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
               <div className="flex min-w-0 flex-1 items-center gap-2.5">
                 {/* Mini icon */}
                 {item.iconUrl && !imgError ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
                   <img
                     src={item.iconUrl}
                     alt=""

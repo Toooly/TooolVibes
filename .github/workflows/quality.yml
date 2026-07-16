@@ -1,0 +1,76 @@
+name: Quality gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint, types, tests and builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Pin npm
+        run: npm install --global npm@10.9.2
+
+      - name: Verify runtime
+        run: npm run check:runtime
+
+      - name: Install locked dependencies
+        run: |
+          mkdir -p artifacts/quality-logs
+          npm ci 2>&1 | tee artifacts/quality-logs/install.log
+
+      - name: Lint (zero warnings)
+        run: npm run lint:ci 2>&1 | tee artifacts/quality-logs/lint.log
+
+      - name: Typecheck
+        run: npm run typecheck 2>&1 | tee artifacts/quality-logs/typecheck.log
+
+      - name: Unit tests
+        run: npm run test:unit 2>&1 | tee artifacts/quality-logs/unit.log
+
+      - name: Next build
+        run: npm run build 2>&1 | tee artifacts/quality-logs/next-build.log
+
+      - name: OpenNext build
+        run: npm run build:cloudflare 2>&1 | tee artifacts/quality-logs/opennext-build.log
+
+      - name: Preserve quality evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-evidence-${{ github.run_id }}
+          path: |
+            artifacts/quality-logs/
+            .next/build-manifest.json
+            .next/routes-manifest.json
+            .next/prerender-manifest.json
+            .next/diagnostics/build-diagnostics.json
+            .open-next/worker.js
+            .open-next/cloudflare/cache-assets-manifest.sql
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
