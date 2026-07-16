@@ -80,11 +80,16 @@ function buildContentSecurityPolicy(environment: SecurityHeaderEnvironment) {
   if (supabaseOrigin && !connectSources.includes(supabaseOrigin)) {
     connectSources.push(supabaseOrigin);
   }
+  connectSources.push("https://challenges.cloudflare.com");
   if (supabaseOrigin && !imageSources.includes(supabaseOrigin)) {
     imageSources.push(supabaseOrigin);
   }
 
-  const scriptSources = ["'self'", "'unsafe-inline'"];
+  const scriptSources = [
+    "'self'",
+    "'unsafe-inline'",
+    "https://challenges.cloudflare.com",
+  ];
   if (environment.nodeEnv !== "production") {
     // Next.js development tooling uses eval for source maps and Fast Refresh.
     scriptSources.push("'unsafe-eval'");
@@ -102,7 +107,7 @@ function buildContentSecurityPolicy(environment: SecurityHeaderEnvironment) {
     `connect-src ${connectSources.join(" ")}`,
     "media-src 'self' blob: https://*.supabase.co",
     "worker-src 'self' blob:",
-    "frame-src 'none'",
+    "frame-src https://challenges.cloudflare.com",
     "manifest-src 'self'",
     `report-uri ${CSP_REPORT_ENDPOINT}`,
     "report-to csp-endpoint",

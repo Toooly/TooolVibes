@@ -3,7 +3,6 @@ import "server-only";
 import { cache } from "react";
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
-import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 import type {
   AffiliateRequestRecord,
   AffiliateRequestStatus,
@@ -110,18 +109,25 @@ export async function getRecentRejectedAffiliateRequestByEmail(
 export async function createAffiliateRequestInSupabase(
   input: AffiliateRequestCreateInput,
 ): Promise<AffiliateRequestRecord> {
-  const client = createPublicSupabaseClient();
+  const client = createAdminSupabaseClient();
   const { data, error } = await client
-    .from("affiliate_requests")
-    .insert(input)
-    .select(affiliateRequestSelect)
+    .rpc("submit_affiliate_request", {
+      p_first_name: input.first_name,
+      p_last_name: input.last_name,
+      p_email: input.email,
+      p_brand_name: input.brand_name ?? null,
+      p_website_url: input.website_url ?? null,
+      p_audience: input.audience ?? null,
+      p_channels: input.channels ?? null,
+      p_message: input.message ?? null,
+    })
     .single();
 
   if (error) {
     throw new Error(`Non è stato possibile inviare la richiesta di affiliazione. Dettaglio: ${error.message}`);
   }
 
-  return data;
+  return data as AffiliateRequestRecord;
 }
 
 export async function updateAffiliateRequestInSupabase(

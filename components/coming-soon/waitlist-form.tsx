@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SubmissionProtectionFields } from "@/components/security/submission-protection-fields";
 import { Loader2, CheckCircle } from "lucide-react";
 
 export function WaitlistForm() {
@@ -12,8 +13,10 @@ export function WaitlistForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const formElement = e.currentTarget;
+    const submissionData = new FormData(formElement);
     setStatus("loading");
     setMessage("");
 
@@ -28,7 +31,11 @@ export function WaitlistForm() {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: normalized }),
+        body: JSON.stringify({
+          email: normalized,
+          companyWebsite: String(submissionData.get("companyWebsite") ?? ""),
+          captchaToken: String(submissionData.get("captchaToken") ?? ""),
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok || res.status === 200) {
@@ -42,6 +49,8 @@ export function WaitlistForm() {
     } catch {
       setStatus("error");
       setMessage("Errore di connessione. Riprova.");
+    } finally {
+      formElement.reset();
     }
   }
 
@@ -52,6 +61,7 @@ export function WaitlistForm() {
       aria-busy={status === "loading"}
       noValidate
     >
+      <SubmissionProtectionFields action="waitlist" />
       <div className="flex flex-col gap-3 sm:flex-row">
         <label htmlFor={emailId} className="sr-only">
           Indirizzo email

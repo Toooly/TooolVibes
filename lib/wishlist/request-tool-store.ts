@@ -1,8 +1,4 @@
 import type { DirectoryToolLevel } from "@/lib/data/tooolvibes-directory";
-import {
-  getBrowserSupabaseClient,
-  isSupabaseBrowserEnabled,
-} from "@/lib/supabase/browser-client";
 
 export type ToolRequestInput = {
   submitterType: "community" | "founder";
@@ -30,10 +26,9 @@ export type StoredToolRequest = ToolRequestInput & {
   storage: "local" | "supabase";
 };
 
-type SupabaseInsertClient = {
-  from: (table: "tool_requests") => {
-    insert: (values: Record<string, unknown>) => Promise<{ error: { message: string } | null }>;
-  };
+export type ToolRequestProtection = {
+  companyWebsite?: string;
+  captchaToken?: string;
 };
 
 const STORAGE_KEY = "tooolvibes_tool_requests_v1";
@@ -97,11 +92,18 @@ function saveToolRequestLocally(input: ToolRequestInput) {
   return request;
 }
 
-async function saveToolRequestViaApi(input: ToolRequestInput) {
+async function saveToolRequestViaApi(
+  input: ToolRequestInput,
+  protection: ToolRequestProtection,
+) {
   const response = await fetch("/api/tool-requests", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
+    body: JSON.stringify({
+      ...input,
+      companyWebsite: protection.companyWebsite ?? "",
+      captchaToken: protection.captchaToken ?? "",
+    }),
   });
 
   if (!response.ok) {
@@ -125,43 +127,19 @@ async function saveToolRequestViaApi(input: ToolRequestInput) {
   };
 }
 
-export async function saveToolRequest(input: ToolRequestInput) {
+export async function saveToolRequest(
+  input: ToolRequestInput,
+  protection: ToolRequestProtection = {},
+) {
   try {
-    return await saveToolRequestViaApi(input);
-  } catch {
-    // Fallback for local/dev setups where the server route is not wired to Supabase yet.
-  }
-
-  if (isSupabaseBrowserEnabled()) {
-    const supabase = getBrowserSupabaseClient() as unknown as SupabaseInsertClient;
-    const request = createStoredRequest(input, "supabase");
-    const { error } = await supabase
-      .from("tool_requests")
-      .insert({
-        id: request.id,
-        submitter_type: input.submitterType,
-        tool_name: input.toolName,
-        tool_url: input.toolUrl,
-        category: input.category,
-        level: input.level,
-        email: input.email ?? null,
-        message: input.message ?? null,
-        use_case: input.useCase ?? null,
-        referral_url: input.referralUrl ?? null,
-        media_url: input.mediaUrl ?? null,
-        personal_notes: input.personalNotes ?? null,
-        founder_name: input.founderName ?? null,
-        company_role: input.companyRole ?? null,
-        launch_stage: input.launchStage ?? null,
-        budget_range: input.budgetRange ?? null,
-        requested_services: input.requestedServices ?? [],
-        created_at: request.createdAt,
-      });
-
-    if (!error) {
-      return request;
+    return await saveToolRequestViaApi(input, protection);
+  } catch (error) {
+    if (process.env.NODE_ENV === "production") {
+      throw error;
     }
   }
 
+  // Local-only fallback for development without a configured API. Production
+  // must never report a local save as a successful server submission.
   return saveToolRequestLocally(input);
 }

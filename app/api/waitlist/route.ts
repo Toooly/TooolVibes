@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { WAITLIST_BODY_LIMIT_BYTES } from "@/lib/public-submissions/contracts";
+import { guardPublicSubmission } from "@/lib/public-submissions/guard";
+import {
+  PublicSubmissionBodyError,
+  readJsonRequestBody,
+} from "@/lib/security/public-submission";
 import {
   isWaitlistRegistrationEnabled,
   registerWaitlistEntry,
@@ -14,11 +20,17 @@ export async function POST(request: Request) {
   let body: unknown;
 
   try {
-    body = await request.json();
-  } catch {
+    body = await readJsonRequestBody(request, WAITLIST_BODY_LIMIT_BYTES);
+  } catch (error) {
     return NextResponse.json(
       { error: "Richiesta non valida." },
-      { status: 400 },
+      {
+        status:
+          error instanceof PublicSubmissionBodyError &&
+          error.code === "too_large"
+            ? 413
+            : 400,
+      },
     );
   }
 
@@ -38,6 +50,24 @@ export async function POST(request: Request) {
     );
   }
 
+  const guard = await guardPublicSubmission({
+    request,
+    action: "waitlist",
+    companyWebsite: parsed.data.companyWebsite,
+    captchaToken: parsed.data.captchaToken,
+    email: parsed.data.email,
+  });
+
+  if (!guard.allowed) {
+    const errorMessage =
+      guard.status === 503
+        ? "Servizio temporaneamente non disponibile."
+        : "Inserisci un indirizzo email valido.";
+    return NextResponse.json(
+      { error: errorMessage },
+      { status: guard.status, headers: guard.headers },
+    );
+  }
   try {
     const result = await registerWaitlistEntry({
       email: parsed.data.email,

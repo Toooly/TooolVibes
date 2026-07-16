@@ -1,41 +1,24 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
-import { z } from "zod";
 
 import { getRejectedAffiliateRequestCooldown } from "@/lib/admin/affiliate-request-queries";
 import { notifyAffiliateRequestSubmitted } from "@/lib/email/resend";
+import {
+  AFFILIATE_REQUEST_BODY_LIMIT_BYTES,
+  affiliateRequestSchema,
+} from "@/lib/public-submissions/contracts";
+import {
+  clearSubmissionReplayGuard,
+  guardPublicSubmission,
+} from "@/lib/public-submissions/guard";
+import {
+  PublicSubmissionBodyError,
+  readJsonRequestBody,
+} from "@/lib/security/public-submission";
+import { isSupabaseAdminEnabled } from "@/lib/supabase/admin-client";
 import { createAffiliateRequestInSupabase } from "@/lib/supabase/affiliate-request-repository";
-import { isSupabasePublicEnabled } from "@/lib/supabase/public-client";
 
 const cooldownDays = 30;
-const optionalText = z.string().trim().optional();
-const affiliateRequestSchema = z
-  .object({
-    firstName: optionalText,
-    lastName: optionalText,
-    email: z.string().trim().email().or(z.literal("")).optional(),
-    brandName: optionalText,
-    websiteUrl: z
-      .string()
-      .trim()
-      .url()
-      .refine((value) => {
-        const url = new URL(value);
-        return url.protocol === "http:" || url.protocol === "https:";
-      })
-      .or(z.literal(""))
-      .optional(),
-    instagram: optionalText,
-    facebook: optionalText,
-    tiktok: optionalText,
-    xProfile: optionalText,
-    linkedin: optionalText,
-    youtube: optionalText,
-    audience: optionalText,
-    channels: optionalText,
-    message: z.string().trim().min(12),
-  })
-  .strict();
 
 function isValidHttpUrl(value: string) {
   try {
@@ -68,9 +51,18 @@ export async function POST(request: Request) {
   let body: unknown;
 
   try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ message: "Richiesta non valida." }, { status: 400 });
+    body = await readJsonRequestBody(request, AFFILIATE_REQUEST_BODY_LIMIT_BYTES);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Richiesta non valida." },
+      {
+        status:
+          error instanceof PublicSubmissionBodyError &&
+          error.code === "too_large"
+            ? 413
+            : 400,
+      },
+    );
   }
 
   const parsed = affiliateRequestSchema.safeParse(body);
@@ -83,6 +75,7 @@ export async function POST(request: Request) {
   }
 
   const payload = parsed.data;
+  const { companyWebsite, captchaToken, ...submissionPayload } = payload;
   const email = (payload.email ?? "").toLowerCase();
   const websiteUrl = payload.websiteUrl ?? "";
   const message = payload.message;
@@ -102,7 +95,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "URL sito non valido." }, { status: 422 });
   }
 
-  if (!isSupabasePublicEnabled()) {
+  if (!isSupabaseAdminEnabled()) {
     return NextResponse.json(
       { message: "Candidature non disponibili in questo momento. Riprova più tardi." },
       { status: 503 },
@@ -120,6 +113,25 @@ export async function POST(request: Request) {
     payload.youtube ? `YouTube: ${payload.youtube}` : "",
   ]);
   const storedEmail = email || getFallbackAffiliateEmail();
+  const guard = await guardPublicSubmission({
+    request,
+    action: "affiliate_request",
+    companyWebsite,
+    captchaToken,
+    email: email || undefined,
+    fingerprintPayload: submissionPayload,
+  });
+
+  if (!guard.allowed) {
+    const responseMessage =
+      guard.status === 503
+        ? "Candidature non disponibili in questo momento. Riprova pi\u00f9 tardi."
+        : "Richiesta non valida.";
+    return NextResponse.json(
+      { message: responseMessage },
+      { status: guard.status, headers: guard.headers },
+    );
+  }
 
   try {
     const recentRejected = email
@@ -146,11 +158,18 @@ export async function POST(request: Request) {
       message,
     });
 
-    await notifyAffiliateRequestSubmitted(savedRequest);
+    try {
+      await notifyAffiliateRequestSubmitted(savedRequest);
+    } catch {
+      console.error("Affiliate request notification failed.");
+    }
     revalidatePath("/admin/affiliates");
 
     return NextResponse.json({ request: savedRequest }, { status: 201 });
   } catch {
+    await clearSubmissionReplayGuard(guard.replayGuard).catch(() => {
+      console.error("Affiliate request replay cleanup failed.");
+    });
     return NextResponse.json(
       { message: "Non sono riuscito a salvare la richiesta affiliato." },
       { status: 500 },

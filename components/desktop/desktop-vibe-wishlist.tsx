@@ -12,6 +12,7 @@ import {
   type DirectoryToolLevel,
 } from "@/lib/data/tooolvibes-directory";
 import { playTooolvibesSound } from "@/lib/config/sound";
+import { SubmissionProtectionFields } from "@/components/security/submission-protection-fields";
 import {
   saveToolRequest,
   type StoredToolRequest,
@@ -93,6 +94,8 @@ export function DesktopVibeWishlist() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
+    const submissionData = new FormData(formElement);
     const nextErrors = validateForm(form);
     setErrors(nextErrors);
 
@@ -104,7 +107,8 @@ export function DesktopVibeWishlist() {
     setIsSubmitting(true);
 
     try {
-      const savedRequest = await saveToolRequest({
+      const savedRequest = await saveToolRequest(
+        {
         submitterType: form.submitterType,
         toolName: form.toolName.trim(),
         toolUrl: form.toolUrl.trim(),
@@ -112,7 +116,12 @@ export function DesktopVibeWishlist() {
         level: form.level,
         email: form.email?.trim() || undefined,
         message: form.message?.trim() || undefined,
-      });
+        },
+        {
+          companyWebsite: String(submissionData.get("companyWebsite") ?? ""),
+          captchaToken: String(submissionData.get("captchaToken") ?? ""),
+        },
+      );
       setLastRequest(savedRequest);
       setForm(initialForm);
       playTooolvibesSound("success");
@@ -121,6 +130,7 @@ export function DesktopVibeWishlist() {
       playTooolvibesSound("warning");
     } finally {
       setIsSubmitting(false);
+      formElement.reset();
     }
   }
 
@@ -155,6 +165,7 @@ export function DesktopVibeWishlist() {
         </aside>
 
         <form className="desktop-vibe-form" onSubmit={handleSubmit} noValidate>
+          <SubmissionProtectionFields action="tool_request" />
           <div className="desktop-vibe-form-grid">
             <label>
               <span>Nome tool</span>

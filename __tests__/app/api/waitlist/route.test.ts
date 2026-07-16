@@ -5,6 +5,15 @@ const waitlistRepository = vi.hoisted(() => ({
   register: vi.fn(),
 }));
 
+const submissionGuard = vi.hoisted(() => ({
+  guard: vi.fn(),
+}));
+
+vi.mock("server-only", () => ({}));
+vi.mock("@/lib/public-submissions/guard", () => ({
+  guardPublicSubmission: submissionGuard.guard,
+}));
+
 vi.mock("@/lib/supabase/waitlist-repository", () => ({
   isWaitlistRegistrationEnabled: waitlistRepository.isEnabled,
   registerWaitlistEntry: waitlistRepository.register,
@@ -25,6 +34,7 @@ describe("POST /api/waitlist", () => {
     vi.clearAllMocks();
     waitlistRepository.isEnabled.mockReturnValue(true);
     waitlistRepository.register.mockResolvedValue({ created: true });
+    submissionGuard.guard.mockResolvedValue({ allowed: true });
   });
 
   it("rejects malformed JSON without touching persistence", async () => {
@@ -107,5 +117,40 @@ describe("POST /api/waitlist", () => {
       "person@example.com",
     );
     consoleError.mockRestore();
+  });
+
+  it("rejects an oversized body before calling the guard", async () => {
+    const response = await POST(
+      jsonRequest({ email: `${"x".repeat(5 * 1_024)}@example.com` }),
+    );
+
+    expect(response.status).toBe(413);
+    expect(submissionGuard.guard).not.toHaveBeenCalled();
+  });
+
+  it("rejects honeypot or CAPTCHA failures without persistence", async () => {
+    submissionGuard.guard.mockResolvedValue({ allowed: false, status: 400 });
+
+    const response = await POST(
+      jsonRequest({
+        email: "person@example.com",
+        companyWebsite: "bot",
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(waitlistRepository.register).not.toHaveBeenCalled();
+  });
+
+  it("returns durable rate-limit headers", async () => {
+    submissionGuard.guard.mockResolvedValue({
+      allowed: false,
+      status: 429,
+      headers: new Headers({ "Retry-After": "60" }),
+    });
+
+    const response = await POST(jsonRequest({ email: "person@example.com" }));
+    expect(response.status).toBe(429);
+    expect(response.headers.get("Retry-After")).toBe("60");
   });
 });

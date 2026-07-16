@@ -23,6 +23,7 @@ import {
   type ToolRequestInput,
 } from "@/lib/wishlist/request-tool-store";
 import { PremiumBadge, PremiumButton, PremiumPanel } from "@/components/ui/premium";
+import { SubmissionProtectionFields } from "@/components/security/submission-protection-fields";
 import { cn } from "@/lib/utils";
 import { playTooolvibesSound } from "@/lib/config/sound";
 
@@ -201,6 +202,8 @@ export function RequestToolForm({ className }: { className?: string }) {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
+    const submissionData = new FormData(formElement);
 
     const nextErrors = validateForm(form);
     setErrors(nextErrors);
@@ -213,7 +216,8 @@ export function RequestToolForm({ className }: { className?: string }) {
     setIsSubmitting(true);
 
     try {
-      const savedRequest = await saveToolRequest({
+      const savedRequest = await saveToolRequest(
+        {
         submitterType: form.submitterType,
         toolName: form.toolName.trim(),
         toolUrl: form.toolUrl.trim(),
@@ -230,7 +234,12 @@ export function RequestToolForm({ className }: { className?: string }) {
         launchStage: form.launchStage || undefined,
         budgetRange: form.budgetRange || undefined,
         requestedServices: form.requestedServices ?? [],
-      });
+        },
+        {
+          companyWebsite: String(submissionData.get("companyWebsite") ?? ""),
+          captchaToken: String(submissionData.get("captchaToken") ?? ""),
+        },
+      );
 
       setLastRequest(savedRequest);
       setForm(initialForm);
@@ -243,6 +252,7 @@ export function RequestToolForm({ className }: { className?: string }) {
       });
     } finally {
       setIsSubmitting(false);
+      formElement.reset();
     }
   }
 
@@ -276,6 +286,7 @@ export function RequestToolForm({ className }: { className?: string }) {
 
       <PremiumPanel tone={isFounderFlow ? "warm" : "blue"} className="motion-form-panel request-tool-form p-4 sm:p-6">
         <form onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
+          <SubmissionProtectionFields action="tool_request" />
           <div className="grid gap-4 sm:gap-6">
             <aside className="rounded-[22px] border border-white/10 bg-[rgba(37,37,43,0.9)] p-4 text-white sm:rounded-[26px] sm:p-5">
               <PremiumBadge tone={isFounderFlow ? "warning" : "accent"}>

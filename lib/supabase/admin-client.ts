@@ -5,6 +5,11 @@ import { createClient } from "@supabase/supabase-js";
 import { getSupabaseAdminEnv } from "@/lib/supabase/env";
 import { createTimeoutFetch } from "@/lib/utils/timeout-fetch";
 
+export function isSupabaseAdminEnabled() {
+  const { url, serviceRoleKey } = getSupabaseAdminEnv();
+  return Boolean(url && serviceRoleKey);
+}
+
 export function createAdminSupabaseClient() {
   const { url, serviceRoleKey } = getSupabaseAdminEnv();
 

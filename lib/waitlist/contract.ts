@@ -1,15 +1,9 @@
 import { z } from "zod";
 
+import { waitlistPublicRequestSchema } from "@/lib/public-submissions/contracts";
 export const WAITLIST_SOURCE = "coming-soon" as const;
 export const WAITLIST_CONSENT_VERSION = "waitlist-v1" as const;
 
-export const waitlistRequestSchema = z
-  .object({
-    email: z.string().trim().max(254).email(),
-  })
-  .strict()
-  .transform((payload) => ({
-    email: payload.email.toLowerCase(),
-  }));
+export const waitlistRequestSchema = waitlistPublicRequestSchema;
 
 export type WaitlistRequest = z.infer<typeof waitlistRequestSchema>;

@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
 
 import { PremiumBadge, PremiumButton, PremiumPanel } from "@/components/ui/premium";
+import { SubmissionProtectionFields } from "@/components/security/submission-protection-fields";
 import { cn } from "@/lib/utils";
 
 type FormState = {
@@ -91,6 +92,8 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
+    const submissionData = new FormData(formElement);
 
     const nextErrors = validateForm(form);
     setErrors(nextErrors);
@@ -106,7 +109,11 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
       const response = await fetch("/api/affiliate-requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          companyWebsite: String(submissionData.get("companyWebsite") ?? ""),
+          captchaToken: String(submissionData.get("captchaToken") ?? ""),
+        }),
       });
       const payload = (await response.json().catch(() => ({}))) as {
         message?: string;
@@ -132,6 +139,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
       setErrors({ form: "Non sono riuscito a inviare la richiesta. Riprova tra poco." });
     } finally {
       setIsSubmitting(false);
+      formElement.reset();
     }
   }
 
@@ -151,6 +159,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+        <SubmissionProtectionFields action="affiliate_request" />
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block">
             <span className={labelClass}>Nome</span>

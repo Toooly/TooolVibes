@@ -3,7 +3,6 @@ import "server-only";
 import { cache } from "react";
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
-import { createPublicSupabaseClient } from "@/lib/supabase/public-client";
 import type { ToolRequestRecord, ToolRequestStatus } from "@/lib/types/tool-request";
 
 export const toolRequestSelect = `
@@ -54,18 +53,33 @@ export type ToolRequestCreateInput = {
 export async function createToolRequestInSupabase(
   input: ToolRequestCreateInput,
 ): Promise<ToolRequestRecord> {
-  const client = createPublicSupabaseClient();
+  const client = createAdminSupabaseClient();
   const { data, error } = await client
-    .from("tool_requests")
-    .insert(input)
-    .select(toolRequestSelect)
+    .rpc("submit_tool_request", {
+      p_submitter_type: input.submitter_type ?? "community",
+      p_tool_name: input.tool_name,
+      p_tool_url: input.tool_url,
+      p_category: input.category,
+      p_level: input.level,
+      p_email: input.email ?? null,
+      p_message: input.message ?? null,
+      p_use_case: input.use_case ?? null,
+      p_referral_url: input.referral_url ?? null,
+      p_media_url: input.media_url ?? null,
+      p_personal_notes: input.personal_notes ?? null,
+      p_founder_name: input.founder_name ?? null,
+      p_company_role: input.company_role ?? null,
+      p_launch_stage: input.launch_stage ?? null,
+      p_budget_range: input.budget_range ?? null,
+      p_requested_services: input.requested_services ?? [],
+    })
     .single();
 
   if (error) {
     throw new Error(`Non è stato possibile inviare il suggerimento. Dettaglio: ${error.message}`);
   }
 
-  return data;
+  return data as ToolRequestRecord;
 }
 
 export const getAdminToolRequestsFromSupabase = cache(async (): Promise<ToolRequestRecord[]> => {

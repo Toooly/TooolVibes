@@ -1,37 +1,24 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
-import { z } from "zod";
 
 import { notifyToolRequestSubmitted } from "@/lib/email/resend";
-import { isSupabasePublicEnabled } from "@/lib/supabase/public-client";
+import {
+  TOOL_REQUEST_BODY_LIMIT_BYTES,
+  toolRequestSchema,
+} from "@/lib/public-submissions/contracts";
+import {
+  clearSubmissionReplayGuard,
+  guardPublicSubmission,
+} from "@/lib/public-submissions/guard";
+import {
+  PublicSubmissionBodyError,
+  readJsonRequestBody,
+} from "@/lib/security/public-submission";
+import { isSupabaseAdminEnabled } from "@/lib/supabase/admin-client";
 import { createToolRequestInSupabase } from "@/lib/supabase/suggestion-repository";
 
-const toolRequestSchema = z
-  .object({
-    submitterType: z.enum(["community", "founder"]).default("community"),
-    toolName: z.string().trim().min(2),
-    toolUrl: z.string().trim().url().refine((value) => {
-      const url = new URL(value);
-      return url.protocol === "http:" || url.protocol === "https:";
-    }),
-    category: z.string().trim().min(2),
-    level: z.enum(["featured", "beginner", "intermediate", "expert"]),
-    email: z.string().trim().email().or(z.literal("")).optional(),
-    message: z.string().trim().optional(),
-    useCase: z.string().trim().optional(),
-    referralUrl: z.string().trim().url().or(z.literal("")).optional(),
-    mediaUrl: z.string().trim().url().or(z.literal("")).optional(),
-    personalNotes: z.string().trim().optional(),
-    founderName: z.string().trim().optional(),
-    companyRole: z.string().trim().optional(),
-    launchStage: z.string().trim().optional(),
-    budgetRange: z.string().trim().optional(),
-    requestedServices: z.array(z.string().trim().min(2)).max(12).optional(),
-  })
-  .strict();
-
 export async function POST(request: Request) {
-  if (!isSupabasePublicEnabled()) {
+  if (!isSupabaseAdminEnabled()) {
     return NextResponse.json(
       { message: "Suggerimenti non disponibili in questo momento. Riprova più tardi." },
       { status: 503 },
@@ -41,9 +28,18 @@ export async function POST(request: Request) {
   let body: unknown;
 
   try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ message: "Richiesta non valida." }, { status: 400 });
+    body = await readJsonRequestBody(request, TOOL_REQUEST_BODY_LIMIT_BYTES);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Richiesta non valida." },
+      {
+        status:
+          error instanceof PublicSubmissionBodyError &&
+          error.code === "too_large"
+            ? 413
+            : 400,
+      },
+    );
   }
 
   const parsed = toolRequestSchema.safeParse(body);
@@ -56,7 +52,27 @@ export async function POST(request: Request) {
   }
 
   const payload = parsed.data;
-  const email = (payload.email ?? "").toLowerCase();
+  const email = payload.email ?? "";
+  const { companyWebsite, captchaToken, ...submissionPayload } = payload;
+  const guard = await guardPublicSubmission({
+    request,
+    action: "tool_request",
+    companyWebsite,
+    captchaToken,
+    email: email || undefined,
+    fingerprintPayload: submissionPayload,
+  });
+
+  if (!guard.allowed) {
+    const message =
+      guard.status === 503
+        ? "Suggerimenti non disponibili in questo momento. Riprova pi\u00f9 tardi."
+        : "Richiesta non valida.";
+    return NextResponse.json(
+      { message },
+      { status: guard.status, headers: guard.headers },
+    );
+  }
 
   try {
     const savedRequest = await createToolRequestInSupabase({
@@ -78,11 +94,18 @@ export async function POST(request: Request) {
       requested_services: payload.requestedServices ?? [],
     });
 
-    await notifyToolRequestSubmitted(savedRequest);
+    try {
+      await notifyToolRequestSubmitted(savedRequest);
+    } catch {
+      console.error("Tool request notification failed.");
+    }
     revalidatePath("/admin/suggestions");
 
     return NextResponse.json({ request: savedRequest }, { status: 201 });
   } catch {
+    await clearSubmissionReplayGuard(guard.replayGuard).catch(() => {
+      console.error("Tool request replay cleanup failed.");
+    });
     return NextResponse.json(
       { message: "Non sono riuscito a salvare il suggerimento." },
       { status: 500 },

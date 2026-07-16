@@ -56,6 +56,10 @@ describe("browser security header policy", () => {
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://project.supabase.co",
     );
     expect(csp).toContain("worker-src 'self' blob:");
+    expect(csp).toContain("https://challenges.cloudflare.com");
+    expect(csp).toContain(
+      "frame-src https://challenges.cloudflare.com",
+    );
   });
 
   it("adds unsafe-eval only for Next development tooling", () => {

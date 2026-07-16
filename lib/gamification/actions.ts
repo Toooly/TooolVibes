@@ -104,11 +104,9 @@ export async function getOrCreateGameProfile(): Promise<GameProfile | null> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data, error } = await supabase
-    .from("game_profiles")
-    .upsert({ user_id: user.id }, { onConflict: "user_id" })
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc(
+    "get_or_create_game_profile",
+  );
 
   if (error) throw error;
   return data as GameProfile;
