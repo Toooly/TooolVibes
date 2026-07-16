@@ -11,6 +11,7 @@ import {
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { claimHiddenSignal } from "@/lib/gamification/actions";
+import { useGamificationSurface } from "@/lib/gamification/release-context";
 
 /* ═══════════════════════════════════════════════════════════════
    Types
@@ -90,6 +91,7 @@ const HIDDEN_SIGNAL_STORAGE_KEY = "tv:hidden-signal";
    ═══════════════════════════════════════════════════════════════ */
 
 export function MobileRadarView() {
+  const hiddenSignalRelease = useGamificationSurface("hiddenSignal");
   const activeRange: ProductHuntRange = "day";
   const [payloads, setPayloads] = useState<
     Partial<Record<ProductHuntRange, ProductHuntPayload>>
@@ -460,11 +462,12 @@ export function MobileRadarView() {
   }, [currentItems]);
 
   const hiddenNodeId = useMemo(() => {
+    if (!hiddenSignalRelease.persistentRewardsEnabled) return null;
     const realNodes = nodes.filter((node) => !node.isPlaceholder);
     if (realNodes.length === 0) return null;
     const index = Math.floor(seededRandom(today) * realNodes.length);
     return realNodes[index]?.id ?? null;
-  }, [nodes, today]);
+  }, [hiddenSignalRelease.persistentRewardsEnabled, nodes, today]);
 
   return (
     <div className="mobile-radar-view relative min-h-screen overflow-hidden">

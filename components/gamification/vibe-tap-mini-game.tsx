@@ -296,7 +296,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   const missionUpgrades = Math.min(upgradeCount, 3);
 
   const badgeMutation = useMutation({
-    mutationFn: checkAndAwardBadges,
+    mutationFn: () => checkAndAwardBadges("vibeRush"),
     onSuccess: (awarded) => {
       if (awarded.length === 0) return;
       awarded.forEach((userBadge) => addBadge(userBadge));
@@ -306,7 +306,8 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
   });
 
   const awardMutation = useMutation({
-    mutationFn: recordGameInteraction,
+    mutationFn: (xpDelta: number) =>
+      recordGameInteraction("vibeRush", xpDelta),
     onMutate: (xpDelta) => {
       setAwardState("saving");
       setAwardedXp(xpDelta);

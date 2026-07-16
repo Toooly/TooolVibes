@@ -4,7 +4,7 @@ import { Radar3DLayer } from "@/components/3d-maestoso/radar-3d-layer";
 import { DesktopRadarNodes } from "@/components/desktop/desktop-radar-nodes";
 import { DesktopRadarTable } from "@/components/desktop/desktop-radar-table";
 
-export function DesktopVibeRadar() {
+export function DesktopVibeRadar({ threeDEnabled }: { threeDEnabled: boolean }) {
   return (
     <div className="desktop-vibe desktop-vibe-radar hidden lg:block">
       <section className="desktop-vibe-section desktop-vibe-radar-hero desktop-vibe-radar-hero--simple">
@@ -13,7 +13,7 @@ export function DesktopVibeRadar() {
         </div>
 
         <div className="desktop-vibe-radar-stage" aria-label="Radar 3D Product Hunt">
-          <Radar3DLayer />
+          {threeDEnabled && <Radar3DLayer />}
           <span className="desktop-vibe-radar-sweep-line" aria-hidden="true" />
           <span className="desktop-vibe-radar-core" aria-hidden="true">
             <Radar />

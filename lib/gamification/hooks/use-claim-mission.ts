@@ -16,7 +16,7 @@ export function useClaimMission() {
       queryClient.invalidateQueries({ queryKey: ["game-missions"] });
       queryClient.invalidateQueries({ queryKey: ["game-profile"] });
 
-      const awarded = await checkAndAwardBadges();
+      const awarded = await checkAndAwardBadges("missions");
       if (awarded.length > 0) {
         setPendingBadge(awarded[0].badge);
       }

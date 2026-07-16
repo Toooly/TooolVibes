@@ -9,6 +9,7 @@ import confetti from "canvas-confetti";
 import { cn } from "@/lib/utils";
 import type { BattleResult, BattleTool } from "@/lib/gamification/battle-engine";
 import { useArenaBattle } from "@/lib/gamification/hooks/use-arena-battle";
+import { useGamificationSurface } from "@/lib/gamification/release-context";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import type { ArenaBattleMode } from "@/lib/gamification/types";
 import type { FighterState } from "@/components/3d-maestoso/arena-fighter";
@@ -77,13 +78,23 @@ function getFighterColors(tool: BattleTool) {
   };
 }
 
-export function ArenaBattleStage({
-  tools,
-  mode,
-}: {
+type ArenaBattleStageProps = {
   tools: BattleTool[];
   mode: ArenaBattleMode;
-}) {
+};
+
+export function ArenaBattleStage(props: ArenaBattleStageProps) {
+  const { persistentRewardsEnabled } = useGamificationSurface("arena");
+
+  if (!persistentRewardsEnabled) return null;
+
+  return <RewardedArenaBattleStage {...props} />;
+}
+
+function RewardedArenaBattleStage({
+  tools,
+  mode,
+}: ArenaBattleStageProps) {
   const [status, setStatus] = useState<"idle" | "fighting" | "done" | "error">("idle");
   const [result, setResult] = useState<BattleResult | null>(null);
   const [impactFlash, setImpactFlash] = useState(false);

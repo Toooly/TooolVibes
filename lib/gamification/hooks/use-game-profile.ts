@@ -6,7 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getOrCreateGameProfile } from "@/lib/gamification/actions";
 import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
 
-export function useGameProfile() {
+export function useGameProfile({
+  enabled = true,
+}: { enabled?: boolean } = {}) {
   const setProfile = useGameProgressStore((s) => s.setProfile);
   const setPendingLevelUp = useGameProgressStore((s) => s.setPendingLevelUp);
   const profile = useGameProgressStore((s) => s.profile);
@@ -16,6 +18,7 @@ export function useGameProfile() {
     queryKey: ["game-profile"],
     queryFn: getOrCreateGameProfile,
     staleTime: 60_000,
+    enabled,
   });
 
   useEffect(() => {

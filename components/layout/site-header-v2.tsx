@@ -13,6 +13,10 @@ import { VibeTapMiniGame } from "../gamification/vibe-tap-mini-game";
 import { CircuitPill, PILL_CONFIGS } from "./navbar-circuit-markers";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import {
+  useGamificationReleaseSummary,
+  useGamificationSurface,
+} from "@/lib/gamification/release-context";
+import {
   X,
   Search,
   Sparkles,
@@ -91,6 +95,8 @@ function NavLink({
 
 export function SiteHeaderV2() {
   const pathname = usePathname();
+  const { hasRewardedSurface } = useGamificationReleaseSummary();
+  const vibeRushRelease = useGamificationSurface("vibeRush");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -252,7 +258,9 @@ export function SiteHeaderV2() {
                 <MusicToggleButton />
               </div>
 
-              <GameProfileBar className="hidden lg:flex" />
+              {hasRewardedSurface && (
+                <GameProfileBar className="hidden lg:flex" />
+              )}
 
               <Link
                 href="/account#account-upgrade"
@@ -435,9 +443,11 @@ export function SiteHeaderV2() {
       </AnimatePresence>
 
       {/* Vibe Rush FAB */}
-      <VibeTapMiniGame
-        className={`site-vibe-rush-fab fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden ${isOverlayOpen ? "max-md:pointer-events-none max-md:scale-90 max-md:opacity-0" : ""}`}
-      />
+      {vibeRushRelease.persistentRewardsEnabled && (
+        <VibeTapMiniGame
+          className={`site-vibe-rush-fab fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden ${isOverlayOpen ? "max-md:pointer-events-none max-md:scale-90 max-md:opacity-0" : ""}`}
+        />
+      )}
 
       {/* Spacer */}
       <div className="site-header-v2__spacer h-16" />

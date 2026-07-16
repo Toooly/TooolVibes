@@ -8,6 +8,12 @@ import {
 } from "@/lib/gamification/battle-engine";
 import type { BattleTool } from "@/lib/gamification/battle-engine";
 import { evaluateBadges } from "@/lib/gamification/badge-rules";
+import {
+  assertAnyPersistentRewardMutationAllowed,
+  assertPersistentRewardMutationAllowed,
+  releaseFeatures,
+  type GamificationSurfaceKey,
+} from "@/lib/config/release-features";
 import type {
   ArenaBattle,
   ArenaBattleMode,
@@ -92,6 +98,8 @@ function buildBattleTool(tool: ToolRecord): BattleTool {
 }
 
 export async function getOrCreateGameProfile(): Promise<GameProfile | null> {
+  assertAnyPersistentRewardMutationAllowed(releaseFeatures);
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
@@ -106,7 +114,12 @@ export async function getOrCreateGameProfile(): Promise<GameProfile | null> {
   return data as GameProfile;
 }
 
-export async function recordGameInteraction(xpDelta: number): Promise<GameProfile> {
+export async function recordGameInteraction(
+  surfaceKey: GamificationSurfaceKey,
+  xpDelta: number,
+): Promise<GameProfile> {
+  assertPersistentRewardMutationAllowed(releaseFeatures, surfaceKey);
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
@@ -133,6 +146,8 @@ export async function recordGameInteraction(xpDelta: number): Promise<GameProfil
 }
 
 export async function claimMission(missionId: string): Promise<GameProfile> {
+  assertPersistentRewardMutationAllowed(releaseFeatures, "missions");
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
@@ -158,6 +173,8 @@ function validateToolSlug(toolSlug: string): string {
 }
 
 export async function createRadarPrediction(toolSlug: string): Promise<RadarPrediction> {
+  assertPersistentRewardMutationAllowed(releaseFeatures, "prediction");
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
@@ -219,6 +236,8 @@ export async function claimHiddenSignal(
   toolSlug: string,
   candidateSlugs: unknown,
 ): Promise<GameProfile> {
+  assertPersistentRewardMutationAllowed(releaseFeatures, "hiddenSignal");
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
@@ -249,6 +268,8 @@ export async function createArenaBattle(
   rawMode: unknown,
   rawToolSlugs: unknown,
 ): Promise<ArenaBattle> {
+  assertPersistentRewardMutationAllowed(releaseFeatures, "arena");
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -288,7 +309,7 @@ export async function createArenaBattle(
     throw new Error("Impossibile salvare la sfida di confronto");
   }
 
-  await recordGameInteraction(ARENA_BATTLE_XP_REWARD);
+  await recordGameInteraction("arena", ARENA_BATTLE_XP_REWARD);
 
   return data as ArenaBattle;
 }
@@ -307,6 +328,8 @@ export async function discoverTool(
   toolSlug: string,
   categoryTags?: unknown,
 ): Promise<void> {
+  assertPersistentRewardMutationAllowed(releaseFeatures, "missions");
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -335,7 +358,11 @@ export async function discoverTool(
   revalidatePath("/");
 }
 
-export async function checkAndAwardBadges(): Promise<UserBadge[]> {
+export async function checkAndAwardBadges(
+  surfaceKey: GamificationSurfaceKey,
+): Promise<UserBadge[]> {
+  assertPersistentRewardMutationAllowed(releaseFeatures, surfaceKey);
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -424,7 +451,7 @@ export async function checkAndAwardBadges(): Promise<UserBadge[]> {
   const awardedBadges = (awardedRows ?? []) as UserBadge[];
   const totalXp = awardedBadges.reduce((sum, ub) => sum + ub.badge.xp_bonus, 0);
   if (totalXp > 0) {
-    await recordGameInteraction(totalXp);
+    await recordGameInteraction(surfaceKey, totalXp);
   }
 
   revalidatePath("/");

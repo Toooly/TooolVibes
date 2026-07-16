@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { adminCookieName } from "@/lib/admin/constants";
 import { verifySessionToken } from "@/lib/admin/session-token";
+import { releaseFeatures } from "@/lib/config/release-features";
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
 
@@ -37,6 +38,9 @@ export async function middleware(request: NextRequest) {
     if (!token || !(await verifySessionToken(token))) {
       return NextResponse.redirect(getRedirectUrl(request, "/admin/login"));
     }
+    return NextResponse.next();
+  }
+  if (!releaseFeatures.publicGate.enabled) {
     return NextResponse.next();
   }
 

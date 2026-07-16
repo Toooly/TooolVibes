@@ -38,6 +38,10 @@ import type { DiscoveryLocalSnapshot } from "@/lib/discovery/local-storage";
 import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
 import { useBadges } from "@/lib/gamification/hooks/use-badges";
 import { useGameProfile } from "@/lib/gamification/hooks/use-game-profile";
+import {
+  useGamificationReleaseSummary,
+  useGamificationSurface,
+} from "@/lib/gamification/release-context";
 import { xpProgressInLevel } from "@/lib/gamification/level-utils";
 import { getPremiumEntitlementMeta } from "@/lib/premium/access";
 import { hasToolDecisionNote } from "@/lib/tools/discovery";
@@ -90,8 +94,15 @@ export function AccountPanel() {
   const account = useAccount();
   const persistence = useDiscoveryPersistence();
   const discovery = useDiscoverySnapshot();
-  const { profile: gameProfile, isLoading: isGameProfileLoading } = useGameProfile();
-  const { badges } = useBadges();
+  const { hasRewardedSurface, firstRewardedSurface } =
+    useGamificationReleaseSummary();
+  const missionsRelease = useGamificationSurface("missions");
+  const vibeRushRelease = useGamificationSurface("vibeRush");
+  const { profile: gameProfile, isLoading: isGameProfileLoading } =
+    useGameProfile({ enabled: hasRewardedSurface });
+  const { badges } = useBadges(firstRewardedSurface ?? "missions", {
+    enabled: hasRewardedSurface,
+  });
   const localXp = useGameProgressStore((state) => state.totalXp);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -345,6 +356,8 @@ export function AccountPanel() {
       <div className="editorial-grid gap-y-5">
         {/* Left column */}
         <section className="col-span-12 space-y-5 lg:col-span-7">
+          {hasRewardedSurface ? (
+            <>
           <div className="account-game-panel p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -388,7 +401,9 @@ export function AccountPanel() {
             </div>
 
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <VibeTapMiniGame className="account-game-launcher" badge="+XP" />
+              {vibeRushRelease.persistentRewardsEnabled && (
+                <VibeTapMiniGame className="account-game-launcher" badge="+XP" />
+              )}
               <Link href="/radar" className="account-btn-secondary">
                 <Target size={16} />
                 Missioni Radar
@@ -406,13 +421,15 @@ export function AccountPanel() {
             </p>
           </div>
 
-          <GameMissionPanel
-            eyebrow="Missioni giornaliere"
-            title="Azioni concrete per guadagnare punti"
-            description="Le missioni tengono insieme radar, raccolta tool e progressione: quando sono completate puoi riscattare XP e reward."
-            scope="radar"
-            variant="radar"
-          />
+          {missionsRelease.persistentRewardsEnabled && (
+            <GameMissionPanel
+              eyebrow="Missioni giornaliere"
+              title="Azioni concrete per guadagnare punti"
+              description="Le missioni tengono insieme radar, raccolta tool e progressione: quando sono completate puoi riscattare XP e reward."
+              scope="radar"
+              variant="radar"
+            />
+          )}
 
           <div className="account-section-panel p-5 sm:p-6">
             <div className="flex items-center gap-2">
@@ -449,6 +466,8 @@ export function AccountPanel() {
             </div>
           </div>
 
+            </>
+          ) : null}
           {/* Stato attuale */}
           <div className="account-section-panel p-5 sm:p-6">
             <div className="flex items-center gap-2">

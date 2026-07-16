@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Compare3DHero } from "@/components/3d-maestoso/compare-3d-hero";
 import { ToolBattleView } from "@/components/tools/tool-battle-view";
+import { releaseFeatures } from "@/lib/config/release-features";
 import { getPublishedTools } from "@/lib/data/public-tools";
 import { directoryTools } from "@/lib/data/tooolvibes-directory";
 
@@ -16,7 +17,7 @@ export default async function ComparePage() {
 
   return (
     <div className="compare-space-page">
-      <Compare3DHero />
+      {releaseFeatures.threeD.enabled && <Compare3DHero />}
       <ToolBattleView directoryTools={directoryTools} legacyTools={tools} />
     </div>
   );

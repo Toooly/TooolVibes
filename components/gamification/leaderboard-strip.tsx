@@ -6,6 +6,7 @@ import NumberFlow from "@number-flow/react";
 import { useEffect, useState } from "react";
 
 import { useLeaderboard } from "@/lib/gamification/hooks/use-leaderboard";
+import { useGamificationSurface } from "@/lib/gamification/release-context";
 import { cn } from "@/lib/utils";
 
 type LeaderboardStripProps = {
@@ -51,7 +52,15 @@ function LeaderboardEmpty() {
   );
 }
 
-export function LeaderboardStrip({ className }: LeaderboardStripProps) {
+export function LeaderboardStrip(props: LeaderboardStripProps) {
+  const { persistentRewardsEnabled } = useGamificationSurface("leaderboard");
+
+  if (!persistentRewardsEnabled) return null;
+
+  return <RewardedLeaderboardStrip {...props} />;
+}
+
+function RewardedLeaderboardStrip({ className }: LeaderboardStripProps) {
   const { data: entries, isLoading } = useLeaderboard();
   const reducedMotion = usePrefersReducedMotion();
 

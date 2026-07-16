@@ -25,7 +25,7 @@ export function useArenaBattle() {
       queryClient.invalidateQueries({ queryKey: ["game-missions"] });
       queryClient.invalidateQueries({ queryKey: ["game-profile"] });
 
-      const awarded = await checkAndAwardBadges();
+      const awarded = await checkAndAwardBadges("arena");
       if (awarded.length > 0) {
         setPendingBadge(awarded[0].badge);
       }

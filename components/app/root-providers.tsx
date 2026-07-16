@@ -7,8 +7,13 @@ import { GlobalCommandPalette } from "@/components/app/global-command-palette";
 import { GlobalExperienceLayer } from "@/components/app/global-experience-layer";
 import { InteractionSoundLayerV2 } from "@/components/app/interaction-sound-layer-v2";
 import { MusicAmbienceLayer } from "@/components/app/music-ambience-layer";
+import { ExperienceReleaseProvider } from "@/lib/config/release-context";
 import { RouteTransitionLoader } from "@/components/app/route-transition-loader";
 import { GameEffectsLayer } from "@/components/gamification/game-effects-layer";
+import {
+  GamificationReleaseProvider,
+  type GamificationClientModes,
+} from "@/lib/gamification/release-context";
 import { MotionObserver } from "@/components/ui/motion-observer";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,9 +21,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 export function RootProviders({
   children,
   enableExperience = true,
+  enableAudio = true,
+  enableGamificationEffects = true,
+  enableThreeD = false,
+  gamificationModes,
 }: {
   children: React.ReactNode;
   enableExperience?: boolean;
+  enableAudio?: boolean;
+  enableGamificationEffects?: boolean;
+  gamificationModes: GamificationClientModes;
+  enableThreeD?: boolean;
 }) {
   const [queryClient] = useState(
     () =>
@@ -33,22 +46,30 @@ export function RootProviders({
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider delay={180}>
-        {children}
-        {enableExperience && (
-          <>
-            <GlobalExperienceLayer />
-            <MotionObserver />
-            <RouteTransitionLoader />
-            <InteractionSoundLayerV2 />
-            <MusicAmbienceLayer />
-            <GameEffectsLayer />
-            <GlobalCommandPalette />
-          </>
-        )}
-        <Toaster position="top-right" richColors closeButton />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ExperienceReleaseProvider threeDEnabled={enableThreeD}>
+      <GamificationReleaseProvider modes={gamificationModes}>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider delay={180}>
+            {children}
+            {enableExperience && (
+              <>
+                <GlobalExperienceLayer />
+                <MotionObserver />
+                <RouteTransitionLoader />
+                {enableAudio && (
+                  <>
+                    <InteractionSoundLayerV2 />
+                    <MusicAmbienceLayer />
+                  </>
+                )}
+                {enableGamificationEffects && <GameEffectsLayer />}
+                <GlobalCommandPalette />
+              </>
+            )}
+            <Toaster position="top-right" richColors closeButton />
+          </TooltipProvider>
+        </QueryClientProvider>
+      </GamificationReleaseProvider>
+    </ExperienceReleaseProvider>
   );
 }

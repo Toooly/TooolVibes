@@ -7,6 +7,8 @@ import "@/styles/figma-final-polish.css";
 import { cookies } from "next/headers";
 import { RootProviders } from "@/components/app/root-providers";
 import { GamificationShell } from "@/components/gamification/gamification-shell";
+import { releaseFeatures } from "@/lib/config/release-features";
+import type { GamificationClientModes } from "@/lib/gamification/release-context";
 import { siteConfig } from "@/lib/config/site";
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
@@ -94,7 +96,19 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const gateCookie = cookieStore.get(gateCookieName);
-  const isGateOpen = gateCookie ? await verifyGateToken(gateCookie.value) : false;
+  const isGateOpen =
+    !releaseFeatures.publicGate.enabled ||
+    (gateCookie ? await verifyGateToken(gateCookie.value) : false);
+  const missionsEnabled =
+    releaseFeatures.gamification.surfaces.missions.persistentRewardsEnabled;
+  const gamificationModes = {
+    missions: releaseFeatures.gamification.surfaces.missions.mode,
+    hiddenSignal: releaseFeatures.gamification.surfaces.hiddenSignal.mode,
+    arena: releaseFeatures.gamification.surfaces.arena.mode,
+    prediction: releaseFeatures.gamification.surfaces.prediction.mode,
+    leaderboard: releaseFeatures.gamification.surfaces.leaderboard.mode,
+    vibeRush: releaseFeatures.gamification.surfaces.vibeRush.mode,
+  } satisfies GamificationClientModes;
   return (
     <html lang="it" className={`${manrope.variable} ${rubik.variable} ${inter.variable} ${fraunces.variable}`} suppressHydrationWarning>
       <head />
@@ -105,9 +119,21 @@ export default async function RootLayout({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
           />
         )}
-        <RootProviders enableExperience={isGateOpen}>
-          {isGateOpen && <GamificationShell />}
-          {isGateOpen && <IntroCinematic3D />}
+        <RootProviders
+          enableExperience={isGateOpen}
+          enableAudio={isGateOpen && releaseFeatures.audio.enabled}
+          enableGamificationEffects={
+            isGateOpen && releaseFeatures.gamification.hasRewardedSurface
+          }
+          enableThreeD={isGateOpen && releaseFeatures.threeD.enabled}
+          gamificationModes={gamificationModes}
+        >
+          {isGateOpen && missionsEnabled && (
+            <GamificationShell missionsEnabled={missionsEnabled} />
+          )}
+          {isGateOpen && releaseFeatures.threeD.enabled && (
+            <IntroCinematic3D />
+          )}
           {children}
         </RootProviders>
       </body>

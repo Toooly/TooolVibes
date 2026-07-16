@@ -1,8 +1,13 @@
 "use client";
 
 import { GameMissionPanel } from "@/components/gamification/game-mission-panel";
+import { useGamificationSurface } from "@/lib/gamification/release-context";
 
 export function ArenaGameMissions() {
+  const { persistentRewardsEnabled } = useGamificationSurface("missions");
+
+  if (!persistentRewardsEnabled) return null;
+
   return (
     <GameMissionPanel
       scope="arena"

@@ -7,6 +7,7 @@ import { CheckCircle2, RadioTower, Radar, ScanLine, Sparkles, Target, Zap } from
 import { toast } from "sonner";
 
 import { useRadarPrediction } from "@/lib/gamification/hooks/use-radar-prediction";
+import { useGamificationSurface } from "@/lib/gamification/release-context";
 import { playGameSound } from "@/lib/gamification/sound-engine";
 import { cn } from "@/lib/utils";
 
@@ -117,7 +118,15 @@ const fallbackItem: RadarConsoleItem = {
 };
 
 // HUD console for Radar scans, signal discovery and daily prediction locking.
-export function RadarConsole({ items, hiddenDiscovered = false, className }: RadarConsoleProps) {
+export function RadarConsole(props: RadarConsoleProps) {
+  const { persistentRewardsEnabled } = useGamificationSurface("prediction");
+
+  if (!persistentRewardsEnabled) return null;
+
+  return <RewardedRadarConsole {...props} />;
+}
+
+function RewardedRadarConsole({ items, hiddenDiscovered = false, className }: RadarConsoleProps) {
   const [scanState, setScanState] = useState<"idle" | "scanning" | "revealed">("idle");
   const [scanRemaining, setScanRemaining] = useState(4);
   const { prediction, createPrediction, isCreating } = useRadarPrediction();

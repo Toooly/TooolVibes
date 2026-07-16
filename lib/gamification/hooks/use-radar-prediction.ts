@@ -36,7 +36,7 @@ export function useRadarPrediction() {
       queryClient.invalidateQueries({ queryKey: ["radar-prediction"] });
       queryClient.invalidateQueries({ queryKey: ["game-profile"] });
 
-      const awarded = await checkAndAwardBadges();
+      const awarded = await checkAndAwardBadges("prediction");
       if (awarded.length > 0) {
         setPendingBadge(awarded[0].badge);
       }

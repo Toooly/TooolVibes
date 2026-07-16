@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { checkAndAwardBadges } from "@/lib/gamification/actions";
 import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
 import type { UserBadge } from "@/lib/gamification/types";
+import type { GamificationSurfaceKey } from "@/lib/config/release-features";
 import { getBrowserSupabaseClient } from "@/lib/supabase/browser-client";
 
 async function fetchUserBadges(): Promise<UserBadge[]> {
@@ -19,7 +20,10 @@ async function fetchUserBadges(): Promise<UserBadge[]> {
   return (data ?? []) as UserBadge[];
 }
 
-export function useBadges() {
+export function useBadges(
+  surfaceKey: GamificationSurfaceKey,
+  { enabled = true }: { enabled?: boolean } = {},
+) {
   const queryClient = useQueryClient();
   const setBadges = useGameProgressStore((state) => state.setBadges);
   const addBadge = useGameProgressStore((state) => state.addBadge);
@@ -30,6 +34,7 @@ export function useBadges() {
     queryKey: ["user-badges"],
     queryFn: fetchUserBadges,
     staleTime: 30_000,
+    enabled,
   });
 
   const badges = query.data ?? storeBadges;
@@ -39,7 +44,7 @@ export function useBadges() {
   }, [query.data, setBadges]);
 
   const checkMutation = useMutation<UserBadge[], Error, void>({
-    mutationFn: () => checkAndAwardBadges(),
+    mutationFn: () => checkAndAwardBadges(surfaceKey),
     onSuccess: (awarded) => {
       if (awarded.length > 0) {
         queryClient.invalidateQueries({ queryKey: ["user-badges"] });

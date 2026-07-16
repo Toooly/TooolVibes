@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { Home3DHero } from "@/components/3d-maestoso/home-3d-hero";
 import { VibeHomeV2 } from "@/components/home/vibe-home-v2";
 import { ComingSoonPage } from "@/components/coming-soon/coming-soon-page";
+import { releaseFeatures } from "@/lib/config/release-features";
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
 import {
@@ -13,7 +14,9 @@ import {
 export async function generateMetadata() {
   const cookieStore = await cookies();
   const gateCookie = cookieStore.get(gateCookieName);
-  const isGateOpen = gateCookie ? await verifyGateToken(gateCookie.value) : false;
+  const isGateOpen =
+    !releaseFeatures.publicGate.enabled ||
+    (gateCookie ? await verifyGateToken(gateCookie.value) : false);
 
   if (!isGateOpen) {
     return {
@@ -31,7 +34,9 @@ export async function generateMetadata() {
 export default async function HomePage() {
   const cookieStore = await cookies();
   const gateCookie = cookieStore.get(gateCookieName);
-  const isGateOpen = gateCookie ? await verifyGateToken(gateCookie.value) : false;
+  const isGateOpen =
+    !releaseFeatures.publicGate.enabled ||
+    (gateCookie ? await verifyGateToken(gateCookie.value) : false);
 
   if (!isGateOpen) {
     return <ComingSoonPage />;
@@ -44,7 +49,9 @@ export default async function HomePage() {
 
   return (
     <>
-      <Home3DHero tools={directoryTools} weeklyTool={weeklyTool} />
+      {releaseFeatures.threeD.enabled && (
+        <Home3DHero tools={directoryTools} weeklyTool={weeklyTool} />
+      )}
       <VibeHomeV2
         tools={directoryTools}
         weeklyTool={weeklyTool}
