@@ -1,0 +1,83 @@
+/*
+ * TooolVibes release token foundation.
+ *
+ * This file owns semantic design decisions. Feature styles may consume these
+ * tokens but must not redefine them. Legacy aliases remain intentionally until
+ * each route is migrated and visually certified.
+ */
+:root {
+  /* Color: dark product direction */
+  --tv-bg-base: #0f0f12;
+  --tv-surface-raised: #1a1a1e;
+  --tv-surface-elevated: #25252b;
+  --tv-ink-primary: #f3f3f7;
+  --tv-ink-secondary: #a0a0b0;
+  --tv-ink-muted: #6e6e7e;
+  --tv-ink-muted-aa: #858596;
+  --tv-accent-primary: #8b5cf6;
+  --tv-accent-hover: #7c3aed;
+  --tv-accent-pressed: #6d28d9;
+  --tv-accent-aa: #7c3aed;
+  --tv-border-subtle: rgba(243, 243, 247, 0.1);
+  --tv-border-interactive: rgba(243, 243, 247, 0.18);
+  --tv-status-success: #22c55e;
+  --tv-status-warning: #f59e0b;
+  --tv-status-danger: #ef4444;
+  --tv-status-info: #3b82f6;
+  --tv-focus-ring: #06b6d4;
+
+  /* Typography roles; B21 owns font-loading consolidation. */
+  --tv-font-ui: var(--font-inter), "Inter", "Segoe UI", sans-serif;
+  --tv-font-display: var(--font-fraunces), Georgia, serif;
+  --tv-font-system: var(--font-rubik), var(--font-inter), sans-serif;
+  --tv-text-xs: 0.75rem;
+  --tv-text-sm: 0.875rem;
+  --tv-text-md: 1rem;
+  --tv-text-lg: 1.125rem;
+  --tv-text-xl: 1.5rem;
+  --tv-text-2xl: 2rem;
+  --tv-text-3xl: 3rem;
+
+  /* Spacing: 4, 8, 12, 16, 24, 32, 48, 64 and 96px. */
+  --tv-space-1: 0.25rem;
+  --tv-space-2: 0.5rem;
+  --tv-space-3: 0.75rem;
+  --tv-space-4: 1rem;
+  --tv-space-6: 1.5rem;
+  --tv-space-8: 2rem;
+  --tv-space-12: 3rem;
+  --tv-space-16: 4rem;
+  --tv-space-24: 6rem;
+
+  /* Shape */
+  --tv-radius-sm: 0.375rem;
+  --tv-radius-md: 0.625rem;
+  --tv-radius-lg: 1rem;
+  --tv-radius-feature: 1.5rem;
+  --tv-radius-pill: 999px;
+
+  /* Elevation */
+  --tv-elevation-rest: 0 1px 2px rgba(0, 0, 0, 0.16);
+  --tv-elevation-raised: 0 18px 42px rgba(0, 0, 0, 0.28);
+  --tv-elevation-modal: 0 30px 90px rgba(0, 0, 0, 0.48);
+
+  /* Motion */
+  --tv-motion-fast: 120ms;
+  --tv-motion-base: 180ms;
+  --tv-motion-slow: 280ms;
+  --tv-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --tv-ease-emphasis: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layer contract; B22 migrates consumers and overlay behavior. */
+  --tv-z-base: 0;
+  --tv-z-content: 1;
+  --tv-z-sticky: 10;
+  --tv-z-nav: 50;
+  --tv-z-overlay: 80;
+  --tv-z-modal: 90;
+  --tv-z-toast: 110;
+  --tv-z-effects: 120;
+
+  /* Compatibility aliases: remove only after route-level visual QA. */
+  --tv-space-32: 8rem;
+}

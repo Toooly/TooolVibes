@@ -4,6 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@import "../styles/tokens.css";
 @import "../styles/gamification.css";
 @import "../styles/radar.css";
 @import "../styles/compare.css";

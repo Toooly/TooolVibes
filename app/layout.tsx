@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter, Manrope, Rubik } from "next/font/google";
 
-import "@/app/globals.css";
-import "@/styles/vibes-3d-maestoso.css";
-import "@/styles/figma-final-polish.css";
+import "@/styles/release-entry";
 import { cookies } from "next/headers";
 import { RootProviders } from "@/components/app/root-providers";
 import { GamificationShell } from "@/components/gamification/gamification-shell";
