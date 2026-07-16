@@ -24,6 +24,45 @@ export type EditorialScoreDimension =
   | "editorial_conviction";
 export type EditorialScoreLevel = "measured" | "solid" | "strong";
 export type ToolEditorialScorecard = Partial<Record<EditorialScoreDimension, EditorialScoreLevel>>;
+
+export const toolCategoryValues = [
+  "Assistente AI",
+  "Design",
+  "Sviluppo",
+  "Marketing",
+  "Produttivit\u00e0",
+  "Video",
+  "Scrittura",
+] as const satisfies readonly ToolCategory[];
+
+export const toolEditorialStateValues = [
+  "In evidenza",
+  "Nuovo in archivio",
+  "Da tenere d'occhio",
+  "Selezione core",
+] as const satisfies readonly ToolEditorialState[];
+
+export const toolPricingValues = [
+  "Free",
+  "Freemium",
+  "Paid",
+  "Enterprise",
+] as const satisfies readonly ToolPricing[];
+
+export const editorialScoreDimensionValues = [
+  "ease_of_use",
+  "versatility",
+  "polish",
+  "workflow_fit",
+  "experimentation_value",
+  "editorial_conviction",
+] as const satisfies readonly EditorialScoreDimension[];
+
+export const editorialScoreLevelValues = [
+  "measured",
+  "solid",
+  "strong",
+] as const satisfies readonly EditorialScoreLevel[];
 export type SaveReason =
   | "test"
   | "compare"
