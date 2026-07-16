@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Loader2, CheckCircle } from "lucide-react";
 
 export function WaitlistForm() {
+  const emailId = "waitlist-email";
+  const messageId = "waitlist-message";
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -44,14 +46,29 @@ export function WaitlistForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md">
+    <form
+      onSubmit={handleSubmit}
+      className="w-full max-w-md"
+      aria-busy={status === "loading"}
+      noValidate
+    >
       <div className="flex flex-col gap-3 sm:flex-row">
+        <label htmlFor={emailId} className="sr-only">
+          Indirizzo email
+        </label>
         <Input
+          id={emailId}
+          name="email"
           type="email"
+          inputMode="email"
+          autoComplete="email"
+          required
           placeholder="La tua email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={status === "loading" || status === "success"}
+          aria-invalid={status === "error"}
+          aria-describedby={message ? messageId : undefined}
           className="h-12 flex-1 rounded-xl border-[rgba(124,77,255,0.25)] bg-[rgba(18,18,42,0.6)] px-4 text-[#F0EFFF] placeholder:text-[#6B6690] focus-visible:border-[rgba(124,77,255,0.5)] focus-visible:ring-[rgba(124,77,255,0.25)]"
         />
         <Button
@@ -71,6 +88,9 @@ export function WaitlistForm() {
 
       {message && (
         <p
+          id={messageId}
+          role={status === "error" ? "alert" : "status"}
+          aria-live={status === "error" ? "assertive" : "polite"}
           className={`mt-3 text-sm ${
             status === "success" ? "text-[#64FFDA]" : "text-[#FF5252]"
           }`}
