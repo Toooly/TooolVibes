@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import {
   clearLoginAttempts,
-  isLoginRateLimited,
+  getLoginRateLimitStatus,
   recordFailedLoginAttempt,
 } from "@/lib/admin/login-attempts";
 import {
@@ -13,6 +13,10 @@ import {
   verifyAdminCredentialsDetailed,
   type AdminCredentialFailureReason,
 } from "@/lib/admin/session";
+import {
+  rateLimitResponseHeaders,
+  type RateLimitDecision,
+} from "@/lib/security/distributed-state";
 
 export const dynamic = "force-dynamic";
 
@@ -52,6 +56,42 @@ function getCredentialErrorCode(reason: AdminCredentialFailureReason): AdminLogi
   return "credentials";
 }
 
+function acceptsHtml(request: Request) {
+  return request.headers.get("accept")?.toLowerCase().includes("text/html") ?? false;
+}
+
+function copyHeaders(response: NextResponse, headers: Headers) {
+  headers.forEach((value, key) => response.headers.set(key, value));
+  return response;
+}
+
+function rateLimitedResponse(request: Request, decision: RateLimitDecision) {
+  const headers = rateLimitResponseHeaders(decision);
+  if (acceptsHtml(request)) {
+    return copyHeaders(redirectTo(request, getLoginErrorPath("rate-limited")), headers);
+  }
+  return NextResponse.json(
+    {
+      ok: false,
+      error: "rate_limited",
+      message: "Troppi tentativi. Attendi qualche minuto e riprova.",
+    },
+    { status: 429, headers },
+  );
+}
+
+function unavailableResponse(request: Request) {
+  if (acceptsHtml(request)) return redirectTo(request, getLoginErrorPath("config"));
+  return NextResponse.json(
+    {
+      ok: false,
+      error: "security_state_unavailable",
+      message: "Login admin non configurato correttamente. Controlla le variabili ambiente.",
+    },
+    { status: 503, headers: { "Cache-Control": "no-store" } },
+  );
+}
+
 function logLoginFailure(
   reason: string,
   details: {
@@ -82,44 +122,63 @@ export async function POST(request: Request) {
     passwordReceived: Boolean(password),
   };
 
+  try {
+    const current = await getLoginRateLimitStatus(request);
+    if (!current.allowed) {
+      const redirect = getLoginErrorPath("rate-limited");
+      logLoginFailure("rate_limited", { ...received, redirect });
+      return rateLimitedResponse(request, current);
+    }
+  } catch {
+    return unavailableResponse(request);
+  }
+
   if (email && password) {
     const credentials = await verifyAdminCredentialsDetailed(email, password);
 
     if (credentials.ok) {
-      await clearLoginAttempts();
+      try {
+        await clearLoginAttempts(request);
+      } catch {
+        return unavailableResponse(request);
+      }
 
       const token = await createAdminSession();
       const response = redirectTo(request, "/admin");
-
-      response.cookies.set(
-        adminCookieName,
-        token,
-        getAdminSessionCookieOptions(request),
-      );
+      response.cookies.set(adminCookieName, token, getAdminSessionCookieOptions(request));
       logLoginSuccess();
-
       return response;
     }
 
-    if (await isLoginRateLimited()) {
+    let recorded: RateLimitDecision;
+    try {
+      recorded = await recordFailedLoginAttempt(request);
+    } catch {
+      return unavailableResponse(request);
+    }
+    if (!recorded.allowed) {
       const redirect = getLoginErrorPath("rate-limited");
       logLoginFailure("rate_limited", { ...received, redirect });
-      return redirectTo(request, redirect);
+      return rateLimitedResponse(request, recorded);
     }
 
-    await recordFailedLoginAttempt();
     const redirect = getLoginErrorPath(getCredentialErrorCode(credentials.reason));
     logLoginFailure(credentials.reason, { ...received, redirect });
     return redirectTo(request, redirect);
   }
 
-  if (await isLoginRateLimited()) {
+  let recorded: RateLimitDecision;
+  try {
+    recorded = await recordFailedLoginAttempt(request);
+  } catch {
+    return unavailableResponse(request);
+  }
+  if (!recorded.allowed) {
     const redirect = getLoginErrorPath("rate-limited");
     logLoginFailure("rate_limited", { ...received, redirect });
-    return redirectTo(request, redirect);
+    return rateLimitedResponse(request, recorded);
   }
 
-  await recordFailedLoginAttempt();
   const redirect = getLoginErrorPath("missing-fields");
   logLoginFailure("missing_form_fields", { ...received, redirect });
   return redirectTo(request, redirect);

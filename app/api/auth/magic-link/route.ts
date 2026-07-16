@@ -3,6 +3,12 @@ import { z } from "zod";
 
 import { sendEmail } from "@/lib/email/resend";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
+import {
+  consumeRateLimit,
+  getRequestAddress,
+  rateLimitResponseHeaders,
+} from "@/lib/security/distributed-state";
+import { magicLinkRateLimitPolicies } from "@/lib/security/rate-limit-policies";
 
 const metadataValueSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 const magicLinkRequestSchema = z
@@ -12,11 +18,6 @@ const magicLinkRequestSchema = z
   })
   .strict();
 
-const emailRateLimit = new Map<string, number>();
-const ipRateLimit = new Map<string, { count: number; resetAt: number }>();
-const EMAIL_RATE_LIMIT_MS = 60 * 1000;
-const IP_RATE_LIMIT_MAX = 5;
-const IP_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 
 function clean(value: string | undefined | null) {
   const normalized = value?.trim();
@@ -69,40 +70,6 @@ function getAuthCallbackUrl(callbackOrigin: string, tokenHash: string) {
   url.searchParams.set("token_hash", tokenHash);
   url.searchParams.set("type", "email");
   return url.toString();
-}
-
-function getRequestIp(request: Request) {
-  return (
-    request.headers.get("cf-connecting-ip") ??
-    request.headers.get("x-real-ip") ??
-    "unknown"
-  );
-}
-
-function checkRateLimit(request: Request, email: string) {
-  const now = Date.now();
-  const normalizedEmail = email.toLowerCase();
-  const nextEmailAt = emailRateLimit.get(normalizedEmail) ?? 0;
-
-  if (now < nextEmailAt) {
-    return false;
-  }
-
-  const ip = getRequestIp(request);
-  const ipAttempt = ipRateLimit.get(ip);
-
-  if (!ipAttempt || now > ipAttempt.resetAt) {
-    ipRateLimit.set(ip, { count: 1, resetAt: now + IP_RATE_LIMIT_WINDOW_MS });
-  } else {
-    if (ipAttempt.count >= IP_RATE_LIMIT_MAX) {
-      return false;
-    }
-
-    ipAttempt.count++;
-  }
-
-  emailRateLimit.set(normalizedEmail, now + EMAIL_RATE_LIMIT_MS);
-  return true;
 }
 
 function getSignupHtml(confirmUrl: string) {
@@ -185,10 +152,32 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!checkRateLimit(request, email)) {
+  try {
+    const emailDecision = await consumeRateLimit({
+      ...magicLinkRateLimitPolicies.email,
+      identifiers: [email],
+    });
+    if (!emailDecision.allowed) {
+      return NextResponse.json(
+        { ok: false, message: "Troppe richieste. Riprova tra poco." },
+        { status: 429, headers: rateLimitResponseHeaders(emailDecision) },
+      );
+    }
+
+    const ipDecision = await consumeRateLimit({
+      ...magicLinkRateLimitPolicies.ip,
+      identifiers: [getRequestAddress(request)],
+    });
+    if (!ipDecision.allowed) {
+      return NextResponse.json(
+        { ok: false, message: "Troppe richieste. Riprova tra poco." },
+        { status: 429, headers: rateLimitResponseHeaders(ipDecision) },
+      );
+    }
+  } catch {
     return NextResponse.json(
-      { ok: false, message: "Troppe richieste. Riprova tra poco." },
-      { status: 429 },
+      { ok: false, message: "Accesso email non disponibile in questo momento." },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
     );
   }
 

@@ -135,6 +135,8 @@ export default defineConfig({
       ...webServerEnvironment,
       NEXT_PUBLIC_SITE_URL: baseURL,
       NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN: baseURL,
+      TOOOLVIBES_SECURITY_STATE_MODE: "memory",
+      TOOOLVIBES_SECURITY_STATE_KEY_SECRET: sessionSecret,
       ALLOWED_AUTH_ORIGINS: baseURL,
       NEXT_TELEMETRY_DISABLED: "1",
       TOOOLVIBES_ALLOW_MOCK_DATA: "1",

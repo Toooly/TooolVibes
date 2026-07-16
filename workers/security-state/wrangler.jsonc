@@ -1,0 +1,26 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "tooolvibes-security-state",
+  "main": "index.ts",
+  "workers_dev": false,
+  "preview_urls": false,
+  "compatibility_date": "2026-04-25",
+  "compatibility_flags": ["nodejs_compat"],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SECURITY_STATE_DO",
+        "class_name": "SecurityStateDurableObject"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["SecurityStateDurableObject"]
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
