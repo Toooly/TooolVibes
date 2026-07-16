@@ -1,0 +1,118 @@
+import { describe, expect, it } from "vitest";
+
+import {
+  buildBrowserSecurityHeaders,
+  getStrictTransportSecurityValue,
+  securityHeaderRoutePattern,
+} from "@/lib/security/browser-headers";
+
+function asHeaderMap(environment: Parameters<typeof buildBrowserSecurityHeaders>[0]) {
+  return new Map(
+    buildBrowserSecurityHeaders(environment).map(({ key, value }) => [
+      key,
+      value,
+    ]),
+  );
+}
+
+describe("browser security header policy", () => {
+  it("applies one policy to public, admin and auth routes", () => {
+    expect(securityHeaderRoutePattern).toBe("/:path*");
+  });
+
+  it("starts CSP in report-only mode and blocks embedding", () => {
+    const headers = asHeaderMap({
+      nodeEnv: "production",
+      supabaseUrl: "https://project.supabase.co",
+    });
+    const csp = headers.get("Content-Security-Policy-Report-Only");
+
+    expect(csp).toContain("default-src 'self'");
+    expect(csp).toContain("frame-ancestors 'none'");
+    expect(csp).toContain("object-src 'none'");
+    expect(csp).toContain("report-uri /api/security/csp-report");
+    expect(csp).toContain("report-to csp-endpoint");
+    expect(headers.has("Content-Security-Policy")).toBe(false);
+    expect(headers.get("X-Frame-Options")).toBe("DENY");
+  });
+
+  it("allows the current Next, Supabase, image, font and 3D runtime needs", () => {
+    const headers = asHeaderMap({
+      nodeEnv: "production",
+      supabaseUrl: "https://project.supabase.co",
+    });
+    const csp = headers.get("Content-Security-Policy-Report-Only");
+
+    expect(csp).toContain("script-src 'self' 'unsafe-inline'");
+    expect(csp).not.toContain("'unsafe-eval'");
+    expect(csp).toContain("style-src 'self' 'unsafe-inline'");
+    expect(csp).toContain("font-src 'self' data:");
+    expect(csp).toContain("img-src 'self' data: blob:");
+    expect(csp).toContain("https://images.unsplash.com");
+    expect(csp).toContain("https://www.google.com");
+    expect(csp).toContain(
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://project.supabase.co",
+    );
+    expect(csp).toContain("worker-src 'self' blob:");
+  });
+
+  it("adds unsafe-eval only for Next development tooling", () => {
+    const production = asHeaderMap({ nodeEnv: "production" });
+    const development = asHeaderMap({ nodeEnv: "development" });
+
+    expect(
+      production.get("Content-Security-Policy-Report-Only"),
+    ).not.toContain("'unsafe-eval'");
+    expect(development.get("Content-Security-Policy-Report-Only")).toContain(
+      "'unsafe-eval'",
+    );
+  });
+
+  it("enables HSTS only for a production HTTPS request", () => {
+    expect(
+      getStrictTransportSecurityValue({
+        nodeEnv: "production",
+        requestUrl: "https://tooolvibes.eu/account",
+      }),
+    ).toContain("max-age=31536000");
+    expect(
+      getStrictTransportSecurityValue({
+        nodeEnv: "development",
+        requestUrl: "https://tooolvibes.eu/account",
+      }),
+    ).toBeNull();
+    expect(
+      getStrictTransportSecurityValue({
+        nodeEnv: "production",
+        requestUrl: "http://tooolvibes.eu/account",
+      }),
+    ).toBeNull();
+    expect(
+      getStrictTransportSecurityValue({
+        nodeEnv: "production",
+        requestUrl: "https://localhost:3000/account",
+      }),
+    ).toBeNull();
+    expect(
+      getStrictTransportSecurityValue({
+        nodeEnv: "production",
+        requestUrl: "https://tooolvibes.eu/account",
+        enableHsts: "false",
+      }),
+    ).toBeNull();
+  });
+
+  it("sets the remaining browser hardening headers", () => {
+    const headers = asHeaderMap({ nodeEnv: "production" });
+
+    expect(headers.has("Strict-Transport-Security")).toBe(false);
+    expect(headers.get("X-Content-Type-Options")).toBe("nosniff");
+    expect(headers.get("Referrer-Policy")).toBe(
+      "strict-origin-when-cross-origin",
+    );
+    expect(headers.get("Permissions-Policy")).toContain("camera=()");
+    expect(headers.get("Cross-Origin-Opener-Policy")).toBe(
+      "same-origin-allow-popups",
+    );
+  });
+});

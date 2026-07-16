@@ -5,6 +5,7 @@ import { verifySessionToken } from "@/lib/admin/session-token";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
+import { getStrictTransportSecurityValue } from "@/lib/security/browser-headers";
 
 function getRedirectUrl(request: NextRequest, path: string) {
   const redirectUrl = request.nextUrl.clone();
@@ -26,22 +27,38 @@ function getRedirectUrl(request: NextRequest, path: string) {
   return redirectUrl;
 }
 
+function withTransportSecurity(
+  request: NextRequest,
+  response: NextResponse,
+) {
+  const hstsValue = getStrictTransportSecurityValue({
+    nodeEnv: process.env.NODE_ENV,
+    requestUrl: getRedirectUrl(request, request.nextUrl.pathname).toString(),
+    enableHsts: process.env.TOOOLVIBES_SECURITY_HSTS,
+  });
+  if (hstsValue) {
+    response.headers.set("Strict-Transport-Security", hstsValue);
+  }
+
+  return response;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Admin gate (esistente)
   if (pathname.startsWith("/admin")) {
     if (pathname === "/admin/login") {
-      return NextResponse.next();
+      return withTransportSecurity(request, NextResponse.next());
     }
     const token = request.cookies.get(adminCookieName)?.value;
     if (!token || !(await verifySessionToken(token))) {
-      return NextResponse.redirect(getRedirectUrl(request, "/admin/login"));
+      return withTransportSecurity(request, NextResponse.redirect(getRedirectUrl(request, "/admin/login")));
     }
-    return NextResponse.next();
+    return withTransportSecurity(request, NextResponse.next());
   }
   if (!releaseFeatures.publicGate.enabled) {
-    return NextResponse.next();
+    return withTransportSecurity(request, NextResponse.next());
   }
 
   // Public access gate
@@ -56,7 +73,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isGateOpen) {
-    return NextResponse.next();
+    return withTransportSecurity(request, NextResponse.next());
   }
 
   // Always allow these paths
@@ -65,22 +82,23 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/api/admin") ||
     pathname.startsWith("/api/gate") ||
     pathname === "/api/waitlist" ||
+    pathname === "/api/security/csp-report" ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/brand") ||
     pathname.startsWith("/images") ||
     pathname === "/favicon.ico" ||
     pathname === "/coming-soon"
   ) {
-    return NextResponse.next();
+    return withTransportSecurity(request, NextResponse.next());
   }
 
   // If not authenticated, only allow /
   if (pathname === "/") {
-    return NextResponse.next();
+    return withTransportSecurity(request, NextResponse.next());
   }
 
   // Block everything else
-  return NextResponse.redirect(new URL("/", request.url));
+  return withTransportSecurity(request, NextResponse.redirect(new URL("/", request.url)));
 }
 
 export const config = {
