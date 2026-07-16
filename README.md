@@ -97,25 +97,37 @@ supabase/
 
 ## Setup locale
 
-1. Installa le dipendenze:
+1. Usa il runtime di release esatto:
 
 ```bash
-npm install
+node --version # v22.23.1
+npm --version  # 10.9.2
+npm run check:runtime
 ```
 
-2. Copia l'ambiente:
+`.nvmrc`, `.node-version`, `packageManager` ed `engines` sono la fonte canonica. L'installazione fallisce intenzionalmente su versioni diverse.
+
+2. Installa le dipendenze dal lockfile:
+
+```bash
+npm ci
+```
+
+3. Copia l'ambiente:
 
 ```bash
 cp .env.example .env.local
 ```
 
-3. Avvia il progetto:
+4. Avvia il progetto:
 
 ```bash
 npm run dev
 ```
 
-4. Apri [http://localhost:3000](http://localhost:3000)
+5. Apri [http://localhost:3000](http://localhost:3000)
+
+La CI e le build di release devono usare Node 22.23.1 e npm 10.9.2; non usare il runtime globale se non coincide.
 
 ## GitHub + Cloudflare deploy rapido
 

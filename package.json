@@ -4,9 +4,12 @@
   "private": true,
   "packageManager": "npm@10.9.2",
   "engines": {
-    "node": ">=22 <23"
+    "node": "22.23.1",
+    "npm": "10.9.2"
   },
   "scripts": {
+    "preinstall": "node scripts/check-runtime.mjs",
+    "check:runtime": "node scripts/check-runtime.mjs",
     "dev": "next dev",
     "build": "next build",
     "build:cloudflare": "opennextjs-cloudflare build",
