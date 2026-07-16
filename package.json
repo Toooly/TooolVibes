@@ -10,6 +10,12 @@
   "scripts": {
     "preinstall": "node scripts/check-runtime.mjs",
     "check:runtime": "node scripts/check-runtime.mjs",
+    "db:migrations:check": "node scripts/release/check-migration-history.mjs",
+    "db:manifest:report": "node scripts/release/build-db-manifest.mjs --report",
+    "db:manifest:strict": "node scripts/release/build-db-manifest.mjs",
+    "db:fixture:check": "node scripts/release/check-staging-seed.mjs",
+    "db:checksums:self-test": "node scripts/release/compare-db-checksums.mjs --self-test",
+    "db:baseline:check": "npm run db:migrations:check && npm run db:fixture:check && npm run db:checksums:self-test && npm run db:manifest:strict",
     "dev": "next dev",
     "build": "next build",
     "build:cloudflare": "opennextjs-cloudflare build",

@@ -19,6 +19,15 @@ test-results/
 playwright-report/
 coverage/
 
+# database restore drills
+/supabase/.temp/
+/.env.db-drill
+/artifacts/database-drill/
+*.backup
+*.dump
+*.dump.gz
+*.pgpass
+
 # debug
 npm-debug.log*
 yarn-debug.log*

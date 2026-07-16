@@ -363,35 +363,45 @@ Secondo i docs ufficiali Cloudflare aggiornati, Next.js su Workers va configurat
 
 ## Setup Supabase
 
-### Opzione A: SQL Editor Supabase
+### Sequenza canonica: Supabase CLI
 
-1. Crea un nuovo progetto su Supabase.
-2. Apri `SQL Editor` nel progetto.
-3. Esegui i file SQL nell'ordine esatto seguente:
-   - `supabase/migrations/0001_create_tools.sql`
-   - `supabase/migrations/0002_tools_policies.sql`
-   - `supabase/migrations/0003_tools_grants.sql`
-   - `supabase/migrations/0004_tools_category_constraint.sql`
-   - `supabase/migrations/0005_create_viewer_workspace.sql`
-   - `supabase/migrations/0006_viewer_workspace_policies.sql`
-   - `supabase/migrations/0007_viewer_workspace_grants.sql`
-   - `supabase/migrations/0008_viewer_profile_auth_identity.sql`
-   - `supabase/migrations/0009_create_collections.sql`
-   - `supabase/migrations/0010_collections_policies.sql`
-   - `supabase/migrations/0011_collections_grants.sql`
-   - `supabase/migrations/0012_create_collection_transition_reviews.sql`
-   - `supabase/migrations/0013_collection_transition_reviews_grants.sql`
-   - `supabase/migrations/0014_create_collection_safe_align_events.sql`
-   - `supabase/migrations/0015_collection_safe_align_events_grants.sql`
-   - `supabase/migrations/0016_expand_collection_access_for_premium.sql`
-   - `supabase/migrations/0017_create_tool_requests.sql`
-   - `supabase/seed.sql`
-4. Vai in `Table Editor` e verifica che la tabella `public.tools` esista e contenga i record seed.
-5. Vai in `Project Settings > API` e copia:
+Non eseguire piu` le migration una per una dal SQL Editor: quella procedura era
+incompleta e non registrava una storia affidabile. La sequenza canonica e`
+quella ordinata in `supabase/migrations/` e validata dal manifest.
+
+1. Installa i prerequisiti descritti in
+   `docs/runbooks/database-backup-restore.md`: Node/npm pinned, Supabase CLI
+   pinned, Docker e PostgreSQL client.
+2. Prima di qualsiasi comando database esegui:
+
+```bash
+node scripts/release/check-migration-history.mjs
+node scripts/release/build-db-manifest.mjs
+node scripts/release/check-staging-seed.mjs
+node scripts/release/compare-db-checksums.mjs --self-test
+```
+
+3. Leggi `docs/runbooks/migration-history-repair.md` prima di aggiornare un DB
+   esistente. Il doppio prefisso storico `0023` e` gestito da una repair
+   forward-only; non usare `supabase migration repair` per aggirarla.
+4. Per un database locale nuovo, dopo un preflight verde:
+
+```bash
+npx --no-install supabase start
+npx --no-install supabase db reset --local
+```
+
+5. Per staging o un restore usa esclusivamente un target disposable, backup B05,
+   operatore e reviewer distinti. Questa guida non autorizza comandi su
+   produzione.
+6. Vai in `Table Editor` e verifica che `public.tools`,
+   `public.editorial_articles` e `public.tool_requests` esistano e che il seed
+   sintetico sia stato applicato.
+7. Vai in `Project Settings > API` e copia:
    - `Project URL`
    - `anon public key`
    - `service_role key`
-6. Inserisci in `.env.local`:
+8. Inserisci in `.env.local`:
 
 ```env
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
@@ -404,20 +414,20 @@ TOOOLVIBES_SESSION_SECRET=YOUR_LONG_RANDOM_SESSION_SECRET
 TOOOLVIBES_COLLECTIONS_SOURCE=auto
 ```
 
-7. Riavvia il dev server dopo avere salvato `.env.local`:
+9. Riavvia il dev server dopo avere salvato `.env.local`:
 
 ```bash
 npm run dev
 ```
 
-8. Apri `http://localhost:3000` e controlla il comportamento:
+10. Apri `http://localhost:3000` e controlla il comportamento:
    - se `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` sono presenti, il layer tools pubblico legge da Supabase
    - se una delle due env pubbliche manca, l'app torna ai mock data locali
    - se e` presente anche `SUPABASE_SERVICE_ROLE_KEY`, shortlist, compare, note e workspace possono sincronizzarsi davvero con il layer remoto
    - se auth e` configurata ma manca `SUPABASE_SERVICE_ROLE_KEY`, il login resta disponibile ma la workspace continua a vivere in fallback locale
    - per le collection, `TOOOLVIBES_COLLECTIONS_SOURCE=auto` compone le source con precedence `supabase > content > mock`, evitando doppioni per slug durante la transizione
    - puoi forzare `mock`, `content` o `supabase` per testare la source architecture senza cambiare la UI pubblica
-9. Verifica il datasource attivo con:
+11. Verifica il datasource attivo con:
 
 ```bash
 curl http://localhost:3000/api/tools
@@ -428,16 +438,13 @@ Controlla il blocco `meta`:
 - `meta.source = "mock"` quando mancano le env pubbliche e l'app sta usando i mock locali
 - `meta.count` ti aiuta a confrontare rapidamente il numero di record con il seed caricato
 
-### Opzione B: Supabase CLI
+### Upgrade di un database esistente
 
-Se hai gia` la CLI installata e un progetto linkato:
-
-```bash
-supabase db push
-psql "$SUPABASE_DB_URL" -f supabase/seed.sql
-```
-
-Assicurati che le migration applicate includano anche `0004_tools_category_constraint.sql`, poi configura `.env.local` come sopra.
+Non passare URL o password database nella command line e non caricare
+`supabase/seed.sql` direttamente su un database remoto. Classifica prima lo
+stato legacy `0023`, crea il backup e prova l'upgrade su uno snapshot disposable
+seguendo `docs/runbooks/migration-history-repair.md`. Solo l'evidenza fresh,
+upgrade e schema-diff consente di promuovere la stessa sequenza verso staging.
 
 ### Setup Auth minimale
 

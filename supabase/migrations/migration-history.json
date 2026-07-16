@@ -1,0 +1,41 @@
+{
+  "format_version": 1,
+  "repair_id": "SEC-102-0023",
+  "legacy_version": "0023",
+  "canonical_file": "0023_create_editorial_articles.sql",
+  "renamed_file": "20260705000000_expand_tool_requests_for_founder_flows.sql",
+  "reconciliation_sha256_lf": "8c01c9e4b72138edb8f81fe9a4409e2fb2854ce54ab2ea4b8556a4ad8b929c25",
+  "reconciliation_file": "20260716000001_reconcile_legacy_0023.sql",
+  "legacy_candidates": [
+    {
+      "legacy_file": "0023_create_editorial_articles.sql",
+      "current_file": "0023_create_editorial_articles.sql",
+      "sha256_lf": "b86ece5a8ad94fa68a3ac386b617ba5204a275b8779c7e47ffeba74a5483d943",
+      "effect": "editorial"
+    },
+    {
+      "legacy_file": "0023_expand_tool_requests_for_founder_flows.sql",
+      "current_file": "20260705000000_expand_tool_requests_for_founder_flows.sql",
+      "sha256_lf": "8309beb07b40a47a914c61c280b1324bee14a4763da42dcbaa954069b2fca675",
+      "effect": "founder-flow"
+    }
+  ],
+  "accepted_remote_states": [
+    {
+      "state": "0023-editorial",
+      "description": "Version 0023 recorded after the editorial migration."
+    },
+    {
+      "state": "0023-founder-flow",
+      "description": "Version 0023 recorded after the founder-flow expansion."
+    },
+    {
+      "state": "0023-unapplied",
+      "description": "Version 0023 is absent and the canonical sequence can run from zero."
+    }
+  ],
+  "policy": {
+    "history_mutation": "forbidden-without-signed-evidence",
+    "repair_strategy": "forward-only-idempotent-reconciliation"
+  }
+}
