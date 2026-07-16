@@ -55,6 +55,15 @@ jobs:
       - name: Next build
         run: npm run build 2>&1 | tee artifacts/quality-logs/next-build.log
 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Browser smoke tests
+        env:
+          PLAYWRIGHT_REUSE_BUILD: "1"
+        run: |
+          npm run test:e2e:smoke 2>&1 | tee artifacts/quality-logs/e2e-smoke.log
+
       - name: OpenNext build
         run: npm run build:cloudflare 2>&1 | tee artifacts/quality-logs/opennext-build.log
 
@@ -71,6 +80,8 @@ jobs:
             .next/diagnostics/build-diagnostics.json
             .open-next/worker.js
             .open-next/cloudflare/cache-assets-manifest.sql
+            playwright-report/
+            test-results/
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 7

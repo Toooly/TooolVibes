@@ -23,6 +23,10 @@
     "test": "vitest run",
     "test:unit": "vitest run",
     "quality": "npm run lint:ci && npm run typecheck && npm run test:unit",
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test --project=chromium --project=firefox --project=webkit",
+    "test:e2e:visual": "playwright test tests/e2e/visual-matrix.spec.ts",
+    "test:e2e:update": "playwright test tests/e2e/visual-matrix.spec.ts --update-snapshots",
     "preview": "npm run build:cloudflare && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare deploy",
     "deploy:local": "npm run build:cloudflare && opennextjs-cloudflare deploy",
@@ -81,6 +85,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "1.61.1",
     "@swc/helpers": "^0.5.15",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/bcryptjs": "^2.4.6",
