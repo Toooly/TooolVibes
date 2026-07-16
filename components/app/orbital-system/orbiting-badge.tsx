@@ -234,7 +234,7 @@ export function OrbitingBadge({
         <motion.span
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="pointer-events-none absolute right-1 top-1 z-30 rounded-full px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-white"
+          className="pointer-events-none absolute right-1 top-1 z-30 rounded-full px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider text-white"
           style={{
             background: item.color ?? "#6a3cff",
             boxShadow: `0 2px 6px ${item.color ?? "#6a3cff"}40`,
@@ -359,7 +359,7 @@ export function OrbitingBadge({
               className="flex flex-col items-center gap-1"
             >
               <span
-                className="max-w-[8.5rem] truncate whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-xl"
+                className="max-w-[8.5rem] truncate whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-xl"
                 style={{
                   background: isActive
                     ? `linear-gradient(135deg, ${item.color ?? "#6a3cff"}45, rgba(18,13,47,0.85))`
@@ -381,7 +381,7 @@ export function OrbitingBadge({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 3 }}
                   transition={{ delay: 0.06, duration: 0.15 }}
-                  className="whitespace-nowrap text-[10px] font-medium text-white/70"
+                  className="whitespace-nowrap text-xs font-medium text-white/70"
                   style={{ textShadow: "0 1px 2px rgba(0,0,0,0.35)" }}
                 >
                   {item.meta}
@@ -395,7 +395,7 @@ export function OrbitingBadge({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 3 }}
                   transition={{ delay: 0.06, duration: 0.15 }}
-                  className="flex items-center gap-0.5 whitespace-nowrap text-[9px] font-medium"
+                  className="flex items-center gap-0.5 whitespace-nowrap text-xs font-medium"
                   style={{ color: item.color ?? "#6a3cff" }}
                 >
                   Esplora

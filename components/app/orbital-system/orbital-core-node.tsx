@@ -259,7 +259,7 @@ export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalC
                       />
                     </motion.div>
                     <span
-                      className="whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-semibold text-white shadow"
+                      className="whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-semibold text-white shadow"
                       style={{
                         background: "rgba(10,6,24,0.75)",
                         textShadow: "0 1px 2px rgba(0,0,0,0.4)",

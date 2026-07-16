@@ -100,3 +100,11 @@ export const workspaceStateV1Schema = z
     toolStates: z.record(workspaceSlugSchema, workspaceToolStateSchema),
   })
   .strict();
+
+export const workspaceSyncMutationSchema = z
+  .object({
+    state: workspaceStateV1Schema,
+    base_revision: z.string().min(1).max(160).nullable(),
+    operation_id: z.string().uuid(),
+  })
+  .strict();

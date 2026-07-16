@@ -119,7 +119,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <p className="pill selection-chip">{collection.cover_kicker}</p>
               <span
-                className="selection-chip rounded-full px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em]"
+                className="selection-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]"
                 style={{
                   background:
                     collection.access !== "open"
@@ -215,7 +215,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(24,17,12,0.08),rgba(26,20,64,0.6))]" />
               <div className="absolute left-5 top-5 flex flex-wrap gap-2">
                 <span
-                  className="selection-chip rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white"
+                  className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white"
                   style={{
                     borderColor: "rgba(255,255,255,0.22)",
                     background: "rgba(24,17,12,0.28)",
@@ -224,7 +224,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                   Raccolta
                 </span>
                 <span
-                  className="selection-chip rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white"
+                  className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white"
                   style={{
                     borderColor: "rgba(255,255,255,0.18)",
                     background: "rgba(255,255,255,0.08)",
@@ -235,7 +235,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               </div>
 
               <div className="absolute bottom-3.5 left-3.5 right-3.5 sm:bottom-4 sm:left-4 sm:right-4">
-                <p className="text-[0.68rem] font-medium uppercase tracking-[0.2em] text-white/74">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/74">
                   In breve
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/82">
@@ -319,7 +319,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 ) : null}
                 {isAdvancedIssue && collection.advanced_issue ? (
                   <div className="mt-5 rounded-[22px] border border-white/10 bg-white/6 px-4 py-4">
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                       Flusso di lettura
                     </p>
                     <p className="mt-2 text-sm leading-6 text-white/78">
@@ -330,7 +330,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 {!hasFullAccess ? (
                   <div className="mt-5 grid gap-3">
                     <div className="rounded-[22px] border border-white/10 bg-white/6 px-4 py-4">
-                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                         Resta aperto
                       </p>
                     <p className="mt-2 text-sm leading-6 text-white/78">
@@ -338,7 +338,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                     </p>
                   </div>
                   <div className="rounded-[22px] border border-white/10 bg-white/6 px-4 py-4">
-                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                         Resta nella versione completa
                       </p>
                     <p className="mt-2 text-sm leading-6 text-white/78">

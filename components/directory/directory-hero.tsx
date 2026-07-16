@@ -55,7 +55,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
                   <span className="block text-[1.45rem] font-semibold leading-none text-white">
                     {value}
                   </span>
-                  <span className="mt-2 block text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-white/58">
+                  <span className="mt-2 block text-xs font-semibold uppercase tracking-[0.15em] text-white/58">
                     {label}
                   </span>
                 </div>
@@ -71,7 +71,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
               ].map((item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-white/10 bg-white/8 px-3 py-1.5 text-[0.72rem] font-semibold text-white/72"
+                  className="rounded-full border border-white/10 bg-white/8 px-3 py-1.5 text-xs font-semibold text-white/72"
                 >
                   {item}
                 </span>
@@ -82,7 +82,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
           <div className="hero-mini-visual hidden rounded-[32px] border border-white/12 bg-[linear-gradient(145deg,rgba(255,255,255,0.13),rgba(244,239,255,0.08))] p-4 shadow-[0_22px_70px_rgba(8,14,38,0.22)] xl:block">
             <div className="flex items-center justify-between gap-3 rounded-[24px] border border-white/10 bg-white/8 px-4 py-3">
               <div>
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/48">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/48">
                   Anteprima selezione
                 </p>
                 <p className="mt-1 text-sm text-white/68">
@@ -105,14 +105,14 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/46">
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/46">
                           {tool.levelLabel}
                         </p>
                         <p className="mt-1 truncate text-[1rem] font-semibold text-white">
                           {tool.name}
                         </p>
                       </div>
-                      <span className="rounded-full border border-white/10 bg-white/8 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/58">
+                      <span className="rounded-full border border-white/10 bg-white/8 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-white/58">
                         {formatItalianDate(tool.publishedAt)}
                       </span>
                     </div>
@@ -123,7 +123,7 @@ export function DirectoryHero({ tools }: DirectoryHeroProps) {
                       {tool.highlights.slice(0, 2).map((highlight) => (
                         <span
                           key={highlight}
-                          className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.62rem] font-semibold text-white/62"
+                          className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-xs font-semibold text-white/62"
                         >
                           {highlight}
                         </span>

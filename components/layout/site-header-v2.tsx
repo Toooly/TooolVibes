@@ -248,7 +248,7 @@ export function SiteHeaderV2() {
                   </svg>
                   <span className="hidden lg:inline">Cerca</span>
                 </span>
-                <kbd className="site-header-v2__kbd ml-1 hidden rounded-md border border-[rgba(56,42,122,0.15)] bg-[rgba(236,232,255,0.6)] px-1.5 py-0.5 text-[10px] font-medium text-[#4f4970] lg:inline">
+                <kbd className="site-header-v2__kbd ml-1 hidden rounded-md border border-[rgba(56,42,122,0.15)] bg-[rgba(236,232,255,0.6)] px-1.5 py-0.5 text-xs font-medium text-[#4f4970] lg:inline">
                   ⌘K
                 </kbd>
               </button>

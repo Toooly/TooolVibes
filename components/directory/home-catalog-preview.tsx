@@ -81,7 +81,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
         <div className="rounded-[26px] border border-white/12 bg-white/9 p-3.5 shadow-[0_22px_58px_rgba(8,14,38,0.18)] sm:rounded-[30px] sm:p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/48">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/48">
                 Scorciatoie
               </p>
               <p className="mt-1 text-sm text-white/68">
@@ -93,7 +93,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
                 <Link
                   key={filter.href}
                   href={filter.href}
-                  className="info-chip-button rounded-full px-3 py-1.5 text-[0.68rem] font-semibold"
+                  className="info-chip-button rounded-full px-3 py-1.5 text-xs font-semibold"
                 >
                   {filter.label}
                 </Link>
@@ -110,7 +110,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
               >
                 <div className="flex items-start justify-between gap-3">
                   <DirectoryToolGlyph tool={tool} size="md" />
-                  <span className="animated-status-badge rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/52">
+                  <span className="animated-status-badge rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-white/52">
                     #{index + 1}
                   </span>
                 </div>
@@ -119,7 +119,7 @@ export function HomeCatalogPreview({ tools }: HomeCatalogPreviewProps) {
                   {tool.shortDescription}
                 </p>
                 <div className="mt-3 rounded-[16px] border border-white/10 bg-white/8 p-3">
-                   <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-white/44">
+                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/44">
                     In breve
                   </p>
                   <p className="text-clamp-2 mt-1.5 text-xs leading-5 text-white/66">

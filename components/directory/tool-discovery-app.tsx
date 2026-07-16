@@ -202,7 +202,7 @@ function FilterControls({
   return (
     <div className="space-y-4">
       <div>
-        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
+        <p className={cn("text-xs font-semibold uppercase tracking-[0.18em]", dark ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
           Categorie
         </p>
         <div className="tool-rail mt-3 flex gap-2 overflow-x-auto pb-1 lg:flex-wrap">
@@ -214,7 +214,7 @@ function FilterControls({
               data-sonic-action="filterApply"
               data-category-key={group.key}
               className={cn(
-                "motion-filter-chip min-h-10 shrink-0 rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3.5 sm:py-2 sm:text-[0.72rem]",
+                "motion-filter-chip min-h-10 shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition sm:px-3.5 sm:py-2",
                 activeGroup === group.key ? activeClass : idleClass,
               )}
             >
@@ -224,7 +224,7 @@ function FilterControls({
         </div>
         <details className="motion-details mt-3 rounded-[20px] border border-white/10 bg-white/5 p-3">
           <summary
-            className="cursor-pointer text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] transition hover:text-[var(--accent-strong)]"
+            className="cursor-pointer text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] transition hover:text-[var(--accent-strong)]"
             data-sonic-action="expand"
           >
             Altre categorie
@@ -238,7 +238,7 @@ function FilterControls({
               data-sonic-action="filterApply"
               data-category-key={group.key}
               className={cn(
-                  "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3 sm:text-xs",
+                  "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition sm:px-3",
                   activeGroup === group.key ? activeClass : idleClass,
                 )}
               >
@@ -250,7 +250,7 @@ function FilterControls({
       </div>
 
       <div>
-        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
+        <p className={cn("text-xs font-semibold uppercase tracking-[0.18em]", dark ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
           Livello
         </p>
         <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
@@ -261,7 +261,7 @@ function FilterControls({
               onClick={() => onLevelChange(level.key)}
               data-sonic-action="filterApply"
               className={cn(
-                "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition sm:px-3 sm:text-xs",
+                "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition sm:px-3",
                 activeLevel === level.key ? activeClass : idleClass,
               )}
             >
@@ -272,7 +272,7 @@ function FilterControls({
       </div>
 
       <div>
-        <p className={cn("text-[0.68rem] font-semibold uppercase tracking-[0.18em]", dark ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
+        <p className={cn("text-xs font-semibold uppercase tracking-[0.18em]", dark ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
           Tag rapidi
         </p>
         <div className="mt-3 flex max-h-[8.5rem] flex-wrap gap-1.5 overflow-y-auto pr-1 sm:max-h-[10rem] sm:gap-2">
@@ -283,7 +283,7 @@ function FilterControls({
               onClick={() => onTagChange(tag)}
               data-sonic-action="filterApply"
               className={cn(
-                "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-[0.72rem] font-medium transition sm:px-3 sm:text-xs",
+                "motion-filter-chip min-h-9 rounded-full border px-2.5 py-1.5 text-xs font-medium transition sm:px-3",
                 activeTag === tag ? activeClass : idleClass,
               )}
             >
@@ -477,7 +477,7 @@ function ToolDetailDrawer({
                 key={label}
                 className="rounded-[22px] border border-white/10 bg-white/7 p-4"
               >
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white/44">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/44">
                   {label}
                 </p>
                 <p className="mt-2 text-sm font-semibold text-white">{value}</p>
@@ -487,7 +487,7 @@ function ToolDetailDrawer({
 
           <div className="grid gap-3 sm:grid-cols-2">
             <PremiumPanel tone="subtle" className="p-4">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                 In breve
               </p>
               <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
@@ -495,7 +495,7 @@ function ToolDetailDrawer({
               </p>
             </PremiumPanel>
             <PremiumPanel tone="subtle" className="p-4">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                 Lettura rapida
               </p>
               <p className="mt-2 text-sm leading-6 text-[var(--muted-strong)]">
@@ -507,7 +507,7 @@ function ToolDetailDrawer({
           <PremiumPanel tone="airy" className="p-5">
             <div className="grid gap-4 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
               <div>
-                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                   Cosa fa
                 </p>
                 <p className="mt-3 text-sm leading-7 text-[var(--muted-strong)]">
@@ -515,7 +515,7 @@ function ToolDetailDrawer({
                 </p>
               </div>
               <div className="rounded-[20px] bg-white/72 p-4">
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                   Per chi ha senso
                 </p>
                 <p className="mt-2 text-sm leading-6 text-[var(--foreground)]">
@@ -526,7 +526,7 @@ function ToolDetailDrawer({
           </PremiumPanel>
 
           <PremiumPanel tone="subtle" className="p-5">
-            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
               Casi d&apos;uso
             </p>
             <div className="mt-4 grid gap-3">
@@ -982,7 +982,7 @@ export function ToolDiscoveryApp({
                 <Search className="size-4" />
                 Cerca o apri comandi
               </span>
-              <kbd className="rounded-md bg-white/10 px-2 py-1 text-[0.68rem]">Ctrl K</kbd>
+              <kbd className="rounded-md bg-white/10 px-2 py-1 text-xs">Ctrl K</kbd>
             </button>
 
             <nav className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 lg:grid-cols-1 lg:gap-2" aria-label="Viste della selezione">
@@ -998,14 +998,14 @@ export function ToolDiscoveryApp({
                   onClick={() => setActiveTab(key as WorkspaceTab)}
                   data-sonic-action="tab"
                   className={cn(
-                    "premium-button flex min-h-10 items-center justify-center gap-1.5 rounded-[16px] px-2 text-[0.72rem] font-semibold sm:min-h-11 sm:text-sm lg:justify-between lg:rounded-[18px] lg:px-3",
+                    "premium-button flex min-h-10 items-center justify-center gap-1.5 rounded-[16px] px-2 text-xs font-semibold sm:min-h-11 sm:text-sm lg:justify-between lg:rounded-[18px] lg:px-3",
                     activeTab === key
                       ? "premium-button-glow text-white"
                       : "premium-button-subtle text-[var(--muted-strong)]",
                   )}
                 >
                   <span>{label}</span>
-                  <span className="rounded-full bg-white/12 px-1.5 py-0.5 text-[0.66rem] sm:px-2 sm:text-xs">{count}</span>
+                  <span className="rounded-full bg-white/12 px-1.5 py-0.5 text-xs sm:px-2">{count}</span>
                 </button>
               ))}
             </nav>
@@ -1068,7 +1068,7 @@ export function ToolDiscoveryApp({
                       data-sonic-action="filterApply"
                       data-category-key={group.key}
                       className={cn(
-                        "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:text-[0.72rem] sm:tracking-[0.14em]",
+                        "motion-filter-chip premium-button min-h-9 shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] sm:px-3.5 sm:py-2 sm:tracking-[0.14em]",
                         activeGroup === group.key
                           ? "premium-button-glow text-white"
                           : "premium-button-subtle text-[var(--muted-strong)]",
@@ -1118,7 +1118,7 @@ export function ToolDiscoveryApp({
         <div className="min-w-0 space-y-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                 {isDirectSearch
                   ? visibleTools.length > 0
                     ? `${visibleTools.length} ${visibleTools.length === 1 ? "risultato" : "risultati"} per "${normalizedQuery}"`
@@ -1223,7 +1223,7 @@ export function ToolDiscoveryApp({
                   <span className="block text-[1rem] font-semibold text-[var(--foreground)]">
                     {item.count}
                   </span>
-                   <span className="mt-1 block text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted-strong)]">
+                   <span className="mt-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted-strong)]">
                     {item.label}
                   </span>
                 </button>
@@ -1239,7 +1239,7 @@ export function ToolDiscoveryApp({
           <PremiumPanel tone="airy" className="p-4 sm:p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                   Tool salvati
                 </p>
                 <h3 className="mt-2 text-display-card text-[1.45rem] text-white">
@@ -1276,7 +1276,7 @@ export function ToolDiscoveryApp({
           </PremiumPanel>
 
           <PremiumPanel tone="violet" className="p-4 sm:p-5">
-            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
               Confronta
             </p>
             <div className="mt-4 overflow-x-auto">
@@ -1326,7 +1326,7 @@ export function ToolDiscoveryApp({
           <PremiumPanel tone="blue" className="p-4 sm:p-5" id="stack-builder">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                   La tua lista
                 </p>
                 <h3 className="mt-2 text-display-card text-[1.32rem] leading-tight text-white sm:text-[1.55rem]">

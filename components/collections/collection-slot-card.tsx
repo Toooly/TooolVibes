@@ -31,7 +31,7 @@ export function CollectionSlotCard({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <span
-            className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]"
+            className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
             style={{
               borderColor: "var(--line)",
               background: "rgba(255,255,255,0.78)",
@@ -41,7 +41,7 @@ export function CollectionSlotCard({
             {slot.tool.category}
           </span>
           <span
-            className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]"
+            className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
             style={{
               borderColor: "var(--line)",
               background: "rgba(255,255,255,0.78)",

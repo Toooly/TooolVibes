@@ -183,7 +183,7 @@ export function MobileRadarCanvas() {
 
         // Label
         if (node.label) {
-          ctx.font = `600 ${Math.max(10, 11 * sweepBoost)}px ui-sans-serif, system-ui, sans-serif`;
+          ctx.font = `600 ${Math.max(12, 11 * sweepBoost)}px ui-sans-serif, system-ui, sans-serif`;
           ctx.textAlign = "center";
           ctx.textBaseline = "top";
           ctx.fillStyle = "rgba(255,255,255,0.9)";

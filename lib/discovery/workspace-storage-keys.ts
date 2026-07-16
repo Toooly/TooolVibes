@@ -3,6 +3,10 @@ export const WORKSPACE_LEGACY_BACKUP_KEY =
   "tooolvibes:workspace:legacy-backup:v1";
 export const WORKSPACE_QUARANTINE_KEY =
   "tooolvibes:workspace:quarantine:v1";
+export const WORKSPACE_SYNC_PREVIOUS_KEY =
+  "tooolvibes:workspace:sync-previous:v1";
+export const WORKSPACE_SYNC_RECOVERY_KEY =
+  "tooolvibes:workspace:sync-recovery:v1";
 
 export const LEGACY_TOOL_WORKSPACE_STORAGE_KEY =
   "tooolvibes-tool-workspace";

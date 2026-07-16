@@ -59,7 +59,7 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.48)] px-3 py-1.5 text-[11px] font-medium text-[#6a3cff] backdrop-blur-md"
+            className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(106,60,255,0.12)] bg-[rgba(255,255,255,0.48)] px-3 py-1.5 text-xs font-medium text-[#6a3cff] backdrop-blur-md"
             data-orbit-shield
           >
             <Sparkles size={14} />

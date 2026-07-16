@@ -59,7 +59,7 @@ export default function CommunityPage() {
 
           <div className="hero-mini-visual rounded-[24px] border border-white/12 bg-white/9 p-4 shadow-[0_18px_48px_rgba(8,14,38,0.16)] sm:rounded-[28px] sm:p-5">
             <div className="flex items-center justify-between gap-3">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/50">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">
                 Partecipa
               </p>
               <MessageSquarePlus className="size-5 text-violet-100" aria-hidden="true" />

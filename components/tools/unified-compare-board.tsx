@@ -294,7 +294,7 @@ function DirectoryCompareMobileDeck({
                   <h3 className="text-display-card mt-2 text-[1.35rem] leading-tight text-[var(--foreground)]">
                     {index + 1}. {tool.name}
                   </h3>
-                  <p className="mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
                     {tool.categoryLabel}
                   </p>
                 </div>
@@ -457,7 +457,7 @@ function DirectoryCompareCard({
           <h3 className="text-display-card mt-3 text-[1.35rem] leading-tight text-[var(--foreground)] sm:text-[1.62rem]">
             {tool.name}
           </h3>
-          <p className="mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+          <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
             {tool.categoryLabel}
           </p>
         </div>
@@ -490,7 +490,7 @@ function DirectoryCompareCard({
         {tool.highlights.slice(0, 3).map((item) => (
           <span
             key={item}
-            className="rounded-full bg-white/72 px-3 py-1 text-[0.68rem] font-semibold text-[var(--foreground)]"
+            className="rounded-full bg-white/72 px-3 py-1 text-xs font-semibold text-[var(--foreground)]"
           >
             {item}
           </span>

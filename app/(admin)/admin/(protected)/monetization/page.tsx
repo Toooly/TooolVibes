@@ -54,7 +54,7 @@ function StatCard({
     <article className="rounded-[24px] border border-white/10 bg-white/[0.045] p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-white/45">{label}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">{label}</p>
           <p className="mt-3 text-3xl font-semibold text-white">{value}</p>
         </div>
         <span className="grid size-10 place-items-center rounded-2xl border border-white/10 bg-white/8 text-white">
@@ -123,13 +123,13 @@ export default function AdminMonetizationPage() {
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
-                      <p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-white/45">
+                      <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">
                         {placement.surface} / {placement.format}
                       </p>
                       <h2 className="mt-3 text-[1.35rem] font-semibold leading-tight">{placement.packageName}</h2>
                     </div>
                     <span
-                      className="inline-flex rounded-full border px-3 py-1 text-[0.64rem] font-bold uppercase tracking-[0.16em]"
+                      className="inline-flex rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.16em]"
                       style={{
                         borderColor: tone.border,
                         background: tone.background,
@@ -142,11 +142,11 @@ export default function AdminMonetizationPage() {
                   <p className="mt-4 text-sm leading-6 text-white/64">{placement.body}</p>
                   <div className="mt-5 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-[20px] border border-white/8 bg-white/[0.045] px-4 py-3">
-                      <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/42">Audience</p>
+                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/42">Audience</p>
                       <p className="mt-2 text-sm leading-6 text-white/68">{placement.audience}</p>
                     </div>
                     <div className="rounded-[20px] border border-white/8 bg-white/[0.045] px-4 py-3">
-                      <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/42">CTA pubblica</p>
+                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/42">CTA pubblica</p>
                       <p className="mt-2 text-sm leading-6 text-white/68">
                         {placement.ctaLabel} / {placement.href}
                       </p>
@@ -164,7 +164,7 @@ export default function AdminMonetizationPage() {
                   <Megaphone size={17} />
                 </span>
                 <div>
-                  <p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-white/45">Regola prodotto</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Regola prodotto</p>
                   <p className="text-sm font-semibold">Native first</p>
                 </div>
               </div>
@@ -174,7 +174,7 @@ export default function AdminMonetizationPage() {
             </div>
 
             <div className="rounded-[28px] border border-white/10 bg-white/[0.045] p-5 text-white">
-              <p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-white/45">Da collegare dopo</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Da collegare dopo</p>
               <div className="mt-4 grid gap-3 text-sm leading-6 text-white/66">
                 <p>Campagne con data inizio/fine, asset, sponsor e URL tracciati.</p>
                 <p>Reporting click/impression e pacchetti founder.</p>
@@ -184,7 +184,7 @@ export default function AdminMonetizationPage() {
 
             {plannedPlacements.length > 0 ? (
               <div className="rounded-[28px] border border-white/10 bg-white/[0.045] p-5 text-white">
-                <p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-white/45">Non ancora visibili</p>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Non ancora visibili</p>
                 <div className="mt-4 grid gap-3">
                   {plannedPlacements.map((placement) => (
                     <div key={placement.key} className="rounded-[18px] border border-white/8 bg-white/[0.04] px-3.5 py-3">

@@ -162,7 +162,7 @@ function CenterContent({
       <span
         className="select-none font-bold tracking-wider text-white"
         style={{
-          fontSize: Math.max(9, Math.floor(size * 0.28)),
+          fontSize: Math.max(12, Math.floor(size * 0.28)),
           textShadow: "0 1px 3px rgba(0,0,0,0.4)",
         }}
       >

@@ -173,16 +173,16 @@ export default async function AdminDashboardPage({
                 pubblicazione. Le altre aree del catalogo restano separate da questa vista.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+                <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                   Pubblicati: {publishedCount}
                 </span>
-                <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+                <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                   In archivio: {cmsCount}
                 </span>
-                <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+                <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                   Da importare: {legacyCount}
                 </span>
-                <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+                <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                   Salvataggio: {canWrite ? "attivo" : "sola lettura"}
                 </span>
               </div>

@@ -240,7 +240,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                           className="rounded-[22px] border px-4 py-3"
                           style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
                         >
-                          <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                          <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                             {item.label}
                           </p>
                           <p className="mt-2 text-sm" style={{ color: "var(--muted-strong)" }}>

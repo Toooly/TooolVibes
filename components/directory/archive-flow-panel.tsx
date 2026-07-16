@@ -46,7 +46,7 @@ export function ArchiveFlowPanel() {
 
   return (
     <div className="hero-mini-visual rounded-[28px] border border-white/12 bg-white/9 p-4">
-      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/48">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/48">
         Flusso catalogo
       </p>
       <div className="mt-4 grid gap-3">

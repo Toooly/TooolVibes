@@ -324,7 +324,7 @@ export function ArticleForm({
       <div className="dark-panel rounded-[28px] px-5 py-4.5 text-white sm:px-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/58">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/58">
               Salvataggio articolo
             </p>
             <p className="mt-2 text-sm leading-7 text-white/72">

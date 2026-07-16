@@ -72,7 +72,7 @@ function ToolMomentCard({
       </p>
       {slot ? (
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <span className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)", color: "var(--muted-strong)" }}>
+          <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)", color: "var(--muted-strong)" }}>
             {slot.role}
           </span>
           <Link
@@ -169,7 +169,7 @@ function renderIssueBlock(
           {comparedSlots.map((slot) => (
             <span
               key={slot.tool.slug}
-              className="selection-chip rounded-full border border-white/14 px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/84"
+              className="selection-chip rounded-full border border-white/14 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/84"
               style={{ background: "rgba(255,255,255,0.08)" }}
             >
               {slot.tool.name}
@@ -356,7 +356,7 @@ export function AdvancedSpecialIssue({
         />
         <div className="space-y-2">
           <span className="selection-status">Formato speciale</span>
-          <p className="text-[0.74rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+          <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
             {issue.reading_flow}
           </p>
         </div>

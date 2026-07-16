@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "status": "certified",
+  "environment": "staging",
+  "owner": "Synthetic release fixture",
+  "capturedAt": "2026-07-16T10:00:00.000Z",
+  "rollbackWindowEndsAt": "2026-07-18T10:00:00.000Z",
+  "sources": {
+    "productionSource": "directory",
+    "candidateSource": "supabase",
+    "fingerprintVersion": "tool-public-release-semantics-v1",
+    "directoryPublished": [
+      { "slug": "atlas-ai", "fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+      { "slug": "orbit-ai", "fingerprint": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" }
+    ],
+    "candidatePublished": [
+      { "slug": "atlas-ai", "fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+      { "slug": "orbit-ai", "fingerprint": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" }
+    ],
+    "candidateDraftSlugs": ["draft-sentinel"],
+    "reviewedCanonicalMismatches": []
+  },
+  "surfaces": {
+    "catalog": ["atlas-ai", "orbit-ai"],
+    "detailOk": ["atlas-ai", "orbit-ai"],
+    "detailNotFound": ["draft-sentinel"],
+    "staticParams": ["atlas-ai", "orbit-ai"],
+    "api": ["atlas-ai", "orbit-ai"],
+    "sitemap": ["atlas-ai", "orbit-ai"],
+    "relatedEdges": [
+      { "from": "atlas-ai", "to": "orbit-ai" },
+      { "from": "orbit-ai", "to": "atlas-ai" }
+    ]
+  },
+  "editorial": {
+    "legacyAdapterRemoved": true,
+    "legacyWarningRemoved": true,
+    "collections": [
+      { "slug": "synthetic-collection", "expectedToolSlugs": ["atlas-ai"], "resolvedToolSlugs": ["atlas-ai"] }
+    ],
+    "posts": [
+      { "slug": "synthetic-post", "expectedToolSlugs": ["orbit-ai"], "resolvedToolSlugs": ["orbit-ai"] }
+    ],
+    "brokenToolLinks": []
+  },
+  "cacheInvalidation": {
+    "publish": {
+      "rehearsed": true,
+      "slug": "publish-sentinel",
+      "surfaces": ["catalog", "detail", "staticParams", "api", "sitemap", "related"],
+      "evidenceRef": "synthetic/cache-publish"
+    },
+    "update": {
+      "rehearsed": true,
+      "slug": "update-sentinel",
+      "surfaces": ["catalog", "detail", "staticParams", "api", "sitemap", "related"],
+      "evidenceRef": "synthetic/cache-update"
+    },
+    "unpublish": {
+      "rehearsed": true,
+      "slug": "unpublish-sentinel",
+      "surfaces": ["catalog", "detail", "staticParams", "api", "sitemap", "related"],
+      "evidenceRef": "synthetic/cache-unpublish"
+    }
+  },
+  "rollback": { "rehearsed": true, "evidenceRef": "synthetic/rollback" },
+  "evidenceRefs": ["synthetic/source", "synthetic/routes", "synthetic/editorial"]
+}

@@ -37,7 +37,7 @@ export function SiteFooter() {
                 <p className="text-[0.84rem] font-semibold uppercase tracking-[0.18em] text-white">
                   TooolVibes
                 </p>
-                <p className="mt-1 text-[0.68rem] uppercase tracking-[0.14em] text-white/58">
+                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-white/58">
                   Guida italiana ai tool AI
                 </p>
               </div>
@@ -99,7 +99,7 @@ export function SiteFooter() {
 
           <div className="hidden min-w-0 gap-4 md:grid md:grid-cols-2 md:items-stretch">
             <div className="dynamic-card h-full rounded-[22px] border border-white/12 bg-white/8 p-4">
-              <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/56">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/56">
                 Navigazione
               </p>
               <div className="motion-stagger mt-3 grid gap-1.5 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
@@ -116,7 +116,7 @@ export function SiteFooter() {
             </div>
 
             <div className="dynamic-card h-full rounded-[22px] border border-white/12 bg-white/8 p-4">
-              <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/56">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/56">
                 Categorie
               </p>
               <div className="motion-stagger mt-3 grid gap-1.5 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">

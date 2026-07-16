@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, Manrope, Rubik } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 
 import "@/styles/release-entry";
 import { cookies } from "next/headers";
@@ -11,18 +11,6 @@ import { siteConfig } from "@/lib/config/site";
 import { gateCookieName } from "@/lib/gate/constants";
 import { getPublicToolsSnapshot } from "@/lib/data/public-tools";
 import { verifyGateToken } from "@/lib/gate/session";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope",
-  display: "swap",
-});
-
-const rubik = Rubik({
-  subsets: ["latin"],
-  variable: "--font-rubik",
-  display: "swap",
-});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -122,7 +110,7 @@ export default async function RootLayout({
     vibeRush: releaseFeatures.gamification.surfaces.vibeRush.mode,
   } satisfies GamificationClientModes;
   return (
-    <html lang="it" className={`${manrope.variable} ${rubik.variable} ${inter.variable} ${fraunces.variable}`} suppressHydrationWarning>
+    <html lang="it" className={`${inter.variable} ${fraunces.variable}`} suppressHydrationWarning>
       <head />
       <body>
         {isGateOpen && (

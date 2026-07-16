@@ -95,8 +95,8 @@ export function ShortlistToggle({
         isSaved ? "is-active" : ""
       } ${isFresh ? "is-fresh" : ""} ${
         compact || mode === "compact"
-          ? "px-2.75 py-1.25 text-[0.66rem]"
-          : "justify-center px-4 py-2.25 text-[0.74rem] sm:text-[0.78rem]"
+          ? "px-2.75 py-1.25 text-xs"
+          : "justify-center px-4 py-2.25 text-xs sm:text-[0.78rem]"
       }`}
       style={{
         borderColor: isSaved ? "rgba(112,82,255,0.24)" : "var(--line)",

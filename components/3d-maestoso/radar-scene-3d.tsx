@@ -298,12 +298,12 @@ function SignalNode({
           ref={labelRef}
           style={{
             color: "rgba(255,255,255,0.9)",
-            fontSize: isMobile ? "10px" : "11px",
+            fontSize: "12px",
             fontWeight: 700,
             textShadow: "0 1px 4px rgba(0,0,0,0.8)",
             whiteSpace: "nowrap",
             transition: "opacity 0.2s, filter 0.2s, transform 0.2s",
-            fontFamily: "Rubik, sans-serif",
+            fontFamily: "var(--tv-font-system)",
             letterSpacing: "0.04em",
           }}
         >

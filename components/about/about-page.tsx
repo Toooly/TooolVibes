@@ -241,10 +241,10 @@ export function AboutPage() {
                 ["1", "obiettivo: chiarezza"],
               ].map(([value, label]) => (
                 <div key={label} className="v-about-stat-card">
-                  <strong className="block font-[var(--font-rubik)] text-2xl leading-none text-[var(--accent-strong)]">
+                  <strong className="block font-[var(--tv-font-system)] text-2xl leading-none text-[var(--accent-strong)]">
                     {value}
                   </strong>
-                  <span className="mt-1 block text-[0.72rem] font-bold uppercase tracking-[0.1em] text-[var(--muted)]">
+                  <span className="mt-1 block text-xs font-bold uppercase tracking-[0.1em] text-[var(--muted)]">
                     {label}
                   </span>
                 </div>

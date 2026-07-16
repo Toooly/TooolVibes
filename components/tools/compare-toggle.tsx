@@ -104,7 +104,7 @@ export function CompareToggle({
       type="button"
       onClick={handleToggle}
       className={`selection-chip toggle-chip-glow text-ui-strong inline-flex items-center gap-2 rounded-full border transition-all duration-200 hover:-translate-y-0.5 ${
-        compact ? "px-2.75 py-1.25 text-[0.66rem]" : "justify-center px-4 py-2.25 text-[0.74rem] sm:text-[0.78rem]"
+        compact ? "px-2.75 py-1.25 text-xs" : "justify-center px-4 py-2.25 text-xs sm:text-[0.78rem]"
       } ${isSelected ? "is-active" : ""} ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
       style={{
         borderColor: isSelected ? "rgba(112,82,255,0.24)" : "var(--line)",
@@ -125,7 +125,7 @@ export function CompareToggle({
       />
       {compact ? "Confronta" : isSelected ? "Confronto" : "Aggiungi al confronto"}
       <span
-        className={`count-badge-live rounded-full bg-white/76 px-1.5 py-0.5 text-[0.58rem] ${count > 0 ? "is-active" : ""} ${
+        className={`count-badge-live rounded-full bg-white/76 px-1.5 py-0.5 text-xs ${count > 0 ? "is-active" : ""} ${
           isReady ? "is-ready" : ""
         } ${isFresh ? "is-fresh" : ""}`}
         style={{ color: "var(--muted)" }}

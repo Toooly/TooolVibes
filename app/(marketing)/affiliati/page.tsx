@@ -40,7 +40,7 @@ export default function AffiliatiPage() {
           <div className="flex items-center gap-3">
             <BrandLogo size={58} priority />
             <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">
                 Programma partner TooolVibes
               </p>
               <p className="mt-1 text-sm" style={{ color: "var(--muted-strong)" }}>

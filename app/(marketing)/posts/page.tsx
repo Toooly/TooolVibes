@@ -69,11 +69,11 @@ export default async function PostsPage() {
                 <p className="editorial-label !text-white/60">Contenuti attivi</p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">Blog</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">Blog</p>
                     <p className="mt-2 text-[1.8rem] leading-none text-white">{blogPosts.length}</p>
                   </div>
                   <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">Approfondimenti tool</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">Approfondimenti tool</p>
                     <p className="mt-2 text-[1.8rem] leading-none text-white">{toolWriteups.length}</p>
                   </div>
                 </div>
@@ -85,7 +85,7 @@ export default async function PostsPage() {
                   {curationCriteria.map((item) => (
                     <span
                       key={item}
-                      className="rounded-full border border-white/12 bg-white/8 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white/72"
+                      className="rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/72"
                     >
                       {item}
                     </span>

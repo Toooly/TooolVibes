@@ -43,7 +43,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
           <div className="flex items-center gap-3">
             <BrandLogo size={52} priority />
             <div>
-              <p className="text-[0.74rem] font-semibold uppercase tracking-[0.22em] text-white/64">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/64">
                 Admin gate
               </p>
               <p className="text-sm text-white/58">Founders access</p>

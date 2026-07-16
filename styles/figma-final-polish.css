@@ -1,13 +1,13 @@
 .tv-figma-theme {
   background: var(--tv-bg-base);
   color: var(--tv-ink-primary);
-  font-family: var(--font-inter), "Inter", "Segoe UI", sans-serif;
+  font-family: var(--tv-font-ui);
   --vibe-button-radius: var(--tv-radius-md);
 }
 
 .tv-figma-theme :where(h1, h2, h3, h4) {
   color: var(--tv-ink-primary);
-  font-family: var(--font-fraunces), var(--font-rubik), serif;
+  font-family: var(--tv-font-display);
   letter-spacing: 0;
 }
 

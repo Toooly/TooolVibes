@@ -529,7 +529,7 @@ export default async function AdminCollectionsPage({
                   style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
                 >
                   <p
-                    className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]"
+                    className="text-xs font-semibold uppercase tracking-[0.18em]"
                     style={{ color: "var(--muted)" }}
                   >
                     {item.label}
@@ -547,7 +547,7 @@ export default async function AdminCollectionsPage({
                   style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
                 >
                   <p
-                    className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]"
+                    className="text-xs font-semibold uppercase tracking-[0.18em]"
                     style={{ color: "var(--muted)" }}
                   >
                     {item.label}
@@ -698,7 +698,7 @@ export default async function AdminCollectionsPage({
                         }}
                       >
                         <p
-                          className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]"
+                          className="text-xs font-semibold uppercase tracking-[0.18em]"
                           style={{ color: "var(--muted)" }}
                         >
                           {item.label}
@@ -745,7 +745,7 @@ export default async function AdminCollectionsPage({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em]"
+                  className="selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.16em]"
                   style={{
                     borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
                     background: item.active
@@ -767,7 +767,7 @@ export default async function AdminCollectionsPage({
               <Link
                 key={item.href}
                 href={item.href}
-                className="selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em]"
+                className="selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.16em]"
                 style={{
                   borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
                   background: item.active
@@ -1080,7 +1080,7 @@ export default async function AdminCollectionsPage({
                             className="rounded-[22px] border px-4 py-3"
                             style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
                           >
-                            <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                               {item.label}
                             </p>
                             <p className="mt-2 text-sm" style={{ color: "var(--muted-strong)" }}>

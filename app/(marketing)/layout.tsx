@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 import { AccountProvider } from "@/components/account/account-provider";
-import { DiscoveryPersistenceProvider } from "@/components/discovery/discovery-persistence-provider";
+import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";

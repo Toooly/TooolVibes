@@ -99,7 +99,7 @@ export default async function NewCollectionPage() {
                 className="stat-block w-[13rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
               >
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.label}
                 </p>
                 <p className="mt-3 text-[1.72rem] leading-none">{item.value}</p>
@@ -117,7 +117,7 @@ export default async function NewCollectionPage() {
                 className="stat-block rounded-[var(--radius-lg)] border p-4"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
               >
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.label}
                 </p>
                 <p className="mt-3 text-[1.72rem] leading-none">{item.value}</p>

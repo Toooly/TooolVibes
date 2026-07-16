@@ -36,7 +36,7 @@ function RuntimeBadge({
 
   return (
     <span
-      className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.14em]"
+      className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]"
       style={styles}
     >
       <span className="text-white/54">{label}</span>
@@ -56,7 +56,7 @@ function MetricCard({
 }) {
   return (
     <article className="rounded-[20px] border border-white/12 bg-white/8 px-4 py-3">
-      <p className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white/52">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/52">
         {label}
       </p>
       <div className="mt-2 flex items-end gap-2">
@@ -180,7 +180,7 @@ export function FounderControlCenter({ articlesRuntime }: FounderControlCenterPr
               <BrandLogo size={48} priority />
               <div className="min-w-0">
                 <span
-                  className="inline-flex rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-white/82"
+                  className="inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/82"
                   style={{
                     borderColor: "rgba(255,255,255,0.12)",
                     background: "rgba(255,255,255,0.08)",

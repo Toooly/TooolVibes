@@ -53,7 +53,7 @@ export function DirectoryToolCard({
               <h3 className="text-display-card text-[1.26rem] leading-tight text-[var(--foreground)] sm:text-[1.5rem]">
                 {tool.name}
               </h3>
-              <p className="mt-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:mt-2 sm:text-[0.78rem] sm:tracking-[0.16em]">
+              <p className="mt-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:mt-2 sm:text-[0.78rem] sm:tracking-[0.16em]">
                 {tool.categoryLabel}
               </p>
             </div>
@@ -64,7 +64,7 @@ export function DirectoryToolCard({
           {tool.highlights.slice(0, 3).map((item) => (
             <span
               key={item}
-              className="rounded-full border border-white/10 bg-[rgba(37,37,43,0.86)] px-2.5 py-1 text-[0.62rem] font-medium text-white/86 sm:px-3 sm:text-[0.68rem]"
+              className="rounded-full border border-white/10 bg-[rgba(37,37,43,0.86)] px-2.5 py-1 text-xs font-medium text-white/86 sm:px-3"
             >
               {item}
             </span>
@@ -75,7 +75,7 @@ export function DirectoryToolCard({
       <div className="flex flex-1 flex-col p-4 sm:p-6">
         <div className="grid grid-cols-2 gap-3 rounded-[22px] border border-white/10 bg-[rgba(37,37,43,0.86)] px-4 py-3">
           <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/58">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/58">
               Livello
             </p>
             <p className="mt-2 text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-white/88">
@@ -83,7 +83,7 @@ export function DirectoryToolCard({
             </p>
           </div>
           <div>
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/58">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/58">
               Fonte
             </p>
             <p className="mt-2 truncate text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-white/88">
@@ -94,7 +94,7 @@ export function DirectoryToolCard({
 
         <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
           <div className="rounded-[22px] border border-white/10 bg-[rgba(37,37,43,0.86)] p-4">
-            <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/58">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/58">
               In breve
             </p>
             <p className="text-clamp-2 mt-2 text-[0.9rem] leading-6 text-white/82">
@@ -104,7 +104,7 @@ export function DirectoryToolCard({
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-[20px] border border-white/10 bg-[rgba(37,37,43,0.86)] p-3.5">
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/58">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/58">
                 Cosa fa
               </p>
               <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-white/82">
@@ -112,7 +112,7 @@ export function DirectoryToolCard({
               </p>
             </div>
             <div className="rounded-[20px] border border-white/10 bg-[rgba(37,37,43,0.86)] p-3.5">
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/58">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/58">
                 Lettura rapida
               </p>
               <p className="text-clamp-3 mt-2 text-[0.84rem] leading-6 text-white/82">
@@ -126,7 +126,7 @@ export function DirectoryToolCard({
               <Link
                 key={tag}
                 href={`/archivio?tag=${encodeURIComponent(tag)}`}
-                className="directory-tool-card__tag-link rounded-full px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.12em] transition-colors duration-200 sm:px-3 sm:text-[0.7rem] sm:tracking-[0.14em]"
+                className="directory-tool-card__tag-link rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] transition-colors duration-200 sm:px-3 sm:tracking-[0.14em]"
               >
                 {tag}
               </Link>
@@ -154,7 +154,7 @@ export function DirectoryToolCard({
             </Link>
           </div>
 
-          <p className="text-center text-[0.62rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:text-[0.7rem] sm:tracking-[0.16em]">
+          <p className="text-center text-xs uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:tracking-[0.16em]">
             {tool.publishedAt ? `Aggiornato ${formatItalianDate(tool.publishedAt)}` : "Data non disponibile"}
           </p>
         </div>

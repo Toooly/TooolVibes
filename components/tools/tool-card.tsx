@@ -104,14 +104,14 @@ function ToolCardComponent({
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.24),rgba(18,15,35,0.78))]" />
             <div className="absolute left-4 top-4 flex flex-wrap gap-2">
               <span
-                className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white"
+                className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white"
                 style={{ borderColor: "rgba(255,255,255,0.22)", background: "rgba(24,17,12,0.32)" }}
               >
                 {contextLabel}
               </span>
               {discoverySignal ? (
                 <span
-                  className="selection-chip rounded-full px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]"
+                  className="selection-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                   style={{ background: "rgba(248,240,215,0.94)", color: "var(--muted-strong)" }}
                 >
                   {discoverySignal}
@@ -119,7 +119,7 @@ function ToolCardComponent({
               ) : null}
               {isCompared ? (
                 <span
-                  className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]"
+                  className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                   style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(112,82,255,0.18)", color: "white" }}
                 >
                   Confronto
@@ -127,7 +127,7 @@ function ToolCardComponent({
               ) : null}
             </div>
             <div className="tool-card-media__caption absolute bottom-4 left-4 right-4">
-               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/74">{tool.category}</p>
+               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/74">{tool.category}</p>
               <h3 className="text-display-card mt-2 max-w-none text-[1.62rem] text-white sm:max-w-[11.5ch] sm:text-[2.08rem] sm:text-balance">
                 {tool.name}
               </h3>
@@ -139,7 +139,7 @@ function ToolCardComponent({
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="selection-status">Prima scelta</span>
-                <span className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}>
+                <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}>
                   {formattedIndex}
                 </span>
               </div>
@@ -153,7 +153,7 @@ function ToolCardComponent({
             </div>
 
             <div className="mt-4.5 border-t pt-3.5 soft-divider">
-              <p className="text-[0.68rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
+              <p className="text-xs uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                 Uso ideale: {bestFor}
               </p>
               <div className="mt-3.5 flex flex-wrap items-center gap-2.5">
@@ -205,13 +205,13 @@ function ToolCardComponent({
             <div className="flex flex-wrap items-center gap-2">
               <p className="editorial-label">{tool.category}</p>
               {discoverySignal ? (
-                <span className="selection-chip rounded-full border px-2.5 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted-strong)" }}>
+                <span className="selection-chip rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted-strong)" }}>
                   {discoverySignal}
                 </span>
               ) : null}
               {isSaved && memorySignals[0] ? (
                 <span
-                  className="selection-chip rounded-full border px-2.5 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.14em]"
+                  className="selection-chip rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.14em]"
                   style={{ borderColor: "var(--line)", background: memorySignals[0].background, color: memorySignals[0].tone }}
                 >
                   {memorySignals[0].label}
@@ -236,17 +236,17 @@ function ToolCardComponent({
             type="button"
             onClick={() => onSelect?.(tool.slug)}
             className={cn(
-              "button-shell text-ui-strong inline-flex items-center rounded-full px-3.5 py-1.75 text-[0.68rem] font-semibold uppercase tracking-[0.16em]",
+              "button-shell text-ui-strong inline-flex items-center rounded-full px-3.5 py-1.75 text-xs font-semibold uppercase tracking-[0.16em]",
               selected ? "button-primary text-white" : "button-secondary",
             )}
           >
             {selected ? "In primo piano" : "Metti a fuoco"}
           </button>
           <div className="flex items-center gap-3">
-            <span className="text-[0.66rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+            <span className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
               {formattedDate}
             </span>
-            <Link href={`/toools/${tool.slug}`} className="section-quiet-link text-[0.74rem] font-semibold" style={{ color: "var(--accent-strong)" }}>
+            <Link href={`/toools/${tool.slug}`} className="section-quiet-link text-xs font-semibold" style={{ color: "var(--accent-strong)" }}>
               Apri profilo
             </Link>
           </div>
@@ -291,14 +291,14 @@ function ToolCardComponent({
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.22),rgba(18,15,35,0.76))]" />
           <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
             <span
-              className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white"
+              className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white"
               style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(24,17,12,0.32)" }}
             >
               {tool.category}
             </span>
             {tool.is_featured ? (
               <span
-                className="selection-chip rounded-full px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]"
+                className="selection-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                 style={{ background: "rgba(248,240,215,0.94)", color: "var(--muted-strong)" }}
               >
                 In evidenza
@@ -307,7 +307,7 @@ function ToolCardComponent({
           </div>
           <div className="tool-card-media__caption absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
             <div className="min-w-0">
-               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/72">
+               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/72">
                  {contextLabel}
                </p>
               <h3 className={cn("text-display-card mt-1.5 max-w-none text-white sm:max-w-[12.5ch] sm:text-balance", variant === "compact" ? "text-[1.12rem]" : "text-[1.28rem]")}>
@@ -315,7 +315,7 @@ function ToolCardComponent({
               </h3>
             </div>
             <span
-              className="tool-card__date-chip selection-chip rounded-full px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white"
+              className="tool-card__date-chip selection-chip rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-white"
               style={{ background: "rgba(24,17,12,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)" }}
             >
               {formattedDate}
@@ -337,7 +337,7 @@ function ToolCardComponent({
               <>
                 <div className="mt-2">
                   <span
-                    className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]"
+                    className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                     style={{ borderColor: "var(--line)", background: shortlistMeta.background, color: shortlistMeta.tone }}
                   >
                     {shortlistMeta.label}
@@ -348,7 +348,7 @@ function ToolCardComponent({
                     {memorySignals.map((signal) => (
                       <span
                         key={signal.label}
-                        className="selection-chip rounded-full border px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.15em]"
+                        className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em]"
                         style={{ borderColor: "var(--line)", background: signal.background, color: signal.tone }}
                       >
                         {signal.label}
@@ -438,7 +438,7 @@ function ToolCardComponent({
                 <ShortlistToggle slug={tool.slug} mode="compact" />
                 <CompareToggle slug={tool.slug} compact />
               </div>
-              <span className="text-[0.68rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
+              <span className="text-xs uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                 {pricingLabel}
               </span>
             </div>
@@ -452,7 +452,7 @@ function ToolCardComponent({
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href={`/toools/${tool.slug}`}
-                className="button-shell button-secondary text-ui-strong inline-flex items-center gap-2 rounded-full px-3.25 py-1.75 text-[0.74rem] font-semibold"
+                className="button-shell button-secondary text-ui-strong inline-flex items-center gap-2 rounded-full px-3.25 py-1.75 text-xs font-semibold"
               >
                 Apri profilo
                 <ArrowRight aria-hidden="true" className="button-arrow size-4" />

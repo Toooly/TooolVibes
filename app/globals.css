@@ -230,7 +230,7 @@ html {
 
 body {
   margin: 0;
-  font-family: "Manrope", "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--tv-font-ui);
   font-weight: 400;
   background: var(--gradient-shell);
   color: var(--foreground);
@@ -241,6 +241,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   isolation: isolate;
+}
+
+small {
+  font-size: max(var(--tv-text-xs), 0.875em);
 }
 
 .marketing-shell {
@@ -370,7 +374,7 @@ img {
   h2,
   h3,
   h4 {
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     letter-spacing: 0;
     font-weight: 600;
     line-height: 1.1;
@@ -618,7 +622,7 @@ img {
     border-radius: 999px;
     background: linear-gradient(135deg, #f3bf4c, #39d2f6);
     color: #171125 !important;
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     line-height: 1;
     box-shadow:
@@ -1670,8 +1674,8 @@ img {
     border-radius: 999px;
     border: 1px solid rgba(70, 54, 134, 0.15);
     padding: 0.42rem 0.72rem;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: 0.64rem;
+    font-family: var(--tv-font-system);
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     letter-spacing: 0.13em;
     line-height: 1;
@@ -2002,7 +2006,7 @@ img {
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.66);
     color: var(--muted-strong);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     line-height: 1;
     padding: 0.45rem 0.78rem;
@@ -2241,7 +2245,7 @@ img {
 
   .category-tool-card__badge {
     padding: 0.28rem 0.56rem;
-    font-size: 0.57rem;
+    font-size: var(--tv-text-xs);
   }
 
   .category-tool-card__title {
@@ -2261,7 +2265,7 @@ img {
     margin: 0.38rem 0 0;
     overflow: hidden;
     color: var(--accent-strong);
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     line-height: 1.35;
     text-transform: uppercase;
@@ -2305,7 +2309,7 @@ img {
   .category-tool-card__insight p {
     margin: 0;
     color: var(--accent-strong);
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     line-height: 1;
     text-transform: uppercase;
@@ -2340,7 +2344,7 @@ img {
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.68);
     color: var(--muted-strong);
-    font-size: 0.64rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     line-height: 1.1;
     overflow: hidden;
@@ -2374,7 +2378,7 @@ img {
   .category-tool-card__meta p {
     margin: 0;
     color: var(--muted);
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     line-height: 1;
     text-transform: uppercase;
@@ -2396,7 +2400,7 @@ img {
   .category-tool-card__meta time {
     flex: 0 0 auto;
     color: var(--muted);
-    font-size: 0.66rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     line-height: 1.15;
     text-align: right;
@@ -2480,7 +2484,7 @@ img {
   .category-tool-card__icon-label {
     max-width: 100%;
     overflow: hidden;
-    font-size: 0.48rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.01em;
     line-height: 1;
@@ -2534,7 +2538,7 @@ img {
     .category-tool-carousel__title-row span {
       min-height: 1.62rem;
       padding: 0.36rem 0.62rem;
-      font-size: 0.6rem;
+      font-size: var(--tv-text-xs);
     }
 
     .category-tool-carousel__header p {
@@ -2560,7 +2564,7 @@ img {
 
     .category-tool-card__badge {
       padding: 0.22rem 0.48rem;
-      font-size: 0.52rem;
+      font-size: var(--tv-text-xs);
     }
 
     .category-tool-card__title {
@@ -2571,7 +2575,7 @@ img {
 
     .category-tool-card__category {
       margin-top: 0.24rem;
-      font-size: 0.58rem;
+      font-size: var(--tv-text-xs);
       -webkit-line-clamp: 1;
     }
 
@@ -2596,13 +2600,13 @@ img {
     }
 
     .category-tool-card__insight p {
-      font-size: 0.52rem;
+      font-size: var(--tv-text-xs);
       letter-spacing: 0.14em;
     }
 
     .category-tool-card__insight strong {
       margin-top: 0.28rem;
-      font-size: 0.72rem;
+      font-size: var(--tv-text-xs);
       line-height: 1.42;
       -webkit-line-clamp: 2;
     }
@@ -2612,7 +2616,7 @@ img {
     }
 
     .category-tool-card__tag {
-      font-size: 0.59rem;
+      font-size: var(--tv-text-xs);
       padding: 0.38rem 0.56rem;
     }
 
@@ -2626,7 +2630,7 @@ img {
     }
 
     .category-tool-card__meta time {
-      font-size: 0.58rem;
+      font-size: var(--tv-text-xs);
     }
 
     .category-tool-card__actions {
@@ -2645,7 +2649,7 @@ img {
       grid-column: 1 / -1;
       min-height: 2.75rem !important;
       padding-inline: 0.7rem;
-      font-size: 0.74rem;
+      font-size: var(--tv-text-xs);
     }
   }
 
@@ -2919,7 +2923,7 @@ img {
     gap: clamp(0.42rem, 1.2vw, 0.9rem);
     align-items: center;
     justify-content: center;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: clamp(2.1rem, 7.4vw, 6.8rem);
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -2943,7 +2947,7 @@ img {
   .brand-intro__caption {
     min-width: min(28rem, 88vw);
     color: rgba(255, 255, 255, 0.72);
-    font-size: clamp(0.62rem, 1.05vw, 0.84rem);
+    font-size: clamp(var(--tv-text-xs), 1.05vw, 0.84rem);
     font-weight: 700;
     letter-spacing: 0.24em;
     text-align: center;
@@ -2964,7 +2968,7 @@ img {
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.78);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.14em;
     padding: 0 0.95rem;
@@ -3147,7 +3151,7 @@ img {
     gap: clamp(0.1rem, 0.4vw, 0.35rem);
     align-items: center;
     justify-content: center;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: clamp(2.6rem, 6.5vw, 4.6rem);
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -3166,7 +3170,7 @@ img {
   .brand-intro__caption {
     margin-top: 0.75rem;
     color: rgba(255, 255, 255, 0.72);
-    font-size: clamp(0.72rem, 1.2vw, 0.92rem);
+    font-size: clamp(var(--tv-text-xs), 1.2vw, 0.92rem);
     font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -3586,7 +3590,7 @@ img {
   .brand-intro__subtitle {
     margin: 0.64rem 0 0;
     color: rgba(236, 244, 249, 0.78);
-    font-size: clamp(0.7rem, 2.6vw, 0.86rem);
+    font-size: clamp(var(--tv-text-xs), 2.6vw, 0.86rem);
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -4096,7 +4100,7 @@ img {
     z-index: 1;
     display: inline-grid;
     place-items: center;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: clamp(2.35rem, 6.6vw, 4rem);
     font-weight: 700;
     letter-spacing: 0.045em;
@@ -4134,7 +4138,7 @@ img {
     z-index: 1;
     margin-top: clamp(1.05rem, 2.8vw, 1.65rem);
     color: rgba(255, 255, 255, 0.8);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.18em;
     text-align: center;
@@ -4197,7 +4201,7 @@ img {
 
     .route-transition-loader__label {
       max-width: 18rem;
-      font-size: 0.58rem;
+      font-size: var(--tv-text-xs);
       letter-spacing: 0.14em;
     }
 
@@ -4210,7 +4214,7 @@ img {
 
   .pill {
     @apply inline-flex items-center gap-2 rounded-full border px-2.5 py-[0.42rem] text-[0.62rem] font-medium uppercase tracking-[0.15em];
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-weight: 500;
     border-color: rgba(70, 54, 134, 0.16);
     color: var(--muted-strong);
@@ -4233,7 +4237,7 @@ img {
     @apply text-[2.05rem] leading-[0.96] sm:text-[2.8rem] lg:text-[3.35rem];
     position: relative;
     display: inline-block;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-weight: 700;
     letter-spacing: 0;
     text-shadow: 0 12px 34px rgba(47, 33, 126, 0.08);
@@ -4264,7 +4268,7 @@ img {
   .section-copy {
     color: color-mix(in srgb, var(--muted-strong) 84%, white 16%);
     @apply max-w-[42rem] text-[0.98rem] leading-[1.7] sm:text-[1.08rem];
-    font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-ui);
     font-weight: 400;
     text-wrap: pretty;
   }
@@ -4283,7 +4287,7 @@ img {
 
   .editorial-label {
     @apply text-[0.66rem] font-semibold uppercase tracking-[0.2em];
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-weight: 700;
     color: color-mix(in srgb, var(--accent-strong) 78%, var(--muted-strong) 22%);
     text-shadow: 0 10px 26px rgba(106, 60, 255, 0.08);
@@ -4338,7 +4342,7 @@ img {
 
   .brand-kicker {
     @apply text-[0.66rem] font-semibold uppercase tracking-[0.2em];
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-weight: 700;
     color: var(--accent-strong);
     text-shadow: 0 10px 26px rgba(106, 60, 255, 0.08);
@@ -4346,7 +4350,7 @@ img {
 
   .selection-status {
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.68rem] font-medium uppercase tracking-[0.15em];
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-weight: 500;
     color: color-mix(in srgb, var(--foreground) 88%, var(--accent-strong) 12%);
     border: 1px solid var(--surface-selection-status-border);
@@ -5052,8 +5056,8 @@ img {
     border: 1px solid rgba(70, 54, 134, 0.12);
     background: rgba(255, 255, 255, 0.8);
     padding: 0.32rem 0.65rem;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: 0.64rem;
+    font-family: var(--tv-font-system);
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -5138,8 +5142,8 @@ img {
   }
 
   .editorial-score-signal-label {
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: 0.64rem;
+    font-family: var(--tv-font-system);
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -5198,8 +5202,8 @@ img {
     border-bottom: 1px solid rgba(112, 82, 255, 0.1);
     background:
       linear-gradient(180deg, rgba(251, 248, 255, 0.98), rgba(244, 239, 255, 0.92));
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: 0.72rem;
+    font-family: var(--tv-font-system);
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -5211,7 +5215,7 @@ img {
     padding: 1rem 1.25rem;
     border-bottom: 1px solid rgba(112, 82, 255, 0.08);
     color: var(--muted-strong);
-    font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-ui);
     font-size: 0.96rem;
     line-height: 1.62;
     letter-spacing: 0;
@@ -5309,8 +5313,8 @@ img {
     border: 1px solid rgba(212, 177, 101, 0.2);
     background: rgba(255, 255, 255, 0.72);
     padding: 0.3rem 0.65rem;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: 0.62rem;
+    font-family: var(--tv-font-system);
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -5431,7 +5435,7 @@ img {
   .compare-mobile-score-ring span {
     position: relative;
     z-index: 1;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.18rem;
     font-weight: 700;
     line-height: 1;
@@ -5441,7 +5445,7 @@ img {
     position: relative;
     z-index: 1;
     margin-top: -1.1rem;
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: var(--muted);
   }
@@ -5465,7 +5469,7 @@ img {
   .compare-mobile-metrics span,
   .compare-mobile-line span {
     display: block;
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.14em;
     line-height: 1.25;
@@ -5503,7 +5507,7 @@ img {
     background: rgba(255, 255, 255, 0.68);
     padding-inline: 0.76rem;
     color: var(--muted-strong);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     white-space: nowrap;
   }
@@ -5572,7 +5576,7 @@ img {
   .compare-mobile-matrix__axis span {
     display: inline-flex;
     color: var(--accent-strong);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.13em;
     line-height: 1.2;
@@ -5593,7 +5597,7 @@ img {
     background: rgba(255, 255, 255, 0.72);
     padding: 0.28rem 0.56rem;
     color: var(--muted);
-    font-size: 0.56rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -5697,7 +5701,7 @@ img {
     background: rgba(255, 255, 255, 0.74);
     padding: 0.24rem 0.5rem;
     color: #6f4814;
-    font-size: 0.54rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.12em;
     line-height: 1;
@@ -6183,7 +6187,7 @@ img {
   .live-hint-restore {
     border-radius: 999px;
     padding: 0.5rem 0.75rem;
-    font-size: 0.74rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: var(--accent-strong);
   }
@@ -6214,7 +6218,7 @@ img {
     gap: 0.45rem;
     border-radius: 999px;
     padding: 0.45rem 0.72rem;
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -6320,7 +6324,7 @@ img {
     border: 1px solid rgba(70, 54, 134, 0.12);
     background: rgba(255, 255, 255, 0.76);
     padding: 0.1rem 0.42rem;
-    font-size: 0.64rem;
+    font-size: var(--tv-text-xs);
     line-height: 1.2;
     color: var(--muted);
   }
@@ -6443,7 +6447,7 @@ img {
     min-height: 1.45rem;
     border-radius: 999px;
     padding: 0.28rem 0.64rem;
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     letter-spacing: 0.13em;
     line-height: 1;
@@ -7107,8 +7111,8 @@ img {
     border: 1px solid rgba(70, 54, 134, 0.14);
     background: linear-gradient(180deg, rgba(252, 249, 255, 0.9), rgba(246, 241, 255, 0.82));
     padding: 0.35rem 0.7rem;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: 0.64rem;
+    font-family: var(--tv-font-system);
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -7135,11 +7139,11 @@ img {
   }
 
   .font-display {
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
   }
 
   .text-display-hero {
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-weight: 600;
     letter-spacing: 0;
     line-height: 0.94;
@@ -7151,7 +7155,7 @@ img {
   }
 
   .text-display-card {
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-weight: 600;
     letter-spacing: 0;
     line-height: 1.03;
@@ -7243,27 +7247,27 @@ img {
   }
 
   .text-ui-strong {
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
     font-weight: 500;
     letter-spacing: 0;
   }
 
   .text-body-soft {
-    font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-ui);
     font-weight: 400;
     line-height: 1.58;
     letter-spacing: 0;
   }
 
   .text-body-strong {
-    font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-ui);
     font-weight: 500;
     line-height: 1.52;
     letter-spacing: 0;
   }
 
   .text-meta {
-    font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-ui);
     font-weight: 500;
     line-height: 1.38;
     letter-spacing: 0;
@@ -7551,7 +7555,7 @@ img {
 
   .hero-shell .premium-badge,
   .premium-panel .premium-badge {
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     letter-spacing: 0.14em;
     padding: 0.42rem 0.68rem;
   }
@@ -7738,7 +7742,7 @@ img {
   }
 
   .mobile-home-expander__eyebrow {
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -7926,7 +7930,7 @@ img {
 
   .compare-mobile-score-ring small {
     margin-top: -0.92rem;
-    font-size: 0.5rem;
+    font-size: var(--tv-text-xs);
   }
 
   .compare-mobile-metrics {
@@ -7950,7 +7954,7 @@ img {
   .compare-mobile-chip {
     min-height: 1.72rem;
     padding-inline: 0.66rem;
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
   }
 
   .compare-summary-panel {
@@ -7990,7 +7994,7 @@ img {
 
   .compare-count-chip {
     padding: 0.42rem 0.66rem;
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
   }
 
   .compare-mobile-matrix {
@@ -9480,7 +9484,7 @@ img {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     color: rgba(34, 27, 76, 0.6);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-style: normal;
     font-weight: 700;
     line-height: 1.35;
@@ -9610,7 +9614,7 @@ img {
   .mobile-vibe-route-card small {
     display: block;
     color: rgba(106, 60, 255, 0.68);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-style: normal;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -9652,7 +9656,7 @@ img {
 
   .mobile-vibe-focus-card p {
     color: rgba(34, 27, 76, 0.56);
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -9690,7 +9694,7 @@ img {
     background: rgba(255, 255, 255, 0.58);
     padding: 0.48rem 0.68rem;
     color: rgba(34, 27, 76, 0.66);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
   }
 
@@ -10330,7 +10334,7 @@ img {
     border-radius: 0.72rem;
     background: rgba(255, 255, 255, 0.5);
     color: rgba(79, 73, 112, 0.56);
-    font-size: 0.74rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
   }
 
@@ -10421,7 +10425,7 @@ img {
     display: block;
     margin-top: 0.16rem;
     color: var(--scene-muted);
-    font-size: 0.74rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     line-height: 1.34;
   }
@@ -10480,7 +10484,7 @@ img {
     background: rgba(255, 255, 255, 0.66);
     padding: 0.4rem 0.58rem;
     color: rgba(79, 73, 112, 0.68);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
   }
 
@@ -10688,7 +10692,7 @@ img {
     background: rgba(255, 255, 255, 0.66);
     padding: 0.42rem 0.62rem;
     color: rgba(79, 73, 112, 0.68);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
   }
 
@@ -11113,7 +11117,7 @@ img {
 
   .desktop-vibe-eyebrow {
     color: var(--accent-strong);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -11352,7 +11356,7 @@ img {
     display: block;
     margin-top: 0.2rem;
     color: rgba(34, 27, 76, 0.78);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
   }
 
@@ -11479,7 +11483,7 @@ img {
   .desktop-vibe-signal-card p {
     margin-top: 1rem;
     color: rgba(34, 27, 76, 0.72);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -11818,7 +11822,7 @@ img {
     align-items: center;
     gap: 0.5rem;
     color: rgba(34, 27, 76, 0.58);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -11838,7 +11842,7 @@ img {
     background: rgba(255, 255, 255, 0.52);
     padding: 0 0.75rem;
     color: rgba(34, 27, 76, 0.66);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     transition:
       transform 180ms ease,
@@ -11915,7 +11919,7 @@ img {
   .desktop-vibe-focus-card > span:not(.tool-glyph-motion) {
     margin-top: 1rem;
     color: rgba(106, 60, 255, 0.72);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -12013,7 +12017,7 @@ img {
     display: block;
     margin-top: 1rem;
     color: rgba(34, 27, 76, 0.72);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.13em;
     text-transform: uppercase;
@@ -12080,7 +12084,7 @@ img {
     display: block;
     margin-top: 1.5rem;
     color: rgba(34, 27, 76, 0.72);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -12123,7 +12127,7 @@ img {
 
   .desktop-vibe-submit-step span {
     color: rgba(106, 60, 255, 0.72);
-    font-size: 0.74rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.16em;
   }
@@ -12152,7 +12156,7 @@ img {
 
   .desktop-vibe-form label > span {
     color: rgba(34, 27, 76, 0.72);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -12445,7 +12449,7 @@ img {
     display: block;
     margin-top: 0.16rem;
     color: rgba(34, 27, 76, 0.72);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
   }
 
@@ -12723,7 +12727,7 @@ img {
   .desktop-vibe-radar-signal p {
     margin-top: 1rem;
     color: rgba(34, 27, 76, 0.82);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -13252,8 +13256,8 @@ img {
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
+  --font-heading: var(--tv-font-system);
+  --font-sans: var(--tv-font-ui);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -13455,7 +13459,7 @@ img {
   background: rgba(18, 13, 47, 0.08);
   color: var(--accent-strong);
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  font-size: 0.88em;
+  font-size: max(var(--tv-text-xs), 0.88em);
   padding: 0.15rem 0.35rem;
 }
 
@@ -13544,7 +13548,7 @@ img {
 
 .catalog-orbit-hud p {
   color: rgba(126, 240, 255, 0.88);
-  font-size: 0.68rem;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   letter-spacing: 0.18em;
   line-height: 1;
@@ -13758,13 +13762,13 @@ img {
 }
 
 .catalog-orbit-node__label strong {
-  font-size: 0.72rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
 }
 
 .catalog-orbit-node__label small {
   color: rgba(218, 226, 255, 0.72);
-  font-size: 0.62rem;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
 }
 
@@ -13972,7 +13976,7 @@ img {
   background: #f3bf4c;
   padding: 0.16rem 0.42rem;
   color: #120d2f;
-  font-size: 0.55rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   letter-spacing: 0.04em;
   box-shadow: 0 8px 18px rgba(243, 191, 76, 0.24);
@@ -14023,7 +14027,7 @@ img {
   .home-orbit-hud__action {
     min-height: 2.28rem;
     padding: 0 0.72rem;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
   }
 
   .home-orbit-planet {
@@ -14187,7 +14191,7 @@ img {
 
   .mobile-hero-solar__hud p {
     margin: 0 0 0.35rem;
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -14196,7 +14200,7 @@ img {
 
   .mobile-hero-solar__hud h1 {
     margin: 0;
-    font-family: "Rubik", "Avenir Next", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.45rem;
     font-weight: 600;
     line-height: 1.08;
@@ -14243,7 +14247,7 @@ img {
   }
 
   .mobile-hero-solar__node .catalog-orbit-node__label strong {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     color: #171125;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.82);
@@ -14252,7 +14256,7 @@ img {
   .mobile-hero-solar__node .catalog-orbit-node__label small {
     display: block;
     margin-top: 0.15rem;
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     color: rgba(79, 73, 112, 0.78);
     text-shadow: none;
   }
@@ -14271,7 +14275,7 @@ img {
     align-items: center;
     gap: 0.45rem;
     margin-bottom: 1.1rem;
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -14323,7 +14327,7 @@ img {
   }
 
   .mobile-spotlight__fallback {
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--accent-purple);
@@ -14336,7 +14340,7 @@ img {
 
   .mobile-spotlight__category {
     display: inline-block;
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -14349,7 +14353,7 @@ img {
 
   .mobile-spotlight__title {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.25rem;
     font-weight: 600;
     line-height: 1.15;
@@ -14412,7 +14416,7 @@ img {
 
   .mobile-method-steps__header span {
     display: block;
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -14422,7 +14426,7 @@ img {
 
   .mobile-method-steps__header h2 {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.35rem;
     font-weight: 700;
     line-height: 1.1;
@@ -14464,7 +14468,7 @@ img {
     width: 2.2rem;
     height: 2.2rem;
     border-radius: 999px;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 0.82rem;
     font-weight: 700;
     color: #ffffff;
@@ -14507,7 +14511,7 @@ img {
 
   .mobile-method-steps__label {
     display: block;
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -14517,7 +14521,7 @@ img {
 
   .mobile-method-steps__title {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.05rem;
     font-weight: 700;
     line-height: 1.2;
@@ -14637,7 +14641,7 @@ img {
     flex-shrink: 0;
     padding: 0.35rem 0.75rem;
     border-radius: 999px;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: var(--text-secondary);
     background: var(--surface-strong);
@@ -14666,7 +14670,7 @@ img {
 
   .mobile-category-map__intro h1 {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.6rem;
     font-weight: 600;
     line-height: 1.1;
@@ -14755,7 +14759,7 @@ img {
   }
 
   .mobile-category-map__label small {
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     color: var(--text-secondary);
   }
@@ -14777,14 +14781,14 @@ img {
 
   .mobile-tool-grid__header h2 {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--foreground);
   }
 
   .mobile-tool-grid__header span {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     color: var(--text-secondary);
     flex-shrink: 0;
@@ -14837,7 +14841,7 @@ img {
   }
 
   .mobile-tool-card__fallback {
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--accent-purple);
@@ -14850,7 +14854,7 @@ img {
   }
 
   .mobile-tool-card__category {
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -14859,7 +14863,7 @@ img {
 
   .mobile-tool-card__title {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 0.88rem;
     font-weight: 600;
     line-height: 1.2;
@@ -14872,7 +14876,7 @@ img {
 
   .mobile-tool-card__description {
     margin: 0;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     line-height: 1.4;
     color: var(--text-secondary);
     display: -webkit-box;
@@ -14899,7 +14903,7 @@ img {
 
   .mobile-tool-card__actions .count-badge-live {
     padding-inline: 0.32rem;
-    font-size: 0.52rem;
+    font-size: var(--tv-text-xs);
   }
 
   /* ── Mobile Catalog Empty ── */
@@ -14925,7 +14929,7 @@ img {
 
   .mobile-catalog-view__empty h3 {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--foreground);
@@ -14988,7 +14992,7 @@ img {
     gap: 0.28rem;
     margin-bottom: 0.45rem;
     color: rgba(255, 255, 255, 0.58);
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -15034,7 +15038,7 @@ img {
 
   .mobile-radar-view__header h1 {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.1;
@@ -15148,7 +15152,7 @@ img {
   }
 
   .mobile-radar-view__node-initials {
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 0.85rem;
     font-weight: 700;
     color: #ffffff;
@@ -15179,7 +15183,7 @@ img {
   }
 
   .mobile-radar-view__node-label small {
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     color: rgba(255, 255, 255, 0.78);
     max-width: 4rem;
@@ -15202,7 +15206,7 @@ img {
   }
 
   .mobile-radar-view__center-info span {
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -15210,7 +15214,7 @@ img {
   }
 
   .mobile-radar-view__center-info strong {
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.6rem;
     font-weight: 700;
     color: #ffffff;
@@ -15230,7 +15234,7 @@ img {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -15334,7 +15338,7 @@ img {
     flex-shrink: 0;
     padding: 0.45rem 1rem;
     border-radius: 999px;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.70);
     background: rgba(255, 255, 255, 0.05);
@@ -15389,7 +15393,7 @@ img {
   }
 
   .mobile-radar-list-item__rank {
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 0.75rem;
     font-weight: 700;
     color: rgba(255, 255, 255, 0.55);
@@ -15417,7 +15421,7 @@ img {
   }
 
   .mobile-radar-list-item__visual span {
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: rgba(255, 255, 255, 0.6);
   }
@@ -15440,7 +15444,7 @@ img {
   }
 
   .mobile-radar-list-item__meta span {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     color: rgba(255, 255, 255, 0.65);
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -15449,7 +15453,7 @@ img {
   }
 
   .mobile-radar-list-item__meta small {
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     color: rgba(255, 255, 255, 0.60);
     font-weight: 500;
   }
@@ -15502,7 +15506,7 @@ img {
     border-radius: 999px;
     background: linear-gradient(135deg, var(--accent-strong, #6d3bff), var(--cyan, #43c6ff));
     color: #fff;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -15610,7 +15614,7 @@ img {
   .mobile-compare-arena__battle-core span {
     align-self: end;
     color: rgba(255, 255, 255, 0.5);
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -15668,7 +15672,7 @@ img {
   .mobile-compare-arena__fighter-name {
     max-width: 5.6rem;
     overflow: hidden;
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     line-height: 1.08;
     text-overflow: ellipsis;
@@ -15678,7 +15682,7 @@ img {
 
   .mobile-compare-arena__fighter small {
     color: rgba(255, 255, 255, 0.58);
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
   }
 
@@ -15780,14 +15784,14 @@ img {
     border-radius: 999px;
     background: linear-gradient(135deg, #f3bf4c, #ff8a00);
     color: #1a0b00;
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   .mobile-compare-arena__cat {
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -15846,7 +15850,7 @@ img {
 
   .mobile-compare-arena__score small {
     position: relative;
-    font-size: 0.55rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
@@ -15889,7 +15893,7 @@ img {
     background: rgba(20, 10, 40, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     line-height: 1.45;
     color: rgba(255, 255, 255, 0.82);
     backdrop-filter: blur(12px);
@@ -15921,7 +15925,7 @@ img {
 
   .mobile-compare-arena__metrics span {
     display: block;
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -16005,7 +16009,7 @@ img {
     place-items: center;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.08);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     color: rgba(255, 255, 255, 0.7);
   }
@@ -16030,7 +16034,7 @@ img {
   }
 
   .mobile-compare-arena__diff {
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     padding: 0.15rem 0.45rem;
     border-radius: 999px;
@@ -16054,7 +16058,7 @@ img {
   }
 
   .mobile-compare-arena__link {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
@@ -16081,7 +16085,7 @@ img {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -16179,7 +16183,7 @@ img {
     display: flex;
     align-items: center;
     padding: 0 0.7rem;
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.08em;
     line-height: 1.1;
@@ -16231,7 +16235,7 @@ img {
   }
 
   .mobile-compare-arena__matrix-tool {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     color: #ffffff;
     white-space: nowrap;
@@ -16257,7 +16261,7 @@ img {
     border-radius: 999px;
     background: rgba(106, 60, 255, 0.18);
     color: #ffffff;
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
   }
 
@@ -16355,7 +16359,7 @@ img {
   }
 
   .mobile-compare-arena__partial-label {
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -16392,7 +16396,7 @@ img {
     min-height: 2.6rem;
     padding: 0 0.9rem;
     border-radius: 999px;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-decoration: none;
     border: none;
@@ -16579,7 +16583,7 @@ img {
   }
 
   .mobile-spotlight-cosmic__satellite-body small {
-    font-size: 0.55rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: rgba(255, 255, 255, 0.7);
   }
@@ -16588,7 +16592,7 @@ img {
     position: absolute;
     left: 50%;
     top: calc(100% + 0.32rem);
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.75);
     max-width: 5rem;
@@ -16620,7 +16624,7 @@ img {
     border-radius: 999px;
     background: linear-gradient(135deg, var(--planet-a), var(--planet-b));
     color: #fff;
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -16668,7 +16672,7 @@ img {
 
   .mobile-spotlight-cosmic__stats span {
     display: block;
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -16726,7 +16730,7 @@ img {
   }
 
   .mobile-spotlight-cosmic__candidates-label {
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -16787,7 +16791,7 @@ img {
     position: relative;
     display: block;
     margin-top: 0.2rem;
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -16841,7 +16845,7 @@ img {
     border-radius: 999px;
     background: linear-gradient(135deg, var(--accent-strong, #6d3bff), var(--cyan, #43c6ff));
     color: #fff;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -16917,7 +16921,7 @@ img {
 
   .mobile-method-room__panel-label {
     display: inline-block;
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.14em;
@@ -16956,7 +16960,7 @@ img {
   }
 
   .mobile-method-room__panel-stat span {
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -16997,7 +17001,7 @@ img {
   }
 
   .mobile-method-room__footer-label {
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -17031,7 +17035,7 @@ img {
     justify-content: center;
     gap: 0.5rem;
     margin-top: 0.875rem;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: rgba(255, 255, 255, 0.4);
   }
@@ -17072,7 +17076,7 @@ img {
     border-radius: 999px;
     background: linear-gradient(135deg, var(--accent-strong, #6d3bff), var(--cyan, #43c6ff));
     color: #fff;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -17100,7 +17104,7 @@ img {
     justify-content: center;
     gap: 0.4rem;
     margin-top: 0.75rem;
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -17141,7 +17145,7 @@ img {
     gap: 0.25rem;
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -17158,7 +17162,7 @@ img {
   }
 
   .mobile-collections__hero-count {
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -17192,7 +17196,7 @@ img {
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.7);
   }
@@ -17225,7 +17229,7 @@ img {
   }
 
   .mobile-collections__list-label {
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -17271,14 +17275,14 @@ img {
     padding: 0.15rem 0.45rem;
     border-radius: 999px;
     border: 1px solid;
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   .mobile-collections__item-count {
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: rgba(255, 255, 255, 0.55);
     text-transform: uppercase;
@@ -17295,7 +17299,7 @@ img {
 
   .mobile-collections__item-desc {
     margin-top: 0.15rem;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     line-height: 1.4;
     color: rgba(255, 255, 255, 0.65);
     display: -webkit-box;
@@ -17378,7 +17382,7 @@ img {
     border-radius: 999px;
     background: linear-gradient(135deg, #f3bf4c, #ff8a00);
     color: #1a0b00;
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -17395,7 +17399,7 @@ img {
 
   .desktop-compare-champion__category {
     margin-top: 0.25rem;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -17453,12 +17457,12 @@ img {
     font-weight: 800;
     color: var(--foreground);
     line-height: 1;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
   }
 
   .desktop-compare-champion__score small {
     position: relative;
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: var(--muted);
     text-transform: uppercase;
@@ -17519,7 +17523,7 @@ img {
 
   .desktop-compare-champion__metrics span {
     display: block;
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -17532,7 +17536,7 @@ img {
     font-size: 1.15rem;
     font-weight: 800;
     color: var(--foreground);
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
   }
 
   .desktop-compare-champion__actions {
@@ -17558,7 +17562,7 @@ img {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -17580,7 +17584,7 @@ img {
 
   .desktop-compare-matrix__axis {
     padding: 0.65rem 1rem;
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -17613,7 +17617,7 @@ img {
     display: inline-flex;
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -17642,7 +17646,7 @@ img {
     font-weight: 700;
     color: var(--foreground);
     white-space: nowrap;
-    font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+    font-family: var(--tv-font-system);
   }
 }
 
@@ -17701,7 +17705,7 @@ img {
     border-radius: 999px;
     background: var(--surface-strong);
     border: 1px solid var(--line);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: var(--text-secondary);
     width: fit-content;
@@ -17714,7 +17718,7 @@ img {
 
   .mobile-category-map__steps-arrow {
     opacity: 0.35;
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
   }
 
   /* Better contrast on Esplora text */
@@ -17808,7 +17812,7 @@ img {
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.92);
     color: #171125;
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -17858,7 +17862,7 @@ img {
     background: rgba(255, 255, 255, 0.9);
     padding: 0.28rem 0.68rem;
     color: #171125;
-    font-size: 0.74rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.02em;
     text-align: center;
@@ -17994,7 +17998,7 @@ img {
   }
 
   .mobile-compare-toolbox h3 {
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 0.98rem;
     font-weight: 750;
     color: var(--foreground);
@@ -18002,7 +18006,7 @@ img {
 
   .mobile-compare-toolbox p {
     margin-top: 0.15rem;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     line-height: 1.35;
     color: #5b5472;
   }
@@ -18096,7 +18100,7 @@ img {
   }
 
   .mobile-tool-card__category {
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
   }
 
@@ -18115,13 +18119,13 @@ img {
   .mobile-radar-view__node-label strong {
     font-weight: 700;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55), 0 0 8px rgba(0, 0, 0, 0.35);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
   }
 
   .mobile-radar-view__node-label small {
     font-weight: 600;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
   }
 
   .mobile-radar-view__node-badge {
@@ -18130,7 +18134,7 @@ img {
     right: -6px;
     padding: 0.15rem 0.35rem;
     border-radius: 999px;
-    font-size: 0.55rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     letter-spacing: 0.04em;
     color: #0a0a1a;
@@ -18190,7 +18194,7 @@ img {
     align-items: center;
     gap: 0.4rem;
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 0.85rem;
     font-weight: 700;
     color: rgba(255, 255, 255, 0.92);
@@ -18258,7 +18262,7 @@ img {
   }
 
   .mobile-radar-section__card-meta strong {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.95);
     line-height: 1.2;
@@ -18269,7 +18273,7 @@ img {
   }
 
   .mobile-radar-section__card-meta span {
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     color: rgba(255, 255, 255, 0.55);
   }
@@ -18280,7 +18284,7 @@ img {
     right: -4px;
     padding: 0.1rem 0.3rem;
     border-radius: 999px;
-    font-size: 0.5rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     color: #0a0a1a;
     background: linear-gradient(135deg, #f3bf4c, #ff8c42);
@@ -18309,7 +18313,7 @@ img {
   }
 
   .mobile-radar-section__row-rank {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: rgba(255, 255, 255, 0.4);
     min-width: 1.5rem;
@@ -18324,7 +18328,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: rgba(255, 255, 255, 0.85);
     flex-shrink: 0;
@@ -18354,7 +18358,7 @@ img {
   }
 
   .mobile-radar-section__row-meta span {
-    font-size: 0.65rem;
+    font-size: var(--tv-text-xs);
     color: rgba(255, 255, 255, 0.5);
     white-space: nowrap;
     overflow: hidden;
@@ -18362,7 +18366,7 @@ img {
   }
 
   .mobile-radar-section__row-votes {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: #39d2f6;
     flex-shrink: 0;
@@ -18400,7 +18404,7 @@ img {
 
   .mobile-library-board__header h1 {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.35rem;
     font-weight: 700;
     line-height: 1.15;
@@ -18439,7 +18443,7 @@ img {
     gap: 0.25rem;
     padding: 0.35rem 0.75rem;
     border-radius: 999px;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: #ffffff;
     background: linear-gradient(135deg, var(--chip-color, #6a3cff), color-mix(in srgb, var(--chip-color, #6a3cff) 70%, #39d2f6));
@@ -18466,14 +18470,14 @@ img {
 
   .mobile-library-shelf__header h2 {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 0.9rem;
     font-weight: 700;
   }
 
   .mobile-library-shelf__header span {
     margin-left: auto;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: var(--text-secondary);
     background: var(--surface-strong);
@@ -18560,7 +18564,7 @@ img {
   }
 
   .mobile-library-book__face span {
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--book-color, #6a3cff);
@@ -18576,7 +18580,7 @@ img {
   }
 
   .mobile-library-book__meta strong {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: var(--foreground);
     line-height: 1.2;
@@ -18587,7 +18591,7 @@ img {
   }
 
   .mobile-library-book__meta span {
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -18678,7 +18682,7 @@ img {
 
   .mobile-library-empty h2 {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.2rem;
     font-weight: 700;
     color: var(--foreground);
@@ -18748,7 +18752,7 @@ img {
     background: rgba(255, 255, 255, 0.72);
     padding: 0.38rem 0.78rem;
     color: var(--accent-purple);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -18757,7 +18761,7 @@ img {
   .mobile-library-wishlist__intro h2 {
     margin: 0.85rem 0 0;
     color: var(--foreground);
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.45rem;
     line-height: 1.08;
   }
@@ -19171,7 +19175,7 @@ img {
     background: linear-gradient(135deg, rgba(106, 60, 255, 0.08), rgba(57, 210, 246, 0.06));
     border: 1px solid rgba(106, 60, 255, 0.12);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    font-size: 0.74rem;
+    font-size: var(--tv-text-xs);
     font-weight: 600;
     color: var(--foreground);
   }
@@ -19297,7 +19301,7 @@ img {
 
   .game-mission-drawer__title {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.15rem;
     font-weight: 700;
     color: var(--foreground);
@@ -19311,7 +19315,7 @@ img {
 
   /* ── Daily Reset Countdown ── */
   .daily-reset-countdown__text {
-    font-size: 0.55rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--foreground);
@@ -19342,7 +19346,7 @@ img {
     flex-shrink: 0;
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: #ffffff;
     background: linear-gradient(135deg, #6a3cff, #39d2f6);
@@ -19410,7 +19414,7 @@ img {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -19435,7 +19439,7 @@ img {
 
   .game-mission-panel__intro h2 {
     margin: 0;
-    font-family: "Rubik", sans-serif;
+    font-family: var(--tv-font-system);
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--foreground);
@@ -19457,7 +19461,7 @@ img {
   }
 
   .game-mission-panel__progress span {
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     color: var(--text-secondary);
   }
 
@@ -19523,7 +19527,7 @@ img {
   }
 
   .game-mission__copy small {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     color: var(--text-secondary);
   }
 
@@ -19538,7 +19542,7 @@ img {
   }
 
   .game-mission__score small {
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     color: var(--text-secondary);
     font-weight: 500;
   }
@@ -19643,14 +19647,14 @@ img {
   background: #f3bf4c;
   box-shadow: 0 0 0 4px rgba(243, 191, 76, 0.16);
   padding: 0 0.08rem;
-  font-size: 0.5rem;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   color: #3a2397;
   line-height: 1;
 }
 
 .vibe-mini-launcher__label {
-  font-size: 0.68rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -19706,7 +19710,7 @@ img {
 .vibe-mini-game__top p,
 .vibe-mini-game__eyebrow {
   color: #f3bf4c;
-  font-size: 0.68rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -19745,7 +19749,7 @@ img {
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.06);
   color: rgba(255, 255, 255, 0.56);
-  font-size: 0.62rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   letter-spacing: 0.1em;
   padding: 0.55rem;
@@ -19901,7 +19905,7 @@ img {
 .vibe-mini-game__hint {
   margin-top: 0.78rem;
   color: rgba(255, 255, 255, 0.58);
-  font-size: 0.74rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.5;
   text-align: center;
 }
@@ -20121,7 +20125,7 @@ img {
     border-radius: 999px;
     background: rgba(5, 2, 11, 0.54);
     color: #ffffff;
-    font-size: 0.72rem !important;
+    font-size: var(--tv-text-xs) !important;
     font-weight: 900;
     line-height: 1.08 !important;
     text-overflow: ellipsis;
@@ -20131,7 +20135,7 @@ img {
 
   .mobile-compare-arena__fighter-slot .mobile-compare-arena__fighter small {
     color: rgba(255, 255, 255, 0.72);
-    font-size: 0.58rem !important;
+    font-size: var(--tv-text-xs) !important;
     font-weight: 950;
     line-height: 1;
   }
@@ -20266,7 +20270,7 @@ img {
   .mobile-compare-arena__stage .mobile-compare-arena__fight-copy small {
     margin-top: 0.18rem;
     color: rgba(255, 255, 255, 0.78);
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     text-transform: uppercase;
   }
@@ -20435,7 +20439,7 @@ img {
   background: rgba(255, 255, 255, 0.08);
   padding: 0.42rem 0.7rem;
   color: rgba(255, 255, 255, 0.78);
-  font-size: 0.72rem;
+  font-size: var(--tv-text-xs);
   font-weight: 850;
   line-height: 1.25;
   text-align: center;
@@ -20498,7 +20502,7 @@ img {
 
 .vibe-mini-game__signup p {
   color: rgba(255, 255, 255, 0.72);
-  font-size: 0.7rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   line-height: 1.35;
 }
@@ -20603,7 +20607,7 @@ img {
 
 .vibe-mini-game__modes small {
   color: rgba(255, 255, 255, 0.52);
-  font-size: 0.66rem;
+  font-size: var(--tv-text-xs);
   font-weight: 850;
 }
 
@@ -20633,7 +20637,7 @@ img {
 
 .vibe-mini-game__mode-card span {
   color: rgba(255, 255, 255, 0.64);
-  font-size: 0.74rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.42;
 }
 
@@ -20643,7 +20647,7 @@ img {
   border-radius: 999px;
   background: rgba(243, 191, 76, 0.15);
   color: #f3bf4c;
-  font-size: 0.66rem;
+  font-size: var(--tv-text-xs);
   font-style: normal;
   font-weight: 900;
   padding: 0.34rem 0.58rem;
@@ -20727,7 +20731,7 @@ img {
   border-radius: 999px;
   background: rgba(9, 5, 22, 0.48);
   color: rgba(255, 255, 255, 0.74);
-  font-size: 0.68rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   padding: 0.32rem 0.52rem;
   backdrop-filter: blur(12px);
@@ -20820,7 +20824,7 @@ img {
   z-index: 1;
   margin-top: 0.12rem;
   color: rgba(255, 255, 255, 0.62);
-  font-size: 0.66rem;
+  font-size: var(--tv-text-xs);
   font-weight: 850;
 }
 
@@ -20864,7 +20868,7 @@ img {
   gap: 0.42rem;
   margin-bottom: 0.55rem;
   color: rgba(255, 255, 255, 0.82);
-  font-size: 0.72rem;
+  font-size: var(--tv-text-xs);
   font-weight: 950;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -20915,7 +20919,7 @@ img {
 
 .vibe-mini-game__upgrade small {
   color: rgba(255, 255, 255, 0.54);
-  font-size: 0.66rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.3;
 }
 
@@ -20924,7 +20928,7 @@ img {
   border-radius: 999px;
   background: linear-gradient(135deg, rgba(106, 60, 255, 0.42), rgba(57, 210, 246, 0.28));
   color: #ffffff;
-  font-size: 0.7rem;
+  font-size: var(--tv-text-xs);
   font-style: normal;
   font-weight: 950;
   padding: 0.35rem 0.5rem;
@@ -20952,7 +20956,7 @@ img {
 
 .vibe-mini-game__mission span {
   color: rgba(255, 255, 255, 0.58);
-  font-size: 0.67rem;
+  font-size: var(--tv-text-xs);
   font-weight: 850;
 }
 
@@ -20990,7 +20994,7 @@ img {
   align-items: center;
   gap: 0.38rem;
   color: rgba(255, 255, 255, 0.66);
-  font-size: 0.72rem;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
 }
 
@@ -21413,7 +21417,7 @@ img {
     background: rgba(255,255,255,0.92);
     padding: 0.42rem 0.9rem;
     color: #171125;
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -21563,7 +21567,7 @@ img {
     background: linear-gradient(135deg, var(--planet-a), var(--planet-b));
     padding: 0.36rem 0.82rem;
     color: #fff;
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -21605,7 +21609,7 @@ img {
   .mobile-spotlight-cosmic__stats span,
   .mobile-spotlight-cosmic__candidate-cat {
     color: rgba(255,255,255,0.62);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -21685,7 +21689,7 @@ img {
   .mobile-collections__list-label,
   .mobile-method-room__footer-label {
     color: rgba(255,255,255,0.66);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -21814,7 +21818,7 @@ img {
     display: block;
     margin-top: 0.65rem;
     color: var(--accent-purple);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -22022,7 +22026,7 @@ img {
 
   .mobile-category-map__label small {
     color: var(--muted);
-    font-size: 0.74rem;
+    font-size: var(--tv-text-xs);
     font-weight: 700;
   }
 
@@ -22161,7 +22165,7 @@ img {
 
   .mobile-tool-card__category {
     color: var(--accent-purple);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -22302,7 +22306,7 @@ img {
   .mobile-radar-view__powered {
     display: inline-flex;
     color: rgba(255,255,255,0.58);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -22450,7 +22454,7 @@ img {
 
   .mobile-radar-view__node-label small {
     color: rgba(255,255,255,0.7);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
   }
 
   .mobile-radar-view__node-badge {
@@ -22462,7 +22466,7 @@ img {
     background: linear-gradient(135deg, #f3bf4c, #ff8c42);
     padding: 0.16rem 0.4rem;
     color: #0a0a1a;
-    font-size: 0.56rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
   }
 
@@ -22474,7 +22478,7 @@ img {
     display: grid;
     place-items: center;
     color: rgba(255,255,255,0.72);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -22498,7 +22502,7 @@ img {
     background: rgba(255,255,255,0.05);
     padding: 0.46rem 0.82rem;
     color: rgba(255,255,255,0.72);
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -22616,7 +22620,7 @@ img {
     display: block;
     overflow: hidden;
     color: rgba(255,255,255,0.58);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -22830,7 +22834,7 @@ img {
 
   .mobile-library-book__meta span {
     color: var(--muted);
-    font-size: 0.64rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -22920,7 +22924,7 @@ img {
     background: rgba(255,255,255,0.72);
     padding: 0.45rem 0.85rem;
     color: var(--accent-purple);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -23095,7 +23099,7 @@ img {
   .mobile-compare-arena__battle-core span {
     align-self: end;
     color: rgba(255,255,255,0.52);
-    font-size: 0.64rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -23220,7 +23224,7 @@ img {
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
-    font-size: 0.66rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.09em;
     text-transform: uppercase;
@@ -23300,7 +23304,7 @@ img {
   .mobile-compare-arena__metrics span {
     display: block;
     color: rgba(255,255,255,0.6);
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -23413,7 +23417,7 @@ img {
     gap: 0.45rem;
     margin-bottom: 0.8rem;
     color: rgba(255,255,255,0.58);
-    font-size: 0.74rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -23445,7 +23449,7 @@ img {
     border-right: 1px solid rgba(255,255,255,0.07);
     padding: 0.7rem;
     color: rgba(255,255,255,0.48);
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -23637,7 +23641,7 @@ img {
   .mobile-collections__item-count {
     border-radius: 999px;
     padding: 0.28rem 0.65rem;
-    font-size: 0.7rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -23796,7 +23800,7 @@ img {
   .mobile-method-room__panel-label {
     margin-top: 1.2rem;
     color: var(--method-a);
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -24314,7 +24318,7 @@ img {
       width: clamp(9.5rem, 12vw, 12.75rem) !important;
       min-width: clamp(9.5rem, 12vw, 12.75rem) !important;
       padding: clamp(0.95rem, 1.15vw, 1.2rem) !important;
-      font-size: clamp(0.66rem, 0.76vw, 0.8rem) !important;
+      font-size: clamp(var(--tv-text-xs), 0.76vw, 0.8rem) !important;
       line-height: 1.25;
     }
 
@@ -24713,7 +24717,7 @@ img {
     border-radius: 999px;
     background: rgba(5,2,11,0.5);
     color: rgba(255,255,255,0.72);
-    font-size: 0.52rem;
+    font-size: var(--tv-text-xs);
     font-weight: 900;
     line-height: 1;
   }
@@ -24777,7 +24781,7 @@ img {
 
   .mobile-compare-arena__battle-result-kicker {
     color: rgba(255,255,255,0.78);
-    font-size: 0.62rem;
+    font-size: var(--tv-text-xs);
     font-weight: 1000;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -24838,7 +24842,7 @@ img {
   .mobile-compare-arena__fight-copy small {
     margin-top: 0.18rem;
     color: rgba(255,255,255,0.76);
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -25062,7 +25066,7 @@ img {
 
   .mobile-compare-arena__battle-result-kicker {
     color: rgba(255, 255, 255, 0.62);
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 850;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -25676,7 +25680,7 @@ img {
   background: rgba(255, 255, 255, 0.78);
   padding: 0.34rem 0.74rem;
   color: #6a3cff;
-  font-size: 0.68rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -25837,7 +25841,7 @@ img {
 
 .catalog-featured-card__meta small {
   color: #5f587d;
-  font-size: 0.72rem;
+  font-size: var(--tv-text-xs);
   font-weight: 750;
 }
 
@@ -25918,7 +25922,7 @@ img {
 @media (max-width: 767px) {
   .mobile-category-map__eyebrow {
     margin-bottom: 0.55rem;
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
   }
 
   .mobile-category-map__stats {
@@ -25928,7 +25932,7 @@ img {
   .mobile-category-map__stats span {
     min-height: 2.45rem;
     padding-inline: 0.78rem;
-    font-size: 0.72rem;
+    font-size: var(--tv-text-xs);
   }
 
   .catalog-featured-rail {
@@ -26172,7 +26176,7 @@ img {
   background: rgba(255, 255, 255, 0.78);
   padding: 0.18rem 0.48rem;
   color: #5f587d;
-  font-size: 0.58rem;
+  font-size: var(--tv-text-xs);
   font-weight: 850;
   text-transform: uppercase;
 }
@@ -26184,7 +26188,7 @@ img {
   gap: 0.34rem;
   margin-top: 0.72rem;
   color: #6a3cff;
-  font-size: 0.72rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
 }
 
@@ -26284,7 +26288,7 @@ img {
   }
 
   .mobile-tool-card__level {
-    font-size: 0.52rem;
+    font-size: var(--tv-text-xs);
   }
 
   .mobile-tool-card__open {
@@ -26455,7 +26459,7 @@ img {
 
 .desktop-radar-node__label small {
   color: rgba(235, 245, 255, 0.72);
-  font-size: 0.66rem;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
 }
 
@@ -26468,7 +26472,7 @@ img {
   background: rgba(243, 191, 76, 0.18);
   padding: 0.22rem 0.46rem;
   color: #ffe59a;
-  font-size: 0.58rem;
+  font-size: var(--tv-text-xs);
   font-weight: 950;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -26904,7 +26908,7 @@ img {
 
 .site-header-v2__kbd::before {
   content: "Ctrl K";
-  font-size: 0.62rem;
+  font-size: var(--tv-text-xs);
 }
 
 .site-header-v2__mobile-search,
@@ -27882,7 +27886,7 @@ body:has(.tone-account) {
 .site-mobile-footer-nav .mobile-bottom-link__label {
   max-width: 100%;
   color: inherit !important;
-  font-size: 0.66rem;
+  font-size: var(--tv-text-xs);
   font-weight: 850;
   letter-spacing: 0 !important;
 }
@@ -27923,7 +27927,7 @@ body:has(.tone-account) {
   }
 
   .site-mobile-footer-nav .mobile-bottom-link__label {
-    font-size: 0.6rem;
+    font-size: var(--tv-text-xs);
   }
 }
 
@@ -28125,7 +28129,7 @@ body:has(.tone-account) {
 }
 
 .site-header-v2__nav-label {
-  font-size: 0.72rem !important;
+  font-size: var(--tv-text-xs) !important;
   font-weight: 760 !important;
   line-height: 1;
 }
@@ -28229,7 +28233,7 @@ body:has(.tone-account) {
   max-width: 100%;
   white-space: normal;
   text-align: center;
-  font-size: 0.56rem;
+  font-size: var(--tv-text-xs);
   line-height: 0.95;
   text-overflow: clip;
 }
@@ -28251,7 +28255,7 @@ body:has(.tone-account) {
 .site-mobile-footer-nav .mobile-bottom-link:nth-child(5) .mobile-bottom-link__label {
   max-width: 100%;
   overflow: visible;
-  font-size: 0.56rem;
+  font-size: var(--tv-text-xs);
   text-overflow: clip;
   white-space: normal;
 }
@@ -28410,7 +28414,7 @@ body:has(.tone-account) {
   background: rgba(255, 255, 255, 0.09);
   padding: 0.36rem 0.72rem;
   color: #9be8ff;
-  font-size: 0.66rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -28463,7 +28467,7 @@ body:has(.tone-account) {
 .mobile-library-hero__stat span {
   margin-top: 0.2rem;
   color: rgba(248, 244, 255, 0.62);
-  font-size: 0.66rem;
+  font-size: var(--tv-text-xs);
   font-weight: 850;
   text-transform: uppercase;
 }
@@ -28529,7 +28533,7 @@ body:has(.tone-account) {
 
 .mobile-library-shelf__empty a {
   color: #9be8ff;
-  font-size: 0.72rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   text-decoration: none;
   white-space: nowrap;
@@ -28654,7 +28658,7 @@ body:has(.tone-account) {
 
 .mobile-library-empty__starter > span {
   color: #ffe49b;
-  font-size: 0.7rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -28756,7 +28760,7 @@ body:has(.tone-account) {
 .mobile-library-wishlist__signal-card small {
   min-width: 0;
   color: rgba(248, 244, 255, 0.62);
-  font-size: 0.72rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.45;
 }
 
@@ -28970,14 +28974,14 @@ body:has(.tone-account) {
   .mobile-compare-arena__fighter-name {
     max-width: calc(5.8rem * var(--arena-fighter-scale)) !important;
     padding: 0.12rem 0.38rem !important;
-    font-size: clamp(0.64rem, calc(0.84rem * var(--arena-fighter-scale)), 0.84rem) !important;
+    font-size: clamp(var(--tv-text-xs), calc(0.84rem * var(--arena-fighter-scale)), 0.84rem) !important;
     line-height: 1.05 !important;
     white-space: nowrap;
   }
 
   .mobile-compare-arena__fighter small {
     max-width: calc(5.8rem * var(--arena-fighter-scale)) !important;
-    font-size: clamp(0.52rem, calc(0.62rem * var(--arena-fighter-scale)), 0.62rem) !important;
+    font-size: var(--tv-text-xs) !important;
     line-height: 1.05 !important;
     white-space: nowrap;
   }
@@ -28988,7 +28992,7 @@ body:has(.tone-account) {
   }
 
   .mobile-compare-arena__battle-core span {
-    font-size: 0.56rem !important;
+    font-size: var(--tv-text-xs) !important;
   }
 
   .mobile-compare-arena__battle-core strong {
@@ -29404,7 +29408,7 @@ body:has(.tone-account) {
 
 .mobile-compare-arena__fighter-initials {
   color: #ffffff;
-  font-size: 0.72em;
+  font-size: max(var(--tv-text-xs), 0.72em);
   font-weight: 900;
   letter-spacing: 0.06em;
 }
@@ -29473,7 +29477,7 @@ body:has(.tone-account) {
   background: rgba(255, 255, 255, 0.075);
   color: rgba(255, 255, 255, 0.68);
   padding: 0 0.5rem;
-  font-size: 0.58rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -29517,7 +29521,7 @@ body:has(.tone-account) {
   .mobile-compare-arena__battle-stage[data-count="4"] .mobile-compare-arena__fighter-name,
   .mobile-compare-arena__battle-stage[data-count="5"] .mobile-compare-arena__fighter-name {
     max-width: 4.75rem !important;
-    font-size: 0.62rem !important;
+    font-size: var(--tv-text-xs) !important;
   }
 
   .mobile-compare-arena__battle-result {
@@ -29699,14 +29703,14 @@ body:has(.tone-account) {
   }
 
   .desktop-radar-node__label small {
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
   }
 
   .desktop-radar-node__badge {
     right: -0.52rem;
     top: 0.08rem;
     padding: 0.18rem 0.38rem;
-    font-size: 0.52rem;
+    font-size: var(--tv-text-xs);
   }
 }
 
@@ -29968,7 +29972,7 @@ body:has(.tone-account) {
   }
 
   .mobile-library-hero__stat span {
-    font-size: 0.56rem !important;
+    font-size: var(--tv-text-xs) !important;
     letter-spacing: 0.08em;
   }
 
@@ -30134,7 +30138,7 @@ body:has(.tone-account) {
     top: calc(50% + 1.6rem);
     width: max-content;
     color: rgba(155, 232, 255, 0.78);
-    font-size: 0.58rem;
+    font-size: var(--tv-text-xs);
     font-weight: 950;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -30240,7 +30244,7 @@ body:has(.tone-account) {
 
   .desktop-radar-node__label small {
     color: rgba(232, 246, 255, 0.76) !important;
-    font-size: 0.7rem !important;
+    font-size: var(--tv-text-xs) !important;
   }
 
   .desktop-radar-node__badge {
@@ -30250,7 +30254,7 @@ body:has(.tone-account) {
     background: linear-gradient(135deg, rgba(243, 191, 76, 0.94), rgba(255, 140, 66, 0.86)) !important;
     padding: 0.24rem 0.5rem !important;
     color: #1b1024 !important;
-    font-size: 0.6rem !important;
+    font-size: var(--tv-text-xs) !important;
     box-shadow:
       0 0 20px rgba(243, 191, 76, 0.36),
       0 8px 18px rgba(0, 0, 0, 0.22) !important;
@@ -30873,7 +30877,7 @@ body:has(.tone-account) {
 
   .mobile-category-map__label small {
     color: color-mix(in srgb, var(--cat-color, #39d2f6) 24%, #eafcff 76%) !important;
-    font-size: 0.68rem;
+    font-size: var(--tv-text-xs);
     font-weight: 750;
     opacity: 0.96;
     text-shadow:
@@ -31193,7 +31197,7 @@ body:has(.tone-account) {
   }
 
   .desktop-vibe-radar-hero--simple .desktop-radar-node__label small {
-    font-size: 0.62rem !important;
+    font-size: var(--tv-text-xs) !important;
   }
 
   .desktop-vibe-radar-console {
@@ -31296,7 +31300,7 @@ body:has(.tone-account) {
 .desktop-radar-table__head {
   padding: 0.72rem 1rem;
   color: rgba(155, 232, 255, 0.58);
-  font-size: 0.68rem;
+  font-size: var(--tv-text-xs);
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -31345,7 +31349,7 @@ body:has(.tone-account) {
     radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.16), transparent 32%),
     rgba(255, 255, 255, 0.07);
   color: #ffffff;
-  font-size: 0.72rem;
+  font-size: var(--tv-text-xs);
   font-weight: 950;
 }
 
@@ -31538,7 +31542,7 @@ body:has(.tone-account) {
 }
 
 .mobile-library-book__meta span {
-  font-size: 0.56rem !important;
+  font-size: var(--tv-text-xs) !important;
 }
 
 .mobile-library-book__remove-wrap {
@@ -32456,7 +32460,7 @@ body:has(.tone-account) {
   }
 
   .site-mobile-footer-nav .mobile-bottom-link__label {
-    font-size: clamp(0.58rem, 2.6vw, 0.66rem) !important;
+    font-size: var(--tv-text-xs) !important;
   }
 }
 
@@ -33268,7 +33272,7 @@ body:has(.tone-account) {
   .mobile-catalog-view .mobile-tool-card__actions .selection-chip {
     width: 100% !important;
     padding-inline: 0.7rem !important;
-    font-size: clamp(0.68rem, 3.25vw, 0.82rem) !important;
+    font-size: clamp(var(--tv-text-xs), 3.25vw, 0.82rem) !important;
   }
 
   .mobile-catalog-view .mobile-tool-card__actions .selection-chip.is-active,
@@ -33385,7 +33389,7 @@ body:has(.tone-account) {
   }
 
   .mobile-compare-arena__eyebrow {
-    font-size: clamp(0.56rem, 2.55vw, 0.68rem) !important;
+    font-size: var(--tv-text-xs) !important;
     letter-spacing: 0.14em !important;
   }
 
@@ -33411,7 +33415,7 @@ body:has(.tone-account) {
     max-width: 6.4rem !important;
     padding: 0.44rem 0.68rem !important;
     border-radius: 999px !important;
-    font-size: clamp(0.62rem, 2.7vw, 0.76rem) !important;
+    font-size: clamp(var(--tv-text-xs), 2.7vw, 0.76rem) !important;
     font-weight: 900 !important;
     line-height: 1 !important;
     white-space: nowrap !important;
@@ -33515,7 +33519,7 @@ body:has(.tone-account) {
 
   .mobile-compare-arena__fight-copy small {
     color: rgba(7, 17, 31, 0.74) !important;
-    font-size: clamp(0.62rem, 2.65vw, 0.78rem) !important;
+    font-size: clamp(var(--tv-text-xs), 2.65vw, 0.78rem) !important;
     font-weight: 900 !important;
     letter-spacing: 0.13em !important;
     text-transform: uppercase !important;
@@ -33547,7 +33551,7 @@ body:has(.tone-account) {
     min-width: 6.25rem !important;
     max-width: 6.25rem !important;
     padding: 0.68rem 0.5rem !important;
-    font-size: clamp(0.55rem, 2.35vw, 0.68rem) !important;
+    font-size: var(--tv-text-xs) !important;
     letter-spacing: 0.08em !important;
   }
 
@@ -33575,12 +33579,12 @@ body:has(.tone-account) {
 
   .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-tool,
   .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-value {
-    font-size: clamp(0.66rem, 2.72vw, 0.86rem) !important;
+    font-size: clamp(var(--tv-text-xs), 2.72vw, 0.86rem) !important;
     line-height: 1.25 !important;
   }
 
   .mobile-compare-arena__matrix[data-count="2"] .mobile-compare-arena__matrix-long {
-    font-size: clamp(0.72rem, 3.05vw, 0.96rem) !important;
+    font-size: clamp(var(--tv-text-xs), 3.05vw, 0.96rem) !important;
     line-height: 1.28 !important;
   }
 
@@ -33685,7 +33689,7 @@ body:has(.tone-account) {
     gap: 0.45rem;
     align-items: center;
     padding: 0 0.68rem 0.08rem;
-    font-size: 0.55rem;
+    font-size: var(--tv-text-xs);
     font-weight: 800;
     line-height: 1;
     color: rgba(178, 223, 255, 0.72);
@@ -33732,7 +33736,7 @@ body:has(.tone-account) {
     border-radius: 999px;
     background: rgba(91, 184, 255, 0.14);
     color: rgba(221, 242, 255, 0.92) !important;
-    font-size: 0.68rem !important;
+    font-size: var(--tv-text-xs) !important;
   }
 
   .mobile-radar-section--table .mobile-radar-section__row--table:nth-child(1) .mobile-radar-section__row-rank {
@@ -33752,7 +33756,7 @@ body:has(.tone-account) {
   }
 
   .mobile-radar-section--table .mobile-radar-section__row-meta strong {
-    font-size: clamp(0.74rem, 3vw, 0.86rem) !important;
+    font-size: clamp(var(--tv-text-xs), 3vw, 0.86rem) !important;
     line-height: 1.1;
   }
 
@@ -33785,7 +33789,7 @@ body:has(.tone-account) {
     max-width: 100%;
     overflow: hidden;
     color: rgba(255, 255, 255, 0.52);
-    font-size: 0.56rem;
+    font-size: var(--tv-text-xs);
     line-height: 1.1;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -33904,7 +33908,7 @@ body:has(.tone-account) {
   .mobile-compare-arena .mobile-compare-arena__fighter-slot .tool-fighter__name {
     width: 100% !important;
     max-width: 100% !important;
-    font-size: clamp(0.64rem, 2.85vw, 0.78rem) !important;
+    font-size: clamp(var(--tv-text-xs), 2.85vw, 0.78rem) !important;
     line-height: 1.08 !important;
     overflow-wrap: anywhere !important;
   }
@@ -33914,7 +33918,7 @@ body:has(.tone-account) {
     display: -webkit-box !important;
     max-width: 100% !important;
     overflow: hidden !important;
-    font-size: clamp(0.48rem, 2.05vw, 0.58rem) !important;
+    font-size: var(--tv-text-xs) !important;
     line-height: 1.08 !important;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -33923,7 +33927,7 @@ body:has(.tone-account) {
 
   .mobile-compare-arena .mobile-compare-arena__fighter-side .tool-fighter__score,
   .mobile-compare-arena .mobile-compare-arena__fighter-slot .tool-fighter__score {
-    font-size: clamp(0.72rem, 3.1vw, 0.86rem) !important;
+    font-size: clamp(var(--tv-text-xs), 3.1vw, 0.86rem) !important;
     line-height: 1 !important;
   }
 

@@ -13,10 +13,14 @@ import {
 import type { Session, User } from "@supabase/supabase-js";
 
 import {
-  applyDiscoveryWorkspaceState,
-  getLocalDiscoveryWorkspaceState,
-} from "@/lib/discovery/local-storage";
-import type { DiscoveryPersistencePayload } from "@/lib/discovery/types";
+  applyCanonicalRemotePayload,
+  clearAccountWorkspaceRecovery,
+  getWorkspaceAttachSnapshot,
+  isolateWorkspaceAfterLogout,
+  preserveAccountWorkspaceRecovery,
+  requestWorkspaceMutation,
+} from "@/lib/discovery/workspace-sync-client";
+import type { WorkspacePersistencePayload } from "@/lib/discovery/types";
 import {
   getBrowserSupabaseClient,
   isSupabaseBrowserEnabled,
@@ -61,6 +65,8 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
   const [isSendingLink, setIsSendingLink] = useState(false);
   const [isAttaching, setIsAttaching] = useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
+  const sessionRef = useRef<Session | null>(null);
+  const localSignOutRef = useRef(false);
   const lastAttachedUserIdRef = useRef<string | null>(null);
 
   const attachWorkspaceToAccount = useCallback(async (currentSession: Session | null) => {
@@ -75,20 +81,29 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
     setIsAttaching(true);
 
     try {
-      const localSnapshot = getLocalDiscoveryWorkspaceState();
-      const response = await fetch("/api/discovery-account/attach", {
+      const localSnapshot = getWorkspaceAttachSnapshot(currentSession.user.id);
+      const response = await fetch("/api/workspace-account/attach", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${currentSession.access_token}`,
         },
-        body: JSON.stringify(localSnapshot),
+        body: JSON.stringify({
+          state: localSnapshot,
+          base_revision: null,
+          operation_id: crypto.randomUUID(),
+        }),
       });
 
-      const payload = (await response.json()) as DiscoveryPersistencePayload;
+      const payload = (await response.json()) as WorkspacePersistencePayload;
 
       if (response.ok && payload.meta.remote_available && payload.data) {
-        applyDiscoveryWorkspaceState(payload.data, { source: "remote" });
+        const applied = applyCanonicalRemotePayload(payload, {
+          owner: { kind: "account", userId: currentSession.user.id },
+          reason: "attach",
+        });
+        if (applied.recoveryRequired) return;
+        clearAccountWorkspaceRecovery(currentSession.user.id);
         lastAttachedUserIdRef.current = currentSession.user.id;
         setAuthMessage("Selezione collegata all'account senza perdere ciò che avevi salvato.");
         window.dispatchEvent(new CustomEvent("tooolvibes:account-updated"));
@@ -135,6 +150,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       }
 
       const currentSession = data.session;
+      sessionRef.current = currentSession;
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       setStatus(currentSession?.user ? "authenticated" : "guest");
@@ -143,12 +159,17 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         void attachWorkspaceToAccount(currentSession);
       }
 
-      const { data: authListener } = client.auth.onAuthStateChange((_event, nextSession) => {
+      const { data: authListener } = client.auth.onAuthStateChange((event, nextSession) => {
+        const previousSession = sessionRef.current;
+        sessionRef.current = nextSession;
         setSession(nextSession);
         setUser(nextSession?.user ?? null);
         setStatus(nextSession?.user ? "authenticated" : "guest");
 
         if (!nextSession?.user) {
+          if (event === "SIGNED_OUT" && previousSession?.user.id && !localSignOutRef.current) {
+            isolateWorkspaceAfterLogout(previousSession.user.id);
+          }
           lastAttachedUserIdRef.current = null;
           return;
         }
@@ -248,22 +269,31 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    localSignOutRef.current = true;
+    const accountUserId = session?.user.id;
+    if (!accountUserId) return;
     setIsAttaching(true);
+    preserveAccountWorkspaceRecovery(accountUserId, "logout");
+    let releasedRemotely = false;
 
     try {
-      const localSnapshot = getLocalDiscoveryWorkspaceState();
-      const releaseResponse = await fetch("/api/discovery-account/release", {
+      const localSnapshot = getWorkspaceAttachSnapshot(accountUserId);
+      const releaseResponse = await fetch("/api/workspace-account/release", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
         },
-        body: JSON.stringify(localSnapshot),
+        body: JSON.stringify({
+          state: localSnapshot,
+          base_revision: null,
+          operation_id: crypto.randomUUID(),
+        }),
       });
-      const payload = (await releaseResponse.json()) as DiscoveryPersistencePayload;
+      const payload = (await releaseResponse.json()) as WorkspacePersistencePayload;
 
       if (releaseResponse.ok && payload.meta.remote_available && payload.data) {
-        applyDiscoveryWorkspaceState(payload.data, { source: "remote" });
+        releasedRemotely = true;
         setAuthMessage("Sei uscito dall'account senza perdere la selezione corrente.");
         window.dispatchEvent(new CustomEvent("tooolvibes:account-updated"));
       } else {
@@ -274,6 +304,17 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
     } catch {
       setAuthMessage("Disconnessione effettuata. La selezione resta disponibile su questo browser.");
     } finally {
+      const isolation = isolateWorkspaceAfterLogout(accountUserId);
+      if (!isolation.applied) {
+        setAuthMessage(
+          "Disconnessione effettuata. La selezione resta disponibile su questo browser.",
+        );
+        localSignOutRef.current = false;
+        setIsAttaching(false);
+        return;
+      }
+      if (releasedRemotely) clearAccountWorkspaceRecovery(accountUserId);
+
       try {
         const client = getBrowserSupabaseClient();
         await client.auth.signOut();
@@ -282,10 +323,11 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         setStatus("guest");
         setUser(null);
         setSession(null);
+        localSignOutRef.current = false;
         setIsAttaching(false);
       }
     }
-  }, [session?.access_token]);
+  }, [session?.access_token, session?.user.id]);
 
   const value = useMemo<AccountContextValue>(
     () => ({

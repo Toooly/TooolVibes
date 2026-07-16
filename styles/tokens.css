@@ -26,10 +26,12 @@
   --tv-status-info: #3b82f6;
   --tv-focus-ring: #06b6d4;
 
-  /* Typography roles; B21 owns font-loading consolidation. */
+  /* Typography: two downloaded families, three semantic roles. */
+  --font-manrope: var(--font-inter);
+  --font-rubik: var(--font-inter);
   --tv-font-ui: var(--font-inter), "Inter", "Segoe UI", sans-serif;
   --tv-font-display: var(--font-fraunces), Georgia, serif;
-  --tv-font-system: var(--font-rubik), var(--font-inter), sans-serif;
+  --tv-font-system: var(--font-inter), "Inter", "Segoe UI", sans-serif;
   --tv-text-xs: 0.75rem;
   --tv-text-sm: 0.875rem;
   --tv-text-md: 1rem;
@@ -37,6 +39,17 @@
   --tv-text-xl: 1.5rem;
   --tv-text-2xl: 2rem;
   --tv-text-3xl: 3rem;
+  --tv-weight-regular: 400;
+  --tv-weight-medium: 500;
+  --tv-weight-semibold: 600;
+  --tv-weight-bold: 700;
+  --tv-leading-tight: 1.12;
+  --tv-leading-heading: 1.2;
+  --tv-leading-body: 1.58;
+  --tv-leading-relaxed: 1.7;
+  --tv-tracking-default: 0;
+  --tv-tracking-label: 0.08em;
+  --tv-tracking-eyebrow: 0.14em;
 
   /* Spacing: 4, 8, 12, 16, 24, 32, 48, 64 and 96px. */
   --tv-space-1: 0.25rem;

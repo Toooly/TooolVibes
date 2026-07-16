@@ -4,21 +4,47 @@ import type { ArticleFormState } from "@/lib/admin/article-form";
 import type { CollectionFormState } from "@/lib/admin/collection-form";
 import type { ToolFormState } from "@/lib/admin/tool-form";
 
+export type ToolRevalidationTarget = {
+  path: string;
+  type?: "layout" | "page";
+};
+
+const toolSharedRevalidationTargets: readonly ToolRevalidationTarget[] = [
+  { path: "/", type: "layout" },
+  { path: "/archivio" },
+  { path: "/tags" },
+  { path: "/shortlist" },
+  { path: "/compare" },
+  { path: "/api/tools" },
+  { path: "/sitemap.xml" },
+  { path: "/toools/[slug]", type: "page" },
+  { path: "/admin" },
+  { path: "/admin/tools" },
+];
+
 export function isValidUuid(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 }
 
-export function revalidateToolPaths(slug: string, previousSlug?: string) {
-  revalidatePath("/");
-  revalidatePath("/archivio");
-  revalidatePath("/tags");
-  revalidatePath("/admin");
-  revalidatePath("/admin/tools");
-  revalidatePath("/api/tools");
-  revalidatePath(`/toools/${slug}`);
+export function getToolRevalidationTargets(
+  slug: string,
+  previousSlug?: string,
+): ToolRevalidationTarget[] {
+  const targets: ToolRevalidationTarget[] = [
+    ...toolSharedRevalidationTargets,
+    { path: `/toools/${slug}` },
+  ];
 
   if (previousSlug && previousSlug !== slug) {
-    revalidatePath(`/toools/${previousSlug}`);
+    targets.push({ path: `/toools/${previousSlug}` });
+  }
+
+  return targets;
+}
+
+export function revalidateToolPaths(slug: string, previousSlug?: string) {
+  for (const target of getToolRevalidationTargets(slug, previousSlug)) {
+    revalidatePath(target.path, target.type);
   }
 }
 

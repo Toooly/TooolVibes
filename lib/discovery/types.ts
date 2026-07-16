@@ -102,9 +102,23 @@ export type DiscoveryPersistenceMeta = {
   viewer_kind?: ViewerKind;
   synced_at?: string | null;
   error?: string | null;
+  revision?: string | null;
+  conflict_retries?: number;
+  recovery_required?: boolean;
 };
 
 export type DiscoveryPersistencePayload = {
   data: DiscoveryWorkspaceState;
   meta: DiscoveryPersistenceMeta;
+};
+
+export type WorkspacePersistencePayload = {
+  data: WorkspaceStateV1;
+  meta: DiscoveryPersistenceMeta;
+};
+
+export type WorkspaceSyncMutation = {
+  state: WorkspaceStateV1;
+  base_revision: string | null;
+  operation_id: string;
 };

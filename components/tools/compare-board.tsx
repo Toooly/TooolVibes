@@ -378,7 +378,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
             <button
               type="button"
               onClick={clearCompare}
-              className="selection-chip text-ui-strong rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.15em]"
+              className="selection-chip text-ui-strong rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em]"
               style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted)" }}
             >
               Svuota
@@ -434,7 +434,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
               <div key={`head-${tool.slug}`} className="compare-score-head">
                 <p className="editorial-label">{tool.category}</p>
                 <p className="text-display-card mt-2 text-[1.16rem]">{tool.name}</p>
-                <p className="mt-2 text-[0.74rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                <p className="mt-2 text-xs uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {getToolEditorialState(tool)}
                 </p>
               </div>
@@ -446,7 +446,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
               return (
                 <Fragment key={dimension.key}>
                   <div className="compare-score-axis">
-                    <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted-strong)" }}>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted-strong)" }}>
                       {dimension.label}
                     </p>
                     <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
@@ -470,7 +470,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
-                            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                               {getEditorialScoreLevelLabel(entry.level)}
                             </p>
                             <p className="mt-2 text-[0.95rem] leading-6" style={{ color: "var(--muted-strong)" }}>

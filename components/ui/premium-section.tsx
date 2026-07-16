@@ -123,7 +123,7 @@ export function EmptyState({
       {eyebrow ? (
         <p
           className={cn(
-            "mt-4 text-[0.68rem] font-semibold uppercase tracking-[0.18em]",
+            "mt-4 text-xs font-semibold uppercase tracking-[0.18em]",
             dark ? "text-white/52" : "text-[var(--accent-strong)]",
           )}
         >

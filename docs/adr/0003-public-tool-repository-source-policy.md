@@ -95,3 +95,16 @@ DATA-203 is also not complete until Posts and Collections are migrated to
 ToolPublic-backed content, the 8/5/21/21 editorial count guard is replaced by a
 certified canonical parity fixture, every editorial link resolves, and
 `legacy-editorial-tool-repository.ts` plus its warning are removed.
+
+## DATA-203 local contract status
+
+B15 now provides local, deterministic lifecycle and cross-surface contract tests
+plus a read-only staging evidence verifier. This closes the repository-side test
+harness only. It does not certify Supabase content, editorial bootstrap, cache
+behavior across deployed requests, rollback, or adapter removal.
+
+Accordingly this ADR keeps the production source at `directory` and keeps the
+transitional editorial exception in force. The Supabase/editorial cutover stays
+blocked until `docs/runbooks/public-tool-source-cutover.md` is completed with a
+real manifest that passes `npm run tools:cutover:verify -- <evidence.json>`.
+Synthetic fixtures are validator tests, not release evidence.

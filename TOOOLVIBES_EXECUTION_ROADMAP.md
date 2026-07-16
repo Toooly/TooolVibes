@@ -1,0 +1,1014 @@
+# TooolVibes — Execution Roadmap
+
+**Batch pre-lancio:** 77  
+**Coda post-lancio:** POST-01 e successivi, esclusi dal percorso di release  
+**Regola:** un batch = uno scope verificabile, un commit, un rollback semplice.  
+**Fonte:** `TOOOLVIBES_PRODUCTION_CLOSURE_PLAN.md`.
+
+## Regole operative
+
+- Ogni batch parte da `main` verde e produce un solo commit tematico.
+- Migration, redesign, cleanup e dipendenze non vengono mescolati nello stesso batch.
+- I test rendono visibile la regressione prima di rimuovere il comportamento precedente.
+- Per i dati si usa forward-fix con backup verificato; per il codice il revert del singolo commit.
+- “File previsti” è un perimetro, non un’autorizzazione ad allargare lo scope.
+- “Non toccare” è un vincolo esplicito: se diventa necessario, si apre un nuovo batch.
+- Ogni batch chiude soltanto quando acceptance criteria e test indicati sono verdi.
+
+## Dependency map
+
+| Wave | Batch | Dipendenza di ingresso | Parallelizzazione sicura |
+|---|---|---|---|
+| A — Safety baseline | B01–B05 | — | B02–B05 dopo B01, con merge coordinato |
+| B — Schema e security | B06–B12 | B02, B03, B05 | B07/B08/B09/B12; B10 dopo B09; B11 indipendente dai dati |
+| C — Dati e identità | B13–B19 | B02, B03 | Tool B13–B15 e workspace B16–B19 possono procedere come due stream |
+| D — Design system e IA | B20–B31 | B03, contratti dati | Fondazioni B20–B24 seriali; B25–B31 per component family |
+| E — Core decision loop | B32–B36 | B15, B18, B24 | Decision Memory e Compare iniziano in parallelo, convergono in B35 |
+| F — Mobile e desktop | B37–B44 | B25, B32–B36 | Mobile e desktop per route possono procedere in parallelo |
+| G — Integrity e inclusion | B45–B63 | B04, B09–B12, core flow | Gamification B45–B52; states B53–B60; a11y B61–B63 |
+| H — Performance e polish | B64–B69 | Responsive e design system | B64–B66 separano capability, leak e asset; B68/B69 dopo le fondazioni |
+| I — Release systems | B70–B74 | Dati/security stabili | SEO, legal, analytics ed error tracking in stream separati |
+| J — Certification | B75–B77 | Tutti i P0/P1 implementativi | Seriale: E2E → device → rehearsal |
+
+**Critical path:** B01 → B02/B03/B05 → B06/B07/B09/B10 → B13/B14/B15 → B16/B17/B18/B19 → B20–B25 → B32–B36 → B37–B44 → B45–B67 → B70–B75 → B76 → B77.
+
+---
+
+## BATCH 01 — Runtime baseline
+
+- **Scope:** allineare Node 22 e npm 10, clean install e version check.
+- **Closure task:** SAF-001.
+- **File previsti:** `package.json`, `.nvmrc`, `.node-version`, `.npmrc`, README.
+- **Rischio / priorità:** basso / P0.
+- **Acceptance:** install e quality commands riproducibili sul runtime dichiarato.
+- **Test:** version check, `npm ci`, lockfile diff, build smoke.
+- **Reversibilità:** revert completo del commit.
+- **Non toccare:** dipendenze applicative, CSS, feature.
+- **Dipendenze:** nessuna.
+
+## BATCH 02 — CI quality gate
+
+- **Scope:** CI per lint zero-warning, typecheck, unit, Next build e OpenNext build.
+- **Closure task:** SAF-002.
+- **File previsti:** workflow CI, script `package.json`.
+- **Rischio / priorità:** basso / P0.
+- **Acceptance:** ogni gate rosso blocca il merge e conserva log/artifact.
+- **Test:** run verde e prova controllata di fallimento.
+- **Reversibilità:** rimozione del solo workflow.
+- **Non toccare:** runtime UI, migration.
+- **Dipendenze:** B01.
+
+## BATCH 03 — E2E e visual harness
+
+- **Scope:** Playwright, fixture gate, route smoke, collector console/hydration e screenshot matrix.
+- **Closure task:** SAF-003.
+- **File previsti:** Playwright config, `tests/e2e`, script test.
+- **Rischio / priorità:** basso / P0.
+- **Acceptance:** route core a 390 e 1440; errori console/hydration falliscono.
+- **Test:** Chromium, Firefox e WebKit smoke; screenshot deterministici.
+- **Reversibilità:** test-only revert.
+- **Non toccare:** UI per aggiornare artificialmente baseline.
+- **Dipendenze:** B01.
+
+## BATCH 04 — Feature flag e kill switch
+
+- **Scope:** config tipizzata con `surfaceEnabled` separato da `persistentRewardsEnabled` per ogni feature game, oltre a gate/3D/audio.
+- **Closure task:** SAF-004.
+- **File previsti:** `lib/config`, middleware, layout, `RootProviders`.
+- **Rischio / priorità:** medio / P0.
+- **Acceptance:** ogni surface dichiara modalità ammesse; local non invia mutation; rewarded implica surface+persistence+B45 ON; leaderboard local è invalida.
+- **Test:** unit config, SSR env, matrix OFF/LOCAL_NO_REWARD/REWARDED, combinazioni invalide e direct call.
+- **Reversibilità:** ripristino default pre-batch.
+- **Non toccare:** logica interna delle feature.
+- **Dipendenze:** B01.
+
+## BATCH 05 — Backup, rollback e dataset staging
+
+- **Scope:** snapshot schema/dati, restore drill e dataset seed non sensibile.
+- **Closure task:** SAF-005.
+- **File previsti:** runbook, script/fixture staging, checklist restore.
+- **Rischio / priorità:** basso / P0.
+- **Acceptance:** restore provato con checksum e tempo registrato.
+- **Test:** backup/restore in staging e confronto record/schema.
+- **Reversibilità:** solo documenti/fixture; nessuna mutazione produzione.
+- **Non toccare:** dati reali di produzione.
+- **Dipendenze:** B01.
+
+## BATCH 06 — Migration history repair
+
+- **Scope:** risolvere il doppio `0023` e definire una sequenza forward-safe.
+- **Closure task:** SEC-102.
+- **File previsti:** migration `0023*`, manifest e runbook DB.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** una storia univoca produce lo schema atteso da zero e da snapshot.
+- **Test:** fresh DB, upgrade staging, schema diff.
+- **Reversibilità:** forward-fix documentato; backup B05 obbligatorio.
+- **Non toccare:** contenuto delle feature non coinvolte.
+- **Dipendenze:** B02, B05.
+
+## BATCH 07 — Waitlist schema e contract
+
+- **Scope:** migration waitlist, RLS, normalizzazione, idempotenza e API contract.
+- **Closure task:** SEC-103.
+- **File previsti:** nuova migration, `/api/waitlist`, repository/test waitlist.
+- **Rischio / priorità:** medio / P0.
+- **Acceptance:** insert idempotente e autorizzazioni minime su fresh/upgrade DB.
+- **Test:** contract API, duplicate email, invalid input, RLS.
+- **Reversibilità:** migration forward-safe e route dietro flag.
+- **Non toccare:** UI coming soon oltre gli stati API.
+- **Dipendenze:** B05, B06.
+
+## BATCH 08 — Patch dipendenze vulnerabili
+
+- **Scope:** patch isolata Next 15.5.20 e toolchain necessaria, senza upgrade broad.
+- **Closure task:** SEC-101.
+- **File previsti:** `package.json`, lockfile, eventuali compatibilità puntuali.
+- **Rischio / priorità:** medio / P0.
+- **Acceptance:** advisory diretti applicabili chiusi e build identiche.
+- **Test:** audit triage, unit, E2E smoke, Next/OpenNext build, deploy dry-run.
+- **Reversibilità:** revert package/lockfile.
+- **Non toccare:** refactor feature, CSS.
+- **Dipendenze:** B01–B03.
+
+## BATCH 09 — Rate limit e revoca distribuiti
+
+- **Scope:** sostituire `Map` in-memory per magic link, gate e admin auth.
+- **Closure task:** SEC-104.
+- **File previsti:** auth/gate API, durable store adapter, config Cloudflare.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** limiti e revoca coerenti tra isolate e riavvii.
+- **Test:** multi-instance, burst, expiry, revoke, failure store.
+- **Reversibilità:** adapter selezionabile con flag in staging.
+- **Non toccare:** UX login.
+- **Dipendenze:** B02, B04.
+
+## BATCH 10 — Endpoint pubblici e RLS
+
+- **Scope:** chiudere insert anon diretti, validare API e vincolare RPC gamification a `auth.uid()`.
+- **Closure task:** SEC-105.
+- **File previsti:** RLS/RPC migration, tool/affiliate request API, server actions.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** bypass diretto e XP arbitrario falliscono; flussi legittimi passano.
+- **Test:** anon/auth/admin matrix, forged user id, replay e invalid payload.
+- **Reversibilità:** migration forward-fix con policy precedente documentata.
+- **Non toccare:** valori reward e copy.
+- **Dipendenze:** B05, B06, B09.
+
+## BATCH 11 — Gate hydration e accessibilità
+
+- **Scope:** ID stabili, label, Dialog semantics, focus trap/restore e live feedback per gate/waitlist.
+- **Closure task:** SEC-107, A11Y-1101.
+- **File previsti:** `GateModal`, `WaitlistForm`, `components/ui/input.tsx`.
+- **Rischio / priorità:** medio / P0.
+- **Acceptance:** zero hydration mismatch; form e dialog annunciati correttamente.
+- **Test:** SSR/hydration, axe, keyboard, NVDA/VoiceOver smoke, autofill.
+- **Reversibilità:** component-level revert con screenshot baseline.
+- **Non toccare:** identità visuale e copy hero.
+- **Dipendenze:** B03, B07.
+
+## BATCH 12 — Security header e origin policy
+
+- **Scope:** CSP compatibile, HSTS, frame, referrer, permissions e origin checks.
+- **Closure task:** SEC-106.
+- **File previsti:** Next/middleware/Cloudflare headers config.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** header presenti senza rompere auth, immagini, font o API.
+- **Test:** header integration, CSP report-only, cross-origin negative tests.
+- **Reversibilità:** rollout report-only e config revertibile.
+- **Non toccare:** componenti UI.
+- **Dipendenze:** B02, B03.
+
+## BATCH 13 — Tool domain canonico
+
+- **Scope:** definire schema, identità slug, score provenance e campi editoriali canonici.
+- **Closure task:** DATA-201.
+- **File previsti:** `types`, adapter directory/Supabase, ADR.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** un solo contract TypeScript copre statico, DB, API e UI.
+- **Test:** schema fixtures e compile-time contract tests.
+- **Reversibilità:** adapter mantiene entrambe le source senza cambiare output.
+- **Non toccare:** UI route e dati DB.
+- **Dipendenze:** B02.
+
+## BATCH 14 — Repository Tool unico
+
+- **Scope:** far leggere catalogo, detail, API, sitemap, Compare e Shortlist dallo stesso repository.
+- **Closure task:** DATA-202.
+- **File previsti:** `lib/data/tools`, route pubbliche/API e adapter.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** stesso slug e stessi campi in ogni consumer.
+- **Test:** route/data parity, fallback e missing slug.
+- **Reversibilità:** flag source con telemetria di confronto.
+- **Non toccare:** layout e stile delle route.
+- **Dipendenze:** B13.
+
+## BATCH 15 — Contract test Tool e CMS
+
+- **Scope:** fixture parity tra admin publish, pubblico, API, sitemap e related.
+- **Closure task:** DATA-203.
+- **File previsti:** test repository/API/admin fixture.
+- **Rischio / priorità:** basso / P0.
+- **Acceptance:** publish/update/unpublish produce gli stessi risultati ovunque.
+- **Test:** integration DB, slug collision e cache invalidation.
+- **Reversibilità:** test-only revert.
+- **Non toccare:** UI admin.
+- **Dipendenze:** B14.
+
+## BATCH 16 — Workspace schema canonico
+
+- **Scope:** definire shortlist, compare, stage, note, decision e versione schema unica.
+- **Closure task:** DATA-204.
+- **File previsti:** store workspace, discovery types, merge utility, ADR.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** CTA, nav, account e API compilano sullo stesso modello.
+- **Test:** reducer/store e invarianti compare/decision.
+- **Reversibilità:** compatibility adapter read-only.
+- **Non toccare:** migrazione localStorage o UI.
+- **Dipendenze:** B02, B03.
+
+## BATCH 17 — Migrazione localStorage non distruttiva
+
+- **Scope:** leggere entrambe le chiavi legacy, deduplicare e scrivere lo schema versionato.
+- **Closure task:** DATA-205.
+- **File previsti:** store, `lib/discovery/local-storage.ts`, migration test.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** nessun save/note/stage perso; rerun idempotente.
+- **Test:** fixture legacy, corrupted JSON, quota e rollback version.
+- **Reversibilità:** copia backup della chiave legacy e dual-read temporaneo.
+- **Non toccare:** sync remoto.
+- **Dipendenze:** B16.
+
+## BATCH 18 — Sync guest/account canonico
+
+- **Scope:** attach, restore, logout e multi-device sul workspace unico.
+- **Closure task:** DATA-206.
+- **File previsti:** Account/Discovery providers, discovery API, merge utility.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** login non perde dati e logout crea un guest isolato.
+- **Test:** guest→account, two tabs/devices, stale remote, concurrent merge.
+- **Reversibilità:** flag sync e snapshot locale precedente.
+- **Non toccare:** copy conversion e layout Account.
+- **Dipendenze:** B16, B17.
+
+## BATCH 19 — Account conversion trasparente
+
+- **Scope:** spiegare cosa viene sincronizzato e mostrare esito/recovery dell’attach.
+- **Closure task:** FLOW-605.
+- **File previsti:** AccountPanel/auth UI, conversion CTA, copy centralizzata.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** promessa, consenso implicato e stato merge sono comprensibili e veritieri.
+- **Test:** guest con/ senza dati, attach success/failure/retry, screen reader.
+- **Reversibilità:** copy/UI wrapper revertibile senza cambiare sync.
+- **Non toccare:** algoritmo merge B18.
+- **Dipendenze:** B18.
+
+## BATCH 20 — Cascade ownership e token foundation
+
+- **Scope:** congelare append-only CSS, mappare owner e promuovere token `tv-*` senza migrare route.
+- **Closure task:** DS-301, DS-302.
+- **File previsti:** style entrypoint, token file, cascade map/adoption matrix.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** ordine/owner documentati; nuovi valori passano dai token canonici.
+- **Test:** CSS build, token contrast snapshot, visual baseline invariata.
+- **Reversibilità:** token aliasano i valori esistenti.
+- **Non toccare:** rimozione di override o restyling route.
+- **Dipendenze:** B03.
+
+## BATCH 21 — Tipografia e font canonici
+
+- **Scope:** ridurre i quattro font globali e definire scala, peso, line-height e fallback.
+- **Closure task:** DS-303; quota PERF-1204.
+- **File previsti:** root layout, font config, token typography, CSS globale.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** massimo due famiglie necessarie, nessun layout shift aggiuntivo.
+- **Test:** visual regression, font request, CLS e fallback offline.
+- **Reversibilità:** font variables mantengono alias legacy.
+- **Non toccare:** copy o gerarchia delle singole route.
+- **Dipendenze:** B20.
+
+## BATCH 22 — Overlay e z-index contract
+
+- **Scope:** livelli canonici, scroll lock, Escape, focus restore e coda overlay.
+- **Closure task:** DS-304.
+- **File previsti:** Dialog/Drawer/Sheet/Popover, overlay tokens e provider.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** una sola policy per modal, sheet, menu, toast e FAB.
+- **Test:** overlay stack, keyboard, scroll, nested trigger, safe area.
+- **Reversibilità:** adapter mantiene primitive precedenti.
+- **Non toccare:** contenuto dei singoli flow.
+- **Dipendenze:** B20.
+
+## BATCH 23 — Primitive core canoniche
+
+- **Scope:** contract e varianti minime per Button, Card, Badge e Chip; nessuna migrazione route.
+- **Closure task:** DS-305.
+- **File previsti:** `components/ui`, showcase design system e test primitive.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** size/state/focus/loading/disabled documentati e testati.
+- **Test:** Story/showcase matrix, axe, keyboard, snapshot visuale.
+- **Reversibilità:** export legacy restano alias temporanei.
+- **Non toccare:** raw control nei consumer.
+- **Dipendenze:** B20–B22.
+
+## BATCH 24 — ToolCard responsive canonica
+
+- **Scope:** una ToolCard con density/slot responsive e azioni save/compare condivise.
+- **Closure task:** DS-306.
+- **File previsti:** DirectoryToolCard, MobileToolCard, card adapter e test.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** un’unica API rende grid/list/mobile senza perdere informazioni.
+- **Test:** 320–1440 px, long copy, missing logo, state save/compare.
+- **Reversibilità:** consumer restano sulla vecchia card fino a B58.
+- **Non toccare:** layout Catalogo o source Tool.
+- **Dipendenze:** B14, B20–B23.
+
+## BATCH 25 — Catalog controller decomposition
+
+- **Scope:** separare query/filter/url state, result list e sponsor slot da MobileCatalogView.
+- **Closure task:** CORE-401.
+- **File previsti:** MobileCatalogView, nuovi hook/controller e test search/filter.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** comportamento invariato con componenti testabili e responsabilità isolate.
+- **Test:** query URL, filter combinations, zero results, rerender count.
+- **Reversibilità:** route continua a montare il facade originale.
+- **Non toccare:** visual design e sponsor policy.
+- **Dipendenze:** B03, B14.
+
+## BATCH 26 — Sound e interaction layer decomposition
+
+- **Scope:** scomporre InteractionSoundLayerV2 e isolare listener/audio lifecycle.
+- **Closure task:** CORE-402; quota PERF-1204.
+- **File previsti:** interaction sound/music layer, hook capability e test lifecycle.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** listener singoli, cleanup verificato e audio opt-in persistente.
+- **Test:** mount/unmount, route change, visibility, audio off/reduced motion.
+- **Reversibilità:** facade conserva API preesistente.
+- **Non toccare:** suoni, volume o gamification reward.
+- **Dipendenze:** B04, B03.
+
+## BATCH 27 — AccountPanel decomposition
+
+- **Scope:** separare auth, profile, workspace, submission e settings dal pannello monolitico.
+- **Closure task:** CORE-403.
+- **File previsti:** `components/account/account-panel.tsx`, sottocomponenti e hook.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** stesso flow e copy; ogni sezione ha contract e loading/error propri.
+- **Test:** guest/auth states, section unit, E2E account smoke.
+- **Reversibilità:** AccountPanel resta facade compositivo.
+- **Non toccare:** algoritmo sync B18 e redesign visuale.
+- **Dipendenze:** B18, B19, B23.
+
+## BATCH 28 — Admin collections decomposition
+
+- **Scope:** separare list, sync, review, form e mutation orchestration dalla pagina monolitica.
+- **Closure task:** CORE-404.
+- **File previsti:** admin collections page, repository/hook e componenti admin.
+- **Rischio / priorità:** alto / P2.
+- **Acceptance:** workflow invariato, mutation serializzate e recovery esplicita.
+- **Test:** list/new/review/sync, concurrent mutation, permission/error.
+- **Reversibilità:** page facade mantiene route contract.
+- **Non toccare:** schema collections o UI pubblica.
+- **Dipendenze:** B02, B03, B05.
+
+## BATCH 29 — Navigation registry e scope route
+
+- **Scope:** unica configurazione IA e decisione esplicita su Community, Shop e route secondarie.
+- **Closure task:** IA-501, IA-503.
+- **File previsti:** marketing strings/nav config, header/footer/bottom nav consumers.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** ogni destinazione ha owner, audience, placement e release flag unici.
+- **Test:** link inventory, active route, feature flag e broken-link check.
+- **Reversibilità:** config può riprodurre IA esistente.
+- **Non toccare:** stile navigation o Account state.
+- **Dipendenze:** B04, B20.
+
+## BATCH 30 — Header account-aware
+
+- **Scope:** rendere identità, CTA e conteggi header/bottom nav coerenti col workspace canonico.
+- **Closure task:** IA-502.
+- **File previsti:** SiteHeaderV2, MobileBottomNav, account/workspace selectors.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** guest/auth copy e counts coincidono su ogni route.
+- **Test:** login/logout, save/compare, tab sync, mobile/desktop.
+- **Reversibilità:** selector adapter precedente disponibile per un release flag.
+- **Non toccare:** struttura IA B29 o design del header.
+- **Dipendenze:** B18, B29.
+
+## BATCH 31 — Search unica e URL-driven
+
+- **Scope:** unificare Archivio, command palette e header su indice/query/URL canonici.
+- **Closure task:** IA-504.
+- **File previsti:** search service, Catalog controller, GlobalCommandPalette, SiteHeaderV2.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** stessa query produce stessi tool; back/forward ripristina lo stato.
+- **Test:** “Blink” relevance fixture, typo, empty, deep link, keyboard.
+- **Reversibilità:** adapter espone il vecchio search dietro flag.
+- **Non toccare:** ranking Compare e layout risultati.
+- **Dipendenze:** B14, B25, B29.
+
+## BATCH 32 — Decision Memory editabile
+
+- **Scope:** rendere raggiungibili stage, note, reopen e decision state dalla Shortlist.
+- **Closure task:** FLOW-601.
+- **File previsti:** MobileShortlistBoard, MobileNoteSheet, workspace selectors/actions.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** nota e stage si modificano, persistono e riaprono dopo reload/login.
+- **Test:** keyboard/touch, empty/long note, guest/auth, migration fixture.
+- **Reversibilità:** nuova UI dietro flag, dati compatibili col contract B16.
+- **Non toccare:** score Compare o gamification.
+- **Dipendenze:** B18, B22–B24.
+
+## BATCH 33 — Compare scoring contract
+
+- **Scope:** sostituire indice/hash/featured con evidenze deterministiche e provenance.
+- **Closure task:** FLOW-602.
+- **File previsti:** compare score/engine, Tool domain fields e unit test.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** ordine input non cambia risultato; assenza dati riduce confidence.
+- **Test:** permutations, missing fields, fixtures e snapshot explanation.
+- **Reversibilità:** vecchio score disponibile solo in confronto interno, non nel copy pubblico.
+- **Non toccare:** layout Compare.
+- **Dipendenze:** B13–B15.
+
+## BATCH 34 — Compare per obiettivo
+
+- **Scope:** objective selector e pesi spiegati condivisi tra mobile e desktop.
+- **Closure task:** FLOW-603.
+- **File previsti:** Compare views, objective config, engine adapter.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** obiettivo persistito e impatto visibile prima del risultato.
+- **Test:** ogni objective, mobile/desktop parity, reload e a11y.
+- **Reversibilità:** objective neutro riproduce il contratto base B33.
+- **Non toccare:** Decision Memory.
+- **Dipendenze:** B33, B23.
+
+## BATCH 35 — Compare verso Decision
+
+- **Scope:** azione esplicita “scegli/annota decisione” con motivazione e ritorno a Shortlist.
+- **Closure task:** FLOW-604.
+- **File previsti:** Compare result, workspace decision action, Shortlist decision view.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** confronto si chiude in una decisione riapribile con contesto.
+- **Test:** choose/change/undo, guest/auth, reload e deep link.
+- **Reversibilità:** decision write è additivo e versionato.
+- **Non toccare:** reward/XP.
+- **Dipendenze:** B32–B34.
+
+## BATCH 36 — Radar data integrity
+
+- **Scope:** eliminare prediction hash placeholder, definire freshness/source/fallback e stati onesti.
+- **Closure task:** FLOW-606.
+- **File previsti:** Radar prediction/resolver, Product Hunt adapter e UI state.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** ranking/prediction dichiarano source, timestamp e fallback; nessun dato inventato.
+- **Test:** live/fallback/stale/error, deterministic resolver e timezone.
+- **Reversibilità:** prediction disattivabile via B04.
+- **Non toccare:** layout desktop o mission reward.
+- **Dipendenze:** B04, B14.
+
+## BATCH 37 — Mobile navigation e FAB shell
+
+- **Scope:** una sola geometria safe-area per bottom nav, compare badge, mission entry e Vibe Rush.
+- **Closure task:** MOB-701.
+- **File previsti:** MobileBottomNav, GamificationShell/FAB e shell tokens.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** nessuna sovrapposizione o azione coperta a 320–430 px.
+- **Test:** iPhone/Android viewport, scroll end, orientation e reduced motion.
+- **Reversibilità:** feature launcher individuali restano flaggabili.
+- **Non toccare:** contenuto Catalogo o reward logic.
+- **Dipendenze:** B22, B29, B30.
+
+## BATCH 38 — Catalog density e sponsor policy
+
+- **Scope:** definire una colonna sotto soglia, information priority e sponsor dopo valore organico.
+- **Closure task:** MOB-702.
+- **File previsti:** Catalog result layout, sponsor slot, ToolCard density config.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** title/use case/CTA leggibili; sponsor non precede il primo valore utile.
+- **Test:** 320/360/390/430, long copy, sponsor absent/present e scroll end.
+- **Reversibilità:** layout variant dietro flag route.
+- **Non toccare:** search controller o source Tool.
+- **Dipendenze:** B24, B25, B31, B37.
+
+## BATCH 39 — Mobile keyboard, viewport e sheet
+
+- **Scope:** policy `dvh`, safe area, scroll-to-input e sheet con tastiera.
+- **Closure task:** MOB-703.
+- **File previsti:** shell/overlay CSS, Gate/Auth/Search/NoteSheet form wrappers.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** input, submit e close restano visibili con tastiera aperta.
+- **Test:** iOS Safari/Android Chrome, autofill, orientation e zoom.
+- **Reversibilità:** utility CSS isolata.
+- **Non toccare:** validation business o copy.
+- **Dipendenze:** B11, B22, B32, B37.
+
+## BATCH 40 — Home time-to-value
+
+- **Scope:** ridurre intro/chrome concorrenziale e portare discovery utile nel primo viewport.
+- **Closure task:** MOB-704.
+- **File previsti:** Home, intro, marketing shell e feature placement.
+- **Rischio / priorità:** medio / P2.
+- **Acceptance:** CTA primaria e primi segnali tool senza attesa obbligatoria; brand preservato.
+- **Test:** first/new session, repeat session, 390 px, reduced motion e visual regression.
+- **Reversibilità:** ordine sezioni e intro restano flaggabili.
+- **Non toccare:** linguaggio visuale cosmic o dati dei tool.
+- **Dipendenze:** B04, B29, B37.
+
+## BATCH 41 — Catalogo desktop intenzionale
+
+- **Scope:** composizione desktop con filtri persistenti, griglia leggibile e density appropriata.
+- **Closure task:** DESK-801.
+- **File previsti:** Archivio route, Catalog facade e desktop layout.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** 1024–1920 px usa lo spazio senza allungare eccessivamente righe/card.
+- **Test:** laptop/wide, keyboard, resize, empty/loading/error e visual regression.
+- **Reversibilità:** mobile facade invariato e desktop variant flaggabile.
+- **Non toccare:** search logic, sponsor policy o ToolCard API.
+- **Dipendenze:** B24, B25, B31, B38.
+
+## BATCH 42 — Salvati desktop
+
+- **Scope:** board/lista desktop con stage, note e compare side action.
+- **Closure task:** DESK-802.
+- **File previsti:** Shortlist route, Decision Memory components e desktop layout.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** grandi viewport accelerano il confronto senza duplicare il modello mobile.
+- **Test:** keyboard, 1024/1440/1920, long note e empty state.
+- **Reversibilità:** usa lo stesso controller B32; view desktop flaggabile.
+- **Non toccare:** workspace schema o scoring.
+- **Dipendenze:** B32, B35.
+
+## BATCH 43 — Compare desktop e render esclusivo
+
+- **Scope:** ricostruire shell/matrice desktop e montare un solo tree responsive per Compare.
+- **Closure task:** DESK-803, POL-1302; quota PERF-1201.
+- **File previsti:** Compare page/views, compare CSS e viewport boundary.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** matrice leggibile, una sola view nel DOM e nessun hard guard legacy.
+- **Test:** SSR, 390/1024/1440/1920, resize boundary, profiler e visual diff.
+- **Reversibilità:** view precedenti dietro flag fino alla certificazione.
+- **Non toccare:** score/objective/decision contract B33–B35.
+- **Dipendenze:** B22–B24, B33–B35.
+
+## BATCH 44 — Radar desktop e query unica
+
+- **Scope:** una composizione desktop e una sola query/cache per tutte le rappresentazioni Radar.
+- **Closure task:** DESK-804, PERF-1202; quota PERF-1201.
+- **File previsti:** Radar page, MobileRadarView, DesktopRadarTable/Nodes e query hook.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** una view montata, una request per key e timestamp/fallback coerenti.
+- **Test:** network count, SSR/resize, live/fallback/error, 390–1920 px.
+- **Reversibilità:** visual node/table selezionabili via config senza doppio mount.
+- **Non toccare:** prediction integrity B36 o reward missioni.
+- **Dipendenze:** B03, B36.
+
+## BATCH 45 — Reward backbone release decision
+
+- **Scope:** prima del commit scegliere un solo branch: OFF disabilita tutte le mutation reward lato server; ON implementa ledger/allowlist, revoca update diretto e quota/cooldown.
+- **Closure task:** GAM-901.
+- **File previsti:** game actions/RPC/RLS migration, `game_profiles`, reward event contracts.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** OFF: nessuna affordance/copy/mutation reward e direct reward call negata, ma surface LOCAL_NO_REWARD consentite. ON: replay, forged delta/user e update diretto non incrementano XP.
+- **Test:** manifest branch; OFF reward-network/direct RPC con surface locale attiva; ON RLS, update, concurrency, idempotency, quota/cooldown, rate limit e ledger.
+- **Reversibilità:** OFF è config+deny revertibile; ON usa kill switch e migration forward-fix.
+- **Non toccare:** valori/bilanciamento reward.
+- **Dipendenze:** B09, B10.
+
+## BATCH 46 — Mission lifecycle release mode
+
+- **Scope:** scegliere OFF, LOCAL_NO_REWARD con progress reale, oppure REWARDED con claim idempotente; definire reset/timezone.
+- **Closure task:** GAM-902.
+- **File previsti:** mission RPC/actions/UI e scheduler/reset.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** OFF elimina UI/request; local completa senza XP mutation; rewarded completa/claim una volta ed è auditabile.
+- **Test:** matrix modalità, direct reward denial off/local; rewarded progress, duplicate claim, reset, offline/retry.
+- **Reversibilità:** kill switch missioni.
+- **Non toccare:** badge/level visual system.
+- **Dipendenze:** B04; solo REWARDED richiede B45 ON.
+
+## BATCH 47 — Hidden Signal integrity
+
+- **Scope:** ownership server-side di candidati/slug e claim idempotente; altrimenti superficie e reward OFF.
+- **Closure task:** GAM-903.
+- **File previsti:** Hidden Signal action/RPC, candidate resolver e feature flag.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** modalità OFF/LOCAL_NO_REWARD/REWARDED registrata; se rewarded, input client non auto-valida il segnale.
+- **Test:** matrix modalità; OFF/local direct reward denial; rewarded forged slug/list/user, replay, multi-tab e stale candidate.
+- **Reversibilità:** kill switch Hidden Signal.
+- **Non toccare:** Arena, Radar prediction o presentazione Vibe Rush.
+- **Dipendenze:** B04; solo REWARDED richiede B45 ON.
+
+## BATCH 48 — Arena integrity
+
+- **Scope:** evento battle server-verificabile con idempotenza e quota/cooldown; altrimenti Arena XP OFF.
+- **Closure task:** GAM-903.
+- **File previsti:** Arena actions/migration, battle event contract e feature flag.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** modalità OFF/LOCAL_NO_REWARD/REWARDED registrata; local non muta XP; rewarded resiste a run ripetute/concorrenti.
+- **Test:** matrix modalità; OFF/local direct reward denial; rewarded replay, concurrency, wrong user, quota e cooldown.
+- **Reversibilità:** kill switch Arena reward.
+- **Non toccare:** Hidden Signal, prediction o gameplay visuale.
+- **Dipendenze:** B04; solo REWARDED richiede B45 ON.
+
+## BATCH 49 — Radar prediction reward integrity
+
+- **Scope:** validare outcome su snapshot rank versionato e disabilitare reward finché il resolver non è reale.
+- **Closure task:** GAM-903; quota FLOW-606.
+- **File previsti:** prediction resolver/RPC, rank snapshot e schedule.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** modalità OFF/LOCAL_NO_REWARD/REWARDED registrata; se rewarded, actual rank non deriva da hash/input client.
+- **Test:** matrix modalità; OFF/local direct reward denial; rewarded stale/missing snapshot, forged date/rank/user e resolver.
+- **Reversibilità:** kill switch prediction reward.
+- **Non toccare:** layout Radar, Hidden Signal o Arena.
+- **Dipendenze:** B04 e B36; solo REWARDED richiede B45 ON.
+
+## BATCH 50 — Leaderboard canonica o OFF
+
+- **Scope:** proiezione server-authoritative con privacy/tie/refresh, oppure rimozione completa dal lancio.
+- **Closure task:** GAM-906.
+- **File previsti:** leaderboard UI/query, reward ledger, `game_profiles` e flag.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** supporta solo OFF o REWARDED; LOCAL_NO_REWARD è config invalida. OFF produce zero entry/request; rewarded è riproducibile dal ledger.
+- **Test:** OFF/REWARDED, invalid local config, forged profile, tie, pagination, refresh, privacy e multi-user ranking.
+- **Reversibilità:** kill switch leaderboard.
+- **Non toccare:** livelli/badge o bilanciamento XP.
+- **Dipendenze:** B04 e B10; solo il branch ON richiede B45 ON.
+
+## BATCH 51 — Vibe Rush guest/account integrity
+
+- **Scope:** copy veritiera e pending run firmata/validata, oppure nessuna promessa di recupero al signup.
+- **Closure task:** GAM-904.
+- **File previsti:** VibeTapMiniGame, account conversion e pending-run action.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** LOCAL_NO_REWARD: nessun payload/attach pending né promessa. REWARDED: firma/expiry, attach/retry idempotenti e tampering negato.
+- **Test:** local UI/network/direct reward denial; oppure rewarded guest/auth attach success/failure/retry, tampering, replay e expiry.
+- **Reversibilità:** persistence run disattivabile senza perdere il gioco locale.
+- **Non toccare:** placement/FAB, gameplay o reward amounts.
+- **Dipendenze:** B18 e B19; solo REWARDED richiede B45 ON.
+
+## BATCH 52 — Vibe Rush placement e opt-in
+
+- **Scope:** Easter egg/area dedicata, nessun FAB globale e rispetto opt-in/kill switch.
+- **Closure task:** GAM-904.
+- **File previsti:** GamificationShell, launcher, navigation placement e flag.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** discovery/decision restano primarie; il gioco non copre nav/CTA e resta assente quando OFF.
+- **Test:** flag, new/repeat user, mobile shell, focus, reduced motion e audio off.
+- **Reversibilità:** placement/config revertibile.
+- **Non toccare:** pending run B51, gameplay o reward amounts.
+- **Dipendenze:** OFF richiede B04 e B37; Vibe Rush ON richiede anche B51.
+
+## BATCH 53 — Error boundary corretta
+
+- **Scope:** spostare `html/body` al global error appropriato e preservare reset/recovery.
+- **Closure task:** STATE-1001.
+- **File previsti:** `app/error.tsx`, eventuale `app/global-error.tsx`, error test route.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** errori client/SSR mostrano recovery valido senza nesting HTML errato.
+- **Test:** throw SSR/client, reset, navigation recovery e console.
+- **Reversibilità:** boundary precedente conservabile come componente presentazionale.
+- **Non toccare:** monitoring o copy non necessario.
+- **Dipendenze:** B03.
+
+## BATCH 54 — State matrix Catalogo
+
+- **Scope:** loading, empty, error, offline e success soltanto per `/archivio`.
+- **Closure task:** STATE-1002.
+- **File previsti:** Catalog state components e route/facade Archivio.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** ogni stato ha CTA/retry coerente senza dati simulati come reali.
+- **Test:** latency, zero results, 500, offline, partial data e visual matrix.
+- **Reversibilità:** state slot additivo nel Catalog facade.
+- **Non toccare:** Tool detail, Shortlist, Compare, Radar, Account o happy-path layout.
+- **Dipendenze:** B14, B25, B31, B53.
+
+## BATCH 55 — State matrix Tool detail
+
+- **Scope:** loading, not-found, error, offline, partial e success soltanto per `/toools/[slug]`.
+- **Closure task:** STATE-1002.
+- **File previsti:** Tool detail route e relativi state components.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** 404 e source failure sono distinti; retry/fallback non inventano campi.
+- **Test:** valid/missing slug, timeout, 404/500/offline e partial related.
+- **Reversibilità:** componenti stato additivi.
+- **Non toccare:** altre route o layout happy path.
+- **Dipendenze:** B14, B15, B53.
+
+## BATCH 56 — State matrix Shortlist
+
+- **Scope:** loading, empty, error, offline, conflict e success soltanto per `/shortlist`.
+- **Closure task:** STATE-1002.
+- **File previsti:** Shortlist route/board e state components.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** empty e sync failure guidano recovery senza perdere note/stage.
+- **Test:** guest empty, auth loading, sync 409/500/offline e partial workspace.
+- **Reversibilità:** state slot separato dal controller Decision Memory.
+- **Non toccare:** Compare, Radar, Account o schema workspace.
+- **Dipendenze:** B18, B32, B42, B53.
+
+## BATCH 57 — State matrix Compare
+
+- **Scope:** zero/uno tool, loading, invalid set, error, offline e success soltanto per `/compare`.
+- **Closure task:** STATE-1002.
+- **File previsti:** Compare route/views e state components.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** precondizioni e recovery sono chiare senza mostrare verdetti incompleti.
+- **Test:** 0/1/2+ tool, missing tool, engine error, offline e reload.
+- **Reversibilità:** state router additivo.
+- **Non toccare:** scoring/objective/decision contract o altre route.
+- **Dipendenze:** B33–B35, B43, B53.
+
+## BATCH 58 — State matrix Radar
+
+- **Scope:** loading, empty, stale, fallback, error e success soltanto per `/radar`.
+- **Closure task:** STATE-1002.
+- **File previsti:** Radar route/views/query states.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** source e timestamp restano visibili; fallback non appare live.
+- **Test:** live, stale, fallback, empty, 429/500/offline e retry.
+- **Reversibilità:** state mapping additivo al query contract.
+- **Non toccare:** reward, prediction resolver o altre route.
+- **Dipendenze:** B36, B44, B49, B53.
+
+## BATCH 59 — State matrix Account
+
+- **Scope:** guest, magic-link pending, authenticated, loading, error, offline e attach outcome per `/account`.
+- **Closure task:** STATE-1002.
+- **File previsti:** AccountPanel sections, auth/workspace state components.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** auth e attach hanno success/retry distinti e non promettono sync non avvenuta.
+- **Test:** guest/auth, link pending/expired, attach success/failure, 401/429/500/offline.
+- **Reversibilità:** state components additivi al facade AccountPanel.
+- **Non toccare:** sync algorithm o altre route.
+- **Dipendenze:** B18, B19, B27, B53.
+
+## BATCH 60 — Storage e sync edge cases
+
+- **Scope:** corrupted JSON, quota, multi-tab/device, clock skew e conflict resolution.
+- **Closure task:** STATE-1003.
+- **File previsti:** workspace persistence/sync, storage adapter e tests.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** recovery non perde dati silenziosamente e comunica i conflitti non risolvibili.
+- **Test:** corruption, quota, storage event, concurrent devices, stale clock.
+- **Reversibilità:** snapshot pre-migration e sync flag.
+- **Non toccare:** UI Decision/Compare tranne messaggi di recovery.
+- **Dipendenze:** B17–B19, B32–B35.
+
+## BATCH 61 — Overlay e feedback accessibili
+
+- **Scope:** migrare overlay core al contract e imporre una sola celebrazione primaria.
+- **Closure task:** A11Y-1102.
+- **File previsti:** NoteSheet, command palette, game modals, toast/confetti/audio.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** Escape/focus/scroll lock/live region coerenti; eventi non si sovrappongono.
+- **Test:** keyboard, screen reader, stacked events, audio/motion off.
+- **Reversibilità:** adapter overlay precedente temporaneo.
+- **Non toccare:** logica business dei flow.
+- **Dipendenze:** B22, B32, B45–B52.
+
+## BATCH 62 — Contrast, touch e semantic sweep
+
+- **Scope:** AA, target 44 px, raw control core e badge/count annunciati.
+- **Closure task:** A11Y-1103.
+- **File previsti:** tokens, nav, Catalogo, Compare, Shortlist e Account.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** nessun contrasto/target/semantic blocker nei flow core.
+- **Test:** axe, contrast tool, touch manuale, zoom 200%, high contrast.
+- **Reversibilità:** modifiche per component family, non big-bang.
+- **Non toccare:** brand palette primaria salvo token insufficienti.
+- **Dipendenze:** B20–B24, B27, B30, B32–B44.
+
+## BATCH 63 — Reduced motion e media preferences
+
+- **Scope:** preference canonica per motion/audio, pause offscreen e Canvas non essenziale off.
+- **Closure task:** A11Y-1104.
+- **File previsti:** capability hook, 3D/Orbital/intro/transition/audio/game effects.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** preference OS/in-app persiste e non rimuove contenuto necessario.
+- **Test:** reduce-motion, audio off, reload, visibilitychange e low-power smoke.
+- **Reversibilità:** capability defaults riproducono comportamento precedente.
+- **Non toccare:** asset o animazioni quando la preference è standard.
+- **Dipendenze:** B04, B26, B52.
+
+## BATCH 64 — Capability gate 3D e global layers
+
+- **Scope:** caricare Canvas, Orbital e layer globali solo dove/capability necessario.
+- **Closure task:** PERF-1203.
+- **File previsti:** RootProviders, marketing layout, Global3DLayer/Orbital e dynamic imports.
+- **Rischio / priorità:** alto / P1.
+- **Acceptance:** route non immersive non scaricano/eseguono layer; fallback conserva contenuto.
+- **Test:** bundle analyzer, network route, low-end profile, feature/reduced-motion flags.
+- **Reversibilità:** capability per layer e import fallback.
+- **Non toccare:** resa visuale delle scene abilitate.
+- **Dipendenze:** B04, B63.
+
+## BATCH 65 — Account background performance
+
+- **Scope:** correggere soltanto resize cleanup e costo O(n²) di AccountVibesBackground.
+- **Closure task:** quota PERF-1204.
+- **File previsti:** `components/account/account-vibes-background.tsx` e test profiler.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** nessun listener residuo; il costo per frame rispetta il budget approvato.
+- **Test:** mount/unmount, resize loop, memory, CPU profile e visibilitychange.
+- **Reversibilità:** revert del singolo componente/commit.
+- **Non toccare:** immagini, asset pipeline, altre scene 3D o design Account.
+- **Dipendenze:** B03, B27.
+
+## BATCH 66 — Image pipeline core
+
+- **Scope:** sostituire/ottimizzare soltanto le immagini raw critiche per LCP e chiudere i relativi warning lint.
+- **Closure task:** quota PERF-1204, esclusi font B21, sound B26 e leak B65.
+- **File previsti:** image consumers prioritari e asset/image config.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** dimensioni/crop/priority corretti e nessun warning image nei consumer core migrati.
+- **Test:** image lint, network dimensions, LCP, fallback e visual regression.
+- **Reversibilità:** revert del solo asset/consumer commit.
+- **Non toccare:** AccountVibesBackground, scene 3D o redesign degli asset.
+- **Dipendenze:** B03, B21.
+
+## BATCH 67 — Performance budget CI
+
+- **Scope:** budget per CSS/JS route, request, LCP, CLS e INP di laboratorio.
+- **Closure task:** PERF-1205.
+- **File previsti:** CI, Lighthouse/bundle config e baseline report.
+- **Rischio / priorità:** basso / P1.
+- **Acceptance:** regressioni oltre soglia bloccano merge con allowlist temporanea motivata.
+- **Test:** due run stabili mobile/desktop e prova budget failure.
+- **Reversibilità:** quality gate configurabile, non rimuove ottimizzazioni.
+- **Non toccare:** codice runtime.
+- **Dipendenze:** B02, B03, B43, B44, B64–B66.
+
+## BATCH 68 — Catalogo come vertical slice canonica
+
+- **Scope:** adottare token, primitive, ToolCard e state matrix nel Catalogo; rimuovere solo override resi inutili.
+- **Closure task:** POL-1301.
+- **File previsti:** Archivio/Catalog components e relativo CSS owner.
+- **Rischio / priorità:** alto / P3.
+- **Acceptance:** mobile/desktop coerenti, zero regressioni e lista precisa di CSS eliminato.
+- **Test:** visual matrix, search/filter, sponsor, state matrix, a11y e performance.
+- **Reversibilità:** route flag e commit singolo; nessuna cancellazione cross-route.
+- **Non toccare:** CSS di Compare/Radar/Home o source dati.
+- **Dipendenze:** B20–B25, B31, B37, B38, B41, B54, B62.
+
+## BATCH 69 — Microcopy e visual hierarchy
+
+- **Scope:** eliminare claim “winner/verdetto” non supportati, chiarire CTA e ridurre rumore gerarchico core.
+- **Closure task:** POL-1303.
+- **File previsti:** copy centralizzata, Home, Catalogo, Compare, Radar, Shortlist e Account.
+- **Rischio / priorità:** basso / P3.
+- **Acceptance:** ogni CTA descrive l’esito; confidence/limiti dei dati sono espliciti.
+- **Test:** content inventory, UX review, localization/overflow e visual regression.
+- **Reversibilità:** solo copy/priority tokens, senza logica.
+- **Non toccare:** brand voice, contenuti editoriali o redesign strutturale.
+- **Dipendenze:** B19, B29–B36, B40, B54–B59.
+
+## BATCH 70 — Release gate, crawler e sitemap
+
+- **Scope:** separare prelaunch/public mode e consentire callback, robots e sitemap secondo policy.
+- **Closure task:** REL-1401.
+- **File previsti:** middleware, gate routes/config, robots e sitemap.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** public mode non richiede gate; prelaunch protegge UI senza rompere auth/crawler policy.
+- **Test:** no-cookie route matrix, callback cross-device, bot UA, robots/sitemap e redirects.
+- **Reversibilità:** environment flag e rollback config.
+- **Non toccare:** contenuto/metadata delle pagine.
+- **Dipendenze:** B04, B11, B14, B15.
+
+## BATCH 71 — Metadata e social preview
+
+- **Scope:** canonical, metadata route-level e immagini OG/Twitter reali per superfici pubbliche.
+- **Closure task:** REL-1402.
+- **File previsti:** route metadata, metadata utility e asset social.
+- **Rischio / priorità:** basso / P1.
+- **Acceptance:** URL canonici e preview corretti per Home, Tool, Collection e Post.
+- **Test:** metadata snapshot, social validator e missing asset fallback.
+- **Reversibilità:** metadata/asset-only revert.
+- **Non toccare:** layout o contenuto delle pagine.
+- **Dipendenze:** B14, B15, B70.
+
+## BATCH 72 — Privacy, Cookie, Termini e consent
+
+- **Scope:** inventario trattamenti/storage, retention, basi giuridiche, termini e consent coerente.
+- **Closure task:** REL-1403.
+- **File previsti:** pagine legal, consent component/config e data inventory.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** testi approvati da consulente competente e comportamento conforme all’inventario reale.
+- **Test:** link/footer/auth, consent persistence/withdrawal, analytics on/off e versioning.
+- **Reversibilità:** feature non essenziali restano off se il consenso non è pronto.
+- **Non toccare:** policy inventate senza approvazione legale.
+- **Dipendenze:** B04, B70; B73 resta spento finché questo batch non è approvato.
+
+## BATCH 73 — Analytics essenziale
+
+- **Scope:** tassonomia minima per discovery→save→compare→decision→return con privacy by design.
+- **Closure task:** REL-1404.
+- **File previsti:** analytics adapter, event schema e instrumentation core.
+- **Rischio / priorità:** medio / P1.
+- **Acceptance:** eventi deduplicati, senza PII, con properties/version owner documentati.
+- **Test:** event contract, consent off/on, duplicate navigation e debug sink.
+- **Reversibilità:** adapter no-op e kill switch.
+- **Non toccare:** logica dei flow o metriche vanity post-lancio.
+- **Dipendenze:** B04, B19, B32–B36; attivazione pubblica dopo B72.
+
+## BATCH 74 — Error tracking, SLI e alert
+
+- **Scope:** error tracking client/server, source map, release tag, SLI e alert essenziali.
+- **Closure task:** REL-1405.
+- **File previsti:** provider telemetry, build/deploy config e runbook incident.
+- **Rischio / priorità:** medio / P0.
+- **Acceptance:** errore sintetico crea evento leggibile con release/route, senza dati sensibili.
+- **Test:** client/server/API throw, source map, sampling, redaction e alert delivery.
+- **Reversibilità:** provider disabilitabile senza spegnere logging base.
+- **Non toccare:** analytics prodotto B73.
+- **Dipendenze:** B02, B53, B72.
+
+## BATCH 75 — E2E core e security certification
+
+- **Scope:** certificare core flow, security e il manifest OFF/LOCAL_NO_REWARD/REWARDED di ogni superficie gamification.
+- **Closure task:** QA-1406.
+- **File previsti:** suite E2E/integration, fixture staging e gamification release manifest.
+- **Rischio / priorità:** basso / P0.
+- **Acceptance:** rewarded ha E2E; local non muta profilo; OFF è assente/nega direct call; leaderboard rifiuta local; zero console/hydration error.
+- **Test:** browser/API/RLS/network/data parity; matrix tri-state per mission/Hidden/Arena/prediction/Vibe Rush e OFF/REWARDED per leaderboard.
+- **Reversibilità:** test-only; bug scoperti aprono batch separati.
+- **Non toccare:** codice prodotto per aggirare i test.
+- **Dipendenze:** B06–B74 applicabili.
+
+## BATCH 76 — Device e cross-browser certification
+
+- **Scope:** matrice reale iPhone, Android, tablet, laptop e wide desktop.
+- **Closure task:** QA-1407.
+- **File previsti:** report QA, screenshot baseline finali e issue log.
+- **Rischio / priorità:** basso / P0.
+- **Acceptance:** zero overflow/clipping/blocker; keyboard, touch, safe area e viewport verificati.
+- **Test:** device/browser matrix, zoom, orientation, keyboard, low network e reduced motion.
+- **Reversibilità:** QA-only; correzioni non entrano in questo batch.
+- **Non toccare:** baseline per nascondere difetti.
+- **Dipendenze:** B75.
+
+## BATCH 77 — Staging rehearsal e go/no-go
+
+- **Scope:** deploy rehearsal, migration/restore, smoke, monitor, rollback e firma readiness matrix.
+- **Closure task:** QA-1408.
+- **File previsti:** release checklist, runbook, deployment config solo se già validata.
+- **Rischio / priorità:** alto / P0.
+- **Acceptance:** Definition of Done e manifest OFF/LOCAL_NO_REWARD/REWARDED firmati; owner firma GO oppure documenta NO-GO.
+- **Test:** clean deploy, migration, synthetic journeys, alert, rollback e post-rollback smoke.
+- **Reversibilità:** rollback provato prima della finestra pubblica.
+- **Non toccare:** nuove feature, redesign o upgrade non necessari.
+- **Dipendenze:** B70–B76 e tutti i P0/P1/P2 release-scoped chiusi.
+
+---
+
+## Coda post-lancio — non inclusa nei 77 batch
+
+### POST-01 — Progressione orientata alla decisione
+
+- **Scope:** un singolo esperimento iniziale sul “revisit di una decisione motivata”, senza XP cosmetico.
+- **Closure task:** GAM-905.
+- **File previsti:** event taxonomy, workspace/decision analytics, eventuali badge definition dietro flag.
+- **Rischio / priorità:** medio / P4.
+- **Entry criteria:** release stabile e almeno un ciclo dati reale.
+- **Dipendenze:** B35 e B73.
+- **Acceptance:** una sola ipotesi, metrica primaria, guardrail e kill criteria definiti prima dell’esposizione.
+- **Test:** cohort analysis del singolo esperimento, abuse review e usability.
+- **Reversibilità:** un solo commit, feature flag e rollback senza migrare il core workspace.
+- **Non toccare:** core loop validato senza evidenza quantitativa.
+
+## Tracciabilità Closure Plan → Roadmap
+
+| Famiglia task | Batch |
+|---|---|
+| SAF-001…005 | B01…B05 |
+| SEC-101 | B08 |
+| SEC-102…107 | B06, B07, B09, B10, B12, B11 |
+| DATA-201…206 | B13…B18 |
+| DS-301…306 | B20, B20, B21, B22, B23, B24 |
+| CORE-401…404 | B25…B28 |
+| IA-501…504 | B29, B30, B29, B31 |
+| FLOW-601, 602, 603, 604 | B32, B33, B34, B35 |
+| FLOW-605, 606 | B19, B36 |
+| MOB-701…704 | B37…B40 |
+| DESK-801…804 | B41…B44 |
+| GAM-901 | B45 |
+| GAM-902 | B46 |
+| GAM-903 | B47, B48, B49 |
+| GAM-904 | B51, B52 |
+| GAM-905 | POST-01 |
+| GAM-906 | B50 |
+| STATE-1001 | B53 |
+| STATE-1002 | B54…B59 |
+| STATE-1003 | B60 |
+| A11Y-1101…1104 | B11, B61, B62, B63 |
+| PERF-1201 | B43 e B44 |
+| PERF-1202 | B44 |
+| PERF-1203 | B64 |
+| PERF-1204 | B21, B26, B65 e B66 |
+| PERF-1205 | B67 |
+| POL-1301…1303 | B68, B43, B69 |
+| REL-1401…1405 | B70…B74 |
+| QA-1406…1408 | B75…B77 |
+
+## Commit e rollback policy
+
+Ogni batch produce un solo commit. Se durante il lavoro emerge una seconda famiglia di file o una modifica non richiesta per soddisfare l’acceptance, il batch si ferma e viene aperto uno scope separato. Le migration non vengono “revertite” distruttivamente: usano backup B05 e forward-fix verificato. Ogni flag temporaneo deve avere owner e batch di rimozione; nessun dual-read o adapter può restare indefinitamente senza una decisione esplicita nel Batch 77.

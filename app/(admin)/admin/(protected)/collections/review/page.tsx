@@ -268,7 +268,7 @@ export default async function AdminCollectionsReviewPage({
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
               >
                 <p
-                  className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]"
+                  className="text-xs font-semibold uppercase tracking-[0.18em]"
                   style={{ color: "var(--muted)" }}
                 >
                   {item.label}
@@ -286,7 +286,7 @@ export default async function AdminCollectionsReviewPage({
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
               >
                 <p
-                  className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]"
+                  className="text-xs font-semibold uppercase tracking-[0.18em]"
                   style={{ color: "var(--muted)" }}
                 >
                   {item.label}
@@ -303,7 +303,7 @@ export default async function AdminCollectionsReviewPage({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em]"
+                  className="selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.16em]"
                   style={{
                     borderColor:
                       item.href === selectedViewHref ? "rgba(112,82,255,0.24)" : "var(--line)",

@@ -82,7 +82,7 @@ function StatusChip({
 
   return (
     <span
-      className="inline-flex items-center rounded-full border px-3 py-1 text-[0.64rem] font-bold uppercase tracking-[0.16em]"
+      className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.16em]"
       style={styles}
     >
       {children}
@@ -99,7 +99,7 @@ function MetricCard({ label, value, detail }: { label: string; value: string | n
         background: "rgba(255,255,255,0.045)",
       }}
     >
-      <p className="text-[0.66rem] font-bold uppercase tracking-[0.18em] text-white/45">{label}</p>
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">{label}</p>
       <p className="mt-3 text-3xl font-semibold text-white">{value}</p>
       <p className="mt-2 text-sm leading-6 text-white/58">{detail}</p>
     </article>
@@ -257,7 +257,7 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
           </div>
 
           <div className="mt-5 rounded-[24px] border border-white/10 bg-white/[0.045] p-4">
-            <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white/45">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">
               Stato operativo
             </p>
             <p className="mt-2 text-sm leading-6 text-white/68">

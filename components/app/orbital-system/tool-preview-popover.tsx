@@ -102,7 +102,7 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
                   />
                 ) : (
                   <div
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold text-white"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
                     style={{ background: `linear-gradient(135deg, ${color}, #4f46e5)` }}
                   >
                     {item.initials?.slice(0, 1)}
@@ -110,7 +110,7 @@ export function ToolPreviewPopover({ item, visible, onClose, position }: ToolPre
                 )}
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-[#120d2f]">{item.title}</p>
-                  <p className="mt-0.5 text-[11px] font-medium" style={{ color }}>{item.category}</p>
+                  <p className="mt-0.5 text-xs font-medium" style={{ color }}>{item.category}</p>
                 </div>
               </div>
               <button

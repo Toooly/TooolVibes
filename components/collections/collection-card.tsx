@@ -85,7 +85,7 @@ export function CollectionCard({
                 </span>
               ) : null}
               <span
-                className="selection-chip rounded-full px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]"
+                className="selection-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                 style={{
                   background:
                     collection.access === "open"
@@ -98,7 +98,7 @@ export function CollectionCard({
               </span>
             </div>
             <div className="absolute bottom-4 left-4 right-4">
-              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.2em] text-white/70">{theme}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">{theme}</p>
               <h3 className="text-display-card mt-2 max-w-none text-[1.56rem] text-white sm:max-w-[14ch] sm:text-[1.92rem] sm:text-balance">
                 {collection.title}
               </h3>
@@ -183,7 +183,7 @@ export function CollectionCard({
                   {hasAdvancedSpecialIssue(collection) ? "Speciale avanzato" : "Speciale"}
                 </span>
               ) : null}
-              <span className="selection-chip rounded-full border px-2.5 py-0.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: collection.access === "open" ? "rgba(255,255,255,0.76)" : "rgba(249,239,212,0.92)", color: "var(--muted-strong)" }}>
+              <span className="selection-chip rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: collection.access === "open" ? "rgba(255,255,255,0.76)" : "rgba(249,239,212,0.92)", color: "var(--muted-strong)" }}>
                 {access.subtleLabel}
               </span>
             </div>
@@ -193,16 +193,16 @@ export function CollectionCard({
                 ? collection.description
                 : collection.premium_teaser ?? collection.description}
             </p>
-            <p className="mt-2 text-[0.68rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+            <p className="mt-2 text-xs uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
               {collection.tool_count} tool - {theme}
             </p>
-            <p className="mt-1 text-[0.66rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+            <p className="mt-1 text-xs uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
               {boundaryLabel}
             </p>
           </div>
         </div>
         <div className="mt-3.5 flex items-center justify-between gap-3 border-t pt-3 soft-divider">
-          <span className="text-[0.68rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+          <span className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
             {difficulty}
           </span>
           <Link href={`/collections/${collection.slug}`} className="section-quiet-link text-[0.76rem] font-semibold" style={{ color: "var(--accent-strong)" }}>
@@ -226,7 +226,7 @@ export function CollectionCard({
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.22),rgba(18,15,35,0.76))]" />
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-            <span className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-white" style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(24,17,12,0.28)" }}>
+            <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white" style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(24,17,12,0.28)" }}>
               {collection.cover_kicker}
             </span>
             {collection.surface === "special-issue" ? (
@@ -234,12 +234,12 @@ export function CollectionCard({
                 {hasAdvancedSpecialIssue(collection) ? "Speciale avanzato" : "Speciale"}
               </span>
             ) : null}
-            <span className="selection-chip rounded-full px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]" style={{ background: collection.access === "open" ? "rgba(255,255,255,0.82)" : "rgba(249,239,212,0.94)", color: "var(--muted-strong)" }}>
+            <span className="selection-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ background: collection.access === "open" ? "rgba(255,255,255,0.82)" : "rgba(249,239,212,0.94)", color: "var(--muted-strong)" }}>
               {access.subtleLabel}
             </span>
           </div>
           <div className="absolute bottom-4 left-4 right-4">
-            <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-white/70">{theme}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">{theme}</p>
             <h3 className="text-display-card mt-1.5 max-w-none text-[1.28rem] text-white sm:max-w-[14ch] sm:text-balance">
               {collection.title}
             </h3>
@@ -253,7 +253,7 @@ export function CollectionCard({
           {collection.surface === "special-issue" ? (
             <span className="selection-status">{formatMeta.label}</span>
           ) : null}
-          <span className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted-strong)" }}>
+          <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted-strong)" }}>
             {collection.tool_count} tool
           </span>
         </div>
@@ -267,7 +267,7 @@ export function CollectionCard({
           {previewTools.slice(0, 2).map((name) => (
             <span
               key={name}
-              className="selection-chip rounded-full border px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.16em]"
+              className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
               style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)", color: "var(--muted)" }}
             >
               {name}
@@ -293,7 +293,7 @@ export function CollectionCard({
         </div>
 
         <div className="mt-auto flex items-center justify-between gap-3 border-t pt-3.5 soft-divider">
-          <p className="text-[0.72rem] uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+          <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
             {collection.audience}
           </p>
           <Link href={`/collections/${collection.slug}`} className="section-quiet-link text-sm font-semibold" style={{ color: "var(--accent-strong)" }}>

@@ -8,7 +8,7 @@ export function TagPill({ tag }: TagPillProps) {
   return (
     <Link
       href={`/archivio?tag=${encodeURIComponent(tag)}`}
-      className="text-ui-strong badge-shell group/tag inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] transition-all duration-200"
+      className="text-ui-strong badge-shell group/tag inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] transition-all duration-200"
       style={{
         color: "var(--muted-strong)",
       }}

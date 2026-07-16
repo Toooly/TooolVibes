@@ -15,7 +15,7 @@ import {
   saveReasonOptions,
 } from "@/lib/tools/discovery";
 
-import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
+import { useDiscoveryPersistence } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { ShortlistStageToggle } from "@/components/tools/shortlist-stage-toggle";
 
 type ToolWorkspacePanelProps = {
@@ -59,7 +59,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
           type="button"
           onClick={() => toggleToolPin(tool.slug)}
           data-sonic-action="update"
-          className={`selection-chip text-ui-strong inline-flex items-center gap-2 rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${
+          className={`selection-chip text-ui-strong inline-flex items-center gap-2 rounded-full border px-2.75 py-1.25 text-xs font-semibold uppercase tracking-[0.14em] ${
             memory.is_pinned ? "quick-filter-chip is-active" : ""
           }`}
           style={
@@ -81,7 +81,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
           {memorySignals.map((signal) => (
             <span
               key={signal.label}
-              className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]"
+              className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
               style={{ borderColor: "var(--line)", background: signal.background, color: signal.tone }}
             >
               {signal.label}
@@ -114,7 +114,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
                   })
                 }
                 data-sonic-action="tab"
-                className={`selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${
+                className={`selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-2.75 py-1.25 text-xs font-semibold uppercase tracking-[0.14em] ${
                   active ? "quick-filter-chip is-active" : ""
                 }`}
                 style={
@@ -154,10 +154,10 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
         />
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-1">
-            <p className="text-[0.72rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
+            <p className="text-xs uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
               Ultimo salvataggio: {formatDecisionTimestamp(memory.updated_at)}
             </p>
-            <p className="text-[0.68rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
+            <p className="text-xs uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
               {persistenceLabel}
             </p>
           </div>
@@ -166,7 +166,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
             onClick={() => updateToolDecisionMemory(tool.slug, { note: noteDraft })}
             disabled={!noteIsDirty}
             data-sonic-action="save"
-            className="selection-chip text-ui-strong inline-flex items-center rounded-full border px-2.75 py-1.25 text-[0.64rem] font-semibold uppercase tracking-[0.14em] disabled:cursor-default disabled:opacity-55"
+            className="selection-chip text-ui-strong inline-flex items-center rounded-full border px-2.75 py-1.25 text-xs font-semibold uppercase tracking-[0.14em] disabled:cursor-default disabled:opacity-55"
             style={{
               borderColor: noteIsDirty ? "rgba(112,82,255,0.24)" : "var(--line)",
               background: noteIsDirty

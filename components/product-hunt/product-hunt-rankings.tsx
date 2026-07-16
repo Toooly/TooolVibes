@@ -217,7 +217,7 @@ export function ProductHuntRankings({
             href="https://www.producthunt.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--v-text-muted)] transition-colors duration-200 hover:text-[var(--v-text)]"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--v-text-muted)] transition-colors duration-200 hover:text-[var(--v-text)]"
           >
             Dati da Product Hunt
             <ExternalLink className="size-3" aria-hidden="true" />
@@ -338,7 +338,7 @@ export function ProductHuntRankings({
                       #{index + 1}
                     </span>
                     {index === 0 ? (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-[var(--v-amber)]/20 bg-[var(--v-amber)]/10 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-[var(--v-amber)]">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-[var(--v-amber)]/20 bg-[var(--v-amber)]/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-[var(--v-amber)]">
                         <Sparkles className="size-3" aria-hidden="true" />
                         In crescita
                       </span>
@@ -403,7 +403,7 @@ export function ProductHuntRankings({
                         </div>
                         <div className="mt-3 grid grid-cols-2 gap-2">
                           <div className="rounded-[14px] border border-[var(--v-glass-border)] bg-[rgba(10,10,24,0.6)] px-3 py-2">
-                            <p className="text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-[var(--v-text-muted)]">
+                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--v-text-muted)]">
                               Voti
                             </p>
                             <p className="mt-1 text-sm font-semibold text-[var(--v-text)]">
@@ -411,7 +411,7 @@ export function ProductHuntRankings({
                             </p>
                           </div>
                           <div className="rounded-[14px] border border-[var(--v-glass-border)] bg-[rgba(10,10,24,0.6)] px-3 py-2">
-                            <p className="text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-[var(--v-text-muted)]">
+                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--v-text-muted)]">
                               Commenti
                             </p>
                             <p className="mt-1 text-sm font-semibold text-[var(--v-text)]">
@@ -468,7 +468,7 @@ export function ProductHuntRankings({
           </AnimatePresence>
         ) : (
           <div className="v-ph-empty rounded-[1.5rem] px-4 py-8 text-center">
-            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--v-purple-soft)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--v-purple-soft)]">
               {activeTab.label}
             </p>
             <h3 className="mt-3 text-[1.25rem] leading-tight font-bold text-[var(--v-text)]">

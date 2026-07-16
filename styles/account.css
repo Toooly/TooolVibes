@@ -128,7 +128,7 @@
 }
 
 .account-stat-value {
-  font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+  font-family: var(--tv-font-system);
   font-weight: 700;
   font-size: 2.2rem;
   line-height: 1;
@@ -215,7 +215,7 @@
 .account-game-stat span {
   display: block;
   color: var(--account-muted);
-  font-size: 0.62rem;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -225,7 +225,7 @@
   display: block;
   margin-top: 0.45rem;
   color: var(--account-ink);
-  font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+  font-family: var(--tv-font-system);
   font-size: 2rem;
   font-weight: 900;
   line-height: 1;
@@ -323,7 +323,7 @@
 
 /* Typography helpers */
 .account-title {
-  font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+  font-family: var(--tv-font-system);
   font-weight: 700;
   font-size: 1.9rem;
   line-height: 1.08;
@@ -344,9 +344,9 @@
 }
 
 .account-label {
-  font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+  font-family: var(--tv-font-system);
   font-weight: 700;
-  font-size: 0.65rem;
+  font-size: var(--tv-text-xs);
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--account-muted);
@@ -354,7 +354,7 @@
 
 /* Number highlight */
 .account-number {
-  font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
+  font-family: var(--tv-font-system);
   font-weight: 800;
   font-size: 2.4rem;
   line-height: 1;
@@ -369,8 +369,8 @@
   gap: 0.4rem;
   border-radius: 999px;
   padding: 0.35rem 0.85rem;
-  font-family: "Rubik", "Avenir Next", "Segoe UI", sans-serif;
-  font-size: 0.68rem;
+  font-family: var(--tv-font-system);
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;

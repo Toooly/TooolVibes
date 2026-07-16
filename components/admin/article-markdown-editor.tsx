@@ -249,8 +249,8 @@ export function ArticleMarkdownEditor({
             }}
           >
             <option value="">Font</option>
-            <option value="'Manrope', sans-serif">Manrope</option>
-            <option value="'Rubik', sans-serif">Rubik</option>
+            <option value="'Inter', 'Segoe UI', sans-serif">Inter</option>
+            <option value="Fraunces, Georgia, serif">Fraunces</option>
             <option value="Georgia, serif">Serif</option>
             <option value="'SFMono-Regular', Consolas, monospace">Mono</option>
           </select>

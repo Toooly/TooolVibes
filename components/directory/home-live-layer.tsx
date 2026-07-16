@@ -51,7 +51,7 @@ export function HomeLiveLayer({
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="live-signal-dot" aria-hidden="true" />
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
                 {signal.label}
               </p>
               <PremiumBadge tone="warning" className="hidden sm:inline-flex">
@@ -72,7 +72,7 @@ export function HomeLiveLayer({
           ].map(([value, label]) => (
             <div key={label} className="rounded-[16px] border border-[var(--border-soft)] bg-white/62 px-2 py-2">
               <p className="text-[1rem] font-semibold leading-none text-[var(--foreground)]">{value}</p>
-               <p className="mt-1 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+               <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
                 {label}
               </p>
             </div>

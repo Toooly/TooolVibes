@@ -59,7 +59,7 @@ export default function ShopPage() {
           <div className="hero-mini-visual rounded-[30px] border border-white/12 bg-white/9 p-4 shadow-[0_22px_58px_rgba(8,14,38,0.18)]">
             <div className="flex items-center justify-between gap-3 rounded-[22px] border border-white/10 bg-white/7 p-4">
               <div>
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/48">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/48">
                   Anteprima kit
                 </p>
                 <p className="mt-1 text-sm font-semibold text-white">

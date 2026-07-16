@@ -21,13 +21,13 @@
   --ring: var(--tv-focus-ring);
   --radius: var(--tv-radius-md);
   color: var(--tv-ink-primary);
-  font-family: var(--font-inter), "Inter", "Segoe UI", sans-serif;
+  font-family: var(--tv-font-ui);
 }
 
 .tv-figma-theme :where(h1, h2, h3, h4),
 .tv-design-system :where(h1, h2, h3, h4) {
   color: var(--tv-ink-primary);
-  font-family: var(--font-fraunces), var(--font-rubik), serif;
+  font-family: var(--tv-font-display);
   letter-spacing: 0;
 }
 
@@ -559,7 +559,7 @@
 
 .tv-radar-preview__node small {
   color: var(--tv-ink-muted);
-  font-size: 0.7rem;
+  font-size: var(--tv-text-xs);
 }
 
 .tv-compare-row {

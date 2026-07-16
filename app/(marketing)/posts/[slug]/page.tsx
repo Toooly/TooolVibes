@@ -108,15 +108,15 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
           <div className={tool ? "col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7" : "col-span-12 p-5 sm:p-6 lg:p-7"}>
             <div className="flex flex-wrap items-center gap-2">
               <span className="pill !bg-white/12 !text-white">{kindLabel}</span>
-              <span className="selection-chip rounded-full border border-white/14 px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-white/82">
+              <span className="selection-chip rounded-full border border-white/14 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/82">
                 {post.source_label}
               </span>
-              <span className="selection-chip rounded-full border border-white/14 px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-white/82">
+              <span className="selection-chip rounded-full border border-white/14 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/82">
                 {formatItalianDate(post.published_at)}
               </span>
             </div>
 
-            <p className="mt-5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white/56">
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.22em] text-white/56">
               {isAuthoredPost ? "Pubblicato nel blog TooolVibes" : "Aggiornato e integrato in TooolVibes"}
             </p>
             <h1 className="text-display-hero mt-3 max-w-none text-[2.02rem] text-white sm:max-w-[14ch] sm:text-[2.76rem] sm:text-balance">
@@ -162,15 +162,15 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.08),rgba(18,15,35,0.72))]" />
                 <div className="absolute left-5 top-5 flex flex-wrap gap-2">
-                  <span className="selection-chip rounded-full border border-white/18 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white" style={{ background: "rgba(24,17,12,0.28)" }}>
+                  <span className="selection-chip rounded-full border border-white/18 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white" style={{ background: "rgba(24,17,12,0.28)" }}>
                     Profilo collegato
                   </span>
-                  <span className="selection-chip rounded-full border border-white/18 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white" style={{ background: "rgba(255,255,255,0.08)" }}>
+                  <span className="selection-chip rounded-full border border-white/18 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white" style={{ background: "rgba(255,255,255,0.08)" }}>
                     {tool.category}
                   </span>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(24,18,54,0.88),rgba(38,31,82,0.76))] px-4 py-4">
-                  <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                     Perché conta
                   </p>
                   <p className="mt-2 text-sm leading-7 text-white/82">
@@ -192,7 +192,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.08),rgba(18,15,35,0.72))]" />
                 <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(24,18,54,0.88),rgba(38,31,82,0.76))] px-4 py-4">
-                  <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                     Cover editoriale
                   </p>
                   <p className="mt-2 text-sm leading-7 text-white/82">
@@ -250,7 +250,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                         background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))",
                       }}
                     >
-                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                         {String(index + 1).padStart(2, "0")}
                       </p>
                       <p className="mt-2 text-body-strong text-[0.98rem]">{item}</p>
@@ -300,7 +300,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               <div className="mt-5 grid gap-3">
                 {tool ? (
                   <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                       Tool collegato
                     </p>
                     <p className="text-meta mt-2 text-[0.96rem] text-white">{tool.name}</p>
@@ -309,7 +309,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                         Apri profilo
                       </ButtonLink>
                       {isRelatedToolAffiliate ? (
-                        <p className="basis-full text-[0.72rem] leading-5 text-white/62">
+                        <p className="basis-full text-xs leading-5 text-white/62">
                           Link partner: potremmo ricevere una commissione senza costi extra per te.
                         </p>
                       ) : null}
@@ -326,7 +326,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 ) : null}
 
                 <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                     Nota editoriale
                   </p>
                   <div className="mt-3 grid gap-1.5 text-[0.82rem] leading-6 text-white/70">
@@ -339,7 +339,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
 
                 {sourceHref.startsWith("http") ? (
                   <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                       Fonte
                     </p>
                     <Link
@@ -353,7 +353,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                   </div>
                 ) : (
                   <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                       Blog
                     </p>
                     <p className="text-meta mt-2 block text-[0.96rem] text-white">

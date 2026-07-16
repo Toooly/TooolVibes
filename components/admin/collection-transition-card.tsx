@@ -304,7 +304,7 @@ export function CollectionTransitionCard({
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em]">{item.label}</p>
-                <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                <span className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.severity === "critical" ? "critico" : "minore"}
                 </span>
               </div>
@@ -319,7 +319,7 @@ export function CollectionTransitionCard({
                     className="rounded-[18px] border px-3 py-3"
                     style={{ borderColor: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.56)" }}
                   >
-                    <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                       {field.label}
                     </p>
                     <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
@@ -375,7 +375,7 @@ export function CollectionTransitionCard({
                       : "rgba(236,253,245,0.95)",
               }}
             >
-              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                 {check.label}
               </p>
               <p className="mt-2">{check.detail}</p>

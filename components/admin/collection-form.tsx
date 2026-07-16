@@ -112,7 +112,7 @@ function StatCard({
       style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
     >
       <p
-        className="text-[0.66rem] font-semibold uppercase tracking-[0.18em]"
+        className="text-xs font-semibold uppercase tracking-[0.18em]"
         style={{ color: "var(--muted)" }}
       >
         {label}
@@ -195,13 +195,13 @@ export function CollectionForm({
               o ancora in costruzione prima di entrare nei dettagli del modulo.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                 Accesso: {accessMeta.label}
               </span>
-              <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                 Stato: {editorialStateMeta.label}
               </span>
-              <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                 Formato: {surfaceMeta.label}
               </span>
             </div>
@@ -595,13 +595,13 @@ export function CollectionForm({
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
-              <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                 {availableTools.length} tool disponibili
               </span>
-              <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                 {filledSlots.length} spazi compilati
               </span>
-              <span className="selection-chip rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em]">
+              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                 {publishedFilledSlots} pubblicati
               </span>
             </div>
@@ -629,17 +629,17 @@ export function CollectionForm({
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {selectedTool ? (
-                        <span className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]">
+                        <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                           {selectedTool.category}
                         </span>
                       ) : null}
                       {selectedTool ? (
-                        <span className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]">
+                        <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                           {selectedTool.is_published === false ? "bozza" : "pubblicato"}
                         </span>
                       ) : null}
                       {slot.featured ? (
-                        <span className="selection-chip rounded-full border px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]">
+                        <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                           tool guida
                         </span>
                       ) : null}

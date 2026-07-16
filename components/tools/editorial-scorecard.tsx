@@ -128,7 +128,7 @@ export function EditorialScorecard({
               <div className="min-w-0">
                 <p
                   className={cn(
-                    "text-[0.7rem] font-semibold uppercase tracking-[0.16em]",
+                    "text-xs font-semibold uppercase tracking-[0.16em]",
                     isDark ? "text-white/52" : "text-[var(--muted)]",
                   )}
                 >
@@ -146,7 +146,7 @@ export function EditorialScorecard({
               <div className="shrink-0 text-right">
                 <p
                   className={cn(
-                    "text-[0.66rem] font-semibold uppercase tracking-[0.18em]",
+                    "text-xs font-semibold uppercase tracking-[0.18em]",
                     isDark ? "text-white/44" : "text-[var(--muted)]",
                   )}
                 >
@@ -199,7 +199,7 @@ export function EditorialScorecard({
               <div className="min-w-0">
                 <p
                   className={cn(
-                    "text-[0.68rem] font-semibold uppercase tracking-[0.18em]",
+                    "text-xs font-semibold uppercase tracking-[0.18em]",
                     isDark ? "text-white/56" : "text-[var(--muted)]",
                   )}
                 >

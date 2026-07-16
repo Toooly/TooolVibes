@@ -41,17 +41,17 @@ export function DirectoryWeeklySpotlight({
             <div className="flex items-center gap-3">
               <DirectoryToolGlyph tool={weeklyTool} size="lg" className="border-white/14" />
               <div>
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/60">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
                   Scheda principale
                 </p>
                 <p className="mt-1 text-[1.3rem] font-semibold">{weeklyTool.name}</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full border border-white/14 bg-white/8 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/84">
+              <span className="rounded-full border border-white/14 bg-white/8 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/84">
                 {weeklyTool.levelLabel}
               </span>
-              <span className="rounded-full border border-white/14 bg-white/8 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/84">
+              <span className="rounded-full border border-white/14 bg-white/8 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/84">
                 {weeklyTool.categoryLabel}
               </span>
             </div>
@@ -59,7 +59,7 @@ export function DirectoryWeeklySpotlight({
 
           <div className="mt-4 grid gap-4 sm:mt-6 lg:grid-cols-[minmax(0,1.03fr)_minmax(15rem,0.97fr)] lg:gap-6">
             <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                 Scelta in evidenza
               </p>
               <h3 className="mt-2 max-w-[11ch] text-[1.35rem] leading-[0.96] sm:mt-3 sm:text-[2.85rem]">
@@ -76,7 +76,7 @@ export function DirectoryWeeklySpotlight({
                   ["Fonte", weeklyTool.domain],
                 ].map(([label, value]) => (
                   <div key={label} className="dynamic-card rounded-[18px] border border-white/10 bg-white/7 px-3 py-3">
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/42">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/42">
                       {label}
                     </p>
                     <p className="mt-1 truncate text-sm font-semibold text-white">{value}</p>
@@ -88,7 +88,7 @@ export function DirectoryWeeklySpotlight({
                 {weeklyTool.highlights.map((item, index) => (
                   <span
                     key={item}
-                    className={`rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-white/84 ${index > 1 ? "hidden sm:inline-flex" : ""}`}
+                    className={`rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white/84 ${index > 1 ? "hidden sm:inline-flex" : ""}`}
                   >
                     {item}
                   </span>
@@ -128,7 +128,7 @@ export function DirectoryWeeklySpotlight({
             </details>
 
             <div className="hidden h-full flex-col rounded-[24px] border border-white/10 bg-white/6 p-4 sm:flex sm:rounded-[28px] sm:p-5">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/56">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                 Perch&eacute; adesso
               </p>
               <p className="mt-3 text-[1rem] leading-7 text-white/82">
@@ -141,7 +141,7 @@ export function DirectoryWeeklySpotlight({
                     key={item}
                     className="dynamic-card rounded-[20px] border border-white/10 bg-white/6 px-4 py-3.5 transition duration-200 hover:border-white/18 hover:bg-white/8"
                   >
-                    <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/44">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/44">
                       Uso {String(index + 1).padStart(2, "0")}
                     </p>
                     <p className="mt-2 text-sm leading-6 text-white/84">{item}</p>
@@ -149,7 +149,7 @@ export function DirectoryWeeklySpotlight({
                 ))}
               </div>
 
-              <div className="mt-auto flex items-center justify-between gap-3 pt-5 text-[0.74rem] uppercase tracking-[0.16em] text-white/56">
+              <div className="mt-auto flex items-center justify-between gap-3 pt-5 text-xs uppercase tracking-[0.16em] text-white/56">
                 <span>{formatItalianDate(weeklyTool.publishedAt)}</span>
                 <span>{weeklyTool.readingTime}</span>
               </div>
@@ -191,7 +191,7 @@ export function DirectoryWeeklySpotlight({
               <div className="flex items-start gap-3">
                 <DirectoryToolGlyph tool={tool} size="md" />
                 <div className="min-w-0">
-                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
                     Alternativa
                   </p>
                   <h3 className="mt-1 truncate text-[1.05rem] font-semibold text-[var(--foreground)]">
@@ -206,7 +206,7 @@ export function DirectoryWeeklySpotlight({
                 {tool.highlights.slice(0, 2).map((item) => (
                   <span
                     key={item}
-                    className="rounded-full border border-[rgba(76,55,166,0.12)] bg-[rgba(106,60,255,0.06)] px-2.5 py-1 text-[0.62rem] font-semibold text-[var(--muted-strong)]"
+                    className="rounded-full border border-[rgba(76,55,166,0.12)] bg-[rgba(106,60,255,0.06)] px-2.5 py-1 text-xs font-semibold text-[var(--muted-strong)]"
                   >
                     {item}
                   </span>

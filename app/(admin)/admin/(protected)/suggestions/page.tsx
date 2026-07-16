@@ -45,7 +45,7 @@ function RequestTypeBadge({ type }: { type?: string | null }) {
 
   return (
     <span
-      className="rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em]"
+      className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
       style={{
         borderColor: isFounder ? "rgba(243,191,76,0.28)" : "rgba(57,210,246,0.22)",
         background: isFounder ? "rgba(243,191,76,0.1)" : "rgba(57,210,246,0.08)",

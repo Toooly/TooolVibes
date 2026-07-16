@@ -228,7 +228,7 @@ export function CollectionSyncPreviewPanel({
             style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
           >
             <p
-              className="text-[0.66rem] font-semibold uppercase tracking-[0.18em]"
+              className="text-xs font-semibold uppercase tracking-[0.18em]"
               style={{ color: "var(--muted)" }}
             >
               {item.label}
@@ -255,7 +255,7 @@ export function CollectionSyncPreviewPanel({
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-semibold">{change.label}</p>
-                  <span className="rounded-full border px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]" style={getChangeStyles(change.kind)}>
+                  <span className="rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={getChangeStyles(change.kind)}>
                     {change.kind === "safe" ? "candidato al riallineamento" : "richiede decisione"}
                   </span>
                 </div>
@@ -275,7 +275,7 @@ export function CollectionSyncPreviewPanel({
                         style={{ borderColor: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.56)" }}
                       >
                         <p
-                          className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]"
+                          className="text-xs font-semibold uppercase tracking-[0.18em]"
                           style={{ color: "var(--muted)" }}
                         >
                           {field.label}
@@ -320,7 +320,7 @@ export function CollectionSyncPreviewPanel({
                     {change.label}: {change.tool_slug}
                   </p>
                   <span
-                    className="rounded-full border px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em]"
+                    className="rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                     style={{
                       borderColor:
                         change.risk === "high"
@@ -350,7 +350,7 @@ export function CollectionSyncPreviewPanel({
                         style={{ borderColor: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.56)" }}
                       >
                         <p
-                          className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]"
+                          className="text-xs font-semibold uppercase tracking-[0.18em]"
                           style={{ color: "var(--muted)" }}
                         >
                           {field.label}

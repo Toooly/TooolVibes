@@ -156,7 +156,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
             </Link>
             <Link
               href="/compare"
-              className="selection-chip text-ui-strong inline-flex items-center rounded-full border px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.16em]"
+              className="selection-chip text-ui-strong inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em]"
               style={{
                 borderColor: compareCount > 1 ? "rgba(112,82,255,0.24)" : "var(--line)",
                 background:
@@ -228,7 +228,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
                   type="button"
                   onClick={() => setStageFilter(item)}
                   data-sonic-action="tab"
-                  className={`quick-filter-chip selection-chip text-ui-strong inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] ${
+                  className={`quick-filter-chip selection-chip text-ui-strong inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.16em] ${
                     stageFilter === item ? "is-active" : ""
                   }`}
                   style={

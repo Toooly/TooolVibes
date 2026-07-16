@@ -186,7 +186,7 @@ export default async function AdminCollectionDetailPage({
                 className="stat-block w-[12.5rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
               >
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.label}
                 </p>
                 <p className="mt-3 text-[1.72rem] leading-none">{item.value}</p>
@@ -204,7 +204,7 @@ export default async function AdminCollectionDetailPage({
                 className="stat-block rounded-[var(--radius-lg)] border p-4"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
               >
-                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.label}
                 </p>
                 <p className="mt-3 text-[1.72rem] leading-none">{item.value}</p>
@@ -237,7 +237,7 @@ export default async function AdminCollectionDetailPage({
                   </span>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4">
-                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white/64">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/64">
                     Anteprima interna
                   </p>
                   <h2 className="mt-2 text-[2rem] leading-tight text-white">{collection.title}</h2>
@@ -266,7 +266,7 @@ export default async function AdminCollectionDetailPage({
                     className="rounded-[22px] border px-4 py-3"
                     style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
                   >
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                       {item.label}
                     </p>
                     <p className="mt-2 text-sm" style={{ color: "var(--muted-strong)" }}>

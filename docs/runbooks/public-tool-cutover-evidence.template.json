@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "status": "pending",
+  "environment": "staging",
+  "owner": null,
+  "capturedAt": null,
+  "rollbackWindowEndsAt": null,
+  "sources": {
+    "productionSource": "directory",
+    "candidateSource": "supabase",
+    "fingerprintVersion": "tool-public-release-semantics-v1",
+    "directoryPublished": [],
+    "candidatePublished": [],
+    "candidateDraftSlugs": [],
+    "reviewedCanonicalMismatches": []
+  },
+  "surfaces": {
+    "catalog": [],
+    "detailOk": [],
+    "detailNotFound": [],
+    "staticParams": [],
+    "api": [],
+    "sitemap": [],
+    "relatedEdges": []
+  },
+  "editorial": {
+    "legacyAdapterRemoved": false,
+    "legacyWarningRemoved": false,
+    "collections": [],
+    "posts": [],
+    "brokenToolLinks": []
+  },
+  "cacheInvalidation": {
+    "publish": { "rehearsed": false, "slug": null, "surfaces": [], "evidenceRef": null },
+    "update": { "rehearsed": false, "slug": null, "surfaces": [], "evidenceRef": null },
+    "unpublish": { "rehearsed": false, "slug": null, "surfaces": [], "evidenceRef": null }
+  },
+  "rollback": { "rehearsed": false, "evidenceRef": null },
+  "evidenceRefs": []
+}

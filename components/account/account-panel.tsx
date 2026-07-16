@@ -28,7 +28,7 @@ import NumberFlow from "@number-flow/react";
 
 import { useAccount } from "@/components/account/account-provider";
 import { AccountVibesBackground } from "@/components/account/account-vibes-background";
-import { useDiscoveryPersistence } from "@/components/discovery/discovery-persistence-provider";
+import { useDiscoveryPersistence } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { GameMissionPanel } from "@/components/gamification/game-mission-panel";
 import { GameProfileBar } from "@/components/gamification/game-profile-bar";
 import { VibeTapMiniGame } from "@/components/gamification/vibe-tap-mini-game";
@@ -629,7 +629,7 @@ export function AccountPanel() {
                       : "Invia link"}
                 </button>
               </div>
-              <p className="mt-3 text-[0.72rem] uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
+              <p className="mt-3 text-xs uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                 {account.authEnabled
                   ? isVibeRushSignup
                     ? "Conferma la mail per salvare la partita e ritrovare il tuo progresso."
@@ -874,13 +874,13 @@ export function AccountPanel() {
           <div className="account-journey-panel p-5 sm:p-6">
             <div className="flex items-center gap-2">
               <Shield size={16} className="text-white/70" />
-              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/60">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
                 Percorso di continuità
               </p>
             </div>
             <div className="mt-5 grid gap-3">
               <div className="account-journey-step px-4 py-4">
-                <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/50">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">
                   1. Sessione locale
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/85">
@@ -888,7 +888,7 @@ export function AccountPanel() {
                 </p>
               </div>
               <div className="account-journey-step px-4 py-4">
-                <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/50">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">
                   2. Mail di conferma
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/85">
@@ -896,7 +896,7 @@ export function AccountPanel() {
                 </p>
               </div>
               <div className="account-journey-step px-4 py-4">
-                <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/50">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">
                   3. Collegamento sicuro
                 </p>
                 <p className="mt-2 text-sm leading-6 text-white/85">

@@ -169,7 +169,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
         >
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:items-start">
             <div>
-              <div className="tool-detail-breadcrumb flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:gap-3 sm:text-[0.8rem]">
+              <div className="tool-detail-breadcrumb flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:gap-3 sm:text-[0.8rem]">
                 <Link href="/" className="hover:text-[var(--accent-strong)]">
                   Home
                 </Link>
@@ -182,16 +182,16 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               </div>
 
               <div className="mt-5 flex flex-wrap items-center gap-2">
-                <span className="tool-detail-hero-badge rounded-full border border-[rgba(109,59,255,0.14)] bg-[rgba(109,59,255,0.1)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
+                <span className="tool-detail-hero-badge rounded-full border border-[rgba(109,59,255,0.14)] bg-[rgba(109,59,255,0.1)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2">
                   {tool.categoryLabel}
                 </span>
                 {tool.levelLabel ? (
-                  <span className="tool-detail-hero-badge tool-detail-hero-badge-muted rounded-full border border-[rgba(83,63,170,0.1)] bg-white/78 px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
+                  <span className="tool-detail-hero-badge tool-detail-hero-badge-muted rounded-full border border-[rgba(83,63,170,0.1)] bg-white/78 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:px-4 sm:py-2">
                     {tool.levelLabel}
                   </span>
                 ) : null}
                 {tool.toolOfWeek ? (
-                  <span className="tool-detail-hero-badge rounded-full border border-[rgba(67,198,255,0.16)] bg-[rgba(67,198,255,0.12)] px-3 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2 sm:text-[0.74rem]">
+                  <span className="tool-detail-hero-badge rounded-full border border-[rgba(67,198,255,0.16)] bg-[rgba(67,198,255,0.12)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)] sm:px-4 sm:py-2">
                     Tool della settimana
                   </span>
                 ) : null}
@@ -214,7 +214,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                     key={label}
                     className="tool-detail-summary-card rounded-[22px] border border-white/10 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
                   >
-                    <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                       {label}
                     </p>
                     <p className="tool-detail-summary-copy mt-2 text-[0.86rem] leading-6 text-[var(--muted-strong)]">
@@ -224,7 +224,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 ))}
               </div>
 
-              <div className="mt-5 flex flex-wrap items-center gap-2 text-[0.68rem] uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:mt-6 sm:gap-3 sm:text-[0.78rem]">
+              <div className="mt-5 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-strong)] sm:mt-6 sm:gap-3 sm:text-[0.78rem]">
                 <span>{formattedPublishedAt}</span>
                 <span className="mx-1.5 h-1 w-1 rounded-full bg-[var(--line-strong)]" />
                 <span>{tool.readingTime ?? "Tempo non disponibile"}</span>
@@ -233,7 +233,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
               </div>
 
               <div className="mt-4 rounded-[22px] border border-[rgba(83,63,170,0.12)] bg-white/68 px-4 py-3.5 text-[0.82rem] leading-6 text-[var(--muted-strong)]">
-                <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                   Nota editoriale
                 </p>
                 <div className="mt-2 grid gap-1 sm:grid-cols-3">
@@ -290,7 +290,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 <div className="flex items-center gap-3">
                   <DirectoryToolGlyph tool={tool} size="lg" />
                   <div>
-                    <p className="tool-detail-profile-label text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                    <p className="tool-detail-profile-label text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                       Profilo rapido
                     </p>
                     <p className="tool-detail-profile-title mt-1 text-[1.3rem] font-semibold text-[var(--foreground)]">
@@ -306,7 +306,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
 
               <div className="mt-4 space-y-3 sm:mt-5">
                 <div className="tool-detail-meta-block rounded-[24px] bg-[rgba(246,244,255,0.88)] p-4">
-                  <p className="tool-detail-meta-label text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                  <p className="tool-detail-meta-label text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                     Categoria
                   </p>
                   <p className="mt-2 text-[0.98rem] leading-7 text-[var(--foreground)]">
@@ -315,14 +315,14 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 </div>
 
                 <div className="tool-detail-meta-block rounded-[24px] bg-[rgba(246,244,255,0.88)] p-4">
-                  <p className="tool-detail-meta-label text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                  <p className="tool-detail-meta-label text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                     Punti forti
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {tool.highlights.map((item) => (
                       <span
                         key={item}
-                        className="tool-detail-highlight-badge rounded-full px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em]"
+                        className="tool-detail-highlight-badge rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]"
                       >
                         {item}
                       </span>
@@ -331,7 +331,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 </div>
 
                 <div className="tool-detail-meta-block rounded-[24px] bg-[rgba(246,244,255,0.88)] p-4">
-                  <p className="tool-detail-meta-label text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                  <p className="tool-detail-meta-label text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                     Tag
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -339,7 +339,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                       <Link
                         key={tag}
                         href={`/archivio?tag=${encodeURIComponent(tag)}`}
-                        className="tool-detail-tag-chip rounded-full px-3 py-1 text-[0.72rem] font-semibold"
+                        className="tool-detail-tag-chip rounded-full px-3 py-1 text-xs font-semibold"
                       >
                         {tag}
                       </Link>
@@ -359,7 +359,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
 
         <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <article className="light-surface rounded-[26px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_18px_54px_rgba(35,18,95,0.08)] sm:rounded-[32px] sm:p-6">
-            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
               Quando usarlo
             </p>
             <h2 className="mt-3 text-[1.45rem] leading-[1.04] text-[var(--foreground)] sm:text-[1.7rem]">
@@ -371,7 +371,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   key={item}
                   className="rounded-[22px] bg-[rgba(246,244,255,0.86)] px-4 py-4"
                 >
-                  <p className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                     Caso d&apos;uso {String(index + 1).padStart(2, "0")}
                   </p>
                   <p className="mt-2 text-[0.98rem] leading-7 text-[var(--foreground)]">
@@ -383,7 +383,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
           </article>
 
           <article className="light-surface rounded-[26px] border border-[rgba(83,63,170,0.12)] bg-white/88 p-5 shadow-[0_18px_54px_rgba(35,18,95,0.08)] sm:rounded-[32px] sm:p-6">
-            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
               Perch&eacute; conta
             </p>
             <h2 className="mt-3 text-[1.45rem] leading-[1.04] text-[var(--foreground)] sm:text-[1.7rem]">
@@ -394,7 +394,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
             </p>
 
             <div className="mt-6 rounded-[24px] bg-[rgba(246,244,255,0.86)] p-4">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
                 Link rapidi
               </p>
               <div className="mt-4 flex flex-col gap-3">
@@ -430,7 +430,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
           <section className="space-y-5">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="max-w-[40rem]">
-                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
                   Tool correlati
                 </p>
                 <h2 className="mt-3 text-[1.9rem] leading-[1.05] text-[var(--foreground)] sm:text-[2.5rem]">

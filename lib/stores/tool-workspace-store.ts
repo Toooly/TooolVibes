@@ -5,7 +5,7 @@ import { persist, type PersistStorage } from "zustand/middleware";
 
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 import { adaptLegacyToolWorkspaceState } from "@/lib/discovery/workspace-legacy-adapters";
-import { reduceWorkspaceState } from "@/lib/discovery/workspace-state";
+import { normalizeWorkspaceState, reduceWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
   getBrowserWorkspaceStorage,
   loadWorkspaceStateFromStorage,
@@ -255,3 +255,29 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
     },
   ),
 );
+
+export function getCanonicalToolWorkspaceState() {
+  return resolveCanonicalWorkspaceState(useToolWorkspaceStore.getState());
+}
+
+export function replaceToolWorkspaceStateFromCanonical(input: unknown) {
+  const state = normalizeWorkspaceState(input);
+  useToolWorkspaceStore.setState(projectWorkspaceCollections(state));
+  return state;
+}
+
+export function commitCanonicalToolWorkspaceState(input: unknown) {
+  const state = normalizeWorkspaceState(input);
+  const storage = getBrowserWorkspaceStorage();
+
+  if (!storage) {
+    replaceToolWorkspaceStateFromCanonical(state);
+    return { state, persisted: false, issues: [] };
+  }
+
+  const result = persistWorkspaceStateToStorage(storage, state);
+  if (result.persisted) {
+    replaceToolWorkspaceStateFromCanonical(result.state);
+  }
+  return result;
+}

@@ -80,6 +80,17 @@ const visualProjects = [
   },
   dependencies: ["gate-setup"],
 }));
+const typographyProject = {
+  name: "typography-runtime",
+  testMatch: /typography-runtime\.spec\.ts/,
+  use: {
+    ...devices["Desktop Chrome"],
+    viewport: { width: 1440, height: 1000 },
+    storageState: gateStorageState,
+  },
+  dependencies: ["gate-setup"],
+};
+
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -125,6 +136,7 @@ export default defineConfig({
     },
     ...smokeProjects,
     ...visualProjects,
+    typographyProject,
   ],
   webServer: {
     command: webServerCommand,

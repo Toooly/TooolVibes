@@ -56,7 +56,7 @@ export function ShortlistLink({
         isFresh && "is-fresh",
         variant === "nav" && "px-4 py-2 text-sm font-medium",
         variant === "button" && "button-shell button-secondary px-4 py-2 text-sm font-semibold",
-        variant === "subtle" && "px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em]",
+        variant === "subtle" && "px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em]",
         className,
       )}
       style={{
@@ -73,7 +73,7 @@ export function ShortlistLink({
       <span>{label}</span>
       <span
         className={cn(
-          "count-badge-live inline-flex min-w-[1.6rem] items-center justify-center rounded-full px-2 py-0.5 text-[0.66rem] font-semibold",
+          "count-badge-live inline-flex min-w-[1.6rem] items-center justify-center rounded-full px-2 py-0.5 text-xs font-semibold",
           count > 0 && "is-active",
           isFresh && "is-fresh",
         )}

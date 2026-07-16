@@ -48,7 +48,7 @@ const navItems = [
 function StatusIndicator({ active, label }: { active: boolean; label: string }) {
   return (
     <motion.span
-      className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-wider"
+      className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider"
       style={{
         borderColor: active ? "rgba(57,210,246,0.3)" : "rgba(243,191,76,0.3)",
         background: active ? "rgba(57,210,246,0.1)" : "rgba(243,191,76,0.1)",
@@ -86,7 +86,7 @@ function MetricOrb({
         className="absolute -right-4 -top-4 h-16 w-16 rounded-full opacity-20 blur-2xl"
         style={{ background: color }}
       />
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/40">
         {label}
       </p>
       <div className="mt-2 flex items-end gap-2">
@@ -166,7 +166,7 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
               </motion.div>
               <div className="hidden sm:block">
                 <span className="text-sm font-bold text-white">TOOOLVIBES</span>
-                <span className="ml-2 text-[10px] font-semibold uppercase tracking-wider text-white/40">
+                <span className="ml-2 text-xs font-semibold uppercase tracking-wider text-white/40">
                   Area admin
                 </span>
               </div>

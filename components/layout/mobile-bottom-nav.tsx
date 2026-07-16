@@ -58,7 +58,7 @@ export function MobileBottomNav() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "mobile-bottom-link flex h-[3.55rem] min-w-0 flex-col items-center justify-center gap-1 rounded-[1.2rem] px-1 text-[0.66rem] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
+                "mobile-bottom-link flex h-[3.55rem] min-w-0 flex-col items-center justify-center gap-1 rounded-[1.2rem] px-1 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
                 active ? "is-active text-[#ffffff]" : "text-[#16112d] hover:bg-white/72 hover:text-[#6a3cff]",
                 active && "[&_.mobile-bottom-link__icon-wrap>svg]:scale-110",
                 compareHasItems && "mobile-bottom-link--compare-ready"

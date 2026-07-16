@@ -69,7 +69,7 @@ export function SiteHeader() {
               <p className="truncate text-[0.86rem] font-semibold uppercase tracking-[0.18em] text-[var(--foreground)] sm:text-[0.95rem]">
                 TooolVibes
               </p>
-              <p className="hidden items-center gap-1.5 text-[0.74rem] text-[var(--muted)] 2xl:flex">
+              <p className="hidden items-center gap-1.5 text-xs text-[var(--muted)] 2xl:flex">
                 <span className="live-signal-dot scale-[0.72]" aria-hidden="true" />
                 Guida italiana ai tool AI
               </p>

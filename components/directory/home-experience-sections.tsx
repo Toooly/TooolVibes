@@ -248,7 +248,7 @@ export function HomeExperienceSections() {
                 <div className="mt-3 grid gap-2">
                   {steps.map((step, index) => (
                     <div key={step.title} className="rounded-[16px] bg-white/72 px-3 py-2.5">
-                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)]">
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--accent-strong)]">
                         Passo {String(index + 1).padStart(2, "0")}
                       </p>
                       <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
@@ -298,7 +298,7 @@ export function HomeExperienceSections() {
                       <Icon className="size-5" aria-hidden="true" />
                     </span>
                     <span className="flex items-center gap-2">
-                      <span className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-white/54">
+                      <span className="rounded-full border border-white/10 bg-white/7 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-white/54">
                         {item.badge}
                       </span>
                       <ChevronRight className="size-4 text-white/42 transition group-hover:translate-x-1 group-hover:text-white" />
@@ -341,7 +341,7 @@ export function HomeExperienceSections() {
                         <Icon className="size-5" aria-hidden="true" />
                       </span>
                       <div>
-                        <p className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-white/44">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/44">
                           Passo {String(index + 1).padStart(2, "0")}
                         </p>
                         <h3 className="mt-1 text-lg font-semibold text-white">{step.title}</h3>
