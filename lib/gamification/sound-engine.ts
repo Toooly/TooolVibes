@@ -5,6 +5,7 @@ import {
   SOUND_PLAY_EVENT,
   type TooolvibesSoundKind,
 } from "@/lib/config/sound";
+import { isReleaseAudioEnabled } from "@/lib/config/audio-runtime";
 
 const MUTED_KEY = "tooolvibes:sound-muted";
 
@@ -33,7 +34,7 @@ function beep(
   startGain: number,
   endGain: number
 ) {
-  if (muted || typeof window === "undefined") return;
+  if (!isReleaseAudioEnabled() || muted || typeof window === "undefined") return;
   const ctx = getAudioContext();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
@@ -50,7 +51,7 @@ function beep(
 export type SoundName = TooolvibesSoundKind;
 
 export function playGameSound(name: SoundName) {
-  if (muted) return;
+  if (!isReleaseAudioEnabled() || muted) return;
   switch (name) {
     case "tap":
     case "nav":

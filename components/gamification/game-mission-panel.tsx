@@ -21,6 +21,7 @@ import {
 import { toast } from "sonner";
 import { setup } from "xstate";
 
+import { isReleaseAudioEnabled } from "@/lib/config/audio-runtime";
 import { useClaimMission } from "@/lib/gamification/hooks/use-claim-mission";
 import { useDailyMissions } from "@/lib/gamification/hooks/use-daily-missions";
 import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
@@ -146,10 +147,12 @@ async function fireRewardBurst(variant: GameMissionPanelProps["variant"]) {
     spread: 46,
   });
 
-  new Howl({
-    src: [getRewardSoundSrc()],
-    volume: 0.24,
-  }).play();
+  if (isReleaseAudioEnabled()) {
+    new Howl({
+      src: [getRewardSoundSrc()],
+      volume: 0.24,
+    }).play();
+  }
 }
 
 export function GameMissionPanel({

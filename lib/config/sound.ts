@@ -1,3 +1,5 @@
+import { isReleaseAudioEnabled } from "@/lib/config/audio-runtime";
+
 export const SOUND_STORAGE_KEY = "tooolvibes:sound-muted";
 export const SOUND_MUTED_CHANGE_EVENT = "tooolvibes:sound-muted-change";
 export const SOUND_PLAY_EVENT = "tooolvibes:sound-play";
@@ -41,7 +43,7 @@ export type TooolvibesSoundKind =
   | "predictionLock";
 
 export function playTooolvibesSound(kind: TooolvibesSoundKind) {
-  if (typeof window === "undefined") {
+  if (!isReleaseAudioEnabled() || typeof window === "undefined") {
     return;
   }
 

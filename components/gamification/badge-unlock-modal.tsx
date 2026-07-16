@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { isReleaseAudioEnabled } from "@/lib/config/audio-runtime";
 import type { Badge } from "@/lib/gamification/types";
 import { cn } from "@/lib/utils";
 
@@ -111,10 +112,12 @@ async function fireBadgeCelebration() {
     spread: 50,
   });
 
-  new Howl({
-    src: [getUnlockSoundSrc()],
-    volume: 0.28,
-  }).play();
+  if (isReleaseAudioEnabled()) {
+    new Howl({
+      src: [getUnlockSoundSrc()],
+      volume: 0.28,
+    }).play();
+  }
 }
 
 type BadgeUnlockModalProps = {

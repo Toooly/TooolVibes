@@ -46,7 +46,10 @@ export function RootProviders({
   );
 
   return (
-    <ExperienceReleaseProvider threeDEnabled={enableThreeD}>
+    <ExperienceReleaseProvider
+      audioEnabled={enableAudio}
+      threeDEnabled={enableThreeD}
+    >
       <GamificationReleaseProvider modes={gamificationModes}>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider delay={180}>
