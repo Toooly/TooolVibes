@@ -1,15 +1,6 @@
+// BATCH 29: le liste locali `nav`/`footerNav` (stale e non più usate) sono
+// state rimosse: la configurazione IA canonica vive in `lib/navigation/`.
 export const marketingStrings = {
-  nav: [
-    { href: "/archivio", label: "Archivio" },
-    { href: "/collections", label: "Raccolte" },
-  ],
-  footerNav: [
-    { href: "/", label: "Home" },
-    { href: "/archivio", label: "Archivio" },
-    { href: "/collections", label: "Raccolte" },
-    { href: "/shortlist", label: "Salvati" },
-    { href: "/account", label: "Account" },
-  ],
   hero: {
     eyebrow: "Sistema editoriale italiano",
     title: "Il posto dove i tool AI smettono di essere rumore e diventano scelta.",

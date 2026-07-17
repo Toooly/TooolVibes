@@ -2,28 +2,17 @@ import Link from "next/link";
 
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { PremiumLink, PremiumPanel } from "@/components/ui/premium";
-import { siteConfig } from "@/lib/config/site";
+import {
+  getNavDestination,
+  getNavItemsForSurface,
+} from "@/lib/navigation/selectors";
 
-const footerNav = [
-  { href: "/", label: "Home" },
-  { href: "/archivio", label: "Catalogo" },
-  { href: "/tags", label: "Categorie" },
-  { href: "/shortlist#wishlist", label: "Suggerisci" },
-  { href: "/affiliati", label: "Diventa affiliato" },
-  { href: "/radar", label: "Radar" },
-  { href: "/community", label: "Community" },
-  { href: "/shop", label: "Shop digitale" },
-  { href: "/admin/login", label: "Login amministratore" },
-];
-
-const categoryNav = [
-  { href: "/archivio?group=vibe-coding", label: "Vibe coding" },
-  { href: "/archivio?group=ai-app-builder", label: "Builder app AI" },
-  { href: "/archivio?group=no-code", label: "No-code" },
-  { href: "/archivio?group=automation", label: "Automazioni" },
-  { href: "/archivio?group=ai-agents", label: "Agenti AI" },
-  { href: "/archivio?group=ai-video", label: "Video AI" },
-];
+const footerNav = getNavItemsForSurface("footer-nav");
+const categoryNav = getNavItemsForSurface("footer-categories");
+const footerMeta = getNavItemsForSurface("footer-meta");
+const suggestDestination = getNavDestination("suggest");
+const affiliatesDestination = getNavDestination("affiliates");
+const shopExternalDestination = getNavDestination("shop-external");
 
 export function SiteFooter() {
   return (
@@ -53,13 +42,13 @@ export function SiteFooter() {
             </p>
 
             <div className="mt-5 hidden flex-col gap-3 sm:flex sm:flex-row">
-              <PremiumLink href="/shortlist#wishlist" tone="secondary" size="sm">
+              <PremiumLink href={suggestDestination.href} tone="secondary" size="sm">
                 Suggerisci un tool
               </PremiumLink>
-              <PremiumLink href="/affiliati" tone="ghost" size="sm">
+              <PremiumLink href={affiliatesDestination.href} tone="ghost" size="sm">
                 Diventa affiliato
               </PremiumLink>
-              <PremiumLink href={siteConfig.shopUrl} tone="ghost" size="sm" external>
+              <PremiumLink href={shopExternalDestination.href} tone="ghost" size="sm" external>
                 Apri lo shop digitale
               </PremiumLink>
             </div>
@@ -137,26 +126,27 @@ export function SiteFooter() {
         <div className="mt-6 flex min-w-0 flex-col gap-3 border-t border-white/12 pt-4 text-[0.76rem] sm:flex-row sm:items-center sm:justify-between">
           <p className="min-w-0 text-white/58">&copy; 2026 TooolVibes. Catalogo premium per AI, SaaS, no-code e automazioni operative.</p>
           <div className="hidden shrink-0 flex-wrap justify-end gap-3 sm:flex">
-            <a
-              href={siteConfig.shopUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="animated-link text-white/50 hover:text-white"
-            >
-              Shop
-            </a>
-            <Link href="/radar" className="animated-link text-white/50 hover:text-white">
-              Product Hunt
-            </Link>
-            <Link href="/shortlist#wishlist" className="animated-link text-white/50 hover:text-white">
-              Suggerisci
-            </Link>
-            <Link href="/affiliati" className="animated-link text-white/50 hover:text-white">
-              Diventa affiliato
-            </Link>
-            <Link href="/archivio" className="animated-link text-white/50 hover:text-white">
-              Archivio
-            </Link>
+            {footerMeta.map((item) =>
+              item.external ? (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="animated-link text-white/50 hover:text-white"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className="animated-link text-white/50 hover:text-white"
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
           </div>
         </div>
       </PremiumPanel>

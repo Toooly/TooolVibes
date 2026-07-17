@@ -11,6 +11,8 @@ import { DirectoryHeaderSearch } from "../directory/directory-header-search";
 import { GameProfileBar } from "../gamification/game-profile-bar";
 import { VibeTapMiniGame } from "../gamification/vibe-tap-mini-game";
 import { CircuitPill, PILL_CONFIGS } from "./navbar-circuit-markers";
+import { useNavItems } from "@/lib/navigation/navigation-release-context";
+import { isNavRouteActive } from "@/lib/navigation/selectors";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import {
   useGamificationReleaseSummary,
@@ -20,37 +22,11 @@ import {
   X,
   Search,
   Sparkles,
-  Compass,
-  Radar,
-  ShoppingBag,
-  Users,
-  LayoutGrid,
-  Zap,
   ChevronRight,
   UserPlus,
 } from "lucide-react";
 
-const navLinks = [
-  { href: "/", label: "Home", icon: Sparkles, tone: ["#7C4DFF", "#39D2F6", "#B388FF"] },
-  { href: "/archivio", label: "Catalogo", icon: LayoutGrid, tone: ["#6A3CFF", "#00E5FF", "#8B6CFF"] },
-  { href: "/radar", label: "Radar", icon: Radar, tone: ["#7C4DFF", "#39D2F6", "#F3BF4C"] },
-  { href: "/compare", label: "Confronto", icon: Zap, tone: ["#8B6CFF", "#FF5EB8", "#39D2F6"] },
-  { href: "/shortlist", label: "Salvati", icon: Compass, tone: ["#6A3CFF", "#B388FF", "#00E5FF"] },
-  { href: "/shop", label: "Shop", icon: ShoppingBag, tone: ["#7C4DFF", "#F3BF4C", "#39D2F6"] },
-  { href: "/community", label: "Community", icon: Users, tone: ["#8B6CFF", "#39D2F6", "#FF5EB8"] },
-];
-
-const desktopNavLinks = [
-  ...navLinks.slice(0, 5),
-];
-
-function matchesPathname(pathname: string | null, href: string) {
-  if (href.includes("#")) {
-    return false;
-  }
-  const path = href.split("#")[0] || "/";
-  return pathname === path || (path !== "/" && Boolean(pathname?.startsWith(path + "/")));
-}
+const DEFAULT_MOBILE_LINK_TONE = ["#6a3cff", "#39d2f6", "#B388FF"] as const;
 
 function NavLink({
   href,
@@ -60,7 +36,7 @@ function NavLink({
 }: {
   href: string;
   label: string;
-  icon: React.ComponentType<{ className?: string; size?: number }>;
+  icon?: React.ComponentType<{ className?: string; size?: number }>;
   isActive: boolean;
 }) {
   return (
@@ -72,12 +48,14 @@ function NavLink({
     >
       <span className="site-header-v2__nav-orbit" aria-hidden="true" />
       <span className="site-header-v2__nav-content">
-        <Icon
-          size={16}
-          className={`site-header-v2__nav-icon transition-colors duration-200 ${
-            isActive ? "text-[#7C4DFF]" : "text-[#B388FF]"
-          }`}
-        />
+        {Icon ? (
+          <Icon
+            size={16}
+            className={`site-header-v2__nav-icon transition-colors duration-200 ${
+              isActive ? "text-[#7C4DFF]" : "text-[#B388FF]"
+            }`}
+          />
+        ) : null}
         <span
           className={`site-header-v2__nav-label text-sm font-medium transition-colors duration-200 ${
             isActive
@@ -95,6 +73,8 @@ function NavLink({
 
 export function SiteHeaderV2() {
   const pathname = usePathname();
+  const desktopNavLinks = useNavItems("header-v2-desktop");
+  const mobileNavLinks = useNavItems("header-v2-mobile");
   const { hasRewardedSurface } = useGamificationReleaseSummary();
   const vibeRushRelease = useGamificationSurface("vibeRush");
   const [scrolled, setScrolled] = useState(false);
@@ -223,7 +203,7 @@ export function SiteHeaderV2() {
                   href={link.href}
                   label={link.label}
                   icon={link.icon}
-                  isActive={matchesPathname(pathname, link.href)}
+                  isActive={isNavRouteActive(pathname, link.href)}
                 />
               ))}
             </nav>
@@ -389,8 +369,10 @@ export function SiteHeaderV2() {
                 Navigazione
               </div>
               <div className="site-header-v2__mobile-links flex flex-col gap-1 border-b border-[rgba(18,13,47,0.08)] pb-4">
-                {navLinks.map((link, i) => {
-                  const isActive = matchesPathname(pathname, link.href);
+                {mobileNavLinks.map((link, i) => {
+                  const isActive = isNavRouteActive(pathname, link.href);
+                  const Icon = link.icon;
+                  const tone = link.tone ?? DEFAULT_MOBILE_LINK_TONE;
                   return (
                     <motion.div
                       key={link.href}
@@ -407,15 +389,15 @@ export function SiteHeaderV2() {
                             : "border-[rgba(106,60,255,0.12)] bg-white text-[#120d2f] hover:border-[rgba(106,60,255,0.28)] hover:bg-[#f0edff]"
                         }`}
                         style={{
-                          "--mobile-link-a": link.tone[0],
-                          "--mobile-link-b": link.tone[1],
-                          "--mobile-link-c": link.tone[2],
+                          "--mobile-link-a": tone[0],
+                          "--mobile-link-b": tone[1],
+                          "--mobile-link-c": tone[2],
                         } as React.CSSProperties}
                         data-sonic-action="nav"
                         aria-current={isActive ? "page" : undefined}
                       >
                         <span className="flex items-center gap-3">
-                          <link.icon size={20} className="text-[#6a3cff]" />
+                          {Icon ? <Icon size={20} className="text-[#6a3cff]" /> : null}
                           <span className="font-medium">{link.label}</span>
                         </span>
                         <ChevronRight

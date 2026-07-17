@@ -2,37 +2,12 @@
 
 import Link from "next/link";
 import { BrandLogo } from "./brand-logo";
-import {
-  Sparkles,
-  LayoutGrid,
-  Radar,
-  Heart,
-  ShoppingBag,
-  Users,
-  ArrowUpRight,
-  Mail,
-} from "lucide-react";
+import { ArrowUpRight, Mail } from "lucide-react";
 
-const footerLinks = {
-  explore: [
-    { label: "Catalogo", href: "/archivio", icon: LayoutGrid },
-    { label: "Radar", href: "/radar", icon: Radar },
-    { label: "Confronto", href: "/compare", icon: Sparkles },
-    { label: "Salvati", href: "/shortlist", icon: Heart },
-  ],
-  community: [
-    { label: "Chi siamo", href: "/chi-siamo", icon: Users },
-    { label: "Shop", href: "/shop", icon: ShoppingBag },
-    { label: "Community", href: "/community", icon: Users },
-    { label: "Blog", href: "/posts", icon: Sparkles },
-    { label: "Affiliati", href: "/affiliati", icon: Heart },
-  ],
-  legal: [
-    { label: "Privacy", href: "/privacy" },
-    { label: "Termini", href: "/termini" },
-    { label: "Cookie", href: "/cookie" },
-  ],
-};
+import { useNavItems } from "@/lib/navigation/navigation-release-context";
+import { getNavDestination } from "@/lib/navigation/selectors";
+
+const contactEmailDestination = getNavDestination("contact-email");
 
 function FooterLink({ href, label, icon: Icon }: {
   href: string;
@@ -61,6 +36,10 @@ function FooterLink({ href, label, icon: Icon }: {
 }
 
 export function SiteFooterV2() {
+  const exploreLinks = useNavItems("footer-v2-explore");
+  const communityLinks = useNavItems("footer-v2-community");
+  const legalLinks = useNavItems("footer-v2-legal");
+  const socialLinks = useNavItems("footer-v2-social");
   return (
     <footer className="site-footer-v2 relative mt-auto border-t border-[rgba(124,77,255,0.08)] bg-[#06060E]">
       <div className="relative mx-auto max-w-[1440px] px-6 py-14 md:py-16">
@@ -86,26 +65,32 @@ export function SiteFooterV2() {
               Trova, confronta e costruisci la lista giusta per te.
             </p>
             <div className="flex items-center gap-3">
-              {[
-                { icon: Mail, href: "mailto:hello@tooolvibes.com", label: "Email" },
-              ].map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[rgba(124,77,255,0.15)] bg-[rgba(124,77,255,0.08)] text-[#B388FF] transition-all hover:border-[rgba(124,77,255,0.3)] hover:bg-[rgba(124,77,255,0.15)] hover:text-white hover:shadow-[0_0_16px_rgba(124,77,255,0.2)]"
-                  aria-label={social.label}
-                >
-                  <social.icon size={18} />
-                </a>
-              ))}
+              {socialLinks.map((social) => {
+                const SocialIcon = social.icon;
+                return (
+                  <a
+                    key={social.id}
+                    href={social.href}
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-[rgba(124,77,255,0.15)] bg-[rgba(124,77,255,0.08)] text-[#B388FF] transition-all hover:border-[rgba(124,77,255,0.3)] hover:bg-[rgba(124,77,255,0.15)] hover:text-white hover:shadow-[0_0_16px_rgba(124,77,255,0.2)]"
+                    aria-label={social.label}
+                  >
+                    {SocialIcon ? <SocialIcon size={18} /> : null}
+                  </a>
+                );
+              })}
             </div>
           </div>
 
           <div>
             <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#B388FF]">Esplora</h3>
             <div className="flex flex-col gap-2.5">
-              {footerLinks.explore.map((link) => (
-                <FooterLink key={link.label} {...link} />
+              {exploreLinks.map((link) => (
+                <FooterLink
+                  key={link.id}
+                  href={link.href}
+                  label={link.label}
+                  icon={link.icon}
+                />
               ))}
             </div>
           </div>
@@ -113,8 +98,13 @@ export function SiteFooterV2() {
           <div>
             <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#B388FF]">Community</h3>
             <div className="flex flex-col gap-2.5">
-              {footerLinks.community.map((link) => (
-                <FooterLink key={link.label} {...link} />
+              {communityLinks.map((link) => (
+                <FooterLink
+                  key={link.id}
+                  href={link.href}
+                  label={link.label}
+                  icon={link.icon}
+                />
               ))}
             </div>
           </div>
@@ -125,7 +115,7 @@ export function SiteFooterV2() {
               La newsletter non è ancora attiva. Per aggiornamenti o segnalazioni, scrivici direttamente.
             </p>
             <a
-              href="mailto:hello@tooolvibes.com"
+              href={contactEmailDestination.href}
               className="inline-flex items-center gap-2 rounded-xl border border-[rgba(124,77,255,0.15)] bg-[rgba(124,77,255,0.08)] px-4 py-2.5 text-sm font-medium text-[#B388FF] transition-all hover:border-[rgba(124,77,255,0.3)] hover:bg-[rgba(124,77,255,0.15)] hover:text-white hover:shadow-[0_0_16px_rgba(124,77,255,0.15)]"
             >
               <Mail size={16} />
@@ -139,9 +129,9 @@ export function SiteFooterV2() {
             &copy; {new Date().getFullYear()} TooolVibes. Tutti i diritti riservati.
           </p>
           <div className="flex items-center gap-6">
-            {footerLinks.legal.map((link) => (
+            {legalLinks.map((link) => (
               <Link
-                key={link.label}
+                key={link.id}
                 href={link.href}
                 className="text-xs text-[#9E99B8]/80 hover:text-[#B388FF] transition-colors"
               >

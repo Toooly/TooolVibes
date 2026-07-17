@@ -4,22 +4,16 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bookmark, Columns3, Home, LayoutGrid, Radar } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useNavItems } from "@/lib/navigation/navigation-release-context";
+import { isNavRouteActive } from "@/lib/navigation/selectors";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
-const mobileItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/archivio", label: "Catalogo", icon: LayoutGrid },
-  { href: "/radar", label: "Radar", icon: Radar },
-  { href: "/shortlist", label: "Salvati", icon: Bookmark },
-  { href: "/compare", label: "Confronto", icon: Columns3 },
-];
-
 export function MobileBottomNav() {
   const pathname = usePathname();
+  const mobileItems = useNavItems("bottom-nav");
   const [mounted, setMounted] = useState(false);
   const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
   const compareCount = useToolWorkspaceStore((s) => s.compareSlugs.length);
@@ -47,9 +41,8 @@ export function MobileBottomNav() {
       <div className="grid w-full grid-cols-5 gap-1.5 p-1.5">
         {mobileItems.map((item) => {
           const Icon = item.icon;
-          const isCompareItem = item.href === "/compare";
-          const active =
-            pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+          const isCompareItem = item.id === "compare";
+          const active = isNavRouteActive(pathname, item.href);
           const compareHasItems = isCompareItem && compareCount > 0;
 
           return (
@@ -65,7 +58,7 @@ export function MobileBottomNav() {
               )}
             >
               <span className="mobile-bottom-link__icon-wrap" aria-hidden="true">
-                <Icon className="size-5 transition-transform" />
+                {Icon ? <Icon className="size-5 transition-transform" /> : null}
                 {isCompareItem && compareCount > 0 ? (
                   <span
                     key={compareCount}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LockKeyhole } from "lucide-react";
@@ -9,17 +9,14 @@ import { DirectoryHeaderSearch } from "@/components/directory/directory-header-s
 import { SoundToggleButton } from "@/components/app/sound-toggle-button";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { PremiumLink } from "@/components/ui/premium";
+import { useNavItems } from "@/lib/navigation/navigation-release-context";
+import {
+  getNavDestination,
+  isNavRouteActive,
+} from "@/lib/navigation/selectors";
 import { cn } from "@/lib/utils";
 
-const primaryNav = [
-  { href: "/", label: "Home" },
-  { href: "/archivio", label: "Catalogo" },
-  { href: "/radar", label: "Radar live" },
-  { href: "/shortlist#wishlist", label: "Suggerisci" },
-  { href: "/affiliati", label: "Diventa affiliato" },
-  { href: "/shop", label: "Shop" },
-  { href: "/community", label: "Community" },
-];
+const suggestDestination = getNavDestination("suggest");
 
 function HeaderSearchFallback({ compact = false }: { compact?: boolean }) {
   return (
@@ -39,19 +36,15 @@ function HeaderSearchFallback({ compact = false }: { compact?: boolean }) {
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const primaryNav = useNavItems("header-legacy-nav");
+  const [adminAction] = useNavItems("header-legacy-actions");
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
 
-  const isActive = useMemo(
-    () => (href: string) => {
-      const path = href.split("#")[0] || "/";
-      return pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
-    },
-    [pathname],
-  );
+  const isActive = (href: string) => isNavRouteActive(pathname, href);
 
   return (
     <header className="site-header-motion page-shell sticky top-0 z-40 py-2.5 sm:py-4">
@@ -102,20 +95,22 @@ export function SiteHeader() {
 
           <div className="hidden shrink-0 items-center gap-2 lg:flex">
             <SoundToggleButton className="hidden xl:inline-flex" />
-            <Link
-              href="/admin/login"
-              className="premium-button premium-button-subtle hidden min-h-10 items-center rounded-full px-3.5 py-2 text-sm font-semibold xl:inline-flex 2xl:px-4"
-            >
-              <LockKeyhole className="size-4" aria-hidden="true" />
-              Admin
-            </Link>
+            {adminAction ? (
+              <Link
+                href={adminAction.href}
+                className="premium-button premium-button-subtle hidden min-h-10 items-center rounded-full px-3.5 py-2 text-sm font-semibold xl:inline-flex 2xl:px-4"
+              >
+                <LockKeyhole className="size-4" aria-hidden="true" />
+                {adminAction.label}
+              </Link>
+            ) : null}
             <PremiumLink
-              href="/shortlist#wishlist"
+              href={suggestDestination.href}
               size="sm"
               tone="premium"
               className="hidden px-4 shadow-[0_16px_42px_rgba(124,58,237,0.24)] 2xl:inline-flex"
             >
-              Suggerisci
+              {suggestDestination.label}
             </PremiumLink>
           </div>
 
@@ -179,15 +174,17 @@ export function SiteHeader() {
             </nav>
 
             <div className="grid gap-2 sm:grid-cols-2">
-              <PremiumLink href="/shortlist#wishlist">
+              <PremiumLink href={suggestDestination.href}>
                 Suggerisci un tool
               </PremiumLink>
-              <Link
-                href="/admin/login"
-                className="premium-button premium-button-subtle rounded-full px-4 py-3 text-center text-sm font-semibold"
-              >
-                Login amministratore
-              </Link>
+              {adminAction ? (
+                <Link
+                  href={adminAction.href}
+                  className="premium-button premium-button-subtle rounded-full px-4 py-3 text-center text-sm font-semibold"
+                >
+                  {adminAction.canonicalLabel}
+                </Link>
+              ) : null}
             </div>
           </div>
         ) : null}
