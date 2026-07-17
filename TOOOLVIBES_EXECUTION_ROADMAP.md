@@ -297,6 +297,11 @@
 - **Reversibilità:** adapter mantiene primitive precedenti.
 - **Non toccare:** contenuto dei singoli flow.
 - **Dipendenze:** B20.
+- **Stato (17 luglio 2026):** completato con scope minimo nel commit `e909f31` ("feat(ui): canonical overlay portal host and z-layer tokens (B22)"). Architettura effettiva: portal host condiviso (`components/ui/overlay-provider.tsx`) + scala token z canonica (base 0 / content 1 / sticky 10 / nav 50 / overlay 80 / modal 90 / floating 100 / toast 110 / effects 120) definita in `styles/tokens.css`.
+- **Deviazione dall'acceptance originale (17 luglio 2026):** nessun registry/coda overlay proprietario implementato; focus trap, Escape, inert e scroll lock restano delegati a Base UI/Vaul per evitare double-lock, double-Escape e focus race. Reversibilità affidata a git revert (nessun adapter).
+- **Rinviato a B61:** custom overlay (NoteSheet, modali game, gate-modal, intro-cinematic, cinematic-grain, skip-link, brand-intro, route-transition-loader, radar sheet, request-tool-form toast).
+- **Follow-up P2 tracciati:** (a) `z-10` hardcoded interno in `components/ui/select.tsx` (righe ~162, ~181); (b) `z-20` hardcoded interno in `components/layout/site-header-v2.tsx` (~riga 294); (c) sonner fuori dall'host condiviso per limite API (z tokenizzato su `--tv-z-toast`); (d) `.game-mission-drawer--mobile` in `app/globals.css` (~19265) ha padding non-layered che neutralizza l'`env()` safe-area della primitiva drawer; (e) residui z off-scale preesistenti in `globals.css` e componenti vari, da censire in piano di tokenizzazione o exemption list.
+- **Copertura test (17 luglio 2026):** token-contract statico (8 test), overlay-primitives jsdom (12 test: portal host, defaultOpen, fallback body, container custom, unmount, nesting Dialog/Drawer/Sheet, floating Popover/DropdownMenu/Select/Tooltip, toast z). Gap residui: scroll lock e safe-area senza test dedicati; arbitrato Escape cross-framework reale verificabile solo via E2E browser.
 
 ## BATCH 23 — Primitive core canoniche
 
