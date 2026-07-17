@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   ArrowRight,
+  Check,
   CheckCircle2,
   CircleX,
   Heart,
@@ -11,10 +12,20 @@ import {
   SlidersHorizontal,
   Zap,
 } from "lucide-react"
+import type { ReactNode } from "react"
 
 import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Chip } from "@/components/ui/chip"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -188,6 +199,176 @@ function ShortlistCardPreview() {
   )
 }
 
+function MatrixCell({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-2 rounded-xl border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] p-3">
+      <span className="text-xs tracking-[0.08em] text-[var(--tv-ink-muted)] uppercase">
+        {label}
+      </span>
+      <div className="flex flex-wrap items-center gap-2">{children}</div>
+    </div>
+  )
+}
+
+function ChipMatrix() {
+  return (
+    <div className="flex flex-col gap-3">
+      <Badge variant="neutral">Chip</Badge>
+      <div className="grid gap-3 md:grid-cols-3">
+        <MatrixCell label="Default">
+          <Chip>AI coding</Chip>
+          <Chip variant="accent">Design</Chip>
+          <Chip variant="outline">Marketing</Chip>
+        </MatrixCell>
+        <MatrixCell label="Selected">
+          <Chip defaultSelected>
+            <Check />
+            AI coding
+          </Chip>
+          <Chip variant="accent" defaultSelected>
+            <Check />
+            Design
+          </Chip>
+          <Chip variant="outline" defaultSelected>
+            <Check />
+            Marketing
+          </Chip>
+        </MatrixCell>
+        <MatrixCell label="Disabled">
+          <Chip disabled>AI coding</Chip>
+          <Chip variant="accent" defaultSelected disabled>
+            Design
+          </Chip>
+          <Chip variant="outline" disabled>
+            Marketing
+          </Chip>
+        </MatrixCell>
+      </div>
+      <MatrixCell label="Size sm / default / lg">
+        <Chip size="sm">Compact</Chip>
+        <Chip>Default</Chip>
+        <Chip size="lg">Large</Chip>
+      </MatrixCell>
+    </div>
+  )
+}
+
+function ButtonMatrix() {
+  return (
+    <div className="flex flex-col gap-3">
+      <Badge variant="neutral">Button</Badge>
+      <div className="grid gap-3 md:grid-cols-3">
+        <MatrixCell label="Default">
+          <Button size="sm">Primary</Button>
+          <Button size="sm" variant="secondary">Secondary</Button>
+          <Button size="sm" variant="outline">Outline</Button>
+          <Button size="sm" variant="ghost">Ghost</Button>
+          <Button size="sm" variant="destructive">Danger</Button>
+        </MatrixCell>
+        <MatrixCell label="Disabled">
+          <Button size="sm" disabled>Primary</Button>
+          <Button size="sm" variant="secondary" disabled>Secondary</Button>
+          <Button size="sm" variant="outline" disabled>Outline</Button>
+          <Button size="sm" variant="ghost" disabled>Ghost</Button>
+          <Button size="sm" variant="destructive" disabled>Danger</Button>
+        </MatrixCell>
+        <MatrixCell label="Loading">
+          <Button size="sm" loading>Primary</Button>
+          <Button size="sm" variant="secondary" loading>Secondary</Button>
+          <Button size="sm" variant="outline" loading>Outline</Button>
+          <Button size="sm" variant="ghost" loading>Ghost</Button>
+          <Button size="sm" variant="destructive" loading>Danger</Button>
+        </MatrixCell>
+      </div>
+      <MatrixCell label="Size xs → xl + icon">
+        <Button size="xs">XS</Button>
+        <Button size="sm">SM</Button>
+        <Button>Default</Button>
+        <Button size="md">MD</Button>
+        <Button size="lg">LG</Button>
+        <Button size="xl">XL</Button>
+        <Button size="icon-sm" variant="secondary" aria-label="Cerca">
+          <Search />
+        </Button>
+      </MatrixCell>
+    </div>
+  )
+}
+
+function BadgeMatrix() {
+  return (
+    <div className="flex flex-col gap-3">
+      <Badge variant="neutral">Badge</Badge>
+      <MatrixCell label="Varianti canoniche">
+        <Badge variant="neutral">Neutral</Badge>
+        <Badge variant="accent">Accent</Badge>
+        <Badge variant="success">Success</Badge>
+        <Badge variant="warning">Warning</Badge>
+        <Badge variant="danger">Danger</Badge>
+        <Badge variant="info">Info</Badge>
+        <Badge variant="trust">Trust</Badge>
+        <Badge variant="verified">Verified</Badge>
+        <Badge variant="affiliate">Affiliate</Badge>
+        <Badge variant="outline">Outline</Badge>
+      </MatrixCell>
+    </div>
+  )
+}
+
+function CardMatrix() {
+  return (
+    <div className="flex flex-col gap-3">
+      <Badge variant="neutral">Card</Badge>
+      <div className="grid gap-3 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Card default</CardTitle>
+            <CardDescription>Slot header, content e footer della primitiva canonica.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-[var(--tv-ink-secondary)]">
+              Superficie card con ring strutturale e densità standard.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Button size="sm" variant="secondary">Azione</Button>
+          </CardFooter>
+        </Card>
+        <Card size="sm">
+          <CardHeader>
+            <CardTitle>Card sm</CardTitle>
+            <CardDescription>Densità compatta per liste e mobile.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-[var(--tv-ink-secondary)]">
+              Stessa API, padding e gap ridotti via data-size.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+function PrimitiveStateMatrix() {
+  return (
+    <div className="tv-panel flex flex-col gap-6">
+      <div>
+        <h3>Matrix stati primitive</h3>
+        <p className="text-sm text-[var(--tv-ink-secondary)]">
+          Stati statici canonici per Button, Chip, Badge e Card. Focus-visible, attivazione da
+          tastiera e axe sono coperti dalla suite automatica
+          (__tests__/components/ui/core-primitives.test.tsx).
+        </p>
+      </div>
+      <ButtonMatrix />
+      <ChipMatrix />
+      <BadgeMatrix />
+      <CardMatrix />
+    </div>
+  )
+}
+
 function StateCards() {
   return (
     <div className="tv-design-system__grid tv-design-system__grid--cards">
@@ -269,6 +450,19 @@ export function FigmaDesignSystemShowcase() {
               <Badge variant="info">Info</Badge>
             </div>
           </div>
+          <div className="tv-panel">
+            <div className="tv-badge-row">
+              <Chip defaultSelected>
+                <Check />
+                AI coding
+              </Chip>
+              <Chip>Gratis</Chip>
+              <Chip variant="accent">Team</Chip>
+              <Chip variant="outline">No-code</Chip>
+              <Chip disabled>Enterprise</Chip>
+            </div>
+          </div>
+          <PrimitiveStateMatrix />
           <div className="tv-design-system__grid tv-design-system__grid--cards">
             <div className="tv-card">
               <div className="tv-field-stack">

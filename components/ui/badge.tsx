@@ -51,10 +51,16 @@ function Badge({
   render,
   ...props
 }: useRender.ComponentProps<"span"> & VariantProps<typeof badgeVariants>) {
+  const dataAttributes = {
+    "data-slot": "badge",
+    "data-variant": variant ?? undefined,
+  }
+
   return useRender({
     defaultTagName: "span",
     props: mergeProps<"span">(
       {
+        ...dataAttributes,
         className: cn(badgeVariants({ variant }), className),
       },
       props

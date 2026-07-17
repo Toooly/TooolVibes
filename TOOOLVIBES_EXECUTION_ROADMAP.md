@@ -314,6 +314,9 @@
 - **Reversibilità:** export legacy restano alias temporanei.
 - **Non toccare:** raw control nei consumer.
 - **Dipendenze:** B20–B22.
+- **Stato (17 luglio 2026):** completato. Architettura effettiva: nuova primitiva Chip canonica su Base UI Toggle (`components/ui/chip.tsx`, varianti default/accent/outline, size sm/default/lg, selected controllato o non controllato, disabled, focus-visible), contract documentato in `docs/design-system/core-primitives.md`, state matrix statica aggiunta alla sezione 02 dello showcase (`components/dev/figma-design-system-showcase.tsx`). Badge allineato al data contract (`data-slot`/`data-variant` espliciti). Nessuna migrazione route, nessuna modifica ai consumer; export legacy invariati (ButtonLink incluso) e reversibilità affidata a git revert.
+- **Deviazione dall'acceptance originale (17 luglio 2026):** snapshot visuale Playwright non aggiornato per decisione utente (rebaseline visuale in sospeso); keyboard interaction coperta a livello di contract nativo in jsdom (activation behavior Enter/Space reale delegata al layer E2E browser).
+- **Copertura test (17 luglio 2026):** `__tests__/components/ui/core-primitives.test.tsx` — 22 test jsdom: data contract Button/Card/Badge/Chip, varianti e size, disabled, loading con `aria-busy` e soppressione attivazione, toggle Chip controllato/non controllato, keyboard contract nativo, axe-core su ogni matrix di primitiva e sull'intero showcase con zero violazioni (regole `color-contrast` e `region` disabilitate perché jsdom non calcola contrasto reale e i frammenti non sono documenti interi; il contrasto resta garantito dal contract statico sui token).
 
 ## BATCH 24 — ToolCard responsive canonica
 
