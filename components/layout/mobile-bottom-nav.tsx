@@ -36,7 +36,7 @@ export function MobileBottomNav() {
     <nav
       aria-label="Navigazione mobile principale"
       className={cn(
-        "mobile-bottom-motion site-mobile-footer-nav fixed z-50 mx-auto w-auto max-w-[25rem]",
+        "mobile-bottom-motion site-mobile-footer-nav fixed z-[var(--tv-z-nav)] mx-auto w-auto max-w-[25rem]",
         "md:hidden",
         "rounded-[1.5rem] border border-white/25 bg-white/85 backdrop-blur-lg",
         "shadow-[0_8px_24px_rgba(47,33,126,0.12)]",

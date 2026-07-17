@@ -81,13 +81,14 @@
   --tv-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --tv-ease-emphasis: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Layer contract; B22 migrates consumers and overlay behavior. */
+  /* Layer contract (B22): floating portals sit above modals and below toasts. */
   --tv-z-base: 0;
   --tv-z-content: 1;
   --tv-z-sticky: 10;
   --tv-z-nav: 50;
   --tv-z-overlay: 80;
   --tv-z-modal: 90;
+  --tv-z-floating: 100;
   --tv-z-toast: 110;
   --tv-z-effects: 120;
 

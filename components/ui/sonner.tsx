@@ -11,7 +11,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       theme={activeTheme === "light" ? "light" : "dark"}
-      className="toaster group"
+      className="toaster group z-[var(--tv-z-toast)]"
       duration={6500}
       icons={{
         success: (
@@ -36,6 +36,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",
           "--border-radius": "var(--radius)",
+          zIndex: "var(--tv-z-toast)",
         } as React.CSSProperties
       }
       toastOptions={{

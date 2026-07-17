@@ -1399,7 +1399,7 @@ export function ToolDiscoveryApp({
               dark
             />
           </div>
-          <DrawerFooter data-vaul-no-drag className="grid grid-cols-2 gap-2 border-t border-white/10 bg-white/6 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
+          <DrawerFooter data-vaul-no-drag className="grid grid-cols-2 gap-2 border-t border-white/10 bg-white/6 p-5">
             <PremiumButton type="button" tone="secondary" onClick={resetFilters} data-sonic-action="update">
               Reset
             </PremiumButton>

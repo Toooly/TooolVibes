@@ -14,13 +14,13 @@
 
 :root {
   --bottom-nav-height: 3.55rem;
-  --z-base: 0;
-  --z-sticky: 10;
-  --z-nav: 50;
-  --z-overlay: 60;
-  --z-modal: 100;
-  --z-toast: 110;
-  --z-cursor: 120;
+  --z-base: var(--tv-z-base);
+  --z-sticky: var(--tv-z-sticky);
+  --z-nav: var(--tv-z-nav);
+  --z-overlay: var(--tv-z-overlay);
+  --z-modal: var(--tv-z-modal);
+  --z-toast: var(--tv-z-toast);
+  --z-cursor: var(--tv-z-effects);
   --surface-brand-panel-bg:
     radial-gradient(circle at top right, rgba(106, 60, 255, 0.11), transparent 30%),
     radial-gradient(circle at 82% 68%, rgba(57, 210, 246, 0.08), transparent 27%),
@@ -200,22 +200,10 @@
 }
 
 /*
- * Z-STACK — principali livelli sovrapposti (mobile first)
- * Usare questi valori come riferimento per evitare regressioni.
- *
- * Elemento                    | Valore        | Nota
- * ----------------------------|---------------|--------------------------------------------------
- * Cursor custom               | 120           | --z-cursor, solo desktop
- * Toast / notifiche           | 110           | --z-toast
- * Modali / Dialog / Sheet     | 100           | --z-modal
- * Drawer laterali             | 95            | componente shadcn/ui, sopra overlay
- * Mobile menu backdrop        | 90            | .site-header-v2__mobile-backdrop
- * FAB Vibe Rush               | 80            | bottone galleggiante mobile
- * Overlay / search            | 60            | --z-overlay
- * Header sticky               | 50            | z-50, .site-header-v2
- * Bottom nav mobile           | 50            | z-50, .site-mobile-footer-nav
- * Sticky / elementi ancorati  | 10            | --z-sticky
- * Base / contenuto            | 0             | --z-base
+ * Z-STACK canonico: i valori appartengono a styles/tokens.css.
+ * Consumer globali: nav/FAB -> --tv-z-nav, backdrop -> --tv-z-overlay,
+ * modal -> --tv-z-modal, floating menu -> --tv-z-floating,
+ * notifiche -> --tv-z-toast, effetti non interattivi -> --tv-z-effects.
  */
 
 * {
@@ -19038,7 +19026,7 @@ img {
     left: 0;
     right: 0;
     width: 100%;
-    z-index: 60;
+    z-index: var(--tv-z-nav);
     padding: max(0.45rem, env(safe-area-inset-top)) 0.75rem 0.3rem;
     transform: none !important;
     will-change: auto !important;
@@ -19233,7 +19221,7 @@ img {
     position: fixed;
     right: 1.1rem;
     bottom: 5.6rem;
-    z-index: 40;
+    z-index: var(--tv-z-nav);
     display: grid;
     place-items: center;
     width: 3rem;
@@ -20466,7 +20454,7 @@ img {
   position: fixed !important;
   right: 1rem !important;
   bottom: calc(5.5rem + env(safe-area-inset-bottom)) !important;
-  z-index: 80;
+  z-index: var(--tv-z-nav);
 }
 
 @media (min-width: 768px) {
@@ -26682,8 +26670,13 @@ img {
 
 /* Site header V2: premium navigation refresh */
 .site-header-v2 {
+  z-index: var(--tv-z-nav);
   padding: 0.95rem max(1rem, env(safe-area-inset-left, 0px)) 0;
   pointer-events: none;
+}
+
+.site-header-v2[data-overlay-open="true"] {
+  z-index: var(--tv-z-overlay);
 }
 
 .site-header-v2__shell {

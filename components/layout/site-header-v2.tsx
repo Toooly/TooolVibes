@@ -171,7 +171,8 @@ export function SiteHeaderV2() {
   return (
     <>
       <header
-        className={`site-header-v2 fixed left-0 right-0 top-0 z-50 transition-all duration-500${
+        data-overlay-open={menuOpen || searchOpen ? "true" : undefined}
+        className={`site-header-v2 fixed left-0 right-0 top-0 transition-all duration-500${
           scrolled || spatialRoute ? " is-elevated" : ""
         }`}
         style={{ transform: "translateZ(0)", willChange: "transform" }}
@@ -319,7 +320,7 @@ export function SiteHeaderV2() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             id="site-search-overlay"
-            className="fixed inset-0 z-[var(--z-overlay)] flex items-end justify-center bg-[rgba(18,13,47,0.5)] p-3 pt-[calc(5rem+env(safe-area-inset-top))] backdrop-blur-sm md:items-start md:p-0 md:pt-24"
+            className="fixed inset-0 z-[var(--tv-z-overlay)] flex items-end justify-center bg-[rgba(18,13,47,0.5)] p-3 pt-[calc(5rem+env(safe-area-inset-top))] backdrop-blur-sm md:items-start md:p-0 md:pt-24"
             onClick={() => closeSearch()}
             role="dialog"
             aria-modal="true"
@@ -348,7 +349,7 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="site-header-v2__mobile-backdrop fixed inset-0 z-[90] bg-[rgba(6,6,14,0.55)] lg:hidden"
+            className="site-header-v2__mobile-backdrop fixed inset-0 z-[var(--tv-z-overlay)] bg-[rgba(6,6,14,0.55)] lg:hidden"
             onClick={() => closeMenu()}
             >
             <motion.nav
@@ -445,7 +446,7 @@ export function SiteHeaderV2() {
       {/* Vibe Rush FAB */}
       {vibeRushRelease.persistentRewardsEnabled && (
         <VibeTapMiniGame
-          className={`site-vibe-rush-fab fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[80] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden ${isOverlayOpen ? "max-md:pointer-events-none max-md:scale-90 max-md:opacity-0" : ""}`}
+          className={`site-vibe-rush-fab fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[var(--tv-z-nav)] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden ${isOverlayOpen ? "max-md:pointer-events-none max-md:scale-90 max-md:opacity-0" : ""}`}
         />
       )}
 

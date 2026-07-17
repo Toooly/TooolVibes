@@ -58,10 +58,30 @@ describe("release design token contract", () => {
       tokens["tv-radius-pill"],
     ]).toEqual(["0.375rem", "0.625rem", "1rem", "1.5rem", "999px"]);
     expect(
-      ["base", "content", "sticky", "nav", "overlay", "modal", "toast", "effects"].map(
+      ["base", "content", "sticky", "nav", "overlay", "modal", "floating", "toast", "effects"].map(
         (layer) => Number(tokens[`tv-z-${layer}`]),
       ),
-    ).toEqual([0, 1, 10, 50, 80, 90, 110, 120]);
+    ).toEqual([0, 1, 10, 50, 80, 90, 100, 110, 120]);
+  });
+
+  it("keeps floating portals and toasts on their semantic release layers", () => {
+    for (const relativePath of [
+      "components/ui/popover.tsx",
+      "components/ui/dropdown-menu.tsx",
+      "components/ui/select.tsx",
+      "components/ui/tooltip.tsx",
+    ]) {
+      const source = fs.readFileSync(path.join(root, relativePath), "utf8");
+      expect(source).toContain("z-[var(--tv-z-floating)]");
+      expect(source).not.toMatch(/\bz-50\b/);
+    }
+
+    const toaster = fs.readFileSync(
+      path.join(root, "components/ui/sonner.tsx"),
+      "utf8",
+    );
+    expect(toaster).toContain("z-[var(--tv-z-toast)]");
+    expect(toaster).not.toMatch(/\bz-50\b/);
   });
 
   it.each([

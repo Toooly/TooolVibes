@@ -15,6 +15,7 @@ import {
   type GamificationClientModes,
 } from "@/lib/gamification/release-context";
 import { MotionObserver } from "@/components/ui/motion-observer";
+import { OverlayProvider } from "@/components/ui/overlay-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
@@ -59,25 +60,27 @@ export function RootProviders({
     >
       <GamificationReleaseProvider modes={gamificationModes}>
         <QueryClientProvider client={queryClient}>
-          <TooltipProvider delay={180}>
-            {children}
-            {enableExperience && (
-              <>
-                <GlobalExperienceLayer />
-                <MotionObserver />
-                <RouteTransitionLoader />
-                {enableAudio && (
-                  <>
-                    <InteractionSoundLayerV2 />
-                    <MusicAmbienceLayer />
-                  </>
-                )}
-                {enableGamificationEffects && <GameEffectsLayer />}
-                <GlobalCommandPalette />
-              </>
-            )}
-            <Toaster position="top-right" richColors closeButton />
-          </TooltipProvider>
+          <OverlayProvider>
+            <TooltipProvider delay={180}>
+              {children}
+              {enableExperience && (
+                <>
+                  <GlobalExperienceLayer />
+                  <MotionObserver />
+                  <RouteTransitionLoader />
+                  {enableAudio && (
+                    <>
+                      <InteractionSoundLayerV2 />
+                      <MusicAmbienceLayer />
+                    </>
+                  )}
+                  {enableGamificationEffects && <GameEffectsLayer />}
+                  <GlobalCommandPalette />
+                </>
+              )}
+              <Toaster position="top-right" richColors closeButton />
+            </TooltipProvider>
+          </OverlayProvider>
         </QueryClientProvider>
       </GamificationReleaseProvider>
       </ExperienceReleaseProvider>
