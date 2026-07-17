@@ -13,7 +13,6 @@ import {
   commitCanonicalToolWorkspaceState,
   getCanonicalToolWorkspaceState,
 } from "@/lib/stores/tool-workspace-store";
-import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 import { DISCOVERY_STORAGE_KEYS } from "@/lib/discovery/workspace-storage-keys";
 
 export { DISCOVERY_STORAGE_KEYS } from "@/lib/discovery/workspace-storage-keys";
@@ -108,104 +107,6 @@ function readMap<T>(key: string): Record<string, T> {
   } catch {
     return {};
   }
-}
-
-function writeMap<T>(key: string, value: Record<string, T>, options: WriteOptions = {}) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(key, JSON.stringify(value));
-
-  if (options.dispatch !== false) {
-    dispatchDiscoverySync(options.source);
-  }
-}
-
-function readObject<T>(key: string, fallback: T): T {
-  if (typeof window === "undefined") {
-    return fallback;
-  }
-
-  try {
-    const raw = window.localStorage.getItem(key);
-
-    if (!raw) {
-      return fallback;
-    }
-
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function writeObject<T>(key: string, value: T, options: WriteOptions = {}) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(key, JSON.stringify(value));
-
-  if (options.dispatch !== false) {
-    dispatchDiscoverySync(options.source);
-  }
-}
-
-function getToolStateMeta() {
-  return readMap<string>(DISCOVERY_STORAGE_KEYS.toolStateMeta);
-}
-
-function setToolStateMeta(value: Record<string, string>, options: WriteOptions = {}) {
-  writeMap(DISCOVERY_STORAGE_KEYS.toolStateMeta, value, options);
-}
-
-function touchToolState(slug: string, timestamp = nowIso(), options: WriteOptions = {}) {
-  setToolStateMeta(
-    {
-      ...getToolStateMeta(),
-      [slug]: timestamp,
-    },
-    options,
-  );
-}
-
-function removeToolStateTouch(slug: string, options: WriteOptions = {}) {
-  const current = { ...getToolStateMeta() };
-  delete current[slug];
-  setToolStateMeta(current, options);
-}
-
-function getCompareMeta() {
-  return readObject<CompareMeta>(DISCOVERY_STORAGE_KEYS.compareMeta, {});
-}
-
-function setCompareMeta(value: CompareMeta, options: WriteOptions = {}) {
-  writeObject(DISCOVERY_STORAGE_KEYS.compareMeta, value, options);
-}
-
-function persistShortlistStateForSlug(slug: string, stage: ShortlistStage, timestamp: string, source: DiscoverySyncSource) {
-  const shortlist = getShortlist();
-  const stages = getShortlistStages();
-
-  if (!shortlist.includes(slug)) {
-    writeList(DISCOVERY_STORAGE_KEYS.shortlist, [...shortlist, slug], {
-      dispatch: false,
-      source,
-    });
-  }
-
-  writeMap(
-    DISCOVERY_STORAGE_KEYS.shortlistState,
-    {
-      ...stages,
-      [slug]: stage,
-    },
-    { dispatch: false, source },
-  );
-
-  touchToolState(slug, timestamp, { dispatch: false, source });
 }
 
 export function getVisitedTools() {

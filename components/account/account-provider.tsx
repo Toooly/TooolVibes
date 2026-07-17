@@ -18,7 +18,6 @@ import {
   getWorkspaceAttachSnapshot,
   isolateWorkspaceAfterLogout,
   preserveAccountWorkspaceRecovery,
-  requestWorkspaceMutation,
 } from "@/lib/discovery/workspace-sync-client";
 import type { WorkspacePersistencePayload } from "@/lib/discovery/types";
 import {

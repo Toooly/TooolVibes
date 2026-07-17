@@ -3,9 +3,17 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 const root = process.cwd();
+const sourceCache = new Map<string, string>();
 
 function read(relativePath: string) {
-  return fs.readFileSync(path.join(root, relativePath), "utf8");
+  const cached = sourceCache.get(relativePath);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const source = fs.readFileSync(path.join(root, relativePath), "utf8");
+  sourceCache.set(relativePath, source);
+  return source;
 }
 
 function walk(relativeDirectory: string): string[] {
@@ -39,6 +47,10 @@ const sourceFiles = ["app", "components", "lib", "styles"]
   .filter((file) => /\.(?:ts|tsx|css)$/.test(file));
 const codeFiles = sourceFiles.filter((file) => /\.(?:ts|tsx)$/.test(file));
 const cssFiles = sourceFiles.filter((file) => file.endsWith(".css"));
+
+for (const file of sourceFiles) {
+  read(file);
+}
 
 describe("release typography contract", () => {
   it("downloads only Inter and Fraunces from next/font", () => {
