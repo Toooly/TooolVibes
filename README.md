@@ -471,10 +471,11 @@ SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
 
 ### Workspace persistence e handoff guest -> account
 
-- Da guest, shortlist, compare, note, pin, reason e stage continuano a funzionare subito in local-first.
-- Se il layer remoto e` disponibile, il viewer guest viene persistito anche su Supabase tramite cookie HTTP-only.
-- Quando l'utente apre il magic link, TooolVibes collega il viewer guest a un account reale e mergea lo stato locale/remoto in modo conservativo.
-- In logout, l'utente torna a un nuovo viewer guest senza perdere il workspace corrente.
+- Da guest, shortlist, compare, note, pin, reason, stage e decisioni funzionano subito in local-first sul browser corrente.
+- Quando l'utente apre il magic link, TooolVibes collega il workspace locale a un account reale e mergea lo stato locale/remoto in modo conservativo.
+- Dopo il collegamento, il workspace account usa snapshot canonici versionati e compare-and-swap per convergere tra browser senza sovrascrivere modifiche concorrenti.
+- In logout, il workspace account viene preservato prima di creare uno spazio guest locale isolato e vuoto.
+- La sync remota richiede `TOOOLVIBES_WORKSPACE_SYNC_MODE=canonical`, le credenziali Supabase server-side e la migration DATA-206 applicata. Senza questi prerequisiti l'app resta intenzionalmente local-only.
 
 ### Variabili richieste
 
@@ -501,11 +502,12 @@ SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
 - Se le env pubbliche esistono, il layer pubblico usa solo il client anon Supabase e legge `public.tools`.
 - Se le env pubbliche mancano, il frontend usa soltanto `lib/data/mock-tools.ts`.
 - Non esiste fallback automatico ai mock in caso di errore Supabase: con env presenti, la fonte dati pubblica resta Supabase.
-- La persistenza workspace usa route handler server-side:
-  - `GET /api/discovery-state`
-  - `PUT /api/discovery-state`
-  - `POST /api/discovery-account/attach`
-  - `POST /api/discovery-account/release`
+- La persistenza workspace usa esclusivamente i route handler canonici server-side:
+  - `GET /api/workspace-state`
+  - `PUT /api/workspace-state`
+  - `POST /api/workspace-account/attach`
+  - `POST /api/workspace-account/release`
+- Gli endpoint legacy `/api/discovery-state` e `/api/discovery-account/*` rispondono `410 Gone` e non accedono piu` alla persistenza.
 - Se `SUPABASE_SERVICE_ROLE_KEY` manca, shortlist/compare/note restano operative ma in modalita` locale.
 
 ## Note implementative
