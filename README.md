@@ -97,15 +97,18 @@ supabase/
 
 ## Setup locale
 
-1. Usa il runtime di release esatto:
+1. Usa il runtime di release supportato:
 
 ```bash
 node --version # v22.23.1
-npm --version  # 10.9.2
+npm --version  # >=10.9.2 e <11 (10.9.2 preferita)
 npm run check:runtime
 ```
 
-`.nvmrc`, `.node-version`, `packageManager` ed `engines` sono la fonte canonica. L'installazione fallisce intenzionalmente su versioni diverse.
+`.nvmrc`, `.node-version`, `packageManager` ed `engines` sono la fonte canonica.
+Node resta fissato a `22.23.1`; npm `10.9.2` è la baseline preferita, mentre
+le release stabili npm 10 dalla `10.9.2` in poi sono compatibili con il builder
+Cloudflare.
 
 2. Installa le dipendenze dal lockfile:
 
@@ -127,7 +130,8 @@ npm run dev
 
 5. Apri [http://localhost:3000](http://localhost:3000)
 
-La CI e le build di release devono usare Node 22.23.1 e npm 10.9.2; non usare il runtime globale se non coincide.
+La CI e le build di release devono usare Node 22.23.1 e npm `>=10.9.2 <11`;
+non usare runtime esterni a questo contratto.
 
 ## GitHub + Cloudflare deploy rapido
 

@@ -5,7 +5,8 @@
 - Closure item: `SEC-101`
 - Batch: `B08`
 - Audit date: 2026-07-16
-- Release runtime: Node.js `22.23.1`, npm `10.9.2`
+- Audited release baseline: Node.js `22.23.1`, npm `10.9.2` (supported npm
+  runtime: `>=10.9.2 <11`)
 - Deployment target: Next.js App Router on Cloudflare Workers through OpenNext
 
 This record covers the direct release toolchain only. It does not authorize a

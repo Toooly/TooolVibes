@@ -9,7 +9,8 @@ does not mutate application data.
 ## Runtime contract
 
 - Node: `22.23.1` (`.nvmrc` / `.node-version`)
-- npm: `10.9.2` (`packageManager` / `engines`)
+- npm: `>=10.9.2 <11` (`engines`); `10.9.2` remains the preferred
+  `packageManager` and CI baseline.
 - Install: `npm ci`; a lockfile change during install is a failure.
 
 The workflow runs on pull requests, pushes to `main`, and manual dispatches.
@@ -58,7 +59,8 @@ manifests that were produced before success or failure. The upload step uses
 
 1. Open the first failing step; later failures may be consequences.
 2. Download the quality evidence artifact when the console log is truncated.
-3. Reproduce the exact command locally on Node 22.23.1/npm 10.9.2.
+3. Reproduce the exact command locally on Node 22.23.1 and a supported npm 10
+   release (`>=10.9.2 <11`; the CI baseline is 10.9.2).
 4. Fix the cause in the smallest owning batch.
 5. Re-run the failed command, then `npm run quality` and both builds.
 6. Re-run the workflow; never bypass a required check for release work.
