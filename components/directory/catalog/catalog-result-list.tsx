@@ -1,17 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "motion/react";
 import { ArrowRight, Columns3 } from "lucide-react";
-import type { CSSProperties } from "react";
+import { MobileToolCard } from "@/components/directory/mobile-tool-card";
 import { CompareToggle } from "@/components/tools/compare-toggle";
-import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 import {
   MAX_COMPARE_TOOLS,
   useToolWorkspaceStore,
 } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
-import { extractDomain } from "./catalog-controller";
 
 /* ═══════════════════════════════════════════════════════════════
    CatalogResultList — result list (grid header, cards, compare tray).
@@ -85,62 +82,5 @@ function MobileCompareToolbox({ tools }: { tools: ToolPublicView[] }) {
         <ArrowRight size={14} aria-hidden="true" />
       </Link>
     </section>
-  );
-}
-
-type MobileToolCardProps = {
-  tool: ToolPublicView;
-  index: number;
-};
-
-function MobileToolCard({ tool, index }: MobileToolCardProps) {
-  const domain = extractDomain(tool.url);
-  const iconUrl = domain
-    ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`
-    : undefined;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-30px" }}
-      transition={{ duration: 0.3, delay: Math.min(index * 0.03, 0.3) }}
-      className="relative"
-    >
-      <Link
-        href={`/toools/${tool.slug}`}
-        className="mobile-tool-card"
-        aria-label={`${tool.name}. ${tool.shortDescription || ""}`}
-        style={iconUrl ? { "--tool-icon": `url("${iconUrl}")` } as CSSProperties : undefined}
-      >
-        <div className="mobile-tool-card__visual">
-          {iconUrl ? (
-            <span className="mobile-tool-card__icon" aria-hidden="true" />
-          ) : (
-            <span className="mobile-tool-card__fallback">
-              {tool.name.slice(0, 2).toUpperCase()}
-            </span>
-          )}
-        </div>
-        <div className="mobile-tool-card__meta">
-          <div className="mobile-tool-card__topline">
-            <span className="mobile-tool-card__category">{tool.categoryLabel}</span>
-            <span className="mobile-tool-card__level">{tool.levelLabel}</span>
-          </div>
-          <h3 className="mobile-tool-card__title">{tool.name}</h3>
-          <p className="mobile-tool-card__description">
-            {tool.shortDescription || tool.tldr || ""}
-          </p>
-          <span className="mobile-tool-card__open">
-            Apri scheda
-            <ArrowRight size={13} aria-hidden="true" />
-          </span>
-        </div>
-      </Link>
-      <div className="mobile-tool-card__actions">
-        <CompareToggle slug={tool.slug} compact />
-        <ShortlistToggle slug={tool.slug} mode="compact" />
-      </div>
-    </motion.div>
   );
 }
