@@ -3,16 +3,14 @@ import {
   WORKSPACE_SYNC_PREVIOUS_KEY,
   WORKSPACE_SYNC_RECOVERY_KEY,
 } from "@/lib/discovery/workspace-storage-keys";
-import {
-  createEmptyWorkspaceState,
-  normalizeWorkspaceState,
-} from "@/lib/discovery/workspace-state";
+import { normalizeWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
   loadWorkspaceStateFromStorage,
   persistWorkspaceStateToStorage,
   type WorkspaceStorage,
 } from "@/lib/discovery/workspace-storage";
 import { mergeWorkspaceForSync } from "@/lib/discovery/workspace-sync";
+import type { WorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 
 export type WorkspaceSyncReason =
@@ -22,9 +20,7 @@ export type WorkspaceSyncReason =
   | "logout"
   | "save";
 
-export type WorkspaceSyncOwner =
-  | { kind: "guest" }
-  | { kind: "account"; userId: string };
+export type WorkspaceSyncOwner = WorkspaceOwner;
 
 type PreviousSnapshot = {
   formatVersion: 1;
@@ -141,9 +137,13 @@ export function putWorkspaceSyncRecovery(
   const envelope = readRecoveryEnvelope(storage);
   const key = ownerKey(options.owner);
   const existing = envelope.entries[key];
+  const normalized = normalizeWorkspaceState(state);
+  if (existing?.reason === "logout" && normalized.clearedAt !== null) {
+    return true;
+  }
   const merged = existing
-    ? mergeWorkspaceForSync(existing.state, state)
-    : normalizeWorkspaceState(state);
+    ? mergeWorkspaceForSync(existing.state, normalized)
+    : normalized;
   envelope.entries[key] = {
     formatVersion: 1,
     capturedAt: nowIso(options.now),
@@ -160,6 +160,95 @@ export function readWorkspaceSyncRecovery(
   owner: WorkspaceSyncOwner,
 ) {
   return readRecoveryEnvelope(storage).entries[ownerKey(owner)]?.state ?? null;
+}
+
+function isLogoutIsolationBoundary(
+  local: WorkspaceStateV1,
+  recovery: RecoveryEntry,
+) {
+  return recovery.reason === "logout" &&
+    local.clearedAt === recovery.capturedAt;
+}
+
+function removeLogoutIsolationBoundary(
+  localInput: WorkspaceStateV1,
+  recovery: RecoveryEntry,
+) {
+  const local = normalizeWorkspaceState(localInput);
+  if (!isLogoutIsolationBoundary(local, recovery)) {
+    return local;
+  }
+
+  const restoreListBoundary = (list: WorkspaceStateV1["saved"]) =>
+    list.slugs.length === 0 && list.updatedAt === recovery.capturedAt
+      ? { ...list, updatedAt: null }
+      : list;
+
+  return normalizeWorkspaceState({
+    ...local,
+    clearedAt: null,
+    saved: restoreListBoundary(local.saved),
+    compare: restoreListBoundary(local.compare),
+    stack: restoreListBoundary(local.stack),
+  });
+}
+
+export function mergeWorkspaceWithSyncRecovery(
+  storage: WorkspaceStorage,
+  local: WorkspaceStateV1,
+  owner: WorkspaceSyncOwner,
+) {
+  const normalizedLocal = normalizeWorkspaceState(local);
+  const recovery = readRecoveryEnvelope(storage).entries[ownerKey(owner)];
+  if (!recovery) {
+    const previous = parsePrevious(
+      readJson(storage, WORKSPACE_SYNC_PREVIOUS_KEY),
+    );
+    return previous && isLogoutIsolationBoundary(normalizedLocal, {
+      ...previous,
+      pending: true,
+    })
+      ? removeLogoutIsolationBoundary(normalizedLocal, {
+          ...previous,
+          pending: true,
+        })
+      : normalizedLocal;
+  }
+  const merged = mergeWorkspaceForSync(
+    recovery.state,
+    removeLogoutIsolationBoundary(normalizedLocal, recovery),
+  );
+  if (!isLogoutIsolationBoundary(normalizedLocal, recovery)) return merged;
+
+  const preserveAccountAndGuestAdditions = (
+    accountList: WorkspaceStateV1["saved"],
+    guestList: WorkspaceStateV1["saved"],
+  ) => {
+    if (guestList.slugs.length === 0 &&
+        guestList.updatedAt === recovery.capturedAt) {
+      return accountList;
+    }
+    return {
+      slugs: Array.from(new Set([...accountList.slugs, ...guestList.slugs])),
+      updatedAt: guestList.updatedAt ?? accountList.updatedAt,
+    };
+  };
+
+  return normalizeWorkspaceState({
+    ...merged,
+    saved: preserveAccountAndGuestAdditions(
+      recovery.state.saved,
+      normalizedLocal.saved,
+    ),
+    compare: preserveAccountAndGuestAdditions(
+      recovery.state.compare,
+      normalizedLocal.compare,
+    ),
+    stack: preserveAccountAndGuestAdditions(
+      recovery.state.stack,
+      normalizedLocal.stack,
+    ),
+  });
 }
 
 export function clearWorkspaceSyncRecovery(
@@ -184,7 +273,10 @@ export function applyWorkspaceSyncSnapshot(
   incoming: WorkspaceStateV1,
   options: { owner: WorkspaceSyncOwner; reason: WorkspaceSyncReason; now?: string },
 ): WorkspaceSyncApplyResult {
-  const current = loadWorkspaceStateFromStorage(storage, { now: options.now }).state;
+  const stored = loadWorkspaceStateFromStorage(storage, { now: options.now }).state;
+  const current = options.reason === "attach"
+    ? mergeWorkspaceWithSyncRecovery(storage, stored, options.owner)
+    : stored;
   const merged = mergeWorkspaceForSync(incoming, current);
   if (JSON.stringify(current) === JSON.stringify(merged)) {
     return { state: current, applied: false, recoveryRequired: false };
@@ -201,28 +293,3 @@ export function applyWorkspaceSyncSnapshot(
   return { state: result.state, applied: true, recoveryRequired: false };
 }
 
-export function isolateGuestWorkspace(
-  storage: WorkspaceStorage,
-  options: { accountUserId: string; now?: string },
-): WorkspaceSyncApplyResult {
-  const owner: WorkspaceSyncOwner = { kind: "account", userId: options.accountUserId };
-  const current = loadWorkspaceStateFromStorage(storage, { now: options.now }).state;
-  const recoveryStored = putWorkspaceSyncRecovery(storage, current, {
-    owner,
-    reason: "logout",
-    now: options.now,
-  });
-  const previousStored = captureWorkspaceSyncPrevious(storage, current, {
-    owner,
-    reason: "logout",
-    now: options.now,
-  });
-  if (!recoveryStored || !previousStored) {
-    return { state: current, applied: false, recoveryRequired: true };
-  }
-  const empty = createEmptyWorkspaceState();
-  const result = persistWorkspaceStateToStorage(storage, empty, { now: options.now });
-  return result.persisted
-    ? { state: empty, applied: true, recoveryRequired: true }
-    : { state: current, applied: false, recoveryRequired: true };
-}

@@ -2,10 +2,10 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
-import { workspaceStateV1Schema } from "@/lib/discovery/schema";
+import { workspaceSyncStateV1Schema } from "@/lib/discovery/schema";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
-  mergeWorkspaceForSync,
+  mergeGuestWorkspaceContribution,
   synchronizeWorkspace,
   type WorkspaceCompareAndSwapResult,
   type WorkspaceRemoteSnapshot,
@@ -71,6 +71,11 @@ async function setViewerCookie(accessToken: string) {
   });
 }
 
+async function clearViewerCookie() {
+  const cookieStore = await cookies();
+  cookieStore.delete(discoveryViewerCookieName);
+}
+
 async function viewerFromCookie() {
   if (!isCanonicalWorkspaceRemoteEnabled()) return null;
   const client = createAdminSupabaseClient();
@@ -85,17 +90,25 @@ async function viewerFromCookie() {
   return viewer;
 }
 
-async function createGuest() {
+async function createAccount(userId: string) {
   const client = createAdminSupabaseClient();
   const { data, error } = await client.from("viewer_profiles")
-    .insert({ access_token: randomUUID(), kind: "guest", last_seen_at: nowIso() })
+    .insert({
+      access_token: randomUUID(),
+      kind: "account",
+      auth_user_id: userId,
+      last_seen_at: nowIso(),
+    })
     .select("id, access_token, kind, auth_user_id").single();
-  if (error || !data) throw new Error("viewer_profiles guest create failed: " + (error?.message ?? "unknown"));
+  if (error || !data) {
+    const existing = await viewerForUser(userId);
+    if (existing) return existing;
+    throw new Error(
+      "viewer_profiles account create failed: " +
+      (error?.message ?? "unknown"),
+    );
+  }
   return data as ViewerProfileRow;
-}
-
-async function getOrCreateViewer() {
-  return (await viewerFromCookie()) ?? createGuest();
 }
 
 async function authenticatedUserId(token: string) {
@@ -116,9 +129,14 @@ async function assignViewer(viewerId: string, userId: string) {
   const { data, error } = await createAdminSupabaseClient().from("viewer_profiles")
     .update({ kind: "account", auth_user_id: userId, last_seen_at: nowIso() })
     .eq("id", viewerId)
-    .select("id, access_token, kind, auth_user_id").single();
-  if (error || !data) throw new Error("viewer_profiles attach failed: " + (error?.message ?? "unknown"));
-  return data as ViewerProfileRow;
+    .eq("kind", "guest")
+    .is("auth_user_id", null)
+    .select("id, access_token, kind, auth_user_id").maybeSingle();
+  if (error) {
+    throw new Error("viewer_profiles attach failed: " + error.message);
+  }
+  if (data) return data as ViewerProfileRow;
+  return viewerForUser(userId);
 }
 
 function revisionOf(value: number | string | null | undefined) {
@@ -137,7 +155,7 @@ function revisionInput(value: string | null) {
 
 function snapshot(row: CanonicalWorkspaceRow | null): WorkspaceRemoteSnapshot {
   if (!row) return { state: createEmptyWorkspaceState(), revision: null };
-  const parsed = workspaceStateV1Schema.safeParse(row.workspace_state);
+  const parsed = workspaceSyncStateV1Schema.safeParse(row.workspace_state);
   if (!parsed.success) throw new Error("Remote workspace_state is not valid WorkspaceStateV1.");
   return { state: parsed.data, revision: revisionOf(row.revision) };
 }
@@ -169,17 +187,27 @@ function repository(viewerId: string): WorkspaceSyncRepository {
   };
 }
 
-async function sync(viewerId: string, state: WorkspaceStateV1, operationId: string) {
+async function sync(
+  viewerId: string,
+  state: WorkspaceStateV1,
+  operationId: string,
+  guestContribution?: WorkspaceStateV1,
+) {
   return synchronizeWorkspace(state, repository(viewerId), {
     operationId,
     maxConflictRetries: 2,
+    guestContribution,
   });
 }
 
-export async function loadCanonicalRemoteWorkspace() {
+export async function loadCanonicalRemoteWorkspace(token?: string) {
   if (!isCanonicalWorkspaceRemoteEnabled()) return disabled();
   try {
-    const viewer = await getOrCreateViewer();
+    if (!token) return disabled("missing-access-token");
+    const userId = await authenticatedUserId(token);
+    const viewer = await viewerForUser(userId);
+    if (!viewer) return disabled("workspace-account-attach-required");
+    await setViewerCookie(viewer.access_token);
     const remote = await repository(viewer.id).load();
     return {
       remoteAvailable: true as const,
@@ -205,10 +233,11 @@ export async function saveCanonicalRemoteWorkspace(
     let viewer = await viewerForUser(userId);
     if (!viewer) {
       const current = await viewerFromCookie();
-      viewer = await assignViewer((current?.kind === "guest" ? current : await createGuest()).id, userId);
+      viewer = current?.kind === "guest"
+        ? await assignViewer(current.id, userId) ?? await createAccount(userId)
+        : await createAccount(userId);
     }
     const result = await sync(viewer.id, state, operationId);
-    await setViewerCookie(viewer.access_token);
     return {
       remoteAvailable: true as const,
       viewerKind: "account" as const,
@@ -225,29 +254,46 @@ export async function saveCanonicalRemoteWorkspace(
 export async function attachCanonicalWorkspace(
   token: string,
   localState: WorkspaceStateV1,
+  guestState: WorkspaceStateV1,
   operationId: string,
 ) {
   if (!isCanonicalWorkspaceRemoteEnabled()) return disabled();
   try {
     const userId = await authenticatedUserId(token);
-    const current = await getOrCreateViewer();
     const account = await viewerForUser(userId);
+    const current = await viewerFromCookie();
     let viewer: ViewerProfileRow;
-    let input = localState;
+    const input = localState;
+    let guestContribution = guestState;
+    let consumedGuestId: string | null = null;
     if (account) {
       viewer = account;
-      if (current.kind === "guest" && current.id !== account.id) {
-        input = mergeWorkspaceForSync((await repository(current.id).load()).state, input);
+      if (current?.kind === "guest" && current.id !== account.id) {
+        // The client sends its explicitly reserved guest contribution. Do not
+        // copy a cookie guest row into an already-existing account here: that
+        // read-then-delete sequence lets two accounts consume the same remote
+        // guest snapshot concurrently. The conditional delete below only
+        // retires an unclaimed legacy guest after the account sync succeeds.
+        consumedGuestId = current.id;
       }
-    } else if (current.kind === "guest") {
-      viewer = await assignViewer(current.id, userId);
-    } else if (current.auth_user_id === userId) {
+    } else if (current?.kind === "guest") {
+      viewer = await assignViewer(current.id, userId) ?? await createAccount(userId);
+    } else if (current?.auth_user_id === userId) {
       viewer = current;
     } else {
-      viewer = await assignViewer((await createGuest()).id, userId);
+      viewer = await createAccount(userId);
     }
-    const result = await sync(viewer.id, input, operationId);
+    const result = await sync(
+      viewer.id,
+      input,
+      operationId,
+      guestContribution,
+    );
     await setViewerCookie(viewer.access_token);
+    if (consumedGuestId) {
+      await createAdminSupabaseClient().from("viewer_profiles")
+        .delete().eq("id", consumedGuestId).eq("kind", "guest");
+    }
     return {
       remoteAvailable: true as const,
       viewerKind: "account" as const,
@@ -270,13 +316,15 @@ export async function releaseCanonicalWorkspace(
   try {
     const userId = await authenticatedUserId(token);
     const cookieViewer = await viewerFromCookie();
-    const account = cookieViewer ?? await viewerForUser(userId);
+    const account = cookieViewer?.kind === "account" &&
+        cookieViewer.auth_user_id === userId
+      ? cookieViewer
+      : await viewerForUser(userId);
     if (!account || account.kind !== "account" || account.auth_user_id !== userId) {
       throw new Error("The workspace viewer does not belong to the authenticated account.");
     }
     await sync(account.id, localState, operationId);
-    const guest = await createGuest();
-    await setViewerCookie(guest.access_token);
+    await clearViewerCookie();
     return {
       remoteAvailable: true as const,
       viewerKind: "guest" as const,

@@ -1,2 +1,4 @@
 export const WORKSPACE_SCHEMA_VERSION = 1 as const;
 export const MAX_COMPARE_TOOLS = 5;
+export const MAX_WORKSPACE_COLLECTION_TOOLS = 500;
+export const MAX_WORKSPACE_TOOL_STATES = 500;

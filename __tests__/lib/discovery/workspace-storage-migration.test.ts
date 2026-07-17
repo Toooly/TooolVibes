@@ -25,6 +25,7 @@ import {
   normalizeWorkspaceState,
   reduceWorkspaceState,
 } from "@/lib/discovery/workspace-state";
+import { markGuestWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 
 const T0 = "2026-07-16T10:00:00.000Z";
 const T1 = "2026-07-16T11:00:00.000Z";
@@ -528,6 +529,7 @@ describe("WorkspaceStateV1 localStorage migration", () => {
     const storage = new MemoryStorage({
       [WORKSPACE_STORAGE_KEY]: JSON.stringify(initial),
     });
+    expect(markGuestWorkspaceOwner(storage)).toBe(true);
     vi.stubGlobal("window", {
       localStorage: storage,
     });
@@ -583,5 +585,24 @@ describe("WorkspaceStateV1 localStorage migration", () => {
     expect(readWorkspaceLegacyBackup(storage)?.entries).toEqual(
       legacyEntries,
     );
+  });
+
+  it("preserves a 501-tool legacy workspace locally and in its immutable backup", () => {
+    const slugs = Array.from({ length: 501 }, (_, index) => `tool-${index}`);
+    const raw = JSON.stringify(slugs);
+    const storage = new MemoryStorage({
+      [DISCOVERY_STORAGE_KEYS.shortlist]: raw,
+    });
+
+    const result = loadWorkspaceStateFromStorage(storage, { now: T1 });
+
+    expect(result.state.saved.slugs).toHaveLength(501);
+    expect(Object.keys(result.state.toolStates)).toHaveLength(501);
+    expect(storage.getItem(DISCOVERY_STORAGE_KEYS.shortlist)).toBe(raw);
+    expect(
+      readWorkspaceLegacyBackup(storage)?.entries[
+        DISCOVERY_STORAGE_KEYS.shortlist
+      ],
+    ).toBe(raw);
   });
 });

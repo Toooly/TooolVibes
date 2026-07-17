@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { MAX_COMPARE_TOOLS, WORKSPACE_SCHEMA_VERSION } from "@/lib/discovery/workspace-constants";
+import {
+  MAX_COMPARE_TOOLS,
+  MAX_WORKSPACE_COLLECTION_TOOLS,
+  MAX_WORKSPACE_TOOL_STATES,
+  WORKSPACE_SCHEMA_VERSION,
+} from "@/lib/discovery/workspace-constants";
 import { workspaceDecisionOutcomeValues } from "@/lib/discovery/types";
 
 const saveReasonSchema = z.enum([
@@ -90,6 +95,11 @@ export const workspaceToolStateSchema = z
   })
   .strict();
 
+const workspaceToolStatesSchema = z.record(
+  workspaceSlugSchema,
+  workspaceToolStateSchema,
+);
+
 export const workspaceStateV1Schema = z
   .object({
     schemaVersion: z.literal(WORKSPACE_SCHEMA_VERSION),
@@ -97,13 +107,39 @@ export const workspaceStateV1Schema = z
     saved: workspaceOrderedListSchema,
     compare: workspaceCompareListSchema,
     stack: workspaceOrderedListSchema,
-    toolStates: z.record(workspaceSlugSchema, workspaceToolStateSchema),
+    toolStates: workspaceToolStatesSchema,
   })
   .strict();
 
+/** Local state remains lossless; remote sync rejects oversized payloads. */
+export const workspaceSyncStateV1Schema = workspaceStateV1Schema.superRefine(
+  (state, context) => {
+    for (const [path, slugs] of [
+      ["saved", state.saved.slugs],
+      ["stack", state.stack.slugs],
+    ] as const) {
+      if (slugs.length > MAX_WORKSPACE_COLLECTION_TOOLS) {
+        context.addIssue({
+          code: "custom",
+          path: [path, "slugs"],
+          message: `Workspace ${path} cannot exceed ${MAX_WORKSPACE_COLLECTION_TOOLS} tools for remote sync.`,
+        });
+      }
+    }
+    if (Object.keys(state.toolStates).length > MAX_WORKSPACE_TOOL_STATES) {
+      context.addIssue({
+        code: "custom",
+        path: ["toolStates"],
+        message: `Workspace toolStates cannot exceed ${MAX_WORKSPACE_TOOL_STATES} entries for remote sync.`,
+      });
+    }
+  },
+);
+
 export const workspaceSyncMutationSchema = z
   .object({
-    state: workspaceStateV1Schema,
+    state: workspaceSyncStateV1Schema,
+    guest_state: workspaceSyncStateV1Schema.optional(),
     base_revision: z.string().min(1).max(160).nullable(),
     operation_id: z.string().uuid(),
   })

@@ -8,6 +8,7 @@ import {
   LEGACY_TOOL_WORKSPACE_STORAGE_KEY,
   LEGACY_WORKSPACE_BACKUP_STORAGE_KEYS,
   WORKSPACE_LEGACY_BACKUP_KEY,
+  WORKSPACE_MIGRATION_STATUS_KEY,
   WORKSPACE_QUARANTINE_KEY,
   WORKSPACE_STORAGE_KEY,
 } from "@/lib/discovery/workspace-storage-keys";
@@ -19,8 +20,7 @@ import {
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 
-export const WORKSPACE_MIGRATION_STATUS_KEY =
-  "tooolvibes:workspace:migration:v1:status";
+export { WORKSPACE_MIGRATION_STATUS_KEY } from "@/lib/discovery/workspace-storage-keys";
 
 export type WorkspaceStorage = Pick<Storage, "getItem" | "setItem">;
 

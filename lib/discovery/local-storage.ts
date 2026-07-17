@@ -14,21 +14,22 @@ import {
   getCanonicalToolWorkspaceState,
 } from "@/lib/stores/tool-workspace-store";
 import { DISCOVERY_STORAGE_KEYS } from "@/lib/discovery/workspace-storage-keys";
+import {
+  dispatchWorkspaceChange,
+  type WorkspaceChangeSource,
+} from "@/lib/discovery/workspace-events";
 
 export { DISCOVERY_STORAGE_KEYS } from "@/lib/discovery/workspace-storage-keys";
+export { DISCOVERY_SYNC_EVENT } from "@/lib/discovery/workspace-events";
 
-type DiscoverySyncSource = "local" | "remote";
 type WriteOptions = {
   dispatch?: boolean;
-  source?: DiscoverySyncSource;
+  source?: WorkspaceChangeSource;
 };
 
 type CompareMeta = {
   updated_at?: string | null;
 };
-
-export const DISCOVERY_SYNC_EVENT = "tooolvibes:discovery-sync";
-
 
 export type DiscoveryLocalSnapshot = {
   visitedTools: string[];
@@ -43,18 +44,6 @@ export type DiscoveryLocalSnapshot = {
 
 function nowIso() {
   return new Date().toISOString();
-}
-
-function dispatchDiscoverySync(source: DiscoverySyncSource = "local") {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.dispatchEvent(
-    new CustomEvent(DISCOVERY_SYNC_EVENT, {
-      detail: { source },
-    }),
-  );
 }
 
 function readList(key: string): string[] {
@@ -85,7 +74,10 @@ function writeList(key: string, values: string[], options: WriteOptions = {}) {
   window.localStorage.setItem(key, JSON.stringify(Array.from(new Set(values))));
 
   if (options.dispatch !== false) {
-    dispatchDiscoverySync(options.source);
+    dispatchWorkspaceChange({
+      source: options.source ?? "local",
+      scope: "telemetry",
+    });
   }
 }
 
@@ -226,16 +218,24 @@ export function applyDiscoveryWorkspaceState(
   const incoming = adaptLegacyDiscoveryWorkspaceState(workspaceState);
   const merged = mergeWorkspaceForSync(incoming, current);
   commitCanonicalToolWorkspaceState(merged);
-  if (options.dispatch !== false) dispatchDiscoverySync(options.source);
+  if (options.dispatch !== false) {
+    dispatchWorkspaceChange({
+      source: options.source ?? "remote",
+      scope: "workspace",
+    });
+  }
   return normalizeDiscoveryWorkspaceState(workspaceState);
 }
 
-function commitAction(action: Parameters<typeof reduceWorkspaceState>[1], source: DiscoverySyncSource = "local") {
+function commitAction(
+  action: Parameters<typeof reduceWorkspaceState>[1],
+  source: WorkspaceChangeSource = "local",
+) {
   const current = getCanonicalToolWorkspaceState();
   const next = reduceWorkspaceState(current, action);
   if (JSON.stringify(current) !== JSON.stringify(next)) {
     commitCanonicalToolWorkspaceState(next);
-    dispatchDiscoverySync(source);
+    dispatchWorkspaceChange({ source, scope: "workspace" });
   }
   return next;
 }
@@ -253,7 +253,8 @@ export function updateToolDecisionMemory(
   patch: Partial<ToolDecisionMemory>,
 ) {
   const timestamp = nowIso();
-  let state = getCanonicalToolWorkspaceState();
+  const current = getCanonicalToolWorkspaceState();
+  let state = current;
   if ("note" in patch) {
     state = reduceWorkspaceState(state, { type: "tool/note", slug, note: patch.note ?? null, at: timestamp });
   }
@@ -273,8 +274,10 @@ export function updateToolDecisionMemory(
       at: timestamp,
     });
   }
-  commitCanonicalToolWorkspaceState(state);
-  dispatchDiscoverySync("local");
+  if (JSON.stringify(current) !== JSON.stringify(state)) {
+    commitCanonicalToolWorkspaceState(state);
+    dispatchWorkspaceChange({ source: "local", scope: "workspace" });
+  }
   return getToolDecisionMemory(slug);
 }
 

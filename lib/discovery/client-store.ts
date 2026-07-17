@@ -2,15 +2,18 @@
 
 import { useSyncExternalStore } from "react";
 
-import { workspaceStateV1Schema } from "@/lib/discovery/schema";
-import { mergeWorkspaceForSync } from "@/lib/discovery/workspace-sync";
-import { WORKSPACE_STORAGE_KEY } from "@/lib/discovery/workspace-storage-keys";
 import {
-  commitCanonicalToolWorkspaceState,
-  replaceToolWorkspaceStateFromCanonical,
-} from "@/lib/stores/tool-workspace-store";
+  getActiveWorkspaceOwner,
+  workspaceStorageKeyForOwner,
+} from "@/lib/discovery/workspace-owner-storage";
 import {
   DISCOVERY_SYNC_EVENT,
+  dispatchWorkspaceChange,
+} from "@/lib/discovery/workspace-events";
+import {
+  refreshCanonicalToolWorkspaceStateFromStorage,
+} from "@/lib/stores/tool-workspace-store";
+import {
   getDiscoveryLocalSnapshot,
   type DiscoveryLocalSnapshot,
 } from "@/lib/discovery/local-storage";
@@ -38,18 +41,15 @@ function emitChange() {
   listeners.forEach((listener) => listener());
 }
 
-function handleStorage(event: StorageEvent) {
-  if (event.key === WORKSPACE_STORAGE_KEY && event.newValue) {
+export function handleWorkspaceStorageEvent(event: StorageEvent) {
+  const activeKey = workspaceStorageKeyForOwner(getActiveWorkspaceOwner());
+  if (event.key === activeKey) {
     try {
-      const incoming = workspaceStateV1Schema.parse(JSON.parse(event.newValue));
-      const previousParsed = event.oldValue
-        ? workspaceStateV1Schema.safeParse(JSON.parse(event.oldValue))
-        : null;
-      const merged = previousParsed?.success
-        ? mergeWorkspaceForSync(previousParsed.data, incoming)
-        : incoming;
-      const committed = commitCanonicalToolWorkspaceState(merged);
-      replaceToolWorkspaceStateFromCanonical(committed.state);
+      // A StorageEvent payload can already be stale when it is delivered.
+      // Treat it only as an invalidation signal and reread the current durable
+      // owner scope without writing it back through Zustand persist.
+      refreshCanonicalToolWorkspaceStateFromStorage();
+      dispatchWorkspaceChange({ source: "cross-tab", scope: "workspace" });
     } catch {
       // DATA-205 owns quarantine. A malformed storage event never replaces
       // the last valid in-memory snapshot.
@@ -65,7 +65,7 @@ function ensureStoreInitialized() {
 
   cachedSnapshot = getDiscoveryLocalSnapshot();
 
-  window.addEventListener("storage", handleStorage);
+  window.addEventListener("storage", handleWorkspaceStorageEvent);
   window.addEventListener(DISCOVERY_SYNC_EVENT, emitChange);
 
   initialized = true;

@@ -11,9 +11,15 @@ import {
   adaptLegacyDiscoveryWorkspaceState,
   adaptLegacyToolWorkspaceState,
 } from "@/lib/discovery/workspace-legacy-adapters";
-import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
+import {
+  MAX_COMPARE_TOOLS,
+  MAX_WORKSPACE_COLLECTION_TOOLS,
+} from "@/lib/discovery/workspace-constants";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
-import { workspaceStateV1Schema } from "@/lib/discovery/schema";
+import {
+  workspaceStateV1Schema,
+  workspaceSyncStateV1Schema,
+} from "@/lib/discovery/schema";
 
 const T0 = "2026-07-16T10:00:00.000Z";
 const T1 = "2026-07-16T11:00:00.000Z";
@@ -326,6 +332,43 @@ describe("Zustand compatibility seam", () => {
 });
 
 describe("workspace merge", () => {
+  it("keeps oversized local merges lossless while rejecting remote sync capacity", () => {
+    const build = (prefix: string) => normalizeWorkspaceState({
+      ...createEmptyWorkspaceState(),
+      saved: {
+        slugs: Array.from(
+          { length: 300 },
+          (_, index) => `${prefix}-${index}`,
+        ),
+        updatedAt: null,
+      },
+      toolStates: Object.fromEntries(Array.from(
+        { length: 300 },
+        (_, index) => [`${prefix}-${index}`, {
+          stage: "saved",
+          note: null,
+          saveReason: null,
+          pinned: false,
+          decision: null,
+          updatedAt: null,
+        }],
+      )),
+    });
+    const left = build("left");
+    const right = build("right");
+
+    expect(workspaceSyncStateV1Schema.safeParse(left).success).toBe(true);
+    expect(workspaceSyncStateV1Schema.safeParse(right).success).toBe(true);
+    const merged = mergeWorkspaceStates(left, right);
+
+    expect(merged.saved.slugs).toHaveLength(600);
+    expect(Object.keys(merged.toolStates)).toHaveLength(600);
+    expect(workspaceStateV1Schema.safeParse(merged).success).toBe(true);
+    expect(workspaceSyncStateV1Schema.safeParse(merged).success).toBe(false);
+    expect(merged.saved.slugs).toHaveLength(
+      MAX_WORKSPACE_COLLECTION_TOOLS + 100,
+    );
+  });
   it("uses timestamp authority for removals and ordered union without timestamps", () => {
     const left = normalizeWorkspaceState({
       schemaVersion: 1,
