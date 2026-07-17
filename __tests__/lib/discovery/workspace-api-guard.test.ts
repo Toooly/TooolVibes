@@ -13,6 +13,10 @@ import {
   readWorkspaceBearerToken,
   workspaceRateLimitNamespace,
 } from "@/lib/discovery/workspace-api-guard";
+import {
+  workspaceStateV1Schema,
+  workspaceSyncStateV1Schema,
+} from "@/lib/discovery/schema";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import { consumeRateLimit } from "@/lib/security/distributed-state";
 
@@ -30,6 +34,10 @@ function request(body: unknown, headers: HeadersInit = {}) {
 }
 
 describe("workspace API guard", () => {
+  it("allows the complete UTF-8 workspace transport envelope up to 8 MiB", () => {
+    expect(MAX_WORKSPACE_MUTATION_BYTES).toBe(8 * 1024 * 1024);
+  });
+
   it("accepts only a bounded bearer token", () => {
     expect(readWorkspaceBearerToken(request({}, {
       authorization: "Bearer token-1",
@@ -68,6 +76,71 @@ describe("workspace API guard", () => {
     ));
 
     expect(parsed).toEqual({ status: "too-large" });
+  });
+
+  it("accepts a structurally valid workspace above the former 256 KiB limit", async () => {
+    const state = {
+      ...createEmptyWorkspaceState(),
+      toolStates: Object.fromEntries(
+        Array.from({ length: 150 }, (_, index) => [
+          `tool-${index}`,
+          {
+            stage: "saved",
+            note: "x".repeat(2_000),
+            saveReason: null,
+            pinned: false,
+            decision: null,
+            updatedAt: null,
+          },
+        ]),
+      ),
+    };
+    const input = {
+      state,
+      base_revision: null,
+      operation_id: OPERATION_ID,
+    };
+    const byteLength = new TextEncoder().encode(JSON.stringify(input)).byteLength;
+
+    expect(byteLength).toBeGreaterThan(256 * 1024);
+    expect(byteLength).toBeLessThan(MAX_WORKSPACE_MUTATION_BYTES);
+    await expect(parseWorkspaceMutationRequest(request(input))).resolves.toMatchObject({
+      status: "valid",
+    });
+  });
+
+  it("covers two maximum-cardinality states with multibyte notes", async () => {
+    const slugs = Array.from({ length: 500 }, (_, index) =>
+      `tool-${index}-${"a".repeat(120)}`.slice(0, 120));
+    const state = {
+      ...createEmptyWorkspaceState(),
+      saved: { slugs, updatedAt: null },
+      stack: { slugs, updatedAt: null },
+      toolStates: Object.fromEntries(slugs.map((slug) => [
+        slug,
+        {
+          stage: "saved",
+          note: "界".repeat(2_000),
+          saveReason: null,
+          pinned: false,
+          decision: null,
+          updatedAt: null,
+        },
+      ])),
+    };
+    const input = {
+      state,
+      guest_state: state,
+      base_revision: null,
+      operation_id: OPERATION_ID,
+    };
+    const byteLength = new TextEncoder().encode(JSON.stringify(input)).byteLength;
+
+    expect(byteLength).toBeGreaterThan(2 * 1024 * 1024);
+    expect(byteLength).toBeLessThan(MAX_WORKSPACE_MUTATION_BYTES);
+    await expect(parseWorkspaceMutationRequest(request(input))).resolves.toMatchObject({
+      status: "valid",
+    });
   });
 
   it("uses valid namespaces plus bounded IP and token-fingerprint buckets", async () => {
@@ -109,7 +182,7 @@ describe("workspace API guard", () => {
     }
   });
 
-  it("caps saved, stack and tool-state cardinality", async () => {
+  it("leaves remote capacity enforcement after structural request parsing", async () => {
     const slugs = Array.from({ length: 501 }, (_, index) => `tool-${index}`);
     const state = {
       ...createEmptyWorkspaceState(),
@@ -123,6 +196,9 @@ describe("workspace API guard", () => {
       operation_id: OPERATION_ID,
     }));
 
-    expect(parsed.status).toBe("invalid");
+    expect(parsed.status).toBe("valid");
+    if (parsed.status !== "valid") return;
+    expect(workspaceStateV1Schema.safeParse(parsed.data.state).success).toBe(true);
+    expect(workspaceSyncStateV1Schema.safeParse(parsed.data.state).success).toBe(false);
   });
 });

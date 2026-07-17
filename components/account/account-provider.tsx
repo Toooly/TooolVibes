@@ -13,16 +13,23 @@ import {
 import type { Session, User } from "@supabase/supabase-js";
 
 import {
+  DISCOVERY_SYNC_EVENT,
+  readWorkspaceChangeDetail,
+} from "@/lib/discovery/workspace-events";
+import {
   applyCanonicalRemotePayload,
   clearAccountWorkspaceRecovery,
   finalizeGuestWorkspaceClaim,
   getWorkspaceAttachSnapshot,
   getWorkspaceGuestContribution,
+  hasQuarantinedWorkspaceRecovery,
   initializeWorkspaceOwnerProvenance,
   isolateWorkspaceAfterLogout,
   preserveAccountWorkspaceRecovery,
   requestWorkspaceMutation,
+  restoreLatestQuarantinedWorkspace,
   stageWorkspaceForAccount,
+  withWorkspaceGuestClaimLock,
 } from "@/lib/discovery/workspace-sync-client";
 import {
   getBrowserSupabaseClient,
@@ -41,11 +48,14 @@ type AccountContextValue = {
   isSendingLink: boolean;
   isAttaching: boolean;
   workspaceAttachPending: boolean;
+  hasQuarantinedWorkspace: boolean;
+  isRestoringQuarantinedWorkspace: boolean;
   authMessage?: string | null;
   sendMagicLink: (
     email: string,
     metadata?: AccountMagicLinkMetadata,
   ) => Promise<{ ok: boolean; message: string }>;
+  restoreQuarantinedWorkspace: () => Promise<{ ok: boolean; message: string }>;
   signOut: () => Promise<void>;
 };
 
@@ -57,8 +67,14 @@ const AccountContext = createContext<AccountContextValue>({
   isSendingLink: false,
   isAttaching: false,
   workspaceAttachPending: false,
+  hasQuarantinedWorkspace: false,
+  isRestoringQuarantinedWorkspace: false,
   authMessage: null,
   sendMagicLink: async () => ({ ok: false, message: "Accesso email non disponibile." }),
+  restoreQuarantinedWorkspace: async () => ({
+    ok: false,
+    message: "Nessuna selezione locale da ripristinare.",
+  }),
   signOut: async () => {},
 });
 
@@ -70,6 +86,9 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
   const [isSendingLink, setIsSendingLink] = useState(false);
   const [isAttaching, setIsAttaching] = useState(false);
   const [workspaceAttachPending, setWorkspaceAttachPending] = useState(false);
+  const [hasQuarantinedWorkspace, setHasQuarantinedWorkspace] = useState(false);
+  const [isRestoringQuarantinedWorkspace, setIsRestoringQuarantinedWorkspace] =
+    useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const sessionRef = useRef<Session | null>(null);
   const localSignOutRef = useRef(false);
@@ -79,6 +98,8 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
   const lifecycleVersionRef = useRef(0);
   const workspaceProvenanceReadyRef = useRef(false);
   const attachRetryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const workspaceChangeRetryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const workspaceChangeRetryQueuedRef = useRef(false);
   const attachRetryAttemptRef = useRef(0);
   const attachWorkspaceToAccountRef = useRef<
     (currentSession: Session | null) => Promise<void>
@@ -128,12 +149,17 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
     setIsAttaching(true);
 
     try {
-      const accountSnapshot = getWorkspaceAttachSnapshot(accountUserId);
-      const guestContribution = getWorkspaceGuestContribution(accountUserId);
-      const staged = stageWorkspaceForAccount(
-        accountUserId,
-        accountSnapshot,
-        guestContribution,
+      const staged = await withWorkspaceGuestClaimLock(
+        (lockHeld) => {
+          const accountSnapshot = getWorkspaceAttachSnapshot(accountUserId);
+          const guestContribution = getWorkspaceGuestContribution(accountUserId);
+          return stageWorkspaceForAccount(
+            accountUserId,
+            accountSnapshot,
+            guestContribution,
+            { guestClaimLockHeld: lockHeld },
+          );
+        },
       );
       setWorkspaceAttachPending(staged.guestPending);
       if (!staged.ready) {
@@ -145,8 +171,8 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       const result = await requestWorkspaceMutation(
         "/api/workspace-account/attach",
         currentSession.access_token,
-        accountSnapshot,
-        { maxConflictRetries: 1, guestState: guestContribution },
+        staged.requestAccountState,
+        { maxConflictRetries: 1, guestState: staged.requestGuestState },
       );
 
       if (lifecycleVersionRef.current !== lifecycleVersion ||
@@ -170,7 +196,12 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
           );
           return;
         }
-        if (!finalizeGuestWorkspaceClaim(accountUserId)) {
+        const finalizedGuestClaim = await withWorkspaceGuestClaimLock(
+          (lockHeld) => finalizeGuestWorkspaceClaim(accountUserId, {
+            guestClaimLockHeld: lockHeld,
+          }),
+        );
+        if (!finalizedGuestClaim) {
           setAuthMessage(
             "Account collegato; la pulizia della selezione guest sarà ritentata senza perdere dati.",
           );
@@ -180,6 +211,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         clearAttachRetry();
         attachRetryAttemptRef.current = 0;
         lastAttachedUserIdRef.current = accountUserId;
+        workspaceChangeRetryQueuedRef.current = false;
         setWorkspaceAttachPending(false);
         setAuthMessage("Selezione collegata all'account senza perdere ciò che avevi salvato.");
         return;
@@ -187,6 +219,13 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
 
       if (response.status === 429 || response.status >= 500) {
         scheduleAttachRetry(currentSession, lifecycleVersion);
+      }
+      if (response.status === 422 &&
+          payload?.meta.error === "workspace-capacity-exceeded") {
+        setAuthMessage(
+          "La selezione locale supera il limite di sincronizzazione. Riduci salvati, stack o note non più utili: il collegamento ripartirà automaticamente e nessun dato verrà cancellato.",
+        );
+        return;
       }
       setAuthMessage(
         "Account collegato, ma il salvataggio online non è disponibile: la selezione resta al sicuro su questo browser.",
@@ -207,10 +246,57 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
           !signOutInProgressRef.current) {
         setIsAttaching(false);
       }
+      if (workspaceChangeRetryQueuedRef.current &&
+          lifecycleVersionRef.current === lifecycleVersion &&
+          !signOutInProgressRef.current &&
+          lastAttachedUserIdRef.current !== accountUserId &&
+          sessionRef.current?.user.id === accountUserId) {
+        workspaceChangeRetryQueuedRef.current = false;
+        if (workspaceChangeRetryTimerRef.current !== null) {
+          clearTimeout(workspaceChangeRetryTimerRef.current);
+        }
+        workspaceChangeRetryTimerRef.current = setTimeout(() => {
+          workspaceChangeRetryTimerRef.current = null;
+          void attachWorkspaceToAccountRef.current(sessionRef.current);
+        }, 0);
+      }
     }
   }, [clearAttachRetry, scheduleAttachRetry]);
 
   attachWorkspaceToAccountRef.current = attachWorkspaceToAccount;
+
+  useEffect(() => {
+    if (!workspaceAttachPending || typeof window === "undefined") return;
+
+    const retryAfterWorkspaceChange = (event: Event) => {
+      const detail = readWorkspaceChangeDetail(event);
+      if (detail?.scope !== "workspace" ||
+          (detail.source !== "local" && detail.source !== "cross-tab")) {
+        return;
+      }
+      workspaceChangeRetryQueuedRef.current = true;
+      if (workspaceChangeRetryTimerRef.current !== null) {
+        clearTimeout(workspaceChangeRetryTimerRef.current);
+      }
+      workspaceChangeRetryTimerRef.current = setTimeout(() => {
+        workspaceChangeRetryTimerRef.current = null;
+        const currentSession = sessionRef.current;
+        if (!currentSession || signOutInProgressRef.current) return;
+        if (attachInFlightUserIdRef.current === currentSession.user.id) return;
+        workspaceChangeRetryQueuedRef.current = false;
+        void attachWorkspaceToAccountRef.current(currentSession);
+      }, 300);
+    };
+
+    window.addEventListener(DISCOVERY_SYNC_EVENT, retryAfterWorkspaceChange);
+    return () => {
+      window.removeEventListener(DISCOVERY_SYNC_EVENT, retryAfterWorkspaceChange);
+      if (workspaceChangeRetryTimerRef.current !== null) {
+        clearTimeout(workspaceChangeRetryTimerRef.current);
+        workspaceChangeRetryTimerRef.current = null;
+      }
+    };
+  }, [workspaceAttachPending]);
 
   useEffect(() => {
     let isActive = true;
@@ -233,6 +319,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         setWorkspaceAttachPending(false);
         const provenance = initializeWorkspaceOwnerProvenance({ kind: "guest" });
         workspaceProvenanceReadyRef.current = provenance.ready;
+        setHasQuarantinedWorkspace(hasQuarantinedWorkspaceRecovery());
         if (provenance.legacyQuarantined) {
           setAuthMessage(
             "Una selezione locale precedente è stata conservata separatamente per evitare di attribuirla all'utente sbagliato.",
@@ -256,6 +343,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
           : { kind: "guest" },
       );
       workspaceProvenanceReadyRef.current = provenance.ready;
+      setHasQuarantinedWorkspace(hasQuarantinedWorkspaceRecovery());
       if (provenance.legacyQuarantined) {
         setAuthMessage(
           "Una selezione locale precedente è stata conservata separatamente per evitare di attribuirla all'account sbagliato.",
@@ -286,13 +374,23 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
         setStatus(nextSession?.user ? "authenticated" : "guest");
 
         if (!nextSession?.user) {
-          if (event === "SIGNED_OUT" && previousSession?.user.id && !localSignOutRef.current) {
-            isolateWorkspaceAfterLogout(previousSession.user.id);
+          if (event === "SIGNED_OUT" && previousSession?.user.id) {
+            const failClosedIsolation = isolateWorkspaceAfterLogout(
+              previousSession.user.id,
+            );
+            if (!localSignOutRef.current) {
+              void withWorkspaceGuestClaimLock((lockHeld) => lockHeld
+                ? isolateWorkspaceAfterLogout(previousSession.user.id, {
+                    guestClaimLockHeld: true,
+                  })
+                : failClosedIsolation);
+            }
           }
           lastAttachedUserIdRef.current = null;
           attachInFlightUserIdRef.current = null;
           setIsAttaching(false);
           setWorkspaceAttachPending(false);
+          workspaceChangeRetryQueuedRef.current = false;
           clearAttachRetry();
           attachRetryAttemptRef.current = 0;
           return;
@@ -300,6 +398,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
 
         if (previousUserId !== nextUserId) {
           setWorkspaceAttachPending(false);
+          workspaceChangeRetryQueuedRef.current = false;
           clearAttachRetry();
           attachRetryAttemptRef.current = 0;
           const nextProvenance = initializeWorkspaceOwnerProvenance({
@@ -307,6 +406,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
             userId: nextSession.user.id,
           });
           workspaceProvenanceReadyRef.current = nextProvenance.ready;
+          setHasQuarantinedWorkspace(hasQuarantinedWorkspaceRecovery());
         }
 
         void attachWorkspaceToAccount(nextSession);
@@ -400,6 +500,41 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const restoreQuarantinedWorkspace = useCallback(async () => {
+    if (isAttaching) {
+      const message = "Attendi la fine del collegamento prima di ripristinare la selezione locale.";
+      setAuthMessage(message);
+      return { ok: false, message };
+    }
+
+    setIsRestoringQuarantinedWorkspace(true);
+    try {
+      const currentSession = sessionRef.current;
+      const owner = currentSession?.user.id
+        ? { kind: "account" as const, userId: currentSession.user.id }
+        : { kind: "guest" as const };
+      const result = restoreLatestQuarantinedWorkspace(owner);
+      const recoveryStillAvailable = hasQuarantinedWorkspaceRecovery();
+      setHasQuarantinedWorkspace(recoveryStillAvailable);
+
+      if (!result.restored) {
+        const message = result.reason === "backup-unavailable"
+          ? "Il backup locale non è più disponibile. Nessun dato è stato modificato."
+          : "Il ripristino locale non è disponibile in questo browser. Nessun dato è stato modificato.";
+        setAuthMessage(message);
+        return { ok: false, message };
+      }
+
+      const message = result.recoveryRecorded
+        ? "La selezione locale è stata ripristinata nello spazio corrente."
+        : "La selezione è stata ripristinata; la copia di sicurezza resta disponibile su questo dispositivo.";
+      setAuthMessage(message);
+      return { ok: true, message };
+    } finally {
+      setIsRestoringQuarantinedWorkspace(false);
+    }
+  }, [isAttaching]);
+
   const signOut = useCallback(async () => {
     if (signOutInProgressRef.current) return;
 
@@ -465,7 +600,11 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       } finally {
         if (signedOut) {
           if (accountUserId) {
-            const isolation = isolateWorkspaceAfterLogout(accountUserId);
+            const isolation = await withWorkspaceGuestClaimLock(
+              (lockHeld) => isolateWorkspaceAfterLogout(accountUserId, {
+                guestClaimLockHeld: lockHeld,
+              }),
+            );
             if (!isolation.applied) {
               setAuthMessage(
                 "Disconnessione effettuata. La selezione resta recuperabile su questo browser.",
@@ -480,6 +619,7 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
           setSession(null);
           setWorkspaceAttachPending(false);
+          workspaceChangeRetryQueuedRef.current = false;
         } else if (currentSession?.user) {
           sessionRef.current = currentSession;
           setStatus("authenticated");
@@ -502,11 +642,14 @@ export function AccountProvider({ children }: { children: React.ReactNode }) {
       isSendingLink,
       isAttaching,
       workspaceAttachPending,
+      hasQuarantinedWorkspace,
+      isRestoringQuarantinedWorkspace,
       authMessage,
       sendMagicLink,
+      restoreQuarantinedWorkspace,
       signOut,
     }),
-    [authEnabled, authMessage, isAttaching, isSendingLink, sendMagicLink, session, signOut, status, user, workspaceAttachPending],
+    [authEnabled, authMessage, hasQuarantinedWorkspace, isAttaching, isRestoringQuarantinedWorkspace, isSendingLink, restoreQuarantinedWorkspace, sendMagicLink, session, signOut, status, user, workspaceAttachPending],
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

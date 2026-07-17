@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useAccount } from "./account-provider";
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { Mail, User, ArrowRight, Shield, Sparkles } from "lucide-react";
+import { Mail, User, ArrowRight, RotateCcw, Shield, Sparkles } from "lucide-react";
 
 type AuthTab = "login" | "register" | "admin";
 
@@ -232,6 +232,28 @@ export function AuthPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {account.hasQuarantinedWorkspace ? (
+            <div className="v-auth-message v-auth-message--success" role="status">
+              <p className="font-semibold">Backup locale isolato</p>
+              <p className="mt-1">
+                Abbiamo separato una selezione creata prima che questo browser
+                potesse stabilirne il proprietario. Ripristinala solo se riconosci
+                questo dispositivo e vuoi aggiungerla allo spazio corrente.
+              </p>
+              <button
+                type="button"
+                className="v-auth-btn-primary mt-3"
+                disabled={account.isRestoringQuarantinedWorkspace || account.isAttaching}
+                onClick={() => void account.restoreQuarantinedWorkspace()}
+              >
+                <RotateCcw size={16} aria-hidden="true" />
+                {account.isRestoringQuarantinedWorkspace
+                  ? "Ripristino in corso..."
+                  : "Ripristina selezione locale"}
+              </button>
+            </div>
+          ) : null}
 
           {/* Auth message */}
           {account.authMessage && (

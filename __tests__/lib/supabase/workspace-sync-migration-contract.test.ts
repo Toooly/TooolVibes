@@ -58,6 +58,56 @@ describe("DATA-206 workspace sync forward-fix migration", () => {
     expect(cleanup).toContain("is distinct from normalized_compare.slugs");
   });
 
+  it("quarantines and deterministically repairs legacy capacity overflow before strict validation", () => {
+    const quarantineIndex = sql.indexOf(
+      "create table if not exists public.viewer_workspace_state_quarantine",
+    );
+    const backupIndex = sql.indexOf(
+      "insert into public.viewer_workspace_state_quarantine",
+    );
+    const repairIndex = sql.indexOf("with capacity_repair as (");
+    const validatorIndex = sql.indexOf(
+      "create or replace function public.workspace_state_v1_is_valid(input jsonb)",
+    );
+    const repair = sql.slice(repairIndex, validatorIndex);
+
+    expect(quarantineIndex).toBeGreaterThan(-1);
+    expect(backupIndex).toBeGreaterThan(quarantineIndex);
+    expect(repairIndex).toBeGreaterThan(backupIndex);
+    expect(repairIndex).toBeLessThan(validatorIndex);
+    expect(sql.slice(backupIndex, repairIndex)).toContain(
+      "'workspace-state-v1-capacity-overflow'",
+    );
+    expect(sql.slice(backupIndex, repairIndex)).toContain(
+      "on conflict (viewer_id, source_revision, reason) do nothing",
+    );
+    expect(repair.match(/limit 500/g)).toHaveLength(3);
+    expect(repair).toContain("order by item.ordinality limit 500");
+    expect(repair).toContain(
+      "greatest( coalesce(item.value->>'updatedat', ''), coalesce(item.value->'decision'->>'updatedat', '') ) desc, item.key limit 500",
+    );
+    expect(repair).toContain("'{saved,slugs}'");
+    expect(repair).toContain("'{stack,slugs}'");
+    expect(repair).toContain("'{toolstates}'");
+    expect(repair).toContain("revision = workspace.revision + 1");
+    expect(repair).toContain("last_operation_id = null");
+  });
+
+  it("keeps overflow quarantine service-only", () => {
+    expect(sql).toContain(
+      "alter table public.viewer_workspace_state_quarantine enable row level security",
+    );
+    expect(sql).toContain(
+      "create policy \"service role can manage workspace state quarantine\" on public.viewer_workspace_state_quarantine for all to service_role using (true) with check (true)",
+    );
+    expect(sql).toContain(
+      "revoke all privileges on table public.viewer_workspace_state_quarantine from public, anon, authenticated",
+    );
+    expect(sql).toContain(
+      "grant all privileges on table public.viewer_workspace_state_quarantine to service_role",
+    );
+  });
+
   it("makes the validator fail closed and requires the complete strict root and list shape", () => {
     const validatorStart = sql.indexOf(
       "create or replace function public.workspace_state_v1_is_valid(input jsonb)",

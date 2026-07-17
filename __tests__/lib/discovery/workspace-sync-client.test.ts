@@ -31,6 +31,16 @@ function payload(
   };
 }
 
+function aboveRemoteCapacity() {
+  return {
+    ...createEmptyWorkspaceState(),
+    saved: {
+      slugs: Array.from({ length: 501 }, (_, index) => `tool-${index}`),
+      updatedAt: T1,
+    },
+  };
+}
+
 describe("workspace sync client contract", () => {
   it("rejects malformed state and inconsistent metadata", () => {
     expect(parseWorkspacePersistencePayload(null)).toBeNull();
@@ -42,6 +52,21 @@ describe("workspace sync client contract", () => {
       conflict_retries: -1,
     }))).toBeNull();
     expect(parseWorkspacePersistencePayload(payload())).not.toBeNull();
+  });
+
+  it("keeps an oversized local 422 payload parsable without accepting it as remote", () => {
+    const state = aboveRemoteCapacity();
+    const local = parseWorkspacePersistencePayload(payload(state, {
+      mode: "local",
+      remote_available: true,
+      error: "workspace-capacity-exceeded",
+      revision: null,
+      recovery_required: true,
+    }));
+
+    expect(local?.data).toEqual(state);
+    expect(local?.meta.error).toBe("workspace-capacity-exceeded");
+    expect(parseWorkspacePersistencePayload(payload(state))).toBeNull();
   });
 
   it("merges a conflict and retries with one stable operation id", async () => {

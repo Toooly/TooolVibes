@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 
 import {
   getActiveWorkspaceOwner,
+  isGuestWorkspaceStorageKey,
   workspaceStorageKeyForOwner,
 } from "@/lib/discovery/workspace-owner-storage";
 import {
@@ -42,8 +43,11 @@ function emitChange() {
 }
 
 export function handleWorkspaceStorageEvent(event: StorageEvent) {
-  const activeKey = workspaceStorageKeyForOwner(getActiveWorkspaceOwner());
-  if (event.key === activeKey) {
+  const activeOwner = getActiveWorkspaceOwner();
+  const activeWorkspaceChanged = activeOwner.kind === "guest"
+    ? isGuestWorkspaceStorageKey(event.key)
+    : event.key === workspaceStorageKeyForOwner(activeOwner);
+  if (activeWorkspaceChanged) {
     try {
       // A StorageEvent payload can already be stale when it is delivered.
       // Treat it only as an invalidation signal and reread the current durable

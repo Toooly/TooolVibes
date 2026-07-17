@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import { workspaceSyncStateV1Schema } from "@/lib/discovery/schema";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
-  mergeGuestWorkspaceContribution,
   synchronizeWorkspace,
   type WorkspaceCompareAndSwapResult,
   type WorkspaceRemoteSnapshot,
@@ -264,17 +263,17 @@ export async function attachCanonicalWorkspace(
     const current = await viewerFromCookie();
     let viewer: ViewerProfileRow;
     const input = localState;
-    let guestContribution = guestState;
-    let consumedGuestId: string | null = null;
+    const guestContribution = guestState;
     if (account) {
       viewer = account;
       if (current?.kind === "guest" && current.id !== account.id) {
         // The client sends its explicitly reserved guest contribution. Do not
         // copy a cookie guest row into an already-existing account here: that
-        // read-then-delete sequence lets two accounts consume the same remote
-        // guest snapshot concurrently. The conditional delete below only
-        // retires an unclaimed legacy guest after the account sync succeeds.
-        consumedGuestId = current.id;
+        // read-then-merge sequence lets two accounts consume the same remote
+        // guest snapshot concurrently. Keep the legacy guest row untouched as
+        // well: deleting it before an atomic migration exists would destroy
+        // remote-only state that an empty or stale client contribution did not
+        // carry into the account.
       }
     } else if (current?.kind === "guest") {
       viewer = await assignViewer(current.id, userId) ?? await createAccount(userId);
@@ -290,10 +289,6 @@ export async function attachCanonicalWorkspace(
       guestContribution,
     );
     await setViewerCookie(viewer.access_token);
-    if (consumedGuestId) {
-      await createAdminSupabaseClient().from("viewer_profiles")
-        .delete().eq("id", consumedGuestId).eq("kind", "guest");
-    }
     return {
       remoteAvailable: true as const,
       viewerKind: "account" as const,

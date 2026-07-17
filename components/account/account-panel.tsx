@@ -247,6 +247,8 @@ export function AccountPanel() {
           : "Sessione locale";
   const continuityCopy = account.isAttaching
     ? "Stiamo collegando salvati, confronto e note all'account corrente senza perdere il lavoro già fatto."
+    : account.workspaceAttachPending
+      ? "La selezione resta disponibile in questo browser. La sincronizzazione online è in attesa; i dati locali non vengono spostati o cancellati."
     : account.status === "authenticated"
       ? "La selezione è agganciata all'account e resta pronta quando torni da un altro browser o da una nuova sessione."
       : account.authEnabled
@@ -255,6 +257,7 @@ export function AccountPanel() {
   const authMessageTone =
     account.authMessage?.includes("non disponibile") ||
     account.authMessage?.includes("pausa") ||
+    account.authMessage?.includes("supera il limite") ||
     account.authMessage?.includes("errore")
       ? {
           borderColor: "rgba(161,105,47,0.18)",
@@ -296,7 +299,11 @@ export function AccountPanel() {
         <div className="flex flex-wrap items-center gap-2">
           <span className="account-status-badge">Account</span>
           <span className="account-status-badge">
-            {account.isAttaching ? "Collegamento in corso" : accountStateLabel}
+            {account.isAttaching
+              ? "Collegamento in corso"
+              : account.workspaceAttachPending
+                ? "Sync in attesa"
+                : accountStateLabel}
           </span>
         </div>
         <h1 className="account-title mt-5 max-w-[22ch]">
@@ -491,6 +498,8 @@ export function AccountPanel() {
                 <p className="account-stat-value mt-3">
                   {account.isAttaching
                     ? "Collegamento in corso"
+                    : account.workspaceAttachPending
+                      ? "Locale, sync in attesa"
                     : account.status === "authenticated"
                       ? "Account agganciato"
                       : "Sessione pronta da collegare"}
@@ -640,6 +649,31 @@ export function AccountPanel() {
               </p>
             </form>
           )}
+
+          {account.hasQuarantinedWorkspace ? (
+            <div className="account-section-panel p-5 sm:p-6" role="status">
+              <div className="flex items-center gap-2">
+                <Shield size={16} className="text-[var(--accent-purple)]" aria-hidden="true" />
+                <p className="account-label">Backup locale isolato</p>
+              </div>
+              <p className="account-subtitle mt-3">
+                Questa selezione è precedente al sistema di proprietà del browser.
+                Non è stata assegnata automaticamente al tuo account. Ripristinala
+                solo se riconosci questo dispositivo e il suo contenuto.
+              </p>
+              <button
+                type="button"
+                className="account-btn-secondary mt-4 disabled:cursor-default disabled:opacity-60"
+                disabled={account.isRestoringQuarantinedWorkspace || account.isAttaching}
+                onClick={() => void account.restoreQuarantinedWorkspace()}
+              >
+                <RotateCcw size={16} aria-hidden="true" />
+                {account.isRestoringQuarantinedWorkspace
+                  ? "Ripristino in corso..."
+                  : "Ripristina nello spazio corrente"}
+              </button>
+            </div>
+          ) : null}
 
           {account.authMessage ? (
             <div

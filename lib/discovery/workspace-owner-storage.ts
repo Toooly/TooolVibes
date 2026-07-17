@@ -18,14 +18,32 @@ export type WorkspaceOwner =
 
 type StorageLike = Pick<Storage, "getItem" | "setItem">;
 
-type GuestWorkspaceClaim = {
-  formatVersion: 1;
+export type GuestWorkspaceClaim = {
+  formatVersion: 2;
   status: "pending" | "complete";
   claimedBy: string;
   claimedAt: string;
+  sourceGeneration: number;
   guestRaw: string;
-  maskedRaw: string;
+  accountBaseRaw: string;
+  stagedRaw: string;
   completedAt?: string;
+  released?: boolean;
+};
+
+type GuestWorkspaceClaimLedger = {
+  formatVersion: 2;
+  activeGeneration: number;
+  claims: Record<string, GuestWorkspaceClaim>;
+};
+
+type LegacyGuestWorkspaceClaim = {
+  formatVersion?: unknown;
+  status?: unknown;
+  claimedBy?: unknown;
+  claimedAt?: unknown;
+  guestRaw?: unknown;
+  completedAt?: unknown;
 };
 
 type GuestOwnerMarker = {
@@ -47,6 +65,10 @@ function accountSuffix(userId: string) {
   return encodeURIComponent(userId.trim().slice(0, 160));
 }
 
+function validUserId(value: unknown): value is string {
+  return typeof value === "string" && value.length > 0 && value.length <= 160;
+}
+
 function readJson(storage: StorageLike, key: string): unknown {
   try {
     const raw = storage.getItem(key);
@@ -66,6 +88,91 @@ function writeVerified(storage: StorageLike, key: string, value: unknown) {
   }
 }
 
+function validClaim(value: unknown): value is GuestWorkspaceClaim {
+  if (!value || typeof value !== "object") return false;
+  const claim = value as Partial<GuestWorkspaceClaim>;
+  return claim.formatVersion === 2 &&
+    (claim.status === "pending" || claim.status === "complete") &&
+    validUserId(claim.claimedBy) &&
+    typeof claim.claimedAt === "string" &&
+    Number.isSafeInteger(claim.sourceGeneration) &&
+    (claim.sourceGeneration ?? -1) >= 0 &&
+    typeof claim.guestRaw === "string" &&
+    typeof claim.accountBaseRaw === "string" &&
+    typeof claim.stagedRaw === "string";
+}
+
+function emptyClaimLedger(): GuestWorkspaceClaimLedger {
+  return { formatVersion: 2, activeGeneration: 0, claims: {} };
+}
+
+function readGuestWorkspaceClaimLedger(
+  storage: StorageLike,
+): GuestWorkspaceClaimLedger {
+  const value = readJson(storage, WORKSPACE_GUEST_CLAIM_KEY);
+  if (value && typeof value === "object") {
+    const ledger = value as Partial<GuestWorkspaceClaimLedger>;
+    if (ledger.formatVersion === 2 &&
+        Number.isSafeInteger(ledger.activeGeneration) &&
+        (ledger.activeGeneration ?? -1) >= 0 &&
+        ledger.claims && typeof ledger.claims === "object") {
+      const claims = Object.fromEntries(
+        Object.entries(ledger.claims).filter(
+          ([userId, claim]) => validUserId(userId) && validClaim(claim) &&
+            claim.claimedBy === userId,
+        ),
+      );
+      return {
+        formatVersion: 2,
+        activeGeneration: ledger.activeGeneration as number,
+        claims,
+      };
+    }
+
+    // Compatibility with the short-lived format-v1 claim. Its first overlay
+    // is generation 1; account/staged snapshots were not recorded yet.
+    const legacy = value as LegacyGuestWorkspaceClaim;
+    if (legacy.formatVersion === 1 &&
+        (legacy.status === "pending" || legacy.status === "complete") &&
+        validUserId(legacy.claimedBy) &&
+        typeof legacy.claimedAt === "string" &&
+        typeof legacy.guestRaw === "string") {
+      const claim: GuestWorkspaceClaim = {
+        formatVersion: 2,
+        status: legacy.status,
+        claimedBy: legacy.claimedBy,
+        claimedAt: legacy.claimedAt,
+        sourceGeneration: 0,
+        guestRaw: legacy.guestRaw,
+        accountBaseRaw: "",
+        stagedRaw: "",
+        completedAt: typeof legacy.completedAt === "string"
+          ? legacy.completedAt
+          : undefined,
+      };
+      return {
+        formatVersion: 2,
+        activeGeneration: 1,
+        claims: { [claim.claimedBy]: claim },
+      };
+    }
+  }
+  return emptyClaimLedger();
+}
+
+export function guestWorkspaceGenerationKey(generation: number) {
+  if (generation <= 0) return WORKSPACE_STORAGE_KEY;
+  if (generation === 1) return WORKSPACE_GUEST_OVERLAY_KEY;
+  return `${WORKSPACE_GUEST_OVERLAY_KEY}:${generation}`;
+}
+
+export function isGuestWorkspaceStorageKey(key: string | null) {
+  return key === WORKSPACE_STORAGE_KEY ||
+    key === WORKSPACE_GUEST_CLAIM_KEY ||
+    key === WORKSPACE_GUEST_OVERLAY_KEY ||
+    Boolean(key?.startsWith(`${WORKSPACE_GUEST_OVERLAY_KEY}:`));
+}
+
 export function hasGuestWorkspaceOwnerMarker(storage: StorageLike) {
   const value = readJson(storage, WORKSPACE_OWNER_MARKER_KEY) as
     | Partial<GuestOwnerMarker>
@@ -80,27 +187,11 @@ export function markGuestWorkspaceOwner(storage: StorageLike) {
   } satisfies GuestOwnerMarker);
 }
 
-function readGuestWorkspaceClaimEnvelope(
+export function readGuestWorkspaceClaim(
   storage: StorageLike,
-): GuestWorkspaceClaim | null {
-  const value = readJson(storage, WORKSPACE_GUEST_CLAIM_KEY) as
-    | Partial<GuestWorkspaceClaim>
-    | null;
-  return value?.formatVersion === 1 &&
-      (value.status === "pending" || value.status === "complete") &&
-      typeof value.claimedBy === "string" && value.claimedBy.length > 0 &&
-      value.claimedBy.length <= 160 && typeof value.claimedAt === "string" &&
-      typeof value.guestRaw === "string" &&
-      (value.maskedRaw === undefined || typeof value.maskedRaw === "string")
-    ? {
-        ...value,
-        maskedRaw: value.maskedRaw ?? value.guestRaw,
-      } as GuestWorkspaceClaim
-    : null;
-}
-
-export function readGuestWorkspaceClaim(storage: StorageLike) {
-  const claim = readGuestWorkspaceClaimEnvelope(storage);
+  userId: string,
+) {
+  const claim = readGuestWorkspaceClaimLedger(storage).claims[userId];
   return claim?.status === "pending" ? claim : null;
 }
 
@@ -108,50 +199,72 @@ export function putGuestWorkspaceClaim(
   storage: StorageLike,
   userId: string,
   guestRaw: string,
-  maskedRaw = guestRaw,
+  options: { accountBaseRaw: string; stagedRaw: string },
 ) {
-  const existing = readGuestWorkspaceClaim(storage);
-  if (existing) return existing.claimedBy === userId ? existing : null;
+  const ledger = readGuestWorkspaceClaimLedger(storage);
+  const existing = ledger.claims[userId];
+  if (existing?.status === "pending") return existing;
+
+  const sourceGeneration = ledger.activeGeneration;
+  const sourceKey = guestWorkspaceGenerationKey(sourceGeneration);
+  try {
+    if (storage.getItem(sourceKey) !== guestRaw) return null;
+  } catch {
+    return null;
+  }
+
   const claim: GuestWorkspaceClaim = {
-    formatVersion: 1,
+    formatVersion: 2,
     status: "pending",
     claimedBy: userId,
     claimedAt: new Date().toISOString(),
+    sourceGeneration,
     guestRaw,
-    maskedRaw,
+    accountBaseRaw: options.accountBaseRaw,
+    stagedRaw: options.stagedRaw,
   };
-  return writeVerified(storage, WORKSPACE_GUEST_CLAIM_KEY, claim)
-    ? claim
+  const next: GuestWorkspaceClaimLedger = {
+    formatVersion: 2,
+    activeGeneration: sourceGeneration + 1,
+    claims: { ...ledger.claims, [userId]: claim },
+  };
+  return writeVerified(storage, WORKSPACE_GUEST_CLAIM_KEY, next)
+    ? readGuestWorkspaceClaim(storage, userId)
     : null;
+}
+
+function settleGuestWorkspaceClaim(
+  storage: StorageLike,
+  userId: string,
+  released: boolean,
+) {
+  const ledger = readGuestWorkspaceClaimLedger(storage);
+  const claim = ledger.claims[userId];
+  if (!claim || claim.status !== "pending") return true;
+  const complete: GuestWorkspaceClaim = {
+    ...claim,
+    status: "complete",
+    completedAt: new Date().toISOString(),
+    released,
+  };
+  return writeVerified(storage, WORKSPACE_GUEST_CLAIM_KEY, {
+    ...ledger,
+    claims: { ...ledger.claims, [userId]: complete },
+  } satisfies GuestWorkspaceClaimLedger);
 }
 
 export function completeGuestWorkspaceClaim(
   storage: StorageLike,
   userId: string,
 ) {
-  const claim = readGuestWorkspaceClaim(storage);
-  if (!claim || claim.claimedBy !== userId) return !claim;
-  return writeVerified(storage, WORKSPACE_GUEST_CLAIM_KEY, {
-    ...claim,
-    status: "complete",
-    completedAt: new Date().toISOString(),
-  } satisfies GuestWorkspaceClaim);
+  return settleGuestWorkspaceClaim(storage, userId, false);
 }
 
 export function releaseGuestWorkspaceClaim(
   storage: StorageLike,
   userId: string,
 ) {
-  const claim = readGuestWorkspaceClaim(storage);
-  if (!claim || claim.claimedBy !== userId) return !claim;
-  return writeVerified(storage, WORKSPACE_GUEST_CLAIM_KEY, {
-    ...claim,
-    status: "complete",
-    // A released claim must not hide the guest snapshot restored on logout.
-    // Canonical workspace JSON can never equal this sentinel.
-    maskedRaw: "__tooolvibes_guest_claim_released__",
-    completedAt: new Date().toISOString(),
-  } satisfies GuestWorkspaceClaim);
+  return settleGuestWorkspaceClaim(storage, userId, true);
 }
 
 export function workspaceStorageKeyForOwner(owner: WorkspaceOwner) {
@@ -177,15 +290,16 @@ export function scopeWorkspaceStorage(
     return {
       getItem(key) {
         const markerPresent = hasGuestWorkspaceOwnerMarker(storage);
-        const claim = readGuestWorkspaceClaimEnvelope(storage);
+        const ledger = readGuestWorkspaceClaimLedger(storage);
         if (!markerPresent &&
             (key === WORKSPACE_STORAGE_KEY || legacyKeys.has(key))) {
           return null;
         }
-        if (claim && legacyKeys.has(key)) return null;
-        if (key === WORKSPACE_STORAGE_KEY && claim) {
-          const overlayRaw = storage.getItem(WORKSPACE_GUEST_OVERLAY_KEY);
-          return claim.maskedRaw === overlayRaw ? null : overlayRaw;
+        if (ledger.activeGeneration > 0 && legacyKeys.has(key)) return null;
+        if (key === WORKSPACE_STORAGE_KEY) {
+          return storage.getItem(
+            guestWorkspaceGenerationKey(ledger.activeGeneration),
+          );
         }
         return storage.getItem(key);
       },
@@ -197,10 +311,10 @@ export function scopeWorkspaceStorage(
             "InvalidStateError",
           );
         }
-        const claim = readGuestWorkspaceClaimEnvelope(storage);
+        const ledger = readGuestWorkspaceClaimLedger(storage);
         storage.setItem(
-          key === WORKSPACE_STORAGE_KEY && claim
-            ? WORKSPACE_GUEST_OVERLAY_KEY
+          key === WORKSPACE_STORAGE_KEY
+            ? guestWorkspaceGenerationKey(ledger.activeGeneration)
             : key,
           value,
         );

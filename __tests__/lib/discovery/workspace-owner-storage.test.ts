@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import {
+  guestWorkspaceGenerationKey,
+  markGuestWorkspaceOwner,
+  putGuestWorkspaceClaim,
+  readGuestWorkspaceClaim,
   scopeWorkspaceStorage,
   setActiveWorkspaceOwner,
   workspaceStorageKeyForOwner,
@@ -89,6 +93,58 @@ describe("owner-scoped workspace storage", () => {
     expect(account.state).toEqual(createEmptyWorkspaceState());
     expect(storage.getItem(LEGACY_TOOL_WORKSPACE_STORAGE_KEY)).toContain(
       "guest-legacy",
+    );
+  });
+
+  it("advances guest generations so pending claims for different accounts coexist", () => {
+    const storage = new MemoryStorage();
+    const guestStorage = scopeWorkspaceStorage(storage, { kind: "guest" });
+    expect(markGuestWorkspaceOwner(storage)).toBe(true);
+    const guestA = saved("guest-a");
+    persistWorkspaceStateToStorage(guestStorage, guestA, { now: T0 });
+
+    const claimA = putGuestWorkspaceClaim(
+      storage,
+      "account-a",
+      JSON.stringify(guestA),
+      {
+        accountBaseRaw: JSON.stringify(createEmptyWorkspaceState()),
+        stagedRaw: JSON.stringify(guestA),
+      },
+    );
+
+    expect(claimA?.sourceGeneration).toBe(0);
+    expect(loadWorkspaceStateFromStorage(guestStorage).state).toEqual(
+      createEmptyWorkspaceState(),
+    );
+
+    const guestB = saved("guest-b");
+    persistWorkspaceStateToStorage(guestStorage, guestB, { now: T0 });
+    const claimB = putGuestWorkspaceClaim(
+      storage,
+      "account-b",
+      JSON.stringify(guestB),
+      {
+        accountBaseRaw: JSON.stringify(createEmptyWorkspaceState()),
+        stagedRaw: JSON.stringify(guestB),
+      },
+    );
+
+    expect(claimB?.sourceGeneration).toBe(1);
+    expect(readGuestWorkspaceClaim(storage, "account-a")?.guestRaw).toBe(
+      JSON.stringify(guestA),
+    );
+    expect(readGuestWorkspaceClaim(storage, "account-b")?.guestRaw).toBe(
+      JSON.stringify(guestB),
+    );
+    expect(storage.getItem(guestWorkspaceGenerationKey(0))).toBe(
+      JSON.stringify(guestA),
+    );
+    expect(storage.getItem(guestWorkspaceGenerationKey(1))).toBe(
+      JSON.stringify(guestB),
+    );
+    expect(loadWorkspaceStateFromStorage(guestStorage).state).toEqual(
+      createEmptyWorkspaceState(),
     );
   });
 });

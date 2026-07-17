@@ -1,12 +1,15 @@
 import "server-only";
 
-import { workspaceSyncMutationSchema } from "@/lib/discovery/schema";
+import { workspaceMutationSchema } from "@/lib/discovery/schema";
 import {
   consumeRateLimit,
   getRequestAddress,
 } from "@/lib/security/distributed-state";
 
-export const MAX_WORKSPACE_MUTATION_BYTES = 256 * 1024;
+// Attach can carry two lossless 500-item states. UTF-8 notes may use up to
+// three bytes per UTF-16 code unit, so the transport ceiling must cover the
+// schema maximum rather than only an ASCII fixture.
+export const MAX_WORKSPACE_MUTATION_BYTES = 8 * 1024 * 1024;
 
 type WorkspaceMutationOperation = "attach" | "load" | "release" | "save";
 
@@ -72,7 +75,7 @@ export async function parseWorkspaceMutationRequest(request: Request) {
   } catch {
     value = null;
   }
-  const parsed = workspaceSyncMutationSchema.safeParse(value);
+  const parsed = workspaceMutationSchema.safeParse(value);
   return parsed.success
     ? { status: "valid" as const, data: parsed.data }
     : { status: "invalid" as const, issues: parsed.error.issues };

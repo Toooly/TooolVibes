@@ -545,6 +545,25 @@ export function retainVolatileToolWorkspaceOwner(
   return state;
 }
 
+/**
+ * Switch the rendered owner without reading or mutating that owner's durable
+ * workspace. Auth transitions use this while the guest claim lock is pending,
+ * so account data disappears immediately without racing another browser tab.
+ */
+export function activateVolatileToolWorkspaceOwnerWithoutStorage(
+  owner: WorkspaceOwner,
+  input: unknown,
+) {
+  const state = normalizeWorkspaceState(input);
+  setActiveWorkspaceOwner(owner);
+  volatileWorkspaceStates.set(workspaceKey(owner), {
+    base: createEmptyWorkspaceState(),
+    desired: state,
+  });
+  renderWorkspaceStateWithoutPersist(state);
+  return state;
+}
+
 export function activateToolWorkspaceOwner(
   owner: WorkspaceOwner,
   input?: unknown,

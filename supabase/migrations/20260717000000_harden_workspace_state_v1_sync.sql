@@ -2,6 +2,170 @@
 -- WorkspaceStateV1 validator fail closed, and reassert the service-only RPC
 -- boundary. Historical migrations intentionally remain unchanged.
 
+-- A strict remote capacity is intentionally smaller than the lossless local
+-- model. Preserve every pre-existing oversized snapshot before deterministically
+-- reducing the live copy, so the constraint upgrade can never make the whole
+-- migration fail or silently destroy the overflow.
+create table if not exists public.viewer_workspace_state_quarantine (
+  id uuid primary key default gen_random_uuid(),
+  viewer_id uuid not null,
+  source_revision bigint not null,
+  reason text not null,
+  workspace_state jsonb not null,
+  quarantined_at timestamptz not null default timezone('utc', now()),
+  unique (viewer_id, source_revision, reason)
+);
+
+alter table public.viewer_workspace_state_quarantine enable row level security;
+drop policy if exists "Service role can manage workspace state quarantine"
+  on public.viewer_workspace_state_quarantine;
+create policy "Service role can manage workspace state quarantine"
+on public.viewer_workspace_state_quarantine
+for all
+to service_role
+using (true)
+with check (true);
+revoke all privileges on table public.viewer_workspace_state_quarantine
+  from public, anon, authenticated;
+grant all privileges on table public.viewer_workspace_state_quarantine
+  to service_role;
+
+insert into public.viewer_workspace_state_quarantine (
+  viewer_id,
+  source_revision,
+  reason,
+  workspace_state
+)
+select
+  workspace.viewer_id,
+  workspace.revision,
+  'workspace-state-v1-capacity-overflow',
+  workspace.workspace_state
+from public.viewer_workspaces as workspace
+where
+  case
+    when jsonb_typeof(workspace.workspace_state->'saved'->'slugs') = 'array'
+    then jsonb_array_length(workspace.workspace_state->'saved'->'slugs')
+    else 0
+  end > 500
+  or case
+    when jsonb_typeof(workspace.workspace_state->'stack'->'slugs') = 'array'
+    then jsonb_array_length(workspace.workspace_state->'stack'->'slugs')
+    else 0
+  end > 500
+  or case
+    when jsonb_typeof(workspace.workspace_state->'toolStates') = 'object'
+    then (
+      select count(*)
+      from jsonb_object_keys(workspace.workspace_state->'toolStates')
+    )
+    else 0
+  end > 500
+on conflict (viewer_id, source_revision, reason) do nothing;
+
+with capacity_repair as (
+  select
+    workspace.viewer_id,
+    case
+      when jsonb_typeof(workspace.workspace_state->'saved'->'slugs') = 'array'
+        and jsonb_array_length(workspace.workspace_state->'saved'->'slugs') > 500
+      then coalesce(
+        (
+          select jsonb_agg(retained.value order by retained.ordinality)
+          from (
+            select item.value, item.ordinality
+            from jsonb_array_elements(
+              workspace.workspace_state->'saved'->'slugs'
+            ) with ordinality as item(value, ordinality)
+            order by item.ordinality
+            limit 500
+          ) as retained
+        ),
+        '[]'::jsonb
+      )
+      else workspace.workspace_state->'saved'->'slugs'
+    end as saved_slugs,
+    case
+      when jsonb_typeof(workspace.workspace_state->'stack'->'slugs') = 'array'
+        and jsonb_array_length(workspace.workspace_state->'stack'->'slugs') > 500
+      then coalesce(
+        (
+          select jsonb_agg(retained.value order by retained.ordinality)
+          from (
+            select item.value, item.ordinality
+            from jsonb_array_elements(
+              workspace.workspace_state->'stack'->'slugs'
+            ) with ordinality as item(value, ordinality)
+            order by item.ordinality
+            limit 500
+          ) as retained
+        ),
+        '[]'::jsonb
+      )
+      else workspace.workspace_state->'stack'->'slugs'
+    end as stack_slugs,
+    case
+      when jsonb_typeof(workspace.workspace_state->'toolStates') = 'object'
+        and (
+          select count(*)
+          from jsonb_object_keys(workspace.workspace_state->'toolStates')
+        ) > 500
+      then coalesce(
+        (
+          select jsonb_object_agg(retained.key, retained.value)
+          from (
+            select item.key, item.value
+            from jsonb_each(
+              workspace.workspace_state->'toolStates'
+            ) as item(key, value)
+            order by
+              greatest(
+                coalesce(item.value->>'updatedAt', ''),
+                coalesce(item.value->'decision'->>'updatedAt', '')
+              ) desc,
+              item.key
+            limit 500
+          ) as retained
+        ),
+        '{}'::jsonb
+      )
+      else workspace.workspace_state->'toolStates'
+    end as tool_states
+  from public.viewer_workspaces as workspace
+  where exists (
+    select 1
+    from public.viewer_workspace_state_quarantine as quarantine
+    where quarantine.viewer_id = workspace.viewer_id
+      and quarantine.source_revision = workspace.revision
+      and quarantine.reason = 'workspace-state-v1-capacity-overflow'
+  )
+)
+update public.viewer_workspaces as workspace
+set
+  workspace_state = jsonb_set(
+    jsonb_set(
+      jsonb_set(
+        workspace.workspace_state,
+        '{saved,slugs}',
+        capacity_repair.saved_slugs,
+        false
+      ),
+      '{stack,slugs}',
+      capacity_repair.stack_slugs,
+      false
+    ),
+    '{toolStates}',
+    capacity_repair.tool_states,
+    false
+  ),
+  revision = workspace.revision + 1,
+  last_operation_id = null
+from capacity_repair
+where capacity_repair.viewer_id = workspace.viewer_id;
+
+comment on table public.viewer_workspace_state_quarantine is
+  'Service-only lossless backup of canonical workspace snapshots repaired during strict schema upgrades.';
+
 -- Run this repair while the validator from DATA-206 is still active. Replacing
 -- the function below also changes the semantics of the existing CHECK, so
 -- invalid legacy compare strings must be removed before that replacement.

@@ -136,10 +136,15 @@ export const workspaceSyncStateV1Schema = workspaceStateV1Schema.superRefine(
   },
 );
 
-export const workspaceSyncMutationSchema = z
+/**
+ * The HTTP boundary validates the complete local shape without applying the
+ * lower remote cardinality limits. Remote persistence owns that capacity
+ * decision so it can return an explicit, lossless 422 response.
+ */
+export const workspaceMutationSchema = z
   .object({
-    state: workspaceSyncStateV1Schema,
-    guest_state: workspaceSyncStateV1Schema.optional(),
+    state: workspaceStateV1Schema,
+    guest_state: workspaceStateV1Schema.optional(),
     base_revision: z.string().min(1).max(160).nullable(),
     operation_id: z.string().uuid(),
   })

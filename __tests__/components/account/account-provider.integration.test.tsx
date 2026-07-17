@@ -1,12 +1,16 @@
 // @vitest-environment jsdom
 
 import { act } from "react";
-import { cleanup, render, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import type { Session } from "@supabase/supabase-js";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const workspaceRuntime = vi.hoisted(() => ({
   requestWorkspaceMutation: vi.fn(),
+}));
+
+const workspaceLockRuntime = vi.hoisted(() => ({
+  request: vi.fn(),
 }));
 
 const authRuntime = vi.hoisted(() => ({
@@ -50,6 +54,7 @@ import {
   AccountProvider,
   useAccount,
 } from "@/components/account/account-provider";
+import { AuthPage } from "@/components/account/auth-page";
 import {
   markGuestWorkspaceOwner,
   scopeWorkspaceStorage,
@@ -57,6 +62,9 @@ import {
 import {
   persistWorkspaceStateToStorage,
 } from "@/lib/discovery/workspace-storage";
+import {
+  WORKSPACE_STORAGE_KEY,
+} from "@/lib/discovery/workspace-storage-keys";
 import {
   createEmptyWorkspaceState,
   reduceWorkspaceState,
@@ -147,6 +155,15 @@ function renderProvider() {
   );
 }
 
+function renderRecoveryAuthPage() {
+  return render(
+    <AccountProvider>
+      <AccountProbe />
+      <AuthPage />
+    </AccountProvider>,
+  );
+}
+
 beforeEach(() => {
   localStorage.clear();
   expect(markGuestWorkspaceOwner(localStorage)).toBe(true);
@@ -156,15 +173,95 @@ beforeEach(() => {
   authRuntime.getSession.mockReset();
   authRuntime.signOut.mockReset();
   workspaceRuntime.requestWorkspaceMutation.mockReset();
+  workspaceLockRuntime.request.mockReset();
+  workspaceLockRuntime.request.mockImplementation(
+    async (
+      _name: string,
+      _options: { mode: "exclusive" },
+      callback: () => unknown | Promise<unknown>,
+    ) => callback(),
+  );
+  Object.defineProperty(window.navigator, "locks", {
+    configurable: true,
+    value: { request: workspaceLockRuntime.request },
+  });
 });
 
 afterEach(() => {
   cleanup();
   activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
   localStorage.clear();
+  Reflect.deleteProperty(window.navigator, "locks");
 });
 
 describe("AccountProvider workspace orchestration", () => {
+  it("requires the visible guest recovery control before restoring legacy data", async () => {
+    localStorage.clear();
+    localStorage.setItem(
+      WORKSPACE_STORAGE_KEY,
+      JSON.stringify(saved("legacy-visible-control")),
+    );
+    authRuntime.getSession.mockResolvedValue({ data: { session: null } });
+
+    renderRecoveryAuthPage();
+
+    const restoreButton = await screen.findByRole("button", {
+      name: "Ripristina selezione locale",
+    });
+    expect(accountValue?.status).toBe("guest");
+    expect(getCanonicalToolWorkspaceState()).toEqual(createEmptyWorkspaceState());
+
+    act(() => {
+      restoreButton.click();
+    });
+
+    await waitFor(() => {
+      expect(getCanonicalToolWorkspaceState().saved.slugs).toEqual([
+        "legacy-visible-control",
+      ]);
+      expect(accountValue?.hasQuarantinedWorkspace).toBe(false);
+    });
+  });
+
+  it("exposes an explicit recovery action without auto-claiming pre-marker data", async () => {
+    const currentSession = session();
+    localStorage.clear();
+    localStorage.setItem(
+      WORKSPACE_STORAGE_KEY,
+      JSON.stringify(saved("legacy-private-selection")),
+    );
+    authRuntime.getSession.mockResolvedValue({
+      data: { session: currentSession },
+    });
+    authRuntime.signOut.mockResolvedValue({ error: null });
+    workspaceRuntime.requestWorkspaceMutation.mockResolvedValue(
+      mutationResult(createEmptyWorkspaceState(), {
+        status: 202,
+        remoteAvailable: false,
+      }),
+    );
+
+    renderProvider();
+
+    await waitFor(() => {
+      expect(accountValue?.status).toBe("authenticated");
+      expect(accountValue?.isAttaching).toBe(false);
+      expect(accountValue?.hasQuarantinedWorkspace).toBe(true);
+    });
+    expect(getCanonicalToolWorkspaceState()).toEqual(createEmptyWorkspaceState());
+
+    let recovery: Awaited<ReturnType<NonNullable<typeof accountValue>["restoreQuarantinedWorkspace"]>> | undefined;
+    await act(async () => {
+      recovery = await accountValue?.restoreQuarantinedWorkspace();
+    });
+
+    expect(recovery?.ok).toBe(true);
+    expect(accountValue?.hasQuarantinedWorkspace).toBe(false);
+    expect(getCanonicalToolWorkspaceState().saved.slugs).toEqual([
+      "legacy-private-selection",
+    ]);
+  });
+
   it("keeps a mutation made during attach in the final account workspace", async () => {
     const currentSession = session();
     authRuntime.getSession.mockResolvedValue({
@@ -206,6 +303,62 @@ describe("AccountProvider workspace orchestration", () => {
     expect(getCanonicalToolWorkspaceState().saved.slugs).toEqual([]);
   });
 
+  it("reads the guest snapshot only after entering the claim lock", async () => {
+    const currentSession = session();
+    authRuntime.getSession.mockResolvedValue({
+      data: { session: currentSession },
+    });
+    authRuntime.signOut.mockResolvedValue({ error: null });
+    persistWorkspaceStateToStorage(localStorage, saved("before-lock"), {
+      now: T0,
+    });
+    const insideLock = saved("inside-lock");
+    workspaceLockRuntime.request.mockImplementationOnce(
+      async (
+        _name: string,
+        _options: { mode: "exclusive" },
+        callback: () => unknown | Promise<unknown>,
+      ) => {
+        persistWorkspaceStateToStorage(localStorage, insideLock, { now: T0 });
+        return callback();
+      },
+    );
+    workspaceRuntime.requestWorkspaceMutation.mockResolvedValue(
+      mutationResult(insideLock),
+    );
+
+    renderProvider();
+
+    await waitFor(() => {
+      expect(accountValue?.workspaceAttachPending).toBe(false);
+      expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(1);
+    });
+    const sentOptions = (
+      workspaceRuntime.requestWorkspaceMutation.mock.calls[0]?.[3]
+    ) as { guestState: WorkspaceStateV1 };
+    expect(sentOptions.guestState.saved.slugs).toEqual(["inside-lock"]);
+  });
+
+  it("fails closed when the browser cannot arbitrate a guest claim", async () => {
+    const currentSession = session();
+    Reflect.deleteProperty(window.navigator, "locks");
+    authRuntime.getSession.mockResolvedValue({ data: { session: currentSession } });
+    authRuntime.signOut.mockResolvedValue({ error: null });
+    persistWorkspaceStateToStorage(localStorage, saved("unclaimed-guest"), {
+      now: T0,
+    });
+
+    renderProvider();
+
+    await waitFor(() => {
+      expect(accountValue?.status).toBe("authenticated");
+      expect(accountValue?.isAttaching).toBe(false);
+      expect(accountValue?.workspaceAttachPending).toBe(true);
+    });
+    expect(workspaceRuntime.requestWorkspaceMutation).not.toHaveBeenCalled();
+    expect(getCanonicalToolWorkspaceState()).toEqual(createEmptyWorkspaceState());
+  });
+
   it("keeps the staged selection visible when canonical sync returns 202", async () => {
     const currentSession = session();
     authRuntime.getSession.mockResolvedValue({
@@ -232,6 +385,153 @@ describe("AccountProvider workspace orchestration", () => {
     expect(getCanonicalToolWorkspaceState().saved.slugs).toEqual([
       "guest-offline",
     ]);
+  });
+
+  it("retries a capacity-blocked attach after the workspace changes", async () => {
+    const currentSession = session();
+    const guestState = saved("guest-capacity");
+    authRuntime.getSession.mockResolvedValue({
+      data: { session: currentSession },
+    });
+    authRuntime.signOut.mockResolvedValue({ error: null });
+    persistWorkspaceStateToStorage(localStorage, guestState, { now: T0 });
+    workspaceRuntime.requestWorkspaceMutation
+      .mockResolvedValueOnce({
+        response: new Response(null, { status: 422 }),
+        payload: {
+          data: guestState,
+          meta: {
+            mode: "local",
+            remote_available: true,
+            viewer_kind: "account",
+            synced_at: null,
+            error: "workspace-capacity-exceeded",
+            revision: null,
+            conflict_retries: 0,
+            recovery_required: true,
+          },
+        },
+        sentState: guestState,
+        conflictRetries: 0,
+      })
+      .mockResolvedValueOnce(mutationResult(guestState));
+
+    renderProvider();
+
+    await waitFor(() => {
+      expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(1);
+      expect(accountValue?.workspaceAttachPending).toBe(true);
+    });
+
+    act(() => {
+      expect(useToolWorkspaceStore.getState().toggleSaved("capacity-reduced"))
+        .toBe(true);
+    });
+
+    await waitFor(() => {
+      expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(2);
+      expect(accountValue?.workspaceAttachPending).toBe(false);
+    }, { timeout: 2_000 });
+  });
+
+  it("does not self-trigger repeated retries from remote staging events", async () => {
+    const currentSession = session();
+    const guestState = saved("guest-still-over-capacity");
+    const capacityResult = {
+      response: new Response(null, { status: 422 }),
+      payload: {
+        data: guestState,
+        meta: {
+          mode: "local" as const,
+          remote_available: true,
+          viewer_kind: "account" as const,
+          synced_at: null,
+          error: "workspace-capacity-exceeded",
+          revision: null,
+          conflict_retries: 0,
+          recovery_required: true,
+        },
+      },
+      sentState: guestState,
+      conflictRetries: 0,
+    };
+    authRuntime.getSession.mockResolvedValue({ data: { session: currentSession } });
+    authRuntime.signOut.mockResolvedValue({ error: null });
+    persistWorkspaceStateToStorage(localStorage, guestState, { now: T0 });
+    workspaceRuntime.requestWorkspaceMutation.mockResolvedValue(capacityResult);
+
+    renderProvider();
+    await waitFor(() => {
+      expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(1);
+      expect(accountValue?.workspaceAttachPending).toBe(true);
+    });
+    act(() => {
+      useToolWorkspaceStore.getState().toggleSaved("one-user-change");
+    });
+    await waitFor(() => {
+      expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(2);
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 700));
+    });
+
+    expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(2);
+  });
+
+  it("consumes a workspace change queued during an in-flight attach", async () => {
+    const currentSession = session();
+    const guestState = saved("guest-queued-retry");
+    const capacity = {
+      response: new Response(null, { status: 422 }),
+      payload: {
+        data: guestState,
+        meta: {
+          mode: "local" as const,
+          remote_available: true,
+          viewer_kind: "account" as const,
+          synced_at: null,
+          error: "workspace-capacity-exceeded",
+          revision: null,
+          conflict_retries: 0,
+          recovery_required: true,
+        },
+      },
+      sentState: guestState,
+      conflictRetries: 0,
+    };
+    const inFlight = deferred<typeof capacity>();
+    authRuntime.getSession.mockResolvedValue({ data: { session: currentSession } });
+    authRuntime.signOut.mockResolvedValue({ error: null });
+    persistWorkspaceStateToStorage(localStorage, guestState, { now: T0 });
+    workspaceRuntime.requestWorkspaceMutation
+      .mockResolvedValueOnce(capacity)
+      .mockReturnValueOnce(inFlight.promise)
+      .mockResolvedValueOnce(mutationResult(guestState));
+
+    renderProvider();
+    await waitFor(() => {
+      expect(accountValue?.workspaceAttachPending).toBe(true);
+      expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(1);
+    });
+    act(() => {
+      useToolWorkspaceStore.getState().toggleSaved("start-retry");
+    });
+    await waitFor(() => {
+      expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(2);
+      expect(accountValue?.isAttaching).toBe(true);
+    });
+    act(() => {
+      useToolWorkspaceStore.getState().toggleSaved("queued-during-request");
+    });
+    await act(async () => {
+      inFlight.resolve(capacity);
+      await inFlight.promise;
+    });
+
+    await waitFor(() => {
+      expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(3);
+      expect(accountValue?.workspaceAttachPending).toBe(false);
+    });
   });
 
   it("retries a transient attach failure with bounded backoff", async () => {

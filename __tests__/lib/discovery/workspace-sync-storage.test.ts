@@ -21,6 +21,7 @@ import {
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 
 const T0 = "2026-07-16T10:00:00.000Z";
+const T1 = "2026-07-16T11:00:00.000Z";
 const T2 = "2026-07-16T12:00:00.000Z";
 
 class MemoryStorage implements WorkspaceStorage {

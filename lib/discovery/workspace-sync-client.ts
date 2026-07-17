@@ -20,6 +20,7 @@ import {
   releaseGuestWorkspaceClaim,
   scopeWorkspaceStorage,
   workspaceOwnersMatch,
+  type GuestWorkspaceClaim,
   type WorkspaceOwner,
 } from "@/lib/discovery/workspace-owner-storage";
 import {
@@ -48,6 +49,7 @@ import {
 import type { WorkspacePersistencePayload, WorkspaceStateV1 } from "@/lib/discovery/types";
 import {
   activateToolWorkspaceOwner,
+  activateVolatileToolWorkspaceOwnerWithoutStorage,
   getCanonicalToolWorkspaceState,
   getToolWorkspaceStateForOwner,
   rebaseWorkspaceIntent,
@@ -59,15 +61,41 @@ function dispatchWorkspaceChange(source: "local" | "remote") {
 }
 
 function workspaceStateFromGuestClaim(
-  claim: ReturnType<typeof readGuestWorkspaceClaim>,
+  claim: GuestWorkspaceClaim | null,
 ) {
-  if (!claim) return null;
+  return claim ? workspaceStateFromRaw(claim.guestRaw) : null;
+}
+
+function workspaceStateFromRaw(raw: string) {
   try {
-    const parsed = workspaceStateV1Schema.safeParse(JSON.parse(claim.guestRaw));
+    const parsed = workspaceStateV1Schema.safeParse(JSON.parse(raw));
     return parsed.success ? parsed.data : null;
   } catch {
     return null;
   }
+}
+
+type WorkspaceLockManager = {
+  request<T>(
+    name: string,
+    options: { mode: "exclusive" },
+    callback: () => T | Promise<T>,
+  ): Promise<T>;
+};
+
+export async function withWorkspaceGuestClaimLock<T>(
+  callback: (lockHeld: boolean) => T | Promise<T>,
+) {
+  const locks = typeof navigator === "undefined"
+    ? undefined
+    : (navigator as Navigator & { locks?: WorkspaceLockManager }).locks;
+  return locks?.request
+    ? locks.request(
+        "tooolvibes:workspace:guest-claim",
+        { mode: "exclusive" },
+        () => callback(true),
+      )
+    : callback(false);
 }
 
 function writeVerified(
@@ -117,6 +145,108 @@ function appendUnownedWorkspaceBackup(
   });
 }
 
+type UnownedWorkspaceBackupSnapshot = {
+  capturedAt?: unknown;
+  reason?: unknown;
+  state?: unknown;
+  rawEntries?: unknown;
+  restoredAt?: unknown;
+  restoredOwner?: unknown;
+};
+
+type UnownedWorkspaceBackupEnvelope = {
+  formatVersion: 1;
+  snapshots: unknown[];
+};
+
+function readUnownedWorkspaceBackup(
+  storage: Pick<Storage, "getItem">,
+): UnownedWorkspaceBackupEnvelope | null {
+  try {
+    const raw = storage.getItem(WORKSPACE_UNOWNED_BACKUP_KEY);
+    if (raw === null) return null;
+    const parsed = JSON.parse(raw) as {
+      formatVersion?: unknown;
+      snapshots?: unknown;
+    };
+    if (parsed.formatVersion !== 1 || !Array.isArray(parsed.snapshots)) {
+      return null;
+    }
+    return {
+      formatVersion: 1,
+      snapshots: parsed.snapshots,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function latestRecoverableUnownedWorkspace(
+  storage: Pick<Storage, "getItem">,
+) {
+  const envelope = readUnownedWorkspaceBackup(storage);
+  if (!envelope) return null;
+  for (let index = envelope.snapshots.length - 1; index >= 0; index -= 1) {
+    const candidate = envelope.snapshots[index];
+    if (!candidate || typeof candidate !== "object") continue;
+    const snapshot = candidate as UnownedWorkspaceBackupSnapshot;
+    if (typeof snapshot.restoredAt === "string") continue;
+    const state = workspaceStateV1Schema.safeParse(snapshot.state);
+    if (state.success && hasWorkspaceData(state.data)) {
+      return { envelope, index, state: state.data };
+    }
+  }
+  return null;
+}
+
+export function hasQuarantinedWorkspaceRecovery() {
+  const storage = getBrowserWorkspaceStorage();
+  return storage ? Boolean(latestRecoverableUnownedWorkspace(storage)) : false;
+}
+
+export function restoreLatestQuarantinedWorkspace(owner: WorkspaceOwner) {
+  const storage = getBrowserWorkspaceStorage();
+  if (!storage) {
+    return { restored: false as const, reason: "storage-unavailable" as const };
+  }
+  if (!hasGuestWorkspaceOwnerMarker(storage)) {
+    return { restored: false as const, reason: "owner-not-ready" as const };
+  }
+  const recovery = latestRecoverableUnownedWorkspace(storage);
+  if (!recovery) {
+    return { restored: false as const, reason: "backup-unavailable" as const };
+  }
+
+  const current = getToolWorkspaceStateForOwner(owner);
+  const restoredState = mergeGuestWorkspaceContribution(current, recovery.state);
+  const ownerStorage = scopeWorkspaceStorage(storage, owner);
+  const persisted = persistWorkspaceStateToStorage(ownerStorage, restoredState);
+  if (!persisted.persisted) {
+    return { restored: false as const, reason: "persist-failed" as const };
+  }
+
+  const snapshots = recovery.envelope.snapshots.map((snapshot, index) =>
+    index === recovery.index
+      ? {
+          ...(snapshot as UnownedWorkspaceBackupSnapshot),
+          restoredAt: new Date().toISOString(),
+          restoredOwner: owner,
+        }
+      : snapshot
+  );
+  const recoveryRecorded = writeVerified(storage, WORKSPACE_UNOWNED_BACKUP_KEY, {
+    formatVersion: 1,
+    snapshots,
+  });
+  activateToolWorkspaceOwner(owner);
+  dispatchWorkspaceChange("remote");
+  return {
+    restored: true as const,
+    state: persisted.state,
+    recoveryRecorded,
+  };
+}
+
 export function initializeWorkspaceOwnerProvenance(owner: WorkspaceOwner) {
   const storage = getBrowserWorkspaceStorage();
   if (!storage) {
@@ -139,25 +269,6 @@ export function initializeWorkspaceOwnerProvenance(owner: WorkspaceOwner) {
     }
   }));
   const legacyState = loadWorkspaceStateFromStorage(storage).state;
-
-  if (owner.kind === "guest") {
-    const marked = markGuestWorkspaceOwner(storage);
-    if (!marked) {
-      retainVolatileToolWorkspaceOwner(owner, legacyState);
-      return {
-        ready: true,
-        legacyQuarantined: false,
-        recoveryRequired: true,
-      };
-    }
-    activateToolWorkspaceOwner(owner, legacyState);
-    dispatchWorkspaceChange("remote");
-    return {
-      ready: true,
-      legacyQuarantined: false,
-      recoveryRequired: false,
-    };
-  }
 
   const legacyQuarantined = [
     WORKSPACE_STORAGE_KEY,
@@ -220,8 +331,8 @@ export function getWorkspaceGuestContribution(userId: string) {
   const storage = getBrowserWorkspaceStorage();
   const guestOwner: WorkspaceOwner = { kind: "guest" };
   if (!storage) return getToolWorkspaceStateForOwner(guestOwner);
-  const claim = readGuestWorkspaceClaim(storage);
-  if (claim?.claimedBy === userId) {
+  const claim = readGuestWorkspaceClaim(storage, userId);
+  if (claim) {
     return workspaceStateFromGuestClaim(claim) ?? createEmptyWorkspaceState();
   }
   return getToolWorkspaceStateForOwner(guestOwner);
@@ -231,33 +342,76 @@ export function stageWorkspaceForAccount(
   userId: string,
   accountSnapshot: WorkspaceStateV1,
   guestContribution: WorkspaceStateV1 = createEmptyWorkspaceState(),
+  options: { guestClaimLockHeld?: boolean } = {},
 ) {
   const owner: WorkspaceOwner = { kind: "account", userId };
-  const hasGuestContribution = hasWorkspaceData(guestContribution);
-  const stagedState = hasGuestContribution
-    ? mergeGuestWorkspaceContribution(accountSnapshot, guestContribution)
-    : accountSnapshot;
   const storage = getBrowserWorkspaceStorage();
-  if (!storage) {
-    retainVolatileToolWorkspaceOwner(owner, stagedState);
+  const existingClaim = storage
+    ? readGuestWorkspaceClaim(storage, userId)
+    : null;
+  const hasGuestContribution = Boolean(existingClaim) ||
+    hasWorkspaceData(guestContribution);
+  const claimBase = existingClaim
+    ? workspaceStateFromRaw(existingClaim.accountBaseRaw)
+    : null;
+  const claimStaged = existingClaim
+    ? workspaceStateFromRaw(existingClaim.stagedRaw)
+    : null;
+  const claimGuest = workspaceStateFromGuestClaim(existingClaim);
+  const stagedState = existingClaim
+    ? accountSnapshot
+    : hasGuestContribution
+      ? mergeGuestWorkspaceContribution(accountSnapshot, guestContribution)
+      : accountSnapshot;
+  const requestAccountState = existingClaim && claimBase && claimStaged && claimGuest
+    ? rebaseWorkspaceIntent(claimStaged, accountSnapshot, claimBase)
+    : accountSnapshot;
+  const requestGuestState = existingClaim && claimBase && claimStaged && claimGuest
+    ? rebaseWorkspaceIntent(claimStaged, accountSnapshot, claimGuest)
+    : existingClaim
+      ? createEmptyWorkspaceState()
+      : guestContribution;
+  if (hasGuestContribution && !options.guestClaimLockHeld) {
+    retainVolatileToolWorkspaceOwner(owner, accountSnapshot);
+    activateToolWorkspaceOwner(owner, accountSnapshot);
     dispatchWorkspaceChange("remote");
     return {
-      state: stagedState,
+      state: accountSnapshot,
+      persisted: false,
+      guestCleared: false,
+      ready: false,
+      guestPending: true,
+      requestAccountState: accountSnapshot,
+      requestGuestState: createEmptyWorkspaceState(),
+    };
+  }
+  if (!storage) {
+    const state = hasGuestContribution ? accountSnapshot : stagedState;
+    retainVolatileToolWorkspaceOwner(owner, state);
+    dispatchWorkspaceChange("remote");
+    return {
+      state,
       persisted: false,
       guestCleared: false,
       ready: !hasGuestContribution,
       guestPending: hasGuestContribution,
+      requestAccountState,
+      requestGuestState,
     };
   }
 
   if (!hasGuestWorkspaceOwnerMarker(storage) && hasGuestContribution) {
-    retainVolatileToolWorkspaceOwner(owner, stagedState);
+    retainVolatileToolWorkspaceOwner(owner, accountSnapshot);
+    activateToolWorkspaceOwner(owner, accountSnapshot);
+    dispatchWorkspaceChange("remote");
     return {
-      state: stagedState,
+      state: accountSnapshot,
       persisted: false,
       guestCleared: false,
       ready: false,
       guestPending: hasGuestContribution,
+      requestAccountState,
+      requestGuestState,
     };
   }
 
@@ -270,18 +424,22 @@ export function stageWorkspaceForAccount(
     ? accountResult.state
     : stagedState;
   if (!accountResult.persisted) {
-    retainVolatileToolWorkspaceOwner(owner, state);
+    const safeState = hasGuestContribution ? accountSnapshot : state;
+    retainVolatileToolWorkspaceOwner(owner, safeState);
+    activateToolWorkspaceOwner(owner, safeState);
     dispatchWorkspaceChange("remote");
     return {
-      state,
+      state: safeState,
       persisted: false,
       guestCleared: false,
       ready: !hasGuestContribution,
       guestPending: hasGuestContribution,
+      requestAccountState,
+      requestGuestState,
     };
   }
 
-  let claim = readGuestWorkspaceClaim(storage);
+  let claim = existingClaim;
   if (hasGuestContribution && !claim) {
     let guestRaw: string | null = null;
     try {
@@ -291,12 +449,21 @@ export function stageWorkspaceForAccount(
       guestRaw = null;
     }
     if (guestRaw) {
-      claim = putGuestWorkspaceClaim(storage, userId, guestRaw, guestRaw);
+      claim = putGuestWorkspaceClaim(storage, userId, guestRaw, {
+        accountBaseRaw: JSON.stringify(accountSnapshot),
+        stagedRaw: JSON.stringify(stagedState),
+      });
     }
   }
-  if (hasGuestContribution && claim?.claimedBy !== userId) {
-    persistWorkspaceStateToStorage(accountStorage, accountSnapshot);
-    activateToolWorkspaceOwner({ kind: "guest" });
+  if (hasGuestContribution && !claim) {
+    const rollback = persistWorkspaceStateToStorage(
+      accountStorage,
+      accountSnapshot,
+    );
+    if (!rollback.persisted) {
+      retainVolatileToolWorkspaceOwner(owner, accountSnapshot);
+    }
+    activateToolWorkspaceOwner(owner, accountSnapshot);
     dispatchWorkspaceChange("remote");
     return {
       state: accountSnapshot,
@@ -304,6 +471,8 @@ export function stageWorkspaceForAccount(
       guestCleared: false,
       ready: false,
       guestPending: true,
+      requestAccountState: accountSnapshot,
+      requestGuestState: createEmptyWorkspaceState(),
     };
   }
 
@@ -315,15 +484,20 @@ export function stageWorkspaceForAccount(
     guestCleared: false,
     ready: true,
     guestPending: hasGuestContribution,
+    requestAccountState,
+    requestGuestState,
   };
 }
 
-export function finalizeGuestWorkspaceClaim(userId: string) {
+export function finalizeGuestWorkspaceClaim(
+  userId: string,
+  options: { guestClaimLockHeld?: boolean } = {},
+) {
   const storage = getBrowserWorkspaceStorage();
   if (!storage) return false;
-  const claim = readGuestWorkspaceClaim(storage);
+  const claim = readGuestWorkspaceClaim(storage, userId);
   if (!claim) return true;
-  if (claim.claimedBy !== userId) return false;
+  if (!options.guestClaimLockHeld) return false;
   return completeGuestWorkspaceClaim(storage, userId);
 }
 
@@ -332,9 +506,8 @@ export function parseWorkspacePersistencePayload(
 ): WorkspacePersistencePayload | null {
   if (!value || typeof value !== "object") return null;
   const payload = value as Partial<WorkspacePersistencePayload>;
-  const state = workspaceSyncStateV1Schema.safeParse(payload.data);
   const meta = payload.meta;
-  if (!state.success || !meta || typeof meta !== "object" ||
+  if (!meta || typeof meta !== "object" ||
       (meta.mode !== "local" && meta.mode !== "remote") ||
       typeof meta.remote_available !== "boolean" ||
       (meta.viewer_kind !== undefined && meta.viewer_kind !== "guest" &&
@@ -351,6 +524,11 @@ export function parseWorkspacePersistencePayload(
         typeof meta.recovery_required !== "boolean")) {
     return null;
   }
+  const stateSchema = meta.mode === "remote"
+    ? workspaceSyncStateV1Schema
+    : workspaceStateV1Schema;
+  const state = stateSchema.safeParse(payload.data);
+  if (!state.success) return null;
   return { data: state.data, meta };
 }
 
@@ -473,12 +651,21 @@ export function preserveAccountWorkspaceRecovery(userId: string, reason: Workspa
   return putWorkspaceSyncRecovery(ownerStorage, current, { owner, reason });
 }
 
-export function isolateWorkspaceAfterLogout(userId: string) {
+export function isolateWorkspaceAfterLogout(
+  userId: string,
+  options: { guestClaimLockHeld?: boolean } = {},
+) {
+  const empty = createEmptyWorkspaceState();
+  if (options.guestClaimLockHeld !== true) {
+    activateVolatileToolWorkspaceOwnerWithoutStorage({ kind: "guest" }, empty);
+    dispatchWorkspaceChange("remote");
+    return { state: empty, applied: false, recoveryRequired: true };
+  }
+
   const storage = getBrowserWorkspaceStorage();
   const owner: WorkspaceOwner = { kind: "account", userId };
-  const empty = createEmptyWorkspaceState();
   if (!storage) {
-    activateToolWorkspaceOwner({ kind: "guest" }, empty);
+    activateVolatileToolWorkspaceOwnerWithoutStorage({ kind: "guest" }, empty);
     dispatchWorkspaceChange("remote");
     return { state: empty, applied: false, recoveryRequired: true };
   }
@@ -490,19 +677,19 @@ export function isolateWorkspaceAfterLogout(userId: string) {
     owner,
     reason: "logout",
   });
-  const guestClaim = readGuestWorkspaceClaim(storage);
-  const pendingGuest = guestClaim?.claimedBy === userId
+  const guestClaim = readGuestWorkspaceClaim(storage, userId);
+  const pendingGuest = guestClaim
     ? workspaceStateFromGuestClaim(guestClaim)
     : null;
   const guestStorage = scopeWorkspaceStorage(storage, { kind: "guest" });
   const currentGuest = loadWorkspaceStateFromStorage(guestStorage).state;
   const guestState = pendingGuest
-    ? mergeGuestWorkspaceContribution(pendingGuest, currentGuest)
+    ? mergeGuestWorkspaceContribution(currentGuest, pendingGuest)
     : currentGuest;
   const guestResult = persistWorkspaceStateToStorage(guestStorage, guestState);
-  const guestClaimReleased = guestResult.persisted
-    ? releaseGuestWorkspaceClaim(storage, userId)
-    : false;
+  const guestClaimReleased = guestClaim
+    ? guestResult.persisted && releaseGuestWorkspaceClaim(storage, userId)
+    : true;
   activateToolWorkspaceOwner({ kind: "guest" }, guestState);
   dispatchWorkspaceChange("remote");
   return {

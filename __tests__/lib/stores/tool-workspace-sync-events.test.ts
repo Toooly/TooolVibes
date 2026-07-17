@@ -3,13 +3,18 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { handleWorkspaceStorageEvent } from "@/lib/discovery/client-store";
 import {
   markGuestWorkspaceOwner,
+  putGuestWorkspaceClaim,
   workspaceStorageKeyForOwner,
 } from "@/lib/discovery/workspace-owner-storage";
 import {
   createEmptyWorkspaceState,
   reduceWorkspaceState,
 } from "@/lib/discovery/workspace-state";
-import { WORKSPACE_STORAGE_KEY } from "@/lib/discovery/workspace-storage-keys";
+import {
+  WORKSPACE_GUEST_CLAIM_KEY,
+  WORKSPACE_GUEST_OVERLAY_KEY,
+  WORKSPACE_STORAGE_KEY,
+} from "@/lib/discovery/workspace-storage-keys";
 import {
   DISCOVERY_SYNC_EVENT,
   type WorkspaceChangeEventDetail,
@@ -158,6 +163,50 @@ describe("tool workspace sync events", () => {
       JSON.stringify(current),
     );
     expect(storage.writes).toBe(writesBefore);
+  });
+
+  it("refreshes a guest tab when a claim advances to a new overlay", () => {
+    const storage = new MemoryStorage();
+    expect(markGuestWorkspaceOwner(storage)).toBe(true);
+    const target = new EventTarget() as EventTarget & {
+      localStorage: MemoryStorage;
+    };
+    target.localStorage = storage;
+    vi.stubGlobal("window", target);
+    const claimed = reduceWorkspaceState(createEmptyWorkspaceState(), {
+      type: "saved/set",
+      slug: "claimed-in-other-tab",
+      saved: true,
+      at: T0,
+    });
+    storage.values.set(WORKSPACE_STORAGE_KEY, JSON.stringify(claimed));
+    activateToolWorkspaceOwner({ kind: "guest" });
+
+    expect(putGuestWorkspaceClaim(
+      storage,
+      "account-a",
+      JSON.stringify(claimed),
+      {
+        accountBaseRaw: JSON.stringify(createEmptyWorkspaceState()),
+        stagedRaw: JSON.stringify(claimed),
+      },
+    )).not.toBeNull();
+    handleWorkspaceStorageEvent({ key: WORKSPACE_GUEST_CLAIM_KEY } as StorageEvent);
+
+    expect(getCanonicalToolWorkspaceState()).toEqual(createEmptyWorkspaceState());
+
+    const overlay = reduceWorkspaceState(createEmptyWorkspaceState(), {
+      type: "saved/set",
+      slug: "new-overlay-tool",
+      saved: true,
+      at: "2026-07-17T11:00:00.000Z",
+    });
+    storage.values.set(WORKSPACE_GUEST_OVERLAY_KEY, JSON.stringify(overlay));
+    handleWorkspaceStorageEvent({ key: WORKSPACE_GUEST_OVERLAY_KEY } as StorageEvent);
+
+    expect(getCanonicalToolWorkspaceState().saved.slugs).toEqual([
+      "new-overlay-tool",
+    ]);
   });
 
   it("preserves an unpersisted local mutation across a cross-tab refresh", () => {
