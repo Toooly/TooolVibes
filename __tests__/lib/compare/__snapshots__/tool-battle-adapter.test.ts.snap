@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`tool-battle adapter sul nuovo scoring contract (B33) > explanation del verdetto stabile su fixture (snapshot) 1`] = `
+{
+  "label": "Verdetto basato sui dati disponibili",
+  "reasons": [
+    "Gamma vince con un margine di 27 punti su Atlas AI.",
+    "Gamma ha più punti di forza evidenziati rispetto agli altri.",
+    "Gamma copre più casi d'uso pratici nel catalogo.",
+  ],
+  "winner": "gamma-app",
+  "winnerExplanation": [
+    "Gamma: punteggio 95/100 con confidence alta (copertura dati 100%).",
+    "+ Valutazione editoriale: 88/100, peso 45% — media dei livelli editoriali (measured=55, solid=75, strong=95) su 3 dimensioni; metodologia editorial-scorecard-v2 (editorial-assessment) [fonte: score.inputs].",
+    "+ Prove editoriali: 100/100, peso 25% — 3 punti di forza (max 3 contati, 25 pt cad.) + recensione presente (25 pt) [fonte: editorial.evidence].",
+    "+ Copertura casi d'uso: 100/100, peso 20% — 4 casi d'uso dichiarati (max 4 contati, 25 pt cad.) [fonte: content.useCases].",
+    "+ Contesto tassonomico: 100/100, peso 10% — categoria canonica presente (50 pt) + 4 tag (max 4 contati, 12,5 pt cad.) [fonte: taxonomy].",
+  ],
+}
+`;

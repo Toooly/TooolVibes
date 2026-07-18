@@ -1,42 +1,15 @@
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
-
-type CatalogScoreLevel = "featured" | "beginner" | "intermediate" | "expert";
-
-function isCatalogScoreLevel(value: string | null): value is CatalogScoreLevel {
-  return value === "featured" || value === "beginner" || value === "intermediate" || value === "expert";
-}
-
-export const levelScoreBase: Record<CatalogScoreLevel, number> = {
-  featured: 91,
-  beginner: 72,
-  intermediate: 82,
-  expert: 87,
-};
-
-export function dirScore(t: ToolPublicView) {
-  const levelBase =
-    isCatalogScoreLevel(t.level)
-      ? levelScoreBase[t.level]
-      : 70;
-
-  return Math.min(
-    98,
-    levelBase +
-      (t.toolOfWeek ? 4 : 0) +
-      (t.featured ? 2 : 0) +
-      Math.min(t.highlights.length, 3),
-  );
-}
+import {
+  rankCompareScores,
+  scoreToolForCompare,
+  type CompareScoreResult,
+} from "@/lib/compare/compare-score";
 
 export function hashColor(name: string): string {
   let h = 0;
   for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
   const hue = Math.abs(h % 360);
   return `hsl(${hue} 80% 55%)`;
-}
-
-export function legacyScore(t: ToolPublicView): number {
-  return Math.min(95, 70 + (t.featured ? 10 : 0) + Math.min(t.tags.length, 5) * 2);
 }
 
 export function getToolLogoUrl(value: string | null | undefined) {
@@ -47,14 +20,6 @@ export function getToolLogoUrl(value: string | null | undefined) {
   } catch {
     return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(value)}&sz=64`;
   }
-}
-
-export function stableScoreOffset(seed: string): number {
-  let hash = 0;
-  for (let i = 0; i < seed.length; i += 1) {
-    hash = (hash * 31 + seed.charCodeAt(i)) % 997;
-  }
-  return (hash % 13) - 6;
 }
 
 export type BattleObjective =
@@ -85,6 +50,7 @@ export type NormalisedTool = {
   battleScore: number;
   objectiveScore?: number;
   objectiveDelta?: number;
+  compareScore: CompareScoreResult;
   accentFrom: string;
   accentTo: string;
   tldr: string;
@@ -100,25 +66,30 @@ export type NormalisedTool = {
   useCasesCount: number;
 };
 
+/**
+ * Ranking deterministico (B33): riusa il comparatore canonico del
+ * motore `lib/compare/compare-score` (totale, copertura, slug).
+ * Nessun offset su indice/hash: l'ordine di input non cambia il
+ * punteggio né il rank di ciascun candidato.
+ */
 export function withBattleScores(tools: NormalisedTool[]): NormalisedTool[] {
-  const ranked = tools
-    .map((tool, index) => ({
-      index,
-      tool,
-      raw: tool.score + stableScoreOffset(`${tool.slug}:${tool.category}:${index}`),
-    }))
-    .sort((a, b) => b.raw - a.raw || a.tool.name.localeCompare(b.tool.name));
+  const rankedBySlug = new Map(
+    rankCompareScores(tools.map((tool) => tool.compareScore)).map((result) => [
+      result.slug,
+      result,
+    ]),
+  );
 
-  const battleBySlug = new Map<string, number>();
-  ranked.forEach(({ tool, raw }, rank) => {
-    const score = Math.max(62, Math.min(99, Math.round(raw - rank * 2.25)));
-    battleBySlug.set(tool.slug, score);
+  return tools.map((tool) => {
+    const compareScore = rankedBySlug.get(tool.slug) ?? tool.compareScore;
+
+    return {
+      ...tool,
+      compareScore,
+      score: compareScore.total,
+      battleScore: compareScore.total,
+    };
   });
-
-  return tools.map((tool) => ({
-    ...tool,
-    battleScore: battleBySlug.get(tool.slug) ?? tool.score,
-  }));
 }
 
 export async function celebrateArenaFight(winner?: NormalisedTool) {
@@ -150,7 +121,11 @@ export function normalise(
     if (!tool) return [];
 
     const isDirectory = tool.presentationKind === "directory";
-    const score = isDirectory ? dirScore(tool) : legacyScore(tool);
+    // B33: il punteggio deriva solo dai campi canonici ToolPublic
+    // (score/evidence/useCases/taxonomy) con provenance dichiarata;
+    // livello, featured e hash di presentazione non partecipano piu`.
+    const compareScore = scoreToolForCompare(tool.publicTool);
+    const score = compareScore.total;
     const fallbackColor = hashColor(tool.name);
     const highlights = tool.highlights.length > 0
       ? tool.highlights.slice(0, 3)
@@ -163,6 +138,7 @@ export function normalise(
       categoryLabel: tool.categoryLabel,
       score,
       battleScore: score,
+      compareScore,
       accentFrom: tool.accentFrom ?? fallbackColor,
       accentTo: tool.accentTo ?? fallbackColor,
       tldr: tool.tldr,
@@ -365,7 +341,7 @@ export function withObjectiveScores(
 
   return tools.map((tool, index) => {
     const delta = deltas[index];
-    const objectiveScore = Math.max(62, Math.min(99, tool.battleScore + delta));
+    const objectiveScore = Math.max(0, Math.min(100, tool.battleScore + delta));
     return { ...tool, objectiveScore, objectiveDelta: objectiveScore - tool.battleScore };
   });
 }
@@ -381,8 +357,13 @@ export function getBattleVerdict(
   tools: NormalisedTool[],
   objective: BattleObjective | null = null,
 ): BattleVerdict {
+  // Tie-break canonico (B33): punteggio, copertura dati, slug.
+  // Il verdetto non dipende dall'ordine di input dei candidati.
   const sorted = [...tools].sort(
-    (a, b) => (b.objectiveScore ?? b.battleScore) - (a.objectiveScore ?? a.battleScore),
+    (a, b) =>
+      (b.objectiveScore ?? b.battleScore) - (a.objectiveScore ?? a.battleScore) ||
+      b.compareScore.confidence.coverage - a.compareScore.confidence.coverage ||
+      (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0),
   );
   const winner = sorted[0];
   const runnerUp = sorted[1];
@@ -438,7 +419,12 @@ export function getBattleVerdict(
         reasons.unshift(`${winner.name} è il migliore per ${objectiveLabel} grazie a ${OBJECTIVE_SOURCE_LABELS[winnerMatch.topSource] ?? "i segnali raccolti"}.`);
       }
 
-      const baseSorted = [...tools].sort((a, b) => b.battleScore - a.battleScore);
+      const baseSorted = [...tools].sort(
+        (a, b) =>
+          b.battleScore - a.battleScore ||
+          b.compareScore.confidence.coverage - a.compareScore.confidence.coverage ||
+          (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0),
+      );
       const baseWinner = baseSorted[0];
       if (baseWinner && baseWinner.slug !== winner.slug) {
         reasons.unshift(`Con l'obiettivo ${objectiveLabel}, ${winner.name} supera ${baseWinner.name}.`);
@@ -450,6 +436,23 @@ export function getBattleVerdict(
     label = "Verdetto editoriale";
   } else if (hasRealData && tools.some((t) => t.isDirectory)) {
     label = "Verdetto tecnico";
+  }
+
+  // B33 / FLOW-602: l'assenza di dati riduce la confidence e viene
+  // dichiarata nel verdetto invece di produrre punteggi fantasma.
+  const winnerConfidence = winner.compareScore.confidence;
+  if (winnerConfidence.level !== "high") {
+    const coveragePercent = Math.round(winnerConfidence.coverage * 100);
+    reasons.unshift(
+      `${winner.name} vince con confidence ${winnerConfidence.level === "medium" ? "media" : "bassa"}: copertura dati al ${coveragePercent}%, verdetto da confermare sulla scheda del tool.`,
+    );
+  }
+
+  if (
+    label === "Verdetto basato sui dati disponibili" &&
+    tools.every((t) => t.compareScore.confidence.level === "low")
+  ) {
+    label = "Verdetto provvisorio: dati insufficienti";
   }
 
   return {
