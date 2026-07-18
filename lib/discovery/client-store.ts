@@ -30,6 +30,7 @@ const emptySnapshot: DiscoveryLocalSnapshot = {
   compare: [],
   shortlistStages: {},
   decisionMemories: {},
+  decisionOutcomes: {},
   toolStateMeta: {},
   compareMeta: {},
 };

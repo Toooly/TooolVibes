@@ -2,6 +2,7 @@ import type { ShortlistStage, ToolDecisionMemory } from "@/lib/types/tool";
 import type {
   DiscoveryWorkspaceState,
   ToolUserState,
+  WorkspaceDecisionOutcome,
 } from "@/lib/discovery/types";
 import {
   normalizeDiscoveryWorkspaceState,
@@ -38,6 +39,12 @@ export type DiscoveryLocalSnapshot = {
   compare: string[];
   shortlistStages: Record<string, ShortlistStage>;
   decisionMemories: Record<string, ToolDecisionMemory>;
+  /**
+   * B32 decision outcomes keyed by slug. Optional so legacy-B consumers that
+   * build this shape by hand (account panel model/tests) keep compiling; the
+   * canonical factory below always populates it.
+   */
+  decisionOutcomes?: Record<string, WorkspaceDecisionOutcome>;
   toolStateMeta: Record<string, string>;
   compareMeta: CompareMeta;
 };
@@ -183,6 +190,13 @@ export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
       state.updatedAt ? [[slug, state.updatedAt] as const] : [],
     ),
   );
+  const decisionOutcomes = Object.fromEntries(
+    Object.entries(workspace.toolStates).flatMap(([slug, state]) =>
+      state.decision?.outcome
+        ? [[slug, state.decision.outcome] as const]
+        : [],
+    ),
+  );
 
   return {
     visitedTools: getVisitedTools(),
@@ -191,6 +205,7 @@ export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
     compare: [...workspace.compare.slugs],
     shortlistStages,
     decisionMemories,
+    decisionOutcomes,
     toolStateMeta,
     compareMeta: { updated_at: workspace.compare.updatedAt },
   };
@@ -286,6 +301,32 @@ export function toggleToolPin(slug: string) {
   const pinned = !current.toolStates[slug]?.pinned;
   commitAction({ type: "tool/pin", slug, pinned, at: nowIso() });
   return getToolDecisionMemory(slug);
+}
+
+export function getToolDecisionOutcome(
+  slug: string,
+): WorkspaceDecisionOutcome | null {
+  return (
+    getCanonicalToolWorkspaceState().toolStates[slug]?.decision?.outcome ??
+    null
+  );
+}
+
+export function setToolDecisionOutcome(
+  slug: string,
+  outcome: WorkspaceDecisionOutcome,
+) {
+  commitAction({ type: "tool/decision", slug, outcome, at: nowIso() });
+  return getToolDecisionOutcome(slug);
+}
+
+/**
+ * B32 "reopen": clears the recorded outcome while keeping a timestamped
+ * decision record, so sync merges honour the reopen across devices.
+ */
+export function reopenToolDecision(slug: string) {
+  commitAction({ type: "tool/decision", slug, outcome: null, at: nowIso() });
+  return getToolDecisionOutcome(slug);
 }
 
 export function toggleCompareTool(slug: string) {

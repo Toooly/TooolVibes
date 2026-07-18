@@ -35,6 +35,7 @@ export type ReleaseFeatureEnvironment = Readonly<{
   TOOOLVIBES_PUBLIC_GATE_ENABLED?: string;
   TOOOLVIBES_3D_ENABLED?: string;
   TOOOLVIBES_AUDIO_ENABLED?: string;
+  TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED?: string;
   TOOOLVIBES_GAMIFICATION_ENABLED?: string;
   TOOOLVIBES_GAMIFICATION_PERSISTENCE_ENABLED?: string;
   TOOOLVIBES_REWARD_BACKBONE_ENABLED?: string;
@@ -60,6 +61,11 @@ export const releaseFeatureRegistry = {
   audio: {
     owner: "frontend-experience",
     envKey: "TOOOLVIBES_AUDIO_ENABLED",
+    defaultEnabled: true,
+  },
+  decisionMemoryBoard: {
+    owner: "product-workspace",
+    envKey: "TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED",
     defaultEnabled: true,
   },
   gamification: {
@@ -144,6 +150,7 @@ export type ReleaseFeatureConfig = Readonly<{
   publicGate: ResolvedBooleanFeature;
   threeD: ResolvedBooleanFeature;
   audio: ResolvedBooleanFeature;
+  decisionMemoryBoard: ResolvedBooleanFeature;
   gamification: Readonly<{
     owner: string;
     enabled: boolean;
@@ -271,6 +278,10 @@ export function createReleaseFeatureConfig(
     environment,
     releaseFeatureRegistry.audio,
   );
+  const decisionMemoryBoard = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.decisionMemoryBoard,
+  );
   const gamificationEnabled = parseBooleanFlag(
     environment[releaseFeatureRegistry.gamification.envKey],
     releaseFeatureRegistry.gamification,
@@ -341,6 +352,7 @@ export function createReleaseFeatureConfig(
     publicGate,
     threeD,
     audio,
+    decisionMemoryBoard,
     gamification: Object.freeze({
       owner: releaseFeatureRegistry.gamification.owner,
       enabled: gamificationEnabled,
@@ -409,6 +421,8 @@ export function readReleaseFeatureEnvironment(): ReleaseFeatureEnvironment {
       process.env.TOOOLVIBES_PUBLIC_GATE_ENABLED,
     TOOOLVIBES_3D_ENABLED: process.env.TOOOLVIBES_3D_ENABLED,
     TOOOLVIBES_AUDIO_ENABLED: process.env.TOOOLVIBES_AUDIO_ENABLED,
+    TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED:
+      process.env.TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED,
     TOOOLVIBES_GAMIFICATION_ENABLED:
       process.env.TOOOLVIBES_GAMIFICATION_ENABLED,
     TOOOLVIBES_GAMIFICATION_PERSISTENCE_ENABLED:

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { MobileShortlistBoard } from "@/components/tools/mobile-shortlist-board";
+import { releaseFeatures } from "@/lib/config/release-features";
 import { getPublishedTools } from "@/lib/data/public-tools";
 
 export const metadata: Metadata = {
@@ -10,5 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function ShortlistPage() {
-  return <MobileShortlistBoard tools={await getPublishedTools()} />;
+  return (
+    <MobileShortlistBoard
+      tools={await getPublishedTools()}
+      decisionMemoryEnabled={releaseFeatures.decisionMemoryBoard.enabled}
+    />
+  );
 }
