@@ -9,14 +9,22 @@ import { cn } from "@/lib/utils";
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { isNavRouteActive } from "@/lib/navigation/selectors";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import {
+  isHeaderAccountAwareEnabled,
+  useWorkspaceNavCounts,
+} from "./workspace-nav-selectors";
 
 export function MobileBottomNav() {
   const pathname = usePathname();
   const mobileItems = useNavItems("bottom-nav");
   const [mounted, setMounted] = useState(false);
   const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
-  const compareCount = useToolWorkspaceStore((s) => s.compareSlugs.length);
+  // BATCH 30 (IA-502): conteggi dal selector workspace canonico; con la flag
+  // account-aware OFF resta l'adapter legacy (solo badge Confronto).
+  const navCounts = useWorkspaceNavCounts();
+  const accountAware = isHeaderAccountAwareEnabled();
+  const compareCount = navCounts.compare;
+  const savedCount = accountAware ? navCounts.saved : 0;
 
   useEffect(() => {
     setMounted(true);
@@ -42,8 +50,17 @@ export function MobileBottomNav() {
         {mobileItems.map((item) => {
           const Icon = item.icon;
           const isCompareItem = item.id === "compare";
+          const isShortlistItem = item.id === "shortlist";
           const active = isNavRouteActive(pathname, item.href);
           const compareHasItems = isCompareItem && compareCount > 0;
+          const badgeCount = isCompareItem
+            ? compareCount
+            : isShortlistItem
+              ? savedCount
+              : 0;
+          const badgeAriaLabel = isCompareItem
+            ? `${compareCount} tool in confronto`
+            : `${savedCount} tool salvati`;
 
           return (
             <Link
@@ -59,13 +76,13 @@ export function MobileBottomNav() {
             >
               <span className="mobile-bottom-link__icon-wrap" aria-hidden="true">
                 {Icon ? <Icon className="size-5 transition-transform" /> : null}
-                {isCompareItem && compareCount > 0 ? (
+                {badgeCount > 0 ? (
                   <span
-                    key={compareCount}
+                    key={badgeCount}
                     className="mobile-bottom-link__badge animate-compare-ping"
-                    aria-label={`${compareCount} tool in confronto`}
+                    aria-label={badgeAriaLabel}
                   >
-                    {compareCount}
+                    {badgeCount}
                   </span>
                 ) : null}
               </span>

@@ -23,8 +23,10 @@ import {
   Search,
   Sparkles,
   ChevronRight,
+  User,
   UserPlus,
 } from "lucide-react";
+import { useHeaderAccountCta } from "./workspace-nav-selectors";
 
 const DEFAULT_MOBILE_LINK_TONE = ["#6a3cff", "#39d2f6", "#B388FF"] as const;
 
@@ -77,6 +79,12 @@ export function SiteHeaderV2() {
   const mobileNavLinks = useNavItems("header-v2-mobile");
   const { hasRewardedSurface } = useGamificationReleaseSummary();
   const vibeRushRelease = useGamificationSurface("vibeRush");
+  // BATCH 30 (IA-502): unica CTA account risolta dal selector canonico.
+  const accountCta = useHeaderAccountCta();
+  const AccountCtaIcon =
+    accountCta.state === "guest" || accountCta.state === "legacy"
+      ? UserPlus
+      : User;
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -243,14 +251,18 @@ export function SiteHeaderV2() {
                 <GameProfileBar className="hidden lg:flex" />
               )}
 
-              <Link
-                href="/account#account-upgrade"
-                className="site-header-v2__primary-action group relative hidden items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-all hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)] md:flex"
-                data-sonic-action="tap"
-              >
-                <UserPlus size={14} className="transition-transform group-hover:scale-110" />
-                Accedi / Registrati
-              </Link>
+              {accountCta.visible && (
+                <Link
+                  href={accountCta.href}
+                  className="site-header-v2__primary-action group relative hidden items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-all hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)] md:flex"
+                  data-sonic-action="tap"
+                  data-account-state={accountCta.state}
+                  aria-busy={accountCta.ariaBusy || undefined}
+                >
+                  <AccountCtaIcon size={14} className="transition-transform group-hover:scale-110" />
+                  {accountCta.label}
+                </Link>
+              )}
 
               <button
                 className="site-header-v2__mobile-search grid size-11 shrink-0 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 md:hidden"
@@ -410,16 +422,20 @@ export function SiteHeaderV2() {
                 })}
               </div>
 
-              <div className="mt-4 pt-4">
-                <Link
-                  href="/account#account-upgrade"
-                  onClick={() => setMenuOpen(false)}
-                  className="site-header-v2__mobile-primary flex items-center justify-center gap-2 rounded-xl bg-[#6a3cff] px-4 py-3 text-sm font-medium text-white shadow-[0_6px_18px_rgba(106,60,255,0.22)]"
-                >
-                  <UserPlus size={16} />
-                  Accedi / Registrati
-                </Link>
-              </div>
+              {accountCta.visible && (
+                <div className="mt-4 pt-4">
+                  <Link
+                    href={accountCta.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="site-header-v2__mobile-primary flex items-center justify-center gap-2 rounded-xl bg-[#6a3cff] px-4 py-3 text-sm font-medium text-white shadow-[0_6px_18px_rgba(106,60,255,0.22)]"
+                    data-account-state={accountCta.state}
+                    aria-busy={accountCta.ariaBusy || undefined}
+                  >
+                    <AccountCtaIcon size={16} />
+                    {accountCta.label}
+                  </Link>
+                </div>
+              )}
             </motion.nav>
           </motion.div>
         )}

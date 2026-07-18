@@ -16,12 +16,36 @@ import { resolveNavigationRelease } from "@/lib/navigation/release";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 
 /* Router mock minimo: l'header legge solo usePathname. */
-const { pathnameState } = vi.hoisted(() => ({
+const { pathnameState, accountState, headerFlagState } = vi.hoisted(() => ({
   pathnameState: { current: "/archivio" as string },
+  accountState: {
+    current: {
+      authEnabled: true,
+      status: "guest" as string,
+      isAttaching: false,
+      workspaceAttachPending: false,
+    },
+  },
+  headerFlagState: { current: true as boolean },
 }));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => pathnameState.current,
+}));
+
+/* Account mock: lo stato sessione canonico arriva da AccountProvider (B18/B19). */
+vi.mock("@/components/account/account-provider", () => ({
+  useAccount: () => accountState.current,
+}));
+
+/* Release flag mock (pattern B04/B29, modulo chrome B30): account-aware di
+   default, OFF = adapter legacy. */
+vi.mock("@/components/layout/header-chrome-release", () => ({
+  headerChromeRelease: {
+    get headerAccountAware() {
+      return headerFlagState.current;
+    },
+  },
 }));
 
 /* Motion mock: strip animazioni per assert deterministiche (pattern B24). */
@@ -132,6 +156,13 @@ describe("B29 SiteHeaderV2 — registry canonico", () => {
   beforeEach(() => {
     pathnameState.current = "/archivio";
     useMobileUIStore.setState({ isOverlayOpen: false });
+    accountState.current = {
+      authEnabled: true,
+      status: "guest",
+      isAttaching: false,
+      workspaceAttachPending: false,
+    };
+    headerFlagState.current = true;
   });
 
   afterEach(() => {
@@ -232,13 +263,151 @@ describe("B29 SiteHeaderV2 — registry canonico", () => {
     expect(panel.textContent).not.toContain("Shop");
   });
 
-  it("CTA account invariata (scope B30): link Accedi / Registrati intatto", () => {
+  it("CTA account guest (B30): Accedi / Registrati verso /account#account-upgrade", () => {
     render(<SiteHeaderV2 />);
 
     const ctas = screen.getAllByRole("link", { name: /Accedi \/ Registrati/ });
     expect(ctas.length).toBeGreaterThan(0);
     for (const cta of ctas) {
       expect(cta.getAttribute("href")).toBe("/account#account-upgrade");
+      expect(cta.getAttribute("data-account-state")).toBe("guest");
     }
+  });
+});
+
+describe("B30 SiteHeaderV2 — header account-aware (IA-502)", () => {
+  const guestAccount = {
+    authEnabled: true,
+    status: "guest",
+    isAttaching: false,
+    workspaceAttachPending: false,
+  };
+
+  function setAccount(overrides: Partial<typeof guestAccount>) {
+    accountState.current = { ...guestAccount, ...overrides };
+  }
+
+  function getDesktopCta() {
+    return document.querySelector<HTMLAnchorElement>(
+      ".site-header-v2__primary-action",
+    );
+  }
+
+  function getMobileCta(panel: HTMLElement) {
+    return panel.querySelector<HTMLAnchorElement>(
+      ".site-header-v2__mobile-primary",
+    );
+  }
+
+  beforeEach(() => {
+    pathnameState.current = "/archivio";
+    useMobileUIStore.setState({ isOverlayOpen: false });
+    headerFlagState.current = true;
+    setAccount({});
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("guest: CTA Accedi / Registrati su desktop e menu mobile, stato guest", () => {
+    render(<SiteHeaderV2 />);
+
+    const desktopCta = getDesktopCta();
+    expect(desktopCta).not.toBeNull();
+    expect(desktopCta?.getAttribute("href")).toBe("/account#account-upgrade");
+    expect(desktopCta?.getAttribute("data-account-state")).toBe("guest");
+    expect(desktopCta?.textContent).toContain("Accedi / Registrati");
+
+    const panel = openMobileMenu();
+    const mobileCta = getMobileCta(panel);
+    expect(mobileCta?.getAttribute("href")).toBe("/account#account-upgrade");
+    expect(mobileCta?.getAttribute("data-account-state")).toBe("guest");
+    expect(mobileCta?.textContent).toContain("Accedi / Registrati");
+  });
+
+  it("authenticated: una sola CTA Il tuo account verso /account, niente copy guest", () => {
+    setAccount({ status: "authenticated" });
+    render(<SiteHeaderV2 />);
+
+    const desktopCta = getDesktopCta();
+    expect(desktopCta?.getAttribute("href")).toBe("/account");
+    expect(desktopCta?.getAttribute("data-account-state")).toBe(
+      "authenticated",
+    );
+    expect(desktopCta?.textContent).toContain("Il tuo account");
+    expect(desktopCta?.textContent).not.toContain("Accedi");
+
+    const panel = openMobileMenu();
+    const mobileCta = getMobileCta(panel);
+    expect(mobileCta?.getAttribute("href")).toBe("/account");
+    expect(mobileCta?.getAttribute("data-account-state")).toBe(
+      "authenticated",
+    );
+  });
+
+  it("loading: copy neutra Account con aria-busy, NON lampeggia guest", () => {
+    setAccount({ status: "loading" });
+    render(<SiteHeaderV2 />);
+
+    const desktopCta = getDesktopCta();
+    expect(desktopCta).not.toBeNull();
+    expect(desktopCta?.getAttribute("data-account-state")).toBe("loading");
+    expect(desktopCta?.getAttribute("aria-busy")).toBe("true");
+    expect(desktopCta?.textContent).not.toContain("Accedi");
+    expect(desktopCta?.textContent).not.toContain("Registrati");
+  });
+
+  it("sync in corso: stato syncing con CTA unica invariata", () => {
+    setAccount({ status: "authenticated", workspaceAttachPending: true });
+    render(<SiteHeaderV2 />);
+
+    const desktopCta = getDesktopCta();
+    expect(desktopCta?.getAttribute("data-account-state")).toBe("syncing");
+    expect(desktopCta?.getAttribute("aria-busy")).toBe("true");
+    expect(desktopCta?.getAttribute("href")).toBe("/account");
+    expect(desktopCta?.textContent).toContain("Il tuo account");
+  });
+
+  it("auth non disponibile: nessuna CTA account (niente copy promozionale falso)", () => {
+    setAccount({ authEnabled: false, status: "unavailable" });
+    render(<SiteHeaderV2 />);
+
+    expect(getDesktopCta()).toBeNull();
+
+    const panel = openMobileMenu();
+    expect(getMobileCta(panel)).toBeNull();
+    expect(panel.textContent).not.toContain("Accedi / Registrati");
+  });
+
+  it("copy guest/auth identica su ogni route (parità di surface)", () => {
+    for (const pathname of ["/", "/archivio", "/compare", "/shortlist"]) {
+      pathnameState.current = pathname;
+
+      setAccount({ status: "guest" });
+      const { unmount } = render(<SiteHeaderV2 />);
+      expect(getDesktopCta()?.textContent).toContain("Accedi / Registrati");
+      expect(getDesktopCta()?.getAttribute("href")).toBe(
+        "/account#account-upgrade",
+      );
+      unmount();
+
+      setAccount({ status: "authenticated" });
+      const { unmount: unmountAuth } = render(<SiteHeaderV2 />);
+      expect(getDesktopCta()?.textContent).toContain("Il tuo account");
+      expect(getDesktopCta()?.getAttribute("href")).toBe("/account");
+      unmountAuth();
+    }
+  });
+
+  it("release flag OFF: adapter legacy statico anche con sessione attiva", () => {
+    headerFlagState.current = false;
+    setAccount({ status: "authenticated" });
+    render(<SiteHeaderV2 />);
+
+    const desktopCta = getDesktopCta();
+    expect(desktopCta?.getAttribute("data-account-state")).toBe("legacy");
+    expect(desktopCta?.getAttribute("href")).toBe("/account#account-upgrade");
+    expect(desktopCta?.textContent).toContain("Accedi / Registrati");
   });
 });
