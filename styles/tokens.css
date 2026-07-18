@@ -94,4 +94,22 @@
 
   /* Compatibility aliases: remove only after route-level visual QA. */
   --tv-space-32: 8rem;
+
+  /*
+   * Mobile shell geometry (B37 / MOB-701): single safe-area contract shared
+   * by the bottom nav and the shell floating dock (mission entry, Vibe Rush).
+   * The dock offset stacks above the nav so no launcher ever covers a nav
+   * action on 320-430px viewports, in either orientation.
+   * `--bottom-nav-height` is owned by app/globals.css and resolved lazily.
+   */
+  --tv-shell-nav-inset-left: max(0.75rem, env(safe-area-inset-left, 0px));
+  --tv-shell-nav-inset-right: max(0.75rem, env(safe-area-inset-right, 0px));
+  --tv-shell-nav-inset-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  --tv-shell-fab-size: 3rem;
+  --tv-shell-fab-gap: 0.625rem;
+  --tv-shell-dock-inset-right: max(1rem, env(safe-area-inset-right, 0px));
+  --tv-shell-dock-inset-bottom: calc(
+    var(--tv-shell-nav-inset-bottom) + var(--bottom-nav-height) +
+    var(--tv-shell-fab-gap)
+  );
 }

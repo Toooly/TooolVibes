@@ -101,6 +101,10 @@ export default async function RootLayout({
     : [];
   const missionsEnabled =
     releaseFeatures.gamification.surfaces.missions.persistentRewardsEnabled;
+  // BATCH 37 (MOB-701): il dock floating della shell ospita mission entry e
+  // Vibe Rush come launcher individualmente flaggabili (registry B04).
+  const vibeRushEnabled =
+    releaseFeatures.gamification.surfaces.vibeRush.persistentRewardsEnabled;
   const gamificationModes = {
     missions: releaseFeatures.gamification.surfaces.missions.mode,
     hiddenSignal: releaseFeatures.gamification.surfaces.hiddenSignal.mode,
@@ -129,8 +133,11 @@ export default async function RootLayout({
           gamificationModes={gamificationModes}
           toolCatalog={toolCatalog}
         >
-          {isGateOpen && missionsEnabled && (
-            <GamificationShell missionsEnabled={missionsEnabled} />
+          {isGateOpen && (missionsEnabled || vibeRushEnabled) && (
+            <GamificationShell
+              missionsEnabled={missionsEnabled}
+              vibeRushEnabled={vibeRushEnabled}
+            />
           )}
           {isGateOpen && releaseFeatures.threeD.enabled && (
             <IntroCinematic3D />

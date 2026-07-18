@@ -268,3 +268,97 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
     ).toBe("2");
   });
 });
+
+describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
+  beforeEach(() => {
+    pathnameState.current = "/";
+    compareCountState.current = 0;
+    savedCountState.current = 0;
+    headerFlagState.current = true;
+    useMobileUIStore.setState({ isOverlayOpen: false });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("geometria: la nav espone le classi del contract shell token-driven", () => {
+    renderBottomNav();
+
+    const nav = getBottomNav();
+    expect(nav.className).toContain("mobile-bottom-motion");
+    expect(nav.className).toContain("site-mobile-footer-nav");
+    expect(nav.className).toContain("fixed");
+    expect(nav.className).toContain("z-[var(--tv-z-nav)]");
+  });
+
+  it("quinto item leggibile: griglia a 5 colonne con label completa Confronto", () => {
+    compareCountState.current = 2;
+    renderBottomNav();
+
+    const grid = getBottomNav().querySelector(".grid");
+    expect(grid?.className).toContain("grid-cols-5");
+
+    const links = within(getBottomNav()).getAllByRole("link");
+    expect(links).toHaveLength(5);
+    const fifth = links[4];
+    expect(fifth.textContent).toContain("Confronto");
+    expect(
+      fifth.querySelector(".mobile-bottom-link__label")?.textContent,
+    ).toBe("Confronto");
+    expect(
+      fifth.querySelector(".mobile-bottom-link__badge")?.textContent,
+    ).toBe("2");
+  });
+
+  it.each([320, 360, 390, 412, 430])(
+    "viewport %ipx: 5 destinazioni e badge sempre nel DOM",
+    (width) => {
+      window.innerWidth = width;
+      window.innerHeight = 844;
+      window.dispatchEvent(new Event("resize"));
+      compareCountState.current = 1;
+      savedCountState.current = 1;
+
+      const { unmount } = renderBottomNav();
+      const links = within(getBottomNav()).getAllByRole("link");
+      expect(links).toHaveLength(5);
+      expect(
+        within(getBottomNav())
+          .getByRole("link", { name: /Confronto/ })
+          .querySelector(".mobile-bottom-link__badge")?.textContent,
+      ).toBe("1");
+      unmount();
+    },
+  );
+
+  it.each([
+    [390, 844],
+    [844, 390],
+  ])(
+    "orientation %ix%i: struttura nav invariata",
+    (width, height) => {
+      window.innerWidth = width;
+      window.innerHeight = height;
+      window.dispatchEvent(new Event("resize"));
+
+      const { unmount } = renderBottomNav();
+      expect(within(getBottomNav()).getAllByRole("link")).toHaveLength(5);
+      unmount();
+    },
+  );
+
+  it("overlay mobile aperto: la nav esce dal flusso touch (opacity-0 + pointer-events-none)", () => {
+    const { rerender } = render(<MobileBottomNav />);
+    expect(getBottomNav().className).not.toContain("opacity-0");
+
+    useMobileUIStore.setState({ isOverlayOpen: true });
+    rerender(<MobileBottomNav />);
+    expect(getBottomNav().className).toContain("opacity-0");
+    expect(getBottomNav().className).toContain("pointer-events-none");
+
+    useMobileUIStore.setState({ isOverlayOpen: false });
+    rerender(<MobileBottomNav />);
+    expect(getBottomNav().className).not.toContain("opacity-0");
+  });
+});

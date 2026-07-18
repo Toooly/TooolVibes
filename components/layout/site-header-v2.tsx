@@ -9,15 +9,11 @@ import { MusicToggleButton } from "../app/music-toggle-button";
 import { SoundToggleButton } from "../app/sound-toggle-button";
 import { DirectoryHeaderSearch } from "../directory/directory-header-search";
 import { GameProfileBar } from "../gamification/game-profile-bar";
-import { VibeTapMiniGame } from "../gamification/vibe-tap-mini-game";
 import { CircuitPill, PILL_CONFIGS } from "./navbar-circuit-markers";
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { isNavRouteActive } from "@/lib/navigation/selectors";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
-import {
-  useGamificationReleaseSummary,
-  useGamificationSurface,
-} from "@/lib/gamification/release-context";
+import { useGamificationReleaseSummary } from "@/lib/gamification/release-context";
 import {
   X,
   Search,
@@ -78,7 +74,6 @@ export function SiteHeaderV2() {
   const desktopNavLinks = useNavItems("header-v2-desktop");
   const mobileNavLinks = useNavItems("header-v2-mobile");
   const { hasRewardedSurface } = useGamificationReleaseSummary();
-  const vibeRushRelease = useGamificationSurface("vibeRush");
   // BATCH 30 (IA-502): unica CTA account risolta dal selector canonico.
   const accountCta = useHeaderAccountCta();
   const AccountCtaIcon =
@@ -106,7 +101,6 @@ export function SiteHeaderV2() {
     setMenuOpen(false);
   }, [pathname]);
 
-  const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
   const setOverlayOpen = useMobileUIStore((s) => s.setOverlayOpen);
   useEffect(() => {
     setOverlayOpen(menuOpen || searchOpen);
@@ -441,12 +435,9 @@ export function SiteHeaderV2() {
         )}
       </AnimatePresence>
 
-      {/* Vibe Rush FAB */}
-      {vibeRushRelease.persistentRewardsEnabled && (
-        <VibeTapMiniGame
-          className={`site-vibe-rush-fab fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[var(--tv-z-nav)] flex !h-14 !w-14 items-center justify-center rounded-full !border-white/30 !bg-gradient-to-br !from-[#6a3cff] !to-[#39d2f6] !p-0 text-white shadow-[0_8px_24px_rgba(106,60,255,0.35)] transition-transform hover:scale-105 active:scale-95 [&_.vibe-mini-launcher__core]:!h-10 [&_.vibe-mini-launcher__core]:!w-10 [&_.vibe-mini-launcher__label]:hidden ${isOverlayOpen ? "max-md:pointer-events-none max-md:scale-90 max-md:opacity-0" : ""}`}
-        />
-      )}
+      {/* BATCH 37 (MOB-701): il launcher Vibe Rush non vive piu' qui — unico
+          slot floating governato dalla GamificationShell (.shell-floating-dock),
+          flaggabile via surface vibeRush (B04). */}
 
       {/* Spacer */}
       <div className="site-header-v2__spacer h-16" />

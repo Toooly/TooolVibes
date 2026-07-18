@@ -485,15 +485,27 @@ img {
 
   .mobile-bottom-motion {
     animation: tv-bottom-nav-in 520ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
-    left: max(0.75rem, env(safe-area-inset-left, 0px));
-    right: max(0.75rem, env(safe-area-inset-right, 0px));
-    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    /* B37/MOB-701: unica geometria safe-area della bottom nav, token-driven
+       (styles/tokens.css). Non duplicare left/right/bottom altrove. */
+    left: var(--tv-shell-nav-inset-left);
+    right: var(--tv-shell-nav-inset-right);
+    bottom: var(--tv-shell-nav-inset-bottom);
     transform: none;
     will-change: opacity;
   }
 
   .pb-mobile-nav {
     padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 1.5rem);
+  }
+
+  /* B37/MOB-701: con il dock floating attivo riservo a fine scroll anche
+     l'ingombro dei launcher, cosi' nessuna azione resta coperta. */
+  @media (max-width: 767px) {
+    body:has(.shell-floating-dock) .pb-mobile-nav {
+      padding-bottom: calc(
+        var(--tv-shell-dock-inset-bottom) + var(--tv-shell-fab-size) + 1rem
+      );
+    }
   }
 
   .mobile-bottom-link {
@@ -19065,9 +19077,8 @@ img {
 
   .mobile-bottom-motion {
     position: fixed !important;
-    left: max(0.75rem, env(safe-area-inset-left, 0px)) !important;
-    right: max(0.75rem, env(safe-area-inset-right, 0px)) !important;
-    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px)) !important;
+    /* B37/MOB-701: left/right/bottom derivano dalla regola base token-driven;
+       qui restano solo i vincoli di stacking/compositing. */
     transform: none !important;
     backface-visibility: hidden;
   }
@@ -19217,15 +19228,15 @@ img {
   }
 
   /* ── Mission FAB ── */
+  /* B37/MOB-701: la geometria fixed/safe-area e' di proprieta' esclusiva di
+     .shell-floating-dock; qui resta solo l'identita' visiva del trigger,
+     dimensionata sul token shell. */
   .game-mission-fab {
-    position: fixed;
-    right: 1.1rem;
-    bottom: 5.6rem;
-    z-index: var(--tv-z-nav);
+    position: relative;
     display: grid;
     place-items: center;
-    width: 3rem;
-    height: 3rem;
+    width: var(--tv-shell-fab-size, 3rem);
+    height: var(--tv-shell-fab-size, 3rem);
     border-radius: 999px;
     border: none;
     color: #ffffff;
@@ -19250,10 +19261,72 @@ img {
 
   @media (min-width: 1024px) {
     .game-mission-fab {
-      right: 1.5rem;
-      bottom: 1.5rem;
       width: 3.25rem;
       height: 3.25rem;
+    }
+  }
+
+  /* ── Shell floating dock (B37 / MOB-701) ──
+     Unico slot floating governato dalla shell: ospita i launcher flaggabili
+     (mission entry, Vibe Rush) impilati in una sola geometria safe-area
+     sopra la bottom nav. I launcher nel dock non si auto-posizionano. */
+  .shell-floating-dock {
+    position: fixed;
+    right: var(--tv-shell-dock-inset-right);
+    bottom: var(--tv-shell-dock-inset-bottom);
+    z-index: var(--tv-z-nav);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--tv-shell-fab-gap);
+    transition:
+      opacity var(--tv-motion-base) var(--tv-ease-standard),
+      transform var(--tv-motion-base) var(--tv-ease-standard);
+  }
+
+  .shell-floating-dock[data-overlay-open="true"] {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.5rem);
+  }
+
+  .shell-floating-dock .vibe-mini-launcher {
+    width: var(--tv-shell-fab-size);
+    height: var(--tv-shell-fab-size);
+    min-height: 0;
+    gap: 0;
+    padding: 0;
+    border-color: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #6a3cff, #39d2f6);
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(106, 60, 255, 0.35);
+  }
+
+  .shell-floating-dock .vibe-mini-launcher .vibe-mini-launcher__core {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .shell-floating-dock .vibe-mini-launcher .vibe-mini-launcher__label {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .shell-floating-dock {
+      right: max(1.5rem, env(safe-area-inset-right, 0px));
+      bottom: 1.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shell-floating-dock {
+      transition: none;
+    }
+
+    .shell-floating-dock[data-overlay-open="true"] {
+      transform: none;
     }
   }
 
@@ -19263,7 +19336,7 @@ img {
   }
 
   .game-mission-drawer--mobile {
-    padding: 1rem 1rem 2rem;
+    padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
     border-top-left-radius: 1.5rem;
     border-top-right-radius: 1.5rem;
   }
@@ -20450,19 +20523,8 @@ img {
   color: #ffd0d0;
 }
 
-.site-vibe-rush-fab {
-  position: fixed !important;
-  right: 1rem !important;
-  bottom: calc(5.5rem + env(safe-area-inset-bottom)) !important;
-  z-index: var(--tv-z-nav);
-}
-
-@media (min-width: 768px) {
-  .site-vibe-rush-fab {
-    right: 2rem !important;
-    bottom: 1.35rem !important;
-  }
-}
+/* B37/MOB-701: .site-vibe-rush-fab rimossa — il launcher Vibe Rush vive
+   nello slot unico .shell-floating-dock governato dalla GamificationShell. */
 
 .vibe-mini-game__result-actions {
   display: flex;
@@ -23875,12 +23937,8 @@ img {
     height: 4.75rem;
   }
 
-  .vibe-mini-launcher {
-    right: 2rem !important;
-    bottom: 1.35rem !important;
-    width: 3.7rem !important;
-    height: 3.7rem !important;
-  }
+  /* B37/MOB-701: la vecchia geometria fixed del launcher Vibe Rush (desktop)
+     e' rimossa; il dock shell possiede il posizionamento a ogni viewport. */
 }
 
 @media (min-width: 768px) and (max-width: 1180px) {
