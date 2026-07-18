@@ -4,6 +4,21 @@ import {
   scoreToolForCompare,
   type CompareScoreResult,
 } from "@/lib/compare/compare-score";
+import {
+  COMPARE_OBJECTIVE_KEYWORDS,
+  COMPARE_OBJECTIVE_MAX_DELTA,
+  COMPARE_OBJECTIVE_POINTS_PER_HIT,
+  COMPARE_OBJECTIVE_SOURCE_WEIGHTS,
+  COMPARE_OBJECTIVES,
+  type CompareObjective,
+} from "@/lib/compare/compare-objective";
+
+// B34 / FLOW-603: la configurazione degli obiettivi vive in
+// `lib/compare/compare-objective`; qui restano i re-export per non
+// rompere gli import esistenti dei consumer dell'adapter.
+export type BattleObjective = CompareObjective;
+export const BATTLE_OBJECTIVES: { key: BattleObjective; label: string }[] =
+  COMPARE_OBJECTIVES.map(({ key, label }) => ({ key, label }));
 
 export function hashColor(name: string): string {
   let h = 0;
@@ -21,25 +36,6 @@ export function getToolLogoUrl(value: string | null | undefined) {
     return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(value)}&sz=64`;
   }
 }
-
-export type BattleObjective =
-  | "save-time"
-  | "quality"
-  | "save-money"
-  | "learn-fast"
-  | "collaborate"
-  | "scale"
-  | "experiment";
-
-export const BATTLE_OBJECTIVES: { key: BattleObjective; label: string }[] = [
-  { key: "save-time", label: "Risparmiare tempo" },
-  { key: "quality", label: "Aumentare qualità" },
-  { key: "save-money", label: "Ridurre costi" },
-  { key: "learn-fast", label: "Imparare velocemente" },
-  { key: "collaborate", label: "Collaborare" },
-  { key: "scale", label: "Scalare" },
-  { key: "experiment", label: "Sperimentare" },
-];
 
 export type NormalisedTool = {
   slug: string;
@@ -154,114 +150,11 @@ export function normalise(
       useCasesCount: tool.useCases.length,
     }];
   });
-}const OBJECTIVE_KEYWORDS: Record<BattleObjective, string[]> = {
-  "save-time": [
-    "automation",
-    "automazione",
-    "productivity",
-    "produttività",
-    "no-code",
-    "low-code",
-    "workflow",
-    "save time",
-    "risparmiare tempo",
-    "faster",
-    "quick",
-    "rapid",
-    "velocizza",
-    "ai writing",
-    "ai image",
-    "ai video",
-    "generate fast",
-    "veloce",
-  ],
-  quality: [
-    "design",
-    "video",
-    "polish",
-    "professional",
-    "high quality",
-    "high-quality",
-    "refined",
-    "pixel-perfect",
-    "creative",
-    "craft",
-    "visuals",
-    "production",
-    "qualità",
-    "professionale",
-  ],
-  "save-money": [
-    "free",
-    "freemium",
-    "open source",
-    "affordable",
-    "cheap",
-    "low cost",
-    "cost-effective",
-    "budget",
-    "gratis",
-    "senza costi",
-    "economico",
-    "risparmiare",
-  ],
-  "learn-fast": [
-    "beginner",
-    "intuitive",
-    "intuitivo",
-    "easy",
-    "facile",
-    "simple",
-    "template",
-    "tutorial",
-    "onboarding",
-    "gentle",
-    "low learning curve",
-    "impara velocemente",
-  ],
-  collaborate: [
-    "team",
-    "collaboration",
-    "collaborazione",
-    "collaborare",
-    "share",
-    "condividi",
-    "feedback",
-    "comment",
-    "workspace",
-    "customer support",
-    "comunicazione",
-  ],
-  scale: [
-    "expert",
-    "enterprise",
-    "scalability",
-    "scalabilità",
-    "scalare",
-    "api",
-    "integration",
-    "enterprise-grade",
-    "growth",
-    "infra",
-    "performante",
-    "grandi volumi",
-  ],
-  experiment: [
-    "vibe-coding",
-    "ai-app-builder",
-    "prototype",
-    "prototipo",
-    "beta",
-    "experiment",
-    "test",
-    "hackathon",
-    "try",
-    "playful",
-    "sandbox",
-    "new tech",
-    "sperimentare",
-  ],
-};
+}
+
+// B34: keyword map e pesi delle sorgenti arrivano dal config canonico
+// `lib/compare/compare-objective` (condiviso con il selettore UI).
+const OBJECTIVE_KEYWORDS = COMPARE_OBJECTIVE_KEYWORDS;
 
 const OBJECTIVE_SOURCE_LABELS: Record<string, string> = {
   highlights: "i punti di forza evidenziati",
@@ -278,12 +171,18 @@ type ObjectiveMatch = {
 
 function getObjectiveMatch(tool: NormalisedTool, objective: BattleObjective): ObjectiveMatch {
   const keywords = OBJECTIVE_KEYWORDS[objective];
-  const sources: { key: string; items: string[]; weight: number }[] = [
-    { key: "highlights", items: tool.highlights, weight: 1.5 },
-    { key: "useCases", items: tool.useCases, weight: 1 },
-    { key: "tags", items: tool.tags, weight: 0.75 },
-    { key: "category", items: [tool.category, tool.categoryLabel].filter(Boolean), weight: 0.5 },
-  ];
+  const sourceItems: Record<string, string[]> = {
+    highlights: tool.highlights,
+    useCases: tool.useCases,
+    tags: tool.tags,
+    category: [tool.category, tool.categoryLabel].filter(Boolean),
+  };
+  const sources: { key: string; items: string[]; weight: number }[] =
+    COMPARE_OBJECTIVE_SOURCE_WEIGHTS.map((source) => ({
+      key: source.key,
+      items: sourceItems[source.key],
+      weight: source.weight,
+    }));
 
   let rawScore = 0;
   const sourceScores = new Map<string, number>();
@@ -313,7 +212,7 @@ function getObjectiveMatch(tool: NormalisedTool, objective: BattleObjective): Ob
 
 export function getObjectiveScore(tool: NormalisedTool, objective: BattleObjective): number {
   const { rawScore } = getObjectiveMatch(tool, objective);
-  return Math.min(15, rawScore * 2.5);
+  return Math.min(COMPARE_OBJECTIVE_MAX_DELTA, rawScore * COMPARE_OBJECTIVE_POINTS_PER_HIT);
 }
 
 export function withObjectiveScores(

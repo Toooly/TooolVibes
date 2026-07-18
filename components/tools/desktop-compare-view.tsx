@@ -7,13 +7,16 @@ import { Swords, Sparkles, Trophy } from "lucide-react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import type { CompareObjective } from "@/lib/compare/compare-objective";
 import {
   celebrateArenaFight,
   getBattleVerdict,
   normalise,
   withBattleScores,
+  withObjectiveScores,
   type NormalisedTool,
 } from "./tool-battle-shared";
+import { CompareObjectiveSelector } from "./compare-objective-selector";
 import { ToolFighter } from "./tool-fighter";
 import { DiffMatrix } from "./mobile-compare-view";
 
@@ -86,7 +89,13 @@ function DesktopRosterCard({
       />
       <div className="desktop-compare__roster-copy">
         <strong>{tool.name}</strong>
-        <span>{tool.battleScore}/100</span>
+        <span>{tool.objectiveScore ?? tool.battleScore}/100</span>
+        {tool.objectiveDelta != null && tool.objectiveDelta !== 0 ? (
+          <span className="desktop-compare__objective-delta">
+            {tool.objectiveDelta > 0 ? "+" : ""}
+            {tool.objectiveDelta} obiettivo
+          </span>
+        ) : null}
       </div>
     </article>
   );
@@ -94,20 +103,37 @@ function DesktopRosterCard({
 
 export function DesktopCompareView({
   tools: catalogTools,
+  objective = null,
+  onObjectiveChange,
+  objectiveEnabled = true,
 }: {
   tools: ToolPublicView[];
+  /** Obiettivo attivo condiviso con la vista mobile (B34); null = neutro. */
+  objective?: CompareObjective | null;
+  onObjectiveChange?: (objective: CompareObjective | null) => void;
+  /** Flag B34: OFF nasconde il selettore e riproduce il contratto base B33. */
+  objectiveEnabled?: boolean;
 }) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const [battleState, setBattleState] = useState<"idle" | "fighting" | "result">("idle");
   const reducedMotion = useReducedMotion();
+  // B34: con il flag OFF l'obiettivo è sempre neutro (contratto base B33).
+  const activeObjective = objectiveEnabled ? objective : null;
 
   const tools = useMemo(
-    () => withBattleScores(normalise(catalogTools, compareSlugs)),
-    [catalogTools, compareSlugs],
+    () => withObjectiveScores(withBattleScores(normalise(catalogTools, compareSlugs)), activeObjective),
+    [catalogTools, compareSlugs, activeObjective],
   );
 
-  const sorted = useMemo(() => [...tools].sort((a, b) => b.battleScore - a.battleScore), [tools]);
-  const verdict = useMemo(() => (tools.length >= 2 ? getBattleVerdict(tools) : null), [tools]);
+  const verdict = useMemo(
+    () => (tools.length >= 2 ? getBattleVerdict(tools, activeObjective) : null),
+    [tools, activeObjective],
+  );
+  // B34: ordine della classifica identico al verdetto canonico (parity mobile).
+  const sorted = useMemo(
+    () => (verdict ? verdict.scores.map((entry) => entry.tool) : tools),
+    [verdict, tools],
+  );
   const winner = verdict?.winner;
   const duelTools = sorted.slice(0, 2);
 
@@ -132,6 +158,14 @@ export function DesktopCompareView({
 
   return (
     <section className="desktop-compare" aria-label="Confronto desktop">
+      {objectiveEnabled && onObjectiveChange ? (
+        <CompareObjectiveSelector
+          objective={activeObjective}
+          onObjectiveChange={onObjectiveChange}
+          idPrefix="desktop"
+        />
+      ) : null}
+
       <div className="desktop-compare__arena">
         <header className="desktop-compare__hud">
           <div>
@@ -218,12 +252,20 @@ export function DesktopCompareView({
           <aside className="desktop-compare__scoreboard" aria-label="Classifica confronto">
             {sorted.map((tool, i) => {
               const isWinner = i === 0;
-              const diff = isWinner ? 0 : (winner?.battleScore ?? tool.battleScore) - tool.battleScore;
+              const displayScore = tool.objectiveScore ?? tool.battleScore;
+              const topScore = winner ? winner.objectiveScore ?? winner.battleScore : displayScore;
+              const diff = isWinner ? 0 : Math.max(topScore - displayScore, 0);
               return (
                 <div key={tool.slug} className="desktop-compare__score-row" data-winner={isWinner}>
                   <span className="desktop-compare__rank">#{i + 1}</span>
                   <span className="desktop-compare__name">{tool.name}</span>
-                  <span className="desktop-compare__score">{tool.battleScore}</span>
+                  <span className="desktop-compare__score">{displayScore}</span>
+                  {tool.objectiveDelta != null && tool.objectiveDelta !== 0 ? (
+                    <span className="desktop-compare__objective-delta">
+                      {tool.objectiveDelta > 0 ? "+" : ""}
+                      {tool.objectiveDelta}
+                    </span>
+                  ) : null}
                   {!isWinner && <span className="desktop-compare__diff">-{diff}</span>}
                 </div>
               );
@@ -233,7 +275,7 @@ export function DesktopCompareView({
       </div>
 
       <div className="desktop-compare__matrix-panel desktop-compare__matrix-panel--full">
-        <DiffMatrix tools={sorted} />
+        <DiffMatrix tools={sorted} objective={activeObjective} />
       </div>
     </section>
   );

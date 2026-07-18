@@ -35,7 +35,9 @@ export type ReleaseFeatureEnvironment = Readonly<{
   TOOOLVIBES_PUBLIC_GATE_ENABLED?: string;
   TOOOLVIBES_3D_ENABLED?: string;
   TOOOLVIBES_AUDIO_ENABLED?: string;
+  TOOOLVIBES_COMPARE_OBJECTIVE_ENABLED?: string;
   TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED?: string;
+  TOOOLVIBES_UNIFIED_SEARCH_ENABLED?: string;
   TOOOLVIBES_GAMIFICATION_ENABLED?: string;
   TOOOLVIBES_GAMIFICATION_PERSISTENCE_ENABLED?: string;
   TOOOLVIBES_REWARD_BACKBONE_ENABLED?: string;
@@ -63,9 +65,19 @@ export const releaseFeatureRegistry = {
     envKey: "TOOOLVIBES_AUDIO_ENABLED",
     defaultEnabled: true,
   },
+  compareObjective: {
+    owner: "product-compare",
+    envKey: "TOOOLVIBES_COMPARE_OBJECTIVE_ENABLED",
+    defaultEnabled: true,
+  },
   decisionMemoryBoard: {
     owner: "product-workspace",
     envKey: "TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED",
+    defaultEnabled: true,
+  },
+  unifiedSearch: {
+    owner: "product-discovery",
+    envKey: "TOOOLVIBES_UNIFIED_SEARCH_ENABLED",
     defaultEnabled: true,
   },
   gamification: {
@@ -150,7 +162,9 @@ export type ReleaseFeatureConfig = Readonly<{
   publicGate: ResolvedBooleanFeature;
   threeD: ResolvedBooleanFeature;
   audio: ResolvedBooleanFeature;
+  compareObjective: ResolvedBooleanFeature;
   decisionMemoryBoard: ResolvedBooleanFeature;
+  unifiedSearch: ResolvedBooleanFeature;
   gamification: Readonly<{
     owner: string;
     enabled: boolean;
@@ -278,9 +292,17 @@ export function createReleaseFeatureConfig(
     environment,
     releaseFeatureRegistry.audio,
   );
+  const compareObjective = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.compareObjective,
+  );
   const decisionMemoryBoard = resolveBooleanFeature(
     environment,
     releaseFeatureRegistry.decisionMemoryBoard,
+  );
+  const unifiedSearch = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.unifiedSearch,
   );
   const gamificationEnabled = parseBooleanFlag(
     environment[releaseFeatureRegistry.gamification.envKey],
@@ -352,7 +374,9 @@ export function createReleaseFeatureConfig(
     publicGate,
     threeD,
     audio,
+    compareObjective,
     decisionMemoryBoard,
+    unifiedSearch,
     gamification: Object.freeze({
       owner: releaseFeatureRegistry.gamification.owner,
       enabled: gamificationEnabled,
@@ -421,8 +445,12 @@ export function readReleaseFeatureEnvironment(): ReleaseFeatureEnvironment {
       process.env.TOOOLVIBES_PUBLIC_GATE_ENABLED,
     TOOOLVIBES_3D_ENABLED: process.env.TOOOLVIBES_3D_ENABLED,
     TOOOLVIBES_AUDIO_ENABLED: process.env.TOOOLVIBES_AUDIO_ENABLED,
+    TOOOLVIBES_COMPARE_OBJECTIVE_ENABLED:
+      process.env.TOOOLVIBES_COMPARE_OBJECTIVE_ENABLED,
     TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED:
       process.env.TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED,
+    TOOOLVIBES_UNIFIED_SEARCH_ENABLED:
+      process.env.TOOOLVIBES_UNIFIED_SEARCH_ENABLED,
     TOOOLVIBES_GAMIFICATION_ENABLED:
       process.env.TOOOLVIBES_GAMIFICATION_ENABLED,
     TOOOLVIBES_GAMIFICATION_PERSISTENCE_ENABLED:

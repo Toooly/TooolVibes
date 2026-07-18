@@ -17,7 +17,10 @@ export default async function ComparePage() {
   return (
     <div className="compare-space-page">
       {releaseFeatures.threeD.enabled && <Compare3DHero />}
-      <ToolBattleView tools={tools} />
+      <ToolBattleView
+        tools={tools}
+        objectiveEnabled={releaseFeatures.compareObjective.enabled}
+      />
     </div>
   );
 }

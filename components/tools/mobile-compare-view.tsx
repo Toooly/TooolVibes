@@ -7,6 +7,10 @@ import { ArrowRight, Columns3, X, Scale, Sparkles, Swords, TrendingUp } from "lu
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import {
+  getCompareObjectiveLabel,
+  type CompareObjective,
+} from "@/lib/compare/compare-objective";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { playTooolvibesSound } from "@/lib/config/sound";
@@ -19,11 +23,17 @@ import {
   type NormalisedTool,
   type BattleVerdict,
 } from "./tool-battle-shared";
+import { CompareObjectiveSelector } from "./compare-objective-selector";
 import { ToolFighter } from "./tool-fighter";
 import { CompareTrendList } from "./compare-trend-list";
 
 type MobileCompareViewProps = {
   tools: ToolPublicView[];
+  /** Obiettivo attivo condiviso con la vista desktop (B34); null = neutro. */
+  objective?: CompareObjective | null;
+  onObjectiveChange?: (objective: CompareObjective | null) => void;
+  /** Flag B34: OFF nasconde il selettore e riproduce il contratto base B33. */
+  objectiveEnabled?: boolean;
 };
 
 type BattleState = "idle" | "analyzing" | "charging" | "clash" | "result";
@@ -64,6 +74,12 @@ function CompactToolCard({
         <div className="mobile-compare-arena__compact-score">
           <span>{tool.objectiveScore ?? tool.battleScore}</span>
           <small>/100</small>
+          {tool.objectiveDelta != null && tool.objectiveDelta !== 0 ? (
+            <small className="mobile-compare-arena__compact-delta">
+              {tool.objectiveDelta > 0 ? "+" : ""}
+              {tool.objectiveDelta} obiettivo
+            </small>
+          ) : null}
         </div>
       </div>
 
@@ -84,7 +100,14 @@ function CompactToolCard({
   );
 }
 
-export function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
+export function DiffMatrix({
+  tools,
+  objective = null,
+}: {
+  tools: NormalisedTool[];
+  /** B34: obiettivo attivo; orienta verdetto e lettura della matrice. */
+  objective?: CompareObjective | null;
+}) {
   const cellsRef = useRef<(HTMLDivElement | null)[]>([]);
   const isSyncing = useRef(false);
   const headWrapRef = useRef<HTMLDivElement | null>(null);
@@ -101,7 +124,7 @@ export function DiffMatrix({ tools }: { tools: NormalisedTool[] }) {
 
   if (tools.length < 2) return null;
 
-  const verdict = getBattleVerdict(tools);
+  const verdict = getBattleVerdict(tools, objective);
   const rankedTools = verdict.scores.map(({ tool }) => tool);
   const winner = verdict.winner;
   const runnerUp = rankedTools[1] ?? winner;
@@ -380,10 +403,13 @@ function MobileArenaBattleStage({
   battleState,
   tools,
   verdict,
+  objectiveLabel,
 }: {
   battleState: BattleState;
   tools: NormalisedTool[];
   verdict: BattleVerdict;
+  /** B34: etichetta dell'obiettivo attivo; null = modalità generale. */
+  objectiveLabel?: string | null;
 }) {
   const reducedMotion = useReducedMotion();
   const statusLabel =
@@ -415,7 +441,9 @@ function MobileArenaBattleStage({
             <h2 className="mobile-compare-arena__title">Arena</h2>
           </div>
           <div className="mobile-compare-arena__hud-pills">
-            <span className="mobile-compare-arena__mode">Generale</span>
+            <span className="mobile-compare-arena__mode">
+              {objectiveLabel ?? "Generale"}
+            </span>
             <span
               className={cn("mobile-compare-arena__status", `mobile-compare-arena__status--${battleState}`)}
               aria-live="polite"
@@ -545,13 +573,20 @@ function MobileArenaBattleStage({
 
 /* ---------- main ---------- */
 
-export function MobileCompareView({ tools: catalogTools }: MobileCompareViewProps) {
+export function MobileCompareView({
+  tools: catalogTools,
+  objective = null,
+  onObjectiveChange,
+  objectiveEnabled = true,
+}: MobileCompareViewProps) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
   const [battleState, setBattleState] = useState<BattleState>("idle");
   const fightTimerRefs = useRef<number[]>([]);
   const fightLockedRef = useRef(false);
-  const compareKey = compareSlugs.join("|");
+  // B34: con il flag OFF l'obiettivo è sempre neutro (contratto base B33).
+  const activeObjective = objectiveEnabled ? objective : null;
+  const compareKey = `${compareSlugs.join("|")}::${activeObjective ?? "neutral"}`;
 
   function clearFightTimers() {
     fightTimerRefs.current.forEach((timer) => window.clearTimeout(timer));
@@ -564,13 +599,13 @@ export function MobileCompareView({ tools: catalogTools }: MobileCompareViewProp
   }
 
   const tools = useMemo(
-    () => withObjectiveScores(withBattleScores(normalise(catalogTools, compareSlugs)), null),
-    [catalogTools, compareSlugs],
+    () => withObjectiveScores(withBattleScores(normalise(catalogTools, compareSlugs)), activeObjective),
+    [catalogTools, compareSlugs, activeObjective],
   );
 
   const verdict = useMemo(
-    () => (tools.length >= 2 ? getBattleVerdict(tools, null) : null),
-    [tools],
+    () => (tools.length >= 2 ? getBattleVerdict(tools, activeObjective) : null),
+    [tools, activeObjective],
   );
 
   useEffect(() => {
@@ -619,8 +654,10 @@ export function MobileCompareView({ tools: catalogTools }: MobileCompareViewProp
     );
   }
 
-  const sorted = [...tools].sort((a, b) => (b.objectiveScore ?? b.battleScore) - (a.objectiveScore ?? a.battleScore));
-  const activeVerdict = verdict ?? getBattleVerdict(sorted, null);
+  // B34: l'ordine mostrato segue il verdetto canonico (punteggio, copertura,
+  // slug), così lista e verdetto non possono divergere a obiettivo attivo.
+  const sorted = verdict ? verdict.scores.map((entry) => entry.tool) : tools;
+  const activeVerdict = verdict ?? getBattleVerdict(sorted, activeObjective);
   const rest = sorted.slice(1);
   const isRevealed = battleState === "result";
 
@@ -651,10 +688,19 @@ export function MobileCompareView({ tools: catalogTools }: MobileCompareViewProp
 
   return (
     <div className="mobile-compare-arena">
+      {objectiveEnabled && onObjectiveChange ? (
+        <CompareObjectiveSelector
+          objective={activeObjective}
+          onObjectiveChange={onObjectiveChange}
+          idPrefix="mobile"
+        />
+      ) : null}
+
       <MobileArenaBattleStage
         battleState={battleState}
         tools={sorted}
         verdict={activeVerdict}
+        objectiveLabel={activeObjective ? getCompareObjectiveLabel(activeObjective) : null}
       />
 
       <div className="mobile-compare-arena__action-area" data-state={battleState}>
@@ -696,7 +742,7 @@ export function MobileCompareView({ tools: catalogTools }: MobileCompareViewProp
             </div>
           </div>
 
-          <DiffMatrix tools={sorted} />
+          <DiffMatrix tools={sorted} objective={activeObjective} />
 
           <div className="mobile-compare-arena__trend">
             <CompareTrendList />

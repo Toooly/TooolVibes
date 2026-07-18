@@ -1,0 +1,80 @@
+"use client";
+
+import { useId } from "react";
+
+import {
+  COMPARE_OBJECTIVES,
+  describeCompareObjectiveWeights,
+  type CompareObjective,
+} from "@/lib/compare/compare-objective";
+
+/**
+ * BATCH 34 / FLOW-603 — selettore obiettivo condiviso mobile/desktop.
+ *
+ * Stesso markup, stessa spiegazione dei pesi su entrambe le superfici:
+ * radio native dentro un fieldset (frecce tastiera e screen reader
+ * funzionano senza logica custom). La spiegazione dichiara sempre
+ * pesi delle fonti, delta massimo e comportamento del neutro.
+ */
+export function CompareObjectiveSelector({
+  objective,
+  onObjectiveChange,
+  idPrefix,
+}: {
+  objective: CompareObjective | null;
+  onObjectiveChange: (objective: CompareObjective | null) => void;
+  /** Prefisso unico per istanza (mobile e desktop sono montati insieme). */
+  idPrefix: string;
+}) {
+  const reactId = useId();
+  const groupName = `${idPrefix}-compare-objective-${reactId}`;
+  const explanation = describeCompareObjectiveWeights(objective);
+
+  return (
+    <fieldset className="compare-objective">
+      <legend className="compare-objective__legend">
+        Obiettivo del confronto
+      </legend>
+
+      <div className="compare-objective__options">
+        <label className="compare-objective__chip" data-active={objective === null}>
+          <input
+            type="radio"
+            className="compare-objective__input"
+            name={groupName}
+            value=""
+            checked={objective === null}
+            onChange={() => onObjectiveChange(null)}
+          />
+          <span className="compare-objective__chip-label">Neutro</span>
+        </label>
+
+        {COMPARE_OBJECTIVES.map((option) => (
+          <label
+            key={option.key}
+            className="compare-objective__chip"
+            data-active={objective === option.key}
+          >
+            <input
+              type="radio"
+              className="compare-objective__input"
+              name={groupName}
+              value={option.key}
+              checked={objective === option.key}
+              onChange={() => onObjectiveChange(option.key)}
+            />
+            <span className="compare-objective__chip-label">{option.label}</span>
+          </label>
+        ))}
+      </div>
+
+      <div className="compare-objective__explain" aria-live="polite">
+        {explanation.map((line) => (
+          <p key={line} className="compare-objective__explain-line">
+            {line}
+          </p>
+        ))}
+      </div>
+    </fieldset>
+  );
+}

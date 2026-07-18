@@ -1376,7 +1376,7 @@
 
 .desktop-compare__score-row {
   display: grid;
-  grid-template-columns: 2rem 1fr 3rem 3rem;
+  grid-template-columns: 2rem 1fr 3rem auto 3rem;
   gap: 0.75rem;
   align-items: center;
   padding: 0.75rem 1rem;
@@ -2156,4 +2156,109 @@
   .desktop-compare__arena-layout > .desktop-compare__scoreboard {
     justify-content: initial;
   }
+}
+
+/* ─── B34 / FLOW-603 — selettore obiettivo condiviso mobile/desktop ─── */
+.compare-objective {
+  position: relative;
+  z-index: 2;
+  margin: 0 0 0.75rem;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.compare-objective__legend {
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94A3B8;
+}
+
+.compare-objective__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.compare-objective__chip {
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.compare-objective__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.compare-objective__chip-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #CBD5E1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.compare-objective__chip[data-active="true"] .compare-objective__chip-label {
+  color: #0F172A;
+  background: linear-gradient(135deg, #7C4DFF, #39D2F6);
+  border-color: transparent;
+}
+
+.compare-objective__input:focus-visible + .compare-objective__chip-label {
+  outline: 2px solid #39D2F6;
+  outline-offset: 2px;
+}
+
+.compare-objective__explain {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.compare-objective__explain-line {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #CBD5E1;
+}
+
+.compare-objective__explain-line + .compare-objective__explain-line {
+  margin-top: 0.3rem;
+}
+
+.mobile-compare-arena__compact-delta {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64FFDA;
+}
+
+.desktop-compare__objective-delta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64FFDA;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
