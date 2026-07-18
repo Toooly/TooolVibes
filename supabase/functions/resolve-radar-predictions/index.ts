@@ -1,6 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import {
+  getUtcContextDate,
+  resolveRadarPredictions,
+} from "../_shared/radar-prediction-resolver.ts";
+
+// B36 / FLOW-606 — integrità del resolver:
+// - nessun hash placeholder: gli score derivano solo dal feed reale Product Hunt
+//   (logica pura condivisa in `supabase/functions/_shared/radar-prediction-resolver.ts`);
+// - feed non disponibile/vuoto → nessuna risoluzione: i pronostici restano
+//   `pending` e la risposta dichiara il motivo (retry al prossimo schedule);
+// - XP solo se la superficie prediction è REWARDED via flag B04
+//   (`TOOOLVIBES_GAME_PREDICTION_MODE=REWARDED`), altrimenti xp_awarded = 0;
+// - data contesto sempre UTC, indipendente dal timezone dell'host.
 
 const PRODUCT_HUNT_ENDPOINT = "https://api.producthunt.com/v2/api/graphql";
 const PRODUCT_HUNT_QUERY = /* GraphQL */ `
@@ -27,30 +40,7 @@ const PRODUCT_HUNT_QUERY = /* GraphQL */ `
   }
 `;
 
-type ProductHuntItem = {
-  id: string;
-  name: string;
-  votesCount: number;
-  commentsCount: number;
-};
-
-function hashString(value: string): number {
-  let hash = 2166136261;
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function normalizeSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
-}
-
-async function fetchProductHuntDayItems(): Promise<ProductHuntItem[] | null> {
+async function fetchProductHuntDayItems() {
   const token = Deno.env.get("PRODUCTHUNT_TOKEN");
   if (!token) {
     return null;
@@ -80,11 +70,11 @@ async function fetchProductHuntDayItems(): Promise<ProductHuntItem[] | null> {
     const edges = json?.data?.posts?.edges ?? [];
 
     return edges
-      .map((edge: { node?: ProductHuntItem }) => edge.node)
-      .filter((node?: ProductHuntItem): node is ProductHuntItem => Boolean(node?.id))
-      .map((node: ProductHuntItem) => ({
+      .map((edge) => edge.node)
+      .filter((node) => Boolean(node?.id))
+      .map((node) => ({
         id: node.id,
-        name: node.name,
+        name: node.name ?? "",
         votesCount: node.votesCount ?? 0,
         commentsCount: node.commentsCount ?? 0,
       }));
@@ -92,62 +82,6 @@ async function fetchProductHuntDayItems(): Promise<ProductHuntItem[] | null> {
     console.error("Failed to fetch Product Hunt day items:", error);
     return null;
   }
-}
-
-function computeDeterministicScore(toolSlug: string, contextDate: string): number {
-  // TODO: This fallback is a placeholder until real ranking deltas are available.
-  // Replace with a comparison against a stored baseline (e.g. yesterday's votes/comments)
-  // once historical Radar data is persisted.
-  return hashString(`${toolSlug}:${contextDate}`) % 10000;
-}
-
-function computeScore(
-  toolSlug: string,
-  contextDate: string,
-  items: ProductHuntItem[] | null,
-): number {
-  if (items) {
-    const item = items.find(
-      (candidate) =>
-        candidate.id === toolSlug || normalizeSlug(candidate.name) === toolSlug,
-    );
-
-    if (item) {
-      // Current engagement signal: votes + weighted comments.
-      // This acts as a proxy for "relative improvement" while we lack a stored baseline.
-      return item.votesCount + item.commentsCount * 2;
-    }
-  }
-
-  return computeDeterministicScore(toolSlug, contextDate);
-}
-
-function resolveStatus(
-  score: number,
-  allScores: number[],
-): { status: "won" | "close" | "lost"; xp: number; actualRankChange: number } {
-  const sorted = [...allScores].sort((a, b) => b - a);
-  const rank = sorted.indexOf(score) + 1;
-  const topHalfThreshold = Math.max(1, Math.ceil(sorted.length / 2));
-
-  let status: "won" | "close" | "lost";
-  let xp: number;
-
-  if (rank === 1) {
-    status = "won";
-    xp = 80;
-  } else if (rank <= topHalfThreshold) {
-    status = "close";
-    xp = 20;
-  } else {
-    status = "lost";
-    xp = 0;
-  }
-
-  const percentile = sorted.length > 1 ? (sorted.length - rank) / (sorted.length - 1) : 1;
-  const actualRankChange = Math.round(percentile * 10);
-
-  return { status, xp, actualRankChange };
 }
 
 Deno.serve(async (req) => {
@@ -161,17 +95,21 @@ Deno.serve(async (req) => {
     });
   }
 
+  const rewardsEnabled =
+    Deno.env.get("TOOOLVIBES_GAME_PREDICTION_MODE") === "REWARDED";
+
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
 
-  const yesterday = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  // Finestra di risoluzione deterministica: i pronostici del giorno UTC precedente.
+  const contextDate = getUtcContextDate(new Date(), -1);
 
   const { data: predictions, error: fetchError } = await supabase
     .from("radar_predictions")
     .select("*")
-    .eq("context_date", yesterday)
+    .eq("context_date", contextDate)
     .eq("status", "pending");
 
   if (fetchError) {
@@ -181,27 +119,48 @@ Deno.serve(async (req) => {
     });
   }
 
-  const dayItems = await fetchProductHuntDayItems();
   const candidates = predictions ?? [];
-  const scores = candidates.map((prediction) =>
-    computeScore(prediction.tool_slug, prediction.context_date, dayItems)
+  const dayItems = await fetchProductHuntDayItems();
+  const resolutions = resolveRadarPredictions(
+    candidates.map((prediction) => ({
+      toolSlug: prediction.tool_slug,
+      contextDate: prediction.context_date,
+    })),
+    dayItems,
+    { rewardsEnabled },
   );
+
+  if (resolutions.length === 0 && candidates.length > 0) {
+    // Fallback esplicito: nessun dato inventato, nessun XP. I pronostici
+    // restano `pending` e verranno riprocessati al prossimo schedule.
+    return new Response(
+      JSON.stringify({
+        resolved: 0,
+        skipped: candidates.length,
+        reason: dayItems === null
+          ? "product-hunt-feed-unavailable"
+          : "product-hunt-feed-empty",
+        rewardsEnabled,
+        date: contextDate,
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } },
+    );
+  }
 
   let resolved = 0;
   let errors = 0;
 
   for (let index = 0; index < candidates.length; index += 1) {
     const prediction = candidates[index];
-    const score = scores[index];
-    const { status, xp, actualRankChange } = resolveStatus(score, scores);
+    const resolution = resolutions[index];
 
     const { error: updateError } = await supabase
       .from("radar_predictions")
       .update({
         resolved_at: new Date().toISOString(),
-        actual_rank_change: actualRankChange,
-        xp_awarded: xp,
-        status,
+        actual_rank_change: resolution.actualRankChange,
+        xp_awarded: resolution.xpAwarded,
+        status: resolution.status,
       })
       .eq("id", prediction.id);
 
@@ -211,10 +170,10 @@ Deno.serve(async (req) => {
       continue;
     }
 
-    if (xp > 0) {
+    if (rewardsEnabled && resolution.xpAwarded > 0) {
       const { error: rpcError } = await supabase.rpc("record_game_interaction", {
         p_user_id: prediction.user_id,
-        p_xp_delta: xp,
+        p_xp_delta: resolution.xpAwarded,
       });
 
       if (rpcError) {
@@ -228,7 +187,13 @@ Deno.serve(async (req) => {
   }
 
   return new Response(
-    JSON.stringify({ resolved, errors, date: yesterday }),
+    JSON.stringify({
+      resolved,
+      errors,
+      source: "product-hunt-live",
+      rewardsEnabled,
+      date: contextDate,
+    }),
     { headers: { "Content-Type": "application/json" } },
   );
 });

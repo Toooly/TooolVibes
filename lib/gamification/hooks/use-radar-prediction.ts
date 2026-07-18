@@ -4,16 +4,19 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { checkAndAwardBadges, createRadarPrediction } from "@/lib/gamification/actions";
 import { useGameProgressStore } from "@/lib/gamification/game-progress-store";
+import { useGamificationSurface } from "@/lib/gamification/release-context";
 import { getBrowserSupabaseClient } from "@/lib/supabase/browser-client";
 import type { RadarPrediction } from "@/lib/gamification/types";
+// Modulo puro condiviso con la edge function resolver (B36 / FLOW-606):
+// la data contesto è sempre UTC e identica tra client e resolver.
+import { getUtcContextDate } from "@/supabase/functions/_shared/radar-prediction-resolver";
 
-async function fetchPrediction(): Promise<RadarPrediction | null> {
+async function fetchPrediction(contextDate: string): Promise<RadarPrediction | null> {
   const supabase = getBrowserSupabaseClient();
-  const today = new Date().toISOString().slice(0, 10);
   const { data, error } = await supabase
     .from("radar_predictions")
     .select("*")
-    .eq("context_date", today)
+    .eq("context_date", contextDate)
     .maybeSingle();
 
   if (error) throw error;
@@ -23,10 +26,15 @@ async function fetchPrediction(): Promise<RadarPrediction | null> {
 export function useRadarPrediction() {
   const queryClient = useQueryClient();
   const setPendingBadge = useGameProgressStore((s) => s.setPendingBadge);
+  // Gate B04: la query resta inattiva con superficie OFF e la mutation è
+  // consentita solo in REWARDED (lo stesso assert esiste lato server action).
+  const predictionSurface = useGamificationSurface("prediction");
+  const contextDate = getUtcContextDate(new Date());
 
   const query = useQuery({
-    queryKey: ["radar-prediction"],
-    queryFn: fetchPrediction,
+    queryKey: ["radar-prediction", contextDate],
+    queryFn: () => fetchPrediction(contextDate),
+    enabled: predictionSurface.surfaceEnabled,
     staleTime: 30_000,
   });
 
@@ -43,10 +51,16 @@ export function useRadarPrediction() {
     },
   });
 
+  const createPrediction = (toolSlug: string) => {
+    if (!predictionSurface.persistentRewardsEnabled) return;
+    mutation.mutate(toolSlug);
+  };
+
   return {
     prediction: query.data,
-    isLoading: query.isLoading,
-    createPrediction: mutation.mutate,
+    isLoading: predictionSurface.surfaceEnabled && query.isLoading,
+    createPrediction,
     isCreating: mutation.isPending,
+    contextDate,
   };
 }

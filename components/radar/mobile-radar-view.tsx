@@ -12,32 +12,19 @@ import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { claimHiddenSignal } from "@/lib/gamification/actions";
 import { useGamificationSurface } from "@/lib/gamification/release-context";
+import {
+  formatUtcTimeLabel,
+  resolveRadarDataState,
+  type ProductHuntItem,
+  type ProductHuntPayload,
+  type ProductHuntRange,
+  type RadarDataState,
+} from "@/lib/radar/product-hunt-contract";
+import { getUtcContextDate } from "@/supabase/functions/_shared/radar-prediction-resolver";
 
 /* ═══════════════════════════════════════════════════════════════
-   Types
+   Types — contratto condiviso con l'adapter (B36 / FLOW-606)
    ═══════════════════════════════════════════════════════════════ */
-
-type ProductHuntRange = "day" | "week" | "month";
-
-type ProductHuntItem = {
-  id: string;
-  name: string;
-  tagline: string;
-  votesCount: number;
-  commentsCount: number;
-  productHuntUrl: string;
-  thumbnailUrl?: string;
-};
-
-type ProductHuntPayload = {
-  status: "ok" | "missing-token" | "error";
-  range: ProductHuntRange;
-  updatedAt: string;
-  items: ProductHuntItem[];
-  message?: string;
-};
-
-type RadarDataState = "loading" | "ready" | "empty" | "missing-token" | "error";
 
 const RADAR_NODE_COUNT = 5;
 const RADAR_SWEEP_DURATION_MS = 3200;
@@ -112,6 +99,8 @@ export function MobileRadarView() {
         ...p,
         [range]: {
           status: "error",
+          source: "none",
+          stale: false,
           range,
           updatedAt: new Date().toISOString(),
           items: [],
@@ -123,10 +112,8 @@ export function MobileRadarView() {
     }
   }, [payloads]);
 
-  useEffect(() => {
-    fetchRange("day");
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
+  // Una sola fetch per range: il payload è cacheato in stato e l'effetto su
+  // `activeRange` copre già il mount iniziale (B36 / FLOW-606).
   useEffect(() => {
     fetchRange(activeRange);
   }, [activeRange, fetchRange]);
@@ -147,13 +134,25 @@ export function MobileRadarView() {
     () => currentPayload?.items ?? [],
     [currentPayload?.items],
   );
-  const radarState: RadarDataState = !currentPayload
-    ? "loading"
-    : currentPayload.status === "ok"
-      ? currentItems.length > 0
-        ? "ready"
-        : "empty"
-      : currentPayload.status;
+  const radarState: RadarDataState = resolveRadarDataState(currentPayload);
+  const isStaleFallback = radarState === "ready" && currentPayload?.stale === true;
+  // Provenance dichiarata: source + timestamp di origine + fallback esplicito.
+  const sourceLabel =
+    radarState === "ready"
+      ? isStaleFallback
+        ? `Ultima sincronizzazione Product Hunt: ${formatUtcTimeLabel(currentPayload?.updatedAt ?? "")}`
+        : `Dati live Product Hunt, aggiornati alle ${formatUtcTimeLabel(currentPayload?.updatedAt ?? "")}`
+      : radarState === "loading"
+        ? "Connessione al feed Product Hunt"
+        : "Feed Product Hunt non disponibile";
+  const liveLabel =
+    radarState === "ready"
+      ? isStaleFallback
+        ? "Radar (ultima sync)"
+        : "Radar live"
+      : radarState === "loading"
+        ? "Radar in avvio"
+        : "Radar in pausa";
   const placeholderNodeLabel =
     radarState === "loading"
       ? "Caricamento"
@@ -166,9 +165,15 @@ export function MobileRadarView() {
       : radarState === "empty"
         ? "riprova più tardi"
         : "dati non disponibili";
-  const centerLabel = radarState === "ready" ? "Ultima ora" : "Aggiorno";
+  const centerLabel =
+    radarState === "ready"
+      ? isStaleFallback
+        ? "Ultima sync"
+        : "Ultima ora"
+      : "Aggiorno";
 
-  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  // Data contesto UTC condivisa con il resolver server (timezone-independent).
+  const today = useMemo(() => getUtcContextDate(new Date()), []);
   const [hiddenDiscovered, setHiddenDiscovered] = useState(false);
   const [scanAngle, setScanAngle] = useState(0);
 
@@ -474,12 +479,12 @@ export function MobileRadarView() {
       {/* Header */}
       <div className="mobile-radar-view__header">
         <span className="mobile-radar-view__powered">
-          Dati da <strong>Product Hunt</strong>
+          {sourceLabel}
         </span>
         <h1>
           <span className="mobile-radar-view__live">
             <span className="mobile-radar-view__live-dot" />
-            Radar live
+            {liveLabel}
           </span>
         </h1>
         <p>Scopri i tool migliori di Product Hunt.</p>
@@ -597,6 +602,8 @@ export function MobileRadarView() {
         items={currentItems}
         state={radarState}
         message={currentPayload?.message}
+        stale={isStaleFallback}
+        updatedAt={currentPayload?.updatedAt}
       />
     </div>
   );
@@ -610,10 +617,14 @@ function MobileRadarSections({
   items,
   state,
   message,
+  stale = false,
+  updatedAt,
 }: {
   items: ProductHuntItem[];
   state: RadarDataState;
   message?: string;
+  stale?: boolean;
+  updatedAt?: string;
 }) {
   if (!items.length) {
     const emptyCopy: Record<Exclude<RadarDataState, "ready">, { title: string; body: string }> = {
@@ -656,6 +667,15 @@ function MobileRadarSections({
 
   return (
     <div className="mobile-radar-sections">
+      {stale && (
+        <p
+          className="rounded-[18px] border border-white/10 bg-white/[0.055] p-4 text-sm leading-6 text-white/70"
+          role="status"
+        >
+          {message ?? "Aggiornamento live non riuscito."} Ultima classifica reale
+          sincronizzata: {formatUtcTimeLabel(updatedAt ?? "")}.
+        </p>
+      )}
       <section className="mobile-radar-section mobile-radar-section--table">
         <h2>
           <Zap size={14} />

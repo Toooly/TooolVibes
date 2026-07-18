@@ -1,26 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import type {
+  ProductHuntItem,
+  ProductHuntPayload,
+  ProductHuntRange,
+} from "@/lib/radar/product-hunt-contract";
 import { createTimeoutFetch } from "@/lib/utils/timeout-fetch";
-
-type ProductHuntRange = "day" | "week" | "month";
-
-type ProductHuntItem = {
-  id: string;
-  name: string;
-  tagline: string;
-  votesCount: number;
-  commentsCount: number;
-  productHuntUrl: string;
-  thumbnailUrl?: string;
-};
-
-type ProductHuntPayload = {
-  status: "ok" | "missing-token" | "error";
-  range: ProductHuntRange;
-  updatedAt: string;
-  items: ProductHuntItem[];
-  message?: string;
-};
 
 type ProductHuntOAuthResponse = {
   access_token?: string;
@@ -98,11 +83,20 @@ const rangeSettings: Record<ProductHuntRange, { days: number; ttlMs: number; fir
   month: { days: 30, ttlMs: 12 * 60 * 60 * 1000, first: 40 },
 };
 
+// Cache dei soli payload live riusciti: il fallback stale ri-serva sempre
+// l'ultima classifica reale con il suo `updatedAt` originale (B36 / FLOW-606).
 const responseCache = new Map<
   ProductHuntRange,
   { expiresAt: number; payload: ProductHuntPayload }
 >();
+// Negative cache breve per non martellare l'API durante un outage.
+const fallbackCache = new Map<
+  ProductHuntRange,
+  { expiresAt: number; payload: ProductHuntPayload }
+>();
 let productHuntTokenCache: { token: string; expiresAt: number } | null = null;
+
+const FALLBACK_TTL_MS = 5 * 60 * 1000;
 
 function parseRange(value: string | null): ProductHuntRange {
   if (value === "week" || value === "month") {
@@ -213,6 +207,12 @@ export async function GET(request: NextRequest) {
     return buildResponse(cached.payload, settings.ttlMs);
   }
 
+  const fallbackCached = fallbackCache.get(range);
+
+  if (fallbackCached && fallbackCached.expiresAt > now) {
+    return buildResponse(fallbackCached.payload, FALLBACK_TTL_MS);
+  }
+
   let token: string | null = null;
 
   try {
@@ -224,15 +224,17 @@ export async function GET(request: NextRequest) {
   if (!token) {
     const payload: ProductHuntPayload = {
       status: "missing-token",
+      source: "none",
+      stale: false,
       range,
-      updatedAt: new Date().toISOString(),
+      updatedAt: new Date(now).toISOString(),
       items: [],
       message:
         "Classifica Product Hunt non configurata.",
     };
 
-    responseCache.set(range, { expiresAt: now + 5 * 60 * 1000, payload });
-    return buildResponse(payload, 5 * 60 * 1000);
+    fallbackCache.set(range, { expiresAt: now + FALLBACK_TTL_MS, payload });
+    return buildResponse(payload, FALLBACK_TTL_MS);
   }
 
   try {
@@ -265,23 +267,38 @@ export async function GET(request: NextRequest) {
 
     const payload: ProductHuntPayload = {
       status: "ok",
+      source: "product-hunt-live",
+      stale: false,
       range,
-      updatedAt: new Date().toISOString(),
+      updatedAt: new Date(now).toISOString(),
       items: normalizeItems(data),
     };
 
     responseCache.set(range, { expiresAt: now + settings.ttlMs, payload });
     return buildResponse(payload, settings.ttlMs);
   } catch {
-    const payload: ProductHuntPayload = {
-      status: "error",
-      range,
-      updatedAt: new Date().toISOString(),
-      items: [],
-      message: "Classifica Product Hunt temporaneamente non disponibile.",
-    };
+    // Fallback esplicito: se esiste un'ultima classifica reale la ri-serviamo
+    // dichiarando provenienza (`source`) e staleness (`stale`) senza riscrivere
+    // il timestamp di origine; altrimenti nessun dato inventato.
+    const payload: ProductHuntPayload = cached
+      ? {
+          ...cached.payload,
+          source: "product-hunt-stale",
+          stale: true,
+          message:
+            "Aggiornamento live non riuscito: mostro l'ultima classifica Product Hunt sincronizzata.",
+        }
+      : {
+          status: "error",
+          source: "none",
+          stale: false,
+          range,
+          updatedAt: new Date(now).toISOString(),
+          items: [],
+          message: "Classifica Product Hunt temporaneamente non disponibile.",
+        };
 
-    responseCache.set(range, { expiresAt: now + 5 * 60 * 1000, payload });
-    return buildResponse(payload, 5 * 60 * 1000);
+    fallbackCache.set(range, { expiresAt: now + FALLBACK_TTL_MS, payload });
+    return buildResponse(payload, FALLBACK_TTL_MS);
   }
 }
