@@ -680,6 +680,9 @@
 - **Reversibilità:** boundary precedente conservabile come componente presentazionale.
 - **Non toccare:** monitoring o copy non necessario.
 - **Dipendenze:** B03.
+- **Stato (18 luglio 2026):** completato. Architettura effettiva: UI di recovery estratta in `components/app/error-recovery-view.tsx` come componente presentazionale (copy, digest, reset e identità visiva della boundary precedente conservate, aggiunto link opzionale "Torna alla home" per navigation recovery); `app/error.tsx` ridotto a segment boundary sottile che NON renderizza più `html`/`body`; nuovo `app/global-error.tsx` document boundary, unico owner del document shell (`<html lang="it"><body>`), che riusa la stessa recovery view. Dev harness `app/dev/error-trigger/` (page server + client) per throw SSR via `?mode=ssr` e throw client via bottone, `robots: noindex`, default render mai lanciante (prerender statico sicuro).
+- **Deviazione dall'acceptance originale (18 luglio 2026):** navigation recovery coperta da anchor nativo `href="/"` (non `next/link`: nel global error il router context può essere assente); nessun logging/monitoring aggiunto (B74 futuro); reversibilità affidata a git revert + view presentazionale conservata.
+- **Copertura test (18 luglio 2026):** `__tests__/components/app/error-boundaries.test.tsx` — 6 test jsdom: SSR segment senza html/body annidati con recovery/digest/reset markup, render client senza console error/warn con reset invocato al click, link home `href="/"`, SSR global-error con html/body e stessa recovery, omissione digest/link quando assenti, axe-core zero violazioni (regole `color-contrast`/`region` disabilitate come in B23/B24). Gap residui: recovery reale post-reset su router Next e throw in layout verificabili solo via E2E browser; harness manuale disponibile su `/dev/error-trigger`.
 
 ## BATCH 54 — State matrix Catalogo
 
