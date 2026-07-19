@@ -5,6 +5,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import {
+  parseCatalogLevelParam,
+  serializeCatalogUrl,
+} from "./catalog/catalog-controller";
 
 type DirectoryHeaderSearchProps = {
   autoFocus?: boolean;
@@ -39,20 +43,23 @@ export function DirectoryHeaderSearch({
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const params = new URLSearchParams();
     const normalizedQuery = query.trim();
 
-    if (normalizedQuery) {
-      params.set("q", normalizedQuery);
+    if (pathname.startsWith("/archivio")) {
+      // Already on the archive: keep the active group/tag/level filters and
+      // replace only the query, so the submitted URL stays the canonical
+      // catalog state (B31 / IA-504).
+      router.push(
+        serializeCatalogUrl({
+          query: normalizedQuery,
+          group: searchParams.get("group"),
+          tag: searchParams.get("tag") ?? "",
+          level: parseCatalogLevelParam(searchParams.get("level")),
+        }),
+      );
+    } else {
+      router.push(serializeCatalogUrl({ query: normalizedQuery }));
     }
-
-    router.push(
-      normalizedQuery
-        ? `/archivio?${params.toString()}`
-        : pathname.startsWith("/archivio")
-          ? "/archivio"
-          : "/archivio",
-    );
     onSubmitted?.();
   };
 

@@ -4,6 +4,7 @@ import { Archive3DHero } from "@/components/3d-maestoso/archive-3d-hero";
 import { FloatingCatalogView } from "@/components/directory/floating-catalog-view";
 import { NativePlacement } from "@/components/monetization/native-placement";
 import { releaseFeatures } from "@/lib/config/release-features";
+import { parseCatalogLevelParam } from "@/components/directory/catalog/catalog-controller";
 import {
   getPublicToolFilterGroups,
   getPublicToolViews,
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 type ArchivePageProps = {
-  searchParams: Promise<{ q?: string; tag?: string; group?: string }>;
+  searchParams: Promise<{ q?: string; tag?: string; group?: string; level?: string }>;
 };
 
 export default async function ArchivePage({ searchParams }: ArchivePageProps) {
@@ -29,6 +30,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const initialGroup = filterGroups.some((group) => group.key === params.group)
     ? params.group ?? "all"
     : "all";
+  const initialLevel = parseCatalogLevelParam(params.level);
 
   return (
     <main className="relative overflow-x-hidden">
@@ -42,6 +44,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
         initialQuery={initialQuery}
         initialGroup={initialGroup}
         initialTag={params.tag ?? ""}
+        initialLevel={initialLevel}
+        unifiedSearchEnabled={releaseFeatures.unifiedSearch.enabled}
       />
 
       {/* ═══ Semantic fallback for search engines & screen readers ═══

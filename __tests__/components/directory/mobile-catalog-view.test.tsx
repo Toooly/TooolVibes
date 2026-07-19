@@ -16,16 +16,20 @@ import { useCatalogController } from "@/components/directory/catalog/use-catalog
 import { CATALOG_FILTER_GROUPS, makeCatalogTools } from "./catalog-test-fixtures";
 
 /* Router mock: the facade serializes group state via router.push. */
-const { pushMock } = vi.hoisted(() => ({ pushMock: vi.fn() }));
+const { pushMock, replaceMock } = vi.hoisted(() => ({
+  pushMock: vi.fn(),
+  replaceMock: vi.fn(),
+}));
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push: pushMock,
-    replace: vi.fn(),
+    replace: replaceMock,
     prefetch: vi.fn(),
     back: vi.fn(),
     forward: vi.fn(),
     refresh: vi.fn(),
   }),
+  useSearchParams: () => new URLSearchParams(""),
 }));
 
 /* Motion mock: strip animation internals so assertions and the render
@@ -97,6 +101,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   pushMock.mockClear();
+  replaceMock.mockClear();
 });
 
 afterEach(() => {

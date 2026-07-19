@@ -39,12 +39,15 @@ function CommandDialog({
   children,
   className,
   showCloseButton = false,
+  shouldFilter,
   ...props
 }: Omit<React.ComponentProps<typeof Dialog>, "children"> & {
   title?: string
   description?: string
   className?: string
   showCloseButton?: boolean
+  /** Forwarded to cmdk; false lets the caller rank/filter items itself (B31). */
+  shouldFilter?: boolean
   children: React.ReactNode
 }) {
   return (
@@ -56,7 +59,7 @@ function CommandDialog({
         )}
         showCloseButton={showCloseButton}
       >
-        <Command>
+        <Command shouldFilter={shouldFilter}>
           <DialogHeader className="sr-only">
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>

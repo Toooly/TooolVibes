@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, Search } from "lucide-react";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { useCatalogController } from "./catalog/use-catalog-controller";
+import type { CatalogLevelFilter } from "./catalog/catalog-controller";
 import { CatalogSearchControl, CatalogLevelChips } from "./catalog/catalog-controls";
 import { CatalogCommandPanel } from "./catalog/catalog-command-panel";
 import { CatalogCategoryMap } from "./catalog/catalog-category-map";
@@ -23,6 +24,8 @@ interface MobileCatalogViewProps {
   initialQuery?: string;
   initialGroup?: string;
   initialTag?: string;
+  initialLevel?: CatalogLevelFilter;
+  unifiedSearchEnabled?: boolean;
 }
 
 export function MobileCatalogView({
@@ -31,6 +34,8 @@ export function MobileCatalogView({
   initialQuery = "",
   initialGroup = "all",
   initialTag = "",
+  initialLevel = "all",
+  unifiedSearchEnabled = true,
 }: MobileCatalogViewProps) {
   const controller = useCatalogController({
     tools,
@@ -38,6 +43,8 @@ export function MobileCatalogView({
     initialQuery,
     initialGroup,
     initialTag,
+    initialLevel,
+    unifiedSearchEnabled,
   });
 
   const {

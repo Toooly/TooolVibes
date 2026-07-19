@@ -2,6 +2,7 @@
 
 import { MobileCatalogView } from "./mobile-catalog-view";
 import type { ToolFilterGroup, ToolPublicView } from "@/lib/data/tool-public-view";
+import type { CatalogLevelFilter } from "./catalog/catalog-controller";
 
 interface FloatingCatalogViewProps {
   tools: ToolPublicView[];
@@ -9,6 +10,8 @@ interface FloatingCatalogViewProps {
   initialQuery?: string;
   initialGroup?: string;
   initialTag?: string;
+  initialLevel?: CatalogLevelFilter;
+  unifiedSearchEnabled?: boolean;
 }
 
 export function FloatingCatalogView({
@@ -17,6 +20,8 @@ export function FloatingCatalogView({
   initialQuery = "",
   initialGroup = "all",
   initialTag = "",
+  initialLevel = "all",
+  unifiedSearchEnabled = true,
 }: FloatingCatalogViewProps) {
   return (
     <MobileCatalogView
@@ -25,6 +30,8 @@ export function FloatingCatalogView({
       initialQuery={initialQuery}
       initialGroup={initialGroup}
       initialTag={initialTag}
+      initialLevel={initialLevel}
+      unifiedSearchEnabled={unifiedSearchEnabled}
     />
   );
 }

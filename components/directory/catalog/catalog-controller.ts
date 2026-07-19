@@ -23,11 +23,18 @@ import {
   Clock,
 } from "lucide-react";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import { searchTools } from "@/lib/search/tool-search";
+import {
+  createLegacyToolSearchIndex,
+  type ToolSearchEngine,
+} from "@/lib/search/tool-search-adapter";
 
 /* ═══════════════════════════════════════════════════════════════
    Catalog controller — pure query/filter/URL state helpers.
    Behavior-preserving extraction from MobileCatalogView (B25):
    no visual, UX or routing semantic changes.
+   B31: canonical URL state serialization + unified search engine
+   (legacy Fuse engine preserved behind the unifiedSearch flag).
    ═══════════════════════════════════════════════════════════════ */
 
 export type CatalogToolLevel = "featured" | "beginner" | "intermediate" | "expert";
@@ -131,24 +138,91 @@ export function buildCatalogGroupUrl(groupKey: string): string {
 
 export const CATALOG_ALL_TOOLS_URL = "/archivio";
 
+/* ── Canonical URL state (B31) ──────────────────────────────── */
+
+export const CATALOG_LEVEL_VALUES: readonly CatalogToolLevel[] = [
+  "featured",
+  "beginner",
+  "intermediate",
+  "expert",
+];
+
+export type CatalogUrlState = {
+  query?: string;
+  group?: string | null;
+  tag?: string;
+  level?: CatalogLevelFilter;
+};
+
+/**
+ * Single serializer for the archive URL state shared by the catalog
+ * controller, the header search and the command palette (IA-504):
+ * same state → same canonical URL. Param order is fixed
+ * (group, q, tag, level); empty/default values are omitted.
+ */
+export function serializeCatalogUrl({
+  query = "",
+  group = null,
+  tag = "",
+  level = "all",
+}: CatalogUrlState): string {
+  const params = new URLSearchParams();
+  if (group && group !== "all") {
+    params.set("group", group);
+  }
+  const trimmedQuery = query.trim();
+  if (trimmedQuery) {
+    params.set("q", trimmedQuery);
+  }
+  if (tag) {
+    params.set("tag", tag);
+  }
+  if (level && level !== "all") {
+    params.set("level", level);
+  }
+  const serialized = params.toString();
+  return serialized
+    ? `${CATALOG_ALL_TOOLS_URL}?${serialized}`
+    : CATALOG_ALL_TOOLS_URL;
+}
+
+export function parseCatalogLevelParam(
+  value: string | null | undefined,
+): CatalogLevelFilter {
+  return value && (CATALOG_LEVEL_VALUES as readonly string[]).includes(value)
+    ? (value as CatalogLevelFilter)
+    : "all";
+}
+
+export function resolveCatalogGroupParam(
+  filterGroups: { key: string; label: string }[],
+  value: string | null | undefined,
+): string {
+  return value && filterGroups.some((group) => group.key === value)
+    ? value
+    : "all";
+}
+
 /* ── Search index ───────────────────────────────────────────── */
 
+/**
+ * Legacy pre-B31 Fuse index. Kept for the unifiedSearch=OFF rollback
+ * path; the canonical engine is lib/search/tool-search.
+ */
 export function createCatalogSearchIndex(tools: ToolPublicView[]): Fuse<ToolPublicView> {
-  return new Fuse(tools, {
-    keys: ["name", "categoryLabel", "tags", "shortDescription", "longDescription"],
-    threshold: 0.35,
-  });
+  return createLegacyToolSearchIndex(tools);
 }
 
 /* ── Filtering pipeline ─────────────────────────────────────── */
 
 export type CatalogFilterInput = {
   tools: ToolPublicView[];
-  searchIndex: Fuse<ToolPublicView>;
+  searchIndex: Fuse<ToolPublicView> | null;
   activeGroup: string | null;
   tag: string;
   searchQuery: string;
   activeLevel: CatalogLevelFilter;
+  searchEngine?: ToolSearchEngine;
 };
 
 export function filterCatalogTools({
@@ -158,6 +232,7 @@ export function filterCatalogTools({
   tag,
   searchQuery,
   activeLevel,
+  searchEngine = "canonical",
 }: CatalogFilterInput): ToolPublicView[] {
   let result = [...tools];
   if (activeGroup && activeGroup !== "all") {
@@ -166,12 +241,16 @@ export function filterCatalogTools({
   if (tag) {
     result = result.filter((tool) => tool.tags.includes(tag));
   }
-  if (searchQuery.trim()) {
+  const trimmedQuery = searchQuery.trim();
+  if (trimmedQuery) {
     const allowedSlugs = new Set(result.map((tool) => tool.slug));
-    result = searchIndex
-      .search(searchQuery.trim())
-      .map((entry) => entry.item)
-      .filter((tool) => allowedSlugs.has(tool.slug));
+    const ranked =
+      searchEngine === "legacy-fuse"
+        ? (searchIndex ?? createCatalogSearchIndex(tools))
+            .search(trimmedQuery)
+            .map((entry) => entry.item)
+        : searchTools(tools, trimmedQuery);
+    result = ranked.filter((tool) => allowedSlugs.has(tool.slug));
   }
   if (activeLevel !== "all") {
     result = result.filter((tool) => tool.level === activeLevel);
