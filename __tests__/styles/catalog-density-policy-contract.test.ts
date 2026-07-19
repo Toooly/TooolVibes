@@ -29,7 +29,10 @@ describe("B38 catalog density policy — CSS contract", () => {
     /* Il blocco parte dall'apertura del commento che contiene il marker. */
     const start = css.lastIndexOf("/*", markerIndex);
     expect(start).toBeGreaterThan(-1);
-    const block = css.slice(start);
+    const nextMarkerIndex = css.indexOf("B40 / MOB-704", markerIndex);
+    const nextSectionStart = css.lastIndexOf("/*", nextMarkerIndex);
+    expect(nextSectionStart).toBeGreaterThan(start);
+    const block = css.slice(start, nextSectionStart);
 
     /* Soglia mobile: una colonna sotto 768px (contract 320–430px). */
     expect(block).toContain("@media (max-width: 767.98px)");
@@ -43,8 +46,8 @@ describe("B38 catalog density policy — CSS contract", () => {
     const rulesOnly = block.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(rulesOnly).not.toContain("!important");
 
-    /* La sezione B38 e' in coda al file (append isolato, stile B39):
-       nessun'altra regola la segue. */
+    /* La sezione B38 resta isolata anche quando batch successivi vengono
+       aggiunti in coda al foglio globale. */
     expect(block.slice(block.lastIndexOf("}") + 1).trim()).toBe("");
   });
 

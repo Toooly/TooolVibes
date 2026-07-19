@@ -67,7 +67,7 @@ function stubOffline() {
 
 function restoreOnline() {
   // Ripristina il getter del prototype rimuovendo lo shadow sull'istanza.
-  delete (window.navigator as Navigator & { onLine?: boolean }).onLine;
+  Reflect.deleteProperty(window.navigator, "onLine");
 }
 
 afterEach(() => {
@@ -834,13 +834,16 @@ vi.mock("motion/react", () => {
     "whileTap",
   ]);
   const create = (tag: string) => {
-    type StubProps = Record<string, unknown> & { children?: ReactNode };
+    type StubProps = {
+      children?: ReactNode;
+      [key: string]: unknown;
+    };
     const MotionStub = forwardRef<HTMLElement, StubProps>((props, ref) => {
       const { children, ...rest } = props;
       const domProps = Object.fromEntries(
         Object.entries(rest).filter(([key]) => !MOTION_PROPS.has(key)),
       );
-      return createElement(tag, { ref, ...domProps }, children);
+      return createElement(tag, { ref, ...domProps }, children as ReactNode);
     });
     MotionStub.displayName = `MotionStub(${tag})`;
     return MotionStub;

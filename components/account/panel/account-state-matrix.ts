@@ -54,7 +54,12 @@ export type AccountStateMatrixInput = {
 /* Keyword condivise con il tono auth del modello B27: i messaggi di
    attach degrado del provider (B18/B19) contengono sempre una di
    queste; il messaggio di successo contiene "collegata all'account". */
-const ATTACH_RETRY_KEYWORDS = ["pausa", "non disponibile", "supera il limite"];
+const ATTACH_RETRY_KEYWORDS = [
+  "pausa",
+  "non disponibile",
+  "non è disponibile",
+  "supera il limite",
+];
 const ATTACH_SUCCESS_KEYWORD = "collegata all'account";
 
 export function isAttachDegradedMessage(message: string): boolean {

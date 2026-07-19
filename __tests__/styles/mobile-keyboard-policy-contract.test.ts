@@ -106,13 +106,20 @@ describe("B39 utility isolata tv-kbd-* (app/globals.css)", () => {
   // Il banner e' dentro un commento /* ... */ che inizia prima del marker:
   // lo slice parte dall'apertura del commento per poterlo strippare nei check.
   const commentStart = globalsCss.lastIndexOf("/*", sectionIndex);
+  const nextMarkerIndex = globalsCss.indexOf(
+    "B38 — Catalog density policy",
+    sectionIndex,
+  );
+  const nextSectionStart = globalsCss.lastIndexOf("/*", nextMarkerIndex);
   const section = globalsCss.slice(
     commentStart === -1 ? sectionIndex : commentStart,
+    nextSectionStart === -1 ? undefined : nextSectionStart,
   );
 
-  it("la sezione B39 esiste ed è l'ultima del file (unlayered, isolata)", () => {
+  it("la sezione B39 esiste nella parte finale del file (unlayered, isolata)", () => {
     expect(sectionIndex).toBeGreaterThan(-1);
     expect(sectionIndex).toBeGreaterThan(globalsCss.length * 0.9);
+    expect(nextSectionStart).toBeGreaterThan(commentStart);
   });
 
   it("la sezione non introduce alcun !important", () => {

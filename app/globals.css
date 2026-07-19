@@ -34212,3 +34212,88 @@ body:has(.tone-account) {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   B40 / MOB-704 — Home time-to-value.
+
+   La variante compact rimuove le due altezze viewport legacy e porta CTA
+   e primo segnale tool nel flusso iniziale. Le doppie classi prevalgono
+   sulle correzioni mobile di vibes-3d-maestoso.css senza cambiare il layout
+   legacy quando il flag è disattivato.
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  .v-hero-mobile.v-hero-mobile--compact {
+    min-height: 0 !important;
+    padding-top: calc(5rem + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  .v-discovery-stage.v-discovery-stage--flow {
+    min-height: 0 !important;
+    padding-top: calc(4.9rem + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .vibe-home-mobile-origin.vibe-home-mobile-origin--ttv {
+    margin-top: 0;
+  }
+
+  .v-hero-mobile__tool-chip {
+    display: inline-flex;
+    max-width: 100%;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid rgba(167, 139, 250, 0.34);
+    border-radius: 9999px;
+    background:
+      radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.16), transparent 42%),
+      linear-gradient(135deg, rgba(79, 70, 229, 0.34), rgba(8, 145, 178, 0.2));
+    color: #e2e8f0;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 12px 30px rgba(76, 29, 149, 0.2);
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .v-hero-mobile__tool-chip:hover,
+  .v-hero-mobile__tool-chip:focus-visible {
+    border-color: rgba(196, 181, 253, 0.62);
+    transform: translateY(-1px);
+  }
+
+  .v-hero-mobile__tool-chip-icon {
+    flex: 0 0 auto;
+    color: #f6dfa5;
+  }
+
+  .v-hero-mobile__tool-chip-text {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    text-align: left;
+  }
+
+  .v-hero-mobile__tool-chip-text strong {
+    max-width: 100%;
+    overflow: hidden;
+    color: #ffffff;
+    font-size: 0.82rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v-hero-mobile__tool-chip {
+    transition: none;
+  }
+}
