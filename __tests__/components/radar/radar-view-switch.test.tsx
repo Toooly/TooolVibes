@@ -174,12 +174,13 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
 
       expect(
         await screen.findByText("Scopri i tool migliori di Product Hunt.", undefined, {
-          timeout: 5000,
+          timeout: 10_000,
         }),
       ).toBeTruthy();
       expect(container.querySelector(".mobile-radar-view")).toBeTruthy();
       expect(container.querySelector(".desktop-vibe-radar")).toBeNull();
     },
+    15_000,
   );
 
   it.each([1024, 1440, 1920])(

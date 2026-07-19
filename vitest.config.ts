@@ -10,6 +10,9 @@ const config = {
   test: {
     environment: "node",
     globals: false,
+    // La suite completa esegue piu' scenari jsdom/axe in parallelo: 5s e'
+    // troppo stretto sotto contesa su Windows e produce timeout non funzionali.
+    testTimeout: 10_000,
     exclude: [
       "node_modules",
       ".codex-tmp",

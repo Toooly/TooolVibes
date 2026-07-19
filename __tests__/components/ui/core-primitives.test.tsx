@@ -437,5 +437,5 @@ describe("design system showcase state matrix", () => {
   it("has no axe violations on the full showcase", async () => {
     const { container } = render(<FigmaDesignSystemShowcase />);
     await expectNoAxeViolations(container);
-  });
+  }, 10_000);
 });
