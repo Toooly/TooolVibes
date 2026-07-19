@@ -35,7 +35,10 @@ import { cn, formatItalianDate } from "@/lib/utils";
    ═══════════════════════════════════════════════════════════════ */
 
 export type CanonicalToolCardTool = DirectoryTool | ToolPublicView;
-export type CanonicalToolCardDensity = "grid" | "list" | "mobile";
+/* "mobile-list" (B38 / MOB-702): card list per la colonna singola
+   sotto soglia — information priority title → use case → CTA con
+   copy utile estesa (clamp 3) e action rail protetta nel footer. */
+export type CanonicalToolCardDensity = "grid" | "list" | "mobile" | "mobile-list";
 
 export type CanonicalToolCardProps = {
   tool: CanonicalToolCardTool;
@@ -117,7 +120,7 @@ export function CanonicalToolCard({
   const glyph = (
     <DirectoryToolGlyph
       tool={tool}
-      size={density === "mobile" ? "md" : "lg"}
+      size={density === "mobile" || density === "mobile-list" ? "md" : "lg"}
       className={priority ? "shadow-[0_16px_30px_rgba(92,60,255,0.18)]" : ""}
     />
   );
@@ -233,7 +236,8 @@ export function CanonicalToolCard({
     density === "grid" &&
       "h-full min-h-[21rem] rounded-[var(--tv-radius-feature)] sm:min-h-[30rem]",
     density === "list" && "h-full rounded-[var(--tv-radius-feature)]",
-    density === "mobile" && "rounded-[var(--tv-radius-lg)]",
+    (density === "mobile" || density === "mobile-list") &&
+      "rounded-[var(--tv-radius-lg)]",
     className,
   );
 
@@ -371,6 +375,76 @@ export function CanonicalToolCard({
               {dateLabel}
             </div>
           </div>
+        </div>
+      </Card>
+    );
+  }
+
+  if (density === "mobile-list") {
+    /* B38 / MOB-702 — card list per la colonna singola sotto soglia:
+       a tutta larghezza il use case ha spazio per tre righe (clamp 3),
+       titolo sempre leggibile (break-words, clamp 2) e action rail
+       protetta nel footer con wrap garantito anche a 320px. */
+    return (
+      <Card
+        size="sm"
+        role="article"
+        aria-label={tool.name}
+        {...stateProps}
+        className={rootClass}
+      >
+        <div className="flex items-start gap-3 p-3.5">
+          {glyph}
+          <div className="min-w-0 flex-1">
+            <div
+              data-slot="tool-card-topline"
+              className="flex items-center justify-between gap-2"
+            >
+              <p className={cn(eyebrowClass, "truncate text-[var(--muted-strong)]")}>
+                {tool.categoryLabel}
+              </p>
+              {levelLabel ? (
+                <Badge variant={levelVariant} className="shrink-0">
+                  {levelLabel}
+                </Badge>
+              ) : null}
+            </div>
+            <h3
+              data-slot="tool-card-title"
+              className="text-display-card mt-1.5 text-[length:var(--tv-text-md)] font-semibold leading-[var(--tv-leading-heading)] break-words text-card-foreground"
+            >
+              <Link href={profileHref} className={cn("line-clamp-2", focusRingClass)}>
+                {tool.name}
+              </Link>
+            </h3>
+            {description ? (
+              <p
+                data-slot="tool-card-description"
+                className="mt-1 line-clamp-3 break-words text-[length:var(--tv-text-sm)] leading-[var(--tv-leading-body)] text-[var(--muted)]"
+              >
+                {description}
+              </p>
+            ) : null}
+          </div>
+        </div>
+        <div
+          data-slot="tool-card-footer"
+          className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)] px-3.5 py-2.5"
+        >
+          <Button
+            variant="link"
+            size="sm"
+            render={<Link href={profileHref} />}
+            aria-label={`Apri la scheda di ${tool.name}`}
+          >
+            Apri scheda
+            <ArrowRight aria-hidden="true" className="size-3.5" />
+          </Button>
+          {showActions ? (
+            <div data-slot="tool-card-actions" className="flex items-center gap-2">
+              {actionNode}
+            </div>
+          ) : null}
         </div>
       </Card>
     );

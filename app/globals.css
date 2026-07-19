@@ -34199,3 +34199,16 @@ body:has(.tone-account) {
     z-index: 1;
   }
 }
+
+/* ═══ B38 — Catalog density policy (MOB-702) ═══
+   Variante density-list della result list (flag catalog-density-policy):
+   una colonna leggibile sotto la soglia mobile (contract 320–430px).
+   Regola scopata alla sola variante flaggata, specificity 0-2-0 senza
+   !important: la griglia legacy a due colonne resta intatta quando il
+   flag e' OFF e nessuna regola esistente viene sovrascritta per altri
+   consumatori di .mobile-tool-grid__list. */
+@media (max-width: 767.98px) {
+  .mobile-tool-grid--density-list .mobile-tool-grid__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -10,6 +10,11 @@ import { extractDomain } from "./catalog-controller";
    CatalogFeaturedRail — sponsor/featured slot ("Scelte consigliate").
    Isolated promotion placement extracted from MobileCatalogView (B25).
    Sponsor policy unchanged: same selection, same markup, same links.
+
+   B38 / MOB-702 — disclosure esplicita "Promosso" accanto
+   all'eyebrow (sponsor disclosure chiara) e aria-label dichiarata;
+   la rail resta DOPO il primo valore organico utile (in
+   CatalogCategoryMap segue la griglia categorie).
    ═══════════════════════════════════════════════════════════════ */
 
 type CatalogFeaturedRailProps = {
@@ -21,10 +26,19 @@ export function CatalogFeaturedRail({ tools, onSelectAll }: CatalogFeaturedRailP
   if (!tools.length) return null;
 
   return (
-    <section className="catalog-featured-rail" aria-label="Tool consigliati">
+    <section
+      className="catalog-featured-rail"
+      aria-label="Tool consigliati, contenuto promosso"
+      data-sponsor-slot="catalog-featured"
+    >
       <div className="catalog-featured-rail__header">
         <div>
           <span>Scelte consigliate</span>
+          <span
+            className="catalog-featured-rail__disclosure ml-2 inline-flex items-center rounded-full border border-[var(--tv-border-subtle)] px-2 py-0.5 align-middle text-[length:var(--tv-text-xs)] font-semibold uppercase tracking-[var(--tv-tracking-label)] text-[var(--tv-ink-muted-aa)]"
+          >
+            Promosso
+          </span>
           <h2>Tool pronti da valutare</h2>
         </div>
         <button type="button" onClick={onSelectAll} className="catalog-featured-rail__cta">
