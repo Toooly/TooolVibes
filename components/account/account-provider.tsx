@@ -78,8 +78,18 @@ const AccountContext = createContext<AccountContextValue>({
   signOut: async () => {},
 });
 
-export function AccountProvider({ children }: { children: React.ReactNode }) {
-  const [authEnabled, setAuthEnabled] = useState(() => isSupabaseBrowserEnabled());
+export function AccountProvider({
+  children,
+  initialAuthEnabled = false,
+}: {
+  children: React.ReactNode;
+  initialAuthEnabled?: boolean;
+}) {
+  /* Public values can exist only in Worker runtime bindings and be absent
+     from the Workers Builds client bundle. The Server Component prop keeps
+     SSR and the first client render identical; bootstrap then refreshes the
+     full configuration from /api/auth/config. */
+  const [authEnabled, setAuthEnabled] = useState(initialAuthEnabled);
   const [status, setStatus] = useState<AccountStatus>("loading");
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);

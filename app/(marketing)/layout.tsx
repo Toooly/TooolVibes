@@ -11,6 +11,7 @@ import { OrbitalProvider, OrbitalLayer } from "@/components/app/orbital-system";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
+import { getSupabasePublicEnv } from "@/lib/supabase/env";
 
 export default async function MarketingLayout({
   children,
@@ -22,6 +23,9 @@ export default async function MarketingLayout({
   const isGateOpen =
     !releaseFeatures.publicGate.enabled ||
     (gateCookie ? await verifyGateToken(gateCookie.value) : false);
+  const { url: supabaseUrl, anonKey: supabaseAnonKey } =
+    getSupabasePublicEnv();
+  const initialAuthEnabled = Boolean(supabaseUrl && supabaseAnonKey);
 
   if (!isGateOpen) {
     return <>{children}</>;
@@ -35,7 +39,7 @@ export default async function MarketingLayout({
       {releaseFeatures.threeD.enabled && <Global3DLayer />}
       <OrbitalProvider>
         {releaseFeatures.threeD.enabled && <OrbitalLayer />}
-        <AccountProvider>
+        <AccountProvider initialAuthEnabled={initialAuthEnabled}>
           <DiscoveryPersistenceProvider>
             <SiteHeaderV2 />
             <main id="main-content" tabIndex={-1} className="relative z-10 pb-mobile-nav md:pb-0">
