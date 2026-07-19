@@ -16,10 +16,10 @@ import {
   formatUtcTimeLabel,
   resolveRadarDataState,
   type ProductHuntItem,
-  type ProductHuntPayload,
   type ProductHuntRange,
   type RadarDataState,
 } from "@/lib/radar/product-hunt-contract";
+import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
 import { getUtcContextDate } from "@/supabase/functions/_shared/radar-prediction-resolver";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -80,56 +80,12 @@ const HIDDEN_SIGNAL_STORAGE_KEY = "tv:hidden-signal";
 export function MobileRadarView() {
   const hiddenSignalRelease = useGamificationSurface("hiddenSignal");
   const activeRange: ProductHuntRange = "day";
-  const [payloads, setPayloads] = useState<
-    Partial<Record<ProductHuntRange, ProductHuntPayload>>
-  >({});
-  const [, setLoadingRange] = useState<ProductHuntRange | null>(null);
-
-  /* ── Fetch data ── */
-  const fetchRange = useCallback(async (range: ProductHuntRange) => {
-    if (payloads[range]) return;
-    setLoadingRange(range);
-    try {
-      const res = await fetch(`/api/product-hunt?range=${range}`);
-      if (!res.ok) throw new Error("fail");
-      const data = (await res.json()) as ProductHuntPayload;
-      setPayloads((p) => ({ ...p, [range]: data }));
-    } catch {
-      setPayloads((p) => ({
-        ...p,
-        [range]: {
-          status: "error",
-          source: "none",
-          stale: false,
-          range,
-          updatedAt: new Date().toISOString(),
-          items: [],
-          message: "Dati non disponibili",
-        },
-      }));
-    } finally {
-      setLoadingRange(null);
-    }
-  }, [payloads]);
-
-  // Una sola fetch per range: il payload è cacheato in stato e l'effetto su
-  // `activeRange` copre già il mount iniziale (B36 / FLOW-606).
-  useEffect(() => {
-    fetchRange(activeRange);
-  }, [activeRange, fetchRange]);
-
-  useEffect(() => {
-    const onVis = () => {
-      if (!document.hidden) {
-        fetchRange("day");
-      }
-    };
-    document.addEventListener("visibilitychange", onVis);
-    return () => document.removeEventListener("visibilitychange", onVis);
-  }, [fetchRange]);
+  // Query condivisa (B44 / PERF-1202): una sola request per key su tutte le
+  // rappresentazioni Radar; il fallback d'errore è il payload unico di
+  // contratto B36. Cache e dedup sono del Query Client, non di stato locale.
+  const { payload: currentPayload } = useProductHuntRadar(activeRange);
 
   /* ── Overlay state for floating layer ── */
-  const currentPayload = payloads[activeRange];
   const currentItems = useMemo(
     () => currentPayload?.items ?? [],
     [currentPayload?.items],

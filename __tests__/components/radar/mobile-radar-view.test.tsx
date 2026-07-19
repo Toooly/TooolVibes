@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -12,6 +13,20 @@ vi.mock("@/lib/gamification/actions", () => ({
 }));
 
 import { MobileRadarView } from "@/components/radar/mobile-radar-view";
+
+// B44: la view consuma la query condivisa (PERF-1202); ogni render ha un
+// Query Client fresco per isolare cache e network count tra i test.
+function renderMobileRadarView() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MobileRadarView />
+    </QueryClientProvider>,
+  );
+}
 
 const LIVE_PAYLOAD: ProductHuntPayload = {
   status: "ok",
@@ -89,7 +104,7 @@ describe("MobileRadarView — stati onesti del radar (B36 / FLOW-606)", () => {
   it("live: una sola fetch per range, provenienza e timestamp dichiarati", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_PAYLOAD));
 
-    render(<MobileRadarView />);
+    renderMobileRadarView();
 
     expect(await screen.findByText("Classifica radar")).toBeTruthy();
     expect(await screen.findAllByText("Alpha Tool")).not.toHaveLength(0);
@@ -114,7 +129,7 @@ describe("MobileRadarView — stati onesti del radar (B36 / FLOW-606)", () => {
       }),
     );
 
-    render(<MobileRadarView />);
+    renderMobileRadarView();
 
     expect(await screen.findByText("Radar (ultima sync)")).toBeTruthy();
     expect(
@@ -130,7 +145,7 @@ describe("MobileRadarView — stati onesti del radar (B36 / FLOW-606)", () => {
   it("error: nessun dato inventato, stato di pausa dichiarato", async () => {
     fetchMock.mockRejectedValue(new Error("network down"));
 
-    render(<MobileRadarView />);
+    renderMobileRadarView();
 
     expect(await screen.findByText("Radar non disponibile")).toBeTruthy();
     // Label di stato presente sia in header sia nei nodi placeholder neutri.
@@ -152,7 +167,7 @@ describe("MobileRadarView — stati onesti del radar (B36 / FLOW-606)", () => {
       }),
     );
 
-    render(<MobileRadarView />);
+    renderMobileRadarView();
 
     expect((await screen.findAllByText("Radar in pausa")).length).toBeGreaterThan(0);
     expect(
@@ -173,7 +188,7 @@ describe("MobileRadarView — stati onesti del radar (B36 / FLOW-606)", () => {
       }),
     );
 
-    render(<MobileRadarView />);
+    renderMobileRadarView();
 
     await waitFor(() =>
       expect(screen.getByText("Nessun segnale disponibile")).toBeTruthy(),

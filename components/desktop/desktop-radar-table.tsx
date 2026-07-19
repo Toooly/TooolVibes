@@ -1,42 +1,26 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ExternalLink } from "lucide-react";
 
-type ProductHuntRange = "day" | "week" | "month";
+import {
+  formatUtcTimeLabel,
+  resolveRadarDataState,
+  type ProductHuntItem,
+  type ProductHuntRange,
+} from "@/lib/radar/product-hunt-contract";
+import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
 
-type ProductHuntItem = {
-  id: string;
-  name: string;
-  tagline: string;
-  votesCount: number;
-  commentsCount: number;
-  productHuntUrl: string;
-  thumbnailUrl?: string;
-};
-
-type ProductHuntPayload = {
-  status: "ok" | "missing-token" | "error";
-  range: ProductHuntRange;
-  updatedAt: string;
-  items: ProductHuntItem[];
-  message?: string;
-};
-
-const radarTabs: { key: ProductHuntRange; label: string }[] = [
-  { key: "day", label: "Giorno" },
-  { key: "week", label: "Settimana" },
-  { key: "month", label: "Mese" },
-];
-
-function formatUpdatedAt(value?: string) {
-  if (!value) return "in caricamento";
-
-  return new Intl.DateTimeFormat("it-IT", {
-    dateStyle: "short",
-    timeStyle: "short",
-  }).format(new Date(value));
-}
+/**
+ * Tabella desktop del Radar (B44 / DESK-804 / PERF-1202).
+ *
+ * Il range è controllato dalla composizione (`DesktopVibeRadar`): i tab di
+ * periodo vivono nella control bar condivisa, così lo switch di visual non
+ * perde la selezione. Dati e cache arrivano dalla query condivisa
+ * `useProductHuntRadar` (una request per key, switch di visual servito da
+ * cache). Timestamp e fallback seguono il contratto B36: label UTC
+ * deterministiche e banner stale dichiarato, nessun dato inventato.
+ */
 
 function formatSignal(item: ProductHuntItem) {
   if (item.votesCount > 0 && item.commentsCount > 0) {
@@ -69,59 +53,20 @@ function DesktopRadarTableSkeleton() {
   );
 }
 
-export function DesktopRadarTable() {
-  const [activeRange, setActiveRange] = useState<ProductHuntRange>("day");
-  const [payloads, setPayloads] = useState<Partial<Record<ProductHuntRange, ProductHuntPayload>>>({});
-  const [loadingRange, setLoadingRange] = useState<ProductHuntRange | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    if (payloads[activeRange]) {
-      return;
-    }
-
-    setLoadingRange(activeRange);
-
-    fetch(`/api/product-hunt?range=${activeRange}`)
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error("Product Hunt request failed");
-        }
-
-        return (await response.json()) as ProductHuntPayload;
-      })
-      .then((payload) => {
-        if (!isMounted) return;
-        setPayloads((current) => ({ ...current, [activeRange]: payload }));
-      })
-      .catch(() => {
-        if (!isMounted) return;
-        setPayloads((current) => ({
-          ...current,
-          [activeRange]: {
-            status: "error",
-            range: activeRange,
-            updatedAt: new Date().toISOString(),
-            items: [],
-            message: "Classifica Product Hunt temporaneamente non disponibile.",
-          },
-        }));
-      })
-      .finally(() => {
-        if (isMounted) {
-          setLoadingRange(null);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [activeRange, payloads]);
-
-  const payload = payloads[activeRange];
+export function DesktopRadarTable({ range }: { range: ProductHuntRange }) {
+  const { payload, isLoading } = useProductHuntRadar(range);
+  const radarState = resolveRadarDataState(payload);
   const items = useMemo(() => payload?.items ?? [], [payload?.items]);
-  const isLoading = loadingRange === activeRange && !payload;
+  const isStaleFallback = radarState === "ready" && payload?.stale === true;
+
+  const updatedLabel =
+    radarState === "loading"
+      ? "Aggiornamento in corso…"
+      : radarState === "ready"
+        ? isStaleFallback
+          ? `Ultima sync: ${formatUtcTimeLabel(payload?.updatedAt ?? "")}`
+          : `Aggiornato: ${formatUtcTimeLabel(payload?.updatedAt ?? "")}`
+        : "Aggiornamento non disponibile";
 
   return (
     <section
@@ -130,23 +75,7 @@ export function DesktopRadarTable() {
       aria-busy={isLoading}
     >
       <div className="desktop-radar-table__topbar">
-        <div className="desktop-radar-table__tabs" role="tablist" aria-label="Periodo classifica">
-          {radarTabs.map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              role="tab"
-              aria-selected={activeRange === tab.key}
-              className={activeRange === tab.key ? "is-active" : undefined}
-              onClick={() => setActiveRange(tab.key)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-        <span className="desktop-radar-table__updated">
-          Aggiornato: {formatUpdatedAt(payload?.updatedAt)}
-        </span>
+        <span className="desktop-radar-table__updated">{updatedLabel}</span>
       </div>
 
       <div className="desktop-radar-table__head" aria-hidden="true">
@@ -156,42 +85,58 @@ export function DesktopRadarTable() {
         <span>Link</span>
       </div>
 
-      {isLoading || !payload ? (
+      {radarState === "loading" ? (
         <DesktopRadarTableSkeleton />
-      ) : payload.status === "ok" && items.length > 0 ? (
-        <div className="desktop-radar-table__body">
-          {items.slice(0, 10).map((item, index) => (
-            <a
-              key={item.id}
-              href={item.productHuntUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="desktop-radar-table__row"
+      ) : radarState === "ready" ? (
+        <>
+          {isStaleFallback && (
+            <p
+              className="mx-4 mt-4 rounded-[18px] border border-white/10 bg-white/[0.055] p-4 text-sm leading-6 text-white/70"
+              role="status"
             >
-              <span className="desktop-radar-table__rank">#{index + 1}</span>
-              <span className="desktop-radar-table__visual">
-                {item.thumbnailUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.thumbnailUrl} alt="" loading="lazy" />
-                ) : (
-                  <span>{item.name.slice(0, 2).toUpperCase()}</span>
-                )}
-              </span>
-              <span className="desktop-radar-table__copy">
-                <strong>{item.name}</strong>
-                <small>{item.tagline}</small>
-              </span>
-              <span className="desktop-radar-table__metric">{formatSignal(item)}</span>
-              <span className="desktop-radar-table__open">
-                Apri
-                <ExternalLink size={13} aria-hidden="true" />
-              </span>
-            </a>
-          ))}
-        </div>
+              {payload?.message ?? "Aggiornamento live non riuscito."} Ultima
+              classifica reale sincronizzata:{" "}
+              {formatUtcTimeLabel(payload?.updatedAt ?? "")}.
+            </p>
+          )}
+          <div className="desktop-radar-table__body">
+            {items.slice(0, 10).map((item, index) => (
+              <a
+                key={item.id}
+                href={item.productHuntUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="desktop-radar-table__row"
+              >
+                <span className="desktop-radar-table__rank">#{index + 1}</span>
+                <span className="desktop-radar-table__visual">
+                  {item.thumbnailUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={item.thumbnailUrl} alt="" loading="lazy" />
+                  ) : (
+                    <span>{item.name.slice(0, 2).toUpperCase()}</span>
+                  )}
+                </span>
+                <span className="desktop-radar-table__copy">
+                  <strong>{item.name}</strong>
+                  <small>{item.tagline}</small>
+                </span>
+                <span className="desktop-radar-table__metric">{formatSignal(item)}</span>
+                <span className="desktop-radar-table__open">
+                  Apri
+                  <ExternalLink size={13} aria-hidden="true" />
+                </span>
+              </a>
+            ))}
+          </div>
+        </>
       ) : (
         <div className="desktop-radar-table__empty">
-          <strong>{payload.message ?? "Classifica Product Hunt non disponibile."}</strong>
+          <strong>
+            {radarState === "empty"
+              ? "Nessun segnale Product Hunt in questo intervallo."
+              : (payload?.message ?? "Classifica Product Hunt non disponibile.")}
+          </strong>
           <span>Il radar resta vuoto finche non tornano dati reali.</span>
         </div>
       )}

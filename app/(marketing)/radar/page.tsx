@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
-import { DesktopVibeRadar } from "@/components/desktop/desktop-vibe-radar";
-import { MobileRadarView } from "@/components/radar/mobile-radar-view";
+import { RadarViewSwitch } from "@/components/radar/radar-view-switch";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { siteConfig } from "@/lib/config/site";
+import { radarDesktopVisual } from "@/lib/radar/radar-view-config";
 
 export const metadata: Metadata = {
   title: "Radar",
@@ -19,11 +19,9 @@ export const metadata: Metadata = {
 
 export default function RadarPage() {
   return (
-    <>
-      <DesktopVibeRadar threeDEnabled={releaseFeatures.threeD.enabled} />
-      <div className="lg:hidden">
-        <MobileRadarView />
-      </div>
-    </>
+    <RadarViewSwitch
+      threeDEnabled={releaseFeatures.threeD.enabled}
+      initialDesktopVisual={radarDesktopVisual}
+    />
   );
 }

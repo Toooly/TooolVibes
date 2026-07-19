@@ -1,64 +1,24 @@
 "use client";
 
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useMemo, type CSSProperties } from "react";
 
-type ProductHuntItem = {
-  id: string;
-  name: string;
-  tagline: string;
-  votesCount: number;
-  commentsCount: number;
-  productHuntUrl: string;
-  thumbnailUrl?: string;
-};
+import {
+  resolveRadarDataState,
+  type ProductHuntRange,
+  type RadarDataState,
+} from "@/lib/radar/product-hunt-contract";
+import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
 
-type ProductHuntPayload = {
-  status: "ok" | "missing-token" | "error";
-  items: ProductHuntItem[];
-};
+/**
+ * Nodi desktop del Radar (B44 / DESK-804).
+ *
+ * Nessun fallback inventato (chiusura gap B36): i nodi esistono solo con
+ * dati reali Product Hunt; loading/empty/missing-token/error mostrano uno
+ * stato onesto dentro lo stage. Dati e cache arrivano dalla query condivisa
+ * `useProductHuntRadar` (una request per key con tabella e header).
+ */
 
-const desktopFallbackItems: ProductHuntItem[] = [
-  {
-    id: "desktop-radar-fallback-1",
-    name: "Blink",
-    tagline: "AI app builder in evidenza.",
-    votesCount: 164,
-    commentsCount: 24,
-    productHuntUrl: "/toools/blink",
-  },
-  {
-    id: "desktop-radar-fallback-2",
-    name: "VibeCode",
-    tagline: "Vibe coding da tenere nel radar.",
-    votesCount: 128,
-    commentsCount: 18,
-    productHuntUrl: "/toools/vibecode",
-  },
-  {
-    id: "desktop-radar-fallback-3",
-    name: "WeWeb",
-    tagline: "Builder no-code per interfacce web.",
-    votesCount: 112,
-    commentsCount: 15,
-    productHuntUrl: "/toools/weweb",
-  },
-  {
-    id: "desktop-radar-fallback-4",
-    name: "Cosmic JS",
-    tagline: "Headless CMS orbitale.",
-    votesCount: 92,
-    commentsCount: 11,
-    productHuntUrl: "/toools/cosmic-js",
-  },
-  {
-    id: "desktop-radar-fallback-5",
-    name: "Dopami",
-    tagline: "Segnale emergente da monitorare.",
-    votesCount: 76,
-    commentsCount: 9,
-    productHuntUrl: "/radar",
-  },
-];
+const DESKTOP_RADAR_NODE_COUNT = 5;
 
 const nodeLayout = [
   { x: 50, y: 22, angle: -90, radius: "clamp(10.8rem, 14vw, 13rem)", delay: -0.1, size: 1.06 },
@@ -68,36 +28,28 @@ const nodeLayout = [
   { x: 24, y: 41, angle: 198, radius: "clamp(11.6rem, 15vw, 14.4rem)", delay: -4.18, size: 0.92 },
 ];
 
-export function DesktopRadarNodes() {
-  const [items, setItems] = useState<ProductHuntItem[]>([]);
-  const [loaded, setLoaded] = useState(false);
+function resolveStageStatusCopy(
+  state: Exclude<RadarDataState, "ready">,
+  message?: string,
+): string {
+  switch (state) {
+    case "loading":
+      return "Connessione al feed Product Hunt…";
+    case "empty":
+      return "Nessun segnale Product Hunt in questo intervallo.";
+    default:
+      return message ?? "Feed Product Hunt non disponibile.";
+  }
+}
 
-  useEffect(() => {
-    let mounted = true;
-
-    fetch("/api/product-hunt?range=day")
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Classifica Product Hunt non disponibile");
-        return (await response.json()) as ProductHuntPayload;
-      })
-      .then((payload) => {
-        if (!mounted) return;
-        setItems(payload.status === "ok" && payload.items.length ? payload.items : desktopFallbackItems);
-      })
-      .catch(() => {
-        if (mounted) setItems(desktopFallbackItems);
-      })
-      .finally(() => {
-        if (mounted) setLoaded(true);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+export function DesktopRadarNodes({ range }: { range: ProductHuntRange }) {
+  const { payload, isLoading } = useProductHuntRadar(range);
+  const radarState = resolveRadarDataState(payload);
 
   const nodes = useMemo(() => {
-    const pool = (items.length ? items : desktopFallbackItems).slice(0, 5);
+    if (radarState !== "ready") return [];
+
+    const pool = (payload?.items ?? []).slice(0, DESKTOP_RADAR_NODE_COUNT);
     const maxVotes = Math.max(...pool.map((item) => item.votesCount || 1), 1);
 
     return pool.map((item, index) => {
@@ -110,11 +62,28 @@ export function DesktopRadarNodes() {
         index,
       };
     });
-  }, [items]);
+  }, [payload?.items, radarState]);
+
+  if (radarState !== "ready") {
+    return (
+      <div
+        className={`desktop-radar-nodes${isLoading ? "" : " is-loaded"}`}
+        aria-label="Top 5 tool nel radar live"
+        aria-busy={isLoading}
+      >
+        <p
+          className="absolute left-1/2 top-1/2 z-[6] w-full max-w-[16rem] -translate-x-1/2 -translate-y-1/2 text-center text-sm font-medium text-white/65"
+          role={radarState === "loading" ? undefined : "status"}
+        >
+          {resolveStageStatusCopy(radarState, payload?.message)}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
-      className={`desktop-radar-nodes${loaded ? " is-loaded" : ""}`}
+      className="desktop-radar-nodes is-loaded"
       aria-label="Top 5 tool nel radar live"
     >
       {nodes.map((node) => {
