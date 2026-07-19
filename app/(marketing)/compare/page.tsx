@@ -20,6 +20,7 @@ export default async function ComparePage() {
       <ToolBattleView
         tools={tools}
         objectiveEnabled={releaseFeatures.compareObjective.enabled}
+        decisionEnabled={releaseFeatures.compareDecision.enabled}
       />
     </div>
   );

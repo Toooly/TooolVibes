@@ -24,6 +24,7 @@ import {
   type BattleVerdict,
 } from "./tool-battle-shared";
 import { CompareObjectiveSelector } from "./compare-objective-selector";
+import { CompareDecisionPanel } from "./compare-decision-panel";
 import { ToolFighter } from "./tool-fighter";
 import { CompareTrendList } from "./compare-trend-list";
 
@@ -34,6 +35,8 @@ type MobileCompareViewProps = {
   onObjectiveChange?: (objective: CompareObjective | null) => void;
   /** Flag B34: OFF nasconde il selettore e riproduce il contratto base B33. */
   objectiveEnabled?: boolean;
+  /** Flag B35: OFF nasconde il pannello decisione e chiude il flow al verdetto. */
+  decisionEnabled?: boolean;
 };
 
 type BattleState = "idle" | "analyzing" | "charging" | "clash" | "result";
@@ -578,6 +581,7 @@ export function MobileCompareView({
   objective = null,
   onObjectiveChange,
   objectiveEnabled = true,
+  decisionEnabled = true,
 }: MobileCompareViewProps) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
@@ -743,6 +747,15 @@ export function MobileCompareView({
           </div>
 
           <DiffMatrix tools={sorted} objective={activeObjective} />
+
+          {/* B35 / FLOW-604: il confronto si chiude in una decisione
+              riapribile con contesto, con ritorno ai Salvati. */}
+          <CompareDecisionPanel
+            tools={sorted}
+            objective={activeObjective}
+            enabled={decisionEnabled}
+            idPrefix="mobile"
+          />
 
           <div className="mobile-compare-arena__trend">
             <CompareTrendList />

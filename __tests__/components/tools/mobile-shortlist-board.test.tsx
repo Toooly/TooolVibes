@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { createElement, Fragment, type ReactNode } from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { MobileShortlistBoard } from "@/components/tools/mobile-shortlist-board";
@@ -319,6 +319,129 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     ).toBeNull();
     expect(
       screen.queryByRole("button", { name: "Salva nota" }),
+    ).toBeNull();
+  });
+});
+
+describe("MobileShortlistBoard — B35 decision view (FLOW-604)", () => {
+  it("mostra le decisioni registrate con contesto e le riapre dalla vista", () => {
+    seedWorkspace(
+      reduceWorkspaceState(savedState("alpha", "beta"), {
+        type: "tool/decision",
+        slug: "alpha",
+        outcome: "selected",
+        at: "2026-07-18T09:00:00.000Z",
+      }),
+    );
+    render(<MobileShortlistBoard tools={TOOLS} />);
+
+    const section = screen.getByRole("region", {
+      name: "Decisioni registrate",
+    });
+    expect(
+      within(section).getByRole("button", { name: "Apri decisione di Alpha" }),
+    ).toBeTruthy();
+    expect(section.textContent).toContain("Scelto");
+    expect(section.textContent).toContain("Registrata");
+    // Beta non ha alcuna decisione: non compare nella decision view.
+    expect(
+      within(section).queryByRole("button", { name: "Apri decisione di Beta" }),
+    ).toBeNull();
+
+    // Riapertura rapida: outcome azzerato, record versionato, sezione vuota.
+    fireEvent.click(
+      within(section).getByRole("button", {
+        name: "Riapri decisione di Alpha",
+      }),
+    );
+    const persisted = readPersistedWorkspace();
+    expect(persisted.toolStates.alpha.decision?.outcome).toBeNull();
+    expect(persisted.toolStates.alpha.decision?.updatedAt).toBeTruthy();
+    expect(
+      screen.queryByRole("region", { name: "Decisioni registrate" }),
+    ).toBeNull();
+  });
+
+  it("ordina la decision view per timestamp decrescente", () => {
+    let state = savedState("alpha", "beta");
+    state = reduceWorkspaceState(state, {
+      type: "tool/decision",
+      slug: "alpha",
+      outcome: "selected",
+      at: "2026-07-18T09:00:00.000Z",
+    });
+    state = reduceWorkspaceState(state, {
+      type: "tool/decision",
+      slug: "beta",
+      outcome: "deferred",
+      at: "2026-07-18T10:00:00.000Z",
+    });
+    seedWorkspace(state);
+    render(<MobileShortlistBoard tools={TOOLS} />);
+
+    const section = screen.getByRole("region", {
+      name: "Decisioni registrate",
+    });
+    const openButtons = within(section).getAllByRole("button", {
+      name: /^Apri decisione di /,
+    });
+    expect(openButtons[0].getAttribute("aria-label")).toBe(
+      "Apri decisione di Beta",
+    );
+    expect(openButtons[1].getAttribute("aria-label")).toBe(
+      "Apri decisione di Alpha",
+    );
+    expect(section.textContent).toContain("Rimandato");
+  });
+
+  it("apre lo sheet dalla decision view e dichiara il timestamp decisione anche senza nota", () => {
+    // Regressione B35: con la sola decisione (nessuna nota/motivo/pin) la
+    // memoria è vuota e prima il "Registrata" cadeva su "Nessun aggiornamento".
+    seedWorkspace(
+      reduceWorkspaceState(savedState("alpha", "beta"), {
+        type: "tool/decision",
+        slug: "alpha",
+        outcome: "rejected",
+        at: "2026-07-18T09:00:00.000Z",
+      }),
+    );
+    render(<MobileShortlistBoard tools={TOOLS} />);
+
+    const section = screen.getByRole("region", {
+      name: "Decisioni registrate",
+    });
+    fireEvent.click(
+      within(section).getByRole("button", { name: "Apri decisione di Alpha" }),
+    );
+
+    const dialog = screen.getByRole("dialog", {
+      name: "Memoria decisionale di Alpha",
+    });
+    // La riga della decisione dichiara un timestamp reale (non il fallback
+    // "Nessun aggiornamento locale", che resta legittimo per la nota mai salvata).
+    expect(dialog.textContent).toMatch(/Registrata \d/);
+    expect(
+      within(dialog)
+        .getByRole("button", { name: "Scartato" })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
+  });
+
+  it("nasconde la decision view quando il flag decision memory è OFF", () => {
+    seedWorkspace(
+      reduceWorkspaceState(savedState("alpha", "beta"), {
+        type: "tool/decision",
+        slug: "alpha",
+        outcome: "selected",
+        at: "2026-07-18T09:00:00.000Z",
+      }),
+    );
+    render(
+      <MobileShortlistBoard tools={TOOLS} decisionMemoryEnabled={false} />,
+    );
+
+    expect(
+      screen.queryByRole("region", { name: "Decisioni registrate" }),
     ).toBeNull();
   });
 });

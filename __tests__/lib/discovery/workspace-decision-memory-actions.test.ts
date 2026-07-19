@@ -220,3 +220,31 @@ describe("B32 decision memory actions — B16 migration fixture", () => {
     expect(reloaded.shortlistStages.beta).toBe("top");
   });
 });
+
+describe("B35 decision timestamps — snapshot decisionUpdatedAts", () => {
+  it("espone il timestamp del record decisione, anche dopo la reopen", () => {
+    setupGuestWindow();
+    activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
+
+    // Nessun record: nessun timestamp.
+    expect(
+      getDiscoveryLocalSnapshot().decisionUpdatedAts?.alpha,
+    ).toBeUndefined();
+
+    setToolDecisionOutcome("alpha", "selected");
+    const recorded = getDiscoveryLocalSnapshot().decisionUpdatedAts?.alpha;
+    expect(recorded).toBeTruthy();
+
+    // Reopen: il record resta versionato (timestamp presente, outcome null),
+    // così la decision view può dichiarare "Registrata" e il merge onora la reopen.
+    reopenToolDecision("alpha");
+    const snapshot = getDiscoveryLocalSnapshot();
+    expect(snapshot.decisionOutcomes?.alpha).toBeUndefined();
+    expect(snapshot.decisionUpdatedAts?.alpha).toBeTruthy();
+
+    activateToolWorkspaceOwner({ kind: "guest" }); // reload
+    expect(
+      getDiscoveryLocalSnapshot().decisionUpdatedAts?.alpha,
+    ).toBeTruthy();
+  });
+});

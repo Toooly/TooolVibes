@@ -45,6 +45,13 @@ export type DiscoveryLocalSnapshot = {
    * canonical factory below always populates it.
    */
   decisionOutcomes?: Record<string, WorkspaceDecisionOutcome>;
+  /**
+   * B35 decision record timestamps keyed by slug. Optional like
+   * `decisionOutcomes` so legacy-B consumers keep compiling; populated for
+   * every persisted decision record, including reopened ones (outcome null,
+   * timestamp kept so the reopen stays versioned across devices).
+   */
+  decisionUpdatedAts?: Record<string, string>;
   toolStateMeta: Record<string, string>;
   compareMeta: CompareMeta;
 };
@@ -197,6 +204,11 @@ export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
         : [],
     ),
   );
+  const decisionUpdatedAts = Object.fromEntries(
+    Object.entries(workspace.toolStates).flatMap(([slug, state]) =>
+      state.decision ? [[slug, state.decision.updatedAt] as const] : [],
+    ),
+  );
 
   return {
     visitedTools: getVisitedTools(),
@@ -206,6 +218,7 @@ export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
     shortlistStages,
     decisionMemories,
     decisionOutcomes,
+    decisionUpdatedAts,
     toolStateMeta,
     compareMeta: { updated_at: workspace.compare.updatedAt },
   };

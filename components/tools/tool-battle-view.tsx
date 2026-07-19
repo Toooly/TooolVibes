@@ -8,10 +8,13 @@ import { DesktopCompareView } from "./desktop-compare-view";
 export function ToolBattleView({
   tools,
   objectiveEnabled = true,
+  decisionEnabled = true,
 }: {
   tools: ToolPublicView[];
   /** Flag B34 (TOOOLVIBES_COMPARE_OBJECTIVE_ENABLED): OFF = contratto base B33. */
   objectiveEnabled?: boolean;
+  /** Flag B35 (TOOOLVIBES_COMPARE_DECISION_ENABLED): OFF = il flow termina al verdetto (contratto B34). */
+  decisionEnabled?: boolean;
 }) {
   // B34 / FLOW-603: un solo stato obiettivo condiviso tra le due superfici
   // (entrambe restano montate): la selezione fatta su mobile si riflette
@@ -26,6 +29,7 @@ export function ToolBattleView({
           objective={objective}
           onObjectiveChange={setObjective}
           objectiveEnabled={objectiveEnabled}
+          decisionEnabled={decisionEnabled}
         />
       </div>
       <div className="hidden md:block">
@@ -34,6 +38,7 @@ export function ToolBattleView({
           objective={objective}
           onObjectiveChange={setObjective}
           objectiveEnabled={objectiveEnabled}
+          decisionEnabled={decisionEnabled}
         />
       </div>
     </>

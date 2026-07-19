@@ -17,6 +17,7 @@ import {
   type NormalisedTool,
 } from "./tool-battle-shared";
 import { CompareObjectiveSelector } from "./compare-objective-selector";
+import { CompareDecisionPanel } from "./compare-decision-panel";
 import { ToolFighter } from "./tool-fighter";
 import { DiffMatrix } from "./mobile-compare-view";
 
@@ -106,6 +107,7 @@ export function DesktopCompareView({
   objective = null,
   onObjectiveChange,
   objectiveEnabled = true,
+  decisionEnabled = true,
 }: {
   tools: ToolPublicView[];
   /** Obiettivo attivo condiviso con la vista mobile (B34); null = neutro. */
@@ -113,6 +115,8 @@ export function DesktopCompareView({
   onObjectiveChange?: (objective: CompareObjective | null) => void;
   /** Flag B34: OFF nasconde il selettore e riproduce il contratto base B33. */
   objectiveEnabled?: boolean;
+  /** Flag B35: OFF nasconde il pannello decisione e chiude il flow al verdetto. */
+  decisionEnabled?: boolean;
 }) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const [battleState, setBattleState] = useState<"idle" | "fighting" | "result">("idle");
@@ -273,6 +277,17 @@ export function DesktopCompareView({
           </aside>
         </div>
       </div>
+
+      {/* B35 / FLOW-604: dopo il verdetto il confronto si chiude in una
+          decisione riapribile con contesto, con ritorno ai Salvati. */}
+      {battleState === "result" ? (
+        <CompareDecisionPanel
+          tools={sorted}
+          objective={activeObjective}
+          enabled={decisionEnabled}
+          idPrefix="desktop"
+        />
+      ) : null}
 
       <div className="desktop-compare__matrix-panel desktop-compare__matrix-panel--full">
         <DiffMatrix tools={sorted} objective={activeObjective} />

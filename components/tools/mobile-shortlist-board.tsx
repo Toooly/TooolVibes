@@ -10,6 +10,7 @@ import {
   Bookmark,
   Heart,
   Clock,
+  ClipboardCheck,
   Library,
   Link2,
   NotebookPen,
@@ -130,6 +131,7 @@ export function MobileShortlistBoard({
   const shortlistStages = discovery.shortlistStages;
   const decisionMemories = discovery.decisionMemories;
   const decisionOutcomes = discovery.decisionOutcomes ?? {};
+  const decisionUpdatedAts = discovery.decisionUpdatedAts ?? {};
 
   const [noteSlug, setNoteSlug] = useState<string | null>(null);
 
@@ -145,6 +147,24 @@ export function MobileShortlistBoard({
   }, [tools, savedSlugs, shortlistStages, decisionMemories, compareSlugs]);
 
   const totalCount = baseTools.length;
+
+  // B35 / FLOW-604: decisioni registrate (anche dal confronto) con contesto,
+  // visibili in shortlist dopo reload e login; ordinate per timestamp.
+  // Le dipendenze restano le proprietà stabili dello snapshot (i fallback
+  // `?? {}` vivono dentro il memo per non invalidarlo a ogni render).
+  const decidedTools = useMemo(() => {
+    const outcomes = discovery.decisionOutcomes ?? {};
+    const updatedAts = discovery.decisionUpdatedAts ?? {};
+    const timestamp = (slug: string) => {
+      const value = updatedAts[slug];
+      const parsed = value ? new Date(value).getTime() : Number.NaN;
+      return Number.isFinite(parsed) ? parsed : 0;
+    };
+
+    return baseTools
+      .filter((tool) => outcomes[tool.slug])
+      .sort((left, right) => timestamp(right.slug) - timestamp(left.slug));
+  }, [baseTools, discovery.decisionOutcomes, discovery.decisionUpdatedAts]);
 
   if (totalCount === 0) {
     return (
@@ -166,6 +186,77 @@ export function MobileShortlistBoard({
   return (
     <div className="mobile-library-board">
       <MobileLibraryHero totalCount={totalCount} compareCount={compareSlugs.length} />
+
+      {/* Decision view (B35 / FLOW-604): le decisioni registrate — anche dal
+          confronto — restano visibili qui dopo reload e login, riapribili con
+          contesto. Riusa la geometria `mobile-library-board__compare` (stesso
+          blocco sezione della board, nessuna nuova regola CSS). */}
+      {decisionMemoryEnabled && decidedTools.length > 0 && (
+        <section
+          className="mobile-library-board__compare"
+          aria-labelledby="mobile-library-decisions-title"
+        >
+          <h2 id="mobile-library-decisions-title">
+            <ClipboardCheck size={14} />
+            Decisioni registrate
+          </h2>
+          <ul className="mt-2 flex flex-col gap-2">
+            {decidedTools.map((tool) => {
+              const outcome = decisionOutcomes[tool.slug];
+              if (!outcome) return null;
+              const meta = decisionOutcomeMeta[outcome];
+
+              return (
+                <li
+                  key={tool.slug}
+                  className="flex flex-wrap items-center gap-2 rounded-[16px] border px-3 py-2"
+                  style={{
+                    borderColor: "var(--line)",
+                    background: "rgba(255,255,255,0.72)",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setNoteSlug(tool.slug)}
+                    aria-label={`Apri decisione di ${tool.name}`}
+                    className="text-sm font-semibold underline-offset-2 hover:underline"
+                  >
+                    {tool.name}
+                  </button>
+                  <span
+                    className={sheetChipClassName}
+                    style={{
+                      borderColor: "rgba(112,82,255,0.24)",
+                      background: meta.background,
+                      color: meta.tone,
+                    }}
+                  >
+                    {meta.label}
+                  </span>
+                  <span
+                    className="text-xs uppercase tracking-[0.14em]"
+                    style={{ color: "var(--muted)" }}
+                  >
+                    Registrata{" "}
+                    {formatDecisionTimestamp(decisionUpdatedAts[tool.slug])}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => reopenToolDecision(tool.slug)}
+                    aria-label={`Riapri decisione di ${tool.name}`}
+                    data-sonic-action="update"
+                    className={`${sheetChipClassName} gap-2`}
+                    style={sheetChipIdleStyle}
+                  >
+                    <RotateCcw size={12} />
+                    Riapri
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       {/* Compare section */}
       {readyToCompare.length > 0 && (
@@ -231,6 +322,7 @@ export function MobileShortlistBoard({
             toolName={noteTool.name}
             memory={decisionMemories[noteSlug] ?? {}}
             decisionOutcome={decisionOutcomes[noteSlug] ?? null}
+            decisionUpdatedAt={decisionUpdatedAts[noteSlug] ?? null}
             editable={decisionMemoryEnabled}
             onClose={() => setNoteSlug(null)}
           />
@@ -448,6 +540,7 @@ function MobileNoteSheet({
   toolName,
   memory,
   decisionOutcome,
+  decisionUpdatedAt = null,
   editable,
   onClose,
 }: {
@@ -455,6 +548,12 @@ function MobileNoteSheet({
   toolName: string;
   memory: ToolDecisionMemory;
   decisionOutcome: WorkspaceDecisionOutcome | null;
+  /**
+   * B35: timestamp versionato del record decisione. Copre anche i tool con
+   * sola decisione (senza nota/motivo/pin), per cui la memoria è vuota ma il
+   * record esiste — prima il "Registrata" cadeva su "Nessun aggiornamento".
+   */
+  decisionUpdatedAt?: string | null;
   editable: boolean;
   onClose: () => void;
 }) {
@@ -602,7 +701,10 @@ function MobileNoteSheet({
                     className="text-xs uppercase tracking-[0.16em]"
                     style={{ color: "var(--muted)" }}
                   >
-                    Registrata {formatDecisionTimestamp(memory.updated_at)}
+                    Registrata{" "}
+                    {formatDecisionTimestamp(
+                      decisionUpdatedAt ?? memory.updated_at,
+                    )}
                   </p>
                   <button
                     type="button"

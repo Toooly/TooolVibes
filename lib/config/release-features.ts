@@ -36,6 +36,7 @@ export type ReleaseFeatureEnvironment = Readonly<{
   TOOOLVIBES_3D_ENABLED?: string;
   TOOOLVIBES_AUDIO_ENABLED?: string;
   TOOOLVIBES_COMPARE_OBJECTIVE_ENABLED?: string;
+  TOOOLVIBES_COMPARE_DECISION_ENABLED?: string;
   TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED?: string;
   TOOOLVIBES_UNIFIED_SEARCH_ENABLED?: string;
   TOOOLVIBES_GAMIFICATION_ENABLED?: string;
@@ -68,6 +69,11 @@ export const releaseFeatureRegistry = {
   compareObjective: {
     owner: "product-compare",
     envKey: "TOOOLVIBES_COMPARE_OBJECTIVE_ENABLED",
+    defaultEnabled: true,
+  },
+  compareDecision: {
+    owner: "product-compare",
+    envKey: "TOOOLVIBES_COMPARE_DECISION_ENABLED",
     defaultEnabled: true,
   },
   decisionMemoryBoard: {
@@ -163,6 +169,7 @@ export type ReleaseFeatureConfig = Readonly<{
   threeD: ResolvedBooleanFeature;
   audio: ResolvedBooleanFeature;
   compareObjective: ResolvedBooleanFeature;
+  compareDecision: ResolvedBooleanFeature;
   decisionMemoryBoard: ResolvedBooleanFeature;
   unifiedSearch: ResolvedBooleanFeature;
   gamification: Readonly<{
@@ -296,6 +303,10 @@ export function createReleaseFeatureConfig(
     environment,
     releaseFeatureRegistry.compareObjective,
   );
+  const compareDecision = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.compareDecision,
+  );
   const decisionMemoryBoard = resolveBooleanFeature(
     environment,
     releaseFeatureRegistry.decisionMemoryBoard,
@@ -375,6 +386,7 @@ export function createReleaseFeatureConfig(
     threeD,
     audio,
     compareObjective,
+    compareDecision,
     decisionMemoryBoard,
     unifiedSearch,
     gamification: Object.freeze({
@@ -447,6 +459,8 @@ export function readReleaseFeatureEnvironment(): ReleaseFeatureEnvironment {
     TOOOLVIBES_AUDIO_ENABLED: process.env.TOOOLVIBES_AUDIO_ENABLED,
     TOOOLVIBES_COMPARE_OBJECTIVE_ENABLED:
       process.env.TOOOLVIBES_COMPARE_OBJECTIVE_ENABLED,
+    TOOOLVIBES_COMPARE_DECISION_ENABLED:
+      process.env.TOOOLVIBES_COMPARE_DECISION_ENABLED,
     TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED:
       process.env.TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED,
     TOOOLVIBES_UNIFIED_SEARCH_ENABLED:
