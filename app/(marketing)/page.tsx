@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { Home3DHero } from "@/components/3d-maestoso/home-3d-hero";
 import { VibeHomeV2 } from "@/components/home/vibe-home-v2";
 import { ComingSoonPage } from "@/components/coming-soon/coming-soon-page";
+import { homeExperience } from "@/lib/config/home-experience";
 import { releaseFeatures } from "@/lib/config/release-features";
 import {
   getFeaturedToolViews,
@@ -51,15 +52,21 @@ export default async function HomePage() {
     (tool) => tool.slug !== spotlightTool?.slug,
   );
 
+  // BATCH 40 (MOB-704): layout home flaggabile (pattern B04). Default
+  // "time-to-value": hero compatto con CTA + chip tool nel primo viewport e
+  // discovery stage a flusso; "legacy" ripristina la composizione precedente.
+  const homeLayout = homeExperience.layout;
+
   return (
     <>
       {releaseFeatures.threeD.enabled && (
-        <Home3DHero tools={tools} weeklyTool={spotlightTool} />
+        <Home3DHero tools={tools} weeklyTool={spotlightTool} layout={homeLayout} />
       )}
       <VibeHomeV2
         tools={tools}
         weeklyTool={spotlightTool}
         supportingTools={supportingTools.slice(0, 4)}
+        layout={homeLayout}
       />
     </>
   );

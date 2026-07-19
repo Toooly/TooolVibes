@@ -8,8 +8,34 @@ import * as THREE from "three";
 import { X } from "lucide-react";
 import { SOUND_PLAY_EVENT, type TooolvibesSoundKind } from "@/lib/config/sound";
 
-const INTRO_DURATION_MS = 4000;
-const INTRO_EXIT_MS = 800;
+/* BATCH 40 (MOB-704): timeline dell'intro per modalita' (flag
+   TOOOLVIBES_HOME_INTRO_MODE, lib/config/home-experience.ts).
+   "cinematic" = esperienza legacy (4s + exit 0.8s, skip solo via tap/click).
+   "compact" = brand flash breve (1.4s + exit 0.4s) che si chiude anche con
+   wheel/touchmove/keydown: nessuna attesa obbligatoria prima della CTA. */
+export const INTRO_TIMELINES = {
+  cinematic: {
+    durationMs: 4000,
+    exitMs: 800,
+    introOpenMs: 200,
+    revealMs: 600,
+    playingMs: 500,
+    closeLeadMs: 500,
+    failsafeMs: 2000,
+  },
+  compact: {
+    durationMs: 1400,
+    exitMs: 400,
+    introOpenMs: 120,
+    revealMs: 350,
+    playingMs: 300,
+    closeLeadMs: 350,
+    failsafeMs: 1500,
+  },
+} as const;
+
+export type IntroCinematicMode = keyof typeof INTRO_TIMELINES;
+
 const HAS_SEEN_INTRO_KEY = "tooolvibes:intro-3d-v1";
 const INTRO_FINISHED_EVENT = "tooolvibes:brand-intro-finished";
 
@@ -165,7 +191,15 @@ function IntroScene({ scale = 1 }: { scale?: number }) {
   );
 }
 
-export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolean) => void }) {
+export function IntroCinematic3D({
+  onComplete,
+  mode = "cinematic",
+}: {
+  onComplete?: (skipped: boolean) => void;
+  mode?: IntroCinematicMode;
+}) {
+  const timeline = INTRO_TIMELINES[mode] ?? INTRO_TIMELINES.cinematic;
+  const exitMs = timeline.exitMs;
   const [phase, setPhase] = useState<"entering" | "playing" | "leaving" | "unmounted">("entering");
   const [shouldRender, setShouldRender] = useState(false);
   const hasFinished = useRef(false);
@@ -188,9 +222,9 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
           })
         );
         onComplete?.(skipped);
-      }, INTRO_EXIT_MS);
+      }, exitMs);
     },
-    [onComplete]
+    [onComplete, exitMs]
   );
 
   useEffect(() => {
@@ -216,19 +250,36 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
     setShouldRender(true);
 
     const timers: number[] = [];
-    timers.push(window.setTimeout(() => dispatchSound("introOpen"), 200));
-    timers.push(window.setTimeout(() => dispatchSound("reveal"), 600));
-    timers.push(window.setTimeout(() => setPhase("playing"), 500));
-    timers.push(window.setTimeout(() => dispatchSound("introClose"), INTRO_DURATION_MS - 500));
-    timers.push(window.setTimeout(() => finishIntro(false), INTRO_DURATION_MS));
+    timers.push(window.setTimeout(() => dispatchSound("introOpen"), timeline.introOpenMs));
+    timers.push(window.setTimeout(() => dispatchSound("reveal"), timeline.revealMs));
+    timers.push(window.setTimeout(() => setPhase("playing"), timeline.playingMs));
+    timers.push(window.setTimeout(() => dispatchSound("introClose"), timeline.durationMs - timeline.closeLeadMs));
+    timers.push(window.setTimeout(() => finishIntro(false), timeline.durationMs));
     timers.push(
       window.setTimeout(() => {
         if (!hasFinished.current) finishIntro(true);
-      }, INTRO_DURATION_MS + 2000)
+      }, timeline.durationMs + timeline.failsafeMs)
     );
 
-    return () => timers.forEach((t) => window.clearTimeout(t));
-  }, [finishIntro, onComplete]);
+    // BATCH 40: in modalita' compact qualsiasi intenzione di interazione
+    // (scroll, touch, tastiera) chiude subito l'intro: il brand moment resta,
+    // ma non esiste attesa obbligatoria per raggiungere la CTA primaria.
+    if (mode !== "compact") {
+      return () => timers.forEach((t) => window.clearTimeout(t));
+    }
+
+    const dismiss = () => finishIntro(true);
+    window.addEventListener("wheel", dismiss, { passive: true });
+    window.addEventListener("touchmove", dismiss, { passive: true });
+    window.addEventListener("keydown", dismiss);
+
+    return () => {
+      timers.forEach((t) => window.clearTimeout(t));
+      window.removeEventListener("wheel", dismiss);
+      window.removeEventListener("touchmove", dismiss);
+      window.removeEventListener("keydown", dismiss);
+    };
+  }, [finishIntro, onComplete, mode, timeline]);
 
   if (!shouldRender || phase === "unmounted") return null;
 
@@ -237,6 +288,7 @@ export function IntroCinematic3D({ onComplete }: { onComplete?: (skipped: boolea
       <motion.div
         className="fixed inset-0 z-[100] flex min-h-[100dvh] items-center justify-center overflow-hidden px-[clamp(1rem,4vw,2rem)] py-[calc(env(safe-area-inset-top)+1rem)]"
         style={{ background: "var(--v-void)" }}
+        data-intro-mode={mode}
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

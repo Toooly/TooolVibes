@@ -88,6 +88,7 @@ const structuredData = {
 };
 
 import { IntroCinematic3D } from "@/components/3d-maestoso/intro-cinematic";
+import { homeExperience } from "@/lib/config/home-experience";
 
 export default async function RootLayout({
   children,
@@ -152,9 +153,15 @@ export default async function RootLayout({
               vibeRushEnabled={vibeRushEnabled}
             />
           )}
-          {isGateOpen && releaseFeatures.threeD.enabled && (
-            <IntroCinematic3D />
-          )}
+          {/* BATCH 40 (MOB-704): intro brand flaggabile (pattern B04,
+             lib/config/home-experience.ts). Default "compact": brand flash
+             breve chiudibile con qualsiasi interazione, nessuna attesa
+             obbligatoria; "cinematic" ripristina la legacy; "off" smonta. */}
+          {isGateOpen &&
+            releaseFeatures.threeD.enabled &&
+            homeExperience.introMode !== "off" && (
+              <IntroCinematic3D mode={homeExperience.introMode} />
+            )}
           {children}
         </RootProviders>
       </body>

@@ -7,8 +7,21 @@ import { useAccount } from "./account-provider";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { useKeyboardAwareScroll } from "@/lib/hooks/use-keyboard-aware-scroll";
 import { Mail, User, ArrowRight, RotateCcw, Shield, Sparkles } from "lucide-react";
+import { AccountStateBanner } from "./panel/account-state-banner";
+import { isAccountStateMatrixEnabled } from "./panel/account-state-flags";
+import {
+  resolveAccountStateCell,
+  shouldRenderAccountStateBanner,
+} from "./panel/account-state-matrix";
+import { useAccountOnlineStatus } from "./panel/use-account-online-status";
 
 type AuthTab = "login" | "register" | "admin";
+
+/* B59: ultimo magic link inviato con successo (cella link-pending). */
+type PendingMagicLink = {
+  email: string;
+  metadata?: { first_name: string; last_name: string };
+};
 
 export function AuthPage() {
   const account = useAccount();
@@ -17,6 +30,8 @@ export function AuthPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [agreed, setAgreed] = useState(false);
+  const [pendingLink, setPendingLink] = useState<PendingMagicLink | null>(null);
+  const isOnline = useAccountOnlineStatus();
 
   /* B39/MOB-703: scroll-to-input con tastiera aperta (iOS non ridimensiona
      il layout viewport); il container e' la card che racchiude i campi. */
@@ -32,7 +47,8 @@ export function AuthPage() {
         ? { first_name: firstName.trim(), last_name: lastName.trim() }
         : undefined;
 
-    await account.sendMagicLink(normalizedEmail, metadata);
+    const result = await account.sendMagicLink(normalizedEmail, metadata);
+    setPendingLink(result.ok ? { email: normalizedEmail, metadata } : null);
   };
 
   const tabs: { key: AuthTab; label: string; icon: React.ComponentType<{ size?: number }> }[] = [
@@ -40,6 +56,21 @@ export function AuthPage() {
     { key: "register", label: "Registrati", icon: User },
     { key: "admin", label: "Admin", icon: Shield },
   ];
+
+  /* B59: cella state matrix per la superficie auth (offline, auth non
+     disponibile, link pending). Con flag OFF tutto resta come prima. */
+  const stateCell = isAccountStateMatrixEnabled()
+    ? resolveAccountStateCell({
+        status: account.status ?? "guest",
+        authEnabled: account.authEnabled !== false,
+        isOnline,
+        isAttaching: account.isAttaching === true,
+        workspaceAttachPending: account.workspaceAttachPending === true,
+        pendingLinkEmail: pendingLink?.email ?? null,
+        authMessage: account.authMessage,
+      })
+    : null;
+  const showStateBanner = stateCell !== null && shouldRenderAccountStateBanner(stateCell);
 
   return (
     <div className="v-auth-page tv-kbd-page">
@@ -239,6 +270,23 @@ export function AuthPage() {
             )}
           </AnimatePresence>
 
+          {/* State matrix (B59): offline / unavailable / link pending */}
+          {showStateBanner ? (
+            <AccountStateBanner
+              variant="auth"
+              cell={stateCell}
+              onAction={(actionId) => {
+                if (actionId === "resend-link" && pendingLink) {
+                  void account
+                    .sendMagicLink(pendingLink.email, pendingLink.metadata)
+                    .then((result) => {
+                      if (!result.ok) setPendingLink(null);
+                    });
+                }
+              }}
+            />
+          ) : null}
+
           {account.hasQuarantinedWorkspace ? (
             <div className="v-auth-message v-auth-message--success" role="status">
               <p className="font-semibold">Backup locale isolato</p>
@@ -262,7 +310,7 @@ export function AuthPage() {
           ) : null}
 
           {/* Auth message */}
-          {account.authMessage && (
+          {account.authMessage && stateCell?.kind !== "link-pending" && (
             <motion.div
               className={`v-auth-message ${account.authMessage.includes("non disponibile") || account.authMessage.includes("errore") || account.authMessage.includes("pausa") ? "v-auth-message--error" : "v-auth-message--success"}`}
               initial={{ opacity: 0, y: 8 }}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import type { EmailOtpType } from "@supabase/supabase-js";
 
 import {
@@ -10,10 +11,17 @@ import {
   isSupabaseBrowserEnabled,
   loadBrowserSupabaseRuntimeConfig,
 } from "@/lib/supabase/browser-client";
+import { isAccountStateMatrixEnabled } from "@/components/account/panel/account-state-flags";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
+  /* B59: i messaggi "di lavoro" noti restano stati transienti; ogni altro
+     esito è un fallimento (link scaduto/usato o servizio non disponibile)
+     e mostra una recovery esplicita invece di un dead end. */
   const [message, setMessage] = useState("Sto collegando il tuo accesso...");
+  const failed =
+    message !== "Sto collegando il tuo accesso..." &&
+    message !== "Verifico l'accesso...";
 
   useEffect(() => {
     let isActive = true;
@@ -158,6 +166,16 @@ export default function AuthCallbackPage() {
         <p className="text-body-soft mt-4 text-[0.98rem]" style={{ color: "var(--muted-strong)" }}>
           {message}
         </p>
+        {failed && isAccountStateMatrixEnabled() ? (
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <Link href="/account" className="account-btn-primary">
+              Richiedi un nuovo link
+            </Link>
+            <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
+              Il link può essere scaduto o già usato: dalla pagina account puoi inviarti una nuova mail di conferma.
+            </p>
+          </div>
+        ) : null}
       </div>
     </div>
   );

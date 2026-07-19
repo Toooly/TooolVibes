@@ -29,13 +29,17 @@ export type SolarRoute = {
 
 type MobileHeroSolarProps = {
   routes: SolarRoute[];
+  /* BATCH 40 (MOB-704): in layout "time-to-value" lo stage non forza piu'
+     100svh (classe v-discovery-stage--flow, override in app/globals.css):
+     la sezione orbitale resta interattiva ma segue il flusso del contenuto. */
+  compact?: boolean;
 };
 
-export function MobileHeroSolar({ routes }: MobileHeroSolarProps) {
+export function MobileHeroSolar({ routes, compact = false }: MobileHeroSolarProps) {
   return (
     <section
       id="v-discovery-stage"
-      className="v-discovery-stage v-discovery-stage--orbital relative z-10 overflow-hidden px-4 py-16 md:py-24"
+      className={`v-discovery-stage v-discovery-stage--orbital${compact ? " v-discovery-stage--flow" : ""} relative z-10 overflow-hidden px-4 py-16 md:py-24`}
       aria-label="Discovery Stage"
     >
       <div className="v-discovery-stage-bg" aria-hidden="true" />

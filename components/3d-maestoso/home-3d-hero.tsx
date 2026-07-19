@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useIsMobile } from "@/lib/hooks/use-is-mobile";
 import { MobileMarketingHero } from "@/components/home/mobile-marketing-hero";
+import type { HomeLayout } from "@/lib/config/home-experience";
 
 const heroOrbPalette = [
   "#64FFDA",
@@ -24,9 +25,11 @@ const heroOrbPalette = [
 export function Home3DHero({
   tools,
   weeklyTool,
+  layout = "legacy",
 }: {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
+  layout?: HomeLayout;
 }) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
   const orbTools = tools.filter((t) => t.featured).slice(0, 7);
@@ -43,7 +46,9 @@ export function Home3DHero({
   const isMobile = useIsMobile();
 
   if (isMobile) {
-    return <MobileMarketingHero />;
+    // BATCH 40 (MOB-704): in layout "time-to-value" l'hero mobile diventa
+    // compatto e mostra il chip del tool in evidenza nel primo viewport.
+    return <MobileMarketingHero layout={layout} spotlightTool={focusTool} />;
   }
 
   return (

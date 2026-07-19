@@ -1,6 +1,7 @@
 "use client";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import type { HomeLayout } from "@/lib/config/home-experience";
 import { NativePlacement } from "@/components/monetization/native-placement";
 import { MobileHeroSolar } from "./mobile-hero-solar";
 import { MobileMethodSteps } from "./mobile-method-steps";
@@ -10,6 +11,12 @@ type VibeHomeV2Props = {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
   supportingTools: ToolPublicView[];
+  /* BATCH 40 (MOB-704): "legacy" = composizione originale; "time-to-value"
+     = discovery stage a flusso e margini mobile corretti (flag
+     TOOOLVIBES_HOME_LAYOUT, lib/config/home-experience.ts). L'ordine delle
+     sezioni resta invariato in entrambe le modalita': lo stage orbitale
+     possiede l'offset dell'header fixed. */
+  layout?: HomeLayout;
 };
 
 const methodSteps = [
@@ -39,9 +46,10 @@ const methodSteps = [
   },
 ];
 
-export function VibeHomeV2({ tools, weeklyTool, supportingTools }: VibeHomeV2Props) {
+export function VibeHomeV2({ tools, weeklyTool, supportingTools, layout = "legacy" }: VibeHomeV2Props) {
   const featuredTools = tools.filter((tool) => tool.featured);
   const focusTool = weeklyTool ?? featuredTools[0] ?? tools[0] ?? null;
+  const isTimeToValue = layout === "time-to-value";
 
   const solarRoutes = [
     {
@@ -83,8 +91,11 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools }: VibeHomeV2Pro
   ];
 
   return (
-    <div className="vibe-home-mobile-origin relative">
-      <MobileHeroSolar routes={solarRoutes} />
+    <div
+      className={`vibe-home-mobile-origin${isTimeToValue ? " vibe-home-mobile-origin--ttv" : ""} relative`}
+      data-home-layout={layout}
+    >
+      <MobileHeroSolar routes={solarRoutes} compact={isTimeToValue} />
       {focusTool && <MobileSpotlight tool={focusTool} supportingTools={supportingTools} />}
       <section className="page-shell sm:hidden">
         <NativePlacement placementKey="home-featured-tool" variant="compact" />

@@ -9,12 +9,20 @@ import type { VibeSignupContext } from "./account-panel-model";
    Campi email/nome/cognome/telefono, prefill email dal contesto
    Vibe Rush e submit con metadata opzionale. Logica invariata
    rispetto al monolite (reset campi solo su invio riuscito).
+   B59: traccia additiva `pendingLink` (email+metadata dell'ultimo
+   invio riuscito) per la cella link-pending della state matrix;
+   nessuna variazione al flusso esistente.
    ═══════════════════════════════════════════════════════════════ */
 
 type SendMagicLink = (
   email: string,
   metadata?: Record<string, string | number | boolean | null | undefined>,
 ) => Promise<{ ok: boolean; message: string }>;
+
+export type AccountPendingLink = {
+  email: string;
+  metadata?: Record<string, string | number | boolean | null | undefined>;
+};
 
 export function useAccountSignupForm({
   sendMagicLink,
@@ -27,6 +35,7 @@ export function useAccountSignupForm({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
+  const [pendingLink, setPendingLink] = useState<AccountPendingLink | null>(null);
 
   const isVibeRushSignup = vibeContext.source === "vibe-rush";
   const vibeScore = vibeContext.vibes;
@@ -56,10 +65,22 @@ export function useAccountSignupForm({
     const result = await sendMagicLink(email, metadata);
 
     if (result.ok) {
+      setPendingLink({ email: email.trim().toLowerCase(), metadata });
       setEmail("");
       setFirstName("");
       setLastName("");
       setPhone("");
+    } else {
+      setPendingLink(null);
+    }
+  };
+
+  // B59: reinvio esplicito dello stesso link (recovery link-pending).
+  const resendPendingLink = async () => {
+    if (!pendingLink) return;
+    const result = await sendMagicLink(pendingLink.email, pendingLink.metadata);
+    if (!result.ok) {
+      setPendingLink(null);
     }
   };
 
@@ -76,6 +97,8 @@ export function useAccountSignupForm({
     vibeScore,
     vibeXp,
     handleSubmit,
+    pendingLink,
+    resendPendingLink,
   };
 }
 

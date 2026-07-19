@@ -12,12 +12,17 @@ import {
    AccountRecoverySection (B27) — stati di recovery e feedback.
    Backup locale in quarantena (ripristino esplicito) e messaggio
    auth con tono warning/success. Condizioni e copy invariati.
+   B59: `suppressAuthMessage` (default false) lascia al banner
+   della state matrix la resa strutturata degli esiti attach,
+   evitando il duplicato del messaggio grezzo.
    ═══════════════════════════════════════════════════════════════ */
 
 export function AccountRecoverySection({
   account,
+  suppressAuthMessage = false,
 }: {
   account: AccountPanelAccountSlice;
+  suppressAuthMessage?: boolean;
 }) {
   return (
     <>
@@ -46,7 +51,7 @@ export function AccountRecoverySection({
         </div>
       ) : null}
 
-      {account.authMessage ? (
+      {account.authMessage && !suppressAuthMessage ? (
         <div
           className={getAuthMessageClassName(account.authMessage)}
           style={getAuthMessageTone(account.authMessage)}

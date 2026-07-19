@@ -1,16 +1,24 @@
 "use client";
 
-import { ExternalLink, Send } from "lucide-react";
+import { ExternalLink, RotateCcw, Send } from "lucide-react";
 
 import type {
   AccountPanelStatus,
   AccountSubmissionsPayload,
 } from "./account-panel-model";
+import { isAccountStateMatrixEnabled } from "./account-state-flags";
+import {
+  resolveSubmissionsErrorCell,
+  type AccountSubmissionsErrorKind,
+} from "./account-state-matrix";
 
 /* ═══════════════════════════════════════════════════════════════
    AccountSubmissionsSection (B27) — pannello "Submission inviate".
    Stati guest / loading / lista / vuoto invariati; i dati arrivano
    da useAccountSubmissions (fetch con bearer token nel hook).
+   B59 (additivo, flag accountStateMatrix): l'esito fallito della
+   fetch (401/429/5xx/offline) ha una cella esplicita con retry,
+   al posto dello stato vuoto che simulava "nessuna submission".
    ═══════════════════════════════════════════════════════════════ */
 
 export function AccountSubmissionsSection({
@@ -18,12 +26,21 @@ export function AccountSubmissionsSection({
   submissions,
   isLoading,
   totalSubmissions,
+  error = null,
+  onRetry,
 }: {
   status: AccountPanelStatus;
   submissions: AccountSubmissionsPayload | null;
   isLoading: boolean;
   totalSubmissions: number;
+  error?: AccountSubmissionsErrorKind | null;
+  onRetry?: () => void;
 }) {
+  const errorCell =
+    isAccountStateMatrixEnabled() && error
+      ? resolveSubmissionsErrorCell(error)
+      : null;
+
   return (
     <div className="account-section-panel p-5 sm:p-6">
       <div className="flex items-center gap-2">
@@ -49,6 +66,29 @@ export function AccountSubmissionsSection({
             <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
               Caricamento submission...
             </p>
+          </div>
+        ) : errorCell ? (
+          <div
+            className="account-selection-card p-4"
+            role="status"
+            data-submissions-error={errorCell.kind}
+          >
+            <p className="font-semibold text-sm text-[var(--account-ink)]">
+              {errorCell.title}
+            </p>
+            <p className="mt-1 text-sm leading-6" style={{ color: "var(--muted)" }}>
+              {errorCell.body}
+            </p>
+            {onRetry ? (
+              <button
+                type="button"
+                className="account-btn-secondary mt-3"
+                onClick={onRetry}
+              >
+                <RotateCcw size={14} aria-hidden="true" />
+                {errorCell.retryLabel}
+              </button>
+            ) : null}
           </div>
         ) : totalSubmissions > 0 ? (
           <>

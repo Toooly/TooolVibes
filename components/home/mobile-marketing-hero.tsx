@@ -1,10 +1,12 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { PremiumLink } from "@/components/ui/premium";
+import type { HomeLayout } from "@/lib/config/home-experience";
+import type { ToolPublicView } from "@/lib/data/tool-public-view";
 
 const STARS_COUNT = 24;
 
@@ -38,8 +40,20 @@ function Starfield() {
   );
 }
 
-export function MobileMarketingHero() {
+type MobileMarketingHeroProps = {
+  /* BATCH 40 (MOB-704): "legacy" = hero 100svh; "time-to-value" = hero
+     compatto con CTA primaria e chip del tool in evidenza nel primo
+     viewport (flag TOOOLVIBES_HOME_LAYOUT, lib/config/home-experience.ts). */
+  layout?: HomeLayout;
+  spotlightTool?: ToolPublicView | null;
+};
+
+export function MobileMarketingHero({
+  layout = "legacy",
+  spotlightTool = null,
+}: MobileMarketingHeroProps) {
   const reducedMotion = useReducedMotion();
+  const isTimeToValue = layout === "time-to-value";
 
   const getTransition = (delay: number) =>
     reducedMotion
@@ -53,8 +67,12 @@ export function MobileMarketingHero() {
     }
   };
 
+  const sectionClassName = isTimeToValue
+    ? "v-hero-mobile v-hero-mobile--compact relative flex min-h-0 flex-col items-center justify-center overflow-hidden px-6 pb-12 pt-24 text-center"
+    : "v-hero-mobile relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 py-24 text-center";
+
   return (
-    <section className="v-hero-mobile relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-6 py-24 text-center">
+    <section className={sectionClassName}>
       <div className="v-hero-mobile__bg" aria-hidden="true" />
       <Starfield />
 
@@ -107,6 +125,38 @@ export function MobileMarketingHero() {
             Radar live
           </Link>
         </motion.div>
+
+        {isTimeToValue && spotlightTool && (
+          <motion.div
+            className="mt-6 flex w-full justify-center"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={getTransition(0.5)}
+          >
+            <Link
+              href={`/toools/${spotlightTool.slug}`}
+              className="v-hero-mobile__tool-chip"
+              aria-label={`${
+                spotlightTool.toolOfWeek
+                  ? "Tool della settimana"
+                  : "Tool in evidenza"
+              }: ${spotlightTool.name}. Apri la scheda`}
+            >
+              <Sparkles
+                size={14}
+                aria-hidden="true"
+                className="v-hero-mobile__tool-chip-icon"
+              />
+              <span className="v-hero-mobile__tool-chip-text">
+                {spotlightTool.toolOfWeek
+                  ? "Tool della settimana"
+                  : "Tool in evidenza"}
+                <strong>{spotlightTool.name}</strong>
+              </span>
+              <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+          </motion.div>
+        )}
       </div>
 
       <div className="v-hero-mobile__explore-wrap">
