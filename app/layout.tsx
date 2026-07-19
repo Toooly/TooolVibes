@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 
 import "@/styles/release-entry";
@@ -59,6 +59,19 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} | Tool AI, no-code e automazioni`,
     description: siteConfig.description,
   },
+};
+
+/* BATCH 39 (MOB-703): con `interactive-widget=resizes-content` Android Chrome
+   ridimensiona il layout viewport all'apertura della tastiera virtuale, cosi'
+   la catena dvh/safe-area della policy tv-kbd-* (styles/tokens.css) restringe
+   overlay e sheet invece di lasciarli finire sotto la tastiera. iOS Safari
+   ignora la direttiva: li' copre useKeyboardAwareScroll (lib/hooks).
+   Nessuna variazione visiva a tastiera chiusa (default width/initial-scale
+   invariati rispetto al viewport di default di Next). */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  interactiveWidget: "resizes-content",
 };
 
 const structuredData = {

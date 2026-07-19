@@ -34127,3 +34127,75 @@ body:has(.tone-account) {
   color: inherit !important;
   -webkit-text-fill-color: currentColor !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   B39 / MOB-703 — Mobile keyboard, viewport e sheet policy.
+
+   Utility isolata (token-driven, styles/tokens.css): overlay a tutto
+   schermo che seguono il dynamic viewport, sheet con altezza cap e
+   scroll interno, footer azioni sticky e zoom guard input >= 16px.
+
+   Le regole sono unlayered: vincono sulle utility Tailwind (layered)
+   senza !important. Dove una regola unlayered preesistente compete
+   (es. .v-auth-input in vibes-3d-maestoso.css) si usa la doppia classe
+   per alzare la specificita'. Reversibilita': rimuovere questo blocco
+   e le classi tv-kbd-* dai wrapper (nessuna variazione visiva finche'
+   le classi non sono applicate).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Overlay container full-screen (gate modal, search overlay): con
+   interactive-widget=resizes-content (app/layout.tsx) il box fixed si
+   restringe quando si apre la tastiera; overflow-y consente lo scroll
+   del contenuto eccedente. */
+.tv-kbd-overlay {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Sheet/dialog dentro l'overlay: mai piu' alta dello spazio visibile
+   (dvh meno gli inset safe-area); il contenuto eccedente scorre
+   dentro la sheet invece di finire sotto la tastiera. */
+.tv-kbd-sheet {
+  max-height: 100%;
+  max-height: var(--tv-kbd-sheet-max-height);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Zoom guard iOS: gli input >= 16px non triggerano l'auto-zoom di
+   Safari al focus. Solo pointer coarse / viewport mobile: nessuna
+   variazione su desktop. Doppia classe per vincere su regole unlayered
+   a singola classe (es. .v-auth-input) senza !important. */
+@media (max-width: 767px), (pointer: coarse) {
+  .tv-kbd-input.tv-kbd-input {
+    font-size: max(var(--tv-kbd-input-min-font-size), 1em);
+  }
+}
+
+/* Tastiera aperta (viewport basso in altezza, portrait o landscape):
+   l'overlay/page ancora il contenuto in alto e lascia scorrere, gli
+   inset safe-area entrano come padding e il footer azioni (submit,
+   close) resta pinnato in vista mentre il campo attivo e' portato
+   nel viewport da useKeyboardAwareScroll. */
+@media (max-height: 34rem) {
+  .tv-kbd-overlay,
+  .tv-kbd-page.tv-kbd-page {
+    align-items: flex-start;
+  }
+
+  .tv-kbd-overlay,
+  .tv-kbd-page.tv-kbd-page {
+    padding-top: var(--tv-kbd-overlay-inset-top);
+    padding-bottom: var(--tv-kbd-overlay-inset-bottom);
+  }
+
+  .tv-kbd-sheet__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+  }
+}

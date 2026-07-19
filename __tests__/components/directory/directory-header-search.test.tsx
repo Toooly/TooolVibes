@@ -4,6 +4,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DirectoryHeaderSearch } from "@/components/directory/directory-header-search";
+import { KEYBOARD_SCROLL_DELAY_MS } from "@/lib/hooks/use-keyboard-aware-scroll";
 
 /* next/navigation mock: pathname/searchParams driven by hoisted mutable
    state so each test can simulate being on/off the archive route.
@@ -131,5 +132,108 @@ describe("DirectoryHeaderSearch — canonical URL submit (B31)", () => {
     fireEvent.submit(input.closest("form") as HTMLFormElement);
 
     expect(pushMock).toHaveBeenCalledWith("/archivio?q=blink");
+  });
+});
+
+describe("DirectoryHeaderSearch — keyboard/viewport policy (B39 / MOB-703)", () => {
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it("l'input applica lo zoom guard iOS e mantiene enterKeyHint search", () => {
+    render(<DirectoryHeaderSearch />);
+
+    const input = screen.getByLabelText("Cerca nel catalogo completo");
+    expect(input.className).toContain("tv-kbd-input");
+    expect(input.getAttribute("enterkeyhint")).toBe("search");
+  });
+
+  it("scroll-to-input: il campo coperto dalla tastiera viene riportato nel viewport", () => {
+    render(<DirectoryHeaderSearch compact autoFocus />);
+
+    const input = screen.getByLabelText("Cerca nel catalogo completo");
+    vi.spyOn(input, "getBoundingClientRect").mockReturnValue({
+      top: 900,
+      bottom: 940,
+      left: 0,
+      right: 0,
+      width: 0,
+      height: 40,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    } as DOMRect);
+
+    vi.useFakeTimers();
+    fireEvent.focusIn(input);
+    vi.advanceTimersByTime(KEYBOARD_SCROLL_DELAY_MS + 1);
+
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({
+      block: "center",
+      inline: "nearest",
+      behavior: "smooth",
+    });
+  });
+
+  it("non scrolla se il campo è già visibile (tastiera chiusa / desktop)", () => {
+    render(<DirectoryHeaderSearch />);
+
+    const input = screen.getByLabelText("Cerca nel catalogo completo");
+    vi.spyOn(input, "getBoundingClientRect").mockReturnValue({
+      top: 120,
+      bottom: 160,
+      left: 0,
+      right: 0,
+      width: 0,
+      height: 40,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    } as DOMRect);
+
+    vi.useFakeTimers();
+    fireEvent.focusIn(input);
+    vi.advanceTimersByTime(KEYBOARD_SCROLL_DELAY_MS + 1);
+
+    expect(Element.prototype.scrollIntoView).not.toHaveBeenCalled();
+  });
+
+  it("input e submit restano nel DOM a 320-430px e in landscape", () => {
+    const viewports = [
+      { width: 320, height: 340 },
+      { width: 390, height: 380 },
+      { width: 430, height: 400 },
+      { width: 844, height: 390 },
+    ];
+
+    for (const viewport of viewports) {
+      cleanup();
+      Object.defineProperty(window, "innerWidth", {
+        configurable: true,
+        writable: true,
+        value: viewport.width,
+      });
+      Object.defineProperty(window, "innerHeight", {
+        configurable: true,
+        writable: true,
+        value: viewport.height,
+      });
+
+      render(<DirectoryHeaderSearch compact />);
+
+      const input = screen.getByLabelText(
+        "Cerca nel catalogo completo",
+      ) as HTMLInputElement;
+      expect(input.disabled).toBe(false);
+      expect(input.className).toContain("tv-kbd-input");
+      expect(
+        screen.getByRole("button", { name: /Cerca/ }),
+      ).toBeTruthy();
+    }
   });
 });

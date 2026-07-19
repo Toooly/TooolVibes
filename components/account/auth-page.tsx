@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useAccount } from "./account-provider";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { useKeyboardAwareScroll } from "@/lib/hooks/use-keyboard-aware-scroll";
 import { Mail, User, ArrowRight, RotateCcw, Shield, Sparkles } from "lucide-react";
 
 type AuthTab = "login" | "register" | "admin";
@@ -16,6 +17,10 @@ export function AuthPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [agreed, setAgreed] = useState(false);
+
+  /* B39/MOB-703: scroll-to-input con tastiera aperta (iOS non ridimensiona
+     il layout viewport); il container e' la card che racchiude i campi. */
+  const keyboardScrollRef = useKeyboardAwareScroll<HTMLDivElement>();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,13 +42,14 @@ export function AuthPage() {
   ];
 
   return (
-    <div className="v-auth-page">
+    <div className="v-auth-page tv-kbd-page">
       {/* Ambient background */}
       <div className="v-auth-page-bg" aria-hidden="true" />
       <div className="v-auth-page-orb" aria-hidden="true" />
 
       <div className="v-auth-container">
         <motion.div
+          ref={keyboardScrollRef}
           className="v-auth-card"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -140,7 +146,7 @@ export function AuthPage() {
                             onChange={(e) => setFirstName(e.target.value)}
                             placeholder="Mario"
                             autoComplete="given-name"
-                            className="v-auth-input"
+                            className="v-auth-input tv-kbd-input"
                           />
                         </div>
                       </div>
@@ -155,7 +161,7 @@ export function AuthPage() {
                             onChange={(e) => setLastName(e.target.value)}
                             placeholder="Rossi"
                             autoComplete="family-name"
-                            className="v-auth-input"
+                            className="v-auth-input tv-kbd-input"
                           />
                         </div>
                       </div>
@@ -177,7 +183,7 @@ export function AuthPage() {
                         autoCapitalize="none"
                         spellCheck={false}
                         required
-                        className="v-auth-input"
+                        className="v-auth-input tv-kbd-input"
                       />
                     </div>
                   </div>
@@ -202,7 +208,7 @@ export function AuthPage() {
                   <button
                     type="submit"
                     disabled={account.isSendingLink || (activeTab === "register" && !agreed)}
-                    className="v-auth-btn-primary"
+                    className="v-auth-btn-primary tv-kbd-sheet__footer"
                   >
                     {account.isSendingLink ? (
                       <>

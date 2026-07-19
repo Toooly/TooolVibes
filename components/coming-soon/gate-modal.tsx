@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
+import { useKeyboardAwareScroll } from "@/lib/hooks/use-keyboard-aware-scroll";
 
 interface GateModalProps {
   open: boolean;
@@ -21,6 +22,17 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  /* B39/MOB-703: scroll-to-input con tastiera aperta; il ref va composto
+     con dialogRef (focus trap) perche' la policy vive sullo stesso nodo. */
+  const keyboardScrollRef = useKeyboardAwareScroll<HTMLDivElement>();
+  const setDialogRefs = useCallback(
+    (node: HTMLDivElement | null) => {
+      dialogRef.current = node;
+      keyboardScrollRef(node);
+    },
+    [keyboardScrollRef],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -105,19 +117,19 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="tv-kbd-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-[rgba(6,6,14,0.72)] backdrop-blur-sm"
         onClick={onClose}
       />
       <div
-        ref={dialogRef}
+        ref={setDialogRefs}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         tabIndex={-1}
-        className="relative z-10 w-full max-w-sm rounded-2xl border border-[rgba(124,77,255,0.18)] bg-[rgba(10,10,24,0.88)] p-6 shadow-2xl"
+        className="tv-kbd-sheet relative z-10 w-full max-w-sm rounded-2xl border border-[rgba(124,77,255,0.18)] bg-[rgba(10,10,24,0.88)] p-6 shadow-2xl"
       >
         <div className="mb-5 text-center">
           <h2 id={titleId} className="text-lg font-semibold text-[#F0EFFF]">
@@ -144,7 +156,7 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
-              className="h-11 w-full rounded-xl border-[rgba(124,77,255,0.2)] bg-[rgba(18,18,42,0.6)] px-4 text-[#F0EFFF] placeholder:text-[#6B6690] focus-visible:border-[rgba(124,77,255,0.5)] focus-visible:ring-[rgba(124,77,255,0.25)]"
+              className="tv-kbd-input h-11 w-full rounded-xl border-[rgba(124,77,255,0.2)] bg-[rgba(18,18,42,0.6)] px-4 text-[#F0EFFF] placeholder:text-[#6B6690] focus-visible:border-[rgba(124,77,255,0.5)] focus-visible:ring-[rgba(124,77,255,0.25)]"
               aria-invalid={Boolean(error)}
               aria-describedby={error ? errorId : descriptionId}
             />
@@ -161,7 +173,7 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
             </p>
           )}
 
-          <div className="flex gap-3">
+          <div className="tv-kbd-sheet__footer flex gap-3">
             <Button
               type="button"
               variant="outline"

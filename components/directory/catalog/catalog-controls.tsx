@@ -24,6 +24,8 @@ export function CatalogSearchControl({ value, view, onChange }: CatalogSearchCon
       <Search size={16} className="shrink-0 text-[#6a3cff]" />
       <input
         data-catalog-search
+        /* B39/MOB-703: zoom guard iOS (>=16px su touch) anti auto-zoom. */
+        className="tv-kbd-input"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={

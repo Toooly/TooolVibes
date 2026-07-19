@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useKeyboardAwareScroll } from "@/lib/hooks/use-keyboard-aware-scroll";
 import {
   parseCatalogLevelParam,
   serializeCatalogUrl,
@@ -27,6 +28,9 @@ export function DirectoryHeaderSearch({
   const currentSearch = searchParams.toString();
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const inputRef = useRef<HTMLInputElement>(null);
+  /* B39/MOB-703: scroll-to-input quando la tastiera copre il campo
+     (l'overlay search mobile e' ancorato in basso). */
+  const keyboardScrollRef = useKeyboardAwareScroll<HTMLFormElement>();
 
   useEffect(() => {
     setQuery(searchParams.get("q") ?? "");
@@ -65,6 +69,7 @@ export function DirectoryHeaderSearch({
 
   return (
     <form
+      ref={keyboardScrollRef}
       onSubmit={handleSubmit}
       className={cn(
         "group/header-search flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/70 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.66)] transition duration-200 focus-within:-translate-y-0.5 focus-within:border-[rgba(106,60,255,0.32)] focus-within:bg-white/90 focus-within:shadow-[0_0_0_5px_rgba(106,60,255,0.12),0_14px_34px_rgba(47,33,126,0.1),inset_0_1px_0_rgba(255,255,255,0.82)]",
@@ -85,7 +90,7 @@ export function DirectoryHeaderSearch({
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         placeholder={compact ? "Cerca nel catalogo" : "Cerca tool, tag o categoria"}
-        className="min-h-9 w-full min-w-0 bg-transparent px-1 text-sm font-medium text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+        className="tv-kbd-input min-h-9 w-full min-w-0 bg-transparent px-1 text-sm font-medium text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
         aria-label="Cerca nel catalogo completo"
         enterKeyHint="search"
       />

@@ -306,7 +306,7 @@ export function SiteHeaderV2() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             id="site-search-overlay"
-            className="fixed inset-0 z-[var(--tv-z-overlay)] flex items-end justify-center bg-[rgba(18,13,47,0.5)] p-3 pt-[calc(5rem+env(safe-area-inset-top))] backdrop-blur-sm md:items-start md:p-0 md:pt-24"
+            className="tv-kbd-overlay fixed inset-0 z-[var(--tv-z-overlay)] flex items-end justify-center bg-[rgba(18,13,47,0.5)] p-3 pt-[calc(5rem+env(safe-area-inset-top))] backdrop-blur-sm md:items-start md:p-0 md:pt-24"
             onClick={() => closeSearch()}
             role="dialog"
             aria-modal="true"
@@ -320,7 +320,7 @@ export function SiteHeaderV2() {
               className="mx-0 w-full max-w-none md:mx-4 md:max-w-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="overflow-hidden rounded-t-[24px] border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.97)] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_16px_48px_rgba(106,60,255,0.12)] backdrop-blur-xl md:rounded-2xl md:pb-4">
+              <div className="tv-kbd-sheet overflow-hidden rounded-t-[24px] border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.97)] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_16px_48px_rgba(106,60,255,0.12)] backdrop-blur-xl md:rounded-2xl md:pb-4">
                 <DirectoryHeaderSearch compact autoFocus onSubmitted={() => closeSearch(false)} />
               </div>
             </motion.div>

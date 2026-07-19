@@ -112,4 +112,24 @@
     var(--tv-shell-nav-inset-bottom) + var(--bottom-nav-height) +
     var(--tv-shell-fab-gap)
   );
+
+  /*
+   * Mobile keyboard / viewport policy (B39 / MOB-703): single dvh + safe-area
+   * contract shared by keyboard-aware overlays and sheets (gate modal, auth
+   * page, search surfaces). Paired with `interactive-widget: resizes-content`
+   * (app/layout.tsx) the dvh chain shrinks when the virtual keyboard opens, so
+   * input, submit and close stay reachable; iOS Safari (which ignores
+   * interactive-widget) is covered by useKeyboardAwareScroll (lib/hooks) and
+   * by the 16px input zoom guard.
+   */
+  --tv-kbd-overlay-inset-top: calc(0.75rem + env(safe-area-inset-top, 0px));
+  --tv-kbd-overlay-inset-right: max(0.75rem, env(safe-area-inset-right, 0px));
+  --tv-kbd-overlay-inset-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  --tv-kbd-overlay-inset-left: max(0.75rem, env(safe-area-inset-left, 0px));
+  --tv-kbd-sheet-max-height: calc(
+    100dvh - var(--tv-kbd-overlay-inset-top) -
+    var(--tv-kbd-overlay-inset-bottom)
+  );
+  /* 16px floor: iOS Safari does not auto-zoom focused inputs at >= 16px. */
+  --tv-kbd-input-min-font-size: 1rem;
 }
