@@ -33,9 +33,18 @@ type BrowserIssue = {
   message: string;
 };
 
-function isIgnoredConsoleError(message: ConsoleMessage) {
+function isIgnoredConsoleError(message: ConsoleMessage, browserName: string) {
   const text = message.text();
-  return ignoredConsoleErrorPatterns.some((pattern) => pattern.test(text));
+  if (ignoredConsoleErrorPatterns.some((pattern) => pattern.test(text))) {
+    return true;
+  }
+
+  return (
+    browserName === "webkit" &&
+    /Viewport argument key "interactive-widget" not recognized and ignored/i.test(
+      text,
+    )
+  );
 }
 
 async function prepareDeterministicPage(page: Page) {
@@ -99,14 +108,17 @@ async function prepareDeterministicPage(page: Page) {
 
 export const test = playwrightTest.extend<{ browserIssues: BrowserIssue[] }>({
   browserIssues: [
-    async ({ page }, runFixture) => {
+    async ({ page, browserName }, runFixture) => {
       const browserIssues: BrowserIssue[] = [];
 
       await prepareDeterministicPage(page);
 
       page.on("console", (message) => {
         const text = message.text();
-        if (message.type() === "error" && !isIgnoredConsoleError(message)) {
+        if (
+          message.type() === "error" &&
+          !isIgnoredConsoleError(message, browserName)
+        ) {
           browserIssues.push({ source: "console", message: text });
         }
 

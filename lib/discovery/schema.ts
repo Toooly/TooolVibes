@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/validation/zod";
 import {
   MAX_COMPARE_TOOLS,
   MAX_WORKSPACE_COLLECTION_TOOLS,

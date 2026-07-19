@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/validation/zod";
 
 import { waitlistPublicRequestSchema } from "@/lib/public-submissions/contracts";
 export const WAITLIST_SOURCE = "coming-soon" as const;

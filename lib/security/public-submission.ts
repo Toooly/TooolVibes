@@ -1,6 +1,6 @@
 import "server-only";
 
-import { z } from "zod";
+import { z } from "@/lib/validation/zod";
 
 import type { PublicSubmissionAction } from "@/lib/public-submissions/contracts";
 import { getRequestAddress } from "@/lib/security/distributed-state";
