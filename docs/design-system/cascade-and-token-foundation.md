@@ -9,7 +9,7 @@ Status: release contract (B20 / DS-301 / DS-302)
 1. `app/globals.css`
    1. Tailwind, animation and shadcn foundations
    2. `styles/tokens.css`
-   3. feature sheets: gamification, radar, compare, depth, account
+   3. feature sheets: home, catalog, gamification, radar, compare, depth, account
    4. Figma implementation scope
    5. legacy global rules
 2. `styles/vibes-3d-maestoso.css`
@@ -23,6 +23,8 @@ The final two sheets currently depend on late cascade priority. Their order is f
 |---|---|---|---|
 | `styles/tokens.css` | Design system | every surface | only canonical token definitions; no component selectors |
 | `app/globals.css` | Frontend platform | application shell and legacy routes | frozen for new component styling; blocker fixes require an owner comment |
+| `styles/home.css` | Home discovery | `/` active V2 hero | home selectors only |
+| `styles/catalog.css` | Directory | `/archivio` active catalog facade | catalog selectors only |
 | `styles/gamification.css` | Engagement | mission/reward surfaces | gamification selectors only |
 | `styles/radar.css` | Radar | `/radar` | Radar selectors only |
 | `styles/compare.css` | Decision flow | `/compare` | Compare selectors only |

@@ -1,3 +1,96 @@
+/* Route-level responsive fallback: compact, informative and motion-safe. */
+.radar-loading-state {
+  display: grid;
+  justify-items: center;
+  width: min(calc(100% - 2 * var(--tv-space-6)), 42rem);
+  min-height: 28rem;
+  align-content: center;
+  margin: clamp(6rem, 10vw, 8rem) auto var(--tv-space-16);
+  padding: var(--tv-space-12);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--tv-accent-cyan) 16%, transparent), transparent 22rem),
+    var(--tv-surface-translucent);
+  color: var(--tv-ink-primary);
+  text-align: center;
+  box-shadow: var(--tv-elevation-raised);
+}
+
+.radar-loading-state__icon {
+  display: grid;
+  width: 4rem;
+  aspect-ratio: 1;
+  place-items: center;
+  margin-bottom: var(--tv-space-6);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 42%, transparent);
+  border-radius: var(--tv-radius-pill);
+  background: color-mix(in srgb, var(--tv-accent-cyan) 12%, var(--tv-bg-base));
+  color: var(--tv-accent-cyan);
+}
+
+.radar-loading-state .radar-loading-state__eyebrow {
+  margin: 0 0 var(--tv-space-3);
+  color: var(--tv-accent-cyan);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.radar-loading-state > strong {
+  max-width: 18ch;
+  font-family: var(--tv-font-display);
+  font-size: var(--tv-text-2xl);
+  line-height: var(--tv-leading-tight);
+}
+
+.radar-loading-state > p:not(.radar-loading-state__eyebrow) {
+  max-width: 34rem;
+  margin: var(--tv-space-4) 0 0;
+  color: var(--tv-ink-secondary);
+  line-height: var(--tv-leading-body);
+}
+
+.radar-loading-state__progress {
+  width: min(15rem, 80%);
+  height: 0.25rem;
+  margin-top: var(--tv-space-8);
+  overflow: hidden;
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-surface-elevated);
+}
+
+.radar-loading-state__progress i {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--tv-accent-primary), var(--tv-accent-cyan));
+  animation: radar-loading-progress 1.6s var(--tv-ease-emphasis) infinite alternate;
+}
+
+@keyframes radar-loading-progress {
+  from { transform: translateX(-35%); }
+  to { transform: translateX(175%); }
+}
+
+@media (max-width: 767px) {
+  .radar-loading-state {
+    width: min(calc(100% - 2 * var(--tv-space-4)), 42rem);
+    min-height: 24rem;
+    margin-top: calc(6rem + env(safe-area-inset-top, 0px));
+    padding: var(--tv-space-8) var(--tv-space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-loading-state__progress i {
+    width: 100%;
+    animation: none;
+  }
+}
+
 @layer components {
 @media (max-width:767px) {
   .mobile-radar-view{color:var(--mobile-text-primary);background:var(--mobile-bg-section);flex-direction:column;padding-top:1.55rem;display:flex}

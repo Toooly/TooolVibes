@@ -60,13 +60,14 @@ export default async function HomePage() {
   return (
     <>
       {releaseFeatures.threeD.enabled && (
-        <Home3DHero tools={tools} weeklyTool={spotlightTool} layout={homeLayout} />
+        <Home3DHero tools={tools} weeklyTool={spotlightTool} />
       )}
       <VibeHomeV2
         tools={tools}
         weeklyTool={spotlightTool}
         supportingTools={supportingTools.slice(0, 4)}
         layout={homeLayout}
+        showDiscoveryHero={!releaseFeatures.threeD.enabled}
       />
     </>
   );

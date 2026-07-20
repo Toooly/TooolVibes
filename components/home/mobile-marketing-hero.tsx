@@ -83,7 +83,7 @@ export function MobileMarketingHero({
           animate={{ opacity: 1, y: 0 }}
           transition={getTransition(0.1)}
         >
-          TooolVibes
+          Curatela indipendente · meno rumore, più segnale
         </motion.span>
 
         <motion.h1
@@ -92,7 +92,7 @@ export function MobileMarketingHero({
           animate={{ opacity: 1, y: 0 }}
           transition={getTransition(0.2)}
         >
-          Scegli tool AI validi
+          Trova il tool giusto prima che il rumore scelga per te.
         </motion.h1>
 
         <motion.p
@@ -101,7 +101,8 @@ export function MobileMarketingHero({
           animate={{ opacity: 1, y: 0 }}
           transition={getTransition(0.3)}
         >
-          Senza attraversare il rumore.
+          Tool AI, SaaS e no-code selezionati per aiutarti a scegliere con
+          più chiarezza.
         </motion.p>
 
         <motion.div

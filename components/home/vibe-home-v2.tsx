@@ -11,6 +11,7 @@ type VibeHomeV2Props = {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
   supportingTools: ToolPublicView[];
+  showDiscoveryHero?: boolean;
   /* BATCH 40 (MOB-704): "legacy" = composizione originale; "time-to-value"
      = discovery stage a flusso e margini mobile corretti (flag
      TOOOLVIBES_HOME_LAYOUT, lib/config/home-experience.ts). L'ordine delle
@@ -46,7 +47,13 @@ const methodSteps = [
   },
 ];
 
-export function VibeHomeV2({ tools, weeklyTool, supportingTools, layout = "legacy" }: VibeHomeV2Props) {
+export function VibeHomeV2({
+  tools,
+  weeklyTool,
+  supportingTools,
+  layout = "legacy",
+  showDiscoveryHero = true,
+}: VibeHomeV2Props) {
   const featuredTools = tools.filter((tool) => tool.featured);
   const focusTool = weeklyTool ?? featuredTools[0] ?? tools[0] ?? null;
   const isTimeToValue = layout === "time-to-value";
@@ -95,7 +102,7 @@ export function VibeHomeV2({ tools, weeklyTool, supportingTools, layout = "legac
       className={`vibe-home-mobile-origin${isTimeToValue ? " vibe-home-mobile-origin--ttv" : ""} relative`}
       data-home-layout={layout}
     >
-      <MobileHeroSolar routes={solarRoutes} compact={isTimeToValue} />
+      {showDiscoveryHero && <MobileHeroSolar routes={solarRoutes} compact={isTimeToValue} />}
       {focusTool && <MobileSpotlight tool={focusTool} supportingTools={supportingTools} />}
       <section className="page-shell sm:hidden">
         <NativePlacement placementKey="home-featured-tool" variant="compact" />

@@ -1,8 +1,9 @@
 "use client";
 
 import { type CSSProperties, useMemo, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { Swords, Sparkles, Trophy } from "lucide-react";
+import { ArrowRight, Columns3, Swords, Sparkles, Trophy } from "lucide-react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
@@ -153,9 +154,36 @@ export function DesktopCompareView({
   }
 
   if (tools.length < 2) {
+    const hasCandidate = tools.length === 1;
     return (
-      <div className="desktop-compare desktop-compare--empty">
-        <p className="text-slate-300">Aggiungi almeno 2 tool per iniziare un confronto.</p>
+      <div className="compare-onboarding-shell">
+        <section className="compare-onboarding" aria-labelledby="compare-onboarding-title">
+          <span className="compare-onboarding__icon" aria-hidden="true">
+            <Columns3 />
+          </span>
+          <p className="compare-onboarding__eyebrow">
+            {hasCandidate ? "Primo candidato pronto" : "Il ring è libero"}
+          </p>
+          <h2 id="compare-onboarding-title">
+            {hasCandidate
+              ? "Serve ancora uno sfidante."
+              : "Costruisci un confronto che porti a una scelta."}
+          </h2>
+          <p className="compare-onboarding__lede">
+            {hasCandidate
+              ? `${tools[0].name} è già nel confronto. Aggiungi un altro tool per leggere differenze, punti forti e compromessi.`
+              : "Seleziona da due a cinque tool dal catalogo: li ordineremo per evidenze, caso d’uso e aderenza al tuo obiettivo."}
+          </p>
+          <Link href="/archivio" className="compare-onboarding__cta">
+            {hasCandidate ? "Aggiungi uno sfidante" : "Scegli i tool"}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+          <div className="compare-onboarding__signals" aria-label="Cosa otterrai">
+            <span><strong>Confronto</strong> fianco a fianco</span>
+            <span><strong>Verdetto</strong> spiegato</span>
+            <span><strong>Decisione</strong> salvabile</span>
+          </div>
+        </section>
       </div>
     );
   }

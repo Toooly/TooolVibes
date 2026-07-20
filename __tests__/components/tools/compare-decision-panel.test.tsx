@@ -196,6 +196,16 @@ function decisionGroupFor(name: string) {
   });
 }
 
+let desktopViewport = false;
+const viewportChangeListeners = new Set<() => void>();
+
+function setDesktopViewport(matches: boolean) {
+  desktopViewport = matches;
+  act(() => {
+    viewportChangeListeners.forEach((listener) => listener());
+  });
+}
+
 /* axe gira sul frammento renderizzato, non sulla pagina intera (stesso
    razionale delle suite B34/B53: jsdom non calcola contrasto né landmark
    di un documento completo). */
@@ -214,19 +224,26 @@ beforeAll(() => {
   vi.stubGlobal(
     "matchMedia",
     (query: string) => ({
-      matches: false,
+      get matches() {
+        return query === "(min-width: 768px)" ? desktopViewport : false;
+      },
       media: query,
       onchange: null,
       addListener: vi.fn(),
       removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
+      addEventListener: (_type: string, listener: () => void) => {
+        if (query === "(min-width: 768px)") viewportChangeListeners.add(listener);
+      },
+      removeEventListener: (_type: string, listener: () => void) => {
+        if (query === "(min-width: 768px)") viewportChangeListeners.delete(listener);
+      },
       dispatchEvent: vi.fn(),
     }),
   );
 });
 
 beforeEach(() => {
+  desktopViewport = false;
   vi.useFakeTimers();
   window.history.replaceState(null, "", "/compare");
   seedWorkspace(compareState("atlas-ai", "gamma-app"));
@@ -470,31 +487,27 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     ).toBeTruthy();
   });
 
-  it("parity mobile/desktop: la decisione è una sola e si riflette su entrambe le superfici", () => {
-    render(<ToolBattleView tools={VIEWS} />);
+  it("la decisione resta unica quando il viewport cambia superficie", () => {
+    const { container } = render(<ToolBattleView tools={VIEWS} />);
+    expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(1);
+    expect(container.querySelectorAll(".desktop-compare")).toHaveLength(0);
+
     revealMobileResult();
+    fireEvent.click(
+      within(decisionGroupFor("Atlas AI")).getByRole("button", { name: "Scegli" }),
+    );
+
+    setDesktopViewport(true);
+    expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(0);
+    expect(container.querySelectorAll(".desktop-compare")).toHaveLength(1);
+
     revealDesktopResult();
-
+    expect(screen.getAllByRole("region", { name: "Registra decisione" })).toHaveLength(1);
     expect(
-      screen.getAllByRole("region", { name: "Registra decisione" }),
-    ).toHaveLength(2);
-
-    const groups = screen.getAllByRole("group", {
-      name: "Decisione per Atlas AI",
-    });
-    expect(groups).toHaveLength(2);
-
-    fireEvent.click(within(groups[0]).getByRole("button", { name: "Scegli" }));
-
-    for (const group of screen.getAllByRole("group", {
-      name: "Decisione per Atlas AI",
-    })) {
-      expect(
-        within(group)
-          .getByRole("button", { name: "Scegli" })
-          .getAttribute("aria-pressed"),
-      ).toBe("true");
-    }
+      within(decisionGroupFor("Atlas AI"))
+        .getByRole("button", { name: "Scegli" })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
     expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );

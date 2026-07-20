@@ -11,11 +11,11 @@ export function Compare3DHero() {
     <section className="compare-hero-light relative flex min-h-[30vh] items-center justify-center overflow-hidden py-16 md:min-h-[38vh]">
       <div className="compare-hero-light__glow" aria-hidden="true" />
       <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
-        <h1 className="text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-          Tool Battle
-        </h1>
+        <p className="compare-hero-light__eyebrow">Decision workspace</p>
+        <h1 className="compare-hero-light__title">Confronta meno. Scegli meglio.</h1>
         <p className="mx-auto mt-4 max-w-xl text-lg text-slate-300">
-          Metti i tool sul ring e scegli il vincitore.
+          Metti sul ring i candidati più forti e porta a casa una decisione
+          leggibile e motivata.
         </p>
       </div>
     </section>

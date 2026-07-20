@@ -12,9 +12,13 @@ export function AccountGate() {
       <div className="v-auth-page">
         <div className="v-auth-page-bg" aria-hidden="true" />
         <div className="v-auth-container">
-          <div className="v-auth-card v-auth-loading">
-            <div className="v-auth-loading-spinner" />
-            <p className="v-auth-loading-text">Caricamento...</p>
+          <div className="v-auth-card v-auth-loading account-loading-state" role="status" aria-busy="true">
+            <div className="v-auth-loading-spinner" aria-hidden="true" />
+            <p className="account-loading-state__eyebrow">Workspace personale</p>
+            <h1>Stiamo preparando il tuo spazio.</h1>
+            <p className="v-auth-loading-text">
+              Sincronizziamo preferenze, tool salvati e decisioni recenti.
+            </p>
           </div>
         </div>
       </div>

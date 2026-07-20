@@ -80,6 +80,8 @@ vi.mock("motion/react", () => {
     motion: motionProxy,
     AnimatePresence: ({ children }: { children: ReactNode }) =>
       createElement(Fragment, null, children),
+    MotionConfig: ({ children }: { children: ReactNode }) =>
+      createElement(Fragment, null, children),
   };
 });
 
@@ -182,6 +184,7 @@ describe("MobileCatalogView facade — filter combinations and zero results", ()
 
     expect(screen.getByText("Nessun tool in questa vista")).toBeTruthy();
     expect(screen.getByText("0 risultati")).toBeTruthy();
+    expect(screen.getByRole("status").getAttribute("aria-live")).toBe("polite");
 
     const emptyCta = container.querySelector<HTMLButtonElement>(
       ".mobile-catalog-view__empty-cta",

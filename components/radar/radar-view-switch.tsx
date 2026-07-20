@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { Radar } from "lucide-react";
 
 import type { RadarDesktopVisual } from "@/lib/radar/radar-view-config";
 
@@ -23,13 +24,16 @@ type RadarViewport = "mobile" | "desktop";
 
 function RadarViewFallback() {
   return (
-    <div
-      className="flex min-h-[60vh] items-center justify-center"
-      role="status"
-      aria-busy="true"
-    >
-      <span className="text-sm font-medium text-white/60">
-        Caricamento del radar…
+    <div className="radar-loading-state" role="status" aria-busy="true">
+      <span className="sr-only">Caricamento del radar…</span>
+      <span className="radar-loading-state__icon" aria-hidden="true">
+        <Radar />
+      </span>
+      <p className="radar-loading-state__eyebrow">Radar live</p>
+      <strong>Sintonizzazione dei segnali in corso.</strong>
+      <p>Stiamo ordinando i lanci più interessanti prima di mostrarteli.</p>
+      <span className="radar-loading-state__progress" aria-hidden="true">
+        <i />
       </span>
     </div>
   );

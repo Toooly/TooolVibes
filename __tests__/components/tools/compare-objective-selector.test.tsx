@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { createElement, Fragment, type ReactNode } from "react";
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import axe from "axe-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -184,23 +184,40 @@ function expectRadioChecked(radio: HTMLElement, expected: boolean) {
   expect((radio as HTMLInputElement).checked).toBe(expected);
 }
 
+let desktopViewport = false;
+const viewportChangeListeners = new Set<() => void>();
+
+function setDesktopViewport(matches: boolean) {
+  desktopViewport = matches;
+  act(() => {
+    viewportChangeListeners.forEach((listener) => listener());
+  });
+}
+
 beforeAll(() => {
   vi.stubGlobal(
     "matchMedia",
     (query: string) => ({
-      matches: false,
+      get matches() {
+        return query === "(min-width: 768px)" ? desktopViewport : false;
+      },
       media: query,
       onchange: null,
       addListener: vi.fn(),
       removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
+      addEventListener: (_type: string, listener: () => void) => {
+        if (query === "(min-width: 768px)") viewportChangeListeners.add(listener);
+      },
+      removeEventListener: (_type: string, listener: () => void) => {
+        if (query === "(min-width: 768px)") viewportChangeListeners.delete(listener);
+      },
       dispatchEvent: vi.fn(),
     }),
   );
 });
 
 beforeEach(() => {
+  desktopViewport = false;
   window.localStorage.clear();
   window.history.replaceState(null, "", "/compare");
 });
@@ -303,31 +320,31 @@ describe("useCompareObjective — persistenza (B34)", () => {
   });
 });
 
-describe("ToolBattleView — parity mobile/desktop e flag (B34)", () => {
+describe("ToolBattleView — viewport esclusivo e flag (B34)", () => {
   beforeEach(() => {
     seedWorkspace(compareState("atlas-ai", "gamma-app"));
   });
 
-  it("obiettivo persistito: stesso stato e stessi punteggi su mobile e desktop", () => {
+  it("obiettivo persistito: stesso stato e stessi punteggi dopo il cambio viewport", () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
 
-    render(<ToolBattleView tools={VIEWS} />);
+    const { container } = render(<ToolBattleView tools={VIEWS} />);
 
-    // Stato condiviso: entrambe le superfici mostrano lo stesso obiettivo attivo.
-    const radios = screen.getAllByRole("radio", { name: "Risparmiare tempo" });
-    expect(radios).toHaveLength(2);
-    for (const radio of radios) {
-      expectRadioChecked(radio, true);
-    }
+    expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(1);
+    expect(container.querySelectorAll(".desktop-compare")).toHaveLength(0);
+    expectRadioChecked(screen.getByRole("radio", { name: "Risparmiare tempo" }), true);
 
-    // Stesso punteggio obiettivo mostrato sulle due superfici.
     const expected = objectiveScoreOf("gamma-app", "save-time");
     expect(expected).toBeGreaterThan(objectiveScoreOf("gamma-app", null) ?? 0);
-    const gammaCards = screen.getAllByText("Gamma");
-    expect(gammaCards.length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText("Gamma").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(String(expected)).length).toBeGreaterThanOrEqual(1);
 
-    const scoreNodes = screen.getAllByText(String(expected));
-    expect(scoreNodes.length).toBeGreaterThanOrEqual(2);
+    setDesktopViewport(true);
+
+    expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(0);
+    expect(container.querySelectorAll(".desktop-compare")).toHaveLength(1);
+    expectRadioChecked(screen.getByRole("radio", { name: "Risparmiare tempo" }), true);
+    expect(screen.getAllByText(String(expected)).length).toBeGreaterThanOrEqual(1);
   });
 
   it("impatto visibile prima del risultato: badge delta senza reveal", () => {
@@ -343,16 +360,16 @@ describe("ToolBattleView — parity mobile/desktop e flag (B34)", () => {
     expect(deltas.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("cambio obiettivo da una superficie aggiorna l'altra (stato condiviso)", () => {
+  it("cambio obiettivo sopravvive allo swap tra superfici", () => {
     render(<ToolBattleView tools={VIEWS} />);
 
-    const collaborate = screen.getAllByRole("radio", { name: "Collaborare" });
-    expect(collaborate).toHaveLength(2);
-    fireEvent.click(collaborate[0]);
+    fireEvent.click(screen.getByRole("radio", { name: "Collaborare" }));
+    expectRadioChecked(screen.getByRole("radio", { name: "Collaborare" }), true);
 
-    for (const radio of screen.getAllByRole("radio", { name: "Collaborare" })) {
-      expectRadioChecked(radio, true);
-    }
+    setDesktopViewport(true);
+
+    expect(screen.getAllByRole("radio", { name: "Collaborare" })).toHaveLength(1);
+    expectRadioChecked(screen.getByRole("radio", { name: "Collaborare" }), true);
     expect(window.localStorage.getItem(COMPARE_OBJECTIVE_STORAGE_KEY)).toBe("collaborate");
   });
 

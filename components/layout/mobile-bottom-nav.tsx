@@ -37,6 +37,7 @@ export function MobileBottomNav() {
   const nav = (
     <nav
       aria-label="Navigazione mobile principale"
+      inert={isOverlayOpen || undefined}
       className={cn(
         "mobile-bottom-motion site-mobile-footer-nav fixed z-[var(--tv-z-nav)] mx-auto w-auto max-w-[25rem]",
         "md:hidden",
@@ -66,6 +67,7 @@ export function MobileBottomNav() {
             <Link
               key={item.href}
               href={item.href}
+              aria-label={badgeCount > 0 ? `${item.label}, ${badgeAriaLabel}` : undefined}
               aria-current={active ? "page" : undefined}
               className={cn(
                 "mobile-bottom-link flex h-[3.55rem] min-w-0 flex-col items-center justify-center gap-1 rounded-[1.2rem] px-1 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
@@ -74,8 +76,8 @@ export function MobileBottomNav() {
                 compareHasItems && "mobile-bottom-link--compare-ready"
               )}
             >
-              <span className="mobile-bottom-link__icon-wrap" aria-hidden="true">
-                {Icon ? <Icon className="size-5 transition-transform" /> : null}
+              <span className="mobile-bottom-link__icon-wrap">
+                {Icon ? <Icon className="size-5 transition-transform" aria-hidden="true" /> : null}
                 {badgeCount > 0 ? (
                   <span
                     key={badgeCount}

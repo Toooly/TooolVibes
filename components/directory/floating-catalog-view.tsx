@@ -12,6 +12,7 @@ interface FloatingCatalogViewProps {
   initialTag?: string;
   initialLevel?: CatalogLevelFilter;
   unifiedSearchEnabled?: boolean;
+  showIntro?: boolean;
 }
 
 export function FloatingCatalogView({
@@ -22,6 +23,7 @@ export function FloatingCatalogView({
   initialTag = "",
   initialLevel = "all",
   unifiedSearchEnabled = true,
+  showIntro = true,
 }: FloatingCatalogViewProps) {
   return (
     <MobileCatalogView
@@ -32,6 +34,7 @@ export function FloatingCatalogView({
       initialTag={initialTag}
       initialLevel={initialLevel}
       unifiedSearchEnabled={unifiedSearchEnabled}
+      showIntro={showIntro}
     />
   );
 }

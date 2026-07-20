@@ -41,7 +41,7 @@ export function CatalogSearchControl({ value, view, onChange }: CatalogSearchCon
         <button
           type="button"
           onClick={() => onChange("")}
-          className="shrink-0 rounded-full p-1 transition-colors hover:bg-[rgba(106,60,255,0.08)]"
+          className="mobile-catalog-view__search-clear shrink-0 rounded-full transition-colors hover:bg-[rgba(106,60,255,0.08)]"
           aria-label="Cancella ricerca"
         >
           <X size={14} className="text-[#4f4970]" />

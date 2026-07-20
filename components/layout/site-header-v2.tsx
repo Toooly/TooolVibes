@@ -9,7 +9,6 @@ import { MusicToggleButton } from "../app/music-toggle-button";
 import { SoundToggleButton } from "../app/sound-toggle-button";
 import { DirectoryHeaderSearch } from "../directory/directory-header-search";
 import { GameProfileBar } from "../gamification/game-profile-bar";
-import { CircuitPill, PILL_CONFIGS } from "./navbar-circuit-markers";
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { isNavRouteActive } from "@/lib/navigation/selectors";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
@@ -25,6 +24,77 @@ import {
 import { useHeaderAccountCta } from "./workspace-nav-selectors";
 
 const DEFAULT_MOBILE_LINK_TONE = ["#6a3cff", "#39d2f6", "#B388FF"] as const;
+
+const MODAL_FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[contenteditable="true"]',
+  '[tabindex]:not([tabindex="-1"])',
+].join(",");
+
+function getModalFocusables(container: HTMLElement) {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(MODAL_FOCUSABLE_SELECTOR),
+  ).filter(
+    (element) =>
+      !element.hidden &&
+      element.getAttribute("aria-hidden") !== "true" &&
+      !element.closest("[inert]"),
+  );
+}
+
+/**
+ * Isolate every DOM branch outside the active dialog. Walking toward `body`
+ * also covers portalled chrome such as the mobile bottom navigation.
+ */
+function isolateModalBackground(dialog: HTMLElement) {
+  const previousAttributes = new Map<
+    HTMLElement,
+    { ariaHidden: string | null; inert: string | null }
+  >();
+  let activeBranch: HTMLElement = dialog;
+
+  while (activeBranch.parentElement) {
+    const parent = activeBranch.parentElement;
+
+    for (const sibling of Array.from(parent.children)) {
+      if (!(sibling instanceof HTMLElement) || sibling === activeBranch) {
+        continue;
+      }
+
+      previousAttributes.set(sibling, {
+        ariaHidden: sibling.getAttribute("aria-hidden"),
+        inert: sibling.getAttribute("inert"),
+      });
+      sibling.setAttribute("aria-hidden", "true");
+      sibling.setAttribute("inert", "");
+    }
+
+    if (parent === document.body) {
+      break;
+    }
+    activeBranch = parent;
+  }
+
+  return () => {
+    for (const [element, previous] of previousAttributes) {
+      if (previous.ariaHidden === null) {
+        element.removeAttribute("aria-hidden");
+      } else {
+        element.setAttribute("aria-hidden", previous.ariaHidden);
+      }
+
+      if (previous.inert === null) {
+        element.removeAttribute("inert");
+      } else {
+        element.setAttribute("inert", previous.inert);
+      }
+    }
+  };
+}
 
 function NavLink({
   href,
@@ -84,11 +154,13 @@ export function SiteHeaderV2() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const spatialRoute = pathname === "/" || pathname?.startsWith("/archivio");
-  const brandRef = useRef<HTMLDivElement>(null);
-  const navRef = useRef<HTMLElement>(null);
-  const actionsRef = useRef<HTMLDivElement>(null);
   const activeSearchTriggerRef = useRef<HTMLButtonElement | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const searchDialogRef = useRef<HTMLDivElement>(null);
+  const menuDialogRef = useRef<HTMLDivElement>(null);
+  const menuCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const restoreSearchFocusRef = useRef(true);
+  const restoreMenuFocusRef = useRef(true);
   
 
   useEffect(() => {
@@ -107,47 +179,113 @@ export function SiteHeaderV2() {
   }, [menuOpen, searchOpen, setOverlayOpen]);
 
   const closeSearch = useCallback((restoreFocus = true) => {
+    restoreSearchFocusRef.current = restoreFocus;
     setSearchOpen(false);
-
-    if (restoreFocus) {
-      window.requestAnimationFrame(() => activeSearchTriggerRef.current?.focus());
-    }
   }, []);
 
   const closeMenu = useCallback((restoreFocus = true) => {
+    restoreMenuFocusRef.current = restoreFocus;
     setMenuOpen(false);
-
-    if (restoreFocus) {
-      window.requestAnimationFrame(() => menuButtonRef.current?.focus());
-    }
   }, []);
 
   const toggleMobileMenu = () => {
+    restoreSearchFocusRef.current = false;
+    restoreMenuFocusRef.current = true;
     setSearchOpen(false);
     setMenuOpen((open) => !open);
   };
 
   useEffect(() => {
-    if (!menuOpen && !searchOpen) {
+    const dialog = searchOpen
+      ? searchDialogRef.current
+      : menuOpen
+        ? menuDialogRef.current
+        : null;
+
+    if (!dialog) {
       return;
     }
 
+    const restoreBackground = isolateModalBackground(dialog);
+    const restoreFocusTarget = searchOpen
+      ? activeSearchTriggerRef.current
+      : menuButtonRef.current;
+    const shouldRestoreFocusRef = searchOpen
+      ? restoreSearchFocusRef
+      : restoreMenuFocusRef;
+    const preferredFocus = searchOpen
+      ? dialog.querySelector<HTMLElement>("input:not([disabled])")
+      : menuCloseButtonRef.current;
+    (preferredFocus ?? getModalFocusables(dialog)[0] ?? dialog).focus({
+      preventScroll: true,
+    });
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        if (searchOpen) {
+          closeSearch();
+        } else {
+          closeMenu();
+        }
         return;
       }
 
-      if (searchOpen) {
-        closeSearch();
+      if (event.key !== "Tab") {
+        return;
       }
 
-      if (menuOpen) {
-        closeMenu();
+      const focusables = getModalFocusables(dialog);
+      if (focusables.length === 0) {
+        event.preventDefault();
+        dialog.focus({ preventScroll: true });
+        return;
+      }
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      const activeIndex =
+        active instanceof HTMLElement ? focusables.indexOf(active) : -1;
+
+      if (event.shiftKey && activeIndex <= 0) {
+        event.preventDefault();
+        last.focus({ preventScroll: true });
+      } else if (!event.shiftKey && activeIndex === focusables.length - 1) {
+        event.preventDefault();
+        first.focus({ preventScroll: true });
+      } else if (!dialog.contains(active)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus({ preventScroll: true });
       }
     };
 
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    const onFocusIn = (event: FocusEvent) => {
+      if (event.target instanceof Node && dialog.contains(event.target)) {
+        return;
+      }
+
+      (getModalFocusables(dialog)[0] ?? dialog).focus({
+        preventScroll: true,
+      });
+    };
+
+    document.addEventListener("keydown", onKeyDown, true);
+    document.addEventListener("focusin", onFocusIn, true);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown, true);
+      document.removeEventListener("focusin", onFocusIn, true);
+      restoreBackground();
+      if (shouldRestoreFocusRef.current && restoreFocusTarget?.isConnected) {
+        window.requestAnimationFrame(() => {
+          if (restoreFocusTarget.isConnected) {
+            restoreFocusTarget.focus({ preventScroll: true });
+          }
+        });
+      }
+    };
   }, [closeMenu, closeSearch, menuOpen, searchOpen]);
 
   return (
@@ -168,7 +306,7 @@ export function SiteHeaderV2() {
         >
           <div className="site-header-v2__inner relative grid h-16 grid-cols-[auto_1fr_auto] items-center px-4 md:flex md:items-center md:justify-between md:px-6">
             {/* Logo */}
-            <div ref={brandRef} className="site-header-v2__brand navbar-circuit-pill group relative flex items-center gap-2.5 justify-self-start sm:gap-3">
+            <div className="site-header-v2__brand group relative flex items-center gap-2.5 justify-self-start sm:gap-3">
               <span className="site-header-v2__brand-aura" aria-hidden="true" />
               <Link href="/" className="site-header-v2__brand-logo relative transition-transform duration-300 group-hover:scale-105" data-sonic-action="brand">
                 <BrandLogo size={36} fallback="png" priority />
@@ -197,8 +335,7 @@ export function SiteHeaderV2() {
             </div>
 
             {/* Desktop Nav */}
-            <nav ref={navRef} className="site-header-v2__nav navbar-circuit-pill hidden items-center gap-1 lg:flex" aria-label="Navigazione principale">
-              <CircuitPill config={PILL_CONFIGS.nav} containerRef={navRef} />
+            <nav className="site-header-v2__nav hidden items-center gap-1 min-[1360px]:flex" aria-label="Navigazione principale">
               {desktopNavLinks.map((link) => (
                 <NavLink
                   key={link.href}
@@ -211,12 +348,13 @@ export function SiteHeaderV2() {
             </nav>
 
             {/* Right Actions */}
-            <div ref={actionsRef} className="site-header-v2__actions navbar-circuit-pill flex items-center gap-2 justify-self-end">
-              <CircuitPill config={PILL_CONFIGS.actions} containerRef={actionsRef} />
+            <div className="site-header-v2__actions col-start-3 flex items-center gap-2 justify-self-end">
               <button
                 className="site-header-v2__search-trigger relative hidden rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] hover:text-[#6a3cff] md:flex"
                 onClick={(event) => {
                   activeSearchTriggerRef.current = event.currentTarget;
+                  restoreSearchFocusRef.current = true;
+                  restoreMenuFocusRef.current = false;
                   setMenuOpen(false);
                   setSearchOpen(!searchOpen);
                 }}
@@ -229,9 +367,9 @@ export function SiteHeaderV2() {
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.3-4.3" />
                   </svg>
-                  <span className="hidden lg:inline">Cerca</span>
+                  <span className="hidden xl:inline">Cerca</span>
                 </span>
-                <kbd className="site-header-v2__kbd ml-1 hidden rounded-md border border-[rgba(56,42,122,0.15)] bg-[rgba(236,232,255,0.6)] px-1.5 py-0.5 text-xs font-medium text-[#4f4970] lg:inline">
+                <kbd className="site-header-v2__kbd ml-1 hidden rounded-md border border-[rgba(56,42,122,0.15)] bg-[rgba(236,232,255,0.6)] px-1.5 py-0.5 text-xs font-medium text-[#4f4970] xl:inline">
                   ⌘K
                 </kbd>
               </button>
@@ -242,7 +380,7 @@ export function SiteHeaderV2() {
               </div>
 
               {hasRewardedSurface && (
-                <GameProfileBar className="hidden lg:flex" />
+                <GameProfileBar className="hidden min-[1360px]:flex" />
               )}
 
               {accountCta.visible && (
@@ -262,6 +400,8 @@ export function SiteHeaderV2() {
                 className="site-header-v2__mobile-search grid size-11 shrink-0 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 md:hidden"
                 onClick={(event) => {
                   activeSearchTriggerRef.current = event.currentTarget;
+                  restoreSearchFocusRef.current = true;
+                  restoreMenuFocusRef.current = false;
                   setMenuOpen(false);
                   setSearchOpen(true);
                 }}
@@ -277,7 +417,7 @@ export function SiteHeaderV2() {
               {/* Mobile menu toggle */}
               <button
                 ref={menuButtonRef}
-                className={`site-header-v2__menu-button relative z-20 grid size-11 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 lg:hidden${
+                className={`site-header-v2__menu-button relative z-20 grid size-11 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 min-[1360px]:hidden${
                   menuOpen ? " is-open" : ""
                 }`}
                 aria-controls="mobile-site-menu"
@@ -302,6 +442,7 @@ export function SiteHeaderV2() {
       <AnimatePresence>
         {searchOpen && (
           <motion.div
+            ref={searchDialogRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -311,6 +452,7 @@ export function SiteHeaderV2() {
             role="dialog"
             aria-modal="true"
             aria-label="Cerca nel catalogo TooolVibes"
+            tabIndex={-1}
           >
             <motion.div
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
@@ -332,11 +474,16 @@ export function SiteHeaderV2() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            ref={menuDialogRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="site-header-v2__mobile-backdrop fixed inset-0 z-[var(--tv-z-overlay)] bg-[rgba(6,6,14,0.55)] lg:hidden"
+            className="site-header-v2__mobile-backdrop fixed inset-0 z-[var(--tv-z-overlay)] bg-[rgba(6,6,14,0.55)] min-[1360px]:hidden"
             onClick={() => closeMenu()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu di navigazione"
+            tabIndex={-1}
             >
             <motion.nav
               id="mobile-site-menu"
@@ -348,7 +495,7 @@ export function SiteHeaderV2() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="site-header-v2__mobile-panel-head mb-6 flex items-center justify-between gap-4">
-                <Link href="/" className="site-header-v2__mobile-brand flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+                <Link href="/" className="site-header-v2__mobile-brand flex items-center gap-2" onClick={() => closeMenu(false)}>
                   <BrandLogo size={34} fallback="png" priority />
                   <span
                     className="text-sm font-black uppercase"
@@ -362,6 +509,7 @@ export function SiteHeaderV2() {
                   </span>
                 </Link>
                 <button
+                  ref={menuCloseButtonRef}
                   type="button"
                   className="site-header-v2__mobile-close grid size-11 place-items-center rounded-xl border border-[rgba(106,60,255,0.2)] bg-white text-[#120d2f]"
                   aria-label="Chiudi menu"
@@ -388,7 +536,7 @@ export function SiteHeaderV2() {
                     >
                       <Link
                         href={link.href}
-                        onClick={() => setMenuOpen(false)}
+                        onClick={() => closeMenu(false)}
                         className={`site-header-v2__mobile-link group flex min-h-[44px] items-center justify-between rounded-xl border px-4 py-3 transition-all ${
                           isActive
                             ? "is-active border-[rgba(106,60,255,0.45)] bg-[#ede9fe] text-[#4c1d95]"
@@ -420,7 +568,7 @@ export function SiteHeaderV2() {
                 <div className="mt-4 pt-4">
                   <Link
                     href={accountCta.href}
-                    onClick={() => setMenuOpen(false)}
+                    onClick={() => closeMenu(false)}
                     className="site-header-v2__mobile-primary flex items-center justify-center gap-2 rounded-xl bg-[#6a3cff] px-4 py-3 text-sm font-medium text-white shadow-[0_6px_18px_rgba(106,60,255,0.22)]"
                     data-account-state={accountCta.state}
                     aria-busy={accountCta.ariaBusy || undefined}

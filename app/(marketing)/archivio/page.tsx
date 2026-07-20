@@ -55,6 +55,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
         initialTag={params.tag ?? ""}
         initialLevel={initialLevel}
         unifiedSearchEnabled={releaseFeatures.unifiedSearch.enabled}
+        showIntro={!releaseFeatures.threeD.enabled}
       />
       {catalogDensityPolicy && (
         <section
@@ -70,7 +71,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
           and SEO, visually hidden but discoverable by assistive tech.
       */}
       <section className="sr-only" aria-label="Catalogo tool in formato lista accessibile">
-        <h1>Archivio Tool AI — TooolVibes</h1>
+        <h2>Archivio Tool AI — TooolVibes</h2>
         <p>{tools.length} tool curati nel catalogo.</p>
         <ul>
           {tools.slice(0, 20).map((tool) => (

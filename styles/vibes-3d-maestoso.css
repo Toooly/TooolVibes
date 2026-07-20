@@ -2099,25 +2099,6 @@ body {
   color: #B388FF !important;
 }
 
-/* ─── NEW: Navbar active pill ─── */
-.site-header-v2__nav-link.is-active {
-  background: linear-gradient(135deg, rgba(124,77,255,0.15) 0%, rgba(0,229,255,0.08) 100%) !important;
-  border: 1px solid rgba(124,77,255,0.2) !important;
-  border-radius: 0.75rem !important;
-}
-.site-header-v2__active-dot {
-  background: linear-gradient(135deg, #7C4DFF 0%, #00E5FF 100%) !important;
-  box-shadow: 0 0 12px rgba(124,77,255,0.5) !important;
-}
-.site-header-v2__nav-orbit {
-  border-color: rgba(124,77,255,0.15) !important;
-}
-.site-header-v2__nav-link:hover .site-header-v2__nav-orbit,
-.site-header-v2__nav-link.is-active .site-header-v2__nav-orbit {
-  border-color: rgba(124,77,255,0.4) !important;
-  background: rgba(124,77,255,0.08) !important;
-}
-
 /* Mobile bottom nav labels always visible */
 .mobile-bottom-link span,
 .mobile-bottom-link__label {
@@ -5032,6 +5013,11 @@ canvas {
   opacity: 0.5;
 }
 
+.archive-3d-hero .archive-3d-hero__eyebrow {
+  margin-bottom: 0.75rem;
+  color: #39d2f6;
+}
+
 .archive-3d-hero__title {
   margin-bottom: 0 !important;
   background: linear-gradient(105deg, #8f6cff 0%, #39d2f6 64%, #f3bf4c 100%);
@@ -5046,8 +5032,16 @@ canvas {
   text-shadow: 0 18px 46px rgba(57, 210, 246, 0.16);
 }
 
+.archive-3d-hero .archive-3d-hero__lede {
+  max-width: 38rem;
+  margin: 1rem auto 0;
+  color: rgba(240, 239, 255, 0.72);
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  line-height: 1.65;
+}
+
 .archive-3d-hero__pill {
-  min-height: 2.55rem;
+  min-height: 2.75rem;
   border-color: rgba(155, 232, 255, 0.16) !important;
   background:
     radial-gradient(circle at 20% 0%, rgba(57, 210, 246, 0.18), transparent 46%),
@@ -5221,7 +5215,7 @@ canvas {
   }
 
   .archive-3d-hero__pill {
-    min-height: 2.38rem;
+    min-height: 2.75rem;
     padding-inline: 0.85rem !important;
   }
 
@@ -6170,100 +6164,6 @@ canvas {
     padding: 0.42rem 0.95rem !important;
   }
 
-  .v-discovery-stage--orbital {
-    display: grid !important;
-    min-height: 100svh !important;
-    place-items: center !important;
-    padding: calc(4.9rem + env(safe-area-inset-top, 0px)) 0.75rem calc(5.8rem + env(safe-area-inset-bottom, 0px)) !important;
-  }
-
-  .v-discovery-orbit-shell {
-    --orbit-width: min(22rem, calc(100vw - 1.35rem)) !important;
-    --orbit-height: min(22rem, calc(100vw - 1.35rem)) !important;
-    --orbit-x: calc(var(--orbit-width) * 0.41) !important;
-    --orbit-y: calc(var(--orbit-height) * 0.41) !important;
-    display: grid !important;
-    width: var(--orbit-width) !important;
-    height: var(--orbit-height) !important;
-    min-height: var(--orbit-height) !important;
-    place-items: center !important;
-  }
-
-  .v-discovery-orbit-ring,
-  .v-discovery-orbit-track,
-  .v-discovery-orbit-node {
-    display: inline-flex !important;
-  }
-
-  .v-discovery-orbit-ring {
-    display: block !important;
-  }
-
-  .v-discovery-stage--orbital .v-discovery-brand {
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    width: clamp(5.15rem, 23vw, 5.85rem) !important;
-    height: clamp(5.15rem, 23vw, 5.85rem) !important;
-    transform: translate(-50%, -50%) !important;
-  }
-
-  .v-discovery-orbit-track {
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    width: 0 !important;
-    height: 0 !important;
-    transform: none !important;
-  }
-
-  .v-discovery-orbit-node {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    min-width: 5.45rem !important;
-    min-height: 3.05rem !important;
-    animation: v-discovery-node-orbit 54s linear infinite !important;
-    animation-delay: var(--orbit-delay, 0s) !important;
-  }
-
-  .v-discovery-orbit-node__content {
-    flex-direction: column !important;
-    gap: 0.22rem !important;
-    min-height: 3rem !important;
-    padding: 0.26rem 0.4rem !important;
-  }
-
-  .v-discovery-orbit-node__icon {
-    width: 2.08rem !important;
-  }
-
-  .v-discovery-orbit-node__label {
-    max-width: 5.45rem !important;
-    font-size: var(--tv-text-xs) !important;
-    line-height: 1.05 !important;
-    text-align: center !important;
-    white-space: normal !important;
-  }
-
-  .v-discovery-grid {
-    display: none !important;
-  }
-}
-
-@media (max-width: 360px) {
-  .v-discovery-stage--orbital {
-    padding-inline: 0.55rem !important;
-  }
-
-  .v-discovery-orbit-node {
-    min-width: 5.05rem !important;
-  }
-
-  .v-discovery-orbit-node__label {
-    max-width: 5.05rem !important;
-    font-size: var(--tv-text-xs) !important;
-  }
 }
 
 .internal-tool-page .tool-detail-profile-title {

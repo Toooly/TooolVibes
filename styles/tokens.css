@@ -18,6 +18,11 @@
   --tv-accent-hover: #7c3aed;
   --tv-accent-pressed: #6d28d9;
   --tv-accent-aa: #7c3aed;
+  --tv-accent-cyan: #39d2f6;
+  --tv-accent-gold: #f3bf4c;
+  --tv-accent-magenta: #ec4899;
+  --tv-surface-translucent: rgba(26, 26, 30, 0.78);
+  --tv-surface-soft: rgba(37, 37, 43, 0.72);
   --tv-border-subtle: rgba(243, 243, 247, 0.1);
   --tv-border-interactive: rgba(243, 243, 247, 0.18);
   --tv-status-success: #22c55e;
@@ -68,6 +73,10 @@
   --tv-radius-lg: 1rem;
   --tv-radius-feature: 1.5rem;
   --tv-radius-pill: 999px;
+
+  /* Layout */
+  --tv-content-wide: 80rem;
+  --tv-content-reading: 46rem;
 
   /* Elevation */
   --tv-elevation-rest: 0 1px 2px rgba(0, 0, 0, 0.16);

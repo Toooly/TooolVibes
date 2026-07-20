@@ -1,0 +1,243 @@
+/* Home discovery vertical slice: owns the active VibeHomeV2 hero. */
+.home-discovery-hero.v-discovery-stage--orbital {
+  display: block;
+  min-height: auto;
+  overflow: hidden;
+  padding: clamp(6.75rem, 10vw, 8.5rem) var(--tv-space-6) clamp(4rem, 7vw, 6rem);
+  background:
+    radial-gradient(circle at 78% 30%, color-mix(in srgb, var(--tv-accent-cyan) 13%, transparent), transparent 28rem),
+    radial-gradient(circle at 14% 12%, color-mix(in srgb, var(--tv-accent-primary) 16%, transparent), transparent 30rem),
+    var(--tv-bg-base);
+  isolation: isolate;
+}
+
+.home-discovery-hero__layout {
+  position: relative;
+  z-index: var(--tv-z-content);
+  display: grid;
+  grid-template-columns: minmax(19rem, 0.82fr) minmax(28rem, 1.18fr);
+  align-items: center;
+  gap: clamp(var(--tv-space-8), 5vw, var(--tv-space-16));
+  width: min(100%, var(--tv-content-wide));
+  margin-inline: auto;
+}
+
+.home-discovery-hero__copy {
+  max-width: 38rem;
+}
+
+.home-discovery-hero .home-discovery-hero__eyebrow {
+  margin: 0 0 var(--tv-space-4);
+  color: var(--tv-accent-cyan);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.home-discovery-hero__copy h1 {
+  margin: 0;
+  max-width: 11ch;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-display);
+  font-size: clamp(3.25rem, 5.6vw, 5.9rem);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.home-discovery-hero__lede {
+  max-width: 35rem;
+  margin: var(--tv-space-6) 0 0;
+  color: var(--tv-ink-secondary);
+  font-size: clamp(var(--tv-text-md), 1.4vw, var(--tv-text-lg));
+  line-height: var(--tv-leading-body);
+}
+
+.home-discovery-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-space-3);
+  margin-top: var(--tv-space-8);
+}
+
+.home-discovery-hero__cta {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tv-space-2);
+  padding-inline: var(--tv-space-6);
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: var(--tv-radius-md);
+  color: var(--tv-ink-primary);
+  font-size: var(--tv-text-sm);
+  font-weight: var(--tv-weight-semibold);
+  text-decoration: none;
+  transition: transform var(--tv-motion-base) var(--tv-ease-standard), border-color var(--tv-motion-base) var(--tv-ease-standard), background var(--tv-motion-base) var(--tv-ease-standard);
+}
+
+.home-discovery-hero__cta:hover,
+.home-discovery-hero__cta:focus-visible {
+  transform: translateY(-2px);
+}
+
+.home-discovery-hero__cta--primary {
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 68%, var(--tv-border-interactive));
+  background: linear-gradient(180deg, var(--tv-accent-primary), var(--tv-accent-hover));
+  box-shadow: 0 18px 42px color-mix(in srgb, var(--tv-accent-primary) 24%, transparent);
+}
+
+.home-discovery-hero__cta--secondary {
+  background: var(--tv-surface-translucent);
+}
+
+.home-discovery-hero .home-discovery-hero__proof {
+  display: flex;
+  gap: var(--tv-space-2);
+  margin: var(--tv-space-6) 0 0;
+  color: var(--tv-ink-muted-aa);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+}
+
+.home-discovery-hero__visual {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+}
+
+.home-discovery-hero .v-discovery-orbit-shell {
+  --orbit-width: clamp(34rem, 46vw, 44rem);
+  --orbit-height: clamp(23rem, 31vw, 28rem);
+}
+
+@media (max-width: 900px) {
+  .home-discovery-hero__layout {
+    grid-template-columns: 1fr;
+    gap: var(--tv-space-8);
+  }
+
+  .home-discovery-hero__copy {
+    max-width: 46rem;
+  }
+
+  .home-discovery-hero__copy h1 {
+    max-width: 14ch;
+  }
+}
+
+@media (max-width: 767px), (hover: none) {
+  .home-discovery-hero.v-discovery-stage--orbital {
+    padding: calc(5.5rem + env(safe-area-inset-top, 0px)) var(--tv-space-4) var(--tv-space-12);
+  }
+
+  .home-discovery-hero__layout {
+    gap: var(--tv-space-8);
+  }
+
+  .home-discovery-hero__copy h1 {
+    max-width: 12ch;
+    font-size: clamp(2.6rem, 12vw, 4rem);
+    line-height: 1;
+  }
+
+  .home-discovery-hero__lede {
+    margin-top: var(--tv-space-4);
+  }
+
+  .home-discovery-hero__actions {
+    margin-top: var(--tv-space-6);
+  }
+
+  .home-discovery-hero__cta {
+    flex: 1 1 10rem;
+  }
+
+  .home-discovery-hero__visual {
+    gap: var(--tv-space-4);
+  }
+
+  .home-discovery-hero .v-discovery-orbit-shell {
+    --orbit-width: min(22rem, calc(100vw - 2rem));
+    --orbit-height: min(22rem, calc(100vw - 2rem));
+    --orbit-x: calc(var(--orbit-width) * 0.41);
+    --orbit-y: calc(var(--orbit-height) * 0.41);
+    display: grid;
+    width: var(--orbit-width);
+    height: var(--orbit-height);
+    min-height: var(--orbit-height);
+    place-items: center;
+  }
+
+  .home-discovery-hero .v-discovery-orbit-ring {
+    display: block;
+  }
+
+  .home-discovery-hero .v-discovery-orbit-track,
+  .home-discovery-hero .v-discovery-orbit-node {
+    display: inline-flex;
+  }
+
+  .home-discovery-hero.v-discovery-stage--orbital .v-discovery-brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: clamp(5.15rem, 23vw, 5.85rem);
+    height: clamp(5.15rem, 23vw, 5.85rem);
+    transform: translate(-50%, -50%);
+  }
+
+  .home-discovery-hero .v-discovery-orbit-track {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform: none;
+  }
+
+  .home-discovery-hero .v-discovery-orbit-node {
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 5.45rem;
+    min-height: 3.05rem;
+  }
+
+  .home-discovery-hero .v-discovery-orbit-node__content {
+    flex-direction: column;
+    gap: 0.22rem;
+    min-height: 3rem;
+    padding: 0.26rem 0.4rem;
+  }
+
+  .home-discovery-hero .v-discovery-orbit-node__icon {
+    width: 2.08rem;
+  }
+
+  .home-discovery-hero .v-discovery-orbit-node__label {
+    max-width: 5.45rem;
+    font-size: var(--tv-text-xs);
+    line-height: 1.05;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .home-discovery-hero .v-discovery-grid {
+    display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .home-discovery-hero__proof {
+    letter-spacing: 0.04em;
+  }
+
+  .home-discovery-hero .v-discovery-grid {
+    grid-template-columns: 1fr;
+  }
+}

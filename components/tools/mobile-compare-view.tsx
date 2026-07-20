@@ -626,7 +626,7 @@ export function MobileCompareView({
 
   if (tools.length === 0) {
     return (
-      <div className="mobile-compare-arena">
+      <div className="mobile-compare-arena mobile-compare-arena--onboarding">
         <div className="mobile-compare-arena__empty">
           <div className="mobile-compare-arena__empty-icon">
             <Columns3 className="size-10" />
@@ -644,7 +644,7 @@ export function MobileCompareView({
 
   if (tools.length === 1) {
     return (
-      <div className="mobile-compare-arena">
+      <div className="mobile-compare-arena mobile-compare-arena--onboarding">
         <CompactToolCard tool={tools[0]} onRemove={() => toggleCompare(tools[0].slug)} />
         <div className="mobile-compare-arena__partial">
           <p className="mobile-compare-arena__partial-label">Confronto parziale</p>

@@ -3,13 +3,10 @@
 import { motion } from "motion/react";
 import { VibesReactor } from "./vibes-reactor";
 import { PremiumLink } from "@/components/ui/premium";
-import { siteConfig } from "@/lib/config/site";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useIsMobile } from "@/lib/hooks/use-is-mobile";
-import { MobileMarketingHero } from "@/components/home/mobile-marketing-hero";
-import type { HomeLayout } from "@/lib/config/home-experience";
+import { useEffect, useState } from "react";
 
 const heroOrbPalette = [
   "#64FFDA",
@@ -25,11 +22,9 @@ const heroOrbPalette = [
 export function Home3DHero({
   tools,
   weeklyTool,
-  layout = "legacy",
 }: {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
-  layout?: HomeLayout;
 }) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
   const orbTools = tools.filter((t) => t.featured).slice(0, 7);
@@ -43,17 +38,19 @@ export function Home3DHero({
     speed: 0.15 + i * 0.04,
   }));
 
-  const isMobile = useIsMobile();
+  const [reactorEnabled, setReactorEnabled] = useState(false);
 
-  if (isMobile) {
-    // BATCH 40 (MOB-704): in layout "time-to-value" l'hero mobile diventa
-    // compatto e mostra il chip del tool in evidenza nel primo viewport.
-    return <MobileMarketingHero layout={layout} spotlightTool={focusTool} />;
-  }
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 768px)");
+    const update = () => setReactorEnabled(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
 
   return (
     <section className="home-3d-hero relative flex min-h-[60vh] items-center justify-center overflow-hidden sm:min-h-[85vh]">
-      <VibesReactor orbs={orbs} className="home-3d-hero__reactor" />
+      {reactorEnabled && <VibesReactor orbs={orbs} className="home-3d-hero__reactor" />}
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
         <motion.p
           className="mb-4 text-sm font-semibold uppercase tracking-widest text-[#B388FF]"
@@ -61,7 +58,7 @@ export function Home3DHero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          Sistema TooolVibes
+          Curatela indipendente · meno rumore, più segnale
         </motion.p>
         <motion.h1
           className="home-3d-hero__title v-text-gradient-purple text-[1.75rem] font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
@@ -69,7 +66,7 @@ export function Home3DHero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
         >
-          Scegli tool AI validi senza attraversare il rumore
+          Trova il tool giusto prima che il rumore scelga per te.
         </motion.h1>
         <motion.p
           className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#9E99B8]"
@@ -77,7 +74,8 @@ export function Home3DHero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
         >
-          {siteConfig.description}
+          Una selezione ragionata di tool AI, SaaS e no-code per passare
+          dalla scoperta alla scelta con più chiarezza.
         </motion.p>
         <motion.div
           className="mt-8 flex flex-wrap items-center justify-center gap-4"

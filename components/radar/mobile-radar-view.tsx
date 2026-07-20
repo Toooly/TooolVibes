@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback, type CSSProperties, type MouseEvent } from "react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   Activity,
   MessageCircle,
@@ -78,6 +78,7 @@ const HIDDEN_SIGNAL_STORAGE_KEY = "tv:hidden-signal";
    ═══════════════════════════════════════════════════════════════ */
 
 export function MobileRadarView() {
+  const prefersReducedMotion = useReducedMotion() === true;
   const hiddenSignalRelease = useGamificationSurface("hiddenSignal");
   const activeRange: ProductHuntRange = "day";
   // Query condivisa (B44 / PERF-1202): una sola request per key su tutte le
@@ -139,6 +140,11 @@ export function MobileRadarView() {
   }, [today]);
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      setScanAngle(0);
+      return;
+    }
+
     let raf = 0;
     let lastUpdate = 0;
     const start = performance.now();
@@ -154,7 +160,7 @@ export function MobileRadarView() {
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [prefersReducedMotion]);
 
   const handleHiddenNodeClick = useCallback(
     async (node: { id: string; productHuntUrl: string }, event: MouseEvent<HTMLAnchorElement>) => {
@@ -203,38 +209,7 @@ export function MobileRadarView() {
     const FRAME_INTERVAL = 1000 / 30; // ~30 fps on mobile
 
 
-    const resize = () => {
-      const rect = canvas.parentElement?.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio, 2);
-      const w = rect ? rect.width : 320;
-      const h = rect ? rect.height : 320;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    resize();
-
-    const ro = new ResizeObserver(resize);
-    if (canvas.parentElement) ro.observe(canvas.parentElement);
-
-    const render = (now: number) => {
-      if (paused) {
-        running = false;
-        return;
-      }
-
-      // Throttle to ~30 fps to keep mobile canvas light
-      if (now - lastFrameTime < FRAME_INTERVAL) {
-        raf = requestAnimationFrame(render);
-        return;
-      }
-      lastFrameTime = now;
-
-      raf = requestAnimationFrame(render);
-      time += 0.016;
-
+    const drawFrame = (frameTime: number) => {
       const w = canvas.width / Math.min(window.devicePixelRatio, 2);
       const h = canvas.height / Math.min(window.devicePixelRatio, 2);
       const cx = w / 2;
@@ -285,7 +260,7 @@ export function MobileRadarView() {
       ctx.stroke();
 
       // Sweep angle
-      const sweepAngle = time * 1.96;
+      const sweepAngle = frameTime * 1.96;
       const sweepLen = maxR * 1.05;
       const sx = cx + Math.cos(sweepAngle) * sweepLen;
       const sy = cy + Math.sin(sweepAngle) * sweepLen;
@@ -318,7 +293,7 @@ export function MobileRadarView() {
       ctx.stroke();
 
       // Pulsing core with layered rings
-      const pulse = Math.sin(time * 2.5) * 0.3 + 1;
+      const pulse = Math.sin(frameTime * 2.5) * 0.3 + 1;
       ctx.beginPath();
       ctx.arc(cx, cy, 7 * pulse, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
@@ -337,7 +312,7 @@ export function MobileRadarView() {
       ctx.stroke();
 
       // Echo ring from center
-      const echoPulse = Math.sin(time * 2.5 - 0.8) * 0.3 + 1;
+      const echoPulse = Math.sin(frameTime * 2.5 - 0.8) * 0.3 + 1;
       if (echoPulse > 0.9) {
         ctx.beginPath();
         ctx.arc(cx, cy, 32 * echoPulse, 0, Math.PI * 2);
@@ -345,6 +320,45 @@ export function MobileRadarView() {
         ctx.lineWidth = 1;
         ctx.stroke();
       }
+    };
+
+    const resize = () => {
+      const rect = canvas.parentElement?.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio, 2);
+      const w = rect ? rect.width : 320;
+      const h = rect ? rect.height : 320;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawFrame(time);
+    };
+    resize();
+
+    const ro = new ResizeObserver(resize);
+    if (canvas.parentElement) ro.observe(canvas.parentElement);
+
+    if (prefersReducedMotion) {
+      return () => ro.disconnect();
+    }
+
+    const render = (now: number) => {
+      if (paused) {
+        running = false;
+        return;
+      }
+
+      // Throttle to ~30 fps to keep mobile canvas light
+      if (now - lastFrameTime < FRAME_INTERVAL) {
+        raf = requestAnimationFrame(render);
+        return;
+      }
+      lastFrameTime = now;
+
+      raf = requestAnimationFrame(render);
+      time += 0.016;
+      drawFrame(time);
     };
 
     const start = () => {
@@ -375,7 +389,7 @@ export function MobileRadarView() {
       ro.disconnect();
       observer.disconnect();
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
   /* ── Node positions ── */
   const nodes = useMemo(() => {
@@ -448,7 +462,11 @@ export function MobileRadarView() {
 
       {/* Radar Stage */}
       <div className="mobile-radar-view__stage">
-        <canvas ref={canvasRef} className="mobile-radar-view__canvas relative z-0" />
+        <canvas
+          ref={canvasRef}
+          className="mobile-radar-view__canvas relative z-0"
+          aria-hidden="true"
+        />
         <span className="mobile-radar-view__scan-line" aria-hidden="true" />
         {/* Real data nodes overlaid */}
         {nodes.map((node) => {
@@ -461,7 +479,9 @@ export function MobileRadarView() {
           } as CSSProperties;
           const isHot = node.votesCount > 100 && !node.isPlaceholder;
           const isHidden = node.id === hiddenNodeId && !hiddenDiscovered;
-          const isScanned = angleDistance(node.angle, scanAngle) < RADAR_SCAN_THRESHOLD;
+          const isScanned =
+            !prefersReducedMotion &&
+            angleDistance(node.angle, scanAngle) < RADAR_SCAN_THRESHOLD;
           const nodeSideClass = node.x >= 0 ? " is-right-side" : " is-left-side";
           const nodeClassName = `mobile-radar-view__node${nodeSideClass}${isHot ? " is-hot" : ""}${isScanned ? " is-scanned" : ""}${node.isPlaceholder ? " is-placeholder" : ""}${isHidden ? " is-hidden" : ""}`;
           const displayName = node.isPlaceholder ? placeholderNodeLabel : node.name;
@@ -560,6 +580,7 @@ export function MobileRadarView() {
         message={currentPayload?.message}
         stale={isStaleFallback}
         updatedAt={currentPayload?.updatedAt}
+        reducedMotion={prefersReducedMotion}
       />
     </div>
   );
@@ -575,12 +596,14 @@ function MobileRadarSections({
   message,
   stale = false,
   updatedAt,
+  reducedMotion,
 }: {
   items: ProductHuntItem[];
   state: RadarDataState;
   message?: string;
   stale?: boolean;
   updatedAt?: string;
+  reducedMotion: boolean;
 }) {
   if (!items.length) {
     const emptyCopy: Record<Exclude<RadarDataState, "ready">, { title: string; body: string }> = {
@@ -605,9 +628,15 @@ function MobileRadarSections({
 
     return (
       <div className="mobile-radar-sections">
-        <section className="mobile-radar-section">
+        <section
+          className="mobile-radar-section"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          aria-busy={state === "loading"}
+        >
           <h2>
-            <Activity size={14} />
+            <Activity size={14} aria-hidden="true" />
             {copy.title}
           </h2>
           <p className="rounded-[18px] border border-white/10 bg-white/[0.055] p-4 text-sm leading-6 text-white/70">
@@ -627,6 +656,8 @@ function MobileRadarSections({
         <p
           className="rounded-[18px] border border-white/10 bg-white/[0.055] p-4 text-sm leading-6 text-white/70"
           role="status"
+          aria-live="polite"
+          aria-atomic="true"
         >
           {message ?? "Aggiornamento live non riuscito."} Ultima classifica reale
           sincronizzata: {formatUtcTimeLabel(updatedAt ?? "")}.
@@ -650,10 +681,10 @@ function MobileRadarSections({
               target="_blank"
               rel="noopener noreferrer"
               className="mobile-radar-section__row mobile-radar-section__row--table"
-              initial={{ opacity: 0, y: 8 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.04 }}
+              initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+              viewport={reducedMotion ? undefined : { once: true }}
+              transition={reducedMotion ? undefined : { delay: index * 0.04 }}
             >
               <span className="mobile-radar-section__row-rank">#{index + 1}</span>
               <div className="mobile-radar-section__row-visual">

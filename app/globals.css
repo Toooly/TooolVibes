@@ -5,6 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @import "../styles/tokens.css";
+@import "../styles/home.css";
+@import "../styles/catalog.css";
 @import "../styles/gamification.css";
 @import "../styles/radar.css";
 @import "../styles/compare.css";
@@ -31977,43 +31979,11 @@ body:has(.tone-account) {
   padding: 0 !important;
 }
 
-.site-header-v2__nav-link {
-  min-height: 2.75rem !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  background: rgba(7, 5, 22, 0.32) !important;
-  box-shadow:
-    0 12px 30px rgba(6, 4, 20, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
-  backdrop-filter: blur(14px) saturate(1.12);
-}
-
-.site-header-v2__nav-orbit {
-  background:
-    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.34), transparent 42%),
-    linear-gradient(135deg, rgba(106, 60, 255, 0.34), rgba(57, 210, 246, 0.22)) !important;
-}
-
-.site-header-v2__nav-link:hover,
-.site-header-v2__nav-link:focus-visible,
-.site-header-v2__nav-link.is-active {
-  border-color: rgba(57, 210, 246, 0.34) !important;
-  background: rgba(8, 7, 26, 0.48) !important;
-  box-shadow:
-    0 14px 34px rgba(6, 4, 20, 0.2),
-    0 0 22px rgba(57, 210, 246, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-}
-
 .site-header-v2__nav-icon,
 .site-header-v2__nav-label,
 .site-header-v2__nav-link span {
   color: #ffffff !important;
   text-shadow: 0 1px 10px rgba(6, 4, 20, 0.46);
-}
-
-.site-header-v2__active-dot {
-  background: #5ee9ff !important;
-  box-shadow: 0 0 16px rgba(94, 233, 255, 0.74) !important;
 }
 
 .site-header-v2__actions {

@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { ArrowLeft, Search } from "lucide-react";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { useCatalogController } from "./catalog/use-catalog-controller";
@@ -26,6 +26,7 @@ interface MobileCatalogViewProps {
   initialTag?: string;
   initialLevel?: CatalogLevelFilter;
   unifiedSearchEnabled?: boolean;
+  showIntro?: boolean;
 }
 
 export function MobileCatalogView({
@@ -36,6 +37,7 @@ export function MobileCatalogView({
   initialTag = "",
   initialLevel = "all",
   unifiedSearchEnabled = true,
+  showIntro = true,
 }: MobileCatalogViewProps) {
   const controller = useCatalogController({
     tools,
@@ -73,7 +75,8 @@ export function MobileCatalogView({
   );
 
   return (
-    <div className="mobile-catalog-view relative min-h-screen pb-24">
+    <MotionConfig reducedMotion="user">
+      <div className="catalog-page mobile-catalog-view relative min-h-screen pb-24">
       <CatalogCommandPanel
         panel={openPanel}
         filterGroups={filterGroups}
@@ -83,6 +86,30 @@ export function MobileCatalogView({
         searchControl={searchControl}
         levelControls={levelControls}
       />
+      {showIntro && (
+        <section
+          className={`catalog-discovery${view === "tools" ? " is-results" : ""}`}
+          aria-labelledby="catalog-title"
+        >
+          <div className="catalog-discovery__copy">
+            <p className="catalog-discovery__eyebrow">Directory editoriale</p>
+            <h1 id="catalog-title">Il catalogo, senza il caos.</h1>
+            <p>
+              Parti da un obiettivo oppure cerca direttamente. Ogni profilo è
+              selezionato per aiutarti a decidere, non per riempire una lista.
+            </p>
+          </div>
+          {view === "categories" && (
+            <div className="catalog-discovery__search">
+              {searchControl}
+              <div className="catalog-discovery__metrics" aria-label="Statistiche catalogo">
+                <span><strong>{tools.length}</strong> tool curati</span>
+                <span><strong>{Math.max(categories.length - 1, 0)}</strong> categorie</span>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
       {/* Content */}
       <AnimatePresence mode="wait">
         {view === "categories" ? (
@@ -140,6 +167,9 @@ export function MobileCatalogView({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             className="mobile-catalog-view__empty"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
           >
             <div className="mobile-catalog-view__empty-icon">
               <Search size={24} className="text-[#6a3cff]" />
@@ -152,6 +182,7 @@ export function MobileCatalogView({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </MotionConfig>
   );
 }

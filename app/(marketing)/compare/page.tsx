@@ -21,6 +21,7 @@ export default async function ComparePage() {
         tools={tools}
         objectiveEnabled={releaseFeatures.compareObjective.enabled}
         decisionEnabled={releaseFeatures.compareDecision.enabled}
+        showIntro={!releaseFeatures.threeD.enabled}
       />
     </div>
   );

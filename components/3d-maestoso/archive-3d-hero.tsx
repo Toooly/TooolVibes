@@ -54,21 +54,30 @@ export function Archive3DHero() {
   const content = (
     <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
       <motion.p
-        className="archive-3d-hero__title mb-3 text-sm font-semibold uppercase tracking-widest text-[#7C4DFF]"
+        className="archive-3d-hero__eyebrow mb-3 text-sm font-semibold uppercase tracking-widest text-[#7C4DFF]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
       >
-        Catalogo TooolVibes
+        Directory editoriale
       </motion.p>
       <motion.h1
-        className="sr-only"
+        className="archive-3d-hero__title"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.7 }}
       >
-        Catalogo TooolVibes
+        Il catalogo, senza il caos.
       </motion.h1>
+      <motion.p
+        className="archive-3d-hero__lede"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.42, duration: 0.6 }}
+      >
+        Cerca per obiettivo e confronta solo tool selezionati per aiutarti a
+        decidere.
+      </motion.p>
       <motion.div
         className="mt-5 flex flex-wrap items-center justify-center gap-3"
         initial={{ opacity: 0, y: 20 }}
