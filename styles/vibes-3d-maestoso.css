@@ -1251,6 +1251,21 @@ body {
 .mobile-shortlist-board {
   background: var(--v-void) !important;
 }
+
+/* Phase 7I: at desktop, cap shortlist width + add gutters (mobile shelves is the IA common) */
+@media (min-width: 768px) {
+  .mobile-shortlist-board {
+    max-width: var(--tv-container-app);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .mobile-shortlist-board {
+    max-width: var(--tv-container-wide);
+    padding-inline: 2rem;
+  }
+}
 .mobile-catalog-view h1,
 .mobile-shortlist-board h1,
 .mobile-catalog-view p,

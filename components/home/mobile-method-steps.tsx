@@ -37,7 +37,7 @@ export function MobileMethodSteps({ steps }: MobileMethodStepsProps) {
       {/* Particle background */}
       <div className="v-method-particles" aria-hidden="true" />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 md:py-20">
+      <div className="container-wide relative z-10 mx-auto py-16 md:py-20">
         <div className="v-method-header text-center mb-10 md:mb-12">
           <span className="v-method-eyebrow">Metodo</span>
           <h2 className="v-method-title">Scopri, confronta, salva</h2>

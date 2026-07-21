@@ -169,6 +169,14 @@
   --tv-width-reading: 46rem;
   --tv-width-app: 80rem;
 
+  /* --- Phase 7B: canonical container widths --- */
+  --tv-container-app:     80rem;     /* 1280px — primary app surface */
+  --tv-container-wide:    84rem;     /* 1344px — marketing/landing (page-shell max-w) */
+  --tv-container-uw:      96rem;     /* 1536px — ultra-wide safety cap */
+  --tv-container-2xl:    112rem;     /* 1792px — hero/featured stage only */
+  --tv-container-reading: 46rem;     /* 736px — text reading measure */
+  --tv-container-narrow:  42rem;     /* 672px — narrow prose / form */
+
   /* ============================================================== */
   /* === SECTION 2: SEMANTIC TOKENS ============================== */
   /* Role-based tokens. What does this color/spacing represent?     */
@@ -425,6 +433,13 @@
   --tv-gutter-mobile: var(--tv-space-px-4);          /* 16px */
   --tv-gutter-tablet: var(--tv-space-px-6);          /* 24px */
   --tv-gutter-desktop: var(--tv-space-px-8);         /* 32px */
+  /* --- Section gutters (responsive, applied via container utilities) --- */
+  --tv-section-gutter-mobile:  var(--tv-gutter-mobile);    /* 16px */
+  --tv-section-gutter-tablet:  var(--tv-gutter-tablet);    /* 24px */
+  --tv-section-gutter-desktop: var(--tv-gutter-desktop);   /* 32px */
+  --tv-section-gutter-wide:    var(--tv-space-px-10);      /* 40px */
+  --tv-section-gutter-uw:      var(--tv-space-px-12);        /* 48px */
+  --tv-section-gutter-2xl:     var(--tv-space-px-16);        /* 64px */
 
   /* --- Density (3 levels, controls compactness) --- */
   --tv-density-compact: compact;
@@ -670,6 +685,15 @@
   --tv-shell-nav-inset-left: max(0.75rem, env(safe-area-inset-left, 0px));
   --tv-shell-nav-inset-right: max(0.75rem, env(safe-area-inset-right, 0px));
   --tv-shell-nav-inset-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  /* --- BATCH 1 (Phase 7A): responsive shell navigation contract ---
+     < 640 (mobile):          bottom nav + header logo + actions + mobile menu
+     640 - 767 (large phone): same as mobile, wider gutters
+     768 - 1023 (tablet):     bottom nav + header logo + actions + mobile menu
+                              (no main nav links until lg)
+     1024 - 1279 (tablet L):  header main nav visible, no bottom nav
+     1280 - 1535 (desktop):   header main nav + GameProfileBar visible
+     1536+ (wide desktop):    header main nav + GameProfileBar visible
+  --- END Phase 7A contract --- */
   --tv-shell-fab-size: 3rem;
   --tv-shell-fab-gap: 0.625rem;
   --tv-shell-dock-inset-right: max(1rem, env(safe-area-inset-right, 0px));

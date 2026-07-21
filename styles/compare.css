@@ -1500,11 +1500,26 @@
 /* ─── Desktop compare ─── */
 .desktop-compare {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 2rem;
-  max-width: 1280px;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  max-width: var(--tv-container-wide);
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
+}
+
+/* Phase 7H: tablet (≥768) gets 2-col split, desktop keeps it */
+@media (min-width: 768px) {
+  .desktop-compare {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .desktop-compare {
+    gap: 2rem;
+    padding: 2rem;
+  }
 }
 
 .desktop-compare--empty {

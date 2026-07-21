@@ -18,8 +18,19 @@
   grid-template-columns: minmax(19rem, 0.82fr) minmax(28rem, 1.18fr);
   align-items: center;
   gap: clamp(var(--tv-space-8), 5vw, var(--tv-space-16));
-  width: min(100%, var(--tv-content-wide));
+  width: min(100%, var(--tv-container-wide));
   margin-inline: auto;
+}
+
+/* Phase 7C: at wide desktop, expand grid to use horizontal real estate */
+@media (min-width: 1280px) {
+  .home-discovery-hero__layout {
+    grid-template-columns: minmax(22rem, 1fr) minmax(34rem, 1.25fr);
+    gap: clamp(var(--tv-space-10), 6vw, var(--tv-space-16));
+  }
+  .home-discovery-hero__copy h1 {
+    max-width: 13ch;
+  }
 }
 
 .home-discovery-hero__copy {

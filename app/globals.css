@@ -389,8 +389,42 @@ img {
 }
 
 @layer components {
+  /* Phase 7B: canonical container — uses semantic tokens */
   .page-shell {
-    @apply relative mx-auto w-full max-w-[84rem] px-5 sm:px-8 lg:px-10;
+    @apply relative mx-auto w-full;
+    max-width: var(--tv-container-wide);
+    padding-inline: var(--tv-section-gutter-mobile);
+  }
+  @media (min-width: 640px) {
+    .page-shell { padding-inline: var(--tv-section-gutter-tablet); }
+  }
+  @media (min-width: 1024px) {
+    .page-shell { padding-inline: var(--tv-section-gutter-desktop); }
+  }
+  @media (min-width: 1280px) {
+    .page-shell { padding-inline: var(--tv-section-gutter-wide); }
+  }
+
+  /* Container variants */
+  .container-app       { @apply mx-auto w-full; max-width: var(--tv-container-app); padding-inline: var(--tv-section-gutter-mobile); }
+  .container-reading   { @apply mx-auto w-full; max-width: var(--tv-container-reading); padding-inline: var(--tv-section-gutter-mobile); }
+  .container-narrow    { @apply mx-auto w-full; max-width: var(--tv-container-narrow); padding-inline: var(--tv-section-gutter-mobile); }
+  .container-full-bleed { width: 100%; padding-inline: 0; }
+
+  /* Ultra-wide stage: only for hero/featured content, capped at 1792px */
+  .container-2xl { @apply mx-auto w-full; max-width: var(--tv-container-2xl); padding-inline: var(--tv-section-gutter-wide); }
+  @media (min-width: 1280px) { .container-2xl { padding-inline: var(--tv-section-gutter-uw); } }
+  @media (min-width: 1920px) { .container-2xl { padding-inline: var(--tv-section-gutter-2xl); } }
+
+  @media (min-width: 640px) {
+    .container-app, .container-reading, .container-narrow {
+      padding-inline: var(--tv-section-gutter-tablet);
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-app, .container-reading, .container-narrow {
+      padding-inline: var(--tv-section-gutter-desktop);
+    }
   }
 
   html[data-motion-ready="true"] [data-motion-observed="true"] {
@@ -7462,9 +7496,7 @@ img {
     overflow-x: clip;
   }
 
-  .page-shell {
-    padding-inline: 0.75rem;
-  }
+  /* .page-shell mobile padding delegated to Phase 7B canonical container */
 
   .site-header-motion {
     padding-top: max(0.625rem, env(safe-area-inset-top));
@@ -17228,6 +17260,42 @@ img {
   /* List */
   .mobile-collections__list {
     padding: 0 0.875rem;
+  }
+
+  /* Phase 7D: at desktop/tablet, expand list to multi-column grid + wider container */
+  @media (min-width: 768px) {
+    .mobile-collections {
+      padding-bottom: 5rem;
+    }
+    .mobile-collections__header {
+      padding-inline: 1.5rem;
+      text-align: left;
+    }
+    .mobile-collections__list {
+      padding-inline: 1.5rem;
+      max-width: var(--tv-container-app);
+      margin-inline: auto;
+    }
+    .mobile-collections__list-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.875rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .mobile-collections__header {
+      max-width: var(--tv-container-wide);
+      margin-inline: auto;
+      padding-inline: 2rem;
+      padding-block: 2.5rem 1.5rem;
+    }
+    .mobile-collections__list {
+      max-width: var(--tv-container-wide);
+      padding-inline: 2rem;
+    }
+    .mobile-collections__list-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
   }
 
   .mobile-collections__list-label {
