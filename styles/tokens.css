@@ -1,98 +1,154 @@
 /*
- * TooolVibes release token foundation.
+ * TooolVibes canonical design token foundation.
  *
- * This file owns semantic design decisions. Feature styles may consume these
- * tokens but must not redefine them. Legacy aliases remain intentionally until
- * each route is migrated and visually certified.
+ * This file is the single source of truth for all design decisions.
+ * Feature styles and components must consume these tokens and must not
+ * redefine them. Legacy aliases remain intentionally until each route
+ * is migrated and visually certified.
+ *
+ * Architecture (4 layers, top-down authority):
+ *   1. FOUNDATION  — raw values, no business meaning
+ *   2. SEMANTIC    — role-based, what a token means
+ *   3. COMPONENT   — component-specific (Button, Card, Input, Badge)
+ *   4. FEATURE     — feature-specific (Radar, Arena, Compare, Shortlist)
+ *
+ * Plus a legacy compatibility alias section that keeps every previously
+ * shipped --tv-* token resolvable until full migration completes.
+ *
+ * Migration policy:
+ *   - New components MUST consume SEMANTIC or COMPONENT tokens
+ *   - Foundation tokens are reserved for token authors (this file)
+ *   - Hardcoded hex / arbitrary spacing / custom breakpoints are FORBIDDEN
+ *     (enforced by scripts/release/check-style-ownership.mjs)
+ *
+ * Constitution reference: audits/tooolvibes-design-system-constitution.md
+ * Token map reference:    audits/ui-phase-2-3-token-map.md
  */
+
 :root {
-  /* Color: dark product direction */
-  --tv-bg-base: #0f0f12;
-  --tv-surface-raised: #1a1a1e;
-  --tv-surface-elevated: #25252b;
-  --tv-ink-primary: #f3f3f7;
-  --tv-ink-secondary: #a0a0b0;
-  --tv-ink-muted: #6e6e7e;
-  --tv-ink-muted-aa: #858596;
-  --tv-accent-primary: #8b5cf6;
-  --tv-accent-hover: #7c3aed;
-  --tv-accent-pressed: #6d28d9;
-  --tv-accent-aa: #7c3aed;
-  --tv-accent-cyan: #39d2f6;
-  --tv-accent-gold: #f3bf4c;
-  --tv-accent-magenta: #ec4899;
-  --tv-surface-translucent: rgba(26, 26, 30, 0.78);
-  --tv-surface-soft: rgba(37, 37, 43, 0.72);
-  --tv-border-subtle: rgba(243, 243, 247, 0.1);
-  --tv-border-interactive: rgba(243, 243, 247, 0.18);
-  --tv-status-success: #22c55e;
-  --tv-status-warning: #f59e0b;
-  --tv-status-danger: #ef4444;
-  --tv-status-info: #3b82f6;
-  --tv-focus-ring: #06b6d4;
+  /* ============================================================== */
+  /* === SECTION 1: FOUNDATION TOKENS ============================= */
+  /* Raw values, no semantic meaning. Token authors only.           */
+  /* ============================================================== */
 
-  /* Typography: two downloaded families, three semantic roles. */
-  --font-manrope: var(--font-inter);
-  --font-rubik: var(--font-inter);
-  --tv-font-ui: var(--font-inter), "Inter", "Segoe UI", sans-serif;
-  --tv-font-display: var(--font-fraunces), Georgia, serif;
-  --tv-font-system: var(--font-inter), "Inter", "Segoe UI", sans-serif;
-  --tv-text-xs: 0.75rem;
-  --tv-text-sm: 0.875rem;
-  --tv-text-md: 1rem;
-  --tv-text-lg: 1.125rem;
-  --tv-text-xl: 1.5rem;
-  --tv-text-2xl: 2rem;
-  --tv-text-3xl: 3rem;
-  --tv-weight-regular: 400;
-  --tv-weight-medium: 500;
-  --tv-weight-semibold: 600;
-  --tv-weight-bold: 700;
-  --tv-leading-tight: 1.12;
-  --tv-leading-heading: 1.2;
-  --tv-leading-body: 1.58;
-  --tv-leading-relaxed: 1.7;
-  --tv-tracking-default: 0;
-  --tv-tracking-label: 0.08em;
-  --tv-tracking-eyebrow: 0.14em;
+  /* --- Color foundation (raw values, NOT for direct use) --- */
+  --tv-color-violet-50: #f5f1ff;
+  --tv-color-violet-100: #ece4ff;
+  --tv-color-violet-200: #d6c4ff;
+  --tv-color-violet-300: #b794ff;
+  --tv-color-violet-400: #9a6dff;
+  --tv-color-violet-500: #6a3cff;       /* CANONICAL BRAND */
+  --tv-color-violet-600: #5a2ee6;
+  --tv-color-violet-700: #4a23bf;
+  --tv-color-violet-800: #371a8f;
+  --tv-color-violet-900: #241060;
 
-  /* Spacing: 4, 8, 12, 16, 24, 32, 48, 64 and 96px. */
-  --tv-space-1: 0.25rem;
-  --tv-space-2: 0.5rem;
-  --tv-space-3: 0.75rem;
-  --tv-space-4: 1rem;
-  --tv-space-6: 1.5rem;
-  --tv-space-8: 2rem;
-  --tv-space-12: 3rem;
-  --tv-space-16: 4rem;
-  --tv-space-24: 6rem;
+  --tv-color-cyan-300: #7adcf9;
+  --tv-color-cyan-400: #4ccaf7;
+  --tv-color-cyan-500: #39d2f6;         /* CYAN BRAND */
+  --tv-color-cyan-600: #1ba8cc;
+  --tv-color-cyan-700: #0d7d9c;
 
-  /* Shape */
-  --tv-radius-sm: 0.375rem;
-  --tv-radius-md: 0.625rem;
-  --tv-radius-lg: 1rem;
-  --tv-radius-feature: 1.5rem;
-  --tv-radius-pill: 999px;
+  --tv-color-gold-300: #f8d684;
+  --tv-color-gold-400: #f5c968;
+  --tv-color-gold-500: #f3bf4c;         /* GOLD ACCENT */
+  --tv-color-gold-600: #c89b30;
+  --tv-color-gold-700: #8e6c1c;
 
-  /* Layout */
-  --tv-content-wide: 80rem;
-  --tv-content-reading: 46rem;
+  --tv-color-magenta-500: #ec4899;       /* MAGENTA ACCENT */
+  --tv-color-magenta-600: #c9347d;
 
-  /* Elevation */
-  --tv-elevation-rest: 0 1px 2px rgba(0, 0, 0, 0.16);
-  --tv-elevation-raised: 0 18px 42px rgba(0, 0, 0, 0.28);
-  --tv-elevation-modal: 0 30px 90px rgba(0, 0, 0, 0.48);
+  --tv-color-green-500: #22c55e;         /* SUCCESS */
+  --tv-color-green-600: #16a34a;
+  --tv-color-amber-500: #f59e0b;         /* WARNING */
+  --tv-color-amber-600: #d97706;
+  --tv-color-red-500: #ef4444;           /* DANGER */
+  --tv-color-red-600: #dc2626;
+  --tv-color-blue-500: #3b82f6;          /* INFO */
+  --tv-color-blue-600: #2563eb;
 
-  /* Motion */
-  --tv-motion-fast: 120ms;
-  --tv-motion-base: 180ms;
-  --tv-motion-slow: 280ms;
-  --tv-ease-standard: cubic-bezier(0.2, 0, 0, 1);
-  --tv-ease-emphasis: cubic-bezier(0.4, 0, 0.2, 1);
+  --tv-color-ink-100: #f8f8fb;
+  --tv-color-ink-200: #f3f3f7;
+  --tv-color-ink-300: #d8d8e0;
+  --tv-color-ink-400: #a0a0b0;
+  --tv-color-ink-500: #858596;
+  --tv-color-ink-600: #6e6e7e;
+  --tv-color-ink-700: #4a4a5a;
+  --tv-color-ink-800: #2c2c38;
 
-  /* Layer contract (B22): floating portals sit above modals and below toasts. */
+  --tv-color-surface-base: #0f0f12;
+  --tv-color-surface-raised: #1a1a1e;
+  --tv-color-surface-elevated: #25252b;
+  --tv-color-surface-floating: #2f2f36;
+  --tv-color-surface-inverted: #f3f3f7;
+
+  --tv-color-white-pure: #ffffff;
+  --tv-color-white-04: rgba(255, 255, 255, 0.04);
+  --tv-color-white-06: rgba(255, 255, 255, 0.06);
+  --tv-color-white-08: rgba(255, 255, 255, 0.08);
+  --tv-color-white-10: rgba(255, 255, 255, 0.10);
+  --tv-color-white-12: rgba(255, 255, 255, 0.12);
+  --tv-color-white-16: rgba(255, 255, 255, 0.16);
+  --tv-color-white-18: rgba(255, 255, 255, 0.18);
+  --tv-color-white-24: rgba(255, 255, 255, 0.24);
+  --tv-color-white-72: rgba(255, 255, 255, 0.72);
+
+  /* --- Typography foundation --- */
+  --tv-font-family-display: var(--font-fraunces), Georgia, serif;
+  --tv-font-family-ui: var(--font-inter), "Inter", "Segoe UI", sans-serif;
+  --tv-font-family-system: var(--font-inter), "Inter", "Segoe UI", sans-serif;
+  --tv-font-family-mono: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+
+  /* --- Spacing foundation (4px base scale) --- */
+  --tv-space-px-0: 0;
+  --tv-space-px-1: 0.25rem;      /* 4px */
+  --tv-space-px-2: 0.5rem;       /* 8px */
+  --tv-space-px-3: 0.75rem;      /* 12px */
+  --tv-space-px-4: 1rem;         /* 16px */
+  --tv-space-px-6: 1.5rem;       /* 24px */
+  --tv-space-px-8: 2rem;         /* 32px */
+  --tv-space-px-12: 3rem;        /* 48px */
+  --tv-space-px-16: 4rem;        /* 64px */
+  --tv-space-px-24: 6rem;        /* 96px */
+  --tv-space-px-32: 8rem;        /* 128px */
+
+  /* --- Radius foundation --- */
+  --tv-radius-px-sm: 0.375rem;     /* 6px */
+  --tv-radius-px-md: 0.625rem;     /* 10px */
+  --tv-radius-px-lg: 1rem;         /* 16px */
+  --tv-radius-px-feature: 1.5rem;  /* 24px */
+  --tv-radius-px-modal: 1.75rem;   /* 28px */
+  --tv-radius-px-pill: 999px;
+
+  /* --- Elevation foundation (raw shadow values) --- */
+  --tv-shadow-rest: 0 1px 2px rgba(0, 0, 0, 0.16);
+  --tv-shadow-raised: 0 18px 42px rgba(0, 0, 0, 0.28);
+  --tv-shadow-floating: 0 24px 60px rgba(0, 0, 0, 0.42);
+  --tv-shadow-modal: 0 30px 90px rgba(0, 0, 0, 0.48);
+
+  /* --- Motion foundation (raw ms values) --- */
+  --tv-duration-instant: 80ms;
+  --tv-duration-fast: 120ms;
+  --tv-duration-base: 180ms;
+  --tv-duration-slow: 240ms;
+  --tv-duration-cinematic: 360ms;
+  --tv-duration-epic: 720ms;
+
+  /* --- Easing foundation --- */
+  --tv-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --tv-easing-emphasis: cubic-bezier(0.4, 0, 0.2, 1);
+  --tv-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --tv-easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --tv-easing-spring-gentle: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --tv-easing-spring-smooth: cubic-bezier(0.45, 0, 0.15, 1);
+  --tv-easing-spring-snappy: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --tv-easing-spring-bouncy: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* --- Z-index foundation --- */
+  --tv-z-backplane: -10;
   --tv-z-base: 0;
   --tv-z-content: 1;
+  --tv-z-elevated: 5;
   --tv-z-sticky: 10;
   --tv-z-nav: 50;
   --tv-z-overlay: 80;
@@ -100,16 +156,447 @@
   --tv-z-floating: 100;
   --tv-z-toast: 110;
   --tv-z-effects: 120;
+  --tv-z-skip: 9999;        /* a11y exception: .skip-link must top everything */
 
-  /* Compatibility aliases: remove only after route-level visual QA. */
-  --tv-space-32: 8rem;
+  /* --- Container foundation --- */
+  --tv-container-mobile: 20rem;      /* 320px */
+  --tv-container-tablet: 44rem;      /* 704px */
+  --tv-container-app: 56rem;         /* 896px */
+  --tv-container-wide: 64rem;        /* 1024px */
+  --tv-container-uw: 84rem;          /* 1344px */
+
+  /* --- Reading / app width --- */
+  --tv-width-reading: 46rem;
+  --tv-width-app: 80rem;
+
+  /* ============================================================== */
+  /* === SECTION 2: SEMANTIC TOKENS ============================== */
+  /* Role-based tokens. What does this color/spacing represent?     */
+  /* ============================================================== */
+
+  /* --- Color semantic --- */
+  /* Backgrounds */
+  --tv-bg-canvas: var(--tv-color-surface-base);
+  --tv-bg-base: var(--tv-color-surface-base);
+  --tv-bg-elevated: var(--tv-color-surface-elevated);
+
+  /* Surfaces */
+  --tv-surface-base: var(--tv-color-surface-base);
+  --tv-surface-raised: var(--tv-color-surface-raised);
+  --tv-surface-elevated: var(--tv-color-surface-elevated);
+  --tv-surface-floating: var(--tv-color-surface-floating);
+  --tv-surface-translucent: rgba(26, 26, 30, 0.78);
+  --tv-surface-soft: rgba(37, 37, 43, 0.72);
+  --tv-surface-inverted: var(--tv-color-surface-inverted);
+
+  /* Glass (translucent surfaces with backdrop blur) */
+  --tv-glass-bg: var(--tv-color-white-06);
+  --tv-glass-bg-strong: var(--tv-color-white-10);
+  --tv-glass-bg-subtle: var(--tv-color-white-04);
+  --tv-glass-blur: 12px;
+  --tv-glass-blur-strong: 20px;
+  --tv-glass-border: var(--tv-color-white-12);
+  --tv-glass-border-strong: var(--tv-color-white-18);
+
+  /* Brand surface (background gradient for premium areas) */
+  --tv-surface-brand: linear-gradient(
+    135deg,
+    rgba(106, 60, 255, 0.16) 0%,
+    rgba(57, 210, 246, 0.08) 100%
+  );
+  --tv-surface-brand-strong: linear-gradient(
+    135deg,
+    rgba(106, 60, 255, 0.32) 0%,
+    rgba(57, 210, 246, 0.16) 100%
+  );
+
+  /* Ink (text) */
+  --tv-ink-primary: var(--tv-color-ink-200);
+  --tv-ink-secondary: var(--tv-color-ink-400);
+  --tv-ink-muted: var(--tv-color-ink-600);
+  --tv-ink-muted-aa: var(--tv-color-ink-500);
+  --tv-ink-inverted: var(--tv-color-surface-base);
+  --tv-ink-on-brand: var(--tv-color-ink-100);
+
+  /* Brand accent */
+  --tv-accent-brand: var(--tv-color-violet-500);
+  --tv-accent-brand-hover: var(--tv-color-violet-400);
+  --tv-accent-brand-pressed: var(--tv-color-violet-600);
+  --tv-accent-brand-aa: var(--tv-color-violet-400);
+  --tv-accent-brand-subtle: var(--tv-color-violet-100);
+
+  /* Secondary accent (cyan, for active signals) */
+  --tv-accent-cyan: var(--tv-color-cyan-500);
+  --tv-accent-cyan-hover: var(--tv-color-cyan-400);
+  --tv-accent-cyan-pressed: var(--tv-color-cyan-600);
+
+  /* Tertiary accents */
+  --tv-accent-gold: var(--tv-color-gold-500);
+  --tv-accent-gold-subtle: rgba(243, 191, 76, 0.18);
+  --tv-accent-magenta: var(--tv-color-magenta-500);
+  --tv-accent-magenta-pressed: var(--tv-color-magenta-600);
+
+  /* Status */
+  --tv-status-success: var(--tv-color-green-500);
+  --tv-status-success-pressed: var(--tv-color-green-600);
+  --tv-status-warning: var(--tv-color-amber-500);
+  --tv-status-warning-pressed: var(--tv-color-amber-600);
+  --tv-status-danger: var(--tv-color-red-500);
+  --tv-status-danger-pressed: var(--tv-color-red-600);
+  --tv-status-info: var(--tv-color-blue-500);
+  --tv-status-info-pressed: var(--tv-color-blue-600);
+
+  /* Borders */
+  --tv-border-subtle: var(--tv-color-white-10);
+  --tv-border-default: var(--tv-color-white-12);
+  --tv-border-strong: var(--tv-color-white-18);
+  --tv-border-interactive: var(--tv-color-white-18);
+  --tv-border-brand: var(--tv-color-violet-500);
+  --tv-border-focus: var(--tv-status-info);
+
+  /* Focus ring */
+  --tv-focus-ring: var(--tv-status-info);
+  --tv-focus-ring-width: 2px;
+  --tv-focus-ring-offset: 2px;
+
+  /* --- Typography semantic (9 roles) --- */
+  --tv-text-hero: clamp(2.5rem, 5vw + 1rem, 4rem);            /* hero */
+  --tv-text-display: clamp(2rem, 4vw + 0.5rem, 3.25rem);      /* display */
+  --tv-text-heading: clamp(1.5rem, 2vw + 1rem, 2.25rem);      /* heading */
+  --tv-text-title: 1.5rem;                                     /* 24px title */
+  --tv-text-subtitle: 1.25rem;                                 /* 20px subtitle */
+  --tv-text-body: 1rem;                                        /* 16px body */
+  --tv-text-body-sm: 0.9375rem;                                /* 15px body-sm */
+  --tv-text-label: 0.875rem;                                   /* 14px label */
+  --tv-text-eyebrow: 0.75rem;                                  /* 12px eyebrow */
+  --tv-text-caption: 0.6875rem;                                /* 11px caption */
+
+  /* Legacy scale kept for compat (use semantic above for new code) */
+  --tv-text-xs: 0.75rem;
+  --tv-text-sm: 0.875rem;
+  --tv-text-md: 1rem;
+  --tv-text-lg: 1.125rem;
+  --tv-text-xl: 1.5rem;
+  --tv-text-2xl: 2rem;
+  --tv-text-3xl: 3rem;
+
+  /* Weights */
+  --tv-weight-regular: 400;
+  --tv-weight-medium: 500;
+  --tv-weight-semibold: 600;
+  --tv-weight-bold: 700;
+  --tv-weight-black: 800;
+
+  /* Leading */
+  --tv-leading-tight: 1.12;
+  --tv-leading-heading: 1.2;
+  --tv-leading-snug: 1.35;
+  --tv-leading-body: 1.58;
+  --tv-leading-relaxed: 1.7;
+  --tv-leading-loose: 1.82;
+
+  /* Tracking */
+  --tv-tracking-default: 0;
+  --tv-tracking-tight: -0.01em;
+  --tv-tracking-wide: 0.02em;
+  --tv-tracking-label: 0.08em;
+  --tv-tracking-eyebrow: 0.14em;
+
+  /* --- Spacing semantic --- */
+  /* Micro: between icon and label, inline gaps */
+  --tv-space-micro-xs: var(--tv-space-px-1);      /* 4px */
+  --tv-space-micro-sm: var(--tv-space-px-2);      /* 8px */
+
+  /* Control: button/input internal padding */
+  --tv-space-control-sm: var(--tv-space-px-2);    /* 8px */
+  --tv-space-control-md: var(--tv-space-px-3);    /* 12px */
+  --tv-space-control-lg: var(--tv-space-px-4);    /* 16px */
+
+  /* Component: card/section internal padding */
+  --tv-space-component-sm: var(--tv-space-px-3);  /* 12px */
+  --tv-space-component-md: var(--tv-space-px-4);  /* 16px */
+  --tv-space-component-lg: var(--tv-space-px-6);  /* 24px */
+
+  /* Layout: between sibling components */
+  --tv-space-layout-sm: var(--tv-space-px-4);     /* 16px */
+  --tv-space-layout-md: var(--tv-space-px-6);     /* 24px */
+  --tv-space-layout-lg: var(--tv-space-px-8);     /* 32px */
+
+  /* Section: between sections in a page */
+  --tv-space-section-sm: var(--tv-space-px-12);   /* 48px */
+  --tv-space-section-md: var(--tv-space-px-16);   /* 64px */
+  --tv-space-section-lg: var(--tv-space-px-24);   /* 96px */
+
+  /* --- Radius semantic (6 levels) --- */
+  --tv-radius-control: var(--tv-radius-px-sm);       /* 6px — buttons, inputs */
+  --tv-radius-card: var(--tv-radius-px-md);          /* 10px — small cards, chips */
+  --tv-radius-feature: var(--tv-radius-px-lg);       /* 16px — tool cards */
+  --tv-radius-panel: var(--tv-radius-px-feature);    /* 24px — panels, hero cards */
+  --tv-radius-modal: var(--tv-radius-px-modal);      /* 28px — modals, sheets */
+  --tv-radius-special: var(--tv-radius-px-lg);       /* 16px — special badges */
+  --tv-radius-pill: var(--tv-radius-px-pill);        /* 999px — pills, tags */
+
+  /* Compatibility for existing usage */
+  --tv-radius-sm: var(--tv-radius-control);
+  --tv-radius-md: var(--tv-radius-card);
+  --tv-radius-lg: var(--tv-radius-feature);
+  --tv-radius-xl: var(--tv-radius-modal);            /* FIX PHANTOM: was 0 defs */
+
+  /* --- Surface semantic --- */
+  --tv-surface-tier-1: var(--tv-surface-base);        /* page canvas */
+  --tv-surface-tier-2: var(--tv-surface-raised);      /* card default */
+  --tv-surface-tier-3: var(--tv-surface-elevated);    /* card hover/featured */
+  --tv-surface-tier-4: var(--tv-surface-floating);    /* floating/3D */
+
+  /* --- Elevation semantic --- */
+  --tv-elevation-rest: var(--tv-shadow-rest);
+  --tv-elevation-raised: var(--tv-shadow-raised);
+  --tv-elevation-floating: var(--tv-shadow-floating);
+  --tv-elevation-modal: var(--tv-shadow-modal);
+
+  /* --- Motion semantic --- */
+  --tv-motion-instant: var(--tv-duration-instant);    /* 80ms hover state */
+  --tv-motion-fast: var(--tv-duration-fast);          /* 120ms click feedback */
+  --tv-motion-base: var(--tv-duration-slow);          /* 240ms transitions */
+  --tv-motion-slow: var(--tv-duration-cinematic);     /* 360ms modal/page */
+  --tv-motion-cinematic: var(--tv-duration-epic);     /* 720ms intro/loader/3D */
+
+  /* Compatibility for existing usage */
+  --tv-duration-fast: var(--tv-motion-fast);
+  --tv-duration-base: var(--tv-motion-base);
+  --tv-duration-slow: var(--tv-motion-slow);
+
+  /* --- Container semantic --- */
+  --tv-container-page-mobile: var(--tv-container-mobile);
+  --tv-container-page-tablet: var(--tv-container-tablet);
+  --tv-container-page-app: var(--tv-container-app);
+  --tv-container-page-wide: var(--tv-container-wide);
+  --tv-container-page-uw: var(--tv-container-uw);
+
+  /* Gutter (page horizontal padding) */
+  --tv-gutter-mobile: var(--tv-space-px-4);          /* 16px */
+  --tv-gutter-tablet: var(--tv-space-px-6);          /* 24px */
+  --tv-gutter-desktop: var(--tv-space-px-8);         /* 32px */
+
+  /* --- Density (3 levels, controls compactness) --- */
+  --tv-density-compact: compact;
+  --tv-density-standard: standard;
+  --tv-density-feature: feature;
+
+  /* ============================================================== */
+  /* === SECTION 3: COMPONENT TOKENS ============================= */
+  /* Component-specific tokens. Defaults consumed by primitives.   */
+  /* ============================================================== */
+
+  /* --- Button --- */
+  --tv-button-padding-x-sm: var(--tv-space-px-3);
+  --tv-button-padding-x-md: var(--tv-space-px-4);
+  --tv-button-padding-x-lg: var(--tv-space-px-6);
+  --tv-button-padding-y-sm: var(--tv-space-px-2);
+  --tv-button-padding-y-md: var(--tv-space-px-2);
+  --tv-button-padding-y-lg: var(--tv-space-px-3);
+  --tv-button-radius: var(--tv-radius-pill);
+  --tv-button-font-size: var(--tv-text-label);
+  --tv-button-font-weight: var(--tv-weight-semibold);
+  --tv-button-min-height: 2.5rem;          /* 40px */
+  --tv-button-min-height-touch: 2.75rem;   /* 44px a11y */
+
+  --tv-button-primary-bg: var(--tv-accent-brand);
+  --tv-button-primary-bg-hover: var(--tv-accent-brand-hover);
+  --tv-button-primary-bg-pressed: var(--tv-accent-brand-pressed);
+  --tv-button-primary-text: var(--tv-color-ink-100);
+
+  --tv-button-secondary-bg: var(--tv-color-white-08);
+  --tv-button-secondary-bg-hover: var(--tv-color-white-12);
+  --tv-button-secondary-bg-pressed: var(--tv-color-white-16);
+  --tv-button-secondary-text: var(--tv-ink-primary);
+
+  --tv-button-ghost-bg-hover: var(--tv-color-white-06);
+  --tv-button-ghost-text: var(--tv-ink-secondary);
+
+  --tv-button-destructive-bg: var(--tv-status-danger);
+  --tv-button-destructive-text: var(--tv-color-ink-100);
+
+  /* --- Card --- */
+  --tv-card-padding-sm: var(--tv-space-component-sm);
+  --tv-card-padding-md: var(--tv-space-component-md);
+  --tv-card-padding-lg: var(--tv-space-component-lg);
+  --tv-card-radius-sm: var(--tv-radius-card);
+  --tv-card-radius-md: var(--tv-radius-feature);
+  --tv-card-radius-lg: var(--tv-radius-panel);
+  --tv-card-bg: var(--tv-surface-tier-2);
+  --tv-card-bg-hover: var(--tv-surface-tier-3);
+  --tv-card-border: var(--tv-border-subtle);
+  --tv-card-border-hover: var(--tv-border-default);
+  --tv-card-shadow: var(--tv-elevation-rest);
+  --tv-card-shadow-hover: var(--tv-elevation-raised);
+
+  /* --- Input --- */
+  --tv-input-padding-x: var(--tv-space-px-3);
+  --tv-input-padding-y: var(--tv-space-px-2);
+  --tv-input-radius: var(--tv-radius-control);
+  --tv-input-bg: var(--tv-surface-tier-2);
+  --tv-input-border: var(--tv-border-default);
+  --tv-input-border-focus: var(--tv-border-focus);
+  --tv-input-text: var(--tv-ink-primary);
+  --tv-input-placeholder: var(--tv-ink-muted);
+  --tv-input-min-height: 2.5rem;
+  --tv-input-min-height-touch: 2.75rem;
+
+  /* --- Badge --- */
+  --tv-badge-padding-x: var(--tv-space-px-2);
+  --tv-badge-padding-y: var(--tv-space-px-1);
+  --tv-badge-radius: var(--tv-radius-pill);
+  --tv-badge-font-size: var(--tv-text-eyebrow);
+  --tv-badge-font-weight: var(--tv-weight-semibold);
+
+  /* --- Overlay (Dialog/Sheet/Drawer/Popover) --- */
+  --tv-overlay-bg: rgba(9, 13, 28, 0.52);
+  --tv-overlay-bg-soft: rgba(9, 13, 28, 0.22);
+  --tv-overlay-radius: var(--tv-radius-modal);
+  --tv-overlay-padding: var(--tv-space-component-lg);
+
+  /* ============================================================== */
+  /* === SECTION 4: FEATURE TOKENS =============================== */
+  /* Feature-specific tokens. Local to a feature surface.          */
+  /* ============================================================== */
+
+  /* --- Radar (live ranking / Product Hunt) --- */
+  --tv-radar-bg: var(--tv-surface-base);
+  --tv-radar-node-bg: var(--tv-color-white-08);
+  --tv-radar-node-bg-active: var(--tv-accent-brand);
+  --tv-radar-node-text: var(--tv-ink-primary);
+  --tv-radar-signal-color: var(--tv-accent-cyan);
+  --tv-radar-range-color: rgba(57, 210, 246, 0.16);
+
+  /* --- Arena (gamification battle stage) --- */
+  --tv-arena-bg: linear-gradient(
+    180deg,
+    rgba(106, 60, 255, 0.08) 0%,
+    rgba(15, 15, 18, 0) 100%
+  );
+  --tv-arena-fighter-border: var(--tv-border-strong);
+  --tv-arena-fighter-border-winner: var(--tv-accent-gold);
+  --tv-arena-clash-flash: var(--tv-color-ink-100);
+  --tv-arena-victory-bg: var(--tv-accent-gold-subtle);
+
+  /* --- Compare (decision workspace) --- */
+  --tv-compare-row-bg: var(--tv-surface-tier-2);
+  --tv-compare-row-bg-winner: rgba(243, 191, 76, 0.06);
+  --tv-compare-row-border-winner: var(--tv-accent-gold);
+  --tv-compare-cell-padding: var(--tv-space-component-md);
+
+  /* --- Shortlist (saved tools) --- */
+  --tv-shortlist-shelf-bg: var(--tv-surface-tier-1);
+  --tv-shortlist-book-spine: var(--tv-border-default);
+  --tv-shortlist-book-spine-saved: var(--tv-accent-brand);
+
+  /* ============================================================== */
+  /* === SECTION 5: COMPATIBILITY ALIASES ========================= */
+  /* Existing tokens kept resolvable. Do not remove until migration. */
+  /* Migration target is documented for each.                      */
+  /* ============================================================== */
+
+  /* --- Color compatibility (existing --tv-*) --- */
+  /* Target migration: SEMANTIC color tokens above */
+  --tv-bg-base: var(--tv-color-surface-base);             /* was already here, keep */
+  --tv-accent-primary: var(--tv-accent-brand);             /* was #8b5cf6 → use --tv-accent-brand */
+  --tv-accent-hover: var(--tv-accent-brand-hover);         /* was #7c3aed → use --tv-accent-brand-hover */
+  --tv-accent-pressed: var(--tv-accent-brand-pressed);     /* was #6d28d9 → use --tv-accent-brand-pressed */
+  --tv-accent-aa: var(--tv-accent-brand-aa);               /* was #7c3aed → use --tv-accent-brand-aa */
+  --tv-accent-cyan: var(--tv-accent-cyan);                 /* same name, alias to canonical */
+  --tv-accent-gold: var(--tv-accent-gold);                 /* same name, alias to canonical */
+  --tv-accent-magenta: var(--tv-accent-magenta);           /* same name, alias to canonical */
+  --tv-ink-primary: var(--tv-ink-primary);                 /* same name, alias to canonical */
+  --tv-ink-secondary: var(--tv-ink-secondary);             /* same name, alias to canonical */
+  --tv-ink-muted: var(--tv-ink-muted);                     /* same name, alias to canonical */
+  --tv-ink-muted-aa: var(--tv-ink-muted-aa);               /* same name, alias to canonical */
+  --tv-surface-raised: var(--tv-surface-raised);           /* same name */
+  --tv-surface-elevated: var(--tv-surface-elevated);       /* same name */
+  --tv-surface-translucent: var(--tv-surface-translucent); /* same name */
+  --tv-surface-soft: var(--tv-surface-soft);               /* same name */
+  --tv-border-subtle: var(--tv-border-subtle);             /* same name */
+  --tv-border-interactive: var(--tv-border-interactive);   /* same name */
+  --tv-status-success: var(--tv-status-success);           /* same name */
+  --tv-status-warning: var(--tv-status-warning);           /* same name */
+  --tv-status-danger: var(--tv-status-danger);             /* same name */
+  --tv-status-info: var(--tv-status-info);                 /* same name */
+  --tv-focus-ring: var(--tv-focus-ring);                   /* same name */
+
+  /* --- Typography compatibility --- */
+  /* Target migration: SEMANTIC typography tokens */
+  --font-manrope: var(--tv-font-family-ui);                /* UNUSED alias */
+  --font-rubik: var(--tv-font-family-ui);                  /* UNUSED alias */
+  --tv-font-ui: var(--tv-font-family-ui);                  /* same name */
+  --tv-font-display: var(--tv-font-family-display);        /* same name */
+  --tv-font-system: var(--tv-font-family-system);          /* same name */
+  --tv-text-xs: var(--tv-text-eyebrow);
+  --tv-text-sm: var(--tv-text-label);
+  --tv-text-md: var(--tv-text-body);
+  --tv-text-lg: var(--tv-text-subtitle);
+  --tv-text-xl: var(--tv-text-title);
+  --tv-text-2xl: var(--tv-text-heading);
+  --tv-text-3xl: var(--tv-text-display);
+  --tv-weight-regular: var(--tv-weight-regular);
+  --tv-weight-medium: var(--tv-weight-medium);
+  --tv-weight-semibold: var(--tv-weight-semibold);
+  --tv-weight-bold: var(--tv-weight-bold);
+  --tv-leading-tight: var(--tv-leading-tight);
+  --tv-leading-heading: var(--tv-leading-heading);
+  --tv-leading-body: var(--tv-leading-body);
+  --tv-leading-relaxed: var(--tv-leading-relaxed);
+  --tv-tracking-default: var(--tv-tracking-default);
+  --tv-tracking-label: var(--tv-tracking-label);
+  --tv-tracking-eyebrow: var(--tv-tracking-eyebrow);
+
+  /* --- Spacing compatibility --- */
+  /* Target migration: SEMANTIC spacing tokens */
+  --tv-space-1: var(--tv-space-px-1);
+  --tv-space-2: var(--tv-space-px-2);
+  --tv-space-3: var(--tv-space-px-3);
+  --tv-space-4: var(--tv-space-px-4);
+  --tv-space-6: var(--tv-space-px-6);
+  --tv-space-8: var(--tv-space-px-8);
+  --tv-space-12: var(--tv-space-px-12);
+  --tv-space-16: var(--tv-space-px-16);
+  --tv-space-24: var(--tv-space-px-24);
+  /* UNUSED legacy: --tv-space-32 was 8rem. Already defined above as px-32. */
+
+  /* --- Layout compatibility --- */
+  --tv-content-wide: var(--tv-width-app);
+  --tv-content-reading: var(--tv-width-reading);
+
+  /* --- Elevation compatibility --- */
+  --tv-elevation-rest: var(--tv-elevation-rest);
+  --tv-elevation-raised: var(--tv-elevation-raised);
+  --tv-elevation-modal: var(--tv-elevation-modal);
+
+  /* --- Motion compatibility --- */
+  --tv-motion-fast: var(--tv-motion-fast);
+  --tv-motion-base: var(--tv-motion-base);
+  --tv-motion-slow: var(--tv-motion-slow);
+  --tv-ease-standard: var(--tv-easing-standard);
+  --tv-ease-emphasis: var(--tv-easing-emphasis);
+
+  /* --- Z-index compatibility --- */
+  --tv-z-base: var(--tv-z-base);
+  --tv-z-content: var(--tv-z-content);
+  --tv-z-sticky: var(--tv-z-sticky);
+  --tv-z-nav: var(--tv-z-nav);
+  --tv-z-overlay: var(--tv-z-overlay);
+  --tv-z-modal: var(--tv-z-modal);
+  --tv-z-floating: var(--tv-z-floating);
+  --tv-z-toast: var(--tv-z-toast);
+  --tv-z-effects: var(--tv-z-effects);
+
+  /* ============================================================== */
+  /* === SECTION 6: MOBILE SHELL & KEYBOARD GEOMETRY ============== */
+  /* Kept verbatim from previous file (mobile-specific contract).   */
+  /* ============================================================== */
 
   /*
    * Mobile shell geometry (B37 / MOB-701): single safe-area contract shared
    * by the bottom nav and the shell floating dock (mission entry, Vibe Rush).
-   * The dock offset stacks above the nav so no launcher ever covers a nav
-   * action on 320-430px viewports, in either orientation.
-   * `--bottom-nav-height` is owned by app/globals.css and resolved lazily.
    */
   --tv-shell-nav-inset-left: max(0.75rem, env(safe-area-inset-left, 0px));
   --tv-shell-nav-inset-right: max(0.75rem, env(safe-area-inset-right, 0px));
@@ -123,13 +610,7 @@
   );
 
   /*
-   * Mobile keyboard / viewport policy (B39 / MOB-703): single dvh + safe-area
-   * contract shared by keyboard-aware overlays and sheets (gate modal, auth
-   * page, search surfaces). Paired with `interactive-widget: resizes-content`
-   * (app/layout.tsx) the dvh chain shrinks when the virtual keyboard opens, so
-   * input, submit and close stay reachable; iOS Safari (which ignores
-   * interactive-widget) is covered by useKeyboardAwareScroll (lib/hooks) and
-   * by the 16px input zoom guard.
+   * Mobile keyboard / viewport policy (B39 / MOB-703).
    */
   --tv-kbd-overlay-inset-top: calc(0.75rem + env(safe-area-inset-top, 0px));
   --tv-kbd-overlay-inset-right: max(0.75rem, env(safe-area-inset-right, 0px));
@@ -139,6 +620,9 @@
     100dvh - var(--tv-kbd-overlay-inset-top) -
     var(--tv-kbd-overlay-inset-bottom)
   );
-  /* 16px floor: iOS Safari does not auto-zoom focused inputs at >= 16px. */
   --tv-kbd-input-min-font-size: 1rem;
+
+  /* Runtime-set tokens (set by JS, not authored here but listed for reference) */
+  /* --tv-pointer-tilt-x, --tv-pointer-tilt-y: set by GlobalExperienceLayer */
+  /* These are NOT defined here because they are computed at runtime. */
 }

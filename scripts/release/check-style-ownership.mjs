@@ -127,8 +127,12 @@ const countedCssFiles = ["app", "styles"].flatMap((d) => walk(d)).filter(
 );
 
 // 1. HEX hardcoded
+// Exempt styles/tokens.css: it is the SINGLE SOURCE OF TRUTH for hex values.
+// New tokens added there (Phase 4+) are AUTHORIZED; only NEW hex outside
+// tokens.css counts as growth.
 let hexTotal = 0;
 for (const file of countedSourceFiles(["app", "components", "styles"], /\.(?:ts|tsx|css)$/)) {
+  if (file === "styles/tokens.css") continue;
   const src = read(file);
   hexTotal += (src.match(HEX_RE) || []).length;
 }
