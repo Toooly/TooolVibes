@@ -417,7 +417,7 @@ export function SiteHeaderV2() {
               {/* Mobile menu toggle */}
               <button
                 ref={menuButtonRef}
-                className={`site-header-v2__menu-button relative z-20 grid size-11 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 min-[1360px]:hidden${
+                className={`site-header-v2__menu-button relative z-20 grid size-11 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 lg:hidden${
                   menuOpen ? " is-open" : ""
                 }`}
                 aria-controls="mobile-site-menu"
@@ -478,7 +478,7 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="site-header-v2__mobile-backdrop fixed inset-0 z-[var(--tv-z-overlay)] bg-[rgba(6,6,14,0.55)] min-[1360px]:hidden"
+            className="site-header-v2__mobile-backdrop fixed inset-0 z-[var(--tv-z-overlay)] bg-[rgba(6,6,14,0.55)] lg:hidden"
             onClick={() => closeMenu()}
             role="dialog"
             aria-modal="true"
