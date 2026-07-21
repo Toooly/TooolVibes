@@ -4,7 +4,6 @@ import { createElement } from "react";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
 import { NavigationReleaseProvider } from "@/lib/navigation/navigation-release-context";
 import { resolveNavigationRelease } from "@/lib/navigation/release";
@@ -17,105 +16,6 @@ vi.mock("@/components/layout/brand-logo", () => ({
 
 afterEach(() => {
   cleanup();
-});
-
-describe("B29 SiteFooter (legacy) — registry canonico", () => {
-  it("footerNav dal registry: 9 destinazioni ordinate con override (Categorie, Shop digitale)", () => {
-    const { container } = render(<SiteFooter />);
-
-    const accordions = container.querySelectorAll("details");
-    expect(accordions.length).toBeGreaterThanOrEqual(2);
-
-    const navLinks = within(
-      accordions[0] as HTMLElement,
-    ).getAllByRole("link");
-    expect(navLinks.map((link) => link.textContent)).toEqual([
-      "Home",
-      "Catalogo",
-      "Categorie",
-      "Suggerisci",
-      "Diventa affiliato",
-      "Radar",
-      "Community",
-      "Shop digitale",
-      "Login amministratore",
-    ]);
-    expect(navLinks.map((link) => link.getAttribute("href"))).toEqual([
-      "/",
-      "/archivio",
-      "/tags",
-      "/shortlist#wishlist",
-      "/affiliati",
-      "/radar",
-      "/community",
-      "/shop",
-      "/admin/login",
-    ]);
-  });
-
-  it("categoryNav dal registry: 6 facet /archivio?group=* ordinate", () => {
-    const { container } = render(<SiteFooter />);
-
-    const accordions = container.querySelectorAll("details");
-    const categoryLinks = within(
-      accordions[1] as HTMLElement,
-    ).getAllByRole("link");
-    expect(categoryLinks.map((link) => link.textContent)).toEqual([
-      "Vibe coding",
-      "Builder app AI",
-      "No-code",
-      "Automazioni",
-      "Agenti AI",
-      "Video AI",
-    ]);
-    expect(categoryLinks.map((link) => link.getAttribute("href"))).toEqual([
-      "/archivio?group=vibe-coding",
-      "/archivio?group=ai-app-builder",
-      "/archivio?group=no-code",
-      "/archivio?group=automation",
-      "/archivio?group=ai-agents",
-      "/archivio?group=ai-video",
-    ]);
-  });
-
-  it("meta bar dal registry: override Product Hunt→/radar e Archivio→/archivio, Shop esterno", () => {
-    render(<SiteFooter />);
-
-    const productHunt = screen.getByRole("link", { name: "Product Hunt" });
-    expect(productHunt.getAttribute("href")).toBe("/radar");
-
-    const archivio = screen.getByRole("link", { name: "Archivio" });
-    expect(archivio.getAttribute("href")).toBe("/archivio");
-
-    const externalShop = screen.getByRole("link", { name: "Shop" });
-    expect(externalShop.getAttribute("href")).toBe(siteConfig.shopUrl);
-    expect(externalShop.getAttribute("target")).toBe("_blank");
-    expect(externalShop.getAttribute("rel")).toContain("noopener");
-  });
-
-  it("CTA hero usano href canonici del registry", () => {
-    render(<SiteFooter />);
-
-    expect(
-      screen
-        .getByRole("link", { name: "Suggerisci un tool" })
-        .getAttribute("href"),
-    ).toBe("/shortlist#wishlist");
-
-    const affiliatesLinks = screen.getAllByRole("link", {
-      name: "Diventa affiliato",
-    });
-    expect(affiliatesLinks.length).toBeGreaterThan(0);
-    for (const link of affiliatesLinks) {
-      expect(link.getAttribute("href")).toBe("/affiliati");
-    }
-
-    expect(
-      screen
-        .getByRole("link", { name: "Apri lo shop digitale" })
-        .getAttribute("href"),
-    ).toBe(siteConfig.shopUrl);
-  });
 });
 
 describe("B29 SiteFooterV2 — registry canonico", () => {
