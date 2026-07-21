@@ -33,7 +33,7 @@ delete webServerEnvironment.NO_COLOR;
 const smokeProjects = [
   {
     name: "chromium",
-    testMatch: /(?:core-routes|security-boundaries)\.spec\.ts/,
+    testMatch: /(?:core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke)\.spec\.ts/,
     use: {
       ...devices["Desktop Chrome"],
       viewport: { width: 1440, height: 1000 },
@@ -43,7 +43,7 @@ const smokeProjects = [
   },
   {
     name: "firefox",
-    testMatch: /(?:core-routes|security-boundaries)\.spec\.ts/,
+    testMatch: /(?:core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke)\.spec\.ts/,
     use: {
       ...devices["Desktop Firefox"],
       viewport: { width: 1440, height: 1000 },
@@ -53,7 +53,7 @@ const smokeProjects = [
   },
   {
     name: "webkit",
-    testMatch: /(?:core-routes|security-boundaries)\.spec\.ts/,
+    testMatch: /(?:core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke)\.spec\.ts/,
     use: {
       ...devices["iPhone 13"],
       viewport: { width: 390, height: 844 },
@@ -63,8 +63,25 @@ const smokeProjects = [
   },
 ];
 
+
+    // Phase 0.2 — Baseline smoke runs WITHOUT the gate-setup fixture because
+    // it must validate public marketing routes before the auth fixture is warm.
+    const baselineProject = [
+      {
+        name: "baseline",
+        testMatch: /baseline-smoke\.spec\.ts/,
+        use: {
+          ...devices["Desktop Chrome"],
+          viewport: { width: 1440, height: 1000 },
+        },
+      },
+    ];
+
 const visualProjects = [
   { name: "visual-320", viewport: { width: 320, height: 740 } },
+  { name: "visual-430", viewport: { width: 430, height: 932 } },
+  { name: "visual-1280", viewport: { width: 1280, height: 800 } },
+  { name: "visual-1728", viewport: { width: 1728, height: 1000 } },
   { name: "visual-390", viewport: { width: 390, height: 844 } },
   { name: "visual-768", viewport: { width: 768, height: 1024 } },
   { name: "visual-1024", viewport: { width: 1024, height: 768 } },
@@ -135,6 +152,7 @@ export default defineConfig({
       testMatch: /gate\.setup\.ts/,
     },
     ...smokeProjects,
+    ...baselineProject,
     ...visualProjects,
     typographyProject,
   ],

@@ -95,6 +95,102 @@ for (const relativePath of ["app", "styles"].flatMap(walk).filter((file) => file
   }
 }
 
+
+// ============================================================
+// Phase 0.3 — No-new-debt baseline guards (growth-only)
+// Captured 2026-07-21 from current repo state.
+// These guards NEVER fail on pre-existing debt.
+// They fail only if the metric GROWS above the captured baseline.
+// ============================================================
+const BASELINE = {
+  hexHardcodedTotal: 2369,
+  radiusArbitraryTotal: 879,
+  breakpointsCustomUnique: 36,
+  motionDurationsArbitrary: 13,
+};
+
+const HEX_RE = /#[0-9A-Fa-f]{3,8}\b/g;
+const RADIUS_TSX_RE = /rounded-\[[0-9]+(px|rem)?\]/g;
+const RADIUS_CSS_RE = /border-radius:\s*[0-9]+px/g;
+const BP_CSS_RE = /@media[^{]*\(min-width:\s*[0-9]+px\)|@media[^{]*\(max-width:\s*[0-9]+px\)/g;
+const BP_CSS_VALUE_RE = /[0-9]+px/g;
+const BP_TSX_RE = /(min|max)-\[[0-9]+px\]/g;
+const MOT_TSX_RE = /duration-\[[0-9]+(ms|s)?\]/g;
+const MOT_CSS_RE = /transition-duration:\s*[0-9]+m?s/g;
+const TAILWIND_DEFAULTS = new Set([640, 768, 1024, 1280, 1536]);
+
+const countedSourceFiles = (dirs, ext) => dirs.flatMap((d) => walk(d))
+  .filter((rel) => ext.test(rel) && rel !== releaseEntry);
+
+const countedCssFiles = ["app", "styles"].flatMap((d) => walk(d)).filter(
+  (rel) => rel.endsWith(".css") && rel !== releaseEntry,
+);
+
+// 1. HEX hardcoded
+let hexTotal = 0;
+for (const file of countedSourceFiles(["app", "components", "styles"], /\.(?:ts|tsx|css)$/)) {
+  const src = read(file);
+  hexTotal += (src.match(HEX_RE) || []).length;
+}
+if (hexTotal > BASELINE.hexHardcodedTotal) {
+  errors.push(
+    `hex hardcoded grew: ${hexTotal} occurrences > baseline ${BASELINE.hexHardcodedTotal} (delta +${hexTotal - BASELINE.hexHardcodedTotal})`,
+  );
+}
+
+// 2. Radius arbitrary (TSX rounded-[Npx] + CSS border-radius: Npx)
+let radiusTotal = 0;
+for (const file of countedSourceFiles(["app", "components"], /\.(?:ts|tsx)$/)) {
+  radiusTotal += (read(file).match(RADIUS_TSX_RE) || []).length;
+}
+for (const file of countedCssFiles) {
+  radiusTotal += (read(file).match(RADIUS_CSS_RE) || []).length;
+}
+if (radiusTotal > BASELINE.radiusArbitraryTotal) {
+  errors.push(
+    `radius arbitrary grew: ${radiusTotal} > baseline ${BASELINE.radiusArbitraryTotal} (delta +${radiusTotal - BASELINE.radiusArbitraryTotal})`,
+  );
+}
+
+// 3. Breakpoints custom unique (excluding Tailwind defaults 640/768/1024/1280/1536)
+const bpSet = new Set();
+for (const file of countedCssFiles) {
+  const src = read(file);
+  const mediaLines = src.match(BP_CSS_RE) || [];
+  for (const line of mediaLines) {
+    for (const v of line.match(BP_CSS_VALUE_RE) || []) {
+      const n = parseInt(v, 10);
+      if (!TAILWIND_DEFAULTS.has(n)) bpSet.add(n);
+    }
+  }
+}
+for (const file of countedSourceFiles(["app", "components"], /\.(?:ts|tsx)$/)) {
+  const src = read(file);
+  const tsxHits = src.match(BP_TSX_RE) || [];
+  for (const h of tsxHits) {
+    const n = parseInt(h.match(/[0-9]+/)[0], 10);
+    if (!TAILWIND_DEFAULTS.has(n)) bpSet.add(n);
+  }
+}
+if (bpSet.size > BASELINE.breakpointsCustomUnique) {
+  errors.push(
+    `custom breakpoints grew: ${bpSet.size} unique > baseline ${BASELINE.breakpointsCustomUnique}`,
+  );
+}
+
+// 4. Motion durations arbitrary (TSX duration-[Nms] + CSS transition-duration: Nms)
+let motionTotal = 0;
+for (const file of countedSourceFiles(["app", "components"], /\.(?:ts|tsx)$/)) {
+  motionTotal += (read(file).match(MOT_TSX_RE) || []).length;
+}
+for (const file of countedCssFiles) {
+  motionTotal += (read(file).match(MOT_CSS_RE) || []).length;
+}
+if (motionTotal > BASELINE.motionDurationsArbitrary) {
+  errors.push(
+    `motion duration arbitrary grew: ${motionTotal} > baseline ${BASELINE.motionDurationsArbitrary}`,
+  );
+}
 if (errors.length > 0) {
   console.error("Style ownership check failed:\n" + errors.map((error) => `- ${error}`).join("\n"));
   process.exit(1);

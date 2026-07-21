@@ -1,0 +1,881 @@
+{
+  "capturedAt": "2026-07-21T17:27:15.403Z",
+  "baseUrl": "http://127.0.0.1:3100",
+  "outDir": "/Users/gianmariacaltagirone/Tooolvibes/audits/visual-baseline-2026-07-21",
+  "viewports": [
+    {
+      "name": "320x740",
+      "width": 320,
+      "height": 740
+    },
+    {
+      "name": "390x844",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "name": "430x932",
+      "width": 430,
+      "height": 932
+    },
+    {
+      "name": "768x1024",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "name": "1024x768",
+      "width": 1024,
+      "height": 768
+    },
+    {
+      "name": "1280x800",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "name": "1440x1000",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "name": "1728x1000",
+      "width": 1728,
+      "height": 1000
+    },
+    {
+      "name": "1920x1080",
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "routes": [
+    "/",
+    "/archivio",
+    "/collections",
+    "/compare",
+    "/shortlist",
+    "/radar",
+    "/toools/blink",
+    "/tags",
+    "/account"
+  ],
+  "results": [
+    {
+      "viewport": "320x740",
+      "route": "/",
+      "file": "320x740/home.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 182023,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:15.481Z"
+    },
+    {
+      "viewport": "320x740",
+      "route": "/archivio",
+      "file": "320x740/archivio.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 182219,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:17.211Z"
+    },
+    {
+      "viewport": "320x740",
+      "route": "/collections",
+      "file": "320x740/collections.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 182125,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:18.909Z"
+    },
+    {
+      "viewport": "320x740",
+      "route": "/compare",
+      "file": "320x740/compare.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 182475,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:20.576Z"
+    },
+    {
+      "viewport": "320x740",
+      "route": "/shortlist",
+      "file": "320x740/shortlist.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 182112,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:22.260Z"
+    },
+    {
+      "viewport": "320x740",
+      "route": "/radar",
+      "file": "320x740/radar.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 181668,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:23.926Z"
+    },
+    {
+      "viewport": "320x740",
+      "route": "/toools/blink",
+      "file": "320x740/toools_blink.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 182091,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:25.593Z"
+    },
+    {
+      "viewport": "320x740",
+      "route": "/tags",
+      "file": "320x740/tags.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 181808,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:27.277Z"
+    },
+    {
+      "viewport": "320x740",
+      "route": "/account",
+      "file": "320x740/account.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 182608,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:28.941Z"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/",
+      "file": "390x844/home.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 226981,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:30.598Z"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/archivio",
+      "file": "390x844/archivio.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 227344,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:32.305Z"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/collections",
+      "file": "390x844/collections.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 227267,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:34.006Z"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/compare",
+      "file": "390x844/compare.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 226990,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:35.682Z"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/shortlist",
+      "file": "390x844/shortlist.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 226911,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:37.367Z"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/radar",
+      "file": "390x844/radar.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 227248,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:39.065Z"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/toools/blink",
+      "file": "390x844/toools_blink.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 226535,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:40.769Z"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/tags",
+      "file": "390x844/tags.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 227225,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:42.452Z"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/account",
+      "file": "390x844/account.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 227200,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:44.135Z"
+    },
+    {
+      "viewport": "430x932",
+      "route": "/",
+      "file": "430x932/home.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 257252,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:45.820Z"
+    },
+    {
+      "viewport": "430x932",
+      "route": "/archivio",
+      "file": "430x932/archivio.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 257454,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:47.525Z"
+    },
+    {
+      "viewport": "430x932",
+      "route": "/collections",
+      "file": "430x932/collections.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 257620,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:49.224Z"
+    },
+    {
+      "viewport": "430x932",
+      "route": "/compare",
+      "file": "430x932/compare.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 257525,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:50.908Z"
+    },
+    {
+      "viewport": "430x932",
+      "route": "/shortlist",
+      "file": "430x932/shortlist.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 257097,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:52.590Z"
+    },
+    {
+      "viewport": "430x932",
+      "route": "/radar",
+      "file": "430x932/radar.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 257282,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:54.258Z"
+    },
+    {
+      "viewport": "430x932",
+      "route": "/toools/blink",
+      "file": "430x932/toools_blink.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 258044,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:55.942Z"
+    },
+    {
+      "viewport": "430x932",
+      "route": "/tags",
+      "file": "430x932/tags.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 257363,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:57.608Z"
+    },
+    {
+      "viewport": "430x932",
+      "route": "/account",
+      "file": "430x932/account.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 257499,
+      "error": null,
+      "capturedAt": "2026-07-21T17:27:59.273Z"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/",
+      "file": "768x1024/home.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 390757,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:00.976Z"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/archivio",
+      "file": "768x1024/archivio.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 391219,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:02.681Z"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/collections",
+      "file": "768x1024/collections.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 391471,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:04.380Z"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/compare",
+      "file": "768x1024/compare.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 391776,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:06.100Z"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/shortlist",
+      "file": "768x1024/shortlist.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 390940,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:07.810Z"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/radar",
+      "file": "768x1024/radar.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 391529,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:09.496Z"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/toools/blink",
+      "file": "768x1024/toools_blink.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 390767,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:11.210Z"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/tags",
+      "file": "768x1024/tags.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 391273,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:12.896Z"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/account",
+      "file": "768x1024/account.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 391484,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:14.597Z"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/",
+      "file": "1024x768/home.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 413854,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:16.282Z"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/archivio",
+      "file": "1024x768/archivio.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 414008,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:17.991Z"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/collections",
+      "file": "1024x768/collections.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 413617,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:19.740Z"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/compare",
+      "file": "1024x768/compare.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 413780,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:21.449Z"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/shortlist",
+      "file": "1024x768/shortlist.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 413591,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:23.165Z"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/radar",
+      "file": "1024x768/radar.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 413630,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:24.870Z"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/toools/blink",
+      "file": "1024x768/toools_blink.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 413546,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:26.552Z"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/tags",
+      "file": "1024x768/tags.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 413497,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:28.266Z"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/account",
+      "file": "1024x768/account.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 413633,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:29.969Z"
+    },
+    {
+      "viewport": "1280x800",
+      "route": "/",
+      "file": "1280x800/home.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 521015,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:31.683Z"
+    },
+    {
+      "viewport": "1280x800",
+      "route": "/archivio",
+      "file": "1280x800/archivio.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 520596,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:33.427Z"
+    },
+    {
+      "viewport": "1280x800",
+      "route": "/collections",
+      "file": "1280x800/collections.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 521054,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:35.211Z"
+    },
+    {
+      "viewport": "1280x800",
+      "route": "/compare",
+      "file": "1280x800/compare.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 520818,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:36.927Z"
+    },
+    {
+      "viewport": "1280x800",
+      "route": "/shortlist",
+      "file": "1280x800/shortlist.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 520634,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:38.651Z"
+    },
+    {
+      "viewport": "1280x800",
+      "route": "/radar",
+      "file": "1280x800/radar.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 521101,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:40.400Z"
+    },
+    {
+      "viewport": "1280x800",
+      "route": "/toools/blink",
+      "file": "1280x800/toools_blink.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 520667,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:42.134Z"
+    },
+    {
+      "viewport": "1280x800",
+      "route": "/tags",
+      "file": "1280x800/tags.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 521335,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:43.867Z"
+    },
+    {
+      "viewport": "1280x800",
+      "route": "/account",
+      "file": "1280x800/account.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 520370,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:45.610Z"
+    },
+    {
+      "viewport": "1440x1000",
+      "route": "/",
+      "file": "1440x1000/home.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 650593,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:47.377Z"
+    },
+    {
+      "viewport": "1440x1000",
+      "route": "/archivio",
+      "file": "1440x1000/archivio.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 649645,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:49.147Z"
+    },
+    {
+      "viewport": "1440x1000",
+      "route": "/collections",
+      "file": "1440x1000/collections.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 651240,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:50.930Z"
+    },
+    {
+      "viewport": "1440x1000",
+      "route": "/compare",
+      "file": "1440x1000/compare.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 650766,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:52.714Z"
+    },
+    {
+      "viewport": "1440x1000",
+      "route": "/shortlist",
+      "file": "1440x1000/shortlist.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 649900,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:54.481Z"
+    },
+    {
+      "viewport": "1440x1000",
+      "route": "/radar",
+      "file": "1440x1000/radar.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 649989,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:56.247Z"
+    },
+    {
+      "viewport": "1440x1000",
+      "route": "/toools/blink",
+      "file": "1440x1000/toools_blink.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 650581,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:58.014Z"
+    },
+    {
+      "viewport": "1440x1000",
+      "route": "/tags",
+      "file": "1440x1000/tags.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 650433,
+      "error": null,
+      "capturedAt": "2026-07-21T17:28:59.797Z"
+    },
+    {
+      "viewport": "1440x1000",
+      "route": "/account",
+      "file": "1440x1000/account.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 650566,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:01.567Z"
+    },
+    {
+      "viewport": "1728x1000",
+      "route": "/",
+      "file": "1728x1000/home.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 780265,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:03.333Z"
+    },
+    {
+      "viewport": "1728x1000",
+      "route": "/archivio",
+      "file": "1728x1000/archivio.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 780245,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:05.182Z"
+    },
+    {
+      "viewport": "1728x1000",
+      "route": "/collections",
+      "file": "1728x1000/collections.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 780499,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:07.016Z"
+    },
+    {
+      "viewport": "1728x1000",
+      "route": "/compare",
+      "file": "1728x1000/compare.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 780364,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:08.816Z"
+    },
+    {
+      "viewport": "1728x1000",
+      "route": "/shortlist",
+      "file": "1728x1000/shortlist.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 781248,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:10.616Z"
+    },
+    {
+      "viewport": "1728x1000",
+      "route": "/radar",
+      "file": "1728x1000/radar.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 780427,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:12.450Z"
+    },
+    {
+      "viewport": "1728x1000",
+      "route": "/toools/blink",
+      "file": "1728x1000/toools_blink.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 780302,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:14.266Z"
+    },
+    {
+      "viewport": "1728x1000",
+      "route": "/tags",
+      "file": "1728x1000/tags.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 781126,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:16.065Z"
+    },
+    {
+      "viewport": "1728x1000",
+      "route": "/account",
+      "file": "1728x1000/account.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 780917,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:17.866Z"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/",
+      "file": "1920x1080/home.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 892705,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:19.685Z"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/archivio",
+      "file": "1920x1080/archivio.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 893153,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:21.583Z"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/collections",
+      "file": "1920x1080/collections.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 892890,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:23.454Z"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/compare",
+      "file": "1920x1080/compare.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 893431,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:25.335Z"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/shortlist",
+      "file": "1920x1080/shortlist.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 892639,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:27.200Z"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/radar",
+      "file": "1920x1080/radar.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 893386,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:29.066Z"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/toools/blink",
+      "file": "1920x1080/toools_blink.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 893008,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:30.933Z"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/tags",
+      "file": "1920x1080/tags.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 893745,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:32.799Z"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/account",
+      "file": "1920x1080/account.png",
+      "status": "ok",
+      "httpStatus": 200,
+      "bytes": 893099,
+      "error": null,
+      "capturedAt": "2026-07-21T17:29:34.649Z"
+    }
+  ],
+  "summary": {
+    "total": 81,
+    "ok": 81,
+    "fail": 0,
+    "finishedAt": "2026-07-21T17:29:36.530Z"
+  }
+}

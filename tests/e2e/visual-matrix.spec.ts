@@ -8,6 +8,8 @@ const visualRoutes = [
   { path: "/compare", snapshot: "compare.png" },
   { path: "/radar", snapshot: "radar.png" },
   { path: "/account", snapshot: "account.png" },
+  { path: "/collections", snapshot: "collections.png" },
+  { path: "/tags", snapshot: "tags.png" },
 ] as const;
 
 test.describe("visual route matrix", () => {
