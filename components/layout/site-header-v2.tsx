@@ -335,7 +335,7 @@ export function SiteHeaderV2() {
             </div>
 
             {/* Desktop Nav */}
-            <nav className="site-header-v2__nav hidden items-center gap-1 lg:flex" aria-label="Navigazione principale">
+            <nav className="site-header-v2__nav hidden items-center gap-1 min-[1360px]:flex" aria-label="Navigazione principale">
               {desktopNavLinks.map((link) => (
                 <NavLink
                   key={link.href}
@@ -380,7 +380,7 @@ export function SiteHeaderV2() {
               </div>
 
               {hasRewardedSurface && (
-                <GameProfileBar className="hidden xl:flex" />
+                <GameProfileBar className="hidden min-[1360px]:flex" />
               )}
 
               {accountCta.visible && (
