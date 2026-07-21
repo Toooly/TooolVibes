@@ -6,8 +6,20 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+// TooolVibes Phase 5: button.tsx now consumes --tv-button-* semantic tokens
+// from styles/tokens.css (SECTION 3: COMPONENT TOKENS).
+// Original `premium-button-*` classes preserved for backward compatibility
+// with globals.css until Phase 6 split.
+//
+// Token mapping:
+//   min-h-10   → min-h-[var(--tv-button-min-height)]    (2.5rem)
+//   min-h-11   → min-h-[var(--tv-button-min-height-touch)] (2.75rem, a11y)
+//   px-4 py-2.5 → px-[var(--tv-button-padding-x-md)] py-[var(--tv-button-padding-y-md)]
+//   rounded-full → rounded-[var(--tv-button-radius)]   (pill, 999px)
+//   text-sm    → text-[length:var(--tv-button-font-size)]
+//   font-semibold → font-[weight:var(--tv-button-font-weight)]
 const buttonVariants = cva(
-  "premium-button group/button inline-flex shrink-0 items-center justify-center rounded-full border border-transparent bg-clip-padding text-sm font-semibold whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "premium-button group/button inline-flex shrink-0 items-center justify-center rounded-[var(--tv-button-radius)] border border-transparent bg-clip-padding text-[length:var(--tv-button-font-size)] font-[weight:var(--tv-button-font-weight)] whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -26,10 +38,10 @@ const buttonVariants = cva(
       },
       size: {
         default:
-          "min-h-10 gap-1.5 px-4 py-2.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
+          "min-h-[var(--tv-button-min-height)] gap-1.5 px-[var(--tv-button-padding-x-md)] py-[var(--tv-button-padding-y-md)] has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
         xs: "min-h-7 gap-1 px-2.5 py-1 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
         sm: "min-h-9 gap-1.5 px-3.5 py-2 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&_svg:not([class*='size-'])]:size-3.5",
-        md: "min-h-11 gap-1.5 px-4.5 py-2.5",
+        md: "min-h-[var(--tv-button-min-height-touch)] gap-1.5 px-[var(--tv-button-padding-x-md)] py-[var(--tv-button-padding-y-md)]",
         lg: "min-h-12 gap-2 px-5 py-3 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
         xl: "min-h-[3.7rem] gap-2 px-7 py-4 text-base",
         icon: "premium-button-icon size-11",
@@ -91,7 +103,7 @@ function ButtonLink({
   return (
     <Link
       className={cn(
-        "premium-button text-ui-strong group/button inline-flex w-full items-center justify-center gap-2 rounded-full px-4.5 py-2.9 text-center text-[0.95rem] font-semibold tracking-normal sm:w-auto",
+        "premium-button text-ui-strong group/button inline-flex w-full items-center justify-center gap-2 rounded-[var(--tv-button-radius)] px-[var(--tv-button-padding-x-md)] py-[var(--tv-button-padding-y-md)] text-center text-[0.95rem] font-[weight:var(--tv-button-font-weight)] tracking-normal sm:w-auto",
         variant === "primary" && "premium-button-primary text-white sm:min-w-[11.75rem]",
         variant === "premium" && "premium-button-premium text-white sm:min-w-[11.75rem]",
         variant === "secondary" && "premium-button-secondary sm:min-w-[10.5rem]",
