@@ -17,21 +17,21 @@ const badgeVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
         trust:
-          "border-[rgba(83,63,170,0.16)] bg-[rgba(246,244,255,0.92)] text-[var(--accent-strong)] dark:border-white/14 dark:bg-white/10 dark:text-violet-100",
+          "border-[var(--tv-status-trust-soft-border)] bg-[var(--tv-status-trust-soft-bg)] text-[var(--tv-status-trust-soft-text)] dark:border-[var(--tv-status-trust-soft-border-dark)] dark:bg-[var(--tv-status-trust-soft-bg-dark)] dark:text-[var(--tv-status-trust-soft-text-dark)]",
         verified:
-          "border-emerald-500/20 bg-emerald-50 text-emerald-700 dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-emerald-100",
+          "border-[var(--tv-status-success-soft-border)] bg-[var(--tv-status-success-soft-bg)] text-[var(--tv-status-success-soft-text)] dark:border-[var(--tv-status-success-soft-border-dark)] dark:bg-[var(--tv-status-success-soft-bg-dark)] dark:text-[var(--tv-status-success-soft-text-dark)]",
         affiliate:
-          "border-amber-500/25 bg-amber-50 text-amber-800 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100",
+          "border-[var(--tv-status-affiliate-soft-border)] bg-[var(--tv-status-affiliate-soft-bg)] text-[var(--tv-status-affiliate-soft-text)] dark:border-[var(--tv-status-affiliate-soft-border-dark)] dark:bg-[var(--tv-status-affiliate-soft-bg-dark)] dark:text-[var(--tv-status-affiliate-soft-text-dark)]",
         info:
-          "border-sky-500/20 bg-sky-50 text-sky-700 dark:border-sky-300/20 dark:bg-sky-300/10 dark:text-sky-100",
+          "border-[var(--tv-status-info-soft-border)] bg-[var(--tv-status-info-soft-bg)] text-[var(--tv-status-info-soft-text)] dark:border-[var(--tv-status-info-soft-border-dark)] dark:bg-[var(--tv-status-info-soft-bg-dark)] dark:text-[var(--tv-status-info-soft-text-dark)]",
         warning:
-          "border-amber-500/25 bg-amber-50 text-amber-800 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100",
+          "border-[var(--tv-status-warning-soft-border)] bg-[var(--tv-status-warning-soft-bg)] text-[var(--tv-status-warning-soft-text)] dark:border-[var(--tv-status-warning-soft-border-dark)] dark:bg-[var(--tv-status-warning-soft-bg-dark)] dark:text-[var(--tv-status-warning-soft-text-dark)]",
         success:
-          "border-emerald-500/20 bg-emerald-50 text-emerald-700 dark:border-emerald-300/20 dark:bg-emerald-300/10 dark:text-emerald-100",
+          "border-[var(--tv-status-success-soft-border)] bg-[var(--tv-status-success-soft-bg)] text-[var(--tv-status-success-soft-text)] dark:border-[var(--tv-status-success-soft-border-dark)] dark:bg-[var(--tv-status-success-soft-bg-dark)] dark:text-[var(--tv-status-success-soft-text-dark)]",
         destructive:
           "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
         danger:
-          "border-[rgba(239,68,68,0.32)] bg-[rgba(239,68,68,0.12)] text-red-100",
+          "border-[var(--tv-status-danger-soft-border)] bg-[var(--tv-status-danger-soft-bg)] text-[var(--tv-status-danger-soft-text)]",
         outline:
           "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
         ghost:

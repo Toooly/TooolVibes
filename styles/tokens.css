@@ -246,6 +246,54 @@
   --tv-status-info: var(--tv-color-blue-500);
   --tv-status-info-pressed: var(--tv-color-blue-600);
 
+  /* --- Status soft variants (added by Phase 6 BATCH 1) ---
+     Soft bg + border + saturated text triplet for each status tone.
+     Light-mode values mirror the Tailwind palette used historically by
+     the canonical Badge primitive; dark-mode values mirror the previous
+     hardcoded dark: variants. Consumers may reference either the light
+     pair (with Tailwind dark: toggle) or the *_dark pair directly. */
+  --tv-status-success-soft-bg: #ecfdf5;
+  --tv-status-success-soft-border: rgb(16 185 129 / 0.2);
+  --tv-status-success-soft-text: #047857;
+  --tv-status-success-soft-bg-dark: rgb(110 231 183 / 0.1);
+  --tv-status-success-soft-border-dark: rgb(110 231 183 / 0.2);
+  --tv-status-success-soft-text-dark: #a7f3d0;
+
+  --tv-status-info-soft-bg: #f0f9ff;
+  --tv-status-info-soft-border: rgb(14 165 233 / 0.2);
+  --tv-status-info-soft-text: #0369a1;
+  --tv-status-info-soft-bg-dark: rgb(125 211 252 / 0.1);
+  --tv-status-info-soft-border-dark: rgb(125 211 252 / 0.2);
+  --tv-status-info-soft-text-dark: #bae6fd;
+
+  --tv-status-warning-soft-bg: #fffbeb;
+  --tv-status-warning-soft-border: rgb(245 158 11 / 0.25);
+  --tv-status-warning-soft-text: #92400e;
+  --tv-status-warning-soft-bg-dark: rgb(252 211 77 / 0.1);
+  --tv-status-warning-soft-border-dark: rgb(252 211 77 / 0.25);
+  --tv-status-warning-soft-text-dark: #fde68a;
+
+  --tv-status-affiliate-soft-bg: #fffbeb;
+  --tv-status-affiliate-soft-border: rgb(245 158 11 / 0.25);
+  --tv-status-affiliate-soft-text: #92400e;
+  --tv-status-affiliate-soft-bg-dark: rgb(252 211 77 / 0.1);
+  --tv-status-affiliate-soft-border-dark: rgb(252 211 77 / 0.25);
+  --tv-status-affiliate-soft-text-dark: #fde68a;
+
+  --tv-status-danger-soft-bg: rgb(239 68 68 / 0.12);
+  --tv-status-danger-soft-border: rgb(239 68 68 / 0.32);
+  --tv-status-danger-soft-text: #fee2e2;
+  --tv-status-danger-soft-bg-dark: rgb(239 68 68 / 0.18);
+  --tv-status-danger-soft-border-dark: rgb(239 68 68 / 0.4);
+  --tv-status-danger-soft-text-dark: #fee2e2;
+
+  --tv-status-trust-soft-bg: rgba(246, 244, 255, 0.92);
+  --tv-status-trust-soft-border: rgba(83, 63, 170, 0.16);
+  --tv-status-trust-soft-text: var(--accent-strong);
+  --tv-status-trust-soft-bg-dark: rgb(255 255 255 / 0.1);
+  --tv-status-trust-soft-border-dark: rgb(255 255 255 / 0.14);
+  --tv-status-trust-soft-text-dark: #ddd6fe;
+
   /* Borders */
   --tv-border-subtle: var(--tv-color-white-10);
   --tv-border-default: var(--tv-color-white-12);
@@ -443,6 +491,15 @@
   --tv-input-min-height: 2.5rem;
   --tv-input-min-height-touch: 2.75rem;
 
+  /* Form control size variants (added by Phase 6 BATCH 2):
+     sm mirrors the historical Tailwind h-8 used by Select/default trigger;
+     xs mirrors h-7 used by Select/sm trigger. They keep the existing
+     visual heights and let future Checkbox/Radio/Switch primitives share
+     the same canonical control geometry. */
+  --tv-control-min-height-default: 2.5rem;  /* 40px (matches input, button) */
+  --tv-control-min-height-sm: 2rem;         /* 32px (matches Select default) */
+  --tv-control-min-height-xs: 1.75rem;      /* 28px (matches Select sm) */
+
   /* --- Badge --- */
   --tv-badge-padding-x: var(--tv-space-px-2);
   --tv-badge-padding-y: var(--tv-space-px-1);
@@ -453,7 +510,14 @@
   /* --- Overlay (Dialog/Sheet/Drawer/Popover) --- */
   --tv-overlay-bg: rgba(9, 13, 28, 0.52);
   --tv-overlay-bg-soft: rgba(9, 13, 28, 0.22);
-  --tv-overlay-radius: var(--tv-radius-modal);
+  --tv-overlay-radius: var(--tv-radius-modal);          /* 28px — Dialog, Drawer */
+  --tv-overlay-radius-popover: var(--tv-radius-feature); /* 16px — Popover, DropdownMenu */
+  --tv-overlay-radius-tooltip: var(--tv-radius-card);    /* 10px — Tooltip */
+
+  /* Backdrop (added by Phase 6 BATCH 4): unified overlay backdrop values
+     so Dialog, Drawer, Sheet all consume the same canonical dimming tone. */
+  --tv-overlay-backdrop: rgba(9, 13, 28, 0.52);
+  --tv-overlay-backdrop-light: rgba(9, 13, 28, 0.22);
   --tv-overlay-padding: var(--tv-space-component-lg);
 
   /* ============================================================== */
@@ -565,6 +629,11 @@
   /* --- Layout compatibility --- */
   --tv-content-wide: var(--tv-width-app);
   --tv-content-reading: var(--tv-width-reading);
+
+  /* --- Text container widths (semantic, for prose/body content) --- */
+  --tv-content-text-narrow: 42rem;    /* 672px — narrow prose, focused reading */
+  --tv-content-text-default: 46rem;   /* 736px — default reading column (alias of reading) */
+  --tv-content-text-wide: 58rem;      /* 928px — wide prose, marketing bodies */
 
   /* --- Elevation compatibility --- */
   --tv-elevation-rest: var(--tv-elevation-rest);
