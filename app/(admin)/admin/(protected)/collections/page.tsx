@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { importMockCollectionsAction } from "@/app/(admin)/admin/actions/collections";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import {
   getCollectionTransitionReviewMeta,
   getCollectionTransitionReviewState,
@@ -361,7 +361,7 @@ export default async function AdminCollectionsPage({
       <div className="space-y-6">
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Gestione raccolte"
               title="Un flusso editoriale leggero e operativo."
               description="Qui leggi sorgente, segnali aperti, stato editoriale e dettaglio interno delle raccolte. La scrittura resta prudente, ma il pannello gestisce già il ciclo editoriale essenziale senza passare dal codice."

@@ -8,7 +8,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import {
   getMonetizationPlacementStats,
   monetizationPlacements,
@@ -83,7 +83,7 @@ export default function AdminMonetizationPage() {
           }}
         >
           <div className="flex flex-wrap items-start justify-between gap-5">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Monetizzazione"
               title="Inventory nativa TooolVibes"
               description="Una mappa operativa degli spazi partner: homepage, catalogo, guide, schede tool, raccolte e newsletter. Gli slot sono pensati per sembrare parte del prodotto, non banner esterni."

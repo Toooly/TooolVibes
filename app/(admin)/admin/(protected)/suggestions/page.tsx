@@ -7,7 +7,7 @@ import {
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusPill } from "@/components/admin/admin-status-pill";
 import { DeleteWithConfirm } from "@/components/admin/delete-with-confirm";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getSuggestionsRuntime } from "@/lib/admin/suggestion-queries";
 import { formatItalianDate } from "@/lib/utils";
 import type { ToolRequestStatus } from "@/lib/types/tool-request";
@@ -92,7 +92,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
       <div className="space-y-6">
         <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Suggerimenti"
               title="Richieste e suggerimenti tool dagli utenti"
               description="Gli utenti possono suggerire tool da aggiungere al catalogo. Qui puoi revisionare, approvare o rifiutare ogni suggerimento."

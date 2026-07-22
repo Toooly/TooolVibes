@@ -8,7 +8,7 @@ import {
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusPill } from "@/components/admin/admin-status-pill";
 import { DeleteWithConfirm } from "@/components/admin/delete-with-confirm";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import {
   getAdminToolWarningLabel,
   getAdminToolsRuntime,
@@ -66,7 +66,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
       <div className="space-y-6">
         <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Gestione tool"
               title="Catalogo operativo, non solo lista."
               description="Qui gestisci i tool che alimentano homepage, catalogo, raccolte, confronto e schede pubbliche."

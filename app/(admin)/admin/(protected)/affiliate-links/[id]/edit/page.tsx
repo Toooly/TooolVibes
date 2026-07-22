@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { updateAffiliateLinkAction } from "@/app/(admin)/admin/actions/affiliates";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getAffiliateLink } from "@/lib/admin/affiliate-queries";
 import { getAdminToolsRuntime } from "@/lib/admin/tool-queries";
 
@@ -25,7 +25,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
     <div className="page-shell py-8 sm:py-10">
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SectionHeading
+          <SectionHeader
             eyebrow="Modifica link affiliato"
             title={link.label}
             description="Aggiorna i parametri del link di affiliazione."

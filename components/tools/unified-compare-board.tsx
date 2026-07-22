@@ -6,6 +6,7 @@ import { ArrowRight, CheckCircle2, Columns3, Info, PieChart, Scale, Sparkles, Tr
 
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import { PremiumBadge, PremiumButton, PremiumLink, PremiumPanel } from "@/components/ui/premium";
+import { SectionHeader } from "@/components/ui/section-header";
 import { EmptyState } from "@/components/ui/premium-section";
 import { CompareBoard } from "@/components/tools/compare-board";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
@@ -550,20 +551,20 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
       <div className="compare-summary-panel metadata-block rounded-[28px] border px-4 py-4 sm:px-5 sm:py-5" style={{ borderColor: "var(--line)" }}>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-[48rem]">
-            <div className="compare-summary-kickers flex flex-wrap items-center gap-2">
-              <span className="selection-status is-fresh">Confronto attivo</span>
-              <span className="selection-chip compare-count-chip">{tools.length}/{MAX_COMPARE_TOOLS} tool</span>
-            </div>
-            <h2 className="section-title mt-3 text-[1.9rem] sm:text-[2.55rem] lg:text-[3rem]">
-              {tools.length > 1
+            <SectionHeader
+              eyebrow="Confronto attivo"
+              title={tools.length > 1
                 ? "Ora le differenze sono leggibili."
                 : "Serve un secondo tool per chiudere il confronto."}
-            </h2>
-            <p className="section-copy mt-3">
-              {leadTool
+              description={leadTool
                 ? `${leadTool.name} è il candidato da leggere per primo: poi confronta casi d'uso, lettura rapida e fonte con gli altri profili.`
                 : "Il confronto del catalogo usa gli stessi tool che selezioni dalla ricerca e dalle schede."}
-            </p>
+              size="feature"
+              className="mt-3"
+              trailing={
+                <span className="selection-chip compare-count-chip">{tools.length}/{MAX_COMPARE_TOOLS} tool</span>
+              }
+            />
           </div>
           <div className="compare-summary-actions flex flex-col gap-2 sm:flex-row">
             <PremiumLink href="/archivio" tone="secondary" size="sm">

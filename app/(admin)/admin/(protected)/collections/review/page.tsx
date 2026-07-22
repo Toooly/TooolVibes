@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { CollectionTransitionCard } from "@/components/admin/collection-transition-card";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import {
   getCollectionTransitionReviewState,
   getCollectionTransitionSeverity,
@@ -227,7 +227,7 @@ export default async function AdminCollectionsReviewPage({
       <div className="space-y-6">
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Revisione conflitti"
               title="Leggi le differenze prima di agire."
               description="Qui trovi conflitti, importazioni in attesa e revisioni nello stesso posto. Nessun riallineamento distruttivo: prima decidiamo cosa va davvero toccato e cosa può restare com'è."

@@ -15,7 +15,7 @@ import {
   Wrench,
 } from "lucide-react";
 
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getAffiliateRequestsRuntime } from "@/lib/admin/affiliate-request-queries";
 import { getAffiliateRuntime } from "@/lib/admin/affiliate-queries";
 import { getAdminArticlesRuntime } from "@/lib/admin/article-queries";
@@ -227,7 +227,7 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
           }}
         >
           <div className="flex flex-wrap items-start justify-between gap-5">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Back office"
               title="Centro di controllo TooolVibes"
               description="Una vista unica per capire cosa funziona, cosa e' in lavorazione e dove serve intervenire: tool, contenuti, utenti, gamification e monetizzazione."

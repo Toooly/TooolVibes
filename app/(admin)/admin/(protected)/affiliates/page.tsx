@@ -7,7 +7,7 @@ import {
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusPill } from "@/components/admin/admin-status-pill";
 import { DeleteWithConfirm } from "@/components/admin/delete-with-confirm";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getAffiliateQrCodeUrl } from "@/lib/affiliates/referral";
 import { getAffiliateRequestsRuntime } from "@/lib/admin/affiliate-request-queries";
 import type { AffiliateRequestStatus } from "@/lib/types/affiliate-request";
@@ -90,7 +90,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
       <div className="space-y-6">
         <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Programma affiliati"
               title="Richieste, codici referral e QR code"
               description="Qui arrivano le candidature dalla pagina pubblica affiliati. Puoi approvare manualmente, scrivere il codice referral, generare il link e inviare la risposta via email."

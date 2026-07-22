@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
 import { MarkdownContent } from "@/components/editorial/markdown-content";
 import { NativePlacement } from "@/components/monetization/native-placement";
@@ -234,7 +234,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               <MarkdownContent content={post.content_markdown} />
             ) : (
               <>
-                <SectionHeading
+                <SectionHeader
                   eyebrow="Lettura"
                   title="Il contenuto qui non parla da solo: ti porta verso il prossimo passo."
                   description="Ogni blocco serve a ridurre rumore e aiutare il salto giusto tra approfondimento, archivio, salvati e raccolte."

@@ -7,7 +7,7 @@ import {
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusPill } from "@/components/admin/admin-status-pill";
 import { DeleteWithConfirm } from "@/components/admin/delete-with-confirm";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getAffiliateRuntime } from "@/lib/admin/affiliate-queries";
 import { formatItalianDate } from "@/lib/utils";
 
@@ -48,7 +48,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
       <div className="space-y-6">
         <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Link affiliati"
               title="Link affiliati dei tool"
               description="Questa sezione gestisce i link outbound dei tool nel catalogo. Le candidature degli affiliati esterni vivono invece nel programma affiliati."

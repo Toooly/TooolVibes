@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { createArticleFormAction } from "@/app/(admin)/admin/actions/articles";
 import { ArticleForm } from "@/components/admin/article-form";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getArticleImportFormValues } from "@/lib/admin/article-form";
 import { getAdminArticlesRuntime, getLegacyPostForImport } from "@/lib/admin/article-queries";
 
@@ -46,7 +46,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
     <div className="page-shell py-8 sm:py-10">
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SectionHeading
+          <SectionHeader
             eyebrow={legacyPost ? "Importa articolo" : "Nuovo articolo"}
             title={legacyPost ? `Importa "${legacyPost.title}" nel blog` : "Crea una nuova bozza blog"}
             description={

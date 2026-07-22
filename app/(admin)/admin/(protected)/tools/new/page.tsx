@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { createToolFormAction } from "@/app/(admin)/admin/actions/tools";
 import { ToolForm } from "@/components/admin/tool-form";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getSuggestionById } from "@/lib/admin/suggestion-queries";
 import { getAdminToolsRuntime } from "@/lib/admin/tool-queries";
 import { slugifyToolName, type ToolFormValues } from "@/lib/admin/tool-form";
@@ -73,7 +73,7 @@ export default async function NewToolPage({ searchParams }: NewToolPageProps) {
     <div className="page-shell py-8 sm:py-10">
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SectionHeading
+          <SectionHeader
             eyebrow={suggestion ? "Converti suggerimento" : "Nuovo tool"}
             title={suggestion ? `Crea "${suggestion.tool_name}" nel catalogo` : "Crea una nuova scheda tool"}
             description={

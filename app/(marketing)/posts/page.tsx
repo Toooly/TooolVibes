@@ -1,7 +1,7 @@
 ﻿import Link from "next/link";
 
 import { EditorialPostCard } from "@/components/editorial/editorial-post-card";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
 import {
   getBlogPosts,
@@ -41,7 +41,7 @@ export default async function PostsPage() {
 
         <div className="editorial-grid relative items-start gap-y-6">
           <div className="col-span-12 lg:col-span-8">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Approfondimenti"
               title="Guide e articoli per capire meglio cosa scegliere."
               description="Qui non trovi un magazine generico: trovi letture brevi, guide e approfondimenti collegati ai tool, alle raccolte e ai casi d'uso più concreti."
@@ -126,7 +126,7 @@ export default async function PostsPage() {
       {blogPosts.length > 0 ? (
         <section className="page-shell home-section-gap">
           <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Blog"
               title="Articoli pubblicati da TooolVibes."
               description="Contenuti originali, aggiornamenti e letture nate per aiutarti a scegliere con più criterio."
@@ -142,7 +142,7 @@ export default async function PostsPage() {
 
       <section className="page-shell home-section-gap">
         <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
-          <SectionHeading
+          <SectionHeader
             eyebrow="Approfondimenti tool"
             title="Gli approfondimenti collegati ai tool già presenti nel catalogo."
             description="Ogni articolo aggiunge contesto alla scheda del tool: non una duplicazione, ma una lettura più chiara del perché può servirti."
@@ -157,7 +157,7 @@ export default async function PostsPage() {
 
       <section id="legacy-guides" className="page-shell home-section-gap">
         <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
-          <SectionHeading
+          <SectionHeader
             eyebrow="Guide"
             title="Le guide più utili, riscritte per il TooolVibes di oggi."
             description="Recuperiamo i pezzi ancora validi e li rendiamo più chiari, pratici e coerenti con il catalogo attuale."

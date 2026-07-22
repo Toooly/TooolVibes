@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { createAffiliateLinkAction } from "@/app/(admin)/admin/actions/affiliates";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getAdminToolsRuntime } from "@/lib/admin/tool-queries";
 
 type NewAffiliateLinkPageProps = {
@@ -19,7 +19,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
     <div className="page-shell py-8 sm:py-10">
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SectionHeading
+          <SectionHeader
             eyebrow="Nuovo link affiliato"
             title="Crea un link di affiliazione"
             description="Associa un link tracciato a un tool del catalogo. I parametri UTM sono opzionali."

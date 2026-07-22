@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { applyCollectionSafeAlignAction } from "@/app/(admin)/admin/actions/collections";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getCollectionSafeAlignEligibility } from "@/lib/admin/collection-safe-align";
 import {
   getCollectionSyncPreviewMeta,
@@ -157,7 +157,7 @@ export function CollectionSyncPreviewPanel({
       style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}
     >
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <SectionHeading
+        <SectionHeader
           eyebrow="Anteprima riallineamento"
           title={compact ? "Anteprima del riallineamento" : "Cosa cambierebbe prima di toccare davvero la sorgente reale."}
           description="Questo pannello è solo descrittivo: distingue i cambi candidati a un riallineamento prudente da quelli che restano nel perimetro di una decisione editoriale."

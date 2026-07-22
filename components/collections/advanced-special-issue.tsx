@@ -11,7 +11,7 @@ import {
   getVisibleAdvancedIssueBlocks,
 } from "@/lib/collections/format";
 
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { ShortlistLink } from "@/components/tools/shortlist-link";
 import { ButtonLink } from "@/components/ui/button";
 
@@ -349,7 +349,7 @@ export function AdvancedSpecialIssue({
   return (
     <section className="tone-issue brand-panel brand-aura panel-lift rounded-[36px] p-5 sm:p-6 lg:p-7">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
-        <SectionHeading
+        <SectionHeader
           eyebrow="Raccolta speciale avanzata"
           title="Il formato lungo in cui la selezione diventa tesi."
           description={issue.intro}

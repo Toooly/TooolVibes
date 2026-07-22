@@ -4229,20 +4229,6 @@ img {
       0 10px 28px rgba(67, 48, 199, 0.08);
   }
 
-  .section-title {
-    @apply text-[2.05rem] leading-[0.96] sm:text-[2.8rem] lg:text-[3.35rem];
-    position: relative;
-    display: inline-block;
-    font-family: var(--tv-font-system);
-    font-weight: 700;
-    letter-spacing: 0;
-    text-shadow: 0 12px 34px rgba(47, 33, 126, 0.08);
-    text-wrap: balance;
-    transition:
-      color 240ms ease,
-      transform 360ms cubic-bezier(0.16, 1, 0.3, 1),
-      text-shadow 360ms ease;
-  }
 
   .section-title::after,
   .hero-shell h1::after {
@@ -4261,13 +4247,6 @@ img {
     pointer-events: none;
   }
 
-  .section-copy {
-    color: color-mix(in srgb, var(--muted-strong) 84%, white 16%);
-    @apply max-w-[42rem] text-[0.98rem] leading-[1.7] sm:text-[1.08rem];
-    font-family: var(--tv-font-ui);
-    font-weight: 400;
-    text-wrap: pretty;
-  }
 
   .editorial-grid {
     display: grid;
@@ -4289,34 +4268,9 @@ img {
     text-shadow: 0 10px 26px rgba(106, 60, 255, 0.08);
   }
 
-  .title-accent {
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 200, 61, 0.92),
-      rgba(99, 50, 255, 0.68),
-      rgba(68, 220, 255, 0.64),
-      rgba(255, 200, 61, 0.72),
-      transparent
-    );
-    background-size: 220% 100%;
-    animation: title-accent-flow 5.8s linear infinite;
-  }
 
-  @keyframes title-accent-flow {
-    0% {
-      background-position: 0% 50%;
-    }
-
-    100% {
-      background-position: 220% 50%;
-    }
-  }
 
   @media (prefers-reduced-motion: reduce) {
-    .title-accent {
-      animation: none;
-    }
   }
 
   .soft-divider {
@@ -6590,10 +6544,6 @@ img {
   .focus-stage,
   .issue-stage,
   .footer-stage,
-  .surface-intro-stage {
-    position: relative;
-    overflow: hidden;
-  }
 
   .hero-stage::after,
   .discovery-stage::after,
@@ -6601,13 +6551,6 @@ img {
   .focus-stage::after,
   .issue-stage::after,
   .footer-stage::after,
-  .surface-intro-stage::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.9;
-  }
 
   .hero-stage::after {
     background:
@@ -6635,44 +6578,10 @@ img {
       radial-gradient(circle at 86% 16%, rgba(243, 191, 76, 0.1), transparent 22%);
   }
 
-  .surface-intro-stage::after {
-    background:
-      linear-gradient(90deg, rgba(106, 60, 255, 0.16), rgba(57, 210, 246, 0.08), transparent 24%) left top / 100% 1px no-repeat,
-      linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 30%);
-  }
 
-  .surface-intro-helper {
-    border: 1px solid var(--surface-intro-helper-border);
-    background: var(--surface-intro-helper-bg);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.56),
-      0 12px 26px rgba(67, 48, 199, 0.04);
-  }
 
-  .surface-intro-helper-dark {
-    --foreground: #ffffff;
-    --muted: rgba(255, 255, 255, 0.72);
-    --muted-strong: rgba(255, 255, 255, 0.84);
-    --accent-strong: #d8b4fe;
-    border-color: rgba(255, 255, 255, 0.11);
-    background:
-      radial-gradient(circle at top right, rgba(168, 85, 247, 0.12), transparent 30%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.04));
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 18px 42px rgba(0, 0, 0, 0.18);
-    color: #ffffff;
-  }
 
-  .surface-intro-helper-dark a {
-    color: rgba(255, 255, 255, 0.94);
-  }
 
-  .surface-intro-aside {
-    border: 1px solid var(--surface-intro-aside-border);
-    background: var(--surface-intro-aside-bg);
-    box-shadow: var(--surface-intro-aside-shadow);
-  }
 
   .section-quiet-link {
     position: relative;
@@ -9813,20 +9722,6 @@ img {
   .mobile-vibe-hero-panel,
   .hero-shell-radar,
   .hero-shell-wishlist,
-  .surface-intro-stage {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(15, 118, 110, 0.11);
-    background:
-      radial-gradient(circle at 22% 0%, rgba(15, 118, 110, 0.12), transparent 34%),
-      radial-gradient(circle at 88% 12%, rgba(37, 99, 235, 0.11), transparent 32%),
-      linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(244, 250, 249, 0.76));
-    color: #111827;
-    box-shadow:
-      0 24px 64px rgba(15, 23, 42, 0.09),
-      inset 0 1px 0 rgba(255, 255, 255, 0.86);
-    max-width: 100%;
-  }
 
   .mobile-vibe-hero-panel::before,
   .hero-shell-radar::before,

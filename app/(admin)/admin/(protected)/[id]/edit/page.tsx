@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { updateArticleFormAction } from "@/app/(admin)/admin/actions/articles";
 import { ArticleForm } from "@/components/admin/article-form";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getArticleFormValues } from "@/lib/admin/article-form";
 import { getAdminArticleById, getAdminArticlesRuntime } from "@/lib/admin/article-queries";
 
@@ -51,7 +51,7 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
     <div className="page-shell py-8 sm:py-10">
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SectionHeading
+          <SectionHeader
             eyebrow="Modifica articolo"
             title={article.title}
             description="Aggiorna contenuto, media, formattazione e stato editoriale senza uscire dal flusso blog."

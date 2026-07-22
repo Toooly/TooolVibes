@@ -8,7 +8,7 @@ import {
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusPill } from "@/components/admin/admin-status-pill";
 import { DeleteWithConfirm } from "@/components/admin/delete-with-confirm";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import {
   type AdminArticleRecord,
   getAdminArticleWarningLabel,
@@ -107,7 +107,7 @@ export default async function AdminDashboardPage({
       <div className="space-y-5">
         <section className="brand-panel rounded-[var(--radius-xl)] p-5 sm:p-7">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Gestione blog"
               title="Crea, modifica e pubblica articoli"
               description="Un'area dedicata al blog: bozze, contenuti pubblicati, articoli in evidenza e modifica editoriale con media nel corpo articolo."

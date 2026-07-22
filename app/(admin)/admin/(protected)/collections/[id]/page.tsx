@@ -6,7 +6,7 @@ import { updateCollectionFormAction } from "@/app/(admin)/admin/actions/collecti
 import { CollectionSyncPreviewPanel } from "@/components/admin/collection-sync-preview-panel";
 import { CollectionTransitionCard } from "@/components/admin/collection-transition-card";
 import { CollectionForm } from "@/components/admin/collection-form";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getCollectionFormValues } from "@/lib/admin/collection-form";
 import {
   getAdminCollectionById,
@@ -130,7 +130,7 @@ export default async function AdminCollectionDetailPage({
       <div className="space-y-6">
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Dettaglio raccolta"
               title={collection.title}
               description="Qui puoi leggere i segnali aperti, verificare la continuità con il prodotto pubblico e modificare la raccolta dallo stesso punto di lavoro."

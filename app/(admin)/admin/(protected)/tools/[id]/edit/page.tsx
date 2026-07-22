@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { updateToolFormAction } from "@/app/(admin)/admin/actions/tools";
 import { ToolForm } from "@/components/admin/tool-form";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { getToolFormValues } from "@/lib/admin/tool-form";
 import { getAdminToolById, getAdminToolsRuntime } from "@/lib/admin/tool-queries";
 
@@ -45,7 +45,7 @@ export default async function EditToolPage({ params }: EditToolPageProps) {
     <div className="page-shell py-8 sm:py-10">
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SectionHeading
+          <SectionHeader
             eyebrow="Modifica tool"
             title={tool.name}
             description="Aggiorna scheda, stato pubblico, link e contenuto editoriale del tool senza passare dal codice."

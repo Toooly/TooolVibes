@@ -7,7 +7,7 @@ import { AdvancedSpecialIssue } from "@/components/collections/advanced-special-
 import { CollectionCard } from "@/components/collections/collection-card";
 import { CollectionSlotCard } from "@/components/collections/collection-slot-card";
 import { NativePlacement } from "@/components/monetization/native-placement";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
 import { siteConfig } from "@/lib/config/site";
 import { getCollectionFormatMeta, hasAdvancedSpecialIssue } from "@/lib/collections/format";
@@ -253,7 +253,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
         <section className="dark-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
           <div className="editorial-grid gap-y-5">
             <div className="col-span-12 lg:col-span-7">
-              <SectionHeading
+              <SectionHeader
                 eyebrow={
                   premiumAccess.state === "locked"
                     ? isAdvancedIssue
@@ -377,7 +377,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
       <section id="collection-content" className="editorial-grid gap-y-4">
         <div className="col-span-12 lg:col-span-8">
           <div className="brand-panel panel-lift rounded-[32px] p-5 sm:p-6">
-            <SectionHeading
+            <SectionHeader
               eyebrow="Tool inclusi"
               title={
                 hasFullAccess
@@ -525,7 +525,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
       {relatedCollections.length > 0 ? (
         <section className="brand-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
-          <SectionHeading
+          <SectionHeader
             eyebrow="Raccolte correlate"
             title="Se questa raccolta ti interessa, queste sono le transizioni più naturali."
             description="Le relazioni non sono casuali: tono, audience, superficie e tool condivisi tengono insieme il passaggio tra una raccolta e l'altra."
