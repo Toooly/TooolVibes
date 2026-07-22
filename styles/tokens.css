@@ -222,7 +222,7 @@
   --tv-accent-brand: var(--tv-color-violet-500);
   --tv-accent-brand-hover: var(--tv-color-violet-400);
   --tv-accent-brand-pressed: var(--tv-color-violet-600);
-  --tv-accent-brand-aa: var(--tv-color-violet-400);
+  --tv-accent-brand-aa: var(--tv-color-violet-500);
   --tv-accent-brand-subtle: var(--tv-color-violet-100);
 
   /* Secondary accent (cyan, for active signals) */
@@ -378,7 +378,7 @@
   /* --- Radius semantic (6 levels) --- */
   --tv-radius-control: var(--tv-radius-px-sm);       /* 6px — buttons, inputs */
   --tv-radius-card: var(--tv-radius-px-md);          /* 10px — small cards, chips */
-  --tv-radius-feature: var(--tv-radius-px-lg);       /* 16px — tool cards */
+  --tv-radius-feature: var(--tv-radius-px-feature);  /* 24px — feature cards, heroes */
   --tv-radius-panel: var(--tv-radius-px-feature);    /* 24px — panels, hero cards */
   --tv-radius-modal: var(--tv-radius-px-modal);      /* 28px — modals, sheets */
   --tv-radius-special: var(--tv-radius-px-lg);       /* 16px — special badges */
@@ -387,7 +387,7 @@
   /* Compatibility for existing usage */
   --tv-radius-sm: var(--tv-radius-control);
   --tv-radius-md: var(--tv-radius-card);
-  --tv-radius-lg: var(--tv-radius-feature);
+  --tv-radius-lg: var(--tv-radius-px-lg);
   --tv-radius-xl: var(--tv-radius-modal);            /* FIX PHANTOM: was 0 defs */
 
   /* --- Surface semantic --- */
@@ -664,8 +664,8 @@
   --tv-hover-lift: translateY(-4px);
   --tv-hover-lift-sm: translateY(-2px);
   --tv-press-scale: scale(0.97);
-  --tv-focus-ring: 0 0 0 2px var(--tv-accent-primary),
-                   0 0 0 4px rgba(106, 60, 255, 0.25);
+  --tv-focus-shadow: 0 0 0 2px var(--tv-accent-primary),
+                     0 0 0 4px rgba(106, 60, 255, 0.25);
   --tv-focus-ring-offset: 2px;
 
   /* --- Convergence breakpoint aliases (NEW) -------------------- */

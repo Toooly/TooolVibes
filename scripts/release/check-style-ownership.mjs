@@ -7,7 +7,13 @@ const releaseEntry = "styles/release-entry.ts";
 const expectedGlobalImports = [
   "@/app/globals.css",
   "@/styles/vibes-3d-maestoso.css",
-  "@/styles/figma-final-polish.css",
+  "@/styles/shell.css",
+  "@/styles/home.css",
+  "@/styles/catalog.css",
+  "@/styles/compare.css",
+  "@/styles/radar.css",
+  "@/styles/tool-detail.css",
+  "@/styles/public-routes.css",
 ];
 const importantCeilings = {
   "app/globals.css": 2324,
@@ -15,12 +21,14 @@ const importantCeilings = {
   "styles/catalog.css": 0,
   "styles/compare.css": 2,
   "styles/depth-scene.css": 0,
-  "styles/figma-final-polish.css": 257,
   "styles/figma-implementation.css": 40,
   "styles/gamification.css": 14,
   "styles/home.css": 0,
   "styles/radar.css": 4,
+  "styles/public-routes.css": 46,
+  "styles/shell.css": 120,
   "styles/tokens.css": 0,
+  "styles/tool-detail.css": 18,
   "styles/vibes-3d-maestoso.css": 873,
 };
 const canonicalTokenNames = [

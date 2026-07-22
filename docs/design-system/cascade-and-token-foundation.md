@@ -9,13 +9,15 @@ Status: release contract (B20 / DS-301 / DS-302)
 1. `app/globals.css`
    1. Tailwind, animation and shadcn foundations
    2. `styles/tokens.css`
-   3. feature sheets: home, catalog, gamification, radar, compare, depth, account
+   3. shared foundations: gamification, depth and account
    4. Figma implementation scope
    5. legacy global rules
 2. `styles/vibes-3d-maestoso.css`
-3. `styles/figma-final-polish.css`
+3. `styles/shell.css`
+4. route owners: `home.css`, `catalog.css`, `compare.css`, `radar.css`, `tool-detail.css`
+5. `styles/public-routes.css`
 
-The final two sheets currently depend on late cascade priority. Their order is frozen until their consumers are migrated and visual regression coverage is green.
+The Maestoso sheet remains before all canonical owners because the Home orbital geometry still consumes it. It must not receive ordinary UI additions. The shell and route sheets are the final owners; the former cross-route repaint sheet was removed in the definitive UI rebuild.
 
 ## Ownership map
 
@@ -31,13 +33,15 @@ The final two sheets currently depend on late cascade priority. Their order is f
 | `styles/depth-scene.css` | Experience layer | global depth scene | capability-gated effects only |
 | `styles/account.css` | Account | account panel/routes | Account selectors only |
 | `styles/figma-implementation.css` | Design system migration | `.tv-figma-theme`, design-system preview | scoped implementation; token definitions forbidden |
-| `styles/vibes-3d-maestoso.css` | 3D experience | 3D shell/components | frozen except isolated 3D defects; no ordinary UI |
-| `styles/figma-final-polish.css` | Release visual migration | migrated product surfaces | frozen override layer; shrink during vertical-slice adoption |
+| `styles/vibes-3d-maestoso.css` | Orbital geometry legacy | Home orbit and dormant 3D components | frozen; loaded before canonical owners; no ordinary UI |
+| `styles/shell.css` | Public shell | header, footer, mobile navigation, recovery states | final shared chrome owner |
+| `styles/tool-detail.css` | Tool decision page | `/toools/[slug]` | tool-detail selectors only |
+| `styles/public-routes.css` | Public route foundation | shared editorial and premium primitives | final shared surface contract; no feature-specific layouts |
 
 ## Change policy
 
 - New UI styles live next to their owned component or in the owning feature sheet.
-- Do not append generic selectors to `app/globals.css` or either final override sheet.
+- Do not append generic selectors to `app/globals.css` or the frozen Maestoso sheet.
 - New `!important` declarations are blocked by `npm run check:styles`; reduce existing debt instead.
 - A new hardcoded color, spacing, radius, elevation, motion or z-index is not accepted in a core component. Add or reuse a semantic `--tv-*` token first.
 - Token removal requires repository-wide usage proof and visual snapshots at supported viewports.

@@ -35,10 +35,22 @@ function contrast(foreground: string, background: string) {
 
 const tokens = tokensFrom(tokenSource);
 
+function resolveToken(name: string, seen = new Set<string>()): string {
+  if (seen.has(name)) throw new Error(`Circular token alias --${name}`);
+  const value = tokens[name];
+  if (!value) throw new Error(`Missing token --${name}`);
+
+  const alias = value.match(/^var\(--([a-z0-9-]+)\)$/i);
+  if (!alias) return value;
+
+  seen.add(name);
+  return resolveToken(alias[1], seen);
+}
+
 describe("release design token contract", () => {
   it("keeps the canonical spacing, radius and layer scales explicit", () => {
     expect(
-      [1, 2, 3, 4, 6, 8, 12, 16, 24].map((step) => tokens[`tv-space-${step}`]),
+      [1, 2, 3, 4, 6, 8, 12, 16, 24].map((step) => resolveToken(`tv-space-${step}`)),
     ).toEqual([
       "0.25rem",
       "0.5rem",
@@ -51,15 +63,15 @@ describe("release design token contract", () => {
       "6rem",
     ]);
     expect([
-      tokens["tv-radius-sm"],
-      tokens["tv-radius-md"],
-      tokens["tv-radius-lg"],
-      tokens["tv-radius-feature"],
-      tokens["tv-radius-pill"],
+      resolveToken("tv-radius-sm"),
+      resolveToken("tv-radius-md"),
+      resolveToken("tv-radius-lg"),
+      resolveToken("tv-radius-feature"),
+      resolveToken("tv-radius-pill"),
     ]).toEqual(["0.375rem", "0.625rem", "1rem", "1.5rem", "999px"]);
     expect(
       ["base", "content", "sticky", "nav", "overlay", "modal", "floating", "toast", "effects"].map(
-        (layer) => Number(tokens[`tv-z-${layer}`]),
+        (layer) => Number(resolveToken(`tv-z-${layer}`)),
       ),
     ).toEqual([0, 1, 10, 50, 80, 90, 100, 110, 120]);
   });
@@ -91,8 +103,8 @@ describe("release design token contract", () => {
     ["white", "tv-accent-aa", 4.5],
     ["tv-focus-ring", "tv-bg-base", 3],
   ])("meets contrast for %s on %s", (foregroundName, backgroundName, minimum) => {
-    const foreground = foregroundName === "white" ? "#ffffff" : tokens[foregroundName];
-    const background = tokens[backgroundName];
+    const foreground = foregroundName === "white" ? "#ffffff" : resolveToken(foregroundName);
+    const background = resolveToken(backgroundName);
     expect(contrast(foreground, background)).toBeGreaterThanOrEqual(minimum);
   });
 
@@ -106,7 +118,13 @@ describe("release design token contract", () => {
     expect(imports).toEqual([
       "@/app/globals.css",
       "@/styles/vibes-3d-maestoso.css",
-      "@/styles/figma-final-polish.css",
+      "@/styles/shell.css",
+      "@/styles/home.css",
+      "@/styles/catalog.css",
+      "@/styles/compare.css",
+      "@/styles/radar.css",
+      "@/styles/tool-detail.css",
+      "@/styles/public-routes.css",
     ]);
   });
 });

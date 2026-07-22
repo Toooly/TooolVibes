@@ -38,6 +38,135 @@
   color: var(--tv-ink-muted-aa);
 }
 
+/* Editorial routes that still consume the shared premium primitives. */
+.marketing-shell main .page-shell {
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
+}
+
+.marketing-shell main .hero-shell {
+  --foreground: var(--tv-ink-primary);
+  --muted: var(--tv-ink-secondary);
+  --muted-strong: var(--tv-ink-secondary);
+  --accent-strong: var(--tv-accent-brand-aa);
+  overflow: hidden;
+  border: 1px solid var(--tv-border-subtle) !important;
+  border-radius: var(--tv-radius-modal) !important;
+  background:
+    radial-gradient(circle at 86% 8%, color-mix(in srgb, var(--tv-accent-primary) 18%, transparent), transparent 28rem),
+    var(--tv-bg-base) !important;
+  color: var(--tv-ink-primary) !important;
+  box-shadow: none !important;
+}
+
+.marketing-shell main .hero-shell :where(h1, h2, h3, strong),
+.marketing-shell main .premium-panel :where(h1, h2, h3, h4, strong),
+.marketing-shell main .brand-panel :where(h1, h2, h3, h4, strong) {
+  color: var(--tv-ink-primary) !important;
+}
+
+.marketing-shell main .hero-shell :where(p, li),
+.marketing-shell main .premium-panel :where(p, li),
+.marketing-shell main .brand-panel :where(p, li) {
+  color: var(--tv-ink-secondary) !important;
+}
+
+.marketing-shell main .premium-panel,
+.marketing-shell main .brand-panel {
+  --foreground: var(--tv-ink-primary);
+  --muted: var(--tv-ink-secondary);
+  --muted-strong: var(--tv-ink-secondary);
+  --accent-strong: var(--tv-accent-brand-aa);
+  border: 1px solid var(--tv-border-subtle) !important;
+  border-radius: var(--tv-radius-feature) !important;
+  background: var(--tv-surface-raised) !important;
+  color: var(--tv-ink-primary) !important;
+  box-shadow: var(--tv-elevation-rest) !important;
+}
+
+.marketing-shell main .hero-mini-visual,
+.marketing-shell main .hero-mini-visual > div,
+.marketing-shell main .premium-panel :where([class*="bg-white/"]) {
+  border-color: var(--tv-border-subtle) !important;
+  background: var(--tv-glass-bg-subtle) !important;
+  color: var(--tv-ink-primary) !important;
+  box-shadow: none !important;
+}
+
+.marketing-shell main .hero-shell .hero-mini-visual,
+.marketing-shell main .hero-shell .hero-mini-visual > div,
+.marketing-shell main .hero-shell .hero-mini-visual > div > div {
+  border-color: var(--tv-border-subtle) !important;
+  background: var(--tv-glass-bg-subtle) !important;
+  color: var(--tv-ink-primary) !important;
+  box-shadow: none !important;
+}
+
+#main-content :where(.hero-shell, .premium-panel, .brand-panel) [class*="bg-white/"]:not(.premium-button):not(.premium-button *) {
+  background-color: var(--tv-glass-bg-subtle) !important;
+}
+
+#main-content :where(.hero-shell, .premium-panel, .brand-panel) [class*="border-white/"]:not(.premium-button):not(.premium-button *) {
+  border-color: var(--tv-border-subtle) !important;
+}
+
+.marketing-shell main :where(.hero-shell, .premium-panel, .brand-panel) .premium-button-secondary {
+  border-color: var(--tv-border-interactive) !important;
+  background: var(--tv-glass-bg-subtle) !important;
+  color: var(--tv-ink-primary) !important;
+}
+
+.marketing-shell main .hero-mini-visual :where(p, span) {
+  color: var(--tv-ink-secondary) !important;
+}
+
+.marketing-shell main .hero-mini-visual :where(strong, [class*="font-semibold"]) {
+  color: var(--tv-ink-primary) !important;
+}
+
+.marketing-shell main .micro-details,
+.marketing-shell main .micro-popover-panel {
+  border-color: var(--tv-border-subtle) !important;
+  background: var(--tv-surface-raised) !important;
+  color: var(--tv-ink-primary) !important;
+}
+
+.marketing-shell main .micro-details p,
+.marketing-shell main .micro-popover-panel {
+  color: var(--tv-ink-secondary) !important;
+}
+
+.marketing-shell main .editorial-label {
+  color: var(--tv-accent-brand-aa) !important;
+}
+
+#main-content :where(.dark-panel, .discovery-strip-dark) {
+  --foreground: var(--tv-ink-primary);
+  --muted: var(--tv-ink-secondary);
+  --muted-strong: var(--tv-ink-secondary);
+  --accent-strong: var(--tv-accent-brand-aa);
+  border-color: var(--tv-border-subtle) !important;
+  background: var(--tv-surface-raised) !important;
+  color: var(--tv-ink-primary) !important;
+  box-shadow: var(--tv-elevation-rest) !important;
+}
+
+#main-content .dark-panel :where(h1, h2, h3, h4, strong) {
+  color: var(--tv-ink-primary) !important;
+}
+
+#main-content .dark-panel :where(p, li) {
+  color: var(--tv-ink-secondary) !important;
+}
+
+#main-content :where(.dark-panel, .discovery-strip-dark) [class*="bg-white/"]:not(.premium-button):not(.premium-button *) {
+  background-color: var(--tv-glass-bg-subtle) !important;
+}
+
+#main-content :where(.dark-panel, .discovery-strip-dark) [class*="border-white/"]:not(.premium-button):not(.premium-button *) {
+  border-color: var(--tv-border-subtle) !important;
+}
+
 @media (max-width: 47.99rem) {
   .marketing-shell main {
     padding-bottom: 5.5rem;

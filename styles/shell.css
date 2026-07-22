@@ -586,3 +586,92 @@
     animation-iteration-count: 1 !important;
   }
 }
+
+.error-recovery-view {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: var(--tv-space-12) var(--tv-space-6);
+  background:
+    radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--tv-accent-primary) 14%, transparent), transparent 28rem),
+    var(--tv-bg-base);
+  color: var(--tv-ink-primary);
+}
+
+.error-recovery-view__panel {
+  width: min(100%, 32rem);
+  padding: clamp(var(--tv-space-6), 5vw, var(--tv-space-12));
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-modal);
+  background: var(--tv-surface-raised);
+  text-align: center;
+  box-shadow: var(--tv-elevation-raised);
+}
+
+.error-recovery-view__eyebrow {
+  color: var(--tv-accent-brand-aa);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.error-recovery-view h1 {
+  margin-top: var(--tv-space-3);
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: var(--tv-weight-semibold);
+  line-height: var(--tv-leading-heading);
+}
+
+.error-recovery-view__copy {
+  margin-top: var(--tv-space-3);
+  color: var(--tv-ink-secondary);
+  font-size: var(--tv-text-label);
+  line-height: var(--tv-leading-relaxed);
+}
+
+.error-recovery-view__digest {
+  margin-top: var(--tv-space-2);
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-family-mono);
+  font-size: var(--tv-text-caption);
+}
+
+.error-recovery-view__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tv-space-3);
+  margin-top: var(--tv-space-6);
+}
+
+.error-recovery-view__primary,
+.error-recovery-view__secondary {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--tv-space-5, 1.25rem);
+  border-radius: var(--tv-radius-pill);
+  font-size: var(--tv-text-label);
+  font-weight: var(--tv-weight-semibold);
+}
+
+.error-recovery-view__primary {
+  border: 1px solid var(--tv-accent-primary);
+  background: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+}
+
+.error-recovery-view__secondary {
+  color: var(--tv-ink-secondary);
+  text-underline-offset: 0.25rem;
+}
+
+.error-recovery-view__secondary:hover,
+.error-recovery-view__secondary:focus-visible {
+  color: var(--tv-ink-primary);
+  text-decoration: underline;
+}
