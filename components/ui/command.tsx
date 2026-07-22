@@ -25,7 +25,7 @@ function Command({
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        "flex size-full flex-col overflow-hidden rounded-[28px]! border border-white/14 bg-[linear-gradient(145deg,#17142f,#222a48)] p-2 text-white shadow-[0_28px_90px_rgba(8,14,38,0.32)]",
+        "flex size-full flex-col overflow-hidden rounded-[var(--tv-radius-modal)]! border border-white/14 bg-[linear-gradient(145deg,#17142f,#222a48)] p-2 text-white shadow-[0_28px_90px_rgba(8,14,38,0.32)]",
         className
       )}
       {...props}
@@ -77,7 +77,7 @@ function CommandInput({
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
     <div data-slot="command-input-wrapper" className="p-1 pb-0">
-      <InputGroup className="h-12! rounded-[20px]! border-white/10 bg-white/8 px-1 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
+      <InputGroup className="h-12! rounded-[var(--tv-radius-lg)]! border-white/10 bg-white/8 px-1 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
         <CommandPrimitive.Input
           data-slot="command-input"
           className={cn(
@@ -161,7 +161,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "group/command-item relative flex cursor-default items-center gap-2 rounded-[16px] px-3 py-2.5 text-sm text-white/76 outline-hidden select-none in-data-[slot=dialog-content]:rounded-[16px]! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-white/10 data-selected:text-white [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-selected:*:[svg]:text-white",
+        "group/command-item relative flex cursor-default items-center gap-2 rounded-[var(--tv-radius-lg)] px-3 py-2.5 text-sm text-white/76 outline-hidden select-none in-data-[slot=dialog-content]:rounded-[var(--tv-radius-lg)]! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-white/10 data-selected:text-white [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-selected:*:[svg]:text-white",
         className
       )}
       {...props}

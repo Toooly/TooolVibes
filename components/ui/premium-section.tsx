@@ -107,7 +107,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "rounded-[24px] border p-5",
+        "rounded-[var(--tv-radius-feature)] border p-5",
         dark
           ? "border-white/10 bg-white/8 text-white"
           : "border-[rgba(76,55,166,0.12)] bg-white/72 text-[var(--foreground)] shadow-[inset_0_1px_0_rgba(255,255,255,0.58)]",

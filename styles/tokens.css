@@ -659,6 +659,72 @@
   --tv-z-effects: var(--tv-z-effects);
 
   /* ============================================================== */
+
+
+  /* ============================================================== */
+  /* === SECTION 7: PHASE 8 CONVERGENCE TOKENS =================== */
+  /* Phase 8 visual convergence: single canonical surface and    */
+  /* motion vocabulary for the entire product.                   */
+  /* Token additions (not redefinitions).                       */
+  /* See: audits/tooolvibes-design-system-constitution.md       */
+  /* See: audits/ui-fragmentation-master-map-2026-07-21.md      */
+  /* ============================================================== */
+
+  /* --- Premium card surface (NEW) ------------------------------- */
+  --tv-card-premium-bg: linear-gradient(
+      135deg,
+      rgba(106, 60, 255, 0.10) 0%,
+      rgba(57, 210, 246, 0.05) 100%
+    );
+  --tv-card-premium-border: rgba(106, 60, 255, 0.28);
+  --tv-card-premium-glow: 0 0 0 1px rgba(106, 60, 255, 0.18),
+                          0 18px 42px rgba(106, 60, 255, 0.15);
+
+  /* --- Editorial card surface (NEW) ----------------------------- */
+  --tv-card-editorial-bg: var(--tv-surface-raised);
+  --tv-card-editorial-border: rgba(255, 255, 255, 0.08);
+  --tv-card-editorial-radius: var(--tv-radius-feature);
+  --tv-card-editorial-padding: var(--tv-card-padding-lg);
+
+  /* --- Tool card canonical surface (NEW) ------------------------ */
+  /* DirectoryToolCard was the highest-quality reference. These   */
+  /* tokens make its surface available to ALL tool cards.         */
+  --tv-tool-card-bg: var(--tv-surface-tier-2);
+  --tv-tool-card-bg-hover: var(--tv-surface-tier-3);
+  --tv-tool-card-border: rgba(255, 255, 255, 0.06);
+  --tv-tool-card-border-hover: rgba(106, 60, 255, 0.30);
+  --tv-tool-card-radius: var(--tv-radius-feature);
+  --tv-tool-card-padding: var(--tv-space-component-lg);
+  --tv-tool-card-gap: var(--tv-space-component-md);
+  --tv-tool-card-shadow-hover: 0 18px 42px rgba(0, 0, 0, 0.28),
+                              0 0 0 1px rgba(106, 60, 255, 0.18);
+
+  /* --- Zone semantic colors (NEW) ------------------------------ */
+  --tv-zone-hero: var(--tv-accent-primary);
+  --tv-zone-discovery: var(--tv-accent-secondary);
+  --tv-zone-section: rgba(255, 255, 255, 0.06);
+  --tv-zone-callout: var(--tv-accent-gold);
+
+  /* --- Hover / Press intent (NEW) ------------------------------ */
+  --tv-hover-lift: translateY(-4px);
+  --tv-hover-lift-sm: translateY(-2px);
+  --tv-press-scale: scale(0.97);
+  --tv-focus-ring: 0 0 0 2px var(--tv-accent-primary),
+                   0 0 0 4px rgba(106, 60, 255, 0.25);
+  --tv-focus-ring-offset: 2px;
+
+  /* --- Convergence breakpoint aliases (NEW) -------------------- */
+  /* Semantic maps to Tailwind v4 breakpoints (sm/md/lg/xl/2xl) */
+  --tv-bp-mobile-end: 639px;
+  --tv-bp-tablet-start: 640px;
+  --tv-bp-tablet-end: 1023px;
+  --tv-bp-desktop-start: 1024px;
+  --tv-bp-desktop-end: 1279px;
+  --tv-bp-wide-start: 1280px;
+  --tv-bp-wide-end: 1535px;
+  --tv-bp-uw-start: 1536px;
+
+
   /* === SECTION 6: MOBILE SHELL & KEYBOARD GEOMETRY ============== */
   /* Kept verbatim from previous file (mobile-specific contract).   */
   /* ============================================================== */
