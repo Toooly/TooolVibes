@@ -68,7 +68,7 @@ describe("release design token contract", () => {
       resolveToken("tv-radius-lg"),
       resolveToken("tv-radius-feature"),
       resolveToken("tv-radius-pill"),
-    ]).toEqual(["0.375rem", "0.625rem", "1rem", "1.5rem", "999px"]);
+    ]).toEqual(["0.25rem", "0.5rem", "0.75rem", "0.875rem", "999px"]);
     expect(
       ["base", "content", "sticky", "nav", "overlay", "modal", "floating", "toast", "effects"].map(
         (layer) => Number(resolveToken(`tv-z-${layer}`)),

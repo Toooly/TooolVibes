@@ -162,8 +162,8 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
     );
 
     expect(html).toContain("Caricamento del radar…");
-    expect(html).not.toContain("mobile-radar-view");
-    expect(html).not.toContain("desktop-vibe-radar");
+    expect(html).not.toContain("radar-mobile");
+    expect(html).not.toContain("radar-command--desktop");
   });
 
   it.each([390, 768, 1023])(
@@ -173,12 +173,12 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
       const { container } = renderSwitch();
 
       expect(
-        await screen.findByText("Scopri i tool migliori di Product Hunt.", undefined, {
+        await screen.findByText("Lanci Product Hunt ordinati per periodo, senza dati simulati.", undefined, {
           timeout: 10_000,
         }),
       ).toBeTruthy();
-      expect(container.querySelector(".mobile-radar-view")).toBeTruthy();
-      expect(container.querySelector(".desktop-vibe-radar")).toBeNull();
+      expect(container.querySelector(".radar-mobile")).toBeTruthy();
+      expect(container.querySelector(".radar-command--desktop")).toBeNull();
     },
     15_000,
   );
@@ -194,8 +194,8 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
           timeout: 5000,
         }),
       ).toBeTruthy();
-      expect(container.querySelector(".desktop-vibe-radar")).toBeTruthy();
-      expect(container.querySelector(".mobile-radar-view")).toBeNull();
+      expect(container.querySelector(".radar-command--desktop")).toBeTruthy();
+      expect(container.querySelector(".radar-mobile")).toBeNull();
     },
   );
 
@@ -204,11 +204,9 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
     const { container } = renderSwitch("nodes");
 
     expect(
-      await screen.findByLabelText("Radar 3D Product Hunt", undefined, {
-        timeout: 5000,
-      }),
+      await screen.findByRole("region", { name: "Radar visuale Product Hunt" }, { timeout: 5000 }),
     ).toBeTruthy();
-    expect(container.querySelector(".desktop-vibe-radar")).toBeTruthy();
+    expect(container.querySelector(".radar-command--desktop")).toBeTruthy();
     expect(
       screen.queryByRole("region", { name: "Classifica Product Hunt" }),
     ).toBeNull();
@@ -222,19 +220,19 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
     expect(
       await screen.findByText("Alpha Tool", undefined, { timeout: 5000 }),
     ).toBeTruthy();
-    expect(container.querySelector(".desktop-vibe-radar")).toBeTruthy();
+    expect(container.querySelector(".radar-command--desktop")).toBeTruthy();
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
     // Resize sotto il boundary: desktop smontata, mobile montata.
     act(() => viewport.setWidth(390));
 
     expect(
-      await screen.findByText("Scopri i tool migliori di Product Hunt.", undefined, {
+      await screen.findByText("Lanci Product Hunt ordinati per periodo, senza dati simulati.", undefined, {
           timeout: 5000,
         }),
     ).toBeTruthy();
-    expect(container.querySelector(".mobile-radar-view")).toBeTruthy();
-    expect(container.querySelector(".desktop-vibe-radar")).toBeNull();
+    expect(container.querySelector(".radar-mobile")).toBeTruthy();
+    expect(container.querySelector(".radar-command--desktop")).toBeNull();
     // La mobile view è servita dalla cache condivisa: ancora UNA request.
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
@@ -246,8 +244,8 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
           timeout: 5000,
         }),
       ).toBeTruthy();
-    expect(container.querySelector(".desktop-vibe-radar")).toBeTruthy();
-    expect(container.querySelector(".mobile-radar-view")).toBeNull();
+    expect(container.querySelector(".radar-command--desktop")).toBeTruthy();
+    expect(container.querySelector(".radar-mobile")).toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
