@@ -7,18 +7,15 @@
 @media (prefers-reduced-motion: no-preference) {
   html[data-motion-ready="true"] [data-motion-observed="true"] {
     opacity: 0;
-    filter: blur(0.35rem);
     transform: translate3d(0, var(--motion-y, 1rem), 0) scale(0.988);
-    will-change: opacity, filter, transform;
+    will-change: opacity, transform;
   }
 
   html[data-motion-ready="true"] [data-motion-observed="true"].is-visible {
     opacity: 1;
-    filter: blur(0);
     transform: translate3d(0, 0, 0) scale(1);
     transition:
       opacity var(--tv-duration-cinematic) var(--tv-easing-decelerate),
-      filter var(--tv-duration-epic) var(--tv-easing-spring-smooth),
       transform var(--tv-duration-epic) var(--tv-easing-spring-smooth);
     transition-delay: var(--motion-delay, 0ms);
   }
@@ -55,30 +52,6 @@
     animation: tv-premium-active-dot var(--tv-duration-cinematic) var(--tv-easing-spring-snappy) both;
   }
 
-  .home-discovery-hero__cta--primary {
-    isolation: isolate;
-  }
-
-  .home-discovery-hero__cta--primary::after {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: linear-gradient(
-      110deg,
-      transparent 18%,
-      color-mix(in srgb, var(--tv-color-white-pure) 22%, transparent) 48%,
-      transparent 76%
-    );
-    content: "";
-    pointer-events: none;
-    transform: translate3d(-130%, 0, 0) skewX(-16deg);
-    transition: transform var(--tv-duration-epic) var(--tv-easing-spring-smooth);
-  }
-
-  .home-discovery-hero__cta--primary:hover::after,
-  .home-discovery-hero__cta--primary:focus-visible::after {
-    transform: translate3d(130%, 0, 0) skewX(-16deg);
-  }
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -149,17 +122,15 @@
     transform: translateX(0.16rem);
   }
 
-  :where(
+  :where(a, button, [role="link"], [role="button"], [data-interactive="true"]):is(
     .catalog-category-map__card,
-    .v-method-card,
     .premium-card,
     .category-tool-card,
     .tool-detail-editorial-card,
     .tool-detail-meta-block
   ):hover,
-  :where(
+  :where(a, button, [role="link"], [role="button"], [data-interactive="true"]):is(
     .catalog-category-map__card,
-    .v-method-card,
     .premium-card,
     .category-tool-card,
     .tool-detail-editorial-card,
@@ -170,8 +141,8 @@
 
   .catalog-category-map__card:hover .catalog-category-map__icon,
   .catalog-category-map__card:focus-visible .catalog-category-map__icon,
-  .v-method-card:hover .v-method-icon,
-  .v-method-card:focus-within .v-method-icon {
+  :where(a, button, [role="link"], [role="button"], [data-interactive="true"]):hover .v-method-icon,
+  :where(a, button, [role="link"], [role="button"], [data-interactive="true"]):focus-visible .v-method-icon {
     transform: rotate(-4deg) scale(1.06);
   }
 
@@ -197,9 +168,8 @@
   transition: transform var(--tv-motion-fast) var(--tv-easing-spring-snappy);
 }
 
-:where(
+:where(a, button, [role="link"], [role="button"], [data-interactive="true"]):is(
   .catalog-category-map__card,
-  .v-method-card,
   .premium-card,
   .category-tool-card,
   .tool-detail-editorial-card,

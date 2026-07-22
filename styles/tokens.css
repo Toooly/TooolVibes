@@ -67,20 +67,20 @@
   --tv-color-blue-500: #3b82f6;          /* INFO */
   --tv-color-blue-600: #2563eb;
 
-  --tv-color-ink-100: #f8f8fb;
-  --tv-color-ink-200: #f3f3f7;
-  --tv-color-ink-300: #d8d8e0;
-  --tv-color-ink-400: #a0a0b0;
-  --tv-color-ink-500: #858596;
-  --tv-color-ink-600: #6e6e7e;
-  --tv-color-ink-700: #4a4a5a;
-  --tv-color-ink-800: #2c2c38;
+  --tv-color-ink-100: #fffdf8;
+  --tv-color-ink-200: #f4f0e7;
+  --tv-color-ink-300: #ddd8cf;
+  --tv-color-ink-400: #c2beb5;
+  --tv-color-ink-500: #aaa59b;
+  --tv-color-ink-600: #8d8981;
+  --tv-color-ink-700: #55524d;
+  --tv-color-ink-800: #2c2a28;
 
-  --tv-color-surface-base: #0f0f12;
-  --tv-color-surface-raised: #1a1a1e;
-  --tv-color-surface-elevated: #25252b;
-  --tv-color-surface-floating: #2f2f36;
-  --tv-color-surface-inverted: #f3f3f7;
+  --tv-color-surface-base: #08080a;
+  --tv-color-surface-raised: #111114;
+  --tv-color-surface-elevated: #18181d;
+  --tv-color-surface-floating: #202027;
+  --tv-color-surface-inverted: #f4f0e7;
 
   --tv-color-white-pure: #ffffff;
   --tv-color-white-04: rgba(255, 255, 255, 0.04);
@@ -94,7 +94,7 @@
   --tv-color-white-72: rgba(255, 255, 255, 0.72);
 
   /* --- Typography foundation --- */
-  --tv-font-family-display: var(--font-syne), "Arial Black", Impact, sans-serif;
+  --tv-font-family-display: var(--font-anton), Impact, "Arial Narrow", sans-serif;
   --tv-font-family-ui: var(--font-inter), "Inter", "Segoe UI", sans-serif;
   --tv-font-family-system: var(--font-inter), "Inter", "Segoe UI", sans-serif;
   --tv-font-family-mono: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
@@ -113,18 +113,18 @@
   --tv-space-px-32: 8rem;        /* 128px */
 
   /* --- Radius foundation --- */
-  --tv-radius-px-sm: 0.375rem;     /* 6px */
-  --tv-radius-px-md: 0.625rem;     /* 10px */
-  --tv-radius-px-lg: 1rem;         /* 16px */
-  --tv-radius-px-feature: 1.5rem;  /* 24px */
-  --tv-radius-px-modal: 1.75rem;   /* 28px */
+  --tv-radius-px-sm: 0.25rem;      /* 4px */
+  --tv-radius-px-md: 0.5rem;       /* 8px */
+  --tv-radius-px-lg: 0.75rem;      /* 12px */
+  --tv-radius-px-feature: 0.875rem;/* 14px */
+  --tv-radius-px-modal: 1rem;      /* 16px */
   --tv-radius-px-pill: 999px;
 
   /* --- Elevation foundation (raw shadow values) --- */
-  --tv-shadow-rest: 0 1px 2px rgba(0, 0, 0, 0.16);
-  --tv-shadow-raised: 0 18px 42px rgba(0, 0, 0, 0.28);
-  --tv-shadow-floating: 0 24px 60px rgba(0, 0, 0, 0.42);
-  --tv-shadow-modal: 0 30px 90px rgba(0, 0, 0, 0.48);
+  --tv-shadow-rest: 0 1px 0 rgba(0, 0, 0, 0.22);
+  --tv-shadow-raised: 0 12px 30px rgba(0, 0, 0, 0.22);
+  --tv-shadow-floating: 0 18px 44px rgba(0, 0, 0, 0.32);
+  --tv-shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.4);
 
   /* --- Motion foundation (raw ms values) --- */
   --tv-duration-instant: 80ms;
@@ -185,30 +185,22 @@
   --tv-surface-raised: var(--tv-color-surface-raised);
   --tv-surface-elevated: var(--tv-color-surface-elevated);
   --tv-surface-floating: var(--tv-color-surface-floating);
-  --tv-surface-translucent: rgba(26, 26, 30, 0.78);
-  --tv-surface-soft: rgba(37, 37, 43, 0.72);
+  --tv-surface-translucent: var(--tv-color-surface-raised);
+  --tv-surface-soft: var(--tv-color-surface-elevated);
   --tv-surface-inverted: var(--tv-color-surface-inverted);
 
   /* Glass (translucent surfaces with backdrop blur) */
-  --tv-glass-bg: var(--tv-color-white-06);
-  --tv-glass-bg-strong: var(--tv-color-white-10);
-  --tv-glass-bg-subtle: var(--tv-color-white-04);
-  --tv-glass-blur: 12px;
-  --tv-glass-blur-strong: 20px;
+  --tv-glass-bg: var(--tv-color-surface-elevated);
+  --tv-glass-bg-strong: var(--tv-color-surface-floating);
+  --tv-glass-bg-subtle: var(--tv-color-surface-raised);
+  --tv-glass-blur: 0px;
+  --tv-glass-blur-strong: 0px;
   --tv-glass-border: var(--tv-color-white-12);
   --tv-glass-border-strong: var(--tv-color-white-18);
 
   /* Brand surface (background gradient for premium areas) */
-  --tv-surface-brand: linear-gradient(
-    135deg,
-    rgba(106, 60, 255, 0.16) 0%,
-    rgba(57, 210, 246, 0.08) 100%
-  );
-  --tv-surface-brand-strong: linear-gradient(
-    135deg,
-    rgba(106, 60, 255, 0.32) 0%,
-    rgba(57, 210, 246, 0.16) 100%
-  );
+  --tv-surface-brand: var(--tv-color-surface-elevated);
+  --tv-surface-brand-strong: var(--tv-color-surface-floating);
 
   /* Ink (text) */
   --tv-ink-primary: var(--tv-color-ink-200);
@@ -216,13 +208,14 @@
   --tv-ink-muted: var(--tv-color-ink-600);
   --tv-ink-muted-aa: var(--tv-color-ink-500);
   --tv-ink-inverted: var(--tv-color-surface-base);
+  --tv-ink-inverted-secondary: var(--tv-color-ink-700);
   --tv-ink-on-brand: var(--tv-color-ink-100);
 
   /* Brand accent */
   --tv-accent-brand: var(--tv-color-violet-500);
   --tv-accent-brand-hover: var(--tv-color-violet-400);
   --tv-accent-brand-pressed: var(--tv-color-violet-600);
-  --tv-accent-brand-aa: var(--tv-color-violet-500);
+  --tv-accent-brand-aa: var(--tv-color-violet-500); /* AA: white on #6a3cff = 5.67:1 */
   --tv-accent-brand-subtle: var(--tv-color-violet-100);
 
   /* Secondary accent (cyan, for active signals) */
@@ -301,6 +294,7 @@
   --tv-border-interactive: var(--tv-color-white-18);
   --tv-border-brand: var(--tv-color-violet-500);
   --tv-border-focus: var(--tv-status-info);
+  --tv-border-inverted: rgba(8, 8, 10, 0.18);
 
   /* Focus ring */
   --tv-focus-ring: var(--tv-status-info);

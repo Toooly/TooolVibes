@@ -1,6 +1,5 @@
 import type { ComponentType, ReactNode } from "react";
 
-import { PremiumBadge } from "@/components/ui/premium";
 import { cn } from "@/lib/utils";
 
 type SectionShellProps = {

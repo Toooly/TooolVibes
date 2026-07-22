@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Syne } from "next/font/google";
+import { Anton, Inter } from "next/font/google";
 
 import "@/styles/release-entry";
 import { cookies } from "next/headers";
@@ -18,9 +18,10 @@ const inter = Inter({
   display: "swap",
 });
 
-const syne = Syne({
+const anton = Anton({
   subsets: ["latin"],
-  variable: "--font-syne",
+  weight: "400",
+  variable: "--font-anton",
   display: "swap",
 });
 
@@ -128,7 +129,7 @@ export default async function RootLayout({
     vibeRush: releaseFeatures.gamification.surfaces.vibeRush.mode,
   } satisfies GamificationClientModes;
   return (
-    <html lang="it" className={`${inter.variable} ${syne.variable}`} suppressHydrationWarning>
+    <html lang="it" className={`${inter.variable} ${anton.variable}`} suppressHydrationWarning>
       <head />
       <body>
         {isGateOpen && (
