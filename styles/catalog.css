@@ -6,13 +6,14 @@
 }
 
 .catalog-discovery {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
   align-items: end;
   gap: clamp(var(--tv-space-8), 6vw, var(--tv-space-16));
   width: min(calc(100% - 2 * var(--tv-space-6)), var(--tv-content-wide));
   margin-inline: auto;
-  padding: clamp(7.5rem, 11vw, 10rem) 0 clamp(var(--tv-space-12), 7vw, var(--tv-space-16));
+  padding: clamp(6.75rem, 9vw, 8.5rem) 0 clamp(var(--tv-space-12), 7vw, var(--tv-space-16));
   border-bottom: 1px solid var(--tv-border-subtle);
 }
 
@@ -34,11 +35,11 @@
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-display);
-  font-size: clamp(3rem, 6vw, 6rem);
-  font-weight: var(--tv-weight-semibold);
-  letter-spacing: -0.05em;
-  line-height: 0.98;
-  text-wrap: balance;
+  font-size: clamp(3.25rem, 4.7vw, 5.2rem);
+  font-weight: var(--tv-weight-black);
+  letter-spacing: -0.06em;
+  line-height: 0.92;
+  text-wrap: wrap;
 }
 
 .catalog-discovery__copy > p:last-child {
@@ -72,6 +73,18 @@
   border-radius: var(--tv-radius-lg);
   background: var(--tv-surface-translucent);
   box-shadow: var(--tv-elevation-raised);
+  transition:
+    border-color var(--tv-motion-fast) var(--tv-ease-standard),
+    background var(--tv-motion-fast) var(--tv-ease-standard),
+    box-shadow var(--tv-motion-fast) var(--tv-ease-standard);
+}
+
+.catalog-discovery__search .mobile-catalog-view__search:focus-within {
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 58%, var(--tv-border-interactive));
+  background: var(--tv-surface-raised);
+  box-shadow:
+    var(--tv-elevation-raised),
+    0 0 0 0.2rem color-mix(in srgb, var(--tv-accent-primary) 14%, transparent);
 }
 
 .catalog-discovery__metrics {
@@ -115,7 +128,8 @@
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-display);
   font-size: clamp(var(--tv-text-2xl), 4vw, var(--tv-text-3xl));
-  font-weight: var(--tv-weight-semibold);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: -0.04em;
   line-height: var(--tv-leading-tight);
 }
 
@@ -244,7 +258,7 @@
   }
 
   .catalog-discovery__copy h1 {
-    font-size: clamp(2.75rem, 13vw, 4.5rem);
+    font-size: clamp(2.7rem, 12vw, 4.25rem);
   }
 
   .catalog-discovery__copy > p:last-child {

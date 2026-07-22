@@ -42,6 +42,8 @@
   max-width: 18ch;
   font-family: var(--tv-font-display);
   font-size: var(--tv-text-2xl);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: -0.035em;
   line-height: var(--tv-leading-tight);
 }
 

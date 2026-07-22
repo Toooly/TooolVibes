@@ -1,0 +1,286 @@
+/*
+ * Canonical cross-route motion owner.
+ * Layout and visual surfaces remain in their feature sheets; this file owns
+ * only entrance hierarchy and reusable interaction feedback.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion-ready="true"] [data-motion-observed="true"] {
+    opacity: 0;
+    filter: blur(0.35rem);
+    transform: translate3d(0, var(--motion-y, 1rem), 0) scale(0.988);
+    will-change: opacity, filter, transform;
+  }
+
+  html[data-motion-ready="true"] [data-motion-observed="true"].is-visible {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+    transition:
+      opacity var(--tv-duration-cinematic) var(--tv-easing-decelerate),
+      filter var(--tv-duration-epic) var(--tv-easing-spring-smooth),
+      transform var(--tv-duration-epic) var(--tv-easing-spring-smooth);
+    transition-delay: var(--motion-delay, 0ms);
+  }
+
+  .site-header-motion {
+    animation: tv-premium-header-in var(--tv-duration-epic) var(--tv-easing-spring-smooth) both;
+  }
+
+  .site-header-motion :where(
+    .site-header-v2__brand,
+    .site-header-v2__nav,
+    .site-header-v2__actions
+  ) {
+    animation: tv-premium-control-in var(--tv-duration-cinematic) var(--tv-easing-spring-smooth) both;
+  }
+
+  .site-header-motion .site-header-v2__nav {
+    animation-delay: var(--tv-duration-fast);
+  }
+
+  .site-header-motion .site-header-v2__actions {
+    animation-delay: var(--tv-duration-base);
+  }
+
+  .mobile-bottom-motion {
+    animation: tv-premium-bottom-nav-fade var(--tv-duration-cinematic) var(--tv-easing-decelerate) var(--tv-duration-fast) both;
+  }
+
+  .mobile-bottom-motion .site-mobile-footer-nav__grid {
+    animation: tv-premium-bottom-nav-in var(--tv-duration-epic) var(--tv-easing-spring-smooth) var(--tv-duration-fast) both;
+  }
+
+  .site-header-v2__active-dot {
+    animation: tv-premium-active-dot var(--tv-duration-cinematic) var(--tv-easing-spring-snappy) both;
+  }
+
+  .home-discovery-hero__cta--primary {
+    isolation: isolate;
+  }
+
+  .home-discovery-hero__cta--primary::after {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 18%,
+      color-mix(in srgb, var(--tv-color-white-pure) 22%, transparent) 48%,
+      transparent 76%
+    );
+    content: "";
+    pointer-events: none;
+    transform: translate3d(-130%, 0, 0) skewX(-16deg);
+    transition: transform var(--tv-duration-epic) var(--tv-easing-spring-smooth);
+  }
+
+  .home-discovery-hero__cta--primary:hover::after,
+  .home-discovery-hero__cta--primary:focus-visible::after {
+    transform: translate3d(130%, 0, 0) skewX(-16deg);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .site-header-v2__nav-link:hover,
+  .site-header-v2__nav-link:focus-visible {
+    transform: translateY(-0.1rem);
+  }
+
+  .site-header-v2__nav-link:hover .site-header-v2__nav-icon,
+  .site-header-v2__nav-link:focus-visible .site-header-v2__nav-icon {
+    transform: translateY(-0.08rem) scale(1.06);
+  }
+
+  .site-header-v2__search-trigger:hover,
+  .site-header-v2__mobile-search:hover,
+  .site-header-v2__menu-button:hover,
+  .site-header-v2__sound :where(.sound-toggle-button, .music-toggle-button):hover,
+  .site-footer-v2__social:hover,
+  .site-footer-v2__contact:hover {
+    transform: translateY(-0.12rem);
+  }
+
+  .site-mobile-footer-nav .mobile-bottom-link:hover,
+  .site-mobile-footer-nav .mobile-bottom-link:focus-visible,
+  .site-mobile-footer-nav .mobile-bottom-link.is-active,
+  .site-mobile-footer-nav .mobile-bottom-link[aria-current="page"] {
+    transform: translateY(-0.14rem);
+  }
+
+  .site-mobile-footer-nav .mobile-bottom-link:hover svg,
+  .site-mobile-footer-nav .mobile-bottom-link:focus-visible svg,
+  .site-mobile-footer-nav .mobile-bottom-link.is-active svg,
+  .site-mobile-footer-nav .mobile-bottom-link[aria-current="page"] svg {
+    transform: scale(1.08);
+  }
+
+  :where(
+    .home-discovery-hero__cta,
+    .v-spotlight-cta,
+    .compare-onboarding__cta,
+    .tool-detail-main-cta,
+    .tool-detail-secondary-cta
+  ):hover,
+  :where(
+    .home-discovery-hero__cta,
+    .v-spotlight-cta,
+    .compare-onboarding__cta,
+    .tool-detail-main-cta,
+    .tool-detail-secondary-cta
+  ):focus-visible {
+    transform: translateY(-0.18rem);
+  }
+
+  :where(
+    .home-discovery-hero__cta,
+    .v-spotlight-cta,
+    .compare-onboarding__cta,
+    .tool-detail-main-cta,
+    .tool-detail-secondary-cta
+  ):hover svg,
+  :where(
+    .home-discovery-hero__cta,
+    .v-spotlight-cta,
+    .compare-onboarding__cta,
+    .tool-detail-main-cta,
+    .tool-detail-secondary-cta
+  ):focus-visible svg {
+    transform: translateX(0.16rem);
+  }
+
+  :where(
+    .catalog-category-map__card,
+    .v-method-card,
+    .premium-card,
+    .category-tool-card,
+    .tool-detail-editorial-card,
+    .tool-detail-meta-block
+  ):hover,
+  :where(
+    .catalog-category-map__card,
+    .v-method-card,
+    .premium-card,
+    .category-tool-card,
+    .tool-detail-editorial-card,
+    .tool-detail-meta-block
+  ):focus-within {
+    transform: translate3d(0, -0.28rem, 0);
+  }
+
+  .catalog-category-map__card:hover .catalog-category-map__icon,
+  .catalog-category-map__card:focus-visible .catalog-category-map__icon,
+  .v-method-card:hover .v-method-icon,
+  .v-method-card:focus-within .v-method-icon {
+    transform: rotate(-4deg) scale(1.06);
+  }
+
+  .site-footer-v2__link:hover,
+  .site-footer-v2__link:focus-visible,
+  .site-footer-v2__legal-link:hover,
+  .site-footer-v2__legal-link:focus-visible {
+    transform: translateX(0.12rem);
+  }
+}
+
+:where(
+  .site-header-v2__nav-icon,
+  .site-mobile-footer-nav .mobile-bottom-link svg,
+  .home-discovery-hero__cta svg,
+  .v-spotlight-cta svg,
+  .compare-onboarding__cta svg,
+  .tool-detail-main-cta svg,
+  .tool-detail-secondary-cta svg,
+  .catalog-category-map__icon,
+  .v-method-icon
+) {
+  transition: transform var(--tv-motion-fast) var(--tv-easing-spring-snappy);
+}
+
+:where(
+  .catalog-category-map__card,
+  .v-method-card,
+  .premium-card,
+  .category-tool-card,
+  .tool-detail-editorial-card,
+  .tool-detail-meta-block
+) {
+  transition:
+    transform var(--tv-motion-base) var(--tv-easing-spring-smooth),
+    border-color var(--tv-motion-base) var(--tv-ease-standard),
+    background var(--tv-motion-base) var(--tv-ease-standard),
+    box-shadow var(--tv-motion-base) var(--tv-ease-standard);
+}
+
+:where(
+  .site-header-v2__nav-link,
+  .site-header-v2__search-trigger,
+  .site-header-v2__mobile-search,
+  .site-header-v2__menu-button,
+  .site-header-v2__primary-action,
+  .site-header-v2__mobile-primary,
+  .site-mobile-footer-nav .mobile-bottom-link,
+  .home-discovery-hero__cta,
+  .v-spotlight-cta,
+  .compare-onboarding__cta,
+  .tool-detail-main-cta,
+  .tool-detail-secondary-cta
+):active {
+  transform: scale(0.97);
+}
+
+@keyframes tv-premium-header-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -0.75rem, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tv-premium-control-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -0.35rem, 0) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes tv-premium-bottom-nav-in {
+  from {
+    transform: translate3d(0, 1rem, 0) scale(0.96);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes tv-premium-bottom-nav-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tv-premium-active-dot {
+  from {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

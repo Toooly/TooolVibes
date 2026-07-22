@@ -6,8 +6,8 @@ Status: canonical foundation (B21 / DS-303)
 
 TooolVibes downloads at most two global families:
 
-- **Inter**: UI, body, navigation, controls, data labels and system/brand moments;
-- **Fraunces**: selected editorial display headings only.
+- **Inter**: UI, body, navigation, controls and data labels;
+- **Syne**: display headings and high-impact brand moments.
 
 The former Manrope and Rubik roles alias to Inter through `--font-manrope` and
 `--font-rubik`. These aliases keep legacy variable consumers stable without
@@ -15,8 +15,8 @@ requesting two additional font families. New code must use the semantic
 `--tv-font-ui`, `--tv-font-system` and `--tv-font-display` tokens.
 
 System fallbacks are part of the contract: Inter falls back to Segoe UI and a
-generic sans-serif; Fraunces falls back to Georgia and a generic serif. Content
-must remain readable if font files are unavailable.
+generic sans-serif; Syne falls back to Arial Black, Impact and a generic
+sans-serif. Content must remain readable if font files are unavailable.
 
 ## Type scale
 
@@ -39,7 +39,7 @@ type and must be hidden from assistive technology.
 
 - body: 400/500, line height 1.58 to 1.7;
 - controls and labels: 500/600, minimum 12px;
-- headings: 600/700, line height 1.12 to 1.2;
+- display headings: 700/800, line height 0.9 to 1.12;
 - uppercase tracking is limited to short labels: 0.08em; eyebrow maximum 0.14em;
 - long body copy uses default tracking.
 

@@ -69,7 +69,7 @@ export function MobileSpotlight({ tool, supportingTools = [] }: MobileSpotlightP
   ];
 
   return (
-    <section className="v-spotlight-section" aria-label="Tool della settimana">
+    <section className="v-spotlight-section motion-reveal" aria-label="Tool della settimana">
       {/* Starfield background */}
       <div className="v-spotlight-stars" aria-hidden="true" />
 

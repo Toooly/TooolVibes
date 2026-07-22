@@ -7040,13 +7040,13 @@ img {
   }
 
   .font-display {
-    font-family: var(--tv-font-system);
+    font-family: var(--tv-font-display);
   }
 
   .text-display-hero {
-    font-family: var(--tv-font-system);
-    font-weight: 600;
-    letter-spacing: 0;
+    font-family: var(--tv-font-display);
+    font-weight: var(--tv-weight-black);
+    letter-spacing: -0.045em;
     line-height: 0.94;
     text-wrap: balance;
     transition:
@@ -7056,8 +7056,8 @@ img {
   }
 
   .text-display-card {
-    font-family: var(--tv-font-system);
-    font-weight: 600;
+    font-family: var(--tv-font-display);
+    font-weight: var(--tv-weight-bold);
     letter-spacing: 0;
     line-height: 1.03;
     text-wrap: balance;
@@ -13143,7 +13143,7 @@ img {
 }
 
 @theme inline {
-  --font-heading: var(--tv-font-system);
+  --font-heading: var(--tv-font-display);
   --font-sans: var(--tv-font-ui);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);

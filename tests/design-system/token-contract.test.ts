@@ -125,6 +125,7 @@ describe("release design token contract", () => {
       "@/styles/radar.css",
       "@/styles/tool-detail.css",
       "@/styles/public-routes.css",
+      "@/styles/premium-motion.css",
     ]);
   });
 });

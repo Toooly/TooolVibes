@@ -31,7 +31,7 @@ type MobileMethodStepsProps = {
 export function MobileMethodSteps({ steps }: MobileMethodStepsProps) {
   return (
     <section
-      className="v-method-section relative z-10 overflow-hidden"
+      className="v-method-section motion-reveal relative z-10 overflow-hidden"
       aria-label="Metodo TooolVibes"
     >
       {/* Particle background */}
@@ -47,7 +47,7 @@ export function MobileMethodSteps({ steps }: MobileMethodStepsProps) {
           </p>
         </div>
 
-        <div className="v-method-grid">
+        <div className="v-method-grid motion-stagger">
           {steps.map((step, index) => {
             const Icon = STEP_ICON_MAP[step.icon];
             return (

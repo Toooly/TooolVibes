@@ -94,7 +94,7 @@
   --tv-color-white-72: rgba(255, 255, 255, 0.72);
 
   /* --- Typography foundation --- */
-  --tv-font-family-display: var(--font-fraunces), Georgia, serif;
+  --tv-font-family-display: var(--font-syne), "Arial Black", Impact, sans-serif;
   --tv-font-family-ui: var(--font-inter), "Inter", "Segoe UI", sans-serif;
   --tv-font-family-system: var(--font-inter), "Inter", "Segoe UI", sans-serif;
   --tv-font-family-mono: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
@@ -410,10 +410,6 @@
   --tv-motion-cinematic: var(--tv-duration-epic);     /* 720ms intro/loader/3D */
 
   /* Compatibility for existing usage */
-  --tv-duration-fast: var(--tv-motion-fast);
-  --tv-duration-base: var(--tv-motion-base);
-  --tv-duration-slow: var(--tv-motion-slow);
-
   /* --- Container semantic --- */
   --tv-container-page-mobile: var(--tv-container-mobile);
   --tv-container-page-tablet: var(--tv-container-tablet);

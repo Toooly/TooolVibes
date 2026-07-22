@@ -53,26 +53,30 @@ for (const file of sourceFiles) {
 }
 
 describe("release typography contract", () => {
-  it("downloads only Inter and Fraunces from next/font", () => {
+  it("downloads only Inter and Syne from next/font", () => {
     const layout = read("app/layout.tsx");
     const fontImportFiles = codeFiles.filter((file) =>
       /from\s+["']next\/font\//.test(read(file)),
     );
 
     expect(fontImportFiles).toEqual(["app/layout.tsx"]);
-    expect(layout).toContain('import { Fraunces, Inter } from "next/font/google";');
+    expect(layout).toContain('import { Inter, Syne } from "next/font/google";');
     expect(layout).not.toMatch(/\b(?:Manrope|Rubik)\s*\(/);
-    expect(layout).toContain("`${inter.variable} ${fraunces.variable}`");
+    expect(layout).toContain("`${inter.variable} ${syne.variable}`");
   });
 
   it("keeps semantic roles, fallbacks and the 12px minimum in tokens", () => {
     const tokens = parseTokens(read("styles/tokens.css"));
-    expect(tokens["font-manrope"]).toBe("var(--font-inter)");
-    expect(tokens["font-rubik"]).toBe("var(--font-inter)");
-    expect(tokens["tv-font-ui"]).toContain("var(--font-inter)");
-    expect(tokens["tv-font-system"]).toContain("var(--font-inter)");
-    expect(tokens["tv-font-display"]).toContain("var(--font-fraunces)");
-    expect(tokens["tv-text-xs"]).toBe("0.75rem");
+    expect(tokens["font-manrope"]).toBe("var(--tv-font-family-ui)");
+    expect(tokens["font-rubik"]).toBe("var(--tv-font-family-ui)");
+    expect(tokens["tv-font-family-ui"]).toContain("var(--font-inter)");
+    expect(tokens["tv-font-family-system"]).toContain("var(--font-inter)");
+    expect(tokens["tv-font-family-display"]).toContain("var(--font-syne)");
+    expect(tokens["tv-font-ui"]).toBe("var(--tv-font-family-ui)");
+    expect(tokens["tv-font-system"]).toBe("var(--tv-font-family-system)");
+    expect(tokens["tv-font-display"]).toBe("var(--tv-font-family-display)");
+    expect(tokens["tv-text-eyebrow"]).toBe("0.75rem");
+    expect(tokens["tv-text-xs"]).toBe("var(--tv-text-eyebrow)");
     expect(Number.parseFloat(tokens["tv-leading-body"])).toBeGreaterThanOrEqual(1.5);
   });
 
@@ -180,7 +184,7 @@ describe("release typography contract", () => {
   it("uses semantic roles instead of generated font variable consumers", () => {
     const violations = sourceFiles
       .filter((file) => file !== "styles/tokens.css")
-      .filter((file) => /var\(--font-(?:inter|fraunces)\)/.test(read(file)));
+      .filter((file) => /var\(--font-(?:inter|syne)\)/.test(read(file)));
 
     expect(violations).toEqual([]);
   });

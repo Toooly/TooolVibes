@@ -14,6 +14,7 @@ const expectedGlobalImports = [
   "@/styles/radar.css",
   "@/styles/tool-detail.css",
   "@/styles/public-routes.css",
+  "@/styles/premium-motion.css",
 ];
 const importantCeilings = {
   "app/globals.css": 2324,
@@ -24,6 +25,7 @@ const importantCeilings = {
   "styles/figma-implementation.css": 40,
   "styles/gamification.css": 14,
   "styles/home.css": 0,
+  "styles/premium-motion.css": 0,
   "styles/radar.css": 4,
   "styles/public-routes.css": 46,
   "styles/shell.css": 120,

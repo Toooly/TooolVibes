@@ -119,9 +119,9 @@
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
   font-size: clamp(3.4rem, 8vw, 7.5rem);
-  font-weight: var(--tv-weight-semibold);
-  letter-spacing: -0.055em;
-  line-height: 0.86;
+  font-weight: var(--tv-weight-black);
+  letter-spacing: -0.065em;
+  line-height: 0.88;
 }
 
 .tool-detail-deck {
@@ -249,7 +249,8 @@
   color: var(--tv-ink-primary) !important;
   font-family: var(--tv-font-family-display);
   font-size: var(--tv-text-title);
-  font-weight: var(--tv-weight-semibold);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: -0.025em;
 }
 
 .tool-detail-profile-copy {
@@ -318,8 +319,8 @@
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.6rem, 3vw, 2.4rem);
-  font-weight: var(--tv-weight-semibold);
-  letter-spacing: -0.035em;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: -0.045em;
   line-height: var(--tv-leading-heading);
 }
 

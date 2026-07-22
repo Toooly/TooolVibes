@@ -16,6 +16,7 @@ Status: release contract (B20 / DS-301 / DS-302)
 3. `styles/shell.css`
 4. route owners: `home.css`, `catalog.css`, `compare.css`, `radar.css`, `tool-detail.css`
 5. `styles/public-routes.css`
+6. `styles/premium-motion.css`
 
 The Maestoso sheet remains before all canonical owners because the Home orbital geometry still consumes it. It must not receive ordinary UI additions. The shell and route sheets are the final owners; the former cross-route repaint sheet was removed in the definitive UI rebuild.
 
@@ -37,6 +38,7 @@ The Maestoso sheet remains before all canonical owners because the Home orbital 
 | `styles/shell.css` | Public shell | header, footer, mobile navigation, recovery states | final shared chrome owner |
 | `styles/tool-detail.css` | Tool decision page | `/toools/[slug]` | tool-detail selectors only |
 | `styles/public-routes.css` | Public route foundation | shared editorial and premium primitives | final shared surface contract; no feature-specific layouts |
+| `styles/premium-motion.css` | Interaction system | public shell and route feedback | final motion owner; no layout, content or surface repainting |
 
 ## Change policy
 

@@ -386,7 +386,7 @@ test("loads only the canonical local Next font assets at runtime", async ({
     ).sort();
   });
 
-  expect(runtimeFamilies).toEqual(["Fraunces", "Inter"]);
+  expect(runtimeFamilies).toEqual(["Inter", "Syne"]);
   expect(
     fontRequests.size,
     "The document did not request a canonical web-font asset.",
