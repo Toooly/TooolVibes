@@ -19,7 +19,6 @@ const globalsCss = read("app/globals.css");
 const layoutSource = read("app/layout.tsx");
 const homePageSource = read("app/(marketing)/page.tsx");
 const introSource = read("components/3d-maestoso/intro-cinematic.tsx");
-const heroSource = read("components/home/mobile-marketing-hero.tsx");
 const vibeHomeSource = read("components/home/vibe-home-v2.tsx");
 const heroSolarSource = read("components/home/mobile-hero-solar.tsx");
 const home3dHeroSource = read("components/3d-maestoso/home-3d-hero.tsx");
@@ -151,7 +150,7 @@ describe("B40 wiring flag (pattern B04)", () => {
   });
 
   it("i componenti client ricevono il flag solo via props (type-only import)", () => {
-    for (const source of [heroSource, vibeHomeSource, home3dHeroSource]) {
+    for (const source of [vibeHomeSource, home3dHeroSource]) {
       expect(source).toContain(
         'import type { HomeLayout } from "@/lib/config/home-experience"',
       );
@@ -170,7 +169,6 @@ describe("B40 wiring flag (pattern B04)", () => {
 
   it("default legacy preservati nei componenti (reversibilita')", () => {
     expect(introSource).toContain('mode = "cinematic"');
-    expect(heroSource).toContain('layout = "legacy"');
     expect(vibeHomeSource).toContain('layout = "legacy"');
     expect(heroSolarSource).toContain("compact = false");
     expect(home3dHeroSource).toContain('layout = "legacy"');
@@ -200,15 +198,9 @@ describe("B40 intro — nessuna attesa obbligatoria", () => {
 });
 
 describe("B40 hero — CTA e primi segnali tool", () => {
-  it("compact hero: classe dedicata e chip tool condizionato alla modalita'", () => {
-    expect(heroSource).toContain("v-hero-mobile--compact");
-    expect(heroSource).toContain("isTimeToValue && spotlightTool");
-    expect(heroSource).toContain("v-hero-mobile__tool-chip");
-  });
+  it.skip("compact hero: classe dedicata e chip tool condizionato alla modalita' [mobile-marketing-hero deleted]", () => {});
 
-  it("chip: link alla scheda del tool in evidenza (dati esistenti)", () => {
-    expect(heroSource).toContain("href={`/toools/${spotlightTool.slug}`}");
-  });
+  it.skip("chip: link alla scheda del tool in evidenza (dati esistenti) [mobile-marketing-hero deleted]", () => {});
 
   it("discovery stage: classe flow solo in time-to-value", () => {
     expect(heroSolarSource).toContain("v-discovery-stage--flow");
