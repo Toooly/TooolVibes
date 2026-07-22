@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { createElement } from "react";
 import { cleanup, render } from "@testing-library/react";
 import axe from "axe-core";
@@ -51,6 +53,7 @@ function sectionOrder(container: HTMLElement) {
   expect(origin).not.toBeNull();
   return Array.from(origin!.children).map((child) => {
     if (child.classList.contains("v-discovery-stage")) return "discovery";
+    if (child.classList.contains("home-radar-preview")) return "radar";
     if (child.classList.contains("v-spotlight-section")) return "spotlight";
     if (child.querySelector("[data-testid='native-placement-mock']"))
       return "placement";
@@ -93,6 +96,7 @@ describe("B40 VibeHomeV2 — composizione home flaggabile (MOB-704)", () => {
 
     expect(sectionOrder(container)).toEqual([
       "discovery",
+      "radar",
       "spotlight",
       "placement",
       "method",
@@ -120,6 +124,7 @@ describe("B40 VibeHomeV2 — composizione home flaggabile (MOB-704)", () => {
 
     expect(sectionOrder(container)).toEqual([
       "discovery",
+      "radar",
       "spotlight",
       "placement",
       "method",
@@ -190,6 +195,7 @@ describe("B40 VibeHomeV2 — composizione home flaggabile (MOB-704)", () => {
 
     expect(sectionOrder(container)).toEqual([
       "discovery",
+      "radar",
       "spotlight",
       "placement",
       "method",
@@ -320,10 +326,11 @@ describe("FIX-1 — mobile discovery hero sempre renderizzato (regressione 2026-
     expect(method?.textContent).toContain("Salva");
   });
 
-  it("FIX-1: ordine sezioni discovery -> spotlight -> placement -> method", () => {
+  it("FIX-1: ordine sezioni discovery -> radar -> spotlight -> placement -> method", () => {
     const { container } = render(<VibeHomeV2 {...baseProps} />);
     expect(sectionOrder(container)).toEqual([
       "discovery",
+      "radar",
       "spotlight",
       "placement",
       "method",
@@ -335,8 +342,8 @@ describe("FIX-1 — mobile discovery hero sempre renderizzato (regressione 2026-
     // Se showDiscoveryHero viene reintrodotto, TS non segnala piu' errore
     // sul type-check (rimosso l'extra prop) e il rendering lo ignora.
     // Verifichiamo quindi la rimozione a livello di codice.
-    const source = require("fs").readFileSync(
-      require("path").join(
+    const source = readFileSync(
+      join(
         process.cwd(),
         "components/home/vibe-home-v2.tsx",
       ),

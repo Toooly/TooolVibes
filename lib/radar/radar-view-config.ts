@@ -18,8 +18,8 @@ export type RadarDesktopVisual = (typeof RADAR_DESKTOP_VISUALS)[number];
 
 export const RADAR_DESKTOP_VISUAL_ENV_KEY = "TOOOLVIBES_RADAR_DESKTOP_VISUAL";
 
-/** Primary view desktop: densità prima (DESK-804), nodes resta selezionabile. */
-export const DEFAULT_RADAR_DESKTOP_VISUAL: RadarDesktopVisual = "table";
+/** Primary view desktop: il Radar visuale è il punto di ingresso canonico. */
+export const DEFAULT_RADAR_DESKTOP_VISUAL: RadarDesktopVisual = "nodes";
 
 export class RadarViewConfigError extends Error {
   constructor(message: string) {

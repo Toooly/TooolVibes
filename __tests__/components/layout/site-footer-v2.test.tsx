@@ -7,7 +7,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
 import { NavigationReleaseProvider } from "@/lib/navigation/navigation-release-context";
 import { resolveNavigationRelease } from "@/lib/navigation/release";
-import { siteConfig } from "@/lib/config/site";
 
 /* Brand logo mock: l'identità visiva non è sotto test. */
 vi.mock("@/components/layout/brand-logo", () => ({

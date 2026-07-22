@@ -4,8 +4,7 @@ import { useState, useEffect, useRef, useMemo, useCallback, type CSSProperties, 
 import { motion, useReducedMotion } from "motion/react";
 import {
   Activity,
-  MessageCircle,
-  TrendingUp,
+  ExternalLink,
   Zap,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -29,6 +28,11 @@ import { getUtcContextDate } from "@/supabase/functions/_shared/radar-prediction
 const RADAR_NODE_COUNT = 5;
 const RADAR_SWEEP_DURATION_MS = 3200;
 const RADAR_SCAN_THRESHOLD = 0.18;
+const RADAR_RANGE_OPTIONS: { key: ProductHuntRange; label: string }[] = [
+  { key: "day", label: "Giorno" },
+  { key: "week", label: "Settimana" },
+  { key: "month", label: "Mese" },
+];
 const RADAR_NODE_LAYOUT = [
   { angle: -0.2, radiusRatio: 0.54 },
   { angle: 1.08, radiusRatio: 0.7 },
@@ -36,18 +40,6 @@ const RADAR_NODE_LAYOUT = [
   { angle: 3.8, radiusRatio: 0.68 },
   { angle: 5.27, radiusRatio: 0.76 },
 ];
-
-const fallbackRadarItems: ProductHuntItem[] = Array.from(
-  { length: RADAR_NODE_COUNT },
-  (_, index) => ({
-    id: `radar-placeholder-${index + 1}`,
-    name: "Segnale in arrivo",
-    tagline: "In attesa dei dati aggiornati",
-    votesCount: 0,
-    commentsCount: 0,
-    productHuntUrl: "#",
-  }),
-);
 
 function hashString(value: string): number {
   let hash = 2166136261;
@@ -80,7 +72,7 @@ const HIDDEN_SIGNAL_STORAGE_KEY = "tv:hidden-signal";
 export function MobileRadarView() {
   const prefersReducedMotion = useReducedMotion() === true;
   const hiddenSignalRelease = useGamificationSurface("hiddenSignal");
-  const activeRange: ProductHuntRange = "day";
+  const [activeRange, setActiveRange] = useState<ProductHuntRange>("day");
   // Query condivisa (B44 / PERF-1202): una sola request per key su tutte le
   // rappresentazioni Radar; il fallback d'errore è il payload unico di
   // contratto B36. Cache e dedup sono del Query Client, non di stato locale.
@@ -110,24 +102,22 @@ export function MobileRadarView() {
       : radarState === "loading"
         ? "Radar in avvio"
         : "Radar in pausa";
-  const placeholderNodeLabel =
-    radarState === "loading"
-      ? "Caricamento"
-      : radarState === "empty"
-        ? "Nessun segnale"
-        : "Radar in pausa";
-  const placeholderNodeHint =
-    radarState === "loading"
-      ? "aggiorno i dati"
-      : radarState === "empty"
-        ? "riprova più tardi"
-        : "dati non disponibili";
   const centerLabel =
     radarState === "ready"
       ? isStaleFallback
         ? "Ultima sync"
         : "Ultima ora"
-      : "Aggiorno";
+      : radarState === "loading"
+        ? "Aggiorno"
+        : radarState === "empty"
+          ? "Nessun dato"
+          : "In pausa";
+  const stageStatus =
+    radarState === "loading"
+      ? "Connessione ai segnali Product Hunt…"
+      : radarState === "empty"
+        ? "Nessun segnale disponibile per questo periodo."
+        : "Radar in pausa. I dati reali compariranno qui quando il feed sarà disponibile.";
 
   // Data contesto UTC condivisa con il resolver server (timezone-independent).
   const today = useMemo(() => getUtcContextDate(new Date()), []);
@@ -218,12 +208,8 @@ export function MobileRadarView() {
 
       ctx.clearRect(0, 0, w, h);
 
-      // Deep void background
-      const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 1.2);
-      bgGrad.addColorStop(0, "#0d0d18");
-      bgGrad.addColorStop(0.7, "#090914");
-      bgGrad.addColorStop(1, "#06060E");
-      ctx.fillStyle = bgGrad;
+      // Opaque instrument surface: no visual data is simulated by the canvas.
+      ctx.fillStyle = "#0f0f12";
       ctx.fillRect(0, 0, w, h);
 
       // Outer rim glow
@@ -265,31 +251,23 @@ export function MobileRadarView() {
       const sx = cx + Math.cos(sweepAngle) * sweepLen;
       const sy = cy + Math.sin(sweepAngle) * sweepLen;
 
-      // Main sweep glow
-      const grad = ctx.createLinearGradient(cx, cy, sx, sy);
-      grad.addColorStop(0, "rgba(0, 229, 255, 0.55)");
-      grad.addColorStop(0.4, "rgba(57, 210, 246, 0.3)");
-      grad.addColorStop(0.8, "rgba(124, 77, 255, 0.1)");
-      grad.addColorStop(1, "rgba(124, 77, 255, 0)");
+      // Main sweep line
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(sx, sy);
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = "rgba(57, 210, 246, 0.58)";
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Sweep echo trail
+      // Sweep echo line
       const echoAngle = sweepAngle + 0.4;
       const ex = cx + Math.cos(echoAngle) * sweepLen * 0.85;
       const ey = cy + Math.sin(echoAngle) * sweepLen * 0.85;
-      const echoGrad = ctx.createLinearGradient(cx, cy, ex, ey);
-      echoGrad.addColorStop(0, "rgba(57, 210, 246, 0.25)");
-      echoGrad.addColorStop(1, "rgba(57, 210, 246, 0)");
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(ex, ey);
-      ctx.strokeStyle = echoGrad;
-      ctx.lineWidth = 1.8;
+      ctx.strokeStyle = "rgba(57, 210, 246, 0.2)";
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       // Pulsing core with layered rings
@@ -393,15 +371,8 @@ export function MobileRadarView() {
 
   /* ── Node positions ── */
   const nodes = useMemo(() => {
-    const visibleItems = currentItems.slice(0, RADAR_NODE_COUNT);
-    const items =
-      visibleItems.length >= RADAR_NODE_COUNT
-        ? visibleItems
-        : [
-            ...visibleItems,
-            ...fallbackRadarItems.slice(visibleItems.length, RADAR_NODE_COUNT),
-          ];
-    const voteCounts = visibleItems.map((item) => item.votesCount);
+    const items = currentItems.slice(0, RADAR_NODE_COUNT);
+    const voteCounts = items.map((item) => item.votesCount);
     const minVotes = voteCounts.length ? Math.min(...voteCounts) : 0;
     const maxVotes = voteCounts.length ? Math.max(...voteCounts) : 1;
     const voteRange = Math.max(1, maxVotes - minVotes);
@@ -414,10 +385,7 @@ export function MobileRadarView() {
       const voteScore = item.votesCount
         ? (item.votesCount - minVotes) / voteRange
         : 0;
-      const isPlaceholder = item.id.startsWith("radar-placeholder-");
-      const radiusRatio = isPlaceholder
-        ? layout.radiusRatio
-        : 0.38 + (1 - voteScore) * 0.42;
+      const radiusRatio = 0.38 + (1 - voteScore) * 0.42;
       const x = Math.cos(layout.angle) * radiusRatio * 46;
       const y = Math.sin(layout.angle) * radiusRatio * 46;
       const size = item.votesCount
@@ -431,44 +399,60 @@ export function MobileRadarView() {
         x,
         y,
         size: Math.min(size, 52),
-        isPlaceholder,
       };
     });
   }, [currentItems]);
 
   const hiddenNodeId = useMemo(() => {
     if (!hiddenSignalRelease.persistentRewardsEnabled) return null;
-    const realNodes = nodes.filter((node) => !node.isPlaceholder);
-    if (realNodes.length === 0) return null;
-    const index = Math.floor(seededRandom(today) * realNodes.length);
-    return realNodes[index]?.id ?? null;
+    if (nodes.length === 0) return null;
+    const index = Math.floor(seededRandom(today) * nodes.length);
+    return nodes[index]?.id ?? null;
   }, [hiddenSignalRelease.persistentRewardsEnabled, nodes, today]);
 
   return (
-    <div className="mobile-radar-view relative min-h-screen overflow-hidden">
-      {/* Header */}
-      <div className="mobile-radar-view__header">
-        <span className="mobile-radar-view__powered">
-          {sourceLabel}
-        </span>
-        <h1>
-          <span className="mobile-radar-view__live">
-            <span className="mobile-radar-view__live-dot" />
+    <div className="radar-mobile">
+      <header className="radar-mobile__header">
+        <div className="radar-mobile__title-row">
+          <h1>Radar</h1>
+          <span className="radar-mobile__live" data-state={radarState}>
+            <span className="radar-mobile__live-dot" aria-hidden="true" />
             {liveLabel}
           </span>
-        </h1>
-        <p>Scopri i tool migliori di Product Hunt.</p>
-      </div>
+        </div>
+        <p className="radar-mobile__source" role="status" aria-live="polite">
+          {sourceLabel}
+        </p>
+        <p className="radar-mobile__description">
+          Lanci Product Hunt ordinati per periodo, senza dati simulati.
+        </p>
+        <div className="radar-mobile__ranges" role="group" aria-label="Periodo classifica">
+          {RADAR_RANGE_OPTIONS.map((option) => (
+            <button
+              key={option.key}
+              type="button"
+              className="radar-mobile__range"
+              aria-pressed={activeRange === option.key}
+              aria-controls="radar-mobile-results"
+              onClick={() => setActiveRange(option.key)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </header>
 
-      {/* Radar Stage */}
-      <div className="mobile-radar-view__stage">
+      <div
+        className="radar-mobile__stage"
+        role="region"
+        aria-label="Radar visuale Product Hunt"
+        aria-busy={radarState === "loading"}
+      >
         <canvas
           ref={canvasRef}
-          className="mobile-radar-view__canvas relative z-0"
+          className="radar-mobile__canvas"
           aria-hidden="true"
         />
-        <span className="mobile-radar-view__scan-line" aria-hidden="true" />
-        {/* Real data nodes overlaid */}
         {nodes.map((node) => {
           const style = {
             "--node-angle": `${node.angle}rad`,
@@ -477,118 +461,68 @@ export function MobileRadarView() {
             "--node-size": `${node.size}px`,
             "--node-hit-delay": `${(normaliseAngle(node.angle) / (Math.PI * 2)) * (RADAR_SWEEP_DURATION_MS / 1000)}s`,
           } as CSSProperties;
-          const isHot = node.votesCount > 100 && !node.isPlaceholder;
           const isHidden = node.id === hiddenNodeId && !hiddenDiscovered;
           const isScanned =
             !prefersReducedMotion &&
             angleDistance(node.angle, scanAngle) < RADAR_SCAN_THRESHOLD;
-          const nodeSideClass = node.x >= 0 ? " is-right-side" : " is-left-side";
-          const nodeClassName = `mobile-radar-view__node${nodeSideClass}${isHot ? " is-hot" : ""}${isScanned ? " is-scanned" : ""}${node.isPlaceholder ? " is-placeholder" : ""}${isHidden ? " is-hidden" : ""}`;
-          const displayName = node.isPlaceholder ? placeholderNodeLabel : node.name;
-          const displayMeta = node.isPlaceholder ? placeholderNodeHint : `${node.votesCount} voti`;
-          const nodeInitials = node.isPlaceholder
-            ? "..."
-            : node.name.slice(0, 2).toUpperCase();
-          const nodeContent = (
-            <>
-              <span className="mobile-radar-view__node-halo" />
-              {isHidden && (
-                <span
-                  className="pointer-events-none absolute inset-[-0.55rem] z-0 rounded-full border-2 border-dashed border-emerald-400/70 shadow-[0_0_18px_rgba(52,211,153,0.45)] animate-[spin_4s_linear_infinite]"
-                  aria-hidden="true"
-                />
-              )}
-              <span className="mobile-radar-view__node-body">
-                {node.thumbnailUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
-                  <img
-                    src={node.thumbnailUrl}
-                    alt=""
-                    loading="lazy"
-                    className="mobile-radar-view__node-img"
-                  />
-                ) : (
-                  <span className="mobile-radar-view__node-initials">
-                    {nodeInitials}
-                  </span>
-                )}
-              </span>
-              <span className="mobile-radar-view__node-label">
-                <strong>{displayName}</strong>
-                <small>{displayMeta}</small>
-              </span>
-              {isHot && <span className="mobile-radar-view__node-badge">In crescita</span>}
-            </>
-          );
-
-          if (node.isPlaceholder) {
-            return (
-              <span
-                key={node.id}
-                className={nodeClassName}
-                style={style}
-                aria-hidden="true"
-              >
-                {nodeContent}
-              </span>
-            );
-          }
+          const nodeSideClass = node.x >= 0 ? " is-right" : " is-left";
+          const nodeClassName = `radar-mobile__node${nodeSideClass}${isScanned ? " is-scanned" : ""}${isHidden ? " is-hidden" : ""}`;
 
           return (
             <a
               key={node.id}
               href={node.productHuntUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={node.productHuntUrl.startsWith("http") ? "_blank" : undefined}
+              rel={node.productHuntUrl.startsWith("http") ? "noopener noreferrer" : undefined}
               className={nodeClassName}
               style={style}
-              aria-label={`${node.name}. ${node.votesCount} voti, ${node.commentsCount} commenti`}
+              aria-label={`${node.name}. ${node.votesCount} voti, ${node.commentsCount} commenti. Apri su Product Hunt.`}
               onClick={isHidden ? (event) => handleHiddenNodeClick(node, event) : undefined}
             >
-              {nodeContent}
+              {isHidden ? <span className="radar-mobile__hidden-marker" aria-hidden="true" /> : null}
+              <span className="radar-mobile__node-body">
+                {node.thumbnailUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
+                  <img className="radar-mobile__node-img" src={node.thumbnailUrl} alt="" loading="lazy" />
+                ) : (
+                  <span className="radar-mobile__node-initials">{node.name.slice(0, 2).toUpperCase()}</span>
+                )}
+              </span>
+              <span className="radar-mobile__node-label">
+                <strong>{node.name}</strong>
+                <small>{node.votesCount > 0 ? `${node.votesCount} voti` : "In verifica"}</small>
+              </span>
             </a>
           );
         })}
 
-        {/* Center badge */}
-        <div className="mobile-radar-view__center-info">
-          <span>{centerLabel}</span>
-        </div>
+        {radarState === "ready" ? (
+          <div className="radar-mobile__center-info" aria-hidden="true">
+            <span>{centerLabel}</span>
+            <strong>{nodes.length}</strong>
+          </div>
+        ) : (
+          <p className="radar-mobile__stage-status" role="status" aria-live="polite">
+            {stageStatus}
+          </p>
+        )}
       </div>
 
-      {/* Legend */}
-      <div className="mobile-radar-view__legend">
-        {[
-          { icon: Activity, label: "Posizione" },
-          { icon: MessageCircle, label: "Segnali" },
-          { icon: TrendingUp, label: "Trend" },
-        ].map((item) => {
-          const Icon = item.icon;
-          return (
-            <span key={item.label} className="mobile-radar-view__legend-item">
-              <Icon size={12} aria-hidden="true" />
-              {item.label}
-            </span>
-          );
-        })}
+      <div id="radar-mobile-results">
+        <MobileRadarSections
+          items={currentItems}
+          state={radarState}
+          message={currentPayload?.message}
+          stale={isStaleFallback}
+          updatedAt={currentPayload?.updatedAt}
+          reducedMotion={prefersReducedMotion}
+        />
       </div>
-
-      {/* Content sections */}
-      <MobileRadarSections
-        items={currentItems}
-        state={radarState}
-        message={currentPayload?.message}
-        stale={isStaleFallback}
-        updatedAt={currentPayload?.updatedAt}
-        reducedMotion={prefersReducedMotion}
-      />
     </div>
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   MobileRadarSections — trending & hot content below canvas
-   ═══════════════════════════════════════════════════════════════ */
+/* Ranked Product Hunt signals below the mobile instrument. */
 
 function MobileRadarSections({
   items,
@@ -609,7 +543,7 @@ function MobileRadarSections({
     const emptyCopy: Record<Exclude<RadarDataState, "ready">, { title: string; body: string }> = {
       loading: {
         title: "Aggiorno il radar",
-        body: "Sto caricando i segnali reali da Product Hunt. Gli slot nel radar restano neutri finché i dati non arrivano.",
+        body: "Sto caricando i segnali reali da Product Hunt. La classifica comparirà solo quando il feed risponde.",
       },
       empty: {
         title: "Nessun segnale disponibile",
@@ -627,19 +561,19 @@ function MobileRadarSections({
     const copy = emptyCopy[state === "ready" ? "empty" : state];
 
     return (
-      <div className="mobile-radar-sections">
+      <div className="radar-mobile-sections">
         <section
-          className="mobile-radar-section"
+          className="radar-mobile-section radar-mobile-section--empty"
           role="status"
           aria-live="polite"
           aria-atomic="true"
           aria-busy={state === "loading"}
         >
-          <h2>
-            <Activity size={14} aria-hidden="true" />
-            {copy.title}
-          </h2>
-          <p className="rounded-[18px] border border-white/10 bg-white/[0.055] p-4 text-sm leading-6 text-white/70">
+          <div className="radar-mobile-section__header">
+            <Activity size={18} aria-hidden="true" />
+            <h2>{copy.title}</h2>
+          </div>
+          <p className="radar-mobile__notice">
             {copy.body}
           </p>
         </section>
@@ -647,14 +581,13 @@ function MobileRadarSections({
     );
   }
 
-  const trending = [...items].sort((a, b) => b.votesCount - a.votesCount).slice(0, 3);
   const watchlist = items.slice(0, 8);
 
   return (
-    <div className="mobile-radar-sections">
+    <div className="radar-mobile-sections">
       {stale && (
         <p
-          className="rounded-[18px] border border-white/10 bg-white/[0.055] p-4 text-sm leading-6 text-white/70"
+          className="radar-mobile__notice"
           role="status"
           aria-live="polite"
           aria-atomic="true"
@@ -663,31 +596,33 @@ function MobileRadarSections({
           sincronizzata: {formatUtcTimeLabel(updatedAt ?? "")}.
         </p>
       )}
-      <section className="mobile-radar-section mobile-radar-section--table">
-        <h2>
-          <Zap size={14} />
-          Classifica radar
-        </h2>
-        <div className="mobile-radar-section__table-head" aria-hidden="true">
+      <section className="radar-mobile-section radar-mobile-section--table">
+        <div className="radar-mobile-section__header">
+          <Zap size={18} aria-hidden="true" />
+          <h2>Classifica radar</h2>
+          <span>{watchlist.length} segnali</span>
+        </div>
+        <div className="radar-mobile-section__table-head" aria-hidden="true">
           <span>#</span>
           <span>Tool</span>
           <span>Segnale</span>
         </div>
-        <div className="mobile-radar-section__list mobile-radar-section__table">
+        <div className="radar-mobile-section__list">
           {watchlist.map((item, index) => (
             <motion.a
               key={item.id}
               href={item.productHuntUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mobile-radar-section__row mobile-radar-section__row--table"
+              target={item.productHuntUrl.startsWith("http") ? "_blank" : undefined}
+              rel={item.productHuntUrl.startsWith("http") ? "noopener noreferrer" : undefined}
+              className="radar-mobile-section__row"
+              aria-label={`${item.name}. ${item.votesCount} voti, ${item.commentsCount} commenti. Apri su Product Hunt.`}
               initial={reducedMotion ? false : { opacity: 0, y: 8 }}
               whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
               viewport={reducedMotion ? undefined : { once: true }}
               transition={reducedMotion ? undefined : { delay: index * 0.04 }}
             >
-              <span className="mobile-radar-section__row-rank">#{index + 1}</span>
-              <div className="mobile-radar-section__row-visual">
+              <span className="radar-mobile-section__rank">#{index + 1}</span>
+              <div className="radar-mobile-section__visual">
                 {item.thumbnailUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
                   <img src={item.thumbnailUrl} alt="" loading="lazy" />
@@ -695,54 +630,19 @@ function MobileRadarSections({
                   <span>{item.name.slice(0, 2).toUpperCase()}</span>
                 )}
               </div>
-              <div className="mobile-radar-section__row-meta">
+              <div className="radar-mobile-section__copy">
                 <strong>{item.name}</strong>
-                <span>{item.tagline}</span>
+                <small>{item.tagline}</small>
               </div>
-              <span className="mobile-radar-section__row-votes">
-                <strong>{item.votesCount}</strong>
+              <span className="radar-mobile-section__signal">
+                <strong>{item.votesCount} voti</strong>
                 <small>{item.commentsCount} commenti</small>
+                <ExternalLink size={13} aria-hidden="true" />
               </span>
             </motion.a>
           ))}
         </div>
       </section>
-
-      {trending.length > 0 && (
-        <section className="mobile-radar-section">
-          <h2>
-            <TrendingUp size={14} />
-            Trending ora
-          </h2>
-          <div className="mobile-radar-section__scroll">
-            {trending.map((item) => (
-              <a
-                key={item.id}
-                href={item.productHuntUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mobile-radar-section__card"
-              >
-                <div className="mobile-radar-section__card-visual">
-                  {item.thumbnailUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
-                    <img src={item.thumbnailUrl} alt="" loading="lazy" />
-                  ) : (
-                    <span>{item.name.slice(0, 2).toUpperCase()}</span>
-                  )}
-                </div>
-                <div className="mobile-radar-section__card-meta">
-                  <strong>{item.name}</strong>
-                  <span>{item.votesCount} voti</span>
-                </div>
-                {item.votesCount > 100 && (
-                  <span className="mobile-radar-section__card-badge">In crescita</span>
-                )}
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   );
 }

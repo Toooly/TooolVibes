@@ -67,9 +67,32 @@ export function MobileHeroSolar({ routes, compact = false }: MobileHeroSolarProp
               Guarda il Radar
             </Link>
           </div>
-          <p className="home-discovery-hero__proof">
-            Scopri <span aria-hidden="true">·</span> Confronta <span aria-hidden="true">·</span> Salva
-          </p>
+          <nav className="home-decision-track" aria-label="Il tuo percorso di scelta">
+            <div className="home-decision-track__header">
+              <span>Il tuo percorso</span>
+              <strong>1/3</strong>
+            </div>
+            <ol>
+              <li className="is-active">
+                <Link href="/archivio">
+                  <span aria-hidden="true">1</span>
+                  Scopri
+                </Link>
+              </li>
+              <li>
+                <Link href="/compare">
+                  <span aria-hidden="true">2</span>
+                  Confronta
+                </Link>
+              </li>
+              <li>
+                <Link href="/shortlist">
+                  <span aria-hidden="true">3</span>
+                  Salva
+                </Link>
+              </li>
+            </ol>
+          </nav>
         </div>
 
         <div className="home-discovery-hero__visual" aria-label="Percorsi rapidi">

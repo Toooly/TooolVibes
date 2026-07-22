@@ -62,74 +62,66 @@ export function DesktopVibeRadar({
         : "Feed Product Hunt non disponibile";
 
   return (
-    <div className="desktop-vibe desktop-vibe-radar">
-      <section className="desktop-vibe-section desktop-vibe-radar-hero desktop-vibe-radar-hero--simple">
-        <div className="desktop-vibe-copy desktop-vibe-radar-title" data-orbit-shield>
-          <h1>Radar Live</h1>
+    <div className="radar-command radar-command--desktop">
+      <section className="radar-command__shell" aria-labelledby="radar-page-title">
+        <header className="radar-command__header" data-orbit-shield>
+          <div>
+            <h1 id="radar-page-title">Radar</h1>
+            <p className="radar-command__subtitle">Classifica Product Hunt</p>
+          </div>
+          <p className="radar-command__source" role="status" aria-live="polite">
+            {sourceLabel}
+          </p>
+        </header>
+
+        <div className="radar-command__controls">
+          <div className="radar-control-group" role="group" aria-labelledby="radar-range-label">
+            <span id="radar-range-label" className="radar-control-group__label">Periodo</span>
+            {radarRangeTabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                aria-pressed={activeRange === tab.key}
+                aria-controls="radar-results"
+                className="radar-control-group__button"
+                onClick={() => setActiveRange(tab.key)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <div className="radar-control-group" role="group" aria-labelledby="radar-view-label">
+            <span id="radar-view-label" className="radar-control-group__label">Vista</span>
+            {radarVisualOptions.map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                aria-pressed={activeVisual === option.key}
+                aria-controls="radar-results"
+                className="radar-control-group__button"
+                onClick={() => setActiveVisual(option.key)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid w-full justify-items-center gap-4">
-          <div className="grid justify-items-center gap-1 text-center" data-orbit-shield>
-            <p className="desktop-vibe-eyebrow">Classifica live</p>
-            <h2 className="text-xl font-bold text-white/90 sm:text-2xl">
-              Classifica Product Hunt
-            </h2>
-            <p className="text-[0.8rem] font-medium text-white/55">
-              {sourceLabel}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <div
-              className="desktop-radar-table__tabs"
-              role="tablist"
-              aria-label="Periodo classifica"
-            >
-              {radarRangeTabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeRange === tab.key}
-                  className={activeRange === tab.key ? "is-active" : undefined}
-                  onClick={() => setActiveRange(tab.key)}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-            <div
-              className="desktop-radar-table__tabs"
-              role="group"
-              aria-label="Visualizzazione desktop"
-            >
-              {radarVisualOptions.map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  aria-pressed={activeVisual === option.key}
-                  className={activeVisual === option.key ? "is-active" : undefined}
-                  onClick={() => setActiveVisual(option.key)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
+        <div id="radar-results" className="radar-command__results" data-view={activeVisual}>
           {activeVisual === "nodes" ? (
-            <div className="desktop-vibe-radar-stage" aria-label="Radar 3D Product Hunt">
+            <div className="radar-command-field" role="region" aria-label="Radar visuale Product Hunt">
               {threeDEnabled && <Radar3DLayer />}
-              <span className="desktop-vibe-radar-sweep-line" aria-hidden="true" />
-              <span className="desktop-vibe-radar-core" aria-hidden="true">
+              <span className="radar-command-field__ring radar-command-field__ring--outer" aria-hidden="true" />
+              <span className="radar-command-field__ring radar-command-field__ring--inner" aria-hidden="true" />
+              <span className="radar-command-field__axis" aria-hidden="true" />
+              <span className="radar-command-field__sweep" aria-hidden="true" />
+              <span className="radar-command-field__core" aria-hidden="true">
                 <Radar />
               </span>
-              <DesktopRadarNodes range={activeRange} />
+              <DesktopRadarNodes range={activeRange} presentation="command" />
             </div>
           ) : (
-            <div id="rankings" className="w-full max-w-[72rem]">
-              <DesktopRadarTable range={activeRange} />
-            </div>
+            <DesktopRadarTable range={activeRange} />
           )}
         </div>
       </section>

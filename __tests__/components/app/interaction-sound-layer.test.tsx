@@ -276,7 +276,7 @@ describe("InteractionSoundLayerV2 facade — interaction playback", () => {
       <>
         <InteractionSoundLayerV2 />
         <button type="button">Apri</button>
-        <div className="dynamic-card">card</div>
+        <a href="/radar">card</a>
       </>
     );
     unlockViaPointerDown("Apri");

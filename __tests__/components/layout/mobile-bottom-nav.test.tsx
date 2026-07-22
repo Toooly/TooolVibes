@@ -296,8 +296,9 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
     compareCountState.current = 2;
     renderBottomNav();
 
-    const grid = getBottomNav().querySelector(".grid");
-    expect(grid?.className).toContain("grid-cols-5");
+    const grid = getBottomNav().querySelector(".site-mobile-footer-nav__grid");
+    expect(grid).toBeTruthy();
+    expect(grid?.children).toHaveLength(5);
 
     const links = within(getBottomNav()).getAllByRole("link");
     expect(links).toHaveLength(5);

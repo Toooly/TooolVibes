@@ -117,8 +117,8 @@ describe("DesktopVibeRadar — composizione unica e query condivisa (B44 / DESK-
       await screen.findByRole("region", { name: "Classifica Product Hunt" }),
     ).toBeTruthy();
     // Render esclusivo: lo stage nodes non è montato.
-    expect(screen.queryByLabelText("Radar 3D Product Hunt")).toBeNull();
-    expect(document.querySelectorAll(".desktop-radar-node")).toHaveLength(0);
+    expect(screen.queryByLabelText("Radar visuale Product Hunt")).toBeNull();
+    expect(document.querySelectorAll(".radar-command-signal")).toHaveLength(0);
 
     expect(await screen.findAllByText("Alpha Tool")).not.toHaveLength(0);
     // Header composizione + tabella condividono la stessa key: UNA request.
@@ -137,11 +137,11 @@ describe("DesktopVibeRadar — composizione unica e query condivisa (B44 / DESK-
     fetchByRange(fetchMock);
     renderDesktopRadar("nodes");
 
-    expect(await screen.findByLabelText("Radar 3D Product Hunt")).toBeTruthy();
+    expect(await screen.findByLabelText("Radar visuale Product Hunt")).toBeTruthy();
     expect(screen.queryByRole("region", { name: "Classifica Product Hunt" })).toBeNull();
 
     await waitFor(() =>
-      expect(document.querySelectorAll(".desktop-radar-node")).toHaveLength(2),
+      expect(document.querySelectorAll(".radar-command-signal")).toHaveLength(2),
     );
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
@@ -155,18 +155,18 @@ describe("DesktopVibeRadar — composizione unica e query condivisa (B44 / DESK-
     ).toBeTruthy();
 
     // Cambio range: nuova key, nuova request.
-    fireEvent.click(screen.getByRole("tab", { name: "Settimana" }));
+    fireEvent.click(screen.getByRole("button", { name: "Settimana" }));
     expect(await screen.findAllByText("Gamma Tool")).not.toHaveLength(0);
     expect(fetchMock).toHaveBeenCalledTimes(2);
 
     // Switch su nodes: tabella smontata, nodi montati, range preservato.
     fireEvent.click(screen.getByRole("button", { name: "Radar" }));
-    expect(await screen.findByLabelText("Radar 3D Product Hunt")).toBeTruthy();
+    expect(await screen.findByLabelText("Radar visuale Product Hunt")).toBeTruthy();
     expect(screen.queryByRole("region", { name: "Classifica Product Hunt" })).toBeNull();
     await waitFor(() =>
-      expect(document.querySelectorAll(".desktop-radar-node")).toHaveLength(1),
+      expect(document.querySelectorAll(".radar-command-signal")).toHaveLength(1),
     );
-    expect(screen.getByRole("tab", { name: "Settimana" }).getAttribute("aria-selected")).toBe("true");
+    expect(screen.getByRole("button", { name: "Settimana" }).getAttribute("aria-pressed")).toBe("true");
     // Nessuna nuova request: la key "week" è in cache condivisa.
     expect(fetchMock).toHaveBeenCalledTimes(2);
 
@@ -175,12 +175,12 @@ describe("DesktopVibeRadar — composizione unica e query condivisa (B44 / DESK-
     expect(
       await screen.findByRole("region", { name: "Classifica Product Hunt" }),
     ).toBeTruthy();
-    expect(screen.queryByLabelText("Radar 3D Product Hunt")).toBeNull();
+    expect(screen.queryByLabelText("Radar visuale Product Hunt")).toBeNull();
     expect(await screen.findAllByText("Gamma Tool")).not.toHaveLength(0);
     expect(fetchMock).toHaveBeenCalledTimes(2);
 
     // Ritorno al range "day": servito da cache, nessuna terza request.
-    fireEvent.click(screen.getByRole("tab", { name: "Giorno" }));
+    fireEvent.click(screen.getByRole("button", { name: "Giorno" }));
     expect(await screen.findAllByText("Alpha Tool")).not.toHaveLength(0);
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
@@ -200,16 +200,16 @@ describe("DesktopVibeRadar — composizione unica e query condivisa (B44 / DESK-
     expect(screen.getByText("Aggiornamento non disponibile")).toBeTruthy();
     // Nessun item di classifica inventato.
     expect(screen.queryByText("Alpha Tool")).toBeNull();
-    expect(document.querySelectorAll(".desktop-radar-table__row:not(.is-loading)")).toHaveLength(0);
+    expect(document.querySelectorAll(".radar-command-table__row:not(.is-loading)")).toHaveLength(0);
 
     // Anche la visual nodes dichiara lo stato senza nodi finti.
     fireEvent.click(screen.getByRole("button", { name: "Radar" }));
-    expect(await screen.findByLabelText("Radar 3D Product Hunt")).toBeTruthy();
-    const status = await screen.findByRole("status");
-    expect(status.textContent).toContain(
+    expect(await screen.findByLabelText("Radar visuale Product Hunt")).toBeTruthy();
+    const statuses = await screen.findAllByRole("status");
+    expect(statuses.some((status) => status.textContent?.includes(
       "Classifica Product Hunt temporaneamente non disponibile.",
-    );
-    expect(document.querySelectorAll(".desktop-radar-node")).toHaveLength(0);
+    ))).toBe(true);
+    expect(document.querySelectorAll(".radar-command-signal")).toHaveLength(0);
     // I vecchi fallback inventati B36 (nomi/voti finti) non esistono più.
     expect(screen.queryByText("Blink")).toBeNull();
     expect(screen.queryByText("VibeCode")).toBeNull();
@@ -231,24 +231,24 @@ describe("DesktopVibeRadar — composizione unica e query condivisa (B44 / DESK-
       await screen.findByText(/Ultima sincronizzazione Product Hunt: 08:00 UTC/),
     ).toBeTruthy();
     expect(screen.getByText("Ultima sync: 08:00 UTC")).toBeTruthy();
-    const notice = await screen.findByRole("status");
-    expect(notice.textContent).toContain("Aggiornamento live non riuscito.");
-    expect(notice.textContent).toContain("08:00 UTC");
+    const statuses = await screen.findAllByRole("status");
+    expect(statuses.some((status) => status.textContent?.includes("Aggiornamento live non riuscito."))).toBe(true);
+    expect(statuses.some((status) => status.textContent?.includes("08:00 UTC"))).toBe(true);
     // I dati reali dell'ultima sync restano visibili.
     expect(await screen.findAllByText("Beta Tool")).not.toHaveLength(0);
   });
 
-  it("keyboard/table semantics: tablist con tab selezionabile e toggle aria-pressed", async () => {
+  it("keyboard/table semantics: gruppi di button nativi con aria-pressed", async () => {
     fetchByRange(fetchMock);
     renderDesktopRadar("table");
 
-    const tablist = screen.getByRole("tablist", { name: "Periodo classifica" });
-    expect(tablist).toBeTruthy();
-    const dayTab = screen.getByRole("tab", { name: "Giorno" });
-    expect(dayTab.getAttribute("aria-selected")).toBe("true");
-    expect(screen.getByRole("tab", { name: "Mese" }).getAttribute("aria-selected")).toBe("false");
+    const rangeGroup = screen.getByRole("group", { name: "Periodo" });
+    expect(rangeGroup).toBeTruthy();
+    const dayButton = screen.getByRole("button", { name: "Giorno" });
+    expect(dayButton.getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("button", { name: "Mese" }).getAttribute("aria-pressed")).toBe("false");
 
-    const visualGroup = screen.getByRole("group", { name: "Visualizzazione desktop" });
+    const visualGroup = screen.getByRole("group", { name: "Vista" });
     expect(visualGroup).toBeTruthy();
     expect(
       screen.getByRole("button", { name: "Tabella" }).getAttribute("aria-pressed"),
@@ -259,7 +259,7 @@ describe("DesktopVibeRadar — composizione unica e query condivisa (B44 / DESK-
 
     // Tutti i controlli sono button nativi: focusabili da tastiera.
     for (const name of ["Giorno", "Settimana", "Mese"]) {
-      expect(screen.getByRole("tab", { name }).tagName).toBe("BUTTON");
+      expect(screen.getByRole("button", { name }).tagName).toBe("BUTTON");
     }
     for (const name of ["Tabella", "Radar"]) {
       expect(screen.getByRole("button", { name }).tagName).toBe("BUTTON");

@@ -4,6 +4,7 @@ import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import type { HomeLayout } from "@/lib/config/home-experience";
 import { NativePlacement } from "@/components/monetization/native-placement";
 import { MobileHeroSolar } from "./mobile-hero-solar";
+import { HomeRadarPreview } from "./home-radar-preview";
 import { MobileMethodSteps } from "./mobile-method-steps";
 import { MobileSpotlight } from "./mobile-spotlight";
 
@@ -106,6 +107,7 @@ export function VibeHomeV2({
       data-home-layout={layout}
     >
       <MobileHeroSolar routes={solarRoutes} compact={isTimeToValue} />
+      <HomeRadarPreview />
       {focusTool && <MobileSpotlight tool={focusTool} supportingTools={supportingTools} />}
       <section className="page-shell sm:hidden">
         <NativePlacement placementKey="home-featured-tool" variant="compact" />

@@ -9,10 +9,10 @@ import {
 
 describe("radar desktop visual config (B44 / DESK-804)", () => {
   it("ha un default sicuro e dichiarato", () => {
-    expect(DEFAULT_RADAR_DESKTOP_VISUAL).toBe("table");
-    expect(resolveRadarDesktopVisual(undefined)).toBe("table");
-    expect(resolveRadarDesktopVisual("")).toBe("table");
-    expect(resolveRadarDesktopVisual("   ")).toBe("table");
+    expect(DEFAULT_RADAR_DESKTOP_VISUAL).toBe("nodes");
+    expect(resolveRadarDesktopVisual(undefined)).toBe("nodes");
+    expect(resolveRadarDesktopVisual("")).toBe("nodes");
+    expect(resolveRadarDesktopVisual("   ")).toBe("nodes");
   });
 
   it("risolve i valori validi in modo case-insensitive e tollerante agli spazi", () => {

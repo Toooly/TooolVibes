@@ -36,17 +36,17 @@ function formatSignal(item: ProductHuntItem) {
 
 function DesktopRadarTableSkeleton() {
   return (
-    <div className="desktop-radar-table__body" aria-hidden="true">
+    <div className="radar-command-table__body" aria-hidden="true">
       {Array.from({ length: 5 }).map((_, index) => (
-        <div key={index} className="desktop-radar-table__row is-loading">
-          <span className="desktop-radar-table__rank" />
-          <span className="desktop-radar-table__visual" />
-          <span className="desktop-radar-table__copy">
+        <div key={index} className="radar-command-table__row is-loading">
+          <span className="radar-command-table__rank" />
+          <span className="radar-command-table__visual" />
+          <span className="radar-command-table__copy">
             <span />
             <small />
           </span>
-          <span className="desktop-radar-table__metric" />
-          <span className="desktop-radar-table__open" />
+          <span className="radar-command-table__metric" />
+          <span className="radar-command-table__open" />
         </div>
       ))}
     </div>
@@ -70,15 +70,15 @@ export function DesktopRadarTable({ range }: { range: ProductHuntRange }) {
 
   return (
     <section
-      className="desktop-radar-table"
+      className="radar-command-table"
       aria-label="Classifica Product Hunt"
       aria-busy={isLoading}
     >
-      <div className="desktop-radar-table__topbar">
-        <span className="desktop-radar-table__updated">{updatedLabel}</span>
+      <div className="radar-command-table__topbar">
+        <span className="radar-command-table__updated">{updatedLabel}</span>
       </div>
 
-      <div className="desktop-radar-table__head" aria-hidden="true">
+      <div className="radar-command-table__head" aria-hidden="true">
         <span>#</span>
         <span>Tool</span>
         <span>Segnale</span>
@@ -91,25 +91,27 @@ export function DesktopRadarTable({ range }: { range: ProductHuntRange }) {
         <>
           {isStaleFallback && (
             <p
-              className="mx-4 mt-4 rounded-[18px] border border-white/10 bg-white/[0.055] p-4 text-sm leading-6 text-white/70"
+              className="radar-command__notice"
               role="status"
+              aria-live="polite"
             >
               {payload?.message ?? "Aggiornamento live non riuscito."} Ultima
               classifica reale sincronizzata:{" "}
               {formatUtcTimeLabel(payload?.updatedAt ?? "")}.
             </p>
           )}
-          <div className="desktop-radar-table__body">
+          <div className="radar-command-table__body">
             {items.slice(0, 10).map((item, index) => (
               <a
                 key={item.id}
                 href={item.productHuntUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="desktop-radar-table__row"
+                target={item.productHuntUrl.startsWith("http") ? "_blank" : undefined}
+                rel={item.productHuntUrl.startsWith("http") ? "noopener noreferrer" : undefined}
+                className="radar-command-table__row"
+                aria-label={`${item.name}. ${formatSignal(item)}. Apri su Product Hunt.`}
               >
-                <span className="desktop-radar-table__rank">#{index + 1}</span>
-                <span className="desktop-radar-table__visual">
+                <span className="radar-command-table__rank">#{index + 1}</span>
+                <span className="radar-command-table__visual">
                   {item.thumbnailUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={item.thumbnailUrl} alt="" loading="lazy" />
@@ -117,12 +119,12 @@ export function DesktopRadarTable({ range }: { range: ProductHuntRange }) {
                     <span>{item.name.slice(0, 2).toUpperCase()}</span>
                   )}
                 </span>
-                <span className="desktop-radar-table__copy">
+                <span className="radar-command-table__copy">
                   <strong>{item.name}</strong>
                   <small>{item.tagline}</small>
                 </span>
-                <span className="desktop-radar-table__metric">{formatSignal(item)}</span>
-                <span className="desktop-radar-table__open">
+                <span className="radar-command-table__metric">{formatSignal(item)}</span>
+                <span className="radar-command-table__open">
                   Apri
                   <ExternalLink size={13} aria-hidden="true" />
                 </span>
@@ -131,13 +133,13 @@ export function DesktopRadarTable({ range }: { range: ProductHuntRange }) {
           </div>
         </>
       ) : (
-        <div className="desktop-radar-table__empty">
+        <div className="radar-command-table__empty" role="status" aria-live="polite">
           <strong>
             {radarState === "empty"
               ? "Nessun segnale Product Hunt in questo intervallo."
               : (payload?.message ?? "Classifica Product Hunt non disponibile.")}
           </strong>
-          <span>Il radar resta vuoto finche non tornano dati reali.</span>
+          <span>Il radar resta vuoto finché non tornano dati reali.</span>
         </div>
       )}
     </section>

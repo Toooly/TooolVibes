@@ -42,9 +42,16 @@ function resolveStageStatusCopy(
   }
 }
 
-export function DesktopRadarNodes({ range }: { range: ProductHuntRange }) {
+export function DesktopRadarNodes({
+  range,
+  presentation = "legacy",
+}: {
+  range: ProductHuntRange;
+  presentation?: "legacy" | "command";
+}) {
   const { payload, isLoading } = useProductHuntRadar(range);
   const radarState = resolveRadarDataState(payload);
+  const isCommand = presentation === "command";
 
   const nodes = useMemo(() => {
     if (radarState !== "ready") return [];
@@ -67,13 +74,14 @@ export function DesktopRadarNodes({ range }: { range: ProductHuntRange }) {
   if (radarState !== "ready") {
     return (
       <div
-        className={`desktop-radar-nodes${isLoading ? "" : " is-loaded"}`}
-        aria-label="Top 5 tool nel radar live"
+        className={isCommand ? "radar-command-signals" : `desktop-radar-nodes${isLoading ? "" : " is-loaded"}`}
+        aria-label="Segnali Product Hunt"
         aria-busy={isLoading}
       >
         <p
-          className="absolute left-1/2 top-1/2 z-[6] w-full max-w-[16rem] -translate-x-1/2 -translate-y-1/2 text-center text-sm font-medium text-white/65"
-          role={radarState === "loading" ? undefined : "status"}
+          className={isCommand ? "radar-command-field__status" : "absolute left-1/2 top-1/2 z-[6] w-full max-w-[16rem] -translate-x-1/2 -translate-y-1/2 text-center text-sm font-medium text-white/65"}
+          role="status"
+          aria-live="polite"
         >
           {resolveStageStatusCopy(radarState, payload?.message)}
         </p>
@@ -83,8 +91,8 @@ export function DesktopRadarNodes({ range }: { range: ProductHuntRange }) {
 
   return (
     <div
-      className="desktop-radar-nodes is-loaded"
-      aria-label="Top 5 tool nel radar live"
+      className={isCommand ? "radar-command-signals" : "desktop-radar-nodes is-loaded"}
+      aria-label="Segnali Product Hunt"
     >
       {nodes.map((node) => {
         const iconStyle = node.thumbnailUrl
@@ -107,24 +115,26 @@ export function DesktopRadarNodes({ range }: { range: ProductHuntRange }) {
             href={node.productHuntUrl}
             target={node.productHuntUrl.startsWith("http") ? "_blank" : undefined}
             rel={node.productHuntUrl.startsWith("http") ? "noopener noreferrer" : undefined}
-            className="desktop-radar-node"
+            className={isCommand ? "radar-command-signal" : "desktop-radar-node"}
             style={nodeStyle}
-            aria-label={`${node.name}. ${node.votesCount} voti, posizione ${node.index + 1}`}
+            aria-label={`${node.name}. ${node.votesCount} voti, posizione ${node.index + 1}. Apri su Product Hunt.`}
           >
-            <span className="desktop-radar-node__halo" aria-hidden="true" />
-            <span className="desktop-radar-node__ring" aria-hidden="true" />
-            <span className="desktop-radar-node__body" style={iconStyle}>
+            {isCommand ? null : <span className="desktop-radar-node__halo" aria-hidden="true" />}
+            <span className={isCommand ? "radar-command-signal__ring" : "desktop-radar-node__ring"} aria-hidden="true" />
+            <span className={isCommand ? "radar-command-signal__body" : "desktop-radar-node__body"} style={iconStyle}>
               {node.thumbnailUrl ? null : (
-                <span className="desktop-radar-node__initials">
+                <span className={isCommand ? "radar-command-signal__initials" : "desktop-radar-node__initials"}>
                   {node.name.slice(0, 2).toUpperCase()}
                 </span>
               )}
             </span>
-            <span className="desktop-radar-node__label">
+            <span className={isCommand ? "radar-command-signal__label" : "desktop-radar-node__label"}>
               <strong>{node.name}</strong>
-              <small>{node.votesCount || "in scansione"} voti</small>
+              <small>{node.votesCount > 0 ? `${node.votesCount} voti` : "Segnale in verifica"}</small>
             </span>
-            {node.index === 0 ? <span className="desktop-radar-node__badge">Caldo</span> : null}
+            <span className={isCommand ? "radar-command-signal__rank" : "desktop-radar-node__badge"}>
+              #{node.index + 1}
+            </span>
           </a>
         );
       })}

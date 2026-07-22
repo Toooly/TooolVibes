@@ -45,18 +45,14 @@ function PodiumTool({
   );
 
   return (
-    <>
-      <Link
-        href={`/toools/${tool.slug}`}
-        className={`${podiumClassName} v-podium-step--mobile-link`}
-        aria-label={`Apri la scheda di ${tool.name}, posizione ${rank}`}
-      >
-        {renderContent()}
-      </Link>
-      <div className={`${podiumClassName} v-podium-step--desktop-static`}>
-        {renderContent()}
-      </div>
-    </>
+    <Link
+      href={`/toools/${tool.slug}`}
+      className={podiumClassName}
+      aria-label={`Apri la scheda di ${tool.name}, posizione ${rank}`}
+      data-sonic-action="detail"
+    >
+      {renderContent()}
+    </Link>
   );
 }
 

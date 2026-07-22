@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { ProductHuntPayload } from "@/lib/radar/product-hunt-contract";
@@ -50,6 +50,21 @@ const LIVE_PAYLOAD: ProductHuntPayload = {
       votesCount: 80,
       commentsCount: 5,
       productHuntUrl: "https://www.producthunt.com/posts/beta",
+    },
+  ],
+};
+
+const WEEK_PAYLOAD: ProductHuntPayload = {
+  ...LIVE_PAYLOAD,
+  range: "week",
+  items: [
+    {
+      id: "ph-3",
+      name: "Gamma Tool",
+      tagline: "Segnale settimanale",
+      votesCount: 240,
+      commentsCount: 22,
+      productHuntUrl: "https://www.producthunt.com/posts/gamma",
     },
   ],
 };
@@ -135,9 +150,9 @@ describe("MobileRadarView — stati onesti del radar (B36 / FLOW-606)", () => {
     expect(
       screen.getByText(/Ultima sincronizzazione Product Hunt: 08:00 UTC/),
     ).toBeTruthy();
-    const notice = await screen.findByRole("status");
-    expect(notice.textContent).toContain("Aggiornamento live non riuscito");
-    expect(notice.textContent).toContain("08:00 UTC");
+    const statuses = await screen.findAllByRole("status");
+    expect(statuses.some((status) => status.textContent?.includes("Aggiornamento live non riuscito"))).toBe(true);
+    expect(statuses.some((status) => status.textContent?.includes("08:00 UTC"))).toBe(true);
     // I dati reali dell'ultima sync restano visibili, non sostituiti da placeholder.
     expect(await screen.findAllByText("Beta Tool")).not.toHaveLength(0);
   });
@@ -148,10 +163,11 @@ describe("MobileRadarView — stati onesti del radar (B36 / FLOW-606)", () => {
     renderMobileRadarView();
 
     expect(await screen.findByText("Radar non disponibile")).toBeTruthy();
-    // Label di stato presente sia in header sia nei nodi placeholder neutri.
+    // Stato dichiarato nell'header, senza nodi simulati nello strumento.
     expect((await screen.findAllByText("Radar in pausa")).length).toBeGreaterThan(0);
     expect(screen.getByText("Feed Product Hunt non disponibile")).toBeTruthy();
     expect(screen.queryByText("Classifica radar")).toBeNull();
+    expect(document.querySelectorAll(".radar-mobile__node")).toHaveLength(0);
   });
 
   it("missing-token: messaggio del backend e nessuna classifica finta", async () => {
@@ -194,5 +210,23 @@ describe("MobileRadarView — stati onesti del radar (B36 / FLOW-606)", () => {
       expect(screen.getByText("Nessun segnale disponibile")).toBeTruthy(),
     );
     expect(screen.queryByText("Classifica radar")).toBeNull();
+  });
+
+  it("cambio periodo: aggiorna la query e mantiene aria-pressed coerente", async () => {
+    fetchMock.mockImplementation((input: RequestInfo | URL) =>
+      String(input).includes("range=week")
+        ? fetchOk(WEEK_PAYLOAD)
+        : fetchOk(LIVE_PAYLOAD),
+    );
+
+    renderMobileRadarView();
+    expect(await screen.findAllByText("Alpha Tool")).not.toHaveLength(0);
+
+    fireEvent.click(screen.getByRole("button", { name: "Settimana" }));
+
+    expect(await screen.findAllByText("Gamma Tool")).not.toHaveLength(0);
+    expect(screen.getByRole("button", { name: "Settimana" }).getAttribute("aria-pressed")).toBe("true");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(String(fetchMock.mock.calls[1][0])).toContain("/api/product-hunt?range=week");
   });
 });
