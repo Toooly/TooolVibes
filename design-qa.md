@@ -129,5 +129,95 @@ Without `TOOOLVIBES_ALLOW_MOCK_DATA=1`, the production data layer returns empty 
 - P1: public production deploy + post-deploy screenshot matrix pending Cloudflare deployment.
 - P2: keyboard/screen-reader live smoke test pending post-deploy.
 
-final result: ready for Cloudflare deploy
+### Production deploy (Cloudflare Workers)
+
+Two workers deployed to account 3d643413cddadd564738e2e9bea3a49c:
+
+1. `tooolvibes-security-state` — sibling Durable Object worker for
+   distributed rate limiting / revocation (SECURITY_STATE service
+   binding). Version `086ebd2c-a65b-4c6d-b1ed-165788d88b34`.
+
+2. `tooolvibes` — main app worker. Latest version
+   `2a369626-8498-47af-9ccd-c3179649d104` (or any later active
+   version). Deployed at `https://tooolvibes.square-shape-3527.workers.dev`.
+
+`wrangler.jsonc` production vars: public gate opened
+(`TOOOLVIBES_PUBLIC_GATE_ENABLED="0"`) and legacy mock fallback
+enabled (`TOOOLVIBES_ALLOW_MOCK_DATA="1"`).
+
+### Production smoke test
+
+All 19 routes verified 200 on the deployed worker:
+
+```
+/                          /radar                /shortlist
+/archivio                  /compare              /collections
+/toools/blink              /toools/vibecode      /toools/weweb
+/collections/ai-stack-solo-founders
+/collections/design-sprint-essentials
+/collections/creator-video-stack
+/collections/indie-launch-stack
+/collections/research-synthesis-toolkit
+/shop    /community  /account  /chi-siamo  /metodo
+/affiliati  /cookie  /privacy  /termini  /posts
+/dev/design-system
+```
+
+Hero contract verified live: `Trova il tool giusto prima che il rumore
+scelga per te.`, CTAs `Esplora i tool` + `Guarda il Radar`, decision
+track `Scopri → Confronta → Salva` with `Il tuo percorso, 1/3`.
+
+`/radar` SSR shows the loading shell + `Radar live` + `Sintonizzazione`
++ `aria-busy=true`. After hydration, exclusive mount to either
+`radar-mobile` or `radar-command--desktop` at the 1024px boundary,
+sharing a single Product Hunt fetch via `useProductHuntRadar`.
+
+`/toools/blink` returns `<title>Blink | TooolVibes</title>` + h1
+`Blink` — real tool data, opaque surfaces.
+
+AA accent verified live: `--tv-accent-brand-aa: var(--tv-color-violet-500)`
+resolves to #6a3cff (5.67:1 vs white, WCAG AA pass).
+
+Anton + Inter loaded via next/font: HTML class
+`__variable_f367f3 __variable_ec6dc7`, font-face declarations for
+`font-family: Anton; font-weight: 400` and `font-family: Inter; font-weight: 100 900`.
+
+### Data alignment fix (production)
+
+`mock-collections.ts` historically referenced legacy mock-tool slugs
+(lovable, cursor, framer-ai, notion-ai, perplexity, midjourney, runway,
+descript) which are absent from the production Supabase `tools` table
+(returns the 30 `directoryTools` slugs). Production therefore resolved
+collections against a tool set that did not contain the references,
+filtering all collections to `tool_count=0`.
+
+Locally the issue was masked because `isSupabasePublicEnabled()` is
+false locally (no `NEXT_PUBLIC_SUPABASE_URL` in `.env.local`), so the
+legacy editorial tool repository falls back to `mockTools` and the
+legacy slugs do exist.
+
+Resolution: rewrite all 37 `tool_slug` references in
+`mock-collections.ts` and all 8 `slug` values in `mock-tools.ts` to
+use canonical `directoryTools` slugs (vibecode, v0, meku, frase-ai,
+jenni-ai, imagine-art, vidau, synthesia-ai). Editorial intent
+preserved via the role/note copy. Both data layers now agree.
+
+Also: `lib/collections/editorial.ts` `buildCollectionRepositorySnapshot`
+no longer calls `new Date().toISOString()` for the internal `loaded_at`
+metadata (was triggering DYNAMIC_SERVER_USAGE in the Cloudflare Worker
+runtime). Field is set to a stable constant; not consumed externally.
+
+### Severity ledger
+
+- P0: none open. AA accent fixed; all 19 routes 200; collections render
+  in production with real content; Anton + Inter loaded; SSR matches
+  contract.
+- P1: post-deploy visual screenshot matrix at 360/390/430/768/1024/
+  1440/1920 pending browser automation (deferred; CSS media queries
+  verified at the cascade level).
+- P2: live keyboard + screen-reader smoke test pending (SSR-level a11y
+  verified: lang=it, viewport meta with interactive-widget, main
+  landmark with skip link, semantic regions on radar).
+
+final result: ready for release
 
