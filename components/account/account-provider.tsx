@@ -313,8 +313,27 @@ export function AccountProvider({
     let unsubscribe: (() => void) | undefined;
 
     async function bootstrap() {
-      if (!isSupabaseBrowserEnabled()) {
-        await loadBrowserSupabaseRuntimeConfig();
+      // Hard cap on the runtime-config fetch so a stuck /api/auth/config
+      // cannot leave the user stuck on the "Stiamo preparando il tuo spazio"
+      // loading screen. Without this, a slow/missing network keeps status
+      // == "loading" indefinitely; with it, we degrade to "guest" after 5s.
+      const configTimeoutMs = 5000;
+      let configTimedOut = false;
+      await Promise.race([
+        loadBrowserSupabaseRuntimeConfig(),
+        new Promise<void>((resolve) => {
+          setTimeout(() => {
+            configTimedOut = true;
+            resolve();
+          }, configTimeoutMs);
+        }),
+      ]);
+      if (!isActive) {
+        return;
+      }
+      if (configTimedOut) {
+        // Fall through; treat as if Supabase is not enabled so we degrade
+        // to guest instead of staying on the loading screen.
       }
 
       const enabled = isSupabaseBrowserEnabled();

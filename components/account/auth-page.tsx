@@ -91,7 +91,13 @@ export function AuthPage() {
             <div className="v-auth-brand">
               <BrandLogo size={44} priority />
             </div>
-            <h1 className="v-auth-title">TooolVibes</h1>
+            <h1 className="v-auth-title">
+              {activeTab === "admin"
+                ? "Accesso amministratore"
+                : activeTab === "register"
+                  ? "Crea il tuo workspace"
+                  : "Accedi al workspace"}
+            </h1>
             <p className="v-auth-subtitle">
               {activeTab === "admin"
                 ? "Accesso riservato agli amministratori"
