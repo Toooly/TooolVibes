@@ -30,32 +30,32 @@ export const mockCollections: CuratedCollectionRecord[] = [
     editorial_order: 10,
     included_tools: [
       {
-        tool_slug: "lovable",
+        tool_slug: "vibecode",
         role: "Dall'idea all'interfaccia",
         note: "Per trasformare un'intuizione in una prima interfaccia navigabile senza attrito iniziale.",
         featured: true,
         order: 1,
       },
       {
-        tool_slug: "cursor",
+        tool_slug: "v0",
         role: "Costruzione e rifinitura",
         note: "Quando il prototipo inizia a chiedere struttura, refactor e controllo vero del codice.",
         order: 2,
       },
       {
-        tool_slug: "framer-ai",
+        tool_slug: "meku",
         role: "Superficie di lancio",
         note: "Per dare credibilità visiva alla presentazione pubblica o alla landing di validazione.",
         order: 3,
       },
       {
-        tool_slug: "notion-ai",
+        tool_slug: "frase-ai",
         role: "Memoria operativa",
         note: "Per tenere insieme note, roadmap leggera e materiali di lavoro senza uscire dal flusso.",
         order: 4,
       },
       {
-        tool_slug: "perplexity",
+        tool_slug: "jenni-ai",
         role: "Ricerca",
         note: "Da usare come orientamento rapido prima di decidere cosa approfondire davvero.",
         order: 5,
@@ -93,26 +93,26 @@ export const mockCollections: CuratedCollectionRecord[] = [
     editorial_order: 20,
     included_tools: [
       {
-        tool_slug: "midjourney",
+        tool_slug: "imagine-art",
         role: "Esplorazione visuale",
         note: "Per esplorare direzioni creative e materializzare rapidamente il tono visuale del progetto.",
         featured: true,
         order: 1,
       },
       {
-        tool_slug: "framer-ai",
+        tool_slug: "meku",
         role: "Rifinitura landing",
         note: "Per consolidare l'idea in una pagina leggibile e credibile.",
         order: 2,
       },
       {
-        tool_slug: "lovable",
+        tool_slug: "vibecode",
         role: "Prototipo interattivo",
         note: "Per testare il feeling app-like e l'architettura di base prima di costruire davvero.",
         order: 3,
       },
       {
-        tool_slug: "notion-ai",
+        tool_slug: "frase-ai",
         role: "Memoria sprint",
         note: "Per catturare ipotesi, insight e passaggi decisionali durante il lavoro.",
         order: 4,
@@ -149,26 +149,26 @@ export const mockCollections: CuratedCollectionRecord[] = [
     editorial_order: 30,
     included_tools: [
       {
-        tool_slug: "runway",
+        tool_slug: "vidau",
         role: "Motore visuale",
         note: "Per idee video, generazione e rifinitura con una sensazione prodotto più matura della media.",
         featured: true,
         order: 1,
       },
       {
-        tool_slug: "descript",
+        tool_slug: "synthesia-ai",
         role: "Editing via testo",
         note: "Per alleggerire il lavoro su audio e video quando il contenuto conta più dell'editing tecnico puro.",
         order: 2,
       },
       {
-        tool_slug: "midjourney",
+        tool_slug: "imagine-art",
         role: "Frame dell'idea",
         note: "Per visual direction, moodboard e frame references prima della produzione finale.",
         order: 3,
       },
       {
-        tool_slug: "notion-ai",
+        tool_slug: "frase-ai",
         role: "Memoria produzione",
         note: "Per organizzare scalette, appunti, publishing notes e richiami editoriali.",
         order: 4,
@@ -207,20 +207,20 @@ export const mockCollections: CuratedCollectionRecord[] = [
     editorial_order: 40,
     included_tools: [
       {
-        tool_slug: "perplexity",
+        tool_slug: "jenni-ai",
         role: "Orientamento iniziale",
         note: "Per costruire il primo perimetro della ricerca e capire cosa vale davvero approfondire.",
         featured: true,
         order: 1,
       },
       {
-        tool_slug: "notion-ai",
+        tool_slug: "frase-ai",
         role: "Archivio di sintesi",
         note: "Per salvare insight, domande aperte e materiali operativi in un sistema che resta leggibile.",
         order: 2,
       },
       {
-        tool_slug: "cursor",
+        tool_slug: "v0",
         role: "Trasformazione finale",
         note: "Quando la sintesi deve diventare specifica, strutturata o pronta a entrare in una consegna tecnica.",
         order: 3,
@@ -287,9 +287,9 @@ export const mockCollections: CuratedCollectionRecord[] = [
           statement:
               "Il lancio non chiede più tool: chiede una sequenza leggibile in cui prova iniziale, landing, materiali e memoria non si contraddicano.",
           points: [
-            "Framer AI regge il momento pubblico e il tono percepito.",
-            "Lovable fa da ponte tra idea e artefatto navigabile.",
-            "Cursor tiene basso il rischio quando il prototipo si sporca di codice vero.",
+            "Meku regge il momento pubblico e il tono percepito.",
+            "VibeCode fa da ponte tra idea e artefatto navigabile.",
+            "v0 tiene basso il rischio quando il prototipo si sporca di codice vero.",
           ],
         },
         {
@@ -301,21 +301,21 @@ export const mockCollections: CuratedCollectionRecord[] = [
             "Qui non conta solo cosa usi, ma quando lo fai entrare. Questi sono i tre passaggi che spostano davvero la percezione del prodotto nei giorni più sensibili del pre-lancio.",
           tool_moments: [
             {
-              tool_slug: "framer-ai",
+              tool_slug: "meku",
               label: "Credibilità della presenza pubblica",
               note:
                 "Entra quando hai già chiara l'idea e devi trasformarla in una landing che faccia sembrare il lancio più maturo del suo stadio reale.",
               emphasis: "anchor",
             },
             {
-              tool_slug: "lovable",
+              tool_slug: "vibecode",
               label: "Narrazione del prototipo",
               note:
                 "Tiene insieme il prodotto raccontato e il prodotto navigabile, così la prima prova non resta solo una promessa.",
               emphasis: "support",
             },
             {
-              tool_slug: "descript",
+              tool_slug: "synthesia-ai",
               label: "Asset di lancio",
               note:
                 "Fa da ponte tra walkthrough, voce e materiali di contenuto senza costringerti a un flusso media troppo tecnico.",
@@ -329,15 +329,15 @@ export const mockCollections: CuratedCollectionRecord[] = [
           eyebrow: "Lettura del confronto",
           title: "La tensione vera qui non è scegliere un vincitore assoluto, ma capire quale ruolo regge meglio il passaggio successivo.",
           body:
-            "Lovable, Framer AI e Cursor sembrano strumenti di fasi diverse. In pratica si sfiorano molto di più: il punto è capire chi regge la transizione tra prova, percezione e pubblicazione.",
+            "VibeCode, Meku e v0 sembrano strumenti di fasi diverse. In pratica si sfiorano molto di più: il punto è capire chi regge la transizione tra prova, percezione e pubblicazione.",
           compare: {
-            compared_tool_slugs: ["lovable", "framer-ai", "cursor"],
+            compared_tool_slugs: ["vibecode", "meku", "v0"],
             insight:
-              "Lovable vince quando devi far sembrare l'idea già viva. Framer AI vince quando il lancio chiede una presenza credibile. Cursor vince quando la promessa deve reggere nel codice.",
+              "VibeCode vince quando devi far sembrare l'idea già viva. Meku vince quando il lancio chiede una presenza credibile. v0 vince quando la promessa deve reggere nel codice.",
             differentiators: [
-              "Lovable: più rapido nella prima prova e sulla sensazione app-like",
-              "Framer AI: più forte sulla presenza pubblica e sulla cura del lancio",
-              "Cursor: più adatto quando la prova iniziale inizia a richiedere struttura reale",
+              "VibeCode: più rapido nella prima prova e sulla sensazione app-like",
+              "Meku: più forte sulla presenza pubblica e sulla cura del lancio",
+              "v0: più adatto quando la prova iniziale inizia a richiedere struttura reale",
             ],
             recommendation:
               "Mettili a confronto quando il dubbio non è quale sia migliore, ma quale dei tre debba entrare per primo nel tuo kit di lancio.",
@@ -354,25 +354,25 @@ export const mockCollections: CuratedCollectionRecord[] = [
             {
               title: "Dai corpo all'idea",
               body: "Usa la prova iniziale per rendere l'idea spiegabile prima ancora di renderla perfetta.",
-              tool_slug: "lovable",
+              tool_slug: "vibecode",
               outcome: "Hai un artefatto navigabile e condivisibile.",
             },
             {
               title: "Rendi il lancio credibile",
               body: "Porta l'idea in una presenza pubblica con tono, posizionamento e gerarchia più maturi.",
-              tool_slug: "framer-ai",
+              tool_slug: "meku",
               outcome: "Landing e messaggio iniziano a sembrare allineati al prodotto.",
             },
             {
               title: "Proteggi la parte fragile",
               body: "Quando la prova iniziale tocca codice reale, usa disciplina e rifinitura minima per non perdere fluidità.",
-              tool_slug: "cursor",
+              tool_slug: "v0",
               outcome: "La prima prova non collassa appena provi a evolverla.",
             },
             {
               title: "Chiudi i materiali di lancio",
               body: "Prepara walkthrough, voce e materiali che aiutano il prodotto a presentarsi bene anche fuori dalla landing.",
-              tool_slug: "descript",
+              tool_slug: "synthesia-ai",
               outcome: "Il lancio ha un racconto più coeso e più leggibile.",
             },
           ],
@@ -417,32 +417,32 @@ export const mockCollections: CuratedCollectionRecord[] = [
     },
     included_tools: [
       {
-        tool_slug: "framer-ai",
+        tool_slug: "meku",
         role: "Superficie pubblica",
         note: "Per la superficie di presentazione: landing, posizionamento e feeling finale.",
         featured: true,
         order: 1,
       },
       {
-        tool_slug: "lovable",
+        tool_slug: "vibecode",
         role: "Concept di prodotto",
         note: "Per trasformare il concetto in un artefatto navigabile e spiegabile.",
         order: 2,
       },
       {
-        tool_slug: "cursor",
+        tool_slug: "v0",
         role: "Disciplina di pubblicazione",
         note: "Per tenere la parte più tecnica sotto controllo quando la prova iniziale inizia a crescere.",
         order: 3,
       },
       {
-        tool_slug: "descript",
+        tool_slug: "synthesia-ai",
         role: "Asset di lancio",
         note: "Per voce, walkthrough e materiali di contenuto a supporto del lancio.",
         order: 4,
       },
       {
-        tool_slug: "notion-ai",
+        tool_slug: "frase-ai",
         role: "Memoria del lancio",
         note: "Per centralizzare checklist, positioning notes e decisioni editoriali.",
         order: 5,
@@ -481,18 +481,18 @@ export const mockCollections: CuratedCollectionRecord[] = [
     editorial_order: 60,
     included_tools: [
       {
-        tool_slug: "perplexity",
+        tool_slug: "jenni-ai",
         role: "Definizione della domanda",
         featured: true,
         order: 1,
       },
       {
-        tool_slug: "notion-ai",
+        tool_slug: "frase-ai",
         role: "Struttura della sintesi",
         order: 2,
       },
       {
-        tool_slug: "cursor",
+        tool_slug: "v0",
         role: "Passaggio finale",
         order: 3,
       },
@@ -527,18 +527,18 @@ export const mockCollections: CuratedCollectionRecord[] = [
     editorial_order: 50,
     included_tools: [
       {
-        tool_slug: "runway",
+        tool_slug: "vidau",
         role: "Costruzione visuale",
         featured: true,
         order: 1,
       },
       {
-        tool_slug: "descript",
+        tool_slug: "synthesia-ai",
         role: "Editing narrativo",
         order: 2,
       },
       {
-        tool_slug: "notion-ai",
+        tool_slug: "frase-ai",
         role: "Memoria di pubblicazione",
         order: 3,
       },
@@ -573,18 +573,18 @@ export const mockCollections: CuratedCollectionRecord[] = [
     editorial_order: 80,
     included_tools: [
       {
-        tool_slug: "lovable",
+        tool_slug: "vibecode",
         role: "Base prototipo",
         featured: true,
         order: 1,
       },
       {
-        tool_slug: "framer-ai",
+        tool_slug: "meku",
         role: "Rifinitura landing",
         order: 2,
       },
       {
-        tool_slug: "midjourney",
+        tool_slug: "imagine-art",
         role: "Riferimento visuale",
         order: 3,
       },

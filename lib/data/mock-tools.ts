@@ -4,7 +4,7 @@ export const mockTools: ToolRecord[] = [
   {
     id: "1",
     name: "Framer AI",
-    slug: "framer-ai",
+slug: "meku",
     category: "Design",
     tags: ["landing page", "no-code", "branding"],
     editorial_state: "In evidenza",
@@ -56,7 +56,7 @@ export const mockTools: ToolRecord[] = [
   {
     id: "2",
     name: "Cursor",
-    slug: "cursor",
+slug: "v0",
     category: "Sviluppo",
     tags: ["vibe-coding", "code editor", "agentic"],
     editorial_state: "In evidenza",
@@ -108,7 +108,7 @@ export const mockTools: ToolRecord[] = [
   {
     id: "3",
     name: "Notion AI",
-    slug: "notion-ai",
+slug: "frase-ai",
     category: "Produttività",
     tags: ["base conoscenza", "spazio condiviso", "team"],
     editorial_state: "Selezione core",
@@ -160,7 +160,7 @@ export const mockTools: ToolRecord[] = [
   {
     id: "4",
     name: "Runway",
-    slug: "runway",
+slug: "vidau",
     category: "Video",
     tags: ["video", "gen-ai", "editing"],
     editorial_state: "In evidenza",
@@ -212,7 +212,7 @@ export const mockTools: ToolRecord[] = [
   {
     id: "5",
     name: "Perplexity",
-    slug: "perplexity",
+slug: "jenni-ai",
     category: "Assistente AI",
     tags: ["research", "search", "answers"],
     editorial_state: "Da tenere d'occhio",
@@ -264,7 +264,7 @@ export const mockTools: ToolRecord[] = [
   {
     id: "6",
     name: "Midjourney",
-    slug: "midjourney",
+slug: "imagine-art",
     category: "Design",
     tags: ["image", "concept", "creative"],
     editorial_state: "Selezione core",
@@ -316,7 +316,7 @@ export const mockTools: ToolRecord[] = [
   {
     id: "7",
     name: "Descript",
-    slug: "descript",
+slug: "synthesia-ai",
     category: "Scrittura",
     tags: ["audio", "podcast", "editing"],
     editorial_state: "In evidenza",
@@ -368,7 +368,7 @@ export const mockTools: ToolRecord[] = [
   {
     id: "8",
     name: "Lovable",
-    slug: "lovable",
+slug: "vibecode",
     category: "Sviluppo",
     tags: ["app builder", "vibe-coding", "prototype"],
     editorial_state: "Nuovo in archivio",
