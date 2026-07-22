@@ -13,19 +13,23 @@
   outline-offset: 3px;
 }
 
-.marketing-shell main :where(.light-surface, .premium-panel, .premium-card, .brand-panel, .metadata-block, .stat-block) {
-  border-color: var(--tv-border-subtle) !important;
-  background: var(--tv-surface-raised) !important;
-  color: var(--tv-ink-primary) !important;
-  box-shadow: var(--tv-elevation-rest) !important;
+.marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) {
+  --foreground: var(--tv-ink-inverted);
+  --muted: var(--tv-ink-inverted-secondary);
+  --muted-strong: var(--tv-ink-inverted-secondary);
+  --accent-strong: var(--tv-accent-brand);
+  border-color: var(--tv-border-inverted) !important;
+  background: var(--tv-surface-inverted) !important;
+  color: var(--tv-ink-inverted) !important;
+  box-shadow: none !important;
 }
 
-.marketing-shell main :where(.light-surface, .premium-panel, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(h1, h2, h3, h4, strong) {
-  color: var(--tv-ink-primary) !important;
+.marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(h1, h2, h3, h4, strong) {
+  color: var(--tv-ink-inverted) !important;
 }
 
-.marketing-shell main :where(.light-surface, .premium-panel, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(p, li, small) {
-  color: var(--tv-ink-secondary) !important;
+.marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(p, li, small) {
+  color: var(--tv-ink-inverted-secondary) !important;
 }
 
 .marketing-shell main :where(input, select, textarea) {
@@ -52,27 +56,23 @@
   overflow: hidden;
   border: 1px solid var(--tv-border-subtle) !important;
   border-radius: var(--tv-radius-modal) !important;
-  background:
-    radial-gradient(circle at 86% 8%, color-mix(in srgb, var(--tv-accent-primary) 18%, transparent), transparent 28rem),
-    var(--tv-bg-base) !important;
+  background: var(--tv-bg-base) !important;
   color: var(--tv-ink-primary) !important;
   box-shadow: none !important;
 }
 
 .marketing-shell main .hero-shell :where(h1, h2, h3, strong),
-.marketing-shell main .premium-panel :where(h1, h2, h3, h4, strong),
-.marketing-shell main .brand-panel :where(h1, h2, h3, h4, strong) {
+.marketing-shell main .premium-panel :where(h1, h2, h3, h4, strong) {
   color: var(--tv-ink-primary) !important;
 }
 
 .marketing-shell main .hero-shell :where(p, li),
-.marketing-shell main .premium-panel :where(p, li),
-.marketing-shell main .brand-panel :where(p, li) {
+.marketing-shell main .premium-panel :where(p, li) {
   color: var(--tv-ink-secondary) !important;
 }
 
 .marketing-shell main .premium-panel,
-.marketing-shell main .brand-panel {
+.marketing-shell main .dark-panel {
   --foreground: var(--tv-ink-primary);
   --muted: var(--tv-ink-secondary);
   --muted-strong: var(--tv-ink-secondary);
@@ -88,7 +88,7 @@
 .marketing-shell main .hero-mini-visual > div,
 .marketing-shell main .premium-panel :where([class*="bg-white/"]) {
   border-color: var(--tv-border-subtle) !important;
-  background: var(--tv-glass-bg-subtle) !important;
+  background: var(--tv-surface-elevated) !important;
   color: var(--tv-ink-primary) !important;
   box-shadow: none !important;
 }
@@ -97,22 +97,22 @@
 .marketing-shell main .hero-shell .hero-mini-visual > div,
 .marketing-shell main .hero-shell .hero-mini-visual > div > div {
   border-color: var(--tv-border-subtle) !important;
-  background: var(--tv-glass-bg-subtle) !important;
+  background: var(--tv-surface-elevated) !important;
   color: var(--tv-ink-primary) !important;
   box-shadow: none !important;
 }
 
-#main-content :where(.hero-shell, .premium-panel, .brand-panel) [class*="bg-white/"]:not(.premium-button):not(.premium-button *) {
-  background-color: var(--tv-glass-bg-subtle) !important;
+#main-content :where(.hero-shell, .premium-panel) [class*="bg-white/"]:not(.premium-button):not(.premium-button *) {
+  background-color: var(--tv-surface-elevated) !important;
 }
 
-#main-content :where(.hero-shell, .premium-panel, .brand-panel) [class*="border-white/"]:not(.premium-button):not(.premium-button *) {
+#main-content :where(.hero-shell, .premium-panel) [class*="border-white/"]:not(.premium-button):not(.premium-button *) {
   border-color: var(--tv-border-subtle) !important;
 }
 
-.marketing-shell main :where(.hero-shell, .premium-panel, .brand-panel) .premium-button-secondary {
+.marketing-shell main :where(.hero-shell, .premium-panel) .premium-button-secondary {
   border-color: var(--tv-border-interactive) !important;
-  background: var(--tv-glass-bg-subtle) !important;
+  background: var(--tv-surface-elevated) !important;
   color: var(--tv-ink-primary) !important;
 }
 
@@ -170,5 +170,84 @@
 @media (max-width: 47.99rem) {
   .marketing-shell main {
     padding-bottom: 5.5rem;
+  }
+}
+
+/* Shared editorial hierarchy for secondary public routes. */
+.catalog-discovery__copy h1,
+.desktop-vibe-radar h1,
+.compare-space-page h1,
+.tool-detail-title,
+.internal-page h1,
+.tone-screen h1,
+.hero-shell h1 {
+  font-family: var(--tv-font-display);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.marketing-shell main :where(
+  .light-surface,
+  .premium-card,
+  .brand-panel,
+  .metadata-block,
+  .stat-block
+) :where(a, button) {
+  color: var(--tv-ink-inverted);
+}
+
+.marketing-shell main :where(
+  .light-surface,
+  .premium-card,
+  .brand-panel,
+  .metadata-block,
+  .stat-block
+) :where(input, textarea, select) {
+  border-color: var(--tv-border-inverted);
+  background: var(--tv-color-white-pure);
+  color: var(--tv-ink-inverted);
+}
+
+.marketing-shell main :where(
+  .light-surface,
+  .premium-card,
+  .brand-panel,
+  .metadata-block,
+  .stat-block
+) .selection-chip {
+  border-color: var(--tv-border-inverted);
+  background: transparent;
+  color: var(--tv-ink-inverted-secondary);
+  box-shadow: none;
+}
+
+.marketing-shell main :where(.hero-shell, .premium-panel, .dark-panel) {
+  border-radius: var(--tv-radius-modal);
+  background: var(--tv-surface-raised);
+  box-shadow: none;
+}
+
+.marketing-shell main :where(.hero-shell, .premium-panel, .dark-panel) :where(
+  .selection-chip,
+  .pill,
+  [data-slot="badge"]
+) {
+  border-color: var(--tv-border-interactive);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-secondary);
+  box-shadow: none;
+}
+
+@media (max-width: 47.99rem) {
+  .marketing-shell main .hero-shell,
+  .marketing-shell main :where(
+    .light-surface,
+    .premium-panel,
+    .premium-card,
+    .brand-panel,
+    .dark-panel
+  ) {
+    border-radius: var(--tv-radius-lg);
   }
 }

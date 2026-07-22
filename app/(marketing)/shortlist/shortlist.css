@@ -1,0 +1,63 @@
+.shortlist-final-surface,
+.shortlist-final-surface .mobile-library-board {
+  min-height: 100svh;
+  background: var(--tv-bg-base) !important;
+  color: var(--tv-ink-primary);
+}
+
+.shortlist-final-surface :where(
+  .mobile-library-hero,
+  .mobile-library-hero__stat,
+  .mobile-library-board__compare,
+  .mobile-library-shelf,
+  .mobile-library-shelf__rail,
+  .mobile-library-empty,
+  .mobile-library-empty__route,
+  .mobile-library-empty__starter,
+  .mobile-library-wishlist,
+  .mobile-library-wishlist__signal-card,
+  .mobile-library-wishlist .request-tool-form
+) {
+  border-color: var(--tv-border-subtle) !important;
+  background: var(--tv-surface-raised) !important;
+  box-shadow: none !important;
+}
+
+.shortlist-final-surface :where(
+  .mobile-library-board__icon,
+  .mobile-library-wishlist__signal-card > span
+) {
+  background: var(--tv-accent-primary) !important;
+  box-shadow: none !important;
+}
+
+.shortlist-final-surface .mobile-library-board__compare-chip {
+  border: 1px solid var(--tv-border-interactive);
+  background: var(--tv-accent-primary) !important;
+  color: var(--tv-ink-on-brand) !important;
+}
+
+.shortlist-final-surface :where(
+  .mobile-library-book__cover,
+  .mobile-library-book__face
+) {
+  border-color: color-mix(in srgb, var(--book-color, var(--tv-accent-primary)) 54%, var(--tv-ink-primary)) !important;
+  background: var(--tv-surface-elevated) !important;
+  box-shadow: none !important;
+}
+
+.shortlist-final-surface .mobile-library-wishlist .request-tool-form :where(
+  input,
+  textarea,
+  select
+) {
+  border-color: var(--tv-border-interactive) !important;
+  background: var(--tv-surface-base) !important;
+  color: var(--tv-ink-primary) !important;
+  box-shadow: none !important;
+}
+
+.shortlist-final-surface :where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid var(--tv-accent-brand-aa) !important;
+  outline-offset: 3px !important;
+}

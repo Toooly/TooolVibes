@@ -857,6 +857,20 @@ export function ToolDiscoveryApp({
       });
     }
 
+    function openStackBuilder() {
+      setActiveTab("stack");
+      const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+      const targetId = isMobile ? "mobile-workspace" : "stack-builder";
+
+      window.requestAnimationFrame(() => {
+        const mobileWorkspace = document.getElementById("mobile-workspace");
+        if (isMobile && mobileWorkspace instanceof HTMLDetailsElement) {
+          mobileWorkspace.open = true;
+        }
+        scrollToElement(targetId);
+      });
+    }
+
     function handleCatalogFlow(event: Event) {
       const action = (event as CustomEvent<"search" | "filters" | "stack">).detail;
 
@@ -878,21 +892,23 @@ export function ToolDiscoveryApp({
       }
 
       if (action === "stack") {
-        setActiveTab("stack");
-        const mobileWorkspace = document.getElementById("mobile-workspace");
-        if (mobileWorkspace instanceof HTMLDetailsElement) {
-          mobileWorkspace.open = true;
-        }
-        scrollToElement(
-          window.matchMedia("(max-width: 1023px)").matches
-            ? "mobile-workspace"
-            : "stack-builder",
-        );
+        openStackBuilder();
       }
     }
 
+    function handleHashChange() {
+      if (window.location.hash === "#stack-builder") {
+        openStackBuilder();
+      }
+    }
+
+    handleHashChange();
     window.addEventListener("tooolvibes:catalog-flow", handleCatalogFlow);
-    return () => window.removeEventListener("tooolvibes:catalog-flow", handleCatalogFlow);
+    window.addEventListener("hashchange", handleHashChange);
+    return () => {
+      window.removeEventListener("tooolvibes:catalog-flow", handleCatalogFlow);
+      window.removeEventListener("hashchange", handleHashChange);
+    };
   }, []);
 
   function handleSave(tool: DirectoryTool) {

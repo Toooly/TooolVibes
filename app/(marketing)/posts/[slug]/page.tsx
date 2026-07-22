@@ -99,15 +99,11 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
 
   return (
     <div className="internal-page internal-editorial-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <section className="dark-panel brand-aura section-stage group relative overflow-hidden rounded-[36px]">
-        <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),transparent_72%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_84%_18%,rgba(112,82,255,0.2),transparent_34%),radial-gradient(ellipse_at_14%_28%,rgba(68,220,255,0.14),transparent_32%)]" />
-        <div className="absolute inset-x-5 top-5 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent)]" />
-
-        <div className="editorial-grid relative gap-y-0">
+      <section className="dark-panel section-stage group relative overflow-hidden rounded-[36px]">
+        <div className="editorial-grid gap-y-0">
           <div className={tool ? "col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7" : "col-span-12 p-5 sm:p-6 lg:p-7"}>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="pill !bg-white/12 !text-white">{kindLabel}</span>
+              <span className="pill !bg-[var(--tv-surface-elevated)] !text-[var(--tv-ink-secondary)]">{kindLabel}</span>
               <span className="selection-chip rounded-full border border-white/14 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/82">
                 {post.source_label}
               </span>
@@ -130,7 +126,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               {post.highlights.map((item) => (
                 <div
                   key={item}
-                  className="rounded-[22px] border border-white/10 bg-white/6 px-4 py-4 text-sm leading-6 text-white/84"
+                  className="rounded-[22px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] px-4 py-4 text-sm leading-6 text-[var(--tv-ink-primary)]"
                 >
                   {item}
                 </div>
@@ -160,16 +156,16 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                   sizes="(max-width: 1024px) 100vw, 42vw"
                   className="image-float object-cover"
                 />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.08),rgba(18,15,35,0.72))]" />
+                <div className="absolute inset-0 bg-black/35" />
                 <div className="absolute left-5 top-5 flex flex-wrap gap-2">
-                  <span className="selection-chip rounded-full border border-white/18 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white" style={{ background: "rgba(24,17,12,0.28)" }}>
+                  <span className="selection-chip rounded-full border border-[var(--tv-border-interactive)] bg-[var(--tv-surface-raised)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tv-ink-primary)]">
                     Profilo collegato
                   </span>
-                  <span className="selection-chip rounded-full border border-white/18 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white" style={{ background: "rgba(255,255,255,0.08)" }}>
+                  <span className="selection-chip rounded-full border border-[var(--tv-border-interactive)] bg-[var(--tv-surface-raised)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tv-ink-primary)]">
                     {tool.category}
                   </span>
                 </div>
-                <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(24,18,54,0.88),rgba(38,31,82,0.76))] px-4 py-4">
+                <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-[var(--tv-border-interactive)] bg-[var(--tv-surface-raised)] px-4 py-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                     Perché conta
                   </p>
@@ -190,8 +186,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                   sizes="(max-width: 1024px) 100vw, 42vw"
                   className="image-float object-cover"
                 />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.08),rgba(18,15,35,0.72))]" />
-                <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/12 bg-[linear-gradient(135deg,rgba(24,18,54,0.88),rgba(38,31,82,0.76))] px-4 py-4">
+                <div className="absolute inset-0 bg-black/35" />
+                <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-[var(--tv-border-interactive)] bg-[var(--tv-surface-raised)] px-4 py-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                     Cover editoriale
                   </p>
@@ -201,7 +197,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 </div>
               </div>
             ) : (
-              <div className="brand-panel panel-lift flex h-full min-h-[22rem] flex-col justify-between rounded-[32px] p-5 sm:p-6">
+              <div className="brand-panel flex h-full min-h-[22rem] flex-col justify-between rounded-[32px] p-5 sm:p-6">
                 <div>
                   <p className="editorial-label">Guida TooolVibes</p>
                   <h2 className="text-display-card mt-3 text-[1.62rem] sm:text-[1.9rem] sm:text-balance">
@@ -229,7 +225,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
 
       <section className="editorial-grid gap-y-4">
         <div className="col-span-12 lg:col-span-7">
-          <div className="brand-panel panel-lift rounded-[32px] p-5 sm:p-6">
+          <div className="brand-panel rounded-[32px] p-5 sm:p-6">
             {post.content_markdown ? (
               <MarkdownContent content={post.content_markdown} />
             ) : (
@@ -247,7 +243,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                       className="stat-block rounded-[22px] border px-4 py-4"
                       style={{
                         borderColor: "var(--line)",
-                        background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))",
+                        background: "var(--tv-surface-inverted)",
                       }}
                     >
                       <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
@@ -263,7 +259,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                     className="mt-5 rounded-[26px] border px-5 py-5"
                     style={{
                       borderColor: "rgba(212,177,101,0.28)",
-                      background: "linear-gradient(180deg, rgba(255,249,240,0.96), rgba(249,239,212,0.74))",
+                      background: "var(--tv-surface-inverted)",
                     }}
                   >
                     <p className="brand-kicker">Limiti / attenzione</p>
@@ -272,7 +268,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                         <div
                           key={item}
                           className="rounded-[20px] border px-4 py-3.5"
-                          style={{ borderColor: "rgba(212,177,101,0.22)", background: "rgba(255,255,255,0.56)" }}
+                          style={{ borderColor: "rgba(212,177,101,0.22)", background: "transparent" }}
                         >
                           <p className="text-body-strong text-[0.95rem]" style={{ color: "var(--muted-strong)" }}>
                             {item}
@@ -292,7 +288,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
 
         <div className="col-span-12 lg:col-span-5">
           <div className="space-y-3 lg:sticky lg:top-28">
-            <div className="dark-panel panel-lift rounded-[28px] p-4 sm:p-5">
+            <div className="dark-panel rounded-[28px] p-4 sm:p-5">
               <p className="editorial-label !text-white/60">Connessioni</p>
               <p className="text-display-card mt-3 max-w-none text-[1.5rem] text-white sm:max-w-[16ch] sm:text-balance">
                 Parti da qui, poi torna dentro il sistema.
@@ -333,7 +329,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                     <p>Pubblicato: {formatItalianDate(post.published_at)}</p>
                     <p>Aggiornato: {formatItalianDate(post.updated_at)}</p>
                     <p>Autore: {post.author_name ?? "TooolVibes"}</p>
-                    <p>Revisione: dati editoriali in aggiornamento.</p>
+                    <p>Revisione editoriale: TooolVibes.</p>
                   </div>
                 </div>
 
@@ -379,14 +375,14 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             <NativePlacement placementKey="article-sidebar-sponsor" variant="rail" dark />
 
             {relatedCollections.length > 0 ? (
-              <div className="brand-panel panel-lift rounded-[28px] p-4 sm:p-4.5">
+              <div className="brand-panel rounded-[28px] p-4 sm:p-4.5">
                 <p className="editorial-label">Raccolte collegate</p>
                 <div className="mt-4 grid gap-3">
                   {relatedCollections.map((collection) => (
                     <Link
                       key={collection.id}
                       href={`/collections/${collection.slug}`}
-                      className="metadata-block rounded-[22px] px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5"
+                      className="metadata-block rounded-[22px] px-4 py-4 transition-colors duration-200 hover:border-[var(--tv-accent-brand)] focus-visible:border-[var(--tv-accent-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tv-accent-brand)]"
                     >
                       <p className="editorial-label">{collection.cover_kicker}</p>
                       <p className="text-display-card mt-2 text-[1.12rem]">{collection.title}</p>

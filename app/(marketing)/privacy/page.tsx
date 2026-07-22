@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <section className="mx-auto max-w-3xl px-6 py-20">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6a3cff]">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
         TooolVibes
       </p>
-      <h1 className="mt-3 text-4xl font-black text-[#171225]">Privacy</h1>
-      <div className="mt-8 space-y-5 text-sm leading-7 text-[#4f4970]">
+      <h1 className="mt-3 text-4xl font-black text-[var(--tv-ink-primary)]">Privacy</h1>
+      <div className="mt-8 space-y-5 text-sm leading-7 text-[var(--tv-ink-secondary)]">
         <p>
           TooolVibes raccoglie solo i dati necessari per far funzionare account,
           preferenze salvate, richieste inviate e comunicazioni richieste dagli utenti.
@@ -25,7 +25,14 @@ export default function PrivacyPage() {
         </p>
         <p>
           Per domande o richieste sui dati personali puoi scrivere a
-          hello@tooolvibes.com.
+          {" "}
+          <a
+            href="mailto:hello@tooolvibes.com"
+            className="font-semibold text-[var(--tv-accent-brand-aa)] underline decoration-current/40 underline-offset-4 transition-colors hover:text-[var(--tv-ink-primary)] focus-visible:text-[var(--tv-ink-primary)]"
+          >
+            hello@tooolvibes.com
+          </a>
+          .
         </p>
       </div>
     </section>

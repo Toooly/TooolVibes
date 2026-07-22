@@ -38,10 +38,11 @@ export function CatalogResultList({ tools, groupLabel, searchQuery }: CatalogRes
 
   return (
     <section
+      id="catalog-results"
       className={
         densityPolicy
-          ? "mobile-tool-grid mobile-tool-grid--density-list"
-          : "mobile-tool-grid"
+          ? "mobile-tool-grid mobile-tool-grid--density-list scroll-mt-24"
+          : "mobile-tool-grid scroll-mt-24"
       }
       aria-label={`Tool in ${groupLabel}`}
       data-density-policy={densityPolicy ? "list" : undefined}
@@ -92,6 +93,7 @@ function CatalogListToolCard({
 
 function MobileCompareToolbox({ tools }: { tools: ToolPublicView[] }) {
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
+  const canCompare = compareSlugs.length >= 2;
   const selectedTools = compareSlugs
     .map((slug) => tools.find((tool) => tool.slug === slug))
     .filter((tool): tool is ToolPublicView => Boolean(tool));
@@ -111,9 +113,9 @@ function MobileCompareToolbox({ tools }: { tools: ToolPublicView[] }) {
         <div>
           <h3>Confronto rapido</h3>
           <p>
-            {compareSlugs.length >= 2
+            {canCompare
               ? `${compareSlugs.length} candidati pronti. Apri il confronto completo.`
-              : "Aggiungi almeno 2 candidati e apri il confronto completo."}
+              : "Aggiungi almeno 2 candidati per attivare il confronto completo."}
           </p>
         </div>
       </div>
@@ -125,8 +127,8 @@ function MobileCompareToolbox({ tools }: { tools: ToolPublicView[] }) {
           </span>
         ))}
       </div>
-      <Link href="/compare" className="mobile-compare-toolbox__cta">
-        {compareSlugs.length >= 2 ? "Vai al confronto" : "Apri confronto"}
+      <Link href={canCompare ? "/compare" : "#catalog-results"} className="mobile-compare-toolbox__cta">
+        {canCompare ? "Vai al confronto" : "Aggiungi candidati"}
         <ArrowRight size={14} aria-hidden="true" />
       </Link>
     </section>

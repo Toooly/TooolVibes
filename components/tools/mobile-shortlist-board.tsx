@@ -94,30 +94,26 @@ const decisionOutcomeMeta: Record<
   selected: {
     label: "Scelto",
     tone: "var(--accent-strong)",
-    background:
-      "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))",
+    background: "#efe8ff",
   },
   rejected: {
     label: "Scartato",
     tone: "var(--muted-strong)",
-    background:
-      "linear-gradient(180deg, rgba(255,246,241,0.96), rgba(250,232,221,0.9))",
+    background: "#fff2ec",
   },
   deferred: {
     label: "Rimandato",
     tone: "var(--muted-strong)",
-    background:
-      "linear-gradient(180deg, rgba(255,248,239,0.96), rgba(249,239,212,0.9))",
+    background: "#fff5df",
   },
 };
 
 const sheetChipClassName =
-  "selection-chip text-ui-strong inline-flex shrink-0 items-center rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em]";
+  "selection-chip text-ui-strong inline-flex shrink-0 items-center rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-strong)] disabled:cursor-default disabled:opacity-100";
 
 const sheetChipIdleStyle: CSSProperties = {
   borderColor: "var(--line)",
-  background:
-    "linear-gradient(180deg, rgba(252,249,255,0.9), rgba(246,241,255,0.82))",
+  background: "#f7f4ff",
   color: "var(--muted-strong)",
 };
 
@@ -212,7 +208,7 @@ export function MobileShortlistBoard({
                   className="flex flex-wrap items-center gap-2 rounded-[16px] border px-3 py-2"
                   style={{
                     borderColor: "var(--line)",
-                    background: "rgba(255,255,255,0.72)",
+                    background: "#ffffff",
                   }}
                 >
                   <button
@@ -492,7 +488,11 @@ function LibraryBook({
       className="mobile-library-book"
       style={{ "--book-color": color } as CSSProperties}
     >
-      <Link href={`/toools/${tool.slug}`} className="mobile-library-book__cover">
+      <Link
+        href={`/toools/${tool.slug}`}
+        className="mobile-library-book__cover"
+        aria-label={`Apri la scheda di ${tool.name}`}
+      >
         <span className="mobile-library-book__face">
           {iconUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
@@ -515,6 +515,10 @@ function LibraryBook({
           onClick={onOpenMemory}
           className="mobile-library-book__remove"
           aria-label={`Apri nota e decisione di ${tool.name}`}
+          style={{
+            background: "#5b3fd6",
+            boxShadow: "0 2px 6px rgba(91,63,214,0.24)",
+          }}
         >
           <NotebookPen size={12} />
         </button>
@@ -522,7 +526,7 @@ function LibraryBook({
           type="button"
           onClick={() => toggleSaved(tool.slug)}
           className="mobile-library-book__remove"
-          aria-label="Rimuovi dai salvati"
+          aria-label={`Rimuovi ${tool.name} dai salvati`}
         >
           <Trash2 size={12} />
         </button>
@@ -601,14 +605,12 @@ function MobileNoteSheet({
         borderRadius: "24px 24px 0 0",
         border: "1px solid var(--line)",
         borderBottom: "none",
-        background:
-          "linear-gradient(180deg, rgba(252,250,255,0.99), rgba(246,242,255,0.97))",
+        background: "#fbfaff",
         boxShadow: "0 -18px 48px rgba(31,16,71,0.18)",
         padding: "10px 20px 28px",
       }}
     >
       <div className="mobile-shortlist-board__sheet-header">
-        <span className="mobile-shortlist-board__sheet-handle" />
         <button
           type="button"
           onClick={onClose}
@@ -643,7 +645,15 @@ function MobileNoteSheet({
                 className={`${sheetChipClassName} gap-2 ${
                   memory.is_pinned ? "quick-filter-chip is-active" : ""
                 }`}
-                style={memory.is_pinned ? undefined : sheetChipIdleStyle}
+                style={
+                  memory.is_pinned
+                    ? {
+                        borderColor: "rgba(112,82,255,0.24)",
+                        background: "#efe8ff",
+                        color: "var(--accent-strong)",
+                      }
+                    : sheetChipIdleStyle
+                }
               >
                 <Pin size={12} />
                 {memory.is_pinned ? "In primo piano" : "Metti in primo piano"}
@@ -672,6 +682,7 @@ function MobileNoteSheet({
                     <button
                       key={option}
                       type="button"
+                      disabled={active}
                       aria-pressed={active}
                       onClick={() => {
                         if (!active) setToolDecisionOutcome(slug, option);
@@ -749,7 +760,7 @@ function MobileNoteSheet({
                         active
                           ? {
                               borderColor: "rgba(112,82,255,0.24)",
-                              background: meta.background,
+                              background: "#efe8ff",
                               color: meta.tone,
                             }
                           : sheetChipIdleStyle
@@ -777,7 +788,7 @@ function MobileNoteSheet({
                 className="filter-control mt-3 w-full rounded-[18px] border px-4 py-3 outline-none"
                 style={{
                   borderColor: "var(--line)",
-                  background: "rgba(255,255,255,0.84)",
+                  background: "#ffffff",
                 }}
               />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
@@ -801,8 +812,8 @@ function MobileNoteSheet({
                       ? "rgba(112,82,255,0.24)"
                       : "var(--line)",
                     background: noteIsDirty
-                      ? "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))"
-                      : "linear-gradient(180deg, rgba(252,249,255,0.9), rgba(246,241,255,0.82))",
+                      ? "#efe8ff"
+                      : "#f7f4ff",
                     color: noteIsDirty ? "var(--accent-strong)" : "var(--muted)",
                   }}
                 >

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { MobileShortlistBoard } from "@/components/tools/mobile-shortlist-board";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { getPublishedTools } from "@/lib/data/public-tools";
+import "./shortlist.css";
 
 export const metadata: Metadata = {
   title: "Salvati",
@@ -12,9 +13,11 @@ export const metadata: Metadata = {
 
 export default async function ShortlistPage() {
   return (
-    <MobileShortlistBoard
-      tools={await getPublishedTools()}
-      decisionMemoryEnabled={releaseFeatures.decisionMemoryBoard.enabled}
-    />
+    <div className="shortlist-final-surface">
+      <MobileShortlistBoard
+        tools={await getPublishedTools()}
+        decisionMemoryEnabled={releaseFeatures.decisionMemoryBoard.enabled}
+      />
+    </div>
   );
 }

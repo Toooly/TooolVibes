@@ -12,22 +12,11 @@
   padding: clamp(var(--tv-space-6), 4vw, var(--tv-space-12));
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-modal);
-  background:
-    radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--tv-accent-primary) 16%, transparent), transparent 26rem),
-    var(--tv-bg-base);
+  background: var(--tv-surface-raised);
 }
 
 .tool-detail-hero::before {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--tv-border-subtle) 1px, transparent 1px),
-    linear-gradient(90deg, var(--tv-border-subtle) 1px, transparent 1px);
-  background-size: 4rem 4rem;
-  content: "";
-  mask-image: linear-gradient(to bottom right, black, transparent 66%);
-  opacity: 0.16;
-  pointer-events: none;
+  content: none;
 }
 
 .tool-detail-hero__grid {
@@ -92,7 +81,7 @@
   padding-inline: var(--tv-space-3);
   border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 34%, transparent);
   border-radius: var(--tv-radius-pill);
-  background: color-mix(in srgb, var(--tv-accent-primary) 12%, transparent);
+  background: var(--tv-surface-elevated);
   color: var(--tv-accent-brand-aa);
   font-size: var(--tv-text-caption);
   font-weight: var(--tv-weight-semibold);
@@ -103,13 +92,13 @@
 .tool-detail-hero-badge-muted,
 .tool-detail-tag-chip {
   border-color: var(--tv-border-subtle);
-  background: var(--tv-glass-bg-subtle);
+  background: var(--tv-bg-base);
   color: var(--tv-ink-secondary);
 }
 
 .tool-detail-hero-badge-featured {
   border-color: color-mix(in srgb, var(--tv-accent-cyan) 35%, transparent);
-  background: color-mix(in srgb, var(--tv-accent-cyan) 10%, transparent);
+  background: var(--tv-surface-elevated);
   color: var(--tv-accent-cyan);
 }
 
@@ -170,7 +159,7 @@
   padding: var(--tv-space-4);
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-feature);
-  background: var(--tv-glass-bg-subtle);
+  background: var(--tv-surface-elevated);
 }
 
 .tool-detail-provenance__grid {
@@ -197,7 +186,8 @@
 }
 
 .tool-detail-main-cta,
-.tool-detail-secondary-cta {
+.tool-detail-secondary-cta,
+.tool-detail-toggle-actions .selection-chip {
   display: inline-flex !important;
   min-height: 3rem !important;
   align-items: center;
@@ -208,16 +198,53 @@
   font-weight: var(--tv-weight-semibold) !important;
 }
 
-.tool-detail-main-cta {
+.tool-detail-main-cta,
+.tool-detail-toggle-actions .selection-chip[aria-pressed="true"] {
   border: 1px solid var(--tv-accent-primary) !important;
   background: var(--tv-accent-primary) !important;
   color: var(--tv-ink-on-brand) !important;
 }
 
-.tool-detail-secondary-cta {
+.tool-detail-secondary-cta,
+.tool-detail-toggle-actions .selection-chip {
   border: 1px solid var(--tv-border-interactive) !important;
-  background: transparent !important;
+  background: var(--tv-surface-elevated) !important;
   color: var(--tv-ink-primary) !important;
+}
+
+.tool-detail-main-cta,
+.tool-detail-secondary-cta,
+.tool-detail-toggle-actions .selection-chip {
+  transition: border-color var(--tv-duration-fast) var(--tv-ease-standard),
+    background-color var(--tv-duration-fast) var(--tv-ease-standard),
+    color var(--tv-duration-fast) var(--tv-ease-standard),
+    transform var(--tv-duration-fast) var(--tv-ease-standard);
+}
+
+.tool-detail-main-cta:hover,
+.tool-detail-secondary-cta:hover,
+.tool-detail-toggle-actions .selection-chip:hover {
+  border-color: var(--tv-accent-cyan);
+  transform: translateY(-2px);
+}
+
+.tool-detail-main-cta:active,
+.tool-detail-secondary-cta:active,
+.tool-detail-toggle-actions .selection-chip:active {
+  transform: scale(0.98);
+}
+
+.tool-detail-main-cta:focus-visible,
+.tool-detail-secondary-cta:focus-visible,
+.tool-detail-toggle-actions .selection-chip:focus-visible,
+.tool-detail-tag-chip:focus-visible {
+  outline: 3px solid var(--tv-focus-ring);
+  outline-offset: 3px;
+}
+
+.tool-detail-toggle-actions .count-badge-live {
+  background: var(--tv-bg-base);
+  color: var(--tv-ink-secondary);
 }
 
 .tool-detail-aside {
@@ -233,9 +260,7 @@
   padding: var(--tv-space-5, 1.25rem);
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-feature);
-  background:
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--tv-accent-primary) 22%, transparent), transparent 14rem),
-    var(--tv-bg-base);
+  background: var(--tv-surface-elevated);
 }
 
 .tool-detail-profile-heading {
@@ -272,7 +297,7 @@
   padding: var(--tv-space-4);
   border: 1px solid var(--tv-border-subtle) !important;
   border-radius: var(--tv-radius-feature);
-  background: var(--tv-glass-bg-subtle) !important;
+  background: var(--tv-surface-elevated) !important;
 }
 
 .internal-tool-page .tool-detail-meta-label {
@@ -330,6 +355,16 @@
   margin-top: var(--tv-space-6);
 }
 
+.tool-detail-empty-state {
+  margin: 0;
+  padding: var(--tv-space-5);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-secondary);
+  line-height: var(--tv-leading-relaxed);
+}
+
 .tool-detail-editorial-copy {
   margin-top: var(--tv-space-6);
   color: var(--tv-ink-secondary);
@@ -350,6 +385,7 @@
 
 .tool-detail-related {
   margin-top: var(--tv-space-16);
+  scroll-margin-top: 7rem;
 }
 
 .tool-detail-related__heading {
@@ -409,7 +445,22 @@
   }
 
   .tool-detail-main-cta,
-  .tool-detail-secondary-cta {
+  .tool-detail-secondary-cta,
+  .tool-detail-toggle-actions .selection-chip {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-detail-main-cta,
+  .tool-detail-secondary-cta,
+  .tool-detail-toggle-actions .selection-chip {
+    transition: none;
+  }
+
+  .tool-detail-main-cta:hover,
+  .tool-detail-secondary-cta:hover,
+  .tool-detail-toggle-actions .selection-chip:hover {
+    transform: none;
   }
 }

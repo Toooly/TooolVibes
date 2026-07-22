@@ -18,7 +18,7 @@ function CompareViewportFallback() {
       aria-busy="true"
       aria-live="polite"
     >
-      Preparazione dell'area di confronto…
+      Preparazione dell’area di confronto…
     </div>
   );
 }
@@ -43,12 +43,22 @@ export function ToolBattleView({
   const [viewport, setViewport] = useState<CompareViewport | null>(null);
 
   useEffect(() => {
+    if (typeof window.matchMedia !== "function") {
+      setViewport("mobile");
+      return;
+    }
+
     const media = window.matchMedia(COMPARE_DESKTOP_MEDIA_QUERY);
     const update = () => setViewport(media.matches ? "desktop" : "mobile");
 
     update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", update);
+      return () => media.removeEventListener("change", update);
+    }
+
+    media.addListener(update);
+    return () => media.removeListener(update);
   }, []);
 
   const activeView =

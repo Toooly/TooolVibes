@@ -10,7 +10,7 @@ import { SOUND_KINDS, type SoundKind } from "./sound-profiles";
 export const INTERACTIVE_SELECTOR =
   "a, button, summary, [role='button'], [role='tab'], [cmdk-item], [data-sonic-action]";
 export const HOVER_SELECTOR =
-  ".premium-button, .dynamic-link-card, .dynamic-card, .category-tool-card, .category-tool-card__icon-button, .mobile-bottom-link, summary, [role='tab'], [data-sonic-hover]";
+  "a[href], button:not(:disabled), summary, [role='button']:not([aria-disabled='true']), [role='tab']:not([aria-disabled='true']), [cmdk-item]:not([aria-disabled='true'])";
 export function isSoundKind(value: string | null | undefined): value is SoundKind {
   return SOUND_KINDS.includes(value as SoundKind);
 }

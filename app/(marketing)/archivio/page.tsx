@@ -9,6 +9,7 @@ import {
   getPublicToolFilterGroups,
   getPublicToolViews,
 } from "@/lib/data/public-tools";
+import "./archive.css";
 
 export const metadata: Metadata = {
   title: "Archivio tool",
@@ -39,7 +40,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const catalogDensityPolicy = isCatalogDensityPolicyEnabled();
 
   return (
-    <main className="relative overflow-x-hidden">
+    <div className="archive-final-surface relative overflow-x-hidden">
       {!catalogDensityPolicy && (
         <section className="page-shell relative z-10 -mt-5 pb-3 sm:-mt-8 sm:pb-5">
           <NativePlacement placementKey="catalog-native-sponsor" variant="band" />
@@ -81,6 +82,6 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
           ))}
         </ul>
       </section>
-    </main>
+    </div>
   );
 }

@@ -64,6 +64,7 @@ export function CatalogLevelChips({ activeLevel, onSelect }: CatalogLevelChipsPr
           key={chip.key}
           type="button"
           onClick={() => onSelect(chip.key)}
+          aria-pressed={activeLevel === chip.key}
           className={`mobile-catalog-view__chip${activeLevel === chip.key ? " is-active" : ""}`}
         >
           {chip.label}

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { CSSProperties } from "react";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import {
@@ -62,7 +62,7 @@ export function CatalogCategoryMap({
                 <strong>{cat.label}</strong>
                 <small>{cat.count} tool</small>
               </span>
-              <ArrowUpRight className="catalog-category-map__arrow" size={18} aria-hidden="true" />
+              <ArrowRight className="catalog-category-map__arrow" size={18} aria-hidden="true" />
             </motion.button>
           );
         })}

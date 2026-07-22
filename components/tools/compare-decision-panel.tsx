@@ -77,35 +77,31 @@ const decisionOutcomeMeta: Record<
     actionLabel: "Scegli",
     stateLabel: "Scelto",
     tone: "var(--accent-strong)",
-    background:
-      "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))",
+    background: "#efe8ff",
     icon: Check,
   },
   rejected: {
     actionLabel: "Scarta",
     stateLabel: "Scartato",
     tone: "var(--muted-strong)",
-    background:
-      "linear-gradient(180deg, rgba(255,246,241,0.96), rgba(250,232,221,0.9))",
+    background: "#fff2ec",
     icon: Ban,
   },
   deferred: {
     actionLabel: "Rimanda",
     stateLabel: "Rimandato",
     tone: "var(--muted-strong)",
-    background:
-      "linear-gradient(180deg, rgba(255,248,239,0.96), rgba(249,239,212,0.9))",
+    background: "#fff5df",
     icon: Clock,
   },
 };
 
 const decisionChipClassName =
-  "selection-chip text-ui-strong inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em]";
+  "selection-chip text-ui-strong inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-strong)] disabled:cursor-default disabled:opacity-100";
 
 const decisionChipIdleStyle: CSSProperties = {
   borderColor: "var(--line)",
-  background:
-    "linear-gradient(180deg, rgba(252,249,255,0.9), rgba(246,241,255,0.82))",
+  background: "#f7f4ff",
   color: "var(--muted-strong)",
 };
 
@@ -166,8 +162,7 @@ export function CompareDecisionPanel({
       className="compare-decision-panel mt-6 rounded-[24px] border p-5"
       style={{
         borderColor: "var(--line)",
-        background:
-          "linear-gradient(180deg, rgba(252,250,255,0.98), rgba(246,242,255,0.94))",
+        background: "#fbfaff",
       }}
       aria-labelledby={titleId}
     >
@@ -205,7 +200,7 @@ export function CompareDecisionPanel({
                 borderColor: isFocused
                   ? "rgba(112,82,255,0.32)"
                   : "var(--line)",
-                background: "rgba(255,255,255,0.72)",
+                background: "#ffffff",
               }}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -225,6 +220,7 @@ export function CompareDecisionPanel({
                   <button
                     type="button"
                     onClick={() => setFocusSlug(tool.slug)}
+                    disabled={isFocused}
                     aria-pressed={isFocused}
                     aria-label={`Annota motivo per ${tool.name}`}
                     data-sonic-action="tab"
@@ -262,6 +258,7 @@ export function CompareDecisionPanel({
                     <button
                       key={option}
                       type="button"
+                      disabled={active}
                       aria-pressed={active}
                       onClick={() => handleOutcome(tool.slug, option, active)}
                       data-sonic-action="tab"
@@ -328,7 +325,7 @@ export function CompareDecisionPanel({
           className="filter-control mt-3 w-full rounded-[18px] border px-4 py-3 outline-none"
           style={{
             borderColor: "var(--line)",
-            background: "rgba(255,255,255,0.84)",
+            background: "#ffffff",
           }}
         />
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
@@ -351,8 +348,8 @@ export function CompareDecisionPanel({
                 ? "rgba(112,82,255,0.24)"
                 : "var(--line)",
               background: noteIsDirty
-                ? "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))"
-                : "linear-gradient(180deg, rgba(252,249,255,0.9), rgba(246,241,255,0.82))",
+                ? "#efe8ff"
+                : "#f7f4ff",
               color: noteIsDirty ? "var(--accent-strong)" : "var(--muted)",
             }}
           >

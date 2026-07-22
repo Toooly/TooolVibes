@@ -1,8 +1,6 @@
 /* Archive vertical slice: active catalog facade and category map. */
 .catalog-page {
-  background:
-    radial-gradient(circle at 12% 6%, color-mix(in srgb, var(--tv-accent-primary) 12%, transparent), transparent 28rem),
-    var(--tv-bg-base);
+  background: var(--tv-bg-base);
 }
 
 .catalog-discovery {
@@ -29,6 +27,10 @@
   font-weight: var(--tv-weight-bold);
   letter-spacing: var(--tv-tracking-eyebrow);
   text-transform: uppercase;
+}
+
+.catalog-page .catalog-category-map__header p {
+  color: var(--tv-accent-brand);
 }
 
 .catalog-discovery__copy h1 {
@@ -72,7 +74,7 @@
   border-color: var(--tv-border-interactive);
   border-radius: var(--tv-radius-lg);
   background: var(--tv-surface-translucent);
-  box-shadow: var(--tv-elevation-raised);
+  box-shadow: none;
   transition:
     border-color var(--tv-motion-fast) var(--tv-ease-standard),
     background var(--tv-motion-fast) var(--tv-ease-standard),
@@ -82,9 +84,7 @@
 .catalog-discovery__search .mobile-catalog-view__search:focus-within {
   border-color: color-mix(in srgb, var(--tv-accent-primary) 58%, var(--tv-border-interactive));
   background: var(--tv-surface-raised);
-  box-shadow:
-    var(--tv-elevation-raised),
-    0 0 0 0.2rem color-mix(in srgb, var(--tv-accent-primary) 14%, transparent);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--tv-accent-primary) 14%, transparent);
 }
 
 .catalog-discovery__metrics {
@@ -110,8 +110,12 @@
 
 .catalog-category-map {
   width: min(calc(100% - 2 * var(--tv-space-6)), var(--tv-content-wide));
-  margin-inline: auto;
-  padding-block: clamp(var(--tv-space-12), 6vw, var(--tv-space-16));
+  margin: var(--tv-space-8) auto 0;
+  padding: clamp(var(--tv-space-8), 5vw, var(--tv-space-16));
+  border: 1px solid var(--tv-border-inverted);
+  border-radius: var(--tv-radius-modal);
+  background: var(--tv-surface-inverted);
+  color: var(--tv-ink-inverted);
 }
 
 .catalog-category-map__header {
@@ -125,7 +129,7 @@
 .catalog-category-map__header h2 {
   max-width: 18ch;
   margin: 0;
-  color: var(--tv-ink-primary);
+  color: var(--tv-ink-inverted);
   font-family: var(--tv-font-display);
   font-size: clamp(var(--tv-text-2xl), 4vw, var(--tv-text-3xl));
   font-weight: var(--tv-weight-bold);
@@ -134,7 +138,7 @@
 }
 
 .catalog-category-map__header > span {
-  color: var(--tv-ink-muted-aa);
+  color: var(--tv-ink-inverted-secondary);
   font-size: var(--tv-text-xs);
   font-weight: var(--tv-weight-semibold);
   letter-spacing: var(--tv-tracking-label);
@@ -156,23 +160,19 @@
   min-height: 7.25rem;
   padding: var(--tv-space-4);
   overflow: hidden;
-  border: 1px solid var(--tv-border-subtle);
+  border: 1px solid var(--tv-border-inverted);
   border-radius: var(--tv-radius-lg);
-  background:
-    radial-gradient(circle at 0 0, color-mix(in srgb, var(--cat-color) 16%, transparent), transparent 62%),
-    var(--tv-surface-translucent);
-  color: var(--tv-ink-primary);
+  background: var(--tv-surface-inverted);
+  color: var(--tv-ink-inverted);
   text-align: left;
-  box-shadow: var(--tv-elevation-rest);
+  box-shadow: none;
   transition: transform var(--tv-motion-base) var(--tv-ease-standard), border-color var(--tv-motion-base) var(--tv-ease-standard), background var(--tv-motion-base) var(--tv-ease-standard);
 }
 
 .catalog-category-map__card:hover,
 .catalog-category-map__card:focus-visible {
   border-color: color-mix(in srgb, var(--cat-color) 46%, var(--tv-border-interactive));
-  background:
-    radial-gradient(circle at 0 0, color-mix(in srgb, var(--cat-color) 24%, transparent), transparent 64%),
-    var(--tv-surface-soft);
+  background: color-mix(in srgb, var(--tv-surface-inverted) 90%, var(--tv-accent-brand));
 }
 
 .catalog-category-map__icon {
@@ -183,7 +183,7 @@
   border: 1px solid color-mix(in srgb, var(--cat-color) 44%, transparent);
   border-radius: var(--tv-radius-md);
   background: color-mix(in srgb, var(--cat-color) 16%, var(--tv-bg-base));
-  color: color-mix(in srgb, var(--cat-color) 72%, white);
+  color: color-mix(in srgb, var(--cat-color) 72%, var(--tv-ink-inverted));
 }
 
 .catalog-category-map__label {
@@ -194,7 +194,7 @@
 
 .catalog-category-map__label strong {
   overflow: hidden;
-  color: var(--tv-ink-primary);
+  color: var(--tv-ink-inverted);
   font-size: var(--tv-text-md);
   font-weight: var(--tv-weight-semibold);
   line-height: var(--tv-leading-heading);
@@ -202,7 +202,7 @@
 }
 
 .catalog-category-map__label small {
-  color: var(--tv-ink-muted-aa);
+  color: var(--tv-ink-inverted-secondary);
   font-size: var(--tv-text-xs);
 }
 

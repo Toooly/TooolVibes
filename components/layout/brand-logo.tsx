@@ -31,9 +31,7 @@ export function BrandLogo({
   return (
     <div
       className={cn(
-        "brand-mark relative flex items-center justify-center rounded-xl",
-        "bg-gradient-to-br from-[#6a3cff]/20 to-[#39d2f6]/10",
-        "ring-1 ring-white/20 shadow-lg shadow-[#6a3cff]/10",
+        "relative flex shrink-0 items-center justify-center",
         className
       )}
       style={{ width: size, height: size }}
@@ -47,7 +45,7 @@ export function BrandLogo({
           alt="TooolVibes"
           width={size}
           height={size}
-          className="relative z-10"
+          className="h-full w-full object-contain"
           priority={priority}
         />
       )}

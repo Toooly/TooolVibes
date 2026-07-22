@@ -12,12 +12,9 @@
   .mobile-compare-arena__partial {
     margin-inline: 0.75rem;
     border: 1px solid rgba(255, 255, 255, 0.14);
-    background:
-      radial-gradient(circle at 50% 0%, rgba(255, 215, 64, 0.08), transparent 34%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035));
+    background: #11111b;
     border-radius: 24px;
     box-shadow: 0 22px 52px rgba(0, 0, 0, 0.32);
-    backdrop-filter: blur(14px);
   }
 }
 
@@ -25,10 +22,7 @@
 .tool-battle-page {
   min-height: 100svh;
   padding-top: clamp(7.5rem, 10vw, 9rem);
-  background:
-    radial-gradient(circle at 82% 4%, color-mix(in srgb, var(--tv-accent-gold) 9%, transparent), transparent 25rem),
-    radial-gradient(circle at 12% 16%, color-mix(in srgb, var(--tv-accent-primary) 14%, transparent), transparent 30rem),
-    var(--tv-bg-base);
+  background: var(--tv-bg-base);
 }
 
 .tool-battle-page__intro {
@@ -104,10 +98,7 @@
   padding: var(--tv-space-8);
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-feature);
-  background:
-    radial-gradient(circle at 82% 12%, color-mix(in srgb, var(--tv-accent-cyan) 12%, transparent), transparent 20rem),
-    radial-gradient(circle at 12% 92%, color-mix(in srgb, var(--tv-accent-primary) 16%, transparent), transparent 24rem),
-    var(--tv-surface-translucent);
+  background: var(--tv-surface-elevated);
   color: var(--tv-ink-secondary);
   font-size: var(--tv-text-sm);
   font-weight: var(--tv-weight-semibold);
@@ -139,10 +130,7 @@
   overflow: hidden;
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-feature);
-  background:
-    radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--tv-accent-cyan) 13%, transparent), transparent 24rem),
-    radial-gradient(circle at 10% 100%, color-mix(in srgb, var(--tv-accent-primary) 18%, transparent), transparent 28rem),
-    var(--tv-surface-translucent);
+  background: var(--tv-surface-elevated);
   box-shadow: var(--tv-elevation-raised);
 }
 
@@ -195,7 +183,7 @@
   padding-inline: var(--tv-space-6);
   border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 62%, var(--tv-border-interactive));
   border-radius: var(--tv-radius-md);
-  background: linear-gradient(180deg, var(--tv-accent-primary), var(--tv-accent-hover));
+  background: var(--tv-accent-primary);
   color: white;
   font-size: var(--tv-text-sm);
   font-weight: var(--tv-weight-semibold);
@@ -275,13 +263,13 @@
 
 .compare-hero-light {
   position: relative;
-  background: radial-gradient(ellipse at 50% 60%, rgba(11, 11, 24, 0.95) 0%, transparent 55%);
+  background: #06060e;
 }
 
 .compare-hero-light__glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(124, 77, 255, 0.08) 0%, transparent 55%);
+  background: transparent;
 }
 
 .compare-hero-light__eyebrow {
@@ -320,9 +308,7 @@
   position: relative;
   padding: 1rem;
   border-radius: 1.5rem;
-  background:
-    radial-gradient(ellipse at 50% 30%, rgba(11, 11, 24, 0.9) 0%, transparent 50%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(6, 6, 14, 1));
+  background: #0d0d16;
   border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
 }
@@ -331,9 +317,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse at 50% 30%, rgba(11, 11, 24, 0.9) 0%, transparent 50%),
-    linear-gradient(180deg, transparent 70%, rgba(6, 6, 14, 1) 100%);
+  background: transparent;
 }
 
 .mobile-compare-arena__hud {
@@ -489,10 +473,9 @@
   margin-top: 0.75rem;
   padding: 1rem;
   border-radius: 1rem;
-  background: rgba(6, 6, 14, 0.75);
+  background: #0d0d16;
   border: 1px solid rgba(100, 255, 218, 0.2);
   color: #E2E8F0;
-  backdrop-filter: blur(8px);
 }
 
 .mobile-compare-arena__verdict-head {
@@ -516,7 +499,7 @@
   height: 2.25rem;
   flex-shrink: 0;
   border-radius: 50%;
-  background: linear-gradient(135deg, #f3bf4c, #ff8a00);
+  background: #f3bf4c;
   color: #1a0b00;
   font-size: 0.75rem;
   font-weight: 900;
@@ -630,8 +613,8 @@
 }
 
 .mobile-compare-arena__chip.is-active {
-  color: #0F172A;
-  background: linear-gradient(135deg, #7C4DFF, #39D2F6);
+  color: #ffffff;
+  background: #7c4dff;
   border-color: transparent;
 }
 
@@ -646,7 +629,7 @@
   justify-content: center;
   padding: 0.75rem calc(1rem + env(safe-area-inset-right)) calc(0.75rem + env(safe-area-inset-bottom));
   padding-right: calc(5.25rem + env(safe-area-inset-right));
-  background: linear-gradient(180deg, transparent 0%, rgba(6, 6, 14, 0.92) 40%, rgba(6, 6, 14, 1) 100%);
+  background: #06060e;
   pointer-events: none;
 }
 
@@ -665,8 +648,8 @@
   border-radius: 9999px;
   font-size: 1rem;
   font-weight: 700;
-  color: #0F172A;
-  background: linear-gradient(135deg, #7C4DFF, #39D2F6);
+  color: #ffffff;
+  background: #7c4dff;
   border: none;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -709,7 +692,7 @@
 .mobile-compare-arena__fight-copy small {
   font-size: var(--tv-text-xs);
   font-weight: 600;
-  color: rgba(15, 23, 42, 0.75);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 /* ─── Compact tool cards ─── */
@@ -828,7 +811,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   color: #FFFFFF;
-  background: linear-gradient(135deg, var(--arena-a, #6a3cff), var(--arena-b, #39d2f6));
+  background: #6a3cff;
   text-decoration: none;
 }
 
@@ -921,8 +904,8 @@
 }
 
 .compare-trend-list__tabs button.is-active {
-  color: #0F172A;
-  background: linear-gradient(135deg, #7C4DFF, #39D2F6);
+  color: #ffffff;
+  background: #7c4dff;
   border-color: transparent;
 }
 
@@ -1085,7 +1068,7 @@
   width: 2.5rem;
   pointer-events: none;
   color: #94A3B8;
-  background: linear-gradient(90deg, transparent, rgba(6, 6, 14, .92));
+  background: #06060e;
 }
 
 .mobile-compare-arena__matrix-grid {
@@ -1232,12 +1215,12 @@
   bottom: 0;
   left: 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--arena-a, #6a3cff), var(--arena-b, #39d2f6));
+  background: var(--arena-a, #6a3cff);
   transition: width .4s ease-out;
 }
 
 .mobile-compare-arena__matrix-bar span.is-winner {
-  background: linear-gradient(90deg, #f3bf4c, #ff6b9d);
+  background: #f3bf4c;
 }
 
 .mobile-compare-arena__matrix-bar strong {
@@ -1350,7 +1333,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--arena-a, #6a3cff), var(--arena-b, #39d2f6));
+  background: var(--arena-a, #6a3cff);
   transition: width 0.4s ease-out;
 }
 
@@ -1464,7 +1447,7 @@
 }
 
 .mobile-compare-arena__cta {
-  background: linear-gradient(135deg, var(--accent-strong, #6d3bff), var(--cyan, #43c6ff));
+  background: var(--accent-strong, #6d3bff);
   color: #fff;
   border-radius: 999px;
   align-items: center;
@@ -1518,7 +1501,7 @@
   position: relative;
   min-height: 60vh;
   border-radius: 1.5rem;
-  background: radial-gradient(ellipse at 50% 30%, rgba(11, 11, 24, 0.95) 0%, transparent 55%);
+  background: #0d0d16;
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 1.5rem;
   overflow: hidden;
@@ -1590,8 +1573,8 @@
   border-radius: 9999px;
   font-size: 1rem;
   font-weight: 700;
-  color: #0F172A;
-  background: linear-gradient(135deg, #7C4DFF, #39D2F6);
+  color: #ffffff;
+  background: #7c4dff;
   border: none;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -1733,10 +1716,7 @@
     min-height: auto;
     overflow: visible;
     border-radius: 1.25rem;
-    background:
-      radial-gradient(circle at 50% 18%, rgba(124, 77, 255, 0.22), transparent 34%),
-      radial-gradient(circle at 16% 82%, rgba(57, 210, 246, 0.13), transparent 28%),
-      linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(6, 6, 14, 0.96));
+    background: #0d0d16;
     box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
   }
 
@@ -1787,9 +1767,7 @@
     position: relative;
     min-width: 0;
     border: 1px solid rgba(255, 255, 255, 0.11);
-    background:
-      radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--arena-a, #6a3cff) 24%, transparent), transparent 42%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.045));
+    background: #151522;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
   }
 
@@ -1899,7 +1877,7 @@
   .desktop-compare__fight-btn {
     min-height: 3rem;
     color: #06101c;
-    background: linear-gradient(135deg, #64FFDA, #39D2F6);
+    background: #64ffda;
   }
 
   .desktop-compare__verdict {
@@ -1911,9 +1889,7 @@
     margin-top: 1rem;
     padding: 0.9rem 1rem;
     border-radius: 1rem;
-    background:
-      radial-gradient(circle at 0% 0%, rgba(100, 255, 218, 0.13), transparent 34%),
-      rgba(6, 6, 14, 0.78);
+    background: #0d1818;
     color: #DFFCF7;
   }
 
@@ -2092,9 +2068,7 @@
 .mobile-compare-arena__matrix-cell--head {
   flex-direction: column;
   gap: 0.28rem;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
-    linear-gradient(135deg, color-mix(in srgb, var(--arena-a, #6a3cff) 20%, transparent), transparent 66%);
+  background: #151522;
 }
 
 .mobile-compare-arena__matrix-tool {
@@ -2110,15 +2084,13 @@
   padding: 0.18rem 0.46rem;
   font-size: var(--tv-text-xs);
   font-weight: 850;
-  color: #04111f;
-  background: linear-gradient(135deg, var(--arena-a, #6a3cff), var(--arena-b, #39d2f6));
+  color: #ffffff;
+  background: #6a3cff;
   box-shadow: 0 0.45rem 1rem color-mix(in srgb, var(--arena-a, #6a3cff) 28%, transparent);
 }
 
 .mobile-compare-arena__matrix-cell.is-winner {
-  background:
-    radial-gradient(circle at 18% 18%, rgba(243, 191, 76, 0.18), transparent 34%),
-    rgba(243, 191, 76, 0.08);
+  background: #241f12;
 }
 
 .mobile-compare-arena__matrix-cell.is-winner .mobile-compare-arena__matrix-value {
@@ -2156,9 +2128,7 @@
 
 .mobile-compare-arena__matrix-verdict-card[data-winner="true"] {
   color: #fff7d6;
-  background:
-    linear-gradient(135deg, rgba(243, 191, 76, 0.22), rgba(255, 107, 157, 0.1)),
-    rgba(15, 23, 42, 0.62);
+  background: #2a2314;
   border-color: rgba(243, 191, 76, 0.42);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
@@ -2174,7 +2144,7 @@
 }
 
 .mobile-compare-arena__matrix-verdict-card[data-winner="true"] .mobile-compare-arena__matrix-rank {
-  background: linear-gradient(135deg, #f3bf4c, #ff6b9d);
+  background: #f3bf4c;
 }
 
 .mobile-compare-arena__matrix-verdict-card strong,
@@ -2238,7 +2208,7 @@
   font-size: var(--tv-text-xs);
   font-weight: 900;
   color: #052e16;
-  background: linear-gradient(135deg, #4ade80, #22d3ee);
+  background: #4ade80;
 }
 
 .mobile-compare-arena__matrix-evidence {
@@ -2379,9 +2349,7 @@
     padding: clamp(1rem, 1.35vw, 1.35rem);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 1.15rem;
-    background:
-      radial-gradient(circle at 0% 0%, rgba(57, 210, 246, 0.08), transparent 34%),
-      rgba(6, 6, 14, 0.5);
+    background: #0d0d16;
   }
 
   .desktop-compare__matrix-panel--full .mobile-compare-arena__matrix-scroll-wrap {
@@ -2485,8 +2453,8 @@
 }
 
 .compare-objective__chip[data-active="true"] .compare-objective__chip-label {
-  color: #0F172A;
-  background: linear-gradient(135deg, #7C4DFF, #39D2F6);
+  color: #ffffff;
+  background: #7c4dff;
   border-color: transparent;
 }
 
@@ -2528,4 +2496,33 @@
   color: #64FFDA;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+/* Route-owned interaction contract: controls remain visibly focusable and
+   progress states do not look actionable while the arena is running. */
+.compare-space-page :where(
+  .compare-onboarding__cta,
+  .mobile-compare-arena__cta,
+  .mobile-compare-arena__fight-btn,
+  .mobile-compare-arena__compact-link,
+  .compare-trend-list__tabs button,
+  .compare-trend-list__row,
+  .desktop-compare__fight-btn
+):focus-visible {
+  outline: 2px solid var(--tv-accent-brand-aa);
+  outline-offset: 3px;
+}
+
+.mobile-compare-arena__fight-btn:disabled,
+.desktop-compare__fight-btn:disabled {
+  background: var(--tv-surface-floating);
+  color: var(--tv-ink-secondary);
+  box-shadow: none;
+  cursor: progress;
+  opacity: 1;
+  transform: none;
+}
+
+.mobile-compare-arena__fight-btn:disabled .mobile-compare-arena__fight-copy small {
+  color: var(--tv-ink-muted-aa);
 }

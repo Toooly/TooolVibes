@@ -12,7 +12,11 @@ const contactEmailDestination = getNavDestination("contact-email");
 function FooterLink({ href, label, icon: Icon }: {
   href: string;
   label: string;
-  icon?: React.ComponentType<{ className?: string; size?: number }>;
+  icon?: React.ComponentType<{
+    className?: string;
+    size?: number;
+    "aria-hidden"?: React.AriaAttributes["aria-hidden"];
+  }>;
 }) {
   return (
     <Link
@@ -24,12 +28,14 @@ function FooterLink({ href, label, icon: Icon }: {
         <Icon
           size={14}
           className="site-footer-v2__link-icon"
+          aria-hidden="true"
         />
       )}
       <span>{label}</span>
       <ArrowUpRight
         size={12}
         className="site-footer-v2__link-arrow"
+        aria-hidden="true"
       />
     </Link>
   );
@@ -67,7 +73,7 @@ export function SiteFooterV2() {
                     className="site-footer-v2__social"
                     aria-label={social.label}
                   >
-                    {SocialIcon ? <SocialIcon size={18} /> : null}
+                    {SocialIcon ? <SocialIcon size={18} aria-hidden="true" /> : null}
                   </a>
                 );
               })}
@@ -103,15 +109,15 @@ export function SiteFooterV2() {
           </div>
 
           <div>
-            <h3>Resta aggiornato</h3>
+            <h3>Parliamone</h3>
             <p className="site-footer-v2__newsletter-copy">
-              La newsletter non è ancora attiva. Per aggiornamenti o segnalazioni, scrivici direttamente.
+              Hai un tool da segnalare, una correzione o una proposta? Scrivici direttamente.
             </p>
             <a
               href={contactEmailDestination.href}
               className="site-footer-v2__contact"
             >
-              <Mail size={16} />
+              <Mail size={16} aria-hidden="true" />
               Scrivici
             </a>
           </div>

@@ -31,7 +31,7 @@ export default async function MarketingLayout({
   }
 
   return (
-    <div className="marketing-shell tv-figma-theme relative isolate overflow-x-clip" style={{ background: "var(--tv-bg-base)" }}>
+    <div className="marketing-shell relative isolate overflow-x-clip" style={{ background: "var(--tv-bg-base)" }}>
       <a href="#main-content" className="skip-link">
         Salta al contenuto
       </a>

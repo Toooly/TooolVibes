@@ -73,7 +73,7 @@ export function AuthPage() {
   const showStateBanner = stateCell !== null && shouldRenderAccountStateBanner(stateCell);
 
   return (
-    <div className="v-auth-page tv-kbd-page">
+    <div id="member-access" className="v-auth-page tv-kbd-page scroll-mt-24">
       {/* Ambient background */}
       <div className="v-auth-page-bg" aria-hidden="true" />
       <div className="v-auth-page-orb" aria-hidden="true" />

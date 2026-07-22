@@ -105,6 +105,11 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
         ? "Archivio Weblium"
         : "TooolVibes"
       : tool.sourceSite ?? "Archivio TooolVibes";
+  const summaryItems = [
+    { label: "In breve", copy: tool.tldr },
+    { label: "Per chi", copy: tool.idealUseCase },
+    { label: "Lettura rapida", copy: tool.editorialReview },
+  ].filter((item): item is { label: string; copy: string } => Boolean(item.copy?.trim()));
 
   // Build orbital items: related tools + navigation nodes
   const toolOrbitItems: OrbitalItem[] = [
@@ -197,12 +202,9 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 {tool.longDescription}
               </p>
 
-              <div className="tool-detail-summary-grid">
-                {[
-                  ["In breve", tool.tldr],
-                  ["Per chi", tool.idealUseCase],
-                  ["Lettura rapida", tool.editorialReview],
-                ].map(([label, copy]) => (
+              {summaryItems.length > 0 ? (
+                <div className="tool-detail-summary-grid">
+                  {summaryItems.map(({ label, copy }) => (
                   <div
                     key={label}
                     className="tool-detail-summary-card"
@@ -214,8 +216,9 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                       {copy}
                     </p>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : null}
 
               <div className="tool-detail-facts">
                 <span>{formattedPublishedAt}</span>
@@ -232,7 +235,9 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 <div className="tool-detail-provenance__grid">
                   <p>Pubblicato: {formattedPublishedAt}</p>
                   <p>Fonte: {sourceLabel}</p>
-                  <p>Revisione: dati editoriali in aggiornamento.</p>
+                  <p>
+                    Copertura: {tool.editorialReview ? "scheda e review editoriale" : "scheda informativa"}.
+                  </p>
                 </div>
               </div>
 
@@ -247,14 +252,15 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="tool-detail-main-cta premium-button premium-button-primary"
+                  aria-label={`${tool.ctaLabel ?? "Apri il sito"} di ${tool.name} in una nuova scheda`}
                 >
                   <span>{tool.ctaLabel ?? "Apri il sito"}</span>
                 </a>
                 <Link
-                  href="/shortlist#wishlist"
+                  href={relatedTools.length > 0 ? "#tool-related" : "/archivio"}
                   className="tool-detail-secondary-cta premium-button"
                 >
-                  Suggerisci un&apos;alternativa
+                  Vedi alternative
                 </Link>
                 {sourceHref ? (
                   <a
@@ -262,8 +268,9 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="tool-detail-secondary-cta premium-button"
+                    aria-label={`Apri ${sourceLabel} in una nuova scheda`}
                   >
-                    Fonte TooolVibes
+                    Apri fonte: {sourceLabel}
                   </a>
                 ) : null}
                 <div className="tool-detail-toggle-actions">
@@ -288,7 +295,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                 </div>
 
                 <p className="tool-detail-profile-copy">
-                  {tool.whyItMatters}
+                  {tool.whyItMatters ?? tool.tldr}
                 </p>
               </div>
 
@@ -302,38 +309,42 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   </p>
                 </div>
 
-                <div className="tool-detail-meta-block">
-                  <p className="tool-detail-meta-label">
-                    Punti forti
-                  </p>
-                  <div className="tool-detail-chip-list">
-                    {tool.highlights.map((item) => (
-                      <span
-                        key={item}
-                        className="tool-detail-highlight-badge"
-                      >
-                        {item}
-                      </span>
-                    ))}
+                {tool.highlights.length > 0 ? (
+                  <div className="tool-detail-meta-block">
+                    <p className="tool-detail-meta-label">
+                      Punti forti
+                    </p>
+                    <div className="tool-detail-chip-list">
+                      {tool.highlights.map((item) => (
+                        <span
+                          key={item}
+                          className="tool-detail-highlight-badge"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                ) : null}
 
-                <div className="tool-detail-meta-block">
-                  <p className="tool-detail-meta-label">
-                    Tag
-                  </p>
-                  <div className="tool-detail-chip-list">
-                    {tool.tags.map((tag) => (
-                      <Link
-                        key={tag}
-                        href={`/archivio?tag=${encodeURIComponent(tag)}`}
-                        className="tool-detail-tag-chip"
-                      >
-                        {tag}
-                      </Link>
-                    ))}
+                {tool.tags.length > 0 ? (
+                  <div className="tool-detail-meta-block">
+                    <p className="tool-detail-meta-label">
+                      Tag
+                    </p>
+                    <div className="tool-detail-chip-list">
+                      {tool.tags.map((tag) => (
+                        <Link
+                          key={tag}
+                          href={`/archivio?tag=${encodeURIComponent(tag)}`}
+                          className="tool-detail-tag-chip"
+                        >
+                          {tag}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                ) : null}
               </div>
             </aside>
           </div>
@@ -367,6 +378,11 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   </p>
                 </div>
               ))}
+              {tool.useCases.length === 0 ? (
+                <p className="tool-detail-empty-state">
+                  I casi d&apos;uso verificati non sono ancora disponibili per questa scheda.
+                </p>
+              ) : null}
             </div>
           </article>
 
@@ -396,6 +412,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="tool-detail-main-cta premium-button premium-button-subtle"
+                  aria-label={`${tool.ctaLabel ?? "Apri il sito"} di ${tool.name} in una nuova scheda`}
                 >
                   {tool.ctaLabel ?? "Apri il sito"}
                 </a>
@@ -405,6 +422,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="tool-detail-secondary-cta premium-button"
+                    aria-label={`Apri ${sourceLabel} in una nuova scheda`}
                   >
                     Apri la fonte originale TooolVibes
                   </a>
@@ -415,7 +433,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
         </section>
 
         {relatedTools.length > 0 ? (
-          <section className="tool-detail-related">
+          <section id="tool-related" className="tool-detail-related">
             <div className="tool-detail-related__heading">
               <div>
                 <p className="tool-detail-kicker">

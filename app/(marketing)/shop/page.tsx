@@ -1,4 +1,4 @@
-import { ArrowRight, Boxes, FileText, Layers3, Sparkles, Zap } from "lucide-react";
+import { Boxes, FileText, Layers3, Sparkles, Zap } from "lucide-react";
 
 import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import { siteConfig } from "@/lib/config/site";
@@ -33,10 +33,10 @@ const shopCards = [
 export default function ShopPage() {
   return (
     <div className="page-shell space-y-5 pb-24 pt-4 sm:space-y-7 sm:pb-16 sm:pt-6">
-      <section className="hero-shell hero-shell-shop motion-reveal px-5 py-5 text-white sm:rounded-[38px] sm:px-7 sm:py-8">
+      <section className="hero-shell motion-reveal bg-[var(--tv-surface-raised)] px-5 py-5 text-white before:!hidden after:!hidden sm:rounded-[38px] sm:px-7 sm:py-8">
         <div className="grid gap-7 lg:grid-cols-[minmax(0,0.94fr)_minmax(20rem,0.8fr)] lg:items-center">
           <div className="max-w-[44rem]">
-            <PremiumBadge tone="warning">Shop digitale</PremiumBadge>
+            <PremiumBadge tone="warning" className="after:!hidden">Shop digitale</PremiumBadge>
             <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[1.05] text-white">
               Risorse, selezioni premium e percorsi pronti per lavorare più veloce.
             </h1>
@@ -50,17 +50,21 @@ export default function ShopPage() {
               <PremiumLink href={siteConfig.shopUrl} external>
                 Apri lo shop digitale
               </PremiumLink>
-              <PremiumLink href="/archivio" tone="secondary">
+              <PremiumLink
+                href="/archivio"
+                tone="secondary"
+                className="[&&]:!border-[var(--tv-border-interactive)] [&&]:!bg-transparent [&&]:!text-[var(--tv-ink-primary)] hover:[&&]:!border-[var(--tv-accent-brand-aa)] hover:[&&]:!bg-[var(--tv-surface-elevated)] focus-visible:[&&]:!border-[var(--tv-accent-brand-aa)] focus-visible:[&&]:!bg-[var(--tv-surface-elevated)]"
+              >
                 Vedi catalogo
               </PremiumLink>
             </div>
           </div>
 
-          <div className="hero-mini-visual rounded-[30px] border border-white/12 bg-white/9 p-4 shadow-[0_22px_58px_rgba(8,14,38,0.18)]">
-            <div className="flex items-center justify-between gap-3 rounded-[22px] border border-white/10 bg-white/7 p-4">
+          <div className="hero-mini-visual rounded-[30px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] p-4 !animate-none">
+            <div className="flex items-center justify-between gap-3 rounded-[22px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] p-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/48">
-                  Anteprima kit
+                  Dentro ogni kit
                 </p>
                 <p className="mt-1 text-sm font-semibold text-white">
                   Kit operativo TooolVibes
@@ -72,15 +76,14 @@ export default function ShopPage() {
               {["Tool salvati", "Prompt operativi", "Checklist decisionale"].map((item, index) => (
                 <div
                   key={item}
-                  className="flex items-center justify-between rounded-[20px] border border-white/10 bg-white/7 p-3"
+                  className="rounded-[20px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] p-3"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="grid size-9 place-items-center rounded-[14px] bg-white/10 text-xs font-semibold text-white">
+                    <span className="grid size-9 place-items-center rounded-[14px] bg-[var(--tv-accent-primary)] text-xs font-semibold text-[var(--tv-ink-on-brand)]">
                       {index + 1}
                     </span>
                     <span className="text-sm font-semibold text-white/82">{item}</span>
                   </div>
-                  <ArrowRight className="size-4 text-white/40" aria-hidden="true" />
                 </div>
               ))}
             </div>
@@ -95,9 +98,9 @@ export default function ShopPage() {
           return (
             <details
               key={item.title}
-              className="micro-details rounded-[20px] border border-[var(--line)] bg-white/76 px-3 py-2.5"
+              className="micro-details rounded-[20px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] px-3 py-2.5"
             >
-              <summary>
+              <summary className="cursor-pointer rounded-[var(--tv-radius-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tv-accent-brand-aa)]">
                 <span className="inline-flex min-w-0 items-center gap-2">
                   <Icon className="size-4 shrink-0 text-[var(--accent)]" aria-hidden="true" />
                   <span className="truncate">{item.title}</span>
@@ -119,12 +122,11 @@ export default function ShopPage() {
           const Icon = item.icon;
 
           return (
-            <PremiumPanel key={item.title} tone="airy" as="article" className="p-5">
+            <PremiumPanel key={item.title} tone="airy" as="article" className="p-5 before:!hidden after:!hidden">
               <div className="flex items-start justify-between gap-4">
-                <span className="grid size-12 place-items-center rounded-[18px] border border-white/10 bg-white/8 text-white">
+                <span className="grid size-12 place-items-center rounded-[18px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-[var(--tv-accent-brand-aa)]">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
-                <PremiumBadge tone="dark">In preparazione</PremiumBadge>
               </div>
               <h2 className="mt-5 text-[1.38rem] leading-[1.08] text-white">
                 {item.title}
@@ -132,7 +134,7 @@ export default function ShopPage() {
               <p className="mt-4 text-[0.98rem] leading-7 text-white/68">
                 {item.copy}
               </p>
-              <div className="mt-5 rounded-[20px] border border-white/10 bg-white/7 p-4 text-sm leading-6 text-white/64">
+              <div className="mt-5 rounded-[20px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] p-4 text-sm leading-6 text-white/64">
                 {item.example}
               </div>
             </PremiumPanel>
@@ -140,10 +142,10 @@ export default function ShopPage() {
         })}
       </section>
 
-      <PremiumPanel tone="warm" className="p-4 sm:p-6">
+      <PremiumPanel tone="warm" className="p-4 before:!hidden after:!hidden sm:p-6">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
           <div>
-            <PremiumBadge tone="accent">Valore reale</PremiumBadge>
+            <PremiumBadge tone="accent" className="after:!hidden">Valore reale</PremiumBadge>
             <h2 className="mt-4 text-[1.75rem] leading-tight text-white sm:text-[2.35rem]">
               Lo shop deve aiutarti a decidere e costruire, non solo vendere file.
             </h2>
@@ -154,7 +156,7 @@ export default function ShopPage() {
           </div>
           <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-3 lg:grid-cols-1">
             {["Pronto al test", "Curato", "Operativo"].map((item) => (
-              <div key={item} className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/7 px-3 py-2 text-xs font-semibold text-white/72 sm:px-4 sm:text-sm">
+              <div key={item} className="flex items-center justify-center gap-2 rounded-full border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] px-3 py-2 text-xs font-semibold text-white/72 sm:px-4 sm:text-sm">
                 <Boxes className="size-4 text-violet-100" aria-hidden="true" />
                 {item}
               </div>

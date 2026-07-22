@@ -62,7 +62,7 @@ function validateForm(form: FormState): FormErrors {
   const errors: FormErrors = {};
 
   if (form.email.trim() && !isValidEmail(form.email.trim())) {
-    errors.email = "Inserisci una email valida oppure lascia vuoto.";
+    errors.email = "Inserisci un'email valida oppure lascia vuoto.";
   }
   if (!isValidUrl(form.websiteUrl.trim())) {
     errors.websiteUrl = "Inserisci un URL valido con https:// oppure lascia vuoto.";
@@ -144,14 +144,15 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
   }
 
   const inputClass =
-    "premium-input min-h-11 px-3.5 py-2.5 text-[0.92rem] placeholder:text-white/38 sm:min-h-12 sm:px-4 sm:py-3 sm:text-[0.98rem]";
-  const labelClass = "text-xs font-semibold uppercase tracking-[0.14em] text-white/68";
+    "premium-input min-h-11 border-[var(--tv-border-interactive)] bg-[var(--tv-surface-elevated)] px-3.5 py-2.5 text-[0.92rem] text-[var(--tv-ink-primary)] placeholder:text-[var(--tv-ink-muted-aa)] sm:min-h-12 sm:px-4 sm:py-3 sm:text-[0.98rem]";
+  const labelClass =
+    "text-xs font-semibold uppercase tracking-[0.14em] text-[var(--tv-ink-secondary)]";
 
   return (
-    <PremiumPanel tone="dark" className={cn("p-4 text-white sm:p-6", className)}>
+    <PremiumPanel tone="dark" className={cn("p-4 text-white before:!hidden after:!hidden sm:p-6", className)}>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <PremiumBadge tone="accent">Candidatura affiliato</PremiumBadge>
+          <PremiumBadge tone="accent" className="after:!hidden">Candidatura affiliato</PremiumBadge>
           <h2 className="mt-3 text-[1.45rem] leading-tight sm:text-[1.85rem]">
             Raccontaci chi sei e dove porteresti TooolVibes.
           </h2>
@@ -166,7 +167,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             <input
               value={form.firstName}
               onChange={(event) => updateField("firstName", event.target.value)}
-              className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+              className={cn(inputClass, "mt-2")}
               placeholder="Opzionale"
               disabled={isSubmitting}
             />
@@ -178,7 +179,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             <input
               value={form.lastName}
               onChange={(event) => updateField("lastName", event.target.value)}
-              className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+              className={cn(inputClass, "mt-2")}
               placeholder="Opzionale"
               disabled={isSubmitting}
             />
@@ -192,7 +193,8 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               onChange={(event) => updateField("email", event.target.value)}
               type="email"
               inputMode="email"
-              className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+              autoComplete="email"
+              className={cn(inputClass, "mt-2")}
               placeholder="Opzionale, se vuoi essere ricontattato via email"
               disabled={isSubmitting}
             />
@@ -204,7 +206,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             <input
               value={form.brandName}
               onChange={(event) => updateField("brandName", event.target.value)}
-              className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+              className={cn(inputClass, "mt-2")}
               placeholder="Creator, newsletter, community..."
               disabled={isSubmitting}
             />
@@ -217,7 +219,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               onChange={(event) => updateField("websiteUrl", event.target.value)}
               type="url"
               inputMode="url"
-              className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+              className={cn(inputClass, "mt-2")}
               placeholder="https://..."
               disabled={isSubmitting}
             />
@@ -238,7 +240,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
                 <input
                   value={form[key as keyof FormState]}
                   onChange={(event) => updateField(key as keyof FormState, event.target.value)}
-                  className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+                  className={cn(inputClass, "mt-2")}
                   placeholder={placeholder}
                   disabled={isSubmitting}
                 />
@@ -252,7 +254,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               value={form.audience}
               onChange={(event) => updateField("audience", event.target.value)}
               rows={3}
-              className={cn(inputClass, "mt-2 min-h-[7rem] resize-none border-white/14 bg-white/8 text-white")}
+              className={cn(inputClass, "mt-2 min-h-[7rem] resize-none")}
               placeholder="Chi ti segue e perché potrebbe essere interessato ai tool AI?"
               disabled={isSubmitting}
             />
@@ -263,7 +265,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             <input
               value={form.channels}
               onChange={(event) => updateField("channels", event.target.value)}
-              className={cn(inputClass, "mt-2 border-white/14 bg-white/8 text-white")}
+              className={cn(inputClass, "mt-2")}
               placeholder="Newsletter, YouTube, LinkedIn, community, sito..."
               disabled={isSubmitting}
             />
@@ -275,7 +277,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               value={form.message}
               onChange={(event) => updateField("message", event.target.value)}
               rows={4}
-              className={cn(inputClass, "mt-2 min-h-[8rem] resize-none border-white/14 bg-white/8 text-white")}
+              className={cn(inputClass, "mt-2 min-h-[8rem] resize-none")}
               placeholder="Raccontaci perché vorresti diventare affiliato e come presenteresti TooolVibes alla tua audience."
               disabled={isSubmitting}
               required
@@ -285,21 +287,21 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
         </div>
 
         {errors.form ? (
-          <div className="rounded-[20px] border border-red-200/20 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100">
+          <div className="rounded-[20px] border border-red-500 bg-[var(--tv-surface-elevated)] px-4 py-3 text-sm font-semibold text-red-200">
             {errors.form}
           </div>
         ) : null}
 
         {isSubmitted ? (
-          <div className="flex gap-3 rounded-[20px] border border-emerald-200/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-50">
+          <div className="flex gap-3 rounded-[20px] border border-emerald-500 bg-[var(--tv-surface-elevated)] px-4 py-3 text-sm text-emerald-200">
             <CheckCircle2 className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
-            <p>Richiesta ricevuta. La troviamo nel backoffice e ti rispondiamo via email.</p>
+            <p>Richiesta ricevuta. La troviamo nel backoffice e ti ricontattiamo sui recapiti indicati.</p>
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm leading-6 text-white/62">
-            Nome, email e profili social sono opzionali. Il messaggio e il solo campo richiesto.
+        <div className="flex flex-col gap-3 border-t border-[var(--tv-border-subtle)] pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm leading-6 text-[var(--tv-ink-secondary)]">
+            Nome, email e profili social sono opzionali. Il messaggio è il solo campo richiesto.
           </p>
           <PremiumButton type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
             {isSubmitting ? (

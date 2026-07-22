@@ -72,7 +72,10 @@ export function AccountPanel() {
   return (
     <>
       <AccountVibesBackground />
-      <div className="tone-account relative z-10 space-y-5 px-4 py-6 sm:px-6 sm:py-8">
+      <div
+        id="member-access"
+        className="tone-account relative z-10 space-y-5 scroll-mt-24 px-4 py-6 sm:px-6 sm:py-8"
+      >
         {/* Hero */}
         <AccountHero account={account} workspace={workspace} />
 

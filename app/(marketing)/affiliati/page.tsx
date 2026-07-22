@@ -36,7 +36,7 @@ export default function AffiliatiPage() {
   return (
     <div className="page-shell py-8 sm:py-12">
       <section className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(22rem,1.08fr)] lg:items-start">
-        <div className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
+        <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
           <div className="flex items-center gap-3">
             <BrandLogo size={58} priority />
             <div>
@@ -49,7 +49,7 @@ export default function AffiliatiPage() {
             </div>
           </div>
 
-          <PremiumBadge tone="accent" className="mt-6">
+          <PremiumBadge tone="accent" className="mt-6 after:!hidden">
             Programma su richiesta
           </PremiumBadge>
           <h1 className="mt-4 text-[2.2rem] leading-[1.02] sm:text-[3.3rem] lg:text-[4rem]">
@@ -69,7 +69,7 @@ export default function AffiliatiPage() {
               <div
                 key={item.label}
                 className="rounded-[22px] border px-4 py-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+                style={{ borderColor: "var(--tv-border-inverted)", background: "transparent" }}
               >
                 <p className="editorial-label">{item.label}</p>
                 <p className="mt-2 text-sm font-semibold">{item.value}</p>
@@ -85,9 +85,9 @@ export default function AffiliatiPage() {
         {programSteps.map((step) => {
           const Icon = step.icon;
           return (
-            <PremiumPanel key={step.title} className="p-5 sm:p-6">
+            <PremiumPanel key={step.title} className="p-5 before:!hidden after:!hidden sm:p-6">
               <div className="flex items-center gap-3">
-                <span className="grid size-11 place-items-center rounded-[18px] bg-[rgba(106,60,255,0.1)] text-[var(--accent-strong)]">
+                <span className="grid size-11 place-items-center rounded-[18px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-[var(--tv-accent-brand-aa)]">
                   <Icon className="size-5" aria-hidden="true" />
                 </span>
                 <h2 className="text-[1.18rem]">{step.title}</h2>
@@ -100,9 +100,9 @@ export default function AffiliatiPage() {
         })}
       </section>
 
-      <PremiumPanel className="mt-8 p-5 sm:p-7">
+      <PremiumPanel className="mt-8 p-5 before:!hidden after:!hidden sm:p-7">
         <div className="grid gap-5 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center">
-          <span className="grid size-14 place-items-center rounded-[22px] bg-[rgba(15,118,110,0.1)] text-teal-700">
+          <span className="grid size-14 place-items-center rounded-[22px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-emerald-300">
             <ChartNoAxesCombined className="size-6" aria-hidden="true" />
           </span>
           <div>

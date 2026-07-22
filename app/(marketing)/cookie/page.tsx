@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 export default function CookiePage() {
   return (
     <section className="mx-auto max-w-3xl px-6 py-20">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6a3cff]">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
         TooolVibes
       </p>
-      <h1 className="mt-3 text-4xl font-black text-[#171225]">Cookie</h1>
-      <div className="mt-8 space-y-5 text-sm leading-7 text-[#4f4970]">
+      <h1 className="mt-3 text-4xl font-black text-[var(--tv-ink-primary)]">Cookie</h1>
+      <div className="mt-8 space-y-5 text-sm leading-7 text-[var(--tv-ink-secondary)]">
         <p>
           TooolVibes usa cookie tecnici e salvataggio locale per mantenere
           sessioni, preferenze, shortlist, confronti e stato dell&apos;interfaccia.

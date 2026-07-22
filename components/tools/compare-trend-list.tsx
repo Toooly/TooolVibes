@@ -93,7 +93,12 @@ export function CompareTrendList() {
   const isLoading = loadingRange === activeRange && !payload;
 
   return (
-    <section className="compare-trend-list" aria-label="Tool in trend" data-loading={isLoading}>
+    <section
+      className="compare-trend-list"
+      aria-label="Tool in trend"
+      aria-busy={isLoading}
+      data-loading={isLoading}
+    >
       <div className="compare-trend-list__header">
         <div className="compare-trend-list__title">
           <TrendingUp className="size-4" />
@@ -160,7 +165,7 @@ export function CompareTrendList() {
           ))}
         </div>
       ) : (
-        <div className="compare-trend-list__empty">
+        <div className="compare-trend-list__empty" role="status">
           <strong>{payload.message ?? "Classifica Product Hunt non disponibile."}</strong>
           <span>Il radar resta vuoto finché non tornano dati reali.</span>
         </div>

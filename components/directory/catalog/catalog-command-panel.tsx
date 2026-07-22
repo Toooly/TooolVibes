@@ -76,6 +76,7 @@ export function CatalogCommandPanel({
                         key={group.key}
                         type="button"
                         onClick={() => onSelectGroup(group.key)}
+                        aria-pressed={isActive}
                         className={`mobile-catalog-command-panel__category${isActive ? " is-active" : ""}`}
                       >
                         {group.label}

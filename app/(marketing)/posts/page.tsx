@@ -34,12 +34,8 @@ export default async function PostsPage() {
 
   return (
     <div className="tone-screen page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <section className="brand-panel brand-aura panel-lift section-stage relative overflow-hidden rounded-[36px] p-5 sm:p-6 lg:p-7">
-        <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.82),transparent_74%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_84%_18%,rgba(99,50,255,0.16),transparent_34%),radial-gradient(ellipse_at_14%_28%,rgba(68,220,255,0.12),transparent_32%)]" />
-        <div className="absolute inset-x-5 top-5 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.52),transparent)]" />
-
-        <div className="editorial-grid relative items-start gap-y-6">
+      <section className="brand-panel section-stage relative overflow-hidden rounded-[36px] p-5 sm:p-6 lg:p-7">
+        <div className="editorial-grid items-start gap-y-6">
           <div className="col-span-12 lg:col-span-8">
             <SectionHeader
               eyebrow="Approfondimenti"
@@ -64,7 +60,7 @@ export default async function PostsPage() {
           </div>
 
           <div className="col-span-12 lg:col-span-4">
-            <div className="dark-panel panel-lift rounded-[28px] p-4.5 sm:p-5 lg:ml-4">
+            <div className="dark-panel rounded-[28px] p-4.5 sm:p-5 lg:ml-4">
               <div>
                 <p className="editorial-label !text-white/60">Contenuti attivi</p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -85,7 +81,7 @@ export default async function PostsPage() {
                   {curationCriteria.map((item) => (
                     <span
                       key={item}
-                      className="rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/72"
+                      className="rounded-full border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--tv-ink-secondary)]"
                     >
                       {item}
                     </span>
@@ -98,7 +94,7 @@ export default async function PostsPage() {
       </section>
 
       <section className="tone-issue page-shell home-section-gap">
-        <div className="dark-panel brand-aura section-stage rounded-[38px] p-6 sm:p-8 lg:p-9">
+        <div className="dark-panel section-stage rounded-[38px] p-6 sm:p-8 lg:p-9">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
             <div>
               <p className="editorial-label !text-white/58">In evidenza</p>
@@ -107,9 +103,8 @@ export default async function PostsPage() {
               </p>
             </div>
             <Link
-              href="#legacy-guides"
-              className="selection-chip rounded-full border px-4 py-2 text-sm font-semibold text-white/86"
-              style={{ borderColor: "rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.06)" }}
+              href="#guide"
+              className="selection-chip rounded-full border border-[var(--tv-border-interactive)] bg-transparent px-4 py-2 text-sm font-semibold text-[var(--tv-ink-primary)] transition-colors hover:border-[var(--tv-accent-brand-aa)] hover:bg-[var(--tv-surface-elevated)] focus-visible:border-[var(--tv-accent-brand-aa)] focus-visible:bg-[var(--tv-surface-elevated)]"
             >
               Vai alle guide
             </Link>
@@ -125,7 +120,7 @@ export default async function PostsPage() {
 
       {blogPosts.length > 0 ? (
         <section className="page-shell home-section-gap">
-          <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
+          <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
             <SectionHeader
               eyebrow="Blog"
               title="Articoli pubblicati da TooolVibes."
@@ -141,7 +136,7 @@ export default async function PostsPage() {
       ) : null}
 
       <section className="page-shell home-section-gap">
-        <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
+        <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
           <SectionHeader
             eyebrow="Approfondimenti tool"
             title="Gli approfondimenti collegati ai tool già presenti nel catalogo."
@@ -155,8 +150,8 @@ export default async function PostsPage() {
         </div>
       </section>
 
-      <section id="legacy-guides" className="page-shell home-section-gap">
-        <div className="brand-panel panel-lift rounded-[34px] p-5 sm:p-7 lg:p-8">
+      <section id="guide" className="page-shell home-section-gap">
+        <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
           <SectionHeader
             eyebrow="Guide"
             title="Le guide più utili, riscritte per il TooolVibes di oggi."

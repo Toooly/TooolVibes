@@ -666,7 +666,12 @@ export function MobileCompareView({
   const isRevealed = battleState === "result";
 
   function handleFight() {
-    if (battleState !== "idle" || fightLockedRef.current) return;
+    if (
+      (battleState !== "idle" && battleState !== "result") ||
+      fightLockedRef.current
+    ) {
+      return;
+    }
     fightLockedRef.current = true;
     clearFightTimers();
 
