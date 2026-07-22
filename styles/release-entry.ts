@@ -7,4 +7,10 @@
  */
 import "@/app/globals.css";
 import "@/styles/vibes-3d-maestoso.css";
-import "@/styles/figma-final-polish.css";
+import "@/styles/shell.css";
+import "@/styles/home.css";
+import "@/styles/catalog.css";
+import "@/styles/compare.css";
+import "@/styles/radar.css";
+import "@/styles/tool-detail.css";
+import "@/styles/public-routes.css";

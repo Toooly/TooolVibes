@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Compare3DHero } from "@/components/3d-maestoso/compare-3d-hero";
 import { ToolBattleView } from "@/components/tools/tool-battle-view";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { getPublicToolViews } from "@/lib/data/public-tools";
@@ -16,12 +15,11 @@ export default async function ComparePage() {
 
   return (
     <div className="compare-space-page">
-      {releaseFeatures.threeD.enabled && <Compare3DHero />}
       <ToolBattleView
         tools={tools}
         objectiveEnabled={releaseFeatures.compareObjective.enabled}
         decisionEnabled={releaseFeatures.compareDecision.enabled}
-        showIntro={!releaseFeatures.threeD.enabled}
+        showIntro
       />
     </div>
   );

@@ -23,7 +23,11 @@ import {
 } from "lucide-react";
 import { useHeaderAccountCta } from "./workspace-nav-selectors";
 
-const DEFAULT_MOBILE_LINK_TONE = ["#6a3cff", "#39d2f6", "#B388FF"] as const;
+const DEFAULT_MOBILE_LINK_TONE = [
+  "var(--tv-accent-primary)",
+  "var(--tv-accent-cyan)",
+  "var(--tv-accent-primary)",
+] as const;
 
 const MODAL_FOCUSABLE_SELECTOR = [
   'a[href]',
@@ -117,20 +121,9 @@ function NavLink({
       <span className="site-header-v2__nav-orbit" aria-hidden="true" />
       <span className="site-header-v2__nav-content">
         {Icon ? (
-          <Icon
-            size={16}
-            className={`site-header-v2__nav-icon transition-colors duration-200 ${
-              isActive ? "text-[#7C4DFF]" : "text-[#B388FF]"
-            }`}
-          />
+          <Icon size={16} className="site-header-v2__nav-icon" />
         ) : null}
-        <span
-          className={`site-header-v2__nav-label text-sm font-medium transition-colors duration-200 ${
-            isActive
-              ? "text-[#F0EFFF]"
-              : "text-[#B388FF]"
-          }`}
-        >
+        <span className="site-header-v2__nav-label">
           {label}
         </span>
         {isActive && <span className="site-header-v2__active-dot" aria-hidden="true" />}
@@ -292,16 +285,14 @@ export function SiteHeaderV2() {
     <>
       <header
         data-overlay-open={menuOpen || searchOpen ? "true" : undefined}
-        className={`site-header-v2 fixed left-0 right-0 top-0 transition-all duration-500${
+        className={`site-header-v2 fixed inset-x-0 top-0${
           scrolled || spatialRoute ? " is-elevated" : ""
         }`}
         style={{ transform: "translateZ(0)", willChange: "transform" }}
       >
         <div
-          className={`site-header-v2__shell mx-auto max-w-[1440px] bg-[#060612] transition-all duration-500 lg:bg-transparent ${
-            scrolled || spatialRoute
-              ? "lg:mx-3 lg:mt-3 lg:rounded-2xl lg:border lg:border-[rgba(106,60,255,0.12)] lg:bg-[rgba(6,6,14,0.82)] lg:shadow-[0_4px_20px_rgba(0,0,0,0.35)] lg:backdrop-blur-xl"
-              : ""
+          className={`site-header-v2__shell${
+            scrolled || spatialRoute ? " is-elevated" : ""
           }`}
         >
           <div className="site-header-v2__inner relative grid h-16 grid-cols-[auto_1fr_auto] items-center px-4 md:flex md:items-center md:justify-between md:px-6">
@@ -313,12 +304,7 @@ export function SiteHeaderV2() {
               </Link>
               <Link
                 href="/"
-                className="site-header-v2__brand-word hidden text-lg font-bold sm:inline-block"
-                style={{
-                  background: "linear-gradient(135deg, #6a3cff 0%, #39d2f6 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
+                className="site-header-v2__brand-word hidden sm:inline-block"
               >
                 TOOOLVIBES
               </Link>
@@ -327,7 +313,7 @@ export function SiteHeaderV2() {
             {/* Mobile title */}
             <div className="col-start-2 flex justify-center md:hidden">
               <span
-                className="site-header-v2__mobile-title pointer-events-none hidden text-[0.92rem] font-black uppercase text-white min-[430px]:inline"
+                className="site-header-v2__mobile-title pointer-events-none hidden min-[430px]:inline"
                 aria-hidden="true"
               >
                 TooolVibes
@@ -350,7 +336,7 @@ export function SiteHeaderV2() {
             {/* Right Actions */}
             <div className="site-header-v2__actions col-start-3 flex items-center gap-2 justify-self-end">
               <button
-                className="site-header-v2__search-trigger relative hidden rounded-xl p-2.5 text-[#4f4970] transition-colors hover:bg-[rgba(106,60,255,0.08)] hover:text-[#6a3cff] md:flex"
+                className="site-header-v2__search-trigger relative hidden md:flex"
                 onClick={(event) => {
                   activeSearchTriggerRef.current = event.currentTarget;
                   restoreSearchFocusRef.current = true;
@@ -369,7 +355,7 @@ export function SiteHeaderV2() {
                   </svg>
                   <span className="hidden xl:inline">Cerca</span>
                 </span>
-                <kbd className="site-header-v2__kbd ml-1 hidden rounded-md border border-[rgba(56,42,122,0.15)] bg-[rgba(236,232,255,0.6)] px-1.5 py-0.5 text-xs font-medium text-[#4f4970] xl:inline">
+                <kbd className="site-header-v2__kbd hidden xl:inline-flex">
                   ⌘K
                 </kbd>
               </button>
@@ -386,7 +372,7 @@ export function SiteHeaderV2() {
               {accountCta.visible && (
                 <Link
                   href={accountCta.href}
-                  className="site-header-v2__primary-action group relative hidden items-center gap-2 rounded-xl bg-gradient-to-r from-[#6a3cff] to-[#4f46e5] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_16px_rgba(106,60,255,0.25)] transition-all hover:shadow-[0_6px_20px_rgba(106,60,255,0.35)] md:flex"
+                  className="site-header-v2__primary-action group relative hidden md:flex"
                   data-sonic-action="tap"
                   data-account-state={accountCta.state}
                   aria-busy={accountCta.ariaBusy || undefined}
@@ -397,7 +383,7 @@ export function SiteHeaderV2() {
               )}
 
               <button
-                className="site-header-v2__mobile-search grid size-11 shrink-0 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 md:hidden"
+                className="site-header-v2__mobile-search grid size-11 shrink-0 place-items-center md:hidden"
                 onClick={(event) => {
                   activeSearchTriggerRef.current = event.currentTarget;
                   restoreSearchFocusRef.current = true;
@@ -417,7 +403,7 @@ export function SiteHeaderV2() {
               {/* Mobile menu toggle */}
               <button
                 ref={menuButtonRef}
-                className={`site-header-v2__menu-button relative z-20 grid size-11 touch-manipulation place-items-center rounded-xl text-white transition-colors active:scale-95 xl:hidden${
+                className={`site-header-v2__menu-button relative z-20 grid size-11 place-items-center xl:hidden${
                   menuOpen ? " is-open" : ""
                 }`}
                 aria-controls="mobile-site-menu"
@@ -447,7 +433,7 @@ export function SiteHeaderV2() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             id="site-search-overlay"
-            className="tv-kbd-overlay fixed inset-0 z-[var(--tv-z-overlay)] flex items-end justify-center bg-[rgba(18,13,47,0.5)] p-3 pt-[calc(5rem+env(safe-area-inset-top))] backdrop-blur-sm md:items-start md:p-0 md:pt-24"
+            className="tv-kbd-overlay site-header-v2__search-overlay fixed inset-0 z-[var(--tv-z-overlay)] flex items-end justify-center md:items-start"
             onClick={() => closeSearch()}
             role="dialog"
             aria-modal="true"
@@ -459,10 +445,10 @@ export function SiteHeaderV2() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 24, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="mx-0 w-full max-w-none md:mx-4 md:max-w-2xl"
+              className="site-header-v2__search-dialog"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="tv-kbd-sheet overflow-hidden rounded-t-[24px] border border-[rgba(106,60,255,0.15)] bg-[rgba(255,255,255,0.97)] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_16px_48px_rgba(106,60,255,0.12)] backdrop-blur-xl md:rounded-2xl md:pb-4">
+              <div className="tv-kbd-sheet site-header-v2__search-sheet">
                 <DirectoryHeaderSearch compact autoFocus onSubmitted={() => closeSearch(false)} />
               </div>
             </motion.div>
@@ -478,7 +464,7 @@ export function SiteHeaderV2() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="site-header-v2__mobile-backdrop fixed inset-0 z-[var(--tv-z-overlay)] bg-[rgba(6,6,14,0.55)] xl:hidden"
+            className="site-header-v2__mobile-backdrop fixed inset-0 z-[var(--tv-z-overlay)] xl:hidden"
             onClick={() => closeMenu()}
             role="dialog"
             aria-modal="true"
@@ -491,35 +477,28 @@ export function SiteHeaderV2() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0.8 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="mobile-menu-panel site-header-v2__mobile-panel absolute right-0 top-0 h-full w-[300px] max-w-[85vw] overflow-y-auto border-l border-[rgba(106,60,255,0.12)] bg-[#f8f7ff] p-6 pt-[max(1.15rem,env(safe-area-inset-top))] shadow-[-12px_0_40px_rgba(0,0,0,0.18)] max-[374px]:w-screen max-[374px]:max-w-none"
+              className="mobile-menu-panel site-header-v2__mobile-panel"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="site-header-v2__mobile-panel-head mb-6 flex items-center justify-between gap-4">
                 <Link href="/" className="site-header-v2__mobile-brand flex items-center gap-2" onClick={() => closeMenu(false)}>
                   <BrandLogo size={34} fallback="png" priority />
-                  <span
-                    className="text-sm font-black uppercase"
-                    style={{
-                      background: "linear-gradient(110deg, #6a3cff 0%, #39d2f6 62%, #f3bf4c 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  >
+                  <span className="site-header-v2__mobile-brand-word">
                     TooolVibes
                   </span>
                 </Link>
                 <button
                   ref={menuCloseButtonRef}
                   type="button"
-                  className="site-header-v2__mobile-close grid size-11 place-items-center rounded-xl border border-[rgba(106,60,255,0.2)] bg-white text-[#120d2f]"
+                  className="site-header-v2__mobile-close grid size-11 place-items-center"
                   aria-label="Chiudi menu"
                   onClick={() => closeMenu()}
                 >
                   <X size={22} />
                 </button>
               </div>
-              <div className="site-header-v2__mobile-eyebrow mb-5 flex items-center gap-2 text-xs font-medium uppercase text-[#6b6580]">
-                <Sparkles size={12} className="text-[#6a3cff]" />
+              <div className="site-header-v2__mobile-eyebrow mb-5 flex items-center gap-2">
+                <Sparkles size={12} />
                 Navigazione
               </div>
               <div className="site-header-v2__mobile-links flex flex-col gap-1 border-b border-[rgba(18,13,47,0.08)] pb-4">
@@ -537,10 +516,8 @@ export function SiteHeaderV2() {
                       <Link
                         href={link.href}
                         onClick={() => closeMenu(false)}
-                        className={`site-header-v2__mobile-link group flex min-h-[44px] items-center justify-between rounded-xl border px-4 py-3 transition-all ${
-                          isActive
-                            ? "is-active border-[rgba(106,60,255,0.45)] bg-[#ede9fe] text-[#4c1d95]"
-                            : "border-[rgba(106,60,255,0.12)] bg-white text-[#120d2f] hover:border-[rgba(106,60,255,0.28)] hover:bg-[#f0edff]"
+                        className={`site-header-v2__mobile-link group${
+                          isActive ? " is-active" : ""
                         }`}
                         style={{
                           "--mobile-link-a": tone[0],
@@ -551,12 +528,12 @@ export function SiteHeaderV2() {
                         aria-current={isActive ? "page" : undefined}
                       >
                         <span className="flex items-center gap-3">
-                          {Icon ? <Icon size={20} className="text-[#6a3cff]" /> : null}
+                          {Icon ? <Icon size={20} /> : null}
                           <span className="font-medium">{link.label}</span>
                         </span>
                         <ChevronRight
                           size={16}
-                          className="text-[#6a3cff] opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100"
+                          className="site-header-v2__mobile-chevron"
                         />
                       </Link>
                     </motion.div>
@@ -569,7 +546,7 @@ export function SiteHeaderV2() {
                   <Link
                     href={accountCta.href}
                     onClick={() => closeMenu(false)}
-                    className="site-header-v2__mobile-primary flex items-center justify-center gap-2 rounded-xl bg-[#6a3cff] px-4 py-3 text-sm font-medium text-white shadow-[0_6px_18px_rgba(106,60,255,0.22)]"
+                    className="site-header-v2__mobile-primary flex items-center justify-center gap-2"
                     data-account-state={accountCta.state}
                     aria-busy={accountCta.ariaBusy || undefined}
                   >

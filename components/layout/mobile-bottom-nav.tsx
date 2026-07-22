@@ -39,15 +39,13 @@ export function MobileBottomNav() {
       aria-label="Navigazione mobile principale"
       inert={isOverlayOpen || undefined}
       className={cn(
-        "mobile-bottom-motion site-mobile-footer-nav fixed z-[var(--tv-z-nav)] mx-auto w-auto max-w-[25rem]",
+        "mobile-bottom-motion site-mobile-footer-nav fixed z-[var(--tv-z-nav)]",
         "md:hidden",
-        "rounded-[1.5rem] border border-white/25 bg-white/85 backdrop-blur-lg",
-        "shadow-[0_8px_24px_rgba(47,33,126,0.12)]",
         "transition-opacity duration-300",
         isOverlayOpen && "opacity-0 pointer-events-none"
       )}
     >
-      <div className="grid w-full grid-cols-5 gap-1.5 p-1.5">
+      <div className="site-mobile-footer-nav__grid">
         {mobileItems.map((item) => {
           const Icon = item.icon;
           const isCompareItem = item.id === "compare";
@@ -70,8 +68,8 @@ export function MobileBottomNav() {
               aria-label={badgeCount > 0 ? `${item.label}, ${badgeAriaLabel}` : undefined}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "mobile-bottom-link flex h-[3.55rem] min-w-0 flex-col items-center justify-center gap-1 rounded-[1.2rem] px-1 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-200/80",
-                active ? "is-active text-[#ffffff]" : "text-[#16112d] hover:bg-white/72 hover:text-[#6a3cff]",
+                "mobile-bottom-link",
+                active && "is-active",
                 active && "[&_.mobile-bottom-link__icon-wrap>svg]:scale-110",
                 compareHasItems && "mobile-bottom-link--compare-ready"
               )}

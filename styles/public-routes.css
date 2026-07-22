@@ -1,0 +1,45 @@
+/* Shared public-route foundation. Route files own their distinctive layouts. */
+
+.marketing-shell :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.marketing-shell :where(p, li) {
+  text-wrap: pretty;
+}
+
+.marketing-shell :where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 3px;
+}
+
+.marketing-shell main :where(.light-surface, .premium-panel, .premium-card, .brand-panel, .metadata-block, .stat-block) {
+  border-color: var(--tv-border-subtle) !important;
+  background: var(--tv-surface-raised) !important;
+  color: var(--tv-ink-primary) !important;
+  box-shadow: var(--tv-elevation-rest) !important;
+}
+
+.marketing-shell main :where(.light-surface, .premium-panel, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(h1, h2, h3, h4, strong) {
+  color: var(--tv-ink-primary) !important;
+}
+
+.marketing-shell main :where(.light-surface, .premium-panel, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(p, li, small) {
+  color: var(--tv-ink-secondary) !important;
+}
+
+.marketing-shell main :where(input, select, textarea) {
+  border-color: var(--tv-border-subtle);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+}
+
+.marketing-shell main :where(input, textarea)::placeholder {
+  color: var(--tv-ink-muted-aa);
+}
+
+@media (max-width: 47.99rem) {
+  .marketing-shell main {
+    padding-bottom: 5.5rem;
+  }
+}

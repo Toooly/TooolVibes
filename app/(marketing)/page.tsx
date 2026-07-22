@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import { Home3DHero } from "@/components/3d-maestoso/home-3d-hero";
 import { VibeHomeV2 } from "@/components/home/vibe-home-v2";
 import { ComingSoonPage } from "@/components/coming-soon/coming-soon-page";
 import { homeExperience } from "@/lib/config/home-experience";
@@ -58,21 +57,11 @@ export default async function HomePage() {
   const homeLayout = homeExperience.layout;
 
   return (
-    <>
-      {releaseFeatures.threeD.enabled && (
-        <Home3DHero tools={tools} weeklyTool={spotlightTool} />
-      )}
-      {/* FIX-1: showDiscoveryHero prop rimosso. Il MobileHeroSolar (discovery
-          stage) viene SEMPRE renderizzato nella composizione, indipendentemente
-          da releaseFeatures.threeD.enabled. La feature 3D desktop (Home3DHero)
-          è nascosta da CSS sotto 768px e può coesistere con l'hero mobile nel
-          render tree. */}
-      <VibeHomeV2
-        tools={tools}
-        weeklyTool={spotlightTool}
-        supportingTools={supportingTools.slice(0, 4)}
-        layout={homeLayout}
-      />
-    </>
+    <VibeHomeV2
+      tools={tools}
+      weeklyTool={spotlightTool}
+      supportingTools={supportingTools.slice(0, 4)}
+      layout={homeLayout}
+    />
   );
 }

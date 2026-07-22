@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { RadarViewSwitch } from "@/components/radar/radar-view-switch";
-import { releaseFeatures } from "@/lib/config/release-features";
 import { siteConfig } from "@/lib/config/site";
 import { radarDesktopVisual } from "@/lib/radar/radar-view-config";
 
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
 export default function RadarPage() {
   return (
     <RadarViewSwitch
-      threeDEnabled={releaseFeatures.threeD.enabled}
+      threeDEnabled={false}
       initialDesktopVisual={radarDesktopVisual}
     />
   );

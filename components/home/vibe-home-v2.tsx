@@ -31,7 +31,7 @@ const methodSteps = [
     title: "Parti da tool già curati",
     description: "Categorie leggibili, filtri utili e una selezione editoriale che tiene fuori il rumore.",
     href: "/archivio",
-    color: "#6a3cff",
+    color: "var(--tv-accent-primary)",
   },
   {
     icon: "GitCompare" as const,
@@ -39,7 +39,7 @@ const methodSteps = [
     title: "Confronta solo i candidati forti",
     description: "Porta avanti pochi tool alla volta e guarda differenze, livello e casi d'uso reali.",
     href: "/compare",
-    color: "#39d2f6",
+    color: "var(--tv-accent-cyan)",
   },
   {
     icon: "Bookmark" as const,
@@ -47,7 +47,7 @@ const methodSteps = [
     title: "Chiudi con una scelta rapida",
     description: "Salva, rivedi e trasforma la ricerca in una lista operativa pronta da provare.",
     href: "/shortlist",
-    color: "#f3bf4c",
+    color: "var(--tv-accent-gold)",
   },
 ];
 
@@ -66,14 +66,14 @@ export function VibeHomeV2({
       id: "solar-catalogo",
       label: "Catalogo",
       href: "/archivio",
-      color: "#6a3cff",
+      color: "var(--tv-accent-primary)",
       icon: "Compass" as const,
     },
     {
       id: "solar-radar",
       label: "Radar",
       href: "/radar",
-      color: "#39d2f6",
+      color: "var(--tv-accent-cyan)",
       icon: "Radar" as const,
       badge: "Ora",
     },
@@ -81,21 +81,21 @@ export function VibeHomeV2({
       id: "solar-shortlist",
       label: "Salvati",
       href: "/shortlist",
-      color: "#f3bf4c",
+      color: "var(--tv-accent-gold)",
       icon: "Bookmark" as const,
     },
     {
       id: "solar-confronta",
       label: "Confronto",
       href: "/compare",
-      color: "#10b981",
+      color: "var(--tv-accent-cyan)",
       icon: "GitCompare" as const,
     },
     {
       id: "solar-top-tool",
       label: "Tool scelto",
       href: focusTool ? `/toools/${focusTool.slug}` : "/archivio",
-      color: "#ec4899",
+      color: "var(--tv-accent-primary)",
       icon: "Sparkles" as const,
     },
   ];

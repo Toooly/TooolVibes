@@ -6,8 +6,7 @@ import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
 import { SiteHeaderV2 } from "@/components/layout/site-header-v2";
-import { Global3DLayer } from "@/components/3d-maestoso/global-3d-layer";
-import { OrbitalProvider, OrbitalLayer } from "@/components/app/orbital-system";
+import { OrbitalProvider } from "@/components/app/orbital-system";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
@@ -36,9 +35,7 @@ export default async function MarketingLayout({
       <a href="#main-content" className="skip-link">
         Salta al contenuto
       </a>
-      {releaseFeatures.threeD.enabled && <Global3DLayer />}
       <OrbitalProvider>
-        {releaseFeatures.threeD.enabled && <OrbitalLayer />}
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
           <DiscoveryPersistenceProvider>
             <SiteHeaderV2 />

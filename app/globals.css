@@ -5,11 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @import "../styles/tokens.css";
-@import "../styles/home.css";
-@import "../styles/catalog.css";
 @import "../styles/gamification.css";
-@import "../styles/radar.css";
-@import "../styles/compare.css";
 @import "../styles/depth-scene.css";
 @import "../styles/account.css";
 @import "../styles/figma-implementation.css";

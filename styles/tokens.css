@@ -568,24 +568,6 @@
   --tv-accent-hover: var(--tv-accent-brand-hover);         /* was #7c3aed → use --tv-accent-brand-hover */
   --tv-accent-pressed: var(--tv-accent-brand-pressed);     /* was #6d28d9 → use --tv-accent-brand-pressed */
   --tv-accent-aa: var(--tv-accent-brand-aa);               /* was #7c3aed → use --tv-accent-brand-aa */
-  --tv-accent-cyan: var(--tv-accent-cyan);                 /* same name, alias to canonical */
-  --tv-accent-gold: var(--tv-accent-gold);                 /* same name, alias to canonical */
-  --tv-accent-magenta: var(--tv-accent-magenta);           /* same name, alias to canonical */
-  --tv-ink-primary: var(--tv-ink-primary);                 /* same name, alias to canonical */
-  --tv-ink-secondary: var(--tv-ink-secondary);             /* same name, alias to canonical */
-  --tv-ink-muted: var(--tv-ink-muted);                     /* same name, alias to canonical */
-  --tv-ink-muted-aa: var(--tv-ink-muted-aa);               /* same name, alias to canonical */
-  --tv-surface-raised: var(--tv-surface-raised);           /* same name */
-  --tv-surface-elevated: var(--tv-surface-elevated);       /* same name */
-  --tv-surface-translucent: var(--tv-surface-translucent); /* same name */
-  --tv-surface-soft: var(--tv-surface-soft);               /* same name */
-  --tv-border-subtle: var(--tv-border-subtle);             /* same name */
-  --tv-border-interactive: var(--tv-border-interactive);   /* same name */
-  --tv-status-success: var(--tv-status-success);           /* same name */
-  --tv-status-warning: var(--tv-status-warning);           /* same name */
-  --tv-status-danger: var(--tv-status-danger);             /* same name */
-  --tv-status-info: var(--tv-status-info);                 /* same name */
-  --tv-focus-ring: var(--tv-focus-ring);                   /* same name */
 
   /* --- Typography compatibility --- */
   /* Target migration: SEMANTIC typography tokens */
@@ -601,17 +583,6 @@
   --tv-text-xl: var(--tv-text-title);
   --tv-text-2xl: var(--tv-text-heading);
   --tv-text-3xl: var(--tv-text-display);
-  --tv-weight-regular: var(--tv-weight-regular);
-  --tv-weight-medium: var(--tv-weight-medium);
-  --tv-weight-semibold: var(--tv-weight-semibold);
-  --tv-weight-bold: var(--tv-weight-bold);
-  --tv-leading-tight: var(--tv-leading-tight);
-  --tv-leading-heading: var(--tv-leading-heading);
-  --tv-leading-body: var(--tv-leading-body);
-  --tv-leading-relaxed: var(--tv-leading-relaxed);
-  --tv-tracking-default: var(--tv-tracking-default);
-  --tv-tracking-label: var(--tv-tracking-label);
-  --tv-tracking-eyebrow: var(--tv-tracking-eyebrow);
 
   /* --- Spacing compatibility --- */
   /* Target migration: SEMANTIC spacing tokens */
@@ -636,27 +607,11 @@
   --tv-content-text-wide: 58rem;      /* 928px — wide prose, marketing bodies */
 
   /* --- Elevation compatibility --- */
-  --tv-elevation-rest: var(--tv-elevation-rest);
-  --tv-elevation-raised: var(--tv-elevation-raised);
-  --tv-elevation-modal: var(--tv-elevation-modal);
-
   /* --- Motion compatibility --- */
-  --tv-motion-fast: var(--tv-motion-fast);
-  --tv-motion-base: var(--tv-motion-base);
-  --tv-motion-slow: var(--tv-motion-slow);
   --tv-ease-standard: var(--tv-easing-standard);
   --tv-ease-emphasis: var(--tv-easing-emphasis);
 
   /* --- Z-index compatibility --- */
-  --tv-z-base: var(--tv-z-base);
-  --tv-z-content: var(--tv-z-content);
-  --tv-z-sticky: var(--tv-z-sticky);
-  --tv-z-nav: var(--tv-z-nav);
-  --tv-z-overlay: var(--tv-z-overlay);
-  --tv-z-modal: var(--tv-z-modal);
-  --tv-z-floating: var(--tv-z-floating);
-  --tv-z-toast: var(--tv-z-toast);
-  --tv-z-effects: var(--tv-z-effects);
 
   /* ============================================================== */
 
