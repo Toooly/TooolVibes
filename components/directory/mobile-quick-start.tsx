@@ -11,7 +11,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { DecorativeGlow, SectionHeader } from "@/components/ui/premium-section";
+import { DecorativeGlow } from "@/components/ui/premium-section";
+import { SectionHeader } from "@/components/ui/section-header";
 
 const quickPaths = [
   {

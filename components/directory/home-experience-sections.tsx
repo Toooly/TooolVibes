@@ -20,7 +20,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
-import { DecorativeGlow, SectionHeader } from "@/components/ui/premium-section";
+import { DecorativeGlow } from "@/components/ui/premium-section";
+import { SectionHeader } from "@/components/ui/section-header";
 import { cn } from "@/lib/utils";
 
 const categories = [
@@ -179,7 +180,7 @@ export function HomeExperienceSections() {
             title="Scegli il percorso, non una card a caso."
             description="Le categorie diventano ingressi operativi: sviluppo, automazione, contenuti, confronto e lista finale."
             className="[&_h2]:text-[var(--foreground)] [&_p]:text-[var(--muted-strong)]"
-            action={
+            trailing={
               <PremiumLink href="/tags" tone="dark" size="sm">
                 Vedi categorie
               </PremiumLink>

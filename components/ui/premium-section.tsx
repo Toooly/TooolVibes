@@ -18,48 +18,6 @@ export function SectionShell({ children, className, id, bleed = false }: Section
   );
 }
 
-type SectionHeaderProps = {
-  eyebrow?: string;
-  title: string;
-  description?: string;
-  align?: "left" | "center";
-  className?: string;
-  action?: ReactNode;
-};
-
-export function SectionHeader({
-  eyebrow,
-  title,
-  description,
-  align = "left",
-  className,
-  action,
-}: SectionHeaderProps) {
-  return (
-    <div
-      className={cn(
-        "flex flex-col gap-4",
-        align === "center" && "items-center text-center",
-        action && align === "left" && "lg:flex-row lg:items-end lg:justify-between",
-        className,
-      )}
-    >
-      <div className={cn("max-w-[46rem]", align === "center" && "mx-auto")}>
-        {eyebrow ? <PremiumBadge tone="accent">{eyebrow}</PremiumBadge> : null}
-        <h2 className="text-display-card mt-4 text-[2rem] leading-[1.05] text-[var(--foreground)] sm:text-[2.8rem]">
-          {title}
-        </h2>
-        {description ? (
-          <p className="mt-4 max-w-[42rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
-            {description}
-          </p>
-        ) : null}
-      </div>
-      {action ? <div className="shrink-0">{action}</div> : null}
-    </div>
-  );
-}
-
 export function DecorativeGlow({
   className,
   tone = "violet",
