@@ -62,12 +62,16 @@ export default async function HomePage() {
       {releaseFeatures.threeD.enabled && (
         <Home3DHero tools={tools} weeklyTool={spotlightTool} />
       )}
+      {/* FIX-1: showDiscoveryHero prop rimosso. Il MobileHeroSolar (discovery
+          stage) viene SEMPRE renderizzato nella composizione, indipendentemente
+          da releaseFeatures.threeD.enabled. La feature 3D desktop (Home3DHero)
+          è nascosta da CSS sotto 768px e può coesistere con l'hero mobile nel
+          render tree. */}
       <VibeHomeV2
         tools={tools}
         weeklyTool={spotlightTool}
         supportingTools={supportingTools.slice(0, 4)}
         layout={homeLayout}
-        showDiscoveryHero={!releaseFeatures.threeD.enabled}
       />
     </>
   );

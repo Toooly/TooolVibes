@@ -11,12 +11,16 @@ type VibeHomeV2Props = {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
   supportingTools: ToolPublicView[];
-  showDiscoveryHero?: boolean;
   /* BATCH 40 (MOB-704): "legacy" = composizione originale; "time-to-value"
      = discovery stage a flusso e margini mobile corretti (flag
      TOOOLVIBES_HOME_LAYOUT, lib/config/home-experience.ts). L'ordine delle
      sezioni resta invariato in entrambe le modalita': lo stage orbitale
-     possiede l'offset dell'header fixed. */
+     possiede l'offset dell'header fixed.
+     FIX-1 (post-Phase 7 audit): il MobileHeroSolar (discovery stage) è
+     SEMPRE renderizzato nella composizione. La feature 3D desktop
+     (Home3DHero) è già nascosta da CSS sotto 768px e può coesistere con
+     l'hero mobile nel render tree. Non esiste più alcun conditional che
+     leghi il rendering dell'hero mobile a threeD.enabled. */
   layout?: HomeLayout;
 };
 
@@ -52,7 +56,6 @@ export function VibeHomeV2({
   weeklyTool,
   supportingTools,
   layout = "legacy",
-  showDiscoveryHero = true,
 }: VibeHomeV2Props) {
   const featuredTools = tools.filter((tool) => tool.featured);
   const focusTool = weeklyTool ?? featuredTools[0] ?? tools[0] ?? null;
@@ -102,7 +105,7 @@ export function VibeHomeV2({
       className={`vibe-home-mobile-origin${isTimeToValue ? " vibe-home-mobile-origin--ttv" : ""} relative`}
       data-home-layout={layout}
     >
-      {showDiscoveryHero && <MobileHeroSolar routes={solarRoutes} compact={isTimeToValue} />}
+      <MobileHeroSolar routes={solarRoutes} compact={isTimeToValue} />
       {focusTool && <MobileSpotlight tool={focusTool} supportingTools={supportingTools} />}
       <section className="page-shell sm:hidden">
         <NativePlacement placementKey="home-featured-tool" variant="compact" />
