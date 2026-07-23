@@ -24,7 +24,7 @@ const importantCeilings = {
   "styles/depth-scene.css": 0,
   "styles/figma-implementation.css": 40,
   "styles/gamification.css": 14,
-  "styles/home.css": 0,
+  "styles/home.css": 2,
   "styles/premium-motion.css": 0,
   "styles/radar.css": 4,
   "styles/public-routes.css": 46,

@@ -1025,10 +1025,16 @@
 }
 
 .home-radar-preview .desktop-radar-node__label {
+  max-width: clamp(11rem, 9vw, 13rem) !important;
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-sm);
   background: var(--tv-bg-base);
   box-shadow: none;
+}
+
+.home-radar-preview .desktop-radar-node__label strong,
+.home-radar-preview .desktop-radar-node__label small {
+  max-width: clamp(10.5rem, 8.5vw, 12.5rem) !important;
 }
 
 @keyframes tv-home-live-pulse {
