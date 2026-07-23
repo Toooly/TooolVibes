@@ -231,6 +231,25 @@
   margin-inline-end: -0.5rem;
 }
 
+.catalog-featured-rail__header h2 {
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: var(--tv-text-title);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: -0.02em;
+  line-height: var(--tv-leading-heading);
+  margin: 0;
+}
+
+.catalog-featured-rail__header span:first-child {
+  color: var(--tv-accent-brand-aa);
+  font-family: var(--tv-font-family-display);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+}
+
 .catalog-page :is(
   .mobile-catalog-view__back,
   .mobile-catalog-view__chip,
