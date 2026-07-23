@@ -22,7 +22,7 @@
 .catalog-page .catalog-discovery__eyebrow,
 .catalog-page .catalog-category-map__header p {
   margin: 0 0 var(--tv-space-3);
-  color: var(--tv-accent-cyan);
+  color: var(--tv-accent-primary);
   font-size: var(--tv-text-xs);
   font-weight: var(--tv-weight-bold);
   letter-spacing: var(--tv-tracking-eyebrow);
