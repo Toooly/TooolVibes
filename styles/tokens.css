@@ -164,6 +164,9 @@
   --tv-container-app: 56rem;         /* 896px */
   --tv-container-wide: 64rem;        /* 1024px */
   --tv-container-uw: 84rem;          /* 1344px */
+  --tv-header-height: 4rem;            /* 64px - site-header-v2 */
+  --tv-header-height-mobile: 4rem;     /* same height on mobile */
+  --tv-main-offset-top: var(--tv-header-height);
 
   /* --- Reading / app width --- */
   --tv-width-reading: 46rem;

@@ -90,7 +90,7 @@
 .radar-command__shell {
   width: min(100%, var(--tv-container-uw));
   margin-inline: auto;
-  padding: clamp(6rem, 9vw, 8rem) var(--tv-space-6) var(--tv-space-24);
+  padding: clamp(2rem, 4vw, 3.5rem) var(--tv-space-6) var(--tv-space-24);
 }
 
 .radar-command__header {
