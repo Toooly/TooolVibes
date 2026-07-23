@@ -355,6 +355,7 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
           placementKey="tool-sponsored-alternative"
           variant="band"
           className="tool-detail-sponsored-placement"
+          dark={true}
         />
 
         <section className="tool-detail-editorial-grid">

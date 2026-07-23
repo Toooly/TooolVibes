@@ -158,7 +158,7 @@ export function CompareTrendList() {
                 <small>{formatSignal(item)}</small>
               </span>
               <span className="compare-trend-list__open">
-                Apri
+                Apri scheda
                 <ExternalLink size={13} aria-hidden="true" />
               </span>
             </a>
