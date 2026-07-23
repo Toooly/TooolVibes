@@ -87,22 +87,29 @@ async function analyze(page) {
         return { r, g, b };
       })();
       if (!fgRgb) continue;
-      // walk up to find first non-transparent bg
-      let bgRgb = { r: 255, g: 255, b: 255 };
+      // walk up to find the most-opaque non-transparent bg ancestor.
+      // Most-opaque wins because translucent wrappers (e.g. bg-[rgba(255,255,255,0.72)])
+      // sit ABOVE the actual painted surface but let the deeper color through.
+      let bestBg = null;
+      let bestAlpha = -1;
       let cur = el;
       while (cur) {
         const bg = window.getComputedStyle(cur).backgroundColor;
         const m = bg.match(/rgba?\(([^)]+)\)/);
         if (m) {
           const [r, g, b, a] = m[1].split(',').map((x) => parseFloat(x.trim()));
-          if (![r, g, b].some((v) => Number.isNaN(v)) && (a === undefined || a > 0.6)) {
-            bgRgb = { r, g, b };
-            found = true;
-            break;
+          if (![r, g, b].some((v) => Number.isNaN(v))) {
+            const alpha = a === undefined ? 1 : a;
+            if (alpha >= 0.5 && alpha > bestAlpha) {
+              bestBg = { r, g, b };
+              bestAlpha = alpha;
+              if (alpha >= 0.95) break; // fully opaque — stop early
+            }
           }
         }
         cur = cur.parentElement;
       }
+      const bgRgb = bestBg ?? { r: 8, g: 8, b: 10 }; // default to canvas when nothing found
       const toLin = (c) => { c = c / 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
       const fL = 0.2126 * toLin(fgRgb.r) + 0.7152 * toLin(fgRgb.g) + 0.0722 * toLin(fgRgb.b);
       const bL = 0.2126 * toLin(bgRgb.r) + 0.7152 * toLin(bgRgb.g) + 0.0722 * toLin(bgRgb.b);
