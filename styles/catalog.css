@@ -11,7 +11,7 @@
   gap: clamp(var(--tv-space-8), 6vw, var(--tv-space-16));
   width: min(calc(100% - 2 * var(--tv-space-6)), var(--tv-content-wide));
   margin-inline: auto;
-  padding: clamp(6.75rem, 9vw, 8.5rem) 0 clamp(var(--tv-space-12), 7vw, var(--tv-space-16));
+  padding: var(--tv-stage-compact) 0 clamp(var(--tv-space-12), 7vw, var(--tv-space-16));
   border-bottom: 1px solid var(--tv-border-subtle);
 }
 
@@ -273,7 +273,7 @@
     grid-template-columns: 1fr;
     gap: var(--tv-space-8);
     width: min(calc(100% - 2 * var(--tv-space-4)), var(--tv-content-wide));
-    padding: calc(6.25rem + env(safe-area-inset-top, 0px)) 0 var(--tv-space-12);
+    padding: var(--tv-stage-compact-mobile) 0 var(--tv-space-12);
   }
 
   .catalog-discovery__copy h1 {

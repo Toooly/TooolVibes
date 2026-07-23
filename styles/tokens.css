@@ -168,6 +168,19 @@
   --tv-header-height-mobile: 4rem;     /* same height on mobile */
   --tv-main-offset-top: var(--tv-header-height);
 
+  /* Route stage offsets — canonical variants for content layout.
+     Use on the FIRST section of each route to control the gap between
+     the fixed header and the first content section.  COMPACT: tight,
+     for dense tool-driven surfaces (Archive, Compare).  STANDARD:
+                     default editorial space (Radar, Tool Detail, Account).
+     IMMERSIVE: hero canvas space for Home. */
+  --tv-stage-compact: clamp(2rem, 4vw, 3rem);        /* 32-48px desktop */
+  --tv-stage-standard: clamp(3rem, 5vw, 4rem);      /* 48-64px desktop */
+  --tv-stage-immersive: clamp(4rem, 7vw, 5.5rem);    /* 64-88px desktop */
+  --tv-stage-compact-mobile: clamp(1.5rem, 5vw, 2.5rem);  /* 24-40px mobile */
+  --tv-stage-standard-mobile: clamp(2rem, 6vw, 3rem);     /* 32-48px mobile */
+  --tv-stage-immersive-mobile: clamp(3rem, 9vw, 4.5rem);  /* 48-72px mobile */
+
   /* --- Reading / app width --- */
   --tv-width-reading: 46rem;
   --tv-width-app: 80rem;
