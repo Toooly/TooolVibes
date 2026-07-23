@@ -1062,9 +1062,7 @@ body {
 .mobile-shortlist-board {
   background: var(--v-void) !important;
 }
-.mobile-catalog-view h1,
 .mobile-shortlist-board h1,
-.mobile-catalog-view p,
 .mobile-shortlist-board p {
   color: #F0EFFF !important;
 }

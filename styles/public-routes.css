@@ -28,7 +28,7 @@
   color: var(--tv-ink-inverted) !important;
 }
 
-.marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(p, li, small) {
+.marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(p, li, small, span) {
   color: var(--tv-ink-inverted-secondary) !important;
 }
 
