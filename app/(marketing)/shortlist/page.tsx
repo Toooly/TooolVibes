@@ -7,7 +7,7 @@ import "./shortlist.css";
 
 export const metadata: Metadata = {
   title: "Salvati",
-  description: "Raccogli, organizza e confronta i tool salvati nella tua shortlist.",
+  description: "Raccogli, organizza e confronta i tool che hai salvato.",
   alternates: { canonical: "/shortlist" },
 };
 

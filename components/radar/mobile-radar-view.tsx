@@ -97,27 +97,27 @@ export function MobileRadarView() {
   const liveLabel =
     radarState === "ready"
       ? isStaleFallback
-        ? "Radar (ultima sync)"
+        ? "Radar in sync"
         : "Radar live"
       : radarState === "loading"
-        ? "Radar in avvio"
-        : "Radar in pausa";
+        ? "Sincronizzazione in corso"
+        : "Radar non disponibile";
   const centerLabel =
     radarState === "ready"
       ? isStaleFallback
         ? "Ultima sync"
         : "Ultima ora"
       : radarState === "loading"
-        ? "Aggiorno"
+        ? "Sincronizzazione"
         : radarState === "empty"
-          ? "Nessun dato"
-          : "In pausa";
+          ? "Nessun segnale"
+          : "Feed non disponibile";
   const stageStatus =
     radarState === "loading"
       ? "Connessione ai segnali Product Hunt…"
       : radarState === "empty"
-        ? "Nessun segnale disponibile per questo periodo."
-        : "Radar in pausa. I dati reali compariranno qui quando il feed sarà disponibile.";
+        ? "Nessun segnale Product Hunt per questo periodo."
+        : "Feed Product Hunt non disponibile. Quando torna online, i segnali reali ricompaiono qui.";
 
   // Data contesto UTC condivisa con il resolver server (timezone-independent).
   const today = useMemo(() => getUtcContextDate(new Date()), []);
