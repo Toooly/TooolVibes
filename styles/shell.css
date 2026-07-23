@@ -858,3 +858,17 @@
 .marketing-shell :is(.site-header-v2__search-overlay, .site-header-v2__mobile-backdrop) {
   background: var(--tv-bg-base);
 }
+
+/* MobileBottomNav visibility — explicit because Tailwind v4
+   responsive variant generation drops the @media wrapper for
+   `md:hidden` when no other `md:*` class is used in the source.
+   Keep the mobile nav visible only on screens <768px. */
+.site-mobile-footer-nav {
+  display: flex;
+}
+
+@media (min-width: 48rem) {
+  .site-mobile-footer-nav {
+    display: none;
+  }
+}
