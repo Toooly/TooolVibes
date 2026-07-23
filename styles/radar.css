@@ -132,6 +132,39 @@
   text-align: right;
 }
 
+.radar-command__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-space-4) var(--tv-space-8);
+  margin-top: var(--tv-space-6);
+  padding-block: var(--tv-space-3);
+  border-top: 1px dashed var(--tv-border-subtle);
+  border-bottom: 1px dashed var(--tv-border-subtle);
+}
+
+.radar-command__meta-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--tv-space-2);
+}
+
+.radar-command__meta-label {
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-family-display);
+  font-size: 0.62rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.radar-command__meta-value {
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: 0.82rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: 0.04em;
+}
+
 .radar-command__controls,
 .radar-mobile__ranges {
   display: flex;

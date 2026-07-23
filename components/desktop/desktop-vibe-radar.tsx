@@ -74,6 +74,21 @@ export function DesktopVibeRadar({
           </p>
         </header>
 
+        <div className="radar-command__meta" aria-label="Stato del Radar">
+          <span className="radar-command__meta-item">
+            <span className="radar-command__meta-label">Last scan</span>
+            <span className="radar-command__meta-value">{formatUtcTimeLabel(payload?.updatedAt ?? "") || "--:--"}</span>
+          </span>
+          <span className="radar-command__meta-item">
+            <span className="radar-command__meta-label">Signals</span>
+            <span className="radar-command__meta-value">{(payload?.items ?? []).length}</span>
+          </span>
+          <span className="radar-command__meta-item">
+            <span className="radar-command__meta-label">Range</span>
+            <span className="radar-command__meta-value">{activeRange.toUpperCase()}</span>
+          </span>
+        </div>
+
         <div className="radar-command__controls">
           <div className="radar-control-group" role="group" aria-labelledby="radar-range-label">
             <span id="radar-range-label" className="radar-control-group__label">Periodo</span>

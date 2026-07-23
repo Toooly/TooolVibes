@@ -513,7 +513,83 @@
 
   .home-radar-preview__stage::before,
   .home-radar-preview__stage::after,
-  .home-radar-preview__axis {
+  .home-radar-preview__ticks {
+  position: absolute;
+  inset: 0;
+  z-index: var(--tv-z-content);
+  border-radius: inherit;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      transparent 14.9deg,
+      color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent) 14.9deg,
+      color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent) 15deg
+    );
+  mask: radial-gradient(circle at center, transparent 64%, black 65%);
+  -webkit-mask: radial-gradient(circle at center, transparent 64%, black 65%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.home-radar-preview__signal-count {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.25rem);
+  left: clamp(0.75rem, 2vw, 1.25rem);
+  z-index: var(--tv-z-elevated);
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--tv-font-family-display);
+  color: var(--tv-ink-primary);
+  letter-spacing: 0.14em;
+  line-height: 1;
+}
+
+.home-radar-preview__signal-count span {
+  font-size: 0.62rem;
+  font-weight: var(--tv-weight-bold);
+  text-transform: uppercase;
+  color: var(--tv-accent-cyan);
+}
+
+.home-radar-preview__signal-count strong {
+  font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+  font-weight: var(--tv-weight-black);
+  letter-spacing: -0.02em;
+  color: var(--tv-ink-primary);
+}
+
+.home-radar-preview__range-label {
+  position: absolute;
+  bottom: clamp(0.75rem, 2vw, 1.25rem);
+  right: clamp(0.75rem, 2vw, 1.25rem);
+  z-index: var(--tv-z-elevated);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 36%, transparent);
+  border-radius: var(--tv-radius-pill);
+  background: color-mix(in srgb, var(--tv-accent-cyan) 8%, var(--tv-surface-elevated));
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: 0.65rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.home-radar-preview__range-label::before {
+  content: "";
+  width: 0.4rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--tv-status-success);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--tv-status-success) 26%, transparent);
+}
+
+.home-radar-preview__axis {
     position: absolute;
     inset: 0;
     border-radius: inherit;
@@ -539,7 +615,83 @@
     animation: tv-home-radar-scan 6s linear infinite;
   }
 
-  .home-radar-preview__axis {
+  .home-radar-preview__ticks {
+  position: absolute;
+  inset: 0;
+  z-index: var(--tv-z-content);
+  border-radius: inherit;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      transparent 14.9deg,
+      color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent) 14.9deg,
+      color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent) 15deg
+    );
+  mask: radial-gradient(circle at center, transparent 64%, black 65%);
+  -webkit-mask: radial-gradient(circle at center, transparent 64%, black 65%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.home-radar-preview__signal-count {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.25rem);
+  left: clamp(0.75rem, 2vw, 1.25rem);
+  z-index: var(--tv-z-elevated);
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--tv-font-family-display);
+  color: var(--tv-ink-primary);
+  letter-spacing: 0.14em;
+  line-height: 1;
+}
+
+.home-radar-preview__signal-count span {
+  font-size: 0.62rem;
+  font-weight: var(--tv-weight-bold);
+  text-transform: uppercase;
+  color: var(--tv-accent-cyan);
+}
+
+.home-radar-preview__signal-count strong {
+  font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+  font-weight: var(--tv-weight-black);
+  letter-spacing: -0.02em;
+  color: var(--tv-ink-primary);
+}
+
+.home-radar-preview__range-label {
+  position: absolute;
+  bottom: clamp(0.75rem, 2vw, 1.25rem);
+  right: clamp(0.75rem, 2vw, 1.25rem);
+  z-index: var(--tv-z-elevated);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 36%, transparent);
+  border-radius: var(--tv-radius-pill);
+  background: color-mix(in srgb, var(--tv-accent-cyan) 8%, var(--tv-surface-elevated));
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: 0.65rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.home-radar-preview__range-label::before {
+  content: "";
+  width: 0.4rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--tv-status-success);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--tv-status-success) 26%, transparent);
+}
+
+.home-radar-preview__axis {
     z-index: var(--tv-z-content);
     border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 32%, transparent);
     transform: scale(0.52);
@@ -749,6 +901,82 @@
 
 .home-radar-preview__stage::before,
 .home-radar-preview__stage::after,
+.home-radar-preview__ticks {
+  position: absolute;
+  inset: 0;
+  z-index: var(--tv-z-content);
+  border-radius: inherit;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      transparent 14.9deg,
+      color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent) 14.9deg,
+      color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent) 15deg
+    );
+  mask: radial-gradient(circle at center, transparent 64%, black 65%);
+  -webkit-mask: radial-gradient(circle at center, transparent 64%, black 65%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.home-radar-preview__signal-count {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.25rem);
+  left: clamp(0.75rem, 2vw, 1.25rem);
+  z-index: var(--tv-z-elevated);
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--tv-font-family-display);
+  color: var(--tv-ink-primary);
+  letter-spacing: 0.14em;
+  line-height: 1;
+}
+
+.home-radar-preview__signal-count span {
+  font-size: 0.62rem;
+  font-weight: var(--tv-weight-bold);
+  text-transform: uppercase;
+  color: var(--tv-accent-cyan);
+}
+
+.home-radar-preview__signal-count strong {
+  font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+  font-weight: var(--tv-weight-black);
+  letter-spacing: -0.02em;
+  color: var(--tv-ink-primary);
+}
+
+.home-radar-preview__range-label {
+  position: absolute;
+  bottom: clamp(0.75rem, 2vw, 1.25rem);
+  right: clamp(0.75rem, 2vw, 1.25rem);
+  z-index: var(--tv-z-elevated);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 36%, transparent);
+  border-radius: var(--tv-radius-pill);
+  background: color-mix(in srgb, var(--tv-accent-cyan) 8%, var(--tv-surface-elevated));
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: 0.65rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.home-radar-preview__range-label::before {
+  content: "";
+  width: 0.4rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--tv-status-success);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--tv-status-success) 26%, transparent);
+}
+
 .home-radar-preview__axis {
   display: none;
   content: none;

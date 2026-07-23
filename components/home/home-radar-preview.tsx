@@ -67,7 +67,15 @@ export function HomeRadarPreview() {
           className="home-radar-preview__stage"
           aria-label="Anteprima dei segnali Product Hunt del giorno"
         >
+          <span className="home-radar-preview__ticks" aria-hidden="true" />
           <span className="home-radar-preview__axis" aria-hidden="true" />
+          <span className="home-radar-preview__signal-count" aria-hidden="true">
+            <span>SIGNAL</span>
+            <strong aria-hidden="true">07</strong>
+          </span>
+          <span className="home-radar-preview__range-label" aria-hidden="true">
+            24H · LIVE
+          </span>
           <span className="home-radar-preview__core" aria-hidden="true">
             <Radar />
           </span>
