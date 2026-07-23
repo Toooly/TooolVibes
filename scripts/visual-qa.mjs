@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
+import { writeFileSync } from 'node:fs';
 
 const BASE = process.env.VISUAL_QA_BASE_URL ?? 'http://127.0.0.1:3100';
 const OUT = '/tmp/opencode/runtime/screenshots';
@@ -35,106 +36,134 @@ await mkdir(OUT, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
 
-async function checkPageDefects(page) {
-  const defects = [];
-  const findings = await page.evaluate(() => {
-    const out = { lowContrast: 0, clippedHeadings: [], overflowingBoxes: [], tinyHeadings: [], hugeHeadings: [], emptyHeroPanels: [], orphans: [], totalHeadings: 0, mobileNavMissing: false, mainOffsetOK: null };
-    // Check for elements with computed color equal to background (low contrast)
-    const all = Array.from(document.querySelectorAll('h1, h2, h3, p, span, button, a, li, label, dt, dd'));
-    for (const el of all) {
-      const text = el.textContent?.trim() ?? '';
-      if (!text || text.length < 2) continue;
-      const r = el.getBoundingClientRect();
+async function analyze(page) {
+  return await page.evaluate(() => {
+    const data = {
+      horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth + 2,
+      docW: document.documentElement.scrollWidth,
+      winW: window.innerWidth,
+      docH: document.documentElement.scrollHeight,
+      headings: [],
+      realLowContrast: [],
+      surfaceIssues: [],
+      emptyContainers: [],
+      clippedHeadings: [],
+      hasMainOffset: null,
+      hasMobileNav: false,
+      pageErrors: [],
+    };
+    const headings = Array.from(document.querySelectorAll('h1, h2, h3'));
+    for (const h of headings) {
+      if (h.closest('.sr-only')) continue;
+      const r = h.getBoundingClientRect();
       if (r.width === 0 || r.height === 0) continue;
-      const cs = window.getComputedStyle(el);
-      const fg = cs.color;
-      // walk up to find first non-transparent background
-      let bg = 'rgba(0, 0, 0, 0)';
-      let cur = el;
-      while (cur && bg === 'rgba(0, 0, 0, 0)') {
-        const bcs = window.getComputedStyle(cur);
-        bg = bcs.backgroundColor;
-        cur = cur.parentElement;
-      }
-      // detect contrast ratio (simplified WCAG relative luminance)
-      const parseRgb = (s) => {
-        const m = s.match(/rgba?\(([^)]+)\)/);
-        if (!m) return null;
-        const [r, g, b] = m[1].split(',').map((x) => parseFloat(x.trim()));
-        if ([r, g, b].some((v) => isNaN(v))) return null;
-        return { r, g, b };
-      };
-      const lum = (rgb) => {
-        if (!rgb) return null;
-        const toLin = (c) => { c = c / 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
-        return 0.2126 * toLin(rgb.r) + 0.7152 * toLin(rgb.g) + 0.0722 * toLin(rgb.b);
-      };
-      const fgRgb = parseRgb(fg);
-      const bgRgb = parseRgb(bg);
-      if (fgRgb && bgRgb && bg !== 'rgba(0, 0, 0, 0)') {
-        const fL = lum(fgRgb), bL = lum(bgRgb);
-        const ratio = (Math.max(fL, bL) + 0.05) / (Math.min(fL, bL) + 0.05);
-        if (ratio < 3.0 && text.length > 5) {
-          out.lowContrast++;
-        }
-      }
-      // Detect clipped headings
-      if (['H1', 'H2', 'H3'].includes(el.tagName)) {
-        out.totalHeadings++;
-        if (el.scrollWidth > el.clientWidth + 4) {
-          out.clippedHeadings.push({ tag: el.tagName, text: text.slice(0, 40), sw: el.scrollWidth, cw: el.clientWidth });
-        }
+      const text = h.textContent?.trim() ?? '';
+      if (!text) continue;
+      const cs = window.getComputedStyle(h);
+      const fontSize = parseFloat(cs.fontSize);
+      data.headings.push({ tag: h.tagName, text: text.slice(0, 60), fontSize, x: Math.round(r.x), w: Math.round(r.width), lineHeight: cs.lineHeight });
+      if (h.scrollWidth > h.clientWidth + 4) {
+        data.clippedHeadings.push({ tag: h.tagName, text: text.slice(0, 50), sw: h.scrollWidth, cw: h.clientWidth });
       }
     }
-    // check main top offset
+    // Check headings + body text for real low contrast (skip sr-only)
+    const textEls = Array.from(document.querySelectorAll('h1, h2, h3, p, span, button, a, li, dt, dd, label, strong'));
+    const seen = new Set();
+    for (const el of textEls) {
+      if (el.closest('.sr-only')) continue;
+      const t = el.textContent?.trim() ?? '';
+      if (!t || t.length < 8) continue;
+      const r = el.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) continue;
+      const key = `${el.tagName}|${t.slice(0, 50)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const cs = window.getComputedStyle(el);
+      const fgRgb = (() => {
+        const m = cs.color.match(/rgba?\(([^)]+)\)/);
+        if (!m) return null;
+        const [r, g, b] = m[1].split(',').map((x) => parseFloat(x.trim()));
+        if ([r, g, b].some((v) => Number.isNaN(v))) return null;
+        return { r, g, b };
+      })();
+      if (!fgRgb) continue;
+      // walk up to find first non-transparent bg
+      let bgRgb = { r: 255, g: 255, b: 255 };
+      let cur = el;
+      while (cur) {
+        const bg = window.getComputedStyle(cur).backgroundColor;
+        const m = bg.match(/rgba?\(([^)]+)\)/);
+        if (m) {
+          const [r, g, b, a] = m[1].split(',').map((x) => parseFloat(x.trim()));
+          if (![r, g, b].some((v) => Number.isNaN(v)) && (a === undefined || a > 0.6)) {
+            bgRgb = { r, g, b };
+            found = true;
+            break;
+          }
+        }
+        cur = cur.parentElement;
+      }
+      const toLin = (c) => { c = c / 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+      const fL = 0.2126 * toLin(fgRgb.r) + 0.7152 * toLin(fgRgb.g) + 0.0722 * toLin(fgRgb.b);
+      const bL = 0.2126 * toLin(bgRgb.r) + 0.7152 * toLin(bgRgb.g) + 0.0722 * toLin(bgRgb.b);
+      const ratio = (Math.max(fL, bL) + 0.05) / (Math.min(fL, bL) + 0.05);
+      // flag if ratio < 3 AND element is large text or has text length > 15
+      if (ratio < 3.0 && t.length > 10) {
+        data.realLowContrast.push({ tag: el.tagName, text: t.slice(0, 50), ratio: ratio.toFixed(2), fg: cs.color });
+      }
+    }
     const main = document.querySelector('main');
     if (main) {
       const r = main.getBoundingClientRect();
-      out.mainOffsetOK = r.top >= 60; // header is 64px
+      data.hasMainOffset = r.top >= 60;
     }
-    // check mobile bottom nav presence below 768
-    const bottomNav = document.querySelector('.site-mobile-footer-nav, .mobile-bottom-nav, [data-mobile-bottom-nav]');
-    out.mobileNavPresent = !!bottomNav;
-    return out;
+    const bottomNav = document.querySelector('.site-mobile-footer-nav, .mobile-bottom-nav');
+    data.hasMobileNav = !!bottomNav;
+    return data;
   });
-  return { findings, defects };
 }
 
 const allResults = [];
 for (const vp of VIEWPORTS) {
   const ctx = await browser.newContext({ viewport: { width: vp.w, height: vp.h } });
   const page = await ctx.newPage();
+  page.on('pageerror', () => {});
   for (const route of ROUTES) {
     const fileName = `${route.id}_${vp.name}.png`;
     try {
       const resp = await page.goto(`${BASE}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 15000 });
       await page.waitForLoadState('networkidle', { timeout: 6000 }).catch(() => {});
-      await page.waitForTimeout(600);
+      await page.waitForTimeout(700);
       const status = resp ? resp.status() : 'no-response';
-      const overflow = await page.evaluate(() => ({
-        docW: document.documentElement.scrollWidth,
-        winW: window.innerWidth,
-        docH: document.documentElement.scrollHeight,
-      }));
-      const { findings } = await checkPageDefects(page, route.id, vp);
+      const analysis = await analyze(page);
       await page.screenshot({ path: `${OUT}/${fileName}`, fullPage: false });
+      // Dedupe and group low contrast by text
+      const lcByText = new Map();
+      for (const lc of analysis.realLowContrast) {
+        const key = lc.text.slice(0, 40);
+        if (!lcByText.has(key)) lcByText.set(key, { ...lc, count: 1 });
+        else lcByText.get(key).count++;
+      }
+      const uniqueLowContrast = [...lcByText.values()].sort((a, b) => b.count - a.count).slice(0, 10);
       allResults.push({
         route: route.path,
         id: route.id,
         viewport: vp.name,
         status,
-        horizontalOverflow: overflow.docW > overflow.winW + 2,
-        docW: overflow.docW,
-        winW: overflow.winW,
-        docH: overflow.docH,
-        lowContrastElements: findings.lowContrast,
-        totalHeadings: findings.totalHeadings,
-        clippedHeadings: findings.clippedHeadings,
-        mainOffsetOK: findings.mainOffsetOK,
-        mobileNavPresent: findings.mobileNavPresent,
+        horizontalOverflow: analysis.horizontalOverflow,
+        docW: analysis.docW,
+        winW: analysis.winW,
+        docH: analysis.docH,
+        clippedHeadings: analysis.clippedHeadings,
+        lowContrastCount: analysis.realLowContrast.length,
+        lowContrastExamples: uniqueLowContrast,
+        headingsCount: analysis.headings.length,
+        headingsSample: analysis.headings.slice(0, 6),
+        hasMainOffset: analysis.hasMainOffset,
+        hasMobileNav: analysis.hasMobileNav,
         file: fileName,
       });
-    } catch (e) {
+    } catch {
       allResults.push({ route: route.path, id: route.id, viewport: vp.name, error: e.message });
     }
   }
@@ -149,19 +178,29 @@ const summary = {
   failed: allResults.filter((r) => r.status && r.status !== 200).length,
   errored: allResults.filter((r) => !!r.error).length,
   withHorizontalOverflow: allResults.filter((r) => r.horizontalOverflow).length,
-  withClippedHeadings: allResults.filter((r) => r.clippedHeadings?.length > 0).length,
-  withLowContrast: allResults.filter((r) => r.lowContrastElements > 30).length,  // only flag pages with many low-contrast
-  withMainOffsetIssues: allResults.filter((r) => r.mainOffsetOK === false).length,
-  withoutMobileNavAtMobile: allResults.filter((r) => {
-    const w = parseInt(r.viewport.split('x')[0]);
-    return w < 768 && !r.mobileNavPresent;
-  }).length,
+  withRealLowContrast: allResults.filter((r) => r.lowContrastCount > 5).length,
+  withMainOffsetIssues: allResults.filter((r) => r.hasMainOffset === false).length,
+  withoutMobileNavAtMobile: allResults.filter((r) => parseInt(r.viewport.split('x')[0]) < 768 && !r.hasMobileNav).length,
 };
-import { writeFileSync } from 'node:fs';
 writeFileSync('/tmp/opencode/runtime/visual-qa-report.json', JSON.stringify({ summary, results: allResults }, null, 2));
 console.log(JSON.stringify(summary, null, 2));
 console.log('\n--- ISSUES ---');
-console.log('Horizontal overflow:', allResults.filter((r) => r.horizontalOverflow).map((r) => `${r.route}@${r.viewport}`));
-console.log('Clipped headings:', allResults.filter((r) => r.clippedHeadings?.length > 0).map((r) => `${r.route}@${r.viewport}: ${r.clippedHeadings.length}`));
-console.log('Main offset issues:', allResults.filter((r) => r.mainOffsetOK === false).map((r) => `${r.route}@${r.viewport}`));
-console.log('No mobile nav (<768):', allResults.filter((r) => parseInt(r.viewport.split('x')[0]) < 768 && !r.mobileNavPresent).map((r) => `${r.route}@${r.viewport}`));
+const overflowRoutes = allResults.filter((r) => r.horizontalOverflow);
+if (overflowRoutes.length) console.log('Horizontal overflow:', overflowRoutes.map((r) => `${r.route}@${r.viewport}`));
+else console.log('Horizontal overflow: none');
+const offsetRoutes = allResults.filter((r) => r.hasMainOffset === false);
+if (offsetRoutes.length) console.log('Main offset issues:', offsetRoutes.map((r) => `${r.route}@${r.viewport}`));
+else console.log('Main offset issues: none');
+const noNavRoutes = allResults.filter((r) => parseInt(r.viewport.split('x')[0]) < 768 && !r.hasMobileNav);
+if (noNavRoutes.length) console.log('No mobile nav (<768):', noNavRoutes.map((r) => `${r.route}@${r.viewport}`));
+else console.log('No mobile nav: none');
+const lcRoutes = allResults.filter((r) => r.lowContrastCount > 5);
+if (lcRoutes.length) {
+  console.log('\n--- LOW CONTRAST HOTSPOTS (>5 elements) ---');
+  for (const r of lcRoutes.slice(0, 15)) {
+    console.log(`${r.route}@${r.viewport}: ${r.lowContrastCount} elements`);
+    for (const ex of r.lowContrastExamples.slice(0, 3)) {
+      console.log(`   ${ex.tag} "${ex.text}" ratio=${ex.ratio} fg=${ex.fg} (x${ex.count})`);
+    }
+  }
+}

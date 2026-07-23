@@ -1330,3 +1330,24 @@
     border-radius: var(--tv-radius-lg);
   }
 }
+
+/* ────────────────────────────────────────────────────────────────
+   Inverted-surface inheritance fix.
+   
+   Several inline-styled elements (NativePlacement CTA links, tool
+   card rank numbers) were inheriting dark text colors that read
+   as invisible on the home page's dark canvas. The issue is that
+   they used the bare `--tv-color-surface-base` value as a text color
+   (e.g. for "ink" emphasis) which only works on ivory surfaces.
+   
+   This rule scopes those legacy dark-ink-on-dark elements back to
+   the semantic primary foreground on dark surfaces.
+   ──────────────────────────────────────────────────────────────── */
+.home-final-surface :is(a, span, button, strong, p, li) {
+  color: inherit;
+}
+
+.home-final-surface a[class*="text-ink-inverted"],
+.home-final-surface a[style*="color: var(--ink-inverted)"] {
+  color: var(--tv-ink-inverted);
+}

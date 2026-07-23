@@ -110,7 +110,7 @@ export function VibeHomeV2({
       <HomeRadarPreview />
       {focusTool && <MobileSpotlight tool={focusTool} supportingTools={supportingTools} />}
       <section className="page-shell sm:hidden">
-        <NativePlacement placementKey="home-featured-tool" variant="compact" />
+        <NativePlacement placementKey="home-featured-tool" variant="compact" dark={true} />
       </section>
       <MobileMethodSteps steps={methodSteps} />
     </div>
