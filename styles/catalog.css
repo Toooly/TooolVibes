@@ -232,7 +232,7 @@
 }
 
 .catalog-featured-rail__header h2 {
-  color: var(--tv-ink-primary);
+  color: var(--tv-ink-inverted);
   font-family: var(--tv-font-family-display);
   font-size: var(--tv-text-title);
   font-weight: var(--tv-weight-bold);

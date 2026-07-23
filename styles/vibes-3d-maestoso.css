@@ -846,28 +846,6 @@ body {
 /* ─── Override existing components for dark 3D ─── */
 /* (Header/mobile menu overrides moved to the dedicated mobile section below) */
 
-/* Footer dark */
-.site-footer-v2 {
-  background: var(--v-void) !important;
-  border-color: rgba(124,77,255,0.08) !important;
-}
-.site-footer-v2--dark {
-  background: var(--v-void) !important;
-}
-.site-footer-v2 p,
-.site-footer-v2 a,
-.site-footer-v2 span {
-  color: #F0EFFF !important;
-}
-.site-footer-v2 a:hover {
-  color: #7C4DFF !important;
-}
-.site-footer-v2 h3 {
-  color: #B388FF !important;
-}
-.site-footer-v2 .border-t {
-  border-color: rgba(124,77,255,0.08) !important;
-}
 
 /* Bottom nav dark */
 .mobile-bottom-nav {
@@ -2833,33 +2811,6 @@ canvas {
   }
 }
 
-/* Footer override — ensure all text is visible */
-.site-footer-v2 {
-  background: #06060E !important;
-  border-color: rgba(124,77,255,0.08) !important;
-}
-.site-footer-v2 h3,
-.site-footer-v2 .text-\[\#B388FF\] {
-  color: #B388FF !important;
-}
-.site-footer-v2 p,
-.site-footer-v2 span,
-.site-footer-v2 a:not(:hover) {
-  color: #9E99B8 !important;
-}
-.site-footer-v2 a:hover,
-.site-footer-v2 a:hover span {
-  color: #B388FF !important;
-}
-.site-footer-v2 .border-\[rgba\(124\,77\,255\,0\.15\)\] {
-  border-color: rgba(124,77,255,0.15) !important;
-}
-.site-footer-v2 .bg-\[rgba\(124\,77\,255\,0\.08\)\] {
-  background: rgba(124,77,255,0.08) !important;
-}
-.site-footer-v2 .border-t {
-  border-color: rgba(124,77,255,0.08) !important;
-}
 
 /* ═══════════════════════════════════════════════════════════════
    ARENA 3D SCENE

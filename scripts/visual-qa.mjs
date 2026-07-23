@@ -170,8 +170,8 @@ for (const vp of VIEWPORTS) {
         hasMobileNav: analysis.hasMobileNav,
         file: fileName,
       });
-    } catch {
-      allResults.push({ route: route.path, id: route.id, viewport: vp.name, error: e.message });
+    } catch (err) {
+      allResults.push({ route: route.path, id: route.id, viewport: vp.name, error: err && err.message });
     }
   }
   await ctx.close();

@@ -82,8 +82,7 @@
 
 .site-header-v2__brand-word,
 .site-header-v2__mobile-title,
-.site-header-v2__mobile-brand-word,
-  .site-footer-v2__wordmark {
+.site-header-v2__mobile-brand-word {
   color: var(--tv-ink-primary) !important;
   font-family: var(--tv-font-family-display);
   font-size: var(--tv-text-label);
@@ -91,6 +90,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
 
 .site-header-v2__nav {
   padding: var(--tv-space-1);
