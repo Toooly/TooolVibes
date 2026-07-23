@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -437,13 +438,17 @@ export default async function ToolDetailPage({ params }: ToolPageProps) {
             <div className="tool-detail-related__heading">
               <div>
                 <p className="tool-detail-kicker">
-                  Tool correlati
+                  Alternative Decision Surface
                 </p>
                 <h2>
                   Se ti interessa {tool.name}, questi sono i confronti pi&ugrave;
                   naturali.
                 </h2>
               </div>
+              <Link href={`/compare?from=${tool.slug}`} className="tool-detail-related__compare-link">
+                Apri il confronto affiancato
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
             </div>
 
             <div className="tool-detail-related__grid">
