@@ -1,5 +1,27 @@
 /* Canonical dark-first tool detail. */
 
+
+@layer components {
+  /* Override `.premium-button-subtle` navy color on .internal-tool-page */
+  .internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta):is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline),
+  .internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta):is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline) :is(span, svg),
+  .internal-page .directory-tool-card__action:is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline),
+  .internal-page .directory-tool-card__action :is(span, svg) {
+    color: var(--tv-ink-on-brand) !important;
+    -webkit-text-fill-color: var(--tv-ink-on-brand) !important;
+  }
+}
+
+
+@layer components {
+  /* Override .premium-button-secondary navy color on .internal-page (related-card CTAs) */
+  .internal-page .directory-tool-card__action:is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline),
+  .internal-page .premium-button-secondary,
+  .internal-page .premium-button-subtle {
+    color: var(--tv-ink-primary) !important;
+    -webkit-text-fill-color: var(--tv-ink-primary) !important;
+  }
+}
 .internal-tool-page {
   width: min(100%, var(--tv-container-uw));
   margin-inline: auto;
