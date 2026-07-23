@@ -1102,6 +1102,175 @@
   box-shadow: none;
 }
 
+/* === PODIUM DYNAMISM (canonical owner: home.css) ===
+   The podium inherited from vibes-3d-maestoso.css has its visual identity
+   neutralized by a second-set of overrides (perspective:none, height:auto,
+   box-shadow:none, .v-podium-floor{display:none!important}) and by the
+   token harmonization here in home.css (.v-podium-step-glow,
+   .v-podium-floor{display:none}). The result is three identical dark
+   rectangles with no rank hierarchy. The rules below restore hierarchical
+   identity and gentle ambient motion without redesign, using --tv-* tokens. */
+@keyframes v-podium-glow-breathe {
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.24; }
+}
+@keyframes v-podium-floor-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.85; }
+}
+@keyframes v-podium-rank-bar {
+  0%, 100% { transform: scaleX(0.82); }
+  50% { transform: scaleX(1); }
+}
+
+.v-spotlight-section .v-podium-platform {
+  align-items: end !important;
+  padding-block: 0;
+}
+
+.v-spotlight-section .v-podium-step {
+  position: relative;
+  overflow: visible;
+  transition:
+    transform 320ms var(--tv-easing-spring-smooth),
+    border-color 320ms var(--tv-ease-standard, ease),
+    box-shadow 320ms var(--tv-ease-standard, ease);
+}
+
+/* Per-rank height differential (drives the podium hierarchy visually). */
+.v-spotlight-section .v-podium-step--rank-1 {
+  min-height: clamp(12rem, 18vw, 14rem) !important;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tv-color-gold-500) 16%, var(--tv-bg-base)),
+    color-mix(in srgb, var(--tv-color-gold-500) 6%, var(--tv-bg-base))
+  ) !important;
+  border-color: color-mix(in srgb, var(--tv-color-gold-500) 38%, var(--tv-border-subtle)) !important;
+}
+.v-spotlight-section .v-podium-step--rank-2 {
+  min-height: clamp(10.5rem, 16vw, 12rem) !important;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tv-accent-primary) 14%, var(--tv-bg-base)),
+    color-mix(in srgb, var(--tv-accent-primary) 5%, var(--tv-bg-base))
+  ) !important;
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 30%, var(--tv-border-subtle)) !important;
+}
+.v-spotlight-section .v-podium-step--rank-3 {
+  min-height: clamp(9.5rem, 14vw, 10.5rem) !important;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tv-color-cyan-500) 12%, var(--tv-bg-base)),
+    color-mix(in srgb, var(--tv-color-cyan-500) 4%, var(--tv-bg-base))
+  ) !important;
+  border-color: color-mix(in srgb, var(--tv-color-cyan-500) 26%, var(--tv-border-subtle)) !important;
+}
+
+/* Decorative top accent bar — kinetic scaleX breath per rank accent. */
+.v-spotlight-section .v-podium-step::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 3px;
+  border-radius: 999px 999px 0 0;
+  background: var(--tv-accent-primary);
+  transform-origin: 50% 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+.v-spotlight-section .v-podium-step--rank-1::before {
+  background: linear-gradient(90deg, transparent, var(--tv-color-gold-500), transparent);
+}
+.v-spotlight-section .v-podium-step--rank-2::before {
+  background: linear-gradient(90deg, transparent, var(--tv-accent-primary), transparent);
+}
+.v-spotlight-section .v-podium-step--rank-3::before {
+  background: linear-gradient(90deg, transparent, var(--tv-color-cyan-500), transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v-spotlight-section .v-podium-step::before {
+    animation: v-podium-rank-bar 4.5s ease-in-out infinite;
+  }
+}
+
+/* Restore per-rank ambient glow halos (override home.css display:none; rank-coloured). */
+.v-spotlight-section .v-podium-step-glow {
+  display: block;
+  border-radius: 50%;
+  filter: blur(36px);
+  opacity: 0.16;
+  z-index: -1;
+}
+.v-spotlight-section .v-podium-step--rank-1 .v-podium-step-glow {
+  background: radial-gradient(circle, var(--tv-color-gold-500), transparent 65%);
+}
+.v-spotlight-section .v-podium-step--rank-2 .v-podium-step-glow {
+  background: radial-gradient(circle, var(--tv-accent-primary), transparent 65%);
+}
+.v-spotlight-section .v-podium-step--rank-3 .v-podium-step-glow {
+  background: radial-gradient(circle, var(--tv-color-cyan-500), transparent 65%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v-spotlight-section .v-podium-step-glow {
+    animation: v-podium-glow-breathe 4.5s ease-in-out infinite;
+  }
+  .v-spotlight-section .v-podium-step:hover .v-podium-step-glow,
+  .v-spotlight-section .v-podium-step:focus-visible .v-podium-step-glow {
+    opacity: 0.42;
+    animation-play-state: paused;
+  }
+}
+
+/* Hover lift (added on top of existing border-color:hover change in this file). */
+@media (prefers-reduced-motion: no-preference) {
+  .v-spotlight-section .v-podium-step:hover,
+  .v-spotlight-section .v-podium-step:focus-visible {
+    transform: translateY(-6px) scale(1.015);
+  }
+}
+
+/* Restore the floor — single ambient gradient line; hover/focus already defined. */
+.v-spotlight-section .v-podium-floor {
+  display: block !important;
+  width: min(82%, 36rem);
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--tv-color-gold-500) 55%, transparent) 22%,
+    var(--tv-accent-primary) 50%,
+    color-mix(in srgb, var(--tv-color-cyan-500) 55%, transparent) 78%,
+    transparent
+  );
+  opacity: 0.6;
+  margin-top: 0.5rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v-spotlight-section .v-podium-floor {
+    animation: v-podium-floor-pulse 4s ease-in-out infinite;
+  }
+}
+
+/* Restore rank-1 avatar breathing glow (defeats vibes-3d-maestoso second-set
+   `.v-podium-step--rank-1 .v-podium-avatar { box-shadow: none !important }`
+   via higher specificity + !important, same cascade priority). */
+.v-spotlight-section .v-podium-step--rank-1 .v-podium-avatar {
+  box-shadow:
+    0 0 26px color-mix(in srgb, var(--tv-color-gold-500) 32%, transparent),
+    0 0 60px color-mix(in srgb, var(--tv-color-gold-500) 18%, transparent) !important;
+}
+
+/* Mobile @media (max-width:640px) shrinks podium — overrides the desktop
+   min-heights declared above. */
+@media (max-width: 640px) {
+  .v-spotlight-section .v-podium-step--rank-1 { min-height: 11rem !important; }
+  .v-spotlight-section .v-podium-step--rank-2 { min-height: 9.6rem !important; }
+  .v-spotlight-section .v-podium-step--rank-3 { min-height: 8.6rem !important; }
+}
+
 .v-spotlight-info {
   border-color: var(--tv-border-inverted);
   background: transparent;
