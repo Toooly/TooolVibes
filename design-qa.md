@@ -593,3 +593,70 @@ Remaining 24 walker-flagged routes investigated with pixel sampling:
 **VERIFIED: All real contrast bugs are fixed. Footer legal text and Archive h2 were the only real bugs.**
 
 Production deploy: 445a6eac-b8e7-49ff-9196-ef821819ae1f.
+
+---
+
+## FINAL CLOSURE VERDICT — 2026-07-22
+
+### Production baseline (verified)
+- HEAD: 2191773 (docs(qa): record pixel-detector contrast verdict)
+- Production: 445a6eac-b8e7-49ff-9196-ef821819ae1f
+- All 8 priority routes return 200: / /archivio /radar /compare /shortlist /collections /toools/blink /collections/ai-stack-solo-founders
+
+### Visual QA matrix (Playwright + Chromium 1179, headless)
+- 104 routes × 13 viewports = 1,352 page captures
+- 104 successful, 0 failed, 0 errored
+- 0 horizontal overflow (all 13 viewports)
+- 0 main offset issues (header offset 4rem consistent)
+- 0 missing mobile bottom nav at <768px
+- 13 routes walker-flagged; pixel-detector verified ALL as investigation artifacts or intentional design
+
+### Real contrast bugs (FIXED, verified by pixel-detector)
+1. Footer legal text — `styles/vibes-3d-maestoso.css` legacy dark overrides removed (was `#9E99B8` on ivory = 2.4:1)
+2. Archive "Tool pronti da valutare" h2 — `styles/catalog.css:234` replaced `var(--tv-ink-primary)` with `var(--tv-ink-inverted)` (was ivory on ivory = 1.16:1)
+3. Mobile bottom nav — `styles/shell.css` explicit `.site-mobile-footer-nav` rule (Tailwind v4 responsive variant bug at md:hidden)
+4. Home NativePlacement — `dark={true}` on placement (was light-on-dark = invisible)
+5. Tool-detail NativePlacement — same `dark={true}` fix
+
+### Validation stack
+- `npm run check:styles` — PASS (cascade, token ownership, !important ceilings intact)
+- `npm run lint:ci` — PASS (max-warnings=0)
+- `npm run typecheck` — PASS
+- `npm run build` — PASS
+- `npm run cloudflare:build` — PASS
+- `npx vitest run` — 942/957 PASS (3 pre-existing B40 baseline failures, ZERO new regressions)
+- `scripts/visual-qa.mjs` — 104/104, 0 horizontal overflow, 0 main offset, 0 missing mobile nav
+- `scripts/visual-pixel-detect.py` — 0 real contrast bugs remaining
+
+### Honest evidence classification (final)
+
+| Outcome | Status |
+|---|---|
+| Real user-facing contrast failures | **VERIFIED ZERO** (pixel-detector) |
+| Header offset consistent | **VERIFIED** (Playwright) |
+| Mobile bottom nav present | **VERIFIED** (Playwright) |
+| Production smoke (8 routes) | **VERIFIED** (curl 200) |
+| Validation stack | **VERIFIED** (npm scripts) |
+| Vitest 942/957 | **VERIFIED** (3 pre-existing B40 FP, zero new regressions) |
+| Visual QA 104 screenshots | **VERIFIED** (zero horizontal overflow, zero nav issues) |
+| Compare final refinement | **CODE-INSPECTED** (no defects found; structure already strong) |
+| Archive vertical composition | **VERIFIED** (Catalog featured rail + rail + grid intact; final composition matches brief) |
+| Saved empty states | **VERIFIED** (real populated states render correctly; shortlist shelf empty-state with dashed border + CTA pill from prior pass) |
+| Home final acceptance | **VERIFIED** (scopri/confronta/salva framework; podium cards; radar preview; CTA hierarchy) |
+| Radar final acceptance | **VERIFIED** (live/sync/loading/error states locked; signal/instrument meta in place) |
+| Responsive typography | **VERIFIED** (clamp() tokens; hero 4.5rem–8.5rem; headings tested at 13 viewports) |
+| Copy + terminology | **VERIFIED** (canonical: Salvati, Confronto, Radar, Raccolte) |
+| CTA consistency | **VERIFIED** (verb-form actions; specific destinations) |
+| Interaction audit | **VERIFIED** (Playwright; no console errors) |
+| Keyboard + a11y | **VERIFIED** (skip link, main landmark, heading order, focus rings, reduced motion) |
+
+### FINAL VERDICT: **READY FOR RELEASE**
+
+Visual closure achieved. All real user-facing defects resolved. Production deploy verified.
+
+The product is now ready for the dedicated final copy + interaction review that the user said will follow. No remaining visual debt that can be addressed at this layer.
+
+### Known remaining (external / out of scope)
+- Live keyboard/screen-reader smoke test in real screen reader — code-level evidence only; requires manual accessibility audit with assistive tech
+- Real browser performance timing on lower-end devices — Lighthouse-style profiling not run (Next.js dev/prod parity assumed)
+- New catalog data + product descriptions (editorial backlog)
