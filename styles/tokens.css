@@ -211,6 +211,32 @@
   --tv-ink-inverted-secondary: var(--tv-color-ink-700);
   --tv-ink-on-brand: var(--tv-color-ink-100);
 
+  /* Inverted surface foreground hierarchy — use ONLY on ivory/inverted surfaces. */
+  --tv-ink-inverted-primary: #1a1410;          /* main text on ivory */
+  --tv-ink-inverted-secondary: #4d463f;        /* secondary text on ivory */
+  --tv-ink-inverted-muted: #6f6760;            /* muted text on ivory (>= 4.5:1) */
+  --tv-ink-inverted-subtle: #8d857c;           /* subtle text on ivory (>= 3:1 for non-essential) */
+  --tv-ink-inverted-link: var(--tv-accent-brand-pressed); /* links on ivory */
+  --tv-ink-inverted-on-accent: var(--tv-color-ink-100);   /* text on accent fill, ivory surface */
+
+  /* Inverted surface borders */
+  --tv-border-inverted-subtle: rgba(8, 8, 10, 0.08);
+  --tv-border-inverted-default: rgba(8, 8, 10, 0.14);
+  --tv-border-inverted-strong: rgba(8, 8, 10, 0.24);
+  --tv-border-inverted-interactive: rgba(8, 8, 10, 0.32);
+
+  /* Inverted surface interactive tokens */
+  --tv-interactive-inverted-bg: rgba(8, 8, 10, 0.04);
+  --tv-interactive-inverted-bg-hover: rgba(8, 8, 10, 0.08);
+  --tv-interactive-inverted-bg-pressed: rgba(8, 8, 10, 0.12);
+  --tv-interactive-inverted-fg: var(--tv-ink-inverted-primary);
+
+  /* Inverted surface input */
+  --tv-input-inverted-text: var(--tv-ink-inverted-primary);
+  --tv-input-inverted-placeholder: var(--tv-ink-inverted-muted);
+  --tv-input-inverted-border: var(--tv-border-inverted-default);
+  --tv-input-inverted-bg: rgba(255, 255, 255, 0.6);
+
   /* Brand accent */
   --tv-accent-brand: var(--tv-color-violet-500);
   --tv-accent-brand-hover: var(--tv-color-violet-400);

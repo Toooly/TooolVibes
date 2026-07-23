@@ -251,3 +251,77 @@
     border-radius: var(--tv-radius-lg);
   }
 }
+
+/* ────────────────────────────────────────────────────────────────
+   Canonical inverted (ivory) surface contract.
+   Use .ivory-surface on any panel/section that should display
+   on the warm ivory Decision Desk palette. Self-contained: it
+   declares its own foreground hierarchy and does NOT inherit
+   dark-mode text colors from .internal-page.
+   ──────────────────────────────────────────────────────────────── */
+.ivory-surface {
+  --foreground: var(--tv-ink-inverted-primary);
+  --muted: var(--tv-ink-inverted-muted);
+  --muted-strong: var(--tv-ink-inverted-secondary);
+  --accent-strong: var(--tv-ink-inverted-link);
+  --line: var(--tv-border-inverted-default);
+  --line-strong: var(--tv-border-inverted-strong);
+  background: var(--tv-surface-inverted);
+  color: var(--tv-ink-inverted-primary);
+  border-color: var(--tv-border-inverted-default);
+}
+
+.ivory-surface :is(h1, h2, h3, h4, h5, h6, strong) {
+  color: var(--tv-ink-inverted-primary);
+}
+
+.ivory-surface :is(p, li, span, small, figcaption):not(.premium-button *):not(.editorial-label):not(.brand-kicker):not(.pill *):not(.selection-chip *) {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.ivory-surface .text-meta,
+.ivory-surface .text-body-soft,
+.ivory-surface .text-body-strong {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.ivory-surface .brand-kicker,
+.ivory-surface .editorial-label,
+.ivory-surface .tool-detail-breadcrumb {
+  color: var(--tv-ink-inverted-link);
+}
+
+.ivory-surface .text-muted-soft,
+.ivory-surface .text-muted-strong,
+.ivory-surface [class*="text-muted"] {
+  color: var(--tv-ink-inverted-muted);
+}
+
+.ivory-surface .pill,
+.ivory-surface .selection-chip,
+.ivory-surface .selection-status,
+.ivory-surface .premium-badge {
+  background: rgba(8, 8, 10, 0.04);
+  border-color: var(--tv-border-inverted-default);
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.ivory-surface .pill-premium {
+  background: rgba(243, 191, 76, 0.16);
+  border-color: rgba(146, 64, 14, 0.3);
+  color: #78350f;
+}
+
+.ivory-surface :is(input, select, textarea) {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: var(--tv-border-inverted-default);
+  color: var(--tv-ink-inverted-primary);
+}
+
+.ivory-surface :is(input, select, textarea)::placeholder {
+  color: var(--tv-ink-inverted-muted);
+}
+
+.ivory-surface .section-quiet-link {
+  color: var(--tv-ink-inverted-link);
+}

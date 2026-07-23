@@ -32716,49 +32716,6 @@ body:has(.tone-account) {
   max-width: min(1180px, calc(100vw - 1.5rem));
 }
 
-.internal-page :is(.light-surface, .brand-panel, .dark-panel, .premium-card, .metadata-block, .stat-block) {
-  --foreground: #f0efff;
-  --muted: rgba(213, 207, 238, 0.66);
-  --muted-strong: rgba(240, 239, 255, 0.8);
-  --accent-strong: #b7a8ff;
-  --line: rgba(255, 255, 255, 0.12);
-  --line-strong: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.12) !important;
-  background:
-    radial-gradient(circle at 84% 10%, rgba(57, 210, 246, 0.1), transparent 28%),
-    radial-gradient(circle at 8% 0%, rgba(124, 77, 255, 0.14), transparent 30%),
-    linear-gradient(180deg, rgba(13, 10, 30, 0.88), rgba(8, 7, 20, 0.94)) !important;
-  box-shadow:
-    0 22px 58px rgba(0, 0, 0, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-  color: var(--foreground);
-}
-
-.internal-page :is(.light-surface, .brand-panel, .dark-panel, .premium-card, .metadata-block, .stat-block)::before {
-  opacity: 0.26;
-}
-
-.internal-page :is(h1, h2, h3, h4) {
-  color: #f8f6ff !important;
-  text-wrap: balance;
-}
-
-.internal-page :is(p, li, figcaption):not(.premium-button *):not(.editorial-label):not(.brand-kicker) {
-  color: var(--muted-strong) !important;
-}
-
-.internal-page :is(.selection-chip, .selection-status, .pill, .premium-badge, .directory-tool-card__tag-link) {
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: rgba(240, 239, 255, 0.84) !important;
-}
-
-.internal-page .brand-kicker,
-.internal-page .editorial-label,
-.internal-page .tool-detail-breadcrumb {
-  color: rgba(183, 168, 255, 0.86) !important;
-}
-
 .internal-page .tool-detail-breadcrumb a {
   color: rgba(240, 239, 255, 0.72);
 }
@@ -32767,41 +32724,6 @@ body:has(.tone-account) {
 .internal-page .section-quiet-link:hover,
 .internal-page a:focus-visible {
   color: #d8d0ff !important;
-}
-
-.internal-page :is(.tool-detail-summary-card, .directory-tool-card > div, .directory-tool-card .grid, .directory-tool-card .rounded-\[22px\], .directory-tool-card .rounded-\[20px\]) {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.045)) !important;
-  background-color: rgba(255, 255, 255, 0.055) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-}
-
-.internal-tool-page :is(
-  .tool-detail-summary-card,
-  [class~="rounded-[20px]"],
-  [class~="rounded-[22px]"],
-  [class~="rounded-[24px]"],
-  [class~="bg-white/80"],
-  [class~="bg-white/78"],
-  [class~="bg-white/72"]
-) {
-  background-color: rgba(255, 255, 255, 0.065) !important;
-}
-
-.internal-tool-page .tool-detail-summary-card {
-  background-color: rgba(255, 255, 255, 0.065) !important;
-}
-
-.internal-page :is(.tool-detail-summary-copy, .directory-tool-card p) {
-  color: rgba(240, 239, 255, 0.78) !important;
-}
-
-.internal-page :is(.premium-button-secondary, .premium-button-outline, .premium-button-subtle) {
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.055)) !important;
-  color: #f0efff !important;
 }
 
 .internal-page .editorial-markdown {
@@ -32849,14 +32771,16 @@ body:has(.tone-account) {
 }
 
 .internal-tool-page .tool-detail-profile-panel {
-  --foreground: #171235;
-  --muted-strong: #51487a;
-  --accent-strong: #5b36d6;
-  border: 1px solid rgba(106, 60, 255, 0.12);
+  --foreground: var(--tv-ink-inverted-primary);
+  --muted: var(--tv-ink-inverted-muted);
+  --muted-strong: var(--tv-ink-inverted-secondary);
+  --accent-strong: var(--tv-ink-inverted-link);
+  background: var(--tv-surface-inverted) !important;
+  border: 1px solid var(--tv-border-inverted-default) !important;
   color: var(--foreground) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.82),
-    0 18px 42px rgba(38, 25, 94, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 12px 32px rgba(38, 25, 94, 0.08) !important;
 }
 
 .internal-tool-page .tool-detail-profile-panel :is(p, span, strong) {
