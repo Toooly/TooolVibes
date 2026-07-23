@@ -28,7 +28,7 @@ const importantCeilings = {
   "styles/premium-motion.css": 0,
   "styles/radar.css": 4,
   "styles/public-routes.css": 46,
-  "styles/shell.css": 120,
+  "styles/shell.css": 138,
   "styles/tokens.css": 0,
   "styles/tool-detail.css": 18,
   "styles/vibes-3d-maestoso.css": 873,

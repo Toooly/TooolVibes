@@ -27272,18 +27272,12 @@ body:has(.tone-account) {
     .live-hint-mini-link,
     .live-hint-restore,
     .mobile-bottom-link,
-    .site-header-v2__nav-link,
-    .site-header-v2__primary-action,
-    .site-header-v2__ghost-action,
-    .site-header-v2__mobile-link,
-    .site-header-v2__mobile-primary,
-    .site-header-v2__mobile-ghost,
     .mobile-library-empty__cta,
     .mobile-tool-card__open,
     .category-tool-card__icon-button,
     [data-sonic-action="tap"],
     [data-sonic-action="tab"]
-  ):not(:disabled):not([aria-disabled="true"]):not(.desktop-radar-node):not(.mobile-radar-view__node) {
+  ):not(:disabled):not([aria-disabled="true"]):not(.desktop-radar-node):not(.mobile-radar-view__node):not(.site-header-v2__search-trigger):not(.site-header-v2__mobile-search):not(.site-header-v2__menu-button):not(.site-header-v2__primary-action):not(.site-header-v2__ghost-action):not(.site-header-v2__nav-link):not(.site-header-v2__mobile-link):not(.site-header-v2__mobile-primary):not(.site-header-v2__mobile-ghost):not(.site-header-v2__sound):not(.sound-toggle-button):not(.music-toggle-button) {
   position: relative;
   isolation: isolate;
   overflow: hidden;
