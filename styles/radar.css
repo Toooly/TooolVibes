@@ -151,7 +151,7 @@
 .radar-command__meta-label {
   color: var(--tv-ink-muted-aa);
   font-family: var(--tv-font-family-display);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: var(--tv-weight-bold);
   letter-spacing: 0.18em;
   text-transform: uppercase;

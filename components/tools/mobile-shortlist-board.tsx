@@ -446,11 +446,14 @@ function MobileLibraryShelf({
         </div>
       ) : (
         <div className="mobile-library-shelf__empty">
-          <span aria-hidden="true">
-            <PlusCircle size={16} />
+          <span className="mobile-library-shelf__empty-icon" aria-hidden="true">
+            <PlusCircle size={20} />
           </span>
-          <p>{emptyText}</p>
-          <Link href="/archivio">Trova candidati</Link>
+          <p className="mobile-library-shelf__empty-text">{emptyText}</p>
+          <Link href="/archivio" className="mobile-library-shelf__empty-cta">
+            Esplora candidati
+            <ArrowRight size={14} aria-hidden="true" />
+          </Link>
         </div>
       )}
     </section>

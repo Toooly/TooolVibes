@@ -547,7 +547,7 @@
 }
 
 .home-radar-preview__signal-count span {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: var(--tv-weight-bold);
   text-transform: uppercase;
   color: var(--tv-accent-cyan);
@@ -574,7 +574,7 @@
   background: color-mix(in srgb, var(--tv-accent-cyan) 8%, var(--tv-surface-elevated));
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: var(--tv-weight-bold);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -649,7 +649,7 @@
 }
 
 .home-radar-preview__signal-count span {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: var(--tv-weight-bold);
   text-transform: uppercase;
   color: var(--tv-accent-cyan);
@@ -676,7 +676,7 @@
   background: color-mix(in srgb, var(--tv-accent-cyan) 8%, var(--tv-surface-elevated));
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: var(--tv-weight-bold);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -935,7 +935,7 @@
 }
 
 .home-radar-preview__signal-count span {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: var(--tv-weight-bold);
   text-transform: uppercase;
   color: var(--tv-accent-cyan);
@@ -962,7 +962,7 @@
   background: color-mix(in srgb, var(--tv-accent-cyan) 8%, var(--tv-surface-elevated));
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: var(--tv-weight-bold);
   letter-spacing: 0.16em;
   text-transform: uppercase;

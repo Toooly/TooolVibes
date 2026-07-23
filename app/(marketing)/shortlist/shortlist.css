@@ -61,3 +61,59 @@
   outline: 2px solid var(--tv-accent-brand-aa) !important;
   outline-offset: 3px !important;
 }
+
+.shortlist-final-surface .mobile-library-shelf__empty {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: var(--tv-space-3) !important;
+  padding: var(--tv-space-6) !important;
+  border: 1px dashed var(--tv-border-interactive) !important;
+  border-radius: var(--tv-radius-lg) !important;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--tv-accent-cyan) 8%, transparent), transparent 60%),
+    color-mix(in srgb, var(--tv-surface-elevated) 70%, transparent) !important;
+  min-height: 8.5rem !important;
+  box-shadow: none !important;
+}
+
+.shortlist-final-surface .mobile-library-shelf__empty-icon {
+  display: inline-flex !important;
+  width: 2.4rem !important;
+  aspect-ratio: 1 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: var(--tv-radius-pill) !important;
+  background: color-mix(in srgb, var(--tv-accent-cyan) 18%, var(--tv-surface-raised)) !important;
+  color: var(--tv-accent-cyan) !important;
+  box-shadow: none !important;
+}
+
+.shortlist-final-surface .mobile-library-shelf__empty-text {
+  margin: 0 !important;
+  color: var(--tv-ink-secondary) !important;
+  font-family: var(--tv-font-family-ui) !important;
+  font-size: var(--tv-text-sm) !important;
+  line-height: var(--tv-leading-body) !important;
+}
+
+.shortlist-final-surface .mobile-library-shelf__empty-cta {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: var(--tv-space-2) !important;
+  padding: var(--tv-space-2) var(--tv-space-4) !important;
+  border: 1px solid var(--tv-border-interactive) !important;
+  border-radius: var(--tv-radius-pill) !important;
+  background: transparent !important;
+  color: var(--tv-ink-primary) !important;
+  font-family: var(--tv-font-family-ui) !important;
+  font-size: var(--tv-text-xs) !important;
+  font-weight: var(--tv-weight-semibold) !important;
+  text-decoration: none !important;
+  transition: all var(--tv-motion-base) var(--tv-ease-standard) !important;
+}
+
+.shortlist-final-surface .mobile-library-shelf__empty-cta:hover {
+  border-color: var(--tv-accent-cyan) !important;
+  background: color-mix(in srgb, var(--tv-accent-cyan) 12%, transparent) !important;
+}
