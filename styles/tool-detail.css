@@ -243,8 +243,8 @@
 }
 
 .tool-detail-toggle-actions .count-badge-live {
-  background: var(--tv-bg-base);
-  color: var(--tv-ink-secondary);
+  background: var(--tv-bg-base) !important;
+  color: var(--tv-ink-secondary) !important;
 }
 
 .tool-detail-aside {
@@ -445,6 +445,20 @@
   display: grid;
   gap: var(--tv-space-5, 1.25rem);
   margin-top: var(--tv-space-8);
+}
+
+/* Dark command-center surface for alternative tool cards.
+   Switches the ShadCN --card tokens so the inherited title / meta /
+   badge palette resolves to dark-surface colors instead of the
+   default light-theme white-card leaks (#ffffff) on a dark page.
+   No !important needed here — the cascade ordinal beats the leak
+   because no previous rule scoped --card to the related grid. */
+.tool-detail-related__grid > :where([data-slot="tool-card"], [class*="bg-card"]) {
+  --card: var(--tv-color-surface-raised);
+  --card-foreground: var(--tv-color-ink-200);
+  --popover: var(--tv-color-surface-raised);
+  --popover-foreground: var(--tv-color-ink-200);
+  --border: var(--tv-border-subtle);
 }
 
 @media (min-width: 40rem) {
