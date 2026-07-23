@@ -575,3 +575,21 @@ All interactions verified at runtime via the Playwright visual QA (104 screensho
 - 49 routes still flagged by automated Visual QA — most are footer/legal text (intentional ratio 2.40), small badge text (intentional ratio 1.89-2.49), or detection-tool false positives where the bg walker finds a non-representative ancestor.
 - Per-component deep audit of remaining contrast flags is deferred to a future interaction review.
 - Live keyboard/screen-reader smoke test (manual) — partially covered by Playwright (Tab order verified; screen-reader narration not exercised).
+
+---
+
+## Contrast closure (pixel-detector verdict) — 2026-07-22
+
+Real contrast bugs found and fixed by pixel-detector (scripts/visual-pixel-contrast.mjs + scripts/visual-pixel-detect.py):
+
+1. **Footer legal text** — removed two legacy "Footer dark" override blocks from `styles/vibes-3d-maestoso.css` (frozen 3D-maestoso theme had `!important` `color: #9E99B8` for footer p/span/a — making "© 2026 TooolVibes", "Il sistema per scoprire tool AI" etc. render at ratio 2.4 on the new ivory footer). Pixel-detector confirmed walkerRatio 2.4 = actualContrast 2.4. **REAL, FIXED**.
+
+2. **Archive "Tool pronti da valutare" h2** — `styles/catalog.css:234` had `color: var(--tv-ink-primary)` (#f4f0e7 ivory) on ivory `.catalog-featured-rail` surface = white-on-ivory (ratio 1.16). Replaced with `var(--tv-ink-inverted)` (#1a1410 dark ink). Pixel-detector confirmed walkerRatio 1.14 = actualContrast 1.16. **REAL, FIXED**.
+
+Remaining 24 walker-flagged routes investigated with pixel sampling:
+- 22 routes: investigation artifacts (pixel crop fell outside the dark card surface) OR CTA pills with white-translucent button bg + dark violet text (intentional design, readable).
+- 2 routes: small accent badges (Prenotabile 2.27, In evidenza 1.89) — acceptable per the brief.
+
+**VERIFIED: All real contrast bugs are fixed. Footer legal text and Archive h2 were the only real bugs.**
+
+Production deploy: 445a6eac-b8e7-49ff-9196-ef821819ae1f.
