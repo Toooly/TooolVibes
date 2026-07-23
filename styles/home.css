@@ -513,7 +513,15 @@
 
   .home-radar-preview__stage::before,
   .home-radar-preview__stage::after,
-  .home-radar-preview__ticks {
+  @media (prefers-reduced-motion: reduce) {
+  .home-radar-preview__ticks,
+  .home-radar-preview__stage::after {
+    animation: none;
+    opacity: 0.2;
+  }
+}
+
+.home-radar-preview__ticks {
   position: absolute;
   inset: 0;
   z-index: var(--tv-z-content);
@@ -615,7 +623,15 @@
     animation: tv-home-radar-scan 6s linear infinite;
   }
 
-  .home-radar-preview__ticks {
+  @media (prefers-reduced-motion: reduce) {
+  .home-radar-preview__ticks,
+  .home-radar-preview__stage::after {
+    animation: none;
+    opacity: 0.2;
+  }
+}
+
+.home-radar-preview__ticks {
   position: absolute;
   inset: 0;
   z-index: var(--tv-z-content);
@@ -901,6 +917,14 @@
 
 .home-radar-preview__stage::before,
 .home-radar-preview__stage::after,
+@media (prefers-reduced-motion: reduce) {
+  .home-radar-preview__ticks,
+  .home-radar-preview__stage::after {
+    animation: none;
+    opacity: 0.2;
+  }
+}
+
 .home-radar-preview__ticks {
   position: absolute;
   inset: 0;
