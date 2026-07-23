@@ -97,11 +97,11 @@ export function MobileRadarView() {
   const liveLabel =
     radarState === "ready"
       ? isStaleFallback
-        ? "Radar in sync"
+        ? "Radar (ultima sync)"
         : "Radar live"
       : radarState === "loading"
-        ? "Sincronizzazione in corso"
-        : "Radar non disponibile";
+        ? "Radar in avvio"
+        : "Radar in pausa";
   const centerLabel =
     radarState === "ready"
       ? isStaleFallback

@@ -42,7 +42,7 @@ export function CatalogFeaturedRail({ tools, onSelectAll }: CatalogFeaturedRailP
           <h2>Tool pronti da valutare</h2>
         </div>
         <button type="button" onClick={onSelectAll} className="catalog-featured-rail__cta">
-          Vedi tutti
+          Esplora archivio
           <ArrowRight size={14} aria-hidden="true" />
         </button>
       </div>

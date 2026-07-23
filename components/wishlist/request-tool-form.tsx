@@ -290,7 +290,7 @@ export function RequestToolForm({ className }: { className?: string }) {
           <div className="grid gap-4 sm:gap-6">
             <aside className="rounded-[22px] border border-white/10 bg-[rgba(37,37,43,0.9)] p-4 text-white sm:rounded-[26px] sm:p-5">
               <PremiumBadge tone={isFounderFlow ? "warning" : "accent"}>
-                {isFounderFlow ? "Founder flow" : "Community flow"}
+                {isFounderFlow ? "Founder" : "Utente"}
               </PremiumBadge>
               <h2 className="text-display-card mt-3 text-[1.35rem] leading-tight text-white sm:mt-4 sm:text-[2.2rem]">
                 {isFounderFlow ? "Proponi il tuo tool a TooolVibes." : "Consiglia un tool che usi davvero."}

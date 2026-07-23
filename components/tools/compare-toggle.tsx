@@ -123,7 +123,7 @@ export function CompareToggle({
           boxShadow: isSelected ? "0 0 0 4px rgba(34,197,94,0.14)" : "0 0 0 4px rgba(239,68,68,0.14)",
         }}
       />
-      {compact ? "Confronta" : isSelected ? "Confronto" : "Aggiungi al confronto"}
+      {compact ? "Confronta" : isSelected ? "Aggiunto al confronto" : "Aggiungi al confronto"}
       <span
         className={`count-badge-live rounded-full bg-white/76 px-1.5 py-0.5 text-xs ${count > 0 ? "is-active" : ""} ${
           isReady ? "is-ready" : ""
