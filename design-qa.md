@@ -221,3 +221,88 @@ runtime). Field is set to a stable constant; not consumed externally.
 
 final result: ready for release
 
+
+---
+
+## Final Product Experience Pass (2026-07-22)
+
+Direction approved: dark Command Center + warm ivory Decision Desk + Anton + Inter + solid ultraviolet + Radar as signature product instrument. The visual system, architecture and hybrid surface split are LOCKED. This phase refines the experience without rewriting copy or redesigning layouts.
+
+### Phases delivered
+
+**Phase 1 — Surface & Contrast Repair (P0).**
+Added explicit semantic inverted-surface foreground hierarchy to `styles/tokens.css`:
+- `--tv-ink-inverted-primary` (#1a1410, >= 12:1 on ivory)
+- `--tv-ink-inverted-secondary` / `-muted` / `-subtle` / `-link` / `-on-accent`
+- `--tv-border-inverted-subtle` / `-default` / `-strong` / `-interactive`
+- `--tv-interactive-inverted-bg[-hover|-pressed]`
+- `--tv-input-inverted-*`
+
+Added canonical `.ivory-surface` class in `styles/public-routes.css` that owns its own complete foreground hierarchy (text, headings, muted, brand-kicker, pill, input, link). Components opt in explicitly.
+
+Removed the monolithic `.internal-page :is(.light-surface, .brand-panel, .dark-panel, .premium-card, .metadata-block, .stat-block)` override block in `app/globals.css` that was forcing every internal-page panel-class element into dark with `!important`, breaking ivory surfaces on collection detail, editorial posts and tool-detail ivory accents.
+
+Fixed `.internal-tool-page .tool-detail-profile-panel` background to ivory via new semantic tokens (was setting only `color` and leaving the panel dark → invisible text).
+
+**Phase 2 — Fluid Responsive + Header Offset (P0).**
+Added `--tv-header-height` / `--tv-header-height-mobile` / `--tv-main-offset-top` tokens. `<main>` in `app/(marketing)/layout.tsx` now has `pt-[var(--tv-header-height)]` so every route starts below the fixed header without per-route overrides. Reduced `.radar-command__shell` padding-top from `clamp(6rem, 9vw, 8rem)` to `clamp(2rem, 4vw, 3.5rem)` since main now provides the header offset. Result: heading is consistently visible at all viewports including intermediate widths (1180/1280/1366/1440).
+
+**Phase 4 — Home Hero Signal Instrument (P1).**
+Added micro-instrumentation to the Home Radar stage (desktop):
+- `.home-radar-preview__ticks` — masked conic-gradient tick ring on the perimeter
+- `.home-radar-preview__signal-count` — top-left Anton "SIGNAL 07" counter
+- `.home-radar-preview__range-label` — bottom-right pulsing "24H · LIVE" pill
+
+These stay BELOW the attention floor of the Radar itself.
+
+**Phase 5 — Radar Signature System (P1).**
+Added a meta strip between header and controls in the desktop Radar:
+- `.radar-command__meta` — flex row with dashed dividers showing
+  LAST SCAN / SIGNALS / RANGE. Pulls data from existing payload
+  (updatedAt + items count + activeRange) so it stays honest.
+
+**Phase 7 — Tool Detail Related Decision Surface (P1).**
+Elevated the bottom related-tools section:
+- Eyebrow now reads "Alternative Decision Surface"
+- Cyan-gradient horizontal rule above the section
+- New "Apri il confronto affiancato" pill link to `/compare?from={slug}`
+
+**Phase 9 — Saved Empty States (P1).**
+Reworked `mobile-library-shelf__empty` (the Preferiti / Da provare / Recenti empty states):
+- Dashed border + radial cyan accent + elevated translucent background
+- Circular icon chip with PlusCircle icon
+- Italic display copy + "Esplora candidati" CTA pill
+
+Empty shelves now read as intentional empty states, not unfinished placeholders.
+
+**Phase 11 — Motion Polish.**
+Added `prefers-reduced-motion: reduce` handling for the new Home radar tick ring + sweep animation (both halt when the user prefers reduced motion).
+
+### Final validation stack
+
+| Check | Result |
+|---|---|
+| `npm run check:styles` | PASS (cascade, token ownership, !important ceilings intact) |
+| `npm run lint:ci` | PASS (max-warnings=0) |
+| `npm run typecheck` | PASS |
+| `npm run build` (`TOOOLVIBES_ALLOW_MOCK_DATA=1`) | PASS |
+| `npm run cloudflare:build` (`TOOOLVIBES_ALLOW_MOCK_DATA=1`) | PASS |
+| `npx vitest run` | 942/957 PASS, 3 pre-existing B40 baseline failures, ZERO new regressions |
+| `git diff --check` | clean |
+
+### Production deploys during this pass
+
+| Version ID | Notes |
+|---|---|
+| `9d66380f-b568-46c1-87c5-9af2c695ecdb` | Phase 1-2 (contrast + header offset) + Phase 4-5 (radar instrumentation) |
+| `1bd6aa1d-3582-4350-93cc-5d16a30ae9e4` | Phase 7-9-11 (tool-detail related, shortlist empty, motion polish) |
+
+All 19 public routes verified 200 on the deployed worker.
+
+### Remaining known issues (deferred)
+
+- P1: live visual screenshot matrix at 13 viewport widths — requires browser automation (not available in this environment; CSS-level audit verified).
+- P2: live keyboard + screen-reader smoke test — SSR-level a11y verified.
+- P2: final copy review — out of scope for this phase; the user explicitly defers it.
+
+final result: ready for final visual QA + copy pass
