@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { FloatingCatalogView } from "@/components/directory/floating-catalog-view";
+import { DefinitiveArchive } from "@/components/archive/definitive-archive";
 import { NativePlacement } from "@/components/monetization/native-placement";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { isCatalogDensityPolicyEnabled } from "@/lib/config/catalog-density-policy";
@@ -10,6 +10,7 @@ import {
   getPublicToolViews,
 } from "@/lib/data/public-tools";
 import "./archive.css";
+import "@/styles/archive-v4.css";
 
 export const metadata: Metadata = {
   title: "Archivio tool",
@@ -46,16 +47,9 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
           <NativePlacement placementKey="catalog-native-sponsor" variant="band" />
         </section>
       )}
-      <FloatingCatalogView
-        tools={tools}
-        filterGroups={filterGroups}
-        initialQuery={initialQuery}
-        initialGroup={initialGroup}
-        initialTag={params.tag ?? ""}
-        initialLevel={initialLevel}
-        unifiedSearchEnabled={releaseFeatures.unifiedSearch.enabled}
-        showIntro
-      />
+
+      <DefinitiveArchive tools={tools} filterGroups={filterGroups} />
+
       {catalogDensityPolicy && (
         <section
           className="page-shell relative z-10 pt-3 sm:pt-5"
