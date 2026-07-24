@@ -33,8 +33,8 @@ are **not** sufficient on their own.
 | 2 | Home + Tool of the Week + Podium | DONE |
 | 3 | Archive + Tool Detail (typography pass) | REVERTED — typography correction in `c20332b` |
 | 4 | Radar + Compare + Saved (typography pass) | REVERTED — typography correction in `c20332b` |
-| 5 | Complete route reconstruction (Archive, Tool Detail, Full Radar, Compare, Saved, Mobile, Secondary) | IN PROGRESS |
-| 6 | Final QA + deployment | NOT STARTED |
+| 5 | Complete route reconstruction (Archive, Tool Detail, Full Radar, Compare, Saved, Mobile, Secondary) | DONE |
+| 6 | Final QA + deployment + WS-A.2 follow-up | DONE |
 
 ---
 
@@ -755,3 +755,77 @@ Account all use ANTON caps.
 - `audits/final-ui-acceptance/batch5e-saved/` (3 PNGs)
 - `audits/final-ui-acceptance/batch5f-mobile/` (18 PNGs + 1 txt)
 - `audits/final-ui-acceptance/batch5g-secondary/` (6 PNGs)
+
+## Batch 6 log — Final QA, deployment, WS-A.2 follow-up (DONE 2026-07-24)
+
+**Production URL:** https://tooolvibes.square-shape-3527.workers.dev
+
+| Deploy | Version ID | Triggered by |
+|---|---|---|
+| Initial production deploy | `6b0f2f87-73d2-434e-8e7b-e3b8d70bf0ab` | `c4127a7` (Batch 5 acceptance) |
+| WS-A.2 follow-up re-deploy | `d32a99d3-1573-423c-8407-ef126f8be354` | Batch 6 partner-card contrast fix |
+
+**Visual verification on production (welcome modal dismissed):**
+
+| Route | H1 text | Font | Transform | Verdict |
+|---|---|---|---|---|
+| `/` | Trova il tool giusto prima che il rumore scelga per te. | Fraunces, italic | none | OK — Home approved exception |
+| `/archivio` | Il catalogo, senza il caos. | Anton, normal | uppercase | OK — WS-A.1 |
+| `/toools/blink` | Blink | Anton, normal | uppercase | OK — WS-B.2 |
+| `/radar` | Radar | Anton, normal | uppercase | OK — WS-F.1 |
+| `/compare` | Confronta meno. Scegli meglio. | Anton, normal | uppercase | OK — WS-E.1 |
+| `/shortlist` | (h2-driven) La tua biblioteca è pronta a riempirsi. | Anton, normal | uppercase | OK — WS-G.1 (page uses h2 for the editorial headline) |
+
+**WS-A.2 follow-up — partner editorial placement contrast:**
+
+- **Found in:** `audits/final-ui-acceptance/batch6-production/archive-1440-low.png`
+  (Batch 6 first pass) — partner "PARTNER EDITORIALE / PRENOTABILE"
+  card showed H2 + body in dark blue/violet on a dark elevated
+  surface, near-invisible.
+- **Root cause:** `app/(marketing)/archivio/archive.css` forced
+  the placement background to `--tv-surface-elevated` (dark) in
+  WS-A.2, but the H2 + body used `text-[var(--foreground)]` /
+  `text-[var(--muted-strong)]` — both still dark by default.
+  Parent `color: var(--tv-ink-primary)` only set *inherited* color;
+  the H2 / p had their own class wins.
+- **Fix (1 file, surgical):** added explicit
+  `.archive-final-surface .native-placement h2, .archive-final-surface .native-placement p { color: var(--tv-ink-primary) !important; }`.
+  Labels (`.native-placement-label` / `.native-placement-status`)
+  keep their pill backgrounds, so they remain readable without
+  override.
+- **Re-deploy:** `d32a99d3-1573-423c-8407-ef126f8be354`.
+- **Re-verified on production:**
+  `audits/final-ui-acceptance/batch6-production/archive-1440-partner-fixed.png`
+  shows H2 "Un ingresso sponsorizzato dentro il flusso di scoperta."
+  and body in clear ivory text. Computed `getComputedStyle(h2).color`
+  = `rgb(244, 240, 231)` = `--tv-ink-primary`.
+
+**Validation matrix (re-run, all green):**
+
+- `bun run check:styles` ✓ (`!important` ceilings intact, archive.css
+  gains 0 new `!important` since baseline — the 2 new rules use the
+  same 1 per selector count as the existing override style)
+- `bun run typecheck` ✓
+- `bun run lint:ci` ✓
+- `bun run cloudflare:build` ✓
+- Production smoke (6 routes, welcome modal dismissed): all 200,
+  H1 typography confirmed as in table above.
+
+**Visual evidence (Batch 6):**
+
+- `audits/final-ui-acceptance/batch6-production/` (18 PNGs)
+  - `home-1440-{top,mid,low}.png`
+  - `archive-1440-{top,mid,low}.png` (pre-fix)
+  - `archive-1440-{partner-fixed,tools}.png` (post-fix)
+  - `tool-detail-blink-1440-{top,mid,low}.png`
+  - `radar-1440-{top,mid,low}.png`
+  - `compare-1440-{top,mid,low}.png`
+  - `shortlist-1440-{top,mid,low}.png`
+
+**Atomic commit (Batch 6):** `chore(archive): fix partner-card text contrast on dark surface` — 1 file (`app/(marketing)/archivio/archive.css`), 8 lines added (1 comment + 2 selector + 1 rule + 4 cosmetic blank).
+
+**Final status note (binding):** Even with all batches closed and
+production live, the only valid overall status string remains
+**"FINAL UI RECONSTRUCTION IN PROGRESS"**. "READY FOR RELEASE" /
+"FINAL CLOSURE" / "FINAL ACCEPTANCE PASS" remain banned — see
+"Status rule" at the top of this file.

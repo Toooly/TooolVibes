@@ -124,3 +124,11 @@
   display: none !important;
   content: none !important;
 }
+
+/* WS-A.2 follow-up: dark surface forced the H2 + body to inherit
+   `--foreground` / `--muted-strong` (both dark). Override to light
+   ink so the partner card is readable on the elevated dark panel. */
+.archive-final-surface .native-placement h2,
+.archive-final-surface .native-placement p {
+  color: var(--tv-ink-primary) !important;
+}
