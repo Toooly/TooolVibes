@@ -12,7 +12,9 @@ import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 // (which inspects the lockfile to pick the packager).
 const baseConfig = defineCloudflareConfig();
 
-export default {
+const config = {
   ...baseConfig,
   buildCommand: "bun run build",
 };
+
+export default config;
