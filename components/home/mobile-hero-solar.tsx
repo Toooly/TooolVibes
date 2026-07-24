@@ -59,14 +59,24 @@ export function MobileHeroSolar({ routes, compact = false }: MobileHeroSolarProp
             uno stack che abbia davvero senso per il tuo lavoro.
           </p>
           <div className="home-discovery-hero__actions">
-            <Link href="/archivio" className="home-discovery-hero__cta home-discovery-hero__cta--primary">
+            <Link
+              href="/archivio"
+              className="btn btn--primary btn--lg home-discovery-hero__cta home-discovery-hero__cta--primary"
+            >
               Esplora i tool
               <ArrowRight size={17} aria-hidden="true" />
             </Link>
-            <Link href="/radar" className="home-discovery-hero__cta home-discovery-hero__cta--secondary">
+            <Link
+              href="/radar"
+              className="btn btn--secondary btn--lg home-discovery-hero__cta home-discovery-hero__cta--secondary"
+            >
               Guarda il Radar
             </Link>
           </div>
+          {/* BATCH 2 (WS-C): decision journey panel — kept as the
+              reference 'definitive UI mockup' (3 numbered steps, brand
+              color accent per step). Now uses the canonical button system
+              internally. */}
           <nav className="home-decision-track" aria-label="Il tuo percorso di scelta">
             <div className="home-decision-track__header">
               <span>Il tuo percorso</span>
