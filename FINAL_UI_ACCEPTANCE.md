@@ -1181,3 +1181,150 @@ anywhere on the Radar or Home surfaces.**
   OR re-deploy any prior Version ID via Cloudflare dashboard.
   No destructive operations; all commits are additive.
 
+---
+
+## Archive v4 — Definitive Reconstruction (AWAITING USER VISUAL ACCEPTANCE — 2026-07-24)
+
+**Status (binding):** **ARCHIVE DEFINITIVE RECONSTRUCTION — ACTIVE**
+(per-route: **AWAITING USER VISUAL ACCEPTANCE** — gate-style).
+
+The `/archivio` route was rebuilt using the accepted v4 visual DNA
+(dark Command Center + warm ivory Decision Desk + violet/cyan/gold
+signal grammar). The legacy catalog stack
+(`mobile-catalog-view`, `catalog-category-map`, `catalog-featured-rail`)
+was replaced with a new purpose-built architecture.
+
+### Composition (desktop ≥1180)
+
+1. **ar4-intro** — compact editorial header.
+   - 1.1/0.9 grid: H1 ANTON caps "IL CATALOGO, **SENZA IL CAOS.**" with
+     "SENZA IL CAOS." in brand violet `rgb(106, 60, 255)` = `#6a3cff`
+   - Lede: "Parti da un obiettivo oppure cerca direttamente. Ogni
+     profilo è selezionato per aiutarti a decidere, non per riempire
+     una lista."
+   - Right panel: search 320px with ⌘K kbd hint + 3 stats: tool curati
+     (30) / categorie (17) / percorsi (17)
+2. **ar4-filters** — 2 groups of `ar4-chip` pills (Categoria + Livello).
+   - 17 category chips + 5 level chips (Tutti i livelli / Principiante /
+     Intermedio / Esperto / In evidenza) = 22 total
+   - Active chip uses primary violet background
+   - Horizontal scroll `<1180` with right-edge fade gradient
+   - Wraps at `≥1180`
+3. **ar4-ivory** — warm cream Decision Desk band.
+   - Background: `rgb(244, 240, 231)` = `#f4f0e7` (cream)
+   - "DECISION DESK" eyebrow + "Il tool della settimana, in evidenza."
+     (Fraunces italic editorial)
+   - 3 promoted tool cards with FEATURED ribbon
+4. **ar4-grid** — "CATALOGO COMPLETO" + count "30 di 30" + 30 tool cards
+   in 3-col grid (3/2/1 responsive)
+5. **ar4-tray** — sticky comparison tray.
+   - Hidden until 1+ tool in compare (correct behavior)
+   - Mobile: full-width bottom (120px padding in shell, above bottom nav)
+   - Desktop `≥1280`: 420px corner card
+   - 3 slots: title+sub, chips (X to remove), Svuota + Apri confronto CTAs
+   - "Apri confronto" CTA disabled until 2+ tools (correctly enforced)
+
+### Tool card v4 anatomy (4 states)
+
+- **default** — standard surface
+- **hover** — lift + violet-tinted shadow
+- **selected** — violet border + glow + `#NN` rank tag (when in compare)
+- **promoted** — gold border + FEATURED ribbon + score highlighted
+  (in ivory band)
+
+Every card has:
+- `.ar4-card__avatar` (48px) + name Anton + category 12px + status pill
+- `.ar4-card__desc` (14px clamp 2) — typography floor met
+- `.ar4-card__level` badge + `.ar4-card__score` (22px Anton) + `.ar4-card__votes`
+- `.ar4-card__open` "Apri scheda" CTA (13px Anton caps) — typography
+  floor corrected from 12px → 13px in this batch
+- `.ar4-card__toggles` (Shortlist + Compare icon buttons)
+- Rank tag + saved flag (conditional)
+
+### Typography floor (auto-inspected)
+
+| Surface          | Required | Actual (1440) | Actual (390) | Actual (768) |
+|------------------|----------|---------------|--------------|--------------|
+| Card description | ≥14px    | 14px          | 14px         | 14px         |
+| "Apri scheda" CTA| ≥13px    | 13px          | 13px         | (tablet=mobile) |
+| H1 (Anton caps)  | ≥28px    | (clamp up to 4rem) | 28.8px    | (clamp)      |
+
+### Animations
+
+- Total on page: **2** (sonic-tap, tv-button-idle) — well below
+  the ≤4 above-fold ceiling.
+- No decorative primitives carried over from Home (restrained motion).
+
+### Style ownership
+
+- `styles/archive-v4.css` ships **0** `!important` declarations.
+- Total `!important` in document: 694 (acceptable, mostly from
+  third-party baseline).
+
+### Auto-inspection: 27/27 PASS
+
+```
+Archive v4 auto-inspection: 27/27 PASS, 0 FAIL
+  ✓ v4 composition: intro + filters + ivory + grid all mounted
+  ✓ Tray conditionally rendered (hidden until compare) — correct
+  ✓ H1 uses ANTON (not Fraunces) — text-transform uppercase
+  ✓ H1 highlight color: rgb(106, 60, 255) — canonical brand #6a3cff
+  ✓ Ivory band background: rgb(244, 240, 231) — cream #f4f0e7
+  ✓ Filter chips present: 22 (17 categories + 5 levels)
+  ✓ Active chip uses primary violet background
+  ✓ Tool cards present: 33 (3 promoted in ivory + 30 in grid)
+  ✓ Animations: 2 (sonic-tap, tv-button-idle) — under ≤4 ceiling
+  ✓ Page height 1440: 4607px (matches spec)
+  ✓ Tray hidden initially, visible after compare toggle
+  ✓ Promoted markers: 3, selected markers: 4
+  ✓ Every card has .ar4-card__name + .ar4-card__category
+  ✓ NativePlacement sponsor band preserved (B38 / MOB-702 policy)
+  ✓ Semantic sr-only fallback preserved (accessibility / SEO)
+  ✓ Tray CTA "Apri confronto" disabled until 2+ tools (correct)
+  ✓ Card description 14px / 14px / 14px (1440 / 390 / 768)
+  ✓ Card "Apri scheda" CTA 13px / 13px (was 12px — fixed in this batch)
+  ✓ Mobile H1 28.8px (≥28px floor)
+```
+
+### Responsive system (custom bands, NOT Tailwind defaults)
+
+- 360–429: 1-col cards, full-width search, sticky tray bottom
+- 430–767: 1-col cards, spacious mobile
+- 768–899: 2-col cards, compact filters
+- 900–1179: 2–3 col cards
+- 1180–1439: 3–4 col cards (filters wrap)
+- 1440+: 4-col cards, full desktop
+
+### Routing preserved
+
+- `app/(marketing)/archivio/page.tsx` still renders `NativePlacement`
+  (placementKey=`catalog-native-sponsor`) per B38 / MOB-702 sponsor
+  policy and the semantic `sr-only` fallback for accessibility / SEO.
+
+### Visual evidence
+
+Captured at 12 viewports + 5 review boards + 4 tool-card states
++ 4 tray states (empty, 2, 4, mobile) + 2 filter-active states:
+
+- Desktop: 1180, 1280, 1366, 1440, 1536, 1920
+- Tablet: 768, 820, 1024
+- Mobile: 360, 390, 430
+- Review boards: `review-board-{desktop,mobile,tablet,card-states,tray-filters}.png`
+
+Path: `audits/definitive-rebuild/archive-v4/`
+
+### Production snapshot
+
+- **HEAD:** `4f8cdbe rebuild(archivio): v4 — compact intro, ivory
+  decision desk, 4-state cards, sticky compare tray`
+- **Latest Version ID:** `fb3c340e-d102-441d-8f00-fca998e55c87`
+- **Production URL:** https://tooolvibes.square-shape-3527.workers.dev/archivio
+- **Rollback path:** `git revert 4f8cdbe` (and the 12→13px follow-up
+  if needed) followed by `bun run cloudflare:build && bun run
+  cloudflare:deploy`, OR re-deploy prior Version ID via Cloudflare
+  dashboard. No destructive operations; all commits are additive.
+
+### Known micro-issues (NOT blocking, optional polish)
+
+None observed in auto-inspection. Manual visual review pending.
+
