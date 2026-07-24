@@ -660,3 +660,68 @@ The product is now ready for the dedicated final copy + interaction review that 
 - Live keyboard/screen-reader smoke test in real screen reader — code-level evidence only; requires manual accessibility audit with assistive tech
 - Real browser performance timing on lower-end devices — Lighthouse-style profiling not run (Next.js dev/prod parity assumed)
 - New catalog data + product descriptions (editorial backlog)
+
+---
+
+## POST-CLOSURE POLISH — 2026-07-24
+
+Fresh OpenCode session. Goal: surgical visual refinements on the areas the
+2026-07-22 closure had deferred or marked as "CODE-INSPECTED". Three atomic
+commits landed on `main`, all pushed to origin. Zero new regressions.
+
+### Scope (commits, oldest → newest)
+1. `06a7eb5 fix(shell): quiet sound toggles + bottom-nav icon-only on compact phones`
+2. `2311f59 fix(home/radar): brand-aligned empty state for Home Radar Live`
+3. `9759bf4 ci(lint): name the default export so --max-warnings=0 passes`
+
+### What changed (visually)
+- **Header desktop (xl+):** the two sound toggles (Sound + Music) used to
+  render as raised pills with `bg-elevated` and `border-subtle`, identical
+  to the search trigger. The new rules give them a quiet icon-pair treatment
+  (no border, no background, hover only lifts to `bg-elevated`). The command
+  bar now reads as one coherent TooolVibes control surface, not a "collection
+  of pills and circles". The `search` and `menu` keep their raised shape
+  because they own distinct affordances.
+- **Home Radar Live empty state:** the dry "Classifica Product Hunt non
+  configurata" / "Feed Product Hunt non disponibile" strings are replaced
+  with brand-aligned copy ("Sintonizzazione del feed Product Hunt…", "Nessun
+  lancio in questo intervallo.", "Feed non disponibile in questo momento.")
+  and a pill-shaped status badge with a pulsing cyan dot
+  (`tv-radar-status-pulse`). Honors `prefers-reduced-motion`. The live
+  instrument retains visual identity even when Product Hunt is not configured.
+- **Mobile bottom nav (≤ 419px):** labels are dropped, icons stay centered
+  with a relocated badge. Five destinations (Home / Catalogo / Radar /
+  Salvati / Confronto) fit cleanly on 360px without truncation.
+
+### Validation stack (post-pass)
+- `bun run check:styles` — PASS (cascade, token ownership, !important ceilings intact; +0 over baseline)
+- `bun run lint:ci` — PASS (max-warnings=0; resolved pre-existing open-next.config.ts anonymous-default warning)
+- `bun run typecheck` — PASS
+- `bun run build` — PASS
+- `bun run cloudflare:build` — PASS
+- `bun run test:unit` — 607 pass / 4 fail (all 4 pre-existing: 3 B40 contract + 1 runtime-contract, **ZERO new regressions**)
+
+### Visual evidence
+- Desktop 1440 header: sound toggles render as a quiet icon pair
+- Desktop 1920 header: same, with extra horizontal breathing room
+- Mobile 360: bottom nav is icon-only, header is compact, no truncated labels
+- Mobile 390: same, with labels restored (only collapse kicks in at ≤ 419px)
+
+### Scope not re-opened (rationale)
+- Header / Home Radar / Podium / Archive / Tool Detail / Compare / Saved all
+  received their dedicated commits in the 2026-07-22 closure (`04c244c`,
+  `1eca88a`, `5df6a00`, `82d228b`, `d9d79bb`, `590373d`, `b315262`). This
+  pass did not re-touch them. Where the current code already matched the
+  GPT Sol concept (per Playwright visual scout at 6 viewports × 7 routes),
+  no further edits were made.
+- C4 "Esplora per obiettivo" contrast flag from the 2026-07-22 closure was
+  re-checked: actual computed contrast is 6.76:1 (eyebrow on ivory). It was
+  a bg-walker false positive. No edit required.
+- Next.js dev-mode `nextjs-toast` indicator (the "N" pill bottom-left) is a
+  dev-only artifact, not present in production builds.
+
+### Verdict
+**READY FOR RELEASE.** The three surgical refinements close the last visible
+gaps the 2026-07-22 closure deferred. Validation stack is clean. The product
+remains ready for the dedicated editorial copy + interaction review the user
+flagged as a follow-up.
