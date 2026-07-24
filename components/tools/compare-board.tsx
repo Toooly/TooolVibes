@@ -4,7 +4,7 @@ import { Fragment, type CSSProperties, useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
 import {
   getCompareDimensionLeaders,
@@ -136,7 +136,7 @@ function LegacyCompareMobileMatrix({
   scoreDimensions: ReturnType<typeof getEditorialScoreDimensions>;
   scorecardsByTool: Record<string, ReturnType<typeof getEditorialScorecard>>;
 }) {
-  if (tools.length < 2) {
+  if (tools.length < MIN_COMPARE_TOOLS) {
     return null;
   }
 

@@ -166,7 +166,6 @@ function ArchiveV4ToolCardInner({
       <div className="ar4-card__top">
         <span className="ar4-card__avatar" aria-hidden="true">
           {iconUrl ? (
-            // eslint-disable-next-line @next/image/no-img-element
             // eslint-disable-next-line @next/next/no-img-element
             <img src={iconUrl} alt="" loading="lazy" decoding="async" />
           ) : (

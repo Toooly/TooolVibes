@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Columns3, X, Scale, Sparkles, Swords, TrendingUp } from "lucide-react";
 
-import { useToolWorkspaceStore, MAX_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
+import { useToolWorkspaceStore, MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import {
   getCompareObjectiveLabel,
@@ -125,7 +125,7 @@ export function DiffMatrix({
     return () => window.removeEventListener("resize", check);
   }, [tools.length]);
 
-  if (tools.length < 2) return null;
+  if (tools.length < MIN_COMPARE_TOOLS) return null;
 
   const verdict = getBattleVerdict(tools, objective);
   const rankedTools = verdict.scores.map(({ tool }) => tool);
@@ -632,7 +632,7 @@ export function MobileCompareView({
             <Columns3 className="size-10" />
           </div>
           <h2>Nessun candidato nel confronto.</h2>
-          <p>Aggiungi 2 o pi&ugrave; tool dal catalogo per far emergere le differenze vere.</p>
+          <p>Aggiungi {MIN_COMPARE_TOOLS} o pi&ugrave; tool dal catalogo per far emergere le differenze vere.</p>
           <Link href="/archivio" className="mobile-compare-arena__cta">
             Scegli i tool
             <ArrowRight className="size-4" />

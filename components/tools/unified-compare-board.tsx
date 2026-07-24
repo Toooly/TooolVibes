@@ -10,7 +10,7 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { EmptyState } from "@/components/ui/premium-section";
 import { CompareBoard } from "@/components/tools/compare-board";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolRecord } from "@/lib/types/tool";
 
 type UnifiedCompareBoardProps = {
@@ -169,7 +169,7 @@ function DesktopDiffMatrix({
   tools: DirectoryTool[];
   scores: Map<string, number>;
 }) {
-  if (tools.length < 2) return null;
+  if (tools.length < MIN_COMPARE_TOOLS) return null;
   const maxScore = Math.max(...tools.map((t) => scores.get(t.slug) ?? 0), 1);
 
   const rows = [
@@ -370,7 +370,7 @@ function DirectoryCompareMobileMatrix({
   tools: DirectoryTool[];
   leadTool: DirectoryTool | null;
 }) {
-  if (tools.length < 2) {
+  if (tools.length < MIN_COMPARE_TOOLS) {
     return null;
   }
 
@@ -538,7 +538,7 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
       <EmptyState
         icon={Columns3}
         eyebrow="Confronto catalogo"
-        title="Aggiungi 2 tool dal catalogo per far partire il confronto."
+        title={`Aggiungi ${MIN_COMPARE_TOOLS} tool dal catalogo per far partire il confronto.`}
         description="Premi Confronta sulle schede dei tool: qui leggerai differenze, casi d'uso, sintesi e lettura rapida in una vista unica."
         className="p-6 text-center sm:p-8"
         action={<PremiumLink href="/archivio">Apri catalogo</PremiumLink>}
@@ -608,7 +608,7 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         onRemove={(slug) => toggleCompare(slug)}
       />
 
-      {leadTool && tools.length >= 2 ? (
+      {leadTool && tools.length >= MIN_COMPARE_TOOLS ? (
         <DesktopChampionCard
           tool={leadTool}
           score={leadScore}

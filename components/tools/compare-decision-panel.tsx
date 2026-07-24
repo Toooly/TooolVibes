@@ -35,6 +35,7 @@ import {
   setToolDecisionOutcome,
   updateToolDecisionMemory,
 } from "@/lib/discovery/local-storage";
+import { MIN_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { WorkspaceDecisionOutcome } from "@/lib/discovery/types";
 import {
   getCompareObjectiveLabel,
@@ -137,7 +138,7 @@ export function CompareDecisionPanel({
     setNoteDraft(focusNote);
   }, [focusNote, resolvedFocusSlug]);
 
-  if (!enabled || tools.length < 2 || !focusTool) return null;
+  if (!enabled || tools.length < MIN_COMPARE_TOOLS || !focusTool) return null;
 
   const noteIsDirty = noteDraft.trim() !== focusNote;
   const noteId = `${idPrefix}-compare-decision-note`;

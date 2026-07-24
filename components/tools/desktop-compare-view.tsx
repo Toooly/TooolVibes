@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Columns3, Swords, Sparkles, Trophy } from "lucide-react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import type { CompareObjective } from "@/lib/compare/compare-objective";
 import {
@@ -131,7 +131,7 @@ export function DesktopCompareView({
   );
 
   const verdict = useMemo(
-    () => (tools.length >= 2 ? getBattleVerdict(tools, activeObjective) : null),
+    () => (tools.length >= MIN_COMPARE_TOOLS ? getBattleVerdict(tools, activeObjective) : null),
     [tools, activeObjective],
   );
   // B34: ordine della classifica identico al verdetto canonico (parity mobile).
@@ -143,7 +143,7 @@ export function DesktopCompareView({
   const duelTools = sorted.slice(0, 2);
 
   function handleFight() {
-    if (battleState === "fighting" || tools.length < 2) return;
+    if (battleState === "fighting" || tools.length < MIN_COMPARE_TOOLS) return;
     setBattleState("fighting");
     window.setTimeout(() => {
       setBattleState("result");
@@ -153,7 +153,7 @@ export function DesktopCompareView({
     }, 900);
   }
 
-  if (tools.length < 2) {
+  if (tools.length < MIN_COMPARE_TOOLS) {
     const hasCandidate = tools.length === 1;
     return (
       <div className="compare-onboarding-shell">

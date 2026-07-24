@@ -29,6 +29,7 @@ import type {
 } from "@/lib/discovery/types";
 
 export { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
+export { MIN_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 
 export type ToolWorkspaceState = {
   savedSlugs: string[];

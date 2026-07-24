@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type {
   ShortlistStage,
   ToolDecisionMemory,
@@ -166,7 +166,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
                 color: compareCount > 1 ? "var(--accent-strong)" : "var(--muted-strong)",
               }}
             >
-              {compareCount > 1 ? `Apri confronto (${compareCount})` : "Servono 2 tool per confrontare"}
+              {compareCount > 1 ? `Apri confronto (${compareCount})` : `Servono ${MIN_COMPARE_TOOLS} tool per confrontare`}
             </Link>
           </div>
         </div>

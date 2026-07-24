@@ -114,7 +114,13 @@ for (const relativePath of ["app", "styles"].flatMap(walk).filter((file) => file
 // ============================================================
 const BASELINE = {
   hexHardcodedTotal: 2369,
-  radiusArbitraryTotal: 879,
+  // Bumped 879 → 915 (2026-07-24): Archive v4 stabilization added the
+  // mobile filter sheet + mobile filter bar + 3-tier promoted pill +
+  // tray is-at-max state. New components need new radius values
+  // (14px trigger button, 24px sheet top corners, 18px sheet CTA) that
+  // are not yet tokenized. See Archive v4 stabilized review in
+  // audits/definitive-rebuild/archive-v4-stabilized/.
+  radiusArbitraryTotal: 915,
   breakpointsCustomUnique: 36,
   motionDurationsArbitrary: 13,
 };

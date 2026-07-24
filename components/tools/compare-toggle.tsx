@@ -3,7 +3,7 @@
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { Columns3 } from "lucide-react";
 
-import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 type CompareToggleProps = {
   slug: string;
@@ -73,7 +73,7 @@ export function CompareToggle({
     previousCountRef.current = nextCount;
   };
 
-  const isReady = count >= 2;
+  const isReady = count >= MIN_COMPARE_TOOLS;
 
   if (mode === "icon") {
     return (

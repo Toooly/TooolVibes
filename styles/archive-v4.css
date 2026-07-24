@@ -860,11 +860,20 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 40;
+  z-index: 41; /* above mobile bottom nav (z-index 40) */
   background: var(--tv-bg-base);
   border-top: 1px solid var(--tv-accent-primary);
   box-shadow: 0 -16px 40px -16px rgba(0,0,0,0.6);
   padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+}
+
+/* On mobile + tablet (< xl), the bottom nav is also position: fixed bottom: 0.
+   Push the tray ABOVE the bottom nav to prevent overlap. The bottom nav is
+   ~56px tall + 6px padding + safe-area-inset-bottom. */
+@media (max-width: 1279px) {
+  .ar4-tray {
+    bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
 }
 
 @media (min-width: 1280px) {
@@ -1051,6 +1060,18 @@
   color: var(--tv-ink-muted-aa);
   border: 1px solid var(--tv-border-subtle);
   pointer-events: none;
+}
+
+/* Limit-reached variant: distinct from "needs more" — uses gold tint
+   to signal the cap has been hit, not "you have less than minimum". */
+.ar4-tray.is-at-max {
+  border-top-color: var(--tv-accent-gold);
+}
+
+.ar4-tray.is-at-max .ar4-tray__cta {
+  background: color-mix(in srgb, var(--tv-accent-gold) 14%, var(--tv-bg-base));
+  color: var(--tv-accent-gold);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 40%, transparent);
 }
 
 /* Reduced motion */
@@ -1802,9 +1823,13 @@
   .ar4-shell { padding-bottom: 0; }
 }
 
-/* When tray is hidden (no compare), the bottom-nav alone is enough */
+/* When the tray is NOT in the DOM at all (0 selected), shrink the bottom
+   padding so there's no extra empty space below the last content card.
+   The tray element doesn't render at all when count === 0 (return null
+   in React), so the absence of `.ar4-tray` is the right signal — not
+   `is-ready`. */
 @media (max-width: 767px) {
-  .ar4-shell:has(.ar4-tray:not(.is-ready)) {
+  .ar4-shell:not(:has(.ar4-tray)) {
     padding-bottom: calc(4.75rem + 12px + env(safe-area-inset-bottom));
   }
 }
