@@ -3,6 +3,8 @@
  * This file is loaded after legacy route styles so the shared chrome has one
  * stable, dark-first contract across every public page.
  */
+@import "./brand-primitives.css";
+
 
 .marketing-shell {
   min-height: 100svh;

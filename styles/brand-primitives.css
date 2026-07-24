@@ -1,0 +1,275 @@
+/* ============================================================== */
+/* === TooolVibes BRAND PRIMITIVES ============================== */
+/* ============================================================== */
+/* Reusable visual primitives derived from the existing TooolVibes
+   logo. Each primitive is a CSS-only building block so feature
+   components can compose the brand language without re-declaring
+   geometry, color or motion. Use sparingly. Color and motion must
+   communicate product meaning, not decoration.
+
+   Naming: --tv-brand-{primitive} for the primitive geometry, and
+   the corresponding .tv-brand-{primitive} class for the composed
+   shape. */
+
+:root {
+  /* WAVE — fluid horizontal flow used for signal traces. */
+  --tv-brand-wave-amplitude: 0.35rem;
+  --tv-brand-wave-length: 4rem;
+
+  /* SIGNAL — directional energy line, used in radar/orbit contexts. */
+  --tv-brand-signal-thickness: 1px;
+  --tv-brand-signal-fade: 0.62;
+
+  /* TRACE — thin path that draws on, used to connect items. */
+  --tv-brand-trace-width: 1px;
+  --tv-brand-trace-color: color-mix(in srgb, var(--tv-accent-primary) 38%, transparent);
+
+  /* ORBIT — circular ring used to wrap a focal element. */
+  --tv-brand-orbit-stroke: 1px;
+  --tv-brand-orbit-color: var(--tv-border-interactive);
+  --tv-brand-orbit-radii: 4.5rem, 8.5rem, 12.5rem;
+
+  /* NODE — a point on a trace or orbit. */
+  --tv-brand-node-size: 0.5rem;
+  --tv-brand-node-color: var(--tv-accent-cyan);
+
+  /* PULSE — concentric breathing ring around a node. */
+  --tv-brand-pulse-stroke: 1px;
+  --tv-brand-pulse-color: var(--tv-accent-primary);
+
+  /* SCAN — a sweeping radial gradient that travels along an orbit. */
+  --tv-brand-scan-color: color-mix(in srgb, var(--tv-accent-cyan) 36%, transparent);
+  --tv-brand-scan-fade: 0.85;
+
+  /* LOCK — a fixed acquisition marker, used to indicate selection. */
+  --tv-brand-lock-color: var(--tv-accent-primary);
+  --tv-brand-lock-size: 0.55rem;
+}
+
+/* --- WAVE --- */
+/* A horizontal sine curve rendered as repeating-linear-gradient. */
+.tv-brand-wave {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: calc(var(--tv-brand-wave-amplitude) * 2);
+  background:
+    repeating-linear-gradient(
+      115deg,
+      transparent 0,
+      transparent calc(var(--tv-brand-wave-length) / 2 - 1px),
+      var(--tv-brand-trace-color) calc(var(--tv-brand-wave-length) / 2 - 1px),
+      var(--tv-brand-trace-color) calc(var(--tv-brand-wave-length) / 2),
+      transparent calc(var(--tv-brand-wave-length) / 2)
+    );
+  mask:
+    radial-gradient(ellipse at center, black 0%, transparent 75%);
+  -webkit-mask:
+    radial-gradient(ellipse at center, black 0%, transparent 75%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* --- SIGNAL --- */
+/* A directional arrow-tail that fades into the page. */
+.tv-brand-signal {
+  position: relative;
+  display: inline-block;
+  width: 1.25rem;
+  height: var(--tv-brand-signal-thickness);
+  background: linear-gradient(
+    90deg,
+    var(--tv-accent-primary) 0%,
+    color-mix(in srgb, var(--tv-accent-primary) var(--tv-brand-signal-fade * 100%), transparent) 100%
+  );
+  border-radius: var(--tv-brand-signal-thickness);
+}
+
+.tv-brand-signal--vertical {
+  width: var(--tv-brand-signal-thickness);
+  height: 1.25rem;
+  background: linear-gradient(
+    180deg,
+    var(--tv-accent-primary) 0%,
+    color-mix(in srgb, var(--tv-accent-primary) var(--tv-brand-signal-fade * 100%), transparent) 100%
+  );
+}
+
+/* --- TRACE --- */
+/* A thin path used to connect two elements. Use ::before/::after to
+   extend it on demand. */
+.tv-brand-trace {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 0;
+  border-top: var(--tv-brand-trace-width) dashed var(--tv-brand-trace-color);
+  opacity: 0.6;
+}
+
+.tv-brand-trace--solid {
+  border-top-style: solid;
+  opacity: 0.5;
+}
+
+/* --- ORBIT --- */
+/* Concentric rings around a focal element. The rings are drawn with
+   stacked box-shadows so the element itself stays layout-agnostic. */
+.tv-brand-orbit {
+  position: relative;
+  isolation: isolate;
+}
+
+.tv-brand-orbit::before,
+.tv-brand-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.tv-brand-orbit--single::before {
+  border: var(--tv-brand-orbit-stroke) solid var(--tv-brand-orbit-color);
+  inset: 0.5rem;
+  opacity: 0.5;
+}
+
+.tv-brand-orbit--triple::before {
+  inset: 0;
+  border: var(--tv-brand-orbit-stroke) solid var(--tv-brand-orbit-color);
+  box-shadow:
+    0 0 0 calc((100% - 4rem) / 2) transparent,
+    0 0 0 calc((100% - 4rem) / 2) var(--tv-brand-orbit-color),
+    0 0 0 calc((100% - 8rem) / 2) transparent,
+    0 0 0 calc((100% - 8rem) / 2) var(--tv-brand-orbit-color);
+  opacity: 0.5;
+}
+
+/* --- NODE --- */
+/* A small fixed point. Use inside orbits or on traces. */
+.tv-brand-node {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: var(--tv-brand-node-size);
+  height: var(--tv-brand-node-size);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-brand-node-color);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--tv-brand-node-color) 28%, transparent);
+}
+
+.tv-brand-node--violet { --tv-brand-node-color: var(--tv-accent-primary); }
+.tv-brand-node--cyan { --tv-brand-node-color: var(--tv-accent-cyan); }
+.tv-brand-node--gold { --tv-brand-node-color: var(--tv-color-gold-500); }
+.tv-brand-node--ink { --tv-brand-node-color: var(--tv-ink-primary); }
+.tv-brand-node--muted { --tv-brand-node-color: var(--tv-ink-muted-aa); }
+
+/* --- PULSE --- */
+/* An animated concentric ring that breathes around a node. Use
+   prefers-reduced-motion to disable. */
+@keyframes tv-brand-pulse-breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+.tv-brand-pulse {
+  position: relative;
+}
+
+.tv-brand-pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--tv-brand-pulse-stroke) solid var(--tv-brand-pulse-color);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tv-brand-pulse::after {
+    animation: tv-brand-pulse-breathe 2.4s var(--tv-ease-emphasis, ease-in-out) infinite;
+  }
+}
+
+.tv-brand-pulse--violet { --tv-brand-pulse-color: var(--tv-accent-primary); }
+.tv-brand-pulse--cyan { --tv-brand-pulse-color: var(--tv-accent-cyan); }
+.tv-brand-pulse--gold { --tv-brand-pulse-color: var(--tv-color-gold-500); }
+
+/* --- SCAN --- */
+/* A rotating sweep gradient. Apply to circular instrument surfaces. */
+@keyframes tv-brand-scan-rotate {
+  to { transform: rotate(360deg); }
+}
+
+.tv-brand-scan {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.tv-brand-scan::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    var(--tv-brand-scan-color) 30deg,
+    transparent 80deg,
+    transparent 360deg
+  );
+  mask: radial-gradient(circle at center, black 0%, transparent 72%);
+  -webkit-mask: radial-gradient(circle at center, black 0%, transparent 72%);
+  pointer-events: none;
+  opacity: var(--tv-brand-scan-fade);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tv-brand-scan::before {
+    animation: tv-brand-scan-rotate 6s linear infinite;
+  }
+}
+
+/* --- LOCK --- */
+/* A fixed acquisition marker — four corner brackets around a target. */
+.tv-brand-lock {
+  position: relative;
+  display: inline-block;
+  width: var(--tv-brand-lock-size);
+  height: var(--tv-brand-lock-size);
+}
+
+.tv-brand-lock::before,
+.tv-brand-lock::after {
+  content: "";
+  position: absolute;
+  width: 0.4rem;
+  height: 0.4rem;
+  border: 1.5px solid var(--tv-brand-lock-color);
+  pointer-events: none;
+}
+
+.tv-brand-lock::before {
+  top: 0;
+  left: 0;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.tv-brand-lock::after {
+  bottom: 0;
+  right: 0;
+  border-left: 0;
+  border-top: 0;
+}
+
+.tv-brand-lock--violet { --tv-brand-lock-color: var(--tv-accent-primary); }
+.tv-brand-lock--cyan { --tv-brand-lock-color: var(--tv-accent-cyan); }
+.tv-brand-lock--gold { --tv-brand-lock-color: var(--tv-color-gold-500); }
