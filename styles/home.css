@@ -144,7 +144,13 @@
 }
 
 .v-spotlight-title {
-  font-size: clamp(3.25rem, 6vw, 6rem);
+  font-family: var(--tv-font-family-editorial);
+  font-size: clamp(2.85rem, 5.4vw, 4.6rem);
+  font-weight: var(--tv-weight-regular);
+  font-style: italic;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  text-transform: none;
 }
 
 .v-method-title {
@@ -153,9 +159,9 @@
 
 .v-method-card-title,
 .v-podium-name {
-  font-family: var(--tv-font-display);
+  font-family: var(--tv-font-family-ui);
   font-weight: var(--tv-weight-bold);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.005em;
 }
 
 .v-method-card {
@@ -1223,7 +1229,6 @@
   display: none;
 }
 
-.v-spotlight-title,
 .v-method-title {
   font-family: var(--tv-font-display);
   font-weight: var(--tv-weight-regular);
@@ -1305,68 +1310,50 @@
 /* Per-rank height differential (drives the podium hierarchy visually). */
 .v-spotlight-section .v-podium-step--rank-1 {
   min-height: clamp(12rem, 18vw, 14rem) !important;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--tv-color-gold-500) 16%, var(--tv-bg-base)),
-    color-mix(in srgb, var(--tv-color-gold-500) 6%, var(--tv-bg-base))
-  ) !important;
-  border-color: color-mix(in srgb, var(--tv-color-gold-500) 38%, var(--tv-border-subtle)) !important;
+  background: var(--tv-surface-raised);
+  border-color: color-mix(in srgb, var(--tv-color-gold-500) 48%, var(--tv-border-subtle));
+  box-shadow: 0 0.5rem 1.75rem -0.75rem color-mix(in srgb, var(--tv-color-gold-500) 50%, transparent);
 }
 .v-spotlight-section .v-podium-step--rank-2 {
   min-height: clamp(10.5rem, 16vw, 12rem) !important;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--tv-accent-primary) 14%, var(--tv-bg-base)),
-    color-mix(in srgb, var(--tv-accent-primary) 5%, var(--tv-bg-base))
-  ) !important;
-  border-color: color-mix(in srgb, var(--tv-accent-primary) 30%, var(--tv-border-subtle)) !important;
+  background: var(--tv-surface-raised);
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 36%, var(--tv-border-subtle));
 }
 .v-spotlight-section .v-podium-step--rank-3 {
   min-height: clamp(9.5rem, 14vw, 10.5rem) !important;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--tv-color-cyan-500) 12%, var(--tv-bg-base)),
-    color-mix(in srgb, var(--tv-color-cyan-500) 4%, var(--tv-bg-base))
-  ) !important;
-  border-color: color-mix(in srgb, var(--tv-color-cyan-500) 26%, var(--tv-border-subtle)) !important;
+  background: var(--tv-surface-raised);
+  border-color: color-mix(in srgb, var(--tv-color-cyan-500) 30%, var(--tv-border-subtle));
 }
 
-/* Decorative top accent bar — kinetic scaleX breath per rank accent. */
+/* Decorative top accent bar — restrained brand-color indicator per rank. */
 .v-spotlight-section .v-podium-step::before {
   content: "";
   position: absolute;
   top: 0;
-  left: 8%;
-  right: 8%;
-  height: 3px;
+  left: 14%;
+  right: 14%;
+  height: 2px;
   border-radius: 999px 999px 0 0;
   background: var(--tv-accent-primary);
   transform-origin: 50% 100%;
   z-index: 1;
   pointer-events: none;
+  animation: none;
 }
 .v-spotlight-section .v-podium-step--rank-1::before {
-  background: linear-gradient(90deg, transparent, var(--tv-color-gold-500), transparent);
+  background: var(--tv-color-gold-500);
 }
 .v-spotlight-section .v-podium-step--rank-2::before {
-  background: linear-gradient(90deg, transparent, var(--tv-accent-primary), transparent);
+  background: var(--tv-accent-primary);
 }
 .v-spotlight-section .v-podium-step--rank-3::before {
-  background: linear-gradient(90deg, transparent, var(--tv-color-cyan-500), transparent);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .v-spotlight-section .v-podium-step::before {
-    animation: v-podium-rank-bar 4.5s ease-in-out infinite;
-  }
+  background: var(--tv-color-cyan-500);
 }
 
-/* Restore per-rank ambient glow halos (override home.css display:none; rank-coloured). */
+/* Suppress the rank glow halos on the Home podium — flat editorial
+   cards read better with the rank accent bar alone. */
 .v-spotlight-section .v-podium-step-glow {
-  display: block;
-  border-radius: 50%;
-  filter: blur(36px);
-  opacity: 0.16;
-  z-index: -1;
+  display: none;
 }
 .v-spotlight-section .v-podium-step--rank-1 .v-podium-step-glow {
   background: radial-gradient(circle, var(--tv-color-gold-500), transparent 65%);
