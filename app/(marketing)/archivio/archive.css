@@ -130,5 +130,5 @@
    ink so the partner card is readable on the elevated dark panel. */
 .archive-final-surface .native-placement h2,
 .archive-final-surface .native-placement p {
-  color: var(--tv-ink-primary) !important;
+  color: var(--tv-ink-primary);
 }

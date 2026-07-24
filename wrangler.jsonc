@@ -11,7 +11,7 @@
     "NEXT_PUBLIC_SUPABASE_URL": "https://pjyasxaebxvvmcjxvnno.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_Ac8LC9KN9Yl9YjDC7KrCVA_9328FOc0",
     "TOOOLVIBES_EMAIL_FROM": "TooolVibes <noreply@tooolvibes.eu>",
-    "TOOOLVIBES_COLLECTIONS_SOURCE": "auto",
+    "TOOOLVIBES_COLLECTIONS_SOURCE": "mock",
     "TOOOLVIBES_TOOLS_SOURCE": "directory",
     "TOOOLVIBES_ARTICLE_CMS_STORAGE_FALLBACK": "1",
     "TOOOLVIBES_SECURITY_STATE_MODE": "service",

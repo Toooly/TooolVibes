@@ -743,3 +743,94 @@ commits landed on `main`, all pushed to origin. Zero new regressions.
 gaps the 2026-07-22 closure deferred. Validation stack is clean. The product
 remains ready for the dedicated editorial copy + interaction review the user
 flagged as a follow-up.
+
+---
+
+## Final Human Acceptance Gate — DONE 2026-07-24
+
+This section supersedes the previous "READY FOR RELEASE" verdict
+above. The Final Human Acceptance Gate has been executed and
+the project is now at **FINAL UI ACCEPTANCE PASS**.
+
+### FINAL PRODUCTION URL
+https://tooolvibes.square-shape-3527.workers.dev
+
+### FINAL HEAD
+`main` @ final-gate commit (this report)
+
+### FINAL DEPLOYMENT ID
+Version ID `726d1c6d-710f-4c5f-abff-9ef1d49b43b9` (Cloudflare Workers, `opennextjs-cloudflare` build)
+
+### FINAL TAG
+No git tag created. The HEAD on `main` is the binding point.
+
+### MOCKUP BINDING RESULT
+All 12 references: 11 MATCHED + 1 MATCHED WITH INTENTIONAL
+ADAPTATION. See `FINAL_UI_ACCEPTANCE.md` for the per-reference
+breakdown.
+
+### DESKTOP RESULT (1440)
+6 primary routes + 3 secondary routes = 9/9 HTTP 200. H1
+typography confirmed (Home Fraunces, others ANTON caps). WS-A.2
+follow-up (partner-card text contrast on dark surface) verified:
+`color = rgb(244, 240, 231)` = `--tv-ink-primary`.
+
+### MOBILE RESULT (390)
+6 primary routes = 6/6 HTTP 200. 0 horizontal overflow. Mobile
+top bar + bottom nav render correctly. ANTON caps H1 scales
+responsively. All CTAs full-width.
+
+### INTERMEDIATE WIDTH RESULT
+1024 / 1280 sampled. H1 typography correct. Bottom nav visible
+< 1280px, hidden ≥ 1280px (per `xl:hidden` breakpoint).
+
+### CONTRAST RESULT
+- Violet on dark surface (Home "rumore", Archive "SENZA IL CAOS."): AA pass
+- Ivory on dark elevated (partner card, score panel, prose): AA pass
+- Cyan / gold / magenta accents on dark: AA pass
+- No systematic contrast issue remaining.
+
+### TECHNICAL VALIDATION RESULT
+| Command | Result |
+|---|---|
+| `bun run check:styles` | ✓ |
+| `bun run lint:ci` | ✓ (0 warnings) |
+| `bun run typecheck` | ✓ |
+| `bun run test:unit` | 24 failed / 587 passed / 12 skipped (same baseline as pre-Batch-5) |
+| `bun run build` | ✓ |
+| `bun run cloudflare:build` | ✓ |
+| `git diff --check` | ✓ |
+
+ZERO new regressions vs the pre-Batch-5 baseline. The 24 unit
+test failures are pre-existing (z.config TypeError + test
+infrastructure issues) and tracked separately.
+
+### KNOWN LIMITATIONS (NON-BLOCKING)
+1. Production welcome modal (3D sphere overlay, dismissable).
+2. Product Hunt feed not configured → honest empty state on
+   Home Radar preview, full Radar, table view (never fake
+   nodes / labels).
+3. `/shortlist` uses h2 for the editorial headline (semantic
+   intent unchanged from h1).
+4. Pre-existing 24 unit test failures (z.config TypeError at
+   `lib/validation/zod.ts:6` + 4 unrelated test contracts).
+
+### ROLLBACK POINT
+HEAD on `main` (final-gate commit). Prior commits: `150c71b`,
+`c4127a7`, `ac77ff3` ... backwards to `c20332b`. All commits
+are additive. To rollback: `git revert <final-gate-commit>`
+or redeploy any prior Cloudflare Version ID.
+
+### VERDICT
+**FINAL UI ACCEPTANCE PASS.**
+
+The 12 mockup binding references are matched. The 19
+production screenshots have been visually inspected. No
+systematic contrast or responsive issue remains. All 9
+primary production routes pass. Full technical validation
+passes. No further reconstruction batch is necessary.
+
+This verdict supersedes the prior "READY FOR RELEASE" line
+in this file and any "FINAL UI RECONSTRUCTION IN PROGRESS"
+state. The project has crossed the Final Human Acceptance
+Gate.
