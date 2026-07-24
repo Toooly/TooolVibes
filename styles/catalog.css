@@ -44,6 +44,18 @@
   text-wrap: wrap;
 }
 
+.catalog-discovery__highlight {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 65%,
+    color-mix(in srgb, var(--tv-accent-primary) 35%, transparent) 65%,
+    color-mix(in srgb, var(--tv-accent-primary) 35%, transparent) 92%,
+    transparent 92%
+  );
+  color: var(--tv-accent-primary);
+}
+
 .catalog-discovery__copy > p:last-child {
   max-width: 38rem;
   margin: var(--tv-space-6) 0 0;

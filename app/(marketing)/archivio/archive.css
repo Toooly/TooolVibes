@@ -18,17 +18,17 @@
 }
 
 .archive-final-surface :where(.catalog-category-map, .catalog-featured-rail) {
-  border-color: var(--tv-border-inverted) !important;
-  background: var(--tv-surface-inverted) !important;
-  color: var(--tv-ink-inverted) !important;
+  border-color: var(--tv-border-interactive) !important;
+  background: var(--tv-surface-elevated) !important;
+  color: var(--tv-ink-primary) !important;
   box-shadow: none !important;
 }
 
 .archive-final-surface .catalog-featured-card,
 .archive-final-surface .catalog-category-map__card {
-  border-color: var(--tv-border-inverted) !important;
-  background: var(--tv-surface-inverted) !important;
-  color: var(--tv-ink-inverted) !important;
+  border-color: var(--tv-border-subtle) !important;
+  background: var(--tv-surface-raised) !important;
+  color: var(--tv-ink-primary) !important;
   box-shadow: none !important;
 }
 
@@ -82,14 +82,14 @@
   .catalog-featured-rail__header h2,
   .catalog-featured-card__meta strong
 ) {
-  color: var(--tv-ink-inverted) !important;
+  color: var(--tv-ink-primary) !important;
 }
 
 .archive-final-surface :where(
   .catalog-category-map__label small,
   .catalog-featured-card__meta small
 ) {
-  color: var(--tv-ink-inverted-secondary) !important;
+  color: var(--tv-ink-muted-aa) !important;
 }
 
 .archive-final-surface :where(a, button, input):focus-visible {
@@ -98,24 +98,24 @@
 }
 
 .archive-final-surface .catalog-featured-card__icon {
-  border-color: var(--tv-border-inverted) !important;
+  border-color: var(--tv-border-subtle) !important;
   background: transparent !important;
   box-shadow: none !important;
 }
 
 .archive-final-surface .catalog-featured-rail__cta {
-  border: 1px solid var(--tv-bg-base) !important;
+  border: 1px solid var(--tv-border-interactive) !important;
   border-radius: var(--tv-radius-md) !important;
-  background: var(--tv-bg-base) !important;
+  background: var(--tv-surface-raised) !important;
   color: var(--tv-ink-primary) !important;
   box-shadow: none !important;
 }
 
 .archive-final-surface .native-placement {
-  border-color: var(--tv-border-inverted) !important;
+  border-color: var(--tv-border-interactive) !important;
   border-radius: var(--tv-radius-lg) !important;
-  background: var(--tv-surface-inverted) !important;
-  color: var(--tv-ink-inverted) !important;
+  background: var(--tv-surface-elevated) !important;
+  color: var(--tv-ink-primary) !important;
   box-shadow: none !important;
   transform: none !important;
 }

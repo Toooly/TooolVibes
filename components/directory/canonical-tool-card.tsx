@@ -62,6 +62,28 @@ function getLevelBadgeVariant(level: string | null): LevelBadgeVariant {
   return "neutral";
 }
 
+/* Score derivato per la Score badge del card: tiene conto di
+   level + featured + toolOfWeek. Il numero e' una visualizzazione
+   editoriale fissa (4.5-9.5) coerente con i mockup; non e' una
+   metrica di qualita' reale. */
+function getCardScore(
+  level: string | null | undefined,
+  featured: boolean | undefined,
+  toolOfWeek: boolean | undefined,
+): { value: number; label: string } {
+  let base = 7.4;
+  if (level === "featured") base = 8.8;
+  else if (level === "expert") base = 8.2;
+  else if (level === "intermediate") base = 7.6;
+  else if (level === "beginner") base = 6.8;
+  if (featured) base = Math.min(base + 0.4, 9.5);
+  if (toolOfWeek) base = Math.min(base + 0.3, 9.5);
+  const rounded = Math.round(base * 10) / 10;
+  const label =
+    rounded >= 9.0 ? "Ottimo" : rounded >= 8.0 ? "Solido" : rounded >= 7.0 ? "Buono" : "Base";
+  return { value: rounded, label };
+}
+
 /* Contratto tipografico B21: mai sotto 12px (--tv-text-xs), tracking
    uppercase solo per label corte (0.08em) o eyebrow (max 0.14em). */
 const eyebrowClass =
@@ -102,6 +124,8 @@ export function CanonicalToolCard({
   const publishedLabel = tool.publishedAt
     ? `Aggiornato ${formatItalianDate(tool.publishedAt)}`
     : "Data non disponibile";
+  const cardScore = getCardScore(tool.level, tool.featured, tool.toolOfWeek);
+  const isFeatured = Boolean(tool.toolOfWeek || tool.featured);
 
   const actionNode = actions ?? (
     <>
@@ -246,19 +270,47 @@ export function CanonicalToolCard({
       <Card role="article" aria-label={tool.name} {...stateProps} className={rootClass}>
         <div
           data-slot="tool-card-media"
-          className="border-b border-[var(--line)] p-4 sm:p-6"
+          className="relative border-b border-[var(--line)] p-4 sm:p-6"
           style={{
-            background: `radial-gradient(circle at top right, ${tool.accentFrom ?? "#6a3cff"}18, transparent 36%), radial-gradient(circle at bottom left, ${tool.accentTo ?? "#43c6ff"}14, transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244,239,255,0.88))`,
+            background: `radial-gradient(circle at top right, ${tool.accentFrom ?? "#6a3cff"}33, transparent 38%), radial-gradient(circle at bottom left, ${tool.accentTo ?? "#43c6ff"}24, transparent 36%), linear-gradient(180deg, color-mix(in srgb, var(--tv-surface-raised) 96%, ${tool.accentFrom ?? "#6a3cff"}10) 0%, color-mix(in srgb, var(--tv-surface-elevated) 96%, ${tool.accentTo ?? "#43c6ff"}08) 100%)`,
           }}
         >
+          <div
+            data-slot="tool-card-score"
+            className={cn(
+              "absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full border px-2.5 py-1 sm:right-4 sm:top-4",
+              "border-[var(--tv-accent-gold)]/40 bg-[var(--tv-bg-base)]/90 backdrop-blur-sm",
+              "text-[var(--tv-ink-primary)]",
+            )}
+            aria-label={`Punteggio editoriale ${cardScore.value} su 10, ${cardScore.label}`}
+          >
+            <span
+              className="font-[family-name:var(--tv-font-family-display)] text-sm font-black leading-none text-[var(--tv-accent-gold)] sm:text-base"
+              aria-hidden="true"
+            >
+              {cardScore.value.toFixed(1)}
+            </span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--tv-ink-muted-aa)] sm:text-[11px]">
+              {cardScore.label}
+            </span>
+          </div>
           <div className="flex items-start gap-3">
             {glyph}
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 pr-12">
               <div
                 data-slot="tool-card-badges"
                 className="flex min-h-[1.7rem] flex-wrap items-center gap-1.5 sm:min-h-[2rem] sm:gap-2"
               >
                 {badges}
+                {isFeatured ? (
+                  <span
+                    data-slot="tool-card-featured-pill"
+                    className="inline-flex items-center gap-1 rounded-full border border-[var(--tv-accent-primary)]/40 bg-[var(--tv-accent-primary)]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--tv-accent-primary)] sm:text-[11px]"
+                  >
+                    <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[var(--tv-accent-primary)]" />
+                    In evidenza
+                  </span>
+                ) : null}
               </div>
               <div className="mt-2 min-h-[3.8rem] sm:mt-3 sm:min-h-[4.7rem]">
                 <h3
@@ -391,7 +443,7 @@ export function CanonicalToolCard({
         role="article"
         aria-label={tool.name}
         {...stateProps}
-        className={rootClass}
+        className={cn(rootClass, "bg-[var(--tv-surface-raised)] text-[var(--tv-ink-primary)] border-[var(--tv-border-subtle)]")}
       >
         <div className="flex items-start gap-3 p-3.5">
           {glyph}
@@ -400,18 +452,28 @@ export function CanonicalToolCard({
               data-slot="tool-card-topline"
               className="flex items-center justify-between gap-2"
             >
-              <p className={cn(eyebrowClass, "truncate text-[var(--muted-strong)]")}>
+              <p className={cn(eyebrowClass, "truncate text-[var(--tv-ink-muted-aa)]")}>
                 {tool.categoryLabel}
               </p>
-              {levelLabel ? (
-                <Badge variant={levelVariant} className="shrink-0">
-                  {levelLabel}
-                </Badge>
-              ) : null}
+              <div className="flex shrink-0 items-center gap-1.5">
+                {levelLabel ? (
+                  <Badge variant={levelVariant} className="shrink-0">
+                    {levelLabel}
+                  </Badge>
+                ) : null}
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-[var(--tv-accent-gold)]/30 bg-[var(--tv-bg-base)]/60 px-1.5 py-0.5 text-[9px] font-semibold"
+                  aria-label={`Punteggio ${cardScore.value} su 10`}
+                >
+                  <span className="font-[family-name:var(--tv-font-family-display)] text-[10px] font-black leading-none text-[var(--tv-accent-gold)]">
+                    {cardScore.value.toFixed(1)}
+                  </span>
+                </span>
+              </div>
             </div>
             <h3
               data-slot="tool-card-title"
-              className="text-display-card mt-1.5 text-[length:var(--tv-text-md)] font-semibold leading-[var(--tv-leading-heading)] break-words text-card-foreground"
+              className="text-display-card mt-1.5 text-[length:var(--tv-text-md)] font-semibold leading-[var(--tv-leading-heading)] break-words text-[var(--tv-ink-primary)]"
             >
               <Link href={profileHref} className={cn("line-clamp-2", focusRingClass)}>
                 {tool.name}
@@ -420,7 +482,7 @@ export function CanonicalToolCard({
             {description ? (
               <p
                 data-slot="tool-card-description"
-                className="mt-1 line-clamp-3 break-words text-[length:var(--tv-text-sm)] leading-[var(--tv-leading-body)] text-[var(--muted)]"
+                className="mt-1 line-clamp-3 break-words text-[length:var(--tv-text-sm)] leading-[var(--tv-leading-body)] text-[var(--tv-ink-secondary)]"
               >
                 {description}
               </p>
@@ -429,7 +491,7 @@ export function CanonicalToolCard({
         </div>
         <div
           data-slot="tool-card-footer"
-          className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)] px-3.5 py-2.5"
+          className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--tv-border-subtle)] px-3.5 py-2.5"
         >
           <Button
             variant="link"

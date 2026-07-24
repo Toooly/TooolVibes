@@ -93,7 +93,9 @@ export function MobileCatalogView({
         >
           <div className="catalog-discovery__copy">
             <p className="catalog-discovery__eyebrow">Directory editoriale</p>
-            <h1 id="catalog-title">Il catalogo, senza il caos.</h1>
+            <h1 id="catalog-title">
+              Il catalogo, <span className="catalog-discovery__highlight">senza il caos.</span>
+            </h1>
             <p>
               Parti da un obiettivo oppure cerca direttamente. Ogni profilo è
               selezionato per aiutarti a decidere, non per riempire una lista.
