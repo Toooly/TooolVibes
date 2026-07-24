@@ -301,7 +301,6 @@ export function CanonicalToolCard({
                 data-slot="tool-card-badges"
                 className="flex min-h-[1.7rem] flex-wrap items-center gap-1.5 sm:min-h-[2rem] sm:gap-2"
               >
-                {badges}
                 {isFeatured ? (
                   <span
                     data-slot="tool-card-featured-pill"
@@ -310,7 +309,9 @@ export function CanonicalToolCard({
                     <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[var(--tv-accent-primary)]" />
                     In evidenza
                   </span>
-                ) : null}
+                ) : (
+                  badges
+                )}
               </div>
               <div className="mt-2 min-h-[3.8rem] sm:mt-3 sm:min-h-[4.7rem]">
                 <h3

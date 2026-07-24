@@ -278,6 +278,104 @@
   box-shadow: var(--tv-elevation-rest);
 }
 
+/* Hero score panel (Mockup 3 — Score TooolVibes block top-right). */
+.tool-detail-score-panel {
+  position: relative;
+  display: grid;
+  gap: var(--tv-space-3);
+  padding: var(--tv-space-5);
+  margin-bottom: var(--tv-space-4);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 36%, var(--tv-border-subtle));
+  border-radius: var(--tv-radius-feature);
+  background:
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--tv-accent-gold) 22%, transparent), transparent 60%),
+    linear-gradient(180deg, color-mix(in srgb, var(--tv-surface-elevated) 92%, var(--tv-accent-gold) 8%), var(--tv-surface-raised));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 18%, transparent);
+}
+.tool-detail-score-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-space-2);
+}
+.tool-detail-score-panel__kicker {
+  color: var(--tv-accent-gold);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+.tool-detail-score-panel__label {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tv-accent-gold) 20%, transparent);
+  color: var(--tv-accent-gold);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tool-detail-score-panel__value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.tool-detail-score-panel__number {
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(2.6rem, 5.4vw, 4.2rem);
+  font-weight: var(--tv-weight-black);
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--tv-ink-primary);
+}
+.tool-detail-score-panel__denominator {
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-family-display);
+  font-size: 1rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: 0;
+}
+.tool-detail-score-panel__bar {
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--tv-surface-elevated);
+  overflow: hidden;
+}
+.tool-detail-score-panel__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--tv-accent-cyan), var(--tv-accent-gold));
+}
+.tool-detail-score-panel__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--tv-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--tv-border-subtle);
+  padding-top: var(--tv-space-3);
+}
+.tool-detail-score-panel__metrics li {
+  display: grid;
+  gap: 0.2rem;
+}
+.tool-detail-score-panel__metric-label {
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.tool-detail-score-panel__metric-value {
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: 0.95rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: -0.01em;
+}
+
 .tool-detail-profile-panel {
   padding: var(--tv-space-5, 1.25rem);
   border: 1px solid var(--tv-border-subtle);
