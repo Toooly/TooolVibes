@@ -1328,6 +1328,63 @@ Path: `audits/definitive-rebuild/archive-v4/`
 
 None observed in auto-inspection. Manual visual review pending.
 
+### Stabilization iteration (2026-07-24, after user feedback round 2)
+
+User verdict: **DIRECTION ACCEPTED, EXECUTION NOT YET APPROVED.**
+7 specific defects identified and fixed:
+
+1. **Mobile promoted card broken** (Blink → "BL..." truncation)
+   - **Fix**: New mobile promoted anatomy (stacked layout). Top row uses
+     grid `avatar | identity | (dedicated status row below)`. Name
+     `white-space: normal; overflow: visible;` on mobile. Category
+     `-webkit-line-clamp: 2; overflow-wrap: break-word; word-break: normal;`
+     to prevent vertical word fragmentation.
+2. **Decision Desk semantic confusion** (3 simultaneous winners)
+   - **Fix**: New 3-tier promoted grammar via `promotedTier` prop:
+     - `primary` (Blink): gold border + "Tool della settimana" + gold pill
+     - `secondary` (VibeCode): cyan border + "In evidenza" + cyan pill
+     - `tertiary` (WeWeb): restrained violet + "Selezione editoriale" + violet pill
+3. **Immediate content duplication** (Blink/VibeCode/WeWeb in ivory AND grid)
+   - **Fix**: Promoted tools hidden from default catalog grid. New toggle
+     "Mostra anche i 7 tool in evidenza" reveals them on demand.
+4. **Tablet 768 too compressed** (miniaturized desktop)
+   - **Fix**: New custom responsive bands:
+     - 360-767: 1-col compact
+     - 768-819: 1-col wide
+     - 820-1179: 2-col spacious
+     - 1180+: 3-col desktop
+5. **Mobile filters too crowded** (22 chips, no hierarchy)
+   - **Fix**: New mobile filter experience: `Filtri` button with active count
+     + bottom sheet (`<dialog>`) with category/level sections, search,
+     reset, apply. Desktop chip rail stays for ≥768.
+6. **Tray evidence invalid** (showed footer not tray)
+   - **Fix**: Recaptured tray states by scrolling to GRID MIDDLE (where
+     tray is visible over content, not at page bottom where footer is).
+7. **Mobile too long (11,670px)** (30 cards as endless scroll)
+   - **Fix**: Progressive disclosure: initial 12 cards + "Mostra altri"
+     button (12 per click). Mobile height reduced 11,670 → 7,048px.
+   - 12-of-23 visible initially (7 promoted hidden, 23 = 30 - 7 promoted).
+
+Additional fixes:
+- **Bottom nav padding**: `ar4-shell` padding-bottom set to 196px on
+  mobile (76px bottom nav + 120px tray + buffer), 160px tablet, 0 desktop
+- **Saved state visual**: cyan border + `[data-saved]` attribute
+- **Focus-visible state**: visible violet outline on focusable elements
+- **Card states**: 6 explicit states (default/hover/focus/saved/selected/promoted)
+  with distinct border + background + semantic label, not just glow
+
+Evidence: `audits/definitive-rebuild/archive-v4-stabilized/`
+- 28 raw screenshots (full required list: 7 desktop, 5 tablet, 10 mobile, 6 card states)
+- 6 review boards (desktop, mobile, tablet, card-states, tray-states, progressive)
+- PIL image compositing (no HTML, no file://, no broken panels)
+
+Production snapshot (stabilization):
+- **HEAD:** `1e6264e fix(archivio): 'Apri scheda' CTA 12px → 13px + accept doc`
+- **Latest Version ID:** `b11716e6-217b-489e-ba5a-54673e5925d2`
+- **Production URL:** https://tooolvibes.square-shape-3527.workers.dev/archivio
+- **Status:** ARCHIVE V4 — DIRECTION ACCEPTED, STABILIZATION ACTIVE.
+  AWAITING USER VISUAL ACCEPTANCE.
+
 ### Board integrity (2026-07-24, re-issued after HTML+file:// embedding failure)
 
 The first iteration of the 5 review boards used a Playwright HTML

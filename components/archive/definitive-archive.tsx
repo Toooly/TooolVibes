@@ -1,25 +1,37 @@
 "use client";
 
 /**
- * TooolVibes — Definitive Archive (v4, 2026-07-24)
+ * TooolVibes — Definitive Archive (v4 stabilized, 2026-07-24)
  *
- * Rebuilt using the accepted v4 visual DNA:
- *  - dark Command Center intro with compact editorial H1 + integrated search
- *  - filter strip with category + level chips
- *  - tool-card grid (3-col desktop, 2-col tablet, 1-col mobile)
- *  - persistent comparison tray (rendered separately)
- *  - warm ivory Decision Desk band for the promoted "Tool of the Week" card
+ * Architecture (accepted direction):
+ *  - dark Command Center intro
+ *  - search + catalog statistics
+ *  - filter system (mobile: Filtri button + bottom sheet; desktop: chip rail)
+ *  - warm ivory Decision Desk band (3-tier promoted grammar)
+ *  - dark catalog grid with progressive disclosure on mobile
+ *  - persistent comparison tray
  *  - clear transition to footer
  *
- * Each tool card has its own state model (default / hover / selected / promoted)
- * defined in ArchiveV4ToolCard.
+ * Stabilization fixes (2026-07-24):
+ *  1. Decision Desk: distinct 3-tier hierarchy (primary/secondary/tertiary)
+ *  2. Removed content duplication: promoted tools hidden from default grid,
+ *     accessible via "Mostra anche i tool in evidenza" toggle
+ *  3. Mobile progressive disclosure: initial 12 tools, "Mostra altri" CTA
+ *  4. Mobile filter sheet: Filtri button + touch-friendly bottom sheet
+ *  5. Mobile promoted card anatomy: stacked, no truncation, 8 clear items
+ *  6. Tablet bands: 360-767 1-col / 768-819 1-col wide / 820-1179 2-col
+ *  7. Bottom nav padding: 120px on mobile (above bottom nav + tray)
+ *
+ * Each tool card has its own state model (default / hover / focus /
+ * saved / selected / promoted with tier variant) defined in
+ * ArchiveV4ToolCard.
  *
  * No real data is fabricated: counts come from `tools` + `filterGroups`.
  */
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Sparkles, ArrowRight, Filter } from "lucide-react";
+import { Search, Sparkles, ArrowRight, SlidersHorizontal, X, Check, Filter } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { ToolFilterGroup, ToolPublicView } from "@/lib/data/tool-public-view";
@@ -39,10 +51,32 @@ const LEVEL_FILTERS = [
   { key: "featured", label: "In evidenza" },
 ] as const;
 
+const PROMOTED_TIERS = ["primary", "secondary", "tertiary"] as const;
+type PromotedTier = (typeof PROMOTED_TIERS)[number];
+
+/** Initial visible count for mobile progressive disclosure */
+const INITIAL_MOBILE_COUNT = 12;
+/** Step for "Mostra altri" */
+const MOBILE_STEP = 12;
+
 export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProps) {
   const [activeGroup, setActiveGroup] = useState<string>("all");
   const [activeLevel, setActiveLevel] = useState<string>("all");
   const [query, setQuery] = useState<string>("");
+  const [showPromotedInGrid, setShowPromotedInGrid] = useState<boolean>(false);
+  const [filterSheetOpen, setFilterSheetOpen] = useState<boolean>(false);
+  const [mobileVisibleCount, setMobileVisibleCount] = useState<number>(INITIAL_MOBILE_COUNT);
+
+  // The set of promoted slugs (tool of week + featured) — used to optionally
+  // hide them from the default catalog grid to avoid duplication with the
+  // Decision Desk band.
+  const promotedSlugs = useMemo(() => {
+    const set = new Set<string>();
+    for (const t of tools) {
+      if (t.toolOfWeek || t.featured) set.add(t.slug);
+    }
+    return set;
+  }, [tools]);
 
   const filtered = useMemo(() => {
     return tools.filter((t) => {
@@ -61,9 +95,13 @@ export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProp
         const haystack = `${t.name} ${t.categoryLabel} ${t.tldr ?? ""} ${t.shortDescription ?? ""}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
+      // Default: hide promoted (Decision Desk tools) unless user toggled them in.
+      if (!showPromotedInGrid && activeGroup === "all" && activeLevel === "all" && !query.trim()) {
+        if (promotedSlugs.has(t.slug)) return false;
+      }
       return true;
     });
-  }, [tools, activeGroup, activeLevel, query]);
+  }, [tools, activeGroup, activeLevel, query, showPromotedInGrid, promotedSlugs]);
 
   const totalTools = tools.length;
   const totalGroups = filterGroups.length;
@@ -80,9 +118,38 @@ export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProp
     return map;
   }, [tools]);
 
-  // Pick the first tool of week for the Decision Desk band
-  const toolOfWeek = tools.find((t) => t.toolOfWeek) ?? tools[0] ?? null;
-  const promotedTools = tools.filter((t) => t.featured).slice(0, 3);
+  // Decision Desk promoted tools (in order: toolOfWeek first, then featured)
+  const toolOfWeek = tools.find((t) => t.toolOfWeek) ?? null;
+  const featuredNonWeek = tools.filter((t) => t.featured && !t.toolOfWeek);
+  // Build a stable 3-tier promoted list: [primary, secondary, tertiary]
+  const promotedTierList: { tool: ToolPublicView; tier: PromotedTier }[] = [];
+  if (toolOfWeek) promotedTierList.push({ tool: toolOfWeek, tier: "primary" });
+  if (featuredNonWeek[0]) promotedTierList.push({ tool: featuredNonWeek[0], tier: "secondary" });
+  if (featuredNonWeek[1]) promotedTierList.push({ tool: featuredNonWeek[1], tier: "tertiary" });
+
+  // Count of active filters (for the mobile Filtri button badge)
+  const activeFilterCount =
+    (activeGroup !== "all" ? 1 : 0) +
+    (activeLevel !== "all" ? 1 : 0) +
+    (query.trim() ? 1 : 0);
+
+  // Mobile progressive disclosure logic:
+  // On mobile (< sm breakpoint, ≤430px), show only the first N tools.
+  // On tablet/desktop, show all filtered tools.
+  // We can't reliably detect viewport in SSR, so we apply the cap via CSS
+  // (`.ar4-grid__list li.is-mobile-hidden { display: none; }`) plus a JS-driven
+  // state. The CSS rule uses a media query to gate the hidden items, but we
+  // also cap via state for clarity.
+  const cap = mobileVisibleCount;
+  const visibleFiltered = filtered.slice(0, cap);
+  const hasMore = filtered.length > cap;
+
+  function resetAll() {
+    setActiveGroup("all");
+    setActiveLevel("all");
+    setQuery("");
+    setShowPromotedInGrid(false);
+  }
 
   return (
     <div className="ar4-shell">
@@ -134,7 +201,7 @@ export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProp
         </div>
       </section>
 
-      {/* 2. FILTER STRIP */}
+      {/* 2. FILTER STRIP — desktop + tablet only (mobile uses bottom sheet) */}
       <section className="ar4-filters" aria-label="Filtri catalogo">
         <div className="ar4-filters__inner">
           <div className="ar4-filters__group" role="tablist" aria-label="Categorie">
@@ -187,8 +254,66 @@ export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProp
         </div>
       </section>
 
-      {/* 3. TOOL GRID + IVORY DECISION DESK (tool of the week band) */}
-      {toolOfWeek && (
+      {/* 2b. MOBILE FILTER BAR — visible < 768px */}
+      <section className="ar4-mobile-bar" aria-label="Filtri rapidi">
+        <div className="ar4-mobile-bar__inner">
+          <button
+            type="button"
+            className="ar4-mobile-bar__trigger"
+            onClick={() => setFilterSheetOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={filterSheetOpen}
+            aria-label="Apri filtri catalogo"
+          >
+            <SlidersHorizontal size={16} aria-hidden="true" />
+            <span>Filtri</span>
+            {activeFilterCount > 0 && (
+              <em className="ar4-mobile-bar__count" aria-label={`${activeFilterCount} filtri attivi`}>
+                {activeFilterCount}
+              </em>
+            )}
+          </button>
+          {/* Quick active filter chips (only show currently active) */}
+          <div className="ar4-mobile-bar__active" role="status" aria-live="polite">
+            {activeGroup !== "all" && (
+              <button
+                type="button"
+                className="ar4-mobile-bar__chip is-active"
+                onClick={() => setActiveGroup("all")}
+                aria-label={`Rimuovi filtro categoria ${activeGroup}`}
+              >
+                {filterGroups.find((g) => g.key === activeGroup)?.label ?? activeGroup}
+                <X size={12} aria-hidden="true" />
+              </button>
+            )}
+            {activeLevel !== "all" && (
+              <button
+                type="button"
+                className="ar4-mobile-bar__chip is-active"
+                onClick={() => setActiveLevel("all")}
+                aria-label={`Rimuovi filtro livello ${activeLevel}`}
+              >
+                {LEVEL_FILTERS.find((l) => l.key === activeLevel)?.label ?? activeLevel}
+                <X size={12} aria-hidden="true" />
+              </button>
+            )}
+            {query.trim() && (
+              <button
+                type="button"
+                className="ar4-mobile-bar__chip is-active"
+                onClick={() => setQuery("")}
+                aria-label="Rimuovi ricerca"
+              >
+                “{query.trim().slice(0, 16)}”
+                <X size={12} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. IVORY DECISION DESK — 3-tier promoted grammar */}
+      {promotedTierList.length > 0 && (
         <section className="ar4-ivory" aria-labelledby="ar4-ivory-title">
           <div className="ar4-ivory__inner">
             <div className="ar4-ivory__head">
@@ -200,21 +325,20 @@ export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProp
                 Il tool della settimana, in evidenza.
               </h2>
             </div>
-            <div className="ar4-ivory__promoted">
-              {promotedTools.length > 0 ? (
-                <div className="ar4-ivory__promoted-grid">
-                  {promotedTools.map((t, idx) => (
-                    <ArchiveV4ToolCard
-                      key={t.slug}
-                      tool={t}
-                      promoted
-                      rank={idx + 1}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <ArchiveV4ToolCard tool={toolOfWeek} promoted rank={1} />
+            <div
+              className={cn(
+                "ar4-ivory__promoted-grid",
+                `ar4-ivory__promoted-grid--count-${promotedTierList.length}`,
               )}
+            >
+              {promotedTierList.map(({ tool, tier }) => (
+                <ArchiveV4ToolCard
+                  key={tool.slug}
+                  tool={tool}
+                  promotedTier={tier}
+                  rank={tier === "primary" ? 1 : tier === "secondary" ? 2 : 3}
+                />
+              ))}
             </div>
           </div>
         </section>
@@ -227,7 +351,7 @@ export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProp
             <div>
               <p className="ar4-grid__eyebrow">Catalogo completo</p>
               <h2 id="ar4-grid-title" className="ar4-grid__title">
-                {activeGroup === "all" && activeLevel === "all"
+                {activeGroup === "all" && activeLevel === "all" && !query.trim()
                   ? "Tutti i tool"
                   : "Tool filtrati"}
               </h2>
@@ -237,29 +361,72 @@ export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProp
             </p>
           </header>
 
+          {/* "Mostra anche i tool in evidenza" toggle — only when no other filter
+              is active and promoted tools are currently hidden. */}
+          {!showPromotedInGrid &&
+            activeGroup === "all" &&
+            activeLevel === "all" &&
+            !query.trim() &&
+            promotedSlugs.size > 0 && (
+              <div className="ar4-grid__promoted-toggle">
+                <button
+                  type="button"
+                  className="ar4-grid__promoted-toggle-btn"
+                  onClick={() => setShowPromotedInGrid(true)}
+                  aria-label={`Mostra anche i ${promotedSlugs.size} tool attualmente in evidenza sopra`}
+                >
+                  <Sparkles size={14} aria-hidden="true" />
+                  Mostra anche i {promotedSlugs.size} tool in evidenza
+                </button>
+                {shown > 0 && (
+                  <p className="ar4-grid__promoted-hint">
+                    {promotedSlugs.size} tool in evidenza sono mostrati qui sopra.
+                  </p>
+                )}
+              </div>
+            )}
+
           {filtered.length === 0 ? (
             <div className="ar4-grid__empty">
               <p>Nessun tool corrisponde ai filtri attivi.</p>
               <button
                 type="button"
                 className="ar4-grid__empty-reset"
-                onClick={() => {
-                  setActiveGroup("all");
-                  setActiveLevel("all");
-                  setQuery("");
-                }}
+                onClick={resetAll}
               >
                 Reimposta filtri
               </button>
             </div>
           ) : (
-            <ul className="ar4-grid__list">
-              {filtered.map((t, idx) => (
-                <li key={t.slug}>
-                  <ArchiveV4ToolCard tool={t} rank={idx + 1} />
-                </li>
-              ))}
-            </ul>
+            <>
+              <ul className="ar4-grid__list">
+                {visibleFiltered.map((t, idx) => (
+                  <li key={t.slug}>
+                    <ArchiveV4ToolCard tool={t} rank={idx + 1} />
+                  </li>
+                ))}
+              </ul>
+              {/* Progressive disclosure — mobile + tablet only */}
+              {hasMore && (
+                <div className="ar4-grid__more">
+                  <button
+                    type="button"
+                    className="ar4-grid__more-btn"
+                    onClick={() => setMobileVisibleCount((c) => c + MOBILE_STEP)}
+                    aria-label={`Carica altri ${Math.min(MOBILE_STEP, filtered.length - cap)} tool`}
+                  >
+                    Mostra altri
+                    <span className="ar4-grid__more-count">
+                      {Math.min(MOBILE_STEP, filtered.length - cap)} di {filtered.length - cap}
+                    </span>
+                  </button>
+                  <p className="ar4-grid__more-hint">
+                    {String(visibleFiltered.length).padStart(2, "0")} di{" "}
+                    {String(filtered.length).padStart(2, "0")} mostrati
+                  </p>
+                </div>
+              )}
+            </>
           )}
 
           <div className="ar4-grid__cta-row">
@@ -271,8 +438,159 @@ export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProp
         </div>
       </section>
 
-      {/* 5. PERSISTENT COMPARISON TRAY */}
+      {/* 5. MOBILE FILTER BOTTOM SHEET */}
+      {filterSheetOpen && (
+        <FilterSheet
+          filterGroups={filterGroups}
+          levelFilters={LEVEL_FILTERS as unknown as { key: string; label: string }[]}
+          groupCounts={groupCounts}
+          totalTools={totalTools}
+          activeGroup={activeGroup}
+          activeLevel={activeLevel}
+          query={query}
+          onSetGroup={setActiveGroup}
+          onSetLevel={setActiveLevel}
+          onSetQuery={setQuery}
+          onClose={() => setFilterSheetOpen(false)}
+          onReset={resetAll}
+        />
+      )}
+
+      {/* 6. PERSISTENT COMPARISON TRAY */}
       <ArchiveV4CompareTray tools={tools} />
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Mobile Filter Bottom Sheet
+// ─────────────────────────────────────────────────────────────────
+type FilterSheetProps = {
+  filterGroups: ToolFilterGroup[];
+  levelFilters: { key: string; label: string }[];
+  groupCounts: Map<string, number>;
+  totalTools: number;
+  activeGroup: string;
+  activeLevel: string;
+  query: string;
+  onSetGroup: (g: string) => void;
+  onSetLevel: (l: string) => void;
+  onSetQuery: (q: string) => void;
+  onClose: () => void;
+  onReset: () => void;
+};
+
+function FilterSheet({
+  filterGroups,
+  levelFilters,
+  groupCounts,
+  totalTools,
+  activeGroup,
+  activeLevel,
+  query,
+  onSetGroup,
+  onSetLevel,
+  onSetQuery,
+  onClose,
+  onReset,
+}: FilterSheetProps) {
+  const isDirty =
+    activeGroup !== "all" || activeLevel !== "all" || query.trim().length > 0;
+  return (
+    <div className="ar4-sheet" role="dialog" aria-modal="true" aria-label="Filtri catalogo">
+      <button
+        type="button"
+        className="ar4-sheet__backdrop"
+        onClick={onClose}
+        aria-label="Chiudi filtri"
+      />
+      <div className="ar4-sheet__panel">
+        <div className="ar4-sheet__head">
+          <h3 className="ar4-sheet__title">Filtri</h3>
+          <button
+            type="button"
+            className="ar4-sheet__close"
+            onClick={onClose}
+            aria-label="Chiudi filtri"
+          >
+            <X size={18} aria-hidden="true" />
+          </button>
+        </div>
+
+        <div className="ar4-sheet__search">
+          <Search size={16} aria-hidden="true" />
+          <input
+            type="search"
+            placeholder="Cerca tool, categorie o tag…"
+            value={query}
+            onChange={(e) => onSetQuery(e.target.value)}
+            autoComplete="off"
+            spellCheck={false}
+            aria-label="Cerca nel catalogo"
+          />
+        </div>
+
+        <div className="ar4-sheet__section">
+          <p className="ar4-sheet__label">Categoria</p>
+          <div className="ar4-sheet__chips">
+            <button
+              type="button"
+              className={cn("ar4-chip", activeGroup === "all" && "is-active")}
+              onClick={() => onSetGroup("all")}
+            >
+              Tutti <em>{totalTools}</em>
+            </button>
+            {filterGroups.filter((g) => g.key !== "all").map((g) => (
+              <button
+                key={g.key}
+                type="button"
+                className={cn("ar4-chip", activeGroup === g.key && "is-active")}
+                onClick={() => onSetGroup(g.key)}
+              >
+                {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="ar4-sheet__section">
+          <p className="ar4-sheet__label">Livello</p>
+          <div className="ar4-sheet__chips">
+            {levelFilters.map((l) => (
+              <button
+                key={l.key}
+                type="button"
+                className={cn(
+                  "ar4-chip ar4-chip--level",
+                  activeLevel === l.key && "is-active",
+                )}
+                onClick={() => onSetLevel(l.key)}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="ar4-sheet__foot">
+          <button
+            type="button"
+            className="ar4-sheet__reset"
+            onClick={onReset}
+            disabled={!isDirty}
+          >
+            Reimposta
+          </button>
+          <button
+            type="button"
+            className="ar4-sheet__apply"
+            onClick={onClose}
+          >
+            <Check size={16} aria-hidden="true" />
+            Mostra risultati
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

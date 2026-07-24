@@ -1,18 +1,30 @@
-/* TooolVibes — Archive V4 (2026-07-24)
+/* TooolVibes — Archive V4 (2026-07-24, stabilized)
  *
  * Definitive archive composition using the v4 DNA:
  *  - dark Command Center (intro + filter + grid)
- *  - warm ivory Decision Desk (promoted/featured band)
+ *  - warm ivory Decision Desk (3-tier promoted grammar)
  *  - persistent comparison tray
- *  - 4-state tool card (default / hover / selected / promoted)
+ *  - 6-state tool card (default / hover / focus / saved / selected / promoted)
+ *  - mobile-first responsive bands (NOT Tailwind defaults)
+ *  - progressive disclosure on mobile (12 initial + Mostra altri)
+ *  - mobile filter bottom sheet
  *
- * Responsive bands (custom, NOT Tailwind defaults):
- *   xs  < 430    compact mobile
- *   sm  430-767  spacious mobile
- *   md  768-899  tablet
- *   lg  900-1179 large tablet / laptop
- *   xl  1180-1439 compact desktop
- *   2xl >=1440    full desktop
+ * Responsive bands (v4 stabilized, mobile-first):
+ *   <430      compact mobile (1-col cards, stacked promoted anatomy)
+ *   430-767   spacious mobile (1-col cards, stacked promoted anatomy)
+ *   768-819   tablet narrow (1-col wide cards)
+ *   820-1023  tablet standard (2-col cards, controlled metadata)
+ *   1024-1179 large tablet (2-col spacious, 3-col if computed fits)
+ *   1180-1439 compact desktop (3-col)
+ *   >=1440    full desktop (3-col, 4-col NEVER forced)
+ *
+ * Mobile promoted card rules (stabilized):
+ *  - full tool name (no truncation, allow word-wrap)
+ *  - category max 2 lines, no vertical word fragmentation
+ *  - dedicated status row below title (no badge collision)
+ *  - description min 14px
+ *  - CTA "Apri scheda" min 13px / 44px height
+ *  - save + compare controls 44×44px
  */
 
 .ar4-shell {
@@ -651,6 +663,17 @@
 
 .ar4-card__name-link:hover { color: var(--tv-accent-primary); }
 
+/* Mobile: name MUST NOT truncate (Blink → "BL..." regression fix). */
+@media (max-width: 767px) {
+  .ar4-card__name-link {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+}
+
 .ar4-card__category {
   font-family: var(--tv-font-mono, ui-monospace);
   font-size: 12px;
@@ -1040,3 +1063,749 @@
     transition: none;
   }
 }
+
+/* ============================================================
+   7. STABILIZED v4 — 3-TIER PROMOTED GRAMMAR (added 2026-07-24)
+   ============================================================ */
+
+/* Default promoted (back-compat) = primary tier */
+.ar4-card.is-promoted {
+  border-color: var(--tv-accent-gold);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-gold) 8%, var(--tv-bg-base)) 0%, var(--tv-bg-base) 60%);
+}
+
+/* Tier: primary (Blink — gold, "Tool della settimana") */
+.ar4-card.is-tier-primary {
+  border-color: var(--tv-accent-gold);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-gold) 10%, var(--tv-bg-base)) 0%, var(--tv-bg-base) 60%),
+    radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--tv-accent-gold) 8%, transparent) 0%, transparent 40%);
+}
+
+/* Tier: secondary (VibeCode — cyan, "In evidenza") */
+.ar4-card.is-tier-secondary {
+  border-color: color-mix(in srgb, var(--tv-accent-cyan) 70%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-cyan) 7%, var(--tv-bg-base)) 0%, var(--tv-bg-base) 60%);
+}
+
+/* Tier: tertiary (WeWeb — restrained violet/neutral, "Selezione editoriale") */
+.ar4-card.is-tier-tertiary {
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 40%, transparent);
+  background: var(--tv-bg-base);
+}
+
+/* Dedicated promoted status row (own line, no title collision) */
+.ar4-card__promoted-status {
+  display: none; /* shown only when promoted */
+}
+
+.ar4-card.is-promoted .ar4-card__promoted-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ar4-card__tier-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-family: var(--tv-font-mono, ui-monospace);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.ar4-card__tier-pill--primary {
+  background: var(--tv-accent-gold);
+  color: var(--tv-bg-base);
+}
+
+.ar4-card__tier-pill--secondary {
+  background: color-mix(in srgb, var(--tv-accent-cyan) 18%, transparent);
+  color: var(--tv-accent-cyan);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 30%, transparent);
+}
+
+.ar4-card__tier-pill--tertiary {
+  background: color-mix(in srgb, var(--tv-accent-primary) 14%, transparent);
+  color: var(--tv-accent-primary);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 30%, transparent);
+}
+
+/* Ribbon variant per tier */
+.ar4-card__ribbon--primary {
+  background: var(--tv-accent-gold);
+  color: var(--tv-bg-base);
+  box-shadow: 0 6px 12px -4px color-mix(in srgb, var(--tv-accent-gold) 60%, transparent);
+}
+
+.ar4-card__ribbon--secondary {
+  background: color-mix(in srgb, var(--tv-accent-cyan) 16%, var(--tv-bg-base));
+  color: var(--tv-accent-cyan);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 40%, transparent);
+  box-shadow: 0 6px 12px -4px color-mix(in srgb, var(--tv-accent-cyan) 30%, transparent);
+}
+
+.ar4-card__ribbon--tertiary {
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 30%, transparent);
+  box-shadow: 0 6px 12px -4px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================================
+   8. STABILIZED v4 — MOBILE PROMOTED CARD (stacked anatomy)
+   ============================================================
+   On mobile, promoted cards use a stacked layout:
+     1. icon + (name) — name wraps on its own line if needed
+     2. category — ≤2 lines, no word fragmentation
+     3. dedicated status row (tier pill)
+     4. description
+     5. metrics row (level + score + votes)
+     6. action row (Apri + Save + Compare 44×44)
+   The top-row status pill is hidden on mobile (the dedicated row takes over).
+*/
+@media (max-width: 767px) {
+  .ar4-card.is-promoted {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .ar4-card.is-promoted .ar4-card__top {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    grid-template-areas:
+      "avatar name"
+      "avatar category";
+    align-items: start;
+    gap: 8px 14px;
+  }
+
+  .ar4-card.is-promoted .ar4-card__avatar {
+    grid-area: avatar;
+    width: 56px;
+    height: 56px;
+  }
+
+  .ar4-card.is-promoted .ar4-card__identity {
+    grid-area: name;
+    min-width: 0;
+  }
+
+  .ar4-card.is-promoted .ar4-card__category {
+    grid-area: category;
+    font-size: 12px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+    /* No vertical word fragmentation */
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  /* Hide the top-row status pill on mobile for promoted cards */
+  .ar4-card.is-promoted > .ar4-card__top > .ar4-card__status {
+    display: none;
+  }
+
+  /* Name on mobile: 17px min, no truncation */
+  .ar4-card.is-promoted .ar4-card__name {
+    font-size: 18px;
+    line-height: 1.15;
+    white-space: normal;
+  }
+  .ar4-card.is-promoted .ar4-card__name-link {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  /* Description: 14px floor */
+  .ar4-card.is-promoted .ar4-card__desc {
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-line-clamp: 3;
+  }
+
+  /* Actions row: 44h CTA + 44×44 toggles */
+  .ar4-card.is-promoted .ar4-card__actions {
+    flex-wrap: wrap;
+  }
+  .ar4-card.is-promoted .ar4-card__open {
+    min-height: 44px;
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+  .ar4-card.is-promoted .ar4-card__toggles > * {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* ============================================================
+   9. STABILIZED v4 — MOBILE STANDARD CARD refinements
+   ============================================================ */
+@media (max-width: 767px) {
+  .ar4-card:not(.is-promoted) {
+    padding: 16px;
+    gap: 12px;
+  }
+  .ar4-card:not(.is-promoted) .ar4-card__top {
+    grid-template-columns: 44px 1fr auto;
+    gap: 10px;
+  }
+  .ar4-card:not(.is-promoted) .ar4-card__avatar {
+    width: 44px;
+    height: 44px;
+  }
+  .ar4-card:not(.is-promoted) .ar4-card__name {
+    font-size: 17px;
+    line-height: 1.15;
+  }
+  .ar4-card:not(.is-promoted) .ar4-card__name-link {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+  .ar4-card:not(.is-promoted) .ar4-card__category {
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 2px 0 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+  .ar4-card:not(.is-promoted) .ar4-card__status {
+    font-size: 10px;
+    padding: 3px 7px;
+    letter-spacing: 0.1em;
+  }
+  .ar4-card:not(.is-promoted) .ar4-card__desc {
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-line-clamp: 3;
+  }
+  .ar4-card:not(.is-promoted) .ar4-card__open {
+    min-height: 44px;
+    font-size: 13px;
+  }
+  .ar4-card:not(.is-promoted) .ar4-card__toggles > * {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* ============================================================
+   10. STABILIZED v4 — 6-STATE CARD GRAMMAR
+   ============================================================ */
+
+/* Focus-visible: visible outline, not just hover */
+.ar4-card:focus-visible,
+.ar4-card a:focus-visible,
+.ar4-card button:focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 3px;
+  border-radius: 16px;
+}
+
+/* Saved state: cyan border + saved-flag color (in addition to is-saved badge) */
+.ar4-card[data-saved] {
+  border-color: color-mix(in srgb, var(--tv-accent-cyan) 50%, transparent);
+}
+
+.ar4-card[data-saved]:not(.is-promoted) {
+  background: color-mix(in srgb, var(--tv-accent-cyan) 4%, var(--tv-bg-base));
+}
+
+/* Selected (compare) state — already defined; ensure no glow-only reliance */
+.ar4-card.is-selected {
+  border-color: var(--tv-accent-primary);
+  background: color-mix(in srgb, var(--tv-accent-primary) 8%, var(--tv-bg-base));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 30%, transparent),
+    0 12px 32px -16px color-mix(in srgb, var(--tv-accent-primary) 50%, transparent);
+}
+
+.ar4-card.is-selected .ar4-card__rank {
+  background: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+}
+
+/* ============================================================
+   11. STABILIZED v4 — RESPONSIVE GRID (mobile-first)
+   ============================================================ */
+
+/* Mobile (default): 1-col */
+.ar4-grid__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ar4-ivory__promoted-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tablet narrow 768-819: 1-col wide cards */
+@media (min-width: 768px) and (max-width: 819px) {
+  .ar4-grid__list { grid-template-columns: 1fr; gap: 18px; }
+  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
+}
+
+/* Tablet standard 820-1023: 2-col */
+@media (min-width: 820px) and (max-width: 1023px) {
+  .ar4-grid__list { grid-template-columns: 1fr 1fr; gap: 18px; }
+  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
+}
+
+/* Large tablet 1024-1179: 2-col spacious (or 3-col only if computed fits) */
+@media (min-width: 1024px) and (max-width: 1179px) {
+  .ar4-grid__list { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+}
+
+/* Compact desktop 1180-1439: 3-col */
+@media (min-width: 1180px) and (max-width: 1439px) {
+  .ar4-grid__list { grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+}
+
+/* Full desktop ≥1440: 3-col (4-col NEVER forced) */
+@media (min-width: 1440px) {
+  .ar4-grid__list { grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+}
+
+/* Tablet card anatomy — controlled metadata, not miniaturized */
+@media (min-width: 768px) and (max-width: 1179px) {
+  .ar4-card {
+    padding: 16px;
+    gap: 10px;
+  }
+  .ar4-card__name { font-size: 17px; }
+  .ar4-card__category { font-size: 12px; }
+  .ar4-card__desc { font-size: 14px; -webkit-line-clamp: 2; }
+  .ar4-card__open { font-size: 13px; min-height: 44px; }
+  .ar4-card__toggles > * { width: 44px; height: 44px; }
+  .ar4-card__votes { font-size: 12px; }
+  .ar4-card__score strong { font-size: 22px; }
+}
+
+/* ============================================================
+   12. STABILIZED v4 — MOBILE FILTER BAR
+   ============================================================ */
+.ar4-mobile-bar {
+  display: none; /* shown only on mobile + narrow tablet */
+}
+
+@media (max-width: 767px) {
+  .ar4-mobile-bar {
+    display: block;
+    background: var(--tv-bg-base);
+    border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
+    position: sticky;
+    top: var(--tv-header-height-mobile, 78px);
+    z-index: 20;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 819px) {
+  .ar4-mobile-bar {
+    display: block;
+    background: var(--tv-bg-base);
+    border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
+  }
+}
+
+.ar4-mobile-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.ar4-mobile-bar__inner::-webkit-scrollbar { display: none; }
+
+.ar4-mobile-bar__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  min-height: 44px;
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: 999px;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-mono, ui-monospace);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ar4-mobile-bar__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.ar4-mobile-bar__active {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ar4-mobile-bar__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  min-height: 36px;
+  background: color-mix(in srgb, var(--tv-accent-primary) 14%, var(--tv-bg-base));
+  border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 40%, transparent);
+  border-radius: 999px;
+  color: var(--tv-accent-primary);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+
+.ar4-mobile-bar__chip:hover { background: color-mix(in srgb, var(--tv-accent-primary) 22%, var(--tv-bg-base)); }
+
+/* Hide desktop filter strip on mobile (replaced by mobile-bar + sheet) */
+@media (max-width: 767px) {
+  .ar4-filters { display: none; }
+}
+
+@media (min-width: 768px) and (max-width: 819px) {
+  .ar4-filters { display: none; }
+}
+
+/* ============================================================
+   13. STABILIZED v4 — FILTER BOTTOM SHEET
+   ============================================================ */
+.ar4-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.ar4-sheet__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ar4-sheet__panel {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  background: var(--tv-bg-base);
+  border: 1px solid var(--tv-border-interactive);
+  border-bottom: 0;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: ar4-sheet-in 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ar4-sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.ar4-sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ar4-sheet__title {
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-size: 24px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--tv-ink-primary);
+  margin: 0;
+}
+
+.ar4-sheet__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 999px;
+  color: var(--tv-ink-primary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ar4-sheet__search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  height: 48px;
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: 12px;
+  color: var(--tv-ink-muted-aa);
+}
+
+.ar4-sheet__search input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-size: 15px;
+  color: var(--tv-ink-primary);
+  min-width: 0;
+}
+
+.ar4-sheet__search input::placeholder { color: var(--tv-ink-muted-aa); }
+
+.ar4-sheet__section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ar4-sheet__label {
+  font-family: var(--tv-font-mono, ui-monospace);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--tv-ink-muted-aa);
+  margin: 0;
+}
+
+.ar4-sheet__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ar4-sheet__foot {
+  display: flex;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--tv-border-subtle);
+}
+
+.ar4-sheet__reset,
+.ar4-sheet__apply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  min-height: 48px;
+  border-radius: 12px;
+  font-family: var(--tv-font-mono, ui-monospace);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  border: 1px solid var(--tv-border-interactive);
+  background: transparent;
+  color: var(--tv-ink-primary);
+}
+
+.ar4-sheet__reset:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ar4-sheet__apply {
+  flex: 1.6;
+  background: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+  border-color: var(--tv-accent-primary);
+}
+
+.ar4-sheet__apply:hover { background: color-mix(in srgb, var(--tv-accent-primary) 88%, white 12%); }
+
+/* ============================================================
+   14. STABILIZED v4 — PROGRESSIVE DISCLOSURE + TOGGLE
+   ============================================================ */
+.ar4-grid__more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 12px 0 4px;
+}
+
+.ar4-grid__more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 22px;
+  min-height: 48px;
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: 999px;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-mono, ui-monospace);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.ar4-grid__more-btn:hover {
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-accent-primary);
+}
+
+.ar4-grid__more-count {
+  display: inline-grid;
+  place-items: center;
+  padding: 3px 8px;
+  background: color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
+  color: var(--tv-accent-primary);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.ar4-grid__more-hint {
+  font-family: var(--tv-font-mono, ui-monospace);
+  font-size: 12px;
+  color: var(--tv-ink-muted-aa);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.ar4-grid__promoted-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  padding: 14px 0 0;
+}
+
+.ar4-grid__promoted-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  min-height: 44px;
+  background: color-mix(in srgb, var(--tv-accent-gold) 10%, var(--tv-bg-base));
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 40%, transparent);
+  border-radius: 999px;
+  color: var(--tv-accent-gold);
+  font-family: var(--tv-font-mono, ui-monospace);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ar4-grid__promoted-toggle-btn:hover {
+  background: color-mix(in srgb, var(--tv-accent-gold) 18%, var(--tv-bg-base));
+}
+
+.ar4-grid__promoted-hint {
+  font-family: var(--tv-font-mono, ui-monospace);
+  font-size: 12px;
+  color: var(--tv-ink-muted-aa);
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   15. STABILIZED v4 — BOTTOM NAV / TRAY SPACING
+   ============================================================ */
+/* Mobile: ensure shell has room for both the comparison tray (when shown)
+   AND the mobile bottom navigation, with safe area inset. */
+@media (max-width: 767px) {
+  .ar4-shell {
+    /* bottom-nav (4.75rem = 76px) + tray (max ~120px) + buffer */
+    padding-bottom: 196px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .ar4-shell { padding-bottom: 160px; }
+}
+
+@media (min-width: 1280px) {
+  .ar4-shell { padding-bottom: 0; }
+}
+
+/* When tray is hidden (no compare), the bottom-nav alone is enough */
+@media (max-width: 767px) {
+  .ar4-shell:has(.ar4-tray:not(.is-ready)) {
+    padding-bottom: calc(4.75rem + 12px + env(safe-area-inset-bottom));
+  }
+}
+

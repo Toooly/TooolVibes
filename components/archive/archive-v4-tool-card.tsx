@@ -1,22 +1,41 @@
 "use client";
 
 /**
- * TooolVibes — Archive V4 Tool Card
- * 2026-07-24
+ * TooolVibes — Archive V4 Tool Card (stabilized, 2026-07-24)
  *
- * Definitive tool card anatomy (different from legacy canonical-tool-card):
- *  - 4-state visual model: default / hover / selected (violet) / promoted (gold)
- *  - top row: identity (avatar + name + status pill)
- *  - middle: category + concise description (clamp 2)
- *  - bottom: level badge + score + votes
- *  - actions rail: save + compare toggles
- *  - selected state: violet border + subtle glow + rank tag
- *  - promoted state: gold border + featured ribbon
+ * Mobile-first tool card with two distinct anatomies:
+ *
+ * STANDARD CARD (default + most uses):
+ *   TOP ROW    : avatar + name + status pill
+ *   BODY       : description (clamp 2)
+ *   METRICS    : level + score + votes
+ *   ACTIONS    : Apri scheda (CTA 13px+) + Save + Compare (44×44 each)
+ *
+ * PROMOTED CARD (Blink / VibeCode / WeWeb in ivory band):
+ *   stacked anatomy on mobile to prevent truncation:
+ *   1. icon
+ *   2. full tool name (NEVER truncates)
+ *   3. category (≤2 lines, no vertical word fragmentation)
+ *   4. editorial status (separate row, not competing with title)
+ *   5. description (min 14px)
+ *   6. score + votes
+ *   7. primary action (Apri scheda, 13px+ 44h)
+ *   8. save + compare (44×44 each)
+ *
+ * 3-tier promoted grammar (only ONE per ivory band):
+ *   - primary   (Blink)        — gold "Tool della settimana"
+ *   - secondary (VibeCode)     — cyan "In evidenza"
+ *   - tertiary  (WeWeb)        — restrained violet "Selezione editoriale"
+ *
+ * State grammar (6 explicit states, not just glow):
+ *   default / hover / focus-visible / saved / selected / promoted
+ *   Each distinguished by border, background, semantic label,
+ *   or selected indicator — not subtle shadow alone.
  *
  * Reuses:
- *  - CompareToggle / ShortlistToggle (workspace store)
- *  - ToolPublicView (data contract B14)
- *  - v4 design tokens (--tv-*)
+ *   - CompareToggle / ShortlistToggle (workspace store)
+ *   - ToolPublicView (data contract B14)
+ *   - v4 design tokens (--tv-*)
  */
 
 import Link from "next/link";
@@ -33,8 +52,16 @@ type ArchiveV4ToolCardProps = {
   tool: ToolPublicView;
   /** rank/position 1..n (used for podium-style label on selected state) */
   rank?: number;
-  /** force the "promoted" gold treatment */
+  /** force the "promoted" gold treatment (back-compat alias for tier="primary") */
   promoted?: boolean;
+  /**
+   * Promoted tier — only meaningful in the ivory Decision Desk band.
+   * Defines distinct visual + semantic hierarchy:
+   *   primary   → Blink (gold, "Tool della settimana")
+   *   secondary → VibeCode (cyan, "In evidenza")
+   *   tertiary  → WeWeb (restrained violet, "Selezione editoriale")
+   */
+  promotedTier?: "primary" | "secondary" | "tertiary";
   /** show full actions or compact */
   density?: "comfortable" | "compact";
   className?: string;
@@ -61,10 +88,17 @@ const LEVEL_COLOR: Record<string, string> = {
   featured: "var(--tv-accent-gold)",
 };
 
+const TIER_LABEL: Record<"primary" | "secondary" | "tertiary", string> = {
+  primary: "Tool della settimana",
+  secondary: "In evidenza",
+  tertiary: "Selezione editoriale",
+};
+
 function ArchiveV4ToolCardInner({
   tool,
   rank,
   promoted = false,
+  promotedTier,
   density = "comfortable",
   className,
 }: ArchiveV4ToolCardProps) {
@@ -92,29 +126,47 @@ function ArchiveV4ToolCardInner({
   // Deterministic votes
   const votes = 12 + (tool.name.length * 7) % 80;
 
-  // Status (in_evidenza / nuovo / base) — derive from tool
+  // Resolve effective promoted treatment: tier > boolean
+  const effectiveTier: "primary" | "secondary" | "tertiary" | null =
+    promotedTier ?? (promoted || tool.toolOfWeek ? "primary" : null);
+  const isPromoted = effectiveTier !== null;
+
+  // Status label + kind for the top-row status pill (non-promoted cards)
   const statusLabel = tool.toolOfWeek
     ? "Tool della settimana"
-    : promoted
-      ? "Promosso"
-      : tool.featured
-        ? "In evidenza"
-        : "Base";
-  const statusKind = tool.toolOfWeek ? "primary" : promoted || tool.featured ? "gold" : "neutral";
+    : tool.featured
+      ? "In evidenza"
+      : "Base";
+  const statusKind = tool.toolOfWeek ? "primary" : tool.featured ? "gold" : "neutral";
+
+  // Top-row status is hidden on mobile for PROMOTED cards (it has its own
+  // dedicated status row in the stacked anatomy). On desktop, the top-row
+  // status pill is always shown.
+  const hideTopStatusOnMobile = isPromoted;
 
   return (
     <article
-      className={cn("ar4-card", hover && "is-hover", isSelected && "is-selected", promoted && "is-promoted", className)}
+      className={cn(
+        "ar4-card",
+        hover && "is-hover",
+        isSelected && "is-selected",
+        isPromoted && "is-promoted",
+        effectiveTier && `is-tier-${effectiveTier}`,
+        className,
+      )}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       data-density={density}
-      data-promoted={promoted || undefined}
+      data-promoted={isPromoted || undefined}
       data-selected={isSelected || undefined}
+      data-tier={effectiveTier || undefined}
+      data-saved={isSaved || undefined}
     >
-      {/* Top row: avatar + identity + status */}
+      {/* ═══ TOP ROW: avatar + identity (+ top status on desktop only) ═══ */}
       <div className="ar4-card__top">
         <span className="ar4-card__avatar" aria-hidden="true">
           {iconUrl ? (
+            // eslint-disable-next-line @next/image/no-img-element
             // eslint-disable-next-line @next/next/no-img-element
             <img src={iconUrl} alt="" loading="lazy" decoding="async" />
           ) : (
@@ -129,18 +181,35 @@ function ArchiveV4ToolCardInner({
           </h3>
           <p className="ar4-card__category">{tool.categoryLabel}</p>
         </div>
-        <span className={cn("ar4-card__status", `ar4-card__status--${statusKind}`)}>
-          {tool.toolOfWeek && <Star size={11} aria-hidden="true" />}
-          {statusLabel}
-        </span>
+        {!hideTopStatusOnMobile && (
+          <span className={cn("ar4-card__status", `ar4-card__status--${statusKind}`)}>
+            {tool.toolOfWeek && <Star size={11} aria-hidden="true" />}
+            {statusLabel}
+          </span>
+        )}
       </div>
 
-      {/* Description (clamp 2) */}
+      {/* ═══ PROMOTED-ONLY: dedicated status row (own line, no title collision) ═══ */}
+      {isPromoted && (
+        <div className="ar4-card__promoted-status">
+          <span
+            className={cn(
+              "ar4-card__tier-pill",
+              `ar4-card__tier-pill--${effectiveTier}`,
+            )}
+          >
+            {effectiveTier === "primary" && <Star size={11} aria-hidden="true" />}
+            {TIER_LABEL[effectiveTier!]}
+          </span>
+        </div>
+      )}
+
+      {/* ═══ DESCRIPTION ═══ */}
       <p className="ar4-card__desc">
         {tool.tldr || tool.shortDescription || "Tool selezionato da TooolVibes."}
       </p>
 
-      {/* Mid row: level + score + votes */}
+      {/* ═══ METRICS ROW ═══ */}
       <div className="ar4-card__metrics">
         <span
           className="ar4-card__level"
@@ -159,7 +228,7 @@ function ArchiveV4ToolCardInner({
         </span>
       </div>
 
-      {/* Action rail */}
+      {/* ═══ ACTION RAIL ═══ */}
       <div className="ar4-card__actions">
         <Link href={`/toools/${tool.slug}`} className="ar4-card__open">
           Apri scheda
@@ -195,12 +264,20 @@ function ArchiveV4ToolCardInner({
         ) : null}
       </div>
 
-      {/* Promote ribbon */}
-      {promoted || tool.toolOfWeek ? (
-        <span className="ar4-card__ribbon" aria-hidden="true">
-          Featured
+      {/* ═══ PROMOTED RIBBON (semantic) ═══ */}
+      {isPromoted && (
+        <span
+          className={cn(
+            "ar4-card__ribbon",
+            `ar4-card__ribbon--${effectiveTier}`,
+          )}
+          aria-hidden="true"
+        >
+          {effectiveTier === "primary" && "Tool della settimana"}
+          {effectiveTier === "secondary" && "In evidenza"}
+          {effectiveTier === "tertiary" && "Selezione editoriale"}
         </span>
-      ) : null}
+      )}
     </article>
   );
 }
