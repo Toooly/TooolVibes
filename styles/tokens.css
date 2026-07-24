@@ -98,6 +98,11 @@
   --tv-font-family-ui: var(--font-inter), "Inter", "Segoe UI", sans-serif;
   --tv-font-family-system: var(--font-inter), "Inter", "Segoe UI", sans-serif;
   --tv-font-family-mono: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+  /* BATCH 2 (WS-C): editorial display family used by the Home hero H1
+     and the Tool of the Week title. Distinct from --tv-font-family-display
+     (Anton) so brand display and editorial display can diverge. */
+  --tv-font-family-editorial: var(--font-fraunces), "Fraunces", Georgia,
+    "Times New Roman", serif;
 
   /* --- Spacing foundation (4px base scale) --- */
   --tv-space-px-0: 0;
@@ -352,6 +357,11 @@
   --tv-text-body: 1rem;                                        /* 16px body */
   --tv-text-body-sm: 0.9375rem;                                /* 15px body-sm */
   --tv-text-label: 0.875rem;                                   /* 14px label */
+  /* BATCH 2 (WS-C): editorial display sizes used by the Home hero
+     H1 and the Tool of the Week title. Larger than the brand display
+     family so editorial copy can carry real weight on a page. */
+  --tv-text-editorial-hero: clamp(2.75rem, 5.5vw + 0.5rem, 5.25rem);
+  --tv-text-editorial-feature: clamp(2.25rem, 4vw + 0.5rem, 4rem);
   --tv-text-eyebrow: 0.75rem;                                  /* 12px eyebrow */
   --tv-text-caption: 0.6875rem;                                /* 11px caption */
 

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Inter } from "next/font/google";
+import { Anton, Fraunces, Inter } from "next/font/google";
 
 import "@/styles/release-entry";
 import { cookies } from "next/headers";
@@ -22,6 +22,16 @@ const anton = Anton({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-anton",
+  display: "swap",
+});
+
+/* BATCH 2 (WS-C): Fraunces is the editorial display family used by the
+   Home hero H1 ("Trova il tool giusto...") and the Tool of the Week title.
+   Anton remains the brand wordmark and secondary display. */
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-fraunces",
   display: "swap",
 });
 
@@ -129,7 +139,7 @@ export default async function RootLayout({
     vibeRush: releaseFeatures.gamification.surfaces.vibeRush.mode,
   } satisfies GamificationClientModes;
   return (
-    <html lang="it" className={`${inter.variable} ${anton.variable}`} suppressHydrationWarning>
+    <html lang="it" className={`${inter.variable} ${anton.variable} ${fraunces.variable}`} suppressHydrationWarning>
       <head />
       <body>
         {isGateOpen && (
