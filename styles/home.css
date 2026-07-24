@@ -719,31 +719,189 @@
     top: 50%;
     z-index: var(--tv-z-elevated);
     display: grid;
-    width: 4.5rem;
+    width: 6.5rem;
     aspect-ratio: 1;
     place-items: center;
-    border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 46%, var(--tv-border-subtle));
     border-radius: 50%;
-    background: var(--tv-surface-elevated);
-    color: var(--tv-accent-cyan);
-    box-shadow: var(--tv-elevation-rest);
+    background: transparent;
     transform: translate(-50%, -50%);
   }
 
-  .home-radar-preview__core svg {
-    width: 1.75rem;
-    height: 1.75rem;
+  .home-radar-preview__core-logo {
+    position: relative;
+    z-index: 2;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .home-radar-preview__core-aura {
+    position: absolute;
+    inset: 0.5rem;
+    z-index: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--tv-accent-primary) 42%, transparent) 0%,
+      color-mix(in srgb, var(--tv-accent-primary) 18%, transparent) 55%,
+      transparent 78%
+    );
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 40%, transparent),
+      0 0 1.5rem color-mix(in srgb, var(--tv-accent-primary) 35%, transparent);
+  }
+
+  .home-radar-preview__core-ring {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 50%, transparent);
+    pointer-events: none;
+  }
+
+  .home-radar-preview__nodes {
+    position: absolute;
+    inset: 0;
+    z-index: var(--tv-z-content);
+    pointer-events: none;
+  }
+
+  .home-radar-preview__nodes[data-mode="fallback"] {
+    pointer-events: auto;
+  }
+
+  .home-radar-preview[data-radar-state="ready"] .home-radar-preview__nodes[data-mode="fallback"] {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .home-radar-preview:not([data-radar-state="ready"]) .home-radar-preview__nodes[data-mode="live"] {
+    display: none;
+  }
+
+  .home-radar-node--fallback {
+    position: absolute;
+    left: var(--node-x);
+    top: var(--node-y);
+    z-index: 4;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: clamp(0.5rem, 0.9vw, 0.75rem);
+    padding: 0.45rem clamp(0.7rem, 1.4vw, 1.05rem) 0.45rem 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--node-color) 38%, var(--tv-border-subtle));
+    border-radius: var(--tv-radius-pill);
+    background: color-mix(in srgb, var(--node-color) 8%, var(--tv-surface-elevated));
+    color: var(--tv-ink-primary);
+    text-decoration: none;
+    box-shadow: 0 0.5rem 1.5rem -0.5rem color-mix(in srgb, var(--node-color) 30%, transparent);
+    transform: translate(-50%, -50%) scale(var(--node-scale, 1));
+    transform-origin: center;
+    transition:
+      transform var(--tv-motion-base) var(--tv-ease-standard),
+      border-color var(--tv-motion-base) var(--tv-ease-standard),
+      background var(--tv-motion-base) var(--tv-ease-standard),
+      box-shadow var(--tv-motion-base) var(--tv-ease-standard);
+  }
+
+  .home-radar-node--fallback:hover,
+  .home-radar-node--fallback:focus-visible {
+    transform: translate(-50%, -50%) scale(calc(var(--node-scale, 1) * 1.06));
+    border-color: var(--node-color);
+    background: color-mix(in srgb, var(--node-color) 18%, var(--tv-surface-elevated));
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--node-color) 18%, transparent),
+      0 0.75rem 1.75rem -0.5rem color-mix(in srgb, var(--node-color) 40%, transparent);
+  }
+
+  .home-radar-node__ring {
+    position: absolute;
+    inset: 0.1rem;
+    z-index: 0;
+    border-radius: inherit;
+    border: 1px solid color-mix(in srgb, var(--node-color) 22%, transparent);
+    pointer-events: none;
+  }
+
+  .home-radar-node__body {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    width: clamp(1.9rem, 2.8vw, 2.4rem);
+    aspect-ratio: 1;
+    place-items: center;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--node-color) 30%, var(--tv-surface-raised));
+    color: var(--node-color);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--node-color) 36%, transparent);
+  }
+
+  .home-radar-node__label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    line-height: 1.05;
+  }
+
+  .home-radar-node__label strong {
+    font-family: var(--tv-font-family-ui);
+    font-size: var(--tv-text-sm);
+    font-weight: var(--tv-weight-bold);
+    color: var(--tv-ink-primary);
+    letter-spacing: 0.005em;
+    line-height: 1.1;
+  }
+
+  .home-radar-node__label small {
+    font-family: var(--tv-font-family-ui);
+    font-size: 0.625rem;
+    font-weight: var(--tv-weight-semibold);
+    color: var(--node-color);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .home-radar-node__badge {
+    position: absolute;
+    top: -0.45rem;
+    right: -0.45rem;
+    z-index: 5;
+    display: grid;
+    width: 1.4rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--node-color);
+    color: var(--tv-ink-on-brand);
+    font-family: var(--tv-font-family-mono);
+    font-size: 0.7rem;
+    font-weight: var(--tv-weight-bold);
+    line-height: 1;
+    box-shadow: 0 0 0 2px var(--tv-bg-base);
+  }
+
+  .home-radar-preview__status {
+    position: absolute;
+    bottom: clamp(0.75rem, 2vw, 1.25rem);
+    left: clamp(0.75rem, 2vw, 1.25rem);
+    z-index: var(--tv-z-elevated);
+    max-width: 60%;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 28%, var(--tv-border-subtle));
+    border-radius: var(--tv-radius-pill);
+    background: color-mix(in srgb, var(--tv-accent-cyan) 8%, var(--tv-surface-elevated));
+    color: var(--tv-ink-secondary);
+    font-family: var(--tv-font-family-ui);
+    font-size: var(--tv-text-xs);
+    font-weight: var(--tv-weight-semibold);
+    text-align: left;
   }
 
   .home-radar-preview__loading {
-    position: absolute;
-    left: 50%;
-    top: calc(50% + var(--tv-space-16));
-    z-index: var(--tv-z-elevated);
-    color: var(--tv-ink-secondary);
-    font-size: var(--tv-text-xs);
-    font-weight: var(--tv-weight-bold);
-    transform: translateX(-50%);
+    display: none;
   }
 
   .home-radar-preview .desktop-radar-node__label {
