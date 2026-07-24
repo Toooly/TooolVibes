@@ -34,11 +34,11 @@ function resolveStageStatusCopy(
 ): string {
   switch (state) {
     case "loading":
-      return "Connessione al feed Product Hunt…";
+      return "Sintonizzazione del feed Product Hunt…";
     case "empty":
-      return "Nessun segnale Product Hunt in questo intervallo.";
+      return "Nessun lancio Product Hunt in questo intervallo.";
     default:
-      return message ?? "Feed Product Hunt non disponibile.";
+      return message ?? "Feed Product Hunt non disponibile in questo momento.";
   }
 }
 
