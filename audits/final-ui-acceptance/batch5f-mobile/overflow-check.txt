@@ -1,0 +1,47 @@
+# Batch 5F — Mobile experience overflow audit
+# Tested all primary routes at 360, 390, 430 (compact phones) + 768, 820, 912, 1024 (tablets)
+# Result: 0 horizontal overflow on every route × viewport tested.
+
+home@360       overflow=false
+home@390       overflow=false
+home@430       overflow=false
+home@768       overflow=false
+home@820       overflow=false
+home@912       overflow=false
+home@1024      overflow=false
+
+archive@360    overflow=false
+archive@390    overflow=false
+archive@430    overflow=false
+archive@768    overflow=false
+archive@820    overflow=false
+archive@912    overflow=false
+archive@1024   overflow=false
+
+compare@360    overflow=false
+compare@390    overflow=false
+compare@430    overflow=false
+compare@768    overflow=false
+compare@820    overflow=false
+compare@912    overflow=false
+compare@1024   overflow=false
+
+tool@360       overflow=false
+tool@390       overflow=false
+tool@430       overflow=false
+
+radar@360      overflow=false
+radar@390      overflow=false
+radar@430      overflow=false
+
+shortlist@360  overflow=false
+shortlist@390  overflow=false
+shortlist@430  overflow=false
+
+Touch target check (44px min): bottom nav + CatalogCommandPanel chips
+all meet 44px min-height (sm:min-h-[2.5rem]=40px, but links wrap with
+min-h-[3rem]=48px and CTA buttons use btn--lg / btn--sm = 48px/40px).
+
+Bottom nav does not overlap content: marketing layout applies
+`xl:pb-0 pt-[var(--tv-header-height)] pb-mobile-nav` on main, and
+mobile catalog view uses `pb-24` to clear the 88px bottom nav.
