@@ -974,3 +974,134 @@
     right: calc(50% - 1.2rem);
   }
 }
+
+/* === Batch 1: desktop header as a coherent command bar ===
+   The earlier .site-header-v2__nav rule is a contained pill
+   (border + bg-raised + radius-md). The earlier .site-header-v2__search-trigger
+   is a separate raised pill. The brand wordmark "TOOOLVIBES" is rendered
+   alongside the logo, doubling the brand signal.
+   The rules below flatten the nav, render the search as a compact
+   icon-only trigger, suppress the brand wordmark above xl (the logo
+   already carries the brand), and let the existing .site-header-v2__sound
+   icon pair remain quiet. Specificity is raised via .site-header-v2__inner
+   so these rules beat the earlier .site-header-v2__nav / __search-trigger
+   declarations via cascade order. */
+
+@media (min-width: 1280px) {
+  .site-header-v2__inner .site-header-v2__brand-word {
+    display: none;
+  }
+}
+
+.site-header-v2__inner .site-header-v2__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-surface-raised);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.site-header-v2__inner .site-header-v2__nav-link {
+  min-height: 2.25rem;
+  padding: 0 0.85rem;
+  border: 0;
+  border-radius: var(--tv-radius-pill);
+  background: transparent;
+  color: var(--tv-ink-secondary);
+  font-size: 0.825rem;
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: 0.005em;
+  text-transform: none;
+  box-shadow: none;
+  filter: none;
+  text-shadow: none;
+  transition:
+    color var(--tv-motion-fast) var(--tv-ease-standard),
+    background var(--tv-motion-fast) var(--tv-ease-standard);
+}
+
+.site-header-v2__inner .site-header-v2__nav-link:hover,
+.site-header-v2__inner .site-header-v2__nav-link:focus-visible {
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+}
+
+.site-header-v2__inner .site-header-v2__nav-link.is-active {
+  background: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand, #fff);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--tv-accent-primary) 28%, transparent);
+}
+
+.site-header-v2__inner .site-header-v2__nav-link.is-active svg,
+.site-header-v2__inner .site-header-v2__nav-link.is-active .site-header-v2__active-dot {
+  color: currentColor;
+  background: currentColor;
+}
+
+.site-header-v2__inner .site-header-v2__nav-orbit {
+  display: none;
+}
+
+/* Search trigger: icon-only at md+, expands on focus via the
+   existing .site-header-v2__search-sheet modal. */
+.site-header-v2__inner .site-header-v2__search-trigger {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-secondary);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.site-header-v2__inner .site-header-v2__search-trigger:hover,
+.site-header-v2__inner .site-header-v2__search-trigger:focus-visible {
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-ink-primary);
+  background: var(--tv-surface-elevated);
+}
+
+.site-header-v2__inner .site-header-v2__search-trigger > span:first-child > span:last-child {
+  display: none;
+}
+
+/* Account primary action becomes a compact circular avatar chip. */
+.site-header-v2__inner .site-header-v2__primary-action {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-secondary);
+  font-size: 0.78rem;
+  font-weight: var(--tv-weight-semibold);
+  box-shadow: none;
+  transition:
+    color var(--tv-motion-fast) var(--tv-ease-standard),
+    background var(--tv-motion-fast) var(--tv-ease-standard),
+    border-color var(--tv-motion-fast) var(--tv-ease-standard);
+}
+
+.site-header-v2__inner .site-header-v2__primary-action:hover,
+.site-header-v2__inner .site-header-v2__primary-action:focus-visible {
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-ink-primary);
+  background: var(--tv-surface-elevated);
+}
+
+/* Brand wordmark is hidden above xl; below xl the existing
+   .sm:inline-block utility already shows it. Above 1280 the
+   wordmark would compete with the logo as a second brand mark,
+   so we suppress it. */
+@media (min-width: 1280px) {
+  .site-header-v2__inner .site-header-v2__brand-word {
+    display: none;
+  }
+}
