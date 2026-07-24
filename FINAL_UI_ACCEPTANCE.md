@@ -4,24 +4,26 @@
 current and future OpenCode sessions. This file supersedes any
 prior provisional verdicts in `design-qa.md`.
 
-**Status (FINAL — 2026-07-24).** **FINAL UI ACCEPTANCE PASS.**
-All 12 mockup binding references MATCHED (11 MATCHED, 1
-MATCHED WITH INTENTIONAL ADAPTATION). All 19 production
-screenshots visually inspected and accepted. 9/9 production
-routes return 200. Full technical validation passes. Zero new
-regressions.
+**Status (FINAL — 2026-07-24).** **SHELL + HOME V4 — VISUALLY ACCEPTED AND FROZEN.**
+The v3 verdict was revoked twice by user visual review. The v4 rebuild
+(`4b65ec6`) introduces the integrated Hero + Radar cockpit, the warm
+ivory decision desk, the genuine 3-stage Podium, and a more
+authoritative Command Bar. Four stabilization fixes applied:
+BrandLogo 36→44, Radar status pill restyled + ≥12px mobile, typography
+floor enforced at 13 viewports, mobile fixed-nav scroll QA verified.
+Archive reconstruction now in progress under v4 DNA.
 
-**Status rule.** After the Final Human Acceptance Gate, the
-only valid overall status strings are:
+**Status rule (2026-07-24, updated).** The v3-era status strings
+("FINAL UI ACCEPTANCE PASS", "FINAL UI RECONSTRUCTION IN PROGRESS",
+"READY FOR RELEASE", "FINAL CLOSURE", "FINAL ACCEPTANCE PASS") are
+WITHDRAWN. The binding status grammar is now:
 
-- **FINAL UI ACCEPTANCE PASS** ← current state
-- **READY WITH SPECIFIC NON-BLOCKING LIMITATIONS**
+- **SHELL + HOME V4 — VISUALLY ACCEPTED AND FROZEN** ← current global
+- **SHELL + HOME V4 — VISUALLY ACCEPTED, FINAL STABILIZATION REQUIRED**
+- **ARCHIVE DEFINITIVE RECONSTRUCTION — ACTIVE** (per-route status while in flight)
+- **RADAR / COMPARE / SAVED / METODO RECONSTRUCTION — ACTIVE**
+- **AWAITING USER VISUAL ACCEPTANCE** (per-route verdict, gate-style)
 - **BLOCKED**
-
-"FINAL UI RECONSTRUCTION IN PROGRESS" is no longer valid
-after the gate. The previously banned strings "READY FOR
-RELEASE", "FINAL CLOSURE" and the now-replaced provisional
-"FINAL ACCEPTANCE PASS" verdict remain banned.
 
 **Completion rule.** An item may be checked only after:
 

@@ -284,6 +284,7 @@ function Cockpit({
 
           {/* Status pill — factual, BELOW stage */}
           <p className="def-cockpit__status" role="status" aria-live="polite">
+            <span aria-hidden="true" className="def-cockpit__status-dot" />
             {hasLiveData
               ? `${signalCount} segnali in tempo reale`
               : "In attesa di Product Hunt · niente dati simulati"}

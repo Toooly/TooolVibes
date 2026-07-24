@@ -74,14 +74,14 @@
   border: 1px solid var(--tv-border-subtle);
   border-radius: 12px;
   color: var(--tv-ink-secondary);
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: border-color 200ms ease, color 200ms ease;
 }
 
 .mobile-top-bar__search-text {
-  font-size: 13px;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -151,6 +151,10 @@
 
 .mobile-top-bar__route-label {
   font-family: var(--tv-font-mono, ui-monospace);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
