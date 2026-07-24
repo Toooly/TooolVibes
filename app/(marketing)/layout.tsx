@@ -4,8 +4,9 @@ import { AccountProvider } from "@/components/account/account-provider";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
+import { MobileTopBar } from "@/components/layout/mobile-top-bar";
+import { CommandBar } from "@/components/layout/command-bar";
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
-import { SiteHeaderV2 } from "@/components/layout/site-header-v2";
 import { OrbitalProvider } from "@/components/app/orbital-system";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { gateCookieName } from "@/lib/gate/constants";
@@ -38,8 +39,15 @@ export default async function MarketingLayout({
       <OrbitalProvider>
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
           <DiscoveryPersistenceProvider>
-            <SiteHeaderV2 />
-            <main id="main-content" tabIndex={-1} className="relative z-10 pb-mobile-nav pt-[var(--tv-header-height)] md:pt-[var(--tv-header-height)] xl:pb-0">
+            {/* Definitive shell (2026-07-24): CommandBar (xl+), MobileTopBar (<xl),
+                MobileBottomNav (<xl). The previous SiteHeaderV2 is removed. */}
+            <CommandBar />
+            <MobileTopBar />
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="relative z-10 pt-[var(--tv-header-height-mobile)] pb-mobile-nav xl:pt-[var(--tv-header-height)] xl:pb-0"
+            >
               <PageTransition>{children}</PageTransition>
             </main>
             <SiteFooterV2 />

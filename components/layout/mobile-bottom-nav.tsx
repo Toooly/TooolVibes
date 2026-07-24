@@ -1,12 +1,26 @@
 "use client";
 
+/**
+ * TooolVibes — Mobile Bottom Nav (Definitive)
+ * 2026-07-24
+ *
+ * Substantially different from the previous site-mobile-footer-nav:
+ *  - Elevated glass shell with brand-gradient border + top scan line
+ *  - Active route marker uses motion layoutId for smooth transitions
+ *  - Animated signal node on Radar (always pulsing)
+ *  - Badge pop-in animation for compare / saved counts
+ *  - Per-item glyph + uppercase mono label
+ *  - Hidden on desktop (xl = 1280px)
+ */
+
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
+import { Home, LayoutGrid, Radar, Columns3, Bookmark } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { isNavRouteActive } from "@/lib/navigation/selectors";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import {
@@ -14,13 +28,29 @@ import {
   useWorkspaceNavCounts,
 } from "./workspace-nav-selectors";
 
+type NavSpec = {
+  id: string;
+  href: string;
+  label: string;
+  Icon: React.ComponentType<{ size?: number; className?: string; "aria-hidden"?: React.AriaAttributes["aria-hidden"] }>;
+  /** Show animated signal node (always pulsing) on this item */
+  hasNode?: boolean;
+  /** Show count badge based on this counter */
+  badge?: "compare" | "saved";
+};
+
+const NAV_SPECS: readonly NavSpec[] = [
+  { id: "home", href: "/", label: "Home", Icon: Home },
+  { id: "catalog", href: "/archivio", label: "Catalogo", Icon: LayoutGrid },
+  { id: "radar", href: "/radar", label: "Radar", Icon: Radar, hasNode: true },
+  { id: "compare", href: "/compare", label: "Confronto", Icon: Columns3, badge: "compare" },
+  { id: "saved", href: "/shortlist", label: "Salvati", Icon: Bookmark, badge: "saved" },
+];
+
 export function MobileBottomNav() {
   const pathname = usePathname();
-  const mobileItems = useNavItems("bottom-nav");
   const [mounted, setMounted] = useState(false);
   const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
-  // BATCH 30 (IA-502): conteggi dal selector workspace canonico; con la flag
-  // account-aware OFF resta l'adapter legacy (solo badge Confronto).
   const navCounts = useWorkspaceNavCounts();
   const accountAware = isHeaderAccountAwareEnabled();
   const compareCount = navCounts.compare;
@@ -35,64 +65,79 @@ export function MobileBottomNav() {
   }
 
   const nav = (
-    <nav
-      aria-label="Navigazione mobile principale"
-      inert={isOverlayOpen || undefined}
+    <div
       className={cn(
-        "mobile-bottom-motion site-mobile-footer-nav fixed z-[var(--tv-z-nav)]",
-        "xl:hidden",
-        "transition-opacity duration-300",
-        isOverlayOpen && "opacity-0 pointer-events-none"
+        "mobile-bottom-shell",
+        isOverlayOpen && "pointer-events-none opacity-0",
       )}
+      aria-hidden={isOverlayOpen || undefined}
     >
-      <div className="site-mobile-footer-nav__grid">
-        {mobileItems.map((item) => {
-          const Icon = item.icon;
-          const isCompareItem = item.id === "compare";
-          const isShortlistItem = item.id === "shortlist";
-          const active = isNavRouteActive(pathname, item.href);
-          const compareHasItems = isCompareItem && compareCount > 0;
-          const badgeCount = isCompareItem
+      <nav
+        aria-label="Navigazione mobile principale"
+        className="mobile-bottom-shell__inner"
+      >
+        {NAV_SPECS.map((item) => {
+          const isActive = isNavRouteActive(pathname, item.href);
+          const badgeCount = item.badge === "compare"
             ? compareCount
-            : isShortlistItem
+            : item.badge === "saved"
               ? savedCount
               : 0;
-          const badgeAriaLabel = isCompareItem
+          const badgeAria = item.badge === "compare"
             ? `${compareCount} tool in confronto`
-            : `${savedCount} tool salvati`;
-
+            : item.badge === "saved"
+              ? `${savedCount} tool salvati`
+              : undefined;
           return (
             <Link
-              key={item.href}
+              key={item.id}
               href={item.href}
-              aria-label={badgeCount > 0 ? `${item.label}, ${badgeAriaLabel}` : undefined}
-              aria-current={active ? "page" : undefined}
-              className={cn(
-                "mobile-bottom-link",
-                active && "is-active",
-                active && "[&_.mobile-bottom-link__icon-wrap>svg]:scale-110",
-                compareHasItems && "mobile-bottom-link--compare-ready"
-              )}
+              aria-current={isActive ? "page" : undefined}
+              aria-label={badgeCount > 0 && badgeAria ? `${item.label}, ${badgeAria}` : undefined}
+              className={cn("mobile-bottom-item", isActive && "is-active")}
             >
-              <span className="mobile-bottom-link__icon-wrap">
-                {Icon ? <Icon className="size-5 transition-transform" aria-hidden="true" /> : null}
+              <span className="mobile-bottom-item__icon-wrap">
+                {isActive ? (
+                  <motion.span
+                    layoutId="mobile-bottom-marker"
+                    className="mobile-bottom-item__marker"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    aria-hidden="true"
+                  />
+                ) : null}
+                <item.Icon
+                  size={18}
+                  className="mobile-bottom-item__glyph"
+                  aria-hidden="true"
+                />
                 {badgeCount > 0 ? (
-                  <span
+                  <motion.span
                     key={badgeCount}
-                    className="mobile-bottom-link__badge animate-compare-ping"
-                    aria-label={badgeAriaLabel}
+                    initial={{ scale: 0.4, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 420, damping: 22 }}
+                    className="mobile-bottom-item__badge"
+                    aria-label={badgeAria}
                   >
                     {badgeCount}
-                  </span>
+                  </motion.span>
+                ) : null}
+                {item.hasNode ? (
+                  <span
+                    aria-hidden="true"
+                    className="mobile-bottom-item__node"
+                  />
                 ) : null}
               </span>
-              <span className="mobile-bottom-link__label">{item.label}</span>
+              <span className="mobile-bottom-item__label">{item.label}</span>
             </Link>
           );
         })}
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 
   return createPortal(nav, document.body);
 }
+
+export default MobileBottomNav;

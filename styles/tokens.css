@@ -169,8 +169,8 @@
   --tv-container-app: 56rem;         /* 896px */
   --tv-container-wide: 64rem;        /* 1024px */
   --tv-container-uw: 84rem;          /* 1344px */
-  --tv-header-height: 4rem;            /* 64px - site-header-v2 */
-  --tv-header-height-mobile: 4rem;     /* same height on mobile */
+  --tv-header-height: 4.875rem;        /* 78px - definitive CommandBar (2026-07-24) */
+  --tv-header-height-mobile: 4.875rem; /* 78px - mobile top bar (brand + route label = 56 + 22) */
   --tv-main-offset-top: var(--tv-header-height);
 
   /* Route stage offsets — canonical variants for content layout.
