@@ -310,15 +310,9 @@ export function SiteHeaderV2() {
               </Link>
             </div>
 
-            {/* Mobile title */}
-            <div className="col-start-2 flex justify-center md:hidden">
-              <span
-                className="site-header-v2__mobile-title pointer-events-none hidden min-[430px]:inline"
-                aria-hidden="true"
-              >
-                TooolVibes
-              </span>
-            </div>
+            {/* Mobile title — removed in Batch 1; the logo already carries
+               the brand. The previous 'TooolVibes' centered title was a
+               redundant mark that fought the logo for attention. */}
 
             {/* Desktop Nav */}
             <nav className="site-header-v2__nav hidden items-center gap-1 xl:flex" aria-label="Navigazione principale">

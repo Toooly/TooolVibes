@@ -1102,16 +1102,18 @@
   }
 }
 
-.site-header-v2__inner .site-header-v2__nav {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem;
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-pill);
-  background: var(--tv-surface-raised);
-  box-shadow: none;
-  backdrop-filter: none;
+@media (min-width: 1280px) {
+  .site-header-v2__inner .site-header-v2__nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid var(--tv-border-subtle);
+    border-radius: var(--tv-radius-pill);
+    background: var(--tv-surface-raised);
+    box-shadow: none;
+    backdrop-filter: none;
+  }
 }
 
 .site-header-v2__inner .site-header-v2__nav-link {
@@ -1213,4 +1215,53 @@
   .site-header-v2__inner .site-header-v2__brand-word {
     display: none;
   }
+}
+
+/* === Mobile top bar: minimal command bar ===
+   The mobile chrome was a brand logo + uppercase wordmark + a
+   second 'TooolVibes' title centered between brand and menu. The
+   wordmark is already hidden below sm via Tailwind, but the
+   centered .site-header-v2__mobile-title kept showing because of a
+   Tailwind v4 responsive-variant issue with the min-[430px]:inline
+   class. The rules below fix the bug and tighten the top bar so it
+   reads as a quiet command surface: brand logo on the left, search
+   and menu on the right, no centered title competing for focus. */
+
+@media (max-width: 429px) {
+  .site-header-v2__inner .site-header-v2__mobile-title {
+    display: none;
+  }
+}
+
+@media (min-width: 430px) and (max-width: 1023px) {
+  .site-header-v2__inner .site-header-v2__mobile-title {
+    display: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .site-header-v2__inner .site-header-v2__brand-word {
+    display: none;
+  }
+}
+
+.site-header-v2__inner .site-header-v2__mobile-search,
+.site-header-v2__inner .site-header-v2__menu-button {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-secondary);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.site-header-v2__inner .site-header-v2__mobile-search:hover,
+.site-header-v2__inner .site-header-v2__mobile-search:focus-visible,
+.site-header-v2__inner .site-header-v2__menu-button:hover,
+.site-header-v2__inner .site-header-v2__menu-button:focus-visible {
+  border-color: var(--tv-accent-primary);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
 }
