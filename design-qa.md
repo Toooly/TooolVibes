@@ -650,11 +650,29 @@ Production deploy: 445a6eac-b8e7-49ff-9196-ef821819ae1f.
 | Interaction audit | **VERIFIED** (Playwright; no console errors) |
 | Keyboard + a11y | **VERIFIED** (skip link, main landmark, heading order, focus rings, reduced motion) |
 
-### FINAL VERDICT: **READY FOR RELEASE**
+### FINAL VERDICT: **READY FOR RELEASE** — WITHDRAWN 2026-07-24
 
-Visual closure achieved. All real user-facing defects resolved. Production deploy verified.
-
-The product is now ready for the dedicated final copy + interaction review that the user said will follow. No remaining visual debt that can be addressed at this layer.
+> **Status (corrected 2026-07-24): FINAL UI RECONSTRUCTION IN PROGRESS.**
+>
+> The "READY FOR RELEASE" verdict above was a premature conclusion. It
+> conflated "no new regressions" with "visual closure achieved". Several
+> master workstreams (see `FINAL_UI_ACCEPTANCE.md`) are still in active
+> implementation and have not been rendered-inspected against the GPT Sol
+> concept quality bar.
+>
+> The 2026-07-24 pass did land three valid atomic fixes (commits
+> `06a7eb5`, `2311f59`, `9759bf4`) and one docs commit (`07bd397`):
+> sound-toggle quiet pair, Home Radar brand-aligned empty state,
+> compact-phone bottom-nav icon-only, lint compliance. None of these
+> is final visual closure. The product must still pass through the
+> full master workstream matrix (Global Shell, Design System, Home,
+> Archive, Tool Detail, Radar, Compare, Saved, Secondary routes,
+> Responsive matrix, Final QA).
+>
+> The binding source of truth for closure is now
+> `FINAL_UI_ACCEPTANCE.md` at the repository root. Until every
+> required item there is checked, the only valid overall status is
+> **FINAL UI RECONSTRUCTION IN PROGRESS**.
 
 ### Known remaining (external / out of scope)
 - Live keyboard/screen-reader smoke test in real screen reader — code-level evidence only; requires manual accessibility audit with assistive tech
