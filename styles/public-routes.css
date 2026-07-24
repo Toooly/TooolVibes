@@ -181,12 +181,10 @@
 .internal-page h1,
 .tone-screen h1,
 .hero-shell h1 {
-  font-family: var(--tv-font-family-editorial);
+  font-family: var(--tv-font-display);
   font-weight: var(--tv-weight-regular);
-  font-style: italic;
-  letter-spacing: -0.025em;
-  line-height: 1.04;
-  text-transform: none;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
 .marketing-shell main :where(

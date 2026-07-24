@@ -3,8 +3,8 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, type CSSProperties } from "react";
-import { ArrowRight, Bookmark, Compass, GitCompare, Radar, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 import {
   resolveRadarDataState,
@@ -22,45 +22,10 @@ const DesktopRadarNodes = dynamic(
     ),
 );
 
-const FALLBACK_ICON_MAP = {
-  Bookmark,
-  Compass,
-  GitCompare,
-  Radar,
-  Sparkles,
-} as const;
-
-export type RadarFallbackRoute = {
-  id: string;
-  label: string;
-  href: string;
-  color: string;
-  icon: keyof typeof FALLBACK_ICON_MAP;
-  badge?: string;
-};
-
-type HomeRadarPreviewProps = {
-  /** When Product Hunt data is not available, the instrument shows these
-   *  5 named route destinations around the TooolVibes center. Real
-   *  Product Hunt items take over as soon as the live payload is ready,
-   *  without re-mounting the stage chrome (TV disc, ticks, scan). */
-  fallbackNodes: RadarFallbackRoute[];
-};
-
-/** Five node positions around the TooolVibes center — even clock
- *  distribution (every 72°) so the instrument reads as a coherent
- *  signal acquisition ring at any viewport. Mirrors the same slot
- *  convention as `nodeLayout` in `desktop-radar-nodes.tsx` so the
- *  live Product Hunt items and the fallback route destinations share
- *  the same geometry. */
-const FALLBACK_NODE_LAYOUT = [
-  { x: 50, y: 16, angle: -90, rank: 1, size: 1.08 },
-  { x: 82, y: 38, angle: -18, rank: 2, size: 1.0 },
-  { x: 72, y: 78, angle: 54, rank: 3, size: 0.98 },
-  { x: 28, y: 78, angle: 126, rank: 4, size: 0.98 },
-  { x: 18, y: 38, angle: 198, rank: 5, size: 1.0 },
-] as const;
-
+/**
+ * Resolve the in-stage status copy for every non-ready data state.
+ * The copy must be factual and never imply live data when unavailable.
+ */
 function resolveStageStatusCopy(
   state: Exclude<RadarDataState, "ready">,
   message?: string,
@@ -71,64 +36,28 @@ function resolveStageStatusCopy(
     case "empty":
       return "Nessun lancio Product Hunt in questo intervallo.";
     case "missing-token":
-      return "Anteprima delle rotte principali in attesa del feed live.";
+      return "Feed Product Hunt non configurato in questo ambiente.";
     default:
-      return message ?? "Anteprima statica · il feed live tornerà al più presto.";
+      return message ?? "Feed Product Hunt non disponibile in questo momento.";
   }
 }
 
-function FallbackNode({
-  route,
-  index,
-}: {
-  route: RadarFallbackRoute;
-  index: number;
-}) {
-  const layout = FALLBACK_NODE_LAYOUT[index] ?? FALLBACK_NODE_LAYOUT[0];
-  const Icon = FALLBACK_ICON_MAP[route.icon];
-  const nodeStyle = {
-    "--node-x": `${layout.x}%`,
-    "--node-y": `${layout.y}%`,
-    "--node-angle": `${layout.angle}deg`,
-    "--node-counter-angle": `${-layout.angle}deg`,
-    "--node-scale": layout.size,
-    "--node-color": route.color,
-  } as CSSProperties;
-
-  return (
-    <Link
-      href={route.href}
-      className="home-radar-node home-radar-node--fallback"
-      style={nodeStyle}
-      aria-label={`Apri ${route.label}`}
-    >
-      <span className="home-radar-node__ring" aria-hidden="true" />
-      <span className="home-radar-node__body" aria-hidden="true">
-        <Icon size={18} aria-hidden="true" />
-      </span>
-      <span className="home-radar-node__label">
-        <strong>{route.label}</strong>
-        <small>{route.badge ?? "Apri rotta"}</small>
-      </span>
-      <span className="home-radar-node__badge" aria-hidden="true">
-        #{layout.rank}
-      </span>
-    </Link>
-  );
-}
-
 /**
- * Home Radar — adaptive signal instrument.
+ * Home Radar — adaptive signal instrument bound to the real Product Hunt
+ * pipeline (WS-C.2.A revised).
  *
- * Stage chrome (TV center disc, perimeter ticks, scan trace, status
- * pills) is always present so the section never feels empty. When the
- * Product Hunt live payload is ready, DesktopRadarNodes takes over the
- * 5 node positions with the real items. When it is not, the 5 named
- * fallback routes occupy the same coordinates so the instrument
- * retains its dignity in loading / empty / missing-token / error
- * states.
+ * Stage chrome (TV center disc, perimeter ticks, scan trace, signal
+ * count, range badge) is always present so the section retains its
+ * visual identity at every viewport and every data state.
+ *
+ * The 5 node slots are bound EXCLUSIVELY to the real Product Hunt
+ * items. We never substitute navigation concepts (Catalogo, Radar,
+ * Salvati, Confronto, Tool scelto) for live tool data — those are
+ * routing labels, not signals. When the feed is not ready, the 5
+ * slots stay empty and a single in-stage status pill carries the
+ * factual state copy.
  */
-export function HomeRadarPreview({ fallbackNodes }: HomeRadarPreviewProps) {
+export function HomeRadarPreview() {
   const [isDesktop, setIsDesktop] = useState(false);
   const { payload } = useProductHuntRadar("day" as ProductHuntRange);
   const dataState = resolveRadarDataState(payload);
@@ -205,22 +134,9 @@ export function HomeRadarPreview({ fallbackNodes }: HomeRadarPreviewProps) {
             <span className="home-radar-preview__core-ring" aria-hidden="true" />
           </span>
 
-          {/* Fallback nodes — 5 named route destinations. These occupy
-              the same node coordinates as the live Product Hunt items
-              so the live layer drops in without geometry changes. */}
-          <div
-            className="home-radar-preview__nodes"
-            data-mode="fallback"
-            aria-hidden={hasLiveData}
-          >
-            {fallbackNodes.slice(0, 5).map((route, index) => (
-              <FallbackNode key={route.id} route={route} index={index} />
-            ))}
-          </div>
-
-          {/* Live Product Hunt nodes — overlay on top of the fallback
-              when desktop + data is ready. Hidden at <1024 so the mobile
-              hero never triggers the PH query. */}
+          {/* Live Product Hunt nodes — bound to the real PH payload. The
+              5 slots are occupied by real items only. When the feed is
+              not ready, the stage is intentionally empty (no fake nodes). */}
           {isDesktop && hasLiveData ? (
             <div className="home-radar-preview__nodes" data-mode="live" aria-hidden="false">
               <DesktopRadarNodes range="day" />

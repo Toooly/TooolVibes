@@ -107,7 +107,7 @@ export function VibeHomeV2({
       data-home-layout={layout}
     >
       <MobileHeroSolar routes={solarRoutes} compact={isTimeToValue} />
-      <HomeRadarPreview fallbackNodes={solarRoutes} />
+      <HomeRadarPreview />
       {focusTool && <MobileSpotlight tool={focusTool} supportingTools={supportingTools} />}
       <section className="page-shell sm:hidden">
         <NativePlacement placementKey="home-featured-tool" variant="compact" dark={true} />

@@ -28,11 +28,10 @@
   max-width: 16ch;
   margin: 0;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-editorial);
+  font-family: var(--tv-font-display);
   font-size: clamp(var(--tv-text-2xl), 5vw, var(--tv-text-3xl));
-  font-weight: var(--tv-weight-regular);
-  font-style: italic;
-  line-height: 1.04;
+  font-weight: var(--tv-weight-semibold);
+  line-height: var(--tv-leading-tight);
 }
 
 .account-loading-state .v-auth-loading-text {
