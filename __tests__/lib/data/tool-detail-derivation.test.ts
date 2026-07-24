@@ -61,34 +61,16 @@ function makeTool(overrides: Partial<ToolPublicView> = {}): ToolPublicView {
   };
 }
 
-describe("deriveEditorialScore", () => {
-  it("returns Ottimo label for score >= 9.0", () => {
-    const tool = makeTool({ toolOfWeek: true, featured: true, level: "featured" });
-    const result = deriveEditorialScore(tool);
-    expect(result.value).toBeGreaterThanOrEqual(9.0);
-    expect(result.label).toBe("Ottimo");
-  });
-
-  it("returns Solido label for featured + expert base", () => {
-    // expert + featured gives 8.1 + 0.3 = 8.4 (within Solido range)
-    const tool = makeTool({
-      toolOfWeek: false,
-      featured: true,
-      level: "expert",
-      name: "ProApp", // 6 chars → jitter 0.0
-    });
-    const result = deriveEditorialScore(tool);
-    expect(result.value).toBeGreaterThanOrEqual(8.0);
-    expect(result.value).toBeLessThan(9.0);
+describe("deriveEditorialScore (delegates to canonical computeEditorialScore)", () => {
+  it("returns 8.4 for Blink (matches Archive card)", () => {
+    const result = deriveEditorialScore({ name: "Blink", toolOfWeek: true });
+    expect(result.value).toBe(8.4);
     expect(result.label).toBe("Solido");
   });
 
-  it("returns Buono label for score 7.0-7.9", () => {
-    const tool = makeTool({ toolOfWeek: false, featured: false, level: "intermediate" });
-    const result = deriveEditorialScore(tool);
-    expect(result.value).toBeGreaterThanOrEqual(7.0);
-    expect(result.value).toBeLessThan(8.0);
-    expect(result.label).toBe("Buono");
+  it("is deterministic — same input → same output", () => {
+    const tool = makeTool();
+    expect(deriveEditorialScore(tool)).toEqual(deriveEditorialScore(tool));
   });
 
   it("never exceeds 9.5 even with all bonuses", () => {
@@ -97,15 +79,10 @@ describe("deriveEditorialScore", () => {
     expect(result.value).toBeLessThanOrEqual(9.5);
   });
 
-  it("never drops below 6.0", () => {
-    const tool = makeTool({ toolOfWeek: false, featured: false, level: "beginner" });
+  it("never drops below 6.8", () => {
+    const tool = makeTool({ toolOfWeek: false, featured: false, level: "beginner", name: "X" });
     const result = deriveEditorialScore(tool);
-    expect(result.value).toBeGreaterThanOrEqual(6.0);
-  });
-
-  it("is deterministic — same input → same output", () => {
-    const tool = makeTool();
-    expect(deriveEditorialScore(tool)).toEqual(deriveEditorialScore(tool));
+    expect(result.value).toBeGreaterThanOrEqual(6.8);
   });
 });
 

@@ -84,9 +84,6 @@ export function ToolDetailCtaBar({
           className="td4-affiliate-note"
           style={{
             flexBasis: "100%",
-            color: "var(--tv-ink-muted-aa)",
-            fontSize: "0.7rem",
-            lineHeight: "var(--tv-leading-snug)",
           }}
         >
           Link partner: potremmo ricevere una commissione senza costi extra per te.
@@ -138,7 +135,7 @@ export function ToolDetailCtaBar({
           aria-label={`Selezionato, posizione ${compareRank}`}
         >
           #{String(compareRank).padStart(2, "0")}
-          <span style={{ opacity: 0.7, fontSize: "0.7rem" }}>
+          <span className="td4-compare-rank__suffix">
             di {compareCount}/{MAX_COMPARE_TOOLS}
           </span>
         </span>

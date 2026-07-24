@@ -44,6 +44,7 @@ import { Bookmark, Columns3, Star } from "lucide-react";
 
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { cn } from "@/lib/utils";
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
@@ -119,9 +120,9 @@ function ArchiveV4ToolCardInner({
     : null;
   const initial = tool.name.slice(0, 2).toUpperCase();
 
-  // Deterministic editorial score (6.8-9.5 range, mirrors Home v4 pattern)
-  const scoreBase = 6.8 + (tool.name.length % 3) * 0.5;
-  const score = (tool.toolOfWeek ? Math.min(scoreBase + 0.6, 9.5) : scoreBase).toFixed(1);
+  // Canonical editorial score (single source of truth: lib/data/editorial-score.ts)
+  const { value: scoreValue } = computeEditorialScore(tool);
+  const score = scoreValue.toFixed(1);
 
   // Deterministic votes
   const votes = 12 + (tool.name.length * 7) % 80;
