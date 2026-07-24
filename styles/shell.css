@@ -900,13 +900,15 @@
 
 /* MobileBottomNav visibility — explicit because Tailwind v4
    responsive variant generation drops the @media wrapper for
-   `md:hidden` when no other `md:*` class is used in the source.
-   Keep the mobile nav visible only on screens <768px. */
+   `xl:hidden` when no other `xl:*` class is used in the source.
+   Keep the mobile bottom nav visible from 0 to 79.99rem so tablet
+   users (768-1279) get the instrument nav, and switch to the
+   desktop nav at xl (>=1280). */
 .site-mobile-footer-nav {
   display: flex;
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 80rem) {
   .site-mobile-footer-nav {
     display: none;
   }

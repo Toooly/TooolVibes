@@ -39,7 +39,7 @@ export default async function MarketingLayout({
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
           <DiscoveryPersistenceProvider>
             <SiteHeaderV2 />
-            <main id="main-content" tabIndex={-1} className="relative z-10 pb-mobile-nav pt-[var(--tv-header-height)] md:pt-[var(--tv-header-height)] md:pb-0">
+            <main id="main-content" tabIndex={-1} className="relative z-10 pb-mobile-nav pt-[var(--tv-header-height)] md:pt-[var(--tv-header-height)] xl:pb-0">
               <PageTransition>{children}</PageTransition>
             </main>
             <SiteFooterV2 />

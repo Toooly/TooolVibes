@@ -40,7 +40,7 @@ export function MobileBottomNav() {
       inert={isOverlayOpen || undefined}
       className={cn(
         "mobile-bottom-motion site-mobile-footer-nav fixed z-[var(--tv-z-nav)]",
-        "md:hidden",
+        "xl:hidden",
         "transition-opacity duration-300",
         isOverlayOpen && "opacity-0 pointer-events-none"
       )}
