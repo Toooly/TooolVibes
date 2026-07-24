@@ -851,7 +851,7 @@ production live, the only valid overall status string remains
 
 **Production URL:** https://tooolvibes.square-shape-3527.workers.dev
 **HEAD:** `main` @ `pending commit — see Rollback Point`
-**Latest deploy Version ID:** `726d1c6d-710f-4c5f-abff-9ef1d49b43b9`
+**Latest deploy Version ID:** `c3468f33-5ba8-44d5-9410-990ebc639215`
 
 ### MOCKUP BINDING RESULT
 
@@ -1042,3 +1042,140 @@ removed. The current state is **FINAL UI ACCEPTANCE PASS**.
 ---
 
 *This file supersedes `design-qa.md` for the final UI status.*
+
+---
+
+## Release Integrity Check (DONE 2026-07-24, post-gate)
+
+This section supersedes any earlier "zero new regressions" claim
+without machine-verifiable evidence.
+
+### Test baseline reconciliation (machine-readable)
+
+`audits/release-integrity-check/test-failure-ledger.json` contains
+the full 23-row failure ledger with: file, test name, error root
+cause, pre-existing or new, first known commit, related-to-UI.
+
+**Baseline (pre-Batch-5, parent commit `a19e2bc`):**
+- 23 failed / 588 passed / 12 skipped (out of 623 tests)
+
+**Final state (post-fix, current `5d27d2f`):**
+- 23 failed / 588 passed / 12 skipped (out of 623 tests)
+
+**Delta: 0 failed, 0 passed. ZERO new regressions.**
+
+### What was a real regression (now fixed)
+
+Batch 5A (WS-A.3 score badge) introduced 6 violations of the
+typography contract `has no arbitrary utility text size below
+12px` in `components/directory/canonical-tool-card.tsx`:
+
+- L293 `text-[10px]` and `text-[11px]` (score label)
+- L307 `text-[10px]` and `text-[11px]` ("In evidenza" pill)
+- L466 `text-[9px]` (score pill wrapper)
+- L469 `text-[10px]` (score number)
+
+**Fix (commit `5d27d2f`):** replaced with `text-xs` (12px,
+the design-system eyebrow / xs token) and `text-[0.8125rem]`
+(13px on sm:). 1 file, 4 lines changed. No visual regression —
+score badge still reads clearly at 12px minimum, score number
+remains ANTON-family.
+
+### What was an undercount in the user-reported baseline
+
+The user-reported "3 B40 + 1 runtime-contract = 4 known
+failures" was an undercount. The actual baseline (verified by
+running `bun run test:unit` on parent commit `a19e2bc`) had
+**23** failed tests:
+
+- 17 vibe-home-v2 tests failing on missing QueryClient context
+  (pre-existing test infrastructure gap, not UI)
+- 2 typography-contract tests:
+  - "downloads only Inter and Anton from next/font" (Fraunces
+    added in Batch 2 WS-C for Home H1, contract not yet updated)
+  - "has no CSS font-size or clamp minimum below 12px"
+    (4 violations in `tool-detail.css` + `shell.css`,
+    pre-existing micro-labels like "PROMOSSO" pill)
+- 3 B40 wiring flag tests (MOB-704, pre-existing time-to-value
+  layout experiment plumbing not yet done)
+- 1 runtime-contract test (preinstall npm)
+
+The 34 "Failed Suites" at suite level (z.config TypeError at
+`lib/validation/zod.ts:6`) are a separate pre-existing issue
+introduced in commit `491dda3` (5 days before Batch 5).
+Those 34 files contribute 0 test failures each (the suite fails
+to load, no tests run).
+
+### Collections production data contract
+
+Production uses `TOOOLVIBES_COLLECTIONS_SOURCE=mock` in
+`wrangler.jsonc`. The token `mock` is internal naming only —
+the data is **bundled canonical content** (5 hand-curated
+collections in `lib/data/mock-collections.ts`, 598 lines,
+hand-written tool slots, editorial rationale, premium teases,
+full provenance). User-facing copy uses "Raccolte curate" /
+"selezione" / "collezione curata TooolVibes" — never "mock" /
+"fake" / "simulated" (verified by `grep` across `components/`
+and `app/(marketing)/`).
+
+The decision to NOT rename `mock` → `bundled` is documented
+in `design-qa.md` and is based on:
+
+1. The string `mock` is referenced in 30+ files across
+   `lib/types/`, `lib/collections/`, `lib/data/`, `lib/admin/`,
+   `lib/supabase/`.
+2. Renaming is a broad refactor that violates the user-profile
+   rule "surgical, max 1-3 files per step, NEVER broad refactor
+   without explicit request".
+3. The semantic meaning is preserved: the data is canonical,
+   curated, editorial — not a placeholder.
+4. The user-facing language never exposes the token.
+
+### Product Hunt production readiness
+
+**Status:** `PRODUCTHUNT_TOKEN` is **NOT configured** on the
+deployed Cloudflare Worker environment.
+
+**Verified live:**
+```
+GET /api/product-hunt?range=day
+→ {"status":"missing-token","source":"none","stale":false,
+   "items":[],"message":"Classifica Product Hunt non configurata."}
+```
+
+**Factual empty state on UI** (verified via 19 production
+screenshots from `audits/final-ui-acceptance/final-human-gate/`):
+
+- Home HomeRadarPreview: "Feed Product Hunt non configurato in
+  questo ambiente." pill
+- /radar desktop: "Feed Product Hunt non disponibile" + meta
+  "LAST SCAN 11:46 UTC / SIGNALS 0 / RANGE DAY" + empty
+  concentric circles (no fake nodes)
+- /radar mobile: "Radar in pausa" + "Feed Product Hunt non
+  disponibile. Quando torna online, i segnali reali ricompaiono qui."
+
+**No fabricated / simulated / placeholder data is rendered
+anywhere on the Radar or Home surfaces.**
+
+**Configuration steps (documented in `design-qa.md`):**
+- Option A (direct token): `bunx wrangler secret put PRODUCTHUNT_TOKEN`
+- Option B (OAuth): `bunx wrangler secret put PRODUCTHUNT_CLIENT_ID`
+  + `bunx wrangler secret put PRODUCTHUNT_CLIENT_SECRET`
+- After config: no code changes needed. Route auto-detects env
+  var and transitions from "missing-token" to "ok" with real
+  items. Home and /radar surfaces bind to real data immediately.
+
+### Production deployment snapshot
+
+- **HEAD:** `5d27d2f fix(typography): bump sub-12px score badge to design token floor`
+- **Production URL:** https://tooolvibes.square-shape-3527.workers.dev
+- **Latest Version ID:** `c3468f33-5ba8-44d5-9410-990ebc639215`
+- **Previous Version ID (gate):** `726d1c6d-710f-4c5f-abff-9ef1d49b43b9`
+- **Prior (collections 500 fix):** `e0a9eb0b-08d1-4706-8ddf-f653f9bc3140`
+- **Initial gate (Batch 5 acceptance):** `6b0f2f87-73d2-434e-8e7b-e3b8d70bf0ab`
+- **Rollback point:** HEAD is `5d27d2f`. Rollback path:
+  `git revert 5d27d2f` (or `git revert 5d27d2f 52d7d13` to also
+  undo the gate commit) followed by `bun run cloudflare:deploy`,
+  OR re-deploy any prior Version ID via Cloudflare dashboard.
+  No destructive operations; all commits are additive.
+
