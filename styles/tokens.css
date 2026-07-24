@@ -169,7 +169,7 @@
   --tv-container-app: 56rem;         /* 896px */
   --tv-container-wide: 64rem;        /* 1024px */
   --tv-container-uw: 84rem;          /* 1344px */
-  --tv-header-height: 4.875rem;        /* 78px - definitive CommandBar (2026-07-24) */
+  --tv-header-height: 5.25rem;          /* 84px - definitive CommandBar v4 (2026-07-24) */
   --tv-header-height-mobile: 4.875rem; /* 78px - mobile top bar (brand + route label = 56 + 22) */
   --tv-main-offset-top: var(--tv-header-height);
 

@@ -100,7 +100,7 @@ function CommandBarBrand() {
           aria-hidden="true"
           className="absolute inset-0 grid place-items-center"
         >
-          <BrandLogo size={28} />
+          <BrandLogo size={36} />
         </span>
         {/* Signal nodes on the outer orbit at 3 positions */}
         <span

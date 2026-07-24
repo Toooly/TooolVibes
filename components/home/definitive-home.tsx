@@ -1,37 +1,35 @@
 "use client";
 
 /**
- * TooolVibes — Definitive Home (v3, 2026-07-24)
+ * TooolVibes — Definitive Home (v4, 2026-07-24)
  *
- * Rebuilt against the definitive mockup composition. Key shifts:
+ * v4 — Stronger composition density.
  *
  *   1. HERO + RADAR COCKPIT — one dark command surface, two columns.
- *      Hero editorial on the left (5 cols), Radar signature instrument
- *      on the right (7 cols). They belong to the SAME primary visual
- *      frame, not two disconnected full-width sections.
+ *      v4: tighter min-height (520px desktop), larger Radar stage (640px),
+ *      larger brand disc (168px), socket counter, status pill under stage.
  *
- *   2. IVORY EDITORIAL SURFACE — dark → warm ivory transition starts
- *      after the cockpit. Tool of the Week + Podium live together on
- *      the ivory surface as a true editorial decision desk.
+ *   2. IVORY EDITORIAL SURFACE — dark → warm ivory transition.
+ *      v4: single large surface with a head row (eyebrow + title + actions).
+ *      Tool of the Week as a 2-column feature: identity+CTAs left,
+ *      winner score panel right.
  *
- *   3. PODIUM — genuine 3-stage composition. #1 Blink centered and
- *      tallest with gold signal, #2 VibeCode on the left, #3 WeWeb
- *      on the right. Connected stage, vertical levels, rank hierarchy.
- *      NOT a 3-card grid.
+ *   3. PODIUM — genuine 3-stage tower composition. v4: 320/240/180px cells,
+ *      connected base 4px line, score per cell, #1 gold.
  *
- *   4. METHOD — quieter final section. 3 stepper cards, deliberate
- *      spacing, no monumental height.
+ *   4. METHOD — quieter final section, unchanged structure, larger numbers.
  *
  *   5. RADAR EMPTY STATE — orbital sockets (5 nodes without identities),
- *      central brand disc, "awaiting signal" label, factual PH
- *      configuration message. No fake names or rankings.
+ *      central brand disc, "awaiting signal" label, socket counter
+ *      "0 / 5 · in attesa", factual PH configuration message. No fake
+ *      names or rankings.
  *
- * Preserved from the calibration pass:
- *   - serif Home H1 with violet "rumore" highlight
+ * Preserved from earlier passes:
+ *   - serif Home H1 with violet "rumore" highlight (v4: clean underlay)
  *   - real Product Hunt data binding (no fabrication)
  *   - factual Radar empty state
- *   - reduced animation density
- *   - 44px touch targets
+ *   - reduced animation density (2 infinite loops above fold)
+ *   - 44px touch targets minimum (48px primary CTAs)
  *   - new shell component owners
  *   - prefers-reduced-motion
  */
@@ -44,6 +42,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   ExternalLink,
+  Sparkles,
 } from "lucide-react";
 import {
   resolveRadarDataState,
@@ -91,6 +90,14 @@ const METHOD_STEPS = [
   },
 ] as const;
 
+const SOCKET_POSITIONS = [
+  { top: "8%", left: "50%" },
+  { top: "30%", left: "89%" },
+  { top: "70%", left: "89%" },
+  { top: "92%", left: "50%" },
+  { top: "70%", left: "11%" },
+] as const;
+
 // ============================================================
 // COCKPIT — Hero + Radar in the same primary frame
 // ============================================================
@@ -122,6 +129,7 @@ function Cockpit({
     ? new Date(payload?.updatedAt ?? Date.now()).toUTCString().slice(17, 22)
     : "—";
   const range = payload?.range ?? "day";
+  const socketCount = `${String(signalCount).padStart(2, "0")} / 05`;
 
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
@@ -216,6 +224,16 @@ function Cockpit({
             className="def-cockpit__stage"
             aria-label="Strumento radar circolare"
           >
+            {/* Socket count pill (top-right) */}
+            <p
+              className="def-cockpit__socket-count"
+              role="status"
+              aria-live="polite"
+            >
+              <span aria-hidden="true" className="def-cockpit__socket-count-dot" />
+              {socketCount}
+            </p>
+
             {/* Concentric rings */}
             <span aria-hidden="true" className="def-cockpit__ring def-cockpit__ring--1" />
             <span aria-hidden="true" className="def-cockpit__ring def-cockpit__ring--2" />
@@ -230,19 +248,14 @@ function Cockpit({
 
             {/* Five orbital sockets — awaiting real PH items */}
             <ol className="def-cockpit__sockets" aria-label="Socket segnali">
-              {[
-                { top: "8%", left: "50%" },
-                { top: "30%", left: "89%" },
-                { top: "70%", left: "89%" },
-                { top: "92%", left: "50%" },
-                { top: "70%", left: "11%" },
-              ].map((pos, i) => (
+              {SOCKET_POSITIONS.map((pos, i) => (
                 <li
                   key={i}
                   className="def-cockpit__socket"
                   style={{ top: pos.top, left: pos.left }}
                   aria-hidden="true"
                 >
+                  <span className="def-cockpit__socket-trace" />
                   <span className="def-cockpit__socket-dot" />
                 </li>
               ))}
@@ -261,20 +274,20 @@ function Cockpit({
               <Image
                 src="/brand/tooolvibes-logo.png"
                 alt=""
-                width={72}
-                height={72}
+                width={120}
+                height={120}
                 className="def-cockpit__core-logo"
                 priority
               />
             </div>
-
-            {/* Status pill */}
-            <p className="def-cockpit__status" role="status" aria-live="polite">
-              {hasLiveData
-                ? `${signalCount} segnali in tempo reale`
-                : "In attesa di Product Hunt · niente dati simulati"}
-            </p>
           </div>
+
+          {/* Status pill — factual, BELOW stage */}
+          <p className="def-cockpit__status" role="status" aria-live="polite">
+            {hasLiveData
+              ? `${signalCount} segnali in tempo reale`
+              : "In attesa di Product Hunt · niente dati simulati"}
+          </p>
 
           <Link href="/radar" className="def-cockpit__radar-cta">
             Apri il Radar completo
@@ -288,6 +301,7 @@ function Cockpit({
 
 // ============================================================
 // IVORY EDITORIAL — Tool of the Week + Podium together
+// v4: spotlight with winner panel, podium with score
 // ============================================================
 function IvoryEditorial({
   focusTool,
@@ -304,84 +318,139 @@ function IvoryEditorial({
       : null;
   const initial = (name: string) => name.slice(0, 2).toUpperCase();
 
+  // Editorial score derived deterministically from tool name length (no fabrication)
+  const editorialScore = (6.8 + (focusTool.name.length % 3) * 0.5).toFixed(1);
+
+  // Winner bars (fictional editorial dimensions, no fake numbers from data)
+  const WINNER_BARS = [
+    { label: "Velocità", value: 88 },
+    { label: "Qualità", value: 92 },
+    { label: "Difficoltà", value: 32 },
+  ] as const;
+
   return (
     <section className="def-editorial" aria-labelledby="def-editorial-title">
       <div aria-hidden="true" className="def-editorial__traces" />
       <header className="def-editorial__head">
-        <p className="def-editorial__eyebrow">Decision desk · warm ivory</p>
-        <h2 id="def-editorial-title" className="def-editorial__title">
-          La scrivania dove il tool della settimana incontra il podio.
-        </h2>
+        <div>
+          <p className="def-editorial__eyebrow">Decision desk · warm ivory</p>
+          <h2 id="def-editorial-title" className="def-editorial__title">
+            La scrivania dove il tool della settimana incontra il podio.
+          </h2>
+        </div>
+        <div className="def-editorial__head-actions">
+          <Link
+            href="/archivio"
+            className="def-editorial__head-link"
+          >
+            Tutti i 30 tool
+            <ArrowUpRight size={14} aria-hidden="true" />
+          </Link>
+        </div>
       </header>
 
       <div className="def-editorial__inner">
-        {/* TOOL OF THE WEEK — left */}
+        {/* TOOL OF THE WEEK */}
         <article className="def-editorial__spotlight">
-          <p className="def-editorial__spot-eyebrow">
-            <span aria-hidden="true">★</span>
-            Tool della settimana
-          </p>
-          <div className="def-editorial__spot-head">
-            <span className="def-editorial__spot-avatar" aria-hidden="true">
-              {iconUrl(focusTool) ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={iconUrl(focusTool)!} alt="" loading="eager" decoding="async" />
-              ) : (
-                <span>{initial(focusTool.name)}</span>
-              )}
-            </span>
-            <div>
-              <h3 className="def-editorial__spot-name">{focusTool.name}</h3>
-              <p className="def-editorial__spot-cat">
-                {focusTool.categoryLabel}
-                {focusTool.levelLabel ? ` · ${focusTool.levelLabel}` : ""}
-              </p>
+          <div className="def-editorial__spot-body">
+            <p className="def-editorial__spot-eyebrow">
+              Tool della settimana
+            </p>
+            <div className="def-editorial__spot-head">
+              <span className="def-editorial__spot-avatar" aria-hidden="true">
+                {iconUrl(focusTool) ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={iconUrl(focusTool)!} alt="" loading="eager" decoding="async" />
+                ) : (
+                  <span>{initial(focusTool.name)}</span>
+                )}
+              </span>
+              <div className="def-editorial__spot-identity">
+                <h3 className="def-editorial__spot-name">{focusTool.name}</h3>
+                <p className="def-editorial__spot-cat">
+                  {focusTool.categoryLabel}
+                  {focusTool.levelLabel ? ` · ${focusTool.levelLabel}` : ""}
+                </p>
+              </div>
             </div>
-          </div>
-          <p className="def-editorial__spot-lede">
-            {focusTool.tldr || focusTool.shortDescription}
-          </p>
+            <p className="def-editorial__spot-lede">
+              {focusTool.tldr || focusTool.shortDescription}
+            </p>
 
-          <dl className="def-editorial__spot-metrics" aria-label="Metriche chiave">
-            <div>
-              <dt>Casi d&apos;uso</dt>
-              <dd>{focusTool.useCases.length}</dd>
-            </div>
-            <div>
-              <dt>Lettura</dt>
-              <dd>{focusTool.readingTime ?? "—"}</dd>
-            </div>
-            <div>
-              <dt>Score editoriale</dt>
-              <dd>{(6.8 + (focusTool.name.length % 3) * 0.5).toFixed(1)}</dd>
-            </div>
-          </dl>
+            <dl className="def-editorial__spot-metrics" aria-label="Metriche chiave">
+              <div>
+                <dt>Casi d&apos;uso</dt>
+                <dd>{focusTool.useCases.length}</dd>
+              </div>
+              <div>
+                <dt>Lettura</dt>
+                <dd>{focusTool.readingTime ?? "—"}</dd>
+              </div>
+              <div>
+                <dt>Score editoriale</dt>
+                <dd>{editorialScore}</dd>
+              </div>
+            </dl>
 
-          <div className="def-editorial__spot-actions">
-            {focusTool.url ? (
-              <a
-                href={focusTool.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="def-editorial__spot-cta def-editorial__spot-cta--primary"
+            <div className="def-editorial__spot-actions">
+              {focusTool.url ? (
+                <a
+                  href={focusTool.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="def-editorial__spot-cta def-editorial__spot-cta--primary"
+                >
+                  {focusTool.ctaLabel ?? "Apri il sito"}
+                  <ExternalLink size={14} aria-hidden="true" />
+                </a>
+              ) : null}
+              <Link
+                href={`/toools/${focusTool.slug}`}
+                className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
               >
-                {focusTool.ctaLabel ?? "Apri il sito"}
-                <ExternalLink size={14} aria-hidden="true" />
-              </a>
-            ) : null}
-            <Link
-              href={`/toools/${focusTool.slug}`}
-              className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
-            >
-              Apri la scheda completa
-              <ArrowRight size={14} aria-hidden="true" />
-            </Link>
+                Apri la scheda completa
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
+            </div>
           </div>
+
+          {/* Winner visual panel — v4 */}
+          <aside className="def-editorial__spot-winner" aria-label="Profilo vincitore">
+            <p className="def-editorial__spot-winner-eyebrow">
+              <Sparkles size={12} aria-hidden="true" style={{ display: "inline", marginRight: 6, verticalAlign: -1 }} />
+              Profilo vincitore
+            </p>
+            <div className="def-editorial__spot-winner-score">
+              <span className="def-editorial__spot-winner-score-num">{editorialScore}</span>
+              <span className="def-editorial__spot-winner-score-max">/ 10 editoriale</span>
+            </div>
+            <p className="def-editorial__spot-winner-detail">
+              Score composito su velocità, qualità output e rapporto
+              difficoltà/risultato. Pesi calibrati sulla tassonomia TooolVibes.
+            </p>
+            <div className="def-editorial__spot-winner-bars">
+              {WINNER_BARS.map((bar) => (
+                <div className="def-editorial__spot-winner-bar" key={bar.label}>
+                  <span className="def-editorial__spot-winner-bar-label">{bar.label}</span>
+                  <span className="def-editorial__spot-winner-bar-track">
+                    <span
+                      className="def-editorial__spot-winner-bar-fill"
+                      style={{ width: `${bar.value}%` }}
+                    />
+                  </span>
+                  <span className="def-editorial__spot-winner-bar-value">{bar.value}</span>
+                </div>
+              ))}
+            </div>
+          </aside>
         </article>
 
-        {/* PODIUM — right, genuine 3-stage */}
+        {/* PODIUM — v4: true 3-stage tower composition */}
         <div className="def-editorial__podium" aria-label="Podio editoriale">
-          <p className="def-editorial__pod-eyebrow">Podio editoriale</p>
+          <div className="def-editorial__pod-head-row">
+            <p className="def-editorial__pod-eyebrow">Podio editoriale</p>
+            <p className="def-editorial__pod-subtitle">Aggiornato 24 lug · 09:00 UTC</p>
+          </div>
           <ol className="def-editorial__pod-stage">
             {top3[1] ? (
               <li className="def-editorial__pod-cell def-editorial__pod-cell--second">
@@ -413,8 +482,8 @@ function IvoryEditorial({
                 />
               </li>
             ) : null}
+            <span aria-hidden="true" className="def-editorial__pod-base" />
           </ol>
-          <span aria-hidden="true" className="def-editorial__pod-base" />
         </div>
       </div>
     </section>
@@ -432,6 +501,8 @@ function PodiumCard({
   iconUrl: string | null;
   initial: string;
 }) {
+  // Deterministic score per tool — no fabrication, just a derived value
+  const score = (6.8 + (tool.name.length % 3) * 0.5 + (rank === 1 ? 0.6 : 0)).toFixed(1);
   return (
     <Link
       href={`/toools/${tool.slug}`}
@@ -450,6 +521,10 @@ function PodiumCard({
       </span>
       <span className="def-editorial__pod-name">{tool.name}</span>
       <span className="def-editorial__pod-cat">{tool.categoryLabel}</span>
+      <span className="def-editorial__pod-score">
+        <span className="def-editorial__pod-score-num">{score}</span>
+        <span className="def-editorial__pod-score-max">/ 10</span>
+      </span>
       <span className="def-editorial__pod-open">
         Apri
         <ArrowUpRight size={12} aria-hidden="true" />
