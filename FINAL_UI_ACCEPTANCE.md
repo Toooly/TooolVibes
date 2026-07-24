@@ -1328,3 +1328,42 @@ Path: `audits/definitive-rebuild/archive-v4/`
 
 None observed in auto-inspection. Manual visual review pending.
 
+### Board integrity (2026-07-24, re-issued after HTML+file:// embedding failure)
+
+The first iteration of the 5 review boards used a Playwright HTML
+composer with `file://` image refs. Playwright's sandboxed page
+context could not load absolute `file://` paths, so the embedded
+`<img>` tags rendered as collapsed horizontal strips showing only
+their alt text. The 27/27 auto-inspection was valid (it ran against
+the live page, not the boards) but the visual evidence the user
+inspected was broken.
+
+**Rebuilt method:** Sharp/PIL image compositing. Each panel is the
+actual PNG screenshot pasted onto a dark canvas with a label strip
+above it. No HTML, no `file://` paths, no embedded data URIs — pure
+image processing. Final 5 boards + 24 raw screenshots re-captured
+from the live V4 production deploy (`fb3c340e-d102-441d-8f00-fca998e55c87`).
+
+**Integrity check** (`audits/definitive-rebuild/archive-v4/board-integrity.json`):
+
+| Board | Size | Min-height OK | Content samples | Real pixels |
+|---|---|---|---|---|
+| review-board-desktop.png | 1248×2552 | ✓ | 7/7 | 29.4% |
+| review-board-mobile.png | 428×2281 | ✓ | 7/7 | 33.9% |
+| review-board-tablet.png | 1254×6161 | ✓ | 7/7 | 21.4% |
+| review-board-card-states.png | 1952×1380 | ✓ | 6/6 | 28.5% |
+| review-board-tray-filters.png | 1634×795 | ✓ | 6/6 | 48.0% |
+
+**Raw screenshots inventory (24/24 present):**
+- Desktop 1440: `archive-{full,fold,intro,filters,decision-desk,grid,card-default,card-hover,card-selected,card-promoted,tray-2-items,tray-4-items}-1440.png` (12 files)
+- Mobile 390: `archive-{full,fold,intro,filters,decision-desk,card,tray,bottom-nav}-390.png` (8 files)
+- Tablet: `archive-{full,fold}-{768,1024}.png` (4 files)
+
+All 5 boards composed with PIL via
+`/tmp/build-archive-v4-boards-v3.py`, integrity-verified via
+`/tmp/verify-archive-v4-boards.py`.
+
+**No Archive UI change** during this iteration — only evidence
+rebuild. CSS/TSX in working tree unchanged from `1e6264e`.
+
+
