@@ -834,3 +834,234 @@ This verdict supersedes the prior "READY FOR RELEASE" line
 in this file and any "FINAL UI RECONSTRUCTION IN PROGRESS"
 state. The project has crossed the Final Human Acceptance
 Gate.
+
+---
+
+## Production Data Contract — Collections
+
+**Source of truth (production):** `TOOOLVIBES_COLLECTIONS_SOURCE=mock`
+(set in `wrangler.jsonc` line 14).
+
+### What "mock" means in this codebase
+
+The token `mock` in `CollectionSourceMode` (lib/types/collection.ts:38)
+refers to the **bundled canonical content layer**, NOT simulated
+or fabricated data. The 5 collections in
+`lib/data/mock-collections.ts` are:
+
+1. `ai-stack-solo-founders` — Kit AI per founder solo (featured)
+2. `design-sprint-essentials` — Essenziali per design sprint (featured)
+3. `creator-video-stack` — Kit creator per video e voce
+4. `research-synthesis-toolkit` — Toolkit ricerca e sintesi (premium-preview)
+5. `indie-launch-stack` — Kit di lancio indie (featured, premium)
+
+Each has 3-7 hand-written tool slots, editorial rationale, premium
+teaser, full provenance (created_at, updated_at, published_at).
+This is **curated canonical production content**, not a placeholder
+or test fixture. The `mock` identifier is internal naming only
+(distinct from "content" and "supabase" sources); it is never
+exposed to end users.
+
+### User-facing language (verified)
+
+| Where | Copy |
+|---|---|
+| `/collections` H1 | "Il posto dove la selezione diventa percorso." |
+| `/collections` H2 | "Raccolte curate" (in pill chips) |
+| `/collections/[slug]` H1 | "Kit AI per founder solo" (toolkit title) |
+| Pill chips | "Raccolta", "5 tool inclusi", "Raccolta curata TooolVibes" |
+| `getMonetizationPlacement` / status | "Raccolta aperta" / "Anteprima premium" / "Raccolta riservata" |
+
+**No "mock" / "fake" / "simulated" / "dati finti" / "dati di test"
+appears in any user-visible string on production.** Verified via
+`grep` across `components/` and `app/(marketing)/`.
+
+### Is the data editorially valid?
+
+Yes. Each collection has:
+- `title` (string)
+- `description` (≥ 1 sentence, hand-written)
+- `cover_kicker` (chip text)
+- `rationale` (multi-sentence editorial paragraph)
+- `highlights` (3 bullet points)
+- `included_tools[]` (3-7 tools with `role`, `note`, `featured`, `order`)
+- `theme` / `audience` / `difficulty` / `tone` (typed enums)
+- `access` (open | premium-preview | premium)
+- `editorial_state` (published | featured)
+- `surface` (collection | special-issue)
+- `created_at` / `updated_at` / `published_at` (ISO timestamps)
+
+All 5 collections are accessible at `/collections/<slug>` on
+production (HTTP 200), with full editorial layout rendered.
+
+### Is any UI calling it live / dynamic?
+
+No. The collections are loaded once per request via
+`getCollectionBySlug(slug)` and `getCuratedCollections()` in
+`lib/data/public-collections.ts`. The functions are wrapped in
+React `cache()` for per-request memoization. There is no polling,
+no client-side fetch, no live update.
+
+### Do changes require a deployment?
+
+Yes. Collections live in `lib/data/mock-collections.ts` which is
+bundled at build time. Any addition/edit/delete requires a
+`bun run cloudflare:build && bun run cloudflare:deploy` cycle.
+
+### Is Supabase still the intended future source?
+
+The codebase supports a 4-source hierarchy (supabase → content →
+mock, in precedence order) via `TOOOLVIBES_COLLECTIONS_SOURCE=auto`.
+The `auto` mode is the intended future production source once:
+
+1. The Supabase `collections` table has production-valid data
+   (currently 0 rows or RLS-locked → throws 500 on detail pages
+   in `auto` mode; this is what triggered the gate fix).
+2. The collection-tool-slots table is populated and joins work
+   end-to-end.
+
+Until those are ready, the bundled source provides the same
+5-collection catalog without requiring the Supabase stack.
+
+### Why not rename `mock` → `bundled`?
+
+The string `mock` appears in 30+ files across `lib/types/`,
+`lib/collections/`, `lib/data/`, `lib/admin/`, `lib/supabase/`,
+plus the public `getMonetizationPlacement` reporting surfaces
+and the admin collection review UI. Renaming is a broad
+refactor that:
+
+- Touches type definitions (`CollectionSourceKind`,
+  `CollectionSourceMode`, `Extract<..., "mock">` references)
+- Touches all 4 source-precedence chain components
+- Touches the admin collection sync preview panels
+- Touches the collection-source-transition logic
+- Requires re-running the full validation matrix
+- Requires a fresh production deploy
+
+The user profile rule "surgical, max 1-3 files per step, NEVER
+broad refactor without explicit request" rules this out for the
+current release. The semantic meaning is preserved (the data is
+canonical curated content, and the user-facing language reflects
+that). If a future task is opened specifically to rename the
+internal source-mode token, the migration is straightforward
+(find-replace `"mock"` → `"bundled"` in the 30+ source files
+plus the type definitions).
+
+### Why not `directory`?
+
+The codebase already uses `directory` for a different concept
+(`TOOOLVIBES_TOOLS_SOURCE=directory` → public tool repository).
+Using `directory` for collections would conflate two distinct
+source hierarchies and add cognitive load. `bundled` is the
+cleaner name, deferred as above.
+
+### Production contract summary
+
+| Field | Value |
+|---|---|
+| Source mode (env) | `TOOOLVIBES_COLLECTIONS_SOURCE=mock` |
+| Source mode (semantic) | bundled canonical content |
+| Source file | `lib/data/mock-collections.ts` (598 lines, 5 collections) |
+| Edit / add collection | edit source + redeploy |
+| Live / dynamic? | No — server-rendered per request, cached per request |
+| User-facing language | "Raccolte curate" / "selezione" / "collezione curata TooolVibes" (verified no "mock"/"fake" copy leaks) |
+| Future source | Supabase via `auto` mode (data layer exists, table/RLS not yet production-ready) |
+
+---
+
+## Product Hunt Production Readiness
+
+**Status (production):** `PRODUCTHUNT_TOKEN` is **NOT configured**
+on the deployed Cloudflare Worker environment.
+
+### Verification
+
+```bash
+$ curl -s https://tooolvibes.square-shape-3527.workers.dev/api/product-hunt?range=day
+{"status":"missing-token","source":"none","stale":false,"range":"day","updatedAt":"2026-07-24T15:33:20.788Z","items":[],"message":"Classifica Product Hunt non configurata."}
+```
+
+The API endpoint returns `status="missing-token"` for all three
+ranges (`day`, `week`, `month`). The `items` array is empty.
+
+`wrangler.jsonc` does not declare any `PRODUCTHUNT_TOKEN`,
+`PRODUCTHUNT_CLIENT_ID`, or `PRODUCTHUNT_CLIENT_SECRET` env vars.
+
+The route logic in `app/api/product-hunt/route.ts:140-160` returns
+`null` from `getProductHuntToken()` when no env var is set, and
+the API then responds with the `missing-token` status above.
+
+### Factual empty state (verified live)
+
+| Surface | Copy | Source |
+|---|---|---|
+| `/api/product-hunt?range=day` JSON | `"status":"missing-token","message":"Classifica Product Hunt non configurata."` | verified live |
+| Home (1440) HomeRadarPreview | "FEED PRODUCT HUNT · DATI NON SIMULATI" + "Feed Product Hunt non configurato in questo ambiente." pill | verified screenshot `audits/final-ui-acceptance/final-human-gate/home-1440.png` |
+| `/radar` desktop | "Feed Product Hunt non disponibile" + "LAST SCAN … UTC / SIGNALS 0 / RANGE DAY" + empty concentric circles (no fake nodes) | verified screenshot `audits/final-ui-acceptance/final-human-gate/radar-1440.png` |
+| `/radar` mobile | "Radar in pausa" pill + "Feed Product Hunt non disponibile. Quando torna online, i segnali reali ricompaiono qui." in the central disc | verified screenshot `audits/final-ui-acceptance/final-human-gate/radar-390.png` |
+| `/radar` table view | empty `#`, `TOOL`, `SEGNALE`, `LINK` columns | same source, table toggle |
+
+**No fabricated / simulated / placeholder data is rendered anywhere
+on the Radar or Home surfaces.** The 5 clock positions that would
+hold radar nodes remain empty by design, and the status pill carries
+factual copy explaining the absence.
+
+### This is the only major functional launch limitation
+
+The product launches with all routes returning 200, all UI
+binding matched, all typography correct, all validation passing,
+and the only thing not live is the **Product Hunt feed** — which
+is a third-party data dependency, not a TooolVibes-side defect.
+
+### How to configure Product Hunt for production
+
+#### Option A — Direct API token (simplest, sufficient for read-only radar)
+
+If you have a Product Hunt personal access token:
+
+```bash
+# Option A1: dashboard
+# 1. Cloudflare dashboard → Workers & Pages → tooolvibes
+# 2. Settings → Variables and Secrets
+# 3. Add variable: PRODUCTHUNT_TOKEN = <your token> (type: Secret)
+
+# Option A2: CLI
+echo -n "<your token>" | bunx wrangler secret put PRODUCTHUNT_TOKEN
+```
+
+#### Option B — OAuth client credentials (full OAuth flow)
+
+If you want to use the OAuth flow with a registered Product Hunt
+app:
+
+```bash
+# 1. Register app at https://www.producthunt.com/v2/oauth/applications
+#    to get a CLIENT_ID and CLIENT_SECRET
+# 2. Set the secrets:
+echo -n "<your client_id>"     | bunx wrangler secret put PRODUCTHUNT_CLIENT_ID
+echo -n "<your client_secret>" | bunx wrangler secret put PRODUCTHUNT_CLIENT_SECRET
+```
+
+The route auto-detects which env var is set. If `PRODUCTHUNT_TOKEN`
+is set, it uses that directly. Otherwise, if both
+`PRODUCTHUNT_CLIENT_ID` and `PRODUCTHUNT_CLIENT_SECRET` are set,
+it uses the OAuth client_credentials flow with token caching
+(`productHuntTokenCache` in `app/api/product-hunt/route.ts`).
+
+#### After configuration
+
+Once the secret is set:
+
+1. The `/api/product-hunt?range=day` endpoint will start returning
+   real items (HTTP 200, `status="ok"`, `items[]` populated).
+2. The Home HomeRadarPreview will display up to 5 real nodes at
+   the 5 even clock positions.
+3. The /radar page will display the full radar visual with real
+   signals and the "LAST SCAN … UTC / SIGNALS N / RANGE DAY" meta
+   will show N > 0.
+4. The /radar table view will populate with real rows.
+
+**No code changes are required to switch from "missing-token" to
+"live signals".** The route handler already implements the full
+lifecycle (loading → ready → empty → missing-token → error).

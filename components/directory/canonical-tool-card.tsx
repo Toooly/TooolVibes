@@ -290,7 +290,7 @@ export function CanonicalToolCard({
             >
               {cardScore.value.toFixed(1)}
             </span>
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--tv-ink-muted-aa)] sm:text-[11px]">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--tv-ink-muted-aa)] sm:text-[0.8125rem]">
               {cardScore.label}
             </span>
           </div>
@@ -304,7 +304,7 @@ export function CanonicalToolCard({
                 {isFeatured ? (
                   <span
                     data-slot="tool-card-featured-pill"
-                    className="inline-flex items-center gap-1 rounded-full border border-[var(--tv-accent-primary)]/40 bg-[var(--tv-accent-primary)]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--tv-accent-primary)] sm:text-[11px]"
+                    className="inline-flex items-center gap-1 rounded-full border border-[var(--tv-accent-primary)]/40 bg-[var(--tv-accent-primary)]/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-[var(--tv-accent-primary)] sm:text-[0.8125rem]"
                   >
                     <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[var(--tv-accent-primary)]" />
                     In evidenza
@@ -463,10 +463,10 @@ export function CanonicalToolCard({
                   </Badge>
                 ) : null}
                 <span
-                  className="inline-flex items-center gap-1 rounded-full border border-[var(--tv-accent-gold)]/30 bg-[var(--tv-bg-base)]/60 px-1.5 py-0.5 text-[9px] font-semibold"
+                  className="inline-flex items-center gap-1 rounded-full border border-[var(--tv-accent-gold)]/30 bg-[var(--tv-bg-base)]/60 px-1.5 py-0.5 text-xs font-semibold"
                   aria-label={`Punteggio ${cardScore.value} su 10`}
                 >
-                  <span className="font-[family-name:var(--tv-font-family-display)] text-[10px] font-black leading-none text-[var(--tv-accent-gold)]">
+                  <span className="font-[family-name:var(--tv-font-family-display)] text-xs font-black leading-none text-[var(--tv-accent-gold)]">
                     {cardScore.value.toFixed(1)}
                   </span>
                 </span>
