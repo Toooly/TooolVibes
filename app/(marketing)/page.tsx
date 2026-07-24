@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
-import { VibeHomeV2 } from "@/components/home/vibe-home-v2";
+import { DefinitiveHome } from "@/components/home/definitive-home";
 import { ComingSoonPage } from "@/components/coming-soon/coming-soon-page";
-import { homeExperience } from "@/lib/config/home-experience";
 import { releaseFeatures } from "@/lib/config/release-features";
 import {
   getFeaturedToolViews,
@@ -51,17 +50,18 @@ export default async function HomePage() {
     (tool) => tool.slug !== spotlightTool?.slug,
   );
 
-  // BATCH 40 (MOB-704): layout home flaggabile (pattern B04). Default
-  // "time-to-value": hero compatto con CTA + chip tool nel primo viewport e
-  // discovery stage a flusso; "legacy" ripristina la composizione precedente.
-  const homeLayout = homeExperience.layout;
-
+  // PHASE 2.2 (2026-07-24): Definitive Home replaces VibeHomeV2.
+  // The new architecture delivers 3+ major visible changes:
+  //   1. Editorial single-column hero with brand glyph as decoration
+  //   2. Full-width signature Radar instrument (NOT a side panel)
+  //   3. Editorial Tool of the Week with score panel + actions
+  //   4. Horizontal 3-card Podium (NOT vertical 3D stacked)
+  //   5. Horizontal method cards
   return (
-    <VibeHomeV2
+    <DefinitiveHome
       tools={tools}
       weeklyTool={spotlightTool}
       supportingTools={supportingTools.slice(0, 4)}
-      layout={homeLayout}
     />
   );
 }

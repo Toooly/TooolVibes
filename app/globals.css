@@ -12,6 +12,7 @@
 @import "../styles/command-bar.css";
 @import "../styles/mobile-top-bar.css";
 @import "../styles/mobile-bottom-nav.css";
+@import "../styles/definitive-home.css";
 
 :root {
   --bottom-nav-height: 3.55rem;
