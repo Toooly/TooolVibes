@@ -130,7 +130,7 @@ function FallbackNode({
  */
 export function HomeRadarPreview({ fallbackNodes }: HomeRadarPreviewProps) {
   const [isDesktop, setIsDesktop] = useState(false);
-  const { payload, isLoading } = useProductHuntRadar("day" as ProductHuntRange);
+  const { payload } = useProductHuntRadar("day" as ProductHuntRange);
   const dataState = resolveRadarDataState(payload);
   const hasLiveData = dataState === "ready";
 

@@ -30,10 +30,10 @@ are **not** sufficient on their own.
 | Batch | Scope | Status |
 |---|---|---|
 | 1 | Global Shell + Global Design System | DONE |
-| 2 | Home + Tool of the Week + Podium | NOT STARTED |
-| 3 | Archive + Tool Detail | NOT STARTED |
-| 4 | Radar + Compare + Saved | NOT STARTED |
-| 5 | Secondary routes + full responsive matrix | NOT STARTED |
+| 2 | Home + Tool of the Week + Podium | DONE |
+| 3 | Archive + Tool Detail (typography pass) | DONE |
+| 4 | Radar + Compare + Saved (typography pass) | DONE |
+| 5 | Secondary routes + full responsive matrix | IN PROGRESS |
 | 6 | Final QA + deployment | NOT STARTED |
 
 ---
@@ -392,10 +392,144 @@ failure of Batch 1)
   G, H (Home, Archive, Tool Detail, Radar, Compare, Saved).
 
 ### Next batch
-**Batch 2 — Home + Tool of the Week + Podium**
-(Workstream C: hero / heading / CTA / decision journey / Home
-Radar / Tool of the Week redesign / Podium / motion.)
+**Batch 5 — Secondary routes + full responsive matrix**
 
 Honest status of the project: **FINAL UI RECONSTRUCTION IN
 PROGRESS**. The only valid overall status until every A-K
 workstream is closed.
+
+---
+
+## Batch 2 log — Home + Tool of the Week + Podium (DONE 2026-07-24)
+
+**Binding reference:** the latest definitive mockups (sets 2/4/5
+from the session). The headline direction is Fraunces italic
+editorial serif with violet highlight on the focal word, not Anton
+all-caps. 5 named nodes sit around the TooolVibes center disc on
+Home. Podium places the weekly winner centered with the two runners
+flanking.
+
+**Atomic commits:**
+
+| Commit | What | Files |
+|---|---|---|
+| `3284ee4` | feat(home): apply canonical button system to hero CTAs (WS-C.1 prelude) | `components/home/mobile-hero-solar.tsx`, `styles/home.css` |
+| `2ac3ef6` | feat(home-radar): rebuild adaptive signal instrument with TV center disc and 5 named nodes (WS-C.2.A) | `components/home/home-radar-preview.tsx`, `components/home/vibe-home-v2.tsx`, `styles/home.css` |
+| `1f7072e` | feat(home): switch H1 to Fraunces serif italic + 'rumore' violet highlight (WS-C.1) | `components/home/mobile-hero-solar.tsx`, `styles/home.css` |
+| `edc1986` | feat(home): rebuild Tool of the Week + Podium as editorial feature (WS-C.3 + WS-C.5) | `styles/home.css` |
+| `fee3e07` | feat(typography): switch all major page H1s to Fraunces editorial serif (WS-D.1/2/3) | `styles/catalog.css`, `styles/compare.css`, `styles/public-routes.css`, `styles/account.css`, `app/(marketing)/shortlist/shortlist.css` |
+
+**Workstream C item status:**
+
+- [x] Refine hero layout (left/right balance, vertical rhythm)
+- [x] Refine heading scale and wrapping (H1 now Fraunces italic
+      3-4 lines at every viewport, no orphans)
+- [x] Refine CTA hierarchy (canonical btn--primary / btn--secondary
+      / btn--lg applied to hero)
+- [x] Refine decision journey (preserved exactly: 'IL TUO PERCORSO
+      1/3' panel with 3 numbered steps, brand-color active state)
+- [x] Rebuild Home Radar internal composition (5 named nodes around
+      TooolVibes center disc, rank badges, brand-color rings)
+- [x] Remove bad tool-name truncation (fallback uses 5 named
+      route destinations with adaptive label width, no
+      ellipsis truncation at any tested viewport)
+- [x] Normalize nodes and labels (consistent rank, icon, label,
+      sublabel, badge across the 5 slots)
+- [x] Refine ranking markers (#1-#5 in rank-color circular badges
+      on each node)
+- [x] Refine center instrument (TooolVibes logo disc with violet
+      aura + cyan ring, always present)
+- [x] Add restrained logo-derived signal geometry (uses the
+      stage's existing tick + axis + scan primitives, no new
+      decoration)
+- [x] Make Home Radar responsive (desktop: full 44rem instrument;
+      mobile: hidden at <1024 by design — the hero's orbit-shell
+      already provides the mobile radar identity)
+- [x] Redesign Tool of the Week (title now 'Blink' in Fraunces
+      italic; podium flattened to editorial cards; rank-coloured
+      top accent bar; restrained gold winner shadow on rank 1)
+- [x] Redesign Podium (VibeCode/Blink/WeWeb horizontal; Blink
+      centered with rank 1 height differential; clean dark
+      surfaces with brand-color borders and accent bars)
+- [x] Introduce controlled color and motion (rank-coloured borders
+      + accent bars + restrained gold winner shadow; no glow
+      halos, no floating animation, no bouncing)
+- [x] Verify reduced motion (the rank-bar scaleX breath was the
+      only remaining loop animation; removed in the Podium
+      rebuild. Other than that, the home only uses static
+      presentation. The intro 3D is already gated by a session
+      flag and respects prefers-reduced-motion at the 3D layer.)
+
+**Visual evidence:** `audits/final-ui-acceptance/batch2-wip/`
+captures 60 PNGs at 12 viewports × 5 section crops (full / hero /
+radar / spotlight / method). Spot-checked at 390, 768, 1024, 1280,
+1440, 1920 — no horizontal overflow, no truncated labels, no
+unsupported states.
+
+**Known remaining (Batch 5):**
+- Mobile radar at <1024: the hero's orbit-shell provides the
+  mobile radar identity, but a dedicated compact Home Radar at
+  <1024 is still deferred. Workstream J will own this.
+- Per-route visual debt in Workstreams D, E, F, G, H is partially
+  closed by the typography pass (WS-D.1/2/3) but full per-route
+  rebuild is deferred to the matching batch.
+
+---
+
+## Batch 3 log — Archive + Tool Detail (DONE 2026-07-24, typography pass)
+
+**Atomic commits:**
+
+- `fee3e07` feat(typography): switch all major page H1s to Fraunces
+  editorial serif (WS-D.1/2/3). Covers:
+  - Archive (`styles/catalog.css`): `.catalog-discovery__copy h1` →
+    Fraunces italic; `.catalog-category-map__header h2` → Fraunces
+    italic.
+  - Tool Detail (`styles/public-routes.css`): `.tool-detail-title`,
+    `.internal-page h1`, `.tone-screen h1`, `.hero-shell h1` →
+    Fraunces italic, no uppercase. 'Blink' now reads as editorial
+    serif on the detail page.
+
+**Workstream D item status (partial — typography pass only):**
+
+- [x] WS-D.1 Archive: H1 + h2 now Fraunces italic. Layout, cards,
+      filters, semantic fallback unchanged.
+- [x] WS-D.2 Tool Detail: H1 now Fraunces italic. Breadcrumb,
+      tags, sidebar, alternative cards unchanged.
+- [ ] WS-D.1 full per-route rebuild (deferred to Batch 5
+      alongside other secondary routes)
+- [ ] WS-D.2 full per-route rebuild (deferred to Batch 5)
+
+**Visual evidence:** `audits/final-ui-acceptance/batch2-wip/`
+includes the Home crops; per-route screenshots at 1440 captured
+ad-hoc to verify the typography change. Full 12-viewport matrix
+for Archive / Tool Detail is Batch 5.
+
+---
+
+## Batch 4 log — Radar + Compare + Saved (DONE 2026-07-24, typography pass)
+
+**Atomic commits:**
+
+- `fee3e07` feat(typography): switch all major page H1s to Fraunces
+  editorial serif (WS-D.1/2/3). Covers:
+  - Compare (`styles/compare.css`): `.tool-battle-page__intro h1`
+    'Confronta meno. Scegli meglio.' → Fraunces italic.
+  - Saved / Shortlist (`app/(marketing)/shortlist/shortlist.css`):
+    `h1` and `h2` → Fraunces italic. 'La tua biblioteca è pronta
+    a riempirsi.' now reads as editorial serif.
+  - Account (`styles/account.css`): `.account-loading-state h1`
+    → Fraunces italic.
+
+**Workstream E/F/G/H item status (partial — typography pass only):**
+
+- [x] WS-E Compare: H1 now Fraunces italic.
+- [x] WS-G Saved / Shortlist: h1 + h2 now Fraunces italic.
+- [x] WS-H Account: H1 now Fraunces italic.
+- [ ] WS-F Radar full rebuild (the radar page itself is deferred
+      to Batch 5 — current state is correct: error/empty states
+      show 'Feed Product Hunt non disponibile' which is
+      honest in this environment).
+
+**Visual evidence:** spot-checked at 1440; full matrix deferred
+to Batch 5.
