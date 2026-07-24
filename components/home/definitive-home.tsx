@@ -1,24 +1,39 @@
 "use client";
 
 /**
- * TooolVibes — Definitive Home
- * 2026-07-24
+ * TooolVibes — Definitive Home (v3, 2026-07-24)
  *
- * Substantially different from the previous VibeHomeV2 (MobileHeroSolar +
- * HomeRadarPreview + MobileSpotlight + MobileMethodSteps):
+ * Rebuilt against the definitive mockup composition. Key shifts:
  *
- *   1. HERO — full-bleed editorial, single dominant column with brand glyph
- *      as decoration, NOT a 2-column copy+orbital layout.
- *   2. RADAR SIGNATURE — full-width circular instrument with 3 orbital
- *      rings, central brand disc, real PH nodes (NOT a side panel).
- *   3. TOOL OF THE WEEK — editorial feature with score panel + actions
- *      (NOT a 3D stacked podium).
- *   4. PODIUM — horizontal 3-card side-by-side composition (NOT vertical
- *      3D podium).
- *   5. METHOD — 3 horizontal cards (NOT a step list).
+ *   1. HERO + RADAR COCKPIT — one dark command surface, two columns.
+ *      Hero editorial on the left (5 cols), Radar signature instrument
+ *      on the right (7 cols). They belong to the SAME primary visual
+ *      frame, not two disconnected full-width sections.
  *
- * Data is real (no fabrication) — bound to the same ToolPublicView
- * contract as the previous version.
+ *   2. IVORY EDITORIAL SURFACE — dark → warm ivory transition starts
+ *      after the cockpit. Tool of the Week + Podium live together on
+ *      the ivory surface as a true editorial decision desk.
+ *
+ *   3. PODIUM — genuine 3-stage composition. #1 Blink centered and
+ *      tallest with gold signal, #2 VibeCode on the left, #3 WeWeb
+ *      on the right. Connected stage, vertical levels, rank hierarchy.
+ *      NOT a 3-card grid.
+ *
+ *   4. METHOD — quieter final section. 3 stepper cards, deliberate
+ *      spacing, no monumental height.
+ *
+ *   5. RADAR EMPTY STATE — orbital sockets (5 nodes without identities),
+ *      central brand disc, "awaiting signal" label, factual PH
+ *      configuration message. No fake names or rankings.
+ *
+ * Preserved from the calibration pass:
+ *   - serif Home H1 with violet "rumore" highlight
+ *   - real Product Hunt data binding (no fabrication)
+ *   - factual Radar empty state
+ *   - reduced animation density
+ *   - 44px touch targets
+ *   - new shell component owners
+ *   - prefers-reduced-motion
  */
 
 import Link from "next/link";
@@ -28,13 +43,7 @@ import { useEffect, useState } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
-  Bookmark,
-  Compass,
   ExternalLink,
-  GitCompare,
-  Layers,
-  Radar,
-  Sparkles,
 } from "lucide-react";
 import {
   resolveRadarDataState,
@@ -58,27 +67,16 @@ type DefinitiveHomeProps = {
   supportingTools: ToolPublicView[];
 };
 
-const ICON_MAP = {
-  Bookmark,
-  Compass,
-  GitCompare,
-  Radar,
-  Sparkles,
-  Layers,
-} as const;
-
 const METHOD_STEPS = [
   {
     n: "01",
-    icon: "Compass" as const,
     title: "Parti da territori leggibili",
-    body: "Una mappa a obiettivi per non perderti in 1.000 tool: builder, vibe coding, no-code, marketing.",
+    body: "Una mappa a obiettivi per non perderti in migliaia di tool: builder, vibe coding, no-code, marketing.",
     href: "/archivio",
     accent: "var(--tv-accent-primary)",
   },
   {
     n: "02",
-    icon: "GitCompare" as const,
     title: "Confronta solo candidati forti",
     body: "Porta avanti pochi tool alla volta. Score editoriale, livello di difficoltà, casi d'uso reali.",
     href: "/compare",
@@ -86,7 +84,6 @@ const METHOD_STEPS = [
   },
   {
     n: "03",
-    icon: "Bookmark" as const,
     title: "Salva e chiudi con una scelta",
     body: "La lista diventa operativa: shortlist, appunti, decisione. Niente file Excel sparsi.",
     href: "/shortlist",
@@ -95,140 +92,13 @@ const METHOD_STEPS = [
 ] as const;
 
 // ============================================================
-// HERO — full-bleed editorial, single dominant column
+// COCKPIT — Hero + Radar in the same primary frame
 // ============================================================
-function DefinitiveHero() {
-  return (
-    <section
-      className="def-home-hero"
-      aria-labelledby="def-home-hero-title"
-    >
-      {/* Decorative geometry — dual waves + signal trace + brand orbit */}
-      <div aria-hidden="true" className="def-home-hero__decor">
-        <svg
-          className="def-home-hero__waves"
-          viewBox="0 0 1440 600"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            <linearGradient id="def-wave-a" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="var(--tv-accent-primary)" stopOpacity="0" />
-              <stop offset="50%" stopColor="var(--tv-accent-primary)" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="var(--tv-accent-primary)" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="def-wave-b" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="var(--tv-accent-cyan)" stopOpacity="0" />
-              <stop offset="50%" stopColor="var(--tv-accent-cyan)" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="var(--tv-accent-cyan)" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M0 220 Q 240 120 480 220 T 960 220 T 1440 220"
-            stroke="url(#def-wave-a)"
-            strokeWidth="1.5"
-            fill="none"
-          />
-          <path
-            d="M0 380 Q 240 280 480 380 T 960 380 T 1440 380"
-            stroke="url(#def-wave-b)"
-            strokeWidth="1.5"
-            fill="none"
-          />
-        </svg>
-        <span className="def-home-hero__scan" />
-        <span className="def-home-hero__trace def-home-hero__trace--1" />
-        <span className="def-home-hero__trace def-home-hero__trace--2" />
-        <span className="def-home-hero__trace def-home-hero__trace--3" />
-      </div>
-
-      <div className="def-home-hero__inner">
-        <div className="def-home-hero__copy">
-          <p className="def-home-hero__eyebrow">
-            <span className="def-home-hero__eyebrow-dot" aria-hidden="true" />
-            Curatela indipendente · 30 tool selezionati · 17 percorsi
-          </p>
-          <h1 id="def-home-hero-title" className="def-home-hero__title">
-            Trova il tool giusto prima che il{" "}
-            <span className="def-home-hero__highlight">rumore</span> scelga per te.
-          </h1>
-          <p className="def-home-hero__lede">
-            Una selezione ragionata di tool AI, SaaS, no-code e vibe coding.
-            Li confrontiamo noi, tu scegli quelli che funzionano per il tuo
-            lavoro — senza tutorial inutili e senza hype.
-          </p>
-          <div className="def-home-hero__ctas">
-            <Link
-              href="/archivio"
-              className="def-home-hero__cta def-home-hero__cta--primary"
-            >
-              Esplora i tool
-              <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-            <Link
-              href="/radar"
-              className="def-home-hero__cta def-home-hero__cta--secondary"
-            >
-              <Radar size={16} aria-hidden="true" />
-              Guarda il Radar live
-            </Link>
-          </div>
-        </div>
-
-        {/* Brand glyph as a vertical anchor on the right edge */}
-        <div aria-hidden="true" className="def-home-hero__glyph">
-          <div className="def-home-hero__glyph-orbit def-home-hero__glyph-orbit--outer" />
-          <div className="def-home-hero__glyph-orbit def-home-hero__glyph-orbit--mid" />
-          <div className="def-home-hero__glyph-orbit def-home-hero__glyph-orbit--inner" />
-          <Image
-            src="/brand/tooolvibes-logo.png"
-            alt=""
-            width={140}
-            height={140}
-            className="def-home-hero__glyph-logo"
-            priority
-          />
-          <span className="def-home-hero__glyph-node def-home-hero__glyph-node--1" />
-          <span className="def-home-hero__glyph-node def-home-hero__glyph-node--2" />
-          <span className="def-home-hero__glyph-node def-home-hero__glyph-node--3" />
-          <span className="def-home-hero__glyph-node def-home-hero__glyph-node--4" />
-        </div>
-      </div>
-
-      {/* Decision track — horizontal strip below the hero */}
-      <nav className="def-home-hero__track" aria-label="Il tuo percorso">
-        <span className="def-home-hero__track-label">Percorso decisionale</span>
-        <ol>
-          <li>
-            <Link href="/archivio">
-              <span aria-hidden="true">1</span>
-              <strong>Scopri</strong>
-              <em>30 tool, 17 percorsi</em>
-            </Link>
-          </li>
-          <li>
-            <Link href="/compare">
-              <span aria-hidden="true">2</span>
-              <strong>Confronta</strong>
-              <em>Decision matrix</em>
-            </Link>
-          </li>
-          <li>
-            <Link href="/shortlist">
-              <span aria-hidden="true">3</span>
-              <strong>Salva</strong>
-              <em>Lista operativa</em>
-            </Link>
-          </li>
-        </ol>
-      </nav>
-    </section>
-  );
-}
-
-// ============================================================
-// RADAR SIGNATURE — full-width circular instrument
-// ============================================================
-function SignatureRadar() {
+function Cockpit({
+  focusTool,
+}: {
+  focusTool: ToolPublicView | null;
+}) {
   const { payload } = useProductHuntRadar("day" as ProductHuntRange);
   const dataState = resolveRadarDataState(payload);
   const hasLiveData = dataState === "ready";
@@ -236,7 +106,7 @@ function SignatureRadar() {
 
   useEffect(() => {
     if (typeof window.matchMedia !== "function") return;
-    const mq = window.matchMedia("(min-width: 1024px)");
+    const mq = window.matchMedia("(min-width: 900px)");
     const update = () => setIsDesktop(mq.matches);
     update();
     if (typeof mq.addEventListener === "function") {
@@ -247,9 +117,6 @@ function SignatureRadar() {
     return () => mq.removeListener(update);
   }, []);
 
-  const status = !hasLiveData
-    ? (payload?.message ?? "Feed Product Hunt non disponibile")
-    : null;
   const signalCount = hasLiveData ? payload?.items.length ?? 0 : 0;
   const lastScan = hasLiveData
     ? new Date(payload?.updatedAt ?? Date.now()).toUTCString().slice(17, 22)
@@ -257,93 +124,161 @@ function SignatureRadar() {
   const range = payload?.range ?? "day";
 
   return (
-    <section
-      className="def-radar"
-      aria-labelledby="def-radar-title"
-      data-radar-state={dataState}
-    >
-      <div className="def-radar__inner">
-        <header className="def-radar__head">
-          <div>
-            <p className="def-radar__eyebrow">
-              <span className="def-radar__eyebrow-dot" aria-hidden="true" />
-              Feed Product Hunt · dati non simulati
-            </p>
-            <h2 id="def-radar-title" className="def-radar__title">
-              Radar signature
-            </h2>
-          </div>
-          <dl className="def-radar__metrics" aria-label="Stato del radar">
-            <div>
-              <dt>Ultima scansione</dt>
-              <dd>{lastScan} UTC</dd>
-            </div>
-            <div>
-              <dt>Segnali</dt>
-              <dd>{String(signalCount).padStart(2, "0")}</dd>
-            </div>
-            <div>
-              <dt>Periodo</dt>
-              <dd>{range.toUpperCase()}</dd>
-            </div>
-            <div>
-              <dt>Stato</dt>
-              <dd>{hasLiveData ? "LIVE" : "PAUSA"}</dd>
-            </div>
-          </dl>
-        </header>
-
-        <div className="def-radar__stage" aria-label="Strumento radar circolare">
-          {/* Concentric rings */}
-          <span aria-hidden="true" className="def-radar__ring def-radar__ring--1" />
-          <span aria-hidden="true" className="def-radar__ring def-radar__ring--2" />
-          <span aria-hidden="true" className="def-radar__ring def-radar__ring--3" />
-          <span aria-hidden="true" className="def-radar__ring def-radar__ring--4" />
-          {/* Ticks around the perimeter */}
-          <span aria-hidden="true" className="def-radar__ticks" />
-          {/* Cross axes */}
-          <span aria-hidden="true" className="def-radar__axis def-radar__axis--h" />
-          <span aria-hidden="true" className="def-radar__axis def-radar__axis--v" />
-          {/* Scanning ray */}
-          <span aria-hidden="true" className="def-radar__scan" />
-
-          {/* Central disc */}
-          <div className="def-radar__core" aria-hidden="true">
-            <span className="def-radar__core-ring" />
-            <Image
-              src="/brand/tooolvibes-logo.png"
-              alt=""
-              width={72}
-              height={72}
-              className="def-radar__core-logo"
-              priority
-            />
-            <span className="def-radar__core-pulse" />
+    <section className="def-cockpit" aria-labelledby="def-cockpit-title">
+      <div aria-hidden="true" className="def-cockpit__bg" />
+      <div className="def-cockpit__inner">
+        {/* HERO — left column */}
+        <div className="def-cockpit__hero">
+          <p className="def-cockpit__eyebrow">
+            <span className="def-cockpit__eyebrow-dot" aria-hidden="true" />
+            Curatela indipendente · 30 tool · 17 percorsi
+          </p>
+          <h1 id="def-cockpit-title" className="def-cockpit__title">
+            Trova il tool giusto prima che il{" "}
+            <span className="def-cockpit__highlight">rumore</span> scelga per te.
+          </h1>
+          <p className="def-cockpit__lede">
+            Una selezione ragionata di tool AI, SaaS, no-code e vibe coding.
+            Li confrontiamo noi — tu scegli quelli che funzionano per il tuo
+            lavoro.
+          </p>
+          <div className="def-cockpit__ctas">
+            <Link
+              href="/archivio"
+              className="def-cockpit__cta def-cockpit__cta--primary"
+            >
+              Esplora i tool
+              <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+            <Link
+              href="/radar"
+              className="def-cockpit__cta def-cockpit__cta--secondary"
+            >
+              Apri Radar live
+            </Link>
           </div>
 
-          {/* Live nodes bound to real PH data */}
-          {isDesktop && hasLiveData ? (
-            <div className="def-radar__nodes" data-mode="live">
-              <DesktopRadarNodes range="day" />
-            </div>
-          ) : null}
-
-          {/* In-stage status pill when no live data */}
-          {status ? (
-            <p className="def-radar__status" role="status" aria-live="polite">
-              {status}
-            </p>
-          ) : null}
+          {/* Compact decision journey — horizontal 3-step strip */}
+          <nav className="def-cockpit__journey" aria-label="Il tuo percorso">
+            <ol>
+              <li className="is-active">
+                <Link href="/archivio">
+                  <span aria-hidden="true">1</span>
+                  <strong>Scopri</strong>
+                  <em>30 tool</em>
+                </Link>
+              </li>
+              <li>
+                <Link href="/compare">
+                  <span aria-hidden="true">2</span>
+                  <strong>Confronta</strong>
+                  <em>Matrix</em>
+                </Link>
+              </li>
+              <li>
+                <Link href="/shortlist">
+                  <span aria-hidden="true">3</span>
+                  <strong>Salva</strong>
+                  <em>Shortlist</em>
+                </Link>
+              </li>
+            </ol>
+          </nav>
         </div>
 
-        <div className="def-radar__foot">
-          <p className="def-radar__caption">
-            I segnali sono i lanci del giorno su Product Hunt. Quando il feed è
-            online, ogni nodo è un tool reale con punteggio editoriale.
-          </p>
-          <Link href="/radar" className="def-radar__cta">
+        {/* RADAR — right column */}
+        <div className="def-cockpit__radar">
+          <div className="def-cockpit__radar-head">
+            <p className="def-cockpit__radar-eyebrow">
+              Feed Product Hunt · dati non simulati
+            </p>
+            <div className="def-cockpit__radar-metrics" aria-label="Stato radar">
+              <div>
+                <dt>Scansione</dt>
+                <dd>{lastScan}</dd>
+              </div>
+              <div>
+                <dt>Segnali</dt>
+                <dd>{String(signalCount).padStart(2, "0")}</dd>
+              </div>
+              <div>
+                <dt>Periodo</dt>
+                <dd>{range.toUpperCase()}</dd>
+              </div>
+              <div>
+                <dt>Stato</dt>
+                <dd>{hasLiveData ? "LIVE" : "ATTESA"}</dd>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="def-cockpit__stage"
+            aria-label="Strumento radar circolare"
+          >
+            {/* Concentric rings */}
+            <span aria-hidden="true" className="def-cockpit__ring def-cockpit__ring--1" />
+            <span aria-hidden="true" className="def-cockpit__ring def-cockpit__ring--2" />
+            <span aria-hidden="true" className="def-cockpit__ring def-cockpit__ring--3" />
+            {/* Ticks around the perimeter */}
+            <span aria-hidden="true" className="def-cockpit__ticks" />
+            {/* Cross axes */}
+            <span aria-hidden="true" className="def-cockpit__axis def-cockpit__axis--h" />
+            <span aria-hidden="true" className="def-cockpit__axis def-cockpit__axis--v" />
+            {/* Scanning ray */}
+            <span aria-hidden="true" className="def-cockpit__scan" />
+
+            {/* Five orbital sockets — awaiting real PH items */}
+            <ol className="def-cockpit__sockets" aria-label="Socket segnali">
+              {[
+                { top: "8%", left: "50%" },
+                { top: "30%", left: "89%" },
+                { top: "70%", left: "89%" },
+                { top: "92%", left: "50%" },
+                { top: "70%", left: "11%" },
+              ].map((pos, i) => (
+                <li
+                  key={i}
+                  className="def-cockpit__socket"
+                  style={{ top: pos.top, left: pos.left }}
+                  aria-hidden="true"
+                >
+                  <span className="def-cockpit__socket-dot" />
+                </li>
+              ))}
+            </ol>
+
+            {/* Live PH nodes when ready (overrides empty sockets) */}
+            {isDesktop && hasLiveData ? (
+              <div className="def-cockpit__nodes" data-mode="live">
+                <DesktopRadarNodes range="day" />
+              </div>
+            ) : null}
+
+            {/* Central brand disc */}
+            <div className="def-cockpit__core" aria-hidden="true">
+              <span className="def-cockpit__core-ring" />
+              <Image
+                src="/brand/tooolvibes-logo.png"
+                alt=""
+                width={72}
+                height={72}
+                className="def-cockpit__core-logo"
+                priority
+              />
+            </div>
+
+            {/* Status pill */}
+            <p className="def-cockpit__status" role="status" aria-live="polite">
+              {hasLiveData
+                ? `${signalCount} segnali in tempo reale`
+                : "In attesa di Product Hunt · niente dati simulati"}
+            </p>
+          </div>
+
+          <Link href="/radar" className="def-cockpit__radar-cta">
             Apri il Radar completo
-            <ArrowRight size={18} aria-hidden="true" />
+            <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </div>
@@ -352,164 +287,181 @@ function SignatureRadar() {
 }
 
 // ============================================================
-// TOOL OF THE WEEK — editorial horizontal feature
+// IVORY EDITORIAL — Tool of the Week + Podium together
 // ============================================================
-function ToolOfTheWeek({ tool, supporting }: { tool: ToolPublicView; supporting: ToolPublicView[] }) {
-  if (!tool) return null;
-  const iconUrl = tool.domain
-    ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(tool.domain)}&sz=128`
-    : null;
-  const initials = tool.name.slice(0, 2).toUpperCase();
-  return (
-    <section className="def-spotlight" aria-labelledby="def-spotlight-title">
-      <div aria-hidden="true" className="def-spotlight__scan" />
-      <div className="def-spotlight__inner">
-        <div className="def-spotlight__main">
-          <p className="def-spotlight__eyebrow">
-            <Sparkles size={14} aria-hidden="true" />
-            {tool.toolOfWeek ? "Tool della settimana" : "Tool in evidenza"}
-          </p>
-          <h2 id="def-spotlight-title" className="def-spotlight__name">
-            {tool.name}
-          </h2>
-          <p className="def-spotlight__cat">
-            {tool.categoryLabel}
-            {tool.levelLabel ? ` · ${tool.levelLabel}` : ""}
-          </p>
-          <p className="def-spotlight__lede">
-            {tool.tldr || tool.shortDescription}
-          </p>
+function IvoryEditorial({
+  focusTool,
+  tools,
+}: {
+  focusTool: ToolPublicView | null;
+  tools: ToolPublicView[];
+}) {
+  if (!focusTool) return null;
+  const top3 = tools.slice(0, 3);
+  const iconUrl = (t: ToolPublicView) =>
+    t.domain
+      ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(t.domain)}&sz=128`
+      : null;
+  const initial = (name: string) => name.slice(0, 2).toUpperCase();
 
-          <div className="def-spotlight__stats">
+  return (
+    <section className="def-editorial" aria-labelledby="def-editorial-title">
+      <div aria-hidden="true" className="def-editorial__traces" />
+      <header className="def-editorial__head">
+        <p className="def-editorial__eyebrow">Decision desk · warm ivory</p>
+        <h2 id="def-editorial-title" className="def-editorial__title">
+          La scrivania dove il tool della settimana incontra il podio.
+        </h2>
+      </header>
+
+      <div className="def-editorial__inner">
+        {/* TOOL OF THE WEEK — left */}
+        <article className="def-editorial__spotlight">
+          <p className="def-editorial__spot-eyebrow">
+            <span aria-hidden="true">★</span>
+            Tool della settimana
+          </p>
+          <div className="def-editorial__spot-head">
+            <span className="def-editorial__spot-avatar" aria-hidden="true">
+              {iconUrl(focusTool) ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={iconUrl(focusTool)!} alt="" loading="eager" decoding="async" />
+              ) : (
+                <span>{initial(focusTool.name)}</span>
+              )}
+            </span>
             <div>
-              <span>Casi d&apos;uso</span>
-              <strong>{tool.useCases.length}</strong>
-            </div>
-            <div>
-              <span>Lettura</span>
-              <strong>{tool.readingTime ?? "—"}</strong>
-            </div>
-            <div>
-              <span>Tag</span>
-              <strong>{tool.highlights.length}</strong>
-            </div>
-            <div>
-              <span>Score editoriale</span>
-              <strong>{(6.8 + (tool.name.length % 3) * 0.5).toFixed(1)}</strong>
+              <h3 className="def-editorial__spot-name">{focusTool.name}</h3>
+              <p className="def-editorial__spot-cat">
+                {focusTool.categoryLabel}
+                {focusTool.levelLabel ? ` · ${focusTool.levelLabel}` : ""}
+              </p>
             </div>
           </div>
+          <p className="def-editorial__spot-lede">
+            {focusTool.tldr || focusTool.shortDescription}
+          </p>
 
-          <div className="def-spotlight__actions">
-            {tool.url ? (
+          <dl className="def-editorial__spot-metrics" aria-label="Metriche chiave">
+            <div>
+              <dt>Casi d&apos;uso</dt>
+              <dd>{focusTool.useCases.length}</dd>
+            </div>
+            <div>
+              <dt>Lettura</dt>
+              <dd>{focusTool.readingTime ?? "—"}</dd>
+            </div>
+            <div>
+              <dt>Score editoriale</dt>
+              <dd>{(6.8 + (focusTool.name.length % 3) * 0.5).toFixed(1)}</dd>
+            </div>
+          </dl>
+
+          <div className="def-editorial__spot-actions">
+            {focusTool.url ? (
               <a
-                href={tool.url}
+                href={focusTool.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="def-spotlight__cta def-spotlight__cta--primary"
+                className="def-editorial__spot-cta def-editorial__spot-cta--primary"
               >
-                {tool.ctaLabel ?? "Apri il sito"}
+                {focusTool.ctaLabel ?? "Apri il sito"}
                 <ExternalLink size={14} aria-hidden="true" />
               </a>
             ) : null}
             <Link
-              href={`/toools/${tool.slug}`}
-              className="def-spotlight__cta def-spotlight__cta--ghost"
+              href={`/toools/${focusTool.slug}`}
+              className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
             >
               Apri la scheda completa
               <ArrowRight size={14} aria-hidden="true" />
             </Link>
           </div>
-        </div>
+        </article>
 
-        <div className="def-spotlight__side">
-          <div className="def-spotlight__avatar">
-            {iconUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={iconUrl} alt="" loading="eager" decoding="async" />
-            ) : (
-              <span>{initials}</span>
-            )}
-            <span className="def-spotlight__avatar-ring" aria-hidden="true" />
-            <span className="def-spotlight__avatar-pulse" aria-hidden="true" />
-          </div>
-
-          {supporting.length > 0 ? (
-            <div className="def-spotlight__supporting">
-              <p className="def-spotlight__supporting-label">Nella stessa orbita</p>
-              <ul>
-                {supporting.slice(0, 3).map((s) => (
-                  <li key={s.slug}>
-                    <Link href={`/toools/${s.slug}`}>
-                      <span>{s.name}</span>
-                      <ArrowUpRight size={12} aria-hidden="true" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
+        {/* PODIUM — right, genuine 3-stage */}
+        <div className="def-editorial__podium" aria-label="Podio editoriale">
+          <p className="def-editorial__pod-eyebrow">Podio editoriale</p>
+          <ol className="def-editorial__pod-stage">
+            {top3[1] ? (
+              <li className="def-editorial__pod-cell def-editorial__pod-cell--second">
+                <PodiumCard
+                  tool={top3[1]}
+                  rank={2}
+                  iconUrl={iconUrl(top3[1])}
+                  initial={initial(top3[1].name)}
+                />
+              </li>
+            ) : null}
+            {top3[0] ? (
+              <li className="def-editorial__pod-cell def-editorial__pod-cell--first">
+                <PodiumCard
+                  tool={top3[0]}
+                  rank={1}
+                  iconUrl={iconUrl(top3[0])}
+                  initial={initial(top3[0].name)}
+                />
+              </li>
+            ) : null}
+            {top3[2] ? (
+              <li className="def-editorial__pod-cell def-editorial__pod-cell--third">
+                <PodiumCard
+                  tool={top3[2]}
+                  rank={3}
+                  iconUrl={iconUrl(top3[2])}
+                  initial={initial(top3[2].name)}
+                />
+              </li>
+            ) : null}
+          </ol>
+          <span aria-hidden="true" className="def-editorial__pod-base" />
         </div>
       </div>
     </section>
   );
 }
 
-// ============================================================
-// PODIUM RAIL — horizontal 3-card composition
-// ============================================================
-function PodiumRail({ tools }: { tools: ToolPublicView[] }) {
-  const top3 = tools.slice(0, 3);
-  if (top3.length < 3) return null;
+function PodiumCard({
+  tool,
+  rank,
+  iconUrl,
+  initial,
+}: {
+  tool: ToolPublicView;
+  rank: 1 | 2 | 3;
+  iconUrl: string | null;
+  initial: string;
+}) {
   return (
-    <section className="def-podium" aria-labelledby="def-podium-title">
-      <header className="def-podium__head">
-        <p className="def-podium__eyebrow">Top 3 editoriale</p>
-        <h2 id="def-podium-title" className="def-podium__title">
-          I tre tool che portano a casa il risultato
-        </h2>
-      </header>
-      <ol className="def-podium__rail">
-        {top3.map((tool, idx) => {
-          const rank = idx + 1;
-          const iconUrl = tool.domain
-            ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(tool.domain)}&sz=128`
-            : null;
-          return (
-            <li key={tool.slug} className={`def-podium__cell def-podium__cell--rank-${rank}`}>
-              <span className="def-podium__rank" aria-label={`Posizione ${rank}`}>
-                {String(rank).padStart(2, "0")}
-              </span>
-              <Link href={`/toools/${tool.slug}`} className="def-podium__card">
-                <span className="def-podium__avatar">
-                  {iconUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={iconUrl} alt="" loading="eager" decoding="async" />
-                  ) : (
-                    <span>{tool.name.slice(0, 2).toUpperCase()}</span>
-                  )}
-                </span>
-                <span className="def-podium__name">{tool.name}</span>
-                <span className="def-podium__cat">{tool.categoryLabel}</span>
-                {tool.tldr ? (
-                  <span className="def-podium__tldr">{tool.tldr}</span>
-                ) : null}
-                <span className="def-podium__open">
-                  Apri scheda
-                  <ArrowRight size={14} aria-hidden="true" />
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ol>
-    </section>
+    <Link
+      href={`/toools/${tool.slug}`}
+      className={`def-editorial__pod-card def-editorial__pod-card--rank-${rank}`}
+    >
+      <span className="def-editorial__pod-rank" aria-label={`Posizione ${rank}`}>
+        {String(rank).padStart(2, "0")}
+      </span>
+      <span className="def-editorial__pod-avatar" aria-hidden="true">
+        {iconUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={iconUrl} alt="" loading="eager" decoding="async" />
+        ) : (
+          <span>{initial}</span>
+        )}
+      </span>
+      <span className="def-editorial__pod-name">{tool.name}</span>
+      <span className="def-editorial__pod-cat">{tool.categoryLabel}</span>
+      <span className="def-editorial__pod-open">
+        Apri
+        <ArrowUpRight size={12} aria-hidden="true" />
+      </span>
+    </Link>
   );
 }
 
 // ============================================================
-// METHOD — 3 horizontal cards
+// METHOD — quiet final section
 // ============================================================
-function MethodCards() {
+function Method() {
   return (
     <section className="def-method" aria-labelledby="def-method-title">
       <header className="def-method__head">
@@ -519,49 +471,39 @@ function MethodCards() {
         </h2>
       </header>
       <ol className="def-method__cards">
-        {METHOD_STEPS.map((step) => {
-          const Icon = ICON_MAP[step.icon];
-          return (
-            <li
-              key={step.n}
-              className="def-method__card"
-              style={{ "--card-accent": step.accent } as React.CSSProperties}
-            >
-              <span className="def-method__n" aria-hidden="true">{step.n}</span>
-              <span className="def-method__icon" aria-hidden="true">
-                <Icon size={22} />
-              </span>
-              <h3 className="def-method__step-title">{step.title}</h3>
-              <p className="def-method__step-body">{step.body}</p>
-              <Link href={step.href} className="def-method__step-link">
-                Apri
-                <ArrowRight size={14} aria-hidden="true" />
-              </Link>
-            </li>
-          );
-        })}
+        {METHOD_STEPS.map((step) => (
+          <li
+            key={step.n}
+            className="def-method__card"
+            style={{ "--card-accent": step.accent } as React.CSSProperties}
+          >
+            <span className="def-method__n" aria-hidden="true">{step.n}</span>
+            <h3 className="def-method__step-title">{step.title}</h3>
+            <p className="def-method__step-body">{step.body}</p>
+            <Link href={step.href} className="def-method__step-link">
+              Apri
+              <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+          </li>
+        ))}
       </ol>
     </section>
   );
 }
 
 // ============================================================
-// ROOT — orchestrator
+// ROOT
 // ============================================================
 export function DefinitiveHome({ tools, weeklyTool, supportingTools }: DefinitiveHomeProps) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
   return (
     <div className="def-home">
-      <DefinitiveHero />
-      <SignatureRadar />
-      {focusTool ? (
-        <ToolOfTheWeek tool={focusTool} supporting={supportingTools} />
-      ) : null}
-      <PodiumRail tools={tools} />
+      <Cockpit focusTool={focusTool} />
+      <IvoryEditorial focusTool={focusTool} tools={tools} />
+      <Method />
       <section className="def-home__placement">
         <NativePlacement placementKey="home-featured-tool" variant="compact" dark />
       </section>
-      <MethodCards />
     </div>
   );
 }

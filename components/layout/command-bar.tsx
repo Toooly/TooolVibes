@@ -116,13 +116,9 @@ function CommandBarBrand() {
           className="command-bar__node command-bar__node--3 absolute bottom-[6px] right-[5px] h-1.5 w-1.5 translate-x-1/2 translate-y-1/2 rounded-full bg-[var(--tv-accent-primary)]/70"
         />
       </div>
-      <div className="command-bar__brand-text hidden flex-col leading-tight sm:flex">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--tv-ink-muted-aa)]">
-          Toool
-        </span>
-        <span className="text-[15px] font-black leading-none tracking-[0.04em] text-[var(--tv-ink-primary)]">
-          VIBES
-        </span>
+      <div className="command-bar__brand-text">
+        <span className="command-bar__brand-eyebrow">Toool</span>
+        <span className="command-bar__brand-word">VIBES</span>
       </div>
     </Link>
   );

@@ -1,13 +1,12 @@
-/* TooolVibes — Command Bar (CALIBRATED 2026-07-24)
+/* TooolVibes — Command Bar (DEFINITIVE v3, 2026-07-24)
  *
- * Calibration pass:
- *  - Background switched to solid dark (no gradient glass) — baseline
- *  - Account CTA downgraded to compact secondary control (no gradient)
- *  - Brand orbits removed (no continuous spin)
- *  - Node pulses removed (no permanent decorative pulse)
- *  - Scan line removed (no continuous top scan)
- *  - Active-marker keeps a single subtle state pulse (state-driven, intentional)
- *  - Search input kept as primary functional control with visible ⌘K
+ * Calibrated for the authoritative shell:
+ *  - 76px height (was 64-79px) — feels like a real product control surface
+ *  - Brand: 44px mark with prominent "TOOOLVIBES" wordmark
+ *  - Nav: 15px labels (was 13px) with 14px padding
+ *  - Search: dominant utility, 280px min-width
+ *  - Account: compact secondary control (purple border, not the loudest)
+ *  - Solid dark baseline
  */
 
 .command-bar {
@@ -23,34 +22,32 @@
   .command-bar { display: none; }
 }
 
-/* Scan line removed */
 .command-bar__scanline { display: none; }
 
 .command-bar__inner {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 24px;
-  height: 64px;
+  gap: 32px;
+  height: 76px;
   max-width: 1480px;
   margin: 0 auto;
-  padding: 0 28px;
+  padding: 0 36px;
 }
 
 @media (max-width: 1280px) {
   .command-bar__inner {
-    grid-template-columns: auto 1fr auto;
-    height: 60px;
-    padding: 0 20px;
-    gap: 16px;
+    height: 68px;
+    padding: 0 24px;
+    gap: 20px;
   }
 }
 
-/* Brand mark — static, no orbits, no pulses */
+/* Brand — bigger, more authoritative */
 .command-bar__brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   text-decoration: none;
   color: inherit;
   flex-shrink: 0;
@@ -59,23 +56,22 @@
 
 .command-bar__brand-mark {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
+  border-radius: 12px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
-  border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 25%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 30%, transparent);
   flex-shrink: 0;
   transition: border-color 240ms ease;
 }
 
 .command-bar__brand:hover .command-bar__brand-mark {
-  border-color: color-mix(in srgb, var(--tv-accent-primary) 50%, transparent);
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
 }
 
-/* Orbits and nodes are kept in JSX for accessibility but hidden via CSS
-   per calibration rule (no permanent decoration) */
+/* Orbits and decorative nodes kept in JSX for accessibility but hidden */
 .command-bar__orbit { display: none; }
 .command-bar__node { display: none; }
 
@@ -86,27 +82,28 @@
 }
 
 .command-bar__brand-eyebrow {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--tv-ink-muted-aa);
 }
 
 .command-bar__brand-word {
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   color: var(--tv-ink-primary);
 }
 
-/* Center nav — vertical-tab style destinations */
+/* Center nav — vertical-tab destinations, larger */
 .command-bar__nav {
   display: flex;
   align-items: center;
   gap: 4px;
   justify-content: center;
-  padding: 4px;
+  padding: 6px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
   border: 1px solid var(--tv-border-subtle);
   border-radius: 999px;
@@ -122,17 +119,17 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: 10px 18px;
   border-radius: 999px;
   text-decoration: none;
   color: var(--tv-ink-secondary);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   transition: color 200ms ease;
   isolation: isolate;
-  min-height: 36px;
+  min-height: 40px;
 }
 
 .command-bar__nav-item:hover { color: var(--tv-ink-primary); }
@@ -158,68 +155,69 @@
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
 }
 
-/* Marker pulse removed — static is enough; color carries the state */
-
-/* Right cluster */
+/* Right cluster — search DOMINANT, then utilities, then account */
 .command-bar__right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
 }
 
+/* Search — dominant utility */
 .command-bar__search {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 14px;
-  background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
+  gap: 12px;
+  padding: 11px 16px;
+  background: color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--tv-ink-secondary);
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
-  transition: border-color 200ms ease, color 200ms ease;
-  min-width: 220px;
-  min-height: 36px;
+  min-width: 280px;
+  min-height: 44px;
+  transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
 }
 
 @media (max-width: 1280px) {
-  .command-bar__search { min-width: 160px; }
+  .command-bar__search { min-width: 200px; padding: 10px 14px; }
 }
 
 @media (max-width: 1024px) {
   .command-bar__search-text { display: none; }
-  .command-bar__search { min-width: 0; padding: 9px 10px; }
+  .command-bar__search { min-width: 44px; padding: 11px; }
 }
 
 .command-bar__search:hover {
-  border-color: var(--tv-border-interactive);
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 50%, transparent);
   color: var(--tv-ink-primary);
+  background: color-mix(in srgb, var(--tv-surface-elevated) 100%, transparent);
 }
 
 .command-bar__search-kbd {
   margin-left: auto;
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--tv-bg-base) 50%, transparent);
+  font-size: 12px;
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--tv-bg-base) 60%, transparent);
   border: 1px solid var(--tv-border-subtle);
   color: var(--tv-ink-muted-aa);
 }
 
+/* Utilities — quiet group, hidden on smaller desktop */
 .command-bar__utilities {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  padding: 3px;
+  padding: 4px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 50%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .command-bar__utilities { display: none; }
 }
 
@@ -227,12 +225,12 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border: none;
   background: transparent;
   color: var(--tv-ink-secondary);
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: color 200ms ease, background 200ms ease;
 }
@@ -242,36 +240,34 @@
   background: color-mix(in srgb, var(--tv-accent-primary) 10%, transparent);
 }
 
-/* Signal pulse removed (no permanent pulse) */
 .command-bar__util-pulse { display: none; }
 
-/* Account CTA — compact secondary, no gradient (calibration) */
+/* Account — compact secondary, purple border */
 .command-bar__account {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 16px;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
+  padding: 11px 18px;
+  border-radius: 12px;
+  background: var(--tv-bg-base);
   color: var(--tv-ink-primary);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-decoration: none;
-  border: 1px solid var(--tv-border-subtle);
-  min-height: 36px;
+  border: 1px solid var(--tv-border-interactive);
+  min-height: 44px;
   transition: border-color 200ms ease, color 200ms ease;
 }
 
 @media (max-width: 768px) {
   .command-bar__account-label { display: none; }
-  .command-bar__account { padding: 9px 10px; }
+  .command-bar__account { padding: 11px; }
 }
 
 .command-bar__account:hover {
   border-color: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
+  color: var(--tv-accent-primary);
 }
 
-/* Bottom border kept (decoration removed) */
 .command-bar__bottom-border { display: none; }
