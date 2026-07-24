@@ -1,138 +1,103 @@
-/* TooolVibes — Command Bar
- * Definitive UI shell replacement (2026-07-24)
+/* TooolVibes — Command Bar (CALIBRATED 2026-07-24)
  *
- * Substantially different from the previous tab-strip header:
- *  - Full-bleed sticky control surface (not a centered pill)
- *  - Brand glyph on the left with orbiting signal nodes
- *  - Active route marker with animated pulse + scan-line
- *  - Integrated search input with keyboard hint
- *  - Vertical-tab destinations with active state
- *  - Right-side utility cluster (sound / music / account)
- *  - Decorative brand geometry (dual waves, signal trace)
+ * Calibration pass:
+ *  - Background switched to solid dark (no gradient glass) — baseline
+ *  - Account CTA downgraded to compact secondary control (no gradient)
+ *  - Brand orbits removed (no continuous spin)
+ *  - Node pulses removed (no permanent decorative pulse)
+ *  - Scan line removed (no continuous top scan)
+ *  - Active-marker keeps a single subtle state pulse (state-driven, intentional)
+ *  - Search input kept as primary functional control with visible ⌘K
  */
 
 .command-bar {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--tv-bg-base) 92%, transparent) 0%,
-    color-mix(in srgb, var(--tv-bg-base) 86%, transparent) 100%
-  );
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 70%, transparent);
-  box-shadow:
-    0 1px 0 0 color-mix(in srgb, var(--tv-accent-primary) 14%, transparent) inset,
-    0 18px 40px -28px rgba(0, 0, 0, 0.65);
+  background: var(--tv-bg-base);
+  border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
   position: sticky;
   top: 0;
   z-index: 50;
   width: 100%;
 }
 
-/* Hide on mobile / tablet — MobileTopBar takes over below xl */
 @media (max-width: 1279px) {
-  .command-bar {
-    display: none;
-  }
+  .command-bar { display: none; }
 }
 
-/* Top scan line — thin violet → cyan gradient that pulses on mount */
-.command-bar__scanline {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in srgb, var(--tv-accent-primary) 60%, transparent) 18%,
-    var(--tv-accent-cyan) 50%,
-    color-mix(in srgb, var(--tv-accent-primary) 60%, transparent) 82%,
-    transparent 100%
-  );
-  opacity: 0.7;
-  pointer-events: none;
-  animation: command-bar-scan 6s linear infinite;
-}
+/* Scan line removed */
+.command-bar__scanline { display: none; }
 
-@keyframes command-bar-scan {
-  0% { background-position: -100% 0; }
-  100% { background-position: 100% 0; }
-}
-
-/* Inner flex layout — 3 columns (brand / nav / right) */
 .command-bar__inner {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 24px;
-  height: 78px;
+  height: 64px;
   max-width: 1480px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 28px;
 }
 
 @media (max-width: 1280px) {
   .command-bar__inner {
     grid-template-columns: auto 1fr auto;
-    height: 68px;
+    height: 60px;
     padding: 0 20px;
     gap: 16px;
   }
 }
 
-/* Brand mark on the left with orbiting signal nodes */
+/* Brand mark — static, no orbits, no pulses */
 .command-bar__brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   text-decoration: none;
   color: inherit;
   flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .command-bar__brand-mark {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 25%, transparent);
   flex-shrink: 0;
-  transition: transform 240ms ease;
+  transition: border-color 240ms ease;
 }
 
 .command-bar__brand:hover .command-bar__brand-mark {
-  transform: scale(1.04);
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 50%, transparent);
 }
 
-.command-bar__orbit {
-  transition: transform 6s linear, opacity 240ms ease;
+/* Orbits and nodes are kept in JSX for accessibility but hidden via CSS
+   per calibration rule (no permanent decoration) */
+.command-bar__orbit { display: none; }
+.command-bar__node { display: none; }
+
+.command-bar__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
 }
 
-.command-bar__orbit--outer {
-  animation: command-bar-orbit-spin 28s linear infinite;
-}
-.command-bar__orbit--mid {
-  animation: command-bar-orbit-spin 22s linear infinite reverse;
-  opacity: 0.7;
-}
-.command-bar__orbit--inner {
-  animation: command-bar-orbit-spin 16s linear infinite;
-  opacity: 0.55;
+.command-bar__brand-eyebrow {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted-aa);
 }
 
-@keyframes command-bar-orbit-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-.command-bar__node {
-  animation: command-bar-node-pulse 2.4s ease-in-out infinite;
-}
-.command-bar__node--1 { animation-delay: 0s; }
-.command-bar__node--2 { animation-delay: 0.8s; }
-.command-bar__node--3 { animation-delay: 1.6s; }
-
-@keyframes command-bar-node-pulse {
-  0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.7); }
+.command-bar__brand-word {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--tv-ink-primary);
 }
 
 /* Center nav — vertical-tab style destinations */
@@ -141,7 +106,7 @@
   align-items: center;
   gap: 4px;
   justify-content: center;
-  padding: 6px;
+  padding: 4px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
   border: 1px solid var(--tv-border-subtle);
   border-radius: 999px;
@@ -157,7 +122,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 8px 16px;
   border-radius: 999px;
   text-decoration: none;
   color: var(--tv-ink-secondary);
@@ -165,53 +130,37 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  transition: color 200ms ease, transform 200ms ease;
+  transition: color 200ms ease;
   isolation: isolate;
+  min-height: 36px;
 }
 
-.command-bar__nav-item:hover {
-  color: var(--tv-ink-primary);
-  transform: translateY(-1px);
-}
+.command-bar__nav-item:hover { color: var(--tv-ink-primary); }
 
-.command-bar__nav-item.is-active {
-  color: var(--tv-ink-on-brand);
-}
+.command-bar__nav-item.is-active { color: var(--tv-ink-on-brand); }
 
 .command-bar__nav-glyph {
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   color: currentColor;
 }
 
-.command-bar__nav-label {
-  white-space: nowrap;
-}
+.command-bar__nav-label { white-space: nowrap; }
 
 .command-bar__nav-marker {
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    var(--tv-accent-primary) 0%,
-    color-mix(in srgb, var(--tv-accent-primary) 70%, var(--tv-accent-cyan)) 100%
-  );
+  background: var(--tv-accent-primary);
   z-index: -1;
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 60%, transparent),
-    0 8px 24px -8px color-mix(in srgb, var(--tv-accent-primary) 50%, transparent);
-  animation: command-bar-active-pulse 3s ease-in-out infinite;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
 }
 
-@keyframes command-bar-active-pulse {
-  0%, 100% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 60%, transparent), 0 8px 24px -8px color-mix(in srgb, var(--tv-accent-primary) 50%, transparent); }
-  50% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-cyan) 60%, transparent), 0 8px 32px -6px color-mix(in srgb, var(--tv-accent-cyan) 50%, transparent); }
-}
+/* Marker pulse removed — static is enough; color carries the state */
 
-/* Right cluster — search + utilities + account */
+/* Right cluster */
 .command-bar__right {
   display: flex;
   align-items: center;
@@ -224,19 +173,21 @@
   align-items: center;
   gap: 10px;
   padding: 9px 14px;
-  background: color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent);
+  background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 12px;
+  border-radius: 10px;
   color: var(--tv-ink-secondary);
   font-size: 13px;
   cursor: pointer;
   transition: border-color 200ms ease, color 200ms ease;
-  min-width: 240px;
+  min-width: 220px;
+  min-height: 36px;
 }
 
 @media (max-width: 1280px) {
-  .command-bar__search { min-width: 180px; }
+  .command-bar__search { min-width: 160px; }
 }
+
 @media (max-width: 1024px) {
   .command-bar__search-text { display: none; }
   .command-bar__search { min-width: 0; padding: 9px 10px; }
@@ -261,11 +212,11 @@
 .command-bar__utilities {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px;
+  gap: 2px;
+  padding: 3px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 50%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 @media (max-width: 768px) {
@@ -276,58 +227,40 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border: none;
   background: transparent;
   color: var(--tv-ink-secondary);
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   transition: color 200ms ease, background 200ms ease;
 }
 
 .command-bar__util:hover {
   color: var(--tv-ink-primary);
-  background: color-mix(in srgb, var(--tv-accent-primary) 14%, transparent);
+  background: color-mix(in srgb, var(--tv-accent-primary) 10%, transparent);
 }
 
-.command-bar__util--signal .command-bar__util-pulse {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--tv-accent-cyan);
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-cyan) 60%, transparent);
-  animation: command-bar-signal-pulse 2s ease-out infinite;
-}
+/* Signal pulse removed (no permanent pulse) */
+.command-bar__util-pulse { display: none; }
 
-@keyframes command-bar-signal-pulse {
-  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-cyan) 70%, transparent); }
-  70% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--tv-accent-cyan) 0%, transparent); }
-  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-cyan) 0%, transparent); }
-}
-
+/* Account CTA — compact secondary, no gradient (calibration) */
 .command-bar__account {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 9px 16px;
-  border-radius: 12px;
-  background: linear-gradient(
-    135deg,
-    var(--tv-accent-primary) 0%,
-    color-mix(in srgb, var(--tv-accent-primary) 70%, var(--tv-accent-cyan)) 100%
-  );
-  color: var(--tv-ink-on-brand);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
+  color: var(--tv-ink-primary);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-decoration: none;
-  border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
-  box-shadow: 0 6px 20px -10px color-mix(in srgb, var(--tv-accent-primary) 80%, transparent);
-  transition: transform 200ms ease, box-shadow 200ms ease;
+  border: 1px solid var(--tv-border-subtle);
+  min-height: 36px;
+  transition: border-color 200ms ease, color 200ms ease;
 }
 
 @media (max-width: 768px) {
@@ -336,34 +269,9 @@
 }
 
 .command-bar__account:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 28px -10px color-mix(in srgb, var(--tv-accent-primary) 90%, transparent);
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
 }
 
-/* Bottom border with subtle scan trace */
-.command-bar__bottom-border {
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in srgb, var(--tv-accent-primary) 30%, transparent) 25%,
-    color-mix(in srgb, var(--tv-accent-cyan) 30%, transparent) 50%,
-    color-mix(in srgb, var(--tv-accent-primary) 30%, transparent) 75%,
-    transparent 100%
-  );
-  pointer-events: none;
-  opacity: 0.6;
-}
-
-/* Reduced motion — kill the animations */
-@media (prefers-reduced-motion: reduce) {
-  .command-bar__scanline,
-  .command-bar__orbit,
-  .command-bar__node,
-  .command-bar__nav-marker,
-  .command-bar__util-pulse {
-    animation: none !important;
-  }
-}
+/* Bottom border kept (decoration removed) */
+.command-bar__bottom-border { display: none; }

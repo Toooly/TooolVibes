@@ -1,12 +1,13 @@
-/* TooolVibes — Mobile Bottom Nav
- * Definitive UI shell replacement (2026-07-24)
+/* TooolVibes — Mobile Bottom Nav (CALIBRATED 2026-07-24)
  *
- * Substantially different from the previous site-mobile-footer-nav:
- *  - Full-bleed elevated surface with brand-gradient top border
- *  - Active route uses animated layoutId marker (motion)
- *  - Pulse nodes on signal/utility items
- *  - Safe-area inset for iOS
- *  - Hidden on desktop (xl = 1280px)
+ * Calibration pass:
+ *  - Touch targets corrected: items are 44px+ height (previous 58px already met, but
+ *    now reduced to 56px with explicit 44px verification)
+ *  - Top scan line removed (calibration rule)
+ *  - Marker pulse removed (calibration rule: no permanent decorative pulse)
+ *  - Badge pulse replaced with one-shot pop on count change (state-driven, not decorative)
+ *  - Signal node on Radar demoted to a tiny static dot (was a continuous pulse)
+ *  - Background switched to solid dark (calibration rule: solid baseline)
  */
 
 .mobile-bottom-shell {
@@ -21,9 +22,7 @@
 }
 
 @media (min-width: 1280px) {
-  .mobile-bottom-shell {
-    display: none;
-  }
+  .mobile-bottom-shell { display: none; }
 }
 
 .mobile-bottom-shell__inner {
@@ -32,47 +31,17 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   align-items: stretch;
-  height: 60px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--tv-bg-base) 96%, transparent) 0%,
-    color-mix(in srgb, var(--tv-bg-base) 92%, transparent) 100%
-  );
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  border: 1px solid color-mix(in srgb, var(--tv-border-interactive) 70%, transparent);
-  border-radius: 18px;
-  box-shadow:
-    0 -2px 0 0 color-mix(in srgb, var(--tv-accent-primary) 16%, transparent) inset,
-    0 24px 48px -28px rgba(0, 0, 0, 0.7),
-    0 2px 8px -4px color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
+  height: 56px;
+  background: var(--tv-bg-base);
+  border: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   isolation: isolate;
 }
 
-/* Top scan line */
-.mobile-bottom-shell__inner::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in srgb, var(--tv-accent-primary) 50%, transparent) 20%,
-    var(--tv-accent-cyan) 50%,
-    color-mix(in srgb, var(--tv-accent-primary) 50%, transparent) 80%,
-    transparent 100%
-  );
-  pointer-events: none;
-  animation: mobile-bottom-scan 7s linear infinite;
-  z-index: 1;
-}
-
-@keyframes mobile-bottom-scan {
-  0% { background-position: -100% 0; }
-  100% { background-position: 100% 0; }
-}
+/* Scan line removed */
+.mobile-bottom-shell__inner::before { display: none; }
 
 .mobile-bottom-item {
   position: relative;
@@ -80,21 +49,22 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   text-decoration: none;
   color: var(--tv-ink-secondary);
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 8px 4px;
+  padding: 6px 4px;
+  min-height: 56px;
   -webkit-tap-highlight-color: transparent;
   isolation: isolate;
-  transition: color 200ms ease, transform 200ms ease;
+  transition: color 200ms ease;
 }
 
 .mobile-bottom-item:active {
-  transform: scale(0.95);
+  color: var(--tv-ink-primary);
 }
 
 .mobile-bottom-item.is-active {
@@ -112,44 +82,34 @@
 .mobile-bottom-item__glyph {
   position: relative;
   z-index: 2;
-  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 200ms ease;
 }
 
 .mobile-bottom-item.is-active .mobile-bottom-item__glyph {
-  transform: translateY(-2px) scale(1.05);
+  transform: translateY(-1px);
 }
 
 .mobile-bottom-item__marker {
   position: absolute;
   inset: 0;
-  border-radius: 10px;
+  border-radius: 9px;
   background: linear-gradient(
     135deg,
     var(--tv-accent-primary) 0%,
     color-mix(in srgb, var(--tv-accent-primary) 60%, var(--tv-accent-cyan)) 100%
   );
   z-index: 0;
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 50%, transparent),
-    0 6px 16px -6px color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
-  animation: mobile-bottom-marker-pulse 2.6s ease-in-out infinite;
 }
 
-@keyframes mobile-bottom-marker-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 50%, transparent),
-                0 6px 16px -6px color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
-  }
-  50% {
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-cyan) 60%, transparent),
-                0 8px 22px -6px color-mix(in srgb, var(--tv-accent-cyan) 70%, transparent);
-  }
+/* Marker pulse removed */
+.mobile-bottom-item__marker {
+  animation: none;
 }
 
 .mobile-bottom-item__label {
   position: relative;
   z-index: 2;
-  font-size: 9.5px;
+  font-size: 9px;
   line-height: 1;
   white-space: nowrap;
   font-family: var(--tv-font-mono, ui-monospace);
@@ -157,8 +117,8 @@
 
 .mobile-bottom-item__badge {
   position: absolute;
-  top: 0;
-  right: -2px;
+  top: 2px;
+  right: 6px;
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
@@ -172,43 +132,31 @@
   place-items: center;
   border: 1.5px solid var(--tv-bg-base);
   z-index: 3;
-  animation: mobile-bottom-badge-pop 360ms cubic-bezier(0.16, 1, 0.3, 1) 1,
-             mobile-bottom-badge-pulse 2.4s ease-in-out infinite 360ms;
+  animation: mobile-bottom-badge-pop 360ms cubic-bezier(0.16, 1, 0.3, 1) 1;
 }
+
+/* Badge pulse removed after pop — only state-driven one-shot */
 
 @keyframes mobile-bottom-badge-pop {
   from { transform: scale(0.4); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
-@keyframes mobile-bottom-badge-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-cyan) 60%, transparent); }
-  50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--tv-accent-cyan) 0%, transparent); }
-}
-
+/* Signal node demoted to a small static dot — was a permanent pulse */
 .mobile-bottom-item__node {
   position: absolute;
   top: 4px;
   right: 4px;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 999px;
   background: var(--tv-accent-cyan);
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-cyan) 70%, transparent);
-  animation: mobile-bottom-node-pulse 1.8s ease-in-out infinite;
   z-index: 3;
-}
-
-@keyframes mobile-bottom-node-pulse {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.4); }
+  opacity: 0.85;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mobile-bottom-shell__inner::before,
-  .mobile-bottom-item__marker,
-  .mobile-bottom-item__badge,
-  .mobile-bottom-item__node {
+  .mobile-bottom-item__badge {
     animation: none !important;
   }
 }
