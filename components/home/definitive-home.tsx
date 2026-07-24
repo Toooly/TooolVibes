@@ -148,9 +148,8 @@ function DefinitiveHero() {
             Curatela indipendente · 30 tool selezionati · 17 percorsi
           </p>
           <h1 id="def-home-hero-title" className="def-home-hero__title">
-            Trova il tool giusto{" "}
-            <span className="def-home-hero__highlight">prima</span> che il rumore
-            scelga per te.
+            Trova il tool giusto prima che il{" "}
+            <span className="def-home-hero__highlight">rumore</span> scelga per te.
           </h1>
           <p className="def-home-hero__lede">
             Una selezione ragionata di tool AI, SaaS, no-code e vibe coding.
