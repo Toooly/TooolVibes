@@ -908,3 +908,66 @@
     display: none;
   }
 }
+
+/* === Sound toggles: quiet icon pair, not raised pills ===
+   Placed at the end of the file so the cascade order wins over the
+   earlier `.site-header-v2__sound :where(...)` rule. Specificity is
+   raised via `.site-header-v2__actions` parent so the rule beats
+   the `.site-header-v2__search-trigger, .sound-toggle-button, ...`
+   combined selector via cascade order. */
+.site-header-v2__actions .site-header-v2__sound {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0 var(--tv-space-1);
+  border: 0;
+  border-radius: var(--tv-radius-md);
+  background: transparent;
+}
+
+.site-header-v2__actions
+  .site-header-v2__sound
+  :where(.sound-toggle-button, .music-toggle-button) {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--tv-radius-sm);
+  background: transparent;
+  color: var(--tv-ink-muted-aa);
+  box-shadow: none;
+  transition:
+    color var(--tv-motion-fast) var(--tv-ease-standard),
+    background var(--tv-motion-fast) var(--tv-ease-standard);
+}
+
+.site-header-v2__actions
+  .site-header-v2__sound
+  :where(.sound-toggle-button, .music-toggle-button):hover,
+.site-header-v2__actions
+  .site-header-v2__sound
+  :where(.sound-toggle-button, .music-toggle-button):focus-visible {
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+}
+
+/* === Mobile bottom nav: below 420px drop labels, keep icons only ===
+   Five destinations still fit cleanly on compact phones. */
+@media (max-width: 419px) {
+  .site-mobile-footer-nav .mobile-bottom-link {
+    min-height: 3.5rem;
+  }
+  .site-mobile-footer-nav .mobile-bottom-link__label {
+    display: none;
+  }
+  .site-mobile-footer-nav .mobile-bottom-link__icon-wrap {
+    width: 100%;
+  }
+  .site-mobile-footer-nav .mobile-bottom-link__badge {
+    top: 0.2rem;
+    right: calc(50% - 1.2rem);
+  }
+}
