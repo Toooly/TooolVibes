@@ -52,7 +52,7 @@ export function MobileHeroSolar({ routes, compact = false }: MobileHeroSolarProp
             Curatela indipendente · meno rumore, più segnale
           </p>
           <h1 id="home-discovery-title">
-            Trova il tool giusto prima che il rumore scelga per te.
+            Trova il tool giusto prima che il <em className="home-discovery-hero__highlight">rumore</em> scelga per te.
           </h1>
           <p className="home-discovery-hero__lede">
             Esplora una selezione ragionata, confronta i candidati e costruisci

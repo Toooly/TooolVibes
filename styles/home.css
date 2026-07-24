@@ -38,14 +38,21 @@
 
 .home-discovery-hero__copy h1 {
   margin: 0;
-  max-width: 13ch;
+  max-width: 18ch;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-display);
-  font-size: clamp(3.5rem, 4.6vw, 5rem);
-  font-weight: var(--tv-weight-black);
-  letter-spacing: -0.06em;
-  line-height: 0.92;
+  font-family: var(--tv-font-family-editorial);
+  font-size: clamp(2.6rem, 5.2vw, 4.4rem);
+  font-weight: var(--tv-weight-regular);
+  font-style: italic;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
   text-wrap: balance;
+}
+
+.home-discovery-hero__highlight {
+  font-style: normal;
+  font-weight: var(--tv-weight-bold);
+  color: var(--tv-accent-primary);
 }
 
 .home-discovery-hero__lede {
@@ -272,7 +279,7 @@
   }
 
   .home-discovery-hero__copy h1 {
-    max-width: 16ch;
+    max-width: 20ch;
   }
 }
 
@@ -286,10 +293,10 @@
   }
 
   .home-discovery-hero__copy h1 {
-    max-width: 13ch;
-    font-size: clamp(2.55rem, 11.2vw, 3.65rem);
-    letter-spacing: -0.055em;
-    line-height: 0.94;
+    max-width: 16ch;
+    font-size: clamp(2.4rem, 9.2vw, 3.4rem);
+    letter-spacing: -0.02em;
+    line-height: 1.04;
   }
 
   .home-discovery-hero__lede {
@@ -939,14 +946,14 @@
 }
 
 .home-discovery-hero__copy h1 {
-  max-width: 10ch;
+  max-width: 18ch;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-display);
-  font-size: clamp(3.3rem, 6vw, 6.5rem);
+  font-family: var(--tv-font-family-editorial);
+  font-size: clamp(2.85rem, 5.8vw, 4.6rem);
   font-weight: var(--tv-weight-regular);
-  letter-spacing: 0;
-  line-height: 0.88;
-  text-transform: uppercase;
+  font-style: italic;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
 }
 
 .home-discovery-hero__lede {
@@ -1610,8 +1617,8 @@
   }
 
   .home-discovery-hero__copy h1 {
-    max-width: 11.5ch;
-    font-size: clamp(3.4rem, 4.65vw, 4.9rem);
+    max-width: 18ch;
+    font-size: clamp(2.85rem, 4.65vw, 4.4rem);
   }
 
   .home-discovery-hero__eyebrow {
@@ -1627,7 +1634,7 @@
 
 @media (max-width: 1023px) {
   .home-discovery-hero__copy h1 {
-    font-size: clamp(3rem, 11vw, 5rem);
+    font-size: clamp(2.4rem, 7.6vw, 3.6rem);
   }
 
   .home-decision-track {
