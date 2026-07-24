@@ -42,14 +42,15 @@
 }
 
 .tool-battle-page__intro h1 {
-  max-width: 12ch;
+  max-width: 16ch;
   margin: 0;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-display);
-  font-size: clamp(3.25rem, 6.5vw, 6.5rem);
-  font-weight: var(--tv-weight-black);
-  letter-spacing: -0.06em;
-  line-height: 0.92;
+  font-family: var(--tv-font-family-editorial);
+  font-size: clamp(2.85rem, 5.4vw, 4.6rem);
+  font-weight: var(--tv-weight-regular);
+  font-style: italic;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
   text-wrap: balance;
 }
 

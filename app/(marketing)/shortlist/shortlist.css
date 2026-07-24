@@ -5,6 +5,15 @@
   color: var(--tv-ink-primary);
 }
 
+.shortlist-final-surface :where(h1, h2) {
+  font-family: var(--tv-font-family-editorial);
+  font-weight: var(--tv-weight-regular);
+  font-style: italic;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  text-transform: none;
+}
+
 .shortlist-final-surface :where(
   .mobile-library-hero,
   .mobile-library-hero__stat,
