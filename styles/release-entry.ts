@@ -12,6 +12,6 @@ import "@/styles/home.css";
 import "@/styles/catalog.css";
 import "@/styles/compare.css";
 import "@/styles/radar.css";
-import "@/styles/tool-detail.css";
+import "@/styles/tool-detail-final.css";
 import "@/styles/public-routes.css";
 import "@/styles/premium-motion.css";

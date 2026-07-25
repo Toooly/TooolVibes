@@ -796,9 +796,7 @@
   .dynamic-card,
   .selection-chip,
   .v-method-card,
-  .category-tool-card,
-  .tool-detail-editorial-card,
-  .tool-detail-meta-block
+  .category-tool-card
 ) {
   cursor: default;
 }
@@ -815,8 +813,6 @@
   .home-radar-preview__cta,
   .v-spotlight-cta,
   .v-method-link,
-  .tool-detail-main-cta,
-  .tool-detail-secondary-cta,
   .compare-onboarding__cta
 ) {
   border-radius: var(--tv-radius-md);
@@ -829,8 +825,7 @@
   .premium-button-glow,
   .home-discovery-hero__cta--primary,
   .home-radar-preview__cta,
-  .v-spotlight-cta--primary,
-  .tool-detail-main-cta
+  .v-spotlight-cta--primary
 ) {
   border-color: var(--tv-accent-primary);
   background: var(--tv-accent-primary);
@@ -841,8 +836,7 @@
   .premium-button-secondary,
   .premium-button-outline,
   .home-discovery-hero__cta--secondary,
-  .v-spotlight-cta--ghost,
-  .tool-detail-secondary-cta
+  .v-spotlight-cta--ghost
 ) {
   border-color: var(--tv-border-interactive);
   background: transparent;

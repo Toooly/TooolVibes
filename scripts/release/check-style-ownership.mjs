@@ -12,7 +12,7 @@ const expectedGlobalImports = [
   "@/styles/catalog.css",
   "@/styles/compare.css",
   "@/styles/radar.css",
-  "@/styles/tool-detail.css",
+  "@/styles/tool-detail-final.css",
   "@/styles/public-routes.css",
   "@/styles/premium-motion.css",
 ];
@@ -30,7 +30,7 @@ const importantCeilings = {
   "styles/public-routes.css": 46,
   "styles/shell.css": 138,
   "styles/tokens.css": 0,
-  "styles/tool-detail.css": 25,
+  "styles/tool-detail-final.css": 0,
   "styles/vibes-3d-maestoso.css": 873,
 };
 const canonicalTokenNames = [
