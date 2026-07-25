@@ -91,6 +91,22 @@ function ArchiveV4CompareTrayInner({ tools }: ArchiveV4CompareTrayProps) {
     return () => mq.removeListener(update);
   }, []);
 
+  /* Fixed-surface contract (binding).
+     The Comparison Tray publishes --tv-tray-height on <html> when it is
+     visible so the route can compute its padding-bottom dynamically.
+     0 when hidden (no permanent blank area), ≈80px on mobile when
+     shown, 0 on desktop because the tray docks to a corner. */
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    if (compareSlugs.length === 0) {
+      root.style.setProperty("--tv-tray-height", "0px");
+      return;
+    }
+    const total = isDesktop ? "0px" : "80px";
+    root.style.setProperty("--tv-tray-height", total);
+  }, [compareSlugs.length, isDesktop]);
+
   // 0 selected → tray hidden (this is the "0" state of the contract)
   if (compareSlugs.length === 0) return null;
 

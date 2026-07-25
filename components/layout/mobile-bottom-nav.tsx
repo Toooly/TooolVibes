@@ -60,6 +60,37 @@ export function MobileBottomNav() {
     setMounted(true);
   }, []);
 
+  /* Fixed-surface contract (binding).
+     MobileBottomNav publishes --tv-bottom-nav-total on <html> while it is
+     mounted. Routes consume the value for their padding-bottom.
+     Hidden on desktop (≥1280px) where the value collapses to 0. */
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    const setValue = () => {
+      const isDesktop = window.matchMedia("(min-width: 1280px)").matches;
+      if (isDesktop) {
+        root.style.setProperty("--tv-bottom-nav-total", "0px");
+      } else {
+        // computed = nav height + safe-area + tray bottom-padding (6px)
+        const navEl = document.querySelector(".mobile-bottom-shell__inner");
+        const measured = navEl instanceof HTMLElement ? navEl.getBoundingClientRect().height : 0;
+        const safeArea = getComputedStyle(root).getPropertyValue("--tv-safe-area-bottom") || "0px";
+        const total = measured + 6;
+        if (total > 0) {
+          root.style.setProperty("--tv-bottom-nav-total", `${total}px`);
+        }
+        // touch-safe-area is unused for now but available for future
+        void safeArea;
+      }
+    };
+    setValue();
+    window.addEventListener("resize", setValue);
+    return () => {
+      window.removeEventListener("resize", setValue);
+    };
+  }, [mounted, pathname]);
+
   if (!mounted || pathname.startsWith("/admin")) {
     return null;
   }

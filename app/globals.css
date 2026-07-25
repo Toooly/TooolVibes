@@ -13,7 +13,8 @@
 @import "../styles/mobile-top-bar.css";
 @import "../styles/mobile-bottom-nav.css";
 @import "../styles/definitive-home.css";
-@import "../styles/tool-detail-v4.css";
+@import "../styles/tool-detail-final.css";
+
 
 :root {
   --bottom-nav-height: 3.55rem;
@@ -24,6 +25,14 @@
   --z-modal: var(--tv-z-modal);
   --z-toast: var(--tv-z-toast);
   --z-cursor: var(--tv-z-effects);
+
+  /* Fixed-surface public contract (binding).
+     MobileBottomNav publishes --tv-bottom-nav-total.
+     Comparison Tray publishes --tv-tray-height.
+     Routes consume both for their padding-bottom. */
+  --tv-bottom-nav-total: 4.0625rem; /* ~65px = nav 3.55 + safe-area padding 6 + extra */
+  --tv-bottom-nav-total-desktop: 0px;
+  --tv-tray-height: 0px;
   --surface-brand-panel-bg:
     radial-gradient(circle at top right, rgba(106, 60, 255, 0.11), transparent 30%),
     radial-gradient(circle at 82% 68%, rgba(57, 210, 246, 0.08), transparent 27%),
@@ -211,6 +220,21 @@ html {
   scroll-behavior: smooth;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   scrollbar-width: thin;
+  /* Fixed-surface contract: anchor scroll offsets land below topbar.
+     MobileTopBar = 56px + 0.5rem slack. CommandBar = 84px + 0.5rem slack. */
+  scroll-padding-top: calc(var(--tv-header-height-mobile, 4.875rem) + 0.5rem);
+}
+
+@media (min-width: 1280px) {
+  html {
+    scroll-padding-top: calc(var(--tv-header-height, 5.25rem) + 0.5rem);
+  }
+}
+
+html, body {
+  /* Bottom padding for the route is computed per-page from
+     --tv-bottom-nav-total + --tv-tray-height (see tool-detail-final.css). */
+  scroll-padding-bottom: var(--tv-bottom-nav-total);
 }
 
 body {
@@ -32792,209 +32816,6 @@ body:has(.tone-account) {
   filter: saturate(0.98) contrast(1.02);
 }
 
-.internal-tool-page .tool-detail-hero-badge {
-  border-color: rgba(183, 168, 255, 0.28) !important;
-  background:
-    linear-gradient(180deg, rgba(92, 66, 202, 0.54), rgba(49, 34, 126, 0.72)) !important;
-  color: #f7f3ff !important;
-  -webkit-text-fill-color: #f7f3ff !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 10px 24px rgba(17, 10, 56, 0.18);
-}
-
-.internal-tool-page .tool-detail-hero-badge-muted {
-  border-color: rgba(148, 226, 255, 0.3) !important;
-  background:
-    linear-gradient(180deg, rgba(236, 250, 255, 0.94), rgba(195, 232, 246, 0.84)) !important;
-  color: #23465e !important;
-  -webkit-text-fill-color: #23465e !important;
-}
-
-.internal-tool-page .tool-detail-profile-panel {
-  --foreground: var(--tv-ink-inverted-primary);
-  --muted: var(--tv-ink-inverted-muted);
-  --muted-strong: var(--tv-ink-inverted-secondary);
-  --accent-strong: var(--tv-ink-inverted-link);
-  background: var(--tv-surface-inverted) !important;
-  border: 1px solid var(--tv-border-inverted-default) !important;
-  color: var(--foreground) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 12px 32px rgba(38, 25, 94, 0.08) !important;
-}
-
-.internal-tool-page .tool-detail-profile-panel :is(p, span, strong) {
-  color: var(--muted-strong) !important;
-  -webkit-text-fill-color: var(--muted-strong) !important;
-}
-
-.internal-tool-page .tool-detail-profile-title {
-  color: var(--foreground) !important;
-  -webkit-text-fill-color: var(--foreground) !important;
-}
-
-.internal-tool-page .tool-detail-profile-label {
-  color: var(--accent-strong) !important;
-  -webkit-text-fill-color: var(--accent-strong) !important;
-}
-
-.internal-tool-page .tool-detail-profile-copy {
-  color: var(--muted-strong) !important;
-  -webkit-text-fill-color: var(--muted-strong) !important;
-}
-
-.internal-page .directory-tool-card .directory-tool-card__actions {
-  align-items: stretch;
-  border: 0 !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-
-.internal-page .directory-tool-card__action {
-  min-width: 0;
-  min-height: 2.75rem !important;
-  height: 100%;
-  width: 100%;
-  padding: 0.55rem 0.82rem !important;
-  font-size: 0.82rem;
-  line-height: 1.12;
-  white-space: normal;
-}
-
-.internal-page .directory-tool-card__action-primary {
-  border-color: rgba(124, 151, 255, 0.42) !important;
-  background:
-    linear-gradient(135deg, #8258ff 0%, #4e7dff 100%) !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-.internal-page .directory-tool-card__action-secondary {
-  border-color: rgba(167, 214, 232, 0.22) !important;
-  background:
-    linear-gradient(180deg, rgba(134, 153, 172, 0.32), rgba(28, 48, 66, 0.46)) !important;
-  color: #f6fbff !important;
-  -webkit-text-fill-color: #f6fbff !important;
-}
-
-.internal-page .directory-tool-card__action :is(span, svg) {
-  color: inherit !important;
-  -webkit-text-fill-color: currentColor !important;
-}
-
-.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta) {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta) :is(span, svg) {
-  color: inherit !important;
-  -webkit-text-fill-color: currentColor !important;
-}
-
-.internal-tool-page .tool-detail-main-cta {
-  border-color: rgba(124, 151, 255, 0.42) !important;
-  background:
-    linear-gradient(135deg, #8057ff 0%, #437cff 100%) !important;
-  box-shadow:
-    0 16px 32px rgba(81, 91, 255, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
-}
-
-.internal-tool-page .tool-detail-secondary-cta {
-  border-color: rgba(158, 230, 255, 0.28) !important;
-  background:
-    linear-gradient(180deg, rgba(90, 111, 132, 0.42), rgba(24, 42, 61, 0.58)) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 12px 26px rgba(0, 0, 0, 0.16) !important;
-}
-
-.internal-tool-page .tool-detail-meta-block {
-  border: 1px solid rgba(216, 208, 255, 0.16);
-  background:
-    radial-gradient(circle at 92% 0%, rgba(57, 210, 246, 0.1), transparent 34%),
-    linear-gradient(180deg, rgba(31, 26, 61, 0.94), rgba(20, 17, 44, 0.96)) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 10px 24px rgba(0, 0, 0, 0.12);
-}
-
-.internal-tool-page .tool-detail-meta-label {
-  color: rgba(238, 234, 255, 0.9) !important;
-}
-
-.internal-tool-page :is(.tool-detail-highlight-badge, .tool-detail-tag-chip) {
-  border: 1px solid rgba(216, 208, 255, 0.2);
-  background:
-    linear-gradient(180deg, rgba(183, 168, 255, 0.24), rgba(124, 77, 255, 0.18)) !important;
-  background-color: rgba(82, 65, 174, 0.52) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  color: #fbfaff !important;
-  text-shadow: 0 1px 8px rgba(5, 4, 18, 0.28);
-}
-
-.internal-tool-page .tool-detail-highlight-badge,
-.internal-tool-page .tool-detail-highlight-badge *,
-.internal-tool-page .tool-detail-tag-chip,
-.internal-tool-page .tool-detail-tag-chip * {
-  animation: none !important;
-  color: #fbfaff !important;
-  -webkit-text-fill-color: #fbfaff !important;
-}
-
-.internal-tool-page .tool-detail-tag-chip {
-  background:
-    linear-gradient(180deg, rgba(57, 210, 246, 0.2), rgba(93, 73, 226, 0.2)) !important;
-  background-color: rgba(28, 107, 151, 0.46) !important;
-}
-
-.internal-tool-page .tool-detail-tag-chip:hover,
-.internal-tool-page .tool-detail-tag-chip:focus-visible {
-  border-color: rgba(94, 226, 255, 0.4);
-  background:
-    linear-gradient(180deg, rgba(94, 226, 255, 0.28), rgba(124, 77, 255, 0.26)) !important;
-  color: #ffffff !important;
-}
-
-.internal-tool-page .tool-detail-sponsored-placement.native-placement-light {
-  --foreground: #171235;
-  --muted-strong: #3c356b;
-  --accent-strong: #5130c4;
-  border-color: rgba(106, 60, 255, 0.2) !important;
-  background:
-    radial-gradient(circle at 92% 0%, rgba(57, 210, 246, 0.18), transparent 34%),
-    radial-gradient(circle at 8% 8%, rgba(124, 77, 255, 0.14), transparent 30%),
-    linear-gradient(135deg, #ffffff 0%, #f3f0ff 58%, #eaf8ff 100%) !important;
-  box-shadow:
-    0 22px 58px rgba(38, 25, 94, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
-}
-
-.internal-tool-page .tool-detail-sponsored-placement :is(h2, p) {
-  color: var(--foreground) !important;
-}
-
-.internal-tool-page .tool-detail-sponsored-placement p {
-  color: var(--muted-strong) !important;
-}
-
-.internal-tool-page .tool-detail-sponsored-placement .native-placement-label {
-  border-color: rgba(106, 60, 255, 0.2);
-  background: rgba(255, 255, 255, 0.86);
-  color: var(--accent-strong);
-}
-
-.internal-tool-page .tool-detail-sponsored-placement .native-placement-status {
-  border-color: rgba(28, 173, 205, 0.28);
-  background: rgba(57, 210, 246, 0.14);
-  color: #28556d;
-}
-
 @media (max-width: 767px) {
   .internal-page.page-shell {
     max-width: min(100%, calc(100vw - 1rem));
@@ -33935,18 +33756,7 @@ body:has(.tone-account) {
   }
 }
 
-.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta),
-.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta):is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline),
-.internal-page .directory-tool-card__action:is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline) {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
 
-.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta) :is(span, svg),
-.internal-page .directory-tool-card__action :is(span, svg) {
-  color: inherit !important;
-  -webkit-text-fill-color: currentColor !important;
-}
 
 /* ═══════════════════════════════════════════════════════════════
    B39 / MOB-703 — Mobile keyboard, viewport e sheet policy.
