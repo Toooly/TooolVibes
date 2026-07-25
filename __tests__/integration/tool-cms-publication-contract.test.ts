@@ -43,9 +43,10 @@ vi.mock("next/navigation", async (importOriginal) => {
 
 import { GET as getToolsApi } from "@/app/api/tools/route";
 import { GET as getSitemap } from "@/app/sitemap.xml/route";
-import ToolDetailPage, {
+import ToolDetailPage from "@/app/(marketing)/toools/[slug]/page";
+import {
   generateStaticParams,
-} from "@/app/(marketing)/toools/[slug]/page";
+} from "@/components/tool-detail-final/tool-detail-final-page";
 
 function makeRecord({
   id,
