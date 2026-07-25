@@ -1,0 +1,144 @@
+{
+  "summary": {
+    "pass": 27,
+    "fail": 0,
+    "total": 27
+  },
+  "checks": [
+    {
+      "kind": "PASS",
+      "key": "ar4-intro mounted",
+      "msg": "count=1"
+    },
+    {
+      "kind": "PASS",
+      "key": "ar4-filters mounted",
+      "msg": "count=1"
+    },
+    {
+      "kind": "PASS",
+      "key": "ar4-ivory (Decision Desk) mounted",
+      "msg": "count=1"
+    },
+    {
+      "kind": "PASS",
+      "key": "ar4-grid mounted",
+      "msg": "count=1"
+    },
+    {
+      "kind": "PASS",
+      "key": "ar4-tray not rendered until compare (correct: hidden state)",
+      "msg": "initialCount=0"
+    },
+    {
+      "kind": "PASS",
+      "key": "Archive H1 uses ANTON (not Fraunces)",
+      "msg": "family=Anton, \"Anton Fallback\", Impact, \"Arial Narrow\", sans-serif, transform=uppercase, text='IL CATALOGO, SENZA IL CAOS.'"
+    },
+    {
+      "kind": "PASS",
+      "key": "Archive H1 has violet highlight (rumore equivalent)",
+      "msg": "count=1, text='SENZA IL CAOS.', color=rgb(106, 60, 255)"
+    },
+    {
+      "kind": "PASS",
+      "key": "Ivory Decision Desk uses cream surface-inverted",
+      "msg": "bg=rgb(244, 240, 231)"
+    },
+    {
+      "kind": "PASS",
+      "key": "Filter chips present (>= 18)",
+      "msg": "count=22"
+    },
+    {
+      "kind": "PASS",
+      "key": "Active chip uses primary violet (brand #6a3cff)",
+      "msg": "activeBg=rgb(106, 60, 255)"
+    },
+    {
+      "kind": "PASS",
+      "key": "Tool cards present (>= 30)",
+      "msg": "count=33"
+    },
+    {
+      "kind": "PASS",
+      "key": "Animations on page (DNA target: ≤ 4 above fold, 0-2 is fine)",
+      "msg": "count=2, names=sonic-tap, tv-button-idle"
+    },
+    {
+      "kind": "PASS",
+      "key": "Total !important in document (high = bad style ownership)",
+      "msg": "count=694"
+    },
+    {
+      "kind": "PASS",
+      "key": "Page height 1440 (target ~4607px, range 4000-5500)",
+      "msg": "actual=4607px"
+    },
+    {
+      "kind": "PASS",
+      "key": "Tray hidden initially, visible after compare",
+      "msg": "before=false, after=true, count=33"
+    },
+    {
+      "kind": "PASS",
+      "key": "Promoted + selected markers present",
+      "msg": "promoted=3, selected=4"
+    },
+    {
+      "kind": "PASS",
+      "key": "Every card has .ar4-card__name",
+      "msg": "count=33"
+    },
+    {
+      "kind": "PASS",
+      "key": "Every card has .ar4-card__category",
+      "msg": "count=33"
+    },
+    {
+      "kind": "PASS",
+      "key": "NativePlacement sponsor band preserved",
+      "msg": "count=1"
+    },
+    {
+      "kind": "PASS",
+      "key": "sr-only semantic fallback preserved",
+      "msg": "count=1"
+    },
+    {
+      "kind": "PASS",
+      "key": "Tray CTA 'Apri confronto' disabled with 2 chips (count >= 2 should enable)",
+      "msg": "disabledCount=0"
+    },
+    {
+      "kind": "PASS",
+      "key": "Card description >= 14px (typography floor)",
+      "msg": "actual=14px"
+    },
+    {
+      "kind": "PASS",
+      "key": "Card 'Apri scheda' CTA >= 13px (typography floor)",
+      "msg": "actual=13px"
+    },
+    {
+      "kind": "PASS",
+      "key": "Mobile card description >= 14px",
+      "msg": "actual=14px"
+    },
+    {
+      "kind": "PASS",
+      "key": "Mobile card 'Apri scheda' CTA >= 13px",
+      "msg": "actual=13px"
+    },
+    {
+      "kind": "PASS",
+      "key": "Mobile H1 readable (>= 28px for ANTON caps hero)",
+      "msg": "actual=28.8px"
+    },
+    {
+      "kind": "PASS",
+      "key": "Tablet card description >= 14px",
+      "msg": "actual=14px"
+    }
+  ]
+}

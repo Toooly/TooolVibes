@@ -1,0 +1,314 @@
+{
+  "generated_at": "2026-07-24T20:47:21.556Z",
+  "url_base": "https://tooolvibes.square-shape-3527.workers.dev/archivio",
+  "compare_url": "https://tooolvibes.square-shape-3527.workers.dev/compare",
+  "canonical": {
+    "MIN": 2,
+    "MAX": 5
+  },
+  "steps": [
+    {
+      "step": "0_empty",
+      "selectedIds": [],
+      "visibleChipNames": [],
+      "chipCount": 0,
+      "trayCounter": "",
+      "trayHelper": "",
+      "trayVisible": false,
+      "trayIsAtMax": false,
+      "ctaText": "",
+      "ctaEnabled": false,
+      "bottomNavBadge": "",
+      "compareRouteCount": 0
+    },
+    {
+      "step": "1_selected",
+      "selectedIds": [
+        "blink"
+      ],
+      "visibleChipNames": [
+        "Blink"
+      ],
+      "chipCount": 1,
+      "trayCounter": "Confronto · 1/5",
+      "trayHelper": "Aggiungi 1 tool per attivare il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": false,
+      "bottomNavBadge": "1"
+    },
+    {
+      "step": "2_selected",
+      "selectedIds": [
+        "blink",
+        "vibecode"
+      ],
+      "visibleChipNames": [
+        "Blink",
+        "VibeCode"
+      ],
+      "chipCount": 2,
+      "trayCounter": "Confronto · 2/5",
+      "trayHelper": "Pronto per il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": true,
+      "bottomNavBadge": "2"
+    },
+    {
+      "step": "3_selected",
+      "selectedIds": [
+        "blink",
+        "vibecode",
+        "weweb"
+      ],
+      "visibleChipNames": [
+        "Blink",
+        "VibeCode",
+        "WeWeb"
+      ],
+      "chipCount": 3,
+      "trayCounter": "Confronto · 3/5",
+      "trayHelper": "Pronto per il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": true,
+      "bottomNavBadge": "3"
+    },
+    {
+      "step": "4_selected",
+      "selectedIds": [
+        "blink",
+        "vibecode",
+        "weweb",
+        "jenni-ai"
+      ],
+      "visibleChipNames": [
+        "Blink",
+        "VibeCode",
+        "WeWeb",
+        "Jenni AI"
+      ],
+      "chipCount": 4,
+      "trayCounter": "Confronto · 4/5",
+      "trayHelper": "Pronto per il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": true,
+      "bottomNavBadge": "4"
+    },
+    {
+      "step": "5_max",
+      "selectedIds": [
+        "blink",
+        "vibecode",
+        "weweb",
+        "jenni-ai",
+        "betterpic"
+      ],
+      "visibleChipNames": [
+        "Blink",
+        "VibeCode",
+        "WeWeb",
+        "Jenni AI",
+        "BetterPic"
+      ],
+      "chipCount": 5,
+      "trayCounter": "Confronto · 5/5",
+      "trayHelper": "Hai raggiunto il limite di 5 tool.",
+      "trayVisible": true,
+      "trayIsAtMax": true,
+      "ctaText": "Limite raggiunto",
+      "ctaEnabled": false,
+      "bottomNavBadge": "5"
+    },
+    {
+      "step": "6_max_plus_one_blocked",
+      "selectedIds": [
+        "blink",
+        "vibecode",
+        "weweb",
+        "jenni-ai",
+        "betterpic"
+      ],
+      "visibleChipNames": [
+        "Blink",
+        "VibeCode",
+        "WeWeb",
+        "Jenni AI",
+        "BetterPic"
+      ],
+      "chipCount": 5,
+      "trayCounter": "Confronto · 5/5",
+      "trayHelper": "Hai raggiunto il limite di 5 tool.",
+      "trayVisible": true,
+      "trayIsAtMax": true,
+      "ctaText": "Limite raggiunto",
+      "ctaEnabled": false,
+      "bottomNavBadge": "5"
+    },
+    {
+      "step": "7_remove_first",
+      "selectedIds": [
+        "vibecode",
+        "weweb",
+        "jenni-ai",
+        "betterpic"
+      ],
+      "visibleChipNames": [
+        "VibeCode",
+        "WeWeb",
+        "Jenni AI",
+        "BetterPic"
+      ],
+      "chipCount": 4,
+      "trayCounter": "Confronto · 4/5",
+      "trayHelper": "Pronto per il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": true,
+      "bottomNavBadge": "4"
+    },
+    {
+      "step": "8_remove_middle",
+      "selectedIds": [
+        "vibecode",
+        "jenni-ai",
+        "betterpic"
+      ],
+      "visibleChipNames": [
+        "VibeCode",
+        "Jenni AI",
+        "BetterPic"
+      ],
+      "chipCount": 3,
+      "trayCounter": "Confronto · 3/5",
+      "trayHelper": "Pronto per il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": true,
+      "bottomNavBadge": "3"
+    },
+    {
+      "step": "9_remove_last",
+      "selectedIds": [
+        "vibecode",
+        "betterpic"
+      ],
+      "visibleChipNames": [
+        "VibeCode",
+        "BetterPic"
+      ],
+      "chipCount": 2,
+      "trayCounter": "Confronto · 2/5",
+      "trayHelper": "Pronto per il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": true,
+      "bottomNavBadge": "2"
+    },
+    {
+      "step": "10_cleared",
+      "selectedIds": [],
+      "visibleChipNames": [],
+      "chipCount": 0,
+      "trayCounter": "",
+      "trayHelper": "",
+      "trayVisible": false,
+      "trayIsAtMax": false,
+      "ctaText": "",
+      "ctaEnabled": false,
+      "bottomNavBadge": ""
+    },
+    {
+      "step": "11_before_reload",
+      "selectedIds": [
+        "blink",
+        "vibecode",
+        "weweb"
+      ],
+      "visibleChipNames": [
+        "Blink",
+        "VibeCode",
+        "WeWeb"
+      ],
+      "chipCount": 3,
+      "trayCounter": "Confronto · 3/5",
+      "trayHelper": "Pronto per il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": true,
+      "bottomNavBadge": "3"
+    },
+    {
+      "step": "12_after_reload",
+      "selectedIds": [
+        "blink",
+        "vibecode",
+        "weweb"
+      ],
+      "visibleChipNames": [
+        "Blink",
+        "VibeCode",
+        "WeWeb"
+      ],
+      "chipCount": 3,
+      "trayCounter": "Confronto · 3/5",
+      "trayHelper": "Pronto per il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": true,
+      "bottomNavBadge": "3"
+    },
+    {
+      "step": "13_navigate_to_compare",
+      "selectedIds": [
+        "blink",
+        "vibecode",
+        "weweb"
+      ],
+      "visibleChipNames": [],
+      "chipCount": 0,
+      "trayCounter": "",
+      "trayHelper": "",
+      "trayVisible": false,
+      "trayIsAtMax": false,
+      "ctaText": "",
+      "ctaEnabled": false,
+      "bottomNavBadge": "3",
+      "compareRouteCount": 0
+    },
+    {
+      "step": "14_return_to_archive",
+      "selectedIds": [
+        "blink",
+        "vibecode",
+        "weweb"
+      ],
+      "visibleChipNames": [
+        "Blink",
+        "VibeCode",
+        "WeWeb"
+      ],
+      "chipCount": 3,
+      "trayCounter": "Confronto · 3/5",
+      "trayHelper": "Pronto per il confronto.",
+      "trayVisible": true,
+      "trayIsAtMax": false,
+      "ctaText": "Apri confronto",
+      "ctaEnabled": true,
+      "bottomNavBadge": "3"
+    }
+  ],
+  "sanity_errors": [],
+  "sanity_pass": true
+}

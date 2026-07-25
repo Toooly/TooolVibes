@@ -1,0 +1,41 @@
+{
+  "boards": [
+    {
+      "board": "review-board-desktop.png",
+      "size": "1248x2552",
+      "min_height_ok": true,
+      "content_samples_ok": 7,
+      "total_samples": 7
+    },
+    {
+      "board": "review-board-mobile.png",
+      "size": "428x2281",
+      "min_height_ok": true,
+      "content_samples_ok": 7,
+      "total_samples": 7
+    },
+    {
+      "board": "review-board-tablet.png",
+      "size": "1254x6161",
+      "min_height_ok": true,
+      "content_samples_ok": 7,
+      "total_samples": 7
+    },
+    {
+      "board": "review-board-card-states.png",
+      "size": "1952x1380",
+      "min_height_ok": true,
+      "content_samples_ok": 6,
+      "total_samples": 6
+    },
+    {
+      "board": "review-board-tray-filters.png",
+      "size": "1634x795",
+      "min_height_ok": true,
+      "content_samples_ok": 6,
+      "total_samples": 6
+    }
+  ],
+  "raw_screenshots_ok": "24/24",
+  "overall_pass": true
+}
