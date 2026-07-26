@@ -1,0 +1,58 @@
+{
+  "baseUrl": "http://127.0.0.1:3200",
+  "generatedAt": "2026-07-26T10:47:49.228Z",
+  "search": {
+    "desktopShortcutOpened": true,
+    "desktopQueryResultVisible": true,
+    "desktopEscapeClosed": true,
+    "mobileButtonOpened": true,
+    "mobileNavSuppressed": true,
+    "mobileEscapeClosed": true
+  },
+  "keyboard": {
+    "firstVisibleFocus": {
+      "tag": "a",
+      "label": "Salta al contenuto",
+      "href": "#main-content",
+      "focusVisible": true,
+      "outlineWidth": "2px",
+      "boxShadow": "rgba(168, 85, 247, 0.18) 0px 0px 0px 5px"
+    },
+    "focusVisibleReached": true
+  },
+  "utilities": {
+    "soundToggleChanged": true,
+    "musicToggleChanged": true
+  },
+  "workspace": {
+    "savedTool": "Blink",
+    "compareSelectedBeforeCap": 5,
+    "compareSelectedAfterSixthAttempt": 5,
+    "sixthCandidateDisabled": false,
+    "compareCapHeld": true,
+    "comparePersistedAfterNavigation": true,
+    "compareIncludesCanonicalBlinkScore": true,
+    "comparePersistedAfterReload": true,
+    "savedPersisted": true,
+    "suggestionDisclosureCollapsed": true,
+    "singleCandidateStateRendered": true
+  },
+  "routeState": {
+    "archiveQueryRestored": true,
+    "archiveGroupRestored": true,
+    "nonHomeIntroAbsent": true,
+    "accountMobileNavAbsent": true,
+    "canonicalBlinkScore": {
+      "/": true,
+      "/toools/blink": true
+    }
+  },
+  "reducedMotion": {
+    "mediaQueryMatches": true,
+    "runningAnimations": 0,
+    "withinContinuousMotionBudget": true
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "passed": true
+}
