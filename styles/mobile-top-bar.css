@@ -11,7 +11,7 @@
 .mobile-top-bar {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: var(--tv-z-nav);
   width: 100%;
   background: var(--tv-bg-base);
   border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
@@ -128,9 +128,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 22px;
+  min-height: 24px;
   padding: 0 12px;
-  font-size: 10px;
+  font-size: var(--tv-text-xs);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--tv-ink-muted-aa);

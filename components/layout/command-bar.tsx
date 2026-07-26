@@ -21,18 +21,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import {
-  Command,
   Search,
   User,
   UserPlus,
-  Volume2,
-  Music2,
-  Signal,
 } from "lucide-react";
+import { MusicToggleButton } from "@/components/app/music-toggle-button";
+import { SoundToggleButton } from "@/components/app/sound-toggle-button";
 import { BrandLogo } from "./brand-logo";
 import { useHeaderAccountCta } from "./workspace-nav-selectors";
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { isNavRouteActive } from "@/lib/navigation/selectors";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 type NavItem = {
   href: string;
@@ -129,6 +128,7 @@ function CommandBarBrand() {
  */
 export function CommandBar() {
   const pathname = usePathname() ?? "/";
+  const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
   // The order is fixed (Home / Catalogo / Radar / Confronto / Salvati).
   // Surface stays an internal concept here — the items are rendered with our
   // own glyphs/labels to match the definitive command-bar geometry.
@@ -195,6 +195,7 @@ export function CommandBar() {
             type="button"
             className="command-bar__search"
             aria-label="Apri ricerca"
+            onClick={() => setCommandOpen(true)}
           >
             <Search size={15} aria-hidden="true" />
             <span className="command-bar__search-text">Cerca tool, raccolte…</span>
@@ -202,28 +203,8 @@ export function CommandBar() {
           </button>
 
           <div className="command-bar__utilities">
-            <button
-              type="button"
-              className="command-bar__util"
-              aria-label="Volume UI"
-            >
-              <Volume2 size={15} aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="command-bar__util"
-              aria-label="Musica di sottofondo"
-            >
-              <Music2 size={15} aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="command-bar__util command-bar__util--signal"
-              aria-label="Stato segnale"
-            >
-              <Signal size={15} aria-hidden="true" />
-              <span aria-hidden="true" className="command-bar__util-pulse" />
-            </button>
+            <SoundToggleButton className="command-bar__util" />
+            <MusicToggleButton className="command-bar__util" />
           </div>
 
           <Link

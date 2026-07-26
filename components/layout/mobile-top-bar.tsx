@@ -14,9 +14,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, Menu, User } from "lucide-react";
+import { Search, User } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { useHeaderAccountCta } from "./workspace-nav-selectors";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 function getRouteLabel(pathname: string): string {
   if (pathname === "/" || pathname === "") return "Home";
@@ -38,6 +39,7 @@ export function MobileTopBar() {
   const pathname = usePathname() ?? "/";
   const routeLabel = getRouteLabel(pathname);
   const accountCta = useHeaderAccountCta();
+  const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
 
   return (
     <header
@@ -58,6 +60,7 @@ export function MobileTopBar() {
           type="button"
           className="mobile-top-bar__search"
           aria-label="Apri ricerca"
+          onClick={() => setCommandOpen(true)}
         >
           <Search size={16} aria-hidden="true" />
           <span className="mobile-top-bar__search-text">Cerca tool…</span>

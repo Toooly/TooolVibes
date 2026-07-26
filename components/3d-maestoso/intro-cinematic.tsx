@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef as useThreeRef, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import * as THREE from "three";
 import { X } from "lucide-react";
 import { SOUND_PLAY_EVENT, type TooolvibesSoundKind } from "@/lib/config/sound";
@@ -198,6 +199,7 @@ export function IntroCinematic3D({
   onComplete?: (skipped: boolean) => void;
   mode?: IntroCinematicMode;
 }) {
+  const pathname = usePathname();
   const timeline = INTRO_TIMELINES[mode] ?? INTRO_TIMELINES.cinematic;
   const exitMs = timeline.exitMs;
   const [phase, setPhase] = useState<"entering" | "playing" | "leaving" | "unmounted">("entering");
@@ -229,6 +231,12 @@ export function IntroCinematic3D({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (pathname && pathname !== "/") {
+      setShouldRender(false);
+      setPhase("unmounted");
+      return;
+    }
+
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const played = sessionStorage.getItem(HAS_SEEN_INTRO_KEY) === "true";
     const forced = new URLSearchParams(window.location.search).get("intro") === "1";
@@ -279,9 +287,11 @@ export function IntroCinematic3D({
       window.removeEventListener("touchmove", dismiss);
       window.removeEventListener("keydown", dismiss);
     };
-  }, [finishIntro, onComplete, mode, timeline]);
+  }, [finishIntro, onComplete, mode, pathname, timeline]);
 
-  if (!shouldRender || phase === "unmounted") return null;
+  if ((pathname && pathname !== "/") || !shouldRender || phase === "unmounted") {
+    return null;
+  }
 
   return (
     <AnimatePresence>
