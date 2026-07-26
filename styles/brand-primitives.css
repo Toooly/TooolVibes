@@ -18,7 +18,7 @@
 
   /* SIGNAL — directional energy line, used in radar/orbit contexts. */
   --tv-brand-signal-thickness: 1px;
-  --tv-brand-signal-fade: 0.62;
+  --tv-brand-signal-fade: 62%;
 
   /* TRACE — thin path that draws on, used to connect items. */
   --tv-brand-trace-width: 1px;
@@ -80,7 +80,7 @@
   background: linear-gradient(
     90deg,
     var(--tv-accent-primary) 0%,
-    color-mix(in srgb, var(--tv-accent-primary) var(--tv-brand-signal-fade * 100%), transparent) 100%
+    color-mix(in srgb, var(--tv-accent-primary) var(--tv-brand-signal-fade), transparent) 100%
   );
   border-radius: var(--tv-brand-signal-thickness);
 }
@@ -91,7 +91,7 @@
   background: linear-gradient(
     180deg,
     var(--tv-accent-primary) 0%,
-    color-mix(in srgb, var(--tv-accent-primary) var(--tv-brand-signal-fade * 100%), transparent) 100%
+    color-mix(in srgb, var(--tv-accent-primary) var(--tv-brand-signal-fade), transparent) 100%
   );
 }
 

@@ -46,7 +46,7 @@ export default async function MarketingLayout({
             <main
               id="main-content"
               tabIndex={-1}
-              className="relative z-10 pt-[var(--tv-header-height-mobile)] pb-mobile-nav xl:pt-[var(--tv-header-height)] xl:pb-0"
+              className="relative z-10 pb-mobile-nav xl:pb-0"
             >
               <PageTransition>{children}</PageTransition>
             </main>

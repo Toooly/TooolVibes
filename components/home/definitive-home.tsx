@@ -162,28 +162,42 @@ function Cockpit() {
             </Link>
           </div>
 
-          {/* Compact decision journey — horizontal 3-step strip */}
+          {/* Complete decision journey — compact and route-driven */}
           <nav className="def-cockpit__journey" aria-label="Il tuo percorso">
             <ol>
               <li className="is-active">
                 <Link href="/archivio">
                   <span aria-hidden="true">1</span>
                   <strong>Scopri</strong>
-                  <em>30 tool</em>
+                  <em>Territori</em>
+                </Link>
+              </li>
+              <li>
+                <Link href="/archivio?sort=score_desc">
+                  <span aria-hidden="true">2</span>
+                  <strong>Valuta</strong>
+                  <em>Evidence</em>
                 </Link>
               </li>
               <li>
                 <Link href="/compare">
-                  <span aria-hidden="true">2</span>
+                  <span aria-hidden="true">3</span>
                   <strong>Confronta</strong>
                   <em>Matrix</em>
                 </Link>
               </li>
               <li>
                 <Link href="/shortlist">
-                  <span aria-hidden="true">3</span>
+                  <span aria-hidden="true">4</span>
                   <strong>Salva</strong>
                   <em>Shortlist</em>
+                </Link>
+              </li>
+              <li>
+                <Link href="/collections">
+                  <span aria-hidden="true">5</span>
+                  <strong>Decidi</strong>
+                  <em>Percorsi</em>
                 </Link>
               </li>
             </ol>

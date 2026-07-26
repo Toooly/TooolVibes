@@ -6,12 +6,11 @@
  *
  * Substantially different from the previous tab-strip header:
  *  - Full-bleed sticky control surface (not a centered pill)
- *  - Brand glyph on the left with orbiting signal nodes
- *  - Active route marker with animated pulse + scan-line
+ *  - Reliable brand asset on the left
+ *  - Active route marker
  *  - Integrated search input with keyboard hint
  *  - Vertical-tab destinations with active state
  *  - Right-side utility cluster (sound / music / account)
- *  - Decorative brand geometry (dual waves, signal trace)
  *
  * The previous site-header-v2.tsx is replaced by this component
  * (kept around as legacy alias for one cycle).
@@ -21,6 +20,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import {
+  Bookmark,
+  Columns2,
+  Grid2X2,
+  Home,
+  Radar,
   Search,
   User,
   UserPlus,
@@ -37,40 +41,9 @@ type NavItem = {
   href: string;
   label: string;
   short: string;
-  glyph: "home" | "catalog" | "radar" | "compare" | "saved";
+  glyph: typeof Home;
 };
 
-const NAV_GLYPHS: Record<NavItem["glyph"], string> = {
-  home: "M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z",
-  catalog: "M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z",
-  radar: "M12 2a10 10 0 1 0 10 10M12 6a6 6 0 1 0 6 6M12 10a2 2 0 1 0 2 2",
-  compare: "M3 4h7v16H3zM14 4h7v16h-7z",
-  saved: "M5 3h14v18l-7-5-7 5z",
-};
-
-function CommandBarGlyph({ kind }: { kind: NavItem["glyph"] }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d={NAV_GLYPHS[kind]} />
-    </svg>
-  );
-}
-
-/**
- * Orbital brand mark — uses the logo + decorative orbits.
- * Visible: 3 concentric rings + 3 signal nodes at 12/4/8 o'clock
- * with a pulse on the active node.
- */
 function CommandBarBrand() {
   return (
     <Link
@@ -78,46 +51,11 @@ function CommandBarBrand() {
       aria-label="TooolVibes — home"
       className="command-bar__brand group relative flex items-center gap-3"
     >
-      <div className="command-bar__brand-mark relative h-12 w-12">
-        {/* Outer orbit */}
-        <span
-          aria-hidden="true"
-          className="command-bar__orbit command-bar__orbit--outer absolute inset-0 rounded-full border border-[var(--tv-accent-primary)]/30"
-        />
-        {/* Middle orbit */}
-        <span
-          aria-hidden="true"
-          className="command-bar__orbit command-bar__orbit--mid absolute inset-[5px] rounded-full border border-[var(--tv-accent-cyan)]/35"
-        />
-        {/* Inner orbit */}
-        <span
-          aria-hidden="true"
-          className="command-bar__orbit command-bar__orbit--inner absolute inset-[10px] rounded-full border border-[var(--tv-accent-primary)]/40"
-        />
-        {/* Center brand glyph */}
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 grid place-items-center"
-        >
-          <BrandLogo size={44} />
-        </span>
-        {/* Signal nodes on the outer orbit at 3 positions */}
-        <span
-          aria-hidden="true"
-          className="command-bar__node command-bar__node--1 absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--tv-accent-primary)] shadow-[0_0_10px_var(--tv-accent-primary)]"
-        />
-        <span
-          aria-hidden="true"
-          className="command-bar__node command-bar__node--2 absolute bottom-[6px] left-[5px] h-1.5 w-1.5 -translate-x-1/2 translate-y-1/2 rounded-full bg-[var(--tv-accent-cyan)] shadow-[0_0_10px_var(--tv-accent-cyan)]"
-        />
-        <span
-          aria-hidden="true"
-          className="command-bar__node command-bar__node--3 absolute bottom-[6px] right-[5px] h-1.5 w-1.5 translate-x-1/2 translate-y-1/2 rounded-full bg-[var(--tv-accent-primary)]/70"
-        />
+      <div className="command-bar__brand-mark">
+        <BrandLogo size={40} fallback="png" priority />
       </div>
       <div className="command-bar__brand-text">
-        <span className="command-bar__brand-eyebrow">Toool</span>
-        <span className="command-bar__brand-word">VIBES</span>
+        <span className="command-bar__brand-word">TOOOLVIBES</span>
       </div>
     </Link>
   );
@@ -134,11 +72,11 @@ export function CommandBar() {
   // own glyphs/labels to match the definitive command-bar geometry.
   void useNavItems;
   const items: NavItem[] = [
-    { href: "/", label: "Home", short: "Home", glyph: "home" },
-    { href: "/archivio", label: "Catalogo", short: "Catalogo", glyph: "catalog" },
-    { href: "/radar", label: "Radar", short: "Radar", glyph: "radar" },
-    { href: "/compare", label: "Confronto", short: "Confronto", glyph: "compare" },
-    { href: "/shortlist", label: "Salvati", short: "Salvati", glyph: "saved" },
+    { href: "/", label: "Home", short: "Home", glyph: Home },
+    { href: "/archivio", label: "Catalogo", short: "Catalogo", glyph: Grid2X2 },
+    { href: "/radar", label: "Radar", short: "Radar", glyph: Radar },
+    { href: "/compare", label: "Confronto", short: "Confronto", glyph: Columns2 },
+    { href: "/shortlist", label: "Salvati", short: "Salvati", glyph: Bookmark },
   ];
   const accountCta = useHeaderAccountCta();
   const accountIcon =
@@ -165,6 +103,7 @@ export function CommandBar() {
         >
           {items.map((item) => {
             const active = isNavRouteActive(pathname, item.href);
+            const Glyph = item.glyph;
             return (
               <Link
                 key={item.href}
@@ -173,7 +112,7 @@ export function CommandBar() {
                 aria-current={active ? "page" : undefined}
               >
                 <span className="command-bar__nav-glyph">
-                  <CommandBarGlyph kind={item.glyph} />
+                  <Glyph size={17} strokeWidth={1.8} aria-hidden="true" />
                 </span>
                 <span className="command-bar__nav-label">{item.label}</span>
                 {active ? (

@@ -24,7 +24,7 @@
 
 .mobile-top-bar__inner {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   height: 56px;
@@ -36,10 +36,10 @@
 .mobile-top-bar__brand {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 44px;
+  justify-content: flex-start;
+  gap: 8px;
+  width: auto;
   height: 44px;
-  margin-left: -8px;
   text-decoration: none;
   color: inherit;
   flex-shrink: 0;
@@ -59,7 +59,13 @@
 }
 
 .mobile-top-bar__brand-text {
-  display: none;
+  display: inline-block;
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  color: var(--tv-ink-primary);
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: 0.035em;
+  white-space: nowrap;
 }
 
 .mobile-top-bar__search {
@@ -78,6 +84,7 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: border-color 200ms ease, color 200ms ease;
+  justify-self: end;
 }
 
 .mobile-top-bar__search-text {
@@ -87,7 +94,7 @@
   text-overflow: ellipsis;
 }
 
-@media (max-width: 420px) {
+@media (max-width: 479px) {
   .mobile-top-bar__search-text { display: none; }
   .mobile-top-bar__search {
     padding: 0;
@@ -106,7 +113,6 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  margin-right: -8px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent);
   color: var(--tv-ink-primary);

@@ -5,9 +5,8 @@
 
    - introMode: comportamento dell'intro brand 3D montata in app/layout.tsx.
        "cinematic" → esperienza legacy (4s + exit 0.8s, solo skip/pointer).
-       "compact"   → default: brand flash breve (1.4s + exit 0.4s) che si
-                     chiude anche con wheel/touchmove/keydown: nessuna attesa
-                     obbligatoria prima della CTA primaria.
+       "compact"   → brand flash breve (1.4s + exit 0.4s) che si chiude anche
+                     con wheel/touchmove/keydown.
        "off"       → intro non montata.
    - layout: composizione della home marketing.
        "legacy"        → hero mobile 100svh + discovery stage 100svh.
@@ -68,7 +67,7 @@ export function createHomeExperienceConfig(
       environment.TOOOLVIBES_HOME_INTRO_MODE,
       "TOOOLVIBES_HOME_INTRO_MODE",
       HOME_INTRO_MODES,
-      "compact",
+      "off",
     ),
     layout: parseMode(
       environment.TOOOLVIBES_HOME_LAYOUT,

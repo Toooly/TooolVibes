@@ -5,7 +5,7 @@
  * Definitive UI shell replacement (2026-07-24)
  *
  * Substantially different from the previous mobile header:
- *  - Logo on the left (with brand mark)
+ *  - Full wordmark on the left
  *  - Compact search trigger in the center (touch-first, 44px hit area)
  *  - Hamburger / account on the right
  *  - Live route label below (shows where you are)
@@ -50,8 +50,7 @@ export function MobileTopBar() {
       <div className="mobile-top-bar__inner">
         <Link href="/" aria-label="TooolVibes home" className="mobile-top-bar__brand">
           <span className="mobile-top-bar__brand-mark">
-            <BrandLogo size={24} />
-            <span aria-hidden="true" className="mobile-top-bar__brand-pulse" />
+            <BrandLogo size={24} fallback="png" priority />
           </span>
           <span className="mobile-top-bar__brand-text">TooolVibes</span>
         </Link>

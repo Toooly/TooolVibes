@@ -243,14 +243,14 @@
 .def-cockpit__journey ol {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
   margin: 0;
   padding: 0;
 }
 
 @media (max-width: 429px) {
-  .def-cockpit__journey ol { gap: 6px; }
+  .def-cockpit__journey ol { gap: 4px; }
 }
 
 .def-cockpit__journey li a {
@@ -271,7 +271,16 @@
 }
 
 @media (max-width: 767px) {
-  .def-cockpit__journey li a { min-height: 44px; padding: 8px 10px; gap: 3px 8px; }
+  .def-cockpit__journey li a {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    justify-items: start;
+    min-height: 58px;
+    padding: 7px 6px;
+    gap: 5px;
+  }
+
+  .def-cockpit__journey li em { display: none; }
 }
 
 .def-cockpit__journey li a:hover {
@@ -298,6 +307,15 @@
   font-family: var(--tv-font-mono, ui-monospace);
 }
 
+@media (max-width: 767px) {
+  .def-cockpit__journey li span[aria-hidden] {
+    grid-row: auto;
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+}
+
 .def-cockpit__journey li strong {
   font-size: 14px;
   font-weight: 800;
@@ -305,6 +323,13 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   line-height: 1.1;
+}
+
+@media (max-width: 767px) {
+  .def-cockpit__journey li strong {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
 }
 
 .def-cockpit__journey li em {
@@ -399,7 +424,7 @@
 }
 
 @media (max-width: 767px) {
-  .def-cockpit__stage { max-width: 320px; min-height: 280px; }
+  .def-cockpit__stage { max-width: 300px; min-height: 260px; }
 }
 
 .def-cockpit__ring {

@@ -18,10 +18,10 @@ describe("B40 home experience flags (MOB-704)", () => {
     expect(HOME_LAYOUTS).toEqual(["legacy", "time-to-value"]);
   });
 
-  it("default: intro compact e layout time-to-value (nuova esperienza attiva)", () => {
+  it("default: intro disattivata e layout time-to-value", () => {
     const config = createHomeExperienceConfig();
 
-    expect(config.introMode).toBe("compact");
+    expect(config.introMode).toBe("off");
     expect(config.layout).toBe("time-to-value");
   });
 
@@ -31,7 +31,7 @@ describe("B40 home experience flags (MOB-704)", () => {
       TOOOLVIBES_HOME_LAYOUT: "",
     });
 
-    expect(config.introMode).toBe("compact");
+    expect(config.introMode).toBe("off");
     expect(config.layout).toBe("time-to-value");
   });
 
