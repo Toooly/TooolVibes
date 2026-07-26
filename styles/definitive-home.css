@@ -270,7 +270,7 @@
   transition: border-color 200ms ease, background 200ms ease;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1199px) {
   .def-cockpit__journey li a {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
@@ -307,12 +307,12 @@
   font-family: var(--tv-font-mono, ui-monospace);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1199px) {
   .def-cockpit__journey li span[aria-hidden] {
     grid-row: auto;
     width: 22px;
     height: 22px;
-    font-size: 11px;
+    font-size: var(--tv-text-xs);
   }
 }
 
@@ -325,10 +325,10 @@
   line-height: 1.1;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1199px) {
   .def-cockpit__journey li strong {
-    font-size: 10px;
-    letter-spacing: 0;
+    font-size: var(--tv-text-xs);
+    letter-spacing: -0.02em;
   }
 }
 

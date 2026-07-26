@@ -1,5 +1,8 @@
 // @vitest-environment jsdom
 
+import fs from "node:fs";
+import path from "node:path";
+
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -116,7 +119,15 @@ describe("B29 MobileBottomNav — registry canonico", () => {
 
   it("contract B22 preservato: z-token var(--tv-z-nav) sulla nav", () => {
     renderBottomNav();
-    expect(getBottomNav().className).toContain("z-[var(--tv-z-nav)]");
+    expect(getBottomNav().closest(".mobile-bottom-shell")).not.toBeNull();
+
+    const css = fs.readFileSync(
+      path.join(process.cwd(), "styles/mobile-bottom-nav.css"),
+      "utf8",
+    );
+    const shellRule = css.match(/\.mobile-bottom-shell\s*\{([^}]+)\}/)?.[1];
+    expect(shellRule).toContain("position: fixed");
+    expect(shellRule).toContain("z-index: var(--tv-z-nav)");
   });
 
   it("badge compare: conteggio dal workspace store sul link Confronto", () => {
@@ -126,7 +137,7 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     const compareLink = within(getBottomNav()).getByRole("link", {
       name: /Confronto/,
     });
-    const badge = compareLink.querySelector(".mobile-bottom-link__badge");
+    const badge = compareLink.querySelector(".mobile-bottom-item__badge");
     expect(badge).not.toBeNull();
     expect(badge?.textContent).toBe("2");
     expect(badge?.getAttribute("aria-label")).toBe("2 tool in confronto");
@@ -184,7 +195,7 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
     const shortlistLink = within(getBottomNav()).getByRole("link", {
       name: /Salvati/,
     });
-    const badge = shortlistLink.querySelector(".mobile-bottom-link__badge");
+    const badge = shortlistLink.querySelector(".mobile-bottom-item__badge");
     expect(badge).not.toBeNull();
     expect(badge?.textContent).toBe("3");
     expect(badge?.getAttribute("aria-label")).toBe("3 tool salvati");
@@ -205,11 +216,11 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
         name: /Confronto/,
       });
       expect(
-        shortlistLink.querySelector(".mobile-bottom-link__badge")
+        shortlistLink.querySelector(".mobile-bottom-item__badge")
           ?.textContent,
       ).toBe("2");
       expect(
-        compareLink.querySelector(".mobile-bottom-link__badge")?.textContent,
+        compareLink.querySelector(".mobile-bottom-item__badge")?.textContent,
       ).toBe("1");
       unmount();
     }
@@ -225,7 +236,7 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
     expect(
       within(getBottomNav())
         .getByRole("link", { name: /Salvati/ })
-        .querySelector(".mobile-bottom-link__badge")?.textContent,
+        .querySelector(".mobile-bottom-item__badge")?.textContent,
     ).toBe("1");
 
     // Il persistence provider riallinea lo store su DISCOVERY_SYNC_EVENT
@@ -238,12 +249,12 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
     expect(
       within(getBottomNav())
         .getByRole("link", { name: /Salvati/ })
-        .querySelector(".mobile-bottom-link__badge")?.textContent,
+        .querySelector(".mobile-bottom-item__badge")?.textContent,
     ).toBe("4");
     expect(
       within(getBottomNav())
         .getByRole("link", { name: /Confronto/ })
-        .querySelector(".mobile-bottom-link__badge")?.textContent,
+        .querySelector(".mobile-bottom-item__badge")?.textContent,
     ).toBe("2");
   });
 
@@ -257,14 +268,14 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
       name: /Salvati/,
     });
     expect(
-      shortlistLink.querySelector(".mobile-bottom-link__badge"),
+      shortlistLink.querySelector(".mobile-bottom-item__badge"),
     ).toBeNull();
 
     const compareLink = within(getBottomNav()).getByRole("link", {
       name: /Confronto/,
     });
     expect(
-      compareLink.querySelector(".mobile-bottom-link__badge")?.textContent,
+      compareLink.querySelector(".mobile-bottom-item__badge")?.textContent,
     ).toBe("2");
   });
 });
@@ -287,16 +298,26 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
 
     const nav = getBottomNav();
     expect(nav.className).toContain("mobile-bottom-motion");
-    expect(nav.className).toContain("site-mobile-footer-nav");
-    expect(nav.className).toContain("fixed");
-    expect(nav.className).toContain("z-[var(--tv-z-nav)]");
+    expect(nav.className).toContain("mobile-bottom-shell__inner");
+    expect(nav.className).not.toContain("site-mobile-footer-nav");
+
+    const css = fs.readFileSync(
+      path.join(process.cwd(), "styles/mobile-bottom-nav.css"),
+      "utf8",
+    );
+    const gridRule = css.match(
+      /\.mobile-bottom-shell__grid\s*\{([^}]+)\}/,
+    )?.[1];
+    expect(gridRule).toContain(
+      "grid-template-columns: repeat(5, minmax(0, 1fr))",
+    );
   });
 
   it("quinto item leggibile: griglia a 5 colonne con label completa Confronto", () => {
     compareCountState.current = 2;
     renderBottomNav();
 
-    const grid = getBottomNav().querySelector(".site-mobile-footer-nav__grid");
+    const grid = getBottomNav().querySelector(".mobile-bottom-shell__grid");
     expect(grid).toBeTruthy();
     expect(grid?.children).toHaveLength(5);
 
@@ -305,10 +326,10 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
     const fifth = links[4];
     expect(fifth.textContent).toContain("Confronto");
     expect(
-      fifth.querySelector(".mobile-bottom-link__label")?.textContent,
+      fifth.querySelector(".mobile-bottom-item__label")?.textContent,
     ).toBe("Confronto");
     expect(
-      fifth.querySelector(".mobile-bottom-link__badge")?.textContent,
+      fifth.querySelector(".mobile-bottom-item__badge")?.textContent,
     ).toBe("2");
   });
 
@@ -327,7 +348,7 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
       expect(
         within(getBottomNav())
           .getByRole("link", { name: /Confronto/ })
-          .querySelector(".mobile-bottom-link__badge")?.textContent,
+          .querySelector(".mobile-bottom-item__badge")?.textContent,
       ).toBe("1");
       unmount();
     },

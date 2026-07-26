@@ -8,23 +8,25 @@ const expectedGlobalImports = [
   "@/app/globals.css",
   "@/styles/vibes-3d-maestoso.css",
   "@/styles/shell.css",
-  "@/styles/home.css",
-  "@/styles/catalog.css",
+  "@/styles/definitive-home.css",
   "@/styles/compare.css",
   "@/styles/radar.css",
   "@/styles/tool-detail-final.css",
   "@/styles/public-routes.css",
   "@/styles/premium-motion.css",
 ];
+const retiredGlobalImports = [
+  "@/styles/home.css",
+  "@/styles/catalog.css",
+  "@/styles/tool-detail.css",
+];
 const importantCeilings = {
   "app/globals.css": 2324,
   "styles/account.css": 0,
-  "styles/catalog.css": 0,
   "styles/compare.css": 2,
-  "styles/depth-scene.css": 0,
+  "styles/definitive-home.css": 1,
   "styles/figma-implementation.css": 40,
   "styles/gamification.css": 14,
-  "styles/home.css": 20,
   "styles/premium-motion.css": 0,
   "styles/radar.css": 4,
   "styles/public-routes.css": 46,
@@ -43,6 +45,8 @@ const canonicalTokenNames = [
   "tv-accent-aa",
   "tv-focus-ring",
   "tv-space-1",
+  "tv-space-5",
+  "tv-space-10",
   "tv-radius-md",
   "tv-elevation-rest",
   "tv-motion-base",
@@ -77,11 +81,31 @@ if (JSON.stringify(actualGlobalImports) !== JSON.stringify(expectedGlobalImports
   );
 }
 
+const globalFoundationSource = read("app/globals.css");
+for (const featureSheet of [
+  "definitive-home.css",
+  "compare.css",
+  "radar.css",
+  "tool-detail-final.css",
+  "public-routes.css",
+  ...retiredGlobalImports.map((stylesheet) => stylesheet.split("/").at(-1)),
+]) {
+  if (
+    new RegExp(
+      `@import\\s+["'][^"']*${featureSheet.replace(".", "\\.")}["']`,
+    ).test(globalFoundationSource)
+  ) {
+    errors.push(
+      `app/globals.css imports feature stylesheet ${featureSheet}; declare it once in ${releaseEntry}`,
+    );
+  }
+}
+
 for (const relativePath of ["app", "components", "lib", "styles"].flatMap(walk)) {
   if (!/\.(?:ts|tsx|js|jsx|mjs)$/.test(relativePath) || relativePath === releaseEntry) continue;
 
   const source = read(relativePath);
-  for (const stylesheet of expectedGlobalImports) {
+  for (const stylesheet of [...expectedGlobalImports, ...retiredGlobalImports]) {
     if (source.includes(stylesheet)) {
       errors.push(`${relativePath} imports global stylesheet ${stylesheet}; use ${releaseEntry}`);
     }

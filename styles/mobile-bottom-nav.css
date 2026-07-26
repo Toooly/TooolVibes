@@ -38,7 +38,9 @@
   isolation: isolate;
 }
 
-.mobile-bottom-shell__inner .site-mobile-footer-nav__grid {
+.mobile-bottom-shell__grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   height: 100%;
 }
 
@@ -113,10 +115,21 @@
 .mobile-bottom-item__label {
   position: relative;
   z-index: 2;
+  display: inline-block;
+  max-width: 100%;
   font-size: var(--tv-text-xs);
   line-height: 1;
   white-space: nowrap;
   font-family: var(--tv-font-mono, ui-monospace);
+}
+
+@media (max-width: 430px) {
+  .mobile-bottom-item__label {
+    font-family: var(--tv-font-ui);
+    letter-spacing: -0.03em;
+    transform: scaleX(0.9);
+    transform-origin: center;
+  }
 }
 
 .mobile-bottom-item__badge {

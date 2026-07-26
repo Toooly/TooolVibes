@@ -53,16 +53,20 @@ for (const file of sourceFiles) {
 }
 
 describe("release typography contract", () => {
-  it("downloads only Inter and Anton from next/font", () => {
+  it("downloads only Inter, Anton and Fraunces from next/font", () => {
     const layout = read("app/layout.tsx");
     const fontImportFiles = codeFiles.filter((file) =>
       /from\s+["']next\/font\//.test(read(file)),
     );
 
     expect(fontImportFiles).toEqual(["app/layout.tsx"]);
-    expect(layout).toContain('import { Anton, Inter } from "next/font/google";');
+    expect(layout).toContain(
+      'import { Anton, Fraunces, Inter } from "next/font/google";',
+    );
     expect(layout).not.toMatch(/\b(?:Manrope|Rubik|Syne)\s*\(/);
-    expect(layout).toContain("`${inter.variable} ${anton.variable}`");
+    expect(layout).toContain(
+      "`${inter.variable} ${anton.variable} ${fraunces.variable}`",
+    );
   });
 
   it("keeps semantic roles, fallbacks and the 12px minimum in tokens", () => {

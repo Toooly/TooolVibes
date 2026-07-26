@@ -119,11 +119,10 @@ describe("release design token contract", () => {
       "@/app/globals.css",
       "@/styles/vibes-3d-maestoso.css",
       "@/styles/shell.css",
-      "@/styles/home.css",
-      "@/styles/catalog.css",
+      "@/styles/definitive-home.css",
       "@/styles/compare.css",
       "@/styles/radar.css",
-      "@/styles/tool-detail.css",
+      "@/styles/tool-detail-final.css",
       "@/styles/public-routes.css",
       "@/styles/premium-motion.css",
     ]);

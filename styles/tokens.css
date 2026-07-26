@@ -110,8 +110,10 @@
   --tv-space-px-2: 0.5rem;       /* 8px */
   --tv-space-px-3: 0.75rem;      /* 12px */
   --tv-space-px-4: 1rem;         /* 16px */
+  --tv-space-px-5: 1.25rem;      /* 20px */
   --tv-space-px-6: 1.5rem;       /* 24px */
   --tv-space-px-8: 2rem;         /* 32px */
+  --tv-space-px-10: 2.5rem;      /* 40px */
   --tv-space-px-12: 3rem;        /* 48px */
   --tv-space-px-16: 4rem;        /* 64px */
   --tv-space-px-24: 6rem;        /* 96px */
@@ -632,8 +634,10 @@
   --tv-space-2: var(--tv-space-px-2);
   --tv-space-3: var(--tv-space-px-3);
   --tv-space-4: var(--tv-space-px-4);
+  --tv-space-5: var(--tv-space-px-5);
   --tv-space-6: var(--tv-space-px-6);
   --tv-space-8: var(--tv-space-px-8);
+  --tv-space-10: var(--tv-space-px-10);
   --tv-space-12: var(--tv-space-px-12);
   --tv-space-16: var(--tv-space-px-16);
   --tv-space-24: var(--tv-space-px-24);

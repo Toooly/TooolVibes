@@ -139,7 +139,12 @@ export default async function RootLayout({
     vibeRush: releaseFeatures.gamification.surfaces.vibeRush.mode,
   } satisfies GamificationClientModes;
   return (
-    <html lang="it" className={`${inter.variable} ${anton.variable} ${fraunces.variable}`} suppressHydrationWarning>
+    <html
+      lang="it"
+      className={`${inter.variable} ${anton.variable} ${fraunces.variable}`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head />
       <body>
         {isGateOpen && (

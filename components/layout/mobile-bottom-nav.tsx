@@ -4,10 +4,10 @@
  * TooolVibes — Mobile Bottom Nav (Definitive)
  * 2026-07-24
  *
- * Substantially different from the previous site-mobile-footer-nav:
- *  - Elevated glass shell with brand-gradient border + top scan line
+ * Canonical mobile navigation, isolated from the retired footer-nav aliases:
+ *  - Solid opaque shell with clear active state
  *  - Active route marker uses motion layoutId for smooth transitions
- *  - Animated signal node on Radar (always pulsing)
+ *  - Static signal node on Radar
  *  - Badge pop-in animation for compare / saved counts
  *  - Per-item glyph + uppercase mono label
  *  - Hidden on desktop (xl = 1280px)
@@ -92,12 +92,12 @@ export function MobileBottomNav() {
       <nav
         aria-label="Navigazione mobile principale"
         className={cn(
-          "mobile-bottom-shell__inner mobile-bottom-motion site-mobile-footer-nav fixed z-[var(--tv-z-nav)]",
+          "mobile-bottom-shell__inner mobile-bottom-motion",
           (isOverlayOpen || isCommandOpen) &&
             "is-suppressed pointer-events-none opacity-0",
         )}
       >
-        <div className="site-mobile-footer-nav__grid">
+        <div className="mobile-bottom-shell__grid">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = isNavRouteActive(pathname, item.href);
@@ -119,11 +119,11 @@ export function MobileBottomNav() {
               aria-current={isActive ? "page" : undefined}
               aria-label={badgeCount > 0 && badgeAria ? `${item.label}, ${badgeAria}` : undefined}
               className={cn(
-                "mobile-bottom-item mobile-bottom-link",
+                "mobile-bottom-item",
                 isActive && "is-active",
               )}
             >
-              <span className="mobile-bottom-item__icon-wrap mobile-bottom-link__icon-wrap">
+              <span className="mobile-bottom-item__icon-wrap">
                 {isActive ? (
                   <motion.span
                     layoutId="mobile-bottom-marker"
@@ -145,7 +145,7 @@ export function MobileBottomNav() {
                     initial={{ scale: 0.4, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 420, damping: 22 }}
-                    className="mobile-bottom-item__badge mobile-bottom-link__badge"
+                    className="mobile-bottom-item__badge"
                     aria-label={badgeAria}
                   >
                     {badgeCount}
@@ -158,7 +158,7 @@ export function MobileBottomNav() {
                   />
                 ) : null}
               </span>
-              <span className="mobile-bottom-item__label mobile-bottom-link__label">
+              <span className="mobile-bottom-item__label">
                 {item.label}
               </span>
             </Link>

@@ -786,34 +786,6 @@
   color: var(--tv-ink-primary);
 }
 
-.marketing-shell *,
-.marketing-shell *::before,
-.marketing-shell *::after {
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
-
-.marketing-shell :is(
-  [class*="bg-[radial-gradient"],
-  [class*="bg-[linear-gradient"]
-) {
-  background-image: none;
-}
-
-.marketing-shell :where(h1, h2, h3) {
-  font-family: var(--tv-font-display);
-  font-weight: var(--tv-weight-regular);
-  letter-spacing: 0.005em;
-}
-
-.marketing-shell :where(p, li, input, textarea, select, button, a) {
-  font-family: var(--tv-font-family-ui);
-}
-
-.marketing-shell :where(h1, h2) {
-  line-height: 0.94;
-}
-
 .marketing-shell :where(a, button, [role="link"], [role="button"]):focus-visible {
   outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: 3px;
