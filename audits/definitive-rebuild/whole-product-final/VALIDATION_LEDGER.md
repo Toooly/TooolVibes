@@ -17,7 +17,9 @@ Final local validation on 2026-07-26.
 | Interaction browser sweep | Pass, 0 console/page errors |
 | Visual board inspection | Pass |
 | Live Worker verification | 18/18 route-viewport checks clean |
-| Active Cloudflare version | `a55600ac-22ce-41cb-8f10-8cd8971ab796` at 100% |
+| Active Cloudflare version | `56f0be35-32fa-4fb8-9b08-f4e17637bd09` at 100% |
+| Production account / Worker | `Staff@elevianutrition.eu` / `tooolvibes.staff-ffa.workers.dev` |
+| Custom Domain | `tooolvibes.eu`, active and fingerprint-matched |
 
 ## Full unit baseline
 

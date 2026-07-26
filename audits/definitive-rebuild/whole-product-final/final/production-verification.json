@@ -1,7 +1,11 @@
 {
-  "baseUrl": "https://tooolvibes.square-shape-3527.workers.dev",
-  "generatedAt": "2026-07-26T18:33:40Z",
-  "activeWorkerVersion": "a55600ac-22ce-41cb-8f10-8cd8971ab796",
+  "baseUrl": "https://tooolvibes.eu",
+  "workerUrl": "https://tooolvibes.staff-ffa.workers.dev",
+  "cloudflareAccount": "Staff@elevianutrition.eu's Account",
+  "customDomainService": "tooolvibes",
+  "generatedAt": "2026-07-26T19:59:16Z",
+  "activeWorkerVersion": "56f0be35-32fa-4fb8-9b08-f4e17637bd09",
+  "rollbackWorkerVersion": "8786dd79-6c67-484b-b73e-95ea014b8ea2",
   "deployedSourceHead": "7fc00651f3667fc57baa4eb1fa23878dce1b1ea3",
   "openNextBuildId": "cKDoonnObPfd7iVnZW5je",
   "viewports": {
