@@ -123,4 +123,3 @@ The primary journey remains:
   are implemented only when an existing contract already supports them.
 - The concepts may show fewer results for legibility; the implementation uses
   real progressive disclosure and preserves complete access to the dataset.
-
