@@ -17,3 +17,4 @@ public-product reconstruction.
 - `before/`, `after/`, `final/raw/`: source captures
 - `final/boards/`: final shell, route, responsive and state review boards
 - `final/*.json`: machine-readable browser results
+- `final/production/`: final live Worker captures at mobile and desktop

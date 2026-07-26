@@ -75,18 +75,56 @@ for (const viewport of viewports) {
     await page.waitForLoadState("networkidle", { timeout: 8_000 }).catch(() => {});
     await page.evaluate(() => document.fonts.ready).catch(() => {});
 
+    const introSkip = page.locator("[aria-label='Salta introduzione']");
+    const introWasVisible = await introSkip.isVisible().catch(() => false);
+    if (route.pathname === "/" && introWasVisible) {
+      await introSkip.click();
+      await introSkip.waitFor({ state: "hidden", timeout: 5_000 }).catch(() => {});
+    }
+    const introVisibleAfterDismissal = await introSkip
+      .isVisible()
+      .catch(() => false);
+
     const metrics = await page.evaluate(() => {
+      const visible = (element) => {
+        if (!element) return false;
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        return (
+          style.display !== "none" &&
+          style.visibility !== "hidden" &&
+          Number(style.opacity) > 0 &&
+          rect.width > 0 &&
+          rect.height > 0
+        );
+      };
       const assets = [
         ...document.querySelectorAll("link[rel='stylesheet'][href], script[src]"),
       ].map((element) =>
         new URL(element.getAttribute("href") ?? element.getAttribute("src"), location.href)
           .pathname,
       );
+      const mobileNav = document.querySelector(
+        "nav[aria-label='Navigazione mobile principale']",
+      );
+      const desktopCommand = document.querySelector(".command-bar");
+      const mobileTop = document.querySelector(".mobile-top-bar");
+      const isDesktop = window.innerWidth >= 1280;
+      const isAccount = location.pathname.startsWith("/account");
+      const mobileNavVisible = visible(mobileNav);
+      const desktopCommandVisible = visible(desktopCommand);
+      const mobileTopVisible = visible(mobileTop);
       return {
         title: document.title,
         hasMain: Boolean(document.querySelector("main")),
         horizontalOverflow:
           document.documentElement.scrollWidth > window.innerWidth + 1,
+        mobileNavVisible,
+        desktopCommandVisible,
+        mobileTopVisible,
+        shellContractPass: isDesktop
+          ? desktopCommandVisible && !mobileNavVisible && !mobileTopVisible
+          : mobileTopVisible && (isAccount ? !mobileNavVisible : mobileNavVisible),
         assets: [...new Set(assets)].filter((asset) =>
           asset.includes("/_next/static/"),
         ),
@@ -107,6 +145,8 @@ for (const viewport of viewports) {
       consoleErrors,
       pageErrors,
       assetErrors,
+      introWasVisible,
+      introVisibleAfterDismissal,
       ...metrics,
     });
 
@@ -141,6 +181,13 @@ const summary = {
       (count, entry) => count + entry.assetErrors.length,
       0,
     ),
+    nonHomeIntroViolations: results.filter(
+      (entry) => entry.pathname !== "/" && entry.introWasVisible,
+    ).length,
+    homeIntroDismissalFailures: results.filter(
+      (entry) => entry.pathname === "/" && entry.introVisibleAfterDismissal,
+    ).length,
+    shellViolations: results.filter((entry) => !entry.shellContractPass).length,
   },
   assetFingerprints: [
     ...new Set(results.flatMap((entry) => entry.assets)),

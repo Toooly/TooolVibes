@@ -35,6 +35,8 @@ Radar, Compare, Saved, Collections, Collection Detail and Account.
 - `final/boards/02-home.png` through `08-collections.png`, plus
   `11-collection-detail.png` and `12-account.png`, verify route hierarchy.
 - `final/boards/09-responsive-contact-sheet.png` shows every required width.
+- `final/boards/13-production-desktop.png` and
+  `14-production-mobile.png` bind the final review to the live Worker.
 - `after/primary-*.png` and `after/secondary-*.png` cover all public route
   families at desktop and mobile.
 - All review boards and route boards were inspected visually after the final

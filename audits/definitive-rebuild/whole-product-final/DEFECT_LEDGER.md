@@ -32,8 +32,11 @@
   file and blocks repository-wide builds if included by Next. It was moved only
   for the build process and restored byte-for-byte. It is excluded from staging
   and production.
-- Live deployment evidence is recorded separately in
-  `DEPLOYMENT_SNAPSHOT.md`.
+- The adapter upload did not initially activate the uploaded Worker version.
+  Live verification caught the stale fingerprint; the final version was
+  explicitly deployed at 100% and the complete production pass is now clean.
+- Wrangler reports one duplicate-object-key warning inside generated OpenNext
+  bundle code. It is non-blocking and absent from application source.
 
 No unresolved defect was found in the reconstructed public journey during the
 final responsive, interaction, keyboard or visual passes.

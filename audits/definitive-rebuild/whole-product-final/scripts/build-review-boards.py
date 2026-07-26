@@ -7,6 +7,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path.cwd() / "audits/definitive-rebuild/whole-product-final"
 RAW = ROOT / "final/raw"
 STATES = ROOT / "after/states"
+PRODUCTION = ROOT / "final/production"
 BOARDS = ROOT / "final/boards"
 AFTER_DESKTOP = ROOT / "after/desktop"
 AFTER_MOBILE = ROOT / "after/mobile"
@@ -134,6 +135,30 @@ for _, route_id in primary_routes:
 
 primary_grid_board("primary-desktop-board.png", 1440, 960)
 primary_grid_board("primary-mobile-board.png", 390, 844)
+
+
+def production_grid_board(filename: str, viewport: str):
+    canvas = Image.new("RGB", (2400, 1900), BG)
+    draw = ImageDraw.Draw(canvas)
+    draw.text(
+        (56, 42),
+        f"LIVE PRODUCTION — {viewport.upper()} · 2026-07-26",
+        font=TITLE,
+        fill=INK,
+    )
+    draw.rectangle((56, 112, 2344, 116), fill=ACCENT)
+    for index, (label, route_id) in enumerate(primary_routes):
+        row, column = divmod(index, 3)
+        x = 56 + column * 780
+        y = 150 + row * 570
+        image = open_rgb(PRODUCTION / viewport / f"{route_id}.png")
+        paste_panel(canvas, image, (x, y, 730, 520), label)
+    canvas.save(BOARDS / filename, quality=94)
+
+
+if PRODUCTION.exists():
+    production_grid_board("13-production-desktop.png", "desktop")
+    production_grid_board("14-production-mobile.png", "mobile")
 
 
 widths = [

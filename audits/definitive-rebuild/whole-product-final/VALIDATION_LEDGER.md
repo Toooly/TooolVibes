@@ -16,6 +16,7 @@ Final local validation on 2026-07-26.
 | Responsive browser sweep | 126/126 route-width checks clean |
 | Interaction browser sweep | Pass, 0 console/page errors |
 | Visual board inspection | Pass |
+| Live Worker verification | 18/18 route-viewport checks clean |
 
 ## Full unit baseline
 
