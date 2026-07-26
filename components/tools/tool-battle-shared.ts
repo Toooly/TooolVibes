@@ -91,23 +91,9 @@ export function withBattleScores(tools: NormalisedTool[]): NormalisedTool[] {
 }
 
 export async function celebrateArenaFight(winner?: NormalisedTool) {
-  const { default: confetti } = await import("canvas-confetti");
-
-  const colors = winner
-    ? [winner.accentFrom, winner.accentTo, "#f3bf4c"]
-    : ["#6a3cff", "#39d2f6", "#f3bf4c"];
-
-  confetti({
-    colors,
-    disableForReducedMotion: true,
-    origin: { y: 0.62 },
-    particleCount: 18,
-    scalar: 0.6,
-    spread: 38,
-    startVelocity: 18,
-    gravity: 1.2,
-    ticks: 100,
-  });
+  // The verdict is the feedback. Keep the decision surface calm and
+  // deterministic instead of layering celebratory particles over evidence.
+  void winner;
 }
 
 export function normalise(

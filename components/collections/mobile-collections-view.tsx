@@ -1,6 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Boxes, Lock, Sparkles, Star } from "lucide-react";
 import type { CuratedCollection } from "@/lib/types/collection";
@@ -34,6 +35,15 @@ function CollectionItem({ collection }: { collection: CuratedCollection }) {
       className="mobile-collections__item"
       style={{ "--col-a": c, "--col-b": badge.tone } as CSSProperties}
     >
+      <div className="mobile-collections__item-media">
+        <Image
+          src={collection.cover_image_url}
+          alt=""
+          fill
+          sizes="(max-width: 767px) 6rem, 9rem"
+          className="object-cover"
+        />
+      </div>
       <div className="mobile-collections__item-body">
         <div className="flex items-center gap-2">
           <span
@@ -93,7 +103,6 @@ export function MobileCollectionsView({
           className="mobile-collections__hero"
           style={{ "--hero-a": hashColor(main.slug) } as CSSProperties}
         >
-          <div className="mobile-collections__hero-glow" />
           <div className="mobile-collections__hero-inner">
             <div className="flex flex-wrap items-center gap-2">
               {specialIssue ? (
@@ -127,6 +136,16 @@ export function MobileCollectionsView({
               {specialIssue ? "Apri raccolta speciale" : "Apri raccolta"}
               <ArrowRight className="size-4" />
             </Link>
+          </div>
+          <div className="mobile-collections__hero-media">
+            <Image
+              src={main.cover_image_url}
+              alt={main.title}
+              fill
+              priority
+              sizes="(max-width: 767px) 100vw, 44vw"
+              className="object-cover"
+            />
           </div>
         </section>
       )}

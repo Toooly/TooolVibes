@@ -6,6 +6,7 @@ import {
   getFeaturedCollections,
   getFeaturedSpecialIssue,
 } from "@/lib/data/public-collections";
+import "./collections.css";
 
 export const metadata: Metadata = {
   title: "Collections",

@@ -40,31 +40,24 @@ export function ToolFighter({
     "--arena-b": tool.accentTo,
     ...style,
   } as CSSProperties;
+  const avatar = !tool.logoUrl || logoError ? (
+    <span className="tool-fighter__initials">{initials}</span>
+  ) : (
+    /* eslint-disable-next-line @next/next/no-img-element -- runtime favicon from the official tool domain */
+    <img
+      src={tool.logoUrl}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      className="tool-fighter__logo"
+      onError={() => setLogoError(true)}
+    />
+  );
 
   if (variant === "micro") {
     return (
       <div className="tool-fighter tool-fighter--micro" style={fighterStyle}>
-        <div
-          className="tool-fighter__orb tool-fighter__orb--micro"
-          style={{
-            borderColor: tool.accentFrom,
-            boxShadow: isWinner ? `0 0 16px ${tool.accentFrom}66` : undefined,
-          }}
-        >
-          {!tool.logoUrl || logoError ? (
-            <span className="tool-fighter__initials">{initials}</span>
-          ) : (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={tool.logoUrl}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="tool-fighter__logo"
-              onError={() => setLogoError(true)}
-            />
-          )}
-        </div>
+        <div className="tool-fighter__avatar">{avatar}</div>
       </div>
     );
   }
@@ -86,35 +79,11 @@ export function ToolFighter({
         layoutId={reducedMotion ? undefined : layoutId}
         style={fighterStyle}
       >
-        <div
-          className="tool-fighter__orb"
-          style={{
-            borderColor: tool.accentFrom,
-            boxShadow: isWinner ? `0 0 24px ${tool.accentFrom}66` : undefined,
-          }}
-        >
-          {!tool.logoUrl || logoError ? (
-            <span className="tool-fighter__initials">{initials}</span>
-          ) : (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={tool.logoUrl}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="tool-fighter__logo"
-              onError={() => setLogoError(true)}
-            />
-          )}
-        </div>
-        <div className="tool-fighter__base" aria-hidden="true" />
+        <div className="tool-fighter__avatar">{avatar}</div>
         <div className="tool-fighter__info">
           <span className="tool-fighter__name">{tool.name}</span>
           <span className="tool-fighter__cat">{tool.categoryLabel}</span>
-          <div className="tool-fighter__health" aria-hidden="true">
-            <span style={{ width: `${Math.max(14, tool.battleScore)}%` }} />
-          </div>
-          <span className="tool-fighter__score">{tool.battleScore}</span>
+          <span className="tool-fighter__score">{tool.battleScore}/100</span>
         </div>
       </motion.div>
     );
@@ -136,37 +105,11 @@ export function ToolFighter({
       layoutId={reducedMotion ? undefined : layoutId}
       style={fighterStyle}
     >
-      <div
-        className="tool-fighter__orb"
-        style={{
-          borderColor: tool.accentFrom,
-          boxShadow: isWinner ? `0 0 24px ${tool.accentFrom}66` : undefined,
-        }}
-      >
-        {!tool.logoUrl || logoError ? (
-          <span className="tool-fighter__initials">{initials}</span>
-        ) : (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            src={tool.logoUrl}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="tool-fighter__logo"
-            onError={() => setLogoError(true)}
-          />
-        )}
-      </div>
-      <div className="tool-fighter__base" aria-hidden="true" />
+      <div className="tool-fighter__avatar">{avatar}</div>
       <div className="tool-fighter__info">
         <span className="tool-fighter__name">{tool.name}</span>
-        <div
-          className="tool-fighter__health"
-          style={{
-            background: `linear-gradient(90deg, ${tool.accentFrom}, ${tool.accentTo})`,
-          }}
-        />
-        <span className="tool-fighter__score">{tool.battleScore}</span>
+        <span className="tool-fighter__cat">{tool.categoryLabel}</span>
+        <span className="tool-fighter__score">{tool.battleScore}/100</span>
       </div>
     </motion.div>
   );

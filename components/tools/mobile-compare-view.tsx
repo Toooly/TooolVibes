@@ -3,7 +3,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Columns3, X, Scale, Sparkles, Swords, TrendingUp } from "lucide-react";
+import { ArrowRight, Columns3, X, Scale, Sparkles, TrendingUp } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
@@ -439,8 +439,8 @@ function MobileArenaBattleStage({
         : battleState === "charging"
           ? "Carica..."
           : battleState === "clash"
-            ? "Scontro..."
-            : "Vincitore";
+            ? "Confronto..."
+            : "Verdetto";
 
   const isAnimating = battleState === "analyzing" || battleState === "charging" || battleState === "clash";
 
@@ -456,8 +456,8 @@ function MobileArenaBattleStage({
 
         <header className="mobile-compare-arena__hud">
           <div className="mobile-compare-arena__title-wrap">
-            <span className="mobile-compare-arena__eyebrow">Tool Battle</span>
-            <h2 className="mobile-compare-arena__title">Arena</h2>
+            <span className="mobile-compare-arena__eyebrow">Verdetto guidato</span>
+            <h2 className="mobile-compare-arena__title">Decision desk</h2>
           </div>
           <div className="mobile-compare-arena__hud-pills">
             <span className="mobile-compare-arena__mode">
@@ -666,7 +666,7 @@ export function MobileCompareView({
           <p className="mobile-compare-arena__partial-label">Confronto parziale</p>
           <p>{tools[0].name} è già nel confronto. Aggiungi un altro profilo per vedere le differenze.</p>
           <Link href="/archivio" className="mobile-compare-arena__cta">
-            Aggiungi sfidante
+            Aggiungi candidato
             <ArrowRight className="size-4" />
           </Link>
         </div>
@@ -721,6 +721,8 @@ export function MobileCompareView({
         />
       ) : null}
 
+      <DiffMatrix tools={sorted} objective={activeObjective} />
+
       <MobileArenaBattleStage
         battleState={battleState}
         tools={sorted}
@@ -736,11 +738,11 @@ export function MobileCompareView({
           onClick={handleFight}
         >
           <span className="mobile-compare-arena__fight-icon" aria-hidden="true">
-            <Swords className="size-5" />
+            <Scale className="size-5" />
           </span>
           <span className="mobile-compare-arena__fight-copy">
-            <strong>{battleState === "result" ? "Nuovo scontro" : battleState === "idle" ? "Combatti" : "In corso..."}</strong>
-            <small>{battleState === "result" ? "rilancia il ring" : "scopri chi domina"}</small>
+            <strong>{battleState === "result" ? "Ricalcola" : battleState === "idle" ? "Calcola il verdetto" : "Analisi..."}</strong>
+            <small>{battleState === "result" ? "aggiorna la lettura" : "ottieni una scelta motivata"}</small>
           </span>
         </button>
       </div>
@@ -767,8 +769,6 @@ export function MobileCompareView({
             </div>
           </div>
 
-          <DiffMatrix tools={sorted} objective={activeObjective} />
-
           {/* B35 / FLOW-604: il confronto si chiude in una decisione
               riapribile con contesto, con ritorno ai Salvati. */}
           <CompareDecisionPanel
@@ -786,7 +786,7 @@ export function MobileCompareView({
         <div className="mobile-compare-arena__mystery">
           <div className="mobile-compare-arena__mystery-head">
             <TrendingUp className="size-4" />
-            <span>Candidati pronti allo scontro</span>
+            <span>Candidati pronti al confronto</span>
           </div>
           <div className="mobile-compare-arena__mystery-list">
             {tools.map((tool) => (

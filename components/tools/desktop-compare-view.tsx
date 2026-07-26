@@ -3,7 +3,7 @@
 import { type CSSProperties, useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Columns3, Swords, Sparkles, Trophy } from "lucide-react";
+import { ArrowRight, Columns3, Scale, Sparkles, Trophy } from "lucide-react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
@@ -43,7 +43,7 @@ function DesktopDuelCard({
         {rank === 1 ? (
           <Trophy className="size-4" aria-hidden="true" />
         ) : (
-          <Swords className="size-4" aria-hidden="true" />
+          <Scale className="size-4" aria-hidden="true" />
         )}
         <span>#{rank}</span>
       </div>
@@ -167,11 +167,11 @@ export function DesktopCompareView({
             <Columns3 />
           </span>
           <p className="compare-onboarding__eyebrow">
-            {hasCandidate ? "Primo candidato pronto" : "Il ring è libero"}
+            {hasCandidate ? "Primo candidato pronto" : "La matrice è vuota"}
           </p>
           <h2 id="compare-onboarding-title">
             {hasCandidate
-              ? "Serve ancora uno sfidante."
+              ? "Serve ancora un candidato."
               : "Costruisci un confronto che porti a una scelta."}
           </h2>
           <p className="compare-onboarding__lede">
@@ -180,7 +180,7 @@ export function DesktopCompareView({
               : "Seleziona da due a cinque tool dal catalogo: li ordineremo per evidenze, caso d’uso e aderenza al tuo obiettivo."}
           </p>
           <Link href="/archivio" className="compare-onboarding__cta">
-            {hasCandidate ? "Aggiungi uno sfidante" : "Scegli i tool"}
+            {hasCandidate ? "Aggiungi un candidato" : "Scegli i tool"}
             <ArrowRight size={17} aria-hidden="true" />
           </Link>
           <div className="compare-onboarding__signals" aria-label="Cosa otterrai">
@@ -203,16 +203,20 @@ export function DesktopCompareView({
         />
       ) : null}
 
+      <div className="desktop-compare__matrix-panel desktop-compare__matrix-panel--full">
+        <DiffMatrix tools={sorted} objective={activeObjective} />
+      </div>
+
       <div className="desktop-compare__arena">
         <header className="desktop-compare__hud">
           <div>
-            <p className="desktop-compare__eyebrow">Arena confronto</p>
-            <h2 className="desktop-compare__title">Scontro guidato</h2>
+            <p className="desktop-compare__eyebrow">Verdetto guidato</p>
+            <h2 className="desktop-compare__title">Chiudi la decisione</h2>
           </div>
           <span className="desktop-compare__status" aria-live="polite" aria-atomic="true">
-            {battleState === "idle" && "Pronti"}
-            {battleState === "fighting" && "Scontro..."}
-            {battleState === "result" && winner && `Vincitore: ${winner.name}`}
+            {battleState === "idle" && "Pronto"}
+            {battleState === "fighting" && "Analisi..."}
+            {battleState === "result" && winner && `Scelta: ${winner.name}`}
           </span>
         </header>
 
@@ -257,8 +261,8 @@ export function DesktopCompareView({
                 disabled={battleState === "fighting"}
                 onClick={handleFight}
               >
-                <Swords className="size-5" aria-hidden="true" />
-                {battleState === "fighting" ? "In corso..." : battleState === "result" ? "Nuovo scontro" : "Combatti"}
+                <Scale className="size-5" aria-hidden="true" />
+                {battleState === "fighting" ? "Analisi..." : battleState === "result" ? "Ricalcola" : "Calcola il verdetto"}
               </button>
             </div>
 
@@ -273,7 +277,7 @@ export function DesktopCompareView({
                 >
                   <div className="desktop-compare__verdict-title">
                     <Sparkles className="size-4" aria-hidden="true" />
-                    <span>{winner.name} vince il confronto</span>
+                    <span>{winner.name} è la scelta consigliata</span>
                   </div>
                   <span className="desktop-compare__verdict-label">{verdict.label}</span>
                   <ul className="desktop-compare__verdict-reasons">
@@ -322,9 +326,6 @@ export function DesktopCompareView({
         />
       ) : null}
 
-      <div className="desktop-compare__matrix-panel desktop-compare__matrix-panel--full">
-        <DiffMatrix tools={sorted} objective={activeObjective} />
-      </div>
     </section>
   );
 }

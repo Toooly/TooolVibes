@@ -856,13 +856,6 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
 
   return (
     <div className="mobile-library-empty">
-      <div className="mobile-library-empty__visual">
-        <div className="mobile-library-empty__shelf">
-          <span className="mobile-library-empty__book" />
-          <span className="mobile-library-empty__book" />
-          <span className="mobile-library-empty__book is-ghost" />
-        </div>
-      </div>
       <div className="mobile-library-empty__content">
         <span className="mobile-library-empty__kicker">Nessun tool salvato, per ora</span>
         <h2>La tua biblioteca è pronta a riempirsi.</h2>

@@ -1,0 +1,227 @@
+.v-auth-page {
+  min-height: calc(100dvh - var(--tv-header-height));
+  overflow: visible;
+  padding: clamp(2rem, 4vw, 3.5rem) 1rem 7rem;
+  background: var(--tv-bg-base);
+}
+
+.v-auth-container--split {
+  grid-template-columns: minmax(0, 1.05fr) minmax(22rem, 0.95fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: 72rem;
+}
+
+.v-auth-context__eyebrow {
+  width: fit-content;
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: 0.25rem;
+  padding: 0.38rem 0.62rem;
+}
+
+.v-auth-context h2 {
+  max-width: 11ch;
+  font-size: clamp(3.2rem, 5.7vw, 6rem);
+  line-height: 0.9;
+}
+
+.v-auth-context li::before {
+  border-radius: 0.1rem;
+}
+
+.v-auth-card {
+  border: 1px solid var(--tv-border-inverted-default);
+  border-radius: 0.75rem;
+  background: var(--tv-surface-inverted);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  color: var(--tv-ink-inverted-primary);
+  box-shadow: none;
+}
+
+.v-auth-card::before {
+  display: none;
+}
+
+.v-auth-brand {
+  border-color: var(--tv-border-inverted-default);
+  border-radius: 0.45rem;
+  background: var(--tv-bg-base);
+}
+
+.v-auth-title,
+.v-auth-admin-title {
+  color: var(--tv-ink-inverted-primary);
+}
+
+.v-auth-subtitle,
+.v-auth-field label,
+.v-auth-consent,
+.v-auth-info,
+.v-auth-footer p,
+.v-auth-admin-desc,
+.v-auth-loading-text {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.v-auth-tabs {
+  gap: 0;
+  border-color: var(--tv-border-inverted-default);
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.46);
+  padding: 0.2rem;
+}
+
+.v-auth-tab {
+  min-height: 2.75rem;
+  border-radius: 0.25rem;
+  color: var(--tv-ink-inverted-muted);
+}
+
+.v-auth-tab:hover {
+  background: var(--tv-interactive-inverted-bg-hover);
+  color: var(--tv-ink-inverted-primary);
+}
+
+.v-auth-tab.is-active {
+  background: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+  box-shadow: none;
+}
+
+.v-auth-tab-indicator {
+  border: 0;
+  border-radius: 0.25rem;
+}
+
+.v-auth-input {
+  border-color: var(--tv-input-inverted-border);
+  border-radius: 0.4rem;
+  background: var(--tv-input-inverted-bg);
+  color: var(--tv-input-inverted-text);
+}
+
+.v-auth-input::placeholder {
+  color: var(--tv-input-inverted-placeholder);
+}
+
+.v-auth-input:focus {
+  border-color: var(--tv-accent-brand);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(106, 60, 255, 0.12);
+}
+
+.v-auth-btn-primary,
+.v-auth-btn-admin {
+  border-radius: 0.4rem;
+  background: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+  box-shadow: none;
+}
+
+.v-auth-btn-primary:hover:not(:disabled),
+.v-auth-btn-admin:hover:not(:disabled) {
+  background: var(--tv-accent-brand-hover);
+  box-shadow: none;
+  transform: none;
+}
+
+.v-auth-message,
+.v-auth-admin-icon {
+  border-radius: 0.4rem;
+}
+
+.v-auth-footer {
+  border-top-color: var(--tv-border-inverted-subtle);
+}
+
+.v-auth-link {
+  color: var(--tv-accent-brand-pressed);
+}
+
+.account-loading-state.v-auth-loading {
+  border-radius: 0.75rem;
+  background: var(--tv-surface-inverted);
+  box-shadow: none;
+}
+
+.account-loading-state h1 {
+  color: var(--tv-ink-inverted-primary);
+}
+
+.tone-account {
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
+  padding-bottom: 7rem !important;
+}
+
+.tone-account :where(
+  .account-section-panel,
+  .account-hero,
+  .account-stat-card,
+  .account-meta-block,
+  .account-game-panel,
+  .account-selection-card,
+  .account-journey-panel,
+  .account-journey-step,
+  .account-message
+) {
+  border-radius: 0.65rem;
+  background-image: none;
+  box-shadow: none;
+}
+
+.tone-account :where(
+  .account-section-panel,
+  .account-hero,
+  .account-stat-card,
+  .account-meta-block,
+  .account-game-panel,
+  .account-selection-card,
+  .account-journey-panel
+) {
+  background-color: var(--tv-surface-raised);
+}
+
+.tone-account :where(
+  .account-section-panel,
+  .account-hero,
+  .account-stat-card,
+  .account-meta-block,
+  .account-selection-card
+)::before,
+.tone-account .account-hero::after {
+  display: none;
+}
+
+.tone-account :where(.account-status-badge, .account-btn-primary, .account-btn-secondary) {
+  border-radius: 0.35rem;
+  box-shadow: none;
+}
+
+@media (max-width: 47.99rem) {
+  .v-auth-page {
+    padding: 1.25rem 1rem 6.5rem;
+  }
+
+  .v-auth-container--split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    max-width: 30rem;
+  }
+
+  .v-auth-context h2 {
+    font-size: clamp(2.75rem, 13vw, 4rem);
+  }
+
+  .v-auth-card {
+    border-radius: 0.6rem;
+    padding: 1.25rem;
+  }
+
+  .v-auth-context ul {
+    margin-bottom: 0;
+  }
+
+  .tone-account {
+    padding-bottom: 6.5rem !important;
+  }
+}

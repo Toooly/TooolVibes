@@ -1,7 +1,6 @@
 "use client";
 
 import { useAccount } from "@/components/account/account-provider";
-import { AccountVibesBackground } from "@/components/account/account-vibes-background";
 
 import { AccountAccessSection } from "./panel/account-access-section";
 import { AccountGamificationSection } from "./panel/account-gamification-section";
@@ -71,7 +70,6 @@ export function AccountPanel() {
 
   return (
     <>
-      <AccountVibesBackground />
       <div
         id="member-access"
         className="tone-account relative z-10 space-y-5 scroll-mt-24 px-4 py-6 sm:px-6 sm:py-8"

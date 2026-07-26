@@ -74,10 +74,6 @@ export function AuthPage() {
 
   return (
     <div id="member-access" className="v-auth-page tv-kbd-page scroll-mt-24">
-      {/* Ambient background */}
-      <div className="v-auth-page-bg" aria-hidden="true" />
-      <div className="v-auth-page-orb" aria-hidden="true" />
-
       <div className="v-auth-container v-auth-container--split">
         <aside className="v-auth-context" aria-labelledby="account-context-title">
           <p className="v-auth-context__eyebrow">Workspace privato</p>

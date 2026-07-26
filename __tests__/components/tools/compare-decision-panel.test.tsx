@@ -168,11 +168,11 @@ function readPersistedWorkspace(key: string = WORKSPACE_STORAGE_KEY) {
   return JSON.parse(raw as string) as WorkspaceStateV1;
 }
 
-/* Il reveal dell'arena è teatrale (timer B33): il test lo attraversa con
+/* Il calcolo del verdetto usa il timer B33: il test lo attraversa con
    timer finti, il comportamento sotto test è lo stato persistito. */
 function revealMobileResult() {
   fireEvent.click(
-    screen.getByRole("button", { name: /scopri chi domina/ }),
+    screen.getByRole("button", { name: /calcola il verdetto/i }),
   );
   act(() => {
     vi.advanceTimersByTime(2000);
@@ -180,7 +180,7 @@ function revealMobileResult() {
 }
 
 function revealDesktopResult() {
-  fireEvent.click(screen.getByRole("button", { name: "Combatti" }));
+  fireEvent.click(screen.getByRole("button", { name: "Calcola il verdetto" }));
   act(() => {
     vi.advanceTimersByTime(2000);
   });
@@ -483,7 +483,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     ).toBeNull();
     // Il verdetto resta raggiungibile come prima.
     expect(
-      screen.getByRole("button", { name: /Nuovo scontro/ }),
+      screen.getByRole("button", { name: /Ricalcola/ }),
     ).toBeTruthy();
   });
 

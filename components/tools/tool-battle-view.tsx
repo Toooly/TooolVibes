@@ -92,8 +92,8 @@ export function ToolBattleView({
         <p className="tool-battle-page__eyebrow">Decision workspace</p>
         <h1 id="tool-battle-title">Confronta meno. Scegli meglio.</h1>
         <p className="tool-battle-page__lede">
-          Metti sul ring i candidati più forti e porta a casa una decisione
-          leggibile, motivata e pronta da ricordare.
+          Affianca i candidati più forti e arriva a una decisione leggibile,
+          motivata e pronta da ricordare.
         </p>
         <ol className="tool-battle-page__steps" aria-label="Come funziona il confronto">
           <li><span>01</span> Aggiungi</li>

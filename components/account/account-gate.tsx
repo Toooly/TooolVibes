@@ -10,7 +10,6 @@ export function AccountGate() {
   if (account.status === "loading") {
     return (
       <div id="member-access" className="v-auth-page scroll-mt-24">
-        <div className="v-auth-page-bg" aria-hidden="true" />
         <div className="v-auth-container">
           <div className="v-auth-card v-auth-loading account-loading-state" role="status" aria-busy="true">
             <div className="v-auth-loading-spinner" aria-hidden="true" />
