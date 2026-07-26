@@ -48,6 +48,7 @@ function CommandBarBrand() {
   return (
     <Link
       href="/"
+      prefetch={false}
       aria-label="TooolVibes — home"
       className="command-bar__brand group relative flex items-center gap-3"
     >
@@ -108,6 +109,7 @@ export function CommandBar() {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 className={`command-bar__nav-item ${active ? "is-active" : ""}`}
                 aria-current={active ? "page" : undefined}
               >
@@ -148,6 +150,7 @@ export function CommandBar() {
 
           <Link
             href={accountCta.href}
+            prefetch={false}
             className="command-bar__account"
             aria-label={accountCta.label}
           >

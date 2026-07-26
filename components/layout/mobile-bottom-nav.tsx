@@ -115,6 +115,7 @@ export function MobileBottomNav() {
             <Link
               key={item.id}
               href={item.href}
+              prefetch={false}
               aria-current={isActive ? "page" : undefined}
               aria-label={badgeCount > 0 && badgeAria ? `${item.label}, ${badgeAria}` : undefined}
               className={cn(

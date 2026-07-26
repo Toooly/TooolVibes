@@ -48,7 +48,12 @@ export function MobileTopBar() {
     >
       <div aria-hidden="true" className="mobile-top-bar__scanline" />
       <div className="mobile-top-bar__inner">
-        <Link href="/" aria-label="TooolVibes home" className="mobile-top-bar__brand">
+        <Link
+          href="/"
+          prefetch={false}
+          aria-label="TooolVibes home"
+          className="mobile-top-bar__brand"
+        >
           <span className="mobile-top-bar__brand-mark">
             <BrandLogo size={24} fallback="png" priority />
           </span>
@@ -67,6 +72,7 @@ export function MobileTopBar() {
 
         <Link
           href={accountCta.href}
+          prefetch={false}
           className="mobile-top-bar__account"
           aria-label={accountCta.label}
         >

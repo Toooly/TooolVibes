@@ -176,7 +176,11 @@ function ArchiveV4ToolCardInner({
         </span>
         <div className="ar4-card__identity">
           <h3 className="ar4-card__name">
-            <Link href={`/toools/${tool.slug}`} className="ar4-card__name-link">
+            <Link
+              href={`/toools/${tool.slug}`}
+              prefetch={false}
+              className="ar4-card__name-link"
+            >
               {tool.name}
             </Link>
           </h3>
@@ -233,7 +237,11 @@ function ArchiveV4ToolCardInner({
 
       {/* ═══ ACTION RAIL ═══ */}
       <div className="ar4-card__actions">
-        <Link href={`/toools/${tool.slug}`} className="ar4-card__open">
+        <Link
+          href={`/toools/${tool.slug}`}
+          prefetch={false}
+          className="ar4-card__open"
+        >
           Apri scheda
           <span aria-hidden="true">→</span>
         </Link>
