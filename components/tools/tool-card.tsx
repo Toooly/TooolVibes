@@ -23,7 +23,7 @@ import { EditorialScorecard } from "@/components/tools/editorial-scorecard";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 import { TagPill } from "@/components/tools/tag-pill";
 
-export type ToolCardVariant = "featured" | "standard" | "compact" | "scan";
+export type ToolCardVariant = "featured" | "standard" | "compact" | "scan" | "collection";
 
 type ToolCardProps = {
   tool: ToolRecord;
@@ -250,6 +250,68 @@ function ToolCardComponent({
               Apri profilo
             </Link>
           </div>
+        </div>
+      </article>
+    );
+  }
+
+  if (variant === "collection") {
+    return (
+      <article
+        className={cn(
+          "tool-card-base group interactive-surface surface-sheen relative overflow-hidden rounded-[22px] border p-3.5 sm:p-4",
+          "tool-card-collection",
+          isSaved && "tool-card-saved",
+          isCompared && "tool-card-compared",
+        )}
+      >
+        <div className="relative flex items-start gap-3.5">
+          <Link
+            href={`/toools/${tool.slug}`}
+            className="relative block h-16 w-16 shrink-0 overflow-hidden rounded-[16px] border border-white/10"
+          >
+            <Image
+              src={tool.cover_image_url}
+              alt=""
+              fill
+              sizes="64px"
+              className="object-cover"
+            />
+          </Link>
+          <div className="min-w-0 flex-1">
+            <p className="editorial-label">{tool.category}</p>
+            <h4 className="text-display-card mt-1 text-[1.12rem]">
+              <Link href={`/toools/${tool.slug}`}>{tool.name}</Link>
+            </h4>
+            <p
+              className="text-body-soft mt-1.5 line-clamp-2 text-[0.84rem] leading-6"
+              style={{ color: "var(--muted-strong)" }}
+            >
+              {tool.short_description_it}
+            </p>
+          </div>
+        </div>
+
+        <EditorialScorecard
+          tool={tool}
+          variant="signals"
+          limit={1}
+          showHeading={false}
+          className="mt-3.5"
+        />
+
+        <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 border-t pt-3 soft-divider">
+          <div className="flex flex-wrap items-center gap-2">
+            <ShortlistToggle slug={tool.slug} mode="compact" />
+            <CompareToggle slug={tool.slug} compact />
+          </div>
+          <Link
+            href={`/toools/${tool.slug}`}
+            className="section-quiet-link inline-flex min-h-11 items-center gap-1.5 text-xs font-semibold"
+          >
+            Apri scheda
+            <ArrowRight aria-hidden="true" className="size-3.5" />
+          </Link>
         </div>
       </article>
     );

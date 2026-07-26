@@ -50,6 +50,7 @@ import {
 } from "@/lib/radar/product-hunt-contract";
 import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { NativePlacement } from "@/components/monetization/native-placement";
 
 const DesktopRadarNodes = dynamic(
@@ -63,7 +64,6 @@ const DesktopRadarNodes = dynamic(
 type DefinitiveHomeProps = {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
-  supportingTools: ToolPublicView[];
 };
 
 const METHOD_STEPS = [
@@ -101,11 +101,7 @@ const SOCKET_POSITIONS = [
 // ============================================================
 // COCKPIT — Hero + Radar in the same primary frame
 // ============================================================
-function Cockpit({
-  focusTool,
-}: {
-  focusTool: ToolPublicView | null;
-}) {
+function Cockpit() {
   const { payload } = useProductHuntRadar("day" as ProductHuntRange);
   const dataState = resolveRadarDataState(payload);
   const hasLiveData = dataState === "ready";
@@ -319,14 +315,11 @@ function IvoryEditorial({
       : null;
   const initial = (name: string) => name.slice(0, 2).toUpperCase();
 
-  // Editorial score derived deterministically from tool name length (no fabrication)
-  const editorialScore = (6.8 + (focusTool.name.length % 3) * 0.5).toFixed(1);
-
-  // Winner bars (fictional editorial dimensions, no fake numbers from data)
-  const WINNER_BARS = [
-    { label: "Velocità", value: 88 },
-    { label: "Qualità", value: 92 },
-    { label: "Difficoltà", value: 32 },
+  const editorialScore = computeEditorialScore(focusTool);
+  const winnerFacts = [
+    { label: "Lettura", value: focusTool.readingTime ?? "—" },
+    { label: "Casi d'uso", value: String(focusTool.useCases.length) },
+    { label: "Fascia", value: editorialScore.label },
   ] as const;
 
   return (
@@ -389,7 +382,7 @@ function IvoryEditorial({
               </div>
               <div>
                 <dt>Score editoriale</dt>
-                <dd>{editorialScore}</dd>
+                <dd>{editorialScore.value.toFixed(1)}</dd>
               </div>
             </dl>
 
@@ -422,24 +415,20 @@ function IvoryEditorial({
               Profilo vincitore
             </p>
             <div className="def-editorial__spot-winner-score">
-              <span className="def-editorial__spot-winner-score-num">{editorialScore}</span>
+              <span className="def-editorial__spot-winner-score-num">
+                {editorialScore.value.toFixed(1)}
+              </span>
               <span className="def-editorial__spot-winner-score-max">/ 10 editoriale</span>
             </div>
             <p className="def-editorial__spot-winner-detail">
-              Score composito su velocità, qualità output e rapporto
-              difficoltà/risultato. Pesi calibrati sulla tassonomia TooolVibes.
+              Punteggio editoriale canonico applicato allo stesso profilo in
+              Home, Archivio, Confronto e scheda completa.
             </p>
             <div className="def-editorial__spot-winner-bars">
-              {WINNER_BARS.map((bar) => (
-                <div className="def-editorial__spot-winner-bar" key={bar.label}>
-                  <span className="def-editorial__spot-winner-bar-label">{bar.label}</span>
-                  <span className="def-editorial__spot-winner-bar-track">
-                    <span
-                      className="def-editorial__spot-winner-bar-fill"
-                      style={{ width: `${bar.value}%` }}
-                    />
-                  </span>
-                  <span className="def-editorial__spot-winner-bar-value">{bar.value}</span>
+              {winnerFacts.map((fact) => (
+                <div className="def-editorial__spot-winner-bar" key={fact.label}>
+                  <span className="def-editorial__spot-winner-bar-label">{fact.label}</span>
+                  <span className="def-editorial__spot-winner-bar-value">{fact.value}</span>
                 </div>
               ))}
             </div>
@@ -502,8 +491,7 @@ function PodiumCard({
   iconUrl: string | null;
   initial: string;
 }) {
-  // Deterministic score per tool — no fabrication, just a derived value
-  const score = (6.8 + (tool.name.length % 3) * 0.5 + (rank === 1 ? 0.6 : 0)).toFixed(1);
+  const score = computeEditorialScore(tool).value.toFixed(1);
   return (
     <Link
       href={`/toools/${tool.slug}`}
@@ -570,11 +558,11 @@ function Method() {
 // ============================================================
 // ROOT
 // ============================================================
-export function DefinitiveHome({ tools, weeklyTool, supportingTools }: DefinitiveHomeProps) {
+export function DefinitiveHome({ tools, weeklyTool }: DefinitiveHomeProps) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
   return (
     <div className="def-home">
-      <Cockpit focusTool={focusTool} />
+      <Cockpit />
       <IvoryEditorial focusTool={focusTool} tools={tools} />
       <Method />
       <section className="def-home__placement">

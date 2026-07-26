@@ -232,7 +232,7 @@
 
 .ar4-intro__stats dt {
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -310,7 +310,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.16em;
@@ -333,7 +333,8 @@
   letter-spacing: 0.02em;
   white-space: nowrap;
   cursor: pointer;
-  min-height: 36px;
+  flex: 0 0 auto;
+  min-height: 44px;
   -webkit-tap-highlight-color: transparent;
   transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
 }
@@ -349,7 +350,7 @@
 .ar4-chip em {
   font-style: normal;
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   padding: 1px 6px;
   border-radius: 999px;
@@ -690,7 +691,7 @@
   padding: 4px 9px;
   border-radius: 999px;
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -730,7 +731,7 @@
   border-radius: 6px;
   border: 1px solid currentColor;
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -761,7 +762,7 @@
 
 .ar4-card__votes {
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   color: var(--tv-ink-muted-aa);
   white-space: nowrap;
 }
@@ -828,7 +829,7 @@
   color: var(--tv-accent-cyan);
   border-radius: 999px;
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -843,7 +844,7 @@
   background: var(--tv-accent-gold);
   color: var(--tv-bg-base);
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 10px;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.18em;
@@ -985,7 +986,7 @@
   display: grid;
   place-items: center;
   font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-size: 10px;
+  font-size: var(--tv-text-xs);
   color: var(--tv-accent-primary);
   text-transform: uppercase;
 }
@@ -1134,7 +1135,7 @@
   padding: 5px 11px;
   border-radius: 999px;
   font-family: var(--tv-font-mono, ui-monospace);
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -1309,7 +1310,7 @@
     word-break: normal;
   }
   .ar4-card:not(.is-promoted) .ar4-card__status {
-    font-size: 10px;
+    font-size: var(--tv-text-xs);
     padding: 3px 7px;
     letter-spacing: 0.1em;
   }
@@ -1499,7 +1500,7 @@
   background: var(--tv-accent-primary);
   color: var(--tv-ink-on-brand);
   border-radius: 999px;
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   font-style: normal;
 }
@@ -1749,7 +1750,7 @@
   background: color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
   color: var(--tv-accent-primary);
   border-radius: 999px;
-  font-size: 11px;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   letter-spacing: 0.06em;
 }
@@ -1833,4 +1834,3 @@
     padding-bottom: calc(4.75rem + 12px + env(safe-area-inset-bottom));
   }
 }
-

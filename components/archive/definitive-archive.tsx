@@ -34,6 +34,7 @@ import Link from "next/link";
 import { Search, Sparkles, ArrowRight, SlidersHorizontal, X, Check, Filter } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import type { CatalogLevelFilter } from "@/components/directory/catalog/catalog-controller";
 import type { ToolFilterGroup, ToolPublicView } from "@/lib/data/tool-public-view";
 import { ArchiveV4ToolCard } from "./archive-v4-tool-card";
 import { ArchiveV4CompareTray } from "./archive-v4-compare-tray";
@@ -41,6 +42,9 @@ import { ArchiveV4CompareTray } from "./archive-v4-compare-tray";
 type DefinitiveArchiveProps = {
   tools: ToolPublicView[];
   filterGroups: ToolFilterGroup[];
+  initialQuery?: string;
+  initialGroup?: string;
+  initialLevel?: CatalogLevelFilter;
 };
 
 const LEVEL_FILTERS = [
@@ -51,18 +55,23 @@ const LEVEL_FILTERS = [
   { key: "featured", label: "In evidenza" },
 ] as const;
 
-const PROMOTED_TIERS = ["primary", "secondary", "tertiary"] as const;
-type PromotedTier = (typeof PROMOTED_TIERS)[number];
+type PromotedTier = "primary" | "secondary" | "tertiary";
 
 /** Initial visible count for mobile progressive disclosure */
 const INITIAL_MOBILE_COUNT = 12;
 /** Step for "Mostra altri" */
 const MOBILE_STEP = 12;
 
-export function DefinitiveArchive({ tools, filterGroups }: DefinitiveArchiveProps) {
-  const [activeGroup, setActiveGroup] = useState<string>("all");
-  const [activeLevel, setActiveLevel] = useState<string>("all");
-  const [query, setQuery] = useState<string>("");
+export function DefinitiveArchive({
+  tools,
+  filterGroups,
+  initialQuery = "",
+  initialGroup = "all",
+  initialLevel = "all",
+}: DefinitiveArchiveProps) {
+  const [activeGroup, setActiveGroup] = useState<string>(initialGroup);
+  const [activeLevel, setActiveLevel] = useState<string>(initialLevel);
+  const [query, setQuery] = useState<string>(initialQuery);
   const [showPromotedInGrid, setShowPromotedInGrid] = useState<boolean>(false);
   const [filterSheetOpen, setFilterSheetOpen] = useState<boolean>(false);
   const [mobileVisibleCount, setMobileVisibleCount] = useState<number>(INITIAL_MOBILE_COUNT);

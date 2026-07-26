@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import { DefinitiveArchive } from "@/components/archive/definitive-archive";
 import { NativePlacement } from "@/components/monetization/native-placement";
-import { releaseFeatures } from "@/lib/config/release-features";
 import { isCatalogDensityPolicyEnabled } from "@/lib/config/catalog-density-policy";
 import { parseCatalogLevelParam } from "@/components/directory/catalog/catalog-controller";
 import {
@@ -29,8 +28,9 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
     getPublicToolFilterGroups(),
   ]);
   const initialQuery = params.q?.trim() ?? "";
-  const initialGroup = filterGroups.some((group) => group.key === params.group)
-    ? params.group ?? "all"
+  const requestedGroup = params.group ?? params.tag;
+  const initialGroup = filterGroups.some((group) => group.key === requestedGroup)
+    ? requestedGroup ?? "all"
     : "all";
   const initialLevel = parseCatalogLevelParam(params.level);
 
@@ -48,7 +48,13 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
         </section>
       )}
 
-      <DefinitiveArchive tools={tools} filterGroups={filterGroups} />
+      <DefinitiveArchive
+        tools={tools}
+        filterGroups={filterGroups}
+        initialQuery={initialQuery}
+        initialGroup={initialGroup}
+        initialLevel={initialLevel}
+      />
 
       {catalogDensityPolicy && (
         <section

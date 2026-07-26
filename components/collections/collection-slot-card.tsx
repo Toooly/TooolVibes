@@ -84,7 +84,7 @@ export function CollectionSlotCard({
       <div className="mt-4">
         <ToolCard
           tool={slot.tool}
-          variant={slot.featured ? "standard" : "compact"}
+          variant="collection"
           contextLabel={collectionTitle}
           index={index}
           priority={slot.featured}

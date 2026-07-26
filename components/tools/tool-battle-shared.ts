@@ -1,4 +1,5 @@
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import { computeEditorialScore } from "@/lib/data/editorial-score";
 import {
   rankCompareScores,
   scoreToolForCompare,
@@ -43,6 +44,7 @@ export type NormalisedTool = {
   category: string;
   categoryLabel: string;
   score: number;
+  editorialScore: number;
   battleScore: number;
   objectiveScore?: number;
   objectiveDelta?: number;
@@ -121,6 +123,7 @@ export function normalise(
     // (score/evidence/useCases/taxonomy) con provenance dichiarata;
     // livello, featured e hash di presentazione non partecipano piu`.
     const compareScore = scoreToolForCompare(tool.publicTool);
+    const editorialScore = computeEditorialScore(tool).value;
     const score = compareScore.total;
     const fallbackColor = hashColor(tool.name);
     const highlights = tool.highlights.length > 0
@@ -133,6 +136,7 @@ export function normalise(
       category: tool.category,
       categoryLabel: tool.categoryLabel,
       score,
+      editorialScore,
       battleScore: score,
       compareScore,
       accentFrom: tool.accentFrom ?? fallbackColor,

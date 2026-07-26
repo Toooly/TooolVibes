@@ -8,10 +8,11 @@ import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph"
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { cn, formatItalianDate } from "@/lib/utils";
 
@@ -62,28 +63,6 @@ function getLevelBadgeVariant(level: string | null): LevelBadgeVariant {
   return "neutral";
 }
 
-/* Score derivato per la Score badge del card: tiene conto di
-   level + featured + toolOfWeek. Il numero e' una visualizzazione
-   editoriale fissa (4.5-9.5) coerente con i mockup; non e' una
-   metrica di qualita' reale. */
-function getCardScore(
-  level: string | null | undefined,
-  featured: boolean | undefined,
-  toolOfWeek: boolean | undefined,
-): { value: number; label: string } {
-  let base = 7.4;
-  if (level === "featured") base = 8.8;
-  else if (level === "expert") base = 8.2;
-  else if (level === "intermediate") base = 7.6;
-  else if (level === "beginner") base = 6.8;
-  if (featured) base = Math.min(base + 0.4, 9.5);
-  if (toolOfWeek) base = Math.min(base + 0.3, 9.5);
-  const rounded = Math.round(base * 10) / 10;
-  const label =
-    rounded >= 9.0 ? "Ottimo" : rounded >= 8.0 ? "Solido" : rounded >= 7.0 ? "Buono" : "Base";
-  return { value: rounded, label };
-}
-
 /* Contratto tipografico B21: mai sotto 12px (--tv-text-xs), tracking
    uppercase solo per label corte (0.08em) o eyebrow (max 0.14em). */
 const eyebrowClass =
@@ -124,7 +103,10 @@ export function CanonicalToolCard({
   const publishedLabel = tool.publishedAt
     ? `Aggiornato ${formatItalianDate(tool.publishedAt)}`
     : "Data non disponibile";
-  const cardScore = getCardScore(tool.level, tool.featured, tool.toolOfWeek);
+  const cardScore = computeEditorialScore({
+    name: tool.name,
+    toolOfWeek: Boolean(tool.toolOfWeek),
+  });
   const isFeatured = Boolean(tool.toolOfWeek || tool.featured);
 
   const actionNode = actions ?? (
@@ -232,16 +214,21 @@ export function CanonicalToolCard({
 
   const ctaRow = (
     <div data-slot="tool-card-cta" className="grid gap-2 sm:grid-cols-2">
-      <Button
-        size="sm"
-        render={<a href={tool.url} target="_blank" rel="noopener noreferrer" />}
+      <a
+        href={tool.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={buttonVariants({ size: "sm" })}
       >
         {tool.ctaLabel ?? "Apri il sito"}
         <ArrowRight aria-hidden="true" className="size-3.5" />
-      </Button>
-      <Button variant="secondary" size="sm" render={<Link href={profileHref} />}>
+      </a>
+      <Link
+        href={profileHref}
+        className={buttonVariants({ variant: "secondary", size: "sm" })}
+      >
         Scopri di più
-      </Button>
+      </Link>
     </div>
   );
 
@@ -301,7 +288,10 @@ export function CanonicalToolCard({
                 data-slot="tool-card-badges"
                 className="flex min-h-[1.7rem] flex-wrap items-center gap-1.5 sm:min-h-[2rem] sm:gap-2"
               >
-                {isFeatured ? (
+                {tool.toolOfWeek ? (
+                  badges
+                ) : isFeatured ? (
+                  <>
                   <span
                     data-slot="tool-card-featured-pill"
                     className="inline-flex items-center gap-1 rounded-full border border-[var(--tv-accent-primary)]/40 bg-[var(--tv-accent-primary)]/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-[var(--tv-accent-primary)] sm:text-[0.8125rem]"
@@ -309,6 +299,8 @@ export function CanonicalToolCard({
                     <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[var(--tv-accent-primary)]" />
                     In evidenza
                   </span>
+                  {badges}
+                  </>
                 ) : (
                   badges
                 )}
@@ -494,15 +486,14 @@ export function CanonicalToolCard({
           data-slot="tool-card-footer"
           className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--tv-border-subtle)] px-3.5 py-2.5"
         >
-          <Button
-            variant="link"
-            size="sm"
-            render={<Link href={profileHref} />}
+          <Link
+            href={profileHref}
+            className={buttonVariants({ variant: "link", size: "sm" })}
             aria-label={`Apri la scheda di ${tool.name}`}
           >
             Apri scheda
             <ArrowRight aria-hidden="true" className="size-3.5" />
-          </Button>
+          </Link>
           {showActions ? (
             <div data-slot="tool-card-actions" className="flex items-center gap-2">
               {actionNode}
@@ -559,15 +550,14 @@ export function CanonicalToolCard({
         data-slot="tool-card-footer"
         className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)] px-3.5 py-2.5"
       >
-        <Button
-          variant="link"
-          size="sm"
-          render={<Link href={profileHref} />}
+        <Link
+          href={profileHref}
+          className={buttonVariants({ variant: "link", size: "sm" })}
           aria-label={`Apri la scheda di ${tool.name}`}
         >
           Apri scheda
           <ArrowRight aria-hidden="true" className="size-3.5" />
-        </Button>
+        </Link>
         {showActions ? (
           <div data-slot="tool-card-actions" className="flex items-center gap-2">
             {actionNode}

@@ -70,7 +70,9 @@ function CompactToolCard({
           <ToolFighter tool={tool} variant="micro" />
         </span>
         <div className="mobile-compare-arena__compact-info">
-          <span className="mobile-compare-arena__compact-cat">{tool.categoryLabel}</span>
+          <span className="mobile-compare-arena__compact-cat">
+            {tool.categoryLabel} · {tool.editorialScore.toFixed(1)}/10 editoriale
+          </span>
           <h3 className="mobile-compare-arena__compact-name">{tool.name}</h3>
           <p className="mobile-compare-arena__compact-tldr">{tool.tldr}</p>
         </div>
@@ -230,6 +232,20 @@ export function DiffMatrix({
         <div className="mobile-compare-arena__matrix-evidence">
           <span className="mobile-compare-arena__matrix-badge">{t.categoryLabel}</span>
           <small>Il confronto va letto dentro questa categoria.</small>
+        </div>
+      ),
+      winnerSlugs: [] as string[],
+    },
+    {
+      id: "editorial-score",
+      label: "Score editoriale",
+      helper: "contratto /10",
+      render: (t: NormalisedTool) => (
+        <div className="mobile-compare-arena__matrix-score-card">
+          <div className="mobile-compare-arena__matrix-score-head">
+            <strong>{t.editorialScore.toFixed(1)}</strong>
+            <small>/10</small>
+          </div>
         </div>
       ),
       winnerSlugs: [] as string[],

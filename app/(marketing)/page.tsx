@@ -3,7 +3,6 @@ import { DefinitiveHome } from "@/components/home/definitive-home";
 import { ComingSoonPage } from "@/components/coming-soon/coming-soon-page";
 import { releaseFeatures } from "@/lib/config/release-features";
 import {
-  getFeaturedToolViews,
   getPublicToolViews,
   getToolSpotlightView,
 } from "@/lib/data/public-tools";
@@ -41,14 +40,10 @@ export default async function HomePage() {
     return <ComingSoonPage />;
   }
 
-  const [tools, spotlightTool, featuredTools] = await Promise.all([
+  const [tools, spotlightTool] = await Promise.all([
     getPublicToolViews(),
     getToolSpotlightView(),
-    getFeaturedToolViews(5),
   ]);
-  const supportingTools = featuredTools.filter(
-    (tool) => tool.slug !== spotlightTool?.slug,
-  );
 
   // PHASE 2.2 (2026-07-24): Definitive Home replaces VibeHomeV2.
   // The new architecture delivers 3+ major visible changes:
@@ -61,7 +56,6 @@ export default async function HomePage() {
     <DefinitiveHome
       tools={tools}
       weeklyTool={spotlightTool}
-      supportingTools={supportingTools.slice(0, 4)}
     />
   );
 }

@@ -58,7 +58,9 @@ function DesktopDuelCard({
 
       <div className="desktop-compare__duel-copy">
         <strong>{tool.name}</strong>
-        <span>{tool.categoryLabel}</span>
+        <span>
+          {tool.categoryLabel} · {tool.editorialScore.toFixed(1)}/10 editoriale
+        </span>
       </div>
     </article>
   );
@@ -91,7 +93,10 @@ function DesktopRosterCard({
       />
       <div className="desktop-compare__roster-copy">
         <strong>{tool.name}</strong>
-        <span>{tool.objectiveScore ?? tool.battleScore}/100</span>
+        <span>
+          {tool.objectiveScore ?? tool.battleScore}/100 ·{" "}
+          {tool.editorialScore.toFixed(1)}/10 editoriale
+        </span>
         {tool.objectiveDelta != null && tool.objectiveDelta !== 0 ? (
           <span className="desktop-compare__objective-delta">
             {tool.objectiveDelta > 0 ? "+" : ""}

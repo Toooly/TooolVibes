@@ -362,7 +362,18 @@ function LibraryWishlistSection() {
           })}
         </div>
       </div>
-      <RequestToolForm className="mobile-library-wishlist__form" />
+      <details className="mobile-library-wishlist__disclosure">
+        <summary>
+          <span>
+            <PlusCircle size={18} aria-hidden="true" />
+            Apri il modulo di segnalazione
+          </span>
+          <small>Link, categoria e motivo</small>
+        </summary>
+        <div className="mobile-library-wishlist__disclosure-body">
+          <RequestToolForm className="mobile-library-wishlist__form" />
+        </div>
+      </details>
     </section>
   );
 }

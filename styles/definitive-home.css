@@ -1087,7 +1087,7 @@
 
 .def-editorial__spot-winner-bar {
   display: grid;
-  grid-template-columns: 90px 1fr 32px;
+  grid-template-columns: minmax(90px, 1fr) auto;
   align-items: center;
   gap: 10px;
   font-size: 12px;
@@ -1101,26 +1101,13 @@
   color: var(--tv-ink-muted-aa);
 }
 
-.def-editorial__spot-winner-bar-track {
-  height: 4px;
-  background: color-mix(in srgb, var(--tv-ink-inverted-muted) 35%, transparent);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.def-editorial__spot-winner-bar-fill {
-  display: block;
-  height: 100%;
-  background: var(--tv-accent-gold);
-  border-radius: 2px;
-}
-
 .def-editorial__spot-winner-bar-value {
   font-family: var(--tv-font-mono, ui-monospace);
   font-size: 12px;
   font-weight: 800;
   color: var(--tv-ink-primary);
   text-align: right;
+  text-transform: uppercase;
 }
 
 /* Podium on ivory — v4 TRUE 3-stage tower composition */

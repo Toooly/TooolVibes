@@ -4234,8 +4234,9 @@ img {
 
 
   .pill {
-    @apply inline-flex items-center gap-2 rounded-full border px-2.5 py-[0.42rem] text-[0.62rem] font-medium uppercase tracking-[0.15em];
+    @apply inline-flex items-center gap-2 rounded-full border px-2.5 py-[0.42rem] font-medium uppercase tracking-[0.15em];
     font-family: var(--tv-font-system);
+    font-size: var(--tv-text-xs);
     font-weight: 500;
     border-color: rgba(70, 54, 134, 0.16);
     color: var(--muted-strong);
@@ -4286,8 +4287,9 @@ img {
   }
 
   .editorial-label {
-    @apply text-[0.66rem] font-semibold uppercase tracking-[0.2em];
+    @apply font-semibold uppercase tracking-[0.2em];
     font-family: var(--tv-font-system);
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: color-mix(in srgb, var(--accent-strong) 78%, var(--muted-strong) 22%);
     text-shadow: 0 10px 26px rgba(106, 60, 255, 0.08);
@@ -4316,8 +4318,9 @@ img {
   }
 
   .brand-kicker {
-    @apply text-[0.66rem] font-semibold uppercase tracking-[0.2em];
+    @apply font-semibold uppercase tracking-[0.2em];
     font-family: var(--tv-font-system);
+    font-size: var(--tv-text-xs);
     font-weight: 700;
     color: var(--accent-strong);
     text-shadow: 0 10px 26px rgba(106, 60, 255, 0.08);
@@ -4815,6 +4818,11 @@ img {
       border-color 260ms ease,
       background 260ms ease,
       filter 260ms ease;
+  }
+
+  .tool-card-collection {
+    content-visibility: visible;
+    contain-intrinsic-size: auto;
   }
 
   .tool-card-base:hover,

@@ -78,7 +78,22 @@ export function AuthPage() {
       <div className="v-auth-page-bg" aria-hidden="true" />
       <div className="v-auth-page-orb" aria-hidden="true" />
 
-      <div className="v-auth-container">
+      <div className="v-auth-container v-auth-container--split">
+        <aside className="v-auth-context" aria-labelledby="account-context-title">
+          <p className="v-auth-context__eyebrow">Workspace privato</p>
+          <h2 id="account-context-title">
+            Una memoria operativa per scegliere il tuo stack.
+          </h2>
+          <p>
+            Salvati, confronto e decisioni restano nello stesso percorso, senza
+            trasformare la selezione in un altro foglio da mantenere.
+          </p>
+          <ul>
+            <li>Salva i candidati con il loro contesto.</li>
+            <li>Confronta da due a cinque tool.</li>
+            <li>Riapri note e decisioni quando serve.</li>
+          </ul>
+        </aside>
         <motion.div
           ref={keyboardScrollRef}
           className="v-auth-card"

@@ -220,7 +220,7 @@
 
 @media (max-width: 767px) {
   .tool-battle-page {
-    padding-top: calc(6.25rem + env(safe-area-inset-top, 0px));
+    padding-top: calc(5.25rem + env(safe-area-inset-top, 0px));
   }
 
   .tool-battle-page__intro {
@@ -228,7 +228,7 @@
   }
 
   .tool-battle-page__intro h1 {
-    font-size: clamp(2.75rem, 13vw, 4.5rem);
+    font-size: clamp(2.6rem, 12vw, 4rem);
   }
 
   .tool-battle-page__lede {
@@ -243,7 +243,7 @@
   }
 
   .tool-battle-page__viewport {
-    padding-block: var(--tv-space-6) var(--tv-space-8);
+    padding-block: var(--tv-space-5) var(--tv-space-6);
   }
 
   .compare-viewport-fallback {
@@ -253,6 +253,24 @@
 
   .compare-onboarding__signals {
     grid-template-columns: 1fr;
+  }
+
+  .mobile-compare-arena.mobile-compare-arena--onboarding {
+    min-height: 0;
+    padding:
+      0
+      var(--tv-space-4)
+      calc(var(--tv-bottom-nav-total, 5.5rem) + var(--tv-space-8));
+  }
+
+  .mobile-compare-arena.mobile-compare-arena--onboarding .mobile-compare-arena__empty {
+    margin-inline: 0;
+    padding: var(--tv-space-5) var(--tv-space-4);
+  }
+
+  .mobile-compare-arena.mobile-compare-arena--onboarding .mobile-compare-arena__empty-icon {
+    width: 3.5rem;
+    height: 3.5rem;
   }
 }
 
