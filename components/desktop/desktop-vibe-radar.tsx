@@ -66,78 +66,94 @@ export function DesktopVibeRadar({
       <section className="radar-command__shell" aria-labelledby="radar-page-title">
         <header className="radar-command__header" data-orbit-shield>
           <div>
+            <p className="radar-command__eyebrow">Product Hunt signal desk</p>
             <h1 id="radar-page-title">Radar</h1>
-            <p className="radar-command__subtitle">Classifica Product Hunt</p>
+            <p className="radar-command__subtitle">
+              Lanci reali, ordinati per periodo. Nessun dato simulato.
+            </p>
           </div>
-          <p className="radar-command__source" role="status" aria-live="polite">
-            {sourceLabel}
-          </p>
         </header>
 
-        <div className="radar-command__meta" aria-label="Stato del Radar">
-          <span className="radar-command__meta-item">
-            <span className="radar-command__meta-label">Last scan</span>
-            <span className="radar-command__meta-value">{formatUtcTimeLabel(payload?.updatedAt ?? "") || "--:--"}</span>
-          </span>
-          <span className="radar-command__meta-item">
-            <span className="radar-command__meta-label">Signals</span>
-            <span className="radar-command__meta-value">{(payload?.items ?? []).length}</span>
-          </span>
-          <span className="radar-command__meta-item">
-            <span className="radar-command__meta-label">Range</span>
-            <span className="radar-command__meta-value">{activeRange.toUpperCase()}</span>
-          </span>
-        </div>
+        <div className="radar-command__workspace">
+          <div
+            className="radar-command__rail"
+            role="group"
+            aria-label="Controlli e stato del Radar"
+          >
+            <p className="radar-command__source" role="status" aria-live="polite">
+              {sourceLabel}
+            </p>
 
-        <div className="radar-command__controls">
-          <div className="radar-control-group" role="group" aria-labelledby="radar-range-label">
-            <span id="radar-range-label" className="radar-control-group__label">Periodo</span>
-            {radarRangeTabs.map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                aria-pressed={activeRange === tab.key}
-                aria-controls="radar-results"
-                className="radar-control-group__button"
-                onClick={() => setActiveRange(tab.key)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-          <div className="radar-control-group" role="group" aria-labelledby="radar-view-label">
-            <span id="radar-view-label" className="radar-control-group__label">Vista</span>
-            {radarVisualOptions.map((option) => (
-              <button
-                key={option.key}
-                type="button"
-                aria-pressed={activeVisual === option.key}
-                aria-controls="radar-results"
-                className="radar-control-group__button"
-                onClick={() => setActiveVisual(option.key)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div id="radar-results" className="radar-command__results" data-view={activeVisual}>
-          {activeVisual === "nodes" ? (
-            <div className="radar-command-field" role="region" aria-label="Radar visuale Product Hunt">
-              {threeDEnabled && <Radar3DLayer />}
-              <span className="radar-command-field__ring radar-command-field__ring--outer" aria-hidden="true" />
-              <span className="radar-command-field__ring radar-command-field__ring--inner" aria-hidden="true" />
-              <span className="radar-command-field__axis" aria-hidden="true" />
-              <span className="radar-command-field__sweep" aria-hidden="true" />
-              <span className="radar-command-field__core" aria-hidden="true">
-                <Radar />
+            <div className="radar-command__meta" aria-label="Stato del Radar">
+              <span className="radar-command__meta-item">
+                <span className="radar-command__meta-label">Ultimo scan</span>
+                <span className="radar-command__meta-value">{formatUtcTimeLabel(payload?.updatedAt ?? "") || "--:--"}</span>
               </span>
-              <DesktopRadarNodes range={activeRange} presentation="command" />
+              <span className="radar-command__meta-item">
+                <span className="radar-command__meta-label">Segnali</span>
+                <span className="radar-command__meta-value">{(payload?.items ?? []).length}</span>
+              </span>
+              <span className="radar-command__meta-item">
+                <span className="radar-command__meta-label">Periodo</span>
+                <span className="radar-command__meta-value">{activeRange.toUpperCase()}</span>
+              </span>
             </div>
-          ) : (
-            <DesktopRadarTable range={activeRange} />
-          )}
+
+            <div className="radar-command__controls">
+              <div className="radar-control-group" role="group" aria-labelledby="radar-range-label">
+                <span id="radar-range-label" className="radar-control-group__label">Periodo</span>
+                <div className="radar-control-group__options">
+                  {radarRangeTabs.map((tab) => (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      aria-pressed={activeRange === tab.key}
+                      aria-controls="radar-results"
+                      className="radar-control-group__button"
+                      onClick={() => setActiveRange(tab.key)}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="radar-control-group" role="group" aria-labelledby="radar-view-label">
+                <span id="radar-view-label" className="radar-control-group__label">Vista</span>
+                <div className="radar-control-group__options">
+                  {radarVisualOptions.map((option) => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      aria-pressed={activeVisual === option.key}
+                      aria-controls="radar-results"
+                      className="radar-control-group__button"
+                      onClick={() => setActiveVisual(option.key)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="radar-results" className="radar-command__results" data-view={activeVisual}>
+            {activeVisual === "nodes" ? (
+              <div className="radar-command-field" role="region" aria-label="Radar visuale Product Hunt">
+                {threeDEnabled && <Radar3DLayer />}
+                <span className="radar-command-field__ring radar-command-field__ring--outer" aria-hidden="true" />
+                <span className="radar-command-field__ring radar-command-field__ring--inner" aria-hidden="true" />
+                <span className="radar-command-field__axis" aria-hidden="true" />
+                <span className="radar-command-field__sweep" aria-hidden="true" />
+                <span className="radar-command-field__core" aria-hidden="true">
+                  <Radar />
+                </span>
+                <DesktopRadarNodes range={activeRange} presentation="command" />
+              </div>
+            ) : (
+              <DesktopRadarTable range={activeRange} />
+            )}
+          </div>
         </div>
       </section>
     </div>

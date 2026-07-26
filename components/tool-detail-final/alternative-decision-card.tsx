@@ -48,7 +48,8 @@ export function AlternativeDecisionCard({ tool }: AlternativeDecisionCardProps) 
   );
 
   const { value: score } = computeEditorialScore(tool);
-  const votes = 18 + ((tool.name.length * 11) % 90);
+  const evidenceCount =
+    tool.useCases.length + tool.highlights.length + tool.cautions.length;
 
   const levelLabel = tool.level ? (LEVEL_LABEL[tool.level] ?? tool.levelLabel ?? "Base") : "Base";
 
@@ -102,8 +103,10 @@ export function AlternativeDecisionCard({ tool }: AlternativeDecisionCardProps) 
             <strong>{score.toFixed(1)}</strong>
             <em>/ 10</em>
           </span>
-          <span className="td-final-alt__votes">
-            {votes} {votes === 1 ? "voto" : "voti"}
+          <span className="td-final-alt__evidence">
+            {evidenceCount > 0
+              ? `${evidenceCount} ${evidenceCount === 1 ? "evidenza" : "evidenze"}`
+              : "Profilo curato"}
           </span>
         </div>
 

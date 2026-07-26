@@ -124,8 +124,9 @@ function ArchiveV4ToolCardInner({
   const { value: scoreValue } = computeEditorialScore(tool);
   const score = scoreValue.toFixed(1);
 
-  // Deterministic votes
-  const votes = 12 + (tool.name.length * 7) % 80;
+  // Canonical evidence only: never synthesize social-proof numbers.
+  const evidenceCount =
+    tool.useCases.length + tool.highlights.length + tool.cautions.length;
 
   // Resolve effective promoted treatment: tier > boolean
   const effectiveTier: "primary" | "secondary" | "tertiary" | null =
@@ -223,8 +224,10 @@ function ArchiveV4ToolCardInner({
           </strong>
           <em>/ 10</em>
         </span>
-        <span className="ar4-card__votes">
-          {votes} {votes === 1 ? "voto" : "voti"}
+        <span className="ar4-card__evidence">
+          {evidenceCount > 0
+            ? `${evidenceCount} ${evidenceCount === 1 ? "evidenza" : "evidenze"}`
+            : "Profilo curato"}
         </span>
       </div>
 

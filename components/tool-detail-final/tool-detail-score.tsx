@@ -1,6 +1,6 @@
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
-import { deriveScoreDimensions, deriveTrend, deriveVotes } from "@/lib/data/tool-detail-derivation";
+import { deriveScoreDimensions } from "@/lib/data/tool-detail-derivation";
 
 /**
  * B. Score Instrument
@@ -14,9 +14,9 @@ type ToolDetailScoreProps = {
 
 export function ToolDetailScore({ tool }: ToolDetailScoreProps) {
   const { value, label } = computeEditorialScore(tool);
-  const trend = deriveTrend(tool);
-  const votes = deriveVotes(tool);
   const dimensions = deriveScoreDimensions(tool);
+  const evidenceCount =
+    tool.useCases.length + tool.highlights.length + tool.cautions.length;
 
   return (
     <aside
@@ -26,7 +26,7 @@ export function ToolDetailScore({ tool }: ToolDetailScoreProps) {
       <div className="td-final-score__header">
         <span className="td-final-score__kicker">Score TooolVibes</span>
         <span className="td-final-score__badge">
-          {trend.direction === "up" ? "↑" : trend.direction === "down" ? "↓" : "—"} {trend.value}
+          Verdetto · {label}
         </span>
       </div>
       <div className="td-final-score__value">
@@ -56,8 +56,11 @@ export function ToolDetailScore({ tool }: ToolDetailScoreProps) {
       </ul>
       <p className="td-final-score__note">
         Score editoriale {label.toLowerCase()} basato su segnali qualitativi
-        della scheda ({votes} segnalazioni redazione). Non è un benchmark di
-        laboratorio: serve a orientare la scelta, non a classificare.
+        della scheda
+        {evidenceCount > 0
+          ? ` e ${evidenceCount} ${evidenceCount === 1 ? "evidenza canonica" : "evidenze canoniche"}`
+          : ""}.
+        {" "}Non è un benchmark di laboratorio: serve a orientare la scelta.
       </p>
     </aside>
   );

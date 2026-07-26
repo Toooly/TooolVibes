@@ -3,10 +3,10 @@
 .radar-loading-state {
   display: grid;
   width: min(calc(100% - 2 * var(--tv-space-6)), 42rem);
-  min-height: 28rem;
+  min-height: 18rem;
   align-content: center;
   justify-items: center;
-  margin: clamp(6rem, 10vw, 8rem) auto var(--tv-space-16);
+  margin: var(--tv-space-8) auto var(--tv-space-16);
   padding: var(--tv-space-12);
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-feature);
@@ -90,15 +90,15 @@
 .radar-command__shell {
   width: min(100%, var(--tv-container-uw));
   margin-inline: auto;
-  padding: clamp(2rem, 4vw, 3.5rem) var(--tv-space-6) var(--tv-space-24);
+  padding: clamp(1.5rem, 3vw, 2.5rem) var(--tv-space-6) var(--tv-space-24);
 }
 
 .radar-command__header {
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: var(--tv-space-8);
-  padding-bottom: var(--tv-space-6);
+  align-items: start;
+  justify-content: flex-start;
+  gap: var(--tv-space-5);
+  padding-bottom: var(--tv-space-5);
   border-bottom: 1px solid var(--tv-border-interactive);
 }
 
@@ -107,15 +107,24 @@
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
-  font-size: clamp(4.5rem, 10vw, 8.5rem);
+  font-size: clamp(3rem, 5vw, 4.8rem);
   font-weight: var(--tv-weight-black);
   letter-spacing: -0.07em;
-  line-height: 0.78;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.radar-command__eyebrow {
+  margin: 0 0 var(--tv-space-2);
+  color: var(--tv-accent-cyan);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: var(--tv-tracking-eyebrow);
   text-transform: uppercase;
 }
 
 .radar-command__subtitle {
-  margin: var(--tv-space-4) 0 0;
+  margin: var(--tv-space-2) 0 0;
   color: var(--tv-ink-secondary);
   font-size: var(--tv-text-label);
   font-weight: var(--tv-weight-semibold);
@@ -129,21 +138,36 @@
   color: var(--tv-ink-muted-aa);
   font-size: var(--tv-text-caption);
   line-height: var(--tv-leading-relaxed);
-  text-align: right;
+  text-align: left;
+}
+
+.radar-command__workspace {
+  display: grid;
+  grid-template-columns: minmax(14rem, 17rem) minmax(0, 1fr);
+  gap: clamp(var(--tv-space-6), 4vw, var(--tv-space-12));
+  align-items: start;
+  padding-top: var(--tv-space-6);
+}
+
+.radar-command__rail {
+  display: grid;
+  gap: var(--tv-space-5);
+  position: sticky;
+  top: calc(var(--tv-header-height) + var(--tv-space-4));
 }
 
 .radar-command__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tv-space-4) var(--tv-space-8);
-  margin-top: var(--tv-space-6);
+  display: grid;
+  gap: var(--tv-space-2);
+  margin-top: 0;
   padding-block: var(--tv-space-3);
-  border-top: 1px dashed var(--tv-border-subtle);
-  border-bottom: 1px dashed var(--tv-border-subtle);
+  border-top: 1px solid var(--tv-border-subtle);
+  border-bottom: 1px solid var(--tv-border-subtle);
 }
 
 .radar-command__meta-item {
-  display: inline-flex;
+  display: flex;
+  justify-content: space-between;
   align-items: baseline;
   gap: var(--tv-space-2);
 }
@@ -167,25 +191,34 @@
 
 .radar-command__controls,
 .radar-mobile__ranges {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: var(--tv-space-3);
-  margin-top: var(--tv-space-6);
+  margin-top: 0;
 }
 
 .radar-control-group,
 .radar-mobile__ranges {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--tv-space-1);
-  padding: var(--tv-space-1);
+  display: grid;
+  align-items: stretch;
+  gap: var(--tv-space-2);
+  padding: var(--tv-space-2);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-pill);
+  border-radius: 10px;
   background: var(--tv-surface-raised);
 }
 
+.radar-control-group__options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--tv-space-1);
+}
+
+.radar-control-group:last-child .radar-control-group__options {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .radar-control-group__label {
-  padding-inline: var(--tv-space-3);
+  padding-inline: var(--tv-space-1);
   color: var(--tv-ink-muted-aa);
   font-size: var(--tv-text-caption);
   font-weight: var(--tv-weight-semibold);
@@ -196,9 +229,9 @@
 .radar-control-group__button,
 .radar-mobile__range {
   min-height: 2.75rem;
-  padding-inline: var(--tv-space-4);
+  padding-inline: var(--tv-space-2);
   border: 1px solid transparent;
-  border-radius: var(--tv-radius-pill);
+  border-radius: 7px;
   background: transparent;
   color: var(--tv-ink-secondary);
   cursor: pointer;
@@ -240,13 +273,14 @@
 }
 
 .radar-command__results {
-  margin-top: clamp(var(--tv-space-8), 5vw, var(--tv-space-16));
+  margin-top: 0;
+  min-width: 0;
 }
 
 .radar-command-field {
   position: relative;
   isolation: isolate;
-  width: min(100%, 54rem);
+  width: min(100%, 34rem);
   aspect-ratio: 1;
   margin-inline: auto;
   overflow: hidden;
@@ -357,7 +391,7 @@
   margin: 0;
   padding: var(--tv-space-5);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-feature);
+  border-radius: 10px;
   background: var(--tv-bg-base);
   color: var(--tv-ink-secondary);
   line-height: var(--tv-leading-relaxed);
@@ -473,7 +507,7 @@
 .radar-command-table {
   overflow: hidden;
   border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-modal);
+  border-radius: 12px;
   background: var(--tv-surface-raised);
 }
 
@@ -633,8 +667,14 @@
 }
 
 .radar-mobile {
-  padding: calc(5rem + env(safe-area-inset-top, 0px)) var(--tv-space-4)
+  padding: var(--tv-space-5) var(--tv-space-4)
     calc(var(--tv-space-24) + env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 47.99rem) {
+  .radar-mobile {
+    padding-inline: 1.25rem;
+  }
 }
 
 .radar-mobile__header {
@@ -643,7 +683,7 @@
 }
 
 .radar-mobile__header h1 {
-  font-size: clamp(4.4rem, 25vw, 7.25rem);
+  font-size: clamp(2.8rem, 15vw, 4.2rem);
 }
 
 .radar-mobile__title-row {
@@ -660,7 +700,7 @@
   gap: var(--tv-space-2);
   padding-inline: var(--tv-space-3);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-pill);
+  border-radius: 7px;
   background: var(--tv-surface-raised);
   color: var(--tv-ink-secondary);
   font-size: var(--tv-text-xs);
@@ -698,6 +738,7 @@
 
 .radar-mobile__ranges {
   width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .radar-mobile__range {
@@ -708,9 +749,9 @@
 .radar-mobile__stage {
   position: relative;
   isolation: isolate;
-  width: min(92vw, 28rem);
+  width: min(88vw, 20rem);
   aspect-ratio: 1;
-  margin: var(--tv-space-8) auto 0;
+  margin: var(--tv-space-5) auto 0;
   overflow: hidden;
   border: 1px solid var(--tv-border-interactive);
   border-radius: 50%;
@@ -1023,8 +1064,8 @@
 @media (max-width: 767px) {
   .radar-loading-state {
     width: min(calc(100% - 2 * var(--tv-space-4)), 42rem);
-    min-height: 24rem;
-    margin-top: calc(6rem + env(safe-area-inset-top, 0px));
+    min-height: 17rem;
+    margin-top: var(--tv-space-5);
     padding: var(--tv-space-8) var(--tv-space-6);
   }
 }
