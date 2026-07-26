@@ -4,6 +4,7 @@
   "name": "tooolvibes",
   "compatibility_date": "2026-04-25",
   "compatibility_flags": ["nodejs_compat"],
+  "minify": true,
   "vars": {
     "NEXT_PUBLIC_SITE_URL": "https://tooolvibes.eu",
     "NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN": "https://tooolvibes.eu",
