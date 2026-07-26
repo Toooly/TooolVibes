@@ -98,8 +98,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
   return (
     <div className="collection-detail-final internal-page internal-collection-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <section className="brand-panel brand-aura panel-lift section-stage relative overflow-hidden rounded-[36px]">
-        <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.8),transparent_74%)]" />
+      <section className="collection-detail-hero brand-panel brand-aura panel-lift section-stage relative overflow-hidden rounded-[36px]">
         <div className="editorial-grid relative gap-y-0">
           <div className="col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7">
             <div
@@ -201,41 +200,29 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
           </div>
 
           <div className="col-span-12 lg:col-span-5">
-            <div className="relative h-full min-h-[22rem] overflow-hidden lg:min-h-[100%]">
+            <div className="collection-detail-hero__media">
               <Image
                 src={collection.cover_image_url}
                 alt={collection.title}
                 fill
                 sizes="(max-width: 1024px) 100vw, 42vw"
-                className="image-float object-cover"
+                className="collection-detail-hero__image image-float"
               />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(24,17,12,0.08),rgba(26,20,64,0.6))]" />
-              <div className="absolute left-5 top-5 flex flex-wrap gap-2">
-                <span
-                  className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white"
-                  style={{
-                    borderColor: "rgba(255,255,255,0.22)",
-                    background: "rgba(24,17,12,0.28)",
-                  }}
-                >
+              <div className="collection-detail-hero__scrim" aria-hidden="true" />
+              <div className="collection-detail-hero__badges">
+                <span className="collection-detail-hero__badge">
                   Raccolta
                 </span>
-                <span
-                  className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white"
-                  style={{
-                    borderColor: "rgba(255,255,255,0.18)",
-                    background: "rgba(255,255,255,0.08)",
-                  }}
-                >
+                <span className="collection-detail-hero__badge">
                   {collection.tool_count} tool inclusi
                 </span>
               </div>
 
-              <div className="absolute bottom-3.5 left-3.5 right-3.5 rounded-md border border-white/12 bg-black/68 p-3 sm:bottom-4 sm:left-4 sm:right-4">
-                <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/74">
+              <div className="collection-detail-hero__summary">
+                <p className="collection-detail-hero__summary-label">
                   In breve
                 </p>
-                <p className="mt-2 text-sm leading-6 text-white/82">
+                <p className="collection-detail-hero__summary-copy">
                   {tone.label} · {audienceDescription} · {difficulty} · {access.label}
                 </p>
               </div>
@@ -247,10 +234,11 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
       </section>
 
       {collection.surface === "special-issue" ? (
-        <section className="dark-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
+        <section className="collection-detail-special dark-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
           <div className="editorial-grid gap-y-5">
             <div className="col-span-12 lg:col-span-7">
               <SectionHeader
+                invert
                 eyebrow={
                   premiumAccess.state === "locked"
                     ? isAdvancedIssue
@@ -406,14 +394,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 />
               ))}
               {hiddenToolCount > 0 ? (
-                <div
-                  className="rounded-[26px] border px-5 py-5"
-                  style={{
-                    borderColor: "rgba(242, 179, 71, 0.28)",
-                    background:
-                      "linear-gradient(180deg, rgba(255,255,255,0.88), rgba(249,239,212,0.84))",
-                  }}
-                >
+                <div className="collection-detail-locked-preview rounded-[26px] border px-5 py-5">
                   <p className="pill pill-premium">Accesso riservato</p>
                   <h3 className="text-display-card mt-3 max-w-none text-[1.34rem] sm:max-w-[16ch] sm:text-balance">
                     {hiddenToolCount} tool restano nella versione completa.
@@ -489,13 +470,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                     </Link>
                   </>
                 ) : (
-                  <div
-                    className="metadata-block rounded-[22px] px-4 py-4"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, rgba(255,255,255,0.84), rgba(249,239,212,0.8))",
-                    }}
-                  >
+                  <div className="collection-detail-access-note metadata-block rounded-[22px] px-4 py-4">
                     <p className="editorial-label">Cosa resta aperto</p>
                     <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
                       Restano leggibili i momenti chiave della raccolta e i tool necessari per capire il taglio, non l&apos;intero percorso editoriale.

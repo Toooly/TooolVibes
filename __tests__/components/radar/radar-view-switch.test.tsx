@@ -8,14 +8,10 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 import type { ProductHuntPayload } from "@/lib/radar/product-hunt-contract";
 import type { RadarDesktopVisual } from "@/lib/radar/radar-view-config";
 
-// Le server actions e il layer 3D non sono oggetto del test: i mock tengono
-// il jsdom deterministico (come nei test delle singole view).
+// Le server actions non sono oggetto del test: il mock tiene il jsdom
+// deterministico (come nei test delle singole view).
 vi.mock("@/lib/gamification/actions", () => ({
   claimHiddenSignal: vi.fn(),
-}));
-
-vi.mock("@/components/3d-maestoso/radar-3d-layer", () => ({
-  Radar3DLayer: () => null,
 }));
 
 import { RadarViewSwitch } from "@/components/radar/radar-view-switch";
@@ -71,7 +67,7 @@ function stubMatchMedia(initialWidth: number): MatchMediaController {
     (query: string) =>
       ({
         get matches() {
-          return width >= 1024;
+          return width >= 1280;
         },
         media: query,
         onchange: null,
@@ -86,7 +82,7 @@ function stubMatchMedia(initialWidth: number): MatchMediaController {
   return {
     setWidth(nextWidth: number) {
       width = nextWidth;
-      const event = { matches: width >= 1024 };
+      const event = { matches: width >= 1280 };
       listeners.forEach((listener) => listener(event));
     },
   };
@@ -99,10 +95,7 @@ function renderSwitch(initialDesktopVisual: RadarDesktopVisual = "table") {
 
   return render(
     <QueryClientProvider client={queryClient}>
-      <RadarViewSwitch
-        threeDEnabled={false}
-        initialDesktopVisual={initialDesktopVisual}
-      />
+      <RadarViewSwitch initialDesktopVisual={initialDesktopVisual} />
     </QueryClientProvider>,
   );
 }
@@ -158,7 +151,7 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
     // renderToString gira senza matchMedia: se il componente leggesse window
     // durante il render lancerebbe. Deve invece produrre il fallback stabile.
     const html = renderToString(
-      <RadarViewSwitch threeDEnabled={false} initialDesktopVisual="table" />,
+      <RadarViewSwitch initialDesktopVisual="table" />,
     );
 
     expect(html).toContain("Caricamento del radar…");
@@ -166,7 +159,7 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
     expect(html).not.toContain("radar-command--desktop");
   });
 
-  it.each([390, 768, 1023])(
+  it.each([390, 768, 1024, 1279])(
     "viewport %i px: monta solo la mobile view",
     async (width) => {
       stubMatchMedia(width);
@@ -183,16 +176,18 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
     15_000,
   );
 
-  it.each([1024, 1440, 1920])(
+  it.each([1280, 1440, 1920])(
     "viewport %i px: monta solo la desktop view",
     async (width) => {
       stubMatchMedia(width);
       const { container } = renderSwitch();
 
       expect(
-        await screen.findByText("Classifica Product Hunt", undefined, {
-          timeout: 5000,
-        }),
+        await screen.findByRole(
+          "region",
+          { name: "Classifica Product Hunt" },
+          { timeout: 5000 },
+        ),
       ).toBeTruthy();
       expect(container.querySelector(".radar-command--desktop")).toBeTruthy();
       expect(container.querySelector(".radar-mobile")).toBeNull();
@@ -240,10 +235,12 @@ describe("RadarViewSwitch — render responsive esclusivo (B44 / quota PERF-1201
     act(() => viewport.setWidth(1920));
 
     expect(
-        await screen.findByText("Classifica Product Hunt", undefined, {
-          timeout: 5000,
-        }),
-      ).toBeTruthy();
+      await screen.findByRole(
+        "region",
+        { name: "Classifica Product Hunt" },
+        { timeout: 5000 },
+      ),
+    ).toBeTruthy();
     expect(container.querySelector(".radar-command--desktop")).toBeTruthy();
     expect(container.querySelector(".radar-mobile")).toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(1);

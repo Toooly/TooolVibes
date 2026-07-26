@@ -13,12 +13,12 @@ import type { RadarDesktopVisual } from "@/lib/radar/radar-view-config";
  * via matchMedia (mai lettura di `window` durante il render, nessuna
  * hydration mismatch), con fallback identico tra SSR e primo render client.
  * Le due view sono dynamic import: il bundle mobile non carica il tree
- * desktop (3D incluso) e viceversa, e allo swap di viewport il tree
+ * desktop e viceversa, e allo swap di viewport il tree
  * precedente viene smontato (un solo fetch/listener attivo, cache query
  * condivisa via `useProductHuntRadar`).
  */
 
-export const RADAR_DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
+export const RADAR_DESKTOP_MEDIA_QUERY = "(min-width: 1280px)";
 
 type RadarViewport = "mobile" | "desktop";
 
@@ -56,10 +56,8 @@ const DesktopVibeRadar = dynamic(
 );
 
 export function RadarViewSwitch({
-  threeDEnabled,
   initialDesktopVisual,
 }: {
-  threeDEnabled: boolean;
   initialDesktopVisual: RadarDesktopVisual;
 }) {
   // `null` su server e primo render client: markup identico, hydration safe.
@@ -76,12 +74,7 @@ export function RadarViewSwitch({
   }, []);
 
   if (viewport === "desktop") {
-    return (
-      <DesktopVibeRadar
-        threeDEnabled={threeDEnabled}
-        initialVisual={initialDesktopVisual}
-      />
-    );
+    return <DesktopVibeRadar initialVisual={initialDesktopVisual} />;
   }
 
   if (viewport === "mobile") {

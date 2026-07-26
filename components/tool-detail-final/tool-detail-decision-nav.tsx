@@ -1,7 +1,6 @@
 import {
   Compass,
   FileText,
-  Layers,
   MessageSquare,
   TrendingUp,
   Wrench,
@@ -14,36 +13,38 @@ import {
  * topbar.
  */
 
-export function ToolDetailDecisionNav() {
+export function ToolDetailDecisionNav({
+  showAlternatives,
+}: {
+  showAlternatives: boolean;
+}) {
   return (
     <nav
       className="td-final-decision-nav"
       aria-label="Sezioni della scheda"
     >
-      <a className="td-final-decision-nav__link" href="#td-final-editorial" aria-current="true">
+      <a className="td-final-decision-nav__link" href="#td-final-overview">
         <Compass size={13} aria-hidden="true" style={{ marginRight: 4 }} />
         Panoramica
+      </a>
+      <a className="td-final-decision-nav__link" href="#td-final-editorial">
+        <MessageSquare size={13} aria-hidden="true" style={{ marginRight: 4 }} />
+        Valutazione
       </a>
       <a className="td-final-decision-nav__link" href="#td-final-information">
         <FileText size={13} aria-hidden="true" style={{ marginRight: 4 }} />
         Scheda
       </a>
-      <a className="td-final-decision-nav__link" href="#td-final-use-cases">
-        <Layers size={13} aria-hidden="true" style={{ marginRight: 4 }} />
-        Casi d&apos;uso
-      </a>
       <a className="td-final-decision-nav__link" href="#td-final-signal">
         <TrendingUp size={13} aria-hidden="true" style={{ marginRight: 4 }} />
         Segnale
       </a>
-      <a className="td-final-decision-nav__link" href="#td-final-alternatives">
-        <Wrench size={13} aria-hidden="true" style={{ marginRight: 4 }} />
-        Alternative
-      </a>
-      <a className="td-final-decision-nav__link" href="#td-final-editorial">
-        <MessageSquare size={13} aria-hidden="true" style={{ marginRight: 4 }} />
-        Recensione
-      </a>
+      {showAlternatives ? (
+        <a className="td-final-decision-nav__link" href="#td-final-alternatives">
+          <Wrench size={13} aria-hidden="true" style={{ marginRight: 4 }} />
+          Alternative
+        </a>
+      ) : null}
     </nav>
   );
 }

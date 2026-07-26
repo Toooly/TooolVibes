@@ -45,7 +45,6 @@ export function GlobalCommandPalette({
   const [query, setQuery] = useState("");
   const isOpen = useToolWorkspaceStore((state) => state.isCommandOpen);
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
-  const setSelectedSlug = useToolWorkspaceStore((state) => state.setSelectedSlug);
   const toggleSaved = useToolWorkspaceStore((state) => state.toggleSaved);
   const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
   const addToStack = useToolWorkspaceStore((state) => state.addToStack);
@@ -95,9 +94,8 @@ export function GlobalCommandPalette({
   }
 
   function openTool(slug: string) {
-    setSelectedSlug(slug);
     playTooolvibesSound("detail");
-    router.push(`/archivio?tool=${slug}`);
+    router.push(`/toools/${slug}`);
     close();
   }
 

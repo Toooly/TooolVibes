@@ -21,6 +21,9 @@ const DEFAULT_ROUTE_CONFIG: RouteLoaderConfig = {
   accentC: "246, 199, 97",
 };
 
+const COMPLETION_HOLD_MS = 120;
+const SAFETY_TIMEOUT_MS = 1400;
+
 const ROUTE_COPY: Record<string, RouteLoaderConfig> = {
   "/compare": { label: "Allineo il confronto", duration: 980, accentA: "246, 199, 97", accentB: "124, 58, 237", accentC: "94, 226, 255" },
   "/archivio": { label: "Apro il catalogo", duration: 780, accentA: "94, 226, 255", accentB: "106, 60, 255", accentC: "246, 199, 97" },
@@ -82,7 +85,6 @@ export function RouteTransitionLoader() {
   const durationRef = useRef(1120);
   const intervalRef = useRef<number | null>(null);
   const hideTimerRef = useRef<number | null>(null);
-  const completeTimerRef = useRef<number | null>(null);
   const samePathTimerRef = useRef<number | null>(null);
   const safetyTimerRef = useRef<number | null>(null);
   const previousPathRef = useRef(pathname);
@@ -96,11 +98,6 @@ export function RouteTransitionLoader() {
     if (hideTimerRef.current) {
       window.clearTimeout(hideTimerRef.current);
       hideTimerRef.current = null;
-    }
-
-    if (completeTimerRef.current) {
-      window.clearTimeout(completeTimerRef.current);
-      completeTimerRef.current = null;
     }
 
     if (samePathTimerRef.current) {
@@ -144,13 +141,13 @@ export function RouteTransitionLoader() {
 
       setProgress(100);
 
-      completeTimerRef.current = window.setTimeout(() => {
+      hideTimerRef.current = window.setTimeout(() => {
         visibleRef.current = false;
         setVisible(false);
         setProgress(0);
         startedAtRef.current = 0;
-      }, 420);
-    }, 3000);
+      }, COMPLETION_HOLD_MS);
+    }, SAFETY_TIMEOUT_MS);
   }, [clearTimers]);
 
   const finishLoading = useCallback(() => {
@@ -159,25 +156,14 @@ export function RouteTransitionLoader() {
     }
 
     clearTimers();
-
-    const elapsed = performance.now() - startedAtRef.current;
-    const remaining = Math.max(0, durationRef.current - elapsed);
+    setProgress(100);
 
     hideTimerRef.current = window.setTimeout(() => {
-      if (intervalRef.current) {
-        window.clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-
-      setProgress(100);
-
-      completeTimerRef.current = window.setTimeout(() => {
-        visibleRef.current = false;
-        setVisible(false);
-        setProgress(0);
-        startedAtRef.current = 0;
-      }, 420);
-    }, Math.max(180, remaining));
+      visibleRef.current = false;
+      setVisible(false);
+      setProgress(0);
+      startedAtRef.current = 0;
+    }, COMPLETION_HOLD_MS);
   }, [clearTimers]);
 
   useEffect(() => {
@@ -232,6 +218,7 @@ export function RouteTransitionLoader() {
           "--route-accent-a": routeTheme.accentA,
           "--route-accent-b": routeTheme.accentB,
           "--route-accent-c": routeTheme.accentC,
+          pointerEvents: "none",
         } as CSSProperties
       }
     >

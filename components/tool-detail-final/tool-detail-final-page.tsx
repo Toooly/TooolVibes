@@ -83,14 +83,18 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
 
   return (
     <div className="td-final-page">
-      <section className="td-final-hero" aria-labelledby="td-final-tool-name">
+      <section
+        id="td-final-overview"
+        className="td-final-hero"
+        aria-labelledby="td-final-tool-name"
+      >
         <div className="td-final-hero__inner">
           <ToolDetailHero tool={tool} isAffiliateLink={isAffiliateLink} />
           <ToolDetailScore tool={tool} />
         </div>
       </section>
 
-      <ToolDetailDecisionNav />
+      <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
       <ToolDetailEditorial tool={tool} />
       <ToolDetailInformation tool={tool} />
       <ToolDetailSignal tool={tool} />

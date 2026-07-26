@@ -716,10 +716,6 @@
   background: var(--tv-surface-elevated);
   color: var(--tv-ink-primary);
 }
-.td-final-decision-nav__link[aria-current="true"] {
-  background: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
-}
 
 /* ============================================================
    E. PRODUCT INFORMATION

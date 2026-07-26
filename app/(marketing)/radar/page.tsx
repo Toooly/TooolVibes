@@ -17,10 +17,5 @@ export const metadata: Metadata = {
 };
 
 export default function RadarPage() {
-  return (
-    <RadarViewSwitch
-      threeDEnabled={false}
-      initialDesktopVisual={radarDesktopVisual}
-    />
-  );
+  return <RadarViewSwitch initialDesktopVisual={radarDesktopVisual} />;
 }

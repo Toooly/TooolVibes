@@ -118,10 +118,12 @@ describe("Tool Detail clean baseline — source files", () => {
     expect(offenders, `literal z-index found: ${offenders.join("; ")}`).toEqual([]);
   });
 
-  it("globals.css imports tool-detail-final.css, not tool-detail-v4.css", () => {
-    const css = read(GLOBALS);
-    expect(css).toMatch(/tool-detail-final\.css/);
-    expect(css).not.toMatch(/tool-detail-v4\.css/);
+  it("release entry imports tool-detail-final.css exactly once", () => {
+    const globals = read(GLOBALS);
+    const releaseEntry = read(path.join(REPO, "styles/release-entry.ts"));
+    expect(globals).not.toMatch(/tool-detail-final\.css/);
+    expect(releaseEntry.match(/tool-detail-final\.css/g)).toHaveLength(1);
+    expect(`${globals}\n${releaseEntry}`).not.toMatch(/tool-detail-v4\.css/);
   });
 
   it("legacy V4 deliverables are removed from disk", () => {
@@ -166,6 +168,18 @@ describe("Tool Detail clean baseline — owner tree", () => {
     const src = read(path.join(TOOL_DETAIL_DIR, "tool-detail-alternatives.tsx"));
     expect(src).toMatch(/AlternativeDecisionCard/);
     expect(src).not.toMatch(/\\bArchiveV4ToolCard\\b/);
+  });
+
+  it("the decision nav links only to unique, rendered section targets", () => {
+    const nav = read(path.join(TOOL_DETAIL_DIR, "tool-detail-decision-nav.tsx"));
+    const page = read(path.join(TOOL_DETAIL_DIR, "tool-detail-final-page.tsx"));
+    const hrefs = Array.from(nav.matchAll(/href="(#[^"]+)"/g), (match) => match[1]);
+
+    expect(new Set(hrefs).size).toBe(hrefs.length);
+    expect(nav).not.toMatch(/aria-current=/);
+    expect(nav).not.toMatch(/#td-final-use-cases/);
+    expect(page).toMatch(/id="td-final-overview"/);
+    expect(page).toMatch(/showAlternatives=\{relatedTools\.length > 0\}/);
   });
 
   it("the route file is a thin re-export (≤ 30 lines)", () => {

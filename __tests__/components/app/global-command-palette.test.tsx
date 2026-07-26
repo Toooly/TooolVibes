@@ -155,7 +155,7 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
     fireEvent.change(input, { target: { value: "blink" } });
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
 
-    expect(pushMock).toHaveBeenCalledWith("/archivio?tool=blink");
+    expect(pushMock).toHaveBeenCalledWith("/toools/blink");
     expect(useToolWorkspaceStore.getState().isCommandOpen).toBe(false);
   });
 

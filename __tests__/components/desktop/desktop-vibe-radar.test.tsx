@@ -8,12 +8,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ProductHuntPayload } from "@/lib/radar/product-hunt-contract";
 import type { RadarDesktopVisual } from "@/lib/radar/radar-view-config";
 
-// Il layer 3D (three/@react-three/fiber) non è oggetto del test: il mock
-// tiene il jsdom leggero e deterministico.
-vi.mock("@/components/3d-maestoso/radar-3d-layer", () => ({
-  Radar3DLayer: () => null,
-}));
-
 import { DesktopVibeRadar } from "@/components/desktop/desktop-vibe-radar";
 
 const LIVE_DAY_PAYLOAD: ProductHuntPayload = {
@@ -81,7 +75,7 @@ function renderDesktopRadar(initialVisual: RadarDesktopVisual) {
 
   return render(
     <QueryClientProvider client={queryClient}>
-      <DesktopVibeRadar threeDEnabled={false} initialVisual={initialVisual} />
+      <DesktopVibeRadar initialVisual={initialVisual} />
     </QueryClientProvider>,
   );
 }
@@ -143,6 +137,8 @@ describe("DesktopVibeRadar — composizione unica e query condivisa (B44 / DESK-
     await waitFor(() =>
       expect(document.querySelectorAll(".radar-command-signal")).toHaveLength(2),
     );
+    expect(document.querySelectorAll(".radar-signal-index__row")).toHaveLength(2);
+    expect(document.querySelector(".radar-command-field__sweep")).toBeTruthy();
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
@@ -214,6 +210,27 @@ describe("DesktopVibeRadar — composizione unica e query condivisa (B44 / DESK-
     expect(screen.queryByText("Blink")).toBeNull();
     expect(screen.queryByText("VibeCode")).toBeNull();
     expect(screen.queryByText("Cosmic JS")).toBeNull();
+    expect(document.querySelector(".radar-command-field__sweep")).toBeNull();
+  });
+
+  it("error: espone un retry manuale sicuro e riparte solo con dati reali", async () => {
+    fetchMock
+      .mockRejectedValueOnce(new Error("network down"))
+      .mockImplementation(() => fetchOk(LIVE_DAY_PAYLOAD));
+    renderDesktopRadar("nodes");
+
+    const retry = await screen.findByRole("button", {
+      name: "Riprova connessione",
+    });
+    expect(document.querySelector(".radar-command-field__sweep")).toBeNull();
+
+    fireEvent.click(retry);
+
+    await waitFor(() =>
+      expect(document.querySelectorAll(".radar-command-signal")).toHaveLength(2),
+    );
+    expect(document.querySelector(".radar-command-field__sweep")).toBeTruthy();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it("stale: fallback dichiarato con timestamp di origine in header, topbar e banner", async () => {
