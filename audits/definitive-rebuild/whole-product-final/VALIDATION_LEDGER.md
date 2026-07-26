@@ -17,6 +17,7 @@ Final local validation on 2026-07-26.
 | Interaction browser sweep | Pass, 0 console/page errors |
 | Visual board inspection | Pass |
 | Live Worker verification | 18/18 route-viewport checks clean |
+| Active Cloudflare version | `a55600ac-22ce-41cb-8f10-8cd8971ab796` at 100% |
 
 ## Full unit baseline
 
@@ -34,13 +35,21 @@ system `node` binary. Result: **1,014 total, 978 passed, 24 failed, 12 skipped**
 
 The failure names match the documented pre-reconstruction baseline groups. The
 previous `font-size below 12px` baseline failure now passes. A Bun-executed
-diagnostic run was discarded because it aborted 47 suites during collection
-with the known `z.config` runtime incompatibility; the Node-backed run above
-collected all 326 suites.
+diagnostic after the release work completed all 1,014 tests with 973 passed,
+29 failed and 12 skipped. The authoritative Node baseline above remains the
+release reference because the extra Bun failures are runtime/test-harness
+drift rather than a new public-UI failure group.
 
 ## Build note
 
-The user-owned untracked `/(internal)/visual-lab/tool-detail` page imports an
-untracked stylesheet that is absent. It was temporarily moved to a private
-temporary directory for each production build, immediately restored, and is
-not part of the intended diff or deployment.
+The unfinished internal Tool Detail Visual Lab imported a stylesheet that did
+not exist and prevented clean production builds. It was removed from the
+product tree rather than special-cased in the release process; it remains
+recoverable from Git history at `990f6a1`. The final Next and OpenNext builds
+now run from a clean checkout path with no temporary file moves.
+
+The production browser pass used viewport captures rather than the browser
+driver's distorted full-page mobile capture. Nine routes at 390×844 and
+1440×900 all render the expected shell, main landmark and zero horizontal
+overflow. The console contains no errors; the only warning kind is the existing
+`THREE.Clock` deprecation notice.

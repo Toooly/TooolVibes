@@ -19,6 +19,10 @@
 | Account | wide layout lacked decision context | functional form plus contextual desktop split |
 | Typography | metadata and generated labels fell below the 12px floor | token and local owner corrections |
 | Intro | cinematic could mount outside Home | route-scoped mount contract |
+| Cloudflare runtime | full minification broke the generated dynamic middleware manifest loader | deterministic OpenNext post-build compatibility patch with fail-loud guard |
+| Collection Detail | on-demand static fallback produced `DYNAMIC_SERVER_USAGE` and a production 500 | explicit dynamic route rendering |
+| Production capacity | automatic prefetch from archive cards and fixed navigation exhausted Worker request limits | prefetch disabled on high-fan-out SSR links; direct clicks unchanged |
+| Visual evidence | full-page mobile capture cropped the emulated viewport and mimicked a UI overflow | evidence recaptured as faithful viewport screenshots and re-inspected |
 
 ## Remaining non-product conditions
 
@@ -26,17 +30,13 @@
   groups. The final run collected 1,014 tests and introduced no new failure
   group; one prior typography-floor failure is now fixed. Details are in
   `VALIDATION_LEDGER.md`.
-- The preferred `agent-browser` executable is absent; Playwright was used for
-  equivalent rendered-browser validation.
-- An untracked internal Visual Lab prototype imports an untracked missing CSS
-  file and blocks repository-wide builds if included by Next. It was moved only
-  for the build process and restored byte-for-byte. It is excluded from staging
-  and production.
-- The adapter upload did not initially activate the uploaded Worker version.
-  Live verification caught the stale fingerprint; the final version was
-  explicitly deployed at 100% and the complete production pass is now clean.
 - Wrangler reports one duplicate-object-key warning inside generated OpenNext
   bundle code. It is non-blocking and absent from application source.
+- Chromium reports the existing `THREE.Clock` deprecation warning and zero
+  console errors.
+- The custom domain `tooolvibes.eu` is owned by a different Cloudflare
+  zone/account context and is not currently routed to the verified Worker URL.
+  This is external release configuration, not an unresolved product/UI defect.
 
 No unresolved defect was found in the reconstructed public journey during the
 final responsive, interaction, keyboard or visual passes.
