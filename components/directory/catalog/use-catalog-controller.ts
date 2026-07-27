@@ -110,10 +110,10 @@ export function useCatalogController({
      (server props already match the URL); lastWrittenUrlKeyRef marks
      our own writes so their echo cannot overwrite newer keystrokes
      while a navigation is in flight. */
-  const urlGroup = searchParams.get("group") ?? "all";
-  const urlQuery = searchParams.get("q") ?? "";
-  const urlTag = searchParams.get("tag") ?? "";
-  const urlLevel = parseCatalogLevelParam(searchParams.get("level"));
+  const urlGroup = searchParams?.get("group") ?? "all";
+  const urlQuery = searchParams?.get("q") ?? "";
+  const urlTag = searchParams?.get("tag") ?? "";
+  const urlLevel = parseCatalogLevelParam(searchParams?.get("level"));
   const urlKey = buildUrlKey({
     group: urlGroup,
     query: urlQuery,

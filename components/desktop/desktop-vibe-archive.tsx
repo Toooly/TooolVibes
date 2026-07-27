@@ -61,14 +61,14 @@ export function DesktopVibeArchive({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [query, setQuery] = useState(searchParams.get("q") ?? initialQuery);
+  const [query, setQuery] = useState(searchParams?.get("q") ?? initialQuery);
   const [activeGroup, setActiveGroup] = useState<DirectoryFilterGroup>(
-    (searchParams.get("group") as DirectoryFilterGroup) ?? initialGroup,
+    (searchParams?.get("group") as DirectoryFilterGroup) ?? initialGroup,
   );
   const [activeLevel, setActiveLevel] = useState<DirectoryToolLevel | "all">(
-    (searchParams.get("level") as DirectoryToolLevel | "all") ?? "all",
+    (searchParams?.get("level") as DirectoryToolLevel | "all") ?? "all",
   );
-  const [activeTag, setActiveTag] = useState(searchParams.get("tag") ?? initialTag);
+  const [activeTag, setActiveTag] = useState(searchParams?.get("tag") ?? initialTag);
   const [displayCount, setDisplayCount] = useState(18);
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);

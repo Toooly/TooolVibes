@@ -35,7 +35,7 @@ export function GamificationShell({
   const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
 
   const isExcludedRoute = EXCLUDED_ROUTE_PREFIXES.some((prefix) =>
-    pathname.startsWith(prefix),
+    (pathname ?? '').startsWith(prefix),
   );
 
   if (isExcludedRoute || (!missionsEnabled && !vibeRushEnabled)) {

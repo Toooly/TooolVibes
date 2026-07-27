@@ -17,9 +17,9 @@ export function CinematicTransition() {
   const lastPath = useRef(pathname);
 
   useEffect(() => {
-    if (lastPath.current === pathname) return;
+    if (lastPath.current === (pathname ?? '')) return;
     lastPath.current = pathname;
-    const label = LABELS[pathname];
+    const label = LABELS[pathname ?? ''];
     if (!label) return;
     setActive(true);
     playGameSound("route");
@@ -43,7 +43,7 @@ export function CinematicTransition() {
           <div className="cinematic-transition__wipe" />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <span className="text-4xl font-black tracking-[0.3em] text-white/90">
-              {LABELS[pathname]}
+              {LABELS[pathname ?? '']}
             </span>
           </div>
         </motion.div>

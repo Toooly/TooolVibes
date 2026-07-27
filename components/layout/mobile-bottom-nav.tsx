@@ -56,7 +56,7 @@ export function MobileBottomNav() {
         typeof window.matchMedia === "function" &&
         window.matchMedia("(min-width: 1280px)").matches;
       const navHidden =
-        pathname.startsWith("/admin") || pathname.startsWith("/account");
+        (pathname ?? '').startsWith("/admin") || (pathname ?? '').startsWith("/account");
       if (isDesktop || navHidden) {
         root.style.setProperty("--tv-bottom-nav-total", "0px");
       } else {
@@ -81,8 +81,8 @@ export function MobileBottomNav() {
 
   if (
     !mounted ||
-    pathname.startsWith("/admin") ||
-    pathname.startsWith("/account")
+    (pathname ?? '').startsWith("/admin") ||
+    (pathname ?? '').startsWith("/account")
   ) {
     return null;
   }

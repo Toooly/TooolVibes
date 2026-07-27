@@ -25,15 +25,15 @@ export function DirectoryHeaderSearch({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentSearch = searchParams.toString();
-  const [query, setQuery] = useState(searchParams.get("q") ?? "");
+  const currentSearch = searchParams?.toString() ?? '';
+  const [query, setQuery] = useState(searchParams?.get("q") ?? "");
   const inputRef = useRef<HTMLInputElement>(null);
   /* B39/MOB-703: scroll-to-input quando la tastiera copre il campo
      (l'overlay search mobile e' ancorato in basso). */
   const keyboardScrollRef = useKeyboardAwareScroll<HTMLFormElement>();
 
   useEffect(() => {
-    setQuery(searchParams.get("q") ?? "");
+    setQuery(searchParams?.get("q") ?? "");
   }, [currentSearch, searchParams]);
 
   useEffect(() => {
@@ -49,16 +49,16 @@ export function DirectoryHeaderSearch({
 
     const normalizedQuery = query.trim();
 
-    if (pathname.startsWith("/archivio")) {
+    if ((pathname ?? '').startsWith("/archivio")) {
       // Already on the archive: keep the active group/tag/level filters and
       // replace only the query, so the submitted URL stays the canonical
       // catalog state (B31 / IA-504).
       router.push(
         serializeCatalogUrl({
           query: normalizedQuery,
-          group: searchParams.get("group"),
-          tag: searchParams.get("tag") ?? "",
-          level: parseCatalogLevelParam(searchParams.get("level")),
+          group: searchParams?.get("group"),
+          tag: searchParams?.get("tag") ?? "",
+          level: parseCatalogLevelParam(searchParams?.get("level")),
         }),
       );
     } else {
