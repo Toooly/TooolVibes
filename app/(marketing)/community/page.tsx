@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
-import { Compass, Lightbulb, MessageSquarePlus, Sparkles, Workflow } from "lucide-react";
+import {
+  Compass,
+  Lightbulb,
+  MessageSquarePlus,
+  Sparkles,
+  Workflow,
+} from "lucide-react";
 
 import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
+import { ResponsiveDisclosureCard } from "@/components/ui/responsive-disclosure-card";
+import { RouteMarker } from "@/components/ui/route-marker";
 import { siteConfig } from "@/lib/config/site";
 
 export const metadata: Metadata = {
@@ -47,8 +55,14 @@ export default function CommunityPage() {
       <section className="hero-shell motion-reveal bg-[var(--tv-surface-raised)] px-5 py-5 text-white before:!hidden after:!hidden sm:rounded-[38px] sm:px-7 sm:py-8">
         <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.72fr)] lg:items-center">
           <div className="max-w-[48rem]">
-            <PremiumBadge tone="accent" className="after:!hidden">Community TooolVibes</PremiumBadge>
-            <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.35rem)] leading-[1.05] text-white">
+            <RouteMarker
+              index="07"
+              label="Community"
+              status="Segnali condivisi"
+              density="hero"
+              className="mb-5"
+            />
+            <h1 className="max-w-[13ch] text-[clamp(2rem,9vw,3.35rem)] leading-[1.05] text-white">
               Tool, flussi e idee migliori restano condivisi.
             </h1>
             <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-7 text-white/70 sm:mt-5 sm:text-[1rem]">
@@ -75,41 +89,20 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      <section className="grid gap-2 md:hidden">
+      <section className="motion-stagger grid gap-2 md:grid-cols-3 md:gap-5">
         {contributionCards.map((item) => {
           const Icon = item.icon;
 
           return (
-            <details
+            <ResponsiveDisclosureCard
               key={item.title}
-              className="micro-details rounded-[20px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] px-3 py-2.5"
+              title={item.title}
+              icon={<Icon className="size-4 md:size-5" aria-hidden="true" />}
             >
-              <summary className="cursor-pointer rounded-[var(--tv-radius-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tv-accent-brand-aa)]">
-                <span className="inline-flex min-w-0 items-center gap-2">
-                  <Icon className="size-4 shrink-0 text-[var(--accent)]" aria-hidden="true" />
-                  <span className="truncate">{item.title}</span>
-                </span>
-              </summary>
-              <p className="mt-3 text-sm leading-6 text-[var(--muted-strong)]">
+              <p className="mt-3 text-sm leading-6 text-[var(--tv-ink-secondary)] md:mt-4 md:leading-7">
                 {item.copy}
               </p>
-            </details>
-          );
-        })}
-      </section>
-
-      <section className="motion-stagger hidden gap-4 md:grid md:grid-cols-3 md:gap-5">
-        {contributionCards.map((item) => {
-          const Icon = item.icon;
-
-          return (
-            <PremiumPanel key={item.title} tone="blue" as="article" className="p-5 before:!hidden after:!hidden">
-              <span className="grid size-12 place-items-center rounded-[18px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-[var(--tv-accent-brand-aa)]">
-                <Icon className="size-5" aria-hidden="true" />
-              </span>
-              <h2 className="mt-5 text-[1.32rem] leading-tight text-white">{item.title}</h2>
-              <p className="mt-3 text-sm leading-7 text-white/66">{item.copy}</p>
-            </PremiumPanel>
+            </ResponsiveDisclosureCard>
           );
         })}
       </section>

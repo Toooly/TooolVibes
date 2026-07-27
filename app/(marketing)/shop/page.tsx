@@ -1,6 +1,8 @@
 import { Boxes, FileText, Layers3, Sparkles, Zap } from "lucide-react";
 
 import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
+import { ResponsiveDisclosureCard } from "@/components/ui/responsive-disclosure-card";
+import { RouteMarker } from "@/components/ui/route-marker";
 import { siteConfig } from "@/lib/config/site";
 
 export const metadata = {
@@ -36,8 +38,14 @@ export default function ShopPage() {
       <section className="hero-shell motion-reveal bg-[var(--tv-surface-raised)] px-5 py-5 text-white before:!hidden after:!hidden sm:rounded-[38px] sm:px-7 sm:py-8">
         <div className="grid gap-7 lg:grid-cols-[minmax(0,0.94fr)_minmax(20rem,0.8fr)] lg:items-center">
           <div className="max-w-[44rem]">
-            <PremiumBadge tone="warning" className="after:!hidden">Shop digitale</PremiumBadge>
-            <h1 className="mt-4 max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[1.05] text-white">
+            <RouteMarker
+              index="06"
+              label="Shop digitale"
+              status="Risorse operative"
+              density="hero"
+              className="mb-5"
+            />
+            <h1 className="max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[1.05] text-white">
               Risorse, selezioni premium e percorsi pronti per lavorare più veloce.
             </h1>
             <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-7 text-white/74 sm:mt-5 sm:text-[1rem]">
@@ -91,53 +99,23 @@ export default function ShopPage() {
         </div>
       </section>
 
-      <section className="grid gap-2 md:hidden">
+      <section className="motion-stagger grid gap-2 md:grid-cols-3 md:gap-5">
         {shopCards.map((item) => {
           const Icon = item.icon;
 
           return (
-            <details
+            <ResponsiveDisclosureCard
               key={item.title}
-              className="micro-details rounded-[20px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] px-3 py-2.5"
+              title={item.title}
+              icon={<Icon className="size-4 md:size-5" aria-hidden="true" />}
             >
-              <summary className="cursor-pointer rounded-[var(--tv-radius-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tv-accent-brand-aa)]">
-                <span className="inline-flex min-w-0 items-center gap-2">
-                  <Icon className="size-4 shrink-0 text-[var(--accent)]" aria-hidden="true" />
-                  <span className="truncate">{item.title}</span>
-                </span>
-              </summary>
-              <p className="mt-3 text-sm leading-6 text-[var(--muted-strong)]">
+              <p className="mt-3 text-sm leading-6 text-[var(--tv-ink-secondary)] md:mt-4 md:text-[0.98rem] md:leading-7">
                 {item.copy}
               </p>
-              <div className="micro-popover-panel mt-3 px-3 py-2 text-xs leading-5 text-[var(--muted)]">
+              <div className="mt-3 rounded-[18px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] px-3 py-2 text-xs leading-5 text-[var(--tv-ink-secondary)] md:mt-5 md:rounded-[20px] md:p-4 md:text-sm md:leading-6">
                 {item.example}
               </div>
-            </details>
-          );
-        })}
-      </section>
-
-      <section className="motion-stagger hidden gap-4 md:grid md:grid-cols-3 md:gap-5">
-        {shopCards.map((item) => {
-          const Icon = item.icon;
-
-          return (
-            <PremiumPanel key={item.title} tone="airy" as="article" className="p-5 before:!hidden after:!hidden">
-              <div className="flex items-start justify-between gap-4">
-                <span className="grid size-12 place-items-center rounded-[18px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-[var(--tv-accent-brand-aa)]">
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
-              </div>
-              <h2 className="mt-5 text-[1.38rem] leading-[1.08] text-white">
-                {item.title}
-              </h2>
-              <p className="mt-4 text-[0.98rem] leading-7 text-white/68">
-                {item.copy}
-              </p>
-              <div className="mt-5 rounded-[20px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] p-4 text-sm leading-6 text-white/64">
-                {item.example}
-              </div>
-            </PremiumPanel>
+            </ResponsiveDisclosureCard>
           );
         })}
       </section>

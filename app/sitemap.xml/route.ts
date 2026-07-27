@@ -52,12 +52,20 @@ export async function GET() {
   const staticPages = [
     "",
     "/archivio",
+    "/radar",
+    "/chi-siamo",
     "/collections",
     "/posts",
     "/shortlist",
     "/compare",
+    "/community",
+    "/affiliati",
+    "/metodo",
     "/tags",
     "/shop",
+    "/privacy",
+    "/termini",
+    "/cookie",
   ].map((path) => urlEntry(`${siteConfig.url}${path}`, null));
 
   const toolPages = tools.map((tool) =>

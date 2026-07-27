@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
 import type { EmailOtpType } from "@supabase/supabase-js";
 
+import { BrandLogo } from "@/components/layout/brand-logo";
 import {
   getBrowserSupabaseClient,
   isSupabaseBrowserEnabled,
   loadBrowserSupabaseRuntimeConfig,
 } from "@/lib/supabase/browser-client";
 import { isAccountStateMatrixEnabled } from "@/components/account/panel/account-state-flags";
+import { PremiumLink, PremiumPanel } from "@/components/ui/premium";
+import { RouteMarker } from "@/components/ui/route-marker";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -142,41 +143,45 @@ export default function AuthCallbackPage() {
   }, [router]);
 
   return (
-    <div className="page-shell flex min-h-[60vh] items-center justify-center py-16">
-      <div className="brand-panel panel-lift max-w-[34rem] rounded-[32px] px-6 py-8 text-center sm:px-8">
-        <div className="flex justify-center">
-          <div
-            className="relative flex items-center justify-center rounded-[24px] bg-white/80 p-3 shadow-[0_18px_48px_rgba(106,60,255,0.14)] ring-1 ring-[rgba(106,60,255,0.14)]"
-            aria-label="TooolVibes logo"
-          >
-            <Image
-              src="/brand/tooolvibes-logo.png"
-              alt="TooolVibes"
-              width={76}
-              height={76}
-              className="h-[76px] w-[76px] object-contain"
-              priority
-            />
+    <div className="page-shell flex min-h-dvh items-center justify-center py-10 sm:py-16">
+      <PremiumPanel
+        tone="light"
+        className="w-full max-w-[42rem] p-5 before:!hidden after:!hidden sm:p-8"
+      >
+        <RouteMarker
+          index="A-01"
+          label="Accesso sicuro"
+          status={failed ? "Recupero disponibile" : "Verifica in corso"}
+          density="minimal"
+        />
+
+        <div className="mt-8 grid gap-6 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
+          <BrandLogo size={76} priority />
+          <div>
+            <p className="editorial-label">Workspace personale</p>
+            <h1 className="text-display-card mt-3 text-[2rem] sm:text-[2.5rem]">
+              {failed ? "Collegamento non riuscito" : "Collegamento in corso"}
+            </h1>
+            <p
+              className="mt-4 text-[0.98rem] leading-7 text-[var(--tv-ink-secondary)]"
+              aria-live="polite"
+            >
+              {message}
+            </p>
           </div>
         </div>
-        <p className="pill mx-auto">Accesso</p>
-        <h1 className="text-display-card mt-4 text-[2rem] sm:text-[2.3rem]">
-          Collegamento in corso
-        </h1>
-        <p className="text-body-soft mt-4 text-[0.98rem]" style={{ color: "var(--muted-strong)" }}>
-          {message}
-        </p>
+
         {failed && isAccountStateMatrixEnabled() ? (
-          <div className="mt-6 flex flex-col items-center gap-3">
-            <Link href="/account" className="account-btn-primary">
+          <div className="mt-7 border-t border-[var(--tv-border-subtle)] pt-6">
+            <PremiumLink href="/account" className="w-full sm:w-auto">
               Richiedi un nuovo link
-            </Link>
-            <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
+            </PremiumLink>
+            <p className="mt-3 max-w-[52ch] text-sm leading-6 text-[var(--tv-ink-secondary)]">
               Il link può essere scaduto o già usato: dalla pagina account puoi inviarti una nuova mail di conferma.
             </p>
           </div>
         ) : null}
-      </div>
+      </PremiumPanel>
     </div>
   );
 }

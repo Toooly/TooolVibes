@@ -24,6 +24,7 @@ export type SectionHeaderProps = {
   eyebrow: React.ReactNode;
   title: React.ReactNode;
   description?: React.ReactNode;
+  as?: "h1" | "h2";
   invert?: boolean;
   align?: "start" | "center";
   className?: string;
@@ -36,6 +37,7 @@ export function SectionHeader({
   eyebrow,
   title,
   description,
+  as: Heading = "h2",
   invert = false,
   align = "start",
   className,
@@ -96,7 +98,7 @@ export function SectionHeader({
         />
         {trailing ? <div className="ml-auto">{trailing}</div> : null}
       </div>
-      <h2
+      <Heading
         className={cn(
           "mt-2.5 max-w-none break-words font-[var(--tv-font-display)] font-semibold leading-[var(--tv-leading-tight)] tracking-[-0.01em]",
           titleSizeClass,
@@ -104,7 +106,7 @@ export function SectionHeader({
         )}
       >
         {title}
-      </h2>
+      </Heading>
       {description ? (
         <p
           className={cn(

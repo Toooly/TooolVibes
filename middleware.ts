@@ -46,6 +46,22 @@ function withTransportSecurity(
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (
+    process.env.NODE_ENV === "production" &&
+    (pathname === "/dev" || pathname.startsWith("/dev/"))
+  ) {
+    return withTransportSecurity(
+      request,
+      new NextResponse("Not Found", {
+        status: 404,
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "X-Robots-Tag": "noindex",
+        },
+      }),
+    );
+  }
+
   // Admin gate (esistente)
   if (pathname.startsWith("/admin")) {
     if (pathname === "/admin/login") {

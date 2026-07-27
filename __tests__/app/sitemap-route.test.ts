@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { completeToolPublicFixture } from "@/__tests__/fixtures/tool-public";
+import { siteConfig } from "@/lib/config/site";
 
 const dependencies = vi.hoisted(() => ({
   getPublicToolsSnapshot: vi.fn(),
@@ -78,6 +79,25 @@ describe("GET /sitemap.xml", () => {
     expect(response.status).toBe(200);
     expect(body).toContain("/toools/atlas-ai");
     expect(body).toContain("/toools/undated-tool");
+    for (const path of [
+      "/archivio",
+      "/radar",
+      "/chi-siamo",
+      "/collections",
+      "/posts",
+      "/shortlist",
+      "/compare",
+      "/community",
+      "/affiliati",
+      "/metodo",
+      "/tags",
+      "/shop",
+      "/privacy",
+      "/termini",
+      "/cookie",
+    ]) {
+      expect(body).toContain(`<loc>${siteConfig.url}${path}</loc>`);
+    }
     expect(body.match(/<lastmod>/g)).toHaveLength(1);
   });
 });

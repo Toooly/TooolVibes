@@ -1017,23 +1017,6 @@ body {
 .premium-section-inner {
   background: transparent !important;
 }
-.premium-badge {
-  background: rgba(124,77,255,0.15) !important;
-  border-color: rgba(124,77,255,0.25) !important;
-  color: #B388FF !important;
-}
-.premium-link {
-  color: #F0EFFF !important;
-}
-.premium-button {
-  background: linear-gradient(135deg, #7C4DFF 0%, #536DFE 100%) !important;
-  color: white !important;
-}
-.premium-button-secondary {
-  background: rgba(124,77,255,0.1) !important;
-  color: #B388FF !important;
-  border-color: rgba(124,77,255,0.2) !important;
-}
 
 /* Mobile catalog view dark */
 .mobile-catalog-view,

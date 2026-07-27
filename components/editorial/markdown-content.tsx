@@ -60,6 +60,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
         components={{
+          h1: ({ children }) => <h2>{children}</h2>,
           a: ({ href, children, ...props }) => (
             <a
               href={href}

@@ -14,6 +14,7 @@ type SupabaseRuntimeConfigResponse = {
 
 let browserClient: BrowserSupabaseClient | null = null;
 let runtimeConfig: BrowserSupabaseConfig | null = null;
+const RUNTIME_CONFIG_TIMEOUT_MS = 6_000;
 
 function cleanEnvValue(value: string | undefined) {
   const normalized = value?.trim();
@@ -63,9 +64,16 @@ export async function loadBrowserSupabaseRuntimeConfig() {
     return true;
   }
 
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(
+    () => controller.abort(),
+    RUNTIME_CONFIG_TIMEOUT_MS,
+  );
+
   try {
     const response = await fetch("/api/auth/config", {
       cache: "no-store",
+      signal: controller.signal,
     });
 
     if (!response.ok) {
@@ -84,6 +92,8 @@ export async function loadBrowserSupabaseRuntimeConfig() {
     });
   } catch {
     return false;
+  } finally {
+    window.clearTimeout(timeoutId);
   }
 }
 

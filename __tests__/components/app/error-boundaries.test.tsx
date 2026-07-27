@@ -120,4 +120,20 @@ describe("B53 ErrorRecoveryView — contratto presentazionale", () => {
 
     await expectNoAxeViolations(container);
   });
+
+  it("può vivere nel main della shell senza creare un landmark annidato", () => {
+    const { container } = render(
+      <main>
+        <ErrorRecoveryView
+          as="div"
+          error={new Error("boom")}
+          reset={() => {}}
+          homeHref="/"
+        />
+      </main>,
+    );
+
+    expect(container.querySelectorAll("main")).toHaveLength(1);
+    expect(container.querySelector(".error-recovery-view")?.tagName).toBe("DIV");
+  });
 });

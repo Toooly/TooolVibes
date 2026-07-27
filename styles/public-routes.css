@@ -8,6 +8,173 @@
   text-wrap: pretty;
 }
 
+/* Brand-derived route identity shared by public editorial surfaces. */
+.route-marker {
+  display: grid;
+  grid-template-columns: minmax(2.75rem, 4.5rem) auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  color: var(--tv-ink-secondary);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-label);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.route-marker__signal {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.route-marker__signal .tv-brand-node {
+  flex: 0 0 auto;
+}
+
+.route-marker__signal .tv-brand-trace {
+  min-width: 1.4rem;
+}
+
+.route-marker__index {
+  display: inline-grid;
+  min-width: 2.35rem;
+  min-height: 2.35rem;
+  place-items: center;
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: var(--tv-radius-control);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.route-marker__label,
+.route-marker__status {
+  min-width: 0;
+}
+
+.route-marker__label {
+  overflow: hidden;
+  color: var(--tv-ink-primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.route-marker__status {
+  color: var(--tv-ink-muted-aa);
+  letter-spacing: 0.1em;
+  text-align: right;
+}
+
+.route-marker--hero {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--tv-border-subtle);
+}
+
+.route-marker--minimal {
+  grid-template-columns: minmax(2.25rem, 3.5rem) auto minmax(0, 1fr) auto;
+}
+
+/* Quiet editorial frame for legal and transactional reading. */
+.legal-page {
+  padding-block: clamp(2rem, 5vw, 5rem);
+}
+
+.legal-page__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: clamp(2rem, 7vw, 7rem);
+  align-items: start;
+  padding-block: clamp(2.25rem, 6vw, 5.5rem);
+}
+
+.legal-page__intro {
+  position: sticky;
+  top: 7rem;
+}
+
+.legal-page__intro h1 {
+  max-width: 9ch;
+  margin-top: 0.75rem;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-display);
+  font-size: clamp(3.35rem, 8vw, 7.5rem);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: -0.035em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.legal-page__intro > p:last-child {
+  max-width: 38rem;
+  margin-top: 1.5rem;
+  color: var(--tv-ink-secondary);
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-body);
+}
+
+.legal-page__body {
+  display: grid;
+  gap: 1.15rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-raised);
+  padding: clamp(1.35rem, 4vw, 2.5rem);
+  color: var(--tv-ink-secondary);
+  font-size: var(--tv-text-body);
+  line-height: 1.8;
+}
+
+.legal-page__body a {
+  color: var(--tv-accent-brand-aa);
+  font-weight: var(--tv-weight-semibold);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 0.28em;
+}
+
+.legal-page__nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-block: 1px solid var(--tv-border-subtle);
+}
+
+.legal-page__nav a {
+  display: flex;
+  min-height: 3.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  color: var(--tv-ink-secondary);
+  font-size: var(--tv-text-sm);
+  font-weight: var(--tv-weight-semibold);
+  transition:
+    background-color var(--tv-duration-fast) var(--tv-ease-standard),
+    color var(--tv-duration-fast) var(--tv-ease-standard);
+}
+
+.legal-page__nav a + a {
+  border-left: 1px solid var(--tv-border-subtle);
+}
+
+.legal-page__nav a[aria-current="page"] {
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+}
+
+.legal-page__nav a:hover,
+.legal-page__nav a:focus-visible {
+  background: var(--tv-surface-elevated);
+  color: var(--tv-accent-brand-aa);
+}
+
+.legal-page__nav svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
 .marketing-shell :where(a, button, input, select, textarea):focus-visible {
   outline: 2px solid var(--tv-accent-primary);
   outline-offset: 3px;
@@ -170,6 +337,39 @@
 @media (max-width: 47.99rem) {
   .marketing-shell main {
     padding-bottom: 5.5rem;
+  }
+
+  .route-marker {
+    grid-template-columns: minmax(2.25rem, 3.5rem) auto minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .route-marker__status {
+    grid-column: 3 / -1;
+    text-align: left;
+  }
+
+  .legal-page__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    padding-block: 2.5rem;
+  }
+
+  .legal-page__intro {
+    position: static;
+  }
+
+  .legal-page__intro h1 {
+    font-size: clamp(3.1rem, 18vw, 5rem);
+  }
+
+  .legal-page__nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .legal-page__nav a + a {
+    border-top: 1px solid var(--tv-border-subtle);
+    border-left: 0;
   }
 }
 

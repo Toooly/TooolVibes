@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { BadgeCheck, ChartNoAxesCombined, QrCode, ShieldCheck } from "lucide-react";
 
 import { AffiliateApplicationForm } from "@/components/affiliates/affiliate-application-form";
-import { BrandLogo } from "@/components/layout/brand-logo";
 import { PremiumBadge, PremiumPanel } from "@/components/ui/premium";
+import { RouteMarker } from "@/components/ui/route-marker";
 
 export const metadata: Metadata = {
   title: "Programma affiliati",
@@ -37,17 +37,12 @@ export default function AffiliatiPage() {
     <div className="page-shell py-8 sm:py-12">
       <section className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(22rem,1.08fr)] lg:items-start">
         <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
-          <div className="flex items-center gap-3">
-            <BrandLogo size={58} priority />
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">
-                Programma partner TooolVibes
-              </p>
-              <p className="mt-1 text-sm" style={{ color: "var(--muted-strong)" }}>
-                Candidature affiliate
-              </p>
-            </div>
-          </div>
+          <RouteMarker
+            index="10"
+            label="Partner network"
+            status="Candidature aperte"
+            density="hero"
+          />
 
           <PremiumBadge tone="accent" className="mt-6 after:!hidden">
             Programma su richiesta

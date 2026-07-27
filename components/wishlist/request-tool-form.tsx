@@ -343,29 +343,28 @@ export function RequestToolForm({ className }: { className?: string }) {
                 })}
               </div>
 
-              <details className="micro-details mt-3 rounded-[18px] border border-white/10 bg-[rgba(26,26,30,0.72)] px-3 py-2.5 text-white sm:hidden">
-                <summary>{isFounderFlow ? "Opzioni business" : "Segnali richiesti"}</summary>
-                <div className="mt-3 grid gap-2">
+              <div className="mt-4 rounded-[18px] border border-white/10 bg-[rgba(26,26,30,0.72)] p-3 text-white sm:mt-5 sm:border-0 sm:bg-transparent sm:p-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/66 sm:sr-only">
+                  {isFounderFlow ? "Opzioni business" : "Segnali richiesti"}
+                </p>
+                <ol
+                  className="mt-3 grid grid-cols-2 gap-2 sm:mt-0 sm:grid-cols-1 sm:gap-3"
+                  aria-label={isFounderFlow ? "Opzioni business" : "Segnali richiesti"}
+                >
                   {flowSteps.map((item, index) => (
-                    <div key={item} className="flex items-center gap-2 rounded-[14px] bg-white/7 p-2.5">
-                      <span className="grid size-7 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white">
+                    <li
+                      key={item}
+                      className="motion-form-step flex items-center gap-2 rounded-[14px] bg-white/7 p-2.5 sm:gap-3 sm:rounded-[18px] sm:border sm:border-white/10 sm:bg-[rgba(26,26,30,0.72)] sm:p-3"
+                    >
+                      <span className="grid size-7 shrink-0 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white sm:size-8">
                         {index + 1}
                       </span>
-                      <span className="text-xs font-semibold text-white/66">{item}</span>
-                    </div>
+                      <span className="text-xs font-semibold text-white/66 sm:text-sm">
+                        {item}
+                      </span>
+                    </li>
                   ))}
-                </div>
-              </details>
-
-              <div className="mt-5 hidden gap-3 sm:grid">
-                {flowSteps.map((item, index) => (
-                  <div key={item} className="motion-form-step flex items-center gap-3 rounded-[18px] border border-white/10 bg-[rgba(26,26,30,0.72)] p-3">
-                    <span className="grid size-8 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white">
-                      {index + 1}
-                    </span>
-                    <span className="text-sm font-semibold text-white/66">{item}</span>
-                  </div>
-                ))}
+                </ol>
               </div>
             </aside>
 

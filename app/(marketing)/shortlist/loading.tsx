@@ -1,31 +1,39 @@
-import { ToolCardSkeleton } from "@/components/tools/tool-card-skeleton";
-
 export default function ShortlistLoading() {
   return (
-    <div className="page-shell space-y-6 pb-18 pt-8 sm:space-y-8 sm:pb-22 sm:pt-10">
-      <section className="brand-panel brand-aura rounded-[36px] p-6 sm:p-7 lg:p-8">
-        <div className="editorial-grid gap-y-7">
-          <div className="col-span-12 lg:col-span-8 space-y-4">
-            <div className="skeleton-block h-8 w-28 rounded-full" />
-            <div className="skeleton-block h-14 max-w-[28rem] rounded-[24px]" />
-            <div className="skeleton-block h-20 max-w-[40rem] rounded-[24px]" />
+    <div className="shortlist-final-surface">
+      <div className="mobile-library-board" aria-busy="true" aria-label="Caricamento salvati">
+        <section className="mobile-library-hero">
+          <div className="grid gap-4">
+            <div className="skeleton-block h-5 w-40 rounded-full" />
+            <div className="skeleton-block h-14 max-w-[34rem] rounded-[18px]" />
+            <div className="skeleton-block h-16 max-w-[44rem] rounded-[18px]" />
           </div>
-          <div className="col-span-12 lg:col-span-4">
-            <div className="skeleton-block h-36 rounded-[30px]" />
+          <div className="mobile-library-hero__stats">
+            <div className="skeleton-block h-20 rounded-[16px]" />
+            <div className="skeleton-block h-20 rounded-[16px]" />
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="brand-panel rounded-[34px] p-6 sm:p-7 lg:p-8">
-        <div className="space-y-5">
-          <div className="skeleton-block h-24 rounded-[28px]" />
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            <ToolCardSkeleton />
-            <ToolCardSkeleton />
-            <ToolCardSkeleton />
+        <section className="mobile-library-board__compare">
+          <div className="skeleton-block h-5 w-44 rounded-full" />
+          <div className="mt-3 flex flex-wrap gap-2">
+            <div className="skeleton-block h-9 w-24 rounded-full" />
+            <div className="skeleton-block h-9 w-28 rounded-full" />
+            <div className="skeleton-block h-9 w-36 rounded-full" />
           </div>
-        </div>
-      </section>
+        </section>
+
+        <section className="mobile-library-shelf">
+          <div className="mobile-library-shelf__header">
+            <div className="skeleton-block h-7 w-32 rounded-[12px]" />
+          </div>
+          <div className="mobile-library-shelf__rail">
+            <div className="skeleton-block h-52 min-w-36 flex-1 rounded-[18px]" />
+            <div className="skeleton-block h-52 min-w-36 flex-1 rounded-[18px]" />
+            <div className="skeleton-block h-52 min-w-36 flex-1 rounded-[18px]" />
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

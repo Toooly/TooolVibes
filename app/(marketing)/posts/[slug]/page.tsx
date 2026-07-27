@@ -7,6 +7,7 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
 import { MarkdownContent } from "@/components/editorial/markdown-content";
 import { NativePlacement } from "@/components/monetization/native-placement";
+import { RouteMarker } from "@/components/ui/route-marker";
 import { siteConfig } from "@/lib/config/site";
 import { getCollectionBySlug } from "@/lib/data/public-collections";
 import {
@@ -102,6 +103,13 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
       <section className="dark-panel section-stage group relative overflow-hidden rounded-[36px]">
         <div className="editorial-grid gap-y-0">
           <div className={tool ? "col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7" : "col-span-12 p-5 sm:p-6 lg:p-7"}>
+            <RouteMarker
+              index={post.kind === "guide" ? "G" : post.kind === "tool-writeup" ? "T" : "E"}
+              label={kindLabel}
+              status={post.source_label}
+              density="editorial"
+              className="mb-5"
+            />
             <div className="flex flex-wrap items-center gap-2">
               <span className="pill !bg-[var(--tv-surface-elevated)] !text-[var(--tv-ink-secondary)]">{kindLabel}</span>
               <span className="selection-chip rounded-full border border-white/14 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/82">

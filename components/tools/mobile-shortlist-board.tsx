@@ -272,6 +272,15 @@ export function MobileShortlistBoard({
                 <span>{tool.name}</span>
               </Link>
             ))}
+            <Link
+              href="/compare"
+              className="mobile-library-board__compare-chip"
+              aria-label={`Apri il confronto con ${readyToCompare.length} tool`}
+              data-sonic-action="navigate"
+            >
+              <span>Apri il confronto</span>
+              <ArrowRight size={13} aria-hidden="true" />
+            </Link>
           </div>
         </div>
       )}

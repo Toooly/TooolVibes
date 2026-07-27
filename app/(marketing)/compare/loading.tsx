@@ -1,23 +1,27 @@
 export default function CompareLoading() {
   return (
-    <div className="page-shell space-y-6 pb-24 pt-8 sm:space-y-8 sm:pb-28 sm:pt-10">
-      <section className="brand-panel brand-aura rounded-[36px] p-6 sm:p-7 lg:p-8">
-        <div className="editorial-grid gap-y-7">
-          <div className="col-span-12 lg:col-span-8 space-y-4">
-            <div className="skeleton-block h-8 w-32 rounded-full" />
-            <div className="skeleton-block h-14 max-w-[32rem] rounded-[24px]" />
-            <div className="skeleton-block h-20 max-w-[42rem] rounded-[24px]" />
+    <div className="compare-space-page">
+      <section className="tool-battle-page" aria-busy="true" aria-label="Caricamento confronto">
+        <header className="tool-battle-page__intro">
+          <div className="skeleton-block h-5 w-36 rounded-full" />
+          <div className="skeleton-block h-14 max-w-[38rem] rounded-[18px]" />
+          <div className="skeleton-block h-16 max-w-[46rem] rounded-[18px]" />
+          <div className="grid max-w-[32rem] grid-cols-3 gap-3">
+            <div className="skeleton-block h-10 rounded-[14px]" />
+            <div className="skeleton-block h-10 rounded-[14px]" />
+            <div className="skeleton-block h-10 rounded-[14px]" />
           </div>
-          <div className="col-span-12 lg:col-span-4">
-            <div className="skeleton-block h-36 rounded-[30px]" />
-          </div>
-        </div>
-      </section>
+        </header>
 
-      <section className="brand-panel rounded-[34px] p-6 sm:p-7 lg:p-8">
-        <div className="space-y-5">
-          <div className="skeleton-block h-24 rounded-[28px]" />
-          <div className="skeleton-block h-[26rem] rounded-[30px]" />
+        <div className="tool-battle-page__viewport">
+          <div className="grid gap-4">
+            <div className="skeleton-block h-24 rounded-[20px]" />
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="skeleton-block h-72 rounded-[24px]" />
+              <div className="skeleton-block h-72 rounded-[24px]" />
+            </div>
+            <div className="skeleton-block h-36 rounded-[20px]" />
+          </div>
         </div>
       </section>
     </div>

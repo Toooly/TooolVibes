@@ -1,6 +1,7 @@
 ﻿import Link from "next/link";
 
 import { EditorialPostCard } from "@/components/editorial/editorial-post-card";
+import { RouteMarker } from "@/components/ui/route-marker";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
 import {
@@ -37,7 +38,15 @@ export default async function PostsPage() {
       <section className="brand-panel section-stage relative overflow-hidden rounded-[36px] p-5 sm:p-6 lg:p-7">
         <div className="editorial-grid items-start gap-y-6">
           <div className="col-span-12 lg:col-span-8">
+            <RouteMarker
+              index="08"
+              label="Archivio editoriale"
+              status={`${blogPosts.length + toolWriteups.length + guides.length} letture`}
+              density="hero"
+              className="mb-5"
+            />
             <SectionHeader
+              as="h1"
               eyebrow="Approfondimenti"
               title="Guide e articoli per capire meglio cosa scegliere."
               description="Qui non trovi un magazine generico: trovi letture brevi, guide e approfondimenti collegati ai tool, alle raccolte e ai casi d'uso più concreti."

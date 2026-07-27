@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   BrainCircuit,
@@ -69,13 +69,13 @@ const serviceCards = [
 
 const signals = ["Discovery", "Design", "Build", "Deploy"];
 
-const mobileStats = [
+const aboutStats = [
   ["3", "founder operativi"],
-  ["0", "fumo"],
-  ["1", "sistema chiaro"],
+  ["0", "fumo nei processi"],
+  ["1", "obiettivo: un sistema chiaro"],
 ];
 
-const mobileFeatures = [
+const aboutFeatures = [
   [Sparkles, "Pensiero chiaro", "Partiamo dal problema e rendiamo esplicite le decisioni prima di costruire."],
   [Workflow, "Metodo operativo", "Discovery, design e sviluppo avanzano nello stesso flusso, senza passaggi opachi."],
   [Handshake, "Partner veri", "Condividiamo priorita, vincoli e progressi con un confronto diretto e continuo."],
@@ -86,144 +86,26 @@ const heroCopy =
 const servicesIntroCopy =
   "Dalla prima decisione al rilascio, costruiamo sistemi digitali coerenti: meno passaggi dispersi, più controllo e un risultato che resta solido nel tempo.";
 const teamCaptionCopy =
-  "Ogni fase condivide lo stesso contesto: il progetto resta veloce senza perdere qualità o intenzione.";
+  "Discovery, design e build restano nello stesso flusso. Ogni fase condivide il contesto: il progetto resta veloce senza perdere qualità o intenzione.";
 const communityCopy =
   "Condividi ciò che stai costruendo, confrontati con persone operative e trova strumenti, metodo e feedback per fare il prossimo passo.";
 
-function MobileAboutPage() {
-  return (
-    <div className="v-about-mobile page-shell space-y-5 pb-10 pt-5 md:hidden">
-      <section className="v-about-mobile-hero">
-        <div className="v-about-mobile-hero__copy">
-          <PremiumBadge tone="accent" className="after:!hidden">Chi siamo</PremiumBadge>
-          <h1>Persone vere, prodotti digitali vivi.</h1>
-          <p>{heroCopy}</p>
-        </div>
-
-        <div className="v-about-mobile-scene" aria-label="Team TooolVibes al lavoro">
-          <div className="v-about-mobile-scene__halo" aria-hidden="true" />
-          <div className="v-about-mobile-scene__image">
-            <Image
-              src="/about/team-working.jpg"
-              alt="Team TooolVibes al lavoro intorno a un laptop"
-              fill
-              priority
-              unoptimized
-              sizes="100vw"
-              className="object-cover"
-            />
-          </div>
-          <div className="v-about-mobile-scene__caption">
-            <span>
-              <UsersRound className="size-4" aria-hidden="true" />
-              Team reale
-            </span>
-            <small>Discovery, design e build nello stesso flusso.</small>
-          </div>
-        </div>
-      </section>
-
-      <div className="v-about-mobile-stats" aria-label="Metriche TooolVibes">
-        {mobileStats.map(([value, label]) => (
-          <div key={label} className="v-about-mobile-stat">
-            <strong>{value}</strong>
-            <span>{label}</span>
-          </div>
-        ))}
-      </div>
-
-      <section className="v-about-mobile-panel v-about-mobile-panel--dark">
-        <div className="v-about-mobile-section-head">
-          <PremiumBadge tone="dark" className="after:!hidden">
-            I servizi che offriamo
-          </PremiumBadge>
-          <h2>Dal caos al sistema.</h2>
-          <p>{servicesIntroCopy}</p>
-        </div>
-
-        <div className="v-about-mobile-services" id="servizi-mobile">
-          {serviceCards.map((service, index) => {
-            const Icon = service.icon;
-
-            return (
-              <motion.article
-                key={service.title}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.46, delay: Math.min(index * 0.04, 0.18), ease: [0.16, 1, 0.3, 1] }}
-                className="v-about-mobile-service"
-                style={
-                  {
-                    "--card-accent": service.accent,
-                    "--card-accent-glow": `${service.accent}22`,
-                  } as React.CSSProperties
-                }
-              >
-                <span className="v-about-mobile-service__icon" style={{ color: service.accent }}>
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
-                <div>
-                  <span className="v-about-mobile-service__label">{service.label}</span>
-                  <h3>{service.title}</h3>
-                  <p>{service.copy}</p>
-                </div>
-              </motion.article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="v-about-mobile-panel">
-        <div className="v-about-mobile-section-head">
-          <PremiumBadge tone="accent" className="after:!hidden">Come lavoriamo</PremiumBadge>
-          <h2>Una rotta, non una pila di card.</h2>
-        </div>
-
-        <div className="v-about-mobile-features">
-          {mobileFeatures.map(([Icon, title, copy]) => {
-            const FeatureIcon = Icon as typeof Sparkles;
-
-            return (
-              <article key={title as string} className="v-about-mobile-feature">
-                <FeatureIcon className="v-about-mobile-feature__icon" aria-hidden="true" />
-                <div>
-                  <h3>{title as string}</h3>
-                  <p>{copy as string}</p>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="v-about-mobile-cta">
-        <PremiumBadge tone="accent" className="after:!hidden">
-          <ShieldCheck className="mr-1 inline size-3.5" aria-hidden="true" />
-          Una community che costruisce
-        </PremiumBadge>
-        <p>{communityCopy}</p>
-        <PremiumLink href="/community" tone="premium" className="w-full">
-          Entra nella community
-        </PremiumLink>
-      </section>
-    </div>
-  );
-}
-
 export function AboutPage() {
-  return (
-    <>
-      <MobileAboutPage />
+  const shouldReduceMotion = useReducedMotion();
 
-      <div className="page-shell hidden pb-24 pt-4 sm:pb-18 sm:pt-6 md:block">
+  return (
+    <div className="page-shell pb-24 pt-4 sm:pb-18 sm:pt-6">
       {/* ─── Hero ─── */}
       <section className="v-about-hero motion-reveal overflow-hidden px-4 py-6 text-[var(--tv-ink-inverted)] sm:px-7 sm:py-8 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.88fr)_minmax(24rem,1.12fr)] lg:items-center">
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : { duration: 0.62, ease: [0.16, 1, 0.3, 1] }
+            }
             className="max-w-[47rem]"
           >
             <PremiumBadge tone="accent" className="after:!hidden">Chi siamo</PremiumBadge>
@@ -234,12 +116,11 @@ export function AboutPage() {
               {heroCopy}
             </p>
 
-            <div className="mt-7 hidden gap-3 sm:grid sm:grid-cols-3">
-              {[
-                ["3", "founder operativi"],
-                ["0", "fumo nei processi"],
-                ["1", "obiettivo: chiarezza"],
-              ].map(([value, label]) => (
+            <div
+              className="mt-7 grid grid-cols-3 gap-2 sm:gap-3"
+              aria-label="Metriche TooolVibes"
+            >
+              {aboutStats.map(([value, label]) => (
                 <div key={label} className="v-about-stat-card">
                   <strong className="block font-[var(--tv-font-system)] text-2xl leading-none text-[var(--tv-accent-brand)]">
                     {value}
@@ -253,10 +134,18 @@ export function AboutPage() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, rotate: -1.2 }}
+            initial={false}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 0.72, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="v-about-image-frame relative min-h-[23rem] sm:min-h-[30rem] lg:min-h-[34rem]"
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : {
+                    duration: 0.72,
+                    delay: 0.1,
+                    ease: [0.16, 1, 0.3, 1],
+                  }
+            }
+            className="v-about-image-frame relative min-h-[18rem] sm:min-h-[30rem] lg:min-h-[34rem]"
           >
             <Image
               src="/about/team-working.jpg"
@@ -292,10 +181,14 @@ export function AboutPage() {
       <section className="v-about-services-section relative mt-8 overflow-hidden px-4 py-7 sm:mt-10 sm:px-7 sm:py-9 lg:px-8">
         <div className="relative grid gap-7 lg:grid-cols-[minmax(19rem,0.72fr)_minmax(0,1.28fr)] lg:items-start">
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : { duration: 0.58, ease: [0.16, 1, 0.3, 1] }
+            }
             className="lg:sticky lg:top-28"
           >
             <PremiumBadge tone="dark" className="after:!hidden">
@@ -328,10 +221,18 @@ export function AboutPage() {
               return (
                 <motion.article
                   key={service.title}
-                  initial={{ opacity: 0, y: 22, scale: 0.98 }}
+                  initial={false}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true, margin: "-90px" }}
-                  transition={{ duration: 0.5, delay: Math.min(index * 0.05, 0.25), ease: [0.16, 1, 0.3, 1] }}
+                  transition={
+                    shouldReduceMotion
+                      ? { duration: 0 }
+                      : {
+                          duration: 0.5,
+                          delay: Math.min(index * 0.05, 0.25),
+                          ease: [0.16, 1, 0.3, 1],
+                        }
+                  }
                   className="v-about-service-card group"
                   style={
                     {
@@ -360,7 +261,15 @@ export function AboutPage() {
 
       {/* ─── Feature cards ─── */}
       <section className="motion-stagger mt-6 grid gap-3 sm:mt-8 md:grid-cols-3">
-        {mobileFeatures.map(([Icon, title, copy]) => {
+        <div className="mb-2 md:col-span-3">
+          <PremiumBadge tone="accent" className="after:!hidden">
+            Come lavoriamo
+          </PremiumBadge>
+          <h2 className="mt-3 max-w-[18ch] text-[clamp(1.8rem,5vw,2.8rem)] leading-[1.02] text-[var(--tv-ink-primary)]">
+            Una rotta, non una pila di card.
+          </h2>
+        </div>
+        {aboutFeatures.map(([Icon, title, copy]) => {
           const FeatureIcon = Icon as typeof Sparkles;
 
           return (
@@ -386,11 +295,10 @@ export function AboutPage() {
             {communityCopy}
           </p>
         </div>
-        <PremiumLink href="/community" tone="premium" className="shrink-0">
+        <PremiumLink href="/community" tone="premium" className="w-full shrink-0 sm:w-auto">
           Entra nella community
         </PremiumLink>
       </section>
-      </div>
-    </>
+    </div>
   );
 }

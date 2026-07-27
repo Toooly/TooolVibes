@@ -64,24 +64,6 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
           <NativePlacement placementKey="catalog-native-sponsor" variant="band" />
         </section>
       )}
-
-      {/* ═══ Semantic fallback for search engines & screen readers ═══
-          A minimal structured list remains in the DOM for accessibility
-          and SEO, visually hidden but discoverable by assistive tech.
-      */}
-      <section className="sr-only" aria-label="Catalogo tool in formato lista accessibile">
-        <h2>Archivio Tool AI — TooolVibes</h2>
-        <p>{tools.length} tool curati nel catalogo.</p>
-        <ul>
-          {tools.slice(0, 20).map((tool) => (
-            <li key={tool.slug}>
-              <a href={`/toools/${tool.slug}`}>{tool.name}</a>
-              <span>{tool.categoryLabel}</span>
-              <p>{tool.shortDescription || tool.tldr}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
     </div>
   );
 }

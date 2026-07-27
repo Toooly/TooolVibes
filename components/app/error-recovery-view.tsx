@@ -3,6 +3,7 @@
 export type ErrorRecoveryViewProps = {
   error: Error & { digest?: string };
   reset: () => void;
+  as?: "main" | "div";
   /** Navigation recovery target rendered as a plain anchor so it also works
    * when the app router tree is unavailable (global error). */
   homeHref?: string;
@@ -18,10 +19,11 @@ export type ErrorRecoveryViewProps = {
 export function ErrorRecoveryView({
   error,
   reset,
+  as: Component = "main",
   homeHref,
 }: ErrorRecoveryViewProps) {
   return (
-    <main className="error-recovery-view">
+    <Component className="error-recovery-view">
       <section className="error-recovery-view__panel">
         <p className="error-recovery-view__eyebrow">
           TooolVibes
@@ -51,6 +53,6 @@ export function ErrorRecoveryView({
           ) : null}
         </div>
       </section>
-    </main>
+    </Component>
   );
 }

@@ -158,6 +158,29 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     ).toBeTruthy();
   });
 
+  it("opens the comparison workspace directly for compare-ready tools", () => {
+    let state = savedState("alpha", "beta");
+    state = reduceWorkspaceState(state, {
+      type: "compare/toggle",
+      slug: "alpha",
+      at: T0,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "compare/toggle",
+      slug: "beta",
+      at: T0,
+    });
+    seedWorkspace(state);
+
+    render(<MobileShortlistBoard tools={TOOLS} />);
+
+    expect(
+      screen
+        .getByRole("link", { name: "Apri il confronto con 2 tool" })
+        .getAttribute("href"),
+    ).toBe("/compare");
+  });
+
   it("edits and saves a note, persists it and re-opens it after a reload", () => {
     render(<MobileShortlistBoard tools={TOOLS} />);
     openSheetFor("Alpha");
