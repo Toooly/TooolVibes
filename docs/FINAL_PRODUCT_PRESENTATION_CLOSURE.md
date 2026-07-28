@@ -435,3 +435,151 @@ Two active defects found, both legacy translucent-white panels on otherwise-clea
 2. `.ivory-surface :is(input)` → migrated to opaque `--tv-surface-inverted-raised`
 
 Everything else is intentional dark-command-center surface construction on dark base, not legacy glass.
+
+## TooolVibes Total UI & Visual Presentation Closure — 2026-07-28 (continuation)
+
+### Starting commit
+
+- Branch: `main`
+- Starting HEAD (after Phase 1 docs): `8b51f7a` (deployed app at `c44b027`)
+- Safety tag: `pre-minimax-final-ui-closure-2026-07-28` (pushed at start)
+
+### Direct-to-main commits (in order)
+
+| Commit | Phase | Description |
+|--------|-------|-------------|
+| `20116d7` | 2 | `refactor(ui): remove remaining active legacy surfaces` |
+| `4d0a17a` | 3 | `refactor(shortlist): close empty and responsive presentation` |
+| `7d3f0dc` | 4 | `refactor(collections): consolidate editorial journey presentation` |
+| `180e9a3` | 5 | `refactor(posts): establish definitive editorial hierarchy` |
+| `19abc0f` | 6 | `refactor(affiliates): simplify application presentation` |
+| `cb2f68c` | 7 | `fix(ui): close server-safe product states` |
+| `3169152` | 7 | `fix(ui): correct .v-auth-tabs surface token for inverted card` |
+| `3b4dd64` | 8 | `fix(ui): complete final route visual convergence` |
+| `64c2f7a` | deployment-readiness | `fix(collections): contain React 19 #419 suspense boundary on slot render` |
+| `5a11462` | evidence | `audit: record final closure production evidence at 390/1024/1440` |
+
+### Phase outcomes
+
+#### Phase 2 — Legacy surface removal
+- `app/(marketing)/account/account.css:69` `.v-auth-tabs` — `rgba(255, 255, 255, 0.46)` → `var(--tv-surface-elevated)`
+- `styles/public-routes.css:516` `.ivory-surface :is(input)` — `rgba(255, 255, 255, 0.6)` → `var(--tv-surface-inverted-raised)`
+- Decorations `rgba(255,255,255,X)` on already-dark surfaces left intact (intentional dark-command-center surface construction).
+
+#### Phase 3 — Shortlist closure
+- Removed the competing `routes` array (3 cards: Esplora catalogo / Apri Radar / Suggerisci tool).
+- MobileLibraryEmpty now keeps only: title (h1), concise explanation, three starter tool recommendations, primary CTA to `/archivio`, secondary CTA to `/radar`.
+- "Suggerisci tool" remains accessible via the existing `LibraryWishlistSection` (`/shortlist#wishlist` disclosure) — submission behavior and data contract preserved.
+
+#### Phase 4 — Collection Detail closure
+- Consolidated to five chapters: hero/editorial thesis, public journey, included tools + key moments, editorial comparison, complete-access module.
+- Removed five duplicate messaging blocks (Resta aperto / Resta nella versione completa two-card, duplicate premium_teaser card, duplicate hero secondary "Apri account", duplicate locked-preview upgrade+account CTA).
+- Consolidated badge density (single editorial label replacing pill + selection-status duplication).
+- Removed unused `visibleItemCount` local.
+
+#### Phase 5 — Posts closure
+- Section order: featured → guides → analyses and tool insights → remaining content.
+- Id anchors added: `#guide`, `#analisi`, `#blog`.
+- Sidebar counters render only kinds with `count > 0`; no "Blog: 0" or "Approfondimenti tool: 0" placeholders.
+
+#### Phase 6 — Affiliates closure
+- Restructured `AffiliateApplicationForm`: essential visible at top (Nome, Brand/progetto, Email, Sito principale, Audience o caso d'uso, Messaggio obbligatorio).
+- Progressive disclosure (single `<details>`) wraps Cognome, Canali di promozione, and all 6 social URLs (instagram/facebook/tiktok/xProfile/linkedin/youtube).
+- Data contract preserved: all fields still serialized via the React state object (form-data submission unaffected by `<details>` open state).
+- A11y preserved: `aria-invalid`, `aria-describedby`, `role="alert"` for errors, `role="status" aria-live` for success message.
+- Honeypot via `SubmissionProtectionFields` unchanged.
+
+#### Phase 7 — Server-safe product states
+- **Account**: replaced generic "Stiamo preparando il tuo spazio" with truthful route identity + auth structure (`v-auth-page--loading` split layout matching `AuthPage`, route eyebrow "Account", "Workspace privato" intro, "Verifica accesso in corso." h1 + descriptive copy + 3 skeleton rows).
+- **Compare**: `loading.tsx` rewritten to meaningful server-side empty state — eyebrow "Confronto editoriale", h1 "Confronto tool" (Anton), descriptive lede, CTA row (Apri l'archivio primary, Apri i salvati secondary), 2 empty slot cards ("Slot libero" with index 1/2 + hint text), and status paragraph. New CSS: `tool-battle-page__cta--primary/--secondary`, `tool-battle-page__slots`, `tool-battle-page__slot` empty variant, slot-index/title/hint typography, status panel.
+- **Radar**: new `app/(marketing)/radar/loading.tsx` renders server-side Radar identity (eyebrow + h1 + lede + CONNESSIONE status badge) plus a `tv-radar__panel-hint` card explaining "Stiamo contattando Product Hunt... Niente dati fittizi". CSS: `tv-radar__panel-hint` in `radar.css`.
+- `eslint.config.mjs` updated to ignore `audits/**` (audit scripts use CommonJS `require()`).
+- Fixed residual `--tv-font-mono` → `--tv-font-family-mono` in `compare.css:2831`.
+
+#### Phase 8 — Final visual convergence
+- Five files updated to replace legacy translucent-white inline gradient/background styles with opaque semantic `--tv-surface-inverted-raised` token on the empty/intro panels:
+  - `components/tools/compare-board.tsx` (4 instances)
+  - `components/tools/shortlist-board.tsx` (4 instances)
+  - `components/tools/shortlist-link.tsx` (1 background)
+  - `components/tools/tool-card.tsx` (2 instances)
+  - `components/tools/tool-workspace-panel.tsx` (1 instance)
+
+#### Phase — React 19 #419 mitigation (deployment-readiness)
+- Production audit detected React error #419 (Suspense boundary failure) on `/collections/indie-launch-stack` rendering `CollectionSlotCard` instances.
+- Added `components/collections/collection-slot-safe-boundary.tsx` wrapping each slot instance with `CollectionSlotErrorBoundary` (client class component).
+- Fallback renders a minimal, accessible slot card with role/tool-name/note metadata when the canonical render fails — preventing the entire page from falling back to the global error boundary.
+- Page updated to import and render `CollectionSlotSafeBoundary` instead of `CollectionSlotCard` directly.
+
+### Remaining documented exceptions (intentional)
+
+- `app/(marketing)/account/page.tsx` and `components/account/` — legitimate Dark Command Center theme.
+- Legacy compatibility aliases in `styles/tokens.css` — needed for unmigrated route helpers; tracked for sunsetting.
+- ESLint `ignoreDuringBuilds: true` and TypeScript `ignoreBuildErrors: true` in `next.config.ts` — pre-existing lint debt tracked in `audits/ui-cleanup-phase-0-baseline.md`.
+- `--surface-*` legacy compat aliases — needed for unmigrated routes.
+- Decorative `rgba(255,255,255,X)` tints (border 0.2/0.22, shadow inset 0.08, gradient halos at 0.5-0.92) on dark surfaces — intentional dark-surface construction, not legacy glass.
+- Account mobile console warnings: `THREE.Clock` deprecation + WebGL `ReadPixels` stalls (4×) — sourced from a layout-level dynamically imported 3D experience layer; not introduced by these phases.
+
+### Typography verification
+
+- All public routes render with Anton for monumental display + Manrope for body/UI/navigation/cards.
+- No Fraunces detected in production HTML.
+- No Inter detected in public presentation typography.
+- 2 `.woff2` font files preloaded per page (Manrope + Anton).
+
+### Surface / contrast verification
+
+- `bg-canvas = rgb(8, 8, 10)` everywhere on dark routes.
+- Ivory Decision Desk `rgb(244, 240, 231)` consistently used on Shortlist, Posts, Affiliati, Account.
+- All audited `<h1>` measured contrast ratios ≥ 16.0 against actual parent backgrounds.
+- No legacy glass cards (zero `backdrop-filter: blur(...)` active consumers).
+- No unauthorized translucent white panels (all migrated to opaque `--tv-surface-*`).
+
+### Screenshots
+
+11 routes × 3 viewports = 33 PNG captures under:
+`audits/final-route-presentation-closure-2026-07-28/screenshots/production/`
+- 390×844 (mobile)
+- 1024×768 (tablet)
+- 1440×1000 (desktop)
+
+Full audit report: `audits/final-route-presentation-closure-2026-07-28/FINAL_UI_UX_AUDIT_REPORT.md`
+
+### Test results
+
+| Step | Result |
+|------|--------|
+| `bun run typecheck` (`tsc --noEmit`) | passed (no output) |
+| `bun run lint` (`--max-warnings=0`) | passed (0 warnings) |
+| `bun run test` (`vitest run`) | 110 files passed, 1 file pre-existing failure |
+| Test cases | 979 passed, 10 skipped (RLS), 1 documented env-only failure (Bun/Node version mismatch in `runtime-contract.test.ts` — identical to baseline `c44b027`; documented and not fixable in this scope) |
+| `bun run build` (Next.js production) | passed; 53 pages generated |
+
+### Build results
+
+| Build | Status |
+|-------|--------|
+| TypeScript (`tsc --noEmit`) | PASS |
+| ESLint (`--max-warnings=0`) | PASS |
+| Complete test suite | 979 pass, 10 skip, 1 env-only fail |
+| Next.js production build | PASS |
+| OpenNext/Cloudflare build | (deployment pipeline step) |
+
+### Deployment (next)
+
+- Cloudflare account: `staff@elevianutrition.eu`
+- Account ID: `ffacd11bfafdca87d540a6c5fbe89120`
+- Worker: `tooolvibes`
+- Previous active Worker version: `5b068a5d-591c-4d6a-a986-770f4d29ffc3` (was promoted; current c44b027 deployment is `851005d1`)
+- New version and deployment ID: recorded after `cloudflare:deploy`
+- Promotion target: 100% traffic
+- Domain: `https://tooolvibes.eu` + `https://tooolvibes.staff-ffa.workers.dev`
+
+### Rollback
+
+```
+bun wrangler versions deploy 5b068a5d-591c-4d6a-a986-770f4d29ffc3 --name tooolvibes --percentage 100
+```
+
+(Or the previous immediate production Worker version retrieved at deploy time.)
+
+Do not alter DNS, the Custom Domain mapping, or the separate `tooolvibes-security-state` Worker.
