@@ -137,16 +137,16 @@ export default async function PostsPage() {
         </div>
       </section>
 
-      {remainingBlogPosts.length > 0 ? (
-        <section className="home-section-gap">
+      {remainingGuides.length > 0 ? (
+        <section id="guide" className="home-section-gap">
           <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
             <SectionHeader
-              eyebrow="Blog"
-              title="Articoli pubblicati da TooolVibes."
-              description="Contenuti originali, aggiornamenti e letture nate per aiutarti a scegliere con più criterio."
+              eyebrow="Guide"
+              title="Le guide più utili, riscritte per il TooolVibes di oggi."
+              description="Recuperiamo i pezzi ancora validi e li rendiamo più chiari, pratici e coerenti con il catalogo attuale."
             />
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {remainingBlogPosts.map((post) => (
+              {remainingGuides.map((post) => (
                 <EditorialPostCard key={post.slug} post={post} compact />
               ))}
             </div>
@@ -171,16 +171,16 @@ export default async function PostsPage() {
         </section>
       ) : null}
 
-      {remainingGuides.length > 0 ? (
-        <section id="guide" className="home-section-gap">
+      {remainingBlogPosts.length > 0 ? (
+        <section className="home-section-gap">
           <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
             <SectionHeader
-              eyebrow="Guide"
-              title="Le guide più utili, riscritte per il TooolVibes di oggi."
-              description="Recuperiamo i pezzi ancora validi e li rendiamo più chiari, pratici e coerenti con il catalogo attuale."
+              eyebrow="Blog"
+              title="Articoli pubblicati da TooolVibes."
+              description="Contenuti originali, aggiornamenti e letture nate per aiutarti a scegliere con più criterio."
             />
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {remainingGuides.map((post) => (
+              {remainingBlogPosts.map((post) => (
                 <EditorialPostCard key={post.slug} post={post} compact />
               ))}
             </div>
