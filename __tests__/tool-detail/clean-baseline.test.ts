@@ -164,10 +164,14 @@ describe("Tool Detail clean baseline — owner tree", () => {
     }
   });
 
-  it("the alternatives component uses AlternativeDecisionCard, not ArchiveV4ToolCard", () => {
+  it("the alternatives component uses editorial comparison rows, not rich cards", () => {
     const src = read(path.join(TOOL_DETAIL_DIR, "tool-detail-alternatives.tsx"));
-    expect(src).toMatch(/AlternativeDecisionCard/);
-    expect(src).not.toMatch(/\\bArchiveV4ToolCard\\b/);
+    expect(src).toMatch(/buildAlternativeWhy/);
+    expect(src).toMatch(/deriveEssentialDifference/);
+    expect(src).toMatch(/computeEditorialScore/);
+    expect(src).not.toMatch(/AlternativeDecisionCard/);
+    expect(src).not.toMatch(/ArchiveV4ToolCard/);
+    expect(src).toMatch(/td-final-alt-row/);
   });
 
   it("the decision nav links only to unique, rendered section targets", () => {

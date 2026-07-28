@@ -1,15 +1,18 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
-import { buildAlternativeWhy } from "@/lib/data/tool-detail-derivation";
-
-import { AlternativeDecisionCard } from "./alternative-decision-card";
+import {
+  buildAlternativeWhy,
+  deriveEssentialDifference,
+} from "@/lib/data/tool-detail-derivation";
+import { computeEditorialScore } from "@/lib/data/editorial-score";
 
 /**
  * G. Alternatives Decision Desk
- * Server container + client card. Replaces ArchiveV4ToolCard with
- * AlternativeDecisionCard on the ivory surface.
+ * Editorial comparison rows. Each row shows tool name, reason to
+ * compare, essential difference, editorial score, and a single open
+ * action. No rich cards, no save/compare bulkheads, no Archive DNA.
  */
 
 type ToolDetailAlternativesProps = {
@@ -38,9 +41,8 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
             Se ti interessa {current.name}, confronta questi.
           </h2>
           <p className="td-final-alternatives__lede">
-            Tre profili affini, ciascuno con un taglio diverso. Le schede qui
-            sotto usano la stessa grammatica del catalogo: salva, confronta,
-            apri senza perdere lo stato.
+            Tre profili affini, ciascuno con un taglio diverso. Confronto
+            editoriale rapido per scegliere senza aprire ogni scheda.
           </p>
         </div>
         <Link
@@ -52,16 +54,41 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
         </Link>
       </div>
 
-      <div className="td-final-alternatives__grid">
+      <div className="td-final-alternatives__table">
         {related.map((alt) => {
           const why = buildAlternativeWhy(current, alt);
+          const difference = deriveEssentialDifference(current, alt);
+          const { value: score } = computeEditorialScore(alt);
+
           return (
-            <div key={alt.slug} className="td-final-alt">
-              <div className="td-final-alt__why" aria-label={`Perché ${alt.name}`}>
-                <strong>Perché {alt.name}</strong>
+            <div className="td-final-alt-row" key={alt.slug}>
+              <span className="td-final-alt-cell td-final-alt-cell--tool">
+                <Link
+                  href={`/toools/${alt.slug}`}
+                  className="td-final-alt-cell__link"
+                >
+                  {alt.name}
+                </Link>
+              </span>
+              <span className="td-final-alt-cell td-final-alt-cell--reason">
                 {why}
-              </div>
-              <AlternativeDecisionCard tool={alt} />
+              </span>
+              <span className="td-final-alt-cell td-final-alt-cell--difference">
+                {difference}
+              </span>
+              <span className="td-final-alt-cell td-final-alt-cell--score">
+                <strong>{score.toFixed(1)}</strong>
+                <em>/10</em>
+              </span>
+              <span className="td-final-alt-cell td-final-alt-cell--action">
+                <Link
+                  href={`/toools/${alt.slug}`}
+                  className="td-final-alt-cell__open"
+                >
+                  Apri scheda
+                  <ExternalLink size={12} aria-hidden="true" />
+                </Link>
+              </span>
             </div>
           );
         })}

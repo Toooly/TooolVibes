@@ -81,7 +81,7 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
         isAffiliateLink={isAffiliateLink}
       />
 
-      <dl className="td-final-hero__meta" aria-label="Metadati">
+      <div className="td-final-hero__meta">
         <div>
           <strong>{formattedPublishedAt}</strong> · pubblicato
         </div>
@@ -102,7 +102,7 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
             ))}
           </div>
         ) : null}
-      </dl>
+      </div>
     </div>
   );
 }

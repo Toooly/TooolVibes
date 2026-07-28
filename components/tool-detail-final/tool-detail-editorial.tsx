@@ -67,7 +67,7 @@ export function ToolDetailEditorial({ tool }: ToolDetailEditorialProps) {
           <p>
             Se il tuo caso d&apos;uso richiede un taglio verticale diverso (es.
             enterprise, no-code puro, AI conversazionale lunga), valuta le
-            <Link href="#td-final-alternatives"> alternative in fondo alla scheda</Link>.
+            {" "}<Link href="#td-final-alternatives" className="td-final-internal-link">alternative in fondo alla scheda</Link>.
           </p>
         </article>
       </div>

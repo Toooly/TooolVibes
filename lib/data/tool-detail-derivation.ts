@@ -73,5 +73,26 @@ export function buildAlternativeWhy(current: ToolPublicView, alt: ToolPublicView
   return `Profilo complementare a ${current.name} nella stessa categoria.`;
 }
 
+/**
+ * Derive a concise essential-difference label for the comparison table.
+ * Returns a short phrase that captures how `alt` differs from `current`.
+ */
+export function deriveEssentialDifference(current: ToolPublicView, alt: ToolPublicView): string {
+  const diffGroups = alt.filterGroups.filter((g) => !current.filterGroups.includes(g));
+
+  if (alt.level === "expert" && current.level !== "expert") return "Più avanzato";
+  if (alt.level === "beginner" && current.level !== "beginner") return "Più accessibile";
+  if (diffGroups.length > 0) {
+    return diffGroups[0].replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  if (alt.toolOfWeek) return "Tool della settimana";
+  if (alt.featured) return "In evidenza editoriale";
+  if (alt.tags.length > 0 && current.tags.length > 0) {
+    const unique = alt.tags.filter((t) => !current.tags.includes(t));
+    if (unique.length > 0) return unique[0];
+  }
+  return alt.categoryLabel || "Complementare";
+}
+
 // Re-export under the old name to keep page imports stable
 export { computeEditorialScore };
