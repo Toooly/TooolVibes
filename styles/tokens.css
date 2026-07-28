@@ -226,7 +226,7 @@
   /* Inverted surface foreground hierarchy — use ONLY on ivory/inverted surfaces. */
   --tv-ink-inverted-primary: #1a1410;          /* main text on ivory */
   --tv-ink-inverted-secondary: #4d463f;        /* secondary text on ivory */
-  --tv-ink-inverted-muted: #6f6760;            /* muted text on ivory (>= 4.5:1) */
+  --tv-ink-inverted-muted: #55524d;            /* muted text on ivory/beige (>= 6:1) */
   --tv-ink-inverted-subtle: #8d857c;           /* subtle text on ivory (>= 3:1 for non-essential) */
   --tv-ink-inverted-link: var(--tv-accent-brand-pressed); /* links on ivory */
   --tv-ink-inverted-on-accent: var(--tv-color-ink-100);   /* text on accent fill, ivory surface */
@@ -266,6 +266,18 @@
   --tv-accent-gold-subtle: rgba(243, 191, 76, 0.18);
   --tv-accent-magenta: var(--tv-color-magenta-500);
   --tv-accent-magenta-pressed: var(--tv-color-magenta-600);
+
+  /* Contextual accents — AA text/icons on dark Command Center vs ivory Decision Desk.
+     Never use bright cyan/gold as small text on ivory. */
+  --tv-accent-violet-on-dark: var(--tv-color-violet-400);   /* #9a6dff · ≥5.7:1 on #08080a */
+  --tv-accent-violet-on-ivory: var(--tv-color-violet-700);  /* #4a23bf · ≥8:1 on ivory */
+  --tv-accent-cyan-on-dark: var(--tv-color-cyan-400);       /* #4ccaf7 · ≥10:1 on dark */
+  --tv-accent-cyan-on-ivory: #065566;                       /* ≥7.3:1 ivory · ≥6:1 soft cyan */
+  --tv-accent-gold-on-dark: var(--tv-color-gold-400);       /* #f5c968 · ≥12:1 on dark */
+  --tv-accent-gold-on-ivory: #6b5015;                       /* ≥6.6:1 ivory · ≥5.8:1 beige */
+  --tv-accent-violet-soft-on-ivory: color-mix(in srgb, var(--tv-color-violet-700) 12%, var(--tv-surface-inverted));
+  --tv-accent-cyan-soft-on-ivory: color-mix(in srgb, var(--tv-accent-cyan-on-ivory) 12%, var(--tv-surface-inverted));
+  --tv-accent-gold-soft-on-ivory: color-mix(in srgb, var(--tv-accent-gold-on-ivory) 12%, var(--tv-surface-inverted));
 
   /* Status */
   --tv-status-success: var(--tv-color-green-500);

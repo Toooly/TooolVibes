@@ -83,10 +83,10 @@ const LEVEL_LABEL: Record<string, string> = {
 };
 
 const LEVEL_COLOR: Record<string, string> = {
-  beginner: "var(--tv-accent-cyan)",
-  intermediate: "var(--tv-accent-primary)",
-  expert: "var(--tv-accent-gold)",
-  featured: "var(--tv-accent-gold)",
+  beginner: "var(--ar4-level-beginner, var(--tv-accent-cyan-on-dark))",
+  intermediate: "var(--ar4-level-intermediate, var(--tv-accent-violet-on-dark))",
+  expert: "var(--ar4-level-expert, var(--tv-accent-gold-on-dark))",
+  featured: "var(--ar4-level-featured, var(--tv-accent-gold-on-dark))",
 };
 
 const TIER_LABEL: Record<"primary" | "secondary" | "tertiary", string> = {
@@ -223,7 +223,7 @@ function ArchiveV4ToolCard({
           {levelLabel}
         </span>
         <span className="ar4-card__score" title={`${score} / 10 editoriale`}>
-          <strong style={{ color: levelKey === "expert" || levelKey === "featured" ? "var(--tv-accent-gold)" : "var(--tv-ink-primary)" }}>
+          <strong style={{ color: levelKey === "expert" || levelKey === "featured" ? "var(--ar4-level-featured, var(--tv-accent-gold-on-dark))" : "var(--tv-ink-primary)" }}>
             {score}
           </strong>
           <em>/ 10</em>

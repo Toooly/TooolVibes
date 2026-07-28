@@ -382,10 +382,10 @@
   gap: 8px;
   font-family: var(--tv-font-family-ui);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: var(--tv-accent-gold);
+  letter-spacing: 0.14em;
+  color: var(--tv-accent-gold-on-ivory);
   margin: 0;
 }
 
@@ -405,6 +405,13 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+}
+
+.ar4-ivory {
+  --ar4-level-beginner: var(--tv-accent-cyan-on-ivory);
+  --ar4-level-intermediate: var(--tv-accent-violet-on-ivory);
+  --ar4-level-expert: var(--tv-accent-gold-on-ivory);
+  --ar4-level-featured: var(--tv-accent-gold-on-ivory);
 }
 
 .ar4-ivory .ar4-card {
@@ -429,8 +436,65 @@
 .ar4-ivory .ar4-card__category,
 .ar4-ivory .ar4-card__desc,
 .ar4-ivory .ar4-card__score em,
-.ar4-ivory .ar4-card__evidence {
+.ar4-ivory .ar4-card__evidence,
+.ar4-ivory .ar4-card__level {
   color: var(--tv-ink-inverted-muted);
+}
+
+.ar4-ivory .ar4-card__level {
+  border-color: color-mix(in srgb, var(--tv-ink-inverted-muted) 55%, transparent);
+}
+
+/* Promoted status chips on ivory: contextual AA accents, never bright brand on light */
+.ar4-ivory .ar4-card__tier-pill--primary {
+  background: var(--tv-accent-gold-soft-on-ivory);
+  color: var(--tv-accent-gold-on-ivory);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold-on-ivory) 28%, transparent);
+}
+
+.ar4-ivory .ar4-card__tier-pill--secondary {
+  background: var(--tv-accent-cyan-soft-on-ivory);
+  color: var(--tv-accent-cyan-on-ivory);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan-on-ivory) 28%, transparent);
+}
+
+.ar4-ivory .ar4-card__tier-pill--tertiary {
+  background: var(--tv-accent-violet-soft-on-ivory);
+  color: var(--tv-accent-violet-on-ivory);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-violet-on-ivory) 28%, transparent);
+}
+
+.ar4-ivory .ar4-card__status--gold,
+.ar4-ivory .ar4-card__level[style*="accent-gold"],
+.ar4-ivory .ar4-card__level[style*="tv-accent-gold"] {
+  color: var(--tv-accent-gold-on-ivory) !important;
+  border-color: color-mix(in srgb, var(--tv-accent-gold-on-ivory) 40%, transparent) !important;
+  background: var(--tv-accent-gold-soft-on-ivory);
+}
+
+.ar4-ivory .ar4-card__status--primary {
+  color: var(--tv-accent-violet-on-ivory);
+  background: var(--tv-accent-violet-soft-on-ivory);
+}
+
+.ar4-ivory .ar4-card__ribbon--primary {
+  background: var(--tv-accent-gold-on-ivory);
+  color: var(--tv-surface-inverted);
+  box-shadow: none;
+}
+
+.ar4-ivory .ar4-card__ribbon--secondary {
+  background: var(--tv-accent-cyan-soft-on-ivory);
+  color: var(--tv-accent-cyan-on-ivory);
+  border-color: color-mix(in srgb, var(--tv-accent-cyan-on-ivory) 35%, transparent);
+  box-shadow: none;
+}
+
+.ar4-ivory .ar4-card__ribbon--tertiary {
+  background: var(--tv-accent-violet-soft-on-ivory);
+  color: var(--tv-accent-violet-on-ivory);
+  border-color: color-mix(in srgb, var(--tv-accent-violet-on-ivory) 35%, transparent);
+  box-shadow: none;
 }
 
 .ar4-ivory .ar4-card__metrics,
