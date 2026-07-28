@@ -88,7 +88,6 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
   const hiddenToolCount = Math.max(collection.included_tools.length - visibleSlots.length, 0);
   const hiddenHighlightCount = Math.max(collection.highlights.length - visibleHighlights.length, 0);
   const hiddenItemCount = hiddenToolCount + hiddenHighlightCount;
-  const visibleItemCount = visibleSlots.length + visibleHighlights.length;
   const rationaleBody =
     premiumAccess.state === "locked"
       ? collection.premium_teaser ?? collection.description
@@ -188,17 +187,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 </Link>
               )}
             </div>
-            {premiumAccess.state === "open" || premiumAccess.state === "unlocked" ? null : (
-              <div className="mt-3">
-                <Link
-                  href="/account#member-access"
-                  className="section-quiet-link text-sm font-semibold"
-                  style={{ color: "var(--muted)" }}
-                >
-                  Apri account
-                </Link>
-              </div>
-            )}
+
           </div>
 
           <div className="col-span-12 lg:col-span-5">
@@ -298,11 +287,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                       ? formatMeta.description
                       : editorialState.description}
                 </p>
-                {collection.premium_teaser ? (
-                  <div className="mt-5 rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4 text-sm leading-6 text-white/78">
-                    {collection.premium_teaser}
-                  </div>
-                ) : null}
+
                 {isAdvancedIssue && collection.advanced_issue ? (
                   <div className="mt-5 rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
@@ -314,36 +299,9 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                   </div>
                 ) : null}
                 {!hasFullAccess ? (
-                  <div className="mt-5 grid gap-3">
-                    <div className="rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
-                        Resta aperto
-                      </p>
-                    <p className="mt-2 text-sm leading-6 text-white/78">
-                      {visibleSlots.length} tool e {visibleHighlights.length} {visibleHighlights.length === 1 ? "punto chiave" : "punti chiave"} {visibleItemCount === 1 ? "leggibile" : "leggibili"} subito: abbastanza per capire il taglio e decidere se continuare.
-                    </p>
-                  </div>
-                  <div className="rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
-                        Resta nella versione completa
-                      </p>
-                    <p className="mt-2 text-sm leading-6 text-white/78">
-                      {hiddenToolCount} tool e {hiddenHighlightCount} {hiddenHighlightCount === 1 ? "punto chiave" : "punti chiave"} con la lettura più densa della raccolta, i moduli aggiuntivi e il contesto completo.
-                    </p>
-                  </div>
-                </div>
-                ) : null}
-                {premiumAccess.state === "locked" ? (
-                  <div className="mt-5 flex flex-wrap items-center gap-3">
-                    <ButtonLink href={premiumAccess.upgrade_href}>{premiumAccess.upgrade_label}</ButtonLink>
-                    <Link
-                      href="/account"
-                      className="section-quiet-link text-sm font-semibold"
-                      style={{ color: "white" }}
-                    >
-                      Apri account
-                    </Link>
-                  </div>
+                  <p className="mt-5 text-sm leading-6 text-white/74">
+                    Anteprima aperta: <strong className="text-white">{visibleSlots.length} tool</strong> e <strong className="text-white">{visibleHighlights.length} {visibleHighlights.length === 1 ? "punto chiave" : "punti chiave"}</strong> leggibili subito. {hiddenToolCount > 0 || hiddenHighlightCount > 0 ? <>{hiddenItemCount} {hiddenItemCount === 1 ? "pezzo resta" : "pezzi restano"} nella versione completa.</> : null}
+                  </p>
                 ) : null}
               </div>
             </aside>
@@ -395,24 +353,12 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               ))}
               {hiddenToolCount > 0 ? (
                 <div className="collection-detail-locked-preview rounded-[26px] border px-5 py-5">
-                  <p className="pill pill-premium">Accesso riservato</p>
-                  <h3 className="text-display-card mt-3 max-w-none text-[1.34rem] sm:max-w-[16ch] sm:text-balance">
+                  <h3 className="text-display-card max-w-none text-[1.34rem] sm:max-w-[20ch] sm:text-balance">
                     {hiddenToolCount} tool {hiddenToolCount === 1 ? "resta" : "restano"} nella versione completa.
                   </h3>
                   <p className="text-body-soft mt-3 text-[0.95rem]" style={{ color: "var(--muted-strong)" }}>
-                    L&apos;anteprima lascia visibile la struttura del percorso, ma tiene fuori i passaggi
-                    più densi, le note più specifiche e la lettura completa della sequenza.
+                    {boundarySummary}
                   </p>
-                  <div className="mt-5 flex flex-wrap items-center gap-3">
-                    <ButtonLink href={premiumAccess.upgrade_href}>{premiumAccess.upgrade_label}</ButtonLink>
-                    <Link
-                      href="/account#member-access"
-                      className="section-quiet-link text-sm font-semibold"
-                      style={{ color: "var(--accent-strong)" }}
-                    >
-                      Apri account
-                    </Link>
-                  </div>
                 </div>
               ) : null}
             </div>
@@ -422,16 +368,13 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
         <div className="col-span-12 lg:col-span-4">
           <div className="space-y-3 lg:sticky lg:top-28">
             <div className="brand-panel panel-lift rounded-[28px] p-4 sm:p-4.5">
-              <div className="flex flex-wrap items-center gap-2">
-                {premiumAccess.is_premium ? (
-                  <p className="pill pill-premium">
-                    {premiumAccess.state === "locked" ? "Raccolta riservata" : "Anteprima premium"}
-                  </p>
-                ) : null}
-                <span className="selection-status">
-                  {hasFullAccess ? "Passo successivo" : "Accesso chiaro"}
-                </span>
-              </div>
+              <p className="editorial-label" style={{ color: "var(--muted)" }}>
+                {premiumAccess.state === "locked"
+                  ? access.label
+                  : hasFullAccess
+                    ? "Passo successivo"
+                    : "Accesso riservato"}
+              </p>
               <p className="text-display-card mt-3 max-w-none text-[1.34rem] sm:max-w-[16ch] sm:text-balance">
                 {hasFullAccess
                   ? "Porta fuori pochi tool forti e chiudi il campo."
