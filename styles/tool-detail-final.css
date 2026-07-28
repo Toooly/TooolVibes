@@ -1183,3 +1183,60 @@
 .td-final-alt__card.is-saved {
   border-color: var(--tv-accent-gold);
 }
+
+@media (max-width: 767px) {
+  .td-final-hero {
+    padding: var(--tv-space-3);
+  }
+  .td-final-hero__inner {
+    gap: var(--tv-space-4);
+  }
+  .td-final-hero__avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.95rem;
+  }
+  .td-final-hero__name {
+    font-size: clamp(1.8rem, 10vw, 2.6rem);
+    margin-bottom: var(--tv-space-2);
+  }
+  .td-final-hero__deck {
+    font-size: 0.9rem;
+    margin-bottom: var(--tv-space-4);
+  }
+  .td-final-actions {
+    margin-bottom: var(--tv-space-3);
+    gap: var(--tv-space-2);
+  }
+  .td-final-cta--primary,
+  .td-final-cta--secondary {
+    min-height: 2.25rem;
+    padding-inline: var(--tv-space-3);
+    font-size: 0.75rem;
+  }
+  .td-final-icon-btn {
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+  }
+  .td-final-hero__meta {
+    padding-top: var(--tv-space-3);
+    gap: var(--tv-space-2) var(--tv-space-3);
+  }
+  .td-final-score {
+    padding: var(--tv-space-3);
+    gap: var(--tv-space-2);
+  }
+  .td-final-score__number {
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+  }
+  .td-final-score__dimensions {
+    gap: var(--tv-space-1);
+    padding-top: var(--tv-space-2);
+  }
+  .td-final-score__dim-value {
+    font-size: 0.85rem;
+  }
+  .td-final-score__note {
+    padding-top: var(--tv-space-2);
+  }
+}

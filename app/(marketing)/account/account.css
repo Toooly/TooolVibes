@@ -181,6 +181,10 @@
   background-color: var(--tv-surface-raised);
 }
 
+.tone-account .account-hero {
+  border: 1px solid var(--tv-border-subtle);
+}
+
 .tone-account :where(
   .account-section-panel,
   .account-hero,

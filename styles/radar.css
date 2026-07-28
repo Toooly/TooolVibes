@@ -108,6 +108,11 @@
   color: var(--tv-ink-secondary);
 }
 
+.tv-radar__status[data-state="loading"],
+.tv-home-radar__status[data-state="loading"] {
+  color: var(--tv-status-info);
+}
+
 .tv-radar__status[data-state="live"] > span,
 .tv-home-radar__status[data-state="live"] > span {
   animation: tv-radar-live-pulse 1.8s var(--tv-easing-standard) infinite;

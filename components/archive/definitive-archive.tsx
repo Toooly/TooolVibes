@@ -58,7 +58,7 @@ const LEVEL_FILTERS = [
 type PromotedTier = "primary" | "secondary" | "tertiary";
 
 /** Initial visible count for mobile progressive disclosure */
-const INITIAL_MOBILE_COUNT = 12;
+const INITIAL_MOBILE_COUNT = 16;
 /** Step for "Mostra altri" */
 const MOBILE_STEP = 12;
 

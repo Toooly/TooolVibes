@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, type CSSProperties } from "react";
+import { useEffect, useRef, useState, useMemo, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   X,
@@ -861,9 +861,11 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
   const suggestTriggerId = "mobile-library-empty__suggest-trigger";
   const suggestDialogId = "mobile-library-empty__suggest-dialog";
   const suggestTitleId = "mobile-library-empty__suggest-title";
+  const dialogCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!suggestOpen) return;
+    dialogCloseRef.current?.focus();
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -871,7 +873,13 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
       }
     };
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      const trigger = document.getElementById(suggestTriggerId);
+      if (trigger && typeof trigger.focus === "function") {
+        trigger.focus();
+      }
+    };
   }, [suggestOpen]);
 
   return (
@@ -941,6 +949,7 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
               <h2 id={suggestTitleId}>Suggerisci un tool</h2>
               <button
                 type="button"
+                ref={dialogCloseRef}
                 className="mobile-library-empty__suggest-dialog-close"
                 aria-controls={suggestTriggerId}
                 aria-label="Chiudi"

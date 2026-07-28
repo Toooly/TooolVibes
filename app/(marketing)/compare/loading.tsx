@@ -12,7 +12,7 @@ export default function CompareLoading() {
       >
         <header className="tool-battle-page__intro">
           <p className="tool-battle-page__eyebrow">Confronto editoriale</p>
-          <h1>Confronto tool</h1>
+          <h1 id="tool-battle-title">Confronto tool</h1>
           <p className="tool-battle-page__lede">
             Scegli 2 o 3 candidati per metterli alla prova fianco a fianco:
             prezzo, piattaforme, tag principali e nota editoriale. Il confronto
@@ -52,7 +52,7 @@ export default function CompareLoading() {
               </li>
             ))}
           </ol>
-          <p className="tool-battle-page__status" role="status">
+          <p className="tool-battle-page__status">
             Stiamo preparando i tuoi slot. Appena arrivano i dati vedrai i tool qui.
           </p>
         </div>

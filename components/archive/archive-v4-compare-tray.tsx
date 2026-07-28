@@ -72,7 +72,7 @@ function buildHelperCopy(currentCount: number): {
   };
 }
 
-function ArchiveV4CompareTrayInner({ tools }: ArchiveV4CompareTrayProps) {
+function ArchiveV4CompareTray({ tools }: ArchiveV4CompareTrayProps) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
   const clearCompare = useToolWorkspaceStore((s) => s.clearCompare);
@@ -190,8 +190,7 @@ function ArchiveV4CompareTrayInner({ tools }: ArchiveV4CompareTrayProps) {
   );
 }
 
-export function ArchiveV4CompareTray(props: ArchiveV4CompareTrayProps) {
-  return <ArchiveV4CompareTrayInner {...props} />;
-}
 
+
+export { ArchiveV4CompareTray };
 export default ArchiveV4CompareTray;

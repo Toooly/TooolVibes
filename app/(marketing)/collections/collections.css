@@ -405,8 +405,32 @@
     font-size: clamp(2.5rem, 12vw, 3.5rem);
   }
 
+  .mobile-collections__hero-inner {
+    padding: 1rem;
+  }
+
+  .mobile-collections__hero-title {
+    font-size: clamp(1.8rem, 10vw, 2.6rem);
+    margin-top: 0.5rem;
+  }
+
+  .mobile-collections__hero-desc {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .mobile-collections__hero-highlights {
+    margin-top: 0.75rem;
+  }
+
+  .mobile-collections__hero-cta {
+    min-height: 2.4rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.85rem;
+  }
+
   .mobile-collections__hero-media {
-    min-height: 14rem;
+    min-height: 8rem;
     border-top: 1px solid var(--tv-border-inverted-default);
     border-bottom: 1px solid var(--tv-border-inverted-default);
     border-left: 0;

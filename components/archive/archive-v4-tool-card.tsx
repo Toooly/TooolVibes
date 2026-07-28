@@ -95,7 +95,7 @@ const TIER_LABEL: Record<"primary" | "secondary" | "tertiary", string> = {
   tertiary: "Selezione editoriale",
 };
 
-function ArchiveV4ToolCardInner({
+function ArchiveV4ToolCard({
   tool,
   rank,
   promoted = false,
@@ -294,10 +294,9 @@ function ArchiveV4ToolCardInner({
 }
 
 // CompareToggle is internal-only; expose a stable wrapper.
-export function ArchiveV4ToolCard(props: ArchiveV4ToolCardProps) {
-  return <ArchiveV4ToolCardInner {...props} />;
-}
 
+
+export { ArchiveV4ToolCard };
 export default ArchiveV4ToolCard;
 
 // Re-export Columns3 as named symbol so parent code can use it for the tray.
