@@ -42,7 +42,7 @@
 
 .ar4-chip em {
   font-style: normal;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--tv-ink-muted-aa);
   padding: 2px 6px;
@@ -193,7 +193,7 @@
 
 .ar4-intro__search kbd {
   font-family: var(--tv-font-family-mono);
-  font-size: 11px;
+  font-size: 12px;
   padding: 2px 6px;
   background: color-mix(in srgb, var(--tv-ink-inverted-primary) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 20%, transparent);
@@ -283,7 +283,7 @@
   gap: 5px;
   flex-shrink: 0;
   font-family: var(--tv-font-family-ui);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -504,7 +504,7 @@
 .ar4-ivory .ar4-card.is-reduced .ar4-card__avatar span {
   width: 20px;
   height: 20px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ar4-ivory .ar4-card.is-reduced .ar4-card__name {
@@ -517,7 +517,7 @@
 }
 
 .ar4-ivory .ar4-card.is-reduced .ar4-card__category {
-  font-size: 11px;
+  font-size: 12px;
 }
 
 @media (max-width: 899px) {
