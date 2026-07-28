@@ -18,10 +18,14 @@
   padding: 0.38rem 0.62rem;
 }
 
-.v-auth-context h2 {
+.v-auth-context__title {
   max-width: 11ch;
   font-size: clamp(3.2rem, 5.7vw, 6rem);
   line-height: 0.9;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-display);
+  font-weight: var(--tv-weight-semibold);
+  margin: 0.5rem 0 0;
 }
 
 .v-auth-context li::before {
@@ -62,18 +66,31 @@
   color: var(--tv-ink-inverted-secondary);
 }
 
+/* Tabs integrated directly into card surface — no separate strip */
 .v-auth-tabs {
-  gap: 0;
-  border-color: var(--tv-border-inverted-default);
+  display: flex;
+  gap: 0.125rem;
   border-radius: 0.4rem;
-  background: var(--tv-surface-inverted-raised);
-  padding: 0.2rem;
+  background: transparent;
+  padding: 0;
 }
 
 .v-auth-tab {
+  position: relative;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
   min-height: 2.75rem;
   border-radius: 0.25rem;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease;
   color: var(--tv-ink-inverted-muted);
+  background: transparent;
 }
 
 .v-auth-tab:hover {
@@ -88,8 +105,11 @@
 }
 
 .v-auth-tab-indicator {
-  border: 0;
-  border-radius: 0.25rem;
+  position: absolute;
+  inset: auto 0.25rem 0 0.25rem;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--tv-ink-on-brand);
 }
 
 .v-auth-input {
@@ -212,7 +232,7 @@
     max-width: 30rem;
   }
 
-  .v-auth-context h2 {
+  .v-auth-context__title {
     font-size: clamp(2.75rem, 13vw, 4rem);
   }
 
@@ -230,7 +250,7 @@
   }
 }
 
-.v-auth-page--loading .v-auth-context h2 {
+.v-auth-page--loading .v-auth-context__title {
   color: var(--tv-ink-primary);
 }
 

@@ -2043,6 +2043,7 @@ canvas {
   letter-spacing: var(--tv-tracking-eyebrow);
   text-transform: uppercase;
 }
+.v-auth-context__title,
 .v-auth-context h2 {
   max-width: 12ch;
   margin: 0;
@@ -2493,7 +2494,8 @@ canvas {
     padding-inline: 0.25rem;
   }
 
-  .v-auth-context h2 {
+  .v-auth-context__title,
+.v-auth-context h2 {
     max-width: 15ch;
     font-size: clamp(2rem, 10vw, 3rem);
   }

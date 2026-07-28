@@ -28,6 +28,8 @@ export function BrandLogo({
   priority = false,
 }: BrandLogoProps) {
   const { threeDEnabled } = useExperienceRelease();
+  const is3D = fallback === "3d" && threeDEnabled;
+
   return (
     <div
       className={cn(
@@ -35,9 +37,10 @@ export function BrandLogo({
         className
       )}
       style={{ width: size, height: size }}
-      aria-label="TooolVibes logo"
+      role={is3D ? "img" : undefined}
+      aria-label={is3D ? "TooolVibes" : undefined}
     >
-      {fallback === "3d" && threeDEnabled ? (
+      {is3D ? (
         <BrandLogo3D size={size} />
       ) : (
         <Image

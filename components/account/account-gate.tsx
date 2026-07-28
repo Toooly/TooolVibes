@@ -13,7 +13,7 @@ export function AccountGate() {
         <div className="v-auth-container v-auth-container--split">
           <aside className="v-auth-context" aria-labelledby="account-context-title">
             <p className="v-auth-context__eyebrow">Account</p>
-            <h2 id="account-context-title">Workspace privato</h2>
+            <p id="account-context-title" className="v-auth-context__title">Workspace privato</p>
             <p className="account-loading-state__hint">
               Stiamo verificando lo stato di accesso. Se hai già una sessione
               attiva, ti porteremo dentro la tua area; altrimenti qui trovi
