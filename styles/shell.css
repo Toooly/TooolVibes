@@ -328,7 +328,7 @@
 .site-header-v2__mobile-close {
   border: 1px solid var(--tv-border-subtle) !important;
   border-radius: var(--tv-radius-pill) !important;
-  background: var(--tv-glass-bg-subtle) !important;
+  background: var(--tv-surface-raised) !important;
   color: var(--tv-ink-secondary) !important;
 }
 
@@ -361,7 +361,7 @@
 .site-header-v2__mobile-link:focus-visible,
 .site-header-v2__mobile-link.is-active {
   border-color: var(--tv-border-subtle) !important;
-  background: var(--tv-glass-bg) !important;
+  background: var(--tv-surface-elevated) !important;
   color: var(--tv-ink-primary) !important;
 }
 
@@ -422,7 +422,7 @@
 .site-mobile-footer-nav .mobile-bottom-link:focus-visible,
 .site-mobile-footer-nav .mobile-bottom-link.is-active,
 .site-mobile-footer-nav .mobile-bottom-link[aria-current="page"] {
-  background: var(--tv-glass-bg) !important;
+  background: var(--tv-surface-elevated) !important;
   color: var(--tv-ink-primary) !important;
 }
 

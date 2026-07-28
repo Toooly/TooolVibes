@@ -199,11 +199,11 @@
   max-width: 17ch;
   margin: 0;
   color: var(--tv-ink-inverted-primary);
-  font-family: var(--tv-font-display);
+  font-family: var(--tv-font-family-ui);
   font-size: clamp(var(--tv-text-2xl), 4vw, var(--tv-text-3xl));
   font-weight: var(--tv-weight-bold);
-  letter-spacing: -0.04em;
-  line-height: var(--tv-leading-tight);
+  letter-spacing: -0.025em;
+  line-height: 1.08;
 }
 
 .compare-onboarding__lede {
@@ -506,7 +506,7 @@
   border-radius: 0.5rem;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  font-family: var(--tv-font-system);
+  font-family: var(--tv-font-family-mono);
   font-size: 0.8rem;
   font-weight: 800;
   color: #F3BF4C;

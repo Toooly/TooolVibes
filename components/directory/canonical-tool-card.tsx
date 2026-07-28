@@ -266,7 +266,7 @@ export function CanonicalToolCard({
             data-slot="tool-card-score"
             className={cn(
               "absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full border px-2.5 py-1 sm:right-4 sm:top-4",
-              "border-[var(--tv-accent-gold)]/40 bg-[var(--tv-bg-base)]/90 backdrop-blur-sm",
+              "border-[var(--tv-accent-gold)]/40 bg-[var(--tv-bg-base)]",
               "text-[var(--tv-ink-primary)]",
             )}
             aria-label={`Punteggio editoriale ${cardScore.value} su 10, ${cardScore.label}`}

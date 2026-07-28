@@ -60,6 +60,10 @@ export function SectionHeader({
     size === "feature"
       ? "text-[clamp(2rem,4vw,3rem)]"
       : "text-[clamp(1.5rem,2.5vw,2.25rem)]";
+  const titleFamilyClass =
+    Heading === "h1"
+      ? "font-[var(--tv-font-family-display)] font-normal tracking-[-0.025em]"
+      : "font-[var(--tv-font-family-ui)] font-bold tracking-[-0.02em]";
 
   const container = (
     <div
@@ -100,7 +104,8 @@ export function SectionHeader({
       </div>
       <Heading
         className={cn(
-          "mt-2.5 max-w-none break-words font-[var(--tv-font-display)] font-semibold leading-[var(--tv-leading-tight)] tracking-[-0.01em]",
+          "mt-2.5 max-w-none break-words leading-[var(--tv-leading-tight)]",
+          titleFamilyClass,
           titleSizeClass,
           surfaceText,
         )}

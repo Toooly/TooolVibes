@@ -580,7 +580,7 @@
 .tv-radar-table__header h2 {
   margin: 0;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-editorial);
+  font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-subtitle);
   font-weight: var(--tv-weight-semibold);
 }
@@ -783,7 +783,7 @@
   max-width: 28rem;
   margin: 0;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-editorial);
+  font-family: var(--tv-font-family-ui);
   font-size: clamp(var(--tv-text-subtitle), 2vw, var(--tv-text-title));
   font-weight: var(--tv-weight-semibold);
   line-height: var(--tv-leading-tight);

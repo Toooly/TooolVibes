@@ -156,7 +156,7 @@
 }
 
 .mobile-top-bar__route-label {
-  font-family: var(--tv-font-mono, ui-monospace);
+  font-family: var(--tv-font-family-ui);
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;

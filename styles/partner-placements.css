@@ -175,7 +175,7 @@
   margin: 0;
   max-width: 26ch;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-editorial);
+  font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-title);
   font-weight: var(--tv-weight-bold);
   line-height: var(--tv-leading-tight);

@@ -47,7 +47,7 @@ html, body {
 
 body {
   margin: 0;
-  font-family: var(--tv-font-ui);
+  font-family: var(--tv-font-family-ui);
   font-weight: 400;
   background: var(--gradient-shell);
   color: var(--foreground);
@@ -6781,10 +6781,10 @@ img {
   }
 
   .text-display-card {
-    font-family: var(--tv-font-display);
+    font-family: var(--tv-font-family-ui);
     font-weight: var(--tv-weight-bold);
-    letter-spacing: 0;
-    line-height: 1.03;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
     text-wrap: balance;
     transition:
       color 220ms ease,

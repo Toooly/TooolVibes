@@ -95,14 +95,9 @@
 
   /* --- Typography foundation --- */
   --tv-font-family-display: var(--font-anton), Impact, "Arial Narrow", sans-serif;
-  --tv-font-family-ui: var(--font-inter), "Inter", "Segoe UI", sans-serif;
-  --tv-font-family-system: var(--font-inter), "Inter", "Segoe UI", sans-serif;
+  --tv-font-family-ui: var(--font-manrope), "Manrope", "Segoe UI", sans-serif;
+  --tv-font-family-system: var(--font-manrope), "Manrope", "Segoe UI", sans-serif;
   --tv-font-family-mono: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
-  /* BATCH 2 (WS-C): editorial display family used by the Home hero H1
-     and the Tool of the Week title. Distinct from --tv-font-family-display
-     (Anton) so brand display and editorial display can diverge. */
-  --tv-font-family-editorial: var(--font-fraunces), "Fraunces", Georgia,
-    "Times New Roman", serif;
 
   /* --- Spacing foundation (4px base scale) --- */
   --tv-space-px-0: 0;
@@ -208,18 +203,12 @@
   --tv-surface-raised: var(--tv-color-surface-raised);
   --tv-surface-elevated: var(--tv-color-surface-elevated);
   --tv-surface-floating: var(--tv-color-surface-floating);
-  --tv-surface-translucent: var(--tv-color-surface-raised);
   --tv-surface-soft: var(--tv-color-surface-elevated);
   --tv-surface-inverted: var(--tv-color-surface-inverted);
-
-  /* Glass (translucent surfaces with backdrop blur) */
-  --tv-glass-bg: var(--tv-color-surface-elevated);
-  --tv-glass-bg-strong: var(--tv-color-surface-floating);
-  --tv-glass-bg-subtle: var(--tv-color-surface-raised);
-  --tv-glass-blur: 0px;
-  --tv-glass-blur-strong: 0px;
-  --tv-glass-border: var(--tv-color-white-12);
-  --tv-glass-border-strong: var(--tv-color-white-18);
+  --tv-surface-inverted-raised: var(--tv-color-ink-100);
+  --tv-surface-inverted-soft: var(--tv-color-ink-300);
+  --tv-surface-inverted-accent: var(--tv-color-violet-50);
+  --tv-surface-inverted-highlight: var(--tv-status-warning-soft-bg);
 
   /* Brand surface (background gradient for premium areas) */
   --tv-surface-brand: var(--tv-color-surface-elevated);
@@ -817,8 +806,6 @@
 
   /* --- Typography compatibility --- */
   /* Target migration: SEMANTIC typography tokens */
-  --font-manrope: var(--tv-font-family-ui);                /* UNUSED alias */
-  --font-rubik: var(--tv-font-family-ui);                  /* UNUSED alias */
   --tv-font-ui: var(--tv-font-family-ui);                  /* same name */
   --tv-font-display: var(--tv-font-family-display);        /* same name */
   --tv-font-system: var(--tv-font-family-system);          /* same name */

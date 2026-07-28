@@ -34,7 +34,7 @@ export function EditorialPostCard({ post, compact = false, className }: Editoria
       <div className="flex flex-wrap items-center gap-2">
         <span className="editorial-label">{kindLabel}</span>
         <span className="selection-status">{post.source_label}</span>
-        {post.featured ? <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}>In primo piano</span> : null}
+        {post.featured ? <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}>In primo piano</span> : null}
       </div>
 
       <h3
@@ -54,7 +54,7 @@ export function EditorialPostCard({ post, compact = false, className }: Editoria
           <span
             key={item}
             className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)", color: "var(--muted-strong)" }}
+            style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)", color: "var(--muted-strong)" }}
           >
             {item}
           </span>

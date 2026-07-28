@@ -217,7 +217,7 @@
 
 .command-bar__search-kbd {
   margin-left: auto;
-  font-family: var(--tv-font-mono, ui-monospace);
+  font-family: var(--tv-font-family-mono);
   font-size: 12px;
   font-weight: 700;
   padding: 3px 7px;

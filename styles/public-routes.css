@@ -327,7 +327,7 @@
 }
 
 #main-content :where(.dark-panel, .discovery-strip-dark) [class*="bg-white/"]:not(.premium-button):not(.premium-button *) {
-  background-color: var(--tv-glass-bg-subtle) !important;
+  background-color: var(--tv-surface-raised) !important;
 }
 
 #main-content :where(.dark-panel, .discovery-strip-dark) [class*="border-white/"]:not(.premium-button):not(.premium-button *) {

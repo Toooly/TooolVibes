@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Fraunces, Inter } from "next/font/google";
+import { Anton, Manrope } from "next/font/google";
 
 import "@/styles/release-entry";
 import { cookies } from "next/headers";
@@ -12,9 +12,9 @@ import { gateCookieName } from "@/lib/gate/constants";
 import { getPublicToolsSnapshot } from "@/lib/data/public-tools";
 import { verifyGateToken } from "@/lib/gate/session";
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-manrope",
   display: "swap",
 });
 
@@ -22,16 +22,6 @@ const anton = Anton({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-anton",
-  display: "swap",
-});
-
-/* BATCH 2 (WS-C): Fraunces is the editorial display family used by the
-   Home hero H1 ("Trova il tool giusto...") and the Tool of the Week title.
-   Anton remains the brand wordmark and secondary display. */
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-fraunces",
   display: "swap",
 });
 
@@ -141,7 +131,7 @@ export default async function RootLayout({
   return (
     <html
       lang="it"
-      className={`${inter.variable} ${anton.variable} ${fraunces.variable}`}
+      className={`${manrope.variable} ${anton.variable}`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
