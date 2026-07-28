@@ -53,3 +53,4 @@ cloudflare-env.d.ts
 .worktrees/
 next-dev.err.log
 next-dev.out.log
+.slim/deepwork/
