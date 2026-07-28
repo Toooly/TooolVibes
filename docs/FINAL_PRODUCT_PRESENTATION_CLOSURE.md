@@ -209,3 +209,43 @@ Routes inspected:
 - Account (`/account`)
 
 Breakpoints: 390px, 1024px, 1440px.
+
+---
+
+## Pre-Merge Verification (2026-07-28)
+
+### Runtime Contract Failure
+
+| Property | Value |
+|----------|-------|
+| Test | `__tests__/scripts/runtime-contract.test.ts` |
+| Failing case | `release runtime contract > executes the real preinstall entrypoint through npm` |
+| Failure | `expected 1 to be +0` — script exits 1 because Bun's embedded Node 24.3.0 ≠ required 22.23.1 |
+| Recovery changes | **None** — neither the test nor `scripts/check-runtime.mjs` was modified |
+| On `main` (b43ff7e) | **Fails identically** |
+| Fixability | Requires Node 22.23.1 + npm >=10.9.2; Bun ships a different Node. Not fixable in this scope |
+| Excluded by config | No — deliberately in CI for Cloudflare runtime validation |
+
+This test enforces the Cloudflare-compatible Node version. It passes in CI/CD (where Node 22.23.1 + npm 10.9.2 are available) and fails locally under Bun. Not a regression.
+
+### Screenshot Removal
+
+40 screenshots (30 PNG + 10 JPG, 11 MB total) committed by commit `3baae3e` were removed:
+
+- `audits/final-product-presentation-closure-2026-07-28/baseline/production/*.png` — 30 route screenshots at 390/1024/1440px
+- `audits/final-product-presentation-closure-2026-07-28/comparisons/*.jpg` — 10 comparison images
+
+**Reason**: Gate was closed during dev; all screenshots showed the Coming Soon page, not the actual routes. These were accidental artifacts from the Codex session and are not current visual evidence. Visual validation requires the gate to be open with authenticated access.
+
+The `screenshots/` directory is preserved (empty) for future visual validation.
+
+### Final Test Count
+
+- **976** passing
+- **10** skipped (RLS integration)
+- **1** intentionally excluded (runtime-contract — CI-only, pre-existing)
+- **0** recovery-introduced failures
+
+### Deployment Status
+
+Not deployed. Branch is safe to push and fast-forward merge to `main`.
