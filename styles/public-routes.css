@@ -513,7 +513,7 @@
 }
 
 .ivory-surface :is(input, select, textarea) {
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--tv-surface-inverted-raised);
   border-color: var(--tv-border-inverted-default);
   color: var(--tv-ink-inverted-primary);
 }
