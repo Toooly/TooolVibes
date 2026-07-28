@@ -39,14 +39,14 @@ describe("Radar UI model", () => {
     expect(live.state).toBe("live");
     expect(live.statusLabel).toBe("LIVE");
     expect(live.isAnimated).toBe(true);
-    expect(live.updatedAtLabel).toBe("08:05 UTC");
+    expect(live.updatedAtLabel).toBe("28 lug 2026 · 08:05 UTC");
 
     expect(stale.state).toBe("stale");
     expect(stale.statusLabel).toBe("ULTIMA SYNC");
     expect(stale.isAnimated).toBe(false);
     expect(stale.canRetry).toBe(true);
     expect(stale.items).toEqual(LIVE_PAYLOAD.items);
-    expect(stale.updatedAtLabel).toBe("08:05 UTC");
+    expect(stale.updatedAtLabel).toBe("28 lug 2026 · 08:05 UTC");
   });
 
   it("dichiara esplicitamente la fixture locale senza animarla come live", () => {
@@ -61,7 +61,7 @@ describe("Radar UI model", () => {
     expect(fixture.state).toBe("fixture");
     expect(fixture.statusLabel).toBe("QA FIXTURE");
     expect(fixture.sourceLabel).toBe(
-      "Fixture QA locale · dati simulati · 08:05 UTC",
+      "Fixture QA locale · dati simulati · 28 lug 2026 · 08:05 UTC",
     );
     expect(fixture.isAnimated).toBe(false);
     expect(fixture.items).toEqual(LIVE_PAYLOAD.items);
@@ -80,7 +80,7 @@ describe("Radar UI model", () => {
       payload: { ...LIVE_PAYLOAD, items: [] },
       state: "empty",
       count: 0,
-      canRetry: false,
+      canRetry: true,
     },
     {
       name: "missing token",
@@ -117,6 +117,15 @@ describe("Radar UI model", () => {
       expect(model.items).toHaveLength(0);
     },
   );
+
+  it("mantiene timestamp e provenienza anche quando il feed live è vuoto", () => {
+    const empty = resolveRadarUiModel({ ...LIVE_PAYLOAD, items: [] }, "day");
+
+    expect(empty.updatedAtLabel).toBe("28 lug 2026 · 08:05 UTC");
+    expect(empty.sourceLabel).toBe(
+      "Feed Product Hunt verificato · nessun lancio · 28 lug 2026 · 08:05 UTC",
+    );
+  });
 
   it("formatta soltanto metriche presenti", () => {
     const item = LIVE_PAYLOAD.items[0];

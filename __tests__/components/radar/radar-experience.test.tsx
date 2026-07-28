@@ -125,7 +125,7 @@ describe("RadarExperience", () => {
 
     expect(await screen.findByText("ULTIMA SYNC")).toBeTruthy();
     expect(
-      screen.getByText(/Ultima classifica reale Product Hunt · 08:05 UTC/),
+      screen.getByText(/Ultima classifica reale Product Hunt · 28 lug 2026 · 08:05 UTC/),
     ).toBeTruthy();
     expect(await screen.findAllByText("Beta Tool")).not.toHaveLength(0);
     expect(
@@ -147,7 +147,7 @@ describe("RadarExperience", () => {
 
     expect(await screen.findByText("QA FIXTURE")).toBeTruthy();
     expect(
-      screen.getByText(/Fixture QA locale · dati simulati · 08:05 UTC/),
+      screen.getByText(/Fixture QA locale · dati simulati · 28 lug 2026 · 08:05 UTC/),
     ).toBeTruthy();
     expect(
       screen.getByText(

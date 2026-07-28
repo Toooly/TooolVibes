@@ -53,7 +53,7 @@ for (const file of sourceFiles) {
 }
 
 describe("release typography contract", () => {
-  it("downloads only Inter, Anton and Fraunces from next/font", () => {
+  it("downloads only Manrope and Anton from next/font", () => {
     const layout = read("app/layout.tsx");
     const fontImportFiles = codeFiles.filter((file) =>
       /from\s+["']next\/font\//.test(read(file)),
@@ -61,21 +61,22 @@ describe("release typography contract", () => {
 
     expect(fontImportFiles).toEqual(["app/layout.tsx"]);
     expect(layout).toContain(
-      'import { Anton, Fraunces, Inter } from "next/font/google";',
+      'import { Anton, Manrope } from "next/font/google";',
     );
-    expect(layout).not.toMatch(/\b(?:Manrope|Rubik|Syne)\s*\(/);
+    expect(layout).not.toMatch(/\b(?:Fraunces|Inter|Rubik|Syne)\s*\(/);
     expect(layout).toContain(
-      "`${inter.variable} ${anton.variable} ${fraunces.variable}`",
+      "`${manrope.variable} ${anton.variable}`",
     );
   });
 
   it("keeps semantic roles, fallbacks and the 12px minimum in tokens", () => {
     const tokens = parseTokens(read("styles/tokens.css"));
-    expect(tokens["font-manrope"]).toBe("var(--tv-font-family-ui)");
-    expect(tokens["font-rubik"]).toBe("var(--tv-font-family-ui)");
-    expect(tokens["tv-font-family-ui"]).toContain("var(--font-inter)");
-    expect(tokens["tv-font-family-system"]).toContain("var(--font-inter)");
+    expect(tokens["font-manrope"]).toBeUndefined();
+    expect(tokens["font-rubik"]).toBeUndefined();
+    expect(tokens["tv-font-family-ui"]).toContain("var(--font-manrope)");
+    expect(tokens["tv-font-family-system"]).toContain("var(--font-manrope)");
     expect(tokens["tv-font-family-display"]).toContain("var(--font-anton)");
+    expect(tokens["tv-font-family-editorial"]).toBeUndefined();
     expect(tokens["tv-font-ui"]).toBe("var(--tv-font-family-ui)");
     expect(tokens["tv-font-system"]).toBe("var(--tv-font-family-system)");
     expect(tokens["tv-font-display"]).toBe("var(--tv-font-family-display)");
@@ -84,10 +85,15 @@ describe("release typography contract", () => {
     expect(Number.parseFloat(tokens["tv-leading-body"])).toBeGreaterThanOrEqual(1.5);
   });
 
-  it("has no literal Manrope or Rubik consumer outside compatibility tokens", () => {
+  it("has no public Fraunces or Inter presentation consumer", () => {
     const violations = sourceFiles
-      .filter((file) => file !== "styles/tokens.css")
-      .filter((file) => /\b(?:Manrope|Rubik)\b/.test(read(file)));
+      .filter((file) => !file.startsWith("app/(admin)/"))
+      .filter((file) => !file.startsWith("components/admin/"))
+      .filter((file) =>
+        /(?:font-family\s*:[^;]*\b(?:Fraunces|Inter)\b|var\(--font-(?:fraunces|inter)\))/i.test(
+          read(file),
+        ),
+      );
     expect(violations).toEqual([]);
   });
 
@@ -100,7 +106,10 @@ describe("release typography contract", () => {
       for (const match of source.matchAll(/--([a-z0-9-]+)\s*:\s*var\(--\1\)/gi)) {
         circular.push(`${file}:${lineNumber(source, match.index)} ${match[0]}`);
       }
-      if (file !== "styles/tokens.css" && /var\(--font-(?:manrope|rubik)\)/i.test(source)) {
+      if (
+        file !== "styles/tokens.css" &&
+        /var\(--font-(?:fraunces|inter|manrope|rubik)\)/i.test(source)
+      ) {
         legacyConsumers.push(file);
       }
     }
@@ -188,7 +197,15 @@ describe("release typography contract", () => {
   it("uses semantic roles instead of generated font variable consumers", () => {
     const violations = sourceFiles
       .filter((file) => file !== "styles/tokens.css")
-      .filter((file) => /var\(--font-(?:inter|anton)\)/.test(read(file)));
+      .filter((file) => /var\(--font-(?:inter|anton|manrope)\)/.test(read(file)));
+
+    expect(violations).toEqual([]);
+  });
+
+  it("keeps monospace on the canonical functional role", () => {
+    const violations = sourceFiles
+      .filter((file) => file !== "styles/tokens.css")
+      .filter((file) => /var\(--tv-font-mono(?:,|\))/.test(read(file)));
 
     expect(violations).toEqual([]);
   });
