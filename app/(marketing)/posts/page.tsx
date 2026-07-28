@@ -42,6 +42,7 @@ export default async function PostsPage() {
   const remainingGuides = guides.filter(
     (post) => !featuredSlugs.has(post.slug),
   );
+  const hasAny = guides.length > 0 || toolWriteups.length > 0 || blogPosts.length > 0;
 
   return (
     <div className="tone-screen page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
@@ -80,19 +81,31 @@ export default async function PostsPage() {
 
           <div className="col-span-12 lg:col-span-4">
             <div className="dark-panel rounded-[28px] p-4.5 sm:p-5 lg:ml-4">
-              <div>
-                <p className="editorial-label !text-white/60">Contenuti attivi</p>
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">Blog</p>
-                    <p className="mt-2 text-[1.8rem] leading-none text-white">{blogPosts.length}</p>
-                  </div>
-                  <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">Approfondimenti tool</p>
-                    <p className="mt-2 text-[1.8rem] leading-none text-white">{toolWriteups.length}</p>
+              {hasAny ? (
+                <div>
+                  <p className="editorial-label !text-white/60">Contenuti attivi</p>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                    {guides.length > 0 ? (
+                      <Link href="#guide" className="discovery-strip-dark rounded-[22px] px-4 py-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">Guide</p>
+                        <p className="mt-2 text-[1.8rem] leading-none text-white">{guides.length}</p>
+                      </Link>
+                    ) : null}
+                    {toolWriteups.length > 0 ? (
+                      <Link href="#analisi" className="discovery-strip-dark rounded-[22px] px-4 py-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">Approfondimenti tool</p>
+                        <p className="mt-2 text-[1.8rem] leading-none text-white">{toolWriteups.length}</p>
+                      </Link>
+                    ) : null}
+                    {blogPosts.length > 0 ? (
+                      <Link href="#blog" className="discovery-strip-dark rounded-[22px] px-4 py-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">Blog</p>
+                        <p className="mt-2 text-[1.8rem] leading-none text-white">{blogPosts.length}</p>
+                      </Link>
+                    ) : null}
                   </div>
                 </div>
-              </div>
+              ) : null}
 
               <div className="mt-5 border-t border-white/10 pt-4">
                 <p className="editorial-label !text-white/60">Criteri di lettura</p>
@@ -155,7 +168,7 @@ export default async function PostsPage() {
       ) : null}
 
       {remainingToolWriteups.length > 0 ? (
-        <section className="home-section-gap">
+        <section id="analisi" className="home-section-gap">
           <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
             <SectionHeader
               eyebrow="Approfondimenti tool"
@@ -172,7 +185,7 @@ export default async function PostsPage() {
       ) : null}
 
       {remainingBlogPosts.length > 0 ? (
-        <section className="home-section-gap">
+        <section id="blog" className="home-section-gap">
           <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
             <SectionHeader
               eyebrow="Blog"
