@@ -109,7 +109,7 @@ const decisionOutcomeMeta: Record<
 };
 
 const sheetChipClassName =
-  "selection-chip text-ui-strong inline-flex shrink-0 items-center rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-strong)] disabled:cursor-default disabled:opacity-100";
+  "selection-chip text-ui-strong inline-flex shrink-0 items-center rounded-md border px-3 py-1.5 text-xs font-semibold tracking-[0.04em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-strong)] disabled:cursor-default disabled:opacity-100";
 
 const sheetChipIdleStyle: CSSProperties = {
   borderColor: "var(--line)",

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { RequestToolForm } from "@/components/wishlist/request-tool-form";
@@ -15,25 +15,19 @@ vi.mock("@/lib/config/sound", () => ({
 
 afterEach(cleanup);
 
-describe("RequestToolForm responsive flow steps", () => {
-  it("renders one shared flow-step tree and updates it for the founder flow", () => {
+describe("RequestToolForm role switch", () => {
+  it("switches between community and founder fields with the radio control", () => {
     render(<RequestToolForm />);
 
-    const communitySteps = screen.getByRole("list", {
-      name: "Segnali richiesti",
-    });
-    expect(within(communitySteps).getAllByRole("listitem")).toHaveLength(4);
+    expect(
+      screen.getByRole("radiogroup", { name: "Tipo di segnalazione" }),
+    ).toBeTruthy();
+    expect(screen.getByRole("radio", { name: /Consiglio un tool/i })).toBeTruthy();
+    expect(screen.queryByLabelText(/Nome founder/i)).toBeNull();
 
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: /Sono il founder/,
-      }),
-    );
+    fireEvent.click(screen.getByRole("radio", { name: /Sono il founder/i }));
 
-    const founderSteps = screen.getByRole("list", {
-      name: "Opzioni business",
-    });
-    expect(within(founderSteps).getAllByRole("listitem")).toHaveLength(4);
-    expect(screen.queryByRole("list", { name: "Segnali richiesti" })).toBeNull();
+    expect(screen.getByLabelText(/Nome founder/i)).toBeTruthy();
+    expect(screen.getByRole("group", { name: "Servizi richiesti" })).toBeTruthy();
   });
 });

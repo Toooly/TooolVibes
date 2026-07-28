@@ -791,7 +791,7 @@
   padding: 20px 18px 18px;
   background: var(--tv-bg-base);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 16px;
+  border-radius: var(--tv-radius-px-feature);
   text-decoration: none;
   color: inherit;
   position: relative;

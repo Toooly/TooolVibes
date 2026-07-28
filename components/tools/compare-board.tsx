@@ -278,7 +278,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
           background: "var(--tv-surface-inverted-raised)",
         }}
       >
-        <p className="pill mx-auto">Confronto</p>
+        <p className="compare-kicker">Confronto</p>
         <h2 className="text-display-card mx-auto mt-4 max-w-none text-[1.72rem] sm:max-w-[16ch] sm:text-[2.08rem] sm:text-balance">
           Il confronto ha senso con pochi candidati veri.
         </h2>
@@ -331,7 +331,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
           background: "var(--tv-surface-inverted-raised)",
         }}
       >
-        <p className="pill mx-auto">Confronto parziale</p>
+        <p className="compare-kicker">Confronto parziale</p>
         <h2 className="text-display-card mx-auto mt-4 max-w-none text-[1.72rem] sm:max-w-[16ch] sm:text-[2.08rem] sm:text-balance">
           Serve un secondo profilo per un confronto utile.
         </h2>
