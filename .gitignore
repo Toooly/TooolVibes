@@ -54,3 +54,14 @@ cloudflare-env.d.ts
 next-dev.err.log
 next-dev.out.log
 .slim/deepwork/
+
+# Production audit tooling (transient, regenerated per run)
+audits/**/audit-script.js
+audits/**/contrast-check.js
+audits/**/deep-check.js
+audits/**/mobile-check.js
+audits/**/radar-check.js
+audits/**/shortlist-compare-check.js
+audits/**/visual-check.js
+audits/**/audit-results.json
+audits/**/audit-report.md
