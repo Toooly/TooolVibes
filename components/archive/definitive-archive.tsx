@@ -27,11 +27,17 @@
  * ArchiveV4ToolCard.
  *
  * No real data is fabricated: counts come from `tools` + `filterGroups`.
+ *
+ * Phase 4 — density reduction (2026-07-28):
+ *  1. Stats consolidated to single data rail
+ *  2. Category/level filters behind advanced disclosure
+ *  3. Promoted hierarchy: primary rich + secondary/tertiary simplified
+ *  4. Standard cards: metrics row removed
  */
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Sparkles, ArrowRight, SlidersHorizontal, X, Check, Filter } from "lucide-react";
+import { Search, Sparkles, ArrowRight, SlidersHorizontal, X, Check, Filter, ChevronDown, ChevronUp } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { CatalogLevelFilter } from "@/components/directory/catalog/catalog-controller";
@@ -62,6 +68,9 @@ const INITIAL_MOBILE_COUNT = 16;
 /** Step for "Mostra altri" */
 const MOBILE_STEP = 12;
 
+/** Number of category chips to show before the advanced disclosure toggle */
+const VISIBLE_CATEGORY_CHIPS = 6;
+
 export function DefinitiveArchive({
   tools,
   filterGroups,
@@ -74,6 +83,8 @@ export function DefinitiveArchive({
   const [query, setQuery] = useState<string>(initialQuery);
   const [showPromotedInGrid, setShowPromotedInGrid] = useState<boolean>(false);
   const [filterSheetOpen, setFilterSheetOpen] = useState<boolean>(false);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState<boolean>(false);
+  const [showAdvancedSheetFilters, setShowAdvancedSheetFilters] = useState<boolean>(false);
   const [mobileVisibleCount, setMobileVisibleCount] = useState<number>(INITIAL_MOBILE_COUNT);
 
   // The set of promoted slugs (tool of week + featured) — used to optionally
@@ -154,6 +165,17 @@ export function DefinitiveArchive({
   const hasMore = filtered.length > cap;
   const nextBatchCount = Math.min(MOBILE_STEP, Math.max(filtered.length - cap, 0));
 
+  // Category chips: visible subset vs all
+  const visibleCategoryGroups = useMemo(() => {
+    const all = filterGroups.filter((g) => g.key !== "all");
+    return all.slice(0, VISIBLE_CATEGORY_CHIPS);
+  }, [filterGroups]);
+
+  const hiddenCategoryGroups = useMemo(() => {
+    const all = filterGroups.filter((g) => g.key !== "all");
+    return all.slice(VISIBLE_CATEGORY_CHIPS);
+  }, [filterGroups]);
+
   function resetAll() {
     setActiveGroup("all");
     setActiveLevel("all");
@@ -193,20 +215,17 @@ export function DefinitiveArchive({
               />
               <kbd aria-hidden="true">⌘K</kbd>
             </label>
-            <dl className="ar4-intro__stats">
-              <div>
-                <dt>Tool curati</dt>
-                <dd>{String(totalTools).padStart(2, "0")}</dd>
-              </div>
-              <div>
-                <dt>Categorie</dt>
-                <dd>{String(totalGroups).padStart(2, "0")}</dd>
-              </div>
-              <div>
-                <dt>Percorsi</dt>
-                <dd>{String(totalGroups).padStart(2, "0")}</dd>
-              </div>
-            </dl>
+            {/* Compact data rail — consolidated single row */}
+            <div className="ar4-intro__data-rail">
+              <span className="ar4-intro__data-item">
+                <strong>{String(totalTools).padStart(2, "0")}</strong>
+                <em>tool</em>
+              </span>
+              <span className="ar4-intro__data-item">
+                <strong>{String(totalGroups).padStart(2, "0")}</strong>
+                <em>categorie</em>
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -229,7 +248,8 @@ export function DefinitiveArchive({
               Tutti
               <em>{totalTools}</em>
             </button>
-            {filterGroups.filter((g) => g.key !== "all").map((g) => (
+            {/* Visible category chips */}
+            {visibleCategoryGroups.map((g) => (
               <button
                 key={g.key}
                 type="button"
@@ -242,25 +262,63 @@ export function DefinitiveArchive({
                 <em>{groupCounts.get(g.key) ?? 0}</em>
               </button>
             ))}
+
+            {/* Advanced disclosure trigger */}
+            {hiddenCategoryGroups.length > 0 && (
+              <button
+                type="button"
+                className="ar4-filters__disclosure"
+                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                aria-expanded={showAdvancedFilters}
+                aria-label={showAdvancedFilters ? "Nascondi filtri avanzati" : "Mostra filtri avanzati"}
+              >
+                {showAdvancedFilters ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                <span>{showAdvancedFilters ? "Meno filtri" : "Avanzati"}</span>
+              </button>
+            )}
           </div>
 
-          <div className="ar4-filters__group" role="tablist" aria-label="Livello">
-            <span className="ar4-filters__label" aria-hidden="true">
-              <span>Livello</span>
-            </span>
-            {LEVEL_FILTERS.map((l) => (
-              <button
-                key={l.key}
-                type="button"
-                role="tab"
-                aria-selected={activeLevel === l.key}
-                className={cn("ar4-chip ar4-chip--level", activeLevel === l.key && "is-active")}
-                onClick={() => setActiveLevel(l.key)}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
+          {/* Advanced filters: hidden categories + level filters */}
+          {showAdvancedFilters && (
+            <div className="ar4-filters__advanced">
+              <div className="ar4-filters__group" role="tablist" aria-label="Altre categorie">
+                <span className="ar4-filters__label" aria-hidden="true">
+                  <span>Altre categorie</span>
+                </span>
+                {hiddenCategoryGroups.map((g) => (
+                  <button
+                    key={g.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeGroup === g.key}
+                    className={cn("ar4-chip", activeGroup === g.key && "is-active")}
+                    onClick={() => setActiveGroup(g.key)}
+                  >
+                    {g.label}
+                    <em>{groupCounts.get(g.key) ?? 0}</em>
+                  </button>
+                ))}
+              </div>
+
+              <div className="ar4-filters__group" role="tablist" aria-label="Livello">
+                <span className="ar4-filters__label" aria-hidden="true">
+                  <span>Livello</span>
+                </span>
+                {LEVEL_FILTERS.map((l) => (
+                  <button
+                    key={l.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeLevel === l.key}
+                    className={cn("ar4-chip ar4-chip--level", activeLevel === l.key && "is-active")}
+                    onClick={() => setActiveLevel(l.key)}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -314,7 +372,7 @@ export function DefinitiveArchive({
                 onClick={() => setQuery("")}
                 aria-label="Rimuovi ricerca"
               >
-                “{query.trim().slice(0, 16)}”
+                &ldquo;{query.trim().slice(0, 16)}&rdquo;
                 <X size={12} aria-hidden="true" />
               </button>
             )}
@@ -347,6 +405,8 @@ export function DefinitiveArchive({
                   tool={tool}
                   promotedTier={tier}
                   rank={tier === "primary" ? 1 : tier === "secondary" ? 2 : 3}
+                  density={tier === "primary" ? "comfortable" : "compact"}
+                  reduced={tier !== "primary"}
                 />
               ))}
             </div>
@@ -470,9 +530,13 @@ export function DefinitiveArchive({
           activeGroup={activeGroup}
           activeLevel={activeLevel}
           query={query}
+          showAdvanced={showAdvancedSheetFilters}
+          visibleCategoryGroups={visibleCategoryGroups}
+          hiddenCategoryGroups={hiddenCategoryGroups}
           onSetGroup={setActiveGroup}
           onSetLevel={setActiveLevel}
           onSetQuery={setQuery}
+          onToggleAdvanced={() => setShowAdvancedSheetFilters(!showAdvancedSheetFilters)}
           onClose={() => setFilterSheetOpen(false)}
           onReset={resetAll}
         />
@@ -495,9 +559,13 @@ type FilterSheetProps = {
   activeGroup: string;
   activeLevel: string;
   query: string;
+  showAdvanced: boolean;
+  visibleCategoryGroups: ToolFilterGroup[];
+  hiddenCategoryGroups: ToolFilterGroup[];
   onSetGroup: (g: string) => void;
   onSetLevel: (l: string) => void;
   onSetQuery: (q: string) => void;
+  onToggleAdvanced: () => void;
   onClose: () => void;
   onReset: () => void;
 };
@@ -510,9 +578,13 @@ function FilterSheet({
   activeGroup,
   activeLevel,
   query,
+  showAdvanced,
+  visibleCategoryGroups,
+  hiddenCategoryGroups,
   onSetGroup,
   onSetLevel,
   onSetQuery,
+  onToggleAdvanced,
   onClose,
   onReset,
 }: FilterSheetProps) {
@@ -562,7 +634,7 @@ function FilterSheet({
             >
               Tutti <em>{totalTools}</em>
             </button>
-            {filterGroups.filter((g) => g.key !== "all").map((g) => (
+            {visibleCategoryGroups.map((g) => (
               <button
                 key={g.key}
                 type="button"
@@ -573,26 +645,62 @@ function FilterSheet({
               </button>
             ))}
           </div>
+
+          {/* Advanced disclosure trigger */}
+          {hiddenCategoryGroups.length > 0 && (
+            <button
+              type="button"
+              className="ar4-sheet__disclosure"
+              onClick={onToggleAdvanced}
+              aria-expanded={showAdvanced}
+            >
+              {showAdvanced ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              <span>{showAdvanced ? "Meno filtri" : "Avanzati"}</span>
+            </button>
+          )}
         </div>
 
-        <div className="ar4-sheet__section">
-          <p className="ar4-sheet__label">Livello</p>
-          <div className="ar4-sheet__chips">
-            {levelFilters.map((l) => (
-              <button
-                key={l.key}
-                type="button"
-                className={cn(
-                  "ar4-chip ar4-chip--level",
-                  activeLevel === l.key && "is-active",
-                )}
-                onClick={() => onSetLevel(l.key)}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        {/* Advanced filter sections: hidden categories + level */}
+        {showAdvanced && (
+          <>
+            {hiddenCategoryGroups.length > 0 && (
+              <div className="ar4-sheet__section">
+                <p className="ar4-sheet__label">Altre categorie</p>
+                <div className="ar4-sheet__chips">
+                  {hiddenCategoryGroups.map((g) => (
+                    <button
+                      key={g.key}
+                      type="button"
+                      className={cn("ar4-chip", activeGroup === g.key && "is-active")}
+                      onClick={() => onSetGroup(g.key)}
+                    >
+                      {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="ar4-sheet__section">
+              <p className="ar4-sheet__label">Livello</p>
+              <div className="ar4-sheet__chips">
+                {levelFilters.map((l) => (
+                  <button
+                    key={l.key}
+                    type="button"
+                    className={cn(
+                      "ar4-chip ar4-chip--level",
+                      activeLevel === l.key && "is-active",
+                    )}
+                    onClick={() => onSetLevel(l.key)}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         <div className="ar4-sheet__foot">
           <button

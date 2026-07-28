@@ -6,9 +6,8 @@
  * Mobile-first tool card with two distinct anatomies:
  *
  * STANDARD CARD (default + most uses):
- *   TOP ROW    : avatar + name + status pill
+ *   TOP ROW    : avatar + name + category + status pill
  *   BODY       : description (clamp 2)
- *   METRICS    : level + score + votes
  *   ACTIONS    : Apri scheda (CTA 13px+) + Save + Compare (44×44 each)
  *
  * PROMOTED CARD (Blink / VibeCode / WeWeb in ivory band):
@@ -18,24 +17,24 @@
  *   3. category (≤2 lines, no vertical word fragmentation)
  *   4. editorial status (separate row, not competing with title)
  *   5. description (min 14px)
- *   6. score + votes
+ *   6. score + votes (primary only)
  *   7. primary action (Apri scheda, 13px+ 44h)
  *   8. save + compare (44×44 each)
  *
- * 3-tier promoted grammar (only ONE per ivory band):
- *   - primary   (Blink)        — gold "Tool della settimana"
- *   - secondary (VibeCode)     — cyan "In evidenza"
- *   - tertiary  (WeWeb)        — restrained violet "Selezione editoriale"
+ * 3-tier promoted grammar:
+ *   - primary   (Blink)        — gold "Tool della settimana" (full card)
+ *   - secondary (VibeCode)     — cyan "In evidenza" (reduced)
+ *   - tertiary  (WeWeb)        — restrained violet "Selezione editoriale" (reduced)
+ *
+ * Reduced variant (secondary/tertiary + optional): no metrics row, no ribbon.
  *
  * State grammar (6 explicit states, not just glow):
  *   default / hover / focus-visible / saved / selected / promoted
- *   Each distinguished by border, background, semantic label,
- *   or selected indicator — not subtle shadow alone.
  *
- * Reuses:
- *   - CompareToggle / ShortlistToggle (workspace store)
- *   - ToolPublicView (data contract B14)
- *   - v4 design tokens (--tv-*)
+ * Phase 4 — density reduction (2026-07-28):
+ *   - Standard cards: metrics row removed (level/score/evidence consolidated)
+ *   - Promoted secondary/tertiary: reduced rendering (no metrics, no ribbon)
+ *   - Actions preserved: save, compare, open
  */
 
 import Link from "next/link";
@@ -58,13 +57,15 @@ type ArchiveV4ToolCardProps = {
   /**
    * Promoted tier — only meaningful in the ivory Decision Desk band.
    * Defines distinct visual + semantic hierarchy:
-   *   primary   → Blink (gold, "Tool della settimana")
-   *   secondary → VibeCode (cyan, "In evidenza")
-   *   tertiary  → WeWeb (restrained violet, "Selezione editoriale")
+   *   primary   → Blink (gold, "Tool della settimana") — full card
+   *   secondary → VibeCode (cyan, "In evidenza") — reduced
+   *   tertiary  → WeWeb (restrained violet, "Selezione editoriale") — reduced
    */
   promotedTier?: "primary" | "secondary" | "tertiary";
   /** show full actions or compact */
   density?: "comfortable" | "compact";
+  /** reduced rendering: hide metrics row, ribbon, and secondary metadata */
+  reduced?: boolean;
   className?: string;
 };
 
@@ -101,6 +102,7 @@ function ArchiveV4ToolCard({
   promoted = false,
   promotedTier,
   density = "comfortable",
+  reduced = false,
   className,
 }: ArchiveV4ToolCardProps) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
@@ -133,6 +135,12 @@ function ArchiveV4ToolCard({
     promotedTier ?? (promoted || tool.toolOfWeek ? "primary" : null);
   const isPromoted = effectiveTier !== null;
 
+  // Reduced rendering: when reduced, hide metrics row and ribbon
+  // Standard cards (non-promoted, non-reduced) also have metrics row removed
+  // per Phase 4. Only primary promoted cards keep the full metrics row.
+  const showMetricsRow = isPromoted && effectiveTier === "primary" && !reduced;
+  const showRibbon = isPromoted && effectiveTier === "primary" && !reduced;
+
   // Status label + kind for the top-row status pill (non-promoted cards)
   const statusLabel = tool.toolOfWeek
     ? "Tool della settimana"
@@ -154,6 +162,7 @@ function ArchiveV4ToolCard({
         isSelected && "is-selected",
         isPromoted && "is-promoted",
         effectiveTier && `is-tier-${effectiveTier}`,
+        reduced && "is-reduced",
         className,
       )}
       onMouseEnter={() => setHover(true)}
@@ -163,6 +172,7 @@ function ArchiveV4ToolCard({
       data-selected={isSelected || undefined}
       data-tier={effectiveTier || undefined}
       data-saved={isSaved || undefined}
+      data-reduced={reduced || undefined}
     >
       {/* ═══ TOP ROW: avatar + identity (+ top status on desktop only) ═══ */}
       <div className="ar4-card__top">
@@ -186,7 +196,7 @@ function ArchiveV4ToolCard({
           </h3>
           <p className="ar4-card__category">{tool.categoryLabel}</p>
         </div>
-        {!hideTopStatusOnMobile && (
+        {!hideTopStatusOnMobile && !reduced && (
           <span className={cn("ar4-card__status", `ar4-card__status--${statusKind}`)}>
             {tool.toolOfWeek && <Star size={11} aria-hidden="true" />}
             {statusLabel}
@@ -214,26 +224,28 @@ function ArchiveV4ToolCard({
         {tool.tldr || tool.shortDescription || "Tool selezionato da TooolVibes."}
       </p>
 
-      {/* ═══ METRICS ROW ═══ */}
-      <div className="ar4-card__metrics">
-        <span
-          className="ar4-card__level"
-          style={{ color: levelColor, borderColor: levelColor }}
-        >
-          {levelLabel}
-        </span>
-        <span className="ar4-card__score" title={`${score} / 10 editoriale`}>
-          <strong style={{ color: levelKey === "expert" || levelKey === "featured" ? "var(--ar4-level-featured, var(--tv-accent-gold-on-dark))" : "var(--tv-ink-primary)" }}>
-            {score}
-          </strong>
-          <em>/ 10</em>
-        </span>
-        <span className="ar4-card__evidence">
-          {evidenceCount > 0
-            ? `${evidenceCount} ${evidenceCount === 1 ? "evidenza" : "evidenze"}`
-            : "Profilo curato"}
-        </span>
-      </div>
+      {/* ═══ METRICS ROW — primary promoted only (Phase 4: removed elsewhere) ═══ */}
+      {showMetricsRow && (
+        <div className="ar4-card__metrics">
+          <span
+            className="ar4-card__level"
+            style={{ color: levelColor, borderColor: levelColor }}
+          >
+            {levelLabel}
+          </span>
+          <span className="ar4-card__score" title={`${score} / 10 editoriale`}>
+            <strong style={{ color: levelKey === "expert" || levelKey === "featured" ? "var(--ar4-level-featured, var(--tv-accent-gold-on-dark))" : "var(--tv-ink-primary)" }}>
+              {score}
+            </strong>
+            <em>/ 10</em>
+          </span>
+          <span className="ar4-card__evidence">
+            {evidenceCount > 0
+              ? `${evidenceCount} ${evidenceCount === 1 ? "evidenza" : "evidenze"}`
+              : "Profilo curato"}
+          </span>
+        </div>
+      )}
 
       {/* ═══ ACTION RAIL ═══ */}
       <div className="ar4-card__actions">
@@ -275,8 +287,8 @@ function ArchiveV4ToolCard({
         ) : null}
       </div>
 
-      {/* ═══ PROMOTED RIBBON (semantic) ═══ */}
-      {isPromoted && (
+      {/* ═══ PROMOTED RIBBON (semantic — primary only for Phase 4) ═══ */}
+      {showRibbon && (
         <span
           className={cn(
             "ar4-card__ribbon",
@@ -284,9 +296,7 @@ function ArchiveV4ToolCard({
           )}
           aria-hidden="true"
         >
-          {effectiveTier === "primary" && "Tool della settimana"}
-          {effectiveTier === "secondary" && "In evidenza"}
-          {effectiveTier === "tertiary" && "Selezione editoriale"}
+          Tool della settimana
         </span>
       )}
     </article>

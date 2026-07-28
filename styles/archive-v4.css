@@ -1,401 +1,378 @@
-/* TooolVibes — Archive V4 (2026-07-24, stabilized)
- *
- * Definitive archive composition using the v4 DNA:
- *  - dark Command Center (intro + filter + grid)
- *  - warm ivory Decision Desk (3-tier promoted grammar)
- *  - persistent comparison tray
- *  - 6-state tool card (default / hover / focus / saved / selected / promoted)
- *  - mobile-first responsive bands (NOT Tailwind defaults)
- *  - progressive disclosure on mobile (12 initial + Mostra altri)
- *  - mobile filter bottom sheet
- *
- * Responsive bands (v4 stabilized, mobile-first):
- *   <430      compact mobile (1-col cards, stacked promoted anatomy)
- *   430-767   spacious mobile (1-col cards, stacked promoted anatomy)
- *   768-819   tablet narrow (1-col wide cards)
- *   820-1023  tablet standard (2-col cards, controlled metadata)
- *   1024-1179 large tablet (2-col spacious, 3-col if computed fits)
- *   1180-1439 compact desktop (3-col)
- *   >=1440    full desktop (3-col, 4-col NEVER forced)
- *
- * Mobile promoted card rules (stabilized):
- *  - full tool name (no truncation, allow word-wrap)
- *  - category max 2 lines, no vertical word fragmentation
- *  - dedicated status row below title (no badge collision)
- *  - description min 14px
- *  - CTA "Apri scheda" min 13px / 44px height
- *  - save + compare controls 44×44px
- */
+/* ============================================================
+   TooolVibes — Archive v4 (stabilized, 2026-07-24)
+   Phase 4: density reduction (2026-07-28)
+   ============================================================
+   Design tokens inherited from :root (tv-*):
+   --tv-bg-base, --tv-surface-elevated, --tv-surface-inverted,
+   --tv-ink-primary, --tv-ink-secondary, --tv-ink-muted-aa,
+   --tv-ink-inverted-primary, --tv-ink-inverted-muted,
+   --tv-border-subtle, --tv-border-interactive,
+   --tv-accent-primary, --tv-accent-gold, --tv-accent-cyan,
+   --tv-accent-violet,
+   --tv-accent-*-on-ivory, --tv-accent-*-on-dark,
+   --tv-accent-*-soft-on-ivory,
+   --tv-font-family-ui, --tv-font-family-display, --tv-font-family-mono,
+   --tv-text-xs
+   ============================================================ */
 
-.ar4-shell {
-  display: flex;
-  flex-direction: column;
-  background: var(--tv-bg-base);
+/* ============================================================
+   0. UTILITY — shared chip style
+   ============================================================ */
+.ar4-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  min-height: 32px;
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 0.5rem;
   color: var(--tv-ink-primary);
-  padding-bottom: 120px; /* room for comparison tray on mobile */
+  font-family: var(--tv-font-family-ui);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 200ms ease, background 200ms ease, color 200ms ease;
+  flex-shrink: 0;
 }
 
-@media (min-width: 1280px) {
-  .ar4-shell { padding-bottom: 0; }
+.ar4-chip em {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tv-ink-muted-aa);
+  padding: 2px 6px;
+  background: color-mix(in srgb, var(--tv-ink-muted-aa) 12%, transparent);
+  border-radius: 0.25rem;
+  line-height: 1;
+}
+
+.ar4-chip:hover { border-color: var(--tv-border-interactive); }
+
+.ar4-chip.is-active {
+  background: var(--tv-accent-primary);
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+}
+.ar4-chip.is-active em { background: color-mix(in srgb, #000 14%, transparent); color: var(--tv-ink-on-brand); }
+
+.ar4-chip--level.is-active {
+  background: color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-accent-primary);
 }
 
 /* ============================================================
-   1. COMPACT INTRO (dark Command Center)
+   1. SHELL
+   ============================================================ */
+.ar4-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   2. COMPACT INTRO (dark Command Center)
    ============================================================ */
 .ar4-intro {
+  background: var(--tv-surface-inverted);
+  color: var(--tv-ink-inverted-primary);
   position: relative;
-  width: 100%;
-  background: var(--tv-bg-base);
-  border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
-  isolation: isolate;
   overflow: hidden;
 }
 
-.ar4-intro::before {
-  display: none;
-}
-
 .ar4-intro__inner {
-  position: relative;
-  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 28px;
   max-width: 1560px;
   margin: 0 auto;
-  padding: clamp(28px, 2.6vw, 40px) clamp(20px, 2.6vw, 40px);
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: clamp(24px, 3vw, 48px);
-  align-items: center;
+  padding: clamp(44px, 5vw, 64px) clamp(20px, 2.6vw, 40px) clamp(36px, 4vw, 52px);
+  align-items: start;
 }
 
-@media (max-width: 1179px) and (min-width: 900px) {
-  .ar4-intro__inner { grid-template-columns: 1fr 1fr; gap: 24px; }
-}
-
-@media (max-width: 899px) {
+@media (max-width: 767px) {
   .ar4-intro__inner {
     grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 32px 18px 40px;
+    gap: 20px;
+    padding: 28px 18px 32px;
   }
 }
 
 @media (max-width: 429px) {
-  .ar4-intro__inner { padding: 24px 16px 32px; gap: 20px; }
+  .ar4-intro__inner { padding: 22px 16px 28px; }
 }
 
-.ar4-intro__copy {
+.ar4-intro__copy { min-width: 0; }
+
+.ar4-intro__eyebrow {
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--tv-accent-primary);
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ar4-intro__eyebrow-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--tv-accent-primary);
+  border-radius: 999px;
+}
+
+.ar4-intro__title {
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3.2vw, 2.8rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--tv-ink-inverted-primary);
+  margin: 0 0 10px;
+}
+
+.ar4-intro__highlight {
+  color: var(--tv-accent-primary);
+}
+
+.ar4-intro__lede {
+  font-size: 15px;
+  font-weight: 450;
+  line-height: 1.55;
+  color: var(--tv-ink-inverted-muted);
+  margin: 0;
+  max-width: 520px;
+}
+
+.ar4-intro__panel {
   display: flex;
   flex-direction: column;
   gap: 14px;
   min-width: 0;
 }
 
-.ar4-intro__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--tv-font-family-ui);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--tv-ink-muted-aa);
-  margin: 0;
-  padding: 6px 12px;
-  border: 1px solid color-mix(in srgb, var(--tv-border-interactive) 60%, transparent);
-  border-radius: 0.5rem;
-  background: var(--tv-bg-base);
-  align-self: flex-start;
-}
-
-.ar4-intro__eyebrow-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--tv-accent-cyan);
-  box-shadow: 0 0 8px var(--tv-accent-cyan);
-}
-
-.ar4-intro__title {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-weight: 700;
-  font-size: clamp(2.2rem, 3.8vw, 3.4rem);
-  line-height: 0.95;
-  letter-spacing: -0.01em;
-  text-transform: none;
-  color: var(--tv-ink-primary);
-  margin: 0;
-  max-width: 18ch;
-}
-
-@media (max-width: 767px) {
-  .ar4-intro__title { font-size: clamp(1.8rem, 7vw, 2.4rem); }
-}
-
-.ar4-intro__highlight {
-  color: var(--tv-accent-primary);
-  background: linear-gradient(180deg, transparent 0%, transparent 60%, color-mix(in srgb, var(--tv-accent-primary) 18%, transparent) 60%, transparent 100%);
-  padding: 0 0.05em;
-}
-
-.ar4-intro__lede {
-  font-size: clamp(0.9375rem, 1.15vw, 1.0625rem);
-  line-height: 1.55;
-  color: var(--tv-ink-secondary);
-  margin: 0;
-  max-width: 540px;
-}
-
-.ar4-intro__panel {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-}
-
 .ar4-intro__search {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  background: color-mix(in srgb, var(--tv-surface-elevated) 90%, transparent);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: 0.625rem;
-  color: var(--tv-ink-secondary);
-  font-size: 14px;
-  min-height: 48px;
-  transition: border-color 200ms ease, background 200ms ease;
+  gap: 10px;
+  padding: 0 14px;
+  height: 48px;
+  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 34%, transparent);
+  border-radius: 12px;
+  color: var(--tv-ink-inverted-muted);
 }
 
 .ar4-intro__search:focus-within {
   border-color: var(--tv-accent-primary);
-  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-inverted-primary);
 }
 
 .ar4-intro__search input {
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 1;
   background: transparent;
   border: 0;
   outline: 0;
-  color: var(--tv-ink-primary);
-  font: inherit;
-  padding: 0;
+  font-size: 14px;
+  font-weight: 450;
+  color: var(--tv-ink-inverted-primary);
+  min-width: 0;
 }
 
-.ar4-intro__search input::placeholder { color: var(--tv-ink-muted-aa); }
+.ar4-intro__search input::placeholder { color: var(--tv-ink-inverted-muted); }
 
 .ar4-intro__search kbd {
   font-family: var(--tv-font-family-mono);
-  font-size: 12px;
-  padding: 3px 7px;
-  border-radius: 5px;
-  background: color-mix(in srgb, var(--tv-bg-base) 70%, transparent);
-  border: 1px solid var(--tv-border-subtle);
-  color: var(--tv-ink-muted-aa);
+  font-size: 11px;
+  padding: 2px 6px;
+  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 20%, transparent);
+  border-radius: 0.3125rem;
+  color: var(--tv-ink-inverted-muted);
   flex-shrink: 0;
 }
 
-@media (max-width: 899px) {
-  .ar4-intro__search kbd { display: none; }
-}
-
-.ar4-intro__stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-}
-
-@media (max-width: 429px) {
-  .ar4-intro__stats { gap: 6px; }
-}
-
-.ar4-intro__stats > div {
+/* Phase 4: compact data rail (consolidated stats) */
+.ar4-intro__data-rail {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 10px 12px;
-  background: var(--tv-surface-elevated);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: 0.5rem;
+  gap: 18px;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 20%, transparent);
+  border-radius: 10px;
 }
 
-.ar4-intro__stats dt {
+.ar4-intro__data-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
   font-family: var(--tv-font-family-ui);
-  font-size: var(--tv-text-xs);
-  font-weight: 700;
-  text-transform: none;
-  letter-spacing: 0.01em;
-  color: var(--tv-ink-muted-aa);
-  margin: 0;
+  font-size: 13px;
+  color: var(--tv-ink-inverted-muted);
 }
 
-.ar4-intro__stats dd {
-  font-family: var(--tv-font-family-mono);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--tv-ink-primary);
-  margin: 0;
-  line-height: 1.1;
+.ar4-intro__data-item strong {
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--tv-ink-inverted-primary);
+  letter-spacing: -0.01em;
 }
+
+.ar4-intro__data-item em {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--tv-ink-inverted-muted);
+  text-transform: lowercase;
+}
+
+/* Old stats removed in Phase 4 — keeping selector for backward compat */
+.ar4-intro__stats { display: none; }
 
 /* ============================================================
-   2. FILTER STRIP
+   3. DESKTOP FILTER STRIP
    ============================================================ */
 .ar4-filters {
-  position: relative;
   background: var(--tv-bg-base);
-  border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 40%, transparent);
-}
-
-.ar4-filters::after {
-  content: "";
-  position: absolute;
+  border-bottom: 1px solid var(--tv-border-subtle);
+  position: sticky;
   top: 0;
-  bottom: 0;
-  right: 0;
-  width: 32px;
-  background: linear-gradient(90deg, transparent, var(--tv-bg-base));
-  pointer-events: none;
-  z-index: 1;
+  z-index: 30;
 }
 
-@media (min-width: 1180px) {
-  .ar4-filters::after { display: none; }
+/* On tablet narrow (768-819) the mobile header has different sticky top */
+@media (min-width: 768px) and (max-width: 819px) {
+  .ar4-filters { top: var(--tv-header-height-tablet, 64px); }
 }
 
 .ar4-filters__inner {
-  max-width: 1560px;
-  margin: 0 auto;
-  padding: 12px clamp(20px, 2.6vw, 40px);
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 10px clamp(20px, 2.6vw, 40px);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
-@media (max-width: 767px) {
-  .ar4-filters__inner { padding: 12px 16px; }
-}
+.ar4-filters__inner::-webkit-scrollbar { display: none; }
 
 .ar4-filters__group {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding-bottom: 2px;
-  padding-right: 24px; /* room for the right-edge fade */
-}
-
-.ar4-filters__group::-webkit-scrollbar { display: none; }
-
-@media (min-width: 1180px) {
-  .ar4-filters__group { flex-wrap: wrap; overflow: visible; padding-right: 0; }
+  gap: 8px;
+  min-width: 0;
 }
 
 .ar4-filters__label {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  flex-shrink: 0;
   font-family: var(--tv-font-family-ui);
-  font-size: var(--tv-text-xs);
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--tv-ink-muted-aa);
-  padding-right: 8px;
-  flex-shrink: 0;
+  margin-right: 4px;
 }
 
-.ar4-chip {
+/* Phase 4: advanced filter disclosure button */
+.ar4-filters__disclosure {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  background: var(--tv-bg-base);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: 0.4375rem;
+  gap: 5px;
+  padding: 5px 10px 5px 8px;
+  min-height: 32px;
+  background: transparent;
+  border: 1px dashed var(--tv-border-interactive);
+  border-radius: 0.5rem;
   color: var(--tv-ink-secondary);
-  font-size: 13px;
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
   cursor: pointer;
-  flex: 0 0 auto;
-  min-height: 36px;
+  flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
-  transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
+  transition: border-color 200ms ease, color 200ms ease;
 }
 
-.ar4-chip:hover { color: var(--tv-ink-primary); border-color: var(--tv-border-interactive); }
-
-.ar4-chip.is-active {
-  background: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
+.ar4-filters__disclosure:hover {
   border-color: var(--tv-accent-primary);
+  color: var(--tv-accent-primary);
 }
 
-.ar4-chip em {
-  font-style: normal;
-  font-family: var(--tv-font-family-mono);
-  font-size: var(--tv-text-xs);
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 0.25rem;
-  background: color-mix(in srgb, var(--tv-bg-base) 50%, transparent);
-  color: inherit;
+.ar4-filters__advanced {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 0 4px;
+  border-top: 1px solid var(--tv-border-subtle);
 }
 
-.ar4-chip.is-active em { background: color-mix(in srgb, var(--tv-bg-base) 30%, transparent); }
+/* Hide desktop filter strip on mobile (replaced by mobile-bar + sheet) */
+@media (max-width: 767px) {
+  .ar4-filters { display: none; }
+}
+
+@media (min-width: 768px) and (max-width: 819px) {
+  .ar4-filters { display: none; }
+}
 
 /* ============================================================
-   3. IVORY DECISION DESK — promoted band
+   3b. IVORY DECISION DESK
    ============================================================ */
 .ar4-ivory {
-  position: relative;
   background: var(--tv-surface-inverted);
-  color: var(--tv-ink-inverted-primary);
-  padding: clamp(32px, 3.5vw, 48px) clamp(20px, 2.6vw, 40px);
-  border-bottom: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 25%, transparent);
 }
 
 .ar4-ivory__inner {
   max-width: 1560px;
   margin: 0 auto;
+  padding: clamp(28px, 3vw, 40px) clamp(20px, 2.6vw, 40px);
 }
 
+@media (max-width: 767px) { .ar4-ivory__inner { padding: 24px 18px 28px; } }
+@media (max-width: 429px) { .ar4-ivory__inner { padding: 20px 16px 24px; } }
+
 .ar4-ivory__head {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .ar4-ivory__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   font-family: var(--tv-font-family-ui);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--tv-accent-gold-on-ivory);
-  margin: 0;
+  letter-spacing: 0.1em;
+  color: var(--tv-ink-inverted-muted);
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .ar4-ivory__title {
-  font-family: var(--tv-font-family-ui);
-  font-style: normal;
-  font-weight: 700;
-  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-weight: 600;
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: none;
   color: var(--tv-ink-inverted-primary);
   margin: 0;
   max-width: 640px;
@@ -403,7 +380,7 @@
 
 .ar4-ivory__promoted-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 12px;
 }
 
@@ -506,12 +483,64 @@
   background: transparent;
 }
 
-@media (max-width: 1179px) {
-  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr; }
+/* Phase 4: reduced cards in ivory — lighter visual weight for secondary/tertiary */
+.ar4-ivory .ar4-card.is-reduced {
+  padding: 14px;
+  gap: 8px;
+  min-height: 160px;
+}
+
+.ar4-ivory .ar4-card.is-reduced .ar4-card__top {
+  grid-template-columns: 36px 1fr;
+  gap: 8px;
+}
+
+.ar4-ivory .ar4-card.is-reduced .ar4-card__avatar {
+  width: 36px;
+  height: 36px;
+}
+
+.ar4-ivory .ar4-card.is-reduced .ar4-card__avatar img,
+.ar4-ivory .ar4-card.is-reduced .ar4-card__avatar span {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.ar4-ivory .ar4-card.is-reduced .ar4-card__name {
+  font-size: 15px;
+}
+
+.ar4-ivory .ar4-card.is-reduced .ar4-card__desc {
+  font-size: 13px;
+  -webkit-line-clamp: 2;
+}
+
+.ar4-ivory .ar4-card.is-reduced .ar4-card__category {
+  font-size: 11px;
+}
+
+@media (max-width: 899px) {
+  .ar4-ivory__promoted-grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 900px) and (max-width: 1179px) {
+  .ar4-ivory__promoted-grid { grid-template-columns: 1.5fr 1fr; }
 }
 
 @media (max-width: 767px) {
-  .ar4-ivory__promoted-grid { grid-template-columns: 1fr; }
+  .ar4-ivory .ar4-card.is-reduced .ar4-card__top {
+    grid-template-columns: 40px 1fr;
+  }
+
+  .ar4-ivory .ar4-card.is-reduced .ar4-card__avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .ar4-ivory .ar4-card.is-reduced .ar4-card__name {
+    font-size: 16px;
+  }
 }
 
 /* ============================================================
@@ -664,7 +693,7 @@
   border: 1px solid var(--tv-border-subtle);
   border-radius: 0.75rem;
   transition: border-color 200ms ease, background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
-  min-height: 220px;
+  min-height: 180px;
 }
 
 .ar4-card.is-hover {
@@ -691,7 +720,12 @@
   background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-gold) 8%, var(--tv-bg-base)) 0%, color-mix(in srgb, var(--tv-accent-primary) 6%, var(--tv-bg-base)) 100%);
 }
 
-.ar4-card[data-density="compact"] { padding: 14px; gap: 10px; min-height: 200px; }
+.ar4-card[data-density="compact"] { padding: 14px; gap: 10px; min-height: 160px; }
+
+/* Phase 4: reduced card — for secondary/tertiary promoted + optional */
+.ar4-card.is-reduced {
+  min-height: 140px;
+}
 
 .ar4-card__top {
   display: grid;
@@ -700,6 +734,8 @@
   gap: 12px;
   min-width: 0;
 }
+
+.ar4-card[data-density="compact"] .ar4-card__top { gap: 8px; }
 
 .ar4-card__avatar {
   width: 48px;
@@ -1181,7 +1217,7 @@
 }
 
 /* ============================================================
-   7. STABILIZED v4 — 3-TIER PROMOTED GRAMMAR (added 2026-07-24)
+   7. STABILIZED v4 — 3-TIER PROMOTED GRAMMAR
    ============================================================ */
 
 /* Default promoted (back-compat) = primary tier */
@@ -1277,16 +1313,7 @@
 
 /* ============================================================
    8. STABILIZED v4 — MOBILE PROMOTED CARD (stacked anatomy)
-   ============================================================
-   On mobile, promoted cards use a stacked layout:
-     1. icon + (name) — name wraps on its own line if needed
-     2. category — ≤2 lines, no word fragmentation
-     3. dedicated status row (tier pill)
-     4. description
-     5. metrics row (level + score + votes)
-     6. action row (Apri + Save + Compare 44×44)
-   The top-row status pill is hidden on mobile (the dedicated row takes over).
-*/
+   ============================================================ */
 @media (max-width: 767px) {
   .ar4-card.is-promoted {
     padding: 16px;
@@ -1323,7 +1350,6 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin: 0;
-    /* No vertical word fragmentation */
     overflow-wrap: break-word;
     word-break: normal;
   }
@@ -1485,7 +1511,7 @@
 /* Tablet narrow 768-819: 1-col wide cards */
 @media (min-width: 768px) and (max-width: 819px) {
   .ar4-grid__list { grid-template-columns: 1fr; gap: 18px; }
-  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
+  .ar4-ivory__promoted-grid { grid-template-columns: 1fr; gap: 18px; }
 }
 
 /* Tablet standard 820-1023: 2-col */
@@ -1494,22 +1520,22 @@
   .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
 }
 
-/* Large tablet 1024-1179: 2-col spacious (or 3-col only if computed fits) */
+/* Large tablet 1024-1179: 2-col spacious */
 @media (min-width: 1024px) and (max-width: 1179px) {
   .ar4-grid__list { grid-template-columns: 1fr 1fr; gap: 20px; }
-  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .ar4-ivory__promoted-grid { grid-template-columns: 2fr 1fr; gap: 18px; }
 }
 
 /* Compact desktop 1180-1439: 3-col */
 @media (min-width: 1180px) and (max-width: 1439px) {
   .ar4-grid__list { grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .ar4-ivory__promoted-grid { grid-template-columns: 2fr 1fr 1fr; gap: 18px; }
 }
 
 /* Full desktop ≥1440: 3-col (4-col NEVER forced) */
 @media (min-width: 1440px) {
   .ar4-grid__list { grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
-  .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .ar4-ivory__promoted-grid { grid-template-columns: 2fr 1fr 1fr; gap: 20px; }
 }
 
 /* Tablet card anatomy — controlled metadata, not miniaturized */
@@ -1625,15 +1651,6 @@
 
 .ar4-mobile-bar__chip:hover { background: color-mix(in srgb, var(--tv-accent-primary) 22%, var(--tv-bg-base)); }
 
-/* Hide desktop filter strip on mobile (replaced by mobile-bar + sheet) */
-@media (max-width: 767px) {
-  .ar4-filters { display: none; }
-}
-
-@media (min-width: 768px) and (max-width: 819px) {
-  .ar4-filters { display: none; }
-}
-
 /* ============================================================
    13. STABILIZED v4 — FILTER BOTTOM SHEET
    ============================================================ */
@@ -1733,6 +1750,31 @@
 }
 
 .ar4-sheet__search input::placeholder { color: var(--tv-ink-muted-aa); }
+
+/* Phase 4: sheet disclosure trigger */
+.ar4-sheet__disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  min-height: 40px;
+  background: transparent;
+  border: 1px dashed var(--tv-border-interactive);
+  border-radius: 0.5rem;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 200ms ease, color 200ms ease;
+  align-self: flex-start;
+}
+
+.ar4-sheet__disclosure:hover {
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-accent-primary);
+}
 
 .ar4-sheet__section {
   display: flex;
@@ -1921,10 +1963,7 @@
 }
 
 /* When the tray is NOT in the DOM at all (0 selected), shrink the bottom
-   padding so there's no extra empty space below the last content card.
-   The tray element doesn't render at all when count === 0 (return null
-   in React), so the absence of `.ar4-tray` is the right signal — not
-   `is-ready`. */
+   padding so there's no extra empty space below the last content card. */
 @media (max-width: 767px) {
   .ar4-shell:not(:has(.ar4-tray)) {
     padding-bottom: calc(4.75rem + 12px + env(safe-area-inset-bottom));
