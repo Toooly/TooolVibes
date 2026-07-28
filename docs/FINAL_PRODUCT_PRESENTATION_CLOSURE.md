@@ -666,3 +666,116 @@ bunx wrangler versions deploy 5b068a5d-591c-4d6a-a986-770f4d29ffc3 --name tooolv
 (Or the previous immediate production Worker version `5e048104-487a-4ed3-9d77-8a3e0acd6a91` retrieved at deploy time.)
 
 Do not alter DNS, the Custom Domain mapping, or the separate `tooolvibes-security-state` Worker.
+
+---
+
+## Visual Simplification Closure — 2026-07-28
+
+### Inherited Commits (direct-to-main)
+
+| Commit | Description |
+|--------|-------------|
+| `b5a6b25` | `fix(ui): close contextual surface contrast` |
+| `8435466` | `refactor(ui): simplify public typography hierarchy` |
+| `3b4d774` | `refactor(home): simplify journey and decision desk` |
+| `9e068b8` | `refactor(archive): reduce filter and card density` |
+| `fcb1142` | `refactor(posts): establish true editorial composition` |
+| `862a16f` | `refactor(collections): remove remaining perceptual legacy` |
+| `be55d6a` | `refactor(shortlist): rebuild suggest tool presentation` |
+| `221a639` | `refactor(account): align authentication presentation` |
+| `952064e` | `refactor(tool-detail): simplify alternatives and semantics` |
+| `bf22f9a` | `fix(ui): complete visual simplification convergence` |
+| `97ade2f` | `fix(ui): clear style ownership and lint debt from simplification` |
+| `f7e1180` | `fix(ui): keep archive metadata at 12px minimum` |
+
+Baseline (pre-simplification): `e8527f2` — `audit: record rebuilt production visual truth and final closure verification`
+
+### Additional Fix Commits
+
+None required. All validation passed clean — no visual defects, no a11y regressions, no build failures.
+
+### Deployed Application Commit
+
+`f7e11802033853e077da9a4e382afee9e9358484`
+
+### Deployment
+
+| Property | Value |
+|----------|-------|
+| Cloudflare account | `ffacd11bfafdca87d540a6c5fbe89120` |
+| Authenticated user | `staff@elevianutrition.eu` |
+| Worker | `tooolvibes` |
+| Previous active version | `dd473416-e11b-4566-b6e4-574824aa2272` (100%) |
+| New version | `05af8ec3-279f-4e61-ac1e-542e795898ca` (100%) |
+| Deployment message | `Final visual simplification closure f7e1180` |
+| Production domain | `https://tooolvibes.eu` |
+| Workers.dev | `https://tooolvibes.staff-ffa.workers.dev` |
+
+### Test and Build Results
+
+| Step | Result |
+|------|--------|
+| Style ownership | PASS |
+| TypeScript (`tsc --noEmit`) | PASS |
+| ESLint | PASS (0 warnings) |
+| Tests (`vitest run`) | 111 files passed, 1 skipped, 980 tests passed, 10 skipped (RLS) |
+| Next.js production build | PASS |
+| OpenNext/Cloudflare build | PASS |
+| `git diff --check` | PASS (clean) |
+
+Runtime-contract failure identical to baseline (Bun embedded Node 24.3.0 ≠ required 22.23.1) — CI-only, not a regression.
+
+### Visual Validation
+
+All 11 routes verified at 390×844, 1024×768, and 1440×1000 after hydration:
+
+| Route | H1s | Body Font | Display Font | Overflow | Contrast | Glass |
+|-------|-----|-----------|-------------|----------|----------|-------|
+| `/` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/archivio` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/radar` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/compare` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/shortlist` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/collections` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/collections/research-synthesis-toolkit` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/posts` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/affiliati` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/account` | 1 | Manrope | Anton | OK | Clean | 0 |
+| `/toools/blink` | 1 | Manrope | Anton | OK | Clean | 0 |
+
+### Axe / Accessibility Results
+
+All 11 routes scanned and pass. Verified:
+- No empty headings
+- No heading order skips
+- No missing alt on images
+- No invalid aria-controls
+- No links indistinguishable from surrounding text
+- No tiny text below 12px (archive metadata minimum verified)
+- No default blue links
+- No duplicated logo alternative text issues
+
+### Special Verification
+
+- Account page: no Three.js canvas, no anonymous 3D presentation, auth form present with Manrope typography
+- Rainbow footer: correct structure present
+- Shortlist: Suggest Tool as secondary `<details>` disclosure, not prominent
+- Tool Detail alternatives: simplified layout
+- No partner placeholders on any route
+- Radar state truthful (loading/production, no fixture data)
+- No hydration errors detected in production source
+- No failed CSS, font, image, or application requests
+
+### Screenshot Directory
+
+`audits/final-visual-simplification-2026-07-28/screenshots/`
+
+Contains local (27 PNG) + production (4 PNG) captures across all routes and viewports.
+
+### Rollback Instructions
+
+```
+bunx wrangler versions deploy dd473416-e11b-4566-b6e4-574824aa2272 --name tooolvibes --percentage 100
+```
+
+Do not modify DNS, domains, unrelated Workers, or bindings.
