@@ -91,7 +91,9 @@ export function MobileCollectionsView({
           Entra da uno scenario, una tesi o un pubblico già ordinati. Nessun filtro da costruire: il percorso è già pronto.
         </p>
         <div className="mobile-collections__stats">
-          <span>{collections.length} raccolte</span>
+          <span>
+            {collections.length} {collections.length === 1 ? "raccolta" : "raccolte"}
+          </span>
           <span>/</span>
           <span>{specialIssue ? "1 raccolta speciale" : "Nessuna raccolta speciale"}</span>
         </div>

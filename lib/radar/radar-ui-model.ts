@@ -103,7 +103,7 @@ export function resolveRadarUiModel(
     RADAR_RANGE_OPTIONS.find((option) => option.key === range)?.label ?? range;
   const copy = STATE_COPY[state];
   const updatedAtLabel =
-    state === "live" || state === "fixture" || state === "stale"
+    payload?.status === "ok"
       ? formatUtcTimeLabel(payload?.updatedAt ?? "")
       : "—";
   const signalCount =
@@ -114,7 +114,7 @@ export function resolveRadarUiModel(
         : null;
   const sourceLabel =
     state === "live"
-      ? `Dati live Product Hunt · aggiornati alle ${updatedAtLabel}`
+      ? `Dati live Product Hunt · aggiornati il ${updatedAtLabel}`
       : state === "fixture"
         ? `Fixture QA locale · dati simulati · ${updatedAtLabel}`
       : state === "stale"
@@ -122,7 +122,11 @@ export function resolveRadarUiModel(
         : state === "loading"
           ? "Connessione al feed Product Hunt"
           : state === "empty"
-            ? `Nessun lancio Product Hunt · ${rangeLabel.toLowerCase()}`
+            ? payload?.source === "product-hunt-stale"
+              ? `Ultima verifica reale Product Hunt · nessun lancio · ${updatedAtLabel}`
+              : payload?.source === "qa-fixture"
+                ? `Fixture QA locale · nessun lancio simulato · ${updatedAtLabel}`
+                : `Feed Product Hunt verificato · nessun lancio · ${updatedAtLabel}`
             : state === "missing-token"
               ? "Feed Product Hunt non configurato"
               : "Feed Product Hunt temporaneamente non disponibile";
@@ -138,7 +142,7 @@ export function resolveRadarUiModel(
     stageTitle: copy.stageTitle,
     stageBody:
       state === "error" && payload?.message ? payload.message : copy.stageBody,
-    canRetry: state === "error" || state === "stale",
+    canRetry: state === "error" || state === "stale" || state === "empty",
     isAnimated: state === "live",
     items: payload?.items ?? [],
   });

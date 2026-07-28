@@ -24,7 +24,9 @@ export async function generateMetadata() {
   }
 
   return {
-    title: "TooolVibes | Tool AI, SaaS, no-code e vibe coding",
+    title: {
+      absolute: "TooolVibes | Tool AI, SaaS, no-code e vibe coding",
+    },
     description: "Scopri i migliori tool AI, SaaS, no-code e automazioni selezionati senza rumore.",
   };
 }

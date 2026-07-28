@@ -405,7 +405,7 @@ function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; c
           <h1 id="mobile-library-title">La tua biblioteca</h1>
           <p>
             {totalCount > 0
-              ? `${totalCount} tool salvati, ordinati per tornare subito alla scelta giusta.`
+              ? `${totalCount} tool ${totalCount === 1 ? "salvato, ordinato" : "salvati, ordinati"} per tornare subito alla scelta giusta.`
               : "Uno spazio vivo per tool salvati, segnalazioni e prossime scoperte."}
           </p>
         </div>

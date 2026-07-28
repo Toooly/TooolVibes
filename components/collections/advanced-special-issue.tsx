@@ -50,8 +50,8 @@ function ToolMomentCard({
               : "var(--line)",
         background:
           moment.emphasis === "anchor"
-            ? "linear-gradient(180deg, rgba(248,244,255,0.96), rgba(241,234,255,0.88))"
-            : "rgba(255,255,255,0.76)",
+            ? "var(--tv-surface-inverted-accent)"
+            : "var(--tv-surface-inverted-raised)",
       }}
     >
       <div className="flex flex-wrap items-center gap-2">
@@ -72,7 +72,7 @@ function ToolMomentCard({
       </p>
       {slot ? (
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)", color: "var(--muted-strong)" }}>
+          <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)", color: "var(--muted-strong)" }}>
             {slot.role}
           </span>
           <Link
@@ -169,14 +169,13 @@ function renderIssueBlock(
           {comparedSlots.map((slot) => (
             <span
               key={slot.tool.slug}
-              className="selection-chip rounded-full border border-white/14 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/84"
-              style={{ background: "rgba(255,255,255,0.08)" }}
+              className="selection-chip rounded-full border border-[var(--tv-border-default)] bg-[var(--tv-surface-floating)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/84"
             >
               {slot.tool.name}
             </span>
           ))}
         </div>
-        <div className="mt-5 rounded-[24px] border border-white/12 bg-white/6 px-4 py-4">
+        <div className="mt-5 rounded-[24px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4">
           <p className="text-sm leading-6 text-white/84">{block.compare.insight}</p>
           <div className="mt-4 grid gap-2">
             {block.compare.differentiators.map((item) => (
@@ -309,7 +308,7 @@ function renderIssueBlock(
         {block.title}
       </h3>
       <p className="mt-3 max-w-[44rem] text-sm leading-7 text-white/80">{block.body}</p>
-      <div className="mt-5 rounded-[24px] border border-white/12 bg-white/6 px-4 py-4 text-sm leading-6 text-white/74">
+      <div className="mt-5 rounded-[24px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4 text-sm leading-6 text-white/74">
         {block.member_note}
       </div>
       {!hasFullAccess ? (
@@ -372,7 +371,7 @@ export function AdvancedSpecialIssue({
             <div
               key={item}
               className="rounded-[22px] border px-4 py-4 text-sm leading-6"
-              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+              style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}
             >
               {item}
             </div>

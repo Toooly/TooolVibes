@@ -152,6 +152,7 @@ export function DefinitiveArchive({
   const cap = mobileVisibleCount;
   const visibleFiltered = filtered.slice(0, cap);
   const hasMore = filtered.length > cap;
+  const nextBatchCount = Math.min(MOBILE_STEP, Math.max(filtered.length - cap, 0));
 
   function resetAll() {
     setActiveGroup("all");
@@ -382,14 +383,21 @@ export function DefinitiveArchive({
                   type="button"
                   className="ar4-grid__promoted-toggle-btn"
                   onClick={() => setShowPromotedInGrid(true)}
-                  aria-label={`Mostra anche i ${promotedSlugs.size} tool attualmente in evidenza sopra`}
+                  aria-label={
+                    promotedSlugs.size === 1
+                      ? "Mostra anche il tool attualmente in evidenza sopra"
+                      : `Mostra anche i ${promotedSlugs.size} tool attualmente in evidenza sopra`
+                  }
                 >
                   <Sparkles size={14} aria-hidden="true" />
-                  Mostra anche i {promotedSlugs.size} tool in evidenza
+                  {promotedSlugs.size === 1
+                    ? "Mostra anche il tool in evidenza"
+                    : `Mostra anche i ${promotedSlugs.size} tool in evidenza`}
                 </button>
                 {shown > 0 && (
                   <p className="ar4-grid__promoted-hint">
-                    {promotedSlugs.size} tool in evidenza sono mostrati qui sopra.
+                    {promotedSlugs.size} tool in evidenza{" "}
+                    {promotedSlugs.size === 1 ? "è mostrato" : "sono mostrati"} qui sopra.
                   </p>
                 )}
               </div>
@@ -422,16 +430,21 @@ export function DefinitiveArchive({
                     type="button"
                     className="ar4-grid__more-btn"
                     onClick={() => setMobileVisibleCount((c) => c + MOBILE_STEP)}
-                    aria-label={`Carica altri ${Math.min(MOBILE_STEP, filtered.length - cap)} tool`}
+                    aria-label={
+                      nextBatchCount === 1
+                        ? "Carica un altro tool"
+                        : `Carica altri ${nextBatchCount} tool`
+                    }
                   >
-                    Mostra altri
+                    {nextBatchCount === 1 ? "Mostra un altro tool" : "Mostra altri"}
                     <span className="ar4-grid__more-count">
-                      {Math.min(MOBILE_STEP, filtered.length - cap)} di {filtered.length - cap}
+                      {nextBatchCount} di {filtered.length - cap}
                     </span>
                   </button>
                   <p className="ar4-grid__more-hint">
                     {String(visibleFiltered.length).padStart(2, "0")} di{" "}
-                    {String(filtered.length).padStart(2, "0")} mostrati
+                    {String(filtered.length).padStart(2, "0")}{" "}
+                    {visibleFiltered.length === 1 ? "mostrato" : "mostrati"}
                   </p>
                 </div>
               )}

@@ -46,7 +46,7 @@ export function CollectionCard({
   const hiddenToolCount = Math.max(collection.tool_count - visibleToolCount, 0);
   const boundaryLabel =
     hiddenToolCount > 0
-      ? `${visibleToolCount}/${collection.tool_count} tool aperti`
+      ? `${visibleToolCount}/${collection.tool_count} tool ${visibleToolCount === 1 ? "aperto" : "aperti"}`
       : "Tutto visibile";
   const entryLabel =
     premium.state === "locked"
@@ -89,8 +89,8 @@ export function CollectionCard({
                 style={{
                   background:
                     collection.access === "open"
-                      ? "rgba(255,255,255,0.82)"
-                      : "rgba(248,240,215,0.94)",
+                      ? "var(--tv-surface-inverted-raised)"
+                      : "var(--tv-surface-inverted-highlight)",
                   color: "var(--muted-strong)",
                 }}
               >
@@ -135,8 +135,10 @@ export function CollectionCard({
               <p className="mt-4 text-[0.86rem] leading-6" style={{ color: "var(--muted)" }}>
                 {leadToolName ? `Tool guida: ${leadToolName}. ` : ""}
                 {hiddenToolCount > 0
-                  ? `${visibleToolCount} tool leggibili ora, ${hiddenToolCount} nella raccolta completa.`
-                  : "Tutti i tool della raccolta sono già leggibili qui."}
+                  ? `${visibleToolCount} tool ${visibleToolCount === 1 ? "leggibile" : "leggibili"} ora, ${hiddenToolCount} nella raccolta completa.`
+                  : collection.tool_count === 1
+                    ? "Il tool della raccolta è già leggibile qui."
+                    : "Tutti i tool della raccolta sono già leggibili qui."}
               </p>
             </div>
 
@@ -183,7 +185,7 @@ export function CollectionCard({
                   {hasAdvancedSpecialIssue(collection) ? "Speciale avanzato" : "Speciale"}
                 </span>
               ) : null}
-              <span className="selection-chip rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: collection.access === "open" ? "rgba(255,255,255,0.76)" : "rgba(249,239,212,0.92)", color: "var(--muted-strong)" }}>
+              <span className="selection-chip rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: collection.access === "open" ? "var(--tv-surface-inverted-raised)" : "var(--tv-surface-inverted-highlight)", color: "var(--muted-strong)" }}>
                 {access.subtleLabel}
               </span>
             </div>
@@ -226,7 +228,7 @@ export function CollectionCard({
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.22),rgba(18,15,35,0.76))]" />
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-            <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white" style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(24,17,12,0.28)" }}>
+            <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white" style={{ borderColor: "var(--tv-border-strong)", background: "var(--tv-surface-raised)" }}>
               {collection.cover_kicker}
             </span>
             {collection.surface === "special-issue" ? (
@@ -234,7 +236,7 @@ export function CollectionCard({
                 {hasAdvancedSpecialIssue(collection) ? "Speciale avanzato" : "Speciale"}
               </span>
             ) : null}
-            <span className="selection-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ background: collection.access === "open" ? "rgba(255,255,255,0.82)" : "rgba(249,239,212,0.94)", color: "var(--muted-strong)" }}>
+            <span className="selection-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ background: collection.access === "open" ? "var(--tv-surface-inverted-raised)" : "var(--tv-surface-inverted-highlight)", color: "var(--muted-strong)" }}>
               {access.subtleLabel}
             </span>
           </div>
@@ -253,7 +255,7 @@ export function CollectionCard({
           {collection.surface === "special-issue" ? (
             <span className="selection-status">{formatMeta.label}</span>
           ) : null}
-          <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted-strong)" }}>
+          <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)", color: "var(--muted-strong)" }}>
             {collection.tool_count} tool
           </span>
         </div>
@@ -268,7 +270,7 @@ export function CollectionCard({
             <span
               key={name}
               className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
-              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)", color: "var(--muted)" }}
+              style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)", color: "var(--muted)" }}
             >
               {name}
             </span>
@@ -286,8 +288,10 @@ export function CollectionCard({
             <p className="editorial-label">Accesso</p>
             <p className="text-meta mt-1 text-[0.8rem]" style={{ color: "var(--muted-strong)" }}>
               {hiddenToolCount > 0
-                ? `${visibleToolCount} aperti, ${hiddenToolCount} nella raccolta completa`
-                : "Tutti i tool sono visibili"}
+                ? `${visibleToolCount} ${visibleToolCount === 1 ? "aperto" : "aperti"}, ${hiddenToolCount} nella raccolta completa`
+                : collection.tool_count === 1
+                  ? "Il tool è visibile"
+                  : "Tutti i tool sono visibili"}
             </p>
           </div>
         </div>

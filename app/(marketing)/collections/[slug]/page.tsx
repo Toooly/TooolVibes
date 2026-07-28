@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
   }
 
   return {
-    title: `${collection.title} | ${siteConfig.name}`,
+    title: collection.title,
     description: collection.description,
     openGraph: {
       title: `${collection.title} | ${siteConfig.name}`,
@@ -87,13 +87,15 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
     : collection.included_tools.slice(0, premiumAccess.preview_tool_limit);
   const hiddenToolCount = Math.max(collection.included_tools.length - visibleSlots.length, 0);
   const hiddenHighlightCount = Math.max(collection.highlights.length - visibleHighlights.length, 0);
+  const hiddenItemCount = hiddenToolCount + hiddenHighlightCount;
+  const visibleItemCount = visibleSlots.length + visibleHighlights.length;
   const rationaleBody =
     premiumAccess.state === "locked"
       ? collection.premium_teaser ?? collection.description
       : collection.rationale;
   const boundarySummary =
     hiddenToolCount > 0 || hiddenHighlightCount > 0
-      ? `Qui restano fuori ${hiddenToolCount} tool e ${hiddenHighlightCount} punti chiave della versione completa.`
+      ? `Qui ${hiddenItemCount === 1 ? "resta" : "restano"} fuori ${hiddenToolCount} tool e ${hiddenHighlightCount} ${hiddenHighlightCount === 1 ? "punto chiave" : "punti chiave"} della versione completa.`
       : "Tutti i moduli della raccolta sono già visibili in questa pagina.";
 
   return (
@@ -119,8 +121,8 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 style={{
                   background:
                     collection.access !== "open"
-                      ? "rgba(249,239,212,0.96)"
-                      : "rgba(255,255,255,0.78)",
+                      ? "var(--tv-surface-inverted-highlight)"
+                      : "var(--tv-surface-inverted-raised)",
                   color: "var(--muted-strong)",
                 }}
               >
@@ -156,7 +158,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
             <p className="mt-4 text-[0.88rem] leading-6" style={{ color: "var(--muted)" }}>
               {hasFullAccess
-                ? `Tool guida: ${leadTool?.name ?? "nessuno esplicito"} · ${visibleSlots.length}/${collection.included_tools.length} tool leggibili in questa pagina.`
+                ? `Tool guida: ${leadTool?.name ?? "nessuno esplicito"} · ${visibleSlots.length}/${collection.included_tools.length} tool ${visibleSlots.length === 1 ? "leggibile" : "leggibili"} in questa pagina.`
                 : boundarySummary}
             </p>
 
@@ -214,7 +216,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                   Raccolta
                 </span>
                 <span className="collection-detail-hero__badge">
-                  {collection.tool_count} tool inclusi
+                  {collection.tool_count} tool {collection.tool_count === 1 ? "incluso" : "inclusi"}
                 </span>
               </div>
 
@@ -269,7 +271,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 {visibleHighlights.map((item) => (
                   <div
                     key={item}
-                    className="rounded-[22px] border border-white/10 bg-white/6 px-4 py-4 text-sm leading-6 text-white/82"
+                    className="rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4 text-sm leading-6 text-white/82"
                   >
                     {item}
                   </div>
@@ -277,13 +279,12 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               </div>
               {hiddenHighlightCount > 0 ? (
                 <p className="mt-4 text-[0.8rem] leading-6 text-white/64">
-                  {hiddenHighlightCount} punt{hiddenHighlightCount > 1 ? "i" : "o"} chiave restano nel
-                  percorso completo della raccolta.
+                  {hiddenHighlightCount} {hiddenHighlightCount === 1 ? "punto chiave resta" : "punti chiave restano"} nel percorso completo della raccolta.
                 </p>
               ) : null}
             </div>
             <aside className="col-span-12 lg:col-span-5">
-              <div className="rounded-[24px] border border-white/12 bg-white/6 p-4.5 sm:p-5">
+              <div className="rounded-[24px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] p-4.5 sm:p-5">
                 <p className="editorial-label !text-white/60">
                   {premiumAccess.state === "locked" ? "Cosa stai leggendo" : "Stato della raccolta"}
                 </p>
@@ -298,12 +299,12 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                       : editorialState.description}
                 </p>
                 {collection.premium_teaser ? (
-                  <div className="mt-5 rounded-[22px] border border-white/10 bg-white/6 px-4 py-4 text-sm leading-6 text-white/78">
+                  <div className="mt-5 rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4 text-sm leading-6 text-white/78">
                     {collection.premium_teaser}
                   </div>
                 ) : null}
                 {isAdvancedIssue && collection.advanced_issue ? (
-                  <div className="mt-5 rounded-[22px] border border-white/10 bg-white/6 px-4 py-4">
+                  <div className="mt-5 rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                       Flusso di lettura
                     </p>
@@ -314,20 +315,20 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 ) : null}
                 {!hasFullAccess ? (
                   <div className="mt-5 grid gap-3">
-                    <div className="rounded-[22px] border border-white/10 bg-white/6 px-4 py-4">
+                    <div className="rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                         Resta aperto
                       </p>
                     <p className="mt-2 text-sm leading-6 text-white/78">
-                      {visibleSlots.length} tool e {visibleHighlights.length} punti chiave leggibili subito: abbastanza per capire il taglio e decidere se continuare.
+                      {visibleSlots.length} tool e {visibleHighlights.length} {visibleHighlights.length === 1 ? "punto chiave" : "punti chiave"} {visibleItemCount === 1 ? "leggibile" : "leggibili"} subito: abbastanza per capire il taglio e decidere se continuare.
                     </p>
                   </div>
-                  <div className="rounded-[22px] border border-white/10 bg-white/6 px-4 py-4">
+                  <div className="rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                         Resta nella versione completa
                       </p>
                     <p className="mt-2 text-sm leading-6 text-white/78">
-                      {hiddenToolCount} tool e {hiddenHighlightCount} punti chiave con la lettura più densa della raccolta, i moduli aggiuntivi e il contesto completo.
+                      {hiddenToolCount} tool e {hiddenHighlightCount} {hiddenHighlightCount === 1 ? "punto chiave" : "punti chiave"} con la lettura più densa della raccolta, i moduli aggiuntivi e il contesto completo.
                     </p>
                   </div>
                 </div>
@@ -390,14 +391,13 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                   key={`${collection.slug}-${slot.tool.slug}`}
                   slot={slot}
                   index={index}
-                  collectionTitle={collection.title}
                 />
               ))}
               {hiddenToolCount > 0 ? (
                 <div className="collection-detail-locked-preview rounded-[26px] border px-5 py-5">
                   <p className="pill pill-premium">Accesso riservato</p>
                   <h3 className="text-display-card mt-3 max-w-none text-[1.34rem] sm:max-w-[16ch] sm:text-balance">
-                    {hiddenToolCount} tool restano nella versione completa.
+                    {hiddenToolCount} tool {hiddenToolCount === 1 ? "resta" : "restano"} nella versione completa.
                   </h3>
                   <p className="text-body-soft mt-3 text-[0.95rem]" style={{ color: "var(--muted-strong)" }}>
                     L&apos;anteprima lascia visibile la struttura del percorso, ma tiene fuori i passaggi

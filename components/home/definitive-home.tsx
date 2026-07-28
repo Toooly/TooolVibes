@@ -20,7 +20,7 @@
  *   4. METHOD — quieter final section, unchanged structure, larger numbers.
  *
  * Preserved from earlier passes:
- *   - serif Home H1 with violet "rumore" highlight (v4: clean underlay)
+ *   - monumental Home H1 with a restrained violet emphasis on "rumore"
  *   - real Product Hunt data binding (no fabrication)
  *   - factual Radar empty state
  *   - state-meaningful motion only while the feed is genuinely live
@@ -86,7 +86,7 @@ function hasAffiliateSignal(href: string | null | undefined) {
 // ============================================================
 // COCKPIT — Hero + Radar in the same primary frame
 // ============================================================
-function Cockpit() {
+function Cockpit({ toolCount }: { toolCount: number }) {
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
       <div aria-hidden="true" className="def-cockpit__bg" />
@@ -95,7 +95,9 @@ function Cockpit() {
         <div className="def-cockpit__hero">
           <p className="def-cockpit__eyebrow">
             <span className="def-cockpit__eyebrow-dot" aria-hidden="true" />
-            Curatela indipendente · 30 tool · 17 percorsi
+            {toolCount > 0
+              ? `Curatela indipendente · ${toolCount} tool verificati`
+              : "Curatela indipendente · catalogo in aggiornamento"}
           </p>
           <h1 id="def-cockpit-title" className="def-cockpit__title">
             Trova il tool giusto prima che il{" "}
@@ -118,7 +120,7 @@ function Cockpit() {
               href="/radar"
               className="def-cockpit__cta def-cockpit__cta--secondary"
             >
-              Apri Radar live
+              Apri Radar
             </Link>
           </div>
 
@@ -205,7 +207,9 @@ function IvoryEditorial({
       <div aria-hidden="true" className="def-editorial__traces" />
       <header className="def-editorial__head">
         <div>
-          <p className="def-editorial__eyebrow">Decision desk · warm ivory</p>
+          <p className="def-editorial__eyebrow">
+            Verdetto editoriale · selezione settimanale
+          </p>
           <h2 id="def-editorial-title" className="def-editorial__title">
             La scrivania dove il tool della settimana incontra il podio.
           </h2>
@@ -215,7 +219,7 @@ function IvoryEditorial({
             href="/archivio"
             className="def-editorial__head-link"
           >
-            Tutti i 30 tool
+            {tools.length > 0 ? `Tutti i ${tools.length} tool` : "Apri il catalogo"}
             <ArrowUpRight size={14} aria-hidden="true" />
           </Link>
         </div>
@@ -327,7 +331,9 @@ function IvoryEditorial({
         <div className="def-editorial__podium" aria-label="Podio editoriale">
           <div className="def-editorial__pod-head-row">
             <p className="def-editorial__pod-eyebrow">Podio editoriale</p>
-            <p className="def-editorial__pod-subtitle">Aggiornato 24 lug · 09:00 UTC</p>
+            <p className="def-editorial__pod-subtitle">
+              Calcolato sul catalogo editoriale attivo
+            </p>
           </div>
           <ol className="def-editorial__pod-stage">
             {top3[1] ? (
@@ -450,7 +456,7 @@ export function DefinitiveHome({ tools, weeklyTool }: DefinitiveHomeProps) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
   return (
     <div className="def-home">
-      <Cockpit />
+      <Cockpit toolCount={tools.length} />
       <IvoryEditorial focusTool={focusTool} tools={tools} />
       <Method />
       <FeaturedPartner

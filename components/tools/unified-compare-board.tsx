@@ -445,7 +445,7 @@ function DirectoryCompareCard({
       className="directory-compare-card dynamic-card panel-lift rounded-[26px] border p-4 sm:p-5"
       style={{
         borderColor: "var(--line)",
-        background: `radial-gradient(circle at 92% 0%, ${tool.accentTo}18, transparent 30%), radial-gradient(circle at 10% 0%, ${tool.accentFrom}18, transparent 28%), linear-gradient(180deg, rgba(255,255,255,0.9), rgba(244,239,255,0.82))`,
+        background: "var(--tv-surface-inverted-raised)",
       }}
     >
       <div className="flex items-start gap-3">
@@ -473,13 +473,13 @@ function DirectoryCompareCard({
       </div>
 
       <div className="mt-4 grid gap-3">
-        <div className="rounded-[20px] bg-white/72 p-3.5">
+        <div className="rounded-[20px] bg-[var(--tv-surface-inverted)] p-3.5">
           <p className="editorial-label">In breve</p>
           <p className="mt-2 text-[0.92rem] leading-6 text-[var(--foreground)]">
             {tool.tldr}
           </p>
         </div>
-        <div className="rounded-[20px] bg-white/64 p-3.5">
+        <div className="rounded-[20px] bg-[var(--tv-surface-inverted-accent)] p-3.5">
           <p className="editorial-label">Lettura rapida</p>
           <p className="mt-2 text-[0.88rem] leading-6 text-[var(--foreground)]">
             {tool.editorialReview}
@@ -491,7 +491,7 @@ function DirectoryCompareCard({
         {tool.highlights.slice(0, 3).map((item) => (
           <span
             key={item}
-            className="rounded-full bg-white/72 px-3 py-1 text-xs font-semibold text-[var(--foreground)]"
+            className="rounded-full bg-[var(--tv-surface-inverted)] px-3 py-1 text-xs font-semibold text-[var(--foreground)]"
           >
             {item}
           </span>
@@ -578,8 +578,8 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
       </div>
 
       {tools.length >= MAX_COMPARE_TOOLS ? (
-        <div className="rounded-[24px] border border-amber-500/20 bg-amber-50/80 px-4 py-3 text-sm leading-6 text-amber-900">
-          <p className="font-semibold">Confronto al limite: 2-4 tool restano la lettura piu chiara.</p>
+        <div className="rounded-[24px] border border-[var(--tv-status-warning-soft-border)] bg-[var(--tv-status-warning-soft-bg)] px-4 py-3 text-sm leading-6 text-[var(--tv-status-warning-soft-text)]">
+          <p className="font-semibold">Confronto al limite: 2-4 tool restano la lettura più chiara.</p>
           <p className="mt-1">
             Usa il quinto come candidato da togliere o confermare dopo aver letto differenze e casi d&apos;uso.
           </p>
@@ -628,7 +628,7 @@ function DirectoryCompareBoard({ tools }: { tools: DirectoryTool[] }) {
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[24px] bg-white/72 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[24px] bg-[var(--tv-surface-inverted-raised)] px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
           <Sparkles className="size-4 text-[var(--accent)]" aria-hidden="true" />
           Il confronto resta salvato anche se cambi pagina.
@@ -665,7 +665,7 @@ export function UnifiedCompareBoard({
         {[0, 1].map((item) => (
           <div
             key={item}
-            className="h-56 animate-pulse rounded-[28px] border border-[var(--line)] bg-white/60"
+            className="h-56 animate-pulse rounded-[28px] border border-[var(--line)] bg-[var(--tv-surface-inverted-raised)]"
           />
         ))}
       </div>

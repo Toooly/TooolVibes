@@ -10,7 +10,7 @@ import "./collections.css";
 
 export const metadata: Metadata = {
   title: "Collections",
-  description: "Raccolte editoriali di tool per scegliere piu velocemente cosa provare.",
+  description: "Raccolte editoriali di tool per scegliere più velocemente cosa provare.",
   alternates: { canonical: "/collections" },
 };
 

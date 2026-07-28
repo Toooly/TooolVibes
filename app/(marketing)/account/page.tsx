@@ -3,7 +3,7 @@ import { AccountGate } from "@/components/account/account-gate";
 import "./account.css";
 
 export const metadata: Metadata = {
-  title: "Account — TooolVibes",
+  title: "Account",
   description: "Accedi, registrati o gestisci il tuo account su TooolVibes.",
   robots: { index: false, follow: false },
 };

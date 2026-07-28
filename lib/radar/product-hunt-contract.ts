@@ -64,7 +64,24 @@ export function resolveRadarDataState(
 export function formatUtcTimeLabel(isoTimestamp: string): string {
   const date = new Date(isoTimestamp);
   if (Number.isNaN(date.getTime())) return "orario sconosciuto";
+  const months = [
+    "gen",
+    "feb",
+    "mar",
+    "apr",
+    "mag",
+    "giu",
+    "lug",
+    "ago",
+    "set",
+    "ott",
+    "nov",
+    "dic",
+  ] as const;
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = months[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
   const hours = String(date.getUTCHours()).padStart(2, "0");
   const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-  return `${hours}:${minutes} UTC`;
+  return `${day} ${month} ${year} · ${hours}:${minutes} UTC`;
 }

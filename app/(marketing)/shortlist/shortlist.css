@@ -70,9 +70,7 @@
   padding: var(--tv-space-6) !important;
   border: 1px dashed var(--tv-border-interactive) !important;
   border-radius: var(--tv-radius-lg) !important;
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--tv-accent-cyan) 8%, transparent), transparent 60%),
-    color-mix(in srgb, var(--tv-surface-elevated) 70%, transparent) !important;
+  background: var(--tv-surface-elevated) !important;
   min-height: 8.5rem !important;
   box-shadow: none !important;
 }
@@ -115,7 +113,7 @@
 
 .shortlist-final-surface .mobile-library-shelf__empty-cta:hover {
   border-color: var(--tv-accent-cyan) !important;
-  background: color-mix(in srgb, var(--tv-accent-cyan) 12%, transparent) !important;
+  background: var(--tv-surface-floating) !important;
 }
 
 .shortlist-final-surface .mobile-library-wishlist__disclosure {
@@ -221,8 +219,8 @@
 .shortlist-final-surface .mobile-library-empty__kicker {
   border-color: var(--tv-border-inverted-default) !important;
   border-radius: 0.25rem !important;
-  background: rgba(243, 191, 76, 0.18) !important;
-  color: #624510 !important;
+  background: var(--tv-surface-inverted-highlight) !important;
+  color: var(--tv-status-warning-soft-text) !important;
 }
 
 .shortlist-final-surface .mobile-library-empty__content h1 {
@@ -253,7 +251,7 @@
   min-height: 4.75rem;
   border-color: var(--tv-border-inverted-default) !important;
   border-radius: 0.5rem !important;
-  background: rgba(255, 255, 255, 0.46) !important;
+  background: var(--tv-surface-inverted-raised) !important;
   padding: 0.9rem 1rem !important;
   text-align: left !important;
   transform: none !important;
@@ -261,7 +259,7 @@
 
 .shortlist-final-surface .mobile-library-empty__route:is(:hover, :focus-visible) {
   border-color: var(--tv-accent-brand) !important;
-  background: rgba(255, 255, 255, 0.78) !important;
+  background: var(--tv-surface-inverted-accent) !important;
 }
 
 .shortlist-final-surface .mobile-library-empty__route strong {
@@ -275,14 +273,14 @@
 .shortlist-final-surface .mobile-library-empty__starter {
   grid-area: starter;
   width: 100% !important;
-  border-color: rgba(117, 80, 14, 0.22) !important;
+  border-color: var(--tv-status-warning-soft-border) !important;
   border-radius: 0.5rem !important;
-  background: rgba(243, 191, 76, 0.12) !important;
+  background: var(--tv-surface-inverted-highlight) !important;
   text-align: left !important;
 }
 
 .shortlist-final-surface .mobile-library-empty__starter > span {
-  color: #624510 !important;
+  color: var(--tv-status-warning-soft-text) !important;
 }
 
 .shortlist-final-surface .mobile-library-empty__starter div {
@@ -292,7 +290,7 @@
 .shortlist-final-surface .mobile-library-empty__starter a {
   border-color: var(--tv-border-inverted-default) !important;
   border-radius: 0.3rem !important;
-  background: rgba(255, 255, 255, 0.58) !important;
+  background: var(--tv-surface-inverted-raised) !important;
   color: var(--tv-ink-inverted-primary) !important;
 }
 
@@ -329,7 +327,7 @@
 .shortlist-final-surface .mobile-library-wishlist__eyebrow {
   border: 1px solid var(--tv-border-inverted-default);
   border-radius: 0.25rem;
-  background: rgba(106, 60, 255, 0.08);
+  background: var(--tv-surface-inverted-accent);
   padding: 0.38rem 0.62rem;
   color: var(--tv-accent-brand-pressed);
   font-size: var(--tv-text-xs);
@@ -361,7 +359,7 @@
 .shortlist-final-surface .mobile-library-wishlist__signal-card {
   border-color: var(--tv-border-inverted-subtle) !important;
   border-radius: 0.4rem !important;
-  background: rgba(255, 255, 255, 0.48) !important;
+  background: var(--tv-surface-inverted-raised) !important;
 }
 
 .shortlist-final-surface .mobile-library-wishlist__signal-card > span {
@@ -380,7 +378,7 @@
   width: 100%;
   border-color: var(--tv-border-inverted-default);
   border-radius: 0.5rem;
-  background: rgba(255, 255, 255, 0.58);
+  background: var(--tv-surface-inverted-raised);
 }
 
 .shortlist-final-surface .mobile-library-wishlist__disclosure > summary {

@@ -145,6 +145,21 @@ export function getMonetizationPlacement(key: MonetizationPlacementKey): Monetiz
   return monetizationPlacements.find((placement) => placement.key === key);
 }
 
+function hasPublicText(value: string | undefined) {
+  return Boolean(value?.trim());
+}
+
+function isAllowedPartnerUrl(value: string | undefined) {
+  if (!hasPublicText(value)) return false;
+
+  try {
+    const url = new URL(value as string);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Reserved and planned inventory belongs to the commercial back office, not
  * to the public reading journey. A placement is public only when a real
@@ -156,9 +171,12 @@ export function isPublicMonetizationPlacement(
   return Boolean(
     placement?.visible &&
       placement.status === "ready" &&
-      placement.partner?.name &&
-      placement.partner.href &&
-      placement.editorialReason,
+      hasPublicText(placement.partner?.name) &&
+      hasPublicText(placement.partner?.category) &&
+      isAllowedPartnerUrl(placement.partner?.href) &&
+      hasPublicText(placement.editorialReason) &&
+      hasPublicText(placement.title) &&
+      hasPublicText(placement.ctaLabel),
   );
 }
 

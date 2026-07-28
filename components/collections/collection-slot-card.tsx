@@ -1,22 +1,23 @@
 import type { ResolvedCollectionToolSlot } from "@/lib/types/collection";
 import { getToolBestFor, getToolPricing, getToolWhyHere } from "@/lib/tools/discovery";
 
-import { ToolCard } from "@/components/tools/tool-card";
+import { CanonicalToolCard } from "@/components/directory/canonical-tool-card";
+import { adaptToolRecordToPublic } from "@/lib/data/tool-public-adapters";
+import { createToolPublicView } from "@/lib/data/tool-public-view";
 
 type CollectionSlotCardProps = {
   slot: ResolvedCollectionToolSlot;
   index: number;
-  collectionTitle: string;
 };
 
 export function CollectionSlotCard({
   slot,
   index,
-  collectionTitle,
 }: CollectionSlotCardProps) {
   const slotContext = slot.note ?? getToolWhyHere(slot.tool);
   const toolBestFor = getToolBestFor(slot.tool);
   const toolPricing = getToolPricing(slot.tool);
+  const publicTool = createToolPublicView(adaptToolRecordToPublic(slot.tool));
 
   return (
     <article
@@ -34,7 +35,7 @@ export function CollectionSlotCard({
             className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
             style={{
               borderColor: "var(--line)",
-              background: "rgba(255,255,255,0.78)",
+              background: "var(--tv-surface-inverted-raised)",
               color: "var(--muted-strong)",
             }}
           >
@@ -44,7 +45,7 @@ export function CollectionSlotCard({
             className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
             style={{
               borderColor: "var(--line)",
-              background: "rgba(255,255,255,0.78)",
+              background: "var(--tv-surface-inverted-raised)",
               color: "var(--muted-strong)",
             }}
           >
@@ -59,7 +60,7 @@ export function CollectionSlotCard({
           className="stat-block rounded-[22px] border px-4 py-4"
           style={{
             borderColor: "var(--line)",
-            background: "linear-gradient(180deg, rgba(255,255,255,0.76), rgba(245,239,255,0.7))",
+            background: "var(--tv-surface-inverted-raised)",
           }}
         >
           <p className="editorial-label">Ruolo nel percorso</p>
@@ -71,7 +72,7 @@ export function CollectionSlotCard({
           className="stat-block rounded-[22px] border px-4 py-4"
           style={{
             borderColor: "var(--line)",
-            background: "linear-gradient(180deg, rgba(255,255,255,0.76), rgba(245,239,255,0.7))",
+            background: "var(--tv-surface-inverted-raised)",
           }}
         >
           <p className="editorial-label">Uso ideale</p>
@@ -82,12 +83,11 @@ export function CollectionSlotCard({
       </div>
 
       <div className="mt-4">
-        <ToolCard
-          tool={slot.tool}
-          variant="collection"
-          contextLabel={collectionTitle}
-          index={index}
+        <CanonicalToolCard
+          tool={publicTool}
+          density="mobile-list"
           priority={slot.featured}
+          className="shadow-none"
         />
       </div>
     </article>

@@ -40,6 +40,8 @@
   max-width: 12ch;
   margin: 0.55rem 0 0;
   color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-weight: var(--tv-weight-regular);
   font-size: clamp(3.4rem, 6.4vw, 6.6rem);
   line-height: 0.9;
 }
@@ -92,17 +94,17 @@
 }
 
 .mobile-collections__hero-tag--special {
-  background: rgba(243, 191, 76, 0.18);
-  color: #624510;
+  background: var(--tv-surface-inverted-highlight);
+  color: var(--tv-status-warning-soft-text);
 }
 
 .mobile-collections__hero-tag--featured {
-  background: rgba(106, 60, 255, 0.1);
+  background: var(--tv-surface-inverted-accent);
   color: var(--tv-accent-brand-pressed);
 }
 
 .mobile-collections__hero-count {
-  background: rgba(8, 8, 10, 0.05);
+  background: var(--tv-surface-inverted-raised);
   color: var(--tv-ink-inverted-muted);
 }
 
@@ -303,9 +305,9 @@
   display: inline-flex;
   align-items: center;
   min-height: 1.75rem;
-  border: 1px solid var(--tv-glass-border-strong);
+  border: 1px solid var(--tv-border-strong);
   border-radius: var(--tv-radius-sm);
-  background: var(--tv-overlay-bg);
+  background: var(--tv-surface-raised);
   padding: 0.25rem 0.75rem;
   color: var(--tv-ink-primary) !important;
   font-size: var(--tv-text-xs);
@@ -321,9 +323,9 @@
   right: 1rem;
   bottom: 1rem;
   left: 1rem;
-  border: 1px solid var(--tv-glass-border-strong);
+  border: 1px solid var(--tv-border-strong);
   border-radius: var(--tv-radius-md);
-  background: color-mix(in srgb, var(--tv-surface-base) 88%, transparent);
+  background: var(--tv-surface-raised);
   padding: 0.875rem 1rem;
 }
 

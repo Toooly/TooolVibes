@@ -32,6 +32,16 @@ export default async function PostsPage() {
     getToolWriteupPosts(),
     getGuidePosts(),
   ]);
+  const featuredSlugs = new Set(featuredPosts.map((post) => post.slug));
+  const remainingBlogPosts = blogPosts.filter(
+    (post) => !featuredSlugs.has(post.slug),
+  );
+  const remainingToolWriteups = toolWriteups.filter(
+    (post) => !featuredSlugs.has(post.slug),
+  );
+  const remainingGuides = guides.filter(
+    (post) => !featuredSlugs.has(post.slug),
+  );
 
   return (
     <div className="tone-screen page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
@@ -112,10 +122,10 @@ export default async function PostsPage() {
               </p>
             </div>
             <Link
-              href="#guide"
+              href={remainingGuides.length > 0 ? "#guide" : "/archivio"}
               className="selection-chip rounded-full border border-[var(--tv-border-interactive)] bg-transparent px-4 py-2 text-sm font-semibold text-[var(--tv-ink-primary)] transition-colors hover:border-[var(--tv-accent-brand-aa)] hover:bg-[var(--tv-surface-elevated)] focus-visible:border-[var(--tv-accent-brand-aa)] focus-visible:bg-[var(--tv-surface-elevated)]"
             >
-              Vai alle guide
+              {remainingGuides.length > 0 ? "Vai alle guide" : "Apri l'archivio"}
             </Link>
           </div>
 
@@ -127,7 +137,7 @@ export default async function PostsPage() {
         </div>
       </section>
 
-      {blogPosts.length > 0 ? (
+      {remainingBlogPosts.length > 0 ? (
         <section className="home-section-gap">
           <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
             <SectionHeader
@@ -136,7 +146,7 @@ export default async function PostsPage() {
               description="Contenuti originali, aggiornamenti e letture nate per aiutarti a scegliere con più criterio."
             />
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {blogPosts.map((post) => (
+              {remainingBlogPosts.map((post) => (
                 <EditorialPostCard key={post.slug} post={post} compact />
               ))}
             </div>
@@ -144,35 +154,39 @@ export default async function PostsPage() {
         </section>
       ) : null}
 
-      <section className="home-section-gap">
-        <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
-          <SectionHeader
-            eyebrow="Approfondimenti tool"
-            title="Gli approfondimenti collegati ai tool già presenti nel catalogo."
-            description="Ogni articolo aggiunge contesto alla scheda del tool: non una duplicazione, ma una lettura più chiara del perché può servirti."
-          />
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {toolWriteups.map((post) => (
-              <EditorialPostCard key={post.slug} post={post} compact />
-            ))}
+      {remainingToolWriteups.length > 0 ? (
+        <section className="home-section-gap">
+          <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
+            <SectionHeader
+              eyebrow="Approfondimenti tool"
+              title="Gli approfondimenti collegati ai tool già presenti nel catalogo."
+              description="Ogni articolo aggiunge contesto alla scheda del tool: non una duplicazione, ma una lettura più chiara del perché può servirti."
+            />
+            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {remainingToolWriteups.map((post) => (
+                <EditorialPostCard key={post.slug} post={post} compact />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
-      <section id="guide" className="home-section-gap">
-        <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
-          <SectionHeader
-            eyebrow="Guide"
-            title="Le guide più utili, riscritte per il TooolVibes di oggi."
-            description="Recuperiamo i pezzi ancora validi e li rendiamo più chiari, pratici e coerenti con il catalogo attuale."
-          />
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {guides.map((post) => (
-              <EditorialPostCard key={post.slug} post={post} compact />
-            ))}
+      {remainingGuides.length > 0 ? (
+        <section id="guide" className="home-section-gap">
+          <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
+            <SectionHeader
+              eyebrow="Guide"
+              title="Le guide più utili, riscritte per il TooolVibes di oggi."
+              description="Recuperiamo i pezzi ancora validi e li rendiamo più chiari, pratici e coerenti con il catalogo attuale."
+            />
+            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {remainingGuides.map((post) => (
+                <EditorialPostCard key={post.slug} post={post} compact />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
     </div>
   );
 }
