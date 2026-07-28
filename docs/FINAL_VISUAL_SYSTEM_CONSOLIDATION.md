@@ -1,6 +1,6 @@
 # TooolVibes — Final Visual System Consolidation
 
-Status: Phase 6 complete — pre-deploy checkpoint
+Status: Phase 7 complete — production verified
 Started: 2026-07-28
 Starting commit: `bcd69e4` (`main`, clean and aligned with `origin/main`)
 Production: `https://tooolvibes.eu`
@@ -36,9 +36,9 @@ The canonical shell owners are `CommandBar`, `MobileTopBar`,
 - Starting HEAD: `bcd69e4`
 - Working tree at start: clean
 - Rollback tag available: `pre-sol-definitive-ui-rebuild`
-- Previous deployed snapshot documented at Worker version
-  `56f0be35-32fa-4fb8-9b08-f4e17637bd09`; it predates the current HEAD and must
-  not be treated as the final release.
+- Initial deployed snapshot documented at Worker version
+  `56f0be35-32fa-4fb8-9b08-f4e17637bd09`; the immediate pre-release production
+  version was `007801a0-9acf-406c-910a-f0e1b8954195`.
 
 ### Baseline validation
 
@@ -152,7 +152,7 @@ number of `!important` rules that restyle older component contracts globally.
 2. Some route naming still describes obsolete mobile-only generations even
    when the component owns all viewports; renaming it would add churn without
    changing runtime ownership.
-3. Current production remains behind repository HEAD until Phase 7 deploy.
+3. No known visual or structural defect blocks the final release.
 
 ## Phase 1 — canonical foundations
 
@@ -290,6 +290,32 @@ Evidence root:
 Historical references to the retired failing Home-generation contracts are no
 longer active release blockers; the complete current suite has zero failures.
 
+## Phase 7 — release and production verification
+
+- Committed the product implementation as `ebf47a8` and the durable visual
+  evidence as `ac03b7d`, then pushed both directly to `origin/main`.
+- Made the OpenNext path reproducible by declaring the native Next standalone
+  output in repository configuration; no local `node_modules` patch is needed.
+- Rebuilt the complete 53-page Next application and the OpenNext Worker
+  artifact successfully.
+- Confirmed the active Wrangler profile is authenticated as
+  `staff@elevianutrition.eu` in account
+  `ffacd11bfafdca87d540a6c5fbe89120`.
+- Uploaded and promoted Worker version
+  `5b068a5d-591c-4d6a-a986-770f4d29ffc3` to 100% of traffic on the historical
+  Worker `tooolvibes`. Deployment ID:
+  `cda17998-b786-4d19-88ad-2bd5d956ccf0`.
+- Verified `https://tooolvibes.eu` after hydration at 390×844, 1024×768 and
+  1440×1000 on both Home and Radar: one `main`, one H1, zero horizontal
+  overflow, no QA fixture copy, live Product Hunt provenance, functional
+  Radar/Table switching and no browser-console warnings or errors.
+- Confirmed HTTP 200 with the OpenNext runtime header from both
+  `https://tooolvibes.eu` and the historical
+  `https://tooolvibes.staff-ffa.workers.dev` endpoint.
+
+Production evidence:
+`audits/final-visual-system-consolidation-2026-07-28/final/production/`
+
 ## Phase plan
 
 1. Canonical foundations: migrate the aliases and shared primitives required by
@@ -302,15 +328,16 @@ longer active release blockers; the complete current suite has zero failures.
 5. Legacy deletion: trace imports, delete retired owners and reduce the cascade.
 6. QA: **complete locally** — targeted/full checks, eight-viewport responsive
    matrix and Next production build.
-7. Release: focused commits on `main`, push, deploy to the pinned historical
-   Worker and verify `tooolvibes.eu` after hydration.
+7. Release: **complete** — focused commits on `main`, push, deploy to the
+   pinned historical Worker and hydrated verification of `tooolvibes.eu`.
 
 ## Rollback
 
 - Code rollback base: Git tag `pre-sol-definitive-ui-rebuild`.
 - Immediate pre-consolidation code point: commit `bcd69e4`.
-- Production rollback: promote the previously verified Worker version recorded
-  above only if the final deployed version fails live verification.
+- Production rollback: promote the immediate pre-release Worker version
+  `007801a0-9acf-406c-910a-f0e1b8954195` only if the final deployed version
+  fails a future live verification.
 - Do not alter DNS, the Custom Domain mapping or the separate
   `tooolvibes-security-state` Worker.
 
@@ -330,5 +357,7 @@ longer active release blockers; the complete current suite has zero failures.
   deleted.
 - 2026-07-28 — Phase 6 complete locally: QA fixture explicitly labelled,
   10-route matrix plus Home/Radar verified across eight viewports, complete
-  test suite green and 53-page Next production build passed. Release remains
-  pending.
+  test suite green and 53-page Next production build passed.
+- 2026-07-28 — Phase 7 complete: commits pushed to `main`, Worker version
+  `5b068a5d-591c-4d6a-a986-770f4d29ffc3` deployed at 100% and
+  `tooolvibes.eu` verified live without console or responsive defects.
