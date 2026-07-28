@@ -857,6 +857,22 @@ function MobileNoteSheet({
 
 function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
   const starterTools = tools.slice(0, 3);
+  const [suggestOpen, setSuggestOpen] = useState(false);
+  const suggestTriggerId = "mobile-library-empty__suggest-trigger";
+  const suggestDialogId = "mobile-library-empty__suggest-dialog";
+  const suggestTitleId = "mobile-library-empty__suggest-title";
+
+  useEffect(() => {
+    if (!suggestOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setSuggestOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [suggestOpen]);
 
   return (
     <section
@@ -884,15 +900,59 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
         </div>
       ) : null}
       <div className="mobile-library-empty__actions">
-        <Link href="/archivio" className="mobile-library-empty__cta">
-          Esplora il catalogo
-          <ArrowRight size={14} />
-        </Link>
-        <Link href="/radar" className="mobile-library-empty__cta is-secondary">
-          Apri il Radar
-          <ArrowRight size={14} />
-        </Link>
+        <div className="mobile-library-empty__recommendations">
+          <Link
+            href="/archivio"
+            className="mobile-library-empty__recommendation-card"
+          >
+            <strong>Esplora catalogo</strong>
+            <span>246 tool in 28 categorie, ordinati per utilità reale.</span>
+          </Link>
+          <Link
+            href="/radar"
+            className="mobile-library-empty__recommendation-card"
+          >
+            <strong>Apri Radar</strong>
+            <span>Lanci Product Hunt live, niente dati simulati.</span>
+          </Link>
+          <button
+            type="button"
+            id={suggestTriggerId}
+            className="mobile-library-empty__recommendation-card"
+            aria-haspopup="dialog"
+            aria-controls={suggestDialogId}
+            onClick={() => setSuggestOpen(true)}
+          >
+            <strong>Suggerisci un tool</strong>
+            <span>Segnala un tool mancante: link, categoria, motivo.</span>
+          </button>
+        </div>
       </div>
+      {suggestOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={suggestTitleId}
+          id={suggestDialogId}
+          className="mobile-library-empty__suggest-dialog"
+        >
+          <div className="mobile-library-empty__suggest-dialog-content">
+            <div className="mobile-library-empty__suggest-dialog-header">
+              <h2 id={suggestTitleId}>Suggerisci un tool</h2>
+              <button
+                type="button"
+                className="mobile-library-empty__suggest-dialog-close"
+                aria-controls={suggestTriggerId}
+                aria-label="Chiudi"
+                onClick={() => setSuggestOpen(false)}
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <RequestToolForm />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
