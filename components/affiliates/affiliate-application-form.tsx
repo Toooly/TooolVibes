@@ -178,39 +178,11 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               value={form.firstName}
               onChange={(event) => updateField("firstName", event.target.value)}
               className={cn(inputClass, "mt-2")}
-              placeholder="Opzionale"
+              placeholder="Il tuo nome"
               disabled={isSubmitting}
+              autoComplete="given-name"
             />
             <FieldError id="affiliate-first-name-error" message={errors.firstName} />
-          </label>
-
-          <label className="block">
-            <span className={labelClass}>Cognome</span>
-            <input
-              value={form.lastName}
-              onChange={(event) => updateField("lastName", event.target.value)}
-              className={cn(inputClass, "mt-2")}
-              placeholder="Opzionale"
-              disabled={isSubmitting}
-            />
-            <FieldError id="affiliate-last-name-error" message={errors.lastName} />
-          </label>
-
-          <label className="block">
-            <span className={labelClass}>Email</span>
-            <input
-              value={form.email}
-              onChange={(event) => updateField("email", event.target.value)}
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              className={cn(inputClass, "mt-2")}
-              placeholder="Opzionale, se vuoi essere ricontattato via email"
-              disabled={isSubmitting}
-              aria-invalid={Boolean(errors.email)}
-              aria-describedby={errors.email ? "affiliate-email-error" : undefined}
-            />
-            <FieldError id="affiliate-email-error" message={errors.email} />
           </label>
 
           <label className="block">
@@ -221,16 +193,35 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               className={cn(inputClass, "mt-2")}
               placeholder="Creator, newsletter, community..."
               disabled={isSubmitting}
+              autoComplete="organization"
             />
           </label>
 
           <label className="block md:col-span-2">
-            <span className={labelClass}>Sito</span>
+            <span className={labelClass}>Email</span>
+            <input
+              value={form.email}
+              onChange={(event) => updateField("email", event.target.value)}
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              className={cn(inputClass, "mt-2")}
+              placeholder="Se vuoi essere ricontattato via email"
+              disabled={isSubmitting}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? "affiliate-email-error" : undefined}
+            />
+            <FieldError id="affiliate-email-error" message={errors.email} />
+          </label>
+
+          <label className="block md:col-span-2">
+            <span className={labelClass}>Sito principale</span>
             <input
               value={form.websiteUrl}
               onChange={(event) => updateField("websiteUrl", event.target.value)}
               type="url"
               inputMode="url"
+              autoComplete="url"
               className={cn(inputClass, "mt-2")}
               placeholder="https://..."
               disabled={isSubmitting}
@@ -240,47 +231,14 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             <FieldError id="affiliate-website-error" message={errors.websiteUrl} />
           </label>
 
-          <div className="grid gap-4 md:col-span-2 md:grid-cols-2">
-            {[
-              ["instagram", "Instagram", "@profilo o URL"],
-              ["facebook", "Facebook", "Pagina, gruppo o profilo"],
-              ["tiktok", "TikTok", "@profilo o URL"],
-              ["xProfile", "X / Twitter", "@profilo o URL"],
-              ["linkedin", "LinkedIn", "Profilo o pagina"],
-              ["youtube", "YouTube", "Canale o URL"],
-            ].map(([key, label, placeholder]) => (
-              <label key={key} className="block">
-                <span className={labelClass}>{label}</span>
-                <input
-                  value={form[key as keyof FormState]}
-                  onChange={(event) => updateField(key as keyof FormState, event.target.value)}
-                  className={cn(inputClass, "mt-2")}
-                  placeholder={placeholder}
-                  disabled={isSubmitting}
-                />
-              </label>
-            ))}
-          </div>
-
           <label className="block md:col-span-2">
-            <span className={labelClass}>Audience</span>
+            <span className={labelClass}>Audience o caso d&apos;uso (poche righe)</span>
             <textarea
               value={form.audience}
               onChange={(event) => updateField("audience", event.target.value)}
               rows={3}
-              className={cn(inputClass, "mt-2 min-h-[7rem] resize-none")}
-              placeholder="Chi ti segue e perché potrebbe essere interessato ai tool AI?"
-              disabled={isSubmitting}
-            />
-          </label>
-
-          <label className="block md:col-span-2">
-            <span className={labelClass}>Canali di promozione</span>
-            <input
-              value={form.channels}
-              onChange={(event) => updateField("channels", event.target.value)}
-              className={cn(inputClass, "mt-2")}
-              placeholder="Newsletter, YouTube, LinkedIn, community, sito..."
+              className={cn(inputClass, "mt-2 min-h-[6.5rem] resize-none")}
+              placeholder="Chi ti segue e perché potrebbe essere interessato ai tool di TooolVibes?"
               disabled={isSubmitting}
             />
           </label>
@@ -301,6 +259,66 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             <FieldError id="affiliate-message-error" message={errors.message} />
           </label>
         </div>
+
+        <details className="affiliate-progressive-disclosure rounded-[22px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)]">
+          <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-[var(--tv-ink-primary)] sm:px-5 sm:py-4">
+            <span className="flex items-center justify-between gap-3">
+              <span>Aggiungi canali di promozione e profili social</span>
+              <span className="text-xs font-normal uppercase tracking-[0.14em] text-[var(--tv-ink-muted-aa)]" aria-hidden="true">
+                Apri
+              </span>
+            </span>
+          </summary>
+          <div className="space-y-4 px-4 pb-4 sm:px-5 sm:pb-5">
+            <input type="hidden" name="_form_disclosure_opened" value="" />
+
+            <label className="block">
+              <span className={labelClass}>Cognome</span>
+              <input
+                value={form.lastName}
+                onChange={(event) => updateField("lastName", event.target.value)}
+                className={cn(inputClass, "mt-2")}
+                placeholder="Opzionale"
+                disabled={isSubmitting}
+                autoComplete="family-name"
+              />
+              <FieldError id="affiliate-last-name-error" message={errors.lastName} />
+            </label>
+
+            <label className="block">
+              <span className={labelClass}>Canali di promozione</span>
+              <input
+                value={form.channels}
+                onChange={(event) => updateField("channels", event.target.value)}
+                className={cn(inputClass, "mt-2")}
+                placeholder="Newsletter, YouTube, LinkedIn, community, sito..."
+                disabled={isSubmitting}
+              />
+            </label>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                ["instagram", "Instagram", "@profilo o URL"],
+                ["facebook", "Facebook", "Pagina, gruppo o profilo"],
+                ["tiktok", "TikTok", "@profilo o URL"],
+                ["xProfile", "X / Twitter", "@profilo o URL"],
+                ["linkedin", "LinkedIn", "Profilo o pagina"],
+                ["youtube", "YouTube", "Canale o URL"],
+              ].map(([key, label, placeholder]) => (
+                <label key={key} className="block">
+                  <span className={labelClass}>{label}</span>
+                  <input
+                    value={form[key as keyof FormState]}
+                    onChange={(event) => updateField(key as keyof FormState, event.target.value)}
+                    className={cn(inputClass, "mt-2")}
+                    placeholder={placeholder}
+                    disabled={isSubmitting}
+                  />
+                </label>
+              ))}
+            </div>
+          </div>
+        </details>
 
         {errors.form ? (
           <div
@@ -324,7 +342,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
 
         <div className="flex flex-col gap-3 border-t border-[var(--tv-border-subtle)] pt-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm leading-6 text-[var(--tv-ink-secondary)]">
-            Nome, email e profili social sono opzionali. Il messaggio è il solo campo richiesto.
+            Nome, brand, email e sito bastano per candidarti. Aggiungi canali e profili social solo se li vuoi condividere.
           </p>
           <PremiumButton type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
             {isSubmitting ? (
