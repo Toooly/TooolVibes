@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 
 import { AdvancedSpecialIssue } from "@/components/collections/advanced-special-issue";
 import { CollectionCard } from "@/components/collections/collection-card";
-import { CollectionSlotCard } from "@/components/collections/collection-slot-card";
+import { CollectionSlotSafeBoundary } from "@/components/collections/collection-slot-safe-boundary";
 import { PartnerCollectionModule } from "@/components/monetization/partner-placements";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
@@ -345,7 +345,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
             <div className="mt-6 grid gap-4">
               {visibleSlots.map((slot, index) => (
-                <CollectionSlotCard
+                <CollectionSlotSafeBoundary
                   key={`${collection.slug}-${slot.tool.slug}`}
                   slot={slot}
                   index={index}
