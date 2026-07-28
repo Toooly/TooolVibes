@@ -928,7 +928,7 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
             id={suggestTriggerId}
             className="mobile-library-empty__recommendation-card"
             aria-haspopup="dialog"
-            aria-controls={suggestDialogId}
+            aria-expanded={suggestOpen}
             onClick={() => setSuggestOpen(true)}
           >
             <strong>Suggerisci un tool</strong>
@@ -951,7 +951,6 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
                 type="button"
                 ref={dialogCloseRef}
                 className="mobile-library-empty__suggest-dialog-close"
-                aria-controls={suggestTriggerId}
                 aria-label="Chiudi"
                 onClick={() => setSuggestOpen(false)}
               >

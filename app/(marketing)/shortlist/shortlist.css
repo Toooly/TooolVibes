@@ -14,8 +14,7 @@
   .mobile-library-empty,
   .mobile-library-empty__starter,
   .mobile-library-wishlist,
-  .mobile-library-wishlist__signal-card,
-  .mobile-library-wishlist .request-tool-form
+  .mobile-library-wishlist__signal-card
 ) {
   border-color: var(--tv-border-subtle) !important;
   background: var(--tv-surface-raised) !important;
@@ -42,17 +41,6 @@
 ) {
   border-color: color-mix(in srgb, var(--book-color, var(--tv-accent-primary)) 54%, var(--tv-ink-primary)) !important;
   background: var(--tv-surface-elevated) !important;
-  box-shadow: none !important;
-}
-
-.shortlist-final-surface .mobile-library-wishlist .request-tool-form :where(
-  input,
-  textarea,
-  select
-) {
-  border-color: var(--tv-border-interactive) !important;
-  background: var(--tv-surface-base) !important;
-  color: var(--tv-ink-primary) !important;
   box-shadow: none !important;
 }
 
