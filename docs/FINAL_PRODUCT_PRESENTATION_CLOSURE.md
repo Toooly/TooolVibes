@@ -599,6 +599,64 @@ Surfaces: no glass elements, no backdrop-filter, no translucent white panels, no
 Partners: no reserved/planned/empty placements.
 Radar: truthful state, no fixture data.
 
+## Post-Deploy Visual Truth Audit (2026-07-28)
+
+### Round 1 — Worker `5e048104-487a-4ed3-9d77-8a3e0acd6a91`
+
+Real-browser verification of the previously deployed Worker captured 30 settled screenshots + 9 initial-state captures (390×844, 1024×768, 1440×1000). Evidence under `audits/final-route-presentation-closure-2026-07-28/post-deploy-truth/`.
+
+Two real defects found in the deployed build:
+
+1. **`/shortlist` empty state still exposed the full RequestToolForm layout** — the deployed bundle predated the `aa629e8` Shortlist remediation commit. The form was layout-occupying in initial render despite a closed `<details>` wrapper, violating the binding "secondary disclosure" contract.
+2. **`/collections/research-synthesis-toolkit` rendered a Server Components error boundary** with leaked React JSON in the visible DOM and a "404" badge artifact. The deployed bundle predated the `64c2f7a` Collection slot-safe boundary commit.
+
+All other routes, typography, surfaces, partner visibility, Radar states, and accessibility surfaces passed.
+
+### Round 2 — Rebuild & Re-audit
+
+- Source fix commit on `main`: `66eebed` — `fix(ui): close final route visual convergence after-truth audit`.
+- Cloudflare Worker version: `dd473416-e11b-4566-b6e4-574824aa2272` (uploaded with message `Total UI closure convergence rebuild 66eebed`).
+- Promoted to 100% via `wrangler versions deploy dd473416-...-2272 --name tooolvibes --percentage 100`.
+- New audit evidence under `audits/final-route-presentation-closure-2026-07-28/post-deploy-truth-rebuilt/` (40 settled + initial captures, structured JSON).
+
+Verified after the rebuild:
+
+| Route | Verdict |
+|-------|---------|
+| `/` | OK — typography, surfaces, partner visibility, Radar preview coherent |
+| `/archivio` | OK — pagination density, no glass, no overflow |
+| `/radar` | OK — terminal state `live` with truthful real Product Hunt signals (Prefactor 468, Cekura 309, Lottie Creator 2.0 261, Hardbook 165, EasyCircuit 152), language coherent with Home preview |
+| `/compare` | OK — meaningful empty slots + CTAs, no layout shift |
+| `/shortlist` | OK — empty-state hierarchy contractually correct: route title, message, three starter recommendations (Blink, VibeCode, WeWeb), Archive primary CTA, Radar secondary CTA, closed `<details>` containing RequestToolForm (summary only, 87px tall). Suggest Tool modal mount only on click (correct) |
+| `/collections/research-synthesis-toolkit` | OK — page renders fully via CollectionSlotSafeBoundary; zero leaked React JSON, zero "404" badge artifact |
+| `/posts` | OK — hierarchy preserved |
+| `/affiliati` | OK — `<details>` closed by default; honeypot hidden via off-screen `left-[-10000px]` + `aria-hidden="true"` + `tabIndex=-1`; no duplicate Company Website controls |
+| `/account` | OK — `v-auth-*` split layout visible before client resolves |
+| `/toools/blink` | OK |
+
+Partner visibility: zero visible or accessibility-exposed "Spazio partner", "Partner editoriale", "Prenotabile", "reserved", or "planned" elements across all 30 route/viewport combos.
+
+Typography: body Manrope everywhere; monumental H1 Anton on every route where intentional; zero Fraunces; zero Inter.
+
+Glass/contrast: zero `backdrop-filter` on card surfaces; zero visible translucent white card; gradients and decorative pseudo-element tints exist only as intentional radar/Home composition and shortlist wishlist intro surfaces, not card backgrounds.
+
+Horizontal overflow: none. H1 count: exactly 1 per page on every route/viewport. Failed font/asset requests: none.
+
+### Production endpoints (Round 2)
+
+```
+$ curl -s -o /dev/null -w '%{http_code}' https://tooolvibes.eu             # 200
+$ curl -s -o /dev/null -w '%{http_code}' https://tooolvibes.eu/shortlist    # 200
+$ curl -s -o /dev/null -w '%{http_code}' https://tooolvibes.eu/collections/research-synthesis-toolkit  # 200
+$ curl -s -o /dev/null -w '%{http_code}' https://tooolvibes.staff-ffa.workers.dev                       # 200
+```
+
+### Final commit & Worker
+
+- Direct-to-main commits in this closure window: `66eebed` (rebuild) + `67945b9` (release doc).
+- Worker `dd473416-e11b-4566-b6e4-574824aa2272` at 100% traffic.
+- Rollback target: `5e048104-487a-4ed3-9d77-8a3e0acd6a91` (the previously deployed release).
+
 ### Rollback
 
 ```
