@@ -266,8 +266,8 @@
   display: block;
   color: var(--account-muted);
   font-size: var(--tv-text-xs);
-  font-weight: 800;
-  letter-spacing: 0.18em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -397,14 +397,14 @@
   font-weight: 700;
   font-size: var(--tv-text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   color: var(--account-muted);
 }
 
 /* Number highlight */
 .account-number {
   font-family: var(--tv-font-system);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 2.4rem;
   line-height: 1;
   color: var(--account-ink);
