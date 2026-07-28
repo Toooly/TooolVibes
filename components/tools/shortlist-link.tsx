@@ -78,7 +78,7 @@ export function ShortlistLink({
           isFresh && "is-fresh",
         )}
         style={{
-          background: "rgba(255,255,255,0.8)",
+          background: "var(--tv-surface-inverted-raised)",
           color: count > 0 ? "var(--accent-strong)" : "var(--muted)",
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.58)",
         }}

@@ -275,7 +275,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
         className="light-surface rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
         style={{
           borderColor: "var(--line)",
-          background: "linear-gradient(180deg, rgba(255,255,255,0.84), rgba(243,237,255,0.74))",
+          background: "var(--tv-surface-inverted-raised)",
         }}
       >
         <p className="pill mx-auto">Confronto</p>
@@ -295,7 +295,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
             <div
               key={item}
               className="stat-block rounded-[24px] border p-4 text-left"
-              style={{ borderColor: "var(--line)", background: "linear-gradient(180deg, rgba(255,255,255,0.82), rgba(243,237,255,0.74))" }}
+              style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}
             >
               <p className="text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
                 {item}
@@ -328,7 +328,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
         className="light-surface rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
         style={{
           borderColor: "var(--line)",
-          background: "linear-gradient(180deg, rgba(255,255,255,0.84), rgba(243,237,255,0.74))",
+          background: "var(--tv-surface-inverted-raised)",
         }}
       >
         <p className="pill mx-auto">Confronto parziale</p>
@@ -379,7 +379,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
               type="button"
               onClick={clearCompare}
               className="selection-chip text-ui-strong rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em]"
-              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)", color: "var(--muted)" }}
+              style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)", color: "var(--muted)" }}
             >
               Svuota
             </button>

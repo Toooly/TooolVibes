@@ -150,7 +150,7 @@ export function ToolWorkspacePanel({ tool }: ToolWorkspacePanelProps) {
           placeholder={`Segnati cosa ti interessa davvero di ${tool.name}...`}
           data-sonic-action="update"
           className="filter-control mt-3 w-full rounded-[18px] border px-4 py-3 outline-none"
-          style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.84)" }}
+          style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}
         />
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-1">
