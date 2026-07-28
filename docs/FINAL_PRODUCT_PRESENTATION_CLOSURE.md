@@ -249,3 +249,107 @@ The `screenshots/` directory is preserved (empty) for future visual validation.
 ### Deployment Status
 
 Not deployed. Branch is safe to push and fast-forward merge to `main`.
+
+---
+
+## Production Deployment (2026-07-28 13:06 UTC)
+
+### Release Pipeline
+
+| Step | Result |
+|------|--------|
+| Recovery branch pushed | `recovery/final-product-presentation-closure-2026-07-28` |
+| Fast-forward merge to `main` | `c44b027` (no merge commit) |
+| `origin/main` updated | `c44b027` |
+| Style ownership | PASS |
+| TypeScript | PASS |
+| ESLint (zero warnings) | PASS |
+| Tests | 976 pass, 10 skip, 1 env-excluded (runtime-contract) |
+| Next.js production build | PASS |
+| OpenNext/Cloudflare build | PASS |
+
+### Deployment
+
+| Property | Value |
+|----------|-------|
+| Cloudflare account | `ffacd11bfafdca87d540a6c5fbe89120` |
+| Authenticated user | `staff@elevianutrition.eu` |
+| Worker | `tooolvibes` |
+| Previous active version | `5b068a5d-591c-4d6a-a986-770f4d29ffc3` (100%) |
+| New version | `851005d1-3fe7-4e50-8d4f-0af8f158cc0d` (100%) |
+| Deployment message | `Final presentation closure c44b027` |
+| Production domain | `https://tooolvibes.eu` |
+| Workers.dev | `https://tooolvibes.staff-ffa.workers.dev` |
+| Gate status | OPEN (`TOOOLVIBES_PUBLIC_GATE_ENABLED: "0"`) |
+
+### Live Verification
+
+All routes return HTTP 200, gate open, no Coming Soon gate:
+
+| Route | Status | Title |
+|-------|--------|-------|
+| `/` | 200 | TooolVibes \| Tool AI, SaaS, no-code e vibe coding |
+| `/archivio` | 200 | Archivio tool \| TooolVibes |
+| `/collections` | 200 | Collections \| TooolVibes |
+| `/compare` | 200 | Confronto tool \| TooolVibes |
+| `/shortlist` | 200 | Salvati \| TooolVibes |
+| `/posts` | 200 | Post \| TooolVibes |
+| `/affiliati` | 200 | Programma affiliati \| TooolVibes |
+| `/account` | 200 | Account \| TooolVibes |
+| `/radar` | 200 | Radar \| TooolVibes |
+| `/toools/blink` | 200 | — |
+
+### Typography Verification
+
+- 2 Next.js font variables in HTML (`__variable_73ee6c` + `__variable_ec6dc7`)
+- 2 .woff2 font files preloaded (Manrope + Anton)
+- No Fraunces font-family references in any page source
+- No Inter font-family references in any page source
+- No missing font requests
+
+### Surfaces Verification
+
+- Account page: no `glass` CSS classes, no `backdrop-filter`
+- No legacy glass card indicators detected across routes
+- No translucent white panel regressions
+
+### Partner Visibility
+
+- No "Prenotabile" text on any route
+- No "reserved" or "planned" partner blocks on any route
+- `isPublicMonetizationPlacement` guard active: all placements hidden (none are `status: "ready"`)
+
+### Radar State
+
+- Production Radar shows truthful `data-state="loading"` — no fixture data, no fake signals
+- No Product Hunt API token configured; loading/retry state correct per design
+
+### Metadata
+
+- Home title: no duplication (`absolute` template applied correctly)
+- Account title: "Account | TooolVibes" (not "Account — TooolVibes | TooolVibes")
+- All route titles use correct template format
+
+### Console/Overflow
+
+- No hydration errors detected in page source
+- No horizontal overflow indicators
+- No broken asset references
+
+### Rollback Reference
+
+```
+bun wrangler versions deploy 5b068a5d-591c-4d6a-a986-770f4d29ffc3 --name tooolvibes --percentage 100
+```
+
+### Runtime-Contract Exception
+
+`__tests__/scripts/runtime-contract.test.ts` fails under Bun (embedded Node 24.3.0 ≠ required 22.23.1). Passes in CI/CD with Node 22.23.1 + npm 10.9.2. Not a regression — identical failure on `main` before recovery.
+
+### Screenshots
+
+Production screenshots directory: `audits/final-product-presentation-closure-2026-07-28/screenshots/production/`
+
+### Remaining Route-Level Work
+
+For MiniMax M3 and Grok 4.5: Shortlist redesign, Collections visual redesign, Posts page redesign, Affiliati page redesign, Account page full migration, legacy `--surface-*` alias sunsetting, ESLint `react/no-unescaped-entities` debt clearance.
