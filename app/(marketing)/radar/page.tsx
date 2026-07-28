@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { RadarViewSwitch } from "@/components/radar/radar-view-switch";
+import { RadarExperience } from "@/components/radar/radar-experience";
 import { siteConfig } from "@/lib/config/site";
 import { radarDesktopVisual } from "@/lib/radar/radar-view-config";
 
@@ -17,5 +17,5 @@ export const metadata: Metadata = {
 };
 
 export default function RadarPage() {
-  return <RadarViewSwitch initialDesktopVisual={radarDesktopVisual} />;
+  return <RadarExperience initialVisual={radarDesktopVisual} />;
 }

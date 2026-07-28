@@ -53,7 +53,7 @@ export function ToolDetailActionSurface({
       <a
         href={externalUrl}
         target="_blank"
-        rel="noopener noreferrer"
+        rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
         className="td-final-cta--primary"
         aria-label={`${primaryLabel} di ${name} in una nuova scheda`}
       >

@@ -32,8 +32,11 @@ export function createProductHuntFixture(requestUrl: string) {
 
   return {
     status: "ok",
+    source: "qa-fixture",
+    stale: false,
     range: range === "week" || range === "month" ? range : "day",
     updatedAt: fixedProductHuntUpdatedAt,
-    items: productHuntItems,
-  };
+    items: [...productHuntItems],
+  } satisfies ProductHuntPayload;
 }
+import type { ProductHuntPayload } from "@/lib/radar/product-hunt-contract";

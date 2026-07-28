@@ -1,7 +1,13 @@
 export default function CompareLoading() {
   return (
     <div className="compare-space-page">
-      <section className="tool-battle-page" aria-busy="true" aria-label="Caricamento confronto">
+      <section
+        className="tool-battle-page"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label="Caricamento confronto"
+      >
         <header className="tool-battle-page__intro">
           <div className="skeleton-block h-5 w-36 rounded-full" />
           <div className="skeleton-block h-14 max-w-[38rem] rounded-[18px]" />

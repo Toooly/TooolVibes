@@ -65,7 +65,7 @@ describe("B38 catalog density policy — archivio route sponsor placement", () =
 
     expect(source).toContain("isCatalogDensityPolicyEnabled");
 
-    const catalogIndex = source.indexOf("<FloatingCatalogView");
+    const catalogIndex = source.indexOf("<DefinitiveArchive");
     expect(catalogIndex).toBeGreaterThan(-1);
 
     /* Con flag ON la band segue il catalogo (ultimo occurrence). */

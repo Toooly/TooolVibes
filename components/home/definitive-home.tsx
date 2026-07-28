@@ -6,8 +6,8 @@
  * v4 — Stronger composition density.
  *
  *   1. HERO + RADAR COCKPIT — one dark command surface, two columns.
- *      v4: tighter min-height (520px desktop), larger Radar stage (640px),
- *      larger brand disc (168px), socket counter, status pill under stage.
+ *      The compact Radar consumes the same truthful state model and responsive
+ *      instrument as the full route.
  *
  *   2. IVORY EDITORIAL SURFACE — dark → warm ivory transition.
  *      v4: single large surface with a head row (eyebrow + title + actions).
@@ -19,47 +19,27 @@
  *
  *   4. METHOD — quieter final section, unchanged structure, larger numbers.
  *
- *   5. RADAR EMPTY STATE — orbital sockets (5 nodes without identities),
- *      central brand disc, "awaiting signal" label, socket counter
- *      "0 / 5 · in attesa", factual PH configuration message. No fake
- *      names or rankings.
- *
  * Preserved from earlier passes:
  *   - serif Home H1 with violet "rumore" highlight (v4: clean underlay)
  *   - real Product Hunt data binding (no fabrication)
  *   - factual Radar empty state
- *   - reduced animation density (2 infinite loops above fold)
+ *   - state-meaningful motion only while the feed is genuinely live
  *   - 44px touch targets minimum (48px primary CTAs)
  *   - new shell component owners
  *   - prefers-reduced-motion
  */
 
 import Link from "next/link";
-import Image from "next/image";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
   ExternalLink,
   Sparkles,
 } from "lucide-react";
-import {
-  resolveRadarDataState,
-  type ProductHuntRange,
-} from "@/lib/radar/product-hunt-contract";
-import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
-import { NativePlacement } from "@/components/monetization/native-placement";
-
-const DesktopRadarNodes = dynamic(
-  () =>
-    import("@/components/desktop/desktop-radar-nodes").then(
-      (mod) => mod.DesktopRadarNodes,
-    ),
-  { ssr: false },
-);
+import { FeaturedPartner } from "@/components/monetization/partner-placements";
+import { HomeRadarPreview } from "@/components/radar/radar-experience";
 
 type DefinitiveHomeProps = {
   tools: ToolPublicView[];
@@ -90,43 +70,23 @@ const METHOD_STEPS = [
   },
 ] as const;
 
-const SOCKET_POSITIONS = [
-  { top: "8%", left: "50%" },
-  { top: "30%", left: "89%" },
-  { top: "70%", left: "89%" },
-  { top: "92%", left: "50%" },
-  { top: "70%", left: "11%" },
-] as const;
+function hasAffiliateSignal(href: string | null | undefined) {
+  if (!href) return false;
+
+  try {
+    const url = new URL(href);
+    return ["aff", "affiliate", "ref", "referral", "via"].some((key) =>
+      url.searchParams.has(key),
+    );
+  } catch {
+    return false;
+  }
+}
 
 // ============================================================
 // COCKPIT — Hero + Radar in the same primary frame
 // ============================================================
 function Cockpit() {
-  const { payload } = useProductHuntRadar("day" as ProductHuntRange);
-  const dataState = resolveRadarDataState(payload);
-  const hasLiveData = dataState === "ready";
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    if (typeof window.matchMedia !== "function") return;
-    const mq = window.matchMedia("(min-width: 900px)");
-    const update = () => setIsDesktop(mq.matches);
-    update();
-    if (typeof mq.addEventListener === "function") {
-      mq.addEventListener("change", update);
-      return () => mq.removeEventListener("change", update);
-    }
-    mq.addListener(update);
-    return () => mq.removeListener(update);
-  }, []);
-
-  const signalCount = hasLiveData ? payload?.items.length ?? 0 : 0;
-  const lastScan = hasLiveData
-    ? new Date(payload?.updatedAt ?? Date.now()).toUTCString().slice(17, 22)
-    : "—";
-  const range = payload?.range ?? "day";
-  const socketCount = `${String(signalCount).padStart(2, "0")} / 05`;
-
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
       <div aria-hidden="true" className="def-cockpit__bg" />
@@ -204,106 +164,8 @@ function Cockpit() {
           </nav>
         </div>
 
-        {/* RADAR — right column */}
         <div className="def-cockpit__radar">
-          <div className="def-cockpit__radar-head">
-            <p className="def-cockpit__radar-eyebrow">
-              Feed Product Hunt · dati non simulati
-            </p>
-            <div className="def-cockpit__radar-metrics" aria-label="Stato radar">
-              <div>
-                <dt>Scansione</dt>
-                <dd>{lastScan}</dd>
-              </div>
-              <div>
-                <dt>Segnali</dt>
-                <dd>{String(signalCount).padStart(2, "0")}</dd>
-              </div>
-              <div>
-                <dt>Periodo</dt>
-                <dd>{range.toUpperCase()}</dd>
-              </div>
-              <div>
-                <dt>Stato</dt>
-                <dd>{hasLiveData ? "LIVE" : "ATTESA"}</dd>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className="def-cockpit__stage"
-            aria-label="Strumento radar circolare"
-          >
-            {/* Socket count pill (top-right) */}
-            <p
-              className="def-cockpit__socket-count"
-              role="status"
-              aria-live="polite"
-            >
-              <span aria-hidden="true" className="def-cockpit__socket-count-dot" />
-              {socketCount}
-            </p>
-
-            {/* Concentric rings */}
-            <span aria-hidden="true" className="def-cockpit__ring def-cockpit__ring--1" />
-            <span aria-hidden="true" className="def-cockpit__ring def-cockpit__ring--2" />
-            <span aria-hidden="true" className="def-cockpit__ring def-cockpit__ring--3" />
-            {/* Ticks around the perimeter */}
-            <span aria-hidden="true" className="def-cockpit__ticks" />
-            {/* Cross axes */}
-            <span aria-hidden="true" className="def-cockpit__axis def-cockpit__axis--h" />
-            <span aria-hidden="true" className="def-cockpit__axis def-cockpit__axis--v" />
-            {/* Scanning ray */}
-            <span aria-hidden="true" className="def-cockpit__scan" />
-
-            {/* Five orbital sockets — awaiting real PH items */}
-            <ol className="def-cockpit__sockets" aria-label="Socket segnali">
-              {SOCKET_POSITIONS.map((pos, i) => (
-                <li
-                  key={i}
-                  className="def-cockpit__socket"
-                  style={{ top: pos.top, left: pos.left }}
-                  aria-hidden="true"
-                >
-                  <span className="def-cockpit__socket-trace" />
-                  <span className="def-cockpit__socket-dot" />
-                </li>
-              ))}
-            </ol>
-
-            {/* Live PH nodes when ready (overrides empty sockets) */}
-            {isDesktop && hasLiveData ? (
-              <div className="def-cockpit__nodes" data-mode="live">
-                <DesktopRadarNodes range="day" />
-              </div>
-            ) : null}
-
-            {/* Central brand disc */}
-            <div className="def-cockpit__core" aria-hidden="true">
-              <span className="def-cockpit__core-ring" />
-              <Image
-                src="/brand/tooolvibes-logo.png"
-                alt=""
-                width={120}
-                height={120}
-                className="def-cockpit__core-logo"
-                priority
-              />
-            </div>
-          </div>
-
-          {/* Status pill — factual, BELOW stage */}
-          <p className="def-cockpit__status" role="status" aria-live="polite">
-            <span aria-hidden="true" className="def-cockpit__status-dot" />
-            {hasLiveData
-              ? `${signalCount} segnali in tempo reale`
-              : "In attesa di Product Hunt · niente dati simulati"}
-          </p>
-
-          <Link href="/radar" className="def-cockpit__radar-cta">
-            Apri il Radar completo
-            <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          <HomeRadarPreview />
         </div>
       </div>
     </section>
@@ -330,6 +192,8 @@ function IvoryEditorial({
   const initial = (name: string) => name.slice(0, 2).toUpperCase();
 
   const editorialScore = computeEditorialScore(focusTool);
+  const isAffiliateLink =
+    Boolean(focusTool.affiliateUrl) || hasAffiliateSignal(focusTool.url);
   const winnerFacts = [
     { label: "Lettura", value: focusTool.readingTime ?? "—" },
     { label: "Casi d'uso", value: String(focusTool.useCases.length) },
@@ -405,7 +269,11 @@ function IvoryEditorial({
                 <a
                   href={focusTool.url}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel={
+                    isAffiliateLink
+                      ? "sponsored noopener noreferrer"
+                      : "noopener noreferrer"
+                  }
                   className="def-editorial__spot-cta def-editorial__spot-cta--primary"
                 >
                   {focusTool.ctaLabel ?? "Apri il sito"}
@@ -420,6 +288,12 @@ function IvoryEditorial({
                 <ArrowRight size={14} aria-hidden="true" />
               </Link>
             </div>
+            {isAffiliateLink ? (
+              <p className="def-editorial__spot-disclosure">
+                Link partner: potremmo ricevere una commissione senza costi
+                extra per te.
+              </p>
+            ) : null}
           </div>
 
           {/* Winner visual panel — v4 */}
@@ -579,9 +453,10 @@ export function DefinitiveHome({ tools, weeklyTool }: DefinitiveHomeProps) {
       <Cockpit />
       <IvoryEditorial focusTool={focusTool} tools={tools} />
       <Method />
-      <section className="def-home__placement">
-        <NativePlacement placementKey="home-featured-tool" variant="compact" dark />
-      </section>
+      <FeaturedPartner
+        placementKey="home-featured-tool"
+        className="def-home__placement"
+      />
     </div>
   );
 }

@@ -6,6 +6,9 @@ import {
 } from "./lib/security/browser-headers";
 
 const nextConfig: NextConfig = {
+  // OpenNext requires the traced standalone tree. Keep this explicit because
+  // Bun does not reliably propagate OpenNext's private build env to `next build`.
+  output: "standalone",
   outputFileTracingRoot: process.cwd(),
   async headers() {
     return [

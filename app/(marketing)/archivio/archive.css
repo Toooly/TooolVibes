@@ -111,24 +111,29 @@
   box-shadow: none !important;
 }
 
-.archive-final-surface .native-placement {
-  border-color: var(--tv-border-interactive) !important;
-  border-radius: var(--tv-radius-lg) !important;
-  background: var(--tv-surface-elevated) !important;
-  color: var(--tv-ink-primary) !important;
-  box-shadow: none !important;
-  transform: none !important;
+.archive-partner-placement {
+  position: relative;
+  z-index: var(--tv-z-content);
+  width: min(calc(100% - 2rem), var(--tv-container-uw));
+  margin-inline: auto;
 }
 
-.archive-final-surface .native-placement::before {
-  display: none !important;
-  content: none !important;
+.archive-partner-placement--before {
+  margin-top: calc(var(--tv-space-5) * -1);
+  margin-bottom: var(--tv-space-3);
 }
 
-/* WS-A.2 follow-up: dark surface forced the H2 + body to inherit
-   `--foreground` / `--muted-strong` (both dark). Override to light
-   ink so the partner card is readable on the elevated dark panel. */
-.archive-final-surface .native-placement h2,
-.archive-final-surface .native-placement p {
-  color: var(--tv-ink-primary);
+.archive-partner-placement--after {
+  margin-top: var(--tv-space-5);
+}
+
+@media (min-width: 640px) {
+  .archive-partner-placement {
+    width: min(calc(100% - 3rem), var(--tv-container-uw));
+  }
+
+  .archive-partner-placement--before {
+    margin-top: calc(var(--tv-space-8) * -1);
+    margin-bottom: var(--tv-space-5);
+  }
 }

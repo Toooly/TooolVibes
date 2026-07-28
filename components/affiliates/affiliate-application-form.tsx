@@ -68,15 +68,19 @@ function validateForm(form: FormState): FormErrors {
     errors.websiteUrl = "Inserisci un URL valido con https:// oppure lascia vuoto.";
   }
   if (form.message.trim().length < 12) {
-    errors.message = "Scrivi almeno due righe sul perché vuoi diventare affiliato.";
+    errors.message = "Scrivi almeno 12 caratteri sul perché vuoi diventare affiliato.";
   }
 
   return errors;
 }
 
-function FieldError({ message }: { message?: string }) {
+function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
-  return <p className="mt-2 text-sm font-semibold text-red-100">{message}</p>;
+  return (
+    <p id={id} role="alert" className="mt-2 text-sm font-semibold text-red-100">
+      {message}
+    </p>
+  );
 }
 
 export function AffiliateApplicationForm({ className }: { className?: string }) {
@@ -88,6 +92,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
   function updateField<Key extends keyof FormState>(key: Key, value: FormState[Key]) {
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined, form: undefined }));
+    setIsSubmitted(false);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -153,13 +158,18 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <PremiumBadge tone="accent" className="after:!hidden">Candidatura affiliato</PremiumBadge>
-          <h2 className="mt-3 text-[1.45rem] leading-tight sm:text-[1.85rem]">
+          <h2 id="affiliate-application-title" className="mt-3 text-[1.45rem] leading-tight sm:text-[1.85rem]">
             Raccontaci chi sei e dove porteresti TooolVibes.
           </h2>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4"
+        aria-labelledby="affiliate-application-title"
+        noValidate
+      >
         <SubmissionProtectionFields action="affiliate_request" />
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block">
@@ -171,7 +181,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               placeholder="Opzionale"
               disabled={isSubmitting}
             />
-            <FieldError message={errors.firstName} />
+            <FieldError id="affiliate-first-name-error" message={errors.firstName} />
           </label>
 
           <label className="block">
@@ -183,7 +193,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               placeholder="Opzionale"
               disabled={isSubmitting}
             />
-            <FieldError message={errors.lastName} />
+            <FieldError id="affiliate-last-name-error" message={errors.lastName} />
           </label>
 
           <label className="block">
@@ -197,8 +207,10 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               className={cn(inputClass, "mt-2")}
               placeholder="Opzionale, se vuoi essere ricontattato via email"
               disabled={isSubmitting}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? "affiliate-email-error" : undefined}
             />
-            <FieldError message={errors.email} />
+            <FieldError id="affiliate-email-error" message={errors.email} />
           </label>
 
           <label className="block">
@@ -222,8 +234,10 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               className={cn(inputClass, "mt-2")}
               placeholder="https://..."
               disabled={isSubmitting}
+              aria-invalid={Boolean(errors.websiteUrl)}
+              aria-describedby={errors.websiteUrl ? "affiliate-website-error" : undefined}
             />
-            <FieldError message={errors.websiteUrl} />
+            <FieldError id="affiliate-website-error" message={errors.websiteUrl} />
           </label>
 
           <div className="grid gap-4 md:col-span-2 md:grid-cols-2">
@@ -281,19 +295,28 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               placeholder="Raccontaci perché vorresti diventare affiliato e come presenteresti TooolVibes alla tua audience."
               disabled={isSubmitting}
               required
+              aria-invalid={Boolean(errors.message)}
+              aria-describedby={errors.message ? "affiliate-message-error" : undefined}
             />
-            <FieldError message={errors.message} />
+            <FieldError id="affiliate-message-error" message={errors.message} />
           </label>
         </div>
 
         {errors.form ? (
-          <div className="rounded-[20px] border border-red-500 bg-[var(--tv-surface-elevated)] px-4 py-3 text-sm font-semibold text-red-200">
+          <div
+            role="alert"
+            className="rounded-[20px] border border-red-500 bg-[var(--tv-surface-elevated)] px-4 py-3 text-sm font-semibold text-red-200"
+          >
             {errors.form}
           </div>
         ) : null}
 
         {isSubmitted ? (
-          <div className="flex gap-3 rounded-[20px] border border-emerald-500 bg-[var(--tv-surface-elevated)] px-4 py-3 text-sm text-emerald-200">
+          <div
+            role="status"
+            aria-live="polite"
+            className="flex gap-3 rounded-[20px] border border-emerald-500 bg-[var(--tv-surface-elevated)] px-4 py-3 text-sm text-emerald-200"
+          >
             <CheckCircle2 className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
             <p>Richiesta ricevuta. La troviamo nel backoffice e ti ricontattiamo sui recapiti indicati.</p>
           </div>

@@ -45,13 +45,6 @@ export default async function HomePage() {
     getToolSpotlightView(),
   ]);
 
-  // PHASE 2.2 (2026-07-24): Definitive Home replaces VibeHomeV2.
-  // The new architecture delivers 3+ major visible changes:
-  //   1. Editorial single-column hero with brand glyph as decoration
-  //   2. Full-width signature Radar instrument (NOT a side panel)
-  //   3. Editorial Tool of the Week with score panel + actions
-  //   4. Horizontal 3-card Podium (NOT vertical 3D stacked)
-  //   5. Horizontal method cards
   return (
     <DefinitiveHome
       tools={tools}

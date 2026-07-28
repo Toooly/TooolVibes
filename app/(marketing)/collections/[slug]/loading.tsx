@@ -1,6 +1,12 @@
 export default function CollectionDetailLoading() {
   return (
-    <div className="page-shell space-y-6 pb-18 pt-8 sm:space-y-8 sm:pb-22 sm:pt-10">
+    <div
+      className="page-shell space-y-6 pb-18 pt-8 sm:space-y-8 sm:pb-22 sm:pt-10"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="Caricamento raccolta"
+    >
       <section className="brand-panel panel-lift rounded-[36px] p-6 sm:p-7 lg:p-8">
         <div className="editorial-grid gap-y-6">
           <div className="col-span-12 lg:col-span-7 space-y-4">

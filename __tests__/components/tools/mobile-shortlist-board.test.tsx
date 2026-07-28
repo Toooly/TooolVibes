@@ -135,6 +135,23 @@ afterEach(() => {
 });
 
 describe("MobileShortlistBoard — B32 editable decision memory", () => {
+  it("keeps a page-level heading and named region in the empty state", () => {
+    seedWorkspace(createEmptyWorkspaceState());
+    render(<MobileShortlistBoard tools={TOOLS} />);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "La tua biblioteca è pronta a riempirsi.",
+      }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("region", {
+        name: "La tua biblioteca è pronta a riempirsi.",
+      }),
+    ).toBeTruthy();
+  });
+
   it("renders only saved tools and opens the decision sheet from a book", () => {
     render(<MobileShortlistBoard tools={TOOLS} />);
 

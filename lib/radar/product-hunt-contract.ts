@@ -25,6 +25,8 @@ export type ProductHuntSource =
   | "product-hunt-live"
   /** Ultima classifica reale sincronizzata, servita come fallback dichiarato. */
   | "product-hunt-stale"
+  /** Fixture deterministica, attivabile solo in sviluppo e dichiarata nella UI. */
+  | "qa-fixture"
   /** Nessun dato reale disponibile (token assente o errore senza cache). */
   | "none";
 

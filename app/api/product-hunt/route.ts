@@ -97,6 +97,55 @@ const fallbackCache = new Map<
 let productHuntTokenCache: { token: string; expiresAt: number } | null = null;
 
 const FALLBACK_TTL_MS = 5 * 60 * 1000;
+const RADAR_QA_FIXTURE_ENV_KEY = "TOOOLVIBES_RADAR_QA_FIXTURE";
+
+function getDevelopmentQaFixture(
+  range: ProductHuntRange,
+): ProductHuntPayload | null {
+  if (
+    process.env.NODE_ENV !== "development" ||
+    process.env[RADAR_QA_FIXTURE_ENV_KEY] !== "1"
+  ) {
+    return null;
+  }
+
+  return {
+    status: "ok",
+    source: "qa-fixture",
+    stale: false,
+    range,
+    updatedAt: "2026-01-15T10:00:00.000Z",
+    items: [
+      {
+        id: "fixture-canvas",
+        name: "Fixture Canvas",
+        tagline: "Segnale deterministico per il QA visuale locale.",
+        votesCount: 420,
+        commentsCount: 32,
+        productHuntUrl:
+          "https://www.producthunt.com/posts/fixture-canvas",
+      },
+      {
+        id: "stable-signal",
+        name: "Stable Signal",
+        tagline: "Dato ripetibile per verificare il layout responsive.",
+        votesCount: 318,
+        commentsCount: 21,
+        productHuntUrl:
+          "https://www.producthunt.com/posts/stable-signal",
+      },
+      {
+        id: "release-lens",
+        name: "Release Lens",
+        tagline: "Terzo elemento fisso della classifica di test.",
+        votesCount: 207,
+        commentsCount: 14,
+        productHuntUrl:
+          "https://www.producthunt.com/posts/release-lens",
+      },
+    ],
+  };
+}
 
 function parseRange(value: string | null): ProductHuntRange {
   if (value === "week" || value === "month") {
@@ -201,6 +250,12 @@ export async function GET(request: NextRequest) {
   const range = parseRange(request.nextUrl.searchParams.get("range"));
   const settings = rangeSettings[range];
   const now = Date.now();
+  const developmentFixture = getDevelopmentQaFixture(range);
+
+  if (developmentFixture) {
+    return buildResponse(developmentFixture, settings.ttlMs);
+  }
+
   const cached = responseCache.get(range);
 
   if (cached && cached.expiresAt > now) {

@@ -864,10 +864,13 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
   ];
 
   return (
-    <div className="mobile-library-empty">
+    <section
+      className="mobile-library-empty"
+      aria-labelledby="mobile-library-empty-title"
+    >
       <div className="mobile-library-empty__content">
         <span className="mobile-library-empty__kicker">Nessun tool salvato, per ora</span>
-        <h2>La tua biblioteca è pronta a riempirsi.</h2>
+        <h1 id="mobile-library-empty-title">La tua biblioteca è pronta a riempirsi.</h1>
         <p>
           Inizia con pochi candidati buoni: quando salvi un tool, qui trovi categoria,
           stato, link alla scheda e scorciatoie per confronto o suggerimenti.
@@ -903,6 +906,6 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
           <ArrowRight size={14} />
         </Link>
       </div>
-    </div>
+    </section>
   );
 }

@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import {
   createHomeExperienceConfig,
   HOME_INTRO_MODES,
-  HOME_LAYOUTS,
   HomeExperienceConfigError,
   readHomeExperienceEnvironment,
 } from "@/lib/config/home-experience";
@@ -13,36 +12,30 @@ import {
    paralleli su release-features.ts). */
 
 describe("B40 home experience flags (MOB-704)", () => {
-  it("espone i modi consentiti per intro e layout", () => {
+  it("espone i modi consentiti per l'intro", () => {
     expect(HOME_INTRO_MODES).toEqual(["cinematic", "compact", "off"]);
-    expect(HOME_LAYOUTS).toEqual(["legacy", "time-to-value"]);
   });
 
-  it("default: intro disattivata e layout time-to-value", () => {
+  it("default: intro disattivata", () => {
     const config = createHomeExperienceConfig();
 
     expect(config.introMode).toBe("off");
-    expect(config.layout).toBe("time-to-value");
   });
 
   it("env vuota o blank ricade sui default", () => {
     const config = createHomeExperienceConfig({
       TOOOLVIBES_HOME_INTRO_MODE: "   ",
-      TOOOLVIBES_HOME_LAYOUT: "",
     });
 
     expect(config.introMode).toBe("off");
-    expect(config.layout).toBe("time-to-value");
   });
 
-  it("reversibilita': override env ripristina cinematic e legacy", () => {
+  it("reversibilita': override env ripristina cinematic", () => {
     const config = createHomeExperienceConfig({
       TOOOLVIBES_HOME_INTRO_MODE: "cinematic",
-      TOOOLVIBES_HOME_LAYOUT: "legacy",
     });
 
     expect(config.introMode).toBe("cinematic");
-    expect(config.layout).toBe("legacy");
   });
 
   it("intro off: la modalita' e' risolta e il gate resta al call site", () => {
@@ -56,11 +49,9 @@ describe("B40 home experience flags (MOB-704)", () => {
   it("parsing case-insensitive con trim", () => {
     const config = createHomeExperienceConfig({
       TOOOLVIBES_HOME_INTRO_MODE: "  Cinematic ",
-      TOOOLVIBES_HOME_LAYOUT: " Legacy",
     });
 
     expect(config.introMode).toBe("cinematic");
-    expect(config.layout).toBe("legacy");
   });
 
   it("valori ignoti: errore fail-fast che nomina la env key", () => {
@@ -70,9 +61,6 @@ describe("B40 home experience flags (MOB-704)", () => {
     expect(() =>
       createHomeExperienceConfig({ TOOOLVIBES_HOME_INTRO_MODE: "slow" }),
     ).toThrow(/TOOOLVIBES_HOME_INTRO_MODE/);
-    expect(() =>
-      createHomeExperienceConfig({ TOOOLVIBES_HOME_LAYOUT: "grid" }),
-    ).toThrow(/TOOOLVIBES_HOME_LAYOUT/);
   });
 
   it("il config risolto e' frozen", () => {
@@ -82,9 +70,6 @@ describe("B40 home experience flags (MOB-704)", () => {
 
   it("readHomeExperienceEnvironment legge solo la allowlist esplicita", () => {
     const environment = readHomeExperienceEnvironment();
-    expect(Object.keys(environment).sort()).toEqual([
-      "TOOOLVIBES_HOME_INTRO_MODE",
-      "TOOOLVIBES_HOME_LAYOUT",
-    ]);
+    expect(Object.keys(environment)).toEqual(["TOOOLVIBES_HOME_INTRO_MODE"]);
   });
 });

@@ -1,5 +1,11 @@
 export type MonetizationStatus = "ready" | "reserved" | "planned";
 
+export type MonetizationPartnerIdentity = {
+  name: string;
+  category: string;
+  href: string;
+};
+
 export type MonetizationPlacement = {
   key: string;
   surface: string;
@@ -14,6 +20,15 @@ export type MonetizationPlacement = {
   visible: boolean;
   priority: number;
   audience: string;
+  partner?: MonetizationPartnerIdentity;
+  editorialReason?: string;
+};
+
+export type PublicMonetizationPlacement = MonetizationPlacement & {
+  status: "ready";
+  visible: true;
+  partner: MonetizationPartnerIdentity;
+  editorialReason: string;
 };
 
 export const monetizationPlacements = [
@@ -128,6 +143,23 @@ export type MonetizationPlacementKey = (typeof monetizationPlacements)[number]["
 
 export function getMonetizationPlacement(key: MonetizationPlacementKey): MonetizationPlacement | undefined {
   return monetizationPlacements.find((placement) => placement.key === key);
+}
+
+/**
+ * Reserved and planned inventory belongs to the commercial back office, not
+ * to the public reading journey. A placement is public only when a real
+ * partner identity and an explicit editorial-relevance reason are present.
+ */
+export function isPublicMonetizationPlacement(
+  placement: MonetizationPlacement | undefined,
+): placement is PublicMonetizationPlacement {
+  return Boolean(
+    placement?.visible &&
+      placement.status === "ready" &&
+      placement.partner?.name &&
+      placement.partner.href &&
+      placement.editorialReason,
+  );
 }
 
 export function getMonetizationPlacementStats() {

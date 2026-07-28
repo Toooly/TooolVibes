@@ -13,4 +13,5 @@ import "@/styles/compare.css";
 import "@/styles/radar.css";
 import "@/styles/tool-detail-final.css";
 import "@/styles/public-routes.css";
+import "@/styles/partner-placements.css";
 import "@/styles/premium-motion.css";

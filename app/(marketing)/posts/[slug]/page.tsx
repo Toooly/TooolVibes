@@ -6,7 +6,10 @@ import { notFound } from "next/navigation";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
 import { MarkdownContent } from "@/components/editorial/markdown-content";
-import { NativePlacement } from "@/components/monetization/native-placement";
+import {
+  ContextualPartnerBlock,
+  PartnerToolCard,
+} from "@/components/monetization/partner-placements";
 import { RouteMarker } from "@/components/ui/route-marker";
 import { siteConfig } from "@/lib/config/site";
 import { getCollectionBySlug } from "@/lib/data/public-collections";
@@ -289,9 +292,10 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               </>
             )}
           </div>
-          <div className="mt-4">
-            <NativePlacement placementKey="guide-inline-promo" variant="inline" />
-          </div>
+          <ContextualPartnerBlock
+            placementKey="guide-inline-promo"
+            className="mt-4"
+          />
         </div>
 
         <div className="col-span-12 lg:col-span-5">
@@ -320,7 +324,11 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                       <Link
                         href={relatedToolHref ?? tool.website_url}
                         target="_blank"
-                        rel="noreferrer"
+                        rel={
+                          isRelatedToolAffiliate
+                            ? "sponsored noopener noreferrer"
+                            : "noopener noreferrer"
+                        }
                         className="section-quiet-link text-sm font-semibold text-white/82"
                       >
                         Vai al sito
@@ -380,7 +388,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               </div>
             </div>
 
-            <NativePlacement placementKey="article-sidebar-sponsor" variant="rail" dark />
+            <PartnerToolCard placementKey="article-sidebar-sponsor" />
 
             {relatedCollections.length > 0 ? (
               <div className="brand-panel rounded-[28px] p-4 sm:p-4.5">

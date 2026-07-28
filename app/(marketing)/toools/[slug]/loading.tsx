@@ -2,7 +2,13 @@ import { ToolCardSkeleton } from "@/components/tools/tool-card-skeleton";
 
 export default function ToolProfileLoading() {
   return (
-    <div className="page-shell space-y-6 pb-18 pt-8 sm:space-y-8 sm:pb-22 sm:pt-10">
+    <div
+      className="page-shell space-y-6 pb-18 pt-8 sm:space-y-8 sm:pb-22 sm:pt-10"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="Caricamento scheda tool"
+    >
       <section className="brand-panel brand-aura overflow-hidden rounded-[36px]">
         <div className="editorial-grid gap-y-0">
           <div className="col-span-12 space-y-5 p-6 sm:p-7 lg:col-span-7 lg:p-8">

@@ -102,7 +102,7 @@ export default async function PostsPage() {
         </div>
       </section>
 
-      <section className="tone-issue page-shell home-section-gap">
+      <section className="tone-issue home-section-gap">
         <div className="dark-panel section-stage rounded-[38px] p-6 sm:p-8 lg:p-9">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
             <div>
@@ -128,7 +128,7 @@ export default async function PostsPage() {
       </section>
 
       {blogPosts.length > 0 ? (
-        <section className="page-shell home-section-gap">
+        <section className="home-section-gap">
           <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
             <SectionHeader
               eyebrow="Blog"
@@ -144,7 +144,7 @@ export default async function PostsPage() {
         </section>
       ) : null}
 
-      <section className="page-shell home-section-gap">
+      <section className="home-section-gap">
         <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
           <SectionHeader
             eyebrow="Approfondimenti tool"
@@ -159,7 +159,7 @@ export default async function PostsPage() {
         </div>
       </section>
 
-      <section id="guide" className="page-shell home-section-gap">
+      <section id="guide" className="home-section-gap">
         <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
           <SectionHeader
             eyebrow="Guide"

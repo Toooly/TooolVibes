@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { DefinitiveArchive } from "@/components/archive/definitive-archive";
-import { NativePlacement } from "@/components/monetization/native-placement";
+import { PartnerToolCard } from "@/components/monetization/partner-placements";
 import { isCatalogDensityPolicyEnabled } from "@/lib/config/catalog-density-policy";
 import { parseCatalogLevelParam } from "@/components/directory/catalog/catalog-controller";
 import {
@@ -43,9 +43,10 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   return (
     <div className="archive-final-surface relative overflow-x-hidden">
       {!catalogDensityPolicy && (
-        <section className="page-shell relative z-10 -mt-5 pb-3 sm:-mt-8 sm:pb-5">
-          <NativePlacement placementKey="catalog-native-sponsor" variant="band" />
-        </section>
+        <PartnerToolCard
+          placementKey="catalog-native-sponsor"
+          className="archive-partner-placement archive-partner-placement--before"
+        />
       )}
 
       <DefinitiveArchive
@@ -57,12 +58,10 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
       />
 
       {catalogDensityPolicy && (
-        <section
-          className="page-shell relative z-10 pt-3 sm:pt-5"
-          aria-label="Sponsor catalogo"
-        >
-          <NativePlacement placementKey="catalog-native-sponsor" variant="band" />
-        </section>
+        <PartnerToolCard
+          placementKey="catalog-native-sponsor"
+          className="archive-partner-placement archive-partner-placement--after"
+        />
       )}
     </div>
   );

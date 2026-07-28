@@ -13,6 +13,7 @@ const expectedGlobalImports = [
   "@/styles/radar.css",
   "@/styles/tool-detail-final.css",
   "@/styles/public-routes.css",
+  "@/styles/partner-placements.css",
   "@/styles/premium-motion.css",
 ];
 const retiredGlobalImports = [
@@ -30,6 +31,7 @@ const importantCeilings = {
   "styles/premium-motion.css": 0,
   "styles/radar.css": 4,
   "styles/public-routes.css": 46,
+  "styles/partner-placements.css": 0,
   "styles/shell.css": 138,
   "styles/tokens.css": 0,
   "styles/tool-detail-final.css": 0,
@@ -82,6 +84,23 @@ if (JSON.stringify(actualGlobalImports) !== JSON.stringify(expectedGlobalImports
 }
 
 const globalFoundationSource = read("app/globals.css");
+const globalScopeBlocks = Array.from(
+  globalFoundationSource.matchAll(
+    /(?:^|\n)\s*((?::root|html|body)(?:\s*,\s*(?::root|html|body))*)\s*\{([^{}]*)\}/g,
+  ),
+);
+for (const [, selector, declarations] of globalScopeBlocks) {
+  const customProperties = Array.from(
+    declarations.matchAll(/^\s*(--[A-Za-z0-9-]+)\s*:/gm),
+    (match) => match[1],
+  );
+  if (customProperties.length > 0) {
+    errors.push(
+      `app/globals.css defines global custom properties on ${selector}: ${customProperties.join(", ")}; own defaults in styles/tokens.css and scope runtime values to their component selector`,
+    );
+  }
+}
+
 for (const featureSheet of [
   "definitive-home.css",
   "compare.css",

@@ -1,7 +1,13 @@
 export default function ShortlistLoading() {
   return (
     <div className="shortlist-final-surface">
-      <div className="mobile-library-board" aria-busy="true" aria-label="Caricamento salvati">
+      <div
+        className="mobile-library-board"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label="Caricamento salvati"
+      >
         <section className="mobile-library-hero">
           <div className="grid gap-4">
             <div className="skeleton-block h-5 w-40 rounded-full" />

@@ -13,195 +13,6 @@
 @import "../styles/mobile-bottom-nav.css";
 
 
-:root {
-  --bottom-nav-height: 3.55rem;
-  --z-base: var(--tv-z-base);
-  --z-sticky: var(--tv-z-sticky);
-  --z-nav: var(--tv-z-nav);
-  --z-overlay: var(--tv-z-overlay);
-  --z-modal: var(--tv-z-modal);
-  --z-toast: var(--tv-z-toast);
-  --z-cursor: var(--tv-z-effects);
-
-  /* Fixed-surface public contract (binding).
-     MobileBottomNav publishes --tv-bottom-nav-total.
-     Comparison Tray publishes --tv-tray-height.
-     Routes consume both for their padding-bottom. */
-  --tv-bottom-nav-total: 4.0625rem; /* ~65px = nav 3.55 + safe-area padding 6 + extra */
-  --tv-bottom-nav-total-desktop: 0px;
-  --tv-tray-height: 0px;
-  --surface-brand-panel-bg:
-    radial-gradient(circle at top right, rgba(106, 60, 255, 0.11), transparent 30%),
-    radial-gradient(circle at 82% 68%, rgba(57, 210, 246, 0.08), transparent 27%),
-    radial-gradient(circle at 16% 12%, rgba(243, 191, 76, 0.12), transparent 18%),
-    radial-gradient(circle at 18% 10%, rgba(255, 255, 255, 0.76), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(243, 239, 255, 0.96));
-  --surface-metadata-bg: linear-gradient(180deg, rgba(252, 250, 255, 0.94), rgba(245, 240, 255, 0.88));
-  --surface-discovery-strip-bg:
-    radial-gradient(circle at top right, rgba(106, 60, 255, 0.07), transparent 26%),
-    linear-gradient(180deg, rgba(253, 251, 255, 0.97), rgba(245, 240, 255, 0.92));
-  --surface-discovery-strip-dark-bg:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
-  --surface-selection-status-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(243, 239, 255, 0.9));
-  --surface-selection-chip-bg: linear-gradient(180deg, rgba(253, 251, 255, 0.94), rgba(244, 238, 255, 0.86));
-  --surface-selection-status-border: rgba(56, 42, 122, 0.15);
-  --surface-selection-chip-border: rgba(56, 42, 122, 0.15);
-  --surface-selection-chip-color: var(--muted-strong);
-  --surface-panel-border: var(--line);
-  --surface-metadata-border: var(--line);
-  --surface-discovery-strip-border: rgba(112, 82, 255, 0.12);
-  --surface-discovery-strip-dark-border: rgba(255, 255, 255, 0.1);
-  --surface-panel-shadow: var(--shadow);
-  --surface-shell-bg:
-    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.92), transparent 38%),
-    radial-gradient(circle at 88% 18%, rgba(57, 210, 246, 0.1), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(242, 237, 255, 0.9));
-  --surface-shell-border: rgba(70, 54, 134, 0.16);
-  --surface-shell-shadow:
-    0 18px 44px rgba(33, 24, 97, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.58);
-  --surface-intro-helper-bg:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(245, 240, 255, 0.62));
-  --surface-intro-helper-border: rgba(70, 54, 134, 0.12);
-  --surface-brand-aura-shadow:
-    0 0 0 1px rgba(106, 60, 255, 0.08),
-    0 20px 56px rgba(41, 28, 120, 0.14),
-    0 0 54px rgba(57, 210, 246, 0.06);
-  --success-soft: rgba(92, 191, 156, 0.16);
-  --success: #158a63;
-  --warning: #b7791f;
-  --warning-soft: rgba(243, 191, 76, 0.18);
-  --danger: #b42318;
-  --danger-soft: rgba(217, 45, 32, 0.12);
-  --game-danger: #ff4d6d;
-  --game-success: #00d084;
-  --info: #2563eb;
-  --info-soft: rgba(37, 99, 235, 0.12);
-  --highlight-soft: rgba(255, 255, 255, 0.72);
-  --accent-glow: rgba(106, 60, 255, 0.2);
-  --gold-glow: rgba(243, 191, 76, 0.18);
-  --tv-scroll-progress: 0;
-  --tv-scroll-depth: 0px;
-  --tv-scroll-lift: 0px;
-  --tv-scroll-soft: 0px;
-  --tv-scroll-rise: 0px;
-  --tv-scroll-sweep: 0px;
-  --tv-scroll-glow: 0.12;
-  --tv-depth-opacity: 0.18;
-  --tv-stage-opacity: 0.28;
-  --tv-field-opacity: 0.34;
-  --tv-pointer-x: 50vw;
-  --tv-pointer-y: 46vh;
-  --tv-pointer-shift-x: 0px;
-  --tv-pointer-shift-y: 0px;
-  --tv-pointer-tilt-x: 0deg;
-  --tv-pointer-tilt-y: 0deg;
-  --radius-xl: 32px;
-  --radius-lg: 24px;
-  --radius-md: 18px;
-  --radius-2xl: 40px;
-  --background: #f7f5ff;
-  --background-strong: #f0edff;
-  --background-deep: #e6e0ff;
-  --foreground: #120d2f;
-  --muted: #4f4970;
-  --muted-strong: #2d255d;
-  --line: rgba(62, 46, 132, 0.13);
-  --line-strong: rgba(62, 46, 132, 0.22);
-  --surface: rgba(255, 255, 255, 0.78);
-  --surface-strong: rgba(255, 255, 255, 0.94);
-  --surface-glass: rgba(255, 255, 255, 0.68);
-  --surface-muted: rgba(236, 232, 255, 0.78);
-  --text-dark: #120d2f;
-  --text-secondary: #5d567b;
-  --border-soft: rgba(62, 46, 132, 0.13);
-  --accent-purple: #6a3cff;
-  --accent-indigo: #4f46e5;
-  --champagne: #f6dfa5;
-  --champagne-strong: #e9bb5c;
-  --primary: #6a3cff;
-  --primary-foreground: #ffffff;
-  --accent: #6a3cff;
-  --accent-strong: #3a2397;
-  --accent-soft: rgba(106, 60, 255, 0.14);
-  --cyan: #2bb9de;
-  --cyan-soft: rgba(57, 210, 246, 0.14);
-  --gold: #d99d27;
-  --gold-soft: rgba(243, 191, 76, 0.18);
-  --card: #ffffff;
-  --card-foreground: #120d2f;
-  --popover: #ffffff;
-  --popover-foreground: #120d2f;
-  --border: rgba(62, 46, 132, 0.13);
-  --input: rgba(62, 46, 132, 0.16);
-  --ring: rgba(106, 60, 255, 0.38);
-  --gradient-shell:
-    repeating-linear-gradient(90deg, rgba(106, 60, 255, 0.012) 0 1px, transparent 1px 5.6rem),
-    linear-gradient(180deg, #fbf9ff 0%, #f4f0ff 48%, #ece7ff 100%);
-  --gradient-primary:
-    radial-gradient(circle at 82% 12%, rgba(57, 210, 246, 0.22), transparent 30%),
-    linear-gradient(135deg, #8b6cff 0%, #6a3cff 42%, #4f46e5 75%, #2c1f86 100%);
-  --gradient-ink:
-    radial-gradient(circle at 20% 8%, rgba(255, 255, 255, 0.38), transparent 28%),
-    radial-gradient(circle at 84% 18%, rgba(57, 210, 246, 0.12), transparent 26%),
-    linear-gradient(145deg, rgba(248, 246, 255, 0.96) 0%, rgba(236, 230, 255, 0.94) 52%, rgba(228, 235, 255, 0.96) 100%);
-  --gradient-panel:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.93), rgba(239, 235, 255, 0.86));
-  --gradient-panel-blue:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(232, 239, 255, 0.9));
-  --gradient-panel-violet:
-    linear-gradient(145deg, rgba(252, 250, 255, 0.95), rgba(238, 232, 255, 0.9));
-  --gradient-panel-warm:
-    linear-gradient(145deg, rgba(255, 252, 246, 0.96), rgba(242, 236, 255, 0.9));
-  --surface-dark-panel-bg: var(--gradient-panel-blue);
-  --surface-shell-dark-bg: var(--gradient-panel-violet);
-  --surface-intro-aside-bg: var(--gradient-panel-blue);
-  --surface-dark-panel-border: rgba(76, 55, 166, 0.18);
-  --surface-shell-dark-border: rgba(76, 55, 166, 0.18);
-  --surface-intro-aside-border: rgba(76, 55, 166, 0.16);
-  --surface-dark-panel-shadow: var(--shadow-card);
-  --surface-shell-dark-shadow: var(--shadow-card);
-  --surface-intro-aside-shadow: var(--shadow-soft);
-  --gradient-paper:
-    radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.36), transparent 34%),
-    radial-gradient(circle at 86% 14%, rgba(167, 139, 250, 0.16), transparent 28%),
-    linear-gradient(180deg, rgba(239, 242, 255, 0.92), rgba(211, 218, 251, 0.84));
-  --shadow: 0 24px 72px rgba(47, 33, 126, 0.11);
-  --shadow-strong: 0 38px 110px rgba(47, 33, 126, 0.18);
-  --shadow-soft: 0 16px 42px rgba(47, 33, 126, 0.08);
-  --shadow-card: 0 24px 64px rgba(47, 33, 126, 0.1);
-  --shadow-premium: 0 34px 90px rgba(47, 33, 126, 0.14);
-  --ink: #130d31;
-  --ink-muted: #4f4970;
-  --ink-strong: #251e51;
-  --ink-accent: #4c2fbc;
-  --scrollbar-track: rgba(229, 224, 255, 0.72);
-  --scrollbar-thumb: rgba(112, 82, 255, 0.46);
-  --scrollbar-thumb-hover: rgba(106, 60, 255, 0.66);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --mobile-bg-void: #06060E;
-  --mobile-bg-section: #06060E;
-  --mobile-bg-card: rgba(255, 255, 255, 0.05);
-  --mobile-border-subtle: rgba(255, 255, 255, 0.08);
-  --mobile-text-primary: #ffffff;
-  --mobile-text-secondary: rgba(255, 255, 255, 0.72);
-  --mobile-text-on-accent: #0a0a1a;
-}
-
 /*
  * Z-STACK canonico: i valori appartengono a styles/tokens.css.
  * Consumer globali: nav/FAB -> --tv-z-nav, backdrop -> --tv-z-overlay,
@@ -6341,104 +6152,6 @@ img {
       inset 0 1px 0 rgba(255, 255, 255, 0.58);
     transform: translateY(-0.5px);
     filter: saturate(1.01);
-  }
-
-  .native-placement {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    isolation: isolate;
-    box-shadow:
-      0 18px 46px rgba(38, 25, 94, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.58);
-  }
-
-  .native-placement::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    opacity: 0.78;
-    background:
-      radial-gradient(circle at 92% 0%, rgba(57, 210, 246, 0.16), transparent 34%),
-      radial-gradient(circle at 8% 12%, rgba(106, 60, 255, 0.12), transparent 34%);
-    transition:
-      opacity 220ms ease,
-      transform 240ms ease;
-  }
-
-  .native-placement:hover,
-  .native-placement:focus-within,
-  .native-placement:active {
-    box-shadow:
-      0 22px 54px rgba(38, 25, 94, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.64);
-  }
-
-  .native-placement:active {
-    transform: translateY(0) scale(0.992);
-  }
-
-  .native-placement:hover::before,
-  .native-placement:focus-within::before {
-    opacity: 1;
-    transform: scale(1.02);
-  }
-
-  .native-placement-light {
-    border-color: rgba(106, 60, 255, 0.12);
-    background:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(246, 242, 255, 0.88)),
-      var(--surface-metadata-bg);
-  }
-
-  .native-placement-dark {
-    border-color: rgba(255, 255, 255, 0.1);
-    background:
-      radial-gradient(circle at 100% 0%, rgba(57, 210, 246, 0.16), transparent 32%),
-      linear-gradient(145deg, rgba(21, 14, 52, 0.96), rgba(10, 8, 24, 0.98));
-  }
-
-  .native-placement-label,
-  .native-placement-status {
-    display: inline-flex;
-    align-items: center;
-    min-height: 1.45rem;
-    border-radius: 999px;
-    padding: 0.28rem 0.64rem;
-    font-size: var(--tv-text-xs);
-    font-weight: 800;
-    letter-spacing: 0.13em;
-    line-height: 1;
-    text-transform: uppercase;
-  }
-
-  .native-placement-label {
-    border: 1px solid rgba(106, 60, 255, 0.14);
-    background: rgba(255, 255, 255, 0.82);
-    color: var(--accent-strong);
-  }
-
-  .native-placement-status {
-    border: 1px solid rgba(57, 210, 246, 0.2);
-    background: rgba(57, 210, 246, 0.08);
-    color: var(--muted-strong);
-  }
-
-  .native-placement-label-dark {
-    border-color: rgba(255, 255, 255, 0.13);
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.82);
-  }
-
-  .native-placement-status-dark {
-    border-color: rgba(57, 210, 246, 0.22);
-    background: rgba(57, 210, 246, 0.1);
-    color: rgba(158, 239, 255, 0.96);
-  }
-
-  .native-placement-rail,
-  .native-placement-compact {
-    border-radius: 24px;
   }
 
   .hover-reveal {
@@ -18675,11 +18388,6 @@ img {
 
 /* Mobile proportional alignment pass: stabilize header, catalog and weekly podium. */
 @media (max-width: 767px) {
-  :root {
-    --mobile-page-inline: clamp(1rem, 4.7vw, 1.35rem);
-    --mobile-content-max: 24.5rem;
-  }
-
   body {
     overflow-x: hidden;
   }
@@ -23820,12 +23528,10 @@ img {
     width: min(34rem, calc(100vw - 3rem)) !important;
     max-width: none !important;
     transform: translateX(-50%) translateZ(0) !important;
-    border-color: rgba(255,255,255,0.5) !important;
+    border-color: var(--tv-border-strong) !important;
     border-radius: 2rem !important;
-    background: rgba(255,255,255,0.82) !important;
-    box-shadow:
-      0 18px 54px rgba(47,33,126,0.18),
-      inset 0 1px 0 rgba(255,255,255,0.78) !important;
+    background: var(--tv-surface-tier-2) !important;
+    box-shadow: var(--tv-elevation-floating) !important;
   }
 
   .mobile-bottom-link {
@@ -31611,10 +31317,6 @@ body:has(.site-header-v2__mobile-backdrop) .mobile-bottom-motion {
 
 /* Mobile-only cleanup pass: transparent chrome, tighter page starts and stable sections. */
 @media (max-width: 767px) {
-  :root {
-    --bottom-nav-height: 4.75rem;
-  }
-
   .home-3d-hero {
     display: none !important;
   }
@@ -31904,11 +31606,6 @@ body:has(.site-header-v2__mobile-backdrop) .mobile-bottom-motion {
 
 /* Final mobile proportion guard: keep key mobile surfaces centered across phone widths. */
 @media (max-width: 767px) {
-  :root {
-    --mobile-page-inline: clamp(1rem, 4.7vw, 1.35rem);
-    --mobile-content-max: 24.5rem;
-  }
-
   body {
     overflow-x: hidden;
   }
