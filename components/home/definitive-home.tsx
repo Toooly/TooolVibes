@@ -34,7 +34,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   ExternalLink,
-  Sparkles,
 } from "lucide-react";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
@@ -131,35 +130,35 @@ function Cockpit({ toolCount }: { toolCount: number }) {
                 <Link href="/archivio">
                   <span aria-hidden="true">1</span>
                   <strong>Scopri</strong>
-                  <em>Territori</em>
+                  <em>Catalogo</em>
                 </Link>
               </li>
               <li>
                 <Link href="/archivio?sort=score_desc">
                   <span aria-hidden="true">2</span>
                   <strong>Valuta</strong>
-                  <em>Evidence</em>
+                  <em>Prove</em>
                 </Link>
               </li>
               <li>
                 <Link href="/compare">
                   <span aria-hidden="true">3</span>
                   <strong>Confronta</strong>
-                  <em>Matrix</em>
+                  <em>Differenze</em>
                 </Link>
               </li>
               <li>
                 <Link href="/shortlist">
                   <span aria-hidden="true">4</span>
                   <strong>Salva</strong>
-                  <em>Shortlist</em>
+                  <em>Lista</em>
                 </Link>
               </li>
               <li>
                 <Link href="/collections">
                   <span aria-hidden="true">5</span>
                   <strong>Decidi</strong>
-                  <em>Percorsi</em>
+                  <em>Raccolte</em>
                 </Link>
               </li>
             </ol>
@@ -196,12 +195,6 @@ function IvoryEditorial({
   const editorialScore = computeEditorialScore(focusTool);
   const isAffiliateLink =
     Boolean(focusTool.affiliateUrl) || hasAffiliateSignal(focusTool.url);
-  const winnerFacts = [
-    { label: "Lettura", value: focusTool.readingTime ?? "—" },
-    { label: "Casi d'uso", value: String(focusTool.useCases.length) },
-    { label: "Fascia", value: editorialScore.label },
-  ] as const;
-
   return (
     <section className="def-editorial" aria-labelledby="def-editorial-title">
       <div aria-hidden="true" className="def-editorial__traces" />
@@ -253,22 +246,33 @@ function IvoryEditorial({
               {focusTool.tldr || focusTool.shortDescription}
             </p>
 
-            <dl className="def-editorial__spot-metrics" aria-label="Metriche chiave">
-              <div>
-                <dt>Casi d&apos;uso</dt>
-                <dd>{focusTool.useCases.length}</dd>
-              </div>
-              <div>
-                <dt>Lettura</dt>
-                <dd>{focusTool.readingTime ?? "—"}</dd>
-              </div>
-              <div>
-                <dt>Score editoriale</dt>
-                <dd>{editorialScore.value.toFixed(1)}</dd>
-              </div>
-            </dl>
+            <ul className="def-editorial__spot-rail" aria-label="Metriche chiave">
+              <li>
+                <span>Score</span>
+                <strong>{editorialScore.value.toFixed(1)}</strong>
+              </li>
+              <li>
+                <span>Casi d&apos;uso</span>
+                <strong>{focusTool.useCases.length}</strong>
+              </li>
+              <li>
+                <span>Lettura</span>
+                <strong>{focusTool.readingTime ?? "—"}</strong>
+              </li>
+              <li>
+                <span>Fascia</span>
+                <strong>{editorialScore.label}</strong>
+              </li>
+            </ul>
 
             <div className="def-editorial__spot-actions">
+              <Link
+                href={`/toools/${focusTool.slug}`}
+                className="def-editorial__spot-cta def-editorial__spot-cta--primary"
+              >
+                Apri la scheda
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
               {focusTool.url ? (
                 <a
                   href={focusTool.url}
@@ -278,19 +282,12 @@ function IvoryEditorial({
                       ? "sponsored noopener noreferrer"
                       : "noopener noreferrer"
                   }
-                  className="def-editorial__spot-cta def-editorial__spot-cta--primary"
+                  className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
                 >
-                  {focusTool.ctaLabel ?? "Apri il sito"}
+                  {focusTool.ctaLabel ?? "Sito ufficiale"}
                   <ExternalLink size={14} aria-hidden="true" />
                 </a>
               ) : null}
-              <Link
-                href={`/toools/${focusTool.slug}`}
-                className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
-              >
-                Apri la scheda completa
-                <ArrowRight size={14} aria-hidden="true" />
-              </Link>
             </div>
             {isAffiliateLink ? (
               <p className="def-editorial__spot-disclosure">
@@ -299,36 +296,10 @@ function IvoryEditorial({
               </p>
             ) : null}
           </div>
-
-          {/* Winner visual panel — v4 */}
-          <aside className="def-editorial__spot-winner" aria-label="Profilo vincitore">
-            <p className="def-editorial__spot-winner-eyebrow">
-              <Sparkles size={12} aria-hidden="true" style={{ display: "inline", marginRight: 6, verticalAlign: -1 }} />
-              Profilo vincitore
-            </p>
-            <div className="def-editorial__spot-winner-score">
-              <span className="def-editorial__spot-winner-score-num">
-                {editorialScore.value.toFixed(1)}
-              </span>
-              <span className="def-editorial__spot-winner-score-max">/ 10 editoriale</span>
-            </div>
-            <p className="def-editorial__spot-winner-detail">
-              Punteggio editoriale canonico applicato allo stesso profilo in
-              Home, Archivio, Confronto e scheda completa.
-            </p>
-            <div className="def-editorial__spot-winner-bars">
-              {winnerFacts.map((fact) => (
-                <div className="def-editorial__spot-winner-bar" key={fact.label}>
-                  <span className="def-editorial__spot-winner-bar-label">{fact.label}</span>
-                  <span className="def-editorial__spot-winner-bar-value">{fact.value}</span>
-                </div>
-              ))}
-            </div>
-          </aside>
         </article>
 
         {/* PODIUM — v4: true 3-stage tower composition */}
-        <div className="def-editorial__podium" aria-label="Podio editoriale">
+        <div className="def-editorial__podium" role="region" aria-label="Podio editoriale">
           <div className="def-editorial__pod-head-row">
             <p className="def-editorial__pod-eyebrow">Podio editoriale</p>
             <p className="def-editorial__pod-subtitle">
@@ -428,20 +399,25 @@ function Method() {
           Tre passaggi per chiudere la scelta senza stress
         </h2>
       </header>
-      <ol className="def-method__cards">
-        {METHOD_STEPS.map((step) => (
+      <ol className="def-method__rail">
+        {METHOD_STEPS.map((step, index) => (
           <li
             key={step.n}
-            className="def-method__card"
+            className="def-method__step"
             style={{ "--card-accent": step.accent } as React.CSSProperties}
           >
             <span className="def-method__n" aria-hidden="true">{step.n}</span>
-            <h3 className="def-method__step-title">{step.title}</h3>
-            <p className="def-method__step-body">{step.body}</p>
-            <Link href={step.href} className="def-method__step-link">
-              Apri
-              <ArrowRight size={14} aria-hidden="true" />
-            </Link>
+            <div className="def-method__copy">
+              <h3 className="def-method__step-title">{step.title}</h3>
+              <p className="def-method__step-body">{step.body}</p>
+              <Link href={step.href} className="def-method__step-link">
+                Continua
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
+            </div>
+            {index < METHOD_STEPS.length - 1 ? (
+              <span className="def-method__divider" aria-hidden="true" />
+            ) : null}
           </li>
         ))}
       </ol>
