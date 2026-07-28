@@ -63,7 +63,7 @@ export function CollectionCard({
     return (
       <article
         className={cn(
-          "collection-card collection-card-featured brand-panel brand-aura panel-lift relative overflow-hidden rounded-[34px]",
+          "collection-card collection-card-featured brand-panel relative overflow-hidden rounded-[34px]",
           swipeFriendly && "w-[22.5rem] shrink-0 snap-start",
         )}
       >
@@ -216,7 +216,7 @@ export function CollectionCard({
   }
 
   return (
-    <article className="collection-card brand-panel panel-lift relative flex h-full flex-col overflow-hidden rounded-[30px]">
+    <article className="collection-card brand-panel relative flex h-full flex-col overflow-hidden rounded-[30px]">
       <Link href={`/collections/${collection.slug}`} className="block">
         <div className="relative h-44 overflow-hidden">
           <Image
@@ -277,7 +277,7 @@ export function CollectionCard({
           ))}
         </div>
 
-        <div className="metadata-block mt-3.5 grid gap-2 rounded-[20px] px-3.5 py-3">
+        <div className="mt-3.5 grid gap-2 rounded-[20px] border border-[var(--tv-border-default)] px-3.5 py-3" style={{ background: "var(--tv-surface-inverted-raised)" }}>
           <div>
             <p className="editorial-label">Tool guida</p>
             <p className="text-meta mt-1 text-[0.8rem]" style={{ color: "var(--muted-strong)" }}>

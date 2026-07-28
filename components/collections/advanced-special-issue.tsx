@@ -72,7 +72,7 @@ function ToolMomentCard({
       </p>
       {slot ? (
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)", color: "var(--muted-strong)" }}>
+          <span className="selection-chip">
             {slot.role}
           </span>
           <Link
@@ -103,7 +103,7 @@ function renderIssueBlock(
 ) {
   if (block.type === "opening-note") {
     return (
-      <article key={block.id} className="brand-panel panel-lift rounded-[32px] p-4.5 sm:p-5 lg:col-span-12">
+      <article key={block.id} className="brand-panel rounded-[32px] p-4.5 sm:p-5 lg:col-span-12">
         <p className="editorial-label">{block.eyebrow}</p>
         <h3 className="text-display-card mt-3 max-w-none text-[1.66rem] sm:max-w-[20ch] sm:text-[1.84rem] sm:text-balance">
           {block.title}
@@ -117,7 +117,7 @@ function renderIssueBlock(
 
   if (block.type === "thesis") {
     return (
-      <article key={block.id} className="dark-panel panel-lift rounded-[32px] p-4.5 text-white sm:p-5 lg:col-span-7">
+      <article key={block.id} className="dark-panel rounded-[32px] p-4.5 text-white sm:p-5 lg:col-span-7">
         <p className="editorial-label !text-white/60">{block.eyebrow}</p>
         <h3 className="text-display-card mt-3 max-w-none text-[1.58rem] text-white sm:max-w-[19ch] sm:text-balance">
           {block.title}
@@ -125,7 +125,7 @@ function renderIssueBlock(
         <p className="mt-4 text-[0.98rem] leading-7 text-white/82">{block.statement}</p>
         <div className="mt-5 grid gap-3">
           {block.points.map((point) => (
-            <div key={point} className="discovery-strip-dark rounded-[22px] px-4 py-4 text-sm leading-6 text-white/82">
+            <div key={point} className="rounded-[22px] border border-[var(--tv-border-default)] px-4 py-4 text-sm leading-6 text-white/82">
               {point}
             </div>
           ))}
@@ -136,7 +136,7 @@ function renderIssueBlock(
 
   if (block.type === "curated-picks") {
     return (
-      <article key={block.id} className="brand-panel panel-lift rounded-[32px] p-4.5 sm:p-5 lg:col-span-12">
+      <article key={block.id} className="brand-panel rounded-[32px] p-4.5 sm:p-5 lg:col-span-12">
         <p className="editorial-label">{block.eyebrow}</p>
         <h3 className="text-display-card mt-3 max-w-none text-[1.56rem] sm:max-w-[19ch] sm:text-balance">
           {block.title}
@@ -159,7 +159,7 @@ function renderIssueBlock(
       .filter((slot): slot is ResolvedCollectionToolSlot => Boolean(slot));
 
     return (
-      <article key={block.id} className="dark-panel panel-lift rounded-[32px] p-4.5 text-white sm:p-5 lg:col-span-5">
+      <article key={block.id} className="dark-panel rounded-[32px] p-4.5 text-white sm:p-5 lg:col-span-5">
         <p className="editorial-label !text-white/60">{block.eyebrow}</p>
         <h3 className="text-display-card mt-3 text-[1.62rem] text-white sm:text-balance">
           {block.title}
@@ -169,22 +169,22 @@ function renderIssueBlock(
           {comparedSlots.map((slot) => (
             <span
               key={slot.tool.slug}
-              className="selection-chip rounded-full border border-[var(--tv-border-default)] bg-[var(--tv-surface-floating)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/84"
+              className="selection-chip"
             >
               {slot.tool.name}
             </span>
           ))}
         </div>
-        <div className="mt-5 rounded-[24px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4">
+        <div className="mt-5 space-y-4">
           <p className="text-sm leading-6 text-white/84">{block.compare.insight}</p>
-          <div className="mt-4 grid gap-2">
+          <div className="grid gap-2">
             {block.compare.differentiators.map((item) => (
               <p key={item} className="text-sm leading-6 text-white/74">
                 {item}
               </p>
             ))}
           </div>
-          <p className="mt-4 text-[0.84rem] leading-6 text-white/66">
+          <p className="text-[0.84rem] leading-6 text-white/66">
             {block.compare.recommendation}
           </p>
         </div>
@@ -204,7 +204,7 @@ function renderIssueBlock(
 
   if (block.type === "workflow") {
     return (
-      <article key={block.id} className="brand-panel panel-lift rounded-[32px] p-4.5 sm:p-5 lg:col-span-7">
+      <article key={block.id} className="brand-panel rounded-[32px] p-4.5 sm:p-5 lg:col-span-7">
         <p className="editorial-label">{block.eyebrow}</p>
         <h3 className="text-display-card mt-3 max-w-none text-[1.56rem] sm:max-w-[19ch] sm:text-balance">
           {block.title}
@@ -219,7 +219,7 @@ function renderIssueBlock(
             return (
               <div
                 key={`${block.id}-${step.title}`}
-                className="metadata-block rounded-[24px] px-4 py-4"
+                className="rounded-[24px] border border-[var(--tv-border-default)] px-4 py-4"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
@@ -246,7 +246,7 @@ function renderIssueBlock(
 
   if (block.type === "why-this-matters") {
     return (
-      <article key={block.id} className="dark-panel panel-lift rounded-[32px] p-4.5 text-white sm:p-5 lg:col-span-5">
+      <article key={block.id} className="dark-panel rounded-[32px] p-4.5 text-white sm:p-5 lg:col-span-5">
         <p className="editorial-label !text-white/60">{block.eyebrow}</p>
         <h3 className="text-display-card mt-3 max-w-none text-[1.48rem] text-white sm:max-w-[18ch] sm:text-balance">
           {block.title}
@@ -254,7 +254,7 @@ function renderIssueBlock(
         <p className="mt-3 text-sm leading-7 text-white/80">{block.body}</p>
         <div className="mt-5 grid gap-3">
           {block.points.map((point) => (
-            <div key={point} className="discovery-strip-dark rounded-[22px] px-4 py-4 text-sm leading-6 text-white/82">
+            <div key={point} className="rounded-[22px] border border-[var(--tv-border-default)] px-4 py-4 text-sm leading-6 text-white/82">
               {point}
             </div>
           ))}
@@ -265,7 +265,7 @@ function renderIssueBlock(
 
   if (block.type === "editorial-takeaway") {
     return (
-      <article key={block.id} className="brand-panel brand-aura panel-lift rounded-[32px] p-4.5 sm:p-5 lg:col-span-12">
+      <article key={block.id} className="brand-panel rounded-[32px] p-4.5 sm:p-5 lg:col-span-12">
         <p className="editorial-label">{block.eyebrow}</p>
         <h3 className="text-display-card mt-3 max-w-none text-[1.64rem] sm:max-w-[19ch] sm:text-balance">
           {block.title}
@@ -277,10 +277,9 @@ function renderIssueBlock(
           {block.takeaways.map((item) => (
             <div
               key={item}
-              className="rounded-[24px] border px-4 py-4 text-sm leading-6"
+              className="rounded-[24px] border border-[var(--tv-border-default)] px-4 py-4 text-sm leading-6"
               style={{
-                borderColor: "rgba(112, 82, 255, 0.16)",
-                background: "linear-gradient(180deg, rgba(255,255,255,0.88), rgba(245,240,252,0.82))",
+                background: "var(--tv-surface-inverted-raised)",
               }}
             >
               {item}
@@ -302,13 +301,13 @@ function renderIssueBlock(
   }
 
   return (
-    <article key={block.id} className="dark-panel panel-lift rounded-[32px] p-4.5 text-white sm:p-5 lg:col-span-12">
+    <article key={block.id} className="dark-panel rounded-[32px] p-4.5 text-white sm:p-5 lg:col-span-12">
       <p className="editorial-label !text-white/60">{block.eyebrow}</p>
       <h3 className="text-display-card mt-3 max-w-none text-[1.48rem] text-white sm:max-w-[18ch] sm:text-balance">
         {block.title}
       </h3>
       <p className="mt-3 max-w-[44rem] text-sm leading-7 text-white/80">{block.body}</p>
-      <div className="mt-5 rounded-[24px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4 text-sm leading-6 text-white/74">
+      <div className="mt-5 text-sm leading-6 text-white/74">
         {block.member_note}
       </div>
       {!hasFullAccess ? (
@@ -346,7 +345,7 @@ export function AdvancedSpecialIssue({
   );
 
   return (
-    <section className="tone-issue brand-panel brand-aura panel-lift rounded-[36px] p-5 sm:p-6 lg:p-7">
+    <section className="tone-issue brand-panel rounded-[36px] p-5 sm:p-6 lg:p-7">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
         <SectionHeader
           eyebrow="Raccolta speciale avanzata"
@@ -361,7 +360,7 @@ export function AdvancedSpecialIssue({
         </div>
       </div>
 
-      <div className="metadata-block mt-5 rounded-[28px] px-4.5 py-4.5">
+      <div className="mt-5">
         <p className="brand-kicker">Tesi della raccolta</p>
         <p className="mt-3 max-w-[46rem] text-[1.02rem] leading-7" style={{ color: "var(--muted-strong)" }}>
           {issue.thesis}
@@ -394,8 +393,7 @@ export function AdvancedSpecialIssue({
           className="mt-5 rounded-[28px] border px-4.5 py-4.5"
           style={{
             borderColor: "rgba(242, 179, 71, 0.26)",
-            background:
-              "linear-gradient(180deg, rgba(255,255,255,0.88), rgba(249,239,212,0.84))",
+            background: "var(--tv-surface-inverted-raised)",
           }}
         >
           <div className="flex flex-wrap items-center gap-2">

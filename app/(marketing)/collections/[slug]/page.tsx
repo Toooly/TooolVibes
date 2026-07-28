@@ -99,7 +99,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
   return (
     <div className="collection-detail-final internal-page internal-collection-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <section className="collection-detail-hero brand-panel brand-aura panel-lift section-stage relative overflow-hidden rounded-[36px]">
+      <section className="collection-detail-hero brand-panel section-stage relative overflow-hidden rounded-[36px]">
         <div className="editorial-grid relative gap-y-0">
           <div className="col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7">
             <div
@@ -111,10 +111,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               </Link>
               <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
               <span>{theme}</span>
-            </div>
-
-            <div className="mt-3 flex flex-wrap items-center gap-3">
-              <p className="pill selection-chip">{collection.cover_kicker}</p>
+              <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
               <span
                 className="selection-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]"
                 style={{
@@ -127,7 +124,6 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               >
                 {premiumAccess.chip_label}
               </span>
-              <span className="selection-status">{formatMeta.label}</span>
             </div>
 
             <p className="mt-6 brand-kicker">
@@ -143,7 +139,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               {collection.description}
             </p>
 
-            <div className="metadata-block mt-4.5 rounded-[24px] px-4.5 py-4">
+            <div className="mt-4.5">
               <p className="brand-kicker">
                 {premiumAccess.state === "locked" ? "Cosa mostra l'anteprima" : "Tesi curatoriale"}
               </p>
@@ -204,19 +200,8 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 <span className="collection-detail-hero__badge">
                   Raccolta
                 </span>
-                <span className="collection-detail-hero__badge">
-                  {collection.tool_count} tool {collection.tool_count === 1 ? "incluso" : "inclusi"}
-                </span>
               </div>
 
-              <div className="collection-detail-hero__summary">
-                <p className="collection-detail-hero__summary-label">
-                  In breve
-                </p>
-                <p className="collection-detail-hero__summary-copy">
-                  {tone.label} · {audienceDescription} · {difficulty} · {access.label}
-                </p>
-              </div>
             </div>
 
             <PartnerCollectionModule placementKey="collection-native-sponsor" />
@@ -225,7 +210,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
       </section>
 
       {collection.surface === "special-issue" ? (
-        <section className="collection-detail-special dark-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
+        <section className="collection-detail-special dark-panel rounded-[34px] p-5 sm:p-6 lg:p-7">
           <div className="editorial-grid gap-y-5">
             <div className="col-span-12 lg:col-span-7">
               <SectionHeader
@@ -273,23 +258,25 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               ) : null}
             </div>
             <aside className="col-span-12 lg:col-span-5">
-              <div className="rounded-[24px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] p-4.5 sm:p-5">
-                <p className="editorial-label !text-white/60">
-                  {premiumAccess.state === "locked" ? "Cosa stai leggendo" : "Stato della raccolta"}
-                </p>
-                <p className="mt-3 text-[1.6rem] leading-tight text-white">
-                  {premiumAccess.state === "locked" ? access.label : formatMeta.label}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-white/74">
-                  {premiumAccess.state === "locked"
-                    ? premiumAccess.description
-                    : isAdvancedIssue
-                      ? formatMeta.description
-                      : editorialState.description}
-                </p>
+              <div className="space-y-4">
+                <div>
+                  <p className="editorial-label !text-white/60">
+                    {premiumAccess.state === "locked" ? "Cosa stai leggendo" : "Stato della raccolta"}
+                  </p>
+                  <p className="mt-3 text-[1.4rem] leading-tight text-white">
+                    {premiumAccess.state === "locked" ? access.label : formatMeta.label}
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-white/74">
+                    {premiumAccess.state === "locked"
+                      ? premiumAccess.description
+                      : isAdvancedIssue
+                        ? formatMeta.description
+                        : editorialState.description}
+                  </p>
+                </div>
 
                 {isAdvancedIssue && collection.advanced_issue ? (
-                  <div className="mt-5 rounded-[22px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-elevated)] px-4 py-4">
+                  <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                       Flusso di lettura
                     </p>
@@ -299,7 +286,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                   </div>
                 ) : null}
                 {!hasFullAccess ? (
-                  <p className="mt-5 text-sm leading-6 text-white/74">
+                  <p className="text-sm leading-6 text-white/74">
                     Anteprima aperta: <strong className="text-white">{visibleSlots.length} tool</strong> e <strong className="text-white">{visibleHighlights.length} {visibleHighlights.length === 1 ? "punto chiave" : "punti chiave"}</strong> leggibili subito. {hiddenToolCount > 0 || hiddenHighlightCount > 0 ? <>{hiddenItemCount} {hiddenItemCount === 1 ? "pezzo resta" : "pezzi restano"} nella versione completa.</> : null}
                   </p>
                 ) : null}
@@ -320,7 +307,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
       <section id="collection-content" className="editorial-grid gap-y-4">
         <div className="col-span-12 lg:col-span-8">
-          <div className="brand-panel panel-lift rounded-[32px] p-5 sm:p-6">
+          <div className="brand-panel rounded-[32px] p-5 sm:p-6">
             <SectionHeader
               eyebrow="Tool inclusi"
               title={
@@ -367,7 +354,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
         <div className="col-span-12 lg:col-span-4">
           <div className="space-y-3 lg:sticky lg:top-28">
-            <div className="brand-panel panel-lift rounded-[28px] p-4 sm:p-4.5">
+            <div className="brand-panel rounded-[28px] p-4 sm:p-4.5">
               <p className="editorial-label" style={{ color: "var(--muted)" }}>
                 {premiumAccess.state === "locked"
                   ? access.label
@@ -395,7 +382,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                   <>
                     <Link
                       href="/shortlist"
-                      className="metadata-block rounded-[22px] px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5"
+                      className="rounded-[22px] border border-[var(--tv-border-default)] px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5" style={{ background: "var(--tv-surface-inverted-raised)" }}
                     >
                       <p className="editorial-label">Salvati</p>
                       <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
@@ -404,7 +391,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                     </Link>
                     <Link
                       href="/compare"
-                      className="metadata-block rounded-[22px] px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5"
+                      className="rounded-[22px] border border-[var(--tv-border-default)] px-4 py-4 transition-transform duration-200 hover:-translate-y-0.5" style={{ background: "var(--tv-surface-inverted-raised)" }}
                     >
                       <p className="editorial-label">Confronto</p>
                       <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
@@ -413,7 +400,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                     </Link>
                   </>
                 ) : (
-                  <div className="collection-detail-access-note metadata-block rounded-[22px] px-4 py-4">
+                  <div>
                     <p className="editorial-label">Cosa resta aperto</p>
                     <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
                       Restano leggibili i momenti chiave della raccolta e i tool necessari per capire il taglio, non l&apos;intero percorso editoriale.
@@ -439,7 +426,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
       </section>
 
       {relatedCollections.length > 0 ? (
-        <section className="brand-panel panel-lift rounded-[34px] p-5 sm:p-6 lg:p-7">
+        <section className="brand-panel rounded-[34px] p-5 sm:p-6 lg:p-7">
           <SectionHeader
             eyebrow="Raccolte correlate"
             title="Se questa raccolta ti interessa, queste sono le transizioni più naturali."

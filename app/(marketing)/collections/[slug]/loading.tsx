@@ -7,7 +7,7 @@ export default function CollectionDetailLoading() {
       aria-busy="true"
       aria-label="Caricamento raccolta"
     >
-      <section className="brand-panel panel-lift rounded-[36px] p-6 sm:p-7 lg:p-8">
+      <section className="brand-panel rounded-[36px] p-6 sm:p-7 lg:p-8">
         <div className="editorial-grid gap-y-6">
           <div className="col-span-12 lg:col-span-7 space-y-4">
             <div className="skeleton-block h-6 w-36 rounded-full" />
@@ -21,7 +21,7 @@ export default function CollectionDetailLoading() {
         </div>
       </section>
 
-      <section className="brand-panel panel-lift rounded-[34px] p-6 sm:p-7 lg:p-8">
+      <section className="brand-panel rounded-[34px] p-6 sm:p-7 lg:p-8">
         <div className="grid gap-4">
           {Array.from({ length: 3 }).map((_, index) => (
             <div key={index} className="skeleton-block h-[20rem] w-full rounded-[28px]" />

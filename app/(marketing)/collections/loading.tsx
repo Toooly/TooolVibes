@@ -7,7 +7,7 @@ export default function CollectionsLoading() {
       aria-busy="true"
       aria-label="Caricamento raccolte"
     >
-      <section className="brand-panel panel-lift rounded-[36px] p-6 sm:p-7 lg:p-8">
+      <section className="brand-panel rounded-[36px] p-6 sm:p-7 lg:p-8">
         <div className="skeleton-block h-6 w-32 rounded-full" />
         <div className="mt-5 space-y-3">
           <div className="skeleton-block h-12 w-full max-w-[34rem] rounded-[20px]" />
@@ -16,7 +16,7 @@ export default function CollectionsLoading() {
         </div>
       </section>
 
-      <section className="brand-panel panel-lift rounded-[34px] p-6 sm:p-7 lg:p-8">
+      <section className="brand-panel rounded-[34px] p-6 sm:p-7 lg:p-8">
         <div className="skeleton-block h-[26rem] w-full rounded-[28px]" />
       </section>
     </div>

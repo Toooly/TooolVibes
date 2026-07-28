@@ -14,23 +14,22 @@ function SlotFallback({ slot, index }: Props) {
     slot?.note ?? "Slot descritto nel percorso della raccolta.";
   return (
     <article
-      className="metadata-block collection-slot-panel rounded-[26px] border p-4 sm:p-5"
+      className="rounded-[26px] border border-[var(--tv-border-default)] p-4 sm:p-5"
       style={{
-        borderColor: "var(--line)",
         background: "var(--tv-surface-inverted-raised)",
       }}
       aria-label={`Slot ${index + 1}`}
     >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
           <p className="editorial-label">Passaggio {String(index + 1).padStart(2, "0")}</p>
           <h3 className="text-display-card mt-2 text-[1.12rem]">{role}</h3>
+          <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
+            {note}
+          </p>
         </div>
-        <span className="editorial-label">{toolName}</span>
+        <span className="selection-chip">{toolName}</span>
       </div>
-      <p className="mt-3 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
-        {note}
-      </p>
     </article>
   );
 }
