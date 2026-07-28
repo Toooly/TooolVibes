@@ -857,11 +857,6 @@ function MobileNoteSheet({
 
 function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
   const starterTools = tools.slice(0, 3);
-  const routes = [
-    { href: "/archivio", label: "Esplora catalogo", copy: "Filtra per categoria e salva i candidati davvero utili." },
-    { href: "/radar", label: "Apri Radar", copy: "Parti dai segnali live quando non sai da dove cominciare." },
-    { href: "#wishlist", label: "Suggerisci tool", copy: "Manca un nome importante? Segnalalo alla selezione." },
-  ];
 
   return (
     <section
@@ -875,14 +870,6 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
           Inizia con pochi candidati buoni: quando salvi un tool, qui trovi categoria,
           stato, link alla scheda e scorciatoie per confronto o suggerimenti.
         </p>
-      </div>
-      <div className="mobile-library-empty__routes">
-        {routes.map((route) => (
-          <Link key={route.href} href={route.href} className="mobile-library-empty__route">
-            <strong>{route.label}</strong>
-            <span>{route.copy}</span>
-          </Link>
-        ))}
       </div>
       {starterTools.length > 0 ? (
         <div className="mobile-library-empty__starter" aria-label="Tool da cui partire">
