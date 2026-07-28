@@ -17,10 +17,7 @@ import {
 } from "@/lib/data/public-collections";
 import {
   getCollectionAccessMeta,
-  getCollectionAudienceDescription,
-  getCollectionDifficultyLabel,
   getCollectionThemeLabel,
-  getCollectionToneMeta,
 } from "@/lib/collections/helpers";
 import {
   getCollectionEditorialStateMeta,
@@ -65,11 +62,8 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
     notFound();
   }
 
-  const tone = getCollectionToneMeta(collection.tone);
   const access = getCollectionAccessMeta(collection.access);
   const formatMeta = getCollectionFormatMeta(collection);
-  const difficulty = getCollectionDifficultyLabel(collection.difficulty);
-  const audienceDescription = getCollectionAudienceDescription(collection.audience);
   const theme = getCollectionThemeLabel(collection.theme);
   const surface = getCollectionSurfaceMeta(collection.surface);
   const editorialState = getCollectionEditorialStateMeta(collection.editorial_state);

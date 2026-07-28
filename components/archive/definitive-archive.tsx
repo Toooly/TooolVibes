@@ -523,7 +523,6 @@ export function DefinitiveArchive({
       {/* 5. MOBILE FILTER BOTTOM SHEET */}
       {filterSheetOpen && (
         <FilterSheet
-          filterGroups={filterGroups}
           levelFilters={LEVEL_FILTERS as unknown as { key: string; label: string }[]}
           groupCounts={groupCounts}
           totalTools={totalTools}
@@ -552,7 +551,6 @@ export function DefinitiveArchive({
 // Mobile Filter Bottom Sheet
 // ─────────────────────────────────────────────────────────────────
 type FilterSheetProps = {
-  filterGroups: ToolFilterGroup[];
   levelFilters: { key: string; label: string }[];
   groupCounts: Map<string, number>;
   totalTools: number;
@@ -571,7 +569,6 @@ type FilterSheetProps = {
 };
 
 function FilterSheet({
-  filterGroups,
   levelFilters,
   groupCounts,
   totalTools,

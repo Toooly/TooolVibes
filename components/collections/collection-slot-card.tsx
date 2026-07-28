@@ -1,5 +1,5 @@
 import type { ResolvedCollectionToolSlot } from "@/lib/types/collection";
-import { getToolBestFor, getToolPricing, getToolWhyHere } from "@/lib/tools/discovery";
+import { getToolPricing, getToolWhyHere } from "@/lib/tools/discovery";
 
 import { CanonicalToolCard } from "@/components/directory/canonical-tool-card";
 import { adaptToolRecordToPublic } from "@/lib/data/tool-public-adapters";
@@ -15,7 +15,6 @@ export function CollectionSlotCard({
   index,
 }: CollectionSlotCardProps) {
   const slotContext = slot.note ?? getToolWhyHere(slot.tool);
-  const toolBestFor = getToolBestFor(slot.tool);
   const toolPricing = getToolPricing(slot.tool);
   const publicTool = createToolPublicView(adaptToolRecordToPublic(slot.tool));
 

@@ -316,7 +316,7 @@
   letter-spacing: 0;
 }
 
-@media (max-width: 599px) {
+@media (max-width: 429px) {
   .def-cockpit__journey ol {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -508,7 +508,7 @@
   line-height: 1.1;
 }
 
-@media (max-width: 699px) {
+@media (max-width: 767px) {
   .def-editorial__spot-rail {
     grid-template-columns: 1fr 1fr;
   }
