@@ -39,7 +39,7 @@ Phase 6 successfully expands the semantic token foundation introduced in Phase 4
 
 ### Audit findings
 
-Badge.tsx variants before: 12 visual variants — 5 "solid" (primary/secondary/verified/success/info) + 7 "soft" (info/warning/affiliate/danger/trust/etc) implemented as inline `bg-[rgba(...)] border-[rgba(...)] text-[var(--tv-*)]`.
+Badge.tsx variants before: 12 visual variants — 5 "solid" (primary/secondary/verified/success/info) + 7 "soft" (info/warning/affiliate/danger/trust/etc) implemented as inline `bg-[rgba(...)] border-[rgba(...)]` plus the dynamic `text-[var(--tv-` + `*)]` form.
 
 Repetition risk: identical rgba tuples were hand-typed across primitives. A future dark-mode tweak would require 7+ line edits.
 

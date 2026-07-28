@@ -78,7 +78,7 @@ comportamento responsive.
 - Mobile 390 — Syne caricata, bottom navigation visibile e overflow orizzontale 0.
 
 La build emette un solo warning non bloccante dell'optimizer CSS per la stringa wildcard
-`.text-[var(--tv-*)]` già presente nel repository; compilazione, type validation, page
+la classe dinamica `text-[var(--tv-` + `*)]` già presente nel repository; compilazione, type validation, page
 generation e bundling terminano correttamente.
 
 ## Rischio residuo noto

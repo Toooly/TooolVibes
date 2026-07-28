@@ -1,0 +1,682 @@
+[
+  {
+    "route": "archivio",
+    "path": "/archivio",
+    "viewport": "360x800",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-archivio-360x800.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 360,
+    "h1": 1,
+    "h1Text": [
+      "Il catalogo, senza il caos."
+    ],
+    "main": 1,
+    "url": "/archivio",
+    "w": 360,
+    "overflow": 0
+  },
+  {
+    "route": "archivio",
+    "path": "/archivio",
+    "viewport": "390x844",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-archivio-390x844.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 390,
+    "h1": 1,
+    "h1Text": [
+      "Il catalogo, senza il caos."
+    ],
+    "main": 1,
+    "url": "/archivio",
+    "w": 390,
+    "overflow": 0
+  },
+  {
+    "route": "archivio",
+    "path": "/archivio",
+    "viewport": "430x932",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-archivio-430x932.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 430,
+    "h1": 1,
+    "h1Text": [
+      "Il catalogo, senza il caos."
+    ],
+    "main": 1,
+    "url": "/archivio",
+    "w": 430,
+    "overflow": 0
+  },
+  {
+    "route": "archivio",
+    "path": "/archivio",
+    "viewport": "768x1024",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-archivio-768x1024.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 768,
+    "h1": 1,
+    "h1Text": [
+      "Il catalogo, senza il caos."
+    ],
+    "main": 1,
+    "url": "/archivio",
+    "w": 768,
+    "overflow": 0
+  },
+  {
+    "route": "archivio",
+    "path": "/archivio",
+    "viewport": "1024x768",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-archivio-1024x768.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1024,
+    "h1": 1,
+    "h1Text": [
+      "Il catalogo, senza il caos."
+    ],
+    "main": 1,
+    "url": "/archivio",
+    "w": 1024,
+    "overflow": 0
+  },
+  {
+    "route": "archivio",
+    "path": "/archivio",
+    "viewport": "1280x900",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-archivio-1280x900.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1280,
+    "h1": 1,
+    "h1Text": [
+      "Il catalogo, senza il caos."
+    ],
+    "main": 1,
+    "url": "/archivio",
+    "w": 1280,
+    "overflow": 0
+  },
+  {
+    "route": "archivio",
+    "path": "/archivio",
+    "viewport": "1440x1000",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-archivio-1440x1000.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1440,
+    "h1": 1,
+    "h1Text": [
+      "Il catalogo, senza il caos."
+    ],
+    "main": 1,
+    "url": "/archivio",
+    "w": 1440,
+    "overflow": 0
+  },
+  {
+    "route": "archivio",
+    "path": "/archivio",
+    "viewport": "1920x1080",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-archivio-1920x1080.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1920,
+    "h1": 1,
+    "h1Text": [
+      "Il catalogo, senza il caos."
+    ],
+    "main": 1,
+    "url": "/archivio",
+    "w": 1920,
+    "overflow": 0
+  },
+  {
+    "route": "tool-blink",
+    "path": "/toools/blink",
+    "viewport": "360x800",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-tool-blink-360x800.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 360,
+    "h1": 1,
+    "h1Text": [
+      "Blink"
+    ],
+    "main": 1,
+    "url": "/toools/blink",
+    "w": 360,
+    "overflow": 0
+  },
+  {
+    "route": "tool-blink",
+    "path": "/toools/blink",
+    "viewport": "390x844",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-tool-blink-390x844.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 390,
+    "h1": 1,
+    "h1Text": [
+      "Blink"
+    ],
+    "main": 1,
+    "url": "/toools/blink",
+    "w": 390,
+    "overflow": 0
+  },
+  {
+    "route": "tool-blink",
+    "path": "/toools/blink",
+    "viewport": "430x932",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-tool-blink-430x932.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 430,
+    "h1": 1,
+    "h1Text": [
+      "Blink"
+    ],
+    "main": 1,
+    "url": "/toools/blink",
+    "w": 430,
+    "overflow": 0
+  },
+  {
+    "route": "tool-blink",
+    "path": "/toools/blink",
+    "viewport": "768x1024",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-tool-blink-768x1024.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 768,
+    "h1": 1,
+    "h1Text": [
+      "Blink"
+    ],
+    "main": 1,
+    "url": "/toools/blink",
+    "w": 768,
+    "overflow": 0
+  },
+  {
+    "route": "tool-blink",
+    "path": "/toools/blink",
+    "viewport": "1024x768",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-tool-blink-1024x768.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1024,
+    "h1": 1,
+    "h1Text": [
+      "Blink"
+    ],
+    "main": 1,
+    "url": "/toools/blink",
+    "w": 1024,
+    "overflow": 0
+  },
+  {
+    "route": "tool-blink",
+    "path": "/toools/blink",
+    "viewport": "1280x900",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-tool-blink-1280x900.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1280,
+    "h1": 1,
+    "h1Text": [
+      "Blink"
+    ],
+    "main": 1,
+    "url": "/toools/blink",
+    "w": 1280,
+    "overflow": 0
+  },
+  {
+    "route": "tool-blink",
+    "path": "/toools/blink",
+    "viewport": "1440x1000",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-tool-blink-1440x1000.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1440,
+    "h1": 1,
+    "h1Text": [
+      "Blink"
+    ],
+    "main": 1,
+    "url": "/toools/blink",
+    "w": 1440,
+    "overflow": 0
+  },
+  {
+    "route": "tool-blink",
+    "path": "/toools/blink",
+    "viewport": "1920x1080",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-tool-blink-1920x1080.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1920,
+    "h1": 1,
+    "h1Text": [
+      "Blink"
+    ],
+    "main": 1,
+    "url": "/toools/blink",
+    "w": 1920,
+    "overflow": 0
+  },
+  {
+    "route": "compare",
+    "path": "/compare",
+    "viewport": "360x800",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-compare-360x800.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 360,
+    "h1": 1,
+    "h1Text": [
+      "Confronta meno. Scegli meglio."
+    ],
+    "main": 1,
+    "url": "/compare",
+    "w": 360,
+    "overflow": 0
+  },
+  {
+    "route": "compare",
+    "path": "/compare",
+    "viewport": "390x844",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-compare-390x844.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 390,
+    "h1": 1,
+    "h1Text": [
+      "Confronta meno. Scegli meglio."
+    ],
+    "main": 1,
+    "url": "/compare",
+    "w": 390,
+    "overflow": 0
+  },
+  {
+    "route": "compare",
+    "path": "/compare",
+    "viewport": "430x932",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-compare-430x932.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 430,
+    "h1": 1,
+    "h1Text": [
+      "Confronta meno. Scegli meglio."
+    ],
+    "main": 1,
+    "url": "/compare",
+    "w": 430,
+    "overflow": 0
+  },
+  {
+    "route": "compare",
+    "path": "/compare",
+    "viewport": "768x1024",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-compare-768x1024.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 768,
+    "h1": 1,
+    "h1Text": [
+      "Confronta meno. Scegli meglio."
+    ],
+    "main": 1,
+    "url": "/compare",
+    "w": 768,
+    "overflow": 0
+  },
+  {
+    "route": "compare",
+    "path": "/compare",
+    "viewport": "1024x768",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-compare-1024x768.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1024,
+    "h1": 1,
+    "h1Text": [
+      "Confronta meno. Scegli meglio."
+    ],
+    "main": 1,
+    "url": "/compare",
+    "w": 1024,
+    "overflow": 0
+  },
+  {
+    "route": "compare",
+    "path": "/compare",
+    "viewport": "1280x900",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-compare-1280x900.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1280,
+    "h1": 1,
+    "h1Text": [
+      "Confronta meno. Scegli meglio."
+    ],
+    "main": 1,
+    "url": "/compare",
+    "w": 1280,
+    "overflow": 0
+  },
+  {
+    "route": "compare",
+    "path": "/compare",
+    "viewport": "1440x1000",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-compare-1440x1000.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1440,
+    "h1": 1,
+    "h1Text": [
+      "Confronta meno. Scegli meglio."
+    ],
+    "main": 1,
+    "url": "/compare",
+    "w": 1440,
+    "overflow": 0
+  },
+  {
+    "route": "compare",
+    "path": "/compare",
+    "viewport": "1920x1080",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-compare-1920x1080.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1920,
+    "h1": 1,
+    "h1Text": [
+      "Confronta meno. Scegli meglio."
+    ],
+    "main": 1,
+    "url": "/compare",
+    "w": 1920,
+    "overflow": 0
+  },
+  {
+    "route": "shortlist",
+    "path": "/shortlist",
+    "viewport": "360x800",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-shortlist-360x800.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 360,
+    "h1": 1,
+    "h1Text": [
+      "La tua biblioteca è pronta a riempirsi."
+    ],
+    "main": 1,
+    "url": "/shortlist",
+    "w": 360,
+    "overflow": 0
+  },
+  {
+    "route": "shortlist",
+    "path": "/shortlist",
+    "viewport": "390x844",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-shortlist-390x844.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 390,
+    "h1": 1,
+    "h1Text": [
+      "La tua biblioteca è pronta a riempirsi."
+    ],
+    "main": 1,
+    "url": "/shortlist",
+    "w": 390,
+    "overflow": 0
+  },
+  {
+    "route": "shortlist",
+    "path": "/shortlist",
+    "viewport": "430x932",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-shortlist-430x932.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 430,
+    "h1": 1,
+    "h1Text": [
+      "La tua biblioteca è pronta a riempirsi."
+    ],
+    "main": 1,
+    "url": "/shortlist",
+    "w": 430,
+    "overflow": 0
+  },
+  {
+    "route": "shortlist",
+    "path": "/shortlist",
+    "viewport": "768x1024",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-shortlist-768x1024.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 768,
+    "h1": 1,
+    "h1Text": [
+      "La tua biblioteca è pronta a riempirsi."
+    ],
+    "main": 1,
+    "url": "/shortlist",
+    "w": 768,
+    "overflow": 0
+  },
+  {
+    "route": "shortlist",
+    "path": "/shortlist",
+    "viewport": "1024x768",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-shortlist-1024x768.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1024,
+    "h1": 1,
+    "h1Text": [
+      "La tua biblioteca è pronta a riempirsi."
+    ],
+    "main": 1,
+    "url": "/shortlist",
+    "w": 1024,
+    "overflow": 0
+  },
+  {
+    "route": "shortlist",
+    "path": "/shortlist",
+    "viewport": "1280x900",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-shortlist-1280x900.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1280,
+    "h1": 1,
+    "h1Text": [
+      "La tua biblioteca è pronta a riempirsi."
+    ],
+    "main": 1,
+    "url": "/shortlist",
+    "w": 1280,
+    "overflow": 0
+  },
+  {
+    "route": "shortlist",
+    "path": "/shortlist",
+    "viewport": "1440x1000",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-shortlist-1440x1000.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1440,
+    "h1": 1,
+    "h1Text": [
+      "La tua biblioteca è pronta a riempirsi."
+    ],
+    "main": 1,
+    "url": "/shortlist",
+    "w": 1440,
+    "overflow": 0
+  },
+  {
+    "route": "shortlist",
+    "path": "/shortlist",
+    "viewport": "1920x1080",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-shortlist-1920x1080.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1920,
+    "h1": 1,
+    "h1Text": [
+      "La tua biblioteca è pronta a riempirsi."
+    ],
+    "main": 1,
+    "url": "/shortlist",
+    "w": 1920,
+    "overflow": 0
+  },
+  {
+    "route": "collections",
+    "path": "/collections",
+    "viewport": "360x800",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-collections-360x800.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 360,
+    "h1": 1,
+    "h1Text": [
+      "Il posto dove la selezione diventa percorso."
+    ],
+    "main": 1,
+    "url": "/collections",
+    "w": 360,
+    "overflow": 0
+  },
+  {
+    "route": "collections",
+    "path": "/collections",
+    "viewport": "390x844",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-collections-390x844.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 390,
+    "h1": 1,
+    "h1Text": [
+      "Il posto dove la selezione diventa percorso."
+    ],
+    "main": 1,
+    "url": "/collections",
+    "w": 390,
+    "overflow": 0
+  },
+  {
+    "route": "collections",
+    "path": "/collections",
+    "viewport": "430x932",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-collections-430x932.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 430,
+    "h1": 1,
+    "h1Text": [
+      "Il posto dove la selezione diventa percorso."
+    ],
+    "main": 1,
+    "url": "/collections",
+    "w": 430,
+    "overflow": 0
+  },
+  {
+    "route": "collections",
+    "path": "/collections",
+    "viewport": "768x1024",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-collections-768x1024.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 768,
+    "h1": 1,
+    "h1Text": [
+      "Il posto dove la selezione diventa percorso."
+    ],
+    "main": 1,
+    "url": "/collections",
+    "w": 768,
+    "overflow": 0
+  },
+  {
+    "route": "collections",
+    "path": "/collections",
+    "viewport": "1024x768",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-collections-1024x768.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1024,
+    "h1": 1,
+    "h1Text": [
+      "Il posto dove la selezione diventa percorso."
+    ],
+    "main": 1,
+    "url": "/collections",
+    "w": 1024,
+    "overflow": 0
+  },
+  {
+    "route": "collections",
+    "path": "/collections",
+    "viewport": "1280x900",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-collections-1280x900.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1280,
+    "h1": 1,
+    "h1Text": [
+      "Il posto dove la selezione diventa percorso."
+    ],
+    "main": 1,
+    "url": "/collections",
+    "w": 1280,
+    "overflow": 0
+  },
+  {
+    "route": "collections",
+    "path": "/collections",
+    "viewport": "1440x1000",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-collections-1440x1000.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1440,
+    "h1": 1,
+    "h1Text": [
+      "Il posto dove la selezione diventa percorso."
+    ],
+    "main": 1,
+    "url": "/collections",
+    "w": 1440,
+    "overflow": 0
+  },
+  {
+    "route": "collections",
+    "path": "/collections",
+    "viewport": "1920x1080",
+    "outPath": "/Users/gianmariacaltagirone/Tooolvibes/audits/final-visual-system-consolidation-2026-07-28/final/local/route-collections-1920x1080.png",
+    "navErr": null,
+    "dialogs": 0,
+    "docW": 1920,
+    "h1": 1,
+    "h1Text": [
+      "Il posto dove la selezione diventa percorso."
+    ],
+    "main": 1,
+    "url": "/collections",
+    "w": 1920,
+    "overflow": 0
+  }
+]
