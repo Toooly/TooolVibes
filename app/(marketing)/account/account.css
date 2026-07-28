@@ -225,3 +225,40 @@
     padding-bottom: 6.5rem !important;
   }
 }
+
+.v-auth-page--loading .v-auth-context h2 {
+  color: var(--tv-ink-primary);
+}
+
+.v-auth-page--loading .v-auth-context__eyebrow {
+  color: var(--tv-ink-secondary);
+  background: transparent;
+  border-color: var(--tv-border-interactive);
+}
+
+.account-loading-state__hint {
+  margin-top: 1.25rem;
+  color: var(--tv-ink-secondary);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  max-width: 32rem;
+}
+
+.account-loading-state__skeleton {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.account-loading-state__row {
+  display: block;
+  height: 0.65rem;
+  width: 100%;
+  border-radius: 999px;
+  background: var(--tv-border-inverted-default);
+  opacity: 0.55;
+}
+
+.account-loading-state__row--short {
+  width: 65%;
+}

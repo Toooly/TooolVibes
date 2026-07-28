@@ -1087,3 +1087,15 @@
     transition: none;
   }
 }
+
+.tv-radar__panel-hint {
+  margin: 0;
+  padding: var(--tv-space-5) var(--tv-space-6);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 18px;
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-muted);
+  font-size: var(--tv-text-sm);
+  line-height: var(--tv-leading-body);
+  text-align: center;
+}

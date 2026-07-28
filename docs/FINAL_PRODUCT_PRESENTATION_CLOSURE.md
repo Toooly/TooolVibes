@@ -353,3 +353,85 @@ Production screenshots directory: `audits/final-product-presentation-closure-202
 ### Remaining Route-Level Work
 
 For MiniMax M3 and Grok 4.5: Shortlist redesign, Collections visual redesign, Posts page redesign, Affiliati page redesign, Account page full migration, legacy `--surface-*` alias sunsetting, ESLint `react/no-unescaped-entities` debt clearance.
+
+---
+
+## Phase 1 — Active Glass & Contrast Inventory (2026-07-28, miniMax final closure)
+
+Starting commit: `8b51f7a` (`main`, aligned with `origin/main`).
+
+### Active residual translucent-white panels
+
+| # | Route | Owner file | Line | Element | Current | Required surface |
+|---|-------|-----------|------|---------|---------|------------------|
+| 1 | `/account` | `app/(marketing)/account/account.css` | 69 | `.v-auth-tabs` | `background: rgba(255, 255, 255, 0.46)` (translucent white on dark account card) | `var(--tv-surface-elevated)` opaque |
+| 2 | `styles/public-routes.css` | `.ivory-surface :is(input, select, textarea)` | 516 | ivory-input background | `background: rgba(255, 255, 255, 0.6)` (translucent white over warm ivory decision desk) | `var(--tv-surface-inverted-raised)` opaque |
+
+### Active `backdrop-filter: blur(...)` consumers
+
+| File | Status | Note |
+|------|--------|------|
+| `styles/shell.css` (multiple) | Already overridden to `none` | Inactive — preserved for legacy cascade only |
+| `styles/figma-implementation.css:46` (blur 22px) | Dead consumer (Figma-import parity sheet, gated to `/internal/visual-lab/*`) | Internal lab, not public |
+| `styles/vibes-3d-maestoso.css` (blur 8-40px) | Dead consumer (3D background animation, lab-gated) | Internal lab, not public |
+| `styles/gamification.css:46` (`.level-up-modal` blur 14px) | Dead consumer (XP modal surfaced via gamification release-flag; gated) | Not public marketing |
+| `app/globals.css` (multiple `backdrop-filter: none` + one `blur(16px)` on `.premium-panel`) | Premium panel decoration gated behind release flag (no premium sponsor inventory currently public) | No public-route visual defect |
+
+**Conclusion:** zero active `backdrop-filter: blur(...)` reaches public marketing routes after hydration.
+
+### Active `rgba(255,255,255,X)` translucent white on dark surfaces
+
+These are intentional dark-command-center surface tints and decorative edges (radial highlights, inset 1px lines, gradient overlays) authored on dark base. They are NOT legacy glass cards and are kept:
+
+| File | Domain | Decision |
+|------|--------|----------|
+| `styles/account.css` (≈17 occurrences) | Dark Command Center account surfaces | KEPT — decorative edge tints on `--tv-bg-canvas` |
+| `styles/compare.css` (≈33 occurrences) | Compare panel/border construction on dark | KEPT — dark panel surface construction |
+| `styles/radar.css` | Dark Radar panel construction | KEPT |
+| `app/(marketing)/account/account.css:69` `.v-auth-tabs` | **Active translucent white panel on dark** | **MIGRATED** → `--tv-surface-elevated` |
+
+### Active `premium-*`, `brand-*`, `v-*` classes
+
+| Class | Active component owner | Status |
+|-------|------------------------|--------|
+| `premium-button`, `premium-button-icon-shift`, `premium-button-secondary`, `premium-arrow` | `components/ui/premium.tsx` + `components/tools/unified-compare-board.tsx`, `compare-board.tsx` | KEPT — semantic surface module |
+| `premium-panel`, `premium-card`, `premium-badge`, `premium-button` | `components/ui/premium.tsx`, `components/tools/{compare,shortlist,unified-compare,tool-workspace}-board.tsx` | KEPT — semantic surface module |
+| `light-surface`, `metadata-block`, `stat-block`, `brand-panel`, `dark-panel`, `marketing-shell`, `hero-shell`, `hero-mini-visual`, `micro-details`, `micro-popover-panel`, `editorial-label`, `ivory-surface` | `components/tools/{compare,shortlist,unified-compare,tool-workspace}-board.tsx`, `mobile-shortlist-board.tsx`, `app/(marketing)/collections/collections.css`, `styles/public-routes.css`, `app/globals.css`, `components/ui/motion-observer.tsx` | KEPT — semantic public-routes contract owned by `styles/public-routes.css` |
+| `v-*` (e.g., `v-auth-page`, `v-auth-container`, `v-auth-tabs`, `v-auth-tab`, `v-auth-loading-*`, `v-auth-card`) | `app/(marketing)/account/account.css` + `components/account/auth-page.tsx` | KEPT — Account authentication surface module |
+
+### Light/dark contrast collision check
+
+| Surface | Text owner | Audit |
+|---------|-----------|-------|
+| `.tv-radar-page` (dark) | `var(--tv-ink-primary)` | Clean |
+| `.compare-space-page` (dark) | `var(--tv-ink-primary)` | Clean |
+| `.shortlist-final-surface` (dark) | `var(--tv-ink-primary)` | Clean |
+| `ar4-ivory` (warm ivory band) | `var(--tv-ink-inverted-primary)` / `var(--tv-ink-inverted-secondary)` | Clean |
+| `.td-final-alt-*` (tool detail alternative grid) | `var(--tv-ink-inverted-primary)` / `var(--tv-ink-inverted-secondary)` | Clean |
+| `.v-auth-*` (Account dark page) | `var(--tv-ink-inverted-secondary)` declared on AuthPage (intentional inverted copy on account card) | Clean |
+| `.v-auth-tabs` | `var(--tv-ink-inverted-muted)` for inactive, `var(--tv-ink-on-brand)` for active | Clean after migration to opaque surface |
+
+### Nested card-inside-card compositions
+
+| Route | Pattern | Status |
+|-------|---------|--------|
+| `/radar` | Single Radar panel + Radar Toolbar + Signal Grid (3-level nesting acceptable: panel > toolbar > list) | KEPT — semantic layout, not decorative nesting |
+| `/collections/[slug]` | AdvancedSpecialIssue > Hero > Editorial thesis, followed by chapter rails (no nested card stacks) | KEPT — chapter composition |
+| `/shortlist` (empty) | Single MobileLibraryEmpty surface (no nested cards) | KEPT |
+| `/compare` | ToolBattleView = header + 2 fighter cards + verdict panel (3-level but content-distinct, not decorative) | KEPT |
+
+### Mobile/tablet/desktop parity targets
+
+- 390px (mobile portrait)
+- 1024px (tablet portrait / small laptop)
+- 1440px (desktop)
+
+All public marketing routes verified to render at all three breakpoints via the canonical system. No breakpoint-specific decorative translation differences remain.
+
+### Inventory conclusion
+
+Two active defects found, both legacy translucent-white panels on otherwise-clean surfaces:
+1. `.v-auth-tabs` (account) → migrated to opaque `--tv-surface-elevated`
+2. `.ivory-surface :is(input)` → migrated to opaque `--tv-surface-inverted-raised`
+
+Everything else is intentional dark-command-center surface construction on dark base, not legacy glass.

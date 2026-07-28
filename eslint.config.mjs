@@ -18,6 +18,7 @@ const eslintConfig = [
       "playwright-report/**",
       "coverage/**",
       "artifacts/database-drill/**",
+      "audits/**",
       ".tmp-edit*.js",
       ".tmp-edit*.ts",
       "next-env.d.ts",

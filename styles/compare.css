@@ -2742,3 +2742,118 @@
 .mobile-compare-arena__fight-btn:disabled .mobile-compare-arena__fight-copy small {
   color: var(--tv-ink-muted-aa);
 }
+
+.tool-battle-page--loading .tool-battle-page__lede {
+  max-width: 56ch;
+}
+
+.tool-battle-page__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-space-3);
+  margin-top: var(--tv-space-5);
+}
+
+.tool-battle-page__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tv-space-2);
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  font-size: var(--tv-text-sm);
+  font-weight: var(--tv-weight-semibold);
+  text-decoration: none;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.tool-battle-page__cta--primary {
+  background: var(--tv-accent-primary);
+  border: 1px solid var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+}
+
+.tool-battle-page__cta--primary:hover,
+.tool-battle-page__cta--primary:focus-visible {
+  background: var(--tv-accent-brand-hover);
+  border-color: var(--tv-accent-brand-hover);
+}
+
+.tool-battle-page__cta--secondary {
+  background: transparent;
+  border: 1px solid var(--tv-border-interactive);
+  color: var(--tv-ink-primary);
+}
+
+.tool-battle-page__cta--secondary:hover,
+.tool-battle-page__cta--secondary:focus-visible {
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-ink-primary);
+}
+
+.tool-battle-page__slots {
+  display: grid;
+  gap: var(--tv-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48rem) {
+  .tool-battle-page__slots {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.tool-battle-page__slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-3);
+  padding: clamp(var(--tv-space-5), 3vw, var(--tv-space-7));
+  border: 1px dashed var(--tv-border-interactive);
+  border-radius: 24px;
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-secondary);
+}
+
+.tool-battle-page__slot--empty {
+  text-align: left;
+}
+
+.tool-battle-page__slot-index {
+  display: inline-grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-interactive);
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-mono);
+  font-size: var(--tv-text-sm);
+  font-weight: var(--tv-weight-bold);
+}
+
+.tool-battle-page__slot-title {
+  margin: 0;
+  color: var(--tv-ink-primary);
+  font-size: var(--tv-text-lg);
+  font-weight: var(--tv-weight-semibold);
+}
+
+.tool-battle-page__slot-hint {
+  margin: 0;
+  color: var(--tv-ink-muted);
+  font-size: var(--tv-text-sm);
+  line-height: var(--tv-leading-body);
+}
+
+.tool-battle-page__status {
+  margin: var(--tv-space-5) 0 0;
+  padding: var(--tv-space-4);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 16px;
+  background: var(--tv-surface-base);
+  color: var(--tv-ink-muted);
+  font-size: var(--tv-text-sm);
+  text-align: center;
+}
