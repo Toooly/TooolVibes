@@ -564,22 +564,47 @@ Full audit report: `audits/final-route-presentation-closure-2026-07-28/FINAL_UI_
 | Next.js production build | PASS |
 | OpenNext/Cloudflare build | (deployment pipeline step) |
 
-### Deployment (next)
+### Deployment (executed)
 
 - Cloudflare account: `staff@elevianutrition.eu`
 - Account ID: `ffacd11bfafdca87d540a6c5fbe89120`
 - Worker: `tooolvibes`
-- Previous active Worker version: `5b068a5d-591c-4d6a-a986-770f4d29ffc3` (was promoted; current c44b027 deployment is `851005d1`)
-- New version and deployment ID: recorded after `cloudflare:deploy`
-- Promotion target: 100% traffic
+- Previous active Worker version: `5b068a5d-591c-4d6a-a986-770f4d29ffc3`
+- Previous c44b027 production version: `851005d1-3fe7-4e50-8d4f-0af8f158cc0d`
+- New version: `5e048104-487a-4ed3-9d77-8a3e0acd6a91`
+- Promotion: 100% traffic (deployed via `wrangler versions deploy 5e048104-487a-4ed3-9d77-8a3e0acd6a91 --name tooolvibes --percentage 100`)
+- Deployed app commit: `5a11462` (audited + production-verified); release tag `tooolvibes-total-ui-closure-2026-07-28` points to this commit
 - Domain: `https://tooolvibes.eu` + `https://tooolvibes.staff-ffa.workers.dev`
+- All 10 audited routes return HTTP 200 after hydration, including the previously-broken `/collections/indie-launch-stack`
+
+### Production verification (post-deploy)
+
+All target routes return HTTP 200 on both `https://tooolvibes.eu` and `https://tooolvibes.staff-ffa.workers.dev` at 390 / 1024 / 1440 px after hydration:
+
+| Route | Status |
+|-------|--------|
+| `/` | 200 |
+| `/archivio` | 200 |
+| `/radar` | 200 (`data-state="loading"` initial SSR; client fetches `/api/product-hunt`, no fabricated data) |
+| `/compare` | 200 (server-safe empty slots card rendered before client state) |
+| `/shortlist` | 200 (simplified empty state: title + 3 starter tools + primary CTA `/archivio` + secondary CTA `/radar`) |
+| `/collections` | 200 |
+| `/collections/indie-launch-stack` | 200 (previously broken React #419 page now renders via `CollectionSlotSafeBoundary` containing the slot render error if any) |
+| `/posts` | 200 (hierarchy: featured → guides → analyses → blog) |
+| `/affiliati` | 200 (essential form + `<details>` progressive disclosure for optional social URLs) |
+| `/account` | 200 (`v-auth-page--loading` split layout with truthful route identity before client auth state resolves) |
+
+Typography: Manrope + Anton confirmed; no Fraunces, no public Inter.
+Surfaces: no glass elements, no backdrop-filter, no translucent white panels, no text/background collisions.
+Partners: no reserved/planned/empty placements.
+Radar: truthful state, no fixture data.
 
 ### Rollback
 
 ```
-bun wrangler versions deploy 5b068a5d-591c-4d6a-a986-770f4d29ffc3 --name tooolvibes --percentage 100
+bunx wrangler versions deploy 5b068a5d-591c-4d6a-a986-770f4d29ffc3 --name tooolvibes --percentage 100
 ```
 
-(Or the previous immediate production Worker version retrieved at deploy time.)
+(Or the previous immediate production Worker version `5e048104-487a-4ed3-9d77-8a3e0acd6a91` retrieved at deploy time.)
 
 Do not alter DNS, the Custom Domain mapping, or the separate `tooolvibes-security-state` Worker.
