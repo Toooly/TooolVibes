@@ -150,6 +150,7 @@ export default async function RootLayout({
             isGateOpen && releaseFeatures.gamification.hasRewardedSurface
           }
           enableThreeD={isGateOpen && releaseFeatures.threeD.enabled}
+          enableRewardRuntime={isGateOpen && releaseFeatures.rewardRuntime.enabled}
           gamificationModes={gamificationModes}
           toolCatalog={toolCatalog}
         >

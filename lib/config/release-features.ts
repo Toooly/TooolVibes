@@ -42,6 +42,7 @@ export type ReleaseFeatureEnvironment = Readonly<{
   TOOOLVIBES_GAMIFICATION_ENABLED?: string;
   TOOOLVIBES_GAMIFICATION_PERSISTENCE_ENABLED?: string;
   TOOOLVIBES_REWARD_BACKBONE_ENABLED?: string;
+  TOOOLVIBES_REWARD_RUNTIME_ENABLED?: string;
   TOOOLVIBES_GAME_MISSIONS_MODE?: string;
   TOOOLVIBES_GAME_HIDDEN_SIGNAL_MODE?: string;
   TOOOLVIBES_GAME_ARENA_MODE?: string;
@@ -99,6 +100,11 @@ export const releaseFeatureRegistry = {
   rewardBackbone: {
     owner: "security-platform",
     envKey: "TOOOLVIBES_REWARD_BACKBONE_ENABLED",
+    defaultEnabled: false,
+  },
+  rewardRuntime: {
+    owner: "product-engagement",
+    envKey: "TOOOLVIBES_REWARD_RUNTIME_ENABLED",
     defaultEnabled: false,
   },
 } as const satisfies Record<string, BooleanFeatureDefinition>;
@@ -172,6 +178,7 @@ export type ReleaseFeatureConfig = Readonly<{
   compareDecision: ResolvedBooleanFeature;
   decisionMemoryBoard: ResolvedBooleanFeature;
   unifiedSearch: ResolvedBooleanFeature;
+  rewardRuntime: ResolvedBooleanFeature;
   gamification: Readonly<{
     owner: string;
     enabled: boolean;
@@ -315,6 +322,10 @@ export function createReleaseFeatureConfig(
     environment,
     releaseFeatureRegistry.unifiedSearch,
   );
+  const rewardRuntime = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.rewardRuntime,
+  );
   const gamificationEnabled = parseBooleanFlag(
     environment[releaseFeatureRegistry.gamification.envKey],
     releaseFeatureRegistry.gamification,
@@ -389,6 +400,7 @@ export function createReleaseFeatureConfig(
     compareDecision,
     decisionMemoryBoard,
     unifiedSearch,
+    rewardRuntime,
     gamification: Object.freeze({
       owner: releaseFeatureRegistry.gamification.owner,
       enabled: gamificationEnabled,
@@ -471,6 +483,8 @@ export function readReleaseFeatureEnvironment(): ReleaseFeatureEnvironment {
       process.env.TOOOLVIBES_GAMIFICATION_PERSISTENCE_ENABLED,
     TOOOLVIBES_REWARD_BACKBONE_ENABLED:
       process.env.TOOOLVIBES_REWARD_BACKBONE_ENABLED,
+    TOOOLVIBES_REWARD_RUNTIME_ENABLED:
+      process.env.TOOOLVIBES_REWARD_RUNTIME_ENABLED,
     TOOOLVIBES_GAME_MISSIONS_MODE:
       process.env.TOOOLVIBES_GAME_MISSIONS_MODE,
     TOOOLVIBES_GAME_HIDDEN_SIGNAL_MODE:

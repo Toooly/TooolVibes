@@ -15,6 +15,8 @@ import {
   type GamificationClientModes,
 } from "@/lib/gamification/release-context";
 import { MotionObserver } from "@/components/ui/motion-observer";
+import { RewardHost } from "@/components/rewards/reward-host";
+import { RewardRuntimeProvider } from "@/components/rewards/reward-provider";
 import { OverlayProvider } from "@/components/ui/overlay-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,6 +31,7 @@ export function RootProviders({
   enableAudio = true,
   enableGamificationEffects = true,
   enableThreeD = false,
+  enableRewardRuntime = false,
   gamificationModes,
   toolCatalog,
 }: {
@@ -36,8 +39,9 @@ export function RootProviders({
   enableExperience?: boolean;
   enableAudio?: boolean;
   enableGamificationEffects?: boolean;
-  gamificationModes: GamificationClientModes;
   enableThreeD?: boolean;
+  enableRewardRuntime?: boolean;
+  gamificationModes: GamificationClientModes;
   toolCatalog: PublicToolCatalogItem[];
 }) {
   const [queryClient] = useState(
@@ -62,6 +66,7 @@ export function RootProviders({
         <QueryClientProvider client={queryClient}>
           <OverlayProvider>
             <TooltipProvider delay={180}>
+              <RewardRuntimeProvider runtimeEnabled={enableRewardRuntime}>
               {children}
               {enableExperience && (
                 <>
@@ -76,8 +81,11 @@ export function RootProviders({
                   )}
                   {enableGamificationEffects && <GameEffectsLayer />}
                   <GlobalCommandPalette />
+                  <RewardHost />
                 </>
               )}
+              {!enableExperience ? <RewardHost /> : null}
+              </RewardRuntimeProvider>
               <Toaster position="top-right" richColors closeButton />
             </TooltipProvider>
           </OverlayProvider>

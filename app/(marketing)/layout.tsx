@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
 import { AccountProvider } from "@/components/account/account-provider";
+import { RewardAuthBridge } from "@/components/rewards/reward-auth-bridge";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
@@ -38,6 +39,7 @@ export default async function MarketingLayout({
       </a>
       <OrbitalProvider>
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
+          <RewardAuthBridge />
           <DiscoveryPersistenceProvider>
             {/* Definitive shell (2026-07-24): CommandBar (xl+), MobileTopBar (<xl),
                 MobileBottomNav (<xl). The previous SiteHeaderV2 is removed. */}

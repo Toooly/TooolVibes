@@ -192,3 +192,9 @@ Not used in Phase 2. Signature moments use Motion + CSS tokens.
 - Tool Detail score bar → once-in-view `scaleX`
 - ScrollReveal → foundation durations/RM
 - Account auth tab marker → layout marker transition
+
+## Reward runtime ownership (Phase 3)
+
+Client reward presentation lives under `lib/rewards/*` and `components/rewards/*`.
+See `docs/REWARD_RUNTIME_V1.md`. Motion presets remain the only animation source for reward UI.
+Do not use confetti/GSAP/NumberFlow in the dormant host path.
