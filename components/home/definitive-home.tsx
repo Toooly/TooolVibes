@@ -82,6 +82,11 @@ function hasAffiliateSignal(href: string | null | undefined) {
   }
 }
 
+function truncate(str: string, max: number) {
+  if (str.length <= max) return str;
+  return str.slice(0, max).trimEnd() + "…";
+}
+
 // ============================================================
 // COCKPIT — Hero + Radar in the same primary frame
 // ============================================================
@@ -359,11 +364,22 @@ function PodiumCard({
   iconUrl: string | null;
   initial: string;
 }) {
-  const score = computeEditorialScore(tool).value.toFixed(1);
+  const score = computeEditorialScore(tool);
+  const rationale = truncate(tool.tldr || tool.shortDescription || "", rank === 1 ? 110 : 90);
+  const pills: { label: string; tone: "gold" | "cyan" | "violet" }[] = [
+    { label: score.label, tone: rank === 1 ? "gold" : rank === 2 ? "cyan" : "violet" },
+  ];
+  if (tool.levelLabel) {
+    pills.push({ label: tool.levelLabel, tone: rank === 1 ? "gold" : rank === 2 ? "cyan" : "violet" });
+  }
+  // Cap at 2 pills per card
+  const visiblePills = pills.slice(0, 2);
+
   return (
     <Link
       href={`/toools/${tool.slug}`}
       className={`def-editorial__pod-card def-editorial__pod-card--rank-${rank}`}
+      data-rank={rank}
     >
       <span className="def-editorial__pod-rank" aria-label={`Posizione ${rank}`}>
         {String(rank).padStart(2, "0")}
@@ -378,8 +394,26 @@ function PodiumCard({
       </span>
       <span className="def-editorial__pod-name">{tool.name}</span>
       <span className="def-editorial__pod-cat">{tool.categoryLabel}</span>
+
+      {rationale ? (
+        <span className="def-editorial__pod-rationale">{rationale}</span>
+      ) : null}
+
+      {visiblePills.length > 0 ? (
+        <span className="def-editorial__pod-pills" aria-hidden="true">
+          {visiblePills.map((pill, i) => (
+            <span
+              key={i}
+              className={`def-editorial__pod-pill def-editorial__pod-pill--${pill.tone}`}
+            >
+              {pill.label}
+            </span>
+          ))}
+        </span>
+      ) : null}
+
       <span className="def-editorial__pod-score">
-        <span className="def-editorial__pod-score-num">{score}</span>
+        <span className="def-editorial__pod-score-num">{score.value.toFixed(1)}</span>
         <span className="def-editorial__pod-score-max">/ 10</span>
       </span>
       <span className="def-editorial__pod-open">
