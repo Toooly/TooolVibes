@@ -133,7 +133,10 @@
   --tv-duration-fast: 120ms;
   --tv-duration-base: 180ms;
   --tv-duration-slow: 240ms;
+  --tv-duration-route: 280ms;
   --tv-duration-cinematic: 360ms;
+  --tv-duration-reward: 480ms;
+  --tv-duration-stagger-step: 40ms;
   --tv-duration-epic: 720ms;
 
   /* --- Easing foundation --- */
@@ -511,7 +514,10 @@
   --tv-motion-instant: var(--tv-duration-instant);    /* 80ms hover state */
   --tv-motion-fast: var(--tv-duration-fast);          /* 120ms click feedback */
   --tv-motion-base: var(--tv-duration-slow);          /* 240ms transitions */
+  --tv-motion-route: var(--tv-duration-route);        /* 280ms route crossfade */
   --tv-motion-slow: var(--tv-duration-cinematic);     /* 360ms modal/page */
+  --tv-motion-reward: var(--tv-duration-reward);      /* 480ms reward settle */
+  --tv-motion-stagger-step: var(--tv-duration-stagger-step); /* 40ms stagger */
   --tv-motion-cinematic: var(--tv-duration-epic);     /* 720ms intro/loader/3D */
 
   /* Compatibility for existing usage */

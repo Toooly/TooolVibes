@@ -2,16 +2,38 @@
 
 import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
+import { useSyncExternalStore } from "react";
+
+import { routeTransitionPreset } from "@/lib/motion/presets";
+import {
+  REDUCED_MOTION_QUERY,
+  getPrefersReducedMotion,
+} from "@/lib/motion/reduced-motion";
+
+function subscribeReducedMotion(onStoreChange: () => void) {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return () => {};
+  }
+  const mq = window.matchMedia(REDUCED_MOTION_QUERY);
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
 
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const preferReducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getPrefersReducedMotion,
+    () => false,
+  );
+  const preset = routeTransitionPreset({ preferReducedMotion });
 
   return (
     <motion.div
       key={pathname}
-      initial={false}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      initial={preset.initial}
+      animate={preset.animate}
+      transition={preset.transition}
     >
       {children}
     </motion.div>

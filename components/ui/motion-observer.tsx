@@ -2,6 +2,12 @@
 
 import { useEffect } from "react";
 
+import { MOTION_DURATION_MS } from "@/lib/motion/tokens";
+import {
+  getPrefersReducedMotion,
+  shouldEnableRevealObserver,
+} from "@/lib/motion/reduced-motion";
+
 const motionSelectors = [
   ".motion-reveal",
   ".motion-stagger > *",
@@ -12,6 +18,10 @@ const motionSelectors = [
   "footer .premium-panel",
 ].join(",");
 
+const STAGGER_STEP_MS = MOTION_DURATION_MS.staggerStep;
+const STAGGER_MAX_MS = MOTION_DURATION_MS.standard + MOTION_DURATION_MS.staggerStep * 5;
+const REVEAL_CLEANUP_MS = MOTION_DURATION_MS.epic + MOTION_DURATION_MS.staggerStep;
+
 function getMotionDelay(element: HTMLElement) {
   const parent = element.parentElement;
 
@@ -20,7 +30,7 @@ function getMotionDelay(element: HTMLElement) {
   }
 
   const index = Array.from(parent.children).indexOf(element);
-  return Math.min(Math.max(index, 0) * 52, 260);
+  return Math.min(Math.max(index, 0) * STAGGER_STEP_MS, STAGGER_MAX_MS);
 }
 
 function isInViewport(element: HTMLElement) {
@@ -46,7 +56,7 @@ function isRendered(element: HTMLElement) {
 
 export function MotionObserver() {
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = getPrefersReducedMotion();
     let observer: IntersectionObserver | null = null;
     let mutationObserver: MutationObserver | null = null;
     let startTimer: number | null = null;
@@ -54,7 +64,7 @@ export function MotionObserver() {
     let started = false;
     let startAfterIntro: (() => void) | null = null;
 
-    if (reduceMotion) {
+    if (!shouldEnableRevealObserver(reduceMotion)) {
       document.documentElement.dataset.motionReady = "false";
       return;
     }
@@ -83,7 +93,7 @@ export function MotionObserver() {
               element.removeAttribute("data-motion-observed");
               element.classList.remove("is-visible");
               element.style.removeProperty("--motion-delay");
-            }, 760 + delay);
+            }, REVEAL_CLEANUP_MS + delay);
 
             observer?.unobserve(element);
           });
@@ -154,7 +164,7 @@ export function MotionObserver() {
             introFallbackTimer = null;
           }
 
-          startTimer = window.setTimeout(startObserver, 180);
+          startTimer = window.setTimeout(startObserver, MOTION_DURATION_MS.base);
         };
 
         window.addEventListener("tooolvibes:brand-intro-finished", startAfterIntro, {
@@ -164,7 +174,7 @@ export function MotionObserver() {
         return;
       }
 
-      startTimer = window.setTimeout(startObserver, 720);
+      startTimer = window.setTimeout(startObserver, MOTION_DURATION_MS.epic);
     };
 
     if (document.readyState === "complete") {

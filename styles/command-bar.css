@@ -69,7 +69,7 @@
   background: color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent);
   border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 40%, transparent);
   flex-shrink: 0;
-  transition: border-color 240ms ease, background 240ms ease;
+  transition: border-color var(--tv-motion-base) var(--tv-easing-standard), background var(--tv-motion-base) var(--tv-easing-standard);
 }
 
 @media (max-width: 1535px) {
@@ -133,7 +133,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  transition: color 200ms ease;
+  transition: color var(--tv-duration-base) var(--tv-easing-standard);
   isolation: isolate;
   min-height: 48px;
 }
@@ -196,7 +196,7 @@
   cursor: pointer;
   min-width: 320px;
   min-height: 48px;
-  transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
+  transition: border-color var(--tv-duration-base) var(--tv-easing-standard), color var(--tv-duration-base) var(--tv-easing-standard), background var(--tv-duration-base) var(--tv-easing-standard);
 }
 
 @media (max-width: 1535px) {
@@ -241,7 +241,7 @@
   color: var(--tv-ink-secondary);
   border-radius: 8px;
   cursor: pointer;
-  transition: color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  transition: color var(--tv-duration-base) var(--tv-easing-standard), background var(--tv-duration-base) var(--tv-easing-standard), box-shadow var(--tv-duration-base) var(--tv-easing-standard);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -249,7 +249,7 @@
   display: grid;
   place-items: center;
   color: inherit;
-  transition: transform 160ms ease;
+  transition: transform var(--tv-duration-base) var(--tv-easing-standard);
 }
 
 .command-control__state {
@@ -260,7 +260,7 @@
   height: 5px;
   border-radius: 999px;
   background: transparent;
-  transition: background 160ms ease, transform 160ms ease;
+  transition: background var(--tv-duration-base) var(--tv-easing-standard), transform var(--tv-duration-base) var(--tv-easing-standard);
 }
 
 .command-control:hover {
@@ -333,7 +333,7 @@
   text-decoration: none;
   border: 1px solid var(--tv-border-interactive);
   min-height: 48px;
-  transition: border-color 200ms ease, color 200ms ease;
+  transition: border-color var(--tv-duration-base) var(--tv-easing-standard), color var(--tv-duration-base) var(--tv-easing-standard);
 }
 
 @media (max-width: 1535px) {

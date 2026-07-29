@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
 import { SOUND_PLAY_EVENT } from "@/lib/config/sound";
+import { getPrefersReducedMotion, shouldShowRouteTransitionPresentation } from "@/lib/motion/reduced-motion";
 
 type RouteLoaderConfig = {
   label: string;
@@ -70,8 +71,10 @@ function getRouteLoaderConfig(pathname: string) {
 }
 
 function canShowRouteLoader() {
-  return window.matchMedia("(max-width: 767px)").matches &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return (
+    window.matchMedia("(max-width: 767px)").matches &&
+    shouldShowRouteTransitionPresentation(getPrefersReducedMotion())
+  );
 }
 
 export function RouteTransitionLoader() {
