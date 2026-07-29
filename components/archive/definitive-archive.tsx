@@ -478,10 +478,13 @@ export function DefinitiveArchive({
             </div>
           ) : (
             <>
-              <ul className="ar4-grid__list">
-                {visibleFiltered.map((t, idx) => (
-                  <li key={t.slug}>
-                    <ArchiveV4ToolCard tool={t} rank={idx + 1} />
+              <ul
+                key={`${activeGroup}|${query}|${showPromotedInGrid ? "p" : "n"}`}
+                className="ar4-grid__list ar4-grid__list--motion"
+              >
+                {visibleFiltered.map((tool, idx) => (
+                  <li key={tool.slug}>
+                    <ArchiveV4ToolCard tool={tool} rank={idx + 1} />
                   </li>
                 ))}
               </ul>

@@ -170,3 +170,30 @@
     transform: scale(1);
   }
 }
+
+/* Posts reading progress — transform only, no CLS */
+.reading-progress {
+  position: sticky;
+  top: var(--tv-header-height, 4.5rem);
+  z-index: var(--tv-z-sticky);
+  height: 2px;
+  width: 100%;
+  pointer-events: none;
+  background: transparent;
+}
+.reading-progress__fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: var(--tv-accent-violet-on-dark);
+}
+.reading-progress[data-complete="true"] .reading-progress__fill {
+  background: var(--tv-accent-violet-on-dark);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-progress__fill {
+    transition: none;
+  }
+}

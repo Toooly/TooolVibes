@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, useMemo, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { levelBTransition } from "@/lib/motion/transitions";
 import {
   X,
   GitCompare,
@@ -584,6 +586,7 @@ function MobileNoteSheet({
   editable: boolean;
   onClose: () => void;
 }) {
+  const preferReducedMotion = useReducedMotion();
   const [noteDraft, setNoteDraft] = useState(memory.note ?? "");
 
   useEffect(() => {
@@ -607,10 +610,10 @@ function MobileNoteSheet({
 
   return (
     <motion.div
-      initial={{ y: "100%" }}
-      animate={{ y: 0 }}
-      exit={{ y: "100%" }}
-      transition={{ type: "spring", stiffness: 320, damping: 32 }}
+      initial={preferReducedMotion ? false : { y: 16, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={preferReducedMotion ? undefined : { y: 12, opacity: 0 }}
+      transition={levelBTransition({ preferReducedMotion })}
       className="mobile-shortlist-board__sheet"
       role="dialog"
       aria-modal="true"

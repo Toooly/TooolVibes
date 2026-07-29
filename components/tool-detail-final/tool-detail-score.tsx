@@ -1,6 +1,7 @@
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { deriveScoreDimensions } from "@/lib/data/tool-detail-derivation";
+import { ToolDetailScoreBar } from "@/components/tool-detail-final/tool-detail-score-bar";
 
 /**
  * B. Score Instrument
@@ -33,19 +34,7 @@ export function ToolDetailScore({ tool }: ToolDetailScoreProps) {
         <span className="td-final-score__number">{value.toFixed(1)}</span>
         <span className="td-final-score__denom">/10</span>
       </div>
-      <div
-        className="td-final-score__bar"
-        role="progressbar"
-        aria-valuenow={Math.round(value * 10)}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={`Score ${value} su 10`}
-      >
-        <span
-          className="td-final-score__bar-fill"
-          style={{ width: `${Math.min(value * 10, 100)}%` }}
-        />
-      </div>
+      <ToolDetailScoreBar ratio={Math.min(value / 10, 1)} />
       <ul className="td-final-score__dimensions" aria-label="Dimensioni">
         {dimensions.map((d) => (
           <li key={d.label} className="td-final-score__dim">

@@ -207,7 +207,7 @@
   color: var(--tv-ink-inverted-primary);
   box-shadow: none;
   transform: none;
-  transition: border-color 160ms ease, background 160ms ease;
+  transition: border-color var(--tv-duration-base) var(--tv-easing-standard), background var(--tv-duration-base) var(--tv-easing-standard);
 }
 
 .mobile-collections__item:is(:hover, :focus-visible) {

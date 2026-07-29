@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
+import { useOnceInView } from "@/lib/motion/use-once-in-view";
 import { FeaturedPartner } from "@/components/monetization/partner-placements";
 import { HomeRadarPreview } from "@/components/radar/radar-experience";
 
@@ -315,41 +316,69 @@ function IvoryEditorial({
               Ranking del catalogo attivo, con lo score di ogni profilo.
             </p>
           </div>
-          <ol className="def-editorial__pod-stage">
-            {top3[0] ? (
-              <li className="def-editorial__pod-cell def-editorial__pod-cell--first">
-                <PodiumCard
-                  tool={top3[0]}
-                  rank={1}
-                  iconUrl={iconUrl(top3[0])}
-                  initial={initial(top3[0].name)}
-                />
-              </li>
-            ) : null}
-            {top3[1] ? (
-              <li className="def-editorial__pod-cell def-editorial__pod-cell--second">
-                <PodiumCard
-                  tool={top3[1]}
-                  rank={2}
-                  iconUrl={iconUrl(top3[1])}
-                  initial={initial(top3[1].name)}
-                />
-              </li>
-            ) : null}
-            {top3[2] ? (
-              <li className="def-editorial__pod-cell def-editorial__pod-cell--third">
-                <PodiumCard
-                  tool={top3[2]}
-                  rank={3}
-                  iconUrl={iconUrl(top3[2])}
-                  initial={initial(top3[2].name)}
-                />
-              </li>
-            ) : null}
-          </ol>
+          <PodiumStage top3={top3} iconUrl={iconUrl} initial={initial} />
         </div>
       </div>
     </section>
+  );
+}
+
+
+function PodiumStage({
+  top3,
+  iconUrl,
+  initial,
+}: {
+  top3: ToolPublicView[];
+  iconUrl: (tool: ToolPublicView) => string | null;
+  initial: (name: string) => string;
+}) {
+  const { ref, hasBeenVisible, preferReducedMotion } = useOnceInView<HTMLOListElement>({
+    threshold: 0.28,
+    rootMargin: "0px 0px -8% 0px",
+  });
+  const pending = !preferReducedMotion && !hasBeenVisible;
+
+  return (
+    <ol
+      ref={ref}
+      className="def-editorial__pod-stage"
+      data-motion-pending={pending ? "true" : "false"}
+    >
+      {top3[0] ? (
+        <li className="def-editorial__pod-cell def-editorial__pod-cell--first">
+          <PodiumCard
+            tool={top3[0]}
+            rank={1}
+            iconUrl={iconUrl(top3[0])}
+            initial={initial(top3[0].name)}
+            revealed={hasBeenVisible || preferReducedMotion}
+          />
+        </li>
+      ) : null}
+      {top3[1] ? (
+        <li className="def-editorial__pod-cell def-editorial__pod-cell--second">
+          <PodiumCard
+            tool={top3[1]}
+            rank={2}
+            iconUrl={iconUrl(top3[1])}
+            initial={initial(top3[1].name)}
+            revealed={hasBeenVisible || preferReducedMotion}
+          />
+        </li>
+      ) : null}
+      {top3[2] ? (
+        <li className="def-editorial__pod-cell def-editorial__pod-cell--third">
+          <PodiumCard
+            tool={top3[2]}
+            rank={3}
+            iconUrl={iconUrl(top3[2])}
+            initial={initial(top3[2].name)}
+            revealed={hasBeenVisible || preferReducedMotion}
+          />
+        </li>
+      ) : null}
+    </ol>
   );
 }
 
@@ -358,11 +387,13 @@ function PodiumCard({
   rank,
   iconUrl,
   initial,
+  revealed = true,
 }: {
   tool: ToolPublicView;
   rank: 1 | 2 | 3;
   iconUrl: string | null;
   initial: string;
+  revealed?: boolean;
 }) {
   const score = computeEditorialScore(tool);
   const rationale = truncate(tool.tldr || tool.shortDescription || "", rank === 1 ? 110 : 90);
@@ -378,7 +409,7 @@ function PodiumCard({
   return (
     <Link
       href={`/toools/${tool.slug}`}
-      className={`def-editorial__pod-card def-editorial__pod-card--rank-${rank}`}
+      className={`def-editorial__pod-card def-editorial__pod-card--rank-${rank}${revealed ? " is-revealed" : ""}`}
       data-rank={rank}
     >
       <span className="def-editorial__pod-rank" aria-label={`Posizione ${rank}`}>

@@ -13,6 +13,7 @@ import {
 } from "@/lib/compare/compare-objective";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { levelCTransition } from "@/lib/motion/transitions";
 import { playTooolvibesSound } from "@/lib/config/sound";
 import {
   celebrateArenaFight,
@@ -553,7 +554,7 @@ function MobileArenaBattleStage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
-            transition={reducedMotion ? { duration: 0 } : { duration: 0.35, ease: "easeOut" }}
+            transition={levelCTransition({ preferReducedMotion: reducedMotion })}
           >
             <div className="mobile-compare-arena__verdict-head">
               <div className="mobile-compare-arena__verdict-winner">

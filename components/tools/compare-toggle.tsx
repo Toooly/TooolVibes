@@ -3,6 +3,7 @@
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { Columns3 } from "lucide-react";
 
+import { MOTION_DURATION_MS } from "@/lib/motion/tokens";
 import { MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 type CompareToggleProps = {
@@ -35,7 +36,7 @@ export function CompareToggle({
         window.clearTimeout(freshTimerRef.current);
       }
 
-      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), 560);
+      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), MOTION_DURATION_MS.reward);
     }
 
     previousCountRef.current = count;
@@ -67,7 +68,7 @@ export function CompareToggle({
         window.clearTimeout(freshTimerRef.current);
       }
 
-      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), 560);
+      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), MOTION_DURATION_MS.reward);
     }
 
     previousCountRef.current = nextCount;
@@ -80,7 +81,7 @@ export function CompareToggle({
       <button
         type="button"
         onClick={handleToggle}
-        className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border transition-all duration-200 hover:-translate-y-0.5 ${
+        className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border transition-all duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
           isSelected ? "is-active" : ""
         } ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
         style={{
@@ -103,7 +104,7 @@ export function CompareToggle({
     <button
       type="button"
       onClick={handleToggle}
-      className={`selection-chip toggle-chip-glow text-ui-strong inline-flex items-center gap-2 rounded-full border transition-all duration-200 hover:-translate-y-0.5 ${
+      className={`selection-chip toggle-chip-glow text-ui-strong inline-flex items-center gap-2 rounded-full border transition-all duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
         compact ? "px-2.75 py-1.25 text-xs" : "justify-center px-4 py-2.25 text-xs sm:text-[0.78rem]"
       } ${isSelected ? "is-active" : ""} ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
       style={{

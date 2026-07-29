@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { MOTION_DURATION_MS } from "@/lib/motion/tokens";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 type ShortlistToggleProps = {
@@ -37,7 +38,7 @@ export function ShortlistToggle({
         window.clearTimeout(freshTimerRef.current);
       }
 
-      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), 540);
+      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), MOTION_DURATION_MS.reward);
     }
 
     wasSavedRef.current = isSaved;
@@ -59,7 +60,7 @@ export function ShortlistToggle({
       <button
         type="button"
         onClick={handleToggle}
-        className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border transition-all duration-200 hover:-translate-y-0.5 ${
+        className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border transition-all duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
           isSaved ? "is-active" : ""
         } ${isFresh ? "is-fresh" : ""}`}
         style={{
@@ -91,7 +92,7 @@ export function ShortlistToggle({
     <button
       type="button"
       onClick={handleToggle}
-      className={`selection-chip toggle-chip-glow text-ui-strong inline-flex items-center gap-2 rounded-full border transition-all duration-200 hover:-translate-y-0.5 ${
+      className={`selection-chip toggle-chip-glow text-ui-strong inline-flex items-center gap-2 rounded-full border transition-all duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
         isSaved ? "is-active" : ""
       } ${isFresh ? "is-fresh" : ""} ${
         compact || mode === "compact"

@@ -162,3 +162,33 @@ Gamification grants are **out of scope** for Phase 1.
 - `styles/premium-motion.css`, route CSS flashes
 - `components/gamification/**` motion (inactive flags; do not activate)
 - GSAP setup / Lenis provider internals (RM already respected)
+
+## Phase 2 — Public interaction system
+
+Implemented without grants, SP, missions, confetti or migrations.
+
+### Intensities
+
+| Level | Duration | Uses |
+|-------|----------|------|
+| A | 80–180ms | save/compare fresh, chips, controls |
+| B | 180–360ms | drawers, filter grid enter, route |
+| C | ≤720ms | Podium entrance, compare verdict, score bar |
+
+### GSAP
+
+Not used in Phase 2. Signature moments use Motion + CSS tokens.
+
+### Migrated owners (Phase 2)
+
+- Command Bar / mobile nav markers → `layoutMarkerTransition`
+- Command palette open → fade + 8px slide tokens
+- Home Podium → one-shot `useOnceInView` + CSS stagger
+- Archive filter grid → keyed list enter
+- Radar live pulse → token duration + existing RM kill
+- Compare verdict → `levelCTransition`
+- Shortlist note sheet → Level B opacity/Y
+- Posts reading progress → `scaleX` bar
+- Tool Detail score bar → once-in-view `scaleX`
+- ScrollReveal → foundation durations/RM
+- Account auth tab marker → layout marker transition

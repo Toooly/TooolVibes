@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { ReadingProgressBar } from "@/components/posts/reading-progress-bar";
 import { notFound } from "next/navigation";
 
 import { SectionHeader } from "@/components/ui/section-header";
@@ -103,7 +104,11 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
 
   return (
     <div className="internal-page internal-editorial-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <section className="dark-panel section-stage group relative overflow-hidden rounded-[36px]">
+      <ReadingProgressBar />
+      <section
+        data-reading-progress-root
+        className="dark-panel section-stage group relative overflow-hidden rounded-[36px]"
+      >
         <div className="editorial-grid gap-y-0">
           <div className={tool ? "col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7" : "col-span-12 p-5 sm:p-6 lg:p-7"}>
             <RouteMarker

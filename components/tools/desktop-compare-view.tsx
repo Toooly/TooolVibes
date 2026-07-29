@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Columns3, Scale, Sparkles, Trophy } from "lucide-react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { levelCTransition } from "@/lib/motion/transitions";
 import { MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import type { CompareObjective } from "@/lib/compare/compare-objective";
@@ -273,7 +274,7 @@ export function DesktopCompareView({
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
-                  transition={reducedMotion ? { duration: 0 } : { duration: 0.35, ease: "easeOut" }}
+                  transition={levelCTransition({ preferReducedMotion: reducedMotion })}
                 >
                   <div className="desktop-compare__verdict-title">
                     <Sparkles className="size-4" aria-hidden="true" />

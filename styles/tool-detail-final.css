@@ -463,19 +463,22 @@
 .td-final-score__bar-fill {
   display: block;
   height: 100%;
+  width: 100%;
   border-radius: inherit;
   background: var(--tv-accent-gold);
   transform-origin: left center;
-  animation: td-final-bar-fill-in 720ms var(--tv-easing-emphasis) both;
+  transform: scaleX(0);
+  transition: transform var(--tv-duration-reward) var(--tv-easing-decelerate);
 }
 
-@keyframes td-final-bar-fill-in {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+.td-final-score__bar-fill[data-animate="done"] {
+  /* transform set inline to the real score ratio */
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .td-final-score__bar-fill { animation: none; }
+  .td-final-score__bar-fill {
+    transition: none;
+  }
 }
 
 .td-final-score__dimensions {

@@ -502,7 +502,7 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.9);
   opacity: 0;
-  animation: compare-flash 0.4s ease-out forwards;
+  animation: compare-flash var(--tv-duration-slow) var(--tv-easing-decelerate) forwards;
   pointer-events: none;
 }
 
@@ -1612,7 +1612,7 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.9);
   opacity: 0;
-  animation: compare-flash 0.35s ease-out forwards;
+  animation: compare-flash var(--tv-duration-slow) var(--tv-easing-decelerate) forwards;
   pointer-events: none;
 }
 

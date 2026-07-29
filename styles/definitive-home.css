@@ -201,7 +201,7 @@
   border: 1px solid transparent;
   min-height: 48px;
   -webkit-tap-highlight-color: transparent;
-  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+  transition: background var(--tv-duration-base) var(--tv-easing-standard), color var(--tv-duration-base) var(--tv-easing-standard), border-color var(--tv-duration-base) var(--tv-easing-standard);
 }
 
 @media (max-width: 767px) {
@@ -275,7 +275,7 @@
   min-height: 48px;
   min-width: 0;
   -webkit-tap-highlight-color: transparent;
-  transition: color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  transition: color var(--tv-duration-base) var(--tv-easing-standard), background var(--tv-duration-base) var(--tv-easing-standard), box-shadow var(--tv-duration-base) var(--tv-easing-standard);
 }
 
 .def-cockpit__journey li a:hover {
@@ -704,7 +704,7 @@
   border: 1px solid transparent;
   min-height: 44px;
   -webkit-tap-highlight-color: transparent;
-  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+  transition: background var(--tv-duration-base) var(--tv-easing-standard), color var(--tv-duration-base) var(--tv-easing-standard), border-color var(--tv-duration-base) var(--tv-easing-standard);
 }
 
 .def-editorial__spot-cta--primary {
@@ -1453,5 +1453,32 @@
   .def-editorial__pod-card:hover {
     transform: none;
     box-shadow: none;
+  }
+}
+
+
+/* Podium Level C — one-shot entrance when revealed (never leaves content invisible without JS) */
+@media (prefers-reduced-motion: no-preference) {
+  .def-editorial__pod-stage[data-motion-pending="true"] .def-editorial__pod-card.is-revealed {
+    animation: def-pod-card-in var(--tv-duration-cinematic) var(--tv-easing-decelerate) both;
+  }
+  .def-editorial__pod-stage[data-motion-pending="true"] .def-editorial__pod-card--rank-1.is-revealed {
+    animation-delay: var(--tv-duration-stagger-step);
+  }
+  .def-editorial__pod-stage[data-motion-pending="true"] .def-editorial__pod-card--rank-2.is-revealed {
+    animation-delay: calc(var(--tv-duration-stagger-step) * 2);
+  }
+  .def-editorial__pod-stage[data-motion-pending="true"] .def-editorial__pod-card--rank-3.is-revealed {
+    animation-delay: calc(var(--tv-duration-stagger-step) * 3);
+  }
+}
+@keyframes def-pod-card-in {
+  from {
+    opacity: 0.01;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
