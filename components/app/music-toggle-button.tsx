@@ -62,7 +62,7 @@ export function MusicToggleButton({ className }: { className?: string }) {
       aria-label={enabled ? "Disattiva musica TooolVibes" : "Attiva musica TooolVibes"}
       aria-pressed={enabled}
       className={cn(
-        "premium-button premium-button-icon premium-button-subtle music-toggle-button inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center text-[#f8fafc] [&_svg]:text-[#f8fafc]",
+        "music-toggle-button",
         enabled && "is-playing",
         className,
       )}

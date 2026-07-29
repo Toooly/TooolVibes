@@ -5,7 +5,7 @@
  *  - Reliable logo asset and readable wordmark
  *  - Route tabs that fit without horizontal clipping
  *  - Search remains dominant when space allows
- *  - Utilities: quiet 36px icons in a tight cluster
+ *  - Utilities: quiet 36px icons in a tight cluster at every desktop width
  *  - Account: compact secondary, 48px tall, purple border
  *  - Solid dark baseline
  *
@@ -227,7 +227,7 @@
   color: var(--tv-ink-muted-aa);
 }
 
-/* Utilities — quiet group, hidden on smaller desktop */
+/* Utilities — quiet group, present throughout the desktop shell */
 .command-bar__utilities {
   display: inline-flex;
   align-items: center;
@@ -236,10 +236,6 @@
   background: color-mix(in srgb, var(--tv-surface-elevated) 50%, transparent);
   border: 1px solid var(--tv-border-subtle);
   border-radius: 12px;
-}
-
-@media (max-width: 1535px) {
-  .command-bar__utilities { display: none; }
 }
 
 .command-bar__util {
@@ -256,17 +252,28 @@
   transition: color 200ms ease, background 200ms ease;
 }
 
-.command-bar__util.premium-button {
-  min-width: 36px;
-  min-height: 36px;
-  padding: 0;
-  border: 0;
-  box-shadow: none;
+.command-bar__utilities .command-bar__util svg {
+  color: inherit;
+  filter: none;
 }
 
-.command-bar__util:hover {
-  color: var(--tv-ink-primary);
+.command-bar__utilities .command-bar__util:hover,
+.command-bar__utilities .command-bar__util:focus-visible {
   background: color-mix(in srgb, var(--tv-accent-primary) 12%, transparent);
+  color: var(--tv-ink-primary);
+}
+
+.command-bar__utilities .command-bar__util:active {
+  background: color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
+}
+
+.command-bar__utilities .command-bar__util[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--tv-accent-primary) 10%, transparent);
+  color: var(--tv-ink-primary);
+}
+
+.command-bar__utilities .command-bar__util.is-playing {
+  color: var(--tv-accent-cyan);
 }
 
 .command-bar__util-pulse { display: none; }

@@ -120,6 +120,7 @@ export function CommandBar() {
                 {active ? (
                   <motion.span
                     layoutId="command-bar-marker"
+                    initial={false}
                     aria-hidden="true"
                     className="command-bar__nav-marker"
                     transition={{ type: "spring", stiffness: 360, damping: 28 }}
