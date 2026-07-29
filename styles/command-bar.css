@@ -227,18 +227,10 @@
   color: var(--tv-ink-muted-aa);
 }
 
-/* Utilities — quiet group, present throughout the desktop shell */
-.command-bar__utilities {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 4px;
-  background: color-mix(in srgb, var(--tv-surface-elevated) 50%, transparent);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: 12px;
-}
-
-.command-bar__util {
+/* ============================================================
+   COMMAND CONTROL — canonical shell utility icon button
+   ============================================================ */
+.command-control {
   position: relative;
   display: grid;
   place-items: center;
@@ -249,32 +241,80 @@
   color: var(--tv-ink-secondary);
   border-radius: 8px;
   cursor: pointer;
-  transition: color 200ms ease, background 200ms ease;
+  transition: color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.command-bar__utilities .command-bar__util svg {
+.command-control__icon {
+  display: grid;
+  place-items: center;
   color: inherit;
-  filter: none;
+  transition: transform 160ms ease;
 }
 
-.command-bar__utilities .command-bar__util:hover,
-.command-bar__utilities .command-bar__util:focus-visible {
+.command-control__state {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: transparent;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.command-control:hover {
   background: color-mix(in srgb, var(--tv-accent-primary) 12%, transparent);
   color: var(--tv-ink-primary);
 }
 
-.command-bar__utilities .command-bar__util:active {
+.command-control:hover .command-control__icon {
+  transform: scale(1.04);
+}
+
+.command-control:active {
   background: color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
 }
 
-.command-bar__utilities .command-bar__util[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--tv-accent-primary) 10%, transparent);
-  color: var(--tv-ink-primary);
+.command-control:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tv-focus-ring);
 }
 
-.command-bar__utilities .command-bar__util.is-playing {
-  color: var(--tv-accent-cyan);
+/* Sound tone */
+.command-control--sound.is-active .command-control__state {
+  background: var(--tv-accent-violet-on-dark);
 }
+
+.command-control--sound.is-muted .command-control__state {
+  background: transparent;
+}
+
+.command-control--sound.is-muted {
+  opacity: 0.72;
+  color: var(--tv-ink-muted-aa);
+}
+
+/* Music tone */
+.command-control--music.is-active .command-control__state {
+  background: var(--tv-accent-cyan);
+}
+
+.command-control--music.is-active {
+  color: var(--tv-accent-cyan-on-dark);
+}
+
+/* Utilities cluster — quiet group, present throughout the desktop shell */
+.command-bar__utilities {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: color-mix(in srgb, var(--tv-surface-elevated) 50%, transparent);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 12px;
+}
+
 
 .command-bar__util-pulse { display: none; }
 
@@ -311,3 +351,16 @@
 }
 
 .command-bar__bottom-border { display: none; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .command-control,
+  .command-control__icon,
+  .command-control__state {
+    transition: none;
+  }
+
+  .command-control:hover .command-control__icon {
+    transform: none;
+  }
+}

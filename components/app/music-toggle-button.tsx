@@ -7,6 +7,7 @@ import {
   MUSIC_CHANGE_EVENT,
   MUSIC_STORAGE_KEY,
 } from "@/lib/config/sound";
+import { CommandControl } from "@/components/ui/command-control";
 import { cn } from "@/lib/utils";
 
 function getInitialMusicEnabled() {
@@ -57,19 +58,15 @@ export function MusicToggleButton({ className }: { className?: string }) {
   }
 
   return (
-    <button
-      type="button"
-      aria-label={enabled ? "Disattiva musica TooolVibes" : "Attiva musica TooolVibes"}
-      aria-pressed={enabled}
-      className={cn(
-        "music-toggle-button",
-        enabled && "is-playing",
-        className,
-      )}
+    <CommandControl
+      pressed={enabled}
+      tone="music"
+      label={enabled ? "Disattiva musica TooolVibes" : "Attiva musica TooolVibes"}
+      className={cn(enabled && "is-playing", className)}
       data-sound-control="true"
       onClick={toggleMusic}
     >
       <Icon className="size-4" aria-hidden="true" />
-    </button>
+    </CommandControl>
   );
 }

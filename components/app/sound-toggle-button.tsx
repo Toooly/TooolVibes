@@ -7,6 +7,7 @@ import {
   SOUND_MUTED_CHANGE_EVENT,
   SOUND_STORAGE_KEY,
 } from "@/lib/config/sound";
+import { CommandControl } from "@/components/ui/command-control";
 import { cn } from "@/lib/utils";
 
 function getInitialMuted() {
@@ -63,19 +64,15 @@ export function SoundToggleButton({ className }: { className?: string }) {
   }
 
   return (
-    <button
-      type="button"
-      aria-label={muted ? "Attiva suoni TooolVibes" : "Disattiva suoni TooolVibes"}
-      aria-pressed={!muted}
-      className={cn(
-        "sound-toggle-button",
-        muted && "is-muted",
-        className,
-      )}
+    <CommandControl
+      pressed={!muted}
+      tone="sound"
+      label={muted ? "Attiva suoni TooolVibes" : "Disattiva suoni TooolVibes"}
+      className={cn(muted && "is-muted", className)}
       data-sound-control="true"
       onClick={toggleMuted}
     >
       <Icon className="size-4" aria-hidden="true" />
-    </button>
+    </CommandControl>
   );
 }

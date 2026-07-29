@@ -1404,29 +1404,6 @@ img {
     transform: scale(1.12) rotate(-4deg);
   }
 
-  .sound-toggle-button,
-  .music-toggle-button {
-    flex-shrink: 0;
-  }
-
-  .sound-toggle-button svg,
-  .music-toggle-button svg {
-    display: block;
-    flex: 0 0 auto;
-    margin: auto;
-  }
-
-  .sound-toggle-button.is-muted {
-    opacity: 0.78;
-    filter: saturate(0.78);
-  }
-
-  .sound-toggle-button:hover svg,
-  .sound-toggle-button:focus-visible svg,
-  .music-toggle-button:hover svg,
-  .music-toggle-button:focus-visible svg {
-    transform: scale(1.08);
-  }
 
   .premium-arrow {
     transition:
