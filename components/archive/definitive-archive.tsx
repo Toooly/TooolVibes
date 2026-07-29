@@ -387,7 +387,7 @@ export function DefinitiveArchive({
             <div className="ar4-ivory__head">
               <p className="ar4-ivory__eyebrow">
                 <Sparkles size={12} aria-hidden="true" />
-                Decision desk
+                Scrivania editoriale
               </p>
               <h2 id="ar4-ivory-title" className="ar4-ivory__title">
                 Il tool della settimana, in evidenza.

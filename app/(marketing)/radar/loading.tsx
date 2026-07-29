@@ -8,7 +8,7 @@ export default function RadarLoading() {
       >
         <header className="tv-radar__header">
           <div>
-            <p className="tv-radar__eyebrow">Product Hunt signal desk</p>
+            <p className="tv-radar__eyebrow">Scrivania segnali · Product Hunt</p>
             <h1 id="tv-radar-title">Radar</h1>
             <p className="tv-radar__lede">
               Lanci reali, ordinati per periodo. Nessun dato simulato.

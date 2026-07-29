@@ -76,7 +76,7 @@ export function AuthPage() {
     <div id="member-access" className="v-auth-page tv-kbd-page scroll-mt-24">
       <div className="v-auth-container v-auth-container--split">
         <aside className="v-auth-context" aria-labelledby="account-context-title">
-          <p className="v-auth-context__eyebrow">Workspace privato</p>
+          <p className="v-auth-context__eyebrow">Spazio personale</p>
           <p id="account-context-title" className="v-auth-context__title">
             Una memoria operativa per scegliere il tuo stack.
           </p>

@@ -27,7 +27,7 @@ type EditorialPostPageProps = {
 };
 
 const kindLabels: Record<NonNullable<Awaited<ReturnType<typeof getEditorialPostBySlug>>>["kind"], string> = {
-  "tool-writeup": "Approfondimento tool",
+  "tool-writeup": "Analisi tool",
   guide: "Guida",
   editorial: "Blog",
 };
@@ -339,7 +339,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
 
                 <div className="discovery-strip-dark rounded-[22px] px-4 py-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
-                    Nota editoriale
+                    Lettura editoriale
                   </p>
                   <div className="mt-3 grid gap-1.5 text-[0.82rem] leading-6 text-white/70">
                     <p>Pubblicato: {formatItalianDate(post.published_at)}</p>

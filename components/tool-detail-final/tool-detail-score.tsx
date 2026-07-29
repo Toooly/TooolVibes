@@ -24,7 +24,7 @@ export function ToolDetailScore({ tool }: ToolDetailScoreProps) {
       aria-label={`Punteggio editoriale TooolVibes ${value} su 10, ${label}`}
     >
       <div className="td-final-score__header">
-        <span className="td-final-score__kicker">Score TooolVibes</span>
+        <span className="td-final-score__kicker">Valutazione editoriale</span>
         <span className="td-final-score__badge">
           Verdetto · {label}
         </span>

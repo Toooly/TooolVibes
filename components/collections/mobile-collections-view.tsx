@@ -84,7 +84,7 @@ export function MobileCollectionsView({
       <header className="mobile-collections__header">
         <div className="mobile-collections__badge">
           <Boxes className="size-4" />
-          <span>Percorsi</span>
+          <span>Selezioni</span>
         </div>
         <h1>Il posto dove la selezione diventa percorso.</h1>
         <p>

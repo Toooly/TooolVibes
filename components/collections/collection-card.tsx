@@ -111,7 +111,7 @@ export function CollectionCard({
           <div className="flex flex-col justify-between p-4.5 sm:p-5 lg:p-6">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="pill">Percorsi curati</span>
+                <span className="pill">Selezioni curate</span>
                 {collection.surface === "special-issue" ? (
                   <span className="selection-status">{formatMeta.label}</span>
                 ) : null}

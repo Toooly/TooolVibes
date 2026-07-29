@@ -401,7 +401,7 @@ function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; c
           <Library size={22} />
         </div>
         <div>
-          <span className="mobile-library-hero__eyebrow">Biblioteca operativa</span>
+          <span className="mobile-library-hero__eyebrow">Biblioteca di scelta</span>
           <h1 id="mobile-library-title">La tua biblioteca</h1>
           <p>
             {totalCount > 0

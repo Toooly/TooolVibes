@@ -126,7 +126,7 @@ export default async function PostsPage() {
                         className="discovery-strip-dark rounded-[22px] px-2 py-3 sm:px-4 sm:py-4"
                       >
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
-                          Approfondimenti tool
+                          Analisi tool
                         </p>
                         <p className="mt-2 text-[1.5rem] leading-none text-white sm:text-[1.8rem]">
                           {toolWriteups.length}
@@ -236,7 +236,7 @@ export default async function PostsPage() {
         <section id="analisi" className="home-section-gap">
           <div className="brand-panel rounded-[34px] p-5 sm:p-7 lg:p-8">
             <SectionHeader
-              eyebrow="Approfondimenti tool"
+              eyebrow="Analisi tool"
               title="Gli approfondimenti collegati ai tool gi&agrave; presenti nel catalogo."
               description="Ogni articolo aggiunge contesto alla scheda del tool: non una duplicazione, ma una lettura pi&ugrave; chiara del perch&eacute; pu&ograve; servirti."
             />

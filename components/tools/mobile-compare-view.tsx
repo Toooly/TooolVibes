@@ -457,7 +457,7 @@ function MobileArenaBattleStage({
         <header className="mobile-compare-arena__hud">
           <div className="mobile-compare-arena__title-wrap">
             <span className="mobile-compare-arena__eyebrow">Verdetto guidato</span>
-            <h2 className="mobile-compare-arena__title">Decision desk</h2>
+            <h2 className="mobile-compare-arena__title">Scrivania editoriale</h2>
           </div>
           <div className="mobile-compare-arena__hud-pills">
             <span className="mobile-compare-arena__mode">

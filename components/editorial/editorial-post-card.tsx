@@ -14,7 +14,7 @@ type EditorialPostCardProps = {
 };
 
 const kindLabels: Record<EditorialPostRecord["kind"], string> = {
-  "tool-writeup": "Approfondimento tool",
+  "tool-writeup": "Analisi tool",
   guide: "Guida",
   editorial: "Blog",
 };
@@ -110,7 +110,7 @@ export function EditorialPostCard({ post, variant = "card", className }: Editori
           variant="secondary"
           className="sm:min-w-0"
         >
-          Apri il post
+          Leggi
         </ButtonLink>
         {post.tool_slug ? (
           <Link

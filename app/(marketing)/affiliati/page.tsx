@@ -39,7 +39,7 @@ export default function AffiliatiPage() {
         <div className="affiliates-intro brand-panel rounded-[var(--radius-xl)] p-5 sm:p-8 xl:p-10">
           <RouteMarker
             index="10"
-            label="Partner network"
+            label="Rete partner"
             status="Candidature aperte"
             density="hero"
           />

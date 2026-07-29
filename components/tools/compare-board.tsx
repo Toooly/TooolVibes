@@ -115,7 +115,7 @@ function LegacyCompareMobileDeck({
                   </div>
                 ))}
                 <div className="compare-mobile-line">
-                  <span>Nota editoriale</span>
+                  <span>Lettura editoriale</span>
                   <p>{getToolEditorialNote(tool)}</p>
                 </div>
               </div>
@@ -290,7 +290,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
           {[
             "1. Parti dall'archivio o da una raccolta coerente.",
             "2. Tieni nel confronto solo i profili davvero vicini.",
-            "3. Leggi prima integrazione nel flusso, poi prezzo e nota editoriale.",
+            "3. Leggi prima integrazione nel flusso, poi prezzo e lettura editoriale.",
           ].map((item) => (
             <div
               key={item}
@@ -401,7 +401,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
         <p className="mt-2 max-w-[42rem] text-[0.96rem] leading-7" style={{ color: "var(--muted-strong)" }}>
           {topDecisionLead
             ? hasTopLeadTie
-              ? `Il gruppo resta vicino: ${topDecisionLead.tool.name} non stacca davvero e conviene leggere prima integrazione nel flusso, prezzo e nota editoriale.`
+              ? `Il gruppo resta vicino: ${topDecisionLead.tool.name} non stacca davvero e conviene leggere prima integrazione nel flusso, prezzo e lettura editoriale.`
               : `${topDecisionLead.tool.name} spicca in ${topDecisionLead.leadCount} dimensioni su ${scoreDimensions.length}. Parti da qui e poi conferma il verdetto nei dettagli.`
             : "Il confronto serve a far emergere differenze vere, non a costruire una matrice infinita."}
         </p>
@@ -515,7 +515,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
                 </p>
               </div>
               <div className="compare-detail-card">
-                <p className="editorial-label">Nota editoriale</p>
+                <p className="editorial-label">Lettura editoriale</p>
                 <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
                   {getToolEditorialNote(tool)}
                 </p>
@@ -553,7 +553,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
                 </div>
               </div>
               <div className="compare-detail-card">
-                <p className="editorial-label">Nota editoriale</p>
+                <p className="editorial-label">Lettura editoriale</p>
                 <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
                   {getToolEditorialNote(tool)}
                 </p>
