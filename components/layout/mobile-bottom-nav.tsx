@@ -18,6 +18,8 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { layoutMarkerTransition, microPopTransition } from "@/lib/motion/transitions";
 
 import { cn } from "@/lib/utils";
 import { isNavRouteActive } from "@/lib/navigation/selectors";
@@ -30,6 +32,7 @@ import {
 } from "./workspace-nav-selectors";
 
 export function MobileBottomNav() {
+  const preferReducedMotion = useReducedMotion();
   const pathname = usePathname();
   const navItems = useNavItems("bottom-nav");
   const [mounted, setMounted] = useState(false);
@@ -128,7 +131,7 @@ export function MobileBottomNav() {
                   <motion.span
                     layoutId="mobile-bottom-marker"
                     className="mobile-bottom-item__marker"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    transition={layoutMarkerTransition({ preferReducedMotion })}
                     aria-hidden="true"
                   />
                 ) : null}
@@ -142,9 +145,9 @@ export function MobileBottomNav() {
                 {badgeCount > 0 ? (
                   <motion.span
                     key={badgeCount}
-                    initial={{ scale: 0.4, opacity: 0 }}
+                    initial={preferReducedMotion ? false : { scale: 0.4, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 420, damping: 22 }}
+                    transition={microPopTransition({ preferReducedMotion })}
                     className="mobile-bottom-item__badge"
                     aria-label={badgeAria}
                   >

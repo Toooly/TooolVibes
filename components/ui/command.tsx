@@ -54,7 +54,7 @@ function CommandDialog({
     <Dialog {...props}>
       <DialogContent
         className={cn(
-          "top-1/3 max-w-[42rem] translate-y-0 overflow-hidden rounded-[30px]! border border-white/10 bg-transparent p-0 shadow-none ring-0",
+          "top-1/3 max-w-[42rem] translate-y-0 overflow-hidden rounded-[30px]! border border-white/10 bg-transparent p-0 shadow-none ring-0 duration-[var(--tv-duration-base)] ease-[var(--tv-easing-standard)] data-open:fade-in-0 data-open:slide-in-from-top-2 data-closed:fade-out-0 data-closed:slide-out-to-top-2 data-open:zoom-in-100 data-closed:zoom-out-100",
           className
         )}
         showCloseButton={showCloseButton}

@@ -19,6 +19,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { layoutMarkerTransition } from "@/lib/motion/transitions";
 import {
   Bookmark,
   Columns2,
@@ -80,6 +82,7 @@ export function CommandBar() {
     { href: "/shortlist", label: "Salvati", short: "Salvati", glyph: Bookmark },
   ];
   const accountCta = useHeaderAccountCta();
+  const preferReducedMotion = useReducedMotion();
   const accountIcon =
     accountCta.state === "guest" || accountCta.state === "legacy"
       ? UserPlus
@@ -123,7 +126,7 @@ export function CommandBar() {
                     initial={false}
                     aria-hidden="true"
                     className="command-bar__nav-marker"
-                    transition={{ type: "spring", stiffness: 360, damping: 28 }}
+                    transition={layoutMarkerTransition({ preferReducedMotion })}
                   />
                 ) : null}
               </Link>

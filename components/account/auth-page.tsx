@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { layoutMarkerTransition } from "@/lib/motion/transitions";
 import { useAccount } from "./account-provider";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { useKeyboardAwareScroll } from "@/lib/hooks/use-keyboard-aware-scroll";
@@ -25,6 +27,7 @@ type PendingMagicLink = {
 
 export function AuthPage() {
   const account = useAccount();
+  const preferReducedMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useState<AuthTab>("login");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -132,7 +135,7 @@ export function AuthPage() {
                     <motion.span
                       className="v-auth-tab-indicator"
                       layoutId="auth-tab-indicator"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      transition={layoutMarkerTransition({ preferReducedMotion })}
                     />
                   )}
                 </button>
