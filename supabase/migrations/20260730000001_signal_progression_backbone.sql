@@ -320,7 +320,58 @@ begin
     'api',
     occurred
   )
+  on conflict (user_id, dedupe_key) do nothing
   returning * into inserted_event;
+
+  if not found then
+    select *
+    into existing_event
+    from public.signal_engagement_events
+    where user_id = p_user_id
+      and dedupe_key = btrim(p_dedupe_key);
+
+    if found then
+      select *
+      into existing_grant
+      from public.signal_reward_grants
+      where engagement_event_id = existing_event.id;
+
+      if found then
+        select *
+        into existing_delivery
+        from public.signal_reward_deliveries
+        where grant_id = existing_grant.id;
+
+        return jsonb_build_object(
+          'status', 'duplicate',
+          'eventId', existing_event.id,
+          'granted', true,
+          'envelope', jsonb_build_object(
+            'grantId', existing_grant.id::text,
+            'eventId', existing_event.id::text,
+            'tier', existing_grant.reward_tier,
+            'code', existing_grant.reason_code,
+            'title', existing_grant.title,
+            'description', existing_grant.description,
+            'displayDelta', existing_grant.sp_delta,
+            'resultingBalance', existing_grant.resulting_balance,
+            'createdAt', existing_grant.created_at,
+            'priority', existing_grant.priority,
+            'accessibilityAnnouncement', existing_grant.accessibility_announcement,
+            'rulesVersion', existing_grant.rules_version
+          ),
+          'deliveryStatus', coalesce(existing_delivery.status, 'pending')
+        );
+      end if;
+
+      return jsonb_build_object(
+        'status', 'duplicate',
+        'eventId', existing_event.id,
+        'granted', false,
+        'envelope', null
+      );
+    end if;
+  end if;
 
   if awarded <= 0 or p_reward_tier = 'interaction' then
     return jsonb_build_object(
