@@ -8,7 +8,6 @@ import {
   getPublicToolFilterGroups,
   getPublicToolViews,
 } from "@/lib/data/public-tools";
-import "./archive.css";
 import "@/styles/archive-v4.css";
 
 export const metadata: Metadata = {

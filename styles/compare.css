@@ -340,37 +340,6 @@
   content: none;
 }
 
-.compare-hero-light {
-  position: relative;
-  background: #06060e;
-}
-
-.compare-hero-light__glow {
-  position: absolute;
-  inset: 0;
-  background: transparent;
-}
-
-.compare-hero-light__eyebrow {
-  margin: 0 0 var(--tv-space-3);
-  color: var(--tv-accent-gold);
-  font-size: var(--tv-text-xs);
-  font-weight: var(--tv-weight-bold);
-  letter-spacing: var(--tv-tracking-eyebrow);
-  text-transform: uppercase;
-}
-
-.compare-hero-light__title {
-  margin: 0;
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-display);
-  font-size: clamp(3rem, 6vw, 5.75rem);
-  font-weight: var(--tv-weight-black);
-  letter-spacing: -0.06em;
-  line-height: 0.92;
-  text-wrap: balance;
-}
-
 /* ─── Mobile arena root ─── */
 .mobile-compare-arena {
   position: relative;

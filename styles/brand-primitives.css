@@ -7,44 +7,9 @@
    geometry, color or motion. Use sparingly. Color and motion must
    communicate product meaning, not decoration.
 
-   Naming: --tv-brand-{primitive} for the primitive geometry, and
+   Tokens live in tokens.css under --tv-brand-{primitive}, and
    the corresponding .tv-brand-{primitive} class for the composed
    shape. */
-
-:root {
-  /* WAVE — fluid horizontal flow used for signal traces. */
-  --tv-brand-wave-amplitude: 0.35rem;
-  --tv-brand-wave-length: 4rem;
-
-  /* SIGNAL — directional energy line, used in radar/orbit contexts. */
-  --tv-brand-signal-thickness: 1px;
-  --tv-brand-signal-fade: 62%;
-
-  /* TRACE — thin path that draws on, used to connect items. */
-  --tv-brand-trace-width: 1px;
-  --tv-brand-trace-color: color-mix(in srgb, var(--tv-accent-primary) 38%, transparent);
-
-  /* ORBIT — circular ring used to wrap a focal element. */
-  --tv-brand-orbit-stroke: 1px;
-  --tv-brand-orbit-color: var(--tv-border-interactive);
-  --tv-brand-orbit-radii: 4.5rem, 8.5rem, 12.5rem;
-
-  /* NODE — a point on a trace or orbit. */
-  --tv-brand-node-size: 0.5rem;
-  --tv-brand-node-color: var(--tv-accent-cyan);
-
-  /* PULSE — concentric breathing ring around a node. */
-  --tv-brand-pulse-stroke: 1px;
-  --tv-brand-pulse-color: var(--tv-accent-primary);
-
-  /* SCAN — a sweeping radial gradient that travels along an orbit. */
-  --tv-brand-scan-color: color-mix(in srgb, var(--tv-accent-cyan) 36%, transparent);
-  --tv-brand-scan-fade: 0.85;
-
-  /* LOCK — a fixed acquisition marker, used to indicate selection. */
-  --tv-brand-lock-color: var(--tv-accent-primary);
-  --tv-brand-lock-size: 0.55rem;
-}
 
 /* --- WAVE --- */
 /* A horizontal sine curve rendered as repeating-linear-gradient. */

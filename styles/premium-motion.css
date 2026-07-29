@@ -20,72 +20,19 @@
     transition-delay: var(--motion-delay, 0ms);
   }
 
-  .site-header-motion {
-    animation: tv-premium-header-in var(--tv-duration-epic) var(--tv-easing-spring-smooth) both;
-  }
-
-  .site-header-motion :where(
-    .site-header-v2__brand,
-    .site-header-v2__nav,
-    .site-header-v2__actions
-  ) {
-    animation: tv-premium-control-in var(--tv-duration-cinematic) var(--tv-easing-spring-smooth) both;
-  }
-
-  .site-header-motion .site-header-v2__nav {
-    animation-delay: var(--tv-duration-fast);
-  }
-
-  .site-header-motion .site-header-v2__actions {
-    animation-delay: var(--tv-duration-base);
-  }
-
   .mobile-bottom-motion {
     animation: tv-premium-bottom-nav-fade var(--tv-duration-cinematic) var(--tv-easing-decelerate) var(--tv-duration-fast) both;
-  }
-
-  .mobile-bottom-motion .site-mobile-footer-nav__grid {
-    animation: tv-premium-bottom-nav-in var(--tv-duration-epic) var(--tv-easing-spring-smooth) var(--tv-duration-fast) both;
-  }
-
-  .site-header-v2__active-dot {
-    animation: tv-premium-active-dot var(--tv-duration-cinematic) var(--tv-easing-spring-snappy) both;
   }
 
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .site-header-v2__nav-link:hover,
-  .site-header-v2__nav-link:focus-visible {
-    transform: translateY(-0.1rem);
-  }
 
-  .site-header-v2__nav-link:hover .site-header-v2__nav-icon,
-  .site-header-v2__nav-link:focus-visible .site-header-v2__nav-icon {
-    transform: translateY(-0.08rem) scale(1.06);
-  }
 
-  .site-header-v2__search-trigger:hover,
-  .site-header-v2__mobile-search:hover,
-  .site-header-v2__menu-button:hover,
-  .site-header-v2__sound :where(.sound-toggle-button, .music-toggle-button):hover,
   .site-footer-v2__social:hover,
+
   .site-footer-v2__contact:hover {
     transform: translateY(-0.12rem);
-  }
-
-  .site-mobile-footer-nav .mobile-bottom-link:hover,
-  .site-mobile-footer-nav .mobile-bottom-link:focus-visible,
-  .site-mobile-footer-nav .mobile-bottom-link.is-active,
-  .site-mobile-footer-nav .mobile-bottom-link[aria-current="page"] {
-    transform: translateY(-0.14rem);
-  }
-
-  .site-mobile-footer-nav .mobile-bottom-link:hover svg,
-  .site-mobile-footer-nav .mobile-bottom-link:focus-visible svg,
-  .site-mobile-footer-nav .mobile-bottom-link.is-active svg,
-  .site-mobile-footer-nav .mobile-bottom-link[aria-current="page"] svg {
-    transform: scale(1.08);
   }
 
   :where(
@@ -154,20 +101,6 @@
   }
 }
 
-:where(
-  .site-header-v2__nav-icon,
-  .site-mobile-footer-nav .mobile-bottom-link svg,
-  .home-discovery-hero__cta svg,
-  .v-spotlight-cta svg,
-  .compare-onboarding__cta svg,
-  .tool-detail-main-cta svg,
-  .tool-detail-secondary-cta svg,
-  .catalog-category-map__icon,
-  .v-method-icon
-) {
-  transition: transform var(--tv-motion-fast) var(--tv-easing-spring-snappy);
-}
-
 :where(a, button, [role="link"], [role="button"], [data-interactive="true"]):is(
   .catalog-category-map__card,
   .premium-card,
@@ -180,23 +113,6 @@
     border-color var(--tv-motion-base) var(--tv-ease-standard),
     background var(--tv-motion-base) var(--tv-ease-standard),
     box-shadow var(--tv-motion-base) var(--tv-ease-standard);
-}
-
-:where(
-  .site-header-v2__nav-link,
-  .site-header-v2__search-trigger,
-  .site-header-v2__mobile-search,
-  .site-header-v2__menu-button,
-  .site-header-v2__primary-action,
-  .site-header-v2__mobile-primary,
-  .site-mobile-footer-nav .mobile-bottom-link,
-  .home-discovery-hero__cta,
-  .v-spotlight-cta,
-  .compare-onboarding__cta,
-  .tool-detail-main-cta,
-  .tool-detail-secondary-cta
-):active {
-  transform: scale(0.97);
 }
 
 @keyframes tv-premium-header-in {

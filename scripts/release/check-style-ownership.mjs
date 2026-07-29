@@ -84,20 +84,23 @@ if (JSON.stringify(actualGlobalImports) !== JSON.stringify(expectedGlobalImports
 }
 
 const globalFoundationSource = read("app/globals.css");
-const globalScopeBlocks = Array.from(
-  globalFoundationSource.matchAll(
-    /(?:^|\n)\s*((?::root|html|body)(?:\s*,\s*(?::root|html|body))*)\s*\{([^{}]*)\}/g,
-  ),
-);
-for (const [, selector, declarations] of globalScopeBlocks) {
-  const customProperties = Array.from(
-    declarations.matchAll(/^\s*(--[A-Za-z0-9-]+)\s*:/gm),
-    (match) => match[1],
+for (const relativePath of ["app", "styles"].flatMap(walk).filter((file) => file.endsWith(".css"))) {
+  if (relativePath === "styles/tokens.css") continue;
+  const globalScopeBlocks = Array.from(
+    read(relativePath).matchAll(
+      /(?:^|\n)\s*((?::root|html|body)(?:\s*,\s*(?::root|html|body))*)\s*\{([^{}]*)\}/g,
+    ),
   );
-  if (customProperties.length > 0) {
-    errors.push(
-      `app/globals.css defines global custom properties on ${selector}: ${customProperties.join(", ")}; own defaults in styles/tokens.css and scope runtime values to their component selector`,
+  for (const [, selector, declarations] of globalScopeBlocks) {
+    const customProperties = Array.from(
+      declarations.matchAll(/^\s*(--[A-Za-z0-9-]+)\s*:/gm),
+      (match) => match[1],
     );
+    if (customProperties.length > 0) {
+      errors.push(
+        `${relativePath} defines global custom properties on ${selector}: ${customProperties.join(", ")}; own defaults in styles/tokens.css and scope runtime values to their component selector`,
+      );
+    }
   }
 }
 

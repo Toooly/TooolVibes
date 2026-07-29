@@ -27,7 +27,6 @@ const headerSearchSource = read(
 const catalogControlsSource = read(
   "components/directory/catalog/catalog-controls.tsx",
 );
-const siteHeaderV2Source = read("components/layout/site-header-v2.tsx");
 
 /** Estrae il blocco `{ ... }` che segue la prima occorrenza di `selector`. */
 function extractBlock(source: string, selector: string): string | null {
@@ -229,8 +228,4 @@ describe("B39 wrapper Gate/Auth/Search — classi della policy applicate", () =>
     expect(catalogControlsSource).toContain("tv-kbd-input");
   });
 
-  it("search overlay (site-header-v2): overlay e sheet della policy", () => {
-    expect(siteHeaderV2Source).toContain("tv-kbd-overlay");
-    expect(siteHeaderV2Source).toContain("tv-kbd-sheet");
-  });
 });

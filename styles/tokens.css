@@ -337,6 +337,62 @@
   --tv-status-trust-soft-border-dark: rgb(255 255 255 / 0.14);
   --tv-status-trust-soft-text-dark: #ddd6fe;
 
+  /* Brand geometry primitives */
+  --tv-brand-wave-amplitude: 0.35rem;
+  --tv-brand-wave-length: 4rem;
+  --tv-brand-signal-thickness: 1px;
+  --tv-brand-signal-fade: 62%;
+  --tv-brand-trace-width: 1px;
+  --tv-brand-trace-color: color-mix(in srgb, var(--tv-accent-primary) 38%, transparent);
+  --tv-brand-orbit-stroke: 1px;
+  --tv-brand-orbit-color: var(--tv-border-interactive);
+  --tv-brand-orbit-radii: 4.5rem, 8.5rem, 12.5rem;
+  --tv-brand-node-size: 0.5rem;
+  --tv-brand-node-color: var(--tv-accent-cyan);
+  --tv-brand-pulse-stroke: 1px;
+  --tv-brand-pulse-color: var(--tv-accent-primary);
+  --tv-brand-scan-color: color-mix(in srgb, var(--tv-accent-cyan) 36%, transparent);
+  --tv-brand-scan-fade: 0.85;
+  --tv-brand-lock-color: var(--tv-accent-primary);
+  --tv-brand-lock-size: 0.55rem;
+
+  /* Maestoso compatibility aliases. Active legacy-named consumers now resolve
+     through the canonical palette, elevation and radius system. */
+  --v-void: var(--tv-bg-base);
+  --v-void-deep: var(--tv-surface-inverted);
+  --v-midnight: var(--tv-surface-raised);
+  --v-nebula: var(--tv-surface-elevated);
+  --v-surface: var(--tv-surface-elevated);
+  --v-surface-raised: var(--tv-surface-inverted-raised);
+  --v-purple: var(--tv-accent-primary);
+  --v-purple-soft: var(--tv-accent-violet);
+  --v-cyan: var(--tv-accent-cyan);
+  --v-cyan-soft: color-mix(in srgb, var(--tv-accent-cyan) 72%, white);
+  --v-indigo: var(--tv-accent-violet);
+  --v-pink: var(--tv-accent-violet);
+  --v-amber: var(--tv-accent-gold);
+  --v-rose: var(--tv-status-danger);
+  --v-teal: var(--tv-status-success);
+  --v-text: var(--tv-ink-primary);
+  --v-text-muted: var(--tv-ink-secondary);
+  --v-text-dim: var(--tv-ink-muted-aa);
+  --v-gradient-purple-cyan: linear-gradient(135deg, var(--tv-accent-primary), var(--tv-accent-cyan));
+  --v-gradient-amber-pink: linear-gradient(135deg, var(--tv-accent-gold), var(--tv-accent-violet));
+  --v-gradient-void-nebula: linear-gradient(180deg, var(--tv-bg-base), var(--tv-surface-elevated));
+  --v-gradient-glow-purple: radial-gradient(circle, color-mix(in srgb, var(--tv-accent-primary) 28%, transparent), transparent 70%);
+  --v-gradient-glow-cyan: radial-gradient(circle, color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent), transparent 70%);
+  --v-shadow-glow-purple: var(--tv-elevation-raised);
+  --v-shadow-glow-cyan: var(--tv-elevation-raised);
+  --v-shadow-glow-amber: var(--tv-elevation-raised);
+  --v-shadow-card: var(--tv-elevation-rest);
+  --v-shadow-card-hover: var(--tv-elevation-raised);
+  --v-glass: color-mix(in srgb, var(--tv-surface-raised) 92%, transparent);
+  --v-glass-border: var(--tv-border-subtle);
+  --v-glass-hover: var(--tv-surface-elevated);
+  --v-radius: var(--tv-radius-md);
+  --v-radius-lg: var(--tv-radius-feature);
+  --v-radius-xl: var(--tv-radius-panel);
+
   /* Borders */
   --tv-border-subtle: var(--tv-color-white-10);
   --tv-border-default: var(--tv-color-white-12);
