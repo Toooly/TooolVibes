@@ -10,7 +10,7 @@
 
 .mobile-collections__header {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(20rem, 0.9fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
   grid-template-areas:
     "badge badge"
     "title copy"
@@ -37,13 +37,13 @@
 
 .mobile-collections__header h1 {
   grid-area: title;
-  max-width: 12ch;
+  max-width: none;
   margin: 0.55rem 0 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
   font-weight: var(--tv-weight-regular);
-  font-size: clamp(3.4rem, 6.4vw, 6.6rem);
-  line-height: 0.9;
+  font-size: clamp(3.2rem, 4.2vw, 4rem);
+  line-height: 0.92;
 }
 
 .mobile-collections__header p {
@@ -114,6 +114,22 @@
   color: var(--tv-ink-inverted-primary);
   font-size: clamp(3rem, 5vw, 5rem);
   line-height: 0.9;
+}
+
+@media (max-width: 79.99rem) {
+  .mobile-collections__header {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "badge"
+      "title"
+      "copy"
+      "stats";
+    gap: 0.75rem;
+  }
+
+  .mobile-collections__header h1 {
+    margin-top: 0.35rem;
+  }
 }
 
 .mobile-collections__hero-desc {
@@ -351,7 +367,7 @@
 
   .mobile-collections__header h1 {
     margin-top: 0.35rem;
-    font-size: clamp(2.8rem, 13vw, 4rem);
+    font-size: clamp(2.55rem, 10.5vw, 3.25rem);
   }
 
   .mobile-collections__stats {
@@ -365,24 +381,16 @@
   }
 
   .mobile-collections__hero-inner {
-    padding: 1.25rem;
-  }
-
-  .mobile-collections__hero-title {
-    font-size: clamp(2.5rem, 12vw, 3.5rem);
-  }
-
-  .mobile-collections__hero-inner {
     padding: 1rem;
   }
 
   .mobile-collections__hero-title {
-    font-size: clamp(1.8rem, 10vw, 2.6rem);
+    font-size: clamp(2.1rem, 9vw, 2.8rem);
     margin-top: 0.5rem;
   }
 
   .mobile-collections__hero-desc {
-    font-size: 0.9rem;
+    font-size: 0.9375rem;
     margin-top: 0.5rem;
   }
 

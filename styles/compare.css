@@ -20,7 +20,7 @@
 
 /* Active compare page introduction and onboarding state. */
 .tool-battle-page {
-  min-height: 100svh;
+  min-height: 0;
   padding-top: clamp(var(--tv-space-5), 3vw, var(--tv-space-8));
   background: var(--tv-bg-base);
 }
@@ -42,7 +42,7 @@
 }
 
 .tool-battle-page__intro h1 {
-  max-width: 12ch;
+  max-inline-size: 16ch;
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-display);
@@ -274,7 +274,8 @@
   }
 
   .tool-battle-page__intro h1 {
-    font-size: clamp(2.6rem, 12vw, 4rem);
+    max-inline-size: none;
+    font-size: clamp(2.5rem, 10.5vw, 3.3rem);
   }
 
   .tool-battle-page__lede {

@@ -21,14 +21,14 @@
   padding: 0.38rem 0.62rem;
 }
 
-.v-auth-context__title {
-  max-width: 11ch;
-  font-size: clamp(3.2rem, 5.7vw, 6rem);
-  line-height: 0.9;
+.v-auth-context > p.v-auth-context__title {
+  max-width: 32rem;
+  margin: 0.75rem 0 0;
+  font-size: clamp(0.9375rem, 1.4vw, 1.125rem);
+  line-height: 1.35;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-display);
   font-weight: var(--tv-weight-semibold);
-  margin: 0.5rem 0 0;
 }
 
 .v-auth-context li::before {
@@ -226,26 +226,46 @@
 
 @media (max-width: 47.99rem) {
   .v-auth-page {
-    padding: 1.25rem 1rem 6.5rem;
+    padding: 0.75rem 1rem 6.5rem;
   }
 
   .v-auth-container--split {
     grid-template-columns: minmax(0, 1fr);
-    gap: 1.25rem;
+    gap: 1rem;
     max-width: 30rem;
   }
 
-  .v-auth-context__title {
-    font-size: clamp(2.75rem, 13vw, 4rem);
+  .v-auth-context > p.v-auth-context__title {
+    max-width: 32rem;
+    font-size: 0.9375rem;
   }
 
   .v-auth-card {
     border-radius: 0.6rem;
-    padding: 1.25rem;
+    padding: 1rem;
+  }
+
+  .v-auth-context > p:not(.v-auth-context__eyebrow):not(.v-auth-context__title) {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
   }
 
   .v-auth-context ul {
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
     margin-bottom: 0;
+    font-size: 0.9375rem;
+  }
+
+  .v-auth-header {
+    margin-bottom: 1rem;
+  }
+
+  .v-auth-brand {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.5rem;
   }
 
   .tone-account {

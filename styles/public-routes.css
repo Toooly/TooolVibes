@@ -1,7 +1,10 @@
 /* Shared public-route foundation. Route files own their distinctive layouts. */
 
 .marketing-shell :where(h1, h2, h3) {
+  hyphens: none;
+  overflow-wrap: normal;
   text-wrap: balance;
+  word-break: normal;
 }
 
 .marketing-shell :where(p, li) {
@@ -356,6 +359,29 @@
   .route-marker__status {
     grid-column: 3 / -1;
     text-align: left;
+  }
+
+  .posts-masthead .route-marker,
+  .affiliates-intro .route-marker {
+    row-gap: 0.2rem;
+  }
+
+  .posts-masthead .route-marker__signal,
+  .posts-masthead .route-marker__index,
+  .affiliates-intro .route-marker__signal,
+  .affiliates-intro .route-marker__index {
+    grid-row: 1 / span 2;
+  }
+
+  .posts-masthead .route-marker__label,
+  .affiliates-intro .route-marker__label {
+    align-self: end;
+  }
+
+  .posts-masthead .route-marker__status,
+  .affiliates-intro .route-marker__status {
+    grid-row: 2;
+    align-self: start;
   }
 
   .legal-page__layout {

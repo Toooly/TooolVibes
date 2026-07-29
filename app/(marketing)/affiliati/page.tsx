@@ -34,9 +34,9 @@ const programSteps = [
 
 export default function AffiliatiPage() {
   return (
-    <div className="page-shell py-8 sm:py-12">
-      <section className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(22rem,1.08fr)] lg:items-start">
-        <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
+    <div className="affiliates-page page-shell py-8 sm:py-12">
+      <section className="affiliates-layout grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(22rem,1.08fr)] xl:items-start">
+        <div className="affiliates-intro brand-panel rounded-[var(--radius-xl)] p-5 sm:p-8 xl:p-10">
           <RouteMarker
             index="10"
             label="Partner network"
@@ -44,18 +44,18 @@ export default function AffiliatiPage() {
             density="hero"
           />
 
-          <PremiumBadge tone="accent" className="mt-6 after:!hidden">
+          <PremiumBadge tone="accent" className="mt-5 after:!hidden sm:mt-6">
             Programma su richiesta
           </PremiumBadge>
-          <h1 className="mt-4 text-[2.2rem] leading-[1.02] sm:text-[3.3rem] lg:text-[4rem]">
+          <h1 className="mt-3 max-w-[18ch] text-[clamp(2.25rem,4.2vw,2.9rem)] leading-[1.02] sm:mt-4">
             Porta TooolVibes alla tua community.
           </h1>
-          <p className="mt-5 max-w-[44rem] text-[1rem] leading-8" style={{ color: "var(--muted)" }}>
+          <p className="mt-4 max-w-[44rem] text-[1rem] leading-7 sm:mt-5" style={{ color: "var(--muted)" }}>
             Cerchiamo creator, newsletter, community e consulenti che parlano con persone
             interessate a tool AI, automazioni, no-code e scelte software più lucide.
           </p>
 
-          <div className="mt-7 grid gap-3 sm:grid-cols-3">
+          <div className="mt-5 grid grid-cols-3 gap-2 sm:mt-7 sm:gap-3">
             {[
               { label: "Valutazione", value: "Personale" },
               { label: "Codice", value: "Dedicato" },
@@ -63,10 +63,12 @@ export default function AffiliatiPage() {
             ].map((item) => (
               <div
                 key={item.label}
-                className="rounded-[22px] border px-4 py-4"
+                className="rounded-[22px] border px-1.5 py-3 sm:px-4 sm:py-4"
                 style={{ borderColor: "var(--tv-border-inverted)", background: "transparent" }}
               >
-                <p className="editorial-label">{item.label}</p>
+                <p className="editorial-label break-normal tracking-[0.04em]">
+                  {item.label}
+                </p>
                 <p className="mt-2 text-sm font-semibold">{item.value}</p>
               </div>
             ))}
@@ -87,7 +89,7 @@ export default function AffiliatiPage() {
                 </span>
                 <h2 className="text-[1.18rem]">{step.title}</h2>
               </div>
-              <p className="mt-4 text-sm leading-7" style={{ color: "var(--muted)" }}>
+              <p className="mt-4 text-[0.9375rem] leading-7" style={{ color: "var(--muted)" }}>
                 {step.description}
               </p>
             </PremiumPanel>
@@ -102,7 +104,7 @@ export default function AffiliatiPage() {
           </span>
           <div>
             <p className="editorial-label">Come funziona dopo l&apos;approvazione</p>
-            <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>
+            <p className="mt-2 text-[0.9375rem] leading-7" style={{ color: "var(--muted)" }}>
               Dopo l’approvazione prepariamo il codice referral, generiamo il link dedicato e
               il QR code, poi ti inviamo tutto via email. Se la candidatura non è adatta,
               potrai riprovare dopo 30 giorni.

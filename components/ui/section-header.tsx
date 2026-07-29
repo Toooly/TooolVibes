@@ -104,7 +104,7 @@ export function SectionHeader({
       </div>
       <Heading
         className={cn(
-          "mt-2.5 max-w-none break-words leading-[var(--tv-leading-tight)]",
+          "mt-2.5 max-w-none break-normal leading-[var(--tv-leading-tight)]",
           titleFamilyClass,
           titleSizeClass,
           surfaceText,

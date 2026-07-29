@@ -15,6 +15,7 @@
     "db:manifest:strict": "node scripts/release/build-db-manifest.mjs",
     "db:fixture:check": "node scripts/release/check-staging-seed.mjs",
     "check:styles": "node scripts/release/check-style-ownership.mjs",
+    "check:responsive": "node scripts/release/check-responsive-typography.mjs",
     "db:checksums:self-test": "node scripts/release/compare-db-checksums.mjs --self-test",
     "db:baseline:check": "npm run db:migrations:check && npm run db:fixture:check && npm run db:checksums:self-test && npm run db:manifest:strict",
     "tools:cutover:verify": "node scripts/release/verify-public-tool-cutover.mjs",
