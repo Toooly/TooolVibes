@@ -326,6 +326,15 @@
   color: var(--tv-ink-secondary) !important;
 }
 
+/* Posts: a focused dark stage avoids applying the broad .dark-panel
+   descendant contract to the nested ivory editorial cards. */
+#main-content .posts-featured-panel {
+  border: 1px solid var(--tv-border-subtle);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  box-shadow: var(--tv-elevation-rest);
+}
+
 #main-content :where(.dark-panel, .discovery-strip-dark) [class*="bg-white/"]:not(.premium-button):not(.premium-button *) {
   background-color: var(--tv-surface-raised) !important;
 }
@@ -375,11 +384,15 @@
 
 /* Shared editorial hierarchy for secondary public routes. */
 .catalog-discovery__copy h1,
-.desktop-vibe-radar h1,
+
 .compare-space-page h1,
+
 .tool-detail-title,
+
 .internal-page h1,
+
 .tone-screen h1,
+
 .hero-shell h1 {
   font-family: var(--tv-font-display);
   font-weight: var(--tv-weight-regular);

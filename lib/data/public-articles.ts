@@ -98,7 +98,7 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
   },
   {
     slug: "jenny-ai",
-    title: "Jenny AI",
+    title: "Jenni AI",
     dek: "Spazio di scrittura accademica con citazioni, note e controllo.",
     summary:
       "Jenni aiuta studenti e ricercatori a scrivere più velocemente, citare con precisione e tenere insieme fonti, PDF e revisioni.",

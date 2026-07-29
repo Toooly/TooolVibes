@@ -76,6 +76,12 @@ function makeTool(slug: string, name: string): ToolPublic {
     slug,
     name,
     urls: { website: "https://example.com", affiliate: null, editorial: null },
+    taxonomy: {
+      canonicalCategory: null,
+      sourceCategory: "test",
+      sourceCategoryLabel: "Test",
+      tags: [],
+    },
   } as unknown as ToolPublic;
 }
 
@@ -150,6 +156,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
         name: "La tua biblioteca è pronta a riempirsi.",
       }),
     ).toBeTruthy();
+    expect(screen.getByText("3 tool in 1 categorie, ordinati per utilità reale.")).toBeTruthy();
   });
 
   it("renders only saved tools and opens the decision sheet from a book", () => {

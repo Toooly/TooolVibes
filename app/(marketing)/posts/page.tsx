@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { EditorialPostCard } from "@/components/editorial/editorial-post-card";
-import { ProgressiveBlogList } from "@/components/editorial/progressive-blog-list";
+import { ProgressiveEditorialList } from "@/components/editorial/progressive-editorial-list";
 import { RouteMarker } from "@/components/ui/route-marker";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
@@ -167,7 +167,7 @@ export default async function PostsPage() {
           ═══════════════════════════════════════════════════════════ */}
       {featuredPosts.length > 0 ? (
         <section className="home-section-gap">
-          <div className="dark-panel section-stage rounded-[38px] p-6 sm:p-8 lg:p-9">
+          <div className="posts-featured-panel section-stage rounded-[38px] p-6 sm:p-8 lg:p-9">
             <h2 className="editorial-label !text-white/58 mb-5">
               In evidenza
             </h2>
@@ -212,15 +212,11 @@ export default async function PostsPage() {
               title="Le guide pi&ugrave; utili, riscritte per il TooolVibes di oggi."
               description="Recuperiamo i pezzi ancora validi e li rendiamo pi&ugrave; chiari, pratici e coerenti con il catalogo attuale."
             />
-            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {remainingGuides.map((post) => (
-                <EditorialPostCard
-                  key={post.slug}
-                  post={post}
-                  variant="compact"
-                />
-              ))}
-            </div>
+            <ProgressiveEditorialList
+              listId="posts-guide-list"
+              posts={remainingGuides}
+              sectionLabel="guide"
+            />
           </div>
         </section>
       ) : null}
@@ -236,15 +232,11 @@ export default async function PostsPage() {
               title="Gli approfondimenti collegati ai tool gi&agrave; presenti nel catalogo."
               description="Ogni articolo aggiunge contesto alla scheda del tool: non una duplicazione, ma una lettura pi&ugrave; chiara del perch&eacute; pu&ograve; servirti."
             />
-            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {remainingToolWriteups.map((post) => (
-                <EditorialPostCard
-                  key={post.slug}
-                  post={post}
-                  variant="compact"
-                />
-              ))}
-            </div>
+            <ProgressiveEditorialList
+              listId="posts-tool-writeup-list"
+              posts={remainingToolWriteups}
+              sectionLabel="approfondimenti"
+            />
           </div>
         </section>
       ) : null}
@@ -260,7 +252,11 @@ export default async function PostsPage() {
               title="Articoli pubblicati da TooolVibes."
               description="Contenuti originali, aggiornamenti e letture nate per aiutarti a scegliere con pi&ugrave; criterio."
             />
-            <ProgressiveBlogList posts={remainingBlogPosts} />
+            <ProgressiveEditorialList
+              listId="posts-blog-list"
+              posts={remainingBlogPosts}
+              sectionLabel="articoli"
+            />
           </div>
         </section>
       ) : null}

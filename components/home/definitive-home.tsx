@@ -245,6 +245,10 @@ function IvoryEditorial({
             <p className="def-editorial__spot-lede">
               {focusTool.tldr || focusTool.shortDescription}
             </p>
+            <p className="def-editorial__distinction">
+              Il focus settimanale è una scelta contestuale della redazione:
+              non coincide automaticamente con il primo posto del podio.
+            </p>
 
             <ul className="def-editorial__spot-rail" aria-label="Metriche chiave">
               <li>
@@ -303,20 +307,10 @@ function IvoryEditorial({
           <div className="def-editorial__pod-head-row">
             <p className="def-editorial__pod-eyebrow">Podio editoriale</p>
             <p className="def-editorial__pod-subtitle">
-              Calcolato sul catalogo editoriale attivo
+              Ranking del catalogo attivo, con lo score di ogni profilo.
             </p>
           </div>
           <ol className="def-editorial__pod-stage">
-            {top3[1] ? (
-              <li className="def-editorial__pod-cell def-editorial__pod-cell--second">
-                <PodiumCard
-                  tool={top3[1]}
-                  rank={2}
-                  iconUrl={iconUrl(top3[1])}
-                  initial={initial(top3[1].name)}
-                />
-              </li>
-            ) : null}
             {top3[0] ? (
               <li className="def-editorial__pod-cell def-editorial__pod-cell--first">
                 <PodiumCard
@@ -324,6 +318,16 @@ function IvoryEditorial({
                   rank={1}
                   iconUrl={iconUrl(top3[0])}
                   initial={initial(top3[0].name)}
+                />
+              </li>
+            ) : null}
+            {top3[1] ? (
+              <li className="def-editorial__pod-cell def-editorial__pod-cell--second">
+                <PodiumCard
+                  tool={top3[1]}
+                  rank={2}
+                  iconUrl={iconUrl(top3[1])}
+                  initial={initial(top3[1].name)}
                 />
               </li>
             ) : null}
@@ -337,7 +341,6 @@ function IvoryEditorial({
                 />
               </li>
             ) : null}
-            <span aria-hidden="true" className="def-editorial__pod-base" />
           </ol>
         </div>
       </div>

@@ -857,6 +857,9 @@ function MobileNoteSheet({
 
 function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
   const starterTools = tools.slice(0, 3);
+  const catalogCategoryCount = new Set(
+    tools.map((tool) => tool.taxonomy.sourceCategoryLabel),
+  ).size;
   const [suggestOpen, setSuggestOpen] = useState(false);
   const suggestTriggerId = "mobile-library-empty__suggest-trigger";
   const suggestDialogId = "mobile-library-empty__suggest-dialog";
@@ -914,7 +917,10 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
             className="mobile-library-empty__recommendation-card"
           >
             <strong>Esplora catalogo</strong>
-            <span>246 tool in 28 categorie, ordinati per utilità reale.</span>
+            <span>
+              {tools.length} tool in {catalogCategoryCount} categorie, ordinati per
+              utilità reale.
+            </span>
           </Link>
           <Link
             href="/radar"
