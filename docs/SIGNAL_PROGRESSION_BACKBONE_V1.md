@@ -1,96 +1,86 @@
 # Signal Progression Backbone V1
 
-Phase 4 secure server-side progression layer. **Not active in production** (flags OFF).
+## Purpose
+
+Server-verified progression ledger for authenticated users. The browser reports
+actions; the server (this backbone) decides every Signal Point (SP) reward.
 
 ## Trust boundary
 
-| Actor | Authority |
-|-------|-----------|
-| Browser | May report event type + minimal context |
-| API | Authenticates JWT, validates schema, calls service RPC |
-| Database RPC | Atomic event + optional SP grant + delivery row |
-| Client reward runtime (Phase 3) | Presents **server envelopes only** |
+| Layer | Role |
+|-------|------|
+| Browser | May only send `{ eventType, context }` — never SP, XP or tiers |
+| API (`app/api/signal-progression/`) | JWT verify → validate payload → call RPC |
+| Database RPC (`accept_signal_engagement`) | Validate params → dedupe → check daily cap → atomic INSERT event + grant + delivery |
+| `game_profiles.xp` | Running SP balance (column name `xp` maps to "Signal Points") |
 
-Never accepted from clients: `xpDelta`, `spDelta`, `points`, `newBalance`, `newLevel`, `rewardTier`, body `userId`.
+## Environment
 
-## Legacy reconciliation
+- **Project**: `tooolvibes-local` (Supabase local dev)
+- **DB**: `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
+- **API**: `http://127.0.0.1:54321`
+- **Classification**: LOCAL / DISPOSABLE — never production
 
-| Asset | Decision |
-|-------|----------|
-| `game_profiles.xp` | **Reuse** as Signal Points balance (documented mapping) |
-| `game_profiles` SELECT own | Keep |
-| `record_game_interaction` | **Isolate** legacy service-only; new path uses `accept_signal_engagement` |
-| missions/badges/arena tables | **Isolate** behind legacy flags |
-| Phase 3 `lib/rewards/*` | **Reuse** envelope contract + host |
+## Schema
 
-## Database model
+### signal_engagement_events
+Append-only, immutable after insert. `UNIQUE (user_id, dedupe_key)`.
 
-Migration: `20260730000001_signal_progression_backbone.sql`
+### signal_reward_grants
+Immutable SP ledger. `UNIQUE (engagement_event_id)` — at most one grant per event.
 
-- `signal_engagement_events` — append-only, unique `(user_id, dedupe_key)`
-- `signal_reward_grants` — immutable SP ledger, 1:1 event when awarded
-- `signal_reward_deliveries` — pending/acknowledged/dismissed (not ledger mutation)
-- `signal_reward_preferences` — authenticated prefs table (sync later)
+### signal_reward_deliveries
+Presentation state. `status ∈ { pending, delivered, acknowledged, dismissed }`.
 
-## Atomic RPC
+### signal_reward_preferences
+Server-replicated user prefs for reward presentation (future sync).
 
-`accept_signal_engagement(...)` — **service_role only**
+## RLS matrix
 
-1. Validate identity (JWT match if present)
-2. Dedupe by key → return existing envelope
-3. Ensure profile
-4. Apply global daily SP cap (default 120)
-5. Insert event
-6. If SP > 0: update `game_profiles.xp/level`, insert grant + pending delivery
-7. Return presentation-safe JSON envelope
+| Role | Events | Grants | Deliveries | Prefs | RPCs |
+|------|--------|--------|------------|-------|------|
+| anon | — | — | — | — | — |
+| authenticated | SELECT self | SELECT self | SELECT self | SELECT self | `acknowledge_signal_reward` only |
+| service_role | ALL | ALL | ALL | ALL | ALL |
 
-`acknowledge_signal_reward` — authenticated, own grants only  
-`list_pending_signal_rewards` — service_role after JWT resolution
+No authenticated INSERT/UPDATE/DELETE on ledger tables.
 
-## Event allowlist
+## RPCs
 
-See `lib/signal-progression/rules.ts` (server-only). Includes save/compare/read/collection/radar/profile plus reserved mission/achievement/level types with 0 SP until later phases.
+| Function | Role | Security |
+|----------|------|----------|
+| `accept_signal_engagement` | service_role | SECURITY DEFINER, search_path '' |
+| `list_pending_signal_rewards` | service_role | SECURITY DEFINER, search_path '' |
+| `acknowledge_signal_reward` | authenticated | SECURITY DEFINER, search_path '', FOR UPDATE scoped to auth.uid() |
+| `calculate_level` | authenticated | Existing legacy (unchanged) |
 
-## API
+## Concurrency
 
-| Method | Path | Flags required |
-|--------|------|----------------|
-| POST | `/api/signal-progression/events` | backbone + signalEventWrites |
-| GET | `/api/signal-progression/pending` | backbone + delivery + runtime |
-| POST | `/api/signal-progression/acknowledge` | backbone + delivery + runtime |
+- `ON CONFLICT (user_id, dedupe_key) DO NOTHING` on event INSERT → single canonical insert
+- `UNIQUE (engagement_event_id)` on grants → at most one grant
+- `SELECT ... FOR UPDATE` on game_profiles → serializes per-user balance writes
+- Live test: 10 concurrent identical events → **1 event, 1 grant** (proved 2026-07-30)
 
-Flags OFF → 404, no writes.
+## Daily cap
 
-## Feature flags (all default OFF)
+- Global: 120 SP per UTC day (`date_trunc('day', timezone('utc', now()))`)
+- Event-specific daily caps per rule (e.g. 3 saves/day)
+- Event-specific cooldowns (e.g. radar_returned 86400s)
+- Once-only events deduped globally (e.g. `tool_saved_first_time`)
 
-- `TOOOLVIBES_REWARD_BACKBONE_ENABLED` (existing, via gamification kill switch)
-- `TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED`
-- `TOOOLVIBES_REWARD_DELIVERY_ENABLED`
-- `TOOOLVIBES_REWARD_RUNTIME_ENABLED` (Phase 3 host)
+## Defects found & fixed
 
-## Phase 3 bridge
-
-`SignalDeliveryBridge` mounts only when all delivery flags are ON. Pulls pending envelopes once per authenticated session into `enqueueVerifiedEnvelope`. No product action wiring.
-
-## Anti-farming
-
-- Unique dedupe constraints
-- Once-only rules in rule registry
-- Per-event daily caps (application-level, enforced by dedupe keys + daily event design)
-- Global daily SP cap in RPC
-- No SP for unsaves
-- Rate limit on ingest API
-- Strict context allowlists
-- Concurrent safety via unique constraint + transaction
-
-## Production activation (future)
-
-1. Apply migration to staging/prod  
-2. Enable backbone + event writes in staging  
-3. Wire Phase 5 product actions  
-4. Enable delivery + runtime  
-5. Monitor caps and errors  
+| Defect | Fix | Commit |
+|--------|-----|--------|
+| Concurrent INSERT race without ON CONFLICT | Added `ON CONFLICT (user_id, dedupe_key) DO NOTHING` with re-SELECT fallback | `fix(db): close live signal progression defects` |
 
 ## Rollback
 
-Disable flags. Do not drop tables. Legacy `record_game_interaction` remains unused by new APIs.
+```bash
+# Flags OFF — no application writes reach the DB
+TOOOLVIBES_REWARD_BACKBONE_ENABLED=0
+TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED=0
+TOOOLVIBES_REWARD_DELIVERY_ENABLED=0
+```
+
+No data deletion needed. Tables remain but are not written to.

@@ -19,6 +19,8 @@ const eslintConfig = [
       "coverage/**",
       "artifacts/database-drill/**",
       "audits/**",
+      ".slim/**",
+      "supabase/.temp/**",
       ".tmp-edit*.js",
       ".tmp-edit*.ts",
       "next-env.d.ts",
