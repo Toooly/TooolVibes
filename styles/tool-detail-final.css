@@ -323,12 +323,14 @@
 }
 .td-final-icon-btn[aria-pressed="true"] {
   border-color: var(--tv-accent-primary);
-  background: color-mix(in srgb, var(--tv-accent-primary) 12%, var(--tv-surface-elevated));
+  background: color-mix(in srgb, var(--tv-accent-primary) 14%, var(--tv-surface-elevated));
   color: var(--tv-accent-primary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
 }
 .td-final-icon-btn[aria-pressed="true"]:hover {
   border-color: var(--tv-accent-primary);
   color: var(--tv-accent-primary);
+  background: color-mix(in srgb, var(--tv-accent-primary) 20%, var(--tv-surface-elevated));
 }
 
 .td-final-compare-rank {
@@ -391,7 +393,7 @@
   border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 36%, var(--tv-border-subtle));
   border-radius: 12px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 92%, var(--tv-accent-gold) 8%);
-  box-shadow: none;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 12%, transparent);
 }
 
 .td-final-score__header {
@@ -974,7 +976,12 @@
   border-radius: var(--tv-radius-feature);
   background: var(--tv-color-white-pure);
   border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-primary) 12%, transparent);
-  transition: border-color var(--tv-duration-fast) var(--tv-ease-standard);
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.td-final-alt-row:hover {
+  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 28%, transparent);
+  background: color-mix(in srgb, var(--tv-accent-gold) 3%, var(--tv-color-white-pure));
 }
 
 .td-final-alt-row:hover {

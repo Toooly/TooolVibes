@@ -3,9 +3,9 @@
   display: grid;
   justify-items: center;
   width: min(calc(100% - 2 * var(--tv-space-6)), 38rem);
-  min-height: 26rem;
-  align-content: center;
-  padding: clamp(var(--tv-space-8), 6vw, var(--tv-space-12));
+  min-height: 22rem;
+  align-content: start;
+  padding: clamp(var(--tv-space-6), 5vw, var(--tv-space-10));
   border-color: var(--tv-border-subtle);
   border-radius: var(--tv-radius-feature);
   background:
@@ -327,6 +327,11 @@
   border-color: rgba(124, 77, 255, 0.45);
   background: rgba(6, 6, 14, 0.85);
   box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.1), 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.account-input:focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 3px;
 }
 
 /* Dark journey panel — already dark, refined */

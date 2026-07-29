@@ -1468,10 +1468,14 @@
 .mobile-compare-arena__empty {
   text-align: center;
   padding: 2.5rem 1.5rem;
-  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 24%, transparent);
   border-radius: 12px;
   background: var(--tv-surface-inverted);
   box-shadow: none;
+}
+
+.mobile-compare-arena__empty:focus-within {
+  border-color: var(--tv-accent-primary);
 }
 
 .mobile-compare-arena__empty-icon {
@@ -1516,9 +1520,9 @@
 .mobile-compare-arena__partial {
   text-align: center;
   padding: 1.25rem;
-  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 30%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--tv-accent-gold) 40%, transparent);
   border-radius: 12px;
-  background: var(--tv-surface-inverted);
+  background: color-mix(in srgb, var(--tv-accent-gold) 6%, var(--tv-surface-inverted));
   box-shadow: none;
 }
 
@@ -2783,6 +2787,12 @@
   border-radius: 24px;
   background: var(--tv-surface-raised);
   color: var(--tv-ink-secondary);
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.tool-battle-page__slot:is(:hover, :focus-within) {
+  border-color: var(--tv-accent-primary);
+  background: color-mix(in srgb, var(--tv-accent-primary) 4%, var(--tv-surface-raised));
 }
 
 .tool-battle-page__slot--empty {

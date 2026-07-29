@@ -66,3 +66,6 @@ audits/**/visual-check.js
 audits/**/audit-results.json
 audits/**/audit-report.md
 audits/final-visual-simplification-2026-07-28/
+
+# Local agent evidence (not committed)
+.codex/

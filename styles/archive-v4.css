@@ -57,6 +57,7 @@
   background: var(--tv-accent-primary);
   border-color: var(--tv-accent-primary);
   color: var(--tv-ink-on-brand);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 24%, transparent);
 }
 .ar4-chip.is-active em { background: color-mix(in srgb, #000 14%, transparent); color: var(--tv-ink-on-brand); }
 
@@ -477,7 +478,7 @@
 .ar4-ivory .ar4-card__level[style*="accent-gold"],
 .ar4-ivory .ar4-card__level[style*="tv-accent-gold"] {
   color: var(--tv-accent-gold-on-ivory) !important;
-  border-color: color-mix(in srgb, var(--tv-accent-gold-on-ivory) 40%, transparent) !important;
+  border-color: color-mix(in srgb, var(--tv-accent-gold-on-ivory) 40%, transparent);
   background: var(--tv-accent-gold-soft-on-ivory);
 }
 
@@ -732,6 +733,12 @@
   border-color: var(--tv-border-interactive);
   background: var(--tv-surface-elevated);
   transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card.is-hover {
+    transform: none;
+  }
 }
 
 .ar4-card.is-selected {
@@ -1255,7 +1262,8 @@
 /* Default promoted (back-compat) = primary tier */
 .ar4-card.is-promoted {
   border-color: var(--tv-accent-gold);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-gold) 8%, var(--tv-bg-base)) 0%, var(--tv-bg-base) 60%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-gold) 10%, var(--tv-bg-base)) 0%, var(--tv-bg-base) 60%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 20%, transparent);
 }
 
 /* Tier: primary (Blink — gold, "Tool della settimana") */
@@ -1496,11 +1504,12 @@
 
 /* Saved state: cyan border + saved-flag color (in addition to is-saved badge) */
 .ar4-card[data-saved] {
-  border-color: color-mix(in srgb, var(--tv-accent-cyan) 50%, transparent);
+  border-color: color-mix(in srgb, var(--tv-accent-cyan) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-cyan) 12%, transparent);
 }
 
 .ar4-card[data-saved]:not(.is-promoted) {
-  background: color-mix(in srgb, var(--tv-accent-cyan) 4%, var(--tv-bg-base));
+  background: color-mix(in srgb, var(--tv-accent-cyan) 5%, var(--tv-bg-base));
 }
 
 /* Selected (compare) state — already defined; ensure no glow-only reliance */

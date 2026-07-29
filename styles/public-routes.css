@@ -308,6 +308,7 @@
 
 .marketing-shell main .editorial-label {
   color: var(--tv-accent-brand-aa) !important;
+  letter-spacing: var(--tv-tracking-eyebrow);
 }
 
 #main-content :where(.dark-panel, .discovery-strip-dark) {

@@ -96,6 +96,7 @@
 .mobile-collections__hero-tag--special {
   background: var(--tv-surface-inverted-highlight);
   color: var(--tv-status-warning-soft-text);
+  border: 1px solid var(--tv-status-warning-soft-border);
 }
 
 .mobile-collections__hero-tag--featured {
@@ -206,6 +207,7 @@
   color: var(--tv-ink-inverted-primary);
   box-shadow: none;
   transform: none;
+  transition: border-color 160ms ease, background 160ms ease;
 }
 
 .mobile-collections__item:is(:hover, :focus-visible) {

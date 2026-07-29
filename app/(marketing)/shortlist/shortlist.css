@@ -33,6 +33,12 @@
   border: 1px solid var(--tv-border-interactive);
   background: var(--tv-accent-primary) !important;
   color: var(--tv-ink-on-brand) !important;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.shortlist-final-surface .mobile-library-board__compare-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--tv-accent-primary) 24%, transparent);
 }
 
 .shortlist-final-surface :where(
@@ -338,6 +344,7 @@
   cursor: pointer;
   font-family: var(--tv-font-family-ui);
   font-size: inherit;
+  transition: border-color 160ms ease, background 160ms ease;
 }
 
 .shortlist-final-surface .mobile-library-empty__recommendation-card:is(:hover, :focus-visible) {
