@@ -306,8 +306,14 @@
   color: var(--tv-ink-secondary) !important;
 }
 
-.marketing-shell main .editorial-label {
-  color: var(--tv-accent-brand-aa) !important;
+/* Dark-context eyebrows — exclude ivory surfaces (contextual AA tokens). */
+.marketing-shell main :where(:not(.ivory-surface)) > .editorial-label,
+.marketing-shell main .dark-panel .editorial-label,
+.marketing-shell main .discovery-strip-dark .editorial-label,
+.marketing-shell main .brand-panel .editorial-label,
+.marketing-shell main .posts-featured-panel .editorial-label,
+.marketing-shell main .gap-5 .editorial-label {
+  color: var(--tv-accent-violet-on-dark) !important;
   letter-spacing: var(--tv-tracking-eyebrow);
 }
 
@@ -528,7 +534,7 @@
 .ivory-surface .brand-kicker,
 .ivory-surface .editorial-label,
 .ivory-surface .tool-detail-breadcrumb {
-  color: var(--tv-ink-inverted-link);
+  color: var(--tv-accent-violet-on-ivory);
 }
 
 .ivory-surface .text-muted-soft,

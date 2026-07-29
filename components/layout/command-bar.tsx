@@ -149,19 +149,22 @@ export function CommandBar() {
             <MusicToggleButton className="command-bar__util" />
           </div>
 
-          <Link
-            href={accountCta.href}
-            prefetch={false}
-            className="command-bar__account"
-            aria-label={accountCta.label}
-          >
-            {accountIcon === UserPlus ? (
-              <UserPlus size={14} aria-hidden="true" />
-            ) : (
-              <User size={14} aria-hidden="true" />
-            )}
-            <span className="command-bar__account-label">{accountCta.label}</span>
-          </Link>
+          {accountCta.visible ? (
+            <Link
+              href={accountCta.href}
+              prefetch={false}
+              className="command-bar__account"
+              aria-label={accountCta.label || "Account"}
+              aria-busy={accountCta.ariaBusy || undefined}
+            >
+              {accountIcon === UserPlus ? (
+                <UserPlus size={14} aria-hidden="true" />
+              ) : (
+                <User size={14} aria-hidden="true" />
+              )}
+              <span className="command-bar__account-label">{accountCta.label || "Account"}</span>
+            </Link>
+          ) : null}
         </div>
       </div>
 

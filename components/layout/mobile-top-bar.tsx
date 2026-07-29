@@ -70,14 +70,17 @@ export function MobileTopBar() {
           <span className="mobile-top-bar__search-text">Cerca tool…</span>
         </button>
 
-        <Link
-          href={accountCta.href}
-          prefetch={false}
-          className="mobile-top-bar__account"
-          aria-label={accountCta.label}
-        >
-          <User size={18} aria-hidden="true" />
-        </Link>
+        {accountCta.visible ? (
+          <Link
+            href={accountCta.href}
+            prefetch={false}
+            className="mobile-top-bar__account"
+            aria-label={accountCta.label || "Account"}
+            aria-busy={accountCta.ariaBusy || undefined}
+          >
+            <User size={18} aria-hidden="true" />
+          </Link>
+        ) : null}
       </div>
 
       <div className="mobile-top-bar__route">

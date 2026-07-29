@@ -233,37 +233,39 @@ export function DefinitiveArchive({
       {/* 2. FILTER STRIP — desktop + tablet only (mobile uses bottom sheet) */}
       <section className="ar4-filters" aria-label="Filtri catalogo">
         <div className="ar4-filters__inner">
-          <div className="ar4-filters__group" role="tablist" aria-label="Categorie">
+          <div className="ar4-filters__group">
             <span className="ar4-filters__label" aria-hidden="true">
               <Filter size={12} />
               <span>Categoria</span>
             </span>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeGroup === "all"}
-              className={cn("ar4-chip", activeGroup === "all" && "is-active")}
-              onClick={() => setActiveGroup("all")}
-            >
-              Tutti
-              <em>{totalTools}</em>
-            </button>
-            {/* Visible category chips */}
-            {visibleCategoryGroups.map((g) => (
+            <div role="tablist" aria-label="Categorie" className="ar4-filters__tabs">
               <button
-                key={g.key}
                 type="button"
                 role="tab"
-                aria-selected={activeGroup === g.key}
-                className={cn("ar4-chip", activeGroup === g.key && "is-active")}
-                onClick={() => setActiveGroup(g.key)}
+                aria-selected={activeGroup === "all"}
+                className={cn("ar4-chip", activeGroup === "all" && "is-active")}
+                onClick={() => setActiveGroup("all")}
               >
-                {g.label}
-                <em>{groupCounts.get(g.key) ?? 0}</em>
+                Tutti
+                <em>{totalTools}</em>
               </button>
-            ))}
+              {/* Visible category chips */}
+              {visibleCategoryGroups.map((g) => (
+                <button
+                  key={g.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeGroup === g.key}
+                  className={cn("ar4-chip", activeGroup === g.key && "is-active")}
+                  onClick={() => setActiveGroup(g.key)}
+                >
+                  {g.label}
+                  <em>{groupCounts.get(g.key) ?? 0}</em>
+                </button>
+              ))}
+            </div>
 
-            {/* Advanced disclosure trigger */}
+            {/* Advanced disclosure trigger — outside tablist (not a tab) */}
             {hiddenCategoryGroups.length > 0 && (
               <button
                 type="button"

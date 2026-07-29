@@ -310,6 +310,11 @@
   min-width: 0;
 }
 
+.ar4-filters__tabs {
+  display: contents;
+}
+
+
 .ar4-filters__label {
   display: inline-flex;
   align-items: center;
@@ -1926,8 +1931,8 @@
   display: inline-grid;
   place-items: center;
   padding: 3px 8px;
-  background: color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
-  color: var(--tv-accent-primary);
+  background: color-mix(in srgb, var(--tv-color-violet-300) 16%, transparent);
+  color: var(--tv-color-violet-300);
   border-radius: 0.3125rem;
   font-size: var(--tv-text-xs);
   font-weight: 700;
