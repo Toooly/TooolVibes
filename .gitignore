@@ -69,3 +69,5 @@ audits/final-visual-simplification-2026-07-28/
 
 # Local agent evidence (not committed)
 .codex/
+.eslintignore
+supabase/.branches/
