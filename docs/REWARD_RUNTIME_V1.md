@@ -101,3 +101,9 @@ Runtime flag does **not** activate Arena, Vibe Rush, missions FAB, or confetti.
 
 Unit fixtures: `lib/rewards/test-fixtures.ts`  
 No public demo route. No production mock buttons.
+
+## Phase 4 backbone integration
+
+Server APIs under `/api/signal-progression/*` issue envelopes matching this contract.
+`SignalDeliveryBridge` may enqueue pending envelopes when delivery flags are enabled.
+Product actions remain unwired until a later phase.

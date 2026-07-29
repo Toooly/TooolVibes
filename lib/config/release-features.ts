@@ -43,6 +43,8 @@ export type ReleaseFeatureEnvironment = Readonly<{
   TOOOLVIBES_GAMIFICATION_PERSISTENCE_ENABLED?: string;
   TOOOLVIBES_REWARD_BACKBONE_ENABLED?: string;
   TOOOLVIBES_REWARD_RUNTIME_ENABLED?: string;
+  TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED?: string;
+  TOOOLVIBES_REWARD_DELIVERY_ENABLED?: string;
   TOOOLVIBES_GAME_MISSIONS_MODE?: string;
   TOOOLVIBES_GAME_HIDDEN_SIGNAL_MODE?: string;
   TOOOLVIBES_GAME_ARENA_MODE?: string;
@@ -105,6 +107,16 @@ export const releaseFeatureRegistry = {
   rewardRuntime: {
     owner: "product-engagement",
     envKey: "TOOOLVIBES_REWARD_RUNTIME_ENABLED",
+    defaultEnabled: false,
+  },
+  signalEventWrites: {
+    owner: "security-platform",
+    envKey: "TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED",
+    defaultEnabled: false,
+  },
+  rewardDelivery: {
+    owner: "product-engagement",
+    envKey: "TOOOLVIBES_REWARD_DELIVERY_ENABLED",
     defaultEnabled: false,
   },
 } as const satisfies Record<string, BooleanFeatureDefinition>;
@@ -179,6 +191,8 @@ export type ReleaseFeatureConfig = Readonly<{
   decisionMemoryBoard: ResolvedBooleanFeature;
   unifiedSearch: ResolvedBooleanFeature;
   rewardRuntime: ResolvedBooleanFeature;
+  signalEventWrites: ResolvedBooleanFeature;
+  rewardDelivery: ResolvedBooleanFeature;
   gamification: Readonly<{
     owner: string;
     enabled: boolean;
@@ -326,6 +340,14 @@ export function createReleaseFeatureConfig(
     environment,
     releaseFeatureRegistry.rewardRuntime,
   );
+  const signalEventWrites = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.signalEventWrites,
+  );
+  const rewardDelivery = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.rewardDelivery,
+  );
   const gamificationEnabled = parseBooleanFlag(
     environment[releaseFeatureRegistry.gamification.envKey],
     releaseFeatureRegistry.gamification,
@@ -401,6 +423,8 @@ export function createReleaseFeatureConfig(
     decisionMemoryBoard,
     unifiedSearch,
     rewardRuntime,
+    signalEventWrites,
+    rewardDelivery,
     gamification: Object.freeze({
       owner: releaseFeatureRegistry.gamification.owner,
       enabled: gamificationEnabled,
@@ -485,6 +509,10 @@ export function readReleaseFeatureEnvironment(): ReleaseFeatureEnvironment {
       process.env.TOOOLVIBES_REWARD_BACKBONE_ENABLED,
     TOOOLVIBES_REWARD_RUNTIME_ENABLED:
       process.env.TOOOLVIBES_REWARD_RUNTIME_ENABLED,
+    TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED:
+      process.env.TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED,
+    TOOOLVIBES_REWARD_DELIVERY_ENABLED:
+      process.env.TOOOLVIBES_REWARD_DELIVERY_ENABLED,
     TOOOLVIBES_GAME_MISSIONS_MODE:
       process.env.TOOOLVIBES_GAME_MISSIONS_MODE,
     TOOOLVIBES_GAME_HIDDEN_SIGNAL_MODE:

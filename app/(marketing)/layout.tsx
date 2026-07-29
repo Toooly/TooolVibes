@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 
 import { AccountProvider } from "@/components/account/account-provider";
 import { RewardAuthBridge } from "@/components/rewards/reward-auth-bridge";
+import { SignalDeliveryBridge } from "@/components/rewards/signal-delivery-bridge";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
@@ -27,6 +28,10 @@ export default async function MarketingLayout({
   const { url: supabaseUrl, anonKey: supabaseAnonKey } =
     getSupabasePublicEnv();
   const initialAuthEnabled = Boolean(supabaseUrl && supabaseAnonKey);
+  const signalDeliveryEnabled =
+    releaseFeatures.rewardRuntime.enabled &&
+    releaseFeatures.rewardDelivery.enabled &&
+    releaseFeatures.gamification.rewardBackboneEnabled;
 
   if (!isGateOpen) {
     return <>{children}</>;
@@ -40,6 +45,7 @@ export default async function MarketingLayout({
       <OrbitalProvider>
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
           <RewardAuthBridge />
+          <SignalDeliveryBridge enabled={signalDeliveryEnabled} />
           <DiscoveryPersistenceProvider>
             {/* Definitive shell (2026-07-24): CommandBar (xl+), MobileTopBar (<xl),
                 MobileBottomNav (<xl). The previous SiteHeaderV2 is removed. */}
