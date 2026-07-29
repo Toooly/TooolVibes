@@ -16,11 +16,29 @@ function hashColor(str: string): string {
 function accessBadge(access: string) {
   switch (access) {
     case "premium":
-      return { icon: Lock, label: "Riservata", tone: "#f3bf4c" };
+      return {
+        icon: Lock,
+        label: "Riservata",
+        tone: "var(--tv-accent-gold-on-ivory)",
+        border: "color-mix(in srgb, var(--tv-accent-gold-on-ivory) 28%, transparent)",
+        background: "var(--tv-accent-gold-soft-on-ivory)",
+      };
     case "premium-preview":
-      return { icon: Sparkles, label: "Anteprima", tone: "#39d2f6" };
+      return {
+        icon: Sparkles,
+        label: "Anteprima",
+        tone: "var(--tv-accent-cyan-on-ivory)",
+        border: "color-mix(in srgb, var(--tv-accent-cyan-on-ivory) 28%, transparent)",
+        background: "var(--tv-accent-cyan-soft-on-ivory)",
+      };
     default:
-      return { icon: Star, label: "Aperta", tone: "#6a3cff" };
+      return {
+        icon: Star,
+        label: "Aperta",
+        tone: "var(--tv-accent-violet-on-ivory)",
+        border: "color-mix(in srgb, var(--tv-accent-violet-on-ivory) 28%, transparent)",
+        background: "var(--tv-accent-violet-soft-on-ivory)",
+      };
   }
 }
 
@@ -48,7 +66,7 @@ function CollectionItem({ collection }: { collection: CuratedCollection }) {
         <div className="flex items-center gap-2">
           <span
             className="mobile-collections__item-badge"
-            style={{ color: badge.tone, borderColor: `${badge.tone}40`, background: `${badge.tone}12` }}
+            style={{ color: badge.tone, borderColor: badge.border, background: badge.background }}
           >
             <BadgeIcon className="size-3" />
             {badge.label}
