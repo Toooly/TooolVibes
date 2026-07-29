@@ -69,7 +69,7 @@ export function EditorialPostCard({ post, variant = "card", className }: Editori
       {isCompact ? (
         post.summary ? (
           <p
-            className="text-body-soft mt-2.5 text-[0.9rem] leading-6"
+            className="text-body-soft mt-2.5 text-[0.9375rem] leading-6"
             style={{ color: "var(--muted-strong)" }}
           >
             {post.summary}

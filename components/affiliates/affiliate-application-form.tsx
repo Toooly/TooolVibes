@@ -341,7 +341,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
         ) : null}
 
         <div className="flex flex-col gap-3 border-t border-[var(--tv-border-subtle)] pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm leading-6 text-[var(--tv-ink-secondary)]">
+          <p className="text-[0.9375rem] leading-6 text-[var(--tv-ink-secondary)]">
             Nome, brand, email e sito bastano per candidarti. Aggiungi canali e profili social solo se li vuoi condividere.
           </p>
           <PremiumButton type="submit" disabled={isSubmitting} className="w-full sm:w-auto">

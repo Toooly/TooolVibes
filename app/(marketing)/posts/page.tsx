@@ -48,11 +48,11 @@ export default async function PostsPage() {
   const [heroPost, ...supportingPosts] = featuredPosts;
 
   return (
-    <div className="tone-screen page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
+    <div className="posts-page tone-screen page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
       {/* ═══════════════════════════════════════════════════════════
           1. Editorial masthead
           ═══════════════════════════════════════════════════════════ */}
-      <section className="brand-panel section-stage relative overflow-hidden rounded-[36px] p-5 sm:p-6 lg:p-7">
+      <section className="posts-masthead brand-panel section-stage relative overflow-hidden rounded-[36px] p-4 sm:p-6 lg:p-7">
         <div className="editorial-grid items-start gap-y-6">
           <div className="col-span-12 lg:col-span-8">
             <RouteMarker
@@ -60,7 +60,7 @@ export default async function PostsPage() {
               label="Archivio editoriale"
               status={`${blogPosts.length + toolWriteups.length + guides.length} letture`}
               density="hero"
-              className="mb-5"
+              className="mb-3 sm:mb-5"
             />
             <SectionHeader
               as="h1"
@@ -69,10 +69,10 @@ export default async function PostsPage() {
               description="Qui non trovi un magazine generico: trovi letture brevi, guide e approfondimenti collegati ai tool, alle raccolte e ai casi d'uso più concreti."
             />
 
-            <div className="metadata-block mt-4 rounded-[24px] px-4.5 py-4">
+            <div className="metadata-block mt-3 rounded-[24px] px-4 py-3.5 sm:mt-4 sm:px-4.5 sm:py-4">
               <p className="brand-kicker">Come li leggiamo</p>
               <p
-                className="mt-2.5 max-w-[42rem] text-[0.98rem] leading-7"
+                className="mt-2.5 max-w-[42rem] text-[0.9375rem] leading-[1.5] sm:text-[0.98rem] sm:leading-7"
                 style={{ color: "var(--muted-strong)" }}
               >
                 Gli approfondimenti sui tool ti portano dal catalogo a un
@@ -80,11 +80,19 @@ export default async function PostsPage() {
                 e scelte di prodotto senza farti ricominciare la ricerca da
                 zero.
               </p>
-              <div className="mt-5 flex flex-wrap items-center gap-3">
-                <ButtonLink href="/archivio" variant="secondary">
+              <div className="mt-3 grid grid-cols-2 gap-2.5 sm:mt-5 sm:gap-3">
+                <ButtonLink
+                  href="/archivio"
+                  variant="secondary"
+                  className="min-w-0 px-2 text-[0.8125rem] sm:text-[0.95rem]"
+                >
                   Apri l&apos;archivio
                 </ButtonLink>
-                <ButtonLink href="/collections" variant="secondary">
+                <ButtonLink
+                  href="/collections"
+                  variant="secondary"
+                  className="min-w-0 px-2 text-[0.8125rem] sm:text-[0.95rem]"
+                >
                   Vai alle raccolte
                 </ButtonLink>
               </div>
@@ -92,22 +100,22 @@ export default async function PostsPage() {
           </div>
 
           <div className="col-span-12 lg:col-span-4">
-            <div className="dark-panel rounded-[28px] p-4.5 sm:p-5 lg:ml-4">
+            <div className="dark-panel rounded-[28px] p-4 sm:p-5 lg:ml-4">
               {hasAny ? (
                 <div>
                   <p className="editorial-label !text-white/60">
                     Contenuti attivi
                   </p>
-                  <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                  <div className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
                     {guides.length > 0 ? (
                       <Link
                         href="#guide"
-                        className="discovery-strip-dark rounded-[22px] px-4 py-4"
+                        className="discovery-strip-dark rounded-[22px] px-2 py-3 sm:px-4 sm:py-4"
                       >
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                           Guide
                         </p>
-                        <p className="mt-2 text-[1.8rem] leading-none text-white">
+                        <p className="mt-2 text-[1.5rem] leading-none text-white sm:text-[1.8rem]">
                           {guides.length}
                         </p>
                       </Link>
@@ -115,12 +123,12 @@ export default async function PostsPage() {
                     {toolWriteups.length > 0 ? (
                       <Link
                         href="#analisi"
-                        className="discovery-strip-dark rounded-[22px] px-4 py-4"
+                        className="discovery-strip-dark rounded-[22px] px-2 py-3 sm:px-4 sm:py-4"
                       >
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                           Approfondimenti tool
                         </p>
-                        <p className="mt-2 text-[1.8rem] leading-none text-white">
+                        <p className="mt-2 text-[1.5rem] leading-none text-white sm:text-[1.8rem]">
                           {toolWriteups.length}
                         </p>
                       </Link>
@@ -128,12 +136,12 @@ export default async function PostsPage() {
                     {blogPosts.length > 0 ? (
                       <Link
                         href="#blog"
-                        className="discovery-strip-dark rounded-[22px] px-4 py-4"
+                        className="discovery-strip-dark rounded-[22px] px-2 py-3 sm:px-4 sm:py-4"
                       >
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                           Blog
                         </p>
-                        <p className="mt-2 text-[1.8rem] leading-none text-white">
+                        <p className="mt-2 text-[1.5rem] leading-none text-white sm:text-[1.8rem]">
                           {blogPosts.length}
                         </p>
                       </Link>
@@ -142,7 +150,7 @@ export default async function PostsPage() {
                 </div>
               ) : null}
 
-              <div className="mt-5 border-t border-white/10 pt-4">
+              <div className="mt-4 border-t border-white/10 pt-3.5 sm:mt-5 sm:pt-4">
                 <p className="editorial-label !text-white/60">
                   Criteri di lettura
                 </p>
