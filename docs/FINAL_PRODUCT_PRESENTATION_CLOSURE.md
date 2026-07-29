@@ -779,3 +779,151 @@ bunx wrangler versions deploy dd473416-e11b-4566-b6e4-574824aa2272 --name tooolv
 ```
 
 Do not modify DNS, domains, unrelated Workers, or bindings.
+
+---
+
+## Definitive UI Production Closure — 2026-07-29
+
+### Scope
+
+Final technical and accessibility gate after responsive, visual, interaction and
+editorial closure. No redesign. Surgical a11y/contrast/runtime fixes only, then
+production deploy, verification, documentation and release tag.
+
+### Application commit (deployed)
+
+| Field | Value |
+|------|-------|
+| Starting commit | `113a1c6fc26254ccb5ecfc7512a77f38d0c659d9` |
+| Deployed application commit | `7b07fbc3eb9ce8f2209a446fb3e0d5ef7efcc41d` |
+| Release sequence base | `d4322b8` → `113a1c6` + gate fixes |
+
+### Closure commits
+
+| Commit | Message | Author |
+|--------|---------|--------|
+| `569dc65710ce391efcf2b7b4a64b3d14b236064c` | `fix(a11y): close final accessibility and contrast defects` | Gianmaria `<gianmariacaltag@gmail.com>` |
+| `7b07fbc3eb9ce8f2209a446fb3e0d5ef7efcc41d` | `fix(release): close final runtime defects` | Gianmaria `<gianmariacaltag@gmail.com>` |
+
+### Surgical fixes
+
+1. **Account chrome CTA** (`command-bar`, `mobile-top-bar`): hide when
+   `accountCta.visible === false`; never emit empty `aria-label`.
+2. **Archive filters**: keep disclosure control outside `role="tablist"`; tabs only.
+3. **Contrast tokens**:
+   - `.ar4-grid__more-count` → violet-300 on dark soft fill
+   - dark `.editorial-label` → `--tv-accent-violet-on-dark` (ivory scoped to
+     `--tv-accent-violet-on-ivory`)
+   - `.v-auth-message--error` → `--danger` on soft danger fill
+   - collection access badges → ivory-safe
+     `--tv-accent-*-on-ivory` / `*-soft-on-ivory` tokens
+
+### Tests and builds
+
+| Gate | Result |
+|------|--------|
+| Node | `22.23.1` |
+| Style ownership | pass |
+| TypeScript | pass |
+| ESLint (`--max-warnings=0`) | pass |
+| Unit tests | **968 passed**, 10 RLS skipped |
+| `git diff --check` | pass |
+| Next production build | pass |
+| OpenNext / Cloudflare build | pass |
+| popupElement duplicate-key warning | vendor/Base UI inside OpenNext bundle only — not application source; no runtime impact |
+
+### Axe results (post-hydration)
+
+Viewports: 390×844, 430×932, 1024×768, 1440×1000.
+
+Routes: Home, Archive, Radar, Compare, Shortlist, Collections,
+Collection Detail (`ai-stack-solo-founders`), Posts, Post Detail (`reclaim-ai`),
+Affiliati, Account, Tool Detail (`blink`).
+
+| Environment | Critical | Serious |
+|-------------|----------|---------|
+| Local production server | 0 | 0 |
+| https://tooolvibes.eu (desktop matrix) | 0 | 0 |
+| https://tooolvibes.staff-ffa.workers.dev | 0 | 0 |
+
+### Contrast results
+
+Confirmed AA after token fixes on:
+
+- Command Controls / shell account affordances
+- Archive more-count pill
+- Dark editorial labels (Affiliati and peers)
+- Account auth error message on ivory card
+- Collections access badges on inverted surfaces
+- Podium / Command Bar / form states re-checked via Axe color-contrast
+
+### Responsive results
+
+`npm run check:responsive` — 77-case matrix:
+
+- horizontal overflow: **0**
+- Home H1 line contract: within limits on live routes (2 desktop / ≤4 mobile)
+- page/console application errors: **0**
+- text-floor advisory failures: 52 (accepted for genuine 12px metadata/eyebrows)
+- fixture note: `/collections/research-synthesis-toolkit` is a soft-404 mock slug
+  in the QA script (not a live collection); representative
+  `/collections/ai-stack-solo-founders` verified 200
+
+Interaction smoke (local prod): sound/music, Command Palette (⌘K + search),
+filters, posts disclosure, account/affiliati focus, tool actions, Escape — OK.
+No page errors.
+
+### Cloudflare deployment
+
+| Field | Previous | New |
+|------|----------|-----|
+| Worker | `tooolvibes` | `tooolvibes` |
+| Version ID | `d48bbba1-87ba-479f-8aa0-cce474eff524` | `f6549246-be8b-41df-9261-7ee702146347` |
+| Traffic | 100% | **100%** |
+| Deployment message | (prior production) | `Definitive-UI-closure-7b07fbc` |
+| Deployment created | 2026-07-29T09:39:14.404Z | 2026-07-29T19:18:20.911Z |
+| Production | https://tooolvibes.eu | https://tooolvibes.eu |
+| workers.dev | https://tooolvibes.staff-ffa.workers.dev | same |
+
+Intermediate deploy (superseded): `b5d3a4b8-8a87-4ace-b6b3-0039e6928d0f`
+(`569dc65` a11y-only) before badge contrast fix.
+
+DNS, domains, bindings, Supabase, Collections data source unchanged.
+
+### Production verification
+
+48 route×viewport checks (12 routes × 2 viewports × 2 hosts): **all OK**.
+
+- HTTP 200, no soft 404 on principal + representative slug routes
+- fonts/CSS loaded (Manrope/Anton)
+- no horizontal overflow
+- no console/page errors on verified loads
+- Command Controls / shell visible
+- Podium present on Home
+- Collections stable on live slug
+- Axe critical/serious: 0
+- traffic 100% on `f6549246-be8b-41df-9261-7ee702146347`
+
+### Release tag
+
+| Field | Value |
+|------|-------|
+| Tag | `tooolvibes-definitive-ui-closure-2026-07-29` |
+| Target | `7b07fbc3eb9ce8f2209a446fb3e0d5ef7efcc41d` (application commit, not docs) |
+| Message | Definitive responsive, visual, interaction and editorial UI closure |
+
+### Rollback command
+
+```bash
+npx wrangler versions deploy d48bbba1-87ba-479f-8aa0-cce474eff524 --name tooolvibes --percentage 100
+```
+
+### Remaining non-blocking limitations
+
+- OpenNext emit warning: duplicate object key `popupElement` inside bundled Base UI
+  vendor code (not app source).
+- Responsive QA script still references obsolete collection slug
+  `research-synthesis-toolkit` (soft 404); update fixture when convenient.
+- Advisory 12px label-floor hits remain for genuine metadata/eyebrows by design.
+- Collections source remains `mock` env binding as before.
+- Auth unavailable chrome CTA intentionally hidden when account access is off.
