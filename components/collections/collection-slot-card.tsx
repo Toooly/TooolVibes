@@ -29,6 +29,7 @@ export function CollectionSlotCard({
   return (
     <article
       className="collection-slot-panel rounded-[26px] border p-4 sm:p-5"
+      data-collection-step={index + 1}
       style={{
         background: "var(--tv-surface-inverted-raised)",
         borderColor:

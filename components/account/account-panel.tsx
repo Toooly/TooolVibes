@@ -4,6 +4,7 @@ import { useAccount } from "@/components/account/account-provider";
 
 import { AccountAccessSection } from "./panel/account-access-section";
 import { AccountGamificationSection } from "./panel/account-gamification-section";
+import { AccountSignalProgressSection } from "./panel/account-signal-progress-section";
 import { AccountHero } from "./panel/account-hero";
 import { AccountJourneyPanel } from "./panel/account-journey-panel";
 import { AccountPreferencesSection } from "./panel/account-preferences-section";
@@ -93,6 +94,7 @@ export function AccountPanel() {
         <div className="editorial-grid gap-y-5">
           {/* Left column */}
           <section className="col-span-12 space-y-5 lg:col-span-7">
+            <AccountSignalProgressSection />
             <AccountGamificationSection
               vibeRushBest={vibeRushBest}
               submissionsLoading={submissions.isLoading}

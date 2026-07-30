@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { AccountProvider } from "@/components/account/account-provider";
 import { RewardAuthBridge } from "@/components/rewards/reward-auth-bridge";
 import { SignalDeliveryBridge } from "@/components/rewards/signal-delivery-bridge";
+import { SignalProductBridge } from "@/components/rewards/signal-product-bridge";
+import { SignalProgressUiProvider } from "@/lib/signal-progression/release-context";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
@@ -11,6 +13,7 @@ import { CommandBar } from "@/components/layout/command-bar";
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
 import { OrbitalProvider } from "@/components/app/orbital-system";
 import { releaseFeatures } from "@/lib/config/release-features";
+import { buildSignalClientFlagSnapshot } from "@/lib/signal-progression/client-flags";
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
 import { getSupabasePublicEnv } from "@/lib/supabase/env";
@@ -32,6 +35,17 @@ export default async function MarketingLayout({
     releaseFeatures.rewardRuntime.enabled &&
     releaseFeatures.rewardDelivery.enabled &&
     releaseFeatures.gamification.rewardBackboneEnabled;
+  const signalProgressUiEnabled =
+    releaseFeatures.signalProgressUi.enabled &&
+    releaseFeatures.gamification.rewardBackboneEnabled;
+  const signalClientFlags = buildSignalClientFlagSnapshot({
+    gamificationEnabled: releaseFeatures.gamification.enabled,
+    rewardBackboneEnabled: releaseFeatures.gamification.rewardBackboneEnabled,
+    signalEventWritesEnabled: releaseFeatures.signalEventWrites.enabled,
+    signalProgressUiEnabled: releaseFeatures.signalProgressUi.enabled,
+    rewardDeliveryEnabled: releaseFeatures.rewardDelivery.enabled,
+    rewardRuntimeEnabled: releaseFeatures.rewardRuntime.enabled,
+  });
 
   if (!isGateOpen) {
     return <>{children}</>;
@@ -44,8 +58,10 @@ export default async function MarketingLayout({
       </a>
       <OrbitalProvider>
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
+          <SignalProgressUiProvider enabled={signalProgressUiEnabled}>
           <RewardAuthBridge />
           <SignalDeliveryBridge enabled={signalDeliveryEnabled} />
+          <SignalProductBridge flags={signalClientFlags} />
           <DiscoveryPersistenceProvider>
             {/* Definitive shell (2026-07-24): CommandBar (xl+), MobileTopBar (<xl),
                 MobileBottomNav (<xl). The previous SiteHeaderV2 is removed. */}
@@ -61,6 +77,7 @@ export default async function MarketingLayout({
             <SiteFooterV2 />
             <MobileBottomNav />
           </DiscoveryPersistenceProvider>
+          </SignalProgressUiProvider>
         </AccountProvider>
       </OrbitalProvider>
     </div>

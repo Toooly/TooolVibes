@@ -43,6 +43,7 @@ import {
 } from "@/lib/compare/compare-objective";
 import { formatDecisionTimestamp } from "@/lib/tools/discovery";
 import { cn } from "@/lib/utils";
+import { emitComparisonCompleted } from "@/lib/signal-progression/client";
 import type { NormalisedTool } from "./tool-battle-shared";
 
 export type CompareDecisionPanelProps = {
@@ -156,6 +157,10 @@ export function CompareDecisionPanel({
     if (active) return;
     setFocusSlug(slug);
     setToolDecisionOutcome(slug, outcome);
+    // Meaningful completion: explicit decision on a compare set (not page view).
+    if (outcome === "selected" || outcome === "rejected" || outcome === "deferred") {
+      emitComparisonCompleted(tools.map((tool) => tool.slug));
+    }
   }
 
   return (

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { AdvancedSpecialIssue } from "@/components/collections/advanced-special-issue";
 import { CollectionCard } from "@/components/collections/collection-card";
 import { CollectionSlotSafeBoundary } from "@/components/collections/collection-slot-safe-boundary";
+import { CollectionSignalTracker } from "@/components/collections/collection-signal-tracker";
 import { PartnerCollectionModule } from "@/components/monetization/partner-placements";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
@@ -93,6 +94,10 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
   return (
     <div className="collection-detail-final internal-page internal-collection-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
+      <CollectionSignalTracker
+        slug={collection.slug}
+        stepCount={visibleSlots.length}
+      />
       <section className="collection-detail-hero brand-panel section-stage relative overflow-hidden rounded-[36px]">
         <div className="editorial-grid relative gap-y-0">
           <div className="col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7">

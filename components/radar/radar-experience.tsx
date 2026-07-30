@@ -34,6 +34,7 @@ import {
 import type { RadarDesktopVisual } from "@/lib/radar/radar-view-config";
 import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
 import { getUtcContextDate } from "@/supabase/functions/_shared/radar-prediction-resolver";
+import { emitRadarReturned } from "@/lib/signal-progression/client";
 
 const RADAR_VISUAL_OPTIONS: ReadonlyArray<{
   key: RadarDesktopVisual;
@@ -338,6 +339,17 @@ export function RadarExperience({
       localStorage.getItem(`${HIDDEN_SIGNAL_STORAGE_KEY}:${today}`) === "1",
     );
   }, [today]);
+
+  // Usable radar only (live/fixture/stale with items) — not loading/error shells.
+  useEffect(() => {
+    const usable =
+      (model.state === "live" ||
+        model.state === "fixture" ||
+        model.state === "stale") &&
+      model.items.length > 0;
+    if (!usable) return;
+    emitRadarReturned(today);
+  }, [model.state, model.items.length, today]);
 
   const hiddenNodeId = useMemo(() => {
     if (!hiddenSignalRelease.persistentRewardsEnabled) return null;
