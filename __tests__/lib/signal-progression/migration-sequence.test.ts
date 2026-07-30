@@ -22,6 +22,11 @@ describe("migration execution sequence", () => {
     expect(signalIdx).toBeGreaterThan(-1);
     expect(gamificationCoreIdx).toBeLessThan(signalIdx);
     expect(gamificationRpcIdx).toBeLessThan(signalIdx);
+
+    const phase5Idx = files.findIndex(
+      (f) => f === "20260730000002_signal_mission_projection.sql",
+    );
+    expect(phase5Idx).toBeGreaterThan(signalIdx);
   });
 
   it("uses create table if not exists for additive safety", () => {
