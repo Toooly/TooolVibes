@@ -5,6 +5,7 @@ import { Compass, Sparkles } from "lucide-react";
 import NumberFlow from "@number-flow/react";
 
 import { useAccount } from "@/components/account/account-provider";
+import { AccountBadgeCabinetSection } from "@/components/account/panel/account-badge-cabinet-section";
 import {
   fetchSignalHub,
   saveSignalProfileContext,
@@ -219,6 +220,8 @@ export function AccountSignalProgressSection() {
               : "Salva contesto"}
         </button>
       </div>
+
+      <AccountBadgeCabinetSection hub={hub} loading={loading} />
     </div>
   );
 }

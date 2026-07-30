@@ -124,12 +124,16 @@ async function emitEvent(input: {
       spAwarded?: number;
       envelope?: unknown;
       missionEnvelopes?: unknown[];
+      achievementEnvelopes?: unknown[];
     };
 
     const envelopes: unknown[] = [];
     if (payload.envelope) envelopes.push(payload.envelope);
     if (Array.isArray(payload.missionEnvelopes)) {
       envelopes.push(...payload.missionEnvelopes);
+    }
+    if (Array.isArray(payload.achievementEnvelopes)) {
+      envelopes.push(...payload.achievementEnvelopes);
     }
     deliverEnvelopes(envelopes);
 
@@ -278,6 +282,7 @@ export async function saveSignalPreferences(
         muteRewardSounds: prefs.muteRewardSounds,
         quietMode: prefs.quietMode,
         suppressAutomaticAchievements: prefs.suppressAutomaticAchievements,
+        suppressMajorCelebrations: prefs.suppressMajorCelebrations,
       }),
     });
     return response.ok;

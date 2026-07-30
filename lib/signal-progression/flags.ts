@@ -38,3 +38,32 @@ export function canReadSignalProgress(
 ): boolean {
   return canReadSignalProgressionUi(config);
 }
+
+export function canEvaluateSignalAchievements(
+  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+): boolean {
+  return (
+    config.gamification.rewardBackboneEnabled &&
+    config.signalAchievements.enabled
+  );
+}
+
+export function canReadSignalBadgeCabinet(
+  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+): boolean {
+  return (
+    config.gamification.rewardBackboneEnabled &&
+    config.signalProgressUi.enabled &&
+    config.signalBadgeCabinet.enabled
+  );
+}
+
+export function canPresentRewardMilestones(
+  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+): boolean {
+  return (
+    config.gamification.rewardBackboneEnabled &&
+    config.rewardRuntime.enabled &&
+    config.rewardMilestones.enabled
+  );
+}

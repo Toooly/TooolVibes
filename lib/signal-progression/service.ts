@@ -12,6 +12,8 @@ import {
 } from "@/lib/rewards/contracts";
 import { missionsCompletedByEvent } from "@/lib/signal-progression/missions";
 import { calculateSignalLevel } from "@/lib/signal-progression/levels";
+import { SIGNAL_ACHIEVEMENTS_RULES_VERSION } from "@/lib/signal-progression/achievements";
+import { canEvaluateSignalAchievements } from "@/lib/signal-progression/flags";
 import type { SignalProfileContextInput } from "@/lib/signal-progression/profile-context";
 import { getSignalProgressHub } from "@/lib/signal-progression/read-model";
 
@@ -23,6 +25,7 @@ export type AcceptSignalResult =
       envelope: RewardEnvelope | null;
       spAwarded: number;
       missionEnvelopes: RewardEnvelope[];
+      achievementEnvelopes: RewardEnvelope[];
     }
   | { ok: false; error: string; status: number };
 
@@ -115,6 +118,32 @@ async function projectMissionsForEvent(
   return envelopes;
 }
 
+async function evaluateAchievementsForUser(
+  userId: string,
+): Promise<RewardEnvelope[]> {
+  try {
+    if (!canEvaluateSignalAchievements()) return [];
+    const admin = createAdminSupabaseClient();
+    const { data, error } = await admin.rpc("evaluate_signal_achievements", {
+      p_user_id: userId,
+      p_daily_sp_cap: GLOBAL_DAILY_SP_CAP,
+      p_rules_version: SIGNAL_ACHIEVEMENTS_RULES_VERSION,
+    });
+    if (error || !data || typeof data !== "object") return [];
+    const raw = (data as { envelopes?: unknown }).envelopes;
+    if (!Array.isArray(raw)) return [];
+    const envelopes: RewardEnvelope[] = [];
+    for (const item of raw) {
+      const envelope = normalizeEnvelope(item);
+      if (envelope) envelopes.push(envelope);
+    }
+    return envelopes;
+  } catch {
+    // Achievement evaluation must never break the primary product action.
+    return [];
+  }
+}
+
 export async function isProfileContextComplete(
   userId: string,
 ): Promise<boolean> {
@@ -184,21 +213,30 @@ export async function acceptSignalEngagement(
       typeof payload?.eventId === "string" ? payload.eventId : null;
 
     let missionEnvelopes: RewardEnvelope[] = [];
+    let achievementEnvelopes: RewardEnvelope[] = [];
     if (status === "accepted") {
       missionEnvelopes = await projectMissionsForEvent(
         userId,
         rule.eventType,
         eventId,
       );
+      // Server-owned eligibility projection runs after every SP-changing path
+      // (event grant + mission grants) so level crossings are caught exactly
+      // once. Failure here must never break the primary action.
+      achievementEnvelopes = await evaluateAchievementsForUser(userId);
     }
 
     return {
       ok: true,
       status,
-      granted: Boolean(payload?.granted && envelope) || missionEnvelopes.length > 0,
+      granted:
+        Boolean(payload?.granted && envelope) ||
+        missionEnvelopes.length > 0 ||
+        achievementEnvelopes.length > 0,
       envelope,
       spAwarded: Number(payload?.spAwarded ?? envelope?.displayDelta ?? 0),
       missionEnvelopes,
+      achievementEnvelopes,
     };
   } catch {
     return { ok: false, error: "service_unavailable", status: 503 };
@@ -297,6 +335,7 @@ export async function upsertSignalProfileContext(
         if (result.ok) {
           if (result.envelope) envelopes.push(result.envelope);
           envelopes.push(...result.missionEnvelopes);
+          envelopes.push(...result.achievementEnvelopes);
         }
       }
     }

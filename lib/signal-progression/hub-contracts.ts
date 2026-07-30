@@ -26,6 +26,28 @@ export const signalHubPreferencesSchema = z.object({
   muteRewardSounds: z.boolean(),
   quietMode: z.boolean(),
   suppressAutomaticAchievements: z.boolean(),
+  suppressMajorCelebrations: z.boolean().default(false),
+});
+
+export const signalHubBadgeSchema = z.object({
+  code: z.string(),
+  title: z.string(),
+  description: z.string(),
+  a11yDescription: z.string(),
+  iconId: z.string(),
+  rarity: z.enum(["common", "uncommon", "rare"]),
+  visualIntensity: z.enum(["quiet", "standard", "elevated"]),
+  sortOrder: z.number().int(),
+  earnedAt: z.string(),
+});
+
+export const signalHubAchievementProgressSchema = z.object({
+  savedCount: z.number().int().nonnegative(),
+  comparisonCount: z.number().int().nonnegative(),
+  radarDays: z.number().int().nonnegative(),
+  collectionJourneysCompleted: z.number().int().nonnegative(),
+  profileComplete: z.boolean(),
+  level: z.number().int().min(1).max(5),
 });
 
 export const signalProgressHubSchema = z.object({
@@ -39,6 +61,8 @@ export const signalProgressHubSchema = z.object({
   missions: z.array(signalHubMissionSchema),
   recentGrants: z.array(signalHubGrantSchema),
   earnedBadgeCodes: z.array(z.string()),
+  badges: z.array(signalHubBadgeSchema).default([]),
+  achievementProgress: signalHubAchievementProgressSchema.nullable().default(null),
   profileContextComplete: z.boolean(),
   profileContext: z
     .object({
@@ -53,3 +77,7 @@ export const signalProgressHubSchema = z.object({
 
 export type SignalProgressHub = z.infer<typeof signalProgressHubSchema>;
 export type SignalHubMission = z.infer<typeof signalHubMissionSchema>;
+export type SignalHubBadge = z.infer<typeof signalHubBadgeSchema>;
+export type SignalHubAchievementProgress = z.infer<
+  typeof signalHubAchievementProgressSchema
+>;

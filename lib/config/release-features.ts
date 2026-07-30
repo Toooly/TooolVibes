@@ -46,6 +46,9 @@ export type ReleaseFeatureEnvironment = Readonly<{
   TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED?: string;
   TOOOLVIBES_REWARD_DELIVERY_ENABLED?: string;
   TOOOLVIBES_SIGNAL_PROGRESS_UI_ENABLED?: string;
+  TOOOLVIBES_SIGNAL_ACHIEVEMENTS_ENABLED?: string;
+  TOOOLVIBES_SIGNAL_BADGE_CABINET_ENABLED?: string;
+  TOOOLVIBES_REWARD_MILESTONES_ENABLED?: string;
   TOOOLVIBES_GAME_MISSIONS_MODE?: string;
   TOOOLVIBES_GAME_HIDDEN_SIGNAL_MODE?: string;
   TOOOLVIBES_GAME_ARENA_MODE?: string;
@@ -125,6 +128,21 @@ export const releaseFeatureRegistry = {
     envKey: "TOOOLVIBES_SIGNAL_PROGRESS_UI_ENABLED",
     defaultEnabled: false,
   },
+  signalAchievements: {
+    owner: "security-platform",
+    envKey: "TOOOLVIBES_SIGNAL_ACHIEVEMENTS_ENABLED",
+    defaultEnabled: false,
+  },
+  signalBadgeCabinet: {
+    owner: "product-engagement",
+    envKey: "TOOOLVIBES_SIGNAL_BADGE_CABINET_ENABLED",
+    defaultEnabled: false,
+  },
+  rewardMilestones: {
+    owner: "product-engagement",
+    envKey: "TOOOLVIBES_REWARD_MILESTONES_ENABLED",
+    defaultEnabled: false,
+  },
 } as const satisfies Record<string, BooleanFeatureDefinition>;
 
 const ALL_GAMIFICATION_MODES = GAMIFICATION_MODES;
@@ -200,6 +218,9 @@ export type ReleaseFeatureConfig = Readonly<{
   signalEventWrites: ResolvedBooleanFeature;
   rewardDelivery: ResolvedBooleanFeature;
   signalProgressUi: ResolvedBooleanFeature;
+  signalAchievements: ResolvedBooleanFeature;
+  signalBadgeCabinet: ResolvedBooleanFeature;
+  rewardMilestones: ResolvedBooleanFeature;
   gamification: Readonly<{
     owner: string;
     enabled: boolean;
@@ -359,6 +380,18 @@ export function createReleaseFeatureConfig(
     environment,
     releaseFeatureRegistry.signalProgressUi,
   );
+  const signalAchievements = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.signalAchievements,
+  );
+  const signalBadgeCabinet = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.signalBadgeCabinet,
+  );
+  const rewardMilestones = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.rewardMilestones,
+  );
   const gamificationEnabled = parseBooleanFlag(
     environment[releaseFeatureRegistry.gamification.envKey],
     releaseFeatureRegistry.gamification,
@@ -437,6 +470,9 @@ export function createReleaseFeatureConfig(
     signalEventWrites,
     rewardDelivery,
     signalProgressUi,
+    signalAchievements,
+    signalBadgeCabinet,
+    rewardMilestones,
     gamification: Object.freeze({
       owner: releaseFeatureRegistry.gamification.owner,
       enabled: gamificationEnabled,

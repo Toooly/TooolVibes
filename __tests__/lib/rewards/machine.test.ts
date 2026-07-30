@@ -89,6 +89,7 @@ describe("reward presentation machine", () => {
         muteRewardSounds: false,
         suppressAutomaticAchievements: true,
         quietMode: false,
+        suppressMajorCelebrations: false,
       },
     });
     actor.send({ type: "ENQUEUE", envelope: makeAchievementEnvelope() });

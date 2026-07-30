@@ -8,6 +8,7 @@ export const rewardPreferencesSchema = z.object({
   muteRewardSounds: z.boolean(),
   suppressAutomaticAchievements: z.boolean(),
   quietMode: z.boolean(),
+  suppressMajorCelebrations: z.boolean().default(false),
 });
 
 export type RewardPreferences = z.infer<typeof rewardPreferencesSchema>;
@@ -18,6 +19,7 @@ export const DEFAULT_REWARD_PREFERENCES: RewardPreferences = Object.freeze({
   muteRewardSounds: false,
   suppressAutomaticAchievements: false,
   quietMode: false,
+  suppressMajorCelebrations: false,
 });
 
 export function parseRewardPreferences(input: unknown): RewardPreferences {

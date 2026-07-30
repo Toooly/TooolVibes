@@ -21,3 +21,34 @@ export function SignalProgressUiProvider({
 export function useSignalProgressUiEnabled(): boolean {
   return useContext(SignalProgressUiContext);
 }
+
+export type SignalAchievementFlagSnapshot = {
+  achievementsEnabled: boolean;
+  badgeCabinetEnabled: boolean;
+  milestonesEnabled: boolean;
+};
+
+const SignalAchievementFlagsContext =
+  createContext<SignalAchievementFlagSnapshot>({
+    achievementsEnabled: false,
+    badgeCabinetEnabled: false,
+    milestonesEnabled: false,
+  });
+
+export function SignalAchievementFlagsProvider({
+  flags,
+  children,
+}: {
+  flags: SignalAchievementFlagSnapshot;
+  children: ReactNode;
+}) {
+  return (
+    <SignalAchievementFlagsContext.Provider value={flags}>
+      {children}
+    </SignalAchievementFlagsContext.Provider>
+  );
+}
+
+export function useSignalAchievementFlags(): SignalAchievementFlagSnapshot {
+  return useContext(SignalAchievementFlagsContext);
+}

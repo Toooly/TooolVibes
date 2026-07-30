@@ -87,5 +87,6 @@ export async function POST(request: Request) {
     spAwarded: result.spAwarded,
     envelope: result.envelope,
     missionEnvelopes: result.missionEnvelopes,
+    achievementEnvelopes: result.achievementEnvelopes,
   });
 }

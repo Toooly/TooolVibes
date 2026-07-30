@@ -21,6 +21,7 @@ const prefsSchema = z
     muteRewardSounds: z.boolean(),
     quietMode: z.boolean(),
     suppressAutomaticAchievements: z.boolean(),
+    suppressMajorCelebrations: z.boolean().optional().default(false),
   })
   .strict();
 
@@ -43,7 +44,7 @@ export async function GET(request: Request) {
     const { data } = await admin
       .from("signal_reward_preferences")
       .select(
-        "reduce_reward_animations, mute_reward_sounds, quiet_mode, suppress_automatic_achievements",
+        "reduce_reward_animations, mute_reward_sounds, quiet_mode, suppress_automatic_achievements, suppress_major_celebrations",
       )
       .eq("user_id", userId)
       .maybeSingle();
@@ -56,6 +57,7 @@ export async function GET(request: Request) {
         muteRewardSounds: data.mute_reward_sounds,
         quietMode: data.quiet_mode,
         suppressAutomaticAchievements: data.suppress_automatic_achievements,
+        suppressMajorCelebrations: data.suppress_major_celebrations,
       },
     });
   } catch {
@@ -106,6 +108,7 @@ export async function PUT(request: Request) {
         p_quiet_mode: parsed.data.quietMode,
         p_suppress_automatic_achievements:
           parsed.data.suppressAutomaticAchievements,
+        p_suppress_major_celebrations: parsed.data.suppressMajorCelebrations,
       },
     );
     if (error) {

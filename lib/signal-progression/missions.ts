@@ -46,7 +46,7 @@ export const SIGNAL_ONBOARDING_MISSIONS: readonly SignalMissionDefinition[] = [
     rewardTitle: "Missione: primo salvataggio",
     rewardDescription: "Hai tracciato il primo tool nella shortlist.",
     announcement: "Missione completata: salva il primo tool.",
-    badgeId: "mission_save_first",
+    badgeId: "first_signal",
     priority: 70,
   },
   {
@@ -61,7 +61,7 @@ export const SIGNAL_ONBOARDING_MISSIONS: readonly SignalMissionDefinition[] = [
     rewardTitle: "Missione: primo confronto",
     rewardDescription: "Hai concluso un confronto significativo.",
     announcement: "Missione completata: primo confronto.",
-    badgeId: "mission_first_compare",
+    badgeId: "first_verdict",
     priority: 72,
   },
   {
@@ -76,7 +76,7 @@ export const SIGNAL_ONBOARDING_MISSIONS: readonly SignalMissionDefinition[] = [
     rewardTitle: "Missione: prima selezione",
     rewardDescription: "Hai percorso uno step in una raccolta curata.",
     announcement: "Missione completata: esplora una selezione.",
-    badgeId: "mission_first_collection",
+    badgeId: "pathfinder",
     priority: 71,
   },
   {
@@ -91,7 +91,6 @@ export const SIGNAL_ONBOARDING_MISSIONS: readonly SignalMissionDefinition[] = [
     rewardTitle: "Missione: ritorno al Radar",
     rewardDescription: "Hai letto i segnali del Radar.",
     announcement: "Missione completata: radar.",
-    badgeId: "mission_radar",
     priority: 68,
   },
   {
@@ -106,7 +105,7 @@ export const SIGNAL_ONBOARDING_MISSIONS: readonly SignalMissionDefinition[] = [
     rewardTitle: "Missione: contesto profilo",
     rewardDescription: "Hai definito il contesto del profilo.",
     announcement: "Missione completata: contesto profilo.",
-    badgeId: "mission_profile",
+    badgeId: "profile_set",
     priority: 74,
   },
 ] as const;

@@ -84,6 +84,35 @@ export async function getSignalProgressHub(
       ? (raw.earnedBadgeCodes as unknown[])
       : [];
 
+    const badgesRaw = Array.isArray(raw.badges)
+      ? (raw.badges as Array<Record<string, unknown>>)
+      : [];
+    const badges = badgesRaw.map((b) => ({
+      code: String(b.code ?? ""),
+      title: String(b.title ?? ""),
+      description: String(b.description ?? ""),
+      a11yDescription: String(b.a11yDescription ?? b.description ?? ""),
+      iconId: String(b.iconId ?? "Bookmark"),
+      rarity: (["common", "uncommon", "rare"].includes(String(b.rarity))
+        ? String(b.rarity)
+        : "common") as "common" | "uncommon" | "rare",
+      visualIntensity: (["quiet", "standard", "elevated"].includes(
+        String(b.visualIntensity),
+      )
+        ? String(b.visualIntensity)
+        : "standard") as "quiet" | "standard" | "elevated",
+      sortOrder: Number(b.sortOrder ?? 100),
+      earnedAt:
+        typeof b.earnedAt === "string"
+          ? b.earnedAt
+          : new Date(String(b.earnedAt ?? Date.now())).toISOString(),
+    }));
+
+    const progressRaw = raw.achievementProgress as Record<
+      string,
+      unknown
+    > | null;
+
     const prefsRaw = raw.preferences as Record<string, unknown> | null;
     const ctxRaw = raw.profileContext as Record<string, unknown> | null;
 
@@ -98,6 +127,19 @@ export async function getSignalProgressHub(
       missions: buildMissions(completed),
       recentGrants,
       earnedBadgeCodes: badgeRaw.map(String).filter(Boolean),
+      badges,
+      achievementProgress: progressRaw
+        ? {
+            savedCount: Number(progressRaw.savedCount ?? 0),
+            comparisonCount: Number(progressRaw.comparisonCount ?? 0),
+            radarDays: Number(progressRaw.radarDays ?? 0),
+            collectionJourneysCompleted: Number(
+              progressRaw.collectionJourneysCompleted ?? 0,
+            ),
+            profileComplete: Boolean(progressRaw.profileComplete),
+            level: Number(progressRaw.level ?? 1),
+          }
+        : null,
       profileContextComplete: Boolean(raw.profileContextComplete),
       profileContext: ctxRaw
         ? {
@@ -116,6 +158,9 @@ export async function getSignalProgressHub(
             quietMode: Boolean(prefsRaw.quietMode),
             suppressAutomaticAchievements: Boolean(
               prefsRaw.suppressAutomaticAchievements,
+            ),
+            suppressMajorCelebrations: Boolean(
+              prefsRaw.suppressMajorCelebrations,
             ),
           }
         : null,

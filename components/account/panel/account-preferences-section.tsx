@@ -50,6 +50,7 @@ export function AccountPreferencesSection({
             muteRewardSounds: boolean;
             quietMode: boolean;
             suppressAutomaticAchievements: boolean;
+            suppressMajorCelebrations?: boolean;
           } | null;
         };
         if (!payload.preferences) return;
@@ -86,6 +87,7 @@ export function AccountPreferencesSection({
             muteRewardSounds: next.muteRewardSounds,
             quietMode: next.quietMode,
             suppressAutomaticAchievements: next.suppressAutomaticAchievements,
+            suppressMajorCelebrations: next.suppressMajorCelebrations,
           }),
         });
       }
@@ -134,6 +136,7 @@ export function AccountPreferencesSection({
               ["reduceRewardAnimations", "Riduci animazioni ricompensa"],
               ["muteRewardSounds", "Silenzia suoni ricompensa"],
               ["suppressAutomaticAchievements", "Sopprimi achievement automatici"],
+              ["suppressMajorCelebrations", "Riduci celebrazioni importanti"],
               ["quietMode", "Modalità quiet"],
             ] as const
           ).map(([key, label]) => (

@@ -4,7 +4,10 @@ import { AccountProvider } from "@/components/account/account-provider";
 import { RewardAuthBridge } from "@/components/rewards/reward-auth-bridge";
 import { SignalDeliveryBridge } from "@/components/rewards/signal-delivery-bridge";
 import { SignalProductBridge } from "@/components/rewards/signal-product-bridge";
-import { SignalProgressUiProvider } from "@/lib/signal-progression/release-context";
+import {
+  SignalAchievementFlagsProvider,
+  SignalProgressUiProvider,
+} from "@/lib/signal-progression/release-context";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
@@ -45,6 +48,9 @@ export default async function MarketingLayout({
     signalProgressUiEnabled: releaseFeatures.signalProgressUi.enabled,
     rewardDeliveryEnabled: releaseFeatures.rewardDelivery.enabled,
     rewardRuntimeEnabled: releaseFeatures.rewardRuntime.enabled,
+    signalAchievementsEnabled: releaseFeatures.signalAchievements.enabled,
+    signalBadgeCabinetEnabled: releaseFeatures.signalBadgeCabinet.enabled,
+    rewardMilestonesEnabled: releaseFeatures.rewardMilestones.enabled,
   });
 
   if (!isGateOpen) {
@@ -59,6 +65,7 @@ export default async function MarketingLayout({
       <OrbitalProvider>
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
           <SignalProgressUiProvider enabled={signalProgressUiEnabled}>
+          <SignalAchievementFlagsProvider flags={signalClientFlags}>
           <RewardAuthBridge />
           <SignalDeliveryBridge enabled={signalDeliveryEnabled} />
           <SignalProductBridge flags={signalClientFlags} />
@@ -77,6 +84,7 @@ export default async function MarketingLayout({
             <SiteFooterV2 />
             <MobileBottomNav />
           </DiscoveryPersistenceProvider>
+          </SignalAchievementFlagsProvider>
           </SignalProgressUiProvider>
         </AccountProvider>
       </OrbitalProvider>

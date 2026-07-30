@@ -5,6 +5,9 @@ export type SignalClientFlagSnapshot = {
   progressionUiEnabled: boolean;
   deliveryEnabled: boolean;
   runtimeEnabled: boolean;
+  achievementsEnabled: boolean;
+  badgeCabinetEnabled: boolean;
+  milestonesEnabled: boolean;
 };
 
 export function buildSignalClientFlagSnapshot(input: {
@@ -14,6 +17,9 @@ export function buildSignalClientFlagSnapshot(input: {
   signalProgressUiEnabled: boolean;
   rewardDeliveryEnabled: boolean;
   rewardRuntimeEnabled: boolean;
+  signalAchievementsEnabled: boolean;
+  signalBadgeCabinetEnabled: boolean;
+  rewardMilestonesEnabled: boolean;
 }): SignalClientFlagSnapshot {
   const backbone = input.gamificationEnabled && input.rewardBackboneEnabled;
   return {
@@ -22,5 +28,12 @@ export function buildSignalClientFlagSnapshot(input: {
     deliveryEnabled:
       backbone && input.rewardDeliveryEnabled && input.rewardRuntimeEnabled,
     runtimeEnabled: input.rewardRuntimeEnabled,
+    achievementsEnabled: backbone && input.signalAchievementsEnabled,
+    badgeCabinetEnabled:
+      backbone &&
+      input.signalProgressUiEnabled &&
+      input.signalBadgeCabinetEnabled,
+    milestonesEnabled:
+      backbone && input.rewardRuntimeEnabled && input.rewardMilestonesEnabled,
   };
 }
