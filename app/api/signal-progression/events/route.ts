@@ -86,5 +86,6 @@ export async function POST(request: Request) {
     granted: result.granted,
     spAwarded: result.spAwarded,
     envelope: result.envelope,
+    missionEnvelopes: result.missionEnvelopes,
   });
 }

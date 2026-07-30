@@ -23,3 +23,18 @@ export function canDeliverSignalRewards(
     config.rewardRuntime.enabled
   );
 }
+
+export function canReadSignalProgressionUi(
+  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+): boolean {
+  return (
+    config.gamification.rewardBackboneEnabled &&
+    config.signalProgressUi.enabled
+  );
+}
+
+export function canReadSignalProgress(
+  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+): boolean {
+  return canReadSignalProgressionUi(config);
+}

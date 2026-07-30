@@ -10,6 +10,10 @@ import {
   parseRewardEnvelope,
   type RewardEnvelope,
 } from "@/lib/rewards/contracts";
+import { missionsCompletedByEvent } from "@/lib/signal-progression/missions";
+import { calculateSignalLevel } from "@/lib/signal-progression/levels";
+import type { SignalProfileContextInput } from "@/lib/signal-progression/profile-context";
+import { getSignalProgressHub } from "@/lib/signal-progression/read-model";
 
 export type AcceptSignalResult =
   | {
@@ -18,36 +22,46 @@ export type AcceptSignalResult =
       granted: boolean;
       envelope: RewardEnvelope | null;
       spAwarded: number;
+      missionEnvelopes: RewardEnvelope[];
     }
   | { ok: false; error: string; status: number };
 
 function normalizeEnvelope(raw: unknown): RewardEnvelope | null {
   if (!raw || typeof raw !== "object") return null;
   const record = raw as Record<string, unknown>;
-  // RPC returns timestamptz object/string — coerce createdAt
   const createdAt =
     typeof record.createdAt === "string"
       ? record.createdAt
       : new Date().toISOString();
+  const balance =
+    typeof record.resultingBalance === "number"
+      ? record.resultingBalance
+      : record.resultingBalance != null
+        ? Number(record.resultingBalance)
+        : undefined;
+  const levelLabel =
+    typeof record.levelLabel === "string"
+      ? record.levelLabel
+      : balance != null
+        ? calculateSignalLevel(balance).title
+        : undefined;
   const candidate = {
     ...record,
     createdAt: createdAt.includes("T")
       ? createdAt
       : new Date(createdAt).toISOString(),
     priority:
-      typeof record.priority === "number" ? record.priority : Number(record.priority ?? 0),
+      typeof record.priority === "number"
+        ? record.priority
+        : Number(record.priority ?? 0),
     displayDelta:
       typeof record.displayDelta === "number"
         ? record.displayDelta
         : record.displayDelta != null
           ? Number(record.displayDelta)
           : undefined,
-    resultingBalance:
-      typeof record.resultingBalance === "number"
-        ? record.resultingBalance
-        : record.resultingBalance != null
-          ? Number(record.resultingBalance)
-          : undefined,
+    resultingBalance: balance,
+    levelLabel,
   };
   const parsed = parseRewardEnvelope(candidate);
   return parsed.ok ? parsed.envelope : null;
@@ -66,11 +80,71 @@ export async function resolveAuthenticatedUserId(
   }
 }
 
+async function projectMissionsForEvent(
+  userId: string,
+  eventType: ValidatedSignalEvent["rule"]["eventType"],
+  sourceEventId: string | null,
+): Promise<RewardEnvelope[]> {
+  const missions = missionsCompletedByEvent(eventType);
+  if (missions.length === 0) return [];
+
+  const admin = createAdminSupabaseClient();
+  const envelopes: RewardEnvelope[] = [];
+
+  for (const mission of missions) {
+    const { data, error } = await admin.rpc("complete_signal_mission", {
+      p_user_id: userId,
+      p_mission_id: mission.id,
+      p_source_event_id: sourceEventId,
+      p_sp_delta: mission.rewardSp,
+      p_reward_tier: mission.rewardTier,
+      p_reason_code: mission.reasonCode,
+      p_title: mission.rewardTitle,
+      p_description: mission.rewardDescription,
+      p_announcement: mission.announcement,
+      p_priority: mission.priority,
+      p_rules_version: SIGNAL_RULES_VERSION,
+      p_daily_sp_cap: GLOBAL_DAILY_SP_CAP,
+      p_badge_id: mission.badgeId ?? null,
+    });
+    if (error || !data) continue;
+    const payload = data as { envelope?: unknown; granted?: boolean };
+    const envelope = normalizeEnvelope(payload.envelope ?? null);
+    if (envelope) envelopes.push(envelope);
+  }
+  return envelopes;
+}
+
+export async function isProfileContextComplete(
+  userId: string,
+): Promise<boolean> {
+  try {
+    const admin = createAdminSupabaseClient();
+    const { data, error } = await admin
+      .from("signal_user_context")
+      .select("completed_at")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (error || !data) return false;
+    return data.completed_at != null;
+  } catch {
+    return false;
+  }
+}
+
 export async function acceptSignalEngagement(
   userId: string,
   validated: ValidatedSignalEvent,
 ): Promise<AcceptSignalResult> {
   try {
+    // Server-side profile proof: client cannot claim completed:true
+    if (validated.rule.eventType === "profile_completed") {
+      const complete = await isProfileContextComplete(userId);
+      if (!complete) {
+        return { ok: false, error: "profile_incomplete", status: 400 };
+      }
+    }
+
     const admin = createAdminSupabaseClient();
     const { rule, input, context, dedupeKey } = validated;
 
@@ -101,15 +175,30 @@ export async function acceptSignalEngagement(
       granted?: boolean;
       envelope?: unknown;
       spAwarded?: number;
+      eventId?: string;
     };
 
     const envelope = normalizeEnvelope(payload?.envelope ?? null);
+    const status = payload?.status === "duplicate" ? "duplicate" : "accepted";
+    const eventId =
+      typeof payload?.eventId === "string" ? payload.eventId : null;
+
+    let missionEnvelopes: RewardEnvelope[] = [];
+    if (status === "accepted") {
+      missionEnvelopes = await projectMissionsForEvent(
+        userId,
+        rule.eventType,
+        eventId,
+      );
+    }
+
     return {
       ok: true,
-      status: payload?.status === "duplicate" ? "duplicate" : "accepted",
-      granted: Boolean(payload?.granted && envelope),
+      status,
+      granted: Boolean(payload?.granted && envelope) || missionEnvelopes.length > 0,
       envelope,
       spAwarded: Number(payload?.spAwarded ?? envelope?.displayDelta ?? 0),
+      missionEnvelopes,
     };
   } catch {
     return { ok: false, error: "service_unavailable", status: 503 };
@@ -126,9 +215,13 @@ export async function listPendingSignalEnvelopes(
       p_user_id: userId,
       p_limit: limit,
     });
-    if (error || !Array.isArray(data)) return [];
+    if (error || !Array.isArray(data)) {
+      // RPC may return jsonb array directly
+      if (error || data == null) return [];
+    }
+    const list = Array.isArray(data) ? data : [];
     const envelopes: RewardEnvelope[] = [];
-    for (const item of data) {
+    for (const item of list) {
       const envelope = normalizeEnvelope(item);
       if (envelope) envelopes.push(envelope);
     }
@@ -144,8 +237,6 @@ export async function acknowledgeSignalReward(
   status: "acknowledged" | "dismissed",
 ): Promise<{ ok: true } | { ok: false; error: string; status: number }> {
   try {
-    // Use user-scoped client via admin getUser then service update is wrong for acknowledge RPC
-    // acknowledge_signal_reward requires auth.uid() — call with user JWT
     const { createClient } = await import("@supabase/supabase-js");
     const { getSupabasePublicEnv } = await import("@/lib/supabase/env");
     const { url, anonKey } = getSupabasePublicEnv();
@@ -168,3 +259,51 @@ export async function acknowledgeSignalReward(
     return { ok: false, error: "service_unavailable", status: 503 };
   }
 }
+
+export async function upsertSignalProfileContext(
+  userId: string,
+  input: SignalProfileContextInput,
+): Promise<
+  | { ok: true; completed: boolean; envelopes: RewardEnvelope[] }
+  | { ok: false; error: string; status: number }
+> {
+  try {
+    const admin = createAdminSupabaseClient();
+    const { data, error } = await admin.rpc("upsert_signal_user_context", {
+      p_user_id: userId,
+      p_focus_area: input.focusArea,
+      p_primary_goal: input.primaryGoal,
+    });
+    if (error || !data) {
+      return { ok: false, error: "context_failed", status: 503 };
+    }
+    const payload = data as { completed?: boolean };
+    const envelopes: RewardEnvelope[] = [];
+    if (payload.completed) {
+      // Server issues profile_completed after verified fields exist
+      const { validateSignalEventPayload } = await import(
+        "@/lib/signal-progression/validate-event"
+      );
+      const validated = validateSignalEventPayload(
+        {
+          eventType: "profile_completed",
+          context: {},
+          clientIdempotencyKey: `profile-complete:${userId}`,
+        },
+        userId,
+      );
+      if (validated.ok) {
+        const result = await acceptSignalEngagement(userId, validated.value);
+        if (result.ok) {
+          if (result.envelope) envelopes.push(result.envelope);
+          envelopes.push(...result.missionEnvelopes);
+        }
+      }
+    }
+    return { ok: true, completed: Boolean(payload.completed), envelopes };
+  } catch {
+    return { ok: false, error: "service_unavailable", status: 503 };
+  }
+}
+
+export { getSignalProgressHub };
