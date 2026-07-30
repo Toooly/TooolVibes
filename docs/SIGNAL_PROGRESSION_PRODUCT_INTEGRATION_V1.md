@@ -115,3 +115,72 @@ Apply migration `20260730000002_signal_mission_projection.sql` to **local** Supa
 - No infinite retries; client idempotency set bounds duplicate posts
 
 Also see `docs/SIGNAL_PROGRESSION_MEANINGFUL_ACTIONS_V1.md` for the committed wiring map.
+
+---
+
+## Phase 5 Technical Closure — 30 July 2026
+
+### Final commit
+`64ed166` — `fix(signal): close Phase 5 integration defects`
+
+### Final test count
+- **Vitest suite**: 1099 passed, 0 failed, 22 skipped
+- **Test files**: 143 passed, 2 skipped (integration files requiring env vars)
+- **Signal-focused tests**: 82 passed (16 files)
+- **Reward runtime tests**: 21 passed (5 files)
+- **Gamification tests**: 30 passed (5 files)
+- **Account tests (incl. Axe)**: 91 passed (7 files)
+- **Core primitives Axe tests**: 22 passed, 0 accessibility violations
+
+### Local Supabase result
+- Supabase project: `tooolvibes-local` (explicitly local/disposable)
+- All migrations applied clean through `20260730000002_signal_mission_projection.sql`
+- Live integration tests: 14 passed (RLS, atomic writes, concurrency dedup, cross-user isolation, tool_unsaved=0 SP)
+- No production database access
+
+### Axe result
+- Core primitives: 0 critical, 0 serious violations
+- Account state matrix: 0 violations (axe-core on auth variant, warning/success tones)
+- Fixed: `id`/`htmlFor` on select elements, `aria-label` on mission cards, `aria-label` on preference toggle buttons
+
+### Responsive result
+- Breakpoint continuity verified: `sm:` variants present across all new components
+- No horizontal overflow or clipped UI in the built output
+- Mobile safe-area handled via existing layout shell conventions
+- All account panel components correctly marked `"use client"`
+
+### OpenNext result
+- Next.js production build: compiled successfully
+- OpenNext/Cloudflare build: worker saved, build complete
+
+### Bundle impact
+- First Load JS shared by all: 102 kB
+- New Signal API routes: `events` (226 B), `hub` (226 B), `pending` (226 B), `preferences` (226 B), `profile-context` (226 B), `acknowledge` (226 B)
+- Account route bundle: included in `/account` page with Signal Progress Hub component
+- No new chunk splits
+
+### Flags-off behaviour (verified)
+- `TOOOLVIBES_GAMIFICATION_ENABLED=false` → all Signal APIs return disabled/404
+- Core product pages (archivio, compare, radar, home) return 200
+- Guest and authenticated core actions work normally
+- No progression writes, no pending-reward polling, no mission UI
+- No reward presentation
+
+### Local flags-on flow (verified via integration + unit tests)
+1. Authenticated user save → `accept_signal_engagement` → event + grant + delivery atomically
+2. `tool_unsaved` → 0 SP (correct)
+3. RLS: user isolation verified (user A cannot read B's grants)
+4. Concurrency: 10 concurrent identical events → 1 DB row
+5. Acknowledge: user A acknowledges own reward; user B blocked
+6. Reward machine: envelope presentation, DISMISS non-replay, AUTH_LOST clears state
+7. Preference sync: remote wins on fetch, local write-through on toggle
+
+### Remaining Phase 6 scope
+- Achievements and badges (Tier 3 rewards)
+- Confetti and celebration UI
+- Leaderboard surface
+- Arena battle mode
+- Vibe Rush game mode
+- Hidden Signal discovery game
+- Production flag rollout
+- Production Supabase migration
