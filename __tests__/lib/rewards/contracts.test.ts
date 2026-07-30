@@ -29,7 +29,10 @@ describe("reward envelope contract", () => {
 
   it("classifies host tiers and expiry", () => {
     expect(isHostPresentableTier("micro")).toBe(true);
-    expect(isHostPresentableTier("milestone")).toBe(false);
+    expect(isHostPresentableTier("achievement")).toBe(true);
+    // Phase 6: milestone is host-presentable (Tier 3 full or static card).
+    expect(isHostPresentableTier("milestone")).toBe(true);
+    expect(isHostPresentableTier("interaction")).toBe(false);
     const expired = makeAchievementEnvelope({
       expiresAt: new Date(Date.now() - 1000).toISOString(),
     });

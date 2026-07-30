@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { createReleaseFeatureConfig } from "@/lib/config/release-features";
+import { releaseFeatures } from "@/lib/config/release-features";
 import {
   canReadSignalProgressionUi,
   canWriteSignalEvents,
@@ -20,7 +20,7 @@ import { assertNoClientRewardFields } from "@/lib/signal-progression/contracts";
 export const dynamic = "force-dynamic";
 
 export async function PUT(request: Request) {
-  const config = createReleaseFeatureConfig();
+  const config = releaseFeatures;
   // Require progression UI or event writes so profile context stays gated
   if (!canReadSignalProgressionUi(config) && !canWriteSignalEvents(config)) {
     return NextResponse.json({ error: "disabled" }, { status: 404 });

@@ -121,16 +121,25 @@ async function projectMissionsForEvent(
 async function evaluateAchievementsForUser(
   userId: string,
 ): Promise<RewardEnvelope[]> {
+  if (!canEvaluateSignalAchievements()) return [];
+  const admin = createAdminSupabaseClient();
   try {
-    if (!canEvaluateSignalAchievements()) return [];
-    const admin = createAdminSupabaseClient();
     const { data, error } = await admin.rpc("evaluate_signal_achievements", {
       p_user_id: userId,
       p_daily_sp_cap: GLOBAL_DAILY_SP_CAP,
       p_rules_version: SIGNAL_ACHIEVEMENTS_RULES_VERSION,
     });
-    if (error || !data || typeof data !== "object") return [];
-    const raw = (data as { envelopes?: unknown }).envelopes;
+    if (error) {
+      console.warn("[signal-achievements] evaluate failed", {
+        operation: "evaluate_signal_achievements",
+        code: error.code,
+        message: error.message,
+      });
+      return [];
+    }
+    if (!data || typeof data !== "object") return [];
+    const obj = data as { envelopes?: unknown };
+    const raw = obj.envelopes;
     if (!Array.isArray(raw)) return [];
     const envelopes: RewardEnvelope[] = [];
     for (const item of raw) {
@@ -138,8 +147,12 @@ async function evaluateAchievementsForUser(
       if (envelope) envelopes.push(envelope);
     }
     return envelopes;
-  } catch {
-    // Achievement evaluation must never break the primary product action.
+  } catch (error) {
+    console.warn("[signal-achievements] evaluate threw", {
+      operation: "evaluate_signal_achievements",
+      code: error instanceof Error ? error.name : "unknown",
+      message: error instanceof Error ? error.message : String(error),
+    });
     return [];
   }
 }

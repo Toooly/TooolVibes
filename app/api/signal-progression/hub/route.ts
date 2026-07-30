@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { createReleaseFeatureConfig } from "@/lib/config/release-features";
+import { releaseFeatures } from "@/lib/config/release-features";
 import { canReadSignalProgressionUi } from "@/lib/signal-progression/flags";
 import { readBearerToken } from "@/lib/signal-progression/http";
 import {
@@ -11,7 +11,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const config = createReleaseFeatureConfig();
+  const config = releaseFeatures;
   if (!canReadSignalProgressionUi(config)) {
     return NextResponse.json({ error: "disabled" }, { status: 404 });
   }

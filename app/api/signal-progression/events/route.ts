@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { createReleaseFeatureConfig } from "@/lib/config/release-features";
+import { releaseFeatures } from "@/lib/config/release-features";
 import { canWriteSignalEvents } from "@/lib/signal-progression/flags";
 import {
   MAX_SIGNAL_BODY_BYTES,
@@ -21,7 +21,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const config = createReleaseFeatureConfig();
+  const config = releaseFeatures;
   if (!canWriteSignalEvents(config)) {
     return NextResponse.json({ error: "disabled" }, { status: 404 });
   }

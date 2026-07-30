@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { createReleaseFeatureConfig } from "@/lib/config/release-features";
+import { releaseFeatures } from "@/lib/config/release-features";
 import { canReadSignalProgressionUi } from "@/lib/signal-progression/flags";
 import {
   MAX_SIGNAL_BODY_BYTES,
@@ -26,7 +26,7 @@ const prefsSchema = z
   .strict();
 
 export async function GET(request: Request) {
-  const config = createReleaseFeatureConfig();
+  const config = releaseFeatures;
   if (!canReadSignalProgressionUi(config)) {
     return NextResponse.json({ error: "disabled" }, { status: 404 });
   }
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const config = createReleaseFeatureConfig();
+  const config = releaseFeatures;
   if (!canReadSignalProgressionUi(config)) {
     return NextResponse.json({ error: "disabled" }, { status: 404 });
   }

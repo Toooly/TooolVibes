@@ -1,12 +1,12 @@
 import "server-only";
 
 import {
-  createReleaseFeatureConfig,
+  releaseFeatures,
   type ReleaseFeatureConfig,
 } from "@/lib/config/release-features";
 
 export function canWriteSignalEvents(
-  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+  config: ReleaseFeatureConfig = releaseFeatures,
 ): boolean {
   return (
     config.gamification.rewardBackboneEnabled &&
@@ -15,7 +15,7 @@ export function canWriteSignalEvents(
 }
 
 export function canDeliverSignalRewards(
-  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+  config: ReleaseFeatureConfig = releaseFeatures,
 ): boolean {
   return (
     config.gamification.rewardBackboneEnabled &&
@@ -25,7 +25,7 @@ export function canDeliverSignalRewards(
 }
 
 export function canReadSignalProgressionUi(
-  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+  config: ReleaseFeatureConfig = releaseFeatures,
 ): boolean {
   return (
     config.gamification.rewardBackboneEnabled &&
@@ -34,13 +34,13 @@ export function canReadSignalProgressionUi(
 }
 
 export function canReadSignalProgress(
-  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+  config: ReleaseFeatureConfig = releaseFeatures,
 ): boolean {
   return canReadSignalProgressionUi(config);
 }
 
 export function canEvaluateSignalAchievements(
-  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+  config: ReleaseFeatureConfig = releaseFeatures,
 ): boolean {
   return (
     config.gamification.rewardBackboneEnabled &&
@@ -49,7 +49,7 @@ export function canEvaluateSignalAchievements(
 }
 
 export function canReadSignalBadgeCabinet(
-  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+  config: ReleaseFeatureConfig = releaseFeatures,
 ): boolean {
   return (
     config.gamification.rewardBackboneEnabled &&
@@ -59,7 +59,7 @@ export function canReadSignalBadgeCabinet(
 }
 
 export function canPresentRewardMilestones(
-  config: ReleaseFeatureConfig = createReleaseFeatureConfig(),
+  config: ReleaseFeatureConfig = releaseFeatures,
 ): boolean {
   return (
     config.gamification.rewardBackboneEnabled &&

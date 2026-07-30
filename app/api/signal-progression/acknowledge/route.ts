@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { createReleaseFeatureConfig } from "@/lib/config/release-features";
+import { releaseFeatures } from "@/lib/config/release-features";
 import { canDeliverSignalRewards } from "@/lib/signal-progression/flags";
 import { signalAcknowledgeSchema } from "@/lib/signal-progression/contracts";
 import {
@@ -17,7 +17,7 @@ import { assertNoClientRewardFields } from "@/lib/signal-progression/contracts";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const config = createReleaseFeatureConfig();
+  const config = releaseFeatures;
   if (!canDeliverSignalRewards(config)) {
     return NextResponse.json({ error: "disabled" }, { status: 404 });
   }
