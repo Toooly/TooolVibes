@@ -153,7 +153,7 @@ export function AccountSignalProgressSection() {
                   </p>
                 </div>
                 <span
-                  className="shrink-0 text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
+                  className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em]"
                   style={{ color: "var(--muted-strong)" }}
                 >
                   {mission.status === "completed"
@@ -163,7 +163,7 @@ export function AccountSignalProgressSection() {
                       : "Prossima"}
                 </span>
               </div>
-              <p className="mt-2 text-[0.7rem]" style={{ color: "var(--muted)" }}>
+              <p className="mt-2 text-xs" style={{ color: "var(--muted)" }}>
                 +{mission.rewardSp} SP
               </p>
             </div>
