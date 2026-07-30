@@ -52,3 +52,30 @@ export function makeAchievementEnvelope(
     badgeId: overrides.badgeId ?? "first_verdict",
   };
 }
+
+export function makeMilestoneEnvelope(
+  overrides: Partial<RewardEnvelope> = {},
+): RewardEnvelope {
+  return {
+    grantId: overrides.grantId ?? "grant_mst_test_0001",
+    eventId: overrides.eventId ?? "evt_test_mst_1",
+    tier: "milestone",
+    code: overrides.code ?? "level_advanced",
+    title: overrides.title ?? "Nuovo livello: Stratega",
+    description:
+      overrides.description ??
+      "Le tue decisioni poggiano su confronti ripetuti e strutturati.",
+    displayDelta: overrides.displayDelta ?? 0,
+    resultingBalance: overrides.resultingBalance ?? 900,
+    levelLabel: overrides.levelLabel ?? "Stratega",
+    createdAt: overrides.createdAt ?? new Date().toISOString(),
+    priority: overrides.priority ?? 92,
+    expiresAt: overrides.expiresAt,
+    accessibilityAnnouncement:
+      overrides.accessibilityAnnouncement ??
+      "Hai raggiunto il livello Stratega.",
+    rulesVersion: overrides.rulesVersion ?? "signal-achievements-v1",
+    iconId: overrides.iconId,
+    badgeId: overrides.badgeId,
+  };
+}

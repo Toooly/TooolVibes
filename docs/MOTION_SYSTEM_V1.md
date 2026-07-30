@@ -198,3 +198,18 @@ Not used in Phase 2. Signature moments use Motion + CSS tokens.
 Client reward presentation lives under `lib/rewards/*` and `components/rewards/*`.
 See `docs/REWARD_RUNTIME_V1.md`. Motion presets remain the only animation source for reward UI.
 Do not use confetti/GSAP/NumberFlow in the dormant host path.
+
+### Tier 3 milestone motion (Phase 6)
+
+Owners, in order: CSS tokens for state feedback; Motion for dialog
+presence; NumberFlow for trusted server balances; `canvas-confetti` only
+for a valid Tier 3 milestone (dynamic import, dialog-local canvas,
+`disableForReducedMotion: true`, two waves ending within ≈1.2s, import
+failure degrades to the static card); XState for the presentation
+lifecycle (full vs static). GSAP is not used for rewards.
+
+Tier 3 never runs under reduced motion, quiet mode, suppressed
+celebrations, hidden document or spent daily cap (1/day) — the machine
+selects the restrained static card instead. The dialog itself is the
+complete accessible alternative. See
+`docs/SIGNAL_ACHIEVEMENTS_AND_REWARDS_V1.md`.

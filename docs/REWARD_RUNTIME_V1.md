@@ -29,7 +29,13 @@ Malformed envelopes are rejected without crashing.
 | `interaction` | Not hosted (Tier 0 product motion only) |
 | `micro` | Non-modal toast ≤1.8s |
 | `achievement` | Controlled dialog, Escape/dismiss |
-| `milestone` | Reserved (Tier 3) — not presented |
+| `milestone` | Tier 3 (Phase 6): coordinated milestone dialog with dialog-local confetti ≤~1.2s, NumberFlow, optional sound — or a restrained static card when suppressed |
+
+Tier 3 selection rules (Phase 6, machine-enforced): milestones flag ON,
+daily automatic cap available (1/day), no reduced motion, no quiet mode,
+major celebrations not suppressed, document visible. Otherwise the same
+envelope renders as a static `achievement`-style card and stays visible in
+Account history. Details in `SIGNAL_ACHIEVEMENTS_AND_REWARDS_V1.md`.
 
 ## Machine states
 
@@ -46,7 +52,7 @@ Owned by XState (`lib/rewards/machine.ts`).
 - Priority desc, then older first
 - Session settled set prevents replay
 - Expired discarded
-- Caps: micro 10/hour, achievement 5/day automatic
+- Caps: micro 10/hour, achievement 5/day automatic, milestone 1/day automatic (static fallback never consumes the cap)
 
 ## Preferences (local only)
 
@@ -56,6 +62,7 @@ Key: `tv.reward-prefs.v1`
 - `muteRewardSounds`
 - `suppressAutomaticAchievements`
 - `quietMode`
+- `suppressMajorCelebrations` (Phase 6 — forces static milestone cards)
 
 No progression data. SSR-safe defaults. Schema-validated.
 

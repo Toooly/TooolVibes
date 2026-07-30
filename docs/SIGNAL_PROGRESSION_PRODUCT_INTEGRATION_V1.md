@@ -175,12 +175,18 @@ Also see `docs/SIGNAL_PROGRESSION_MEANINGFUL_ACTIONS_V1.md` for the committed wi
 6. Reward machine: envelope presentation, DISMISS non-replay, AUTH_LOST clears state
 7. Preference sync: remote wins on fetch, local write-through on toggle
 
-### Remaining Phase 6 scope
-- Achievements and badges (Tier 3 rewards)
-- Confetti and celebration UI
+### Phase 6 closure (2026-07-30, local)
+
+Achievements, badges, the Account badge cabinet and Tier 1–3 milestone
+presentations are implemented and verified locally — canonical reference:
+`docs/SIGNAL_ACHIEVEMENTS_AND_REWARDS_V1.md`. Production flags remain OFF;
+production migrations are not applied; no deployment occurred.
+
+### Remaining Phase 7 scope
 - Leaderboard surface
 - Arena battle mode
 - Vibe Rush game mode
 - Hidden Signal discovery game
+- `deep_read` achievement (deferred: no trustworthy server evidence)
 - Production flag rollout
 - Production Supabase migration

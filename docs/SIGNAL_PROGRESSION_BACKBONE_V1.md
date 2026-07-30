@@ -85,6 +85,26 @@ TOOOLVIBES_REWARD_DELIVERY_ENABLED=0
 
 No data deletion needed. Tables remain but are not written to.
 
+## Phase 6 additive changes (20260730000003_signal_achievements_v1.sql)
+
+- `badges` extended (additive): `family` (`legacy` | `signal_v1`), `rarity`
+  (`common` | `uncommon` | `rare`), `a11y_description`, `visual_intensity`,
+  `sort_order`; nine V1 definitions seeded; legacy rows untouched.
+- Table-level grants repaired on the reused legacy structures: `badges`
+  SELECT → anon/authenticated; `user_badges` SELECT → authenticated (RLS
+  still allows own rows only, INSERT still `WITH CHECK (false)`); full DML
+  → service_role on both; `game_profiles` DML → service_role.
+- New RPCs (SECURITY DEFINER, service_role only):
+  `award_signal_badge` (once-only ownership + optional grant envelope),
+  `evaluate_signal_achievements` (authoritative eligibility projection +
+  once-only level advancement, zero SP per level).
+- `get_signal_progress_hub` replaced additively: earned badge objects,
+  `achievementProgress` counters, `suppressMajorCelebrations` preference.
+- `upsert_signal_reward_preferences` replaced with a five-parameter
+  signature (four-parameter form dropped in the same migration).
+- Ownership model: `user_badges` + unique constraints; details in
+  `docs/SIGNAL_ACHIEVEMENTS_AND_REWARDS_V1.md`.
+
 ## Phase 5 additive tables
 
 - `signal_mission_completions` — once-only mission completion
