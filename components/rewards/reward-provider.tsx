@@ -21,11 +21,13 @@ import {
   writeRewardPreferences,
 } from "@/lib/rewards/preferences";
 import type { RewardEnvelope } from "@/lib/rewards/contracts";
+import type { RewardPresentationMode } from "@/lib/rewards/machine";
 
 type RewardRuntimeContextValue = {
   runtimeEnabled: boolean;
   preferences: RewardPreferences;
   active: RewardEnvelope | null;
+  activePresentation: RewardPresentationMode;
   queueLength: number;
   preferReducedMotion: boolean;
   machineState: string;
@@ -45,6 +47,7 @@ const dormantValue: RewardRuntimeContextValue = {
   runtimeEnabled: false,
   preferences: DEFAULT_REWARD_PREFERENCES,
   active: null,
+  activePresentation: "full",
   queueLength: 0,
   preferReducedMotion: false,
   machineState: "idle",
@@ -58,9 +61,11 @@ const dormantValue: RewardRuntimeContextValue = {
 export function RewardRuntimeProvider({
   children,
   runtimeEnabled = false,
+  milestonesEnabled = false,
 }: {
   children: ReactNode;
   runtimeEnabled?: boolean;
+  milestonesEnabled?: boolean;
 }) {
   const [state, send] = useMachine(rewardPresentationMachine);
   const pathname = usePathname();
@@ -71,6 +76,10 @@ export function RewardRuntimeProvider({
   useEffect(() => {
     send({ type: "RUNTIME_ENABLED", enabled: runtimeEnabled });
   }, [runtimeEnabled, send]);
+
+  useEffect(() => {
+    send({ type: "MILESTONES_ENABLED", enabled: milestonesEnabled });
+  }, [milestonesEnabled, send]);
 
   useEffect(() => {
     if (!prefsHydrated.current) {
@@ -131,6 +140,7 @@ export function RewardRuntimeProvider({
       runtimeEnabled,
       preferences: state.context.preferences,
       active: state.context.active,
+      activePresentation: state.context.activePresentation,
       queueLength: state.context.queue.items.length,
       preferReducedMotion: state.context.preferReducedMotion,
       machineState: String(state.value),
@@ -144,6 +154,7 @@ export function RewardRuntimeProvider({
       runtimeEnabled,
       state.context.preferences,
       state.context.active,
+      state.context.activePresentation,
       state.context.queue.items.length,
       state.context.preferReducedMotion,
       state.value,

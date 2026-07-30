@@ -329,6 +329,34 @@
   cursor: pointer;
 }
 
+.tv-reward-milestone-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.tv-reward-milestone-canvas {
+  position: absolute;
+  inset: -6rem -4rem;
+  width: calc(100% + 8rem);
+  height: calc(100% + 12rem);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tv-reward-milestone {
+  border-color: color-mix(in srgb, var(--tv-accent-gold) 45%, transparent);
+}
+
+.tv-reward-milestone__level {
+  color: var(--tv-accent-violet-on-dark);
+  font-size: var(--tv-text-sm);
+}
+
+.tv-reward-milestone__delta-unit {
+  font-size: var(--tv-text-xs);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tv-reward-micro,
   .tv-reward-ach {

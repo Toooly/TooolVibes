@@ -19,6 +19,16 @@ const AchievementReveal = dynamic(
   { ssr: false },
 );
 
+// Tier 3 module (and its confetti chunk) loads only for a valid full
+// milestone presentation — never when flags are OFF.
+const MilestoneReveal = dynamic(
+  () =>
+    import("@/components/rewards/milestone-reveal").then(
+      (m) => m.MilestoneReveal,
+    ),
+  { ssr: false },
+);
+
 /**
  * Single app-level host. Inert when flag OFF or no active envelope.
  * Lazy-loads presentation modules only when needed.
@@ -27,6 +37,7 @@ export function RewardHost() {
   const {
     runtimeEnabled,
     active,
+    activePresentation,
     preferences,
     preferReducedMotion,
     dismissActive,
@@ -62,6 +73,25 @@ export function RewardHost() {
           <AchievementReveal
             key={active.grantId}
             envelope={active}
+            preferReducedMotion={reduced}
+            quietMode={quiet}
+            onDismiss={dismissActive}
+          />
+        ) : null}
+        {active?.tier === "milestone" && activePresentation === "full" ? (
+          <MilestoneReveal
+            key={active.grantId}
+            envelope={active}
+            quietMode={quiet}
+            muteRewardSounds={preferences.muteRewardSounds}
+            onDismiss={dismissActive}
+          />
+        ) : null}
+        {active?.tier === "milestone" && activePresentation === "static" ? (
+          <AchievementReveal
+            key={active.grantId}
+            envelope={active}
+            eyebrow="Traguardo"
             preferReducedMotion={reduced}
             quietMode={quiet}
             onDismiss={dismissActive}

@@ -4,6 +4,8 @@ import type { HostRewardTier } from "@/lib/rewards/contracts";
 export const REWARD_PRESENTATION_CAPS = {
   microPerHour: 10,
   achievementPerDay: 5,
+  /** Tier 3 stays rare: at most one automatic milestone presentation/day. */
+  milestonePerDay: 1,
   maxQueue: 12,
 } as const;
 
@@ -37,6 +39,12 @@ export function canPresentTier(
     return count < REWARD_PRESENTATION_CAPS.microPerHour;
   }
   const dayAgo = nowMs - 24 * 60 * 60 * 1000;
+  if (tier === "milestone") {
+    const count = pruned.filter(
+      (e) => e.tier === "milestone" && e.presentedAtMs >= dayAgo,
+    ).length;
+    return count < REWARD_PRESENTATION_CAPS.milestonePerDay;
+  }
   const count = pruned.filter(
     (e) => e.tier === "achievement" && e.presentedAtMs >= dayAgo,
   ).length;

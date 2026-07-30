@@ -10,7 +10,11 @@ export const REWARD_TIERS = [
 
 export type RewardTier = (typeof REWARD_TIERS)[number];
 
-export const rewardTierPresentedByHost = ["micro", "achievement"] as const;
+export const rewardTierPresentedByHost = [
+  "micro",
+  "achievement",
+  "milestone",
+] as const;
 export type HostRewardTier = (typeof rewardTierPresentedByHost)[number];
 
 /**
@@ -62,7 +66,7 @@ export function parseRewardEnvelope(input: unknown): RewardEnvelopeParseResult {
 export function isHostPresentableTier(
   tier: RewardTier,
 ): tier is HostRewardTier {
-  return tier === "micro" || tier === "achievement";
+  return tier === "micro" || tier === "achievement" || tier === "milestone";
 }
 
 export function isEnvelopeExpired(

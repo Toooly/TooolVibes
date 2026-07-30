@@ -12,6 +12,8 @@ type AchievementRevealProps = {
   preferReducedMotion: boolean;
   quietMode: boolean;
   onDismiss: () => void;
+  /** Eyebrow label: "Achievement" by default, "Traguardo" for static milestones. */
+  eyebrow?: string;
 };
 
 export function AchievementReveal({
@@ -19,6 +21,7 @@ export function AchievementReveal({
   preferReducedMotion,
   quietMode,
   onDismiss,
+  eyebrow = "Achievement",
 }: AchievementRevealProps) {
   const titleId = useId();
   const descId = useId();
@@ -73,7 +76,7 @@ export function AchievementReveal({
           ease: [...MOTION_EASING.decelerate] as [number, number, number, number],
         }}
       >
-        <p className="tv-reward-ach__eyebrow">Achievement</p>
+        <p className="tv-reward-ach__eyebrow">{eyebrow}</p>
         <h2 id={titleId} className="tv-reward-ach__title">
           {envelope.title}
         </h2>
@@ -83,8 +86,11 @@ export function AchievementReveal({
         {envelope.levelLabel ? (
           <p className="tv-reward-ach__level">{envelope.levelLabel}</p>
         ) : null}
-        {typeof envelope.displayDelta === "number" ? (
+        {typeof envelope.displayDelta === "number" && envelope.displayDelta > 0 ? (
           <p className="tv-reward-ach__delta">+{envelope.displayDelta}</p>
+        ) : null}
+        {envelope.badgeId ? (
+          <p className="tv-reward-ach__level">Segno aggiunto al cabinet</p>
         ) : null}
         <button
           ref={closeRef}

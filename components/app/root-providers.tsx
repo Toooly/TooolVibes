@@ -32,6 +32,7 @@ export function RootProviders({
   enableGamificationEffects = true,
   enableThreeD = false,
   enableRewardRuntime = false,
+  enableRewardMilestones = false,
   gamificationModes,
   toolCatalog,
 }: {
@@ -41,6 +42,7 @@ export function RootProviders({
   enableGamificationEffects?: boolean;
   enableThreeD?: boolean;
   enableRewardRuntime?: boolean;
+  enableRewardMilestones?: boolean;
   gamificationModes: GamificationClientModes;
   toolCatalog: PublicToolCatalogItem[];
 }) {
@@ -66,7 +68,10 @@ export function RootProviders({
         <QueryClientProvider client={queryClient}>
           <OverlayProvider>
             <TooltipProvider delay={180}>
-              <RewardRuntimeProvider runtimeEnabled={enableRewardRuntime}>
+              <RewardRuntimeProvider
+                runtimeEnabled={enableRewardRuntime}
+                milestonesEnabled={enableRewardMilestones}
+              >
               {children}
               {enableExperience && (
                 <>

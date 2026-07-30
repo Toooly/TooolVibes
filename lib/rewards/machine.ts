@@ -21,18 +21,24 @@ import {
 } from "@/lib/rewards/preferences";
 import { isHostPresentableTier } from "@/lib/rewards/contracts";
 
+export type RewardPresentationMode = "full" | "static";
+
 export type RewardMachineContext = {
   queue: RewardQueueState;
   active: RewardEnvelope | null;
+  /** `full` = tier-native presentation; `static` = restrained static card. */
+  activePresentation: RewardPresentationMode;
   presentationLog: PresentationLogEntry[];
   preferences: RewardPreferences;
   preferReducedMotion: boolean;
   runtimeEnabled: boolean;
+  milestonesEnabled: boolean;
   lastError: string | null;
 };
 
 export type RewardMachineEvent =
   | { type: "RUNTIME_ENABLED"; enabled: boolean }
+  | { type: "MILESTONES_ENABLED"; enabled: boolean }
   | { type: "ENQUEUE"; envelope: unknown }
   | { type: "PRESENTATION_COMPLETE" }
   | { type: "DISMISS" }
@@ -75,6 +81,34 @@ function tryActivate(
       continue;
     }
 
+    if (next.tier === "milestone") {
+      // Tier 3 never blocks the queue: when the daily automatic cap is spent
+      // or any suppression applies, the milestone is shown as a restrained
+      // static card (and stays visible in Account history).
+      const suppressed =
+        !context.milestonesEnabled ||
+        context.preferReducedMotion ||
+        context.preferences.quietMode ||
+        context.preferences.suppressMajorCelebrations ||
+        (typeof document !== "undefined" && document.hidden);
+      const eligible = canPresentTier("milestone", log, nowMs);
+      const full = eligible && !suppressed;
+      if (full) {
+        log = recordPresentation(log, {
+          grantId: next.grantId,
+          tier: next.tier,
+          presentedAtMs: nowMs,
+        });
+      }
+      return {
+        queue: dequeueReward(queue, next.grantId),
+        active: next,
+        activePresentation: full ? "full" : "static",
+        presentationLog: log,
+        lastError: null,
+      };
+    }
+
     if (!canPresentTier(next.tier, log, nowMs)) {
       // Cap hit — leave in queue for later; stop activating
       break;
@@ -89,6 +123,7 @@ function tryActivate(
     return {
       queue: dequeueReward(queue, next.grantId),
       active: next,
+      activePresentation: "full" as const,
       presentationLog: log,
       lastError: null,
     };
@@ -102,10 +137,12 @@ const REWARD_GUARD = 20;
 const initialContext: RewardMachineContext = {
   queue: EMPTY_REWARD_QUEUE,
   active: null,
+  activePresentation: "full",
   presentationLog: [],
   preferences: DEFAULT_REWARD_PREFERENCES,
   preferReducedMotion: false,
   runtimeEnabled: false,
+  milestonesEnabled: false,
   lastError: null,
 };
 
@@ -122,6 +159,9 @@ export const rewardPresentationMachine = setup({
     RUNTIME_ENABLED: {
       actions: assign(({ event }) => ({ runtimeEnabled: event.enabled })),
     },
+    MILESTONES_ENABLED: {
+      actions: assign(({ event }) => ({ milestonesEnabled: event.enabled })),
+    },
     PREFERENCES_CHANGED: {
       actions: assign(({ event }) => ({ preferences: event.preferences })),
     },
@@ -135,6 +175,7 @@ export const rewardPresentationMachine = setup({
       actions: assign(() => ({
         queue: clearAllRewardSession(),
         active: null,
+        activePresentation: "full" as const,
         presentationLog: [],
         lastError: null,
       })),
