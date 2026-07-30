@@ -142,6 +142,7 @@ export function AccountSignalProgressSection() {
               className="rounded-[18px] border px-4 py-3"
               style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.66)" }}
               data-status={mission.status}
+              aria-label={`${mission.title} — ${mission.status === "completed" ? "Fatto" : mission.status === "current" ? "Attiva" : "Prossima"}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -173,9 +174,10 @@ export function AccountSignalProgressSection() {
 
       <div className="mt-6 grid gap-3">
         <p className="account-label">Contesto profilo</p>
-        <label className="grid gap-1 text-sm">
+        <label className="grid gap-1 text-sm" htmlFor="signal-focus-select">
           <span>Focus</span>
           <select
+            id="signal-focus-select"
             value={focusArea}
             onChange={(e) => setFocusArea(e.target.value as SignalFocusArea)}
             className="rounded-[14px] border px-3 py-2"
@@ -188,9 +190,10 @@ export function AccountSignalProgressSection() {
             ))}
           </select>
         </label>
-        <label className="grid gap-1 text-sm">
+        <label className="grid gap-1 text-sm" htmlFor="signal-goal-select">
           <span>Obiettivo</span>
           <select
+            id="signal-goal-select"
             value={primaryGoal}
             onChange={(e) => setPrimaryGoal(e.target.value as SignalPrimaryGoal)}
             className="rounded-[14px] border px-3 py-2"

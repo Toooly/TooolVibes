@@ -144,6 +144,7 @@ export function AccountPreferencesSection({
               className="flex items-center justify-between gap-3 rounded-[18px] border px-4 py-3 text-left"
               style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.66)" }}
               aria-pressed={prefs[key]}
+              aria-label={`${label}, attualmente ${prefs[key] ? "On" : "Off"}`}
             >
               <span className="text-sm font-semibold text-[var(--account-ink)]">{label}</span>
               <span
