@@ -84,3 +84,11 @@ TOOOLVIBES_REWARD_DELIVERY_ENABLED=0
 ```
 
 No data deletion needed. Tables remain but are not written to.
+
+## Phase 5 additive tables
+
+- `signal_mission_completions` — once-only mission completion
+- `signal_user_context` — minimal focus/goal profile context
+- RPCs: `complete_signal_mission`, `get_signal_progress_hub`, `upsert_signal_user_context`, `upsert_signal_reward_preferences`, `calculate_signal_level`
+
+See `docs/SIGNAL_PROGRESSION_PRODUCT_INTEGRATION_V1.md`.

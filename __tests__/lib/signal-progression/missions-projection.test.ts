@@ -1,3 +1,6 @@
+import { vi } from "vitest";
+vi.mock("server-only", () => ({}));
+
 import { describe, expect, it } from "vitest";
 import {
   missionsCompletedByEvent,
@@ -18,17 +21,16 @@ describe("signal mission projection", () => {
   });
 
   it("projects completed/active/locked from events", () => {
-    const views = projectSignalMissions([
-      { event_type: "tool_saved_first_time" },
-    ]);
-    expect(views[0].status).toBe("completed");
-    expect(views[1].status).toBe("active");
-    expect(views[2].status).toBe("locked");
+    const rows = [
+      { event_type: "tool_saved_first_time", context: { slug: "a" } },
+    ];
+    const projected = projectSignalMissions(rows);
+    expect(projected[0]?.status).toBe("completed");
+    expect(projected[1]?.status).toBe("active");
+    expect(projected.slice(2).every((m) => m.status === "locked")).toBe(true);
   });
 
-  it("maps completing events", () => {
-    expect(missionsCompletedByEvent("comparison_completed")[0]?.id).toBe(
-      "complete_first_comparison",
-    );
+  it("maps engagement events to missions", () => {
+    expect(missionsCompletedByEvent("radar_returned")[0]?.id).toBe("return_to_radar");
   });
 });

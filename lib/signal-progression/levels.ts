@@ -66,3 +66,25 @@ export function signalLevelTitle(level: number): string {
     SIGNAL_LEVEL_THRESHOLDS[0].title
   );
 }
+
+export type SignalLevelV1Computed = {
+  level: number;
+  title: string;
+  sp: number;
+  spForCurrent: number;
+  spForNext: number | null;
+  progressPercent: number;
+};
+
+export function computeSignalLevelV1(sp: number): SignalLevelV1Computed {
+  const info = calculateSignalLevel(sp);
+  return {
+    level: info.level,
+    title: info.title,
+    sp: info.balance,
+    spForCurrent: info.currentFloor,
+    spForNext: info.nextThreshold,
+    progressPercent: Math.round(info.progressInLevel * 100),
+  };
+}
+

@@ -153,13 +153,6 @@ export function emitToolSaved(slug: string, isFirstSave: boolean): void {
       eventType: "tool_saved_first_time",
       context: { slug },
       clientIdempotencyKey: `save_first:${slug}`,
-    }).then((first) => {
-      if (first.ok && first.status === "accepted") return;
-      void emitEvent({
-        eventType: "tool_saved",
-        context: { slug },
-        clientIdempotencyKey: `save:${slug}`,
-      });
     });
     return;
   }
