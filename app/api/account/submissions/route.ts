@@ -2,26 +2,22 @@ import { NextResponse } from "next/server";
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
 import { getSupabaseAdminEnv } from "@/lib/supabase/env";
-import { toolRequestSelect } from "@/lib/supabase/suggestion-repository";
+
+/** Production-safe projection: only columns present on live tool_requests. */
+const toolRequestSelect = `
+  id,
+  tool_name,
+  tool_url,
+  status,
+  created_at
+`;
 
 const affiliateRequestSelect = `
   id,
-  first_name,
-  last_name,
-  email,
   brand_name,
-  website_url,
-  audience,
-  channels,
-  message,
   status,
-  admin_notes,
-  referral_code,
   referral_url,
-  approved_at,
-  rejected_at,
-  created_at,
-  updated_at
+  created_at
 `;
 
 function isAdminSupabaseReady() {
@@ -38,6 +34,18 @@ function readBearerToken(request: Request) {
   }
 
   return token;
+}
+
+function isMissingRelationError(error: { code?: string; message?: string } | null) {
+  if (!error) return false;
+  const code = error.code ?? "";
+  const message = (error.message ?? "").toLowerCase();
+  return (
+    code === "42P01" ||
+    code === "PGRST205" ||
+    message.includes("does not exist") ||
+    message.includes("could not find the table")
+  );
 }
 
 export async function GET(request: Request) {
@@ -80,7 +88,16 @@ export async function GET(request: Request) {
       .order("created_at", { ascending: false }),
   ]);
 
-  if (toolRequestsResult.error || affiliateRequestsResult.error) {
+  if (toolRequestsResult.error) {
+    return NextResponse.json(
+      { message: "Non e' stato possibile caricare le submission." },
+      { status: 500 },
+    );
+  }
+
+  // affiliate_requests is optional on Free-plan production shape.
+  const affiliateMissing = isMissingRelationError(affiliateRequestsResult.error);
+  if (affiliateRequestsResult.error && !affiliateMissing) {
     return NextResponse.json(
       { message: "Non e' stato possibile caricare le submission." },
       { status: 500 },
@@ -89,7 +106,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     toolRequests: toolRequestsResult.data ?? [],
-    affiliateRequests: affiliateRequestsResult.data ?? [],
+    affiliateRequests: affiliateMissing ? [] : affiliateRequestsResult.data ?? [],
     remoteAvailable: true,
   });
 }
