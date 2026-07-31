@@ -131,6 +131,22 @@ function sanitizeErrorMessage(message: string | undefined) {
     .slice(0, 240);
 }
 
+
+function authDebugEnabled() {
+  const raw = clean(process.env.TOOOLVIBES_AUTH_DEBUG)?.toLowerCase();
+  return raw === "1" || raw === "true" || raw === "yes" || raw === "on";
+}
+
+function safeDebugFields(fields: Record<string, string | number | boolean | undefined | null>) {
+  if (!authDebugEnabled()) return undefined;
+  const out: Record<string, string | number | boolean | null> = {};
+  for (const [key, value] of Object.entries(fields)) {
+    if (value === undefined) continue;
+    out[key] = value;
+  }
+  return out;
+}
+
 function getErrorMessage(error: unknown) {
   const candidate = error as { message?: string; code?: string | number; status?: number };
   const detail = `${candidate?.code ?? ""} ${candidate?.message ?? ""}`.toLowerCase();
@@ -164,31 +180,112 @@ function logMagicLinkFailure(
   console.error("[auth.magic-link] generateLink failed", safe);
 }
 
+type GenerateLinkResult = {
+  data: {
+    properties: { hashed_token?: string } | null;
+    user?: unknown;
+  };
+  error: { name?: string; message?: string; code?: string | number; status?: number } | null;
+};
+
 async function generateMagicLink(
-  supabase: ReturnType<typeof createAdminSupabaseClient>,
+  _supabase: ReturnType<typeof createAdminSupabaseClient>,
   email: string,
   metadata: Record<string, string | number | boolean | null | undefined> | undefined,
   callbackUrl: string,
-) {
-  let timer: ReturnType<typeof setTimeout> | undefined;
+): Promise<GenerateLinkResult> {
+  const adminEnv = getSupabaseAdminEnv();
+  const baseUrl = adminEnv.url?.replace(/\/$/, "");
+  const serviceKey = adminEnv.serviceRoleKey;
+
+  if (!baseUrl || !serviceKey) {
+    return {
+      data: { properties: null },
+      error: { name: "ConfigError", message: "Missing Supabase admin env", code: "config", status: 503 },
+    };
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), GENERATE_LINK_TIMEOUT_MS);
+
   try {
-    return await Promise.race([
-      supabase.auth.admin.generateLink({
+    const response = await fetch(`${baseUrl}/auth/v1/admin/generate_link`, {
+      method: "POST",
+      headers: {
+        apikey: serviceKey,
+        Authorization: `Bearer ${serviceKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         type: "magiclink",
         email,
         options: {
           data: metadata ?? {},
-          redirectTo: callbackUrl,
+          redirect_to: callbackUrl,
         },
       }),
-      new Promise<never>((_, reject) => {
-        timer = setTimeout(() => {
-          reject(Object.assign(new Error("generateLink timed out"), { code: "timeout", status: 504 }));
-        }, GENERATE_LINK_TIMEOUT_MS);
-      }),
-    ]);
+      signal: controller.signal,
+    });
+
+    const rawText = await response.text();
+    let parsed: Record<string, unknown> | null = null;
+    try {
+      parsed = rawText ? (JSON.parse(rawText) as Record<string, unknown>) : null;
+    } catch {
+      return {
+        data: { properties: null },
+        error: {
+          name: "AuthUnknownError",
+          message: rawText.slice(0, 180),
+          code: "invalid_json",
+          status: response.status || 500,
+        },
+      };
+    }
+
+    if (!response.ok) {
+      return {
+        data: { properties: null },
+        error: {
+          name: "AuthApiError",
+          message: String((parsed as { msg?: string; message?: string } | null)?.msg
+            ?? (parsed as { message?: string } | null)?.message
+            ?? `generate_link HTTP ${response.status}`),
+          code: String((parsed as { error_code?: string; code?: string } | null)?.error_code
+            ?? (parsed as { code?: string } | null)?.code
+            ?? response.status),
+          status: response.status,
+        },
+      };
+    }
+
+    const hashed =
+      (typeof parsed?.hashed_token === "string" && parsed.hashed_token)
+      || (typeof (parsed?.properties as { hashed_token?: string } | undefined)?.hashed_token === "string"
+        ? (parsed?.properties as { hashed_token?: string }).hashed_token
+        : undefined);
+
+    return {
+      data: {
+        properties: { hashed_token: hashed },
+        user: parsed?.user ?? parsed,
+      },
+      error: null,
+    };
+  } catch (thrown) {
+    const candidate = thrown as { name?: string; message?: string };
+    const aborted = candidate?.name === "AbortError";
+    return {
+      data: { properties: null },
+      error: {
+        name: candidate?.name ?? "Error",
+        message: aborted ? "generateLink timed out" : sanitizeErrorMessage(candidate?.message),
+        code: aborted ? "timeout" : "fetch_failed",
+        status: aborted ? 504 : 500,
+      },
+    };
   } finally {
-    if (timer) clearTimeout(timer);
+    clearTimeout(timer);
   }
 }
 
@@ -343,6 +440,22 @@ export async function POST(request: Request) {
         ok: false,
         message: getErrorMessage(thrown),
         correlationId,
+        debug: safeDebugFields({
+          reason: "generate_link_throw",
+          errorName: candidate?.name ?? "Error",
+          errorCode: candidate?.code != null ? String(candidate.code) : null,
+          httpStatus: candidate?.status ?? 500,
+          sanitizedMessage: sanitizeErrorMessage(candidate?.message) ?? null,
+          hashedTokenAbsent: true,
+          urlProjectRef: urlProjectRef ?? null,
+          serviceKeyPresent,
+          serviceKeyProjectRef: serviceKeyProjectRef ?? null,
+          serviceKeyJwt: Boolean(adminEnv.serviceRoleKey?.startsWith("eyJ")),
+          serviceKeyLen: adminEnv.serviceRoleKey?.length ?? 0,
+          urlHost: (() => {
+            try { return adminEnv.url ? new URL(adminEnv.url).host : null; } catch { return "invalid_url"; }
+          })(),
+        }),
       },
       { status: 500 },
     );
@@ -372,6 +485,22 @@ export async function POST(request: Request) {
         ok: false,
         message: getErrorMessage(error),
         correlationId,
+        debug: safeDebugFields({
+          reason: error ? "generate_link_error" : "hashed_token_absent",
+          errorName: candidate?.name ?? (error ? "AuthError" : "MissingHashedToken"),
+          errorCode: candidate?.code != null ? String(candidate.code) : null,
+          httpStatus: candidate?.status ?? 500,
+          sanitizedMessage: sanitizeErrorMessage(candidate?.message) ?? null,
+          hashedTokenAbsent,
+          urlProjectRef: urlProjectRef ?? null,
+          serviceKeyPresent,
+          serviceKeyProjectRef: serviceKeyProjectRef ?? null,
+          serviceKeyJwt: Boolean(adminEnv.serviceRoleKey?.startsWith("eyJ")),
+          serviceKeyLen: adminEnv.serviceRoleKey?.length ?? 0,
+          urlHost: (() => {
+            try { return adminEnv.url ? new URL(adminEnv.url).host : null; } catch { return "invalid_url"; }
+          })(),
+        }),
       },
       { status: 500 },
     );
