@@ -5,10 +5,11 @@ export const adminLoginRateLimitPolicy = {
 } as const;
 
 export const magicLinkRateLimitPolicies = {
-  email: { namespace: "auth-magic-email", limit: 1, windowMs: 60 * 1000 },
+  // v2 namespaces intentionally rotate exhausted probe counters from Phase 7C.
+  email: { namespace: "auth-magic-email-v2", limit: 3, windowMs: 60 * 1000 },
   ip: {
-    namespace: "auth-magic-ip",
-    limit: 5,
+    namespace: "auth-magic-ip-v2",
+    limit: 20,
     windowMs: 60 * 60 * 1000,
   },
 } as const;

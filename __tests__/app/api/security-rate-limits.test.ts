@@ -91,8 +91,8 @@ describe("public auth security rate limits", () => {
     }));
     expect(response.status).toBe(429);
     expect(response.headers.get("retry-after")).toBe("60");
-    expect(state.consume.mock.calls[0][0]).toMatchObject({ namespace: "auth-magic-email", identifiers: ["person@example.com"] });
-    expect(state.consume.mock.calls[1][0]).toMatchObject({ namespace: "auth-magic-ip", identifiers: ["203.0.113.10"] });
+    expect(state.consume.mock.calls[0][0]).toMatchObject({ namespace: "auth-magic-email-v2", identifiers: ["person@example.com"] });
+    expect(state.consume.mock.calls[1][0]).toMatchObject({ namespace: "auth-magic-ip-v2", identifiers: ["203.0.113.10"] });
     expect(supabase.create).not.toHaveBeenCalled();
   });
 

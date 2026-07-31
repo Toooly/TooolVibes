@@ -52,19 +52,19 @@ describe("distributed security-state client", () => {
     const client = new DistributedSecurityStateClient(store, "s".repeat(32));
 
     await client.consumeRateLimit({
-      namespace: "auth-magic-email",
+      namespace: "auth-magic-email-v2",
       identifiers: ["person@example.com"],
       limit: 1,
       windowMs: 60_000,
     });
     await client.peekRateLimit({
-      namespace: "auth-magic-email",
+      namespace: "auth-magic-email-v2",
       identifiers: ["person@example.com"],
       limit: 1,
       windowMs: 60_000,
     });
     await client.consumeRateLimit({
-      namespace: "auth-magic-ip",
+      namespace: "auth-magic-ip-v2",
       identifiers: ["person@example.com"],
       limit: 1,
       windowMs: 60_000,
