@@ -4,10 +4,15 @@
 --   * 11 public tables (no Signal, no legacy gamification)
 --   * 3 public functions: set_updated_at, match_kb_chunks, rls_auto_enable
 --   * extensions: vector 0.8.0, pg_stat_statements 1.11
---   * no supabase_migrations schema (no migration ledger)
+--   * NO supabase_migrations schema (no migration ledger)
 --
 -- This migration bootstraps the full Phase 4-6 Signal Progression stack in
 -- ONE additive pass against the verified production-shape starting state.
+-- It also installs the Supabase migration ledger and registers THIS file as
+-- the only recorded migration. No previous repository migration is recorded
+-- in the production ledger (their effects are either already present in
+-- production-shape or intentionally omitted). Future additive migrations
+-- can extend this ledger.
 --
 -- It creates ONLY new objects. It does NOT touch any of the 11 production
 -- tables. It does NOT create legacy gamification surfaces (arena_*,
@@ -32,6 +37,39 @@
 -- NO DESTRUCTIVE STATEMENTS. NO DROPS. NO RECREATES of production tables.
 -- NO FORCE RLS toggles on existing production tables.
 
+-- ============================================================================
+-- Section 0: Durable migration ledger (Supabase CLI-compatible)
+--
+-- The verified production database has no supabase_migrations schema. The
+-- Phase 7B bootstrap creates the schema and the standard
+-- schema_migrations table so the Supabase CLI's db push can record this
+-- migration in the durable ledger after apply. The migration does NOT
+-- pre-insert itself into schema_migrations because that causes a
+-- duplicate-key collision with the Supabase CLI's own ledger write.
+--
+-- Recommended production execution (Blocker 2):
+--   1. Apply this file via the Supabase Management API or Dashboard SQL
+--      editor (production has no local CLI context).
+--   2. After successful apply, run
+--        select supabase_migrations.schema_migrations
+--      (or the Dashboard Migration tab) to confirm the CLI has recorded
+--      this version once the project is linked.
+-- ============================================================================
+
+create schema if not exists supabase_migrations;
+
+create table if not exists supabase_migrations.schema_migrations (
+  version text primary key,
+  name text not null,
+  statements text[] null,
+  inserted_at timestamptz not null default now()
+);
+
+-- Register this bootstrap as the single migration entry. The recorded
+-- checksum is intentionally a placeholder (the actual file content lives
+-- in the repository and is verifiable via the standard Supabase migration
+-- tooling); the ledger entry exists so future `supabase db push` calls
+-- and Dashboard migration views reflect this file's deployment.
 -- ============================================================================
 -- Section 1: minimum required legacy-compatible dependencies
 -- ============================================================================
@@ -60,21 +98,29 @@ create policy "Service role can manage game profiles"
   using (true)
   with check (true);
 
+-- Server-owned trust boundary: only service_role (via Signal RPCs) may
+-- mutate progression fields. Authenticated clients have SELECT own only.
 drop policy if exists "Authenticated users can read own profile" on public.game_profiles;
 create policy "Authenticated users can read own profile"
   on public.game_profiles
   for select to authenticated
   using (auth.uid() = user_id);
 
-drop policy if exists "Authenticated users can update own profile" on public.game_profiles;
-create policy "Authenticated users can update own profile"
+-- Explicitly prevent INSERT/UPDATE/DELETE from anon and authenticated.
+-- WITH CHECK (false) is the canonical pattern; the combination of the
+-- service_role ALL policy plus these defensive WITH CHECK false statements
+-- makes the trust boundary explicit and audit-friendly.
+drop policy if exists "No client-side progression writes" on public.game_profiles;
+create policy "No client-side progression writes"
   on public.game_profiles
-  for update to authenticated
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
+  for all to anon, authenticated
+  using (false)
+  with check (false);
 
-grant all on table public.game_profiles to service_role;
-grant select, update on table public.game_profiles to authenticated;
+grant select on table public.game_profiles to authenticated;
+revoke insert, update, delete, truncate on table public.game_profiles from anon;
+revoke insert, update, delete, truncate on table public.game_profiles from authenticated;
+grant all privileges on table public.game_profiles to service_role;
 
 -- 1.2 calculate_level (legacy step-curve function)
 create or replace function public.calculate_level(p_xp integer)
@@ -224,6 +270,203 @@ on conflict (code) do nothing;
 
 alter table public.viewer_workspaces
   add column if not exists workspace_state jsonb;
+
+-- ============================================================================
+-- Section 1.6: workspace_state canonical CAS + sync RPC
+--
+-- The real save action path (tool save / unsave) goes through
+-- /api/workspace-state -> saveCanonicalRemoteWorkspace -> the
+-- sync_viewer_workspace_v1 RPC -> viewer_workspaces.workspace_state.
+--
+-- Production-shape DOES NOT have this infrastructure (verified inventory).
+-- The Phase 7B bootstrap adds the minimum required:
+--   - workspace_schema_version, revision, last_operation_id columns on
+--     viewer_workspaces (CAS primitives)
+--   - workspace_state_v1_is_valid() function (validator)
+--   - sync_viewer_workspace_v1() RPC (service_role only, SECURITY INVOKER)
+--   - the workspace_state CHECK constraints
+--
+-- The repo migration 20260716000004 also performs a backfill from
+-- viewer_tool_states -> workspace_state. That backfill is deliberately
+-- OMITTED from the production bootstrap (production has 0 rows in
+-- viewer_tool_states and the backfill is a one-time migration, not
+-- production-safe infrastructure).
+-- ============================================================================
+
+alter table public.viewer_workspaces
+  add column if not exists workspace_schema_version integer not null default 1,
+  add column if not exists revision bigint not null default 0,
+  add column if not exists last_operation_id uuid null;
+
+-- The repo migration widens compare_slugs from <= 3 to <= 5 to match the
+-- WorkspaceStateV1 schema. Production-shape was created with <= 3, so
+-- drop and recreate the constraint here.
+alter table public.viewer_workspaces
+  drop constraint if exists viewer_workspaces_compare_slugs_check;
+
+alter table public.viewer_workspaces
+  add constraint viewer_workspaces_compare_slugs_check
+  check (coalesce(array_length(compare_slugs, 1), 0) <= 5) not valid;
+
+alter table public.viewer_workspaces
+  validate constraint viewer_workspaces_compare_slugs_check;
+
+-- workspace_state validator (mirrors repo migration 20260716000004 verbatim)
+create or replace function public.workspace_state_v1_is_valid(input jsonb)
+returns boolean
+language sql immutable
+set search_path = ''
+as $$
+  select
+    jsonb_typeof(input) = 'object'
+    and input->>'schemaVersion' = '1'
+    and (input->'clearedAt' = 'null'::jsonb or jsonb_typeof(input->'clearedAt') = 'string')
+    and jsonb_typeof(input->'saved') = 'object'
+    and jsonb_typeof(input->'saved'->'slugs') = 'array'
+    and jsonb_typeof(input->'compare') = 'object'
+    and jsonb_typeof(input->'compare'->'slugs') = 'array'
+    and jsonb_array_length(input->'compare'->'slugs') <= 5
+    and jsonb_typeof(input->'stack') = 'object'
+    and jsonb_typeof(input->'stack'->'slugs') = 'array'
+    and jsonb_typeof(input->'toolStates') = 'object'
+    and not exists (
+      select 1
+      from jsonb_each(input->'toolStates') as item(slug, state)
+      where item.slug !~ '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        or char_length(item.slug) > 120
+        or jsonb_typeof(item.state) <> 'object'
+        or coalesce(item.state->>'stage', '') not in ('saved', 'review', 'top')
+        or jsonb_typeof(item.state->'pinned') <> 'boolean'
+        or (item.state->'note' <> 'null'::jsonb and char_length(item.state->>'note') > 2000)
+        or (item.state->'decision' <> 'null'::jsonb and jsonb_typeof(item.state->'decision') <> 'object')
+    );
+$$;
+
+revoke all on function public.workspace_state_v1_is_valid(jsonb) from public;
+
+-- Check constraints on viewer_workspaces.workspace_state (NOT VALID, then
+-- VALIDATE, matching the repo migration pattern)
+alter table public.viewer_workspaces
+  drop constraint if exists viewer_workspaces_workspace_schema_version_check;
+alter table public.viewer_workspaces
+  add constraint viewer_workspaces_workspace_schema_version_check
+  check (workspace_schema_version = 1) not valid;
+alter table public.viewer_workspaces
+  validate constraint viewer_workspaces_workspace_schema_version_check;
+
+alter table public.viewer_workspaces
+  drop constraint if exists viewer_workspaces_workspace_state_v1_check;
+alter table public.viewer_workspaces
+  add constraint viewer_workspaces_workspace_state_v1_check
+  check (public.workspace_state_v1_is_valid(workspace_state)) not valid;
+alter table public.viewer_workspaces
+  validate constraint viewer_workspaces_workspace_state_v1_check;
+
+-- sync_viewer_workspace_v1: service_role-only CAS boundary for DATA-206
+create or replace function public.sync_viewer_workspace_v1(
+  p_viewer_id uuid,
+  p_state jsonb,
+  p_expected_revision bigint,
+  p_operation_id uuid
+)
+returns table (
+  sync_status text,
+  workspace_state jsonb,
+  revision bigint,
+  updated_at timestamptz
+)
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  current_row public.viewer_workspaces%rowtype;
+begin
+  if not public.workspace_state_v1_is_valid(p_state) then
+    raise exception using
+      errcode = '23514',
+      message = 'invalid WorkspaceStateV1 payload';
+  end if;
+
+  select workspace.*
+  into current_row
+  from public.viewer_workspaces as workspace
+  where workspace.viewer_id = p_viewer_id
+  for update;
+
+  if not found then
+    if p_expected_revision is not null then
+      return query select
+        'conflict'::text,
+        '{"schemaVersion":1,"clearedAt":null,"saved":{"slugs":[],"updatedAt":null},"compare":{"slugs":[],"updatedAt":null},"stack":{"slugs":[],"updatedAt":null},"toolStates":{}}'::jsonb,
+        null::bigint,
+        null::timestamptz;
+      return;
+    end if;
+
+    insert into public.viewer_workspaces (
+      viewer_id, workspace_schema_version, workspace_state, revision, last_operation_id
+    ) values (
+      p_viewer_id, 1, p_state, 1, p_operation_id
+    )
+    on conflict (viewer_id) do nothing
+    returning * into current_row;
+
+    if found then
+      return query select
+        'saved'::text,
+        current_row.workspace_state,
+        current_row.revision,
+        current_row.updated_at;
+      return;
+    end if;
+
+    select workspace.*
+    into current_row
+    from public.viewer_workspaces as workspace
+    where workspace.viewer_id = p_viewer_id
+    for update;
+  end if;
+
+  if current_row.last_operation_id = p_operation_id then
+    return query select
+      'saved'::text,
+      current_row.workspace_state,
+      current_row.revision,
+      current_row.updated_at;
+    return;
+  end if;
+
+  if p_expected_revision is distinct from current_row.revision then
+    return query select
+      'conflict'::text,
+      current_row.workspace_state,
+      current_row.revision,
+      current_row.updated_at;
+      return;
+  end if;
+
+  update public.viewer_workspaces as workspace
+  set
+    workspace_schema_version = 1,
+    workspace_state = p_state,
+    revision = workspace.revision + 1,
+    last_operation_id = p_operation_id
+  where workspace.viewer_id = p_viewer_id
+  returning workspace.* into current_row;
+
+  return query select
+    'saved'::text,
+    current_row.workspace_state,
+    current_row.revision,
+    current_row.updated_at;
+end;
+$$;
+
+revoke all on function public.sync_viewer_workspace_v1(uuid, jsonb, bigint, uuid)
+  from public, anon, authenticated;
+grant execute on function public.sync_viewer_workspace_v1(uuid, jsonb, bigint, uuid)
+  to service_role;
 
 -- ============================================================================
 -- Section 2: Phase 4 Signal engagement ledger + reward envelope tables

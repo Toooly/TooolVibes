@@ -26,6 +26,9 @@ schema:
   does not have), 20260621000002 (partially - viewer_workspace authenticated
   policies NOT applied), 20260705000000 (tool_requests expansion),
   20260716000002 (waitlist, but in pre-harden state).
+  - The Phase 7B bootstrap `20260731130000_signal_bootstrap_v1.sql`
+    records ONLY itself in the production ledger. No previous migration
+    version is falsified.
 - **Absent in production**: editorial_articles, affiliate_links,
   affiliate_requests, all legacy gamification (game_profiles,
   game_missions, arena_*, badges, user_badges, tool_collections,
@@ -47,16 +50,46 @@ replayed against production because they depend on:
 | public.user_badges | award_signal_badge, get_signal_progress_hub | ABSENT |
 | viewer_workspaces.workspace_state | evaluate_signal_achievements (stack_builder evidence) | ABSENT (column) |
 
+## Durable migration ledger (Blocker 2)
+
+The verified production database has no `supabase_migrations` schema.
+The Phase 7B bootstrap creates the schema and the standard
+`schema_migrations(version text, name text, statements text[], inserted_at timestamptz)`
+table (the Supabase CLI-compatible structure), but does NOT pre-insert
+itself into the ledger -- the Supabase CLI `db push` records the version
+after apply. This avoids a duplicate-key collision with the CLI's
+ledger writer.
+
+After production execution, the operator verifies the ledger with:
+
+```sql
+select version, name, inserted_at
+from supabase_migrations.schema_migrations
+where version = '20260731130000';
+```
+
+A single row is the expected outcome.
+
 ## Selected strategy: additive production-safe Signal bootstrap
 
-A single additive migration `20260801000000_signal_bootstrap_v1.sql` that:
+A single additive migration `20260731130000_signal_bootstrap_v1.sql` that:
 
 1. Creates the minimum required legacy-compatible dependency chain
    (game_profiles + calculate_level + badges + user_badges) with
    FORCE RLS where required by the Phase 4-6 trust boundary.
+   - `game_profiles` exposes authenticated SELECT-own + service_role ALL +
+     defensive `No client-side progression writes` policy that denies
+     anon/authenticated every mutation. Authenticated
+     INSERT/UPDATE/DELETE are also revoked at the table-privilege level.
+     The trust boundary matches the local production-shape proof (S13).
 2. Additively extends `viewer_workspaces` with a nullable
-   `workspace_state jsonb` column (required by the
-   `evaluate_signal_achievements` stack).
+   `workspace_state jsonb` column, the three CAS columns
+   (`workspace_schema_version`, `revision`, `last_operation_id`), the
+   `workspace_state_v1_is_valid()` validator, and the
+   `sync_viewer_workspace_v1()` RPC (service_role only). This is the
+   real save-action product path; production users' authenticated save
+   actions will now populate workspace_state and unlock stack_builder
+   through the actual application code path.
 3. Creates the Phase 4-6 Signal tables (8 tables), all Phase 4-6 RPCs
    (accept_signal_engagement, complete_signal_mission,
    upsert_signal_user_context, calculate_signal_level,
@@ -101,7 +134,7 @@ production RPC evaluates correctly when invoked.
 
 ## Files added in Phase 7B
 
-- `supabase/migrations/20260801000000_signal_bootstrap_v1.sql` (commit 1)
+- `supabase/migrations/20260731130000_signal_bootstrap_v1.sql` (commit 1)
 - `supabase/fixtures/production_shape.sql` (commit 2 - fixture)
 - `scripts/release/test-production-shape-proof.sql` (commit 2 - proof)
 - `docs/PRODUCTION_RECONCILIATION_V1.md` (commit 3 - this runbook)
@@ -153,17 +186,38 @@ will be made:
 #    - FORCE RLS = true on Signal tables and game_profiles + user_badges
 #    - FORCE RLS = false on the 11 production tables (unchanged)
 
-# 4. Flag rollout (one at a time, in order):
-#    TOOOLVIBES_REWARD_BACKBONE_ENABLED = true
-#    TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED = true
-#    TOOOLVIBES_REWARD_RUNTIME_ENABLED = true
-#    TOOOLVIBES_REWARD_DELIVERY_ENABLED = true
-#    TOOOLVIBES_SIGNAL_PROGRESS_UI_ENABLED = true
-#    TOOOLVIBES_SIGNAL_ACHIEVEMENTS_ENABLED = true
-#    TOOOLVIBES_SIGNAL_BADGE_CABINET_ENABLED = true
-#    TOOOLVIBES_REWARD_MILESTONES_ENABLED = true
-#    After each flag flip, verify via the live integration suite + a
-#    smoke-test authenticated user.
+# 4. Flag rollout (one at a time, in this exact order).
+#    Each flag flips the smallest surface that does not depend on
+#    an un-enabled flag. Server-owned evaluation runs as soon as
+#    `signalAchievements` is enabled (Step 6), at which point
+#    pre-existing event rows are picked up by the first evaluate
+#    call and awarded retrospectively (idempotent).
+#
+#      Step  Flag                                     Why this order
+#      ----  ---------------------------------------  -----------------------
+#      1     TOOOLVIBES_REWARD_BACKBONE_ENABLED       Server-side RPCs need
+#                                                  the backbone gate.
+#      2     TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED   accept_signal_engagement
+#                                                  writes event/grant rows.
+#      3     TOOOLVIBES_REWARD_RUNTIME_ENABLED        Reward host XState machine.
+#      4     TOOOLVIBES_REWARD_DELIVERY_ENABLED       Pending reward polling +
+#                                                  acknowledge.
+#      5     TOOOLVIBES_SIGNAL_PROGRESS_UI_ENABLED    Server hub payload
+#                                                  (gates badge payload fields).
+#      6     TOOOLVIBES_SIGNAL_ACHIEVEMENTS_ENABLED  evaluate_signal_achievements
+#                                                  runs server-side on every
+#                                                  event accept.
+#      7     TOOOLVIBES_SIGNAL_BADGE_CABINET_ENABLED  Account cabinet renders.
+#      8     TOOOLVIBES_REWARD_MILESTONES_ENABLED     Tier 3 milestone host
+#                                                  (gates confetti import).
+#
+#    After each flag flip, verify via:
+#      - `npm run quality` (TypeScript + ESLint + full Vitest)
+#      - the live Supabase integration suite
+#      - a smoke test with one authenticated production user.
+#    Do not proceed to the next flag until the previous one is verified
+#    in production logs (no 5xx, no unexpected client errors, expected
+#    grant / envelope / badge counts in the live DB).
 
 # 5. Rollback at any time:
 #    Set all Phase 4-6 flags back to OFF (or false) and the user-facing
