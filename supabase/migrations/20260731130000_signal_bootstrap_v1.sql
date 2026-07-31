@@ -8,11 +8,13 @@
 --
 -- This migration bootstraps the full Phase 4-6 Signal Progression stack in
 -- ONE additive pass against the verified production-shape starting state.
--- It also installs the Supabase migration ledger and registers THIS file as
--- the only recorded migration. No previous repository migration is recorded
--- in the production ledger (their effects are either already present in
--- production-shape or intentionally omitted). Future additive migrations
--- can extend this ledger.
+--
+-- Production execution: this migration will be applied via the project-scoped
+-- Supabase Management API `apply_migration` tool (project ref
+-- pjyasxaebxvvmcjxvnno, migration name "signal_bootstrap_v1"). The
+-- Management API owns the migration transaction, the schema_migrations
+-- table creation, the migration-history insertion, and the failure rollback.
+-- This file contains application schema changes only.
 --
 -- It creates ONLY new objects. It does NOT touch any of the 11 production
 -- tables. It does NOT create legacy gamification surfaces (arena_*,
@@ -30,46 +32,14 @@
 -- for every RPC (so re-applying against a partial state is a no-op for the
 -- RPC bodies) and `create table if not exists` for the Signal tables.
 --
--- No migration-history rows are written. The applied audit trail in
--- production will be this migration's timestamp in the cluster's pg_stat
--- activity only.
+-- This file contains NO manual migration-history DDL. Production
+-- migration-history tracking is delegated exclusively to the project-scoped
+-- Supabase Management API `apply_migration` tool that applies this file
+-- (see docs/PRODUCTION_RECONCILIATION_V1.md, Blocker 1 closure).
 --
 -- NO DESTRUCTIVE STATEMENTS. NO DROPS. NO RECREATES of production tables.
 -- NO FORCE RLS toggles on existing production tables.
 
--- ============================================================================
--- Section 0: Durable migration ledger (Supabase CLI-compatible)
---
--- The verified production database has no supabase_migrations schema. The
--- Phase 7B bootstrap creates the schema and the standard
--- schema_migrations table so the Supabase CLI's db push can record this
--- migration in the durable ledger after apply. The migration does NOT
--- pre-insert itself into schema_migrations because that causes a
--- duplicate-key collision with the Supabase CLI's own ledger write.
---
--- Recommended production execution (Blocker 2):
---   1. Apply this file via the Supabase Management API or Dashboard SQL
---      editor (production has no local CLI context).
---   2. After successful apply, run
---        select supabase_migrations.schema_migrations
---      (or the Dashboard Migration tab) to confirm the CLI has recorded
---      this version once the project is linked.
--- ============================================================================
-
-create schema if not exists supabase_migrations;
-
-create table if not exists supabase_migrations.schema_migrations (
-  version text primary key,
-  name text not null,
-  statements text[] null,
-  inserted_at timestamptz not null default now()
-);
-
--- Register this bootstrap as the single migration entry. The recorded
--- checksum is intentionally a placeholder (the actual file content lives
--- in the repository and is verifiable via the standard Supabase migration
--- tooling); the ledger entry exists so future `supabase db push` calls
--- and Dashboard migration views reflect this file's deployment.
 -- ============================================================================
 -- Section 1: minimum required legacy-compatible dependencies
 -- ============================================================================

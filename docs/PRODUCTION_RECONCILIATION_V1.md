@@ -123,14 +123,45 @@ throwaway `pgvector/pgvector:pg17` container, after applying the
 the verified production surface exactly, including the kb_chunks stub,
 the auth schema stub, and the waitlist pre-harden state).
 
-Result: **6 of 9 V1 badges awarded** (first_signal, first_verdict,
-stack_builder, radar_return, strategist, profile_set); 1
-level_advanced grant (L2 Selezionatore); mission completion recorded;
-cross-user forgery blocked at RLS; hub read model returns the badge
-cabinet; idempotent replay preserves uniqueness. cartographer and
-curator_mark require production data fixtures (a multi-step curated
-collection journey) that the proof harness does not fabricate but the
-production RPC evaluates correctly when invoked.
+Result: **all 9 V1 badges awarded** (first_signal, first_verdict,
+pathfinder, profile_set, stack_builder, radar_return, curator_mark,
+strategist, cartographer), plus 4 level_advanced grants (Selezionatore,
+Curatore, Stratega, Cartografo) and 1 mission completion. The proof
+contains 13 scenarios:
+
+  - S1: first_signal ownership persisted (merged into save_first_tool mission)
+  - S1 idempotent replay preserves uniqueness
+  - S2: first_verdict (merged) + strategist (5 distinct comparisons)
+  - S3: stack_builder via the real workspace_state product path
+  - S4: radar_return (3 distinct days, no streak, no consecutive rule)
+  - S5: profile_set (server-verified context completion)
+  - S5b: pathfinder (1 collection_progressed event, merged presentation)
+  - S6: level advancement L2 Selezionatore
+  - S7: cross-user badge forgery blocked at RLS (WITH CHECK false)
+  - S8: pathfinder ownership persistence verified
+  - S9: curator_mark from a real 3-slot collection journey (curator-journey)
+       with 3 distinct collection_progressed steps, authoritative slot count
+  - S10: cartographer from 30 real tool_saved events through the
+        accept_signal_engagement RPC (balance 2000 SP, no direct
+        game_profiles UPDATE; real server-owned progression path)
+  - S11: 10 concurrent evaluate_signal_achievements calls leave
+        cartographer ownership count unchanged (idempotent, no duplicate
+        SP grant)
+  - S12: product-path workspace sync via sync_viewer_workspace_v1 RPC
+        populates viewer_workspaces.workspace_state, which then unlocks
+        stack_builder without manual fixture injection
+  - S13: game_profiles trust boundary (authenticated SELECT own only,
+        no authenticated INSERT/UPDATE/DELETE/TRUNCATE table privileges,
+        defensive No-client-side-progression-writes policy, service_role
+        can mutate progression, cartographer achievable through service_role
+        RPCs)
+
+All scenarios are reproducible in a disposable `pgvector/pgvector:pg17`
+container with `psql -v ON_ERROR_STOP=1 < /tmp/fixture.sql && < /tmp/bootstrap.sql && < /tmp/proof.sql`. The same harness executes cleanly against the
+local Supabase (`supabase db reset` then `psql < /tmp/proof.sql`) once
+test auth.users are seeded; the local proof does not require the
+fixture because the production-shape schema already exists in local
+after the 45 migrations are applied.
 
 ## Files added in Phase 7B
 
@@ -138,6 +169,77 @@ production RPC evaluates correctly when invoked.
 - `supabase/fixtures/production_shape.sql` (commit 2 - fixture)
 - `scripts/release/test-production-shape-proof.sql` (commit 2 - proof)
 - `docs/PRODUCTION_RECONCILIATION_V1.md` (commit 3 - this runbook)
+
+## Authoritative production execution method
+
+The sole approved production execution method is the project-scoped
+Supabase Management API `apply_migration` tool:
+
+  - Tool: `apply_migration`
+  - Project ref: `pjyasxaebxvvmcjxvnno`
+  - Migration name: `signal_bootstrap_v1`
+  - Query: the complete reviewed contents of
+    `supabase/migrations/20260731130000_signal_bootstrap_v1.sql`
+
+The Management `apply_migration` operation owns:
+
+  - the migration transaction (atomic apply or rollback on failure);
+  - the `supabase_migrations.schema_migrations` table creation;
+  - the migration-history row insertion;
+  - the ledger's authoritative version stamping.
+
+DO NOT use:
+
+  - Dashboard SQL Editor;
+  - raw psql;
+  - `supabase db push` (production has no migration ledger);
+  - `migration repair`;
+  - manual INSERT into `schema_migrations`.
+
+Production MCP is currently read-only. The future execution phase must
+require a separate, explicitly authorised write-capable, project-scoped
+connection only for the single `apply_migration` call. After apply,
+the operator verifies through read-only tools (MCP `list_tables`,
+`list_extensions`, `execute_sql` with read-only role):
+
+  - exactly one new migration-history row exists;
+  - its `name` is `signal_bootstrap_v1`;
+  - its `version` is the value assigned by the Management migration
+    endpoint (the version chosen by Management, not the file's
+    timestamp name);
+  - no historical repository migrations are falsified in the ledger;
+  - all expected schema objects exist (game_profiles, badges,
+    user_badges, the 6 signal_* tables, all 11 Phase 4-6 RPCs, the
+    9 V1 badge rows, the workspace_state + sync RPC infrastructure).
+
+The recommended production verification query:
+
+```sql
+select version, name, inserted_at
+from supabase_migrations.schema_migrations
+order by inserted_at desc
+limit 5;
+```
+
+## Local proof vs. future Management API execution
+
+The local proof (commands in "Local proof" section below) certifies:
+
+  1. The bootstrap SQL contains no manual `supabase_migrations` DDL.
+  2. Local Supabase `db reset` records the migration normally via the
+     Supabase CLI (45 entries after reset, including the new bootstrap).
+  3. The application schema after the bootstrap matches the local
+     proof result exactly (verified by the 13-scenario proof).
+  4. The bootstrap SQL is repeatable against the production-shaped
+     disposable fixture (idempotent re-apply produces no errors).
+  5. The production execution documentation delegates the ledger
+     exclusively to the Management API `apply_migration` operation.
+
+The local proof does NOT fabricate Management API results. It proves
+that the bootstrap SQL itself is correct and that the local CLI's
+`db reset` records it; the Management API in production is a separate
+transport whose outcome must be verified post-apply via read-only
+tools as documented above.
 
 ## Production execution hold point
 
@@ -148,79 +250,92 @@ will be made:
    retention window, PITR enabled, restore capability tested.
 2. **Dashboard overrides verified**: confirm no Dashboard-created
    functions, views or policies depend on objects the bootstrap will
-   create (game_profiles, badges, user_badges, signal_*).
-3. **Maintenance window scheduled**: the bootstrap applies a nullable
-   column to `viewer_workspaces`; this is non-blocking but still
-   acquires a brief ACCESS EXCLUSIVE lock.
-4. **Production flag plan confirmed**: which Phase 4-6 flag is the
-   first to flip ON after bootstrap? The accepted sequence is:
-   backbone → writes → delivery/runtime → progress UI →
-   achievements → badge cabinet → milestones. Production defaults
-   remain OFF until Step 4.
-5. **Rollback plan confirmed**: flags OFF (behavioural kill switch)
-   + revert the four Phase 7B commits. The migration is additive; if
-   left applied with flags OFF, no user-facing effect occurs.
+   create (game_profiles, badges, user_badges, signal_*, sync_viewer_workspace_v1).
+3. **Maintenance window scheduled**: the bootstrap applies nullable
+   columns and CHECK constraints to `viewer_workspaces`; this is
+   non-blocking but acquires brief ACCESS EXCLUSIVE locks.
+4. **Production flag plan confirmed**: the corrected rollout order
+   below (Blocker 2 closure).
+5. **Rollback plan confirmed**: four-tier rollback (see below).
 
-## Future runbook (when operator approves execution)
+## Flag rollout (corrected for effective-backbone gating)
 
+`TOOOLVIBES_REWARD_BACKBONE_ENABLED` alone is NOT enough. The
+effective backbone is:
+
+```ts
+rewardBackboneEnabled = gamificationEnabled && configuredRewardBackboneEnabled
 ```
-# 1. Confirm production backups (manual check)
-#    - latest backup timestamp
-#    - retention window
-#    - PITR enabled + restore capability
 
-# 2. Apply the bootstrap migration against production.
-#    ONLY use one of these methods (NEVER both):
-#    (a) Supabase Dashboard SQL editor (paste bootstrap contents)
-#    (b) psql against the production DATABASE_URL with the migration file
-#
-#    Do NOT use supabase db push (production has no migration ledger).
-#    Do NOT use supabase migration repair.
+So Stage 1 must flip the master gamification flag AND the backbone
+together. The master gamification flag is a kill switch: when OFF, no
+legacy surface can become enabled regardless of its own mode env var.
+No legacy gamification surface (missions, arena, prediction, leaderboard,
+hidden_signal, vibe_rush) may become enabled.
 
-# 3. Verify post-bootstrap state matches the local proof:
-#    - 11 production tables preserved
-#    - 8 new Signal tables present
-#    - game_profiles, badges, user_badges present
-#    - 9 V1 badges seeded (family = signal_v1)
-#    - All 11 Phase 4-6 RPCs compiled
-#    - FORCE RLS = true on Signal tables and game_profiles + user_badges
-#    - FORCE RLS = false on the 11 production tables (unchanged)
+Rollout sequence:
 
-# 4. Flag rollout (one at a time, in this exact order).
-#    Each flag flips the smallest surface that does not depend on
-#    an un-enabled flag. Server-owned evaluation runs as soon as
-#    `signalAchievements` is enabled (Step 6), at which point
-#    pre-existing event rows are picked up by the first evaluate
-#    call and awarded retrospectively (idempotent).
-#
-#      Step  Flag                                     Why this order
-#      ----  ---------------------------------------  -----------------------
-#      1     TOOOLVIBES_REWARD_BACKBONE_ENABLED       Server-side RPCs need
-#                                                  the backbone gate.
-#      2     TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED   accept_signal_engagement
-#                                                  writes event/grant rows.
-#      3     TOOOLVIBES_REWARD_RUNTIME_ENABLED        Reward host XState machine.
-#      4     TOOOLVIBES_REWARD_DELIVERY_ENABLED       Pending reward polling +
-#                                                  acknowledge.
-#      5     TOOOLVIBES_SIGNAL_PROGRESS_UI_ENABLED    Server hub payload
-#                                                  (gates badge payload fields).
-#      6     TOOOLVIBES_SIGNAL_ACHIEVEMENTS_ENABLED  evaluate_signal_achievements
-#                                                  runs server-side on every
-#                                                  event accept.
-#      7     TOOOLVIBES_SIGNAL_BADGE_CABINET_ENABLED  Account cabinet renders.
-#      8     TOOOLVIBES_REWARD_MILESTONES_ENABLED     Tier 3 milestone host
-#                                                  (gates confetti import).
-#
-#    After each flag flip, verify via:
-#      - `npm run quality` (TypeScript + ESLint + full Vitest)
-#      - the live Supabase integration suite
-#      - a smoke test with one authenticated production user.
-#    Do not proceed to the next flag until the previous one is verified
-#    in production logs (no 5xx, no unexpected client errors, expected
-#    grant / envelope / badge counts in the live DB).
+| Step | Flag | Why this order |
+|------|------|----------------|
+| 1a | `TOOOLVIBES_GAMIFICATION_ENABLED=1` | Master kill switch ON (required) |
+| 1b | `TOOOLVIBES_REWARD_BACKBONE_ENABLED=1` | Effective backbone becomes true |
+| 2 | `TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED=1` | accept_signal_engagement writes events/grants |
+| 3 | `TOOOLVIBES_REWARD_RUNTIME_ENABLED=1` | Reward host XState machine |
+| 4 | `TOOOLVIBES_REWARD_DELIVERY_ENABLED=1` | Pending reward polling + acknowledge |
+| 5 | `TOOOLVIBES_SIGNAL_PROGRESS_UI_ENABLED=1` | Server hub payload (gates badge fields) |
+| 6 | `TOOOLVIBES_SIGNAL_ACHIEVEMENTS_ENABLED=1` | evaluate_signal_achievements runs server-side on every event accept |
+| 7 | `TOOOLVIBES_SIGNAL_BADGE_CABINET_ENABLED=1` | Account cabinet renders |
+| 8 | `TOOOLVIBES_REWARD_MILESTONES_ENABLED=1` | Tier 3 milestone host (gates confetti import) |
 
-# 5. Rollback at any time:
-#    Set all Phase 4-6 flags back to OFF (or false) and the user-facing
-#    behaviour reverts to the pre-bootstrap state. The migration is
-#    additive; if a hard rollback is needed (migration removal),
-#    contact the operator to coordinate a brief downtime window.
+Explicitly absent or OFF throughout the rollout:
+
+- `TOOOLVIBES_GAMIFICATION_PERSISTENCE_ENABLED`
+- `TOOOLVIBES_GAME_MISSIONS_MODE`
+- `TOOOLVIBES_GAME_HIDDEN_SIGNAL_MODE`
+- `TOOOLVIBES_GAME_ARENA_MODE`
+- `TOOOLVIBES_GAME_PREDICTION_MODE`
+- `TOOOLVIBES_GAME_LEADERBOARD_MODE`
+- `TOOOLVIBES_GAME_VIBE_RUSH_MODE`
+
+The config-level test (Section "Certifications") proves:
+- backbone flag ON + master OFF -> effective backbone false;
+- master ON + backbone ON -> effective backbone true;
+- every legacy surface remains OFF;
+- every Signal gate remains inactive until its subordinate flag is enabled.
+
+## Rollback contract (four tiers)
+
+1. **Feature rollback (instantaneous)**:
+   - set `TOOOLVIBES_GAMIFICATION_ENABLED=0`;
+   - this disables all Signal capabilities immediately (master kill
+     switch forces every legacy and Signal surface to OFF);
+   - zero product-visible behaviour change after the kill switch
+     takes effect.
+
+2. **Worker rollback (instantaneous)**:
+   - restore Cloudflare Worker version
+     `f6549246-be8b-41df-9261-7ee702146347`
+     (the certified Phase 6 closure Worker, the last release
+     deployed to 100% traffic before the Phase 7B preparation);
+   - use `wrangler rollback f6549246-be8b-41df-9261-7ee702146347`
+     or `wrangler rollback b5d3a4b8-8a87-4ace-b6b3-0039e6928d0f`
+     (alternate known-good).
+
+3. **Database containment**:
+   - leave the additive schema in place with flags OFF;
+   - the bootstrap is purely additive: no existing production tables,
+     rows, policies, or grants are modified;
+   - the new schema objects (game_profiles, badges, user_badges,
+     signal_*, workspace_state column, sync RPC infrastructure) sit
+     inert and consume only disk;
+   - zero user-visible behaviour as long as the flags remain OFF.
+
+4. **Hard schema rollback (separately reviewed procedure required)**:
+   - Git revert + Worker rollback do NOT remove database objects;
+   - a hard schema rollback requires:
+     * a separately reviewed reverse migration (Phase 8 work);
+     * a maintenance window with downtime;
+     * the operator's explicit authorisation;
+   - contact the operator before initiating a hard schema rollback;
+   - document any reverse migration in `docs/SIGNAL_REVERSE_MIGRATION_V1.md`
+     (not yet authored).

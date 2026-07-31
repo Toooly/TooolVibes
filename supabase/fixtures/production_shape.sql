@@ -13,19 +13,26 @@ end $$;
 
 create extension if not exists vector;
 
--- Stub Supabase auth schema (for fixture portability; production has real auth)
-create schema if not exists auth;
-create table if not exists auth.users (
-  id uuid primary key default gen_random_uuid(),
-  email text,
-  created_at timestamptz default now()
-);
-
--- Stub Supabase auth helpers (production has real implementations)
-create or replace function auth.uid() returns uuid
-  language sql stable as $$ select null::uuid $$;
-create or replace function auth.role() returns text
-  language sql stable as $$ select 'anon'::text $$;
+-- Stub Supabase auth schema + helpers only when missing (production-shape
+-- disposable fixture). Local Supabase has real auth.users + auth.uid()
+-- and these stub definitions would fail with permission denied on the auth
+-- schema. The throwaway container used by CI / production-shape proof
+-- ships without an auth schema; the do-blocks below install the stubs
+-- only if auth.users does not exist yet.
+do $doauth$
+begin
+  if to_regclass('auth.users') is null then
+    create schema if not exists auth;
+    create table auth.users (
+      id uuid primary key default gen_random_uuid(),
+      email text,
+      created_at timestamptz default now()
+    );
+    execute $a$create or replace function auth.uid() returns uuid language sql stable as $b$ select null::uuid $b$$a$;
+    execute $a$create or replace function auth.role() returns text language sql stable as $b$ select 'anon'::text $b$$a$;
+  end if;
+end
+$doauth$;
 
 
 

@@ -5,12 +5,46 @@
 
 \set ON_ERROR_STOP on
 
+-- Idempotency: purge prior proof-run state for the test users.
+-- This makes the harness safe to run repeatedly on the same database.
+do $purge$
+declare
+  v_user_a uuid := '00000000-0000-0000-0000-aaaaaaaaaaaa';
+  v_user_b uuid := '00000000-0000-0000-0000-bbbbbbbbbbbb';
+  v_viewer uuid := '00000000-0000-0000-0000-0000000000aa';
+begin
+  delete from public.signal_reward_deliveries
+    where user_id in (v_user_a, v_user_b);
+  delete from public.signal_reward_grants
+    where user_id in (v_user_a, v_user_b);
+  delete from public.signal_mission_completions
+    where user_id in (v_user_a, v_user_b);
+  delete from public.user_badges
+    where user_id in (v_user_a, v_user_b);
+  delete from public.game_profiles
+    where user_id in (v_user_a, v_user_b);
+  delete from public.viewer_workspaces
+    where viewer_id = v_viewer;
+  delete from public.viewer_profiles
+    where id = v_viewer;
+  delete from public.signal_engagement_events
+    where user_id in (v_user_a, v_user_b);
+  delete from public.signal_user_context
+    where user_id in (v_user_a, v_user_b);
+  delete from public.signal_reward_preferences
+    where user_id in (v_user_a, v_user_b);
+  delete from public.collections
+    where slug in ('proof-journey','curator-journey');
+end
+$purge$;
+
 -- ============================================================================
 -- SETUP: create two test users (userA, userB) in auth.users
 -- ============================================================================
 insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-aaaaaaaaaaaa', 'proof-a@test'),
-  ('00000000-0000-0000-0000-bbbbbbbbbbbb', 'proof-b@test');
+  ('00000000-0000-0000-0000-bbbbbbbbbbbb', 'proof-b@test')
+on conflict (id) do nothing;
 
 -- create a representative tools row + a workspace_state + a collection
 insert into public.tools (id, name, slug, category, short_description_it,
@@ -36,7 +70,8 @@ values
   ('00000000-0000-0000-0000-0000000000a5', 'Tool E', 'proof-tool-e',
    'Developer', 'Tool E short desc test', 'Tool E long desc test for proof harness dataset XXXXX',
    'https://e.test', 'https://post.test/e', 'https://img.test/e.png',
-   'proof', '2026-07-31', true);
+   'proof', '2026-07-31', true)
+on conflict (id) do nothing;
 
 -- ============================================================================
 -- SCENARIO 1: first save + first_signal ownership persistence
@@ -174,13 +209,15 @@ $$;
 -- ============================================================================
 insert into public.viewer_profiles (id, access_token, kind, auth_user_id)
 values ('00000000-0000-0000-0000-0000000000aa', 'proof-token-1', 'account',
-        '00000000-0000-0000-0000-aaaaaaaaaaaa');
+        '00000000-0000-0000-0000-aaaaaaaaaaaa')
+on conflict (id) do nothing;
 
 insert into public.viewer_workspaces (viewer_id, workspace_state)
 values (
   '00000000-0000-0000-0000-0000000000aa',
   '{"schemaVersion":1,"clearedAt":null,"saved":{"slugs":["proof-tool-a","proof-tool-b","proof-tool-c","proof-tool-d","proof-tool-e"],"updatedAt":"2026-07-31T00:00:00.000Z"},"compare":{"slugs":[],"updatedAt":"2026-07-31T00:00:00.000Z"},"stack":{"slugs":[],"updatedAt":"2026-07-31T00:00:00.000Z"},"toolStates":{}}'::jsonb
-);
+)
+on conflict (viewer_id) do nothing;
 
 select public.evaluate_signal_achievements(
   p_user_id := '00000000-0000-0000-0000-aaaaaaaaaaaa',
@@ -326,7 +363,7 @@ $$;
 -- ============================================================================
 insert into public.game_profiles (user_id, xp, level)
 values ('00000000-0000-0000-0000-aaaaaaaaaaaa', 150, 1)
-on conflict (user_id) do update set xp = excluded.xp, level = excluded.level;
+on conflict (user_id) do update set xp = greatest(game_profiles.xp, excluded.xp), level = excluded.level;
 
 select public.evaluate_signal_achievements(
   p_user_id := '00000000-0000-0000-0000-aaaaaaaaaaaa',
@@ -377,8 +414,11 @@ begin
   -- Since auth.uid() returns the requester's user id, and our stub
   -- returns null, this test verifies the RLS policy denies non-null userB.
   -- We test by setting the request role and session user.
-  perform set_config('role', 'authenticated', false);
-  perform set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-bbbbbbbbbbbb', false);
+  perform set_config('role', 'authenticated', true);
+  perform set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-bbbbbbbbbbbb', true);
+  -- restore session defaults at end of do block (must run inside the txn)
+  perform set_config('role', 'postgres', true);
+  perform set_config('request.jwt.claim.sub', '', true);
   -- In production this would evaluate the policy with auth.uid() = userB.id.
   -- Our stub returns null, so auth.uid() = userA.id would fail the policy.
   -- For this proof we simply count rows visible under "authenticated" with
@@ -415,6 +455,7 @@ $$;
 -- FINAL: hub read model returns earned badges
 -- ============================================================================
 set role service_role;
+set local role service_role;
 select jsonb_pretty(public.get_signal_progress_hub(
   p_user_id := '00000000-0000-0000-0000-aaaaaaaaaaaa'
 )) as hub_payload;
