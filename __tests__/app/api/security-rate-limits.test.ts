@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("server-only", () => ({}));
 import { NextRequest } from "next/server";
 
 const state = vi.hoisted(() => ({
@@ -23,6 +25,13 @@ vi.mock("@/lib/gate/session", () => ({
 }));
 vi.mock("@/lib/supabase/admin-client", () => ({
   createAdminSupabaseClient: supabase.create,
+}));
+vi.mock("@/lib/supabase/env", () => ({
+  getSupabaseAdminEnv: () => ({
+    url: "https://pjyasxaebxvvmcjxvnno.supabase.co",
+    serviceRoleKey: "test-service-role",
+    serviceRoleProjectRef: "pjyasxaebxvvmcjxvnno",
+  }),
 }));
 vi.mock("@/lib/email/resend", () => ({ sendEmail: vi.fn() }));
 
