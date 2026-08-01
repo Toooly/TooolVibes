@@ -26,7 +26,7 @@ export default async function TagsPage() {
   );
 
   return (
-    <div className="page-shell space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
+    <div className="page-shell tags-route space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
       <section className="light-surface overflow-hidden rounded-[30px] border border-[var(--tv-border-inverted)] bg-[var(--tv-surface-inverted)] px-5 py-5 sm:rounded-[38px] sm:px-7 sm:py-8">
         <div className="max-w-[44rem]">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
