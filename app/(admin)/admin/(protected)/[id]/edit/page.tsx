@@ -19,7 +19,7 @@ function getReadSourceLabel(source: string) {
       return "Archivio alternativo";
     case "mixed":
       return "Archivio misto";
-    case "legacy":
+    case "seed":
       return "Articoli da importare";
     case "empty":
       return "Nessun articolo";

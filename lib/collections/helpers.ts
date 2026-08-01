@@ -8,11 +8,11 @@ import type {
   CollectionDifficulty,
   CollectionTheme,
   CollectionTone,
+  CollectionTool,
   CuratedCollection,
   CuratedCollectionRecord,
   ResolvedCollectionToolSlot,
 } from "@/lib/types/collection";
-import type { ToolRecord } from "@/lib/types/tool";
 
 const toneMeta: Record<CollectionTone, { label: string; description: string }> = {
   "starter-stack": {
@@ -98,7 +98,7 @@ export function getCollectionThemeLabel(theme: CollectionTheme) {
 
 export function resolveCuratedCollection(
   collection: CuratedCollectionRecord,
-  tools: ToolRecord[],
+  tools: CollectionTool[],
 ): CuratedCollection {
   const slots = collection.included_tools
     .map((slot, index) => {

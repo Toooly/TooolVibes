@@ -50,32 +50,22 @@ Optional comparison telemetry reports only source names and aggregate counts:
 overlap, source-only records and canonical field mismatch count. It does not
 log slugs, request data or user data.
 
-## Transitional editorial exception
+## Editorial consumers
 
-Posts and Collections are explicitly outside the DATA-202 canonical consumer
-cutover. Until DATA-203 bootstraps and certifies their content, they read through
-`lib/data/legacy-editorial-tool-repository.ts` only. This adapter is server-only,
-read-only, emits `legacy-editorial-tool-repository-active-until-data-203`, and
-preserves the pre-DATA-202 Supabase/mock fallback and editorial overlay contract.
-The canonical ToolPublic repository never imports it.
-
-The only transitional consumers are:
-
-- `lib/data/public-articles.ts`;
-- `lib/data/public-collections.ts`;
-- `app/(marketing)/posts/[slug]/page.tsx`.
-
-The count guard is 8 legacy tools, 5 public collections, 21 expected slots and
-21 resolved slots. This prevents a silent zero-slot release while avoiding an
-unreviewed cross-inventory slug remap.
+Posts and Collections are canonical `ToolPublic` consumers. Tool writeups are
+derived from published records only when they have a factual publication or
+lifecycle date; checked-in guide content remains explicitly authored content.
+Collections resolve their reviewed slot list against the same canonical source.
+No public consumer may import a second tool repository, merge inventories by
+slug, or silently enrich a record with unrelated presentation fields.
 
 ## Consequences
 
 - Home, catalog, tags, detail, related tools, static params, public tool API,
   tool sitemap URLs, shortlist, compare, client search and account resolve the
   same published canonical set.
-- Posts and Collections retain their named legacy repository until DATA-203;
-  they are not evidence of canonical source parity.
+- Posts and Collections resolve the same canonical source as the catalog,
+  detail, API and sitemap surfaces.
 - Drafts are filtered once at the canonical repository boundary.
 - Duplicate slugs invalidate the entire canonical source instead of using
   last-write-wins.
@@ -91,10 +81,8 @@ Do not change production to `supabase` until DATA-203 verifies import counts,
 slug and canonical-field parity, draft exclusion, route/API/sitemap parity,
 cache invalidation and rollback in staging.
 
-DATA-203 is also not complete until Posts and Collections are migrated to
-ToolPublic-backed content, the 8/5/21/21 editorial count guard is replaced by a
-certified canonical parity fixture, every editorial link resolves, and
-`legacy-editorial-tool-repository.ts` plus its warning are removed.
+DATA-203 is also not complete until staging verifies the canonical import,
+every editorial link resolves and the certified canonical parity fixture passes.
 
 ## DATA-203 local contract status
 

@@ -44,7 +44,7 @@ function getReadSourceLabel(source: string) {
       return "Archivio alternativo";
     case "mixed":
       return "Archivio misto";
-    case "legacy":
+    case "seed":
       return "Articoli da importare";
     case "empty":
       return "Nessun articolo";
@@ -66,7 +66,7 @@ export default async function AdminDashboardPage({
   const publishedCount = articles.filter((article) => article.status === "published").length;
   const featuredCount = articles.filter((article) => article.featured).length;
   const cmsCount = articles.filter((article) => article.admin_source === "cms").length;
-  const legacyCount = articles.length - cmsCount;
+  const seedCount = articles.length - cmsCount;
   const draftCount = articles.length - publishedCount;
   const filteredArticles = articles.filter((article) => {
     if (activeView === "all") return true;
@@ -74,14 +74,14 @@ export default async function AdminDashboardPage({
     if (activeView === "draft") return article.status === "draft";
     if (activeView === "featured") return article.featured;
     if (activeView === "cms") return article.admin_source === "cms";
-    if (activeView === "legacy") return article.admin_source === "legacy";
+    if (activeView === "seed") return article.admin_source === "seed";
     return true;
   });
   const dashboardMetrics = [
     { label: "Articoli", value: articles.length },
     { label: "Pubblicati", value: publishedCount },
     { label: "In archivio", value: cmsCount },
-    { label: "Da importare", value: legacyCount },
+    { label: "Da importare", value: seedCount },
   ];
   const filterLinks = [
     { href: "/admin", label: "Tutti", value: "all", count: articles.length },
@@ -99,7 +99,7 @@ export default async function AdminDashboardPage({
       count: featuredCount,
     },
     { href: "/admin?view=cms", label: "In archivio", value: "cms", count: cmsCount },
-    { href: "/admin?view=legacy", label: "Da importare", value: "legacy", count: legacyCount },
+    { href: "/admin?view=seed", label: "Da importare", value: "seed", count: seedCount },
   ];
 
   return (
@@ -180,7 +180,7 @@ export default async function AdminDashboardPage({
                   In archivio: {cmsCount}
                 </span>
                 <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                  Da importare: {legacyCount}
+                  Da importare: {seedCount}
                 </span>
                 <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
                   Salvataggio: {canWrite ? "attivo" : "sola lettura"}
@@ -353,7 +353,7 @@ export default async function AdminDashboardPage({
                       </Link>
                     ) : canWrite ? (
                       <Link
-                        href={`/admin/articles/new?legacy=${article.slug}`}
+                        href={`/admin/articles/new?seed=${article.slug}`}
                         className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
                       >
                         Importa e modifica

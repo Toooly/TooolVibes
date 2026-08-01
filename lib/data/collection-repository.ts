@@ -6,7 +6,6 @@ import {
   buildCollectionRepositorySnapshot,
   getRequestedCollectionsSource,
 } from "@/lib/collections/editorial";
-import { mergeCollectionsByPrecedence } from "@/lib/collections/source-transition";
 import { contentCollections } from "@/lib/data/content-collections";
 import { canUseMockDataFallback } from "@/lib/data/mock-fallback";
 import { mockCollections } from "@/lib/data/mock-collections";
@@ -22,6 +21,10 @@ function hasCollections(items: CuratedCollectionRecord[]) {
   return items.length > 0;
 }
 
+function canLoadMockCollectionsLocally() {
+  return process.env.NODE_ENV !== "production" && canUseMockDataFallback();
+}
+
 async function loadCollectionsFromSource(
   source: CollectionSourceKind,
 ): Promise<CuratedCollectionRecord[]> {
@@ -31,22 +34,23 @@ async function loadCollectionsFromSource(
     case "supabase":
       return getCollectionsFromSupabase();
     case "mock":
-    default:
       return mockCollections;
+    default:
+      return contentCollections;
   }
 }
 
 async function trySource(
   source: CollectionSourceKind,
   warnings: string[],
-  { warnIfEmpty = source !== "content" }: { warnIfEmpty?: boolean } = {},
+  { warnIfEmpty = true }: { warnIfEmpty?: boolean } = {},
 ): Promise<CuratedCollectionRecord[] | null> {
   try {
     const collections = await loadCollectionsFromSource(source);
 
-    if (!hasCollections(collections) && source !== "mock") {
+    if (!hasCollections(collections)) {
       if (warnIfEmpty) {
-        warnings.push(`La sorgente ${source} non ha restituito raccolte: passo alla sorgente successiva.`);
+        warnings.push(`La sorgente ${source} non ha restituito raccolte.`);
       }
       return null;
     }
@@ -66,14 +70,13 @@ export const getCollectionRepositorySnapshot = cache(
   async (): Promise<CollectionRepositorySnapshot> => {
     const requestedSource = getRequestedCollectionsSource();
     const warnings: string[] = [];
-    const mockFallbackEnabled = canUseMockDataFallback();
 
     if (requestedSource === "mock") {
-      if (!mockFallbackEnabled) {
+      if (!canLoadMockCollectionsLocally()) {
         return buildCollectionRepositorySnapshot([], {
           requestedSource,
           activeSource: "mock",
-          warnings: ["mock-source-disabled-in-production"],
+          warnings: ["mock-source-disabled-for-public-v1"],
           composedSources: [],
           sourcePrecedence: ["mock"],
         });
@@ -87,18 +90,20 @@ export const getCollectionRepositorySnapshot = cache(
       });
     }
 
-    if (requestedSource === "content") {
+    // V1 keeps the public catalog deterministic: content is both the default
+    // and the only automatic source. Remote records remain opt-in for a later
+    // migration, while mock data can only be selected locally and explicitly.
+    if (requestedSource === "content" || requestedSource === "auto") {
       const collections = await trySource("content", warnings);
 
       return buildCollectionRepositorySnapshot(
-        collections ?? (mockFallbackEnabled ? mockCollections : []),
+        collections ?? [],
         {
-        requestedSource,
-        activeSource: collections ? "content" : mockFallbackEnabled ? "mock" : "content",
-        fallbackSource: collections ? null : mockFallbackEnabled ? "mock" : null,
-        warnings,
-        composedSources: collections ? ["content"] : mockFallbackEnabled ? ["mock"] : [],
-        sourcePrecedence: mockFallbackEnabled ? ["content", "mock"] : ["content"],
+          requestedSource,
+          activeSource: "content",
+          warnings,
+          composedSources: collections ? ["content"] : [],
+          sourcePrecedence: ["content"],
         },
       );
     }
@@ -125,47 +130,24 @@ export const getCollectionRepositorySnapshot = cache(
       const fallbackContent = await trySource("content", warnings);
 
       return buildCollectionRepositorySnapshot(
-        fallbackContent ?? (mockFallbackEnabled ? mockCollections : []),
+        fallbackContent ?? [],
         {
-        requestedSource,
-        activeSource: fallbackContent ? "content" : mockFallbackEnabled ? "mock" : "supabase",
-        fallbackSource: fallbackContent ? "content" : mockFallbackEnabled ? "mock" : null,
-        warnings,
-        composedSources: fallbackContent ? ["content"] : mockFallbackEnabled ? ["mock"] : [],
-        sourcePrecedence: mockFallbackEnabled
-          ? ["supabase", "content", "mock"]
-          : ["supabase", "content"],
+          requestedSource,
+          activeSource: fallbackContent ? "content" : "supabase",
+          fallbackSource: fallbackContent ? "content" : null,
+          warnings,
+          composedSources: fallbackContent ? ["content"] : [],
+          sourcePrecedence: ["supabase", "content"],
         },
       );
     }
 
-    const supabaseCollections = isSupabasePublicEnabled()
-      ? await trySource("supabase", warnings)
-      : null;
-
-    if (!isSupabasePublicEnabled()) {
-      warnings.push("Archivio pubblico non disponibile: la transizione delle raccolte resta locale.");
-    }
-
-    const structuredContentCollections = await trySource("content", warnings, {
-      warnIfEmpty: false,
-    });
-    const merged = mergeCollectionsByPrecedence({
-      mockCollections: mockFallbackEnabled ? mockCollections : [],
-      contentCollections: structuredContentCollections ?? [],
-      supabaseCollections: supabaseCollections ?? [],
-    });
-
-    return buildCollectionRepositorySnapshot(merged.collections, {
+    return buildCollectionRepositorySnapshot([], {
       requestedSource,
-      activeSource: merged.activeSource,
-      fallbackSource:
-        merged.composedSources.length > 1 ? merged.composedSources.at(-1) ?? null : null,
-      warnings: [...warnings, ...merged.warnings],
-      resolutionMode:
-        merged.composedSources.length > 1 ? "merged-precedence" : "single-source",
-      composedSources: merged.composedSources,
-      sourcePrecedence: merged.transition.source_precedence,
+      activeSource: "content",
+      warnings: ["unsupported-collection-source"],
+      composedSources: [],
+      sourcePrecedence: ["content"],
     });
   },
 );

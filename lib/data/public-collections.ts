@@ -10,19 +10,37 @@ import {
   sortCollections,
 } from "@/lib/collections/helpers";
 import { getCollectionRepositorySnapshot } from "@/lib/data/collection-repository";
-import { getLegacyEditorialPublishedTools } from "@/lib/data/legacy-editorial-tool-repository";
-import type { CuratedCollection } from "@/lib/types/collection";
+import { getPublishedTools } from "@/lib/data/public-tools";
+import type { CuratedCollection, CollectionTool } from "@/lib/types/collection";
+import type { ToolPublic } from "@/lib/types/tool-public";
+
+function toCollectionTool(tool: ToolPublic): CollectionTool {
+  return {
+    id: tool.provenance.sourceId,
+    name: tool.name,
+    slug: tool.slug,
+    category: tool.taxonomy.canonicalCategory ?? tool.taxonomy.sourceCategoryLabel,
+    short_description_it: tool.content.summary,
+    website_url: tool.urls.website,
+    affiliate_url: tool.urls.affiliate,
+    pricing: tool.attributes.pricing ?? undefined,
+    why_here:
+      tool.editorial.evidence.find((evidence) => evidence.kind === "rationale")
+        ?.text,
+  };
+}
 
 const loadCollections = cache(async (): Promise<CuratedCollection[]> => {
   const [tools, snapshot] = await Promise.all([
-    getLegacyEditorialPublishedTools(),
+    getPublishedTools(),
     getCollectionRepositorySnapshot(),
   ]);
+  const collectionTools = tools.map(toCollectionTool);
 
   return sortCollections(
     snapshot.collections
       .filter(isCollectionPublic)
-      .map((collection) => resolveCuratedCollection(collection, tools))
+      .map((collection) => resolveCuratedCollection(collection, collectionTools))
       .filter((collection) => collection.tool_count > 0),
   );
 });

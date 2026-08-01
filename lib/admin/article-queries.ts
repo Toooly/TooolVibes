@@ -2,7 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 
-import { loadLegacyEditorialPosts } from "@/lib/data/public-articles";
+import { loadCatalogEditorialPosts } from "@/lib/data/public-articles";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
 import { getSupabaseAdminEnv } from "@/lib/supabase/env";
 import {
@@ -23,7 +23,7 @@ import {
 import type { BlogArticleRecord, EditorialPostRecord } from "@/lib/types/article";
 
 export type AdminArticleRecord = BlogArticleRecord & {
-  admin_source: "cms" | "legacy";
+  admin_source: "cms" | "seed";
   admin_source_label: string;
   admin_can_edit: boolean;
   admin_can_mutate: boolean;
@@ -31,7 +31,7 @@ export type AdminArticleRecord = BlogArticleRecord & {
 
 export type AdminArticlesRuntime = {
   articles: AdminArticleRecord[];
-  adminReadSource: "supabase" | "storage" | "legacy" | "mixed" | "empty";
+  adminReadSource: "supabase" | "storage" | "seed" | "mixed" | "empty";
   requestedAdminReadSource: "supabase" | "empty";
   readMessage: string;
   canWrite: boolean;
@@ -47,9 +47,9 @@ const warningLabels: Record<string, string> = {
     "L'archivio del blog non è ancora raggiungibile. Intanto vedi gli articoli da importare e potrai salvarli appena l'area sarà pronta.",
   "supabase-admin-query-failed":
     "La lettura dell'archivio blog non è riuscita. Mostro gli articoli da importare per non lasciare l'area vuota.",
-  "legacy-auto-import-failed":
+  "seed-auto-import-failed":
     "Un articolo precedente non è stato importato automaticamente.",
-  "legacy-auto-import-refresh-failed":
+  "seed-auto-import-refresh-failed":
     "Importazione completata solo in parte: non sono riuscito a rileggere l'archivio dopo il tentativo automatico.",
 };
 
@@ -64,7 +64,7 @@ function getMissingSupabaseAdminWarnings() {
   return url && !serviceRoleKey ? ["supabase-service-role-missing"] : [];
 }
 
-function buildLegacyArticleContent(post: EditorialPostRecord) {
+function buildSeedArticleContent(post: EditorialPostRecord) {
   const sections = [
     `# ${post.title}`,
     post.dek,
@@ -77,16 +77,16 @@ function buildLegacyArticleContent(post: EditorialPostRecord) {
   return sections.filter(Boolean).join("\n\n");
 }
 
-function mapLegacyPostToAdminArticle(post: EditorialPostRecord): AdminArticleRecord {
+function mapSeedPostToAdminArticle(post: EditorialPostRecord): AdminArticleRecord {
   return {
-    id: `legacy:${post.slug}`,
+    id: `seed:${post.slug}`,
     slug: post.slug,
     title: post.title,
     dek: post.dek,
     summary: post.summary,
     kind: post.kind,
     status: "published",
-    content_markdown: post.content_markdown ?? buildLegacyArticleContent(post),
+    content_markdown: post.content_markdown ?? buildSeedArticleContent(post),
     cover_image_url: post.cover_image_url ?? null,
     cover_image_alt: post.cover_image_alt ?? post.title,
     author_name: post.author_name ?? "TooolVibes",
@@ -95,14 +95,14 @@ function mapLegacyPostToAdminArticle(post: EditorialPostRecord): AdminArticleRec
     featured: Boolean(post.featured),
     created_at: post.published_at,
     updated_at: post.updated_at,
-    admin_source: "legacy",
+    admin_source: "seed",
     admin_source_label: post.source_label,
     admin_can_edit: false,
     admin_can_mutate: false,
   };
 }
 
-function dedupeLegacyPostsBySlug(posts: EditorialPostRecord[]) {
+function dedupeSeedPostsBySlug(posts: EditorialPostRecord[]) {
   const seen = new Set<string>();
   const uniquePosts: EditorialPostRecord[] = [];
 
@@ -133,15 +133,15 @@ function mapCmsArticleToAdminArticle(
 
 function mergeAdminArticles(
   cmsArticles: BlogArticleRecord[],
-  legacyPosts: EditorialPostRecord[],
+  seedPosts: EditorialPostRecord[],
 ) {
   const cmsItems = cmsArticles.map((article) => mapCmsArticleToAdminArticle(article));
   const cmsSlugs = new Set(cmsItems.map((article) => article.slug));
-  const legacyItems = dedupeLegacyPostsBySlug(legacyPosts)
+  const seedItems = dedupeSeedPostsBySlug(seedPosts)
     .filter((post) => !cmsSlugs.has(post.slug))
-    .map(mapLegacyPostToAdminArticle);
+    .map(mapSeedPostToAdminArticle);
 
-  return [...cmsItems, ...legacyItems].sort((left, right) => {
+  return [...cmsItems, ...seedItems].sort((left, right) => {
     if (left.admin_source !== right.admin_source) {
       return left.admin_source === "cms" ? -1 : 1;
     }
@@ -154,15 +154,15 @@ function mergeAdminArticles(
   });
 }
 
-async function getLegacyAdminArticles() {
+async function getSeedAdminArticles() {
   try {
-    return dedupeLegacyPostsBySlug(await loadLegacyEditorialPosts());
+    return dedupeSeedPostsBySlug(await loadCatalogEditorialPosts());
   } catch {
     return [];
   }
 }
 
-type LegacyArticleImportInput = Pick<
+type SeedArticleImportInput = Pick<
   BlogArticleRecord,
   | "slug"
   | "title"
@@ -180,7 +180,7 @@ type LegacyArticleImportInput = Pick<
   is_featured: boolean;
 };
 
-function mapLegacyPostToImportInput(post: EditorialPostRecord): LegacyArticleImportInput {
+function mapSeedPostToImportInput(post: EditorialPostRecord): SeedArticleImportInput {
   return {
     slug: post.slug,
     title: post.title,
@@ -188,7 +188,7 @@ function mapLegacyPostToImportInput(post: EditorialPostRecord): LegacyArticleImp
     summary: post.summary,
     kind: post.kind,
     status: post.status ?? "published",
-    content_markdown: post.content_markdown ?? buildLegacyArticleContent(post),
+    content_markdown: post.content_markdown ?? buildSeedArticleContent(post),
     cover_image_url: post.cover_image_url ?? null,
     cover_image_alt: post.cover_image_alt ?? post.title,
     author_name: post.author_name ?? "TooolVibes",
@@ -198,22 +198,22 @@ function mapLegacyPostToImportInput(post: EditorialPostRecord): LegacyArticleImp
   };
 }
 
-function getMissingLegacyPosts(
+function getMissingSeedPosts(
   cmsArticles: BlogArticleRecord[],
-  legacyPosts: EditorialPostRecord[],
+  seedPosts: EditorialPostRecord[],
 ) {
   const cmsSlugs = new Set(cmsArticles.map((article) => article.slug));
 
-  return dedupeLegacyPostsBySlug(legacyPosts).filter((post) => !cmsSlugs.has(post.slug));
+  return dedupeSeedPostsBySlug(seedPosts).filter((post) => !cmsSlugs.has(post.slug));
 }
 
 function getImportWarning(post: EditorialPostRecord, error: unknown) {
   const detail = error instanceof Error ? error.message : String(error);
 
-  return `legacy-auto-import-failed::${post.slug}: ${detail}`;
+  return `seed-auto-import-failed::${post.slug}: ${detail}`;
 }
 
-async function importLegacyPostsIntoSupabase(posts: EditorialPostRecord[]) {
+async function importSeedPostsIntoSupabase(posts: EditorialPostRecord[]) {
   if (posts.length === 0) {
     return;
   }
@@ -221,7 +221,7 @@ async function importLegacyPostsIntoSupabase(posts: EditorialPostRecord[]) {
   const client = createAdminSupabaseClient();
   const { error } = await client
     .from("editorial_articles")
-    .upsert(posts.map(mapLegacyPostToImportInput), {
+    .upsert(posts.map(mapSeedPostToImportInput), {
       onConflict: "slug",
       ignoreDuplicates: true,
     });
@@ -231,33 +231,33 @@ async function importLegacyPostsIntoSupabase(posts: EditorialPostRecord[]) {
   }
 }
 
-async function materializeMissingLegacyArticles({
+async function materializeMissingSeedArticles({
   cmsArticles,
-  legacyPosts,
+  seedPosts,
   writeTarget,
 }: {
   cmsArticles: BlogArticleRecord[];
-  legacyPosts: EditorialPostRecord[];
+  seedPosts: EditorialPostRecord[];
   writeTarget: ArticleWriteTarget;
 }) {
-  const missingLegacyPosts = getMissingLegacyPosts(cmsArticles, legacyPosts);
+  const missingSeedPosts = getMissingSeedPosts(cmsArticles, seedPosts);
   const warnings: string[] = [];
 
-  if (missingLegacyPosts.length === 0) {
+  if (missingSeedPosts.length === 0) {
     return { articles: cmsArticles, warnings, importedCount: 0 };
   }
 
   if (writeTarget === "supabase") {
     try {
-      await importLegacyPostsIntoSupabase(missingLegacyPosts);
+      await importSeedPostsIntoSupabase(missingSeedPosts);
     } catch (error) {
-      warnings.push(getImportWarning({ ...missingLegacyPosts[0], slug: "batch" }, error));
+      warnings.push(getImportWarning({ ...missingSeedPosts[0], slug: "batch" }, error));
     }
   } else {
     try {
-      await createArticlesInStorage(missingLegacyPosts.map(mapLegacyPostToImportInput));
+      await createArticlesInStorage(missingSeedPosts.map(mapSeedPostToImportInput));
     } catch (error) {
-      warnings.push(getImportWarning({ ...missingLegacyPosts[0], slug: "storage-batch" }, error));
+      warnings.push(getImportWarning({ ...missingSeedPosts[0], slug: "storage-batch" }, error));
     }
   }
 
@@ -277,7 +277,7 @@ async function materializeMissingLegacyArticles({
 
     return {
       articles: cmsArticles,
-      warnings: [...warnings, `legacy-auto-import-refresh-failed::${detail}`],
+      warnings: [...warnings, `seed-auto-import-refresh-failed::${detail}`],
       importedCount: 0,
     };
   }
@@ -326,13 +326,13 @@ export const isSupabaseArticlesWriteEnabled = cache(async () => {
 });
 
 export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRuntime> => {
-  const legacyPosts = await getLegacyAdminArticles();
-  const legacyArticles = mergeAdminArticles([], legacyPosts);
+  const seedPosts = await getSeedAdminArticles();
+  const seedArticles = mergeAdminArticles([], seedPosts);
 
   if (!isSupabaseAdminEnabled()) {
     return buildFallbackRuntime({
-      articles: legacyArticles,
-      adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
+      articles: seedArticles,
+      adminReadSource: seedArticles.length > 0 ? "seed" : "empty",
       requestedAdminReadSource: "empty",
       readMessage:
         "Archivio blog non attivo: mostro gli articoli già disponibili per l'importazione.",
@@ -346,8 +346,8 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
 
   if (!writeTarget) {
     return buildFallbackRuntime({
-      articles: legacyArticles,
-      adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
+      articles: seedArticles,
+      adminReadSource: seedArticles.length > 0 ? "seed" : "empty",
       requestedAdminReadSource: "supabase",
       readMessage:
         "L'archivio principale è configurato ma il blog non è raggiungibile: mostro gli articoli da importare.",
@@ -360,22 +360,22 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
   if (writeTarget === "storage") {
     try {
       const storageArticles = await getArticlesFromArticleStorage();
-      const importResult = await materializeMissingLegacyArticles({
+      const importResult = await materializeMissingSeedArticles({
         cmsArticles: storageArticles,
-        legacyPosts,
+        seedPosts,
         writeTarget,
       });
-      const articles = mergeAdminArticles(importResult.articles, legacyPosts);
-      const hasLegacyFallback = articles.some((article) => article.admin_source === "legacy");
+      const articles = mergeAdminArticles(importResult.articles, seedPosts);
+      const hasSeedFallback = articles.some((article) => article.admin_source === "seed");
 
       return {
         articles,
-        adminReadSource: hasLegacyFallback ? "mixed" : "storage",
+        adminReadSource: hasSeedFallback ? "mixed" : "storage",
         requestedAdminReadSource: "supabase",
         readMessage:
           importResult.importedCount > 0
             ? "Archivio blog attivo: ho importato automaticamente gli articoli precedenti mancanti."
-            : hasLegacyFallback
+            : hasSeedFallback
               ? "Archivio blog attivo con alcuni articoli precedenti ancora da verificare."
               : "Archivio blog attivo con articoli modificabili.",
         canWrite: true,
@@ -388,8 +388,8 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
       const detail = error instanceof Error ? error.message : "errore sconosciuto";
 
       return buildFallbackRuntime({
-        articles: legacyArticles,
-        adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
+        articles: seedArticles,
+        adminReadSource: seedArticles.length > 0 ? "seed" : "empty",
         requestedAdminReadSource: "supabase",
       readMessage:
           "Lettura dell'archivio alternativo non disponibile: mostro gli articoli da importare.",
@@ -402,22 +402,22 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
 
   try {
     const cmsArticles = await getAdminArticlesFromSupabase();
-    const importResult = await materializeMissingLegacyArticles({
+    const importResult = await materializeMissingSeedArticles({
       cmsArticles,
-      legacyPosts,
+      seedPosts,
       writeTarget: "supabase",
     });
-    const articles = mergeAdminArticles(importResult.articles, legacyPosts);
-    const hasLegacyFallback = articles.some((article) => article.admin_source === "legacy");
+    const articles = mergeAdminArticles(importResult.articles, seedPosts);
+    const hasSeedFallback = articles.some((article) => article.admin_source === "seed");
 
     return {
       articles,
-      adminReadSource: hasLegacyFallback ? "mixed" : "supabase",
+      adminReadSource: hasSeedFallback ? "mixed" : "supabase",
       requestedAdminReadSource: "supabase",
       readMessage:
         importResult.importedCount > 0
           ? "Lettura attiva: ho importato automaticamente gli articoli precedenti mancanti."
-          : hasLegacyFallback
+          : hasSeedFallback
             ? "Lettura attiva con alcuni articoli precedenti ancora da verificare."
           : "Lettura attiva con articoli e bozze del blog.",
       canWrite: true,
@@ -431,22 +431,22 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
     if (isArticleStorageFallbackEnabled() && await canAccessArticleStorageAdmin()) {
       try {
         const storageArticles = await getArticlesFromArticleStorage();
-        const importResult = await materializeMissingLegacyArticles({
+        const importResult = await materializeMissingSeedArticles({
           cmsArticles: storageArticles,
-          legacyPosts,
+          seedPosts,
           writeTarget: "storage",
         });
-        const articles = mergeAdminArticles(importResult.articles, legacyPosts);
-        const hasLegacyFallback = articles.some((article) => article.admin_source === "legacy");
+        const articles = mergeAdminArticles(importResult.articles, seedPosts);
+        const hasSeedFallback = articles.some((article) => article.admin_source === "seed");
 
         return {
           articles,
-          adminReadSource: hasLegacyFallback ? "mixed" : "storage",
+          adminReadSource: hasSeedFallback ? "mixed" : "storage",
           requestedAdminReadSource: "supabase",
           readMessage:
             importResult.importedCount > 0
               ? "L'archivio principale non risponde: uso l'archivio alternativo e ho importato gli articoli precedenti mancanti."
-              : hasLegacyFallback
+              : hasSeedFallback
                 ? "L'archivio principale non risponde: uso l'archivio alternativo con alcuni articoli precedenti da verificare."
                 : "L'archivio principale non risponde: uso l'archivio alternativo per tenere attive le modifiche.",
           canWrite: true,
@@ -461,8 +461,8 @@ export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRunt
     }
 
     return buildFallbackRuntime({
-      articles: legacyArticles,
-      adminReadSource: legacyArticles.length > 0 ? "legacy" : "empty",
+      articles: seedArticles,
+      adminReadSource: seedArticles.length > 0 ? "seed" : "empty",
       requestedAdminReadSource: "supabase",
       readMessage:
         "Lettura blog degradata: mostro gli articoli da importare per non lasciare l'area vuota.",
@@ -494,9 +494,9 @@ export async function getAdminArticleById(id: string) {
   return getAdminArticleByIdFromSupabase(id);
 }
 
-export const getLegacyPostForImport = cache(async (
+export const getSeedPostForImport = cache(async (
   slug: string,
 ): Promise<EditorialPostRecord | null> => {
-  const legacyPosts = await getLegacyAdminArticles();
-  return legacyPosts.find((post) => post.slug === slug) ?? null;
+  const seedPosts = await getSeedAdminArticles();
+  return seedPosts.find((post) => post.slug === slug) ?? null;
 });

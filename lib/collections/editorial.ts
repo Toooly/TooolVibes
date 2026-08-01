@@ -75,7 +75,7 @@ export function getRequestedCollectionsSource(): CollectionSourceMode {
     return value;
   }
 
-  return "auto";
+  return "content";
 }
 
 export function isCollectionPublic(collection: CuratedCollectionRecord) {
@@ -92,6 +92,10 @@ export function normalizeCollectionRecord(
 ): CuratedCollectionRecord {
   return {
     ...collection,
+    // V1 collections are fully readable. Keep legacy access values in their
+    // archival sources, but never expose a membership gate in public output.
+    access: "open",
+    premium_teaser: undefined,
     source_kind: collection.source_kind ?? sourceKind,
     featured_slot: collection.featured_slot ?? null,
     editorial_order: collection.editorial_order ?? 999,

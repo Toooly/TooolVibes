@@ -1,4 +1,4 @@
-import type { ToolRecord } from "@/lib/types/tool";
+import type { ToolPricing } from "@/lib/types/tool";
 
 export type CollectionTheme =
   | "founder-stack"
@@ -196,9 +196,21 @@ export type CuratedCollectionRecord = {
   source_kind?: CollectionSourceKind;
 };
 
+export type CollectionTool = {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  short_description_it: string;
+  website_url: string;
+  affiliate_url: string | null;
+  pricing?: ToolPricing;
+  why_here?: string;
+};
+
 export type ResolvedCollectionToolSlot = CollectionToolSlot & {
   order: number;
-  tool: ToolRecord;
+  tool: CollectionTool;
 };
 
 export type CuratedCollection = Omit<CuratedCollectionRecord, "included_tools"> & {

@@ -4,10 +4,10 @@ import { createArticleFormAction } from "@/app/(admin)/admin/actions/articles";
 import { ArticleForm } from "@/components/admin/article-form";
 import { SectionHeader } from "@/components/ui/section-header";
 import { getArticleImportFormValues } from "@/lib/admin/article-form";
-import { getAdminArticlesRuntime, getLegacyPostForImport } from "@/lib/admin/article-queries";
+import { getAdminArticlesRuntime, getSeedPostForImport } from "@/lib/admin/article-queries";
 
 type NewArticlePageProps = {
-  searchParams: Promise<{ legacy?: string }>;
+  searchParams: Promise<{ seed?: string }>;
 };
 
 function getReadSourceLabel(source: string) {
@@ -18,7 +18,7 @@ function getReadSourceLabel(source: string) {
       return "Archivio alternativo";
     case "mixed":
       return "Archivio misto";
-    case "legacy":
+    case "seed":
       return "Articoli da importare";
     case "empty":
       return "Nessun articolo";
@@ -29,13 +29,13 @@ function getReadSourceLabel(source: string) {
 
 export default async function NewArticlePage({ searchParams }: NewArticlePageProps) {
   const params = await searchParams;
-  const legacySlug = params.legacy?.trim();
-  const [runtime, legacyPost] = await Promise.all([
+  const seedSlug = params.seed?.trim();
+  const [runtime, seedPost] = await Promise.all([
     getAdminArticlesRuntime(),
-    legacySlug ? getLegacyPostForImport(legacySlug) : Promise.resolve(null),
+    seedSlug ? getSeedPostForImport(seedSlug) : Promise.resolve(null),
   ]);
   const canWrite = runtime.canWrite;
-  const initialValues = legacyPost ? getArticleImportFormValues(legacyPost) : undefined;
+  const initialValues = seedPost ? getArticleImportFormValues(seedPost) : undefined;
   const runtimeHighlights = [
     { label: "Lettura", value: getReadSourceLabel(runtime.adminReadSource) },
     { label: "Articoli", value: String(runtime.articles.length) },
@@ -47,10 +47,10 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <SectionHeader
-            eyebrow={legacyPost ? "Importa articolo" : "Nuovo articolo"}
-            title={legacyPost ? `Importa "${legacyPost.title}" nel blog` : "Crea una nuova bozza blog"}
+            eyebrow={seedPost ? "Importa articolo" : "Nuovo articolo"}
+            title={seedPost ? `Importa "${seedPost.title}" nel blog` : "Crea una nuova bozza blog"}
             description={
-              legacyPost
+              seedPost
                 ? "Ho precompilato il contenuto dell'articolo precedente nel nuovo editor. Salvalo per renderlo modificabile mantenendo stato e data originale."
                 : "Scrivi il testo, inserisci media nel corpo articolo e decidi se salvarlo come bozza o pubblicarlo subito."
             }
@@ -91,7 +91,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
           <ArticleForm
             action={createArticleFormAction}
             initialValues={initialValues}
-            submitLabel={legacyPost ? "Importa nel blog" : "Crea articolo"}
+            submitLabel={seedPost ? "Importa nel blog" : "Crea articolo"}
             disabled={!canWrite}
           />
         </div>

@@ -2,48 +2,82 @@ import "server-only";
 
 import { cache } from "react";
 
-import { getLegacyEditorialPublishedTools } from "@/lib/data/legacy-editorial-tool-repository";
+import { getPublishedTools } from "@/lib/data/public-tools";
 import {
   getPublishedArticlesFromSupabase,
   mapArticleToEditorialPost,
 } from "@/lib/supabase/article-repository";
 import { getPublishedArticlesFromArticleStorage } from "@/lib/supabase/article-storage-repository";
 import { isSupabasePublicEnabled } from "@/lib/supabase/public-client";
-import type { EditorialPostKind, EditorialPostRecord } from "@/lib/types/article";
-import type { ToolRecord } from "@/lib/types/tool";
+import type {
+  BlogArticleRecord,
+  EditorialPostKind,
+  EditorialPostRecord,
+} from "@/lib/types/article";
+import type { ToolPublic } from "@/lib/types/tool-public";
 
-type LegacyGuideSeed = Omit<EditorialPostRecord, "tool_slug" | "updated_at" | "kind"> & {
+type GuideSeed = Omit<EditorialPostRecord, "tool_slug" | "updated_at" | "kind"> & {
   kind: EditorialPostKind;
 };
 
-function buildToolWriteup(tool: ToolRecord): EditorialPostRecord {
-  const highlights = [
-    tool.best_for ?? tool.short_description_it,
-    tool.why_here ?? tool.description_it,
-    tool.editorial_note ?? tool.short_description_it,
-  ].filter((item): item is string => Boolean(item));
+function uniqueText(values: Array<string | null | undefined>) {
+  return [
+    ...new Set(
+      values
+        .map((value) => value?.trim())
+        .filter((value): value is string => Boolean(value)),
+    ),
+  ];
+}
 
-  const details = (tool.use_cases?.length ? tool.use_cases : tool.strengths ?? []).slice(0, 3);
+function getToolWriteupDate(tool: ToolPublic) {
+  return (
+    tool.publication.publishedAt ??
+    tool.lifecycle.updatedAt ??
+    tool.lifecycle.discoveredAt ??
+    tool.lifecycle.createdAt
+  );
+}
+
+function buildToolWriteup(tool: ToolPublic): EditorialPostRecord | null {
+  const publishedAt = getToolWriteupDate(tool);
+
+  if (!publishedAt) {
+    return null;
+  }
+
+  const evidence = tool.editorial.evidence;
+  const highlights = uniqueText([
+    tool.content.bestFor,
+    ...evidence
+      .filter((item) =>
+        ["highlight", "strength", "review", "rationale"].includes(item.kind),
+      )
+      .map((item) => item.text),
+  ]).slice(0, 3);
 
   return {
     slug: tool.slug,
     title: tool.name,
-    dek: tool.short_description_it,
-    summary: tool.description_it,
+    dek: tool.content.summary,
+    summary: tool.content.description,
     kind: "tool-writeup",
-    published_at: tool.date_discovered,
-    updated_at: tool.updated_at,
-    source_label: "Archivio TooolVibes",
-    source_url: tool.tooolvibes_post_url,
+    published_at: publishedAt,
+    updated_at: tool.lifecycle.updatedAt ?? publishedAt,
+    source_label: tool.provenance.sourceLabel ?? "Catalogo TooolVibes",
+    source_url: tool.urls.editorial ?? tool.urls.website,
     tool_slug: tool.slug,
-    featured: false,
-    highlights: highlights.slice(0, 3),
-    details,
-    cautions: (tool.cautions ?? []).slice(0, 3),
+    featured: tool.flags.featured,
+    highlights,
+    details: tool.content.useCases.slice(0, 3),
+    cautions: evidence
+      .filter((item) => item.kind === "caution")
+      .map((item) => item.text)
+      .slice(0, 3),
   };
 }
 
-const legacyGuideSeeds: LegacyGuideSeed[] = [
+const guideSeeds: GuideSeed[] = [
   {
     slug: "betterpic",
     title: "BetterPic",
@@ -358,6 +392,17 @@ const legacyGuideSeeds: LegacyGuideSeed[] = [
   },
 ];
 
+// `supabase/fixtures/staging_seed.sql` uses this UUID for its local-only
+// restore record. The public database query cannot infer fixture intent from
+// publish status, so retain the exact immutable identifier at this boundary.
+const LOCAL_RESTORE_FIXTURE_ARTICLE_ID =
+  "60000000-0000-4000-8000-000000000001";
+
+/** Keeps the deterministic restore fixture out of every public consumer. */
+export function isPublicAuthoredArticle(article: BlogArticleRecord) {
+  return article.id !== LOCAL_RESTORE_FIXTURE_ARTICLE_ID;
+}
+
 function sortPosts(posts: EditorialPostRecord[]) {
   return [...posts].sort((left, right) => {
     if (left.featured !== right.featured) {
@@ -368,12 +413,14 @@ function sortPosts(posts: EditorialPostRecord[]) {
   });
 }
 
-export async function loadLegacyEditorialPosts(): Promise<EditorialPostRecord[]> {
-  const tools = await getLegacyEditorialPublishedTools();
-  const toolWriteups = tools.map(buildToolWriteup);
+export async function loadCatalogEditorialPosts(): Promise<EditorialPostRecord[]> {
+  const tools = await getPublishedTools();
+  const toolWriteups = tools
+    .map(buildToolWriteup)
+    .filter((post): post is EditorialPostRecord => Boolean(post));
 
   return sortPosts([
-    ...legacyGuideSeeds.map((item) => ({
+    ...guideSeeds.map((item) => ({
       ...item,
       updated_at: item.published_at,
     })),
@@ -388,11 +435,15 @@ async function loadAuthoredEditorialPosts(): Promise<EditorialPostRecord[]> {
 
   try {
     const articles = await getPublishedArticlesFromSupabase();
-    return articles.map(mapArticleToEditorialPost);
+    return articles
+      .filter(isPublicAuthoredArticle)
+      .map(mapArticleToEditorialPost);
   } catch {
     try {
       const articles = await getPublishedArticlesFromArticleStorage();
-      return articles.map(mapArticleToEditorialPost);
+      return articles
+        .filter(isPublicAuthoredArticle)
+        .map(mapArticleToEditorialPost);
     } catch {
       return [];
     }
@@ -401,12 +452,12 @@ async function loadAuthoredEditorialPosts(): Promise<EditorialPostRecord[]> {
 
 function mergeEditorialPosts(
   authoredPosts: EditorialPostRecord[],
-  legacyPosts: EditorialPostRecord[],
+  catalogPosts: EditorialPostRecord[],
 ) {
   const seen = new Set<string>();
   const merged: EditorialPostRecord[] = [];
 
-  for (const post of [...authoredPosts, ...legacyPosts]) {
+  for (const post of [...authoredPosts, ...catalogPosts]) {
     if (seen.has(post.slug)) {
       continue;
     }
@@ -419,12 +470,12 @@ function mergeEditorialPosts(
 }
 
 async function loadEditorialPosts(): Promise<EditorialPostRecord[]> {
-  const [authoredPosts, legacyPosts] = await Promise.all([
+  const [authoredPosts, catalogPosts] = await Promise.all([
     loadAuthoredEditorialPosts(),
-    loadLegacyEditorialPosts(),
+    loadCatalogEditorialPosts(),
   ]);
 
-  return mergeEditorialPosts(authoredPosts, legacyPosts);
+  return mergeEditorialPosts(authoredPosts, catalogPosts);
 }
 
 export const getPublishedEditorialPosts = cache(async (): Promise<EditorialPostRecord[]> => {

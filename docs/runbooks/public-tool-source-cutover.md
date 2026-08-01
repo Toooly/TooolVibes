@@ -11,11 +11,10 @@ TOOOLVIBES_TOOLS_SOURCE=directory
 This preserves the current 30-record canonical public catalog. While this value
 is active, publishing a tool in the Supabase CMS does not make it public.
 
-Posts and Collections remain temporarily pinned to the named read-only adapter
-`lib/data/legacy-editorial-tool-repository.ts`. Its baseline is 8 legacy tools,
-5 public collections, 21 expected collection slots and 21 resolved slots. The
-canonical directory and legacy mock inventories overlap on 0 slugs, so do not
-remap editorial slugs or remove this adapter before DATA-203 content bootstrap.
+Posts and Collections resolve from the same canonical `ToolPublic` source as
+the catalog. Public post writeups are derived only from published canonical
+records with a factual date; editorial guide seeds remain checked-in content.
+No second public tool repository or runtime tool-source alias is allowed.
 
 ## Safe shadow comparison
 
@@ -34,8 +33,8 @@ catalog and never merges sources.
 
 1. Import the 30-record directory inventory into staging Supabase without
    changing slugs.
-2. Bootstrap Posts and Collections against the imported canonical tool IDs;
-   do not infer mappings between the disjoint 8- and 30-slug inventories.
+2. Bootstrap any staged Posts and Collections against the imported canonical
+   tool IDs; do not infer mappings from an unreviewed source.
 3. Confirm every intended public record is published and every draft is absent.
 4. Run DATA-203 parity tests for catalog, detail, related, API, sitemap and
    static params.
@@ -46,18 +45,17 @@ catalog and never merges sources.
 8. Rehearse `TOOOLVIBES_TOOLS_SOURCE=supabase` in staging.
 9. Verify API and sitemap return 503 when Supabase is unavailable.
 10. Verify an intentionally empty source is reported as `empty`, not fallback.
-11. Remove all imports of `legacy-editorial-tool-repository.ts`, migrate its
-    three consumers to ToolPublic, and delete the adapter and warning.
-12. Replace the transitional 8/5/21/21 count test with a certified staging
-    parity fixture covering Posts and Collections.
+11. Confirm Posts and Collections still resolve only through `ToolPublic` and
+    no alternate public tool repository is introduced.
+12. Maintain a certified staging parity fixture covering Posts and Collections.
 13. Record owner, evidence and rollback window.
 14. Change the production build variable and Wrangler variable together.
 15. Rerun typecheck, lint, unit tests, production build and editorial route
     smoke tests after the adapter removal.
 
-The cutover is not accepted if the environment variable changes while the
-legacy adapter, its warning, unresolved collection slots or broken editorial
-tool links remain.
+The cutover is not accepted if the environment variable changes while public
+tool consumers disagree, collection slots are unresolved or editorial links are
+broken.
 
 ## Rollback
 
@@ -77,8 +75,8 @@ set. These tests use an in-memory disposable CMS fixture and never create a
 service-role client.
 
 This local coverage does **not** certify the source cutover. The tracked
-production source remains `directory`, and the transitional editorial adapter
-must remain active until real staging content passes every checklist item.
+production source remains `directory` until real staging content passes every
+checklist item.
 
 Use the blocked template as a new evidence file; never mark the tracked template
 as certified:
@@ -104,7 +102,7 @@ The verifier is read-only and accepts only explicit staging evidence. It checks:
 - related edges that resolve only to published canonical tools;
 - reviewed fingerprint mismatches with owner and rationale;
 - reviewed collection/post expected-versus-resolved tool links;
-- removal of the legacy adapter and its warning;
+- canonical Posts and Collections resolution without a second tool source;
 - publish/update/unpublish cache rehearsals across every dependent surface;
 - rollback rehearsal, owner, timestamps and evidence references.
 
@@ -125,10 +123,10 @@ the following real evidence:
 4. publish, update and unpublish cache invalidation observed after separate
    requests/build boundaries;
 5. Posts and Collections rebuilt against reviewed canonical tool IDs, without
-   inferred mappings from the disjoint eight-slug legacy inventory;
+   inferred mappings from an unreviewed source;
 6. every editorial link and expected slot resolved;
-7. the 8/5/21/21 transitional guard replaced by the certified fixture;
-8. the legacy adapter and warning removed only after points 1-7 pass;
+7. the certified Posts and Collections fixture remains green;
+8. no second public tool repository or runtime alias is present;
 9. source-unavailable, intentionally-empty and rollback rehearsals;
 10. owner, evidence references and rollback window recorded.
 
