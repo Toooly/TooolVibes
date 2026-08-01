@@ -21,16 +21,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition } from "@/lib/motion/transitions";
-import {
-  Bookmark,
-  Columns2,
-  Grid2X2,
-  Home,
-  Radar,
-  Search,
-  User,
-  UserPlus,
-} from "lucide-react";
+import { Search, User, UserPlus } from "lucide-react";
 import { MusicToggleButton } from "@/components/app/music-toggle-button";
 import { SoundToggleButton } from "@/components/app/sound-toggle-button";
 import { BrandLogo } from "./brand-logo";
@@ -38,13 +29,6 @@ import { useHeaderAccountCta } from "./workspace-nav-selectors";
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { isNavRouteActive } from "@/lib/navigation/selectors";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
-
-type NavItem = {
-  href: string;
-  label: string;
-  short: string;
-  glyph: typeof Home;
-};
 
 function CommandBarBrand() {
   return (
@@ -70,17 +54,7 @@ function CommandBarBrand() {
 export function CommandBar() {
   const pathname = usePathname() ?? "/";
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
-  // The order is fixed (Home / Catalogo / Radar / Confronto / Salvati).
-  // Surface stays an internal concept here — the items are rendered with our
-  // own glyphs/labels to match the definitive command-bar geometry.
-  void useNavItems;
-  const items: NavItem[] = [
-    { href: "/", label: "Home", short: "Home", glyph: Home },
-    { href: "/archivio", label: "Catalogo", short: "Catalogo", glyph: Grid2X2 },
-    { href: "/radar", label: "Radar", short: "Radar", glyph: Radar },
-    { href: "/compare", label: "Confronto", short: "Confronto", glyph: Columns2 },
-    { href: "/shortlist", label: "Salvati", short: "Salvati", glyph: Bookmark },
-  ];
+  const items = useNavItems("header-v2-desktop");
   const accountCta = useHeaderAccountCta();
   const preferReducedMotion = useReducedMotion();
   const accountIcon =
@@ -107,7 +81,7 @@ export function CommandBar() {
         >
           {items.map((item) => {
             const active = isNavRouteActive(pathname, item.href);
-            const Glyph = item.glyph;
+            const Glyph = item.icon;
             return (
               <Link
                 key={item.href}
@@ -117,7 +91,7 @@ export function CommandBar() {
                 aria-current={active ? "page" : undefined}
               >
                 <span className="command-bar__nav-glyph">
-                  <Glyph size={17} strokeWidth={1.8} aria-hidden="true" />
+                  {Glyph ? <Glyph size={17} strokeWidth={1.8} aria-hidden="true" /> : null}
                 </span>
                 <span className="command-bar__nav-label">{item.label}</span>
                 {active ? (

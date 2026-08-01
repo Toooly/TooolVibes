@@ -38,7 +38,8 @@ const ROUTE_COPY: Record<string, RouteLoaderConfig> = {
   "/toools": { label: "Carico la scheda", duration: 820, accentA: "94, 226, 255", accentB: "106, 60, 255", accentC: "246, 199, 97" },
   "/account": { label: "Apro il profilo", duration: 760, accentA: "216, 180, 254", accentB: "106, 60, 255", accentC: "94, 226, 255" },
   "/shop": { label: "Accendo lo shop", duration: 720, accentA: "246, 199, 97", accentB: "124, 58, 237", accentC: "94, 226, 255" },
-  "/community": { label: "Entro nella community", duration: 760, accentA: "94, 226, 255", accentB: "124, 58, 237", accentC: "246, 199, 97" },
+  "/contributi": { label: "Apro i contributi", duration: 760, accentA: "94, 226, 255", accentB: "124, 58, 237", accentC: "246, 199, 97" },
+  "/studio": { label: "Apro lo Studio", duration: 760, accentA: "216, 180, 254", accentB: "124, 58, 237", accentC: "94, 226, 255" },
 };
 
 function isModifiedNavigation(event: MouseEvent) {

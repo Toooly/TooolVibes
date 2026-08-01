@@ -118,3 +118,22 @@ export function isNavRouteActive(
   const path = href.split("#")[0]?.split("?")[0] || "/";
   return pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
 }
+
+/** Returns the most specific canonical navigation destination for a path. */
+export function getNavDestinationForPathname(
+  pathname: string | null,
+): NavDestination | null {
+  if (!pathname) {
+    return null;
+  }
+
+  return (
+    navigationRegistry
+      .filter(
+        (destination) =>
+          destination.kind !== "external" &&
+          isNavRouteActive(pathname, destination.href),
+      )
+      .sort((left, right) => right.href.length - left.href.length)[0] ?? null
+  );
+}

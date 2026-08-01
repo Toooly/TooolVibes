@@ -42,8 +42,8 @@ function FooterLink({ href, label, icon: Icon }: {
 }
 
 export function SiteFooterV2() {
-  const exploreLinks = useNavItems("footer-v2-explore");
-  const communityLinks = useNavItems("footer-v2-community");
+  const productLinks = useNavItems("footer-v2-product");
+  const companyLinks = useNavItems("footer-v2-company");
   const legalLinks = useNavItems("footer-v2-legal");
   const socialLinks = useNavItems("footer-v2-social");
   return (
@@ -81,9 +81,9 @@ export function SiteFooterV2() {
           </div>
 
           <div>
-            <h3>Esplora</h3>
+            <h3>Prodotto</h3>
             <div className="site-footer-v2__links">
-              {exploreLinks.map((link) => (
+              {productLinks.map((link) => (
                 <FooterLink
                   key={link.id}
                   href={link.href}
@@ -95,9 +95,9 @@ export function SiteFooterV2() {
           </div>
 
           <div>
-            <h3>Community</h3>
+            <h3>TooolVibes</h3>
             <div className="site-footer-v2__links">
-              {communityLinks.map((link) => (
+              {companyLinks.map((link) => (
                 <FooterLink
                   key={link.id}
                   href={link.href}

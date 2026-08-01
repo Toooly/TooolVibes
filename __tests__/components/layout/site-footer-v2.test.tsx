@@ -27,36 +27,42 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
     return within(column).getAllByRole("link");
   }
 
-  it("explore/community/legal dal registry con label e href canonici", () => {
+  it("renders product, company and legal links from the canonical registry", () => {
     render(<SiteFooterV2 />);
 
-    const explore = getColumnLinks("Esplora");
-    expect(explore.map((link) => link.textContent)).toEqual([
+    const product = getColumnLinks("Prodotto");
+    expect(product.map((link) => link.textContent)).toEqual([
       "Catalogo",
       "Radar",
       "Confronto",
       "Salvati",
+      "Raccolte",
+      "Guide",
+      "Metodo",
+      "Contributi",
     ]);
-    expect(explore.map((link) => link.getAttribute("href"))).toEqual([
+    expect(product.map((link) => link.getAttribute("href"))).toEqual([
       "/archivio",
       "/radar",
       "/compare",
       "/shortlist",
+      "/collections",
+      "/posts",
+      "/metodo",
+      "/contributi",
     ]);
 
-    const community = getColumnLinks("Community");
-    expect(community.map((link) => link.textContent)).toEqual([
+    const company = getColumnLinks("TooolVibes");
+    expect(company.map((link) => link.textContent)).toEqual([
       "Chi siamo",
+      "Studio by TooolVibes",
       "Shop",
-      "Community",
-      "Blog",
       "Affiliati",
     ]);
-    expect(community.map((link) => link.getAttribute("href"))).toEqual([
+    expect(company.map((link) => link.getAttribute("href"))).toEqual([
       "/chi-siamo",
+      "/studio",
       "/shop",
-      "/community",
-      "/posts",
       "/affiliati",
     ]);
 

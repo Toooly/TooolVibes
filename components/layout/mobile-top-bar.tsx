@@ -17,20 +17,15 @@ import { usePathname } from "next/navigation";
 import { Search, User } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { useHeaderAccountCta } from "./workspace-nav-selectors";
+import { getNavDestinationForPathname } from "@/lib/navigation/selectors";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 function getRouteLabel(pathname: string): string {
-  if (pathname === "/" || pathname === "") return "Home";
-  if (pathname.startsWith("/archivio")) return "Catalogo";
-  if (pathname.startsWith("/radar")) return "Radar";
-  if (pathname.startsWith("/compare")) return "Confronto";
-  if (pathname.startsWith("/shortlist")) return "Salvati";
+  const destination = getNavDestinationForPathname(pathname);
+  if (destination) return destination.label;
   if (pathname.startsWith("/toools")) return "Tool";
-  if (pathname.startsWith("/collections")) return "Raccolte";
-  if (pathname.startsWith("/metodo")) return "Metodo";
-  if (pathname.startsWith("/chi-siamo")) return "Chi siamo";
   if (pathname.startsWith("/account")) return "Account";
-  if (pathname.startsWith("/community")) return "Community";
+  if (pathname.startsWith("/community")) return "Contributi";
   if (pathname.startsWith("/affiliati")) return "Affiliati";
   return "TooolVibes";
 }

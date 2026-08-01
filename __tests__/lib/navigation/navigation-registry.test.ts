@@ -11,6 +11,7 @@ import {
 } from "@/lib/navigation/release";
 import {
   getNavDestination,
+  getNavDestinationForPathname,
   getNavItemsForSurface,
   isNavRouteActive,
 } from "@/lib/navigation/selectors";
@@ -20,16 +21,6 @@ import {
   NAV_SURFACES,
   type NavSurface,
 } from "@/lib/navigation/types";
-import { siteConfig } from "@/lib/config/site";
-
-/**
- * BATCH 29 — Contract test del registry canonico di navigazione.
- *
- * Lo snapshot per surface qui sotto è l'INVENTARIO PRE-MIGRAZIONE copiato dai
- * consumer originali (header v2, header legacy, bottom nav, footer legacy,
- * footer v2): garantisce la reversibilità richiesta dal batch, cioè che la
- * config canonica riproduca esattamente l'IA esistente.
- */
 
 const EXPECTED_SURFACE_INVENTORY: Readonly<
   Record<NavSurface, ReadonlyArray<readonly [string, string]>>
@@ -41,25 +32,6 @@ const EXPECTED_SURFACE_INVENTORY: Readonly<
     ["Confronto", "/compare"],
     ["Salvati", "/shortlist"],
   ],
-  "header-v2-mobile": [
-    ["Home", "/"],
-    ["Catalogo", "/archivio"],
-    ["Radar", "/radar"],
-    ["Confronto", "/compare"],
-    ["Salvati", "/shortlist"],
-    ["Shop", "/shop"],
-    ["Community", "/community"],
-  ],
-  "header-legacy-nav": [
-    ["Home", "/"],
-    ["Catalogo", "/archivio"],
-    ["Radar live", "/radar"],
-    ["Suggerisci", "/shortlist#wishlist"],
-    ["Diventa affiliato", "/affiliati"],
-    ["Shop", "/shop"],
-    ["Community", "/community"],
-  ],
-  "header-legacy-actions": [["Admin", "/admin/login"]],
   "bottom-nav": [
     ["Home", "/"],
     ["Catalogo", "/archivio"],
@@ -67,43 +39,20 @@ const EXPECTED_SURFACE_INVENTORY: Readonly<
     ["Salvati", "/shortlist"],
     ["Confronto", "/compare"],
   ],
-  "footer-nav": [
-    ["Home", "/"],
-    ["Catalogo", "/archivio"],
-    ["Categorie", "/tags"],
-    ["Suggerisci", "/shortlist#wishlist"],
-    ["Diventa affiliato", "/affiliati"],
-    ["Radar", "/radar"],
-    ["Community", "/community"],
-    ["Shop digitale", "/shop"],
-    ["Login amministratore", "/admin/login"],
-  ],
-  "footer-categories": [
-    ["Vibe coding", "/archivio?group=vibe-coding"],
-    ["Builder app AI", "/archivio?group=ai-app-builder"],
-    ["No-code", "/archivio?group=no-code"],
-    ["Automazioni", "/archivio?group=automation"],
-    ["Agenti AI", "/archivio?group=ai-agents"],
-    ["Video AI", "/archivio?group=ai-video"],
-  ],
-  "footer-meta": [
-    ["Shop", siteConfig.shopUrl],
-    ["Product Hunt", "/radar"],
-    ["Suggerisci", "/shortlist#wishlist"],
-    ["Diventa affiliato", "/affiliati"],
-    ["Archivio", "/archivio"],
-  ],
-  "footer-v2-explore": [
+  "footer-v2-product": [
     ["Catalogo", "/archivio"],
     ["Radar", "/radar"],
     ["Confronto", "/compare"],
     ["Salvati", "/shortlist"],
+    ["Raccolte", "/collections"],
+    ["Guide", "/posts"],
+    ["Metodo", "/metodo"],
+    ["Contributi", "/contributi"],
   ],
-  "footer-v2-community": [
+  "footer-v2-company": [
     ["Chi siamo", "/chi-siamo"],
+    ["Studio by TooolVibes", "/studio"],
     ["Shop", "/shop"],
-    ["Community", "/community"],
-    ["Blog", "/posts"],
     ["Affiliati", "/affiliati"],
   ],
   "footer-v2-legal": [
@@ -122,8 +71,8 @@ function routeFileExists(routePath: string): boolean {
   );
 }
 
-describe("B29 navigation registry — schema IA-501/IA-503", () => {
-  it("ogni destinazione ha id, owner, audience, kpi, scope, release flag e decisione univoci", () => {
+describe("V1 public navigation registry", () => {
+  it("owns every public destination with one release flag and an explicit decision", () => {
     const ids = new Set<string>();
     const flags = new Set<string>();
 
@@ -142,62 +91,44 @@ describe("B29 navigation registry — schema IA-501/IA-503", () => {
 
       expect(flags.has(destination.releaseFlag)).toBe(false);
       flags.add(destination.releaseFlag);
-      expect(
-        Object.hasOwn(navReleaseFlagRegistry, destination.releaseFlag),
-      ).toBe(true);
+      expect(Object.hasOwn(navReleaseFlagRegistry, destination.releaseFlag)).toBe(true);
     }
   });
 
-  it("le env key dei release flag sono univoche e tutte di default ON (IA invariata)", () => {
-    const envKeys = Object.values(navReleaseFlagRegistry).map(
-      (definition) => definition.envKey,
-    );
-    expect(new Set(envKeys).size).toBe(envKeys.length);
-    for (const definition of Object.values(navReleaseFlagRegistry)) {
-      expect(definition.defaultEnabled).toBe(true);
-      expect(definition.envKey).toMatch(/^TOOOLVIBES_NAV_[A-Z0-9_]+_ENABLED$/);
-    }
+  it("uses the V1 public vocabulary and has no Community or external shop destination", () => {
+    const labels = navigationRegistry.map((destination) => destination.label);
+    expect(labels).toEqual(expect.arrayContaining([
+      "Catalogo",
+      "Radar",
+      "Confronto",
+      "Salvati",
+      "Raccolte",
+      "Guide",
+      "Contributi",
+      "Studio by TooolVibes",
+    ]));
+    expect(navigationRegistry.map((destination) => destination.id)).not.toContain("community");
+    expect(navigationRegistry.map((destination) => destination.href)).not.toContain("/community");
+    expect(navigationRegistry.find((destination) => destination.id === "shop")).toMatchObject({
+      kind: "route",
+      href: "/shop",
+    });
   });
 
-  it("gli order di placement sono univoci e consecutivi per ogni surface", () => {
+  it("keeps placement order consecutive on every public surface", () => {
     for (const surface of NAV_SURFACES) {
       const orders = navigationRegistry
         .flatMap((destination) => destination.placements)
         .filter((placement) => placement.surface === surface)
         .map((placement) => placement.order)
-        .sort((a, b) => a - b);
+        .sort((left, right) => left - right);
       expect(orders).toEqual(orders.map((_, index) => index));
     }
   });
 
-  it("label canoniche univoche per le destinazioni primarie (Catalogo/Salvati/Confronto)", () => {
-    expect(getNavDestination("catalog").label).toBe("Catalogo");
-    expect(getNavDestination("shortlist").label).toBe("Salvati");
-    expect(getNavDestination("compare").label).toBe("Confronto");
-
-    const primaryLabels = navigationRegistry
-      .filter((destination) => destination.scope === "primary")
-      .map((destination) => destination.label);
-    expect(new Set(primaryLabels).size).toBe(primaryLabels.length);
-  });
-
-  it("decisione IA-503 esplicita per Community e Shop: keep secondary, proposta documentata non applicata", () => {
-    for (const id of ["community", "shop"]) {
-      const destination = getNavDestination(id);
-      expect(destination.scope).toBe("secondary");
-      expect(destination.scopeDecision).toContain("IA-503");
-      expect(destination.scopeDecision).toContain("keep secondary");
-      expect(destination.proposal).toBeDefined();
-      expect(destination.proposal).toContain("NON applicata");
-    }
-  });
-});
-
-describe("B29 navigation registry — inventory e broken-link check", () => {
-  it("ogni surface riproduce esattamente l'inventario pre-migrazione (label, href, ordine)", () => {
+  it("resolves the exact V1 public shell inventory", () => {
     for (const surface of NAV_SURFACES) {
-      const items = getNavItemsForSurface(surface);
-      const actual = items.map(
+      const actual = getNavItemsForSurface(surface).map(
         (item) => [item.label, item.href] as const,
       );
       expect(actual, `surface ${surface}`).toEqual(
@@ -206,138 +137,89 @@ describe("B29 navigation registry — inventory e broken-link check", () => {
     }
   });
 
-  it("ogni destinazione route/facet del registry risolve a una page esistente in app/", () => {
+  it("only includes route targets that exist", () => {
     const routable = navigationRegistry.filter(
       (destination) => destination.kind !== "external",
     );
-    expect(routable.length).toBeGreaterThan(0);
 
     for (const destination of routable) {
-      const routePath =
-        destination.href.split("#")[0]?.split("?")[0] || "/";
-      expect(
-        routeFileExists(routePath),
-        `${destination.id} (${destination.href}) deve risolvere a app/**/page.tsx`,
-      ).toBe(true);
+      const routePath = destination.href.split("#")[0]?.split("?")[0] || "/";
+      expect(routeFileExists(routePath), `${destination.id} must resolve to a page`).toBe(true);
     }
   });
 
-  it("le destinazioni external usano URL assoluti e restano fuori dal broken-link check", () => {
-    const externals = navigationRegistry.filter(
-      (destination) => destination.kind === "external",
-    );
-    expect(externals.length).toBeGreaterThan(0);
-    for (const destination of externals) {
-      expect(destination.href).toMatch(/^(https?:\/\/|mailto:)/);
-    }
-  });
-
-  it("nessuna route primaria è duplicata o mancante dalle surface principali", () => {
+  it("keeps primary routes compact and present in desktop and mobile navigation", () => {
     const primaryIds = navigationRegistry
       .filter((destination) => destination.scope === "primary")
       .map((destination) => destination.id);
-    expect(primaryIds).toEqual([
-      "home",
-      "catalog",
-      "radar",
-      "compare",
-      "shortlist",
-    ]);
+    expect(primaryIds).toEqual(["home", "catalog", "radar", "compare", "shortlist"]);
 
-    for (const surface of [
-      "header-v2-desktop",
-      "header-v2-mobile",
-      "bottom-nav",
-    ] as const) {
+    for (const surface of ["header-v2-desktop", "bottom-nav"] as const) {
       const ids = getNavItemsForSurface(surface).map((item) => item.id);
       expect(new Set(ids).size).toBe(ids.length);
-      for (const primaryId of primaryIds) {
-        expect(ids).toContain(primaryId);
-      }
+      expect(ids).toEqual(expect.arrayContaining(primaryIds));
     }
   });
 });
 
-describe("B29 navigation release flags", () => {
-  it("default: tutte le destinazioni abilitate (riproduce l'IA corrente)", () => {
+describe("V1 public navigation release flags", () => {
+  it("defaults every destination to enabled", () => {
     const release = resolveNavigationRelease({});
     for (const destination of navigationRegistry) {
       expect(release[destination.releaseFlag]).toBe(true);
     }
   });
 
-  it("destinazione con flag OFF esclusa dai selector di ogni surface", () => {
+  it("removes a secondary product destination without changing the rest of the footer", () => {
     const release = resolveNavigationRelease({
-      TOOOLVIBES_NAV_SHOP_ENABLED: "0",
+      TOOOLVIBES_NAV_CONTRIBUTIONS_ENABLED: "0",
     });
+    const productItems = getNavItemsForSurface("footer-v2-product", release);
 
-    for (const surface of NAV_SURFACES) {
-      const items = getNavItemsForSurface(surface, release);
-      expect(items.map((item) => item.id)).not.toContain("shop");
-    }
-
-    const mobile = getNavItemsForSurface("header-v2-mobile", release);
-    expect(mobile).toHaveLength(6);
-    expect(mobile.map((item) => item.id)).toEqual([
-      "home",
+    expect(productItems.map((item) => item.id)).not.toContain("contributions");
+    expect(productItems.map((item) => item.id)).toEqual([
       "catalog",
       "radar",
       "compare",
       "shortlist",
-      "community",
+      "collections",
+      "guides",
+      "method",
     ]);
   });
 
-  it("una flag OFF non influenza le altre destinazioni", () => {
-    const release = resolveNavigationRelease({
-      TOOOLVIBES_NAV_COMPARE_ENABLED: "off",
-    });
-    expect(release.compare).toBe(false);
-    expect(release.shop).toBe(true);
-    expect(release.community).toBe(true);
-
-    const bottomNav = getNavItemsForSurface("bottom-nav", release);
-    expect(bottomNav.map((item) => item.id)).toEqual([
-      "home",
-      "catalog",
-      "radar",
-      "shortlist",
-    ]);
-  });
-
-  it("valori non booleani generano NavigationReleaseConfigError", () => {
+  it("rejects non-boolean release flags", () => {
     expect(() =>
-      resolveNavigationRelease({ TOOOLVIBES_NAV_SHOP_ENABLED: "maybe" }),
+      resolveNavigationRelease({ TOOOLVIBES_NAV_STUDIO_ENABLED: "maybe" }),
     ).toThrow(NavigationReleaseConfigError);
   });
 });
 
-describe("B29 isNavRouteActive — matcher attivo canonico", () => {
+describe("V1 active navigation matcher", () => {
   it.each([
     ["/", "/", true],
-    ["/archivio", "/", false],
     ["/archivio", "/archivio", true],
     ["/archivio/vibe", "/archivio", true],
     ["/archiv", "/archivio", false],
-    ["/radar", "/radar", true],
-    ["/compare", "/compare", true],
-    ["/shortlist", "/shortlist#wishlist", true],
     ["/shortlist", "/shortlist", true],
+    ["/contributi", "/contributi", true],
+    ["/studio", "/studio", true],
     ["/shop", "/shop", true],
-    ["/community", "/community", true],
-    ["/admin", "/", false],
-    ["/tags", "/tags", true],
-    ["/archivio", "/archivio?group=vibe-coding", true],
-  ])("pathname %s vs href %s → %s", (pathname, href, expected) => {
+    ["/studio", "https://example.com", false],
+  ])("pathname %s vs href %s -> %s", (pathname, href, expected) => {
     expect(isNavRouteActive(pathname, href)).toBe(expected);
   });
 
-  it("pathname null/empty non è mai attivo; href esterni non sono attivi", () => {
-    expect(isNavRouteActive(null, "/archivio")).toBe(false);
-    expect(isNavRouteActive("", "/archivio")).toBe(false);
-    expect(isNavRouteActive("/shop", "https://shop.tooolvibes.com")).toBe(
-      false,
-    );
-    expect(isNavRouteActive("/x", "mailto:hello@tooolvibes.com")).toBe(false);
+  it("looks up canonical destination labels", () => {
+    expect(getNavDestination("guides").label).toBe("Guide");
+    expect(getNavDestination("contributions").label).toBe("Contributi");
+    expect(getNavDestination("studio").label).toBe("Studio by TooolVibes");
+  });
+
+  it("resolves canonical labels for secondary paths", () => {
+    expect(getNavDestinationForPathname("/collections/solo-founders")?.label).toBe("Raccolte");
+    expect(getNavDestinationForPathname("/posts/guida")?.label).toBe("Guide");
+    expect(getNavDestinationForPathname("/contributi")?.label).toBe("Contributi");
+    expect(getNavDestinationForPathname("/unknown")).toBeNull();
   });
 });

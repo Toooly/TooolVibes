@@ -3,13 +3,8 @@ import type { LucideIcon } from "lucide-react";
 import type { NavReleaseFlagKey } from "./release";
 
 /**
- * BATCH 29 — Tipi canonici della information architecture (IA-501, IA-503).
- *
- * Ogni destinazione di navigazione del sito è descritta una sola volta nel
- * registry (`./destinations.ts`) con owner, audience, KPI, scope, release flag
- * e placement univoci. I consumer (header v2, header legacy, bottom nav,
- * footer legacy, footer v2) non definiscono più liste locali: leggono item
- * risolti dai selector (`./selectors.ts`).
+ * Tipi per la navigazione pubblica: ogni destinazione è descritta una sola
+ * volta nel registry e risolta dai consumer tramite i selector.
  */
 
 export const NAV_AUDIENCES = ["public", "admin"] as const;
@@ -28,32 +23,22 @@ export type NavScope = (typeof NAV_SCOPES)[number];
  */
 export const NAV_SURFACES = [
   "header-v2-desktop",
-  "header-v2-mobile",
-  "header-legacy-nav",
-  "header-legacy-actions",
   "bottom-nav",
-  "footer-nav",
-  "footer-categories",
-  "footer-meta",
-  "footer-v2-explore",
-  "footer-v2-community",
+  "footer-v2-product",
+  "footer-v2-company",
   "footer-v2-legal",
   "footer-v2-social",
 ] as const;
 export type NavSurface = (typeof NAV_SURFACES)[number];
 
-/** Tripla cromatica usata dai link mobile dell'header v2 (CSS vars). */
+/** Tripla cromatica disponibile per eventuali consumer mobili. */
 export type NavTone = readonly [string, string, string];
 
 export type NavPlacement = Readonly<{
   surface: NavSurface;
   /** Ordine di rendering nella surface (0-based, univoco per surface). */
   order: number;
-  /**
-   * Override di label specifico della surface. Riproduce il copy corrente
-   * dove diverge dal canonical (es. "Radar live" su header legacy,
-   * "Shop digitale" su footer legacy) senza cambiare la visibilità.
-   */
+  /** Override di label riservato a una surface specifica. */
   label?: string;
   /** Icona lucide specifica della surface (cambia da consumer a consumer). */
   icon?: LucideIcon;

@@ -520,7 +520,7 @@ export function OrbitalLayer() {
     pathname?.startsWith("/collections") ||
     pathname?.startsWith("/wishlist");
   const isToolDetailPage = pathname?.startsWith("/toools/");
-  const textPages = ["/chi-siamo", "/community", "/shop", "/privacy", "/termini", "/metodo"];
+  const textPages = ["/chi-siamo", "/contributi", "/studio", "/shop", "/privacy", "/termini", "/metodo"];
   const isTextPage = textPages.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
   const hideFloatingLayer =
     isMobileOriginPage ||

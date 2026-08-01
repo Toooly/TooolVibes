@@ -2,17 +2,18 @@
 
 import React, { useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Home, Search, Radar, Bookmark, Columns3, X } from "lucide-react";
+import { X } from "lucide-react";
 import Link from "next/link";
+import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { useOrbitalContext } from "./orbital-context";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Home", icon: Home, color: "#6a3cff" },
-  { href: "/archivio", label: "Cerca", icon: Search, color: "#39d2f6" },
-  { href: "/radar", label: "Radar", icon: Radar, color: "#f3bf4c" },
-  { href: "/shortlist", label: "Salvati", icon: Bookmark, color: "#8b6cff" },
-  { href: "/compare", label: "Confronta", icon: Columns3, color: "#2bb9de" },
-];
+const NAV_COLORS: Readonly<Record<string, string>> = {
+  home: "#6a3cff",
+  catalog: "#39d2f6",
+  radar: "#f3bf4c",
+  shortlist: "#8b6cff",
+  compare: "#2bb9de",
+};
 
 interface OrbitalCoreNodeProps {
   x: number;
@@ -23,6 +24,7 @@ interface OrbitalCoreNodeProps {
 
 export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalCoreNodeProps) {
   const { coreMenuOpen, setCoreMenuOpen, setIsPaused } = useOrbitalContext();
+  const navItems = useNavItems("bottom-nav");
   const nodeRef = useRef<HTMLDivElement>(null);
   const size = isMobile ? 58 : 72;
   const hitSize = isMobile ? 76 : 82;
@@ -215,10 +217,12 @@ export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalC
                 filter: "blur(20px)",
               }}
             />
-            {NAV_ITEMS.map((item, i) => {
-              const angle = (i / NAV_ITEMS.length) * Math.PI * 2 - Math.PI / 2;
+            {navItems.map((item, i) => {
+              const angle = (i / navItems.length) * Math.PI * 2 - Math.PI / 2;
               const tx = Math.cos(angle) * menuRadius;
               const ty = Math.sin(angle) * menuRadius;
+              const Icon = item.icon;
+              const color = NAV_COLORS[item.id] ?? "#6a3cff";
               return (
                 <motion.div
                   key={item.href}
@@ -245,18 +249,20 @@ export function OrbitalCoreNode({ x, y, isMobile, inSafeZone = false }: OrbitalC
                       style={{
                         width: isMobile ? 46 : 52,
                         height: isMobile ? 46 : 52,
-                        background: `radial-gradient(circle at 30% 30%, ${item.color}22, rgba(255,255,255,0.92))`,
-                        borderColor: `${item.color}35`,
-                        boxShadow: `0 4px 16px ${item.color}25, inset 0 1px 0 rgba(255,255,255,0.6)`,
+                        background: `radial-gradient(circle at 30% 30%, ${color}22, rgba(255,255,255,0.92))`,
+                        borderColor: `${color}35`,
+                        boxShadow: `0 4px 16px ${color}25, inset 0 1px 0 rgba(255,255,255,0.6)`,
                       }}
                       whileHover={{ scale: 1.12 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <item.icon
-                        size={isMobile ? 18 : 20}
-                        style={{ color: item.color }}
-                        strokeWidth={2.2}
-                      />
+                      {Icon ? (
+                        <Icon
+                          size={isMobile ? 18 : 20}
+                          style={{ color }}
+                          strokeWidth={2.2}
+                        />
+                      ) : null}
                     </motion.div>
                     <span
                       className="whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-semibold text-white shadow"
