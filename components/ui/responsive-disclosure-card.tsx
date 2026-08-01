@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -12,6 +12,16 @@ type ResponsiveDisclosureCardProps = {
   className?: string;
 };
 
+function slugifyTitle(title: string) {
+  return title
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48);
+}
+
 export function ResponsiveDisclosureCard({
   icon,
   title,
@@ -19,8 +29,12 @@ export function ResponsiveDisclosureCard({
   className,
 }: ResponsiveDisclosureCardProps) {
   const [expanded, setExpanded] = useState(false);
-  const titleId = useId();
-  const panelId = useId();
+  const baseId = useMemo(() => {
+    const slug = slugifyTitle(title) || "section";
+    return `rdc-${slug}`;
+  }, [title]);
+  const titleId = `${baseId}-title`;
+  const panelId = `${baseId}-panel`;
 
   return (
     <article
@@ -49,7 +63,7 @@ export function ResponsiveDisclosureCard({
         >
           <ChevronDown
             className={cn(
-              "size-4 transition-transform",
+              "size-4 transition-transform duration-[var(--tv-duration-fast)]",
               expanded ? "rotate-180" : "",
             )}
             aria-hidden="true"

@@ -77,7 +77,7 @@ export function ToolDetailActionSurface({
       <button
         type="button"
         onClick={() => toggleSaved(slug)}
-        className="td-final-icon-btn"
+        className={cn("td-final-cta--save", isSaved && "is-saved")}
         aria-pressed={isSaved}
         aria-label={isSaved ? "Rimuovi dai salvati" : "Salva"}
         title={isSaved ? "Salvato" : "Salva"}
@@ -87,6 +87,7 @@ export function ToolDetailActionSurface({
           aria-hidden="true"
           fill={isSaved ? "currentColor" : "none"}
         />
+        <span>{isSaved ? "Salvato" : "Salva"}</span>
       </button>
 
       <a

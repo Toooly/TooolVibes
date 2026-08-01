@@ -23,7 +23,13 @@ export function ToolDetailScore({ tool }: ToolDetailScoreProps) {
     >
       <div className="td-final-score__header">
         <span className="td-final-score__kicker">Valutazione editoriale</span>
-        <span className="td-final-score__badge">
+        <span
+          className={
+            assessment.status === "assessed"
+              ? "td-final-score__badge tv-brand-stamp"
+              : "td-final-score__badge tv-brand-stamp tv-brand-stamp--violet"
+          }
+        >
           {assessment.status === "assessed" ? "Verdetto verificato" : "In preparazione"}
         </span>
       </div>

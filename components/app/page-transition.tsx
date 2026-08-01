@@ -31,6 +31,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
       key={pathname}
+      className="tv-page-transition"
       initial={preset.initial}
       animate={preset.animate}
       transition={preset.transition}

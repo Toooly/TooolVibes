@@ -571,3 +571,54 @@
 .ivory-surface .section-quiet-link {
   color: var(--tv-ink-inverted-link);
 }
+
+/* V1 GM — utility / editorial route framing */
+.page-shell {
+  position: relative;
+}
+
+.page-shell > section:first-child,
+.page-shell > header:first-child {
+  position: relative;
+}
+
+.legal-page,
+.utility-route,
+.method-page,
+.about-page {
+  max-width: 72rem;
+}
+
+.legal-page h1,
+.utility-route h1 {
+  letter-spacing: 0.02em;
+}
+
+/* Empty / success / loading shared tone */
+.tv-state-panel {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature, 1.25rem);
+  background: var(--tv-surface-raised);
+}
+
+.tv-state-panel__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tv-state-panel__eyebrow::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--tv-accent-cyan);
+}

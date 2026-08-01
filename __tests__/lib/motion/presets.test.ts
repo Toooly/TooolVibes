@@ -44,7 +44,13 @@ describe("motion presets", () => {
   it("preserves route duration when motion is allowed", () => {
     const full = routeTransitionPreset({ preferReducedMotion: false });
     expect(full.transition.duration).toBe(MOTION_DURATION_S.route);
-    expect(full.initial).toBe(false);
+    expect(full.initial).toEqual({ opacity: 0.01, y: 10 });
+  });
+
+  it("collapses route entry under reduced motion", () => {
+    const reduced = routeTransitionPreset({ preferReducedMotion: true });
+    expect(reduced.initial).toBe(false);
+    expect(reduced.transition.duration).toBe(0);
   });
 
   it("zeros route duration under reduced motion", () => {

@@ -156,7 +156,7 @@ export default function AuthCallbackPage() {
         />
 
         <div className="mt-8 grid gap-6 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
-          <BrandLogo size={76} priority />
+          <BrandLogo fallback="png" size={76} priority />
           <div>
             <p className="editorial-label">Workspace personale</p>
             <h1 className="text-display-card mt-3 text-[2rem] sm:text-[2.5rem]">

@@ -1156,3 +1156,53 @@
     padding-top: var(--tv-space-2);
   }
 }
+
+/* V1 GM — explicit Save CTA in decision hierarchy */
+.td-final-cta--save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tv-border-interactive) 80%, transparent);
+  background: color-mix(in srgb, var(--tv-surface-elevated) 88%, transparent);
+  color: var(--tv-ink-primary);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition:
+    transform var(--tv-duration-fast) var(--tv-easing-standard),
+    border-color var(--tv-duration-fast) var(--tv-easing-standard),
+    background var(--tv-duration-fast) var(--tv-easing-standard),
+    color var(--tv-duration-fast) var(--tv-easing-standard);
+}
+
+.td-final-cta--save.is-saved {
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 55%, transparent);
+  background: color-mix(in srgb, var(--tv-accent-primary) 14%, transparent);
+  color: var(--tv-accent-primary);
+}
+
+.td-final-cta--save:hover {
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 45%, transparent);
+}
+
+.td-final-cta--save:focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 3px;
+}
+
+.td-final-cta--primary:focus-visible,
+.td-final-cta--secondary:focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 3px;
+}
+
+@media (max-width: 429px) {
+  .td-final-cta--save span {
+    /* Keep label; stack denser if needed via parent grid */
+  }
+}

@@ -2044,3 +2044,27 @@
   from { opacity: 0.72; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* V1 GM — catalog card hierarchy for compare/save selection */
+[data-compared] {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 50%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--tv-accent-primary) 14%, transparent);
+}
+
+[data-saved] {
+  border-color: color-mix(in srgb, var(--tv-accent-cyan) 40%, transparent);
+}
+
+.archive-v4-card:focus-within,
+.canonical-tool-card:focus-within {
+  outline: none;
+}
+
+.archive-v4-card:focus-visible,
+.canonical-tool-card:focus-visible,
+a.archive-v4-card:focus-visible {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 55%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--tv-accent-primary) 16%, transparent);
+}

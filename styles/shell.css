@@ -482,3 +482,35 @@
    .sm:inline-block utility already shows it. Above 1280 the
    wordmark would compete with the logo as a second brand mark,
    so we suppress it. */
+
+/* V1 GM — error recovery framing */
+.error-recovery-view__panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.error-recovery-view__panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--tv-accent-primary) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--tv-accent-cyan) 10%, transparent) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse at top, black 10%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at top, black 10%, transparent 70%);
+}
+
+.error-recovery-view__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.error-recovery-view__primary:focus-visible,
+.error-recovery-view__secondary:focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 3px;
+}

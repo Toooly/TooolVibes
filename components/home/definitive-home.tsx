@@ -94,7 +94,11 @@ function truncate(str: string, max: number) {
 function Cockpit({ toolCount }: { toolCount: number }) {
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
-      <div aria-hidden="true" className="def-cockpit__bg" />
+      <div aria-hidden="true" className="def-cockpit__bg">
+        <span className="tv-brand-cartograph" />
+        <span className="def-cockpit__signature-arc" />
+        <span className="def-cockpit__signature-node" />
+      </div>
       <div className="def-cockpit__inner">
         {/* HERO — left column */}
         <div className="def-cockpit__hero">
@@ -104,9 +108,14 @@ function Cockpit({ toolCount }: { toolCount: number }) {
               ? `Curatela indipendente · ${toolCount} tool nel Catalogo`
               : "Curatela indipendente · catalogo in aggiornamento"}
           </p>
-          <h1 id="def-cockpit-title" className="def-cockpit__title">
+          <h1
+            id="def-cockpit-title"
+            className="def-cockpit__title"
+            aria-label="Trova il tool giusto prima che il rumore scelga per te."
+          >
             Trova il tool giusto prima che il{" "}
-            <span className="def-cockpit__highlight">rumore</span> scelga per te.
+            <span className="def-cockpit__highlight" aria-hidden="true">rumore</span>
+            <span className="sr-only">rumore</span> scelga per te.
           </h1>
           <p className="def-cockpit__lede">
             Una selezione ragionata di tool AI, SaaS, no-code e vibe coding.

@@ -24,13 +24,14 @@ export function ErrorRecoveryView({
 }: ErrorRecoveryViewProps) {
   return (
     <Component className="error-recovery-view">
-      <section className="error-recovery-view__panel">
+      <section className="error-recovery-view__panel" aria-labelledby="error-recovery-title">
         <p className="error-recovery-view__eyebrow">
-          TooolVibes
+          <span className="tv-brand-signal-dot" aria-hidden="true" />
+          TooolVibes · recupero
         </p>
-        <h1>Qualcosa &egrave; andato storto</h1>
+        <h1 id="error-recovery-title">Qualcosa è andato storto</h1>
         <p className="error-recovery-view__copy">
-          La pagina non &egrave; riuscita a completare il caricamento. Puoi riprovare senza perdere il contesto.
+          La pagina non è riuscita a completare il caricamento. Puoi riprovare senza perdere il contesto.
         </p>
         {error.digest ? (
           <p className="error-recovery-view__digest">Codice errore: {error.digest}</p>

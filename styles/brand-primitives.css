@@ -238,3 +238,121 @@
 .tv-brand-lock--violet { --tv-brand-lock-color: var(--tv-accent-primary); }
 .tv-brand-lock--cyan { --tv-brand-lock-color: var(--tv-accent-cyan); }
 .tv-brand-lock--gold { --tv-brand-lock-color: var(--tv-color-gold-500); }
+
+/* --- CARTOGRAPHIC GRID --- */
+/* Subtle orientation field for command surfaces. */
+.tv-brand-cartograph {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--tv-accent-cyan) 18%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--tv-accent-primary) 14%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 30% 20%, black 0%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse at 30% 20%, black 0%, transparent 72%);
+}
+
+/* --- PATH TRAIL --- */
+/* Ordered journey / collection progress. */
+.tv-brand-path {
+  position: relative;
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tv-accent-primary) 70%, transparent),
+    color-mix(in srgb, var(--tv-accent-cyan) 55%, transparent),
+    transparent
+  );
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.tv-brand-path::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  transform: translate(50%, -50%);
+  background: var(--tv-accent-cyan);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--tv-accent-cyan) 55%, transparent);
+}
+
+/* --- EDITORIAL STAMP --- */
+/* Verification / methodology / sponsored status. */
+.tv-brand-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 1.75rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px dashed color-mix(in srgb, var(--tv-accent-gold) 55%, transparent);
+  border-radius: 0.35rem;
+  color: var(--tv-accent-gold);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--tv-accent-gold) 8%, transparent);
+}
+
+.tv-brand-stamp--cyan {
+  border-color: color-mix(in srgb, var(--tv-accent-cyan) 55%, transparent);
+  color: var(--tv-accent-cyan);
+  background: color-mix(in srgb, var(--tv-accent-cyan) 8%, transparent);
+}
+
+.tv-brand-stamp--violet {
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 55%, transparent);
+  color: var(--tv-accent-primary);
+  background: color-mix(in srgb, var(--tv-accent-primary) 10%, transparent);
+}
+
+/* --- SELECTION RING --- */
+.tv-brand-select-ring {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 55%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--tv-accent-primary) 16%, transparent);
+}
+
+/* --- SIGNAL DOT --- */
+.tv-brand-signal-dot {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--tv-accent-cyan);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-cyan) 45%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tv-brand-signal-dot--live {
+    animation: tv-brand-signal-breathe 1.8s var(--tv-easing-standard, ease) infinite;
+  }
+}
+
+@keyframes tv-brand-signal-breathe {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-cyan) 0%, transparent);
+    opacity: 0.85;
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--tv-accent-cyan) 0%, transparent);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-brand-signal-dot--live {
+    animation: none;
+  }
+}

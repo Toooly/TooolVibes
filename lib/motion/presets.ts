@@ -97,7 +97,7 @@ export function selectPreset(options: MotionPresetOptions = {}): Variants {
   };
 }
 
-/** Route crossfade — matches existing PageTransition perceptual timing. */
+/** Route region enter — short map-like settle (opacity + Y only). */
 export function routeTransitionPreset(options: MotionPresetOptions = {}): {
   initial: false | { opacity: number; y: number };
   animate: { opacity: number; y: number };
@@ -105,9 +105,9 @@ export function routeTransitionPreset(options: MotionPresetOptions = {}): {
 } {
   const rm = options.preferReducedMotion === true;
   return {
-    initial: false,
+    initial: rm ? false : { opacity: 0.01, y: 10 },
     animate: { opacity: 1, y: 0 },
-    transition: transition(MOTION_DURATION_S.route, MOTION_EASING.springSmooth, rm),
+    transition: transition(MOTION_DURATION_S.route, MOTION_EASING.decelerate, rm),
   };
 }
 

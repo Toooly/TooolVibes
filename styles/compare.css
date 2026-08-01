@@ -2837,3 +2837,94 @@
   font-size: var(--tv-text-sm);
   text-align: center;
 }
+
+/* V1 GM — compare empty/onboarding denser editorial field */
+.compare-onboarding-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.compare-onboarding-shell::before {
+  content: "";
+  position: absolute;
+  inset: 8% 12%;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--tv-accent-primary) 14%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--tv-accent-cyan) 10%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+}
+
+.compare-onboarding {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--tv-border-interactive) 70%, transparent);
+  box-shadow:
+    0 24px 60px color-mix(in srgb, #000 28%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
+}
+
+.compare-onboarding__signals span {
+  border: 1px solid color-mix(in srgb, var(--tv-border-subtle) 80%, transparent);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  background: color-mix(in srgb, var(--tv-surface-elevated) 70%, transparent);
+}
+
+.desktop-compare__verdict {
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 35%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--tv-accent-gold) 8%, transparent),
+      color-mix(in srgb, var(--tv-surface-raised) 92%, transparent)
+    );
+}
+
+.desktop-compare__fight-btn:focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 3px;
+}
+
+.desktop-compare__duel-card[data-winner="true"] {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 45%, transparent),
+    0 0 0 5px color-mix(in srgb, var(--tv-accent-gold) 12%, transparent);
+}
+
+/* V1 GM — criterion focus + relation feedback */
+.mobile-compare-arena__status--analyzing,
+.mobile-compare-arena__status--charging,
+.mobile-compare-arena__status--clash {
+  border-color: color-mix(in srgb, var(--tv-accent-cyan) 45%, transparent);
+  color: var(--tv-accent-cyan);
+}
+
+.mobile-compare-arena__status--result {
+  border-color: color-mix(in srgb, var(--tv-accent-gold) 45%, transparent);
+  color: var(--tv-accent-gold);
+}
+
+.mobile-compare-arena__vs span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent);
+  color: var(--tv-ink-secondary);
+  font-size: 0.85rem;
+}
+
+.mobile-compare-arena__matrix-verdict-card {
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 30%, transparent);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--tv-accent-gold) 10%, transparent),
+      color-mix(in srgb, var(--tv-surface-raised) 92%, transparent)
+    );
+}

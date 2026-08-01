@@ -473,3 +473,25 @@
     border-left: 1px solid var(--tv-border-inverted-default);
   }
 }
+
+/* V1 GM — raccolte as curated routes */
+.collections-page,
+.mobile-collections,
+[data-collections-surface] {
+  position: relative;
+}
+
+.collection-card,
+.mobile-collections a[href*="/collections/"] {
+  transition:
+    transform var(--tv-duration-fast) var(--tv-easing-standard),
+    border-color var(--tv-duration-fast) var(--tv-easing-standard),
+    box-shadow var(--tv-duration-base) var(--tv-easing-decelerate);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .collection-card:hover,
+  .mobile-collections a[href*="/collections/"]:hover {
+    transform: translateY(-2px);
+  }
+}

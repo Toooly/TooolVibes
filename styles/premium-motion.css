@@ -363,3 +363,36 @@
     transition: none;
   }
 }
+
+/* V1 GM — shared microinteraction grammar */
+@media (prefers-reduced-motion: no-preference) {
+  .marketing-shell :where(button, [role="button"], a.button, .def-cockpit__cta, .compare-onboarding__cta):active:not(:disabled) {
+    transform: translateY(1px) scale(0.985);
+  }
+
+  .marketing-shell :where(
+    .canonical-tool-card,
+    .directory-tool-card,
+    .category-tool-card,
+    .collection-card,
+    .premium-card
+  ):focus-visible {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 55%, transparent),
+      0 0 0 4px color-mix(in srgb, var(--tv-accent-primary) 16%, transparent);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .marketing-shell :where(
+    .canonical-tool-card,
+    .directory-tool-card,
+    .category-tool-card
+  ):hover {
+    transform: translateY(-2px);
+    transition:
+      transform var(--tv-duration-fast) var(--tv-easing-standard),
+      box-shadow var(--tv-duration-base) var(--tv-easing-decelerate),
+      border-color var(--tv-duration-fast) var(--tv-easing-standard);
+  }
+}

@@ -71,6 +71,19 @@ small {
   font-size: max(var(--tv-text-xs), 0.875em);
 }
 
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 .marketing-shell {
   position: relative;
   z-index: 2;
@@ -3797,173 +3810,134 @@ img {
 
 
 
-  .route-transition-loader {
+  /* ============================================================
+   * Route transition signal — non-blocking map coordinate feedback.
+   * Immediate response, ~240ms, no full-screen wait, no fake duration.
+   * ============================================================ */
+  .route-transition-signal {
     position: fixed;
-    inset: 0;
-    z-index: 118;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    padding: clamp(1.25rem, 4vw, 2.5rem);
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--tv-z-toast, 90);
     pointer-events: none;
     opacity: 0;
     visibility: hidden;
-    color: white;
-    background: rgba(6, 6, 14, 0.92);
-    transform: translate3d(0, 0.45rem, 0) scale(1.008);
-    backdrop-filter: blur(16px) saturate(1.1);
-    will-change: opacity, transform;
+    transform: translate3d(0, -100%, 0);
     transition:
-      opacity 170ms ease,
-      transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
-      visibility 220ms ease;
+      opacity var(--tv-duration-fast, 120ms) var(--tv-easing-standard, ease),
+      transform var(--tv-duration-base, 180ms) var(--tv-easing-decelerate, ease),
+      visibility var(--tv-duration-fast, 120ms) linear;
   }
 
-  .route-transition-loader.is-visible {
+  .route-transition-signal.is-visible {
     opacity: 1;
-    pointer-events: auto;
     visibility: visible;
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0);
   }
 
-  .route-transition-loader__stage {
+  .route-transition-signal__bar {
     position: relative;
-    z-index: 1;
     display: grid;
-    place-items: center;
-    width: min(92vw, 28rem);
-    min-height: clamp(14rem, 38vh, 20rem);
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 28px;
-    background: rgba(16, 14, 36, 0.75);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 22px 70px rgba(0, 0, 0, 0.35);
-    transform: translateZ(0);
-    will-change: transform, opacity, filter;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    width: 100%;
+    min-height: 3px;
+    padding-top: env(safe-area-inset-top, 0px);
+    background: color-mix(in srgb, var(--tv-bg-base, #08080a) 72%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, rgb(var(--route-accent-a, 106, 60, 255)) 28%, transparent);
+    backdrop-filter: blur(10px) saturate(1.05);
   }
 
-  .route-transition-loader.is-visible .route-transition-loader__stage {
-    animation: tv-route-stage-arrive 580ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  .route-transition-signal__fill {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: var(--route-progress, 0%);
+    max-width: 100%;
+    background: linear-gradient(
+      90deg,
+      rgb(var(--route-accent-a, 106, 60, 255)),
+      rgb(var(--route-accent-b, 57, 210, 246))
+    );
+    box-shadow: 0 0 12px rgba(var(--route-accent-a, 106, 60, 255), 0.45);
+    transition: width 80ms linear;
   }
 
-  .route-transition-loader__word {
+  .route-transition-signal__meta {
     position: relative;
     z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-left: auto;
+    margin-right: clamp(0.75rem, 2vw, 1.5rem);
+    padding: 0.35rem 0.65rem 0.45rem;
+    color: var(--tv-ink-primary, #fffdf8);
+    font-family: var(--tv-font-family-ui, inherit);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .route-transition-signal__coord {
     display: inline-grid;
     place-items: center;
-    font-family: var(--tv-font-system);
-    font-size: clamp(2.35rem, 6.6vw, 4rem);
-    font-weight: 700;
-    letter-spacing: 0.045em;
-    line-height: 0.92;
-    text-transform: uppercase;
-    text-shadow: 0 12px 40px rgba(var(--route-accent-a), 0.34);
-  }
-
-  .route-transition-loader__word::before,
-  .route-transition-loader__word::after {
-    content: "TOOOLVIBES";
-    display: block;
-    grid-area: 1 / 1;
-    white-space: nowrap;
-  }
-
-  .route-transition-loader__word::before {
-    color: rgba(255, 255, 255, 0.18);
-  }
-
-  .route-transition-loader__word::after {
-    width: var(--route-progress);
-    overflow: hidden;
-    justify-self: start;
-    background: linear-gradient(90deg, #ffffff 0%, rgb(var(--route-accent-a)) 28%, rgb(var(--route-accent-b)) 58%, rgb(var(--route-accent-c)) 86%, #ffffff 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 0 16px rgba(var(--route-accent-a), 0.36));
-    transition: width 120ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .route-transition-loader__label {
-    position: relative;
-    z-index: 1;
-    margin-top: clamp(1.05rem, 2.8vw, 1.65rem);
-    color: rgba(255, 255, 255, 0.8);
-    font-size: var(--tv-text-xs);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-align: center;
-    text-transform: uppercase;
-  }
-
-  .route-transition-loader__track {
-    position: relative;
-    z-index: 1;
-    display: block;
-    width: min(64vw, 18rem);
-    height: 4px;
-    margin-top: 1.2rem;
-    overflow: hidden;
+    min-width: 2.75rem;
+    min-height: 1.35rem;
+    padding: 0 0.35rem;
+    border: 1px solid color-mix(in srgb, rgb(var(--route-accent-b, 57, 210, 246)) 45%, transparent);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.1);
+    background: color-mix(in srgb, rgb(var(--route-accent-a, 106, 60, 255)) 16%, transparent);
+    color: rgb(var(--route-accent-b, 57, 210, 246));
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
   }
 
-  .route-transition-loader.is-visible .route-transition-loader__track {
-    animation: tv-route-track-arrive 520ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+  .route-transition-signal__label {
+    max-width: 14rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: color-mix(in srgb, var(--tv-ink-primary, #fffdf8) 88%, transparent);
   }
 
-  .route-transition-loader__track span {
-    display: block;
-    width: var(--route-progress);
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, rgb(var(--route-accent-b)), rgb(var(--route-accent-a)), rgb(var(--route-accent-c)));
-    box-shadow: 0 0 14px rgba(var(--route-accent-a), 0.35);
-    transition: width 120ms cubic-bezier(0.16, 1, 0.3, 1);
+  .route-transition-signal__pulse {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: rgb(var(--route-accent-b, 57, 210, 246));
+    box-shadow: 0 0 10px rgba(var(--route-accent-b, 57, 210, 246), 0.7);
+    animation: tv-route-signal-pulse 240ms var(--tv-easing-decelerate, ease) both;
   }
 
-
-
-  @media (min-width: 768px) {
-    .route-transition-loader {
-      display: none !important;
-    }
+  .tv-page-transition {
+    min-width: 0;
   }
 
-  @media (max-width: 640px) {
-    .route-transition-loader {
-      padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
-    }
-
-    .route-transition-loader__stage {
-      width: min(94vw, 26rem);
-      min-height: 18rem;
-      border-radius: 26px;
-    }
-
-    .route-transition-loader__halo {
-      width: clamp(10rem, 62vw, 15rem);
-    }
-
-    .route-transition-loader__word {
-      font-size: clamp(2.05rem, 11vw, 3.25rem);
-      letter-spacing: 0.035em;
-    }
-
-    .route-transition-loader__label {
-      max-width: 18rem;
-      font-size: var(--tv-text-xs);
-      letter-spacing: 0.14em;
-    }
-
-    .route-transition-loader__track {
-      width: min(72vw, 17rem);
-      height: 3px;
-    }
+  @keyframes tv-route-signal-pulse {
+    0% { opacity: 0.35; transform: scale(0.7); }
+    55% { opacity: 1; transform: scale(1.15); }
+    100% { opacity: 0.85; transform: scale(1); }
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .route-transition-signal,
+    .route-transition-signal.is-visible,
+    .route-transition-signal__fill,
+    .route-transition-signal__pulse {
+      animation: none;
+      transition: none;
+      transform: none;
+    }
+
+    .route-transition-signal:not(.is-visible) {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
 
   .pill {
     @apply inline-flex items-center gap-2 rounded-full border px-2.5 py-[0.42rem] font-medium uppercase tracking-[0.15em];
@@ -10616,7 +10590,7 @@ img {
     display: none !important;
   }
 
-  .route-transition-loader,
+  .route-transition-signal,
 
   .mobile-radar-view__scan-line,
 
@@ -27563,15 +27537,15 @@ img {
 @media (prefers-reduced-motion: reduce) {
   /* Stop infinite non-essential animations (discovery orbit, podium float, method particles, shimmer, pulse) */
   .hero-shell::after,
-  [class*="orbit"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-loader):not(.mobile-menu-panel),
-  [class*="float"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-loader):not(.mobile-menu-panel),
-  [class*="drift"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-loader):not(.mobile-menu-panel),
-  [class*="sweep"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-loader):not(.mobile-menu-panel),
-  [class*="pulse"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-loader):not(.mobile-menu-panel),
-  [class*="shimmer"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-loader):not(.mobile-menu-panel),
-  [class*="breathe"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-loader):not(.mobile-menu-panel),
-  [class*="spin"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-loader):not(.mobile-menu-panel),
-  [class*="twinkle"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-loader):not(.mobile-menu-panel) {
+  [class*="orbit"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-signal):not(.mobile-menu-panel),
+  [class*="float"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-signal):not(.mobile-menu-panel),
+  [class*="drift"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-signal):not(.mobile-menu-panel),
+  [class*="sweep"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-signal):not(.mobile-menu-panel),
+  [class*="pulse"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-signal):not(.mobile-menu-panel),
+  [class*="shimmer"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-signal):not(.mobile-menu-panel),
+  [class*="breathe"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-signal):not(.mobile-menu-panel),
+  [class*="spin"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-signal):not(.mobile-menu-panel),
+  [class*="twinkle"]:not([role="dialog"]):not([role="alertdialog"]):not(.sheet):not(.drawer):not(.modal):not(.toast):not(.route-transition-signal):not(.mobile-menu-panel) {
     animation: none !important;
   }
 
