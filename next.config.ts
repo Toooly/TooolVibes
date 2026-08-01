@@ -10,6 +10,13 @@ const nextConfig: NextConfig = {
   // Bun does not reliably propagate OpenNext's private build env to `next build`.
   output: "standalone",
   outputFileTracingRoot: process.cwd(),
+  env: {
+    TOOOLVIBES_RELEASE_SHA: process.env.TOOOLVIBES_RELEASE_SHA ?? "development",
+    TOOOLVIBES_RELEASE_NAME:
+      process.env.TOOOLVIBES_RELEASE_NAME ?? "TooolVibes V1.0 MVP GM Release",
+    TOOOLVIBES_BUILD_TIMESTAMP:
+      process.env.TOOOLVIBES_BUILD_TIMESTAMP ?? "development",
+  },
   async headers() {
     return [
       {
@@ -20,15 +27,6 @@ const nextConfig: NextConfig = {
         }),
       },
     ];
-  },
-  // Phase 0.5: pre-existing lint debt (react/no-unescaped-entities across TSX
-  // files) is tracked in audits/ui-cleanup-phase-0-baseline.md and does NOT block the
-  // production build. Remove this block once the lint debt is cleared in a later phase.
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
   },
   webpack: (config) => {
     config.cache = false;

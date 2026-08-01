@@ -1,7 +1,15 @@
 import { defineConfig, devices } from "@playwright/test";
+import { resolve } from "node:path";
 
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 3100);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
+const profile = process.env.PLAYWRIGHT_E2E_PROFILE ?? "gated";
+
+if (profile !== "gated" && profile !== "public") {
+  throw new Error(`Unknown Playwright E2E profile: ${profile}`);
+}
+
+const isPublicProfile = profile === "public";
 const gatePassword =
   process.env.TOOOLVIBES_E2E_GATE_PASSWORD ?? "tooolvibes-e2e-gate-only";
 const e2eOrigin = new URL(baseURL);
@@ -19,21 +27,25 @@ const sessionSecret =
   process.env.TOOOLVIBES_E2E_SESSION_SECRET ??
   "tooolvibes-e2e-session-secret-at-least-32-characters";
 const gateStorageState = "test-results/.auth/gate.json";
-const npmCommand = process.env.npm_execpath
-  ? `"${process.execPath}" "${process.env.npm_execpath}"`
-  : "npm";
-const startCommand = `${npmCommand} run start -- --hostname 127.0.0.1 --port ${port}`;
+const e2eRuntime = process.env.PLAYWRIGHT_RUNTIME ?? process.execPath;
+const nextCli = resolve(process.cwd(), "node_modules/next/dist/bin/next");
+const standaloneLauncher = resolve(
+  process.cwd(),
+  "scripts/release/start-standalone.mjs",
+);
+const nextCommand = `"${e2eRuntime}" "${nextCli}"`;
+const startCommand = `"${e2eRuntime}" "${standaloneLauncher}"`;
 const webServerCommand =
   process.env.PLAYWRIGHT_REUSE_BUILD === "1"
     ? startCommand
-    : `${npmCommand} run build && ${startCommand}`;
+    : `${nextCommand} build && ${startCommand}`;
 const webServerEnvironment = { ...process.env };
 delete webServerEnvironment.NO_COLOR;
 
 const smokeProjects = [
   {
     name: "chromium",
-    testMatch: /(?:core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke)\.spec\.ts/,
+    testMatch: /(?:core-routes|security-boundaries)\.spec\.ts/,
     use: {
       ...devices["Desktop Chrome"],
       viewport: { width: 1440, height: 1000 },
@@ -43,7 +55,7 @@ const smokeProjects = [
   },
   {
     name: "firefox",
-    testMatch: /(?:core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke)\.spec\.ts/,
+    testMatch: /(?:core-routes|security-boundaries)\.spec\.ts/,
     use: {
       ...devices["Desktop Firefox"],
       viewport: { width: 1440, height: 1000 },
@@ -53,7 +65,7 @@ const smokeProjects = [
   },
   {
     name: "webkit",
-    testMatch: /(?:core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke|core-routes|security-boundaries|baseline-smoke)\.spec\.ts/,
+    testMatch: /(?:core-routes|security-boundaries)\.spec\.ts/,
     use: {
       ...devices["iPhone 13"],
       viewport: { width: 390, height: 844 },
@@ -62,20 +74,14 @@ const smokeProjects = [
     dependencies: ["gate-setup"],
   },
 ];
-
-
-    // Phase 0.2 — Baseline smoke runs WITHOUT the gate-setup fixture because
-    // it must validate public marketing routes before the auth fixture is warm.
-    const baselineProject = [
-      {
-        name: "baseline",
-        testMatch: /baseline-smoke\.spec\.ts/,
-        use: {
-          ...devices["Desktop Chrome"],
-          viewport: { width: 1440, height: 1000 },
-        },
-      },
-    ];
+const baselineProject = {
+  name: "baseline",
+  testMatch: /baseline-smoke\.spec\.ts/,
+  use: {
+    ...devices["Desktop Chrome"],
+    viewport: { width: 1440, height: 1000 },
+  },
+};
 
 const visualProjects = [
   { name: "visual-320", viewport: { width: 320, height: 740 } },
@@ -146,16 +152,17 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
   },
-  projects: [
-    {
-      name: "gate-setup",
-      testMatch: /gate\.setup\.ts/,
-    },
-    ...smokeProjects,
-    ...baselineProject,
-    ...visualProjects,
-    typographyProject,
-  ],
+  projects: isPublicProfile
+    ? [baselineProject]
+    : [
+        {
+          name: "gate-setup",
+          testMatch: /gate\.setup\.ts/,
+        },
+        ...smokeProjects,
+        ...visualProjects,
+        typographyProject,
+      ],
   webServer: {
     command: webServerCommand,
     url: baseURL,
@@ -163,16 +170,18 @@ export default defineConfig({
     timeout: 600_000,
     env: {
       ...webServerEnvironment,
+      PORT: String(port),
+      HOSTNAME: "127.0.0.1",
       NEXT_PUBLIC_SITE_URL: baseURL,
       NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN: baseURL,
       TOOOLVIBES_SECURITY_STATE_MODE: "memory",
       TOOOLVIBES_SECURITY_STATE_KEY_SECRET: sessionSecret,
       ALLOWED_AUTH_ORIGINS: baseURL,
       NEXT_TELEMETRY_DISABLED: "1",
-      TOOOLVIBES_ALLOW_MOCK_DATA: "1",
-      TOOOLVIBES_COLLECTIONS_SOURCE: "mock",
-      TOOOLVIBES_E2E_FIXTURES: "1",
-      TOOOLVIBES_PUBLIC_GATE_ENABLED: "1",
+      TOOOLVIBES_ALLOW_MOCK_DATA: "0",
+      TOOOLVIBES_COLLECTIONS_SOURCE: "content",
+      TOOOLVIBES_E2E_FIXTURES: isPublicProfile ? "0" : "1",
+      TOOOLVIBES_PUBLIC_GATE_ENABLED: isPublicProfile ? "0" : "1",
       TOOOLVIBES_GATE_PASSWORD: gatePassword,
       TOOOLVIBES_SESSION_SECRET: sessionSecret,
       TOOOLVIBES_3D_ENABLED: "0",

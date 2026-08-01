@@ -9,6 +9,14 @@ const config = {
   plugins: [react()],
   test: {
     environment: "node",
+    environmentOptions: {
+      jsdom: {
+        // A concrete origin makes browser storage available to every
+        // per-file `@vitest-environment jsdom` contract suite.
+        url: "http://localhost",
+      },
+    },
+    setupFiles: ["./tests/setup-vitest.ts"],
     globals: false,
     // La suite completa esegue piu' scenari jsdom/axe in parallelo: 5s e'
     // troppo stretto sotto contesa su Windows e produce timeout non funzionali.

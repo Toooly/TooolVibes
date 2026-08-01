@@ -22,6 +22,7 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
@@ -48,6 +49,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
@@ -108,12 +110,15 @@ function NestedOverlayFixture() {
     <OverlayProvider>
       <Dialog>
         <DialogTrigger>Apri dialog</DialogTrigger>
-        <DialogContent>
+        <DialogContent aria-describedby={undefined}>
           <DialogTitle>Dialog principale</DialogTitle>
           <Drawer>
             <DrawerTrigger>Apri drawer</DrawerTrigger>
             <DrawerContent>
               <DrawerTitle>Drawer annidato</DrawerTitle>
+              <DrawerDescription className="sr-only">
+                Dettagli del drawer annidato
+              </DrawerDescription>
               <DrawerClose>Chiudi drawer</DrawerClose>
               <button type="button">Azione drawer</button>
             </DrawerContent>
@@ -130,7 +135,7 @@ describe("canonical overlay primitives", () => {
       <OverlayProvider>
         <Dialog>
           <DialogTrigger>Apri</DialogTrigger>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogTitle>Dettagli</DialogTitle>
             <button type="button">Conferma</button>
           </DialogContent>
@@ -143,7 +148,9 @@ describe("canonical overlay primitives", () => {
 
     const dialog = await screen.findByRole("dialog", { name: "Dettagli" });
     expect(dialog.closest("[data-tv-overlay-portal-host]")).not.toBeNull();
-    expect(dialog.contains(document.activeElement)).toBe(true);
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true);
+    });
 
     fireEvent.keyDown(document, { key: "Escape" });
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
@@ -194,7 +201,7 @@ describe("overlay portal host contract", () => {
       <OverlayProvider>
         <Dialog defaultOpen>
           <DialogTrigger>Apri</DialogTrigger>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogTitle>Apertura iniziale</DialogTitle>
           </DialogContent>
         </Dialog>
@@ -212,7 +219,7 @@ describe("overlay portal host contract", () => {
   it("falls back to document.body when no OverlayProvider is present", async () => {
     const { container } = render(
       <Dialog defaultOpen>
-        <DialogContent>
+        <DialogContent aria-describedby={undefined}>
           <DialogTitle>Senza provider</DialogTitle>
         </DialogContent>
       </Dialog>,
@@ -252,7 +259,7 @@ describe("overlay portal host contract", () => {
     const { unmount } = render(
       <OverlayProvider>
         <Dialog defaultOpen>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogTitle>Da smontare</DialogTitle>
           </DialogContent>
         </Dialog>
@@ -279,12 +286,15 @@ describe("overlay portal host contract", () => {
       <OverlayProvider>
         <Dialog>
           <DialogTrigger>Apri dialog</DialogTrigger>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogTitle>Dialog esterno</DialogTitle>
             <Sheet>
               <SheetTrigger>Apri sheet</SheetTrigger>
               <SheetContent side="left">
                 <SheetTitle>Sheet interna</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Dettagli della sheet interna
+                </SheetDescription>
               </SheetContent>
             </Sheet>
           </DialogContent>

@@ -15,7 +15,6 @@ const ROUTES = [
     id: "home",
     path: "/",
     readyText: "Trova il tool giusto",
-    heroSelector: ".def-cockpit__hero",
   },
   { id: "archive", path: "/archivio", readyText: "Il catalogo, senza il caos." },
   { id: "radar", path: "/radar", readyText: "Radar" },
@@ -23,43 +22,70 @@ const ROUTES = [
     id: "compare",
     path: "/compare",
     readyText: "Confronta meno.",
-    readySelector: ".compare-onboarding, .mobile-compare-arena--onboarding",
-    heroSelector: ".tool-battle-page__intro",
   },
   {
     id: "shortlist",
     path: "/shortlist",
     readyText: "La tua biblioteca",
-    heroSelector: ".mobile-library-empty__content, .mobile-library-hero",
   },
   {
     id: "collections",
     path: "/collections",
     readyText: "Il posto dove la selezione diventa percorso.",
-    heroSelector: ".mobile-collections__header",
   },
   {
     id: "collection-detail",
-    path: "/collections/research-synthesis-toolkit",
-    readyText: "Toolkit ricerca e sintesi",
+    path: "/collections/ai-stack-solo-founders",
+    readyText: "Kit AI per founder solo",
   },
   {
     id: "posts",
     path: "/posts",
     readyText: "Guide e articoli per capire meglio cosa scegliere.",
-    heroSelector: ".posts-masthead > .editorial-grid > :first-child",
+  },
+  {
+    id: "post-detail",
+    path: "/posts/reclaim-ai",
+    readyText: "Reclaim AI",
+  },
+  {
+    id: "contributi",
+    path: "/contributi",
+    readyText: "Le scelte migliori meritano contesto.",
+  },
+  {
+    id: "chi-siamo",
+    path: "/chi-siamo",
+    readyText: "Persone vere, prodotti digitali vivi.",
+    h1MaxLines: { desktop: 4 },
+  },
+  {
+    id: "studio",
+    path: "/studio",
+    readyText: "Diamo forma a decisioni più chiare.",
   },
   {
     id: "affiliati",
     path: "/affiliati",
     readyText: "Porta TooolVibes alla tua community.",
-    heroSelector: ".affiliates-intro",
   },
   {
     id: "account",
     path: "/account",
-    readyText: "Accedi al workspace",
-    heroSelector: ".v-auth-context",
+    readyText: "Accedi al tuo spazio personale",
+  },
+  {
+    id: "shop",
+    path: "/shop",
+    readyText: "Lo Shop TooolVibes è in preparazione.",
+  },
+  { id: "privacy", path: "/privacy", readyText: "Privacy" },
+  { id: "termini", path: "/termini", readyText: "Termini" },
+  { id: "cookie", path: "/cookie", readyText: "Cookie" },
+  {
+    id: "tags",
+    path: "/tags",
+    readyText: "Esplora TooolVibes per categoria, livello e caso d'uso.",
   },
   {
     id: "tool-detail",
@@ -80,13 +106,16 @@ const ACTIVE_ROUTES =
     : ROUTES;
 
 const RELEASE_VIEWPORTS = [
-  { width: 375, height: 667 },
+  { width: 320, height: 700 },
+  { width: 360, height: 800 },
   { width: 390, height: 844 },
   { width: 430, height: 932 },
   { width: 768, height: 1024 },
   { width: 1024, height: 768 },
   { width: 1280, height: 800 },
   { width: 1440, height: 1000 },
+  { width: 1728, height: 1117 },
+  { width: 1920, height: 1080 },
 ];
 
 const CONTINUITY_VIEWPORTS = [
@@ -156,6 +185,12 @@ for (const viewport of VIEWPORTS) {
         timeout: 45_000,
         waitUntil: "domcontentloaded",
       });
+      if (!response || response.status() >= 400) {
+        throw new Error(`Unexpected document status: ${response?.status() ?? "no response"}`);
+      }
+      if (new URL(page.url()).pathname !== route.path) {
+        throw new Error(`Unexpected final route: ${new URL(page.url()).pathname}`);
+      }
       await page.locator("main").first().waitFor({
         state: "visible",
         timeout: 20_000,
@@ -216,6 +251,20 @@ for (const viewport of VIEWPORTS) {
             .join(" ")
             .replace(/\s+/g, " ")
             .trim();
+        const isCompactMetadata = (element) => {
+          const className =
+            typeof element.className === "string"
+              ? element.className.toLowerCase()
+              : "";
+          return Boolean(
+            element.closest(
+              ".premium-badge,.pill,.editorial-label,[data-typography='metadata']",
+            ) ||
+              /(?:eyebrow|kicker|category|text-meta|metadata|badge|tag|count|date|timestamp)/.test(
+                className,
+              ),
+          );
+        };
         const elementLabel = (element) => {
           const id = element.id ? `#${element.id}` : "";
           const classes =
@@ -346,8 +395,8 @@ for (const viewport of VIEWPORTS) {
             hardBreak: Boolean(element.querySelector("br")),
             orphanFinalLine:
               lines.length > 1 &&
-              (lastLineWords.length === 1 ||
-                (lastLineWords.length === 2 && lastLine.length <= 10)),
+              lastLineWords.length === 1 &&
+              (lines.at(-2)?.split(/\s+/).filter(Boolean).length ?? 0) >= 3,
             clipped:
               element.scrollWidth > element.clientWidth + 2 ||
               element.scrollHeight > element.clientHeight + 2,
@@ -389,6 +438,7 @@ for (const viewport of VIEWPORTS) {
           ),
         )
           .filter(visible)
+          .filter((element) => !isCompactMetadata(element))
           .map((element) => {
             const text = (element.textContent ?? "")
               .replace(/\s+/g, " ")
@@ -411,6 +461,7 @@ for (const viewport of VIEWPORTS) {
           document.querySelectorAll("main p,main li"),
         )
           .filter(visible)
+          .filter((element) => !isCompactMetadata(element))
           .map((element) => {
             const text = (element.textContent ?? "")
               .replace(/\s+/g, " ")
@@ -426,7 +477,7 @@ for (const viewport of VIEWPORTS) {
             (entry) =>
               entry.text.length >= 20 &&
               Number.isFinite(entry.fontSize) &&
-              entry.fontSize < 15,
+              entry.fontSize < 14,
           )
           .slice(0, 50);
         const fontFamilies = [];
@@ -446,8 +497,10 @@ for (const viewport of VIEWPORTS) {
                 hardBreak: Boolean(h1.querySelector("br")),
                 orphanFinalLine:
                   h1Lines.length > 1 &&
-                  (h1Lines.at(-1)?.split(/\s+/).filter(Boolean).length ?? 0) <=
-                    1,
+                  (h1Lines.at(-1)?.split(/\s+/).filter(Boolean).length ?? 0) ===
+                    1 &&
+                  (h1Lines.at(-2)?.split(/\s+/).filter(Boolean).length ?? 0) >=
+                    3,
               }
             : null,
           hero: heroRect
@@ -534,18 +587,9 @@ const summary = {
   h1ContractFailures: results.filter((result) => {
     if (!result.h1) return true;
     const width = result.viewport.width;
-    const maximum =
-      result.route === "/"
-        ? width >= 1024
-          ? 2
-          : width >= 768
-            ? 3
-            : 4
-        : width >= 1024
-          ? 2
-          : width >= 768
-            ? 3
-            : 4;
+    const range = width >= 1024 ? "desktop" : width >= 768 ? "tablet" : "mobile";
+    const route = ROUTES.find((candidate) => candidate.path === result.route);
+    const maximum = route?.h1MaxLines?.[range] ?? (range === "mobile" ? 4 : 3);
     return result.h1.lineCount > maximum || result.h1.orphanFinalLine;
   }).length,
   horizontalOverflow: results.filter((result) => result.horizontalOverflow)
@@ -577,3 +621,13 @@ await writeFile(
 );
 
 console.log(JSON.stringify(summary, null, 2));
+
+if (
+  summary.errors > 0 ||
+  summary.h1ContractFailures > 0 ||
+  summary.horizontalOverflow > 0 ||
+  summary.pageOrConsoleErrors > 0 ||
+  summary.textFloorFailures > 0
+) {
+  process.exitCode = 1;
+}

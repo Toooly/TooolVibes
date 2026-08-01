@@ -152,9 +152,11 @@ export const test = playwrightTest.extend<{ browserIssues: BrowserIssue[] }>({
 export const expect = playwrightExpect;
 
 export async function settleForScreenshot(page: Page) {
-  await page.waitForLoadState("networkidle");
   await page.evaluate(async () => {
     await document.fonts.ready;
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
   });
   await page.addStyleTag({
     content: `
@@ -171,4 +173,5 @@ export async function settleForScreenshot(page: Page) {
     `,
   });
   await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(100);
 }

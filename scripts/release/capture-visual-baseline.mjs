@@ -3,17 +3,21 @@
 // Why standalone: the test runner's settleForScreenshot calls page.waitForLoadState("networkidle")
 // which never resolves for TooolVibes (Supabase realtime subscriptions, middleware keepalive,
 // orbital physics rAF). This is pre-existing infrastructure debt, documented in
-// audits/ui-cleanup-phase-0-baseline.md.
+// the local release workspace rather than the source tree.
 //
-// Capture: 9 routes × 9 viewports = 81 screenshots → audits/visual-baseline-2026-07-21/
+// Capture: 9 routes × 9 viewports = 81 screenshots outside the repository.
 
 import { chromium } from "playwright";
 import { mkdir, writeFile } from "node:fs/promises";
 import { existsSync, statSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const BASE_URL = process.env.CAPTURE_BASE_URL ?? "http://127.0.0.1:3100";
-const OUT_DIR = path.resolve("audits/visual-baseline-2026-07-21");
+const OUT_DIR = path.resolve(
+  process.env.CAPTURE_OUTPUT_DIR ??
+    path.join(os.tmpdir(), "tooolvibes-visual-baseline"),
+);
 
 const VIEWPORTS = [
   { name: "320x740", width: 320, height: 740 },
@@ -97,6 +101,12 @@ async function main() {
           timeout: 30_000,
         });
         result.httpStatus = response?.status() ?? null;
+        if (!response || response.status() >= 400) {
+          throw new Error(`Unexpected document status: ${response?.status() ?? "no response"}`);
+        }
+        if (new URL(page.url()).pathname !== route) {
+          throw new Error(`Unexpected final route: ${new URL(page.url()).pathname}`);
+        }
         // Brief settle for fonts and one render frame.
         await page.waitForTimeout(SETTLE_MS);
         await page.screenshot({ path: filePath, fullPage: true });

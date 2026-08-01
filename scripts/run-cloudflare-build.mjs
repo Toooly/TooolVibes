@@ -45,6 +45,13 @@ const env = {
   ALLOWED_AUTH_ORIGINS: String(
     vars.ALLOWED_AUTH_ORIGINS ?? vars.NEXT_PUBLIC_SITE_URL,
   ),
+  TOOOLVIBES_RELEASE_SHA:
+    process.env.TOOOLVIBES_RELEASE_SHA ??
+    spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).stdout.trim(),
+  TOOOLVIBES_RELEASE_NAME:
+    process.env.TOOOLVIBES_RELEASE_NAME ?? "TooolVibes V1.0 MVP GM Release",
+  TOOOLVIBES_BUILD_TIMESTAMP:
+    process.env.TOOOLVIBES_BUILD_TIMESTAMP ?? new Date().toISOString(),
 };
 
 delete env.SUPABASE_SERVICE_ROLE_KEY;

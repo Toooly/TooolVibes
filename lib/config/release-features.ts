@@ -61,7 +61,9 @@ export const releaseFeatureRegistry = {
   publicGate: {
     owner: "release-readiness",
     envKey: "TOOOLVIBES_PUBLIC_GATE_ENABLED",
-    defaultEnabled: true,
+    // The V1 product is public by default. A gate can still be enabled
+    // explicitly for a contained maintenance window.
+    defaultEnabled: false,
   },
   threeD: {
     owner: "frontend-experience",

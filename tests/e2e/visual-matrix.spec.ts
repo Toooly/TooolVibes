@@ -18,6 +18,9 @@ test.describe("visual route matrix", () => {
       const response = await page.goto(route.path, { waitUntil: "domcontentloaded" });
 
       expect(response?.status()).toBeLessThan(400);
+      await expect(page, `${route.path} redirected unexpectedly`).toHaveURL(
+        new RegExp(`${route.path === "/" ? "/$" : `${route.path}$`}`),
+      );
       await settleForScreenshot(page);
       await expect(page).toHaveScreenshot(route.snapshot, {
         fullPage: true,

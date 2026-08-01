@@ -63,7 +63,7 @@ describe("release feature resolution", () => {
   it("uses conservative SSR-safe defaults without reading browser globals", () => {
     const config = createReleaseFeatureConfig();
 
-    expect(config.publicGate.enabled).toBe(true);
+    expect(config.publicGate.enabled).toBe(false);
     expect(config.threeD.enabled).toBe(true);
     expect(config.audio.enabled).toBe(true);
     expect(config.gamification.enabled).toBe(false);

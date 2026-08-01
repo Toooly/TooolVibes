@@ -134,13 +134,25 @@ const allResults = [];
 for (const vp of VIEWPORTS) {
   const ctx = await browser.newContext({ viewport: { width: vp.w, height: vp.h } });
   const page = await ctx.newPage();
-  page.on('pageerror', () => {});
+  const pageErrors = [];
+  const consoleErrors = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  page.on('console', (message) => {
+    if (message.type() === 'error') consoleErrors.push(message.text());
+  });
   for (const route of ROUTES) {
     const fileName = `${route.id}_${vp.name}.png`;
     try {
+      const pageErrorCount = pageErrors.length;
+      const consoleErrorCount = consoleErrors.length;
       const resp = await page.goto(`${BASE}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 15000 });
-      await page.waitForLoadState('networkidle', { timeout: 6000 }).catch(() => {});
-      await page.waitForTimeout(700);
+      if (!resp || resp.status() >= 400) throw new Error(`Unexpected document status: ${resp?.status() ?? 'no response'}`);
+      if (new URL(page.url()).pathname !== route.path) throw new Error(`Unexpected final route: ${new URL(page.url()).pathname}`);
+      await page.evaluate(async () => {
+        await document.fonts.ready;
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      });
+      await page.waitForTimeout(100);
       const status = resp ? resp.status() : 'no-response';
       const analysis = await analyze(page);
       await page.screenshot({ path: `${OUT}/${fileName}`, fullPage: false });
@@ -168,6 +180,9 @@ for (const vp of VIEWPORTS) {
         headingsSample: analysis.headings.slice(0, 6),
         hasMainOffset: analysis.hasMainOffset,
         hasMobileNav: analysis.hasMobileNav,
+        h1Count: analysis.headings.filter((heading) => heading.tag === 'H1').length,
+        pageErrorCount: pageErrors.length - pageErrorCount,
+        consoleErrorCount: consoleErrors.length - consoleErrorCount,
         file: fileName,
       });
     } catch (err) {
@@ -185,6 +200,8 @@ const summary = {
   failed: allResults.filter((r) => r.status && r.status !== 200).length,
   errored: allResults.filter((r) => !!r.error).length,
   withHorizontalOverflow: allResults.filter((r) => r.horizontalOverflow).length,
+  missingH1: allResults.filter((r) => !r.error && r.h1Count === 0).length,
+  pageOrConsoleErrors: allResults.filter((r) => r.pageErrorCount > 0 || r.consoleErrorCount > 0).length,
   withRealLowContrast: allResults.filter((r) => r.lowContrastCount > 5).length,
   withMainOffsetIssues: allResults.filter((r) => r.hasMainOffset === false).length,
   withoutMobileNavAtMobile: allResults.filter((r) => parseInt(r.viewport.split('x')[0]) < 768 && !r.hasMobileNav).length,
@@ -210,4 +227,14 @@ if (lcRoutes.length) {
       console.log(`   ${ex.tag} "${ex.text}" ratio=${ex.ratio} fg=${ex.fg} (x${ex.count})`);
     }
   }
+}
+
+if (
+  summary.failed > 0 ||
+  summary.errored > 0 ||
+  summary.withHorizontalOverflow > 0 ||
+  summary.missingH1 > 0 ||
+  summary.pageOrConsoleErrors > 0
+) {
+  process.exitCode = 1;
 }

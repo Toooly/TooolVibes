@@ -215,7 +215,6 @@ async function navigateAndSettle(page: Page, path: string) {
   );
   await expect(page.locator("#main-content")).toBeVisible();
   await expect(page.locator("#main-content")).not.toBeEmpty();
-  await page.waitForLoadState("networkidle");
   await page.evaluate(async () => {
     await document.fonts.ready;
     await new Promise<void>((resolve) => {

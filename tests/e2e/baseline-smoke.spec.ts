@@ -27,6 +27,9 @@ test.describe("baseline smoke — route + chrome + console", () => {
 
       expect(response, `${route.path} did not return a document response`).not.toBeNull();
       expect(response?.status(), `${route.path} returned an unexpected status`).toBeLessThan(400);
+      await expect(page, `${route.path} redirected unexpectedly`).toHaveURL(
+        new RegExp(`${route.path === "/" ? "/$" : `${route.path}$`}`),
+      );
 
       await settleForScreenshot(page);
 
