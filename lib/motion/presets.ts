@@ -99,13 +99,15 @@ export function selectPreset(options: MotionPresetOptions = {}): Variants {
 
 /** Route region enter — short map-like settle (opacity + Y only). */
 export function routeTransitionPreset(options: MotionPresetOptions = {}): {
-  initial: false | { opacity: number; y: number };
+  initial: { opacity: number; y: number };
   animate: { opacity: number; y: number };
   transition: Transition;
 } {
   const rm = options.preferReducedMotion === true;
+  // Keep a stable initial shape for SSR/hydration; reduced motion collapses
+  // duration to 0 so the settle is instantaneous without structural drift.
   return {
-    initial: rm ? false : { opacity: 0.01, y: 10 },
+    initial: { opacity: rm ? 1 : 0.01, y: rm ? 0 : 10 },
     animate: { opacity: 1, y: 0 },
     transition: transition(MOTION_DURATION_S.route, MOTION_EASING.decelerate, rm),
   };

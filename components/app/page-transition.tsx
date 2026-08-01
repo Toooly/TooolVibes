@@ -32,7 +32,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     <motion.div
       key={pathname}
       className="tv-page-transition"
-      initial={preset.initial}
+      initial={false}
       animate={preset.animate}
       transition={preset.transition}
     >

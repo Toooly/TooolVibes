@@ -49,7 +49,7 @@ describe("motion presets", () => {
 
   it("collapses route entry under reduced motion", () => {
     const reduced = routeTransitionPreset({ preferReducedMotion: true });
-    expect(reduced.initial).toBe(false);
+    expect(reduced.initial).toEqual({ opacity: 1, y: 0 });
     expect(reduced.transition.duration).toBe(0);
   });
 
