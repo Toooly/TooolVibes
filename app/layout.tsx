@@ -5,9 +5,11 @@ import "@/styles/release-entry";
 import { cookies } from "next/headers";
 import { RootProviders } from "@/components/app/root-providers";
 import { GamificationShell } from "@/components/gamification/gamification-shell";
+import { JsonLd } from "@/components/seo/json-ld";
 import { releaseFeatures } from "@/lib/config/release-features";
 import type { GamificationClientModes } from "@/lib/gamification/release-context";
 import { siteConfig } from "@/lib/config/site";
+import { defaultSocialImage, organizationLogoUrl } from "@/lib/seo/metadata";
 import { gateCookieName } from "@/lib/gate/constants";
 import { getPublicToolsSnapshot } from "@/lib/data/public-tools";
 import { verifyGateToken } from "@/lib/gate/session";
@@ -54,11 +56,13 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: "it_IT",
     type: "website",
+    images: [defaultSocialImage],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteConfig.name} | Tool AI, no-code e automazioni`,
     description: siteConfig.description,
+    images: [defaultSocialImage],
   },
 };
 
@@ -75,18 +79,27 @@ export const viewport: Viewport = {
   interactiveWidget: "resizes-content",
 };
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: siteConfig.name,
-  url: siteConfig.url,
-  description: siteConfig.description,
-  potentialAction: {
-    "@type": "SearchAction",
-    target: `${siteConfig.url}/archivio?q={search_term_string}`,
-    "query-input": "required name=search_term_string",
+const structuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: siteConfig.description,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${siteConfig.url}/archivio?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
   },
-};
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: organizationLogoUrl,
+  },
+];
 
 import { IntroCinematic3D } from "@/components/3d-maestoso/intro-cinematic";
 import { homeExperience } from "@/lib/config/home-experience";
@@ -138,10 +151,7 @@ export default async function RootLayout({
       <head />
       <body>
         {isGateOpen && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-          />
+          <JsonLd data={structuredData} />
         )}
         <RootProviders
           enableExperience={isGateOpen}

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 
 import { LegalPageShell } from "@/components/legal/legal-page-shell";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
   title: "Privacy",
   description: "Informazioni sul trattamento dei dati personali in TooolVibes.",
-  alternates: { canonical: "/privacy" },
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

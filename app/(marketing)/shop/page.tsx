@@ -1,34 +1,34 @@
-import { Boxes, FileText, Layers3, Sparkles, Zap } from "lucide-react";
+import { FileText, Layers3, Sparkles } from "lucide-react";
 
-import { PremiumBadge, PremiumLink, PremiumPanel } from "@/components/ui/premium";
+import { PremiumLink } from "@/components/ui/premium";
 import { ResponsiveDisclosureCard } from "@/components/ui/responsive-disclosure-card";
 import { RouteMarker } from "@/components/ui/route-marker";
-import { siteConfig } from "@/lib/config/site";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata = {
+export const metadata = createPublicPageMetadata({
   title: "Shop",
-  description: "Kit, risorse operative e raccolte premium TooolVibes.",
-  alternates: { canonical: "/shop" },
-};
+  description: "Lo Shop TooolVibes è in preparazione: oggi puoi esplorare il Catalogo e le Raccolte editoriali.",
+  path: "/shop",
+});
 
 const shopCards = [
   {
-    title: "Kit curati",
-    copy: "Selezioni premium di tool e flussi già ragionate per creator, founder e team piccoli.",
-    example: "Esempio: kit per MVP, contenuti AI e automazioni di partenza.",
+    title: "Stato attuale",
+    copy: "Non sono disponibili prodotti, prezzi, checkout o acquisti. Questa pagina resta visibile per spiegare con chiarezza lo stato dello Shop.",
+    example: "Puoi già usare senza registrazione Catalogo, Confronto, Salvati e Raccolte.",
     icon: Layers3,
   },
   {
-    title: "Risorse operative",
-    copy: "Materiali che riducono attrito: esempi concreti, checklist e percorsi pronti al test.",
-    example: "Esempio: brief, prompt pronti e schede per valutare i tool.",
+    title: "Contenuto editoriale",
+    copy: "Le selezioni pubblicate da TooolVibes rimangono nel prodotto, dove puoi verificarne il contesto e confrontare i tool inclusi.",
+    example: "Le Raccolte sono accessibili dal sito, senza una promessa di sblocco a pagamento.",
     icon: FileText,
   },
   {
-    title: "Percorsi più rapidi",
-    copy: "Le risorse premium servono quando vuoi passare più in fretta da scoperta, scelta e implementazione.",
-    example: "Esempio: sequenze operative per lanciare, automatizzare o validare.",
-    icon: Zap,
+    title: "Quando sarà pronto",
+    copy: "Eventuali risorse future saranno pubblicate qui solo quando destinazione, contenuto e condizioni saranno verificabili.",
+    example: "Fino ad allora non trovi link esterni, cataloghi fittizi o inviti all'acquisto.",
+    icon: Sparkles,
   },
 ];
 
@@ -41,29 +41,24 @@ export default function ShopPage() {
             <RouteMarker
               index="06"
               label="Shop digitale"
-              status="Risorse operative"
+              status="In preparazione"
               density="hero"
               className="mb-5"
             />
-            <h1 className="max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[1.05] text-white">
-              Risorse, selezioni premium e percorsi pronti per lavorare più veloce.
+            <h1 className="max-w-[13ch] text-[clamp(2rem,9vw,3.3rem)] leading-[1.05] text-white sm:max-w-[22ch]">
+              Lo Shop TooolVibes è in preparazione.
             </h1>
             <p className="mt-4 max-w-[40rem] text-[0.98rem] leading-7 text-white/74 sm:mt-5 sm:text-[1rem]">
-              Lo shop digitale raccoglie selezioni premium,
-              risorse e percorsi più approfonditi. Il punto non è aggiungere rumore: è darti
-              materiali più pronti all&apos;uso.
+              Oggi non vendiamo prodotti né indirizziamo a un checkout esterno. Per decidere meglio puoi
+              partire dal Catalogo, dalle Raccolte editoriali e dal Confronto.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <PremiumLink href={siteConfig.shopUrl} external>
-                Apri lo shop digitale
+              <PremiumLink href="/archivio">
+                Esplora il Catalogo
               </PremiumLink>
-              <PremiumLink
-                href="/archivio"
-                tone="secondary"
-                className="[&&]:!border-[var(--tv-border-interactive)] [&&]:!bg-transparent [&&]:!text-[var(--tv-ink-primary)] hover:[&&]:!border-[var(--tv-accent-brand-aa)] hover:[&&]:!bg-[var(--tv-surface-elevated)] focus-visible:[&&]:!border-[var(--tv-accent-brand-aa)] focus-visible:[&&]:!bg-[var(--tv-surface-elevated)]"
-              >
-                Vedi catalogo
+              <PremiumLink href="/collections" tone="secondary">
+                Vedi le Raccolte
               </PremiumLink>
             </div>
           </div>
@@ -72,16 +67,16 @@ export default function ShopPage() {
             <div className="flex items-center justify-between gap-3 rounded-[22px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] p-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/48">
-                  Dentro ogni kit
+                  Stato dello Shop
                 </p>
                 <p className="mt-1 text-sm font-semibold text-white">
-                  Kit operativo TooolVibes
+                  Nessun acquisto attivo
                 </p>
               </div>
               <Sparkles className="size-5 text-amber-100" aria-hidden="true" />
             </div>
             <div className="mt-4 grid gap-3">
-              {["Tool salvati", "Prompt operativi", "Checklist decisionale"].map((item, index) => (
+              {["Nessun catalogo esterno", "Nessun prezzo pubblicato", "Nessun checkout attivo"].map((item, index) => (
                 <div
                   key={item}
                   className="rounded-[20px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] p-3"
@@ -120,28 +115,27 @@ export default function ShopPage() {
         })}
       </section>
 
-      <PremiumPanel tone="warm" className="p-4 before:!hidden after:!hidden sm:p-6">
+      <section className="rounded-[30px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] p-4 text-white sm:p-6">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
           <div>
-            <PremiumBadge tone="accent" className="after:!hidden">Valore reale</PremiumBadge>
+            <p
+              data-typography="metadata"
+              className="text-xs font-semibold uppercase tracking-[0.16em] text-violet-200"
+            >
+              Una promessa verificabile
+            </p>
             <h2 className="mt-4 text-[1.75rem] leading-tight text-white sm:text-[2.35rem]">
-              Lo shop deve aiutarti a decidere e costruire, non solo vendere file.
+              Per ora, il posto giusto per decidere resta il prodotto.
             </h2>
             <p className="mt-3 max-w-[48rem] text-sm leading-7 text-white/66">
-              Ogni risorsa premium parte da un problema operativo: scegliere una combinazione di tool,
-              validare una scelta, automatizzare un passaggio o rendere un flusso replicabile.
+              Se vuoi suggerire una risorsa o un flusso che merita una guida editoriale, puoi inviarlo a TooolVibes.
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-3 lg:grid-cols-1">
-            {["Pronto al test", "Curato", "Operativo"].map((item) => (
-              <div key={item} className="flex items-center justify-center gap-2 rounded-full border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] px-3 py-2 text-xs font-semibold text-white/72 sm:px-4 sm:text-sm">
-                <Boxes className="size-4 text-violet-100" aria-hidden="true" />
-                {item}
-              </div>
-            ))}
-          </div>
+          <PremiumLink href="/contributi" tone="secondary">
+            Invia un contributo
+          </PremiumLink>
         </div>
-      </PremiumPanel>
+      </section>
     </div>
   );
 }

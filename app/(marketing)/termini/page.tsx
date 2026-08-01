@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 
 import { LegalPageShell } from "@/components/legal/legal-page-shell";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
   title: "Termini",
   description: "Condizioni essenziali di utilizzo di TooolVibes.",
-  alternates: { canonical: "/termini" },
-};
+  path: "/termini",
+});
 
 export default function TermsPage() {
   return (

@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getPublicToolViews, getRelatedToolViewsBySlug, getToolViewBySlug } from "@/lib/data/public-tools";
+import { JsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/lib/config/site";
+import { getPublicToolViews, getRelatedToolViewsBySlug, getToolViewBySlug } from "@/lib/data/public-tools";
+import {
+  createPublicPageMetadata,
+  defaultSocialImage,
+} from "@/lib/seo/metadata";
 
 import { ToolDetailHero } from "./tool-detail-hero";
 import { ToolDetailScore } from "./tool-detail-score";
@@ -49,15 +54,17 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
 
   if (!tool) return {};
 
-  return {
+  return createPublicPageMetadata({
     title: `${tool.name} — ${tool.categoryLabel}`,
     description: tool.shortDescription,
-    openGraph: {
-      title: `${tool.name} | ${siteConfig.name}`,
-      description: tool.shortDescription,
-      url: `${siteConfig.url}/toools/${tool.slug}`,
-    },
-  };
+    path: `/toools/${tool.slug}`,
+    image: tool.publicTool.media.coverImageUrl
+      ? {
+          url: tool.publicTool.media.coverImageUrl,
+          alt: tool.name,
+        }
+      : defaultSocialImage,
+  });
 }
 
 function hasAffiliateSignal(href: string | null | undefined) {
@@ -80,26 +87,69 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
 
   const relatedTools = await getRelatedToolViewsBySlug(tool.slug, 3);
   const isAffiliateLink = Boolean(tool.affiliateUrl) || hasAffiliateSignal(tool.url);
+  const canonicalUrl = `${siteConfig.url}/toools/${tool.slug}`;
+  const toolStructuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        name: tool.name,
+        url: canonicalUrl,
+        description: tool.shortDescription,
+        applicationCategory: tool.categoryLabel,
+        operatingSystem:
+          tool.publicTool.attributes.platforms.length > 0
+            ? tool.publicTool.attributes.platforms.join(", ")
+            : undefined,
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "TooolVibes",
+            item: siteConfig.url,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Catalogo",
+            item: `${siteConfig.url}/archivio`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: tool.name,
+            item: canonicalUrl,
+          },
+        ],
+      },
+    ],
+  };
 
   return (
-    <div className="td-final-page">
-      <section
-        id="td-final-overview"
-        className="td-final-hero"
-        aria-labelledby="td-final-tool-name"
-      >
-        <div className="td-final-hero__inner">
-          <ToolDetailHero tool={tool} isAffiliateLink={isAffiliateLink} />
-          <ToolDetailScore tool={tool} />
-        </div>
-      </section>
+    <>
+      <JsonLd data={toolStructuredData} />
+      <div className="td-final-page">
+        <section
+          id="td-final-overview"
+          className="td-final-hero"
+          aria-labelledby="td-final-tool-name"
+        >
+          <div className="td-final-hero__inner">
+            <ToolDetailHero tool={tool} isAffiliateLink={isAffiliateLink} />
+            <ToolDetailScore tool={tool} />
+          </div>
+        </section>
 
-      <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
-      <ToolDetailEditorial tool={tool} />
-      <ToolDetailInformation tool={tool} />
-      <ToolDetailSignal tool={tool} />
-      <ToolDetailAlternatives current={tool} related={relatedTools} />
-      <ToolDetailFooter />
-    </div>
+        <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
+        <ToolDetailEditorial tool={tool} />
+        <ToolDetailInformation tool={tool} />
+        <ToolDetailSignal tool={tool} />
+        <ToolDetailAlternatives current={tool} related={relatedTools} />
+        <ToolDetailFooter />
+      </div>
+    </>
   );
 }

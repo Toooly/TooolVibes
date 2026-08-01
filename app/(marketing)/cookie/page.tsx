@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 
 import { LegalPageShell } from "@/components/legal/legal-page-shell";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
   title: "Cookie",
   description: "Informazioni sui cookie e sul salvataggio locale usati da TooolVibes.",
-  alternates: { canonical: "/cookie" },
-};
+  path: "/cookie",
+});
 
 export default function CookiePage() {
   return (

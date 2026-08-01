@@ -8,6 +8,7 @@ import {
 } from "@/lib/data/public-tools";
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -18,17 +19,19 @@ export async function generateMetadata() {
 
   if (!isGateOpen) {
     return {
-      title: "Coming Soon | TooolVibes",
+      title: "Coming Soon",
       description: "TooolVibes sta arrivando. Lascia la tua email per essere avvisato.",
+      robots: { index: false, follow: false },
     };
   }
 
-  return {
-    title: {
-      absolute: "TooolVibes | Tool AI, SaaS, no-code e vibe coding",
-    },
-    description: "Scopri i migliori tool AI, SaaS, no-code e automazioni selezionati senza rumore.",
-  };
+  return createPublicPageMetadata({
+    title: "Tool AI, SaaS, no-code e vibe coding",
+    description:
+      "Scopri i migliori tool AI, SaaS, no-code e automazioni selezionati senza rumore.",
+    path: "/",
+    openGraphTitle: "TooolVibes | Tool AI, SaaS, no-code e vibe coding",
+  });
 }
 
 export default async function HomePage() {

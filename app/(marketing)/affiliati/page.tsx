@@ -4,12 +4,14 @@ import { BadgeCheck, ChartNoAxesCombined, QrCode, ShieldCheck } from "lucide-rea
 import { AffiliateApplicationForm } from "@/components/affiliates/affiliate-application-form";
 import { PremiumBadge, PremiumPanel } from "@/components/ui/premium";
 import { RouteMarker } from "@/components/ui/route-marker";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
   title: "Programma affiliati",
   description:
     "Candidati al programma affiliati TooolVibes e scopri come condividere la piattaforma con la tua community.",
-};
+  path: "/affiliati",
+});
 
 const programSteps = [
   {
@@ -47,7 +49,7 @@ export default function AffiliatiPage() {
           <PremiumBadge tone="accent" className="mt-5 after:!hidden sm:mt-6">
             Programma su richiesta
           </PremiumBadge>
-          <h1 className="mt-3 max-w-[18ch] text-[clamp(2.25rem,4.2vw,2.9rem)] leading-[1.02] sm:mt-4">
+          <h1 className="mt-3 max-w-none text-[clamp(2.25rem,4.2vw,2.9rem)] leading-[1.02] sm:mt-4 sm:max-w-[20ch]">
             Porta TooolVibes alla tua community.
           </h1>
           <p className="mt-4 max-w-[44rem] text-[1rem] leading-7 sm:mt-5" style={{ color: "var(--muted)" }}>

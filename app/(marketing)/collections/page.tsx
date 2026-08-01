@@ -6,13 +6,16 @@ import {
   getFeaturedCollections,
   getFeaturedSpecialIssue,
 } from "@/lib/data/public-collections";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "./collections.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
   title: "Collections",
   description: "Raccolte editoriali di tool per scegliere più velocemente cosa provare.",
-  alternates: { canonical: "/collections" },
-};
+  path: "/collections",
+});
+
+export const revalidate = 3600;
 
 export default async function CollectionsPage() {
   const [collections, featuredCollections, specialIssue] = await Promise.all([

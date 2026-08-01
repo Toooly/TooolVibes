@@ -3,12 +3,13 @@ import type { Metadata } from "next";
 import { ToolBattleView } from "@/components/tools/tool-battle-view";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { getPublicToolViews } from "@/lib/data/public-tools";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
   title: "Confronto tool",
   description: "Confronta tool salvati e alternative per scegliere lo stack piu adatto.",
-  alternates: { canonical: "/compare" },
-};
+  path: "/compare",
+});
 
 export default async function ComparePage() {
   const tools = await getPublicToolViews();

@@ -8,13 +8,14 @@ import {
   getPublicToolFilterGroups,
   getPublicToolViews,
 } from "@/lib/data/public-tools";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "@/styles/archive-v4.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
   title: "Archivio tool",
   description: "Esplora tool AI, SaaS, no-code e vibe coding selezionati da TooolVibes.",
-  alternates: { canonical: "/archivio" },
-};
+  path: "/archivio",
+});
 
 type ArchivePageProps = {
   searchParams: Promise<{ q?: string; tag?: string; group?: string; level?: string }>;

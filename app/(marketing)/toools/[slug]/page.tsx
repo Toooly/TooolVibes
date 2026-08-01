@@ -1,4 +1,8 @@
-import { ToolDetailFinalPage } from "@/components/tool-detail-final/tool-detail-final-page";
+import {
+  ToolDetailFinalPage,
+  generateMetadata,
+  generateStaticParams,
+} from "@/components/tool-detail-final/tool-detail-final-page";
 
 /**
  * Tool Detail — Clean baseline route.
@@ -8,5 +12,7 @@ import { ToolDetailFinalPage } from "@/components/tool-detail-final/tool-detail-
  */
 
 export const dynamic = "force-static";
+
+export { generateMetadata, generateStaticParams };
 
 export default ToolDetailFinalPage;

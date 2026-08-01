@@ -8,6 +8,7 @@ import { CollectionCard } from "@/components/collections/collection-card";
 import { CollectionSlotSafeBoundary } from "@/components/collections/collection-slot-safe-boundary";
 import { CollectionSignalTracker } from "@/components/collections/collection-signal-tracker";
 import { PartnerCollectionModule } from "@/components/monetization/partner-placements";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
 import { siteConfig } from "@/lib/config/site";
@@ -25,13 +26,16 @@ import {
   getCollectionSurfaceMeta,
 } from "@/lib/collections/editorial";
 import { resolveCollectionPremiumAccess } from "@/lib/premium/access";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "../collections.css";
 
 type CollectionPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export const dynamic = "force-dynamic";
+// Collections are public editorial content. Revalidate in the background
+// instead of resolving the same record for every request.
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -41,15 +45,15 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
     return {};
   }
 
-  return {
+  return createPublicPageMetadata({
     title: collection.title,
     description: collection.description,
-    openGraph: {
-      title: `${collection.title} | ${siteConfig.name}`,
-      description: collection.description,
-      images: [collection.cover_image_url],
+    path: `/collections/${collection.slug}`,
+    image: {
+      url: collection.cover_image_url,
+      alt: collection.title,
     },
-  };
+  });
 }
 
 export default async function CollectionDetailPage({ params }: CollectionPageProps) {
@@ -91,14 +95,62 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
     hiddenToolCount > 0 || hiddenHighlightCount > 0
       ? `Qui ${hiddenItemCount === 1 ? "resta" : "restano"} fuori ${hiddenToolCount} tool e ${hiddenHighlightCount} ${hiddenHighlightCount === 1 ? "punto chiave" : "punti chiave"} della versione completa.`
       : "Tutti i moduli della raccolta sono già visibili in questa pagina.";
+  const canonicalUrl = `${siteConfig.url}/collections/${collection.slug}`;
+  const collectionStructuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        name: collection.title,
+        description: collection.description,
+        url: canonicalUrl,
+        image: collection.cover_image_url,
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: collection.included_tools.length,
+          itemListElement: collection.included_tools.map((slot, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: slot.tool.name,
+            url: `${siteConfig.url}/toools/${slot.tool.slug}`,
+          })),
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "TooolVibes",
+            item: siteConfig.url,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Raccolte",
+            item: `${siteConfig.url}/collections`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: collection.title,
+            item: canonicalUrl,
+          },
+        ],
+      },
+    ],
+  };
 
   return (
-    <div className="collection-detail-final internal-page internal-collection-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <CollectionSignalTracker
-        slug={collection.slug}
-        stepCount={visibleSlots.length}
-      />
-      <section className="collection-detail-hero brand-panel section-stage relative overflow-hidden rounded-[36px]">
+    <>
+      <JsonLd data={collectionStructuredData} />
+      <div className="collection-detail-final internal-page internal-collection-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
+        <CollectionSignalTracker
+          slug={collection.slug}
+          stepCount={visibleSlots.length}
+        />
+        <section className="collection-detail-hero brand-panel section-stage relative overflow-hidden rounded-[36px]">
         <div className="editorial-grid relative gap-y-0">
           <div className="col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7">
             <div
@@ -422,10 +474,10 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
             </div>
           </div>
         </div>
-      </section>
+        </section>
 
-      {relatedCollections.length > 0 ? (
-        <section className="brand-panel rounded-[34px] p-5 sm:p-6 lg:p-7">
+        {relatedCollections.length > 0 ? (
+          <section className="brand-panel rounded-[34px] p-5 sm:p-6 lg:p-7">
           <SectionHeader
             eyebrow="Raccolte correlate"
             title="Se questa raccolta ti interessa, queste sono le transizioni più naturali."
@@ -440,8 +492,9 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               />
             ))}
           </div>
-        </section>
-      ) : null}
-    </div>
+          </section>
+        ) : null}
+      </div>
+    </>
   );
 }

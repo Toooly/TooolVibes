@@ -7,12 +7,13 @@ import {
   getPublicToolFilterGroups,
   getPublicToolViews,
 } from "@/lib/data/public-tools";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPublicPageMetadata({
   title: "Tag",
   description: "Esplora i tool TooolVibes per tag, categoria e scenario d'uso.",
-  alternates: { canonical: "/tags" },
-};
+  path: "/tags",
+});
 
 export default async function TagsPage() {
   const [tags, filterGroups, tools] = await Promise.all([
@@ -31,7 +32,7 @@ export default async function TagsPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
             Categorie e tag
           </p>
-          <h1 className="mt-4 max-w-[14ch] text-[clamp(2rem,10vw,2.65rem)] leading-[0.96] text-[var(--foreground)] sm:text-[3.2rem]">
+          <h1 className="mt-4 max-w-[18ch] text-[clamp(2rem,10vw,2.65rem)] leading-[0.96] text-[var(--foreground)] sm:max-w-[24ch] sm:text-[3.2rem]">
             Esplora TooolVibes per categoria, livello e caso d&apos;uso.
           </h1>
           <p className="mt-5 max-w-[40rem] text-[1rem] leading-7 text-[var(--muted-strong)]">

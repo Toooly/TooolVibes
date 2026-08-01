@@ -17,6 +17,8 @@ import type { ToolPublic } from "@/lib/types/tool-public";
 
 const publicRuntime = vi.hoisted(() => ({
   snapshot: null as PublicToolsSnapshot | null,
+  editorialPost: null as Record<string, unknown> | null,
+  collection: null as Record<string, unknown> | null,
   notFound: vi.fn((): never => {
     throw new Error("tool-route-not-found");
   }),
@@ -32,9 +34,13 @@ vi.mock("@/lib/data/public-tools", () => ({
 }));
 vi.mock("@/lib/data/public-collections", () => ({
   getCuratedCollections: async () => [],
+  getCollectionBySlug: async () => publicRuntime.collection,
+  getCollectionsByToolSlug: async () => [],
+  getRelatedCollectionsForSlug: async () => [],
 }));
 vi.mock("@/lib/data/public-articles", () => ({
   getPublishedEditorialPosts: async () => [],
+  getEditorialPostBySlug: async () => publicRuntime.editorialPost,
 }));
 vi.mock("next/navigation", async (importOriginal) => {
   const actual = await importOriginal<typeof import("next/navigation")>();
@@ -43,7 +49,11 @@ vi.mock("next/navigation", async (importOriginal) => {
 
 import { GET as getToolsApi } from "@/app/api/tools/route";
 import { GET as getSitemap } from "@/app/sitemap.xml/route";
-import ToolDetailPage from "@/app/(marketing)/toools/[slug]/page";
+import ToolDetailPage, {
+  generateMetadata as generateToolMetadata,
+} from "@/app/(marketing)/toools/[slug]/page";
+import { generateMetadata as generateCollectionMetadata } from "@/app/(marketing)/collections/[slug]/page";
+import { generateMetadata as generatePostMetadata } from "@/app/(marketing)/posts/[slug]/page";
 import {
   generateStaticParams,
 } from "@/components/tool-detail-final/tool-detail-final-page";
@@ -209,7 +219,88 @@ function relatedSlugs(snapshot: PublicToolsSnapshot, slug: string) {
 describe("DATA-203 CMS publication contract", () => {
   beforeEach(() => {
     publicRuntime.snapshot = null;
+    publicRuntime.editorialPost = null;
+    publicRuntime.collection = null;
     publicRuntime.notFound.mockClear();
+  });
+
+  it("keeps dynamic tool metadata on the route entrypoint", async () => {
+    const cms = new InMemoryToolCms([
+      makeRecord({
+        id: "record-atlas",
+        slug: "atlas-ai",
+        name: "Atlas AI",
+        isPublished: true,
+        tags: ["assistant"],
+      }),
+    ]);
+    publicRuntime.snapshot = await cms.snapshot();
+
+    const metadata = await generateToolMetadata({
+      params: Promise.resolve({ slug: "atlas-ai" }),
+    });
+
+    expect(metadata.title).toBe("Atlas AI — Assistente AI");
+    expect(metadata.alternates).toMatchObject({
+      canonical: "http://localhost:3000/toools/atlas-ai",
+    });
+    expect(metadata.openGraph).toMatchObject({
+      title: "Atlas AI — Assistente AI | TooolVibes",
+      url: "http://localhost:3000/toools/atlas-ai",
+      images: [
+        {
+          url: "https://images.example.com/atlas-ai.webp",
+          alt: "Atlas AI",
+        },
+      ],
+    });
+  });
+
+  it("publishes canonical and Open Graph URLs for indexable dynamic editorial routes", async () => {
+    publicRuntime.editorialPost = {
+      slug: "decisioni-migliori",
+      title: "Decisioni migliori",
+      summary: "Un riepilogo editoriale verificabile.",
+    };
+    publicRuntime.collection = {
+      slug: "ai-stack-solo-founders",
+      title: "Kit AI per founder solo",
+      description: "Una raccolta editoriale completa.",
+      cover_image_url: "/images/collection-cover.png",
+    };
+
+    const [postMetadata, collectionMetadata] = await Promise.all([
+      generatePostMetadata({
+        params: Promise.resolve({ slug: "decisioni-migliori" }),
+      }),
+      generateCollectionMetadata({
+        params: Promise.resolve({ slug: "ai-stack-solo-founders" }),
+      }),
+    ]);
+
+    expect(postMetadata.alternates).toMatchObject({
+      canonical: "http://localhost:3000/posts/decisioni-migliori",
+    });
+    expect(postMetadata.openGraph).toMatchObject({
+      url: "http://localhost:3000/posts/decisioni-migliori",
+      images: [
+        {
+          url: "http://localhost:3000/about/team-working.jpg",
+        },
+      ],
+    });
+    expect(collectionMetadata.alternates).toMatchObject({
+      canonical: "http://localhost:3000/collections/ai-stack-solo-founders",
+    });
+    expect(collectionMetadata.openGraph).toMatchObject({
+      url: "http://localhost:3000/collections/ai-stack-solo-founders",
+      images: [
+        {
+          url: "/images/collection-cover.png",
+          alt: "Kit AI per founder solo",
+        },
+      ],
+    });
   });
 
   it("keeps publish, update and unpublish in parity across catalog, detail, static params, API, sitemap and related", async () => {

@@ -11,12 +11,15 @@ import {
   getGuidePosts,
   getToolWriteupPosts,
 } from "@/lib/data/public-articles";
+import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata = {
+export const metadata = createPublicPageMetadata({
   title: "Post",
   description: "Guide, note editoriali e analisi TooolVibes sui tool da provare.",
-  alternates: { canonical: "/posts" },
-};
+  path: "/posts",
+});
+
+export const revalidate = 3600;
 
 const curationCriteria = [
   "Valore rapido",

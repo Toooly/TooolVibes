@@ -11,6 +11,7 @@ import {
   ContextualPartnerBlock,
   PartnerToolCard,
 } from "@/components/monetization/partner-placements";
+import { JsonLd } from "@/components/seo/json-ld";
 import { RouteMarker } from "@/components/ui/route-marker";
 import { siteConfig } from "@/lib/config/site";
 import { getCollectionBySlug } from "@/lib/data/public-collections";
@@ -19,13 +20,19 @@ import {
   getPublishedEditorialPosts,
 } from "@/lib/data/public-articles";
 import { getCollectionsByToolSlug } from "@/lib/data/public-collections";
-import { getLegacyEditorialToolBySlug } from "@/lib/data/legacy-editorial-tool-repository";
+import { getToolBySlug } from "@/lib/data/public-tools";
+import {
+  createPublicPageMetadata,
+  defaultSocialImage,
+} from "@/lib/seo/metadata";
 import type { CuratedCollection } from "@/lib/types/collection";
 import { formatItalianDate } from "@/lib/utils";
 
 type EditorialPostPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+export const revalidate = 3600;
 
 const kindLabels: Record<NonNullable<Awaited<ReturnType<typeof getEditorialPostBySlug>>>["kind"], string> = {
   "tool-writeup": "Analisi tool",
@@ -54,14 +61,18 @@ export async function generateMetadata({ params }: EditorialPostPageProps): Prom
     return {};
   }
 
-  return {
+  return createPublicPageMetadata({
     title: post.title,
     description: post.summary,
-    openGraph: {
-      title: `${post.title} | ${siteConfig.name}`,
-      description: post.summary,
-    },
-  };
+    path: `/posts/${post.slug}`,
+    type: "article",
+    image: post.cover_image_url
+      ? {
+          url: post.cover_image_url,
+          alt: post.cover_image_alt ?? post.title,
+        }
+      : defaultSocialImage,
+  });
 }
 
 export default async function EditorialPostPage({ params }: EditorialPostPageProps) {
@@ -76,12 +87,12 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   const guideCount = editorialPosts.filter((item) => item.kind === "guide").length;
   const writeupCount = editorialPosts.filter((item) => item.kind === "tool-writeup").length;
 
-  let tool: Awaited<ReturnType<typeof getLegacyEditorialToolBySlug>> = null;
+  let tool: Awaited<ReturnType<typeof getToolBySlug>> = null;
   let relatedCollections: CuratedCollection[] = [];
 
   if (post.tool_slug) {
     [tool, relatedCollections] = await Promise.all([
-      getLegacyEditorialToolBySlug(post.tool_slug),
+      getToolBySlug(post.tool_slug),
       getCollectionsByToolSlug(post.tool_slug),
     ]);
   } else {
@@ -95,20 +106,71 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   const sourceHref = post.source_url;
   const sourceLabel = post.source_label;
   const isAuthoredPost = Boolean(post.content_markdown);
-  const relatedToolHref = tool ? (tool.affiliate_url ?? tool.website_url) : null;
-  const isRelatedToolAffiliate = Boolean(tool?.affiliate_url) || hasAffiliateSignal(relatedToolHref);
+  const relatedToolHref = tool ? (tool.urls.affiliate ?? tool.urls.website) : null;
+  const isRelatedToolAffiliate = Boolean(tool?.urls.affiliate) || hasAffiliateSignal(relatedToolHref);
+  const relatedToolRationale = tool?.editorial.evidence.find(
+    (item) => item.kind === "rationale" || item.kind === "review",
+  )?.text ?? tool?.content.description;
   const kindLabel =
     post.kind === "guide" && post.source_label === "Blog TooolVibes"
       ? "Guida"
       : kindLabels[post.kind];
+  const canonicalUrl = `${siteConfig.url}/posts/${post.slug}`;
+  const postStructuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        headline: post.title,
+        description: post.summary,
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id": canonicalUrl,
+        },
+        datePublished: post.published_at,
+        dateModified: post.updated_at,
+        image: post.cover_image_url ?? defaultSocialImage.url,
+        publisher: {
+          "@type": "Organization",
+          name: siteConfig.name,
+          url: siteConfig.url,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "TooolVibes",
+            item: siteConfig.url,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Guide",
+            item: `${siteConfig.url}/posts`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: post.title,
+            item: canonicalUrl,
+          },
+        ],
+      },
+    ],
+  };
 
   return (
-    <div className="internal-page internal-editorial-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
-      <ReadingProgressBar />
-      <section
-        data-reading-progress-root
-        className="dark-panel section-stage group relative overflow-hidden rounded-[36px]"
-      >
+    <>
+      <JsonLd data={postStructuredData} />
+      <div className="internal-page internal-editorial-page tone-issue page-shell space-y-4 pb-14 pt-6 sm:space-y-6 sm:pb-18 sm:pt-9">
+        <ReadingProgressBar />
+        <section
+          data-reading-progress-root
+          className="dark-panel section-stage group relative overflow-hidden rounded-[36px]"
+        >
         <div className="editorial-grid gap-y-0">
           <div className={tool ? "col-span-12 p-5 sm:p-6 lg:col-span-7 lg:p-7" : "col-span-12 p-5 sm:p-6 lg:p-7"}>
             <RouteMarker
@@ -128,7 +190,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               </span>
             </div>
 
-            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.22em] text-white/56">
+            <p className="mt-5 text-sm font-semibold uppercase tracking-[0.22em] text-white/56">
               {isAuthoredPost ? "Pubblicato nel blog TooolVibes" : "Aggiornato e integrato in TooolVibes"}
             </p>
             <h1 className="text-display-hero mt-3 max-w-none text-[2.02rem] text-white sm:max-w-[14ch] sm:text-[2.76rem] sm:text-balance">
@@ -163,10 +225,10 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
           </div>
 
           <div className="col-span-12 lg:col-span-5">
-            {tool ? (
+            {tool?.media.coverImageUrl ? (
               <div className="relative h-full min-h-[22rem] overflow-hidden lg:min-h-[100%]">
                 <Image
-                  src={tool.cover_image_url}
+                  src={tool.media.coverImageUrl}
                   alt={tool.name}
                   fill
                   sizes="(max-width: 1024px) 100vw, 42vw"
@@ -178,7 +240,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                     Profilo collegato
                   </span>
                   <span className="selection-chip rounded-full border border-[var(--tv-border-interactive)] bg-[var(--tv-surface-raised)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tv-ink-primary)]">
-                    {tool.category}
+                    {tool.taxonomy.sourceCategoryLabel}
                   </span>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-[var(--tv-border-interactive)] bg-[var(--tv-surface-raised)] px-4 py-4">
@@ -186,10 +248,10 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                     Perché conta
                   </p>
                   <p className="mt-2 text-sm leading-7 text-white/82">
-                    {tool.best_for ?? tool.short_description_it}
+                    {tool.content.bestFor ?? tool.content.summary}
                   </p>
                   <p className="mt-3 text-[0.82rem] leading-6 text-white/66">
-                    {tool.why_here ?? tool.description_it}
+                    {relatedToolRationale}
                   </p>
                 </div>
               </div>
@@ -327,7 +389,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                         </p>
                       ) : null}
                       <Link
-                        href={relatedToolHref ?? tool.website_url}
+                        href={relatedToolHref ?? tool.urls.website}
                         target="_blank"
                         rel={
                           isRelatedToolAffiliate
@@ -346,7 +408,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
                     Lettura editoriale
                   </p>
-                  <div className="mt-3 grid gap-1.5 text-[0.82rem] leading-6 text-white/70">
+                  <div className="mt-3 grid gap-1.5 text-sm leading-6 text-white/70">
                     <p>Pubblicato: {formatItalianDate(post.published_at)}</p>
                     <p>Aggiornato: {formatItalianDate(post.updated_at)}</p>
                     <p>Autore: {post.author_name ?? "TooolVibes"}</p>
@@ -417,7 +479,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             ) : null}
           </div>
         </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   );
 }
