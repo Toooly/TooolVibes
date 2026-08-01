@@ -1,30 +1,24 @@
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
-import { computeEditorialScore } from "@/lib/data/editorial-score";
 import {
   rankCompareScores,
   scoreToolForCompare,
   type CompareScoreResult,
 } from "@/lib/compare/compare-score";
 import {
-  COMPARE_OBJECTIVE_KEYWORDS,
-  COMPARE_OBJECTIVE_MAX_DELTA,
-  COMPARE_OBJECTIVE_POINTS_PER_HIT,
-  COMPARE_OBJECTIVE_SOURCE_WEIGHTS,
   COMPARE_OBJECTIVES,
   type CompareObjective,
 } from "@/lib/compare/compare-objective";
 
-// B34 / FLOW-603: la configurazione degli obiettivi vive in
-// `lib/compare/compare-objective`; qui restano i re-export per non
-// rompere gli import esistenti dei consumer dell'adapter.
 export type BattleObjective = CompareObjective;
 export const BATTLE_OBJECTIVES: { key: BattleObjective; label: string }[] =
   COMPARE_OBJECTIVES.map(({ key, label }) => ({ key, label }));
 
 export function hashColor(name: string): string {
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
-  const hue = Math.abs(h % 360);
+  let hash = 0;
+  for (let index = 0; index < name.length; index += 1) {
+    hash = name.charCodeAt(index) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash % 360);
   return `hsl(${hue} 80% 55%)`;
 }
 
@@ -43,11 +37,12 @@ export type NormalisedTool = {
   name: string;
   category: string;
   categoryLabel: string;
-  score: number;
-  editorialScore: number;
-  battleScore: number;
-  objectiveScore?: number;
-  objectiveDelta?: number;
+  /** Explicit editorial assessment only; null means not yet assessable. */
+  score: number | null;
+  editorialScore: number | null;
+  battleScore: number | null;
+  objectiveScore?: number | null;
+  objectiveDelta?: number | null;
   compareScore: CompareScoreResult;
   accentFrom: string;
   accentTo: string;
@@ -65,10 +60,9 @@ export type NormalisedTool = {
 };
 
 /**
- * Ranking deterministico (B33): riusa il comparatore canonico del
- * motore `lib/compare/compare-score` (totale, copertura, slug).
- * Nessun offset su indice/hash: l'ordine di input non cambia il
- * punteggio né il rank di ciascun candidato.
+ * Re-attaches the canonical assessment result to each candidate. Equal
+ * assessments share a rank; incomplete assessments have no rank. No slug,
+ * name, or field coverage can decide an outcome.
  */
 export function withBattleScores(tools: NormalisedTool[]): NormalisedTool[] {
   const rankedBySlug = new Map(
@@ -86,13 +80,13 @@ export function withBattleScores(tools: NormalisedTool[]): NormalisedTool[] {
       compareScore,
       score: compareScore.total,
       battleScore: compareScore.total,
+      editorialScore: compareScore.total,
     };
   });
 }
 
 export async function celebrateArenaFight(winner?: NormalisedTool) {
-  // The verdict is the feedback. Keep the decision surface calm and
-  // deterministic instead of layering celebratory particles over evidence.
+  // Only an explicit, supported verdict may trigger this optional feedback.
   void winner;
 }
 
@@ -104,12 +98,7 @@ export function normalise(
     const tool = tools.find((item) => item.slug === slug);
     if (!tool) return [];
 
-    const isDirectory = tool.presentationKind === "directory";
-    // B33: il punteggio deriva solo dai campi canonici ToolPublic
-    // (score/evidence/useCases/taxonomy) con provenance dichiarata;
-    // livello, featured e hash di presentazione non partecipano piu`.
     const compareScore = scoreToolForCompare(tool.publicTool);
-    const editorialScore = computeEditorialScore(tool).value;
     const score = compareScore.total;
     const fallbackColor = hashColor(tool.name);
     const highlights = tool.highlights.length > 0
@@ -122,7 +111,7 @@ export function normalise(
       category: tool.category,
       categoryLabel: tool.categoryLabel,
       score,
-      editorialScore,
+      editorialScore: score,
       battleScore: score,
       compareScore,
       accentFrom: tool.accentFrom ?? fallbackColor,
@@ -136,218 +125,157 @@ export function normalise(
       readingTime: tool.readingTime ?? "",
       url: tool.url,
       logoUrl: getToolLogoUrl(tool.domain || tool.externalUrl),
-      isDirectory,
+      isDirectory: tool.presentationKind === "directory",
       useCasesCount: tool.useCases.length,
     }];
   });
 }
 
-// B34: keyword map e pesi delle sorgenti arrivano dal config canonico
-// `lib/compare/compare-objective` (condiviso con il selettore UI).
-const OBJECTIVE_KEYWORDS = COMPARE_OBJECTIVE_KEYWORDS;
-
-const OBJECTIVE_SOURCE_LABELS: Record<string, string> = {
-  highlights: "i punti di forza evidenziati",
-  useCases: "i casi d'uso pratici",
-  tags: "i tag del catalogo",
-  category: "la categoria",
-};
-
-type ObjectiveMatch = {
-  rawScore: number;
-  topSource: string | null;
-  topKeyword: string | null;
-};
-
-function getObjectiveMatch(tool: NormalisedTool, objective: BattleObjective): ObjectiveMatch {
-  const keywords = OBJECTIVE_KEYWORDS[objective];
-  const sourceItems: Record<string, string[]> = {
-    highlights: tool.highlights,
-    useCases: tool.useCases,
-    tags: tool.tags,
-    category: [tool.category, tool.categoryLabel].filter(Boolean),
-  };
-  const sources: { key: string; items: string[]; weight: number }[] =
-    COMPARE_OBJECTIVE_SOURCE_WEIGHTS.map((source) => ({
-      key: source.key,
-      items: sourceItems[source.key],
-      weight: source.weight,
-    }));
-
-  let rawScore = 0;
-  const sourceScores = new Map<string, number>();
-  const keywordHits = new Map<string, number>();
-
-  for (const source of sources) {
-    sourceScores.set(source.key, 0);
-    for (const item of source.items) {
-      const text = String(item).toLowerCase();
-      for (const keyword of keywords) {
-        if (text.includes(keyword.toLowerCase())) {
-          rawScore += source.weight;
-          sourceScores.set(source.key, (sourceScores.get(source.key) ?? 0) + source.weight);
-          keywordHits.set(keyword, (keywordHits.get(keyword) ?? 0) + 1);
-        }
-      }
-    }
-  }
-
-  const topSource =
-    [...sourceScores.entries()].filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
-  const topKeyword =
-    [...keywordHits.entries()].filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
-
-  return { rawScore, topSource, topKeyword };
+/**
+ * Kept as a compatible export. Priorities remain useful filters/readers, but
+ * they no longer turn keywords, evidence, use cases, or taxonomy into a score.
+ */
+export function getObjectiveScore(
+  _tool: NormalisedTool,
+  _objective: BattleObjective,
+): null {
+  void _tool;
+  void _objective;
+  return null;
 }
 
-export function getObjectiveScore(tool: NormalisedTool, objective: BattleObjective): number {
-  const { rawScore } = getObjectiveMatch(tool, objective);
-  return Math.min(COMPARE_OBJECTIVE_MAX_DELTA, rawScore * COMPARE_OBJECTIVE_POINTS_PER_HIT);
-}
-
+/** Priorities must not alter a canonical editorial assessment. */
 export function withObjectiveScores(
   tools: NormalisedTool[],
-  objective: BattleObjective | null,
+  _objective: BattleObjective | null,
 ): NormalisedTool[] {
-  if (!objective) {
-    return tools.map((tool) => ({
-      ...tool,
-      objectiveScore: undefined,
-      objectiveDelta: undefined,
-    }));
-  }
-
-  const deltas = tools.map((tool) => Math.round(getObjectiveScore(tool, objective)));
-  const hasAnyMatch = deltas.some((delta) => delta !== 0);
-
-  if (!hasAnyMatch) {
-    return tools.map((tool) => ({
-      ...tool,
-      objectiveScore: tool.battleScore,
-      objectiveDelta: 0,
-    }));
-  }
-
-  return tools.map((tool, index) => {
-    const delta = deltas[index];
-    const objectiveScore = Math.max(0, Math.min(100, tool.battleScore + delta));
-    return { ...tool, objectiveScore, objectiveDelta: objectiveScore - tool.battleScore };
-  });
+  void _objective;
+  return tools.map((tool) => ({
+    ...tool,
+    objectiveScore: undefined,
+    objectiveDelta: undefined,
+  }));
 }
 
+export type BattleVerdictState =
+  | "insufficient_evidence"
+  | "tie"
+  | "user_preference_required"
+  | "editorial_lead"
+  | "personal_verdict";
+
+export type PersonalBattleVerdict = {
+  winnerSlug: string;
+  reason?: string;
+};
+
 export type BattleVerdict = {
-  winner: NormalisedTool;
-  scores: { tool: NormalisedTool; score: number; rank: number }[];
+  state: BattleVerdictState;
+  winner: NormalisedTool | null;
+  scores: { tool: NormalisedTool; score: number | null; rank: number | null }[];
   reasons: string[];
   label: string;
 };
 
+function getScores(tools: NormalisedTool[]): BattleVerdict["scores"] {
+  return tools.map((tool) => ({
+    tool,
+    score: tool.battleScore,
+    rank: tool.compareScore.rank,
+  }));
+}
+
+function hasSupportedAssessment(
+  tool: NormalisedTool,
+): tool is NormalisedTool & { battleScore: number } {
+  return tool.compareScore.assessment.state === "supported" && typeof tool.battleScore === "number";
+}
+
+function createVerdict(
+  state: BattleVerdictState,
+  scores: BattleVerdict["scores"],
+  reasons: string[],
+  winner: NormalisedTool | null = null,
+): BattleVerdict {
+  const labels: Record<BattleVerdictState, string> = {
+    insufficient_evidence: "Dati insufficienti per un verdetto",
+    tie: "Nessun vincitore automatico",
+    user_preference_required: "La priorità richiede una scelta personale",
+    editorial_lead: "Valutazione editoriale supportata",
+    personal_verdict: "Verdetto personale",
+  };
+
+  return { state, winner, scores, reasons, label: labels[state] };
+}
+
+/**
+ * Resolves only explicit outcomes. It never chooses a candidate from equal or
+ * incomplete assessments, and an objective never becomes a proxy score.
+ */
 export function getBattleVerdict(
   tools: NormalisedTool[],
   objective: BattleObjective | null = null,
+  personalVerdict: PersonalBattleVerdict | null = null,
 ): BattleVerdict {
-  // Tie-break canonico (B33): punteggio, copertura dati, slug.
-  // Il verdetto non dipende dall'ordine di input dei candidati.
-  const sorted = [...tools].sort(
-    (a, b) =>
-      (b.objectiveScore ?? b.battleScore) - (a.objectiveScore ?? a.battleScore) ||
-      b.compareScore.confidence.coverage - a.compareScore.confidence.coverage ||
-      (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0),
-  );
-  const winner = sorted[0];
-  const runnerUp = sorted[1];
+  const scores = getScores(tools);
+  const personalWinner = personalVerdict
+    ? tools.find((tool) => tool.slug === personalVerdict.winnerSlug) ?? null
+    : null;
 
-  const scores = sorted.map((tool, index) => ({
-    tool,
-    score: tool.objectiveScore ?? tool.battleScore,
-    rank: index + 1,
-  }));
-
-  const reasons: string[] = [];
-
-  if (runnerUp) {
-    const gap = (winner.objectiveScore ?? winner.battleScore) - (runnerUp.objectiveScore ?? runnerUp.battleScore);
-    if (gap >= 8) {
-      reasons.push(`${winner.name} vince con un margine di ${gap} punti su ${runnerUp.name}.`);
-    } else if (gap >= 3) {
-      reasons.push(`${winner.name} supera ${runnerUp.name} di ${gap} punti.`);
-    } else {
-      reasons.push(`${winner.name} vince per un margine ridotto: la scelta dipende dal caso d'uso.`);
-    }
-  }
-
-  const winnerHighlights = winner.highlights.length;
-  const avgHighlights = tools.reduce((sum, t) => sum + t.highlights.length, 0) / tools.length;
-  if (winnerHighlights >= avgHighlights + 1) {
-    reasons.push(`${winner.name} ha più punti di forza evidenziati rispetto agli altri.`);
-  }
-
-  const winnerUseCases = winner.useCasesCount;
-  const avgUseCases = tools.reduce((sum, t) => sum + t.useCasesCount, 0) / tools.length;
-  if (winnerUseCases >= avgUseCases + 1) {
-    reasons.push(`${winner.name} copre più casi d'uso pratici nel catalogo.`);
-  }
-
-  if (reasons.length < 3) {
-    reasons.push(`${winner.name} ha ottenuto il miglior punteggio nella combinazione di dimensioni confrontate.`);
-  }
-
-  const hasRealData =
-    tools.some((t) => t.isDirectory) ||
-    tools.some((t) => t.highlights.length > 0 || t.useCasesCount > 0);
-
-  let label: BattleVerdict["label"] = "Verdetto basato sui dati disponibili";
-  const objectiveLabel = objective ? BATTLE_OBJECTIVES.find((o) => o.key === objective)?.label : null;
-
-  if (objective && objectiveLabel) {
-    const hasObjectiveMatch = tools.some((t) => (t.objectiveDelta ?? 0) !== 0);
-    if (hasObjectiveMatch) {
-      label = `Verdetto orientato a ${objectiveLabel}`;
-      const winnerMatch = getObjectiveMatch(winner, objective);
-      if (winnerMatch.rawScore > 0 && winnerMatch.topSource) {
-        reasons.unshift(`${winner.name} è il migliore per ${objectiveLabel} grazie a ${OBJECTIVE_SOURCE_LABELS[winnerMatch.topSource] ?? "i segnali raccolti"}.`);
-      }
-
-      const baseSorted = [...tools].sort(
-        (a, b) =>
-          b.battleScore - a.battleScore ||
-          b.compareScore.confidence.coverage - a.compareScore.confidence.coverage ||
-          (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0),
-      );
-      const baseWinner = baseSorted[0];
-      if (baseWinner && baseWinner.slug !== winner.slug) {
-        reasons.unshift(`Con l'obiettivo ${objectiveLabel}, ${winner.name} supera ${baseWinner.name}.`);
-      }
-    } else {
-      reasons.unshift(`Nessun dato specifico per ${objectiveLabel}: il verdetto si basa sul punteggio generale.`);
-    }
-  } else if (hasRealData && tools.every((t) => t.isDirectory)) {
-    label = "Verdetto editoriale";
-  } else if (hasRealData && tools.some((t) => t.isDirectory)) {
-    label = "Verdetto tecnico";
-  }
-
-  // B33 / FLOW-602: l'assenza di dati riduce la confidence e viene
-  // dichiarata nel verdetto invece di produrre punteggi fantasma.
-  const winnerConfidence = winner.compareScore.confidence;
-  if (winnerConfidence.level !== "high") {
-    const coveragePercent = Math.round(winnerConfidence.coverage * 100);
-    reasons.unshift(
-      `${winner.name} vince con confidence ${winnerConfidence.level === "medium" ? "media" : "bassa"}: copertura dati al ${coveragePercent}%, verdetto da confermare sulla scheda del tool.`,
+  if (personalWinner) {
+    return createVerdict(
+      "personal_verdict",
+      scores,
+      [
+        `${personalWinner.name} è la tua scelta personale.${personalVerdict?.reason ? ` ${personalVerdict.reason}` : ""}`,
+        "La scelta personale resta distinta da un verdetto editoriale automatico.",
+      ],
+      personalWinner,
     );
   }
 
-  if (
-    label === "Verdetto basato sui dati disponibili" &&
-    tools.every((t) => t.compareScore.confidence.level === "low")
-  ) {
-    label = "Verdetto provvisorio: dati insufficienti";
+  const unsupported = tools.filter((tool) => !hasSupportedAssessment(tool));
+  if (tools.length === 0 || unsupported.length > 0) {
+    const pending = unsupported
+      .map((tool) => `${tool.name}: ${tool.compareScore.assessment.missing.join(", ")}`)
+      .join("; ");
+    return createVerdict("insufficient_evidence", scores, [
+      "Nessun vincitore automatico: ogni candidato deve avere una valutazione editoriale completa e verificata.",
+      pending
+        ? `Valutazioni ancora incomplete: ${pending}.`
+        : "Aggiungi almeno due valutazioni editoriali complete per confrontarle.",
+    ]);
   }
 
-  return {
-    winner,
+  const supported = tools.filter(hasSupportedAssessment);
+  const highestScore = Math.max(...supported.map((tool) => tool.battleScore));
+  const leaders = supported.filter((tool) => tool.battleScore === highestScore);
+
+  if (leaders.length !== 1) {
+    return createVerdict("tie", scores, [
+      "Nessun vincitore automatico: le valutazioni editoriali più alte sono equivalenti.",
+      "La scelta dipende dalle tue priorità, dai limiti verificati e dal contesto d'uso.",
+    ]);
+  }
+
+  const objectiveLabel = objective
+    ? BATTLE_OBJECTIVES.find((item) => item.key === objective)?.label ?? "la priorità selezionata"
+    : null;
+  if (objectiveLabel) {
+    return createVerdict("user_preference_required", scores, [
+      `Hai selezionato ${objectiveLabel}: confronta i casi d'uso e i limiti verificati rispetto al tuo contesto.`,
+      "Una priorità personale non assegna da sola un vincitore automatico.",
+    ]);
+  }
+
+  const winner = leaders[0];
+  return createVerdict(
+    "editorial_lead",
     scores,
-    reasons: reasons.slice(0, 3),
-    label,
-  };
+    [
+      `${winner.name} ha la valutazione editoriale esplicita più alta tra i candidati completamente verificati.`,
+      "Questo vantaggio non deriva da quantità di prove, casi d'uso, tag o completezza dei campi.",
+    ],
+    winner,
+  );
 }

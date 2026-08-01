@@ -97,7 +97,7 @@ export function AboutPage() {
     <div className="page-shell pb-24 pt-4 sm:pb-18 sm:pt-6">
       {/* ─── Hero ─── */}
       <section className="v-about-hero motion-reveal overflow-hidden px-4 py-6 text-[var(--tv-ink-inverted)] sm:px-7 sm:py-8 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.88fr)_minmax(24rem,1.12fr)] lg:items-center">
+        <div className="grid gap-8 xl:grid-cols-[minmax(0,0.88fr)_minmax(24rem,1.12fr)] xl:items-center">
           <motion.div
             initial={false}
             animate={{ opacity: 1, y: 0 }}
@@ -109,7 +109,7 @@ export function AboutPage() {
             className="max-w-[47rem]"
           >
             <PremiumBadge tone="accent" className="after:!hidden">Chi siamo</PremiumBadge>
-            <h1 className="mt-4 max-w-[12ch] text-[clamp(2.35rem,9vw,5.15rem)] font-semibold leading-[0.96] text-[var(--tv-ink-inverted)]">
+            <h1 className="mt-4 max-w-none text-balance text-[clamp(2.35rem,9vw,5.15rem)] font-semibold leading-[0.96] text-[var(--tv-ink-inverted)]">
               Persone vere, prodotti digitali vivi.
             </h1>
             <p className="mt-5 max-w-[41rem] text-[1rem] leading-7 text-[var(--tv-ink-inverted-secondary)] sm:text-[1.08rem]">
@@ -145,7 +145,7 @@ export function AboutPage() {
                     ease: [0.16, 1, 0.3, 1],
                   }
             }
-            className="v-about-image-frame relative min-h-[18rem] sm:min-h-[30rem] lg:min-h-[34rem]"
+            className="v-about-image-frame relative min-h-[18rem] sm:min-h-[30rem] xl:min-h-[34rem]"
           >
             <Image
               src="/about/team-working.jpg"

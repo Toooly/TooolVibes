@@ -8,6 +8,7 @@ import {
   deriveVotes,
 } from "@/lib/data/tool-detail-derivation";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import { completeToolPublicFixture } from "@/__tests__/fixtures/tool-public";
 
 /**
  * Test suite for the Tool Detail v4 derivation helpers.
@@ -20,7 +21,7 @@ import type { ToolPublicView } from "@/lib/data/tool-public-view";
 
 function makeTool(overrides: Partial<ToolPublicView> = {}): ToolPublicView {
   return {
-    publicTool: {} as ToolPublicView["publicTool"],
+    publicTool: completeToolPublicFixture,
     presentationKind: "canonical",
     id: "test-id",
     slug: "blink",
@@ -61,79 +62,71 @@ function makeTool(overrides: Partial<ToolPublicView> = {}): ToolPublicView {
   };
 }
 
-describe("deriveEditorialScore (delegates to canonical computeEditorialScore)", () => {
-  it("returns 8.4 for Blink (matches Archive card)", () => {
-    const result = deriveEditorialScore({ name: "Blink", toolOfWeek: true });
-    expect(result.value).toBe(8.4);
-    expect(result.label).toBe("Solido");
+describe("deriveEditorialScore (delegates to the editorial-assessment contract)", () => {
+  it("does not infer an assessment from name, featured state or tool of the week", () => {
+    const result = deriveEditorialScore(makeTool());
+
+    expect(result).toMatchObject({ status: "in_preparation", value: null });
   });
 
-  it("is deterministic — same input → same output", () => {
-    const tool = makeTool();
-    expect(deriveEditorialScore(tool)).toEqual(deriveEditorialScore(tool));
-  });
+  it("preserves a supported public assessment", () => {
+    const tool = makeTool({
+      publicTool: {
+        ...completeToolPublicFixture,
+        score: {
+          ...completeToolPublicFixture.score,
+          value: 8.4,
+          verdict: "Scelta solida per ricerche tracciabili.",
+          limitationsAssessed: true,
+        },
+      },
+    });
 
-  it("never exceeds 9.5 even with all bonuses", () => {
-    const tool = makeTool({ toolOfWeek: true, featured: true, level: "featured" });
-    const result = deriveEditorialScore(tool);
-    expect(result.value).toBeLessThanOrEqual(9.5);
-  });
-
-  it("never drops below 6.8", () => {
-    const tool = makeTool({ toolOfWeek: false, featured: false, level: "beginner", name: "X" });
-    const result = deriveEditorialScore(tool);
-    expect(result.value).toBeGreaterThanOrEqual(6.8);
+    expect(deriveEditorialScore(tool)).toMatchObject({
+      status: "assessed",
+      value: 8.4,
+      verdict: "Scelta solida per ricerche tracciabili.",
+    });
   });
 });
 
 describe("deriveVotes", () => {
-  it("returns a positive integer >= 18", () => {
-    const votes = deriveVotes(makeTool());
-    expect(votes).toBeGreaterThanOrEqual(18);
-    expect(votes).toBeLessThan(200);
-  });
-
-  it("is deterministic", () => {
-    expect(deriveVotes(makeTool())).toBe(deriveVotes(makeTool()));
+  it("does not manufacture a vote count", () => {
+    expect(deriveVotes(makeTool())).toBeNull();
   });
 });
 
 describe("deriveTrend", () => {
-  it("returns one of the 5 known trend values", () => {
-    const values = ["+24%", "+82%", "+6%", "—", "-3%"];
-    for (let i = 0; i < 10; i++) {
-      const tool = makeTool({ name: `Tool${i}` });
-      const trend = deriveTrend(tool);
-      expect(values).toContain(trend.value);
-      expect(["up", "down", "flat"]).toContain(trend.direction);
-    }
+  it("marks unavailable trend evidence explicitly", () => {
+    expect(deriveTrend(makeTool())).toEqual({
+      value: "Non disponibile",
+      direction: "flat",
+    });
   });
 });
 
 describe("deriveScoreDimensions", () => {
-  it("returns 4 dimensions", () => {
-    const dims = deriveScoreDimensions(makeTool());
-    expect(dims).toHaveLength(4);
+  it("returns no dimensions while the assessment is not supported", () => {
+    expect(deriveScoreDimensions(makeTool())).toEqual([]);
   });
 
-  it("marks Velocità as Alta for toolOfWeek/featured", () => {
-    const dims = deriveScoreDimensions(makeTool({ toolOfWeek: true }));
-    expect(dims.find((d) => d.label === "Velocità")?.value).toBe("Alta");
-  });
+  it("uses only explicit assessment inputs", () => {
+    const tool = makeTool({
+      publicTool: {
+        ...completeToolPublicFixture,
+        score: {
+          ...completeToolPublicFixture.score,
+          value: 8.4,
+          verdict: "Scelta solida per ricerche tracciabili.",
+          limitationsAssessed: true,
+        },
+      },
+    });
 
-  it("marks Curva as Impegnativa for expert", () => {
-    const dims = deriveScoreDimensions(makeTool({ level: "expert" }));
-    expect(dims.find((d) => d.label === "Curva")?.value).toBe("Impegnativa");
-  });
-
-  it("marks Flessibilità as Ampia when tags > 4", () => {
-    const dims = deriveScoreDimensions(makeTool({ tags: ["a", "b", "c", "d", "e"] }));
-    expect(dims.find((d) => d.label === "Flessibilità")?.value).toBe("Ampia");
-  });
-
-  it("marks Supporto as Editoriale when editorialReview present", () => {
-    const dims = deriveScoreDimensions(makeTool({ editorialReview: "x" }));
-    expect(dims.find((d) => d.label === "Supporto")?.value).toBe("Editoriale TooolVibes");
+    expect(deriveScoreDimensions(tool)).toEqual([
+      { label: "ease of use", value: "Solido" },
+      { label: "editorial conviction", value: "Forte" },
+    ]);
   });
 });
 

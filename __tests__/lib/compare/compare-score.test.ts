@@ -13,235 +13,137 @@ import {
 } from "@/lib/compare/compare-score";
 import type { ToolPublic } from "@/lib/types/tool-public";
 
-const atlas = completeToolPublicFixture;
+function withSupportedAssessment(
+  tool: ToolPublic,
+  value: number,
+): ToolPublic {
+  const score = tool.score;
+  if (!score) throw new Error("A scorecard is required for this fixture.");
 
-const beta: ToolPublic = {
-  ...completeToolPublicFixture,
-  slug: "beta-clone",
-  name: "Beta Clone",
-  provenance: {
-    ...completeToolPublicFixture.provenance,
-    sourceId: "tool-beta",
-  },
-};
-
-const gamma: ToolPublic = {
-  ...completeToolPublicFixture,
-  slug: "gamma-app",
-  name: "Gamma",
-  taxonomy: {
-    canonicalCategory: "Produttività",
-    sourceCategory: "Produttività",
-    sourceCategoryLabel: "Produttività",
-    tags: ["automation", "workflow", "team", "prototype"],
-  },
-  content: {
-    summary: "Automazione completa dei flussi ripetitivi.",
-    description: "Gamma automatizza workflow di team con approvazioni tracciate.",
-    bestFor: "Team che vogliono automazione workflow completa",
-    useCases: [
-      "Automazione onboarding",
-      "Approvazioni ricorrenti",
-      "Sincronizzazione strumenti",
-      "Report automatici",
-    ],
-  },
-  editorial: {
-    evidence: [
-      { kind: "review", text: "Il motore di regole resta leggibile.", sourceField: "editorial_note" },
-      { kind: "strength", text: "Automazione workflow completa", sourceField: "strengths" },
-      { kind: "strength", text: "Permessi granulari", sourceField: "strengths" },
-      { kind: "highlight", text: "Template pronti", sourceField: "highlights" },
-    ],
-  },
-  score: {
-    inputs: [
-      { dimension: "ease_of_use", level: "strong" },
-      { dimension: "workflow_fit", level: "strong" },
-      { dimension: "editorial_conviction", level: "solid" },
-    ],
-    provenance: {
-      kind: "editorial-assessment",
-      sourceField: "editorial_scorecard",
-      methodologyVersion: "editorial-scorecard-v2",
-      assessedAt: "2026-07-12T10:00:00.000Z",
+  return {
+    ...tool,
+    score: {
+      ...score,
+      value,
+      verdict: "Valutazione editoriale verificata.",
+      limitationsAssessed: true,
+      provenance: {
+        ...score.provenance,
+        kind: "editorial-assessment",
+        methodologyVersion: "editorial-score-v1",
+        assessedAt: "2026-08-01T10:00:00.000Z",
+      },
     },
-  },
-  provenance: {
-    ...completeToolPublicFixture.provenance,
-    sourceId: "tool-gamma",
-  },
-};
-
-const deltaMedium: ToolPublic = {
-  ...completeToolPublicFixture,
-  slug: "delta-medium",
-  name: "Delta Medium",
-  taxonomy: {
-    canonicalCategory: null,
-    sourceCategory: "Legacy category",
-    sourceCategoryLabel: "Legacy category",
-    tags: [],
-  },
-  content: {
-    ...completeToolPublicFixture.content,
-    useCases: [],
-  },
-  provenance: {
-    ...completeToolPublicFixture.provenance,
-    sourceId: "tool-delta",
-    missingFields: ["taxonomy.canonicalCategory", "content.useCases"],
-  },
-};
-
-const partial = partialToolPublicFixture;
-
-function permutations<T>(items: T[]): T[][] {
-  if (items.length <= 1) return [items];
-
-  return items.flatMap((item, index) =>
-    permutations([...items.slice(0, index), ...items.slice(index + 1)]).map((rest) => [
-      item,
-      ...rest,
-    ]),
-  );
+    editorial: {
+      evidence: [
+        { kind: "review", text: "Prova verificata.", sourceField: "editorial_note" },
+        { kind: "caution", text: "Limite verificato.", sourceField: "cautions" },
+      ],
+    },
+  };
 }
 
-function rankingSignature(results: ReturnType<typeof compareToolsForCompare>) {
-  return results.map((result) => ({
-    slug: result.slug,
-    total: result.total,
-    rank: result.rank,
-    confidence: result.confidence.level,
-    explanation: result.explanation,
-  }));
-}
+const atlas = withSupportedAssessment(completeToolPublicFixture, 8.4);
+const beta = withSupportedAssessment(
+  { ...completeToolPublicFixture, slug: "beta-clone", name: "Beta Clone" },
+  8.4,
+);
+const gamma = withSupportedAssessment(
+  { ...completeToolPublicFixture, slug: "gamma-app", name: "Gamma" },
+  9.1,
+);
 
-describe("compare-score engine (B33)", () => {
-  it("versiona il contratto e lo espone nel risultato", () => {
-    const result = scoreToolForCompare(atlas);
+describe("compare-score truth contract", () => {
+  it("exposes a number only for a fully-supported editorial assessment", () => {
+    const supported = scoreToolForCompare(atlas);
+    const incomplete = scoreToolForCompare(partialToolPublicFixture);
 
-    expect(result.version).toBe(COMPARE_SCORE_VERSION);
-    expect(result.rank).toBe(0);
-  });
-
-  it("l'ordine di input non cambia punteggi, rank e spiegazioni", () => {
-    const candidates = [atlas, gamma, partial];
-    const signatures = permutations(candidates).map((order) =>
-      rankingSignature(compareToolsForCompare(order)),
-    );
-
-    for (const signature of signatures) {
-      expect(signature).toEqual(signatures[0]);
-    }
-
-    const winnerOrder = signatures[0].map((entry) => entry.slug);
-    expect(winnerOrder).toEqual(["gamma-app", "atlas-ai", "partial-tool"]);
-  });
-
-  it("lo scoring del singolo tool è puro: non dipende dal contesto degli altri candidati", () => {
-    const solo = scoreToolForCompare(atlas);
-    const inGroup = compareToolsForCompare([gamma, atlas, partial]).find(
-      (result) => result.slug === atlas.slug,
-    );
-
-    expect(inGroup).toBeDefined();
-    expect({ ...inGroup, rank: 0 }).toEqual(solo);
-  });
-
-  it("rankCompareScores assegna rank canonici indipendenti dall'ordine", () => {
-    const scored = [atlas, gamma, partial].map(scoreToolForCompare);
-    const forward = rankCompareScores(scored);
-    const reversed = rankCompareScores([...scored].reverse());
-
-    expect(reversed).toEqual(forward);
-    expect(forward.map((result) => result.rank)).toEqual([1, 2, 3]);
-  });
-
-  it("pareggio: stesso totale, tie-break deterministico sullo slug", () => {
-    const atlasResult = scoreToolForCompare(atlas);
-    const betaResult = scoreToolForCompare(beta);
-
-    expect(betaResult.total).toBe(atlasResult.total);
-    expect(compareScoreResults(atlasResult, betaResult)).toBeLessThan(0);
-    expect(compareScoreResults(betaResult, atlasResult)).toBeGreaterThan(0);
-
-    const ranked = rankCompareScores([betaResult, atlasResult]);
-    expect(ranked.map((result) => result.slug)).toEqual(["atlas-ai", "beta-clone"]);
-  });
-
-  it("dati mancanti: nessun punteggio fantasma, confidence bassa e degrado dichiarato", () => {
-    const result = scoreToolForCompare(partial);
-
-    expect(result.total).toBe(0);
-    expect(result.confidence.level).toBe("low");
-    expect(result.confidence.coverage).toBe(0);
-    expect(result.components.every((component) => !component.available)).toBe(true);
-    expect(result.components.every((component) => component.value === 0)).toBe(true);
-    expect(result.confidence.missing).toEqual(
-      expect.arrayContaining([
-        "Valutazione editoriale",
-        "Prove editoriali",
-        "Copertura casi d'uso",
-        "Contesto tassonomico",
-        "score",
-        "taxonomy.canonicalCategory",
-      ]),
-    );
-    expect(result.explanation.join("\n")).toContain("dati assenti, nessun contributo assegnato");
-  });
-
-  it("la confidence cresce con la copertura dei dati canonici", () => {
-    const lowResult = scoreToolForCompare(partial);
-    const mediumResult = scoreToolForCompare(deltaMedium);
-    const highResult = scoreToolForCompare(atlas);
-
-    expect(lowResult.confidence.level).toBe("low");
-    expect(mediumResult.confidence.level).toBe("medium");
-    expect(mediumResult.confidence.coverage).toBeCloseTo(0.7, 5);
-    expect(highResult.confidence.level).toBe("high");
-    expect(highResult.confidence.coverage).toBe(1);
-  });
-
-  it("calcola il totale come media pesata dei soli componenti disponibili", () => {
-    const result = scoreToolForCompare(atlas);
-
-    const byKey = new Map(result.components.map((component) => [component.key, component]));
-    expect(byKey.get("editorial-scorecard")?.value).toBe(85);
-    expect(byKey.get("editorial-evidence")?.value).toBe(50);
-    expect(byKey.get("use-case-coverage")?.value).toBe(50);
-    expect(byKey.get("taxonomy-context")?.value).toBe(75);
-    expect(result.total).toBe(68);
-  });
-
-  it("ogni componente dichiara provenance: campo canonico e regola", () => {
-    const result = scoreToolForCompare(gamma);
-
-    for (const component of result.components) {
-      expect(component.provenance.field.length).toBeGreaterThan(0);
-      expect(component.provenance.rule.length).toBeGreaterThan(0);
-    }
-
-    const fields = result.components.map((component) => component.provenance.field);
-    expect(fields).toEqual([
-      "score.inputs",
-      "editorial.evidence",
-      "content.useCases",
-      "taxonomy",
+    expect(supported.version).toBe(COMPARE_SCORE_VERSION);
+    expect(supported.total).toBe(8.4);
+    expect(supported.assessment.state).toBe("supported");
+    expect(supported.components).toEqual([
+      expect.objectContaining({
+        key: "editorial-assessment",
+        available: true,
+        value: 8.4,
+      }),
     ]);
 
-    const scorecard = result.components.find(
-      (component) => component.key === "editorial-scorecard",
-    );
-    expect(scorecard?.provenance.rule).toContain("editorial-scorecard-v2");
-    expect(scorecard?.provenance.rule).toContain("editorial-assessment");
+    expect(incomplete.total).toBeNull();
+    expect(incomplete.rank).toBeNull();
+    expect(incomplete.assessment.state).toBe("insufficient_evidence");
+    expect(incomplete.explanation.join(" ")).toContain("in preparazione");
   });
 
-  it("explanation stabile e leggibile su fixture (snapshot)", () => {
-    const explanation = [gamma, atlas, partial].map(
-      (tool) => scoreToolForCompare(tool).explanation,
-    );
+  it("does not derive a number from evidence, use cases, or taxonomy", () => {
+    const richerMetadata: ToolPublic = {
+      ...atlas,
+      taxonomy: {
+        ...atlas.taxonomy,
+        tags: ["research", "assistant", "automation", "workflow"],
+      },
+      content: {
+        ...atlas.content,
+        useCases: ["Ricerca", "Sintesi", "Automazione", "Report"],
+      },
+      editorial: {
+        evidence: [
+          ...atlas.editorial.evidence,
+          { kind: "strength", text: "Ulteriore segnale.", sourceField: "strengths" },
+        ],
+      },
+    };
 
-    expect(explanation).toMatchSnapshot();
+    expect(scoreToolForCompare(richerMetadata).total).toBe(atlas.score?.value);
+    expect(scoreToolForCompare(richerMetadata).total).toBe(8.4);
+  });
+
+  it("requires the explicit score, methodology, verification date, verdict, evidence, and limitations", () => {
+    const missingValue: ToolPublic = {
+      ...atlas,
+      score: { ...atlas.score!, value: null },
+    };
+    const missingVerdict: ToolPublic = {
+      ...atlas,
+      score: { ...atlas.score!, verdict: null },
+    };
+    const missingLimitations: ToolPublic = {
+      ...atlas,
+      score: { ...atlas.score!, limitationsAssessed: false },
+      editorial: {
+        evidence: [{ kind: "review", text: "Prova verificata.", sourceField: "editorial_note" }],
+      },
+    };
+
+    for (const tool of [missingValue, missingVerdict, missingLimitations]) {
+      expect(scoreToolForCompare(tool).total).toBeNull();
+      expect(scoreToolForCompare(tool).assessment.state).toBe("insufficient_evidence");
+    }
+  });
+
+  it("gives equal explicit scores the same rank without a slug tie-break", () => {
+    const atlasResult = scoreToolForCompare(atlas);
+    const betaResult = scoreToolForCompare(beta);
+    const gammaResult = scoreToolForCompare(gamma);
+
+    expect(compareScoreResults(atlasResult, betaResult)).toBe(0);
+
+    const ranked = rankCompareScores([betaResult, gammaResult, atlasResult]);
+    expect(ranked.map(({ slug, rank }) => [slug, rank])).toEqual([
+      ["beta-clone", 2],
+      ["gamma-app", 1],
+      ["atlas-ai", 2],
+    ]);
+  });
+
+  it("keeps candidate order while keeping assessment values and ranks permutation-independent", () => {
+    const forward = compareToolsForCompare([atlas, gamma, beta]);
+    const reversed = compareToolsForCompare([beta, gamma, atlas]);
+
+    const signature = (results: typeof forward) =>
+      new Map(results.map(({ slug, total, rank }) => [slug, { total, rank }]));
+
+    expect(signature(reversed)).toEqual(signature(forward));
+    expect(forward.map(({ slug }) => slug)).toEqual(["atlas-ai", "gamma-app", "beta-clone"]);
   });
 });

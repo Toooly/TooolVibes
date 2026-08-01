@@ -1,55 +1,54 @@
-import type { EditorialScoreLevel } from "@/lib/types/tool";
 import type { ToolPublic } from "@/lib/types/tool-public";
 
 /**
- * BATCH 33 / FLOW-602 — Compare scoring contract.
+ * Compare's public assessment contract.
  *
- * Motore deterministico di scoring per il confronto pubblico.
- *
- * Garanzie del contratto:
- * - dipende SOLO dai campi canonici `ToolPublic` (mai da indici, hash,
- *   flag featured o campi legati alla sorgente CMS);
- * - l'ordine di input non cambia il risultato: il ranking usa un
- *   comparatore canonico (totale, copertura, slug);
- * - l'assenza di dati riduce la confidence: i componenti senza dati
- *   non contribuiscono e non vengono inventati punteggi;
- * - ogni componente dichiara la sua provenance (campo dominio + regola).
+ * A number is deliberately available only when the canonical editorial
+ * assessment is complete. Evidence, use cases, taxonomy, names, slugs, and
+ * field coverage may explain a comparison, but must never manufacture or
+ * alter its score.
  */
-
-export const COMPARE_SCORE_VERSION = "compare-score-v1";
+export const COMPARE_SCORE_VERSION = "compare-score-v2";
 
 export type CompareConfidenceLevel = "high" | "medium" | "low";
 
+export type CompareAssessmentState = "supported" | "insufficient_evidence";
+
+export type CompareAssessmentRequirement =
+  | "score.value"
+  | "score.provenance.kind"
+  | "score.provenance.methodologyVersion"
+  | "score.provenance.assessedAt"
+  | "score.verdict"
+  | "editorial.evidence"
+  | "editorial.limitations";
+
 export type CompareScoreProvenance = {
-  /** Campo canonico ToolPublic da cui deriva il componente. */
+  /** Canonical fields which support the displayed assessment. */
   field: string;
-  /** Regola deterministica applicata al campo, in forma leggibile. */
+  /** Human-readable contract rule. */
   rule: string;
 };
 
-export type CompareScoreComponentKey =
-  | "editorial-scorecard"
-  | "editorial-evidence"
-  | "use-case-coverage"
-  | "taxonomy-context";
+export type CompareScoreComponentKey = "editorial-assessment";
 
 export type CompareScoreComponent = {
   key: CompareScoreComponentKey;
   label: string;
-  /** Peso percentuale sul totale (somma dei pesi = 100). */
+  /** Kept for compatible consumers; the sole supported component is 100%. */
   weight: number;
-  /** false quando il dato canonico manca: nessun contributo assegnato. */
+  /** False means that no numeric assessment may be displayed. */
   available: boolean;
-  /** Valore normalizzato 0-100 del componente (0 quando non disponibile). */
-  value: number;
+  /** The explicitly stored 0-10 editorial score, never a derived value. */
+  value: number | null;
   provenance: CompareScoreProvenance;
 };
 
 export type CompareScoreConfidence = {
   level: CompareConfidenceLevel;
-  /** Quota di peso coperta da dati reali (0..1). */
+  /** 1 for a fully-supported assessment, otherwise 0. Never used to rank. */
   coverage: number;
-  /** Etichette dei componenti senza dati + missingFields tracciati dalla sorgente. */
+  /** Requirements absent from the canonical assessment. */
   missing: string[];
 };
 
@@ -57,313 +56,164 @@ export type CompareScoreResult = {
   version: typeof COMPARE_SCORE_VERSION;
   slug: string;
   name: string;
-  /** Punteggio complessivo 0-100, media pesata sui soli componenti disponibili. */
-  total: number;
-  /** Posizione nel ranking canonico; assegnata da rankCompareScores. */
-  rank: number;
+  /** Explicit 0-10 editorial score, or null when the assessment is incomplete. */
+  total: number | null;
+  /** Equal scores share a rank; incomplete assessments are intentionally unranked. */
+  rank: number | null;
+  assessment: {
+    state: CompareAssessmentState;
+    missing: CompareAssessmentRequirement[];
+  };
   confidence: CompareScoreConfidence;
   components: CompareScoreComponent[];
-  /** Spiegazione stabile e leggibile del punteggio (una riga per fatto). */
   explanation: string[];
 };
 
-const SCORECARD_WEIGHT = 45;
-const EVIDENCE_WEIGHT = 25;
-const USE_CASE_WEIGHT = 20;
-const TAXONOMY_WEIGHT = 10;
-const TOTAL_WEIGHT = SCORECARD_WEIGHT + EVIDENCE_WEIGHT + USE_CASE_WEIGHT + TAXONOMY_WEIGHT;
+const SUPPORT_FIELDS =
+  "score.value, score.provenance.kind, score.provenance.methodologyVersion, score.provenance.assessedAt, score.verdict, editorial.evidence, editorial.limitations";
 
-const CONFIDENCE_HIGH_MIN_COVERAGE = 0.75;
-const CONFIDENCE_MEDIUM_MIN_COVERAGE = 0.45;
-
-const EVIDENCE_MAX_COUNTED = 3;
-const EVIDENCE_POINTS_EACH = 25;
-const REVIEW_POINTS = 25;
-
-const USE_CASE_MAX_COUNTED = 4;
-const USE_CASE_POINTS_EACH = 25;
-
-const TAXONOMY_CATEGORY_POINTS = 50;
-const TAXONOMY_MAX_TAGS_COUNTED = 4;
-const TAXONOMY_TAG_POINTS = 12.5;
-
-const scorecardLevelValue: Record<EditorialScoreLevel, number> = {
-  measured: 55,
-  solid: 75,
-  strong: 95,
-};
-
-const confidenceLevelLabel: Record<CompareConfidenceLevel, string> = {
-  high: "alta",
-  medium: "media",
-  low: "bassa",
-};
-
-function round(value: number) {
-  return Math.round(value);
+function hasText(value: string | null | undefined): value is string {
+  return typeof value === "string" && value.trim().length > 0;
 }
 
-function scorecardComponent(tool: ToolPublic): CompareScoreComponent {
-  const field = "score.inputs";
+function getMissingRequirements(tool: ToolPublic): CompareAssessmentRequirement[] {
+  const score = tool.score;
 
-  if (!tool.score || tool.score.inputs.length === 0) {
-    return {
-      key: "editorial-scorecard",
-      label: "Valutazione editoriale",
-      weight: SCORECARD_WEIGHT,
-      available: false,
-      value: 0,
-      provenance: {
-        field,
-        rule: "richiede la scorecard editoriale canonica; assente, nessun valore stimato",
-      },
-    };
+  if (!score) {
+    return [
+      "score.value",
+      "score.provenance.kind",
+      "score.provenance.methodologyVersion",
+      "score.provenance.assessedAt",
+      "score.verdict",
+      "editorial.evidence",
+      "editorial.limitations",
+    ];
   }
 
-  const inputs = tool.score.inputs;
-  const average =
-    inputs.reduce((sum, input) => sum + scorecardLevelValue[input.level], 0) / inputs.length;
+  const missing: CompareAssessmentRequirement[] = [];
+
+  if (typeof score.value !== "number") missing.push("score.value");
+  if (score.provenance.kind !== "editorial-assessment") {
+    missing.push("score.provenance.kind");
+  }
+  if (!hasText(score.provenance.methodologyVersion)) {
+    missing.push("score.provenance.methodologyVersion");
+  }
+  if (!score.provenance.assessedAt) missing.push("score.provenance.assessedAt");
+  if (!hasText(score.verdict)) missing.push("score.verdict");
+  if (!tool.editorial.evidence.some((item) => hasText(item.sourceField))) {
+    missing.push("editorial.evidence");
+  }
+  if (
+    !score.limitationsAssessed &&
+    !tool.editorial.evidence.some((item) => item.kind === "caution" && hasText(item.sourceField))
+  ) {
+    missing.push("editorial.limitations");
+  }
+
+  return missing;
+}
+
+function assessmentComponent(
+  tool: ToolPublic,
+  state: CompareAssessmentState,
+): CompareScoreComponent {
+  const available = state === "supported";
 
   return {
-    key: "editorial-scorecard",
+    key: "editorial-assessment",
     label: "Valutazione editoriale",
-    weight: SCORECARD_WEIGHT,
-    available: true,
-    value: round(average),
+    weight: 100,
+    available,
+    value: available ? tool.score?.value ?? null : null,
     provenance: {
-      field,
-      rule: `media dei livelli editoriali (measured=55, solid=75, strong=95) su ${inputs.length} dimensioni; metodologia ${tool.score.provenance.methodologyVersion} (${tool.score.provenance.kind})`,
-    },
-  };
-}
-
-function evidenceComponent(tool: ToolPublic): CompareScoreComponent {
-  const field = "editorial.evidence";
-  const strengths = tool.editorial.evidence.filter(
-    (item) => item.kind === "strength" || item.kind === "highlight",
-  ).length;
-  const hasReview = tool.editorial.evidence.some((item) => item.kind === "review");
-
-  if (strengths === 0 && !hasReview) {
-    return {
-      key: "editorial-evidence",
-      label: "Prove editoriali",
-      weight: EVIDENCE_WEIGHT,
-      available: false,
-      value: 0,
-      provenance: {
-        field,
-        rule: "richiede punti di forza o una recensione editoriale; assenti, nessun valore stimato",
-      },
-    };
-  }
-
-  const counted = Math.min(strengths, EVIDENCE_MAX_COUNTED);
-  const value = counted * EVIDENCE_POINTS_EACH + (hasReview ? REVIEW_POINTS : 0);
-
-  return {
-    key: "editorial-evidence",
-    label: "Prove editoriali",
-    weight: EVIDENCE_WEIGHT,
-    available: true,
-    value: round(value),
-    provenance: {
-      field,
-      rule: `${strengths} ${strengths === 1 ? "punto" : "punti"} di forza (max ${EVIDENCE_MAX_COUNTED} contati, ${EVIDENCE_POINTS_EACH} pt cad.)${hasReview ? ` + recensione presente (${REVIEW_POINTS} pt)` : ""}`,
-    },
-  };
-}
-
-function caseCoverageComponent(tool: ToolPublic): CompareScoreComponent {
-  const field = "content.useCases";
-  const count = tool.content.useCases.length;
-
-  if (count === 0) {
-    return {
-      key: "use-case-coverage",
-      label: "Copertura casi d'uso",
-      weight: USE_CASE_WEIGHT,
-      available: false,
-      value: 0,
-      provenance: {
-        field,
-        rule: "richiede casi d'uso dichiarati; assenti, nessun valore stimato",
-      },
-    };
-  }
-
-  const counted = Math.min(count, USE_CASE_MAX_COUNTED);
-
-  return {
-    key: "use-case-coverage",
-    label: "Copertura casi d'uso",
-    weight: USE_CASE_WEIGHT,
-    available: true,
-    value: round(counted * USE_CASE_POINTS_EACH),
-    provenance: {
-      field,
-      rule: `${count} casi d'uso dichiarati (max ${USE_CASE_MAX_COUNTED} contati, ${USE_CASE_POINTS_EACH} pt cad.)`,
-    },
-  };
-}
-
-function taxonomyComponent(tool: ToolPublic): CompareScoreComponent {
-  const field = "taxonomy";
-  const hasCanonicalCategory = tool.taxonomy.canonicalCategory !== null;
-  const tagCount = tool.taxonomy.tags.length;
-
-  if (!hasCanonicalCategory && tagCount === 0) {
-    return {
-      key: "taxonomy-context",
-      label: "Contesto tassonomico",
-      weight: TAXONOMY_WEIGHT,
-      available: false,
-      value: 0,
-      provenance: {
-        field,
-        rule: "richiede categoria canonica o tag; assenti, nessun valore stimato",
-      },
-    };
-  }
-
-  const countedTags = Math.min(tagCount, TAXONOMY_MAX_TAGS_COUNTED);
-  const value =
-    (hasCanonicalCategory ? TAXONOMY_CATEGORY_POINTS : 0) + countedTags * TAXONOMY_TAG_POINTS;
-
-  return {
-    key: "taxonomy-context",
-    label: "Contesto tassonomico",
-    weight: TAXONOMY_WEIGHT,
-    available: true,
-    value: round(value),
-    provenance: {
-      field,
-      rule: `categoria canonica ${hasCanonicalCategory ? `presente (${TAXONOMY_CATEGORY_POINTS} pt)` : "assente"} + ${tagCount} tag (max ${TAXONOMY_MAX_TAGS_COUNTED} contati, 12,5 pt cad.)`,
+      field: SUPPORT_FIELDS,
+      rule: available
+        ? "usa esclusivamente il valore editoriale esplicito, con metodologia, data di verifica, verdetto, evidenza e limiti dichiarati"
+        : "senza tutti i requisiti editoriali non viene mostrato né stimato alcun punteggio",
     },
   };
 }
 
 function buildExplanation(
-  name: string,
-  total: number,
-  confidence: CompareScoreConfidence,
-  components: CompareScoreComponent[],
-  trackedMissingFields: string[],
+  tool: ToolPublic,
+  total: number | null,
+  missing: CompareAssessmentRequirement[],
 ): string[] {
-  const coveragePercent = round(confidence.coverage * 100);
-  const lines = [
-    `${name}: punteggio ${total}/100 con confidence ${confidenceLevelLabel[confidence.level]} (copertura dati ${coveragePercent}%).`,
+  if (total === null) {
+    return [
+      `${tool.name}: valutazione editoriale in preparazione. Nessun punteggio viene mostrato finché non sono disponibili: ${missing.join(", ")}.`,
+    ];
+  }
+
+  return [
+    `${tool.name}: valutazione editoriale esplicita ${total}/10, verificata il ${tool.score?.provenance.assessedAt}.`,
+    `Verdetto editoriale: ${tool.score?.verdict}.`,
+    "Il valore non incorpora quantità di prove, casi d'uso, tag o completezza dei campi.",
   ];
-
-  for (const component of components) {
-    if (component.available) {
-      lines.push(
-        `+ ${component.label}: ${component.value}/100, peso ${component.weight}% — ${component.provenance.rule} [fonte: ${component.provenance.field}].`,
-      );
-    } else {
-      lines.push(
-        `- ${component.label}: dati assenti, nessun contributo assegnato [fonte attesa: ${component.provenance.field}].`,
-      );
-    }
-  }
-
-  if (trackedMissingFields.length > 0) {
-    lines.push(`Campi mancanti dichiarati dalla sorgente: ${[...trackedMissingFields].sort().join(", ")}.`);
-  }
-
-  return lines;
 }
 
 /**
- * Punteggio deterministico di un singolo tool. Funzione pura:
- * stesso input canonico → stesso output, indipendentemente da
- * ordine, indice o contesto degli altri candidati.
+ * Produces an honest, per-tool assessment. No score is inferred from content
+ * richness or metadata: only a complete canonical editorial assessment can
+ * expose `total`.
  */
 export function scoreToolForCompare(tool: ToolPublic): CompareScoreResult {
-  const components = [
-    scorecardComponent(tool),
-    evidenceComponent(tool),
-    caseCoverageComponent(tool),
-    taxonomyComponent(tool),
-  ];
-
-  const availableWeight = components
-    .filter((component) => component.available)
-    .reduce((sum, component) => sum + component.weight, 0);
-
-  const weightedSum = components
-    .filter((component) => component.available)
-    .reduce((sum, component) => sum + component.value * component.weight, 0);
-
-  const total = availableWeight === 0 ? 0 : round(weightedSum / availableWeight);
-  const coverage = availableWeight / TOTAL_WEIGHT;
-
-  const level: CompareConfidenceLevel =
-    coverage >= CONFIDENCE_HIGH_MIN_COVERAGE
-      ? "high"
-      : coverage >= CONFIDENCE_MEDIUM_MIN_COVERAGE
-        ? "medium"
-        : "low";
-
-  const missing = [
-    ...components
-      .filter((component) => !component.available)
-      .map((component) => component.label),
-    ...tool.provenance.missingFields,
-  ];
-
-  const confidence: CompareScoreConfidence = { level, coverage, missing };
+  const missing = getMissingRequirements(tool);
+  const state: CompareAssessmentState = missing.length === 0 ? "supported" : "insufficient_evidence";
+  const total = state === "supported" ? tool.score?.value ?? null : null;
+  const confidence: CompareScoreConfidence = {
+    level: state === "supported" ? "high" : "low",
+    coverage: state === "supported" ? 1 : 0,
+    missing,
+  };
 
   return {
     version: COMPARE_SCORE_VERSION,
     slug: tool.slug,
     name: tool.name,
     total,
-    rank: 0,
+    rank: null,
+    assessment: { state, missing },
     confidence,
-    components,
-    explanation: buildExplanation(
-      tool.name,
-      total,
-      confidence,
-      components,
-      tool.provenance.missingFields,
-    ),
+    components: [assessmentComponent(tool, state)],
+    explanation: buildExplanation(tool, total, missing),
   };
 }
 
 /**
- * Comparatore canonico del ranking: totale decrescente, poi copertura
- * dati decrescente, poi slug crescente. Nessun riferimento all'ordine
- * di input: le permutazioni producono lo stesso ranking.
+ * Orders only distinct explicit values. Equal or incomplete assessments are
+ * deliberately indistinguishable to the comparator: no slug/name fallback is
+ * permitted.
  */
 export function compareScoreResults(
   left: CompareScoreResult,
   right: CompareScoreResult,
 ): number {
-  if (right.total !== left.total) {
-    return right.total - left.total;
-  }
-
-  if (right.confidence.coverage !== left.confidence.coverage) {
-    return right.confidence.coverage - left.confidence.coverage;
-  }
-
-  return left.slug < right.slug ? -1 : left.slug > right.slug ? 1 : 0;
+  if (left.total === null || right.total === null) return 0;
+  return right.total - left.total;
 }
 
 /**
- * Ordina i risultati con il comparatore canonico e assegna i rank 1..N.
+ * Assigns a shared rank to each distinct supported value while preserving the
+ * caller's candidate order. There is no tie-break and incomplete entries have
+ * no rank.
  */
 export function rankCompareScores(results: CompareScoreResult[]): CompareScoreResult[] {
-  return [...results].sort(compareScoreResults).map((result, index) => ({
+  const rankedValues = [...new Set(
+    results.flatMap((result) => (result.total === null ? [] : [result.total])),
+  )].sort((left, right) => right - left);
+
+  return results.map((result) => ({
     ...result,
-    rank: index + 1,
+    rank: result.total === null ? null : rankedValues.indexOf(result.total) + 1,
   }));
 }
 
 /**
- * Pipeline completa: scoring puro per tool + ranking canonico.
+ * Pure per-tool assessment pipeline. Input order is retained because it is
+ * never evidence of superiority; scores/ranks themselves are order-independent.
  */
 export function compareToolsForCompare(tools: ToolPublic[]): CompareScoreResult[] {
   return rankCompareScores(tools.map(scoreToolForCompare));

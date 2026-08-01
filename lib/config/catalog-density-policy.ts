@@ -6,8 +6,7 @@
    - information priority title → use case → CTA;
    - placement sponsor DOPO il primo valore organico utile.
 
-   Default ON: il sito pubblico resta dietro il gate Coming Soon,
-   quindi nessuna variazione visiva pubblica e' attesa. Kill switch:
+   Default ON: il catalogo pubblico usa questa densità mobile. Kill switch:
    NEXT_PUBLIC_TOOOLVIBES_CATALOG_DENSITY_POLICY="0" (o false/off).
 
    Il flag vive in un modulo dedicato — non in release-features.ts —

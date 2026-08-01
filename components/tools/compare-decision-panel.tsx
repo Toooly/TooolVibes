@@ -147,7 +147,7 @@ export function CompareDecisionPanel({
   const contextLabel = objective
     ? `Confronto orientato a ${getCompareObjectiveLabel(objective)}`
     : "Confronto generale";
-  const candidateNames = tools.map((tool) => tool.name).join(" vs ");
+  const candidateNames = tools.map((tool) => tool.name).join(", ");
 
   function handleOutcome(
     slug: string,
@@ -221,7 +221,7 @@ export function CompareDecisionPanel({
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs" style={{ color: "var(--muted)" }}>
-                    {tool.objectiveScore ?? tool.battleScore}/100
+                    {tool.battleScore === null ? "Valutazione in preparazione" : `${tool.battleScore}/10`}
                   </span>
                   <button
                     type="button"

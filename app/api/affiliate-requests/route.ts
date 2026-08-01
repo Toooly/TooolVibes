@@ -33,10 +33,6 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-function getFallbackAffiliateEmail() {
-  return `affiliate-request+${Date.now()}@tooolvibes.local`;
-}
-
 function compactLines(lines: string[]) {
   return lines.filter(Boolean).join("\n");
 }
@@ -76,7 +72,7 @@ export async function POST(request: Request) {
 
   const payload = parsed.data;
   const { companyWebsite, captchaToken, ...submissionPayload } = payload;
-  const email = (payload.email ?? "").toLowerCase();
+  const email = payload.email.toLowerCase();
   const websiteUrl = payload.websiteUrl ?? "";
   const message = payload.message;
 
@@ -87,7 +83,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (email && !isValidEmail(email)) {
+  if (!isValidEmail(email)) {
     return NextResponse.json({ message: "Email non valida." }, { status: 422 });
   }
 
@@ -112,13 +108,12 @@ export async function POST(request: Request) {
     payload.linkedin ? `LinkedIn: ${payload.linkedin}` : "",
     payload.youtube ? `YouTube: ${payload.youtube}` : "",
   ]);
-  const storedEmail = email || getFallbackAffiliateEmail();
   const guard = await guardPublicSubmission({
     request,
     action: "affiliate_request",
     companyWebsite,
     captchaToken,
-    email: email || undefined,
+    email,
     fingerprintPayload: submissionPayload,
   });
 
@@ -134,10 +129,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const recentRejected = email
-      ? await getRejectedAffiliateRequestCooldown(email, cooldownSince)
-      : null;
-    if (email && recentRejected?.rejected_at) {
+    const recentRejected = await getRejectedAffiliateRequestCooldown(email, cooldownSince);
+    if (recentRejected?.rejected_at) {
       return NextResponse.json(
         {
           message: "Hai già ricevuto una risposta negativa da meno di 30 giorni.",
@@ -150,7 +143,7 @@ export async function POST(request: Request) {
     const savedRequest = await createAffiliateRequestInSupabase({
       first_name: payload.firstName || "Candidato",
       last_name: payload.lastName || "Affiliato",
-      email: storedEmail,
+      email,
       brand_name: payload.brandName || null,
       website_url: websiteUrl || null,
       audience: payload.audience || null,

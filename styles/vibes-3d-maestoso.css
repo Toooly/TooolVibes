@@ -1837,7 +1837,7 @@ canvas {
   letter-spacing: -0.01em;
 }
 .v-auth-subtitle {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: var(--v-text-muted);
   margin: 0.4rem 0 0;
   line-height: 1.5;
@@ -2022,7 +2022,7 @@ canvas {
 /* Info */
 .v-auth-info {
   text-align: center;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   color: var(--v-text-dim);
   line-height: 1.5;
   margin: 0.5rem 0 0;
@@ -2056,7 +2056,7 @@ canvas {
   text-align: center;
 }
 .v-auth-footer p {
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   color: var(--v-text-muted);
   margin: 0;
 }

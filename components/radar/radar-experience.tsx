@@ -3,24 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  useCallback,
-  useEffect,
   useMemo,
   useState,
   type CSSProperties,
-  type MouseEvent,
 } from "react";
-import confetti from "canvas-confetti";
 import {
   ArrowRight,
   ExternalLink,
   Radar as RadarIcon,
   RefreshCw,
 } from "lucide-react";
-import { toast } from "sonner";
-
-import { claimHiddenSignal } from "@/lib/gamification/actions";
-import { useGamificationSurface } from "@/lib/gamification/release-context";
 import type {
   ProductHuntItem,
   ProductHuntRange,
@@ -33,8 +25,6 @@ import {
 } from "@/lib/radar/radar-ui-model";
 import type { RadarDesktopVisual } from "@/lib/radar/radar-view-config";
 import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
-import { getUtcContextDate } from "@/supabase/functions/_shared/radar-prediction-resolver";
-import { emitRadarReturned } from "@/lib/signal-progression/client";
 
 const RADAR_VISUAL_OPTIONS: ReadonlyArray<{
   key: RadarDesktopVisual;
@@ -51,17 +41,6 @@ const RADAR_NODE_POSITIONS = [
   { x: 28, y: 76, side: "left" },
   { x: 18, y: 35, side: "left" },
 ] as const;
-
-const HIDDEN_SIGNAL_STORAGE_KEY = "tv:hidden-signal";
-
-function hashString(value: string): number {
-  let hash = 2166136261;
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
 
 function signalLinkProps(item: ProductHuntItem) {
   const external = item.productHuntUrl.startsWith("http");
@@ -99,18 +78,9 @@ function SignalIdentity({
 function RadarInstrument({
   model,
   compact = false,
-  hiddenNodeId,
-  hiddenDiscovered = false,
-  onHiddenNodeClick,
 }: {
   model: RadarUiModel;
   compact?: boolean;
-  hiddenNodeId?: string | null;
-  hiddenDiscovered?: boolean;
-  onHiddenNodeClick?: (
-    item: ProductHuntItem,
-    event: MouseEvent<HTMLAnchorElement>,
-  ) => void;
 }) {
   const nodes = model.items.slice(0, 5);
 
@@ -146,27 +116,15 @@ function RadarInstrument({
           "--tv-radar-node-x": `${position.x}%`,
           "--tv-radar-node-y": `${position.y}%`,
         } as CSSProperties;
-        const isHidden =
-          item.id === hiddenNodeId && hiddenDiscovered === false;
-
         return (
           <a
             key={item.id}
             {...signalLinkProps(item)}
             className="tv-radar-node"
             data-side={position.side}
-            data-hidden-signal={isHidden || undefined}
             style={style}
             aria-label={`${item.name}. ${formatRadarSignal(item)}. Apri su Product Hunt.`}
-            onClick={
-              isHidden && onHiddenNodeClick
-                ? (event) => onHiddenNodeClick(item, event)
-                : undefined
-            }
           >
-            {isHidden ? (
-              <span className="tv-radar-node__hidden-marker" aria-hidden="true" />
-            ) : null}
             <SignalIdentity item={item} compact />
             <span className="tv-radar-node__label">
               <strong>{item.name}</strong>
@@ -329,77 +287,6 @@ export function RadarExperience({
     [activeRange, payload],
   );
 
-  const hiddenSignalRelease = useGamificationSurface("hiddenSignal");
-  const today = useMemo(() => getUtcContextDate(new Date()), []);
-  const [hiddenDiscovered, setHiddenDiscovered] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setHiddenDiscovered(
-      localStorage.getItem(`${HIDDEN_SIGNAL_STORAGE_KEY}:${today}`) === "1",
-    );
-  }, [today]);
-
-  // Usable radar only (live/fixture/stale with items) — not loading/error shells.
-  useEffect(() => {
-    const usable =
-      (model.state === "live" ||
-        model.state === "fixture" ||
-        model.state === "stale") &&
-      model.items.length > 0;
-    if (!usable) return;
-    emitRadarReturned(today);
-  }, [model.state, model.items.length, today]);
-
-  const hiddenNodeId = useMemo(() => {
-    if (!hiddenSignalRelease.persistentRewardsEnabled) return null;
-    const candidates = model.items.slice(0, 5);
-    if (candidates.length === 0) return null;
-    const index = Math.floor(
-      (hashString(today) / 4294967296) * candidates.length,
-    );
-    return candidates[index]?.id ?? null;
-  }, [
-    hiddenSignalRelease.persistentRewardsEnabled,
-    model.items,
-    today,
-  ]);
-
-  const handleHiddenNodeClick = useCallback(
-    async (
-      item: ProductHuntItem,
-      event: MouseEvent<HTMLAnchorElement>,
-    ) => {
-      if (hiddenDiscovered) return;
-      event.preventDefault();
-
-      try {
-        await claimHiddenSignal(
-          today,
-          item.id,
-          model.items.slice(0, 5).map((candidate) => candidate.id),
-        );
-        localStorage.setItem(`${HIDDEN_SIGNAL_STORAGE_KEY}:${today}`, "1");
-        setHiddenDiscovered(true);
-        confetti({
-          particleCount: 40,
-          spread: 50,
-          origin: { y: 0.6 },
-          disableForReducedMotion: true,
-        });
-        toast.success("Segnale nascosto!", { description: "+25 XP" });
-      } catch (error) {
-        toast.error("Segnale non registrato", {
-          description:
-            error instanceof Error ? error.message : "Riprova più tardi.",
-        });
-      }
-
-      window.open(item.productHuntUrl, "_blank", "noopener,noreferrer");
-    },
-    [hiddenDiscovered, model.items, today],
-  );
-
   return (
     <div className="tv-radar-page">
       <section
@@ -516,9 +403,6 @@ export function RadarExperience({
                 <div>
                   <RadarInstrument
                     model={model}
-                    hiddenNodeId={hiddenNodeId}
-                    hiddenDiscovered={hiddenDiscovered}
-                    onHiddenNodeClick={handleHiddenNodeClick}
                   />
                   <p className="tv-radar__stage-note" role="status">
                     <strong>{model.stageTitle}</strong>

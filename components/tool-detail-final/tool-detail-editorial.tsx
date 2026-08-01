@@ -18,9 +18,9 @@ export function ToolDetailEditorial({ tool }: ToolDetailEditorialProps) {
       className="td-final-editorial"
       aria-labelledby="td-final-editorial-title"
     >
-      <p className="td-final-section-eyebrow">Perché TooolVibes lo consiglia</p>
+      <p className="td-final-section-eyebrow">Lettura editoriale</p>
       <h2 id="td-final-editorial-title" className="td-final-section-title">
-        Il punto editoriale dietro {tool.name}.
+        Cosa sappiamo finora di {tool.name}.
       </h2>
       <div className="td-final-editorial__grid">
         <article className="td-final-editorial__card">
@@ -28,8 +28,7 @@ export function ToolDetailEditorial({ tool }: ToolDetailEditorialProps) {
           <p>
             {tool.idealUseCase ??
               tool.whyItMatters ??
-              tool.tldr ??
-              `${tool.name} è una soluzione adatta a chi cerca uno strumento ${tool.categoryLabel.toLowerCase()} con taglio editoriale.`}
+              "L'utente ideale non è ancora verificato con sufficiente confidenza."}
           </p>
         </article>
 
@@ -55,19 +54,16 @@ export function ToolDetailEditorial({ tool }: ToolDetailEditorialProps) {
               ))}
             </ul>
           ) : (
-            <p>
-              Nessun limite specifico segnalato in redazione. Verifica sempre i
-              termini d&apos;uso ufficiali prima di adottarlo in produzione.
-            </p>
+            <p>Limiti non ancora verificati con sufficiente confidenza.</p>
           )}
         </article>
 
         <article className="td-final-editorial__card">
           <h3>Quando preferirne un altro</h3>
           <p>
-            Se il tuo caso d&apos;uso richiede un taglio verticale diverso (es.
-            enterprise, no-code puro, AI conversazionale lunga), valuta le
-            {" "}<Link href="#td-final-alternatives" className="td-final-internal-link">alternative in fondo alla scheda</Link>.
+            Confronta i candidati quando le differenze utili al tuo caso d&apos;uso
+            sono state chiarite. Puoi iniziare dalle {" "}
+            <Link href="#td-final-alternatives" className="td-final-internal-link">alternative in fondo alla scheda</Link>.
           </p>
         </article>
       </div>

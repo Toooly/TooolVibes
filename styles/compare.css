@@ -1498,7 +1498,7 @@
 .mobile-compare-arena__empty p {
   color: var(--tv-ink-inverted-secondary);
   margin-top: .4rem;
-  font-size: .82rem;
+  font-size: .875rem;
   line-height: 1.5;
 }
 

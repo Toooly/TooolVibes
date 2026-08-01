@@ -34,7 +34,7 @@
   margin: 0 0 var(--tv-space-micro-sm);
   color: var(--tv-accent-cyan);
   font-family: var(--tv-font-family-mono);
-  font-size: var(--tv-text-eyebrow);
+  font-size: 0.875rem;
   font-weight: var(--tv-weight-semibold);
   letter-spacing: 0.14em;
   text-transform: uppercase;

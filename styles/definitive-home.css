@@ -645,7 +645,7 @@
 
 .def-editorial__spot-cat {
   font-family: var(--tv-font-family-ui);
-  font-size: 13px;
+  font-size: 14px;
   text-transform: none;
   letter-spacing: 0;
   color: var(--tv-ink-inverted-secondary);
@@ -667,7 +667,7 @@
   padding-left: 12px;
   border-left: 2px solid var(--tv-accent-gold-on-ivory);
   color: var(--tv-ink-inverted-muted);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -685,7 +685,7 @@
 .def-editorial__spot-disclosure {
   margin: 0;
   color: var(--tv-ink-inverted-muted);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.45;
 }
 
@@ -784,7 +784,7 @@
 
 .def-editorial__pod-subtitle {
   font-family: var(--tv-font-family-ui);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--tv-ink-inverted-secondary);
   margin: 0;
   letter-spacing: 0.01em;

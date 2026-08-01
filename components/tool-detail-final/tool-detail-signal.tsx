@@ -34,10 +34,9 @@ export function ToolDetailSignal({ tool }: ToolDetailSignalProps) {
         <div className="td-final-signal__grid" />
       ) : (
         <p className="td-final-signal__empty">
-          Product Hunt e segnali live non sono al momento disponibili in TooolVibes
-          (token di lettura non configurato). Per {tool.name} non mostriamo
-          variazioni o classifiche derivate: questo spazio si attiverà solo
-          quando saranno disponibili metriche reali e verificabili.
+          I segnali live per questa scheda non sono disponibili in questo
+          momento. Per {tool.name} non mostriamo variazioni o classifiche
+          derivate: questo spazio si attiva solo con dati reali e verificabili.
         </p>
       )}
     </section>

@@ -172,7 +172,7 @@ function readPersistedWorkspace(key: string = WORKSPACE_STORAGE_KEY) {
    timer finti, il comportamento sotto test è lo stato persistito. */
 function revealMobileResult() {
   fireEvent.click(
-    screen.getByRole("button", { name: /calcola il verdetto/i }),
+    screen.getByRole("button", { name: /valuta il confronto/i }),
   );
   act(() => {
     vi.advanceTimersByTime(2000);
@@ -180,7 +180,7 @@ function revealMobileResult() {
 }
 
 function revealDesktopResult() {
-  fireEvent.click(screen.getByRole("button", { name: "Calcola il verdetto" }));
+  fireEvent.click(screen.getByRole("button", { name: "Valuta il confronto" }));
   act(() => {
     vi.advanceTimersByTime(2000);
   });
@@ -483,7 +483,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     ).toBeNull();
     // Il verdetto resta raggiungibile come prima.
     expect(
-      screen.getByRole("button", { name: /Ricalcola/ }),
+      screen.getByRole("button", { name: /Rivaluta/ }),
     ).toBeTruthy();
   });
 

@@ -87,7 +87,7 @@ export const affiliateRequestSchema = z
   .object({
     firstName: optionalText(80),
     lastName: optionalText(80),
-    email: z.string().trim().max(254).email().or(z.literal("")).optional(),
+    email: z.string().trim().min(1).max(254).email(),
     brandName: optionalText(120),
     websiteUrl: optionalHttpUrl(2_048),
     instagram: optionalText(255),

@@ -42,6 +42,10 @@ type MobileCompareViewProps = {
 
 type BattleState = "idle" | "analyzing" | "charging" | "clash" | "result";
 
+function formatEditorialScore(score: number | null) {
+  return score === null ? "Valutazione in preparazione" : `${score}/10 editoriale`;
+}
+
 /* ---------- sub-components ---------- */
 
 function CompactToolCard({
@@ -72,20 +76,14 @@ function CompactToolCard({
         </span>
         <div className="mobile-compare-arena__compact-info">
           <span className="mobile-compare-arena__compact-cat">
-            {tool.categoryLabel} · {tool.editorialScore.toFixed(1)}/10 editoriale
+            {tool.categoryLabel} · {formatEditorialScore(tool.editorialScore)}
           </span>
           <h3 className="mobile-compare-arena__compact-name">{tool.name}</h3>
           <p className="mobile-compare-arena__compact-tldr">{tool.tldr}</p>
         </div>
         <div className="mobile-compare-arena__compact-score">
-          <span>{tool.objectiveScore ?? tool.battleScore}</span>
-          <small>/100</small>
-          {tool.objectiveDelta != null && tool.objectiveDelta !== 0 ? (
-            <small className="mobile-compare-arena__compact-delta">
-              {tool.objectiveDelta > 0 ? "+" : ""}
-              {tool.objectiveDelta} obiettivo
-            </small>
-          ) : null}
+          <span>{tool.battleScore ?? "—"}</span>
+          {tool.battleScore !== null ? <small>/10</small> : null}
         </div>
       </div>
 
@@ -131,21 +129,13 @@ export function DiffMatrix({
   if (tools.length < MIN_COMPARE_TOOLS) return null;
 
   const verdict = getBattleVerdict(tools, objective);
-  const rankedTools = verdict.scores.map(({ tool }) => tool);
   const winner = verdict.winner;
-  const runnerUp = rankedTools[1] ?? winner;
   const rankBySlug = new Map(verdict.scores.map(({ tool, rank }) => [tool.slug, rank]));
   const scoreBySlug = new Map(verdict.scores.map(({ tool, score }) => [tool.slug, score]));
-  const scores = tools.map((t) => t.objectiveScore ?? t.battleScore);
-  const maxScore = Math.max(...scores, 1);
-  const topScore = scoreBySlug.get(winner.slug) ?? maxScore;
-  const runnerUpScore = scoreBySlug.get(runnerUp.slug) ?? topScore;
-  const bestCoverage = Math.max(...tools.map((t) => t.useCasesCount));
-  const bestHighlights = Math.max(...tools.map((t) => t.highlights.length));
-  const readingMinutes = tools
-    .map((t) => Number.parseInt(t.readingTime, 10))
-    .filter((value) => Number.isFinite(value));
-  const lowestReadingTime = readingMinutes.length ? Math.min(...readingMinutes) : Number.POSITIVE_INFINITY;
+  const scores = verdict.scores
+    .map(({ score }) => score)
+    .filter((score): score is number => score !== null);
+  const maxScore = scores.length > 0 ? Math.max(...scores) : null;
 
   const handleScroll = (index: number) => {
     if (isSyncing.current) return;
@@ -168,62 +158,66 @@ export function DiffMatrix({
       label: "Verdetto",
       helper: "lettura finale",
       render: (t: NormalisedTool) => {
-        const score = scoreBySlug.get(t.slug) ?? t.battleScore;
-        const rank = rankBySlug.get(t.slug) ?? tools.length;
-        const gap = Math.max(topScore - score, 0);
-        const isWinner = t.slug === winner.slug;
-        const isClose = !isWinner && gap <= 3;
+        const rank = rankBySlug.get(t.slug) ?? null;
+        const isWinner = t.slug === winner?.slug;
         return (
           <div
             className="mobile-compare-arena__matrix-verdict-card"
             data-winner={isWinner}
           >
-            <span className="mobile-compare-arena__matrix-rank">#{rank}</span>
+            <span className="mobile-compare-arena__matrix-rank">
+              {rank === null ? "—" : `#${rank}`}
+            </span>
             <strong>
               {isWinner
-                ? "Vince su " + runnerUp.name
-                : isClose
-                  ? "Alternativa vicina"
-                  : "Dietro di " + gap + " pt"}
+                ? "Valutazione editoriale più alta"
+                : verdict.state === "tie"
+                  ? "Nessun vincitore automatico"
+                  : verdict.state === "insufficient_evidence"
+                    ? "Valutazione in preparazione"
+                    : "Confronta con le tue priorità"}
             </strong>
             <small>
               {isWinner
-                ? "Miglior equilibrio tra score, prove e contesto."
-                : isClose
-                  ? "Molto competitivo, perde sul dettaglio."
-                  : "Buono, ma meno convincente nel confronto diretto."}
+                ? "Vantaggio supportato da una valutazione editoriale completa."
+                : "La scelta non viene dedotta da completezza dei campi o parole chiave."}
             </small>
           </div>
         );
       },
-      winnerSlugs: [winner.slug],
+      winnerSlugs: winner ? [winner.slug] : [],
     },
     {
       id: "score",
-      label: "Score & gap",
-      helper: "peso globale",
+      label: "Valutazione",
+      helper: "fonte editoriale",
       render: (t: NormalisedTool, isWinner: boolean) => {
         const score = scoreBySlug.get(t.slug) ?? t.battleScore;
+        const canVisualizeScore = score !== null && maxScore !== null;
         return (
           <div className="mobile-compare-arena__matrix-score-card">
             <div className="mobile-compare-arena__matrix-score-head">
-              <strong>{score}</strong>
+              <strong>{score ?? "—"}</strong>
               <small>
                 {isWinner
-                  ? "+" + Math.max(topScore - runnerUpScore, 0) + " sul 2o"
-                  : "-" + Math.max(topScore - score, 0)}
+                  ? "Valutazione editoriale supportata"
+                  : score === null
+                    ? "In preparazione"
+                    : "Valutazione editoriale esplicita"}
               </small>
             </div>
-            <div className="mobile-compare-arena__matrix-bar">
-              <span
-                className={cn(isWinner && "is-winner")}
-                style={{ width: String((score / maxScore) * 100) + "%" }}
-              />
-            </div>
+            {canVisualizeScore ? (
+              <div className="mobile-compare-arena__matrix-bar">
+                <span
+                  className={cn(isWinner && "is-winner")}
+                  style={{ width: String(maxScore === 0 ? 0 : (score / maxScore) * 100) + "%" }}
+                />
+              </div>
+            ) : null}
           </div>
         );
       },
-      winnerSlugs: [winner.slug],
+      winnerSlugs: winner ? [winner.slug] : [],
     },
     {
       id: "category",
@@ -239,13 +233,13 @@ export function DiffMatrix({
     },
     {
       id: "editorial-score",
-      label: "Score editoriale",
+      label: "Valutazione editoriale",
       helper: "contratto /10",
       render: (t: NormalisedTool) => (
         <div className="mobile-compare-arena__matrix-score-card">
           <div className="mobile-compare-arena__matrix-score-head">
-            <strong>{t.editorialScore.toFixed(1)}</strong>
-            <small>/10</small>
+            <strong>{t.editorialScore ?? "—"}</strong>
+            <small>{t.editorialScore === null ? "In preparazione" : "/10"}</small>
           </div>
         </div>
       ),
@@ -255,14 +249,13 @@ export function DiffMatrix({
       id: "coverage",
       label: "Copertura",
       helper: "casi coperti",
-      render: (t: NormalisedTool, isWinner: boolean) => (
+      render: (t: NormalisedTool) => (
         <div className="mobile-compare-arena__matrix-proof">
           <strong>{t.useCasesCount || "-"}</strong>
           <small>{t.useCasesCount === 1 ? "scenario concreto" : "scenari concreti"}</small>
-          {isWinner ? <span>campo piu ampio</span> : null}
         </div>
       ),
-      winnerSlugs: tools.flatMap((t) => (t.useCasesCount === bestCoverage ? [t.slug] : [])),
+      winnerSlugs: [] as string[],
     },
     {
       id: "ideal-use",
@@ -279,10 +272,10 @@ export function DiffMatrix({
       id: "highlights-list",
       label: "Prove forti",
       helper: "segnali concreti",
-      render: (t: NormalisedTool, isWinner: boolean) => (
+      render: (t: NormalisedTool) => (
         <div
           title={t.highlights.join(" - ")}
-          className={cn("mobile-compare-arena__matrix-evidence", isWinner && "is-strong")}
+          className="mobile-compare-arena__matrix-evidence"
         >
           {t.highlights.length ? (
             <>
@@ -296,7 +289,7 @@ export function DiffMatrix({
           )}
         </div>
       ),
-      winnerSlugs: tools.flatMap((t) => (t.highlights.length === bestHighlights ? [t.slug] : [])),
+      winnerSlugs: [] as string[],
     },
     {
       id: "editor-note",
@@ -313,16 +306,13 @@ export function DiffMatrix({
       id: "reading-time",
       label: "Costo lettura",
       helper: "tempo scheda",
-      render: (t: NormalisedTool, isWinner: boolean) => (
-        <span className={cn("mobile-compare-arena__matrix-time", isWinner && "mobile-compare-arena__matrix-value--winner")}>
+      render: (t: NormalisedTool) => (
+        <span className="mobile-compare-arena__matrix-time">
           <strong>{t.readingTime}</strong>
-          <small>{isWinner ? "piu rapido da valutare" : "impegno lettura"}</small>
+          <small>impegno lettura</small>
         </span>
       ),
-      winnerSlugs: tools.flatMap((t) => {
-        const minutes = Number.parseInt(t.readingTime, 10);
-        return Number.isFinite(minutes) && minutes === lowestReadingTime ? [t.slug] : [];
-      }),
+      winnerSlugs: [] as string[],
     },
   ];
 
@@ -331,7 +321,7 @@ export function DiffMatrix({
       <div className="mobile-compare-arena__matrix-header">
         <Scale className="size-4" />
         <div>
-          <span>Perche ha vinto</span>
+          <span>Cosa confrontare</span>
           <small>Una lettura decisionale, non una tabella piatta.</small>
         </div>
       </div>
@@ -365,7 +355,9 @@ export function DiffMatrix({
               >
                 <span className="mobile-compare-arena__matrix-tool">{tool.name}</span>
                 <span className="mobile-compare-arena__matrix-tool-score">
-                  #{rankBySlug.get(tool.slug)} - {scoreBySlug.get(tool.slug)}/100
+                  {rankBySlug.get(tool.slug) === null || scoreBySlug.get(tool.slug) === null
+                    ? "Valutazione in preparazione"
+                    : `#${rankBySlug.get(tool.slug)} · ${scoreBySlug.get(tool.slug)}/10`}
                 </span>
               </div>
             ))}
@@ -438,12 +430,20 @@ function MobileArenaBattleStage({
       : battleState === "analyzing"
         ? "Analisi..."
         : battleState === "charging"
-          ? "Carica..."
+          ? "Confronto in corso..."
           : battleState === "clash"
-            ? "Confronto..."
-            : "Verdetto";
+            ? "Sintesi..."
+            : "Esito";
 
   const isAnimating = battleState === "analyzing" || battleState === "charging" || battleState === "clash";
+  const winner = verdict.winner;
+  const runnerUp = winner
+    ? verdict.scores.find(({ tool, score }) => tool.slug !== winner.slug && score !== null) ?? null
+    : null;
+  const gap =
+    winner?.battleScore !== null && winner?.battleScore !== undefined && runnerUp?.score !== null && runnerUp?.score !== undefined
+      ? winner.battleScore - runnerUp.score
+      : null;
 
   return (
     <>
@@ -468,7 +468,7 @@ function MobileArenaBattleStage({
               className={cn("mobile-compare-arena__status", `mobile-compare-arena__status--${battleState}`)}
               aria-live="polite"
               aria-atomic="true"
-              aria-label={battleState === "result" ? `${statusLabel}: ${verdict.winner.name}` : statusLabel}
+              aria-label={battleState === "result" ? `${statusLabel}: ${winner?.name ?? verdict.label}` : statusLabel}
             >
               {statusLabel}
             </span>
@@ -486,8 +486,7 @@ function MobileArenaBattleStage({
                 <ToolFighter
                   tool={tools[0]}
                   variant="compact"
-                  isWinner={battleState === "result" && tools[0].slug === verdict.winner.slug}
-                  isDefeated={battleState === "result" && tools[0].slug !== verdict.winner.slug}
+                  isWinner={battleState === "result" && tools[0].slug === winner?.slug}
                   isFighting={battleState === "clash"}
                   isAnalyzing={battleState === "analyzing"}
                   isCharging={battleState === "charging"}
@@ -497,14 +496,13 @@ function MobileArenaBattleStage({
                 />
               </div>
               <div className="mobile-compare-arena__vs" aria-hidden="true">
-                <span>VS</span>
+                <span>↔</span>
               </div>
               <div className="mobile-compare-arena__fighter-side mobile-compare-arena__fighter-side--right">
                 <ToolFighter
                   tool={tools[1]}
                   variant="compact"
-                  isWinner={battleState === "result" && tools[1].slug === verdict.winner.slug}
-                  isDefeated={battleState === "result" && tools[1].slug !== verdict.winner.slug}
+                  isWinner={battleState === "result" && tools[1].slug === winner?.slug}
                   isFighting={battleState === "clash"}
                   isAnalyzing={battleState === "analyzing"}
                   isCharging={battleState === "charging"}
@@ -525,8 +523,7 @@ function MobileArenaBattleStage({
                   <ToolFighter
                     tool={tool}
                     variant="compact"
-                    isWinner={battleState === "result" && tool.slug === verdict.winner.slug}
-                    isDefeated={battleState === "result" && tool.slug !== verdict.winner.slug}
+                    isWinner={battleState === "result" && tool.slug === winner?.slug}
                     isFighting={battleState === "clash"}
                     isAnalyzing={battleState === "analyzing"}
                     isCharging={battleState === "charging"}
@@ -536,7 +533,7 @@ function MobileArenaBattleStage({
                 </div>
               ))}
               <div className="mobile-compare-arena__vs" aria-hidden="true">
-                <span>VS</span>
+                <span>↔</span>
               </div>
             </>
           )}
@@ -558,24 +555,28 @@ function MobileArenaBattleStage({
           >
             <div className="mobile-compare-arena__verdict-head">
               <div className="mobile-compare-arena__verdict-winner">
-                <span className="mobile-compare-arena__verdict-rank">#1</span>
+                <span className="mobile-compare-arena__verdict-rank">
+                  {winner?.compareScore.rank === null || !winner ? "—" : `#${winner.compareScore.rank}`}
+                </span>
                 <div>
                   <span className="mobile-compare-arena__verdict-label">{verdict.label}</span>
                   <h3 className="mobile-compare-arena__verdict-name">
                     <Sparkles className="size-4" />
-                    {verdict.winner.name}
+                    {winner?.name ?? "Nessun vincitore automatico"}
                   </h3>
                 </div>
               </div>
-              <div className="mobile-compare-arena__verdict-score">
-                <span>{verdict.winner.objectiveScore ?? verdict.winner.battleScore}</span>
-                <small>/100</small>
-              </div>
+              {winner?.battleScore !== null && winner?.battleScore !== undefined ? (
+                <div className="mobile-compare-arena__verdict-score">
+                  <span>{winner.battleScore}</span>
+                  <small>/10</small>
+                </div>
+              ) : null}
             </div>
 
-            {verdict.scores[1] && (
+            {runnerUp && gap !== null && gap > 0 && (
               <div className="mobile-compare-arena__verdict-gap">
-                +{(verdict.winner.objectiveScore ?? verdict.winner.battleScore) - verdict.scores[1].score} punti rispetto a {verdict.scores[1].tool.name}
+                +{gap} punti rispetto a {runnerUp.tool.name}
               </div>
             )}
 
@@ -675,11 +676,12 @@ export function MobileCompareView({
     );
   }
 
-  // B34: l'ordine mostrato segue il verdetto canonico (punteggio, copertura,
-  // slug), così lista e verdetto non possono divergere a obiettivo attivo.
+  // The input order is retained unless a supported editorial assessment gives
+  // candidates shared ranks; no slug or field-completeness ordering is used.
   const sorted = verdict ? verdict.scores.map((entry) => entry.tool) : tools;
   const activeVerdict = verdict ?? getBattleVerdict(sorted, activeObjective);
-  const rest = sorted.slice(1);
+  const winner = activeVerdict.winner;
+  const rest = winner ? sorted.filter((tool) => tool.slug !== winner.slug) : sorted;
   const isRevealed = battleState === "result";
 
   function handleFight() {
@@ -706,8 +708,10 @@ export function MobileCompareView({
 
     queueFightTimer(() => {
       setBattleState("result");
-      playTooolvibesSound("battleWin");
-      void celebrateArenaFight(sorted[0]);
+      if (activeVerdict.winner) {
+        playTooolvibesSound("battleWin");
+        void celebrateArenaFight(activeVerdict.winner);
+      }
       fightLockedRef.current = false;
     }, 1150);
   }
@@ -742,8 +746,8 @@ export function MobileCompareView({
             <Scale className="size-5" />
           </span>
           <span className="mobile-compare-arena__fight-copy">
-            <strong>{battleState === "result" ? "Ricalcola" : battleState === "idle" ? "Calcola il verdetto" : "Analisi..."}</strong>
-            <small>{battleState === "result" ? "aggiorna la lettura" : "ottieni una scelta motivata"}</small>
+            <strong>{battleState === "result" ? "Rivaluta" : battleState === "idle" ? "Valuta il confronto" : "Analisi..."}</strong>
+            <small>{battleState === "result" ? "aggiorna la lettura" : "leggi le differenze verificabili"}</small>
           </span>
         </button>
       </div>
@@ -751,19 +755,22 @@ export function MobileCompareView({
       {isRevealed ? (
         <>
           <div className="mobile-compare-arena__champions">
-            <CompactToolCard
-              tool={sorted[0]}
-              rank={1}
-              isWinner
-              onRemove={() => toggleCompare(sorted[0].slug)}
-            />
+            {winner ? (
+              <CompactToolCard
+                tool={winner}
+                rank={winner.compareScore.rank ?? undefined}
+                isWinner
+                onRemove={() => toggleCompare(winner.slug)}
+              />
+            ) : null}
 
             <div className="mobile-compare-arena__challengers">
-              {rest.map((tool, i) => (
+              {rest.map((tool) => (
                 <CompactToolCard
                   key={tool.slug}
                   tool={tool}
-                  rank={i + 2}
+                  rank={tool.compareScore.rank ?? undefined}
+                  isWinner={winner?.slug === tool.slug}
                   onRemove={() => toggleCompare(tool.slug)}
                 />
               ))}

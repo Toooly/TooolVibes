@@ -17,35 +17,35 @@ import { computeEditorialScore } from "@/lib/data/editorial-score";
 
 export { computeEditorialScore as deriveEditorialScore } from "@/lib/data/editorial-score";
 
-export function deriveVotes(tool: ToolPublicView): number {
-  // deterministic — bound between 18 and 107
-  return 18 + ((tool.name.length * 11) % 90);
+export function deriveVotes(_tool: ToolPublicView): null {
+  // Votes are not part of the canonical tool record. Do not manufacture them.
+  void _tool;
+  return null;
 }
 
 export function deriveTrend(
-  tool: ToolPublicView,
+  _tool: ToolPublicView,
 ): { value: string; direction: "up" | "down" | "flat" } {
-  const idx = tool.name.length % 5;
-  if (idx === 0) return { value: "+24%", direction: "up" };
-  if (idx === 1) return { value: "+82%", direction: "up" };
-  if (idx === 2) return { value: "+6%", direction: "up" };
-  if (idx === 3) return { value: "—", direction: "flat" };
-  return { value: "-3%", direction: "down" };
+  void _tool;
+  return { value: "Non disponibile", direction: "flat" };
 }
 
 export function deriveScoreDimensions(tool: ToolPublicView): { label: string; value: string }[] {
-  return [
-    { label: "Velocità", value: tool.toolOfWeek ? "Alta" : tool.featured ? "Alta" : "Buona" },
-    {
-      label: "Curva",
-      value: tool.level === "beginner" ? "Dolce" : tool.level === "expert" ? "Impegnativa" : "Media",
-    },
-    { label: "Flessibilità", value: tool.tags.length > 4 ? "Ampia" : "Focalizzata" },
-    {
-      label: "Supporto",
-      value: tool.editorialReview ? "Editoriale TooolVibes" : "Scheda base",
-    },
-  ];
+  const assessment = computeEditorialScore(tool);
+  const inputs = tool.publicTool.score?.inputs ?? [];
+
+  if (assessment.status !== "assessed") return [];
+
+  const levelLabels = {
+    measured: "Misurato",
+    solid: "Solido",
+    strong: "Forte",
+  } as const;
+
+  return inputs.map((input) => ({
+    label: input.dimension.replaceAll("_", " "),
+    value: levelLabels[input.level],
+  }));
 }
 
 export function buildAlternativeWhy(current: ToolPublicView, alt: ToolPublicView): string {

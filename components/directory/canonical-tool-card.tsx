@@ -103,10 +103,8 @@ export function CanonicalToolCard({
   const publishedLabel = tool.publishedAt
     ? `Aggiornato ${formatItalianDate(tool.publishedAt)}`
     : "Data non disponibile";
-  const cardScore = computeEditorialScore({
-    name: tool.name,
-    toolOfWeek: Boolean(tool.toolOfWeek),
-  });
+  const cardScore =
+    "publicTool" in tool ? computeEditorialScore(tool) : computeEditorialScore({});
   const isFeatured = Boolean(tool.toolOfWeek || tool.featured);
 
   const actionNode = actions ?? (
@@ -269,14 +267,8 @@ export function CanonicalToolCard({
               "border-[var(--tv-accent-gold)]/40 bg-[var(--tv-bg-base)]",
               "text-[var(--tv-ink-primary)]",
             )}
-            aria-label={`Punteggio editoriale ${cardScore.value} su 10, ${cardScore.label}`}
+            aria-label={cardScore.label}
           >
-            <span
-              className="font-[family-name:var(--tv-font-family-display)] text-sm font-black leading-none text-[var(--tv-accent-gold)] sm:text-base"
-              aria-hidden="true"
-            >
-              {cardScore.value.toFixed(1)}
-            </span>
             <span className="text-xs font-semibold uppercase tracking-wider text-[var(--tv-ink-muted-aa)] sm:text-[0.8125rem]">
               {cardScore.label}
             </span>
@@ -456,11 +448,9 @@ export function CanonicalToolCard({
                 ) : null}
                 <span
                   className="inline-flex items-center gap-1 rounded-full border border-[var(--tv-accent-gold)]/30 bg-[var(--tv-bg-base)]/60 px-1.5 py-0.5 text-xs font-semibold"
-                  aria-label={`Punteggio ${cardScore.value} su 10`}
+                  aria-label={cardScore.label}
                 >
-                  <span className="font-[family-name:var(--tv-font-family-display)] text-xs font-black leading-none text-[var(--tv-accent-gold)]">
-                    {cardScore.value.toFixed(1)}
-                  </span>
+                  <span>{cardScore.status === "assessed" ? "Valutato" : "Da valutare"}</span>
                 </span>
               </div>
             </div>

@@ -518,7 +518,7 @@
   padding-top: var(--tv-space-3);
   border-top: 1px solid color-mix(in srgb, var(--tv-accent-gold) 18%, transparent);
   color: var(--tv-ink-muted-aa);
-  font-size: var(--tv-text-xs);
+  font-size: var(--tv-text-sm);
   line-height: var(--tv-leading-snug);
 }
 
@@ -870,7 +870,7 @@
   border-radius: var(--tv-radius-feature);
   background: var(--tv-surface-elevated);
   color: var(--tv-ink-muted-aa);
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   font-style: italic;
   line-height: var(--tv-leading-relaxed);
 }

@@ -61,10 +61,13 @@ describe("legacy compare score — confronto interno (B33)", () => {
     expect(orderDependentSlugs.length).toBeGreaterThan(0);
   });
 
-  it("il nuovo engine è invariante sulle stesse permutazioni (cross-validazione)", () => {
+  it("il nuovo engine mantiene valutazioni e rank indipendenti dall'ordine", () => {
     const tools = [completeToolPublicFixture, partialToolPublicFixture];
     const signatures = permutations(tools).map((order) =>
-      compareToolsForCompare(order).map((result) => [result.slug, result.total, result.rank]),
+      new Map(compareToolsForCompare(order).map((result) => [
+        result.slug,
+        { total: result.total, rank: result.rank },
+      ])),
     );
 
     for (const signature of signatures) {

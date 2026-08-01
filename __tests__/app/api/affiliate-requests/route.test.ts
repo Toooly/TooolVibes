@@ -96,6 +96,7 @@ describe("POST /api/affiliate-requests", () => {
   it.each([
     { ...validBody, adminNotes: "forged" },
     { ...validBody, message: "short" },
+    { ...validBody, email: "" },
     { ...validBody, websiteUrl: "file:///etc/passwd" },
   ])("rejects forged or invalid payloads: %j", async (body) => {
     const response = await POST(jsonRequest(body));

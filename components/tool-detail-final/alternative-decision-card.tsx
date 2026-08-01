@@ -47,9 +47,7 @@ export function AlternativeDecisionCard({ tool }: AlternativeDecisionCardProps) 
     [compareSlugs, tool.slug, isSelected],
   );
 
-  const { value: score } = computeEditorialScore(tool);
-  const evidenceCount =
-    tool.useCases.length + tool.highlights.length + tool.cautions.length;
+  const assessment = computeEditorialScore(tool);
 
   const levelLabel = tool.level ? (LEVEL_LABEL[tool.level] ?? tool.levelLabel ?? "Base") : "Base";
 
@@ -96,18 +94,17 @@ export function AlternativeDecisionCard({ tool }: AlternativeDecisionCardProps) 
 
         <div className="td-final-alt__metrics">
           <span className="td-final-alt__level">{levelLabel}</span>
-          <span
-            className="td-final-alt__score"
-            title={`${score} / 10 editoriale`}
-          >
-            <strong>{score.toFixed(1)}</strong>
-            <em>/ 10</em>
+          <span className="td-final-alt__score" title={assessment.label}>
+            {assessment.value !== null ? (
+              <>
+                <strong>{assessment.value.toFixed(1)}</strong>
+                <em>/ 10</em>
+              </>
+            ) : (
+              <em>Da valutare</em>
+            )}
           </span>
-          <span className="td-final-alt__evidence">
-            {evidenceCount > 0
-              ? `${evidenceCount} ${evidenceCount === 1 ? "evidenza" : "evidenze"}`
-              : "Profilo curato"}
-          </span>
+          <span className="td-final-alt__evidence">{assessment.label}</span>
         </div>
 
         <div className="td-final-alt__actions">

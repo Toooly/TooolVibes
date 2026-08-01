@@ -122,13 +122,8 @@ function ArchiveV4ToolCard({
     : null;
   const initial = tool.name.slice(0, 2).toUpperCase();
 
-  // Canonical editorial score (single source of truth: lib/data/editorial-score.ts)
-  const { value: scoreValue } = computeEditorialScore(tool);
-  const score = scoreValue.toFixed(1);
-
-  // Canonical evidence only: never synthesize social-proof numbers.
-  const evidenceCount =
-    tool.useCases.length + tool.highlights.length + tool.cautions.length;
+  // Public assessment is explicit or honestly still in preparation.
+  const assessment = computeEditorialScore(tool);
 
   // Resolve effective promoted treatment: tier > boolean
   const effectiveTier: "primary" | "secondary" | "tertiary" | null =
@@ -233,16 +228,20 @@ function ArchiveV4ToolCard({
           >
             {levelLabel}
           </span>
-          <span className="ar4-card__score" title={`${score} / 10 editoriale`}>
-            <strong style={{ color: levelKey === "expert" || levelKey === "featured" ? "var(--ar4-level-featured, var(--tv-accent-gold-on-dark))" : "var(--tv-ink-primary)" }}>
-              {score}
-            </strong>
-            <em>/ 10</em>
+          <span className="ar4-card__score" title={assessment.label}>
+            {assessment.value !== null ? (
+              <>
+                <strong style={{ color: levelKey === "expert" || levelKey === "featured" ? "var(--ar4-level-featured, var(--tv-accent-gold-on-dark))" : "var(--tv-ink-primary)" }}>
+                  {assessment.value.toFixed(1)}
+                </strong>
+                <em>/ 10</em>
+              </>
+            ) : (
+              <em>Da valutare</em>
+            )}
           </span>
           <span className="ar4-card__evidence">
-            {evidenceCount > 0
-              ? `${evidenceCount} ${evidenceCount === 1 ? "evidenza" : "evidenze"}`
-              : "Profilo curato"}
+            {assessment.label}
           </span>
         </div>
       )}

@@ -1,7 +1,6 @@
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { deriveScoreDimensions } from "@/lib/data/tool-detail-derivation";
-import { ToolDetailScoreBar } from "@/components/tool-detail-final/tool-detail-score-bar";
 
 /**
  * B. Score Instrument
@@ -14,42 +13,46 @@ type ToolDetailScoreProps = {
 };
 
 export function ToolDetailScore({ tool }: ToolDetailScoreProps) {
-  const { value, label } = computeEditorialScore(tool);
+  const assessment = computeEditorialScore(tool);
   const dimensions = deriveScoreDimensions(tool);
-  const evidenceCount =
-    tool.useCases.length + tool.highlights.length + tool.cautions.length;
 
   return (
     <aside
       className="td-final-score"
-      aria-label={`Punteggio editoriale TooolVibes ${value} su 10, ${label}`}
+      aria-label={assessment.label}
     >
       <div className="td-final-score__header">
         <span className="td-final-score__kicker">Valutazione editoriale</span>
         <span className="td-final-score__badge">
-          Verdetto · {label}
+          {assessment.status === "assessed" ? "Verdetto verificato" : "In preparazione"}
         </span>
       </div>
       <div className="td-final-score__value">
-        <span className="td-final-score__number">{value.toFixed(1)}</span>
-        <span className="td-final-score__denom">/10</span>
+        {assessment.value !== null ? (
+          <>
+            <span className="td-final-score__number">{assessment.value.toFixed(1)}</span>
+            <span className="td-final-score__denom">/10</span>
+          </>
+        ) : (
+          <span className="td-final-score__number td-final-score__number--status">
+            Valutazione in preparazione
+          </span>
+        )}
       </div>
-      <ToolDetailScoreBar ratio={Math.min(value / 10, 1)} />
-      <ul className="td-final-score__dimensions" aria-label="Dimensioni">
-        {dimensions.map((d) => (
-          <li key={d.label} className="td-final-score__dim">
-            <span className="td-final-score__dim-label">{d.label}</span>
-            <span className="td-final-score__dim-value">{d.value}</span>
-          </li>
-        ))}
-      </ul>
+      {dimensions.length > 0 ? (
+        <ul className="td-final-score__dimensions" aria-label="Dimensioni verificate">
+          {dimensions.map((d) => (
+            <li key={d.label} className="td-final-score__dim">
+              <span className="td-final-score__dim-label">{d.label}</span>
+              <span className="td-final-score__dim-value">{d.value}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <p className="td-final-score__note">
-        Score editoriale {label.toLowerCase()} basato su segnali qualitativi
-        della scheda
-        {evidenceCount > 0
-          ? ` e ${evidenceCount} ${evidenceCount === 1 ? "evidenza canonica" : "evidenze canoniche"}`
-          : ""}.
-        {" "}Non è un benchmark di laboratorio: serve a orientare la scelta.
+        {assessment.status === "assessed"
+          ? assessment.verdict
+          : "Stiamo raccogliendo fonti, limiti e verifiche prima di pubblicare un verdetto."}
       </p>
     </aside>
   );

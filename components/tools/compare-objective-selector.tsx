@@ -11,10 +11,10 @@ import {
 /**
  * BATCH 34 / FLOW-603 — selettore obiettivo condiviso mobile/desktop.
  *
- * Stesso markup, stessa spiegazione dei pesi su entrambe le superfici:
+ * Stesso markup e stessa guida alla lettura su entrambe le superfici:
  * radio native dentro un fieldset (frecce tastiera e screen reader
- * funzionano senza logica custom). La spiegazione dichiara sempre
- * pesi delle fonti, delta massimo e comportamento del neutro.
+ * funzionano senza logica custom). Gli obiettivi orientano la scelta, ma non
+ * producono punteggi né vincitori automatici.
  */
 export function CompareObjectiveSelector({
   objective,

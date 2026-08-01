@@ -38,7 +38,7 @@ export function AccountHero({
         Il tuo spazio personale TooolVibes
       </h1>
       <p className="account-subtitle mt-4 max-w-[44rem]">
-        Qui capisci se la selezione resta solo in questo browser o segue il tuo account, cosa sblocca l&apos;accesso riservato e da dove conviene ripartire.
+        Qui capisci se la selezione resta solo in questo browser o segue il tuo account e da dove conviene ripartire.
       </p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -63,7 +63,7 @@ export function AccountHero({
               Continua con email
             </Link>
             <Link href="/collections" className="account-link">
-              Vedi raccolte e anteprime
+              Vedi le Raccolte
               <ArrowRight size={14} />
             </Link>
           </>

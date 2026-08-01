@@ -245,8 +245,7 @@ describe("CompareObjectiveSelector (B34)", () => {
       false,
     );
 
-    // Spiegazione dei pesi sempre presente, anche per il neutro.
-    expect(group.textContent).toContain("contratto base dello score (B33)");
+    expect(group.textContent).toContain("Nessun punteggio aggiuntivo");
   });
 
   it("la selezione notifica il cambio verso un obiettivo e verso il neutro", () => {
@@ -272,7 +271,7 @@ describe("CompareObjectiveSelector (B34)", () => {
     expect(onChange).toHaveBeenLastCalledWith(null);
   });
 
-  it("con obiettivo attivo dichiara delta massimo e pesi delle fonti", () => {
+  it("con obiettivo attivo chiarisce che la priorità non crea un vincitore", () => {
     render(
       <CompareObjectiveSelector
         objective="save-time"
@@ -282,9 +281,8 @@ describe("CompareObjectiveSelector (B34)", () => {
     );
 
     const group = screen.getByRole("group", { name: "Obiettivo del confronto" });
-    expect(group.textContent).toContain('Obiettivo "Risparmiare tempo"');
-    expect(group.textContent).toContain("+15 punti");
-    expect(group.textContent).toContain("punti di forza ×1,5");
+    expect(group.textContent).toContain("Risparmiare tempo");
+    expect(group.textContent).toContain("non assegna un vincitore automatico");
   });
 });
 
@@ -325,7 +323,7 @@ describe("ToolBattleView — viewport esclusivo e flag (B34)", () => {
     seedWorkspace(compareState("atlas-ai", "gamma-app"));
   });
 
-  it("obiettivo persistito: stesso stato e stessi punteggi dopo il cambio viewport", () => {
+  it("obiettivo persistito: stesso stato e stessa lettura dopo il cambio viewport", () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
 
     const { container } = render(<ToolBattleView tools={VIEWS} />);
@@ -335,29 +333,25 @@ describe("ToolBattleView — viewport esclusivo e flag (B34)", () => {
     expectRadioChecked(screen.getByRole("radio", { name: "Risparmiare tempo" }), true);
 
     const expected = objectiveScoreOf("gamma-app", "save-time");
-    expect(expected).toBeGreaterThan(objectiveScoreOf("gamma-app", null) ?? 0);
+    expect(expected).toBe(objectiveScoreOf("gamma-app", null));
     expect(screen.getAllByText("Gamma").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(String(expected)).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Valutazione in preparazione").length).toBeGreaterThanOrEqual(1);
 
     setDesktopViewport(true);
 
     expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(0);
     expect(container.querySelectorAll(".desktop-compare")).toHaveLength(1);
     expectRadioChecked(screen.getByRole("radio", { name: "Risparmiare tempo" }), true);
-    expect(screen.getAllByText(String(expected)).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Valutazione in preparazione").length).toBeGreaterThanOrEqual(1);
   });
 
-  it("impatto visibile prima del risultato: badge delta senza reveal", () => {
+  it("la priorità resta una guida senza delta numerici", () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
 
     render(<ToolBattleView tools={VIEWS} />);
 
-    // Stato idle (nessun "Combatti" premuto): il delta obiettivo è già visibile.
-    expect(screen.queryByRole("button", { name: /Nuovo scontro/i })).toBeNull();
-    const deltas = screen.getAllByText(/obiettivo/i).filter((node) =>
-      node.textContent?.includes("+"),
-    );
-    expect(deltas.length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByText(/\+\d+ obiettivo/)).toBeNull();
+    expect(screen.getAllByText(/non assegna un vincitore automatico/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it("cambio obiettivo sopravvive allo swap tra superfici", () => {
@@ -373,7 +367,7 @@ describe("ToolBattleView — viewport esclusivo e flag (B34)", () => {
     expect(window.localStorage.getItem(COMPARE_OBJECTIVE_STORAGE_KEY)).toBe("collaborate");
   });
 
-  it("flag OFF: nessun selettore e punteggi base B33 anche con obiettivo persistito", () => {
+  it("flag OFF: nessun selettore e nessun delta anche con obiettivo persistito", () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
 
     render(<ToolBattleView tools={VIEWS} objectiveEnabled={false} />);
@@ -381,9 +375,7 @@ describe("ToolBattleView — viewport esclusivo e flag (B34)", () => {
     expect(screen.queryByRole("group", { name: "Obiettivo del confronto" })).toBeNull();
     expect(screen.queryByText(/\+\d+ obiettivo/)).toBeNull();
 
-    const baseScore = objectiveScoreOf("gamma-app", null);
-    expect(baseScore).toBeDefined();
-    expect(screen.getAllByText(String(baseScore)).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Valutazione in preparazione").length).toBeGreaterThanOrEqual(1);
   });
 
   it("nessuna violazione axe sul confronto con selettore obiettivo", async () => {

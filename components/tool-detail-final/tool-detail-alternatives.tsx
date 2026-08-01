@@ -58,7 +58,7 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
         {related.map((alt) => {
           const why = buildAlternativeWhy(current, alt);
           const difference = deriveEssentialDifference(current, alt);
-          const { value: score } = computeEditorialScore(alt);
+          const assessment = computeEditorialScore(alt);
 
           return (
             <div className="td-final-alt-row" key={alt.slug}>
@@ -77,8 +77,14 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
                 {difference}
               </span>
               <span className="td-final-alt-cell td-final-alt-cell--score">
-                <strong>{score.toFixed(1)}</strong>
-                <em>/10</em>
+                {assessment.value !== null ? (
+                  <>
+                    <strong>{assessment.value.toFixed(1)}</strong>
+                    <em>/10</em>
+                  </>
+                ) : (
+                  <em>Da valutare</em>
+                )}
               </span>
               <span className="td-final-alt-cell td-final-alt-cell--action">
                 <Link

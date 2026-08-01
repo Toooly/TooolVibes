@@ -116,20 +116,9 @@ describe("ToolRecord adapter", () => {
       "strengths",
       "cautions",
     ]);
-    expect(tool.score).toEqual({
-      inputs: [
-        { dimension: "ease_of_use", level: "solid" },
-        { dimension: "editorial_conviction", level: "strong" },
-      ],
-      provenance: {
-        kind: "editorial-assessment",
-        sourceField: "editorial_scorecard",
-        methodologyVersion: "legacy-editorial-scorecard-v1",
-        assessedAt: null,
-      },
-    });
+    expect(tool.score).toBeNull();
     expect(tool.provenance.missingFields).toContain("publication.publishedAt");
-    expect(tool.provenance.missingFields).toContain("score.provenance.assessedAt");
+    expect(tool.provenance.missingFields).toContain("score");
     expectTypeOf(tool).toEqualTypeOf<ToolPublic>();
   });
 

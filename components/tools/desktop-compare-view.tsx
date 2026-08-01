@@ -3,7 +3,7 @@
 import { type CSSProperties, useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Columns3, Scale, Sparkles, Trophy } from "lucide-react";
+import { ArrowRight, Columns3, Scale, Sparkles } from "lucide-react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { levelCTransition } from "@/lib/motion/transitions";
@@ -23,6 +23,10 @@ import { CompareDecisionPanel } from "./compare-decision-panel";
 import { ToolFighter } from "./tool-fighter";
 import { DiffMatrix } from "./mobile-compare-view";
 
+function formatEditorialScore(score: number | null) {
+  return score === null ? "Valutazione in preparazione" : `${score}/10 editoriale`;
+}
+
 function DesktopDuelCard({
   tool,
   rank,
@@ -30,7 +34,7 @@ function DesktopDuelCard({
   isFighting,
 }: {
   tool: NormalisedTool;
-  rank: number;
+  rank: number | null;
   isWinner: boolean;
   isFighting: boolean;
 }) {
@@ -41,12 +45,8 @@ function DesktopDuelCard({
       style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
     >
       <div className="desktop-compare__duel-rank">
-        {rank === 1 ? (
-          <Trophy className="size-4" aria-hidden="true" />
-        ) : (
-          <Scale className="size-4" aria-hidden="true" />
-        )}
-        <span>#{rank}</span>
+        <Scale className="size-4" aria-hidden="true" />
+        <span>{rank === null ? "—" : `#${rank}`}</span>
       </div>
 
       <ToolFighter
@@ -60,7 +60,7 @@ function DesktopDuelCard({
       <div className="desktop-compare__duel-copy">
         <strong>{tool.name}</strong>
         <span>
-          {tool.categoryLabel} · {tool.editorialScore.toFixed(1)}/10 editoriale
+          {tool.categoryLabel} · {formatEditorialScore(tool.editorialScore)}
         </span>
       </div>
     </article>
@@ -74,7 +74,7 @@ function DesktopRosterCard({
   isFighting,
 }: {
   tool: NormalisedTool;
-  rank: number;
+  rank: number | null;
   isWinner: boolean;
   isFighting: boolean;
 }) {
@@ -84,7 +84,7 @@ function DesktopRosterCard({
       data-winner={isWinner}
       style={{ "--arena-a": tool.accentFrom, "--arena-b": tool.accentTo } as CSSProperties}
     >
-      <span className="desktop-compare__roster-rank">#{rank}</span>
+      <span className="desktop-compare__roster-rank">{rank === null ? "—" : `#${rank}`}</span>
       <ToolFighter
         tool={tool}
         variant="micro"
@@ -95,15 +95,8 @@ function DesktopRosterCard({
       <div className="desktop-compare__roster-copy">
         <strong>{tool.name}</strong>
         <span>
-          {tool.objectiveScore ?? tool.battleScore}/100 ·{" "}
-          {tool.editorialScore.toFixed(1)}/10 editoriale
+          {formatEditorialScore(tool.editorialScore)}
         </span>
-        {tool.objectiveDelta != null && tool.objectiveDelta !== 0 ? (
-          <span className="desktop-compare__objective-delta">
-            {tool.objectiveDelta > 0 ? "+" : ""}
-            {tool.objectiveDelta} obiettivo
-          </span>
-        ) : null}
       </div>
     </article>
   );
@@ -140,7 +133,8 @@ export function DesktopCompareView({
     () => (tools.length >= MIN_COMPARE_TOOLS ? getBattleVerdict(tools, activeObjective) : null),
     [tools, activeObjective],
   );
-  // B34: ordine della classifica identico al verdetto canonico (parity mobile).
+  // Candidate order is retained unless an explicit editorial assessment gives
+  // them a shared rank; no hidden tie-break is applied.
   const sorted = useMemo(
     () => (verdict ? verdict.scores.map((entry) => entry.tool) : tools),
     [verdict, tools],
@@ -178,7 +172,7 @@ export function DesktopCompareView({
           <p className="compare-onboarding__lede">
             {hasCandidate
               ? `${tools[0].name} è già nel confronto. Aggiungi un altro tool per leggere differenze, punti forti e compromessi.`
-              : "Seleziona da due a cinque tool dal catalogo: li ordineremo per evidenze, caso d’uso e aderenza al tuo obiettivo."}
+              : "Seleziona da due a cinque tool dal catalogo: confronterai evidenze, casi d’uso e limiti verificabili."}
           </p>
           <Link href="/archivio" className="compare-onboarding__cta">
             {hasCandidate ? "Aggiungi un candidato" : "Scegli i tool"}
@@ -217,7 +211,7 @@ export function DesktopCompareView({
           <span className="desktop-compare__status" aria-live="polite" aria-atomic="true">
             {battleState === "idle" && "Pronto"}
             {battleState === "fighting" && "Analisi..."}
-            {battleState === "result" && winner && `Scelta: ${winner.name}`}
+            {battleState === "result" && (winner ? `Scelta: ${winner.name}` : verdict?.label)}
           </span>
         </header>
 
@@ -225,11 +219,11 @@ export function DesktopCompareView({
           <div className="desktop-compare__battle-zone">
             <div className="desktop-compare__ring">
               <div className="desktop-compare__duel">
-                {duelTools.map((tool, i) => (
+                {duelTools.map((tool) => (
                   <DesktopDuelCard
                     key={tool.slug}
                     tool={tool}
-                    rank={i + 1}
+                    rank={tool.compareScore.rank}
                     isWinner={battleState === "result" && tool.slug === winner?.slug}
                     isFighting={battleState === "fighting"}
                   />
@@ -238,11 +232,11 @@ export function DesktopCompareView({
 
               {sorted.length > 2 ? (
                 <div className="desktop-compare__roster" aria-label="Altri candidati nel confronto">
-                  {sorted.slice(2).map((tool, i) => (
+                  {sorted.slice(2).map((tool) => (
                     <DesktopRosterCard
                       key={tool.slug}
                       tool={tool}
-                      rank={i + 3}
+                      rank={tool.compareScore.rank}
                       isWinner={battleState === "result" && tool.slug === winner?.slug}
                       isFighting={battleState === "fighting"}
                     />
@@ -263,12 +257,12 @@ export function DesktopCompareView({
                 onClick={handleFight}
               >
                 <Scale className="size-5" aria-hidden="true" />
-                {battleState === "fighting" ? "Analisi..." : battleState === "result" ? "Ricalcola" : "Calcola il verdetto"}
+                {battleState === "fighting" ? "Analisi..." : battleState === "result" ? "Rivaluta" : "Valuta il confronto"}
               </button>
             </div>
 
             <AnimatePresence>
-              {battleState === "result" && verdict && winner && (
+              {battleState === "result" && verdict && (
                 <motion.div
                   className="desktop-compare__verdict"
                   initial={{ opacity: 0, y: 12 }}
@@ -278,7 +272,11 @@ export function DesktopCompareView({
                 >
                   <div className="desktop-compare__verdict-title">
                     <Sparkles className="size-4" aria-hidden="true" />
-                    <span>{winner.name} è la scelta consigliata</span>
+                    <span>
+                      {winner
+                        ? `${winner.name} è la scelta editoriale supportata`
+                        : "Nessun vincitore automatico"}
+                    </span>
                   </div>
                   <span className="desktop-compare__verdict-label">{verdict.label}</span>
                   <ul className="desktop-compare__verdict-reasons">
@@ -291,24 +289,25 @@ export function DesktopCompareView({
             </AnimatePresence>
           </div>
 
-          <aside className="desktop-compare__scoreboard" aria-label="Classifica confronto">
-            {sorted.map((tool, i) => {
-              const isWinner = i === 0;
-              const displayScore = tool.objectiveScore ?? tool.battleScore;
-              const topScore = winner ? winner.objectiveScore ?? winner.battleScore : displayScore;
-              const diff = isWinner ? 0 : Math.max(topScore - displayScore, 0);
+          <aside className="desktop-compare__scoreboard" aria-label="Valutazioni confronto">
+            {sorted.map((tool) => {
+              const isWinner = winner?.slug === tool.slug;
+              const displayScore = tool.battleScore;
+              const topScore = winner?.battleScore ?? null;
+              const diff =
+                !isWinner && topScore !== null && displayScore !== null
+                  ? Math.max(topScore - displayScore, 0)
+                  : null;
               return (
                 <div key={tool.slug} className="desktop-compare__score-row" data-winner={isWinner}>
-                  <span className="desktop-compare__rank">#{i + 1}</span>
+                  <span className="desktop-compare__rank">
+                    {tool.compareScore.rank === null ? "—" : `#${tool.compareScore.rank}`}
+                  </span>
                   <span className="desktop-compare__name">{tool.name}</span>
-                  <span className="desktop-compare__score">{displayScore}</span>
-                  {tool.objectiveDelta != null && tool.objectiveDelta !== 0 ? (
-                    <span className="desktop-compare__objective-delta">
-                      {tool.objectiveDelta > 0 ? "+" : ""}
-                      {tool.objectiveDelta}
-                    </span>
+                  <span className="desktop-compare__score">{displayScore ?? "—"}</span>
+                  {diff !== null && diff > 0 ? (
+                    <span className="desktop-compare__diff">-{diff}</span>
                   ) : null}
-                  {!isWinner && <span className="desktop-compare__diff">-{diff}</span>}
                 </div>
               );
             })}

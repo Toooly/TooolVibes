@@ -106,8 +106,8 @@ export function AuthPage() {
               {activeTab === "admin"
                 ? "Accesso amministratore"
                 : activeTab === "register"
-                  ? "Crea il tuo workspace"
-                  : "Accedi al workspace"}
+                  ? "Crea il tuo spazio personale"
+                  : "Accedi al tuo spazio personale"}
             </h1>
             <p className="v-auth-subtitle">
               {activeTab === "admin"

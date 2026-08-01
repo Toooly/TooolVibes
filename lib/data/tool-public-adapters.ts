@@ -1,8 +1,5 @@
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
-import {
-  editorialScoreDimensionValues,
-  type ToolRecord,
-} from "@/lib/types/tool";
+import type { ToolRecord } from "@/lib/types/tool";
 import { parseToolPublic, type ToolPublic } from "@/lib/types/tool-public";
 
 export type DirectoryToolPublicationContext =
@@ -73,24 +70,15 @@ function buildDirectoryToolEvidence(tool: DirectoryTool): EditorialEvidence[] {
 }
 
 function buildToolRecordScore(record: ToolRecord): ToolPublic["score"] {
-  const inputs = editorialScoreDimensionValues.flatMap((dimension) => {
-    const level = record.editorial_scorecard?.[dimension];
-    return level ? [{ dimension, level }] : [];
-  });
-
-  if (inputs.length === 0) {
-    return null;
-  }
-
-  return {
-    inputs,
-    provenance: {
-      kind: "editorial-assessment",
-      sourceField: "editorial_scorecard",
-      methodologyVersion: "legacy-editorial-scorecard-v1",
-      assessedAt: null,
-    },
-  };
+  /*
+   * A partially populated legacy scorecard is not a public assessment.  It
+   * lacks an explicit numerical score, verdict, verified date and an
+   * assessment of limitations, so exposing it as a score would manufacture
+   * certainty. Keep the tool honestly unassessed until that contract is
+   * supplied by the editorial source.
+   */
+  void record;
+  return null;
 }
 
 function getToolRecordMissingFields(
@@ -108,7 +96,7 @@ function getToolRecordMissingFields(
     evidence.length ? "" : "editorial.evidence",
     record.pricing ? "" : "attributes.pricing",
     record.platforms?.length ? "" : "attributes.platforms",
-    score ? "score.provenance.assessedAt" : "score",
+    score ? "" : "score",
   ]);
 }
 

@@ -30,7 +30,7 @@ export function AccountPremiumSection({
   return (
     <div className="account-meta-block p-5 sm:p-6">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="account-status-badge">Accesso riservato</span>
+        <span className="account-status-badge">Continuità personale</span>
         <span className="account-status-badge">{premiumMeta.short_label}</span>
       </div>
       <p className="account-title mt-4 max-w-[20ch] text-[1.5rem] sm:text-[1.7rem]">
@@ -41,15 +41,15 @@ export function AccountPremiumSection({
       </p>
       <p className="mt-3 text-[0.9rem] leading-7" style={{ color: "var(--muted)" }}>
         {savedCount > 0
-          ? `Hai già ${savedCount} tool salvati: account e premium servono a dare continuità e accesso, non a rimettere in discussione la selezione.`
-          : "Qui si chiarisce il rapporto tra accesso, anteprime e raccolte riservate senza aggiungere frizione inutile."}
+          ? `Hai già ${savedCount} tool salvati: l'account serve a ritrovare la selezione, non a rimetterla in discussione.`
+          : "Puoi usare Catalogo, Confronto, Salvati e Raccolte già ora; l'account conserva il tuo percorso tra le sessioni."}
       </p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <Link href={premiumActionHref} className="account-btn-secondary">
           {premiumActionLabel}
         </Link>
         <Link href="/collections" className="account-link">
-          Vedi raccolte e anteprime
+          Vedi le Raccolte
           <ArrowRight size={14} />
         </Link>
       </div>

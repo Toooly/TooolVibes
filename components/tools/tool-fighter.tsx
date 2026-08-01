@@ -83,7 +83,9 @@ export function ToolFighter({
         <div className="tool-fighter__info">
           <span className="tool-fighter__name">{tool.name}</span>
           <span className="tool-fighter__cat">{tool.categoryLabel}</span>
-          <span className="tool-fighter__score">{tool.battleScore}/100</span>
+          <span className="tool-fighter__score">
+            {tool.battleScore === null ? "Valutazione in preparazione" : `${tool.battleScore}/10`}
+          </span>
         </div>
       </motion.div>
     );
@@ -109,7 +111,9 @@ export function ToolFighter({
       <div className="tool-fighter__info">
         <span className="tool-fighter__name">{tool.name}</span>
         <span className="tool-fighter__cat">{tool.categoryLabel}</span>
-        <span className="tool-fighter__score">{tool.battleScore}/100</span>
+        <span className="tool-fighter__score">
+          {tool.battleScore === null ? "Valutazione in preparazione" : `${tool.battleScore}/10`}
+        </span>
       </div>
     </motion.div>
   );

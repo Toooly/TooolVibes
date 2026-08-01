@@ -9,195 +9,117 @@ import {
   normalise,
   withBattleScores,
   withObjectiveScores,
-  type NormalisedTool,
 } from "@/components/tools/tool-battle-shared";
 import { createToolPublicView } from "@/lib/data/tool-public-view";
 import type { ToolPublic } from "@/lib/types/tool-public";
 
-const gamma: ToolPublic = {
-  ...completeToolPublicFixture,
-  slug: "gamma-app",
-  name: "Gamma",
-  taxonomy: {
-    canonicalCategory: "Produttività",
-    sourceCategory: "Produttività",
-    sourceCategoryLabel: "Produttività",
-    tags: ["automation", "workflow", "team", "prototype"],
-  },
-  content: {
-    summary: "Automazione completa dei flussi ripetitivi.",
-    description: "Gamma automatizza workflow di team con approvazioni tracciate.",
-    bestFor: "Team che vogliono automazione workflow completa",
-    useCases: [
-      "Automazione onboarding",
-      "Approvazioni ricorrenti",
-      "Sincronizzazione strumenti",
-      "Report automatici",
-    ],
-  },
-  editorial: {
-    evidence: [
-      { kind: "review", text: "Il motore di regole resta leggibile.", sourceField: "editorial_note" },
-      { kind: "strength", text: "Automazione workflow completa", sourceField: "strengths" },
-      { kind: "strength", text: "Permessi granulari", sourceField: "strengths" },
-      { kind: "highlight", text: "Template pronti", sourceField: "highlights" },
-    ],
-  },
-  score: {
-    inputs: [
-      { dimension: "ease_of_use", level: "strong" },
-      { dimension: "workflow_fit", level: "strong" },
-      { dimension: "editorial_conviction", level: "solid" },
-    ],
-    provenance: {
-      kind: "editorial-assessment",
-      sourceField: "editorial_scorecard",
-      methodologyVersion: "editorial-scorecard-v2",
-      assessedAt: "2026-07-12T10:00:00.000Z",
+function withSupportedAssessment(tool: ToolPublic, value: number): ToolPublic {
+  const score = tool.score;
+  if (!score) throw new Error("A scorecard is required for this fixture.");
+
+  return {
+    ...tool,
+    score: {
+      ...score,
+      value,
+      verdict: "Valutazione editoriale verificata.",
+      limitationsAssessed: true,
+      provenance: {
+        ...score.provenance,
+        kind: "editorial-assessment",
+        methodologyVersion: "editorial-score-v1",
+        assessedAt: "2026-08-01T10:00:00.000Z",
+      },
     },
-  },
-  provenance: {
-    ...completeToolPublicFixture.provenance,
-    sourceId: "tool-gamma",
-  },
-};
-
-const beta: ToolPublic = {
-  ...completeToolPublicFixture,
-  slug: "beta-clone",
-  name: "Beta Clone",
-  provenance: {
-    ...completeToolPublicFixture.provenance,
-    sourceId: "tool-beta",
-  },
-};
-
-const sparse: ToolPublic = {
-  ...partialToolPublicFixture,
-  slug: "sparse-tool",
-  name: "Sparse Tool",
-  provenance: {
-    ...partialToolPublicFixture.provenance,
-    sourceId: "tool-sparse",
-  },
-};
-
-const views = [
-  createToolPublicView(completeToolPublicFixture),
-  createToolPublicView(gamma),
-  createToolPublicView(beta),
-  createToolPublicView(partialToolPublicFixture),
-  createToolPublicView(sparse),
-];
-
-function permutations<T>(items: T[]): T[][] {
-  if (items.length <= 1) return [items];
-
-  return items.flatMap((item, index) =>
-    permutations([...items.slice(0, index), ...items.slice(index + 1)]).map((rest) => [
-      item,
-      ...rest,
-    ]),
-  );
+    editorial: {
+      evidence: [
+        { kind: "review", text: "Prova verificata.", sourceField: "editorial_note" },
+        { kind: "caution", text: "Limite verificato.", sourceField: "cautions" },
+      ],
+    },
+  };
 }
 
-function battlePipeline(slugs: string[]): NormalisedTool[] {
+const atlas = withSupportedAssessment(completeToolPublicFixture, 8.4);
+const beta = withSupportedAssessment(
+  { ...completeToolPublicFixture, slug: "beta-clone", name: "Beta Clone" },
+  8.4,
+);
+const gamma = withSupportedAssessment(
+  { ...completeToolPublicFixture, slug: "gamma-app", name: "Gamma" },
+  9.1,
+);
+
+const views = [
+  createToolPublicView(atlas),
+  createToolPublicView(beta),
+  createToolPublicView(gamma),
+  createToolPublicView(partialToolPublicFixture),
+];
+
+function battlePipeline(slugs: string[]) {
   return withBattleScores(normalise(views, slugs));
 }
 
-describe("tool-battle adapter sul nuovo scoring contract (B33)", () => {
-  it("normalise + withBattleScores: le permutazioni di compareSlugs non cambiano score e rank", () => {
-    const slugs = ["atlas-ai", "gamma-app", "partial-tool"];
-    const signatures = permutations(slugs).map((order) =>
-      battlePipeline(order)
-        .map((tool) => ({
-          slug: tool.slug,
-          battleScore: tool.battleScore,
-          rank: tool.compareScore.rank,
-          explanation: tool.compareScore.explanation,
-        }))
-        .sort((a, b) => (a.slug < b.slug ? -1 : 1)),
-    );
+describe("tool-battle truth adapter", () => {
+  it("does not turn an unassessed tool into a zero-score candidate", () => {
+    const [tool] = battlePipeline(["partial-tool"]);
 
-    for (const signature of signatures) {
-      expect(signature).toEqual(signatures[0]);
-    }
+    expect(tool.battleScore).toBeNull();
+    expect(tool.editorialScore).toBeNull();
+    expect(tool.compareScore.rank).toBeNull();
   });
 
-  it("il verdetto è identico per ogni permutazione dell'input", () => {
-    const slugs = ["atlas-ai", "gamma-app", "partial-tool"];
-    const verdicts = permutations(slugs).map((order) => {
-      const verdict = getBattleVerdict(battlePipeline(order));
+  it("returns insufficient_evidence and no winner when any candidate is incomplete", () => {
+    const verdict = getBattleVerdict(battlePipeline(["atlas-ai", "partial-tool"]));
 
-      return {
-        winner: verdict.winner.slug,
-        label: verdict.label,
-        reasons: verdict.reasons,
-        ranks: verdict.scores.map((entry) => [entry.tool.slug, entry.rank]),
-      };
-    });
-
-    for (const verdict of verdicts) {
-      expect(verdict).toEqual(verdicts[0]);
-    }
-
-    expect(verdicts[0].winner).toBe("gamma-app");
+    expect(verdict.state).toBe("insufficient_evidence");
+    expect(verdict.winner).toBeNull();
+    expect(verdict.label).toBe("Dati insufficienti per un verdetto");
+    expect(verdict.reasons.join(" ")).toContain("Nessun vincitore automatico");
   });
 
-  it("pareggio perfetto: il vincitore è deciso dallo slug, non dall'ordine", () => {
+  it("returns tie and no winner for equal supported assessments, regardless of slug", () => {
     const forward = getBattleVerdict(battlePipeline(["atlas-ai", "beta-clone"]));
     const reversed = getBattleVerdict(battlePipeline(["beta-clone", "atlas-ai"]));
 
-    expect(forward.winner.slug).toBe("atlas-ai");
-    expect(reversed.winner.slug).toBe("atlas-ai");
-    expect(reversed.reasons).toEqual(forward.reasons);
+    expect(forward.state).toBe("tie");
+    expect(forward.winner).toBeNull();
+    expect(reversed.state).toBe("tie");
+    expect(reversed.winner).toBeNull();
+    expect(forward.scores.map(({ rank }) => rank)).toEqual([1, 1]);
+    expect(reversed.scores.map(({ rank }) => rank)).toEqual([1, 1]);
   });
 
-  it("dati insufficienti: il verdetto lo dichiara invece di fingere precisione", () => {
-    const verdict = getBattleVerdict(battlePipeline(["partial-tool", "sparse-tool"]));
+  it("uses editorial_lead only for a unique, fully-supported assessment", () => {
+    const verdict = getBattleVerdict(battlePipeline(["atlas-ai", "gamma-app"]));
 
-    expect(verdict.label).toBe("Verdetto provvisorio: dati insufficienti");
-    expect(verdict.reasons[0]).toContain("confidence bassa");
-    expect(verdict.reasons[0]).toContain("copertura dati al 0%");
-    expect(verdict.winner.battleScore).toBe(0);
+    expect(verdict.state).toBe("editorial_lead");
+    expect(verdict.winner?.slug).toBe("gamma-app");
+    expect(verdict.reasons.join(" ")).toContain("esplicita più alta");
   });
 
-  it("confidence media/alta: la dicitura appare solo quando la copertura è ridotta", () => {
-    const richVerdict = getBattleVerdict(battlePipeline(["gamma-app", "atlas-ai"]));
-    expect(richVerdict.reasons.join("\n")).not.toContain("confidence");
+  it("does not let a selected objective alter scores or claim an automatic winner", () => {
+    const base = battlePipeline(["atlas-ai", "gamma-app"]);
+    const prioritised = withObjectiveScores(base, "save-time");
+    const verdict = getBattleVerdict(prioritised, "save-time");
 
-    const mixedVerdict = getBattleVerdict(battlePipeline(["gamma-app", "partial-tool"]));
-    expect(mixedVerdict.winner.slug).toBe("gamma-app");
-    expect(mixedVerdict.reasons.join("\n")).not.toContain("confidence bassa");
+    expect(prioritised.map((tool) => tool.battleScore)).toEqual(base.map((tool) => tool.battleScore));
+    expect(prioritised.every((tool) => tool.objectiveScore === undefined)).toBe(true);
+    expect(verdict.state).toBe("user_preference_required");
+    expect(verdict.winner).toBeNull();
+    expect(verdict.reasons.join(" ")).toContain("non assegna da sola un vincitore automatico");
   });
 
-  it("objective score: deterministico, basato su evidenze e limitato a 0-100", () => {
-    const base = battlePipeline(["gamma-app", "atlas-ai"]);
-    const forward = withObjectiveScores(base, "save-time");
-    const reversed = withObjectiveScores([...base].reverse(), "save-time");
+  it("supports an explicit personal verdict without relabeling it as editorial", () => {
+    const verdict = getBattleVerdict(
+      battlePipeline(["atlas-ai", "gamma-app"]),
+      null,
+      { winnerSlug: "atlas-ai", reason: "Preferisco il flusso di ricerca." },
+    );
 
-    const deltaBySlug = (tools: NormalisedTool[]) =>
-      new Map(tools.map((tool) => [tool.slug, tool.objectiveDelta]));
-
-    expect(deltaBySlug(reversed)).toEqual(deltaBySlug(forward));
-
-    const gammaTool = forward.find((tool) => tool.slug === "gamma-app");
-    expect(gammaTool?.objectiveDelta).toBeGreaterThan(0);
-    expect(gammaTool?.objectiveScore).toBeLessThanOrEqual(100);
-    expect(gammaTool?.objectiveScore).toBeGreaterThanOrEqual(0);
-
-    const noObjective = withObjectiveScores(base, null);
-    expect(noObjective.every((tool) => tool.objectiveScore === undefined)).toBe(true);
-  });
-
-  it("explanation del verdetto stabile su fixture (snapshot)", () => {
-    const verdict = getBattleVerdict(battlePipeline(["gamma-app", "atlas-ai"]));
-
-    expect({
-      label: verdict.label,
-      winner: verdict.winner.slug,
-      reasons: verdict.reasons,
-      winnerExplanation: verdict.winner.compareScore.explanation,
-    }).toMatchSnapshot();
+    expect(verdict.state).toBe("personal_verdict");
+    expect(verdict.winner?.slug).toBe("atlas-ai");
+    expect(verdict.label).toBe("Verdetto personale");
   });
 });

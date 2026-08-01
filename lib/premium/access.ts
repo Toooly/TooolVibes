@@ -36,86 +36,34 @@ type PremiumEntitlementMeta = {
   cta_href: string;
 };
 
-const PREMIUM_ACCESS_HREF = "/account#member-access";
-
 export function resolveCollectionPremiumAccess(
-  access: CollectionAccess,
-  {
-    entitlement = "guest",
-    surface = "collection",
-  }: {
+  _access: CollectionAccess,
+  options: {
     entitlement?: PremiumEntitlementStatus;
     surface?: CollectionSurface;
   } = {},
 ): ResolvedCollectionPremiumAccess {
-  const previewToolLimit = surface === "special-issue" ? 3 : 2;
-  const previewHighlightLimit = surface === "special-issue" ? 3 : 2;
+  const entitlement = options.entitlement ?? "guest";
 
-  if (access === "open") {
-    return {
-      tier: "free",
-      entitlement,
-      state: "open",
-      label: "Raccolta aperta",
-      subtle_label: "Aperta",
-      chip_label: "Accesso aperto",
-      description: "La raccolta è interamente leggibile: tool, punti chiave e percorso sono già aperti.",
-      entry_label: "Apri raccolta completa",
-      upgrade_label: "Apri raccolta completa",
-      upgrade_href: "#collection-content",
-      is_premium: false,
-      is_previewable: false,
-      is_locked: false,
-      has_full_access: true,
-      preview_tool_limit: 999,
-      preview_highlight_limit: 999,
-    };
-  }
-
-  if (access === "premium-preview") {
-    return {
-      tier: "member",
-      entitlement,
-      state: entitlement === "member" ? "unlocked" : "preview",
-      label: entitlement === "member" ? "Accesso riservato" : "Anteprima premium",
-      subtle_label: entitlement === "member" ? "Sbloccata" : "Anteprima",
-      chip_label: entitlement === "member" ? "Accesso riservato" : "Anteprima aperta",
-      description:
-        entitlement === "member"
-          ? "La raccolta è disponibile per intero, con tutti i tool, i punti chiave e la lettura completa."
-          : "L'anteprima mostra il percorso, i primi tool e i punti chiave. L'accesso riservato aggiunge il resto della lettura e gli approfondimenti più utili.",
-      entry_label: entitlement === "member" ? "Apri raccolta completa" : "Apri anteprima",
-      upgrade_label: entitlement === "member" ? "Apri raccolta completa" : "Vedi cosa sblocchi",
-      upgrade_href: entitlement === "member" ? "#collection-content" : PREMIUM_ACCESS_HREF,
-      is_premium: true,
-      is_previewable: true,
-      is_locked: false,
-      has_full_access: entitlement === "member",
-      preview_tool_limit: previewToolLimit,
-      preview_highlight_limit: previewHighlightLimit,
-    };
-  }
-
+  // Historical records still carry legacy access values, but V1 deliberately
+  // ships every public collection as a complete, ungated editorial resource.
   return {
-    tier: "member",
+    tier: "free",
     entitlement,
-    state: entitlement === "member" ? "unlocked" : "locked",
-    label: entitlement === "member" ? "Accesso riservato" : "Raccolta riservata",
-    subtle_label: entitlement === "member" ? "Sbloccata" : "Riservata",
-    chip_label: entitlement === "member" ? "Accesso riservato" : "Raccolta riservata",
-    description:
-      entitlement === "member"
-        ? "La raccolta speciale è disponibile per intero, compresi i moduli centrali, l'ordine di lettura e le note operative."
-        : "Qui vedi il taglio della raccolta. La versione completa include i moduli centrali, il percorso completo e le note più operative.",
-    entry_label: entitlement === "member" ? "Apri raccolta completa" : "Apri anteprima",
-    upgrade_label: entitlement === "member" ? "Apri raccolta completa" : "Vedi cosa sblocchi",
-    upgrade_href: entitlement === "member" ? "#collection-content" : PREMIUM_ACCESS_HREF,
-    is_premium: true,
+    state: "open",
+    label: "Raccolta aperta",
+    subtle_label: "Aperta",
+    chip_label: "Accesso aperto",
+    description: "La raccolta è interamente leggibile: tool, punti chiave e percorso sono già disponibili.",
+    entry_label: "Apri raccolta",
+    upgrade_label: "Apri raccolta",
+    upgrade_href: "#collection-content",
+    is_premium: false,
     is_previewable: false,
-    is_locked: entitlement !== "member",
-    has_full_access: entitlement === "member",
-    preview_tool_limit: 2,
-    preview_highlight_limit: 2,
+    is_locked: false,
+    has_full_access: true,
+    preview_tool_limit: 999,
+    preview_highlight_limit: 999,
   };
 }
 
@@ -125,13 +73,13 @@ export function getPremiumEntitlementMeta(
   if (status === "member") {
     return {
       status,
-      tier: "member",
-      label: "Accesso riservato attivo",
-      short_label: "Riservato",
+      tier: "free",
+      label: "Account con selezione sincronizzata",
+      short_label: "Account",
       description:
-        "Anteprime, raccolte riservate e speciali complete sono sbloccate. Puoi passare da archivio, raccolte e selezione personale senza perdere il filo.",
-      badge: "Accesso riservato",
-      cta_label: "Apri raccolte e anteprime",
+        "Puoi passare da archivio, raccolte e selezione personale senza perdere il filo.",
+      badge: "Account attivo",
+      cta_label: "Apri raccolte",
       cta_href: "/collections",
     };
   }
@@ -140,12 +88,12 @@ export function getPremiumEntitlementMeta(
     return {
       status,
       tier: "free",
-      label: "Account pronto per l'accesso premium",
+      label: "Account attivo",
       short_label: "Account",
       description:
-        "La tua selezione può già seguire il tuo account. L'accesso riservato non è attivo, ma puoi vedere cosa resta aperto e cosa si sblocca dopo.",
+        "La tua selezione può già seguire il tuo account tra archivio, raccolte e salvati.",
       badge: "Account attivo",
-      cta_label: "Vedi anteprime e raccolte",
+      cta_label: "Apri raccolte",
       cta_href: "/collections",
     };
   }
@@ -153,12 +101,12 @@ export function getPremiumEntitlementMeta(
   return {
     status,
     tier: "free",
-    label: "Anteprime disponibili",
+    label: "Esplora senza limiti",
     short_label: "Visitatore",
     description:
-      "Puoi usare archivio, salvati, confronto e note senza attrito. Le raccolte premium mostrano il taglio prima di chiederti un account.",
-    badge: "Anteprime attive",
-    cta_label: "Capisci cosa sblocchi",
-    cta_href: PREMIUM_ACCESS_HREF,
+      "Puoi usare archivio, salvati, confronto e raccolte senza attrito.",
+    badge: "Accesso aperto",
+    cta_label: "Apri raccolte",
+    cta_href: "/collections",
   };
 }

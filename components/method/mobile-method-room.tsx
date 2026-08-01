@@ -16,8 +16,8 @@ const STEPS = [
     color: "#6a3cff",
     colorB: "#9f5bff",
     icon: Search,
-    stat: "120+",
-    statLabel: "Tool curati",
+    stat: "Catalogo",
+    statLabel: "in aggiornamento editoriale",
   },
   {
     num: "02",

@@ -61,8 +61,8 @@ function isValidUrl(value: string) {
 function validateForm(form: FormState): FormErrors {
   const errors: FormErrors = {};
 
-  if (form.email.trim() && !isValidEmail(form.email.trim())) {
-    errors.email = "Inserisci un'email valida oppure lascia vuoto.";
+  if (!isValidEmail(form.email.trim())) {
+    errors.email = "Inserisci un'email valida per poterti ricontattare.";
   }
   if (!isValidUrl(form.websiteUrl.trim())) {
     errors.websiteUrl = "Inserisci un URL valido con https:// oppure lascia vuoto.";
@@ -198,7 +198,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
           </label>
 
           <label className="block md:col-span-2">
-            <span className={labelClass}>Email</span>
+            <span className={labelClass}>Email per ricontattarti</span>
             <input
               value={form.email}
               onChange={(event) => updateField("email", event.target.value)}
@@ -206,8 +206,9 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               inputMode="email"
               autoComplete="email"
               className={cn(inputClass, "mt-2")}
-              placeholder="Se vuoi essere ricontattato via email"
+              placeholder="nome@esempio.it"
               disabled={isSubmitting}
+              required
               aria-invalid={Boolean(errors.email)}
               aria-describedby={errors.email ? "affiliate-email-error" : undefined}
             />

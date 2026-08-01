@@ -550,7 +550,7 @@
 }
 
 .ar4-ivory .ar4-card.is-reduced .ar4-card__desc {
-  font-size: 13px;
+  font-size: 14px;
   -webkit-line-clamp: 2;
 }
 
@@ -1981,7 +1981,7 @@
 
 .ar4-grid__promoted-hint {
   font-family: var(--tv-font-family-ui);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--tv-ink-muted-aa);
   margin: 0;
   text-align: center;

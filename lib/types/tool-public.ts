@@ -80,6 +80,16 @@ const scoreInputSchema = z
 
 const scoreSchema = z
   .object({
+    /**
+     * A public number is optional while the editorial archive is being
+     * migrated. Consumers must still require it, together with the other
+     * assessment evidence below, before rendering a score.
+     */
+    value: z.number().min(0).max(10).nullable().optional(),
+    /** Explicit editorial conclusion; never infer one from populated fields. */
+    verdict: nullableTextSchema.optional(),
+    /** True only after limitations have been explicitly assessed. */
+    limitationsAssessed: z.boolean().optional(),
     inputs: z.array(scoreInputSchema).min(1),
     provenance: z
       .object({

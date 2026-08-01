@@ -101,7 +101,7 @@ function Cockpit({ toolCount }: { toolCount: number }) {
           <p className="def-cockpit__eyebrow">
             <span className="def-cockpit__eyebrow-dot" aria-hidden="true" />
             {toolCount > 0
-              ? `Curatela indipendente · ${toolCount} tool verificati`
+              ? `Curatela indipendente · ${toolCount} tool nel Catalogo`
               : "Curatela indipendente · catalogo in aggiornamento"}
           </p>
           <h1 id="def-cockpit-title" className="def-cockpit__title">
@@ -110,8 +110,8 @@ function Cockpit({ toolCount }: { toolCount: number }) {
           </h1>
           <p className="def-cockpit__lede">
             Una selezione ragionata di tool AI, SaaS, no-code e vibe coding.
-            Li confrontiamo noi — tu scegli quelli che funzionano per il tuo
-            lavoro.
+            Metti a confronto i candidati, leggi le evidenze disponibili e
+            scegli quelli che funzionano per il tuo lavoro.
           </p>
           <div className="def-cockpit__ctas">
             <Link
@@ -256,10 +256,10 @@ function IvoryEditorial({
               non coincide automaticamente con il primo posto del podio.
             </p>
 
-            <ul className="def-editorial__spot-rail" aria-label="Metriche chiave">
+            <ul className="def-editorial__spot-rail" aria-label="Dettagli editoriali">
               <li>
-                <span>Score</span>
-                <strong>{editorialScore.value.toFixed(1)}</strong>
+                <span>Valutazione</span>
+                <strong>{editorialScore.status === "assessed" ? "Verificata" : "In preparazione"}</strong>
               </li>
               <li>
                 <span>Casi d&apos;uso</span>
@@ -270,7 +270,7 @@ function IvoryEditorial({
                 <strong>{focusTool.readingTime ?? "—"}</strong>
               </li>
               <li>
-                <span>Fascia</span>
+                <span>Stato</span>
                 <strong>{editorialScore.label}</strong>
               </li>
             </ul>
@@ -398,7 +398,10 @@ function PodiumCard({
   const score = computeEditorialScore(tool);
   const rationale = truncate(tool.tldr || tool.shortDescription || "", rank === 1 ? 110 : 90);
   const pills: { label: string; tone: "gold" | "cyan" | "violet" }[] = [
-    { label: score.label, tone: rank === 1 ? "gold" : rank === 2 ? "cyan" : "violet" },
+    {
+      label: score.status === "assessed" ? "Valutato" : "Da valutare",
+      tone: rank === 1 ? "gold" : rank === 2 ? "cyan" : "violet",
+    },
   ];
   if (tool.levelLabel) {
     pills.push({ label: tool.levelLabel, tone: rank === 1 ? "gold" : rank === 2 ? "cyan" : "violet" });
@@ -444,8 +447,12 @@ function PodiumCard({
       ) : null}
 
       <span className="def-editorial__pod-score">
-        <span className="def-editorial__pod-score-num">{score.value.toFixed(1)}</span>
-        <span className="def-editorial__pod-score-max">/ 10</span>
+        <span className="def-editorial__pod-score-num">
+          {score.value !== null ? score.value.toFixed(1) : "—"}
+        </span>
+        <span className="def-editorial__pod-score-max">
+          {score.value !== null ? "/ 10" : "da valutare"}
+        </span>
       </span>
       <span className="def-editorial__pod-open">
         Apri

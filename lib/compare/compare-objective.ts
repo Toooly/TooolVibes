@@ -1,18 +1,15 @@
 /**
  * BATCH 34 / FLOW-603 — Compare per obiettivo.
  *
- * Configurazione canonica degli obiettivi del confronto: etichette,
- * parole chiave e pesi delle fonti usati dall'adapter
- * `tool-battle-shared.withObjectiveScores`.
+ * Configurazione canonica degli obiettivi del confronto: etichette e parole
+ * chiave utili a guidare la lettura, senza trasformarle in un punteggio.
  *
  * Garanzie del contratto:
- * - configurazione dichiarativa e versionata: ogni obiettivo elenca le
- *   parole chiave cercate nei campi testuali del tool e i pesi delle
- *   fonti sono espliciti (nessun punteggio nascosto);
- * - l'impatto è limitato: il boost obiettivo è al massimo
- *   `COMPARE_OBJECTIVE_MAX_DELTA` punti sul punteggio base;
- * - l'obiettivo neutro (`null`) non tocca il motore: il risultato
- *   riproduce il contratto base B33 (`lib/compare/compare-score`).
+ * - configurazione dichiarativa e versionata: ogni obiettivo elenca parole
+ *   chiave da considerare nei campi testuali del tool;
+ * - le priorità non modificano una valutazione editoriale né scelgono un
+ *   vincitore automatico;
+ * - l'obiettivo neutro (`null`) mantiene la lettura generale invariata.
  */
 
 export const COMPARE_OBJECTIVE_CONFIG_VERSION = "compare-objective-v1";
@@ -34,29 +31,6 @@ export const COMPARE_OBJECTIVE_STORAGE_KEY = "tooolvibes:compare-objective:v1";
 
 /** Nome del parametro di deep link (`/compare?objective=save-time`). */
 export const COMPARE_OBJECTIVE_QUERY_PARAM = "objective";
-
-/**
- * Punteggio massimo che l'obiettivo può aggiungere al punteggio base
- * (il totale resta comunque clammato in 0-100 dall'adapter).
- */
-export const COMPARE_OBJECTIVE_MAX_DELTA = 15;
-
-/** Punti assegnati per ogni hit pesato di parola chiave. */
-export const COMPARE_OBJECTIVE_POINTS_PER_HIT = 2.5;
-
-/**
- * Pesi delle fonti testuali in cui si cercano le parole chiave.
- * Ordine stabile: è anche l'ordine in cui i pesi sono spiegati in UI.
- */
-export const COMPARE_OBJECTIVE_SOURCE_WEIGHTS = [
-  { key: "highlights", label: "punti di forza", weight: 1.5 },
-  { key: "useCases", label: "casi d'uso", weight: 1 },
-  { key: "tags", label: "tag", weight: 0.75 },
-  { key: "category", label: "categoria", weight: 0.5 },
-] as const;
-
-export type CompareObjectiveSourceKey =
-  (typeof COMPARE_OBJECTIVE_SOURCE_WEIGHTS)[number]["key"];
 
 export const COMPARE_OBJECTIVE_KEYWORDS: Record<CompareObjective, readonly string[]> = {
   "save-time": [
@@ -179,34 +153,24 @@ export function getCompareObjectiveLabel(key: CompareObjective): string {
   return definition?.label ?? key;
 }
 
-function formatWeight(weight: number): string {
-  return String(weight).replace(".", ",");
-}
-
 /**
- * Spiegazione stabile e leggibile dei pesi dell'obiettivo, condivisa
- * identica tra mobile e desktop (FLOW-603). Per l'obiettivo neutro
- * dichiara che il contratto base B33 resta invariato.
+ * Stable, shared objective guidance. The export name is retained for current
+ * consumers, but it no longer describes weights or score boosts.
  */
 export function describeCompareObjectiveWeights(
   objective: CompareObjective | null,
 ): string[] {
   if (objective === null) {
     return [
-      "Obiettivo neutro: nessun boost applicato, il confronto riproduce il contratto base dello score (B33).",
-      `Pesi delle dimensioni invariati: valutazione editoriale 45%, prove editoriali 25%, casi d'uso 20%, contesto tassonomico 10%.`,
+      "Obiettivo neutro: confronta le valutazioni editoriali e le differenze verificabili.",
+      "Nessun punteggio aggiuntivo o vincitore automatico viene applicato.",
     ];
   }
 
   const label = getCompareObjectiveLabel(objective);
-  const sources = COMPARE_OBJECTIVE_SOURCE_WEIGHTS.map(
-    (source) => `${source.label} ×${formatWeight(source.weight)}`,
-  ).join(", ");
-  const keywordCount = COMPARE_OBJECTIVE_KEYWORDS[objective].length;
 
   return [
-    `Obiettivo "${label}": fino a +${COMPARE_OBJECTIVE_MAX_DELTA} punti sul punteggio base, in base ai segnali trovati nel tool.`,
-    `Pesi delle fonti: ${sources}. Ogni hit vale ${formatWeight(COMPARE_OBJECTIVE_POINTS_PER_HIT)} punti.`,
-    `${keywordCount} parole chiave associate a questo obiettivo; il punteggio base (B33) resta il punto di partenza.`,
+    `Obiettivo “${label}”: usalo per leggere casi d'uso e limiti nel tuo contesto.`,
+    "La priorità non modifica la valutazione editoriale e non assegna un vincitore automatico.",
   ];
 }

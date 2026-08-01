@@ -4054,7 +4054,7 @@ img {
   }
 
   .selection-status {
-    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.68rem] font-medium uppercase tracking-[0.15em];
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium uppercase tracking-[0.15em];
     font-family: var(--tv-font-system);
     font-weight: 500;
     color: color-mix(in srgb, var(--foreground) 88%, var(--accent-strong) 12%);
@@ -14710,7 +14710,7 @@ img {
 
   .mobile-collections__item-desc {
     margin-top: 0.15rem;
-    font-size: var(--tv-text-xs);
+    font-size: var(--tv-text-sm);
     line-height: 1.4;
     color: rgba(255, 255, 255, 0.65);
     display: -webkit-box;
@@ -15878,7 +15878,7 @@ img {
   .mobile-library-wishlist__intro p {
     margin: 0.55rem 0 0;
     color: var(--muted);
-    font-size: 0.86rem;
+    font-size: 0.875rem;
     line-height: 1.55;
   }
 }

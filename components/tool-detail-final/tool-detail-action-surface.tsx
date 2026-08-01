@@ -50,42 +50,10 @@ export function ToolDetailActionSurface({
 
   return (
     <div className="td-final-actions" role="group" aria-label="Azioni scheda">
-      <a
-        href={externalUrl}
-        target="_blank"
-        rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
-        className="td-final-cta--primary"
-        aria-label={`${primaryLabel} di ${name} in una nuova scheda`}
-      >
-        <span>{primaryLabel}</span>
-        <ExternalLink size={15} aria-hidden="true" />
-      </a>
-
-      {isAffiliateLink ? (
-        <span className="td-final-affiliate-note">
-          Link partner: potremmo ricevere una commissione senza costi extra per te.
-        </span>
-      ) : null}
-
-      <button
-        type="button"
-        onClick={() => toggleSaved(slug)}
-        className="td-final-icon-btn"
-        aria-pressed={isSaved}
-        aria-label={isSaved ? "Rimuovi dai salvati" : "Salva tool"}
-        title={isSaved ? "Salvato" : "Salva"}
-      >
-        <Bookmark
-          size={17}
-          aria-hidden="true"
-          fill={isSaved ? "currentColor" : "none"}
-        />
-      </button>
-
       <button
         type="button"
         onClick={() => toggleCompare(slug)}
-        className="td-final-icon-btn"
+        className="td-final-cta--primary"
         aria-pressed={compareRank > 0}
         aria-label={
           compareRank > 0
@@ -103,7 +71,40 @@ export function ToolDetailActionSurface({
         }
       >
         <Columns3 size={17} aria-hidden="true" />
+        <span>{compareRank > 0 ? "Rimuovi dal confronto" : "Aggiungi al confronto"}</span>
       </button>
+
+      <button
+        type="button"
+        onClick={() => toggleSaved(slug)}
+        className="td-final-icon-btn"
+        aria-pressed={isSaved}
+        aria-label={isSaved ? "Rimuovi dai salvati" : "Salva"}
+        title={isSaved ? "Salvato" : "Salva"}
+      >
+        <Bookmark
+          size={17}
+          aria-hidden="true"
+          fill={isSaved ? "currentColor" : "none"}
+        />
+      </button>
+
+      <a
+        href={externalUrl}
+        target="_blank"
+        rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
+        className="td-final-cta--secondary"
+        aria-label={`${primaryLabel} di ${name} in una nuova scheda`}
+      >
+        <span>Visita il sito ufficiale</span>
+        <ExternalLink size={15} aria-hidden="true" />
+      </a>
+
+      {isAffiliateLink ? (
+        <span className="td-final-affiliate-note">
+          Link partner: potremmo ricevere una commissione senza costi extra per te.
+        </span>
+      ) : null}
 
       {compareRank > 0 ? (
         <span

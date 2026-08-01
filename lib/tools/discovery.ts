@@ -136,7 +136,7 @@ export function getToolEditorialState(
   return "Selezione core";
 }
 
-export function getToolPricing(tool: ToolRecord): ToolPricing {
+export function getToolPricing(tool: Pick<ToolRecord, "pricing">): ToolPricing {
   return tool.pricing ?? "Freemium";
 }
 
@@ -155,7 +155,7 @@ export function getToolEditorialNote(tool: ToolRecord) {
   );
 }
 
-export function getToolWhyHere(tool: ToolRecord) {
+export function getToolWhyHere(tool: Pick<ToolRecord, "why_here">) {
   return (
     tool.why_here ??
     "È qui perché mostra abbastanza utilità, direzione prodotto e sostanza da meritare una scheda vera, non solo un link salvato."

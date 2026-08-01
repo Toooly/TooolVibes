@@ -75,7 +75,7 @@ export function CollectionSlotCard({
               {slot.tool.name}
               <ArrowRight className="size-3.5 shrink-0" aria-hidden="true" />
             </Link>
-            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--tv-ink-inverted-muted)]">
+            <p className="mt-1 text-sm font-semibold uppercase tracking-[0.08em] text-[var(--tv-ink-inverted-muted)]">
               {slot.tool.category}
             </p>
             <p className="mt-2 line-clamp-2 text-sm leading-5 text-[var(--tv-ink-inverted-secondary)]">
