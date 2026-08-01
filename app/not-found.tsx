@@ -3,7 +3,7 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 
 export default function NotFound() {
   return (
-    <div className="page-shell py-16 sm:py-24">
+    <main className="page-shell py-16 sm:py-24">
       <section
         className="tv-state-panel mx-auto max-w-xl text-center"
         aria-labelledby="not-found-title"
@@ -40,6 +40,6 @@ export default function NotFound() {
           </Link>
         </div>
       </section>
-    </div>
+    </main>
   );
 }
