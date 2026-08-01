@@ -15,6 +15,7 @@ import { siteConfig } from "@/lib/config/site";
 import { getCollectionFormatMeta, hasAdvancedSpecialIssue } from "@/lib/collections/format";
 import {
   getCollectionBySlug,
+  getCuratedCollections,
   getRelatedCollectionsForSlug,
 } from "@/lib/data/public-collections";
 import {
@@ -33,9 +34,14 @@ type CollectionPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// Collections are public editorial content. Revalidate in the background
-// instead of resolving the same record for every request.
+// Collections are public editorial content. Pre-render known slugs and
+// revalidate in the background instead of resolving every request cold.
 export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const collections = await getCuratedCollections();
+  return collections.map((collection) => ({ slug: collection.slug }));
+}
 
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
   const { slug } = await params;

@@ -20,7 +20,7 @@ describe("GET /api/release", () => {
     const response = GET();
 
     expect(response.status).toBe(200);
-    expect(response.headers.get("cache-control")).toBe("public, max-age=31536000, immutable");
+    expect(response.headers.get("cache-control")).toBe("public, max-age=60, stale-while-revalidate=300");
     await expect(response.json()).resolves.toEqual({
       sha: "abc123release",
       name: "TooolVibes V1.0 MVP GM Release",

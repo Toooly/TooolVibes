@@ -1,0 +1,86 @@
+name: Firefox GM certification
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: firefox-gm-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  firefox:
+    name: Firefox public smoke (ubuntu)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Record SHA
+        run: |
+          echo "CANDIDATE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git rev-parse HEAD
+          test "$(git rev-parse HEAD)" = "${{ github.sha }}"
+
+      - name: Set up Node 22.23.1
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.23.1
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Pin npm 10.9.8
+        run: npm install --global npm@10.9.8
+
+      - name: Verify runtime
+        run: npm run check:runtime
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Next build
+        env:
+          TOOOLVIBES_RELEASE_SHA: ${{ github.sha }}
+          TOOOLVIBES_RELEASE_NAME: TooolVibes V1.0 MVP GM Release
+          TOOOLVIBES_BUILD_TIMESTAMP: ${{ github.run_started_at }}
+          TOOOLVIBES_COLLECTIONS_SOURCE: content
+          TOOOLVIBES_TOOLS_SOURCE: directory
+          TOOOLVIBES_ALLOW_MOCK_DATA: "0"
+        run: npm run build
+
+      - name: Install Firefox + Playwright system deps
+        run: npx playwright install --with-deps firefox
+
+      - name: Firefox gated smoke (core routes + security)
+        env:
+          PLAYWRIGHT_REUSE_BUILD: "1"
+          CI: "true"
+        run: npx playwright test --project=firefox
+
+      - name: Firefox public baseline smoke
+        env:
+          PLAYWRIGHT_E2E_PROFILE: public
+          PLAYWRIGHT_REUSE_BUILD: "1"
+          CI: "true"
+          TOOOLVIBES_COLLECTIONS_SOURCE: content
+          TOOOLVIBES_TOOLS_SOURCE: directory
+        run: npx playwright test --project=baseline
+
+      - name: Preserve Firefox evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-gm-evidence-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: warn
+          retention-days: 14

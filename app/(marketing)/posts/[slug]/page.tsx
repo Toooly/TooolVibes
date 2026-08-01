@@ -34,6 +34,12 @@ type EditorialPostPageProps = {
 
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+  const posts = await getPublishedEditorialPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
+
+
 const kindLabels: Record<NonNullable<Awaited<ReturnType<typeof getEditorialPostBySlug>>>["kind"], string> = {
   "tool-writeup": "Analisi tool",
   guide: "Guida",
@@ -83,10 +89,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
     notFound();
   }
 
-  const editorialPosts = await getPublishedEditorialPosts();
-  const guideCount = editorialPosts.filter((item) => item.kind === "guide").length;
-  const writeupCount = editorialPosts.filter((item) => item.kind === "tool-writeup").length;
-
+  // Keep detail rendering bounded for Worker CPU: one post fetch already done,
+  // optional related tool/collections only, no full catalog recount on every hit.
   let tool: Awaited<ReturnType<typeof getToolBySlug>> = null;
   let relatedCollections: CuratedCollection[] = [];
 
@@ -95,10 +99,12 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
       getToolBySlug(post.tool_slug),
       getCollectionsByToolSlug(post.tool_slug),
     ]);
-  } else {
+  } else if ((post.related_collection_slugs ?? []).length > 0) {
     relatedCollections = (
       await Promise.all(
-        (post.related_collection_slugs ?? []).map((collectionSlug) => getCollectionBySlug(collectionSlug)),
+        (post.related_collection_slugs ?? [])
+          .slice(0, 4)
+          .map((collectionSlug) => getCollectionBySlug(collectionSlug)),
       )
     ).filter((collection): collection is CuratedCollection => Boolean(collection));
   }
@@ -292,7 +298,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                     {sourceLabel}
                   </p>
                   <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted-strong)" }}>
-                    {formatItalianDate(post.published_at)} · {guideCount} guide · {writeupCount} approfondimenti tool
+                    {formatItalianDate(post.published_at)} · {kindLabel}
                   </p>
                 </div>
               </div>
