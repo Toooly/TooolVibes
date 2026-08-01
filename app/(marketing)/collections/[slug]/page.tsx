@@ -15,7 +15,6 @@ import { siteConfig } from "@/lib/config/site";
 import { getCollectionFormatMeta, hasAdvancedSpecialIssue } from "@/lib/collections/format";
 import {
   getCollectionBySlug,
-  getCuratedCollections,
   getRelatedCollectionsForSlug,
 } from "@/lib/data/public-collections";
 import {
@@ -38,10 +37,6 @@ type CollectionPageProps = {
 // revalidate in the background instead of resolving every request cold.
 export const revalidate = 3600;
 
-export async function generateStaticParams() {
-  const collections = await getCuratedCollections();
-  return collections.map((collection) => ({ slug: collection.slug }));
-}
 
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
   const { slug } = await params;

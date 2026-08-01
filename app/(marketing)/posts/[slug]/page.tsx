@@ -34,10 +34,6 @@ type EditorialPostPageProps = {
 
 export const revalidate = 3600;
 
-export async function generateStaticParams() {
-  const posts = await getPublishedEditorialPosts();
-  return posts.map((post) => ({ slug: post.slug }));
-}
 
 
 const kindLabels: Record<NonNullable<Awaited<ReturnType<typeof getEditorialPostBySlug>>>["kind"], string> = {
