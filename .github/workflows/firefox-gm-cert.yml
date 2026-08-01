@@ -57,7 +57,7 @@ jobs:
         run: npm run build
 
       - name: Install Firefox + Playwright system deps
-        run: npx playwright install --with-deps firefox
+        run: npx playwright install --with-deps firefox chromium
 
       - name: Firefox gated smoke (core routes + security)
         env:
