@@ -46,6 +46,7 @@ export function MobileBottomNav() {
   const savedCount = accountAware ? navCounts.saved : 0;
 
   const lastScrollY = useRef(0);
+  const downDistance = useRef(0);
   const lockedByInteraction = useRef(false);
   const rafId = useRef<number | null>(null);
   const innerRef = useRef<HTMLElement | null>(null);
@@ -56,6 +57,7 @@ export function MobileBottomNav() {
 
   useEffect(() => {
     setChromeState("expanded");
+    downDistance.current = 0;
     lastScrollY.current = typeof window !== "undefined" ? window.scrollY : 0;
   }, [pathname]);
 
@@ -140,6 +142,7 @@ export function MobileBottomNav() {
         const nearBottom = maxScroll > 0 && y >= maxScroll - BOTTOM_REVEAL_PX;
 
         if (y <= TOP_FORCE_EXPAND_PX || nearBottom) {
+          downDistance.current = 0;
           setChromeState("expanded");
           lastScrollY.current = y;
           return;
@@ -150,15 +153,15 @@ export function MobileBottomNav() {
         }
 
         if (delta > 0) {
-          // Decisive downward motion: compact first, then hide.
-          setChromeState((current) => {
-            if (current === "expanded" && delta >= COMPACT_AFTER) return "compact";
-            if (current === "compact" && delta >= COMPACT_AFTER) return "hidden";
-            if (current === "expanded" && delta >= HIDE_AFTER) return "hidden";
-            if (current !== "hidden" && delta >= HIDE_AFTER) return "hidden";
-            return current === "expanded" ? "compact" : current;
-          });
+          downDistance.current += delta;
+          // Staged: compact after moderate down-scroll, hide after sustained down-scroll.
+          if (downDistance.current >= HIDE_AFTER) {
+            setChromeState("hidden");
+          } else if (downDistance.current >= COMPACT_AFTER) {
+            setChromeState("compact");
+          }
         } else {
+          downDistance.current = 0;
           // Upward motion restores full chrome immediately.
           setChromeState("expanded");
         }

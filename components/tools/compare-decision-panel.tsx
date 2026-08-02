@@ -221,7 +221,7 @@ export function CompareDecisionPanel({
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs" style={{ color: "var(--muted)" }}>
-                    {tool.battleScore === null ? "Valutazione in preparazione" : `${tool.battleScore}/10`}
+                    {tool.battleScore === null ? "n/d" : `${tool.battleScore}/10`}
                   </span>
                   <button
                     type="button"

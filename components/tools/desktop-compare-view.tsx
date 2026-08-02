@@ -24,7 +24,7 @@ import { ToolFighter } from "./tool-fighter";
 import { DiffMatrix } from "./mobile-compare-view";
 
 function formatEditorialScore(score: number | null) {
-  return score === null ? "Valutazione in preparazione" : `${score}/10 editoriale`;
+  return score === null ? "n/d" : `${score}/10 editoriale`;
 }
 
 function DesktopDuelCard({

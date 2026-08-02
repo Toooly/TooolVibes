@@ -47,10 +47,24 @@ describe("public partner placement guard", () => {
       partner: { name: "Partner", category: " ", href: "https://example.com" },
     }),
     readyPlacement({
-      partner: { name: "Partner", category: "Automazione", href: "/affiliati" },
+      partner: { name: "Partner", category: "Automazione", href: "javascript:alert(1)" },
     }),
     readyPlacement({ editorialReason: " " }),
   ])("rejects incomplete or non-public inventory", (placement) => {
     expect(isPublicMonetizationPlacement(placement)).toBe(false);
+  });
+
+  it("accepts same-site relative partner URLs for internal CTAs", () => {
+    expect(
+      isPublicMonetizationPlacement(
+        readyPlacement({
+          partner: {
+            name: "Demo Partner",
+            category: "Dato di sviluppo",
+            href: "/affiliati",
+          },
+        }),
+      ),
+    ).toBe(true);
   });
 });

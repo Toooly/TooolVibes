@@ -42,8 +42,9 @@ type MobileCompareViewProps = {
 
 type BattleState = "idle" | "analyzing" | "charging" | "clash" | "result";
 
-function formatEditorialScore(score: number | null) {
-  return score === null ? "Valutazione in preparazione" : `${score}/10 editoriale`;
+function formatEditorialScore(score: number | null, compact = false) {
+  if (score === null) return compact ? "n/d" : "Ancora da valutare";
+  return compact ? `${score}/10` : `${score}/10 editoriale`;
 }
 
 /* ---------- sub-components ---------- */
@@ -76,7 +77,7 @@ function CompactToolCard({
         </span>
         <div className="mobile-compare-arena__compact-info">
           <span className="mobile-compare-arena__compact-cat">
-            {tool.categoryLabel} · {formatEditorialScore(tool.editorialScore)}
+            {tool.categoryLabel} · {formatEditorialScore(tool.editorialScore, true)}
           </span>
           <h3 className="mobile-compare-arena__compact-name">{tool.name}</h3>
           <p className="mobile-compare-arena__compact-tldr">{tool.tldr}</p>
@@ -174,7 +175,7 @@ export function DiffMatrix({
                 : verdict.state === "tie"
                   ? "Nessun vincitore automatico"
                   : verdict.state === "insufficient_evidence"
-                    ? "Valutazione in preparazione"
+                    ? "Ancora da valutare"
                     : "Confronta con le tue priorità"}
             </strong>
             <small>
@@ -202,8 +203,8 @@ export function DiffMatrix({
                 {isWinner
                   ? "Valutazione editoriale supportata"
                   : score === null
-                    ? "In preparazione"
-                    : "Valutazione editoriale esplicita"}
+                    ? "n/d"
+                    : "Valutazione editoriale"}
               </small>
             </div>
             {canVisualizeScore ? (
@@ -239,7 +240,7 @@ export function DiffMatrix({
         <div className="mobile-compare-arena__matrix-score-card">
           <div className="mobile-compare-arena__matrix-score-head">
             <strong>{t.editorialScore ?? "—"}</strong>
-            <small>{t.editorialScore === null ? "In preparazione" : "/10"}</small>
+            <small>{t.editorialScore === null ? "n/d" : "/10"}</small>
           </div>
         </div>
       ),
@@ -356,7 +357,7 @@ export function DiffMatrix({
                 <span className="mobile-compare-arena__matrix-tool">{tool.name}</span>
                 <span className="mobile-compare-arena__matrix-tool-score">
                   {rankBySlug.get(tool.slug) === null || scoreBySlug.get(tool.slug) === null
-                    ? "Valutazione in preparazione"
+                    ? "Ancora da valutare"
                     : `#${rankBySlug.get(tool.slug)} · ${scoreBySlug.get(tool.slug)}/10`}
                 </span>
               </div>
