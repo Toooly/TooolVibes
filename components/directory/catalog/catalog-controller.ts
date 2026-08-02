@@ -97,7 +97,7 @@ export const DEFAULT_CATEGORY_META: { color: string; iconName: keyof typeof CATE
 
 export const CATALOG_LEVEL_CHIPS: { key: CatalogLevelFilter; label: string }[] = [
   { key: "all", label: "Tutti" },
-  { key: "featured", label: "In evidenza" },
+  { key: "featured", label: "Solo in vetrina" },
   { key: "beginner", label: "Base" },
   { key: "intermediate", label: "Intermedio" },
   { key: "expert", label: "Avanzato" },

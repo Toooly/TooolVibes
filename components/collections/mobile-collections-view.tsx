@@ -133,7 +133,7 @@ export function MobileCollectionsView({
               ) : (
                 <span className="mobile-collections__hero-tag mobile-collections__hero-tag--featured">
                   <Star className="size-3" />
-                  In evidenza
+                  In vetrina
                 </span>
               )}
               <span className="mobile-collections__hero-count">

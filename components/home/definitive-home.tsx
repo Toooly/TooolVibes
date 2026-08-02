@@ -222,10 +222,10 @@ function IvoryEditorial({
       <header className="def-editorial__head">
         <div>
           <p className="def-editorial__eyebrow">
-            Verdetto editoriale · selezione settimanale
+            Verdetto editoriale · selezione della redazione
           </p>
           <h2 id="def-editorial-title" className="def-editorial__title">
-            Selezione editoriale: focus della settimana e podio del catalogo.
+            La scelta della redazione, in primo piano.
           </h2>
         </div>
         <div className="def-editorial__head-actions">
@@ -240,11 +240,11 @@ function IvoryEditorial({
       </header>
 
       <div className="def-editorial__inner">
-        {/* TOOL OF THE WEEK */}
+        {/* TOOL OF THE WEEK → Selezione della redazione (claim "settimanale" rimosso 2026-08-02) */}
         <article className="def-editorial__spotlight">
           <div className="def-editorial__spot-body">
             <p className="def-editorial__spot-eyebrow">
-              Tool della settimana
+              Selezione della redazione
             </p>
             <div className="def-editorial__spot-head">
               <span className="def-editorial__spot-avatar" aria-hidden="true">
@@ -267,8 +267,8 @@ function IvoryEditorial({
               {focusTool.tldr || focusTool.shortDescription}
             </p>
             <p className="def-editorial__distinction">
-              Il focus settimanale è una scelta contestuale della redazione:
-              non coincide automaticamente con il primo posto del podio.
+              Scelto dalla redazione per il suo taglio, non per il punteggio.
+              Il podio è una classifica, il focus è una decisione editoriale.
             </p>
 
             <ul className="def-editorial__spot-rail" aria-label="Dettagli editoriali">

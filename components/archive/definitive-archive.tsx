@@ -58,7 +58,7 @@ const LEVEL_FILTERS = [
   { key: "beginner", label: "Principiante" },
   { key: "intermediate", label: "Intermedio" },
   { key: "expert", label: "Esperto" },
-  { key: "featured", label: "In evidenza" },
+  { key: "featured", label: "Solo in vetrina" },
 ] as const;
 
 type PromotedTier = "primary" | "secondary" | "tertiary";
@@ -392,7 +392,7 @@ export function DefinitiveArchive({
                 Scrivania editoriale
               </p>
               <h2 id="ar4-ivory-title" className="ar4-ivory__title">
-                Il tool della settimana, in evidenza.
+                La scelta della redazione, in evidenza.
               </h2>
             </div>
             <div

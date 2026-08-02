@@ -16,7 +16,7 @@ export function DirectoryWeeklySpotlight({
     <section className="page-shell space-y-4 sm:space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-[40rem]">
-          <PremiumBadge tone="accent">Tool della settimana</PremiumBadge>
+          <PremiumBadge tone="accent">Selezione della redazione</PremiumBadge>
           <h2 className="mt-3 text-[1.65rem] leading-[1.1] text-[var(--foreground)] sm:text-[2.45rem]">
             Il focus editoriale da provare prima degli altri.
           </h2>

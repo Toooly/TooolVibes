@@ -22,8 +22,8 @@
  *   8. save + compare (44×44 each)
  *
  * 3-tier promoted grammar:
- *   - primary   (Blink)        — gold "Tool della settimana" (full card)
- *   - secondary (VibeCode)     — cyan "In evidenza" (reduced)
+ *   - primary   (Blink)        — gold "Selezione della redazione" (full card)
+ *   - secondary (VibeCode)     — cyan "In vetrina" (reduced)
  *   - tertiary  (WeWeb)        — restrained violet "Selezione editoriale" (reduced)
  *
  * Reduced variant (secondary/tertiary + optional): no metrics row, no ribbon.
@@ -57,8 +57,8 @@ type ArchiveV4ToolCardProps = {
   /**
    * Promoted tier — only meaningful in the ivory Decision Desk band.
    * Defines distinct visual + semantic hierarchy:
-   *   primary   → Blink (gold, "Tool della settimana") — full card
-   *   secondary → VibeCode (cyan, "In evidenza") — reduced
+   *   primary   → Blink (gold, "Selezione della redazione") — full card
+   *   secondary → VibeCode (cyan, "In vetrina") — reduced
    *   tertiary  → WeWeb (restrained violet, "Selezione editoriale") — reduced
    */
   promotedTier?: "primary" | "secondary" | "tertiary";
@@ -80,7 +80,7 @@ const LEVEL_LABEL: Record<string, string> = {
   beginner: "Principiante",
   intermediate: "Intermedio",
   expert: "Esperto",
-  featured: "In evidenza",
+  featured: "Segnalato",
 };
 
 const LEVEL_COLOR: Record<string, string> = {
@@ -91,8 +91,8 @@ const LEVEL_COLOR: Record<string, string> = {
 };
 
 const TIER_LABEL: Record<"primary" | "secondary" | "tertiary", string> = {
-  primary: "Tool della settimana",
-  secondary: "In evidenza",
+  primary: "Selezione della redazione",
+  secondary: "In vetrina",
   tertiary: "Selezione editoriale",
 };
 
@@ -138,10 +138,10 @@ function ArchiveV4ToolCard({
 
   // Status label + kind for the top-row status pill (non-promoted cards)
   const statusLabel = tool.toolOfWeek
-    ? "Tool della settimana"
+    ? "Selezione della redazione"
     : tool.featured
-      ? "In evidenza"
-      : "Base";
+      ? "Segnalato"
+      : null;
   const statusKind = tool.toolOfWeek ? "primary" : tool.featured ? "gold" : "neutral";
 
   // Top-row status is hidden on mobile for PROMOTED cards (it has its own
@@ -295,7 +295,7 @@ function ArchiveV4ToolCard({
           )}
           aria-hidden="true"
         >
-          Tool della settimana
+          Selezione della redazione
         </span>
       )}
     </article>

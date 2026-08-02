@@ -116,7 +116,7 @@ export function CanonicalToolCard({
 
   const badges = (
     <>
-      {tool.toolOfWeek ? <Badge variant="warning">Tool della settimana</Badge> : null}
+      {tool.toolOfWeek ? <Badge variant="warning">Selezione della redazione</Badge> : null}
       {levelLabel ? <Badge variant={levelVariant}>{levelLabel}</Badge> : null}
     </>
   );
@@ -289,7 +289,7 @@ export function CanonicalToolCard({
                     className="inline-flex items-center gap-1 rounded-full border border-[var(--tv-accent-primary)]/40 bg-[var(--tv-accent-primary)]/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-[var(--tv-accent-primary)] sm:text-[0.8125rem]"
                   >
                     <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[var(--tv-accent-primary)]" />
-                    In evidenza
+                    In evidenza editoriale
                   </span>
                   {badges}
                   </>

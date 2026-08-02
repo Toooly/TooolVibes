@@ -170,7 +170,7 @@ function RadarSignalIndex({ model }: { model: RadarUiModel }) {
       <header className="tv-radar-index__header">
         <div>
           <p>Editoriale · top segnali</p>
-          <h2 id="tv-radar-index-title">In evidenza ora</h2>
+          <h2 id="tv-radar-index-title">Migliori su Product Hunt oggi</h2>
         </div>
         <span>{model.signalCount ?? "—"}</span>
       </header>
