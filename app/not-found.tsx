@@ -12,7 +12,7 @@ export default function NotFound() {
           <BrandLogo size={72} priority fallback="png" />
         </div>
         <p className="tv-state-panel__eyebrow mx-auto mt-5 justify-center">
-          Coordinata assente
+          Pagina non trovata
         </p>
         <p className="tv-brand-stamp tv-brand-stamp--violet mx-auto mt-3">404</p>
         <h1 id="not-found-title" className="mt-5 text-4xl sm:text-5xl">

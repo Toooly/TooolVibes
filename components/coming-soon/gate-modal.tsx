@@ -133,7 +133,7 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
       >
         <div className="mb-5 text-center">
           <h2 id={titleId} className="text-lg font-semibold text-[#F0EFFF]">
-            Varco interno
+            Accesso riservato
           </h2>
           <p id={descriptionId} className="mt-1 text-sm text-[#9E99B8]">
             Inserisci la chiave per accedere al sito completo.

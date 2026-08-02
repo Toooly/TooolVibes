@@ -140,8 +140,7 @@ export function SiteFooterV2() {
           </div>
         </div>
         <p className="site-footer-v2__disclosure">
-          Alcuni link possono essere affiliate: se acquisti tramite quei collegamenti, TooolVibes
-          potrebbe ricevere una commissione senza costi extra per te.
+          Alcuni link su TooolVibes sono link affiliati. Se acquisti tramite questi collegamenti, potremmo ricevere una commissione, senza costi aggiuntivi per te. Le partnership commerciali non determinano le valutazioni editoriali.
         </p>
       </div>
     </footer>
