@@ -72,7 +72,7 @@ const CATALOG = [
     featured: true,
     toolOfWeek: true,
     tags: ["vibe coding", "ai app builder", "prompt-to-app"],
-    levelLabel: "In evidenza",
+    levelLabel: "Segnalato",
   },
   {
     slug: "vibecode",
@@ -82,7 +82,7 @@ const CATALOG = [
     featured: true,
     toolOfWeek: false,
     tags: ["vibe coding", "builder app AI"],
-    levelLabel: "In evidenza",
+    levelLabel: "Segnalato",
   },
   {
     slug: "weweb",
@@ -92,7 +92,7 @@ const CATALOG = [
     featured: true,
     toolOfWeek: false,
     tags: ["no-code", "builder web app"],
-    levelLabel: "In evidenza",
+    levelLabel: "Segnalato",
   },
 ];
 

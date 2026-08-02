@@ -29,7 +29,7 @@ function makeTool(overrides: Partial<ToolPublicView> = {}): ToolPublicView {
     category: "vibe-coding",
     categoryLabel: "Vibe coding / builder app AI",
     level: "featured",
-    levelLabel: "In evidenza",
+    levelLabel: "Segnalato",
     segments: ["vibe-coding", "ai-app-builder"],
     filterGroups: ["vibe-coding", "ai-app-builder"],
     shortDescription: "AI app builder che trasforma un'idea in un'app.",
@@ -58,6 +58,7 @@ function makeTool(overrides: Partial<ToolPublicView> = {}): ToolPublicView {
     cautions: [],
     accentFrom: "#6d3bff",
     accentTo: "#43c6ff",
+    extendedContent: null,
     ...overrides,
   };
 }

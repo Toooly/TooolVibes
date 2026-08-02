@@ -150,7 +150,7 @@ describe("CanonicalToolCard — density grid", () => {
     // Identità e evidenza
     expect(screen.getByRole("heading", { name: "Rich Tool" })).toBeTruthy();
     expect(screen.getByText("Vibe coding")).toBeTruthy();
-    expect(screen.getByText("Tool della settimana")).toBeTruthy();
+    expect(screen.getByText("Selezione della redazione")).toBeTruthy();
     // "Base" compare sia nel badge livello sia nel meta panel "Livello".
     expect(screen.getAllByText("Base").length).toBeGreaterThan(0);
     for (const highlight of ["Veloce", "Affidabile", "Open source"]) {
@@ -191,7 +191,7 @@ describe("CanonicalToolCard — density grid", () => {
 
     const badges = container.querySelector("[data-slot='tool-card-badges']");
     expect(badges?.querySelector("[data-variant='warning']")?.textContent).toBe(
-      "Tool della settimana",
+      "Selezione della redazione",
     );
     expect(badges?.querySelector("[data-variant='success']")?.textContent).toBe("Base");
 

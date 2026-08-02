@@ -101,7 +101,7 @@ export function makeCatalogTools(): ToolPublicView[] {
       name: "Delta",
       categoryLabel: "Marketing",
       level: "featured",
-      levelLabel: "In evidenza",
+      levelLabel: "Segnalato",
       segments: ["marketing"],
       filterGroups: ["marketing"],
       tags: ["seo"],

@@ -205,7 +205,7 @@ export const directoryToolFixture: DirectoryTool = {
   category: "Vibe Coding",
   categoryLabel: "Vibe coding / builder app AI",
   level: "featured",
-  levelLabel: "In evidenza",
+  levelLabel: "Segnalato",
   segments: ["vibe-coding", "ai-app-builder"],
   shortDescription: "Builder AI per trasformare un prompt in un prototipo navigabile.",
   description: "Alias legacy che l'adapter non deve usare.",

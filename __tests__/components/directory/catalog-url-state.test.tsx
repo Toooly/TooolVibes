@@ -129,7 +129,7 @@ function makeUrlStateTools() {
       name: "WeWeb",
       categoryLabel: "No-code",
       level: "featured",
-      levelLabel: "In evidenza",
+      levelLabel: "Segnalato",
       segments: ["no-code"],
       tags: ["no-code", "builder web app"],
       shortDescription: "Piattaforma visuale no-code/AI per creare web app.",
