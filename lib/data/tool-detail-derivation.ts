@@ -65,7 +65,7 @@ export function buildAlternativeWhy(current: ToolPublicView, alt: ToolPublicView
     return `Approccio diverso su ${differentGroup.replaceAll("-", " ")} rispetto a ${current.name}.`;
   }
   if (alt.toolOfWeek) {
-    return `Tool della settimana alternativo, focus su casi d'uso complementari.`;
+    return `Selezione della redazione alternativo, focus su casi d'uso complementari.`;
   }
   if (alt.featured) {
     return `Stessa categoria, in evidenza editoriale per il suo taglio più verticale.`;
@@ -85,7 +85,7 @@ export function deriveEssentialDifference(current: ToolPublicView, alt: ToolPubl
   if (diffGroups.length > 0) {
     return diffGroups[0].replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase());
   }
-  if (alt.toolOfWeek) return "Tool della settimana";
+  if (alt.toolOfWeek) return "Selezione della redazione";
   if (alt.featured) return "In evidenza editoriale";
   if (alt.tags.length > 0 && current.tags.length > 0) {
     const unique = alt.tags.filter((t) => !current.tags.includes(t));
