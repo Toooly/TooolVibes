@@ -119,22 +119,28 @@ function Cockpit({ toolCount }: { toolCount: number }) {
           </h1>
           <p className="def-cockpit__lede">
             Una selezione ragionata di tool AI, SaaS, no-code e vibe coding.
-            Metti a confronto i candidati, leggi le evidenze disponibili e
-            scegli quelli che funzionano per il tuo lavoro.
+            Parti dal catalogo, confronta i candidati con evidenze reali e
+            salva la shortlist: TooolVibes chiude la scelta, non la diluisce.
           </p>
           <div className="def-cockpit__ctas">
             <Link
               href="/archivio"
               className="def-cockpit__cta def-cockpit__cta--primary"
             >
-              Esplora i tool
+              Inizia dal catalogo
               <ArrowRight size={16} aria-hidden="true" />
             </Link>
             <Link
-              href="/radar"
+              href="/compare"
               className="def-cockpit__cta def-cockpit__cta--secondary"
             >
-              Apri Radar
+              Apri il confronto
+            </Link>
+            <Link
+              href="/radar"
+              className="def-cockpit__cta def-cockpit__cta--ghost"
+            >
+              Vedi il Radar
             </Link>
           </div>
 
@@ -219,7 +225,7 @@ function IvoryEditorial({
             Verdetto editoriale · selezione settimanale
           </p>
           <h2 id="def-editorial-title" className="def-editorial__title">
-            La scrivania dove il tool della settimana incontra il podio.
+            Selezione editoriale: focus della settimana e podio del catalogo.
           </h2>
         </div>
         <div className="def-editorial__head-actions">
@@ -480,8 +486,12 @@ function Method() {
       <header className="def-method__head">
         <p className="def-method__eyebrow">Metodo TooolVibes</p>
         <h2 id="def-method-title" className="def-method__title">
-          Tre passaggi per chiudere la scelta senza stress
+          Il metodo: scopri, confronta, salva la decisione
         </h2>
+        <p className="def-method__lede">
+          Ogni passo ha una destinazione chiara. Niente dashboard decorative:
+          azioni che portano a una shortlist e a una scelta.
+        </p>
       </header>
       <ol className="def-method__rail">
         {METHOD_STEPS.map((step, index) => (
@@ -519,10 +529,15 @@ export function DefinitiveHome({ tools, weeklyTool }: DefinitiveHomeProps) {
       <Cockpit toolCount={tools.length} />
       <IvoryEditorial focusTool={focusTool} tools={tools} />
       <Method />
-      <FeaturedPartner
-        placementKey="home-featured-tool"
-        className="def-home__placement"
-      />
+      <section className="def-home__sponsor" aria-label="Partner editoriale">
+        <div className="def-home__sponsor-frame">
+          <p className="def-home__sponsor-eyebrow">Partner · slot di lancio</p>
+          <FeaturedPartner
+            placementKey="home-featured-tool"
+            className="def-home__placement"
+          />
+        </div>
+      </section>
     </div>
   );
 }

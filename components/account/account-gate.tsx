@@ -15,9 +15,8 @@ export function AccountGate() {
             <p className="v-auth-context__eyebrow">Account</p>
             <p id="account-context-title" className="v-auth-context__title">Spazio personale</p>
             <p className="account-loading-state__hint">
-              Stiamo verificando lo stato di accesso. Se hai già una sessione
-              attiva, ti porteremo dentro la tua area; altrimenti qui trovi
-              subito il modulo per ricevere un magic link.
+              Controlliamo se hai già una sessione attiva. In pochi istanti
+              entri nel workspace oppure nel modulo di accesso.
             </p>
           </aside>
           <section
@@ -28,10 +27,10 @@ export function AccountGate() {
             aria-labelledby="account-loading-title"
           >
             <p className="account-loading-state__eyebrow">Workspace personale</p>
-            <h1 id="account-loading-title">Verifica accesso in corso.</h1>
+            <h1 id="account-loading-title">Stiamo aprendo il tuo spazio.</h1>
             <p className="v-auth-loading-text">
-              Recuperiamo configurazione Supabase, sessione e stato del workspace
-              locale. Niente dati fittizi: appena pronti vedrai il modulo di accesso.
+              Recupero sessione e workspace locale. Appena pronti, vedi i tuoi
+              salvati oppure il modulo per entrare con email.
             </p>
             <div className="account-loading-state__skeleton" aria-hidden="true">
               <span className="account-loading-state__row" />

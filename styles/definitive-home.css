@@ -212,6 +212,9 @@
   background: var(--tv-accent-primary);
   color: var(--tv-ink-on-brand);
   border-color: color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
+  box-shadow:
+    0 10px 28px color-mix(in srgb, var(--tv-accent-primary) 28%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 18%, transparent);
 }
 
 .def-cockpit__cta--primary:hover {
@@ -227,6 +230,33 @@
 .def-cockpit__cta--secondary:hover {
   border-color: var(--tv-accent-primary);
   color: var(--tv-accent-primary);
+}
+
+.def-cockpit__cta--ghost {
+  background: transparent;
+  color: var(--tv-ink-secondary);
+  border-color: transparent;
+  padding-inline: 14px;
+}
+
+.def-cockpit__cta--ghost:hover {
+  color: var(--tv-ink-primary);
+  background: color-mix(in srgb, var(--tv-surface-elevated) 55%, transparent);
+}
+
+.def-cockpit__cta--primary:active {
+  transform: translateY(1px);
+  filter: brightness(0.96);
+}
+
+.def-cockpit__cta--secondary:active,
+.def-cockpit__cta--ghost:active {
+  transform: translateY(1px);
+}
+
+.def-cockpit__cta:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tv-bg-base), 0 0 0 4px var(--tv-focus-ring);
 }
 
 /* Compact horizontal decision journey — not 3 stacked cards */
@@ -288,8 +318,8 @@
 }
 
 .def-cockpit__journey li.is-active a {
-  background: transparent;
-  box-shadow: inset 0 0 0 1.5px var(--tv-accent-primary);
+  background: color-mix(in srgb, var(--tv-accent-primary) 10%, transparent);
+  box-shadow: inset 0 -2px 0 var(--tv-accent-primary);
 }
 
 .def-cockpit__journey li.is-active a::before {
@@ -396,7 +426,7 @@
   position: relative;
   z-index: 1;
   max-width: 1560px;
-  margin: 0 auto 24px;
+  margin: 0 auto clamp(28px, 3.2vw, 40px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
@@ -404,7 +434,7 @@
 }
 
 @media (max-width: 899px) {
-  .def-editorial__head { grid-template-columns: 1fr; gap: 8px; margin: 0 auto 24px; }
+  .def-editorial__head { grid-template-columns: 1fr; gap: 8px; margin: 0 auto 28px; }
 }
 
 .def-editorial__eyebrow {
@@ -454,13 +484,13 @@
   background: transparent;
   color: var(--tv-ink-inverted-primary);
   font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-transform: none;
   text-decoration: none;
   min-height: 44px;
   -webkit-tap-highlight-color: transparent;
-  transition: background 200ms ease, border-color 200ms ease;
+  transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
 }
 
 .def-editorial__head-link:hover {
@@ -711,6 +741,7 @@
   background: var(--tv-accent-violet-on-ivory);
   color: var(--tv-color-ink-100);
   border-color: transparent;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
 }
 
 .def-editorial__spot-cta--primary:hover {
@@ -1262,6 +1293,14 @@
   max-width: 720px;
 }
 
+.def-method__lede {
+  margin: 0;
+  max-width: 42rem;
+  color: var(--tv-ink-secondary);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
 .def-method__rail {
   list-style: none;
   margin: 0 auto;
@@ -1427,15 +1466,38 @@
   }
 }
 
+.def-home__sponsor {
+  width: 100%;
+  padding: 0 clamp(20px, 2.6vw, 40px) clamp(40px, 5vw, 64px);
+  background: var(--tv-bg-base);
+}
+
+.def-home__sponsor-frame {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
+}
+
+.def-home__sponsor-eyebrow {
+  margin: 0;
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted-aa);
+}
+
 .def-home__placement {
-  width: min(calc(100% - 64px), 1280px);
-  margin: 0 auto 48px;
+  width: 100%;
+  margin: 0;
 }
 
 @media (max-width: 767px) {
-  .def-home__placement {
-    width: calc(100% - 40px);
-    margin-bottom: 32px;
+  .def-home__sponsor {
+    padding-inline: 16px;
+    padding-bottom: 36px;
   }
 }
 
@@ -1547,4 +1609,26 @@
   .def-cockpit__signature-node {
     animation: tv-brand-signal-breathe 2.4s var(--tv-easing-standard, ease) infinite;
   }
+}
+
+
+/* Final visual polish — depth from state, not decoration */
+.def-editorial__pod-card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tv-surface-inverted), 0 0 0 4px var(--tv-accent-primary);
+}
+
+.def-editorial__pod-card:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+.def-editorial__spot-cta:focus-visible,
+.def-method__step-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tv-focus-ring);
+  border-radius: 6px;
+}
+
+.def-home__sponsor .partner-placement--featured {
+  border-radius: 20px;
 }

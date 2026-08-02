@@ -35,10 +35,14 @@ export function AccountHero({
         <span className="account-status-badge">{getHeroBadgeLabel(account)}</span>
       </div>
       <h1 className="account-title mt-5 max-w-[22ch]">
-        Il tuo spazio personale TooolVibes
+        {account.status === "authenticated"
+          ? "Riprendi la tua selezione"
+          : "Il tuo spazio decisionale"}
       </h1>
       <p className="account-subtitle mt-4 max-w-[44rem]">
-        Qui capisci se la selezione resta solo in questo browser o segue il tuo account e da dove conviene ripartire.
+        {account.status === "authenticated"
+          ? "Qui trovi salvati, confronti aperti e il punto esatto da cui ripartire — senza perdere il lavoro già fatto."
+          : "Salva tool, confronta candidati e chiudi decisioni. Con l'email la selezione ti segue; senza resta in questo browser."}
       </p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">

@@ -169,8 +169,8 @@ function RadarSignalIndex({ model }: { model: RadarUiModel }) {
     <aside className="tv-radar-index" aria-labelledby="tv-radar-index-title">
       <header className="tv-radar-index__header">
         <div>
-          <p>Indice segnali</p>
-          <h2 id="tv-radar-index-title">Top Product Hunt</h2>
+          <p>Editoriale · top segnali</p>
+          <h2 id="tv-radar-index-title">In evidenza ora</h2>
         </div>
         <span>{model.signalCount ?? "—"}</span>
       </header>
@@ -221,7 +221,7 @@ function RadarTable({ model }: { model: RadarUiModel }) {
       <header className="tv-radar-table__header">
         <div>
           <p>Classifica verificabile</p>
-          <h2 id="tv-radar-table-title">Tutti i segnali</h2>
+          <h2 id="tv-radar-table-title">Elenco completo</h2>
         </div>
         <span>{model.rangeLabel}</span>
       </header>
@@ -296,12 +296,12 @@ export function RadarExperience({
       >
         <header className="tv-radar__header">
           <div>
-            <p className="tv-radar__eyebrow">Scrivania segnali · Product Hunt</p>
+            <p className="tv-radar__eyebrow">Segnali esterni · Product Hunt</p>
             <h1 id="tv-radar-title">Radar</h1>
             <p className="tv-radar__lede">
               {model.state === "fixture"
                 ? "Fixture locale deterministica per verificare ogni breakpoint."
-                : "Lanci reali, ordinati per periodo. Nessun dato simulato."}
+                : "Lanci reali del giorno, della settimana e del mese. Segnali da verificare — non hype da inseguire."}
             </p>
           </div>
           <span
@@ -441,7 +441,7 @@ export function HomeRadarPreview() {
               ? "Feed Product Hunt · fixture QA simulata"
               : "Feed Product Hunt · dati non simulati"}
           </p>
-          <h2>Segnali da verificare, non hype da inseguire.</h2>
+          <h2>Segnali live da verificare prima di scegliere.</h2>
         </div>
         <span className="tv-home-radar__status" data-state={model.state}>
           <span aria-hidden="true" />

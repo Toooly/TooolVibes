@@ -674,3 +674,108 @@
   background: var(--tv-accent-cyan);
   box-shadow: 0 0 10px color-mix(in srgb, var(--tv-accent-cyan) 50%, transparent);
 }
+
+
+/* Final account hierarchy polish */
+.tone-account {
+  gap: 1.25rem;
+}
+
+.account-hero {
+  border-radius: 28px;
+  box-shadow:
+    0 22px 56px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.account-hero .account-title {
+  font-size: clamp(1.75rem, 4vw, 2.35rem);
+  letter-spacing: -0.03em;
+}
+
+.account-hero .account-subtitle {
+  max-width: 40rem;
+  color: color-mix(in srgb, var(--account-muted) 92%, var(--account-ink));
+}
+
+.account-section-panel {
+  border-radius: 24px;
+  border-color: color-mix(in srgb, var(--account-violet) 14%, transparent);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+  background:
+    linear-gradient(180deg, rgba(18, 18, 42, 0.9), rgba(10, 10, 24, 0.94));
+}
+
+/* Secondary panels: less chrome than hero */
+.editorial-grid .account-section-panel:not(:first-child) {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+.account-stat-card,
+.account-selection-card {
+  border-radius: 18px;
+  box-shadow: none;
+  border-color: color-mix(in srgb, var(--account-violet) 12%, transparent);
+}
+
+.account-stat-card:hover,
+.account-selection-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+}
+
+.account-btn-primary:focus-visible,
+.account-btn-secondary:focus-visible,
+.account-link:focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 3px;
+}
+
+.account-status-badge {
+  letter-spacing: 0.08em;
+}
+
+.account-loading-state__skeleton {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
+.account-loading-state__row {
+  display: block;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent),
+    color-mix(in srgb, var(--tv-accent-primary) 18%, transparent),
+    color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent)
+  );
+  background-size: 200% 100%;
+}
+
+.account-loading-state__row--short {
+  width: 62%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .account-loading-state__row {
+    animation: account-skeleton-shine 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes account-skeleton-shine {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account-stat-card:hover,
+  .account-selection-card:hover,
+  .account-btn-primary:hover,
+  .account-btn-secondary:hover,
+  .account-link:hover,
+  .account-journey-step:hover {
+    transform: none;
+  }
+}

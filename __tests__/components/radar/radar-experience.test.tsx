@@ -196,7 +196,7 @@ describe("RadarExperience", () => {
     expect(await screen.findAllByText("Gamma Tool")).not.toHaveLength(0);
 
     fireEvent.click(screen.getByRole("button", { name: "Tabella" }));
-    expect(await screen.findByText("Tutti i segnali")).toBeTruthy();
+    expect(await screen.findByText("Elenco completo")).toBeTruthy();
     expect(
       screen.getByRole("button", { name: "Settimana" }).getAttribute(
         "aria-pressed",
@@ -213,7 +213,7 @@ describe("RadarExperience", () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
     const { container } = renderRadar("table");
 
-    await screen.findByText("Tutti i segnali");
+    await screen.findByText("Elenco completo");
     expect(screen.getByRole("group", { name: "Periodo" })).toBeTruthy();
     expect(screen.getByRole("group", { name: "Vista" })).toBeTruthy();
 
