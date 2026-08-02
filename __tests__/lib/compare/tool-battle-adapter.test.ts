@@ -76,7 +76,8 @@ describe("tool-battle truth adapter", () => {
     expect(verdict.state).toBe("insufficient_evidence");
     expect(verdict.winner).toBeNull();
     expect(verdict.label).toBe("Dati insufficienti per un verdetto");
-    expect(verdict.reasons.join(" ")).toContain("Nessun vincitore automatico");
+    expect(verdict.reasons.join(" ")).toContain("Non sono ancora disponibili abbastanza valutazioni editoriali");
+    expect(verdict.reasons.join(" ")).not.toMatch(/score\.(value|provenance|verdict)/);
   });
 
   it("returns tie and no winner for equal supported assessments, regardless of slug", () => {

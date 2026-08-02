@@ -104,6 +104,9 @@ export function FeaturedPartner({
         "partner-placement partner-placement--featured",
         className,
       )}
+      data-placement-id={placement.key}
+      data-placement-surface={placement.surface}
+      data-sponsored="true"
     >
       <div className="partner-placement__rail" aria-hidden="true">
         <Sparkles />
@@ -129,6 +132,9 @@ export function PartnerToolCard({
     <aside
       aria-label={`Contenuto sponsorizzato: ${placement.partner.name}`}
       className={cn("partner-placement partner-placement--tool", className)}
+      data-placement-id={placement.key}
+      data-placement-surface={placement.surface}
+      data-sponsored="true"
     >
       <div className="partner-placement__tool-heading">
         <PartnerMeta formatLabel="Partner tool" />
@@ -157,6 +163,9 @@ export function ContextualPartnerBlock({
         "partner-placement partner-placement--contextual",
         className,
       )}
+      data-placement-id={placement.key}
+      data-placement-surface={placement.surface}
+      data-sponsored="true"
     >
       <div className="partner-placement__context-marker" aria-hidden="true">
         <BookOpenText />
@@ -185,6 +194,9 @@ export function PartnerCollectionModule({
         "partner-placement partner-placement--collection",
         className,
       )}
+      data-placement-id={placement.key}
+      data-placement-surface={placement.surface}
+      data-sponsored="true"
     >
       <div className="partner-placement__collection-index" aria-hidden="true">
         <span>Partner</span>

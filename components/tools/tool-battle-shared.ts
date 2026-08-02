@@ -3,6 +3,8 @@ import {
   rankCompareScores,
   scoreToolForCompare,
   type CompareScoreResult,
+  formatCompareMissingRequirements,
+  COMPARE_INSUFFICIENT_EVIDENCE_MESSAGE,
 } from "@/lib/compare/compare-score";
 import {
   COMPARE_OBJECTIVES,
@@ -236,13 +238,17 @@ export function getBattleVerdict(
 
   const unsupported = tools.filter((tool) => !hasSupportedAssessment(tool));
   if (tools.length === 0 || unsupported.length > 0) {
-    const pending = unsupported
-      .map((tool) => `${tool.name}: ${tool.compareScore.assessment.missing.join(", ")}`)
+    const pendingNames = unsupported.map((tool) => tool.name);
+    const pendingDetail = unsupported
+      .map((tool) => {
+        const detail = formatCompareMissingRequirements(tool.compareScore.assessment.missing);
+        return detail ? `${tool.name} (${detail})` : tool.name;
+      })
       .join("; ");
     return createVerdict("insufficient_evidence", scores, [
-      "Nessun vincitore automatico: ogni candidato deve avere una valutazione editoriale completa e verificata.",
-      pending
-        ? `Valutazioni ancora incomplete: ${pending}.`
+      COMPARE_INSUFFICIENT_EVIDENCE_MESSAGE,
+      pendingNames.length > 0
+        ? `Ancora in preparazione: ${pendingDetail}.`
         : "Aggiungi almeno due valutazioni editoriali complete per confrontarle.",
     ]);
   }

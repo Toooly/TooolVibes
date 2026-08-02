@@ -37,30 +37,44 @@ export const monetizationPlacements = [
     surface: "Homepage",
     format: "Featured tool nativo",
     packageName: "Homepage spotlight",
-    label: "Spazio partner",
-    title: "Uno slot per tool che meritano una prova vera.",
-    body: "Pensato per un tool sponsorizzato ma curato come contenuto TooolVibes: promessa chiara, contesto editoriale e passaggio naturale al profilo.",
-    ctaLabel: "Proponi partnership",
+    label: "Partner editoriale",
+    title: "Slot partner in home (demo sviluppo).",
+    body: "Placement di lancio per validare layout, disclosure e CTA. Non è una sponsorizzazione pubblicata di un brand reale.",
+    ctaLabel: "Scopri come funziona",
     href: "/affiliati",
-    status: "reserved",
+    status: "ready",
     visible: true,
     priority: 1,
-    audience: "Founder, SaaS e tool AI con fit editoriale forte.",
+    audience: "Utenti in esplorazione sulla home.",
+    partner: {
+      name: "Demo Partner Home",
+      category: "Dato di sviluppo",
+      href: "/affiliati",
+    },
+    editorialReason:
+      "Record demo per il launch: mostra come appare un partner editoriale in home senza fingere un brand reale.",
   },
   {
     key: "catalog-native-sponsor",
     surface: "Catalogo",
     format: "Placement categoria",
     packageName: "Category native",
-    label: "Partner editoriale",
-    title: "Un ingresso sponsorizzato dentro il flusso di scoperta.",
-    body: "Lo slot resta vicino a filtri e categorie, utile per promuovere un tool senza interrompere la ricerca dell'utente.",
-    ctaLabel: "Scopri i pacchetti",
+    label: "Sponsor",
+    title: "Partner contestuale nel catalogo (demo sviluppo).",
+    body: "Placement nativo nel flusso di scoperta. Contenuto di sviluppo chiaramente etichettato, non un brand inventato presentato come sponsor reale.",
+    ctaLabel: "Vedi i pacchetti",
     href: "/affiliati",
-    status: "reserved",
+    status: "ready",
     visible: true,
     priority: 2,
-    audience: "Tool che vogliono presidiare una categoria o un caso d'uso.",
+    audience: "Utenti che filtrano e confrontano tool nel catalogo.",
+    partner: {
+      name: "Demo Partner Catalogo",
+      category: "Dato di sviluppo",
+      href: "/affiliati",
+    },
+    editorialReason:
+      "Serve a verificare densità, disclosure e responsive del catalogo prima del go-live commerciale.",
   },
   {
     key: "guide-inline-promo",
@@ -97,15 +111,22 @@ export const monetizationPlacements = [
     surface: "Scheda tool",
     format: "Alternativa sponsorizzata",
     packageName: "Tool profile native",
-    label: "Alternativa partner",
-    title: "Uno spazio per alternative sponsorizzate ma dichiarate.",
-    body: "Compare vicino al profilo del tool, con una logica di confronto e scelta. Non sostituisce la selezione editoriale.",
-    ctaLabel: "Richiedi listing",
+    label: "Contenuto sponsorizzato",
+    title: "Alternativa partner in scheda tool (demo sviluppo).",
+    body: "Placement contestuale su scheda tool / confronto. Demo di sviluppo con disclosure esplicita, senza brand finti presentati come sponsor reali.",
+    ctaLabel: "Come diventare partner",
     href: "/affiliati",
-    status: "reserved",
+    status: "ready",
     visible: true,
     priority: 5,
-    audience: "Tool concorrenti o complementari con proposta chiara.",
+    audience: "Utenti in fase di decisione su una scheda tool.",
+    partner: {
+      name: "Demo Partner Tool",
+      category: "Dato di sviluppo",
+      href: "/affiliati",
+    },
+    editorialReason:
+      "Valida layout, CTA e fallback su scheda tool e superfici di decisione prima dell'inventory commerciale reale.",
   },
   {
     key: "collection-native-sponsor",
@@ -152,8 +173,14 @@ function hasPublicText(value: string | undefined) {
 function isAllowedPartnerUrl(value: string | undefined) {
   if (!hasPublicText(value)) return false;
 
+  const raw = (value as string).trim();
+  // Same-site relative paths are valid for internal partner CTAs / demo slots.
+  if (raw.startsWith("/") && !raw.startsWith("//")) {
+    return raw.length > 1 && !raw.includes("://");
+  }
+
   try {
-    const url = new URL(value as string);
+    const url = new URL(raw);
     return url.protocol === "https:" || url.protocol === "http:";
   } catch {
     return false;

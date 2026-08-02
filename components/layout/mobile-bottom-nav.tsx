@@ -1,19 +1,12 @@
 "use client";
 
 /**
- * TooolVibes — Mobile Bottom Nav (Definitive)
- * 2026-07-24
- *
- * Canonical mobile navigation, isolated from the retired footer-nav aliases:
- *  - Solid opaque shell with clear active state
- *  - Active route marker uses motion layoutId for smooth transitions
- *  - Static signal node on Radar
- *  - Badge pop-in animation for compare / saved counts
- *  - Per-item glyph + uppercase mono label
- *  - Hidden on desktop (xl = 1280px)
+ * TooolVibes — Mobile Bottom Nav
+ * Dynamic chrome: full → compact on decisive scroll-down, hidden deeper,
+ * restored on scroll-up / near page end / focus interactions.
  */
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -31,11 +24,20 @@ import {
   useWorkspaceNavCounts,
 } from "./workspace-nav-selectors";
 
+type NavChromeState = "expanded" | "compact" | "hidden";
+
+const SCROLL_DELTA_THRESHOLD = 12;
+const COMPACT_AFTER = 48;
+const HIDE_AFTER = 120;
+const BOTTOM_REVEAL_PX = 120;
+const TOP_FORCE_EXPAND_PX = 24;
+
 export function MobileBottomNav() {
   const preferReducedMotion = useReducedMotion();
   const pathname = usePathname();
   const navItems = useNavItems("bottom-nav");
   const [mounted, setMounted] = useState(false);
+  const [chromeState, setChromeState] = useState<NavChromeState>("expanded");
   const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
   const isCommandOpen = useToolWorkspaceStore((s) => s.isCommandOpen);
   const navCounts = useWorkspaceNavCounts();
@@ -43,130 +45,245 @@ export function MobileBottomNav() {
   const compareCount = navCounts.compare;
   const savedCount = accountAware ? navCounts.saved : 0;
 
+  const lastScrollY = useRef(0);
+  const lockedByInteraction = useRef(false);
+  const rafId = useRef<number | null>(null);
+  const innerRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  /* Fixed-surface contract (binding).
-     MobileBottomNav publishes --tv-bottom-nav-total on <html> while it is
-     mounted. Routes consume the value for their padding-bottom.
-     Hidden on desktop (≥1280px) where the value collapses to 0. */
   useEffect(() => {
+    setChromeState("expanded");
+    lastScrollY.current = typeof window !== "undefined" ? window.scrollY : 0;
+  }, [pathname]);
+
+  const publishNavTotal = useCallback(() => {
     if (typeof document === "undefined") return;
     const root = document.documentElement;
-    const setValue = () => {
-      const isDesktop =
-        typeof window.matchMedia === "function" &&
-        window.matchMedia("(min-width: 1280px)").matches;
-      const navHidden =
-        (pathname ?? '').startsWith("/admin") || (pathname ?? '').startsWith("/account");
-      if (isDesktop || navHidden) {
-        root.style.setProperty("--tv-bottom-nav-total", "0px");
-      } else {
-        // computed = nav height + safe-area + tray bottom-padding (6px)
-        const navEl = document.querySelector(".mobile-bottom-shell__inner");
-        const measured = navEl instanceof HTMLElement ? navEl.getBoundingClientRect().height : 0;
-        const safeArea = getComputedStyle(root).getPropertyValue("--tv-safe-area-bottom") || "0px";
-        const total = measured + 6;
-        if (total > 0) {
-          root.style.setProperty("--tv-bottom-nav-total", `${total}px`);
-        }
-        // touch-safe-area is unused for now but available for future
-        void safeArea;
+    const isDesktop =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(min-width: 1280px)").matches;
+    const navHidden =
+      (pathname ?? "").startsWith("/admin") ||
+      (pathname ?? "").startsWith("/account");
+    if (isDesktop || navHidden) {
+      root.style.setProperty("--tv-bottom-nav-total", "0px");
+      root.dataset.tvBottomNav = "off";
+      return;
+    }
+    // Always reserve expanded chrome height so content never jumps when
+    // the nav compacts or slides away.
+    const expandedHeight = 56;
+    const padding = 6;
+    const safe = Number.parseFloat(
+      getComputedStyle(root).getPropertyValue("env(safe-area-inset-bottom)") || "0",
+    );
+    // safe-area is already applied in CSS padding; reserve nav + tray slack.
+    const total = expandedHeight + padding;
+    root.style.setProperty("--tv-bottom-nav-total", `${total}px`);
+    root.dataset.tvBottomNav = chromeState;
+    void safe;
+  }, [pathname, chromeState]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    publishNavTotal();
+    window.addEventListener("resize", publishNavTotal);
+    return () => window.removeEventListener("resize", publishNavTotal);
+  }, [mounted, publishNavTotal]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    if (typeof window === "undefined") return;
+
+    const isEditableTarget = (target: EventTarget | null) => {
+      if (!(target instanceof Element)) return false;
+      return Boolean(
+        target.closest(
+          "input, textarea, select, [contenteditable='true'], [role='textbox'], [data-tv-keep-nav]",
+        ),
+      );
+    };
+
+    const onFocusIn = (event: FocusEvent) => {
+      if (isEditableTarget(event.target) || isOverlayOpen || isCommandOpen) {
+        lockedByInteraction.current = true;
+        setChromeState("expanded");
       }
     };
-    setValue();
-    window.addEventListener("resize", setValue);
-    return () => {
-      window.removeEventListener("resize", setValue);
+    const onFocusOut = () => {
+      window.setTimeout(() => {
+        const active = document.activeElement;
+        if (!isEditableTarget(active) && !isOverlayOpen && !isCommandOpen) {
+          lockedByInteraction.current = false;
+        }
+      }, 0);
     };
-  }, [mounted, pathname]);
+
+    const onScroll = () => {
+      if (rafId.current !== null) return;
+      rafId.current = window.requestAnimationFrame(() => {
+        rafId.current = null;
+        if (lockedByInteraction.current || isOverlayOpen || isCommandOpen) {
+          setChromeState("expanded");
+          lastScrollY.current = window.scrollY;
+          return;
+        }
+
+        const y = window.scrollY;
+        const prev = lastScrollY.current;
+        const delta = y - prev;
+        const doc = document.documentElement;
+        const maxScroll = Math.max(doc.scrollHeight - window.innerHeight, 0);
+        const nearBottom = maxScroll > 0 && y >= maxScroll - BOTTOM_REVEAL_PX;
+
+        if (y <= TOP_FORCE_EXPAND_PX || nearBottom) {
+          setChromeState("expanded");
+          lastScrollY.current = y;
+          return;
+        }
+
+        if (Math.abs(delta) < SCROLL_DELTA_THRESHOLD) {
+          return;
+        }
+
+        if (delta > 0) {
+          // Decisive downward motion: compact first, then hide.
+          setChromeState((current) => {
+            if (current === "expanded" && delta >= COMPACT_AFTER) return "compact";
+            if (current === "compact" && delta >= COMPACT_AFTER) return "hidden";
+            if (current === "expanded" && delta >= HIDE_AFTER) return "hidden";
+            if (current !== "hidden" && delta >= HIDE_AFTER) return "hidden";
+            return current === "expanded" ? "compact" : current;
+          });
+        } else {
+          // Upward motion restores full chrome immediately.
+          setChromeState("expanded");
+        }
+
+        lastScrollY.current = y;
+      });
+    };
+
+    lastScrollY.current = window.scrollY;
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("focusout", onFocusOut);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("focusin", onFocusIn);
+      document.removeEventListener("focusout", onFocusOut);
+      if (rafId.current !== null) {
+        window.cancelAnimationFrame(rafId.current);
+      }
+    };
+  }, [mounted, isOverlayOpen, isCommandOpen]);
+
+  useEffect(() => {
+    if (isOverlayOpen || isCommandOpen) {
+      lockedByInteraction.current = true;
+      setChromeState("expanded");
+    } else {
+      lockedByInteraction.current = false;
+    }
+  }, [isOverlayOpen, isCommandOpen]);
 
   if (
     !mounted ||
-    (pathname ?? '').startsWith("/admin") ||
-    (pathname ?? '').startsWith("/account")
+    (pathname ?? "").startsWith("/admin") ||
+    (pathname ?? "").startsWith("/account")
   ) {
     return null;
   }
 
+  const suppressed = isOverlayOpen || isCommandOpen;
+
   const nav = (
-    <div className="mobile-bottom-shell">
+    <div
+      className={cn(
+        "mobile-bottom-shell",
+        `mobile-bottom-shell--${chromeState}`,
+        preferReducedMotion && "mobile-bottom-shell--reduced",
+      )}
+      data-state={chromeState}
+    >
       <nav
+        ref={(node) => {
+          innerRef.current = node;
+        }}
         aria-label="Navigazione mobile principale"
         className={cn(
           "mobile-bottom-shell__inner mobile-bottom-motion",
-          (isOverlayOpen || isCommandOpen) &&
-            "is-suppressed pointer-events-none opacity-0",
+          suppressed && "is-suppressed pointer-events-none opacity-0",
         )}
       >
         <div className="mobile-bottom-shell__grid">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = isNavRouteActive(pathname, item.href);
-          const badgeCount = item.id === "compare"
-            ? compareCount
-            : item.id === "shortlist"
-              ? savedCount
-              : 0;
-          const badgeAria = item.id === "compare"
-            ? `${compareCount} tool in confronto`
-            : item.id === "shortlist"
-              ? `${savedCount} tool salvati`
-              : undefined;
-          return (
-            <Link
-              key={item.id}
-              href={item.href}
-              prefetch={false}
-              aria-current={isActive ? "page" : undefined}
-              aria-label={badgeCount > 0 && badgeAria ? `${item.label}, ${badgeAria}` : undefined}
-              className={cn(
-                "mobile-bottom-item",
-                isActive && "is-active",
-              )}
-            >
-              <span className="mobile-bottom-item__icon-wrap">
-                {isActive ? (
-                  <motion.span
-                    layoutId="mobile-bottom-marker"
-                    className="mobile-bottom-item__marker"
-                    transition={layoutMarkerTransition({ preferReducedMotion })}
-                    aria-hidden="true"
-                  />
-                ) : null}
-                {Icon ? (
-                  <Icon
-                    size={18}
-                    className="mobile-bottom-item__glyph"
-                    aria-hidden="true"
-                  />
-                ) : null}
-                {badgeCount > 0 ? (
-                  <motion.span
-                    key={badgeCount}
-                    initial={preferReducedMotion ? false : { scale: 0.4, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={microPopTransition({ preferReducedMotion })}
-                    className="mobile-bottom-item__badge"
-                    aria-label={badgeAria}
-                  >
-                    {badgeCount}
-                  </motion.span>
-                ) : null}
-                {item.id === "radar" ? (
-                  <span
-                    aria-hidden="true"
-                    className="mobile-bottom-item__node"
-                  />
-                ) : null}
-              </span>
-              <span className="mobile-bottom-item__label">
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = isNavRouteActive(pathname, item.href);
+            const badgeCount =
+              item.id === "compare"
+                ? compareCount
+                : item.id === "shortlist"
+                  ? savedCount
+                  : 0;
+            const badgeAria =
+              item.id === "compare"
+                ? `${compareCount} tool in confronto`
+                : item.id === "shortlist"
+                  ? `${savedCount} tool salvati`
+                  : undefined;
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                prefetch={false}
+                aria-current={isActive ? "page" : undefined}
+                aria-label={
+                  badgeCount > 0 && badgeAria
+                    ? `${item.label}, ${badgeAria}`
+                    : undefined
+                }
+                className={cn("mobile-bottom-item", isActive && "is-active")}
+              >
+                <span className="mobile-bottom-item__icon-wrap">
+                  {isActive ? (
+                    <motion.span
+                      layoutId="mobile-bottom-marker"
+                      className="mobile-bottom-item__marker"
+                      transition={layoutMarkerTransition({ preferReducedMotion })}
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  {Icon ? (
+                    <Icon
+                      size={18}
+                      className="mobile-bottom-item__glyph"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  {badgeCount > 0 ? (
+                    <motion.span
+                      key={badgeCount}
+                      initial={preferReducedMotion ? false : { scale: 0.4, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={microPopTransition({ preferReducedMotion })}
+                      className="mobile-bottom-item__badge"
+                      aria-label={badgeAria}
+                    >
+                      {badgeCount}
+                    </motion.span>
+                  ) : null}
+                  {item.id === "radar" ? (
+                    <span aria-hidden="true" className="mobile-bottom-item__node" />
+                  ) : null}
+                </span>
+                <span className="mobile-bottom-item__label">{item.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </div>

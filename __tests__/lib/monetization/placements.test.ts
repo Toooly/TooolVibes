@@ -8,14 +8,31 @@ import {
 
 describe("public monetization placement policy", () => {
   it("keeps reserved and planned inventory out of public routes", () => {
+    // Launch demo slots are intentionally public-ready and labeled as development data.
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("home-featured-tool"),
       ),
-    ).toBe(false);
+    ).toBe(true);
+    expect(
+      isPublicMonetizationPlacement(
+        getMonetizationPlacement("catalog-native-sponsor"),
+      ),
+    ).toBe(true);
+    expect(
+      isPublicMonetizationPlacement(
+        getMonetizationPlacement("tool-sponsored-alternative"),
+      ),
+    ).toBe(true);
+    // Planned inventory without a complete partner identity stays private.
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("article-sidebar-sponsor"),
+      ),
+    ).toBe(false);
+    expect(
+      isPublicMonetizationPlacement(
+        getMonetizationPlacement("newsletter-placement"),
       ),
     ).toBe(false);
   });

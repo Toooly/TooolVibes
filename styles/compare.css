@@ -671,7 +671,7 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 0.75rem);
+  bottom: calc(var(--tv-bottom-nav-total, 4.0625rem) + env(safe-area-inset-bottom) + 0.75rem);
   z-index: 45;
   display: flex;
   justify-content: center;
@@ -2927,4 +2927,52 @@
       color-mix(in srgb, var(--tv-accent-gold) 10%, transparent),
       color-mix(in srgb, var(--tv-surface-raised) 92%, transparent)
     );
+}
+
+
+/* Pre-launch mobile matrix: fluid cells, no crushed columns, clear scroll affordance */
+@media (max-width: 47.99rem) {
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-cell,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-cell {
+    width: min(70vw, 12.5rem);
+    min-width: min(70vw, 12.5rem);
+    max-width: min(70vw, 12.5rem);
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-axis,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-axis {
+    width: min(32vw, 6.5rem);
+    min-width: min(32vw, 5.5rem);
+    max-width: min(32vw, 6.5rem);
+  }
+
+  .mobile-compare-arena__matrix-tool,
+  .mobile-compare-arena__matrix-value,
+  .mobile-compare-arena__matrix-verdict-card strong,
+  .mobile-compare-arena__matrix-verdict-card small,
+  .mobile-compare-arena__matrix-axis > span,
+  .mobile-compare-arena__matrix-axis > small {
+    overflow-wrap: anywhere;
+    word-break: normal;
+    hyphens: auto;
+  }
+
+  .mobile-compare-arena__matrix-scroll-wrap {
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.35rem;
+  }
+
+  .mobile-compare-arena__matrix-cell {
+    scroll-snap-align: start;
+  }
+
+  .mobile-compare-arena__action-area {
+    bottom: calc(var(--tv-bottom-nav-total, 4.0625rem) + env(safe-area-inset-bottom) + 0.75rem);
+  }
+
+  .mobile-compare-arena,
+  .tool-battle-page {
+    padding-bottom: calc(var(--tv-bottom-nav-total, 4.0625rem) + env(safe-area-inset-bottom) + var(--tv-space-10, 2.5rem));
+  }
 }

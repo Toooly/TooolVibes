@@ -69,8 +69,31 @@ export type CompareScoreResult = {
   explanation: string[];
 };
 
-const SUPPORT_FIELDS =
-  "score.value, score.provenance.kind, score.provenance.methodologyVersion, score.provenance.assessedAt, score.verdict, editorial.evidence, editorial.limitations";
+const SUPPORT_FIELDS = "valutazione-editoriale";
+
+/** Public-facing labels for incomplete assessment requirements. Never expose raw schema keys. */
+const REQUIREMENT_PUBLIC_LABEL: Record<CompareAssessmentRequirement, string> = {
+  "score.value": "punteggio editoriale",
+  "score.provenance.kind": "fonte della valutazione",
+  "score.provenance.methodologyVersion": "metodo di valutazione",
+  "score.provenance.assessedAt": "data di verifica",
+  "score.verdict": "verdetto editoriale",
+  "editorial.evidence": "evidenze a supporto",
+  "editorial.limitations": "limiti dichiarati",
+};
+
+export function formatCompareMissingRequirements(
+  missing: readonly CompareAssessmentRequirement[],
+): string {
+  if (missing.length === 0) return "";
+  const labels = missing.map((key) => REQUIREMENT_PUBLIC_LABEL[key] ?? "dato editoriale");
+  if (labels.length === 1) return labels[0];
+  if (labels.length === 2) return `${labels[0]} e ${labels[1]}`;
+  return `${labels.slice(0, -1).join(", ")} e ${labels[labels.length - 1]}`;
+}
+
+export const COMPARE_INSUFFICIENT_EVIDENCE_MESSAGE =
+  "Non sono ancora disponibili abbastanza valutazioni editoriali per determinare un vincitore.";
 
 function hasText(value: string | null | undefined): value is string {
   return typeof value === "string" && value.trim().length > 0;
@@ -136,20 +159,40 @@ function assessmentComponent(
   };
 }
 
+function formatAssessedDate(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat("it-IT", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
+
 function buildExplanation(
   tool: ToolPublic,
   total: number | null,
   missing: CompareAssessmentRequirement[],
 ): string[] {
   if (total === null) {
+    const detail = formatCompareMissingRequirements(missing);
     return [
-      `${tool.name}: valutazione editoriale in preparazione. Nessun punteggio viene mostrato finché non sono disponibili: ${missing.join(", ")}.`,
+      detail
+        ? `${tool.name}: valutazione editoriale in preparazione. Mancano ancora ${detail}.`
+        : `${tool.name}: valutazione editoriale in preparazione.`,
+      COMPARE_INSUFFICIENT_EVIDENCE_MESSAGE,
     ];
   }
 
+  const verifiedOn = formatAssessedDate(tool.score?.provenance.assessedAt);
   return [
-    `${tool.name}: valutazione editoriale esplicita ${total}/10, verificata il ${tool.score?.provenance.assessedAt}.`,
-    `Verdetto editoriale: ${tool.score?.verdict}.`,
+    verifiedOn
+      ? `${tool.name}: valutazione editoriale ${total}/10, verificata il ${verifiedOn}.`
+      : `${tool.name}: valutazione editoriale ${total}/10.`,
+    tool.score?.verdict
+      ? `Verdetto editoriale: ${tool.score.verdict}.`
+      : "Verdetto editoriale disponibile.",
     "Il valore non incorpora quantità di prove, casi d'uso, tag o completezza dei campi.",
   ];
 }
