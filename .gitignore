@@ -71,3 +71,6 @@ audits/final-visual-simplification-2026-07-28/
 .codex/
 .eslintignore
 supabase/.branches/
+
+# Local prelaunch visual evidence (kept outside git)
+audits/prelaunch-*/
