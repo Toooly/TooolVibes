@@ -12,6 +12,7 @@ import {
 import { ToolDetailHero } from "./tool-detail-hero";
 import { ToolDetailScore } from "./tool-detail-score";
 import { ToolDetailEditorial } from "./tool-detail-editorial";
+import { ToolDetailExtendedContent } from "./tool-detail-extended-content";
 import { ToolDetailDecisionNav } from "./tool-detail-decision-nav";
 import { ToolDetailInformation } from "./tool-detail-information";
 import { ToolDetailSignal } from "./tool-detail-signal";
@@ -146,6 +147,10 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
 
         <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
         <ToolDetailEditorial tool={tool} />
+        <ToolDetailExtendedContent
+          content={tool.extendedContent}
+          toolName={tool.name}
+        />
         <ToolDetailInformation tool={tool} />
         <ToolDetailSignal tool={tool} />
         <ToolDetailAlternatives current={tool} related={relatedTools} />

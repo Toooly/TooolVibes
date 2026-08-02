@@ -1,4 +1,5 @@
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import { getToolExtendedContent } from "@/lib/data/tool-extended-content";
 import type { ToolPublic } from "@/lib/types/tool-public";
 
 export type ToolPublicView = {
@@ -39,6 +40,14 @@ export type ToolPublicView = {
   cautions: string[];
   accentFrom: string | null;
   accentTo: string | null;
+  /**
+   * Editorial body (Overview, Features, Use cases narrative, Strengths,
+   * Limitations, Editorial verdict, FAQ) sourced from
+   * docs/final-copy/tools/<slug>_FINAL_COPY.md. Null when the body is not
+   * available. The renderer in tool-detail-final/tool-detail-extended-content.tsx
+   * shows this only when present.
+   */
+  extendedContent: string | null;
 };
 
 export type ToolFilterGroup = {
@@ -185,6 +194,7 @@ export function createToolPublicView(
     cautions,
     accentFrom: directoryTool?.accentFrom ?? null,
     accentTo: directoryTool?.accentTo ?? null,
+    extendedContent: getToolExtendedContent(tool.slug),
   };
 }
 

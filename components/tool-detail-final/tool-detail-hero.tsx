@@ -57,12 +57,12 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
           {tool.toolOfWeek ? (
             <span className="td-final-chip td-final-chip--tool-of-week">
               <span className="td-final-chip__dot" aria-hidden="true" />
-              Tool della settimana
+              Selezione della redazione
             </span>
           ) : tool.featured ? (
             <span className="td-final-chip td-final-chip--featured">
               <span className="td-final-chip__dot" aria-hidden="true" />
-              In evidenza
+              In evidenza editoriale
             </span>
           ) : null}
         </div>
