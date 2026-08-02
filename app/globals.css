@@ -10723,12 +10723,56 @@ img {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Editorial markdown dark-mode overrides. The base tokens for
+     --foreground / --muted / --muted-strong / --accent-strong are
+     scoped only to light surfaces (.brand-panel, .premium-panel-light,
+     etc.) and would otherwise stay dark on the tool-detail dark canvas,
+     making the editorial body invisible. Force them to light-on-dark
+     values whenever the page is in dark mode. */
+  --foreground: oklch(0.985 0 0);
+  --muted: rgba(240, 239, 255, 0.78);
+  --muted-strong: rgba(240, 239, 255, 0.92);
+  --accent-strong: var(--tv-accent-cyan-on-dark, #4ccaf7);
+  --line: rgba(240, 239, 255, 0.18);
 }
 
 .editorial-markdown {
   color: var(--foreground);
   font-size: 1rem;
   line-height: 1.82;
+}
+
+/* Editorial markdown in dark canvas. The marketing-shell main is
+   permanently dark (#08080a via --tv-bg-base). When the body markdown
+   is rendered directly inside main (tool detail extended content) and
+   NOT inside a light-surface wrapper (.brand-panel / .premium-panel-
+   light / etc.), the default editorial tokens (--foreground,
+   --muted-strong) stay dark and the body becomes invisible. Force
+   light-on-dark values for that exact context. */
+.marketing-shell > main .editorial-markdown:not(.inside-light-surface) {
+  --foreground: rgba(240, 239, 255, 0.95);
+  --muted: rgba(240, 239, 255, 0.72);
+  --muted-strong: rgba(240, 239, 255, 0.9);
+  --accent-strong: var(--tv-accent-cyan-on-dark, #4ccaf7);
+  --line: rgba(240, 239, 255, 0.18);
+}
+
+.marketing-shell > main .editorial-markdown:not(.inside-light-surface) :is(img, video, iframe) {
+  background: rgba(8, 8, 10, 0.72);
+}
+
+.marketing-shell > main .editorial-markdown:not(.inside-light-surface) .blog-callout {
+  background:
+    radial-gradient(circle at top right, rgba(57, 210, 246, 0.16), transparent 32%),
+    linear-gradient(180deg, rgba(20, 12, 50, 0.92), rgba(14, 8, 38, 0.94));
+  border-color: rgba(106, 60, 255, 0.32);
+}
+
+.marketing-shell > main .editorial-markdown:not(.inside-light-surface) blockquote {
+  background:
+    linear-gradient(180deg, rgba(106, 60, 255, 0.16), rgba(20, 12, 50, 0.32));
+  border-left-color: var(--tv-accent-cyan-on-dark, #4ccaf7);
 }
 
 .editorial-markdown > * + * {
