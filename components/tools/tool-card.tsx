@@ -58,7 +58,7 @@ function ToolCardComponent({
     const editorialState = getToolEditorialState(tool, index);
 
     if (priority || tool.is_featured) {
-      return "In evidenza";
+      return "In evidenza editoriale";
     }
 
     return editorialState === "Selezione core" ? undefined : editorialState;
@@ -363,7 +363,7 @@ function ToolCardComponent({
                 className="selection-chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                 style={{ background: "rgba(248,240,215,0.94)", color: "var(--muted-strong)" }}
               >
-                In evidenza
+                In evidenza editoriale
               </span>
             ) : null}
           </div>

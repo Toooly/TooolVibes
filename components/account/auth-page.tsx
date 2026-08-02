@@ -232,7 +232,7 @@ export function AuthPage() {
                       className="v-auth-checkbox"
                     />
                     <span>
-                      Accetto di ricevere la mail di conferma e i termini del servizio.
+                      Accetto di ricevere la mail di conferma e i <a href="/termini" className="underline hover:text-white">termini del servizio</a>.
                     </span>
                   </label>
                 )}

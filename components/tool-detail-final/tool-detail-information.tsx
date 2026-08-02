@@ -81,10 +81,10 @@ export function ToolDetailInformation({ tool }: ToolDetailInformationProps) {
           </dd>
         </div>
         <div className="td-final-information__row">
-          <dt>In evidenza</dt>
+          <dt>In evidenza editoriale</dt>
           <dd>
             {tool.toolOfWeek
-              ? "Sì — è il Tool della settimana"
+              ? "Sì — è la selezione della redazione"
               : tool.featured
                 ? "Sì — è in evidenza editoriale"
                 : "No — profilo standard del catalogo"}

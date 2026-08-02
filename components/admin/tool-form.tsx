@@ -325,7 +325,7 @@ export function ToolForm({
               <ToggleCard
                 name="is_featured"
                 title="Tool in evidenza"
-                description="Mostralo nella selezione settimanale e nei punti più curati del prodotto."
+                description="Mostralo nella selezione della redazione e nei punti più curati del prodotto."
                 defaultChecked={values.is_featured}
               />
               <ToggleCard

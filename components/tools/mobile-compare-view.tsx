@@ -747,7 +747,7 @@ export function MobileCompareView({
             <Scale className="size-5" />
           </span>
           <span className="mobile-compare-arena__fight-copy">
-            <strong>{battleState === "result" ? "Rivaluta" : battleState === "idle" ? "Valuta il confronto" : "Analisi..."}</strong>
+            <strong>{battleState === "result" ? "Aggiorna il verdetto" : battleState === "idle" ? "Analizza il confronto" : "Analisi in corso…"}</strong>
             <small>{battleState === "result" ? "aggiorna la lettura" : "leggi le differenze verificabili"}</small>
           </span>
         </button>

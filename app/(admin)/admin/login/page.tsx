@@ -2,7 +2,6 @@ import { BrandLogo } from "@/components/layout/brand-logo";
 import { LoginForm } from "@/components/admin/login-form";
 import { PremiumPanel } from "@/components/ui/premium";
 import { isAdminSessionUnlocked } from "@/lib/admin/session";
-import { marketingStrings } from "@/lib/config/strings";
 import { redirect } from "next/navigation";
 
 const loginErrorCodes = ["credentials", "missing-fields", "rate-limited", "config"] as const;
@@ -49,9 +48,9 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
               <p className="text-sm text-white/58">Founders access</p>
             </div>
           </div>
-          <h1 className="mt-4 text-[2rem] leading-[1.1] sm:text-[2.2rem]">{marketingStrings.admin.loginTitle}</h1>
+          <h1 className="mt-4 text-[2rem] leading-[1.1] sm:text-[2.2rem]">Accesso interno</h1>
           <p className="mt-3 text-[0.98rem] leading-7 text-white/72">
-            {marketingStrings.admin.loginDescription}
+            Inserisci la password riservata per entrare nella dashboard editoriale.
           </p>
 
           <LoginForm errorCode={errorCode} />

@@ -7,7 +7,7 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Confronto tool",
-  description: "Confronta tool salvati e alternative per scegliere lo stack piu adatto.",
+  description: "Confronta tool salvati e alternative per scegliere lo stack più adatto.",
   path: "/compare",
 });
 

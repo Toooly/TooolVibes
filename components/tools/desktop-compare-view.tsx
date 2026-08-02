@@ -210,7 +210,7 @@ export function DesktopCompareView({
           </div>
           <span className="desktop-compare__status" aria-live="polite" aria-atomic="true">
             {battleState === "idle" && "Pronto"}
-            {battleState === "fighting" && "Analisi..."}
+            {battleState === "fighting" && "Analisi in corso…"}
             {battleState === "result" && (winner ? `Scelta: ${winner.name}` : verdict?.label)}
           </span>
         </header>
@@ -257,7 +257,7 @@ export function DesktopCompareView({
                 onClick={handleFight}
               >
                 <Scale className="size-5" aria-hidden="true" />
-                {battleState === "fighting" ? "Analisi..." : battleState === "result" ? "Rivaluta" : "Valuta il confronto"}
+                {battleState === "fighting" ? "Analisi in corso…" : battleState === "result" ? "Aggiorna il verdetto" : "Analizza il confronto"}
               </button>
             </div>
 

@@ -180,7 +180,7 @@ export default async function PostsPage() {
         <section className="home-section-gap">
           <div className="posts-featured-panel section-stage rounded-[38px] p-6 sm:p-8 lg:p-9">
             <h2 className="editorial-label !text-white/58 mb-5">
-              In evidenza
+              In evidenza editoriale
             </h2>
 
             <div className="flex flex-col gap-4">

@@ -27,7 +27,7 @@ const LEVEL_LABEL: Record<string, string> = {
   beginner: "Principiante",
   intermediate: "Intermedio",
   expert: "Esperto",
-  featured: "In evidenza",
+  featured: "Segnalato",
 };
 
 type AlternativeDecisionCardProps = {
