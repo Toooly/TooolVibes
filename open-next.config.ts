@@ -1,20 +1,13 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 
-// `buildCommand` forces the OpenNext `npm run build` invocation to use `bun`.
-// Required because the local environment has only bun installed (no node/npm)
-// and OpenNext's build helper would otherwise try to invoke `npm run build`
-// which fails with ENOENT. The `defineCloudflareConfig()` wrapper currently
-// drops unknown top-level fields, so we spread its result and re-attach
-// `buildCommand` at the top level here.
-//
-// This file is the single source of truth for the build invocation command
-// on the deploy path. Removing it falls back to the @opennextjs/aws default
-// (which inspects the lockfile to pick the packager).
+// Cloudflare Workers Builds and local release path both use Node 22.23.1 + npm.
+// Do not force bun here: CF builders do not guarantee bun, and an empty bun.lock
+// previously made Git-connected builds fail while manual wrangler deploys worked.
 const baseConfig = defineCloudflareConfig();
 
 const config = {
   ...baseConfig,
-  buildCommand: "bun run build",
+  buildCommand: "npm run build",
 };
 
 export default config;
