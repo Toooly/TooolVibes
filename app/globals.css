@@ -28579,3 +28579,35 @@ img {
     transition: none;
   }
 }
+
+
+/* Final decision feedback — save / compare chips */
+.selection-chip.is-fresh,
+.toggle-chip-glow.is-fresh {
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--tv-accent-primary) 35%, transparent),
+    0 8px 22px color-mix(in srgb, var(--tv-accent-primary) 22%, transparent);
+}
+
+.selection-chip.is-active,
+.toggle-chip-glow.is-active {
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 40%, transparent);
+}
+
+.selection-chip:active,
+.toggle-chip-glow:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selection-chip,
+  .toggle-chip-glow {
+    transition: none !important;
+  }
+  .selection-chip:hover,
+  .toggle-chip-glow:hover,
+  .selection-chip:active,
+  .toggle-chip-glow:active {
+    transform: none !important;
+  }
+}

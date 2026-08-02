@@ -26,13 +26,22 @@ function resolvePublicPlacement(placementKey: MonetizationPlacementKey) {
   return isPublicMonetizationPlacement(placement) ? placement : null;
 }
 
-function PartnerMeta({ formatLabel }: { formatLabel: string }) {
+function PartnerMeta({
+  formatLabel,
+  isDemo,
+}: {
+  formatLabel: string;
+  isDemo?: boolean;
+}) {
   return (
     <div className="partner-placement__meta">
       <span className="partner-placement__disclosure">
         Contenuto sponsorizzato
       </span>
       <span className="partner-placement__format">{formatLabel}</span>
+      {isDemo ? (
+        <span className="partner-placement__demo">Demo sviluppo</span>
+      ) : null}
     </div>
   );
 }
@@ -42,10 +51,17 @@ function PartnerIdentity({
 }: {
   placement: PublicMonetizationPlacement;
 }) {
+  const logo = placement.partner.logo ?? placement.logo ?? null;
+
   return (
     <div className="partner-placement__identity">
       <span className="partner-placement__identity-mark" aria-hidden="true">
-        <Building2 />
+        {logo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={logo} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <Building2 />
+        )}
       </span>
       <span className="partner-placement__identity-copy">
         <strong>{placement.partner.name}</strong>
@@ -82,12 +98,29 @@ function PartnerAction({
         href={placement.partner.href}
         target={isExternal ? "_blank" : undefined}
         rel={isExternal ? "sponsored noopener noreferrer" : "sponsored"}
+        data-tracking-id={placement.trackingId}
       >
         <span>{placement.ctaLabel}</span>
         <ArrowUpRight aria-hidden="true" />
       </Link>
     </div>
   );
+}
+
+function placementShellProps(
+  placement: PublicMonetizationPlacement,
+  className: string | undefined,
+  variant: string,
+) {
+  return {
+    "aria-label": `Contenuto sponsorizzato: ${placement.partner.name}`,
+    className: cn("partner-placement", variant, className),
+    "data-placement-id": placement.placementId ?? placement.key,
+    "data-placement-surface": placement.surface,
+    "data-tracking-id": placement.trackingId,
+    "data-sponsored": "true" as const,
+    "data-demo": placement.partner.isDemo ? "true" : undefined,
+  };
 }
 
 export function FeaturedPartner({
@@ -99,20 +132,20 @@ export function FeaturedPartner({
 
   return (
     <aside
-      aria-label={`Contenuto sponsorizzato: ${placement.partner.name}`}
-      className={cn(
-        "partner-placement partner-placement--featured",
+      {...placementShellProps(
+        placement,
         className,
+        "partner-placement--featured",
       )}
-      data-placement-id={placement.key}
-      data-placement-surface={placement.surface}
-      data-sponsored="true"
     >
       <div className="partner-placement__rail" aria-hidden="true">
         <Sparkles />
       </div>
       <div className="partner-placement__body">
-        <PartnerMeta formatLabel="Featured partner" />
+        <PartnerMeta
+          formatLabel="Featured partner"
+          isDemo={placement.partner.isDemo}
+        />
         <PartnerIdentity placement={placement} />
         <PartnerEditorial placement={placement} />
       </div>
@@ -130,14 +163,13 @@ export function PartnerToolCard({
 
   return (
     <aside
-      aria-label={`Contenuto sponsorizzato: ${placement.partner.name}`}
-      className={cn("partner-placement partner-placement--tool", className)}
-      data-placement-id={placement.key}
-      data-placement-surface={placement.surface}
-      data-sponsored="true"
+      {...placementShellProps(placement, className, "partner-placement--tool")}
     >
       <div className="partner-placement__tool-heading">
-        <PartnerMeta formatLabel="Partner tool" />
+        <PartnerMeta
+          formatLabel="Partner tool"
+          isDemo={placement.partner.isDemo}
+        />
         <BadgeCheck aria-hidden="true" />
       </div>
       <div className="partner-placement__body">
@@ -158,20 +190,20 @@ export function ContextualPartnerBlock({
 
   return (
     <aside
-      aria-label={`Contenuto sponsorizzato: ${placement.partner.name}`}
-      className={cn(
-        "partner-placement partner-placement--contextual",
+      {...placementShellProps(
+        placement,
         className,
+        "partner-placement--contextual",
       )}
-      data-placement-id={placement.key}
-      data-placement-surface={placement.surface}
-      data-sponsored="true"
     >
       <div className="partner-placement__context-marker" aria-hidden="true">
         <BookOpenText />
       </div>
       <div className="partner-placement__body">
-        <PartnerMeta formatLabel="Partner della lettura" />
+        <PartnerMeta
+          formatLabel="Partner della lettura"
+          isDemo={placement.partner.isDemo}
+        />
         <PartnerEditorial placement={placement} />
         <PartnerIdentity placement={placement} />
       </div>
@@ -189,21 +221,21 @@ export function PartnerCollectionModule({
 
   return (
     <aside
-      aria-label={`Contenuto sponsorizzato: ${placement.partner.name}`}
-      className={cn(
-        "partner-placement partner-placement--collection",
+      {...placementShellProps(
+        placement,
         className,
+        "partner-placement--collection",
       )}
-      data-placement-id={placement.key}
-      data-placement-surface={placement.surface}
-      data-sponsored="true"
     >
       <div className="partner-placement__collection-index" aria-hidden="true">
         <span>Partner</span>
         <Layers3 />
       </div>
       <div className="partner-placement__body">
-        <PartnerMeta formatLabel="Partner della raccolta" />
+        <PartnerMeta
+          formatLabel="Partner della raccolta"
+          isDemo={placement.partner.isDemo}
+        />
         <PartnerIdentity placement={placement} />
         <PartnerEditorial placement={placement} />
       </div>

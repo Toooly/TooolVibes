@@ -316,3 +316,32 @@
     transition: none;
   }
 }
+
+
+.partner-placement__demo {
+  display: inline-flex;
+  min-height: 1.5rem;
+  align-items: center;
+  border-radius: var(--tv-radius-pill);
+  padding-inline: var(--tv-space-micro-sm);
+  border: 1px dashed color-mix(in srgb, var(--tv-status-warning) 55%, transparent);
+  color: var(--tv-status-warning);
+  background: color-mix(in srgb, var(--tv-status-warning) 10%, transparent);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-label);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.partner-placement__identity-mark img {
+  width: 1.35rem;
+  height: 1.35rem;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.partner-placement[data-demo="true"] {
+  border-style: dashed;
+}
