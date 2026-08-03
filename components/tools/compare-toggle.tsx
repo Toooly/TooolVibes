@@ -10,6 +10,8 @@ type CompareToggleProps = {
   slug: string;
   compact?: boolean;
   mode?: "default" | "icon";
+  /** Tool name for tool-specific aria-labels (V2 catalog contract). */
+  toolName?: string;
   onChange?: (selected: boolean) => void;
 };
 
@@ -17,6 +19,7 @@ export function CompareToggle({
   slug,
   compact = false,
   mode = "default",
+  toolName,
   onChange,
 }: CompareToggleProps) {
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
@@ -77,6 +80,13 @@ export function CompareToggle({
   const isReady = count >= MIN_COMPARE_TOOLS;
 
   if (mode === "icon") {
+    const ariaLabel = toolName
+      ? isSelected
+        ? `Rimuovi ${toolName} dal confronto`
+        : `Aggiungi ${toolName} al confronto`
+      : isSelected
+        ? "Rimuovi dal confronto"
+        : "Aggiungi al confronto";
     return (
       <button
         type="button"
@@ -92,7 +102,7 @@ export function CompareToggle({
           color: isSelected ? "var(--accent-strong)" : "var(--muted-strong)",
         }}
         aria-pressed={isSelected}
-        aria-label={isSelected ? "Rimuovi dal confronto" : "Aggiungi al confronto"}
+        aria-label={ariaLabel}
         data-sonic-action="compare"
       >
         <Columns3 className="h-4 w-4" aria-hidden="true" />

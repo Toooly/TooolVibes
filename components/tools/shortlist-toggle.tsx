@@ -9,6 +9,8 @@ type ShortlistToggleProps = {
   slug: string;
   compact?: boolean;
   mode?: "default" | "compact" | "icon";
+  /** Tool name for tool-specific aria-labels (V2 catalog contract). */
+  toolName?: string;
   onChange?: (saved: boolean) => void;
 };
 
@@ -16,6 +18,7 @@ export function ShortlistToggle({
   slug,
   compact = false,
   mode = "default",
+  toolName,
   onChange,
 }: ShortlistToggleProps) {
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
@@ -56,6 +59,13 @@ export function ShortlistToggle({
   };
 
   if (mode === "icon") {
+    const ariaLabel = toolName
+      ? isSaved
+        ? `Rimuovi ${toolName} dai salvati`
+        : `Salva ${toolName}`
+      : isSaved
+        ? "Rimuovi dai salvati"
+        : "Salva tool";
     return (
       <button
         type="button"
@@ -71,7 +81,7 @@ export function ShortlistToggle({
           color: isSaved ? "var(--accent-strong)" : "var(--muted-strong)",
         }}
         aria-pressed={isSaved}
-        aria-label={isSaved ? "Rimuovi dai salvati" : "Salva tool"}
+        aria-label={ariaLabel}
         data-sonic-action="save"
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">

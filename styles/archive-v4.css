@@ -2081,3 +2081,440 @@ a.archive-v4-card:focus-visible {
     0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 55%, transparent),
     0 0 0 4px color-mix(in srgb, var(--tv-accent-primary) 16%, transparent);
 }
+
+/* ============================================================
+   CATALOG V2 (2026-08-03) — new selectors on top of v4.
+   - Hero eyebrow split (desktop/mobile via CSS)
+   - Search clear button + helper
+   - Data synth rail (compact mobile vs full desktop)
+   - Categorie section (chip rail + expand/collapse)
+   - Sort dropdown (desktop + mobile)
+   - Grid supporting copy + empty state (title/body/CTA dual)
+   - Sheet title + description + clear button
+   - Card V2 badges (editorial / sponsored / tier)
+   - Card affiliate disclosure
+   - Utility: .sr-only for visually hidden labels
+   ============================================================ */
+
+/* — Utility: visually hidden, accessible to screen readers — */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* — Hero eyebrow split — */
+.ar4-intro__eyebrow-desktop { display: inline; }
+.ar4-intro__eyebrow-mobile { display: none; }
+@media (max-width: 47.99rem) {
+  .ar4-intro__eyebrow-desktop { display: none; }
+  .ar4-intro__eyebrow-mobile { display: inline; }
+}
+
+/* — Hero search clear button — */
+.ar4-intro__search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 10%, transparent);
+  color: var(--tv-ink-inverted-muted);
+  border: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 200ms ease, color 200ms ease;
+}
+.ar4-intro__search-clear:hover {
+  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 18%, transparent);
+  color: var(--tv-ink-inverted-primary);
+}
+
+/* — Hero search helper — */
+.ar4-intro__search-helper {
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tv-ink-inverted-muted);
+  margin: -6px 4px 0;
+  line-height: 1.4;
+}
+
+/* — Hero data synth (compact rail, replaces the old data-rail) — */
+.ar4-intro__data {
+  list-style: none;
+  margin: 0;
+  padding: 10px 14px;
+  display: flex;
+  gap: 18px;
+  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 20%, transparent);
+  border-radius: 10px;
+}
+.ar4-intro__data li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ar4-intro__data strong {
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--tv-ink-inverted-primary);
+  letter-spacing: -0.01em;
+}
+.ar4-intro__data em {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tv-ink-inverted-muted);
+}
+.ar4-intro__data-desktop { display: flex; flex-direction: column; gap: 2px; }
+.ar4-intro__data-mobile { display: none; }
+@media (max-width: 47.99rem) {
+  .ar4-intro__data-desktop { display: none; }
+  .ar4-intro__data-mobile { display: flex; flex-direction: column; gap: 2px; }
+  .ar4-intro__data-mobile strong { font-size: 16px; }
+}
+
+/* — Categorie section — */
+.ar4-categories {
+  background: var(--tv-bg-base);
+  border-bottom: 1px solid var(--tv-border-subtle);
+  padding: clamp(24px, 3vw, 36px) 0;
+}
+.ar4-categories__inner {
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 2.6vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+@media (max-width: 429px) { .ar4-categories__inner { padding: 0 16px; } }
+.ar4-categories__head { display: flex; flex-direction: column; gap: 4px; max-width: 640px; }
+.ar4-categories__eyebrow {
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--tv-accent-primary);
+  margin: 0;
+}
+.ar4-categories__title {
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+  line-height: 1.1;
+  color: var(--tv-ink-primary);
+  margin: 0;
+}
+.ar4-categories__body {
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.5;
+  color: var(--tv-ink-muted-aa);
+  margin: 0;
+}
+.ar4-categories__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.ar4-categories__disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px 5px 8px;
+  min-height: 32px;
+  background: transparent;
+  border: 1px dashed var(--tv-border-interactive);
+  border-radius: 0.5rem;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+.ar4-categories__disclosure:hover {
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-accent-primary);
+}
+
+/* — Sort dropdown (desktop + mobile) — */
+.ar4-filters__group--sort {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ar4-filters__sort {
+  font-family: var(--tv-font-family-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tv-ink-primary);
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 0.5rem;
+  padding: 5px 28px 5px 12px;
+  min-height: 32px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23120d2f' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  flex-shrink: 0;
+}
+.ar4-filters__sort:focus-visible {
+  outline: 0;
+  border-color: var(--tv-accent-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
+}
+
+/* — Mobile sort — */
+.ar4-mobile-bar__sort { margin-left: auto; }
+.ar4-mobile-bar__sort-select {
+  font-family: var(--tv-font-family-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tv-ink-primary);
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 0.5rem;
+  padding: 8px 28px 8px 12px;
+  min-height: 38px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23120d2f' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+}
+.ar4-mobile-bar__sort-select:focus-visible {
+  outline: 0;
+  border-color: var(--tv-accent-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
+}
+
+/* — Grid supporting copy (aria-live target) — */
+.ar4-grid__supporting {
+  font-family: var(--tv-font-family-ui);
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--tv-ink-muted-aa);
+  margin: 6px 0 0;
+}
+
+/* — Empty state V2 (title + body + dual CTA) — */
+.ar4-grid__empty {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(32px, 4vw, 48px) clamp(20px, 2.6vw, 40px);
+  text-align: center;
+  background: var(--tv-surface-elevated);
+  border: 1px dashed var(--tv-border-interactive);
+  border-radius: 24px;
+  align-items: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.ar4-grid__empty-title {
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-weight: 600;
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  line-height: 1.15;
+  color: var(--tv-ink-primary);
+  margin: 0;
+  max-width: 520px;
+}
+.ar4-grid__empty-body {
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.5;
+  color: var(--tv-ink-muted-aa);
+  margin: 0;
+  max-width: 520px;
+}
+.ar4-grid__empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  justify-content: center;
+}
+.ar4-grid__empty-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 18px;
+  font-family: var(--tv-font-family-ui);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.ar4-grid__empty-cta--primary {
+  background: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+}
+.ar4-grid__empty-cta--primary:hover {
+  background: var(--tv-accent-primary-hover, var(--tv-accent-primary));
+}
+.ar4-grid__empty-cta--secondary {
+  background: transparent;
+  color: var(--tv-ink-primary);
+  border-color: var(--tv-border-interactive);
+}
+.ar4-grid__empty-cta--secondary:hover {
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-accent-primary);
+}
+
+/* — Sheet header (title + description) — */
+.ar4-sheet__desc {
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.5;
+  color: var(--tv-ink-muted-aa);
+  margin: 4px 32px 0 0;
+}
+.ar4-sheet__search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tv-ink-muted-aa) 10%, transparent);
+  color: var(--tv-ink-secondary);
+  border: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 200ms ease, color 200ms ease;
+}
+.ar4-sheet__search-clear:hover {
+  background: color-mix(in srgb, var(--tv-ink-muted-aa) 20%, transparent);
+  color: var(--tv-ink-primary);
+}
+
+/* — Card V2 status badges (editorial / sponsored / tier) — */
+.ar4-card__status--editorial {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: color-mix(in srgb, var(--tv-accent-gold) 18%, transparent);
+  color: var(--tv-accent-gold);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 36%, transparent);
+  border-radius: 999px;
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.ar4-card__status--sponsored {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: color-mix(in srgb, var(--tv-accent-cyan) 14%, transparent);
+  color: var(--tv-accent-cyan);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 32%, transparent);
+  border-radius: 999px;
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.ar4-card__status--tier {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.ar4-card__status--tier-primary {
+  background: color-mix(in srgb, var(--tv-accent-gold) 20%, transparent);
+  color: var(--tv-accent-gold);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 38%, transparent);
+}
+.ar4-card__status--tier-secondary {
+  background: color-mix(in srgb, var(--tv-accent-cyan) 18%, transparent);
+  color: var(--tv-accent-cyan);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 36%, transparent);
+}
+.ar4-card__status--tier-tertiary {
+  background: color-mix(in srgb, var(--tv-accent-violet) 18%, transparent);
+  color: var(--tv-accent-violet);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-violet) 36%, transparent);
+}
+
+/* On mobile (single-column card) the badges wrap to a new line below the top row */
+.ar4-card__top {
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+.ar4-card__top .ar4-card__status { margin-left: 0; }
+
+/* — Card affiliate disclosure — */
+.ar4-card__disclosure {
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--tv-ink-muted-aa);
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px dashed color-mix(in srgb, var(--tv-border-subtle) 80%, transparent);
+  font-style: italic;
+}
+
+/* Card outline subtly tinted when sponsored (visual signal, not the only signal) */
+.ar4-card.is-sponsored {
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--tv-accent-cyan) 4%, var(--tv-surface-elevated)),
+      var(--tv-surface-elevated)
+    );
+}
+

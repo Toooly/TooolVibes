@@ -19,6 +19,8 @@ import { cn } from "@/lib/utils";
 type PartnerPlacementProps = {
   placementKey: MonetizationPlacementKey;
   className?: string;
+  /** Override the format label (default: "Partner tool"). */
+  formatLabelOverride?: string;
 };
 
 function resolvePublicPlacement(placementKey: MonetizationPlacementKey) {
@@ -157,6 +159,7 @@ export function FeaturedPartner({
 export function PartnerToolCard({
   placementKey,
   className,
+  formatLabelOverride,
 }: PartnerPlacementProps) {
   const placement = resolvePublicPlacement(placementKey);
   if (!placement) return null;
@@ -167,7 +170,7 @@ export function PartnerToolCard({
     >
       <div className="partner-placement__tool-heading">
         <PartnerMeta
-          formatLabel="Partner tool"
+          formatLabel={formatLabelOverride ?? "Partner tool"}
           isDemo={placement.partner.isDemo}
         />
         <BadgeCheck aria-hidden="true" />

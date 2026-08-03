@@ -7,7 +7,7 @@ export default function ArchiveLoading() {
       role="status"
       aria-live="polite"
       aria-busy="true"
-      aria-label="Caricamento archivio tool"
+      aria-label="Caricamento del catalogo in corso."
     >
       <section className="brand-panel brand-aura rounded-[36px] p-6 sm:p-7 lg:p-8">
         <div className="editorial-grid gap-y-7">
