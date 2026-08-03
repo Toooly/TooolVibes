@@ -815,6 +815,34 @@
   .def-editorial__exploratory { grid-template-columns: 1fr 1fr; }
 }
 
+
+/* Stato B — exploratory cards rendered inside the restored podium geometry.
+   The .def-editorial__pod-stage / pod-cell--first/second/third rules already
+   provide the 3-stage tower silhouette (central elevated, two lower cards).
+   These rules only make the exploratory cards fill their cell and keep the
+   card anatomy readable at the taller podium heights. No rank or score is
+   added here: the block remains a catalog selection ("Tre tool da esplorare"). */
+.def-editorial__exploratory-stage .def-editorial__exploratory-card {
+  height: 100%;
+  min-height: 0;
+}
+
+/* Taller cells give the central card more room; the 1fr middle row absorbs
+   the extra height so the CTA stays anchored to the bottom of the card. */
+.def-editorial__exploratory-stage .def-editorial__exploratory-pill {
+  margin-top: auto;
+}
+
+@media (max-width: 767px) {
+  .def-editorial__exploratory-stage .def-editorial__exploratory-card {
+    height: auto;
+    min-height: 200px;
+  }
+  .def-editorial__exploratory-stage .def-editorial__exploratory-pill {
+    margin-top: 0;
+  }
+}
+
 .def-editorial__spot-cta {
   display: inline-flex;
   align-items: center;

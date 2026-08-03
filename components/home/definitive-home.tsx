@@ -397,38 +397,95 @@ function ClassificaOrAlternativa({
           Tre tool da esplorare.
         </p>
       </div>
-      <ul className="def-editorial__exploratory">
-        {top3.map((tool) => (
-          <li key={tool.slug}>
-            <Link
-              href={`/toools/${tool.slug}`}
-              className="def-editorial__exploratory-card"
-              aria-label={`Apri la scheda di ${tool.name}`}
-            >
-              <span className="def-editorial__exploratory-avatar" aria-hidden="true">
-                {iconUrl(tool) ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={iconUrl(tool)!} alt="" loading="lazy" decoding="async" />
-                ) : (
-                  <span>{initial(tool.name)}</span>
-                )}
-              </span>
-              <span className="def-editorial__exploratory-name">{tool.name}</span>
-              <span className="def-editorial__exploratory-cat">{tool.categoryLabel}</span>
-              <span className="def-editorial__exploratory-pill">
-                {computeEditorialScore({ publicTool: tool.publicTool }).status === "assessed"
-                  ? "Valutato"
-                  : "In valutazione"}
-              </span>
-              <span className="def-editorial__exploratory-cta">
-                Apri la scheda
-                <ArrowUpRight size={12} aria-hidden="true" />
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <ExploratoryPodium top3={top3} iconUrl={iconUrl} initial={initial} />
     </div>
+  );
+}
+
+// ============================================================
+// PODIUM GEOMETRY (Stato B) — "Tre tool da esplorare".
+// Ripristina la silhouette da podio (card centrale elevata, due
+// laterali più basse) recuperata dalla struttura storica, MA senza
+// mostrare punteggi numerici, posizioni o ranking. Il blocco resta
+// una selezione dal catalogo, non una classifica basata su score.
+// ============================================================
+function ExploratoryPodium({
+  top3,
+  iconUrl,
+  initial,
+}: {
+  top3: ToolPublicView[];
+  iconUrl: (tool: ToolPublicView) => string | null;
+  initial: (name: string) => string;
+}) {
+  return (
+    <ol className="def-editorial__pod-stage def-editorial__exploratory-stage">
+      {top3[0] ? (
+        <li className="def-editorial__pod-cell def-editorial__pod-cell--first">
+          <ExploratoryCard
+            tool={top3[0]}
+            iconUrl={iconUrl(top3[0])}
+            initial={initial(top3[0].name)}
+          />
+        </li>
+      ) : null}
+      {top3[1] ? (
+        <li className="def-editorial__pod-cell def-editorial__pod-cell--second">
+          <ExploratoryCard
+            tool={top3[1]}
+            iconUrl={iconUrl(top3[1])}
+            initial={initial(top3[1].name)}
+          />
+        </li>
+      ) : null}
+      {top3[2] ? (
+        <li className="def-editorial__pod-cell def-editorial__pod-cell--third">
+          <ExploratoryCard
+            tool={top3[2]}
+            iconUrl={iconUrl(top3[2])}
+            initial={initial(top3[2].name)}
+          />
+        </li>
+      ) : null}
+    </ol>
+  );
+}
+
+function ExploratoryCard({
+  tool,
+  iconUrl,
+  initial,
+}: {
+  tool: ToolPublicView;
+  iconUrl: string | null;
+  initial: string;
+}) {
+  return (
+    <Link
+      href={`/toools/${tool.slug}`}
+      className="def-editorial__exploratory-card"
+      aria-label={`Apri la scheda di ${tool.name}`}
+    >
+      <span className="def-editorial__exploratory-avatar" aria-hidden="true">
+        {iconUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <span>{initial}</span>
+        )}
+      </span>
+      <span className="def-editorial__exploratory-name">{tool.name}</span>
+      <span className="def-editorial__exploratory-cat">{tool.categoryLabel}</span>
+      <span className="def-editorial__exploratory-pill">
+        {computeEditorialScore({ publicTool: tool.publicTool }).status === "assessed"
+          ? "Valutato"
+          : "In valutazione"}
+      </span>
+      <span className="def-editorial__exploratory-cta">
+        Apri la scheda
+        <ArrowUpRight size={12} aria-hidden="true" />
+      </span>
+    </Link>
   );
 }
 
