@@ -43,10 +43,10 @@ const STATE_COPY: Record<
   Pick<RadarUiModel, "statusLabel" | "stageTitle" | "stageBody">
 > = {
   loading: {
-    statusLabel: "CONNESSIONE",
-    stageTitle: "Aggiorno il Radar",
+    statusLabel: "CONNESSIONE A PRODUCT HUNT IN CORSO",
+    stageTitle: "Aggiornamento del Radar",
     stageBody:
-      "I segnali compaiono solo dopo una risposta reale di Product Hunt.",
+      "I segnali compariranno appena Product Hunt restituisce dati reali.",
   },
   live: {
     statusLabel: "LIVE",
@@ -67,9 +67,9 @@ const STATE_COPY: Record<
   },
   empty: {
     statusLabel: "NESSUN SEGNALE",
-    stageTitle: "Nessun lancio nel periodo",
+    stageTitle: "Nessun segnale disponibile",
     stageBody:
-      "Product Hunt non ha restituito risultati reali per questo intervallo.",
+      "Product Hunt non ha restituito dati utilizzabili. Puoi riprovare tra poco oppure esplorare il catalogo.",
   },
   "missing-token": {
     statusLabel: "IN PAUSA",

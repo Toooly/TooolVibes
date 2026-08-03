@@ -48,6 +48,13 @@ export type ToolPublicView = {
    * shows this only when present.
    */
   extendedContent: string | null;
+  /**
+   * Editorial "why this tool" reason. When present, the home spotlight uses
+   * it as the per-tool "perché lo abbiamo scelto" line, instead of falling
+   * back to a generic editorial explanation. Sourced from the tool's
+   * editorialNote attribute in the data layer.
+   */
+  editorialNote?: string | null;
 };
 
 export type ToolFilterGroup = {
@@ -195,6 +202,7 @@ export function createToolPublicView(
     accentFrom: directoryTool?.accentFrom ?? null,
     accentTo: directoryTool?.accentTo ?? null,
     extendedContent: getToolExtendedContent(tool.slug),
+    editorialNote: tool.attributes.editorialNote ?? null,
   };
 }
 

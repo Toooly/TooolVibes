@@ -269,6 +269,13 @@ export const monetizationPlacements = [
 
 export type MonetizationPlacementKey = (typeof monetizationPlacements)[number]["key"];
 
+export function resolvePublicMonetizationPlacement(
+  key: MonetizationPlacementKey,
+): PublicMonetizationPlacement | null {
+  const placement = getMonetizationPlacement(key);
+  return isPublicMonetizationPlacement(placement) ? placement : null;
+}
+
 export function getMonetizationPlacement(key: MonetizationPlacementKey): MonetizationPlacement | undefined {
   return monetizationPlacements.find((placement) => placement.key === key);
 }
@@ -317,7 +324,12 @@ function isWithinFlightWindow(placement: MonetizationPlacement) {
  * Reserved and planned inventory belongs to the commercial back office, not
  * to the public reading journey. A placement is public only when a real
  * partner identity and an explicit editorial-relevance reason are present.
- * Demo partners remain allowed only while explicitly labeled (Demo / isDemo).
+ *
+ * Demo / fixture / development / placeholder records are explicitly filtered
+ * out so the home never renders a sponsored block without an approved real
+ * partner. The rule mirrors the V2 home-copy contract: "Non renderizzare il
+ * modulo quando il record è: demo; fixture; development; placeholder; privo
+ * di un partner reale approvato."
  */
 export function isPublicMonetizationPlacement(
   placement: MonetizationPlacement | undefined,
@@ -325,6 +337,8 @@ export function isPublicMonetizationPlacement(
   if (!placement) return false;
   if (placement.active === false) return false;
   if (!isWithinFlightWindow(placement)) return false;
+  // Demo / fixture / placeholder records must not surface on the home.
+  if (placement.partner?.isDemo) return false;
 
   return Boolean(
     placement.visible &&

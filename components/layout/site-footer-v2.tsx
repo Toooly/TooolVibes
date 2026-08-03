@@ -60,8 +60,8 @@ export function SiteFooterV2() {
               </span>
             </Link>
             <p className="site-footer-v2__summary">
-              Il sistema per scoprire tool AI, SaaS, no-code e vibe coding.
-              Trova, confronta e costruisci la lista giusta per te.
+              Il catalogo editoriale per scoprire, confrontare e scegliere
+              tool AI, SaaS e no-code con più contesto.
             </p>
             <div className="site-footer-v2__socials">
               {socialLinks.map((social) => {
@@ -111,7 +111,8 @@ export function SiteFooterV2() {
           <div>
             <h3>Parliamone</h3>
             <p className="site-footer-v2__newsletter-copy">
-              Hai un tool da segnalare, una correzione o una proposta? Scrivici direttamente.
+              Hai un tool da segnalare, una correzione o una proposta?
+              Scrivici: ci aiuta a mantenere il catalogo più utile e aggiornato.
             </p>
             <a
               href={contactEmailDestination.href}

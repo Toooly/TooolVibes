@@ -39,6 +39,7 @@ import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { useOnceInView } from "@/lib/motion/use-once-in-view";
 import { FeaturedPartner } from "@/components/monetization/partner-placements";
+import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
 import { HomeRadarPreview } from "@/components/radar/radar-experience";
 
 type DefinitiveHomeProps = {
@@ -49,22 +50,25 @@ type DefinitiveHomeProps = {
 const METHOD_STEPS = [
   {
     n: "01",
-    title: "Parti da territori leggibili",
-    body: "Una mappa a obiettivi per non perderti in migliaia di tool: builder, vibe coding, no-code, marketing.",
+    title: "Trova i candidati giusti",
+    body: "Filtra il catalogo per categoria, caso d'uso e livello. Parti da una selezione più piccola e pertinente.",
+    cta: "Esplora il catalogo",
     href: "/archivio",
     accent: "var(--tv-accent-primary)",
   },
   {
     n: "02",
-    title: "Confronta solo candidati forti",
-    body: "Porta avanti pochi tool alla volta. Score editoriale, livello di difficoltà, casi d'uso reali.",
+    title: "Confronta ciò che conta",
+    body: "Affianca pochi tool alla volta e valuta differenze, limiti e aderenza al tuo lavoro.",
+    cta: "Apri il confronto",
     href: "/compare",
     accent: "var(--tv-accent-cyan)",
   },
   {
     n: "03",
-    title: "Salva e chiudi con una scelta",
-    body: "La lista diventa operativa: shortlist, appunti, decisione. Niente file Excel sparsi.",
+    title: "Salva la decisione",
+    body: "Conserva i candidati, aggiungi una nota e ritrova il motivo per cui hai scelto.",
+    cta: "Vai ai salvati",
     href: "/shortlist",
     accent: "var(--tv-accent-gold)",
   },
@@ -92,6 +96,11 @@ function truncate(str: string, max: number) {
 // COCKPIT — Hero + Radar in the same primary frame
 // ============================================================
 function Cockpit({ toolCount }: { toolCount: number }) {
+  const eyebrowDesktop =
+    toolCount > 0
+      ? `Selezionati dalla redazione · ${toolCount} tool nel catalogo`
+      : "Selezionati dalla redazione";
+  const eyebrowMobile = toolCount > 0 ? `${toolCount} tool selezionati` : "Catalogo in arrivo";
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
       <div aria-hidden="true" className="def-cockpit__bg">
@@ -104,43 +113,43 @@ function Cockpit({ toolCount }: { toolCount: number }) {
         <div className="def-cockpit__hero">
           <p className="def-cockpit__eyebrow">
             <span className="def-cockpit__eyebrow-dot" aria-hidden="true" />
-            {toolCount > 0
-              ? `Curatela indipendente · ${toolCount} tool nel Catalogo`
-              : "Curatela indipendente · catalogo in aggiornamento"}
+            <span className="def-cockpit__eyebrow-desktop">{eyebrowDesktop}</span>
+            <span className="def-cockpit__eyebrow-mobile">{eyebrowMobile}</span>
           </p>
           <h1
             id="def-cockpit-title"
             className="def-cockpit__title"
-            aria-label="Trova il tool giusto prima che il rumore scelga per te."
+            aria-label="Trova il tool giusto, senza perderti nel rumore."
           >
-            Trova il tool giusto prima che il{" "}
-            <span className="def-cockpit__highlight" aria-hidden="true">rumore</span>
-            <span className="sr-only">rumore</span> scelga per te.
+            Trova il tool giusto, senza perderti nel rumore.
           </h1>
           <p className="def-cockpit__lede">
-            Una selezione ragionata di tool AI, SaaS, no-code e vibe coding.
-            Parti dal catalogo, confronta i candidati con evidenze reali e
-            salva la shortlist: TooolVibes chiude la scelta, non la diluisce.
+            Esplora tool AI, SaaS e no-code selezionati e spiegati con criterio.
+            Confronta le alternative, salva i candidati e conserva il motivo della
+            tua scelta.
           </p>
           <div className="def-cockpit__ctas">
             <Link
               href="/archivio"
               className="def-cockpit__cta def-cockpit__cta--primary"
+              aria-label="Esplora il catalogo dei tool"
             >
-              Inizia dal catalogo
+              Esplora il catalogo
               <ArrowRight size={16} aria-hidden="true" />
             </Link>
             <Link
               href="/compare"
               className="def-cockpit__cta def-cockpit__cta--secondary"
+              aria-label="Confronta i tool selezionati"
             >
-              Apri il confronto
+              Confronta i tool
             </Link>
             <Link
               href="/radar"
               className="def-cockpit__cta def-cockpit__cta--ghost"
+              aria-label="Apri il Radar dei nuovi lanci"
             >
-              Vedi il Radar
+              Apri il Radar
             </Link>
           </div>
 
@@ -150,15 +159,15 @@ function Cockpit({ toolCount }: { toolCount: number }) {
               <li className="is-active">
                 <Link href="/archivio">
                   <span aria-hidden="true">1</span>
-                  <strong>Scopri</strong>
+                  <strong>Esplora</strong>
                   <em>Catalogo</em>
                 </Link>
               </li>
               <li>
-                <Link href="/archivio?sort=score_desc">
+                <Link href="/toools">
                   <span aria-hidden="true">2</span>
                   <strong>Valuta</strong>
-                  <em>Prove</em>
+                  <em>Schede</em>
                 </Link>
               </li>
               <li>
@@ -172,14 +181,14 @@ function Cockpit({ toolCount }: { toolCount: number }) {
                 <Link href="/shortlist">
                   <span aria-hidden="true">4</span>
                   <strong>Salva</strong>
-                  <em>Lista</em>
+                  <em>Candidati</em>
                 </Link>
               </li>
               <li>
-                <Link href="/collections">
+                <Link href="/shortlist#wishlist">
                   <span aria-hidden="true">5</span>
                   <strong>Decidi</strong>
-                  <em>Raccolte</em>
+                  <em>Motivazione</em>
                 </Link>
               </li>
             </ol>
@@ -206,7 +215,6 @@ function IvoryEditorial({
   tools: ToolPublicView[];
 }) {
   if (!focusTool) return null;
-  const top3 = tools.slice(0, 3);
   const iconUrl = (t: ToolPublicView) =>
     t.domain
       ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(t.domain)}&sz=128`
@@ -222,18 +230,19 @@ function IvoryEditorial({
       <header className="def-editorial__head">
         <div>
           <p className="def-editorial__eyebrow">
-            Verdetto editoriale · selezione della redazione
+            Selezione della redazione
           </p>
           <h2 id="def-editorial-title" className="def-editorial__title">
-            La scelta della redazione, in primo piano.
+            Un tool da guardare con più attenzione.
           </h2>
         </div>
         <div className="def-editorial__head-actions">
           <Link
             href="/archivio"
             className="def-editorial__head-link"
+            aria-label="Vedi tutti i tool del catalogo"
           >
-            {tools.length > 0 ? `Tutti i ${tools.length} tool` : "Apri il catalogo"}
+            {tools.length > 0 ? `Vedi tutti i ${tools.length} tool` : "Apri il catalogo"}
             <ArrowUpRight size={14} aria-hidden="true" />
           </Link>
         </div>
@@ -244,7 +253,7 @@ function IvoryEditorial({
         <article className="def-editorial__spotlight">
           <div className="def-editorial__spot-body">
             <p className="def-editorial__spot-eyebrow">
-              Selezione della redazione
+              In primo piano
             </p>
             <div className="def-editorial__spot-head">
               <span className="def-editorial__spot-avatar" aria-hidden="true">
@@ -267,26 +276,26 @@ function IvoryEditorial({
               {focusTool.tldr || focusTool.shortDescription}
             </p>
             <p className="def-editorial__distinction">
-              Scelto dalla redazione per il suo taglio, non per il punteggio.
-              Il podio è una classifica, il focus è una decisione editoriale.
+              {focusTool.editorialNote ||
+                "Scelto dalla redazione per il taglio, non per il punteggio."}
             </p>
 
             <ul className="def-editorial__spot-rail" aria-label="Dettagli editoriali">
               <li>
                 <span>Valutazione</span>
-                <strong>{editorialScore.status === "assessed" ? "Verificata" : "In preparazione"}</strong>
+                <strong>
+                  {editorialScore.status === "assessed"
+                    ? "Valutazione editoriale"
+                    : "Valutazione editoriale / In preparazione"}
+                </strong>
               </li>
               <li>
                 <span>Casi d&apos;uso</span>
                 <strong>{focusTool.useCases.length}</strong>
               </li>
               <li>
-                <span>Lettura</span>
-                <strong>{focusTool.readingTime ?? "—"}</strong>
-              </li>
-              <li>
-                <span>Stato</span>
-                <strong>{editorialScore.label}</strong>
+                <span>Tempo di lettura</span>
+                <strong>{focusTool.readingTime ? `${focusTool.readingTime} min` : "—"}</strong>
               </li>
             </ul>
 
@@ -294,6 +303,7 @@ function IvoryEditorial({
               <Link
                 href={`/toools/${focusTool.slug}`}
                 className="def-editorial__spot-cta def-editorial__spot-cta--primary"
+                aria-label="Apri la scheda dello strumento selezionato"
               >
                 Apri la scheda
                 <ArrowRight size={14} aria-hidden="true" />
@@ -308,36 +318,119 @@ function IvoryEditorial({
                       : "noopener noreferrer"
                   }
                   className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
+                  aria-label={
+                    isAffiliateLink
+                      ? `Prova ${focusTool.name} (link affiliato)`
+                      : `Visita ${focusTool.name}`
+                  }
                 >
-                  {focusTool.ctaLabel ?? "Sito ufficiale"}
+                  {focusTool.ctaLabel ??
+                    (isAffiliateLink ? `Prova ${focusTool.name}` : `Visita ${focusTool.name}`)}
                   <ExternalLink size={14} aria-hidden="true" />
                 </a>
               ) : null}
             </div>
             {isAffiliateLink ? (
               <p className="def-editorial__spot-disclosure">
-                Link partner: potremmo ricevere una commissione senza costi
-                extra per te.
+                Link affiliato: potremmo ricevere una commissione, senza costi
+                aggiuntivi per te.
               </p>
             ) : null}
           </div>
         </article>
 
-        {/* PODIUM — v4: true 3-stage tower composition */}
-        <div className="def-editorial__podium" role="region" aria-label="Podio editoriale">
-          <div className="def-editorial__pod-head-row">
-            <p className="def-editorial__pod-eyebrow">Podio editoriale</p>
-            <p className="def-editorial__pod-subtitle">
-              Ranking del catalogo attivo, con lo score di ogni profilo.
-            </p>
-          </div>
-          <PodiumStage top3={top3} iconUrl={iconUrl} initial={initial} />
-        </div>
+        {/* CLASSIFICA / SELEZIONE ALTERNATIVA — logica condizionale
+            Stato A (>= 3 valutati): classifica con rank.
+            Stato B (< 3 valutati): tre tool da esplorare, senza rank. */}
+        <ClassificaOrAlternativa
+          tools={tools}
+          iconUrl={iconUrl}
+          initial={initial}
+        />
       </div>
     </section>
   );
 }
 
+
+// ============================================================
+// CLASSIFICA / SELEZIONE ALTERNATIVA — logica A/B
+// Stato A: >= 3 tool con valutazione editoriale completa → podio con rank.
+// Stato B: < 3 tool valutati → "Tre tool da esplorare" senza rank.
+// Regola: non mostrare "Podio editoriale", posizioni, score vuoti o
+// ranking quando meno di tre tool dispongono di una valutazione completa.
+// ============================================================
+function ClassificaOrAlternativa({
+  tools,
+  iconUrl,
+  initial,
+}: {
+  tools: ToolPublicView[];
+  iconUrl: (tool: ToolPublicView) => string | null;
+  initial: (name: string) => string;
+}) {
+  const evaluated = tools.filter(
+    (t) => computeEditorialScore({ publicTool: t.publicTool }).status === "assessed",
+  );
+  const isPodium = evaluated.length >= 3;
+  const top3 = isPodium ? evaluated.slice(0, 3) : tools.slice(0, 3);
+
+  if (isPodium) {
+    return (
+      <div className="def-editorial__podium" role="region" aria-label="Classifica editoriale">
+        <div className="def-editorial__pod-head-row">
+          <p className="def-editorial__pod-eyebrow">Classifica editoriale</p>
+          <p className="def-editorial__pod-subtitle">
+            I tool con la valutazione più alta.
+          </p>
+        </div>
+        <PodiumStage top3={top3} iconUrl={iconUrl} initial={initial} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="def-editorial__podium" role="region" aria-label="Tre tool da esplorare">
+      <div className="def-editorial__pod-head-row">
+        <p className="def-editorial__pod-eyebrow">Dal catalogo</p>
+        <p className="def-editorial__pod-subtitle">
+          Tre tool da esplorare.
+        </p>
+      </div>
+      <ul className="def-editorial__exploratory">
+        {top3.map((tool) => (
+          <li key={tool.slug}>
+            <Link
+              href={`/toools/${tool.slug}`}
+              className="def-editorial__exploratory-card"
+              aria-label={`Apri la scheda di ${tool.name}`}
+            >
+              <span className="def-editorial__exploratory-avatar" aria-hidden="true">
+                {iconUrl(tool) ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={iconUrl(tool)!} alt="" loading="lazy" decoding="async" />
+                ) : (
+                  <span>{initial(tool.name)}</span>
+                )}
+              </span>
+              <span className="def-editorial__exploratory-name">{tool.name}</span>
+              <span className="def-editorial__exploratory-cat">{tool.categoryLabel}</span>
+              <span className="def-editorial__exploratory-pill">
+                {computeEditorialScore({ publicTool: tool.publicTool }).status === "assessed"
+                  ? "Valutato"
+                  : "In valutazione"}
+              </span>
+              <span className="def-editorial__exploratory-cta">
+                Apri la scheda
+                <ArrowUpRight size={12} aria-hidden="true" />
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 function PodiumStage({
   top3,
@@ -484,13 +577,13 @@ function Method() {
   return (
     <section className="def-method" aria-labelledby="def-method-title">
       <header className="def-method__head">
-        <p className="def-method__eyebrow">Metodo TooolVibes</p>
+        <p className="def-method__eyebrow">Come funziona</p>
         <h2 id="def-method-title" className="def-method__title">
-          Il metodo: scopri, confronta, salva la decisione
+          Dal primo confronto a una scelta motivata.
         </h2>
         <p className="def-method__lede">
-          Ogni passo ha una destinazione chiara. Niente dashboard decorative:
-          azioni che portano a una shortlist e a una scelta.
+          TooolVibes ti aiuta a ridurre le alternative, confrontare ciò che
+          conta e conservare il motivo della tua scelta.
         </p>
       </header>
       <ol className="def-method__rail">
@@ -505,7 +598,7 @@ function Method() {
               <h3 className="def-method__step-title">{step.title}</h3>
               <p className="def-method__step-body">{step.body}</p>
               <Link href={step.href} className="def-method__step-link">
-                Continua
+                {step.cta}
                 <ArrowRight size={14} aria-hidden="true" />
               </Link>
             </div>
@@ -529,16 +622,36 @@ export function DefinitiveHome({ tools, weeklyTool }: DefinitiveHomeProps) {
       <Cockpit toolCount={tools.length} />
       <IvoryEditorial focusTool={focusTool} tools={tools} />
       <Method />
-      <section className="def-home__sponsor" aria-label="Partner editoriale">
-        <div className="def-home__sponsor-frame">
-          <p className="def-home__sponsor-eyebrow">Partner · slot di lancio</p>
-          <FeaturedPartner
-            placementKey="home-featured-tool"
-            className="def-home__placement"
-          />
-        </div>
-      </section>
+      <SponsorSection placementKey="home-featured-tool" />
     </div>
+  );
+}
+
+// ============================================================
+// SPONSOR SECTION — wrapper che non renderizza nulla se il partner
+// è demo/fixture/placeholder. Mantiene l'eyebrow interno (PartnerMeta)
+// come unica fonte di "Contenuto sponsorizzato", evitando spazi vuoti.
+// ============================================================
+function SponsorSection({
+  placementKey,
+}: {
+  placementKey: Parameters<typeof FeaturedPartner>[0]["placementKey"];
+}) {
+  // Resolve directly so we can hide the whole section if no real partner.
+  const placement = resolvePublicMonetizationPlacement(placementKey);
+  if (!placement) return null;
+  return (
+    <section
+      className="def-home__sponsor"
+      aria-label="Contenuto sponsorizzato"
+    >
+      <div className="def-home__sponsor-frame">
+        <FeaturedPartner
+          placementKey={placementKey}
+          className="def-home__placement"
+        />
+      </div>
+    </section>
   );
 }
 

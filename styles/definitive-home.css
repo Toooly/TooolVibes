@@ -127,6 +127,14 @@
   align-self: flex-start;
 }
 
+/* V2 HOME — eyebrow split: long desktop copy vs compact mobile copy. */
+.def-cockpit__eyebrow-mobile { display: none; }
+.def-cockpit__eyebrow-desktop { display: inline; }
+@media (max-width: 47.99rem) {
+  .def-cockpit__eyebrow-desktop { display: none; }
+  .def-cockpit__eyebrow-mobile { display: inline; }
+}
+
 .def-cockpit__eyebrow-dot {
   width: 6px;
   height: 6px;
@@ -717,6 +725,94 @@
   color: var(--tv-ink-inverted-muted);
   font-size: 14px;
   line-height: 1.45;
+}
+
+/* Stato B — Tre tool da esplorare (used when fewer than three tools
+   have a full editorial assessment). Mirrors the podium tile anatomy
+   so the two states feel related without showing rank / score. */
+.def-editorial__exploratory {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.def-editorial__exploratory-card {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: 8px;
+  padding: 16px 14px 14px;
+  border: 1px solid var(--tv-border-inverted);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--tv-surface-inverted) 96%, #000 4%);
+  text-decoration: none;
+  color: var(--tv-ink-inverted-primary);
+  transition: transform var(--tv-duration-base) var(--tv-easing-standard),
+    border-color var(--tv-duration-base) var(--tv-easing-standard);
+}
+.def-editorial__exploratory-card:hover,
+.def-editorial__exploratory-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--tv-accent-primary);
+}
+.def-editorial__exploratory-avatar {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--tv-border-inverted);
+  background: var(--tv-surface-elevated);
+  overflow: hidden;
+  font-family: var(--tv-font-family-display);
+  font-size: 0.85rem;
+  color: var(--tv-ink-inverted-primary);
+}
+.def-editorial__exploratory-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.def-editorial__exploratory-name {
+  font-family: var(--tv-font-family-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--tv-ink-inverted-primary);
+}
+.def-editorial__exploratory-cat {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--tv-ink-inverted-secondary);
+}
+.def-editorial__exploratory-pill {
+  display: inline-flex;
+  align-items: center;
+  align-self: start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-inverted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--tv-ink-inverted-secondary);
+}
+.def-editorial__exploratory-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: end;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--tv-accent-violet-on-ivory);
+}
+
+@media (max-width: 47.99rem) {
+  .def-editorial__exploratory { grid-template-columns: 1fr; }
+}
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  .def-editorial__exploratory { grid-template-columns: 1fr 1fr; }
 }
 
 .def-editorial__spot-cta {

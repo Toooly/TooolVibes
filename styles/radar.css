@@ -161,7 +161,9 @@
 .tv-radar__provenance dl,
 .tv-home-radar__meta {
   display: flex;
+  flex-wrap: wrap;
   margin: 0;
+  gap: var(--tv-space-component-sm) 0;
 }
 
 .tv-radar__provenance dl > div,
@@ -799,6 +801,14 @@
   font-size: clamp(var(--tv-text-subtitle), 2vw, var(--tv-text-title));
   font-weight: var(--tv-weight-semibold);
   line-height: var(--tv-leading-tight);
+}
+
+.tv-home-radar__lede {
+  max-width: 32rem;
+  margin: 8px 0 0;
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .tv-home-radar__status {

@@ -17,7 +17,6 @@ import { siteConfig } from "@/lib/config/site";
 import { getCollectionBySlug } from "@/lib/data/public-collections";
 import {
   getEditorialPostBySlug,
-  getPublishedEditorialPosts,
 } from "@/lib/data/public-articles";
 import { getCollectionsByToolSlug } from "@/lib/data/public-collections";
 import { getToolBySlug } from "@/lib/data/public-tools";

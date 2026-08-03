@@ -78,7 +78,7 @@ function PartnerEditorial({
 }) {
   return (
     <div className="partner-placement__editorial">
-      <p className="partner-placement__reason-label">Perché è rilevante qui</p>
+      <p className="partner-placement__reason-label">Perché è rilevante</p>
       <h2>{placement.title}</h2>
       <p>{placement.editorialReason}</p>
     </div>
@@ -143,7 +143,7 @@ export function FeaturedPartner({
       </div>
       <div className="partner-placement__body">
         <PartnerMeta
-          formatLabel="Featured partner"
+          formatLabel="Partner in evidenza"
           isDemo={placement.partner.isDemo}
         />
         <PartnerIdentity placement={placement} />

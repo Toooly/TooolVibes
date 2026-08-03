@@ -436,12 +436,12 @@ export function HomeRadarPreview() {
     >
       <header className="tv-home-radar__header">
         <div>
-          <p>
-            {model.state === "fixture"
-              ? "Feed Product Hunt · fixture QA simulata"
-              : "Feed Product Hunt · dati non simulati"}
+          <p>Radar · Dati da Product Hunt</p>
+          <h2>Segui i nuovi lanci. Valuta quelli che meritano attenzione.</h2>
+          <p className="tv-home-radar__lede">
+            Il Radar raccoglie segnali reali da Product Hunt e li organizza
+            per periodo. Nessun dato simulato.
           </p>
-          <h2>Segnali live da verificare prima di scegliere.</h2>
         </div>
         <span className="tv-home-radar__status" data-state={model.state}>
           <span aria-hidden="true" />
@@ -451,11 +451,15 @@ export function HomeRadarPreview() {
 
       <dl className="tv-home-radar__meta">
         <div>
-          <dt>Scansione</dt>
+          <dt>Stato</dt>
+          <dd>{model.statusLabel}</dd>
+        </div>
+        <div>
+          <dt>Ultimo aggiornamento</dt>
           <dd>{model.updatedAtLabel}</dd>
         </div>
         <div>
-          <dt>Segnali</dt>
+          <dt>Segnali rilevati</dt>
           <dd>{model.signalCount ?? "—"}</dd>
         </div>
         <div>
@@ -471,8 +475,12 @@ export function HomeRadarPreview() {
         <span>{model.sourceLabel}</span>
       </p>
 
-      <Link href="/radar" className="tv-home-radar__cta">
-        Apri il Radar completo
+      <Link
+        href="/radar"
+        className="tv-home-radar__cta"
+        aria-label="Apri il Radar completo dei nuovi lanci"
+      >
+        Esplora il Radar
         <ArrowRight size={16} aria-hidden="true" />
       </Link>
     </div>

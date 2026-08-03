@@ -7,23 +7,25 @@ import {
 } from "@/lib/monetization/placements";
 
 describe("public monetization placement policy", () => {
-  it("keeps reserved and planned inventory out of public routes", () => {
-    // Launch demo slots are intentionally public-ready and labeled as development data.
+  it("keeps reserved, planned and demo inventory out of public routes", () => {
+    // V2 home-copy contract: "Non renderizzare il modulo quando il record
+    // è: demo; fixture; development; placeholder; privo di un partner reale
+    // approvato." Demo / fixture slots therefore stay private.
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("home-featured-tool"),
       ),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("catalog-native-sponsor"),
       ),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("tool-sponsored-alternative"),
       ),
-    ).toBe(true);
+    ).toBe(false);
     // Planned inventory without a complete partner identity stays private.
     expect(
       isPublicMonetizationPlacement(

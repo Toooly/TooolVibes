@@ -167,6 +167,7 @@ export const toolPublicSchema = z
           .strict()
           .nullable(),
         segments: uniqueTextListSchema,
+        editorialNote: z.string().nullable().optional(),
       })
       .strict(),
     media: z

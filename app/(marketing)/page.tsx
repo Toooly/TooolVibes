@@ -26,11 +26,13 @@ export async function generateMetadata() {
   }
 
   return createPublicPageMetadata({
-    title: "Tool AI, SaaS, no-code e vibe coding",
+    title: "TooolVibes | Catalogo di tool AI, SaaS e no-code",
     description:
-      "Scopri i migliori tool AI, SaaS, no-code e automazioni selezionati senza rumore.",
+      "Scopri, confronta e salva tool AI, SaaS e no-code selezionati dalla redazione. Riduci il rumore e scegli con più contesto.",
     path: "/",
-    openGraphTitle: "TooolVibes | Tool AI, SaaS, no-code e vibe coding",
+    openGraphTitle: "TooolVibes · Trova e confronta i tool giusti",
+    openGraphDescription:
+      "Un catalogo editoriale di tool AI, SaaS e no-code per esplorare alternative, confrontare differenze e salvare decisioni motivate.",
   });
 }
 
