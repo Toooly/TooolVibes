@@ -40,16 +40,10 @@
   text-transform: uppercase;
 }
 
-.tv-radar__header h1 {
-  margin: 0;
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-display);
-  font-size: clamp(4.5rem, 11vw, 9rem);
-  font-weight: var(--tv-weight-regular);
-  line-height: 0.78;
-  letter-spacing: -0.035em;
-  text-transform: uppercase;
-}
+/* — Hero H1: usa classe .tv-radar__title (le regole legacy
+     .tv-radar__header h1 con font-size 4.5rem–9rem sono state
+     rimosse: il nuovo H1 ha max 3.5rem per stare nella viewport
+     mobile). Vedi blocco .tv-radar__title più sotto. — */
 
 .tv-radar__lede {
   max-width: var(--tv-content-text-narrow);
@@ -925,10 +919,6 @@
     align-items: start;
   }
 
-  .tv-radar__header h1 {
-    font-size: clamp(4rem, 24vw, 6.5rem);
-  }
-
   .tv-radar__lede {
     font-size: var(--tv-text-body-sm);
   }
@@ -1240,4 +1230,436 @@
   .tv-radar-node:active {
     transform: none;
   }
+}
+
+/* ============================================================
+   RADAR V2 (2026-08-03) — new selectors on top of v4/v5.
+   - Hero eyebrow split (desktop/mobile via CSS)
+   - Status rail (Stato / Ultimo aggiornamento / Segnali / Periodo)
+   - Controls section (Periodo + Vista + Aggiorna)
+   - State panel (empty / stale / error) con doppia CTA
+   - Mappa / Elenco (table column names V2)
+   - Provenance section ("Informazioni sui dati")
+   - Loading route block (senza H1, no duplicazione)
+   - Mappa central count
+   ============================================================ */
+
+/* — Hero eyebrow split — */
+.tv-radar__eyebrow-desktop { display: inline; }
+.tv-radar__eyebrow-mobile { display: none; }
+@media (max-width: 47.99rem) {
+  .tv-radar__eyebrow-desktop { display: none; }
+  .tv-radar__eyebrow-mobile { display: inline; }
+}
+
+/* — Hero H1: usa classe .tv-radar__title — */
+h1.tv-radar__title,
+.tv-radar__title {
+  font-family: var(--tv-font-family-display);
+  font-weight: var(--tv-weight-regular);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  text-transform: none;
+  margin: 0;
+  color: var(--tv-ink-primary);
+  font-size: clamp(1.75rem, 4.5vw, 3.25rem);
+  max-width: 18ch;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 47.99rem) {
+  h1.tv-radar__title,
+  .tv-radar__title {
+    font-size: clamp(1.5rem, 8vw, 2.4rem);
+    letter-spacing: -0.02em;
+  }
+}
+
+/* — Hero provenance note (V2 §6) — */
+.tv-radar__provenance {
+  margin: var(--tv-space-component-md) 0 0;
+  max-width: 38rem;
+  color: var(--tv-ink-muted-aa);
+  font-size: var(--tv-text-body-sm);
+  line-height: var(--tv-leading-relaxed);
+}
+.tv-radar__provenance > span {
+  color: var(--tv-ink-secondary);
+  font-weight: var(--tv-weight-semibold);
+}
+
+/* — Status rail V2 (Stato / Ultimo aggiornamento / Segnali / Periodo) — */
+.tv-radar-status-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--tv-space-component-md);
+  margin: 0 0 var(--tv-space-component-lg);
+  padding: var(--tv-space-component-md) var(--tv-space-component-lg);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-panel);
+  background: var(--tv-surface-tier-2);
+  list-style: none;
+}
+.tv-radar-status-rail__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  padding-inline: var(--tv-space-component-md);
+  border-left: 1px solid var(--tv-border-subtle);
+}
+.tv-radar-status-rail__item:first-child { padding-left: 0; border-left: 0; }
+.tv-radar-status-rail__item dt {
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-family-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tv-radar-status-rail__item dd {
+  margin: 0;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-mono);
+  font-size: 0.95rem;
+  font-weight: var(--tv-weight-semibold);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.tv-radar-status-rail__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.tv-radar-status-rail__dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--tv-radius-pill);
+  background: currentColor;
+}
+.tv-radar-status-rail__status[data-state="live"] { color: var(--tv-status-success); }
+.tv-radar-status-rail__status[data-state="loading"] { color: var(--tv-status-info); }
+.tv-radar-status-rail__status[data-state="empty"],
+.tv-radar-status-rail__status[data-state="stale"] { color: var(--tv-status-warning); }
+.tv-radar-status-rail__status[data-state="error"],
+.tv-radar-status-rail__status[data-state="missing-token"] { color: var(--tv-status-danger); }
+@media (max-width: 47.99rem) {
+  .tv-radar-status-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--tv-space-component-sm);
+  }
+}
+
+/* — Controls V2 — */
+.tv-radar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--tv-space-component-lg);
+  margin: 0 0 var(--tv-space-component-lg);
+  padding: var(--tv-space-component-md) 0;
+  border-top: 1px solid var(--tv-border-subtle);
+  border-bottom: 1px solid var(--tv-border-subtle);
+}
+.tv-radar-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.tv-radar-control__label {
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-family-mono);
+  font-size: 0.75rem;
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tv-radar-control__buttons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.tv-radar__retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  align-self: end;
+  -webkit-tap-highlight-color: transparent;
+}
+.tv-radar__retry:hover:not(:disabled) {
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-accent-primary);
+}
+.tv-radar__retry:disabled { opacity: 0.6; cursor: progress; }
+
+@media (max-width: 47.99rem) {
+  .tv-radar__controls { flex-direction: column; align-items: stretch; }
+  .tv-radar__retry { margin-left: 0; align-self: stretch; justify-content: center; }
+}
+
+/* — Results container (Mappa / Elenco) — */
+.tv-radar__results {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: var(--tv-space-component-lg);
+}
+.tv-radar__visual {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 63.99rem) {
+  .tv-radar__visual { grid-template-columns: 1fr; }
+}
+
+/* — Mappa central count (quando ci sono nodi) — */
+.tv-radar-instrument__count {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-family-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+.tv-radar-instrument__count strong {
+  display: block;
+  font-family: var(--tv-font-family-display);
+  font-size: 2.2rem;
+  color: var(--tv-ink-primary);
+  line-height: 1;
+}
+
+/* — State panel (empty / stale / error) — */
+.tv-radar-state {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: flex-start;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-panel);
+  background: var(--tv-surface-tier-2);
+}
+.tv-radar-state[data-variant="error"],
+.tv-radar-state[data-variant="stale"] {
+  border-color: color-mix(in srgb, var(--tv-status-warning) 35%, var(--tv-border-subtle));
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--tv-status-warning) 8%, var(--tv-surface-tier-2)),
+      var(--tv-surface-tier-2)
+    );
+}
+.tv-radar-state[data-variant="empty"] {
+  border-style: dashed;
+  border-color: var(--tv-border-interactive);
+}
+.tv-radar-state__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--tv-radius-pill);
+  background: color-mix(in srgb, var(--tv-status-warning) 16%, transparent);
+  color: var(--tv-status-warning);
+  font-family: var(--tv-font-family-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: none;
+}
+.tv-radar-state__title {
+  margin: 0;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-weight: 600;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  line-height: 1.15;
+}
+.tv-radar-state__body {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 44rem;
+}
+.tv-radar-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+.tv-radar-state__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border-radius: var(--tv-radius-pill);
+  border: 1px solid transparent;
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
+}
+.tv-radar-state__cta--primary {
+  background: var(--tv-button-primary-bg);
+  color: var(--tv-button-primary-fg);
+}
+.tv-radar-state__cta--primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--tv-button-primary-bg) 88%, var(--tv-ink-primary));
+}
+.tv-radar-state__cta--primary:disabled { opacity: 0.65; cursor: progress; }
+.tv-radar-state__cta--secondary {
+  background: transparent;
+  color: var(--tv-ink-primary);
+  border-color: var(--tv-border-interactive);
+}
+.tv-radar-state__cta--secondary:hover {
+  border-color: var(--tv-accent-primary);
+  color: var(--tv-accent-primary);
+}
+
+/* — Provenance section (V2 §19) — */
+.tv-radar-provenance {
+  margin-top: var(--tv-space-component-lg);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-panel);
+  background: var(--tv-surface-tier-1);
+}
+.tv-radar-provenance__title {
+  margin: 0 0 0.4rem;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tv-radar-provenance__body {
+  margin: 0 0 0.6rem;
+  color: var(--tv-ink-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 50rem;
+}
+.tv-radar-provenance__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--tv-accent-primary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.tv-radar-provenance__link:hover { text-decoration: underline; }
+
+/* — Loading route (no H1) — */
+.tv-radar--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+.tv-radar__loading-block {
+  max-width: 32rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.tv-radar__loading-title {
+  margin: 0;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  line-height: 1.15;
+}
+.tv-radar__loading-body {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* — Table V2 columns header (rename da vecchi nomi) — */
+.tv-radar-table__head {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1.6fr) 5rem 5.5rem 7rem;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-family-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+@media (max-width: 47.99rem) {
+  .tv-radar-table__head { display: none; }
+}
+
+/* — Table row (grid match) — */
+.tv-radar-table__row {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1.6fr) 5rem 5.5rem 7rem;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-card);
+  background: var(--tv-surface-tier-1);
+  color: inherit;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 200ms ease, background 200ms ease, transform 200ms ease;
+}
+.tv-radar-table__row:hover {
+  border-color: var(--tv-border-interactive);
+  background: var(--tv-surface-tier-2);
+}
+.tv-radar-table__row .tv-radar-table__metric--cta {
+  color: var(--tv-accent-primary);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+@media (max-width: 47.99rem) {
+  .tv-radar-table__row {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    grid-template-areas:
+      "rank tool"
+      "votes votes"
+      "comments comments"
+      "cta cta";
+    row-gap: 0.5rem;
+  }
+  .tv-radar-table__rank { grid-area: rank; }
+  .tv-radar-table__tool { grid-area: tool; }
+  .tv-radar-table__metric:nth-of-type(1) { grid-area: votes; }
+  .tv-radar-table__metric:nth-of-type(2) { grid-area: comments; }
+  .tv-radar-table__metric--cta { grid-area: cta; justify-self: end; }
 }

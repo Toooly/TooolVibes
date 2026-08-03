@@ -1,40 +1,37 @@
+/**
+ * Radar loading route (V2, 2026-08-03).
+ *
+ * Un solo blocco di caricamento, no H1 (per evitare doppio H1 con la
+ * pagina hydrated). Il copy segue il contratto V2:
+ *   - Title: "Aggiornamento del Radar"
+ *   - Body: "Stiamo recuperando i segnali da Product Hunt. I risultati
+ *           compariranno appena saranno disponibili."
+ *   - Screen reader: "Aggiornamento del Radar in corso."
+ *
+ * Niente duplicazioni: il blocco qui è l'unica istanza di "Aggiornamento
+ * del Radar" in pagina; il grafico/strumento non riproduce il paragrafo.
+ */
 export default function RadarLoading() {
   return (
-    <div className="tv-radar-page" data-state="loading">
+    <div
+      className="tv-radar-page"
+      data-state="loading"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="Aggiornamento del Radar in corso."
+    >
       <section
-        className="tv-radar"
-        aria-labelledby="tv-radar-title"
+        className="tv-radar tv-radar--loading"
         aria-busy="true"
       >
-        <header className="tv-radar__header">
-          <div>
-            <p className="tv-radar__eyebrow">Scrivania segnali · Product Hunt</p>
-            <h1 id="tv-radar-title">Radar</h1>
-            <p className="tv-radar__lede">
-              Lanci reali, ordinati per periodo. Nessun dato simulato.
-            </p>
-          </div>
-          <span
-            className="tv-radar__status"
-            data-state="loading"
-            role="status"
-            aria-live="polite"
-          >
-            <span aria-hidden="true" />
-            CONNESSIONE
-          </span>
-        </header>
-
-        <section
-          className="tv-radar__panel"
-          aria-label="Controlli e risultati Radar in caricamento"
-        >
-          <p className="tv-radar__panel-hint" role="status">
-            Stiamo contattando Product Hunt per recuperare i segnali del
-            periodo richiesto. Niente dati fittizi: appena arrivano i risultati
-            vedrai la classifica reale.
+        <div className="tv-radar__loading-block" role="status">
+          <h2 className="tv-radar__loading-title">Aggiornamento del Radar</h2>
+          <p className="tv-radar__loading-body">
+            Stiamo recuperando i segnali da Product Hunt. I risultati
+            compariranno appena saranno disponibili.
           </p>
-        </section>
+        </div>
       </section>
     </div>
   );
