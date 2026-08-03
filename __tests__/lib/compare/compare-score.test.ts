@@ -60,7 +60,7 @@ describe("compare-score truth contract", () => {
 
     expect(supported.version).toBe(COMPARE_SCORE_VERSION);
     expect(supported.total).toBe(8.4);
-    expect(supported.assessment.state).toBe("supported");
+    expect(supported.assessment.state).toBe("verified");
     expect(supported.components).toEqual([
       expect.objectContaining({
         key: "editorial-assessment",
@@ -71,7 +71,7 @@ describe("compare-score truth contract", () => {
 
     expect(incomplete.total).toBeNull();
     expect(incomplete.rank).toBeNull();
-    expect(incomplete.assessment.state).toBe("insufficient_evidence");
+    expect(incomplete.assessment.state).toBe("not_assessed");
     expect(incomplete.explanation.join(" ")).toContain("in preparazione");
   });
 
@@ -117,7 +117,7 @@ describe("compare-score truth contract", () => {
 
     for (const tool of [missingValue, missingVerdict, missingLimitations]) {
       expect(scoreToolForCompare(tool).total).toBeNull();
-      expect(scoreToolForCompare(tool).assessment.state).toBe("insufficient_evidence");
+      expect(scoreToolForCompare(tool).assessment.state).toBe("not_assessed");
     }
   });
 
@@ -145,5 +145,77 @@ describe("compare-score truth contract", () => {
 
     expect(signature(reversed)).toEqual(signature(forward));
     expect(forward.map(({ slug }) => slug)).toEqual(["atlas-ai", "gamma-app", "beta-clone"]);
+  });
+});
+
+/**
+ * Closure 2026-08-03 §8 — contratto di non-fabbricazione.
+ *
+ * Il runtime non deriva mai un punteggio da `level`, `featured`, scorecard
+ * parziali, evidenze libere, popolarità o altri campi non editoriali.
+ * Solo `ToolPublic.score` verified (7 condizioni) produce un totale.
+ * Tutti gli altri tool finiscono su `not_assessed` e l'UI mostra
+ * "Valutazione editoriale in preparazione".
+ */
+describe("compare-score: non-fabbricazione (closure 2026-08-03 §8)", () => {
+  it("non produce un totale per VibeCode quando ToolPublic.score è null", () => {
+    const vibecode: ToolPublic = {
+      ...partialToolPublicFixture,
+      slug: "vibecode",
+      name: "VibeCode",
+    };
+    const result = scoreToolForCompare(vibecode);
+
+    expect(result.assessment.state).toBe("not_assessed");
+    expect(result.total).toBeNull();
+    expect(result.explanation.join(" ")).toContain("in preparazione");
+  });
+
+  it("non produce un totale per WeWeb quando ToolPublic.score è null", () => {
+    const weweb: ToolPublic = {
+      ...partialToolPublicFixture,
+      slug: "weweb",
+      name: "WeWeb",
+    };
+    const result = scoreToolForCompare(weweb);
+
+    expect(result.assessment.state).toBe("not_assessed");
+    expect(result.total).toBeNull();
+  });
+
+  it("non deduce un totale da featured, slug, name, o level", () => {
+    const enriched: ToolPublic = {
+      ...partialToolPublicFixture,
+      slug: "vibecode",
+      name: "VibeCode",
+      flags: { featured: true },
+      taxonomy: {
+        ...partialToolPublicFixture.taxonomy,
+        tags: ["vibe-coding", "ai", "builder", "iterazione", "pubblicazione"],
+      },
+    };
+    const result = scoreToolForCompare(enriched);
+
+    expect(result.total).toBeNull();
+    expect(result.assessment.state).toBe("not_assessed");
+  });
+
+  it("partial score (senza verdict/limitations) resta su not_assessed, mai scorecard_derived", () => {
+    const partialSupported: ToolPublic = {
+      ...partialToolPublicFixture,
+      score: {
+        inputs: [{ dimension: "ease_of_use", level: "strong" }],
+        provenance: {
+          kind: "editorial-assessment",
+          sourceField: "editorial_scorecard",
+          methodologyVersion: "editorial-score-v1",
+          assessedAt: "2026-08-01T10:00:00.000Z",
+        },
+      },
+    };
+    const result = scoreToolForCompare(partialSupported);
+
+    expect(result.assessment.state).toBe("not_assessed");
+    expect(result.total).toBeNull();
   });
 });

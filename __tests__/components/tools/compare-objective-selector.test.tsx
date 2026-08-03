@@ -335,14 +335,14 @@ describe("ToolBattleView — viewport esclusivo e flag (B34)", () => {
     const expected = objectiveScoreOf("gamma-app", "save-time");
     expect(expected).toBe(objectiveScoreOf("gamma-app", null));
     expect(screen.getAllByText("Gamma").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText("n/d").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Valutazione editoriale in preparazione").length).toBeGreaterThanOrEqual(1);
 
     setDesktopViewport(true);
 
     expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(0);
     expect(container.querySelectorAll(".desktop-compare")).toHaveLength(1);
     expectRadioChecked(screen.getByRole("radio", { name: "Risparmiare tempo" }), true);
-    expect(screen.getAllByText("n/d").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Valutazione editoriale in preparazione").length).toBeGreaterThanOrEqual(1);
   });
 
   it("la priorità resta una guida senza delta numerici", () => {
@@ -375,7 +375,7 @@ describe("ToolBattleView — viewport esclusivo e flag (B34)", () => {
     expect(screen.queryByRole("group", { name: "Obiettivo del confronto" })).toBeNull();
     expect(screen.queryByText(/\+\d+ obiettivo/)).toBeNull();
 
-    expect(screen.getAllByText("n/d").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Valutazione editoriale in preparazione").length).toBeGreaterThanOrEqual(1);
   });
 
   it("nessuna violazione axe sul confronto con selettore obiettivo", async () => {

@@ -483,7 +483,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     ).toBeNull();
     // Il verdetto resta raggiungibile come prima.
     expect(
-      screen.getByRole("button", { name: /Aggiorna il verdetto/ }),
+      screen.getByRole("button", { name: /Ricalcola il verdetto/ }),
     ).toBeTruthy();
   });
 

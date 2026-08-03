@@ -10,7 +10,6 @@ import {
   withBattleScores,
   withObjectiveScores,
 } from "@/components/tools/tool-battle-shared";
-import { createToolPublicView } from "@/lib/data/tool-public-view";
 import type { ToolPublic } from "@/lib/types/tool-public";
 
 function withSupportedAssessment(tool: ToolPublic, value: number): ToolPublic {
@@ -75,8 +74,9 @@ describe("tool-battle truth adapter", () => {
 
     expect(verdict.state).toBe("insufficient_evidence");
     expect(verdict.winner).toBeNull();
-    expect(verdict.label).toBe("Dati insufficienti per un verdetto");
-    expect(verdict.reasons.join(" ")).toContain("Non sono ancora disponibili abbastanza valutazioni editoriali");
+    expect(verdict.label).toBe("Valutazione editoriale in preparazione");
+    expect(verdict.reasons.join(" ")).toContain("Valutazione editoriale in preparazione");
+    expect(verdict.reasons.join(" ")).toContain("in preparazione per");
     expect(verdict.reasons.join(" ")).not.toMatch(/score\.(value|provenance|verdict)/);
   });
 
@@ -122,5 +122,57 @@ describe("tool-battle truth adapter", () => {
     expect(verdict.state).toBe("personal_verdict");
     expect(verdict.winner?.slug).toBe("atlas-ai");
     expect(verdict.label).toBe("Verdetto personale");
+  });
+});
+
+/**
+ * Closure 2026-08-03 §8 — Confronto + Arena non deducono mai un totale da
+ * `level`, `featured`, scorecard parziali o altri campi non editoriali.
+ * VibeCode e WeWeb, in assenza di un `ToolPublic.score` verified,
+ * restano su `insufficient_evidence` con label "Valutazione editoriale
+ * in preparazione".
+ */
+import { directoryTools } from "@/lib/data/tooolvibes-directory";
+import { adaptDirectoryToolToPublic } from "@/lib/data/tool-public-adapters";
+import { createToolPublicView } from "@/lib/data/tool-public-view";
+
+const findDirectory = (slug: string) => {
+  const tool = directoryTools.find((t) => t.slug === slug);
+  if (!tool) throw new Error(`Directory tool ${slug} not found`);
+  return tool;
+};
+
+const vibecodeView = createToolPublicView(
+  adaptDirectoryToolToPublic(findDirectory("vibecode"), { status: "published" }),
+  findDirectory("vibecode"),
+);
+const wewebView = createToolPublicView(
+  adaptDirectoryToolToPublic(findDirectory("weweb"), { status: "published" }),
+  findDirectory("weweb"),
+);
+
+describe("VibeCode + WeWeb: nessun punteggio fabbricato (closure 2026-08-03 §8)", () => {
+  it("VibeCode + WeWeb finiscono su insufficient_evidence senza winner", () => {
+    const tools = withBattleScores(
+      normalise([vibecodeView, wewebView], ["vibecode", "weweb"]),
+    );
+
+    const verdict = getBattleVerdict(tools);
+
+    expect(verdict.state).toBe("insufficient_evidence");
+    expect(verdict.winner).toBeNull();
+    expect(verdict.label).toBe("Valutazione editoriale in preparazione");
+    expect(tools.find((t) => t.slug === "weweb")?.battleScore).toBeNull();
+    expect(tools.find((t) => t.slug === "vibecode")?.battleScore).toBeNull();
+    expect(verdict.reasons.join(" ")).toContain("Valutazione editoriale in preparazione");
+  });
+
+  it("VibeCode alone: battleScore è null (nessuna fabbricazione)", () => {
+    const tools = withBattleScores(
+      normalise([vibecodeView], ["vibecode"]),
+    );
+
+    expect(tools[0].battleScore).toBeNull();
+    expect(tools[0].compareScore.assessment.state).toBe("not_assessed");
   });
 });

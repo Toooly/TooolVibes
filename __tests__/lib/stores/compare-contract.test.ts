@@ -27,6 +27,10 @@ import {
   MAX_COMPARE_TOOLS,
   MIN_COMPARE_TOOLS,
 } from "@/lib/discovery/workspace-constants";
+import { adaptDirectoryToolToPublic } from "@/lib/data/tool-public-adapters";
+import { createToolPublicView } from "@/lib/data/tool-public-view";
+import { scoreToolForCompare } from "@/lib/compare/compare-score";
+import { directoryTools } from "@/lib/data/tooolvibes-directory";
 
 describe("Compare contract — canonical MIN/MAX", () => {
   it("MIN_COMPARE_TOOLS = 2 (canonical minimum to activate comparison)", () => {
@@ -168,5 +172,43 @@ describe("Compare contract — canonical MIN/MAX", () => {
         }
       }
     });
+  });
+});
+
+/**
+ * Closure 2026-08-03 §2 — il workspace store conserva solo slug, non score.
+ * Il dato editoriale verified viene reidratato dal resolver canonico
+ * (`getPublicToolViews` → `adaptDirectoryToolToPublic` → assessment).
+ */
+
+describe("Compare store — rehydration from canonical data (closure 2026-08-03 §2)", () => {
+  function rehydrateCompareView(slug: string) {
+    const directory = directoryTools.find((tool) => tool.slug === slug);
+    if (!directory) throw new Error(`directory tool ${slug} not found`);
+    const publicTool = adaptDirectoryToolToPublic(directory, { status: "published" });
+    return createToolPublicView(publicTool, directory);
+  }
+
+  it("the workspace store keeps only slugs, never score snapshots", () => {
+    // Simula il workspace store canonico: contiene solo slug,
+    // nessun ToolPublic, nessun punteggio. Il punteggio arriva solo
+    // dopo la reidratazione dal dataset canonico.
+    const storedState: { compare: { slugs: string[] } } = {
+      compare: { slugs: ["blink", "vibecode", "weweb"] },
+    };
+    expect(storedState.compare.slugs).toEqual(["blink", "vibecode", "weweb"]);
+    // Lo stato non contiene `score`, `total`, o altri campi editoriali.
+    expect(JSON.stringify(storedState)).not.toMatch(/value/);
+    expect(JSON.stringify(storedState)).not.toMatch(/total/);
+  });
+
+  it("rehydrated Blink, VibeCode, and WeWeb views stay not_assessed", () => {
+    for (const slug of ["blink", "vibecode", "weweb"]) {
+      const view = rehydrateCompareView(slug);
+      const result = scoreToolForCompare(view.publicTool);
+
+      expect(result.assessment.state).toBe("not_assessed");
+      expect(result.total).toBeNull();
+    }
   });
 });

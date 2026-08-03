@@ -199,9 +199,9 @@ export const draftToolRecordFixture: ToolRecord = {
 };
 
 export const directoryToolFixture: DirectoryTool = {
-  id: "directory-blink",
-  name: "Blink",
-  slug: "blink",
+  id: "directory-fixture-01",
+  name: "Fixture Directory Tool",
+  slug: "fixture-directory-tool",
   category: "Vibe Coding",
   categoryLabel: "Vibe coding / builder app AI",
   level: "featured",
