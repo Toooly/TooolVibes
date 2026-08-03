@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import type {
-  ProductHuntItem,
-  ProductHuntPayload,
-  ProductHuntRange,
+import {
+  RADAR_RANGE_SETTINGS,
+  type ProductHuntItem,
+  type ProductHuntPayload,
+  type ProductHuntRange,
 } from "@/lib/radar/product-hunt-contract";
 import { createTimeoutFetch } from "@/lib/utils/timeout-fetch";
 
@@ -77,11 +78,7 @@ const PRODUCT_HUNT_QUERY = /* GraphQL */ `
   }
 `;
 
-const rangeSettings: Record<ProductHuntRange, { days: number; ttlMs: number; first: number }> = {
-  day: { days: 1, ttlMs: 30 * 60 * 1000, first: 20 },
-  week: { days: 7, ttlMs: 3 * 60 * 60 * 1000, first: 30 },
-  month: { days: 30, ttlMs: 12 * 60 * 60 * 1000, first: 40 },
-};
+const rangeSettings = RADAR_RANGE_SETTINGS;
 
 // Cache dei soli payload live riusciti: il fallback stale ri-serva sempre
 // l'ultima classifica reale con il suo `updatedAt` originale (B36 / FLOW-606).
