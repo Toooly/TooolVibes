@@ -732,6 +732,7 @@
   border-radius: 0.75rem;
   transition: border-color 200ms ease, background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
   min-height: 180px;
+  min-width: 0;
 }
 
 .ar4-card.is-hover {
@@ -1435,6 +1436,18 @@
   .ar4-card.is-promoted .ar4-card__toggles > * {
     width: 44px;
     height: 44px;
+  }
+
+  /* Mobile promoted: stack metrics vertically to avoid
+     nowrap evidence overflowing the card. */
+  .ar4-card.is-promoted .ar4-card__metrics {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .ar4-card.is-promoted .ar4-card__evidence {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    min-width: 0;
   }
 }
 

@@ -53,6 +53,17 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* .brand-panel and friends declare a dark `--tv-ink-inverted-secondary`
+   foreground for *all* descendants to read on the ivory surface. But
+   the route-marker index pill is a self-contained dark tile, so the
+   dark-on-dark inheritance makes the number invisible. Force the
+   pill's own foreground to win. */
+.brand-panel .route-marker__index,
+.premium-card .route-marker__index,
+.light-surface .route-marker__index {
+  color: var(--tv-ink-primary) !important;
+}
+
 .route-marker__label,
 .route-marker__status {
   min-width: 0;
@@ -198,6 +209,26 @@
   color: var(--tv-ink-inverted) !important;
 }
 
+/* Override #main-content .dark-panel h* when the h* sits inside a
+   nested light surface (brand-panel, premium-card, etc.). The dark
+   panel ancestor forces light foreground on every h*, but the inner
+   brand-panel needs dark text on its ivory surface. Specificity
+   must exceed the #main-content .dark-panel :where(h*) rule. */
+#main-content .dark-panel .brand-panel :where(h1, h2, h3, h4, strong),
+#main-content .dark-panel .premium-card :where(h1, h2, h3, h4, strong),
+#main-content .dark-panel .light-surface :where(h1, h2, h3, h4, strong),
+#main-content .dark-panel .metadata-block :where(h1, h2, h3, h4, strong),
+#main-content .dark-panel .stat-block :where(h1, h2, h3, h4, strong) {
+  color: var(--tv-ink-inverted) !important;
+}
+#main-content .dark-panel .brand-panel :where(p, li, small, span),
+#main-content .dark-panel .premium-card :where(p, li, small, span),
+#main-content .dark-panel .light-surface :where(p, li, small, span),
+#main-content .dark-panel .metadata-block :where(p, li, small, span),
+#main-content .dark-panel .stat-block :where(p, li, small, span) {
+  color: var(--tv-ink-inverted-secondary) !important;
+}
+
 .marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(p, li, small, span) {
   color: var(--tv-ink-inverted-secondary) !important;
 }
@@ -315,6 +346,22 @@
 .marketing-shell main .gap-5 .editorial-label {
   color: var(--tv-accent-violet-on-dark) !important;
   letter-spacing: var(--tv-tracking-eyebrow);
+}
+
+/* Nested dark surfaces inside an ivory parent.
+   .brand-panel and friends force a dark foreground on every
+   descendant. If a descendant is itself a dark surface (e.g.
+   .dark-panel or a dark-on-dark pill), it must keep its own
+   light foreground. Restore the dark-canvas ink ramp locally. */
+.marketing-shell main .dark-panel :where(span, p, li, small),
+.marketing-shell main .dark-panel :where(span, p, li, small) *,
+.marketing-shell main .discovery-strip-dark :where(span, p, li, small),
+.marketing-shell main .discovery-strip-dark :where(span, p, li, small) * {
+  color: var(--tv-ink-primary) !important;
+}
+.marketing-shell main .dark-panel :where(span, p, li, small).text-white\/60,
+.marketing-shell main .dark-panel :where(span, p, li, small).text-white\/60 * {
+  color: rgba(255, 255, 255, 0.6) !important;
 }
 
 #main-content :where(.dark-panel, .discovery-strip-dark) {
@@ -499,6 +546,28 @@
 }
 
 /* ────────────────────────────────────────────────────────────────
+   Light-bg CTA inside dark hero panels.
+   .hero-shell declares color: var(--tv-ink-primary) !important
+   which forces every descendant to light text. But buttons/cards
+   that opt into a light background (bg-white) MUST keep dark text
+   to stay visible. Restore the foreground locally.
+   Use precise class matchers to avoid catching hover:bg-violet-50.
+   ──────────────────────────────────────────────────────────────── */
+.marketing-shell main .hero-shell :where(a, button).bg-white,
+.marketing-shell main .premium-panel :where(a, button).bg-white,
+.marketing-shell main .dark-panel :where(a, button).bg-white {
+  color: var(--tv-ink-inverted-primary) !important;
+}
+.marketing-shell main .hero-shell :where(a, button).bg-violet-500,
+.marketing-shell main .hero-shell :where(a, button).bg-violet-600,
+.marketing-shell main .hero-shell :where(a, button).bg-violet-700,
+.marketing-shell main .premium-panel :where(a, button).bg-violet-500,
+.marketing-shell main .premium-panel :where(a, button).bg-violet-600,
+.marketing-shell main .premium-panel :where(a, button).bg-violet-700 {
+  color: var(--tv-ink-on-brand) !important;
+}
+
+/* ────────────────────────────────────────────────────────────────
    Canonical inverted (ivory) surface contract.
    Use .ivory-surface on any panel/section that should display
    on the warm ivory Decision Desk palette. Self-contained: it
@@ -535,6 +604,20 @@
 .ivory-surface .editorial-label,
 .ivory-surface .tool-detail-breadcrumb {
   color: var(--tv-accent-violet-on-ivory);
+}
+
+/* The dark-context eyebrow rule (accent-violet-on-dark) leaks into
+   light surfaces when an editorial-label sits as a descendant
+   of a non-ivory wrapper inside an ivory parent (e.g. the cards
+   inside .brand-panel on affiliati/posts). Force the ivory token
+   there. Specificity must match or exceed the .marketing-shell main
+   > .editorial-label override (which is 0,0,3,0 with !important). */
+.marketing-shell main .brand-panel .editorial-label,
+.marketing-shell main .light-surface .editorial-label,
+.marketing-shell main .metadata-block .editorial-label,
+.marketing-shell main .premium-card .editorial-label,
+.marketing-shell main .stat-block .editorial-label {
+  color: var(--tv-accent-violet-on-ivory) !important;
 }
 
 .ivory-surface .text-muted-soft,
@@ -602,6 +685,24 @@
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-feature, 1.25rem);
   background: var(--tv-surface-raised);
+}
+
+/* Dark self-contained 404 / state panel.
+   The default body color is the dark --foreground (#120d2f) which is
+   invisible on a dark surface. Override locally so the panel always
+   uses the dark-canvas ink ramp. */
+.tv-state-panel--dark {
+  color: var(--tv-ink-primary);
+}
+.tv-state-panel--dark h1,
+.tv-state-panel--dark h2,
+.tv-state-panel--dark h3,
+.tv-state-panel--dark p,
+.tv-state-panel--dark a {
+  color: var(--tv-ink-primary);
+}
+.tv-state-panel--dark a {
+  text-decoration: none;
 }
 
 .tv-state-panel__eyebrow {

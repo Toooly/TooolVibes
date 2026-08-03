@@ -1,0 +1,8581 @@
+[
+  {
+    "route": "home",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "home",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": []
+  },
+  {
+    "route": "home",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": []
+  },
+  {
+    "route": "home",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "home",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "home",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "home",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "home",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "home",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "archivio",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 239,
+            "h": 20.6875
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 265,
+            "h": 18.390625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 265,
+            "h": 18.390625
+          },
+          {
+            "tag": "a",
+            "text": "Jenni AI",
+            "w": 229,
+            "h": 19.546875
+          },
+          {
+            "tag": "a",
+            "text": "BetterPic",
+            "w": 229,
+            "h": 19.546875
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "archivio",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 254,
+            "h": 20.6875
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 280,
+            "h": 18.390625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 280,
+            "h": 18.390625
+          },
+          {
+            "tag": "a",
+            "text": "Jenni AI",
+            "w": 244,
+            "h": 19.546875
+          },
+          {
+            "tag": "a",
+            "text": "BetterPic",
+            "w": 244,
+            "h": 19.546875
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "archivio",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 290,
+            "h": 20.6875
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 316,
+            "h": 18.390625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 316,
+            "h": 18.390625
+          },
+          {
+            "tag": "a",
+            "text": "Jenni AI",
+            "w": 280,
+            "h": 19.546875
+          },
+          {
+            "tag": "a",
+            "text": "BetterPic",
+            "w": 280,
+            "h": 19.546875
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "archivio",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 622,
+            "h": 17
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 654,
+            "h": 15
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 654,
+            "h": 15
+          },
+          {
+            "tag": "a",
+            "text": "Jenni AI",
+            "w": 602,
+            "h": 17
+          },
+          {
+            "tag": "a",
+            "text": "BetterPic",
+            "w": 602,
+            "h": 17
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "archivio",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "button",
+            "cls": "ar4-filters__disclosure",
+            "right": 1103.75,
+            "width": 87.84375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 1038.90625,
+            "width": 14
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 1035.40625,
+            "width": 7
+          },
+          {
+            "tag": "span",
+            "cls": "",
+            "right": 1092.75,
+            "width": 48.84375
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "Tutti30",
+            "w": 89.40625,
+            "h": 32.53125
+          },
+          {
+            "tag": "button",
+            "text": "Vibe coding3",
+            "w": 124.515625,
+            "h": 32.53125
+          },
+          {
+            "tag": "button",
+            "text": "Builder app AI7",
+            "w": 136.46875,
+            "h": 32.53125
+          },
+          {
+            "tag": "button",
+            "text": "No-code7",
+            "w": 104.8125,
+            "h": 32.53125
+          },
+          {
+            "tag": "button",
+            "text": "CMS headless1",
+            "w": 138.546875,
+            "h": 32.53125
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "archivio",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "archivio",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "archivio",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "archivio",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "radar",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "radar",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "radar",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "radar",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "radar",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "radar",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "radar",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "radar",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "radar",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "compare",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Scegli i tool",
+            "w": 135.859375,
+            "h": 43.109375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "compare",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Scegli i tool",
+            "w": 135.859375,
+            "h": 43.109375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "compare",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Scegli i tool",
+            "w": 135.859375,
+            "h": 43.109375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "compare",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "compare",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "compare",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "compare",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "compare",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "compare",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "shortlist",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 245.8125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shortlist",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 260.8125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shortlist",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 300.8125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shortlist",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 208,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shortlist",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 208,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shortlist",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "shortlist",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "shortlist",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "shortlist",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "wishlist",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 245.8125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "wishlist",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 260.8125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "wishlist",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 300.8125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "wishlist",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 208,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "wishlist",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Blink",
+            "w": 53.921875,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "VibeCode",
+            "w": 83.25,
+            "h": 35.15625
+          },
+          {
+            "tag": "a",
+            "text": "WeWeb",
+            "w": 69.53125,
+            "h": 35.15625
+          },
+          {
+            "tag": "button",
+            "text": "Suggerisci un tool",
+            "w": 208,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "wishlist",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "wishlist",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "wishlist",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "wishlist",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "tags",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "no-code6",
+            "w": 101.79486083984375,
+            "h": 39.519775390625
+          },
+          {
+            "tag": "a",
+            "text": "vibe coding3",
+            "w": 120.13462829589844,
+            "h": 39.519775390625
+          },
+          {
+            "tag": "a",
+            "text": "linkedin3",
+            "w": 97.79656982421875,
+            "h": 39.52001953125
+          },
+          {
+            "tag": "a",
+            "text": "sales3",
+            "w": 81.72611999511719,
+            "h": 39.52001953125
+          },
+          {
+            "tag": "a",
+            "text": "ai video3",
+            "w": 96.60784912109375,
+            "h": 39.52001953125
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "tags",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "no-code6",
+            "w": 101.79486083984375,
+            "h": 39.519775390625
+          },
+          {
+            "tag": "a",
+            "text": "vibe coding3",
+            "w": 120.13462829589844,
+            "h": 39.519775390625
+          },
+          {
+            "tag": "a",
+            "text": "linkedin3",
+            "w": 97.79656982421875,
+            "h": 39.52001953125
+          },
+          {
+            "tag": "a",
+            "text": "sales3",
+            "w": 81.72611999511719,
+            "h": 39.52001953125
+          },
+          {
+            "tag": "a",
+            "text": "ai video3",
+            "w": 96.60787963867188,
+            "h": 39.52001953125
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "tags",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "no-code6",
+            "w": 101.79487609863281,
+            "h": 39.52001953125
+          },
+          {
+            "tag": "a",
+            "text": "vibe coding3",
+            "w": 120.1346435546875,
+            "h": 39.52001953125
+          },
+          {
+            "tag": "a",
+            "text": "linkedin3",
+            "w": 97.79653930664062,
+            "h": 39.52001953125
+          },
+          {
+            "tag": "a",
+            "text": "sales3",
+            "w": 81.72611999511719,
+            "h": 39.52001953125
+          },
+          {
+            "tag": "a",
+            "text": "ai video3",
+            "w": 96.60787200927734,
+            "h": 39.52001953125
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "tags",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "tags",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "tags",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "tags",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "tags",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "tags",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "collections",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Apri raccolta",
+            "w": 125.640625,
+            "h": 38.390625
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "collections",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Apri raccolta",
+            "w": 125.640625,
+            "h": 38.390625
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "collections",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Apri raccolta",
+            "w": 125.640625,
+            "h": 38.390625
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "collections",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "collections",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "collections",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "collections",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "collections",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "collections",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "community",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 313.1960144042969,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "community",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 328.0159912109375,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "community",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.472015380859375,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 367.5360107421875,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "community",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 133.2410888671875,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "community",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 133.2410888671875,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "community",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "community",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "community",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "community",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "contributi",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 313.1960144042969,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "contributi",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 328.0159912109375,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "contributi",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.472015380859375,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 367.5360107421875,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "contributi",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 133.2410888671875,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "contributi",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Leggi il Metodo",
+            "w": 133.2410888671875,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "contributi",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "contributi",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "contributi",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "contributi",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "chi-siamo",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "chi-siamo",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "chi-siamo",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "chi-siamo",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "chi-siamo",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "chi-siamo",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "chi-siamo",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "chi-siamo",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "chi-siamo",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "metodo",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Apri catalogo",
+            "w": 305,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Vai al confronto",
+            "w": 305,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Apri salvati",
+            "w": 305,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 60.203125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 39.921875,
+            "h": 18.953125
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "metodo",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Apri catalogo",
+            "w": 320,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Vai al confronto",
+            "w": 320,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Apri salvati",
+            "w": 320,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 60.203125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 39.921875,
+            "h": 18.953125
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "metodo",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Apri catalogo",
+            "w": 360,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Vai al confronto",
+            "w": 360,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Apri salvati",
+            "w": 360,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 60.203125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 39.921875,
+            "h": 18.953125
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "metodo",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 81.625,
+            "h": 25.265625
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 54.578125,
+            "h": 25.265625
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 45.96875,
+            "h": 25.265625
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "metodo",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 81.625,
+            "h": 25.265625
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 54.578125,
+            "h": 25.265625
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 45.96875,
+            "h": 25.265625
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "metodo",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "metodo",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "metodo",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "metodo",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "affiliati",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "affiliati",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "affiliati",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "affiliati",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "affiliati",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "affiliati",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "affiliati",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "affiliati",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "affiliati",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "shop",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shop",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shop",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shop",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shop",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "shop",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "shop",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "shop",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "shop",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "studio",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "Vai a Chi siamo",
+            "w": 313.1960144042969,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "studio",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.47198486328125,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "Vai a Chi siamo",
+            "w": 328.0159912109375,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "studio",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "",
+            "w": 43.472015380859375,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "Vai a Chi siamo",
+            "w": 367.5360107421875,
+            "h": 43.4720458984375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "studio",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Vai a Chi siamo",
+            "w": 131.14154052734375,
+            "h": 43.471923828125
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "studio",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Vai a Chi siamo",
+            "w": 131.14154052734375,
+            "h": 43.47198486328125
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "studio",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "studio",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "studio",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "studio",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "posts",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25106811523438,
+            "h": 15.8079833984375
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25105285644531,
+            "h": 15.8079833984375
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25105285644531,
+            "h": 15.80810546875
+          },
+          {
+            "tag": "button",
+            "text": "Mostra tutto: guide (+3)",
+            "w": 199.65316772460938,
+            "h": 41.49609375
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25105285644531,
+            "h": 15.80810546875
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "posts",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25106811523438,
+            "h": 15.8079833984375
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25105285644531,
+            "h": 15.807861328125
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25105285644531,
+            "h": 15.80810546875
+          },
+          {
+            "tag": "button",
+            "text": "Mostra tutto: guide (+3)",
+            "w": 199.65316772460938,
+            "h": 41.49560546875
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25105285644531,
+            "h": 15.80810546875
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "posts",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25106811523438,
+            "h": 15.8079833984375
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25105285644531,
+            "h": 15.807861328125
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25105285644531,
+            "h": 15.80810546875
+          },
+          {
+            "tag": "button",
+            "text": "Mostra tutto: guide (+3)",
+            "w": 199.6531982421875,
+            "h": 41.49560546875
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 91.25105285644531,
+            "h": 15.80810546875
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "posts",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Apri l'archivio",
+            "w": 302,
+            "h": 42.015625
+          },
+          {
+            "tag": "a",
+            "text": "Vai alle raccolte",
+            "w": 302,
+            "h": 42.015625
+          },
+          {
+            "tag": "a",
+            "text": "Leggi",
+            "w": 74.25,
+            "h": 42.015625
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 92.359375,
+            "h": 16
+          },
+          {
+            "tag": "a",
+            "text": "Leggi",
+            "w": 74.25,
+            "h": 42.015625
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "posts",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Apri l'archivio",
+            "w": 266.734375,
+            "h": 42.015625
+          },
+          {
+            "tag": "a",
+            "text": "Vai alle raccolte",
+            "w": 266.734375,
+            "h": 42.015625
+          },
+          {
+            "tag": "a",
+            "text": "Leggi",
+            "w": 74.25,
+            "h": 42.015625
+          },
+          {
+            "tag": "a",
+            "text": "Vedi tool →",
+            "w": 92.359375,
+            "h": 16
+          },
+          {
+            "tag": "a",
+            "text": "Leggi",
+            "w": 74.25,
+            "h": 42.015625
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "posts",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "posts",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "posts",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "posts",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "product-hunt",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "product-hunt",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "product-hunt",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "product-hunt",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "product-hunt",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "product-hunt",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "product-hunt",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "product-hunt",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "product-hunt",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "cookie",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "cookie",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "cookie",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "cookie",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "cookie",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "cookie",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "cookie",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "cookie",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "cookie",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "privacy",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "hello@tooolvibes.com",
+            "w": 170,
+            "h": 22
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "privacy",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "hello@tooolvibes.com",
+            "w": 170,
+            "h": 22
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "privacy",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "hello@tooolvibes.com",
+            "w": 170,
+            "h": 22
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "privacy",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "hello@tooolvibes.com",
+            "w": 170,
+            "h": 22
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "privacy",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "hello@tooolvibes.com",
+            "w": 170,
+            "h": 22
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "privacy",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "privacy",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "privacy",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "privacy",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "termini",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "termini",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "termini",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "termini",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "termini",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Salvati",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "termini",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "termini",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "termini",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "termini",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "account",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "Registrati",
+            "w": 65.875,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 163.5,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 163.5,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "account",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "Registrati",
+            "w": 65.875,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 171,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 171,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "account",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "Registrati",
+            "w": 65.875,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 191,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 191,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "account",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "Registrati",
+            "w": 65.875,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 336,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 336,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "account",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "button",
+            "text": "Registrati",
+            "w": 65.875,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "TOOOLVIBES",
+            "w": 163.875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Radar",
+            "w": 177.03125,
+            "h": 22.109375
+          },
+          {
+            "tag": "a",
+            "text": "Confronto",
+            "w": 177.03125,
+            "h": 22.109375
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "account",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "account",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "account",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "account",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/betterpic",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "post/betterpic",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": []
+  },
+  {
+    "route": "post/betterpic",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": []
+  },
+  {
+    "route": "post/betterpic",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "post/betterpic",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "post/betterpic",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/betterpic",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/betterpic",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/betterpic",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/reclaim-ai",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "post/reclaim-ai",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": []
+  },
+  {
+    "route": "post/reclaim-ai",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": []
+  },
+  {
+    "route": "post/reclaim-ai",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "post/reclaim-ai",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "post/reclaim-ai",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/reclaim-ai",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/reclaim-ai",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/reclaim-ai",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/windsor-ai",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "post/windsor-ai",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": []
+  },
+  {
+    "route": "post/windsor-ai",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": []
+  },
+  {
+    "route": "post/windsor-ai",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "post/windsor-ai",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": []
+  },
+  {
+    "route": "post/windsor-ai",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/windsor-ai",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/windsor-ai",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "post/windsor-ai",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/blink",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/blink",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/blink",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 662.75,
+            "width": 135.15625
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/blink",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/blink",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/blink",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/blink",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/blink",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/blink",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/betterpic",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/betterpic",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/betterpic",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 662.75,
+            "width": 135.15625
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/betterpic",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/betterpic",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/betterpic",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/betterpic",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/betterpic",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/betterpic",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/make",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/make",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/make",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 662.75,
+            "width": 135.15625
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/make",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/make",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/make",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/make",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/make",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/make",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/flowise",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/flowise",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/flowise",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 662.75,
+            "width": 135.15625
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/flowise",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/flowise",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/flowise",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/flowise",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/flowise",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/flowise",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/imagine-art",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/imagine-art",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/imagine-art",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 662.75,
+            "width": 135.15625
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/imagine-art",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/imagine-art",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/imagine-art",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/imagine-art",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/imagine-art",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/imagine-art",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/v0",
+    "vp": "mobile-375",
+    "viewport": {
+      "name": "mobile-375",
+      "width": 375,
+      "height": 812,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/v0",
+    "vp": "mobile-390",
+    "viewport": {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 411.21875,
+            "width": 102.6875
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/v0",
+    "vp": "mobile-430",
+    "viewport": {
+      "name": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "isMobile": true,
+      "dpr": 3
+    },
+    "issues": [
+      {
+        "type": "element-overflow",
+        "elements": [
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 523.59375,
+            "width": 108.375
+          },
+          {
+            "tag": "svg",
+            "cls": "[object SVGAnimatedString]",
+            "right": 444.21875,
+            "width": 13
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 3.25
+          },
+          {
+            "tag": "path",
+            "cls": "[object SVGAnimatedString]",
+            "right": 443.1354064941406,
+            "width": 10.83331298828125
+          },
+          {
+            "tag": "a",
+            "cls": "td-final-decision-nav__link",
+            "right": 662.75,
+            "width": 135.15625
+          }
+        ]
+      },
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/v0",
+    "vp": "tablet-768",
+    "viewport": {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/v0",
+    "vp": "tablet-1024",
+    "viewport": {
+      "name": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "isMobile": true,
+      "dpr": 2
+    },
+    "issues": [
+      {
+        "type": "small-touch-target",
+        "elements": [
+          {
+            "tag": "a",
+            "text": "Home",
+            "w": 41.296875,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Catalogo",
+            "w": 76.578125,
+            "h": 18.953125
+          },
+          {
+            "tag": "a",
+            "text": "Panoramica",
+            "w": 136.3125,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Valutazione",
+            "w": 139.21875,
+            "h": 40
+          },
+          {
+            "tag": "a",
+            "text": "Scheda",
+            "w": 102.6875,
+            "h": 40
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "route": "toools/v0",
+    "vp": "desktop-1280",
+    "viewport": {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/v0",
+    "vp": "desktop-1440",
+    "viewport": {
+      "name": "desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/v0",
+    "vp": "desktop-1920",
+    "viewport": {
+      "name": "desktop-1920",
+      "width": 1920,
+      "height": 1080,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  },
+  {
+    "route": "toools/v0",
+    "vp": "ultrawide-2560",
+    "viewport": {
+      "name": "ultrawide-2560",
+      "width": 2560,
+      "height": 1440,
+      "isMobile": false,
+      "dpr": 1
+    },
+    "issues": []
+  }
+]

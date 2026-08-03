@@ -1473,6 +1473,22 @@ img {
     background: rgba(168, 85, 247, 0.14);
   }
 
+  /* On dark surfaces the accent-strong text disappears into the
+     purple-tinted background. Lift the text to a brighter violet
+     so the badge stays readable. */
+  .dark-panel .premium-badge-accent,
+  .discovery-strip-dark .premium-badge-accent,
+  .premium-panel .premium-badge-accent,
+  .premium-card .premium-badge-accent,
+  .hero-shell .premium-badge-accent,
+  .v-about-services-section .premium-badge-accent,
+  .motion-stagger .premium-badge-accent,
+  .premium-badge-accent.premium-badge-accent--on-dark {
+    color: #d6c2ff;
+    border-color: rgba(192, 132, 252, 0.4);
+    background: rgba(168, 85, 247, 0.22);
+  }
+
   .premium-badge-success {
     color: #146c4b;
     border-color: rgba(110, 231, 183, 0.28);
@@ -10750,12 +10766,42 @@ img {
    light / etc.), the default editorial tokens (--foreground,
    --muted-strong) stay dark and the body becomes invisible. Force
    light-on-dark values for that exact context. */
-.marketing-shell > main .editorial-markdown:not(.inside-light-surface) {
+.marketing-shell > main .editorial-markdown:not(.inside-light-surface):not(.inside-ivory) {
   --foreground: rgba(240, 239, 255, 0.95);
   --muted: rgba(240, 239, 255, 0.72);
   --muted-strong: rgba(240, 239, 255, 0.9);
   --accent-strong: var(--tv-accent-cyan-on-dark, #4ccaf7);
   --line: rgba(240, 239, 255, 0.18);
+}
+
+/* Editorial markdown inside a light-surface wrapper (brand-panel,
+   premium-card, ivory-surface, metadata-block). Re-apply ivory
+   tokens so the markdown body stays readable on the ivory canvas. */
+.marketing-shell main .brand-panel .editorial-markdown,
+.marketing-shell main .premium-card .editorial-markdown,
+.marketing-shell main .light-surface .editorial-markdown,
+.marketing-shell main .ivory-surface .editorial-markdown,
+.marketing-shell main .metadata-block .editorial-markdown,
+.marketing-shell main .stat-block .editorial-markdown,
+.editorial-markdown.inside-light-surface,
+.editorial-markdown.inside-ivory {
+  --foreground: var(--tv-ink-inverted-primary);
+  --muted: var(--tv-ink-inverted-secondary);
+  --muted-strong: var(--tv-ink-inverted-secondary);
+  --accent-strong: var(--tv-accent-violet-on-ivory);
+  --accent: var(--tv-accent-violet-on-ivory);
+  --line: rgba(18, 13, 47, 0.18);
+}
+.marketing-shell main .brand-panel .editorial-markdown code,
+.marketing-shell main .premium-card .editorial-markdown code,
+.marketing-shell main .light-surface .editorial-markdown code,
+.marketing-shell main .ivory-surface .editorial-markdown code,
+.marketing-shell main .metadata-block .editorial-markdown code,
+.marketing-shell main .stat-block .editorial-markdown code,
+.editorial-markdown.inside-light-surface code,
+.editorial-markdown.inside-ivory code {
+  background: rgba(18, 13, 47, 0.08);
+  color: var(--tv-accent-violet-on-ivory);
 }
 
 .marketing-shell > main .editorial-markdown:not(.inside-light-surface) :is(img, video, iframe) {
@@ -14334,7 +14380,7 @@ img {
     font-size: 1.8rem;
     font-weight: 800;
     line-height: 1;
-    color: rgba(255, 255, 255, 0.30);
+    color: rgba(255, 255, 255, 0.55);
   }
 
   .mobile-method-room__panel-icon {
@@ -14393,7 +14439,7 @@ img {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.6);
   }
 
   .mobile-method-room__panel-cta {
@@ -20865,7 +20911,7 @@ img {
   }
 
   .mobile-method-room__panel-num {
-    color: rgba(255,255,255,0.22);
+    color: rgba(255,255,255,0.45);
     font-size: 2.6rem;
     font-weight: 950;
     line-height: 1;
