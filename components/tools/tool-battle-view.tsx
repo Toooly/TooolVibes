@@ -89,11 +89,11 @@ export function ToolBattleView({
       aria-label={showIntro ? undefined : "Area di confronto"}
     >
       {showIntro && <header className="tool-battle-page__intro">
-        <p className="tool-battle-page__eyebrow">Spazio di decisione</p>
-        <h1 id="tool-battle-title">Confronta meno. Scegli meglio.</h1>
+        <p className="tool-battle-page__eyebrow">Confronto guidato</p>
+        <h1 id="tool-battle-title">Metti a confronto ciò che conta davvero.</h1>
         <p className="tool-battle-page__lede">
-          Affianca i candidati più forti e arriva a una decisione leggibile,
-          motivata e pronta da ricordare.
+          Affianca da due a tre tool e confronta valutazioni editoriali,
+          casi d&apos;uso, punti di forza e limiti.
         </p>
         <ol className="tool-battle-page__steps" aria-label="Come funziona il confronto">
           <li><span>01</span> Aggiungi</li>

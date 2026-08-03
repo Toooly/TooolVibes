@@ -1794,6 +1794,14 @@
     text-transform: uppercase;
   }
 
+  .desktop-compare__lede {
+    margin: 0.4rem 0 0;
+    color: rgba(203, 213, 225, 0.85);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    max-width: 36rem;
+  }
+
   .desktop-compare__title {
     margin: 0;
     color: #F8FAFC;
@@ -2091,6 +2099,148 @@
   justify-content: center;
   gap: 0.18rem;
   padding: 0.75rem 0.7rem;
+}
+
+/* ─── Mobile matrix layout (closure 2026-08-03 §11) ───
+   - max-width 47.99rem: la prima colonna (label) è full-width, helper
+     sotto la label, valori in rail separata con scroll-snap orizzontale.
+   - 2 tool visibili se lo spazio lo consente, 3 tool via scroll-snap.
+   - nessuna colonna sticky.
+   - nessun word-break di parola; niente hyphens. */
+@media (max-width: 47.99rem) {
+  .mobile-compare-arena__matrix {
+    margin: 1rem 0 0;
+  }
+
+  .mobile-compare-arena__matrix-head,
+  .mobile-compare-arena__matrix-row {
+    flex-direction: column;
+    align-items: stretch;
+    overflow: visible;
+  }
+
+  .mobile-compare-arena__matrix-head {
+    position: static;
+    top: auto;
+    z-index: auto;
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-axis,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-axis {
+    flex-basis: auto;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 0.4rem;
+    padding: 0.65rem 0.85rem 0.4rem;
+    border-right: none;
+    border-bottom: 1px solid #ffffff14;
+  }
+
+  .mobile-compare-arena__matrix-axis > span {
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.2;
+    word-break: normal;
+    hyphens: none;
+    overflow-wrap: normal;
+  }
+
+  .mobile-compare-arena__matrix-axis > small {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: none;
+    letter-spacing: 0;
+    color: rgba(125, 211, 252, 0.78);
+    word-break: normal;
+    hyphens: none;
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-scroll-wrap,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-scroll-wrap {
+    width: 100%;
+    flex: 0 0 auto;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-scroll-wrap::-webkit-scrollbar,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-scroll-wrap::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-cells,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-cells {
+    width: auto;
+    min-width: 0;
+    flex: 0 0 auto;
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-cell,
+  .mobile-compare-arena__matrix-row .mobile-compare-arena__matrix-cell {
+    flex-basis: min(48vw, 13rem);
+    width: min(48vw, 13rem);
+    min-width: min(48vw, 13rem);
+    max-width: min(48vw, 13rem);
+    scroll-snap-align: start;
+    padding: 0.6rem 0.65rem;
+    word-break: normal;
+    hyphens: none;
+    overflow-wrap: break-word;
+  }
+
+  .mobile-compare-arena__matrix-head .mobile-compare-arena__matrix-cell--head {
+    min-height: 3.4rem;
+  }
+
+  .mobile-compare-arena__matrix-cell .mobile-compare-arena__matrix-value {
+    word-break: normal;
+    hyphens: none;
+  }
+}
+
+/* ─── Selected tools section (V2) ─── */
+.mobile-compare-arena__selected {
+  margin: 0 0 1rem;
+  padding: 0.85rem 0.85rem 0;
+  border-radius: 1.1rem;
+  background: rgba(6, 6, 14, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mobile-compare-arena__selected-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #cbd5e1;
+}
+
+.mobile-compare-arena__selected-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+/* ─── Verdict body (V2) ─── */
+.mobile-compare-arena__verdict-body {
+  margin: 0.65rem 0 0.85rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: rgba(226, 232, 240, 0.92);
 }
 
 .mobile-compare-arena__matrix-axis > span {

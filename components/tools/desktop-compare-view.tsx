@@ -24,7 +24,7 @@ import { ToolFighter } from "./tool-fighter";
 import { DiffMatrix } from "./mobile-compare-view";
 
 function formatEditorialScore(score: number | null) {
-  return score === null ? "n/d" : `${score}/10 editoriale`;
+  return score === null ? "Valutazione editoriale in preparazione" : `${score}/10 editoriale`;
 }
 
 function DesktopDuelCard({
@@ -205,13 +205,17 @@ export function DesktopCompareView({
       <div className="desktop-compare__arena">
         <header className="desktop-compare__hud">
           <div>
-            <p className="desktop-compare__eyebrow">Verdetto guidato</p>
-            <h2 className="desktop-compare__title">Chiudi la decisione</h2>
+            <p className="desktop-compare__eyebrow">Verdetto comparativo</p>
+            <h2 className="desktop-compare__title">Quale tool emerge dal confronto?</h2>
+            <p className="desktop-compare__lede">
+              Il risultato considera le valutazioni editoriali e il contesto dei tool
+              selezionati. Non indica un vincitore assoluto.
+            </p>
           </div>
           <span className="desktop-compare__status" aria-live="polite" aria-atomic="true">
             {battleState === "idle" && "Pronto"}
             {battleState === "fighting" && "Analisi in corso…"}
-            {battleState === "result" && (winner ? `Scelta: ${winner.name}` : verdict?.label)}
+            {battleState === "result" && (winner ? `Emerge: ${winner.name}` : verdict?.label)}
           </span>
         </header>
 
@@ -257,7 +261,7 @@ export function DesktopCompareView({
                 onClick={handleFight}
               >
                 <Scale className="size-5" aria-hidden="true" />
-                {battleState === "fighting" ? "Analisi in corso…" : battleState === "result" ? "Aggiorna il verdetto" : "Analizza il confronto"}
+                {battleState === "fighting" ? "Analisi in corso…" : battleState === "result" ? "Ricalcola il verdetto" : "Analizza il confronto"}
               </button>
             </div>
 
@@ -274,8 +278,12 @@ export function DesktopCompareView({
                     <Sparkles className="size-4" aria-hidden="true" />
                     <span>
                       {winner
-                        ? `${winner.name} è la scelta editoriale supportata`
-                        : "Nessun vincitore automatico"}
+                        ? `${winner.name} emerge dal confronto`
+                        : verdict.state === "tie"
+                          ? "Nessun vincitore netto"
+                          : verdict.state === "insufficient_evidence"
+                            ? "Una valutazione editoriale è ancora in preparazione"
+                            : "Nessun vincitore automatico"}
                     </span>
                   </div>
                   <span className="desktop-compare__verdict-label">{verdict.label}</span>

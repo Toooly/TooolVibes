@@ -3,7 +3,7 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Columns3, X, Scale, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, Columns3, X, Scale, TrendingUp } from "lucide-react";
 
 import { useToolWorkspaceStore, MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
@@ -43,7 +43,7 @@ type MobileCompareViewProps = {
 type BattleState = "idle" | "analyzing" | "charging" | "clash" | "result";
 
 function formatEditorialScore(score: number | null, compact = false) {
-  if (score === null) return compact ? "n/d" : "Ancora da valutare";
+  if (score === null) return compact ? "—" : "Valutazione editoriale in preparazione";
   return compact ? `${score}/10` : `${score}/10 editoriale`;
 }
 
@@ -156,8 +156,8 @@ export function DiffMatrix({
   const rows = [
     {
       id: "verdict",
-      label: "Verdetto",
-      helper: "lettura finale",
+      label: "Verdetto editoriale",
+      helper: "sintesi della valutazione",
       render: (t: NormalisedTool) => {
         const rank = rankBySlug.get(t.slug) ?? null;
         const isWinner = t.slug === winner?.slug;
@@ -171,16 +171,16 @@ export function DiffMatrix({
             </span>
             <strong>
               {isWinner
-                ? "Valutazione editoriale più alta"
+                ? "Emerge dal confronto"
                 : verdict.state === "tie"
-                  ? "Nessun vincitore automatico"
+                  ? "Risultato equilibrato"
                   : verdict.state === "insufficient_evidence"
-                    ? "Ancora da valutare"
+                    ? "Una valutazione editoriale è ancora in preparazione"
                     : "Confronta con le tue priorità"}
             </strong>
             <small>
               {isWinner
-                ? "Vantaggio supportato da una valutazione editoriale completa."
+                ? "Vantaggio supportato dalla valutazione editoriale."
                 : "La scelta non viene dedotta da completezza dei campi o parole chiave."}
             </small>
           </div>
@@ -190,21 +190,21 @@ export function DiffMatrix({
     },
     {
       id: "score",
-      label: "Valutazione",
-      helper: "fonte editoriale",
+      label: "Valutazione editoriale",
+      helper: "punteggio su 10",
       render: (t: NormalisedTool, isWinner: boolean) => {
         const score = scoreBySlug.get(t.slug) ?? t.battleScore;
         const canVisualizeScore = score !== null && maxScore !== null;
         return (
           <div className="mobile-compare-arena__matrix-score-card">
             <div className="mobile-compare-arena__matrix-score-head">
-              <strong>{score ?? "—"}</strong>
+              <strong>{score === null ? "—" : `${score}/10`}</strong>
               <small>
-                {isWinner
-                  ? "Valutazione editoriale supportata"
-                  : score === null
-                    ? "n/d"
-                    : "Valutazione editoriale"}
+                {score === null
+                  ? "Valutazione editoriale in preparazione"
+                  : isWinner
+                    ? "Più adatto in questo confronto"
+                    : "Punteggio editoriale"}
               </small>
             </div>
             {canVisualizeScore ? (
@@ -222,8 +222,8 @@ export function DiffMatrix({
     },
     {
       id: "category",
-      label: "Terreno",
-      helper: "dove compete",
+      label: "Ambito principale",
+      helper: "dove si posiziona",
       render: (t: NormalisedTool) => (
         <div className="mobile-compare-arena__matrix-evidence">
           <span className="mobile-compare-arena__matrix-badge">{t.categoryLabel}</span>
@@ -233,27 +233,44 @@ export function DiffMatrix({
       winnerSlugs: [] as string[],
     },
     {
-      id: "editorial-score",
-      label: "Valutazione editoriale",
-      helper: "contratto /10",
+      id: "use-cases",
+      label: "Casi d'uso",
+      helper: "scenari analizzati",
       render: (t: NormalisedTool) => (
-        <div className="mobile-compare-arena__matrix-score-card">
-          <div className="mobile-compare-arena__matrix-score-head">
-            <strong>{t.editorialScore ?? "—"}</strong>
-            <small>{t.editorialScore === null ? "n/d" : "/10"}</small>
-          </div>
+        <div className="mobile-compare-arena__matrix-evidence">
+          {t.useCases.length ? (
+            <>
+              {t.useCases.slice(0, 2).map((useCase) => (
+                <span key={useCase}>{useCase}</span>
+              ))}
+              <small>{t.useCases.length} scenari analizzati</small>
+            </>
+          ) : (
+            <small>Da valutare con altri dati.</small>
+          )}
         </div>
       ),
       winnerSlugs: [] as string[],
     },
     {
-      id: "coverage",
-      label: "Copertura",
-      helper: "casi coperti",
+      id: "strengths",
+      label: "Punti di forza",
+      helper: "dove emerge",
       render: (t: NormalisedTool) => (
-        <div className="mobile-compare-arena__matrix-proof">
-          <strong>{t.useCasesCount || "-"}</strong>
-          <small>{t.useCasesCount === 1 ? "scenario concreto" : "scenari concreti"}</small>
+        <div
+          title={t.highlights.join(" - ")}
+          className="mobile-compare-arena__matrix-evidence"
+        >
+          {t.highlights.length ? (
+            <>
+              {t.highlights.slice(0, 2).map((highlight) => (
+                <span key={highlight}>{highlight}</span>
+              ))}
+              <small>{t.highlights.length} punti di forza</small>
+            </>
+          ) : (
+            <small>Punti di forza non ancora pubblicati.</small>
+          )}
         </div>
       ),
       winnerSlugs: [] as string[],
@@ -270,32 +287,9 @@ export function DiffMatrix({
       winnerSlugs: [] as string[],
     },
     {
-      id: "highlights-list",
-      label: "Prove forti",
-      helper: "segnali concreti",
-      render: (t: NormalisedTool) => (
-        <div
-          title={t.highlights.join(" - ")}
-          className="mobile-compare-arena__matrix-evidence"
-        >
-          {t.highlights.length ? (
-            <>
-              {t.highlights.slice(0, 2).map((highlight) => (
-                <span key={highlight}>{highlight}</span>
-              ))}
-              <small>{t.highlights.length} prove totali</small>
-            </>
-          ) : (
-            <small>Da valutare con altri dati.</small>
-          )}
-        </div>
-      ),
-      winnerSlugs: [] as string[],
-    },
-    {
       id: "editor-note",
       label: "Nota decisiva",
-      helper: "perche pesa",
+      helper: "perché pesa",
       render: (t: NormalisedTool) => (
         <span title={t.review} className="mobile-compare-arena__matrix-long mobile-compare-arena__matrix-long--decision">
           {t.review || t.tldr}
@@ -357,7 +351,7 @@ export function DiffMatrix({
                 <span className="mobile-compare-arena__matrix-tool">{tool.name}</span>
                 <span className="mobile-compare-arena__matrix-tool-score">
                   {rankBySlug.get(tool.slug) === null || scoreBySlug.get(tool.slug) === null
-                    ? "Ancora da valutare"
+                    ? "Valutazione editoriale in preparazione"
                     : `#${rankBySlug.get(tool.slug)} · ${scoreBySlug.get(tool.slug)}/10`}
                 </span>
               </div>
@@ -427,14 +421,14 @@ function MobileArenaBattleStage({
   const reducedMotion = useReducedMotion();
   const statusLabel =
     battleState === "idle"
-      ? "Pronti"
+      ? "Pronto"
       : battleState === "analyzing"
-        ? "Analisi..."
+        ? "Analisi in corso…"
         : battleState === "charging"
-          ? "Confronto in corso..."
+          ? "Confronto in corso…"
           : battleState === "clash"
-            ? "Sintesi..."
-            : "Esito";
+            ? "Sintesi…"
+            : verdict.label;
 
   const isAnimating = battleState === "analyzing" || battleState === "charging" || battleState === "clash";
   const winner = verdict.winner;
@@ -446,20 +440,52 @@ function MobileArenaBattleStage({
       ? winner.battleScore - runnerUp.score
       : null;
 
+  // V2 verdict title based on state.
+  const verdictEyebrow =
+    verdict.state === "editorial_lead" && winner
+      ? "Più adatto in questo confronto"
+      : verdict.state === "tie"
+        ? "Risultato equilibrato"
+        : verdict.state === "user_preference_required"
+          ? "Confronto orientato alla priorità"
+          : verdict.state === "insufficient_evidence"
+            ? "Confronto da completare"
+            : "Verdetto comparativo";
+
+  const verdictTitle = winner
+    ? `${winner.name} emerge dal confronto`
+    : verdict.state === "tie"
+      ? "Nessun vincitore netto"
+      : verdict.state === "insufficient_evidence"
+        ? "Una valutazione editoriale è ancora in preparazione"
+        : "Nessun vincitore automatico";
+
+  const verdictBody = winner
+    ? "Ottiene il risultato più solido sui criteri disponibili. Leggi le motivazioni prima di decidere."
+    : verdict.state === "tie"
+      ? "Le valutazioni sono troppo vicine per indicare una scelta unica. La differenza dipende soprattutto dal tuo caso d'uso."
+      : verdict.state === "insufficient_evidence"
+        ? "Il verdetto sarà disponibile quando tutti i tool selezionati avranno una valutazione editoriale verificata."
+        : "Il risultato considera le valutazioni editoriali e il contesto dei tool selezionati.";
+
   return (
     <>
       <section
         className="mobile-compare-arena__stage"
         data-state={battleState}
         data-count={tools.length}
-        aria-label="Area di confronto"
+        aria-label="Verdetto del confronto"
       >
         <div className="mobile-compare-arena__bg" aria-hidden="true" />
 
         <header className="mobile-compare-arena__hud">
           <div className="mobile-compare-arena__title-wrap">
-            <span className="mobile-compare-arena__eyebrow">Verdetto guidato</span>
-            <h2 className="mobile-compare-arena__title">Scrivania editoriale</h2>
+            <span className="mobile-compare-arena__eyebrow">Verdetto comparativo</span>
+            <h2 className="mobile-compare-arena__title">Quale tool emerge dal confronto?</h2>
+            <p className="mobile-compare-arena__lede">
+              Il risultato considera le valutazioni editoriali e il contesto dei tool
+              selezionati. Non indica un vincitore assoluto.
+            </p>
           </div>
           <div className="mobile-compare-arena__hud-pills">
             <span className="mobile-compare-arena__mode">
@@ -476,73 +502,78 @@ function MobileArenaBattleStage({
           </div>
         </header>
 
-        <div
-          className="mobile-compare-arena__ring"
-          data-count={tools.length}
-          data-clash={battleState === "clash"}
-        >
-          {tools.length <= 2 ? (
-            <>
-              <div className="mobile-compare-arena__fighter-side mobile-compare-arena__fighter-side--left">
-                <ToolFighter
-                  tool={tools[0]}
-                  variant="compact"
-                  isWinner={battleState === "result" && tools[0].slug === winner?.slug}
-                  isFighting={battleState === "clash"}
-                  isAnalyzing={battleState === "analyzing"}
-                  isCharging={battleState === "charging"}
-                  isClash={battleState === "clash"}
-                  layoutId={isAnimating ? undefined : `fighter-${tools[0].slug}`}
-                  style={{ "--charge-x": "20%" } as React.CSSProperties}
-                />
-              </div>
-              <div className="mobile-compare-arena__vs" aria-hidden="true">
-                <span>↔</span>
-              </div>
-              <div className="mobile-compare-arena__fighter-side mobile-compare-arena__fighter-side--right">
-                <ToolFighter
-                  tool={tools[1]}
-                  variant="compact"
-                  isWinner={battleState === "result" && tools[1].slug === winner?.slug}
-                  isFighting={battleState === "clash"}
-                  isAnalyzing={battleState === "analyzing"}
-                  isCharging={battleState === "charging"}
-                  isClash={battleState === "clash"}
-                  layoutId={isAnimating ? undefined : `fighter-${tools[1].slug}`}
-                  style={{ "--charge-x": "-20%" } as React.CSSProperties}
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              {tools.slice(0, MAX_COMPARE_TOOLS).map((tool, i) => (
-                <div
-                  key={tool.slug}
-                  className="mobile-compare-arena__fighter-slot"
-                  data-index={i}
-                >
+        {/* Fighter ring: solo durante l'animazione del clash. In stato result
+            il ring è nascosto per non duplicare l'informazione del verdetto
+            (winner name + score + motivazioni). */}
+        {battleState !== "result" ? (
+          <div
+            className="mobile-compare-arena__ring"
+            data-count={tools.length}
+            data-clash={battleState === "clash"}
+          >
+            {tools.length <= 2 ? (
+              <>
+                <div className="mobile-compare-arena__fighter-side mobile-compare-arena__fighter-side--left">
                   <ToolFighter
-                    tool={tool}
+                    tool={tools[0]}
                     variant="compact"
-                    isWinner={battleState === "result" && tool.slug === winner?.slug}
+                    isWinner={false}
                     isFighting={battleState === "clash"}
                     isAnalyzing={battleState === "analyzing"}
                     isCharging={battleState === "charging"}
                     isClash={battleState === "clash"}
-                    layoutId={isAnimating ? undefined : `fighter-${tool.slug}`}
+                    layoutId={isAnimating ? undefined : `fighter-${tools[0].slug}`}
+                    style={{ "--charge-x": "20%" } as React.CSSProperties}
                   />
                 </div>
-              ))}
-              <div className="mobile-compare-arena__vs" aria-hidden="true">
-                <span>↔</span>
-              </div>
-            </>
-          )}
+                <div className="mobile-compare-arena__vs" aria-hidden="true">
+                  <span>↔</span>
+                </div>
+                <div className="mobile-compare-arena__fighter-side mobile-compare-arena__fighter-side--right">
+                  <ToolFighter
+                    tool={tools[1]}
+                    variant="compact"
+                    isWinner={false}
+                    isFighting={battleState === "clash"}
+                    isAnalyzing={battleState === "analyzing"}
+                    isCharging={battleState === "charging"}
+                    isClash={battleState === "clash"}
+                    layoutId={isAnimating ? undefined : `fighter-${tools[1].slug}`}
+                    style={{ "--charge-x": "-20%" } as React.CSSProperties}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                {tools.slice(0, MAX_COMPARE_TOOLS).map((tool, i) => (
+                  <div
+                    key={tool.slug}
+                    className="mobile-compare-arena__fighter-slot"
+                    data-index={i}
+                  >
+                    <ToolFighter
+                      tool={tool}
+                      variant="compact"
+                      isWinner={false}
+                      isFighting={battleState === "clash"}
+                      isAnalyzing={battleState === "analyzing"}
+                      isCharging={battleState === "charging"}
+                      isClash={battleState === "clash"}
+                      layoutId={isAnimating ? undefined : `fighter-${tool.slug}`}
+                    />
+                  </div>
+                ))}
+                <div className="mobile-compare-arena__vs" aria-hidden="true">
+                  <span>↔</span>
+                </div>
+              </>
+            )}
 
-          {battleState === "clash" && !reducedMotion && (
-            <div className="mobile-compare-arena__flash" aria-hidden="true" />
-          )}
-        </div>
+            {battleState === "clash" && !reducedMotion && (
+              <div className="mobile-compare-arena__flash" aria-hidden="true" />
+            )}
+          </div>
+        ) : null}
       </section>
 
       <AnimatePresence>
@@ -560,10 +591,9 @@ function MobileArenaBattleStage({
                   {winner?.compareScore.rank === null || !winner ? "—" : `#${winner.compareScore.rank}`}
                 </span>
                 <div>
-                  <span className="mobile-compare-arena__verdict-label">{verdict.label}</span>
+                  <span className="mobile-compare-arena__verdict-label">{verdictEyebrow}</span>
                   <h3 className="mobile-compare-arena__verdict-name">
-                    <Sparkles className="size-4" />
-                    {winner?.name ?? "Nessun vincitore automatico"}
+                    {winner?.name ?? verdictTitle}
                   </h3>
                 </div>
               </div>
@@ -575,11 +605,13 @@ function MobileArenaBattleStage({
               ) : null}
             </div>
 
-            {runnerUp && gap !== null && gap > 0 && (
+            <p className="mobile-compare-arena__verdict-body">{verdictBody}</p>
+
+            {runnerUp && gap !== null && gap > 0 ? (
               <div className="mobile-compare-arena__verdict-gap">
-                +{gap} punti rispetto a {runnerUp.tool.name}
+                +{gap.toFixed(1)} punti rispetto a {runnerUp.tool.name}
               </div>
-            )}
+            ) : null}
 
             <ul className="mobile-compare-arena__verdict-reasons">
               {verdict.reasons.slice(0, 3).map((reason, index) => (
@@ -682,7 +714,6 @@ export function MobileCompareView({
   const sorted = verdict ? verdict.scores.map((entry) => entry.tool) : tools;
   const activeVerdict = verdict ?? getBattleVerdict(sorted, activeObjective);
   const winner = activeVerdict.winner;
-  const rest = winner ? sorted.filter((tool) => tool.slug !== winner.slug) : sorted;
   const isRevealed = battleState === "result";
 
   function handleFight() {
@@ -727,8 +758,30 @@ export function MobileCompareView({
         />
       ) : null}
 
-      <DiffMatrix tools={sorted} objective={activeObjective} />
+      {/* 2. Tool selezionati (sempre visibili, anche prima del verdetto). */}
+      <div className="mobile-compare-arena__selected" aria-labelledby="mobile-compare-selected-title">
+        <h2 id="mobile-compare-selected-title" className="sr-only">
+          Tool selezionati
+        </h2>
+        <p className="mobile-compare-arena__selected-eyebrow" aria-hidden="true">
+          <TrendingUp className="size-4" aria-hidden="true" />
+          <span>Tool selezionati</span>
+        </p>
+        <ul className="mobile-compare-arena__selected-list">
+          {sorted.map((tool) => (
+            <li key={tool.slug}>
+              <CompactToolCard
+                tool={tool}
+                rank={tool.compareScore.rank ?? undefined}
+                isWinner={winner?.slug === tool.slug}
+                onRemove={() => toggleCompare(tool.slug)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
 
+      {/* 3-4. Verdetto + motivazioni (HUD + result panel). */}
       <MobileArenaBattleStage
         battleState={battleState}
         tools={sorted}
@@ -736,6 +789,10 @@ export function MobileCompareView({
         objectiveLabel={activeObjective ? getCompareObjectiveLabel(activeObjective) : null}
       />
 
+      {/* 5. Differenze decisive (matrice). */}
+      <DiffMatrix tools={sorted} objective={activeObjective} />
+
+      {/* 6. CTA: ricalcola il verdetto o apri l'analisi. */}
       <div className="mobile-compare-arena__action-area" data-state={battleState}>
         <button
           type="button"
@@ -747,67 +804,36 @@ export function MobileCompareView({
             <Scale className="size-5" />
           </span>
           <span className="mobile-compare-arena__fight-copy">
-            <strong>{battleState === "result" ? "Aggiorna il verdetto" : battleState === "idle" ? "Analizza il confronto" : "Analisi in corso…"}</strong>
-            <small>{battleState === "result" ? "aggiorna la lettura" : "leggi le differenze verificabili"}</small>
+            <strong>
+              {battleState === "result"
+                ? "Ricalcola il verdetto"
+                : battleState === "idle"
+                  ? "Analizza il confronto"
+                  : "Analisi in corso…"}
+            </strong>
+            <small>
+              {battleState === "result"
+                ? "leggi le differenze verificabili"
+                : "leggi le differenze verificabili"}
+            </small>
           </span>
         </button>
       </div>
 
+      {/* B35 / FLOW-604: il confronto si chiude in una decisione
+          riapribile con contesto, con ritorno ai Salvati. */}
       {isRevealed ? (
-        <>
-          <div className="mobile-compare-arena__champions">
-            {winner ? (
-              <CompactToolCard
-                tool={winner}
-                rank={winner.compareScore.rank ?? undefined}
-                isWinner
-                onRemove={() => toggleCompare(winner.slug)}
-              />
-            ) : null}
+        <CompareDecisionPanel
+          tools={sorted}
+          objective={activeObjective}
+          enabled={decisionEnabled}
+          idPrefix="mobile"
+        />
+      ) : null}
 
-            <div className="mobile-compare-arena__challengers">
-              {rest.map((tool) => (
-                <CompactToolCard
-                  key={tool.slug}
-                  tool={tool}
-                  rank={tool.compareScore.rank ?? undefined}
-                  isWinner={winner?.slug === tool.slug}
-                  onRemove={() => toggleCompare(tool.slug)}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* B35 / FLOW-604: il confronto si chiude in una decisione
-              riapribile con contesto, con ritorno ai Salvati. */}
-          <CompareDecisionPanel
-            tools={sorted}
-            objective={activeObjective}
-            enabled={decisionEnabled}
-            idPrefix="mobile"
-          />
-
-          <div className="mobile-compare-arena__trend">
-            <CompareTrendList />
-          </div>
-        </>
-      ) : (
-        <div className="mobile-compare-arena__mystery">
-          <div className="mobile-compare-arena__mystery-head">
-            <TrendingUp className="size-4" />
-            <span>Candidati pronti al confronto</span>
-          </div>
-          <div className="mobile-compare-arena__mystery-list">
-            {tools.map((tool) => (
-              <CompactToolCard
-                key={tool.slug}
-                tool={tool}
-                onRemove={() => toggleCompare(tool.slug)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="mobile-compare-arena__trend">
+        <CompareTrendList />
+      </div>
     </div>
   );
 }

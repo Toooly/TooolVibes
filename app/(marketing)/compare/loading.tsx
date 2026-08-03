@@ -11,12 +11,12 @@ export default function CompareLoading() {
         aria-label="Preparazione del confronto"
       >
         <header className="tool-battle-page__intro">
-          <p className="tool-battle-page__eyebrow">Confronto editoriale</p>
-          <h1 id="tool-battle-title">Confronto tool</h1>
+          <p className="tool-battle-page__eyebrow">Confronto guidato</p>
+          <h1 id="tool-battle-title">Metti a confronto ciò che conta davvero.</h1>
           <p className="tool-battle-page__lede">
-            Scegli 2 o 3 candidati per metterli alla prova fianco a fianco:
-            prezzo, piattaforme, tag principali e nota editoriale. Il confronto
-            mostra differenze concrete, non classifiche generiche.
+            Affianca da due a tre tool e confronta valutazioni editoriali,
+            casi d&apos;uso, punti di forza e limiti. Stiamo preparando i
+            tuoi slot.
           </p>
           <div className="tool-battle-page__cta-row">
             <Link

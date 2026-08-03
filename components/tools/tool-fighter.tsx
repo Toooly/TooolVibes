@@ -84,7 +84,7 @@ export function ToolFighter({
           <span className="tool-fighter__name">{tool.name}</span>
           <span className="tool-fighter__cat">{tool.categoryLabel}</span>
           <span className="tool-fighter__score">
-            {tool.battleScore === null ? "n/d" : `${tool.battleScore}/10`}
+            {tool.battleScore === null ? "Valutazione editoriale in preparazione" : `${tool.battleScore}/10`}
           </span>
         </div>
       </motion.div>
@@ -112,7 +112,7 @@ export function ToolFighter({
         <span className="tool-fighter__name">{tool.name}</span>
         <span className="tool-fighter__cat">{tool.categoryLabel}</span>
         <span className="tool-fighter__score">
-          {tool.battleScore === null ? "n/d" : `${tool.battleScore}/10`}
+          {tool.battleScore === null ? "Valutazione editoriale in preparazione" : `${tool.battleScore}/10`}
         </span>
       </div>
     </motion.div>

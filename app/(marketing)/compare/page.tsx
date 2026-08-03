@@ -6,8 +6,9 @@ import { getPublicToolViews } from "@/lib/data/public-tools";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Confronto tool",
-  description: "Confronta tool salvati e alternative per scegliere lo stack più adatto.",
+  title: "Confronta tool AI e SaaS",
+  description:
+    "Confronta valutazioni editoriali, casi d'uso, punti di forza e limiti dei tool selezionati.",
   path: "/compare",
 });
 

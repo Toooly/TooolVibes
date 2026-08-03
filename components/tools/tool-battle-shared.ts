@@ -3,7 +3,6 @@ import {
   rankCompareScores,
   scoreToolForCompare,
   type CompareScoreResult,
-  formatCompareMissingRequirements,
   COMPARE_INSUFFICIENT_EVIDENCE_MESSAGE,
 } from "@/lib/compare/compare-score";
 import {
@@ -39,7 +38,11 @@ export type NormalisedTool = {
   name: string;
   category: string;
   categoryLabel: string;
-  /** Explicit editorial assessment only; null means not yet assessable. */
+  /**
+   * Explicit 0-10 editorial score. Available when the canonical assessment
+   * is supported OR when a complete scorecard is published.
+   * Null only when the tool is genuinely unassessed.
+   */
   score: number | null;
   editorialScore: number | null;
   battleScore: number | null;
@@ -187,10 +190,13 @@ function getScores(tools: NormalisedTool[]): BattleVerdict["scores"] {
   }));
 }
 
-function hasSupportedAssessment(
+function hasAssessableScore(
   tool: NormalisedTool,
 ): tool is NormalisedTool & { battleScore: number } {
-  return tool.compareScore.assessment.state === "supported" && typeof tool.battleScore === "number";
+  return (
+    tool.compareScore.assessment.state === "verified" &&
+    typeof tool.battleScore === "number"
+  );
 }
 
 function createVerdict(
@@ -198,21 +204,33 @@ function createVerdict(
   scores: BattleVerdict["scores"],
   reasons: string[],
   winner: NormalisedTool | null = null,
+  labelOverride?: string,
 ): BattleVerdict {
   const labels: Record<BattleVerdictState, string> = {
-    insufficient_evidence: "Dati insufficienti per un verdetto",
-    tie: "Nessun vincitore automatico",
+    insufficient_evidence: "Valutazione editoriale in preparazione",
+    tie: "Risultato equilibrato",
     user_preference_required: "La priorità richiede una scelta personale",
     editorial_lead: "Valutazione editoriale supportata",
     personal_verdict: "Verdetto personale",
   };
 
-  return { state, winner, scores, reasons, label: labels[state] };
+  return {
+    state,
+    winner,
+    scores,
+    reasons,
+    label: labelOverride ?? labels[state],
+  };
 }
 
 /**
- * Resolves only explicit outcomes. It never chooses a candidate from equal or
- * incomplete assessments, and an objective never becomes a proxy score.
+ * Resolves only explicit outcomes. It never chooses a candidate from equal
+ * or incomplete assessments, and an objective never becomes a proxy score.
+ *
+ * Closure 2026-08-03 §8: solo `verified` e (futuro) `derived_from_verified_scorecard`
+ * producono un totale. Tutti gli altri stati (`draft_review_required`,
+ * `not_assessed`) bloccano il verdetto e mostrano il fallback pubblico
+ * "Valutazione editoriale in preparazione".
  */
 export function getBattleVerdict(
   tools: NormalisedTool[],
@@ -236,30 +254,24 @@ export function getBattleVerdict(
     );
   }
 
-  const unsupported = tools.filter((tool) => !hasSupportedAssessment(tool));
-  if (tools.length === 0 || unsupported.length > 0) {
-    const pendingNames = unsupported.map((tool) => tool.name);
-    const pendingDetail = unsupported
-      .map((tool) => {
-        const detail = formatCompareMissingRequirements(tool.compareScore.assessment.missing);
-        return detail ? `${tool.name} (${detail})` : tool.name;
-      })
-      .join("; ");
+  const unassessed = tools.filter((tool) => !hasAssessableScore(tool));
+  if (tools.length === 0 || unassessed.length > 0) {
+    const pendingNames = unassessed.map((tool) => tool.name).join(", ");
     return createVerdict("insufficient_evidence", scores, [
       COMPARE_INSUFFICIENT_EVIDENCE_MESSAGE,
-      pendingNames.length > 0
-        ? `Ancora in preparazione: ${pendingDetail}.`
-        : "Aggiungi almeno due valutazioni editoriali complete per confrontarle.",
+      pendingNames
+        ? `Una valutazione editoriale è ancora in preparazione per: ${pendingNames}.`
+        : "Aggiungi almeno due tool con valutazione editoriale verificata per ottenere un verdetto.",
     ]);
   }
 
-  const supported = tools.filter(hasSupportedAssessment);
-  const highestScore = Math.max(...supported.map((tool) => tool.battleScore));
-  const leaders = supported.filter((tool) => tool.battleScore === highestScore);
+  const assessable = tools.filter(hasAssessableScore);
+  const highestScore = Math.max(...assessable.map((tool) => tool.battleScore));
+  const leaders = assessable.filter((tool) => tool.battleScore === highestScore);
 
   if (leaders.length !== 1) {
     return createVerdict("tie", scores, [
-      "Nessun vincitore automatico: le valutazioni editoriali più alte sono equivalenti.",
+      "Le valutazioni editoriali sono equivalenti: nessun vincitore automatico.",
       "La scelta dipende dalle tue priorità, dai limiti verificati e dal contesto d'uso.",
     ]);
   }
@@ -279,7 +291,7 @@ export function getBattleVerdict(
     "editorial_lead",
     scores,
     [
-      `${winner.name} ha la valutazione editoriale esplicita più alta tra i candidati completamente verificati.`,
+      `${winner.name} ha la valutazione editoriale esplicita più alta tra i candidati verificati.`,
       "Questo vantaggio non deriva da quantità di prove, casi d'uso, tag o completezza dei campi.",
     ],
     winner,
