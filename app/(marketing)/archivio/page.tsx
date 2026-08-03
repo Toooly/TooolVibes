@@ -13,11 +13,11 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "@/styles/archive-v4.css";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Catalogo di tool AI, SaaS e no-code | TooolVibes",
+  title: "Catalogo di tool AI, SaaS e no-code",
   description:
     "Esplora il catalogo editoriale di TooolVibes. Cerca e filtra tool AI, SaaS e no-code, salva i candidati e confronta le alternative.",
   path: "/archivio",
-  openGraphTitle: "Catalogo TooolVibes · Trova i tool da valutare",
+  openGraphTitle: "Catalogo · Trova i tool da valutare",
   openGraphDescription:
     "Cerca, filtra e confronta tool AI, SaaS e no-code. Riduci le alternative e costruisci una selezione più utile per il tuo lavoro.",
 });
