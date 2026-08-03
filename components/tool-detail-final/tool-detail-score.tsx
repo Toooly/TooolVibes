@@ -4,7 +4,7 @@ import { deriveScoreDimensions } from "@/lib/data/tool-detail-derivation";
 
 /**
  * B. Score Instrument
- * Server component. Renders the canonical 8.4 score with gold halo,
+ * Server component. Renders the canonical editorial score with gold halo,
  * 4 derived dimensions, and a non-benchmark disclaimer.
  */
 

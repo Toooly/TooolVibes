@@ -1,4 +1,5 @@
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+import { getApprovedAssessmentBySlug } from "@/lib/data/editorial-assessments";
 import type { ToolRecord } from "@/lib/types/tool";
 import { parseToolPublic, type ToolPublic } from "@/lib/types/tool-public";
 
@@ -158,10 +159,11 @@ export function adaptToolRecordToPublic(record: ToolRecord): ToolPublic {
 }
 
 function getDirectoryMissingFields(tool: DirectoryTool) {
+  const hasVerifiedScore = getApprovedAssessmentBySlug(tool.slug) !== null;
   return uniqueNonEmpty([
     "taxonomy.canonicalCategory",
     tool.affiliateUrl ? "" : "urls.affiliate",
-    "score",
+    hasVerifiedScore ? "" : "score",
     "attributes.pricing",
     "attributes.platforms",
     "media.coverImageUrl",
@@ -175,6 +177,13 @@ export function adaptDirectoryToolToPublic(
   tool: DirectoryTool,
   publication: DirectoryToolPublicationContext,
 ): ToolPublic {
+  // Closure 2026-08-03 §8 — canonical resolver. Uno score verified
+  // (approvalStatus === "approved") è l'unica fonte di punteggio
+  // pubblicabile. Le scorecard legacy, draft, o senza approvazione
+  // esplicita NON entrano nel runtime; il punteggio resta null.
+  const approvedAssessment = getApprovedAssessmentBySlug(tool.slug);
+  const score = approvedAssessment?.score ?? null;
+
   return parseToolPublic({
     schemaVersion: 1,
     slug: tool.slug,
@@ -203,7 +212,7 @@ export function adaptDirectoryToolToPublic(
     editorial: {
       evidence: buildDirectoryToolEvidence(tool),
     },
-    score: null,
+    score,
     attributes: {
       pricing: null,
       platforms: [],

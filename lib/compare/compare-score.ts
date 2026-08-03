@@ -7,12 +7,35 @@ import type { ToolPublic } from "@/lib/types/tool-public";
  * assessment is complete. Evidence, use cases, taxonomy, names, slugs, and
  * field coverage may explain a comparison, but must never manufacture or
  * alter its score.
+ *
+ * Closure 2026-08-03 §8 — gerarchia di availability:
+ *  1. `verified` — `ToolPublic.score` è un assessment editoriale completo
+ *     (valore, fonte, metodologia, data, verdetto, evidenza, limiti). Solo
+ *     `verified` pubblica un totale in Confronto / Arena.
+ *  2. `derived_from_verified_scorecard` — riservato a un futuro scorecard
+ *     canonico verificato editorialmente con metadati (data, metodologia,
+ *     fonti). Per oggi nessun tool di directory ha uno scorecard verified:
+ *     questo stato non viene mai pubblicato in produzione.
+ *  3. `draft_review_required` — proposta editoriale non approvata. Non
+ *     pubblicabile come punteggio definitivo.
+ *  4. `not_assessed` — nessun dato editoriale. UI mostra "Valutazione
+ *     editoriale in preparazione".
+ *
+ * Nessun valore viene dedotto da: completezza dei campi, use cases, tag,
+ * evidenze libere, livello del tool, featured, popolarità o posizionamento
+ * di marketing. Il commit `ab5ae91` ("fix(trust): remove synthetic public
+ * scores") ha esplicitamente vietato la sintesi automatica; questo
+ * contratto la ribadisce.
  */
-export const COMPARE_SCORE_VERSION = "compare-score-v2";
+export const COMPARE_SCORE_VERSION = "compare-score-v3-trust";
 
 export type CompareConfidenceLevel = "high" | "medium" | "low";
 
-export type CompareAssessmentState = "supported" | "insufficient_evidence";
+export type CompareAssessmentState =
+  | "verified"
+  | "derived_from_verified_scorecard"
+  | "draft_review_required"
+  | "not_assessed";
 
 export type CompareAssessmentRequirement =
   | "score.value"
@@ -93,7 +116,7 @@ export function formatCompareMissingRequirements(
 }
 
 export const COMPARE_INSUFFICIENT_EVIDENCE_MESSAGE =
-  "Non sono ancora disponibili abbastanza valutazioni editoriali per determinare un vincitore.";
+  "Valutazione editoriale in preparazione.";
 
 function hasText(value: string | null | undefined): value is string {
   return typeof value === "string" && value.trim().length > 0;
@@ -138,11 +161,8 @@ function getMissingRequirements(tool: ToolPublic): CompareAssessmentRequirement[
   return missing;
 }
 
-function assessmentComponent(
-  tool: ToolPublic,
-  state: CompareAssessmentState,
-): CompareScoreComponent {
-  const available = state === "supported";
+function supportedComponent(tool: ToolPublic): CompareScoreComponent {
+  const available = typeof tool.score?.value === "number";
 
   return {
     key: "editorial-assessment",
@@ -172,45 +192,47 @@ function formatAssessedDate(value: string | null | undefined): string | null {
 
 function buildExplanation(
   tool: ToolPublic,
+  state: CompareAssessmentState,
   total: number | null,
-  missing: CompareAssessmentRequirement[],
 ): string[] {
-  if (total === null) {
-    const detail = formatCompareMissingRequirements(missing);
+  if (state === "verified") {
+    const verifiedOn = formatAssessedDate(tool.score?.provenance.assessedAt);
     return [
-      detail
-        ? `${tool.name}: valutazione editoriale in preparazione. Mancano ancora ${detail}.`
-        : `${tool.name}: valutazione editoriale in preparazione.`,
-      COMPARE_INSUFFICIENT_EVIDENCE_MESSAGE,
+      verifiedOn
+        ? `${tool.name}: valutazione editoriale ${total}/10, verificata il ${verifiedOn}.`
+        : `${tool.name}: valutazione editoriale ${total}/10.`,
+      tool.score?.verdict
+        ? `Verdetto editoriale: ${tool.score.verdict}.`
+        : "Verdetto editoriale disponibile.",
+      "Il valore non incorpora quantità di prove, casi d'uso, tag o completezza dei campi.",
     ];
   }
 
-  const verifiedOn = formatAssessedDate(tool.score?.provenance.assessedAt);
   return [
-    verifiedOn
-      ? `${tool.name}: valutazione editoriale ${total}/10, verificata il ${verifiedOn}.`
-      : `${tool.name}: valutazione editoriale ${total}/10.`,
-    tool.score?.verdict
-      ? `Verdetto editoriale: ${tool.score.verdict}.`
-      : "Verdetto editoriale disponibile.",
-    "Il valore non incorpora quantità di prove, casi d'uso, tag o completezza dei campi.",
+    `${tool.name}: valutazione editoriale in preparazione.`,
+    "Nessun punteggio viene mostrato finché l'assessment editoriale non sarà verificato.",
   ];
 }
 
 /**
- * Produces an honest, per-tool assessment. No score is inferred from content
- * richness or metadata: only a complete canonical editorial assessment can
- * expose `total`.
+ * Calcola la valutazione editoriale di un tool. Nessun punteggio viene
+ * fabbricato da `level`, `featured`, `editorialScorecard` di default,
+ * scorecard parziali, popolarità o altri campi non editoriali.
+ *
+ * Stati pubblicabili nel Confronto (closure 2026-08-03 §8):
+ * - `verified` → `total = ToolPublic.score.value`
+ * - `derived_from_verified_scorecard` → riservato a scorecard canoniche
+ *   verificate con metadati editoriali; non si verifica in produzione.
+ *
+ * Stati non pubblicabili come punteggio definitivo:
+ * - `draft_review_required`
+ * - `not_assessed`
  */
 export function scoreToolForCompare(tool: ToolPublic): CompareScoreResult {
   const missing = getMissingRequirements(tool);
-  const state: CompareAssessmentState = missing.length === 0 ? "supported" : "insufficient_evidence";
-  const total = state === "supported" ? tool.score?.value ?? null : null;
-  const confidence: CompareScoreConfidence = {
-    level: state === "supported" ? "high" : "low",
-    coverage: state === "supported" ? 1 : 0,
-    missing,
-  };
+  const state: CompareAssessmentState =
+    missing.length === 0 ? "verified" : "not_assessed";
+  const total = state === "verified" ? tool.score?.value ?? null : null;
 
   return {
     version: COMPARE_SCORE_VERSION,
@@ -219,9 +241,13 @@ export function scoreToolForCompare(tool: ToolPublic): CompareScoreResult {
     total,
     rank: null,
     assessment: { state, missing },
-    confidence,
-    components: [assessmentComponent(tool, state)],
-    explanation: buildExplanation(tool, total, missing),
+    confidence: {
+      level: state === "verified" ? "high" : "low",
+      coverage: state === "verified" ? 1 : 0,
+      missing,
+    },
+    components: [supportedComponent(tool)],
+    explanation: buildExplanation(tool, state, total),
   };
 }
 
