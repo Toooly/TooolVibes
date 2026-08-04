@@ -59,7 +59,7 @@ export const SIGNAL_ACHIEVEMENT_DEFINITIONS: readonly SignalAchievementDefinitio
     },
     {
       code: "first_verdict",
-      publicName: "Primo verdetto",
+      publicName: "Prima decisione",
       rarity: "uncommon",
       presentationTier: "achievement",
       mergedIntoMission: "complete_first_comparison",
@@ -87,7 +87,7 @@ export const SIGNAL_ACHIEVEMENT_DEFINITIONS: readonly SignalAchievementDefinitio
     },
     {
       code: "curator_mark",
-      publicName: "Segno del curatore",
+      publicName: "Segno del builder",
       rarity: "rare",
       presentationTier: "achievement",
       mergedIntoMission: null,

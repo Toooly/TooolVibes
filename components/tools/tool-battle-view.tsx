@@ -92,7 +92,7 @@ export function ToolBattleView({
         <p className="tool-battle-page__eyebrow">Confronto guidato</p>
         <h1 id="tool-battle-title">Metti a confronto ciò che conta davvero.</h1>
         <p className="tool-battle-page__lede">
-          Affianca da due a tre tool e confronta valutazioni editoriali,
+          Affianca da due a cinque tool e confronta evidenze,
           casi d&apos;uso, punti di forza e limiti.
         </p>
         <ol className="tool-battle-page__steps" aria-label="Come funziona il confronto">

@@ -8,16 +8,16 @@ const STEPS = [
   {
     num: "01",
     label: "Scopri",
-    title: "Parti da tool già curati",
+    title: "Parti da tool già filtrati",
     description:
-      "Categorie leggibili, filtri utili e una selezione editoriale che tiene fuori il rumore. Nessuna vetrina infinita.",
+      "Categorie leggibili, filtri utili e un catalogo verificato che tiene fuori il rumore. Nessuna vetrina infinita.",
     href: "/archivio",
     cta: "Apri catalogo",
     color: "#6a3cff",
     colorB: "#9f5bff",
     icon: Search,
     stat: "Catalogo",
-    statLabel: "in aggiornamento editoriale",
+    statLabel: "in aggiornamento continuo",
   },
   {
     num: "02",

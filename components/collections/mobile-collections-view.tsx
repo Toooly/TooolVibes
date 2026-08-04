@@ -102,9 +102,9 @@ export function MobileCollectionsView({
       <header className="mobile-collections__header">
         <div className="mobile-collections__badge">
           <Boxes className="size-4" />
-          <span>Selezioni</span>
+          <span>Percorsi</span>
         </div>
-        <h1>Il posto dove la selezione diventa percorso.</h1>
+        <h1>Percorsi già organizzati per stack e scenari.</h1>
         <p>
           Entra da uno scenario, una tesi o un pubblico già ordinati. Nessun filtro da costruire: il percorso è già pronto.
         </p>

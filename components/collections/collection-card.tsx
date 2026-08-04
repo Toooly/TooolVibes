@@ -111,7 +111,7 @@ export function CollectionCard({
           <div className="flex flex-col justify-between p-4.5 sm:p-5 lg:p-6">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="pill">Selezioni curate</span>
+                <span className="pill">Percorsi guidati</span>
                 {collection.surface === "special-issue" ? (
                   <span className="selection-status">{formatMeta.label}</span>
                 ) : null}
@@ -281,7 +281,7 @@ export function CollectionCard({
           <div>
             <p className="editorial-label">Tool guida</p>
             <p className="text-meta mt-1 text-[0.8rem]" style={{ color: "var(--muted-strong)" }}>
-              {leadToolName ?? "Percorso editoriale"}
+              {leadToolName ?? "Percorso guidato"}
             </p>
           </div>
           <div>

@@ -112,7 +112,7 @@ export function AuthPage() {
             <p className="v-auth-subtitle">
               {activeTab === "admin"
                 ? "Accesso riservato agli amministratori"
-                : "Accedi al tuo spazio di selezione tool"}
+                : "Accedi al tuo workspace decisionale"}
             </p>
           </div>
 

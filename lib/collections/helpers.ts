@@ -20,12 +20,12 @@ const toneMeta: Record<CollectionTone, { label: string; description: string }> =
     description: "Una sequenza corta per partire bene senza accumulare rumore.",
   },
   "focused-bundle": {
-    label: "Selezione compatta",
+    label: "Percorso compatto",
     description: "Una raccolta più stretta, utile quando l'obiettivo è già chiaro.",
   },
   "editorial-picks": {
-    label: "Scelta curatoriale",
-    description: "Una lettura curatoriale più orientata all'uso giusto che alla completezza.",
+    label: "Percorso guidato",
+    description: "Un percorso più orientato all'uso giusto che alla completezza.",
   },
   "special-issue": {
     label: "Speciale",
@@ -51,7 +51,7 @@ const accessMeta: Record<
   "premium-preview": {
     label: "Anteprima premium",
     subtleLabel: "Anteprima",
-    description: "Una parte della raccolta resta visibile, mentre la lettura completa è riservata agli utenti iscritti.",
+    description: "Una parte della raccolta resta visibile, mentre la versione completa è riservata agli utenti iscritti.",
   },
   premium: {
     label: "Raccolta riservata",

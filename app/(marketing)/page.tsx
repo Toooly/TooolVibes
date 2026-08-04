@@ -26,13 +26,13 @@ export async function generateMetadata() {
   }
 
   return createPublicPageMetadata({
-    title: "TooolVibes | Catalogo di tool AI, SaaS e no-code",
+    title: "Scegli il tuo stack",
     description:
-      "Scopri, confronta e salva tool AI, SaaS e no-code selezionati dalla redazione. Riduci il rumore e scegli con più contesto.",
+      "Il workspace decisionale per chi costruisce prodotti digitali: confronta tool AI, SaaS e no-code, scegli il tuo stack e conserva il motivo di ogni scelta.",
     path: "/",
-    openGraphTitle: "TooolVibes · Trova e confronta i tool giusti",
+    openGraphTitle: "TooolVibes · Scegli il tuo stack con criterio",
     openGraphDescription:
-      "Un catalogo editoriale di tool AI, SaaS e no-code per esplorare alternative, confrontare differenze e salvare decisioni motivate.",
+      "Un sistema decisionale per tool AI, SaaS e no-code: esplora alternative, confronta trade-off e salva decisioni motivate.",
   });
 }
 

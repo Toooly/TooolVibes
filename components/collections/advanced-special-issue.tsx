@@ -349,7 +349,7 @@ export function AdvancedSpecialIssue({
       <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
         <SectionHeader
           eyebrow="Raccolta speciale avanzata"
-          title="Il formato lungo in cui la selezione diventa tesi."
+          title="Il formato lungo in cui lo stack diventa tesi."
           description={issue.intro}
         />
         <div className="space-y-2">
@@ -401,7 +401,7 @@ export function AdvancedSpecialIssue({
             <span className="selection-status">{hiddenBlockCount} moduli nella versione completa</span>
           </div>
           <p className="mt-3 max-w-[46rem] text-[0.96rem] leading-7" style={{ color: "var(--muted-strong)" }}>
-            L&apos;anteprima lascia leggibile la tesi della raccolta. La versione completa aggiunge i passaggi più densi: note comparative più lunghe, varianti di percorso e chiusure editoriali più specifiche.
+            L&apos;anteprima lascia leggibile la tesi della raccolta. La versione completa aggiunge i passaggi più densi: note comparative più lunghe, varianti di percorso e chiusure più specifiche.
           </p>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <ButtonLink href={premiumUpgradeHref}>{premiumUpgradeLabel}</ButtonLink>

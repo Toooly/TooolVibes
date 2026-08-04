@@ -8,7 +8,7 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Confronta tool AI e SaaS",
   description:
-    "Confronta valutazioni editoriali, casi d'uso, punti di forza e limiti dei tool selezionati.",
+    "Affianca i candidati e leggi differenze, trade-off e limiti verificabili prima di decidere il tuo stack.",
   path: "/compare",
 });
 

@@ -121,7 +121,7 @@ describe("tool-battle truth adapter", () => {
 
     expect(verdict.state).toBe("personal_verdict");
     expect(verdict.winner?.slug).toBe("atlas-ai");
-    expect(verdict.label).toBe("Verdetto personale");
+    expect(verdict.label).toBe("Scelta personale");
   });
 });
 

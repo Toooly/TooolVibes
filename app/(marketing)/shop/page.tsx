@@ -7,7 +7,7 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPublicPageMetadata({
   title: "Shop",
-  description: "Lo Shop TooolVibes è in preparazione: oggi puoi esplorare il Catalogo e le Raccolte editoriali.",
+  description: "Lo Shop TooolVibes è in preparazione: oggi puoi esplorare il Catalogo e le Raccolte.",
   path: "/shop",
 });
 

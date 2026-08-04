@@ -77,7 +77,7 @@ export const contentCollections: CuratedCollectionRecord[] = [
       "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1400&q=80",
     cover_kicker: "Bundle compatto",
     rationale:
-      "Qui conta la qualità della lettura più della quantità dei tool. La raccolta è costruita per esplorare, convergere e arrivare a una superficie presentabile senza perdere tono editoriale.",
+      "Qui conta la qualità della lettura più della quantità dei tool. La raccolta è costruita per esplorare, convergere e arrivare a una superficie presentabile senza perdere coerenza di tono.",
     highlights: [
       "Moodboard e direzione visiva forti in poco tempo",
       "Passaggio rapido da idea a prototipo navigabile",
@@ -133,7 +133,7 @@ export const contentCollections: CuratedCollectionRecord[] = [
       "Una selezione per chi lavora su video, audio e contenuti visuali con bisogno di velocità, resa e flussi leggibili.",
     cover_image_url:
       "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1400&q=80",
-    cover_kicker: "Scelta curatoriale",
+    cover_kicker: "Percorso creator",
     rationale:
       "La raccolta non guarda solo alla generazione. Tiene insieme ideazione visuale, post-produzione e contenuto testuale, così il percorso creator non si spezza tra tool brillanti ma scollegati.",
     highlights: [

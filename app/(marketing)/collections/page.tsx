@@ -10,8 +10,8 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "./collections.css";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Collections",
-  description: "Raccolte editoriali di tool per scegliere più velocemente cosa provare.",
+  title: "Raccolte",
+  description: "Percorsi di tool organizzati per stack, workflow e scenari, per scegliere più velocemente cosa provare.",
   path: "/collections",
 });
 

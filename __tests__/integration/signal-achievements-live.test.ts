@@ -353,7 +353,7 @@ describe.runIf(CAN_RUN && isLocal(URL))("SIG-ACH live Phase 6 achievements", () 
     res = await evaluate(idC);
     levels = (res.envelopes as Array<{ code: string; tier: string; levelLabel?: string }>)
       .filter((e) => e.code === "level_advanced");
-    expect(levels.map((l) => l.levelLabel)).toEqual(["Curatore", "Stratega"]);
+    expect(levels.map((l) => l.levelLabel)).toEqual(["Builder", "Stratega"]);
     expect(levels.find((l) => l.levelLabel === "Stratega")?.tier).toBe("milestone");
 
     // Cartografo: level 5 emits the milestone envelope and the badge.

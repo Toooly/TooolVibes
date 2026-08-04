@@ -15,7 +15,7 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPublicPageMetadata({
   title: "Post",
-  description: "Guide, note editoriali e analisi TooolVibes sui tool da provare.",
+  description: "Guide, analisi e approfondimenti TooolVibes per scegliere i tool giusti per il tuo stack.",
   path: "/posts",
 });
 
@@ -60,8 +60,8 @@ export default async function PostsPage() {
           <div className="col-span-12 lg:col-span-8">
             <RouteMarker
               index="08"
-              label="Archivio editoriale"
-              status={`${blogPosts.length + toolWriteups.length + guides.length} letture`}
+              label="Guide e analisi"
+              status={`${blogPosts.length + toolWriteups.length + guides.length} articoli`}
               density="hero"
               className="mb-3 sm:mb-5"
             />
@@ -73,7 +73,7 @@ export default async function PostsPage() {
             />
 
             <div className="metadata-block mt-3 rounded-[24px] px-4 py-3.5 sm:mt-4 sm:px-4.5 sm:py-4">
-              <p className="brand-kicker">Come li leggiamo</p>
+              <p className="brand-kicker">A cosa servono</p>
               <p
                 className="mt-2.5 max-w-[42rem] text-[0.9375rem] leading-[1.5] sm:text-[0.98rem] sm:leading-7"
                 style={{ color: "var(--muted-strong)" }}
@@ -155,7 +155,7 @@ export default async function PostsPage() {
 
               <div className="mt-4 border-t border-white/10 pt-3.5 sm:mt-5 sm:pt-4">
                 <p className="editorial-label !text-white/60">
-                  Criteri di lettura
+                  Criteri di valutazione
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {curationCriteria.map((item) => (
@@ -180,7 +180,7 @@ export default async function PostsPage() {
         <section className="home-section-gap">
           <div className="posts-featured-panel section-stage rounded-[38px] p-6 sm:p-8 lg:p-9">
             <h2 className="editorial-label !text-white/58 mb-5">
-              In evidenza editoriale
+              In evidenza
             </h2>
 
             <div className="flex flex-col gap-4">

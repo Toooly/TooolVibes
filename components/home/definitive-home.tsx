@@ -98,9 +98,9 @@ function truncate(str: string, max: number) {
 function Cockpit({ toolCount }: { toolCount: number }) {
   const eyebrowDesktop =
     toolCount > 0
-      ? `Selezionati dalla redazione · ${toolCount} tool nel catalogo`
-      : "Selezionati dalla redazione";
-  const eyebrowMobile = toolCount > 0 ? `${toolCount} tool selezionati` : "Catalogo in arrivo";
+      ? `Per chi costruisce prodotti digitali · ${toolCount} tool nel catalogo`
+      : "Per chi costruisce prodotti digitali";
+  const eyebrowMobile = toolCount > 0 ? `${toolCount} tool da valutare` : "Catalogo in arrivo";
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
       <div aria-hidden="true" className="def-cockpit__bg">
@@ -124,9 +124,9 @@ function Cockpit({ toolCount }: { toolCount: number }) {
             Trova il tool giusto, senza perderti nel rumore.
           </h1>
           <p className="def-cockpit__lede">
-            Esplora tool AI, SaaS e no-code selezionati e spiegati con criterio.
-            Confronta le alternative, salva i candidati e conserva il motivo della
-            tua scelta.
+            Per chi costruisce prodotti e business digitali: esplora tool AI,
+            SaaS e no-code, confronta alternative e trade-off, salva i candidati
+            e conserva il motivo di ogni scelta.
           </p>
           <div className="def-cockpit__ctas">
             <Link
@@ -164,7 +164,7 @@ function Cockpit({ toolCount }: { toolCount: number }) {
                 </Link>
               </li>
               <li>
-                <Link href="/toools">
+                <Link href="/archivio">
                   <span aria-hidden="true">2</span>
                   <strong>Valuta</strong>
                   <em>Schede</em>
@@ -230,7 +230,7 @@ function IvoryEditorial({
       <header className="def-editorial__head">
         <div>
           <p className="def-editorial__eyebrow">
-            Selezione della redazione
+            In evidenza
           </p>
           <h2 id="def-editorial-title" className="def-editorial__title">
             Un tool da guardare con più attenzione.
@@ -277,7 +277,7 @@ function IvoryEditorial({
             </p>
             <p className="def-editorial__distinction">
               {focusTool.editorialNote ||
-                "Scelto dalla redazione per il taglio, non per il punteggio."}
+                "Scelta per il taglio, non per il punteggio."}
             </p>
 
             <ul className="def-editorial__spot-rail" aria-label="Dettagli editoriali">
@@ -294,7 +294,7 @@ function IvoryEditorial({
                 <strong>{focusTool.useCases.length}</strong>
               </li>
               <li>
-                <span>Tempo di lettura</span>
+                <span>Tempo di analisi</span>
                 <strong>{focusTool.readingTime ? `${focusTool.readingTime} min` : "—"}</strong>
               </li>
             </ul>

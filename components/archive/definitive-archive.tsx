@@ -187,7 +187,7 @@ export function DefinitiveArchive({
             <p className="ar4-intro__eyebrow">
               <span aria-hidden="true" className="ar4-intro__eyebrow-dot" />
               <span className="ar4-intro__eyebrow-desktop">
-                Catalogo editoriale · {totalTools} tool in {totalGroups} categorie
+                Catalogo · {totalTools} tool in {totalGroups} categorie
               </span>
               <span className="ar4-intro__eyebrow-mobile">
                 {totalTools} tool · {totalGroups} categorie

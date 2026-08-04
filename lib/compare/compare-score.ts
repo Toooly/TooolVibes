@@ -202,8 +202,8 @@ function buildExplanation(
         ? `${tool.name}: valutazione editoriale ${total}/10, verificata il ${verifiedOn}.`
         : `${tool.name}: valutazione editoriale ${total}/10.`,
       tool.score?.verdict
-        ? `Verdetto editoriale: ${tool.score.verdict}.`
-        : "Verdetto editoriale disponibile.",
+        ? `Esito: ${tool.score.verdict}.`
+        : "Esito disponibile.",
       "Il valore non incorpora quantità di prove, casi d'uso, tag o completezza dei campi.",
     ];
   }

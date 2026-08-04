@@ -9,7 +9,7 @@ import {
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 
 /**
- * G. Alternatives Decision Desk
+ * G. Alternative da confrontare
  * Editorial comparison rows. Each row shows tool name, reason to
  * compare, essential difference, editorial score, and a single open
  * action. No rich cards, no save/compare bulkheads, no Archive DNA.
@@ -32,7 +32,7 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
       <div className="td-final-alternatives__heading-row">
         <div>
           <p className="td-final-alternatives__eyebrow">
-            Alternatives Decision Desk
+            Alternative da confrontare
           </p>
           <h2
             id="td-final-alternatives-title"
@@ -41,8 +41,8 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
             Se ti interessa {current.name}, confronta questi.
           </h2>
           <p className="td-final-alternatives__lede">
-            Tre profili affini, ciascuno con un taglio diverso. Confronto
-            editoriale rapido per scegliere senza aprire ogni scheda.
+            Tre profili affini, ciascuno con un taglio diverso. Un confronto
+            rapido per scegliere senza aprire ogni scheda.
           </p>
         </div>
         <Link

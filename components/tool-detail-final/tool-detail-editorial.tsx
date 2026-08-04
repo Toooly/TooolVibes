@@ -18,7 +18,7 @@ export function ToolDetailEditorial({ tool }: ToolDetailEditorialProps) {
       className="td-final-editorial"
       aria-labelledby="td-final-editorial-title"
     >
-      <p className="td-final-section-eyebrow">Lettura editoriale</p>
+      <p className="td-final-section-eyebrow">Quadro decisionale</p>
       <h2 id="td-final-editorial-title" className="td-final-section-title">
         Cosa sappiamo finora di {tool.name}.
       </h2>

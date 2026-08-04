@@ -156,7 +156,7 @@ export function DiffMatrix({
   const rows = [
     {
       id: "verdict",
-      label: "Verdetto editoriale",
+      label: "Sintesi della valutazione",
       helper: "sintesi della valutazione",
       render: (t: NormalisedTool) => {
         const rank = rankBySlug.get(t.slug) ?? null;
@@ -299,12 +299,12 @@ export function DiffMatrix({
     },
     {
       id: "reading-time",
-      label: "Costo lettura",
+      label: "Tempo di analisi",
       helper: "tempo scheda",
       render: (t: NormalisedTool) => (
         <span className="mobile-compare-arena__matrix-time">
           <strong>{t.readingTime}</strong>
-          <small>impegno lettura</small>
+          <small>impegno di analisi</small>
         </span>
       ),
       winnerSlugs: [] as string[],
@@ -450,7 +450,7 @@ function MobileArenaBattleStage({
           ? "Confronto orientato alla priorità"
           : verdict.state === "insufficient_evidence"
             ? "Confronto da completare"
-            : "Verdetto comparativo";
+            : "Esito comparativo";
 
   const verdictTitle = winner
     ? `${winner.name} emerge dal confronto`
@@ -465,7 +465,7 @@ function MobileArenaBattleStage({
     : verdict.state === "tie"
       ? "Le valutazioni sono troppo vicine per indicare una scelta unica. La differenza dipende soprattutto dal tuo caso d'uso."
       : verdict.state === "insufficient_evidence"
-        ? "Il verdetto sarà disponibile quando tutti i tool selezionati avranno una valutazione editoriale verificata."
+        ? "L'esito sarà disponibile quando tutti i tool selezionati avranno una valutazione editoriale verificata."
         : "Il risultato considera le valutazioni editoriali e il contesto dei tool selezionati.";
 
   return (
@@ -474,13 +474,13 @@ function MobileArenaBattleStage({
         className="mobile-compare-arena__stage"
         data-state={battleState}
         data-count={tools.length}
-        aria-label="Verdetto del confronto"
+        aria-label="Esito del confronto"
       >
         <div className="mobile-compare-arena__bg" aria-hidden="true" />
 
         <header className="mobile-compare-arena__hud">
           <div className="mobile-compare-arena__title-wrap">
-            <span className="mobile-compare-arena__eyebrow">Verdetto comparativo</span>
+            <span className="mobile-compare-arena__eyebrow">Esito comparativo</span>
             <h2 className="mobile-compare-arena__title">Quale tool emerge dal confronto?</h2>
             <p className="mobile-compare-arena__lede">
               Il risultato considera le valutazioni editoriali e il contesto dei tool
@@ -806,7 +806,7 @@ export function MobileCompareView({
           <span className="mobile-compare-arena__fight-copy">
             <strong>
               {battleState === "result"
-                ? "Ricalcola il verdetto"
+                ? "Ricalcola l'esito"
                 : battleState === "idle"
                   ? "Analizza il confronto"
                   : "Analisi in corso…"}

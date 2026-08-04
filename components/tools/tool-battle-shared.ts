@@ -211,7 +211,7 @@ function createVerdict(
     tie: "Risultato equilibrato",
     user_preference_required: "La priorità richiede una scelta personale",
     editorial_lead: "Valutazione editoriale supportata",
-    personal_verdict: "Verdetto personale",
+    personal_verdict: "Scelta personale",
   };
 
   return {
@@ -248,7 +248,7 @@ export function getBattleVerdict(
       scores,
       [
         `${personalWinner.name} è la tua scelta personale.${personalVerdict?.reason ? ` ${personalVerdict.reason}` : ""}`,
-        "La scelta personale resta distinta da un verdetto editoriale automatico.",
+        "La scelta personale resta distinta da un esito automatico.",
       ],
       personalWinner,
     );
@@ -261,7 +261,7 @@ export function getBattleVerdict(
       COMPARE_INSUFFICIENT_EVIDENCE_MESSAGE,
       pendingNames
         ? `Una valutazione editoriale è ancora in preparazione per: ${pendingNames}.`
-        : "Aggiungi almeno due tool con valutazione editoriale verificata per ottenere un verdetto.",
+        : "Aggiungi almeno due tool con valutazione editoriale verificata per arrivare a una decisione.",
     ]);
   }
 

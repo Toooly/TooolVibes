@@ -7,7 +7,7 @@ describe("signal level V1", () => {
     expect(calculateSignalLevel(0).title).toBe("Esploratore");
     expect(calculateSignalLevel(149).level).toBe(1);
     expect(calculateSignalLevel(150).title).toBe("Selezionatore");
-    expect(calculateSignalLevel(400).title).toBe("Curatore");
+    expect(calculateSignalLevel(400).title).toBe("Builder");
     expect(calculateSignalLevel(900).title).toBe("Stratega");
     expect(calculateSignalLevel(1800).title).toBe("Cartografo");
     expect(calculateSignalLevel(1800).nextThreshold).toBeNull();

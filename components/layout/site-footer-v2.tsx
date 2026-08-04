@@ -60,8 +60,8 @@ export function SiteFooterV2() {
               </span>
             </Link>
             <p className="site-footer-v2__summary">
-              Il catalogo editoriale per scoprire, confrontare e scegliere
-              tool AI, SaaS e no-code con più contesto.
+              Il sistema decisionale per confrontare tool AI, SaaS e no-code,
+              scegliere il tuo stack e conservare il motivo di ogni scelta.
             </p>
             <div className="site-footer-v2__socials">
               {socialLinks.map((social) => {

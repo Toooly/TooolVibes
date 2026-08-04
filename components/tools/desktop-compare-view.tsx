@@ -180,7 +180,7 @@ export function DesktopCompareView({
           </Link>
           <div className="compare-onboarding__signals" aria-label="Cosa otterrai">
             <span><strong>Confronto</strong> fianco a fianco</span>
-            <span><strong>Verdetto</strong> spiegato</span>
+            <span><strong>Esito</strong> spiegato</span>
             <span><strong>Decisione</strong> salvabile</span>
           </div>
         </section>
@@ -205,7 +205,7 @@ export function DesktopCompareView({
       <div className="desktop-compare__arena">
         <header className="desktop-compare__hud">
           <div>
-            <p className="desktop-compare__eyebrow">Verdetto comparativo</p>
+            <p className="desktop-compare__eyebrow">Esito comparativo</p>
             <h2 className="desktop-compare__title">Quale tool emerge dal confronto?</h2>
             <p className="desktop-compare__lede">
               Il risultato considera le valutazioni editoriali e il contesto dei tool
@@ -261,7 +261,7 @@ export function DesktopCompareView({
                 onClick={handleFight}
               >
                 <Scale className="size-5" aria-hidden="true" />
-                {battleState === "fighting" ? "Analisi in corso…" : battleState === "result" ? "Ricalcola il verdetto" : "Analizza il confronto"}
+                {battleState === "fighting" ? "Analisi in corso…" : battleState === "result" ? "Ricalcola l'esito" : "Analizza il confronto"}
               </button>
             </div>
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { formatItalianDate } from "@/lib/utils";
+import { buildPromoChips } from "@/lib/tools/public-badges";
 
 import { ToolDetailActionSurface } from "./tool-detail-action-surface";
 
@@ -49,22 +50,21 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
           <span className="td-final-chip td-final-chip--category">
             {tool.categoryLabel}
           </span>
-          {tool.levelLabel ? (
-            <span className="td-final-chip td-final-chip--level">
-              {tool.levelLabel}
+          {buildPromoChips(tool).map((chip) => (
+            <span
+              key={chip.label}
+              className={
+                chip.kind === "level"
+                  ? "td-final-chip td-final-chip--level"
+                  : `td-final-chip td-final-chip--${chip.kind}`
+              }
+            >
+              {chip.kind !== "level" ? (
+                <span className="td-final-chip__dot" aria-hidden="true" />
+              ) : null}
+              {chip.label}
             </span>
-          ) : null}
-          {tool.toolOfWeek ? (
-            <span className="td-final-chip td-final-chip--tool-of-week">
-              <span className="td-final-chip__dot" aria-hidden="true" />
-              Selezione della redazione
-            </span>
-          ) : tool.featured ? (
-            <span className="td-final-chip td-final-chip--featured">
-              <span className="td-final-chip__dot" aria-hidden="true" />
-              In evidenza editoriale
-            </span>
-          ) : null}
+          ))}
         </div>
       </div>
 
@@ -87,7 +87,7 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
         </div>
         {tool.readingTime ? (
           <div>
-            <strong>{tool.readingTime}</strong> · lettura
+            <strong>{tool.readingTime}</strong> · analisi
           </div>
         ) : null}
         <div>

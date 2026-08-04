@@ -30,7 +30,7 @@ export function ToolDetailScore({ tool }: ToolDetailScoreProps) {
               : "td-final-score__badge tv-brand-stamp tv-brand-stamp--violet"
           }
         >
-          {assessment.status === "assessed" ? "Verdetto verificato" : "In preparazione"}
+          {assessment.status === "assessed" ? "Valutazione verificata" : "In preparazione"}
         </span>
       </div>
       <div className="td-final-score__value">
@@ -58,7 +58,7 @@ export function ToolDetailScore({ tool }: ToolDetailScoreProps) {
       <p className="td-final-score__note">
         {assessment.status === "assessed"
           ? assessment.verdict
-          : "Stiamo raccogliendo fonti, limiti e verifiche prima di pubblicare un verdetto."}
+          : "Stiamo raccogliendo fonti, limiti e verifiche prima di pubblicare una valutazione."}
       </p>
     </aside>
   );

@@ -35,7 +35,7 @@ export function makeAchievementEnvelope(
     eventId: overrides.eventId ?? "evt_test_ach_1",
     tier: "achievement",
     code: overrides.code ?? "first_verdict",
-    title: overrides.title ?? "Primo verdetto",
+    title: overrides.title ?? "Prima decisione",
     description:
       overrides.description ?? "Hai chiuso il tuo primo confronto significativo.",
     displayDelta: overrides.displayDelta ?? 60,
@@ -46,7 +46,7 @@ export function makeAchievementEnvelope(
     expiresAt: overrides.expiresAt,
     accessibilityAnnouncement:
       overrides.accessibilityAnnouncement ??
-      "Achievement sbloccato: Primo verdetto.",
+      "Achievement sbloccato: Prima decisione.",
     rulesVersion: overrides.rulesVersion ?? "reward-runtime-v1",
     iconId: overrides.iconId ?? "sparkles",
     badgeId: overrides.badgeId ?? "first_verdict",

@@ -22,7 +22,7 @@ export function getCollectionFormatMeta(
       label: "Speciale avanzato",
       subtleLabel: "Speciale",
       description:
-        "Una raccolta più strutturata, con letture guidate, confronti e passaggi operativi.",
+        "Una raccolta più strutturata, con guide, confronti e passaggi operativi.",
     };
   }
 
@@ -31,7 +31,7 @@ export function getCollectionFormatMeta(
       label: "Raccolta riservata",
       subtleLabel: "Riservata",
       description:
-        "Una raccolta premium più ricca di una selezione standard, consultabile dentro TooolVibes.",
+        "Una raccolta premium più ricca di un percorso standard, consultabile dentro TooolVibes.",
     };
   }
 

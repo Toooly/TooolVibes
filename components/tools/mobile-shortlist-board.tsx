@@ -353,10 +353,10 @@ function LibraryWishlistSection() {
           <Heart size={14} />
           Segnalazioni TooolVibes
         </span>
-        <h2 id="library-wishlist-title">Suggerisci un tool alla selezione.</h2>
+        <h2 id="library-wishlist-title">Suggerisci un tool da valutare.</h2>
         <p>
           Se manca un tool AI, SaaS o builder che merita spazio, segnalalo da qui:
-          resta tra i tuoi suggerimenti e diventa parte del percorso di selezione.
+          resta tra i tuoi suggerimenti e diventa parte del percorso di valutazione.
         </p>
         <div className="mobile-library-wishlist__signals" aria-label="Segnali utili per proporre un tool">
           {signalCards.map((item) => {
@@ -403,8 +403,8 @@ function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; c
           <Library size={22} />
         </div>
         <div>
-          <span className="mobile-library-hero__eyebrow">Biblioteca di scelta</span>
-          <h1 id="mobile-library-title">La tua biblioteca</h1>
+          <span className="mobile-library-hero__eyebrow">Shortlist operativa</span>
+          <h1 id="mobile-library-title">La tua shortlist</h1>
           <p>
             {totalCount > 0
               ? `${totalCount} tool ${totalCount === 1 ? "salvato, ordinato" : "salvati, ordinati"} per tornare subito alla scelta giusta.`
@@ -895,7 +895,7 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
     >
       <div className="mobile-library-empty__content">
         <span className="mobile-library-empty__kicker">Nessun tool salvato, per ora</span>
-        <h1 id="mobile-library-empty-title">La tua biblioteca è pronta a riempirsi.</h1>
+        <h1 id="mobile-library-empty-title">La tua shortlist è pronta a riempirsi.</h1>
         <p>
           Inizia con pochi candidati buoni: quando salvi un tool, qui trovi categoria,
           stato, link alla scheda e scorciatoie per confronto o suggerimenti.

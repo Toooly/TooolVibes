@@ -31,7 +31,7 @@ export function ToolDetailExtendedContent({
       className="td-final-section td-final-extended-content"
       aria-labelledby="td-final-extended-content-title"
     >
-      <p className="td-final-section-eyebrow">Approfondimento editoriale</p>
+      <p className="td-final-section-eyebrow">Approfondimento</p>
       <h2
         id="td-final-extended-content-title"
         className="td-final-section-title"

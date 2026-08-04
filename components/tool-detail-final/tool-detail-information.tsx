@@ -49,7 +49,7 @@ export function ToolDetailInformation({ tool }: ToolDetailInformationProps) {
           <dd>{formattedPublishedAt}</dd>
         </div>
         <div className="td-final-information__row">
-          <dt>Lettura</dt>
+          <dt>Analisi</dt>
           <dd>{tool.readingTime ?? "Non disponibile"}</dd>
         </div>
         <div className="td-final-information__row">
@@ -81,12 +81,12 @@ export function ToolDetailInformation({ tool }: ToolDetailInformationProps) {
           </dd>
         </div>
         <div className="td-final-information__row">
-          <dt>In evidenza editoriale</dt>
+          <dt>In evidenza</dt>
           <dd>
             {tool.toolOfWeek
-              ? "Sì — è la selezione della redazione"
+              ? "Sì — è in evidenza"
               : tool.featured
-                ? "Sì — è in evidenza editoriale"
+                ? "Sì — è in evidenza nel catalogo"
                 : "No — profilo standard del catalogo"}
           </dd>
         </div>

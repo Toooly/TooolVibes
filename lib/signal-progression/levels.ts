@@ -12,7 +12,7 @@ export type SignalLevelThreshold = {
 export const SIGNAL_LEVEL_THRESHOLDS: readonly SignalLevelThreshold[] = [
   { level: 1, title: "Esploratore", minSp: 0 },
   { level: 2, title: "Selezionatore", minSp: 150 },
-  { level: 3, title: "Curatore", minSp: 400 },
+  { level: 3, title: "Builder", minSp: 400 },
   { level: 4, title: "Stratega", minSp: 900 },
   { level: 5, title: "Cartografo", minSp: 1800 },
 ];

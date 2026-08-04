@@ -25,7 +25,7 @@ export function ToolDetailSignal({ tool }: ToolDetailSignalProps) {
     >
       <p className="td-final-section-eyebrow">
         <TrendingUp size={12} aria-hidden="true" />
-        Trend e segnale editoriale
+        Trend e segnali
       </p>
       <h2 id="td-final-signal-title" className="td-final-section-title">
         Cosa dice il momento di {tool.name}.

@@ -310,7 +310,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             ) : (
               <>
                 <SectionHeader
-                  eyebrow="Lettura"
+                  eyebrow="Nel dettaglio"
                   title="Il contenuto qui non parla da solo: ti porta verso il prossimo passo."
                   description="Ogni blocco serve a ridurre rumore e aiutare il salto giusto tra approfondimento, archivio, salvati e raccolte."
                 />

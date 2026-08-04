@@ -76,10 +76,10 @@ function buildTrajectory(
     },
     {
       code: "curator_mark",
-      title: "Segno del curatore",
+      title: "Segno del builder",
       current: Math.min(progress.collectionJourneysCompleted, 1),
       target: 1,
-      hint: "percorso curato completato",
+      hint: "percorso completato",
     },
   ];
   const open = candidates.filter((item) => !earned.has(item.code));
@@ -138,14 +138,14 @@ export function AccountBadgeCabinetSection({
       ) : badges.length === 0 ? (
         <div className="mt-4 rounded-[18px] border px-4 py-4" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.6)" }}>
           <p className="text-sm leading-6" style={{ color: "var(--account-ink)" }}>
-            Il cabinet raccoglie i segni del tuo percorso: la prima selezione,
-            il primo verdetto, i percorsi curati completati. Ogni segno arriva
+            Il cabinet raccoglie i segni del tuo percorso: la prima shortlist,
+            la prima decisione, i percorsi completati. Ogni segno arriva
             solo da azioni utili verificate dal server — mai da click ripetuti.
           </p>
           <p className="mt-3 text-sm leading-6" style={{ color: "var(--muted)" }}>
             Prossimo passo utile:{" "}
-            <Link href="/toools" className="section-quiet-link">
-              salva il primo strumento nella tua selezione
+            <Link href="/archivio" className="section-quiet-link">
+              salva il primo strumento nella tua shortlist
             </Link>
             .
           </p>

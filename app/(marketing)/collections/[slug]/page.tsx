@@ -179,7 +179,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
             </div>
 
             <p className="mt-6 brand-kicker">
-              {isAdvancedIssue ? "Raccolta speciale TooolVibes" : "Raccolta curata TooolVibes"}
+              {isAdvancedIssue ? "Raccolta speciale TooolVibes" : "Raccolta TooolVibes"}
             </p>
             <h1 className="text-display-hero mt-2.5 max-w-none text-[2.44rem] sm:max-w-[13.5ch] sm:text-[3.02rem] sm:text-balance lg:max-w-[14ch] lg:text-[3.66rem]">
               {collection.title}
@@ -193,7 +193,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
             <div className="mt-4.5">
               <p className="brand-kicker">
-                {premiumAccess.state === "locked" ? "Cosa mostra l'anteprima" : "Tesi curatoriale"}
+                {premiumAccess.state === "locked" ? "Cosa mostra l'anteprima" : "Tesi del percorso"}
               </p>
               <p
                 className="text-body-strong mt-2.5 text-[0.98rem] sm:text-[1.02rem]"
@@ -273,16 +273,16 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                       ? "Anteprima speciale avanzata"
                       : "Anteprima riservata"
                     : isAdvancedIssue
-                      ? "Lettura speciale avanzata"
-                      : "Lettura speciale"
+                      ? "Percorso speciale avanzato"
+                      : "Percorso speciale"
                 }
                 title={
                   premiumAccess.state === "locked"
                     ? isAdvancedIssue
                       ? "Uno speciale avanzato già leggibile in anteprima, con il cuore del formato nella versione completa."
-                      : "Una raccolta riservata già leggibile in anteprima, senza perdere il suo taglio curatoriale."
+                      : "Una raccolta riservata già leggibile in anteprima, senza perdere il suo taglio."
                     : isAdvancedIssue
-                      ? "Un formato editoriale più profondo di una raccolta standard."
+                      ? "Un formato più profondo di una raccolta standard."
                       : "Una raccolta più guidata di un semplice elenco tool."
                 }
                 description={
@@ -313,7 +313,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
               <div className="space-y-4">
                 <div>
                   <p className="editorial-label !text-white/60">
-                    {premiumAccess.state === "locked" ? "Cosa stai leggendo" : "Stato della raccolta"}
+                    {premiumAccess.state === "locked" ? "Cosa stai esplorando" : "Stato della raccolta"}
                   </p>
                   <p className="mt-3 text-[1.4rem] leading-tight text-white">
                     {premiumAccess.state === "locked" ? access.label : formatMeta.label}
@@ -330,7 +330,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                 {isAdvancedIssue && collection.advanced_issue ? (
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
-                      Flusso di lettura
+                      Flusso del percorso
                     </p>
                     <p className="mt-2 text-sm leading-6 text-white/78">
                       {collection.advanced_issue.reading_flow}
@@ -377,7 +377,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                     ? "La raccolta approfondisce il perché, ma resta operativa: puoi salvare, confrontare e aprire i profili senza uscire dal formato."
                     : "Ogni slot ha un ruolo chiaro dentro la raccolta. Puoi salvare i tool, portarli nel confronto e aprire il profilo singolo senza perdere il filo."
                   : isAdvancedIssue
-                    ? "L'anteprima narrativa resta leggibile, ma la versione completa conserva più moduli editoriali e una lettura più profonda del ruolo di ogni tool."
+                    ? "L'anteprima narrativa resta leggibile, ma la versione completa conserva più moduli e un'analisi più profonda del ruolo di ogni tool."
                     : "Vedi gli snodi principali della raccolta e puoi comunque salvare i tool più convincenti, portarli nel confronto e capire se vale lo sblocco."
               }
             />
@@ -455,7 +455,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
                   <div>
                     <p className="editorial-label">Cosa resta aperto</p>
                     <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
-                      Restano leggibili i momenti chiave della raccolta e i tool necessari per capire il taglio, non l&apos;intero percorso editoriale.
+                      Restano leggibili i momenti chiave della raccolta e i tool necessari per capire il taglio, non l&apos;intero percorso.
                     </p>
                   </div>
                 )}

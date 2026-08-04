@@ -59,7 +59,7 @@ function makeHub(overrides: Partial<SignalProgressHub> = {}): SignalProgressHub 
 
 const EARNED_BADGE = {
   code: "curator_mark",
-  title: "Segno del curatore",
+  title: "Segno del builder",
   description: "Hai completato un intero percorso curato, passaggio dopo passaggio.",
   a11yDescription: "Segnalino guadagnato: hai completato un percorso curato completo.",
   iconId: "PenTool",
@@ -99,7 +99,7 @@ describe("AccountBadgeCabinetSection", () => {
     expect(screen.getByText(/raccoglie i segni del tuo percorso/i)).toBeTruthy();
     expect(screen.getByText(/mai da click ripetuti/i)).toBeTruthy();
     const link = screen.getByRole("link", { name: /salva il primo strumento/i });
-    expect(link.getAttribute("href")).toBe("/toools");
+    expect(link.getAttribute("href")).toBe("/archivio");
   });
 
   it("renders earned badges with meaning, date and textual rarity", () => {
@@ -109,7 +109,7 @@ describe("AccountBadgeCabinetSection", () => {
         loading: false,
       }),
     );
-    expect(screen.getByText("Segno del curatore")).toBeTruthy();
+    expect(screen.getByText("Segno del builder")).toBeTruthy();
     expect(screen.getByText(/percorso curato, passaggio dopo passaggio/i)).toBeTruthy();
     // Rarity is text, never colour-only.
     expect(screen.getByText("Raro")).toBeTruthy();

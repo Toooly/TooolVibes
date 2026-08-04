@@ -44,9 +44,9 @@ type ArchiveV4ToolCardProps = {
 };
 
 const TIER_LABEL: Record<"primary" | "secondary" | "tertiary", string> = {
-  primary: "Selezione della redazione",
+  primary: "In evidenza",
   secondary: "In vetrina",
-  tertiary: "Selezione editoriale",
+  tertiary: "Selezione TooolVibes",
 };
 
 function ArchiveV4ToolCard({
@@ -132,10 +132,10 @@ function ArchiveV4ToolCard({
         {showEditorialBadge ? (
           <span
             className="ar4-card__status ar4-card__status--editorial"
-            aria-label="Selezione della redazione"
+            aria-label="In evidenza"
           >
             <Star size={11} aria-hidden="true" />
-            Selezione della redazione
+            In evidenza
           </span>
         ) : null}
         {showTierBadge ? (

@@ -8,7 +8,7 @@ import "./shortlist.css";
 
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Salvati",
-  description: "Raccogli, organizza e confronta i tool che hai salvato.",
+  description: "La tua shortlist operativa: raccogli i candidati, annota il motivo e riprendi il confronto quando vuoi.",
   path: "/shortlist",
 });
 

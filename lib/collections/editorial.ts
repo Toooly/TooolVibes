@@ -41,11 +41,11 @@ const editorialStateMeta: Record<
 const surfaceMeta: Record<CollectionSurface, { label: string; description: string }> = {
   collection: {
     label: "Raccolta",
-    description: "Una raccolta curatoriale pensata per orientare la scelta.",
+    description: "Un percorso pensato per orientare la scelta.",
   },
   "special-issue": {
     label: "Speciale",
-    description: "Una selezione più ricca, pensata per spiegare meglio uno scenario.",
+    description: "Un percorso più ricco, pensato per spiegare meglio uno scenario.",
   },
 };
 
