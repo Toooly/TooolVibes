@@ -16,10 +16,10 @@ import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { levelCTransition } from "@/lib/motion/transitions";
 import { playTooolvibesSound } from "@/lib/config/sound";
 import {
+  buildCanonicalObjectiveRanking,
   celebrateArenaFight,
   normalise,
   withBattleScores,
-  withObjectiveScores,
   getBattleVerdict,
   type NormalisedTool,
   type BattleVerdict,
@@ -108,10 +108,13 @@ function CompactToolCard({
 export function DiffMatrix({
   tools,
   objective = null,
+  verdict: suppliedVerdict = null,
 }: {
   tools: NormalisedTool[];
   /** B34: obiettivo attivo; orienta verdetto e lettura della matrice. */
   objective?: CompareObjective | null;
+  /** Pre-computed canonical verdict (no re-sort inside DiffMatrix). */
+  verdict?: BattleVerdict | null;
 }) {
   const cellsRef = useRef<(HTMLDivElement | null)[]>([]);
   const isSyncing = useRef(false);
@@ -129,7 +132,7 @@ export function DiffMatrix({
 
   if (tools.length < MIN_COMPARE_TOOLS) return null;
 
-  const verdict = getBattleVerdict(tools, objective);
+  const verdict = suppliedVerdict ?? getBattleVerdict(tools, objective);
   const winner = verdict.winner;
   const rankBySlug = new Map(verdict.scores.map(({ tool, rank }) => [tool.slug, rank]));
   const scoreBySlug = new Map(verdict.scores.map(({ tool, score }) => [tool.slug, score]));
@@ -161,6 +164,16 @@ export function DiffMatrix({
       render: (t: NormalisedTool) => {
         const rank = rankBySlug.get(t.slug) ?? null;
         const isWinner = t.slug === winner?.slug;
+        // Summary comes from the canonical engine (per-tool, per-objective).
+        const engineSummary = t.objectiveSummary ?? "";
+        const fitScore = t.objectiveScore ?? null;
+        // Use the engine summary when available; otherwise fall back to copy
+        // reserved for genuinely insufficient data.
+        const contextualSummary = engineSummary || (
+          verdict.state === "insufficient_evidence"
+            ? "Una valutazione editoriale è ancora in preparazione"
+            : "Confronta con le tue priorità"
+        );
         return (
           <div
             className="mobile-compare-arena__matrix-verdict-card"
@@ -169,18 +182,10 @@ export function DiffMatrix({
             <span className="mobile-compare-arena__matrix-rank">
               {rank === null ? "—" : `#${rank}`}
             </span>
-            <strong>
-              {isWinner
-                ? "Emerge dal confronto"
-                : verdict.state === "tie"
-                  ? "Risultato equilibrato"
-                  : verdict.state === "insufficient_evidence"
-                    ? "Una valutazione editoriale è ancora in preparazione"
-                    : "Confronta con le tue priorità"}
-            </strong>
+            <strong>{contextualSummary}</strong>
             <small>
-              {isWinner
-                ? "Vantaggio supportato dalla valutazione editoriale."
+              {fitScore !== null
+                ? `Fit obiettivo: ${fitScore}/10`
                 : "La scelta non viene dedotta da completezza dei campi o parole chiave."}
             </small>
           </div>
@@ -194,6 +199,8 @@ export function DiffMatrix({
       helper: "punteggio su 10",
       render: (t: NormalisedTool, isWinner: boolean) => {
         const score = scoreBySlug.get(t.slug) ?? t.battleScore;
+        const fitScore = t.objectiveScore ?? null;
+        const fitRank = t.objectiveRank ?? null;
         const canVisualizeScore = score !== null && maxScore !== null;
         return (
           <div className="mobile-compare-arena__matrix-score-card">
@@ -203,10 +210,18 @@ export function DiffMatrix({
                 {score === null
                   ? "Valutazione editoriale in preparazione"
                   : isWinner
-                    ? "Più adatto in questo confronto"
-                    : "Punteggio editoriale"}
+                    ? "Più adatto per questo obiettivo"
+                    : "Punteggio TooolVibes"}
               </small>
             </div>
+            {fitScore !== null ? (
+              <div className="mobile-compare-arena__fit-block" aria-label={`Fit obiettivo ${fitScore} su 10`}>
+                <small className="mobile-compare-arena__fit-note">
+                  Fit “{objective ? getCompareObjectiveLabel(objective) : "obiettivo"}”: {fitScore}/10
+                  {fitRank !== null ? ` · rank ${fitRank}` : ""}
+                </small>
+              </div>
+            ) : null}
             {canVisualizeScore ? (
               <div className="mobile-compare-arena__matrix-bar">
                 <span
@@ -219,6 +234,54 @@ export function DiffMatrix({
         );
       },
       winnerSlugs: winner ? [winner.slug] : [],
+    },
+    {
+      id: "factor-bars",
+      label: "Fattori per l'obiettivo",
+      helper: "dimensioni e pesi",
+      render: (t: NormalisedTool) => {
+        const dims = t.weightedDimensions ?? [];
+        if (dims.length === 0) {
+          return (
+            <div className="mobile-compare-arena__matrix-evidence">
+              <small>Seleziona un obiettivo per vedere il peso dei fattori.</small>
+            </div>
+          );
+        }
+        return (
+          <div className="compare-factor-bars" aria-label={`Fattori per ${t.name}`}>
+            {dims.map((dim) => (
+              <div key={dim.key} className="compare-factor-bar">
+                <div className="compare-factor-bar__head">
+                  <span className="compare-factor-bar__label">{dim.label}</span>
+                  <span className="compare-factor-bar__value">
+                    {dim.value}/5 · peso {Math.round(dim.weight * 100)}%
+                  </span>
+                </div>
+                <div
+                  className="compare-factor-bar__track"
+                  role="meter"
+                  aria-label={`${dim.label}: valore ${dim.value} su 5, peso ${Math.round(dim.weight * 100)} percento`}
+                  aria-valuenow={dim.value}
+                  aria-valuemin={1}
+                  aria-valuemax={5}
+                >
+                  <span
+                    className="compare-factor-bar__fill"
+                    data-primary={dim.isPrimary}
+                    style={{ width: `${(dim.value / 5) * 100}%` }}
+                  />
+                </div>
+                <div className="compare-factor-bar__weight">
+                  <span className="compare-factor-bar__weight-fill" style={{ width: `${Math.min(dim.weight * 100, 100)}%` }} />
+                  contributo {dim.contribution.toFixed(2)}
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      },
+      winnerSlugs: [] as string[],
     },
     {
       id: "category",
@@ -414,11 +477,12 @@ function MobileArenaBattleStage({
 }: {
   battleState: BattleState;
   tools: NormalisedTool[];
-  verdict: BattleVerdict;
+  verdict: BattleVerdict | null;
   /** B34: etichetta dell'obiettivo attivo; null = modalità generale. */
   objectiveLabel?: string | null;
 }) {
   const reducedMotion = useReducedMotion();
+  if (!verdict) return null;
   const statusLabel =
     battleState === "idle"
       ? "Pronto"
@@ -435,15 +499,21 @@ function MobileArenaBattleStage({
   const runnerUp = winner
     ? verdict.scores.find(({ tool, score }) => tool.slug !== winner.slug && score !== null) ?? null
     : null;
+  // Gap uses objective raw scores when an objective is active, else base scores.
+  const winnerRaw = winner?.objectiveRawScore ?? winner?.battleScore ?? null;
+  const runnerUpRaw = runnerUp
+    ? verdict.scores.find((s) => s.tool.slug === runnerUp.tool.slug)?.tool.objectiveRawScore
+        ?? runnerUp.score
+    : null;
   const gap =
-    winner?.battleScore !== null && winner?.battleScore !== undefined && runnerUp?.score !== null && runnerUp?.score !== undefined
-      ? winner.battleScore - runnerUp.score
+    winnerRaw !== null && runnerUpRaw !== null
+      ? winnerRaw - runnerUpRaw
       : null;
 
   // V2 verdict title based on state.
   const verdictEyebrow =
     verdict.state === "editorial_lead" && winner
-      ? "Più adatto in questo confronto"
+      ? "Più adatto per questo obiettivo"
       : verdict.state === "tie"
         ? "Risultato equilibrato"
         : verdict.state === "user_preference_required"
@@ -588,7 +658,7 @@ function MobileArenaBattleStage({
             <div className="mobile-compare-arena__verdict-head">
               <div className="mobile-compare-arena__verdict-winner">
                 <span className="mobile-compare-arena__verdict-rank">
-                  {winner?.compareScore.rank === null || !winner ? "—" : `#${winner.compareScore.rank}`}
+                  {winner?.objectiveRank ?? winner?.compareScore.rank ?? "—"}
                 </span>
                 <div>
                   <span className="mobile-compare-arena__verdict-label">{verdictEyebrow}</span>
@@ -653,14 +723,16 @@ export function MobileCompareView({
     fightTimerRefs.current.push(timer);
   }
 
-  const tools = useMemo(
-    () => withObjectiveScores(withBattleScores(normalise(catalogTools, compareSlugs)), activeObjective),
+  const ranking = useMemo(
+    () => buildCanonicalObjectiveRanking(withBattleScores(normalise(catalogTools, compareSlugs)), activeObjective),
     [catalogTools, compareSlugs, activeObjective],
   );
+  const tools = ranking.orderedTools;
+  const canonicalVerdict = ranking.objectiveVerdict;
 
   const verdict = useMemo(
-    () => (tools.length >= 2 ? getBattleVerdict(tools, activeObjective) : null),
-    [tools, activeObjective],
+    () => (tools.length >= 2 ? getBattleVerdict(tools, activeObjective, null, canonicalVerdict) : null),
+    [tools, activeObjective, canonicalVerdict],
   );
 
   useEffect(() => {
@@ -712,7 +784,7 @@ export function MobileCompareView({
   // The input order is retained unless a supported editorial assessment gives
   // candidates shared ranks; no slug or field-completeness ordering is used.
   const sorted = verdict ? verdict.scores.map((entry) => entry.tool) : tools;
-  const activeVerdict = verdict ?? getBattleVerdict(sorted, activeObjective);
+  const activeVerdict = verdict!;
   const winner = activeVerdict.winner;
   const isRevealed = battleState === "result";
 
@@ -772,7 +844,7 @@ export function MobileCompareView({
             <li key={tool.slug}>
               <CompactToolCard
                 tool={tool}
-                rank={tool.compareScore.rank ?? undefined}
+                rank={tool.objectiveRank ?? tool.compareScore.rank ?? undefined}
                 isWinner={winner?.slug === tool.slug}
                 onRemove={() => toggleCompare(tool.slug)}
               />
@@ -790,7 +862,7 @@ export function MobileCompareView({
       />
 
       {/* 5. Differenze decisive (matrice). */}
-      <DiffMatrix tools={sorted} objective={activeObjective} />
+              <DiffMatrix tools={sorted} objective={activeObjective} verdict={activeVerdict} />
 
       {/* 6. CTA: ricalcola il verdetto o apri l'analisi. */}
       <div className="mobile-compare-arena__action-area" data-state={battleState}>

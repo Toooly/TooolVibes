@@ -11,11 +11,11 @@ import { MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-work
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import type { CompareObjective } from "@/lib/compare/compare-objective";
 import {
+  buildCanonicalObjectiveRanking,
   celebrateArenaFight,
   getBattleVerdict,
   normalise,
   withBattleScores,
-  withObjectiveScores,
   type NormalisedTool,
 } from "./tool-battle-shared";
 import { CompareObjectiveSelector } from "./compare-objective-selector";
@@ -48,6 +48,11 @@ function DesktopDuelCard({
         <Scale className="size-4" aria-hidden="true" />
         <span>{rank === null ? "—" : `#${rank}`}</span>
       </div>
+      {tool.objectiveScore !== null && tool.objectiveScore !== undefined ? (
+        <span className="desktop-compare__duel-fit" aria-label={`Fit obiettivo ${tool.objectiveScore} su 10`}>
+          Fit {tool.objectiveScore}/10
+        </span>
+      ) : null}
 
       <ToolFighter
         tool={tool}
@@ -62,6 +67,11 @@ function DesktopDuelCard({
         <span>
           {tool.categoryLabel} · {formatEditorialScore(tool.editorialScore)}
         </span>
+        {tool.objectiveScore !== null && tool.objectiveScore !== undefined ? (
+          <span className="desktop-compare__duel-basefit">
+            Punteggio {tool.battleScore}/10
+          </span>
+        ) : null}
       </div>
     </article>
   );
@@ -124,14 +134,16 @@ export function DesktopCompareView({
   // B34: con il flag OFF l'obiettivo è sempre neutro (contratto base B33).
   const activeObjective = objectiveEnabled ? objective : null;
 
-  const tools = useMemo(
-    () => withObjectiveScores(withBattleScores(normalise(catalogTools, compareSlugs)), activeObjective),
+  const ranking = useMemo(
+    () => buildCanonicalObjectiveRanking(withBattleScores(normalise(catalogTools, compareSlugs)), activeObjective),
     [catalogTools, compareSlugs, activeObjective],
   );
+  const tools = ranking.orderedTools;
+  const canonicalVerdict = ranking.objectiveVerdict;
 
   const verdict = useMemo(
-    () => (tools.length >= MIN_COMPARE_TOOLS ? getBattleVerdict(tools, activeObjective) : null),
-    [tools, activeObjective],
+    () => (tools.length >= MIN_COMPARE_TOOLS ? getBattleVerdict(tools, activeObjective, null, canonicalVerdict) : null),
+    [tools, activeObjective, canonicalVerdict],
   );
   // Candidate order is retained unless an explicit editorial assessment gives
   // them a shared rank; no hidden tie-break is applied.
@@ -199,7 +211,7 @@ export function DesktopCompareView({
       ) : null}
 
       <div className="desktop-compare__matrix-panel desktop-compare__matrix-panel--full">
-        <DiffMatrix tools={sorted} objective={activeObjective} />
+        <DiffMatrix tools={sorted} objective={activeObjective} verdict={verdict} />
       </div>
 
       <div className="desktop-compare__arena">
@@ -227,7 +239,7 @@ export function DesktopCompareView({
                   <DesktopDuelCard
                     key={tool.slug}
                     tool={tool}
-                    rank={tool.compareScore.rank}
+                    rank={tool.objectiveRank ?? tool.compareScore.rank}
                     isWinner={battleState === "result" && tool.slug === winner?.slug}
                     isFighting={battleState === "fighting"}
                   />
@@ -240,7 +252,7 @@ export function DesktopCompareView({
                     <DesktopRosterCard
                       key={tool.slug}
                       tool={tool}
-                      rank={tool.compareScore.rank}
+                      rank={tool.objectiveRank ?? tool.compareScore.rank}
                       isWinner={battleState === "result" && tool.slug === winner?.slug}
                       isFighting={battleState === "fighting"}
                     />
@@ -278,9 +290,11 @@ export function DesktopCompareView({
                     <Sparkles className="size-4" aria-hidden="true" />
                     <span>
                       {winner
-                        ? `${winner.name} emerge dal confronto`
+                        ? activeObjective
+                          ? `${winner.name} è più adatto per questo obiettivo`
+                          : `${winner.name} emerge dal confronto`
                         : verdict.state === "tie"
-                          ? "Nessun vincitore netto"
+                          ? "Nessun distacco netto"
                           : verdict.state === "insufficient_evidence"
                             ? "Una valutazione editoriale è ancora in preparazione"
                             : "Nessun vincitore automatico"}
@@ -301,20 +315,25 @@ export function DesktopCompareView({
             {sorted.map((tool) => {
               const isWinner = winner?.slug === tool.slug;
               const displayScore = tool.battleScore;
-              const topScore = winner?.battleScore ?? null;
+              const topScore = winner?.objectiveScore ?? winner?.battleScore ?? null;
               const diff =
                 !isWinner && topScore !== null && displayScore !== null
-                  ? Math.max(topScore - displayScore, 0)
+                  ? Math.max(topScore - (tool.objectiveScore ?? displayScore), 0)
                   : null;
+              const rank = tool.objectiveRank ?? tool.compareScore.rank;
               return (
                 <div key={tool.slug} className="desktop-compare__score-row" data-winner={isWinner}>
                   <span className="desktop-compare__rank">
-                    {tool.compareScore.rank === null ? "—" : `#${tool.compareScore.rank}`}
+                    {rank === null ? "—" : `#${rank}`}
                   </span>
                   <span className="desktop-compare__name">{tool.name}</span>
-                  <span className="desktop-compare__score">{displayScore ?? "—"}</span>
+                  <span className="desktop-compare__score">
+                    {tool.objectiveScore !== null && tool.objectiveScore !== undefined
+                      ? `${tool.objectiveScore}/10`
+                      : displayScore ?? "—"}
+                  </span>
                   {diff !== null && diff > 0 ? (
-                    <span className="desktop-compare__diff">-{diff}</span>
+                    <span className="desktop-compare__diff">-{diff.toFixed(1)}</span>
                   ) : null}
                 </div>
               );
