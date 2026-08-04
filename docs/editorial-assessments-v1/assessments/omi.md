@@ -3,7 +3,7 @@
 - methodologyVersion: `builder-first-v1`
 - assessedAt: `2026-08-04`
 - assessor: TooolVibes Editorial (staging, pre-approval)
-- approvalStatus: `ready_for_owner_approval`
+- approvalStatus: `approved`
 
 ## Dimensioni
 ### Fit nel workflow (workflowFit) — 2

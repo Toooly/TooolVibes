@@ -1,7 +1,7 @@
 {
   "registryVersion": "builder-first-v1-staging",
   "generatedAt": "2026-08-04",
-  "note": "Staging registry. NON importato dal runtime. Nessun punteggio qui è pubblico finché l'owner non approva e registra nel registry canonico (ADR 0005).",
+  "note": "Owner approved for publication (2026-08-04). 25 APPROVE + 5 APPROVE_WITH_LIMITATIONS. Zero score changes.",
   "assessments": [
     {
       "slug": "blink",
@@ -9,7 +9,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -74,7 +74,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 3,
@@ -139,7 +139,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 5,
@@ -204,7 +204,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -269,7 +269,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -334,7 +334,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 5,
@@ -399,7 +399,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -464,7 +464,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -529,7 +529,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 3,
@@ -594,7 +594,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -659,7 +659,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -724,7 +724,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 3,
@@ -789,7 +789,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -854,7 +854,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 5,
@@ -919,7 +919,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 5,
@@ -984,7 +984,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 3,
@@ -1049,7 +1049,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -1114,7 +1114,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -1179,7 +1179,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -1244,7 +1244,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -1309,7 +1309,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 3,
@@ -1374,7 +1374,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -1439,7 +1439,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -1504,7 +1504,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -1569,7 +1569,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 3,
@@ -1634,7 +1634,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 5,
@@ -1699,7 +1699,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 2,
@@ -1764,7 +1764,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -1829,7 +1829,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 4,
@@ -1894,7 +1894,7 @@
       "methodologyVersion": "builder-first-v1",
       "assessedAt": "2026-08-04",
       "assessor": "TooolVibes Editorial (staging, pre-approval)",
-      "approvalStatus": "ready_for_owner_approval",
+      "approvalStatus": "approved",
       "dimensions": {
         "workflowFit": {
           "value": 3,
