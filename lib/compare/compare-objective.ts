@@ -174,3 +174,183 @@ export function describeCompareObjectiveWeights(
     "La priorità non modifica la valutazione editoriale e non assegna un vincitore automatico.",
   ];
 }
+
+// ---------------------------------------------------------------------------
+// Builder-first objective profiles (dimension weights)
+// ---------------------------------------------------------------------------
+
+import type { CanonicalDimension } from "./objective-fit";
+import { DIMENSION_LABELS } from "./objective-fit";
+
+/** Weight profile for an objective. Sum must equal 1. */
+export type ObjectiveProfile = {
+  key: CompareObjective;
+  label: string;
+  weights: Record<CanonicalDimension, number>;
+  primaryDimensions: CanonicalDimension[];
+  rationale: string;
+};
+
+/** Validate that profile weights sum to 1. */
+function validateWeights(profile: ObjectiveProfile): ObjectiveProfile {
+  const sum = Object.values(profile.weights).reduce((a, b) => a + b, 0);
+  if (Math.abs(sum - 1) > 0.001) {
+    throw new Error(
+      `Objective profile "${profile.key}" weights sum to ${sum}, expected 1.`,
+    );
+  }
+  return profile;
+}
+
+const PROFILE_DEFINITIONS: Array<{
+  key: CompareObjective;
+  label: string;
+  weights: Record<CanonicalDimension, number>;
+  primaryDimensions: CanonicalDimension[];
+  rationale: string;
+}> = [
+  {
+    key: "save-time",
+    label: "Risparmiare tempo",
+    weights: {
+      workflowFit: 0.3,
+      easeOfUse: 0.25,
+      versatility: 0.15,
+      experienceQuality: 0.05,
+      operationalMaturity: 0.05,
+      experimentationSpeed: 0.2,
+    },
+    primaryDimensions: ["workflowFit", "easeOfUse", "experimentationSpeed"],
+    rationale:
+      "Privilegia l'adozione rapida, l'integrazione nel flusso esistente e la velocita di validazione rispetto alla qualita percepita o alla maturita operativa.",
+  },
+  {
+    key: "quality",
+    label: "Aumentare qualità",
+    weights: {
+      workflowFit: 0.1,
+      easeOfUse: 0.05,
+      versatility: 0.2,
+      experienceQuality: 0.35,
+      operationalMaturity: 0.2,
+      experimentationSpeed: 0.1,
+    },
+    primaryDimensions: ["experienceQuality", "operationalMaturity", "versatility"],
+    rationale:
+      "Mette al centro la qualita dell'output e la credibilita professionale, seguite da maturita operativa e copertura di casi d'uso.",
+  },
+  {
+    key: "save-money",
+    label: "Ridurre costi",
+    weights: {
+      workflowFit: 0.25,
+      easeOfUse: 0.1,
+      versatility: 0.15,
+      experienceQuality: 0.05,
+      operationalMaturity: 0.35,
+      experimentationSpeed: 0.1,
+    },
+    primaryDimensions: ["operationalMaturity", "workflowFit", "versatility"],
+    rationale:
+      "Misura l'efficienza operativa e la riduzione della complessita. Non finge di conoscere il pricing: premia controllo dei dati, export e bassa dipendenza dal vendor.",
+  },
+  {
+    key: "learn-fast",
+    label: "Imparare velocemente",
+    weights: {
+      workflowFit: 0.1,
+      easeOfUse: 0.45,
+      versatility: 0.1,
+      experienceQuality: 0.15,
+      operationalMaturity: 0.05,
+      experimentationSpeed: 0.15,
+    },
+    primaryDimensions: ["easeOfUse", "experimentationSpeed", "experienceQuality"],
+    rationale:
+      "La facilita d'uso domina: quanto e rapido arrivare al primo risultato utile senza attrito iniziale.",
+  },
+  {
+    key: "collaborate",
+    label: "Collaborare",
+    weights: {
+      workflowFit: 0.2,
+      easeOfUse: 0.15,
+      versatility: 0.15,
+      experienceQuality: 0.1,
+      operationalMaturity: 0.3,
+      experimentationSpeed: 0.1,
+    },
+    primaryDimensions: ["operationalMaturity", "workflowFit", "easeOfUse"],
+    rationale:
+      "Privilegia permessi, gestione dei dati e controllo operativo, seguiti da fit nel workflow di team.",
+  },
+  {
+    key: "scale",
+    label: "Scalare",
+    weights: {
+      workflowFit: 0.15,
+      easeOfUse: 0.05,
+      versatility: 0.2,
+      experienceQuality: 0.1,
+      operationalMaturity: 0.4,
+      experimentationSpeed: 0.1,
+    },
+    primaryDimensions: ["operationalMaturity", "versatility", "workflowFit"],
+    rationale:
+      "La maturita operativa e la capacita di gestire volumi e integrazioni sono dominanti.",
+  },
+  {
+    key: "experiment",
+    label: "Sperimentare",
+    weights: {
+      workflowFit: 0.1,
+      easeOfUse: 0.2,
+      versatility: 0.15,
+      experienceQuality: 0.05,
+      operationalMaturity: 0.05,
+      experimentationSpeed: 0.45,
+    },
+    primaryDimensions: ["experimentationSpeed", "easeOfUse", "versatility"],
+    rationale:
+      "La velocita di validazione e la rapidita di adozione dominano: quanto si riesce a testare in fretta senza setup pesanti.",
+  },
+];
+
+/** Objective profiles with validated weights. */
+export const OBJECTIVE_PROFILES: ReadonlyArray<ObjectiveProfile> =
+  PROFILE_DEFINITIONS.map(validateWeights);
+
+/** Map for quick lookup by objective key. */
+const profileByKey = new Map(OBJECTIVE_PROFILES.map((p) => [p.key, p]));
+
+/** Get the weight profile for an objective. Returns null for unknown keys. */
+export function getObjectiveProfile(
+  key: CompareObjective | null,
+): ObjectiveProfile | null {
+  if (key === null) return null;
+  return profileByKey.get(key) ?? null;
+}
+
+/** Describe the objective profile for UI explanation. */
+export function describeObjectiveProfile(
+  profile: ObjectiveProfile | null,
+): string[] {
+  if (!profile) {
+    return [
+      "Obiettivo neutro: il confronto usa la valutazione editoriale generale senza aggiustamenti.",
+      "I pesi delle sei dimensioni seguono la formula canonica builder-first.",
+    ];
+  }
+
+  const parts = Object.entries(profile.weights)
+    .filter(([, w]) => w >= 0.15)
+    .sort(([, a], [, b]) => b - a)
+    .map(([dim, w]) => `${DIMENSION_LABELS[dim as CanonicalDimension]} ${Math.round(w * 100)}%`)
+    .join(", ");
+
+  return [
+    `Obiettivo "${profile.label}": ${profile.rationale}`,
+    `Pesi principali: ${parts}.`,
+    "Il punteggio TooolVibes (valutazione generale) non cambia; il fit influenza solo ranking, Arena e decision workspace.",
+  ];
+}
