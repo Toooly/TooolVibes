@@ -1,0 +1,654 @@
+{
+  "assessments": [
+    {
+      "slug": "vibecode",
+      "toolName": "VibeCode",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "VibeCode entra in un flusso di iterazione e pubblicazione rapida mobile+web, ma il record non segnala integrazioni profonde con il resto della pipeline tecnica: la promessa è velocità, non ancora tenuta del progetto.",
+          "evidence": "`shortDescription` \"Builder AI per creare app da prompt, iterare rapidamente e pubblicare progetti mobile/web\"; `useCases` centrati su iterazione, demo pubblicabile e feedback reale; tag `iterazione`, `pubblicazione`, `app mobile`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: shortDescription, longDescription, useCases, tags); https://www.vibecodeapp.com/",
+          "limit": "Nessun test hands-on in questa fase; l'integrazione con stack esistenti (auth, pagamenti, analytics) non è documentata nel record.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Il modello prompt-to-app con focus su iterazione porta al primo risultato nella prima sessione: la curva è tarata su velocità, non su profondità.",
+          "evidence": "`longDescription` \"VibeCode spinge sulla velocità di iterazione: generi una base applicativa, la rifinisci rapidamente\"; tag `vibe coding`, `iterazione`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: longDescription, tags); https://www.vibecodeapp.com/",
+          "limit": "La qualità reale del primo output dipende dal prompt; non misurato l'attrito su app non banali.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre mobile e web via prompt, ma resta nel perimetro app/sito generati da AI; non segnala backend complessi, agenti o integrazioni di sistema.",
+          "evidence": "`segments` `vibe-coding`, `ai-app-builder`; tag `app mobile`, `iterazione`, `pubblicazione`; use cases tutti interni al ciclo idea → demo.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di backend complessi, agenti autonomi o integrazioni enterprise.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "L'output è presentato come credibile per iterare e pubblicare velocemente, ma la qualità del codice e della UX oltre la prima demo non è verificabile senza test.",
+          "evidence": "`longDescription` \"capisci se il prodotto merita il passaggio successivo\"; tag `pubblicazione` che presuppone output presentabile.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: longDescription, tags)",
+          "limit": "Nessun progetto pubblico analizzato; qualità UI/codice oltre il prototipo non testata.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Export del codice, self-hosting e integrazioni non documentati nel record; il lock-in è plausibile e il pricing non è riverificato.",
+          "evidence": "Assenza di claim su export/self-hosting/API nei campi del record; nessuna evidenza di permessi granulari o SSO.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: assenza di campi su export e self-hosting)",
+          "limit": "Voce da riverificare con accesso al prodotto; pricing e politiche di export non consultati in questa fase.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Il focus dichiarato è iterare e pubblicare in fretta: la dimensione di \"quanto acceleri un test reale\" è esplicitamente centrale.",
+          "evidence": "`useCases` \"Accelerare il passaggio da idea a demo pubblicabile\" e \"Ridurre il tempo tra concept e feedback reale\"; tag `iterazione`, `pubblicazione`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: useCases, tags); https://www.vibecodeapp.com/",
+          "limit": "Velocità dichiarata, non cronometrata su un caso reale; dipende dalla natura dell'idea.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.15,
+      "score10": 6.3,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Export del codice, lock-in reale e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "weweb",
+      "toolName": "WeWeb",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "WeWeb è posizionata come piattaforma no-code/AI per web app production-grade, pensata per chi vuole portare un progetto no-code a uno standard serio: si inserisce in un flusso reale di produzione, non solo di prototipazione.",
+          "evidence": "`longDescription` \"scelta matura quando vuoi restare veloce senza perdere controllo sul front-end, sulle integrazioni e sulla tenuta del progetto nel tempo\"; `useCases` \"Collegare frontend visuale e backend esterni\" e \"Portare un progetto no-code a uno standard serio\"; tag `produzione`, `backend`, `frontend`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: longDescription, useCases, tags); https://dashboard.weweb.io/",
+          "limit": "Nessun test hands-on in questa fase; la profondità reale di \"production-grade\" su casi complessi non è verificata.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Costruire una web app production-ready via no-code richiede comunque investimento di apprendimento: la velocità di adozione è reale ma non è il punto di forza principale.",
+          "evidence": "`shortDescription` \"Piattaforma visuale no-code/AI per creare web app production-grade\"; `segments` `no-code`, `ai-app-builder`, `website-builder` (sovrapposizione di tre logiche).",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: shortDescription, segments)",
+          "limit": "Curva di apprendimento reale non cronometrata; la semplicità del prompt iniziale può mascherare la complessità di un'app completa.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre frontend visuale, integrazioni backend esterne e output production-grade: tre sotto-casi distinti dentro il ruolo no-code web app.",
+          "evidence": "`useCases` \"Costruire web app senza ripartire da zero\", \"Collegare frontend visuale e backend esterni\", \"Portare un progetto no-code a uno standard serio\"; tag `frontend`, `backend`, `produzione`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: useCases, tags)",
+          "limit": "Non verificata la copertura di mobile nativo, agenti AI o workflow puramente backend.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Piattaforma no-code matura con output pensato per la produzione: la qualità percepita è uno dei motivi per cui viene citata in contesti professionali.",
+          "evidence": "`longDescription` \"sembrarare pronto per andare in produzione\"; `whyItMatters` \"merita attenzione vera\"; tag `no-code pro`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: longDescription, whyItMatters, tags); https://dashboard.weweb.io/",
+          "limit": "Qualità effettiva del codice generato e UX del builder non testate hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Export, self-hosting e integrazioni backend sono nel perimetro dichiarato del tool: il lock-in è ridotto rispetto a un vibe-coding puro, e la prevedibilità operativa è tra i motivi di scelta.",
+          "evidence": "`useCases` \"Collegare frontend visuale e backend esterni\" indica controllo esplicito su dove vivono dati e servizi; `whyItMatters` \"restare veloce senza perdere controllo sul front-end, sulle integrazioni e sulla tenuta del progetto\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: useCases, whyItMatters); https://dashboard.weweb.io/",
+          "limit": "Pricing dei piani, limiti di export e opzioni di self-hosting non riverificati in questa fase.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Più orientata a costruire un prodotto tenuto che a prototipare in pochi minuti: la velocità di validazione c'è, ma non è la dimensione in cui WeWeb eccelle.",
+          "evidence": "`useCases` \"Costruire web app senza ripartire da zero\" suggerisce un tempo di setup superiore a un vibe-coding puro; tag `produzione` indica focus su tenuta.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: useCases, tags)",
+          "limit": "Tempo idea → prototipo navigabile non cronometrato; la promessa è \"production\", non \"minutes\".",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.95,
+      "score10": 7.9,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica del prodotto: nessun test hands-on.",
+        "Pricing dei piani, limiti di export/self-hosting e qualità del codice generato su casi complessi da riverificare."
+      ]
+    },
+    {
+      "slug": "cosmicjs",
+      "toolName": "CosmicJS",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Il record posiziona CosmicJS come \"centro operativo\" per cataloghi, siti editoriali e web app guidate dai contenuti: si integra bene in un workflow dove i contenuti sono il cuore del prodotto.",
+          "evidence": "`longDescription` \"centro operativo per cataloghi, siti editoriali e web app guidate dai contenuti\"; `useCases` \"Gestire contenuti strutturati via API\" e \"Dare ordine a progetti editoriali o cataloghi\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: longDescription, useCases); https://app.cosmicjs.com/",
+          "limit": "Nessun test hands-on in questa fase; il fit con team non tecnici che vogliono solo \"pubblicare pagine\" non è verificato.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Un CMS headless con AI richiede comunque familiarità con modelli di contenuto, API e schemi: la curva è gestibile, ma non è un tool plug-and-play.",
+          "evidence": "`shortDescription` \"CMS headless con AI, API, flussi e strumenti per accelerare progetti guidati dai contenuti\"; `segments` `headless-cms`, `no-code`, `automation` (tre logiche da comporre).",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: shortDescription, segments)",
+          "limit": "Tempo reale al primo schema pubblicato non cronometrato; la presenza di \"no-code\" tra i segmenti può sovrastimare la semplicità.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "CMS headless + API + AI + flussi: copre più sotto-casi della sua categoria, dal content modeling all'automazione editoriale.",
+          "evidence": "`useCases` \"Gestire contenuti strutturati via API\", \"Dare ordine a progetti editoriali o cataloghi\", \"Velocizzare flussi tra contenuti, team e frontend\"; tag `cms headless`, `api`, `flussi contenuti`, `flussi ai`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: useCases, tags)",
+          "limit": "Non verificata la copertura di workflow puramente commerce, mobile nativo o agenti.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "CMS headless maturo con API al centro: la qualità percepita del pannello e la stabilità dei contenuti strutturati sono il valore dichiarato.",
+          "evidence": "`highlights` \"API al centro\", \"Flussi\", \"CMS\"; `whyItMatters` \"Non è solo un CMS: è un centro operativo quando contenuti e struttura devono restare gestibili nel tempo\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: highlights, whyItMatters); https://app.cosmicjs.com/",
+          "limit": "UX del pannello admin e qualità delle risposte AI non testate hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "API-first significa che i contenuti sono esportabili e il lock-in è ridotto: il controllo su schema, flussi e integrazioni è esplicito nel perimetro del tool.",
+          "evidence": "`useCases` \"Gestire contenuti strutturati via API\" implica dati accessibili; `longDescription` \"organizzare contenuti, modelli, API e flussi editoriali in modo pulito\"; tag `api`, `flussi contenuti`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: useCases, longDescription, tags)",
+          "limit": "Pricing per usage/storage, policy di backup e opzioni di self-hosting non riverificati in questa fase.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Più orientato a costruire un sistema di contenuti stabile e gestibile che a un prototipo lampo: la velocità di validazione c'è, ma non è il punto di forza.",
+          "evidence": "`useCases` centrato su \"dare ordine\" e \"velocizzare flussi\" (continui), non su \"test in pochi minuti\"; tag `cataloghi`, `flussi`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: useCases, tags)",
+          "limit": "Tempo idea → sito MVP con contenuti non cronometrato; dipende dalla complessità del modello dati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.7,
+      "score10": 7.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Pricing per storage/usage, policy di backup e profondità delle funzioni AI da riverificare."
+      ]
+    },
+    {
+      "slug": "mocha",
+      "toolName": "Mocha",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Mocha copre end-to-end un'app AI no-code (backend, database, autenticazione, hosting e pubblicazione): entra in un flusso reale di rilascio, non solo di prototipazione UI.",
+          "evidence": "`longDescription` \"backend, database, accesso e pubblicazione fanno parte della promessa\"; `useCases` \"Costruire una app con backend e accesso inclusi\" e \"Ridurre i passaggi tra costruzione, dati e pubblicazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: longDescription, useCases); https://getmocha.com/",
+          "limit": "Nessun test hands-on in questa fase; l'integrazione con servizi terzi (pagamenti, analytics, CRM) non è documentata nel record.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "No-code con backend integrato abbrevia molto il time-to-first-app: il primo risultato utile, comprensivo di login e database, arriva in una sessione.",
+          "evidence": "`shortDescription` \"Builder no-code per app AI con backend, database, autenticazione, hosting e pubblicazione integrati\"; `useCases` \"Lanciare velocemente un prodotto no-code completo\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: shortDescription, useCases); https://getmocha.com/",
+          "limit": "Curva reale su app non banali (logiche complesse, permessi granulari) non cronometrata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre web app AI complete con backend: un perimetro chiaro, ma non specializzato su UI pura, siti, o agenti autonomi.",
+          "evidence": "`segments` `ai-app-builder`, `no-code`; tag `app completa`, `database`, `pubblicazione`; `useCases` tutti interni al ciclo \"app AI con backend\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di mobile nativo, siti editoriali o workflow multi-agent.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "L'output è presentato come credibile per \"lanciare un prodotto no-code completo\", ma la qualità del codice e della UX non è verificabile senza test.",
+          "evidence": "`useCases` \"Lanciare velocemente un prodotto no-code completo\"; `highlights` \"App completa\", \"Database\", \"Accesso\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: useCases, highlights)",
+          "limit": "Qualità UI/codice e coerenza del backend generato non testate hands-on; nessun progetto pubblico analizzato.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Hosting incluso riduce l'attrito operativo, ma export del codice, portabilità del backend e permessi granulari non sono documentati: il lock-in è plausibile.",
+          "evidence": "`shortDescription` cita \"hosting e pubblicazione integrati\" ma il record non menziona export, self-hosting o API di gestione dati; nessun campo su SSO o audit.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: shortDescription, assenza di campi su export e self-hosting)",
+          "limit": "Pricing per app pubblicate, policy di backup e opzioni di export da riverificare con accesso al prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Backend, database e autenticazione già integrati abbreviano drasticamente il tempo tra idea e MVP rilasciato: la dimensione è centrale per un tool che promette \"no-code completo\".",
+          "evidence": "`useCases` \"Ridurre i passaggi tra costruzione, dati e pubblicazione\" e \"Lanciare velocemente un prodotto no-code completo\"; `whyItMatters` \"vuoi un sistema più integrato e meno frizione operativa tra idea e rilascio\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: useCases, whyItMatters); https://getmocha.com/",
+          "limit": "Velocità dichiarata, non cronometrata su un caso reale; la presenza di backend integrato è un vantaggio solo se la logica di business resta semplice.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.55,
+      "score10": 7.1,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Export del codice, portabilità del backend e pricing per app pubblicate da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "v0",
+      "toolName": "v0",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "v0 è il builder UI/componenti di Vercel e si inserisce in modo nativo nel flusso prompt → componenti React/Tailwind → codice pronto per Next.js: per chi già costruisce su quello stack il fit è tra i più diretti del panorama AI builder.",
+          "evidence": "`longDescription` \"v0 è forte quando la partita si gioca su UI, componenti e velocità di esecuzione front-end\"; tag `vercel`, `frontend`, `components`; segmento `ui-builder`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: longDescription, tags, segments); https://v0.app/",
+          "limit": "Per chi non usa l'ecosistema Vercel/Next.js il vantaggio di workflowFit si riduce: il fit è alto ma non universale.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Prompt-based con output UI quasi immediato: la curva di apprendimento è tra le più dolci del segmento, e il primo componente utile arriva nella prima sessione.",
+          "evidence": "`useCases` \"Generare UI e componenti da prompt\" e \"Accelerare il lavoro su prototipi frontend\"; tag `ai coding`, `ui builder`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: useCases, tags); https://v0.app/",
+          "limit": "La qualità del primo output dipende dal prompt; non misurato l'attrito su componenti molto custom.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Fortissimo su UI, componenti e prototipi frontend, ma meno su backend complessi, mobile nativo, workflow non-React o prodotti completi con logiche di business profonde.",
+          "evidence": "`segments` `ui-builder`, `ai-app-builder`; `useCases` tutti interni a UI/componenti/frontend; `categoryLabel` \"Coding AI / builder UI\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: segments, useCases, categoryLabel)",
+          "limit": "Non verificata la copertura di mobile nativo, backend o workflow multi-agent.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 5,
+          "motivation": "Lo standard qualitativo di Vercel (Shadcn, Tailwind, Next.js) è riconosciuto a livello di categoria: l'output di v0 è credibile, professionale e pronto per essere integrato in un progetto reale.",
+          "evidence": "`whyItMatters` \"v0 resta uno dei riferimenti più chiari del panorama AI builder\" per UI e componenti; `highlights` \"UI\", \"Componenti\", \"Frontend\"; tag `vercel`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: whyItMatters, highlights, tags); https://v0.app/",
+          "limit": "La qualità del codice generato su logiche complesse e accessibilità non è testata hands-on in questa fase.",
+          "confidence": "alta"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Piattaforma Vercel con code export, integrazione con GitHub e possibilità di proseguire fuori dal builder: il lock-in è ridotto rispetto a un vibe-coding puro, e la prevedibilità operativa è solida.",
+          "evidence": "`useCases` \"Passare da idea visuale a codice più in fretta\" implica output di codice portabile; tag `vercel` indica piattaforma matura; `longDescription` \"portare il codice in un flusso moderno\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: useCases, tags, longDescription); https://v0.app/",
+          "limit": "Limiti dei piani Vercel, policy di export e governance del workspace non riverificati in questa fase.",
+          "confidence": "alta"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Validazione UI rapidissima (prompt → componenti → preview) è il punto di forza esplicito: la dimensione è centrale, anche se il tempo complessivo di validazione dipende poi dall'integrazione nel prodotto finale.",
+          "evidence": "`useCases` \"Generare UI e componenti da prompt\" e \"Accelerare il lavoro su prototipi frontend\"; `whyItMatters` \"velocità di esecuzione front-end\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: useCases, whyItMatters); https://v0.app/",
+          "limit": "Velocità di validazione UI dichiarata, non cronometrata su un prodotto completo; il delta idea → componente è rapidissimo, idea → prodotto no.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.25,
+      "score10": 8.5,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica del prodotto (Vercel/Next.js): nessun test hands-on.",
+        "Limiti dei piani, qualità del codice generato su logiche complesse e accessibilità dell'output da riverificare."
+      ]
+    },
+    {
+      "slug": "meku",
+      "toolName": "Meku",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Il punto di forza esplicito è generare basi React/Tailwind, iterare e poi esportare per continuare fuori dal builder: entra in un flusso in cui il codice resta del developer, non del tool.",
+          "evidence": "`useCases` \"Generare basi React/Tailwind da cui partire\", \"Costruire siti o web app con iterazione veloce\", \"Esportare e continuare un progetto fuori dal builder\"; tag `react`, `tailwind`, `export`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: useCases, tags); https://meku.dev/",
+          "limit": "Nessun test hands-on in questa fase; la qualità della base generata su stack non standard non è verificata.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Prompt AI su uno stack molto noto (React/Tailwind) porta al primo progetto navigabile in fretta, soprattutto per chi già padroneggia quel mondo.",
+          "evidence": "`shortDescription` \"AI web app & site builder per generare progetti React/Tailwind, iterare, esportare e pubblicare\"; `longDescription` \"genera una base moderna, la iteri\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: shortDescription, longDescription); https://meku.dev/",
+          "limit": "La velocità reale per chi non conosce React/Tailwind può essere inferiore; curva non cronometrata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Pensato per siti e web app React/Tailwind: copre quel perimetro bene, ma non è adatto ad app native mobile, backend complessi o workflow non-React.",
+          "evidence": "`segments` `vibe-coding`, `ai-app-builder`, `website-builder`; tag `react`, `tailwind`, `site builder`; `useCases` tutti interni a siti/web app.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di mobile nativo, backend o integrazioni enterprise.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Tool meno noto di v0 o WeWeb: l'output è presentato come credibile (React/Tailwind moderni), ma la qualità effettiva non è verificabile senza test.",
+          "evidence": "`longDescription` \"vuole restare nel mondo React/Tailwind ma partire da una spinta AI concreta: genera una base moderna\"; `highlights` \"React\", \"Tailwind\", \"Esportazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: longDescription, highlights)",
+          "limit": "Nessun progetto pubblico analizzato; qualità del codice generato su logiche complesse non testata.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Export del codice è un campo dichiarato del record e riduce il lock-in in modo esplicito: è il differenziale onesto rispetto a builder puramente chiusi.",
+          "evidence": "`useCases` \"Esportare e continuare un progetto fuori dal builder\"; `highlights` include \"Esportazione\"; `longDescription` \"poi puoi riprendere controllo del progetto\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: useCases, highlights, longDescription)",
+          "limit": "Formato dell'export, licenza del codice generato e pricing dei piani non riverificati in questa fase.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Iterazione veloce su base React/Tailwind e poi export per validare in proprio o in team: la dimensione è ben supportata dal perimetro del tool.",
+          "evidence": "`useCases` \"Costruire siti o web app con iterazione veloce\" e \"Esportare e continuare un progetto fuori dal builder\"; `longDescription` \"la iteri e poi puoi riprendere controllo\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: useCases, longDescription); https://meku.dev/",
+          "limit": "Velocità dichiarata, non cronometrata su un caso reale; dipende dalla complessità del design system.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.7,
+      "score10": 7.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità del codice generato su edge case reali, formato dell'export e pricing dei piani da riverificare."
+      ]
+    },
+    {
+      "slug": "notionapps",
+      "toolName": "NotionApps",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Entra bene solo se Notion è già adottato come backend operativo: in quel caso la trasformazione \"DB Notion → app\" è un'estensione naturale; altrimenti vincola tutto il workflow a un'adozione non neutrale.",
+          "evidence": "`longDescription` \"perfetto quando Notion è già il backend operativo e serve un'interfaccia più pulita\"; `useCases` \"Usare Notion come base dati operativa\" e \"Creare portali per clienti o team\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: longDescription, useCases); https://www.notionapps.com/",
+          "limit": "Nessun test hands-on in questa fase; il fit su team che non hanno Notion come fonte di verità non è verificato (e probabilmente basso).",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Vicinanza al modello Notion rende la curva dolce per chi già usa Notion: database esistenti diventano app senza riscrivere la logica.",
+          "evidence": "`shortDescription` \"Tool per trasformare database Notion in app web/mobile con permessi e sync\"; `useCases` \"Trasformare database Notion in app\" e \"Usare Notion come base dati operativa\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: shortDescription, useCases); https://www.notionapps.com/",
+          "limit": "Velocità reale dipende dalla complessità dei database Notion di partenza; non cronometrata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 2,
+          "motivation": "Molto specifico al mondo Notion: non copre siti, prodotti AI nativi, agenti o workflow che richiedono un backend non-Notion.",
+          "evidence": "`segments` `no-code`, `productivity`; tag `notion`, `no-code`, `mobile app`, `database`, `internal tools`; `useCases` tutti interni all'ecosistema Notion.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di integrazioni esterne, logiche server-side complesse o workflow multi-Notion.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "L'output è presentato come app credibile per \"portali clienti o team\", ma la qualità del layer di presentazione e dei permessi non è testata.",
+          "evidence": "`useCases` \"Creare portali per clienti o team\"; `highlights` \"Notion\", \"App\", \"Sincronizzazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: useCases, highlights)",
+          "limit": "Qualità UX finale e coerenza della sync Notion su uso reale non testate hands-on.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Forte dipendenza da Notion come backend: il lock-in è duplice (Notion + NotionApps) e l'export del layer applicativo non è documentato.",
+          "evidence": "`longDescription` cita Notion come backend; `useCases` \"Usare Notion come base dati operativa\" implica che i dati vivono altrove; nessun campo su export dell'app o self-hosting.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: longDescription, useCases, assenza di campi su export)",
+          "limit": "Pricing per app pubblicata, granularità dei permessi e policy di export del layer app da riverificare con accesso al prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Buona se Notion è già in piedi (database esistenti diventano app in fretta), ma se Notion non è ancora adottato il setup iniziale aggiunge attrito rispetto a un builder puro.",
+          "evidence": "`useCases` \"Trasformare database Notion in app\" presuppone DB già esistenti; `shortDescription` \"trasformare database Notion in app web/mobile\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: useCases, shortDescription)",
+          "limit": "Velocità di validazione end-toend dipendente dallo stato di partenza del team su Notion.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 2.9,
+      "score10": 5.8,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Lock-in duplice (Notion + NotionApps), granularità dei permessi e pricing per app da riverificare."
+      ]
+    },
+    {
+      "slug": "wegic",
+      "toolName": "Wegic",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Pensato per siti web e presenza online via flusso conversazionale: entra bene in un workflow di \"pubblicare una pagina/sito in fretta\", non in un workflow di prodotto complesso.",
+          "evidence": "`longDescription` \"adatto a chi vuole un sito credibile rapidamente senza perdersi nei dettagli del builder\"; `useCases` \"Creare siti tramite chat\", \"Iterare copy e layout velocemente\", \"Pubblicare una presenza online in poco tempo\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: longDescription, useCases); https://wegic.ai/",
+          "limit": "Nessun test hands-on in questa fase; il fit su web app o prodotti con logica di business non è documentato.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Il flusso conversazionale (\"descrivi cosa vuoi, iteri, pubblichi\") è tra i più accessibili del segmento: chiunque può partire senza competenze di design o codice.",
+          "evidence": "`shortDescription` \"AI website builder che crea, modifica e pubblica siti tramite conversazione\"; `useCases` \"Creare siti tramite chat\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: shortDescription, useCases); https://wegic.ai/",
+          "limit": "La qualità del primo output dipende dalla chiarezza del brief; curva su siti complessi non cronometrata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 2,
+          "motivation": "Limitato al sito web: non copre web app, prodotti SaaS, backend, agenti o integrazioni di sistema.",
+          "evidence": "`segments` `website-builder`, `ai-app-builder`, `no-code` (tre etichette, ma l'uso concreto è sito); tag `website builder`, `ai site`; `useCases` tutti interni a \"sito/presenza online\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di web app, prodotti o workflow multi-pagina complessi.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "L'output è presentato come \"sito credibile rapidamente\", ma la qualità del design e della resa su brand esigenti non è verificabile senza test.",
+          "evidence": "`longDescription` \"sito credibile rapidamente senza perdersi nei dettagli del builder\"; `highlights` \"Sito\", \"Chat\", \"Pubblicazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: longDescription, highlights)",
+          "limit": "Qualità di design su siti con identità visive specifiche e qualità responsive non testate hands-on.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Lock-in probabile: il sito generato è chiuso nel builder, export del codice e self-hosting non sono documentati, e il pricing non è riverificato.",
+          "evidence": "Assenza di claim su export/self-hosting/API nei campi del record; `useCases` \"Pubblicare una presenza online\" indica hosting proprietario; nessun campo su permessi granulari.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: useCases, assenza di campi su export e self-hosting)",
+          "limit": "Pricing, policy di export e limiti dei piani da riverificare con accesso al prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "\"Pubblicare una presenza online in poco tempo\" è esattamente la promessa: per validare ipotesi di sito (landing, presenza, MVP di marketing) la velocità è il punto di forza.",
+          "evidence": "`useCases` \"Iterare copy e layout velocemente\" e \"Pubblicare una presenza online in poco tempo\"; `highlights` include \"Pubblicazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: useCases, highlights); https://wegic.ai/",
+          "limit": "Velocità dichiarata, non cronometrata su un sito reale; il delta dipende dalla completezza del brief.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.0,
+      "score10": 6.0,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Export del sito, lock-in reale e pricing dei piani da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "flowise",
+      "toolName": "Flowise",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Per chi costruisce agenti AI, RAG e flussi LangChain, Flowise è un builder visuale solido che si inserisce in pipeline AI serie: il valore è dare \"controllo tecnico\" a chi già lavora con LangChain senza dover scrivere tutto da zero.",
+          "evidence": "`longDescription` \"builder visuale per creare flussi AI, agenti e RAG basati su LangChain con maggiore controllo tecnico\"; `useCases` \"Creare chatflow e agenti AI\", \"Prototipare flussi RAG\", \"Costruire automazioni AI più controllabili\"; tag `langchain`, `rag`, `flussi ai`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: longDescription, useCases, tags); https://flowiseai.com/",
+          "limit": "Nessun test hands-on in questa fase; il fit con team non tecnici è escluso a priori (target expert).",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 2,
+          "motivation": "Target esplicito expert: richiede competenza su LangChain, concetti di prompt engineering, vector store e modelli. La velocità di adozione non è il punto di forza.",
+          "evidence": "`level: expert`; `longDescription` \"maggiore controllo tecnico\"; tag `agenti ai`, `langchain`, `rag` presuppongono conoscenze pregresse.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: level, longDescription, tags)",
+          "limit": "Tempo al primo agente funzionante non cronometrato; la curva dipende dal background LangChain dell'utente.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre molti sotto-casi del suo ruolo: agenti, RAG, chatflow, automazioni AI basate su LangChain: è un generalista dentro la categoria agenti.",
+          "evidence": "`useCases` \"Creare chatflow e agenti AI\", \"Prototipare flussi RAG\", \"Costruire automazioni AI più controllabili\"; `highlights` \"Agenti\", \"RAG\", \"LangChain\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: useCases, highlights)",
+          "limit": "Non verificata la copertura di voice agent, workflow ibridi non-LangChain o scenari enterprise molto custom.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "UI visuale funzionale e open-source: la qualità percepita è buona per uno strumento tecnico, ma non è un tool consumer-grade con polish da \"prodotto finale\".",
+          "evidence": "`shortDescription` \"Builder visuale open-source per creare agenti AI, RAG, chat e flussi LangChain\"; `highlights` \"Agenti\", \"RAG\", \"LangChain\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: shortDescription, highlights)",
+          "limit": "UX del builder e qualità dei template community non testate hands-on; open-source significa anche dipendenza dalla community.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 5,
+          "motivation": "Open-source, self-hosting, export dei flussi e nessun lock-in proprietario: è esattamente il punto in cui Flowise eccelle rispetto a tool chiusi della stessa categoria.",
+          "evidence": "`shortDescription` \"open-source\"; `longDescription` \"maggiore controllo tecnico\"; `whyItMatters` \"vuole costruire automazioni AI serie senza scrivere tutto da zero\"; tag `open-source`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: shortDescription, longDescription, whyItMatters, tags); https://flowiseai.com/",
+          "limit": "Effort reale di self-hosting, manutenzione versioni e gestione costi infrastrutturali non valutati in questa fase.",
+          "confidence": "alta"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Prototyping AI valido, ma richiede setup: non è un tool \"minuti al primo agente\". Il valore di Flowise è il controllo, non la velocità pura.",
+          "evidence": "`useCases` \"Prototipare flussi RAG\" indica prototyping come caso d'uso, non \"MVP in minuti\"; `level: expert`; `longDescription` \"maggiore controllo tecnico\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: useCases, level, longDescription)",
+          "limit": "Velocità reale di setup, costo di manutenzione delle dipendenze LangChain e tempi di deploy non cronometrati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.5,
+      "score10": 7.0,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica (open-source, LangChain): nessun test hands-on.",
+        "Effort reale di self-hosting, costi infrastrutturali e maturità della governance su casi enterprise da valutare in pratica."
+      ]
+    },
+    {
+      "slug": "agentx",
+      "toolName": "AgentX",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Entra in workflow business che vogliono portare agenti AI dentro processi senza setup troppo pesante: il fit è promesso ma va verificato su processi reali, non su demo.",
+          "evidence": "`longDescription` \"rilevante per chi vuole portare agenti AI dentro processi business senza un setup troppo pesante\"; `useCases` \"Automatizzare processi business\" e \"Prototipare flussi multi-agent\"; tag `agenti ai`, `flussi business`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: longDescription, useCases, tags); https://www.agentx.so/",
+          "limit": "Nessun test hands-on in questa fase; profondità del \"no-code\" su processi business complessi non verificata.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "No-code nella promessa, ma modellare agenti specializzati e flussi multi-agent richiede comunque pensiero strutturato: la curva è gestibile, non immediata.",
+          "evidence": "`shortDescription` \"Piattaforma no-code e multi-agent per creare agenti AI specializzati e flussi business\"; `useCases` \"Creare agenti AI specializzati\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: shortDescription, useCases); https://www.agentx.so/",
+          "limit": "Tempo al primo agente funzionante non cronometrato; dipende dalla chiarezza del processo da automatizzare.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre un perimetro definito (agenti AI + flussi business multi-agent): buona ampiezza nel suo segmento, ma non generalista oltre gli agenti.",
+          "evidence": "`useCases` \"Creare agenti AI specializzati\", \"Automatizzare processi business\", \"Prototipare flussi multi-agent\"; tag `agenti ai`, `multi-agent`, `flussi business`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: useCases, tags)",
+          "limit": "Non verificata la copertura di voice agent, integrazioni enterprise profonde o workflow non-business.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Tool meno noto di Flowise o v0: l'output (agenti + flussi) è presentato come professionale, ma la qualità effettiva non è verificabile senza test.",
+          "evidence": "`longDescription` \"agenti AI specializzati e flussi multi-agent senza partire da una struttura tecnica complessa\"; `highlights` \"Agenti\", \"No-code\", \"Flussi\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: longDescription, highlights)",
+          "limit": "Qualità reale degli agenti generati e stabilità dei flussi multi-agent su casi reali non testate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Lock-in probabile: export di agenti e flussi, governance e audit non sono documentati, e il pricing non è riverificato.",
+          "evidence": "Assenza di claim su export/self-hosting/on-prem nei campi del record; nessun campo su SSO, audit log o permessi granulari; `level: expert` indica piattaforma chiusa, non self-hosted.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: level, assenza di campi su export, self-hosting, SSO)",
+          "limit": "Pricing per agent/session, policy di export e opzioni enterprise (SSO, audit) da riverificare con accesso al prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Prototipazione multi-agent possibile, ma il \"no-code\" non è sinonimo di \"minuti al primo agente\": la velocità di validazione c'è ma non è la dimensione in cui eccelle.",
+          "evidence": "`useCases` \"Prototipare flussi multi-agent\"; `shortDescription` \"no-code e multi-agent\"; `longDescription` \"senza un setup troppo pesante\" (non \"senza setup\").",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: useCases, shortDescription, longDescription)",
+          "limit": "Velocità reale di prototipazione e tempo al primo flusso business operativo non cronometrati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 2.85,
+      "score10": 5.7,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Profondità reale del \"no-code\" su agenti complessi, export, governance enterprise e pricing da riverificare prima della pubblicazione."
+      ]
+    }
+  ]
+}

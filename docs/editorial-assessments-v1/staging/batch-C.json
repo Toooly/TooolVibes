@@ -1,0 +1,589 @@
+{
+  "assessments": [
+    {
+      "slug": "socleads",
+      "toolName": "Socleads",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Utile per costruire le prime liste di outbound in un workflow sales di founder o team piccoli, ma resta un tool di prospecting, non un pilastro del prodotto.",
+          "evidence": "Record directory: bestFor 'Costruire liste lead per outbound', useCases centrati su liste, contatti da fonti pubbliche e prospecting commerciale; category 'Lead Generation'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: useCases, bestFor, category, tags)",
+          "limit": "Nessun test hands-on; l'efficacia reale dipende da fonti pubbliche la cui disponibilità e i cui termini di servizio cambiano.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Flusso di estrazione guidato, level 'beginner' nel record, pensato per essere usato senza setup tecnico pesante da un team sales.",
+          "evidence": "Record directory: level 'beginner', segmenti sales/marketing, whyItMatters 'riduce il lavoro manuale sulle prime liste di contatti'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: level, segments, whyItMatters); https://socleads.com/",
+          "limit": "Curva reale di qualità del dato e falsi positivi non misurata in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre più fonti pubbliche (Google Maps, Instagram, LinkedIn), ma resta un estrattore: non esce dal perimetro lead generation.",
+          "evidence": "Record directory: tags 'google maps', 'linkedin', 'outreach'; useCases tutti dentro lead/prospecting; nessun caso d'uso al di fuori del sales funnel.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: tags, useCases)",
+          "limit": "Non verificato l'uso del tool in contesti diversi dal prospecting (es. market research, enrichment CRM).",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "UI da prodotto sales/marketing standard, nessun elemento distintivo di qualità percepita nel record; la resa dipende dalla qualità del dato estratto.",
+          "evidence": "Record directory: segmenti sales/marketing, shortDescription orientata a flusso di estrazione; nessun claim di design o qualità output nel record.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: shortDescription, segments)",
+          "limit": "Qualità UI reale e qualità del dato non verificate; nessuna demo analizzata.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Estrazione da fonti pubbliche (LinkedIn, Google Maps) espone a fragilità tecnica, dipendenza dalle policy delle piattaforme e rischio compliance; lock-in sul dato e pricing non documentati nel record.",
+          "evidence": "Record directory: tags 'google maps', 'linkedin' (fonti note per restrizioni ToS); assenza nel record di claim su export, integrazioni native, SLA, prevedibilità pricing.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: tags, assenza di campi su export/SLA); https://socleads.com/",
+          "limit": "Pricing, portabilità del dato e stato reale del lock-in da riverificare; contesto legale dell'uso non analizzato.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Per una prima lista utile, l'attivazione è rapida: il valore arriva nelle prime sessioni, in linea con un workflow di prospecting agile.",
+          "evidence": "Record directory: level 'beginner', whyItMatters 'riduce il lavoro manuale sulle prime liste di contatti'; useCases orientati a output rapidi.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: level, whyItMatters, useCases)",
+          "limit": "Velocità su lead di qualità (non solo volume) non cronometrata.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.15,
+      "score10": 6.3,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiale vendor: nessun test hands-on.",
+        "Rischi di compliance su scraping, pricing e portabilità del dato da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "windsor-ai",
+      "toolName": "Windsor AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Entra nel workflow marketing quando report e dashboard diventano critici: è un layer di attribuzione e unified data tra ads, analytics e BI.",
+          "evidence": "Record directory: bestFor 'Unificare dati advertising e analytics'; category 'Dati marketing'; whyItMatters 'È utile quando report e dashboard iniziano a diventare più importanti delle singole campagne'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: useCases, category, whyItMatters); https://www.windsor.ai/",
+          "limit": "Il fit su team molto piccoli senza necessità di attribution formale può essere sovradimensionato.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Richiede scelta connettori, mapping e setup account su BI/warehouse: non è uno strumento zero-config, in linea con level 'intermediate'.",
+          "evidence": "Record directory: level 'intermediate', tags 'connectors', 'bi', 'warehouse'; useCases 'Inviare dati verso BI e warehouse'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: level, tags, useCases); https://www.windsor.ai/",
+          "limit": "Tempo medio al primo report affidabile non misurato in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Ampia copertura di canali marketing lato sorgente e destinazioni lato BI/warehouse, più casi d'uso distinti dentro il suo ruolo.",
+          "evidence": "Record directory: useCases (unificare dati, invio a BI, reportistica), tags 'attribution', 'bi', 'warehouse', 'connectors'; segmenti marketing/automation.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: useCases, tags, segments)",
+          "limit": "Non verificata l'ampiezza effettiva dei connettori supportati rispetto alla documentazione live del vendor.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Prodotto di categoria tecnica; il record non evidenzia elementi distintivi di UX, la qualità si misura sull'affidabilità dei connettori e dei report.",
+          "evidence": "Record directory: segmenti marketing/automation, focus su dati e connettori; nessun claim specifico di design/UX nel record.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: segments, whyItMatters)",
+          "limit": "Qualità UI reale e completezza dei template di report non verificate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Invia dati a warehouse e BI, quindi mantiene il dato in casa: meccanismo di controllo ragionevole e allineato a un workflow di team maturi.",
+          "evidence": "Record directory: useCases 'Inviare dati verso BI e warehouse', tags 'warehouse', 'bi', 'connectors'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: useCases, tags); https://www.windsor.ai/",
+          "limit": "Pricing, retention dei dati sul vendor, granularità dei permessi e lock-in da riverificare.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Una volta connessi i canali il flusso è rapido, ma il setup iniziale (connettori, mapping, scelta destination) rallenta l'idea → test.",
+          "evidence": "Record directory: level 'intermediate', useCases che implicano setup di connettori verso BI/warehouse; segmento automation.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: level, useCases, segments)",
+          "limit": "Tempo a 'primo report' non cronometrato; dipende dal numero di sorgenti collegate.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.55,
+      "score10": 7.1,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiale vendor: nessun test hands-on.",
+        "Pricing, profondità dei connettori e granularità di permessi da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "livechat",
+      "toolName": "LiveChat",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Si inserisce nel momento in cui il traffico cresce: conversazioni realtime su sito e prodotto, con ruolo doppio supporto/vendita, in linea con un workflow di crescita di un prodotto digitale.",
+          "evidence": "Record directory: bestFor 'Gestire chat realtime su sito'; useCases 'Supportare utenti e clienti', 'Convertire lead durante la navigazione'; whyItMatters 'quando il traffico cresce, una live chat solida può aumentare conversione e qualità del supporto'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: useCases, bestFor, whyItMatters); https://www.livechat.com/",
+          "limit": "Non copre ticketing strutturato né automazioni AI profonde: complementare, non sostitutivo, di helpdesk/chatbot.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Widget embed, agent console e onboarding sono noti per essere immediati: primo risultato utile rapido anche per team non tecnici.",
+          "evidence": "Record directory: level 'intermediate', segmenti customer-support/sales, useCases 'Gestire chat realtime su sito'; track record pubblico del prodotto come live chat maturo.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: level, segments, useCases); https://www.livechat.com/",
+          "limit": "Curva su regole di routing, code e permessi non misurata in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre live chat su web (e in parte mobile) con tagli supporto e vendita, ma non si estende a ticketing, automazioni AI o flussi complessi.",
+          "evidence": "Record directory: tags 'live chat', 'support', 'sales', 'realtime'; useCases tutti dentro chat realtime; segmenti customer-support/sales.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: tags, useCases, segments)",
+          "limit": "Estensioni oltre la chat web (es. social messaging nativo, voice) non verificate.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 5,
+          "motivation": "Prodotto maturo e noto per qualità di agent console, widget e reportistica: è tra i riferimenti della sua categoria.",
+          "evidence": "Record directory: prodotto descritto come live chat solida per supporto/vendita; posizionamento del vendor (LiveChat) come punto di riferimento di categoria nel settore.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: shortDescription, whyItMatters); https://www.livechat.com/",
+          "limit": "Nessuna demo analizzata in questa fase; qualità aggiornata dell'UI da riverificare.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 5,
+          "motivation": "Vendor storico, integrazioni ampie, agenti, permessi e SLA noti; export delle chat e API documentate; resta la criticità del pricing per agente.",
+          "evidence": "Record directory: prodotto live chat di livello intermedio; track record pubblico del vendor (Text/LiveChat) come suite matura con app, integrazioni e API.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: level, tags); https://www.livechat.com/",
+          "limit": "Pricing per agente e prevedibilità del costo su team in crescita da riverificare; nessun hands-on fatto.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Installare il widget è veloce, ma tarare regole, code, team e integrazioni richiede tempo: l'idea → test è rapida solo sul primo scenario semplice.",
+          "evidence": "Record directory: useCases 'Gestire chat realtime su sito' e 'Convertire lead durante la navigazione' implicano setup iniziale di widget e team.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: useCases, level)",
+          "limit": "Tempo al primo A/B tra varianti di widget/messaggi non cronometrato.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.05,
+      "score10": 8.1,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica di prodotto: nessun test hands-on.",
+        "Pricing per agente, profondità di routing e qualità attuale della UI da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "chatbot",
+      "toolName": "ChatBot",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Si colloca come primo strato di automazione conversazionale (FAQ, lead qualification, routing) sopra un sito o un prodotto: rientra nel workflow di un builder che vuole alleggerire il supporto.",
+          "evidence": "Record directory: bestFor 'Automatizzare FAQ e supporto iniziale'; useCases 'Qualificare lead tramite conversazione', 'Collegare chatbot a flussi operativi'; segmenti customer-support/ai-agents/automation.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: useCases, bestFor, segments); https://www.chatbot.com/",
+          "limit": "Da solo non copre ticketing né live chat umana: va pensato come componente in uno stack di supporto.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Builder visuale di flussi e template, pensato per non dover scrivere logica da zero: il primo bot si mette in piedi in una sessione.",
+          "evidence": "Record directory: shortDescription 'piattaforma per creare chatbot AI di supporto, vendita e automazione conversazionale'; level 'intermediate'; useCases orientati a setup rapidi di FAQ e automazioni.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: shortDescription, level, useCases); https://www.chatbot.com/",
+          "limit": "Curva su integrazioni con AI/LLM e tuning qualità risposte non misurata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Buona varietà di template (vendita, FAQ, lead), ma il perimetro resta il chatbot conversazionale; non copre ticketing o live chat.",
+          "evidence": "Record directory: tags 'chatbot', 'ai support', 'automation', 'sales', 'faq'; useCases tutti dentro chatbot/automazioni.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: tags, useCases)",
+          "limit": "Estensioni a voce, social messaging nativo o RAG avanzato non verificate sul record.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Prodotto del gruppo LiveChat, con qualità percepita e attenzione all'editor di flussi coerente con il resto della suite.",
+          "evidence": "Record directory: segmenti customer-support/ai-agents/automation, useCases che puntano a esperienza conversazionale; affiliazione vendor nota al gruppo LiveChat.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: segments, useCases); https://www.chatbot.com/",
+          "limit": "Qualità UI aggiornata e qualità dell'editor visuale non verificate con un accesso hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Vendor consolidato, integrazioni e modelli di bot riutilizzabili; il pricing legato a interazioni/AI può essere meno prevedibile ed è un rischio da gestire.",
+          "evidence": "Record directory: level 'intermediate', segmenti che includono automation; presenza di un modello di piattaforma matura con template e flussi (record).",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: level, segments); https://www.chatbot.com/",
+          "limit": "Pricing basato su consumi AI e lock-in sui flussi del bot da riverificare.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Il valore arriva presto: template + builder visuale permettono di testare un flusso FAQ o di qualificazione in tempi brevi.",
+          "evidence": "Record directory: useCases 'Automatizzare FAQ e supporto iniziale', 'Qualificare lead tramite conversazione'; segmento automation.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: useCases, segments)",
+          "limit": "Velocità di iterazione su risposte AI reali non cronometrata in questa fase.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.85,
+      "score10": 7.7,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza del prodotto: nessun test hands-on.",
+        "Pricing AI-driven, qualità effettiva delle risposte e lock-in sui flussi del bot da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "helpdesk",
+      "toolName": "HelpDesk",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Entra nel workflow quando email e chat non bastano più: dà struttura a ticket, priorità e SLA, allineato a un supporto che inizia a essere misurabile.",
+          "evidence": "Record directory: bestFor 'Gestire ticket clienti'; useCases 'Automatizzare priorità e assegnazioni', 'Tenere traccia di SLA e conversazioni'; whyItMatters 'Aiuta a non perdere conversazioni importanti e rende il supporto più misurabile'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: useCases, bestFor, whyItMatters); https://www.helpdesk.com/",
+          "limit": "Non copre chat realtime né bot: complementare a LiveChat/ChatBot nello stack.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Concetti noti (ticket, code, priorità) e UI consolidate rendono l'adozione rapida per team che arrivano da email o fogli condivisi.",
+          "evidence": "Record directory: level 'intermediate', shortDescription 'Ticketing system per gestire comunicazioni clienti, automazioni e supporto team'; useCases 'Gestire ticket clienti'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: level, shortDescription, useCases); https://www.helpdesk.com/",
+          "limit": "Complessità reale di setup di caselle, regole e SLA non misurata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Buona varietà interna (ticket, automazioni, SLA) ma il perimetro resta il supporto strutturato; non sostituisce live chat o chatbot.",
+          "evidence": "Record directory: tags 'helpdesk', 'ticketing', 'support', 'automation', 'team'; useCases tutti dentro gestione ticket/automazioni.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: tags, useCases)",
+          "limit": "Estensioni a voice, social o workflow fortemente custom non verificate sul record.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Stessa famiglia di prodotto di LiveChat/ChatBot, con qualità UI e focus su operator experience coerenti con la suite.",
+          "evidence": "Record directory: segmenti customer-support/automation, focus su agenti e team; prodotto del gruppo noto per qualità di agent console e report.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: segments, useCases); https://www.helpdesk.com/",
+          "limit": "Qualità UI aggiornata non verificata con accesso hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Struttura pensata per team (ruoli, code, SLA) e integrazioni con canali di posta e moduli: controllo operativo ragionevole per la sua categoria.",
+          "evidence": "Record directory: useCases 'Tenere traccia di SLA e conversazioni', 'Automatizzare priorità e assegnazioni'; tags 'automation', 'team'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: useCases, tags); https://www.helpdesk.com/",
+          "limit": "Export dei dati, granularità dei permessi e pricing per agente da riverificare.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Aprire la casella e instradare i primi ticket è veloce, ma arrivare a un setup completo (SLA, automazioni, report) richiede tempo.",
+          "evidence": "Record directory: useCases 'Gestire ticket clienti' e 'Tenere traccia di SLA e conversazioni' implicano configurazione iniziale di code e regole.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: useCases)",
+          "limit": "Velocità al primo ticket instradato correttamente non cronometrata.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.75,
+      "score10": 7.5,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza del prodotto: nessun test hands-on.",
+        "Pricing per agente, profondità di automazioni e qualità attuale della UI da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "lemon-squeezy",
+      "toolName": "Lemon Squeezy",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Entra nel workflow 'vendi un prodotto digitale o SaaS senza costruire da subito tutta la macchina fiscale': è un Merchant of Record che comprime onboarding, pagamenti, tasse.",
+          "evidence": "Record directory: bestFor 'Vendere prodotti digitali'; useCases 'Gestire abbonamenti SaaS', 'Demandare tax compliance e billing'; whyItMatters 'è utile quando vuoi vendere software o prodotti digitali senza costruire subito tutta la gestione fiscale'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: useCases, bestFor, whyItMatters); https://www.lemonsqueezy.com/",
+          "limit": "Per chi vuole controllare tutto in proprio (fatturazione, tassazione, brand sul checkout) può non essere la scelta giusta.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Dashboard di prodotti, link di checkout e setup abbonamento sono pensati per essere rapidi; il primo prodotto vendibile si crea in una sessione.",
+          "evidence": "Record directory: level 'intermediate', segmenti payments, useCases orientati a vendita di prodotti digitali e abbonamenti.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: level, segments, useCases); https://www.lemonsqueezy.com/",
+          "limit": "Curva su tassazione internazionale e gestione rimborsi non misurata in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre pagamenti, abbonamenti e MoR per prodotti digitali e SaaS, ma è focalizzato su questo perimetro: non un commerce platform generalista.",
+          "evidence": "Record directory: tags 'payments', 'saas', 'merchant of record', 'subscriptions', 'tax'; useCases tutti dentro vendita digitale / SaaS / abbonamenti.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: tags, useCases)",
+          "limit": "Casi d'uso oltre il digitale (fisico, marketplace complesso) non sono nel perimetro del record.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Prodotto percepito come moderno, con checkout curato e dashboard pulita; brand e marketing del vendor coerenti con un target di creator/SaaS.",
+          "evidence": "Record directory: categoryLabel 'Pagamenti / Merchant of Record', posizionamento del vendor verso creator e SaaS; tag 'saas', 'subscriptions'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: categoryLabel, tags); https://www.lemonsqueezy.com/",
+          "limit": "Qualità UI aggiornata e personalizzazione del checkout non verificate con un accesso hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Il modello MoR è un'arma a doppio taglio: alleggerisce tasse e fisco, ma introduce dipendenza dal vendor (il cliente finale è del MoR) e vincola export, branding e rapporto diretto col cliente.",
+          "evidence": "Record directory: tags 'merchant of record', 'tax'; useCases 'Demandare tax compliance e billing' implica cessione di parte delle responsabilità operative al vendor.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: tags, useCases); https://www.lemonsqueezy.com/",
+          "limit": "Portabilità del cliente, esportazione dati e clausole di lock-in da leggere con attenzione prima della pubblicazione.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Per validare monetizzazione di un prodotto digitale, il tempo idea → primo pagamento reale è breve: link di checkout e prodotto si pubblicano in fretta.",
+          "evidence": "Record directory: useCases 'Vendere prodotti digitali' e 'Gestire abbonamenti SaaS' orientati a setup rapido di offerta e billing.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: useCases)",
+          "limit": "Tempo al primo incasso reale e gestione dispute/rimborso non cronometrati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.7,
+      "score10": 7.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza del prodotto: nessun test hands-on.",
+        "Lock-in del MoR, portabilità del cliente e pricing su volumi alti da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "tolt",
+      "toolName": "Tolt",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Si inserisce nel workflow di crescita di una SaaS che vuole trasformare utenti, creator o partner in un canale di acquisizione misurabile.",
+          "evidence": "Record directory: bestFor 'Lanciare un programma affiliate SaaS'; useCases 'Tracciare partner e commissioni', 'Collegare referral a billing e pagamenti'; whyItMatters 'utile quando vuoi trasformare utenti, creator o partner in un canale di crescita misurabile'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: useCases, bestFor, whyItMatters); https://tolt.com/",
+          "limit": "Ha senso solo dopo che il prodotto e il billing sono pronti: non è un tool di prima linea.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Richiede integrazione con Stripe/Paddle/Chargebee e configurazione di programmi, commissioni e pagine: level 'expert' nel record indica attrito non banale.",
+          "evidence": "Record directory: level 'expert', tags 'stripe', 'paddle', 'chargebee' (integrazioni con billing esterni), useCases 'Lanciare un programma affiliate SaaS'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: level, tags, useCases); https://tolt.com/",
+          "limit": "Curva di setup e qualità UX del dashboard non misurate in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Profondo nel suo ruolo (programmi affiliate, referral, commissioni) ma limitato a quel perimetro: non copre ads, SEO o content.",
+          "evidence": "Record directory: tags 'affiliate', 'referral', 'saas'; useCases tutti dentro programmi affiliate e tracciamento partner.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: tags, useCases)",
+          "limit": "Eventuali estensioni a referral non-SaaS o multi-tier non verificate sul record.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Prodotto di nicchia con target esperto: la qualità percepita dipende da dashboard, pagine affiliate e materiali per partner, non documentati nel record.",
+          "evidence": "Record directory: categoryLabel 'Marketing affiliate / SaaS', level 'expert'; nessun claim specifico di design/UX nel record.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: categoryLabel, level)",
+          "limit": "UI reale, qualità delle pagine pubbliche affiliate e materiali per partner non verificate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Si appoggia a billing esterni (Stripe, Paddle, Chargebee) per i pagamenti, il che dà controllo, ma il modello di pricing legato alle commissioni affiliate è un costo variabile e un rischio da prevedere.",
+          "evidence": "Record directory: tags 'stripe', 'paddle', 'chargebee' (dipendenza da billing esterni); nessun claim nel record su export completo o API pubbliche.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: tags, assenza di campi su export); https://tolt.com/",
+          "limit": "Pricing delle commissioni, portabilità dei dati e lock-in da riverificare.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Una volta collegato il billing e lanciato il programma si sperimenta bene, ma il setup iniziale non è rapido: l'idea → test reale richiede alcuni passaggi.",
+          "evidence": "Record directory: level 'expert', useCases 'Lanciare un programma affiliate SaaS' e 'Collegare referral a billing e pagamenti' implicano setup non immediato.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: level, useCases)",
+          "limit": "Tempo al primo referral tracciato e pagato non cronometrato.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.25,
+      "score10": 6.5,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiale vendor: nessun test hands-on.",
+        "Pricing legato alle commissioni, profondità di integrazioni e portabilità del dato da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "omi",
+      "toolName": "Omi",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 2,
+          "motivation": "È un wearable personale per trascrizione, memoria e azioni: utile per la produttività personale del founder, non come mattone nel workflow di costruzione di un prodotto digitale.",
+          "evidence": "Record directory: bestFor 'Trascrivere conversazioni importanti'; useCases 'Creare memoria personale consultabile', 'Trasformare meeting e dialoghi in azioni'; categoryLabel 'Wearable AI / assistente personale'; segmenti productivity/ai-agents.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: useCases, bestFor, categoryLabel, segments); https://www.omi.me/",
+          "limit": "Il fit su un workflow di building/operations è marginale; entra più nella sfera 'personal AI' che 'product stack'.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 2,
+          "motivation": "Richiede un device hardware e setup iniziale: l'attrito non è zero ed è in linea con level 'expert' e categoria wearable AI.",
+          "evidence": "Record directory: level 'expert', shortDescription 'Wearable AI open-source che registra, trascrive, ricorda e trasforma conversazioni in azioni'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: level, shortDescription); https://www.omi.me/",
+          "limit": "Esperienza reale di onboarding hardware/AI e qualità della trascrizione non misurate.",
+          "confidence": "bassa"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Dentro la sua nicchia (memoria personale, trascrizione, azioni) copre più casi d'uso; ma resta circoscritto a un dispositivo e a un'idea di personal AI.",
+          "evidence": "Record directory: useCases 'Trascrivere conversazioni importanti', 'Creare memoria personale consultabile', 'Trasformare meeting e dialoghi in azioni'; tags 'transcription', 'memory', 'personal ai'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: useCases, tags)",
+          "limit": "Versatilità reale in contesti non documentati (es. team, integrazioni business) non verificata.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Progetto open-source con claim chiari (trascrizione + memoria + azioni), ma la qualità percepita dipende dal prodotto fisico e dal software, non verificati nel record.",
+          "evidence": "Record directory: tags 'open-source', 'personal ai'; whyItMatters 'interessante per chi vuole sperimentare personal AI e memoria aumentata'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: tags, whyItMatters); https://www.omi.me/",
+          "limit": "Nessun test hands-on; qualità di trascrizione, latenza e UX del dispositivo non verificate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Hardware sperimentale e software in evoluzione: il pricing, la disponibilità, il supporto e la stabilità del prodotto nel tempo non sono documentati nel record; la natura open-source mitiga parte del lock-in ma non garantisce continuità del device.",
+          "evidence": "Record directory: tags 'open-source', 'wearable' (combinazione hardware + software); assenza nel record di pricing, SLA, ciclo di rilascio o roadmap formale.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: tags, assenza di campi su pricing/SLA); https://www.omi.me/",
+          "limit": "Maturità del prodotto fisico, policy di retention dei dati audio e continuità del progetto da riverificare con documentazione vendor aggiornata.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Per chi ha già il device, il loop 'parlo → trascrizione → azione' è immediato; ma l'idea → test reale richiede l'acquisto/setup del wearable, che è un collo di bottiglia.",
+          "evidence": "Record directory: useCases orientati a flussi rapidi (trascrivere, generare azioni); categoria wearable AI che implica barriera d'ingresso hardware.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: useCases, categoryLabel)",
+          "limit": "Tempo al primo use case utile dipende dalla disponibilità del device, non misurato in questa fase.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 2.4,
+      "score10": 4.8,
+      "overallConfidence": "bassa",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiale vendor: nessun test hands-on.",
+        "Maturità hardware, pricing, retention dei dati audio e stabilità del progetto open-source nel tempo da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "make",
+      "toolName": "Make",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "È un pilastro di automazione per chi costruisce: orchestra app, API, dati e processi interni, ed è centrale in qualunque stack operativo di un builder.",
+          "evidence": "Record directory: bestFor 'Automatizzare flussi tra strumenti'; useCases 'Collegare app, API e database', 'Costruire processi operativi scalabili'; whyItMatters 'È uno dei pilastri no-code per automatizzare operazioni, marketing, dati e processi interni'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: useCases, bestFor, whyItMatters); https://www.make.com/",
+          "limit": "Per workflow che richiedono logica custom pesante o runtime dedicato, può non bastare da solo.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Il builder visuale è potente ma non immediato: la curva reale (router, iterator, error handler, moduli HTTP) sale velocemente, in linea con level 'expert'.",
+          "evidence": "Record directory: level 'expert', shortDescription 'piattaforma visuale per creare automazioni, flussi e integrazioni tra app e API'; segmenti automation/no-code.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: level, shortDescription, segments); https://www.make.com/",
+          "limit": "Curva su scenari complessi e moduli HTTP non misurata in questa fase; è notoriamente superiore a strumenti più lineari come Zapier di base.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 5,
+          "motivation": "Centinaia di app supportate, moduli HTTP/JSON, branching, iteratori, gestione errori: copre una gamma vastissima di automazioni.",
+          "evidence": "Record directory: useCases 'Automatizzare flussi tra strumenti', 'Collegare app, API e database', 'Costruire processi operativi scalabili'; tags 'automazioni', 'flussi', 'integrazioni', 'api', 'no-code'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: useCases, tags); https://www.make.com/",
+          "limit": "La vastità effettiva dei connettori e dei moduli va verificata sulla documentazione live del vendor.",
+          "confidence": "alta"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Editor visuale maturo, con debugging, history run e visualizzazione del flusso chiara: la qualità percepita è solida per un tool di automazione complesso.",
+          "evidence": "Record directory: longDescription 'Make permette di progettare automazioni visuali tra app, API e dati, con una potenza superiore ai flussi semplici'; segmento no-code di alto livello.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: longDescription, segments); https://www.make.com/",
+          "limit": "Cambiamenti recenti di UI e qualità di moduli specifici da riverificare; nessun hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Mature su versioning, scheduling, error handling e API; il pricing a operazioni è potente ma introduce un rischio di costo variabile da prevedere con attenzione su volumi alti.",
+          "evidence": "Record directory: useCases 'Costruire processi operativi scalabili', tags 'api'; track record pubblico del vendor come piattaforma di automazione affermata.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: useCases, tags); https://www.make.com/",
+          "limit": "Modello di pricing a operazioni, portabilità degli scenari fuori dalla piattaforma e lock-in da valutare prima dell'adozione su processi critici.",
+          "confidence": "alta"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Per chi conosce già la piattaforma, lo scenario minimo (trigger → azione) si costruisce in pochi minuti; il primo scenario complesso richiede più tempo, ma il loop di test è rapido grazie all'esecuzione on-demand.",
+          "evidence": "Record directory: useCases 'Automatizzare flussi tra strumenti', segmenti automation/no-code; level 'expert' indica prodotto profondo ma con esecuzione immediata.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: useCases, segments, level); https://www.make.com/",
+          "limit": "Tempo al primo scenario in esecuzione non cronometrato in questa fase; varia molto con la familiarità dell'utente.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.2,
+      "score10": 8.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica del prodotto: nessun test hands-on.",
+        "Pricing a operazioni su volumi alti, portabilità degli scenari e profondità di connettori specifici da riverificare prima della pubblicazione."
+      ]
+    }
+  ]
+}

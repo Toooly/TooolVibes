@@ -1,0 +1,654 @@
+{
+  "assessments": [
+    {
+      "slug": "jenni-ai",
+      "toolName": "Jenni AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Entra bene nel lavoro di ricerca e produzione di documenti lunghi, soprattutto quando fonti, outline e citazioni devono restare nello stesso flusso; è meno centrale per il copy marketing breve.",
+          "evidence": "Il record directory descrive un assistente per scrittura, ricerca, citazioni e documenti accademici e indica come casi d'uso bozze lunghe, gestione delle fonti e struttura dei testi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: shortDescription, longDescription, useCases); https://jenni.ai/",
+          "limit": "Nessun test hands-on; non è stata verificata la continuità del flusso con repository, CMS o strumenti editoriali esterni.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 5,
+          "motivation": "Il paradigma di scrittura assistita applicato a un documento riduce il setup e consente di ottenere una prima bozza utile nella prima sessione.",
+          "evidence": "Il record lo presenta come punto di ingresso per usare l'AI sulla scrittura senza costruire flussi complessi, con supporto diretto a outline e stesura.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: whyItMatters, longDescription); https://jenni.ai/",
+          "limit": "La rapidità iniziale è dedotta dal flusso dichiarato; non sono stati misurati onboarding e curva di apprendimento per citazioni avanzate.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre più fasi della scrittura documentale, dalla ricerca alla citazione, ma il perimetro resta concentrato su testi lunghi e accademici.",
+          "evidence": "I casi d'uso directory comprendono bozze, documenti lunghi, fonti e struttura; non sono dichiarati workflow distinti per visual, video o distribuzione.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: useCases, shortDescription)",
+          "limit": "Non verificata la qualità su formati diversi da quelli documentali né su lingue e stili editoriali specifici.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Outline, ricerca e citazioni nello stesso ambiente possono produrre documenti più coerenti e credibili di una chat generalista, pur richiedendo revisione umana.",
+          "evidence": "Il record evidenzia documenti più ordinati e supporto a citazioni, outline e scrittura assistita; il sito vendor presenta un editor dedicato.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: longDescription); https://jenni.ai/",
+          "limit": "Nessun documento generato è stato valutato; accuratezza delle fonti, qualità stilistica e rischio di allucinazioni restano da verificare.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Il prodotto appare strutturato per un uso continuativo, ma il record non documenta export, integrazioni, controllo dei dati o prevedibilità del pricing, lasciando rischio di lock-in editoriale.",
+          "evidence": "Il record descrive funzionalità di scrittura e ricerca ma non riporta formati di esportazione, permessi, API o condizioni di conservazione dei documenti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: longDescription, assenza di campi su export e integrazioni); https://jenni.ai/",
+          "limit": "Pricing, policy dati, formati di export e portabilità non sono stati riverificati sul prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Accelera sensibilmente il passaggio da appunti e fonti a una bozza valutabile, anche se la verifica delle citazioni limita la velocità del test finale.",
+          "evidence": "Il record dichiara la trasformazione di appunti e ricerche in documenti ordinati e il caso d'uso di velocizzare ricerca e struttura.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: longDescription, useCases)",
+          "limit": "Il tempo risparmiato non è stato cronometrato e dipende dalla revisione necessaria su fonti e testo.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.9,
+      "score10": 7.8,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Accuratezza delle citazioni, qualità multilingua, pricing, dati ed export da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "betterpic",
+      "toolName": "BetterPic",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Risolve bene un passaggio concreto del lancio — produrre headshot coerenti per founder e team — ma non diventa un componente ricorrente del workflow di costruzione.",
+          "evidence": "Il record directory lo destina a profili, CV, LinkedIn e team page, con la promessa di evitare l'organizzazione di uno shooting.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: shortDescription, whyItMatters, useCases); https://www.betterpic.io/",
+          "limit": "Nessun test hands-on; non è verificato il fit per team numerosi o processi di brand continuativi.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 5,
+          "motivation": "Partire da foto personali per ricevere ritratti pronti elimina set, fotografo e montaggio, comprimendo il percorso al primo risultato utile.",
+          "evidence": "Long description e whyItMatters dichiarano generazione da foto personali e headshot credibili senza shooting.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: longDescription, whyItMatters); https://www.betterpic.io/",
+          "limit": "Non sono stati verificati requisiti delle foto in ingresso, tempi di elaborazione o numero di tentativi necessario.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 2,
+          "motivation": "È deliberatamente verticale: riusa lo stesso tipo di output in più destinazioni, ma non copre classi creative diverse dagli headshot professionali.",
+          "evidence": "Tutti i casi d'uso directory convergono su ritratti per profili professionali, team, CV e LinkedIn.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: useCases, shortDescription)",
+          "limit": "Non verificata l'eventuale presenza di strumenti per altri formati fotografici o campagne visuali.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "La proposta punta a un output professionale e coerente adatto a superfici pubbliche; la credibilità del volto resta però un criterio sensibile agli artefatti.",
+          "evidence": "Il record parla esplicitamente di ritratti professionali, asset curati e immagini uniformi per un team; il sito vendor mostra il posizionamento headshot.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: shortDescription, useCases); https://www.betterpic.io/",
+          "limit": "Nessun campione è stato analizzato; somiglianza, resa di capelli e dettagli, bias e coerenza tra persone non sono verificati.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Il servizio produce asset riutilizzabili fuori piattaforma, riducendo il lock-in, ma controllo delle foto caricate, licenze, cancellazione e pricing non sono documentati nel record.",
+          "evidence": "Gli output sono descritti come asset per CV, LinkedIn e team page, quindi implicitamente esportabili; mancano invece indicazioni su dati, permessi e costi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: longDescription, useCases, assenza di dettagli operativi); https://www.betterpic.io/",
+          "limit": "Export effettivo, risoluzione, diritti d'uso, retention delle immagini e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "Consente di testare rapidamente una nuova immagine professionale o una direzione coerente per il team senza coordinare una produzione fotografica.",
+          "evidence": "Il record identifica come valore centrale ottenere headshot credibili senza shooting e aggiornare rapidamente profili, CV e LinkedIn.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: whyItMatters, useCases)",
+          "limit": "Velocità e numero di revisioni non sono stati misurati su un ordine reale.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.6,
+      "score10": 7.2,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Somiglianza, artefatti, diritti d'uso, retention delle foto, export e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "imagine-art",
+      "toolName": "Imagine Art",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Concentra immagini, video brevi e asset social in un unico ambiente, entrando bene nel ciclo creativo di campagne e lancio senza richiedere una pipeline separata per ogni formato.",
+          "evidence": "Il record directory descrive una suite da prompt per immagini, video, shorts e visual destinati a campagne e social.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: shortDescription, longDescription, useCases); https://www.imagine.art/",
+          "limit": "Nessun test hands-on; non è verificato come la suite si colleghi a strumenti di brand, editing o pubblicazione.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Il flusso da prompt riduce l'attrito iniziale, ma ottenere coerenza tra immagini e video richiede verosimilmente iterazione e competenza di prompting.",
+          "evidence": "Il record indica generazione visuale e produzione di asset da prompt dentro una suite unica.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: shortDescription, longDescription); https://www.imagine.art/",
+          "limit": "Onboarding, controlli disponibili e numero di iterazioni per un output utilizzabile non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre classi di output realmente distinte — immagini, video e shorts — e più destinazioni marketing, pur restando una suite di generazione creativa.",
+          "evidence": "Short description e useCases elencano immagini da prompt, video brevi e visual per campagne e social.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: shortDescription, useCases)",
+          "limit": "Non verificata la profondità di ogni modulo rispetto a strumenti verticali specializzati.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "La suite promette output adatti a campagne e social e riduce i passaggi tra formati; la qualità professionale e la coerenza di stile non sono però dimostrate dal solo record.",
+          "evidence": "Il record parla di contenuti creativi e asset social prodotti rapidamente; il sito vendor presenta esempi di generazione visuale e video.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: longDescription, useCases); https://www.imagine.art/",
+          "limit": "Nessun output è stato confrontato con un brief reale; artefatti, tipografia, continuità video e fedeltà al brand restano da verificare.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "La centralizzazione riduce il tool switching, ma il record non chiarisce formati di export, diritti sugli asset, gestione dei dati, crediti o prevedibilità del pricing, con rischio di dipendenza dalla piattaforma.",
+          "evidence": "Il record documenta la gamma creativa ma non API, permessi, licenze, export o modello a crediti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: longDescription, assenza di dettagli operativi); https://www.imagine.art/",
+          "limit": "Licenze commerciali, risoluzioni, watermark, pricing, crediti e policy sui prompt non sono stati riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "Permette di produrre e confrontare rapidamente direzioni creative in più formati prima di investire in una produzione completa.",
+          "evidence": "Il record posiziona la suite per passare da prompt ad asset visuali e video rapidamente e senza rimbalzare tra app separate.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: longDescription, whyItMatters)",
+          "limit": "Il tempo idea → variante approvabile non è stato cronometrato e può dipendere dai limiti di generazione.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.95,
+      "score10": 7.9,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità comparativa dei moduli, coerenza di brand, licenze, crediti, export e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "muse-ai",
+      "toolName": "Muse AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Hosting, ricerca interna ed embed coprono un problema operativo reale quando tutorial, webinar e knowledge base video diventano parte stabile del prodotto.",
+          "evidence": "Il record directory combina hosting, ricerca semantica, condivisione ed embed e lo indica per siti, knowledge base e archivi video.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: shortDescription, longDescription, useCases); https://muse.ai/",
+          "limit": "Nessun test hands-on; non è stata verificata l'integrazione con CMS, analytics o sistemi di autenticazione del prodotto.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Un servizio unico per caricare, rendere ricercabile e incorporare video evita di assemblare più componenti, pur richiedendo organizzazione iniziale dell'archivio.",
+          "evidence": "Il record presenta hosting, ricerca AI, embed e sharing come flusso integrato per rendere gestibile una libreria video.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: longDescription, whyItMatters); https://muse.ai/",
+          "limit": "Non sono stati misurati import, indicizzazione, configurazione degli embed o curva di gestione.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Serve bene più contesti di distribuzione e consultazione video, ma non è una suite di creazione o montaggio e resta legato alla gestione di una sola classe di contenuto.",
+          "evidence": "I casi d'uso directory riguardano hosting ricercabile, embed e organizzazione di archivi video.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: useCases, shortDescription)",
+          "limit": "Non verificata la copertura di live streaming, editing, monetizzazione o workflow audiovisivi avanzati.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Ricerca semantica ed embed possono rendere un archivio molto più fruibile per utenti e team, ma la qualità reale di player, ricerca e trascrizione non è stata osservata.",
+          "evidence": "Il record identifica ricerca AI nei video, condivisione ed embed come elementi distintivi dell'esperienza.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: shortDescription, longDescription); https://muse.ai/",
+          "limit": "Accuratezza della ricerca, qualità del player, accessibilità, performance e resa mobile non sono state testate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Hosting, embed e gestione di archivi indicano una piattaforma operativa più matura di un generatore isolato; resta un lock-in significativo sui video ospitati e il record non chiarisce export e pricing.",
+          "evidence": "Il record descrive una piattaforma di hosting e condivisione pensata per archivi persistenti, ma non documenta portabilità, API, permessi o costi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: longDescription, useCases, assenza di dettagli su export); https://muse.ai/",
+          "limit": "SLA, privacy, download degli originali e dei metadati, API, limiti di storage e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Accelera il test di una libreria video ricercabile o incorporata, ma il valore cresce con un archivio già consistente e non comprime la produzione dei video.",
+          "evidence": "I casi d'uso directory partono da video esistenti da ospitare, ricercare e incorporare.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: useCases)",
+          "limit": "Tempi di upload, indicizzazione e implementazione dell'embed non sono stati misurati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.75,
+      "score10": 7.5,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Ricerca, player, accessibilità, privacy, portabilità dell'archivio, SLA e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "synthesia-ai",
+      "toolName": "Synthesia AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "Trasforma script in video ripetibili per onboarding, training e comunicazione corporate, inserendosi direttamente in workflow continuativi dove una produzione tradizionale sarebbe troppo lenta.",
+          "evidence": "Il record directory indica avatar, voiceover e script testuali per formazione, onboarding, tutorial e contenuti corporate scalabili.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: shortDescription, longDescription, useCases); https://www.synthesia.io/",
+          "limit": "Nessun test hands-on; non sono state verificate integrazioni specifiche con LMS, CMS o processi di approvazione del team.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Il flusso script-to-video elimina set, camera e speaker, ma progettare template, voce, avatar e ritmo efficaci richiede più cura di una semplice generazione one-click.",
+          "evidence": "Il record descrive la produzione da script con avatar e voiceover e sottolinea l'assenza di set e speaker a ogni aggiornamento.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: longDescription, whyItMatters); https://www.synthesia.io/",
+          "limit": "Onboarding, tempi di rendering e sforzo per arrivare a un template approvato non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre bene training, onboarding, tutorial e comunicazione multilingua, ma resta ottimizzato per video presentazionali basati su script più che per ogni genere audiovisivo.",
+          "evidence": "I casi d'uso directory includono training, corporate multilingua, onboarding e tutorial.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: useCases, longDescription)",
+          "limit": "Non verificata l'idoneità per storytelling emozionale, demo prodotto complesse o campagne che richiedono riprese reali.",
+          "confidence": "alta"
+        },
+        "experienceQuality": {
+          "value": 5,
+          "motivation": "È una piattaforma di riferimento per video avatar corporate e offre un output sufficientemente coerente e professionale per formazione scalabile, pur senza sostituire sempre la presenza umana.",
+          "evidence": "Il record la posiziona su video professionali con avatar e voiceover; il sito vendor documenta un'offerta consolidata per comunicazione e training aziendale.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: shortDescription, whyItMatters); https://www.synthesia.io/",
+          "limit": "Nessun video è stato valutato in questa fase; naturalezza, pronuncia, accessibilità e ricezione del pubblico restano dipendenti dal caso d'uso.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 5,
+          "motivation": "Il posizionamento enterprise e l'uso per contenuti corporate ricorrenti indicano maturità su gestione e scala; rimangono lock-in su template/avatar e rischio di pricing elevato o variabile.",
+          "evidence": "Il record descrive comunicazione scalabile e contenuti corporate multilingua; il sito vendor presenta la piattaforma come soluzione strutturata per organizzazioni.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: longDescription, useCases); https://www.synthesia.io/",
+          "limit": "Export dei progetti sorgente, permessi granulari, policy dati, SLA e pricing non sono stati verificati direttamente; l'output video esportato non elimina il lock-in di editing.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Consente di validare rapidamente script, lingue e formati video senza organizzare riprese, anche se rendering e approvazioni corporate impediscono un ciclo istantaneo.",
+          "evidence": "Il record evidenzia la produzione da script senza set, camera e speaker e l'uso per tutorial e onboarding aggiornabili.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: whyItMatters, useCases)",
+          "limit": "Tempi di generazione, revisione e localizzazione non sono stati cronometrati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.55,
+      "score10": 9.1,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor e conoscenza pubblica di categoria: nessun test hands-on.",
+        "Naturalezza degli avatar, accessibilità, governance, portabilità dei progetti, SLA e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "blogify",
+      "toolName": "Blogify",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Si inserisce in modo diretto nel riuso di asset già prodotti, colmando il passaggio operativo da video, audio o URL a una bozza di articolo SEO.",
+          "evidence": "Il record directory dichiara trasformazione di video, audio, URL e contenuti in blog post SEO-ready e aumento dell'output da asset esistenti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: shortDescription, longDescription, useCases); https://blogify.ai?fpr=n2ogi",
+          "limit": "Nessun test hands-on; non è stato verificato il collegamento con CMS, workflow editoriali o pubblicazione.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Usare un asset o un URL come input riduce il lavoro di partenza, ma una bozza pubblicabile richiede comunque editing, fact-checking e adattamento della voce.",
+          "evidence": "Il record descrive un flusso rapido da contenuti esistenti ad articoli ottimizzati.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: longDescription, whyItMatters); https://blogify.ai?fpr=n2ogi",
+          "limit": "Tempi di import, trascrizione, generazione e revisione non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Accetta fonti diverse e serve più scenari di repurposing, ma converge quasi sempre su un solo output: l'articolo di blog orientato alla SEO.",
+          "evidence": "I casi d'uso includono conversione da video e audio e riuso SEO, tutti finalizzati a blog post.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: shortDescription, useCases)",
+          "limit": "Non verificata la qualità di output alternativi, localizzazione o riuso multicanale oltre il blog.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Può produrre una base ordinata e SEO-ready, ma la conversione automatica da media a testo rischia contenuti generici, ripetitivi o poco fedeli alla voce originale.",
+          "evidence": "Il record promette articoli ottimizzati e contenuti evergreen a partire da asset esistenti, senza fornire evidenze sulla qualità editoriale finale.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: longDescription, whyItMatters); https://blogify.ai?fpr=n2ogi",
+          "limit": "Nessun articolo è stato analizzato per accuratezza, leggibilità, originalità, tono o resa SEO reale.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Gli articoli sono verosimilmente portabili, ma il record non documenta export, integrazioni CMS, gestione fonti, diritti sugli input o pricing, lasciando un rischio operativo medio.",
+          "evidence": "Il record descrive input e output del flusso ma non API, formati di esportazione, permessi, attribuzione o condizioni economiche.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: longDescription, assenza di dettagli operativi); https://blogify.ai?fpr=n2ogi",
+          "limit": "Export, integrazioni, privacy degli asset caricati, licenze, limiti e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "Comprime il passaggio da un contenuto esistente a una bozza SEO valutabile, rendendo economico testare il repurposing prima di impegnare risorse editoriali.",
+          "evidence": "Il record identifica come valore centrale ridurre il tempo tra video, audio o link e pubblicazione sul blog.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: longDescription, whyItMatters)",
+          "limit": "La velocità fino a una bozza è dichiarata; il tempo fino a un articolo approvato non è stato misurato.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.65,
+      "score10": 7.3,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità editoriale e SEO, fedeltà agli input, integrazioni CMS, privacy, export e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "vidau",
+      "toolName": "Vidau",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Porta URL prodotto, immagini e testi direttamente nel ciclo di produzione di creatività performance, con un fit forte per ecommerce e campagne che richiedono molte varianti.",
+          "evidence": "Il record directory lo descrive come generatore di video ads da URL, immagini e testi per campagne, ecommerce e creatività performance.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: shortDescription, longDescription, useCases); https://www.vidau.ai/",
+          "limit": "Nessun test hands-on; non sono state verificate integrazioni con cataloghi prodotto, ad platform o flussi di approvazione.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Generare da URL o asset esistenti riduce brief e montaggio iniziali, ma selezione del messaggio, revisione e adattamento al canale restano necessari.",
+          "evidence": "Il record presenta un flusso da URL, immagini e testi a video ads pronti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: shortDescription, longDescription); https://www.vidau.ai/",
+          "limit": "Non sono stati misurati onboarding, tempi di rendering o sforzo per correggere una variante.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Accetta più tipi di input e può produrre varianti per prodotti diversi, ma resta focalizzato sul formato video advertising.",
+          "evidence": "I casi d'uso directory riguardano video ads da URL, test creativi ed ecommerce.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: useCases, shortDescription)",
+          "limit": "Non verificata la copertura di formati organici, tutorial, video lunghi o brand storytelling.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Il flusso specializzato può produrre asset abbastanza rifiniti per un test paid, ma la qualità percepita dipende da template, voce, scene e fedeltà al prodotto.",
+          "evidence": "Il record definisce gli output come video ads pronti e creatività per campagne ed ecommerce; il sito vendor mostra il posizionamento specializzato.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: shortDescription, longDescription); https://www.vidau.ai/",
+          "limit": "Nessun annuncio è stato valutato; accuratezza dei claim, resa del prodotto, localizzazione e performance creativa non sono verificate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "L'output video dovrebbe essere utilizzabile fuori piattaforma, ma il record non chiarisce export, watermark, diritti, brand control, crediti o pricing, con rischio di dipendenza per le revisioni.",
+          "evidence": "Il record parla di asset video per campagne ma non documenta formati, API, permessi, licenze o modello economico.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: useCases, assenza di dettagli operativi); https://www.vidau.ai/",
+          "limit": "Risoluzione, export, licenze commerciali, retention degli asset, crediti, pricing e lock-in di editing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "La capacità dichiarata di trasformare rapidamente un URL prodotto in più video rende molto veloce il ciclo idea → variante testabile.",
+          "evidence": "WhyItMatters e useCases evidenziano la riduzione del tempo verso la prima variante e il test rapido di creatività.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: whyItMatters, useCases)",
+          "limit": "Il tempo di produzione non è stato cronometrato e la velocità di apprendimento richiede comunque traffico e misurazione sulla piattaforma ads.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.8,
+      "score10": 7.6,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità e performance degli annunci, controllo del brand, licenze, export, crediti e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "vibrantsnap",
+      "toolName": "VibrantSnap",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Trasforma una registrazione schermo già naturale nel lavoro di un builder in demo e tutorial più presentabili per onboarding, supporto e marketing.",
+          "evidence": "Il record directory descrive la conversione di screen recording in demo o tutorial rifiniti per prodotto, onboarding e marketing.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: shortDescription, longDescription, useCases); https://www.vibrantsnap.com/",
+          "limit": "Nessun test hands-on; non è verificato il fit con strumenti di registrazione, documentazione o hosting già in uso.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Partire da uno screen recording evita una timeline di montaggio complessa, ma una demo chiara richiede comunque una buona registrazione e revisioni narrative.",
+          "evidence": "Il record presenta come beneficio un output professionale senza montaggi lunghi a partire da registrazioni schermo.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: longDescription, whyItMatters); https://www.vibrantsnap.com/",
+          "limit": "Onboarding, requisiti di registrazione e tempo di rifinitura non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Lo stesso motore serve demo commerciali, tutorial e onboarding, ma resta vincolato a contenuti basati su cattura dello schermo.",
+          "evidence": "I casi d'uso directory includono demo, tutorial prodotto e video per onboarding e marketing.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: useCases, shortDescription)",
+          "limit": "Non verificata la gestione di riprese camera, animazioni autonome, video lunghi o formati non legati al prodotto software.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Il valore dichiarato è alzare la qualità percepita di demo grezze, un vantaggio concreto per SaaS; la resa professionale dipende però dai controlli di montaggio e dalla qualità dell'input.",
+          "evidence": "Il record parla di demo e tutorial più rifiniti e di qualità percepita migliore senza editing lungo.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: longDescription, whyItMatters); https://www.vibrantsnap.com/",
+          "limit": "Nessun output è stato analizzato per ritmo, leggibilità, audio, accessibilità, branding o artefatti automatici.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Il video finito è presumibilmente esportabile, ma il record non documenta progetti editabili, formati, collaborazione, privacy delle registrazioni o pricing, lasciando lock-in sulle revisioni.",
+          "evidence": "Il record descrive output destinati a onboarding e marketing ma non API, permessi, export del progetto, policy dati o costi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: useCases, assenza di dettagli operativi); https://www.vibrantsnap.com/",
+          "limit": "Export, risoluzione, asset sorgente, controlli di brand, retention, collaborazione e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Riduce il tempo necessario per portare una registrazione a una demo pubblicabile e consente di provare rapidamente narrazioni diverse, pur richiedendo una nuova cattura per cambi sostanziali.",
+          "evidence": "WhyItMatters identifica l'eliminazione dei montaggi lunghi; i casi d'uso coprono demo, tutorial e onboarding.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: whyItMatters, useCases)",
+          "limit": "Tempo di elaborazione e costo delle iterazioni non sono stati misurati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.7,
+      "score10": 7.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità di montaggio, accessibilità, portabilità dei progetti, privacy delle registrazioni, export e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "reachifyme",
+      "toolName": "ReachifyMe",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Aiuta founder e professionisti a mantenere una routine LinkedIn, ma resta un supporto di canale periferico rispetto alla costruzione e validazione del prodotto.",
+          "evidence": "Il record directory lo posiziona su idee, testi, continuità editoriale, personal branding e crescita professionale su LinkedIn.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: shortDescription, longDescription, useCases); https://reachifyme.com/",
+          "limit": "Nessun test hands-on; non è verificata l'integrazione con calendario, analytics o approvazioni editoriali.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Idee e testi assistiti abbassano l'attrito della pagina bianca, ma costruire una voce credibile richiede input personale e revisione costante.",
+          "evidence": "Il record dichiara supporto a idee, testi e ritmo editoriale più sostenibile e trasformazione di idee in contenuti pubblicabili.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: longDescription, useCases); https://reachifyme.com/",
+          "limit": "Onboarding, personalizzazione del tono e tempo effettivo fino alla pubblicazione non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 2,
+          "motivation": "Copre ideazione, scrittura e continuità, ma tutte le funzioni convergono su LinkedIn e personal branding, con scarsa ampiezza fuori dal canale.",
+          "evidence": "Short description e casi d'uso directory sono interamente dedicati a post LinkedIn, brand personale e crescita professionale.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: shortDescription, useCases)",
+          "limit": "Non verificata l'eventuale distribuzione o adattamento verso newsletter, blog o altri social.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Può rendere più regolare la produzione, ma l'output AI per personal branding rischia uniformità e tono artificiale se non viene sostanzialmente personalizzato.",
+          "evidence": "Il record promette idee e testi pubblicabili, senza evidenze sulla distintività della voce o sui risultati dei contenuti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: longDescription, useCases); https://reachifyme.com/",
+          "limit": "Nessun post generato è stato valutato e non sono disponibili verifiche su autenticità percepita, engagement o qualità in italiano.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Il record non documenta export, scheduling, analytics, collaborazione, controllo dei dati o pricing; la dipendenza da LinkedIn e dal modello generativo aumenta il rischio operativo.",
+          "evidence": "Le informazioni directory coprono solo creazione dei contenuti e brand personale, senza claim su integrazioni, permessi, portabilità o condizioni economiche.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: longDescription, assenza di dettagli operativi); https://reachifyme.com/",
+          "limit": "Funzioni di export e pubblicazione, policy dati, conformità alle regole LinkedIn, continuità del servizio e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Riduce il tempo da un'idea a un post testabile e rende semplice provare più angoli editoriali, anche se la validazione richiede giorni di distribuzione e segnali LinkedIn.",
+          "evidence": "Il record indica trasformazione di idee in contenuti pubblicabili e una routine più sostenibile.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: longDescription, useCases)",
+          "limit": "Tempo di generazione e impatto sulla frequenza reale non sono stati misurati; engagement e crescita non sono attribuibili al solo tool.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.0,
+      "score10": 6.0,
+      "overallConfidence": "bassa",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità e autenticità dei post, integrazioni LinkedIn, analytics, policy dati, portabilità e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "frase-ai",
+      "toolName": "Frase AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "Unisce analisi SERP, brief, outline, scrittura e ottimizzazione in una sequenza coerente con il workflow SEO reale di founder e content team.",
+          "evidence": "Il record directory descrive ricerca SERP, brief, outline e ottimizzazione e dichiara la riduzione del salto tra keyword research, brief e pubblicazione.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: shortDescription, longDescription, whyItMatters); https://www.frase.io/?via=tool57",
+          "limit": "Nessun test hands-on; non sono state verificate integrazioni con CMS, analytics o strumenti keyword già in uso.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Centralizzare ricerca e brief accelera il primo output, ma interpretare intenti, concorrenti e raccomandazioni richiede competenza SEO.",
+          "evidence": "Il record indica brief più veloci, analisi SERP e ottimizzazione controllabile nello stesso prodotto.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: longDescription, useCases); https://www.frase.io/?via=tool57",
+          "limit": "Onboarding, curva delle funzioni avanzate e tempo fino a un brief approvato non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre ricerca, pianificazione, produzione e aggiornamento di contenuti, più fasi distinte dentro il perimetro SEO pur senza diventare una suite marketing generalista.",
+          "evidence": "I casi d'uso directory includono creazione di brief, ottimizzazione di contenuti pubblicati e analisi di SERP e intenti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: useCases, shortDescription)",
+          "limit": "Non verificata la profondità su SEO tecnica, backlink, local SEO o mercati linguistici specifici.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Brief basati sulla SERP e controlli di ottimizzazione rendono l'output più decisionale di una chat generica, ma non garantiscono originalità né performance organica.",
+          "evidence": "Il record evidenzia analisi SERP, intenti, outline e ottimizzazione come base per contenuti più controllabili.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: longDescription, useCases); https://www.frase.io/?via=tool57",
+          "limit": "Nessun brief o articolo è stato valutato; qualità editoriale, aggiornamento dei dati e correlazione tra score e ranking restano da verificare.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "La copertura di un workflow SEO continuativo indica un prodotto maturo, ma il record non documenta export, collaborazione, API, gestione dati o prevedibilità del pricing; resta lock-in sulle analisi e sui punteggi proprietari.",
+          "evidence": "Il record descrive una piattaforma multi-fase per team e founder, senza dettagli su portabilità, permessi, integrazioni o costi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: longDescription, whyItMatters, assenza di dettagli operativi); https://www.frase.io/?via=tool57",
+          "limit": "Export, collaborazione, fonti SERP, policy dati, limiti d'uso, pricing e dipendenza dagli score proprietari devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "Comprime ricerca SERP e preparazione del brief, permettendo di testare rapidamente un cluster o aggiornare una pagina prima di investire in un ciclo editoriale completo.",
+          "evidence": "Il record dichiara brief SEO più veloci, ottimizzazione di contenuti esistenti e riduzione del salto tra ricerca e pubblicazione.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: whyItMatters, useCases)",
+          "limit": "La preparazione accelera, ma la validazione finale del ranking richiede settimane o mesi e non è stata osservata.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.35,
+      "score10": 8.7,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor e conoscenza di categoria: nessun test hands-on.",
+        "Qualità dei dati SERP, resa editoriale, correlazione con il ranking, integrazioni, export e pricing da riverificare prima della pubblicazione."
+      ]
+    }
+  ]
+}

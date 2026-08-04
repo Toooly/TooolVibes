@@ -1,0 +1,1957 @@
+{
+  "registryVersion": "builder-first-v1-staging",
+  "generatedAt": "2026-08-04",
+  "note": "Staging registry. NON importato dal runtime. Nessun punteggio qui è pubblico finché l'owner non approva e registra nel registry canonico (ADR 0005).",
+  "assessments": [
+    {
+      "slug": "blink",
+      "toolName": "Blink",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Copre direttamente il passaggio idea → prototipo navigabile che fonda il workflow di validazione di founder e indie developer; resta debole quando il progetto deve diventare prodotto mantenuto.",
+          "evidence": "Il record directory lo posiziona per \"Validare un MVP in ore invece che in settimane\" e \"Mostrare un concept navigabile a clienti o investitori\"; la promessa vendor (prompt-to-app) è coerente con quel ruolo.",
+          "source": "lib/data/tooolvibes-directory.ts (record blink: useCases, bestFor); https://blink.new/",
+          "limit": "Nessun test hands-on in questa fase; il fit su progetti oltre il prototipo non è verificato.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 5,
+          "motivation": "Il modello prompt-to-app elimina setup e configurazione: il primo risultato utile arriva nella prima sessione.",
+          "evidence": "Summary directory \"trasforma un'idea in un'app funzionante in pochi minuti\"; il flusso vendor è interamente guidato da prompt.",
+          "source": "lib/data/tooolvibes-directory.ts (record blink: summary, description); https://blink.new/",
+          "limit": "La resa reale dipende dalla qualità del prompt; non misurata la curva oltre i primi output.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre bene web app e prototipi di prodotto, ma resta dentro il perimetro vibe-coding: non è un tool generalista.",
+          "evidence": "Tag e segmenti del record (web app, prototype, ai-app-builder); use cases tutti dentro il perimetro validazione/prototipo.",
+          "source": "lib/data/tooolvibes-directory.ts (record blink: tags, segments, useCases)",
+          "limit": "Non verificata la copertura di app mobile, backend complessi o integrazioni esterne.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "L'output mostrato dal vendor è credibile per demo e test utente; la resa \"senza aprire un ciclo di sviluppo pesante\" è il punto forte dichiarato.",
+          "evidence": "Description directory (\"resa credibile\", \"prototipo e primo test reale\"); materiali pubblici vendor.",
+          "source": "lib/data/tooolvibes-directory.ts (record blink: description); https://blink.new/",
+          "limit": "Qualità del codice e della UX oltre la demo non verificata; nessun progetto pubblico analizzato.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Esportazione e controllo del codice non sono documentati nel record; il lock-in è plausibile ma non provato; pricing non riverificato.",
+          "evidence": "Assenza di claim su export/self-hosting nel record; nessuna evidenza di integrazioni enterprise nel materiale consultato.",
+          "source": "lib/data/tooolvibes-directory.ts (record blink: evidence, assenza di campi su export); https://blink.new/",
+          "limit": "Voce da riverificare con accesso al prodotto; pricing instabile non confermato né smentito.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "È la dimensione centrale del tool: il valore dichiarato è comprimere settimane in ore per un test reale.",
+          "evidence": "bestFor \"Validare un MVP in ore invece che in settimane\"; evidence review \"il profilo più diretto da aprire per primo\" per validare in fretta.",
+          "source": "lib/data/tooolvibes-directory.ts (record blink: bestFor, evidence)",
+          "limit": "Velocità dichiarata, non cronometrata su un caso reale in questa fase.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.0,
+      "score10": 8.0,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Pricing, export e lock-in da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "vibecode",
+      "toolName": "VibeCode",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "VibeCode entra in un flusso di iterazione e pubblicazione rapida mobile+web, ma il record non segnala integrazioni profonde con il resto della pipeline tecnica: la promessa è velocità, non ancora tenuta del progetto.",
+          "evidence": "`shortDescription` \"Builder AI per creare app da prompt, iterare rapidamente e pubblicare progetti mobile/web\"; `useCases` centrati su iterazione, demo pubblicabile e feedback reale; tag `iterazione`, `pubblicazione`, `app mobile`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: shortDescription, longDescription, useCases, tags); https://www.vibecodeapp.com/",
+          "limit": "Nessun test hands-on in questa fase; l'integrazione con stack esistenti (auth, pagamenti, analytics) non è documentata nel record.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Il modello prompt-to-app con focus su iterazione porta al primo risultato nella prima sessione: la curva è tarata su velocità, non su profondità.",
+          "evidence": "`longDescription` \"VibeCode spinge sulla velocità di iterazione: generi una base applicativa, la rifinisci rapidamente\"; tag `vibe coding`, `iterazione`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: longDescription, tags); https://www.vibecodeapp.com/",
+          "limit": "La qualità reale del primo output dipende dal prompt; non misurato l'attrito su app non banali.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre mobile e web via prompt, ma resta nel perimetro app/sito generati da AI; non segnala backend complessi, agenti o integrazioni di sistema.",
+          "evidence": "`segments` `vibe-coding`, `ai-app-builder`; tag `app mobile`, `iterazione`, `pubblicazione`; use cases tutti interni al ciclo idea → demo.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di backend complessi, agenti autonomi o integrazioni enterprise.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "L'output è presentato come credibile per iterare e pubblicare velocemente, ma la qualità del codice e della UX oltre la prima demo non è verificabile senza test.",
+          "evidence": "`longDescription` \"capisci se il prodotto merita il passaggio successivo\"; tag `pubblicazione` che presuppone output presentabile.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: longDescription, tags)",
+          "limit": "Nessun progetto pubblico analizzato; qualità UI/codice oltre il prototipo non testata.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Export del codice, self-hosting e integrazioni non documentati nel record; il lock-in è plausibile e il pricing non è riverificato.",
+          "evidence": "Assenza di claim su export/self-hosting/API nei campi del record; nessuna evidenza di permessi granulari o SSO.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: assenza di campi su export e self-hosting)",
+          "limit": "Voce da riverificare con accesso al prodotto; pricing e politiche di export non consultati in questa fase.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Il focus dichiarato è iterare e pubblicare in fretta: la dimensione di \"quanto acceleri un test reale\" è esplicitamente centrale.",
+          "evidence": "`useCases` \"Accelerare il passaggio da idea a demo pubblicabile\" e \"Ridurre il tempo tra concept e feedback reale\"; tag `iterazione`, `pubblicazione`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibecode`: useCases, tags); https://www.vibecodeapp.com/",
+          "limit": "Velocità dichiarata, non cronometrata su un caso reale; dipende dalla natura dell'idea.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.15,
+      "score10": 6.3,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Export del codice, lock-in reale e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "weweb",
+      "toolName": "WeWeb",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "WeWeb è posizionata come piattaforma no-code/AI per web app production-grade, pensata per chi vuole portare un progetto no-code a uno standard serio: si inserisce in un flusso reale di produzione, non solo di prototipazione.",
+          "evidence": "`longDescription` \"scelta matura quando vuoi restare veloce senza perdere controllo sul front-end, sulle integrazioni e sulla tenuta del progetto nel tempo\"; `useCases` \"Collegare frontend visuale e backend esterni\" e \"Portare un progetto no-code a uno standard serio\"; tag `produzione`, `backend`, `frontend`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: longDescription, useCases, tags); https://dashboard.weweb.io/",
+          "limit": "Nessun test hands-on in questa fase; la profondità reale di \"production-grade\" su casi complessi non è verificata.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Costruire una web app production-ready via no-code richiede comunque investimento di apprendimento: la velocità di adozione è reale ma non è il punto di forza principale.",
+          "evidence": "`shortDescription` \"Piattaforma visuale no-code/AI per creare web app production-grade\"; `segments` `no-code`, `ai-app-builder`, `website-builder` (sovrapposizione di tre logiche).",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: shortDescription, segments)",
+          "limit": "Curva di apprendimento reale non cronometrata; la semplicità del prompt iniziale può mascherare la complessità di un'app completa.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre frontend visuale, integrazioni backend esterne e output production-grade: tre sotto-casi distinti dentro il ruolo no-code web app.",
+          "evidence": "`useCases` \"Costruire web app senza ripartire da zero\", \"Collegare frontend visuale e backend esterni\", \"Portare un progetto no-code a uno standard serio\"; tag `frontend`, `backend`, `produzione`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: useCases, tags)",
+          "limit": "Non verificata la copertura di mobile nativo, agenti AI o workflow puramente backend.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Piattaforma no-code matura con output pensato per la produzione: la qualità percepita è uno dei motivi per cui viene citata in contesti professionali.",
+          "evidence": "`longDescription` \"sembrarare pronto per andare in produzione\"; `whyItMatters` \"merita attenzione vera\"; tag `no-code pro`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: longDescription, whyItMatters, tags); https://dashboard.weweb.io/",
+          "limit": "Qualità effettiva del codice generato e UX del builder non testate hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Export, self-hosting e integrazioni backend sono nel perimetro dichiarato del tool: il lock-in è ridotto rispetto a un vibe-coding puro, e la prevedibilità operativa è tra i motivi di scelta.",
+          "evidence": "`useCases` \"Collegare frontend visuale e backend esterni\" indica controllo esplicito su dove vivono dati e servizi; `whyItMatters` \"restare veloce senza perdere controllo sul front-end, sulle integrazioni e sulla tenuta del progetto\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: useCases, whyItMatters); https://dashboard.weweb.io/",
+          "limit": "Pricing dei piani, limiti di export e opzioni di self-hosting non riverificati in questa fase.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Più orientata a costruire un prodotto tenuto che a prototipare in pochi minuti: la velocità di validazione c'è, ma non è la dimensione in cui WeWeb eccelle.",
+          "evidence": "`useCases` \"Costruire web app senza ripartire da zero\" suggerisce un tempo di setup superiore a un vibe-coding puro; tag `produzione` indica focus su tenuta.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `weweb`: useCases, tags)",
+          "limit": "Tempo idea → prototipo navigabile non cronometrato; la promessa è \"production\", non \"minutes\".",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.95,
+      "score10": 7.9,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica del prodotto: nessun test hands-on.",
+        "Pricing dei piani, limiti di export/self-hosting e qualità del codice generato su casi complessi da riverificare."
+      ]
+    },
+    {
+      "slug": "cosmicjs",
+      "toolName": "CosmicJS",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Il record posiziona CosmicJS come \"centro operativo\" per cataloghi, siti editoriali e web app guidate dai contenuti: si integra bene in un workflow dove i contenuti sono il cuore del prodotto.",
+          "evidence": "`longDescription` \"centro operativo per cataloghi, siti editoriali e web app guidate dai contenuti\"; `useCases` \"Gestire contenuti strutturati via API\" e \"Dare ordine a progetti editoriali o cataloghi\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: longDescription, useCases); https://app.cosmicjs.com/",
+          "limit": "Nessun test hands-on in questa fase; il fit con team non tecnici che vogliono solo \"pubblicare pagine\" non è verificato.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Un CMS headless con AI richiede comunque familiarità con modelli di contenuto, API e schemi: la curva è gestibile, ma non è un tool plug-and-play.",
+          "evidence": "`shortDescription` \"CMS headless con AI, API, flussi e strumenti per accelerare progetti guidati dai contenuti\"; `segments` `headless-cms`, `no-code`, `automation` (tre logiche da comporre).",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: shortDescription, segments)",
+          "limit": "Tempo reale al primo schema pubblicato non cronometrato; la presenza di \"no-code\" tra i segmenti può sovrastimare la semplicità.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "CMS headless + API + AI + flussi: copre più sotto-casi della sua categoria, dal content modeling all'automazione editoriale.",
+          "evidence": "`useCases` \"Gestire contenuti strutturati via API\", \"Dare ordine a progetti editoriali o cataloghi\", \"Velocizzare flussi tra contenuti, team e frontend\"; tag `cms headless`, `api`, `flussi contenuti`, `flussi ai`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: useCases, tags)",
+          "limit": "Non verificata la copertura di workflow puramente commerce, mobile nativo o agenti.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "CMS headless maturo con API al centro: la qualità percepita del pannello e la stabilità dei contenuti strutturati sono il valore dichiarato.",
+          "evidence": "`highlights` \"API al centro\", \"Flussi\", \"CMS\"; `whyItMatters` \"Non è solo un CMS: è un centro operativo quando contenuti e struttura devono restare gestibili nel tempo\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: highlights, whyItMatters); https://app.cosmicjs.com/",
+          "limit": "UX del pannello admin e qualità delle risposte AI non testate hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "API-first significa che i contenuti sono esportabili e il lock-in è ridotto: il controllo su schema, flussi e integrazioni è esplicito nel perimetro del tool.",
+          "evidence": "`useCases` \"Gestire contenuti strutturati via API\" implica dati accessibili; `longDescription` \"organizzare contenuti, modelli, API e flussi editoriali in modo pulito\"; tag `api`, `flussi contenuti`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: useCases, longDescription, tags)",
+          "limit": "Pricing per usage/storage, policy di backup e opzioni di self-hosting non riverificati in questa fase.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Più orientato a costruire un sistema di contenuti stabile e gestibile che a un prototipo lampo: la velocità di validazione c'è, ma non è il punto di forza.",
+          "evidence": "`useCases` centrato su \"dare ordine\" e \"velocizzare flussi\" (continui), non su \"test in pochi minuti\"; tag `cataloghi`, `flussi`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `cosmicjs`: useCases, tags)",
+          "limit": "Tempo idea → sito MVP con contenuti non cronometrato; dipende dalla complessità del modello dati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.7,
+      "score10": 7.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Pricing per storage/usage, policy di backup e profondità delle funzioni AI da riverificare."
+      ]
+    },
+    {
+      "slug": "mocha",
+      "toolName": "Mocha",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Mocha copre end-to-end un'app AI no-code (backend, database, autenticazione, hosting e pubblicazione): entra in un flusso reale di rilascio, non solo di prototipazione UI.",
+          "evidence": "`longDescription` \"backend, database, accesso e pubblicazione fanno parte della promessa\"; `useCases` \"Costruire una app con backend e accesso inclusi\" e \"Ridurre i passaggi tra costruzione, dati e pubblicazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: longDescription, useCases); https://getmocha.com/",
+          "limit": "Nessun test hands-on in questa fase; l'integrazione con servizi terzi (pagamenti, analytics, CRM) non è documentata nel record.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "No-code con backend integrato abbrevia molto il time-to-first-app: il primo risultato utile, comprensivo di login e database, arriva in una sessione.",
+          "evidence": "`shortDescription` \"Builder no-code per app AI con backend, database, autenticazione, hosting e pubblicazione integrati\"; `useCases` \"Lanciare velocemente un prodotto no-code completo\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: shortDescription, useCases); https://getmocha.com/",
+          "limit": "Curva reale su app non banali (logiche complesse, permessi granulari) non cronometrata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre web app AI complete con backend: un perimetro chiaro, ma non specializzato su UI pura, siti, o agenti autonomi.",
+          "evidence": "`segments` `ai-app-builder`, `no-code`; tag `app completa`, `database`, `pubblicazione`; `useCases` tutti interni al ciclo \"app AI con backend\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di mobile nativo, siti editoriali o workflow multi-agent.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "L'output è presentato come credibile per \"lanciare un prodotto no-code completo\", ma la qualità del codice e della UX non è verificabile senza test.",
+          "evidence": "`useCases` \"Lanciare velocemente un prodotto no-code completo\"; `highlights` \"App completa\", \"Database\", \"Accesso\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: useCases, highlights)",
+          "limit": "Qualità UI/codice e coerenza del backend generato non testate hands-on; nessun progetto pubblico analizzato.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Hosting incluso riduce l'attrito operativo, ma export del codice, portabilità del backend e permessi granulari non sono documentati: il lock-in è plausibile.",
+          "evidence": "`shortDescription` cita \"hosting e pubblicazione integrati\" ma il record non menziona export, self-hosting o API di gestione dati; nessun campo su SSO o audit.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: shortDescription, assenza di campi su export e self-hosting)",
+          "limit": "Pricing per app pubblicate, policy di backup e opzioni di export da riverificare con accesso al prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Backend, database e autenticazione già integrati abbreviano drasticamente il tempo tra idea e MVP rilasciato: la dimensione è centrale per un tool che promette \"no-code completo\".",
+          "evidence": "`useCases` \"Ridurre i passaggi tra costruzione, dati e pubblicazione\" e \"Lanciare velocemente un prodotto no-code completo\"; `whyItMatters` \"vuoi un sistema più integrato e meno frizione operativa tra idea e rilascio\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `mocha`: useCases, whyItMatters); https://getmocha.com/",
+          "limit": "Velocità dichiarata, non cronometrata su un caso reale; la presenza di backend integrato è un vantaggio solo se la logica di business resta semplice.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.55,
+      "score10": 7.1,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Export del codice, portabilità del backend e pricing per app pubblicate da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "v0",
+      "toolName": "v0",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "v0 è il builder UI/componenti di Vercel e si inserisce in modo nativo nel flusso prompt → componenti React/Tailwind → codice pronto per Next.js: per chi già costruisce su quello stack il fit è tra i più diretti del panorama AI builder.",
+          "evidence": "`longDescription` \"v0 è forte quando la partita si gioca su UI, componenti e velocità di esecuzione front-end\"; tag `vercel`, `frontend`, `components`; segmento `ui-builder`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: longDescription, tags, segments); https://v0.app/",
+          "limit": "Per chi non usa l'ecosistema Vercel/Next.js il vantaggio di workflowFit si riduce: il fit è alto ma non universale.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Prompt-based con output UI quasi immediato: la curva di apprendimento è tra le più dolci del segmento, e il primo componente utile arriva nella prima sessione.",
+          "evidence": "`useCases` \"Generare UI e componenti da prompt\" e \"Accelerare il lavoro su prototipi frontend\"; tag `ai coding`, `ui builder`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: useCases, tags); https://v0.app/",
+          "limit": "La qualità del primo output dipende dal prompt; non misurato l'attrito su componenti molto custom.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Fortissimo su UI, componenti e prototipi frontend, ma meno su backend complessi, mobile nativo, workflow non-React o prodotti completi con logiche di business profonde.",
+          "evidence": "`segments` `ui-builder`, `ai-app-builder`; `useCases` tutti interni a UI/componenti/frontend; `categoryLabel` \"Coding AI / builder UI\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: segments, useCases, categoryLabel)",
+          "limit": "Non verificata la copertura di mobile nativo, backend o workflow multi-agent.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 5,
+          "motivation": "Lo standard qualitativo di Vercel (Shadcn, Tailwind, Next.js) è riconosciuto a livello di categoria: l'output di v0 è credibile, professionale e pronto per essere integrato in un progetto reale.",
+          "evidence": "`whyItMatters` \"v0 resta uno dei riferimenti più chiari del panorama AI builder\" per UI e componenti; `highlights` \"UI\", \"Componenti\", \"Frontend\"; tag `vercel`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: whyItMatters, highlights, tags); https://v0.app/",
+          "limit": "La qualità del codice generato su logiche complesse e accessibilità non è testata hands-on in questa fase.",
+          "confidence": "alta"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Piattaforma Vercel con code export, integrazione con GitHub e possibilità di proseguire fuori dal builder: il lock-in è ridotto rispetto a un vibe-coding puro, e la prevedibilità operativa è solida.",
+          "evidence": "`useCases` \"Passare da idea visuale a codice più in fretta\" implica output di codice portabile; tag `vercel` indica piattaforma matura; `longDescription` \"portare il codice in un flusso moderno\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: useCases, tags, longDescription); https://v0.app/",
+          "limit": "Limiti dei piani Vercel, policy di export e governance del workspace non riverificati in questa fase.",
+          "confidence": "alta"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Validazione UI rapidissima (prompt → componenti → preview) è il punto di forza esplicito: la dimensione è centrale, anche se il tempo complessivo di validazione dipende poi dall'integrazione nel prodotto finale.",
+          "evidence": "`useCases` \"Generare UI e componenti da prompt\" e \"Accelerare il lavoro su prototipi frontend\"; `whyItMatters` \"velocità di esecuzione front-end\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `v0`: useCases, whyItMatters); https://v0.app/",
+          "limit": "Velocità di validazione UI dichiarata, non cronometrata su un prodotto completo; il delta idea → componente è rapidissimo, idea → prodotto no.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.25,
+      "score10": 8.5,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica del prodotto (Vercel/Next.js): nessun test hands-on.",
+        "Limiti dei piani, qualità del codice generato su logiche complesse e accessibilità dell'output da riverificare."
+      ]
+    },
+    {
+      "slug": "meku",
+      "toolName": "Meku",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Il punto di forza esplicito è generare basi React/Tailwind, iterare e poi esportare per continuare fuori dal builder: entra in un flusso in cui il codice resta del developer, non del tool.",
+          "evidence": "`useCases` \"Generare basi React/Tailwind da cui partire\", \"Costruire siti o web app con iterazione veloce\", \"Esportare e continuare un progetto fuori dal builder\"; tag `react`, `tailwind`, `export`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: useCases, tags); https://meku.dev/",
+          "limit": "Nessun test hands-on in questa fase; la qualità della base generata su stack non standard non è verificata.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Prompt AI su uno stack molto noto (React/Tailwind) porta al primo progetto navigabile in fretta, soprattutto per chi già padroneggia quel mondo.",
+          "evidence": "`shortDescription` \"AI web app & site builder per generare progetti React/Tailwind, iterare, esportare e pubblicare\"; `longDescription` \"genera una base moderna, la iteri\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: shortDescription, longDescription); https://meku.dev/",
+          "limit": "La velocità reale per chi non conosce React/Tailwind può essere inferiore; curva non cronometrata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Pensato per siti e web app React/Tailwind: copre quel perimetro bene, ma non è adatto ad app native mobile, backend complessi o workflow non-React.",
+          "evidence": "`segments` `vibe-coding`, `ai-app-builder`, `website-builder`; tag `react`, `tailwind`, `site builder`; `useCases` tutti interni a siti/web app.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di mobile nativo, backend o integrazioni enterprise.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Tool meno noto di v0 o WeWeb: l'output è presentato come credibile (React/Tailwind moderni), ma la qualità effettiva non è verificabile senza test.",
+          "evidence": "`longDescription` \"vuole restare nel mondo React/Tailwind ma partire da una spinta AI concreta: genera una base moderna\"; `highlights` \"React\", \"Tailwind\", \"Esportazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: longDescription, highlights)",
+          "limit": "Nessun progetto pubblico analizzato; qualità del codice generato su logiche complesse non testata.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Export del codice è un campo dichiarato del record e riduce il lock-in in modo esplicito: è il differenziale onesto rispetto a builder puramente chiusi.",
+          "evidence": "`useCases` \"Esportare e continuare un progetto fuori dal builder\"; `highlights` include \"Esportazione\"; `longDescription` \"poi puoi riprendere controllo del progetto\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: useCases, highlights, longDescription)",
+          "limit": "Formato dell'export, licenza del codice generato e pricing dei piani non riverificati in questa fase.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Iterazione veloce su base React/Tailwind e poi export per validare in proprio o in team: la dimensione è ben supportata dal perimetro del tool.",
+          "evidence": "`useCases` \"Costruire siti o web app con iterazione veloce\" e \"Esportare e continuare un progetto fuori dal builder\"; `longDescription` \"la iteri e poi puoi riprendere controllo\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `meku`: useCases, longDescription); https://meku.dev/",
+          "limit": "Velocità dichiarata, non cronometrata su un caso reale; dipende dalla complessità del design system.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.7,
+      "score10": 7.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità del codice generato su edge case reali, formato dell'export e pricing dei piani da riverificare."
+      ]
+    },
+    {
+      "slug": "jenni-ai",
+      "toolName": "Jenni AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Entra bene nel lavoro di ricerca e produzione di documenti lunghi, soprattutto quando fonti, outline e citazioni devono restare nello stesso flusso; è meno centrale per il copy marketing breve.",
+          "evidence": "Il record directory descrive un assistente per scrittura, ricerca, citazioni e documenti accademici e indica come casi d'uso bozze lunghe, gestione delle fonti e struttura dei testi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: shortDescription, longDescription, useCases); https://jenni.ai/",
+          "limit": "Nessun test hands-on; non è stata verificata la continuità del flusso con repository, CMS o strumenti editoriali esterni.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 5,
+          "motivation": "Il paradigma di scrittura assistita applicato a un documento riduce il setup e consente di ottenere una prima bozza utile nella prima sessione.",
+          "evidence": "Il record lo presenta come punto di ingresso per usare l'AI sulla scrittura senza costruire flussi complessi, con supporto diretto a outline e stesura.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: whyItMatters, longDescription); https://jenni.ai/",
+          "limit": "La rapidità iniziale è dedotta dal flusso dichiarato; non sono stati misurati onboarding e curva di apprendimento per citazioni avanzate.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre più fasi della scrittura documentale, dalla ricerca alla citazione, ma il perimetro resta concentrato su testi lunghi e accademici.",
+          "evidence": "I casi d'uso directory comprendono bozze, documenti lunghi, fonti e struttura; non sono dichiarati workflow distinti per visual, video o distribuzione.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: useCases, shortDescription)",
+          "limit": "Non verificata la qualità su formati diversi da quelli documentali né su lingue e stili editoriali specifici.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Outline, ricerca e citazioni nello stesso ambiente possono produrre documenti più coerenti e credibili di una chat generalista, pur richiedendo revisione umana.",
+          "evidence": "Il record evidenzia documenti più ordinati e supporto a citazioni, outline e scrittura assistita; il sito vendor presenta un editor dedicato.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: longDescription); https://jenni.ai/",
+          "limit": "Nessun documento generato è stato valutato; accuratezza delle fonti, qualità stilistica e rischio di allucinazioni restano da verificare.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Il prodotto appare strutturato per un uso continuativo, ma il record non documenta export, integrazioni, controllo dei dati o prevedibilità del pricing, lasciando rischio di lock-in editoriale.",
+          "evidence": "Il record descrive funzionalità di scrittura e ricerca ma non riporta formati di esportazione, permessi, API o condizioni di conservazione dei documenti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: longDescription, assenza di campi su export e integrazioni); https://jenni.ai/",
+          "limit": "Pricing, policy dati, formati di export e portabilità non sono stati riverificati sul prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Accelera sensibilmente il passaggio da appunti e fonti a una bozza valutabile, anche se la verifica delle citazioni limita la velocità del test finale.",
+          "evidence": "Il record dichiara la trasformazione di appunti e ricerche in documenti ordinati e il caso d'uso di velocizzare ricerca e struttura.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `jenni-ai`: longDescription, useCases)",
+          "limit": "Il tempo risparmiato non è stato cronometrato e dipende dalla revisione necessaria su fonti e testo.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.9,
+      "score10": 7.8,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Accuratezza delle citazioni, qualità multilingua, pricing, dati ed export da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "betterpic",
+      "toolName": "BetterPic",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Risolve bene un passaggio concreto del lancio — produrre headshot coerenti per founder e team — ma non diventa un componente ricorrente del workflow di costruzione.",
+          "evidence": "Il record directory lo destina a profili, CV, LinkedIn e team page, con la promessa di evitare l'organizzazione di uno shooting.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: shortDescription, whyItMatters, useCases); https://www.betterpic.io/",
+          "limit": "Nessun test hands-on; non è verificato il fit per team numerosi o processi di brand continuativi.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 5,
+          "motivation": "Partire da foto personali per ricevere ritratti pronti elimina set, fotografo e montaggio, comprimendo il percorso al primo risultato utile.",
+          "evidence": "Long description e whyItMatters dichiarano generazione da foto personali e headshot credibili senza shooting.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: longDescription, whyItMatters); https://www.betterpic.io/",
+          "limit": "Non sono stati verificati requisiti delle foto in ingresso, tempi di elaborazione o numero di tentativi necessario.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 2,
+          "motivation": "È deliberatamente verticale: riusa lo stesso tipo di output in più destinazioni, ma non copre classi creative diverse dagli headshot professionali.",
+          "evidence": "Tutti i casi d'uso directory convergono su ritratti per profili professionali, team, CV e LinkedIn.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: useCases, shortDescription)",
+          "limit": "Non verificata l'eventuale presenza di strumenti per altri formati fotografici o campagne visuali.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "La proposta punta a un output professionale e coerente adatto a superfici pubbliche; la credibilità del volto resta però un criterio sensibile agli artefatti.",
+          "evidence": "Il record parla esplicitamente di ritratti professionali, asset curati e immagini uniformi per un team; il sito vendor mostra il posizionamento headshot.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: shortDescription, useCases); https://www.betterpic.io/",
+          "limit": "Nessun campione è stato analizzato; somiglianza, resa di capelli e dettagli, bias e coerenza tra persone non sono verificati.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Il servizio produce asset riutilizzabili fuori piattaforma, riducendo il lock-in, ma controllo delle foto caricate, licenze, cancellazione e pricing non sono documentati nel record.",
+          "evidence": "Gli output sono descritti come asset per CV, LinkedIn e team page, quindi implicitamente esportabili; mancano invece indicazioni su dati, permessi e costi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: longDescription, useCases, assenza di dettagli operativi); https://www.betterpic.io/",
+          "limit": "Export effettivo, risoluzione, diritti d'uso, retention delle immagini e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "Consente di testare rapidamente una nuova immagine professionale o una direzione coerente per il team senza coordinare una produzione fotografica.",
+          "evidence": "Il record identifica come valore centrale ottenere headshot credibili senza shooting e aggiornare rapidamente profili, CV e LinkedIn.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `betterpic`: whyItMatters, useCases)",
+          "limit": "Velocità e numero di revisioni non sono stati misurati su un ordine reale.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.6,
+      "score10": 7.2,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Somiglianza, artefatti, diritti d'uso, retention delle foto, export e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "imagine-art",
+      "toolName": "Imagine Art",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Concentra immagini, video brevi e asset social in un unico ambiente, entrando bene nel ciclo creativo di campagne e lancio senza richiedere una pipeline separata per ogni formato.",
+          "evidence": "Il record directory descrive una suite da prompt per immagini, video, shorts e visual destinati a campagne e social.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: shortDescription, longDescription, useCases); https://www.imagine.art/",
+          "limit": "Nessun test hands-on; non è verificato come la suite si colleghi a strumenti di brand, editing o pubblicazione.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Il flusso da prompt riduce l'attrito iniziale, ma ottenere coerenza tra immagini e video richiede verosimilmente iterazione e competenza di prompting.",
+          "evidence": "Il record indica generazione visuale e produzione di asset da prompt dentro una suite unica.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: shortDescription, longDescription); https://www.imagine.art/",
+          "limit": "Onboarding, controlli disponibili e numero di iterazioni per un output utilizzabile non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre classi di output realmente distinte — immagini, video e shorts — e più destinazioni marketing, pur restando una suite di generazione creativa.",
+          "evidence": "Short description e useCases elencano immagini da prompt, video brevi e visual per campagne e social.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: shortDescription, useCases)",
+          "limit": "Non verificata la profondità di ogni modulo rispetto a strumenti verticali specializzati.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "La suite promette output adatti a campagne e social e riduce i passaggi tra formati; la qualità professionale e la coerenza di stile non sono però dimostrate dal solo record.",
+          "evidence": "Il record parla di contenuti creativi e asset social prodotti rapidamente; il sito vendor presenta esempi di generazione visuale e video.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: longDescription, useCases); https://www.imagine.art/",
+          "limit": "Nessun output è stato confrontato con un brief reale; artefatti, tipografia, continuità video e fedeltà al brand restano da verificare.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "La centralizzazione riduce il tool switching, ma il record non chiarisce formati di export, diritti sugli asset, gestione dei dati, crediti o prevedibilità del pricing, con rischio di dipendenza dalla piattaforma.",
+          "evidence": "Il record documenta la gamma creativa ma non API, permessi, licenze, export o modello a crediti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: longDescription, assenza di dettagli operativi); https://www.imagine.art/",
+          "limit": "Licenze commerciali, risoluzioni, watermark, pricing, crediti e policy sui prompt non sono stati riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "Permette di produrre e confrontare rapidamente direzioni creative in più formati prima di investire in una produzione completa.",
+          "evidence": "Il record posiziona la suite per passare da prompt ad asset visuali e video rapidamente e senza rimbalzare tra app separate.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `imagine-art`: longDescription, whyItMatters)",
+          "limit": "Il tempo idea → variante approvabile non è stato cronometrato e può dipendere dai limiti di generazione.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.95,
+      "score10": 7.9,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità comparativa dei moduli, coerenza di brand, licenze, crediti, export e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "muse-ai",
+      "toolName": "Muse AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Hosting, ricerca interna ed embed coprono un problema operativo reale quando tutorial, webinar e knowledge base video diventano parte stabile del prodotto.",
+          "evidence": "Il record directory combina hosting, ricerca semantica, condivisione ed embed e lo indica per siti, knowledge base e archivi video.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: shortDescription, longDescription, useCases); https://muse.ai/",
+          "limit": "Nessun test hands-on; non è stata verificata l'integrazione con CMS, analytics o sistemi di autenticazione del prodotto.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Un servizio unico per caricare, rendere ricercabile e incorporare video evita di assemblare più componenti, pur richiedendo organizzazione iniziale dell'archivio.",
+          "evidence": "Il record presenta hosting, ricerca AI, embed e sharing come flusso integrato per rendere gestibile una libreria video.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: longDescription, whyItMatters); https://muse.ai/",
+          "limit": "Non sono stati misurati import, indicizzazione, configurazione degli embed o curva di gestione.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Serve bene più contesti di distribuzione e consultazione video, ma non è una suite di creazione o montaggio e resta legato alla gestione di una sola classe di contenuto.",
+          "evidence": "I casi d'uso directory riguardano hosting ricercabile, embed e organizzazione di archivi video.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: useCases, shortDescription)",
+          "limit": "Non verificata la copertura di live streaming, editing, monetizzazione o workflow audiovisivi avanzati.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Ricerca semantica ed embed possono rendere un archivio molto più fruibile per utenti e team, ma la qualità reale di player, ricerca e trascrizione non è stata osservata.",
+          "evidence": "Il record identifica ricerca AI nei video, condivisione ed embed come elementi distintivi dell'esperienza.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: shortDescription, longDescription); https://muse.ai/",
+          "limit": "Accuratezza della ricerca, qualità del player, accessibilità, performance e resa mobile non sono state testate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Hosting, embed e gestione di archivi indicano una piattaforma operativa più matura di un generatore isolato; resta un lock-in significativo sui video ospitati e il record non chiarisce export e pricing.",
+          "evidence": "Il record descrive una piattaforma di hosting e condivisione pensata per archivi persistenti, ma non documenta portabilità, API, permessi o costi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: longDescription, useCases, assenza di dettagli su export); https://muse.ai/",
+          "limit": "SLA, privacy, download degli originali e dei metadati, API, limiti di storage e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Accelera il test di una libreria video ricercabile o incorporata, ma il valore cresce con un archivio già consistente e non comprime la produzione dei video.",
+          "evidence": "I casi d'uso directory partono da video esistenti da ospitare, ricercare e incorporare.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `muse-ai`: useCases)",
+          "limit": "Tempi di upload, indicizzazione e implementazione dell'embed non sono stati misurati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.75,
+      "score10": 7.5,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Ricerca, player, accessibilità, privacy, portabilità dell'archivio, SLA e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "socleads",
+      "toolName": "Socleads",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Utile per costruire le prime liste di outbound in un workflow sales di founder o team piccoli, ma resta un tool di prospecting, non un pilastro del prodotto.",
+          "evidence": "Record directory: bestFor 'Costruire liste lead per outbound', useCases centrati su liste, contatti da fonti pubbliche e prospecting commerciale; category 'Lead Generation'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: useCases, bestFor, category, tags)",
+          "limit": "Nessun test hands-on; l'efficacia reale dipende da fonti pubbliche la cui disponibilità e i cui termini di servizio cambiano.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Flusso di estrazione guidato, level 'beginner' nel record, pensato per essere usato senza setup tecnico pesante da un team sales.",
+          "evidence": "Record directory: level 'beginner', segmenti sales/marketing, whyItMatters 'riduce il lavoro manuale sulle prime liste di contatti'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: level, segments, whyItMatters); https://socleads.com/",
+          "limit": "Curva reale di qualità del dato e falsi positivi non misurata in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre più fonti pubbliche (Google Maps, Instagram, LinkedIn), ma resta un estrattore: non esce dal perimetro lead generation.",
+          "evidence": "Record directory: tags 'google maps', 'linkedin', 'outreach'; useCases tutti dentro lead/prospecting; nessun caso d'uso al di fuori del sales funnel.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: tags, useCases)",
+          "limit": "Non verificato l'uso del tool in contesti diversi dal prospecting (es. market research, enrichment CRM).",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "UI da prodotto sales/marketing standard, nessun elemento distintivo di qualità percepita nel record; la resa dipende dalla qualità del dato estratto.",
+          "evidence": "Record directory: segmenti sales/marketing, shortDescription orientata a flusso di estrazione; nessun claim di design o qualità output nel record.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: shortDescription, segments)",
+          "limit": "Qualità UI reale e qualità del dato non verificate; nessuna demo analizzata.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Estrazione da fonti pubbliche (LinkedIn, Google Maps) espone a fragilità tecnica, dipendenza dalle policy delle piattaforme e rischio compliance; lock-in sul dato e pricing non documentati nel record.",
+          "evidence": "Record directory: tags 'google maps', 'linkedin' (fonti note per restrizioni ToS); assenza nel record di claim su export, integrazioni native, SLA, prevedibilità pricing.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: tags, assenza di campi su export/SLA); https://socleads.com/",
+          "limit": "Pricing, portabilità del dato e stato reale del lock-in da riverificare; contesto legale dell'uso non analizzato.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Per una prima lista utile, l'attivazione è rapida: il valore arriva nelle prime sessioni, in linea con un workflow di prospecting agile.",
+          "evidence": "Record directory: level 'beginner', whyItMatters 'riduce il lavoro manuale sulle prime liste di contatti'; useCases orientati a output rapidi.",
+          "source": "lib/data/tooolvibes-directory.ts (record `socleads`: level, whyItMatters, useCases)",
+          "limit": "Velocità su lead di qualità (non solo volume) non cronometrata.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.15,
+      "score10": 6.3,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiale vendor: nessun test hands-on.",
+        "Rischi di compliance su scraping, pricing e portabilità del dato da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "windsor-ai",
+      "toolName": "Windsor AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Entra nel workflow marketing quando report e dashboard diventano critici: è un layer di attribuzione e unified data tra ads, analytics e BI.",
+          "evidence": "Record directory: bestFor 'Unificare dati advertising e analytics'; category 'Dati marketing'; whyItMatters 'È utile quando report e dashboard iniziano a diventare più importanti delle singole campagne'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: useCases, category, whyItMatters); https://www.windsor.ai/",
+          "limit": "Il fit su team molto piccoli senza necessità di attribution formale può essere sovradimensionato.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Richiede scelta connettori, mapping e setup account su BI/warehouse: non è uno strumento zero-config, in linea con level 'intermediate'.",
+          "evidence": "Record directory: level 'intermediate', tags 'connectors', 'bi', 'warehouse'; useCases 'Inviare dati verso BI e warehouse'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: level, tags, useCases); https://www.windsor.ai/",
+          "limit": "Tempo medio al primo report affidabile non misurato in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Ampia copertura di canali marketing lato sorgente e destinazioni lato BI/warehouse, più casi d'uso distinti dentro il suo ruolo.",
+          "evidence": "Record directory: useCases (unificare dati, invio a BI, reportistica), tags 'attribution', 'bi', 'warehouse', 'connectors'; segmenti marketing/automation.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: useCases, tags, segments)",
+          "limit": "Non verificata l'ampiezza effettiva dei connettori supportati rispetto alla documentazione live del vendor.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Prodotto di categoria tecnica; il record non evidenzia elementi distintivi di UX, la qualità si misura sull'affidabilità dei connettori e dei report.",
+          "evidence": "Record directory: segmenti marketing/automation, focus su dati e connettori; nessun claim specifico di design/UX nel record.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: segments, whyItMatters)",
+          "limit": "Qualità UI reale e completezza dei template di report non verificate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Invia dati a warehouse e BI, quindi mantiene il dato in casa: meccanismo di controllo ragionevole e allineato a un workflow di team maturi.",
+          "evidence": "Record directory: useCases 'Inviare dati verso BI e warehouse', tags 'warehouse', 'bi', 'connectors'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: useCases, tags); https://www.windsor.ai/",
+          "limit": "Pricing, retention dei dati sul vendor, granularità dei permessi e lock-in da riverificare.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Una volta connessi i canali il flusso è rapido, ma il setup iniziale (connettori, mapping, scelta destination) rallenta l'idea → test.",
+          "evidence": "Record directory: level 'intermediate', useCases che implicano setup di connettori verso BI/warehouse; segmento automation.",
+          "source": "lib/data/tooolvibes-directory.ts (record `windsor-ai`: level, useCases, segments)",
+          "limit": "Tempo a 'primo report' non cronometrato; dipende dal numero di sorgenti collegate.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.55,
+      "score10": 7.1,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiale vendor: nessun test hands-on.",
+        "Pricing, profondità dei connettori e granularità di permessi da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "frase-ai",
+      "toolName": "Frase AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "Unisce analisi SERP, brief, outline, scrittura e ottimizzazione in una sequenza coerente con il workflow SEO reale di founder e content team.",
+          "evidence": "Il record directory descrive ricerca SERP, brief, outline e ottimizzazione e dichiara la riduzione del salto tra keyword research, brief e pubblicazione.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: shortDescription, longDescription, whyItMatters); https://www.frase.io/?via=tool57",
+          "limit": "Nessun test hands-on; non sono state verificate integrazioni con CMS, analytics o strumenti keyword già in uso.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Centralizzare ricerca e brief accelera il primo output, ma interpretare intenti, concorrenti e raccomandazioni richiede competenza SEO.",
+          "evidence": "Il record indica brief più veloci, analisi SERP e ottimizzazione controllabile nello stesso prodotto.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: longDescription, useCases); https://www.frase.io/?via=tool57",
+          "limit": "Onboarding, curva delle funzioni avanzate e tempo fino a un brief approvato non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre ricerca, pianificazione, produzione e aggiornamento di contenuti, più fasi distinte dentro il perimetro SEO pur senza diventare una suite marketing generalista.",
+          "evidence": "I casi d'uso directory includono creazione di brief, ottimizzazione di contenuti pubblicati e analisi di SERP e intenti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: useCases, shortDescription)",
+          "limit": "Non verificata la profondità su SEO tecnica, backlink, local SEO o mercati linguistici specifici.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Brief basati sulla SERP e controlli di ottimizzazione rendono l'output più decisionale di una chat generica, ma non garantiscono originalità né performance organica.",
+          "evidence": "Il record evidenzia analisi SERP, intenti, outline e ottimizzazione come base per contenuti più controllabili.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: longDescription, useCases); https://www.frase.io/?via=tool57",
+          "limit": "Nessun brief o articolo è stato valutato; qualità editoriale, aggiornamento dei dati e correlazione tra score e ranking restano da verificare.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "La copertura di un workflow SEO continuativo indica un prodotto maturo, ma il record non documenta export, collaborazione, API, gestione dati o prevedibilità del pricing; resta lock-in sulle analisi e sui punteggi proprietari.",
+          "evidence": "Il record descrive una piattaforma multi-fase per team e founder, senza dettagli su portabilità, permessi, integrazioni o costi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: longDescription, whyItMatters, assenza di dettagli operativi); https://www.frase.io/?via=tool57",
+          "limit": "Export, collaborazione, fonti SERP, policy dati, limiti d'uso, pricing e dipendenza dagli score proprietari devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "Comprime ricerca SERP e preparazione del brief, permettendo di testare rapidamente un cluster o aggiornare una pagina prima di investire in un ciclo editoriale completo.",
+          "evidence": "Il record dichiara brief SEO più veloci, ottimizzazione di contenuti esistenti e riduzione del salto tra ricerca e pubblicazione.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `frase-ai`: whyItMatters, useCases)",
+          "limit": "La preparazione accelera, ma la validazione finale del ranking richiede settimane o mesi e non è stata osservata.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.35,
+      "score10": 8.7,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor e conoscenza di categoria: nessun test hands-on.",
+        "Qualità dei dati SERP, resa editoriale, correlazione con il ranking, integrazioni, export e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "synthesia-ai",
+      "toolName": "Synthesia AI",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "Trasforma script in video ripetibili per onboarding, training e comunicazione corporate, inserendosi direttamente in workflow continuativi dove una produzione tradizionale sarebbe troppo lenta.",
+          "evidence": "Il record directory indica avatar, voiceover e script testuali per formazione, onboarding, tutorial e contenuti corporate scalabili.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: shortDescription, longDescription, useCases); https://www.synthesia.io/",
+          "limit": "Nessun test hands-on; non sono state verificate integrazioni specifiche con LMS, CMS o processi di approvazione del team.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Il flusso script-to-video elimina set, camera e speaker, ma progettare template, voce, avatar e ritmo efficaci richiede più cura di una semplice generazione one-click.",
+          "evidence": "Il record descrive la produzione da script con avatar e voiceover e sottolinea l'assenza di set e speaker a ogni aggiornamento.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: longDescription, whyItMatters); https://www.synthesia.io/",
+          "limit": "Onboarding, tempi di rendering e sforzo per arrivare a un template approvato non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre bene training, onboarding, tutorial e comunicazione multilingua, ma resta ottimizzato per video presentazionali basati su script più che per ogni genere audiovisivo.",
+          "evidence": "I casi d'uso directory includono training, corporate multilingua, onboarding e tutorial.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: useCases, longDescription)",
+          "limit": "Non verificata l'idoneità per storytelling emozionale, demo prodotto complesse o campagne che richiedono riprese reali.",
+          "confidence": "alta"
+        },
+        "experienceQuality": {
+          "value": 5,
+          "motivation": "È una piattaforma di riferimento per video avatar corporate e offre un output sufficientemente coerente e professionale per formazione scalabile, pur senza sostituire sempre la presenza umana.",
+          "evidence": "Il record la posiziona su video professionali con avatar e voiceover; il sito vendor documenta un'offerta consolidata per comunicazione e training aziendale.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: shortDescription, whyItMatters); https://www.synthesia.io/",
+          "limit": "Nessun video è stato valutato in questa fase; naturalezza, pronuncia, accessibilità e ricezione del pubblico restano dipendenti dal caso d'uso.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 5,
+          "motivation": "Il posizionamento enterprise e l'uso per contenuti corporate ricorrenti indicano maturità su gestione e scala; rimangono lock-in su template/avatar e rischio di pricing elevato o variabile.",
+          "evidence": "Il record descrive comunicazione scalabile e contenuti corporate multilingua; il sito vendor presenta la piattaforma come soluzione strutturata per organizzazioni.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: longDescription, useCases); https://www.synthesia.io/",
+          "limit": "Export dei progetti sorgente, permessi granulari, policy dati, SLA e pricing non sono stati verificati direttamente; l'output video esportato non elimina il lock-in di editing.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Consente di validare rapidamente script, lingue e formati video senza organizzare riprese, anche se rendering e approvazioni corporate impediscono un ciclo istantaneo.",
+          "evidence": "Il record evidenzia la produzione da script senza set, camera e speaker e l'uso per tutorial e onboarding aggiornabili.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `synthesia-ai`: whyItMatters, useCases)",
+          "limit": "Tempi di generazione, revisione e localizzazione non sono stati cronometrati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.55,
+      "score10": 9.1,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor e conoscenza pubblica di categoria: nessun test hands-on.",
+        "Naturalezza degli avatar, accessibilità, governance, portabilità dei progetti, SLA e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "notionapps",
+      "toolName": "NotionApps",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Entra bene solo se Notion è già adottato come backend operativo: in quel caso la trasformazione \"DB Notion → app\" è un'estensione naturale; altrimenti vincola tutto il workflow a un'adozione non neutrale.",
+          "evidence": "`longDescription` \"perfetto quando Notion è già il backend operativo e serve un'interfaccia più pulita\"; `useCases` \"Usare Notion come base dati operativa\" e \"Creare portali per clienti o team\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: longDescription, useCases); https://www.notionapps.com/",
+          "limit": "Nessun test hands-on in questa fase; il fit su team che non hanno Notion come fonte di verità non è verificato (e probabilmente basso).",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Vicinanza al modello Notion rende la curva dolce per chi già usa Notion: database esistenti diventano app senza riscrivere la logica.",
+          "evidence": "`shortDescription` \"Tool per trasformare database Notion in app web/mobile con permessi e sync\"; `useCases` \"Trasformare database Notion in app\" e \"Usare Notion come base dati operativa\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: shortDescription, useCases); https://www.notionapps.com/",
+          "limit": "Velocità reale dipende dalla complessità dei database Notion di partenza; non cronometrata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 2,
+          "motivation": "Molto specifico al mondo Notion: non copre siti, prodotti AI nativi, agenti o workflow che richiedono un backend non-Notion.",
+          "evidence": "`segments` `no-code`, `productivity`; tag `notion`, `no-code`, `mobile app`, `database`, `internal tools`; `useCases` tutti interni all'ecosistema Notion.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di integrazioni esterne, logiche server-side complesse o workflow multi-Notion.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "L'output è presentato come app credibile per \"portali clienti o team\", ma la qualità del layer di presentazione e dei permessi non è testata.",
+          "evidence": "`useCases` \"Creare portali per clienti o team\"; `highlights` \"Notion\", \"App\", \"Sincronizzazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: useCases, highlights)",
+          "limit": "Qualità UX finale e coerenza della sync Notion su uso reale non testate hands-on.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Forte dipendenza da Notion come backend: il lock-in è duplice (Notion + NotionApps) e l'export del layer applicativo non è documentato.",
+          "evidence": "`longDescription` cita Notion come backend; `useCases` \"Usare Notion come base dati operativa\" implica che i dati vivono altrove; nessun campo su export dell'app o self-hosting.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: longDescription, useCases, assenza di campi su export)",
+          "limit": "Pricing per app pubblicata, granularità dei permessi e policy di export del layer app da riverificare con accesso al prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Buona se Notion è già in piedi (database esistenti diventano app in fretta), ma se Notion non è ancora adottato il setup iniziale aggiunge attrito rispetto a un builder puro.",
+          "evidence": "`useCases` \"Trasformare database Notion in app\" presuppone DB già esistenti; `shortDescription` \"trasformare database Notion in app web/mobile\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `notionapps`: useCases, shortDescription)",
+          "limit": "Velocità di validazione end-toend dipendente dallo stato di partenza del team su Notion.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 2.9,
+      "score10": 5.8,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Lock-in duplice (Notion + NotionApps), granularità dei permessi e pricing per app da riverificare."
+      ]
+    },
+    {
+      "slug": "blogify",
+      "toolName": "Blogify",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Si inserisce in modo diretto nel riuso di asset già prodotti, colmando il passaggio operativo da video, audio o URL a una bozza di articolo SEO.",
+          "evidence": "Il record directory dichiara trasformazione di video, audio, URL e contenuti in blog post SEO-ready e aumento dell'output da asset esistenti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: shortDescription, longDescription, useCases); https://blogify.ai?fpr=n2ogi",
+          "limit": "Nessun test hands-on; non è stato verificato il collegamento con CMS, workflow editoriali o pubblicazione.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Usare un asset o un URL come input riduce il lavoro di partenza, ma una bozza pubblicabile richiede comunque editing, fact-checking e adattamento della voce.",
+          "evidence": "Il record descrive un flusso rapido da contenuti esistenti ad articoli ottimizzati.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: longDescription, whyItMatters); https://blogify.ai?fpr=n2ogi",
+          "limit": "Tempi di import, trascrizione, generazione e revisione non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Accetta fonti diverse e serve più scenari di repurposing, ma converge quasi sempre su un solo output: l'articolo di blog orientato alla SEO.",
+          "evidence": "I casi d'uso includono conversione da video e audio e riuso SEO, tutti finalizzati a blog post.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: shortDescription, useCases)",
+          "limit": "Non verificata la qualità di output alternativi, localizzazione o riuso multicanale oltre il blog.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Può produrre una base ordinata e SEO-ready, ma la conversione automatica da media a testo rischia contenuti generici, ripetitivi o poco fedeli alla voce originale.",
+          "evidence": "Il record promette articoli ottimizzati e contenuti evergreen a partire da asset esistenti, senza fornire evidenze sulla qualità editoriale finale.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: longDescription, whyItMatters); https://blogify.ai?fpr=n2ogi",
+          "limit": "Nessun articolo è stato analizzato per accuratezza, leggibilità, originalità, tono o resa SEO reale.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Gli articoli sono verosimilmente portabili, ma il record non documenta export, integrazioni CMS, gestione fonti, diritti sugli input o pricing, lasciando un rischio operativo medio.",
+          "evidence": "Il record descrive input e output del flusso ma non API, formati di esportazione, permessi, attribuzione o condizioni economiche.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: longDescription, assenza di dettagli operativi); https://blogify.ai?fpr=n2ogi",
+          "limit": "Export, integrazioni, privacy degli asset caricati, licenze, limiti e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "Comprime il passaggio da un contenuto esistente a una bozza SEO valutabile, rendendo economico testare il repurposing prima di impegnare risorse editoriali.",
+          "evidence": "Il record identifica come valore centrale ridurre il tempo tra video, audio o link e pubblicazione sul blog.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `blogify`: longDescription, whyItMatters)",
+          "limit": "La velocità fino a una bozza è dichiarata; il tempo fino a un articolo approvato non è stato misurato.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.65,
+      "score10": 7.3,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità editoriale e SEO, fedeltà agli input, integrazioni CMS, privacy, export e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "livechat",
+      "toolName": "LiveChat",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Si inserisce nel momento in cui il traffico cresce: conversazioni realtime su sito e prodotto, con ruolo doppio supporto/vendita, in linea con un workflow di crescita di un prodotto digitale.",
+          "evidence": "Record directory: bestFor 'Gestire chat realtime su sito'; useCases 'Supportare utenti e clienti', 'Convertire lead durante la navigazione'; whyItMatters 'quando il traffico cresce, una live chat solida può aumentare conversione e qualità del supporto'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: useCases, bestFor, whyItMatters); https://www.livechat.com/",
+          "limit": "Non copre ticketing strutturato né automazioni AI profonde: complementare, non sostitutivo, di helpdesk/chatbot.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Widget embed, agent console e onboarding sono noti per essere immediati: primo risultato utile rapido anche per team non tecnici.",
+          "evidence": "Record directory: level 'intermediate', segmenti customer-support/sales, useCases 'Gestire chat realtime su sito'; track record pubblico del prodotto come live chat maturo.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: level, segments, useCases); https://www.livechat.com/",
+          "limit": "Curva su regole di routing, code e permessi non misurata in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre live chat su web (e in parte mobile) con tagli supporto e vendita, ma non si estende a ticketing, automazioni AI o flussi complessi.",
+          "evidence": "Record directory: tags 'live chat', 'support', 'sales', 'realtime'; useCases tutti dentro chat realtime; segmenti customer-support/sales.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: tags, useCases, segments)",
+          "limit": "Estensioni oltre la chat web (es. social messaging nativo, voice) non verificate.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 5,
+          "motivation": "Prodotto maturo e noto per qualità di agent console, widget e reportistica: è tra i riferimenti della sua categoria.",
+          "evidence": "Record directory: prodotto descritto come live chat solida per supporto/vendita; posizionamento del vendor (LiveChat) come punto di riferimento di categoria nel settore.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: shortDescription, whyItMatters); https://www.livechat.com/",
+          "limit": "Nessuna demo analizzata in questa fase; qualità aggiornata dell'UI da riverificare.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 5,
+          "motivation": "Vendor storico, integrazioni ampie, agenti, permessi e SLA noti; export delle chat e API documentate; resta la criticità del pricing per agente.",
+          "evidence": "Record directory: prodotto live chat di livello intermedio; track record pubblico del vendor (Text/LiveChat) come suite matura con app, integrazioni e API.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: level, tags); https://www.livechat.com/",
+          "limit": "Pricing per agente e prevedibilità del costo su team in crescita da riverificare; nessun hands-on fatto.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Installare il widget è veloce, ma tarare regole, code, team e integrazioni richiede tempo: l'idea → test è rapida solo sul primo scenario semplice.",
+          "evidence": "Record directory: useCases 'Gestire chat realtime su sito' e 'Convertire lead durante la navigazione' implicano setup iniziale di widget e team.",
+          "source": "lib/data/tooolvibes-directory.ts (record `livechat`: useCases, level)",
+          "limit": "Tempo al primo A/B tra varianti di widget/messaggi non cronometrato.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.05,
+      "score10": 8.1,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica di prodotto: nessun test hands-on.",
+        "Pricing per agente, profondità di routing e qualità attuale della UI da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "chatbot",
+      "toolName": "ChatBot",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Si colloca come primo strato di automazione conversazionale (FAQ, lead qualification, routing) sopra un sito o un prodotto: rientra nel workflow di un builder che vuole alleggerire il supporto.",
+          "evidence": "Record directory: bestFor 'Automatizzare FAQ e supporto iniziale'; useCases 'Qualificare lead tramite conversazione', 'Collegare chatbot a flussi operativi'; segmenti customer-support/ai-agents/automation.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: useCases, bestFor, segments); https://www.chatbot.com/",
+          "limit": "Da solo non copre ticketing né live chat umana: va pensato come componente in uno stack di supporto.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Builder visuale di flussi e template, pensato per non dover scrivere logica da zero: il primo bot si mette in piedi in una sessione.",
+          "evidence": "Record directory: shortDescription 'piattaforma per creare chatbot AI di supporto, vendita e automazione conversazionale'; level 'intermediate'; useCases orientati a setup rapidi di FAQ e automazioni.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: shortDescription, level, useCases); https://www.chatbot.com/",
+          "limit": "Curva su integrazioni con AI/LLM e tuning qualità risposte non misurata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Buona varietà di template (vendita, FAQ, lead), ma il perimetro resta il chatbot conversazionale; non copre ticketing o live chat.",
+          "evidence": "Record directory: tags 'chatbot', 'ai support', 'automation', 'sales', 'faq'; useCases tutti dentro chatbot/automazioni.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: tags, useCases)",
+          "limit": "Estensioni a voce, social messaging nativo o RAG avanzato non verificate sul record.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Prodotto del gruppo LiveChat, con qualità percepita e attenzione all'editor di flussi coerente con il resto della suite.",
+          "evidence": "Record directory: segmenti customer-support/ai-agents/automation, useCases che puntano a esperienza conversazionale; affiliazione vendor nota al gruppo LiveChat.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: segments, useCases); https://www.chatbot.com/",
+          "limit": "Qualità UI aggiornata e qualità dell'editor visuale non verificate con un accesso hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Vendor consolidato, integrazioni e modelli di bot riutilizzabili; il pricing legato a interazioni/AI può essere meno prevedibile ed è un rischio da gestire.",
+          "evidence": "Record directory: level 'intermediate', segmenti che includono automation; presenza di un modello di piattaforma matura con template e flussi (record).",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: level, segments); https://www.chatbot.com/",
+          "limit": "Pricing basato su consumi AI e lock-in sui flussi del bot da riverificare.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Il valore arriva presto: template + builder visuale permettono di testare un flusso FAQ o di qualificazione in tempi brevi.",
+          "evidence": "Record directory: useCases 'Automatizzare FAQ e supporto iniziale', 'Qualificare lead tramite conversazione'; segmento automation.",
+          "source": "lib/data/tooolvibes-directory.ts (record `chatbot`: useCases, segments)",
+          "limit": "Velocità di iterazione su risposte AI reali non cronometrata in questa fase.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.85,
+      "score10": 7.7,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza del prodotto: nessun test hands-on.",
+        "Pricing AI-driven, qualità effettiva delle risposte e lock-in sui flussi del bot da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "helpdesk",
+      "toolName": "HelpDesk",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Entra nel workflow quando email e chat non bastano più: dà struttura a ticket, priorità e SLA, allineato a un supporto che inizia a essere misurabile.",
+          "evidence": "Record directory: bestFor 'Gestire ticket clienti'; useCases 'Automatizzare priorità e assegnazioni', 'Tenere traccia di SLA e conversazioni'; whyItMatters 'Aiuta a non perdere conversazioni importanti e rende il supporto più misurabile'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: useCases, bestFor, whyItMatters); https://www.helpdesk.com/",
+          "limit": "Non copre chat realtime né bot: complementare a LiveChat/ChatBot nello stack.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Concetti noti (ticket, code, priorità) e UI consolidate rendono l'adozione rapida per team che arrivano da email o fogli condivisi.",
+          "evidence": "Record directory: level 'intermediate', shortDescription 'Ticketing system per gestire comunicazioni clienti, automazioni e supporto team'; useCases 'Gestire ticket clienti'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: level, shortDescription, useCases); https://www.helpdesk.com/",
+          "limit": "Complessità reale di setup di caselle, regole e SLA non misurata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Buona varietà interna (ticket, automazioni, SLA) ma il perimetro resta il supporto strutturato; non sostituisce live chat o chatbot.",
+          "evidence": "Record directory: tags 'helpdesk', 'ticketing', 'support', 'automation', 'team'; useCases tutti dentro gestione ticket/automazioni.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: tags, useCases)",
+          "limit": "Estensioni a voice, social o workflow fortemente custom non verificate sul record.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Stessa famiglia di prodotto di LiveChat/ChatBot, con qualità UI e focus su operator experience coerenti con la suite.",
+          "evidence": "Record directory: segmenti customer-support/automation, focus su agenti e team; prodotto del gruppo noto per qualità di agent console e report.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: segments, useCases); https://www.helpdesk.com/",
+          "limit": "Qualità UI aggiornata non verificata con accesso hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Struttura pensata per team (ruoli, code, SLA) e integrazioni con canali di posta e moduli: controllo operativo ragionevole per la sua categoria.",
+          "evidence": "Record directory: useCases 'Tenere traccia di SLA e conversazioni', 'Automatizzare priorità e assegnazioni'; tags 'automation', 'team'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: useCases, tags); https://www.helpdesk.com/",
+          "limit": "Export dei dati, granularità dei permessi e pricing per agente da riverificare.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Aprire la casella e instradare i primi ticket è veloce, ma arrivare a un setup completo (SLA, automazioni, report) richiede tempo.",
+          "evidence": "Record directory: useCases 'Gestire ticket clienti' e 'Tenere traccia di SLA e conversazioni' implicano configurazione iniziale di code e regole.",
+          "source": "lib/data/tooolvibes-directory.ts (record `helpdesk`: useCases)",
+          "limit": "Velocità al primo ticket instradato correttamente non cronometrata.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.75,
+      "score10": 7.5,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza del prodotto: nessun test hands-on.",
+        "Pricing per agente, profondità di automazioni e qualità attuale della UI da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "wegic",
+      "toolName": "Wegic",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Pensato per siti web e presenza online via flusso conversazionale: entra bene in un workflow di \"pubblicare una pagina/sito in fretta\", non in un workflow di prodotto complesso.",
+          "evidence": "`longDescription` \"adatto a chi vuole un sito credibile rapidamente senza perdersi nei dettagli del builder\"; `useCases` \"Creare siti tramite chat\", \"Iterare copy e layout velocemente\", \"Pubblicare una presenza online in poco tempo\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: longDescription, useCases); https://wegic.ai/",
+          "limit": "Nessun test hands-on in questa fase; il fit su web app o prodotti con logica di business non è documentato.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Il flusso conversazionale (\"descrivi cosa vuoi, iteri, pubblichi\") è tra i più accessibili del segmento: chiunque può partire senza competenze di design o codice.",
+          "evidence": "`shortDescription` \"AI website builder che crea, modifica e pubblica siti tramite conversazione\"; `useCases` \"Creare siti tramite chat\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: shortDescription, useCases); https://wegic.ai/",
+          "limit": "La qualità del primo output dipende dalla chiarezza del brief; curva su siti complessi non cronometrata.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 2,
+          "motivation": "Limitato al sito web: non copre web app, prodotti SaaS, backend, agenti o integrazioni di sistema.",
+          "evidence": "`segments` `website-builder`, `ai-app-builder`, `no-code` (tre etichette, ma l'uso concreto è sito); tag `website builder`, `ai site`; `useCases` tutti interni a \"sito/presenza online\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: segments, tags, useCases)",
+          "limit": "Non verificata la copertura di web app, prodotti o workflow multi-pagina complessi.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "L'output è presentato come \"sito credibile rapidamente\", ma la qualità del design e della resa su brand esigenti non è verificabile senza test.",
+          "evidence": "`longDescription` \"sito credibile rapidamente senza perdersi nei dettagli del builder\"; `highlights` \"Sito\", \"Chat\", \"Pubblicazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: longDescription, highlights)",
+          "limit": "Qualità di design su siti con identità visive specifiche e qualità responsive non testate hands-on.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Lock-in probabile: il sito generato è chiuso nel builder, export del codice e self-hosting non sono documentati, e il pricing non è riverificato.",
+          "evidence": "Assenza di claim su export/self-hosting/API nei campi del record; `useCases` \"Pubblicare una presenza online\" indica hosting proprietario; nessun campo su permessi granulari.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: useCases, assenza di campi su export e self-hosting)",
+          "limit": "Pricing, policy di export e limiti dei piani da riverificare con accesso al prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "\"Pubblicare una presenza online in poco tempo\" è esattamente la promessa: per validare ipotesi di sito (landing, presenza, MVP di marketing) la velocità è il punto di forza.",
+          "evidence": "`useCases` \"Iterare copy e layout velocemente\" e \"Pubblicare una presenza online in poco tempo\"; `highlights` include \"Pubblicazione\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `wegic`: useCases, highlights); https://wegic.ai/",
+          "limit": "Velocità dichiarata, non cronometrata su un sito reale; il delta dipende dalla completezza del brief.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.0,
+      "score10": 6.0,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Export del sito, lock-in reale e pricing dei piani da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "vidau",
+      "toolName": "Vidau",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Porta URL prodotto, immagini e testi direttamente nel ciclo di produzione di creatività performance, con un fit forte per ecommerce e campagne che richiedono molte varianti.",
+          "evidence": "Il record directory lo descrive come generatore di video ads da URL, immagini e testi per campagne, ecommerce e creatività performance.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: shortDescription, longDescription, useCases); https://www.vidau.ai/",
+          "limit": "Nessun test hands-on; non sono state verificate integrazioni con cataloghi prodotto, ad platform o flussi di approvazione.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Generare da URL o asset esistenti riduce brief e montaggio iniziali, ma selezione del messaggio, revisione e adattamento al canale restano necessari.",
+          "evidence": "Il record presenta un flusso da URL, immagini e testi a video ads pronti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: shortDescription, longDescription); https://www.vidau.ai/",
+          "limit": "Non sono stati misurati onboarding, tempi di rendering o sforzo per correggere una variante.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Accetta più tipi di input e può produrre varianti per prodotti diversi, ma resta focalizzato sul formato video advertising.",
+          "evidence": "I casi d'uso directory riguardano video ads da URL, test creativi ed ecommerce.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: useCases, shortDescription)",
+          "limit": "Non verificata la copertura di formati organici, tutorial, video lunghi o brand storytelling.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Il flusso specializzato può produrre asset abbastanza rifiniti per un test paid, ma la qualità percepita dipende da template, voce, scene e fedeltà al prodotto.",
+          "evidence": "Il record definisce gli output come video ads pronti e creatività per campagne ed ecommerce; il sito vendor mostra il posizionamento specializzato.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: shortDescription, longDescription); https://www.vidau.ai/",
+          "limit": "Nessun annuncio è stato valutato; accuratezza dei claim, resa del prodotto, localizzazione e performance creativa non sono verificate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "L'output video dovrebbe essere utilizzabile fuori piattaforma, ma il record non chiarisce export, watermark, diritti, brand control, crediti o pricing, con rischio di dipendenza per le revisioni.",
+          "evidence": "Il record parla di asset video per campagne ma non documenta formati, API, permessi, licenze o modello economico.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: useCases, assenza di dettagli operativi); https://www.vidau.ai/",
+          "limit": "Risoluzione, export, licenze commerciali, retention degli asset, crediti, pricing e lock-in di editing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 5,
+          "motivation": "La capacità dichiarata di trasformare rapidamente un URL prodotto in più video rende molto veloce il ciclo idea → variante testabile.",
+          "evidence": "WhyItMatters e useCases evidenziano la riduzione del tempo verso la prima variante e il test rapido di creatività.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vidau`: whyItMatters, useCases)",
+          "limit": "Il tempo di produzione non è stato cronometrato e la velocità di apprendimento richiede comunque traffico e misurazione sulla piattaforma ads.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.8,
+      "score10": 7.6,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità e performance degli annunci, controllo del brand, licenze, export, crediti e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "lemon-squeezy",
+      "toolName": "Lemon Squeezy",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Entra nel workflow 'vendi un prodotto digitale o SaaS senza costruire da subito tutta la macchina fiscale': è un Merchant of Record che comprime onboarding, pagamenti, tasse.",
+          "evidence": "Record directory: bestFor 'Vendere prodotti digitali'; useCases 'Gestire abbonamenti SaaS', 'Demandare tax compliance e billing'; whyItMatters 'è utile quando vuoi vendere software o prodotti digitali senza costruire subito tutta la gestione fiscale'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: useCases, bestFor, whyItMatters); https://www.lemonsqueezy.com/",
+          "limit": "Per chi vuole controllare tutto in proprio (fatturazione, tassazione, brand sul checkout) può non essere la scelta giusta.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Dashboard di prodotti, link di checkout e setup abbonamento sono pensati per essere rapidi; il primo prodotto vendibile si crea in una sessione.",
+          "evidence": "Record directory: level 'intermediate', segmenti payments, useCases orientati a vendita di prodotti digitali e abbonamenti.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: level, segments, useCases); https://www.lemonsqueezy.com/",
+          "limit": "Curva su tassazione internazionale e gestione rimborsi non misurata in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre pagamenti, abbonamenti e MoR per prodotti digitali e SaaS, ma è focalizzato su questo perimetro: non un commerce platform generalista.",
+          "evidence": "Record directory: tags 'payments', 'saas', 'merchant of record', 'subscriptions', 'tax'; useCases tutti dentro vendita digitale / SaaS / abbonamenti.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: tags, useCases)",
+          "limit": "Casi d'uso oltre il digitale (fisico, marketplace complesso) non sono nel perimetro del record.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Prodotto percepito come moderno, con checkout curato e dashboard pulita; brand e marketing del vendor coerenti con un target di creator/SaaS.",
+          "evidence": "Record directory: categoryLabel 'Pagamenti / Merchant of Record', posizionamento del vendor verso creator e SaaS; tag 'saas', 'subscriptions'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: categoryLabel, tags); https://www.lemonsqueezy.com/",
+          "limit": "Qualità UI aggiornata e personalizzazione del checkout non verificate con un accesso hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Il modello MoR è un'arma a doppio taglio: alleggerisce tasse e fisco, ma introduce dipendenza dal vendor (il cliente finale è del MoR) e vincola export, branding e rapporto diretto col cliente.",
+          "evidence": "Record directory: tags 'merchant of record', 'tax'; useCases 'Demandare tax compliance e billing' implica cessione di parte delle responsabilità operative al vendor.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: tags, useCases); https://www.lemonsqueezy.com/",
+          "limit": "Portabilità del cliente, esportazione dati e clausole di lock-in da leggere con attenzione prima della pubblicazione.",
+          "confidence": "media"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Per validare monetizzazione di un prodotto digitale, il tempo idea → primo pagamento reale è breve: link di checkout e prodotto si pubblicano in fretta.",
+          "evidence": "Record directory: useCases 'Vendere prodotti digitali' e 'Gestire abbonamenti SaaS' orientati a setup rapido di offerta e billing.",
+          "source": "lib/data/tooolvibes-directory.ts (record `lemon-squeezy`: useCases)",
+          "limit": "Tempo al primo incasso reale e gestione dispute/rimborso non cronometrati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.7,
+      "score10": 7.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza del prodotto: nessun test hands-on.",
+        "Lock-in del MoR, portabilità del cliente e pricing su volumi alti da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "vibrantsnap",
+      "toolName": "VibrantSnap",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Trasforma una registrazione schermo già naturale nel lavoro di un builder in demo e tutorial più presentabili per onboarding, supporto e marketing.",
+          "evidence": "Il record directory descrive la conversione di screen recording in demo o tutorial rifiniti per prodotto, onboarding e marketing.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: shortDescription, longDescription, useCases); https://www.vibrantsnap.com/",
+          "limit": "Nessun test hands-on; non è verificato il fit con strumenti di registrazione, documentazione o hosting già in uso.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Partire da uno screen recording evita una timeline di montaggio complessa, ma una demo chiara richiede comunque una buona registrazione e revisioni narrative.",
+          "evidence": "Il record presenta come beneficio un output professionale senza montaggi lunghi a partire da registrazioni schermo.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: longDescription, whyItMatters); https://www.vibrantsnap.com/",
+          "limit": "Onboarding, requisiti di registrazione e tempo di rifinitura non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Lo stesso motore serve demo commerciali, tutorial e onboarding, ma resta vincolato a contenuti basati su cattura dello schermo.",
+          "evidence": "I casi d'uso directory includono demo, tutorial prodotto e video per onboarding e marketing.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: useCases, shortDescription)",
+          "limit": "Non verificata la gestione di riprese camera, animazioni autonome, video lunghi o formati non legati al prodotto software.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Il valore dichiarato è alzare la qualità percepita di demo grezze, un vantaggio concreto per SaaS; la resa professionale dipende però dai controlli di montaggio e dalla qualità dell'input.",
+          "evidence": "Il record parla di demo e tutorial più rifiniti e di qualità percepita migliore senza editing lungo.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: longDescription, whyItMatters); https://www.vibrantsnap.com/",
+          "limit": "Nessun output è stato analizzato per ritmo, leggibilità, audio, accessibilità, branding o artefatti automatici.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Il video finito è presumibilmente esportabile, ma il record non documenta progetti editabili, formati, collaborazione, privacy delle registrazioni o pricing, lasciando lock-in sulle revisioni.",
+          "evidence": "Il record descrive output destinati a onboarding e marketing ma non API, permessi, export del progetto, policy dati o costi.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: useCases, assenza di dettagli operativi); https://www.vibrantsnap.com/",
+          "limit": "Export, risoluzione, asset sorgente, controlli di brand, retention, collaborazione e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Riduce il tempo necessario per portare una registrazione a una demo pubblicabile e consente di provare rapidamente narrazioni diverse, pur richiedendo una nuova cattura per cambi sostanziali.",
+          "evidence": "WhyItMatters identifica l'eliminazione dei montaggi lunghi; i casi d'uso coprono demo, tutorial e onboarding.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `vibrantsnap`: whyItMatters, useCases)",
+          "limit": "Tempo di elaborazione e costo delle iterazioni non sono stati misurati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.7,
+      "score10": 7.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità di montaggio, accessibilità, portabilità dei progetti, privacy delle registrazioni, export e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "reachifyme",
+      "toolName": "ReachifyMe",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Aiuta founder e professionisti a mantenere una routine LinkedIn, ma resta un supporto di canale periferico rispetto alla costruzione e validazione del prodotto.",
+          "evidence": "Il record directory lo posiziona su idee, testi, continuità editoriale, personal branding e crescita professionale su LinkedIn.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: shortDescription, longDescription, useCases); https://reachifyme.com/",
+          "limit": "Nessun test hands-on; non è verificata l'integrazione con calendario, analytics o approvazioni editoriali.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 4,
+          "motivation": "Idee e testi assistiti abbassano l'attrito della pagina bianca, ma costruire una voce credibile richiede input personale e revisione costante.",
+          "evidence": "Il record dichiara supporto a idee, testi e ritmo editoriale più sostenibile e trasformazione di idee in contenuti pubblicabili.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: longDescription, useCases); https://reachifyme.com/",
+          "limit": "Onboarding, personalizzazione del tono e tempo effettivo fino alla pubblicazione non sono stati misurati.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 2,
+          "motivation": "Copre ideazione, scrittura e continuità, ma tutte le funzioni convergono su LinkedIn e personal branding, con scarsa ampiezza fuori dal canale.",
+          "evidence": "Short description e casi d'uso directory sono interamente dedicati a post LinkedIn, brand personale e crescita professionale.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: shortDescription, useCases)",
+          "limit": "Non verificata l'eventuale distribuzione o adattamento verso newsletter, blog o altri social.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Può rendere più regolare la produzione, ma l'output AI per personal branding rischia uniformità e tono artificiale se non viene sostanzialmente personalizzato.",
+          "evidence": "Il record promette idee e testi pubblicabili, senza evidenze sulla distintività della voce o sui risultati dei contenuti.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: longDescription, useCases); https://reachifyme.com/",
+          "limit": "Nessun post generato è stato valutato e non sono disponibili verifiche su autenticità percepita, engagement o qualità in italiano.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Il record non documenta export, scheduling, analytics, collaborazione, controllo dei dati o pricing; la dipendenza da LinkedIn e dal modello generativo aumenta il rischio operativo.",
+          "evidence": "Le informazioni directory coprono solo creazione dei contenuti e brand personale, senza claim su integrazioni, permessi, portabilità o condizioni economiche.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: longDescription, assenza di dettagli operativi); https://reachifyme.com/",
+          "limit": "Funzioni di export e pubblicazione, policy dati, conformità alle regole LinkedIn, continuità del servizio e pricing devono essere riverificati.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Riduce il tempo da un'idea a un post testabile e rende semplice provare più angoli editoriali, anche se la validazione richiede giorni di distribuzione e segnali LinkedIn.",
+          "evidence": "Il record indica trasformazione di idee in contenuti pubblicabili e una routine più sostenibile.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `reachifyme`: longDescription, useCases)",
+          "limit": "Tempo di generazione e impatto sulla frequenza reale non sono stati misurati; engagement e crescita non sono attribuibili al solo tool.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.0,
+      "score10": 6.0,
+      "overallConfidence": "bassa",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Qualità e autenticità dei post, integrazioni LinkedIn, analytics, policy dati, portabilità e pricing da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "make",
+      "toolName": "Make",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 5,
+          "motivation": "È un pilastro di automazione per chi costruisce: orchestra app, API, dati e processi interni, ed è centrale in qualunque stack operativo di un builder.",
+          "evidence": "Record directory: bestFor 'Automatizzare flussi tra strumenti'; useCases 'Collegare app, API e database', 'Costruire processi operativi scalabili'; whyItMatters 'È uno dei pilastri no-code per automatizzare operazioni, marketing, dati e processi interni'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: useCases, bestFor, whyItMatters); https://www.make.com/",
+          "limit": "Per workflow che richiedono logica custom pesante o runtime dedicato, può non bastare da solo.",
+          "confidence": "alta"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Il builder visuale è potente ma non immediato: la curva reale (router, iterator, error handler, moduli HTTP) sale velocemente, in linea con level 'expert'.",
+          "evidence": "Record directory: level 'expert', shortDescription 'piattaforma visuale per creare automazioni, flussi e integrazioni tra app e API'; segmenti automation/no-code.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: level, shortDescription, segments); https://www.make.com/",
+          "limit": "Curva su scenari complessi e moduli HTTP non misurata in questa fase; è notoriamente superiore a strumenti più lineari come Zapier di base.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 5,
+          "motivation": "Centinaia di app supportate, moduli HTTP/JSON, branching, iteratori, gestione errori: copre una gamma vastissima di automazioni.",
+          "evidence": "Record directory: useCases 'Automatizzare flussi tra strumenti', 'Collegare app, API e database', 'Costruire processi operativi scalabili'; tags 'automazioni', 'flussi', 'integrazioni', 'api', 'no-code'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: useCases, tags); https://www.make.com/",
+          "limit": "La vastità effettiva dei connettori e dei moduli va verificata sulla documentazione live del vendor.",
+          "confidence": "alta"
+        },
+        "experienceQuality": {
+          "value": 4,
+          "motivation": "Editor visuale maturo, con debugging, history run e visualizzazione del flusso chiara: la qualità percepita è solida per un tool di automazione complesso.",
+          "evidence": "Record directory: longDescription 'Make permette di progettare automazioni visuali tra app, API e dati, con una potenza superiore ai flussi semplici'; segmento no-code di alto livello.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: longDescription, segments); https://www.make.com/",
+          "limit": "Cambiamenti recenti di UI e qualità di moduli specifici da riverificare; nessun hands-on.",
+          "confidence": "media"
+        },
+        "operationalMaturity": {
+          "value": 4,
+          "motivation": "Mature su versioning, scheduling, error handling e API; il pricing a operazioni è potente ma introduce un rischio di costo variabile da prevedere con attenzione su volumi alti.",
+          "evidence": "Record directory: useCases 'Costruire processi operativi scalabili', tags 'api'; track record pubblico del vendor come piattaforma di automazione affermata.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: useCases, tags); https://www.make.com/",
+          "limit": "Modello di pricing a operazioni, portabilità degli scenari fuori dalla piattaforma e lock-in da valutare prima dell'adozione su processi critici.",
+          "confidence": "alta"
+        },
+        "experimentationSpeed": {
+          "value": 4,
+          "motivation": "Per chi conosce già la piattaforma, lo scenario minimo (trigger → azione) si costruisce in pochi minuti; il primo scenario complesso richiede più tempo, ma il loop di test è rapido grazie all'esecuzione on-demand.",
+          "evidence": "Record directory: useCases 'Automatizzare flussi tra strumenti', segmenti automation/no-code; level 'expert' indica prodotto profondo ma con esecuzione immediata.",
+          "source": "lib/data/tooolvibes-directory.ts (record `make`: useCases, segments, level); https://www.make.com/",
+          "limit": "Tempo al primo scenario in esecuzione non cronometrato in questa fase; varia molto con la familiarità dell'utente.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 4.2,
+      "score10": 8.4,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica del prodotto: nessun test hands-on.",
+        "Pricing a operazioni su volumi alti, portabilità degli scenari e profondità di connettori specifici da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "omi",
+      "toolName": "Omi",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 2,
+          "motivation": "È un wearable personale per trascrizione, memoria e azioni: utile per la produttività personale del founder, non come mattone nel workflow di costruzione di un prodotto digitale.",
+          "evidence": "Record directory: bestFor 'Trascrivere conversazioni importanti'; useCases 'Creare memoria personale consultabile', 'Trasformare meeting e dialoghi in azioni'; categoryLabel 'Wearable AI / assistente personale'; segmenti productivity/ai-agents.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: useCases, bestFor, categoryLabel, segments); https://www.omi.me/",
+          "limit": "Il fit su un workflow di building/operations è marginale; entra più nella sfera 'personal AI' che 'product stack'.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 2,
+          "motivation": "Richiede un device hardware e setup iniziale: l'attrito non è zero ed è in linea con level 'expert' e categoria wearable AI.",
+          "evidence": "Record directory: level 'expert', shortDescription 'Wearable AI open-source che registra, trascrive, ricorda e trasforma conversazioni in azioni'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: level, shortDescription); https://www.omi.me/",
+          "limit": "Esperienza reale di onboarding hardware/AI e qualità della trascrizione non misurate.",
+          "confidence": "bassa"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Dentro la sua nicchia (memoria personale, trascrizione, azioni) copre più casi d'uso; ma resta circoscritto a un dispositivo e a un'idea di personal AI.",
+          "evidence": "Record directory: useCases 'Trascrivere conversazioni importanti', 'Creare memoria personale consultabile', 'Trasformare meeting e dialoghi in azioni'; tags 'transcription', 'memory', 'personal ai'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: useCases, tags)",
+          "limit": "Versatilità reale in contesti non documentati (es. team, integrazioni business) non verificata.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Progetto open-source con claim chiari (trascrizione + memoria + azioni), ma la qualità percepita dipende dal prodotto fisico e dal software, non verificati nel record.",
+          "evidence": "Record directory: tags 'open-source', 'personal ai'; whyItMatters 'interessante per chi vuole sperimentare personal AI e memoria aumentata'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: tags, whyItMatters); https://www.omi.me/",
+          "limit": "Nessun test hands-on; qualità di trascrizione, latenza e UX del dispositivo non verificate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Hardware sperimentale e software in evoluzione: il pricing, la disponibilità, il supporto e la stabilità del prodotto nel tempo non sono documentati nel record; la natura open-source mitiga parte del lock-in ma non garantisce continuità del device.",
+          "evidence": "Record directory: tags 'open-source', 'wearable' (combinazione hardware + software); assenza nel record di pricing, SLA, ciclo di rilascio o roadmap formale.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: tags, assenza di campi su pricing/SLA); https://www.omi.me/",
+          "limit": "Maturità del prodotto fisico, policy di retention dei dati audio e continuità del progetto da riverificare con documentazione vendor aggiornata.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Per chi ha già il device, il loop 'parlo → trascrizione → azione' è immediato; ma l'idea → test reale richiede l'acquisto/setup del wearable, che è un collo di bottiglia.",
+          "evidence": "Record directory: useCases orientati a flussi rapidi (trascrivere, generare azioni); categoria wearable AI che implica barriera d'ingresso hardware.",
+          "source": "lib/data/tooolvibes-directory.ts (record `omi`: useCases, categoryLabel)",
+          "limit": "Tempo al primo use case utile dipende dalla disponibilità del device, non misurato in questa fase.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 2.4,
+      "score10": 4.8,
+      "overallConfidence": "bassa",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiale vendor: nessun test hands-on.",
+        "Maturità hardware, pricing, retention dei dati audio e stabilità del progetto open-source nel tempo da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "flowise",
+      "toolName": "Flowise",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Per chi costruisce agenti AI, RAG e flussi LangChain, Flowise è un builder visuale solido che si inserisce in pipeline AI serie: il valore è dare \"controllo tecnico\" a chi già lavora con LangChain senza dover scrivere tutto da zero.",
+          "evidence": "`longDescription` \"builder visuale per creare flussi AI, agenti e RAG basati su LangChain con maggiore controllo tecnico\"; `useCases` \"Creare chatflow e agenti AI\", \"Prototipare flussi RAG\", \"Costruire automazioni AI più controllabili\"; tag `langchain`, `rag`, `flussi ai`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: longDescription, useCases, tags); https://flowiseai.com/",
+          "limit": "Nessun test hands-on in questa fase; il fit con team non tecnici è escluso a priori (target expert).",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 2,
+          "motivation": "Target esplicito expert: richiede competenza su LangChain, concetti di prompt engineering, vector store e modelli. La velocità di adozione non è il punto di forza.",
+          "evidence": "`level: expert`; `longDescription` \"maggiore controllo tecnico\"; tag `agenti ai`, `langchain`, `rag` presuppongono conoscenze pregresse.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: level, longDescription, tags)",
+          "limit": "Tempo al primo agente funzionante non cronometrato; la curva dipende dal background LangChain dell'utente.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 4,
+          "motivation": "Copre molti sotto-casi del suo ruolo: agenti, RAG, chatflow, automazioni AI basate su LangChain: è un generalista dentro la categoria agenti.",
+          "evidence": "`useCases` \"Creare chatflow e agenti AI\", \"Prototipare flussi RAG\", \"Costruire automazioni AI più controllabili\"; `highlights` \"Agenti\", \"RAG\", \"LangChain\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: useCases, highlights)",
+          "limit": "Non verificata la copertura di voice agent, workflow ibridi non-LangChain o scenari enterprise molto custom.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "UI visuale funzionale e open-source: la qualità percepita è buona per uno strumento tecnico, ma non è un tool consumer-grade con polish da \"prodotto finale\".",
+          "evidence": "`shortDescription` \"Builder visuale open-source per creare agenti AI, RAG, chat e flussi LangChain\"; `highlights` \"Agenti\", \"RAG\", \"LangChain\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: shortDescription, highlights)",
+          "limit": "UX del builder e qualità dei template community non testate hands-on; open-source significa anche dipendenza dalla community.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 5,
+          "motivation": "Open-source, self-hosting, export dei flussi e nessun lock-in proprietario: è esattamente il punto in cui Flowise eccelle rispetto a tool chiusi della stessa categoria.",
+          "evidence": "`shortDescription` \"open-source\"; `longDescription` \"maggiore controllo tecnico\"; `whyItMatters` \"vuole costruire automazioni AI serie senza scrivere tutto da zero\"; tag `open-source`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: shortDescription, longDescription, whyItMatters, tags); https://flowiseai.com/",
+          "limit": "Effort reale di self-hosting, manutenzione versioni e gestione costi infrastrutturali non valutati in questa fase.",
+          "confidence": "alta"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Prototyping AI valido, ma richiede setup: non è un tool \"minuti al primo agente\". Il valore di Flowise è il controllo, non la velocità pura.",
+          "evidence": "`useCases` \"Prototipare flussi RAG\" indica prototyping come caso d'uso, non \"MVP in minuti\"; `level: expert`; `longDescription` \"maggiore controllo tecnico\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `flowise`: useCases, level, longDescription)",
+          "limit": "Velocità reale di setup, costo di manutenzione delle dipendenze LangChain e tempi di deploy non cronometrati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.5,
+      "score10": 7.0,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + conoscenza pubblica (open-source, LangChain): nessun test hands-on.",
+        "Effort reale di self-hosting, costi infrastrutturali e maturità della governance su casi enterprise da valutare in pratica."
+      ]
+    },
+    {
+      "slug": "tolt",
+      "toolName": "Tolt",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 4,
+          "motivation": "Si inserisce nel workflow di crescita di una SaaS che vuole trasformare utenti, creator o partner in un canale di acquisizione misurabile.",
+          "evidence": "Record directory: bestFor 'Lanciare un programma affiliate SaaS'; useCases 'Tracciare partner e commissioni', 'Collegare referral a billing e pagamenti'; whyItMatters 'utile quando vuoi trasformare utenti, creator o partner in un canale di crescita misurabile'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: useCases, bestFor, whyItMatters); https://tolt.com/",
+          "limit": "Ha senso solo dopo che il prodotto e il billing sono pronti: non è un tool di prima linea.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "Richiede integrazione con Stripe/Paddle/Chargebee e configurazione di programmi, commissioni e pagine: level 'expert' nel record indica attrito non banale.",
+          "evidence": "Record directory: level 'expert', tags 'stripe', 'paddle', 'chargebee' (integrazioni con billing esterni), useCases 'Lanciare un programma affiliate SaaS'.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: level, tags, useCases); https://tolt.com/",
+          "limit": "Curva di setup e qualità UX del dashboard non misurate in questa fase.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Profondo nel suo ruolo (programmi affiliate, referral, commissioni) ma limitato a quel perimetro: non copre ads, SEO o content.",
+          "evidence": "Record directory: tags 'affiliate', 'referral', 'saas'; useCases tutti dentro programmi affiliate e tracciamento partner.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: tags, useCases)",
+          "limit": "Eventuali estensioni a referral non-SaaS o multi-tier non verificate sul record.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Prodotto di nicchia con target esperto: la qualità percepita dipende da dashboard, pagine affiliate e materiali per partner, non documentati nel record.",
+          "evidence": "Record directory: categoryLabel 'Marketing affiliate / SaaS', level 'expert'; nessun claim specifico di design/UX nel record.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: categoryLabel, level)",
+          "limit": "UI reale, qualità delle pagine pubbliche affiliate e materiali per partner non verificate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 3,
+          "motivation": "Si appoggia a billing esterni (Stripe, Paddle, Chargebee) per i pagamenti, il che dà controllo, ma il modello di pricing legato alle commissioni affiliate è un costo variabile e un rischio da prevedere.",
+          "evidence": "Record directory: tags 'stripe', 'paddle', 'chargebee' (dipendenza da billing esterni); nessun claim nel record su export completo o API pubbliche.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: tags, assenza di campi su export); https://tolt.com/",
+          "limit": "Pricing delle commissioni, portabilità dei dati e lock-in da riverificare.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Una volta collegato il billing e lanciato il programma si sperimenta bene, ma il setup iniziale non è rapido: l'idea → test reale richiede alcuni passaggi.",
+          "evidence": "Record directory: level 'expert', useCases 'Lanciare un programma affiliate SaaS' e 'Collegare referral a billing e pagamenti' implicano setup non immediato.",
+          "source": "lib/data/tooolvibes-directory.ts (record `tolt`: level, useCases)",
+          "limit": "Tempo al primo referral tracciato e pagato non cronometrato.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 3.25,
+      "score10": 6.5,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiale vendor: nessun test hands-on.",
+        "Pricing legato alle commissioni, profondità di integrazioni e portabilità del dato da riverificare prima della pubblicazione."
+      ]
+    },
+    {
+      "slug": "agentx",
+      "toolName": "AgentX",
+      "methodologyVersion": "builder-first-v1",
+      "assessedAt": "2026-08-04",
+      "assessor": "TooolVibes Editorial (staging, pre-approval)",
+      "approvalStatus": "ready_for_owner_approval",
+      "dimensions": {
+        "workflowFit": {
+          "value": 3,
+          "motivation": "Entra in workflow business che vogliono portare agenti AI dentro processi senza setup troppo pesante: il fit è promesso ma va verificato su processi reali, non su demo.",
+          "evidence": "`longDescription` \"rilevante per chi vuole portare agenti AI dentro processi business senza un setup troppo pesante\"; `useCases` \"Automatizzare processi business\" e \"Prototipare flussi multi-agent\"; tag `agenti ai`, `flussi business`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: longDescription, useCases, tags); https://www.agentx.so/",
+          "limit": "Nessun test hands-on in questa fase; profondità del \"no-code\" su processi business complessi non verificata.",
+          "confidence": "media"
+        },
+        "easeOfUse": {
+          "value": 3,
+          "motivation": "No-code nella promessa, ma modellare agenti specializzati e flussi multi-agent richiede comunque pensiero strutturato: la curva è gestibile, non immediata.",
+          "evidence": "`shortDescription` \"Piattaforma no-code e multi-agent per creare agenti AI specializzati e flussi business\"; `useCases` \"Creare agenti AI specializzati\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: shortDescription, useCases); https://www.agentx.so/",
+          "limit": "Tempo al primo agente funzionante non cronometrato; dipende dalla chiarezza del processo da automatizzare.",
+          "confidence": "media"
+        },
+        "versatility": {
+          "value": 3,
+          "motivation": "Copre un perimetro definito (agenti AI + flussi business multi-agent): buona ampiezza nel suo segmento, ma non generalista oltre gli agenti.",
+          "evidence": "`useCases` \"Creare agenti AI specializzati\", \"Automatizzare processi business\", \"Prototipare flussi multi-agent\"; tag `agenti ai`, `multi-agent`, `flussi business`.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: useCases, tags)",
+          "limit": "Non verificata la copertura di voice agent, integrazioni enterprise profonde o workflow non-business.",
+          "confidence": "media"
+        },
+        "experienceQuality": {
+          "value": 3,
+          "motivation": "Tool meno noto di Flowise o v0: l'output (agenti + flussi) è presentato come professionale, ma la qualità effettiva non è verificabile senza test.",
+          "evidence": "`longDescription` \"agenti AI specializzati e flussi multi-agent senza partire da una struttura tecnica complessa\"; `highlights` \"Agenti\", \"No-code\", \"Flussi\".",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: longDescription, highlights)",
+          "limit": "Qualità reale degli agenti generati e stabilità dei flussi multi-agent su casi reali non testate.",
+          "confidence": "bassa"
+        },
+        "operationalMaturity": {
+          "value": 2,
+          "motivation": "Lock-in probabile: export di agenti e flussi, governance e audit non sono documentati, e il pricing non è riverificato.",
+          "evidence": "Assenza di claim su export/self-hosting/on-prem nei campi del record; nessun campo su SSO, audit log o permessi granulari; `level: expert` indica piattaforma chiusa, non self-hosted.",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: level, assenza di campi su export, self-hosting, SSO)",
+          "limit": "Pricing per agent/session, policy di export e opzioni enterprise (SSO, audit) da riverificare con accesso al prodotto.",
+          "confidence": "bassa"
+        },
+        "experimentationSpeed": {
+          "value": 3,
+          "motivation": "Prototipazione multi-agent possibile, ma il \"no-code\" non è sinonimo di \"minuti al primo agente\": la velocità di validazione c'è ma non è la dimensione in cui eccelle.",
+          "evidence": "`useCases` \"Prototipare flussi multi-agent\"; `shortDescription` \"no-code e multi-agent\"; `longDescription` \"senza un setup troppo pesante\" (non \"senza setup\").",
+          "source": "`lib/data/tooolvibes-directory.ts` (record `agentx`: useCases, shortDescription, longDescription)",
+          "limit": "Velocità reale di prototipazione e tempo al primo flusso business operativo non cronometrati.",
+          "confidence": "media"
+        }
+      },
+      "weighted": 2.85,
+      "score10": 5.7,
+      "overallConfidence": "media",
+      "summaryLimits": [
+        "Assessment basato su record directory + materiali vendor: nessun test hands-on.",
+        "Profondità reale del \"no-code\" su agenti complessi, export, governance enterprise e pricing da riverificare prima della pubblicazione."
+      ]
+    }
+  ]
+}
