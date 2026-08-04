@@ -78,22 +78,22 @@ const decisionOutcomeMeta: Record<
   selected: {
     actionLabel: "Scegli",
     stateLabel: "Scelto",
-    tone: "var(--accent-strong)",
-    background: "#efe8ff",
+    tone: "var(--tv-ink-primary)",
+    background: "rgba(112,82,255,0.15)",
     icon: Check,
   },
   rejected: {
     actionLabel: "Scarta",
     stateLabel: "Scartato",
-    tone: "var(--muted-strong)",
-    background: "#fff2ec",
+    tone: "var(--tv-ink-primary)",
+    background: "rgba(255,200,180,0.12)",
     icon: Ban,
   },
   deferred: {
     actionLabel: "Rimanda",
     stateLabel: "Rimandato",
-    tone: "var(--muted-strong)",
-    background: "#fff5df",
+    tone: "var(--tv-ink-primary)",
+    background: "rgba(255,220,150,0.12)",
     icon: Clock,
   },
 };
@@ -103,8 +103,8 @@ const decisionChipClassName =
 
 const decisionChipIdleStyle: CSSProperties = {
   borderColor: "var(--line)",
-  background: "#f7f4ff",
-  color: "var(--muted-strong)",
+  background: "rgba(255,255,255,0.06)",
+  color: "var(--tv-ink-primary)",
 };
 
 export function CompareDecisionPanel({
@@ -168,7 +168,7 @@ export function CompareDecisionPanel({
       className="compare-decision-panel mt-6 rounded-[24px] border p-5"
       style={{
         borderColor: "var(--line)",
-        background: "#fbfaff",
+        background: "rgba(255,255,255,0.04)",
       }}
       aria-labelledby={titleId}
     >
@@ -178,7 +178,7 @@ export function CompareDecisionPanel({
           <h3 id={titleId} className="mt-1 text-base font-semibold">
             Registra decisione
           </h3>
-          <p className="mt-1 text-xs" style={{ color: "var(--muted)" }}>
+          <p className="mt-1 text-xs" style={{ color: "var(--tv-ink-secondary)" }}>
             {contextLabel} · {candidateNames}
           </p>
         </div>
@@ -193,7 +193,7 @@ export function CompareDecisionPanel({
       </div>
 
       <ul className="mt-4 flex flex-col gap-3">
-        {tools.map((tool, index) => {
+        {tools.map((tool) => {
           const outcome = decisionOutcomes[tool.slug] ?? null;
           const recordedAt = decisionUpdatedAts[tool.slug] ?? null;
           const isFocused = tool.slug === focusTool.slug;
@@ -206,22 +206,29 @@ export function CompareDecisionPanel({
                 borderColor: isFocused
                   ? "rgba(112,82,255,0.32)"
                   : "var(--line)",
-                background: "#ffffff",
+                background: "rgba(255,255,255,0.06)",
               }}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex min-w-0 items-center gap-2">
                   <span
                     className="text-xs font-bold uppercase tracking-[0.14em]"
-                    style={{ color: "var(--muted)" }}
+                    style={{ color: "var(--tv-ink-secondary)" }}
                   >
-                    #{index + 1}
+                    {tool.objectiveRank !== null && tool.objectiveRank !== undefined
+                      ? `#${tool.objectiveRank}`
+                      : ""}
+                    {tool.objectiveRank === 1 ? " · raccomandato" : ""}
                   </span>
                   <strong className="truncate text-sm">{tool.name}</strong>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs" style={{ color: "var(--muted)" }}>
-                    {tool.battleScore === null ? "Valutazione editoriale in preparazione" : `${tool.battleScore}/10`}
+                  <span className="text-xs" style={{ color: "var(--tv-ink-secondary)" }}>
+                    {tool.battleScore === null
+                      ? "Valutazione editoriale in preparazione"
+                      : tool.objectiveScore !== null && tool.objectiveScore !== undefined
+                        ? `Punteggio ${tool.battleScore}/10 · Fit ${tool.objectiveScore}/10`
+                        : `${tool.battleScore}/10`}
                   </span>
                   <button
                     type="button"
@@ -293,7 +300,7 @@ export function CompareDecisionPanel({
                 <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                   <p
                     className="text-xs uppercase tracking-[0.16em]"
-                    style={{ color: "var(--muted)" }}
+                    style={{ color: "var(--tv-ink-secondary)" }}
                   >
                     {decisionOutcomeMeta[outcome].stateLabel} · Registrata{" "}
                     {formatDecisionTimestamp(recordedAt)}
@@ -331,13 +338,14 @@ export function CompareDecisionPanel({
           className="filter-control mt-3 w-full rounded-[18px] border px-4 py-3 outline-none"
           style={{
             borderColor: "var(--line)",
-            background: "#ffffff",
+            background: "rgba(255,255,255,0.06)",
+            color: "var(--ink-primary, #e2e0ea)",
           }}
         />
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
           <p
             className="text-xs uppercase tracking-[0.16em]"
-            style={{ color: "var(--muted)" }}
+            style={{ color: "var(--tv-ink-secondary)" }}
           >
             {noteDraft.length}/2000 · Resta nei Salvati con motivo e timestamp
           </p>
@@ -354,9 +362,9 @@ export function CompareDecisionPanel({
                 ? "rgba(112,82,255,0.24)"
                 : "var(--line)",
               background: noteIsDirty
-                ? "#efe8ff"
-                : "#f7f4ff",
-              color: noteIsDirty ? "var(--accent-strong)" : "var(--muted)",
+                ? "rgba(112,82,255,0.2)"
+                : "rgba(255,255,255,0.06)",
+              color: noteIsDirty ? "var(--tv-ink-primary)" : "var(--tv-ink-secondary)",
             }}
           >
             {noteIsDirty ? "Salva motivo" : "Motivo salvato"}
