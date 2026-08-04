@@ -27,7 +27,7 @@ type CompareBoardProps = {
   tools: ToolRecord[];
 };
 
-const dimensionReadingCopy: Record<EditorialScoreDimension, string> = {
+const dimensionReadingCopy: Partial<Record<EditorialScoreDimension, string>> = {
   ease_of_use: "Quanto entra in mano senza attrito iniziale.",
   versatility: "Quanto regge scenari diversi senza perdere fuoco.",
   polish: "Quanto l'interfaccia restituisce maturità e cura.",

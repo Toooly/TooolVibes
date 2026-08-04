@@ -74,9 +74,15 @@ const publicationSchema = z.discriminatedUnion("status", [
 const scoreInputSchema = z
   .object({
     dimension: z.enum(editorialScoreDimensionValues),
-    level: z.enum(editorialScoreLevelValues),
+    /** Legacy editorial scorecard level (measured/solid/strong). */
+    level: z.enum(editorialScoreLevelValues).optional(),
+    /** Builder-first numeric value (1-5). Mutually preferred over level. */
+    value: z.number().int().min(1).max(5).optional(),
   })
-  .strict();
+  .strict()
+  .refine((input) => input.level !== undefined || input.value !== undefined, {
+    message: 'Either level or value must be provided.',
+  });
 
 const scoreSchema = z
   .object({

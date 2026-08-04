@@ -21,7 +21,13 @@ export type EditorialScoreDimension =
   | "polish"
   | "workflow_fit"
   | "experimentation_value"
-  | "editorial_conviction";
+  | "editorial_conviction"
+  // builder-first v1 dimensions (numeric 1-5 scale)
+  | "workflowFit"
+  | "easeOfUse"
+  | "experienceQuality"
+  | "operationalMaturity"
+  | "experimentationSpeed";
 export type EditorialScoreLevel = "measured" | "solid" | "strong";
 export type ToolEditorialScorecard = Partial<Record<EditorialScoreDimension, EditorialScoreLevel>>;
 
@@ -56,6 +62,11 @@ export const editorialScoreDimensionValues = [
   "workflow_fit",
   "experimentation_value",
   "editorial_conviction",
+  "workflowFit",
+  "easeOfUse",
+  "experienceQuality",
+  "operationalMaturity",
+  "experimentationSpeed",
 ] as const satisfies readonly EditorialScoreDimension[];
 
 export const editorialScoreLevelValues = [

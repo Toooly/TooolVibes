@@ -42,10 +42,12 @@ export function deriveScoreDimensions(tool: ToolPublicView): { label: string; va
     strong: "Forte",
   } as const;
 
-  return inputs.map((input) => ({
-    label: input.dimension.replaceAll("_", " "),
-    value: levelLabels[input.level],
-  }));
+  return inputs
+    .filter((input) => input.level !== undefined)
+    .map((input) => ({
+      label: input.dimension.replaceAll("_", " "),
+      value: levelLabels[input.level as keyof typeof levelLabels],
+    }));
 }
 
 export function buildAlternativeWhy(current: ToolPublicView, alt: ToolPublicView): string {
