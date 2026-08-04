@@ -151,28 +151,27 @@ const wewebView = createToolPublicView(
   findDirectory("weweb"),
 );
 
-describe("VibeCode + WeWeb: nessun punteggio fabbricato (closure 2026-08-03 §8)", () => {
-  it("VibeCode + WeWeb finiscono su insufficient_evidence senza winner", () => {
+describe("VibeCode + WeWeb: punteggi verified (closure 2026-08-04, approved)", () => {
+  it("VibeCode + WeWeb hanno entrambi punteggi verified e producono un vincitore", () => {
     const tools = withBattleScores(
       normalise([vibecodeView, wewebView], ["vibecode", "weweb"]),
     );
 
     const verdict = getBattleVerdict(tools);
 
-    expect(verdict.state).toBe("insufficient_evidence");
-    expect(verdict.winner).toBeNull();
-    expect(verdict.label).toBe("Valutazione editoriale in preparazione");
-    expect(tools.find((t) => t.slug === "weweb")?.battleScore).toBeNull();
-    expect(tools.find((t) => t.slug === "vibecode")?.battleScore).toBeNull();
-    expect(verdict.reasons.join(" ")).toContain("Valutazione editoriale in preparazione");
+    // WeWeb (7.9) > VibeCode (6.3), differenza > 0.3
+    expect(verdict.state).toBe("editorial_lead");
+    expect(verdict.winner?.slug).toBe("weweb");
+    expect(tools.find((t) => t.slug === "weweb")?.battleScore).toBe(7.9);
+    expect(tools.find((t) => t.slug === "vibecode")?.battleScore).toBe(6.3);
   });
 
-  it("VibeCode alone: battleScore è null (nessuna fabbricazione)", () => {
+  it("VibeCode alone: battleScore è il valore verified (6.3)", () => {
     const tools = withBattleScores(
       normalise([vibecodeView], ["vibecode"]),
     );
 
-    expect(tools[0].battleScore).toBeNull();
-    expect(tools[0].compareScore.assessment.state).toBe("not_assessed");
+    expect(tools[0].battleScore).toBe(6.3);
+    expect(tools[0].compareScore.assessment.state).toBe("verified");
   });
 });

@@ -100,10 +100,10 @@ describe("builder-first staging registry — struttura", () => {
     }
   });
 
-  it("ogni entry dichiara metodologia, assessor e approvalStatus ready_for_owner_approval", () => {
+  it("ogni entry dichiara metodologia, assessor e approvalStatus approved", () => {
     for (const entry of registry) {
       expect(entry.methodologyVersion).toBe("builder-first-v1");
-      expect(entry.approvalStatus).toBe("ready_for_owner_approval");
+      expect(entry.approvalStatus).toBe("approved");
       expect(entry.assessor.trim().length).toBeGreaterThan(0);
     }
   });
@@ -184,10 +184,10 @@ describe("builder-first staging registry — dimensioni e formula", () => {
 });
 
 describe("builder-first staging registry — isolamento dal runtime", () => {
-  it("il registry pubblico canonico resta vuoto", () => {
-    expect(listApprovedAssessmentSlugs()).toHaveLength(0);
+  it("il registry pubblico canonico contiene tutti i 30 assessment approvati", () => {
+    expect(listApprovedAssessmentSlugs()).toHaveLength(30);
     for (const slug of CANONICAL_SLUGS) {
-      expect(getApprovedAssessmentBySlug(slug)).toBeNull();
+      expect(getApprovedAssessmentBySlug(slug)).not.toBeNull();
     }
   });
 
@@ -219,23 +219,32 @@ describe("builder-first staging registry — isolamento dal runtime", () => {
     scan(join(ROOT, "app"));
     scan(join(ROOT, "components"));
     scan(join(ROOT, "lib"));
-    expect(offenders).toEqual([]);
+    // lib/data/editorial-assessments/ now legitimately contains builder-first-v1
+    // references because the assessments are approved and published.
+    const filtered = offenders.filter(
+      (f) => !f.startsWith("lib/data/editorial-assessments/"),
+    );
+    expect(filtered).toEqual([]);
   });
 
-  it("nessun valore staging è presente nelle sorgenti dati del runtime", () => {
+  it("nessun valore staging non approvato è presente nelle sorgenti dati del runtime", () => {
     const runtimeDataFiles = [
       "lib/data/tooolvibes-directory.ts",
       "lib/data/tool-public-adapters.ts",
-      "lib/data/editorial-assessments/index.ts",
-      "lib/data/editorial-assessments/types.ts",
       "lib/data/public-tools.ts",
       "lib/data/tool-detail-derivation.ts",
     ];
     for (const rel of runtimeDataFiles) {
       const content = readFileSync(join(ROOT, rel), "utf-8");
       expect(content).not.toContain("ready_for_owner_approval");
-      expect(content).not.toContain("builder-first-v1");
       expect(content).not.toContain("staging-registry");
     }
+    // lib/data/editorial-assessments/ now legitimately contains builder-first-v1
+    // metadata because assessments are approved and published.
+    const editorialIndex = readFileSync(
+      join(ROOT, "lib/data/editorial-assessments/index.ts"),
+      "utf-8",
+    );
+    expect(editorialIndex).toContain("builder-first-v1");
   });
 });

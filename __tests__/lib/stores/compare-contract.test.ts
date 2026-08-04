@@ -202,13 +202,14 @@ describe("Compare store — rehydration from canonical data (closure 2026-08-03 
     expect(JSON.stringify(storedState)).not.toMatch(/total/);
   });
 
-  it("rehydrated Blink, VibeCode, and WeWeb views stay not_assessed", () => {
+  it("rehydrated Blink, VibeCode, and WeWeb views are now verified", () => {
+    const expected = { blink: 8.0, vibecode: 6.3, weweb: 7.9 };
     for (const slug of ["blink", "vibecode", "weweb"]) {
       const view = rehydrateCompareView(slug);
       const result = scoreToolForCompare(view.publicTool);
 
-      expect(result.assessment.state).toBe("not_assessed");
-      expect(result.total).toBeNull();
+      expect(result.assessment.state).toBe("verified");
+      expect(result.total).toBe(expected[slug as keyof typeof expected]);
     }
   });
 });
