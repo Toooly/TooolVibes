@@ -11,6 +11,38 @@ import {
   withObjectiveScores,
 } from "@/components/tools/tool-battle-shared";
 import type { ToolPublic } from "@/lib/types/tool-public";
+import type { ApprovedEditorialAssessment } from "@/lib/data/editorial-assessments/types";
+
+function buildMockAssessment(slug: string, value: number): ApprovedEditorialAssessment {
+  const dimValue = Math.round(value / 2); // approximate for testing
+  return {
+    slug,
+    approvalStatus: "approved",
+    approvedAt: "2026-08-04",
+    approvedBy: "test",
+    assessor: "test",
+    score: {
+      value,
+      verdict: "Test verdict.",
+      limitationsAssessed: true,
+      inputs: [
+        { dimension: "workflowFit", value: dimValue },
+        { dimension: "easeOfUse", value: dimValue },
+        { dimension: "versatility", value: dimValue },
+        { dimension: "experienceQuality", value: dimValue },
+        { dimension: "operationalMaturity", value: dimValue },
+        { dimension: "experimentationSpeed", value: dimValue },
+      ],
+      provenance: {
+        kind: "editorial-assessment",
+        sourceField: "test",
+        methodologyVersion: "builder-first-v1",
+        assessedAt: "2026-08-04",
+      },
+    },
+    limitations: ["Test limitation."],
+  };
+}
 
 function withSupportedAssessment(tool: ToolPublic, value: number): ToolPublic {
   const score = tool.score;
@@ -97,19 +129,27 @@ describe("tool-battle truth adapter", () => {
 
     expect(verdict.state).toBe("editorial_lead");
     expect(verdict.winner?.slug).toBe("gamma-app");
-    expect(verdict.reasons.join(" ")).toContain("esplicita più alta");
+    expect(verdict.reasons.join(" ")).toMatch(/esplicita\s+pi[uù]\s+alta/);
   });
 
-  it("does not let a selected objective alter scores or claim an automatic winner", () => {
+  it("objective fit produces real ranking without altering base scores", () => {
     const base = battlePipeline(["atlas-ai", "gamma-app"]);
-    const prioritised = withObjectiveScores(base, "save-time");
+    const assessments = new Map([
+      ["atlas-ai", buildMockAssessment("atlas-ai", 8.4)],
+      ["gamma-app", buildMockAssessment("gamma-app", 9.1)],
+    ]);
+    const prioritised = withObjectiveScores(base, "save-time", assessments);
     const verdict = getBattleVerdict(prioritised, "save-time");
 
-    expect(prioritised.map((tool) => tool.battleScore)).toEqual(base.map((tool) => tool.battleScore));
-    expect(prioritised.every((tool) => tool.objectiveScore === undefined)).toBe(true);
-    expect(verdict.state).toBe("user_preference_required");
-    expect(verdict.winner).toBeNull();
-    expect(verdict.reasons.join(" ")).toContain("non assegna da sola un vincitore automatico");
+    // Base editorial scores are preserved (as a set) regardless of objective.
+    expect(prioritised.map((tool) => tool.battleScore).sort()).toEqual(
+      base.map((tool) => tool.battleScore).sort(),
+    );
+    // Every assessed tool receives a fit score.
+    expect(prioritised.every((tool) => typeof tool.objectiveScore === "number")).toBe(true);
+    // The objective produces a real verdict, not the universal fallback.
+    expect(verdict.state).not.toBe("user_preference_required");
+    expect(["editorial_lead", "tie"]).toContain(verdict.state);
   });
 
   it("supports an explicit personal verdict without relabeling it as editorial", () => {

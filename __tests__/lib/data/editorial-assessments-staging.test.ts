@@ -206,12 +206,17 @@ describe("builder-first staging registry — isolamento dal runtime", () => {
         const rel = relative(ROOT, full);
         if (rel.startsWith("__tests__")) continue;
         const content = readFileSync(full, "utf-8");
-        if (
-          content.includes("editorial-assessments-v1") ||
+        // "builder-first-v1" is a legitimate methodology version string that may
+        // appear in the runtime engine. Only flag actual staging leaks:
+        // the staging directory reference, the staging registry, the
+        // ready_for_owner_approval marker, or an import from the staging docs.
+        const hasStagingLeak =
           content.includes("staging-registry") ||
           content.includes("ready_for_owner_approval") ||
-          content.includes("builder-first-v1")
-        ) {
+          content.includes("editorial-assessments-v1") ||
+          /from\s+["']docs\/editorial-assessments-v1/.test(content) ||
+          /require\(["']docs\/editorial-assessments-v1/.test(content);
+        if (hasStagingLeak) {
           offenders.push(rel);
         }
       }
@@ -219,12 +224,88 @@ describe("builder-first staging registry — isolamento dal runtime", () => {
     scan(join(ROOT, "app"));
     scan(join(ROOT, "components"));
     scan(join(ROOT, "lib"));
-    // lib/data/editorial-assessments/ now legitimately contains builder-first-v1
-    // references because the assessments are approved and published.
+    // lib/data/editorial-assessments/ legitimately contains the methodology
+    // version and references the approved assessments; it is not a staging leak.
     const filtered = offenders.filter(
       (f) => !f.startsWith("lib/data/editorial-assessments/"),
     );
     expect(filtered).toEqual([]);
+  });
+
+  it("builder-first-v1 come methodologyVersion nel runtime non e un leak", () => {
+    // objective-fit.ts e editorial-assessments/index.ts contengono
+    // builder-first-v1 come dichiarazione di metodologia approvata.
+    // Questa stringa NON deve attivare lo scan di staging.
+    const allowedPaths = [
+      "lib/data/editorial-assessments/index.ts",
+      "lib/compare/objective-fit.ts",
+    ];
+    for (const rel of allowedPaths) {
+      const content = readFileSync(join(ROOT, rel), "utf-8");
+      // Il contenuto deve includere builder-first-v1 (e legittimo)
+      expect(content).toContain("builder-first-v1");
+      // Ma non deve contenere marcatori staging
+      expect(content).not.toContain("ready_for_owner_approval");
+      expect(content).not.toContain("staging-registry");
+    }
+  });
+
+  it("un import da docs/editorial-assessments-v1 nel runtime e bloccato", () => {
+    // Verifica che la scan intercetti import staging.
+    const scanDirs = ["app", "components", "lib"] as const;
+    for (const dir of scanDirs) {
+      const scan = (d: string) => {
+        for (const name of readdirSync(d)) {
+          const full = join(d, name);
+          if (name === "node_modules" || name.startsWith(".")) continue;
+          const stat = statSync(full);
+          if (stat.isDirectory()) { scan(full); continue; }
+          if (!/\.(ts|tsx|js|jsx|mjs|cjs)$/.test(name)) continue;
+          const rel = relative(ROOT, full);
+          if (rel.startsWith("__tests__") || rel.startsWith("docs/")) continue;
+          const content = readFileSync(full, "utf-8");
+          // Import o require da docs/editorial-assessments-v1
+          const hasStagingImport =
+            /from\s+["']docs\/editorial-assessments-v1/.test(content) ||
+            /require\(["']docs\/editorial-assessments-v1/.test(content);
+          expect(hasStagingImport).toBe(false);
+        }
+      };
+      scan(join(ROOT, dir));
+    }
+  });
+
+  it("ready_for_owner_approval nel runtime e bloccato", () => {
+    const scanDirs = ["app", "components"] as const;
+    for (const dir of scanDirs) {
+      const scan = (d: string) => {
+        for (const name of readdirSync(d)) {
+          const full = join(d, name);
+          if (name === "node_modules" || name.startsWith(".")) continue;
+          const stat = statSync(full);
+          if (stat.isDirectory()) { scan(full); continue; }
+          if (!/\.(ts|tsx|js|jsx|mjs|cjs)$/.test(name)) continue;
+          const rel = relative(ROOT, full);
+          if (rel.startsWith("__tests__")) continue;
+          const content = readFileSync(full, "utf-8");
+          expect(content).not.toContain("ready_for_owner_approval");
+        }
+      };
+      scan(join(ROOT, dir));
+    }
+  });
+
+  it("objective-fit.ts non ha marcatori staging ne import da docs/", () => {
+    const content = readFileSync(
+      join(ROOT, "lib/compare/objective-fit.ts"),
+      "utf-8",
+    );
+    expect(content).toContain("builder-first-v1");
+    expect(content).not.toContain("staging-registry");
+    expect(content).not.toContain("ready_for_owner_approval");
+    expect(content).not.toContain("FINAL_APPROVAL_REPORT");
+    expect(content).not.toContain("approvalStatus");
+    expect(content).not.toContain("docs/editorial-assessments-v1");
   });
 
   it("nessun valore staging non approvato è presente nelle sorgenti dati del runtime", () => {
