@@ -2,18 +2,15 @@
 
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Columns3, X, Scale, TrendingUp } from "lucide-react";
 
-import { useToolWorkspaceStore, MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
+import { useToolWorkspaceStore, MIN_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import {
   getCompareObjectiveLabel,
   type CompareObjective,
 } from "@/lib/compare/compare-objective";
 import { cn } from "@/lib/utils";
-import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
-import { levelCTransition } from "@/lib/motion/transitions";
 import { playTooolvibesSound } from "@/lib/config/sound";
 import {
   buildCanonicalObjectiveRanking,
@@ -40,7 +37,7 @@ type MobileCompareViewProps = {
   decisionEnabled?: boolean;
 };
 
-type BattleState = "idle" | "analyzing" | "charging" | "clash" | "result";
+type BattleState = "idle" | "fighting" | "result";
 
 function formatEditorialScore(score: number | null, compact = false) {
   if (score === null) return compact ? "—" : "Valutazione editoriale in preparazione";
@@ -109,12 +106,15 @@ export function DiffMatrix({
   tools,
   objective = null,
   verdict: suppliedVerdict = null,
+  mobile = false,
 }: {
   tools: NormalisedTool[];
   /** B34: obiettivo attivo; orienta verdetto e lettura della matrice. */
   objective?: CompareObjective | null;
   /** Pre-computed canonical verdict (no re-sort inside DiffMatrix). */
   verdict?: BattleVerdict | null;
+  /** Mobile renders the same canonical data as a criterion-first accordion. */
+  mobile?: boolean;
 }) {
   const cellsRef = useRef<(HTMLDivElement | null)[]>([]);
   const isSyncing = useRef(false);
@@ -140,6 +140,10 @@ export function DiffMatrix({
     .map(({ score }) => score)
     .filter((score): score is number => score !== null);
   const maxScore = scores.length > 0 ? Math.max(...scores) : null;
+
+  if (mobile) {
+    return <MobileFactorAccordion tools={tools} objective={objective} verdict={verdict} />;
+  }
 
   const handleScroll = (index: number) => {
     if (isSyncing.current) return;
@@ -469,48 +473,34 @@ export function DiffMatrix({
   );
 }
 
-function MobileArenaBattleStage({
-  battleState,
+function MobileResultStage({
   tools,
   verdict,
+  battleState,
+  onFight,
   objectiveLabel,
 }: {
-  battleState: BattleState;
   tools: NormalisedTool[];
   verdict: BattleVerdict | null;
-  /** B34: etichetta dell'obiettivo attivo; null = modalità generale. */
+  battleState: BattleState;
+  onFight: () => void;
   objectiveLabel?: string | null;
 }) {
-  const reducedMotion = useReducedMotion();
   if (!verdict) return null;
-  const statusLabel =
-    battleState === "idle"
-      ? "Pronto"
-      : battleState === "analyzing"
-        ? "Analisi in corso…"
-        : battleState === "charging"
-          ? "Confronto in corso…"
-          : battleState === "clash"
-            ? "Sintesi…"
-            : verdict.label;
 
-  const isAnimating = battleState === "analyzing" || battleState === "charging" || battleState === "clash";
   const winner = verdict.winner;
   const runnerUp = winner
-    ? verdict.scores.find(({ tool, score }) => tool.slug !== winner.slug && score !== null) ?? null
+    ? (verdict.scores.find(
+        ({ tool, score }) => tool.slug !== winner.slug && score !== null,
+      ) ?? null)
     : null;
-  // Gap uses objective raw scores when an objective is active, else base scores.
   const winnerRaw = winner?.objectiveRawScore ?? winner?.battleScore ?? null;
   const runnerUpRaw = runnerUp
-    ? verdict.scores.find((s) => s.tool.slug === runnerUp.tool.slug)?.tool.objectiveRawScore
-        ?? runnerUp.score
+    ? (verdict.scores.find(({ tool }) => tool.slug === runnerUp.tool.slug)?.tool
+        .objectiveRawScore ?? runnerUp.score)
     : null;
   const gap =
-    winnerRaw !== null && runnerUpRaw !== null
-      ? winnerRaw - runnerUpRaw
-      : null;
-
-  // V2 verdict title based on state.
+    winnerRaw !== null && runnerUpRaw !== null ? winnerRaw - runnerUpRaw : null;
   const verdictEyebrow =
     verdict.state === "editorial_lead" && winner
       ? "Più adatto per questo obiettivo"
@@ -521,15 +511,13 @@ function MobileArenaBattleStage({
           : verdict.state === "insufficient_evidence"
             ? "Confronto da completare"
             : "Esito comparativo";
-
   const verdictTitle = winner
-    ? `${winner.name} emerge dal confronto`
+    ? winner.name
     : verdict.state === "tie"
       ? "Nessun vincitore netto"
       : verdict.state === "insufficient_evidence"
-        ? "Una valutazione editoriale è ancora in preparazione"
+        ? "Valutazione editoriale in preparazione"
         : "Nessun vincitore automatico";
-
   const verdictBody = winner
     ? "Ottiene il risultato più solido sui criteri disponibili. Leggi le motivazioni prima di decidere."
     : verdict.state === "tie"
@@ -537,161 +525,296 @@ function MobileArenaBattleStage({
       : verdict.state === "insufficient_evidence"
         ? "L'esito sarà disponibile quando tutti i tool selezionati avranno una valutazione editoriale verificata."
         : "Il risultato considera le valutazioni editoriali e il contesto dei tool selezionati.";
+  const winnerScore = winner
+    ? (verdict.scores.find(({ tool }) => tool.slug === winner.slug)?.score ??
+      winner.battleScore)
+    : null;
+  const isFighting = battleState === "fighting";
 
   return (
-    <>
-      <section
-        className="mobile-compare-arena__stage"
+    <section
+      className="mobile-result-stage"
+      aria-label="Esito del confronto"
+      aria-busy={isFighting}
+    >
+      <header className="mobile-result-stage__header">
+        <span className="mobile-result-stage__eyebrow">{verdictEyebrow}</span>
+        <span className="mobile-result-stage__mode">
+          {objectiveLabel ?? `Generale · ${tools.length} tool`}
+        </span>
+      </header>
+
+      {isFighting ? (
+        <div
+          className="mobile-result-stage__loading"
+          role="status"
+          aria-live="polite"
+        >
+          <span className="mobile-result-stage__spinner" aria-hidden="true" />
+          Analisi in corso…
+        </div>
+      ) : (
+        <>
+          <div className="mobile-result-stage__winner">
+            <span className="mobile-result-stage__winner-rank">
+              {winner?.objectiveRank ?? winner?.compareScore.rank ?? "—"}
+            </span>
+            <strong className="mobile-result-stage__winner-name">
+              {verdictTitle}
+            </strong>
+            {winnerScore !== null ? (
+              <span className="mobile-result-stage__winner-score">
+                <span>{winnerScore}</span>
+                <small>/10</small>
+              </span>
+            ) : null}
+          </div>
+          <p className="mobile-result-stage__body">{verdictBody}</p>
+          {runnerUp && gap !== null && gap > 0 ? (
+            <span className="mobile-result-stage__gap">
+              +{gap.toFixed(1)} punti rispetto a {runnerUp.tool.name}
+            </span>
+          ) : null}
+          <ul className="mobile-result-stage__reasons">
+            {verdict.reasons.slice(0, 3).map((reason, index) => (
+              <li key={index}>{reason}</li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <div
+        className="mobile-compare-arena__action-area"
         data-state={battleState}
-        data-count={tools.length}
-        aria-label="Esito del confronto"
       >
-        <div className="mobile-compare-arena__bg" aria-hidden="true" />
+        <button
+          type="button"
+          className="mobile-compare-arena__fight-btn"
+          disabled={isFighting}
+          onClick={onFight}
+        >
+          <span className="mobile-compare-arena__fight-icon" aria-hidden="true">
+            <Scale className="size-5" />
+          </span>
+          <span className="mobile-compare-arena__fight-copy">
+            <strong>
+              {battleState === "result"
+                ? "Ricalcola l'esito"
+                : isFighting
+                  ? "Analisi in corso…"
+                  : "Analizza il confronto"}
+            </strong>
+            <small>leggi le differenze verificabili</small>
+          </span>
+        </button>
+      </div>
+    </section>
+  );
+}
 
-        <header className="mobile-compare-arena__hud">
-          <div className="mobile-compare-arena__title-wrap">
-            <span className="mobile-compare-arena__eyebrow">Esito comparativo</span>
-            <h2 className="mobile-compare-arena__title">Quale tool emerge dal confronto?</h2>
-            <p className="mobile-compare-arena__lede">
-              Il risultato considera le valutazioni editoriali e il contesto dei tool
-              selezionati. Non indica un vincitore assoluto.
-            </p>
-          </div>
-          <div className="mobile-compare-arena__hud-pills">
-            <span className="mobile-compare-arena__mode">
-              {objectiveLabel ?? "Generale"}
+function MobileRankingList({
+  tools,
+  winner,
+  onRemove,
+}: {
+  tools: NormalisedTool[];
+  winner: NormalisedTool | null;
+  onRemove: (slug: string) => void;
+}) {
+  return (
+    <ol className="mobile-compare-ranking">
+      {tools.map((tool, index) => {
+        const isWinner = winner?.slug === tool.slug;
+        const rank = tool.objectiveRank ?? tool.compareScore.rank ?? index + 1;
+        return (
+          <li
+            key={tool.slug}
+            className={cn(
+              "mobile-compare-ranking__item",
+              isWinner && "mobile-compare-ranking__item--winner",
+            )}
+          >
+            <span className="mobile-compare-ranking__pos">#{rank}</span>
+            <span className="mobile-compare-ranking__info">
+              <strong className="mobile-compare-ranking__name">
+                {tool.name}
+              </strong>
+              <small className="mobile-compare-ranking__reason">
+                {tool.objectiveSummary || tool.tldr}
+              </small>
             </span>
-            <span
-              className={cn("mobile-compare-arena__status", `mobile-compare-arena__status--${battleState}`)}
-              aria-live="polite"
-              aria-atomic="true"
-              aria-label={battleState === "result" ? `${statusLabel}: ${winner?.name ?? verdict.label}` : statusLabel}
+            <span className="mobile-compare-ranking__score">
+              <span>{tool.battleScore ?? "—"}</span>
+              <small>/10</small>
+            </span>
+            <button
+              type="button"
+              className="mobile-compare-ranking__remove"
+              onClick={() => onRemove(tool.slug)}
+              aria-label={`Rimuovi ${tool.name} dal confronto`}
             >
-              {statusLabel}
-            </span>
-          </div>
-        </header>
+              <X className="size-4" aria-hidden="true" />
+            </button>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
 
-        {/* Fighter ring: solo durante l'animazione del clash. In stato result
-            il ring è nascosto per non duplicare l'informazione del verdetto
-            (winner name + score + motivazioni). */}
-        {battleState !== "result" ? (
-          <div
-            className="mobile-compare-arena__ring"
-            data-count={tools.length}
-            data-clash={battleState === "clash"}
-          >
-            {tools.length <= 2 ? (
-              <>
-                <div className="mobile-compare-arena__fighter-side mobile-compare-arena__fighter-side--left">
-                  <ToolFighter
-                    tool={tools[0]}
-                    variant="compact"
-                    isWinner={false}
-                    isFighting={battleState === "clash"}
-                    isAnalyzing={battleState === "analyzing"}
-                    isCharging={battleState === "charging"}
-                    isClash={battleState === "clash"}
-                    layoutId={isAnimating ? undefined : `fighter-${tools[0].slug}`}
-                    style={{ "--charge-x": "20%" } as React.CSSProperties}
-                  />
-                </div>
-                <div className="mobile-compare-arena__vs" aria-hidden="true">
-                  <span>↔</span>
-                </div>
-                <div className="mobile-compare-arena__fighter-side mobile-compare-arena__fighter-side--right">
-                  <ToolFighter
-                    tool={tools[1]}
-                    variant="compact"
-                    isWinner={false}
-                    isFighting={battleState === "clash"}
-                    isAnalyzing={battleState === "analyzing"}
-                    isCharging={battleState === "charging"}
-                    isClash={battleState === "clash"}
-                    layoutId={isAnimating ? undefined : `fighter-${tools[1].slug}`}
-                    style={{ "--charge-x": "-20%" } as React.CSSProperties}
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                {tools.slice(0, MAX_COMPARE_TOOLS).map((tool, i) => (
-                  <div
-                    key={tool.slug}
-                    className="mobile-compare-arena__fighter-slot"
-                    data-index={i}
-                  >
-                    <ToolFighter
-                      tool={tool}
-                      variant="compact"
-                      isWinner={false}
-                      isFighting={battleState === "clash"}
-                      isAnalyzing={battleState === "analyzing"}
-                      isCharging={battleState === "charging"}
-                      isClash={battleState === "clash"}
-                      layoutId={isAnimating ? undefined : `fighter-${tool.slug}`}
-                    />
-                  </div>
-                ))}
-                <div className="mobile-compare-arena__vs" aria-hidden="true">
-                  <span>↔</span>
-                </div>
-              </>
-            )}
+function MobileFactorAccordion({
+  tools,
+  objective,
+  verdict,
+}: {
+  tools: NormalisedTool[];
+  objective: CompareObjective | null;
+  verdict: BattleVerdict;
+}) {
+  const [openFactor, setOpenFactor] = useState<string | null>(null);
+  const factors = Array.from(
+    new Map(
+      tools
+        .flatMap((tool) => tool.weightedDimensions ?? [])
+        .map((dimension) => [dimension.key, dimension.label]),
+    ),
+  );
 
-            {battleState === "clash" && !reducedMotion && (
-              <div className="mobile-compare-arena__flash" aria-hidden="true" />
-            )}
-          </div>
-        ) : null}
-      </section>
+  if (factors.length === 0) {
+    return (
+      <p className="mobile-factor-accordion__empty">
+        Seleziona un obiettivo per vedere il peso dei fattori.
+      </p>
+    );
+  }
 
-      <AnimatePresence>
-        {battleState === "result" && (
-          <motion.div
-            className="mobile-compare-arena__verdict"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={levelCTransition({ preferReducedMotion: reducedMotion })}
-          >
-            <div className="mobile-compare-arena__verdict-head">
-              <div className="mobile-compare-arena__verdict-winner">
-                <span className="mobile-compare-arena__verdict-rank">
-                  {winner?.objectiveRank ?? winner?.compareScore.rank ?? "—"}
-                </span>
-                <div>
-                  <span className="mobile-compare-arena__verdict-label">{verdictEyebrow}</span>
-                  <h3 className="mobile-compare-arena__verdict-name">
-                    {winner?.name ?? verdictTitle}
-                  </h3>
-                </div>
-              </div>
-              {winner?.battleScore !== null && winner?.battleScore !== undefined ? (
-                <div className="mobile-compare-arena__verdict-score">
-                  <span>{winner.battleScore}</span>
-                  <small>/10</small>
-                </div>
-              ) : null}
-            </div>
-
-            <p className="mobile-compare-arena__verdict-body">{verdictBody}</p>
-
-            {runnerUp && gap !== null && gap > 0 ? (
-              <div className="mobile-compare-arena__verdict-gap">
-                +{gap.toFixed(1)} punti rispetto a {runnerUp.tool.name}
+  return (
+    <div
+      className="mobile-factor-accordion"
+      aria-label={`Fattori per ${objective ? getCompareObjectiveLabel(objective) : "il confronto"}`}
+    >
+      {factors.map(([key, label], index) => {
+        const isOpen =
+          openFactor === key || (openFactor === null && index === 0);
+        const contentId = `mobile-factor-${key}`;
+        return (
+          <section key={key} className="mobile-factor-accordion__section">
+            <button
+              type="button"
+              className="mobile-factor-accordion__summary"
+              onClick={() => setOpenFactor(isOpen ? "" : key)}
+              aria-expanded={isOpen}
+              aria-controls={contentId}
+            >
+              <span>{label}</span>
+              <span aria-hidden="true">{isOpen ? "−" : "+"}</span>
+            </button>
+            {isOpen ? (
+              <div id={contentId} className="mobile-factor-accordion__content">
+                {tools.map((tool) => {
+                  const dimension = tool.weightedDimensions?.find(
+                    (item) => item.key === key,
+                  );
+                  if (!dimension) return null;
+                  return (
+                    <div
+                      key={tool.slug}
+                      className="mobile-factor-accordion__tool-row"
+                      data-winner={verdict.winner?.slug === tool.slug}
+                    >
+                      <span className="mobile-factor-accordion__tool-name">
+                        {tool.name}
+                      </span>
+                      <span className="mobile-factor-accordion__tool-value">
+                        {dimension.value}/5
+                      </span>
+                      <span
+                        className="mobile-factor-accordion__tool-bar"
+                        role="meter"
+                        aria-valuenow={dimension.value}
+                        aria-valuemin={1}
+                        aria-valuemax={5}
+                        aria-label={`${tool.name}: ${dimension.label}, valore ${dimension.value} su 5, peso ${Math.round(dimension.weight * 100)}%, contributo ${dimension.contribution.toFixed(2)}`}
+                      >
+                        <span
+                          className="mobile-factor-accordion__tool-bar-fill"
+                          style={
+                            {
+                              width: `${(dimension.value / 5) * 100}%`,
+                              "--arena-a": tool.accentFrom,
+                            } as CSSProperties
+                          }
+                        />
+                      </span>
+                      <span className="mobile-factor-accordion__tool-contrib">
+                        contrib {dimension.contribution.toFixed(2)}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             ) : null}
+          </section>
+        );
+      })}
+    </div>
+  );
+}
 
-            <ul className="mobile-compare-arena__verdict-reasons">
-              {verdict.reasons.slice(0, 3).map((reason, index) => (
-                <li key={index}>{reason}</li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+function MobileToolDetails({ tools }: { tools: NormalisedTool[] }) {
+  const [openSlug, setOpenSlug] = useState<string | null>(
+    tools[0]?.slug ?? null,
+  );
+
+  return (
+    <div className="mobile-tool-details">
+      {tools.map((tool) => {
+        const isOpen = openSlug === tool.slug;
+        const contentId = `mobile-tool-details-${tool.slug}`;
+        const detailRows = [
+          ["Ambito principale", tool.categoryLabel],
+          [
+            "Casi d'uso",
+            tool.useCases.length
+              ? tool.useCases.join(" · ")
+              : "Da valutare con altri dati.",
+          ],
+          [
+            "Punti di forza",
+            tool.highlights.length
+              ? tool.highlights.join(" · ")
+              : "Non ancora pubblicati.",
+          ],
+          ["Quando sceglierlo", tool.useCase || tool.tldr],
+          ["Nota decisiva", tool.review || tool.tldr],
+          ["Tempo di analisi", tool.readingTime],
+        ];
+        return (
+          <section key={tool.slug} className="mobile-tool-details__card">
+            <button
+              type="button"
+              className="mobile-tool-details__summary"
+              onClick={() => setOpenSlug(isOpen ? null : tool.slug)}
+              aria-expanded={isOpen}
+              aria-controls={contentId}
+            >
+              <span>{tool.name}</span>
+              <span aria-hidden="true">{isOpen ? "−" : "+"}</span>
+            </button>
+            {isOpen ? (
+              <div id={contentId} className="mobile-tool-details__content">
+                {detailRows.map(([label, value]) => (
+                  <div key={label} className="mobile-tool-details__row">
+                    <span className="mobile-tool-details__label">{label}</span>
+                    <span className="mobile-tool-details__value">{value}</span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </section>
+        );
+      })}
+    </div>
   );
 }
 
@@ -789,27 +912,10 @@ export function MobileCompareView({
   const isRevealed = battleState === "result";
 
   function handleFight() {
-    if (
-      (battleState !== "idle" && battleState !== "result") ||
-      fightLockedRef.current
-    ) {
-      return;
-    }
+    if (battleState === "fighting" || fightLockedRef.current) return;
     fightLockedRef.current = true;
     clearFightTimers();
-
-    setBattleState("analyzing");
-
-    queueFightTimer(() => {
-      setBattleState("charging");
-    }, 300);
-
-    queueFightTimer(() => {
-      setBattleState("clash");
-      playTooolvibesSound("battleHit");
-      queueFightTimer(() => playTooolvibesSound("battleHit"), 180);
-    }, 800);
-
+    setBattleState("fighting");
     queueFightTimer(() => {
       setBattleState("result");
       if (activeVerdict.winner) {
@@ -817,7 +923,7 @@ export function MobileCompareView({
         void celebrateArenaFight(activeVerdict.winner);
       }
       fightLockedRef.current = false;
-    }, 1150);
+    }, 600);
   }
 
   return (
@@ -830,70 +936,49 @@ export function MobileCompareView({
         />
       ) : null}
 
-      {/* 2. Tool selezionati (sempre visibili, anche prima del verdetto). */}
-      <div className="mobile-compare-arena__selected" aria-labelledby="mobile-compare-selected-title">
-        <h2 id="mobile-compare-selected-title" className="sr-only">
-          Tool selezionati
-        </h2>
-        <p className="mobile-compare-arena__selected-eyebrow" aria-hidden="true">
-          <TrendingUp className="size-4" aria-hidden="true" />
-          <span>Tool selezionati</span>
-        </p>
-        <ul className="mobile-compare-arena__selected-list">
-          {sorted.map((tool) => (
-            <li key={tool.slug}>
-              <CompactToolCard
-                tool={tool}
-                rank={tool.objectiveRank ?? tool.compareScore.rank ?? undefined}
-                isWinner={winner?.slug === tool.slug}
-                onRemove={() => toggleCompare(tool.slug)}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* 3-4. Verdetto + motivazioni (HUD + result panel). */}
-      <MobileArenaBattleStage
-        battleState={battleState}
+      <MobileResultStage
         tools={sorted}
         verdict={activeVerdict}
-        objectiveLabel={activeObjective ? getCompareObjectiveLabel(activeObjective) : null}
+        battleState={battleState}
+        onFight={handleFight}
+        objectiveLabel={
+          activeObjective ? getCompareObjectiveLabel(activeObjective) : null
+        }
       />
 
-      {/* 5. Differenze decisive (matrice). */}
-              <DiffMatrix tools={sorted} objective={activeObjective} verdict={activeVerdict} />
+      <section aria-label="Classifica">
+        <div className="mobile-compare-section-header">
+          <TrendingUp className="size-4" aria-hidden="true" />
+          <span>Classifica</span>
+        </div>
+        <MobileRankingList
+          tools={sorted}
+          winner={winner}
+          onRemove={(slug) => toggleCompare(slug)}
+        />
+      </section>
 
-      {/* 6. CTA: ricalcola il verdetto o apri l'analisi. */}
-      <div className="mobile-compare-arena__action-area" data-state={battleState}>
-        <button
-          type="button"
-          className="mobile-compare-arena__fight-btn"
-          disabled={battleState !== "idle" && battleState !== "result"}
-          onClick={handleFight}
-        >
-          <span className="mobile-compare-arena__fight-icon" aria-hidden="true">
-            <Scale className="size-5" />
-          </span>
-          <span className="mobile-compare-arena__fight-copy">
-            <strong>
-              {battleState === "result"
-                ? "Ricalcola l'esito"
-                : battleState === "idle"
-                  ? "Analizza il confronto"
-                  : "Analisi in corso…"}
-            </strong>
-            <small>
-              {battleState === "result"
-                ? "leggi le differenze verificabili"
-                : "leggi le differenze verificabili"}
-            </small>
-          </span>
-        </button>
-      </div>
+      <section aria-label="Fattori decisivi">
+        <div className="mobile-compare-section-header">
+          <Scale className="size-4" aria-hidden="true" />
+          <span>Fattori decisivi</span>
+        </div>
+        <DiffMatrix
+          tools={sorted}
+          objective={activeObjective}
+          verdict={activeVerdict}
+          mobile={true}
+        />
+      </section>
 
-      {/* B35 / FLOW-604: il confronto si chiude in una decisione
-          riapribile con contesto, con ritorno ai Salvati. */}
+      <section aria-label="Dettaglio per tool">
+        <div className="mobile-compare-section-header">
+          <Columns3 className="size-4" aria-hidden="true" />
+          <span>Dettaglio per tool</span>
+        </div>
+        <MobileToolDetails tools={sorted} />
+      </section>
+
       {isRevealed ? (
         <CompareDecisionPanel
           tools={sorted}
