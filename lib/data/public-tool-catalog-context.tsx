@@ -2,16 +2,9 @@
 
 import { createContext, useContext } from "react";
 
-export type PublicToolCatalogItem = {
-  slug: string;
-  name: string;
-  categoryLabel: string;
-  shortDescription: string;
-  featured: boolean;
-  toolOfWeek: boolean;
-  tags: string[];
-  levelLabel: string | null;
-};
+import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
+
+export type { PublicToolCatalogItem };
 
 const PublicToolCatalogContext = createContext<readonly PublicToolCatalogItem[]>([]);
 
@@ -20,7 +13,7 @@ export function PublicToolCatalogProvider({
   tools,
 }: {
   children: React.ReactNode;
-  tools: PublicToolCatalogItem[];
+  tools: readonly PublicToolCatalogItem[];
 }) {
   return (
     <PublicToolCatalogContext.Provider value={tools}>

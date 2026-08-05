@@ -44,7 +44,7 @@ export function RootProviders({
   enableRewardRuntime?: boolean;
   enableRewardMilestones?: boolean;
   gamificationModes: GamificationClientModes;
-  toolCatalog: PublicToolCatalogItem[];
+  toolCatalog: readonly PublicToolCatalogItem[];
 }) {
   const [queryClient] = useState(
     () =>
