@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, rmSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -59,6 +59,10 @@ delete env.SUPABASE_SERVICE_ROLE_KEY;
 console.log(
   `[cloudflare-build] NEXT_PUBLIC_SUPABASE_URL=${env.NEXT_PUBLIC_SUPABASE_URL}`,
 );
+
+// stale next dev artifacts can produce incompatible manifests for OpenNext
+rmSync(path.join(root, ".next"), { recursive: true, force: true });
+rmSync(path.join(root, ".open-next"), { recursive: true, force: true });
 
 const build = spawnSync("npx", ["opennextjs-cloudflare", "build"], {
   cwd: root,
