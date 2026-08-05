@@ -223,3 +223,206 @@ describe("MobileCompareView — accessibility della factor bar (P2 fix)", () => 
     expect(emptyMessage!.textContent).toContain("Seleziona un obiettivo");
   });
 });
+
+
+/* ---------- Adaptive matrix: content-driven rows, no clipping, tool counts ---------- */
+
+type ToolCountMode = 2 | 3 | 4 | 5;
+
+function buildTools(count: ToolCountMode): NormalisedTool[] {
+  return Array.from({ length: count }, (_, i) =>
+    buildTool({
+      slug: `tool-${i}`,
+      name: `Tool ${i}`,
+      objectiveScore: 7.5 - i * 0.3,
+      objectiveRank: i + 1,
+    }),
+  );
+}
+
+function buildVerdictFromTools(tools: NormalisedTool[]): BattleVerdict {
+  return {
+    state: "editorial_lead" as BattleVerdict["state"],
+    label: "Esito comparativo",
+    winner: tools[0],
+    scores: tools.map((t) => ({ tool: t, score: t.battleScore ?? 8, rank: (t.objectiveRank ?? 1) })),
+    reasons: ["Reason A", "Reason B"],
+  };
+}
+
+describe("Adaptive matrix — content-driven rows", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("le righe della matrice non hanno overflow:hidden", () => {
+    const tools = buildTools(3);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const rows = document.querySelectorAll(".mobile-compare-arena__matrix-row");
+    for (const row of rows) {
+      const style = window.getComputedStyle(row);
+      expect(style.overflow).not.toBe("hidden");
+    }
+  });
+
+  it("le celle summary (__matrix-long) non hanno line-clamp", () => {
+    const tools = buildTools(3);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const longCells = document.querySelectorAll(".mobile-compare-arena__matrix-long");
+    for (const cell of longCells) {
+      const style = window.getComputedStyle(cell);
+      const clamp = style.webkitLineClamp;
+      expect(clamp === "" || clamp === "none").toBe(true);
+      expect(style.overflow).not.toBe("hidden");
+    }
+  });
+
+  it("le celle della matrice hanno height:auto (nessuna altezza fissa)", () => {
+    const tools = buildTools(3);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const cells = document.querySelectorAll(".mobile-compare-arena__matrix-cell");
+    for (const cell of cells) {
+      const style = window.getComputedStyle(cell);
+      const mh = style.minHeight;
+      expect(mh === "" || mh === "auto").toBe(true);
+    }
+  });
+
+  it("le factor bar sono renderizzate con role=meter preservato", () => {
+    const tools = buildTools(3);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const meters = document.querySelectorAll('[role="meter"]');
+    expect(meters.length).toBe(tools.length * 6);
+    for (const meter of meters) {
+      expect(meter.getAttribute("aria-valuemin")).toBe("1");
+      expect(meter.getAttribute("aria-valuemax")).toBe("5");
+      expect(meter.getAttribute("aria-label")).toBeTruthy();
+    }
+  });
+
+  it("2 tool: la matrice esiste ed è leggibile", () => {
+    const tools = buildTools(2);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const matrix = document.querySelector(".mobile-compare-arena__matrix");
+    expect(matrix).toBeTruthy();
+    expect(matrix!.getAttribute("data-count")).toBe("2");
+
+    const cells = document.querySelectorAll(".mobile-compare-arena__matrix-cell");
+    expect(cells.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("3 tool: la matrice esiste con 3 colonne", () => {
+    const tools = buildTools(3);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const matrix = document.querySelector(".mobile-compare-arena__matrix");
+    expect(matrix!.getAttribute("data-count")).toBe("3");
+  });
+
+  it("4 tool: la matrice esiste con 4 colonne", () => {
+    const tools = buildTools(4);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const matrix = document.querySelector(".mobile-compare-arena__matrix");
+    expect(matrix!.getAttribute("data-count")).toBe("4");
+  });
+
+  it("5 tool: la matrice esiste con 5 colonne e grid scrollabile", () => {
+    const tools = buildTools(5);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const matrix = document.querySelector(".mobile-compare-arena__matrix");
+    expect(matrix!.getAttribute("data-count")).toBe("5");
+
+    const grid = document.querySelector(".mobile-compare-arena__matrix-grid");
+    expect(grid!.getAttribute("data-scrollable")).toBe("true");
+  });
+
+  it("data-count corrisponde al numero di tool (2–5)", () => {
+    for (const count of [2, 3, 4, 5] as ToolCountMode[]) {
+      const tools = buildTools(count);
+      render(
+        <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+      );
+
+      const matrix = document.querySelector(".mobile-compare-arena__matrix");
+      expect(matrix).toBeTruthy();
+      expect(matrix!.getAttribute("data-count")).toBe(String(count));
+
+      cleanup();
+    }
+  });
+
+  it("data-count e --tool-count coesistono senza selettori fragili nello style", () => {
+    const tools = buildTools(3);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const matrix = document.querySelector(".mobile-compare-arena__matrix") as HTMLElement;
+    expect(matrix).toBeTruthy();
+    expect(matrix.getAttribute("data-count")).toBe("3");
+    expect(matrix.style.getPropertyValue("--tool-count")).toBe("3");
+  });
+
+  it("5 tool: data-scrollable='true' sulla grid", () => {
+    const tools = buildTools(5);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const grid = document.querySelector(".mobile-compare-arena__matrix-grid");
+    expect(grid!.getAttribute("data-scrollable")).toBe("true");
+  });
+
+  it("Nota decisiva: le celle matrix-long non sono troncate (no line-clamp)", () => {
+    const tools = buildTools(4);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const longCells = document.querySelectorAll(".mobile-compare-arena__matrix-long");
+    for (const cell of longCells) {
+      const style = window.getComputedStyle(cell);
+      const clamp = style.webkitLineClamp;
+      expect(clamp === "" || clamp === "none").toBe(true);
+      expect(style.overflow).not.toBe("hidden");
+    }
+  });
+
+  it("factor bars contengono tutte e 6 le dimensioni", () => {
+    const tools = buildTools(2);
+    render(
+      <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
+    );
+
+    const factorContainers = document.querySelectorAll(".compare-factor-bars");
+    expect(factorContainers.length).toBe(tools.length);
+
+    for (const container of factorContainers) {
+      const bars = container.querySelectorAll(".compare-factor-bar");
+      expect(bars.length).toBe(6);
+    }
+  });
+});
