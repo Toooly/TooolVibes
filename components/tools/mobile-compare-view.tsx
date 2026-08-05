@@ -379,7 +379,11 @@ export function DiffMatrix({
   ];
 
   return (
-    <section className="mobile-compare-arena__matrix" data-count={tools.length}>
+    <section
+      className="mobile-compare-arena__matrix"
+      data-count={tools.length}
+      style={{ "--tool-count": tools.length } as CSSProperties}
+    >
       <div className="mobile-compare-arena__matrix-header">
         <Scale className="size-4" />
         <div>
@@ -427,7 +431,10 @@ export function DiffMatrix({
         </div>
       </div>
 
-      <div className="mobile-compare-arena__matrix-grid">
+      <div
+        className="mobile-compare-arena__matrix-grid"
+        data-scrollable={tools.length >= 5 ? "true" : undefined}
+      >
         {rows.map((row, rowIndex) => (
           <div key={row.id} className="mobile-compare-arena__matrix-row">
             <div className="mobile-compare-arena__matrix-axis">

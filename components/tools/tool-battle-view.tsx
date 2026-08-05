@@ -6,7 +6,7 @@ import { useCompareObjective } from "@/lib/hooks/use-compare-objective";
 import { MobileCompareView } from "./mobile-compare-view";
 import { DesktopCompareView } from "./desktop-compare-view";
 
-export const COMPARE_DESKTOP_MEDIA_QUERY = "(min-width: 768px)";
+export const COMPARE_DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 
 type CompareViewport = "mobile" | "desktop";
 
