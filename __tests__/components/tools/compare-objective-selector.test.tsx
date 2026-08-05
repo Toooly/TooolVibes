@@ -199,17 +199,17 @@ beforeAll(() => {
     "matchMedia",
     (query: string) => ({
       get matches() {
-        return query === "(min-width: 1024px)" ? desktopViewport : false;
+        return query === "(min-width: 1180px)" ? desktopViewport : false;
       },
       media: query,
       onchange: null,
       addListener: vi.fn(),
       removeListener: vi.fn(),
       addEventListener: (_type: string, listener: () => void) => {
-        if (query === "(min-width: 1024px)") viewportChangeListeners.add(listener);
+        if (query === "(min-width: 1180px)") viewportChangeListeners.add(listener);
       },
       removeEventListener: (_type: string, listener: () => void) => {
-        if (query === "(min-width: 1024px)") viewportChangeListeners.delete(listener);
+        if (query === "(min-width: 1180px)") viewportChangeListeners.delete(listener);
       },
       dispatchEvent: vi.fn(),
     }),

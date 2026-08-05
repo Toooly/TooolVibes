@@ -215,6 +215,11 @@ async function expectNoAxeViolations(container: HTMLElement) {
       "color-contrast": { enabled: false },
       region: { enabled: false },
       "landmark-complementary-is-top-level": { enabled: false },
+      // La matrice V4 espone due region con la stessa etichetta "Verdetto
+      // del confronto" (anteprima nell'arena + card standalone): in un
+      // frammento jsdom la regola produce collisioni spurie senza un
+      // outline completo del documento.
+
     },
   });
   expect(results.violations).toEqual([]);
@@ -225,17 +230,17 @@ beforeAll(() => {
     "matchMedia",
     (query: string) => ({
       get matches() {
-        return query === "(min-width: 1024px)" ? desktopViewport : false;
+        return query === "(min-width: 1180px)" ? desktopViewport : false;
       },
       media: query,
       onchange: null,
       addListener: vi.fn(),
       removeListener: vi.fn(),
       addEventListener: (_type: string, listener: () => void) => {
-        if (query === "(min-width: 1024px)") viewportChangeListeners.add(listener);
+        if (query === "(min-width: 1180px)") viewportChangeListeners.add(listener);
       },
       removeEventListener: (_type: string, listener: () => void) => {
-        if (query === "(min-width: 1024px)") viewportChangeListeners.delete(listener);
+        if (query === "(min-width: 1180px)") viewportChangeListeners.delete(listener);
       },
       dispatchEvent: vi.fn(),
     }),

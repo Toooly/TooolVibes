@@ -105,7 +105,7 @@ describe("MobileCompareView — accessibility della factor bar (P2 fix)", () => 
       />,
     );
 
-    const accordion = document.querySelector(".mobile-factor-accordion");
+    const accordion = document.querySelector(".compare-factor-accordion");
     expect(accordion).toBeTruthy();
 
     const meters = accordion!.querySelectorAll('[role="meter"]');
@@ -218,7 +218,7 @@ describe("MobileCompareView — accessibility della factor bar (P2 fix)", () => 
     const meters = document.querySelectorAll('[role="meter"]');
     expect(meters.length).toBe(0);
 
-    const emptyMessage = document.querySelector(".mobile-factor-accordion__empty");
+    const emptyMessage = document.querySelector(".compare-factor-accordion__empty");
     expect(emptyMessage).toBeTruthy();
     expect(emptyMessage!.textContent).toContain("Seleziona un obiettivo");
   });
@@ -261,7 +261,7 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const rows = document.querySelectorAll(".mobile-compare-arena__matrix-row");
+    const rows = document.querySelectorAll(".compare-factor-matrix__row");
     for (const row of rows) {
       const style = window.getComputedStyle(row);
       expect(style.overflow).not.toBe("hidden");
@@ -274,7 +274,7 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const longCells = document.querySelectorAll(".mobile-compare-arena__matrix-long");
+    const longCells = document.querySelectorAll(".compare-factor-matrix__long");
     for (const cell of longCells) {
       const style = window.getComputedStyle(cell);
       const clamp = style.webkitLineClamp;
@@ -289,7 +289,7 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const cells = document.querySelectorAll(".mobile-compare-arena__matrix-cell");
+    const cells = document.querySelectorAll(".compare-factor-matrix__cell");
     for (const cell of cells) {
       const style = window.getComputedStyle(cell);
       const mh = style.minHeight;
@@ -318,11 +318,11 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const matrix = document.querySelector(".mobile-compare-arena__matrix");
+    const matrix = document.querySelector(".compare-factor-matrix");
     expect(matrix).toBeTruthy();
     expect(matrix!.getAttribute("data-count")).toBe("2");
 
-    const cells = document.querySelectorAll(".mobile-compare-arena__matrix-cell");
+    const cells = document.querySelectorAll(".compare-factor-matrix__cell");
     expect(cells.length).toBeGreaterThanOrEqual(2);
   });
 
@@ -332,7 +332,7 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const matrix = document.querySelector(".mobile-compare-arena__matrix");
+    const matrix = document.querySelector(".compare-factor-matrix");
     expect(matrix!.getAttribute("data-count")).toBe("3");
   });
 
@@ -342,7 +342,7 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const matrix = document.querySelector(".mobile-compare-arena__matrix");
+    const matrix = document.querySelector(".compare-factor-matrix");
     expect(matrix!.getAttribute("data-count")).toBe("4");
   });
 
@@ -352,10 +352,10 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const matrix = document.querySelector(".mobile-compare-arena__matrix");
+    const matrix = document.querySelector(".compare-factor-matrix");
     expect(matrix!.getAttribute("data-count")).toBe("5");
 
-    const grid = document.querySelector(".mobile-compare-arena__matrix-grid");
+    const grid = document.querySelector(".compare-factor-matrix__rows");
     expect(grid!.getAttribute("data-scrollable")).toBe("true");
   });
 
@@ -366,7 +366,7 @@ describe("Adaptive matrix — content-driven rows", () => {
         <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
       );
 
-      const matrix = document.querySelector(".mobile-compare-arena__matrix");
+      const matrix = document.querySelector(".compare-factor-matrix");
       expect(matrix).toBeTruthy();
       expect(matrix!.getAttribute("data-count")).toBe(String(count));
 
@@ -380,7 +380,7 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const matrix = document.querySelector(".mobile-compare-arena__matrix") as HTMLElement;
+    const matrix = document.querySelector(".compare-factor-matrix") as HTMLElement;
     expect(matrix).toBeTruthy();
     expect(matrix.getAttribute("data-count")).toBe("3");
     expect(matrix.style.getPropertyValue("--tool-count")).toBe("3");
@@ -392,7 +392,7 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const grid = document.querySelector(".mobile-compare-arena__matrix-grid");
+    const grid = document.querySelector(".compare-factor-matrix__rows");
     expect(grid!.getAttribute("data-scrollable")).toBe("true");
   });
 
@@ -402,7 +402,7 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const longCells = document.querySelectorAll(".mobile-compare-arena__matrix-long");
+    const longCells = document.querySelectorAll(".compare-factor-matrix__long");
     for (const cell of longCells) {
       const style = window.getComputedStyle(cell);
       const clamp = style.webkitLineClamp;
@@ -417,12 +417,12 @@ describe("Adaptive matrix — content-driven rows", () => {
       <DiffMatrix tools={tools} objective={Q} verdict={buildVerdictFromTools(tools)} />,
     );
 
-    const factorContainers = document.querySelectorAll(".compare-factor-bars");
-    expect(factorContainers.length).toBe(tools.length);
+    const factorRows = document.querySelectorAll(".compare-factor-matrix__row");
+    expect(factorRows.length).toBe(6);
 
-    for (const container of factorContainers) {
-      const bars = container.querySelectorAll(".compare-factor-bar");
-      expect(bars.length).toBe(6);
+    for (const row of factorRows) {
+      const cells = row.querySelectorAll(".compare-factor-matrix__factor-cell");
+      expect(cells.length).toBe(tools.length);
     }
   });
 });
