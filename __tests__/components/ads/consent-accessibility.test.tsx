@@ -45,9 +45,10 @@ describe("consent accessibility (axe + roles)", () => {
 
   it("banner is keyboard accessible with equal accept/reject buttons", async () => {
     consentMock = "unknown";
-    const { container } = render(<ConsentBanner />);
+    render(<ConsentBanner />);
+    const banner = screen.getByRole("dialog");
 
-    expect(screen.getByRole("dialog")).toBeTruthy();
+    expect(banner).toBeTruthy();
     const accept = screen.getByRole("button", { name: "Accetta tutto" });
     const reject = screen.getByRole("button", { name: "Rifiuta non necessari" });
     accept.focus();
@@ -56,22 +57,23 @@ describe("consent accessibility (axe + roles)", () => {
     reject.focus();
     expect(document.activeElement).toBe(reject);
 
-    const violations = await runAxe(container);
+    const violations = await runAxe(banner);
     expect(violations).toEqual([]);
   });
 
   it("settings dialog is a modal with accessible name and labeled switch", async () => {
     consentMock = "granted";
     settingsOpen = true;
-    const { container } = render(<ConsentSettingsDialog />);
+    render(<ConsentSettingsDialog />);
+    const dialog = screen.getByRole("dialog", { name: "Personalizza preferenze" });
 
-    expect(screen.getByRole("dialog", { name: "Personalizza preferenze" })).toBeTruthy();
+    expect(dialog).toBeTruthy();
     const toggle = screen.getByRole("switch", {
       name: /Pubblicità e misurazione TinyAdz/,
     });
     expect(toggle).toBeTruthy();
 
-    const violations = await runAxe(container);
+    const violations = await runAxe(dialog);
     expect(violations).toEqual([]);
   });
 

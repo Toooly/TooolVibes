@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 
 import { DefinitiveHome } from "@/components/home/definitive-home";
+import { AdvertisingConsentProvider } from "@/components/ads/advertising-consent-provider";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 
 /* Test di regressione per il restauro del podio (Stato B).
@@ -104,7 +105,11 @@ describe("DefinitiveHome — podio geometria (Stato B)", () => {
   afterEach(cleanup);
 
   it("mostra 'Tre tool da esplorare' senza rank/score quando meno di 3 tool sono valutati", () => {
-    render(<DefinitiveHome tools={tools} />);
+    render(
+      <AdvertisingConsentProvider>
+        <DefinitiveHome tools={tools} />
+      </AdvertisingConsentProvider>,
+    );
 
     expect(screen.getByText("Dal catalogo")).toBeTruthy();
     expect(screen.getByText("Tre tool da esplorare.")).toBeTruthy();
@@ -118,7 +123,11 @@ describe("DefinitiveHome — podio geometria (Stato B)", () => {
   });
 
   it("dispone i tre tool nella geometria da podio (stage + tre cellule)", () => {
-    render(<DefinitiveHome tools={tools} />);
+    render(
+      <AdvertisingConsentProvider>
+        <DefinitiveHome tools={tools} />
+      </AdvertisingConsentProvider>,
+    );
 
     const stage = document.querySelector(".def-editorial__pod-stage");
     expect(stage).not.toBeNull();
