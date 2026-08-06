@@ -57,7 +57,15 @@ export const useGameProgressStore = create<GameProgressState>()(
     {
       name: "tooolvibes-game-progress",
       storage: createJSONStorage(() => localStorage),
-      version: 2,
+      // Celebration/modal triggers are event-driven session state, never persisted.
+      partialize: (state) => ({
+        claimedRewards: state.claimedRewards,
+        totalXp: state.totalXp,
+        profile: state.profile,
+        missions: state.missions,
+        badges: state.badges,
+      }),
+      version: 3,
       migrate: (persistedState: unknown, version: number) => {
         const state = (persistedState ?? {}) as Record<string, unknown>;
         const base = {
@@ -71,11 +79,15 @@ export const useGameProgressStore = create<GameProgressState>()(
             profile: null,
             missions: [],
             badges: [],
-            pendingBadge: null,
           } as unknown as GameProgressState;
         }
 
-        return { ...state } as unknown as GameProgressState;
+        return {
+          ...base,
+          profile: (state.profile as GameProfile | null) ?? null,
+          missions: (state.missions as GameMission[]) ?? [],
+          badges: (state.badges as UserBadge[]) ?? [],
+        } as unknown as GameProgressState;
       },
     }
   )

@@ -11,6 +11,7 @@ import { useAccount } from "@/components/account/account-provider";
 import { useRewardRuntime } from "@/components/rewards/reward-provider";
 import { getBrowserSupabaseClient } from "@/lib/supabase/browser-client";
 import { parseRewardEnvelope } from "@/lib/rewards/contracts";
+import { isGrantAcknowledged } from "@/lib/rewards/acknowledgement";
 
 export function SignalDeliveryBridge({ enabled }: { enabled: boolean }) {
   const { status } = useAccount();
@@ -44,6 +45,7 @@ export function SignalDeliveryBridge({ enabled }: { enabled: boolean }) {
         for (const item of list) {
           const parsed = parseRewardEnvelope(item);
           if (parsed.ok) {
+            if (isGrantAcknowledged(parsed.envelope.grantId)) continue;
             enqueueVerifiedEnvelope(parsed.envelope);
           }
         }

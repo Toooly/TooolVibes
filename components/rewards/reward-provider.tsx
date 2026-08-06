@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { rewardPresentationMachine } from "@/lib/rewards/machine";
+import { acknowledgeSignalRewardGrant } from "@/lib/rewards/acknowledgement";
 import {
   type RewardPreferences,
   DEFAULT_REWARD_PREFERENCES,
@@ -111,12 +112,20 @@ export function RewardRuntimeProvider({
   );
 
   const dismissActive = useCallback(() => {
+    const active = state.context.active;
+    if (active?.grantId && runtimeEnabled) {
+      void acknowledgeSignalRewardGrant(active.grantId, "dismissed");
+    }
     send({ type: "DISMISS" });
-  }, [send]);
+  }, [runtimeEnabled, send, state.context.active]);
 
   const completeActive = useCallback(() => {
+    const active = state.context.active;
+    if (active?.grantId && runtimeEnabled) {
+      void acknowledgeSignalRewardGrant(active.grantId, "acknowledged");
+    }
     send({ type: "PRESENTATION_COMPLETE" });
-  }, [send]);
+  }, [runtimeEnabled, send, state.context.active]);
 
   const notifyAuthLost = useCallback(() => {
     send({ type: "AUTH_LOST" });

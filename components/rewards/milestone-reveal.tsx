@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
 import NumberFlow from "@number-flow/react";
 
@@ -167,6 +168,13 @@ export function MilestoneReveal({
           >
             Continua
           </button>
+          <Link
+            href="/account"
+            className="tv-reward-ach__close"
+            onClick={onDismiss}
+          >
+            Vedi i tuoi progressi
+          </Link>
           <span className="sr-only" role="status" aria-live="polite">
             {envelope.accessibilityAnnouncement}
           </span>
