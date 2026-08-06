@@ -6,6 +6,7 @@ import { ArrowUpRight, Mail } from "lucide-react";
 
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { getNavDestination } from "@/lib/navigation/selectors";
+import { ConsentFooterLink } from "@/components/ads/consent-footer-link";
 
 const contactEmailDestination = getNavDestination("contact-email");
 
@@ -138,6 +139,7 @@ export function SiteFooterV2() {
                 {link.label}
               </Link>
             ))}
+            <ConsentFooterLink />
           </div>
         </div>
         <p className="site-footer-v2__disclosure">

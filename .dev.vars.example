@@ -15,3 +15,11 @@ TOOOLVIBES_AUTH_DEBUG=
 RESEND_API_KEY=
 TOOOLVIBES_EMAIL_FROM="TooolVibes <noreply@tooolvibes.eu>"
 TOOOLVIBES_ADMIN_NOTIFY_EMAIL=
+
+# ============================
+# TINYADZ PUBLISHER (default OFF)
+# ============================
+# See .env.example. Requires explicit advertising consent; ships disabled.
+NEXT_PUBLIC_TINYADZ_ENABLED=0
+NEXT_PUBLIC_TINYADZ_SITE_ID=
+NEXT_PUBLIC_TINYADZ_TEST_MODE=true

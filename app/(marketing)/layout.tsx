@@ -12,6 +12,11 @@ import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-d
 import { PageTransition } from "@/components/app/page-transition";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { MobileTopBar } from "@/components/layout/mobile-top-bar";
+import { TinyAdzLoader } from "@/components/ads/tinyadz-loader";
+import { TinyAdzLifecycle } from "@/components/ads/tinyadz-lifecycle";
+import { AdvertisingConsentProvider } from "@/components/ads/advertising-consent-provider";
+import { ConsentBanner } from "@/components/ads/consent-banner";
+import { ConsentSettingsDialog } from "@/components/ads/consent-settings-dialog";
 import { CommandBar } from "@/components/layout/command-bar";
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
 import { OrbitalProvider } from "@/components/app/orbital-system";
@@ -62,6 +67,7 @@ export default async function MarketingLayout({
       <a href="#main-content" className="skip-link">
         Salta al contenuto
       </a>
+      <AdvertisingConsentProvider>
       <OrbitalProvider>
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
           <SignalProgressUiProvider enabled={signalProgressUiEnabled}>
@@ -83,11 +89,16 @@ export default async function MarketingLayout({
             </main>
             <SiteFooterV2 />
             <MobileBottomNav />
+            <TinyAdzLoader />
           </DiscoveryPersistenceProvider>
+          <TinyAdzLifecycle />
+          <ConsentBanner />
+          <ConsentSettingsDialog />
           </SignalAchievementFlagsProvider>
           </SignalProgressUiProvider>
         </AccountProvider>
       </OrbitalProvider>
+      </AdvertisingConsentProvider>
     </div>
   );
 }

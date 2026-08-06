@@ -15,6 +15,7 @@ export type HstsRequestEnvironment = Readonly<{
 }>;
 
 const CSP_REPORT_ENDPOINT = "/api/security/csp-report";
+const TINYADZ_SCRIPT_ORIGIN = "https://cdn.apitiny.net";
 const HSTS_VALUE = "max-age=31536000; includeSubDomains";
 
 function normalizeHttpsOrigin(value?: string) {
@@ -75,12 +76,14 @@ function buildContentSecurityPolicy(environment: SecurityHeaderEnvironment) {
     "https://ph-files.imgix.net",
     "https://api.qrserver.com",
     "https://www.google.com",
+    TINYADZ_SCRIPT_ORIGIN,
   ];
 
   if (supabaseOrigin && !connectSources.includes(supabaseOrigin)) {
     connectSources.push(supabaseOrigin);
   }
   connectSources.push("https://challenges.cloudflare.com");
+  connectSources.push(TINYADZ_SCRIPT_ORIGIN);
   if (supabaseOrigin && !imageSources.includes(supabaseOrigin)) {
     imageSources.push(supabaseOrigin);
   }
@@ -89,6 +92,7 @@ function buildContentSecurityPolicy(environment: SecurityHeaderEnvironment) {
     "'self'",
     "'unsafe-inline'",
     "https://challenges.cloudflare.com",
+    TINYADZ_SCRIPT_ORIGIN,
   ];
   if (environment.nodeEnv !== "production") {
     // Next.js development tooling uses eval for source maps and Fast Refresh.
@@ -107,7 +111,7 @@ function buildContentSecurityPolicy(environment: SecurityHeaderEnvironment) {
     `connect-src ${connectSources.join(" ")}`,
     "media-src 'self' blob: https://*.supabase.co",
     "worker-src 'self' blob:",
-    "frame-src https://challenges.cloudflare.com",
+    `frame-src https://challenges.cloudflare.com ${TINYADZ_SCRIPT_ORIGIN}`,
     "manifest-src 'self'",
     `report-uri ${CSP_REPORT_ENDPOINT}`,
     "report-to csp-endpoint",
