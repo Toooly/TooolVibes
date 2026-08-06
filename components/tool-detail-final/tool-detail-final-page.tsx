@@ -165,7 +165,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
               placementKey="tool-sponsored-alternative"
               trackerRoute={`/toools/${slug}`}
             />
-            <SponsorOpportunityLink />
+            <SponsorOpportunityLink placementId="tool-detail-sponsor-opportunity" route={`/toools/${slug}`} />
           </div>
         ) : null}
         <ToolDetailFooter />

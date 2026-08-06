@@ -63,7 +63,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
             className="archive-partner-placement archive-partner-placement--before"
             trackerRoute="/archivio"
           />
-          <SponsorOpportunityLink />
+          <SponsorOpportunityLink placementId="archive-sponsor-opportunity" route="/archivio" />
         </div>
       ) : null}
 
@@ -85,7 +85,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
             className="archive-partner-placement archive-partner-placement--after"
             trackerRoute="/archivio"
           />
-          <SponsorOpportunityLink />
+          <SponsorOpportunityLink placementId="archive-sponsor-opportunity" route="/archivio" />
         </div>
       ) : null}
     </div>

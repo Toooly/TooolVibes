@@ -28,6 +28,12 @@ export type SponsorOpportunityClickEvent = {
   kind: "sponsor_opportunity_click";
   placementId: string;
   route: string;
+  /** Where the opportunity click leads (internal route or mailto target). */
+  destination: string;
+  /** Acquisition/campaign identifier when it exists for the placement. */
+  campaignId?: string;
+  sponsorId?: string;
+  toolSlug?: string;
 };
 
 export type SponsorAnalyticsEvent =

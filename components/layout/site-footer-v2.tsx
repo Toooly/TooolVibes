@@ -1,18 +1,23 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BrandLogo } from "./brand-logo";
 import { ArrowUpRight, Mail } from "lucide-react";
 
+import { trackSponsorOpportunityClick } from "@/lib/analytics/sponsor-events";
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { getNavDestination } from "@/lib/navigation/selectors";
 import { ConsentFooterLink } from "@/components/ads/consent-footer-link";
 
 const contactEmailDestination = getNavDestination("contact-email");
 
-function FooterLink({ href, label, icon: Icon }: {
+const SPONSOR_OPPORTUNITY_HREF = "/sponsorizza";
+
+function FooterLink({ href, label, icon: Icon, onClick }: {
   href: string;
   label: string;
+  onClick?: () => void;
   icon?: React.ComponentType<{
     className?: string;
     size?: number;
@@ -24,6 +29,7 @@ function FooterLink({ href, label, icon: Icon }: {
       href={href}
       className="site-footer-v2__link group"
       data-sonic-action="nav"
+      onClick={onClick}
     >
       {Icon && (
         <Icon
@@ -47,6 +53,7 @@ export function SiteFooterV2() {
   const companyLinks = useNavItems("footer-v2-company");
   const legalLinks = useNavItems("footer-v2-legal");
   const socialLinks = useNavItems("footer-v2-social");
+  const pathname = usePathname() ?? "/";
   return (
     <footer className="site-footer-v2 relative mt-auto">
       <div className="site-footer-v2__shell">
@@ -104,6 +111,21 @@ export function SiteFooterV2() {
                   href={link.href}
                   label={link.label}
                   icon={link.icon}
+                  onClick={
+                    link.href === SPONSOR_OPPORTUNITY_HREF
+                      ? () => {
+                          try {
+                            trackSponsorOpportunityClick({
+                              placementId: "footer-sponsor-opportunity",
+                              route: pathname,
+                              destination: SPONSOR_OPPORTUNITY_HREF,
+                            });
+                          } catch {
+                            // Analytics failure is non-fatal and must not block navigation.
+                          }
+                        }
+                      : undefined
+                  }
                 />
               ))}
             </div>

@@ -16,6 +16,7 @@ import {
   SponsorClickHandler,
   SponsorImpressionTracker,
 } from "@/components/monetization/sponsor-analytics-tracker";
+import { trackSponsorOpportunityClick } from "@/lib/analytics/sponsor-events";
 import {
   getMonetizationPlacement,
   isPublicMonetizationPlacement,
@@ -104,6 +105,17 @@ export function SponsorOpenSlot({
             href="/sponsorizza"
             rel="sponsored"
             data-tracking-id={placement.trackingId}
+            onClick={() => {
+              try {
+                trackSponsorOpportunityClick({
+                  placementId: "tool-detail-open-slot",
+                  route: trackerRoute || "/",
+                  destination: "/sponsorizza",
+                });
+              } catch {
+                // Analytics failure is non-fatal and must not block navigation.
+              }
+            }}
           >
             <span>Sponsorizza il tuo tool su TooolVibes</span>
             <ArrowUpRight aria-hidden="true" />
@@ -116,14 +128,29 @@ export function SponsorOpenSlot({
 
 export function SponsorOpportunityLink({
   className,
+  placementId = "sponsor-opportunity",
+  route = "",
 }: {
   className?: string;
+  placementId?: string;
+  route?: string;
 }) {
   return (
     <Link
       href="/sponsorizza"
       className={cn("partner-placement__opportunity", className)}
       data-tracking-id="tv-sponsor-opportunity"
+      onClick={() => {
+        try {
+          trackSponsorOpportunityClick({
+            placementId,
+            route: route || "/",
+            destination: "/sponsorizza",
+          });
+        } catch {
+          // Analytics failure is non-fatal and must not block navigation.
+        }
+      }}
     >
       <span>Vuoi presentare il tuo tool qui?</span>
       <ArrowRight size={12} aria-hidden="true" style={{ marginLeft: "var(--tv-space-micro-xs)", verticalAlign: "middle" }} />

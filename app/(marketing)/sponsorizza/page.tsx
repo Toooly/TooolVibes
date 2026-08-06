@@ -12,6 +12,8 @@ import {
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import { TAYLORA_CAMPAIGN } from "@/lib/sponsors/sponsor-placements";
 
+import { SponsorOpportunityMailtoLink } from "@/components/monetization/sponsor-analytics-tracker";
+
 import "@/styles/sponsorizza.css";
 
 export const metadata: Metadata = createPublicPageMetadata({
@@ -123,11 +125,16 @@ export default function SponsorizzaPage() {
               product manager e professionisti che stanno attivamente cercando e
               confrontando tool per il loro stack.
             </p>
-            <a className="sponsorizza-hero__cta" href={SPONSOR_EMAIL}>
+            <SponsorOpportunityMailtoLink
+              placementId="sponsor-page-hero"
+              route="/sponsorizza"
+              href={SPONSOR_EMAIL}
+              className="sponsorizza-hero__cta"
+            >
               <Mail aria-hidden="true" />
               <span>{SPONSOR_EMAIL_LABEL}</span>
               <ArrowRight aria-hidden="true" />
-            </a>
+            </SponsorOpportunityMailtoLink>
           </div>
 
           <aside className="sponsorizza-hero__visual" aria-label="In evidenza · partner attivi">
@@ -429,11 +436,16 @@ export default function SponsorizzaPage() {
               per ricevere il media kit e i dettagli sui formati disponibili.
             </p>
           </div>
-          <a className="sponsorizza-final-cta__email" href={SPONSOR_EMAIL}>
+          <SponsorOpportunityMailtoLink
+            placementId="sponsor-page-final-cta"
+            route="/sponsorizza"
+            href={SPONSOR_EMAIL}
+            className="sponsorizza-final-cta__email"
+          >
             <Mail aria-hidden="true" />
             <span>Scrivi a hello@tooolvibes.com</span>
             <ArrowRight aria-hidden="true" />
-          </a>
+          </SponsorOpportunityMailtoLink>
         </div>
       </section>
     </div>

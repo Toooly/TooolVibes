@@ -715,7 +715,7 @@ function SponsorSection({
         />
       </div>
       <div className="def-home__sponsor-opportunity">
-        <SponsorOpportunityLink />
+        <SponsorOpportunityLink placementId="home-sponsor-opportunity" route="/" />
       </div>
     </section>
   );

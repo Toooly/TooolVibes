@@ -484,7 +484,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             ) : null}
 
             <div className="internal-editorial-page__sponsor-opportunity">
-              <SponsorOpportunityLink />
+              <SponsorOpportunityLink placementId="posts-sponsor-opportunity" route={`/posts/${slug}`} />
             </div>
           </div>
         </div>

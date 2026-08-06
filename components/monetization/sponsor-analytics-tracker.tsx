@@ -127,13 +127,56 @@ export function SponsorClickHandler({
 export type SponsorOpportunityClickHandlerProps = {
   placementId: string;
   route: string;
+  destination?: string;
   className?: string;
   children: ReactNode;
 };
 
+export type SponsorOpportunityMailtoLinkProps = {
+  placementId: string;
+  route?: string;
+  href: string;
+  className?: string;
+  children: ReactNode;
+};
+
+/**
+ * Mailto/anchored acquisition CTA that emits one sponsor_opportunity_click
+ * on click and never interferes with navigation: no preventDefault, no href
+ * swap, no extra nesting. Fires only on the user-initiated click.
+ */
+export function SponsorOpportunityMailtoLink({
+  placementId,
+  route = "/sponsorizza",
+  href,
+  className,
+  children,
+}: SponsorOpportunityMailtoLinkProps) {
+  return (
+    <a
+      href={href}
+      className={className}
+      onClick={() => {
+        try {
+          trackSponsorOpportunityClick({
+            placementId,
+            route,
+            destination: href,
+          });
+        } catch {
+          // Analytics failure is non-fatal and must not block the mail client.
+        }
+      }}
+    >
+      {children}
+    </a>
+  );
+}
+
 export function SponsorOpportunityClickHandler({
   placementId,
   route,
+  destination,
   className,
   children,
 }: SponsorOpportunityClickHandlerProps) {
@@ -141,8 +184,9 @@ export function SponsorOpportunityClickHandler({
     trackSponsorOpportunityClick({
       placementId,
       route,
+      destination: destination ?? "/sponsorizza",
     });
-  }, [placementId, route]);
+  }, [placementId, route, destination]);
 
   return (
     <span

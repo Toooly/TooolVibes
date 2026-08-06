@@ -215,6 +215,7 @@ describe("trackSponsorOpportunityClick", () => {
     trackSponsorOpportunityClick({
       placementId: "tool-sponsored-alternative",
       route: "/tools/taylora",
+      destination: "/sponsorizza",
     });
 
     expect(logSpy).toHaveBeenCalledTimes(1);
@@ -222,10 +223,12 @@ describe("trackSponsorOpportunityClick", () => {
       kind: string;
       placementId: string;
       route: string;
+      destination: string;
     };
     expect(event.kind).toBe("sponsor_opportunity_click");
     expect(event.placementId).toBe("tool-sponsored-alternative");
     expect(event.route).toBe("/tools/taylora");
+    expect(event.destination).toBe("/sponsorizza");
   });
 
   it("emits on every call (no dedup)", () => {
@@ -234,10 +237,12 @@ describe("trackSponsorOpportunityClick", () => {
     trackSponsorOpportunityClick({
       placementId: "tool-sponsored-alternative",
       route: "/tools/taylora",
+      destination: "/sponsorizza",
     });
     trackSponsorOpportunityClick({
       placementId: "tool-sponsored-alternative",
       route: "/tools/taylora",
+      destination: "/sponsorizza",
     });
 
     expect(logSpy).toHaveBeenCalledTimes(2);
@@ -304,6 +309,7 @@ describe("non-fatal analytics failures", () => {
       trackSponsorOpportunityClick({
         placementId: "tool-sponsored-alternative",
         route: "/tools/taylora",
+        destination: "https://example.com",
       }),
     ).not.toThrow();
 

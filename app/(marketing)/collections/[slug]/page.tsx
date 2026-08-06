@@ -500,7 +500,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
         ) : null}
 
         <div className="collection-detail-final__sponsor-opportunity">
-          <SponsorOpportunityLink />
+          <SponsorOpportunityLink placementId="collections-sponsor-opportunity" route={`/collections/${collection.slug}`} />
         </div>
       </div>
     </>
