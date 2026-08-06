@@ -7,26 +7,28 @@ import {
 } from "@/lib/monetization/placements";
 
 describe("public monetization placement policy", () => {
-  it("keeps reserved, planned and demo inventory out of public routes", () => {
-    // V2 home-copy contract: "Non renderizzare il modulo quando il record
-    // è: demo; fixture; development; placeholder; privo di un partner reale
-    // approvato." Demo / fixture slots therefore stay private.
+  it("surfaces Taylora on the two active public placements", () => {
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("home-featured-tool"),
       ),
-    ).toBe(false);
+    ).toBe(true);
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("catalog-native-sponsor"),
       ),
-    ).toBe(false);
+    ).toBe(true);
+  });
+
+  it("keeps tool-sponsored-alternative private (not active)", () => {
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("tool-sponsored-alternative"),
       ),
     ).toBe(false);
-    // Planned inventory without a complete partner identity stays private.
+  });
+
+  it("keeps reserved, planned and inactive inventory out of public routes", () => {
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("article-sidebar-sponsor"),
@@ -35,6 +37,16 @@ describe("public monetization placement policy", () => {
     expect(
       isPublicMonetizationPlacement(
         getMonetizationPlacement("newsletter-placement"),
+      ),
+    ).toBe(false);
+    expect(
+      isPublicMonetizationPlacement(
+        getMonetizationPlacement("guide-inline-promo"),
+      ),
+    ).toBe(false);
+    expect(
+      isPublicMonetizationPlacement(
+        getMonetizationPlacement("collection-native-sponsor"),
       ),
     ).toBe(false);
   });

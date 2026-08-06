@@ -54,6 +54,7 @@ const EXPECTED_SURFACE_INVENTORY: Readonly<
     ["Studio by TooolVibes", "/studio"],
     ["Shop", "/shop"],
     ["Affiliati", "/affiliati"],
+    ["Sponsorizza", "/sponsorizza"],
   ],
   "footer-v2-legal": [
     ["Privacy", "/privacy"],
@@ -106,6 +107,7 @@ describe("V1 public navigation registry", () => {
       "Guide",
       "Contributi",
       "Studio by TooolVibes",
+      "Sponsorizza",
     ]));
     expect(navigationRegistry.map((destination) => destination.id)).not.toContain("community");
     expect(navigationRegistry.map((destination) => destination.href)).not.toContain("/community");
@@ -205,6 +207,7 @@ describe("V1 active navigation matcher", () => {
     ["/contributi", "/contributi", true],
     ["/studio", "/studio", true],
     ["/shop", "/shop", true],
+    ["/sponsorizza", "/sponsorizza", true],
     ["/studio", "https://example.com", false],
   ])("pathname %s vs href %s -> %s", (pathname, href, expected) => {
     expect(isNavRouteActive(pathname, href)).toBe(expected);
@@ -214,12 +217,14 @@ describe("V1 active navigation matcher", () => {
     expect(getNavDestination("guides").label).toBe("Guide");
     expect(getNavDestination("contributions").label).toBe("Contributi");
     expect(getNavDestination("studio").label).toBe("Studio by TooolVibes");
+    expect(getNavDestination("sponsorizza").label).toBe("Sponsorizza");
   });
 
   it("resolves canonical labels for secondary paths", () => {
     expect(getNavDestinationForPathname("/collections/solo-founders")?.label).toBe("Raccolte");
     expect(getNavDestinationForPathname("/posts/guida")?.label).toBe("Guide");
     expect(getNavDestinationForPathname("/contributi")?.label).toBe("Contributi");
+    expect(getNavDestinationForPathname("/sponsorizza")?.label).toBe("Sponsorizza");
     expect(getNavDestinationForPathname("/unknown")).toBeNull();
   });
 });

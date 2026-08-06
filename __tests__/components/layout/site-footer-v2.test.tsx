@@ -63,12 +63,14 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
       "Studio by TooolVibes",
       "Shop",
       "Affiliati",
+      "Sponsorizza",
     ]);
     expect(company.map((link) => link.getAttribute("href"))).toEqual([
       "/chi-siamo",
       "/studio",
       "/shop",
       "/affiliati",
+      "/sponsorizza",
     ]);
 
     const legalLinks = screen
@@ -83,6 +85,28 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
       "Termini",
       "Cookie",
     ]);
+  });
+
+  it("renders the single /sponsorizza link through the registry only", () => {
+    render(
+      <AdvertisingConsentProvider>
+        <SiteFooterV2 />
+      </AdvertisingConsentProvider>,
+    );
+
+    const sponsorLinks = screen
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("href") === "/sponsorizza");
+    expect(sponsorLinks).toHaveLength(1);
+
+    const company = getColumnLinks("TooolVibes");
+    const companyHrefs = company.map((link) => link.getAttribute("href"));
+    expect(companyHrefs.at(-1)).toBe("/sponsorizza");
+
+    const product = getColumnLinks("Prodotto");
+    expect(
+      product.some((link) => link.getAttribute("href") === "/sponsorizza"),
+    ).toBe(false);
   });
 
   it("contatto mailto dal registry: icona social e CTA newsletter", () => {
