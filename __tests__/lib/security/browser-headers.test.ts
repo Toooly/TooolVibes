@@ -62,6 +62,32 @@ describe("browser security header policy", () => {
     );
   });
 
+  it("allows the exact TinyAdz script origin only where required", () => {
+    const headers = asHeaderMap({
+      nodeEnv: "production",
+      supabaseUrl: "https://project.supabase.co",
+    });
+    const csp = headers.get("Content-Security-Policy-Report-Only");
+
+    const cspValue = csp ?? "";
+
+    // script-src: the publisher loader itself.
+    expect(cspValue).toContain("script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://cdn.apitiny.net");
+    // img-src: ad creatives.
+    expect(cspValue).toContain("https://cdn.apitiny.net");
+    // connect-src: reporting/auction calls.
+    expect(cspValue).toContain("connect-src 'self' https://*.supabase.co wss://*.supabase.co https://project.supabase.co https://challenges.cloudflare.com https://cdn.apitiny.net");
+    // frame-src: iframe-rendered placements.
+    expect(cspValue).toContain("frame-src https://challenges.cloudflare.com https://cdn.apitiny.net");
+
+    // The exact origin only — never a wildcard or a bare https: source token.
+    const tinyAdzMatches = cspValue.match(/https:\/\/cdn\.apitiny\.net/g) ?? [];
+    expect(tinyAdzMatches.length).toBeGreaterThanOrEqual(4);
+    expect(cspValue).not.toContain("*.apitiny.net");
+    // A bare `https:` source would allow any https origin; ensure none exists.
+    expect(/(^|[ ;])https:(?=[ ;]|$)/.test(cspValue)).toBe(false);
+  });
+
   it("adds unsafe-eval only for Next development tooling", () => {
     const production = asHeaderMap({ nodeEnv: "production" });
     const development = asHeaderMap({ nodeEnv: "development" });

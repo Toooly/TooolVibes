@@ -5,6 +5,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
+import { AdvertisingConsentProvider } from "@/components/ads/advertising-consent-provider";
 import { NavigationReleaseProvider } from "@/lib/navigation/navigation-release-context";
 import { resolveNavigationRelease } from "@/lib/navigation/release";
 
@@ -28,7 +29,11 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
   }
 
   it("renders product, company and legal links from the canonical registry", () => {
-    render(<SiteFooterV2 />);
+    render(
+      <AdvertisingConsentProvider>
+        <SiteFooterV2 />
+      </AdvertisingConsentProvider>,
+    );
 
     const product = getColumnLinks("Prodotto");
     expect(product.map((link) => link.textContent)).toEqual([
@@ -81,7 +86,11 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
   });
 
   it("contatto mailto dal registry: icona social e CTA newsletter", () => {
-    render(<SiteFooterV2 />);
+    render(
+      <AdvertisingConsentProvider>
+        <SiteFooterV2 />
+      </AdvertisingConsentProvider>,
+    );
 
     const social = screen.getByRole("link", { name: "Email" });
     expect(social.getAttribute("href")).toBe("mailto:hello@tooolvibes.com");
@@ -97,7 +106,9 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
 
     render(
       <NavigationReleaseProvider value={release}>
-        <SiteFooterV2 />
+        <AdvertisingConsentProvider>
+          <SiteFooterV2 />
+        </AdvertisingConsentProvider>
       </NavigationReleaseProvider>,
     );
 

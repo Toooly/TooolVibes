@@ -1,0 +1,78 @@
+// @vitest-environment jsdom
+
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import axe from "axe-core";
+
+let consentMock: "unknown" | "granted" | "denied" = "unknown";
+let settingsOpen = false;
+
+vi.mock("@/components/ads/advertising-consent-provider", () => ({
+  useAdvertisingConsent: () => ({
+    state: consentMock,
+    settingsOpen,
+    openSettings: () => {
+      settingsOpen = true;
+    },
+    closeSettings: () => {
+      settingsOpen = false;
+    },
+    grantAll: () => {},
+    denyNonNecessary: () => {},
+    saveAdvertisingPreference: () => {},
+    advertisingLabel: "Pubblicità e misurazione TinyAdz",
+  }),
+}));
+
+import { ConsentBanner } from "@/components/ads/consent-banner";
+import { ConsentSettingsDialog } from "@/components/ads/consent-settings-dialog";
+
+async function runAxe(container: HTMLElement) {
+  const results = await axe.run(container, {
+    rules: {
+      "color-contrast": { enabled: false },
+    },
+  });
+  return results.violations.filter(
+    (v) => !["region"].includes(v.id),
+  );
+}
+
+describe("consent accessibility (axe + roles)", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("banner is keyboard accessible with equal accept/reject buttons", async () => {
+    consentMock = "unknown";
+    const { container } = render(<ConsentBanner />);
+
+    expect(screen.getByRole("dialog")).toBeTruthy();
+    const accept = screen.getByRole("button", { name: "Accetta tutto" });
+    const reject = screen.getByRole("button", { name: "Rifiuta non necessari" });
+    accept.focus();
+    expect(document.activeElement).toBe(accept);
+    accept.blur();
+    reject.focus();
+    expect(document.activeElement).toBe(reject);
+
+    const violations = await runAxe(container);
+    expect(violations).toEqual([]);
+  });
+
+  it("settings dialog is a modal with accessible name and labeled switch", async () => {
+    consentMock = "granted";
+    settingsOpen = true;
+    const { container } = render(<ConsentSettingsDialog />);
+
+    expect(screen.getByRole("dialog", { name: "Personalizza preferenze" })).toBeTruthy();
+    const toggle = screen.getByRole("switch", {
+      name: /Pubblicità e misurazione TinyAdz/,
+    });
+    expect(toggle).toBeTruthy();
+
+    const violations = await runAxe(container);
+    expect(violations).toEqual([]);
+  });
+
+});
