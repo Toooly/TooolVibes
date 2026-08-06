@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 import { DefinitiveArchive } from "@/components/archive/definitive-archive";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
-import { PartnerToolCard } from "@/components/monetization/partner-placements";
+import {
+  PartnerToolCard,
+  SponsorOpportunityLink,
+} from "@/components/monetization/partner-placements";
 import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
 import { isCatalogDensityPolicyEnabled } from "@/lib/config/catalog-density-policy";
 import { parseCatalogLevelParam } from "@/components/directory/catalog/catalog-controller";
@@ -53,11 +56,15 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   return (
     <div className="archive-final-surface relative overflow-x-hidden">
       {!catalogDensityPolicy && placement ? (
-        <PartnerToolCard
-          placementKey="catalog-native-sponsor"
-          formatLabelOverride="Partner nel catalogo"
-          className="archive-partner-placement archive-partner-placement--before"
-        />
+        <div className="archive-partner-placement-wrap archive-partner-placement-wrap--before">
+          <PartnerToolCard
+            placementKey="catalog-native-sponsor"
+            formatLabelOverride="Partner nel catalogo"
+            className="archive-partner-placement archive-partner-placement--before"
+            trackerRoute="/archivio"
+          />
+          <SponsorOpportunityLink />
+        </div>
       ) : null}
 
       <DefinitiveArchive
@@ -71,11 +78,15 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
       <TinyAdzInlineSlot placement="archive-feed" />
 
       {catalogDensityPolicy && placement ? (
-        <PartnerToolCard
-          placementKey="catalog-native-sponsor"
-          formatLabelOverride="Partner nel catalogo"
-          className="archive-partner-placement archive-partner-placement--after"
-        />
+        <div className="archive-partner-placement-wrap archive-partner-placement-wrap--after">
+          <PartnerToolCard
+            placementKey="catalog-native-sponsor"
+            formatLabelOverride="Partner nel catalogo"
+            className="archive-partner-placement archive-partner-placement--after"
+            trackerRoute="/archivio"
+          />
+          <SponsorOpportunityLink />
+        </div>
       ) : null}
     </div>
   );

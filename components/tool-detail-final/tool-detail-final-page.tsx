@@ -19,7 +19,10 @@ import { ToolDetailSignal } from "./tool-detail-signal";
 import { ToolDetailAlternatives } from "./tool-detail-alternatives";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { ToolDetailFooter } from "./tool-detail-footer";
-import { PartnerToolCard } from "@/components/monetization/partner-placements";
+import {
+  PartnerToolCard,
+  SponsorOpportunityLink,
+} from "@/components/monetization/partner-placements";
 
 /**
  * ToolDetailFinalPage — clean baseline owner.
@@ -156,9 +159,15 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
         <ToolDetailInformation tool={tool} />
         <ToolDetailSignal tool={tool} />
         <ToolDetailAlternatives current={tool} related={relatedTools} />
-        <div className="td-final-page__partner">
-          <PartnerToolCard placementKey="tool-sponsored-alternative" />
-        </div>
+        {slug !== "taylora" ? (
+          <div className="td-final-page__partner">
+            <PartnerToolCard
+              placementKey="tool-sponsored-alternative"
+              trackerRoute={`/toools/${slug}`}
+            />
+            <SponsorOpportunityLink />
+          </div>
+        ) : null}
         <ToolDetailFooter />
       </div>
     </>

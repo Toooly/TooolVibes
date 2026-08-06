@@ -11,6 +11,7 @@ import { MarkdownContent } from "@/components/editorial/markdown-content";
 import {
   ContextualPartnerBlock,
   PartnerToolCard,
+  SponsorOpportunityLink,
 } from "@/components/monetization/partner-placements";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RouteMarker } from "@/components/ui/route-marker";
@@ -481,6 +482,10 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 </div>
               </div>
             ) : null}
+
+            <div className="internal-editorial-page__sponsor-opportunity">
+              <SponsorOpportunityLink />
+            </div>
           </div>
         </div>
         </section>

@@ -7,7 +7,10 @@ import { AdvancedSpecialIssue } from "@/components/collections/advanced-special-
 import { CollectionCard } from "@/components/collections/collection-card";
 import { CollectionSlotSafeBoundary } from "@/components/collections/collection-slot-safe-boundary";
 import { CollectionSignalTracker } from "@/components/collections/collection-signal-tracker";
-import { PartnerCollectionModule } from "@/components/monetization/partner-placements";
+import {
+  PartnerCollectionModule,
+  SponsorOpportunityLink,
+} from "@/components/monetization/partner-placements";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ButtonLink } from "@/components/ui/button";
@@ -495,6 +498,10 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
           </div>
           </section>
         ) : null}
+
+        <div className="collection-detail-final__sponsor-opportunity">
+          <SponsorOpportunityLink />
+        </div>
       </div>
     </>
   );

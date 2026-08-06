@@ -39,6 +39,7 @@ export const navReleaseFlagRegistry = {
   privacy: navFlag("TOOOLVIBES_NAV_PRIVACY_ENABLED"),
   termini: navFlag("TOOOLVIBES_NAV_TERMINI_ENABLED"),
   cookie: navFlag("TOOOLVIBES_NAV_COOKIE_ENABLED"),
+  sponsorizza: navFlag("TOOOLVIBES_NAV_SPONSORIZZA_ENABLED"),
   contactEmail: navFlag("TOOOLVIBES_NAV_CONTACT_EMAIL_ENABLED"),
 } as const satisfies Record<string, NavReleaseFlagDefinition>;
 

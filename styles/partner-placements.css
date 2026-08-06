@@ -2,7 +2,12 @@
  * Canonical editorial partnership family.
  * Reserved/planned inventory never reaches these surfaces; the component
  * renders only verified, active partners with an explicit relevance reason.
+ *
+ * Editorial direction: premium, restrained, recognizably TooolVibes.
+ * No flashing gradients, no casino urgency, no organic-ranking styling.
  */
+
+/* ---- Base container --------------------------------------------------- */
 
 .partner-placement {
   position: relative;
@@ -11,19 +16,30 @@
   color: var(--tv-ink-primary);
   border: 1px solid var(--tv-border-default);
   background: var(--tv-surface-raised);
+  transition: border-color 200ms ease;
 }
+
+.partner-placement:hover {
+  border-color: var(--tv-border-interactive);
+}
+
+/* ---- Rail (featured left rail / contextual sidebar) ------------------- */
 
 .partner-placement__rail {
   display: grid;
   place-items: center;
   color: var(--tv-accent-cyan);
   background: var(--tv-surface-elevated);
+  border-bottom: 1px solid var(--tv-border-subtle);
+  padding: var(--tv-space-component-md);
 }
 
 .partner-placement__rail svg {
   width: 1.125rem;
   height: 1.125rem;
 }
+
+/* ---- Tool heading bar -------------------------------------------------- */
 
 .partner-placement__tool-heading {
   display: flex;
@@ -41,18 +57,23 @@
   color: var(--tv-accent-cyan);
 }
 
+/* ---- Context marker (compact, contextual variant) --------------------- */
+
 .partner-placement__context-marker {
   display: grid;
   place-items: start center;
-  padding-top: var(--tv-partner-space-emphasis);
   color: var(--tv-accent-cyan);
   background: var(--tv-surface-elevated);
+  border-bottom: 1px solid var(--tv-border-subtle);
+  padding: var(--tv-space-component-md);
 }
 
 .partner-placement__context-marker svg {
   width: 1rem;
   height: 1rem;
 }
+
+/* ---- Collection index bar --------------------------------------------- */
 
 .partner-placement__collection-index {
   display: flex;
@@ -77,6 +98,8 @@
   height: 1rem;
 }
 
+/* ---- Body ------------------------------------------------------------- */
+
 .partner-placement__body {
   min-width: 0;
 }
@@ -87,6 +110,8 @@
   align-items: center;
   gap: var(--tv-space-micro-sm);
 }
+
+/* ---- Pills: disclosure (sponsored) + format ---------------------------- */
 
 .partner-placement__disclosure,
 .partner-placement__format {
@@ -115,6 +140,8 @@
   background: var(--tv-surface-elevated);
 }
 
+/* ---- Identity row ----------------------------------------------------- */
+
 .partner-placement__identity {
   display: flex;
   align-items: center;
@@ -132,11 +159,19 @@
   border-radius: var(--tv-radius-card);
   color: var(--tv-accent-cyan);
   background: var(--tv-surface-elevated);
+  overflow: hidden;
 }
 
 .partner-placement__identity-mark svg {
   width: 1.125rem;
   height: 1.125rem;
+}
+
+.partner-placement__identity-mark img {
+  width: 1.35rem;
+  height: 1.35rem;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .partner-placement__identity-copy {
@@ -158,6 +193,8 @@
   font-size: var(--tv-text-caption);
 }
 
+/* ---- Editorial copy --------------------------------------------------- */
+
 .partner-placement__editorial {
   margin-top: var(--tv-partner-space-emphasis);
 }
@@ -175,10 +212,10 @@
   margin: 0;
   max-width: 26ch;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-ui);
-  font-size: var(--tv-text-title);
+  font-family: var(--tv-font-family-editorial, var(--tv-font-family-display, var(--tv-font-family-ui)));
+  font-size: var(--tv-text-lead, var(--tv-text-subtitle));
   font-weight: var(--tv-weight-bold);
-  line-height: var(--tv-leading-tight);
+  line-height: var(--tv-leading-snug);
 }
 
 .partner-placement__editorial p:last-child {
@@ -188,6 +225,8 @@
   font-size: var(--tv-text-body-sm);
   line-height: var(--tv-leading-body);
 }
+
+/* ---- CTA -------------------------------------------------------------- */
 
 .partner-placement__action {
   display: flex;
@@ -208,16 +247,13 @@
   font-size: var(--tv-text-label);
   font-weight: var(--tv-weight-semibold);
   text-decoration: none;
-  transition:
-    color var(--tv-partner-action-motion),
-    border-color var(--tv-partner-action-motion),
-    background var(--tv-partner-action-motion);
+  transition: all 200ms ease;
 }
 
 .partner-placement__action a:hover {
   border-color: var(--tv-border-brand);
-  color: var(--tv-ink-on-brand);
-  background: var(--tv-accent-brand);
+  color: var(--tv-accent-brand);
+  background: color-mix(in srgb, var(--tv-accent-brand) 8%, var(--tv-surface-elevated));
 }
 
 .partner-placement__action a:focus-visible {
@@ -230,8 +266,69 @@
   height: 1rem;
 }
 
+/* ---- Open slot (availability placeholder for SponsorOpenSlot) --------- */
+
+.partner-placement--open {
+  border-style: dashed;
+  border-color: var(--tv-border-subtle);
+  background: var(--tv-surface-base);
+}
+
+.partner-placement--open .partner-placement__disclosure {
+  background: transparent;
+  color: var(--tv-ink-muted);
+  border-color: var(--tv-border-subtle);
+}
+
+.partner-placement--open .partner-placement__editorial h2 {
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-style: italic;
+  font-weight: var(--tv-weight-medium);
+}
+
+.partner-placement--open .partner-placement__action a {
+  border-color: var(--tv-border-brand);
+  color: var(--tv-accent-brand);
+  background: color-mix(in srgb, var(--tv-accent-brand) 6%, var(--tv-surface-elevated));
+}
+
+.partner-placement--open .partner-placement__action a:hover {
+  color: var(--tv-ink-on-brand);
+  background: var(--tv-accent-brand);
+}
+
+/* ---- Opportunity link (SponsorOpportunityLink) ------------------------ */
+
+.partner-placement__opportunity {
+  display: inline-block;
+  margin-top: var(--tv-space-component-sm);
+  color: var(--tv-ink-muted);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-caption);
+  font-weight: var(--tv-weight-medium);
+  letter-spacing: var(--tv-tracking-label);
+  text-decoration: none;
+  text-align: left;
+  transition: color 200ms ease;
+}
+
+.partner-placement__opportunity:hover {
+  color: var(--tv-accent-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.partner-placement__opportunity:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
+  border-radius: 2px;
+}
+
+/* ---- Variants --------------------------------------------------------- */
+
 .partner-placement--featured {
-  grid-template-columns: 3rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 0;
   border-radius: var(--tv-radius-feature);
 }
@@ -261,7 +358,7 @@
 }
 
 .partner-placement--contextual {
-  grid-template-columns: 2.75rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   border-inline: 0;
   border-radius: 0;
   background: var(--tv-surface-raised);
@@ -291,9 +388,19 @@
   padding-top: 0;
 }
 
+/* ---- Desktop layout (min-width: 768px) -------------------------------- */
+
 @media (min-width: 768px) {
   .partner-placement--featured {
     grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+    /* Subtle right-side accent bar; inset shadow avoids layout shift. */
+    box-shadow: inset -3px 0 0 var(--tv-accent-brand);
+  }
+
+  .partner-placement--featured .partner-placement__rail {
+    border-bottom: 0;
+    border-right: 1px solid var(--tv-border-subtle);
+    padding: var(--tv-partner-space-emphasis);
   }
 
   .partner-placement--featured .partner-placement__action {
@@ -305,43 +412,29 @@
     grid-template-columns: 3rem minmax(0, 1fr) auto;
   }
 
+  .partner-placement--contextual .partner-placement__context-marker {
+    border-bottom: 0;
+    border-right: 1px solid var(--tv-border-subtle);
+    padding-top: var(--tv-partner-space-emphasis);
+  }
+
   .partner-placement--contextual .partner-placement__action {
     padding-top: var(--tv-partner-space-emphasis);
     padding-left: 0;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .partner-placement__action a {
-    transition: none;
+  .partner-placement__opportunity {
+    text-align: right;
+    margin-top: 0;
   }
 }
 
+/* ---- Reduced motion --------------------------------------------------- */
 
-.partner-placement__demo {
-  display: inline-flex;
-  min-height: 1.5rem;
-  align-items: center;
-  border-radius: var(--tv-radius-pill);
-  padding-inline: var(--tv-space-micro-sm);
-  border: 1px dashed color-mix(in srgb, var(--tv-status-warning) 55%, transparent);
-  color: var(--tv-status-warning);
-  background: color-mix(in srgb, var(--tv-status-warning) 10%, transparent);
-  font-family: var(--tv-font-family-ui);
-  font-size: var(--tv-text-eyebrow);
-  font-weight: var(--tv-weight-semibold);
-  letter-spacing: var(--tv-tracking-label);
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.partner-placement__identity-mark img {
-  width: 1.35rem;
-  height: 1.35rem;
-  object-fit: contain;
-  border-radius: 4px;
-}
-
-.partner-placement[data-demo="true"] {
-  border-style: dashed;
+@media (prefers-reduced-motion: reduce) {
+  .partner-placement,
+  .partner-placement__action a,
+  .partner-placement__opportunity {
+    transition: none;
+  }
 }

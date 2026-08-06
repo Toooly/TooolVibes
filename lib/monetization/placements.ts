@@ -1,3 +1,5 @@
+import { TAYLORA_CAMPAIGN } from "@/lib/sponsors/sponsor-placements";
+
 export type MonetizationStatus = "ready" | "reserved" | "planned";
 
 /**
@@ -30,32 +32,32 @@ export const LAUNCH_SPONSOR_SLOTS: Record<
   LaunchSponsorRecord
 > = {
   "home-featured-tool": {
-    active: false,
+    active: true,
     placementId: "home-featured-tool",
-    sponsorLabel: "Partner editoriale",
-    name: "",
-    logo: null,
+    sponsorLabel: "Partner di TooolVibes",
+    name: TAYLORA_CAMPAIGN.name,
+    logo: TAYLORA_CAMPAIGN.logo,
     image: null,
-    description: "",
-    href: "",
-    cta: "",
-    trackingId: "tv-home-featured",
-    startDate: null,
-    endDate: null,
+    description: TAYLORA_CAMPAIGN.description,
+    href: TAYLORA_CAMPAIGN.destinationUrl,
+    cta: TAYLORA_CAMPAIGN.ctaLabel,
+    trackingId: "tv-home-featured-taylora",
+    startDate: TAYLORA_CAMPAIGN.startsAt,
+    endDate: TAYLORA_CAMPAIGN.endsAt,
   },
   "catalog-native-sponsor": {
-    active: false,
+    active: true,
     placementId: "catalog-native-sponsor",
     sponsorLabel: "Sponsor",
-    name: "",
-    logo: null,
+    name: TAYLORA_CAMPAIGN.name,
+    logo: TAYLORA_CAMPAIGN.logo,
     image: null,
-    description: "",
-    href: "",
-    cta: "",
-    trackingId: "tv-catalog-native",
-    startDate: null,
-    endDate: null,
+    description: TAYLORA_CAMPAIGN.description,
+    href: TAYLORA_CAMPAIGN.destinationUrl,
+    cta: TAYLORA_CAMPAIGN.ctaLabel,
+    trackingId: "tv-catalog-native-taylora",
+    startDate: TAYLORA_CAMPAIGN.startsAt,
+    endDate: TAYLORA_CAMPAIGN.endsAt,
   },
   "tool-sponsored-alternative": {
     active: false,
@@ -121,57 +123,57 @@ export const monetizationPlacements = [
     key: "home-featured-tool",
     placementId: "home-featured-tool",
     surface: "Homepage",
-    format: "Featured tool nativo",
+    format: "Partner Spotlight",
     packageName: "Homepage spotlight",
-    label: "Partner editoriale",
-    title: "Slot partner in home (demo sviluppo).",
-    body: "Placement di lancio per validare layout, disclosure e CTA. Non è una sponsorizzazione pubblicata di un brand reale.",
-    description:
-      "Placement di lancio per validare layout, disclosure e CTA. Non è una sponsorizzazione pubblicata di un brand reale.",
-    ctaLabel: "Scopri come funziona",
-    href: "/affiliati",
-    status: "ready",
+    label: "Partner di TooolVibes",
+    title: TAYLORA_CAMPAIGN.headline,
+    body: TAYLORA_CAMPAIGN.description,
+    description: TAYLORA_CAMPAIGN.description,
+    ctaLabel: TAYLORA_CAMPAIGN.ctaLabel,
+    href: TAYLORA_CAMPAIGN.destinationUrl,
+    status: "ready" as const,
     active: true,
     visible: true,
     priority: 1,
     audience: "Utenti in esplorazione sulla home.",
-    trackingId: "tv-home-featured-demo",
+    trackingId: "tv-home-featured-taylora",
+    startDate: TAYLORA_CAMPAIGN.startsAt,
+    endDate: TAYLORA_CAMPAIGN.endsAt,
     partner: {
-      name: "Demo Partner Home",
-      category: "Dato di sviluppo",
-      href: "/affiliati",
-      isDemo: true,
+      name: TAYLORA_CAMPAIGN.name,
+      category: TAYLORA_CAMPAIGN.eyebrow,
+      href: TAYLORA_CAMPAIGN.destinationUrl,
+      isDemo: false,
     },
-    editorialReason:
-      "Record demo per il launch: mostra come appare un partner editoriale in home senza fingere un brand reale.",
+    editorialReason: TAYLORA_CAMPAIGN.contextualReason ?? "",
   },
   {
     key: "catalog-native-sponsor",
     placementId: "catalog-native-sponsor",
     surface: "Catalogo",
-    format: "Placement categoria",
+    format: "Sponsored Tool Card",
     packageName: "Category native",
     label: "Sponsor",
-    title: "Partner contestuale nel catalogo (demo sviluppo).",
-    body: "Placement nativo nel flusso di scoperta. Contenuto di sviluppo chiaramente etichettato, non un brand inventato presentato come sponsor reale.",
-    description:
-      "Placement nativo nel flusso di scoperta. Contenuto di sviluppo chiaramente etichettato, non un brand inventato presentato come sponsor reale.",
-    ctaLabel: "Vedi i pacchetti",
-    href: "/affiliati",
-    status: "ready",
+    title: TAYLORA_CAMPAIGN.headline,
+    body: TAYLORA_CAMPAIGN.description,
+    description: TAYLORA_CAMPAIGN.description,
+    ctaLabel: TAYLORA_CAMPAIGN.ctaLabel,
+    href: TAYLORA_CAMPAIGN.destinationUrl,
+    status: "ready" as const,
     active: true,
     visible: true,
     priority: 2,
     audience: "Utenti che filtrano e confrontano tool nel catalogo.",
-    trackingId: "tv-catalog-native-demo",
+    trackingId: "tv-catalog-native-taylora",
+    startDate: TAYLORA_CAMPAIGN.startsAt,
+    endDate: TAYLORA_CAMPAIGN.endsAt,
     partner: {
-      name: "Demo Partner Catalogo",
-      category: "Dato di sviluppo",
-      href: "/affiliati",
-      isDemo: true,
+      name: TAYLORA_CAMPAIGN.name,
+      category: TAYLORA_CAMPAIGN.eyebrow,
+      href: TAYLORA_CAMPAIGN.destinationUrl,
+      isDemo: false,
     },
-    editorialReason:
-      "Serve a verificare densità, disclosure e responsive del catalogo prima del go-live commerciale.",
+    editorialReason: TAYLORA_CAMPAIGN.contextualReason ?? "",
   },
   {
     key: "guide-inline-promo",
@@ -212,26 +214,26 @@ export const monetizationPlacements = [
     format: "Alternativa sponsorizzata",
     packageName: "Tool profile native",
     label: "Contenuto sponsorizzato",
-    title: "Alternativa partner in scheda tool (demo sviluppo).",
-    body: "Placement contestuale su scheda tool / confronto. Demo di sviluppo con disclosure esplicita, senza brand finti presentati come sponsor reali.",
+    title: "Alternativa partner in scheda tool (disponibile).",
+    body: "Placement contestuale su scheda tool / confronto. Disponibile per sponsor con tool complementari al contesto di valutazione.",
     description:
-      "Placement contestuale su scheda tool / confronto. Demo di sviluppo con disclosure esplicita, senza brand finti presentati come sponsor reali.",
-    ctaLabel: "Come diventare partner",
-    href: "/affiliati",
+      "Placement contestuale su scheda tool / confronto. Disponibile per sponsor con tool complementari al contesto di valutazione.",
+    ctaLabel: "Diventa sponsor",
+    href: "/sponsorizza",
     status: "ready",
-    active: true,
+    active: false,
     visible: true,
     priority: 5,
     audience: "Utenti in fase di decisione su una scheda tool.",
-    trackingId: "tv-tool-alternative-demo",
+    trackingId: "tv-tool-alternative-open",
     partner: {
-      name: "Demo Partner Tool",
-      category: "Dato di sviluppo",
-      href: "/affiliati",
-      isDemo: true,
+      name: "Il tuo tool qui",
+      category: "Opportunità partner",
+      href: "/sponsorizza",
+      isDemo: false,
     },
     editorialReason:
-      "Valida layout, CTA e fallback su scheda tool e superfici di decisione prima dell'inventory commerciale reale.",
+      "Questo spazio è disponibile per un partner che offre un'alternativa o strumento complementare.",
   },
   {
     key: "collection-native-sponsor",
@@ -242,7 +244,7 @@ export const monetizationPlacements = [
     title: "Sponsorship nativa dentro una raccolta curata.",
     body: "Adatta a speciali verticali, selezioni premium e percorsi tematici con sponsor coerente al contesto.",
     ctaLabel: "Parla con TooolVibes",
-    href: "/affiliati",
+    href: "/sponsorizza",
     status: "reserved",
     active: false,
     visible: true,
@@ -256,9 +258,9 @@ export const monetizationPlacements = [
     packageName: "Newsletter native",
     label: "Slot newsletter",
     title: "Un placement pronto per quando parte la newsletter.",
-    body: "Lo spazio e' gia' mappato nell'inventory, cosi' puo' entrare nei pacchetti founder senza ridisegnare l'offerta.",
+    body: "Lo spazio è già mappato nell'inventory, così può entrare nei pacchetti founder senza ridisegnare l'offerta.",
     ctaLabel: "Prenota slot",
-    href: "/affiliati",
+    href: "/sponsorizza",
     status: "planned",
     active: false,
     visible: false,
@@ -294,7 +296,6 @@ function isAllowedPartnerUrl(value: string | undefined) {
   if (!hasPublicText(value)) return false;
 
   const raw = (value as string).trim();
-  // Same-site relative paths are valid for internal partner CTAs / demo slots.
   if (raw.startsWith("/") && !raw.startsWith("//")) {
     return raw.length > 1 && !raw.includes("://");
   }
@@ -337,7 +338,6 @@ export function isPublicMonetizationPlacement(
   if (!placement) return false;
   if (placement.active === false) return false;
   if (!isWithinFlightWindow(placement)) return false;
-  // Demo / fixture / placeholder records must not surface on the home.
   if (placement.partner?.isDemo) return false;
 
   return Boolean(

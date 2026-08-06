@@ -39,7 +39,10 @@ import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { useOnceInView } from "@/lib/motion/use-once-in-view";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
-import { FeaturedPartner } from "@/components/monetization/partner-placements";
+import {
+  FeaturedPartner,
+  SponsorOpportunityLink,
+} from "@/components/monetization/partner-placements";
 import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
 import { HomeRadarPreview } from "@/components/radar/radar-experience";
 
@@ -708,7 +711,11 @@ function SponsorSection({
         <FeaturedPartner
           placementKey={placementKey}
           className="def-home__placement"
+          trackerRoute="/"
         />
+      </div>
+      <div className="def-home__sponsor-opportunity">
+        <SponsorOpportunityLink />
       </div>
     </section>
   );
