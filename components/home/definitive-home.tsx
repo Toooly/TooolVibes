@@ -38,6 +38,7 @@ import {
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { useOnceInView } from "@/lib/motion/use-once-in-view";
+import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { FeaturedPartner } from "@/components/monetization/partner-placements";
 import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
 import { HomeRadarPreview } from "@/components/radar/radar-experience";
@@ -678,6 +679,7 @@ export function DefinitiveHome({ tools, weeklyTool }: DefinitiveHomeProps) {
     <div className="def-home">
       <Cockpit toolCount={tools.length} />
       <IvoryEditorial focusTool={focusTool} tools={tools} />
+      <TinyAdzInlineSlot placement="home-editorial" />
       <Method />
       <SponsorSection placementKey="home-featured-tool" />
     </div>

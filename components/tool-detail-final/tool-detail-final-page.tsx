@@ -17,6 +17,7 @@ import { ToolDetailDecisionNav } from "./tool-detail-decision-nav";
 import { ToolDetailInformation } from "./tool-detail-information";
 import { ToolDetailSignal } from "./tool-detail-signal";
 import { ToolDetailAlternatives } from "./tool-detail-alternatives";
+import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { ToolDetailFooter } from "./tool-detail-footer";
 import { PartnerToolCard } from "@/components/monetization/partner-placements";
 
@@ -151,6 +152,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
           content={tool.extendedContent}
           toolName={tool.name}
         />
+        <TinyAdzInlineSlot placement="tool-detail" />
         <ToolDetailInformation tool={tool} />
         <ToolDetailSignal tool={tool} />
         <ToolDetailAlternatives current={tool} related={relatedTools} />

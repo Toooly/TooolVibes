@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Boxes, Lock, Sparkles, Star } from "lucide-react";
 import type { CuratedCollection } from "@/lib/types/collection";
+import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 
 function hashColor(str: string): string {
   let h = 0;
@@ -169,6 +170,8 @@ export function MobileCollectionsView({
           </div>
         </section>
       )}
+
+      <TinyAdzInlineSlot placement="collection-feed" />
 
       {/* Others list */}
       {others.length > 0 && (

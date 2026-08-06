@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { DefinitiveArchive } from "@/components/archive/definitive-archive";
+import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { PartnerToolCard } from "@/components/monetization/partner-placements";
 import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
 import { isCatalogDensityPolicyEnabled } from "@/lib/config/catalog-density-policy";
@@ -66,6 +67,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
         initialGroup={initialGroup}
         initialLevel={initialLevel}
       />
+
+      <TinyAdzInlineSlot placement="archive-feed" />
 
       {catalogDensityPolicy && placement ? (
         <PartnerToolCard

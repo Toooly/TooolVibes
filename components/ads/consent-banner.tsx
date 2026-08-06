@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
 
 /**
  * First-party consent banner. Shown only while advertising consent is
  * `unknown` — i.e. until a real user choice exists.
+ *
+ * The banner is portalled to `document.body` with a high z-index so it can
+ * never be hidden below the app's own portalled mobile bottom navigation.
  *
  * Accessibility:
  *  - `role="dialog"` (non-modal) with an accessible name;
@@ -18,25 +22,30 @@ export function ConsentBanner() {
   const { state, grantAll, denyNonNecessary, openSettings } =
     useAdvertisingConsent();
   const regionRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (state === "unknown") {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (state === "unknown" && mounted) {
       regionRef.current?.focus();
     }
-  }, [state]);
+  }, [state, mounted]);
 
-  if (state !== "unknown") {
+  if (!mounted || state !== "unknown") {
     return null;
   }
 
-  return (
+  return createPortal(
     <div
       ref={regionRef}
       role="dialog"
       aria-modal="false"
       aria-label="Preferenze pubblicitarie"
       tabIndex={-1}
-      className="fixed inset-x-0 bottom-0 z-[9000] border-t border-border bg-background/95 p-4 backdrop-blur shadow-[0_-8px_24px_rgba(0,0,0,0.3)]"
+      className="fixed inset-x-0 bottom-0 z-[999999999] border-t border-border bg-background/95 p-4 backdrop-blur shadow-[0_-8px_24px_rgba(0,0,0,0.3)]"
     >
       <div className="mx-auto flex max-w-5xl flex-col gap-3">
         <h2 className="text-sm font-semibold">Rispettiamo la tua privacy</h2>
@@ -69,6 +78,7 @@ export function ConsentBanner() {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

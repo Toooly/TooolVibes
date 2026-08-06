@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ReadingProgressBar } from "@/components/posts/reading-progress-bar";
+import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { notFound } from "next/navigation";
 
 import { SectionHeader } from "@/components/ui/section-header";
@@ -301,6 +302,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
           </div>
         </div>
       </section>
+
+      <TinyAdzInlineSlot placement="article-body" />
 
       <section className="editorial-grid gap-y-4">
         <div className="col-span-12 lg:col-span-7">

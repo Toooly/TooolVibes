@@ -1,15 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
 
 /**
- * Consent settings panel. Modal dialog with focus trap, ESC to close, focus
- * return to opener, and a switch for "Pubblicità e misurazione TinyAdz".
+ * Consent settings panel. Modal dialog portalled to `document.body` (so it
+ * ranks above the app's portalled bottom nav), with focus trap, ESC to close,
+ * focus return to opener, and a switch for "Pubblicità e misurazione TinyAdz".
  *
  * The advertising switch is never preselected ON for an `unknown` state: it
- * reflects the tne actual current preference, which defaults to OFF.
+ * reflects the actual current preference, which defaults to OFF.
  */
 export function ConsentSettingsDialog() {
   const {
@@ -24,8 +26,13 @@ export function ConsentSettingsDialog() {
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
+  const [mounted, setMounted] = useState(false);
   // Advertising switch state: reflects current choice; initial considered OFF if unknown.
   const [advertisingOn, setAdvertisingOn] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Reset the switch each time the dialog opens, reflecting the real state.
   useEffect(() => {
@@ -68,7 +75,10 @@ export function ConsentSettingsDialog() {
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
       const active = document.activeElement as HTMLElement | null;
-      if (event.shiftKey && (active === first || !dialogRef.current?.contains(active))) {
+      if (
+        event.shiftKey &&
+        (active === first || !dialogRef.current?.contains(active))
+      ) {
         event.preventDefault();
         last.focus();
       } else if (!event.shiftKey && active === last) {
@@ -82,15 +92,15 @@ export function ConsentSettingsDialog() {
 
   const handleSave = useCallback(() => {
     saveAdvertisingPreference(advertisingOn);
-      }, [advertisingOn, saveAdvertisingPreference]);
+  }, [advertisingOn, saveAdvertisingPreference]);
 
-  if (!settingsOpen) {
+  if (!mounted || !settingsOpen) {
     return null;
   }
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[9500] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-[999999999] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4"
       onClick={() => closeSettings()}
     >
       <div
@@ -114,9 +124,7 @@ export function ConsentSettingsDialog() {
           </div>
           <button
             type="button"
-            onClick={() => {
-              closeSettings();
-                          }}
+            onClick={() => closeSettings()}
             aria-label="Chiudi preferenze"
             className="rounded-md p-2 text-muted-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
           >
@@ -141,7 +149,12 @@ export function ConsentSettingsDialog() {
             </div>
             <span
               className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-within:outline-2 focus-within:outline-ring focus-within:outline-offset-2"
-              style={{ backgroundColor: advertisingOn ? "var(--foreground)" : "var(--muted-foreground)", opacity: advertisingOn ? 1 : 0.5 }}
+              style={{
+                backgroundColor: advertisingOn
+                  ? "var(--foreground)"
+                  : "var(--muted-foreground)",
+                opacity: advertisingOn ? 1 : 0.5,
+              }}
             >
               <input
                 id="consent-advertising-switch"
@@ -161,25 +174,20 @@ export function ConsentSettingsDialog() {
                 }}
               />
             </span>
-
           </div>
         </div>
 
         <div className="mt-5 flex flex-wrap items-center justify-end gap-2">
           <button
             type="button"
-            onClick={() => {
-              denyNonNecessary();
-                          }}
+            onClick={() => denyNonNecessary()}
             className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-90 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
           >
             Rifiuta non necessari
           </button>
           <button
             type="button"
-            onClick={() => {
-              grantAll();
-                          }}
+            onClick={() => grantAll()}
             className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-90 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
           >
             Accetta tutto
@@ -193,6 +201,7 @@ export function ConsentSettingsDialog() {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
