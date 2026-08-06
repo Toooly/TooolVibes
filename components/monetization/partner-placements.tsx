@@ -8,10 +8,9 @@ import {
   BookOpenText,
   Building2,
   Layers3,
-  Sparkles,
-  Zap,
 } from "lucide-react";
 
+import { SponsorKineticCore } from "@/components/monetization/sponsor-kinetic-core";
 import {
   SponsorClickHandler,
   SponsorImpressionTracker,
@@ -90,15 +89,23 @@ export function SponsorOpenSlot({
         data-sponsored="false"
         data-tracking-id={placement.trackingId}
       >
-        <div className="partner-placement__rail" aria-hidden="true">
-          <Zap />
-        </div>
+        <PartnerMeta formatLabel="Disponibile" disclosure={placement.label} />
         <div className="partner-placement__body">
-          <PartnerMeta formatLabel="Disponibile" disclosure={placement.label} />
           <div className="partner-placement__editorial">
             <h2>Il prossimo tool in evidenza potrebbe essere il tuo.</h2>
             <p>Porta il tuo tool davanti a chi sta già cercando cosa usare.</p>
           </div>
+          <ul className="partner-placement__micro-spec" aria-label="Cosa può contenere questo spazio">
+            <li>Logo e posizionamento del partner</li>
+            <li>CTA dedicata verso il tuo prodotto</li>
+            <li>Contesto editoriale curato da TooolVibes</li>
+          </ul>
+        </div>
+        <div className="partner-placement__preview" aria-hidden="true">
+          <SponsorKineticCore
+            partnerName={placement.partner?.name ?? "Opportunità sponsor"}
+            density="slot"
+          />
         </div>
         <div className="partner-placement__action">
           <Link
@@ -198,6 +205,31 @@ function PartnerIdentity({
   );
 }
 
+function PartnerKineticIdentity({
+  placement,
+}: {
+  placement: PublicMonetizationPlacement;
+}) {
+  const logo = placement.partner.logo ?? placement.logo ?? null;
+
+  return (
+    <div className="partner-placement__identity">
+      <span className="partner-placement__identity-mark" aria-hidden="true">
+        {logo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={logo} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <SponsorKineticCore partnerName={placement.partner.name} density="card" />
+        )}
+      </span>
+      <span className="partner-placement__identity-copy">
+        <strong>{placement.partner.name}</strong>
+        <span>{placement.partner.category}</span>
+      </span>
+    </div>
+  );
+}
+
 function PartnerEditorial({
   placement,
 }: {
@@ -212,12 +244,31 @@ function PartnerEditorial({
   );
 }
 
+function PartnerEditorialLong({
+  placement,
+}: {
+  placement: PublicMonetizationPlacement;
+}) {
+  const body =
+    placement.description ?? placement.body ?? placement.editorialReason ?? "";
+  return (
+    <div className="partner-placement__editorial">
+      <p className="partner-placement__reason-label">Perché è rilevante</p>
+      <h2>{placement.title}</h2>
+      <p>{placement.editorialReason}</p>
+      {body && <p className="partner-placement__body-copy">{body}</p>}
+    </div>
+  );
+}
+
 function PartnerAction({
   placement,
   trackerRoute,
+  variant = "primary",
 }: {
   placement: PublicMonetizationPlacement;
   trackerRoute?: string;
+  variant?: "primary" | "secondary";
 }) {
   const isExternal = /^https?:\/\//.test(placement.partner.href);
 
@@ -229,10 +280,22 @@ function PartnerAction({
         rel={isExternal ? "sponsored noopener noreferrer" : "sponsored"}
         data-tracking-id={placement.trackingId}
         data-tracker-route={trackerRoute}
+        className={cn(
+          variant === "primary" && "partner-placement__action--primary",
+          variant === "secondary" && "partner-placement__action--secondary",
+        )}
       >
         <span>{placement.ctaLabel}</span>
         <ArrowUpRight aria-hidden="true" />
       </Link>
+    </div>
+  );
+}
+
+function PartnerCategoryChip() {
+  return (
+    <div className="partner-placement__chips">
+      <span className="partner-placement__chip">Partner verificato</span>
     </div>
   );
 }
@@ -307,27 +370,31 @@ export function FeaturedPartner({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--featured",
+          "partner-placement--featured partner-placement--xl",
           trackerRoute,
         )}
       >
-        <div className="partner-placement__rail" aria-hidden="true">
-          <Sparkles />
-        </div>
+        <PartnerMeta
+          formatLabel={formatLabelOverride ?? "Partner in evidenza"}
+          disclosure={placement.label}
+        />
         <div className="partner-placement__body">
-          <PartnerMeta
-            formatLabel={formatLabelOverride ?? "Partner in evidenza"}
-            disclosure={placement.label}
-          />
-          <PartnerIdentity placement={placement} />
-          <PartnerEditorial placement={placement} />
+          <PartnerKineticIdentity placement={placement} />
+          <PartnerEditorialLong placement={placement} />
+          <PartnerCategoryChip />
+          <div className="partner-placement__cta-row">
+            <SponsorClickHandler
+              {...trackerProps}
+              destination={placement.partner.href}
+            >
+              <PartnerAction placement={placement} trackerRoute={trackerRoute} />
+            </SponsorClickHandler>
+            <SponsorOpportunityLink placementId="featured-sponsor-opportunity" route={trackerRoute} className="partner-placement__opportunity--inline" />
+          </div>
         </div>
-        <SponsorClickHandler
-          {...trackerProps}
-          destination={placement.partner.href}
-        >
-          <PartnerAction placement={placement} trackerRoute={trackerRoute} />
-        </SponsorClickHandler>
+        <div className="partner-placement__kinetic" aria-hidden="true">
+          <SponsorKineticCore partnerName={placement.partner.name} density="xl" />
+        </div>
       </aside>
     </SponsorImpressionTracker>
   );
@@ -371,14 +438,15 @@ export function PartnerToolCard({
           trackerRoute,
         )}
       >
-        <div className="partner-placement__tool-heading">
+        <div className="partner-placement__tool-heading" aria-hidden="true">
+          <span className="partner-placement__tool-pulse" />
+          <BadgeCheck />
+        </div>
+        <div className="partner-placement__body">
           <PartnerMeta
             formatLabel={formatLabelOverride ?? "Partner tool"}
             disclosure={placement.label}
           />
-          <BadgeCheck aria-hidden="true" />
-        </div>
-        <div className="partner-placement__body">
           <PartnerIdentity placement={placement} />
           <PartnerEditorial placement={placement} />
         </div>
@@ -446,7 +514,11 @@ export function ContextualPartnerBlock({
           {...trackerProps}
           destination={placement.partner.href}
         >
-          <PartnerAction placement={placement} trackerRoute={trackerRoute} />
+          <PartnerAction
+            placement={placement}
+            trackerRoute={trackerRoute}
+            variant="secondary"
+          />
         </SponsorClickHandler>
       </aside>
     </SponsorImpressionTracker>

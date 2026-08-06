@@ -634,6 +634,16 @@
   --tv-partner-space-emphasis: var(--tv-space-px-5);
   --tv-partner-action-motion: var(--tv-motion-fast) var(--tv-easing-standard);
 
+  /* Sponsor kinetic core (SponsorKineticCore) — a single dark visual
+     nucleus per direct-sponsor surface. All values are derived from
+     existing foundation tokens via color-mix so remapping the dark
+     base updates both the core and existing dark surfaces together. */
+  --tv-sponsor-core-grid: color-mix(in srgb, var(--tv-color-ink-100) 7%, transparent);
+  --tv-sponsor-core-ring: color-mix(in srgb, var(--tv-color-ink-100) 14%, transparent);
+  --tv-sponsor-core-pulse: color-mix(in srgb, var(--tv-accent-cyan-on-dark) 22%, transparent);
+  --tv-sponsor-shadow-ivory-1: color-mix(in srgb, var(--tv-ink-inverted-primary) 4%, transparent);
+  --tv-sponsor-shadow-ivory-2: color-mix(in srgb, var(--tv-ink-inverted-primary) 28%, transparent);
+
   /* ============================================================== */
   /* === SECTION 4: FEATURE TOKENS =============================== */
   /* Feature-specific tokens. Local to a feature surface.          */
