@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { DefinitiveArchive } from "@/components/archive/definitive-archive";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
@@ -76,6 +77,58 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
       />
 
       <TinyAdzInlineSlot placement="archive-feed" />
+
+      {/*
+        Editorial method band — sits BETWEEN the TinyAdz mount and the
+        direct-sponsor mount so the two commercial units are never
+        visually adjacent on /archivio. Reinforces that the catalog
+        stays editorial and that sponsored content stays labeled and
+        separated. See `lib/monetization/commercial-placement-matrix.ts`
+        for the canonical contract.
+      */}
+      <section
+        className="archive-method-band"
+        aria-labelledby="archive-method-band-title"
+      >
+        <div className="archive-method-band__inner">
+          <p className="archive-method-band__eyebrow">Metodo TooolVibes</p>
+          <h2
+            id="archive-method-band-title"
+            className="archive-method-band__title"
+          >
+            Il catalogo resta editoriale. Gli sponsor restano dichiarati.
+          </h2>
+          <ol className="archive-method-band__items">
+            <li className="archive-method-band__item">
+              <h3 className="archive-method-band__item-title">
+                Selezione curata
+              </h3>
+              <p className="archive-method-band__item-body">
+                Ogni tool entra dopo una valutazione editoriale, non per pagamento.
+              </p>
+            </li>
+            <li className="archive-method-band__item">
+              <h3 className="archive-method-band__item-title">
+                Nessuna posizione in vendita
+              </h3>
+              <p className="archive-method-band__item-body">
+                L&apos;ordine organico non è influenzato da partner o inserzionisti.
+              </p>
+            </li>
+            <li className="archive-method-band__item">
+              <h3 className="archive-method-band__item-title">
+                Sponsor sempre marcati
+              </h3>
+              <p className="archive-method-band__item-body">
+                I contenuti commerciali sono separati e sempre etichettati.
+              </p>
+            </li>
+          </ol>
+          <Link href="/metodo" className="archive-method-band__link">
+            Scopri il metodo
+          </Link>
+        </div>
+      </section>
 
       {catalogDensityPolicy && placement ? (
         <div className="archive-partner-placement-wrap archive-partner-placement-wrap--after">

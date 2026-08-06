@@ -2518,3 +2518,130 @@ a.archive-v4-card:focus-visible {
     );
 }
 
+
+/* ============================================================
+   ARCHIVE METHOD BAND — editorial separator between TinyAdz
+   (archive-feed) and the density-policy sponsor card on /archivio.
+   Reinforces the visual-adjacency rule documented in
+   `lib/monetization/commercial-placement-matrix.ts`: a full
+   semantic content section must always sit between the two
+   independent commercial units.
+   ============================================================ */
+.archive-method-band {
+  position: relative;
+  width: 100%;
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  border-top: 1px solid var(--tv-border-subtle);
+  border-bottom: 1px solid var(--tv-border-subtle);
+  padding-block: clamp(var(--tv-space-10), 4vw, var(--tv-space-16));
+}
+
+.archive-method-band__inner {
+  width: min(calc(100% - 2rem), var(--tv-container-uw));
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-5);
+}
+
+.archive-method-band__eyebrow {
+  margin: 0;
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--tv-accent-cyan-on-ivory);
+}
+
+.archive-method-band__title {
+  margin: 0;
+  font-family: var(--tv-font-family-ui);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--tv-ink-primary);
+  max-width: 38ch;
+  text-wrap: balance;
+}
+
+.archive-method-band__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--tv-space-5);
+}
+
+@media (max-width: 899px) {
+  .archive-method-band__items {
+    grid-template-columns: 1fr;
+    gap: var(--tv-space-4);
+  }
+}
+
+.archive-method-band__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-space-2);
+  padding: var(--tv-space-4);
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-card);
+  transition: border-color var(--tv-duration-base) var(--tv-easing-standard);
+}
+
+.archive-method-band__item:hover {
+  border-color: var(--tv-border-interactive);
+}
+
+.archive-method-band__item-title {
+  margin: 0;
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-subtitle);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--tv-ink-primary);
+}
+
+.archive-method-band__item-body {
+  margin: 0;
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-body-sm);
+  line-height: 1.55;
+  color: var(--tv-ink-secondary);
+}
+
+.archive-method-band__link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-label);
+  font-weight: 600;
+  color: var(--tv-accent-cyan-on-ivory);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--tv-duration-base) var(--tv-easing-standard);
+}
+
+.archive-method-band__link:hover {
+  color: var(--tv-accent-cyan-pressed);
+}
+
+.archive-method-band__link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tv-focus-ring);
+  border-radius: var(--tv-radius-control);
+}
+
+@media (min-width: 640px) {
+  .archive-method-band__inner {
+    width: min(calc(100% - 3rem), var(--tv-container-uw));
+  }
+}
