@@ -1,9 +1,17 @@
 /**
  * Sponsor analytics — lightweight, non-fatal event tracking.
  *
- * Events are logged to console in development and can be piped
- * to any analytics backend. Failure is always non-fatal.
+ * Events are logged to console in development and delivered to the first-party
+ * ingest endpoint in production via a navigation-safe, keepalive transport.
+ * Failure is always non-fatal. Only anonymous, consent-permitted fields are
+ * transmitted — never email, IP, name, account identifiers, personal data from
+ * query strings, cookies, or fingerprint data.
  */
+
+import {
+  sendSponsorAnalytics,
+  type SponsorTransportPayload,
+} from "@/lib/analytics/sponsor-transport";
 
 export type SponsorImpressionEvent = {
   kind: "sponsor_impression";
@@ -78,11 +86,34 @@ export function trackSponsorOpportunityClick(
   emit(fullEvent);
 }
 
+function toTransportPayload(
+  event: SponsorAnalyticsEvent,
+): SponsorTransportPayload {
+  const base: SponsorTransportPayload = {
+    name: event.kind,
+    ts: Date.now(),
+    placementId: event.placementId,
+    route: event.route,
+  };
+  if (event.kind !== "sponsor_opportunity_click") {
+    base.campaignId = event.campaignId;
+    base.sponsorId = event.sponsorId;
+  } else {
+    if (event.campaignId) base.campaignId = event.campaignId;
+    if (event.sponsorId) base.sponsorId = event.sponsorId;
+  }
+  if (event.toolSlug) base.toolSlug = event.toolSlug;
+  if ("destination" in event) base.destination = event.destination;
+  return base;
+}
+
 function emit(event: SponsorAnalyticsEvent): void {
   try {
     if (process.env.NODE_ENV === "development") {
       console.log("[sponsor-analytics]", event);
+      return;
     }
+    sendSponsorAnalytics(toTransportPayload(event));
   } catch {
     // Analytics failure is non-fatal
   }
