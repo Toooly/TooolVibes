@@ -22,6 +22,14 @@ vi.mock("canvas-confetti", () => ({
   default: vi.fn(),
 }));
 
+/* The commercial mount is contracted separately (duplication/matrix tests);
+   here it is isolated so the consent provider is not required. */
+vi.mock("@/components/ads/tinyadz-inline-slot", () => ({
+  TinyAdzInlineSlot: ({ placement }: { placement: string }) => (
+    <div data-testid="tinyadz-stub" data-placement={placement} />
+  ),
+}));
+
 const LIVE_DAY: ProductHuntPayload = {
   status: "ok",
   source: "product-hunt-live",

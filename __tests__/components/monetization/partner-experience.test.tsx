@@ -24,7 +24,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import { cleanup, render } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   FeaturedPartner,
@@ -42,6 +42,19 @@ import {
   TayloraFlowCreative,
 } from "@/components/monetization/partner-creatives";
 import type { MonetizationPlacement } from "@/lib/monetization/placements";
+import { TAYLORA_CAMPAIGN } from "@/lib/sponsors/sponsor-placements";
+
+/* Rotation is date-driven by design; these tests pin the creative framework,
+   not the daily pick — the resolver is stubbed to the Taylora campaign. */
+vi.mock("@/lib/sponsors/partner-resolver", async (importOriginal) => {
+  const actual = await importOriginal<
+    typeof import("@/lib/sponsors/partner-resolver")
+  >();
+  return {
+    ...actual,
+    resolvePartnerCampaign: () => TAYLORA_CAMPAIGN,
+  };
+});
 
 afterEach(() => {
   cleanup();
@@ -94,18 +107,19 @@ describe("TayloraFlowCreative — narrative completeness", () => {
   it("renders the full content → protection → customer story as static markup", () => {
     const { container } = render(<TayloraFlowCreative density="stage" />);
 
-    /* Sources: the content modules claimed by the campaign copy. */
-    expect(container.textContent).toContain("Video");
-    expect(container.textContent).toContain("PDF");
-    expect(container.textContent).toContain("Corso");
+    /* Sources: the knowledge modules claimed on the current Taylora site. */
+    expect(container.textContent).toContain("Procedure");
+    expect(container.textContent).toContain("Corsi");
+    expect(container.textContent).toContain("Onboarding");
 
-    /* Protection state and customer outcome are static, not animated-only. */
-    expect(container.textContent).toContain("Raccolta protetta");
-    expect(container.textContent).toContain("Cliente");
+    /* Protection state and team outcome are static, not animated-only. */
+    expect(container.textContent).toContain("Workspace protetto");
+    expect(container.textContent).toContain("Team");
 
     /* Phase captions make the story readable with zero animation. */
-    expect(container.textContent).toContain("Contenuti");
-    expect(container.textContent).toContain("Protezione");
+    expect(container.textContent).toContain("Conoscenza");
+    expect(container.textContent).toContain("Formazione");
+    expect(container.textContent).toContain("Tracciamento");
   });
 
   it("exposes the composition as pure presentation", () => {
@@ -184,8 +198,11 @@ describe("PartnerEditorialInsert — catalogue feature strip", () => {
     const disclosure = container.querySelector(".partner-placement__disclosure");
     expect(disclosure?.textContent?.trim()).toBe("Sponsor");
 
-    const link = container.querySelector("a[href='https://taylora.com']");
+    const link = container.querySelector(
+      "a[href^='https://discover.taylora.com/']",
+    );
     expect(link).not.toBeNull();
+    expect(link?.getAttribute("href")).toContain("utm_source=tooolvibes");
     expect(link?.getAttribute("rel")).toBe("sponsored noopener noreferrer");
   });
 

@@ -79,6 +79,8 @@ describe("isTinyAdzEligiblePath", () => {
     ["/privacy", false],
     ["/termini", false],
     ["/cookie", false],
+    /* Commercial acquisition page: zero programmatic advertising. */
+    ["/sponsorizza", false],
   ])("%s -> %s", (pathname, expected) => {
     expect(isTinyAdzEligiblePath(pathname)).toBe(expected);
   });

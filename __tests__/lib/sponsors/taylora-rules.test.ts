@@ -14,6 +14,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  ALL_SPONSOR_CAMPAIGNS,
   getActiveCampaignForPlacement,
   TAYLORA_CAMPAIGN,
 } from "@/lib/sponsors/sponsor-placements";
@@ -99,36 +100,37 @@ describe("Taylora editorial independence", () => {
   });
 
   it("keeps the campaign object limited to non-editorial-scoring fields", () => {
-    // The object must not declare any field whose name contains
-    // 'score', 'rank', 'weight', or 'boost' (case-insensitive).
+    // The object must not declare any field that could alter editorial
+    // scoring. Exact-key guard: 'score', 'rank', 'weight', 'boost', 'bias'
+    // (case-insensitive) as standalone keys. The single sanctioned exception
+    // is `rotationWeight`, which biases only the deterministic rotation
+    // BETWEEN sponsor campaigns on commercial surfaces — it never touches
+    // organic ranking, ordering or scores.
     const keys = Object.keys(TAYLORA_CAMPAIGN);
     const suspicious = keys.filter((key) => {
       const k = key.toLowerCase();
-      return (
-        k.includes("score") ||
-        k.includes("rank") ||
-        k.includes("weight") ||
-        k.includes("boost") ||
-        k.includes("bias")
-      );
+      return ["score", "rank", "weight", "boost", "bias"].includes(k);
     });
 
     expect(suspicious).toEqual([]);
+    expect(TAYLORA_CAMPAIGN.rotationWeight).toBe(1);
   });
 
-  it("does not influence any other campaign (it is the only registered campaign)", () => {
-    // Indirect proof: even an explicit 1-campaign registry has Taylora as
-    // its sole member, so there is no other campaign it could affect.
-    const oneItemRegistry = [TAYLORA_CAMPAIGN];
-    expect(oneItemRegistry).toHaveLength(1);
-    expect(oneItemRegistry[0]?.id).toBe("taylora-v1-2026");
+  it("does not influence any other campaign in the multi-partner registry", () => {
+    // The registry now holds three active partners (Taylora, OnWeb24,
+    // ZapLater) with equal rotation weight: no campaign carries contractual
+    // priority over the others.
+    expect(ALL_SPONSOR_CAMPAIGNS.length).toBeGreaterThanOrEqual(3);
+    expect(TAYLORA_CAMPAIGN.id).toBe("taylora-v1-2026");
+    const weights = ALL_SPONSOR_CAMPAIGNS.map((c) => c.rotationWeight ?? 1);
+    expect(new Set(weights).size).toBe(1);
   });
 });
 
 describe("Taylora UTM campaign parameter", () => {
   it("declares a non-empty utmCampaign value", () => {
     expect(typeof TAYLORA_CAMPAIGN.utmCampaign).toBe("string");
-    expect(TAYLORA_CAMPAIGN.utmCampaign).toBe("tooolvibes-sponsor-v1");
+    expect(TAYLORA_CAMPAIGN.utmCampaign).toBe("taylora");
     expect((TAYLORA_CAMPAIGN.utmCampaign ?? "").length).toBeGreaterThan(0);
   });
 

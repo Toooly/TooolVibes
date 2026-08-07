@@ -31,6 +31,7 @@ const ALL_ROUTE_KEYS: readonly CommercialRouteKey[] = [
   "tool-detail",
   "posts",
   "collections",
+  "radar",
 ];
 
 const EXPECTED_TINYADZ_PLACEMENTS: Readonly<Record<CommercialRouteKey, string>> = {
@@ -39,6 +40,7 @@ const EXPECTED_TINYADZ_PLACEMENTS: Readonly<Record<CommercialRouteKey, string>> 
   "tool-detail": "tool-detail",
   posts: "article-body",
   collections: "collection-feed",
+  radar: "radar-feed",
 };
 
 describe("commercial placement matrix shape", () => {
@@ -75,8 +77,10 @@ describe("commercial placement matrix invariants", () => {
         expect(entry.directSponsorMount.trim().length).toBeGreaterThan(0);
       });
 
-      it("declares separation.type === content-section with non-empty reference", () => {
-        expect(entry.separation.type).toBe("content-section");
+      it("declares a supported separation type with non-empty reference", () => {
+        expect(["content-section", "grid-distance"]).toContain(
+          entry.separation.type,
+        );
         expect(entry.separation.reference).toBeTruthy();
         expect(entry.separation.reference.trim().length).toBeGreaterThan(0);
       });

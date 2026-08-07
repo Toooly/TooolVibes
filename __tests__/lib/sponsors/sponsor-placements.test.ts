@@ -27,13 +27,17 @@ describe("TAYLORA_CAMPAIGN", () => {
     expect(TAYLORA_CAMPAIGN.toolSlug).toBe("taylora");
     expect(TAYLORA_CAMPAIGN.name).toBe("Taylora");
     expect(TAYLORA_CAMPAIGN.disclosure).toBe("Partner di TooolVibes");
-    expect(TAYLORA_CAMPAIGN.destinationUrl).toBe("https://taylora.com");
+    expect(TAYLORA_CAMPAIGN.destinationUrl).toBe(
+      "https://discover.taylora.com/it/",
+    );
     expect(TAYLORA_CAMPAIGN.status).toBe("active");
     expect(TAYLORA_CAMPAIGN.placements).toEqual([
       "home-partner-spotlight",
       "archive-sponsored-tool",
     ]);
-    expect(TAYLORA_CAMPAIGN.utmCampaign).toBe("tooolvibes-sponsor-v1");
+    expect(TAYLORA_CAMPAIGN.utmCampaign).toBe("taylora");
+    expect(TAYLORA_CAMPAIGN.creativeVariant).toBe("taylora-flow");
+    expect(TAYLORA_CAMPAIGN.creativeTheme?.monogram).toBe("T");
   });
 });
 
@@ -119,9 +123,15 @@ describe("getActiveCampaignForPlacement", () => {
 });
 
 describe("getActiveCampaigns", () => {
-  it("returns exactly one active campaign from the default registry", () => {
+  it("returns the active partner campaigns from the default registry", () => {
+    /* Commercial inventory finalization: Taylora, OnWeb24 and ZapLater are
+       the active direct partners (equal rotation weight). */
     const campaigns = getActiveCampaigns();
-    expect(campaigns).toHaveLength(1);
+    expect(campaigns.map((c) => c.sponsorId).sort()).toEqual([
+      "onweb24",
+      "taylora",
+      "zaplater",
+    ]);
     expect(campaigns[0]?.id).toBe(TAYLORA_CAMPAIGN.id);
   });
 

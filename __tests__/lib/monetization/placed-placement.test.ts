@@ -1,11 +1,14 @@
 /**
- * Tests for the TooolVibes monetization placements with Taylora wired in.
+ * Tests for the TooolVibes monetization placements with the multi-partner
+ * direct registry (Taylora + OnWeb24 + ZapLater, rotation via resolver).
  *
  * Verifies the public-policy contract:
- *   - home-featured-tool and catalog-native-sponsor expose Taylora (real
- *     identity, active, status: ready).
- *   - tool-sponsored-alternative is intentionally not public yet (active: false).
- *   - The partner record is never flagged as a demo.
+ *   - home-featured-tool and catalog-native-sponsor always expose a real
+ *     active partner from the registry (never a demo, never a fixture).
+ *   - tool-sponsored-alternative stays non-public without a relevant
+ *     subject context (Open Slot fallback) and becomes public when the
+ *     resolver finds a semantically relevant campaign.
+ *   - Partner destinations carry deterministic UTM parameters.
  *   - Editorial-relevance reason and date-window policy are enforced.
  */
 
@@ -17,6 +20,11 @@ import {
   resolvePublicMonetizationPlacement,
   type MonetizationPlacement,
 } from "@/lib/monetization/placements";
+import { ALL_SPONSOR_CAMPAIGNS } from "@/lib/sponsors/sponsor-placements";
+
+const ACTIVE_SPONSOR_IDS = ALL_SPONSOR_CAMPAIGNS.filter(
+  (campaign) => campaign.status === "active",
+).map((campaign) => campaign.sponsorId);
 
 describe("home-featured-tool placement", () => {
   const placement = getMonetizationPlacement("home-featured-tool");
@@ -34,9 +42,16 @@ describe("home-featured-tool placement", () => {
     expect(placement?.partner?.isDemo).toBe(false);
   });
 
-  it("has Taylora as the partner and an editorial reason", () => {
-    expect(placement?.partner?.name).toBe("Taylora");
-    expect(placement?.partner?.href).toBe("https://taylora.com");
+  it("exposes an active registry partner with a tracked destination", () => {
+    const partner = placement?.partner;
+    expect(partner).toBeDefined();
+    expect(ACTIVE_SPONSOR_IDS).toContain(
+      ALL_SPONSOR_CAMPAIGNS.find((c) => c.name === partner?.name)?.sponsorId,
+    );
+    expect(partner?.href).toContain("utm_source=tooolvibes");
+    expect(partner?.href).toContain("utm_medium=partner");
+    expect(partner?.href).toContain("utm_content=home-featured-tool");
+    expect(placement?.trackingId).toMatch(/^tv-home-featured-(taylora|onweb24|zaplater)$/);
     expect(typeof placement?.editorialReason).toBe("string");
     expect((placement?.editorialReason ?? "").length).toBeGreaterThan(0);
   });
@@ -60,10 +75,16 @@ describe("catalog-native-sponsor placement", () => {
     expect(isPublicMonetizationPlacement(placement)).toBe(true);
   });
 
-  it("exposes Taylora as the partner", () => {
-    expect(placement?.partner?.name).toBe("Taylora");
+  it("exposes an active registry partner", () => {
+    expect(placement?.partner).toBeDefined();
+    expect(
+      ACTIVE_SPONSOR_IDS.includes(
+        ALL_SPONSOR_CAMPAIGNS.find((c) => c.name === placement?.partner?.name)
+          ?.sponsorId ?? "",
+      ),
+    ).toBe(true);
     expect(placement?.partner?.isDemo).toBe(false);
-    expect(placement?.partner?.href).toBe("https://taylora.com");
+    expect(placement?.partner?.href).toContain("utm_content=catalog-native-sponsor");
   });
 });
 
@@ -228,28 +249,54 @@ describe("isPublicMonetizationPlacement", () => {
 });
 
 describe("resolvePublicMonetizationPlacement", () => {
-  it("returns the Taylora placement for home-featured-tool", () => {
+  it("returns a public partner placement for home-featured-tool", () => {
     const placement = resolvePublicMonetizationPlacement("home-featured-tool");
     expect(placement).not.toBeNull();
-    expect(placement?.partner.name).toBe("Taylora");
-    expect(placement?.trackingId).toBe("tv-home-featured-taylora");
+    expect(
+      ACTIVE_SPONSOR_IDS.includes(
+        ALL_SPONSOR_CAMPAIGNS.find((c) => c.name === placement?.partner.name)
+          ?.sponsorId ?? "",
+      ),
+    ).toBe(true);
+    expect(placement?.trackingId).toMatch(
+      /^tv-home-featured-(taylora|onweb24|zaplater)$/,
+    );
     expect(placement?.status).toBe("ready");
     expect(placement?.visible).toBe(true);
   });
 
-  it("returns the Taylora placement for catalog-native-sponsor", () => {
+  it("returns a public partner placement for catalog-native-sponsor", () => {
     const placement = resolvePublicMonetizationPlacement(
       "catalog-native-sponsor",
     );
     expect(placement).not.toBeNull();
-    expect(placement?.partner.name).toBe("Taylora");
-    expect(placement?.trackingId).toBe("tv-catalog-native-taylora");
+    expect(placement?.trackingId).toMatch(
+      /^tv-catalog-native-(taylora|onweb24|zaplater)$/,
+    );
   });
 
-  it("returns null for tool-sponsored-alternative (inactive slot)", () => {
+  it("returns null for tool-sponsored-alternative without subject context", () => {
     expect(
       resolvePublicMonetizationPlacement("tool-sponsored-alternative"),
     ).toBeNull();
+  });
+
+  it("resolves a relevant campaign on tool detail when tags match", () => {
+    const placement = resolvePublicMonetizationPlacement(
+      "tool-sponsored-alternative",
+      { tags: ["website-builder", "no-code"], text: "Costruisci il tuo sito" },
+    );
+    expect(placement).not.toBeNull();
+    expect(placement?.partner.name).toBe("OnWeb24");
+    expect(placement?.trackingId).toBe("tv-tool-alternative-onweb24");
+  });
+
+  it("excludes self-sponsorship on the partner's own tool page", () => {
+    const placement = resolvePublicMonetizationPlacement(
+      "tool-sponsored-alternative",
+      { toolSlug: "taylora", tags: ["productivity", "ai-video"], text: "training corporate" },
+    );
+    expect(placement?.partner.name).not.toBe("Taylora");
   });
 });
 
