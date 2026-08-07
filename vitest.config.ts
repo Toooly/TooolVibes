@@ -23,10 +23,12 @@ const config = {
     testTimeout: 10_000,
     exclude: [
       "node_modules",
+      "**/node_modules/**",
       ".codex-tmp",
       ".worktrees",
       ".next",
       ".open-next",
+      ".opencode/**",
       "dist",
       "tests/e2e/**",
     ],
