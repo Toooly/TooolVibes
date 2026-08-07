@@ -60,24 +60,29 @@ describe("B38 catalog density policy — CSS contract", () => {
 });
 
 describe("B38 catalog density policy — archivio route sponsor placement", () => {
-  it("renders the sponsor band AFTER the organic catalog when the flag is ON", () => {
+  it("inserts the Partner Experience INSIDE the discovery flow, render-level only", () => {
     const source = read("app/(marketing)/archivio/page.tsx");
 
-    expect(source).toContain("isCatalogDensityPolicyEnabled");
-
+    /* La pagina passa l'insert al catalogo: niente band prima o dopo. */
     const catalogIndex = source.indexOf("<DefinitiveArchive");
     expect(catalogIndex).toBeGreaterThan(-1);
+    expect(source).toContain("partnerInsert={");
+    expect(source).toContain('placementKey="catalog-native-sponsor"');
+    expect(source).not.toContain("archive-partner-placement--before");
+    expect(source).not.toContain("archive-partner-placement--after");
 
-    /* Con flag ON la band segue il catalogo (ultimo occurrence). */
-    const sponsorAfterCatalog = source.lastIndexOf(
-      'placementKey="catalog-native-sponsor"',
-    );
-    expect(sponsorAfterCatalog).toBeGreaterThan(catalogIndex);
+    /* L'inserimento vive nel catalogo, dopo il primo gruppo organico,
+       senza toccare array, ordinamento o rank delle card organiche. */
+    const catalog = read("components/archive/definitive-archive.tsx");
+    expect(catalog).toContain("PARTNER_INSERT_AFTER");
+    expect(catalog).toContain("ar4-grid__item--partner");
+    expect(catalog).toContain("!hasActiveFilter");
+    expect(catalog).toContain("rank={idx + 1}");
 
-    /* La posizione legacy above-the-fold resta disponibile con flag OFF. */
-    const legacySection = source.indexOf("!catalogDensityPolicy");
-    expect(legacySection).toBeGreaterThan(-1);
-    expect(legacySection).toBeLessThan(catalogIndex);
+    /* Grid contract: l'insert occupa una riga intera, mai una cella. */
+    const css = read("styles/archive-v4.css");
+    expect(css).toContain(".ar4-grid__item--partner");
+    expect(css).toContain("grid-column: 1 / -1");
   });
 });
 
