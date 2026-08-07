@@ -68,6 +68,8 @@ const TINYADZ_EXCLUDED_PATH_PREFIXES: readonly string[] = [
   "/privacy",
   "/termini",
   "/cookie",
+  /* Commercial acquisition page: never programmatic advertising. */
+  "/sponsorizza",
 ];
 
 export function isTinyAdzEligiblePath(

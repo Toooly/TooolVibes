@@ -88,6 +88,10 @@
   grid-column: 1 / -1;
 }
 
+.ar4-grid__item--ad {
+  grid-column: 1 / -1;
+}
+
 .archive-partner-placement {
   position: relative;
   z-index: var(--tv-z-content);

@@ -49,16 +49,19 @@ export type CommercialRouteKey =
   | "archivio"
   | "tool-detail"
   | "posts"
-  | "collections";
+  | "collections"
+  | "radar";
 
 export type CommercialRouteSeparation = {
   /**
-   * Only "content-section" is supported today: the separator MUST be a real
-   * semantic `<section>` with its own `aria-labelledby`. If you ever need a
-   * different separator type, add the union member here and update the test
-   * contract — do not silently change the rule for one route.
+   * "content-section": a real semantic `<section>` with its own
+   * `aria-labelledby` between the two commercial units.
+   * "grid-distance": both units live inside the same discovery grid at
+   * different insertion indexes with multiple organic rows between them —
+   * the equivalent natural page distance (allowed since the commercial
+   * inventory finalization; never zero, never adjacent indexes).
    */
-  type: "content-section";
+  type: "content-section" | "grid-distance";
   /**
    * Human-readable reference to the actual content section that sits
    * between the two commercial units. Should be grep-able in the codebase
@@ -127,13 +130,14 @@ export const COMMERCIAL_PLACEMENT_MATRIX: Readonly<
   archivio: {
     tinyadzPlacement: "archive-feed",
     tinyadzMount:
-      "directly after DefinitiveArchive catalog (app/(marketing)/archivio/page.tsx)",
+      "inside the catalog grid after 18 organic cards (ar4-grid__item--ad), pristine discovery view only",
     directSponsorKey: "catalog-native-sponsor",
     directSponsorMount:
-      "archive-partner-placement-wrap--after block AFTER the archive method band",
+      "PartnerEditorialInsert inside the catalog grid after 6 organic cards (ar4-grid__item--partner)",
     separation: {
-      type: "content-section",
-      reference: "archive method band (archive-method-band)",
+      type: "grid-distance",
+      reference:
+        "insertion index 6 (partner) vs 18 (TinyAdz): twelve organic catalog cards between the two mounts",
     },
     maxPrimaryDirectSponsors: 1,
   },
@@ -143,7 +147,7 @@ export const COMMERCIAL_PLACEMENT_MATRIX: Readonly<
       "after ToolDetailExtendedContent (tool-detail-final-page.tsx)",
     directSponsorKey: "tool-sponsored-alternative",
     directSponsorMount:
-      "td-final-page__partner near the footer (tool-detail-final-page.tsx)",
+      "td-final-page__partner near the footer — contextual campaign via resolver, Open Slot V3.1 fallback (tool-detail-final-page.tsx)",
     separation: {
       type: "content-section",
       reference:
@@ -157,7 +161,7 @@ export const COMMERCIAL_PLACEMENT_MATRIX: Readonly<
       "after the intro section (app/(marketing)/posts/[slug]/page.tsx)",
     directSponsorKey: "guide-inline-promo",
     directSponsorMount:
-      "ContextualPartnerBlock after the article body panel (reserved/inactive → renders null in production)",
+      "ContextualPartnerBlock after the article body panel (contextual resolver; renders null without semantic relevance)",
     separation: {
       type: "content-section",
       reference: "article body panel",
@@ -170,10 +174,22 @@ export const COMMERCIAL_PLACEMENT_MATRIX: Readonly<
       "between hero and others list (components/collections/mobile-collections-view.tsx)",
     directSponsorKey: "collection-native-sponsor",
     directSponsorMount:
-      "PartnerCollectionModule on the collection detail page (reserved/inactive → renders null in production)",
+      "PartnerCollectionModule on the collection detail page (contextual resolver; renders null without semantic relevance)",
     separation: {
       type: "content-section",
       reference: "collections list section",
+    },
+    maxPrimaryDirectSponsors: 1,
+  },
+  radar: {
+    tinyadzPlacement: "radar-feed",
+    tinyadzMount:
+      "after the results block (#tv-radar-results), before the provenance section (components/radar/radar-experience.tsx)",
+    directSponsorKey: null,
+    directSponsorMount: "none mounted",
+    separation: {
+      type: "content-section",
+      reference: "RadarProvenance section (tv-radar-provenance)",
     },
     maxPrimaryDirectSponsors: 1,
   },

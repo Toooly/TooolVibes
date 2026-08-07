@@ -48,6 +48,14 @@ type DefinitiveArchiveProps = {
    * the organic array, its order and its ranks are never touched.
    */
   partnerInsert?: ReactNode;
+  /**
+   * TinyAdz inline insert, rendered after the twelfth organic card —
+   * always a different insertion index than the Partner Insert and never
+   * adjacent to it. Mounted only in the pristine discovery view (no
+   * filter, default sort): the programmatic creative cannot reliably
+   * refill a remounted container, so it never enters a keyed remount.
+   */
+  adInsert?: ReactNode;
 };
 
 type SortKey = "name-asc" | "name-desc" | "recent";
@@ -66,7 +74,7 @@ const LEVEL_FILTERS = [
 ] as const;
 
 /** Initial visible count for mobile progressive disclosure */
-const INITIAL_MOBILE_COUNT = 16;
+const INITIAL_MOBILE_COUNT = 24;
 /** Step for "Mostra altri" */
 const MOBILE_STEP = 12;
 
@@ -80,7 +88,17 @@ const VISIBLE_CATEGORY_CHIPS = 8;
  * 6 divides both the 2-column and 3-column grids, so the full-row insert
  * never leaves an orphan organic card on the preceding row.
  */
-const PARTNER_INSERT_AFTER = 6;
+export const PARTNER_INSERT_AFTER = 6;
+
+/**
+ * TinyAdz insertion point: after this many organic cards. 18 divides both
+ * the 2-column and 3-column grids and leaves twelve organic cards (two full
+ * 3-col / three full 2-col row groups) between the Partner Insert (6) and
+ * the ad — enough natural edge-to-edge separation to clear the desktop
+ * density target without artificial empty spacing. Contract: the two
+ * insertion indexes must never be equal (see duplication tests).
+ */
+export const TINYADZ_INSERT_AFTER = 18;
 
 export function DefinitiveArchive({
   tools,
@@ -89,6 +107,7 @@ export function DefinitiveArchive({
   initialGroup = "all",
   initialLevel = "all",
   partnerInsert = null,
+  adInsert = null,
 }: DefinitiveArchiveProps) {
   const [activeGroup, setActiveGroup] = useState<string>(initialGroup);
   const [activeLevel, setActiveLevel] = useState<string>(initialLevel);
@@ -498,6 +517,17 @@ export function DefinitiveArchive({
                         className="ar4-grid__item--partner"
                       >
                         {partnerInsert}
+                      </li>
+                    ) : null}
+                    {adInsert &&
+                    !hasActiveFilter &&
+                    sortKey === "name-asc" &&
+                    idx === TINYADZ_INSERT_AFTER - 1 ? (
+                      <li
+                        key="tinyadz-catalog-insert"
+                        className="ar4-grid__item--ad"
+                      >
+                        {adInsert}
                       </li>
                     ) : null}
                   </Fragment>

@@ -10,9 +10,13 @@ import { ButtonLink } from "@/components/ui/button";
 import { MarkdownContent } from "@/components/editorial/markdown-content";
 import {
   ContextualPartnerBlock,
-  PartnerToolCard,
   SponsorOpportunityLink,
 } from "@/components/monetization/partner-placements";
+import { shouldSuppressTinyAdzForPaidPartner } from "@/lib/monetization/commercial-density-policy";
+import {
+  getMonetizationPlacement,
+  isPublicMonetizationPlacement,
+} from "@/lib/monetization/placements";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RouteMarker } from "@/components/ui/route-marker";
 import { siteConfig } from "@/lib/config/site";
@@ -119,6 +123,20 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
       ? "Guida"
       : kindLabels[post.kind];
   const canonicalUrl = `${siteConfig.url}/posts/${post.slug}`;
+  const partnerContext = {
+    toolSlug: post.tool_slug ?? undefined,
+    tags: post.tags ?? [],
+    text: `${post.title} ${post.dek ?? ""}`,
+  };
+  const guidePartnerPlacement = getMonetizationPlacement(
+    "guide-inline-promo",
+    partnerContext,
+  );
+  const hasPaidGuidePartner = isPublicMonetizationPlacement(guidePartnerPlacement);
+  const showArticleTinyAdz = !shouldSuppressTinyAdzForPaidPartner({
+    hasPaidPartner: hasPaidGuidePartner,
+    surface: "posts",
+  });
   const postStructuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -304,7 +322,9 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
         </div>
       </section>
 
-      <TinyAdzInlineSlot placement="article-body" />
+      {showArticleTinyAdz ? (
+        <TinyAdzInlineSlot placement="article-body" />
+      ) : null}
 
       <section className="editorial-grid gap-y-4">
         <div className="col-span-12 lg:col-span-7">
@@ -367,6 +387,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
           <ContextualPartnerBlock
             placementKey="guide-inline-promo"
             className="mt-4"
+            context={partnerContext}
           />
         </div>
 
@@ -459,8 +480,6 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 </div>
               </div>
             </div>
-
-            <PartnerToolCard placementKey="article-sidebar-sponsor" />
 
             {relatedCollections.length > 0 ? (
               <div className="brand-panel rounded-[28px] p-4 sm:p-4.5">

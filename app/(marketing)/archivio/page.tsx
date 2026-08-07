@@ -66,9 +66,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
             />
           ) : null
         }
+        adInsert={<TinyAdzInlineSlot placement="archive-feed" />}
       />
-
-      <TinyAdzInlineSlot placement="archive-feed" />
 
       {/*
         Editorial method band — sits BETWEEN the TinyAdz mount and the

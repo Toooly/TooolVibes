@@ -43,6 +43,7 @@ import {
   Radar as RadarIcon,
   RefreshCw,
 } from "lucide-react";
+import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import type {
   ProductHuntItem,
   ProductHuntRange,
@@ -690,6 +691,10 @@ export function RadarExperience({
             <RadarTable model={model} />
           )}
         </div>
+
+        {/* ═══ 6. COMMERCIAL — max one inline TinyAdz, after the first
+            substantial block of signals, before provenance. ═══ */}
+        <TinyAdzInlineSlot placement="radar-feed" />
 
         {/* ═══ 7. PROVENANCE SECTION ═══ */}
         <RadarProvenance />
