@@ -13,8 +13,9 @@ import {
 import {
   OpenSlotPreviewCreative,
   PartnerCreativeRenderer,
-  partnerThemeKey,
 } from "@/components/monetization/partner-creatives";
+import { partnerThemeKey } from "@/lib/sponsors/partner-theme";
+import type { PartnerResolutionContext } from "@/lib/sponsors/partner-resolver";
 import {
   SponsorClickHandler,
   SponsorImpressionTracker,
@@ -39,12 +40,18 @@ type PartnerPlacementProps = {
    * placement. Does not change partner identity, copy or visibility.
    */
   trackerRoute?: string;
+  /**
+   * Subject context for contextual surfaces (tool slug, catalogue
+   * segments/tags, free text). Rotation surfaces ignore it.
+   */
+  context?: Partial<PartnerResolutionContext>;
 };
 
 export function resolvePublicPlacement(
   placementKey: MonetizationPlacementKey,
+  context?: Partial<PartnerResolutionContext>,
 ): PublicMonetizationPlacement | null {
-  const placement = getMonetizationPlacement(placementKey);
+  const placement = getMonetizationPlacement(placementKey, context);
   return isPublicMonetizationPlacement(placement) ? placement : null;
 }
 
@@ -274,6 +281,7 @@ function placementShellProps(
   className: string | undefined,
   variant: string,
   trackerRoute: string | undefined,
+  experience?: "stage" | "insert" | "tool" | "contextual" | "collection",
 ) {
   return {
     "aria-label": `Contenuto sponsorizzato: ${placement.partner.name}`,
@@ -283,18 +291,21 @@ function placementShellProps(
     "data-tracking-id": placement.trackingId,
     "data-tracker-route": trackerRoute,
     "data-sponsored": "true" as const,
+    "data-partner-theme": partnerThemeKey(placement.creativeTheme),
+    ...(experience ? { "data-partner-experience": experience } : {}),
   };
 }
 
 function resolveVariantPlacement(
   placementKey: MonetizationPlacementKey,
   trackerRoute: string = "",
+  context?: Partial<PartnerResolutionContext>,
 ):
   | { kind: "open-slot"; placement: MonetizationPlacement; trackerRoute: string }
   | { kind: "public"; placement: PublicMonetizationPlacement; trackerRoute: string }
   | { kind: "empty"; trackerRoute: string } {
-  const placement = getMonetizationPlacement(placementKey);
-  const publicPlacement = resolvePublicPlacement(placementKey);
+  const placement = getMonetizationPlacement(placementKey, context);
+  const publicPlacement = resolvePublicPlacement(placementKey, context);
 
   if (publicPlacement) {
     return { kind: "public", placement: publicPlacement, trackerRoute };
@@ -339,12 +350,12 @@ export function FeaturedPartner({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--featured partner-placement--xl partner-stage",
+          "partner-placement--featured partner-placement--xl partner-stage partner-luminous",
           trackerRoute,
+          "stage",
         )}
-        data-partner-experience="stage"
-        data-partner-theme={partnerThemeKey(placement.creativeTheme)}
       >
+        <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-stage__editorial">
           <PartnerMeta
             formatLabel={formatLabelOverride ?? "Partner in evidenza"}
@@ -422,12 +433,12 @@ export function PartnerEditorialInsert({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--insert partner-insert",
+          "partner-placement--insert partner-insert partner-luminous",
           trackerRoute,
+          "insert",
         )}
-        data-partner-experience="insert"
-        data-partner-theme={partnerThemeKey(placement.creativeTheme)}
       >
+        <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-insert__marker" aria-hidden="true">
           <span className="partner-insert__monogram">{monogram}</span>
           <span className="partner-insert__marker-label">
@@ -473,8 +484,9 @@ export function PartnerToolCard({
   className,
   formatLabelOverride,
   trackerRoute = "",
+  context,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
 
   if (resolved.kind === "open-slot") {
     return (
@@ -502,14 +514,26 @@ export function PartnerToolCard({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--tool",
+          "partner-placement--tool partner-luminous",
           trackerRoute,
+          "tool",
         )}
       >
+        <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-placement__tool-heading" aria-hidden="true">
           <span className="partner-placement__tool-pulse" />
           <BadgeCheck />
         </div>
+        {placement.creativeVariant ? (
+          <div className="partner-placement__tool-visual" aria-hidden="true">
+            <PartnerCreativeRenderer
+              creativeVariant={placement.creativeVariant}
+              creativeTheme={placement.creativeTheme}
+              partnerName={placement.partner.name}
+              density="strip"
+            />
+          </div>
+        ) : null}
         <div className="partner-placement__body">
           <PartnerMeta
             formatLabel={formatLabelOverride ?? "Partner tool"}
@@ -534,8 +558,9 @@ export function ContextualPartnerBlock({
   className,
   formatLabelOverride,
   trackerRoute = "",
+  context,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
 
   if (resolved.kind === "open-slot") {
     return (
@@ -563,8 +588,9 @@ export function ContextualPartnerBlock({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--contextual",
+          "partner-placement--contextual partner-luminous partner-luminous--soft",
           trackerRoute,
+          "contextual",
         )}
       >
         <div className="partner-placement__context-marker" aria-hidden="true">
@@ -598,8 +624,9 @@ export function PartnerCollectionModule({
   className,
   formatLabelOverride,
   trackerRoute = "",
+  context,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
 
   if (resolved.kind === "open-slot") {
     return (
@@ -627,8 +654,9 @@ export function PartnerCollectionModule({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--collection",
+          "partner-placement--collection partner-luminous partner-luminous--soft",
           trackerRoute,
+          "collection",
         )}
       >
         <div className="partner-placement__collection-index" aria-hidden="true">

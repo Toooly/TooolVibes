@@ -1,7 +1,14 @@
 import {
   TAYLORA_CAMPAIGN,
   type SponsorCreativeTheme,
+  type SponsorRouteKey,
 } from "@/lib/sponsors/sponsor-placements";
+import {
+  buildPartnerDestinationUrl,
+  resolvePartnerCampaign,
+  type PartnerResolutionContext,
+  type PartnerResolutionStrategy,
+} from "@/lib/sponsors/partner-resolver";
 
 export type MonetizationStatus = "ready" | "reserved" | "planned";
 
@@ -120,6 +127,16 @@ export type MonetizationPlacement = {
   creativeVariant?: string;
   /** Partner creative theme (named accent roles + monogram) from the registry. */
   creativeTheme?: SponsorCreativeTheme;
+  /**
+   * Commercial inventory finalization — campaign resolution metadata.
+   * route/strategy/rotationOffset drive the canonical partner resolver;
+   * trackingStem keeps analytics ids stable across campaign rotation
+   * (trackingId = tv-<trackingStem>-<sponsorId>).
+   */
+  route?: SponsorRouteKey;
+  contextStrategy?: PartnerResolutionStrategy;
+  rotationOffset?: number;
+  trackingStem?: string;
 };
 
 export type PublicMonetizationPlacement = MonetizationPlacement & {
@@ -131,80 +148,80 @@ export type PublicMonetizationPlacement = MonetizationPlacement & {
 
 export const monetizationPlacements = [
   {
+    /* Partner Spotlight — campaign-agnostic: the daily campaign is chosen
+       by the canonical resolver (rotation, offset 0). Partner fields are
+       overlaid from the resolved campaign at read time. */
     key: "home-featured-tool",
     placementId: "home-featured-tool",
     surface: "Homepage",
     format: "Partner Spotlight",
     packageName: "Homepage spotlight",
     label: "Partner di TooolVibes",
-    title: TAYLORA_CAMPAIGN.headline,
-    body: TAYLORA_CAMPAIGN.description,
-    description: TAYLORA_CAMPAIGN.description,
-    ctaLabel: TAYLORA_CAMPAIGN.ctaLabel,
-    href: TAYLORA_CAMPAIGN.destinationUrl,
+    title: "Partner Spotlight in homepage (disponibile).",
+    body: "Superficie editoriale riservata a una Partner Experience attiva.",
+    description:
+      "Superficie editoriale riservata a una Partner Experience attiva.",
+    ctaLabel: "Scopri il partner",
+    href: "/sponsorizza",
     status: "ready" as const,
     active: true,
     visible: true,
     priority: 1,
     audience: "Utenti in esplorazione sulla home.",
-    trackingId: "tv-home-featured-taylora",
-    startDate: TAYLORA_CAMPAIGN.startsAt,
-    endDate: TAYLORA_CAMPAIGN.endsAt,
-    creativeVariant: TAYLORA_CAMPAIGN.creativeVariant,
-    creativeTheme: TAYLORA_CAMPAIGN.creativeTheme,
-    partner: {
-      name: TAYLORA_CAMPAIGN.name,
-      category: TAYLORA_CAMPAIGN.eyebrow,
-      href: TAYLORA_CAMPAIGN.destinationUrl,
-      isDemo: false,
-    },
-    editorialReason: TAYLORA_CAMPAIGN.contextualReason ?? "",
+    trackingId: "tv-home-featured-open",
+    route: "home",
+    contextStrategy: "rotation",
+    rotationOffset: 0,
+    trackingStem: "home-featured",
   },
   {
+    /* Catalog Insert — campaign-agnostic: rotation with offset +1 so the
+       archive does not automatically repeat the Home partner. */
     key: "catalog-native-sponsor",
     placementId: "catalog-native-sponsor",
     surface: "Catalogo",
-    format: "Sponsored Tool Card",
+    format: "Catalog Insert",
     packageName: "Category native",
     label: "Sponsor",
-    title: TAYLORA_CAMPAIGN.headline,
-    body: TAYLORA_CAMPAIGN.description,
-    description: TAYLORA_CAMPAIGN.description,
-    ctaLabel: TAYLORA_CAMPAIGN.ctaLabel,
-    href: TAYLORA_CAMPAIGN.destinationUrl,
+    title: "Catalog Insert nel catalogo (disponibile).",
+    body: "Inserto editoriale riservato a una Partner Experience attiva.",
+    description:
+      "Inserto editoriale riservato a una Partner Experience attiva.",
+    ctaLabel: "Scopri il partner",
+    href: "/sponsorizza",
     status: "ready" as const,
     active: true,
     visible: true,
     priority: 2,
     audience: "Utenti che filtrano e confrontano tool nel catalogo.",
-    trackingId: "tv-catalog-native-taylora",
-    startDate: TAYLORA_CAMPAIGN.startsAt,
-    endDate: TAYLORA_CAMPAIGN.endsAt,
-    creativeVariant: TAYLORA_CAMPAIGN.creativeVariant,
-    creativeTheme: TAYLORA_CAMPAIGN.creativeTheme,
-    partner: {
-      name: TAYLORA_CAMPAIGN.name,
-      category: TAYLORA_CAMPAIGN.eyebrow,
-      href: TAYLORA_CAMPAIGN.destinationUrl,
-      isDemo: false,
-    },
-    editorialReason: TAYLORA_CAMPAIGN.contextualReason ?? "",
+    trackingId: "tv-catalog-native-open",
+    route: "archivio",
+    contextStrategy: "rotation",
+    rotationOffset: 1,
+    trackingStem: "catalog-native",
   },
   {
+    /* Contextual Experience in articles: resolver-driven by subject tags;
+       renders nothing when no campaign is semantically relevant. */
     key: "guide-inline-promo",
     surface: "Guide e articoli",
     format: "Box promo in lettura",
     packageName: "Guide native box",
-    label: "Lettura partner",
-    title: "Un box promo coerente con il tema della guida.",
+    label: "Contenuto sponsorizzato",
+    title: "Partner Experience contestuale in lettura (disponibile).",
     body: "Pensato per guide, tutorial e contenuti editoriali: dichiarato, contestuale e con copy utile invece di banner generico.",
-    ctaLabel: "Apri partnership",
-    href: "/affiliati",
-    status: "reserved",
+    ctaLabel: "Scopri il partner",
+    href: "/sponsorizza",
+    status: "ready" as const,
     active: false,
     visible: true,
     priority: 3,
     audience: "Prodotti che risolvono il problema trattato nella guida.",
+    trackingId: "tv-guide-inline-open",
+    route: "posts",
+    contextStrategy: "contextual",
+    rotationOffset: 0,
+    trackingStem: "guide-inline",
   },
   {
     key: "article-sidebar-sponsor",
@@ -223,6 +240,9 @@ export const monetizationPlacements = [
     audience: "Sponsor con contenuto, demo o risorsa da collegare alla lettura.",
   },
   {
+    /* Contextual partner surface: the resolver picks a campaign by tool
+       tags/segments; without a relevant campaign the record stays
+       non-public and the approved Open Slot V3.1 renders. */
     key: "tool-sponsored-alternative",
     placementId: "tool-sponsored-alternative",
     surface: "Scheda tool",
@@ -241,30 +261,33 @@ export const monetizationPlacements = [
     priority: 5,
     audience: "Utenti in fase di decisione su una scheda tool.",
     trackingId: "tv-tool-alternative-open",
-    partner: {
-      name: "Il tuo tool qui",
-      category: "Opportunità partner",
-      href: "/sponsorizza",
-      isDemo: false,
-    },
-    editorialReason:
-      "Questo spazio è disponibile per un partner che offre un'alternativa o strumento complementare.",
+    route: "tool-detail",
+    contextStrategy: "contextual",
+    rotationOffset: 0,
+    trackingStem: "tool-alternative",
   },
   {
+    /* Contextual partner inside a curated collection: resolver-driven by
+       collection topic; renders nothing without semantic relevance. */
     key: "collection-native-sponsor",
     surface: "Raccolte",
     format: "Sponsor di raccolta",
     packageName: "Collection sponsor",
-    label: "Partner raccolta",
-    title: "Sponsorship nativa dentro una raccolta curata.",
+    label: "Contenuto sponsorizzato",
+    title: "Partner di raccolta (disponibile).",
     body: "Adatta a speciali verticali, selezioni premium e percorsi tematici con sponsor coerente al contesto.",
-    ctaLabel: "Parla con TooolVibes",
+    ctaLabel: "Scopri il partner",
     href: "/sponsorizza",
-    status: "reserved",
+    status: "ready" as const,
     active: false,
     visible: true,
     priority: 6,
     audience: "Brand che vogliono presidiare una verticale editoriale.",
+    trackingId: "tv-collection-native-open",
+    route: "collections",
+    contextStrategy: "contextual",
+    rotationOffset: 0,
+    trackingStem: "collection-native",
   },
   {
     key: "newsletter-placement",
@@ -288,13 +311,91 @@ export type MonetizationPlacementKey = (typeof monetizationPlacements)[number]["
 
 export function resolvePublicMonetizationPlacement(
   key: MonetizationPlacementKey,
+  context?: Partial<PartnerResolutionContext>,
 ): PublicMonetizationPlacement | null {
-  const placement = getMonetizationPlacement(key);
+  const placement = getMonetizationPlacement(key, context);
   return isPublicMonetizationPlacement(placement) ? placement : null;
 }
 
-export function getMonetizationPlacement(key: MonetizationPlacementKey): MonetizationPlacement | undefined {
-  return monetizationPlacements.find((placement) => placement.key === key);
+/**
+ * Overlay the resolved partner campaign onto a placement record.
+ *
+ * Records carry no partner copy of their own: the canonical resolver picks
+ * the active campaign (rotation or contextual, per record strategy) and the
+ * public view is built from campaign fields. When no campaign is eligible
+ * or relevant, partner fields are stripped so the record is not public —
+ * open-slot surfaces (tool detail) then render the approved Open Slot.
+ */
+function applyPartnerCampaign(
+  record: MonetizationPlacement,
+  context?: Partial<PartnerResolutionContext>,
+): MonetizationPlacement {
+  if (!record.route || !record.contextStrategy) return record;
+
+  const campaign = resolvePartnerCampaign({
+    placementKey: record.key,
+    route: record.route,
+    strategy: record.contextStrategy,
+    rotationOffset: record.rotationOffset ?? 0,
+    toolSlug: context?.toolSlug,
+    tags: context?.tags,
+    text: context?.text,
+    now: context?.now,
+  });
+
+  if (!campaign) {
+    const fallback: MonetizationPlacement = {
+      ...record,
+      active: false,
+      partner: undefined,
+      editorialReason: undefined,
+      creativeVariant: undefined,
+      creativeTheme: undefined,
+      startDate: null,
+      endDate: null,
+    };
+    return fallback;
+  }
+
+  const destination = buildPartnerDestinationUrl(campaign, record.key);
+
+  return {
+    ...record,
+    active: true,
+    title: campaign.headline,
+    body: campaign.description,
+    description: campaign.description,
+    ctaLabel: campaign.ctaLabel,
+    href: destination,
+    trackingId: `tv-${record.trackingStem ?? record.key}-${campaign.sponsorId}`,
+    startDate: campaign.startsAt,
+    endDate: campaign.endsAt,
+    creativeVariant: campaign.creativeVariant,
+    creativeTheme: campaign.creativeTheme,
+    partner: {
+      name: campaign.name,
+      category: campaign.eyebrow,
+      href: destination,
+      isDemo: false,
+    },
+    editorialReason: campaign.contextualReason ?? campaign.description,
+  };
+}
+
+/**
+ * Read a placement with its partner campaign resolved. `context` carries
+ * the current subject (tool slug, catalogue segments/tags, free text) for
+ * contextual surfaces; rotation surfaces need no context.
+ */
+export function getMonetizationPlacement(
+  key: MonetizationPlacementKey,
+  context?: Partial<PartnerResolutionContext>,
+): MonetizationPlacement | undefined {
+  const record = monetizationPlacements.find(
+    (placement) => placement.key === key,
+  );
+  if (!record) return undefined;
+  return applyPartnerCampaign(record, context);
 }
 
 export function getLaunchSponsorSlot(

@@ -259,7 +259,12 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
             </div>
 
-            <PartnerCollectionModule placementKey="collection-native-sponsor" />
+            <PartnerCollectionModule
+              placementKey="collection-native-sponsor"
+              context={{
+                text: `${collection.title} ${collection.description} ${theme}`,
+              }}
+            />
           </div>
         </div>
       </section>

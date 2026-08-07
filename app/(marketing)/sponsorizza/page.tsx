@@ -10,10 +10,23 @@ import {
 } from "lucide-react";
 
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
-import { TAYLORA_CAMPAIGN } from "@/lib/sponsors/sponsor-placements";
+import {
+  ALL_SPONSOR_CAMPAIGNS,
+  TAYLORA_CAMPAIGN,
+} from "@/lib/sponsors/sponsor-placements";
 
 import { SponsorOpportunityMailtoLink } from "@/components/monetization/sponsor-analytics-tracker";
-import { TayloraFlowCreative } from "@/components/monetization/partner-creatives";
+import {
+  PartnerCreativeRenderer,
+  TayloraFlowCreative,
+} from "@/components/monetization/partner-creatives";
+import { buildPartnerDestinationUrl } from "@/lib/sponsors/partner-resolver";
+import { partnerThemeKey } from "@/lib/sponsors/partner-theme";
+
+/** Showcase previews: every currently active direct partner campaign. */
+const LIVE_PARTNER_CAMPAIGNS = ALL_SPONSOR_CAMPAIGNS.filter(
+  (campaign) => campaign.status === "active",
+);
 
 import "@/styles/sponsorizza.css";
 
@@ -395,13 +408,52 @@ export default function SponsorizzaPage() {
           <div className="sponsorizza-example__caption">
             <strong>La stessa creatività che va in produzione</strong>
             <span>
-              Il visual qui sopra è la Partner Experience reale: i contenuti del partner
-              (video, PDF, corsi) confluiscono in una raccolta protetta e raggiungono il
-              cliente. Il placement mostra chiaramente la label &ldquo;Partner di TooolVibes&rdquo;;
-              nessun punteggio, valutazione o classifica di TooolVibes è modificato dalla
-              presenza di questa sponsorship.
+              Il visual qui sopra è la Partner Experience reale: conoscenza, procedure e
+              corsi del partner confluiscono in un workspace protetto e raggiungono il team,
+              con tracciamento dei completamenti. Il placement mostra chiaramente la label
+              &ldquo;Partner di TooolVibes&rdquo;; nessun punteggio, valutazione o classifica di
+              TooolVibes è modificato dalla presenza di questa sponsorship.
             </span>
           </div>
+        </div>
+
+        <div className="sponsorizza-partners" aria-label="Partner Experience live">
+          <p className="sponsorizza-partners__eyebrow">Partner Experience live</p>
+          <ul className="sponsorizza-partners__grid">
+            {LIVE_PARTNER_CAMPAIGNS.map((campaign) => (
+              <li
+                key={campaign.id}
+                className="sponsorizza-partners__card"
+                data-partner-theme={partnerThemeKey(campaign.creativeTheme)}
+              >
+                <div className="sponsorizza-partners__visual" aria-hidden="true">
+                  <PartnerCreativeRenderer
+                    creativeVariant={campaign.creativeVariant}
+                    creativeTheme={campaign.creativeTheme}
+                    partnerName={campaign.name}
+                    density="strip"
+                  />
+                </div>
+                <div className="sponsorizza-partners__copy">
+                  <strong>{campaign.name}</strong>
+                  <span>{campaign.eyebrow}</span>
+                  <a
+                    href={buildPartnerDestinationUrl(campaign, "sponsorizza-preview")}
+                    rel="sponsored noopener noreferrer"
+                    target="_blank"
+                  >
+                    <span>Visita {campaign.name}</span>
+                    <ArrowUpRight aria-hidden="true" />
+                    <span className="sr-only">(link sponsorizzato)</span>
+                  </a>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p className="sponsorizza-partners__note">
+            Anteprime dimostrative dei mondi creativi attivi: non sono placement a pagamento
+            in questa pagina e non registrano impression di campagna.
+          </p>
         </div>
       </section>
 

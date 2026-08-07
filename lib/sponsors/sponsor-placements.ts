@@ -29,7 +29,24 @@ export type SponsorPlacementId =
  * forking the placement architecture. Unknown/absent values resolve to the
  * generic partner creative.
  */
-export type SponsorCreativeVariant = "taylora-flow" | "generic";
+export type SponsorCreativeVariant =
+  | "taylora-flow"
+  | "onweb24-build"
+  | "zaplater-schedule"
+  | "generic";
+
+/**
+ * Public route keys a direct campaign can be eligible for. Mirrors the
+ * canonical commercial matrix (lib/monetization/commercial-placement-matrix.ts).
+ */
+export type SponsorRouteKey =
+  | "home"
+  | "archivio"
+  | "tool-detail"
+  | "posts"
+  | "collections"
+  | "radar"
+  | "sponsorizza";
 
 /**
  * Partner-specific creative theme. The campaign selects named accent roles
@@ -45,8 +62,9 @@ export type SponsorCreativeTheme = {
   /** Named accent roles, resolved by CSS theme blocks. */
   accentPrimary?: "gold" | "cyan" | "violet";
   accentSecondary?: "gold" | "cyan" | "violet";
-  /** Creative motif identifier (e.g. "flow" for pipeline narratives). */
-  motif?: "flow";
+  /** Creative motif identifier ("flow" pipeline, "pipeline" build stages,
+      "timeline" scheduling narrative). */
+  motif?: "flow" | "pipeline" | "timeline";
   /** Partner monogram used for identity marks (falls back to first letter). */
   monogram?: string;
 };
@@ -74,6 +92,21 @@ export type SponsorCampaign = {
   utmCampaign?: string;
   creativeVariant?: SponsorCreativeVariant;
   creativeTheme?: SponsorCreativeTheme;
+  /**
+   * Contextual eligibility signals (commercial inventory finalization).
+   * categoryTags carry real catalogue segments (DirectoryFilterGroup keys);
+   * contextTags carry free-topic signals matched against tool/article tags
+   * and titles. preferredRoutes/excludedRoutes gate route eligibility.
+   * rotationWeight biases the deterministic per-placement rotation between
+   * otherwise equivalent campaigns (never influences organic ranking —
+   * the name guard in __tests__/lib/sponsors/taylora-rules.test.ts allows
+   * exactly this one sponsor-rotation field).
+   */
+  contextTags?: readonly string[];
+  categoryTags?: readonly string[];
+  preferredRoutes?: readonly SponsorRouteKey[];
+  excludedRoutes?: readonly SponsorRouteKey[];
+  rotationWeight?: number;
 };
 
 function isWithinDateWindow(startsAt?: string, endsAt?: string): boolean {
@@ -116,27 +149,36 @@ export function getActiveCampaigns(
 // ============================================================
 // TAYLORA — canonical first sponsor campaign
 // ============================================================
+/**
+ * Copy contract: every claim below is supported by the current public
+ * partner website (audited 2026-08-07):
+ *  - Taylora  → https://discover.taylora.com/it/
+ *  - OnWeb24  → https://onweb24.com
+ *  - ZapLater → https://www.zaplater.com/it
+ * Do not add capabilities that the partner site does not state.
+ */
 export const TAYLORA_CAMPAIGN: SponsorCampaign = {
   id: "taylora-v1-2026",
   sponsorId: "taylora",
   toolSlug: "taylora",
   name: "Taylora",
   logo: null,
-  eyebrow: "Partner di TooolVibes",
+  eyebrow: "Formazione digitale",
   headline:
-    "Distribuisci contenuti digitali protetti senza complicare l'esperienza del tuo pubblico.",
+    "Onboarding digitale, procedure e formazione obbligatoria in un'unica piattaforma.",
   description:
-    "Taylora è la piattaforma che permette a creator, coach ed editori di vendere e distribuire contenuti digitali protetti — corsi, membership, download — senza costruire un'infrastruttura tecnica.",
+    "Corsi pronti su Sicurezza, GDPR e AI Act, procedure digitalizzate e percorsi di onboarding replicabili: ogni completamento è tracciato, ogni certificato è automatico.",
   contextualReason:
-    "Partner selezionato per chi vuole distribuire contenuti digitali protetti senza perdere il controllo dell'esperienza.",
+    "Partner selezionato per chi organizza conoscenza e formazione del team: percorsi strutturati, tracciamento dei completamenti e report pronti per ogni audit.",
   ctaLabel: "Scopri Taylora",
-  destinationUrl: "https://taylora.com",
+  destinationUrl: "https://discover.taylora.com/it/",
   disclosure: "Partner di TooolVibes",
   placements: ["home-partner-spotlight", "archive-sponsored-tool"],
   status: "active",
   startsAt: "2026-08-01",
   priority: 1,
-  utmCampaign: "tooolvibes-sponsor-v1",
+  rotationWeight: 1,
+  utmCampaign: "taylora",
   creativeVariant: "taylora-flow",
   creativeTheme: {
     accentPrimary: "gold",
@@ -144,10 +186,130 @@ export const TAYLORA_CAMPAIGN: SponsorCampaign = {
     motif: "flow",
     monogram: "T",
   },
+  contextTags: [
+    "onboarding",
+    "formazione",
+    "procedure",
+    "corsi",
+    "training",
+    "conoscenza",
+    "knowledge",
+    "hr",
+    "operations",
+    "team",
+    "tutorial",
+    "corporate",
+    "compliance",
+    "certificati",
+  ],
+  categoryTags: ["productivity", "ai-video", "ai-writing"],
+  preferredRoutes: ["home", "archivio", "tool-detail", "posts", "collections"],
+};
+
+export const ONWEB24_CAMPAIGN: SponsorCampaign = {
+  id: "onweb24-v1-2026",
+  sponsorId: "onweb24",
+  name: "OnWeb24",
+  logo: null,
+  eyebrow: "Siti web done-for-you",
+  headline:
+    "Il sito web che ti porta clienti: bello, velocissimo, pronto in 24 ore.",
+  description:
+    "Rispondi a poche domande: design, copy, SEO tecnico, performance e integrazioni li gestisce il team OnWeb24. Hosting e dominio inclusi, disdici quando vuoi.",
+  contextualReason:
+    "Partner selezionato per chi sta valutando come costruire la propria presenza online: un sito completo — design, copy, SEO e sistema di contatto — realizzato dal team OnWeb24.",
+  ctaLabel: "Scopri OnWeb24",
+  destinationUrl: "https://onweb24.com",
+  disclosure: "Partner di TooolVibes",
+  placements: ["home-partner-spotlight", "archive-sponsored-tool"],
+  status: "active",
+  startsAt: "2026-08-07",
+  priority: 1,
+  rotationWeight: 1,
+  utmCampaign: "onweb24",
+  creativeVariant: "onweb24-build",
+  creativeTheme: {
+    accentPrimary: "violet",
+    accentSecondary: "cyan",
+    motif: "pipeline",
+    monogram: "O",
+  },
+  contextTags: [
+    "sito",
+    "siti web",
+    "website",
+    "landing",
+    "landing page",
+    "builder",
+    "no-code",
+    "cms",
+    "seo",
+    "conversione",
+    "conversioni",
+    "presenza online",
+    "web",
+  ],
+  categoryTags: ["website-builder", "no-code", "ui-builder", "headless-cms"],
+  preferredRoutes: ["home", "archivio", "tool-detail", "posts", "collections"],
+};
+
+export const ZAPLATER_CAMPAIGN: SponsorCampaign = {
+  id: "zaplater-v1-2026",
+  sponsorId: "zaplater",
+  name: "ZapLater",
+  logo: null,
+  eyebrow: "WhatsApp scheduling",
+  headline:
+    "Scrivi ora, invia quando conta: messaggi WhatsApp programmati.",
+  description:
+    "Programmi il messaggio e scegli quando: invio singolo, ricorrente o nei gruppi. ZapLater lo consegna al momento giusto.",
+  contextualReason:
+    "Partner selezionato per chi coordina community, clienti o promemoria su WhatsApp: invio programmato, anche ricorrente e nei gruppi.",
+  ctaLabel: "Scopri ZapLater",
+  destinationUrl: "https://www.zaplater.com/it",
+  disclosure: "Partner di TooolVibes",
+  placements: ["home-partner-spotlight", "archive-sponsored-tool"],
+  status: "active",
+  startsAt: "2026-08-07",
+  priority: 1,
+  rotationWeight: 1,
+  utmCampaign: "zaplater",
+  creativeVariant: "zaplater-schedule",
+  creativeTheme: {
+    accentPrimary: "cyan",
+    accentSecondary: "violet",
+    motif: "timeline",
+    monogram: "Z",
+  },
+  contextTags: [
+    "whatsapp",
+    "automation",
+    "automazioni",
+    "marketing",
+    "community",
+    "comunità",
+    "reminder",
+    "promemoria",
+    "crm",
+    "chat",
+    "supporto",
+    "messaggi",
+    "vendite",
+  ],
+  categoryTags: [
+    "marketing",
+    "automation",
+    "customer-support",
+    "sales",
+    "ai-agents",
+  ],
+  preferredRoutes: ["home", "archivio", "tool-detail", "posts", "collections"],
 };
 
 export const ALL_SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [
   TAYLORA_CAMPAIGN,
+  ONWEB24_CAMPAIGN,
+  ZAPLATER_CAMPAIGN,
 ];
 
 // ============================================================

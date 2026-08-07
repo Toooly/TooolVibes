@@ -2,16 +2,28 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
+  CheckCheck,
+  ClipboardList,
+  Clock,
   FileText,
+  Globe,
   GraduationCap,
   Lock,
+  MessageCircle,
+  Palette,
+  PenLine,
+  RotateCcw,
+  Search,
+  UserPlus,
   UserRound,
+  Users,
   Video,
 } from "lucide-react";
 
 import { SponsorKineticCore } from "@/components/monetization/sponsor-kinetic-core";
 import type { SponsorCreativeTheme } from "@/lib/sponsors/sponsor-placements";
 import { cn } from "@/lib/utils";
+export { partnerThemeKey } from "@/lib/sponsors/partner-theme";
 
 /**
  * Partner Experience creative layer.
@@ -67,28 +79,33 @@ function useInViewFlag(initial = true) {
    ============================================================ */
 
 type FlowNode = {
-  id: "video" | "pdf" | "corso";
+  id: "procedure" | "corsi" | "onboarding";
   label: string;
   x: number;
   y: number;
   icon: typeof Video;
 };
 
+/**
+ * Taylora narrative (discover.taylora.com, audited 2026-08-07):
+ * azienda → conoscenza/procedure/corsi → workspace strutturato e protetto
+ * → team tracciato (completamenti, certificati, report di audit).
+ */
 const TAYLORA_SOURCE_NODES: readonly FlowNode[] = [
-  { id: "video", label: "Video", x: 16, y: 24, icon: Video },
-  { id: "pdf", label: "PDF", x: 16, y: 50, icon: FileText },
-  { id: "corso", label: "Corso", x: 16, y: 76, icon: GraduationCap },
+  { id: "procedure", label: "Procedure", x: 16, y: 24, icon: FileText },
+  { id: "corsi", label: "Corsi", x: 16, y: 50, icon: GraduationCap },
+  { id: "onboarding", label: "Onboarding", x: 16, y: 76, icon: UserPlus },
 ];
 
-const TAYLORA_PHASES = ["Contenuti", "Protezione", "Cliente"] as const;
+const TAYLORA_PHASES = ["Conoscenza", "Formazione", "Tracciamento"] as const;
 
 /* Node coordinates shared between the SVG path space (viewBox 0 0 100 100,
    preserveAspectRatio="none") and the HTML chips (percentage offsets), so
    lines and nodes stay connected at any panel size. */
 const TAYLORA_PATHS = {
-  video: "M 16 24 C 30 24 34 50 45 50",
-  pdf: "M 16 50 L 45 50",
-  corso: "M 16 76 C 30 76 34 50 45 50",
+  procedure: "M 16 24 C 30 24 34 50 45 50",
+  corsi: "M 16 50 L 45 50",
+  onboarding: "M 16 76 C 30 76 34 50 45 50",
   out: "M 57 50 L 86 50",
 } as const;
 
@@ -197,7 +214,7 @@ export function TayloraFlowCreative({
         <span className="taylora-flow__hub-lock">
           <Lock aria-hidden="true" />
         </span>
-        <span className="taylora-flow__hub-label">Raccolta protetta</span>
+        <span className="taylora-flow__hub-label">Workspace protetto</span>
       </div>
 
       <div
@@ -207,11 +224,347 @@ export function TayloraFlowCreative({
         <span className="taylora-flow__customer-icon">
           <UserRound aria-hidden="true" />
         </span>
-        <span className="taylora-flow__customer-label">Cliente</span>
+        <span className="taylora-flow__customer-label">Team</span>
       </div>
 
       <ol className="taylora-flow__phases">
         {TAYLORA_PHASES.map((phase) => (
+          <li key={phase}>{phase}</li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/* ============================================================
+   ONWEB24 — brief → design/copy/seo → site live → leads
+   ============================================================ */
+
+type CanvasNode = {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  icon: typeof Globe;
+};
+
+/**
+ * OnWeb24 narrative (onweb24.com, audited 2026-08-07): you answer a few
+ * questions; the team handles design, copy, technical SEO, performance and
+ * integrations; the site goes live (24h claim / 7-day guarantee) and the
+ * lead system (forms, WhatsApp, booking) brings clients.
+ * Composition intentionally distinct from Taylora: one brief fans out to
+ * three parallel workstreams before converging to the live site.
+ */
+const ONWEB24_BRIEF: CanvasNode = {
+  id: "brief",
+  label: "Brief",
+  x: 12,
+  y: 50,
+  icon: ClipboardList,
+};
+
+const ONWEB24_WORK_NODES: readonly CanvasNode[] = [
+  { id: "design", label: "Design", x: 38, y: 22, icon: Palette },
+  { id: "copy", label: "Copy", x: 38, y: 50, icon: PenLine },
+  { id: "seo", label: "SEO", x: 38, y: 78, icon: Search },
+];
+
+const ONWEB24_PATHS = {
+  briefDesign: "M 17 47 C 26 44 30 26 34 24",
+  briefCopy: "M 17 50 L 33 50",
+  briefSeo: "M 17 53 C 26 56 30 74 34 76",
+  designLive: "M 43 24 C 52 26 56 44 61 47",
+  copyLive: "M 43 50 L 61 50",
+  seoLive: "M 43 76 C 52 74 56 56 61 53",
+  out: "M 71 50 L 86 50",
+} as const;
+
+const ONWEB24_PHASES = ["Brief", "Realizzazione", "Clienti"] as const;
+
+export function OnWeb24BuildCreative({
+  density = "stage",
+  monogram = "O",
+  className,
+}: {
+  density?: PartnerCreativeDensity;
+  monogram?: string;
+  className?: string;
+}) {
+  const { rootRef, inView } = useInViewFlag(true);
+  const BriefIcon = ONWEB24_BRIEF.icon;
+
+  return (
+    <div
+      ref={rootRef}
+      aria-hidden="true"
+      role="presentation"
+      data-creative="onweb24-build"
+      data-creative-density={density}
+      data-in-view={inView ? "true" : "false"}
+      className={cn(
+        "partner-canvas",
+        "onweb24-build",
+        density === "strip" && "partner-canvas--strip",
+        className,
+      )}
+    >
+      <span className="partner-canvas__monogram">{monogram}</span>
+      <div className="partner-canvas__grid" />
+
+      <svg
+        className="partner-canvas__paths"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        focusable="false"
+      >
+        {Object.values(ONWEB24_PATHS).map((d, i) => (
+          <path
+            key={`base-${i}`}
+            className={cn(
+              "partner-canvas__path",
+              d === ONWEB24_PATHS.out && "partner-canvas__path--out",
+            )}
+            d={d}
+            pathLength={100}
+            vectorEffect="non-scaling-stroke"
+          />
+        ))}
+        <path
+          className="partner-canvas__pulse partner-canvas__pulse--a"
+          d={ONWEB24_PATHS.briefCopy}
+          pathLength={100}
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          className="partner-canvas__pulse partner-canvas__pulse--b"
+          d={ONWEB24_PATHS.designLive}
+          pathLength={100}
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          className="partner-canvas__pulse partner-canvas__pulse--c"
+          d={ONWEB24_PATHS.seoLive}
+          pathLength={100}
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          className="partner-canvas__pulse partner-canvas__pulse--out"
+          d={ONWEB24_PATHS.out}
+          pathLength={100}
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          className="partner-canvas__arrow"
+          d="M 79 46.5 L 85.5 50 L 79 53.5 Z"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+
+      <span
+        className="partner-canvas__node partner-canvas__node--brief"
+        style={{ left: `${ONWEB24_BRIEF.x}%`, top: `${ONWEB24_BRIEF.y}%` } as CSSProperties}
+      >
+        <BriefIcon aria-hidden="true" />
+        <span>{ONWEB24_BRIEF.label}</span>
+      </span>
+
+      <ul className="partner-canvas__sources">
+        {ONWEB24_WORK_NODES.map((node) => {
+          const Icon = node.icon;
+          return (
+            <li
+              key={node.id}
+              className={cn("partner-canvas__node", `partner-canvas__node--${node.id}`)}
+              style={{ left: `${node.x}%`, top: `${node.y}%` } as CSSProperties}
+            >
+              <Icon aria-hidden="true" />
+              <span>{node.label}</span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div
+        className="partner-canvas__hub"
+        style={{ left: "66%", top: "50%" } as CSSProperties}
+      >
+        <span className="partner-canvas__hub-ring" />
+        <span className="partner-canvas__hub-icon">
+          <Globe aria-hidden="true" />
+        </span>
+        <span className="partner-canvas__hub-label">Sito live</span>
+      </div>
+
+      <div
+        className="partner-canvas__dest"
+        style={{ left: "90%", top: "50%" } as CSSProperties}
+      >
+        <span className="partner-canvas__dest-icon">
+          <Users aria-hidden="true" />
+        </span>
+        <span className="partner-canvas__dest-label">Clienti</span>
+      </div>
+
+      <ol className="partner-canvas__phases">
+        {ONWEB24_PHASES.map((phase) => (
+          <li key={phase}>{phase}</li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/* ============================================================
+   ZAPLATER — write now → schedule → chat/group → sent
+   ============================================================ */
+
+/**
+ * ZapLater narrative (zaplater.com, audited 2026-08-07): "Write now, send
+ * when it matters" — schedule WhatsApp messages: one-time, recurring, and
+ * in groups. The creative world is a timeline: draft → scheduled clock →
+ * chat/group delivery with a sent state.
+ */
+const ZAPLATER_DRAFT: CanvasNode = {
+  id: "bozza",
+  label: "Bozza",
+  x: 12,
+  y: 44,
+  icon: PenLine,
+};
+
+const ZAPLATER_DESTINATIONS: readonly CanvasNode[] = [
+  { id: "chat", label: "Chat", x: 84, y: 28, icon: MessageCircle },
+  { id: "gruppo", label: "Gruppo", x: 84, y: 62, icon: Users },
+];
+
+const ZAPLATER_PATHS = {
+  draftClock: "M 17 44 L 38 44",
+  clockChat: "M 52 42 C 62 40 70 32 79 29",
+  clockGroup: "M 52 46 C 62 48 70 58 79 61",
+} as const;
+
+const ZAPLATER_TICKS = [22, 32, 42, 52, 62, 72] as const;
+
+const ZAPLATER_PHASES = ["Scrivi", "Programma", "Consegna"] as const;
+
+export function ZapLaterScheduleCreative({
+  density = "stage",
+  monogram = "Z",
+  className,
+}: {
+  density?: PartnerCreativeDensity;
+  monogram?: string;
+  className?: string;
+}) {
+  const { rootRef, inView } = useInViewFlag(true);
+  const DraftIcon = ZAPLATER_DRAFT.icon;
+
+  return (
+    <div
+      ref={rootRef}
+      aria-hidden="true"
+      role="presentation"
+      data-creative="zaplater-schedule"
+      data-creative-density={density}
+      data-in-view={inView ? "true" : "false"}
+      className={cn(
+        "partner-canvas",
+        "zaplater-schedule",
+        density === "strip" && "partner-canvas--strip",
+        className,
+      )}
+    >
+      <span className="partner-canvas__monogram">{monogram}</span>
+      <div className="partner-canvas__grid" />
+
+      {/* Timeline rail: the scheduling world is time-based. */}
+      <div className="zaplater-schedule__rail">
+        {ZAPLATER_TICKS.map((tick) => (
+          <span
+            key={tick}
+            className="zaplater-schedule__tick"
+            style={{ left: `${tick}%` } as CSSProperties}
+          />
+        ))}
+      </div>
+
+      <svg
+        className="partner-canvas__paths"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        focusable="false"
+      >
+        {Object.values(ZAPLATER_PATHS).map((d, i) => (
+          <path
+            key={`base-${i}`}
+            className="partner-canvas__path"
+            d={d}
+            pathLength={100}
+            vectorEffect="non-scaling-stroke"
+          />
+        ))}
+        <path
+          className="partner-canvas__pulse partner-canvas__pulse--a"
+          d={ZAPLATER_PATHS.draftClock}
+          pathLength={100}
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          className="partner-canvas__pulse partner-canvas__pulse--b"
+          d={ZAPLATER_PATHS.clockChat}
+          pathLength={100}
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          className="partner-canvas__pulse partner-canvas__pulse--c"
+          d={ZAPLATER_PATHS.clockGroup}
+          pathLength={100}
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+
+      <span
+        className="partner-canvas__node partner-canvas__node--bozza"
+        style={{ left: `${ZAPLATER_DRAFT.x}%`, top: `${ZAPLATER_DRAFT.y}%` } as CSSProperties}
+      >
+        <DraftIcon aria-hidden="true" />
+        <span>{ZAPLATER_DRAFT.label}</span>
+      </span>
+
+      <div
+        className="partner-canvas__hub"
+        style={{ left: "45%", top: "44%" } as CSSProperties}
+      >
+        <span className="partner-canvas__hub-ring" />
+        <span className="partner-canvas__hub-icon">
+          <Clock aria-hidden="true" />
+        </span>
+        <span className="partner-canvas__hub-badge">
+          <RotateCcw aria-hidden="true" />
+        </span>
+        <span className="partner-canvas__hub-label">Programmato</span>
+      </div>
+
+      <ul className="partner-canvas__sources">
+        {ZAPLATER_DESTINATIONS.map((node) => {
+          const Icon = node.icon;
+          return (
+            <li
+              key={node.id}
+              className={cn("partner-canvas__node", `partner-canvas__node--${node.id}`)}
+              style={{ left: `${node.x}%`, top: `${node.y}%` } as CSSProperties}
+            >
+              <Icon aria-hidden="true" />
+              <span>{node.label}</span>
+              <CheckCheck className="partner-canvas__sent" aria-hidden="true" />
+            </li>
+          );
+        })}
+      </ul>
+
+      <ol className="partner-canvas__phases">
+        {ZAPLATER_PHASES.map((phase) => (
           <li key={phase}>{phase}</li>
         ))}
       </ol>
@@ -304,20 +657,6 @@ export type PartnerCreativeRendererProps = {
   className?: string;
 };
 
-/**
- * Maps a campaign creative theme to the CSS theme block key consumed via
- * `data-partner-theme` on the placement shell. Returns undefined when the
- * campaign carries no theme, so the neutral treatment applies.
- */
-export function partnerThemeKey(
-  theme?: SponsorCreativeTheme,
-): string | undefined {
-  if (!theme?.accentPrimary) return undefined;
-  return theme.accentSecondary
-    ? `${theme.accentPrimary}-${theme.accentSecondary}`
-    : theme.accentPrimary;
-}
-
 export function PartnerCreativeRenderer({
   creativeVariant,
   creativeTheme,
@@ -331,6 +670,26 @@ export function PartnerCreativeRenderer({
       <TayloraFlowCreative
         density={density}
         monogram={creativeTheme?.monogram ?? monogram ?? "T"}
+        className={className}
+      />
+    );
+  }
+
+  if (creativeVariant === "onweb24-build") {
+    return (
+      <OnWeb24BuildCreative
+        density={density}
+        monogram={creativeTheme?.monogram ?? monogram ?? "O"}
+        className={className}
+      />
+    );
+  }
+
+  if (creativeVariant === "zaplater-schedule") {
+    return (
+      <ZapLaterScheduleCreative
+        density={density}
+        monogram={creativeTheme?.monogram ?? monogram ?? "Z"}
         className={className}
       />
     );

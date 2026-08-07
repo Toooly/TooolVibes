@@ -164,6 +164,11 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
             <PartnerToolCard
               placementKey="tool-sponsored-alternative"
               trackerRoute={`/toools/${slug}`}
+              context={{
+                toolSlug: slug,
+                tags: [...tool.filterGroups, ...tool.tags],
+                text: `${tool.name} ${tool.shortDescription ?? ""}`,
+              }}
             />
             <SponsorOpportunityLink placementId="tool-detail-sponsor-opportunity" route={`/toools/${slug}`} />
           </div>
