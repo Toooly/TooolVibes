@@ -19,7 +19,7 @@
  *  - Sponsor module hidden when partner is demo/fixture/development/placeholder
  */
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState, type ReactNode } from "react";
 import {
   Search,
   SlidersHorizontal,
@@ -42,6 +42,12 @@ type DefinitiveArchiveProps = {
   initialQuery?: string;
   initialGroup?: string;
   initialLevel?: CatalogLevelFilter;
+  /**
+   * Partner Experience insert, rendered INSIDE the discovery flow after
+   * the first meaningful group of organic cards. Purely render-level:
+   * the organic array, its order and its ranks are never touched.
+   */
+  partnerInsert?: ReactNode;
 };
 
 type SortKey = "name-asc" | "name-desc" | "recent";
@@ -67,12 +73,22 @@ const MOBILE_STEP = 12;
 /** Number of category chips to show before the expand/collapse toggle */
 const VISIBLE_CATEGORY_CHIPS = 8;
 
+/**
+ * Partner Experience insertion point inside the discovery flow: the insert
+ * renders after this many organic cards (between position 6 and 7), only in
+ * the unfiltered discovery view. Organic position N stays organic position N.
+ * 6 divides both the 2-column and 3-column grids, so the full-row insert
+ * never leaves an orphan organic card on the preceding row.
+ */
+const PARTNER_INSERT_AFTER = 6;
+
 export function DefinitiveArchive({
   tools,
   filterGroups,
   initialQuery = "",
   initialGroup = "all",
   initialLevel = "all",
+  partnerInsert = null,
 }: DefinitiveArchiveProps) {
   const [activeGroup, setActiveGroup] = useState<string>(initialGroup);
   const [activeLevel, setActiveLevel] = useState<string>(initialLevel);
@@ -470,9 +486,21 @@ export function DefinitiveArchive({
                 className="ar4-grid__list ar4-grid__list--motion"
               >
                 {visibleFiltered.map((tool, idx) => (
-                  <li key={tool.slug}>
-                    <ArchiveV4ToolCard tool={tool} rank={idx + 1} />
-                  </li>
+                  <Fragment key={tool.slug}>
+                    <li>
+                      <ArchiveV4ToolCard tool={tool} rank={idx + 1} />
+                    </li>
+                    {partnerInsert &&
+                    !hasActiveFilter &&
+                    idx === PARTNER_INSERT_AFTER - 1 ? (
+                      <li
+                        key="partner-experience-insert"
+                        className="ar4-grid__item--partner"
+                      >
+                        {partnerInsert}
+                      </li>
+                    ) : null}
+                  </Fragment>
                 ))}
               </ul>
 

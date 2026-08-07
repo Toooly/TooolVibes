@@ -3,12 +3,8 @@ import Link from "next/link";
 
 import { DefinitiveArchive } from "@/components/archive/definitive-archive";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
-import {
-  PartnerToolCard,
-  SponsorOpportunityLink,
-} from "@/components/monetization/partner-placements";
+import { PartnerEditorialInsert } from "@/components/monetization/partner-placements";
 import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
-import { isCatalogDensityPolicyEnabled } from "@/lib/config/catalog-density-policy";
 import { parseCatalogLevelParam } from "@/components/directory/catalog/catalog-controller";
 import {
   getPublicToolFilterGroups,
@@ -44,36 +40,32 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
     : "all";
   const initialLevel = parseCatalogLevelParam(params.level);
 
-  /* B38 / MOB-702 — sponsor policy: con la density policy attiva lo
-     slot sponsor NON precede il primo valore organico utile: la band
-     si sposta DOPO il catalogo (categorie/tool). Flag OFF → posizione
-     legacy above-the-fold, reversibilita' immediata. */
-  const catalogDensityPolicy = isCatalogDensityPolicyEnabled();
-
+  /* Partner Experience V3.1 — il Catalog Insert vive DENTRO il flusso di
+     discovery: viene inserito a livello di render dopo il primo gruppo di
+     card organiche (vedi DefinitiveArchive), mai prima del valore
+     organico e mai in coda al catalogo. L'ordine organico resta intatto. */
   // V2 contract: non renderizzare lo slot se il record è demo/fixture/
   // development/placeholder. Wrapper identico a quello della Home V2.
   const placement = resolvePublicMonetizationPlacement("catalog-native-sponsor");
 
   return (
     <div className="archive-final-surface relative overflow-x-hidden">
-      {!catalogDensityPolicy && placement ? (
-        <div className="archive-partner-placement-wrap archive-partner-placement-wrap--before">
-          <PartnerToolCard
-            placementKey="catalog-native-sponsor"
-            formatLabelOverride="Partner nel catalogo"
-            className="archive-partner-placement archive-partner-placement--before"
-            trackerRoute="/archivio"
-          />
-          <SponsorOpportunityLink placementId="archive-sponsor-opportunity" route="/archivio" />
-        </div>
-      ) : null}
-
       <DefinitiveArchive
         tools={tools}
         filterGroups={filterGroups}
         initialQuery={initialQuery}
         initialGroup={initialGroup}
         initialLevel={initialLevel}
+        partnerInsert={
+          placement ? (
+            <PartnerEditorialInsert
+              placementKey="catalog-native-sponsor"
+              formatLabelOverride="Partner nel catalogo"
+              className="archive-partner-placement"
+              trackerRoute="/archivio"
+            />
+          ) : null
+        }
       />
 
       <TinyAdzInlineSlot placement="archive-feed" />
@@ -130,17 +122,6 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
         </div>
       </section>
 
-      {catalogDensityPolicy && placement ? (
-        <div className="archive-partner-placement-wrap archive-partner-placement-wrap--after">
-          <PartnerToolCard
-            placementKey="catalog-native-sponsor"
-            formatLabelOverride="Partner nel catalogo"
-            className="archive-partner-placement archive-partner-placement--after"
-            trackerRoute="/archivio"
-          />
-          <SponsorOpportunityLink placementId="archive-sponsor-opportunity" route="/archivio" />
-        </div>
-      ) : null}
     </div>
   );
 }

@@ -81,31 +81,17 @@
   flex-direction: column;
 }
 
+/* Partner Experience insert lives inside the discovery grid (render-level
+   insertion after the first group of organic cards): the <li> spans the
+   full row, the aside fills it. */
+.ar4-grid__item--partner {
+  grid-column: 1 / -1;
+}
+
 .archive-partner-placement {
   position: relative;
   z-index: var(--tv-z-content);
-  width: min(calc(100% - 2rem), var(--tv-container-uw));
-  margin-inline: auto;
-}
-
-.archive-partner-placement--before {
-  margin-top: calc(var(--tv-space-5) * -1);
-  margin-bottom: var(--tv-space-3);
-}
-
-.archive-partner-placement--after {
-  margin-top: var(--tv-space-5);
-}
-
-@media (min-width: 640px) {
-  .archive-partner-placement {
-    width: min(calc(100% - 3rem), var(--tv-container-uw));
-  }
-
-  .archive-partner-placement--before {
-    margin-top: calc(var(--tv-space-8) * -1);
-    margin-bottom: var(--tv-space-5);
-  }
+  width: 100%;
 }
 
 /* ============================================================

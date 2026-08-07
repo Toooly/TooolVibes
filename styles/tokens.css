@@ -644,6 +644,27 @@
   --tv-sponsor-shadow-ivory-1: color-mix(in srgb, var(--tv-ink-inverted-primary) 4%, transparent);
   --tv-sponsor-shadow-ivory-2: color-mix(in srgb, var(--tv-ink-inverted-primary) 28%, transparent);
 
+  /* Partner Experience V3 — "light stage / dark system".
+     The stage is a warm ivory editorial slab; the creative centre is a
+     dark kinetic structure that visualizes the partner product. All
+     values derive from foundation tokens so a palette remap propagates. */
+  --tv-partner-stage-bg: var(--tv-color-ink-100);
+  --tv-partner-stage-radius: 1.75rem;
+  --tv-partner-stage-shadow-rest: 0 1px 0 color-mix(in srgb, var(--tv-ink-inverted-primary) 5%, transparent), 0 24px 56px -28px color-mix(in srgb, var(--tv-ink-inverted-primary) 30%, transparent);
+  --tv-partner-visual-bg: var(--tv-color-surface-base);
+  --tv-partner-visual-raised: var(--tv-color-surface-raised);
+  --tv-partner-visual-border: var(--tv-color-white-12);
+  --tv-partner-visual-ink: var(--tv-color-ink-100);
+  --tv-partner-visual-ink-muted: var(--tv-color-ink-400);
+  --tv-partner-flow-line: color-mix(in srgb, var(--tv-color-ink-100) 34%, transparent);
+  --tv-partner-flow-pulse: var(--tv-accent-cyan-on-dark);
+  --tv-partner-flow-protection: var(--tv-accent-gold-on-dark);
+  --tv-partner-flow-node-bg: var(--tv-color-surface-elevated);
+  --tv-partner-flow-node-border: var(--tv-color-white-24);
+  --tv-partner-flow-period: 16s;
+  --tv-partner-headline-size: clamp(1.75rem, 2.4vw + 1rem, 3rem);
+  --tv-partner-insert-headline-size: clamp(1.125rem, 1vw + 0.85rem, 1.625rem);
+
   /* ============================================================== */
   /* === SECTION 4: FEATURE TOKENS =============================== */
   /* Feature-specific tokens. Local to a feature surface.          */

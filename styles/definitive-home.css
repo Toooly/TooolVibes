@@ -1597,7 +1597,9 @@
 }
 
 .def-home__sponsor-frame {
-  width: min(100%, 1280px);
+  /* Partner Experience V3: the stage runs wider than the reading grid so
+     the section reads as a scene change, not as another content card. */
+  width: min(100%, 1440px);
   margin: 0 auto;
   display: grid;
   gap: 12px;
@@ -1753,6 +1755,4 @@
   border-radius: 6px;
 }
 
-.def-home__sponsor .partner-placement--featured {
-  border-radius: 20px;
-}
+/* Radius owned by .partner-stage (Partner Experience V3 stage token). */

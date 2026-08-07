@@ -1,4 +1,7 @@
-import { TAYLORA_CAMPAIGN } from "@/lib/sponsors/sponsor-placements";
+import {
+  TAYLORA_CAMPAIGN,
+  type SponsorCreativeTheme,
+} from "@/lib/sponsors/sponsor-placements";
 
 export type MonetizationStatus = "ready" | "reserved" | "planned";
 
@@ -109,6 +112,14 @@ export type MonetizationPlacement = {
   endDate?: string | null;
   logo?: string | null;
   image?: string | null;
+  /**
+   * Partner-specific creative micro-world rendered at the centre of the
+   * placement shell. Sourced from the sponsor campaign registry; unknown
+   * or absent values fall back to the generic partner creative.
+   */
+  creativeVariant?: string;
+  /** Partner creative theme (named accent roles + monogram) from the registry. */
+  creativeTheme?: SponsorCreativeTheme;
 };
 
 export type PublicMonetizationPlacement = MonetizationPlacement & {
@@ -139,6 +150,8 @@ export const monetizationPlacements = [
     trackingId: "tv-home-featured-taylora",
     startDate: TAYLORA_CAMPAIGN.startsAt,
     endDate: TAYLORA_CAMPAIGN.endsAt,
+    creativeVariant: TAYLORA_CAMPAIGN.creativeVariant,
+    creativeTheme: TAYLORA_CAMPAIGN.creativeTheme,
     partner: {
       name: TAYLORA_CAMPAIGN.name,
       category: TAYLORA_CAMPAIGN.eyebrow,
@@ -167,6 +180,8 @@ export const monetizationPlacements = [
     trackingId: "tv-catalog-native-taylora",
     startDate: TAYLORA_CAMPAIGN.startsAt,
     endDate: TAYLORA_CAMPAIGN.endsAt,
+    creativeVariant: TAYLORA_CAMPAIGN.creativeVariant,
+    creativeTheme: TAYLORA_CAMPAIGN.creativeTheme,
     partner: {
       name: TAYLORA_CAMPAIGN.name,
       category: TAYLORA_CAMPAIGN.eyebrow,

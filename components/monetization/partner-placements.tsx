@@ -10,7 +10,11 @@ import {
   Layers3,
 } from "lucide-react";
 
-import { SponsorKineticCore } from "@/components/monetization/sponsor-kinetic-core";
+import {
+  OpenSlotPreviewCreative,
+  PartnerCreativeRenderer,
+  partnerThemeKey,
+} from "@/components/monetization/partner-creatives";
 import {
   SponsorClickHandler,
   SponsorImpressionTracker,
@@ -82,51 +86,49 @@ export function SponsorOpenSlot({
           "partner-placement",
           "partner-placement--featured",
           "partner-placement--open",
+          "partner-open",
           className,
         )}
         data-placement-id={placement.placementId ?? placement.key}
         data-placement-surface={placement.surface}
         data-sponsored="false"
+        data-partner-experience="open-slot"
         data-tracking-id={placement.trackingId}
       >
-        <PartnerMeta formatLabel="Disponibile" disclosure={placement.label} />
-        <div className="partner-placement__body">
-          <div className="partner-placement__editorial">
-            <h2>Il prossimo tool in evidenza potrebbe essere il tuo.</h2>
-            <p>Porta il tuo tool davanti a chi sta già cercando cosa usare.</p>
+        <div className="partner-open__editorial">
+          <PartnerMeta formatLabel="Disponibile" disclosure={placement.label} />
+          <h2 className="partner-open__headline">
+            Il prossimo tool qui potrebbe essere il tuo.
+          </h2>
+          <p className="partner-open__lede">
+            Identità, messaggio e visual narrativo costruiti intorno al tuo
+            prodotto.
+          </p>
+          <div className="partner-placement__action partner-open__action">
+            <Link
+              href="/sponsorizza"
+              rel="sponsored"
+              data-tracking-id={placement.trackingId}
+              onClick={() => {
+                try {
+                  trackSponsorOpportunityClick({
+                    placementId: "tool-detail-open-slot",
+                    route: trackerRoute || "/",
+                    destination: "/sponsorizza",
+                  });
+                } catch {
+                  // Analytics failure is non-fatal and must not block navigation.
+                }
+              }}
+            >
+              <span>Sponsorizza il tuo tool su TooolVibes</span>
+              <ArrowUpRight aria-hidden="true" />
+            </Link>
           </div>
-          <ul className="partner-placement__micro-spec" aria-label="Cosa può contenere questo spazio">
-            <li>Logo e posizionamento del partner</li>
-            <li>CTA dedicata verso il tuo prodotto</li>
-            <li>Contesto editoriale curato da TooolVibes</li>
-          </ul>
+          <p className="partner-open__cue">Partner Experience curate da TooolVibes</p>
         </div>
-        <div className="partner-placement__preview" aria-hidden="true">
-          <SponsorKineticCore
-            partnerName={placement.partner?.name ?? "Opportunità sponsor"}
-            density="slot"
-          />
-        </div>
-        <div className="partner-placement__action">
-          <Link
-            href="/sponsorizza"
-            rel="sponsored"
-            data-tracking-id={placement.trackingId}
-            onClick={() => {
-              try {
-                trackSponsorOpportunityClick({
-                  placementId: "tool-detail-open-slot",
-                  route: trackerRoute || "/",
-                  destination: "/sponsorizza",
-                });
-              } catch {
-                // Analytics failure is non-fatal and must not block navigation.
-              }
-            }}
-          >
-            <span>Sponsorizza il tuo tool su TooolVibes</span>
-            <ArrowUpRight aria-hidden="true" />
-          </Link>
+        <div className="partner-open__visual" aria-hidden="true">
+          <OpenSlotPreviewCreative />
         </div>
       </aside>
     </SponsorImpressionTracker>
@@ -186,40 +188,24 @@ function PartnerIdentity({
   placement: PublicMonetizationPlacement;
 }) {
   const logo = placement.partner.logo ?? placement.logo ?? null;
+  const monogram = placement.creativeTheme?.monogram ?? null;
 
   return (
     <div className="partner-placement__identity">
-      <span className="partner-placement__identity-mark" aria-hidden="true">
+      <span
+        className={cn(
+          "partner-placement__identity-mark",
+          monogram && !logo && "partner-placement__identity-mark--monogram",
+        )}
+        aria-hidden="true"
+      >
         {logo ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={logo} alt="" loading="lazy" decoding="async" />
+        ) : monogram ? (
+          <span className="partner-placement__identity-monogram">{monogram}</span>
         ) : (
           <Building2 />
-        )}
-      </span>
-      <span className="partner-placement__identity-copy">
-        <strong>{placement.partner.name}</strong>
-        <span>{placement.partner.category}</span>
-      </span>
-    </div>
-  );
-}
-
-function PartnerKineticIdentity({
-  placement,
-}: {
-  placement: PublicMonetizationPlacement;
-}) {
-  const logo = placement.partner.logo ?? placement.logo ?? null;
-
-  return (
-    <div className="partner-placement__identity">
-      <span className="partner-placement__identity-mark" aria-hidden="true">
-        {logo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={logo} alt="" loading="lazy" decoding="async" />
-        ) : (
-          <SponsorKineticCore partnerName={placement.partner.name} density="card" />
         )}
       </span>
       <span className="partner-placement__identity-copy">
@@ -240,23 +226,6 @@ function PartnerEditorial({
       <p className="partner-placement__reason-label">Perché è rilevante</p>
       <h2>{placement.title}</h2>
       <p>{placement.editorialReason}</p>
-    </div>
-  );
-}
-
-function PartnerEditorialLong({
-  placement,
-}: {
-  placement: PublicMonetizationPlacement;
-}) {
-  const body =
-    placement.description ?? placement.body ?? placement.editorialReason ?? "";
-  return (
-    <div className="partner-placement__editorial">
-      <p className="partner-placement__reason-label">Perché è rilevante</p>
-      <h2>{placement.title}</h2>
-      <p>{placement.editorialReason}</p>
-      {body && <p className="partner-placement__body-copy">{body}</p>}
     </div>
   );
 }
@@ -370,19 +339,22 @@ export function FeaturedPartner({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--featured partner-placement--xl",
+          "partner-placement--featured partner-placement--xl partner-stage",
           trackerRoute,
         )}
+        data-partner-experience="stage"
+        data-partner-theme={partnerThemeKey(placement.creativeTheme)}
       >
-        <PartnerMeta
-          formatLabel={formatLabelOverride ?? "Partner in evidenza"}
-          disclosure={placement.label}
-        />
-        <div className="partner-placement__body">
-          <PartnerKineticIdentity placement={placement} />
-          <PartnerEditorialLong placement={placement} />
+        <div className="partner-stage__editorial">
+          <PartnerMeta
+            formatLabel={formatLabelOverride ?? "Partner in evidenza"}
+            disclosure={placement.label}
+          />
+          <PartnerIdentity placement={placement} />
+          <h2 className="partner-stage__headline">{placement.title}</h2>
+          <p className="partner-stage__lede">{placement.editorialReason}</p>
           <PartnerCategoryChip />
-          <div className="partner-placement__cta-row">
+          <div className="partner-placement__cta-row partner-stage__cta-row">
             <SponsorClickHandler
               {...trackerProps}
               destination={placement.partner.href}
@@ -392,8 +364,104 @@ export function FeaturedPartner({
             <SponsorOpportunityLink placementId="featured-sponsor-opportunity" route={trackerRoute} className="partner-placement__opportunity--inline" />
           </div>
         </div>
-        <div className="partner-placement__kinetic" aria-hidden="true">
-          <SponsorKineticCore partnerName={placement.partner.name} density="xl" />
+        <div className="partner-stage__visual" aria-hidden="true">
+          <PartnerCreativeRenderer
+            creativeVariant={placement.creativeVariant}
+            creativeTheme={placement.creativeTheme}
+            partnerName={placement.partner.name}
+            density="stage"
+          />
+        </div>
+      </aside>
+    </SponsorImpressionTracker>
+  );
+}
+
+/**
+ * Partner Experience — editorial insert for the catalogue.
+ *
+ * A magazine-style feature strip that visibly interrupts the organic card
+ * grammar: dark vertical identity marker, editorial headline, concise
+ * proposition, mini partner narrative and CTA. No score, no rank, no
+ * tool-card shell — the silhouette is deliberately not a tool card.
+ */
+export function PartnerEditorialInsert({
+  placementKey,
+  className,
+  formatLabelOverride,
+  trackerRoute = "",
+}: PartnerPlacementProps) {
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute);
+
+  if (resolved.kind === "open-slot") {
+    return (
+      <SponsorOpenSlot
+        placement={resolved.placement}
+        className={className}
+        trackerRoute={trackerRoute}
+      />
+    );
+  }
+  if (resolved.kind === "empty") return null;
+
+  const placement = resolved.placement;
+  const monogram =
+    placement.creativeTheme?.monogram ??
+    ((placement.partner.name ?? "").trim().charAt(0).toUpperCase() || "•");
+
+  const trackerProps = {
+    campaignId: placement.trackingId ?? placement.key,
+    sponsorId: placement.partner.name,
+    placementId: placement.placementId ?? placement.key,
+    route: trackerRoute,
+  };
+
+  return (
+    <SponsorImpressionTracker {...trackerProps}>
+      <aside
+        {...placementShellProps(
+          placement,
+          className,
+          "partner-placement--insert partner-insert",
+          trackerRoute,
+        )}
+        data-partner-experience="insert"
+        data-partner-theme={partnerThemeKey(placement.creativeTheme)}
+      >
+        <div className="partner-insert__marker" aria-hidden="true">
+          <span className="partner-insert__monogram">{monogram}</span>
+          <span className="partner-insert__marker-label">
+            {placement.partner.name}
+          </span>
+        </div>
+        <div className="partner-insert__main">
+          <PartnerMeta
+            formatLabel={formatLabelOverride ?? "Partner nel catalogo"}
+            disclosure={placement.label}
+          />
+          <h2 className="partner-insert__headline">{placement.title}</h2>
+          <p className="partner-insert__lede">{placement.editorialReason}</p>
+        </div>
+        <div className="partner-insert__visual" aria-hidden="true">
+          <PartnerCreativeRenderer
+            creativeVariant={placement.creativeVariant}
+            creativeTheme={placement.creativeTheme}
+            partnerName={placement.partner.name}
+            density="strip"
+          />
+        </div>
+        <div className="partner-insert__action">
+          <SponsorClickHandler
+            {...trackerProps}
+            destination={placement.partner.href}
+          >
+            <PartnerAction placement={placement} trackerRoute={trackerRoute} />
+          </SponsorClickHandler>
+          <SponsorOpportunityLink
+            placementId="archive-sponsor-opportunity"
+            route={trackerRoute}
+            className="partner-placement__opportunity--insert"
+          />
         </div>
       </aside>
     </SponsorImpressionTracker>

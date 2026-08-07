@@ -225,9 +225,9 @@
 }
 
 .partner-placement__action a:hover {
-  border-color: var(--tv-accent-violet-on-ivory);
+  border-color: var(--partner-accent-primary-ivory, var(--tv-accent-violet-on-ivory));
   color: var(--tv-color-ink-100);
-  background: var(--tv-accent-violet-on-ivory);
+  background: var(--partner-accent-primary-ivory, var(--tv-accent-violet-on-ivory));
 }
 
 .partner-placement__action a:focus-visible {
@@ -295,8 +295,8 @@
 }
 
 .partner-placement--open .partner-placement__action a:hover {
-  border-color: var(--tv-accent-violet-on-ivory);
-  background: var(--tv-accent-violet-on-ivory);
+  border-color: var(--partner-accent-primary-ivory, var(--tv-accent-violet-on-ivory));
+  background: var(--partner-accent-primary-ivory, var(--tv-accent-violet-on-ivory));
   color: var(--tv-color-ink-100);
 }
 
@@ -304,40 +304,6 @@
   margin-top: var(--tv-space-component-md);
   border-radius: var(--tv-radius-card);
   overflow: hidden;
-}
-
-.partner-placement__micro-spec {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--tv-space-micro-xs);
-  margin: var(--tv-space-component-md) 0 0;
-  padding: 0;
-  list-style: none;
-  color: var(--tv-ink-inverted-secondary);
-  font-size: var(--tv-text-caption);
-  line-height: var(--tv-leading-snug);
-}
-
-.partner-placement__micro-spec li {
-  position: relative;
-  padding-left: var(--tv-space-component-md);
-}
-
-.partner-placement__micro-spec li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.5em;
-  width: 0.5rem;
-  height: 1px;
-  background: var(--tv-accent-cyan-on-ivory);
-}
-
-@media (min-width: 768px) {
-  .partner-placement__micro-spec {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--tv-space-component-md);
-  }
 }
 
 /* ---- Opportunity link (SponsorOpportunityLink) -------------------- */
@@ -903,5 +869,1247 @@
   .sponsor-kinetic__monogram {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ============================================================== */
+/* === PARTNER EXPERIENCE V3 — light stage / dark system ======== */
+/* ============================================================== */
+/*
+ * Direct-sponsor surfaces stop behaving like cards and become temporary
+ * editorial stages inside TooolVibes:
+ *
+ *   - Silhouette: oversized radius, no hairline border, shadow-separated
+ *     ivory slab; the dark creative panel is flush with the stage edges,
+ *     breaking the padded-card grammar used by organic UI.
+ *   - Scale: display-face headlines larger than any organic card title.
+ *   - Motion: narrative product storytelling (content → protection →
+ *     customer), never ornamental badge animation.
+ *
+ * Base composition is always complete (SSR / reduced-motion / no-JS);
+ * narrative loops only run under prefers-reduced-motion: no-preference.
+ */
+
+/* ---- Shared stage shell ------------------------------------------- */
+
+.partner-placement.partner-stage,
+.partner-placement.partner-insert,
+.partner-placement.partner-open {
+  border: 0;
+  border-radius: var(--tv-partner-stage-radius);
+  background: var(--tv-partner-stage-bg);
+  box-shadow: var(--tv-partner-stage-shadow-rest);
+}
+
+.partner-placement.partner-stage:hover,
+.partner-placement.partner-insert:hover,
+.partner-placement.partner-open:hover {
+  border-color: transparent;
+}
+
+/* Neutralize legacy --featured/--open paddings on the V3 DOM. */
+.partner-stage .partner-placement__meta,
+.partner-open .partner-placement__meta {
+  padding: 0;
+}
+
+/* ---- Partner creative themes (V3.1) ------------------------------
+   A campaign may declare a creativeTheme in the registry; the shell
+   exposes only the data-partner-theme key and every consumer reads the
+   themed roles via var(--partner-accent-*, <neutral fallback>), so the
+   framework stays generic and future partners need CSS-only themes. */
+[data-partner-theme="gold-cyan"] {
+  --partner-accent-primary: var(--tv-accent-gold-on-dark);
+  --partner-accent-primary-ivory: var(--tv-accent-gold-on-ivory);
+  --partner-accent-secondary: var(--tv-accent-cyan-on-dark);
+}
+
+/* Identity monogram (partner-owned mark when no logo asset exists). */
+.partner-placement__identity-mark--monogram {
+  display: grid;
+  place-items: center;
+}
+
+.partner-placement__identity-monogram {
+  color: var(--partner-accent-primary, currentColor);
+  font-family: var(--tv-font-family-display);
+  font-size: 1.375rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* ============================================================== */
+/* === HOME — PARTNER SPOTLIGHT XL V3 (editorial stage) ========= */
+/* ============================================================== */
+
+.partner-placement.partner-stage {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto;
+  align-items: stretch;
+}
+
+.partner-stage__editorial {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--tv-space-px-8) var(--tv-space-px-6);
+}
+
+.partner-stage .partner-placement__identity {
+  margin-top: var(--tv-space-px-8);
+}
+
+.partner-stage .partner-placement__identity-mark {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-color: transparent;
+  border-radius: var(--tv-radius-feature);
+  color: var(--partner-accent-primary, var(--tv-color-ink-100));
+  background: var(--tv-color-surface-base);
+}
+
+.partner-stage .partner-placement__identity-copy strong {
+  font-size: var(--tv-text-lg);
+  letter-spacing: var(--tv-tracking-tight);
+}
+
+.partner-stage__headline {
+  margin: var(--tv-space-component-lg) 0 0;
+  max-width: 19ch;
+  color: var(--tv-ink-inverted-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: var(--tv-partner-headline-size);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: var(--tv-tracking-tight);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.partner-stage__lede {
+  margin: var(--tv-space-component-md) 0 0;
+  max-width: 46ch;
+  color: var(--tv-ink-inverted-secondary);
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-body);
+}
+
+.partner-stage__cta-row {
+  margin-top: var(--tv-space-px-8);
+}
+
+.partner-stage__visual {
+  position: relative;
+  min-height: 15rem;
+  overflow: hidden;
+  border-radius: 0 0 var(--tv-partner-stage-radius) var(--tv-partner-stage-radius);
+  background: var(--tv-partner-visual-bg);
+  color-scheme: dark;
+}
+
+@media (min-width: 1024px) {
+  .partner-placement.partner-stage {
+    grid-template-columns: minmax(0, 9fr) minmax(0, 11fr);
+    grid-template-rows: auto;
+    column-gap: 0;
+  }
+
+  .partner-stage__editorial {
+    padding: var(--tv-space-px-12) var(--tv-space-px-10);
+  }
+
+  .partner-stage__visual {
+    min-height: 22rem;
+    border-radius: 0 var(--tv-partner-stage-radius) var(--tv-partner-stage-radius) 0;
+  }
+}
+
+/* ============================================================== */
+/* === TAYLORA FLOW — content → protection → customer =========== */
+/* ============================================================== */
+
+.taylora-flow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--tv-partner-visual-bg);
+  color: var(--tv-partner-visual-ink);
+  isolation: isolate;
+}
+
+.taylora-flow__grid {
+  position: absolute;
+  inset: -10%;
+  z-index: 0;
+  background-image:
+    repeating-linear-gradient(0deg, var(--tv-sponsor-core-grid) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, var(--tv-sponsor-core-grid) 0 1px, transparent 1px 28px);
+  background-size: 28px 28px;
+}
+
+.taylora-flow__monogram {
+  position: absolute;
+  right: -6%;
+  bottom: -34%;
+  z-index: 0;
+  color: var(--tv-color-white-08);
+  font-family: var(--tv-font-family-display);
+  font-size: 19rem;
+  line-height: 0.8;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Connecting paths ------------------------------------------------ */
+
+.taylora-flow__paths {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.taylora-flow__path {
+  fill: none;
+  stroke: var(--tv-partner-flow-line);
+  stroke-width: 2;
+}
+
+.taylora-flow__path--out {
+  stroke: var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark));
+  stroke-opacity: 0.55;
+}
+
+.taylora-flow__pulse {
+  fill: none;
+  stroke: var(--partner-accent-secondary, var(--tv-partner-flow-pulse));
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 7 93;
+  stroke-dashoffset: 100;
+  opacity: 0;
+}
+
+/* Direction cue into the customer node (static, always visible). */
+.taylora-flow__arrow {
+  fill: var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark));
+  opacity: 0.9;
+}
+
+/* Nodes ------------------------------------------------------------ */
+
+.taylora-flow__sources {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.taylora-flow__node {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tv-space-component-sm);
+  padding: var(--tv-space-component-sm) var(--tv-space-component-md);
+  border: 1px solid var(--tv-partner-flow-node-border);
+  border-radius: var(--tv-radius-pill);
+  color: var(--tv-partner-visual-ink);
+  background: var(--tv-color-surface-floating);
+  box-shadow: 0 0 32px -8px var(--tv-color-white-08);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.8125rem;
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-label);
+  line-height: 1;
+  text-transform: uppercase;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.taylora-flow__node svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark));
+}
+
+/* Hub: collection + protection state ------------------------------- */
+
+.taylora-flow__hub {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+}
+
+.taylora-flow--stage .taylora-flow__hub::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 17rem;
+  height: 17rem;
+  border-radius: var(--tv-radius-pill);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--partner-accent-primary, var(--tv-partner-flow-protection)) 11%, transparent),
+    transparent 65%
+  );
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.taylora-flow__hub-ring {
+  position: absolute;
+  width: 6rem;
+  height: 6rem;
+  border: 1.5px solid var(--partner-accent-primary, var(--tv-partner-flow-protection));
+  border-radius: var(--tv-radius-pill);
+  box-shadow: 0 0 48px -6px color-mix(in srgb, var(--partner-accent-primary, var(--tv-partner-flow-protection)) 45%, transparent);
+}
+
+.taylora-flow__hub-lock {
+  position: relative;
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  place-items: center;
+  border: 1px solid var(--tv-partner-flow-node-border);
+  border-radius: var(--tv-radius-pill);
+  color: var(--partner-accent-primary, var(--tv-partner-flow-protection));
+  background: var(--tv-color-surface-floating);
+  box-shadow: 0 0 28px -6px color-mix(in srgb, var(--partner-accent-primary, var(--tv-partner-flow-protection)) 35%, transparent);
+}
+
+.taylora-flow__hub-lock svg {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+.taylora-flow__hub-label {
+  position: absolute;
+  top: calc(100% + 2.75rem);
+  left: 50%;
+  color: var(--partner-accent-primary, var(--tv-partner-flow-protection));
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  line-height: 1;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* Customer ---------------------------------------------------------- */
+
+.taylora-flow__customer {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  gap: var(--tv-space-micro-sm);
+  transform: translate(-50%, -50%);
+}
+
+.taylora-flow__customer-icon {
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  place-items: center;
+  border: 1.5px solid var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark));
+  border-radius: var(--tv-radius-pill);
+  color: var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark));
+  background: var(--tv-color-surface-floating);
+  box-shadow: 0 0 36px -8px color-mix(in srgb, var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark)) 55%, transparent);
+}
+
+.taylora-flow__customer-icon svg {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+.taylora-flow__customer-label {
+  color: var(--tv-partner-visual-ink);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Phase labels ------------------------------------------------------- */
+
+.taylora-flow__phases {
+  position: absolute;
+  right: var(--tv-space-component-md);
+  bottom: var(--tv-space-component-md);
+  left: var(--tv-space-component-md);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  color: var(--tv-partner-visual-ink-muted);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-medium);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.taylora-flow__phases li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tv-space-micro-sm);
+}
+
+.taylora-flow__phases li::before {
+  content: "";
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: var(--tv-radius-pill);
+  background: currentColor;
+}
+
+.taylora-flow__phases li:nth-child(2) {
+  color: var(--partner-accent-primary, var(--tv-partner-flow-protection));
+}
+
+/* Narrative loop (motion preference only) --------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .taylora-flow__node {
+    animation: taylora-node-pulse var(--tv-partner-flow-period) var(--tv-easing-standard) infinite;
+  }
+
+  .taylora-flow__node--pdf {
+    animation-delay: 800ms;
+  }
+
+  .taylora-flow__node--corso {
+    animation-delay: 1600ms;
+  }
+
+  .taylora-flow__pulse--video,
+  .taylora-flow__pulse--pdf,
+  .taylora-flow__pulse--corso {
+    animation: taylora-pulse-travel 5200ms linear infinite;
+  }
+
+  .taylora-flow__pulse--pdf {
+    animation-delay: 1300ms;
+  }
+
+  .taylora-flow__pulse--corso {
+    animation-delay: 2600ms;
+  }
+
+  .taylora-flow__pulse--out {
+    animation: taylora-pulse-out var(--tv-partner-flow-period) linear infinite;
+  }
+
+  .taylora-flow__hub-ring {
+    animation: taylora-hub-ring var(--tv-partner-flow-period) var(--tv-easing-standard) infinite;
+  }
+
+  .taylora-flow__hub-lock {
+    animation: taylora-hub-lock var(--tv-partner-flow-period) var(--tv-easing-standard) infinite;
+  }
+
+  .taylora-flow__customer-icon {
+    animation: taylora-customer-glow var(--tv-partner-flow-period) var(--tv-easing-standard) infinite;
+  }
+
+  .taylora-flow__monogram {
+    animation: taylora-monogram-breathe var(--tv-partner-flow-period) var(--tv-easing-standard) infinite;
+  }
+}
+
+@keyframes taylora-node-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  6% { transform: translate(-50%, -50%) scale(1.07); }
+  12% { transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes taylora-pulse-travel {
+  0% { stroke-dashoffset: 100; opacity: 0; }
+  6% { opacity: 0.9; }
+  62% { opacity: 0.9; }
+  70%, 100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+@keyframes taylora-pulse-out {
+  0%, 46% { stroke-dashoffset: 100; opacity: 0; }
+  50% { opacity: 0.95; }
+  76% { opacity: 0.95; }
+  82%, 100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+@keyframes taylora-hub-ring {
+  0%, 26% { border-color: var(--tv-partner-flow-line); box-shadow: none; transform: scale(0.94); }
+  34%, 88% { border-color: var(--partner-accent-primary, var(--tv-partner-flow-protection)); box-shadow: 0 0 32px -6px color-mix(in srgb, var(--partner-accent-primary, var(--tv-partner-flow-protection)) 45%, transparent); transform: scale(1); }
+  96%, 100% { border-color: var(--tv-partner-flow-line); box-shadow: none; transform: scale(0.94); }
+}
+
+@keyframes taylora-hub-lock {
+  0%, 26% { transform: scale(0.82); opacity: 0.4; }
+  34%, 88% { transform: scale(1); opacity: 1; }
+  96%, 100% { transform: scale(0.82); opacity: 0.4; }
+}
+
+@keyframes taylora-customer-glow {
+  0%, 52% { transform: scale(0.92); box-shadow: none; }
+  62%, 88% { transform: scale(1); box-shadow: 0 0 28px -8px color-mix(in srgb, var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark)) 50%, transparent); }
+  96%, 100% { transform: scale(0.92); box-shadow: none; }
+}
+
+@keyframes taylora-monogram-breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.035); opacity: 0.75; }
+}
+
+/* Strip density (editorial insert) ---------------------------------- */
+
+.taylora-flow--strip .taylora-flow__node {
+  padding: 0.625rem;
+}
+
+.taylora-flow--strip .taylora-flow__node svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.taylora-flow--strip .taylora-flow__node span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.taylora-flow--strip .taylora-flow__hub-ring {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.taylora-flow--strip .taylora-flow__hub-lock {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.taylora-flow--strip .taylora-flow__hub-label {
+  top: calc(100% + 2rem);
+}
+
+.taylora-flow--strip .taylora-flow__phases {
+  display: none;
+}
+
+.taylora-flow--strip .taylora-flow__customer-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.taylora-flow--strip .taylora-flow__customer-label {
+  display: none;
+}
+
+.taylora-flow--strip .taylora-flow__monogram {
+  font-size: 11rem;
+}
+
+/* ============================================================== */
+/* === ARCHIVIO — EDITORIAL INSERT V3 (feature strip) =========== */
+/* ============================================================== */
+
+.partner-placement.partner-insert {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.partner-insert__marker {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-space-component-sm);
+  padding: var(--tv-space-component-sm) var(--tv-space-component-md);
+  color: var(--tv-partner-visual-ink);
+  background: var(--tv-partner-visual-bg);
+  color-scheme: dark;
+}
+
+.partner-insert__monogram {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--tv-partner-visual-border);
+  border-radius: var(--tv-radius-card);
+  color: var(--partner-accent-primary, var(--tv-partner-flow-protection));
+  font-family: var(--tv-font-family-display);
+  font-size: var(--tv-text-md);
+  line-height: 1;
+}
+
+.partner-insert__marker-label {
+  color: var(--tv-partner-visual-ink);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.partner-insert__main {
+  min-width: 0;
+  padding: var(--tv-space-component-md) var(--tv-space-component-md) var(--tv-space-component-sm);
+}
+
+.partner-insert__headline {
+  margin: var(--tv-space-component-sm) 0 0;
+  max-width: 34ch;
+  color: var(--tv-ink-inverted-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: var(--tv-partner-insert-headline-size);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: var(--tv-tracking-tight);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.partner-insert__lede {
+  margin: var(--tv-space-component-sm) 0 0;
+  max-width: 58ch;
+  color: var(--tv-ink-inverted-secondary);
+  font-size: var(--tv-text-body-sm);
+  line-height: var(--tv-leading-snug);
+}
+
+.partner-insert__visual {
+  position: relative;
+  min-height: 9.5rem;
+  overflow: hidden;
+  background: var(--tv-partner-visual-bg);
+  color-scheme: dark;
+}
+
+/* Right bookend: the CTA zone continues the dark creative panel so the
+   strip reads dark–light–dark and the action never floats on empty ivory. */
+.partner-insert__action {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: var(--tv-space-component-sm);
+  padding: var(--tv-space-component-sm) var(--tv-space-component-md) var(--tv-space-component-md);
+  background: var(--tv-partner-visual-bg);
+  color-scheme: dark;
+}
+
+.partner-insert__action .partner-placement__action {
+  width: 100%;
+}
+
+.partner-insert__action .partner-placement__action a {
+  width: 100%;
+  border-color: var(--tv-color-ink-100);
+  color: var(--tv-ink-inverted-primary);
+  background: var(--tv-color-ink-100);
+}
+
+.partner-insert__action .partner-placement__action a:hover {
+  border-color: var(--partner-accent-primary, var(--tv-partner-flow-protection));
+  color: var(--tv-ink-inverted-primary);
+  background: var(--partner-accent-primary, var(--tv-partner-flow-protection));
+}
+
+.partner-insert__action .partner-placement__action a:focus-visible {
+  outline: var(--tv-focus-ring-width) solid
+    var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark));
+}
+
+.partner-insert__action .partner-placement__opportunity {
+  color: var(--tv-partner-visual-ink-muted);
+}
+
+.partner-insert__action .partner-placement__opportunity:hover {
+  color: var(--partner-accent-primary, var(--tv-partner-flow-protection));
+  text-decoration: none;
+}
+
+/* Tablet: magazine spine + full-width copy, then visual + CTA row.
+   The four-column strip only takes over when the main column can hold the
+   headline without squeezing (>= 1024px). */
+@media (min-width: 768px) {
+  .partner-placement.partner-insert {
+    grid-template-columns: 3.75rem minmax(0, 1fr) auto;
+  }
+
+  .partner-insert__marker {
+    grid-row: 1 / 3;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--tv-space-component-md);
+    padding: var(--tv-space-component-md) 0;
+  }
+
+  .partner-insert__marker-label {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .partner-insert__main {
+    grid-column: 2 / 4;
+    padding: var(--tv-space-component-lg) var(--tv-space-px-8) var(--tv-space-component-sm);
+  }
+
+  .partner-insert__visual {
+    grid-column: 2 / 3;
+    min-height: 8.5rem;
+  }
+
+  .partner-insert__action {
+    grid-column: 3 / 4;
+    padding: 0 var(--tv-space-component-lg) var(--tv-space-component-lg) var(--tv-space-component-md);
+  }
+
+  .partner-insert__action .partner-placement__action a {
+    width: auto;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 1024px) {
+  .partner-placement.partner-insert {
+    grid-template-columns: 3.75rem minmax(0, 1.3fr) minmax(13rem, 0.75fr) auto;
+  }
+
+  .partner-insert__main {
+    grid-column: auto;
+    align-self: center;
+    padding: var(--tv-space-component-lg) var(--tv-space-px-8);
+  }
+
+  .partner-insert__visual {
+    grid-column: auto;
+    min-height: 0;
+  }
+
+  .partner-insert__action {
+    grid-column: auto;
+    padding: var(--tv-space-component-lg) var(--tv-space-component-lg) var(--tv-space-component-lg) 0;
+  }
+}
+
+/* ============================================================== */
+/* === SPONSOR OPEN SLOT V3 — self-assembling media-kit ========= */
+/* ============================================================== */
+
+.partner-placement.partner-open {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  outline: none;
+}
+
+.partner-open__editorial {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--tv-space-px-8) var(--tv-space-px-6);
+}
+
+.partner-open__headline {
+  margin: var(--tv-space-component-lg) 0 0;
+  max-width: 22ch;
+  color: var(--tv-ink-inverted-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: var(--tv-partner-insert-headline-size);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: var(--tv-tracking-tight);
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.partner-open__lede {
+  margin: var(--tv-space-component-sm) 0 0;
+  max-width: 48ch;
+  color: var(--tv-ink-inverted-secondary);
+  font-size: var(--tv-text-body-sm);
+  line-height: var(--tv-leading-body);
+}
+
+.partner-open__action {
+  margin-top: var(--tv-space-component-lg);
+}
+
+.partner-open__cue {
+  margin: var(--tv-space-component-sm) 0 0;
+  color: var(--tv-ink-inverted-muted);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-caption);
+  font-weight: var(--tv-weight-medium);
+  letter-spacing: var(--tv-tracking-label);
+}
+
+.partner-open__visual {
+  position: relative;
+  min-height: 15rem;
+  overflow: hidden;
+  border-radius: 0 0 var(--tv-partner-stage-radius) var(--tv-partner-stage-radius);
+  background: var(--tv-partner-visual-bg);
+  color-scheme: dark;
+}
+
+@media (min-width: 768px) {
+  .partner-placement.partner-open {
+    grid-template-columns: minmax(0, 11fr) minmax(0, 10fr);
+  }
+
+  .partner-open__editorial {
+    padding: var(--tv-space-px-10) var(--tv-space-px-8);
+  }
+
+  .partner-open__visual {
+    min-height: 17rem;
+    border-radius: 0 var(--tv-partner-stage-radius) var(--tv-partner-stage-radius) 0;
+  }
+}
+
+/* Media-kit preview sheet ------------------------------------------- */
+
+.open-slot-preview {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: var(--tv-partner-visual-ink);
+  isolation: isolate;
+}
+
+/* Assembly step markers (01 brand → 02 positioning → 03 placement). */
+.open-slot-preview__steps {
+  position: absolute;
+  top: var(--tv-space-component-sm);
+  right: var(--tv-space-component-md);
+  left: var(--tv-space-component-md);
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  color: var(--tv-partner-visual-ink);
+  font-family: var(--tv-font-family-mono);
+  font-size: var(--tv-text-eyebrow);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  opacity: 0.72;
+}
+
+.open-slot-preview__canvas {
+  position: absolute;
+  inset: 15% 10% 20%;
+  z-index: 2;
+}
+
+/* Frame accents — one per placement silhouette. Invisible at rest; the
+   ambient cycle reveals one at a time so the same campaign mock reads as
+   Spotlight, then Catalog Insert, then Editorial module. */
+.open-slot-preview__accent {
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.open-slot-preview__accent--spotlight {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30%;
+  border-left: 1px solid var(--tv-color-white-16);
+  background: var(--tv-color-white-04);
+}
+
+.open-slot-preview__accent--insert {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0.625rem;
+  background: var(--tv-color-white-12);
+}
+
+.open-slot-preview__accent--editorial {
+  inset: 0;
+  border: 1px solid var(--tv-color-white-16);
+  border-radius: var(--tv-radius-card);
+}
+
+.open-slot-preview__content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  max-width: 62%;
+  height: 100%;
+  align-content: center;
+  gap: var(--tv-space-component-sm);
+}
+
+.open-slot-preview__logo {
+  display: inline-flex;
+  min-height: 2.75rem;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px dashed color-mix(in srgb, var(--tv-color-ink-100) 42%, transparent);
+  border-radius: var(--tv-radius-card);
+  padding-inline: var(--tv-space-component-lg);
+}
+
+.open-slot-preview__logo-label {
+  color: var(--tv-partner-visual-ink-muted);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.open-slot-preview__headline {
+  display: grid;
+  gap: var(--tv-space-micro-sm);
+}
+
+.open-slot-preview__headline i {
+  display: block;
+  height: 0.875rem;
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-color-white-24);
+}
+
+.open-slot-preview__headline i:first-child {
+  width: 88%;
+}
+
+.open-slot-preview__headline i:last-child {
+  width: 58%;
+}
+
+.open-slot-preview__prop {
+  display: block;
+  height: 0.625rem;
+  width: 72%;
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-color-white-12);
+}
+
+.open-slot-preview__cta {
+  display: inline-flex;
+  min-height: 2.5rem;
+  width: fit-content;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--tv-color-ink-100) 42%, transparent);
+  border-radius: var(--tv-radius-pill);
+  padding-inline: var(--tv-space-component-lg);
+  color: var(--tv-partner-visual-ink);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+}
+
+/* Placement contexts exposed below the canvas; the active one lights up
+   in sync with the frame accent of the same silhouette. */
+.open-slot-preview__modes {
+  position: absolute;
+  right: 10%;
+  bottom: 8%;
+  left: 10%;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-space-micro-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.open-slot-preview__modes li {
+  display: inline-flex;
+  min-height: 1.625rem;
+  align-items: center;
+  border: 1px solid var(--tv-color-white-16);
+  border-radius: var(--tv-radius-pill);
+  padding-inline: var(--tv-space-component-sm);
+  color: var(--tv-partner-visual-ink-muted);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-medium);
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+}
+
+/* Static / reduced-motion state: first context lit, cycle disabled. */
+.open-slot-preview__modes li[data-mode="spotlight"] {
+  border-color: var(--tv-color-white-24);
+  color: var(--tv-partner-visual-ink);
+}
+
+/* One-shot assembly when the preview enters the viewport. */
+@media (prefers-reduced-motion: no-preference) {
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__logo {
+    animation: open-slot-assemble-pop var(--tv-motion-cinematic) var(--tv-easing-decelerate) both;
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__headline i {
+    animation: open-slot-assemble-bar var(--tv-motion-slow) var(--tv-easing-decelerate) both;
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__headline i:first-child {
+    animation-delay: var(--tv-motion-fast);
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__headline i:last-child {
+    animation-delay: var(--tv-motion-base);
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__prop {
+    animation: open-slot-assemble-bar var(--tv-motion-slow) var(--tv-easing-decelerate) var(--tv-motion-cinematic) both;
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__cta {
+    animation: open-slot-assemble-pop var(--tv-motion-slow) var(--tv-easing-decelerate) var(--tv-motion-reward) both;
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__modes li {
+    animation-name: open-slot-assemble-fade, open-slot-mode-chip;
+    animation-duration: var(--tv-motion-slow), var(--tv-partner-flow-period);
+    animation-timing-function: var(--tv-easing-standard), linear;
+    animation-fill-mode: both, none;
+    animation-iteration-count: 1, infinite;
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__modes li[data-mode="spotlight"] {
+    animation-delay: var(--tv-motion-cinematic), 0ms;
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__modes li[data-mode="insert"] {
+    animation-delay: var(--tv-motion-reward), calc(var(--tv-partner-flow-period) * -0.667);
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__modes li[data-mode="editorial"] {
+    animation-delay: 640ms, calc(var(--tv-partner-flow-period) * -0.334);
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__steps span {
+    animation: open-slot-assemble-fade var(--tv-motion-slow) var(--tv-easing-standard) both;
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__steps span:nth-child(2) {
+    animation-delay: var(--tv-motion-fast);
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__steps span:nth-child(3) {
+    animation-delay: var(--tv-motion-cinematic);
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__logo {
+    animation: open-slot-logo-wait 12s var(--tv-easing-standard) infinite;
+  }
+
+  /* Silhouette cycle: Spotlight → Catalog Insert → Editorial module.
+     One 16s loop; each accent and its context chip share the same phase
+     via negative delays derived from the shared period token. */
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__accent {
+    animation: open-slot-mode-window var(--tv-partner-flow-period) linear infinite;
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__accent--insert {
+    animation-delay: calc(var(--tv-partner-flow-period) * -0.667);
+  }
+
+  .open-slot-preview[data-in-view="true"] .open-slot-preview__accent--editorial {
+    animation-delay: calc(var(--tv-partner-flow-period) * -0.334);
+  }
+}
+
+/* Generic fallback creative fills the stage visual like any other micro-world. */
+.partner-generic {
+  position: absolute;
+  inset: 0;
+}
+
+.partner-generic .sponsor-kinetic {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+@keyframes open-slot-assemble-pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes open-slot-assemble-bar {
+  from { opacity: 0; transform: scaleX(0); transform-origin: left center; }
+  to { opacity: 1; transform: scaleX(1); transform-origin: left center; }
+}
+
+@keyframes open-slot-assemble-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes open-slot-logo-wait {
+  0%, 100% { border-color: color-mix(in srgb, var(--tv-color-ink-100) 42%, transparent); }
+  50% { border-color: color-mix(in srgb, var(--tv-color-ink-100) 20%, transparent); }
+}
+
+@keyframes open-slot-tag-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* One third of the loop per silhouette: fade in, hold, fade out. */
+@keyframes open-slot-mode-window {
+  0% { opacity: 0; }
+  3%, 29% { opacity: 1; }
+  33.4%, 100% { opacity: 0; }
+}
+
+@keyframes open-slot-mode-chip {
+  0% {
+    border-color: var(--tv-color-white-16);
+    color: var(--tv-partner-visual-ink-muted);
+  }
+  3%, 29% {
+    border-color: var(--tv-color-white-24);
+    color: var(--tv-partner-visual-ink);
+  }
+  33.4%, 100% {
+    border-color: var(--tv-color-white-16);
+    color: var(--tv-partner-visual-ink-muted);
+  }
+}
+
+/* ============================================================== */
+/* === PARTNER EXPERIENCE V3 — reduced motion / pause =========== */
+/* ============================================================== */
+
+.taylora-flow[data-in-view="false"] *,
+.open-slot-preview[data-in-view="false"] * {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .taylora-flow *,
+  .open-slot-preview * {
+    animation: none;
+  }
+
+  .taylora-flow[data-in-view="false"] *,
+  .open-slot-preview[data-in-view="false"] * {
+    animation-play-state: running;
+  }
+
+  .taylora-flow__pulse {
+    opacity: 0;
+  }
+
+  .taylora-flow__node,
+  .taylora-flow__hub,
+  .taylora-flow__customer {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  /* The canvas keeps its Spotlight silhouette statically. */
+  .open-slot-preview__accent--spotlight {
+    opacity: 1;
+  }
+}
+
+/* Strip legibility: paths must read as connections, not hairlines. */
+.taylora-flow--strip .taylora-flow__path {
+  stroke-width: 2;
+}
+
+/* Compact flow nodes keep the composition inside small panels. */
+@media (max-width: 640px) {
+  .partner-open__visual {
+    min-height: 17rem;
+  }
+
+  /* Reserve a real footer zone for the context chips: one row, no wrap,
+     never overlapping the campaign mock above. */
+  .open-slot-preview__canvas {
+    inset: 14% 8% 25%;
+  }
+
+  .open-slot-preview__modes {
+    right: 8%;
+    bottom: 6%;
+    left: 8%;
+    flex-wrap: nowrap;
+    gap: var(--tv-space-micro-xs);
+  }
+
+  .open-slot-preview__modes li {
+    padding-inline: var(--tv-space-micro-sm);
+  }
+
+  .open-slot-preview__content {
+    gap: var(--tv-space-micro-sm);
+  }
+
+  .open-slot-preview__prop {
+    display: none;
+  }
+
+
+  .taylora-flow__node {
+    gap: var(--tv-space-micro-sm);
+    padding: var(--tv-space-micro-sm) var(--tv-space-component-sm);
+    font-size: var(--tv-text-eyebrow);
+  }
+
+  .taylora-flow__node svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .taylora-flow__hub-ring {
+    width: 4.75rem;
+    height: 4.75rem;
+  }
+
+  .taylora-flow__hub-lock {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .taylora-flow__hub-lock svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .taylora-flow__customer-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .taylora-flow__customer-icon svg {
+    width: 1.125rem;
+    height: 1.125rem;
   }
 }

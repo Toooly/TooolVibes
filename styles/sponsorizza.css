@@ -1070,3 +1070,101 @@
     transition: none;
   }
 }
+
+/* =====================================================================
+   PARTNER EXPERIENCE V3 — live example stage
+   The real campaign creative runs inside the example frame so the page
+   sells the actual product, not a mock: ivory editorial stage on the
+   left, dark kinetic product narrative flush on the right.
+   ===================================================================== */
+
+.sponsorizza-example__frame--experience {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--tv-partner-stage-radius);
+  background: var(--tv-partner-stage-bg);
+  box-shadow: var(--tv-partner-stage-shadow-rest);
+  overflow: hidden;
+}
+
+.sponsorizza-example__copy {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  gap: clamp(0.9rem, 2vw, 1.25rem);
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+}
+
+.sponsorizza-example__visual {
+  position: relative;
+  min-height: 17rem;
+  overflow: hidden;
+  background: var(--tv-partner-visual-bg);
+  color-scheme: dark;
+}
+
+.sponsorizza-example__frame--experience .sponsorizza-example__identity-copy strong {
+  color: var(--tv-ink-inverted-primary);
+}
+
+.sponsorizza-example__frame--experience .sponsorizza-example__identity-copy span {
+  color: var(--tv-accent-violet-on-ivory);
+}
+
+.sponsorizza-example__frame--experience .sponsorizza-example__logo {
+  border-color: transparent;
+  color: var(--tv-accent-gold-on-dark);
+  background: var(--tv-color-surface-base);
+  box-shadow: none;
+}
+
+.sponsorizza-example__frame--experience .sponsorizza-example__headline {
+  max-width: 24ch;
+  color: var(--tv-ink-inverted-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(1.375rem, 1.6vw + 0.9rem, 2rem);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: var(--tv-tracking-tight);
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.sponsorizza-example__frame--experience .sponsorizza-example__description {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.sponsorizza-example__frame--experience .sponsorizza-example__meta span {
+  border-color: var(--tv-border-inverted-default);
+  color: var(--tv-ink-inverted-secondary);
+  background: transparent;
+}
+
+.sponsorizza-example__frame--experience .sponsorizza-example__cta {
+  border-color: var(--tv-ink-inverted-primary);
+  border-radius: var(--tv-radius-card);
+  color: var(--tv-surface-inverted);
+  background: var(--tv-ink-inverted-primary);
+}
+
+.sponsorizza-example__frame--experience .sponsorizza-example__cta:hover {
+  border-color: var(--tv-accent-violet-on-ivory);
+  color: var(--tv-color-ink-100);
+  background: var(--tv-accent-violet-on-ivory);
+}
+
+.sponsorizza-example__frame--experience .sponsorizza-example__cta:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
+}
+
+@media (min-width: 1024px) {
+  .sponsorizza-example__frame--experience {
+    grid-template-columns: minmax(0, 11fr) minmax(0, 10fr);
+  }
+
+  .sponsorizza-example__visual {
+    min-height: 20rem;
+  }
+}

@@ -20,6 +20,37 @@ export type SponsorPlacementId =
   | "collections-partner"
   | "article-partner";
 
+/**
+ * Partner-specific creative micro-world selected by a campaign.
+ *
+ * The structural shell (disclosure, identity, CTA, analytics, responsive and
+ * reduced-motion rules) is shared by every partner; the creative centre is
+ * chosen here so each advertiser can have a distinct visual narrative without
+ * forking the placement architecture. Unknown/absent values resolve to the
+ * generic partner creative.
+ */
+export type SponsorCreativeVariant = "taylora-flow" | "generic";
+
+/**
+ * Partner-specific creative theme. The campaign selects named accent roles
+ * and identity primitives; the actual color values live in CSS theme blocks
+ * (`[data-partner-theme="…"]`), never in this registry, so the design-token
+ * pipeline stays the single source of truth for color.
+ *
+ * Everything is optional: absent values fall back to the neutral TooolVibes
+ * partner treatment, keeping the framework reusable for future partners
+ * without per-partner forks of the shell components.
+ */
+export type SponsorCreativeTheme = {
+  /** Named accent roles, resolved by CSS theme blocks. */
+  accentPrimary?: "gold" | "cyan" | "violet";
+  accentSecondary?: "gold" | "cyan" | "violet";
+  /** Creative motif identifier (e.g. "flow" for pipeline narratives). */
+  motif?: "flow";
+  /** Partner monogram used for identity marks (falls back to first letter). */
+  monogram?: string;
+};
+
 export type SponsorCampaign = {
   id: string;
   sponsorId: string;
@@ -41,6 +72,8 @@ export type SponsorCampaign = {
   endsAt?: string;
   priority?: number;
   utmCampaign?: string;
+  creativeVariant?: SponsorCreativeVariant;
+  creativeTheme?: SponsorCreativeTheme;
 };
 
 function isWithinDateWindow(startsAt?: string, endsAt?: string): boolean {
@@ -104,6 +137,13 @@ export const TAYLORA_CAMPAIGN: SponsorCampaign = {
   startsAt: "2026-08-01",
   priority: 1,
   utmCampaign: "tooolvibes-sponsor-v1",
+  creativeVariant: "taylora-flow",
+  creativeTheme: {
+    accentPrimary: "gold",
+    accentSecondary: "cyan",
+    motif: "flow",
+    monogram: "T",
+  },
 };
 
 export const ALL_SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [

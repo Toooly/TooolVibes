@@ -13,16 +13,17 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import { TAYLORA_CAMPAIGN } from "@/lib/sponsors/sponsor-placements";
 
 import { SponsorOpportunityMailtoLink } from "@/components/monetization/sponsor-analytics-tracker";
+import { TayloraFlowCreative } from "@/components/monetization/partner-creatives";
 
 import "@/styles/sponsorizza.css";
 
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Sponsorizza",
   description:
-    "Porta il tuo tool davanti a founder, product manager e professionisti che stanno attivamente confrontando tool su TooolVibes. Partner Spotlight, Sponsored Tool Card e Partner Dispatch.",
+    "Porta il tuo tool davanti a founder, product manager e professionisti che stanno attivamente confrontando tool su TooolVibes. Partner Experience: Spotlight, Catalog Insert e Contextual Experience.",
   path: "/sponsorizza",
   openGraphDescription:
-    "Sponsorship dirette su TooolVibes: visibilità editoriale, indipendenza garantita, audience in decision mode.",
+    "TooolVibes Partner Experience: racconti di prodotto contestuali, indipendenza editoriale garantita, audience in decision mode.",
 });
 
 const SPONSOR_EMAIL =
@@ -42,39 +43,39 @@ const formatCards: ReadonlyArray<{
   {
     slug: "spotlight",
     index: "01",
-    title: "Partner Spotlight",
-    label: "Homepage · formato editoriale",
+    title: "Spotlight",
+    label: "Homepage · Partner Experience",
     copy:
-      "Posizionamento prominente in homepage, massima visibilità, formato editoriale con contesto e CTA dedicata.",
+      "Una branded experience dentro la home: identità del brand, headline in scala editoriale e un visual cinetico che racconta il prodotto in azione.",
     bullets: [
       "Visibilità massima nella superficie di atterraggio del prodotto.",
-      "Formato editoriale con headline, descrizione e CTA dedicata.",
+      "Visual narrativo costruito sul prodotto del partner, non un riquadro decorativo.",
       "Disciplina di priorità: una sola Spotlight attiva per periodo.",
     ],
   },
   {
     slug: "tool-card",
     index: "02",
-    title: "Sponsored Tool Card",
-    label: "Catalogo · scheda nativa",
+    title: "Catalog Insert",
+    label: "Catalogo · dentro la discovery",
     copy:
-      "Scheda sponsorizzata nel catalogo, visibile durante la navigazione e il filtraggio, distinta dalle card organiche.",
+      "Un'interruzione editoriale dentro il flusso di discovery del catalogo: silhouette propria, nessun punteggio, nessuna classifica.",
     bullets: [
-      "Compare accanto alle schede organiche durante ricerca e filtro.",
+      "Inserita tra le schede organiche durante l'esplorazione, non in coda alla pagina.",
       "Etichetta trasparente che distingue il contenuto sponsorizzato.",
-      "Mantiene i metadati editoriali (categoria, tag, attributi).",
+      "Mini-visual narrativo e CTA dedicata verso il prodotto.",
     ],
   },
   {
     slug: "dispatch",
     index: "03",
-    title: "Partner Dispatch",
-    label: "Guide · blocco contestuale",
+    title: "Contextual Experience",
+    label: "Guide · storia partner contestuale",
     copy:
-      "Blocco editoriale all'interno di articoli e guide, contestuale al tema trattato.",
+      "Una storia partner dentro i contenuti editoriali pertinenti: guide, raccolte e articoli, in contesto con il tema trattato.",
     bullets: [
-      "Inserito vicino al contenuto editoriale che ha più attinenza.",
-      "Blocco contestuale, non un banner: lo leggono perché è utile.",
+      "Inserita vicino al contenuto editoriale che ha più attinenza.",
+      "Narrazione contestuale, non un banner: la leggono perché è utile.",
       "Disponibile su richiesta per articoli e guide pertinenti.",
     ],
   },
@@ -116,14 +117,15 @@ export default function SponsorizzaPage() {
       <section className="sponsorizza-hero" aria-labelledby="sponsorizza-hero-title">
         <div className="sponsorizza-hero__inner">
           <div className="sponsorizza-hero__copy">
-            <span className="sponsorizza-hero__eyebrow">Sponsorizza · Sponsorizzazioni dirette</span>
+            <span className="sponsorizza-hero__eyebrow">TooolVibes Partner Experience</span>
             <h1 id="sponsorizza-hero-title" className="sponsorizza-hero__title">
               Porta il tuo tool davanti a chi sta già decidendo cosa usare.
             </h1>
             <p className="sponsorizza-hero__subtitle">
-              La sponsorship diretta su TooolVibes ti mette in contatto con founder,
-              product manager e professionisti che stanno attivamente cercando e
-              confrontando tool per il loro stack.
+              TooolVibes crea Partner Experience contestuali per prodotti selezionati,
+              davanti a founder, product manager e professionisti che stanno
+              confrontando tool per il loro stack. Non compri uno spazio:
+              costruiamo come il tuo prodotto entra in TooolVibes.
             </p>
             <SponsorOpportunityMailtoLink
               placementId="sponsor-page-hero"
@@ -239,13 +241,14 @@ export default function SponsorizzaPage() {
       {/* PLACEMENT FORMATS */}
       <section className="sponsorizza-section" aria-labelledby="sponsorizza-formats-title">
         <header className="sponsorizza-section__header">
-          <span className="sponsorizza-section__eyebrow">Formati</span>
+          <span className="sponsorizza-section__eyebrow">Partner Experience</span>
           <h2 id="sponsorizza-formats-title" className="sponsorizza-section__title">
-            I formati disponibili
+            Tre contesti, un&rsquo;unica partnership
           </h2>
           <p className="sponsorizza-section__lead">
-            Tre superfici pensate per contesti diversi: scoperta, confronto, lettura. Ogni placement
-            è etichettato come contenuto sponsorizzato e non influenza le valutazioni editoriali.
+            La stessa identità e lo stesso racconto di prodotto prendono forma in tre contesti:
+            scoperta, confronto, lettura. Ogni esperienza è etichettata come contenuto
+            sponsorizzato e non influenza le valutazioni editoriali.
           </p>
         </header>
 
@@ -336,58 +339,67 @@ export default function SponsorizzaPage() {
             Un esempio reale
           </h2>
           <p className="sponsorizza-section__lead">
-            Taylora è una delle campagne partner attualmente live su TooolVibes. Ecco come viene
-            presentata agli utenti che esplorano il catalogo o leggono le nostre guide.
+            Taylora è una delle campagne partner attualmente live su TooolVibes. Questa è la
+            Partner Experience reale: non una card premium, ma un piccolo palcoscenico
+            editoriale con un visual che spiega il prodotto prima ancora del testo.
           </p>
         </header>
 
         <div className="sponsorizza-example">
           <article
-            className="sponsorizza-example__frame"
-            aria-label={`Placement editoriale per ${TAYLORA_CAMPAIGN.name}`}
+            className="sponsorizza-example__frame sponsorizza-example__frame--experience"
+            aria-label={`Partner Experience per ${TAYLORA_CAMPAIGN.name}`}
           >
-            <span className="sponsorizza-example__ribbon">
-              <Sparkles aria-hidden="true" />
-              <span>Partner di TooolVibes</span>
-            </span>
-
-            <div className="sponsorizza-example__identity">
-              <span className="sponsorizza-example__logo" aria-hidden="true">
-                {TAYLORA_CAMPAIGN.name.slice(0, 1)}
-              </span>
-              <div className="sponsorizza-example__identity-copy">
-                <strong>{TAYLORA_CAMPAIGN.name}</strong>
+            <div className="sponsorizza-example__copy">
+              <span className="sponsorizza-example__ribbon">
+                <Sparkles aria-hidden="true" />
                 <span>Partner di TooolVibes</span>
+              </span>
+
+              <div className="sponsorizza-example__identity">
+                <span className="sponsorizza-example__logo" aria-hidden="true">
+                  {TAYLORA_CAMPAIGN.name.slice(0, 1)}
+                </span>
+                <div className="sponsorizza-example__identity-copy">
+                  <strong>{TAYLORA_CAMPAIGN.name}</strong>
+                  <span>Partner di TooolVibes</span>
+                </div>
               </div>
+
+              <p className="sponsorizza-example__headline">{TAYLORA_CAMPAIGN.headline}</p>
+              <p className="sponsorizza-example__description">
+                {TAYLORA_CAMPAIGN.description}
+              </p>
+
+              <div className="sponsorizza-example__meta" aria-label="Dettagli del placement">
+                <span>Disciplina · Contenuto sponsorizzato</span>
+                <span>Homepage · Partner Spotlight</span>
+              </div>
+
+              <a
+                className="sponsorizza-example__cta"
+                href={TAYLORA_CAMPAIGN.destinationUrl}
+                rel="sponsored noopener noreferrer"
+                target="_blank"
+              >
+                <span>{TAYLORA_CAMPAIGN.ctaLabel}</span>
+                <ArrowUpRight aria-hidden="true" />
+              </a>
             </div>
 
-            <p className="sponsorizza-example__headline">{TAYLORA_CAMPAIGN.headline}</p>
-            <p className="sponsorizza-example__description">
-              {TAYLORA_CAMPAIGN.description}
-            </p>
-
-            <div className="sponsorizza-example__meta" aria-label="Dettagli del placement">
-              <span>Disciplina · Contenuto sponsorizzato</span>
-              <span>Homepage · Partner Spotlight</span>
+            <div className="sponsorizza-example__visual" aria-hidden="true">
+              <TayloraFlowCreative density="stage" />
             </div>
-
-            <a
-              className="sponsorizza-example__cta"
-              href={TAYLORA_CAMPAIGN.destinationUrl}
-              rel="sponsored noopener noreferrer"
-              target="_blank"
-            >
-              <span>{TAYLORA_CAMPAIGN.ctaLabel}</span>
-              <ArrowUpRight aria-hidden="true" />
-            </a>
           </article>
 
           <div className="sponsorizza-example__caption">
-            <strong>Disclosure editoriale</strong>
+            <strong>La stessa creatività che va in produzione</strong>
             <span>
-              Il placement mostra chiaramente la label &ldquo;Partner di TooolVibes&rdquo; e mantiene una CTA
-              coerente con il contesto editoriale. Nessun punteggio, valutazione o classifica
-              di TooolVibes è modificato dalla presenza di questa sponsorship.
+              Il visual qui sopra è la Partner Experience reale: i contenuti del partner
+              (video, PDF, corsi) confluiscono in una raccolta protetta e raggiungono il
+              cliente. Il placement mostra chiaramente la label &ldquo;Partner di TooolVibes&rdquo;;
+              nessun punteggio, valutazione o classifica di TooolVibes è modificato dalla
+              presenza di questa sponsorship.
             </span>
           </div>
         </div>
