@@ -17,7 +17,10 @@ import { getDirectoryToolBySlug } from "@/lib/data/tooolvibes-directory";
 /** Segments of one directory tool by slug; empty when the slug is unknown. */
 export function partnerSegmentsForToolSlug(slug: string): string[] {
   const tool = getDirectoryToolBySlug(slug);
-  return tool ? [...tool.segments] : [];
+  if (!tool) return [];
+  /* Segments are strong catalogue signals; free tags supply secondary context
+     (e.g. training on a video tool) without inventing weak category matches. */
+  return [...tool.segments, ...tool.tags];
 }
 
 /**

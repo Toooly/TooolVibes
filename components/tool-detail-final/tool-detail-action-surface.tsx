@@ -103,7 +103,7 @@ export function ToolDetailActionSurface({
 
       {isAffiliateLink ? (
         <span className="td-final-affiliate-note">
-          Link partner: potremmo ricevere una commissione senza costi extra per te.
+          Link affiliato: potremmo ricevere una commissione senza costi extra per te.
         </span>
       ) : null}
 

@@ -20,8 +20,13 @@ import {
   Video,
 } from "lucide-react";
 
+import Image from "next/image";
+
 import { SponsorKineticCore } from "@/components/monetization/sponsor-kinetic-core";
-import type { SponsorCreativeTheme } from "@/lib/sponsors/sponsor-placements";
+import type {
+  SponsorBrandAsset,
+  SponsorCreativeTheme,
+} from "@/lib/sponsors/sponsor-placements";
 import { cn } from "@/lib/utils";
 export { partnerThemeKey } from "@/lib/sponsors/partner-theme";
 
@@ -35,8 +40,8 @@ export { partnerThemeKey } from "@/lib/sponsors/partner-theme";
  *   - PartnerCreativeRenderer  — selects the micro-world per campaign
  *     (`creativeVariant` from the sponsor registry); unknown variants fall
  *     back to the generic partner creative.
- *   - TayloraFlowCreative      — kinetic product narrative:
- *     contenuti → raccolta protetta → cliente.
+ *   - PartnerBrandPlate        — canonical approved brand plate (preferred).
+ *   - TayloraFlowCreative      — kinetic fallback narrative (onboarding/procedure).
  *   - OpenSlotPreviewCreative  — self-assembling media-kit preview for the
  *     unsold placement ("your product could live here").
  *
@@ -644,6 +649,62 @@ export function OpenSlotPreviewCreative({
   );
 }
 
+
+/* ============================================================
+   BRAND PLATE — canonical approved partner identity artwork
+   ============================================================ */
+
+export type PartnerBrandPlateProps = {
+  asset: SponsorBrandAsset;
+  density?: PartnerCreativeDensity;
+  className?: string;
+  /** Decorative when surrounding copy already names the partner. */
+  decorative?: boolean;
+};
+
+/**
+ * Renders the approved partner brand plate as the dominant identity field.
+ * Uses object-fit: contain so the wordmark/icon is never cropped.
+ * Purely presentational when decorative; otherwise exposes concise alt.
+ */
+export function PartnerBrandPlate({
+  asset,
+  density = "stage",
+  className,
+  decorative = true,
+}: PartnerBrandPlateProps) {
+  const fit = asset.fit ?? "contain";
+  const position = asset.position ?? "center";
+
+  return (
+    <div
+      data-creative="brand-plate"
+      data-creative-density={density}
+      data-brand-fit={fit}
+      className={cn("partner-brand-plate", `partner-brand-plate--${density}`, className)}
+      aria-hidden={decorative ? true : undefined}
+      role={decorative ? "presentation" : undefined}
+    >
+      <Image
+        src={asset.src}
+        alt={decorative ? "" : asset.alt}
+        width={asset.width}
+        height={asset.height}
+        sizes={
+          density === "stage"
+            ? "(max-width: 768px) 100vw, 42vw"
+            : density === "strip"
+              ? "(max-width: 768px) 100vw, 280px"
+              : "(max-width: 768px) 100vw, 360px"
+        }
+        className="partner-brand-plate__img"
+        style={{ objectFit: fit, objectPosition: position }}
+        priority={density === "stage"}
+      />
+    </div>
+  );
+}
+
 /* ============================================================
    RENDERER — campaign creativeVariant → micro-world
    ============================================================ */
@@ -651,6 +712,7 @@ export function OpenSlotPreviewCreative({
 export type PartnerCreativeRendererProps = {
   creativeVariant?: string;
   creativeTheme?: SponsorCreativeTheme;
+  brandAsset?: SponsorBrandAsset;
   partnerName: string;
   monogram?: string;
   density?: PartnerCreativeDensity;
@@ -660,11 +722,24 @@ export type PartnerCreativeRendererProps = {
 export function PartnerCreativeRenderer({
   creativeVariant,
   creativeTheme,
+  brandAsset,
   partnerName,
   monogram,
   density = "stage",
   className,
 }: PartnerCreativeRendererProps) {
+  /* Approved brand plate is the preferred identity field when present. */
+  if (brandAsset) {
+    return (
+      <PartnerBrandPlate
+        asset={brandAsset}
+        density={density}
+        className={className}
+        decorative
+      />
+    );
+  }
+
   if (creativeVariant === "taylora-flow") {
     return (
       <TayloraFlowCreative

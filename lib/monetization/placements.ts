@@ -1,5 +1,6 @@
 import {
   TAYLORA_CAMPAIGN,
+  type SponsorBrandAsset,
   type SponsorCreativeTheme,
   type SponsorRouteKey,
 } from "@/lib/sponsors/sponsor-placements";
@@ -127,6 +128,8 @@ export type MonetizationPlacement = {
   creativeVariant?: string;
   /** Partner creative theme (named accent roles + monogram) from the registry. */
   creativeTheme?: SponsorCreativeTheme;
+  /** Canonical approved brand plate from the partner registry. */
+  brandAsset?: SponsorBrandAsset;
   /**
    * Commercial inventory finalization — campaign resolution metadata.
    * route/strategy/rotationOffset drive the canonical partner resolver;
@@ -351,6 +354,7 @@ function applyPartnerCampaign(
       editorialReason: undefined,
       creativeVariant: undefined,
       creativeTheme: undefined,
+      brandAsset: undefined,
       startDate: null,
       endDate: null,
     };
@@ -372,6 +376,7 @@ function applyPartnerCampaign(
     endDate: campaign.endsAt,
     creativeVariant: campaign.creativeVariant,
     creativeTheme: campaign.creativeTheme,
+    brandAsset: campaign.brandAsset,
     partner: {
       name: campaign.name,
       category: campaign.eyebrow,

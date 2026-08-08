@@ -196,25 +196,29 @@ function PartnerIdentity({
 }) {
   const logo = placement.partner.logo ?? placement.logo ?? null;
   const monogram = placement.creativeTheme?.monogram ?? null;
+  /* When the brand plate owns the visual field, skip a second mark/monogram. */
+  const hasBrandPlate = Boolean(placement.brandAsset);
 
   return (
     <div className="partner-placement__identity">
-      <span
-        className={cn(
-          "partner-placement__identity-mark",
-          monogram && !logo && "partner-placement__identity-mark--monogram",
-        )}
-        aria-hidden="true"
-      >
-        {logo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={logo} alt="" loading="lazy" decoding="async" />
-        ) : monogram ? (
-          <span className="partner-placement__identity-monogram">{monogram}</span>
-        ) : (
-          <Building2 />
-        )}
-      </span>
+      {hasBrandPlate ? null : (
+        <span
+          className={cn(
+            "partner-placement__identity-mark",
+            monogram && !logo && "partner-placement__identity-mark--monogram",
+          )}
+          aria-hidden="true"
+        >
+          {logo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logo} alt="" loading="lazy" decoding="async" />
+          ) : monogram ? (
+            <span className="partner-placement__identity-monogram">{monogram}</span>
+          ) : (
+            <Building2 />
+          )}
+        </span>
+      )}
       <span className="partner-placement__identity-copy">
         <strong>{placement.partner.name}</strong>
         <span>{placement.partner.category}</span>
@@ -271,7 +275,7 @@ function PartnerAction({
 function PartnerCategoryChip() {
   return (
     <div className="partner-placement__chips">
-      <span className="partner-placement__chip">Partner verificato</span>
+      <span className="partner-placement__chip">Partner di TooolVibes</span>
     </div>
   );
 }
@@ -379,6 +383,7 @@ export function FeaturedPartner({
           <PartnerCreativeRenderer
             creativeVariant={placement.creativeVariant}
             creativeTheme={placement.creativeTheme}
+            brandAsset={placement.brandAsset}
             partnerName={placement.partner.name}
             density="stage"
           />
@@ -457,6 +462,7 @@ export function PartnerEditorialInsert({
           <PartnerCreativeRenderer
             creativeVariant={placement.creativeVariant}
             creativeTheme={placement.creativeTheme}
+            brandAsset={placement.brandAsset}
             partnerName={placement.partner.name}
             density="strip"
           />
@@ -529,6 +535,7 @@ export function PartnerToolCard({
             <PartnerCreativeRenderer
               creativeVariant={placement.creativeVariant}
               creativeTheme={placement.creativeTheme}
+              brandAsset={placement.brandAsset}
               partnerName={placement.partner.name}
               density="strip"
             />
@@ -596,6 +603,17 @@ export function ContextualPartnerBlock({
         <div className="partner-placement__context-marker" aria-hidden="true">
           <BookOpenText />
         </div>
+        {placement.brandAsset || placement.creativeVariant ? (
+          <div className="partner-placement__context-visual" aria-hidden="true">
+            <PartnerCreativeRenderer
+              creativeVariant={placement.creativeVariant}
+              creativeTheme={placement.creativeTheme}
+              brandAsset={placement.brandAsset}
+              partnerName={placement.partner.name}
+              density="strip"
+            />
+          </div>
+        ) : null}
         <div className="partner-placement__body">
           <PartnerMeta
             formatLabel={formatLabelOverride ?? "Partner della lettura"}
@@ -663,6 +681,17 @@ export function PartnerCollectionModule({
           <span>Partner</span>
           <Layers3 />
         </div>
+        {placement.brandAsset || placement.creativeVariant ? (
+          <div className="partner-placement__collection-visual" aria-hidden="true">
+            <PartnerCreativeRenderer
+              creativeVariant={placement.creativeVariant}
+              creativeTheme={placement.creativeTheme}
+              brandAsset={placement.brandAsset}
+              partnerName={placement.partner.name}
+              density="strip"
+            />
+          </div>
+        ) : null}
         <div className="partner-placement__body">
           <PartnerMeta
             formatLabel={formatLabelOverride ?? "Partner della raccolta"}

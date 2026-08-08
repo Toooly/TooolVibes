@@ -69,6 +69,18 @@ export type SponsorCreativeTheme = {
   monogram?: string;
 };
 
+export type SponsorBrandAsset = {
+  /** Preferred web-optimized source (webp). */
+  src: string;
+  /** PNG fallback for environments without webp. */
+  srcPng?: string;
+  width: number;
+  height: number;
+  alt: string;
+  fit?: "contain" | "cover";
+  position?: string;
+};
+
 export type SponsorCampaign = {
   id: string;
   sponsorId: string;
@@ -92,6 +104,8 @@ export type SponsorCampaign = {
   utmCampaign?: string;
   creativeVariant?: SponsorCreativeVariant;
   creativeTheme?: SponsorCreativeTheme;
+  /** Canonical approved brand plate - dominant identity visual. */
+  brandAsset?: SponsorBrandAsset;
   /**
    * Contextual eligibility signals (commercial inventory finalization).
    * categoryTags carry real catalogue segments (DirectoryFilterGroup keys);
@@ -186,23 +200,34 @@ export const TAYLORA_CAMPAIGN: SponsorCampaign = {
     motif: "flow",
     monogram: "T",
   },
+  brandAsset: {
+    src: "/partners/taylora/taylora-brand-plate.webp",
+    srcPng: "/partners/taylora/taylora-brand-plate.png",
+    width: 1774,
+    height: 887,
+    alt: "Taylora",
+    fit: "contain",
+  },
   contextTags: [
     "onboarding",
     "formazione",
     "procedure",
-    "corsi",
+    "procedures",
     "training",
+    "learning",
     "conoscenza",
     "knowledge",
     "hr",
+    "hse",
     "operations",
     "team",
-    "tutorial",
+    "employee",
     "corporate",
     "compliance",
+    "audit",
     "certificati",
   ],
-  categoryTags: ["productivity", "ai-video", "ai-writing"],
+  categoryTags: ["productivity"],
   preferredRoutes: ["home", "archivio", "tool-detail", "posts", "collections"],
 };
 
@@ -234,20 +259,29 @@ export const ONWEB24_CAMPAIGN: SponsorCampaign = {
     motif: "pipeline",
     monogram: "O",
   },
+  brandAsset: {
+    src: "/partners/onweb24/onweb24-brand-plate.webp",
+    srcPng: "/partners/onweb24/onweb24-brand-plate.png",
+    width: 1774,
+    height: 887,
+    alt: "OnWeb24",
+    fit: "contain",
+  },
   contextTags: [
     "sito",
     "siti web",
     "website",
+    "web builder",
     "landing",
     "landing page",
-    "builder",
-    "no-code",
     "cms",
     "seo",
     "conversione",
     "conversioni",
     "presenza online",
-    "web",
+    "web design",
+    "web development",
+    "business website",
   ],
   categoryTags: ["website-builder", "no-code", "ui-builder", "headless-cms"],
   preferredRoutes: ["home", "archivio", "tool-detail", "posts", "collections"],
@@ -281,24 +315,31 @@ export const ZAPLATER_CAMPAIGN: SponsorCampaign = {
     motif: "timeline",
     monogram: "Z",
   },
+  brandAsset: {
+    src: "/partners/zaplater/zaplater-brand-plate.webp",
+    srcPng: "/partners/zaplater/zaplater-brand-plate.png",
+    width: 1774,
+    height: 887,
+    alt: "ZapLater",
+    fit: "contain",
+  },
   contextTags: [
     "whatsapp",
-    "automation",
-    "automazioni",
-    "marketing",
+    "messaging",
+    "communication",
+    "scheduling",
+    "scheduled",
+    "recurring",
+    "reminder",
+    "reminders",
+    "promemoria",
+    "groups",
     "community",
     "comunità",
-    "reminder",
-    "promemoria",
-    "crm",
     "chat",
-    "supporto",
     "messaggi",
-    "vendite",
   ],
   categoryTags: [
-    "marketing",
-    "automation",
     "customer-support",
     "sales",
     "ai-agents",

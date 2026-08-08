@@ -420,7 +420,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                       </ButtonLink>
                       {isRelatedToolAffiliate ? (
                         <p className="basis-full text-xs leading-5 text-white/62">
-                          Link partner: potremmo ricevere una commissione senza costi extra per te.
+                          Link affiliato: potremmo ricevere una commissione senza costi extra per te.
                         </p>
                       ) : null}
                       <Link

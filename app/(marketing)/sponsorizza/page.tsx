@@ -18,7 +18,6 @@ import {
 import { SponsorOpportunityMailtoLink } from "@/components/monetization/sponsor-analytics-tracker";
 import {
   PartnerCreativeRenderer,
-  TayloraFlowCreative,
 } from "@/components/monetization/partner-creatives";
 import { buildPartnerDestinationUrl } from "@/lib/sponsors/partner-resolver";
 import { partnerThemeKey } from "@/lib/sponsors/partner-theme";
@@ -33,7 +32,7 @@ import "@/styles/sponsorizza.css";
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Sponsorizza",
   description:
-    "Porta il tuo tool davanti a founder, product manager e professionisti che stanno attivamente confrontando tool su TooolVibes. Partner Experience: Spotlight, Catalog Insert e Contextual Experience.",
+    "Porta il tuo tool davanti a founder, product manager e professionisti che stanno attivamente confrontando tool su TooolVibes. Partner Experience: Spotlight, Catalog Insert, Contextual Experience e Collection Partner.",
   path: "/sponsorizza",
   openGraphDescription:
     "TooolVibes Partner Experience: racconti di prodotto contestuali, indipendenza editoriale garantita, audience in decision mode.",
@@ -269,7 +268,7 @@ export default function SponsorizzaPage() {
         <header className="sponsorizza-section__header">
           <span className="sponsorizza-section__eyebrow">Partner Experience</span>
           <h2 id="sponsorizza-formats-title" className="sponsorizza-section__title">
-            Tre contesti, un&rsquo;unica partnership
+            Una partnership, pi&ugrave; contesti ad alta intenzione
           </h2>
           <p className="sponsorizza-section__lead">
             La stessa identità e lo stesso racconto di prodotto prendono forma in tre contesti:
@@ -416,7 +415,12 @@ export default function SponsorizzaPage() {
             </div>
 
             <div className="sponsorizza-example__visual" aria-hidden="true">
-              <TayloraFlowCreative density="stage" />
+              <PartnerCreativeRenderer
+                creativeVariant="taylora-flow"
+                brandAsset={LIVE_PARTNER_CAMPAIGNS.find((c) => c.sponsorId === "taylora")?.brandAsset}
+                partnerName="Taylora"
+                density="stage"
+              />
             </div>
           </article>
 
@@ -445,6 +449,7 @@ export default function SponsorizzaPage() {
                   <PartnerCreativeRenderer
                     creativeVariant={campaign.creativeVariant}
                     creativeTheme={campaign.creativeTheme}
+                    brandAsset={campaign.brandAsset}
                     partnerName={campaign.name}
                     density="strip"
                   />

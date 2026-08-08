@@ -2866,3 +2866,68 @@
   --partner-luminous-a: var(--tv-accent-cyan-on-dark);
   --partner-luminous-b: var(--tv-accent-violet-on-dark);
 }
+
+
+/* ============================================================== */
+/* === PARTNER BRAND PLATE — approved identity artwork ========== */
+/* ============================================================== */
+
+.partner-brand-plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  overflow: hidden;
+  background: #0a0e1a;
+}
+
+.partner-brand-plate__img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.partner-brand-plate--stage {
+  min-height: 14rem;
+}
+
+.partner-brand-plate--strip {
+  min-height: 6.5rem;
+}
+
+.partner-brand-plate--card {
+  min-height: 8.5rem;
+}
+
+.partner-placement__context-visual,
+.partner-placement__collection-visual {
+  position: relative;
+  min-height: 8.5rem;
+  overflow: hidden;
+  background: #0a0e1a;
+  border-radius: inherit;
+}
+
+.partner-placement__context-visual .partner-brand-plate,
+.partner-placement__collection-visual .partner-brand-plate,
+.partner-stage__visual .partner-brand-plate,
+.partner-insert__visual .partner-brand-plate,
+.partner-placement__tool-visual .partner-brand-plate {
+  border-radius: inherit;
+}
+
+@media (max-width: 767px) {
+  .partner-brand-plate--stage {
+    min-height: 10.5rem;
+  }
+  .partner-brand-plate--strip,
+  .partner-brand-plate--card {
+    min-height: 7rem;
+  }
+}
