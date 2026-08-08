@@ -2625,56 +2625,90 @@
 }
 
 /* ============================================================== */
-/* === PARTNER LUMINOUS SHELL — animated dedicated sponsorship === */
+/* === PARTNER AURORA EDGE V1 — perimeter + brand plate safety === */
 /* ============================================================== */
 /*
- * Dedicated Partner Experience surfaces carry a living luminous shell:
- * theme-aware aurora rim, soft ambient halo, and a breathing glow that
- * reads as premium product storytelling — never a badge flash.
- * Animation is transform/opacity/filter only; paused off-DOM via
- * prefers-reduced-motion; works with SSR static base complete.
+ * Architecture:
+ *   OUTER aura  → box-shadow halo (not clipped by overflow)
+ *   EDGE ring   → ::before conic-gradient masked to 1.5px perimeter
+ *   INNER bloom → ::after soft ambient wash inside the shell
+ *   CONTENT     → children at z-index >= 1, overflow clipped by shell
+ *
+ * Brand plates use an intrinsic aspect-ratio contract (asset 1774×887 = 2/1).
+ * Never crop identity: object-fit contain + height:auto. Size limits shrink
+ * the plate proportionally (width tracks max-height) instead of clipping.
  */
 
+@property --partner-aurora-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .partner-luminous {
+  --partner-aurora-a: var(--partner-accent-primary, var(--tv-accent-gold-on-dark));
+  --partner-aurora-b: var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark));
+  --partner-aurora-comet: color-mix(in srgb, var(--partner-aurora-a) 42%, white);
+  --partner-aurora-glow-a: color-mix(in srgb, var(--partner-aurora-a) 52%, transparent);
+  --partner-aurora-glow-b: color-mix(in srgb, var(--partner-aurora-b) 42%, transparent);
+  --partner-luminous-a: var(--partner-aurora-a);
+  --partner-luminous-b: var(--partner-aurora-b);
+  --partner-luminous-glow-a: var(--partner-aurora-glow-a);
+  --partner-luminous-glow-b: var(--partner-aurora-glow-b);
+
   position: relative;
   isolation: isolate;
+  /* Clip content to radius; box-shadow halo still paints outside. */
   overflow: hidden;
-  --partner-luminous-a: var(--partner-accent-primary, var(--tv-accent-gold-on-dark));
-  --partner-luminous-b: var(--partner-accent-secondary, var(--tv-accent-cyan-on-dark));
-  --partner-luminous-glow-a: color-mix(in srgb, var(--partner-luminous-a) 42%, transparent);
-  --partner-luminous-glow-b: color-mix(in srgb, var(--partner-luminous-b) 36%, transparent);
+  border-color: color-mix(in srgb, var(--partner-aurora-a) 48%, transparent);
+  /* Crisp 1px ring + ambient halo ~10–18px (paint-only, no layout) */
   box-shadow:
-    var(--tv-partner-stage-shadow-rest),
-    0 0 0 1px color-mix(in srgb, var(--partner-luminous-a) 12%, transparent),
-    0 14px 36px -28px var(--partner-luminous-glow-a);
+    0 0 0 1px color-mix(in srgb, var(--partner-aurora-a) 58%, transparent),
+    0 0 0 1.5px color-mix(in srgb, var(--partner-aurora-b) 28%, transparent),
+    0 0 12px 0 var(--partner-aurora-glow-a),
+    0 0 22px 2px var(--partner-aurora-glow-b),
+    0 14px 36px -22px color-mix(in srgb, var(--partner-aurora-a) 30%, transparent);
   transition:
     box-shadow 420ms var(--tv-easing-standard),
+    border-color 420ms var(--tv-easing-standard),
     transform 420ms var(--tv-easing-standard);
 }
 
 .partner-luminous--soft {
+  /* Soft variant (post/collection): still visible, less pressure on neighbors */
   box-shadow:
-    0 1px 0 color-mix(in srgb, var(--tv-ink-primary) 4%, transparent),
-    0 14px 36px -24px color-mix(in srgb, var(--partner-luminous-a) 28%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--partner-luminous-a) 12%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--partner-aurora-a) 46%, transparent),
+    0 0 10px 0 var(--partner-aurora-glow-a),
+    0 0 18px 1px var(--partner-aurora-glow-b),
+    0 12px 28px -22px color-mix(in srgb, var(--partner-aurora-a) 24%, transparent);
 }
 
+/* LAYER 1 + 2 — crisp luminous edge + travelling comet highlight */
 .partner-luminous::before {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 5;
   border-radius: inherit;
-  padding: 1px;
-  opacity: 0.55;
-  background: linear-gradient(
-    125deg,
-    color-mix(in srgb, var(--partner-luminous-a) 72%, transparent),
-    color-mix(in srgb, var(--partner-luminous-b) 18%, transparent) 38%,
-    color-mix(in srgb, var(--partner-luminous-a) 8%, transparent) 62%,
-    color-mix(in srgb, var(--partner-luminous-b) 64%, transparent)
+  padding: 2px;
+  pointer-events: none;
+  opacity: 1;
+  background: conic-gradient(
+    from var(--partner-aurora-angle, 0deg),
+    /* base rim — readable but quiet */
+    color-mix(in srgb, var(--partner-aurora-a) 42%, transparent) 0deg,
+    color-mix(in srgb, var(--partner-aurora-a) 28%, transparent) 200deg,
+    color-mix(in srgb, var(--partner-aurora-a) 22%, transparent) 240deg,
+    /* trailing falloff into the comet */
+    color-mix(in srgb, var(--partner-aurora-b) 55%, transparent) 262deg,
+    color-mix(in srgb, var(--partner-aurora-comet) 70%, white) 278deg,
+    /* bright short arc / comet head */
+    #ffffff 288deg,
+    color-mix(in srgb, var(--partner-aurora-comet) 92%, white) 296deg,
+    color-mix(in srgb, var(--partner-aurora-b) 85%, transparent) 308deg,
+    color-mix(in srgb, var(--partner-aurora-a) 50%, transparent) 328deg,
+    color-mix(in srgb, var(--partner-aurora-a) 42%, transparent) 360deg
   );
-  background-size: 220% 220%;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -2683,31 +2717,54 @@
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0.55;
 }
 
-.partner-luminous__halo {
+/* LAYER 3 companion — soft inner wash (text stays sharp; no full-card blur) */
+.partner-luminous::after {
+  content: "";
   position: absolute;
-  inset: -28% -12% auto;
+  inset: 0;
   z-index: 0;
-  height: 62%;
-  border-radius: 50%;
+  border-radius: inherit;
+  pointer-events: none;
   background:
     radial-gradient(
-      ellipse 55% 48% at 28% 40%,
-      var(--partner-luminous-glow-a),
-      transparent 70%
+      ellipse 78% 52% at 18% 0%,
+      color-mix(in srgb, var(--partner-aurora-a) 26%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse 64% 48% at 92% 100%,
+      color-mix(in srgb, var(--partner-aurora-b) 20%, transparent),
+      transparent 68%
+    );
+  opacity: 0.9;
+}
+
+/* Optional DOM halo — ambient bloom near top edge (clipped softly inside) */
+.partner-luminous__halo {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  height: 52%;
+  width: 100%;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      ellipse 55% 48% at 32% 40%,
+      var(--partner-aurora-glow-a),
+      transparent 72%
     ),
     radial-gradient(
       ellipse 48% 42% at 78% 55%,
-      var(--partner-luminous-glow-b),
-      transparent 72%
+      var(--partner-aurora-glow-b),
+      transparent 74%
     );
-  filter: blur(14px);
-  opacity: 0.32;
+  filter: blur(18px);
+  opacity: 0.42;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
+  will-change: opacity, transform;
 }
 
 .partner-luminous > *:not(.partner-luminous__halo) {
@@ -2718,18 +2775,23 @@
 .partner-luminous .partner-placement__action a.partner-placement__action--primary,
 .partner-luminous .partner-placement__action a {
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--partner-luminous-a) 14%, transparent),
-    0 8px 20px -14px var(--partner-luminous-glow-a);
+    0 0 0 1px color-mix(in srgb, var(--partner-aurora-a) 16%, transparent),
+    0 8px 20px -14px var(--partner-aurora-glow-a);
+  transition:
+    box-shadow 320ms var(--tv-easing-standard),
+    border-color 320ms var(--tv-easing-standard),
+    background-color 320ms var(--tv-easing-standard),
+    color 320ms var(--tv-easing-standard);
 }
 
 .partner-luminous .partner-placement__identity-monogram,
 .partner-luminous .partner-insert__monogram {
-  text-shadow: 0 0 10px color-mix(in srgb, var(--partner-luminous-glow-a) 55%, transparent);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--partner-aurora-glow-a) 55%, transparent);
 }
 
 .partner-luminous .partner-placement__tool-pulse {
   background: var(--partner-accent-primary, var(--tv-accent-cyan-on-ivory));
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--partner-luminous-a) 40%, transparent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--partner-aurora-a) 40%, transparent);
 }
 
 @media (min-width: 768px) {
@@ -2738,15 +2800,16 @@
   }
 }
 
-/* Tool creative strip ------------------------------------------------ */
-
+/* Tool visual field — sizes to plate, never crops identity */
 .partner-placement__tool-visual {
   position: relative;
-  min-height: 7.5rem;
+  min-height: 0;
   overflow: hidden;
-  background: var(--tv-partner-visual-bg);
+  background: var(--tv-partner-visual-bg, #0a0e1a);
   color-scheme: dark;
-  border-bottom: 1px solid color-mix(in srgb, var(--partner-luminous-a) 16%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--partner-aurora-a) 16%, transparent);
+  display: grid;
+  place-items: center;
 }
 
 .partner-placement__tool-visual .partner-canvas,
@@ -2757,72 +2820,67 @@
   inset: 0;
 }
 
-@media (min-width: 768px) {
-  .partner-placement--tool:has(.partner-placement__tool-visual) {
-    grid-template-columns: 3.25rem minmax(0, 1fr);
-    grid-template-rows: 7.5rem auto auto;
-  }
-
-  .partner-placement--tool:has(.partner-placement__tool-visual)
-    .partner-placement__tool-heading {
-    grid-column: 1 / 2;
-    grid-row: 1 / 4;
-  }
-
-  .partner-placement--tool .partner-placement__tool-visual {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
-  }
-
-  .partner-placement--tool:has(.partner-placement__tool-visual)
-    .partner-placement__body {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-  }
-
-  .partner-placement--tool:has(.partner-placement__tool-visual)
-    .partner-placement__action {
-    grid-column: 2 / 3;
-    grid-row: 3 / 4;
-  }
-}
-
-/* Motion — aurora rim + halo breath (no-preference only) ------------ */
-
+/* Motion — slow perimeter cycle + soft halo breath */
 @media (prefers-reduced-motion: no-preference) {
   .partner-luminous::before {
-    animation: partner-luminous-rim 9.5s linear infinite;
+    animation: partner-aurora-spin 11s linear infinite;
   }
 
   .partner-luminous__halo {
-    animation: partner-luminous-halo 7.2s var(--tv-easing-standard) infinite alternate;
+    animation: partner-aurora-halo 7.5s var(--tv-easing-standard) infinite alternate;
   }
 
   .partner-luminous:hover {
+    border-color: color-mix(in srgb, var(--partner-aurora-a) 62%, transparent);
+    transform: translate3d(0, -1px, 0);
     box-shadow:
-      var(--tv-partner-stage-shadow-rest),
-      0 0 0 1px color-mix(in srgb, var(--partner-luminous-a) 34%, transparent),
-      0 22px 64px -22px var(--partner-luminous-glow-a),
-      0 0 48px -18px var(--partner-luminous-glow-b);
+      0 0 0 1px color-mix(in srgb, var(--partner-aurora-a) 72%, transparent),
+      0 0 0 1.5px color-mix(in srgb, var(--partner-aurora-b) 36%, transparent),
+      0 0 14px 1px var(--partner-aurora-glow-a),
+      0 0 28px 3px var(--partner-aurora-glow-b),
+      0 20px 44px -20px color-mix(in srgb, var(--partner-aurora-a) 36%, transparent);
   }
 
   .partner-luminous:hover::before {
     opacity: 1;
-    animation-duration: 6.5s;
+    filter: brightness(1.12);
+    animation-duration: 9.5s;
   }
 
   .partner-luminous:hover .partner-luminous__halo {
-    opacity: 0.48;
+    opacity: 0.52;
+  }
+
+  .partner-luminous:hover .partner-brand-plate__img {
+    transform: scale(1.01);
   }
 
   .partner-luminous .partner-placement__action a:hover {
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--partner-luminous-a) 40%, transparent),
-      0 14px 36px -12px var(--partner-luminous-glow-a),
-      0 0 24px -8px var(--partner-luminous-glow-b);
+      0 0 0 1px color-mix(in srgb, var(--partner-aurora-a) 50%, transparent),
+      0 14px 36px -12px var(--partner-aurora-glow-a),
+      0 0 24px -8px var(--partner-aurora-glow-b);
   }
 }
 
+@keyframes partner-aurora-spin {
+  to {
+    --partner-aurora-angle: 360deg;
+  }
+}
+
+@keyframes partner-aurora-halo {
+  0% {
+    opacity: 0.34;
+    transform: translate3d(-1%, 0, 0) scale(0.98);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translate3d(1.5%, 1%, 0) scale(1.04);
+  }
+}
+
+/* Legacy keyframe aliases (safe no-ops if referenced elsewhere) */
 @keyframes partner-luminous-rim {
   0% { background-position: 0% 40%; }
   50% { background-position: 100% 60%; }
@@ -2842,77 +2900,136 @@
 
 @media (prefers-reduced-motion: reduce) {
   .partner-luminous::before,
-  .partner-luminous__halo {
+  .partner-luminous__halo,
+  .partner-luminous .partner-brand-plate__img {
     animation: none;
+    filter: none;
+  }
+
+  .partner-luminous:hover {
+    transform: none;
   }
 
   .partner-luminous__halo {
-    opacity: 0.35;
+    opacity: 0.44;
+  }
+
+  /* Static premium edge remains clearly luminous — no travelling segment */
+  .partner-luminous::before {
+    opacity: 1;
+    padding: 2px;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--partner-aurora-a) 92%, white 8%),
+      color-mix(in srgb, var(--partner-aurora-b) 55%, transparent) 38%,
+      color-mix(in srgb, var(--partner-aurora-a) 28%, transparent) 55%,
+      color-mix(in srgb, var(--partner-aurora-comet) 70%, transparent) 72%,
+      color-mix(in srgb, var(--partner-aurora-b) 85%, transparent)
+    );
   }
 }
 
-/* Theme-tuned ambient fills for the three live partners ------------- */
+/* ---- Partner atmosphere (edge + ambient only; plates untouched) ---- */
+/* Taylora — lavender / violet */
+[data-partner-theme="gold-cyan"] {
+  --partner-accent-primary: #b794f6;
+  --partner-accent-primary-ivory: #7c3aed;
+  --partner-accent-secondary: #8b5cf6;
+}
 
 [data-partner-theme="gold-cyan"].partner-luminous {
-  --partner-luminous-a: var(--tv-accent-gold-on-dark);
-  --partner-luminous-b: var(--tv-accent-cyan-on-dark);
+  --partner-aurora-a: #d8b4fe;
+  --partner-aurora-b: #a78bfa;
+  --partner-aurora-comet: #f5e1ff;
+  --partner-luminous-a: var(--partner-aurora-a);
+  --partner-luminous-b: var(--partner-aurora-b);
+}
+
+/* OnWeb24 — electric blue / cool cyan-indigo */
+[data-partner-theme="violet-cyan"] {
+  --partner-accent-primary: #22d3ee;
+  --partner-accent-primary-ivory: #0284c7;
+  --partner-accent-secondary: #3b82f6;
 }
 
 [data-partner-theme="violet-cyan"].partner-luminous {
-  --partner-luminous-a: var(--tv-accent-violet-on-dark);
-  --partner-luminous-b: var(--tv-accent-cyan-on-dark);
+  --partner-aurora-a: #38bdf8;
+  --partner-aurora-b: #60a5fa;
+  --partner-aurora-comet: #e0f2fe;
+  --partner-luminous-a: var(--partner-aurora-a);
+  --partner-luminous-b: var(--partner-aurora-b);
+}
+
+/* ZapLater — green → teal */
+[data-partner-theme="cyan-violet"] {
+  --partner-accent-primary: #34d399;
+  --partner-accent-primary-ivory: #059669;
+  --partner-accent-secondary: #14b8a6;
 }
 
 [data-partner-theme="cyan-violet"].partner-luminous {
-  --partner-luminous-a: var(--tv-accent-cyan-on-dark);
-  --partner-luminous-b: var(--tv-accent-violet-on-dark);
+  --partner-aurora-a: #4ade80;
+  --partner-aurora-b: #2dd4bf;
+  --partner-aurora-comet: #ecfdf5;
+  --partner-luminous-a: var(--partner-aurora-a);
+  --partner-luminous-b: var(--partner-aurora-b);
 }
 
 
 /* ============================================================== */
-/* === PARTNER BRAND PLATE — approved identity artwork ========== */
+/* === PARTNER BRAND PLATE — never crop identity artwork ======== */
 /* ============================================================== */
 
 .partner-brand-plate {
+  --partner-plate-ratio: 2 / 1;
   position: relative;
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  min-height: inherit;
+  display: block;
+  width: min(100%, calc(var(--partner-plate-max-h, 100rem) * 2));
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: var(--partner-plate-ratio);
+  max-height: var(--partner-plate-max-h, none);
+  margin-inline: auto;
   overflow: hidden;
   background: #0a0e1a;
 }
 
-.partner-brand-plate__img {
+/* Density caps: width tracks max-height so the 2/1 box never clips identity */
+.partner-brand-plate--stage { --partner-plate-max-h: 16rem; }
+.partner-brand-plate--ending { --partner-plate-max-h: 12rem; }
+.partner-brand-plate--ribbon,
+.partner-brand-plate--strip { --partner-plate-max-h: 7rem; }
+.partner-brand-plate--contextual { --partner-plate-max-h: 13rem; }
+.partner-brand-plate--preview { --partner-plate-max-h: 9rem; }
+
+/*
+ * Image always paints inside the plate box via absolute fill + contain.
+ * The plate box owns sizing (aspect-ratio and/or explicit height).
+ * This prevents height:auto intrinsic overflow past max-height clamps.
+ */
+.partner-brand-plate > .partner-brand-plate__img,
+.partner-brand-plate img.partner-brand-plate__img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  max-width: 100%;
-  max-height: 100%;
+  max-width: none;
+  max-height: none;
   object-fit: contain;
   object-position: center;
   display: block;
-}
-
-.partner-brand-plate--stage {
-  min-height: 14rem;
-}
-
-.partner-brand-plate--strip {
-  min-height: 6.5rem;
-}
-
-.partner-brand-plate--card {
-  min-height: 8.5rem;
+  transition: transform 420ms var(--tv-easing-standard);
 }
 
 .partner-placement__context-visual,
 .partner-placement__collection-visual {
   position: relative;
-  min-height: 8.5rem;
+  min-height: 0;
   overflow: hidden;
   background: #0a0e1a;
   border-radius: inherit;
+  display: grid;
+  place-items: center;
 }
 
 .partner-placement__context-visual .partner-brand-plate,
@@ -2923,21 +3040,12 @@
   border-radius: inherit;
 }
 
-@media (max-width: 767px) {
-  .partner-brand-plate--stage {
-    min-height: 10.5rem;
-  }
-  .partner-brand-plate--strip,
-  .partner-brand-plate--card {
-    min-height: 7rem;
-  }
-}
-
 
 /* ============================================================== */
-/* === V4.2 FINAL POLISH — compact PE size system =============== */
+/* === V4.3 AURORA FINAL — responsive PE size system ============ */
 /* ============================================================== */
 
+/* HOME hero — keep reviewed compact band; plate fully visible */
 .partner-pe--hero.partner-stage {
   min-height: 0;
 }
@@ -2963,24 +3071,41 @@
   overflow: hidden;
 }
 
-.partner-pe--hero .partner-stage__visual,
+.partner-pe--hero .partner-stage__visual {
+  min-height: 0;
+  max-height: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  min-width: 0;
+}
+
 .partner-pe--hero .partner-brand-plate--stage {
-  min-height: 12rem;
-  max-height: 16rem;
+  --partner-plate-max-h: 14rem;
+  width: min(100%, calc(14rem * 2));
 }
 
 @media (min-width: 768px) {
   .partner-pe--hero.partner-stage {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
   }
-  .partner-pe--hero .partner-stage__visual,
-  .partner-pe--hero .partner-brand-plate--stage {
+
+  .partner-pe--hero .partner-stage__visual {
+    height: 100%;
     min-height: 14rem;
-    max-height: 18rem;
+    max-height: 18rem; /* ~380px desktop budget with editorial */
+  }
+
+  .partner-pe--hero .partner-brand-plate--stage {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    aspect-ratio: auto;
+    min-height: 0;
   }
 }
 
-/* Archive ribbon — single cohesive strip ~150-190px */
+/* Archive ribbon — compact, plate fully contained */
 .partner-pe--ribbon.partner-insert {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -3017,11 +3142,20 @@
   opacity: 0.9;
 }
 
-.partner-pe--ribbon .partner-insert__visual,
+.partner-pe--ribbon .partner-insert__visual {
+  min-height: 0;
+  max-height: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding-block: 0.35rem;
+  background: #0a0e1a;
+}
+
 .partner-pe--ribbon .partner-brand-plate--ribbon,
 .partner-pe--ribbon .partner-brand-plate--strip {
-  min-height: 5.5rem;
-  max-height: 7.5rem;
+  --partner-plate-max-h: 6.75rem;
+  width: min(100%, calc(6.75rem * 2));
 }
 
 .partner-pe--ribbon .partner-placement__action {
@@ -3040,25 +3174,31 @@
     min-height: 9.5rem;
     max-height: 11.75rem;
   }
-  /* Final Polish grid reset: the legacy magazine-spine rules pin
-     __main to grid-column 2/4 and __visual to 2/3. Inside the 2-track
-     ribbon that forces both children into the right track (overlap on
-     tablet). Releasing the explicit placements lets auto-placement
-     follow DOM order: editorial LEFT, brand plate RIGHT. */
+
   .partner-pe--ribbon .partner-insert__main,
   .partner-pe--ribbon .partner-insert__visual {
     grid-column: auto;
     grid-row: auto;
   }
-  .partner-pe--ribbon .partner-insert__visual,
-  .partner-pe--ribbon .partner-brand-plate--ribbon {
+
+  .partner-pe--ribbon .partner-insert__visual {
+    height: 100%;
     min-height: 100%;
     max-height: none;
-    height: 100%;
+    padding-block: 0;
   }
+
+  .partner-pe--ribbon .partner-brand-plate--ribbon,
+  .partner-pe--ribbon .partner-brand-plate--strip {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+
 }
 
-/* Tool / Post contextual — compact 200-280px class */
+/* Tool / Post contextual — mobile: copy then full plate; desktop: 60/40 */
 .partner-pe--contextual.partner-placement--tool,
 .partner-pe--contextual.partner-placement--contextual {
   display: grid;
@@ -3097,10 +3237,18 @@
 }
 
 .partner-pe--contextual .partner-placement__tool-visual,
-.partner-pe--contextual .partner-placement__context-visual,
+.partner-pe--contextual .partner-placement__context-visual {
+  min-height: 0;
+  max-height: none;
+  height: auto;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
 .partner-pe--contextual .partner-brand-plate--contextual {
-  min-height: 6.5rem;
-  max-height: 8.5rem;
+  --partner-plate-max-h: 12.5rem;
+  width: 100%;
 }
 
 .partner-pe--contextual .partner-placement__action a {
@@ -3117,11 +3265,7 @@
     min-height: 11rem;
     max-height: 14.5rem;
   }
-  /* Final Polish grid reset: legacy desktop rules pin __body to
-     grid-column 2/3 (post) and the tool :has() block stacks __body and
-     __tool-visual in the same right track. Releasing the explicit
-     placements lets auto-placement follow DOM order:
-     editorial LEFT 55-60%, brand plate RIGHT 40-45%. */
+
   .partner-pe--contextual.partner-placement--tool .partner-placement__body,
   .partner-pe--contextual.partner-placement--contextual .partner-placement__body,
   .partner-pe--contextual.partner-placement--tool .partner-placement__tool-visual,
@@ -3129,19 +3273,48 @@
     grid-column: auto;
     grid-row: auto;
   }
+
   .partner-pe--contextual .partner-placement__tool-visual,
-  .partner-pe--contextual .partner-placement__context-visual,
-  .partner-pe--contextual .partner-brand-plate--contextual {
+  .partner-pe--contextual .partner-placement__context-visual {
     min-height: 100%;
     max-height: none;
     height: 100%;
   }
+
+  .partner-pe--contextual .partner-brand-plate--contextual {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+
+
   .partner-pe--contextual .partner-placement__body {
     padding: var(--tv-space-component-md);
   }
+
+  /* Neutralize legacy tool :has() grid that stacked visual above body */
+  .partner-placement--tool:has(.partner-placement__tool-visual) {
+    grid-template-columns: minmax(0, 1.2fr) minmax(9.5rem, 0.8fr);
+    grid-template-rows: none;
+  }
+
+  .partner-placement--tool:has(.partner-placement__tool-visual)
+    .partner-placement__tool-heading {
+    display: none;
+  }
+
+  .partner-placement--tool .partner-placement__tool-visual,
+  .partner-placement--tool:has(.partner-placement__tool-visual)
+    .partner-placement__body,
+  .partner-placement--tool:has(.partner-placement__tool-visual)
+    .partner-placement__action {
+    grid-column: auto;
+    grid-row: auto;
+  }
 }
 
-/* Collection ending — medium-large, still restrained */
+/* Collection ending — medium breathing room */
 .partner-pe--ending.partner-placement--collection {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -3155,10 +3328,17 @@
   gap: 0.5rem;
 }
 
-.partner-pe--ending .partner-placement__collection-visual,
+.partner-pe--ending .partner-placement__collection-visual {
+  min-height: 0;
+  max-height: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
 .partner-pe--ending .partner-brand-plate--ending {
-  min-height: 8rem;
-  max-height: 11rem;
+  --partner-plate-max-h: 11rem;
+  width: 100%;
 }
 
 .partner-pe--ending .partner-placement__editorial h2 {
@@ -3183,74 +3363,65 @@
     min-height: 12rem;
     max-height: 16rem;
   }
-  .partner-pe--ending .partner-placement__collection-visual,
-  .partner-pe--ending .partner-brand-plate--ending {
+
+  .partner-pe--ending .partner-placement__collection-visual {
     min-height: 100%;
     max-height: none;
     height: 100%;
   }
-}
 
-/* Brand plate density tokens */
-.partner-brand-plate--stage { min-height: 12rem; }
-.partner-brand-plate--ending { min-height: 8rem; }
-.partner-brand-plate--ribbon,
-.partner-brand-plate--strip { min-height: 5.5rem; }
-.partner-brand-plate--contextual { min-height: 6.5rem; }
-.partner-brand-plate--preview { min-height: 7rem; max-height: 9rem; }
-
-/* Restrain luminous weight */
-.partner-luminous__halo {
-  opacity: 0.28;
-  filter: blur(22px);
-}
-
-.partner-luminous:hover .partner-luminous__halo {
-  opacity: 0.38;
-}
-
-.partner-luminous {
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--tv-ink-primary) 4%, transparent),
-    0 12px 28px -22px color-mix(in srgb, var(--partner-luminous-a, var(--tv-accent-gold-on-dark)) 28%, transparent);
-}
-
-/* Theme accent via data-partner-theme — thin border only */
-[data-partner-theme="gold-cyan"].partner-luminous {
-  --partner-luminous-a: var(--tv-accent-gold-on-dark);
-  --partner-luminous-b: var(--tv-accent-cyan-on-dark);
-}
-[data-partner-theme="violet-cyan"].partner-luminous {
-  --partner-luminous-a: var(--tv-accent-violet-on-dark);
-  --partner-luminous-b: var(--tv-accent-cyan-on-dark);
-}
-[data-partner-theme="cyan-violet"].partner-luminous {
-  --partner-luminous-a: var(--tv-accent-cyan-on-dark);
-  --partner-luminous-b: var(--tv-accent-violet-on-dark);
-}
-
-/* Mobile stack: plate after copy, compact */
-@media (max-width: 767px) {
-  .partner-pe--hero .partner-stage__visual,
-  .partner-pe--hero .partner-brand-plate--stage {
-    min-height: 9.5rem;
-    max-height: 11rem;
-  }
-  .partner-pe--ribbon .partner-insert__visual,
-  .partner-pe--ribbon .partner-brand-plate--ribbon {
-    min-height: 6.5rem;
-    max-height: 7.5rem;
-  }
-  .partner-pe--contextual .partner-placement__tool-visual,
-  .partner-pe--contextual .partner-placement__context-visual,
-  .partner-pe--contextual .partner-brand-plate--contextual {
-    min-height: 6.25rem;
-    max-height: 7.5rem;
-  }
-  .partner-pe--ending .partner-placement__collection-visual,
   .partner-pe--ending .partner-brand-plate--ending {
-    min-height: 7rem;
-    max-height: 8.5rem;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+
+}
+
+/* Mobile density — plate fully visible; no crop clamps */
+@media (max-width: 767px) {
+  .partner-pe--hero .partner-brand-plate--stage {
+    --partner-plate-max-h: 11.5rem;
+    width: min(100%, calc(11.5rem * 2));
+  }
+
+  .partner-pe--ribbon .partner-brand-plate--ribbon,
+  .partner-pe--ribbon .partner-brand-plate--strip {
+    --partner-plate-max-h: 6.5rem;
+    width: min(92%, calc(6.5rem * 2));
+  }
+
+  .partner-pe--contextual .partner-brand-plate--contextual {
+    /* Full-bleed width → height from 2/1 ratio (~width/2). No max-height crop. */
+    --partner-plate-max-h: 100rem; /* effectively uncapped; width stays 100% */
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+    height: auto;
+    aspect-ratio: var(--partner-plate-ratio, 2 / 1);
+  }
+
+  .partner-pe--ending .partner-brand-plate--ending {
+    --partner-plate-max-h: 10rem;
+    width: 100%;
+  }
+
+  /* Keep CTA inside editorial on mobile (above plate) */
+  .partner-pe--contextual .partner-placement__body {
+    padding-bottom: var(--tv-space-component-md);
+  }
+}
+
+/* Archive mobile: visible edge + restrained halo (no glue to organic cards) */
+@media (max-width: 767px) {
+  .partner-pe--ribbon.partner-luminous {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--partner-aurora-a) 52%, transparent),
+      0 0 0 1.5px color-mix(in srgb, var(--partner-aurora-b) 22%, transparent),
+      0 0 10px 0 var(--partner-aurora-glow-a),
+      0 0 16px 1px var(--partner-aurora-glow-b),
+      0 10px 24px -18px color-mix(in srgb, var(--partner-aurora-a) 26%, transparent);
   }
 }
 
@@ -3258,6 +3429,6 @@
 .sponsorizza-partners__visual .partner-brand-plate,
 .sponsorizza-partners__visual .partner-brand-plate--strip,
 .sponsorizza-partners__visual .partner-brand-plate--preview {
-  min-height: 7.5rem;
-  max-height: 9rem;
+  --partner-plate-max-h: 9rem;
+  width: min(100%, calc(9rem * 2));
 }

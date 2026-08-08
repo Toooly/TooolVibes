@@ -386,6 +386,7 @@ export function PartnerEditorialInsert({
           "insert",
         )}
       >
+        <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-insert__main">
           <PartnerMeta disclosure={placement.label} />
           <h2 className="partner-insert__headline">{placement.title}</h2>
@@ -450,6 +451,7 @@ export function PartnerToolCard({
           "tool",
         )}
       >
+        <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-placement__body">
           <PartnerMeta disclosure={placement.label} />
           <PartnerEditorial placement={placement} />
@@ -515,6 +517,7 @@ export function ContextualPartnerBlock({
           "contextual",
         )}
       >
+        <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-placement__body">
           <PartnerMeta disclosure={placement.label} />
           <PartnerEditorial placement={placement} />
@@ -584,6 +587,7 @@ export function PartnerCollectionModule({
           "collection",
         )}
       >
+        <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-placement__body">
           <PartnerMeta disclosure={placement.label} />
           <PartnerEditorial placement={placement} />
