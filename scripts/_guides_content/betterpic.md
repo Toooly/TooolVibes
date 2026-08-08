@@ -1,6 +1,8 @@
-### Cosa fa BetterPic, in una frase
+### La decisione che BetterPic affronta
 
-BetterPic prende un set di selfie (8-14), li usa come riferimento biometrico, e ti restituisce un pacchetto di 20-120 ritratti generati in 4K in meno di due ore, con la possibilità di far ritoccare un'immagine da un editor umano sul tier Expert.
+Ti serve un headshot per LinkedIn, il sito, una proposta. Le opzioni sono: pagare un fotografo $200-500, aspettare 1-2 settimane per la sessione e la consegna, e ritirare fuori vestiti che non ti metti da sei mesi. Oppure: scattare 8-14 selfie in casa, aspettare due ore, e ricevere un pacchetto di 20-120 ritratti in 4K generati da un modello addestrato sul tuo viso.
+
+BetterPic è uno dei tool più diffusi per la seconda strada. La domanda non è "funziona?" — funziona, e i risultati su uso corporate sono sorprendentemente credibili. La domanda è: in quali contesti ha senso, in quali è un errore, e quanto vale rispetto a un fotografo vero.
 
 ### A chi serve davvero, e a chi no
 

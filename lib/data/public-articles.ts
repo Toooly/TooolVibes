@@ -113,9 +113,11 @@ const guideSeeds: GuideSeed[] = [
       "**Personal brand che deve trasmettere \"presenza\".** Speaker, mental coach, autori: serve uno shooting reale.",
       "**Volti con caratteristiche molto particolari.** Viso molto asimmetrico, barba insolita. L'AI può semplificare.",
     ],
-      content_markdown: `### Cosa fa BetterPic, in una frase
+      content_markdown: `### La decisione che BetterPic affronta
 
-BetterPic prende un set di selfie (8-14), li usa come riferimento biometrico, e ti restituisce un pacchetto di 20-120 ritratti generati in 4K in meno di due ore, con la possibilità di far ritoccare un'immagine da un editor umano sul tier Expert.
+Ti serve un headshot per LinkedIn, il sito, una proposta. Le opzioni sono: pagare un fotografo $200-500, aspettare 1-2 settimane per la sessione e la consegna, e ritirare fuori vestiti che non ti metti da sei mesi. Oppure: scattare 8-14 selfie in casa, aspettare due ore, e ricevere un pacchetto di 20-120 ritratti in 4K generati da un modello addestrato sul tuo viso.
+
+BetterPic è uno dei tool più diffusi per la seconda strada. La domanda non è "funziona?" — funziona, e i risultati su uso corporate sono sorprendentemente credibili. La domanda è: in quali contesti ha senso, in quali è un errore, e quanto vale rispetto a un fotografo vero.
 
 ### A chi serve davvero, e a chi no
 
@@ -316,6 +318,7 @@ La chiave è capire il proprio use case: se serve "credibile e veloce" in 4K, Be
 - **Salva BetterPic nei preferiti** se vuoi tornarci dopo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -337,11 +340,13 @@ La chiave è capire il proprio use case: se serve "credibile e veloce" in 4K, Be
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa Frase, in una frase
+      content_markdown: `### Il workflow di content marketing nel 2026
 
-Frase è una piattaforma SEO + GEO end-to-end che fa ricerca SERP, genera brief, scrive draft ottimizzati, pubblica sul CMS, monitora il ranking su Google, e traccia la visibilità su ChatGPT, Perplexity, Google AI, Claude, e Gemini — in un workflow solo invece di cinque tool separati.
+Fino al 2024 il gioco era: keyword research → SERP analysis → brief → draft → ottimizzazione on-page → pubblicazione → rank tracking. Cinque tool, un workflow manuale, e l'output era "rankare su Google".
 
-Non è un content generator. È un sistema operativo per il content marketing che ha capito che il gioco non è più solo "rank su Google", è "essere citato dagli AI answer engine".
+Oggi non basta più. I tuoi contenuti devono anche essere **citati** dagli AI answer engine — ChatGPT, Perplexity, Google AI Overviews, Claude, Gemini. Un articolo può rankare #1 su Google e non essere mai menzionato da un LLM, perché i LLM pescano da segnali diversi (struttura, citazioni, fonti, freshness, autorità di dominio).
+
+Frase è la piattaforma che ha sposato questo shift end-to-end: SERP research, brief, draft, ottimizzazione, pubblicazione, rank tracking, e GEO monitoring in un workflow unico. Non è un content generator — è il sistema operativo per chi fa content marketing nel 2026 sapendo che il "rank su Google" è solo metà del lavoro.
 
 ### A chi serve davvero, e a chi no
 
@@ -539,6 +544,7 @@ Frase nel 2026 è uno dei tool più completi per content marketing SEO + GEO. No
 - **Salva Frase nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -559,9 +565,11 @@ Frase nel 2026 è uno dei tool più completi per content marketing SEO + GEO. No
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa Jenni AI, in una frase
+      content_markdown: `### Il momento in cui serve Jenni
 
-Jenni è un workspace AI pensato per chi scrive testi accademici: autocomplete, gestione citazioni in 2.600+ stili, chat con PDF, library management, e modalità di revisione specifiche (Proofread, Claim Confidence, Peer Review, Source Quality) — disegnato per ridurre l'attrito tra le note e il draft finito.
+Stai scrivendo la tesi, o un paper, o una literature review. Hai 47 PDF aperti, una tabella Excel con le citazioni da mettere in APA, e un draft in Word che non riesci a chiudere perché ogni volta che provi a riprendere ti accorgi di aver dimenticato una fonte o di aver parafrasato troppo vicino all'originale.
+
+Jenni AI è un workspace costruito intorno a questo specifico dolore. Autocomplete accademico, gestione citazioni in 2.600+ stili, chat con PDF, library management, e cinque modalità di revisione dedicate (Proofread, Claim Confidence, Peer Review, Source Quality) — disegnate per ridurre l'attrito tra le note sparse e il draft finito, non per scrivere al posto tuo.
 
 ### A chi serve davvero, e a chi no
 
@@ -768,6 +776,7 @@ Per studenti e ricercatori, è uno dei migliori investimenti. Per content writer
 - **Salva Jenni AI nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -789,11 +798,11 @@ Per studenti e ricercatori, è uno dei migliori investimenti. Per content writer
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa Reclaim AI, in una frase
+      content_markdown: `### Il problema che Reclaim risolve
 
-Reclaim è un layer di intelligenza sopra Google Calendar e Outlook che difende automaticamente il tuo focus time, distribuisce le tue abitudini ricorrenti nei buchi del calendario, e protegge le tue task dai meeting invadenti — senza che tu debba micro-gestire ogni slot.
+Apri Google Calendar e trovi 14 meeting, 3 abitudini che avresti dovuto mantenere questa settimana, e 8 task scadute ieri. Sai che il tuo deep work sta evaporando. Sai che la palestra salta. Sai che quel report che dovevi consegnare venerdì è ancora aperto. Ma "ottimizzare il calendario" è una di quelle cose che rimandi per mesi.
 
-Non è un calendario. Non è un task manager. È un arbitro che decide, in tempo reale, chi può occupare il tuo tempo e quando.
+Reclaim AI è un layer sopra Google Calendar e Outlook che decide, in tempo reale, chi può occupare il tuo tempo e quando. Difende il focus time, distribuisce le abitudini nei buchi, trasforma le task in blocchi di calendario, e gestisce i meeting senza farti diventare un segretario di te stesso. Tu imposti le regole; Reclaim le applica.
 
 ### A chi serve davvero, e a chi no
 
@@ -835,17 +844,19 @@ Il modello di scheduling è di tipo "constraint satisfaction": data una serie di
 
 ### Pricing, onestamente
 
-Reclaim ha quattro tier (verificati sul sito ufficiale a luglio 2026):
+Reclaim pubblica quattro tier sulla pagina ufficiale, con un toggle mensile/annuale che fa risparmiare circa il 17-29% su annuale. Verifica direttamente su reclaim.ai/pricing — i numeri qui sotto sono stati confermati ad agosto 2026, ma la società è in fase di integrazione con Dropbox e i prezzi cambiano.
 
-**Lite, gratis per sempre.** 1 utente, 1 sync calendar, 1 scheduling link, 5 AI Agents, 1 settimana di scheduling range, integrazioni limitate (Google Tasks, Slack, Zoom, Google Meet). È un piano reale, non un trial. Copre l'uso individuale leggero.
+**Lite — Free, per sempre.** 1 utente, 1 calendar sync, 1 scheduling link, 5 AI Agents, 1 settimana di scheduling range, integrazioni limitate (Google Tasks, Slack, Zoom, Google Meet). È un piano reale, non un trial. Tutti i nuovi account ricevono inoltre un trial gratuito di 14 giorni del tier Business.
 
-**Starter, $12/mese per seat (annuale) o $10/seat con commit annuale.** Aggiunge 8 settimane di scheduling range, 3 calendar sync, 3 scheduling link, integrazioni complete con Todoist, Asana, ClickUp, Linear, Jira, Slack status sync, Focus Time, Habits illimitate, Smart Meetings 3 come organizer. Adatto a singoli o team piccoli.
+**Starter.** Annuale: **$10/seat/mese**. Mensile: **$12/seat/mese**. Fino a 10 seat. Aggiunge 8 settimane di scheduling range, 3 calendar sync, 3 scheduling link, integrazioni complete con Todoist, Asana, ClickUp, Linear, Jira, Slack status sync, Focus Time, Habits illimitate, Smart Meetings 3 come organizer. Adatto a singoli o team piccoli.
 
-**Business, $18/mese per seat (annuale).** 12 settimane di scheduling range, calendar sync illimitati, scheduling link illimitati, Smart Meetings illimitati, webhooks, Team OOO calendar, delegated access, security review. Adatto a team 10-100 persone.
+**Business.** Annuale: **$15/seat/mese**. Mensile: **$18/seat/mese**. Fino a 100 seat. 12 settimane di scheduling range, 100 AI Agents per seat, calendar sync illimitati, scheduling link illimitati, Smart Meetings illimitati, webhooks, Team OOO calendar, delegated access, branding removal. È il tier "Most Popular".
 
-**Enterprise, $22/mese per seat (annuale), minimo 100 seat.** SSO, SCIM provisioning, domain capture, dedicated support, audit log, SLA. Adatto a organizzazioni 100+.
+**Enterprise — $22/seat/mese, annual only, contact sales.** Minimo 100 seat. Unlimited AI Agents, SSO + SCIM provisioning, org-chart-aware scheduling, Focus Time company OKRs, dedicated support, audit log, SLA, supporto alla configurazione enterprise. Non è self-serve: contatti il sales team.
 
-Reclaim è stato acquisito da Dropbox nel 2024 per $40.2M, ma continua a operare come prodotto indipendente. La cosa importante da sapere: i prezzi sono competitivi con Motion ($29/mese entry-level), e significativamente più economici di strumenti enterprise comparabili (Clockwise, Asana con calendar integration).
+**Costi realistici per team.** Un team di 10 su Business annuale: $150/mese, $1.800/anno. Su Starter annuale: $100/mese, $1.200/anno. Pagare mensile costa circa il 20% in più: $12 invece di $10 su Starter, $18 invece di $15 su Business. Per team grossi, il delta è significativo.
+
+Reclaim è parte del gruppo Dropbox (footer ufficiale: "Reclaim.ai from Dropbox company logo") e continua a operare come prodotto indipendente. Il prezzo resta competitivo con Motion ($29/mese entry-level), e significativamente più economico di Clockwise o Asana con calendar integration.
 
 Una nota: i prezzi di Reclaim sono cambiati più volte negli ultimi due anni. Quando firmi un budget annuale, considera un 10-20% di tolleranza per eventuali price increase.
 
@@ -979,7 +990,7 @@ La disciplina è fragile. Reclaim la codifica nel sistema. Se sei il tipo che "d
 
 ### In sintesi
 
-Reclaim AI è uno dei migliori investimenti di produttività per knowledge worker con calendario frammentato. Il prezzo ($12/mese) è giusto, il fit per il target è preciso, e l'impatto su focus time e abitudini è misurabile. Non è per tutti, e non è una bacchetta magica — richiede configurazione iniziale e iterazione. Ma per il profilo giusto, è probabilmente il tool di calendar AI con il miglior rapporto qualità/prezzo.
+Reclaim AI è uno dei migliori investimenti di produttività per knowledge worker con calendario frammentato. Il prezzo ($10/seat/mese annuale) è giusto, il fit per il target è preciso, e l'impatto su focus time e abitudini è misurabile. Non è per tutti, e non è una bacchetta magica — richiede configurazione iniziale e iterazione. Ma per il profilo giusto, è probabilmente il tool di calendar AI con il miglior rapporto qualità/prezzo.
 
 ### Prossimi passi
 
@@ -988,6 +999,7 @@ Reclaim AI è uno dei migliori investimenti di produttività per knowledge worke
 - **Salva Reclaim AI nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -1008,11 +1020,11 @@ Reclaim AI è uno dei migliori investimenti di produttività per knowledge worke
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa Windsor AI, in una frase
+      content_markdown: `### Il problema che Google Analytics non risolve
 
-Windsor AI è una piattaforma no-code di data integration e marketing attribution che collega 325+ fonti di marketing e vendita a destinazioni come BigQuery, Snowflake, Google Sheets, Looker, e Power BI — e che include un modello di attribuzione multi-touch basato su Markov chain per capire quale canale sta davvero portando conversioni.
+Spendi $50k/mese su Meta, $30k su Google, $20k su LinkedIn, e $10k su TikTok. Google Analytics ti dice "last-click: Google ha portato 80% delle conversioni". Tu sai che non è vero: il cliente ha visto un post LinkedIn, ha cercato il brand, ha cliccato una Meta retargeting ad, e ha convertito da Google Branded. Last-click attribuisce tutto a Google, e tu sposti budget dove non dovresti.
 
-Non è solo un connettore. È un data pipeline + attribution engine per team marketing che non vogliono (o non possono) avere un data engineer a tempo pieno.
+Windsor AI è la piattaforma che collega 325+ fonti di marketing e vendita e applica modelli di attribuzione multi-touch (Markov, data-driven, position-based) per restituirti la verità su quale canale sta davvero contribuendo. Non è solo un connettore — è un data pipeline + attribution engine per team marketing che non vogliono (o non possono) avere un data engineer a tempo pieno.
 
 ### A chi serve davvero, e a chi no
 
@@ -1208,6 +1220,7 @@ Per team piccoli, è overkill. Per team grandi con data engineer, Fivetran è su
 - **Salva Windsor AI nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -1228,9 +1241,11 @@ Per team piccoli, è overkill. Per team grandi con data engineer, Fivetran è su
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa ReachifyMe, in una frase
+      content_markdown: `### Il canale dove si gioca la lead generation
 
-ReachifyMe è un set di tool AI per costruire la tua presenza LinkedIn: generatore di post, scheduler, generatore di carousel, generator di idee, hashtag tool, formatter del testo, e un visitor assistant AI per il tuo profilo — pensato per creator, freelance, e founder che fanno di LinkedIn il canale di lead generation primario.
+Per freelance B2B, consultant, e founder di micro-SaaS, LinkedIn è diventato il canale dove si qualificano i lead, si costruisce autorità, e si chiudono i primi clienti. Il problema è che LinkedIn è anche un canale che premia costanza: post 3-4 volte a settimana, commenti strategici, carousel periodici, DM di follow-up. Senza un sistema, in tre mesi molli.
+
+ReachifyMe è un set di tool AI costruiti intorno a questa realtà: generatore di post, scheduler, generatore di carousel, generator di idee, hashtag tool, formatter, e un visitor assistant AI per il profilo. Non è per chi vuole "postare di più su LinkedIn" — è per chi ha deciso che LinkedIn è il canale primario e ha bisogno di un workflow per reggere il ritmo.
 
 ### A chi serve davvero, e a chi no
 
@@ -1416,6 +1431,7 @@ Le limitazioni sono: dipendenza dall'AI che genera testi riconoscibili se non pe
 - **Salva ReachifyMe nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -1436,11 +1452,11 @@ Le limitazioni sono: dipendenza dall'AI che genera testi riconoscibili se non pe
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa Flowise, in una frase
+      content_markdown: `### Il problema che Flowise risolve
 
-Flowise è un layer visuale sopra LangChain, LangGraph e LlamaIndex: colleghi nodi su una canvas invece di scrivere orchestration code, e ottieni un'app LLM funzionante — chatbot, agente RAG, flusso multi-agent — che puoi esporre come API, embeddare come widget, o self-hostare gratis.
+Hai un'idea per un'app LLM. Sai che ti serve RAG, magari un agent loop, magari un guardrail prima dell'output. Sai che il codice di orchestrazione esiste — LangChain, LangGraph, LlamaIndex — ma riscriverlo ogni volta è una perdita di tempo, e farlo in produzione senza un layer visuale significa debug alla cieca.
 
-Non è un chatbot builder. È un programma per chi vuole costruire applicazioni LLM senza reinventare l'orchestrazione ogni volta.
+Flowise è un canvas visuale sopra quei framework: colleghi nodi (LLM, retriever, tool, memory) invece di scrivere orchestration code, e ottieni un'app LLM funzionante — chatbot, agente RAG, flusso multi-agent — che puoi esporre come API, embeddare come widget, o self-hostare gratis (Apache 2.0). Non è un chatbot builder. È un programma per chi vuole costruire applicazioni LLM senza reinventare l'orchestrazione ogni volta.
 
 ### A chi serve davvero, e a chi no
 
@@ -1658,6 +1674,7 @@ La decisione chiave non è "Flowise sì o no" — è "abbiamo le competenze per 
 - **Salva Flowise nei preferiti** se vuoi tornarci dopo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -1679,11 +1696,11 @@ La decisione chiave non è "Flowise sì o no" — è "abbiamo le competenze per 
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa Lemon Squeezy, in una frase
+      content_markdown: `### La decisione che Lemon Squeezy ti evita
 
-Lemon Squeezy è un merchant of record per chi vende prodotti digitali e SaaS: si mette come venditore legale su ogni transazione, e in cambio gestisce tasse globali, fatturazione ricorrente, licenze software, chargeback, e pagamenti internazionali — lasciando a te il prodotto e il marketing.
+Stai per vendere il tuo primo plugin, corso, o SaaS. Apri Stripe e ti accorgi che per accettare pagamenti globali devi: registrarti come venditore in ogni paese UE, gestire VAT MOSS, configurare la ritenuta d'imposta US, emettere fatture conformi in 30+ giurisdizioni, gestire i chargeback, e tenerti aggiornato quando le regole cambiano. È un lavoro a tempo pieno che nessun founder indie ha voglia di fare.
 
-Non è un payment processor. È un'azienda che compra la tua fattura e si assume il rischio fiscale.
+Lemon Squeezy è un merchant of record (MoR): si mette come venditore legale su ogni transazione, e in cambio gestisce tasse globali, fatturazione ricorrente, licenze software, chargeback, e pagamenti internazionali. Tu ti concentri sul prodotto e sul marketing. Non è un payment processor — è un'azienda che compra la tua fattura e si assume il rischio fiscale al posto tuo.
 
 ### Cosa significa "merchant of record" e perché è importante
 
@@ -1911,6 +1928,7 @@ Non è la scelta giusta per tutti, e non è gratis. Ma per il target giusto — 
 - **Salva Lemon Squeezy nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -1932,11 +1950,11 @@ Non è la scelta giusta per tutti, e non è gratis. Ma per il target giusto — 
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa AgentX, in una frase
+      content_markdown: `### Il punto di svolta degli agenti AI
 
-AgentX è una piattaforma no-code per costruire agenti AI specializzati e flussi multi-agent — dove l'utente disegna la logica dell'agente in un canvas visuale, configura i tool che l'agente può chiamare, e mette in produzione senza scrivere codice di orchestrazione.
+Nel 2024-2025 la maggior parte dei "chatbot AI" era un LLM con un system prompt e un bottone "Invia". Funzionava per FAQ. Non funzionava per lead qualification reale, per customer support che tocca un CRM, per document processing che richiede OCR e validazione, per internal operations che agiscono su tool di terze parti.
 
-Non è un chatbot builder. È un sistema operativo per agenti che vivono dentro processi di business reali: lead qualification, customer support automation, document processing, internal operations.
+AgentX nasce per quest'ultima categoria: agenti AI specializzati, disegnati su un canvas visuale, che possono chiamare tool reali (API, database, CRM, ERP), mantenere stato, e operare dentro processi di business concreti. Non è un chatbot builder — è un sistema operativo per agenti che vivono in produzione, non in demo.
 
 ### A chi serve davvero, e a chi no
 
@@ -2136,6 +2154,7 @@ Per il target giusto — team che vogliono velocità + qualità senza scrivere c
 - **Salva AgentX nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -2157,11 +2176,11 @@ Per il target giusto — team che vogliono velocità + qualità senza scrivere c
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa Omi, in una frase
+      content_markdown: `### La prima cosa da capire su Omi
 
-Omi è un dispositivo wearable che ascolta le tue conversazioni, le trascrive in tempo reale, genera riassunti strutturati, e ti permette di cercare nella tua memoria conversazionale — un "secondo cervello" ambient che vive appeso al collo.
+Indossi un dispositivo che ascolta tutto quello che sente nel raggio di 1-2 metri. Non ha un pulsante "record" da premere: è always-on. Trascrive, riassume, indicizza, e ti permette di cercare nella tua memoria conversazionale settimane dopo. È un "secondo cervello" ambient che vive appeso al collo.
 
-Non è un registratore vocale. Non è un'app di note con AI. È un dispositivo di memoria personale continua che richiede decisioni consapevoli su privacy, consenso sociale, e data ownership.
+Tutto il resto — funzioni, limiti, casi d'uso, rischi — discende da questa singola decisione di design. Se ti mette a disagio l'idea, Omi non è per te e nessuna feature ti convincerà del contrario. Se ti incuriosisce, vale la pena leggerlo con onestà.
 
 ### A chi serve davvero, e a chi no
 
@@ -2237,7 +2256,9 @@ Omi ha una narrativa forte su privacy. Verifichiamola onestamente.
 
 Omi ha un modello ibrido: hardware + subscription.
 
-**Hardware.** Omi Dev Kit 2 a $89 (prezzo di pre-order al momento). Include il dispositivo, custodia in silicone, lanyard, caricatore USB-C magnetico. È un prezzo entry-level per un wearable AI — competitivo vs Plaud Note ($179), Limitless Pendant ($99), Friend ($129).
+**Hardware.** Omi Dev Kit 2 a **$69.99 USD** (prezzo in promozione al momento della verifica, agosto 2026; prezzo regolare $79.99). Il prodotto è venduto direttamente dal negozio ufficiale su omi.me (store Shopify di Based Hardware Inc., San Francisco). Include il dispositivo, custodia in silicone, lanyard, caricatore USB-C magnetico. È un prezzo entry-level per un wearable AI — competitivo vs Plaud Note ($179), Limitless Pendant ($99), Friend ($129).
+
+> **Nota di verifica:** i prezzi sul negozio omi.me cambiano spesso (Basic era $49, Dev Kit 2 era $79.99 prima della promozione). Verifica sul sito prima di ordinare.
 
 **Omi Basic (gratis incluso con l'hardware).** 1.200 minuti di cloud listening/mese, transcription illimitata, AI summaries, memories. Le registrazioni locali non contano nei minuti cloud. Quando esaurisci i minuti cloud, le registrazioni continuano locali ma non vengono processate per AI.
 
@@ -2338,7 +2359,9 @@ Dipende dalla regolamentazione locale e dal consenso del terapeuta. In molte giu
 Sì, supporta 25+ lingue tra cui l'italiano. La qualità è migliore in inglese (training set più ampio), ma l'italiano funziona ragionevolmente bene.
 
 **Quanto costa davvero in un anno?**
-$89 hardware + $199 (annual Unlimited) = $288 anno uno. Se ti basta Basic, $89 anno uno. Se usi BYO API key, $89 hardware + costo API (variabile, $10-50/mese per uso moderato).
+$69.99 hardware (prezzo promo verificato agosto 2026; regolare $79.99) + $199 (annual Unlimited) = ~$269 anno uno. Se ti basta Basic, $69.99 anno uno. Se usi BYO API key, $69.99 hardware + costo API (variabile, $10-50/mese per uso moderato).
+
+> **Caveat importante:** i dettagli di Omi Basic (soglia 1.200 min/mese di cloud) e Unlimited ($19/mese, $199/anno) non sono pubblicati direttamente sul negozio omi.me — emergono nell'app companion o in comunicazioni del vendor. I numeri sopra sono basati sul pricing storico documentato. Verifica direttamente nell'app prima di firmare un budget.
 
 **È meglio di un Note taker come Plaud?**
 Per uso always-on con cattura continua, sì. Per uso on-demand (solo quando premi record), Plaud è superiore. La scelta dipende dal tuo workflow.
@@ -2380,6 +2403,7 @@ Per il target giusto, è un moltiplicatore di produttività. Per il target sbagl
 - **Salva Omi nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -2400,9 +2424,11 @@ Per il target giusto, è un moltiplicatore di produttività. Per il target sbagl
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa Wegic, in una frase
+      content_markdown: `### Il sito che ti serve in 30 minuti
 
-Wegic è un website builder conversazionale: descrivi cosa vuoi, l'AI genera un sito completo in 60 secondi, e iteri con prompt in linguaggio naturale invece di drag-and-drop — pensato per chi vuole un sito credibile rapidamente senza competenze tecniche o di design.
+Hai un'idea, un freelance setup, o un piccolo e-commerce da lanciare. Non hai voglia di imparare WordPress, di pagare un'agenzia $3.000 per una landing page, o di litigare con un template drag-and-drop per due weekend. Vuoi un sito credibile in 30 minuti, possibilmente stasera.
+
+Wegic è un website builder conversazionale: descrivi a Kimmy (l'AI) cosa vuoi, in 60 secondi genera un sito completo, e iteri con prompt in linguaggio naturale invece di drag-and-drop. Non è il tool per chi vuole un web design su misura — è il tool per chi vuole uscire dal blocco "devo fare un sito" con qualcosa di pubblicabile.
 
 ### A chi serve davvero, e a chi no
 
@@ -2592,6 +2618,7 @@ Le limitazioni principali sono: credit system che non rolla-over e consuma su er
 - **Salva Wegic nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
   {
@@ -2613,11 +2640,11 @@ Le limitazioni principali sono: credit system che non rolla-over e consuma su er
     highlights: [],
     details: [],
     cautions: [],
-      content_markdown: `### Cosa fa Tolt, in una frase
+      content_markdown: `### L'economia che Tolt gestisce
 
-Tolt è una piattaforma di affiliate management pensata per SaaS che vogliono lanciare un programma di affiliazione o referral senza fee iniziali — collega Stripe, Paddle, Chargebee, o Shopify, e in 15 minuti hai un programma funzionante con dashboard per gli affiliati, tracking ricorrente, e payout globali.
+Lanci un SaaS. Vuoi un programma di affiliazione. Il primo affiliato porta un cliente che si iscrive a $50/mese. L'affiliato aspetta la sua commissione. Ma quel cliente può fare upgrade a $100, o downgrade a $20, o chiedere un refund dopo 3 mesi. La commissione ricorrente del 30% su quel cliente vale $360 in 12 mesi — ma se la tracci male, paghi troppo o troppo poco, e il programma muore.
 
-Non è un "generico" affiliate tracker. È costruito specificamente per SaaS in abbonamento, dove la sfida non è tracciare una vendita singola ma tracciare un customer lifetime value e pagare commissioni che sopravvivono a upgrade, downgrade, refund, e cancellazioni.
+Tolt è un affiliate manager costruito per SaaS in abbonamento: collega Stripe, Paddle, Chargebee, o Shopify, e in 15 minuti hai un programma funzionante con tracking ricorrente, dashboard per gli affiliati, e payout globali. Non è un "generico" affiliate tracker — è fatto per gestire customer LTV e commissioni che sopravvivono a upgrade, downgrade, refund, e cancellazioni.
 
 ### A chi serve davvero, e a chi no
 
@@ -2827,6 +2854,7 @@ Le limitazioni sono: tier alti che diventano costosi, funzionalità enterprise l
 - **Salva Tolt nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
 `,
+
   },
 
 ];

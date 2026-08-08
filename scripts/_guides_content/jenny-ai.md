@@ -1,6 +1,8 @@
-### Cosa fa Jenni AI, in una frase
+### Il momento in cui serve Jenni
 
-Jenni è un workspace AI pensato per chi scrive testi accademici: autocomplete, gestione citazioni in 2.600+ stili, chat con PDF, library management, e modalità di revisione specifiche (Proofread, Claim Confidence, Peer Review, Source Quality) — disegnato per ridurre l'attrito tra le note e il draft finito.
+Stai scrivendo la tesi, o un paper, o una literature review. Hai 47 PDF aperti, una tabella Excel con le citazioni da mettere in APA, e un draft in Word che non riesci a chiudere perché ogni volta che provi a riprendere ti accorgi di aver dimenticato una fonte o di aver parafrasato troppo vicino all'originale.
+
+Jenni AI è un workspace costruito intorno a questo specifico dolore. Autocomplete accademico, gestione citazioni in 2.600+ stili, chat con PDF, library management, e cinque modalità di revisione dedicate (Proofread, Claim Confidence, Peer Review, Source Quality) — disegnate per ridurre l'attrito tra le note sparse e il draft finito, non per scrivere al posto tuo.
 
 ### A chi serve davvero, e a chi no
 

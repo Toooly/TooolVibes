@@ -1,8 +1,8 @@
-### Cosa fa Omi, in una frase
+### La prima cosa da capire su Omi
 
-Omi è un dispositivo wearable che ascolta le tue conversazioni, le trascrive in tempo reale, genera riassunti strutturati, e ti permette di cercare nella tua memoria conversazionale — un "secondo cervello" ambient che vive appeso al collo.
+Indossi un dispositivo che ascolta tutto quello che sente nel raggio di 1-2 metri. Non ha un pulsante "record" da premere: è always-on. Trascrive, riassume, indicizza, e ti permette di cercare nella tua memoria conversazionale settimane dopo. È un "secondo cervello" ambient che vive appeso al collo.
 
-Non è un registratore vocale. Non è un'app di note con AI. È un dispositivo di memoria personale continua che richiede decisioni consapevoli su privacy, consenso sociale, e data ownership.
+Tutto il resto — funzioni, limiti, casi d'uso, rischi — discende da questa singola decisione di design. Se ti mette a disagio l'idea, Omi non è per te e nessuna feature ti convincerà del contrario. Se ti incuriosisce, vale la pena leggerlo con onestà.
 
 ### A chi serve davvero, e a chi no
 
@@ -78,7 +78,9 @@ Omi ha una narrativa forte su privacy. Verifichiamola onestamente.
 
 Omi ha un modello ibrido: hardware + subscription.
 
-**Hardware.** Omi Dev Kit 2 a $89 (prezzo di pre-order al momento). Include il dispositivo, custodia in silicone, lanyard, caricatore USB-C magnetico. È un prezzo entry-level per un wearable AI — competitivo vs Plaud Note ($179), Limitless Pendant ($99), Friend ($129).
+**Hardware.** Omi Dev Kit 2 a **$69.99 USD** (prezzo in promozione al momento della verifica, agosto 2026; prezzo regolare $79.99). Il prodotto è venduto direttamente dal negozio ufficiale su omi.me (store Shopify di Based Hardware Inc., San Francisco). Include il dispositivo, custodia in silicone, lanyard, caricatore USB-C magnetico. È un prezzo entry-level per un wearable AI — competitivo vs Plaud Note ($179), Limitless Pendant ($99), Friend ($129).
+
+> **Nota di verifica:** i prezzi sul negozio omi.me cambiano spesso (Basic era $49, Dev Kit 2 era $79.99 prima della promozione). Verifica sul sito prima di ordinare.
 
 **Omi Basic (gratis incluso con l'hardware).** 1.200 minuti di cloud listening/mese, transcription illimitata, AI summaries, memories. Le registrazioni locali non contano nei minuti cloud. Quando esaurisci i minuti cloud, le registrazioni continuano locali ma non vengono processate per AI.
 
@@ -179,7 +181,9 @@ Dipende dalla regolamentazione locale e dal consenso del terapeuta. In molte giu
 Sì, supporta 25+ lingue tra cui l'italiano. La qualità è migliore in inglese (training set più ampio), ma l'italiano funziona ragionevolmente bene.
 
 **Quanto costa davvero in un anno?**
-$89 hardware + $199 (annual Unlimited) = $288 anno uno. Se ti basta Basic, $89 anno uno. Se usi BYO API key, $89 hardware + costo API (variabile, $10-50/mese per uso moderato).
+$69.99 hardware (prezzo promo verificato agosto 2026; regolare $79.99) + $199 (annual Unlimited) = ~$269 anno uno. Se ti basta Basic, $69.99 anno uno. Se usi BYO API key, $69.99 hardware + costo API (variabile, $10-50/mese per uso moderato).
+
+> **Caveat importante:** i dettagli di Omi Basic (soglia 1.200 min/mese di cloud) e Unlimited ($19/mese, $199/anno) non sono pubblicati direttamente sul negozio omi.me — emergono nell'app companion o in comunicazioni del vendor. I numeri sopra sono basati sul pricing storico documentato. Verifica direttamente nell'app prima di firmare un budget.
 
 **È meglio di un Note taker come Plaud?**
 Per uso always-on con cattura continua, sì. Per uso on-demand (solo quando premi record), Plaud è superiore. La scelta dipende dal tuo workflow.

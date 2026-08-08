@@ -1,8 +1,8 @@
-### Cosa fa Reclaim AI, in una frase
+### Il problema che Reclaim risolve
 
-Reclaim è un layer di intelligenza sopra Google Calendar e Outlook che difende automaticamente il tuo focus time, distribuisce le tue abitudini ricorrenti nei buchi del calendario, e protegge le tue task dai meeting invadenti — senza che tu debba micro-gestire ogni slot.
+Apri Google Calendar e trovi 14 meeting, 3 abitudini che avresti dovuto mantenere questa settimana, e 8 task scadute ieri. Sai che il tuo deep work sta evaporando. Sai che la palestra salta. Sai che quel report che dovevi consegnare venerdì è ancora aperto. Ma "ottimizzare il calendario" è una di quelle cose che rimandi per mesi.
 
-Non è un calendario. Non è un task manager. È un arbitro che decide, in tempo reale, chi può occupare il tuo tempo e quando.
+Reclaim AI è un layer sopra Google Calendar e Outlook che decide, in tempo reale, chi può occupare il tuo tempo e quando. Difende il focus time, distribuisce le abitudini nei buchi, trasforma le task in blocchi di calendario, e gestisce i meeting senza farti diventare un segretario di te stesso. Tu imposti le regole; Reclaim le applica.
 
 ### A chi serve davvero, e a chi no
 
@@ -44,17 +44,19 @@ Il modello di scheduling è di tipo "constraint satisfaction": data una serie di
 
 ### Pricing, onestamente
 
-Reclaim ha quattro tier (verificati sul sito ufficiale a luglio 2026):
+Reclaim pubblica quattro tier sulla pagina ufficiale, con un toggle mensile/annuale che fa risparmiare circa il 17-29% su annuale. Verifica direttamente su reclaim.ai/pricing — i numeri qui sotto sono stati confermati ad agosto 2026, ma la società è in fase di integrazione con Dropbox e i prezzi cambiano.
 
-**Lite, gratis per sempre.** 1 utente, 1 sync calendar, 1 scheduling link, 5 AI Agents, 1 settimana di scheduling range, integrazioni limitate (Google Tasks, Slack, Zoom, Google Meet). È un piano reale, non un trial. Copre l'uso individuale leggero.
+**Lite — Free, per sempre.** 1 utente, 1 calendar sync, 1 scheduling link, 5 AI Agents, 1 settimana di scheduling range, integrazioni limitate (Google Tasks, Slack, Zoom, Google Meet). È un piano reale, non un trial. Tutti i nuovi account ricevono inoltre un trial gratuito di 14 giorni del tier Business.
 
-**Starter, $12/mese per seat (annuale) o $10/seat con commit annuale.** Aggiunge 8 settimane di scheduling range, 3 calendar sync, 3 scheduling link, integrazioni complete con Todoist, Asana, ClickUp, Linear, Jira, Slack status sync, Focus Time, Habits illimitate, Smart Meetings 3 come organizer. Adatto a singoli o team piccoli.
+**Starter.** Annuale: **$10/seat/mese**. Mensile: **$12/seat/mese**. Fino a 10 seat. Aggiunge 8 settimane di scheduling range, 3 calendar sync, 3 scheduling link, integrazioni complete con Todoist, Asana, ClickUp, Linear, Jira, Slack status sync, Focus Time, Habits illimitate, Smart Meetings 3 come organizer. Adatto a singoli o team piccoli.
 
-**Business, $18/mese per seat (annuale).** 12 settimane di scheduling range, calendar sync illimitati, scheduling link illimitati, Smart Meetings illimitati, webhooks, Team OOO calendar, delegated access, security review. Adatto a team 10-100 persone.
+**Business.** Annuale: **$15/seat/mese**. Mensile: **$18/seat/mese**. Fino a 100 seat. 12 settimane di scheduling range, 100 AI Agents per seat, calendar sync illimitati, scheduling link illimitati, Smart Meetings illimitati, webhooks, Team OOO calendar, delegated access, branding removal. È il tier "Most Popular".
 
-**Enterprise, $22/mese per seat (annuale), minimo 100 seat.** SSO, SCIM provisioning, domain capture, dedicated support, audit log, SLA. Adatto a organizzazioni 100+.
+**Enterprise — $22/seat/mese, annual only, contact sales.** Minimo 100 seat. Unlimited AI Agents, SSO + SCIM provisioning, org-chart-aware scheduling, Focus Time company OKRs, dedicated support, audit log, SLA, supporto alla configurazione enterprise. Non è self-serve: contatti il sales team.
 
-Reclaim è stato acquisito da Dropbox nel 2024 per $40.2M, ma continua a operare come prodotto indipendente. La cosa importante da sapere: i prezzi sono competitivi con Motion ($29/mese entry-level), e significativamente più economici di strumenti enterprise comparabili (Clockwise, Asana con calendar integration).
+**Costi realistici per team.** Un team di 10 su Business annuale: $150/mese, $1.800/anno. Su Starter annuale: $100/mese, $1.200/anno. Pagare mensile costa circa il 20% in più: $12 invece di $10 su Starter, $18 invece di $15 su Business. Per team grossi, il delta è significativo.
+
+Reclaim è parte del gruppo Dropbox (footer ufficiale: "Reclaim.ai from Dropbox company logo") e continua a operare come prodotto indipendente. Il prezzo resta competitivo con Motion ($29/mese entry-level), e significativamente più economico di Clockwise o Asana con calendar integration.
 
 Una nota: i prezzi di Reclaim sono cambiati più volte negli ultimi due anni. Quando firmi un budget annuale, considera un 10-20% di tolleranza per eventuali price increase.
 
@@ -188,7 +190,7 @@ La disciplina è fragile. Reclaim la codifica nel sistema. Se sei il tipo che "d
 
 ### In sintesi
 
-Reclaim AI è uno dei migliori investimenti di produttività per knowledge worker con calendario frammentato. Il prezzo ($12/mese) è giusto, il fit per il target è preciso, e l'impatto su focus time e abitudini è misurabile. Non è per tutti, e non è una bacchetta magica — richiede configurazione iniziale e iterazione. Ma per il profilo giusto, è probabilmente il tool di calendar AI con il miglior rapporto qualità/prezzo.
+Reclaim AI è uno dei migliori investimenti di produttività per knowledge worker con calendario frammentato. Il prezzo ($10/seat/mese annuale) è giusto, il fit per il target è preciso, e l'impatto su focus time e abitudini è misurabile. Non è per tutti, e non è una bacchetta magica — richiede configurazione iniziale e iterazione. Ma per il profilo giusto, è probabilmente il tool di calendar AI con il miglior rapporto qualità/prezzo.
 
 ### Prossimi passi
 

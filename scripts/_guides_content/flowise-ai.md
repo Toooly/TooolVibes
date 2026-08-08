@@ -1,8 +1,8 @@
-### Cosa fa Flowise, in una frase
+### Il problema che Flowise risolve
 
-Flowise è un layer visuale sopra LangChain, LangGraph e LlamaIndex: colleghi nodi su una canvas invece di scrivere orchestration code, e ottieni un'app LLM funzionante — chatbot, agente RAG, flusso multi-agent — che puoi esporre come API, embeddare come widget, o self-hostare gratis.
+Hai un'idea per un'app LLM. Sai che ti serve RAG, magari un agent loop, magari un guardrail prima dell'output. Sai che il codice di orchestrazione esiste — LangChain, LangGraph, LlamaIndex — ma riscriverlo ogni volta è una perdita di tempo, e farlo in produzione senza un layer visuale significa debug alla cieca.
 
-Non è un chatbot builder. È un programma per chi vuole costruire applicazioni LLM senza reinventare l'orchestrazione ogni volta.
+Flowise è un canvas visuale sopra quei framework: colleghi nodi (LLM, retriever, tool, memory) invece di scrivere orchestration code, e ottieni un'app LLM funzionante — chatbot, agente RAG, flusso multi-agent — che puoi esporre come API, embeddare come widget, o self-hostare gratis (Apache 2.0). Non è un chatbot builder. È un programma per chi vuole costruire applicazioni LLM senza reinventare l'orchestrazione ogni volta.
 
 ### A chi serve davvero, e a chi no
 

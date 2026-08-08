@@ -1,6 +1,8 @@
-### Cosa fa Wegic, in una frase
+### Il sito che ti serve in 30 minuti
 
-Wegic è un website builder conversazionale: descrivi cosa vuoi, l'AI genera un sito completo in 60 secondi, e iteri con prompt in linguaggio naturale invece di drag-and-drop — pensato per chi vuole un sito credibile rapidamente senza competenze tecniche o di design.
+Hai un'idea, un freelance setup, o un piccolo e-commerce da lanciare. Non hai voglia di imparare WordPress, di pagare un'agenzia $3.000 per una landing page, o di litigare con un template drag-and-drop per due weekend. Vuoi un sito credibile in 30 minuti, possibilmente stasera.
+
+Wegic è un website builder conversazionale: descrivi a Kimmy (l'AI) cosa vuoi, in 60 secondi genera un sito completo, e iteri con prompt in linguaggio naturale invece di drag-and-drop. Non è il tool per chi vuole un web design su misura — è il tool per chi vuole uscire dal blocco "devo fare un sito" con qualcosa di pubblicabile.
 
 ### A chi serve davvero, e a chi no
 

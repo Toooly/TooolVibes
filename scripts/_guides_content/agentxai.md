@@ -1,8 +1,8 @@
-### Cosa fa AgentX, in una frase
+### Il punto di svolta degli agenti AI
 
-AgentX è una piattaforma no-code per costruire agenti AI specializzati e flussi multi-agent — dove l'utente disegna la logica dell'agente in un canvas visuale, configura i tool che l'agente può chiamare, e mette in produzione senza scrivere codice di orchestrazione.
+Nel 2024-2025 la maggior parte dei "chatbot AI" era un LLM con un system prompt e un bottone "Invia". Funzionava per FAQ. Non funzionava per lead qualification reale, per customer support che tocca un CRM, per document processing che richiede OCR e validazione, per internal operations che agiscono su tool di terze parti.
 
-Non è un chatbot builder. È un sistema operativo per agenti che vivono dentro processi di business reali: lead qualification, customer support automation, document processing, internal operations.
+AgentX nasce per quest'ultima categoria: agenti AI specializzati, disegnati su un canvas visuale, che possono chiamare tool reali (API, database, CRM, ERP), mantenere stato, e operare dentro processi di business concreti. Non è un chatbot builder — è un sistema operativo per agenti che vivono in produzione, non in demo.
 
 ### A chi serve davvero, e a chi no
 

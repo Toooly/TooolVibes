@@ -1,8 +1,8 @@
-### Cosa fa Windsor AI, in una frase
+### Il problema che Google Analytics non risolve
 
-Windsor AI è una piattaforma no-code di data integration e marketing attribution che collega 325+ fonti di marketing e vendita a destinazioni come BigQuery, Snowflake, Google Sheets, Looker, e Power BI — e che include un modello di attribuzione multi-touch basato su Markov chain per capire quale canale sta davvero portando conversioni.
+Spendi $50k/mese su Meta, $30k su Google, $20k su LinkedIn, e $10k su TikTok. Google Analytics ti dice "last-click: Google ha portato 80% delle conversioni". Tu sai che non è vero: il cliente ha visto un post LinkedIn, ha cercato il brand, ha cliccato una Meta retargeting ad, e ha convertito da Google Branded. Last-click attribuisce tutto a Google, e tu sposti budget dove non dovresti.
 
-Non è solo un connettore. È un data pipeline + attribution engine per team marketing che non vogliono (o non possono) avere un data engineer a tempo pieno.
+Windsor AI è la piattaforma che collega 325+ fonti di marketing e vendita e applica modelli di attribuzione multi-touch (Markov, data-driven, position-based) per restituirti la verità su quale canale sta davvero contribuendo. Non è solo un connettore — è un data pipeline + attribution engine per team marketing che non vogliono (o non possono) avere un data engineer a tempo pieno.
 
 ### A chi serve davvero, e a chi no
 

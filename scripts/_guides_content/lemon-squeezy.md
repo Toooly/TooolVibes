@@ -1,8 +1,8 @@
-### Cosa fa Lemon Squeezy, in una frase
+### La decisione che Lemon Squeezy ti evita
 
-Lemon Squeezy è un merchant of record per chi vende prodotti digitali e SaaS: si mette come venditore legale su ogni transazione, e in cambio gestisce tasse globali, fatturazione ricorrente, licenze software, chargeback, e pagamenti internazionali — lasciando a te il prodotto e il marketing.
+Stai per vendere il tuo primo plugin, corso, o SaaS. Apri Stripe e ti accorgi che per accettare pagamenti globali devi: registrarti come venditore in ogni paese UE, gestire VAT MOSS, configurare la ritenuta d'imposta US, emettere fatture conformi in 30+ giurisdizioni, gestire i chargeback, e tenerti aggiornato quando le regole cambiano. È un lavoro a tempo pieno che nessun founder indie ha voglia di fare.
 
-Non è un payment processor. È un'azienda che compra la tua fattura e si assume il rischio fiscale.
+Lemon Squeezy è un merchant of record (MoR): si mette come venditore legale su ogni transazione, e in cambio gestisce tasse globali, fatturazione ricorrente, licenze software, chargeback, e pagamenti internazionali. Tu ti concentri sul prodotto e sul marketing. Non è un payment processor — è un'azienda che compra la tua fattura e si assume il rischio fiscale al posto tuo.
 
 ### Cosa significa "merchant of record" e perché è importante
 

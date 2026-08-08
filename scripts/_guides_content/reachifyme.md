@@ -1,6 +1,8 @@
-### Cosa fa ReachifyMe, in una frase
+### Il canale dove si gioca la lead generation
 
-ReachifyMe è un set di tool AI per costruire la tua presenza LinkedIn: generatore di post, scheduler, generatore di carousel, generator di idee, hashtag tool, formatter del testo, e un visitor assistant AI per il tuo profilo — pensato per creator, freelance, e founder che fanno di LinkedIn il canale di lead generation primario.
+Per freelance B2B, consultant, e founder di micro-SaaS, LinkedIn è diventato il canale dove si qualificano i lead, si costruisce autorità, e si chiudono i primi clienti. Il problema è che LinkedIn è anche un canale che premia costanza: post 3-4 volte a settimana, commenti strategici, carousel periodici, DM di follow-up. Senza un sistema, in tre mesi molli.
+
+ReachifyMe è un set di tool AI costruiti intorno a questa realtà: generatore di post, scheduler, generatore di carousel, generator di idee, hashtag tool, formatter, e un visitor assistant AI per il profilo. Non è per chi vuole "postare di più su LinkedIn" — è per chi ha deciso che LinkedIn è il canale primario e ha bisogno di un workflow per reggere il ritmo.
 
 ### A chi serve davvero, e a chi no
 

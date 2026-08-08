@@ -1,8 +1,10 @@
-### Cosa fa Frase, in una frase
+### Il workflow di content marketing nel 2026
 
-Frase è una piattaforma SEO + GEO end-to-end che fa ricerca SERP, genera brief, scrive draft ottimizzati, pubblica sul CMS, monitora il ranking su Google, e traccia la visibilità su ChatGPT, Perplexity, Google AI, Claude, e Gemini — in un workflow solo invece di cinque tool separati.
+Fino al 2024 il gioco era: keyword research → SERP analysis → brief → draft → ottimizzazione on-page → pubblicazione → rank tracking. Cinque tool, un workflow manuale, e l'output era "rankare su Google".
 
-Non è un content generator. È un sistema operativo per il content marketing che ha capito che il gioco non è più solo "rank su Google", è "essere citato dagli AI answer engine".
+Oggi non basta più. I tuoi contenuti devono anche essere **citati** dagli AI answer engine — ChatGPT, Perplexity, Google AI Overviews, Claude, Gemini. Un articolo può rankare #1 su Google e non essere mai menzionato da un LLM, perché i LLM pescano da segnali diversi (struttura, citazioni, fonti, freshness, autorità di dominio).
+
+Frase è la piattaforma che ha sposato questo shift end-to-end: SERP research, brief, draft, ottimizzazione, pubblicazione, rank tracking, e GEO monitoring in un workflow unico. Non è un content generator — è il sistema operativo per chi fa content marketing nel 2026 sapendo che il "rank su Google" è solo metà del lavoro.
 
 ### A chi serve davvero, e a chi no
 

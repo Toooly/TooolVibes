@@ -198,3 +198,184 @@ After this v2 pass, all 12 guides:
 The Guides section is now at a level where every article can be published under an expert editorial brand without needing to apologize for its depth, accuracy, prose, or usefulness.
 
 Single commit: **`3e0a21d MiniMax · guides: editorial certification v2 — verify facts, deepen, vary structure`**.
+
+---
+
+# v3 — Surgical correction pass
+
+**Date**: 2026-08-08 (same session, post-v2)
+**Operator**: Mavis (Mavis)
+**Scope**: surgical corrections only. No UI redesign. No article restructuring. No partner / sponsor / ad work touched.
+
+This is **not** another rewrite. v2 is substantially approved. v3 is a final certification patch focused on:
+1. Omi hardware pricing (live store vs v2 claim).
+2. Reclaim pricing (yearly vs monthly distinction).
+3. Source hierarchy — primary vs secondary.
+4. Varying article openings to remove the "Cosa fa X, in una frase" template fingerprint.
+
+## V3-1. Omi pricing correction
+
+**Verified against primary source**: `https://www.omi.me/collections/people-love-this` (Based Hardware official Shopify store), `https://docs.omi.me/doc/hardware/DevKit2`, store footer "© 2026 Based Hardware. All rights reserved."
+
+| Claim | v2 said | v3 says (verified Aug 2026) | Source |
+|-------|--------|------------------------------|--------|
+| Omi Dev Kit 2 hardware | $89 (preorder) | **$69.99 USD (sale, regolare $79.99)** | omi.me/collections/people-love-this (product list) |
+| Omi Glass Dev Kit | (not mentioned) | $299 (sale, regolare $399) | omi.me/products/omi-glass-dev-kit |
+| Omi Firmware Dev Kit | (not mentioned) | $49.99 (sale, regolare $69.99) | omi.me/products/omi-firmware-developer-kit |
+| Omi Basic cloud minutes | 1.200 min/mese (unverified secondary) | Same, with explicit caveat: subscription tier limits are not published on the public store; they appear in the app companion after purchase | docs.omi.me, app companion |
+| Omi Unlimited $19/mo or $199/yr | Same (unverified secondary) | Same, with caveat above | docs.omi.me, app companion |
+
+**Note on the user's original $179 hint**: the user reported the Omi hardware is currently $179. The live omi.me store (verified Aug 8 2026) does not list $179. The Dev Kit 2 is currently on sale at $69.99 (regular $79.99). $179 is the Plaud Note hardware price — a different competitor. v3 reflects the live primary source, not the user's prior mental model.
+
+**Files modified**: `scripts/_guides_content/omi-app-ai.md` (3 corrections: opening, hardware price, year-1 cost calculation with caveat).
+
+## V3-2. Reclaim pricing correction
+
+**Verified against primary source**: `https://reclaim.ai/pricing` (live), `https://reclaim.ai/pricing/education-discount`, footer "Reclaim.ai from Dropbox company logo" and "© 2026 Reclaim.ai, Inc."
+
+The v2 article was self-contradictory on Starter ("$12/mese per seat (annuale) o $10/seat con commit annuale" — had monthly and annual swapped) and wrong on Business ("$18/mese per seat (annuale)" — but $18 is the MONTHLY rate; the annual is $15).
+
+| Tier | v2 said | v3 verified (live pricing page, Aug 2026) |
+|------|--------|--------------------------------------------|
+| Lite | Free, 1 user, 1 calendar sync, 5 AI Agents | Same ✓ |
+| Starter annual | $12/seat/mo (wrong — was actually $10) | **$10/seat/mo** (annual billing) |
+| Starter monthly | $10/seat (wrong — was actually $12) | **$12/seat/mo** (monthly billing) |
+| Business annual | $18/seat/mo (wrong — was actually $15) | **$15/seat/mo** (annual billing) |
+| Business monthly | not stated | **$18/seat/mo** (monthly billing) |
+| Enterprise | $22/seat/mo annual, min 100 seat | **$22/seat/mo, annual only, contact sales, min 100 seat** |
+| Reclaim + Dropbox | "Acquired by Dropbox 2024 for $40.2M" | Softened: "Reclaim.ai from Dropbox company logo" (footer), operationally independent. Acquisition amount and date not re-verified in v3 — was widely reported but not from an official Dropbox press release. |
+| Free trial | not mentioned | 14-day free trial of Business on every new account (no credit card) |
+| 30% promo | not mentioned | "Save 30% today-only on Starter & Business plans" (banner) |
+| Toggle label | not mentioned | "Yearly — SAVE 20%" / Monthly switch on the page |
+| Annual saving | not quantified | "Paying monthly costs about 20% more: $12 vs $10 on Starter, $18 vs $15 on Business" |
+
+**Files modified**: `scripts/_guides_content/reclaim-ai.md` (3 corrections: opening, full pricing block, "In sintesi" price reference).
+
+## V3-3. Openings varied
+
+All 12 guides previously opened with the same template:
+
+```
+### Cosa fa [Tool], in una frase
+[Definitional paragraph]
+Non è un X. È un Y.
+```
+
+This created a clear template fingerprint. v3 replaces each opening with a subject-specific editorial hook:
+
+| Slug | v2 opening | v3 opening (subject-specific hook) |
+|------|-----------|------------------------------------|
+| `agentxai` | "Cosa fa AgentX, in una frase" | "Il punto di svolta degli agenti AI" — frames the gap between 2024-2025 chatbot demos and production-grade agents |
+| `betterpic` | "Cosa fa BetterPic, in una frase" | "La decisione che BetterPic affronta" — photographer-vs-AI trade-off (per user spec) |
+| `flowise-ai` | "Cosa fa Flowise, in una frase" | "Il problema che Flowise risolve" — orchestration overhead (per user spec) |
+| `frase-ai` | "Cosa fa Frase, in una frase" | "Il workflow di content marketing nel 2026" — SEO→GEO shift (per user spec) |
+| `jenny-ai` | "Cosa fa Jenni AI, in una frase" | "Il momento in cui serve Jenni" — thesis-writer scenario (47 PDF, APA table, draft in Word) |
+| `lemon-squeezy` | "Cosa fa Lemon Squeezy, in una frase" | "La decisione che Lemon Squeezy ti evita" — MoR value proposition (per user spec) |
+| `omi-app-ai` | "Cosa fa Omi, in una frase" | "La prima cosa da capire su Omi" — always-on recorder implication (per user spec) |
+| `reachifyme` | "Cosa fa ReachifyMe, in una frase" | "Il canale dove si gioca la lead generation" — LinkedIn-as-primary-channel reality |
+| `reclaim-ai` | "Cosa fa Reclaim AI, in una frase" | "Il problema che Reclaim risolve" — calendar overload (per user spec) |
+| `tolt` | "Cosa fa Tolt, in una frase" | "L'economia che Tolt gestisce" — affiliate economics (per user spec) |
+| `wegic` | "Cosa fa Wegic, in una frase" | "Il sito che ti serve in 30 minuti" — anti-WordPress impulse |
+| `windsor-ai` | "Cosa fa Windsor AI, in una frase" | "Il problema che Google Analytics non risolve" — last-click attribution lies (real scenario with $50k/$30k/$20k/$10k spend mix) |
+
+**Files modified**: all 12 source files in `scripts/_guides_content/*.md`, applied via `scripts/_apply_guides_v3.py`.
+
+## V3-4. Source hierarchy — primary vs secondary
+
+v2 used a mixed "Sources" log. v3 distinguishes primary from secondary sources for every guide that was fact-checked. The hierarchy used in v3:
+
+### Primary sources (vendor-owned, used to verify pricing/features/positioning)
+
+| Slug | Primary sources checked |
+|------|------------------------|
+| `betterpic` | betterpic.io/pricing, betterpic.io upload flow |
+| `flowise-ai` | flowiseai.com (pricing, docs), github.com/FlowiseAI/Flowise (Apache 2.0 license), Workday acquisition press release (Aug 14 2025) |
+| `frase-ai` | frase.io (pricing, feature list), frase.io/content-guard, frase.io/ai-visibility |
+| `jenny-ai` | jenni.ai/pricing, jenni.ai docs (Source Quality mode, Jul 2026) |
+| `lemon-squeezy` | lemonsqueezy.com (pricing, MoR docs), Stripe acquisition press release, Stripe Managed Payments roadmap |
+| `omi-app-ai` | omi.me/collections/people-love-this (live pricing Aug 2026), omi.me/products/omi-glass-dev-kit, omi.me/products/omi-firmware-developer-kit, docs.omi.me, omi GitHub repo (BasedHardware/omi) |
+| `reclaim-ai` | reclaim.ai/pricing (live Aug 2026, yearly/monthly toggle), reclaim.ai/features/*, footer "Reclaim.ai from Dropbox company logo" |
+| `reachifyme` | reachifyme.com (pricing is not all public — only visible after signup), 7-day free trial page |
+| `tolt` | tolt.com/pricing, tolt.com/docs (auto payouts, recurring commission tracking) |
+| `wegic` | wegic.ai/pricing, wegic.ai docs (credit system, code export) |
+| `windsor-ai` | windsor.ai/pricing, windsor.ai docs (Markov attribution, MCP server) |
+| `agentxai` | agentx.so/pricing (Professional + Business visible; Starter not public), agentx.so docs |
+
+### Secondary / supporting sources (used for context, comparison, market positioning)
+
+These are **not** used to override primary pricing/features. They appear in the guides for context only:
+
+| Source | Used for |
+|--------|----------|
+| morgen.so/blog-posts/reclaim-pricing | Reclaim yearly vs monthly confirmation (cross-checked with primary) |
+| hackceleration.com/labs/reclaim-pricing | Reclaim yearly vs monthly confirmation (cross-checked with primary) |
+| pipeline.zoominfo.com/sales/reclaim-ai-review | Reclaim tier summary (cross-checked with primary) |
+| schedulingkit.com/pricing-guides/reclaim-ai-pricing | Reclaim tier summary (cross-checked with primary) |
+| saastruecost.com/guides/reclaim-ai-pricing-decoded | Reclaim per-seat math examples |
+| usagepricing.com/blueprint/reclaim-ai | Reclaim billing cadence + 29% annual saving claim |
+| umevo.ai/blogs/ume-all-posts/omi-ai-wearable-deep-dive-... | Omi Deep Dive (third-party blog, NOT used for pricing) |
+| coefficient.io (windsor comparison) | Windsor vs competitors |
+| smbguide (windsor pricing) | Windsor pricing (cross-checked) |
+| signalbridge (windsor attribution) | Markov attribution context |
+| agenticindex (flowise tutorial) | Flowise architecture context |
+| voiceflow, aiagentsquare | Flowise feature comparison |
+| inflowpay (lemon-squeezy fees) | Lemon Squeezy effective rate context |
+| idealonlinebusiness, nc-media-group, affonso (tolt) | Tolt affiliate economics context |
+| top10k, ecommerceparadise, bestguide (wegic) | Wegic context (NOT used for pricing) |
+| aisotools, manusights, tooliverse (jenny) | Jenni AI context |
+| sourceforge, theresanaiforthat, skywork (reachifyme) | ReachifyMe market context |
+| agxntsix (agentx) | AgentX market context |
+| omidsaffari, theskillshift, forbes (omi) | Omi context (NOT used for pricing) |
+
+**Rule applied throughout v3**: when a primary and a secondary source disagreed on a numeric value, the primary source was used and the secondary was not cited. Where a number is unverifiable from primary sources, the article explicitly says so (e.g., the Omi Basic/Unlimited subscription limits caveat).
+
+## V3-5. Validation
+
+| Check | Command | Result |
+|-------|---------|--------|
+| TypeScript | `npm run typecheck` | **PASS** (0 errors) |
+| Lint (strict) | `npm run lint:ci` (--max-warnings=0) | **PASS** (0 warnings) |
+| Production build | `npm run build` | **PASS** (all routes compile, 0 errors) |
+| Unit / vitest | `npx vitest run` | **1 798 / 1 799 pass** (same 1 pre-existing failure on `runtime-contract.test.ts > release runtime contract > executes the real preinstall entrypoint through npm` — unrelated to this v3 pass) |
+| Routes 200 | `curl /posts/{slug}` for all 12 slugs | **PASS** — all 12 routes return 200 |
+| Opening H2 check | Python script scanning each `content_markdown` block | **PASS** — all 12 openings unique, no "Cosa fa X, in una frase" template repetition |
+
+## V3-6. Safety
+
+- **No Guide UI redesign**: no changes to `app/globals.css`, `styles/guides.css`, `components/guides/*`, or any layout/component file.
+- **No partner/sponsor modifications**: partner-* files remain untouched in the working tree (other agent's work, not in v3 scope).
+- **No unrelated code changes**: only `scripts/_guides_content/*.md` and `lib/data/public-articles.ts` (and this audit doc) are modified.
+
+## V3-7. Files modified
+
+| File | Type | Change |
+|------|------|--------|
+| `scripts/_guides_content/agentxai.md` | source | opening variation |
+| `scripts/_guides_content/betterpic.md` | source | opening variation |
+| `scripts/_guides_content/flowise-ai.md` | source | opening variation |
+| `scripts/_guides_content/frase-ai.md` | source | opening variation |
+| `scripts/_guides_content/jenny-ai.md` | source | opening variation |
+| `scripts/_guides_content/lemon-squeezy.md` | source | opening variation |
+| `scripts/_guides_content/omi-app-ai.md` | source | opening variation + hardware price fix ($89→$69.99/$79.99) + Basic/Unlimited caveat |
+| `scripts/_guides_content/reachifyme.md` | source | opening variation |
+| `scripts/_guides_content/reclaim-ai.md` | source | opening variation + pricing block rewrite (yearly vs monthly) + closing price reference |
+| `scripts/_guides_content/tolt.md` | source | opening variation |
+| `scripts/_guides_content/wegic.md` | source | opening variation |
+| `scripts/_guides_content/windsor-ai.md` | source | opening variation |
+| `lib/data/public-articles.ts` | build artifact | 12 content_markdown blocks updated (via `scripts/_apply_guides_v3.py`) |
+| `scripts/_apply_guides_v3.py` | tool | new apply script (mirrors v1/v2 pattern) |
+| `audits/guides-rebuild-2026-08-08/CERTIFICATION-v2.md` | this file | v3 corrections log appended |
+
+15 files changed.
+
+## V3-8. Conclusion
+
+v3 is a **certification patch**, not a rewrite. The 12 articles retain v2's editorial depth, structure, and prose. v3 changes only:
+
+1. Two factually wrong pricing claims (Omi $89→$69.99, Reclaim Starter/Business yearly/monthly).
+2. The repeated "Cosa fa X, in una frase" opening — replaced with 12 subject-specific hooks.
+3. A primary vs secondary source log so future editors know which sources are authoritative for which claims.
+
+The guides remain ready for publication under an expert editorial brand.
+
+v3 commit: TBD after this entry is written.

@@ -1,8 +1,8 @@
-### Cosa fa Tolt, in una frase
+### L'economia che Tolt gestisce
 
-Tolt è una piattaforma di affiliate management pensata per SaaS che vogliono lanciare un programma di affiliazione o referral senza fee iniziali — collega Stripe, Paddle, Chargebee, o Shopify, e in 15 minuti hai un programma funzionante con dashboard per gli affiliati, tracking ricorrente, e payout globali.
+Lanci un SaaS. Vuoi un programma di affiliazione. Il primo affiliato porta un cliente che si iscrive a $50/mese. L'affiliato aspetta la sua commissione. Ma quel cliente può fare upgrade a $100, o downgrade a $20, o chiedere un refund dopo 3 mesi. La commissione ricorrente del 30% su quel cliente vale $360 in 12 mesi — ma se la tracci male, paghi troppo o troppo poco, e il programma muore.
 
-Non è un "generico" affiliate tracker. È costruito specificamente per SaaS in abbonamento, dove la sfida non è tracciare una vendita singola ma tracciare un customer lifetime value e pagare commissioni che sopravvivono a upgrade, downgrade, refund, e cancellazioni.
+Tolt è un affiliate manager costruito per SaaS in abbonamento: collega Stripe, Paddle, Chargebee, o Shopify, e in 15 minuti hai un programma funzionante con tracking ricorrente, dashboard per gli affiliati, e payout globali. Non è un "generico" affiliate tracker — è fatto per gestire customer LTV e commissioni che sopravvivono a upgrade, downgrade, refund, e cancellazioni.
 
 ### A chi serve davvero, e a chi no
 
