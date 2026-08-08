@@ -675,6 +675,10 @@ export function PartnerBrandPlate({
 }: PartnerBrandPlateProps) {
   const fit = asset.fit ?? "contain";
   const position = asset.position ?? "center";
+  const ratio =
+    asset.width > 0 && asset.height > 0
+      ? `${asset.width} / ${asset.height}`
+      : "2 / 1";
 
   return (
     <div
@@ -682,6 +686,7 @@ export function PartnerBrandPlate({
       data-creative-density={density}
       data-brand-fit={fit}
       className={cn("partner-brand-plate", `partner-brand-plate--${density}`, className)}
+      style={{ ["--partner-plate-ratio" as string]: ratio } as CSSProperties}
       aria-hidden={decorative ? true : undefined}
       role={decorative ? "presentation" : undefined}
     >
@@ -700,7 +705,10 @@ export function PartnerBrandPlate({
                 : "(max-width: 768px) 92vw, 280px"
         }
         className="partner-brand-plate__img"
-        style={{ objectFit: fit, objectPosition: position }}
+        style={{
+          objectFit: fit === "cover" ? "contain" : fit,
+          objectPosition: position,
+        }}
         priority={density === "stage"}
       />
     </div>
