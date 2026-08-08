@@ -131,7 +131,7 @@ Omi Dev Kit 2 è un piccolo disco (~2.5cm), 10-14 ore di batteria continua, micr
 
 ### Omi vs Plaud vs Limitless vs Friend vs Bee
 
-**Omi vs Plaud Note.** Plaud è un dispositivo "per riunioni" (on-demand recording, non always-on). Più privacy-friendly di default (registra solo quando attivi), ma perde il vantaggio di catturare conversazioni informali. Plaud è $179 con subscription $19.99/mese per transcription. Omi è $89 con subscription $19/mese. Omi vince su prezzo entry, Plaud vince su privacy-by-default.
+**Omi vs Plaud Note.** Plaud è un dispositivo "per riunioni" (on-demand recording, non always-on). Più privacy-friendly di default (registra solo quando attivi), ma perde il vantaggio di catturare conversazioni informali. Plaud è $179 con subscription $19.99/mese per transcription. Omi è $69.99 (in promo, $79.99 regolare) con subscription Unlimited $19/mese. Omi vince su prezzo entry, Plaud vince su privacy-by-default.
 
 **Omi vs Limitless Pendant.** Limitless è $99 con subscription $19/mese obbligatoria per le funzioni AI. Più maturo come prodotto, con community più ampia, ma forza la subscription (Omi Basic è gratis). Limitless vince su "polished UX", Omi vince su flessibilità (local mode, API, dev kit).
 
@@ -141,7 +141,7 @@ Omi Dev Kit 2 è un piccolo disco (~2.5cm), 10-14 ore di batteria continua, micr
 
 ### Setup pratico: da zero a un uso produttivo in una settimana
 
-**1. Ordina l'hardware.** Da omiwearable.com, $89 + shipping. 5-10 giorni per la consegna.
+**1. Ordina l'hardware.** Da omiwearable.com, $69.99 (in promo, $79.99 regolare) + shipping. 5-10 giorni per la consegna.
 
 **2. Pairing con l'app.** Scarica l'app Omi (iOS o Android), accoppia via Bluetooth, concedi i permessi di microfono e notifica. 5 minuti.
 
