@@ -378,4 +378,4 @@ v3 is a **certification patch**, not a rewrite. The 12 articles retain v2's edit
 
 The guides remain ready for publication under an expert editorial brand.
 
-v3 commit: TBD after this entry is written.
+v3 commit: 100edba
