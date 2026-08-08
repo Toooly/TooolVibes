@@ -21,7 +21,6 @@ import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { ToolDetailFooter } from "./tool-detail-footer";
 import {
   PartnerToolCard,
-  SponsorOpportunityLink,
 } from "@/components/monetization/partner-placements";
 
 /**
@@ -170,7 +169,6 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
                 text: `${tool.name} ${tool.shortDescription ?? ""}`,
               }}
             />
-            <SponsorOpportunityLink placementId="tool-detail-sponsor-opportunity" route={`/toools/${slug}`} />
           </div>
         ) : null}
         <ToolDetailFooter />

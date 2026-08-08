@@ -15,10 +15,13 @@
  *      rotationWeight, with a per-placement offset so different surfaces
  *      do not automatically repeat the same partner.
  *
- * Determinism contract: the rotation seed is derived from the placement
- * key, the rotation offset and the current UTC day. Server and client on
- * the same day always resolve the same campaign — no randomness, no
- * per-user tracking, no hydration drift beyond the UTC midnight boundary.
+ * Determinism contract: rotational surfaces (home/archivio) share a single
+ * UTC-day seed and differentiate only through the per-placement rotation
+ * offset, so Home (N) and Archivio (N+1) never land on the same partner;
+ * contextual surfaces seed from the placement key and the subject. Server
+ * and client on the same day always resolve the same campaign — no
+ * randomness, no per-user tracking, no hydration drift beyond the UTC
+ * midnight boundary.
  */
 
 import {
@@ -201,9 +204,12 @@ export function resolvePartnerCampaign(
     );
   }
 
+  /* Shared day seed across rotational surfaces so rotationOffset creates
+     true anti-collision (home N, archive N+1) instead of independent hashes
+     that can still land on the same partner. */
   return pickDeterministic(
     candidates,
-    `rot|${ctx.placementKey}`,
+    "rot|shared",
     ctx.rotationOffset ?? 0,
     now,
   );

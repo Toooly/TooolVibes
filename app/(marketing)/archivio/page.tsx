@@ -60,7 +60,6 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
           placement ? (
             <PartnerEditorialInsert
               placementKey="catalog-native-sponsor"
-              formatLabelOverride="Partner nel catalogo"
               className="archive-partner-placement"
               trackerRoute="/archivio"
             />

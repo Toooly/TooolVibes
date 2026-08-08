@@ -4,10 +4,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
-  BadgeCheck,
-  BookOpenText,
-  Building2,
-  Layers3,
 } from "lucide-react";
 
 import {
@@ -33,7 +29,6 @@ import { cn } from "@/lib/utils";
 type PartnerPlacementProps = {
   placementKey: MonetizationPlacementKey;
   className?: string;
-  formatLabelOverride?: string;
   /**
    * Route where the placement renders. Surfaced as `data-tracker-route` so
    * analytics can attribute impressions to the page that served the
@@ -103,7 +98,7 @@ export function SponsorOpenSlot({
         data-tracking-id={placement.trackingId}
       >
         <div className="partner-open__editorial">
-          <PartnerMeta formatLabel="Disponibile" disclosure={placement.label} />
+          <PartnerMeta formatLabel="Disponibile" disclosure={placement.label} showFormat />
           <h2 className="partner-open__headline">
             Il prossimo tool qui potrebbe essere il tuo.
           </h2>
@@ -177,55 +172,22 @@ export function SponsorOpportunityLink({
 function PartnerMeta({
   formatLabel,
   disclosure,
+  showFormat = false,
 }: {
-  formatLabel: string;
+  formatLabel?: string;
   disclosure: string;
+  showFormat?: boolean;
 }) {
   return (
     <div className="partner-placement__meta">
       <SponsorDisclosure text={disclosure} />
-      <span className="partner-placement__format">{formatLabel}</span>
+      {showFormat && formatLabel ? (
+        <span className="partner-placement__format">{formatLabel}</span>
+      ) : null}
     </div>
   );
 }
 
-function PartnerIdentity({
-  placement,
-}: {
-  placement: PublicMonetizationPlacement;
-}) {
-  const logo = placement.partner.logo ?? placement.logo ?? null;
-  const monogram = placement.creativeTheme?.monogram ?? null;
-  /* When the brand plate owns the visual field, skip a second mark/monogram. */
-  const hasBrandPlate = Boolean(placement.brandAsset);
-
-  return (
-    <div className="partner-placement__identity">
-      {hasBrandPlate ? null : (
-        <span
-          className={cn(
-            "partner-placement__identity-mark",
-            monogram && !logo && "partner-placement__identity-mark--monogram",
-          )}
-          aria-hidden="true"
-        >
-          {logo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={logo} alt="" loading="lazy" decoding="async" />
-          ) : monogram ? (
-            <span className="partner-placement__identity-monogram">{monogram}</span>
-          ) : (
-            <Building2 />
-          )}
-        </span>
-      )}
-      <span className="partner-placement__identity-copy">
-        <strong>{placement.partner.name}</strong>
-        <span>{placement.partner.category}</span>
-      </span>
-    </div>
-  );
-}
 
 function PartnerEditorial({
   placement,
@@ -234,7 +196,6 @@ function PartnerEditorial({
 }) {
   return (
     <div className="partner-placement__editorial">
-      <p className="partner-placement__reason-label">Perché è rilevante</p>
       <h2>{placement.title}</h2>
       <p>{placement.editorialReason}</p>
     </div>
@@ -272,13 +233,6 @@ function PartnerAction({
   );
 }
 
-function PartnerCategoryChip() {
-  return (
-    <div className="partner-placement__chips">
-      <span className="partner-placement__chip">Partner di TooolVibes</span>
-    </div>
-  );
-}
 
 function placementShellProps(
   placement: PublicMonetizationPlacement,
@@ -323,7 +277,6 @@ function resolveVariantPlacement(
 export function FeaturedPartner({
   placementKey,
   className,
-  formatLabelOverride,
   trackerRoute = "",
 }: PartnerPlacementProps) {
   const resolved = resolveVariantPlacement(placementKey, trackerRoute);
@@ -354,21 +307,16 @@ export function FeaturedPartner({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--featured partner-placement--xl partner-stage partner-luminous",
+          "partner-placement--featured partner-placement--xl partner-stage partner-luminous partner-pe--hero",
           trackerRoute,
           "stage",
         )}
       >
         <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-stage__editorial">
-          <PartnerMeta
-            formatLabel={formatLabelOverride ?? "Partner in evidenza"}
-            disclosure={placement.label}
-          />
-          <PartnerIdentity placement={placement} />
+          <PartnerMeta disclosure={placement.label} />
           <h2 className="partner-stage__headline">{placement.title}</h2>
           <p className="partner-stage__lede">{placement.editorialReason}</p>
-          <PartnerCategoryChip />
           <div className="partner-placement__cta-row partner-stage__cta-row">
             <SponsorClickHandler
               {...trackerProps}
@@ -376,7 +324,6 @@ export function FeaturedPartner({
             >
               <PartnerAction placement={placement} trackerRoute={trackerRoute} />
             </SponsorClickHandler>
-            <SponsorOpportunityLink placementId="featured-sponsor-opportunity" route={trackerRoute} className="partner-placement__opportunity--inline" />
           </div>
         </div>
         <div className="partner-stage__visual" aria-hidden="true">
@@ -404,7 +351,6 @@ export function FeaturedPartner({
 export function PartnerEditorialInsert({
   placementKey,
   className,
-  formatLabelOverride,
   trackerRoute = "",
 }: PartnerPlacementProps) {
   const resolved = resolveVariantPlacement(placementKey, trackerRoute);
@@ -421,9 +367,6 @@ export function PartnerEditorialInsert({
   if (resolved.kind === "empty") return null;
 
   const placement = resolved.placement;
-  const monogram =
-    placement.creativeTheme?.monogram ??
-    ((placement.partner.name ?? "").trim().charAt(0).toUpperCase() || "•");
 
   const trackerProps = {
     campaignId: placement.trackingId ?? placement.key,
@@ -438,25 +381,21 @@ export function PartnerEditorialInsert({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--insert partner-insert partner-luminous",
+          "partner-placement--insert partner-insert partner-luminous partner-pe--ribbon",
           trackerRoute,
           "insert",
         )}
       >
-        <span className="partner-luminous__halo" aria-hidden="true" />
-        <div className="partner-insert__marker" aria-hidden="true">
-          <span className="partner-insert__monogram">{monogram}</span>
-          <span className="partner-insert__marker-label">
-            {placement.partner.name}
-          </span>
-        </div>
         <div className="partner-insert__main">
-          <PartnerMeta
-            formatLabel={formatLabelOverride ?? "Partner nel catalogo"}
-            disclosure={placement.label}
-          />
+          <PartnerMeta disclosure={placement.label} />
           <h2 className="partner-insert__headline">{placement.title}</h2>
           <p className="partner-insert__lede">{placement.editorialReason}</p>
+          <SponsorClickHandler
+            {...trackerProps}
+            destination={placement.partner.href}
+          >
+            <PartnerAction placement={placement} trackerRoute={trackerRoute} />
+          </SponsorClickHandler>
         </div>
         <div className="partner-insert__visual" aria-hidden="true">
           <PartnerCreativeRenderer
@@ -464,20 +403,7 @@ export function PartnerEditorialInsert({
             creativeTheme={placement.creativeTheme}
             brandAsset={placement.brandAsset}
             partnerName={placement.partner.name}
-            density="strip"
-          />
-        </div>
-        <div className="partner-insert__action">
-          <SponsorClickHandler
-            {...trackerProps}
-            destination={placement.partner.href}
-          >
-            <PartnerAction placement={placement} trackerRoute={trackerRoute} />
-          </SponsorClickHandler>
-          <SponsorOpportunityLink
-            placementId="archive-sponsor-opportunity"
-            route={trackerRoute}
-            className="partner-placement__opportunity--insert"
+            density="ribbon"
           />
         </div>
       </aside>
@@ -488,7 +414,6 @@ export function PartnerEditorialInsert({
 export function PartnerToolCard({
   placementKey,
   className,
-  formatLabelOverride,
   trackerRoute = "",
   context,
 }: PartnerPlacementProps) {
@@ -520,41 +445,32 @@ export function PartnerToolCard({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--tool partner-luminous",
+          "partner-placement--tool partner-luminous partner-pe--contextual",
           trackerRoute,
           "tool",
         )}
       >
-        <span className="partner-luminous__halo" aria-hidden="true" />
-        <div className="partner-placement__tool-heading" aria-hidden="true">
-          <span className="partner-placement__tool-pulse" />
-          <BadgeCheck />
+        <div className="partner-placement__body">
+          <PartnerMeta disclosure={placement.label} />
+          <PartnerEditorial placement={placement} />
+          <SponsorClickHandler
+            {...trackerProps}
+            destination={placement.partner.href}
+          >
+            <PartnerAction placement={placement} trackerRoute={trackerRoute} />
+          </SponsorClickHandler>
         </div>
-        {placement.creativeVariant ? (
+        {placement.brandAsset || placement.creativeVariant ? (
           <div className="partner-placement__tool-visual" aria-hidden="true">
             <PartnerCreativeRenderer
               creativeVariant={placement.creativeVariant}
               creativeTheme={placement.creativeTheme}
               brandAsset={placement.brandAsset}
               partnerName={placement.partner.name}
-              density="strip"
+              density="contextual"
             />
           </div>
         ) : null}
-        <div className="partner-placement__body">
-          <PartnerMeta
-            formatLabel={formatLabelOverride ?? "Partner tool"}
-            disclosure={placement.label}
-          />
-          <PartnerIdentity placement={placement} />
-          <PartnerEditorial placement={placement} />
-        </div>
-        <SponsorClickHandler
-          {...trackerProps}
-          destination={placement.partner.href}
-        >
-          <PartnerAction placement={placement} trackerRoute={trackerRoute} />
-        </SponsorClickHandler>
       </aside>
     </SponsorImpressionTracker>
   );
@@ -563,7 +479,6 @@ export function PartnerToolCard({
 export function ContextualPartnerBlock({
   placementKey,
   className,
-  formatLabelOverride,
   trackerRoute = "",
   context,
 }: PartnerPlacementProps) {
@@ -595,13 +510,24 @@ export function ContextualPartnerBlock({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--contextual partner-luminous partner-luminous--soft",
+          "partner-placement--contextual partner-luminous partner-luminous--soft partner-pe--contextual",
           trackerRoute,
           "contextual",
         )}
       >
-        <div className="partner-placement__context-marker" aria-hidden="true">
-          <BookOpenText />
+        <div className="partner-placement__body">
+          <PartnerMeta disclosure={placement.label} />
+          <PartnerEditorial placement={placement} />
+          <SponsorClickHandler
+            {...trackerProps}
+            destination={placement.partner.href}
+          >
+            <PartnerAction
+              placement={placement}
+              trackerRoute={trackerRoute}
+              variant="secondary"
+            />
+          </SponsorClickHandler>
         </div>
         {placement.brandAsset || placement.creativeVariant ? (
           <div className="partner-placement__context-visual" aria-hidden="true">
@@ -610,28 +536,10 @@ export function ContextualPartnerBlock({
               creativeTheme={placement.creativeTheme}
               brandAsset={placement.brandAsset}
               partnerName={placement.partner.name}
-              density="strip"
+              density="contextual"
             />
           </div>
         ) : null}
-        <div className="partner-placement__body">
-          <PartnerMeta
-            formatLabel={formatLabelOverride ?? "Partner della lettura"}
-            disclosure={placement.label}
-          />
-          <PartnerEditorial placement={placement} />
-          <PartnerIdentity placement={placement} />
-        </div>
-        <SponsorClickHandler
-          {...trackerProps}
-          destination={placement.partner.href}
-        >
-          <PartnerAction
-            placement={placement}
-            trackerRoute={trackerRoute}
-            variant="secondary"
-          />
-        </SponsorClickHandler>
       </aside>
     </SponsorImpressionTracker>
   );
@@ -640,7 +548,6 @@ export function ContextualPartnerBlock({
 export function PartnerCollectionModule({
   placementKey,
   className,
-  formatLabelOverride,
   trackerRoute = "",
   context,
 }: PartnerPlacementProps) {
@@ -672,14 +579,20 @@ export function PartnerCollectionModule({
         {...placementShellProps(
           placement,
           className,
-          "partner-placement--collection partner-luminous partner-luminous--soft",
+          "partner-placement--collection partner-luminous partner-luminous--soft partner-pe--ending",
           trackerRoute,
           "collection",
         )}
       >
-        <div className="partner-placement__collection-index" aria-hidden="true">
-          <span>Partner</span>
-          <Layers3 />
+        <div className="partner-placement__body">
+          <PartnerMeta disclosure={placement.label} />
+          <PartnerEditorial placement={placement} />
+          <SponsorClickHandler
+            {...trackerProps}
+            destination={placement.partner.href}
+          >
+            <PartnerAction placement={placement} trackerRoute={trackerRoute} />
+          </SponsorClickHandler>
         </div>
         {placement.brandAsset || placement.creativeVariant ? (
           <div className="partner-placement__collection-visual" aria-hidden="true">
@@ -688,24 +601,10 @@ export function PartnerCollectionModule({
               creativeTheme={placement.creativeTheme}
               brandAsset={placement.brandAsset}
               partnerName={placement.partner.name}
-              density="strip"
+              density="ending"
             />
           </div>
         ) : null}
-        <div className="partner-placement__body">
-          <PartnerMeta
-            formatLabel={formatLabelOverride ?? "Partner della raccolta"}
-            disclosure={placement.label}
-          />
-          <PartnerIdentity placement={placement} />
-          <PartnerEditorial placement={placement} />
-        </div>
-        <SponsorClickHandler
-          {...trackerProps}
-          destination={placement.partner.href}
-        >
-          <PartnerAction placement={placement} trackerRoute={trackerRoute} />
-        </SponsorClickHandler>
       </aside>
     </SponsorImpressionTracker>
   );

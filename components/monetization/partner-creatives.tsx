@@ -53,7 +53,7 @@ export { partnerThemeKey } from "@/lib/sponsors/partner-theme";
  *   - prefers-reduced-motion: a complete static composition.
  */
 
-export type PartnerCreativeDensity = "stage" | "strip";
+export type PartnerCreativeDensity = "stage" | "strip" | "ribbon" | "contextual" | "ending" | "preview";
 
 function useInViewFlag(initial = true) {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -692,10 +692,12 @@ export function PartnerBrandPlate({
         height={asset.height}
         sizes={
           density === "stage"
-            ? "(max-width: 768px) 100vw, 42vw"
-            : density === "strip"
-              ? "(max-width: 768px) 100vw, 280px"
-              : "(max-width: 768px) 100vw, 360px"
+            ? "(max-width: 768px) 100vw, 40vw"
+            : density === "ending"
+              ? "(max-width: 768px) 100vw, 36vw"
+              : density === "ribbon" || density === "strip"
+                ? "(max-width: 768px) 100vw, 260px"
+                : "(max-width: 768px) 92vw, 280px"
         }
         className="partner-brand-plate__img"
         style={{ objectFit: fit, objectPosition: position }}
