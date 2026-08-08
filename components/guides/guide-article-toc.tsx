@@ -1,0 +1,154 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+
+export type TocItem = { id: string; text: string; level: 2 | 3 };
+
+type GuideArticleTocProps = {
+  items: TocItem[];
+  title?: string;
+  readingMinutes?: number;
+  progressRootSelector?: string;
+};
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 64);
+}
+
+export function buildHeadingId(text: string, usedIds: Set<string>): string {
+  const base = slugify(text) || "sezione";
+  let id = base;
+  let i = 2;
+  while (usedIds.has(id)) {
+    id = `${base}-${i++}`;
+  }
+  usedIds.add(id);
+  return id;
+}
+
+export function GuideArticleToc({
+  items,
+  title = "Indice della guida",
+  readingMinutes,
+  progressRootSelector = "[data-guides-article-body]",
+}: GuideArticleTocProps) {
+  const [activeId, setActiveId] = useState<string | null>(items[0]?.id ?? null);
+  const [progress, setProgress] = useState(0);
+  const preferReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const elements = items
+      .map((item) => document.getElementById(item.id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (elements.length === 0) return;
+
+    let raf = 0;
+    const measure = () => {
+      const root = document.querySelector(progressRootSelector) as HTMLElement | null;
+      const target = root ?? document.body;
+      const rect = target.getBoundingClientRect();
+      const top = rect.top + window.scrollY;
+      const height = target.offsetHeight;
+      const viewport = window.innerHeight;
+      const scrolled = window.scrollY - top;
+      const total = Math.max(1, height - viewport);
+      const pct = Math.max(0, Math.min(1, scrolled / total));
+      setProgress(pct);
+
+      // Active section: pick the heading whose top is closest above the
+      // reading line (25% of viewport from top).
+      const line = window.scrollY + viewport * 0.25;
+      let current: string | null = elements[0]?.id ?? null;
+      for (const el of elements) {
+        const elTop = el.getBoundingClientRect().top + window.scrollY;
+        if (elTop <= line) {
+          current = el.id;
+        } else {
+          break;
+        }
+      }
+      setActiveId(current);
+    };
+
+    const onScroll = () => {
+      if (preferReducedMotion) {
+        measure();
+        return;
+      }
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(measure);
+    };
+
+    measure();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [items, preferReducedMotion, progressRootSelector]);
+
+  const counter = useMemo(
+    () => items.length.toString().padStart(2, "0"),
+    [items.length],
+  );
+
+  if (items.length === 0) return null;
+
+  return (
+    <nav
+      className="guides-toc"
+      aria-label={title}
+    >
+      <div className="guides-toc__title">
+        {title} <span aria-hidden>· {counter}</span>
+      </div>
+      <div
+        className="guides-toc__progress"
+        role="progressbar"
+        aria-label="Progresso di lettura"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(progress * 100)}
+      >
+        <span style={{ width: `${Math.round(progress * 100)}%` }} />
+      </div>
+      <ol className="guides-toc__list">
+        {items.map((item) => (
+          <li
+            key={item.id}
+            className={item.level === 3 ? "toc-h3" : "toc-h2"}
+          >
+            <a
+              href={`#${item.id}`}
+              aria-current={activeId === item.id ? "true" : undefined}
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+      {readingMinutes && readingMinutes > 0 ? (
+        <div className="guides-toc__cta">
+          <span className="guides-meta">
+            Lettura stimata · <strong>{readingMinutes} min</strong>
+          </span>
+        </div>
+      ) : null}
+    </nav>
+  );
+}
