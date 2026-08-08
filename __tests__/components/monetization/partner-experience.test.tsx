@@ -64,7 +64,7 @@ afterEach(() => {
    2026-08-01 with no end date, so placements resolve publicly. */
 
 describe("FeaturedPartner — Partner Experience stage", () => {
-  it("renders the stage shell with the Taylora creative micro-world", () => {
+  it("renders the stage shell with the Taylora brand plate", () => {
     const { container } = render(
       <FeaturedPartner placementKey="home-featured-tool" trackerRoute="/" />,
     );
@@ -74,10 +74,11 @@ describe("FeaturedPartner — Partner Experience stage", () => {
     expect(aside?.getAttribute("data-partner-experience")).toBe("stage");
     expect(aside?.getAttribute("data-sponsored")).toBe("true");
 
-    const creative = container.querySelector('[data-creative="taylora-flow"]');
+    const creative = container.querySelector('[data-creative="brand-plate"]');
     expect(creative).not.toBeNull();
     expect(creative?.getAttribute("data-creative-density")).toBe("stage");
     expect(creative?.getAttribute("aria-hidden")).toBe("true");
+    expect(creative?.querySelector("img")?.getAttribute("src")).toContain("taylora-brand-plate");
   });
 
   it("keeps the sponsored disclosure visible in the stage", () => {
@@ -169,7 +170,7 @@ describe("PartnerCreativeRenderer — variant selection", () => {
 });
 
 describe("PartnerEditorialInsert — catalogue feature strip", () => {
-  it("renders the insert shell with the strip-density Taylora creative", () => {
+  it("renders the insert shell with the strip-density Taylora brand plate", () => {
     const { container } = render(
       <PartnerEditorialInsert
         placementKey="catalog-native-sponsor"
@@ -183,7 +184,8 @@ describe("PartnerEditorialInsert — catalogue feature strip", () => {
     expect(aside?.getAttribute("data-sponsored")).toBe("true");
     expect(aside?.getAttribute("data-tracking-id")).toBe("tv-catalog-native-taylora");
 
-    const creative = container.querySelector('[data-creative="taylora-flow"]');
+    const creative = container.querySelector('[data-creative="brand-plate"]');
+    expect(creative).not.toBeNull();
     expect(creative?.getAttribute("data-creative-density")).toBe("strip");
   });
 
@@ -314,7 +316,7 @@ describe("V3.1 — partner creative theme", () => {
     expect(aside?.getAttribute("data-partner-theme")).toBe("gold-cyan");
   });
 
-  it("renders the partner monogram from the theme instead of a generic icon", () => {
+  it("omits the identity monogram when the brand plate owns the visual field", () => {
     const { container } = render(
       <FeaturedPartner placementKey="home-featured-tool" trackerRoute="/" />,
     );
@@ -322,8 +324,8 @@ describe("V3.1 — partner creative theme", () => {
     const mark = container.querySelector(
       ".partner-placement__identity-mark--monogram",
     );
-    expect(mark).not.toBeNull();
-    expect(mark?.textContent).toBe("T");
+    expect(mark).toBeNull();
+    expect(container.querySelector('[data-creative="brand-plate"]')).not.toBeNull();
   });
 });
 
