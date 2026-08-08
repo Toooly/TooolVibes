@@ -29,6 +29,7 @@ import {
   getCollectionSurfaceMeta,
 } from "@/lib/collections/editorial";
 import { resolveCollectionPremiumAccess } from "@/lib/premium/access";
+import { partnerSegmentsForToolSlugs } from "@/lib/sponsors/partner-context";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "../collections.css";
 
@@ -74,6 +75,12 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
   const access = getCollectionAccessMeta(collection.access);
   const formatMeta = getCollectionFormatMeta(collection);
   const theme = getCollectionThemeLabel(collection.theme);
+  /* Collection Partner matching depth: derive catalogue segments from the
+     included tools so the contextual resolver receives structured metadata
+     instead of free text. Uncatalogued slugs are skipped (never forced). */
+  const collectionPartnerTags = partnerSegmentsForToolSlugs(
+    collection.included_tools.map((slot) => slot.tool_slug),
+  );
   const surface = getCollectionSurfaceMeta(collection.surface);
   const editorialState = getCollectionEditorialStateMeta(collection.editorial_state);
   const leadTool = collection.featured_tool_slot?.tool ?? collection.included_tools[0]?.tool ?? null;
@@ -259,12 +266,6 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
             </div>
 
-            <PartnerCollectionModule
-              placementKey="collection-native-sponsor"
-              context={{
-                text: `${collection.title} ${collection.description} ${theme}`,
-              }}
-            />
           </div>
         </div>
       </section>
@@ -484,6 +485,19 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
           </div>
         </div>
         </section>
+
+        {/* Collection Partner — ending Partner Experience: appears only after the
+            full curated tool list, so the sponsor never precedes or shapes the
+            editorial selection. Resolver-driven; renders null without relevance. */}
+        <div className="collection-detail-partner">
+          <PartnerCollectionModule
+            placementKey="collection-native-sponsor"
+            context={{
+              tags: collectionPartnerTags,
+              text: `${collection.title} ${collection.description} ${theme}`,
+            }}
+          />
+        </div>
 
         {relatedCollections.length > 0 ? (
           <section className="brand-panel rounded-[34px] p-5 sm:p-6 lg:p-7">

@@ -26,6 +26,7 @@ import {
 } from "@/lib/data/public-articles";
 import { getCollectionsByToolSlug } from "@/lib/data/public-collections";
 import { getToolBySlug } from "@/lib/data/public-tools";
+import { getDirectoryToolBySlug } from "@/lib/data/tooolvibes-directory";
 import {
   createPublicPageMetadata,
   defaultSocialImage,
@@ -123,9 +124,17 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
       ? "Guida"
       : kindLabels[post.kind];
   const canonicalUrl = `${siteConfig.url}/posts/${post.slug}`;
+  /* Partner matching depth: prefer the directory tool segments for the
+     current subject. tool_slug covers tool-generated guides; falling back to
+     the post slug covers hand-written tool write-ups whose seed omitted
+     tool_slug. Unknown slugs (no directory tool) keep editorial tags only, so
+     no partner is ever forced onto an irrelevant guide. */
+  const subjectDirectoryTool = getDirectoryToolBySlug(post.tool_slug ?? post.slug);
   const partnerContext = {
-    toolSlug: post.tool_slug ?? undefined,
-    tags: post.tags ?? [],
+    toolSlug: subjectDirectoryTool?.slug ?? post.tool_slug ?? undefined,
+    tags: subjectDirectoryTool
+      ? [...subjectDirectoryTool.segments]
+      : (post.tags ?? []),
     text: `${post.title} ${post.dek ?? ""}`,
   };
   const guidePartnerPlacement = getMonetizationPlacement(

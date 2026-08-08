@@ -174,7 +174,7 @@ export const COMMERCIAL_PLACEMENT_MATRIX: Readonly<
       "between hero and others list (components/collections/mobile-collections-view.tsx)",
     directSponsorKey: "collection-native-sponsor",
     directSponsorMount:
-      "PartnerCollectionModule on the collection detail page (contextual resolver; renders null without semantic relevance)",
+      "PartnerCollectionModule as an ending Partner Experience after the full curated tool list (contextual resolver on included-tool directory segments; renders null without semantic relevance)",
     separation: {
       type: "content-section",
       reference: "collections list section",

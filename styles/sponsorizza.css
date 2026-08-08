@@ -503,6 +503,10 @@
   color: var(--tv-accent-violet-on-dark);
 }
 
+.sponsorizza-format-card--collection .sponsorizza-format-card__index {
+  color: var(--tv-accent-cyan);
+}
+
 .sponsorizza-format-card__title {
   margin: 0;
   color: var(--tv-ink-primary);
@@ -572,6 +576,10 @@
 
 .sponsorizza-format-card--dispatch .sponsorizza-format-card__bullets li::before {
   background: var(--tv-accent-violet-on-dark);
+}
+
+.sponsorizza-format-card--collection .sponsorizza-format-card__bullets li::before {
+  background: var(--tv-accent-cyan);
 }
 
 /* =====================================================================

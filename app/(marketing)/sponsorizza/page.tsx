@@ -43,7 +43,7 @@ const SPONSOR_EMAIL =
   "mailto:hello@tooolvibes.com?subject=Richiesta%20informazioni%20sponsorship";
 const SPONSOR_EMAIL_LABEL = "Richiedi informazioni";
 
-type FormatSlug = "spotlight" | "tool-card" | "dispatch";
+type FormatSlug = "spotlight" | "tool-card" | "dispatch" | "collection";
 
 const formatCards: ReadonlyArray<{
   slug: FormatSlug;
@@ -90,6 +90,19 @@ const formatCards: ReadonlyArray<{
       "Inserita vicino al contenuto editoriale che ha più attinenza.",
       "Narrazione contestuale, non un banner: la leggono perché è utile.",
       "Disponibile su richiesta per articoli e guide pertinenti.",
+    ],
+  },
+  {
+    slug: "collection",
+    index: "04",
+    title: "Collection Partner",
+    label: "Raccolte · verticale curatoriale",
+    copy:
+      "Presenza partner dentro una raccolta curata e coerente: il brand si associa a un percorso tematico, mai alla selezione dei tool.",
+    bullets: [
+      "La pertinenza deriva dai tool inclusi nella raccolta, non da keyword libere.",
+      "Nessuna influenza su quali tool entrano, sul loro ordine o sui giudizi editoriali.",
+      "Una sola attribuzione partner per raccolta: spazio raro, non un catalogo di loghi.",
     ],
   },
 ];
@@ -272,7 +285,9 @@ export default function SponsorizzaPage() {
                 ? "sponsorizza-format-card--spotlight"
                 : card.slug === "dispatch"
                   ? "sponsorizza-format-card--dispatch"
-                  : "";
+                  : card.slug === "collection"
+                    ? "sponsorizza-format-card--collection"
+                    : "";
             return (
               <article
                 key={card.slug}
