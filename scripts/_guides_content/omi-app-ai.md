@@ -1,174 +1,222 @@
 ### Cosa fa Omi, in una frase
 
-Omi è un wearable AI open source che si aggancia al collo o all'orecchio, ascolta le conversazioni, le trascrive, le riassume, e le organizza in una memoria ricercabile a cui puoi chiedere "cosa ho detto della conference X la settimana scorsa?".
+Omi è un dispositivo wearable che ascolta le tue conversazioni, le trascrive in tempo reale, genera riassunti strutturati, e ti permette di cercare nella tua memoria conversazionale — un "secondo cervello" ambient che vive appeso al collo.
 
-### A chi serve davvero
+Non è un registratore vocale. Non è un'app di note con AI. È un dispositivo di memoria personale continua che richiede decisioni consapevoli su privacy, consenso sociale, e data ownership.
 
-Omi non è per chi cerca uno smart speaker o un assistente vocale generico (per quello, Alexa, Google Assistant, Siri). È per chi vuole catturare e ritrovare informazioni dalla vita reale:
+### A chi serve davvero, e a chi no
 
-- **Executive e founder** che hanno decine di conversazioni al giorno e vogliono un "secondo cervello" che le ricorda.
-- **Studenti e ricercatori** che seguono lezioni, seminari, e conversazioni informali che vogliono ritrovare.
-- **Persone con ADHD o memory challenges** che hanno bisogno di un sistema esterno per ricordare commitments, idee, e dettagli.
-- **Giornalisti, autori, content creator** che vogliono catturare conversazioni e idee in mobilità.
-- **Manager e coach** che vogliono riascoltare conversazioni con i collaboratori per individuare pattern.
+Omi è per:
 
-Non è il tool giusto per chi cerca un dispositivo medico, per chi ha bisogno di un assistente vocale "passivo" (Alexa), o per chi vuole registrare conversazioni senza consenso (illegale in molte giurisdizioni).
+**Knowledge worker con molte conversazioni.** Manager, consultant, recruiter, giornalisti, avvocati, medici, accademici. Chi passa la giornata in conversazioni che contengono informazioni utili da ricordare.
 
-### Come funziona, passo per passo
+**Persone con difficoltà di memoria o attenzione.** Chi dimentica commitments presi a voce, chi perde dettagli di conversazioni, chi ha ADHD o altri disturbi dell'attenzione.
 
-Il flusso operativo ha cinque fasi.
+**Developer e tinkerer.** Omi ha un Dev Kit 2 con API, MCP support, custom speech-to-text, e local mode. Per chi vuole costruire integrazioni custom, è una piattaforma, non solo un prodotto.
 
-**1. Aggancio del dispositivo.** Omi si aggancia al collo (con un supporto magnetico) o all'orecchio (con una clip). È un dispositivo piccolo, leggero, con microfoni multipli per catturare l'audio ambientale.
+**Studenti e ricercatori.** Per prendere appunti durante lezioni, seminari, e discussioni. Le note sono strutturate automaticamente e ricercabili.
 
-**2. Connessione all'app companion.** L'utente installa l'app Omi (iOS, Android, e prossimamente desktop), connette il dispositivo via Bluetooth, e configura le preferenze (frequenza di trascrizione, lingue, integrazioni).
+**Pazienti con patologie che compromettono la memoria.** L'uso medico di Omi è documentato per pazienti con trauma cranico, dementia early-stage, e altre condizioni dove la registrazione passiva è utile.
 
-**3. Trascrizione in tempo reale.** Mentre l'utente parla (o ascolta una conversazione), Omi trascrive l'audio in tempo reale, con speaker identification (chi sta parlando). La trascrizione può avvenire:
-- **On-device**: privacy massima, ma qualità inferiore per lingue rare o accenti.
-- **Cloud**: qualità superiore, ma i dati lasciano il dispositivo.
+Non è per:
 
-**4. Riassunto e organizzazione.** L'AI di Omi riassume le conversazioni, estrae i punti chiave, identifica i "to-do" menzionati, e organizza tutto in una timeline ricercabile.
+**Chiunque abbia conversazioni private con partner, amici, o familiari.** Omi registra anche quelle. La questione del consenso è reale, non teorica.
 
-**5. Query conversazionale.** L'utente può chiedere a Omi, in linguaggio naturale, di ritrovare informazioni passate: "Cosa ha detto Marco del pricing?", "Quali sono le scadenze di questa settimana?", "Riassumi la riunione di giovedì".
+**Professioni regolate con segreto professionale.** Medici, avvocati, psicologi: le conversazioni con pazienti/clienti sono confidenziali per legge. Registrarle senza consenso esplicito può violare leggi e codici deontologici.
 
-:::tip Cosa distingue Omi da un "registratore vocale"
+**Chi lavora in ambienti ad alta sicurezza.** Molti uffici governativi, militari, e di ricerca proibiscono dispositivi di registrazione. Omi è esattamente quello.
 
-- **Omi capisce il contesto**, non solo trascrive. Identifica speaker, estrae to-do, organizza per argomento.
-- **Omi ha una memoria ricercabile** con AI conversazionale. Alexa e Siri richiedono query esplicite; Omi capisce domande complesse.
-- **Omi è open source.** Il firmware e l'app possono essere ispezionati, customizzati, e self-hosted. Per chi ha requisiti di privacy, questo è un vantaggio enorme.
-- **Omi si integra con tool di produttività.** Notion, Obsidian, Apple Notes, Google Calendar: le trascrizioni e i riassunti finiscono dove l'utente li usa.
+**Chi ha già un sistema che funziona.** Se sei soddisfatto del tuo Note taker (Notion AI, Reflect, Obsidian con voice), Omi non ti darà un salto di qualità sufficiente per giustificare il costo e le complicazioni.
 
-:::
+### Cosa registra, e cosa no
 
-### Le funzionalità chiave di Omi
+Omi è un microfono ambient, sempre attivo. Registra tutto ciò che sente nel raggio di azione del microfono MEMS, che è progettato per captare voci a distanza di conversazione normale (1-2 metri).
 
-**Trascrizione continua.** Omi può trascrivere per ore senza interruzione, con batteria che dura un giorno intero. La trascrizione è segmentata per conversazione, e identificata per speaker.
+**Registra:** conversazioni con altre persone, riunioni, lezioni, telefonate in vivavoce, conversazioni al ristorante con amici, monologhi in solitudine. Tutto ciò che il microfono capta.
 
-**Speaker identification.** Omi identifica chi sta parlando, e può essere addestrato a riconoscere voci specifiche (utile per executive che hanno conversazioni con collaboratori abituali).
+**NON registra:** telefonate private (Omi non ha sensore di conduzione per le chiamate appoggiate all'orecchio), audio ad alta fedeltà per podcast o musica (la qualità è pensata per trascrizione, non per ascolto), audio sub-vocale o pensieri silenziosi.
 
-**Riassunti automatici.** Per ogni conversazione, Omi genera un riassunto dei punti chiave, delle decisioni prese, e dei to-do menzionati.
+La trascrizione avviene in tempo reale sull'app companion via Bluetooth. Il modello AI che genera i riassunti e le "memories" gira sul cloud Omi (o in locale, in local mode). Ogni "memory" è una porzione di conversazione che Omi ha identificato come significativa.
 
-**Query conversazionale.** "Cosa ho detto ieri sulla strategia di pricing?" — Omi cerca nella memoria, trova la conversazione rilevante, e risponde con un riassunto.
+### La questione del consenso: non aggirabile
 
-**Integrazioni.** Omi si integra con Notion, Obsidian, Apple Notes, Google Calendar, e altri tool. Le trascrizioni e i riassunti possono essere esportati automaticamente.
+Questo è il punto più importante dell'articolo, e la ragione per cui Omi non è per tutti.
 
-**On-device e cloud.** L'utente sceglie dove avviene l'elaborazione. Per dati sensibili, on-device è l'opzione (con limiti di qualità).
+In molte giurisdizioni, registrare una conversazione senza il consenso di tutti i partecipanti è illegale. In Italia, l'articolo 617 del Codice Penale punisce le intercettazioni non autorizzate. In California (two-party consent), serve il consenso di tutte le parti. In altri paesi, le leggi variano.
 
-### Casi d'uso concreti
+Ma la legge è solo una parte del problema. C'è anche la questione del consenso sociale.
 
-:::pro Quando Omi fa la differenza
+Quando un collega, un amico, o un familiare si rende conto che stai registrando la conversazione, la dinamica cambia. Le persone filtrano, diventano più formali, o rifiutano di parlare. L'uso di Omi in contesti sociali è una decisione che ha conseguenze relazionali.
 
-- **Executive che ha 10+ conversazioni significative al giorno** e vuole un sistema per ricordarle.
-- **Studente che segue lezioni universitarie** e vuole trascrizioni e riassunti su cui studiare.
-- **Ricercatore che partecipa a conferenze** e vuole registrare le conversazioni con altri ricercatori.
-- **Manager che vuole riascoltare 1:1** con i collaboratori per individuare pattern (es. "cosa chiede sempre Luca?").
-- **Persona con ADHD che ha bisogno di un "secondo cervello"** esterno.
-- **Content creator che cattura idee in mobilità** e le vuole trasformare in post, articoli, video.
+**Omi ha una funzione "consenso esplicito"** che richiede di dichiarare "Omi sta registrando" prima di iniziare una conversazione registrata. È un'ottima feature. Ma in pratica, la maggior parte degli utenti lo lascia in modalità always-on, e si affida al fatto che il dispositivo è piccolo e spesso non notato.
 
-:::
+**Il mio parere editoriale:** se usi Omi in contesti dove la registrazione è appropriata (riunioni di lavoro con colleghi che sanno che registri, lezioni con professore che acconsente, interviste con consensi firmati), è uno strumento potente. Se lo usi per registrare conversazioni private senza il consenso esplicito di tutti i partecipanti, stai violando la privacy delle persone. Non è una zona grigia.
 
-:::warning Quando Omi non è la scelta giusta
+### Privacy e data ownership: cosa fa Omi, e cosa no
 
-- **Non puoi (o non vuoi) registrare le conversazioni.** In molte giurisdizioni, registrare senza consenso è illegale.
-- **Hai bisogno di un assistente vocale "passivo"** (sveglia, meteo, musica). Per quello, Alexa o Google Assistant.
-- **Hai bisogno di trascrizione medica o legale** con standard di precisione e certificazione specifici. Per quello, servono tool verticali.
-- **Lavori in un ambiente rumoroso.** La precisione di Omi cala significativamente in ambienti con molto rumore di fondo.
-- **Hai bisogno di privacy assoluta.** Anche on-device, Omi cattura audio. Per chi ha bisogno di "no recording", meglio non usarlo.
+Omi ha una narrativa forte su privacy. Verifichiamola onestamente.
 
-:::
+**Cosa Omi fa bene:**
 
-### Omi vs i concorrenti diretti
+- **Encryption AES-256 at rest, TLS in transit.** Standard industriale.
+- **SOC 2 e HIPAA compliance.** Significativo per uso enterprise e medical.
+- **Local/cloud-free mode.** Su Omi Basic, i dati restano locali sul telefono. È la modalità più privacy-friendly.
+- **Delete/export controls.** L'utente può cancellare o esportare tutti i dati in qualsiasi momento.
+- **No training on user data.** Omi dichiara esplicitamente di non usare i dati utente per addestrare modelli.
+- **Open source firmware.** Il firmware è open source, verificabile.
 
-**Omi vs Rewind.ai (ora Limitless).** Limitless è un competitor diretto, con un approccio simile (wearable + AI + memory). La differenza: Limitless è più "consumer-first", Omi è più "open source" e customizzabile. Per developer e maker, Omi è preferibile. Per consumer che vuole "funziona subito", Limitless.
+**Cosa Omi NON fa:**
 
-**Omi vs Plaud Note.** Plaud Note è un dispositivo simile (registratore AI indossabile), con un focus su "registrazione discreta" e trascrizione. Plaud è più "consumer", Omi è più "maker" e open source. La scelta dipende dal profilo tecnico.
+- **Non è veramente "no subscription".** Omi Basic è gratis con 1.200 minuti di cloud listening/mese. Se superi, o vuoi transcription illimitata, ti serve Unlimited ($19/mese o $199/anno). Le transcrizioni in local mode sono illimitate ma locali — non puoi usarle per query semantiche che richiedono cloud.
+- **Non protegge da registrazioni accidentali.** Se dimentichi di disattivare in una conversazione privata, registra.
+- **Non anonimizza automaticamente le voci.** Le registrazioni contengono la voce di chi parla, identificabile.
+- **Non è immune da data breach.** Omi è SOC 2, non è immune da attacchi. I dati sono cifrati at rest, ma se le chiavi sono compromesse, la protezione salta.
 
-**Omi vs Otter.ai.** Otter è focalizzato sulla trascrizione di meeting (Zoom, Google Meet), non sulla vita reale. Omi è per catturare conversazioni di vita reale, Otter è per meeting strutturati. Sono complementari, non concorrenti diretti.
+**Per la maggior parte degli utenti, il setup giusto è:** Omi Basic per uso personale, con consensi espliciti per ogni conversazione registrata, e review periodica delle "memories" per cancellare quelle sensibili.
 
-**Omi vs Heyday (ora chiuso).** Heyday era un'app che faceva memory augmentation catturando lo schermo. È un approccio diverso: cattura digitale, non fisica. Omi è per il mondo fisico.
+### Pricing, spiegato onestamente
 
-**Omi vs Alexa / Google Assistant.** Sono assistenti vocali "passivi" (rispondono a query). Omi è un "proactive memory" (cattura e organizza continuamente). Use case diversi.
+Omi ha un modello ibrido: hardware + subscription.
 
-### Privacy e consenso
+**Hardware.** Omi Dev Kit 2 a $89 (prezzo di pre-order al momento). Include il dispositivo, custodia in silicone, lanyard, caricatore USB-C magnetico. È un prezzo entry-level per un wearable AI — competitivo vs Plaud Note ($179), Limitless Pendant ($99), Friend ($129).
 
-**Omi registra audio**. Questo ha implicazioni serie:
+**Omi Basic (gratis incluso con l'hardware).** 1.200 minuti di cloud listening/mese, transcription illimitata, AI summaries, memories. Le registrazioni locali non contano nei minuti cloud. Quando esaurisci i minuti cloud, le registrazioni continuano locali ma non vengono processate per AI.
 
-- In molte giurisdizioni (EU, alcuni stati US, UK), registrare conversazioni di terzi senza consenso è illegale.
-- Omi ha un LED visibile che segnala la registrazione, ma spetta all'utente informare gli altri.
-- On-device riduce il rischio (i dati non lasciano il dispositivo), ma la registrazione avviene comunque.
+**Omi Unlimited, $19/mese o $199/anno.** Unlimited cloud transcription, advanced AI summaries, custom note templates, priority support. Year-one total: $378 con annual billing, $407 con monthly billing. Annual risparmia $29.
 
-L'utente responsabile:
-- **Informa le persone** che stai registrando (esplicito, non implicito).
-- **Chiede consenso** in contesti sensibili (lavoro, sanitario, legale).
-- **Verifica le leggi locali** prima di usare Omi in un contesto pubblico.
-- **Usa on-device** per dati sensibili.
+**Il modello "BYO API key" è la killer feature per i developer.** In local mode, usi la tua API key (OpenAI, Anthropic) per le transcription e AI summaries. I costi sono i tuoi (pay-per-token al provider), ma il controllo è totale. Per chi ha già un account OpenAI e vuole sperimentare, è la strada più economica in assoluto.
 
-### Pricing di Omi
+### Hardware, in dettaglio
 
-Omi ha un modello ibrido:
+Omi Dev Kit 2 è un piccolo disco (~2.5cm), 10-14 ore di batteria continua, microfono MEMS ad alta sensibilità, connettività Bluetooth Low Energy 5.2, certificato splash-resistant (non waterproof).
 
-- **Hardware**: prezzo una tantum per il dispositivo (indicativamente 50-100 €, da verificare sul sito ufficiale, dato che il prodotto è in fase di lancio/crescita).
-- **Software**: l'app core è open source e gratuita.
-- **Cloud features**: opzionali, a consumo (per chi vuole trascrizione cloud di alta qualità).
-- **Premium tier**: per funzionalità avanzate (speaker identification, integrazioni, memoria illimitata).
+**Form factor:** portato come ciondolo al collo, o clip su maglietta/borsa. La versione "necklace" è la più comune.
 
-I prezzi variano man mano che il prodotto matura. Verifica sul sito ufficiale per le condizioni correnti.
+**Audio capture:** buono per conversazioni normali a 1-2 metri. Sotto una maglietta, la qualità degrada ma resta utilizzabile. In ambienti rumorosi (ristorante affollato, conference hall), la qualità peggiora significativamente.
 
-### Flusso pratico: un caso reale
+**Battery:** 10-14 ore di ascolto continuo. Una giornata lavorativa standard (8 ore) lo gestisce. Ricarica USB-C magnetica, full charge in ~2 ore.
 
-Luca è un product manager in consulenza strategica. Ha 5-7 conversazioni significative al giorno (con clienti, colleghi, mentor) e spesso dimentica commitments o dettagli.
+**Durabilità:** pensato per uso quotidiano, ma non per sport intensi o pioggia forte. Il sudore può danneggiare le porte del microfono.
 
-**Settimana 1:** setup. Luca aggancia Omi al collo, configura l'app, e fa un primo giorno di test. Scopre che Omi trascrive bene in inglese (meeting con clienti internazionali) e accettabilmente in italiano.
+### Use cases che funzionano, e che non funzionano
 
-**Settimane 2-4:** uso quotidiano. Luca indossa Omi durante le giornate di meeting, e la sera interroga l'app: "cosa ho detto ieri sul pricing del progetto X?" Omi restituisce un riassunto e link alla trascrizione completa. Luca recupera dettagli che altrimenti avrebbe perso.
+**Funziona bene:**
 
-**Mese 2:** integrazione. Luca collega Omi a Notion: le trascrizioni vengono esportate come pagine, organizzate per progetto. La memory diventa una vera "knowledge base" delle conversazioni.
+- **Riunioni 1:1 con colleghi che acconsentono.** Ogni conversazione di lavoro diventa ricercabile. Dopo 3 mesi, hai una knowledge base implicita di tutte le tue conversazioni.
+- **Lecture e seminari universitari.** Note strutturate automatiche, ricercabili per argomento.
+- **Interviste con consensi firmati.** Per giornalisti e ricercatori, Omi elimina le note manuali.
+- **Brainstorming con il team.** Cattura idee che altrimenti andrebbero perse.
+- **Sessioni di therapy (con consenso del terapeuta).** Per pazienti che vogliono rivedere le sessioni, o terapeuti che vogliono note migliori. Dipende dalle regole deontologiche locali.
 
-**Mese 4:** review. Luca nota che non perde più dettagli importanti, e che i suoi follow-up sono più precisi. ROI: il costo del dispositivo si è ripagato in 2 settimane.
+**Funziona meno bene:**
+
+- **Conference e convention.** Il rumore di fondo degrada la trascrizione. Le conversazioni sono brevi e frammentate. Le registrazioni diventano inutili o fuorvianti.
+- **Conversazioni in lingua mista.** Il modello gestisce 25+ lingue, ma transizioni frequenti tra lingue diverse degradano la qualità.
+- **Conversazioni telefoniche.** Omi non ha conduction sensor per le chiamate appoggiate. Può registrare in vivavoce, ma è scomodo.
+- **Contesti dove serve silenzio.** Biblioteche, musei, cene eleganti. Anche con Omi disattivato, la consapevolezza di averlo intorno al collo cambia il comfort.
+
+### Limitazioni strutturali, da conoscere prima di comprare
+
+**La qualità della trascrizione non è perfetta.** Anche con microfono MEMS di qualità, errori di trascrizione sono comuni in ambienti rumorosi, con accenti marcati, o con terminologia tecnica. Omi corregge in parte con il modello AI, ma aspettati un 5-10% di errori sistematici.
+
+**Le "memories" sono soggettive.** Omi identifica porzioni significative usando euristiche, non è perfetto. Alcune "memories" sono inutili, altre mancano conversazioni importanti. Serve review periodica per pulire e aggiungere tag.
+
+**Il search semantico richiede cloud.** In local mode, puoi trascrivere e riassumere localmente, ma la ricerca semantica ("dove abbiamo parlato di onboarding l'ultima volta?") richiede che i vettori siano in un database, e quello è cloud. La modalità "tutto locale" è meno potente.
+
+**Non sostituisce un sistema di note strutturato.** Se il tuo lavoro richiede note precise, tag, link interni, e relazioni tra concetti, Omi è un complemento, non un sostituto. Notion, Obsidian, e simili restano superiori per note strutturate.
+
+**La batteria non dura una giornata di lavoro intenso.** 10-14 ore di ascolto continuo è il massimo. Se hai un giorno con 12 ore di meeting back-to-back, ricarica a pranzo.
+
+### Omi vs Plaud vs Limitless vs Friend vs Bee
+
+**Omi vs Plaud Note.** Plaud è un dispositivo "per riunioni" (on-demand recording, non always-on). Più privacy-friendly di default (registra solo quando attivi), ma perde il vantaggio di catturare conversazioni informali. Plaud è $179 con subscription $19.99/mese per transcription. Omi è $89 con subscription $19/mese. Omi vince su prezzo entry, Plaud vince su privacy-by-default.
+
+**Omi vs Limitless Pendant.** Limitless è $99 con subscription $19/mese obbligatoria per le funzioni AI. Più maturo come prodotto, con community più ampia, ma forza la subscription (Omi Basic è gratis). Limitless vince su "polished UX", Omi vince su flessibilità (local mode, API, dev kit).
+
+**Omi vs Friend.** Friend è un dispositivo più "social" (un'amica AI che commenta le tue attività) e un chat online gratis. Il pendant è $129. Posizionamento diverso: Friend è più lifestyle, Omi è più productivity. Se cerchi memoria conversazionale, Omi è superiore.
+
+**Omi vs Bee Pioneer.** Bee è $49.99, no subscription, no premium tier (al momento). Più economico, più semplice, meno features. Bee lavora solo su iPhone, Omi funziona con iOS e Android. Bee è una buona entry-level, Omi è più serio.
+
+### Setup pratico: da zero a un uso produttivo in una settimana
+
+**1. Ordina l'hardware.** Da omiwearable.com, $89 + shipping. 5-10 giorni per la consegna.
+
+**2. Pairing con l'app.** Scarica l'app Omi (iOS o Android), accoppia via Bluetooth, concedi i permessi di microfono e notifica. 5 minuti.
+
+**3. Configura la prima sessione.** Indossa Omi, apri l'app, fai una sessione di test di 10 minuti. Verifica che trascriva correttamente. 15 minuti.
+
+**4. Decidi il tuo protocollo di consenso.** Questo è il passo più importante. Decidi in quali contesti userai Omi, e come gestirai il consenso. Per uso professionale, mandare una mail al team "registro le riunioni con Omi per avere appunti migliori, dimmi se preferisci che disattivi" è appropriato. 30 minuti di decisione.
+
+**5. Prima settimana di uso.** Indossa Omi durante le tue tipiche attività. Ogni sera, rivedi le "memories" generate. Identifica pattern: quali sono utili, quali sono rumore. Aggiusta le euristiche se possibile. Tempo: 10-15 minuti al giorno per la review.
+
+**6. Setup integrazioni (opzionale).** Slack, Notion, Calendar, MCP, API custom. Tempo: 30-60 minuti.
+
+**7. Pulizia periodica.** Ogni settimana, dedichi 30 minuti a pulire le "memories" inutili, aggiungere tag, e organizzare. Senza questa review, Omi diventa un dump inutilizzabile.
+
+In una settimana hai un workflow funzionante. In un mese, hai una base di memoria ricercabile che diventa un asset.
+
+### Errori comuni
+
+**Non stabilire un protocollo di consenso.** Senza regole chiare, finisci per registrare conversazioni inappropriate. Decidi prima.
+
+**Non fare review periodica.** Le "memories" si accumulano velocemente. Senza review, il sistema diventa inutilizzabile in poche settimane.
+
+**Affidarsi solo a Omi per le note.** Per conversazioni critiche (decisioni, accordi, contratti), Omi è un complemento, non un sostituto. Conferma sempre per iscritto.
+
+**Non testare in ambienti diversi.** Omi funziona benissimo nel tuo ufficio silenzioso, malissimo in un coffee shop rumoroso. Testa in tutti i tuoi ambienti tipici.
+
+**Ignorare la durata della batteria.** Se ti dimentichi di ricaricare, Omi si spegne a metà giornata. Metti la ricarica in routine serale.
 
 ### Le domande che ci fanno più spesso
 
-**Omi registra davvero tutto?**
-Sì, se attivo. L'utente può disattivare la registrazione (modalità "privacy"), ma perde la funzionalità di memory.
+**Omi è meglio di Notion AI per prendere appunti?**
+Sono diversi. Notion AI richiede che tu scriva le note. Omi cattura le conversazioni automaticamente. Se le conversazioni sono la tua fonte di informazione, Omi è superiore. Se il tuo lavoro è più lettura/scrittura, Notion AI è sufficiente.
 
-**Posso cancellare le registrazioni?**
-Sì, manualmente o con policy di retention automatiche. Le registrazioni on-device restano sul dispositivo; quelle cloud dipendono dalle policy del servizio.
+**Posso usarlo in terapia?**
+Dipende dalla regolamentazione locale e dal consenso del terapeuta. In molte giurisdizioni, registrare le sessioni di terapia richiede consenso esplicito e sicurezza HIPAA. Omi è HIPAA-compliant, ma il consenso è un passo separato.
 
-**Omi funziona in italiano?**
-Sì, con qualità variabile. La precisione è migliore in inglese, ma l'italiano è supportato.
+**Funziona in italiano?**
+Sì, supporta 25+ lingue tra cui l'italiano. La qualità è migliore in inglese (training set più ampio), ma l'italiano funziona ragionevolmente bene.
 
-**Posso usarlo in meeting senza che gli altri se ne accorgano?**
-Sì, è piccolo e discreto. Ma resta la questione etica e legale: informare i partecipanti è obbligo legale in molte giurisdizioni.
+**Quanto costa davvero in un anno?**
+$89 hardware + $199 (annual Unlimited) = $288 anno uno. Se ti basta Basic, $89 anno uno. Se usi BYO API key, $89 hardware + costo API (variabile, $10-50/mese per uso moderato).
 
-**Omi è open source?**
-Sì, firmware e app. Questo permette a developer e maker di ispezionare, customizzare, e self-hostare.
+**È meglio di un Note taker come Plaud?**
+Per uso always-on con cattura continua, sì. Per uso on-demand (solo quando premi record), Plaud è superiore. La scelta dipende dal tuo workflow.
 
-**Omi supporta le lingue asiatiche?**
-Sì, ma con qualità variabile. Cinese, giapponese, coreano sono supportati con precisione decrescente.
+**Posso esportare i dati?**
+Sì, Omi supporta export in formati standard (testo, JSON). In local mode, hai accesso completo al file system.
 
-**Posso usare Omi offline?**
-Sì, con la modalità on-device. La precisione della trascrizione cala, ma la cattura e l'organizzazione locale funzionano.
+### Alternative da considerare
+
+- **Plaud Note / NotePin.** On-demand recording, no always-on. Più privacy-friendly.
+- **Limitless Pendant.** Più maturo, subscription obbligatoria, UX più rifinita.
+- **Friend.** Più lifestyle/social, meno productivity.
+- **Bee Pioneer.** Budget, iOS only, no subscription.
+- **Reflect / Notion AI / Obsidian + voice.** App di note con AI, no hardware, registri tu quando serve.
+- **Meeting recording tools (Otter, Fireflies, Read AI).** Per sole riunioni, non always-on. Ottima qualità transcription, integrazione con calendar.
 
 ### Cosa ci aspettiamo da Omi nei prossimi mesi
 
-Le aree da osservare:
+**Più integrazioni native.** Slack, Notion, Calendar già supportati. La roadmap è verso più tool (CRM, task manager, project management).
 
-- **Migliore precisione multilingua.** Specialmente per italiano, spagnolo, portoghese.
-- **Più integrazioni.** Omi è ancora giovane; le integrazioni crescono con la community open source.
-- **Modelli locali più piccoli e precisi.** Per chi fa on-device, modelli Whisper-like stanno diventando molto più efficienti.
-- **Funzionalità "proactive" più ricche.** Suggerimenti automatici di follow-up, alert su commitments, ecc.
-- **Hardware di nuova generazione.** Batteria più lunga, design più discreto, supporto per più accessori.
+**Modelli AI migliori per transcription in italiano.** La qualità in lingue non-inglese è ancora inferiore. Miglioramenti attesi.
+
+**Miglioramenti del search semantico.** Attualmente è buono, non eccellente. Con l'evoluzione dei modelli di embedding, può migliorare.
+
+**Compliance enterprise.** Già HIPAA e SOC 2. GDPR explicitness e data residency EU sarebbero i prossimi passi per il mercato europeo.
+
+**Integrazione voice agents.** Omi come interfaccia per agenti AI (parli a Omi, parla con un agente, l'agente esegue task). È il futuro prossimo.
 
 ### In sintesi
 
-Omi è un wearable AI pensato per chi vuole catturare e ritrovare informazioni dalla vita reale. È open source, focalizzato sulla privacy (con on-device option), e integrabile con i tool di produttività.
+Omi è uno strumento potente per un target specifico: knowledge worker con molte conversazioni che vogliono memoria continua, e che sono disposti a gestire la complessità del consenso sociale. Non è per tutti, e non è per chiunque abbia conversazioni private. Il prezzo è entry-level per la categoria, la qualità è buona ma non perfetta, e il valore dipende tutto da quanto sei disciplinato nel review periodica.
 
-Per executive, ricercatori, content creator, e persone con memory challenges, è un tool con potenziale enorme. Per uso consumer "passivo" (musica, meteo, sveglia), non è il tool giusto.
-
-La questione della privacy e del consenso è centrale: registrare conversazioni senza consenso è illegale in molte giurisdizioni, e l'utente responsabile deve informare le persone coinvolte.
+Per il target giusto, è un moltiplicatore di produttività. Per il target sbagliato, è un incubo di privacy. Decidi consapevolmente.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Omi** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri wearable AI** nella raccolta dedicata.
-- **Salva Omi nei preferiti** se vuoi tornarci dopo.
+- **Apri la scheda tool di Omi** per confrontare con Plaud, Limitless, e altri wearable AI.
+- **Esplora la raccolta su produttività e AI hardware** per casi d'uso affini.
+- **Salva Omi nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.

@@ -1,168 +1,191 @@
 ### Cosa fa Wegic, in una frase
 
-Wegic è un website team AI conversazionale: descrivi cosa vuoi (un sito, una landing, un micro-sito), l'AI genera design, copy, e codice, e tu iteri in linguaggio naturale finché non sei soddisfatto. Il risultato è un sito web pubblicabile.
+Wegic è un website builder conversazionale: descrivi cosa vuoi, l'AI genera un sito completo in 60 secondi, e iteri con prompt in linguaggio naturale invece di drag-and-drop — pensato per chi vuole un sito credibile rapidamente senza competenze tecniche o di design.
 
-### A chi serve davvero
+### A chi serve davvero, e a chi no
 
-Wegic non è un website builder tradizionale (WordPress, Squarespace, Webflow). È un generatore di siti web tramite AI conversazionale. I profili tipici:
+Wegic è per:
 
-- **Founder e piccole imprese** che vogliono un sito veloce senza dover assumere un designer o un developer.
-- **Marketer e freelance** che vogliono landing page e micro-siti per clienti in tempi rapidi.
-- **Creator e coach** che vogliono un portfolio o un sito vetrina in pochi minuti.
-- **Team di prodotto** che vogliono testare idee con micro-siti prima di investire in un prodotto vero.
-- **Individui** che vogliono un sito personale (matrimonio, evento, progetto) senza dover imparare un CMS.
+**Freelance e piccole attività** che vogliono un sito vetrina o una landing page senza pagare un designer o imparare WordPress. Il workflow conversazionale è più veloce di qualsiasi drag-and-drop builder.
 
-Non è il tool giusto per chi cerca un sito "complesso" (e-commerce, portali, community), per chi vuole massimo controllo sul codice, o per chi ha bisogno di un CMS robusto con molte pagine e utenti.
+**Persone che hanno procrastinato il sito per anni** perché il processo tradizionale è troppo scoraggiante. Wegic abbatte la barriera d'ingresso.
 
-### Come funziona, passo per passo
+**Side project e MVP** che hanno bisogno di una presenza online in pochi minuti. Test di mercato, validazione, early traction.
 
-Il flusso operativo ha cinque fasi.
+**Micro-imprese locali** (ristoranti, studi professionali, artigiani) che vogliono una presenza web basic senza complessità.
 
-**1. Brief iniziale.** L'utente descrive a Wegic cosa vuole, in linguaggio naturale: "Voglio una landing page per il mio studio di yoga a Milano, con sezione orari, lista corsi, e form di contatto". Più il brief è dettagliato, migliore è il primo output.
+**Creator che vogliono un sito portfolio** veloce. Designer, fotografi, scrittori.
 
-**2. Generazione iniziale.** L'AI di Wegic genera una prima bozza:
-- Struttura del sito (homepage + pagine interne).
-- Design (layout, colori, tipografia).
-- Copy (testi descrittivi, headline, CTA).
-- Codice (HTML/CSS/JS, generato automaticamente).
+Non è per:
 
-**3. Iterazione conversazionale.** L'utente continua a chiedere modifiche in linguaggio naturale: "Cambia il colore principale in verde scuro", "Aggiungi una sezione testimonials", "Riscrivi la headline in modo più diretto". L'AI applica le modifiche e rigenera.
+**Aziende con siti complessi.** E-commerce avanzato, multi-language, membership, blog articolato. Per quello, WordPress, Shopify, o soluzioni custom.
 
-**4. Personalizzazione avanzata.** Per chi vuole più controllo, Wegic offre opzioni per modificare direttamente il design (colori, font, layout) o il codice (per chi sa programmare).
+**Designer professionisti.** Se vuoi controllo pixel-perfect sul design, Wegic non è il tool. Figma o Webflow sono superiori.
 
-**5. Pubblicazione.** Una volta soddisfatto, l'utente pubblica il sito. Le opzioni:
-- **Hosting Wegic**: dominio custom o sottodominio Wegic.
-- **Export del codice**: l'utente scarica HTML/CSS/JS e lo pubblica dove vuole (Vercel, Netlify, GitHub Pages, suo server).
+**Siti con contenuti dinamici complessi.** Database-driven, login area, custom forms con logica complessa. Wegic gestisce form base, non applicazioni web.
 
-:::tip Cosa distingue Wegic da Squarespace o Wix
+**E-commerce avanzato.** C'è un'integrazione pagamenti base, ma per shop seri Shopify rimane lo standard.
 
-- **L'interfaccia è conversazionale**, non drag-and-drop. Scrivi cosa vuoi, l'AI esegue.
-- **Il codice è esportabile**, non chiuso in un walled garden. Per chi vuole hosting custom, Wegic lo permette.
-- **L'iterazione è veloce.** Cambiare un layout, un colore, un copy è una frase, non 10 click.
+### Cosa fa, in pratica
 
-Per chi vuole "no-code ma con interfaccia visuale", Squarespace o Wix restano preferibili. Per chi vuole "AI-first con export flessibile", Wegic è un'alternativa interessante.
+Wegic si basa su Kimmy, l'AI assistant, che gestisce l'intero workflow.
 
-:::
+**1. Conversazione iniziale.** Apri Wegic, Kimmy ti chiede: business, target, stile, pagine necessarie, tone. Pochi scambi, ~5 minuti.
 
-### Le funzionalità chiave di Wegic
+**2. Generazione del sito.** In 60-90 secondi, Kimmy genera un sito multi-pagina completo: layout, copy, immagini AI, responsive design. Non un mockup, un sito pronto.
 
-**Generazione di design.** L'AI produce layout, palette colori, tipografia, e struttura del sito. Il design è responsive (mobile, tablet, desktop) e accessibile di default.
+**3. Modifica conversazionale.** Da qui in poi, tutte le modifiche avvengono via chat. "Cambia il colore dell'header", "Aggiungi una sezione servizi", "Il testo è troppo formale". Kimmy interpreta ed esegue.
 
-**Generazione di copy.** L'AI scrive testi descrittivi, headline, CTA, e contenuti per le sezioni del sito. I testi possono essere editabili.
+**4. Voice input.** Per chi pensa meglio parlando, puoi dettare le modifiche invece di digitarle.
 
-**Multi-page.** Wegic genera siti con multiple pagine (home, about, servizi, contatti, blog, ecc.), con navigazione coerente.
+**5. Sketch/circling.** Disegna direttamente sulla pagina per indicare quale elemento modificare. Più preciso del text-only per layout adjustments.
 
-**Form e integrazioni.** L'utente può aggiungere form di contatto, integrazioni con tool di marketing (email, analytics, payment), e componenti interattivi.
+**6. AI visitor assistant.** Sul sito pubblicato, un chatbot AI risponde a domande dei visitatori sulla tua attività. Customer service lightweight incluso.
 
-**Hosting e dominio.** Wegic offre hosting e supporto per domini custom. Per chi vuole hosting proprio, export del codice.
+**7. Multi-language generation.** Genera il sito in più lingue contemporaneamente. Per chi serve audience internazionale.
 
-**Collaborazione.** Per team, Wegic offre funzionalità di collaborazione (multi-edit, commenti, versioning).
+**8. Publishing.** One-click publishing. Hosting incluso, SSL, dominio custom su tier pagati.
 
-### Casi d'uso concreti
+**9. Code export.** Esporta il codice (HTML/CSS/JS) durante la subscription attiva. Per chi vuole migrare altrove o customizzare oltre.
 
-:::pro Quando Wegic fa la differenza
+### Pricing, onestamente
 
-- **Landing page per un lancio di prodotto.** Founder che vuole una landing convincente in 2 ore, non 2 settimane.
-- **Sito portfolio per un freelance.** Designer, fotografo, copywriter che vuole mostrare i lavori senza pagare un designer.
-- **Micro-sito per un evento.** Matrimonio, conferenza, evento aziendale: sito veloce con info, mappa, RSVP.
-- **MVP di un'idea.** Prima di investire in un prodotto vero, un micro-sito per validare l'idea con utenti reali.
-- **Sito vetrina per un'attività locale.** Ristorante, palestra, studio professionale che vuole un sito bello e funzionale.
-- **Landing per una campagna marketing.** ADS, campagne social, o newsletter che richiedono una pagina dedicata.
+I prezzi cambiano frequentemente (verifica su wegic.ai):
 
-:::
+- **Free trial, $2.99 one-time.** Una generazione completa di sito. Pubblicato con branding Wegic.
+- **Free tier.** Limitato: pochi siti, pochi crediti AI, dominio Wegic. I siti pubblicati vanno offline senza subscription attiva.
+- **Starter, ~$11.90-$23.90/mese (varia per billing cycle).** 400-600 crediti/mese (~10-15 generazioni o 40-60 modifiche), 10 pagine per sito, 10.000 visitatori/mese, dominio custom, badge Wegic rimosso, 1 sito pubblicato.
+- **Premium, ~$19.90-$41.90/mese.** 1000+ crediti/mese (25 generazioni o 100+ modifiche), pagine illimitate, dominio custom, visitatori illimitati, Google Analytics, siti illimitati.
+- **Ultra, $2.999/mese.** Managed service, 7-day delivery, design revisions illimitate, advanced integrations. Enterprise.
 
-:::warning Quando Wegic non è la scelta giusta
+**Annual billing** risparmia circa il 40% su Starter e Premium.
 
-- **E-commerce complesso.** Per un negozio online serio, Shopify o WooCommerce sono preferibili.
-- **Community o portale.** Per siti con molti utenti, contenuti generati dagli utenti, e funzionalità social, servono piattaforme dedicate.
-- **Massimo controllo sul codice.** Wegic è AI-first; per chi vuole scrivere ogni riga, un editor di codice è preferibile.
-- **SEO avanzato.** Per una strategia SEO complessa, Wegic è un punto di partenza ma non sostituisce un lavoro tecnico dedicato.
-- **Integrazioni custom profonde.** Se il sito ha bisogno di logica backend complessa, Wegic non è sufficiente.
+**Caveat importante: i crediti non roll-over.** Ogni mese ricominci da zero. Se sprechi crediti in modifiche che non funzionano, li perdi.
 
-:::
+**Caveat più critico: i crediti si consumano anche per modifiche che falliscono.** Se chiedi una modifica che l'AI non riesce a fare bene, i crediti sono comunque spesi. Questo è documentato come il principale complaint.
 
-### Wegic vs i concorrenti diretti
+### Cosa fa bene, e cosa no
 
-**Wegic vs Squarespace / Wix.** Squarespace e Wix sono i leader del website building visuale. La differenza è di paradigma: drag-and-drop vs conversazionale. Per chi è abituato al visuale, Squarespace è più familiare. Per chi preferisce "scrivi cosa vuoi", Wegic è più efficiente.
+**Fa bene:** generazione iniziale del sito, modifiche semplici, design responsive automatico, multi-language, fast iteration. Il punto di forza è la velocità di setup.
 
-**Wegic vs WordPress + Elementor.** WordPress è il CMS più diffuso, con Elementor come page builder visuale. È più flessibile e potente, ma richiede più competenze tecniche. Per un sito "da 1 a 10 pagine", Wegic è più rapido. Per un sito "da 50 a 1000 pagine" con molti autori, WordPress.
+**Fa meno bene:** personalizzazione avanzata del design, ottimizzazione SEO tecnica profonda, integrazioni custom complesse, performance optimization.
 
-**Wegic vs Framer.** Framer è un competitor recente focalizzato su design-driven websites. Wegic è più "AI-first" nella generazione, Framer è più "design-first" nell'editing. Per designer che vogliono controllo, Frayer. Per founder che vogliono velocità, Wegic.
+**Fa male:** siti che richiedono logica di business complessa (booking systems, calcolatori prezzi, aree riservate con permessi granulari).
 
-**Wegic vs Durable.co.** Durable è un competitor AI-first simile. La differenza è sottile: Durable è più "business site" (per piccole imprese), Wegic è più "creator site" (per founder, freelance, content creator). Per piccole imprese locali, Durable. Per creator e startup, Wegic.
+### Quando Wegic ha senso, e quando no
 
-**Wegic vs Webflow.** Webflow è il tool di riferimento per designer che vogliono un sito custom senza codice. È più potente e più complesso di Wegic. Per designer che vogliono controllo totale, Webflow. Per chi vuole velocità e semplicità, Wegic.
+**Ha senso:** sito vetrina per piccola attività, landing page per prodotto/servizio, portfolio personale, sito per side project. Tempo dal brief al live: sotto 1 ora.
 
-### Pricing di Wegic
+**Non ha senso:** e-commerce serio, blog con centinaia di articoli, sito corporate con pagine dinamiche, applicazione web.
 
-Wegic offre:
+**Caso borderline:** se hai bisogno di un sito "credibile" ma non perfetto, e iterare velocemente ti conviene più del controllo assoluto, Wegic è OK. Se vuoi pixel-perfect e customizzazione totale, no.
 
-- **Free tier**: limitato a 1 sito, funzionalità base, sottodominio Wegic.
-- **Pro**: più siti, export del codice, integrazioni, dominio custom.
-- **Business**: collaboration, team, supporto prioritario.
+### Wegic vs Framer vs Wix AI vs Durable vs 10Web
 
-I prezzi pubblicati variano nel tempo. Indicativamente, il tier Pro parte da 15-25 €/mese con fatturazione annuale.
+**Wegic vs Framer.** Framer è più designer-oriented, con più controllo ma learning curve più ripida. Wegic è più conversazionale. Per designer che vogliono customizzazione, Framer. Per non-designer, Wegic.
 
-### Flusso pratico: un caso reale
+**Wegic vs Wix AI.** Wix è il re dei website builder tradizionali, con AI features aggiunte. Wix ha più template, più app, più flessibilità, ma è più complesso. Wegic è più snello. Per chi vuole semplicità estrema, Wegic. Per chi vuole un ecosistema maturo, Wix.
 
-Marco è un consulente di strategia che vuole lanciare un suo sito personale. Ha un CV su LinkedIn, ma vuole un sito dove pubblicare articoli, case study, e raccogliere lead.
+**Wegic vs Durable.** Durable è il competitor più diretto: AI website builder, conversazionale, simile posizionamento. Durable è più economico, Wegic ha più utenti. Differenze minime, prova entrambi.
 
-**Mattina del sabato:** Marco apre Wegic, scrive: "Voglio un sito personale per consulenza strategia. Minimal, professionale, con homepage, pagina about, pagina servizi, pagina case study, blog, e contatti. Colori: blu scuro, grigio, bianco. Tono: serio ma accessibile."
+**Wegic vs 10Web.** 10Web è focalizzato su WordPress + AI, conversion di siti statici a WordPress. Più complesso, più adatto a chi vuole restare in WordPress ecosystem.
 
-**15 minuti dopo:** Wegic genera la prima bozza. Marco la guarda, chiede modifiche ("Aggiungi una sezione 'Parliamone' con CTA in homepage", "Riscrivi la headline principale in modo più diretto", "Cambia la foto placeholder con uno sfondo geometrico").
+**Wegic vs Squarespace AI.** Squarespace è design-first, con template premium. AI features sono basic. Per chi cerca design premium senza AI, Squarespace. Per chi cerca AI + velocità, Wegic.
 
-**1 ora dopo:** il sito è pronto. Marco aggiunge un caso studio (incolla il testo), un articolo del blog (idem), e una foto profilo.
+### Casi d'uso reali
 
-**Publishing:** Marco collega il dominio custom (marco-strategia.it) e pubblica. Tempo totale: 2 ore.
+**Ristorante che vuole un sito vetrina.** Wegic Free trial → Premium. 1 ora dal brief al live. Include menu, orari, location, contatti.
 
-**Senza Wegic:** Marco avrebbe dovuto scegliere un CMS (WordPress, Squarespace, Webflow), impararlo, acquistare hosting, configurare DNS, e dedicare almeno un weekend intero.
+**Freelance designer che vuole un portfolio.** Wegic Starter. Sito con progetti, bio, contatti. Tempo di creazione: 30 minuti.
 
-ROI: Wegic ha restituito a Marco 6-8 ore di lavoro. Il costo dell'abbonamento annuale si ripaga in un singolo uso.
+**SaaS che vuole una landing page per testare un nuovo prodotto.** Wegic Starter. Landing con copy generata, hero section, form di signup. Tempo: 1-2 ore.
+
+**Coach che vuole un sito per vendere servizi.** Wegic Premium con integrazione pagamenti (colleghi il tuo Stripe). Sito + sistema di booking base.
+
+**Artigiano che vuole una presenza online.** Wegic Free o Starter. Sito semplice, portfolio, contatti.
+
+### Setup pratico: da zero al sito live in 1-2 ore
+
+**1. Crea l'account.** Su wegic.ai, signup con Google o email. 3 minuti.
+
+**2. Inizia la conversazione con Kimmy.** Rispondi alle domande su business, target, stile. 5-10 minuti.
+
+**3. Genera il primo draft.** 60-90 secondi di attesa, sito pronto. 2 minuti.
+
+**4. Itera via chat.** 5-10 round di "cambia X", "aggiungi Y", "riformula Z". 30-60 minuti.
+
+**5. Connetti dominio custom (opzionale).** Su Starter o Premium, configura tuodominio.com. 10 minuti.
+
+**6. Configura analytics (opzionale).** Google Analytics su Premium. 10 minuti.
+
+**7. Pubblica.** Click "Publish". Sito live. 5 minuti.
+
+**8. Setup AI visitor assistant (opzionale).** Configura il chatbot per il tuo sito. 15 minuti.
+
+In 1-2 ore hai un sito live, responsive, multi-page, con dominio custom. Per un sito vetrina, è un risultato onesto.
+
+### Errori comuni
+
+**Sprecare crediti su modifiche generiche.** "Migliora il design" è vago e consuma crediti senza risultato. Meglio: "Cambia il colore dell'header da blu a verde scuro".
+
+**Non rivedere il draft iniziale.** Il primo draft è decente ma generico. Senza iterazione, resta generico. La personalizzazione è nel prompt delle iterazioni.
+
+**Aspettarsi controllo totale.** Wegic non è Figma. Se vuoi spostare un singolo pixel, non è il tool. Per quel livello, Framer o Webflow.
+
+**Ignorare le performance.** I siti Wegic sono accettabili ma non ottimizzati per performance. Per Lighthouse score 90+, ti serve un dev che lavori sul codice esportato.
+
+**Pubblicare senza testare mobile.** Il design è responsive, ma la resa su mobile può differire. Testa sempre su 360px e 390px prima di pubblicare.
 
 ### Le domande che ci fanno più spesso
 
-**Wegic è difficile da usare?**
-No, l'interfaccia è conversazionale. Se sai scrivere cosa vuoi, sai usare Wegic. La curva di apprendimento è dolce.
+**Wegic è meglio di Squarespace?**
+Per chi vuole velocità di setup e non ha competenze di design, sì. Per chi vuole template premium e flessibilità di design, Squarespace.
 
 **Posso esportare il codice?**
-Sì, con il tier Pro. Il codice è HTML/CSS/JS standard, pubblicabile ovunque.
+Sì, durante la subscription attiva. Il codice è HTML/CSS/JS standard. Per migrare altrove, contatta il supporto.
 
-**Il codice esportato è personalizzabile?**
-Sì, se sai programmare. Il codice è pulito e strutturato. Puoi modificarlo, aggiungere componenti, o integrarlo in un'app esistente.
+**Quanto costa davvero?**
+Starter ~$11.90-$23.90/mese, Premium ~$19.90-$41.90/mese, con annual saving. Ultra è enterprise.
 
-**Wegic supporta l'italiano?**
-Sì, sia per il copy generato che per l'interfaccia.
+**Wegic fa e-commerce?**
+Funzionalità base (colleghi il tuo Stripe/PayPal), ma non è un e-commerce platform. Per shop seri, Shopify.
 
-**Wegic è SEO-friendly?**
-Di base, sì: HTML semantico, meta tag, performance. Per una strategia SEO avanzata, serve lavoro tecnico aggiuntivo.
+**Funziona per portfolio?**
+Sì, è uno dei suoi use case migliori.
 
-**Posso aggiungere un blog?**
-Sì, Wegic supporta blog con articoli. Per blog con molti articoli, valuta se un CMS dedicato (Ghost, WordPress) è più adatto.
+**I siti Wegic sono SEO-friendly?**
+Base. Puoi configurare meta tags, ma non hai controllo su URL structure, sitemap, o structured data avanzato. Per SEO serio, devi intervenire manualmente.
 
-**Wegic supporta e-commerce?**
-Limitato. Per un piccolo shop con pochi prodotti, sì. Per un e-commerce serio, Shopify o WooCommerce sono preferibili.
+### Alternative da considerare
 
-**Posso usare un dominio custom?**
-Sì, con il tier Pro. La configurazione DNS è guidata.
+- **Durable.** Simile, più economico.
+- **Framer.** Più designer-oriented, più controllo.
+- **Wix AI.** Più maturo, più complesso.
+- **Squarespace.** Design premium, meno AI.
+- **10Web.** WordPress + AI, più complesso.
+- **Carrd.** Ultra-minimalist, per one-page site.
 
 ### Cosa ci aspettiamo da Wegic nei prossimi mesi
 
-Le aree da osservare:
+**Modelli AI migliori per generazione.** Ogni release migliora la qualità del primo draft.
 
-- **Migliore gestione di siti complessi.** Multi-pagina, multi-autore, versioning.
-- **Più integrazioni con tool di marketing.** Email, analytics, payment, CRM.
-- **AI più contestuale.** Generazione che apprende dal feedback dell'utente, con prompt history.
-- **Export più flessibile.** Non solo HTML/CSS/JS, ma anche framework moderni (React, Next.js) per chi vuole.
+**Code export migliore.** Esportazione più pulita, più portabile.
+
+**Analytics integrate.** Oltre Google Analytics, dashboard Wegic.
+
+**Più integrazioni.** CRM, email marketing, payment, automazioni.
+
+**Miglioramento del credit system.** È il principale pain point. Se risolvono il problema dei crediti sprecati su modifiche fallite, diventa molto più user-friendly.
 
 ### In sintesi
 
-Wegic è un website builder AI-first che permette di creare siti web belli e funzionali tramite conversazione. È più veloce di Squarespace, più semplice di Webflow, e più flessibile di Durable.
+Wegic è una delle opzioni più accessibili per chi vuole un sito AI-generated in tempi brevi. Il workflow conversazionale è il suo superpotere, e i 300.000+ siti generati sono una validation del market fit.
 
-Per founder, freelance, creator, e piccole imprese che vogliono un sito in tempi rapidi senza competenze tecniche, è uno strumento con ROI immediato. Per e-commerce, community, o siti complessi, servono piattaforme dedicate.
+Le limitazioni principali sono: credit system che non rolla-over e consuma su errori, mancanza di controllo design pixel-perfect, performance non ottimali, e-commerce limitato. Per il target giusto — non-designer che vogliono un sito vetrina — è una scelta eccellente. Per siti complessi, no.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Wegic** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri website builder** nella raccolta dedicata.
-- **Salva Wegic nei preferiti** se vuoi tornarci dopo.
+- **Apri la scheda tool di Wegic** per confrontare con Durable, Framer, e altri AI website builder.
+- **Esplora la raccolta su website builder e no-code** per casi d'uso affini.
+- **Salva Wegic nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.

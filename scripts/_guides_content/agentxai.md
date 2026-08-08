@@ -1,164 +1,203 @@
 ### Cosa fa AgentX, in una frase
 
-AgentX è una piattaforma no-code per costruire agenti AI specializzati: definisci l'obiettivo dell'agente, i tool che può usare, e la knowledge base da cui attingere, e l'agente lavora su task reali (qualificazione lead, supporto, automazioni interne) senza che tu scriva una riga di codice.
+AgentX è una piattaforma no-code per costruire agenti AI specializzati e flussi multi-agent — dove l'utente disegna la logica dell'agente in un canvas visuale, configura i tool che l'agente può chiamare, e mette in produzione senza scrivere codice di orchestrazione.
 
-### A chi serve davvero
+Non è un chatbot builder. È un sistema operativo per agenti che vivono dentro processi di business reali: lead qualification, customer support automation, document processing, internal operations.
 
-AgentX non è per chi vuole un chatbot "FAQ". È per chi vuole agenti che lavorano su processi reali:
+### A chi serve davvero, e a chi no
 
-- **Sales e marketing team** che vogliono automatizzare la qualificazione dei lead.
-- **Customer success** che vogliono un primo livello di supporto automatizzato.
-- **Operazioni** che vogliono agenti che gestiscono task interni (es. smistamento email, drafting documenti).
-- **Founder e PM** che vogliono prototipare workflow AI senza overhead engineering.
-- **Team AI di aziende** che vogliono deployare agenti rapidamente senza (o con poca) engineering.
+AgentX è per:
 
-Non è il tool giusto per chi cerca un chatbot conversazionale semplice (per quello, Tidio, Crisp, o Intercom sono più adatti), né per chi ha bisogno di un modello LLM custom con training su dati proprietari (per quello, servono approcci custom).
+**Team marketing e sales ops che vogliono automatizzare lead qualification.** Un agente che legge le submission form, fa enrichment, qualifica, score, e instrada ai sales rep con il contesto completo.
 
-### Come funziona, passo per passo
+**Team customer support che vogliono automare le richieste di primo livello.** Un agente che risponde a FAQ, gestisce richieste standard, e instrada le questioni complesse a umani con tutto il contesto.
 
-Il flusso operativo ha sei fasi.
+**Team operations che vogliono automatizzare processi ripetitivi.** Un agente che legge email, classifica, estrae dati, e li mette in un sistema downstream.
 
-**1. Definizione dello scope dell'agente.** L'utente definisce:
-- Cosa deve fare l'agente (es. "qualificare lead inbound").
-- Con quali dati può lavorare (CRM, knowledge base, web).
-- Quali azioni può compiere (es. "aggiornare il CRM", "inviare email").
-- Quali limiti ha (es. "non può mandare email a clienti esistenti senza conferma umana").
+**Agenzie che costruiscono agenti per clienti.** Il tier Professional include white-label e client workspaces.
 
-**2. Configurazione dei tool.** L'utente configura i tool che l'agente può usare:
-- Ricerca web (Google Search, Bing, Brave Search).
-- CRM (HubSpot, Salesforce, Pipedrive).
-- Email (Gmail, Outlook).
-- Calendar (Google Calendar, Outlook).
-- HTTP requests generici per API custom.
-- Tool di calcolo e trasformazione dati.
+**Team che hanno già provato LangChain/LlamaIndex e vogliono qualcosa di più visuale.** AgentX è "LangChain con una UI e senza il debito tecnico del custom code".
 
-**3. Knowledge base.** L'utente carica documenti (PDF, pagine web, knowledge base interne) che l'agente può consultare per rispondere a domande specifiche. La knowledge base è indicizzata in un vector store e il retriever pesca i chunk rilevanti.
+Non è per:
 
-**4. Prompt e personalità.** L'utente definisce il system prompt, il tono, le regole di escalation a umani, e gli esempi di comportamento atteso.
+**Sviluppatori che vogliono massimo controllo.** Se preferisci scrivere codice Python, LangGraph e CrewAI ti danno più flessibilità. AgentX è per chi vuole velocità, non per chi vuole controllo.
 
-**5. Test e iterazione.** L'utente testa l'agente in un playground, lo sottopone a scenari tipici, e itera sul prompt e sui tool fino a ottenere il comportamento desiderato.
+**Chatbot semplici.** Se ti serve un FAQ bot, non hai bisogno di un agent platform. Typebot, Botpress, o anche un semplice widget AI sono sufficienti.
 
-**6. Deploy.** L'agente è deployato in produzione, con monitoraggio delle conversazioni, KPI, e capacity di intervento umano.
+**Mission-critical senza engineering di guardia.** Come tutti i tool no-code, debugging in produzione è più limitato. Per applicazioni critiche (financial, medical), serve almeno un dev disponibile per intervenire.
 
-:::tip Cosa distingue AgentX da un "chatbot builder"
+**Voice agents.** AgentX è focalizzato su text agents. Per voice, servono tool diversi (Vapi, Retell, Bland).
 
-- **Gli agenti ragionano e agiscono**, non solo rispondono. Possono fare ricerche, chiamare API, aggiornare dati.
-- **L'orchestrazione multi-tool è nativa.** Un agente può usare 5-10 tool in sequenza per completare un task.
-- **L'escalation a umani è integrata.** L'agente sa quando fermarsi e chiedere conferma.
+### Architettura: come è fatto un agente in AgentX
 
-Queste differenze sono ciò che rende AgentX utile per task reali, non solo per FAQ.
+L'architettura di AgentX ha quattro elementi fondamentali.
 
-:::
+**Agenti.** Un agente è un'unità autonoma con un ruolo definito, un prompt che ne stabilisce personalità e obiettivi, un set di tool che può chiamare, e una memoria opzionale. Esempi:
+- "Sales Qualifier" — agisce come un sales rep, qualifica lead, pone domande, score
+- "Document Processor" — riceve documenti, li estrae, li classifica, li struttura
+- "Customer Support" — risponde a domande, consulta knowledge base, instrada quando serve
 
-### Le metriche chiave di un agente
+**Tools.** I tool sono le "azioni" che l'agente può compiere. Includono:
+- HTTP request (chiamare qualsiasi API)
+- Database query (PostgreSQL, MySQL, MongoDB)
+- CRM integration (HubSpot, Salesforce, Pipedrive)
+- Document processing (PDF, Word, Excel)
+- Email/Slack notification
+- Custom tool (definisci tu cosa l'agente può fare)
 
-Una volta in produzione, AgentX traccia:
+**Memoria.** L'agente può ricordare conversazioni passate (short-term memory, entro una sessione) e informazioni strutturate (long-term memory, su un database). La memoria long-term è utile per agenti che gestiscono lead nel tempo.
 
-- **Tasso di completamento** (task risolti senza escalation).
-- **Tempo medio di risoluzione**.
-- **Tasso di escalation a umani**.
-- **Qualità delle risposte** (via feedback utente o via eval automatiche).
-- **Costo per conversazione** (basato su token LLM consumati).
-- **KPI specifici del task** (es. per lead qualification: "lead qualificati", "conversion rate").
+**Flussi multi-agent.** Più agenti che collaborano. Un "supervisor" instrada richieste a sotto-agenti specializzati. È il pattern adatto per workflow complessi dove un singolo agente non basta.
 
-L'utente può esportare i dati per analisi o creare dashboard custom.
+Il pattern operativo è: l'utente disegna l'agente in canvas, configura tool e memoria, testa con eval, deploya. L'agente gira come servizio, riceve input via API o widget, e restituisce output strutturato.
 
-### Casi d'uso concreti
+### Il sistema di crediti, spiegato onestamente
 
-:::pro Quando AgentX fa la differenza
+AgentX usa un sistema di crediti per l'AI usage. Ogni interazione consuma crediti, e il numero dipende dal modello usato.
 
-- **Qualificazione lead inbound.** L'agente legge le richieste, le analizza contro il CRM, e assegna uno score di qualificazione. I lead qualificati vanno al sales rep, gli altri vanno a nurture.
-- **Customer support di primo livello.** L'agente risponde alle FAQ, risolve i casi semplici, e scala a umani per i casi complessi.
-- **Onboarding clienti.** L'agente invia email di benvenuto, raccoglie informazioni, schedula kickoff call.
-- **Ricerca e sintesi.** L'agente fa ricerche su temi specifici e produce report.
-- **Drafting documenti.** L'agente prepara bozze di email, proposte, report, a partire da template e dati.
-- **Operazioni interne.** Smistamento email, estrazione dati da PDF, aggiornamento CRM, generazione report.
+**Modelli e costi (verificati luglio 2026):**
+- GPT-4o: 10 crediti per interazione
+- Claude Sonnet: 12 crediti per interazione
+- Gemini Pro: 8 crediti per interazione
+- Claude Haiku: 3 crediti per interazione
 
-:::
+**Tier (verificati luglio 2026):**
 
-:::warning Quando AgentX non è la scelta giusta
+- **Free, $0/mese.** Per chi vuole esplorare. Include valutazione base, support community.
+- **Starter, non pubblicato direttamente sul pricing page ufficiale, parte da $99/mese.** Include deploy in produzione, flussi multi-agent, API access.
+- **Professional, $199/mese annuale ($1.490/anno).** Include fino a 25 agenti, 10.000 crediti/mese, white-label deployment, client workspaces, 2 seat inclusi. Adatto a team che costruiscono per clienti.
+- **Business, $299/mese annuale ($2.990/anno).** Unlimited workspaces, unlimited agenti, 20.000 crediti/mese, priority support, priority SLA. Adatto a agency.
+- **Enterprise, custom.** Unlimited tutto, custom credit volume, on-premise option, dedicated infrastructure.
 
-- **Vuoi un chatbot FAQ semplice.** Per quello, Tidio, Crisp, o Intercom bastano.
-- **Hai bisogno di un LLM custom con training su dati proprietari.** Servono approcci custom (fine-tuning, RAG avanzato).
-- **Hai requisiti di compliance stringenti** (HIPAA, GDPR ristretto, ecc.). Verifica le policy di AgentX prima di usarlo per dati sensibili.
-- **Il task è troppo semplice.** Se è una singola domanda-risposta, l'agent framework è overkill.
+**Overages:** $10 per 1.000 crediti extra su Professional e Business. Per agenti in produzione con volumi alti, il costo dei crediti può superare il tier.
 
-:::
+**Costo totale realistico:** un agente in produzione che gestisce 1.000 lead/mese con GPT-4o consuma 10.000 crediti/mese. Su Professional, il tier include quei crediti, ma se l'agente fa tool calls (ognuna potenzialmente un'interazione extra), il consumo sale.
 
-### AgentX vs i concorrenti diretti
+**Regola pratica:** budget realistico per un deployment in produzione è 2-3x il tier base, per coprire overage e modelli più potenti.
 
-**AgentX vs LangChain / Flowise.** LangChain e Flowise sono framework "general purpose" per costruire applicazioni AI. Richiedono competenze tecniche (Python/JS per LangChain, base tecnica per Flowise). AgentX è più "business user friendly", con UI che astrae la complessità dell'orchestrazione. Per developer che vogliono massimo controllo, LangChain. Per business user che vogliono velocità, AgentX.
+### Le feature chiave in profondità
 
-**AgentX vs Voiceflow.** Voiceflow è focalizzato su chatbot conversazionali (con un focus su voice / IVR). AgentX è più orientato ad agenti che eseguono task. Per chatbot conversazionali, Voiceflow. Per agenti task-oriented, AgentX.
+**Canvas visuale.** L'interfaccia per disegnare agenti. Nodi per LLM, tool, memoria, condizioni. Connessioni type-checked. È la feature centrale che differenzia AgentX da soluzioni solo-code.
 
-**AgentX vs Botpress.** Botpress è un competitor diretto, con canvas simile. La differenza è di posizionamento: Botpress è più "chatbot-first", AgentX è più "agent-first". Per chatbot complessi, Botpress. Per agenti task-oriented, AgentX.
+**Model-agnostic.** Supporta OpenAI, Anthropic, Google, e modelli custom via OpenAI-compatible API. Non sei lockato a un vendor.
 
-**AgentX vs Lindy.ai.** Lindy è un competitor recente, con un approccio simile (agenti no-code per task reali). La differenza è di prezzo, di template, e di integrazioni. Confronta per il tuo caso d'uso specifico.
+**Memory strutturata e conversazionale.** Short-term per la sessione corrente, long-term per la conoscenza persistente. La long-term memory è il vantaggio competitivo per agenti che gestiscono relazioni nel tempo (lead, customer success, support tickets).
 
-**AgentX vs Relevance AI.** Relevance AI è un altro competitor, con un focus su "AI workforce" (agenti che lavorano su task di team). Posizionamento simile, target simile. La scelta dipende spesso da test specifici sul tuo caso d'uso.
+**API e widget.** Ogni agente è esposto via API REST. Widget embeddable per siti web. SDK per integrazioni custom.
 
-### Pricing di AgentX
+**Multi-agent workflows.** Più agenti che collaborano, con un agente principale che orchestra. Pattern utile per workflow complessi.
 
-AgentX ha un modello freemium con limiti sulle esecuzioni, e tier a pagamento basati su volumi e funzionalità:
+**Evaluation framework.** Su Business e superiori, valutazione strutturata: agent risk mapping, custom datasets, multi-run testing, performance benchmarks. È la feature che distingue deployment POC da produzione.
 
-- **Free tier**: limitato a poche centinaia di esecuzioni al mese, utile per test.
-- **Pro**: più esecuzioni, più tool, supporto base.
-- **Business**: esecuzioni illimitate (o volumi alti), collaboration, supporto prioritario, SLA.
+**White-label deployment.** Su Professional. Puoi deployare l'agente con il tuo brand, non "Powered by AgentX".
 
-I prezzi pubblicati variano. Indicativamente, il tier Pro parte da 30-50 €/mese, e il tier Business da 200-500 €/mese per uso moderato. Per volumi enterprise, custom pricing.
+**Client workspaces.** Su Professional. Multi-tenant: ogni cliente vede solo i suoi agenti e dati.
 
-### Flusso pratico: un caso reale
+### Quando AgentX ha senso, e quando no
 
-Sofia è head of marketing in una scaleup B2B. Vuole automatizzare la qualificazione dei lead inbound che arrivano via form sul sito e via email.
+**Ha senso:** team non-engineering che vogliono automatizzare processi ripetitivi con AI, agenzie che costruiscono agenti per clienti, team che hanno già provato soluzioni custom e vogliono accelerare.
 
-**Settimana 1:** setup. Sofia definisce l'agente "Lead Qualifier" con scope, tool (CRM HubSpot, Google Search, email), e knowledge base (casi studio, descrizione prodotti, ICP).
+**Non ha senso:** se sei un dev Python e vuoi massimo controllo (LangGraph), se ti serve solo un FAQ bot (Typebot, Botpress), se hai requisiti di voice o vision specializzati, se il tuo budget è <$200/mese.
 
-**Settimana 2:** addestramento. Sofia testa l'agente su 50 lead storici, ne verifica le risposte, e itera sul prompt.
+**Caso borderline:** se il tuo team ha competenza tecnica ma vuole accelerare il time-to-market, AgentX è un buon compromesso. Paghi un premium rispetto al self-hosting open source, ma risparmi settimane di sviluppo.
 
-**Settimana 3:** deploy. L'agente è live: legge le nuove richieste, fa ricerche sul lead, scrive uno score, aggiorna HubSpot, e risponde al lead con un'email personalizzata. Per lead qualificati (score > 70), notifica il sales rep.
+### AgentX vs LangGraph vs CrewAI vs Botpress vs Vapi
 
-**Mese 2:** risultati. Sofia e il sales lead misurano: lead qualificati al mese passati da 30 a 80, tempo di risposta ai lead passato da 24 ore a 2 ore, e il team sales può focalizzarsi sui lead caldi.
+**AgentX vs LangGraph.** LangGraph è un framework Python per agenti. Massimo controllo, massima flessibilità, ma richiede Python expertise e tempo di sviluppo. AgentX è no-code con canvas. Per team con Python, LangGraph è superiore. Per team senza Python, AgentX è l'unica opzione realistica.
 
-ROI: il costo di AgentX (50-100 €/mese) è enormemente inferiore al costo di un SDR part-time.
+**AgentX vs CrewAI.** CrewAI è un framework Python specializzato in multi-agent. Più focalizzato di LangGraph su flussi con ruoli. Buono per il pattern "team di agenti con personalità diverse". AgentX offre lo stesso pattern con canvas visuale.
+
+**AgentX vs Botpress.** Botpress è un chatbot builder con focus su customer support. Meno flessibile per logiche complesse, più semplice per FAQ bot. Se il tuo caso d'uso è solo customer support FAQ, Botpress è più economico. Se devi fare workflow complessi, AgentX è superiore.
+
+**AgentX vs n8n AI.** n8n è un automation tool general-purpose con nodi AI. Più ampio (puoi fare qualsiasi automation), meno specializzato per agenti. Per team che fanno automazioni miste (AI + API + DB), n8n è più versatile. Per agenti puri, AgentX è più focalizzato.
+
+**AgentX vs Flowise.** Flowise è open source, self-hostable, simile per visual agent building. Per team con competenza DevOps, Flowise è significativamente più economico. Per team che vogliono managed hosting, AgentX è più accessibile.
+
+**AgentX vs Vapi / Retell / Bland.** Questi sono voice agent platforms. AgentX non fa voice. Sono mercati diversi.
+
+### Casi d'uso reali
+
+**Lead qualification per SaaS B2B.** Agente che riceve form submissions, fa enrichment via Clearbit o Apollo, qualifica con framework BANT o MEDDIC, score, e instrada a sales rep con il contesto completo. Risparmio: 5-10 ore/settimana per sales rep.
+
+**Customer support tier 1.** Agente che gestisce FAQ, reset password, status ordini, e instrada questioni complesse a umani. Riduzione del 40-60% del volume al support team umano.
+
+**Document processing per finance.** Agente che riceve fatture, le legge, estrae dati strutturati, li mette in un sistema ERP. Sostituisce data entry manuale.
+
+**Internal HR assistant.** Agente che risponde a domande su policy aziendali, leave, benefits, basandosi su documenti HR interni.
+
+**Sales enablement.** Agente che conosce le schede prodotto, casi studio, objection handling. Il sales rep chiede contesto e l'agente fornisce.
+
+**Research automation.** Agente che fa market research, aggrega dati, genera report strutturati.
+
+### Setup pratico: da zero a un agente in produzione in una settimana
+
+**1. Crea l'account.** Su agentx.so, signup. 5 minuti.
+
+**2. Configura il primo agente.** "Agents" → "New". Definisci ruolo, prompt, tool iniziali. 30 minuti.
+
+**3. Testa con eval.** "Evaluations" → "Run". Usa un dataset di 10-20 esempi rappresentativi. Verifica qualità. 30 minuti.
+
+**4. Configura integrazioni.** Collega CRM, database, API esterne che l'agente userà. 1-2 ore.
+
+**5. Deploy.** "Deploy to Production". L'agente è ora accessibile via API o widget. 5 minuti.
+
+**6. Monitoring.** Configura logging, alerting su error rate, dashboard per quality metrics. 1 ora.
+
+**7. Iterazione basata su dati reali.** Dopo 1-2 settimane di produzione, analizza le conversazioni, identifica failure modes, raffina prompt e tool. Continuo.
+
+In una settimana hai un agente POC-ready. In un mese, un agente production-grade. In tre mesi, un agente che evolve con dati reali.
+
+### Errori comuni
+
+**Sottovalutare la qualità del prompt.** Il prompt determina il 70% della qualità. Iterazioni multiple, A/B test, review con eval sono necessari.
+
+**Tool troppi.** Dare all'agente 20 tool aumenta le possibilità di scelte sbagliate. Meglio 5-8 tool focalizzati.
+
+**Nessuna valutazione strutturata.** "Funziona" non è una metrica. Senza eval dataset e metric tracking, stai lavorando al buio.
+
+**Deploy senza monitoring.** In produzione senza logging, il primo bug ti arriva dall'utente. Sempre monitoring e alerting.
+
+**Sottovalutare il costo modello.** Un agente con tool calls e memoria può consumare più crediti del previsto. Modella il costo prima del deploy, non dopo.
 
 ### Le domande che ci fanno più spesso
 
-**AgentX è difficile da configurare?**
-La UI è no-code, ma il setup non è banale: serve definire bene scope, tool, e prompt. Per un task semplice, 1-2 giorni. Per un task complesso, 1-2 settimane.
+**AgentX è meglio di LangGraph?**
+Per chi non è Python developer, sì. Per Python developer, LangGraph è superiore per flessibilità.
 
-**Quanto costa?**
-Il pricing è a tier, a partire da 30-50 €/mese per il Pro, fino a 200-500 €/mese per il Business. Per volumi enterprise, custom pricing.
+**Quanto costa in produzione?**
+Tier Professional a $199/mese + ~$100-200 di overage crediti per agenti in produzione reali. Total: $300-400/mese per un deployment medio.
 
-**AgentX può gestire dati sensibili?**
-Verifica le policy di sicurezza e compliance. Per dati sanitari (HIPAA) o finanziari (PCI), potresti aver bisogno di un piano enterprise o di un tool self-hosted.
+**Posso usarlo per voice agents?**
+No, AgentX è text-only. Per voice, Vapi, Retell, Bland.
 
-**Gli agenti possono fare danni?**
-Sì. Un agente con accesso a un CRM può modificare record, inviare email, cancellare contatti. Servono guardrail: conferma umana per azioni sensibili, audit log, e limiti di azione per agente.
+**Posso deployare on-premise?**
+Solo su Enterprise. Self-hosted open source alternative: Flowise, LangFlow.
 
-**Posso integrare AgentX con il mio stack?**
-Sì, con API e webhook. Per stack complessi, la fase di integrazione è la parte più time-consuming.
+**Supporta MCP?**
+Sì, AgentX supporta Model Context Protocol per collegare tool esterni.
 
-**AgentX è un competitor di ChatGPT Enterprise?**
-No, sono complementari. ChatGPT Enterprise è un'interfaccia AI per uso interno. AgentX è una piattaforma per costruire agenti task-oriented. Si possono usare insieme: ChatGPT per assistenza, AgentX per automazione.
+**Funziona per chatbot customer support semplici?**
+Sì, ma è sovradimensionato. Per solo FAQ, Botpress o Typebot sono più economici.
 
-### Cosa ci aspettiamo da AgentX nei prossimi mesi
+### Alternative da considerare
 
-Le aree da osservare:
-
-- **Migliore debugging degli agenti.** Log più ricchi, replay delle conversazioni, identificazione di failure mode.
-- **Multi-agent orchestration.** Agenti che collaborano tra loro su task complessi.
-- **Migliore supporto per tool complessi.** Integrazioni più profonde con CRM, ERP, e tool di produttività.
-- **Enterprise features.** SSO, audit log, role-based access, on-prem option.
+- **LangGraph / LangChain.** Per Python developer che vogliono massimo controllo.
+- **CrewAI.** Per multi-agent con personalità, Python-first.
+- **Flowise.** Open source, self-hosted, gratuito. Per team con DevOps.
+- **Botpress.** Più semplice, più economico per FAQ bot.
+- **n8n AI.** General automation, versatile ma meno specializzato.
+- **Voiceflow.** Per team con focus su conversational UX.
+- **Build custom con OpenAI Assistants API.** Massimo controllo, massimo sforzo.
 
 ### In sintesi
 
-AgentX è una piattaforma solida per costruire agenti AI no-code, utile per team che vogliono automatizzare task reali senza overhead engineering. Non è per chatbot semplici, e non sostituisce un approccio custom per use case specialistici.
+AgentX è una piattaforma solida per team non-engineering che vogliono costruire agenti AI in produzione. Il pricing è medio-alto ma giustificato per il valore. Il canvas visuale è uno dei migliori sul mercato. Le limitazioni principali sono: lock-in al sistema di crediti, voice non supportato, e complessità che richiede pratica per essere sfruttata appieno.
 
-Per team che vogliono velocità e ROI rapido su task ripetitivi, è uno degli investimenti con ritorno più diretto. Per use case mission-critical, serve un approccio custom.
+Per il target giusto — team che vogliono velocità + qualità senza scrivere codice — è una delle scelte migliori. Per il target sbagliato — Python developer che vuole controllo, o team che vuole solo FAQ bot — ci sono alternative migliori.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di AgentX** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altre piattaforme agenti** nella raccolta dedicata.
-- **Salva AgentX nei preferiti** se vuoi tornarci dopo.
+- **Apri la scheda tool di AgentX** per confrontare con LangChain, Flowise, e altri agent builder.
+- **Esplora la raccolta su agenti AI** per casi d'uso affini.
+- **Salva AgentX nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.

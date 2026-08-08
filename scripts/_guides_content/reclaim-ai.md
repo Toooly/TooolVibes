@@ -1,165 +1,198 @@
 ### Cosa fa Reclaim AI, in una frase
 
-Reclaim AI è un planner intelligente che si collega a Google Calendar o Outlook e organizza automaticamente la tua settimana: difende il tempo di concentrazione, pianifica task e abitudini, e bilancia meeting senza che tu debba rinunciare a nessuno dei due.
+Reclaim è un layer di intelligenza sopra Google Calendar e Outlook che difende automaticamente il tuo focus time, distribuisce le tue abitudini ricorrenti nei buchi del calendario, e protegge le tue task dai meeting invadenti — senza che tu debba micro-gestire ogni slot.
 
-### A chi serve davvero
+Non è un calendario. Non è un task manager. È un arbitro che decide, in tempo reale, chi può occupare il tuo tempo e quando.
 
-Reclaim non è per chi ha un calendario con 5 eventi a settimana. È per chi ha un calendario congestionato e vuole recuperare il controllo. I profili tipici:
+### A chi serve davvero, e a chi no
 
-- **Manager e dirigenti** con 25-35 ore di meeting a settimana.
-- **Consulenti e freelance** che fanno project work con deadline e clienti multipli.
-- **Team operativi** (sales, customer success, recruiting) con calendario frammentato da call.
-- **Chi ha ADHD o fatica a proteggere il tempo di focus** e vuole un sistema che lo faccia al posto suo.
+Reclaim ha un profilo di fit molto specifico. Funziona bene per:
 
-Non è il tool giusto per chi ha bisogno di una semplice to-do list, né per chi preferisce il controllo manuale totale del calendario (in quel caso, un time blocking tradizionale può bastare).
+**Knowledge worker con calendario frammentato.** Se la tua settimana ha 20-30 ore di meeting, 5-10 task importanti, e 3-4 abitudini che vuoi mantenere (workout, lettura, deep work), Reclaim è la risposta. Senza, devi micro-gestire manualmente, e prima o dopo qualcosa salta.
 
-### Come funziona, passo per passo
+**Manager e director che hanno troppe cose in parallelo.** Quando sei in 5 progetti diversi, con 3 one-to-one settimanali, e ogni progetto ha le sue task, il calendario diventa un campo di battaglia. Reclaim lo gestisce come un arbitro.
 
-Il flusso di Reclaim ha quattro elementi chiave.
+**Team che lavorano async-first.** Se la tua organizzazione ha culture async, con block di deep work difesi, e meeting solo quando necessari, Reclaim codifica quella cultura nel calendario.
 
-**1. Connessione al calendario.** Reclaim si integra nativamente con Google Calendar e Microsoft Outlook. Una volta autorizzato, legge tutti gli eventi esistenti e i calendari secondari.
+**Freelance con clienti multipli e time tracking.** Le abitudini di Reclaim possono essere configurate con task specifiche (time tracking, fatturazione, follow-up), e si integrano con Todoist, Asana, Linear, ClickUp, Jira.
 
-**2. Definizione di task, abitudini e buffer.** L'utente crea:
-- **Task** con priorità, deadline stimata, e durata stimata.
-- **Abitudini** ricorrenti (es. "30 minuti di sport 3 volte a settimana", "meditazione ogni mattina").
-- **Buffer** tra meeting (es. 10 minuti prima di ogni call) per evitare il back-to-back.
+**Studenti universitari e dottorandi.** Block di studio difeso automaticamente, in modo che i seminari non erodano il tempo di tesi.
 
-**3. Auto-scheduling.** Reclaim piazza automaticamente task, abitudini e buffer negli slot liberi del calendario, rispettando:
-- Le priorità dei task (alta > media > bassa).
-- Le deadline.
-- Gli orari di lavoro definiti.
-- Le "minime daily hours" per il deep work (configurabili).
+Non è la scelta giusta per:
 
-**4. Ribilanciamento continuo.** Quando un meeting viene aggiunto o spostato, Reclaim riadatta automaticamente il calendario. Quando un task viene completato, Reclaim libera quello slot.
+**Chi ha un calendario con pochi eventi.** Se hai 5-6 meeting a settimana e poco altro, Reclaim è overkill. Il value è nel gestire la complessità; poca complessità = poco value.
 
-:::tip Cosa distingue Reclaim da un calendario tradizionale
+**Chi vuole controllo totale e micro-gestione.** Reclaim decide per te dove mettere le cose. Se preferisci controllare tu ogni slot, l'automazione ti darà fastidio.
 
-- **Task e abitudini vengono trattati come eventi** del calendario, ma con intelligenza: cambiano posto se serve.
-- **Le priorità non sono statiche**: un task alta priorità con deadline imminente viene spostato al primo slot disponibile, scalzando task a bassa priorità.
-- **Il calendario si difende da solo**: se un collega prova a prenotare un meeting sul tuo slot di focus, Reclaim può negoziare o proporre alternative.
-- **Le abitudini sono "intelligenti"**: se salti la sessione di sport di martedì, Reclaim riprova giovedì.
+**Team che usano calendari condivisi come primary tool.** Reclaim lavora su calendari individuali, non su calendari di team. Per team scheduling, ci sono tool specifici (Clockwise, Motion for Teams, calendar polls).
 
-:::
+**Chi ha bisogno di pianificazione avanzata di progetti.** Reclaim gestisce task individuali, non progetti complessi con dipendenze. Per quello, Linear, Asana, e tool di project management sono più adatti.
 
-### I vantaggi concreti di Reclaim
+### Architettura: come funziona davvero
 
-**Recupero di tempo di focus.** Il beneficio principale è il tempo di concentrazione protetto. Senza Reclaim, una settimana media di un manager ha 5-8 ore di focus "veri". Con Reclaim, si sale a 12-15 ore, a parità di meeting.
+Capire come Reclaim "pensa" è fondamentale per usarlo bene. L'architettura si basa su quattro astrazioni: Habits, Tasks, Smart Meetings, e Calendar Sync.
 
-**Riduzione del carico cognitivo.** Non devi più decidere quando fare cosa. Reclaim decide per te, rispettando i vincoli che hai impostato.
+**Habits** sono routine ricorrenti con priorità, durata, e range orario. Esempi: "Workout 3 volte a settimana, 1 ora, tra le 17 e le 20, priorità alta", oppure "Deep work 4 ore, 3 volte a settimana, tra le 9 e le 13, priorità massima". Reclaim cerca gli slot disponibili nel calendario e li blocca, spostandoli dinamicamente se arriva un meeting prioritario. La differenza rispetto a un evento ricorrente classico è che la Habit è difensiva: protegge il tempo, non lo riempie.
 
-**Abitudini che si fanno.** L'auto-scheduling delle abitudini è uno dei punti più apprezzati: gli utenti riportano un aumento significativo dell'aderenza a routine personali (sport, lettura, meditazione).
+**Tasks** sono cose da fare con durata stimata, deadline, e priorità. Le integrazioni con Todoist, Asana, Linear, ClickUp, e Jira sincronizzano le task esterne. Reclaim le trasforma in blocchi di calendario, scegliendo quando farle in base a deadline, durata stimata, e slot disponibili. La differenza rispetto a un task manager classico è che Reclaim tratta il tempo come risorsa scarsa da allocare, non come una lista da spuntare.
 
-**Riunioni meno "rubano tempo".** Il buffer automatico riduce il fenomeno del "salto rapido" tra meeting, che è uno dei maggiori consumatori di energia cognitiva.
+**Smart Meetings** sono meeting che si organizzano da soli, rispettando vincoli di tutti i partecipanti (calendari, abitudini, task). Reclaim trova lo slot ottimale e manda l'invito. Per meeting ricorrenti con molte persone, è una delle feature più apprezzate: evita la negoziazione via email.
 
-### I limiti da considerare
+**Calendar Sync** tiene sincronizzati più calendari Google o Outlook. Se hai un calendario personale e uno di lavoro, e un terzo per side project, Reclaim li tiene in sync senza i loop infiniti dei cambi di colore o delle risposte "declinato" su calendari condivisi.
 
-**Fase di apprendimento iniziale.** Reclaim richiede un setup iniziale non banale: definire orari, priorità, task types, abitudini. La prima settimana è di rodaggio.
+Il modello di scheduling è di tipo "constraint satisfaction": data una serie di Habits e Tasks con vincoli, Reclaim trova una disposizione che massimizza la priorità alta e minimizza la frammentazione. Quando un meeting arriva, Reclaim ri-negozia gli slot per assorbire l'evento nuovo. È un algoritmo continuo, non un one-shot.
 
-**Overhead se il calendario cambia spesso.** Se il tuo calendario è altamente variabile (es. consulente con clienti che cambiano settimana per settimana), Reclaim deve ribilanciare spesso, e l'utente deve accettare le decisioni dell'AI.
+### Pricing, onestamente
 
-**Costo per team.** Il pricing per team cresce rapidamente sopra i 5 utenti, e diventa significativo sopra i 20. Per team più piccoli (1-5 persone), è gestibile.
+Reclaim ha quattro tier (verificati sul sito ufficiale a luglio 2026):
 
-**Non sostituisce la disciplina.** Reclaim aiuta a strutturare, ma se l'utente continua a sovraccaricare il calendario, l'AI può fare poco.
+**Lite, gratis per sempre.** 1 utente, 1 sync calendar, 1 scheduling link, 5 AI Agents, 1 settimana di scheduling range, integrazioni limitate (Google Tasks, Slack, Zoom, Google Meet). È un piano reale, non un trial. Copre l'uso individuale leggero.
 
-### Casi d'uso concreti
+**Starter, $12/mese per seat (annuale) o $10/seat con commit annuale.** Aggiunge 8 settimane di scheduling range, 3 calendar sync, 3 scheduling link, integrazioni complete con Todoist, Asana, ClickUp, Linear, Jira, Slack status sync, Focus Time, Habits illimitate, Smart Meetings 3 come organizer. Adatto a singoli o team piccoli.
 
-:::pro Quando Reclaim fa la differenza
+**Business, $18/mese per seat (annuale).** 12 settimane di scheduling range, calendar sync illimitati, scheduling link illimitati, Smart Meetings illimitati, webhooks, Team OOO calendar, delegated access, security review. Adatto a team 10-100 persone.
 
-- **Manager con 25+ ore di meeting a settimana** che vuole recuperare focus.
-- **Consulenti** che bilanciano 3-5 clienti e hanno bisogno di proteggere il deep work.
-- **Team sales / customer success** con calendario frammentato da call esterne.
-- **Freelance con abitudini irregolari** (sport, scrittura) che faticano a mantenerle.
-- **Chi ha ADHD** e ha bisogno di un sistema esterno che gestisca la pianificazione.
-- **Team distribuiti** che vogliono coordinare "no meeting days" e focus time.
+**Enterprise, $22/mese per seat (annuale), minimo 100 seat.** SSO, SCIM provisioning, domain capture, dedicated support, audit log, SLA. Adatto a organizzazioni 100+.
 
-:::
+Reclaim è stato acquisito da Dropbox nel 2024 per $40.2M, ma continua a operare come prodotto indipendente. La cosa importante da sapere: i prezzi sono competitivi con Motion ($29/mese entry-level), e significativamente più economici di strumenti enterprise comparabili (Clockwise, Asana con calendar integration).
 
-:::warning Quando Reclaim non è la scelta giusta
+Una nota: i prezzi di Reclaim sono cambiati più volte negli ultimi due anni. Quando firmi un budget annuale, considera un 10-20% di tolleranza per eventuali price increase.
 
-- **Calendario quasi vuoto.** Il costo non si giustifica se hai 5 eventi a settimana.
-- **Preferisci il controllo manuale totale.** Se ogni mossa del calendario ti infastidisce, l'auto-scheduling sarà una fonte di attrito, non di sollievo.
-- **Lavoro molto reattivo senza blocchi definiti.** Se la tua giornata è 100% reattiva (es. on-call tecnico), Reclaim non ha slot da ottimizzare.
-- **Non sei disposto a investire 30-60 minuti in setup iniziale.** Senza setup, Reclaim non funziona bene.
+### Le feature che fanno la differenza
 
-:::
+**Focus Time difensivo.** È la feature più usata. Dichiari che vuoi N ore di focus time a settimana, e Reclaim le difende. Quando un meeting prova a eroderle, Reclaim le riposiziona o ti avvisa. È il contrario di un evento "deep work" creato manualmente, che verrebbe rimosso o spostato alla prima occasione.
 
-### Reclaim vs i concorrenti diretti
+**Habits ricorrenti.** Workout, lettura, journaling, language practice. Configuri la frequenza, la durata, il range orario, e Reclaim le mette in calendario. Quando salti una sessione, Reclaim sposta la prossima per tenere la frequenza. È come avere un personal scheduler per le abitudini.
 
-**Reclaim vs Motion.** Motion è il concorrente più diretto. La differenza principale: Motion è più "project management" (pianifica task di progetti), Reclaim è più "calendar protection" (difende slot di focus). Motion è più adatto a chi gestisce progetti complessi, Reclaim a chi ha un calendario frammentato da meeting.
+**Task-to-calendar con integrazioni.** Colleghi Todoist, Asana, Linear, ClickUp, o Jira, e le task con deadline diventano blocchi di calendario. Reclaim stima la durata in base a una euristica (1 ora di default, configurabile per project), e la mette dove c'è spazio. Quando completi la task nel task manager, Reclaim rimuove il blocco.
 
-**Reclaim vs Notion Calendar (ex Cron).** Notion Calendar è un calendario con integrazioni Notion, gratuito. Reclaim ha l'AI di scheduling, Notion Calendar no. Per chi vuole "solo un bel calendario", Notion Calendar basta. Per chi vuole "il calendario che pensa al posto mio", Reclaim.
+**Smart Meetings 1:1.** Per i one-to-one ricorrenti, Reclaim trova lo slot che rispetta le abitudini di entrambi. Niente più "quando ti va bene?" via email.
 
-**Reclaim vs Clockwise.** Clockwise è un altro competitor focalizzato sulla protezione del focus time. La differenza è sottile: Clockwise ottimizza su base settimanale (sposta meeting in blocchi), Reclaim lavora su task + abitudini + meeting in tempo reale. Per team che vogliono "no meeting friday" automatico, Clockwise è forte. Per gestione individuale continua, Reclaim è più granulare.
+**Scheduling links personalizzati.** Crei un link pubblico del tipo "30 minuti con me" o "Coffee chat", e le persone prenotano rispettando le tue abitudini e il tuo focus time. Simile a Calendly, ma con l'integrazione nativa nelle tue difese.
 
-**Reclaim vs Time Blocking manuale.** Il time blocking fatto a mano (es. con Google Calendar) funziona se hai disciplina e tempo per farlo ogni settimana. Reclaim fa la stessa cosa automaticamente, con intelligenza su priorità e deadline. Il prezzo è giustificato dal tempo risparmiato.
+**Slack status sync.** Reclaim legge il tuo calendario e aggiorna il tuo status Slack ("In a meeting", "Focus time", "Heads down") automaticamente. Riduce le interruzioni.
 
-**Reclaim vs Todoist / Things 3.** Sono to-do list potenti, ma non si integrano con il calendario come Reclaim. Reclaim tratta i task come eventi del calendario. Todoist e Things no.
+**Buffer time e travel time.** Tra un meeting e l'altro, Reclaim inserisce un buffer configurabile (default 10 minuti) per darti tempo di respirare. Per chi ha meeting back-to-back, è una salvezza.
 
-### Pricing di Reclaim
+**Productivity stats.** Dashboard settimanale con quanto focus time hai difeso, quante Habits completate, quanti meeting accettati/rifiutati. Utile per capire dove va il tuo tempo.
 
-Reclaim ha un piano free con funzionalità limitate (1 tipo di task, 3 abitudini), e tier a pagamento:
+### Le feature che mancano, e come workaround-are
 
-- **Starter** (utente singolo): funzionalità complete per uso individuale.
-- **Business** (team): collaboration features, analytics di team, integrazioni HR.
-- **Enterprise**: custom pricing per organizzazioni grandi.
+**Nessuna vera project management.** Reclaim è task-aware ma non project-aware. Non vede le dipendenze tra task, le milestone, i deliverable. Se il tuo lavoro è strutturato a progetti complessi, gestiscili in Linear o Asana, e usa Reclaim solo per il time-blocking.
 
-Il tier Starter per utente singolo è nella fascia 8-12 €/mese (fatturato annuale). I piani team partono da 10-15 €/utente/mese.
+**Scheduling link collettivi con logica team.** Reclaim ha round-robin scheduling link, ma è basilare. Per team scheduling complesso (distribuzione automatica in base a workload, preferenze, SLA), tool come Motion for Teams o calendar polls sono superiori.
 
-### Flusso pratico: un caso reale
+**Integrazione diretta con i team calendar.** Reclaim lavora sui calendari individuali. Per team calendar condivisi, devi configurare i sync, e la complessità cresce con le persone.
 
-Luca è un engineering manager in una scaleup, gestisce un team di 8 persone. Calendario: 28 ore di meeting a settimana, 12 task di review o 1:1 da incastrare, abitudine di correre 3 volte a settimana.
+**Personalizzazione profonda del conflict resolution.** Quando due Habit sono in conflitto, Reclaim sceglie in base alla priorità. Ma non puoi configurare regole complesse come "se l'utente ha saltato 2 workout questa settimana, sposta il meeting invece dell'habit". La logica è semplice, non programmabile.
 
-**Setup iniziale (45 minuti):** collega Google Calendar. Definisce "no meeting mercoledì mattina", orari di lavoro 9-18, buffer 10 minuti tra meeting, abitudine "corsa 30 min 3 volte a settimana", task types con priorità (P1 urgente, P2 alta, P3 standard).
+**Mobile app limitata.** L'app mobile esiste, ma è più un viewer che un editor completo. La gestione delle Habits, Task configuration, e calendar sync è più comoda su desktop.
 
-**Settimana 1-2:** rodaggio. Reclaim piazza i task P1 nei primi slot liberi, le abitudini negli slot "minimi", e i meeting negli slot periferici. Luca nota che il mercoledì mattina è libero per focus.
+### Reclaim vs Motion vs Clockwise vs Akiflow
 
-**Mese 2:** Luca ha preso l'abitudine. Sa che può accettare meeting nella "finestra buona" di martedì pomeriggio e venerdì, e che il mercoledì mattina è sacro. Il numero di ore di focus è salito da 6 a 14.
+**Reclaim vs Motion.** Motion è il concorrente più visibile: AI calendar, project management integrato, prezzi più alti ($29/mese entry-level, vs $12 di Reclaim). Motion è più completo nella project management (task con dipendenze, AI che ri-pianifica progetti), ma più caro. Reclaim è più focalizzato su habits e calendar defense, meno su project management. Per un founder con task semplici, Reclaim è più che sufficiente e costa meno. Per un team di product management con progetti complessi, Motion è superiore.
 
-**Mese 4:** review trimestrale. Il team ha adottato Reclaim. La "no meeting mercoledì" è diventata una convenzione. Le review di performance sono state fatte in slot dedicati, non rubati alla giornata.
+**Reclaim vs Clockwise.** Clockwise è focalizzato su team calendar optimization: trova slot per i meeting di team, riduce le interruzioni, crea "Focus Time" aziendale. È più adatto a team che vogliono ottimizzare i calendari condivisi, meno a individui che vogliono difendere il proprio tempo. Pricing simile a Reclaim, ma con meno integrazioni con task manager.
 
-Risultato per Luca: più tempo di focus, meno decisioni micro sul calendario, abitudini mantenute. ROI su 4 mesi: positivo.
+**Reclaim vs Akiflow.** Akiflow è un "inbox per il calendario" con integrazioni multiple e shortcuts da tastiera potenti. È più adatto a chi vuole un workflow keyboard-driven per gestire task e calendario. Reclaim è più automazione, Akiflow è più controllo manuale. Akiflow è meno caro (~$15/mese) ma richiede più configurazione.
 
-### Le domande che ci fanno più spesso
+**Reclaim vs calendari nativi (Google Calendar, Outlook).** I calendari nativi non hanno automazione di habits, non difendono il focus time, e non sincronizzano task con calendario automaticamente. Reclaim è un layer sopra, non un sostituto.
 
-**Reclaim funziona con Outlook?**
-Sì, Reclaim supporta Google Calendar e Microsoft Outlook 365. La qualità dell'integrazione è comparabile.
+### Casi d'uso reali
 
-**Reclaim è adatto a un team di 50 persone?**
-Sì, con il piano Business o Enterprise. Per team grandi, l'analisi di "dove va il tempo del team" diventa il valore aggiunto principale.
+**Founder con 3-4 progetti paralleli.** Reclaim è il sistema nervoso centrale: Habit "Review weekly metrics" ogni venerdì mattina, Task dai project management tool, Focus time difeso per le decisioni strategiche, Smart Meetings per gli investor update.
 
-**Quanto costa per un singolo utente?**
-Il piano Starter è circa 8-12 €/mese con fatturazione annuale. C'è un free tier con limitazioni.
+**Consulente con 8-10 clienti.** Habit settimanali per fatturazione e follow-up, Task per ogni deliverable con deadline, Focus time per la preparazione, Scheduling link per i clienti.
 
-**Posso esportare le mie pianificazioni?**
-Sì, Reclaim sincronizza tutto in Google Calendar o Outlook. Esportare il calendario significa esportare Reclaim.
+**Engineering manager.** Habit "1:1 con i diretti report" ogni settimana, Task per le review del codice, Focus time per la scrittura tecnica, Team calendar integration via Google Calendar.
 
-**Reclaim può negoziare meeting al posto mio?**
-Sì, con la funzionalità "Meeting Polls" e "Smart Meetings". Reclaim può proporre orari alternativi, raccogliere risposte, e prenotare lo slot migliore per tutti.
+**Dottorando.** Habit "Scrittura tesi" 4 ore al giorno, Habit "Lettura paper" 2 ore, Focus time difeso, Integrazione con Zotero o Notion per i paper.
 
-**Reclaim è adatto a chi ha ADHD?**
-Spesso sì. Il sistema esterno che decide "quando fare cosa" riduce il carico decisionale. Detto questo, non è una soluzione medica: se sospetti ADHD, parlane con un professionista.
+**Team di vendita.** Smart Meetings per le demo, Buffer time tra le demo per il follow-up, Status sync su Slack per ridurre le interruzioni, calendar sync tra personal calendar e team calendar.
 
-**Reclaim funziona con le task management esterne?**
-Sì, con integrazioni: Todoist, Asana, ClickUp, Jira, Linear, Notion. Le task esterne vengono importate in Reclaim per lo scheduling.
+### Quando Reclaim non è la scelta giusta
+
+**Team con calendari pesantemente condivisi.** Se il tuo calendario è 80% meeting con altre persone, Reclaim ha meno da difendere. Per team calendar optimization, Clockwise è più adatto.
+
+**Lavori strutturati a turni.** Reclaim è pensato per knowledge work, non per lavoro a turni o operation.
+
+**Contesti dove il calendario non è il primary tool.** Se sei un grafico o un designer che lavora principalmente su Figma, e i meeting sono rari, Reclaim è overkill.
+
+**Privacy estreme.** Reclaim accede al tuo calendario, e per definizione vede tutti i tuoi eventi. Se hai requisiti di privacy tali che nessun tool di terze parti può toccare il tuo calendario, Reclaim non è per te.
+
+### Setup pratico: da zero a un calendario difeso in 30 minuti
+
+**1. Crea l'account e collega il calendario.** Su reclaim.ai, signup con Google o Outlook. Autorizza l'accesso al calendario. Tempo: 3 minuti.
+
+**2. Configura le prime Habit.** Vai su "Habits", "New Habit". Parti da 2-3: workout, deep work, lettura. Configura frequenza, durata, range orario, priorità. Tempo: 10 minuti.
+
+**3. Collega un task manager.** Settings → Integrations. Collega Todoist, Asana, o Linear. Le task con deadline diventano blocchi di calendario. Tempo: 5 minuti.
+
+**4. Crea il primo Smart Meeting.** Vai su "Smart Meetings", "New". Tipo (1:1, group, 30min, 60min), chi invitare, vincoli (no meeting prima delle 10, etc.). Tempo: 5 minuti.
+
+**5. Configura Focus Time.** Settings → Time Blocking. Dichiara quante ore di focus time a settimana, in quali range orari, con quale priorità. Tempo: 3 minuti.
+
+**6. Testa e itera.** Lascia girare una settimana. Guarda come Reclaim dispone le cose. Aggiusta priorità e range. Tempo: settimana di osservazione.
+
+In 30 minuti hai un setup funzionante. In una settimana capisci se ti piace. In un mese lo hai ottimizzato per il tuo workflow.
+
+### Errori comuni
+
+**Configurare troppe Habit il primo giorno.** Parti da 2-3, non da 8. Aggiungi gradualmente, altrimenti il calendario diventa una gabbia di slot obbligati che ti stressa.
+
+**Sottovalutare la priorità delle Habit.** Reclaim sceglie in base alla priorità. Se non la configuri, le Habit di bassa priorità vengono sacrificate per i meeting. Decidi cosa è sacro e cosa è negoziabile.
+
+**Dimenticare di disattivare le Habit in vacanza.** Reclaim continua a cercare slot anche quando sei in ferie. Configura "Out of Office" o pausa le Habit per il periodo.
+
+**Non integrare i task manager.** Reclaim senza integrazioni è solo un calendar tool. Con Todoist/Linear integration, diventa un time-blocking engine.
+
+**Ignorare i productivity stats.** La dashboard è il feedback loop. Se non la guardi, non sai se Reclaim ti sta aiutando o ti sta incasinando.
 
 ### Cosa ci aspettiamo da Reclaim nei prossimi mesi
 
-Le aree da osservare:
+**Integrazione con Dropbox.** L'acquisizione del 2024 può portare integrazioni con Dropbox ecosystem (Dropbox Paper, Dropbox Dash, Dropbox Sign). Da monitorare se sei in quell'ecosistema.
 
-- **AI più granulare sulle priorità.** Se Reclaim impara dalle tue scelte passate e suggerisce priorità in modo più intelligente, il valore sale.
-- **Integrazione con project management più profonda.** Oggi Reclaim legge task da Asana, ClickUp, ecc. Se diventa bidirezionale (modifichi la task in Reclaim, si aggiorna in Asana), il workflow è più pulito.
-- **Analytics di produttività più ricche.** Sapere quanto tempo di focus hai effettivamente avuto, e in quali fasce, è un input prezioso.
-- **Migliore gestione dei team distribuiti.** Fusi orari, overlap, no-meeting days cross-team.
+**Mobile migliore.** L'app mobile è ancora limitata. Migliorarla è una richiesta frequente della community.
+
+**Project management più ricco.** Reclaim potrebbe aggiungere funzionalità per gestire task con dipendenze, o integrarsi più profondamente con Linear e Asana per portare la project intelligence dentro il calendar.
+
+**AI più conversazionale.** Possibilità di "Hey Reclaim, sposta la call con X a domani e proteggimi il martedì mattina per il deep work". Già presente in parte, da consolidare.
+
+### Le domande che ci fanno più spesso
+
+**Reclaim funziona con Microsoft Outlook?**
+Sì, dal marzo 2025. Supporta Google Calendar e Microsoft Outlook completamente.
+
+**Posso esportare il mio calendario e abbandonare Reclaim?**
+Sì, in qualsiasi momento. Le Habit e le Task sono oggetti Reclaim, ma il calendario sottostante resta tuo. Esporti, e perdi l'automazione ma mantieni gli eventi.
+
+**Reclaim rallenta il mio calendario?**
+No. Reclaim lavora in background, le modifiche sono rapide, e non c'è un impatto percepibile sulla velocità di Google Calendar o Outlook.
+
+**C'è un rischio di data breach?**
+Reclaim memorizza i dati di configurazione (Habit, Task config) sui propri server. Il contenuto del calendario resta sui server di Google/Outlook. Reclaim è SOC 2 compliant e usa encryption standard.
+
+**Funziona per team con molti membri?**
+Sì, ma il valore per team è diverso. Reclaim eccelle come tool individuale. Per team, è uno strumento che ogni membro usa individualmente, e il valore si moltiplica (se tutti hanno Focus Time difeso, gli slot di meeting si concentrano).
+
+**Meglio Reclaim o un calendar tradizionale + disciplina?**
+La disciplina è fragile. Reclaim la codifica nel sistema. Se sei il tipo che "dovrei fare X ma finisce che Y prende il sopravvento", Reclaim è la risposta. Se sei già un master del calendar management, Reclaim è ridondante.
+
+### Alternative da considerare
+
+- **Motion.** Più caro ($29/mese), più completo in project management, meno focalizzato su habits.
+- **Clockwise.** Più focalizzato su team calendar optimization, meno su individuale.
+- **Akiflow.** Keyboard-driven, più controllo manuale, meno automazione.
+- **Google Calendar + disciplina.** Gratis, ma richiede self-discipline.
+- **Outlook + Focus Time blocks.** Funzionalità nativa parziale, ma molto meno potente di Reclaim.
 
 ### In sintesi
 
-Reclaim AI è una risposta concreta al problema "ho un calendario pieno e non riesco a fare focus work". Non è un tool per il calendario vuoto, né un sostituto della disciplina personale. Per chi ha un calendario congestionato e vuole recuperare il controllo, è uno degli investimenti con ROI più rapido.
-
-La chiave è investire nel setup iniziale: senza task, abitudini e priorità definite, Reclaim non può fare miracoli.
+Reclaim AI è uno dei migliori investimenti di produttività per knowledge worker con calendario frammentato. Il prezzo ($12/mese) è giusto, il fit per il target è preciso, e l'impatto su focus time e abitudini è misurabile. Non è per tutti, e non è una bacchetta magica — richiede configurazione iniziale e iterazione. Ma per il profilo giusto, è probabilmente il tool di calendar AI con il miglior rapporto qualità/prezzo.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Reclaim AI** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool di produttività** nella raccolta dedicata.
-- **Salva Reclaim nei preferiti** se vuoi tornarci dopo.
+- **Apri la scheda tool di Reclaim AI** per confrontare con Motion, Clockwise, e altri calendar tool.
+- **Esplora la raccolta su produttività** per casi d'uso affini.
+- **Salva Reclaim AI nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.

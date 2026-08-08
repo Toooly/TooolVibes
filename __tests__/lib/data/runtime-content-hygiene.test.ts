@@ -58,7 +58,7 @@ describe("runtime content hygiene", () => {
     it.each(POST_SLUGS)("%s has non-empty content_markdown", (slug) => {
       const idx = articlesFile.indexOf(`slug: "${slug}"`);
       expect(idx, `slug ${slug} not found in public-articles.ts`).toBeGreaterThanOrEqual(0);
-      const block = articlesFile.slice(idx, idx + 20000);
+      const block = articlesFile.slice(idx, idx + 60000);
       const m = /content_markdown:\s*`([^`]+(?:\\.[^`]*)*)`/.exec(block);
       expect(m, `${slug} has no content_markdown`).toBeTruthy();
       const body = (m?.[1] ?? "").replace(/\\`/g, "`").replace(/\\\\/g, "\\");

@@ -1,157 +1,187 @@
 ### Cosa fa ReachifyMe, in una frase
 
-ReachifyMe è un content engine per LinkedIn: aiuta a creare post, testare hook, schedulare pubblicazioni, e analizzare le performance, in un unico workspace pensato per chi fa LinkedIn organico o a pagamento con costanza.
+ReachifyMe è un set di tool AI per costruire la tua presenza LinkedIn: generatore di post, scheduler, generatore di carousel, generator di idee, hashtag tool, formatter del testo, e un visitor assistant AI per il tuo profilo — pensato per creator, freelance, e founder che fanno di LinkedIn il canale di lead generation primario.
 
-### A chi serve davvero
+### A chi serve davvero, e a chi no
 
-ReachifyMe non è per chi pubblica un post ogni due mesi. È per chi fa LinkedIn come parte strutturale del proprio lavoro:
+ReachifyMe è per:
 
-- **Founder e CEO** che fanno thought leadership personale.
-- **Executive** che vogliono costruire una presenza pubblica coerente.
-- **Sales e biz dev** che fanno outreach e personal branding.
-- **Consulenti e coach B2B** che usano LinkedIn come canale principale di lead generation.
-- **Team marketing B2B** che gestiscono contenuti per 3-10 executive.
+**Creator e freelance che fanno di LinkedIn il canale principale.** Post regolari, personal brand, lead generation via DM. Se LinkedIn è dove ti trovano i clienti, ReachifyMe è il tool che ti fa risparmiare ore.
 
-Non è il tool giusto per chi cerca un "generatore di post automatici con un click". ReachifyMe amplifica una strategia, non la sostituisce.
+**Founder B2B che usano LinkedIn per thought leadership.** Post settimanali su temi di settore, carousel didattici, commenti strategici. ReachifyMe genera idee e draft, tu curi la voce.
 
-### Come funziona, passo per passo
+**Sales rep che fanno social selling.** Post regolari, DM automation, presenza credibile su LinkedIn.
 
-Il flusso operativo ha cinque fasi.
+**Marketer che gestiscono LinkedIn per brand.** Multi-account, scheduling, content calendar.
 
-**1. Definizione della voce e del posizionamento.** L'utente definisce (manualmente o con l'aiuto dell'AI) la voce del brand, i temi ricorrenti, e il posizionamento. ReachifyMe usa queste informazioni per guidare la generazione AI.
+**Studenti e job seeker che vogliono costruire presenza.** Profile optimization, post regolari, networking attivo.
 
-**2. Generazione di idee e post.** L'utente inserisce un'idea o un tema, e ReachifyMe propone post strutturati con:
-- Hook di apertura (il punto critico per il reach organico).
-- Struttura (listicle, stori personale, case study, framework).
-- CTA finale.
-- Hashtag suggeriti.
+Non è per:
 
-**3. Hook testing A/B.** ReachifyMe permette di testare varianti di hook sullo stesso post, e misurare quale performa meglio. È uno strumento prezioso per identificare cosa risuona con il proprio pubblico.
+**Aziende che fanno LinkedIn Ads in scala.** ReachifyMe è per organica, non per paid. Per ads, gestisci direttamente in Campaign Manager.
 
-**4. Scheduling e pubblicazione.** L'utente schedula i post per il momento migliore (configurabile per fuso orario e per "best time" calcolato da ReachifyMe). La pubblicazione è automatica, con possibilità di review pre-pubblicazione.
+**Chi cerca un tool di cold outreach.** ReachifyMe non fa automation di messaggi o connection request. Per quello, LinkedHelper, Zopto, Octopus CRM.
 
-**5. Analytics.** ReachifyMe traccia impression, commenti, salvataggi, reach per autore, e trend settimanali. L'utente vede cosa performa, e può iterare.
+**Chi ha bisogno di analytics avanzate.** ReachifyMe ha metriche di base (engagement, reach), ma non il livello di LinkedIn Campaign Manager o tool specialistici.
 
-:::tip Cosa distingue ReachifyMe da un "LinkedIn scheduler" base
+**Multi-piattaforma.** ReachifyMe è LinkedIn-only. Se gestisci Twitter, Instagram, e LinkedIn, ti serve un tool multi-piattaforma (Buffer, Hootsuite).
 
-- **L'AI conosce la tua voce** (se la definisci) e genera bozze coerenti.
-- **Il hook testing è nativo**: testi varianti in tempo reale, non a posteriori.
-- **Le analytics sono per autore**, non solo per company page: utile se gestisci 5 profili personali.
-- **I template sono editor-driven**: listicle, case study, contrarian take, framework — non "post generici".
+### Cosa fa, in pratica
 
-Queste differenze sono sottili ma contano per chi fa LinkedIn seriamente.
+ReachifyMe è un toolkit, non un workflow unico. Le feature principali sono:
 
-:::
+**AI Post Generator.** Scrivi un argomento, scegli il tone, ReachifyMe genera un draft. La qualità è variabile: buona per bozze, mediocre per post "iconici" che richiedono personalità. Il pattern corretto: usa il generator per il 70% del draft, poi aggiungi il tuo punto di vista e casi specifici.
 
-### Le metriche che ReachifyMe traccia
+**AI Idea Generator.** Input una nicchia o un tema, output una lista di idee per post. Utile per superare il blocco dello scrittore o per riempire un content calendar.
 
-ReachifyMe offre analytics su:
+**Hashtag Generator.** Genera hashtag rilevanti per il tuo post basandosi sul contenuto. Include hashtag di nicchia + generali. Aumenta la reach organica.
 
-- **Reach organica** per post.
-- **Impression e click-through** su link.
-- **Engagement rate** (like, commenti, salvataggi, condivisioni).
-- **Follower growth** attribuito ai post.
-- **Profili view** e **search appearance** per autore.
-- **Commenti qualificati** (con lead nel testo) vs generici.
+**Headline Generator.** Per il tuo profilo LinkedIn e per i post. Test A/B di headline diverse.
 
-L'utente può esportare i dati in CSV o collegarli a Looker / Google Sheets via API.
+**LinkedIn Text Formatter.** Aggiunge bold, italic, underline, e altre formattazioni che LinkedIn normalmente non supporta nativamente (LinkedIn strips formatting). Il tool usa caratteri Unicode che LinkedIn mantiene.
 
-### Casi d'uso concreti
+**Carousel Generator.** Genera carousel (post multi-slide) partendo da testo o articoli. Utile per "listicle" educational posts che performano bene su LinkedIn.
 
-:::pro Quando ReachifyMe fa la differenza
+**Trending News.** Mostra post trending nel tuo settore, per restare al passo.
 
-- **Founder che pubblica 3-5 post a settimana** e vuole ottimizzare hook e timing.
-- **Sales leader che coordina 5-10 profili di executive** con una sola dashboard.
-- **Consulente B2B che fa LinkedIn come canale principale** di lead generation.
-- **Coach o formatore** che vuole costruire una presenza pubblica e misurarne l'impatto.
-- **Team marketing B2B** che vuole standardizzare la qualità dei post dei vari executive.
+**Scheduler.** Schedula post per pubblicazione automatica. Supporta company page e personal profile.
 
-:::
+**Hook and CTA Generator.** Genera hook (prime righe che catturano attenzione) e CTA (call-to-action finali). Sono le parti più importanti di un post LinkedIn.
 
-:::warning Quando ReachifyMe non è la scelta giusta
+**AI Meme Generator.** Genera meme per LinkedIn. Funziona sorprendentemente bene per engagement.
 
-- **Pubblichi 1-2 post al mese.** Il costo non si giustifica, e l'AI non ha abbastanza dati per imparare la tua voce.
-- **Cerchi un tool "tutto fatto".** ReachifyMe amplifica una strategia, non la crea. Se non hai una voce e un posizionamento chiari, anche l'AI migliore produrrà contenuti generici.
-- **Il tuo pubblico non è su LinkedIn.** Per B2C, Instagram o TikTok restano canali più rilevanti.
-- **Vuoi automatizzare l'engagement (like, commenti automatici).** ReachifyMe non lo fa, e per buone ragioni: l'engagement automation è contro le policy di LinkedIn e controproducente.
+**Video Downloader.** Scarica video da LinkedIn. Per uso personale e reference.
 
-:::
+**Browser Extension.** ReachifyMe in Chrome, accessibile mentre navighi LinkedIn.
 
-### ReachifyMe vs i concorrenti diretti
+### Pricing, onestamente
 
-**ReachifyMe vs Taplio.** Taplio è il competitor più noto. La differenza principale: Taplio ha più funzionalità di "engagement automation" (es. suggerimenti di like/comment), ReachifyMe è più focalizzato sulla generazione e analytics. Se vuoi un tool completo di "presence management", Taplio è più ricco. Se vuoi un content engine pulito, ReachifyMe è più focalizzato.
+ReachifyMe non pubblica un pricing dettagliato sulla homepage. La pagina pricing ufficiale conferma:
 
-**ReachifyMe vs Supergrow.** Supergrow è un altro competitor focalizzato su LinkedIn. La differenza è di posizionamento: Supergrow è più "CRM-like" (gestione relazioni, lead), ReachifyMe è più "content-like" (creazione, scheduling, analytics).
+- **7-day free trial.** Accesso completo, no carta di credito richiesta.
+- **Piani mensili e annuali.** Annual billing risparmia fino al 15%.
+- **Pricing stimato:** starter da $9.95-$15/mese, mid-tier $19.99-$30/mese, premium fino a $29-$50/mese (fonti diverse, pricing cambia spesso).
 
-**ReachifyMe vs Buffer / Hootsuite.** Buffer e Hootsuite sono scheduler generici multi-canale. Sono ottimi se gestisci 5+ canali social. Se LinkedIn è il tuo canale principale (90%+ del focus), uno strumento verticale come ReachifyMe è più efficiente.
+I prezzi esatti cambiano frequentemente. Verifica su reachifyme.com/pricing prima di firmare.
 
-**ReachifyMe vs scrittura manuale.** Il valore di ReachifyMe non è "scrivere al posto tuo". È accelerare il processo (bozze rapide, hook testabili, scheduling automatico, analytics integrate) mantenendo la voce autentica. Per chi scrive già bene, ReachifyMe è un acceleratore. Per chi non scrive bene, non è magia.
+**Costo modello AI:** ReachifyMe usa GPT-class per le generazioni. Ogni generazione consuma crediti interni. Su tier più alti, più crediti inclusi.
 
-### Pricing di ReachifyMe
+**Refunds:** la policy non è prominente. Contatta il supporto per richieste specifiche.
 
-ReachifyMe ha tier a pagamento basati su numero di profili gestiti e funzionalità:
+### Cosa fa bene, e cosa no
 
-- **Free tier**: limitato a 1 profilo, funzionalità base.
-- **Pro**: più profili, AI assistant, hook testing, analytics avanzate.
-- **Business**: team, collaboration, multi-account management.
+**Fa bene:** ridurre l'attrito della creazione quotidiana di contenuti LinkedIn, generare idee quando sei in blocco, formattare testo, generare carousel. Il tool è un acceleratore, non un sostituto.
 
-I prezzi pubblicati variano. Indicativamente, il tier Pro è nella fascia 30-50 €/mese per utente (fatturazione annuale).
+**Fa meno bene:** catturare una voce personale forte, generare post che diventano virali per la loro originalità, gestire commenti e DM in modo strategico.
 
-### Flusso pratico: un caso reale
+**Fa male:** fingere che il tuo punto di vista sia un altro. Se ReachifyMe genera un post e tu pubblichi senza modificarlo, il post suona generico, e il pubblico se ne accorge.
 
-Sofia è una consulente di strategia B2B, ha un profilo LinkedIn personale con 8.000 follower. Pubblica 4-5 post a settimana, e LinkedIn è il suo canale principale di lead generation.
+### Quando ReachifyMe ha senso, e quando no
 
-**Settimana 1:** setup. Sofia definisce la sua voce ("pragmatica, mai guru, sempre con dati"), i temi ricorrenti (operations, produttività, pricing), e il suo CTA tipo. ReachifyMe apprende.
+**Ha senso:** post 3-7 volte a settimana, content calendar regolare, target di lead generation organica, poco tempo per creare da zero ogni post.
 
-**Settimane 2-4:** generazione. Sofia inserisce 2-3 idee a settimana, ReachifyMe propone bozze. Sofia modifica, integra esperienze personali, pubblica. Tempo medio per post: 20-30 minuti (contro 45-60 senza AI).
+**Non ha senso:** post sporadici (1-2 al mese), brand voice molto specifico che l'AI non cattura, focus su altri canali oltre LinkedIn.
 
-**Settimana 5:** hook testing. Sofia testa 3 varianti di hook sullo stesso contenuto. Scopre che "Controversia + dati" performa 2x meglio del suo hook standard.
+**Caso borderline:** se fai 1-2 post/settimana ma il post è la tua firma professionale, ReachifyMe può aiutare con idee e formattazione, ma il draft finale devi scriverlo tu.
 
-**Mese 2:** review. Sofia vede che la reach organica è salita del 40%, le DM qualificate sono aumentate, e il tempo per post è dimezzato. Il tool si ripaga da solo in termini di lead.
+### ReachifyMe vs Buffer vs Hootsuite vs Taplio vs Supergrow
 
-Risultato: più impatto, meno tempo, voce mantenuta.
+**ReachifyMe vs Buffer.** Buffer è multi-piattaforma, semplice, scheduler eccellente. ReachifyMe è LinkedIn-only con tool di generazione AI. Se il tuo bisogno è solo scheduling, Buffer è più economico. Se vuoi generazione AI integrata, ReachifyMe vince.
+
+**ReachifyMe vs Hootsuite.** Hootsuite è enterprise, multi-piattaforma, con analytics avanzate. ReachifyMe è LinkedIn + AI. Per team grandi con social cross-platform, Hootsuite. Per singolo creator LinkedIn-focused, ReachifyMe.
+
+**ReachifyMe vs Taplio.** Taplio è il competitor diretto: AI + LinkedIn, scheduling, analytics, content library. Taplio è più caro (~$50/mese) ma con più features. ReachifyMe è più economico e focalizzato. Per creator con budget che vogliono il top, Taplio. Per chi parte, ReachifyMe.
+
+**ReachifyMe vs Supergrow.** Supergrow è LinkedIn AI + outreach automation. Più caro, più completo. Per social selling serio, Supergrow. Per solo content, ReachifyMe.
+
+### Casi d'uso reali
+
+**Founder B2B con 3-4 post/settimana.** ReachifyMe per generare bozze, formatter per il testo, carousel per i post didattici. Tempo per post: 30 minuti (vs 1.5 ore senza tool).
+
+**Freelance con personal brand.** 1-2 post/settimana, focus su lead generation. ReachifyMe per idee, generatore post, scheduler. 45 minuti per post.
+
+**Sales rep con social selling.** Post regolari per costruire presenza + DM mirati. ReachifyMe per i post, tool separato per i DM.
+
+**Studente con job search.** Post su progetti, learning journey. ReachifyMe per struttura e formattazione.
+
+### Setup pratico: da zero a 1 post/giorno in una settimana
+
+**1. Crea l'account e fai il trial.** Su reachifyme.com, signup, 7 giorni gratis. 5 minuti.
+
+**2. Configura il profilo.** Collega il tuo LinkedIn account, configura timezone, personalizza le preferenze. 15 minuti.
+
+**3. Genera i primi 7 post.** Usa il Post Generator per 7 idee. Non pubblicare ancora, salva in bozza. 30 minuti.
+
+**4. Cura i draft.** Per ogni bozza, aggiungi 2-3 righe di tuo contenuto specifico (un caso, un numero, un'opinione). 1-2 ore.
+
+**5. Schedula.** Programma i 7 post per la settimana prossima, uno al giorno. 15 minuti.
+
+**6. Misura.** Dopo una settimana, guarda engagement, reach, e click. Identifica cosa funziona. 30 minuti di review.
+
+**7. Itera.** Per la settimana 2, raddoppia le idee, seleziona le migliori, ripeti il ciclo.
+
+In una settimana hai un content calendar attivo. In un mese, hai dati su cosa funziona per il tuo pubblico.
+
+### Errori comuni
+
+**Pubblicare senza modificare.** Il draft AI è una base, non un prodotto finito. Aggiungi sempre il tuo punto di vista.
+
+**Ignorare la voce personale.** ReachifyMe genera testi che suonano AI. Il pattern "AI-generated" è immediatamente riconoscibile. Più personalizzi, meno si nota.
+
+**Postare troppo.** 3-5 post/settimana è il sweet spot. Sotto 1, non crei momentum. Sopra 7, saturi il pubblico.
+
+**Non misurare.** Senza analytics, non sai cosa funziona. Traccia engagement, reach, click, e conversion.
+
+**Ignorare i commenti.** LinkedIn premia l'engagement. Rispondere ai commenti aumenta la reach. ReachifyMe non automatizza i commenti, e non dovrebbe — la risposta personale è il valore.
 
 ### Le domande che ci fanno più spesso
 
-**ReachifyMe può pubblicare al posto mio?**
-Sì, con lo scheduling automatico. Ma il review pre-pubblicazione è sempre possibile, e consigliato.
+**ReachifyMe è meglio di Taplio?**
+Taplio è più caro ma più completo. Per chi ha budget, Taplio. Per chi parte, ReachifyMe.
 
-**L'AI può scrivere post con la mia voce?**
-Sì, se definisci la voce e il posizionamento, e se fornisci feedback sulle bozze. Più usi il tool, più l'AI apprende.
+**Funziona per la company page?**
+Sì, supporta sia profilo personale che company page.
 
-**ReachifyMe funziona per le company page?**
-Sì, con funzionalità specifiche. Ma il focus principale è sui profili personali, che su LinkedIn hanno mediamente più reach delle company page.
+**I post generati sembrano AI?**
+Sì, se non li modifichi. Il draft AI è un punto di partenza.
 
-**Quanto costa?**
-Il tier Pro è circa 30-50 €/mese con fatturazione annuale. C'è un free tier limitato.
+**Quanto costa in un anno?**
+Dipende dal tier, ma indicativamente $120-$360/anno.
 
-**Posso gestire 5 profili diversi?**
-Sì, con il piano giusto. Il pricing per profilo varia, ed è spesso più efficiente del "5 account individuali".
+**Posso automatizzare i DM?**
+No, ReachifyMe è per content, non per outreach automation.
 
-**ReachifyMe è contro i termini di LinkedIn?**
-No. ReachifyMe è un tool di content creation e scheduling, non di automation. L'engagement automation (like/comment automatici) è vietata da LinkedIn, e ReachifyMe non la fa.
+**Funziona con il Sales Navigator?**
+No, è per organica, non per Sales Navigator.
 
-**Posso esportare i contenuti?**
-Sì, in CSV, Markdown, o direttamente via API per integrazioni custom.
+### Alternative da considerare
+
+- **Taplio.** Più completo, più caro.
+- **Buffer.** Multi-piattaforma, meno AI.
+- **Hootsuite.** Enterprise, multi-piattaforma.
+- **Supergrow.** LinkedIn + outreach automation.
+- **Shield Analytics.** Per analytics LinkedIn, non generation.
+- **AuthoredUp.** Per personal brand LinkedIn, focus su formattazione.
 
 ### Cosa ci aspettiamo da ReachifyMe nei prossimi mesi
 
-Le aree da osservare:
+**Più AI features.** Generator più intelligenti, hook migliori, integrazione con trend analysis.
 
-- **AI più contestuale.** Se ReachifyMe impara dai tuoi post più performanti e adatta la generazione, il valore sale.
-- **Integrazione con CRM.** Collegare LinkedIn al CRM per tracciare il lead-to-revenue è il "next big thing" per il B2B.
-- **Personal brand benchmarking.** Confrontare le proprie performance con benchmark di settore.
-- **AI video e carousel.** LinkedIn sta premendo video e carousel. Se ReachifyMe aggiunge generazione AI per questi formati, diventa più utile.
+**Analytics più profonde.** Post performance, audience insights, competitor tracking.
+
+**Multi-piattaforma?** LinkedIn-first è la loro scelta. Possibili estensioni, ma il focus su LinkedIn è una delle ragioni del successo.
+
+**Integrazione con CRM.** Per chi usa LinkedIn per lead generation, integrazione con HubSpot o Salesforce sarebbe potente.
 
 ### In sintesi
 
-ReachifyMe è un content engine verticale per LinkedIn, pensato per chi fa LinkedIn con costanza. Non è un "post generator", è un acceleratore per chi ha già una strategia.
+ReachifyMe è uno dei tool più accessibili per accelerare la creazione di contenuti LinkedIn. Il prezzo è entry-level per la categoria, le feature coprono il 90% del workflow di un creator LinkedIn, e il tool è focalizzato — non cerca di fare tutto.
 
-Per founder, executive, sales leader, e team B2B, è uno degli investimenti con ROI più diretto: riduce il tempo per post, migliora la reach, e mantiene la voce autentica.
+Le limitazioni sono: dipendenza dall'AI che genera testi riconoscibili se non personalizzati, mancanza di outreach automation, focus esclusivo su LinkedIn. Per il target giusto — creator e freelance con content regolare su LinkedIn — è una delle scelte più efficienti.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di ReachifyMe** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool LinkedIn** nella raccolta dedicata.
-- **Salva ReachifyMe nei preferiti** se vuoi tornarci dopo.
+- **Apri la scheda tool di ReachifyMe** per confrontare con Taplio, Buffer, e altri LinkedIn tool.
+- **Esplora la raccolta su LinkedIn e social selling** per casi d'uso affini.
+- **Salva ReachifyMe nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.

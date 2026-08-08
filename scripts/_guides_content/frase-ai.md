@@ -1,167 +1,201 @@
 ### Cosa fa Frase, in una frase
 
-Frase è una piattaforma SEO e content workflow che mette nella stessa interfaccia l'analisi SERP, la generazione di brief, l'editor con punteggio contenuti, e un assistente AI per bozze, paragrafi e FAQ. È pensata per chi fa content marketing in modo continuativo — non per il blogger occasionale.
+Frase è una piattaforma SEO + GEO end-to-end che fa ricerca SERP, genera brief, scrive draft ottimizzati, pubblica sul CMS, monitora il ranking su Google, e traccia la visibilità su ChatGPT, Perplexity, Google AI, Claude, e Gemini — in un workflow solo invece di cinque tool separati.
 
-La promessa è concreta: ridurre il numero di tool aperti durante la produzione di un articolo SEO, e rendere il workflow misurabile invece che affidato all'intuizione.
+Non è un content generator. È un sistema operativo per il content marketing che ha capito che il gioco non è più solo "rank su Google", è "essere citato dagli AI answer engine".
 
-### A chi serve davvero
+### A chi serve davvero, e a chi no
 
-Frase non è un tool per chi scrive un articolo ogni due mesi. È un tool per chi pubblica con regolarità — settimanale, anche più volte a settimana — e ha bisogno di:
+Frase funziona bene per:
 
-- Allinearsi a un piano editoriale SEO.
-- Produrre brief condivisi tra editor, scrittori e SEO specialist.
-- Ottimizzare contenuti esistenti con un punteggio oggettivo (anche se imperfetto).
-- Tenere traccia di cosa è stato pubblicato e dove si posiziona.
+**Content team in-house che pubblicano 10+ articoli al mese.** Quando il volume è alto, il collo di bottiglia è il workflow: brief, scrittura, ottimizzazione, pubblicazione, monitoraggio. Frase automatizza i primi quattro e strumenta il quinto. Il ROI si vede già dal secondo mese.
 
-In pratica, i profili che beneficiano di più di Frase sono:
+**Agenzie SEO con più clienti.** Il tier Scale (fino a 10 domini) è progettato per agency. Brand portal, white-label report, e multi-domain tracking sono fatti per il workflow agency.
 
-- **Content team strutturati.** Persone che lavorano in 3-10 su un calendario editoriale comune.
-- **Agenzie SEO.** Team che gestiscono contenuti per più clienti e hanno bisogno di standardizzare il processo.
-- **SEO specialist in-house.** Figure che fanno da ponte tra redazione e analytics, e hanno bisogno di brief e audit rapidi.
-- **Freelance SEO evoluti.** Singoli professionisti che gestiscono portfolio di clienti e vogliono una pipeline unica.
+**SEO specialist che vogliono integrare GEO nel loro stack.** Il 2026 è l'anno in cui "GEO" (Generative Engine Optimization) è entrato nel mainstream. Frase traccia visibilità su 5 AI engine, e questo è uno dei motivi per cui il pricing è aumentato: vale il delta.
 
-Non è invece il tool adatto a chi cerca un generatore di articoli "premi un tasto e ottieni un post". Frase velocizza un processo, non lo sostituisce.
+**Team che usano WordPress, Webflow, Sanity, o Wix come CMS primario.** Il publish one-click elimina un passaggio manuale che rallenta il flusso.
 
-### Come funziona, passo per passo
+Non è la scelta giusta per:
 
-Il flusso di lavoro in Frase si articola in cinque fasi principali.
+**Chi scrive 2-3 articoli al mese.** Il pricing non giustifica, e il workflow è sovradimensionato. Per volumi bassi, Surfer SEO o Clearscope sono sufficienti.
 
-**1. Ricerca keyword e selezione del target.** Frase offre un database interno di keyword research (più ricco per il mercato inglese, in crescita per l'italiano). L'utente inserisce la keyword principale e ottiene un set di keyword correlate, domande frequenti, e volumi. La fase di selezione è importante: meglio un cluster di 5-10 keyword semanticamente coerenti che una keyword secca.
+**Chi fa blog post puramente editoriali senza intento SEO.** Frase ottimizza per rank e citazione AI. Se il tuo obiettivo è solo "scrivere bene", è un tool sbagliato.
 
-**2. Analisi SERP.** Per ogni keyword target, Frase estrae i risultati di Google e li analizza: titoli, lunghezze medie, domande poste (People Also Ask), entità citate. L'utente vede cosa sta posizionando la concorrenza e quali gap ci sono.
+**Team che hanno già un workflow consolidato su tool diversi.** Migrare a Frase ha un costo di apprendimento e disruption. Se il tuo team è già produttivo con Ahrefs + Surfer + Notion, Frase non migliorerà magicamente.
 
-**3. Generazione del brief.** A partire dall'analisi SERP, Frase genera un brief strutturato: titolo suggerito, meta description, outline, lunghezza target, lista di titoli H2/H3 da coprire, domande a cui rispondere, link correlati da includere. Il brief è editabile.
+**Enterprise con requisiti di compliance o on-premise.** Frase è cloud-only. Se devi on-premise, non è la scelta.
 
-**4. Scrittura nell'editor.** L'editor di Frase mostra in tempo reale un punteggio di ottimizzazione confrontato con i risultati SERP. L'AI Assistant può generare paragrafi, riassunti, FAQ, introduzioni, o riformulare testi esistenti. Il punteggio è una guida, non un voto: l'editor resta il giudice finale.
+### Il workflow reale, end-to-end
 
-**5. Ottimizzazione e pubblicazione.** Una volta finito, l'articolo può essere esportato in Google Docs, in WordPress via plugin, o copiato manualmente. Frase si integra con Google Search Console, permettendo di tracciare le performance post-pubblicazione.
+Ecco come un team serio usa Frase nel 2026. Non è il marketing pitch, è il pattern operativo.
 
-:::tip Cosa distingue Frase da un editor "normale"
+**1. Research e brief.** Partenza: hai una lista di keyword o topic da coprire. Apri Frase, lanci la ricerca SERP per la keyword target. Frase analizza i top 20 risultati Google, estrae headings, lunghezze medie, statistiche citate, domande People Also Ask, e domande da Reddit e Quora. Genera un brief con outline suggerito, keyword target, suggerimenti NLP, e link a fonti.
 
-L'editor di Frase non è un editor di testo. È un editor SEO:
+Il valore: in 5-10 minuti hai un brief che manualmente richiederebbe 1-2 ore di ricerca. La qualità del brief dipende dalla keyword: keyword competitive danno brief più ricchi, keyword di nicchia danno brief più scarni.
 
-- Il pannello laterale mostra i titoli dei competitor e il loro punteggio medio.
-- L'outline del brief è visibile a sinistra mentre scrivi.
-- L'AI Assistant lavora in contesto, può riprendere il tono del brief.
-- Il punteggio di ottimizzazione si aggiorna in tempo reale.
+**2. Drafting assistito.** Apri l'editor di Frase, incolla il brief, e scrivi. Mentre scrivi, Frase mostra in real-time:
+- Topic score: quanto il tuo draft copre i topic che i top risultati coprono
+- SEO score: keyword density, struttura, lunghezza
+- GEO score: come il tuo draft si posiziona per essere citato dagli AI engine
+- Suggerimenti NLP: keyword correlate da includere
+- Domande da coprire: PAA e Reddit che non hai ancora risposto
 
-Questo significa che la fase di ottimizzazione on-page non è un passaggio separato a fine scrittura: è integrata mentre scrivi.
+Il valore: in tempo reale sai se stai scrivendo un articolo "rank-ready" o se ti stai allontanando. Niente più "ottimizzo dopo", l'ottimizzazione è nel flusso.
 
-:::
+**3. AI assistita.** Se vuoi accelerare, Frase AI scrive sezioni del draft basandosi sul brief. Il livello di qualità è onesto: buono per bozze di sezioni standard, mediocre per sezioni che richiedono visione editoriale forte. Il pattern corretto è: tu scrivi la struttura e le idee chiave, Frase AI riempie le sezioni standard (definitions, backgrounds, summary), tu raffini e aggiungi il punto di vista.
 
-### La qualità del brief, onestamente
+**4. Ottimizzazione finale.** Quando il draft è completo, rivedi i tre score (Topic, SEO, GEO). Punta Topic score sopra 80% per keyword competitive. Il GEO score è più sfumato: Frase suggerisce formattazione (liste, tabelle, FAQ strutturate) che aumenta la probabilità di essere citato dagli AI engine.
 
-Il brief generato da Frase è utile, non perfetto. I suoi punti di forza:
+**5. Publish one-click.** Se usi WordPress, Webflow, Sanity, o Wix, clicchi "Publish" e Frase manda l'articolo al CMS con metadata SEO, immagini ottimizzate, e structured data. Se usi un CMS diverso, copi il markdown o esporti l'HTML.
 
-- **Velocità.** Un brief che manualmente richiederebbe 1-2 ore di analisi viene generato in 10-15 minuti.
-- **Struttura.** Il brief esce con un'outline pronto, con titoli H2/H3 suggeriti, con domande a cui rispondere. Questo accelera la fase di scrittura.
-- **Suggerimenti di entità.** Frase evidenzia le entità semanticamente rilevanti per il topic. Utile per non dimenticare nomi propri, brand, o concetti chiave.
+**6. Monitoraggio.** Dopo la pubblicazione, l'articolo entra nel monitoring di Frase:
+- Google ranking: posizione sulla SERP per la keyword target
+- Traffic da GSC: click e impression (se hai collegato Google Search Console)
+- AI visibility: quante volte l'articolo è citato da ChatGPT, Perplexity, Google AI, Claude, Gemini
+- Content decay: se l'articolo inizia a perdere rank, Content Guard ti avvisa
 
-I suoi limiti:
+**7. Content Guard e fix.** Questa è la feature che distingue Frase nel 2026. Content Guard monitora la pagina pubblicata, e quando rileva un calo di ranking, genera automaticamente un draft di revisione basato sui fattori che sono cambiati (nuovi competitor, aggiornamento di Google, query trends). Tu approvi, modifichi, o rifiuti. È un'evoluzione del "content refresh periodico" che di solito non fai perché è noioso.
 
-- **SERP anglofona più ricca.** Per keyword in inglese, i dati sono abbondanti. Per keyword in italiano di nicchia, può essere più scarso.
-- **Non sostituisce la conoscenza del dominio.** Il brief è una mappa del territorio, non la conoscenza. Serve sempre un editor che sappia cosa è rilevante per il proprio pubblico.
-- **AI Assistant ancora da addomesticare.** L'AI Assistant è utile per paragrafi, FAQ, e introduzioni, ma su testi specialistici può produrre contenuti generici che vanno rielaborati.
+### Pricing, spiegato onestamente
 
-### Quanto costa Frase
+I piani (verificati sulla pagina ufficiale a luglio 2026, annual billing):
 
-Frase ha un modello di pricing a tier, basato su utenti e funzionalità:
+**Starter, $39/mese annuale ($49/mese mensile).** 1 seat, 1 sito, 10 articoli/mese, 50 audit pages, SEO + GEO score, AI visibility su ChatGPT e Google AI, Content Guard su 3 pagine, Frase CMS free. Adatto a freelance, blogger, e piccole attività.
 
-- **Solopreneur** (1 utente): per professionisti singoli.
-- **Pro** (1 utente con funzionalità avanzate): per SEO specialist.
-- **Team** (3+ utenti): per team e agenzie.
+**Professional, $103/mese annuale ($129 mensile).** 3 seat inclusi ($29/mese per seat extra), 5 siti, 40 articoli/mese, 250 audit pages, internal linking suggestions, AI crawler monitoring, Perplexity aggiunto al monitoring, Content Guard su 15 pagine. Adatto a team in-house e agenzie piccole.
 
-I prezzi pubblicati sul sito variano nel tempo. Indicativamente, il tier Pro per utente singolo è nella fascia 30-50 €/mese (fatturato annuale), mentre i piani team partono da 100 €/mese per 3 utenti e crescono rapidamente con il numero di account.
+**Scale, $239/mese annuale ($299 mensile).** 5 seat, 10 domini, 100 articoli/mese, 1000 audit pages, Content Guard su 50 pagine, Claude e Gemini aggiunti al monitoring, white-label client reports, repurposing automatico. Adatto a team content strutturati e agenzie.
 
-Per un team content che pubblica 10-30 articoli al mese e usa Frase quotidianamente, il costo è giustificato dal tempo risparmiato nella produzione di brief. Per chi pubblica 2-3 articoli al mese, il tier Solopreneur è probabilmente sufficiente.
+**Enterprise, custom.** White-label report, branded client portal, custom domain, support dedicato.
 
-:::pro Quando Frase vale l'investimento
+**FraseCMS** è un'opzione separata: gratis con 100k page views/mese, Basic $19/mese per 250k views, Pro $99/mese per 1M views. È l'opzione "non ho un CMS, ospitalo voi".
 
-- Produci regolarmente contenuti SEO (almeno 4-6 articoli/mese).
-- Hai un team (anche piccolo) che ha bisogno di un workflow condiviso.
-- Vuoi standardizzare la qualità dei brief e delle ottimizzazioni.
-- Stai cercando di ottimizzare articoli esistenti che non performano.
-- Hai un budget sufficiente (almeno 30-50 €/mese) per giustificare l'abbonamento.
+**Add-ons pay-as-you-go:** su Professional, $5 per articolo extra, $0.50 per audit page extra, $0.25 per AI prompt extra. Su Scale, $4, $0.40, e $0.20 rispettivamente.
 
-:::
+**Cambiamento importante del 2026:** GEO tracking (visibilità su AI engine) è ora incluso in tutti i piani, senza add-on separato. Prima del 2026, era un $35/mese add-on. Questo rende Frase significativamente più conveniente rispetto a prima.
 
-:::warning Quando Frase NON è la scelta giusta
+**Costo modello AI:** le funzionalità AI (drafting, Content Guard revisions) consumano credits. Il tier include un numero base, e l'overage è pay-as-you-go. Su un team Professional che produce 40 articoli/mese, il costo AI tipico è $20-50 in più.
 
-- Scrivi 1-2 articoli ogni due mesi. Il costo non si giustifica.
-- Cerchi un tool "fai da te" senza processo editoriale. Frase accelera un processo, non lo crea.
-- Il tuo business non dipende da traffico organico SEO. Il tool non aggiunge valore fuori da quel contesto.
-- Hai bisogno di analisi tecnica SEO (crawl, log analysis, schema audit). Frase non sostituisce strumenti come Screaming Frog, Sitebulb, o Ahrefs.
-- Lavori in un mercato talmente di nicchia che i dati SERP sono rumorosi. Il brief sarà debole.
+### Le funzionalità chiave in profondità
 
-:::
+**SERP Analyzer.** Il core dell'analisi competitiva. Per una data keyword, estrae i top 20 risultati Google, analizza headings (H1, H2, H3), lunghezze medie, domande People Also Ask, snippet in evidenza, e backlink overview. Genera un brief "rank-ready" che identifica cosa serve per competere. È la funzione su cui Frase ha costruito la sua reputazione.
 
-### Frase vs i concorrenti diretti
+**AI Writer con brand voice.** Genera testo basandosi sul brief. La qualità è migliore dei generatori generici perché è ancorata al brief SERP. Il "brand voice" è una funzione recente: carichi 3-5 articoli del tuo brand, Frase estrae tono, vocabolario, e stile, e l'AI scrive "come te". La qualità è variabile — su argomenti tecnici con dati, funziona; su opinion piece, è mediocre.
 
-**Frase vs Surfer SEO.** Surfer è il concorrente più noto. La differenza principale è di posizionamento: Surfer è più "audit tecnico" (punteggio, correlazione segnali), Frase è più "workflow editoriale" (brief + scrittura + ottimizzazione). Per un SEO specialist puro, Surfer può essere preferibile. Per un content team che vuole un unico strumento, Frase è più completo.
+**GEO (Generative Engine Optimization).** Questa è la funzionalità che definisce Frase nel 2026. Il GEO score misura quanto il tuo draft è strutturato per essere citato dagli AI answer engine. Fattori considerati: presenza di definizioni chiare, struttura a domanda-risposta, tabelle comparative, FAQ strutturate, citazioni autorevoli, lunghezza adeguata. Non è magia: è un insieme di best practice SEO evolute per il contesto AI. Funziona meglio di quanto ti aspetti, e diventa un vantaggio competitivo quando i concorrenti ignorano ancora GEO.
 
-**Frase vs Clearscope.** Clearscope è un altro competitor focalizzato sull'ottimizzazione. Storicamente, Clearscope era considerato più "pulito" sui dati SERP e più conservativo nei punteggi. Frase ha recuperato terreno e oggi ha un vantaggio sul fronte del brief strutturato e dell'AI Assistant.
+**Content Guard.** Monitoring post-pubblicazione. Tiene d'occhio le pagine pubblicate per cambiamenti di ranking, e quando rileva un calo, genera un draft di revisione. Su Starter monitora 3 pagine, su Professional 15, su Scale 50. Per team content, è la funzione che giustifica il tier superiore.
 
-**Frase vs MarketMuse.** MarketMuse è il tool enterprise, con database proprietari e analisi predittive. Costa di più, è più adatto a team grandi con budget importanti. Frase è la versione "snella" per team di medie dimensioni.
+**AI Visibility tracking.** Traccia quanto i tuoi contenuti sono citati dagli AI engine. Su Starter, ChatGPT e Google AI. Su Professional, aggiunge Perplexity. Su Scale, aggiunge Claude e Gemini. Mostra la "share of voice" rispetto ai competitor per una data query. È il nuovo "rank tracking" per il 2026.
 
-**Frase vs ChatGPT / Claude / Perplexity.** I tool AI generalisti non hanno accesso ai dati SERP in tempo reale, non generano brief strutturati su un cluster di keyword, e non offrono un punteggio di ottimizzazione. Possono essere complementari (per ricerca laterale, generazione di bozze) ma non sostituiscono Frase nel workflow SEO.
+**Internal linking suggestions.** Suggerisce link interni tra i tuoi articoli in base a topic similarity. Su Professional e superiori. Fa risparmiare ore di audit manuale.
 
-**Frase vs Ahrefs / Semrush.** I tool di keyword research pura (Ahrefs, Semrush) sono complementari, non alternativi. Frase si appoggia a keyword research integrate, ma per keyword research avanzata (intenzione di ricerca, SERP feature, gap analysis), un tool dedicato resta superiore.
+**Programmatic SEO.** Su Scale. Genera pagine SEO programmatiche per location pages, directory, e use case combinations. Richiede setup tecnico, ma per SaaS con multi-location o multi-product è un moltiplicatore di traffico organico.
 
-### Flusso pratico: un caso reale
+**AI agenti specializzati.** Su tutti i piani, 80+ agenti specializzati che gestiscono task specifici: research, outline, drafting, optimization, audit, publishing. È il pattern "agent for everything", e funziona meglio quando lo usi come collaboratore, non come sostituto.
 
-Anna è content manager in una scaleup B2B che pubblica 12 articoli al mese sul blog aziendale. Il team è composto da lei, due scrittori freelance, e una SEO specialist.
+### Cosa fa bene, e cosa fa male
 
-**Lunedì mattina:** la SEO specialist identifica 8 nuove keyword target usando Ahrefs. Le inserisce in Frase e genera i brief in 20-30 minuti.
+**Fa bene:** SERP research, brief generation, draft assistito, GEO optimization, AI visibility tracking, Content Guard. Sono i suoi superpoteri, e in queste aree è tra i migliori sul mercato.
 
-**Martedì-mercoledì:** Anna prende i brief, li revisiona per allinearli alla voce del brand, e li assegna ai due freelance su Notion.
+**Fa meno bene:** project management (non gestisce workflow editoriali complessi), content calendar (esiste ma è basilare), team collaboration (commenti e review sì, ma non è Notion), multilingual SEO (supporta ma con qualità variabile).
 
-**Giovedì-venerdì:** i freelance scrivono gli articoli direttamente nell'editor di Frase, usando il brief come outline e l'AI Assistant per paragrafi complessi.
+**Fa male:** articoli puramente editoriali senza intento di rank, content ultra-creativi dove il punto di vista personale è centrale, articoli che richiedono fonti primarie o interviste originali.
 
-**Lunedì successivo:** Anna edita, ottimizza, e pubblica su WordPress via plugin. Il punteggio SEO è già allineato al brief.
+### Frase vs Surfer vs Clearscope vs MarketMuse
 
-Senza Frase, lo stesso processo richiederebbe 2-3 tool separati (keyword research, brief, editor SEO) e passaggi manuali di copia-incolla. Con Frase, il workflow è integrato e i brief sono oggettivi (quindi freelance diversi producono articoli di qualità più omogenea).
+**Frase vs Surfer SEO.** Surfer è focalizzato sull'ottimizzazione on-page: SERP analysis, content editor, NLP suggestions. È più specializzato, più economico (entry-level a $89/mese vs Frase $39), ma non ha la pipeline publishing, il GEO, l'AI visibility. Per team che vogliono solo "ottimizza bene questo articolo", Surfer è più focalizzato. Per team che vogliono un workflow completo, Frase vince.
 
-### Le domande che ci fanno più spesso
+**Frase vs Clearscope.** Clearscope è il premium tool per content optimization. Report SEO di alta qualità, content grading sofisticato, ma niente drafting AI, niente publishing, niente GEO. Per team che hanno già un draft e vogliono uno score di qualità serio, Clearscope è superiore. Per team che vogliono un workflow completo, Frase vince.
 
-**Frase è meglio di Surfer SEO?**
-Dipende dall'uso. Per un SEO specialist puro che fa audit, Surfer può essere preferibile. Per un content team che vuole un workflow unificato, Frase è più adatto. Spesso i team usano entrambi in fasi diverse.
+**Frase vs MarketMuse.** MarketMuse è enterprise-oriented, con focus su content inventory e topic clusters. Più costoso, più complesso, più adatto a team content strutturati in aziende grandi. Per team con 5-10 persone che fanno content marketing, Frase è più accessibile. Per team con 30+ content people, MarketMuse è più adatto.
 
-**Frase genera articoli automaticamente con l'AI?**
-No, non è un generatore di articoli. Genera brief, e l'AI Assistant aiuta su paragrafi specifici. L'articolo finale è scritto (e editato) dall'utente.
+**Frase vs tool "free + DIY".** Clearscope, Surfer, e altri sono più economici del 2024 grazie a nuovi competitor. Frase ha il vantaggio dell'integrazione end-to-end, ma se il tuo workflow è già "Ahrefs per keyword + Surfer per optimize + Notion per scrivere", Frase non migliorerà di 10x.
 
-**L'italiano è supportato?**
-Sì, con qualche limite. Il database SERP per l'italiano è meno ricco di quello inglese, e l'AI Assistant può produrre testi più generici. Per mercati di nicchia italiani, conviene verificare la qualità dei brief prima di adottarlo su larga scala.
+### Casi d'uso reali
 
-**Posso esportare i contenuti in WordPress?**
-Sì, c'è un plugin ufficiale e integrazioni native. Funziona bene per blog WordPress self-hosted. Per CMS custom o altri editori, l'esportazione è in HTML/Markdown.
+**SaaS blog con 30 articoli/mese.** Tier Professional. Research SERP per ogni articolo, brief rank-ready, drafting AI-assisted, GEO score, publish su WordPress, monitoraggio. Tempo per articolo: 2-3 ore (vs 5-6 ore senza Frase).
 
-**Frase è adatto a chi non ha un team?**
-Sì, con il tier Solopreneur. Ma il valore aggiunto rispetto a un generico tool AI è limitato se il workflow editoriale non è già strutturato.
+**Agenzia SEO con 8 clienti.** Tier Scale, 5 seat, 10 domini. Workflow per ogni cliente: research, brief, draft, review, publish, monitor. Report white-label mensili. Risparmio operativo: 30-50% del tempo del team.
 
-**Posso ottimizzare articoli già pubblicati?**
-Sì, Frase ha una funzione di content audit che permette di analizzare articoli esistenti contro i risultati SERP attuali. È uno degli usi più preziosi del tool.
+**E-commerce con 100+ pagine prodotto.** Tier Professional, focus su programmatic SEO. Genera pagine per category + location, ottimizza description prodotti, monitora ranking su long-tail keywords.
 
-**Frase integra Google Search Console?**
-Sì, l'integrazione permette di tracciare impression, click, e posizione media dei contenuti scritti con Frase.
+**Editorial site senza intento SEO.** Frase è il tool sbagliato. Per editorial puro, strumenti di collaborative writing (Notion, Google Docs) sono sufficienti.
+
+### Setup pratico: da zero al primo articolo pubblicato in 2 ore
+
+**1. Crea l'account e collega il tuo CMS.** Su frase.io, signup con Google. Collega WordPress via plugin, Webflow via API, o configura un altro CMS. Tempo: 15 minuti.
+
+**2. Configura il primo progetto.** Settings → Projects. Aggiungi il tuo sito, configura il brand voice caricando 3-5 articoli esistenti. Tempo: 20 minuti.
+
+**3. Collega Google Search Console.** Settings → Integrations → GSC. Questo abilita il monitoraggio di click, impression, e position. Tempo: 5 minuti.
+
+**4. Fai la prima ricerca.** "Research" → inserisci una keyword target. Frase genera il brief. Tempo: 5 minuti.
+
+**5. Scrivi o usa l'AI.** Apri l'editor, parti dal brief, scrivi o usa AI Writer. Monitora i tre score. Tempo: 60-90 minuti.
+
+**6. Pubblica.** Clicca "Publish" per mandare al CMS, o esporta. Tempo: 5 minuti.
+
+**7. Configura il monitoraggio.** L'articolo pubblicato entra automaticamente in monitoraggio. Content Guard inizia a guardarlo. Tempo: 1 minuto.
+
+In 2 ore hai un articolo rank-ready, pubblicato, e monitorato. Per il secondo articolo il tempo scende a 60-90 minuti perché conosci già il workflow.
+
+### Errori comuni
+
+**Affidarsi troppo all'AI Writer.** L'AI scrive bozze decenti ma generiche. Il punto di vista editoriale, le idee non-ovvie, e la voce del brand devono venire da te. Frase è un acceleratore, non un sostituto.
+
+**Ignorare il GEO score.** Molti team SEO sono ancora ancorati al SEO score classico. Il GEO score è altrettanto importante nel 2026. Ignorarlo significa perdere visibilità su ChatGPT e Perplexity.
+
+**Non collegare GSC.** Senza GSC, il monitoraggio post-pubblicazione è cieco sui dati di click e impression reali. Collegalo il primo giorno.
+
+**Produurre troppo velocemente senza quality check.** Il workflow Frase è veloce, ma la qualità editoriale finale è ancora responsabilità tua. Review sempre, specialmente per articoli che vanno su testate con reputazione.
+
+**Non aggiornare i brief con dati freschi.** Il SERP cambia. Un brief di 3 mesi fa può essere superato. Per keyword competitive, rifai la research prima di aggiornare un articolo.
 
 ### Cosa ci aspettiamo da Frase nei prossimi mesi
 
-Il settore SEO e content è in fermento, trainato dall'AI generativa. Le aree da osservare:
+**GEO sempre più centrale.** Man mano che gli AI engine diventano una quota maggiore del traffico referral, GEO diventa la metrica principale. Frase ha un vantaggio first-mover qui.
 
-- **Integrazione con AI Agents.** Se Frase apre l'editor ad agenti che lavorano in background (es. "ottimizza tutti gli articoli sotto X posizione"), il valore sale.
-- **Database SERP in italiano.** Più il database cresce per l'italiano, più il tool diventa interessante per il mercato italiano.
-- **Personalizzazione del punteggio.** Il punteggio di ottimizzazione è ancora basato su correlazioni statistiche. Se Frase introduce un modello che tiene conto della qualità editoriale (oltre alla copertura SERP), diventa più utile.
-- **Collaborazione real-time.** Per i team distribuiti, una vera collaborazione real-time sull'editor (simile a Google Docs) sarebbe un vantaggio competitivo.
+**Più agenti specializzati.** La roadmap è verso agenti che gestiscono workflow sempre più complessi in autonomia, con review umana finale.
+
+**Integrazione AI engine più profonda.** Tracciamento di citazioni specifiche, non solo presenza. Mostrarti esattamente quali frasi del tuo articolo sono state usate, in quali prompt.
+
+**Multi-modal GEO.** GEO per video (YouTube come answer engine), audio (voice search), immagini. Espansione oltre il text.
+
+### Le domande che ci fanno più spesso
+
+**Frase è meglio di ChatGPT per scrivere articoli?**
+Per articoli SEO con intento di rank, sì. ChatGPT non ha il SERP context, non sa cosa è già rankato, non genera il brief. Per brainstorming o scrittura libera, ChatGPT va altrettanto bene.
+
+**Quanto costa davvero un articolo rank-ready?**
+Su Professional con 40 articoli inclusi, il costo marginale è il tuo tempo + l'overage AI. Un articolo "rank-ready" in 2-3 ore è realistico. Su Surfer puro, lo stesso articolo richiede 1-2 ore in più per il workflow di ottimizzazione.
+
+**Frase può sostituire un SEO specialist?**
+No, ma può aumentare la produttività del SEO specialist di 2-3x. Il SEO specialist fa la strategia, l'analisi, le decisioni. Frase esegue.
+
+**Funziona per mercati non-anglofoni?**
+Sì, supporta multi-lingua. La qualità della SERP analysis è migliore in inglese (database più ricco), ma funziona bene anche per italiano, spagnolo, francese, tedesco.
+
+**Frase vs Ahrefs?**
+Sono complementari, non concorrenti. Ahrefs è per keyword research, backlink analysis, competitor research. Frase è per content creation, optimization, GEO. Li usi insieme.
+
+### Alternative da considerare
+
+- **Surfer SEO.** Più focalizzato sull'optimization, meno sul workflow completo.
+- **Clearscope.** Premium content grading, niente AI drafting.
+- **MarketMuse.** Enterprise content strategy, più costoso.
+- **WriterZen.** Budget-friendly, funzionalità simili ma meno profonde.
+- **Scalenut.** AI-first, buon rapporto qualità/prezzo.
+- **DIY (Ahrefs + Surfer + Notion).** Più flessibile, più lavoro manuale.
 
 ### In sintesi
 
-Frase è uno strumento solido per content team che hanno un processo editoriale già definito e vogliono ridurre l'attrito operativo nella produzione di articoli SEO. Non è una bacchetta magica, e non sostituisce una buona redazione, ma risponde a un'esigenza reale.
-
-La chiave è adottarlo come acceleratore di un processo, non come sostituto di un metodo.
+Frase nel 2026 è uno dei tool più completi per content marketing SEO + GEO. Non è il più economico, ma l'integrazione end-to-end e il focus su GEO lo rendono particolarmente rilevante per team che pubblicano regolarmente. Per il blogger occasionale è overkill; per il content team strutturato è uno dei migliori investimenti.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Frase** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool SEO** nella raccolta dedicata.
-- **Salva Frase nei preferiti** se vuoi tornarci dopo.
+- **Apri la scheda tool di Frase** per confrontare con Surfer, Clearscope, e altri SEO tool.
+- **Esplora la raccolta su SEO e content** per casi d'uso affini.
+- **Salva Frase nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.

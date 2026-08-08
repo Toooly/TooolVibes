@@ -1,167 +1,213 @@
 ### Cosa fa Tolt, in una frase
 
-Tolt è una piattaforma self-serve per lanciare e gestire un programma di affiliazione per SaaS, senza fee iniziali e con un modello revenue-share: paghi solo quando gli affiliati generano effettivamente delle conversioni.
+Tolt è una piattaforma di affiliate management pensata per SaaS che vogliono lanciare un programma di affiliazione o referral senza fee iniziali — collega Stripe, Paddle, Chargebee, o Shopify, e in 15 minuti hai un programma funzionante con dashboard per gli affiliati, tracking ricorrente, e payout globali.
 
-### A chi serve davvero
+Non è un "generico" affiliate tracker. È costruito specificamente per SaaS in abbonamento, dove la sfida non è tracciare una vendita singola ma tracciare un customer lifetime value e pagare commissioni che sopravvivono a upgrade, downgrade, refund, e cancellazioni.
 
-Tolt non è per chi ha già un programma di affiliazione enterprise con FirstPromoter o PartnerStack e non ha intenzione di cambiare. È per:
+### A chi serve davvero, e a chi no
 
-- **SaaS early-stage** che vogliono lanciare un programma di affiliazione senza investimenti iniziali e senza team dedicato.
-- **Indie developer e solopreneur** che hanno un prodotto digitale e vogliono un canale di crescita organica.
-- **Bootstrapped startup** che preferiscono un modello pay-for-performance rispetto a un abbonamento fisso mensile.
-- **Prodotti digitali non-SaaS** (corsi, template, ebook) che vogliono un programma referral.
+Tolt funziona bene per:
 
-Non è il tool giusto per chi cerca un programma di affiliazione enterprise con gestione contratti, pagamenti internazionali complessi, e compliance avanzata (per quello, FirstPromoter, PartnerStack, o Impact).
+**SaaS early-stage con Stripe, Paddle, o Chargebee.** Se sei un founder che ha appena lanciato e vuoi un programma di affiliazione subito, Tolt è probabilmente la scelta giusta. Setup in 15 minuti, integrazione nativa, pricing flat.
 
-### Come funziona, passo per passo
+**SaaS mid-stage che vogliono uscire da Rewardful o FirstPromoter.** Se sei cresciuto oltre i limiti di quei tool, Tolt offre un upgrade path naturale con più features e pricing flat (vs commission cut).
 
-Il flusso operativo ha cinque fasi.
+**Indie maker con prodotti su Shopify.** Tolt si integra con Shopify per gestire commissioni su prodotti fisici o ibridi.
 
-**1. Setup del programma.** L'utente configura su Tolt:
-- Nome del programma e descrizione.
-- Commissioni (percentuale, fissa, tiered, ricorrenti).
-- Regole di attribuzione (cookie duration, last click, first click).
-- Materiali marketing per affiliati (banners, email copy, link generator).
+**SaaS B2B dove il customer LTV è alto.** In contesti B2B con LTV $5k-$50k, la capacità di Tolt di tracciare commissioni ricorrenti e gestire upgrade/downgrade diventa cruciale.
 
-**2. Integrazione con il payment processor.** Tolt si integra con Stripe, Paddle, Lemon Squeezy, e altri. Quando un cliente paga, Tolt registra la transazione, attribuisce la commissione all'affiliato, e traccia il payout.
+**Team che vogliono branded affiliate portal.** Tolt ti permette di ospitare il portale affiliati sul tuo dominio (es. affiliates.tuosito.com), che è una leva di trust importante.
 
-**3. Onboarding degli affiliati.** L'utente può:
-- **Invitare affiliati specifici** (es. creator, blogger, consulenti con audience).
-- **Aprire un programma pubblico** dove chiunque può iscriversi e diventare affiliato.
-- **Usare il marketplace Tolt** (se attivo) per essere scoperti da potenziali affiliati.
+Non è per:
 
-**4. Tracking delle conversioni.** Quando un visitatore clicca su un link affiliato, Tolt piazza un cookie (o usa un altro metodo di attribuzione) e traccia se converte. Se converte entro la finestra di attribuzione, la commissione è registrata.
+**E-commerce puramente fisico ad alto volume.** Tolt è ottimizzato per SaaS e Shopify. Per e-commerce puro ad alto volume, tool come Refersion o UpPromote sono più adatti.
 
-**5. Payout.** Tolt gestisce i payout agli affiliati secondo il calendario configurato (mensile, quindicinale, o custom), con supporto per payout internazionali via PayPal o bonifico.
+**Marketplace multi-vendor.** Tolt non è progettato per gestire pagamenti a vendor terzi in marketplace. Per quello, Stripe Connect, Adyen for Platforms.
 
-:::tip Cosa distingue Tolt dai concorrenti
+**Enterprise con requisiti di compliance specifici.** Se hai bisogno di audit log, SSO, e compliance avanzata, Tolt non offre Enterprise plan in quel senso. Valuta FirstPromoter Enterprise o soluzioni custom.
 
-- **Zero commissioni upfront**: paghi solo quando l'affiliato genera conversioni.
-- **Self-serve completo**: setup, monitoring, e payout senza intervento di sales.
-- **Dashboard trasparente**: vedi in tempo reale click, conversioni, e commissioni.
-- **Onboarding di affiliati self-serve**: chiunque può iscriversi senza che tu debba approvare manualmente.
+**SaaS con +$50k MRR generato da affiliati.** A quel punto, il pricing flat di Tolt diventa meno interessante rispetto a soluzioni con commission percentage, e probabilmente hai bisogno di funzionalità enterprise.
 
-Queste caratteristiche lo rendono ideale per SaaS early-stage che vogliono lanciare velocemente.
+### L'economia degli affiliati, spiegata davvero
 
-:::
+Prima di scegliere Tolt (o qualsiasi piattaforma), devi capire l'economia del tuo programma. Tre numeri chiave:
 
-### Le caratteristiche chiave di Tolt
+**Costo per acquisizione (CAC) target.** Quanto sei disposto a pagare per un cliente acquisito via affiliato? Tipicamente, è 10-30% del primo MRR o del primo anno di revenue. Se il tuo ARPU è $50/mese, un CAC di $50-150 è ragionevole.
 
-**Modello revenue-share.** Paghi una percentuale del revenue generato dagli affiliati (indicativamente 20-30% delle commissioni, il dettaglio è sul sito ufficiale). Zero fee fissi mensili, zero fee di setup.
+**Lifetime value (LTV).** Quanto vale un cliente nel tempo. Se il tuo churn è 5%/mese e ARPU è $50, l'LTV è circa $1.000. La regola: pagare fino al 20% dell'LTV come commissione è sostenibile.
 
-**Anti-frode.** Tolt ha sistemi di detection per click fraud, conversion fraud, e self-referral. Le transazioni sospette sono bloccate prima del payout.
+**Commissions ricorrenti vs one-time.** La scelta più strategica. Tolt supporta entrambi:
+- **One-time commission:** una tantum al signup, tipicamente 20-50% del primo pagamento. Cash flow negativo iniziale, ma limitato.
+- **Recurring commission:** percentuale del MRR per la vita del cliente. Tipicamente 10-30% del MRR mensile o annuale. Allinea gli affiliati ai tuoi obiettivi di retention.
+- **Hybrid:** una tantum + recurring ridotto. Esempio: 30% del primo pagamento + 10% recurring per 12 mesi. Bilanciato.
 
-**Materiali marketing.** Banners, email template, link generator, e strumenti per tracking. Gli affiliati hanno accesso a materiali pronti.
+La scelta influenza il tipo di affiliati che attrai. One-time attira affiliati "spray and pray" che cercano il guadagno veloce. Recurring attira affiliati che credono nel prodotto e vogliono costruire un reddito passivo.
 
-**Quality scoring.** Tolt assegna un punteggio di qualità agli affiliati basato su click, conversioni, e retention. Questo aiuta a identificare gli affiliati che portano lead di valore.
+### Architettura tecnica: come funziona il tracking
 
-**Payout internazionali.** Supporto per PayPal e bonifico bancario, con gestione delle valute multiple.
+Il tracking degli affiliati è più complesso di quanto sembri. Tolt risolve il problema con una serie di meccanismi.
 
-**API e webhook.** Per integrazioni custom con il proprio stack.
+**Tracking link.** Ogni affiliato riceve un link unico (es. toolt.com/?aff=ABC123 o tuosito.com/?via=ABC123). Tolt mette un cookie first-party sul browser del visitatore.
 
-### Casi d'uso concreti
+**Durata del cookie.** Configurabile (default 30-60 giorni). Se il visitatore converti entro quel periodo, la commissione va all'affiliato.
 
-:::pro Quando Tolt fa la differenza
+**Subdomain-safe tracking.** Tolt traccia attraverso root domain e subdomini (es. tuosito.com e app.tuosito.com). Importante se il marketing site e il product vivono su domini diversi.
 
-- **SaaS early-stage che vuole lanciare un programma referral** in poche ore, senza investimenti iniziali.
-- **Indie developer con un prodotto digitale** che vuole un canale di crescita organica.
-- **Creator che vendono corsi o template** e vogliono incentivare i loro studenti a promuovere.
-- **Bootstrapped startup** che preferisce un modello pay-for-performance.
-- **Team marketing snelli** che vogliono testare il canale affiliati prima di investire in un programma enterprise.
+**Sub-ID tracking.** Ogni link può avere sub-IDs (es. aff=ABC123&sub=email-campaign) per granular attribution. L'affiliato può segmentare le proprie campagne.
 
-:::
+**Two-way billing sync.** Tolt si sincronizza con Stripe/Paddle/Chargebee in tempo reale: quando un customer subscribe, Tolt registra la commissione; quando upgrade, la commissione si aggiorna; quando cancel, la commissione si ferma; quando refund, la commissione viene dedotta. È la parte più critica e dove Tolt eccelle.
 
-:::warning Quando Tolt non è la scelta giusta
+**Anti-fraud e self-referral prevention.** Tolt blocca self-referral (l'affiliato si registra come customer), detecta pattern sospetti, e permette approval manuale. Non perfetto, ma ragionevole.
 
-- **Hai bisogno di un programma enterprise** con contratti formali, compliance internazionale, e gestione di network di affiliati di alto livello. Per quello, FirstPromoter, PartnerStack, o Impact.
-- **Non hai ancora un prodotto stabile.** Lanciare un programma affiliati prima di avere un prodotto con retention e conversioni funzionanti è prematuro.
-- **Non hai un sistema di tracking affidabile.** Senza analytics chiare, non sai se gli affiliati portano valore.
-- **Hai volumi molto alti.** Il modello revenue-share può diventare costoso su volumi elevati; a quel punto, un programma proprietario con un admin dedicato può essere più efficiente.
+### Pricing, onestamente
 
-:::
+Tolt usa un modello tier basato sul revenue generato dagli affiliati (verificato luglio 2026):
 
-### Tolt vs i concorrenti diretti
+- **Basic, $69/mese.** Fino a $10k/mese di revenue da affiliati. Unlimited affiliati e referrals, custom domain, branded portal, 2 programmi, 3 partner groups, 3 team members, 3 commission flows. Payouts manuali. Adatto a programmi early-stage.
+- **Growth, $99/mese.** Fino a $20k/mese. Aggiunge auto payouts (2% processing fee), tax form collection (W-9/W-8, 1099), invoice generation, customizable email notifications. Adatto a programmi in crescita.
+- **Pro, $199/mese.** Fino a $50k/mese. Unlimited programmi, custom payout methods, dedicated Slack channel, no "powered by Tolt" branding. Adatto a programmi maturi.
+- **Enterprise, custom.** Programmi con +$50k/mese.
 
-**Tolt vs FirstPromoter.** FirstPromoter è un competitor più "enterprise", con pricing a abbonamento mensile (a partire da circa 100-200 €/mese). Tolt ha il modello revenue-share. Per SaaS che fatturano < 50k €/mese, Tolt è più economico. Per SaaS con volumi alti, FirstPromoter può essere preferibile (controllo completo e costi prevedibili).
+**Cosa NON è incluso al livello base che potresti aspettarti:**
+- Auto payouts richiedono Growth.
+- Customizable email notifications richiedono Growth.
+- "No powered by Tolt" richiede Pro.
+- White-label completo richiede Pro.
 
-**Tolt vs PartnerStack.** PartnerStack è focalizzato su programmi B2B e network di affiliati, con pricing enterprise (custom). Tolt è più "self-serve". Per aziende che vogliono un programma strutturato con account manager, PartnerStack. Per chi vuole un programma rapido e self-serve, Tolt.
+**Tolt ha alzato i prezzi 4 volte dal 2023.** Basic era $49, ora è $69 (+40%). Se firmi un budget annuale, tieni un 10-20% di tolleranza per futuri price increase.
 
-**Tolt vs Lemon Squeezy Affiliates.** Lemon Squeezy offre un programma affiliati integrato (per chi usa Lemon Squeezy come MoR). È semplice ma limitato. Tolt è più completo, ma richiede integrazione con il payment processor. Per chi usa già Lemon Squeezy, il loro programma può bastare. Per chi vuole più flessibilità, Tolt.
+**Tolt non prende commission percentage.** È una differenza sostanziale vs FirstPromoter (che prende fino al 5% del revenue generato da affiliati) o Impact (che prende 10-30%). Su programmi grossi, questo risparmio è significativo.
 
-**Tolt vs programma proprietario.** Un programma proprietario (con tracciamento custom, dashboard custom, gestione manuale) è possibile, ma richiede engineering. Tolt lo fornisce out-of-the-box, a un costo che cresce solo quando il programma funziona.
+### Le feature chiave in profondità
 
-**Tolt vs Rewardful.** Rewardful è un competitor diretto di Tolt, focalizzato su SaaS. La differenza è sottile: Rewardful ha un pricing più prevedibile (fee fisso mensile + % delle commissioni), Tolt ha un modello puramente revenue-share. La scelta dipende dalla preferenza per prevedibilità vs pay-for-performance.
+**Branded affiliate portal.** Gli affiliati accedono a un portale ospitato sul tuo dominio (es. affiliates.tuosito.com), con i tuoi colori, il tuo logo, e la tua copy. Vede il loro link personale, click stats, conversion data, payout history, e materiali marketing. Su Basic c'è il "powered by Tolt" che sparisce solo su Pro.
 
-### Pricing di Tolt
+**Recurring commission tracking.** La killer feature per SaaS. Tolt traccia upgrade, downgrade, refund, e cancellation in tempo reale, e aggiusta le commissioni di conseguenza. Se un customer upgrade da $50 a $100/mese, l'affiliato riceve commissione proporzionale. Se refund, la commissione viene dedotta.
 
-Tolt usa un modello revenue-share: paghi una percentuale delle commissioni pagate agli affiliati. I dettagli:
+**Custom commission per partner.** Puoi impostare commissioni diverse per singoli affiliati: 30% per i top performer, 20% per gli altri, 50% per i launch partner. La flessibilità è uno dei motivi per cui Tolt è apprezzato.
 
-- **Zero fee mensili, zero fee di setup.**
-- **Percentuale del revenue generato dagli affiliati** (verifica il sito ufficiale per la cifra esatta, indicativamente 20-30% delle commissioni).
-- **Payout minimi** per gli affiliati (es. $50) per evitare fee di transazione inefficienti.
+**Double-sided rewards (coupons).** L'affiliato può avere un coupon che dà uno sconto al customer E contemporaneamente genera commissione. È il pattern standard per SaaS con sconti di lancio.
 
-Per un SaaS che fattura 10k €/mese da affiliati con commissioni al 30% (cioè 3k €/mese di commissioni), il costo Tolt è circa 600-900 €/mese. Sufficientemente basso da essere giustificato dal ROI solo se il programma affiliati è un canale di crescita profittevole.
+**Global auto payouts.** Su Growth, pagamenti via PayPal, Wise, local bank, crypto, e wire. Con tax form collection (W-9/W-8 per US contractors) e 1099 filing. Per programmi con affiliati internazionali, è una manna.
 
-### Flusso pratico: un caso reale
+**Custom referral link slugs.** L'affiliato può scegliere il suo slug (es. tuosito.com/?via=mario-rossi invece di tuosito.com/?via=ABC123). Migliore brand recognition.
 
-Sofia è founder di un SaaS B2B che fattura 5k €/mese da outbound e content. Vuole lanciare un programma affiliati per avere un canale di crescita organica.
+**Email notifications.** Su Growth, puoi personalizzare le email che Tolt manda (signup, payout, referral, etc.). Su Basic, sono template fissi.
 
-**Giorno 1:** setup. Sofia configura Tolt: commissione 30% ricorrente per il primo anno, cookie 30 giorni, integrazione con Stripe.
+**Fraud detection.** Self-referral blocking, IP analysis, pattern detection. Non perfetto, ma ragionevole. Per frodi sofisticate, devi combinarlo con il tuo monitoring.
 
-**Giorno 2:** materiali. Crea banner, email template, e pagina di onboarding affiliati. Pubblica un post su LinkedIn e Hacker News per invitare i primi affiliati.
+### Casi d'uso reali
 
-**Settimana 2:** primi affiliati. Tre blogger nel settore si iscrivono, due accettano, e iniziano a promuovere.
+**SaaS early-stage con primo programma di affiliazione.** Tolt Basic, custom domain, 1-2 programmi, commissioni 30% recurring. Setup: 1 ora. Primi affiliati via outreach personale. Risultato atteso: 5-15% del MRR da affiliati in 6 mesi.
 
-**Mese 2:** prime conversioni. 4 clienti nuovi arrivano via affiliati, generando 400 € di MRR. Tolt paga 120 € di commissioni ai blogger, e trattiene 36 € (30% di 120) come fee. ROI per Sofia: 400 € MRR in entrata, 156 € in uscita (commissioni + fee Tolt), per un guadagno netto di 244 €/mese.
+**Indie maker su AppSumo o Product Hunt launch.** Tolt Basic, commissioni generose (40% recurring per 12 mesi) per creare buzz al lancio. Tracking del conversion post-launch.
 
-**Mese 6:** scaling. Il programma affiliati porta 30% del nuovo MRR. Sofia ha 15 affiliati attivi, e i payout sono diventati un costo operativo prevedibile.
+**SaaS B2B con partner program.** Tolt Pro, multi-tier (referral partner, integration partner, agency partner), commissioni custom per tier, payout in valuta locale. Per programmi strutturati con relazioni a lungo termine.
 
-Senza Tolt, lanciare un programma simile avrebbe richiesto: sviluppo custom, gestione manuale dei payout, integrazione con Stripe. Tempo stimato: 2-4 settimane. Con Tolt: 1 giorno.
+**E-commerce ibrido su Shopify.** Tolt + Shopify, commissioni su prodotti fisici E digitali. Per brand che hanno sia SaaS sia shop.
+
+**Agency che gestisce programmi per clienti.** Tolt Pro con white-label, branded portal per ogni cliente, gestione multi-tenant.
+
+### Quando Tolt non è la scelta giusta
+
+**Programmi con +$50k/mese di revenue affiliato.** A quel punto, valuta FirstPromoter Enterprise, Impact, o PartnerStack. Hanno funzionalità enterprise che Tolt non ha.
+
+**E-commerce fisico puro.** Per marketplace fisici, Refersion, UpPromote, o soluzioni custom.
+
+**Settori regolamentati con compliance specifica.** Se hai bisogno di audit log, SOC 2, HIPAA, non c'è un tier Enterprise di Tolt che copra questo.
+
+**Integrazioni custom profonde.** Tolt ha webhooks e API, ma se devi fare integrazioni custom complesse, meglio soluzioni con API più mature (Impact, PartnerStack).
+
+### Tolt vs FirstPromoter vs PartnerStack vs Rewardful vs Impact
+
+**Tolt vs FirstPromoter.** FirstPromoter è il concorrente più diretto. Storicamente FirstPromoter prende 5% del revenue affiliato in tier più alti. Tolt ha 0% commission. Su programmi grossi, Tolt risparmia migliaia di dollari/anno. FirstPromoter ha più funzionalità enterprise (audit log, white-label, dedicated support). Per SaaS indie/mid-market, Tolt vince su prezzo. Per enterprise, FirstPromoter vince su features.
+
+**Tolt vs PartnerStack.** PartnerStack è più enterprise-oriented, con focus su partner ecosystem (non solo affiliati ma anche resellers, integrators). Più costoso, più complesso, adatto a aziende con programmi partner strutturati. Tolt è più snello e focalizzato.
+
+**Tolt vs Rewardful.** Rewardful è il tool entry-level per SaaS indie. Più economico (entry-level a $29/mese), meno funzionalità. Per chi parte da zero con budget limitato, Rewardful è OK. Tolt è il passo successivo naturale.
+
+**Tolt vs Impact.** Impact è il leader enterprise. Ha la sua rete di affiliati, software maturo, e pricing enterprise. Per programmi che vogliono attingere alla rete Impact, è l'unica opzione. Tolt non ha una rete di affiliati propria.
+
+**Tolt vs Refersion.** Refersion è più orientato a e-commerce, meno a SaaS. Tolt vince per SaaS.
+
+### Setup pratico: da zero al primo affiliato attivo in un giorno
+
+**1. Crea l'account.** Su tolt.com, signup, 14-day free trial, no credit card. 5 minuti.
+
+**2. Connetti Stripe/Paddle/Chargebee.** Settings → Integrations. OAuth con il tuo account Stripe, autorizza Tolt a leggere customers, subscriptions, invoices. 5 minuti.
+
+**3. Configura il primo programma.** Programs → New. Definisci nome, commissioni (percentage, recurring, duration), cookie duration. 15 minuti.
+
+**4. Configura il branded portal.** Settings → Branding. Dominio personalizzato (es. affiliates.tuosito.com), colori, logo. 15 minuti.
+
+**5. Definisci i materiali marketing.** Resources page con link, banner, email copy. Crea 2-3 asset base. 30 minuti.
+
+**6. Testa con te stesso.** Crea un account affiliato di test, fai una simulazione di referral, verifica che la commissione venga tracciata. 15 minuti.
+
+**7. Recluta i primi affiliati.** Outreach personale ai tuoi primi 10-20 candidati: blogger di nicchia, creator YouTube, podcast host, integration partners. 1-2 ore.
+
+In un giorno hai un programma live. In una settimana, hai i primi affiliati attivi. In un mese, hai conversioni.
+
+### Errori comuni
+
+**Offrire commissioni troppo basse per attrarre affiliati.** Sotto 20% recurring, il programma fatica a competere con alternative. Allinea con i tuoi concorrenti.
+
+**Non curare il branded portal.** Il portale affiliati è la prima impressione per i tuoi partner. Se è generico, la fiducia cala. Investi tempo in branding e copy.
+
+**Ignorare l'onboarding degli affiliati.** Non basta pubblicare il link. Chiama i top affiliati, spiega il prodotto, dai loro accesso a materiali. Senza onboarding, il programma langue.
+
+**Dimenticare di ottimizzare le commissioni.** A 6 mesi, analizza quali affiliati performano e quali no. Aumenta le commissioni per i top, riduci per gli inattivi.
+
+**Sottovalutare l'attrito del payout.** Se i tuoi affiliati sono internazionali e tu non hai auto payouts (Growth), il payout manuale è un incubo. Cresci al tier superiore quando ne hai bisogno.
 
 ### Le domande che ci fanno più spesso
 
-**Tolt è difficile da configurare?**
-No, l'interfaccia è self-serve. Il setup di base richiede 1-2 ore, inclusa l'integrazione con il payment processor.
+**Tolt è meglio di FirstPromoter?**
+Dipende dal tuo programma. Tolt ha pricing flat (0% commission), FirstPromoter prende 5% su tier alti. Tolt ha meno funzionalità enterprise. Per SaaS indie/mid-market, Tolt vince.
 
-**Quanto si paga?**
-Il modello è revenue-share: una percentuale delle commissioni pagate agli affiliati. Zero fee fissi. Verifica il sito ufficiale per la cifra corrente.
+**Quanto costa davvero un programma di affiliazione?**
+Tolt Basic a $69/mese + i costi delle commissioni che paghi agli affiliati. Su un programma con $5k/mese di revenue da affiliati e 30% commission, paghi $1.500/mese agli affiliati + $69 a Tolt = $1.569/mese.
 
-**Posso usare Tolt se non ho Stripe?**
-Sì, Tolt si integra con Stripe, Paddle, Lemon Squeezy, e altri. Verifica la lista corrente sul sito ufficiale.
+**Posso passare da Rewardful a Tolt?**
+Sì, ma con effort. Esporti la lista affiliati, reimporti in Tolt, re-emetti i link, e gestisci il periodo di transizione. Pianifica 1-2 settimane.
 
-**Tolt gestisce i payout internazionali?**
-Sì, con PayPal e bonifico. Le valute supportate dipendono dal payment processor integrato.
+**Funziona con Stripe Atlas?**
+Sì, Tolt funziona con qualsiasi Stripe account. Stripe Atlas è un setup specifico ma l'integrazione è la stessa.
 
-**Come gestisco il quality scoring degli affiliati?**
-Tolt offre un punteggio di qualità automatico basato su click, conversioni, e retention. Puoi usarlo per identificare gli affiliati da premiare (con commissioni più alte) o da bloccare.
+**Quanto devo pagare i miei affiliati?**
+Dipende dal tuo LTV. Regola pratica: 20-30% recurring per SaaS con LTV $1k+. Per prodotti one-time, 20-50% del primo pagamento. Confronta con i concorrenti.
 
-**Tolt ha un marketplace di affiliati?**
-Sì, Tolt ha un marketplace dove i SaaS possono essere scoperti da potenziali affiliati. L'efficacia dipende da quanto è attivo il marketplace.
+**Tolt fa marketing per trovare affiliati?**
+No. Tolt è il software, non la rete. Trovare affiliati è il tuo lavoro (outreach, content marketing, conference, ecc.).
 
-**Posso gestire pagamenti di commissioni in criptovalute?**
-No, Tolt supporta solo metodi di pagamento tradizionali (PayPal, bonifico). Per payout in crypto, servono soluzioni custom.
+### Alternative da considerare
 
-**Tolt è integrato con il mio CRM?**
-Tolt ha integrazioni con i CRM principali via webhook. Per integrazioni custom, l'API è documentata.
+- **FirstPromoter.** Meno economico a programmi grossi, più features enterprise.
+- **PartnerStack.** Enterprise, ecosystem partner, più costoso.
+- **Rewardful.** Entry-level, meno features, più economico.
+- **Impact.** Enterprise leader, con rete di affiliati propria.
+- **Refersion.** E-commerce, meno adatto a SaaS.
+- **Build custom con Stripe + dashboard.** Per team engineering con esigenze molto specifiche.
 
 ### Cosa ci aspettiamo da Tolt nei prossimi mesi
 
-Le aree da osservare:
+**Integrazione con più payment processor.** Shopify già supportato. Possibili espansioni a Lemon Squeezy, Recurly, o Chargebee 2.0.
 
-- **Più integrazioni con CRM e marketing tools.** Per tracciare il lead-to-revenue degli affiliati in modo più granulare.
-- **Modelli di commissione più flessibili.** Performance tiers, bonus, gamification per gli affiliati.
-- **Marketplace più attivo.** Più SaaS e più affiliati significano un ecosistema più vivo.
-- **Compliance internazionale.** Gestione delle tasse sulle commissioni per gli affiliati internazionali.
+**Più funzionalità di analytics.** Attribution migliore, segmentazione per fonte, lifetime value per affiliato. Sono richieste frequenti della community.
+
+**API più matura.** Webhook e API esistenti, ma con limitazioni. Una API più completa aprirebbe use case enterprise.
+
+**Compliance e audit.** W-9/W-8 e 1099 già su Growth. Possibili espansioni a GDPR compliance, audit log, e data residency EU per il mercato europeo.
 
 ### In sintesi
 
-Tolt è una piattaforma solida per lanciare un programma di affiliazione SaaS senza investimenti iniziali. È self-serve, intuitivo, e ha un modello di pricing che si ripaga solo se il programma funziona.
+Tolt è una scelta eccellente per SaaS early e mid-stage che vogliono un programma di affiliazione self-serve, con pricing flat e zero commission cut. Il setup è veloce, l'integrazione con Stripe/Paddle/Chargebee è nativa, e le feature ricorrenti (commission tracking, branded portal) sono ben fatte.
 
-Per SaaS early-stage, indie developer, e creator che vogliono testare il canale affiliati senza rischi, è uno strumento con ROI diretto. Per programmi enterprise con volumi alti, FirstPromoter o PartnerStack restano preferibili.
+Le limitazioni sono: tier alti che diventano costosi, funzionalità enterprise limitate, e prezzi che sono cambiati 4 volte in 3 anni (segnale da monitorare). Per il target giusto — SaaS indie/mid-market con programmi sotto $50k/mese di revenue affiliato — è una delle scelte migliori.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Tolt** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altre piattaforme affiliate** nella raccolta dedicata.
-- **Salva Tolt nei preferiti** se vuoi tornarci dopo.
+- **Apri la scheda tool di Tolt** per confrontare con FirstPromoter, PartnerStack, e altri affiliate tool.
+- **Esplora la raccolta su SaaS business** per casi d'uso affini.
+- **Salva Tolt nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.

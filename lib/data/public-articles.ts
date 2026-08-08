@@ -80,7 +80,7 @@ function buildToolWriteup(tool: ToolPublic): EditorialPostRecord | null {
 const guideSeeds: GuideSeed[] = [
   {
     slug: "betterpic",
-    title: "BetterPic: la guida onesta all'headshot AI",
+    title: 'BetterPic: la guida onesta all\'headshot AI',
     dek: 'Cosa fa davvero, quando ti risparmia un fotografo, e quando invece non basta.',
     summary:
       "BetterPic genera headshot professionali a partire dai tuoi selfie, con consegna in meno di un'ora." +
@@ -95,99 +95,112 @@ const guideSeeds: GuideSeed[] = [
     source_url: "https://tooolvibes.com/posts/betterpic",
     featured: true,
     highlights: [
-      "Consegna headshot in 4K in meno di un'ora, contro le 1–3 settimane di uno shooting",
-      'Costa una frazione di un servizio fotografico: indicativamente 30–60 € a pacchetto',
-      'Funziona bene con 15–25 selfie, male con set scarsi o foto tutte uguali',
-      'Il pacchetto base è accettabile; il ritocco umano fa la differenza per usi editoriali',
+      "**Aggiornamento LinkedIn in giornata.** Consulente che cambia settore e vuole rinfrescare il profilo. Carica 12 selfie, sceglie preset corporate, scarica e pubblica. Tempo totale: 1-2 ore.",
+      "**Press kit per founder early-stage.** Set uniforme in tempi rapidi, costo abbordabile.",
+      "**Allineamento immagini del team.** Azienda con 10 persone che vogliono foto dal look coerente. Team pricing dedicato.",
+      "**CV e portfolio per freelance.** Tempo minimo, immagine spendibile.",
+      "**Print-ready a costi accessibili.** Tutti i tier sono 4K, quindi stampabile su banner, badge, press kit.",
     ],
     details: [
-      'Preset corporate, creativo, ambientato, tradizionale',
-      'Output in 4K, scaricabili singolarmente o in pacchetto',
-      'Ritocco umano opzionale disponibile come upsell',
+      "**Aggiornamento LinkedIn in giornata.** Consulente che cambia settore e vuole rinfrescare il profilo. Carica 12 selfie, sceglie preset corporate, scarica e pubblica. Tempo totale: 1-2 ore.",
+      "**Press kit per founder early-stage.** Set uniforme in tempi rapidi, costo abbordabile.",
+      "**Allineamento immagini del team.** Azienda con 10 persone che vogliono foto dal look coerente. Team pricing dedicato.",
     ],
     cautions: [
-      'Serve un set di selfie di qualità, non basta uno scatto',
-      "L'AI può generare artefatti su volti molto asimmetrici o con accessori",
-      'Le policy sui diritti variano: leggi le condizioni prima di usi commerciali',
+      "**Campagne stampa di alto livello.** Copertine, campagne adv nazionali, branded content premium.",
+      "**Ritratti con direzione artistica.** Luce studiata, angolazione non convenzionale, look specifico.",
+      "**Contesti in cui l'AI-generated è esplicitamente esclusa.** Alcune redazioni, agenzie, contesti corporate vietano le immagini AI.",
+      "**Personal brand che deve trasmettere \"presenza\".** Speaker, mental coach, autori: serve uno shooting reale.",
+      "**Volti con caratteristiche molto particolari.** Viso molto asimmetrico, barba insolita. L'AI può semplificare.",
     ],
       content_markdown: `### Cosa fa BetterPic, in una frase
 
-BetterPic prende un set di selfie che gli dai tu, li usa come riferimento biometrico, e ti restituisce un pacchetto di ritratti generati da un modello generativo allenato su volti umani. Scegli uno stile, attendi la generazione, scarichi. Tutto qui.
+BetterPic prende un set di selfie (8-14), li usa come riferimento biometrico, e ti restituisce un pacchetto di 20-120 ritratti generati in 4K in meno di due ore, con la possibilità di far ritoccare un'immagine da un editor umano sul tier Expert.
 
-Nella pratica è un servizio SaaS verticale: carichi foto, scegli preset, ricevi output. Non è un editor creativo, non è Photoshop, non è un servizio fotografico. È un generatore di headshot con una pipeline di ritocco umano opzionale.
-
-### A chi serve davvero
+### A chi serve davvero, e a chi no
 
 L'utente tipo di BetterPic è una persona che ha bisogno di "sembrare credibile" in tempi brevi, non di "sembrare un personaggio". In concreto:
 
 - Consulenti, founder, manager che aggiornano LinkedIn dopo un cambio di ruolo o un rebranding personale.
 - Freelance che devono pubblicare una foto sul sito e sui CV di proposte.
 - Team aziendali che vogliono allineare lo stile delle foto interne senza organizzare uno shooting per 12 persone.
-- Early-stage startup che preparano un press kit minimo per il lancio.
 - Persone in transizione di carriera che non hanno foto recenti e non vogliono aspettare settimane.
+- Press kit per founder early-stage che hanno bisogno di immagini credibili per giornalisti, podcast, pagine "About".
 
 Non è il servizio giusto per chi cerca un ritratto riconoscibile, una direzione artistica precisa, o un'immagine destinata a una campagna adv di alto livello. In quei casi, un fotografo resta una scelta migliore.
 
-### Come funziona, passo per passo
+### Come funziona, davvero
 
-Il flusso è lineare. Una volta dentro, l'utente attraversa cinque fasi.
+Il flusso è lineare, una volta dentro.
 
-**1. Caricamento del set di selfie.** BetterPic chiede un set di foto, idealmente tra 15 e 25, scattate in contesti diversi, con espressioni diverse, in condizioni di luce differenti. Selfie frontali, di tre quarti, in luce naturale, in luce interna, con e senza occhiali (se li porti solitamente). La piattaforma fornisce una mini-guida su come scattare le foto: sfondo neutro, volto ben illuminato, niente gruppi.
+**1. Caricamento del set di selfie.** BetterPic chiede 8-14 foto in contesti diversi, con espressioni diverse, in condizioni di luce differenti. Selfie frontali, di tre quarti, in luce naturale, in luce interna, con e senza occhiali (se li porti solitamente). La piattaforma fornisce una mini-guida su come scattare: sfondo neutro, volto ben illuminato, niente gruppi. Meno foto del previsto da molti concorrenti (che chiedono 15-25) — è uno dei punti di accesso più semplici.
 
-**2. Scelta dello stile.** BetterPic offre una libreria di preset, organizzati per contesto: corporate, creativo, ambientato, tradizionale, e varianti intermedie. La scelta del preset influenza molto il risultato finale. Un preset "corporate classico" tende a produrre sfondi neutri, giacca o maglia, luce morbida. Un preset "creativo" può restituire uno sfondo di uno studio colorato, look più rilassato.
+**2. Scelta dello stile.** BetterPic offre una libreria di preset organizzati per contesto: corporate, creativo, ambientato, tradizionale. La scelta del preset influenza molto il risultato finale. Un preset "corporate classico" produce sfondi neutri, giacca o maglia, luce morbida. Un preset "creativo" restituisce uno sfondo colorato, look più rilassato.
 
-**3. Generazione.** L'algoritmo produce un pacchetto di scatti partendo dal volto di riferimento e dal preset scelto. Il tempo di attesa è in genere inferiore all'ora, a volte pochi minuti. L'utente riceve una notifica quando il pacchetto è pronto.
+**3. Generazione.** L'algoritmo produce un pacchetto di scatti in 4K partendo dal volto di riferimento. Il tempo di attesa varia: 2 ore per il tier base, 1 ora per il tier top. L'utente riceve una notifica quando il pacchetto è pronto.
 
-**4. Selezione e (opzionale) ritocco umano.** L'utente scarica il pacchetto e seleziona le immagini migliori. BetterPic offre un passaggio di ritocco umano come upsell: un editor corregge artefatti (occhi, denti, asimmetrie) a fronte di un costo aggiuntivo. Per uso LinkedIn e CV di solito non serve. Per press kit di un founder o immagine su una testata, il ritocco fa differenza.
+**4. Selezione e (opzionale) ritocco umano.** L'utente scarica il pacchetto e seleziona le immagini migliori. Solo il tier Expert include il ritocco umano (illimitato su 1 foto, con 1 redo gratuito). Per gli altri tier, gli AI edit sono limitati (2-8 per pacchetto) e il ritocco umano è un add-on a $8/edit.
 
-**5. Utilizzo.** Le immagini sono fornite in 4K, scaricabili in formati standard, con licenza per uso personale e professionale (i dettagli della licenza sono sul sito ufficiale, e vanno verificati caso per caso prima di usi commerciali intensivi).
+**5. Utilizzo.** Le immagini sono fornite in 4K (long edge ~3840px), scaricabili in formati standard, con licenza commerciale. Il tier base (Basic, $35) include uso personale, Pro ($39) e Expert ($79) includono licenza commerciale. Per uso editoriale ad alta risoluzione o campagne, leggi i termini sul sito ufficiale.
 
 :::tip Set di selfie ideale
 
-Per risultati davvero buoni, prepara un set di almeno 15-20 selfie così composto:
+Per risultati davvero buoni, prepara un set di almeno 10-12 selfie così composto:
 
-- Luce naturale vicino a una finestra (almeno 8 foto)
-- Luce interna neutra (almeno 4 foto)
-- Espressioni diverse: neutro, mezzo sorriso, sorriso pieno (mix)
+- Luce naturale vicino a una finestra (almeno metà del set)
+- Luce interna neutra (almeno 3-4 foto)
+- Espressioni diverse: neutro, mezzo sorriso, sorriso pieno
 - Angolazioni: frontale, leggero tre quarti a sinistra, a destra
-- Sfondi diversi: muro chiaro, muro scuro, sfondo sfocato
+- Sfondi diversi: muro chiaro, muro scuro, sfocato
 - Eventuali accessori che usi abitualmente: occhiali, orecchini
 
-Scatta in momenti diversi, anche nella stessa sessione: la varietà è la materia prima del modello.
+Scatta in momenti diversi: la varietà è la materia prima del modello.
 
 :::
 
 ### La qualità dell'output, onestamente
 
-BetterPic non è magia, e non è nemmeno fuffa. Il risultato dipende molto da tre fattori.
+BetterPic non è magia, e non è nemmeno fuffa. Il risultato dipende da tre fattori.
 
 **Qualità del set di input.** Se le foto sono sfocate, in controluce, tutte con la stessa espressione e la stessa angolazione, l'output sarà piatto. Se sono varie, ben esposte, con espressioni differenti, l'output sarà molto più ricco.
 
 **Preset scelto.** I preset corporate e tradizionali sono i più conservativi, e quindi i più "sicuri" per LinkedIn, CV, contesti formali. I preset creativi e ambientati producono risultati più distintivi, ma anche più rischiosi se l'uso finale è corporate.
 
-**Upselling del ritocco umano.** Il pacchetto base è accettabile, ma su volti con asimmetrie marcate, occhiali dalla montatura spessa, barbe molto folte, l'AI può generare artefatti. Il ritocco umano risolve la maggior parte di questi problemi.
+**Tier e uman edit.** Il pacchetto base è accettabile, ma su volti con asimmetrie marcate, occhiali dalla montatura spessa, barbe molto folte, l'AI può generare artefatti. Il ritocco umano (solo Expert) risolve la maggior parte di questi problemi. Per gli altri tier, gli AI edit aiutano ma non sostituiscono un editor umano.
 
-### Quanto costa (realisticamente)
+### Quanto costa, con i numeri reali
 
-I piani pubblicati sul sito di BetterPic variano nel tempo. Al momento della stesura, il modello commerciale tipico è a pacchetto, con prezzi che vanno indicativamente da 30 a 60 euro per un set base (più foto) e 100+ euro per un pacchetto completo con ritocco umano e usi commerciali estesi.
+BetterPic usa un modello one-time payment (verificato luglio 2026):
+
+| Tier | Prezzo | Foto | Stili | Tempo | AI edits | Human edits | Licenza |
+|------|--------|------|-------|-------|----------|-------------|---------|
+| Basic | $35 | 20 | 1 | 2 ore | 2 | 0 | Personale |
+| Pro | $39 | 60 | 3 | 1.5 ore | 4 | 0 | Commerciale |
+| Expert | $79 | 120 | 6 | 1 ora | 8 | Unlimited su 1 foto + 1 redo | Commerciale |
+
+**Add-ons:** $8 per human edit extra, $10 per redo completo (ri-elabora da nuove foto).
+
+**Team pricing:** quote-based, via teams.betterpic.io. 60 foto/persona, dashboard custom, human touch-up, EU data residency per GDPR. Non c'è un prezzo per-seat pubblicato.
+
+**Politica di refund:** 7 giorni, ma i refund sono negati se hai già scaricato le immagini. Quindi: valuta bene prima di scaricare.
 
 Per confronto:
 
-- Shooting fotografico professionale: 150–500 euro, più 1–3 settimane di attesa.
-- HeadshotPro (concorrente diretto): fascia simile.
-- Photoshop + freelancer: variabile, da 50 a 200 euro a seconda della complessità, con tempi lunghi.
+- Shooting fotografico professionale: 150-500 euro, 1-3 settimane di attesa.
+- HeadshotPro: stesso segmento, pricing simile ($29-$59).
+- Photoshop + freelancer: variabile, 50-200 euro.
 
-Il vantaggio economico di BetterPic è chiaro per chi ha bisogno di un headshot in tempi brevi, senza investire in uno shooting. Il divario si riduce quando serve un ritocco umano di qualità, perché a quel punto il costo di BetterPic con ritocco si avvicina a quello di un fotografo entry-level.
+Il vantaggio economico di BetterPic è chiaro per chi ha bisogno di un headshot in tempi brevi. Il divario si riduce quando serve il ritocco umano di qualità, perché a quel punto il costo di BetterPic Expert si avvicina a quello di un fotografo entry-level.
 
 ### Quando BetterPic funziona bene
 
 :::pro Casi d'uso in cui BetterPic è la scelta giusta
 
-- **Aggiornamento LinkedIn in giornata.** Consulente che cambia settore e vuole rinfrescare il profilo. Carica 20 selfie, sceglie preset corporate, scarica e pubblica. Tempo totale: 1–2 ore.
-- **Press kit per founder early-stage.** Startup che si prepara a un lancio e ha bisogno di immagini credibili per giornalisti, podcast, e pagine "About". Set uniforme in tempi rapidi, costo abbordabile.
-- **Allineamento immagini del team.** Azienda con 10 persone che vogliono foto dal look coerente sul sito. BetterPic permette di standardizzare lo stile mantenendo la diversità dei volti.
-- **CV e portfolio per freelance.** Professionista che ha bisogno di un'immagine curata per il portfolio personale, le proposte, e il sito. Produce una versione spendibile in pochi minuti.
-- **Pronto in pochi giorni per un evento.** Stai per parlare a un evento, fare un pitch, o essere fotografato per un articolo, e non hai una foto professionale recente.
+- **Aggiornamento LinkedIn in giornata.** Consulente che cambia settore e vuole rinfrescare il profilo. Carica 12 selfie, sceglie preset corporate, scarica e pubblica. Tempo totale: 1-2 ore.
+- **Press kit per founder early-stage.** Set uniforme in tempi rapidi, costo abbordabile.
+- **Allineamento immagini del team.** Azienda con 10 persone che vogliono foto dal look coerente. Team pricing dedicato.
+- **CV e portfolio per freelance.** Tempo minimo, immagine spendibile.
+- **Print-ready a costi accessibili.** Tutti i tier sono 4K, quindi stampabile su banner, badge, press kit.
 
 :::
 
@@ -195,36 +208,34 @@ Il vantaggio economico di BetterPic è chiaro per chi ha bisogno di un headshot 
 
 :::warning Casi in cui uno shooting resta superiore
 
-- **Campagne stampa di alto livello.** Copertine di magazine, campagne adv nazionali, branded content per brand premium. La qualità richiesta è più alta di quella che l'AI può garantire stabilmente.
-- **Ritratti con direzione artistica.** Se il progetto richiede un'estetica precisa, una luce studiata, un'angolazione non convenzionale, un fotografo ti dà controllo totale. L'AI no.
-- **Contesti in cui l'AI-generated è esplicitamente esclusa.** Alcune redazioni, agenzie creative, e contesti corporate vietano le immagini AI. Verifica sempre.
-- **Personal brand che deve trasmettere "presenza".** Alcune professioni (attori, speaker, mental coach, autori) vivono di presenza scenica. Un headshot AI può essere tecnicamente perfetto ma mancare di personalità. Per questi casi, uno shooting reale paga.
-- **Volti con caratteristiche molto particolari.** Se hai un viso molto asimmetrico, una barba insolita, o tratti somatici non standard, l'AI può semplificare. Il ritocco umano aiuta, ma in alcuni casi serve davvero un fotografo che sappia gestire la luce.
+- **Campagne stampa di alto livello.** Copertine, campagne adv nazionali, branded content premium.
+- **Ritratti con direzione artistica.** Luce studiata, angolazione non convenzionale, look specifico.
+- **Contesti in cui l'AI-generated è esplicitamente esclusa.** Alcune redazioni, agenzie, contesti corporate vietano le immagini AI.
+- **Personal brand che deve trasmettere "presenza".** Speaker, mental coach, autori: serve uno shooting reale.
+- **Volti con caratteristiche molto particolari.** Viso molto asimmetrico, barba insolita. L'AI può semplificare.
 
 :::
 
 ### BetterPic vs i concorrenti diretti
 
-**BetterPic vs HeadshotPro.** Sono i due servizi più noti in questa categoria. BetterPic ha un flusso leggermente più rapido e un set di preset più "pulito" per uso corporate. HeadshotPro ha storicamente una libreria di stili più ampia e opzioni di personalizzazione fine. Per un utente che deve fare una scelta, la differenza è minima: la qualità dipende più dal set di input che dal servizio.
+**BetterPic vs HeadshotPro.** Stesso segmento, pricing simile. BetterPic ha 4K su tutti i tier, HeadshotPro ha 4K solo sul premium. Per uso corporate rapido, BetterPic è più lineare. Per personalizzazione fine, HeadshotPro ha più opzioni.
 
-**BetterPic vs Aragon AI.** Stessa categoria, modello di pricing simile, qualità dell'output comparabile. Le differenze sono su dettagli: velocità di consegna, ampiezza della libreria di preset, opzioni di upsell. Consigliabile fare una prova gratuita su entrambi prima di scegliere.
+**BetterPic vs Aragon AI.** Stesso segmento, pricing simile. Aragon ha consegna più veloce (15 min sul premium) e più foto incluse (40-100). BetterPic ha 4K su tutti i tier, e uman edit su Expert. Per chi cerca velocità, Aragon. Per chi cerca risoluzione, BetterPic.
 
-**BetterPic vs Secta AI.** Secta è posizionato su un segmento più alto (con un ex-fotografo Apple alla guida), con un'estetica più distintiva. Costa di più, ed è pensato per chi cerca un look più "da copertina". Per la maggior parte degli usi professionali, BetterPic è più che sufficiente.
+**BetterPic vs Secta Labs.** Secta è posizionato più in alto, con un ex-fotografo Apple. Singolo tier a $49, 200-300 foto, alta-def ma non 4K-marketed. Per "look da copertina" distinctive, Secta. Per uso corporate standard, BetterPic.
 
-**BetterPic vs un fotografo.** Non è un confronto equo, perché sono prodotti diversi. Il fotografo vince su qualità, distintività, performance. BetterPic vince su tempi, costi, scalabilità. Se devi fare un headshot e hai un mese, scegli il fotografo. Se devi farlo in una giornata, scegli BetterPic.
+**BetterPic vs un fotografo.** Non è un confronto equi: sono prodotti diversi. Il fotografo vince su qualità e distintività. BetterPic vince su tempi, costi, e scalabilità. Se hai un mese, scegli il fotografo. Se devi farlo in una giornata, scegli BetterPic.
 
-**BetterPic vs Photoshop + freelancer.** Un ritoccatore esperto può prendere una tua foto amatoriale e trasformarla in un headshot credibile. Il tempo è però significativamente superiore, e il costo può avvicinarsi a quello di un pacchetto BetterPic con ritocco umano. Ha senso se hai già una buona foto di partenza e ti serve solo una pulizia.
-
-### Come scattare il set di selfie che fa la differenza
+### Il protocollo di scatto che fa la differenza
 
 :::tip Checklist operativa
 
 Prima di aprire BetterPic:
 
-- [ ] Almeno 15 foto, idealmente 20–25
+- [ ] Almeno 10 foto, idealmente 12-14
 - [ ] Luce naturale vicino a una finestra in almeno metà del set
 - [ ] Espressioni miste: neutro, sorriso leggero, sorriso pieno
-- [ ] Angolazioni miste: frontale, tre quarti a sinistra, tre quarti a destra
+- [ ] Angolazioni miste: frontale, tre quarti a sinistra, tre qualti a destra
 - [ ] Sfondi neutri (muro chiaro, muro scuro, sfocato)
 - [ ] Niente gruppi, niente altre persone nel frame
 - [ ] Se porti occhiali, almeno metà delle foto con gli occhiali
@@ -236,76 +247,75 @@ Dopo aver scattato:
 
 - [ ] Controlla che ogni foto sia a fuoco sul viso
 - [ ] Scarta i duplicati quasi identici
-- [ ] Mantieni una varietà reale, non 25 varianti della stessa inquadratura
+- [ ] Mantieni una varietà reale, non 12 varianti della stessa inquadratura
 
 :::
 
-### Flusso pratico: un caso reale
+### Un caso reale: Marco
 
-Marco è un consulente marketing, 38 anni, ha cambiato azienda dopo otto anni, e vuole rinfrescare la sua presenza LinkedIn prima di iniziare a fare outreach commerciale. Tempo a disposizione: il weekend. Budget: minimo.
+Marco è un consulente marketing, 38 anni, ha cambiato azienda dopo otto anni, e vuole rinfrescare la sua presenza LinkedIn prima di fare outreach commerciale. Tempo: il weekend. Budget: minimo.
 
-Venerdì sera: scatta 22 selfie in casa, davanti a una finestra, contro un muro bianco, in cinque "set" diversi (cambio maglia, cambio luce naturale spostando la posizione rispetto alla finestra, cambio espressione). Seleziona le 20 migliori.
+Venerdì sera: scatta 12 selfie in casa, davanti a una finestra, contro un muro bianco, in quattro "set" diversi (cambio maglia, cambio luce naturale, cambio espressione). Seleziona le 12 migliori.
 
-Sabato mattina: si iscrive a BetterPic, carica le 20 foto, sceglie il preset "corporate classico". Tempo di generazione: 38 minuti. Scarica il pacchetto, seleziona 4 immagini.
+Sabato mattina: si iscrive a BetterPic, carica le foto, sceglie preset "corporate classico". Tempo di generazione: 38 minuti sul tier Pro. Scarica il pacchetto, seleziona 4 immagini.
 
 Sabato pomeriggio: aggiorna LinkedIn con la nuova foto. Aggiorna anche la foto del sito personale.
 
-Costo totale: 35 euro. Tempo totale: meno di 3 ore. Risultato: un headshot credibile, allineato al tono corporate, sufficiente per uso LinkedIn e CV.
+Costo totale: $39 (Pro). Tempo totale: meno di 3 ore. Risultato: un headshot credibile, allineato al tono corporate, sufficiente per uso LinkedIn e CV.
 
 Per il sito personale, Marco decide di investire in uno shooting reale con un fotografo locale il mese successivo. BetterPic gli ha dato il "credito visivo" in attesa di una soluzione di qualità superiore.
 
 ### Le domande che ci fanno più spesso
 
 **BetterPic funziona davvero con pochi selfie?**
-Meglio con 15–25 foto varie. Sotto quella soglia i risultati calano visibilmente. Se hai solo 5–6 foto e tutte simili, l'output sarà piatto e potrebbe ripetere artefatti.
+Sì, è uno dei punti di forza. 8-14 foto sono sufficienti. Sotto quella soglia la qualità cala. Sopra 20, non migliora significativamente.
 
 **Gli headshot sono riconoscibili come AI-generated?**
-A un osservatore attento ravvicinato, sì. A un recruiter o un cliente che scorre LinkedIn, no. Per uso professionale standard l'output regge. Per uso editoriale ad alta risoluzione no.
+A un osservatore attento ravvicinato, sì. A un recruiter che scorre LinkedIn, no. Per uso professionale standard l'output regge. Per uso editoriale ad alta risoluzione no.
 
 **Posso scegliere lo stile?**
 Sì, ci sono preset preconfigurati. La personalizzazione fine (composizione, sfondo specifico, tipo di luce) ha limiti strutturali: l'AI non è un editor.
 
-**Quanto costa davvero?**
-I piani pubblicati sul sito ufficiale variano nel tempo e includono diverse tier (Basic, Pro, Executive) con numero di foto, licenze, e opzioni di ritocco diverse. Verifica direttamente sul sito per i prezzi correnti.
+**Il tier base (Basic) include la licenza commerciale?**
+No. Basic ($35) è per uso personale. Pro ($39) e Expert ($79) includono licenza commerciale. Per uso business, salta Basic.
 
 **Posso usare le immagini per un annuncio stampa o per un cliente?**
-Dipende dalla licenza associata al pacchetto acquistato. I pacchetti base coprono l'uso personale e professionale standard. Per usi commerciali estesi (campagna adv, branded content) verifica i termini sul sito.
+Con Pro o Expert sì, sotto i termini della licenza. Per usi commerciali estesi (campagna adv nazionale, branded content per brand premium), verifica i termini sul sito.
 
 **BetterPic è meglio di uno shooting tradizionale?**
 No, se hai tempo e budget. Sì, se ti serve velocità e credibilità di base. La risposta onesta è: dipende da quanto vale per te la differenza.
 
 **E se l'output non mi piace?**
-BetterPic permette in genere di rigenerare il pacchetto o di chiedere una revisione. Leggi le condizioni del piano prima dell'acquisto per sapere quante generazioni sono incluse.
+Hai AI edits (2 su Basic, 4 su Pro, 8 su Expert) inclusi. Expert include anche 1 redo gratuito e human edits illimitati su 1 foto. Se ancora non ti piace, il refund è di 7 giorni ma solo se non hai scaricato.
 
 ### Alternative da considerare
 
-- **Shooting tradizionale.** Resta il riferimento per qualità. Investimento da 150 a 500 euro, 1–3 settimane di tempo. Per chi può permetterselo, è la scelta giusta per il personal brand.
-- **Aragon AI.** Alternativa diretta a BetterPic, con modello di pricing simile. Prova gratuita spesso disponibile.
-- **HeadshotPro.** Alternativa storica, con più personalizzazione di stile. Vale la pena confrontare le librerie di preset.
-- **Secta AI.** Posizionamento più alto, con ex-fotografi Apple. Qualità superiore, costo superiore.
-- **ShootProof + fotografo locale.** Per chi vuole un fotografo ma non vuole pagare le tariffe di uno studio, ShootProof e piattaforme simili permettono di trovare fotografi locali a tariffe più accessibili.
+- **HeadshotPro.** Stesso segmento, pricing simile. Più stili, meno 4K.
+- **Aragon AI.** Più veloce, più foto, premium solo per 4K.
+- **Secta Labs.** Premium, look distintivo, ex-fotografo Apple.
+- **Shooting tradizionale.** Resta il riferimento per qualità assoluta. 150-500 euro, 1-3 settimane.
+- **ShootProof + fotografo locale.** Per chi vuole un fotografo a tariffe accessibili.
 
 ### Cosa ci aspettiamo da BetterPic nei prossimi mesi
 
-Il settore degli headshot AI si sta muovendo velocemente. Le aree da osservare:
-
-- **Qualità del ritocco umano.** Se BetterPic investe sull'upsell del ritocco umano, la differenza con un fotografo entry-level si riduce ulteriormente.
-- **Personalizzazione del preset.** Se la piattaforma apre a preset più flessibili, la qualità per usi specifici (es. settore legale, medical, creative) migliora sensibilmente.
-- **Politiche sui diritti.** La chiarezza delle licenze per uso commerciale è una delle aree che più spesso genera confusione. Se BetterPic pubblica policy più esplicite, diventa più appetibile per usi corporate.
-- **Integrazione con tool di personal brand.** Se nascono integrazioni dirette con LinkedIn, con piattaforme di podcast, o con CRM, il flusso si accorcia ulteriormente.
+- **Miglioramenti del ritocco umano.** Se BetterPic investe sull'upsell del ritocco umano, la differenza con un fotografo entry-level si riduce ulteriormente.
+- **Personalizzazione del preset.** Se la piattaforma apre a preset più flessibili, la qualità per usi specifici (legale, medical, creative) migliora.
+- **Politiche sui diritti.** La chiarezza delle licenze per uso commerciale è una delle aree che più spesso genera confusione. Policy più esplicite aiutano.
+- **Integrazione con tool di personal brand.** LinkedIn, CRM, podcast platform, se nascono integrazioni dirette il flusso si accorcia.
 
 ### In sintesi
 
-BetterPic è una risposta concreta a un bisogno reale: immagini profilo credibili in tempi rapidi, a costi accessibili. Non sostituisce uno shooting professionale, e non è adatto a produzioni editoriali di alto livello. Risponde bene alla maggior parte delle esigenze di personal brand standard, e può essere un buon primo step prima di investire in una soluzione fotografica completa.
+BetterPic è una risposta concreta a un bisogno reale: immagini profilo credibili in tempi rapidi, a costi accessibili, con risoluzione 4K su tutti i tier. Non sostituisce uno shooting professionale, e non è adatto a produzioni editoriali di alto livello. Risponde bene alla maggior parte delle esigenze di personal brand standard, e può essere un buon primo step prima di investire in una soluzione fotografica completa.
 
-La chiave è capire il proprio use case: se serve "credibile e veloce", BetterPic è una scelta valida. Se serve "distintivo e ad alto impatto", meglio investire in un fotografo.
+La chiave è capire il proprio use case: se serve "credibile e veloce" in 4K, BetterPic è una scelta valida. Se serve "distintivo e ad alto impatto", meglio investire in un fotografo.
 
 ### Prossimi passi
 
 - **Apri la scheda tool di BetterPic** per vedere pricing, integrazioni, e giudizio editoriale completo.
 - **Confronta con altre soluzioni immagini AI** nella raccolta dedicata.
 - **Salva BetterPic nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -324,195 +334,216 @@ La chiave è capire il proprio use case: se serve "credibile e veloce", BetterPi
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/frase-ai",
     featured: true,
-    highlights: [
-      'Brief SEO generati a partire dai risultati SERP, in pochi minuti',
-      'Editor con punteggio contenuti, ottimizzazione on-page e AI assistant integrati',
-      'Pensato per content team strutturati, agenzie SEO e team in-house',
-      'Si integra con Google Docs, WordPress e Google Search Console',
-      'Ha senso se il workflow editoriale è già definito, non lo sostituisce',
-    ],
-    details: [
-      'Piani da singolo utente a team (fino a oltre 10 membri)',
-      'Database di keyword research integrato (in inglese più profondo)',
-      'AI Assistant per paragrafi, riassunti, titoli, FAQ e introduzioni',
-    ],
-    cautions: [
-      'Su mercati di nicchia molto verticali, i dati SERP possono essere scarsi',
-      'I testi generati vanno sempre editati, non sono pronti per la pubblicazione',
-      'Il pricing per team può superare i 200 €/mese, da valutare con attenzione',
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa Frase, in una frase
 
-Frase è una piattaforma SEO e content workflow che mette nella stessa interfaccia l'analisi SERP, la generazione di brief, l'editor con punteggio contenuti, e un assistente AI per bozze, paragrafi e FAQ. È pensata per chi fa content marketing in modo continuativo — non per il blogger occasionale.
+Frase è una piattaforma SEO + GEO end-to-end che fa ricerca SERP, genera brief, scrive draft ottimizzati, pubblica sul CMS, monitora il ranking su Google, e traccia la visibilità su ChatGPT, Perplexity, Google AI, Claude, e Gemini — in un workflow solo invece di cinque tool separati.
 
-La promessa è concreta: ridurre il numero di tool aperti durante la produzione di un articolo SEO, e rendere il workflow misurabile invece che affidato all'intuizione.
+Non è un content generator. È un sistema operativo per il content marketing che ha capito che il gioco non è più solo "rank su Google", è "essere citato dagli AI answer engine".
 
-### A chi serve davvero
+### A chi serve davvero, e a chi no
 
-Frase non è un tool per chi scrive un articolo ogni due mesi. È un tool per chi pubblica con regolarità — settimanale, anche più volte a settimana — e ha bisogno di:
+Frase funziona bene per:
 
-- Allinearsi a un piano editoriale SEO.
-- Produrre brief condivisi tra editor, scrittori e SEO specialist.
-- Ottimizzare contenuti esistenti con un punteggio oggettivo (anche se imperfetto).
-- Tenere traccia di cosa è stato pubblicato e dove si posiziona.
+**Content team in-house che pubblicano 10+ articoli al mese.** Quando il volume è alto, il collo di bottiglia è il workflow: brief, scrittura, ottimizzazione, pubblicazione, monitoraggio. Frase automatizza i primi quattro e strumenta il quinto. Il ROI si vede già dal secondo mese.
 
-In pratica, i profili che beneficiano di più di Frase sono:
+**Agenzie SEO con più clienti.** Il tier Scale (fino a 10 domini) è progettato per agency. Brand portal, white-label report, e multi-domain tracking sono fatti per il workflow agency.
 
-- **Content team strutturati.** Persone che lavorano in 3-10 su un calendario editoriale comune.
-- **Agenzie SEO.** Team che gestiscono contenuti per più clienti e hanno bisogno di standardizzare il processo.
-- **SEO specialist in-house.** Figure che fanno da ponte tra redazione e analytics, e hanno bisogno di brief e audit rapidi.
-- **Freelance SEO evoluti.** Singoli professionisti che gestiscono portfolio di clienti e vogliono una pipeline unica.
+**SEO specialist che vogliono integrare GEO nel loro stack.** Il 2026 è l'anno in cui "GEO" (Generative Engine Optimization) è entrato nel mainstream. Frase traccia visibilità su 5 AI engine, e questo è uno dei motivi per cui il pricing è aumentato: vale il delta.
 
-Non è invece il tool adatto a chi cerca un generatore di articoli "premi un tasto e ottieni un post". Frase velocizza un processo, non lo sostituisce.
+**Team che usano WordPress, Webflow, Sanity, o Wix come CMS primario.** Il publish one-click elimina un passaggio manuale che rallenta il flusso.
 
-### Come funziona, passo per passo
+Non è la scelta giusta per:
 
-Il flusso di lavoro in Frase si articola in cinque fasi principali.
+**Chi scrive 2-3 articoli al mese.** Il pricing non giustifica, e il workflow è sovradimensionato. Per volumi bassi, Surfer SEO o Clearscope sono sufficienti.
 
-**1. Ricerca keyword e selezione del target.** Frase offre un database interno di keyword research (più ricco per il mercato inglese, in crescita per l'italiano). L'utente inserisce la keyword principale e ottiene un set di keyword correlate, domande frequenti, e volumi. La fase di selezione è importante: meglio un cluster di 5-10 keyword semanticamente coerenti che una keyword secca.
+**Chi fa blog post puramente editoriali senza intento SEO.** Frase ottimizza per rank e citazione AI. Se il tuo obiettivo è solo "scrivere bene", è un tool sbagliato.
 
-**2. Analisi SERP.** Per ogni keyword target, Frase estrae i risultati di Google e li analizza: titoli, lunghezze medie, domande poste (People Also Ask), entità citate. L'utente vede cosa sta posizionando la concorrenza e quali gap ci sono.
+**Team che hanno già un workflow consolidato su tool diversi.** Migrare a Frase ha un costo di apprendimento e disruption. Se il tuo team è già produttivo con Ahrefs + Surfer + Notion, Frase non migliorerà magicamente.
 
-**3. Generazione del brief.** A partire dall'analisi SERP, Frase genera un brief strutturato: titolo suggerito, meta description, outline, lunghezza target, lista di titoli H2/H3 da coprire, domande a cui rispondere, link correlati da includere. Il brief è editabile.
+**Enterprise con requisiti di compliance o on-premise.** Frase è cloud-only. Se devi on-premise, non è la scelta.
 
-**4. Scrittura nell'editor.** L'editor di Frase mostra in tempo reale un punteggio di ottimizzazione confrontato con i risultati SERP. L'AI Assistant può generare paragrafi, riassunti, FAQ, introduzioni, o riformulare testi esistenti. Il punteggio è una guida, non un voto: l'editor resta il giudice finale.
+### Il workflow reale, end-to-end
 
-**5. Ottimizzazione e pubblicazione.** Una volta finito, l'articolo può essere esportato in Google Docs, in WordPress via plugin, o copiato manualmente. Frase si integra con Google Search Console, permettendo di tracciare le performance post-pubblicazione.
+Ecco come un team serio usa Frase nel 2026. Non è il marketing pitch, è il pattern operativo.
 
-:::tip Cosa distingue Frase da un editor "normale"
+**1. Research e brief.** Partenza: hai una lista di keyword o topic da coprire. Apri Frase, lanci la ricerca SERP per la keyword target. Frase analizza i top 20 risultati Google, estrae headings, lunghezze medie, statistiche citate, domande People Also Ask, e domande da Reddit e Quora. Genera un brief con outline suggerito, keyword target, suggerimenti NLP, e link a fonti.
 
-L'editor di Frase non è un editor di testo. È un editor SEO:
+Il valore: in 5-10 minuti hai un brief che manualmente richiederebbe 1-2 ore di ricerca. La qualità del brief dipende dalla keyword: keyword competitive danno brief più ricchi, keyword di nicchia danno brief più scarni.
 
-- Il pannello laterale mostra i titoli dei competitor e il loro punteggio medio.
-- L'outline del brief è visibile a sinistra mentre scrivi.
-- L'AI Assistant lavora in contesto, può riprendere il tono del brief.
-- Il punteggio di ottimizzazione si aggiorna in tempo reale.
+**2. Drafting assistito.** Apri l'editor di Frase, incolla il brief, e scrivi. Mentre scrivi, Frase mostra in real-time:
+- Topic score: quanto il tuo draft copre i topic che i top risultati coprono
+- SEO score: keyword density, struttura, lunghezza
+- GEO score: come il tuo draft si posiziona per essere citato dagli AI engine
+- Suggerimenti NLP: keyword correlate da includere
+- Domande da coprire: PAA e Reddit che non hai ancora risposto
 
-Questo significa che la fase di ottimizzazione on-page non è un passaggio separato a fine scrittura: è integrata mentre scrivi.
+Il valore: in tempo reale sai se stai scrivendo un articolo "rank-ready" o se ti stai allontanando. Niente più "ottimizzo dopo", l'ottimizzazione è nel flusso.
 
-:::
+**3. AI assistita.** Se vuoi accelerare, Frase AI scrive sezioni del draft basandosi sul brief. Il livello di qualità è onesto: buono per bozze di sezioni standard, mediocre per sezioni che richiedono visione editoriale forte. Il pattern corretto è: tu scrivi la struttura e le idee chiave, Frase AI riempie le sezioni standard (definitions, backgrounds, summary), tu raffini e aggiungi il punto di vista.
 
-### La qualità del brief, onestamente
+**4. Ottimizzazione finale.** Quando il draft è completo, rivedi i tre score (Topic, SEO, GEO). Punta Topic score sopra 80% per keyword competitive. Il GEO score è più sfumato: Frase suggerisce formattazione (liste, tabelle, FAQ strutturate) che aumenta la probabilità di essere citato dagli AI engine.
 
-Il brief generato da Frase è utile, non perfetto. I suoi punti di forza:
+**5. Publish one-click.** Se usi WordPress, Webflow, Sanity, o Wix, clicchi "Publish" e Frase manda l'articolo al CMS con metadata SEO, immagini ottimizzate, e structured data. Se usi un CMS diverso, copi il markdown o esporti l'HTML.
 
-- **Velocità.** Un brief che manualmente richiederebbe 1-2 ore di analisi viene generato in 10-15 minuti.
-- **Struttura.** Il brief esce con un'outline pronto, con titoli H2/H3 suggeriti, con domande a cui rispondere. Questo accelera la fase di scrittura.
-- **Suggerimenti di entità.** Frase evidenzia le entità semanticamente rilevanti per il topic. Utile per non dimenticare nomi propri, brand, o concetti chiave.
+**6. Monitoraggio.** Dopo la pubblicazione, l'articolo entra nel monitoring di Frase:
+- Google ranking: posizione sulla SERP per la keyword target
+- Traffic da GSC: click e impression (se hai collegato Google Search Console)
+- AI visibility: quante volte l'articolo è citato da ChatGPT, Perplexity, Google AI, Claude, Gemini
+- Content decay: se l'articolo inizia a perdere rank, Content Guard ti avvisa
 
-I suoi limiti:
+**7. Content Guard e fix.** Questa è la feature che distingue Frase nel 2026. Content Guard monitora la pagina pubblicata, e quando rileva un calo di ranking, genera automaticamente un draft di revisione basato sui fattori che sono cambiati (nuovi competitor, aggiornamento di Google, query trends). Tu approvi, modifichi, o rifiuti. È un'evoluzione del "content refresh periodico" che di solito non fai perché è noioso.
 
-- **SERP anglofona più ricca.** Per keyword in inglese, i dati sono abbondanti. Per keyword in italiano di nicchia, può essere più scarso.
-- **Non sostituisce la conoscenza del dominio.** Il brief è una mappa del territorio, non la conoscenza. Serve sempre un editor che sappia cosa è rilevante per il proprio pubblico.
-- **AI Assistant ancora da addomesticare.** L'AI Assistant è utile per paragrafi, FAQ, e introduzioni, ma su testi specialistici può produrre contenuti generici che vanno rielaborati.
+### Pricing, spiegato onestamente
 
-### Quanto costa Frase
+I piani (verificati sulla pagina ufficiale a luglio 2026, annual billing):
 
-Frase ha un modello di pricing a tier, basato su utenti e funzionalità:
+**Starter, $39/mese annuale ($49/mese mensile).** 1 seat, 1 sito, 10 articoli/mese, 50 audit pages, SEO + GEO score, AI visibility su ChatGPT e Google AI, Content Guard su 3 pagine, Frase CMS free. Adatto a freelance, blogger, e piccole attività.
 
-- **Solopreneur** (1 utente): per professionisti singoli.
-- **Pro** (1 utente con funzionalità avanzate): per SEO specialist.
-- **Team** (3+ utenti): per team e agenzie.
+**Professional, $103/mese annuale ($129 mensile).** 3 seat inclusi ($29/mese per seat extra), 5 siti, 40 articoli/mese, 250 audit pages, internal linking suggestions, AI crawler monitoring, Perplexity aggiunto al monitoring, Content Guard su 15 pagine. Adatto a team in-house e agenzie piccole.
 
-I prezzi pubblicati sul sito variano nel tempo. Indicativamente, il tier Pro per utente singolo è nella fascia 30-50 €/mese (fatturato annuale), mentre i piani team partono da 100 €/mese per 3 utenti e crescono rapidamente con il numero di account.
+**Scale, $239/mese annuale ($299 mensile).** 5 seat, 10 domini, 100 articoli/mese, 1000 audit pages, Content Guard su 50 pagine, Claude e Gemini aggiunti al monitoring, white-label client reports, repurposing automatico. Adatto a team content strutturati e agenzie.
 
-Per un team content che pubblica 10-30 articoli al mese e usa Frase quotidianamente, il costo è giustificato dal tempo risparmiato nella produzione di brief. Per chi pubblica 2-3 articoli al mese, il tier Solopreneur è probabilmente sufficiente.
+**Enterprise, custom.** White-label report, branded client portal, custom domain, support dedicato.
 
-:::pro Quando Frase vale l'investimento
+**FraseCMS** è un'opzione separata: gratis con 100k page views/mese, Basic $19/mese per 250k views, Pro $99/mese per 1M views. È l'opzione "non ho un CMS, ospitalo voi".
 
-- Produci regolarmente contenuti SEO (almeno 4-6 articoli/mese).
-- Hai un team (anche piccolo) che ha bisogno di un workflow condiviso.
-- Vuoi standardizzare la qualità dei brief e delle ottimizzazioni.
-- Stai cercando di ottimizzare articoli esistenti che non performano.
-- Hai un budget sufficiente (almeno 30-50 €/mese) per giustificare l'abbonamento.
+**Add-ons pay-as-you-go:** su Professional, $5 per articolo extra, $0.50 per audit page extra, $0.25 per AI prompt extra. Su Scale, $4, $0.40, e $0.20 rispettivamente.
 
-:::
+**Cambiamento importante del 2026:** GEO tracking (visibilità su AI engine) è ora incluso in tutti i piani, senza add-on separato. Prima del 2026, era un $35/mese add-on. Questo rende Frase significativamente più conveniente rispetto a prima.
 
-:::warning Quando Frase NON è la scelta giusta
+**Costo modello AI:** le funzionalità AI (drafting, Content Guard revisions) consumano credits. Il tier include un numero base, e l'overage è pay-as-you-go. Su un team Professional che produce 40 articoli/mese, il costo AI tipico è $20-50 in più.
 
-- Scrivi 1-2 articoli ogni due mesi. Il costo non si giustifica.
-- Cerchi un tool "fai da te" senza processo editoriale. Frase accelera un processo, non lo crea.
-- Il tuo business non dipende da traffico organico SEO. Il tool non aggiunge valore fuori da quel contesto.
-- Hai bisogno di analisi tecnica SEO (crawl, log analysis, schema audit). Frase non sostituisce strumenti come Screaming Frog, Sitebulb, o Ahrefs.
-- Lavori in un mercato talmente di nicchia che i dati SERP sono rumorosi. Il brief sarà debole.
+### Le funzionalità chiave in profondità
 
-:::
+**SERP Analyzer.** Il core dell'analisi competitiva. Per una data keyword, estrae i top 20 risultati Google, analizza headings (H1, H2, H3), lunghezze medie, domande People Also Ask, snippet in evidenza, e backlink overview. Genera un brief "rank-ready" che identifica cosa serve per competere. È la funzione su cui Frase ha costruito la sua reputazione.
 
-### Frase vs i concorrenti diretti
+**AI Writer con brand voice.** Genera testo basandosi sul brief. La qualità è migliore dei generatori generici perché è ancorata al brief SERP. Il "brand voice" è una funzione recente: carichi 3-5 articoli del tuo brand, Frase estrae tono, vocabolario, e stile, e l'AI scrive "come te". La qualità è variabile — su argomenti tecnici con dati, funziona; su opinion piece, è mediocre.
 
-**Frase vs Surfer SEO.** Surfer è il concorrente più noto. La differenza principale è di posizionamento: Surfer è più "audit tecnico" (punteggio, correlazione segnali), Frase è più "workflow editoriale" (brief + scrittura + ottimizzazione). Per un SEO specialist puro, Surfer può essere preferibile. Per un content team che vuole un unico strumento, Frase è più completo.
+**GEO (Generative Engine Optimization).** Questa è la funzionalità che definisce Frase nel 2026. Il GEO score misura quanto il tuo draft è strutturato per essere citato dagli AI answer engine. Fattori considerati: presenza di definizioni chiare, struttura a domanda-risposta, tabelle comparative, FAQ strutturate, citazioni autorevoli, lunghezza adeguata. Non è magia: è un insieme di best practice SEO evolute per il contesto AI. Funziona meglio di quanto ti aspetti, e diventa un vantaggio competitivo quando i concorrenti ignorano ancora GEO.
 
-**Frase vs Clearscope.** Clearscope è un altro competitor focalizzato sull'ottimizzazione. Storicamente, Clearscope era considerato più "pulito" sui dati SERP e più conservativo nei punteggi. Frase ha recuperato terreno e oggi ha un vantaggio sul fronte del brief strutturato e dell'AI Assistant.
+**Content Guard.** Monitoring post-pubblicazione. Tiene d'occhio le pagine pubblicate per cambiamenti di ranking, e quando rileva un calo, genera un draft di revisione. Su Starter monitora 3 pagine, su Professional 15, su Scale 50. Per team content, è la funzione che giustifica il tier superiore.
 
-**Frase vs MarketMuse.** MarketMuse è il tool enterprise, con database proprietari e analisi predittive. Costa di più, è più adatto a team grandi con budget importanti. Frase è la versione "snella" per team di medie dimensioni.
+**AI Visibility tracking.** Traccia quanto i tuoi contenuti sono citati dagli AI engine. Su Starter, ChatGPT e Google AI. Su Professional, aggiunge Perplexity. Su Scale, aggiunge Claude e Gemini. Mostra la "share of voice" rispetto ai competitor per una data query. È il nuovo "rank tracking" per il 2026.
 
-**Frase vs ChatGPT / Claude / Perplexity.** I tool AI generalisti non hanno accesso ai dati SERP in tempo reale, non generano brief strutturati su un cluster di keyword, e non offrono un punteggio di ottimizzazione. Possono essere complementari (per ricerca laterale, generazione di bozze) ma non sostituiscono Frase nel workflow SEO.
+**Internal linking suggestions.** Suggerisce link interni tra i tuoi articoli in base a topic similarity. Su Professional e superiori. Fa risparmiare ore di audit manuale.
 
-**Frase vs Ahrefs / Semrush.** I tool di keyword research pura (Ahrefs, Semrush) sono complementari, non alternativi. Frase si appoggia a keyword research integrate, ma per keyword research avanzata (intenzione di ricerca, SERP feature, gap analysis), un tool dedicato resta superiore.
+**Programmatic SEO.** Su Scale. Genera pagine SEO programmatiche per location pages, directory, e use case combinations. Richiede setup tecnico, ma per SaaS con multi-location o multi-product è un moltiplicatore di traffico organico.
 
-### Flusso pratico: un caso reale
+**AI agenti specializzati.** Su tutti i piani, 80+ agenti specializzati che gestiscono task specifici: research, outline, drafting, optimization, audit, publishing. È il pattern "agent for everything", e funziona meglio quando lo usi come collaboratore, non come sostituto.
 
-Anna è content manager in una scaleup B2B che pubblica 12 articoli al mese sul blog aziendale. Il team è composto da lei, due scrittori freelance, e una SEO specialist.
+### Cosa fa bene, e cosa fa male
 
-**Lunedì mattina:** la SEO specialist identifica 8 nuove keyword target usando Ahrefs. Le inserisce in Frase e genera i brief in 20-30 minuti.
+**Fa bene:** SERP research, brief generation, draft assistito, GEO optimization, AI visibility tracking, Content Guard. Sono i suoi superpoteri, e in queste aree è tra i migliori sul mercato.
 
-**Martedì-mercoledì:** Anna prende i brief, li revisiona per allinearli alla voce del brand, e li assegna ai due freelance su Notion.
+**Fa meno bene:** project management (non gestisce workflow editoriali complessi), content calendar (esiste ma è basilare), team collaboration (commenti e review sì, ma non è Notion), multilingual SEO (supporta ma con qualità variabile).
 
-**Giovedì-venerdì:** i freelance scrivono gli articoli direttamente nell'editor di Frase, usando il brief come outline e l'AI Assistant per paragrafi complessi.
+**Fa male:** articoli puramente editoriali senza intento di rank, content ultra-creativi dove il punto di vista personale è centrale, articoli che richiedono fonti primarie o interviste originali.
 
-**Lunedì successivo:** Anna edita, ottimizza, e pubblica su WordPress via plugin. Il punteggio SEO è già allineato al brief.
+### Frase vs Surfer vs Clearscope vs MarketMuse
 
-Senza Frase, lo stesso processo richiederebbe 2-3 tool separati (keyword research, brief, editor SEO) e passaggi manuali di copia-incolla. Con Frase, il workflow è integrato e i brief sono oggettivi (quindi freelance diversi producono articoli di qualità più omogenea).
+**Frase vs Surfer SEO.** Surfer è focalizzato sull'ottimizzazione on-page: SERP analysis, content editor, NLP suggestions. È più specializzato, più economico (entry-level a $89/mese vs Frase $39), ma non ha la pipeline publishing, il GEO, l'AI visibility. Per team che vogliono solo "ottimizza bene questo articolo", Surfer è più focalizzato. Per team che vogliono un workflow completo, Frase vince.
 
-### Le domande che ci fanno più spesso
+**Frase vs Clearscope.** Clearscope è il premium tool per content optimization. Report SEO di alta qualità, content grading sofisticato, ma niente drafting AI, niente publishing, niente GEO. Per team che hanno già un draft e vogliono uno score di qualità serio, Clearscope è superiore. Per team che vogliono un workflow completo, Frase vince.
 
-**Frase è meglio di Surfer SEO?**
-Dipende dall'uso. Per un SEO specialist puro che fa audit, Surfer può essere preferibile. Per un content team che vuole un workflow unificato, Frase è più adatto. Spesso i team usano entrambi in fasi diverse.
+**Frase vs MarketMuse.** MarketMuse è enterprise-oriented, con focus su content inventory e topic clusters. Più costoso, più complesso, più adatto a team content strutturati in aziende grandi. Per team con 5-10 persone che fanno content marketing, Frase è più accessibile. Per team con 30+ content people, MarketMuse è più adatto.
 
-**Frase genera articoli automaticamente con l'AI?**
-No, non è un generatore di articoli. Genera brief, e l'AI Assistant aiuta su paragrafi specifici. L'articolo finale è scritto (e editato) dall'utente.
+**Frase vs tool "free + DIY".** Clearscope, Surfer, e altri sono più economici del 2024 grazie a nuovi competitor. Frase ha il vantaggio dell'integrazione end-to-end, ma se il tuo workflow è già "Ahrefs per keyword + Surfer per optimize + Notion per scrivere", Frase non migliorerà di 10x.
 
-**L'italiano è supportato?**
-Sì, con qualche limite. Il database SERP per l'italiano è meno ricco di quello inglese, e l'AI Assistant può produrre testi più generici. Per mercati di nicchia italiani, conviene verificare la qualità dei brief prima di adottarlo su larga scala.
+### Casi d'uso reali
 
-**Posso esportare i contenuti in WordPress?**
-Sì, c'è un plugin ufficiale e integrazioni native. Funziona bene per blog WordPress self-hosted. Per CMS custom o altri editori, l'esportazione è in HTML/Markdown.
+**SaaS blog con 30 articoli/mese.** Tier Professional. Research SERP per ogni articolo, brief rank-ready, drafting AI-assisted, GEO score, publish su WordPress, monitoraggio. Tempo per articolo: 2-3 ore (vs 5-6 ore senza Frase).
 
-**Frase è adatto a chi non ha un team?**
-Sì, con il tier Solopreneur. Ma il valore aggiunto rispetto a un generico tool AI è limitato se il workflow editoriale non è già strutturato.
+**Agenzia SEO con 8 clienti.** Tier Scale, 5 seat, 10 domini. Workflow per ogni cliente: research, brief, draft, review, publish, monitor. Report white-label mensili. Risparmio operativo: 30-50% del tempo del team.
 
-**Posso ottimizzare articoli già pubblicati?**
-Sì, Frase ha una funzione di content audit che permette di analizzare articoli esistenti contro i risultati SERP attuali. È uno degli usi più preziosi del tool.
+**E-commerce con 100+ pagine prodotto.** Tier Professional, focus su programmatic SEO. Genera pagine per category + location, ottimizza description prodotti, monitora ranking su long-tail keywords.
 
-**Frase integra Google Search Console?**
-Sì, l'integrazione permette di tracciare impression, click, e posizione media dei contenuti scritti con Frase.
+**Editorial site senza intento SEO.** Frase è il tool sbagliato. Per editorial puro, strumenti di collaborative writing (Notion, Google Docs) sono sufficienti.
+
+### Setup pratico: da zero al primo articolo pubblicato in 2 ore
+
+**1. Crea l'account e collega il tuo CMS.** Su frase.io, signup con Google. Collega WordPress via plugin, Webflow via API, o configura un altro CMS. Tempo: 15 minuti.
+
+**2. Configura il primo progetto.** Settings → Projects. Aggiungi il tuo sito, configura il brand voice caricando 3-5 articoli esistenti. Tempo: 20 minuti.
+
+**3. Collega Google Search Console.** Settings → Integrations → GSC. Questo abilita il monitoraggio di click, impression, e position. Tempo: 5 minuti.
+
+**4. Fai la prima ricerca.** "Research" → inserisci una keyword target. Frase genera il brief. Tempo: 5 minuti.
+
+**5. Scrivi o usa l'AI.** Apri l'editor, parti dal brief, scrivi o usa AI Writer. Monitora i tre score. Tempo: 60-90 minuti.
+
+**6. Pubblica.** Clicca "Publish" per mandare al CMS, o esporta. Tempo: 5 minuti.
+
+**7. Configura il monitoraggio.** L'articolo pubblicato entra automaticamente in monitoraggio. Content Guard inizia a guardarlo. Tempo: 1 minuto.
+
+In 2 ore hai un articolo rank-ready, pubblicato, e monitorato. Per il secondo articolo il tempo scende a 60-90 minuti perché conosci già il workflow.
+
+### Errori comuni
+
+**Affidarsi troppo all'AI Writer.** L'AI scrive bozze decenti ma generiche. Il punto di vista editoriale, le idee non-ovvie, e la voce del brand devono venire da te. Frase è un acceleratore, non un sostituto.
+
+**Ignorare il GEO score.** Molti team SEO sono ancora ancorati al SEO score classico. Il GEO score è altrettanto importante nel 2026. Ignorarlo significa perdere visibilità su ChatGPT e Perplexity.
+
+**Non collegare GSC.** Senza GSC, il monitoraggio post-pubblicazione è cieco sui dati di click e impression reali. Collegalo il primo giorno.
+
+**Produurre troppo velocemente senza quality check.** Il workflow Frase è veloce, ma la qualità editoriale finale è ancora responsabilità tua. Review sempre, specialmente per articoli che vanno su testate con reputazione.
+
+**Non aggiornare i brief con dati freschi.** Il SERP cambia. Un brief di 3 mesi fa può essere superato. Per keyword competitive, rifai la research prima di aggiornare un articolo.
 
 ### Cosa ci aspettiamo da Frase nei prossimi mesi
 
-Il settore SEO e content è in fermento, trainato dall'AI generativa. Le aree da osservare:
+**GEO sempre più centrale.** Man mano che gli AI engine diventano una quota maggiore del traffico referral, GEO diventa la metrica principale. Frase ha un vantaggio first-mover qui.
 
-- **Integrazione con AI Agents.** Se Frase apre l'editor ad agenti che lavorano in background (es. "ottimizza tutti gli articoli sotto X posizione"), il valore sale.
-- **Database SERP in italiano.** Più il database cresce per l'italiano, più il tool diventa interessante per il mercato italiano.
-- **Personalizzazione del punteggio.** Il punteggio di ottimizzazione è ancora basato su correlazioni statistiche. Se Frase introduce un modello che tiene conto della qualità editoriale (oltre alla copertura SERP), diventa più utile.
-- **Collaborazione real-time.** Per i team distribuiti, una vera collaborazione real-time sull'editor (simile a Google Docs) sarebbe un vantaggio competitivo.
+**Più agenti specializzati.** La roadmap è verso agenti che gestiscono workflow sempre più complessi in autonomia, con review umana finale.
+
+**Integrazione AI engine più profonda.** Tracciamento di citazioni specifiche, non solo presenza. Mostrarti esattamente quali frasi del tuo articolo sono state usate, in quali prompt.
+
+**Multi-modal GEO.** GEO per video (YouTube come answer engine), audio (voice search), immagini. Espansione oltre il text.
+
+### Le domande che ci fanno più spesso
+
+**Frase è meglio di ChatGPT per scrivere articoli?**
+Per articoli SEO con intento di rank, sì. ChatGPT non ha il SERP context, non sa cosa è già rankato, non genera il brief. Per brainstorming o scrittura libera, ChatGPT va altrettanto bene.
+
+**Quanto costa davvero un articolo rank-ready?**
+Su Professional con 40 articoli inclusi, il costo marginale è il tuo tempo + l'overage AI. Un articolo "rank-ready" in 2-3 ore è realistico. Su Surfer puro, lo stesso articolo richiede 1-2 ore in più per il workflow di ottimizzazione.
+
+**Frase può sostituire un SEO specialist?**
+No, ma può aumentare la produttività del SEO specialist di 2-3x. Il SEO specialist fa la strategia, l'analisi, le decisioni. Frase esegue.
+
+**Funziona per mercati non-anglofoni?**
+Sì, supporta multi-lingua. La qualità della SERP analysis è migliore in inglese (database più ricco), ma funziona bene anche per italiano, spagnolo, francese, tedesco.
+
+**Frase vs Ahrefs?**
+Sono complementari, non concorrenti. Ahrefs è per keyword research, backlink analysis, competitor research. Frase è per content creation, optimization, GEO. Li usi insieme.
+
+### Alternative da considerare
+
+- **Surfer SEO.** Più focalizzato sull'optimization, meno sul workflow completo.
+- **Clearscope.** Premium content grading, niente AI drafting.
+- **MarketMuse.** Enterprise content strategy, più costoso.
+- **WriterZen.** Budget-friendly, funzionalità simili ma meno profonde.
+- **Scalenut.** AI-first, buon rapporto qualità/prezzo.
+- **DIY (Ahrefs + Surfer + Notion).** Più flessibile, più lavoro manuale.
 
 ### In sintesi
 
-Frase è uno strumento solido per content team che hanno un processo editoriale già definito e vogliono ridurre l'attrito operativo nella produzione di articoli SEO. Non è una bacchetta magica, e non sostituisce una buona redazione, ma risponde a un'esigenza reale.
-
-La chiave è adottarlo come acceleratore di un processo, non come sostituto di un metodo.
+Frase nel 2026 è uno dei tool più completi per content marketing SEO + GEO. Non è il più economico, ma l'integrazione end-to-end e il focus su GEO lo rendono particolarmente rilevante per team che pubblicano regolarmente. Per il blogger occasionale è overkill; per il content team strutturato è uno dei migliori investimenti.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Frase** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool SEO** nella raccolta dedicata.
-- **Salva Frase nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di Frase** per confrontare con Surfer, Clearscope, e altri SEO tool.
+- **Esplora la raccolta su SEO e content** per casi d'uso affini.
+- **Salva Frase nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
     slug: "jenny-ai",
-    title: "Jenni AI: la guida onesta all'assistente di scrittura accademica",
+    title: 'Jenni AI: la guida onesta all\'assistente di scrittura accademica',
     dek: 'Quando ha senso usarlo per paper, tesi e ricerca, e quando non basta.',
     summary:
       "Jenni AI è un assistente di scrittura pensato per il mondo accademico: aiuta con bozze, citazioni," +
@@ -525,180 +556,218 @@ La chiave è adottarlo come acceleratore di un processo, non come sostituto di u
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/jenny-ai",
     featured: true,
-    highlights: [
-      'Autocomplete per sbloccare la pagina bianca, soprattutto nella sezione metodi',
-      'Citazioni in migliaia di stili (APA, MLA, Chicago, IEEE, Vancouver)',
-      'Importazione di PDF, gestione fonti, antiplagio e note nello stesso workspace',
-      'Pensato per scrittura accademica, non per copy o narrativa',
-    ],
-    details: [
-      "Importa PDF e indicizzali per citarli direttamente nell'editor",
-      'Outline guidata con AI assistant per paragrafi e sezioni',
-      'Sincronizzazione su web e desktop, esportazione LaTeX, Word, PDF',
-    ],
-    cautions: [
-      'Richiede sempre revisione umana sul testo finale',
-      "Le policy universitarie sull'AI variano: verifica con il tuo dipartimento",
-      "Le citazioni sono indicative: ogni riferimento va verificato sull'originale",
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa Jenni AI, in una frase
 
-Jenni AI è un editor di scrittura accademica con AI integrata: aiuta a sbloccare la pagina bianca, a citare le fonti, a importare PDF, e a tenere note e bibliografia nello stesso workspace. Non è un "writer automatico": è un assistente pensato per il ricercatore, lo studente, e l'analista che scrive in modo continuativo.
+Jenni è un workspace AI pensato per chi scrive testi accademici: autocomplete, gestione citazioni in 2.600+ stili, chat con PDF, library management, e modalità di revisione specifiche (Proofread, Claim Confidence, Peer Review, Source Quality) — disegnato per ridurre l'attrito tra le note e il draft finito.
 
-### A chi serve davvero
+### A chi serve davvero, e a chi no
 
-Jenni AI non è per chi scrive email o post LinkedIn. È per chi scrive testi lunghi, strutturati, con citazioni:
+Jenni è per:
 
-- **Studenti universitari** che scrivono tesi, tesine, paper per esami.
-- **Dottorandi e ricercatori** che pubblicano paper, review sistematiche, capitoli di tesi.
-- **Analisti e consulenti** che producono report di ricerca basati su letteratura accademica.
-- **Content specialist** che producono long-form per pubblicazioni verticali (es. white paper, e-book specialistici).
+**Studenti universitari e dottorandi** che scrivono tesi, dissertazioni, literature review, paper. L'autocomplete accademico, la generazione automatica di citazioni APA/MLA/Chicago/Harvard/Vancouver, e l'import di PDF per source-grounded writing sono fatti per loro.
 
-Non è il tool adatto a chi cerca un "writer automatico" o un generatore di saggi: le policy accademiche sull'AI sono in evoluzione, e Jenni non è progettato per generare testi "non tracciati" dall'utente.
+**Ricercatori** che passano dalla lettura alla scrittura e vogliono citare correttamente. Source Quality (introdotto a luglio 2026) flagga citazioni ritrattate, outdated, o same-journal-heavy — un layer di verifica che altri tool non hanno.
 
-### Come funziona, passo per passo
+**Autori non madrelingua inglese** che scrivono paper in inglese. Il tone-of-voice AI assistant mantiene il registro accademico.
 
-Il flusso tipico con Jenni AI ha sei fasi.
+**Team accademici e istituti di ricerca** che vogliono standardizzare la qualità di scrittura tra collaboratori. Il Team plan include collaboration e admin dashboard.
 
-**1. Importazione delle fonti.** L'utente carica PDF (paper, articoli, capitoli) o importa riferimenti da DOI, URL, o da un file BibTeX. Jenni indicizza il testo, lo rende citabile, e lo rende disponibile per la ricerca interna.
+Non è per:
 
-**2. Outline e struttura.** L'utente definisce l'outline del paper o della tesi: sezioni, sottosezioni, argomenti. L'outline è il punto di partenza per la scrittura.
+**Content writer e marketer.** Per article SEO, blog post, o marketing copy, tool come Jasper, Copy.ai, o Frase sono più adatti. Jenni è specifico per accademico, e il suo tone è inadatto al marketing.
 
-**3. Autocomplete intelligente.** Mentre l'utente scrive, Jenni suggerisce continuazioni del testo basate sul contesto. Le suggerenze sono in stile accademico, non in stile copy. L'utente accetta, rifiuta, o modifica.
+**Autori di narrativa.** Per fiction, tool come Sudowrite, NovelAI, o il proprio editor sono migliori. Jenni non genera prosa creativa.
 
-**4. Citazioni automatiche.** L'utente inserisce citazioni in stile APA, MLA, Chicago, IEEE, Vancouver, Harvard, o in uno dei 8000+ stili supportati. Le citazioni sono inserite inline e raccolte automaticamente in una bibliografia finale.
+**Studenti che cercano scorciatoie anti-plagiarism.** Jenni include un plagiarism checker, ma usarlo per "pulire" un paper AI-generated è un uso improprio che può portare a problemi accademici. Il tool aiuta chi scrive, non chi vuole evitare di scrivere.
 
-**5. Note e appunti.** L'utente può aggiungere note durante la lettura delle fonti, organizzarle per argomento, e richiamarle nel testo durante la scrittura.
+**Chi cerca un reference manager puro.** Zotero, Mendeley, EndNote sono più maturi per citation management puro. Jenni è un writing environment, non un reference manager.
 
-**6. Antiplagio e revisione.** Jenni integra un controllo antiplagio (in partnership con servizi terzi) e offre strumenti di revisione (riassunti, parafrasi, verifica della coerenza).
+### Architettura: come è fatto
 
-:::tip Cosa distingue Jenni da un editor "normale"
+Jenni è un editor documentale con AI integrata. Le funzionalità si organizzano in cinque aree.
 
-- **L'autocomplete lavora su ciò che hai scritto**, non su prompt generici.
-- **Le citazioni sono contestuali**: inserisci (Smith, 2020) e Jenni espande in (Smith, J. et al., 2020, p. 42).
-- **I PDF diventano citabili**: leggi un paper, evidenzia un passaggio, citato automaticamente.
-- **La bibliografia si aggiorna da sola** se modifichi lo stile di citazione.
+**AI Autocomplete.** Suggerimenti di completamento che apprendono dal tuo stile mentre scrivi. Non sono completamenti generici: si adattano al tono, vocabolario, e struttura del tuo documento. La qualità è significativamente migliore di ChatGPT per scrittura accademica lunga.
 
-Queste sono funzionalità che gli editor "normali" (Word, Google Docs) non hanno di default, e che richiedono plugin complessi per essere emulate.
+**AI Edit.** Strumenti di revisione AI: parafrasi con preservazione della citazione, espansione di paragrafi, raffinamento del tono, sintesi. Parafrasi con source preservation è critico per integrità accademica — non è solo "riformulare", è "riformulare mantenendo l'attribuzione".
 
-:::
+**Citation Management.** 2.600+ stili di citazione (APA 6/7, MLA 8/9, Chicago notes-bibliography, Harvard, Vancouver, e molti altri). Generazione automatica in-text citations da DOI, URL, o import. Bibliography export. Integrazione con Zotero e Mendeley.
 
-### La qualità dell'output, onestamente
+**Library e PDF Chat.** Upload di PDF, chat con i documenti ("riassumi il paper X", "qual è la metodologia usata?"), collections-based chat per interrogare interi folder di fonti. Atlas, il motore di ricerca interno, indicizza tutti i tuoi documenti.
 
-Jenni è utile per **sbloccare la pagina bianca**, non per **scrivere il paper al posto tuo**. Il valore aggiunto è duplice:
+**Review Modes.** Quattro modalità specifiche:
+- **Proofread:** grammar, spelling, style
+- **Claim Confidence:** verifica che le affermazioni nel testo siano supportate dalle fonti citate
+- **Tone of Voice:** assicura coerenza di registro
+- **Peer Review:** simula il feedback di un reviewer accademico
+- **Source Quality:** flagga fonti ritrattate, outdated, o ridondanti
 
-- **Meno attrito nella scrittura.** L'autocomplete riduce il tempo speso a formulare ogni frase.
-- **Più precisione nelle citazioni.** L'inserimento automatico evita gli errori di formattazione che costano punti nella review.
+Queste review modes sono il vantaggio competitivo di Jenni nel 2026. La Source Quality in particolare, introdotta a luglio 2026, è un layer di verifica che non esiste in altri tool.
 
-I limiti:
+### Pricing, onestamente
 
-- **Non sostituisce la lettura critica.** L'AI può proporre citazioni plausibili ma errate. Verifica sempre sull'originale.
-- **Può produrre prosa generica.** L'AI tende a "appiattire" lo stile. La supervisione editoriale resta necessaria.
-- **Le policy universitarie variano.** Verifica con il tuo dipartimento cosa è ammesso.
+Jenni ha tre tier pubblici (verificati luglio 2026 sul sito ufficiale):
 
-### Casi d'uso concreti
+| Tier | Prezzo | Limiti | Note |
+|------|--------|--------|------|
+| Free | $0 | 200 AI words/giorno, 10 AI autocompletes/giorno, 10 PDF uploads, 3 AI edits/mese, 5 AI chat/mese, 2 reviews/mese | Tier reale, non trial |
+| Plus | $12/mese (annuale) o $20/mese (mensile) | 5.000 autocompletes/mese, unlimited PDF uploads, 500 AI edits/mese, 500 AI chat/mese, 10 reviews/mese, latest features | Adatto a studenti attivi |
+| Pro | $29/mese (annuale) o $29/mese (mensile) | Unlimited su tutto, priority support | Adatto a ricercatori intensivi |
 
-:::pro Quando Jenni fa la differenza
+**Annual billing** su Plus fa risparmiare circa il 40% ($144/anno vs $240/anno).
 
-- **Tesi di laurea magistrale o dottorato.** 200 pagine, 150+ fonti, 6 mesi di lavoro. Jenni diventa il workspace unico.
-- **Paper per riviste peer-reviewed.** Cicli di submission multipli, citazioni da riformattare a ogni revisione, bibliografia da gestire.
-- **Report di ricerca interni.** Una società di consulenza che deve produrre 30 report/anno basati su letteratura accademica.
-- **Review sistematiche o meta-analisi.** Lavori che richiedono gestione rigorosa di centinaia di paper.
-- **White paper verticali.** Contenuti lunghi per thought leadership, con citazioni puntuali.
+**Costo realistico per uso accademico serio:** uno studente che scrive una tesi di laurea magistrale in 6 mesi consuma probabilmente 200-500 AI edits, 100-300 chat, e qualche migliaio di autocompletes. Plus a $12/mese × 6 = $72 copre abbondantemente.
 
-:::
+**Per un ricercatore attivo** che pubblica 3-4 paper/anno: Pro è giustificato. $29/mese × 12 = $348/anno.
 
-:::warning Quando Jenni non è la scelta giusta
+**Refunds:** Jenni offre refund entro 7 giorni per il primo acquisto. Per acquisti successivi, la policy è più restrittiva.
 
-- **Scrivi email, articoli blog, o copy.** Lo stile accademico è pesante per quel tipo di contenuti.
-- **Hai policy universitarie che vietano l'AI.** Verifica prima di adottarlo, anche solo per l'autocomplete.
-- **Scrivi narrativa o saggistica creativa.** L'autocomplete è ottimizzato per testi strutturati, non per prosa letteraria.
-- **Il tuo paper è di 5 pagine.** Il setup e l'overhead di gestione fonti non si giustifica per un singolo paper breve.
+### Le feature chiave in profondità
 
-:::
+**AI Autocomplete adattivo.** La differenza tra Jenni e ChatGPT per la scrittura: l'autocomplete di Jenni apprende dal tuo documento. Suggerimenti basati sul tono che stai usando, sul vocabolario che stai impiegando, sulle citazioni che hai già inserito. Non è generico, è contestuale.
 
-### Jenni vs i concorrenti diretti
+**Source-Grounded Autocomplete.** Per chi scrive paper con fonti specifiche, l'autocomplete può essere ancorato alle tue fonti. Carichi i PDF, l'autocomplete cita i tuoi documenti invece di generare dal nulla. È la differenza tra un paper "AI-assisted" e un paper "AI-generated".
 
-**Jenni vs Grammarly.** Grammarly corregge grammatica e stile, Jenni supporta il workflow accademico. Sono complementari: Grammarly per la pulizia del testo, Jenni per la struttura e le citazioni.
+**AI Chat con PDF.** Upload di documenti, poi chatti con loro. "Qual è la metodologia del paper X?", "Riassumi le conclusioni di Smith 2024", "Confronta paper X e paper Y". Il targeting è preciso: con \`@filename.pdf\` puoi ancorare la chat a un documento specifico. Su Plus, hai 500 chat/mese; su Pro, illimitate.
 
-**Jenni vs Scrivener.** Scrivener è un editor di lungo formato per scrittori (romanzieri, saggisti), senza AI. Jenni ha l'AI ma è focalizzato sull'accademico. Per un dottorando che scrive anche narrativa, sono entrambi utili in fasi diverse.
+**2.600+ Citation Styles.** La libreria di stili è tra le più ampie sul mercato. Include tutti i major (APA, MLA, Chicago, Harvard, Vancouver) e molti specialistici. La generazione automatica da DOI o URL è la parte che fa risparmiare tempo. Non devi più scrivere a mano le citazioni.
 
-**Jenni vs Zotero.** Zotero è un gestore di bibliografia open source, eccellente. Jenni integra gestione bibliografia + scrittura assistita. Per chi vuole solo citazioni, Zotero è sufficiente. Per chi vuole un workflow integrato, Jenni è più efficiente.
+**Integrazione con Zotero e Mendeley.** Sync delle library esterne. Le citazioni e i PDF che hai già in Zotero appaiono in Jenni senza duplicare.
 
-**Jenni vs ChatGPT / Claude.** I tool AI generalisti possono generare testo accademico, ma non hanno accesso diretto alle tue fonti, non gestiscono la bibliografia, e non offrono antiplagio integrato. Jenni è specializzato, ChatGPT/Claude sono generalisti.
+**Multilingual Support.** Scrittura in 30+ lingue, con capacità di "rewrite in English" mantenendo il significato. Utile per ricercatori non madrelingua inglese.
 
-**Jenni vs QuillBot.** QuillBot è focalizzato sulla parafrasi e il riassunto. Jenni è più ampio (scrittura + citazioni + note). Per un uso leggero di parafrasi, QuillBot può bastare. Per il workflow accademico completo, Jenni è più adatto.
+**Outline e Summary Builder.** Da note sparse, genera outline strutturato. Da documenti densi, genera summary. Sono strumenti di scaffolding per chi parte da zero.
 
-### Pricing di Jenni AI
+**Version History.** Track dei cambiamenti e revert a versioni precedenti. Per chi scrive draft lunghi con iterazioni multiple, evita disastri.
 
-Jenni ha un modello freemium con limiti sulla generazione AI, e tier a pagamento che sbloccano:
+**Browser Extension.** Jenni in Google Docs, e in altri web editor. Non tutte le funzionalità sono nell'estensione, ma l'autocomplete base sì.
 
-- Generazione AI illimitata.
-- Citazioni illimitate.
-- Accesso a tutti gli stili di citazione.
-- Antiplagio integrato.
-- Supporto prioritario.
+### Cosa fa bene, e cosa fa meno bene
 
-I piani variano nel tempo. Indicativamente, il tier "Pro" per utente singolo è nella fascia 10-20 €/mese (fatturato annuale). Per studenti con verifica accademica, sono spesso disponibili sconti dedicati.
+**Fa bene:** scrittura accademica con source grounding, citation management, AI chat con PDF, review modes specifiche (Source Quality, Claim Confidence). Sono i suoi superpoteri.
 
-### Flusso pratico: un caso reale
+**Fa meno bene:** prosa creativa, marketing copy, scrittura veloce senza source grounding. Per questi use case, tool diversi sono più adatti.
 
-Giulia è una dottoranda in economia, sta scrivendo il terzo capitolo della sua tesi. Ha 40 articoli da citare, 6 mesi di deadline, e il supervisor chiede revisioni strutturali frequenti.
+**Fa male:** generare paper interi "from scratch" con citazioni inventate. Jenni cita solo fonti reali (DOI, URL, library), ma usato impropriamente può generare paper con citazioni plausibili ma inventate. La qualità dell'output dipende dalla qualità delle tue fonti.
 
-**Settimana 1:** importa i 40 PDF, definisce l'outline (4 sezioni + bibliografia).
+### Limiti strutturali, da conoscere
 
-**Settimane 2-6:** scrive usando l'autocomplete, inserisce citazioni in stile APA, prende appunti per ogni articolo in Jenni.
+**Il plagiarism check è base.** Confronta con web sources, non con paper accademici indicizzati (Turnitin, iThenticate). Per submission a riviste con check serio, ti serve ancora Turnitin.
 
-**Settimana 7:** review con il supervisor. Le revisioni sono tutte strutturali: aggiunge una sezione, sposta paragrafi, aggiorna 12 citazioni. Jenni riformatta automaticamente.
+**L'output AI è rilevabile.** I detection tool (GPTZero, Originality.ai) identificano il testo AI-generated. Jenni non evade la detection. Il pattern corretto: Jenni aiuta a scrivere, tu rivedi e aggiungi il tuo punto di vista.
 
-**Settimana 8-10:** finalizzazione, export in Word per la submission interna al dipartimento.
+**La contestualizzazione è limitata.** Jenni non conosce il paper completo: lavora sul contesto locale del documento. Per review globali ("è il paper coerente con la tesi centrale?"), serve un supervisor umano.
 
-Tempo risparmiato rispetto al workflow manuale (Word + Zotero + Google Drive): circa 30 ore, distribuite sul ciclo. Il valore per Giulia è soprattutto nella riduzione del tempo dedicato alla gestione delle citazioni, non nella generazione del testo.
+**I modelli sottostanti sono GPT-class.** La qualità dipende dal modello, e Jenni non è trasparente su quale usa. In generale, è GPT-4-class con wrapper.
 
-### Le domande che ci fanno più spesso
+### Jenni vs Grammarly vs Sudowrite vs Zotero
 
-**Jenni AI è ammesso dalle università?**
-Dipende dalla policy del tuo corso. Verifica con il supervisor o con il regolamento didattico. Molte università permettono l'uso di AI assistant per bozze e revisione, vietano la generazione di testi finali.
+**Jenni vs Grammarly.** Grammarly è il re della grammar e spelling check. Più maturo, più polished UX, brand riconoscibile. Ma non ha source-grounded writing, citation management specifico per accademico, o PDF chat. Jenni è specializzato per accademico, Grammarly è generalista.
 
-**Le citazioni sono accurate?**
-Le citazioni sono basate sul match tra il tuo testo e le fonti caricate. Se il match è buono, la citazione è accurata. Se il match è debole, Jenni potrebbe proporre citazioni sbagliate. Verifica sempre.
+**Jenni vs Sudowrite.** Sudowrite è per fiction. Completamente diverso. Non c'è overlap reale.
 
-**Funziona in italiano?**
-Sì, con qualità variabile. Per lavori in inglese è ottimizzato. Per lavori in italiano, la precisione dell'autocomplete è buona, ma la gestione di citazioni in stile italiano (UNI, ISO) può richiedere configurazione manuale.
+**Jenni vs ChatGPT con plugin accademici.** ChatGPT può fare cose simili con plugin come ScholarAI o Consensus, ma è più fragile (i plugin cambiano, ChatGPT non è specializzato). Jenni è un environment dedicato.
 
-**Quanto costa?**
-Jenni offre un piano free con limiti mensili sulla generazione AI, e piani a pagamento a partire da circa 10-20 €/mese (fatturato annuale) per uso individuale. Sconti dedicati per studenti con verifica accademica.
+**Jenni vs Zotero + ChatGPT.** Zotero è un reference manager puro. Puoi usarlo con ChatGPT per citare, ma è workflow manuale. Jenni integra la citazione nel flow di scrittura.
 
-**Posso esportare in LaTeX?**
-Sì, l'esportazione in LaTeX è supportata. È uno dei punti di forza per chi scrive paper in ambienti accademici che richiedono LaTeX.
+**Jenni vs Paperpal / Writefull.** Sono competitor diretti nello spazio "AI for academic writing". Paperpal è editoriale-focused (journal targeting, submission prep), Writefull è più accademico-generico. Jenni ha Source Quality che è unique.
 
-**Jenni è meglio di Zotero + Word?**
-Sono approcci diversi. Zotero + Word è una combo tradizionale, gratuita, con setup manuale. Jenni è un workspace integrato, a pagamento, con setup più rapido. Per studenti che vogliono "funziona subito", Jenni è più efficiente. Per chi vuole massimo controllo e open source, Zotero è superiore.
+### Casi d'uso reali
 
-**Posso importare la mia bibliografia Zotero esistente?**
-Sì, è possibile importare da BibTeX, RIS, o DOI. La migrazione da Zotero a Jenni è fattibile, ma non è istantanea: richiede un'ora di setup iniziale.
+**Studente magistrale con tesi di 80 pagine.** Tier Plus, scrittura su 4 mesi, source grounding attivo su 30-40 paper letti, citation management, autocomplete per il tone. Risparmio: 30-40 ore di citation formatting manuale.
+
+**Dottorando con paper per conferenza.** Tier Pro, scrittura intensiva in 2-3 settimane, multiple revisioni con review modes, claim confidence per verificare le affermazioni. Quality check prima della submission.
+
+**Ricercatore con revisione di letteratura.** Tier Plus, PDF chat con 50+ paper, summary builder, outline generator, citation per il draft finale. Velocità di literature review: 2-3x rispetto al manuale.
+
+**Insegnante con preparazione materiale.** Tier Pro, outline delle lezioni, summary dei paper da assegnare, struttura delle slides. Non è lo use case primario ma funziona.
+
+### Setup pratico: da zero a un paper draft in 2 settimane
+
+**1. Crea l'account e importa le fonti.** Su jenni.ai, signup, scegli il tier (Pro se budget lo permette, altrimenti Plus). Importa i PDF delle fonti primarie, sincronizza con Zotero se lo usi. 1-2 ore.
+
+**2. Crea il documento.** New document, scegli citation style. Inizia l'outline. 30 minuti.
+
+**3. Scrivi con autocomplete.** Lascia che Jenni suggerisca. Accetta, modifica, o rifiuta. Il pattern corretto: scrivi tu le idee, lascia che Jenni formatti. 4-8 ore al giorno per 5-7 giorni.
+
+**4. Inserisci citazioni.** Mentre scrivi, usa la citation generation. DOI o URL della fonte, Jenni formatta in-text e bibliography. 30 minuti integrato nel flow.
+
+**5. Review con le modalità.** Proofread per grammar, Claim Confidence per verificare affermazioni, Source Quality per pulizia delle fonti, Tone of Voice per coerenza. 2-3 ore.
+
+**6. Version history.** Salva versioni a milestone (draft 1, draft 2, final). 15 minuti.
+
+**7. Esporta.** Word, LaTeX, o PDF, a seconda del submission target. 5 minuti.
+
+In 2 settimane hai un draft completo con citazioni formattate, review passate, e version history. Per submission, un giro finale di human review è comunque necessario.
+
+### Errori comuni
+
+**Generare paper senza leggere le fonti.** Jenni source-grounded è uno strumento potente, ma se non leggi le fonti, citi senza capire. Il risultato è un paper formalmente corretto ma intellettualmente vuoto. Leggi sempre.
+
+**Affidarsi solo all'AI per le citazioni.** Jenni automatizza la formattazione, ma la scelta delle citazioni è tua. Cita le fonti che hai letto, non quelle che "Jenni suggerisce".
+
+**Non fare Claim Confidence check.** La review mode Claim Confidence verifica che le affermazioni siano supportate. Senza, rischi affermazioni non coperte dalle fonti. Fallo sempre prima della submission.
+
+**Ignorare la Tone of Voice.** La coerenza di registro è importante per journal editor e reviewer. La review mode Tone of Voice è gratis, usala.
+
+**Pagare per Pro quando Plus basta.** Pro è per uso intensivo. Se scrivi 1-2 paper/anno, Plus è sufficiente. Non over-pagare.
+
+### Le domande che ci fanno più sposo
+
+**Jenni è meglio di ChatGPT per scrivere paper?**
+Per paper con citazioni e source grounding, sì. Per brainstorming o scrittura libera, ChatGPT va altrettanto bene.
+
+**Quanto costa in un anno?**
+Studente: Plus annuale $144/anno. Ricercatore: Pro $29/mese = $348/anno.
+
+**Funziona con Zotero?**
+Sì, integrazione nativa. Le library di Zotero si sincronizzano.
+
+**I paper scritti con Jenni superano i plagiarism check?**
+Dipende. Jenni parafrasa le fonti (non copia), ma il plagiarism check serio (Turnitin) può ancora flaggare. Per evitare problemi, usa Jenni come acceleratore di scrittura, non come generatore di paper.
+
+**Jenni è meglio di Grammarly?**
+Per accademico, sì. Per scrittura generale (email, blog, social), Grammarly è sufficiente.
+
+**C'è un trial?**
+Il tier Free è il trial permanente. 200 words/giorno sono sufficienti per testare il workflow.
+
+### Alternative da considerare
+
+- **Grammarly.** Grammar e spelling, generalista, non accademico-specializzato.
+- **Paperpal.** Academic writing con focus journal submission.
+- **Writefull.** Academic writing più generico.
+- **Sudowrite.** Fiction, completamente diverso.
+- **ChatGPT con plugin accademici.** Più fragile, più flessibile.
+- **Zotero + Word.** Workflow tradizionale, manuale, gratuito.
 
 ### Cosa ci aspettiamo da Jenni nei prossimi mesi
 
-Le aree da osservare:
+**Più review modes.** Source Quality è l'inizio. Claim Confidence e Peer Review sono già lì. Possibili estensioni: Replication Check, Funding Compliance.
 
-- **Integrazione con Overleaf e LaTeX.** Se Jenni apre un export più pulito verso Overleaf, diventa ancora più utile per chi scrive in LaTeX.
-- **Antiplagio proprietario.** L'integrazione attuale è con servizi terzi. Se Jenni ne sviluppa uno proprio (o lo integra in modo più stretto), il valore sale.
-- **Collaborazione tra co-autori.** Per paper scritti in team, una vera collaborazione real-time sarebbe un vantaggio.
-- **Supporto per lingue diverse dall'inglese.** L'italiano è supportato, ma l'AI è più forte in inglese. Miglioramenti in questo senso amplierebbero il mercato.
+**Migliore integrazione con reference manager.** Zotero e Mendeley già supportati. Sincronizzazione bidirezionale, gestione di metadata, e PDF management più profondi.
+
+**Migliori capacità multilingual.** Il tone-of-voice per non-madrelingua inglese è buono, non eccellente. Miglioramenti attesi.
+
+**Mobile companion.** L'app mobile è basilare. Un mobile companion più funzionale sarebbe utile per scrivere in mobilità.
 
 ### In sintesi
 
-Jenni AI è uno strumento valido per il workflow accademico, a patto di usarlo come supporto e non come sostituto del lavoro del ricercatore. La gestione delle citazioni e l'integrazione con le fonti sono i vantaggi concreti, non la generazione automatica del testo.
+Jenni è uno dei migliori tool di AI-assisted academic writing nel 2026. La combinazione di source-grounded autocomplete, citation management serio, e review modes specifiche (Source Quality) lo rende particolarmente utile per studenti e ricercatori. Il pricing è accessibile, il tier Free è reale, e il workflow è integrato.
 
-Per chi pubblica regolarmente, il risparmio di tempo (e di frustrazione) giustifica l'abbonamento. Per chi scrive un singolo paper, il free tier basta per provarlo.
+Le limitazioni principali sono: plagiarism check base, AI output rilevabile, e context limitation a livello di documento. Sono limiti strutturali degli LLM attuali, non specifici di Jenni.
+
+Per studenti e ricercatori, è uno dei migliori investimenti. Per content writer, è il tool sbagliato.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Jenni AI** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool di scrittura** nella raccolta dedicata.
-- **Salva Jenni nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di Jenni AI** per confrontare con Paperpal, Grammarly, e altri writing tool.
+- **Esplora la raccolta su scrittura e produttività** per casi d'uso affini.
+- **Salva Jenni AI nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -717,187 +786,208 @@ Per chi pubblica regolarmente, il risparmio di tempo (e di frustrazione) giustif
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/reclaim-ai",
     featured: true,
-    highlights: [
-      'Blocca tempo di concentrazione e abitudini automaticamente, senza trascinare eventi',
-      'Si integra nativamente con Google Calendar e Outlook',
-      'Riduce il burnout da calendario pieno, senza dover rinunciare a meeting',
-      'Utile per manager, consulenti, e chiunque abbia una settimana frammentata',
-    ],
-    details: [
-      'Pianificazione task con priorità, deadline e durata stimata',
-      'Routine e abitudini con frequenza configurabile',
-      'Buffer tra meeting per evitare lo zero-pause back-to-back',
-    ],
-    cautions: [
-      "Richiede di abituarsi a cedere il controllo al planner, all'inizio può confondere",
-      "L'AI può commettere errori su conflitti o priorità: il review settimanale resta utile",
-      'Il pricing per team cresce rapidamente sopra i 5 utenti',
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa Reclaim AI, in una frase
 
-Reclaim AI è un planner intelligente che si collega a Google Calendar o Outlook e organizza automaticamente la tua settimana: difende il tempo di concentrazione, pianifica task e abitudini, e bilancia meeting senza che tu debba rinunciare a nessuno dei due.
+Reclaim è un layer di intelligenza sopra Google Calendar e Outlook che difende automaticamente il tuo focus time, distribuisce le tue abitudini ricorrenti nei buchi del calendario, e protegge le tue task dai meeting invadenti — senza che tu debba micro-gestire ogni slot.
 
-### A chi serve davvero
+Non è un calendario. Non è un task manager. È un arbitro che decide, in tempo reale, chi può occupare il tuo tempo e quando.
 
-Reclaim non è per chi ha un calendario con 5 eventi a settimana. È per chi ha un calendario congestionato e vuole recuperare il controllo. I profili tipici:
+### A chi serve davvero, e a chi no
 
-- **Manager e dirigenti** con 25-35 ore di meeting a settimana.
-- **Consulenti e freelance** che fanno project work con deadline e clienti multipli.
-- **Team operativi** (sales, customer success, recruiting) con calendario frammentato da call.
-- **Chi ha ADHD o fatica a proteggere il tempo di focus** e vuole un sistema che lo faccia al posto suo.
+Reclaim ha un profilo di fit molto specifico. Funziona bene per:
 
-Non è il tool giusto per chi ha bisogno di una semplice to-do list, né per chi preferisce il controllo manuale totale del calendario (in quel caso, un time blocking tradizionale può bastare).
+**Knowledge worker con calendario frammentato.** Se la tua settimana ha 20-30 ore di meeting, 5-10 task importanti, e 3-4 abitudini che vuoi mantenere (workout, lettura, deep work), Reclaim è la risposta. Senza, devi micro-gestire manualmente, e prima o dopo qualcosa salta.
 
-### Come funziona, passo per passo
+**Manager e director che hanno troppe cose in parallelo.** Quando sei in 5 progetti diversi, con 3 one-to-one settimanali, e ogni progetto ha le sue task, il calendario diventa un campo di battaglia. Reclaim lo gestisce come un arbitro.
 
-Il flusso di Reclaim ha quattro elementi chiave.
+**Team che lavorano async-first.** Se la tua organizzazione ha culture async, con block di deep work difesi, e meeting solo quando necessari, Reclaim codifica quella cultura nel calendario.
 
-**1. Connessione al calendario.** Reclaim si integra nativamente con Google Calendar e Microsoft Outlook. Una volta autorizzato, legge tutti gli eventi esistenti e i calendari secondari.
+**Freelance con clienti multipli e time tracking.** Le abitudini di Reclaim possono essere configurate con task specifiche (time tracking, fatturazione, follow-up), e si integrano con Todoist, Asana, Linear, ClickUp, Jira.
 
-**2. Definizione di task, abitudini e buffer.** L'utente crea:
-- **Task** con priorità, deadline stimata, e durata stimata.
-- **Abitudini** ricorrenti (es. "30 minuti di sport 3 volte a settimana", "meditazione ogni mattina").
-- **Buffer** tra meeting (es. 10 minuti prima di ogni call) per evitare il back-to-back.
+**Studenti universitari e dottorandi.** Block di studio difeso automaticamente, in modo che i seminari non erodano il tempo di tesi.
 
-**3. Auto-scheduling.** Reclaim piazza automaticamente task, abitudini e buffer negli slot liberi del calendario, rispettando:
-- Le priorità dei task (alta > media > bassa).
-- Le deadline.
-- Gli orari di lavoro definiti.
-- Le "minime daily hours" per il deep work (configurabili).
+Non è la scelta giusta per:
 
-**4. Ribilanciamento continuo.** Quando un meeting viene aggiunto o spostato, Reclaim riadatta automaticamente il calendario. Quando un task viene completato, Reclaim libera quello slot.
+**Chi ha un calendario con pochi eventi.** Se hai 5-6 meeting a settimana e poco altro, Reclaim è overkill. Il value è nel gestire la complessità; poca complessità = poco value.
 
-:::tip Cosa distingue Reclaim da un calendario tradizionale
+**Chi vuole controllo totale e micro-gestione.** Reclaim decide per te dove mettere le cose. Se preferisci controllare tu ogni slot, l'automazione ti darà fastidio.
 
-- **Task e abitudini vengono trattati come eventi** del calendario, ma con intelligenza: cambiano posto se serve.
-- **Le priorità non sono statiche**: un task alta priorità con deadline imminente viene spostato al primo slot disponibile, scalzando task a bassa priorità.
-- **Il calendario si difende da solo**: se un collega prova a prenotare un meeting sul tuo slot di focus, Reclaim può negoziare o proporre alternative.
-- **Le abitudini sono "intelligenti"**: se salti la sessione di sport di martedì, Reclaim riprova giovedì.
+**Team che usano calendari condivisi come primary tool.** Reclaim lavora su calendari individuali, non su calendari di team. Per team scheduling, ci sono tool specifici (Clockwise, Motion for Teams, calendar polls).
 
-:::
+**Chi ha bisogno di pianificazione avanzata di progetti.** Reclaim gestisce task individuali, non progetti complessi con dipendenze. Per quello, Linear, Asana, e tool di project management sono più adatti.
 
-### I vantaggi concreti di Reclaim
+### Architettura: come funziona davvero
 
-**Recupero di tempo di focus.** Il beneficio principale è il tempo di concentrazione protetto. Senza Reclaim, una settimana media di un manager ha 5-8 ore di focus "veri". Con Reclaim, si sale a 12-15 ore, a parità di meeting.
+Capire come Reclaim "pensa" è fondamentale per usarlo bene. L'architettura si basa su quattro astrazioni: Habits, Tasks, Smart Meetings, e Calendar Sync.
 
-**Riduzione del carico cognitivo.** Non devi più decidere quando fare cosa. Reclaim decide per te, rispettando i vincoli che hai impostato.
+**Habits** sono routine ricorrenti con priorità, durata, e range orario. Esempi: "Workout 3 volte a settimana, 1 ora, tra le 17 e le 20, priorità alta", oppure "Deep work 4 ore, 3 volte a settimana, tra le 9 e le 13, priorità massima". Reclaim cerca gli slot disponibili nel calendario e li blocca, spostandoli dinamicamente se arriva un meeting prioritario. La differenza rispetto a un evento ricorrente classico è che la Habit è difensiva: protegge il tempo, non lo riempie.
 
-**Abitudini che si fanno.** L'auto-scheduling delle abitudini è uno dei punti più apprezzati: gli utenti riportano un aumento significativo dell'aderenza a routine personali (sport, lettura, meditazione).
+**Tasks** sono cose da fare con durata stimata, deadline, e priorità. Le integrazioni con Todoist, Asana, Linear, ClickUp, e Jira sincronizzano le task esterne. Reclaim le trasforma in blocchi di calendario, scegliendo quando farle in base a deadline, durata stimata, e slot disponibili. La differenza rispetto a un task manager classico è che Reclaim tratta il tempo come risorsa scarsa da allocare, non come una lista da spuntare.
 
-**Riunioni meno "rubano tempo".** Il buffer automatico riduce il fenomeno del "salto rapido" tra meeting, che è uno dei maggiori consumatori di energia cognitiva.
+**Smart Meetings** sono meeting che si organizzano da soli, rispettando vincoli di tutti i partecipanti (calendari, abitudini, task). Reclaim trova lo slot ottimale e manda l'invito. Per meeting ricorrenti con molte persone, è una delle feature più apprezzate: evita la negoziazione via email.
 
-### I limiti da considerare
+**Calendar Sync** tiene sincronizzati più calendari Google o Outlook. Se hai un calendario personale e uno di lavoro, e un terzo per side project, Reclaim li tiene in sync senza i loop infiniti dei cambi di colore o delle risposte "declinato" su calendari condivisi.
 
-**Fase di apprendimento iniziale.** Reclaim richiede un setup iniziale non banale: definire orari, priorità, task types, abitudini. La prima settimana è di rodaggio.
+Il modello di scheduling è di tipo "constraint satisfaction": data una serie di Habits e Tasks con vincoli, Reclaim trova una disposizione che massimizza la priorità alta e minimizza la frammentazione. Quando un meeting arriva, Reclaim ri-negozia gli slot per assorbire l'evento nuovo. È un algoritmo continuo, non un one-shot.
 
-**Overhead se il calendario cambia spesso.** Se il tuo calendario è altamente variabile (es. consulente con clienti che cambiano settimana per settimana), Reclaim deve ribilanciare spesso, e l'utente deve accettare le decisioni dell'AI.
+### Pricing, onestamente
 
-**Costo per team.** Il pricing per team cresce rapidamente sopra i 5 utenti, e diventa significativo sopra i 20. Per team più piccoli (1-5 persone), è gestibile.
+Reclaim ha quattro tier (verificati sul sito ufficiale a luglio 2026):
 
-**Non sostituisce la disciplina.** Reclaim aiuta a strutturare, ma se l'utente continua a sovraccaricare il calendario, l'AI può fare poco.
+**Lite, gratis per sempre.** 1 utente, 1 sync calendar, 1 scheduling link, 5 AI Agents, 1 settimana di scheduling range, integrazioni limitate (Google Tasks, Slack, Zoom, Google Meet). È un piano reale, non un trial. Copre l'uso individuale leggero.
 
-### Casi d'uso concreti
+**Starter, $12/mese per seat (annuale) o $10/seat con commit annuale.** Aggiunge 8 settimane di scheduling range, 3 calendar sync, 3 scheduling link, integrazioni complete con Todoist, Asana, ClickUp, Linear, Jira, Slack status sync, Focus Time, Habits illimitate, Smart Meetings 3 come organizer. Adatto a singoli o team piccoli.
 
-:::pro Quando Reclaim fa la differenza
+**Business, $18/mese per seat (annuale).** 12 settimane di scheduling range, calendar sync illimitati, scheduling link illimitati, Smart Meetings illimitati, webhooks, Team OOO calendar, delegated access, security review. Adatto a team 10-100 persone.
 
-- **Manager con 25+ ore di meeting a settimana** che vuole recuperare focus.
-- **Consulenti** che bilanciano 3-5 clienti e hanno bisogno di proteggere il deep work.
-- **Team sales / customer success** con calendario frammentato da call esterne.
-- **Freelance con abitudini irregolari** (sport, scrittura) che faticano a mantenerle.
-- **Chi ha ADHD** e ha bisogno di un sistema esterno che gestisca la pianificazione.
-- **Team distribuiti** che vogliono coordinare "no meeting days" e focus time.
+**Enterprise, $22/mese per seat (annuale), minimo 100 seat.** SSO, SCIM provisioning, domain capture, dedicated support, audit log, SLA. Adatto a organizzazioni 100+.
 
-:::
+Reclaim è stato acquisito da Dropbox nel 2024 per $40.2M, ma continua a operare come prodotto indipendente. La cosa importante da sapere: i prezzi sono competitivi con Motion ($29/mese entry-level), e significativamente più economici di strumenti enterprise comparabili (Clockwise, Asana con calendar integration).
 
-:::warning Quando Reclaim non è la scelta giusta
+Una nota: i prezzi di Reclaim sono cambiati più volte negli ultimi due anni. Quando firmi un budget annuale, considera un 10-20% di tolleranza per eventuali price increase.
 
-- **Calendario quasi vuoto.** Il costo non si giustifica se hai 5 eventi a settimana.
-- **Preferisci il controllo manuale totale.** Se ogni mossa del calendario ti infastidisce, l'auto-scheduling sarà una fonte di attrito, non di sollievo.
-- **Lavoro molto reattivo senza blocchi definiti.** Se la tua giornata è 100% reattiva (es. on-call tecnico), Reclaim non ha slot da ottimizzare.
-- **Non sei disposto a investire 30-60 minuti in setup iniziale.** Senza setup, Reclaim non funziona bene.
+### Le feature che fanno la differenza
 
-:::
+**Focus Time difensivo.** È la feature più usata. Dichiari che vuoi N ore di focus time a settimana, e Reclaim le difende. Quando un meeting prova a eroderle, Reclaim le riposiziona o ti avvisa. È il contrario di un evento "deep work" creato manualmente, che verrebbe rimosso o spostato alla prima occasione.
 
-### Reclaim vs i concorrenti diretti
+**Habits ricorrenti.** Workout, lettura, journaling, language practice. Configuri la frequenza, la durata, il range orario, e Reclaim le mette in calendario. Quando salti una sessione, Reclaim sposta la prossima per tenere la frequenza. È come avere un personal scheduler per le abitudini.
 
-**Reclaim vs Motion.** Motion è il concorrente più diretto. La differenza principale: Motion è più "project management" (pianifica task di progetti), Reclaim è più "calendar protection" (difende slot di focus). Motion è più adatto a chi gestisce progetti complessi, Reclaim a chi ha un calendario frammentato da meeting.
+**Task-to-calendar con integrazioni.** Colleghi Todoist, Asana, Linear, ClickUp, o Jira, e le task con deadline diventano blocchi di calendario. Reclaim stima la durata in base a una euristica (1 ora di default, configurabile per project), e la mette dove c'è spazio. Quando completi la task nel task manager, Reclaim rimuove il blocco.
 
-**Reclaim vs Notion Calendar (ex Cron).** Notion Calendar è un calendario con integrazioni Notion, gratuito. Reclaim ha l'AI di scheduling, Notion Calendar no. Per chi vuole "solo un bel calendario", Notion Calendar basta. Per chi vuole "il calendario che pensa al posto mio", Reclaim.
+**Smart Meetings 1:1.** Per i one-to-one ricorrenti, Reclaim trova lo slot che rispetta le abitudini di entrambi. Niente più "quando ti va bene?" via email.
 
-**Reclaim vs Clockwise.** Clockwise è un altro competitor focalizzato sulla protezione del focus time. La differenza è sottile: Clockwise ottimizza su base settimanale (sposta meeting in blocchi), Reclaim lavora su task + abitudini + meeting in tempo reale. Per team che vogliono "no meeting friday" automatico, Clockwise è forte. Per gestione individuale continua, Reclaim è più granulare.
+**Scheduling links personalizzati.** Crei un link pubblico del tipo "30 minuti con me" o "Coffee chat", e le persone prenotano rispettando le tue abitudini e il tuo focus time. Simile a Calendly, ma con l'integrazione nativa nelle tue difese.
 
-**Reclaim vs Time Blocking manuale.** Il time blocking fatto a mano (es. con Google Calendar) funziona se hai disciplina e tempo per farlo ogni settimana. Reclaim fa la stessa cosa automaticamente, con intelligenza su priorità e deadline. Il prezzo è giustificato dal tempo risparmiato.
+**Slack status sync.** Reclaim legge il tuo calendario e aggiorna il tuo status Slack ("In a meeting", "Focus time", "Heads down") automaticamente. Riduce le interruzioni.
 
-**Reclaim vs Todoist / Things 3.** Sono to-do list potenti, ma non si integrano con il calendario come Reclaim. Reclaim tratta i task come eventi del calendario. Todoist e Things no.
+**Buffer time e travel time.** Tra un meeting e l'altro, Reclaim inserisce un buffer configurabile (default 10 minuti) per darti tempo di respirare. Per chi ha meeting back-to-back, è una salvezza.
 
-### Pricing di Reclaim
+**Productivity stats.** Dashboard settimanale con quanto focus time hai difeso, quante Habits completate, quanti meeting accettati/rifiutati. Utile per capire dove va il tuo tempo.
 
-Reclaim ha un piano free con funzionalità limitate (1 tipo di task, 3 abitudini), e tier a pagamento:
+### Le feature che mancano, e come workaround-are
 
-- **Starter** (utente singolo): funzionalità complete per uso individuale.
-- **Business** (team): collaboration features, analytics di team, integrazioni HR.
-- **Enterprise**: custom pricing per organizzazioni grandi.
+**Nessuna vera project management.** Reclaim è task-aware ma non project-aware. Non vede le dipendenze tra task, le milestone, i deliverable. Se il tuo lavoro è strutturato a progetti complessi, gestiscili in Linear o Asana, e usa Reclaim solo per il time-blocking.
 
-Il tier Starter per utente singolo è nella fascia 8-12 €/mese (fatturato annuale). I piani team partono da 10-15 €/utente/mese.
+**Scheduling link collettivi con logica team.** Reclaim ha round-robin scheduling link, ma è basilare. Per team scheduling complesso (distribuzione automatica in base a workload, preferenze, SLA), tool come Motion for Teams o calendar polls sono superiori.
 
-### Flusso pratico: un caso reale
+**Integrazione diretta con i team calendar.** Reclaim lavora sui calendari individuali. Per team calendar condivisi, devi configurare i sync, e la complessità cresce con le persone.
 
-Luca è un engineering manager in una scaleup, gestisce un team di 8 persone. Calendario: 28 ore di meeting a settimana, 12 task di review o 1:1 da incastrare, abitudine di correre 3 volte a settimana.
+**Personalizzazione profonda del conflict resolution.** Quando due Habit sono in conflitto, Reclaim sceglie in base alla priorità. Ma non puoi configurare regole complesse come "se l'utente ha saltato 2 workout questa settimana, sposta il meeting invece dell'habit". La logica è semplice, non programmabile.
 
-**Setup iniziale (45 minuti):** collega Google Calendar. Definisce "no meeting mercoledì mattina", orari di lavoro 9-18, buffer 10 minuti tra meeting, abitudine "corsa 30 min 3 volte a settimana", task types con priorità (P1 urgente, P2 alta, P3 standard).
+**Mobile app limitata.** L'app mobile esiste, ma è più un viewer che un editor completo. La gestione delle Habits, Task configuration, e calendar sync è più comoda su desktop.
 
-**Settimana 1-2:** rodaggio. Reclaim piazza i task P1 nei primi slot liberi, le abitudini negli slot "minimi", e i meeting negli slot periferici. Luca nota che il mercoledì mattina è libero per focus.
+### Reclaim vs Motion vs Clockwise vs Akiflow
 
-**Mese 2:** Luca ha preso l'abitudine. Sa che può accettare meeting nella "finestra buona" di martedì pomeriggio e venerdì, e che il mercoledì mattina è sacro. Il numero di ore di focus è salito da 6 a 14.
+**Reclaim vs Motion.** Motion è il concorrente più visibile: AI calendar, project management integrato, prezzi più alti ($29/mese entry-level, vs $12 di Reclaim). Motion è più completo nella project management (task con dipendenze, AI che ri-pianifica progetti), ma più caro. Reclaim è più focalizzato su habits e calendar defense, meno su project management. Per un founder con task semplici, Reclaim è più che sufficiente e costa meno. Per un team di product management con progetti complessi, Motion è superiore.
 
-**Mese 4:** review trimestrale. Il team ha adottato Reclaim. La "no meeting mercoledì" è diventata una convenzione. Le review di performance sono state fatte in slot dedicati, non rubati alla giornata.
+**Reclaim vs Clockwise.** Clockwise è focalizzato su team calendar optimization: trova slot per i meeting di team, riduce le interruzioni, crea "Focus Time" aziendale. È più adatto a team che vogliono ottimizzare i calendari condivisi, meno a individui che vogliono difendere il proprio tempo. Pricing simile a Reclaim, ma con meno integrazioni con task manager.
 
-Risultato per Luca: più tempo di focus, meno decisioni micro sul calendario, abitudini mantenute. ROI su 4 mesi: positivo.
+**Reclaim vs Akiflow.** Akiflow è un "inbox per il calendario" con integrazioni multiple e shortcuts da tastiera potenti. È più adatto a chi vuole un workflow keyboard-driven per gestire task e calendario. Reclaim è più automazione, Akiflow è più controllo manuale. Akiflow è meno caro (~$15/mese) ma richiede più configurazione.
 
-### Le domande che ci fanno più spesso
+**Reclaim vs calendari nativi (Google Calendar, Outlook).** I calendari nativi non hanno automazione di habits, non difendono il focus time, e non sincronizzano task con calendario automaticamente. Reclaim è un layer sopra, non un sostituto.
 
-**Reclaim funziona con Outlook?**
-Sì, Reclaim supporta Google Calendar e Microsoft Outlook 365. La qualità dell'integrazione è comparabile.
+### Casi d'uso reali
 
-**Reclaim è adatto a un team di 50 persone?**
-Sì, con il piano Business o Enterprise. Per team grandi, l'analisi di "dove va il tempo del team" diventa il valore aggiunto principale.
+**Founder con 3-4 progetti paralleli.** Reclaim è il sistema nervoso centrale: Habit "Review weekly metrics" ogni venerdì mattina, Task dai project management tool, Focus time difeso per le decisioni strategiche, Smart Meetings per gli investor update.
 
-**Quanto costa per un singolo utente?**
-Il piano Starter è circa 8-12 €/mese con fatturazione annuale. C'è un free tier con limitazioni.
+**Consulente con 8-10 clienti.** Habit settimanali per fatturazione e follow-up, Task per ogni deliverable con deadline, Focus time per la preparazione, Scheduling link per i clienti.
 
-**Posso esportare le mie pianificazioni?**
-Sì, Reclaim sincronizza tutto in Google Calendar o Outlook. Esportare il calendario significa esportare Reclaim.
+**Engineering manager.** Habit "1:1 con i diretti report" ogni settimana, Task per le review del codice, Focus time per la scrittura tecnica, Team calendar integration via Google Calendar.
 
-**Reclaim può negoziare meeting al posto mio?**
-Sì, con la funzionalità "Meeting Polls" e "Smart Meetings". Reclaim può proporre orari alternativi, raccogliere risposte, e prenotare lo slot migliore per tutti.
+**Dottorando.** Habit "Scrittura tesi" 4 ore al giorno, Habit "Lettura paper" 2 ore, Focus time difeso, Integrazione con Zotero o Notion per i paper.
 
-**Reclaim è adatto a chi ha ADHD?**
-Spesso sì. Il sistema esterno che decide "quando fare cosa" riduce il carico decisionale. Detto questo, non è una soluzione medica: se sospetti ADHD, parlane con un professionista.
+**Team di vendita.** Smart Meetings per le demo, Buffer time tra le demo per il follow-up, Status sync su Slack per ridurre le interruzioni, calendar sync tra personal calendar e team calendar.
 
-**Reclaim funziona con le task management esterne?**
-Sì, con integrazioni: Todoist, Asana, ClickUp, Jira, Linear, Notion. Le task esterne vengono importate in Reclaim per lo scheduling.
+### Quando Reclaim non è la scelta giusta
+
+**Team con calendari pesantemente condivisi.** Se il tuo calendario è 80% meeting con altre persone, Reclaim ha meno da difendere. Per team calendar optimization, Clockwise è più adatto.
+
+**Lavori strutturati a turni.** Reclaim è pensato per knowledge work, non per lavoro a turni o operation.
+
+**Contesti dove il calendario non è il primary tool.** Se sei un grafico o un designer che lavora principalmente su Figma, e i meeting sono rari, Reclaim è overkill.
+
+**Privacy estreme.** Reclaim accede al tuo calendario, e per definizione vede tutti i tuoi eventi. Se hai requisiti di privacy tali che nessun tool di terze parti può toccare il tuo calendario, Reclaim non è per te.
+
+### Setup pratico: da zero a un calendario difeso in 30 minuti
+
+**1. Crea l'account e collega il calendario.** Su reclaim.ai, signup con Google o Outlook. Autorizza l'accesso al calendario. Tempo: 3 minuti.
+
+**2. Configura le prime Habit.** Vai su "Habits", "New Habit". Parti da 2-3: workout, deep work, lettura. Configura frequenza, durata, range orario, priorità. Tempo: 10 minuti.
+
+**3. Collega un task manager.** Settings → Integrations. Collega Todoist, Asana, o Linear. Le task con deadline diventano blocchi di calendario. Tempo: 5 minuti.
+
+**4. Crea il primo Smart Meeting.** Vai su "Smart Meetings", "New". Tipo (1:1, group, 30min, 60min), chi invitare, vincoli (no meeting prima delle 10, etc.). Tempo: 5 minuti.
+
+**5. Configura Focus Time.** Settings → Time Blocking. Dichiara quante ore di focus time a settimana, in quali range orari, con quale priorità. Tempo: 3 minuti.
+
+**6. Testa e itera.** Lascia girare una settimana. Guarda come Reclaim dispone le cose. Aggiusta priorità e range. Tempo: settimana di osservazione.
+
+In 30 minuti hai un setup funzionante. In una settimana capisci se ti piace. In un mese lo hai ottimizzato per il tuo workflow.
+
+### Errori comuni
+
+**Configurare troppe Habit il primo giorno.** Parti da 2-3, non da 8. Aggiungi gradualmente, altrimenti il calendario diventa una gabbia di slot obbligati che ti stressa.
+
+**Sottovalutare la priorità delle Habit.** Reclaim sceglie in base alla priorità. Se non la configuri, le Habit di bassa priorità vengono sacrificate per i meeting. Decidi cosa è sacro e cosa è negoziabile.
+
+**Dimenticare di disattivare le Habit in vacanza.** Reclaim continua a cercare slot anche quando sei in ferie. Configura "Out of Office" o pausa le Habit per il periodo.
+
+**Non integrare i task manager.** Reclaim senza integrazioni è solo un calendar tool. Con Todoist/Linear integration, diventa un time-blocking engine.
+
+**Ignorare i productivity stats.** La dashboard è il feedback loop. Se non la guardi, non sai se Reclaim ti sta aiutando o ti sta incasinando.
 
 ### Cosa ci aspettiamo da Reclaim nei prossimi mesi
 
-Le aree da osservare:
+**Integrazione con Dropbox.** L'acquisizione del 2024 può portare integrazioni con Dropbox ecosystem (Dropbox Paper, Dropbox Dash, Dropbox Sign). Da monitorare se sei in quell'ecosistema.
 
-- **AI più granulare sulle priorità.** Se Reclaim impara dalle tue scelte passate e suggerisce priorità in modo più intelligente, il valore sale.
-- **Integrazione con project management più profonda.** Oggi Reclaim legge task da Asana, ClickUp, ecc. Se diventa bidirezionale (modifichi la task in Reclaim, si aggiorna in Asana), il workflow è più pulito.
-- **Analytics di produttività più ricche.** Sapere quanto tempo di focus hai effettivamente avuto, e in quali fasce, è un input prezioso.
-- **Migliore gestione dei team distribuiti.** Fusi orari, overlap, no-meeting days cross-team.
+**Mobile migliore.** L'app mobile è ancora limitata. Migliorarla è una richiesta frequente della community.
+
+**Project management più ricco.** Reclaim potrebbe aggiungere funzionalità per gestire task con dipendenze, o integrarsi più profondamente con Linear e Asana per portare la project intelligence dentro il calendar.
+
+**AI più conversazionale.** Possibilità di "Hey Reclaim, sposta la call con X a domani e proteggimi il martedì mattina per il deep work". Già presente in parte, da consolidare.
+
+### Le domande che ci fanno più spesso
+
+**Reclaim funziona con Microsoft Outlook?**
+Sì, dal marzo 2025. Supporta Google Calendar e Microsoft Outlook completamente.
+
+**Posso esportare il mio calendario e abbandonare Reclaim?**
+Sì, in qualsiasi momento. Le Habit e le Task sono oggetti Reclaim, ma il calendario sottostante resta tuo. Esporti, e perdi l'automazione ma mantieni gli eventi.
+
+**Reclaim rallenta il mio calendario?**
+No. Reclaim lavora in background, le modifiche sono rapide, e non c'è un impatto percepibile sulla velocità di Google Calendar o Outlook.
+
+**C'è un rischio di data breach?**
+Reclaim memorizza i dati di configurazione (Habit, Task config) sui propri server. Il contenuto del calendario resta sui server di Google/Outlook. Reclaim è SOC 2 compliant e usa encryption standard.
+
+**Funziona per team con molti membri?**
+Sì, ma il valore per team è diverso. Reclaim eccelle come tool individuale. Per team, è uno strumento che ogni membro usa individualmente, e il valore si moltiplica (se tutti hanno Focus Time difeso, gli slot di meeting si concentrano).
+
+**Meglio Reclaim o un calendar tradizionale + disciplina?**
+La disciplina è fragile. Reclaim la codifica nel sistema. Se sei il tipo che "dovrei fare X ma finisce che Y prende il sopravvento", Reclaim è la risposta. Se sei già un master del calendar management, Reclaim è ridondante.
+
+### Alternative da considerare
+
+- **Motion.** Più caro ($29/mese), più completo in project management, meno focalizzato su habits.
+- **Clockwise.** Più focalizzato su team calendar optimization, meno su individuale.
+- **Akiflow.** Keyboard-driven, più controllo manuale, meno automazione.
+- **Google Calendar + disciplina.** Gratis, ma richiede self-discipline.
+- **Outlook + Focus Time blocks.** Funzionalità nativa parziale, ma molto meno potente di Reclaim.
 
 ### In sintesi
 
-Reclaim AI è una risposta concreta al problema "ho un calendario pieno e non riesco a fare focus work". Non è un tool per il calendario vuoto, né un sostituto della disciplina personale. Per chi ha un calendario congestionato e vuole recuperare il controllo, è uno degli investimenti con ROI più rapido.
-
-La chiave è investire nel setup iniziale: senza task, abitudini e priorità definite, Reclaim non può fare miracoli.
+Reclaim AI è uno dei migliori investimenti di produttività per knowledge worker con calendario frammentato. Il prezzo ($12/mese) è giusto, il fit per il target è preciso, e l'impatto su focus time e abitudini è misurabile. Non è per tutti, e non è una bacchetta magica — richiede configurazione iniziale e iterazione. Ma per il profilo giusto, è probabilmente il tool di calendar AI con il miglior rapporto qualità/prezzo.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Reclaim AI** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool di produttività** nella raccolta dedicata.
-- **Salva Reclaim nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di Reclaim AI** per confrontare con Motion, Clockwise, e altri calendar tool.
+- **Esplora la raccolta su produttività** per casi d'uso affini.
+- **Salva Reclaim AI nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -915,185 +1005,209 @@ La chiave è investire nel setup iniziale: senza task, abitudini e priorità def
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/windsor-ai",
     featured: true,
-    highlights: [
-      'Connettori nativi con Meta Ads, Google Ads, LinkedIn, TikTok, HubSpot, Salesforce',
-      'Modelli di attribuzione multi-touch configurabili',
-      'Esportazione verso BigQuery, Snowflake, Redshift, Looker',
-      'Pensato per team marketing che vogliono ownership del dato, non lock-in da piattaforma',
-    ],
-    details: [
-      'Dashboard pronte per ROAS, CPA, LTV per campagna e canale',
-      'API aperte per integrazioni custom',
-      'Template di reportistica per finance e leadership',
-    ],
-    cautions: [
-      "Richiede una data strategy di base: senza naming conventions pulite, l'output è caotico",
-      'Non è un tool per il singolo marketer: serve almeno un analista',
-      "La qualità dell'attribuzione dipende dalla qualità dei dati di input",
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa Windsor AI, in una frase
 
-Windsor AI è una piattaforma di marketing data e attribuzione che connette le tue fonti pubblicitarie (Meta, Google, LinkedIn, TikTok, ecc.), il CRM (HubSpot, Salesforce) e gli analytics in un unico layer, e ti permette di esportare il dato pulito verso BigQuery, Snowflake, Redshift o Looker.
+Windsor AI è una piattaforma no-code di data integration e marketing attribution che collega 325+ fonti di marketing e vendita a destinazioni come BigQuery, Snowflake, Google Sheets, Looker, e Power BI — e che include un modello di attribuzione multi-touch basato su Markov chain per capire quale canale sta davvero portando conversioni.
 
-### A chi serve davvero
+Non è solo un connettore. È un data pipeline + attribution engine per team marketing che non vogliono (o non possono) avere un data engineer a tempo pieno.
 
-Windsor non è per il singolo marketer che fa una campagna su Meta. È per il team marketing che ha bisogno di:
+### A chi serve davvero, e a chi no
 
-- **Attribuzione multi-touch reale**, non solo "ultimo click" di Google Analytics.
-- **Reportistica cross-canale** unificata, senza dover entrare in 6 dashboard diverse.
-- **Ownership del dato**, con export verso il proprio data warehouse.
-- **Performance monitoring di campagne e canali** in tempo reale.
+Windsor AI funziona bene per:
 
-I profili tipici:
+**Team marketing che spendono $20k-$500k/mese in ads su più canali.** Quando hai Meta Ads, Google Ads, TikTok, LinkedIn, e forse Pinterest tutti attivi, e devi capire quale canale sta realmente contribuendo, l'attribuzione last-click di Google Analytics mente. Windsor ti dà la verità multi-touch.
 
-- **Marketing team in scaleup e mid-market** (5-50 persone marketing) che stanno crescendo e hanno bisogno di un'infrastruttura dati seria.
-- **Agenzie media** che gestiscono portfolio di clienti e vogliono reportistica standardizzata.
-- **Data analyst marketing** che costruiscono dashboard e modelli di attribuzione custom.
-- **CFO e finance** che vogliono capire il ROI reale del marketing, canale per canale.
+**Aziende che vogliono centralizzare i dati marketing in un data warehouse.** Senza dover scrivere custom ETL. Colleghi le fonti, scegli la destinazione, e i dati arrivano puliti, normalizzati, e pronti per l'analisi.
 
-Non è il tool adatto a chi cerca un "dashboard facile senza setup": Windsor richiede un minimo di data literacy e di integrazione iniziale.
+**Team che usano BigQuery, Snowflake, o Redshift.** Windsor eccelle in questo caso, perché i dati arrivano in tempo reale e possono essere analizzati con SQL.
 
-### Come funziona, passo per passo
+**Marketing operations specialist che vogliono un'alternativa a Supermetrics.** Windsor ha più connettori, più destinazioni incluse, e pricing flat (vs per-source come Supermetrics).
 
-Il flusso operativo ha cinque fasi.
+**Agenzie media-buying che gestiscono 20+ clienti.** Il pricing flat di Windsor (vs per-utente o per-source) lo rende economicamente interessante per agency.
 
-**1. Connessione delle fonti dati.** Windsor offre connettori nativi per le principali piattaforme pubblicitarie (Meta Ads, Google Ads, LinkedIn Ads, TikTok, Pinterest, Reddit, X), per i CRM (HubSpot, Salesforce, Pipedrive), per i tool di email (Klaviyo, Mailchimp), e per le piattaforme di ecommerce (Shopify, WooCommerce). L'utente autorizza le connessioni via OAuth.
+Non è la scelta giusta per:
 
-**2. Mappatura dei campi.** Windsor normalizza i dati: spese, impression, click, conversioni, revenue, lead, customer id. La mappatura consente di unificare le metriche tra canali (es. "spend" diventa "cost" ovunque).
+**Aziende che spendono meno di $5k/mese in ads.** A volumi bassi, Google Analytics nativo è sufficiente, e Windsor è overkill.
 
-**3. Modelli di attribuzione.** Windsor supporta diversi modelli: last click, first click, linear, time decay, position-based, data-driven (con limiti sui volumi). L'utente sceglie il modello o ne confronta più di uno.
+**Team che hanno già una data infrastructure robusta.** Se hai un data engineer full-time e un Fivetran o Airbyte, Windsor è ridondante.
 
-**4. Dashboard e report.** Windsor offre dashboard pronte (ROAS, CPA, LTV per campagna) e template per report periodici. Gli utenti tecnici possono costruire dashboard custom.
+**Casi d'uso che richiedono server-side tracking.** Windsor è un data integration tool, non un server-side tracking tool. Per server-side CAPI, Enhanced Conversions, o conversion API, ti servono tool diversi (SignalBridge, Stape, o implementazione custom).
 
-**5. Export verso warehouse.** Il valore aggiunto principale di Windsor è l'export del dato normalizzato verso il proprio data warehouse (BigQuery, Snowflake, Redshift, Postgres). Una volta lì, il dato è disponibile per analisi avanzate, modelli di marketing mix, e dashboard BI custom.
+**Realtime decision-making su bid management.** Windsor è analytico, non operativo. Per bidding automatico su Meta o Google, usare le piattaforme native.
 
-:::tip Cosa distingue Windsor da un tool "solo dashboard"
+### Architettura: come funziona davvero
 
-La differenza è l'**ownership del dato**:
+Capire l'architettura è fondamentale per capire quando Windsor ha senso e quando no.
 
-- Un tool come Supermetrics o Funnel ti dà dashboard, ma ti "intrappola" nel loro prodotto.
-- Windsor ti dà il dato normalizzato, e tu lo porti dove vuoi.
-- Questo significa che puoi costruire il tuo modello di attribuzione, fare analisi personalizzate, e non perdere il dato se cambi tool.
+**Fonti (325+ connector).** Ogni connettore è un modulo che parla l'API di una piattaforma specifica: Meta Ads API, Google Ads API, TikTok API, LinkedIn Campaign Manager, HubSpot, Salesforce, Shopify, Klaviyo, Stripe, GA4, e così via. Tutti i connettori sono disponibili su tutti i piani — niente "premium connector" o upsell. È uno dei vantaggi competitivi rispetto a Supermetrics.
 
-Per un team marketing che cresce, questa differenza è significativa.
+**Destinazioni.** Dove vanno i dati. Le destinazioni supportate includono:
+- Data warehouse: BigQuery, Snowflake, Redshift, Databricks
+- Spreadsheet: Google Sheets, Excel
+- BI tool: Looker Studio, Power BI, Tableau, Google Sheets come BI
+- Custom: webhook, API
 
-:::
+Windsor include tutte le destinazioni su tutti i piani — un altro vantaggio su Supermetrics, che fa pagare extra per destinazioni aggiuntive.
 
-### Le metriche chiave che Windsor espone
+**Data transformation.** Quando i dati arrivano, Windsor li normalizza: rinomina i campi in un formato consistente, applica schema matching, gestisce i cambi di schema delle API (Meta cambia la sua API ogni 6 mesi, e i connettori si aggiornano di conseguenza). Per il data warehouse, questo significa tabelle pronte per l'analisi senza ETL custom.
 
-Windsor espone le metriche standard di marketing con normalizzazione cross-canale:
+**Sync schedule.** Puoi schedulare il sync: real-time, hourly, daily. Per la maggior parte dei casi d'uso marketing, daily è sufficiente. Real-time serve per bidding automation, ma Windsor non è progettato per quello.
 
-- **Spese** (cost, spend, budget).
-- **Impression, click, CTR, CPM, CPC.**
-- **Conversioni, CPA, ROAS.**
-- **Revenue, LTV per canale e campagna.**
-- **Attribution-adjusted metrics** (es. "credito" di ogni canale in una conversione multi-touch).
-- **Cross-channel overlap** (es. quante conversioni sono toccate da Meta + Google + email).
+**Attribution engine.** Questo è il valore aggiunto. Windsor include modelli di attribuzione multi-touch: first-touch, last-touch, linear, time-decay, position-based (U-shaped), e — la feature distintiva — Markov chain attribution. Markov calcola il "removal effect" di ogni canale: se togliessi quel canale, quanto calerebbero le conversioni? È il modello più sofisticato e il più onesto, perché non assume pesi uguali tra i canali.
 
-L'utente può combinare queste metriche in dashboard e report, o esportarle per analisi esterne.
+**MCP server.** Windsor offre un server Model Context Protocol che permette a ChatGPT, Claude, e Gemini di interrogare i tuoi dati marketing in linguaggio naturale. "Quanto ho speso su Meta Ads il mese scorso per la campagna X?" diventa una domanda che puoi fare a Claude invece di scrivere SQL.
 
-### Casi d'uso concreti
+### Pricing reale, calcolato onestamente
 
-:::pro Quando Windsor fa la differenza
+Windsor ha sei tier (verificati sul sito ufficiale a luglio 2026):
 
-- **Marketing team di scaleup** che investe 50k+ €/mese su più canali e ha bisogno di capire il ROI.
-- **Agenzie media** che gestiscono 5-20 clienti e vogliono reportistica standardizzata.
-- **Brand ecommerce** che vuole analizzare il customer journey cross-canale.
-- **B2B con sales cycle lungo** che vuole capire l'attribution tra LinkedIn, Google, e attività sales.
-- **Team finance** che ha bisogno di dati di spesa marketing normalizzati per i report CFO.
+**Free, $0/mese per sempre.** 1 utente, 1 fonte, 1 account, 1 destinazione, daily sync. È un tier reale, non un trial. Sufficiente per testare il workflow o per micro-progetti.
 
-:::
+**Basic, $19/mese annuale ($23 mensile).** Utenti illimitati, 3 fonti, 75 account, 5 destination task, daily sync, 5M monthly active rows (MAR) inclusi. Il delta di $4 tra mensile e annuale è piccolo, ma vale la pena l'annuale. Adatto a freelancer e team molto piccoli.
 
-:::warning Quando Windsor non è la scelta giusta
+**Standard, $99/mese annuale ($118 mensile).** 7 fonti, 75 account, 5 destinazioni. È il tier "sweet spot" per team marketing strutturati che hanno 5-7 piattaforme attive. Include Google Sheets, BigQuery, Snowflake, e i principali BI tool come destinazioni.
 
-- **Singolo marketer con una campagna su un canale.** Il setup non si giustifica.
-- **Team senza data analyst.** Windsor è un tool per data-informed team, non per chi vuole "solo un report".
-- **Volumi molto bassi (<10k di spesa mensile).** Il costo del tool potrebbe superare il beneficio.
-- **Budget analytics zero.** Windsor ha un costo di setup (tempo, integrazioni) che va preventivato.
+**Plus, $249/mese annuale ($298 mensile).** 10 fonti, 200 account, 5 destinazioni. Per team più grandi o multi-brand.
 
-:::
+**Professional, $499/mese annuale ($598 mensile).** 14 fonti, 500 account, 5 destinazioni, support prioritario. Per agenzie media-buying con molti clienti.
 
-### Windsor vs i concorrenti diretti
+**Enterprise, custom.** 14-300+ fonti, 50.000+ account, dedicated support, SLA.
 
-**Windsor vs Supermetrics.** Supermetrics è focalizzato sull'export verso Google Sheets, Looker, BigQuery. Windsor ha più connettori nativi e un modello di attribuzione più ricco. Per un uso "leggero" (es. report in Google Sheets), Supermetrics è più semplice. Per un uso enterprise, Windsor è più strutturato.
+**Attribution pricing separato:** questa è la parte che fa storcere il naso. Le funzionalità di attribution avanzate (Markov, multi-touch) sono in un tier separato:
+- Attribution Standard: $549/mese annuale ($658 mensile)
+- Attribution Professional: $699/mese annuale ($838 mensile)
 
-**Windsor vs Funnel.io.** Funnel è il competitor più diretto, con modello simile (connettori + normalizzazione + export). La differenza è sottile: Funnel ha un'UI più moderna, Windsor ha più modelli di attribuzione pronti. Per molti team, la scelta è indifferente — confronta pricing e connettori specifici.
+Quindi, se vuoi data integration + attribution avanzata, paghi due tier: Standard + Attribution Standard = $99 + $549 = $648/mese annuale. È caro. È il prezzo dell'attribution seria.
 
-**Windsor vs Triple Whale.** Triple Whale è focalizzato sull'ecommerce (Shopify, DTC brands). Windsor è più generalista. Per un brand ecommerce puro, Triple Whale è specializzato. Per un team marketing multi-canale generalista, Windsor è più adatto.
+**Overages:** $20 per 1M additional rows su Basic, variabile su altri tier. Per la maggior parte dei team, il MAR incluso è sufficiente.
 
-**Windsor vs Northbeam.** Northbeam è un altro competitor forte sul cross-channel. La differenza: Northbeam è più orientato a "media mix modeling", Windsor è più "attribution + dashboard". Per team che fanno MMM avanzato, Northbeam è preferibile. Per attribution operativa, Windsor è solido.
+### Le feature chiave in profondità
 
-**Windsor vs Google Analytics 4.** GA4 è free e fa attribution di base, ma è limitato a quel che Google vede. Windsor aggiunge Meta, LinkedIn, TikTok, CRM, e ti dà il dato esportabile. Non sostituisce GA4, lo completa.
+**325+ connettori.** La libreria è una delle più ampie del settore. Include tutti i major ad platform (Meta, Google, TikTok, LinkedIn, Pinterest, Reddit, X, Snapchat), i CRM (HubSpot, Salesforce, Pipedrive), e-commerce (Shopify, WooCommerce, BigCommerce), email (Klaviyo, Mailchimp, Sendgrid), analytics (GA4, Mixpanel, Amplitude), e molto altro. Tutti disponibili su tutti i piani.
 
-### Pricing di Windsor
+**Schema matching e incremental loading.** Quando colleghi Meta Ads e Google Ads insieme, i campi sono diversi ("spend" vs "cost", "campaign_name" vs "campaign"). Windsor normalizza in fase di sync, e fa incremental loading (solo i dati nuovi, non tutto ogni volta), che è critico per performance e costi.
 
-Windsor ha un modello di pricing a tier, basato su connettori, fonti dati, e volumi:
+**MCP server per AI interrogation.** Server Model Context Protocol che permette a LLM esterni (Claude, ChatGPT, Gemini) di fare query SQL-like sui tuoi dati. Invece di aprire Looker Studio, chiedi a Claude "qual è il ROAS di Meta Ads vs Google Ads negli ultimi 30 giorni, segmentato per campagna?".
 
-- **Free tier**: limitato a 1-2 connettori, utile per test.
-- **Pro**: 5-10 connettori, attribution di base, dashboard.
-- **Business**: 20+ connettori, attribution avanzata, export warehouse.
-- **Enterprise**: custom.
+**TV Ad Performance e AppsFlyer Master API.** Feature meno conosciute ma potenti: TV Ad Performance usa un algoritmo per collegare le TV ads a traffico web (rilevando spike quando una campagna TV va on air), e AppsFlyer Master API è per mobile attribution.
 
-I prezzi pubblicati sul sito variano nel tempo. Indicativamente, il tier Pro parte da 100-200 €/mese, e il tier Business da 500+ €/mese. Il pricing è spesso negoziato per volumi alti.
+**Budget Optimizer.** Algoritmo che suggerisce riallocazione del budget tra campagne basandosi su ROAS e attribution model. È uno strumento decisionale, non automatizza i cambi di budget.
 
-### Flusso pratico: un caso reale
+**White-label reports.** Su Enterprise. Per agenzie che vogliono presentare report con il proprio brand ai clienti.
 
-Marco è head of growth in una scaleup B2B che spende 60k €/mese tra Google Ads, LinkedIn, e content syndication. Il team finance chiede report di ROI cross-canale, e il CEO vuole capire se sta spendendo bene.
+**Custom domain per le dashboard.** Su Enterprise.
 
-**Settimana 1:** setup. Marco collega Google Ads, LinkedIn, HubSpot, e Google Analytics. Mappa i campi. Imposta i modelli di attribuzione (last click + first click + time decay, in confronto).
+### Quando Windsor ha senso, e quando no
 
-**Settimana 2:** primi report. Marco scopre che LinkedIn, su cui spendeva 30k €/mese, porta il 5% delle conversioni con last click, ma il 25% con time decay. La storia è diversa a seconda del modello.
+**Sì, se:** spendi $20k+/mese in ads, hai 5+ fonti attive, vuoi dati in un warehouse o BI tool, e/o vuoi attribution multi-touch seria. Il ROI è chiaro.
 
-**Settimana 3:** export verso BigQuery. Il team data costruisce una dashboard custom che combina Windsor + dati sales + dati prodotto.
+**No, se:** spendi poco, hai poche fonti, non hai bisogno di attribution (last-click va bene), o hai già un data team che costruisce pipeline custom.
 
-**Mese 2:** decisione. Marco sposta 10k €/mese da LinkedIn a Google Ads (che ha un ROI migliore su first click e contribuisce di più al bottom funnel). Risultato atteso: +15% di MQL senza aumento di spesa.
+**Caso borderline:** se spendi $5-20k/mese e hai 3-4 fonti, Basic o Standard sono sufficienti. L'attribution separata è un costo extra da valutare solo se il last-click davvero non basta.
 
-ROI di Windsor per Marco: un singolo spostamento di budget di 10k/mese ripaga 1000+ volte il costo del tool.
+### Windsor vs Supermetrics vs Fivetran vs Improvado
 
-### Le domande che ci fanno più spesso
+**Windsor vs Supermetrics.** Il confronto più diretto. Supermetrics ha più connettori storici (è nato prima), ma Windsor ha: pricing flat vs per-source, tutte le destinazioni incluse, e attribution built-in. Supermetrics è più caro a parità di volumi, specialmente quando aggiungi più fonti o destinazioni. Per team che vogliono data integration puro senza attribution, sono molto simili. Per team che vogliono anche attribution, Windsor vince.
 
-**Windsor è difficile da configurare?**
-Richiede un setup di 2-5 giorni per un data analyst. Non è un "click and go", ma non è nemmeno un progetto di mesi. La documentazione è buona.
+**Windsor vs Fivetran.** Fivetran è il leader di mercato per data integration enterprise. Ha più connettori, più destination, più robustezza, ma è significativamente più caro (entry-level intorno a $500/mese) e richiede setup più tecnico. Per enterprise con data team, Fivetran è la scelta. Per team marketing che vogliono qualcosa di più accessibile, Windsor è meglio.
 
-**Posso esportare in Google Sheets?**
-Sì, ma il valore principale di Windsor è l'export verso data warehouse (BigQuery, Snowflake, ecc.). Google Sheets è supportato ma è un uso "leggero".
+**Windsor vs Improvado.** Improvado è più enterprise-oriented, con focus su custom data transformation e routing. Pricing enterprise, setup più complesso. Per team marketing mid-size, Windsor è più accessibile.
 
-**Windsor supporta l'italiano?**
-Sì, l'interfaccia è multilingua. I dati elaborati sono naturalmente nella lingua delle fonti.
+**Windsor vs Airbyte (open source).** Airbyte è open source e self-hostable, gratis, ma richiede engineering per setup e manutenzione. Per team con data engineer, Airbyte è più flessibile. Per team marketing senza engineering, Windsor vince per accessibilità.
 
-**Quanto costa?**
-Il pricing è a tier, a partire da circa 100-200 €/mese per il piano Pro. Il piano Business (consigliato per team marketing strutturati) parte da 500+ €/mese. Il pricing è spesso personalizzato.
+**Windsor vs build custom con Python e Airflow.** Per team data maturi, build custom è il massimo della flessibilità. Per team marketing che vogliono "connetti fonti e dammi i dati", Windsor è molto più veloce.
 
-**Windsor è un "media mix modeling" tool?**
-No, è un attribution + dashboard tool. Il media mix modeling è un approccio diverso (statistico, richiede più dati storici) ed è offerto da tool come Northbeam o da data scientist custom.
+### Casi d'uso reali
 
-**Windsor può sostituire Google Analytics?**
-No, si integra. GA4 continua a essere utile per l'analisi del comportamento on-site. Windsor aggiunge il pezzo cross-channel.
+**E-commerce DTC con $100k/mese su Meta + Google.** Tier Standard, connetti Meta Ads, Google Ads, Shopify, Klaviyo. Destinazione: BigQuery. Attribution Standard per capire il ruolo di ogni canale. Risultato: capisci che Meta è per awareness, Google è per conversion, email è per retention, e sposti budget di conseguenza.
 
-**Il dato è in tempo reale?**
-Sì, con un lag di 1-3 ore rispetto alle piattaforme pubblicitarie (dipende dai connettori).
+**B2B SaaS con $50k/mese su LinkedIn + Google + HubSpot.** Tier Standard, connetti LinkedIn Ads, Google Ads, HubSpot. Destinazione: BigQuery. Analisi del full funnel: impression → click → lead → MQL → SQL → closed-won. Capisci che LinkedIn genera lead che si chiudono a $5k ACV, Google genera lead che si chiudono a $1k ACV, e aggiusti il bidding.
+
+**Agenzia media-buying con 15 clienti.** Tier Professional, connetti 15 Meta Ads account e 15 Google Ads account. Destinazione: Looker Studio dashboard per cliente. Report mensili per ogni cliente. Risparmio: 10+ ore a settimana rispetto a dashboard manuali.
+
+**Marketing team senza data engineer.** Tier Standard + Attribution Standard, connetti 5-7 fonti, destinazione Google Sheets. Il team marketing può fare analisi senza dipendere dall'IT.
+
+### Setup pratico: da zero al primo sync in 30 minuti
+
+**1. Crea l'account e scegli le fonti.** Su windsor.ai, signup. Vai su "Sources", seleziona le piattaforme da collegare. Per ogni fonte, autorizza l'accesso OAuth. Tempo: 10 minuti.
+
+**2. Scegli la destinazione.** "Destinations". Le opzioni: Google Sheets (più semplice), BigQuery (richiede setup), Looker Studio (visualizzazione). Per il primo test, Google Sheets. Tempo: 5 minuti.
+
+**3. Configura il primo data flow.** "Data Flows" → "New". Seleziona fonte, destinazione, e campi da sincronizzare. Configura la frequenza (daily per default). Tempo: 10 minuti.
+
+**4. Verifica il primo sync.** Trigger manual sync, verifica che i dati arrivino nella destinazione. Tempo: 5 minuti.
+
+**5. Costruisci la prima dashboard (opzionale).** Se destinazione è Looker Studio o Google Sheets, costruisci una dashboard base. Tempo: 30-60 minuti per una dashboard decente.
+
+In 30 minuti hai dati che fluiscono. In un'ora hai una dashboard funzionante. In un giorno hai insight che prima non avevi.
+
+### Errori comuni
+
+**Sottovalutare il numero di fonti necessarie.** "Useremo Meta e Google, basta quelli" diventa presto "ci serve anche Shopify, Klaviyo, HubSpot". Aggiungere fonti a metà contratto è facile, ma il pricing scala. Meglio fare un inventario realistico prima.
+
+**Confondere data integration con attribution.** Sono due problemi diversi. L'integration ti dà i dati. L'attribution ti dà la storia di quei dati. Se il tuo problema è capire il customer journey, ti serve attribution, e il tier sale.
+
+**Sottovalutare la Markov attribution.** Molti team si accontentano del first/last touch. Markov è il modello più onesto, ma richiede un volume minimo di conversioni per essere statisticamente valido. Sotto 100 conversioni/mese, i risultati sono rumorosi.
+
+**Ignorare la qualità dei dati di partenza.** Se Meta Ads è tracciato male (pixel rotto, conversion API non configurato), Windsor non ti salva. I dati di input devono essere puliti.
+
+**Dimenticare la data governance.** Chi può accedere a quali dati? Windsor ha RBAC, ma configurarlo è noioso. Fallo il primo giorno, non dopo il primo data leak.
 
 ### Cosa ci aspettiamo da Windsor nei prossimi mesi
 
-Le aree da osservare:
+**Più AI agenti nativi.** L'MCP server è l'inizio. L'evoluzione è agenti che fanno analisi autonoma, identificano anomalie, e ti notificano.
 
-- **AI-assisted insights.** Se Windsor introduce alert e insight automatici ("questa campagna ha un CPA anomalo"), il valore sale.
-- **Modelli di attribution più granulari.** Soprattutto per il B2B, dove i sales cycle sono lunghi e multi-stakeholder.
-- **Integrazione con strumenti di marketing mix modeling.** Per chi vuole combinare attribution operativa con MMM strategico.
-- **Predictive analytics.** Previsioni di spesa, di performance, di mix ottimale.
+**Integrazione più profonda con i data warehouse.** Snapshot, change data capture, e sync bidirezionale tra Windsor e warehouse. Per data team che vogliono Windsor come parte di un'architettura più ampia.
+
+**Causal inference più sofisticata.** Markov è buono, ma causal inference con dati osservazionali è il prossimo livello. Se Windsor ci arriva, diventa il leader incontrastato.
+
+**Compliance e data residency.** SOC 2, GDPR, HIPAA per casi d'uso enterprise. Già in roadmap.
+
+### Le domande che ci fanno più spesso
+
+**Windsor è meglio di Supermetrics?**
+Per data integration puro, sono simili. Per pricing, Windsor vince (flat vs per-source). Per attribution built-in, Windsor vince. Per libreria di connettori legacy, Supermetrics ha un piccolo vantaggio.
+
+**Quanto costa davvero?**
+Tier Standard a $99/mese è il sweet spot per team marketing mid-size. Se aggiungi Attribution Standard, arrivi a $648/mese. Per team che spendono $50k+/mese in ads, il ROI è misurabile in settimane.
+
+**Posso usarlo senza data warehouse?**
+Sì, Google Sheets come destinazione funziona. Non è elegante come BigQuery, ma per team senza data engineer, è l'unica opzione realistica.
+
+**Windsor supporta il mio CRM?**
+Probabilmente sì. La libreria copre HubSpot, Salesforce, Pipedrive, Zoho, e altri. Verifica sul sito ufficiale per il tuo caso specifico.
+
+**Funziona per server-side tracking?**
+No. Windsor è per data integration, non per conversion API. Per server-side CAPI, usa Stape, SignalBridge, o implementazione custom con Meta CAPI / Google Enhanced Conversions.
+
+**Quanto è affidabile il sync?**
+Windsor ha SLA del 99.5% su Standard, 99.9% su Plus e superiori. In pratica, i sync daily sono affidabili. Per real-time critico, meglio soluzioni custom.
+
+### Alternative da considerare
+
+- **Supermetrics.** Più connettori legacy, pricing per-source. Buono se hai bisogno di connettori molto specifici.
+- **Fivetran.** Enterprise, più caro, più robusto. Per data team strutturati.
+- **Improvado.** Enterprise, custom transformation. Per agenzie media grandi.
+- **Airbyte.** Open source, gratis, richiede engineering. Per team con data engineer.
+- **Make / n8n.** General automation, possibilità di fare data integration custom, più cheap ma più fragile.
+- **Build custom.** Per data team che vogliono massima flessibilità.
 
 ### In sintesi
 
-Windsor AI è uno strumento solido per team marketing che hanno bisogno di attribution cross-channel, reportistica unificata, e ownership del dato. Non è un tool "per tutti": richiede data literacy e un minimo di investimento iniziale.
+Windsor AI è una scelta eccellente per team marketing che spendono significativamente in ads, hanno multiple fonti attive, e vogliono dati centralizzati senza costruire pipeline custom. Il pricing flat è un vantaggio competitivo vs Supermetrics. L'attribution Markov è unica nel settore. La limitazione principale è l'attribution separata che fa raddoppiare il costo per chi ha bisogno di multi-touch serio.
 
-Per un team marketing in crescita che spende 50k+ €/mese su più canali, è uno degli investimenti con ROI più diretto: un singolo spostamento di budget ben informato ripaga anni di abbonamento.
+Per team piccoli, è overkill. Per team grandi con data engineer, Fivetran è superiore. Per il target giusto — team marketing mid-size senza data engineer dedicato — è probabilmente la scelta migliore.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Windsor AI** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool di marketing data** nella raccolta dedicata.
-- **Salva Windsor nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di Windsor AI** per confrontare con Supermetrics, Fivetran, e altri data integration tool.
+- **Esplora la raccolta su marketing e analytics** per casi d'uso affini.
+- **Salva Windsor AI nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -1111,179 +1225,197 @@ Per un team marketing in crescita che spende 50k+ €/mese su più canali, è un
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/reachifyme",
     featured: false,
-    highlights: [
-      'Generazione di post LinkedIn con AI, partendo da idee o brief',
-      'Hook testing A/B e ottimizzazione del pattern di apertura',
-      'Scheduling e analytics integrati, niente export su tool esterni',
-      'Utile per founder, executive, e team B2B che fanno LinkedIn organico',
-    ],
-    details: [
-      'Libreria di template per thought leadership, case study, listicle, behind-the-scenes',
-      'AI coach per riformulare i post in tono personale',
-      'Dashboard analytics su impression, commenti, salvataggi, reach per autore',
-    ],
-    cautions: [
-      "Non sostituisce una vera strategia di contenuti: amplifica l'esistente",
-      "Il rischio di 'AI slop' su LinkedIn è reale: serve una voce riconoscibile",
-      'Il pricing cresce rapidamente per team con più di 3 autori',
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa ReachifyMe, in una frase
 
-ReachifyMe è un content engine per LinkedIn: aiuta a creare post, testare hook, schedulare pubblicazioni, e analizzare le performance, in un unico workspace pensato per chi fa LinkedIn organico o a pagamento con costanza.
+ReachifyMe è un set di tool AI per costruire la tua presenza LinkedIn: generatore di post, scheduler, generatore di carousel, generator di idee, hashtag tool, formatter del testo, e un visitor assistant AI per il tuo profilo — pensato per creator, freelance, e founder che fanno di LinkedIn il canale di lead generation primario.
 
-### A chi serve davvero
+### A chi serve davvero, e a chi no
 
-ReachifyMe non è per chi pubblica un post ogni due mesi. È per chi fa LinkedIn come parte strutturale del proprio lavoro:
+ReachifyMe è per:
 
-- **Founder e CEO** che fanno thought leadership personale.
-- **Executive** che vogliono costruire una presenza pubblica coerente.
-- **Sales e biz dev** che fanno outreach e personal branding.
-- **Consulenti e coach B2B** che usano LinkedIn come canale principale di lead generation.
-- **Team marketing B2B** che gestiscono contenuti per 3-10 executive.
+**Creator e freelance che fanno di LinkedIn il canale principale.** Post regolari, personal brand, lead generation via DM. Se LinkedIn è dove ti trovano i clienti, ReachifyMe è il tool che ti fa risparmiare ore.
 
-Non è il tool giusto per chi cerca un "generatore di post automatici con un click". ReachifyMe amplifica una strategia, non la sostituisce.
+**Founder B2B che usano LinkedIn per thought leadership.** Post settimanali su temi di settore, carousel didattici, commenti strategici. ReachifyMe genera idee e draft, tu curi la voce.
 
-### Come funziona, passo per passo
+**Sales rep che fanno social selling.** Post regolari, DM automation, presenza credibile su LinkedIn.
 
-Il flusso operativo ha cinque fasi.
+**Marketer che gestiscono LinkedIn per brand.** Multi-account, scheduling, content calendar.
 
-**1. Definizione della voce e del posizionamento.** L'utente definisce (manualmente o con l'aiuto dell'AI) la voce del brand, i temi ricorrenti, e il posizionamento. ReachifyMe usa queste informazioni per guidare la generazione AI.
+**Studenti e job seeker che vogliono costruire presenza.** Profile optimization, post regolari, networking attivo.
 
-**2. Generazione di idee e post.** L'utente inserisce un'idea o un tema, e ReachifyMe propone post strutturati con:
-- Hook di apertura (il punto critico per il reach organico).
-- Struttura (listicle, stori personale, case study, framework).
-- CTA finale.
-- Hashtag suggeriti.
+Non è per:
 
-**3. Hook testing A/B.** ReachifyMe permette di testare varianti di hook sullo stesso post, e misurare quale performa meglio. È uno strumento prezioso per identificare cosa risuona con il proprio pubblico.
+**Aziende che fanno LinkedIn Ads in scala.** ReachifyMe è per organica, non per paid. Per ads, gestisci direttamente in Campaign Manager.
 
-**4. Scheduling e pubblicazione.** L'utente schedula i post per il momento migliore (configurabile per fuso orario e per "best time" calcolato da ReachifyMe). La pubblicazione è automatica, con possibilità di review pre-pubblicazione.
+**Chi cerca un tool di cold outreach.** ReachifyMe non fa automation di messaggi o connection request. Per quello, LinkedHelper, Zopto, Octopus CRM.
 
-**5. Analytics.** ReachifyMe traccia impression, commenti, salvataggi, reach per autore, e trend settimanali. L'utente vede cosa performa, e può iterare.
+**Chi ha bisogno di analytics avanzate.** ReachifyMe ha metriche di base (engagement, reach), ma non il livello di LinkedIn Campaign Manager o tool specialistici.
 
-:::tip Cosa distingue ReachifyMe da un "LinkedIn scheduler" base
+**Multi-piattaforma.** ReachifyMe è LinkedIn-only. Se gestisci Twitter, Instagram, e LinkedIn, ti serve un tool multi-piattaforma (Buffer, Hootsuite).
 
-- **L'AI conosce la tua voce** (se la definisci) e genera bozze coerenti.
-- **Il hook testing è nativo**: testi varianti in tempo reale, non a posteriori.
-- **Le analytics sono per autore**, non solo per company page: utile se gestisci 5 profili personali.
-- **I template sono editor-driven**: listicle, case study, contrarian take, framework — non "post generici".
+### Cosa fa, in pratica
 
-Queste differenze sono sottili ma contano per chi fa LinkedIn seriamente.
+ReachifyMe è un toolkit, non un workflow unico. Le feature principali sono:
 
-:::
+**AI Post Generator.** Scrivi un argomento, scegli il tone, ReachifyMe genera un draft. La qualità è variabile: buona per bozze, mediocre per post "iconici" che richiedono personalità. Il pattern corretto: usa il generator per il 70% del draft, poi aggiungi il tuo punto di vista e casi specifici.
 
-### Le metriche che ReachifyMe traccia
+**AI Idea Generator.** Input una nicchia o un tema, output una lista di idee per post. Utile per superare il blocco dello scrittore o per riempire un content calendar.
 
-ReachifyMe offre analytics su:
+**Hashtag Generator.** Genera hashtag rilevanti per il tuo post basandosi sul contenuto. Include hashtag di nicchia + generali. Aumenta la reach organica.
 
-- **Reach organica** per post.
-- **Impression e click-through** su link.
-- **Engagement rate** (like, commenti, salvataggi, condivisioni).
-- **Follower growth** attribuito ai post.
-- **Profili view** e **search appearance** per autore.
-- **Commenti qualificati** (con lead nel testo) vs generici.
+**Headline Generator.** Per il tuo profilo LinkedIn e per i post. Test A/B di headline diverse.
 
-L'utente può esportare i dati in CSV o collegarli a Looker / Google Sheets via API.
+**LinkedIn Text Formatter.** Aggiunge bold, italic, underline, e altre formattazioni che LinkedIn normalmente non supporta nativamente (LinkedIn strips formatting). Il tool usa caratteri Unicode che LinkedIn mantiene.
 
-### Casi d'uso concreti
+**Carousel Generator.** Genera carousel (post multi-slide) partendo da testo o articoli. Utile per "listicle" educational posts che performano bene su LinkedIn.
 
-:::pro Quando ReachifyMe fa la differenza
+**Trending News.** Mostra post trending nel tuo settore, per restare al passo.
 
-- **Founder che pubblica 3-5 post a settimana** e vuole ottimizzare hook e timing.
-- **Sales leader che coordina 5-10 profili di executive** con una sola dashboard.
-- **Consulente B2B che fa LinkedIn come canale principale** di lead generation.
-- **Coach o formatore** che vuole costruire una presenza pubblica e misurarne l'impatto.
-- **Team marketing B2B** che vuole standardizzare la qualità dei post dei vari executive.
+**Scheduler.** Schedula post per pubblicazione automatica. Supporta company page e personal profile.
 
-:::
+**Hook and CTA Generator.** Genera hook (prime righe che catturano attenzione) e CTA (call-to-action finali). Sono le parti più importanti di un post LinkedIn.
 
-:::warning Quando ReachifyMe non è la scelta giusta
+**AI Meme Generator.** Genera meme per LinkedIn. Funziona sorprendentemente bene per engagement.
 
-- **Pubblichi 1-2 post al mese.** Il costo non si giustifica, e l'AI non ha abbastanza dati per imparare la tua voce.
-- **Cerchi un tool "tutto fatto".** ReachifyMe amplifica una strategia, non la crea. Se non hai una voce e un posizionamento chiari, anche l'AI migliore produrrà contenuti generici.
-- **Il tuo pubblico non è su LinkedIn.** Per B2C, Instagram o TikTok restano canali più rilevanti.
-- **Vuoi automatizzare l'engagement (like, commenti automatici).** ReachifyMe non lo fa, e per buone ragioni: l'engagement automation è contro le policy di LinkedIn e controproducente.
+**Video Downloader.** Scarica video da LinkedIn. Per uso personale e reference.
 
-:::
+**Browser Extension.** ReachifyMe in Chrome, accessibile mentre navighi LinkedIn.
 
-### ReachifyMe vs i concorrenti diretti
+### Pricing, onestamente
 
-**ReachifyMe vs Taplio.** Taplio è il competitor più noto. La differenza principale: Taplio ha più funzionalità di "engagement automation" (es. suggerimenti di like/comment), ReachifyMe è più focalizzato sulla generazione e analytics. Se vuoi un tool completo di "presence management", Taplio è più ricco. Se vuoi un content engine pulito, ReachifyMe è più focalizzato.
+ReachifyMe non pubblica un pricing dettagliato sulla homepage. La pagina pricing ufficiale conferma:
 
-**ReachifyMe vs Supergrow.** Supergrow è un altro competitor focalizzato su LinkedIn. La differenza è di posizionamento: Supergrow è più "CRM-like" (gestione relazioni, lead), ReachifyMe è più "content-like" (creazione, scheduling, analytics).
+- **7-day free trial.** Accesso completo, no carta di credito richiesta.
+- **Piani mensili e annuali.** Annual billing risparmia fino al 15%.
+- **Pricing stimato:** starter da $9.95-$15/mese, mid-tier $19.99-$30/mese, premium fino a $29-$50/mese (fonti diverse, pricing cambia spesso).
 
-**ReachifyMe vs Buffer / Hootsuite.** Buffer e Hootsuite sono scheduler generici multi-canale. Sono ottimi se gestisci 5+ canali social. Se LinkedIn è il tuo canale principale (90%+ del focus), uno strumento verticale come ReachifyMe è più efficiente.
+I prezzi esatti cambiano frequentemente. Verifica su reachifyme.com/pricing prima di firmare.
 
-**ReachifyMe vs scrittura manuale.** Il valore di ReachifyMe non è "scrivere al posto tuo". È accelerare il processo (bozze rapide, hook testabili, scheduling automatico, analytics integrate) mantenendo la voce autentica. Per chi scrive già bene, ReachifyMe è un acceleratore. Per chi non scrive bene, non è magia.
+**Costo modello AI:** ReachifyMe usa GPT-class per le generazioni. Ogni generazione consuma crediti interni. Su tier più alti, più crediti inclusi.
 
-### Pricing di ReachifyMe
+**Refunds:** la policy non è prominente. Contatta il supporto per richieste specifiche.
 
-ReachifyMe ha tier a pagamento basati su numero di profili gestiti e funzionalità:
+### Cosa fa bene, e cosa no
 
-- **Free tier**: limitato a 1 profilo, funzionalità base.
-- **Pro**: più profili, AI assistant, hook testing, analytics avanzate.
-- **Business**: team, collaboration, multi-account management.
+**Fa bene:** ridurre l'attrito della creazione quotidiana di contenuti LinkedIn, generare idee quando sei in blocco, formattare testo, generare carousel. Il tool è un acceleratore, non un sostituto.
 
-I prezzi pubblicati variano. Indicativamente, il tier Pro è nella fascia 30-50 €/mese per utente (fatturazione annuale).
+**Fa meno bene:** catturare una voce personale forte, generare post che diventano virali per la loro originalità, gestire commenti e DM in modo strategico.
 
-### Flusso pratico: un caso reale
+**Fa male:** fingere che il tuo punto di vista sia un altro. Se ReachifyMe genera un post e tu pubblichi senza modificarlo, il post suona generico, e il pubblico se ne accorge.
 
-Sofia è una consulente di strategia B2B, ha un profilo LinkedIn personale con 8.000 follower. Pubblica 4-5 post a settimana, e LinkedIn è il suo canale principale di lead generation.
+### Quando ReachifyMe ha senso, e quando no
 
-**Settimana 1:** setup. Sofia definisce la sua voce ("pragmatica, mai guru, sempre con dati"), i temi ricorrenti (operations, produttività, pricing), e il suo CTA tipo. ReachifyMe apprende.
+**Ha senso:** post 3-7 volte a settimana, content calendar regolare, target di lead generation organica, poco tempo per creare da zero ogni post.
 
-**Settimane 2-4:** generazione. Sofia inserisce 2-3 idee a settimana, ReachifyMe propone bozze. Sofia modifica, integra esperienze personali, pubblica. Tempo medio per post: 20-30 minuti (contro 45-60 senza AI).
+**Non ha senso:** post sporadici (1-2 al mese), brand voice molto specifico che l'AI non cattura, focus su altri canali oltre LinkedIn.
 
-**Settimana 5:** hook testing. Sofia testa 3 varianti di hook sullo stesso contenuto. Scopre che "Controversia + dati" performa 2x meglio del suo hook standard.
+**Caso borderline:** se fai 1-2 post/settimana ma il post è la tua firma professionale, ReachifyMe può aiutare con idee e formattazione, ma il draft finale devi scriverlo tu.
 
-**Mese 2:** review. Sofia vede che la reach organica è salita del 40%, le DM qualificate sono aumentate, e il tempo per post è dimezzato. Il tool si ripaga da solo in termini di lead.
+### ReachifyMe vs Buffer vs Hootsuite vs Taplio vs Supergrow
 
-Risultato: più impatto, meno tempo, voce mantenuta.
+**ReachifyMe vs Buffer.** Buffer è multi-piattaforma, semplice, scheduler eccellente. ReachifyMe è LinkedIn-only con tool di generazione AI. Se il tuo bisogno è solo scheduling, Buffer è più economico. Se vuoi generazione AI integrata, ReachifyMe vince.
+
+**ReachifyMe vs Hootsuite.** Hootsuite è enterprise, multi-piattaforma, con analytics avanzate. ReachifyMe è LinkedIn + AI. Per team grandi con social cross-platform, Hootsuite. Per singolo creator LinkedIn-focused, ReachifyMe.
+
+**ReachifyMe vs Taplio.** Taplio è il competitor diretto: AI + LinkedIn, scheduling, analytics, content library. Taplio è più caro (~$50/mese) ma con più features. ReachifyMe è più economico e focalizzato. Per creator con budget che vogliono il top, Taplio. Per chi parte, ReachifyMe.
+
+**ReachifyMe vs Supergrow.** Supergrow è LinkedIn AI + outreach automation. Più caro, più completo. Per social selling serio, Supergrow. Per solo content, ReachifyMe.
+
+### Casi d'uso reali
+
+**Founder B2B con 3-4 post/settimana.** ReachifyMe per generare bozze, formatter per il testo, carousel per i post didattici. Tempo per post: 30 minuti (vs 1.5 ore senza tool).
+
+**Freelance con personal brand.** 1-2 post/settimana, focus su lead generation. ReachifyMe per idee, generatore post, scheduler. 45 minuti per post.
+
+**Sales rep con social selling.** Post regolari per costruire presenza + DM mirati. ReachifyMe per i post, tool separato per i DM.
+
+**Studente con job search.** Post su progetti, learning journey. ReachifyMe per struttura e formattazione.
+
+### Setup pratico: da zero a 1 post/giorno in una settimana
+
+**1. Crea l'account e fai il trial.** Su reachifyme.com, signup, 7 giorni gratis. 5 minuti.
+
+**2. Configura il profilo.** Collega il tuo LinkedIn account, configura timezone, personalizza le preferenze. 15 minuti.
+
+**3. Genera i primi 7 post.** Usa il Post Generator per 7 idee. Non pubblicare ancora, salva in bozza. 30 minuti.
+
+**4. Cura i draft.** Per ogni bozza, aggiungi 2-3 righe di tuo contenuto specifico (un caso, un numero, un'opinione). 1-2 ore.
+
+**5. Schedula.** Programma i 7 post per la settimana prossima, uno al giorno. 15 minuti.
+
+**6. Misura.** Dopo una settimana, guarda engagement, reach, e click. Identifica cosa funziona. 30 minuti di review.
+
+**7. Itera.** Per la settimana 2, raddoppia le idee, seleziona le migliori, ripeti il ciclo.
+
+In una settimana hai un content calendar attivo. In un mese, hai dati su cosa funziona per il tuo pubblico.
+
+### Errori comuni
+
+**Pubblicare senza modificare.** Il draft AI è una base, non un prodotto finito. Aggiungi sempre il tuo punto di vista.
+
+**Ignorare la voce personale.** ReachifyMe genera testi che suonano AI. Il pattern "AI-generated" è immediatamente riconoscibile. Più personalizzi, meno si nota.
+
+**Postare troppo.** 3-5 post/settimana è il sweet spot. Sotto 1, non crei momentum. Sopra 7, saturi il pubblico.
+
+**Non misurare.** Senza analytics, non sai cosa funziona. Traccia engagement, reach, click, e conversion.
+
+**Ignorare i commenti.** LinkedIn premia l'engagement. Rispondere ai commenti aumenta la reach. ReachifyMe non automatizza i commenti, e non dovrebbe — la risposta personale è il valore.
 
 ### Le domande che ci fanno più spesso
 
-**ReachifyMe può pubblicare al posto mio?**
-Sì, con lo scheduling automatico. Ma il review pre-pubblicazione è sempre possibile, e consigliato.
+**ReachifyMe è meglio di Taplio?**
+Taplio è più caro ma più completo. Per chi ha budget, Taplio. Per chi parte, ReachifyMe.
 
-**L'AI può scrivere post con la mia voce?**
-Sì, se definisci la voce e il posizionamento, e se fornisci feedback sulle bozze. Più usi il tool, più l'AI apprende.
+**Funziona per la company page?**
+Sì, supporta sia profilo personale che company page.
 
-**ReachifyMe funziona per le company page?**
-Sì, con funzionalità specifiche. Ma il focus principale è sui profili personali, che su LinkedIn hanno mediamente più reach delle company page.
+**I post generati sembrano AI?**
+Sì, se non li modifichi. Il draft AI è un punto di partenza.
 
-**Quanto costa?**
-Il tier Pro è circa 30-50 €/mese con fatturazione annuale. C'è un free tier limitato.
+**Quanto costa in un anno?**
+Dipende dal tier, ma indicativamente $120-$360/anno.
 
-**Posso gestire 5 profili diversi?**
-Sì, con il piano giusto. Il pricing per profilo varia, ed è spesso più efficiente del "5 account individuali".
+**Posso automatizzare i DM?**
+No, ReachifyMe è per content, non per outreach automation.
 
-**ReachifyMe è contro i termini di LinkedIn?**
-No. ReachifyMe è un tool di content creation e scheduling, non di automation. L'engagement automation (like/comment automatici) è vietata da LinkedIn, e ReachifyMe non la fa.
+**Funziona con il Sales Navigator?**
+No, è per organica, non per Sales Navigator.
 
-**Posso esportare i contenuti?**
-Sì, in CSV, Markdown, o direttamente via API per integrazioni custom.
+### Alternative da considerare
+
+- **Taplio.** Più completo, più caro.
+- **Buffer.** Multi-piattaforma, meno AI.
+- **Hootsuite.** Enterprise, multi-piattaforma.
+- **Supergrow.** LinkedIn + outreach automation.
+- **Shield Analytics.** Per analytics LinkedIn, non generation.
+- **AuthoredUp.** Per personal brand LinkedIn, focus su formattazione.
 
 ### Cosa ci aspettiamo da ReachifyMe nei prossimi mesi
 
-Le aree da osservare:
+**Più AI features.** Generator più intelligenti, hook migliori, integrazione con trend analysis.
 
-- **AI più contestuale.** Se ReachifyMe impara dai tuoi post più performanti e adatta la generazione, il valore sale.
-- **Integrazione con CRM.** Collegare LinkedIn al CRM per tracciare il lead-to-revenue è il "next big thing" per il B2B.
-- **Personal brand benchmarking.** Confrontare le proprie performance con benchmark di settore.
-- **AI video e carousel.** LinkedIn sta premendo video e carousel. Se ReachifyMe aggiunge generazione AI per questi formati, diventa più utile.
+**Analytics più profonde.** Post performance, audience insights, competitor tracking.
+
+**Multi-piattaforma?** LinkedIn-first è la loro scelta. Possibili estensioni, ma il focus su LinkedIn è una delle ragioni del successo.
+
+**Integrazione con CRM.** Per chi usa LinkedIn per lead generation, integrazione con HubSpot o Salesforce sarebbe potente.
 
 ### In sintesi
 
-ReachifyMe è un content engine verticale per LinkedIn, pensato per chi fa LinkedIn con costanza. Non è un "post generator", è un acceleratore per chi ha già una strategia.
+ReachifyMe è uno dei tool più accessibili per accelerare la creazione di contenuti LinkedIn. Il prezzo è entry-level per la categoria, le feature coprono il 90% del workflow di un creator LinkedIn, e il tool è focalizzato — non cerca di fare tutto.
 
-Per founder, executive, sales leader, e team B2B, è uno degli investimenti con ROI più diretto: riduce il tempo per post, migliora la reach, e mantiene la voce autentica.
+Le limitazioni sono: dipendenza dall'AI che genera testi riconoscibili se non personalizzati, mancanza di outreach automation, focus esclusivo su LinkedIn. Per il target giusto — creator e freelance con content regolare su LinkedIn — è una delle scelte più efficienti.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di ReachifyMe** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool LinkedIn** nella raccolta dedicata.
-- **Salva ReachifyMe nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di ReachifyMe** per confrontare con Taplio, Buffer, e altri LinkedIn tool.
+- **Esplora la raccolta su LinkedIn e social selling** per casi d'uso affini.
+- **Salva ReachifyMe nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -1301,186 +1433,231 @@ Per founder, executive, sales leader, e team B2B, è uno degli investimenti con 
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/flowise-ai",
     featured: false,
-    highlights: [
-      'Canvas visuale per orchestrare LLM, vector store, retriever, memory, tool',
-      'Open source, self-hosted o cloud, con integrazioni pronte per i principali provider',
-      'Supporta agenti ReAct, function calling, e flussi RAG ibridi',
-      'Buona alternativa low-code a LangChain per chi non vuole scrivere TypeScript',
-    ],
-    details: [
-      'Componenti pronti per OpenAI, Anthropic, Mistral, Ollama, Hugging Face',
-      'Vector store: Pinecone, Chroma, Qdrant, FAISS, Supabase',
-      'Export del flusso come API JSON, riutilizzabile in applicazioni esterne',
-    ],
-    cautions: [
-      'Il debug in canvas è meno immediato che nel codice',
-      'Self-hosting richiede competenze DevOps di base',
-      "Open source non significa 'gratuito in produzione': i costi sono LLM API e infrastruttura",
-    ],
-      content_markdown: `### Cosa fa Flowise AI, in una frase
+    highlights: [],
+    details: [],
+    cautions: [],
+      content_markdown: `### Cosa fa Flowise, in una frase
 
-Flowise AI è un framework open source per costruire applicazioni LLM, agenti, e flussi RAG con un canvas visuale drag-and-drop: colleghi nodi (LLM, vector store, retriever, memory, tool), definisci il flusso, e lo esporti come API.
+Flowise è un layer visuale sopra LangChain, LangGraph e LlamaIndex: colleghi nodi su una canvas invece di scrivere orchestration code, e ottieni un'app LLM funzionante — chatbot, agente RAG, flusso multi-agent — che puoi esporre come API, embeddare come widget, o self-hostare gratis.
 
-### A chi serve davvero
+Non è un chatbot builder. È un programma per chi vuole costruire applicazioni LLM senza reinventare l'orchestrazione ogni volta.
 
-Flowise non è per chi vuole un chatbot "premi un tasto". È per chi vuole costruire applicazioni AI custom senza (o con poco) codice:
+### A chi serve davvero, e a chi no
 
-- **Developer e team engineering** che vogliono prototipare applicazioni AI rapidamente.
-- **Data scientist** che preferiscono un approccio visuale rispetto a LangChain puro codice.
-- **Product manager tecnici** che vogliono testare idee AI senza overhead engineering.
-- **Team AI di aziende mid-market** che vogliono internalizzare capability AI senza dipendere da piattaforme chiuse.
-- **Indie hacker** che vogliono lanciare un MVP AI-based in settimane, non mesi.
+Flowise ha un fit molto preciso. Funziona bene per:
 
-Non è il tool giusto per chi non ha competenze tecniche di base: serve almeno un'infarinatura di come funzionano LLM, embedding, vector store. Se sei completamente non tecnico, strumenti come Voiceflow o Botpress sono più accessibili.
+- **Team engineering che prototipano agenti LLM in ore invece di settimane.** Un senior che conosce LangChain può costruire un agente RAG completo in un pomeriggio. Un junior che non lo conosce può costruirlo in un giorno, guardando la canvas invece di leggere documentazione.
+- **Team di prodotto che vogliono testare interi flussi AI prima di impegnare risorse in una build custom.** Drag, drop, eval, itera. Quando la logica è giusta, puoi esportare il JSON e portarlo in codice.
+- **Aziende che vogliono self-hostare per ragioni di data residency, compliance, o semplice costo.** Il core è Apache 2.0, gira in Docker, ed è gratis anche per uso commerciale.
+- **Team che devono costruire POC per pitch interni o clienti.** Funziona meglio di una slide per dimostrare "abbiamo un agente che fa X".
 
-### Come funziona, passo per passo
+Non è la scelta giusta per:
 
-Il flusso operativo ha cinque fasi.
+- **Team che non hanno nessuna competenza tecnica.** Non è un no-code "per tutti". Devi capire cosa fa un LLM, cosa fa un vector store, perché chunking e retrieval contano. Se non hai almeno una persona tecnica nel team, Flowise ti darà più problemi che soluzioni.
+- **Applicazioni mission-critical in produzione senza engineering di guardia.** Flowise aiuta a costruire velocemente, ma quando il flusso gestisce transazioni o decisioni importanti, ti serve comunque un team che possa intervenire, monitorare, debuggare a livello di log. La canvas non ti salva da una catena di tool calls che impazzisce.
+- **Casi d'uso che richiedono un controllo fine su modelli custom, GPU interne, o architetture di inference non standard.** Funziona, ma stai lottando contro lo strumento. Per quel livello di customizzazione, meglio scrivere il codice.
 
-**1. Installazione e setup.** Flowise può essere:
-- **Self-hosted** via Docker (più popolare, consigliato per uso produzione).
-- **Cloud-hosted** (piano a pagamento).
-- **On-prem** (per aziende con policy di sicurezza stringenti).
+### Le tre modalità di build: Assistant, Chatflow, Agentflow
 
-**2. Costruzione del flusso nel canvas.** L'utente trascina nodi sul canvas:
-- **LLM nodes** (OpenAI, Anthropic, Mistral, Ollama per modelli locali, ecc.).
-- **Prompt template nodes** (per costruire i prompt con variabili).
-- **Memory nodes** (per gestire la conversazione).
-- **Vector store nodes** (Pinecone, Chroma, Qdrant, FAISS, Supabase).
-- **Retriever nodes** (per RAG su documenti).
-- **Tool nodes** (per function calling: ricerche web, calcolatrici, API custom).
-- **Agent nodes** (per orchestrazioni ReAct o function calling).
+Flowise organizza il lavoro in tre livelli di complessità crescente. Capire la differenza è il primo passo per non usare lo strumento nel modo sbagliato.
 
-**3. Configurazione dei nodi.** Ogni nodo ha parametri specifici: il modello LLM, la temperatura, la lunghezza del contesto, il chunk size per il retriever, ecc. L'utente configura tutto via interfaccia.
+**Assistant** è il livello più semplice. Crei un assistente che segue istruzioni, chiama tool se servono, e risponde da una knowledge base di file che carichi. È quello che useresti per un chatbot di supporto che sa rispondere solo su una serie di documenti caricati, oppure per un "assistente interno" che conosce le policy aziendali. Il flusso in canvas è corto: prompt, documenti, memoria opzionale, output.
 
-**4. Test del flusso.** Flowise offre un playground integrato dove testare il flusso con input reali. L'utente verifica che il comportamento sia quello atteso.
+**Chatflow** è il livello intermedio, per sistemi single-agent più articolati. Hai retrieval-augmented generation (RAG) con supporto per reranking, graph-based RAG, hybrid search, e la possibilità di collegare decine di data loader (PDF, Notion, Confluence, Google Drive, siti web, S3, SQL). La canvas diventa una pipeline visuale: input → query rewriting → retriever → reranker → LLM → output, con la possibilità di ramificare, fare fallback, mantenere memoria conversazionale.
 
-**5. Export come API.** Una volta validato, il flusso è esposto come endpoint API JSON. L'utente può integrarlo in un'app, un sito, o un workflow n8n / Make / Zapier.
+**Agentflow** è il livello agente. Qui costruisci sistemi in cui un agente principale analizza la richiesta, decide quali tool chiamare, instrada verso sotto-agenti specializzati, e orchestra l'esecuzione. È la modalità giusta per research assistant, data agent, internal copilots dove servono più step, hand-off di contesto, e decisioni dinamiche. Più potenza, più complessità, più cose che possono andare storte.
 
-:::tip Cosa distingue Flowise da LangChain puro
+In produzione la maggior parte dei team usa Chatflow e Agentflow. Assistant è utile per prototipi o chatbot molto verticali.
 
-- **Visuale vs codice.** LangChain è un framework Python/JS da scrivere. Flowise è lo stesso tipo di orchestrazione, ma con un canvas.
-- **Più accessibile a team non-engineering.** Un product manager tecnico può costruire prototipi senza scrivere codice.
-- **Stesso ecosistema di integrazioni.** LangChain e Flowise condividono la stessa libreria di nodi, perché Flowise è costruito sopra LangChain.
+### Architettura pratica: come è fatta davvero un'app Flowise
 
-Per chi sa già programmare e vuole massimo controllo, LangChain resta superiore. Per chi vuole velocità di prototipazione, Flowise è imbattibile.
+Una canvas Flowise non è un diagramma qualsiasi. È un grafo di esecuzione. Ogni nodo ha:
 
-:::
+- **Input tipizzati.** Un nodo retriever si aspetta un query. Un nodo LLM si aspetta un prompt. Le connessioni tra nodi sono type-checked a runtime, e Flowise segnala quando manca un input o l'output non è compatibile.
+- **Configurazione specifica.** Un nodo OpenAI LLM ha dentro il modello, la temperatura, il numero di token massimo, le credenziali (memorizzate cifrate nel credential store). Un nodo retriever Pinecone ha l'indicizzazione, il namespace, il numero di risultati. Espandere un nodo mostra decine di parametri.
+- **Esecuzione tracciata.** Quando il flusso gira, ogni step lascia un trace: input, output, latenza, numero di token, modello usato, costo stimato. Questo è il materiale grezzo con cui fai debug, eval, e ottimizzazione. Senza traces, stai lavorando al buio.
 
-### I componenti chiave del canvas
+L'output del flusso è esposto in tre modi:
 
-**Chatflow Template.** Il template di partenza per chatbot conversazionali con memory. È il flusso più comune.
+- **API generata automaticamente.** Ogni flow ha un endpoint REST pronto, con auth, rate limiting, e configurazione CORS. Non devi scrivere backend code per esporlo.
+- **Embedded chat widget.** Un componente JavaScript che inietti in un sito, e il flusso diventa un chatbot live. Personalizzi branding, posizione, lingua, behavior di apertura.
+- **SDK TypeScript e Python.** Se l'app non è un sito web, usi le SDK per integrare il flusso nel tuo backend, mobile app, o flusso server-to-server.
 
-**RAG Template.** Per costruire applicazioni che rispondono a partire da una base documentale (PDF, siti web, knowledge base). Il flusso canonico: carichi documenti → li indicizzi in un vector store → l'utente fa una domanda → il retriever pesca i chunk rilevanti → LLM genera la risposta con quei chunk come contesto.
+Tutto questo è gratis nella self-hosted open source edition. La versione cloud aggiunge managed hosting, team workspaces, RBAC, e supporto prioritario — paghi per non dover gestire l'infrastruttura.
 
-**AgentFlow Template.** Per agenti multi-step che usano tool. L'LLM decide, ad ogni step, quale tool chiamare. Utile per task che richiedono ragionamento + azione (es. "cerca online, poi calcola, poi scrivi email").
+### Il modello di pricing, spiegato onestamente
 
-**Sequential Chain.** Per pipeline lineari: l'output di un nodo è l'input del successivo.
+Il pricing di Flowise è in due dimensioni: la piattaforma e i modelli.
 
-### Casi d'uso concreti
+**Piattaforma.** Self-hosted è gratis sotto Apache 2.0, con tutti i nodi, API, embedded widget, e accesso completo. Paghi solo l'infrastruttura (un server per il docker container, ~10-30 dollari al mese su Hetzner o DigitalOcean per workload leggeri) e il costo dei modelli LLM che usi. Per team che partono, è la strada più economica in assoluto.
 
-:::pro Quando Flowise fa la differenza
+La versione cloud ha tre tier: Free ($0/mese, 2 flow, 100 predictions, 5MB storage), Starter ($35/mese, flow illimitati, 10.000 predictions, 1GB storage), e Pro ($65/mese, 50.000 predictions, 10GB storage, workspaces illimitati, RBAC, priority support). Enterprise è custom, di solito per on-premise con SSO/SAML e SLA. I numeri sono stati verificati sulla pagina ufficiale di Flowise a luglio 2026 — cambiano spesso, ricontrolla prima di firmare un budget.
 
-- **MVP di un'applicazione AI.** Vuoi testare l'idea con utenti reali prima di investire in engineering.
-- **Chatbot interno per knowledge base aziendale.** RAG su documenti interni (policy, manuali, archivi).
-- **Automazioni AI per il team operativo.** Lead enrichment, classificazione email, drafting assistito.
-- **Customer support AI di primo livello.** Risposte automatiche su FAQ, con escalation a umani.
-- **Strumenti interni per il team.** Summarization di meeting, analisi di documenti, generazione di draft.
+Attenzione: Workday ha annunciato l'acquisizione di Flowise il 14 agosto 2025. Al momento Flowise continua a operare come prodotto indipendente sotto Workday, la licenza Apache 2.0 è stata mantenuta, e il pricing non è cambiato sostanzialmente. Tuttavia, è una variabile da tenere d'occhio: le roadmap delle acquisizioni cambiano.
 
-:::
+**Modelli.** Questa è la parte che il marketing di Flowise tende a nascondere. Ogni prediction consuma token, e ogni token si paga al provider del modello scelto. Se usi GPT-4o su 50.000 predictions al mese con un context medio, il conto modello è nell'ordine di 200-500 dollari al mese sopra i 65 della piattaforma. Il pricing cloud copre forse il 10-30% del vero costo totale di un deployment reale. Per un calcolo onesto, prendi il tier cloud e aggiungi il costo modello — e poi aggiungi il costo vettoriale storage se usi Pinecone, Weaviate, o simili.
 
-:::warning Quando Flowise non è la scelta giusta
+Una regola pratica: budget realistico per un POC serio è 200-500 dollari al mese, 500-1500 per un deployment di produzione medio, e cifra da definire per volumi enterprise. Non è un tool "gratis che fa tutto".
 
-- **Non hai competenze tecniche.** Serve almeno un'infarinatura di come funzionano LLM, embedding, vector store.
-- **Vuoi un chatbot "immediato".** Per quello, strumenti come Voiceflow, Botpress, o Tidio sono più accessibili.
-- **Hai requisiti di compliance stringenti e non puoi self-hostare.** In quel caso, piattaforme enterprise come Azure AI Foundry o AWS Bedrock hanno governance integrata.
-- **Hai bisogno di un'infrastruttura mission-critical con SLA garantiti.** Flowise self-hosted non offre SLA enterprise. Per quello, piattaforme cloud a pagamento.
+### I tre setup operativi, e quando scegliere ognuno
 
-:::
+**Self-hosting open source.** Scarichi il docker, lo fai girare, accedi alla UI su localhost:3000. Tempo di setup: 15-30 minuti per chi ha familiarità con Docker, un'ora per chi parte da zero. Costi ricorrenti: server (10-50 dollari al mese a seconda delle dimensioni) + LLM API calls. Pro: controllo totale, nessun vendor lock-in, privacy, data residency. Contro: devi gestire aggiornamenti, backup, sicurezza, e monitoring. Adatto a team con competenza DevOps o SysAdmin.
+
+**Flowise Cloud.** Ti iscrivi, crei l'account, accedi alla canvas via browser. Tempo di setup: 5 minuti. Costi ricorrenti: tier cloud (35-65 dollari al mese) + LLM API. Pro: zero gestione infrastruttura, team collaboration pronta, SSO su Pro. Contro: costi più alti a lungo termine, dati ospitati da Flowise/Workday. Adatto a team che vogliono andare veloce e accettano di pagare per la gestione.
+
+**Enterprise on-premise.** Self-hosted ma con contratto enterprise: SSO/SAML, audit log, support dedicato, SLA. Costi: da definire con il vendor, generalmente migliaia di dollari al mese. Pro: sicurezza enterprise, compliance. Contro: lock-in contrattuale. Adatto a organizzazioni con requisiti di compliance specifici (sanità, finanza, pubblica amministrazione).
+
+La scelta si riduce a tre domande: il vostro team ha competenza DevOps? Avete requisiti di data residency stringenti? Quanto è grande il deployment? Se la prima è sì e le altre due sono basse, self-host. Se la prima è no e la terza è medio-bassa, cloud. Se la terza è alta o avete requisiti stringenti, enterprise.
+
+### Cosa puoi costruire, in concreto
+
+Flowise non è solo chatbot. Le applicazioni che i team mettono in produzione coprono almeno queste aree:
+
+**Internal copilot aziendale.** L'utente carica documenti aziendali (policy, manuali, contratti tipo, knowledge base), Flowise indicizza tutto in un vector store, e il dipendente fa domande in linguaggio naturale. La differenza rispetto a un classico search è che il sistema risponde con citazioni, sintetizza, e gestisce domande ibride ("confronta la policy ferie con il contratto del nuovo assunto"). Casi d'uso tipici: onboarding, supporto IT interno, help desk HR.
+
+**Customer support automation.** L'agente accede a FAQ, knowledge base pubblica, storico conversazioni, e tool interni (controllo ordine, verifica account). Quando non sa rispondere, instrada a un umano con tutto il contesto. È la differenza tra un chatbot che frustrerebbe il cliente e uno che effettivamente riduce il volume al support team.
+
+**Document processing pipeline.** Carichi contratti, fatture, CV, o report, l'agente li estrae, li classifica, li struttura in output JSON, e li manda a un sistema downstream. Sostituisce settimane di data entry manuale in processi finance, legal, HR.
+
+**Research assistant.** Data analyst o researcher che interrogano un corpus di paper, articoli, o documentazione tecnica. L'agente fa retrieval, riassume, compara, e cita. Risparmia ore di lettura manuale.
+
+**Sales enablement.** L'agente conosce le schede prodotto, i casi studio, le objection handling. Il sales rep chiede "come rispondo a un cliente che dice che il pricing è troppo alto per il volume?" e l'agente genera una risposta contestualizzata.
+
+**Code assistant verticale.** Flowise si collega a un repository Git, indicizza il codice, e permette di fare domande sull'architettura, trovare pattern, generare documentazione. È quello che fa Cursor o Copilot, ma con il tuo codice dentro e la possibilità di integrarlo con tool esterni (issue tracker, CI/CD, documentazione interna).
+
+Queste sono applicazioni reali in produzione, non demo. Richiedono tutte una fase di valutazione, monitoring, e iterazione — non è "metti Flowise, funziona". Ma sono fattibili in settimane, non in trimestri.
+
+### Limiti e trade-off, dichiarati onestamente
+
+Flowise non è una bacchetta magica. Ci sono almeno cinque limiti strutturali che devi conoscere prima di impegnare tempo e budget.
+
+**Debug dei flussi complessi è difficile.** Quando un agente sbaglia, può essere per il prompt, il modello, il retriever, il chunking, o la logica di orchestrazione. La canvas aiuta, ma la tracciabilità a livello di singola decisione non è nativa — devi costruirtela tu o esportare i log in un observability tool esterno (LangSmith, Helicone, o il tuo sistema). I nodi "if/else" diventano rapidamente illeggibili quando il flusso supera una certa soglia di complessità.
+
+**Il costo modello è imprevedibile.** Un agente con 5 tool calls per task, su 1000 task al giorno, può spendere 50 dollari o 500 a seconda della qualità delle risposte, dei modelli scelti, e del context che si porta dietro. Senza budget guardrails, una settimana di traffico anomalo può triplicare la fattura. Lavora con budget alerts, rate limiting, e modelli più piccoli dove possibile.
+
+**Versioning e governance sono deboli.** Le canvas sono oggetti JSON, ma il flusso di lavoro (chi ha cambiato cosa, perché, quando) non è una funzione nativa di Flowise. Per team che devono tracciare decisioni AI per compliance, serve un layer esterno (Git per la canvas JSON, ticket system per le decisioni). Per team piccoli non è un problema. Per aziende regolamentate, è un blocker parziale.
+
+**LangChain è in costante mutazione.** Flowise segue LangChain da vicino, ma il wrapper visuale non sempre copre tutte le funzionalità LangChain di ultima generazione. Se LangChain introduce un nuovo pattern (graph agents, reflection, planner-executor), Flowise può richiedere settimane per integrarlo. È il prezzo di essere sopra un framework invece di essere il framework.
+
+**Il flusso JSON esportato non è production-ready.** Puoi esportare la canvas come JSON, ma non è codice LangChain pulito. È un dump dello stato. Per portare il flusso in produzione in modo sostenibile, o lo ri-scrivi in codice LangChain a mano, o lo mantieni su Flowise per tutta la vita. La prima opzione è la più sana per il lungo periodo. La seconda è la più veloce.
 
 ### Flowise vs i concorrenti diretti
 
-**Flowise vs LangChain.** LangChain è il framework originale in Python/JS. Flowise è il layer visuale sopra LangChain. Per developer puri, LangChain è più potente. Per team misti (PM + dev), Flowise è più accessibile.
+Il panorama dei visual agent builder è affollato. Flowise ha un posizionamento specifico, e vale la pena capire dove si distingue.
 
-**Flowise vs Langflow.** Langflow è un competitor diretto di Flowise, con un canvas simile. La differenza è sottile: Langflow ha avuto più trazione nella community RAG e sperimentale, Flowise è più maturo in enterprise. Per la maggior parte degli use case, sono intercambiabili.
+**Flowise vs LangFlow.** LangFlow è il concorrente più vicino: stessa base LangChain, stessa interfaccia visuale, open source. La differenza storica è che Flowise ha più nodi, una community più ampia, e un perimetro funzionale leggermente più largo (Agentflow è una distinzione che LangFlow non ha allo stesso modo). LangFlow è un buon fallback se Flowise non ti piace. Per il 90% dei casi, sono intercambiabili.
 
-**Flowise vs n8n / Make (con nodi AI).** n8n e Make sono piattaforme di automazione con nodi AI integrati. La differenza: n8n/Make sono più "automation-first" (orchestrano tool esistenti), Flowise è più "AI-first" (costruisci applicazioni AI). Per workflow che coinvolgono 10+ tool, n8n/Make. Per applicazioni AI core, Flowise.
+**Flowise vs n8n.** n8n è una piattaforma di automazione general-purpose con nodi AI aggiunti di recente. È più adatta a orchestrazioni che coinvolgono API esterne, CRM, fogli Google, e tool SaaS, meno a pipeline RAG pure. Se il tuo flusso è "l'utente chiede qualcosa, l'agente decide, chiama un'API, salva il risultato su Notion", n8n è più ergonomico. Se è "l'utente fa una domanda, l'agente cerca in un corpus, genera una risposta con citazioni", Flowise è la scelta giusta.
 
-**Flowise vs Voiceflow / Botpress.** Voiceflow e Botpress sono focalizzati su chatbot conversazionali, con UI più "non-technical". Flowise è più generico e più tecnico. Per un chatbot customer support semplice, Voiceflow è più veloce. Per applicazioni AI complesse, Flowise.
+**Flowise vs LangSmith / LangGraph Studio.** Sono strumenti diversi con obiettivi diversi. LangGraph è un framework per agenti complessi, LangSmith è una piattaforma di observability e eval. Flowise non compete con loro: li complementa. Puoi costruire il flusso in Flowise, esportarlo, e portarlo in LangGraph per orchestrazioni avanzate.
 
-**Flowise vs Azure AI Studio / AWS Bedrock.** Le piattaforme cloud enterprise offrono orchestration visuale simile, ma con governance, security, e compliance integrati. Per enterprise con requisiti stringenti, sono preferibili. Per team snelli che vogliono velocità, Flowise.
+**Flowise vs tool commerciali chiusi (Vellum, Voiceflow, Botpress).** I closed-source hanno spesso UI più rifinite, customer support reattivo, e compliance enterprise certificata. Ma costano 5-10 volte tanto, ti vincolano a un vendor, e hanno meno flessibilità. Per un POC in 48 ore, Flowise open source batte tutti. Per un deployment enterprise con audit e compliance, valuta i closed-source.
 
-### Pricing di Flowise
+**Flowise vs build custom con LangChain.** Costruire da zero ti dà controllo totale, ma costa settimane di sviluppo e ti costringe a mantenere il codice. Flowise ti fa partire in un'ora e ti permette di iterare. Il momento in cui il custom vince è quando il flusso deve scalare in modo molto specifico, o quando hai requisiti che la canvas non esprime bene (es. modelli custom su GPU interne, logica di sicurezza stratificata, integrazione con sistemi legacy).
 
-Flowise è **open source** (licenza MIT) e può essere usato gratuitamente. I costi sono:
+### Setup pratico: da zero a un agente funzionante in un'ora
 
-- **Self-hosted**: costo del server (5-50 €/mese a seconda delle risorse) + costi delle API LLM.
-- **Cloud-hosted**: piano a pagamento basato su numero di esecuzioni (indicativamente 25-100 €/mese per uso moderato).
-- **Enterprise**: custom pricing, con supporto e SLA.
+Ecco il percorso minimo per portare un agente RAG funzionante dalla zero. Funziona per self-hosting e per cloud.
 
-Il costo principale non è Flowise: sono le API LLM (OpenAI, Anthropic, ecc.). Per un'app con 10k chiamate/mese, il costo LLM può essere 50-500 €/mese a seconda del modello.
+**1. Crea l'istanza.** Self-hosting: \`docker run -d --name flowise -p 3000:3000 flowiseai/flowise\`. Cloud: iscriviti a flowiseai.com e crea un workspace. Tempo: 5 minuti.
 
-### Flusso pratico: un caso reale
+**2. Prepara le credenziali.** Vai in "Credentials", crea una API key OpenAI (o Anthropic, o quello che preferisci). Non usare la chiave root del tuo account. Tempo: 2 minuti.
 
-Giulia è una product manager in una scaleup B2B. Vuole prototipare un assistente interno per il team sales che risponda a domande su policy commerciali, casi passati, e best practices.
+**3. Carica i documenti.** Vai in "Document Stores", crea uno store, carica 5-10 PDF o file di testo. Per il primo test, file piccoli, sotto 50 pagine ciascuno. Tempo: 5 minuti.
 
-**Giorno 1:** installa Flowise via Docker su un server aziendale. Configura i nodi di base.
+**4. Crea il flow.** Vai in "Chatflows", "Create New". Parti dal template "Document Q&A" o "Conversational Retrieval Agent". Il template è già un agente RAG funzionante. Tempo: 3 minuti.
 
-**Giorno 2-3:** importa 200 documenti (PDF di policy, deck di casi studio, trascrizioni di call). Indicizza tutto in un vector store (Chroma, gratuito).
+**5. Configura i nodi.** Apri il nodo "Document Loader" e seleziona lo store che hai creato. Apri il nodo "Embeddings" e configura il modello (OpenAI text-embedding-3-small è il default sensato). Apri il nodo "LLM" e scegli il modello (gpt-4o-mini per test, gpt-4o per qualità). Tempo: 10 minuti.
 
-**Giorno 4:** costruisce un chatflow con LLM (Claude o GPT-4), retriever sul vector store, e memory. Testa con domande di esempio.
+**6. Indicizza.** Salva il flow, poi clicca "Upsert" sul document store. Indicizza i file (tempo dipende dalla quantità: da secondi a minuti). Tempo: 5 minuti.
 
-**Giorno 5:** esporta come API. Il team engineering di Giulia integra l'endpoint nel workspace sales interno in 2 ore.
+**7. Testa.** Apri la chat integrata, fai una domanda sul contenuto dei documenti. Verifica che la risposta abbia citazioni. Tempo: 5 minuti.
 
-Risultato: prototipo funzionante in 5 giorni, costo di setup minimo, base per decidere se investire in una versione produzione.
+**8. Esponi.** Vai su "API", copia l'endpoint generato. Testalo con curl. Tempo: 5 minuti.
+
+**9. Embedda (opzionale).** Vai su "Embedded Chat", copia lo script, incollalo in una pagina web. Tempo: 5 minuti.
+
+In un'ora hai un agente che risponde a domande su un corpus documentale, con citazioni, e che puoi embeddare ovunque. È POC-ready. Per arrivare a produzione, ci vogliono altre iterazioni: eval su un dataset di test, tuning dei prompt, gestione degli errori, monitoring.
+
+### Errori comuni che vedo fare a chi inizia
+
+Dopo aver visto decine di implementazioni, i pattern di errore sono ricorrenti.
+
+**Scegliere il modello sbagliato per il task.** Usare GPT-4o per un chatbot FAQ è sovradimensionato e costoso. gpt-4o-mini o Claude Haiku fanno lo stesso lavoro a un quarto del costo, e per task semplici la qualità è indistinguibile. Usa il modello più piccolo che risolve il task, e scala solo quando la qualità effettivamente migliora.
+
+**Chunking sbagliato.** Il chunking decide come il testo viene spezzato per l'embedding. Default troppo grandi o troppo piccoli uccidono la qualità del retrieval. Per documenti densi (paper accademici, contratti), chunking ricorsivo con overlap 10-20% è un buon punto di partenza. Per FAQ, chunking per sezione. Misura sempre con un set di domande rappresentative.
+
+**Dimenticare la valutazione.** "Funziona" è diverso da "funziona bene". Senza un dataset di eval (20-50 domande con risposta attesa), stai navigando a vista. Crea un set di eval il primo giorno, e misura su quel set a ogni iterazione seria. Altrimenti cambi il prompt e non sai se hai migliorato o peggiorato.
+
+**Self-hosting senza monitoring.** Self-hostare senza logging e monitoring centralizzato significa che il primo bug in produzione ti arriva via email dall'utente. Metti Loki, Datadog, o anche solo un buon syslog davanti al container, prima di andare live.
+
+**Progettare senza pensare ai limiti del modello.** I modelli attuali hanno finestra di context limitata (8K-200K token, a seconda del modello). Flussi che mandano 100K token per task sono lenti e costosi. Riassumi, filtra, prioritizza. Lavora sul contesto che conta, non su quello che hai.
+
+**Sottovalutare il tempo di iterazione.** Un agente in produzione richiede settimane di iterazione su prompt, retrieval, chunking, e valutazione. Non è un deliverable da una settimana. Se hai un cliente che si aspetta "agente in produzione in 5 giorni", Flowise non ti salva. Rinegoziare le aspettative o non partire.
+
+### Il futuro di Flowise: cosa guardare nei prossimi mesi
+
+L'ecosistema LLM si muove velocemente. Le aree da osservare su Flowise specificamente:
+
+- **Workday integration.** L'acquisizione del 2025 può significare integrazione profonda con l'ecosistema HR/finance di Workday. Utile se sei un'azienda Workday, neutro se non lo sei. Possibile lock-in a lungo termine da monitorare.
+- **Agent evaluation framework.** Flowise ha iniziato a includere eval nel prodotto. Se migliora la qualità del debugging, diventa molto più production-ready. Tieni d'occhio le release notes.
+- **Multi-agent orchestration.** Agentflow è relativamente giovane rispetto a LangGraph puro. Se i framework concorrenti (CrewAI, AutoGen) consolidano pattern migliori, Flowise potrebbe rincorrere.
+- **MCP (Model Context Protocol).** Supporto crescente per collegare tool esterni via MCP standard, che potrebbe diventare il modo principale di integrare sistemi.
+
+Per ora Flowise è una delle migliori opzioni per il visual agent building open source. La combinazione Apache 2.0 + self-hosting + community attiva + LangChain compatibile lo rende difficile da battere per il target giusto. Ma non è il tool giusto per tutti, e non è gratis come sembra — il costo modello è la vera variabile di spesa.
 
 ### Le domande che ci fanno più spesso
 
-**Flowise è difficile da imparare?**
-La curva di apprendimento è ripida se vieni da zero competenze AI/LLM. Se hai già lavorato con LangChain o con API LLM, è immediato. Se vieni da zero, concediti 2-3 settimane di apprendimento prima di partire con un progetto reale.
+**Flowise è davvero gratis?**
+Il core open source è gratis sotto Apache 2.0, anche per uso commerciale. Paghi solo server e modelli LLM. La versione cloud ha tier a pagamento per chi non vuole gestire infrastruttura. Il "gratis" finisce quando hai un deployment di produzione serio, perché i costi modello crescono velocemente.
 
-**Flowise è production-ready?**
-Sì, con caveat. Per uso produzione serve:
-- Self-hosting con monitoring (Prometheus, Grafana).
-- Rate limiting.
-- Logging strutturato.
-- Backup e disaster recovery.
+**Posso esportare il flusso in codice LangChain?**
+Sì, ogni canvas esporta un JSON con la struttura del flusso. Non è codice Python pulito pronto per produzione, ma puoi leggerlo, capirlo, e ri-scriverlo in LangChain. È un buon modo per prototipare velocemente e poi consolidare in codice manutenibile.
 
-Il core di Flowise è solido, ma l'infrastruttura va curata.
+**Flowise vs LangGraph?**
+LangGraph è un framework Python per agenti, con il massimo controllo. Flowise è sopra LangChain/LangGraph/LlamaIndex, con una UI. Se il tuo team è Python-native e vuole codice production-ready, LangGraph. Se vuoi velocità di prototipazione e visualizzazione del flusso, Flowise.
 
-**Flowise supporta i modelli locali (Ollama)?**
-Sì, perfettamente. Puoi usare Llama, Mistral, Qwen, e altri modelli locali via Ollama, LM Studio, o altri runtime. Questo è un vantaggio competitivo importante per chi ha requisiti di privacy.
+**Funziona con Claude e Gemini oltre a OpenAI?**
+Sì. Flowise supporta OpenAI, Anthropic, Google, Cohere, HuggingFace, modelli locali via Ollama, e qualsiasi provider OpenAI-compatible. La scelta del modello è una decisione per nodo, non un'impostazione globale.
 
-**Flowise è gratis?**
-Il core è open source e gratis. Il cloud-hosted è a pagamento. I costi LLM sono separati (API del provider scelto).
+**Quanto è sicuro self-hostarlo?**
+Dipende da quanto fai hardening. Out of the box, Flowise richiede auth di base, e le credenziali sono cifrate a riposo. Per ambienti enterprise, devi aggiungere reverse proxy con TLS, secret management esterno (Vault), audit logging, e SSO. Non è zero-config per ambienti regolamentati.
 
-**Flowise può fare function calling?**
-Sì, con nodi dedicati. Puoi definire tool custom e lasciare che l'LLM decida quando chiamarli. È uno dei punti di forza rispetto ad approcci più semplici.
+**Posso usarlo per un chatbot commerciale sul mio sito?**
+Sì, e in effetti è uno dei casi d'uso più comuni. L'embedded widget è production-ready. Le consideration sono: modello e costi, gestione del context a lungo termine, fallback a umano quando l'agente non sa rispondere, monitoring della qualità.
 
-**Posso esportare il flusso come codice?**
-Sì, Flowise può esportare il flusso come JSON, e ci sono progetti per convertire il JSON in codice LangChain Python/JS. Per chi vuole poi portarlo in produzione come codice custom, l'export è un buon punto di partenza.
+### Alternative da considerare
+
+- **LangFlow.** Alternativa diretta, stessa base LangChain, open source. Pro: nessun lock-in, interfamiliare. Contro: meno nodi, community più piccola. Adatto se Flowise non ti convince per qualche ragione.
+- **LangGraph.** Framework Python puro. Pro: massimo controllo, codice production-ready. Contro: zero visuale, devi sapere Python bene.
+- **n8n.** Automazione general-purpose con nodi AI. Pro: enorme libreria di integrazioni. Contro: meno specializzato per AI.
+- **Voiceflow.** Piattaforma chiusa con buona UX. Pro: interfaccia rifinita, customer support. Contro: costoso, lock-in.
+- **CrewAI / AutoGen.** Framework Python per multi-agent. Pro: pattern di orchestrazione potenti. Contro: richiede competenza Python, no visuale.
+- **Build custom con LangChain.** Per quando il flusso è critico e ti serve il pieno controllo. Costo: settimane di sviluppo iniziale.
 
 ### Cosa ci aspettiamo da Flowise nei prossimi mesi
 
-Le aree da osservare:
+Il 2026 è l'anno in cui i visual agent builder passano da "POC veloce" a "production-grade". Le aree da osservare:
 
-- **Migliore supporto per modelli multimodali.** Vision, audio, e video nei flussi RAG.
-- **Collaboration migliore per team.** Editing condiviso del canvas, versioning dei flussi.
-- **AI-assisted canvas design.** Suggerimenti automatici su come strutturare un flusso.
-- **Enterprise features.** SSO, audit log, role-based access.
+- **Eval nativo.** Se Flowise costruisce un framework di valutazione integrato, diventa molto più serio per uso di produzione. La eval è il collo di bottiglia attuale.
+- **Observability.** Tracciamento granulare di token, costo, latenza, errori per flusso. I closed-source ce l'hanno, open source arranca.
+- **MCP e integrazione tool standardizzata.** Il Model Context Protocol sta diventando lo standard per collegare tool. Se Flowise lo supporta bene, è un vantaggio competitivo.
+- **Agent versioning e collaboration.** Più utenti su un flow, conflitti, merge. Git-like per canvas.
+- **Modelli on-device e privacy.** Esecuzione locale di modelli via Ollama, LM Studio, vLLM. Già supportato in parte, da consolidare.
 
 ### In sintesi
 
-Flowise AI è il modo più rapido per costruire applicazioni AI custom senza scrivere codice da zero. È open source, flessibile, e adatto a team con competenze tecniche di base che vogliono prototipare velocemente.
+Flowise è un buon prodotto per un target preciso: team con competenza tecnica che vogliono costruire applicazioni LLM velocemente, mantenere il controllo del codice, e iterare rapidamente. Non è il tool per chi inizia da zero senza basi tecniche, e non è gratis come sembra — il costo modello è la vera spesa. Per il target giusto, è probabilmente la migliore opzione open source nel 2026. Per il target sbagliato, è frustrante e costoso.
 
-Per team AI più maturi che vogliono massimo controllo, LangChain resta superiore. Per team che vogliono velocità, Flowise è imbattibile.
+La decisione chiave non è "Flowise sì o no" — è "abbiamo le competenze per usarlo bene, e il budget per i modelli?". Se sì a entrambe, Flowise è una scelta solida. Se no a una delle due, meglio costruire con un closed-source gestito o tornare al codice.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Flowise** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri framework AI** nella raccolta dedicata.
+- **Apri la scheda tool di Flowise** per confrontare con altri agent builder nel catalogo.
+- **Esplora le raccolte su agenti AI e automazioni** per vedere casi d'uso affini.
 - **Salva Flowise nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -1499,191 +1676,241 @@ Per team AI più maturi che vogliono massimo controllo, LangChain resta superior
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/lemon-squeezy",
     featured: false,
-    highlights: [
-      'Merchant of record: gestisce per te la raccolta e il versamento delle tasse',
-      'Supporta prodotti digitali, abbonamenti, licenze, e usage-based billing',
-      'Checkout ospitato, webhook completi, API pulita',
-      'Alternativa a Paddle con un pricing più semplice (5% + 50¢ per transazione)',
-    ],
-    details: [
-      'Supporta oltre 90 valute',
-      'Gestione automatica di EU VAT, UK VAT, US sales tax, GST, e sales tax australiano',
-      'Fatturazione, rimborsi, dunning email e gestione dispute integrati',
-    ],
-    cautions: [
-      'Il modello MoR ha implicazioni contrattuali: verifica che sia compatibile con i tuoi termini',
-      'Per volumi molto alti, Stripe + TaxJar può costare meno (richiede setup iniziale maggiore)',
-      'La personalizzazione del checkout è più limitata di Stripe Checkout',
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa Lemon Squeezy, in una frase
 
-Lemon Squeezy è un merchant of record (MoR) per SaaS e prodotti digitali: ti permette di vendere a clienti internazionali gestendo al posto tuo pagamenti, tasse (VAT, GST, sales tax), fatturazione, e dunning — così tu puoi concentrarti sul prodotto.
+Lemon Squeezy è un merchant of record per chi vende prodotti digitali e SaaS: si mette come venditore legale su ogni transazione, e in cambio gestisce tasse globali, fatturazione ricorrente, licenze software, chargeback, e pagamenti internazionali — lasciando a te il prodotto e il marketing.
 
-### A chi serve davvero
+Non è un payment processor. È un'azienda che compra la tua fattura e si assume il rischio fiscale.
 
-Lemon Squeezy non è per chi vende prodotti fisici o per chi ha bisogno di un gateway di pagamento "neutro". È per chi:
+### Cosa significa "merchant of record" e perché è importante
 
-- **Vende SaaS, software, o prodotti digitali** (licenze, ebook, corsi, template, membership).
-- **Vuole vendere a clienti internazionali** senza dover gestire VAT, GST, sales tax in 50+ paesi.
-- **Vuole un checkout ospitato, bello, e funzionante** senza doverlo costruire.
-- **Gestisce subscription, license key, o usage-based billing** senza ricostruire da zero ogni volta.
-- **È una startup o un solopreneur** che non ha (e non vuole avere) un team finance dedicato.
+Il merchant of record (MoR) è l'entità che appare sulla carta di credito del cliente come venditore. Quando un cliente americano compra il tuo plugin WordPress e vede "Lemon Squeezy" sull'estratto conto, Lemon Squeezy è il MoR. Tu sei il fornitore del prodotto. Lemon Squeezy è il commerciante.
 
-Non è il tool giusto per chi vende merci fisiche (manca la logistica), per chi ha bisogno di un marketplace-style platform, o per chi ha requisiti di customizzazione estrema del checkout (in quel caso, Stripe è più flessibile).
+Questo ribaltamento ha conseguenze operative enormi:
 
-### Come funziona, passo per passo
+**Tasse.** Il MoR è legalmente responsabile del calcolo, della riscossione, e del versamento di IVA, GST, e sales tax in ogni giurisdizione dove vende. Se vendi a un cliente in Germania, è Lemon Squeezy che calcola l'aliquota IVA tedesca del 19%, la aggiunge al checkout, la versa al fisco tedesco, e ti rende conto a fine mese. Tu non devi registrarti al VAT MOSS, non devi fare dichiarazioni intracomunitarie, non devi sapere che la Svizzera ha cambiato l'aliquota al 8.1% a gennaio 2024. Lemon Squeezy lo sa.
 
-Il flusso operativo ha sei fasi.
+**Chargeback.** Se un cliente contesta il pagamento, è Lemon Squeezy che gestisce la disputa, fornisce la documentazione al circuito, e si fa carico del rischio economico. Tu vieni notificato, e nei casi gravi può esserci un impatto sul tuo account, ma non sei tu a dover rispondere al cliente arrabbiato e al rappresentante Visa.
 
-**1. Creazione del prodotto.** L'utente crea un prodotto in Lemon Squeezy, specifica:
-- Nome, descrizione, immagini.
-- Prezzo (one-time, subscription, usage-based, o "pay what you want").
-- Valute accettate.
-- Eventuali varianti (es. "Basic", "Pro", "Enterprise").
+**Compliance.** Anti-money laundering, KYC, GDPR per i dati di pagamento, PCI-DSS per la gestione delle carte — tutto a carico del MoR. Se non hai mai letto il PCI-DSS, è una pagina da 300+ pagine di requisiti tecnici e operativi. Lemon Squeezy lo gestisce.
 
-**2. Generazione del checkout.** Lemon Squeezy genera un checkout ospitato, bello, mobile-friendly, e accessibile. L'utente può personalizzarlo (colori, logo, campi custom) entro certi limiti.
+**Fatturazione internazionale.** Il cliente italiano vuole fattura con partita IVA? Lemon Squeezy la genera. Il cliente UK vuole fattura con VAT number? Lemon Squeezy la genera. Il cliente canadese vuole fattura in dollari con il suo HST? Anche. Tu non devi sapere come si fa.
 
-**3. Vendita.** Il cliente completa il checkout. Lemon Squeezy gestisce il pagamento, l'eventuale subscription ricorrente, l'anti-frode, e la conformità PCI (la carta del cliente non passa mai per i server del venditore).
+Questo è il valore vero. Non è "pagare meno" — è "non dover gestire un dipartimento fiscale".
 
-**4. Calcolo e versamento delle tasse.** Lemon Squeezy, in qualità di merchant of record, calcola e versa le tasse per conto del venditore:
-- EU VAT.
-- UK VAT.
-- US sales tax (in tutti gli stati che lo richiedono).
-- GST (Australia, Nuova Zelanda, Canada, India, Singapore, e altri).
-- Sales tax in altre giurisdizioni (UK digitale, Giappone, Corea, Sud Africa, e oltre 50 paesi).
+### Chi dovrebbe usare Lemon Squeezy, e chi no
 
-**5. Fatturazione e dunning.** Lemon Squeezy invia le fatture, gestisce i rinnovi, e gestisce il dunning (solleciti, retry dei pagamenti falliti, recupero dei failed payment). Le fatture sono conformi alle regole locali.
+Lemon Squeezy è ideale per un profilo specifico:
 
-**6. Payout.** Il venditore riceve i payout secondo il calendario configurato (settimanale, mensile, o custom), con dettaglio di fees, tasse trattenute, e net.
+**Indie hacker, solo founder, micro-team** che vendono il primo SaaS, plugin, template, o corso. Il founder tipico ha un'azienda semplice (spesso una LLC, SRL, o partita IVA), vende a clienti internazionali, non ha un CFO, e vuole passare il minor tempo possibile a gestire la fiscalità. Lemon Squeezy gli toglie un mese di burocrazia al primo setup, e gli toglie il costo di un commercialista internazionale ogni anno.
 
-:::tip Cosa significa "merchant of record" in pratica
+**SaaS in fase early-stage** con abbonamenti mensili o annuali, che hanno bisogno di merchant of record perché stanno vendendo in paesi dove non hanno un'entità legale. Senza MoR, vendere a clienti europei da una LLC americana è un incubo fiscale.
 
-Quando vendi con Lemon Squeezy, **il cliente è tecnicamente cliente di Lemon Squeezy, non tuo**. Lemon Squeezy è il merchant of record, cioè il "soggetto fiscale" che vende. Questo significa:
+**Creatori di prodotti digitali** (corsi, ebook, template, asset) che vogliono vendere globalmente senza diventare esperti di sales tax.
 
-- Lemon Squeezy è responsabile della raccolta delle tasse (non tu).
-- Lemon Squeezy è responsabile della fatturazione conforme.
-- Lemon Squeezy gestisce eventuali chargeback e dispute.
-- Tu sei il "seller" o "creator", e ricevi un payout netto.
+**Shopify brands** che passano a prodotti digitali o ibridi.
 
-Questo è un vantaggio enorme per chi non vuole gestire la fiscalità internazionale, ma ha implicazioni contrattuali che vanno comprese (es. i termini di servizio del cliente finale sono con Lemon Squeezy, non con te).
+**Team che vogliono dunning e subscription management senza scrivere il proprio sistema.** La gestione dei mancati pagamenti (carte scadute, fondi insufficienti, frodi) è uno dei lavori più noiosi del billing. Lemon Squeezy la fa, con retry automatici, email di sollecito, e grace period configurabili.
 
-:::
+Non è la scelta giusta per:
 
-### Le caratteristiche chiave di Lemon Squeezy
+**SaaS con MRR superiore a 50-100k dollari al mese.** A quel punto i volumi sono tali che il 5% di Lemon Squeezy diventa un costo significativo, e probabilmente hai bisogno di un setup più flessibile (Stripe + un servizio tax automation come Stripe Tax, Quaderno, o TaxJar). Inoltre, l'integrazione con il tuo prodotto diventa abbastanza complessa che il lock-in conta.
 
-**Checkout ospitato.** Il cliente paga su una pagina Lemon Squeezy, non sul tuo sito. Vantaggi: PCI compliance gratuita, anti-frode integrato, mobile-friendly. Svantaggi: meno controllo sull'esperienza rispetto a Stripe Checkout personalizzato.
+**Marketplace o piattaforme multi-vendor.** Lemon Squeezy non è progettato per essere il payment layer di un marketplace dove hai venditori terzi che ricevono pagamenti. Per quello servono Stripe Connect, Adyen for Platforms, o simili.
 
-**Subscription management.** Lemon Squeezy gestisce abbonamenti, piani, upgrade/downgrade, pause, cancellazioni. Webhook completi per integrazioni custom.
+**Aziende che hanno bisogno di una vera entità locale in Europa.** Se devi fatturare in Italia con partita IVA italiana per ragioni di soglia, di compliance, o di credibilità commerciale, Lemon Squeezy non ti risolve. Ti serve una SRL italiana (o equivalente), e probabilmente Stripe o un'altra soluzione MoR con entity locale.
 
-**License key e download.** Per chi vende software, Lemon Squeezy genera e gestisce license key, e permette download sicuri dei file digitali.
+**Prodotti fisici.** Lemon Squeezy è progettato per digitali. Per i fisici servono Shopify, WooCommerce, o soluzioni e-commerce generali.
 
-**Usage-based billing.** Lemon Squeezy supporta billing basato sull'uso (es. "X euro per 1000 chiamate API"), con calcolo automatico e fatturazione mensile.
+### Come funziona, tecnicamente
 
-**Tax handling globale.** Il vantaggio competitivo principale. Lemon Squeezy calcola e versa le tasse in oltre 50 paesi, risparmiando al venditore ore di lavoro e migliaia di euro in consulenza fiscale.
+Il flusso operativo è lineare. Una volta configurato, funziona così.
 
-**Affiliate program integrato.** Lemon Squeezy offre un programma di affiliazione nativo, utile se vuoi lanciare un affiliate program senza dipendere da tool esterni.
+**Setup iniziale.** Crei l'account su lemonsqueezy.com (gratis, no carta di credito richiesta). Configuri il tuo profilo venditore: dati fiscali di base, metodi di pagamento da accettare, valuta di pagamento. Tempo: 15-30 minuti.
 
-### Casi d'uso concreti
+**Creazione del primo prodotto.** Vai su "Products", "New Product". Definisci nome, descrizione, prezzo, immagine. Scegli il tipo: one-time purchase, subscription, pay-what-you-want, free, o bundle. Configuri opzioni di variante (es. licenza singola vs. team), trial, sconti. Tempo: 10-20 minuti per il primo prodotto.
 
-:::pro Quando Lemon Squeezy fa la differenza
+**Generazione del checkout.** Lemon Squeezy genera automaticamente un URL di checkout ospitato. Lo embeddi nel tuo sito come overlay, o lo condividi come link diretto, o lo inserisci in un pulsante. Tempo: 5 minuti.
 
-- **SaaS B2B che vende a clienti in EU e US**, e non vuole gestire VAT e sales tax internazionali.
-- **Indie developer che vende plugin o temi** e ha bisogno di license key automatiche.
-- **Creator che vende corsi, ebook, o template** e vuole un checkout bello senza costruirlo.
-- **Membership site** con accesso ricorrente a contenuti o community.
-- **Prodotti digitali one-shot** con refund e chargeback gestiti.
+**Integrazione con il tuo prodotto.** Per SaaS e software con licenze, colleghi Lemon Squeezy al tuo backend via webhook o API: quando un pagamento è confermato, Lemon Squeezy ti manda un POST, e tu attivi la licenza, sblocchi l'account, o fai quello che devi. Per prodotti non software, puoi anche ignorare le webhook e basta usare la gestione clienti integrata.
 
-:::
+**Gestione clienti e abbonamenti.** Il cliente ha un suo account sul customer portal di Lemon Squeezy (ospitato da loro o sul tuo dominio custom), dove può aggiornare il metodo di pagamento, scaricare le fatture, cancellare l'abbonamento, vedere la cronologia. Tu non devi costruire nessuna di queste UI.
 
-:::warning Quando Lemon Squeezy non è la scelta giusta
+**Dunning e retry.** Se un pagamento fallisce, Lemon Squeezy riprova automaticamente secondo una schedule (smart retries basati sul tipo di fallimento, non random), manda email al cliente, e ti notifica solo se l'azione richiede il tuo intervento. La "involuntary churn" da carte scadute scende drasticamente.
 
-- **Vendi prodotti fisici.** Manca la logistica. Per quello, Shopify o Amazon.
-- **Hai bisogno di customizzazione estrema del checkout.** Stripe Checkout o un checkout custom su Stripe è più flessibile.
-- **Hai volumi molto alti (>1M €/anno).** Il modello MoR ha un costo percentuale (5% + 50¢ per transazione) che, su volumi alti, può superare il costo di Stripe + TaxJar.
-- **Hai requisiti di compliance specifici che richiedono di essere il merchant of record.** In quel caso, Stripe + consulenza fiscale è la strada.
+### Il modello di pricing reale, non quello dichiarato
 
-:::
+Lemon Squeezy dichiara "5% + 50¢ per transazione". È la base. Il conto reale è quasi sempre più alto, e capire perché è fondamentale prima di scegliere.
 
-### Lemon Squeezy vs i concorrenti diretti
+**La fee base.** 5% + 50¢ per transazione andata a buon fine. Su una vendita da 100 dollari, paghi $5.50 a Lemon Squeezy.
 
-**Lemon Squeezy vs Paddle.** Paddle è il competitor più diretto. La differenza principale: Paddle ha un pricing più complesso (fee variabile per paese) ma più strumenti per enterprise (B2B billing, sales tax compliance). Lemon Squeezy ha un pricing più semplice (5% + 50¢) ed è più adatto a indie e small SaaS. Per enterprise con bisogni complessi, Paddle; per indie con bisogni semplici, Lemon Squeezy.
+**International card fee.** +1.5% quando il cliente paga con una carta emessa in un paese diverso dal tuo. Su una vendita da 100 dollari a un cliente tedesco con carta tedesca (e tu sei in Italia), paghi un altro $1.50. Totale: $7.00.
 
-**Lemon Squeezy vs Stripe + TaxJar.** Stripe è un payment processor, non un MoR. Se usi Stripe, sei tu il merchant of record, e devi gestire tu le tasse (con l'aiuto di TaxJar o di consulenza fiscale). Il vantaggio di Stripe è la flessibilità del checkout, degli abbonamenti, e delle integrazioni. Il vantaggio di Lemon Squeezy è la semplicità fiscale. La scelta dipende da quanto vale per te la semplicità vs la flessibilità.
+**PayPal fee.** +1.5% per pagamenti PayPal. Anche qui, $1.50 in più su $100.
 
-**Lemon Squeezy vs Gumroad.** Gumroad è focalizzato su creator (ebook, corsi, musica). Lemon Squeezy è più focalizzato su SaaS e software. Per un creator puro, Gumroad è più friendly. Per un SaaS, Lemon Squeezy è più strutturato (license key, usage-based, subscription).
+**Recurring subscription fee.** +0.5% su ogni rinnovo di abbonamento. Su $100/anno, paghi 50¢ extra al mese successivo. Su $10/mese, paghi 5¢. Trascurabile a basso volume, misurabile a volumi alti.
 
-**Lemon Squeezy vs FastSpring.** FastSpring è un MoR con focus su software, più enterprise di Lemon Squeezy. Per software company grandi con bisogni complessi (reseller, multi-store, compliance), FastSpring è preferibile. Per indie e piccole software house, Lemon Squeezy è sufficiente.
+**Abandoned cart recovery fee.** +5% quando converti un carrello abbandonato via email automation di Lemon Squeezy. Una tantum, ma il 5% è salato.
 
-**Lemon Squeezy vs Pabbly.** Pabbly è più "automation + checkout" che MoR puro. È un'opzione economica per chi ha bisogni semplici, ma meno robusto per uso SaaS serio.
+**Affiliate referred sale fee.** +3% per vendite che arrivano tramite il programma affiliate integrato. Se usi l'affiliate program, è un costo significativo.
 
-### Pricing di Lemon Squeezy
+Facciamo i conti su uno scenario realistico per un SaaS indie:
 
-Il pricing è semplice e trasparente:
+Cliente tedesco, subscription mensile da 30 dollari, paga con carta, abbonamento ricorrente, e dopo tre mesi la carta scade → dunning → retry → recovery.
 
-- **5% + 50¢ per transazione.** Nessun fee mensile, nessun fee di setup.
-- **Zero commissioni** per tasse (perché Lemon Squeezy le gestisce per te, e le trattiene dal payout).
-- **Volume discounts** disponibili per transazioni ad alto volume (contatta il sales).
+- Primo mese: 5% + 50¢ + 1.5% internazionale = $2.10. Incassi netti: $27.90.
+- Mesi 2-12 (rinnovi senza problemi): 5% + 50¢ + 1.5% + 0.5% recurring = $2.25. Incassi netti: $27.75.
+- Mese in cui la carta fallisce e poi viene aggiornata: due addebiti, doppio costo.
 
-Per un SaaS che fattura 10k €/mese con 100 transazioni, il costo è circa 500-550 €/mese. Per un SaaS che fattura 100k €/mese, il costo è circa 5k-5.5k €/mese — confrontabile con Stripe + TaxJar, ma con zero lavoro di compliance.
+Su un cliente lifetime value di $360 (12 mesi × $30), Lemon Squeezy incassa circa $26.50 — il 7.4% del ricavo, non il 5%. Su volumi più alti, le fee internazionali e PayPal pesano meno in proporzione, ma il conto resta salato rispetto a un setup Stripe + tax automation (dove paghi 2.9% + 30¢ + $0.5%-$1.5% su un tax automation, totale circa 3.5-4.5%).
 
-### Flusso pratico: un caso reale
+Il break-even point dove Lemon Squeezy conviene rispetto a Stripe + tax automation è quando il costo di gestire la compliance fiscale internazionale da soli è superiore al delta di fee. Per la maggior parte dei piccoli SaaS, quel break-even arriva presto, già al primo cliente europeo.
 
-Marco è un indie developer che ha lanciato un plugin per Notion. Prezzo: 49 € one-time o 99 €/anno subscription. Clienti in EU, US, e Australia.
+**Email marketing è separato.** Lemon Squeezy include email marketing gratis fino a 500 subscribers, poi si paga un tier separato basato sul numero di subscribers. Se ti serve solo transactional email, è gratis. Se vuoi fare drip campaigns, automation, segmentation serie, è un costo aggiuntivo.
 
-**Settimana 1:** setup. Marco crea il prodotto in Lemon Squeezy, configura il checkout, genera le license key template.
+**Custom pricing per alti volumi.** Lemon Squeezy offre pricing custom per merchant che generano volumi significativi. Se arrivi a $10k-$20k/mese di ricavi, parla con il sales team. Il pricing pubblico è il massimo, non il minimo.
 
-**Settimana 2:** integrazione. Marco embedda il checkout sul suo sito con uno snippet, e configura i webhook per la generazione automatica delle license key al pagamento.
+### Le feature chiave che devi conoscere
 
-**Mese 1-3:** 50 clienti pagano, 30 in EU, 15 in US, 5 in AU. Marco riceve i payout ogni settimana, al netto delle tasse che Lemon Squeezy ha versato per lui. Il suo commercialista riceve le fatture in PDF direttamente da Lemon Squeezy.
+**Storefronts e checkout ospitati.** Ogni prodotto ha una pagina checkout ospitata su Lemon Squeezy (sottodominio o tuo dominio custom). Conversioni: l'ottimizzazione del checkout è il loro lavoro, non il tuo. Supportano upsells, downsells, order bumps, coupon codes, e bundles.
 
-**Senza Lemon Squeezy:** Marco avrebbe dovuto registrarsi al MOSS (EU VAT), gestire la sales tax US (50 stati), la GST australiana, e tenere la compliance fiscale aggiornata. Per un indie, è tempo e costo proibitivi.
+**Subscription management robusto.** Pause, riprendi, upgrade, downgrade, downgrade con prorating, cancellation flow con survey, winback email, dunning con smart retry. Se hai mai provato a costruire tutto questo, sai quanto è noioso. Lemon Squeezy lo dà gratis.
 
-ROI per Marco: pagare il 5% + 50¢ per transazione è enormemente più economico che pagare un consulente fiscale + gestire la compliance internazionale.
+**License key generation.** Per prodotti software, generi e gestisci license keys associate alle vendite. Il cliente riceve la chiave via email, può attivarla, e tu verifichi via API. Supporta attivazioni multiple, deactivation, rotation.
 
-### Le domande che ci fanno più spesso
+**Email marketing integrato.** Non è un tool di email marketing serio (non compete con ConvertKit o Mailchimp), ma copre le basi: opt-in forms, broadcast, automation semplici. Sufficiente per il transactional, insufficiente per marketing automation seria.
 
-**Lemon Squeezy è un payment processor o un MoR?**
-È un merchant of record. Il cliente compra da Lemon Squeezy, non da te. Questo ha vantaggi (compliance fiscale) e implicazioni (i termini di servizio sono con Lemon Squeezy, non con te).
+**Affiliates integrato.** Programma affiliate nativo: definisci commissione (percentuale o flat), generi link, tracci conversioni, paghi tramite PayPal o Wise. Niente tool esterni, niente costi aggiuntivi. Il costo è il 3% di fee sulle vendite affiliate — è il prezzo dell'integrazione.
 
-**Quanto si paga?**
-5% + 50¢ per transazione. Per transazioni internazionali, le fee del payment processor (Stripe, PayPal) sono già incluse.
+**Webhooks e API.** Per integrazioni custom, hai webhooks (ordine creato, ordine pagato, subscription creata, cancellata, etc.) e una API REST. Il pattern è: il tuo backend riceve il webhook, verifica la firma, aggiorna lo stato utente. Per SaaS è il pattern standard.
 
-**Posso personalizzare il checkout?**
-Entro certi limiti: colori, logo, campo "thank you message". Per personalizzazione estrema, Stripe Checkout resta più flessibile.
+**Tassazione globale automatica.** Questo è il valore centrale. EU VAT, UK VAT, GST australiano, sales tax USA (dove applicabile), GST canadese, IVA messicana. Lemon Squeezy si tiene aggiornata sulle aliquote e sui threshold. Tu non guardi mai un regolamento fiscale.
 
-**Lemon Squeezy supporta i rimborsi?**
-Sì, con un self-service portal per il cliente. Puoi configurare policy di rimborso (es. "entro 30 giorni", "no rimborsi dopo 30 giorni").
+**GDPR e data residency.** Lemon Squeezy è basato in UK, opera sotto GDPR, e memorizza i dati di pagamento su infrastruttura PCI-compliant. Il dato "chi ha comprato cosa" è tuo (lo esporti), il dato "carte di credito" è loro e mai tuo.
 
-**Lemon Squeezy è adatto a vendite B2B?**
-Sì, ma ci sono limiti: la fatturazione B2B con VAT reverse charge richiede configurazione. Per B2B complessi, Paddle o Stripe sono preferibili.
+### Casi d'uso reali che funzionano bene
 
-**Posso usare Lemon Squeezy per un marketplace?**
-No, Lemon Squeezy è per single-seller. Per marketplace, servono piattaforme come Stripe Connect.
+**SaaS indie con prezzi $5-$50/mese.** Il taglio di mercato perfetto. Subscription management, license keys, dunning, tasse globali: tutto risolto. Il 5%+50¢ è un costo accettabile.
 
-**Lemon Squeezy supporta usage-based billing?**
-Sì, con metering automatico. Il cliente paga in base all'uso reale (es. "X euro per 1000 chiamate API").
+**Corsi online e cohort-based programs.** Vendor di corsi che vendono a clienti internazionali. Checkout ospitato, gestione studenti, integrazione con piattaforme esterne via webhook.
 
-### Cosa ci aspettiamo da Lemon Squeezy nei prossimi mesi
+**Plugin e temi WordPress, software desktop, asset digitali.** Vendor che vendono licenze una tantum o annuali. License key generation, activation tracking, e protezione da chargeback per licensing dispute.
+
+**Template, UI kit, design asset.** Venditori individuali su Gumroad che passano a Lemon Squeezy per avere merchant of record e tasse gestite.
+
+**Indie developer su AppSumo o Product Hunt launch.** Quando lanci un prodotto e hai bisogno di checkout pronto in 5 minuti senza setup tecnico.
+
+**Studios e freelance che vendono servizi ricorrenti.** Subscription mensile per manutenzione, retainer, o servizi a canone. Lemon Squeezy gestisce la fatturazione, tu gestisci il lavoro.
+
+### Casi in cui Lemon Squeezy non è la scelta giusta
+
+**Se stai costruendo un marketplace.** Multi-vendor richiede Connect-like, e Lemon Squeezy non lo è. Stripe Connect, Adyen for Platforms.
+
+**Se devi fatturare in valuta locale come entità locale.** Se devi emettere fatture italiane con partita IVA italiana, devi avere una SRL italiana, e Lemon Squeezy non ti sostituisce.
+
+**Se il tuo MRR supera i $50k e vuoi negoziare fee.** A quel punto contatti il sales team, ma se non ottieni fee migliori di ~3-4%, potrebbe convenirti Stripe + tax automation.
+
+**Se hai bisogno di compliance specifica di settore.** HIPAA per il medical, PCI-DSS per il gaming con denaro reale, etc. Lemon Squeezy è PCI-DSS per il processing, ma non copre compliance specifiche di settore. Per HIPAA ti serve un BAA, e Lemon Squeezy probabilmente non lo offre.
+
+**Se vendi prodotti che richiedono licenze particolari.** Gambling, armi, software crittografico in certi paesi, prodotti regolamentati. Lemon Squeezy si riserva il diritto di rifiutare categorie specifiche. Verifica i ToS prima di impegnarti.
+
+### Lemon Squeezy vs Paddle vs Gumroad vs Stripe
+
+Il mercato ha diverse opzioni. Le differenze sono sottili e contano.
+
+**Lemon Squeezy vs Paddle.** Sono i due MoR più diretti. Paddle è più enterprise-oriented, ha un tier Pro a $650/mese pensato per SaaS più strutturati, e supporta multi-entity (puoi avere più MoR in paesi diversi per compliance locale). Lemon Squeezy è più indie-friendly, ha un pricing più semplice, e un'affiliate program nativo. Per il 90% degli indie SaaS, sono intercambiabili. Paddle vince su compliance enterprise, Lemon Squeezy vince su semplicità e costi per piccoli volumi.
+
+**Lemon Squeezy vs Gumroad.** Gumroad è il precursore del mercato "MoR per creatori". È più semplice, più adatto a creatori puri (chi vende un singolo ebook o corso), meno a SaaS con subscription. Fee simili (10% flat su Gumroad vs 5%+50¢ su Lemon Squeezy), ma Gumroad ha meno strumenti di subscription management. Se vendi un solo prodotto e non ti serve subscription, Gumroad va bene. Se vendi subscription o licenze, Lemon Squeezy è superiore.
+
+**Lemon Squeezy vs Stripe + tax automation.** Stripe è solo payment processor (non MoR), quindi il vendor è tecnicamente tu. Ma puoi aggiungere Stripe Tax, Quaderno, o TaxJar per automatizzare la tassazione. Il costo totale: 2.9% + 30¢ (Stripe) + $0.5-1.5% (tax automation) = 3.5-4.5%. Più economico del 5% di Lemon Squeezy. Ma devi gestirti la complessità del setup, l'integrazione con il tuo backend, e in certi paesi avrai bisogno di un'entità locale per essere veramente MoR. Per team che hanno già un developer dedicato, Stripe + tax automation è spesso la scelta giusta sopra una certa soglia di volumi.
+
+**Lemon Squeezy vs Stripe Managed Payments.** Stripe ha lanciato Managed Payments, una funzionalità MoR simile a Lemon Squeezy. È in beta, disponibile per un sottoinsieme di clienti, e la roadmap è di migrazione progressiva dei merchant Lemon Squeezy. Se stai pensando a lungo termine e vuoi restare nell'ecosistema Stripe, tienilo d'occhio. Per ora, Lemon Squeezy ha più funzionalità merchant of record mature.
+
+### Setup pratico: da zero a una prima vendita in un'ora
+
+**1. Crea l'account.** Su lemonsqueezy.com, registrazione con email, no carta richiesta. 2 minuti.
+
+**2. Configura il profilo.** Settings → Store. Aggiungi nome dello store, URL (sottodominio o custom), valuta di default, paese fiscale. 10 minuti.
+
+**3. Crea il primo prodotto.** Products → New Product. Definisci nome, descrizione, prezzo. Scegli il tipo (one-time o subscription). Configura variante se necessario. 15 minuti.
+
+**4. Configura il checkout.** Per ogni prodotto, hai un checkout URL. Customizzi i colori, il logo, le opzioni di upsell. 10 minuti.
+
+**5. Testa con un pagamento vero.** Lemon Squeezy ha una modalità test che simula transazioni. Fai un giro, verifica che le email arrivino, che il webhook funzioni (se ne hai configurato uno). 10 minuti.
+
+**6. Integra nel tuo sito.** Aggiungi il link al checkout, o embeddi l'overlay via JS. Per SaaS, configura i webhook per attivare la licenza. 15 minuti.
+
+Totale: un'ora. Hai un prodotto in vendita con tasse, fatturazione, subscription, dunning, e merchant of record attivi. Per un SaaS custom con licenze, aggiungi un'ora per l'integrazione webhook.
+
+### Errori comuni che vedo fare
+
+**Non configurare il webhook correttamente.** Il webhook è dove la vendita diventa attivazione utente. Se lo sbagli, vendi ma non attivi, e l'utente si arrabbia. Testalo con cura. Lemon Squeezy ha un sistema di firma sui webhook per evitare spoofing — usalo.
+
+**Sottovalutare l'impatto del 5%+50¢ su small-ticket.** Se vendi un plugin da $5 una tantum, il 50¢ fisso è il 10% del ricavo. Sommato al 5%, stai dando via il 20%. Per small-ticket products, le fee pesano in modo sproporzionato. Considera bundle, free trials, o piani annuali per alzare il ticket medio.
+
+**Non testare il dunning flow.** Il 20-30% dei mancati pagamenti su subscription è involuntary (carte scadute, fondi insufficienti). Se il tuo dunning è mal configurato, perdi soldi che potresti recuperare. Testa cosa succede quando una carta scade: il cliente riceve l'email? Il retry avviene? La notifica ti arriva?
+
+**Pensare che MoR sostituisca l'accountant.** Lemon Squeezy gestisce le tasse di vendita (sales tax, VAT, GST). Non gestisce le tasse sul reddito della tua azienda (corporate tax, imposta sui redditi delle società). Per quelle ti serve ancora un commercialista. MoR è per il lato "entrate" della fatturazione, non per il lato "profitti" della tua contabilità.
+
+**Ignorare le restrictions geografiche.** Lemon Squeezy ha una lista di paesi a restricted trade. Se i tuoi clienti sono in paesi sanzionati o in settori vietati, le transazioni vengono rifiutate. Verifica i ToS e la restricted countries list prima di promettere vendite globali.
+
+### Il futuro di Lemon Squeezy
 
 Le aree da osservare:
 
-- **Migliore supporto B2B.** Fatturazione con VAT ID, PO number, e termini di pagamento più flessibili.
-- **Espansione geografica del tax handling.** Copertura di nuovi paesi in cui le regole fiscali digitali sono in evoluzione.
-- **Migliore subscription management.** Pause, dunning avanzato, retention flows.
-- **Migliore API e integrazioni.** Per team che vogliono costruire esperienze custom sopra Lemon Squeezy.
+- **Migrazione verso Stripe Managed Payments.** Stripe possiede Lemon Squeezy dal 2024. La roadmap a lungo termine è un consolidamento, ma Lemon Squeezy continua a operare come prodotto indipendente. Tieni d'occhio le comunicazioni ufficiali se sei un merchant esistente.
+- **Tassazione globale e compliance.** Le regole cambiano. EU VAT, UK VAT post-Brexit, sales tax US per stato (alcuni stati stanno introducendo nuove regole per SaaS), GST indiana. Lemon Squeezy si tiene aggiornata. Tu devi assicurarti di avere il setup giusto per il tuo modello.
+- **Funzionalità enterprise.** Al momento Lemon Squeezy è fortemente indie. Se iniziano a investire in SSO, audit log, multi-entity, e compliance enterprise, può diventare una scelta valida anche per SaaS più grandi.
+- **Affiliates e discovery.** Il programma affiliate integrato è una delle feature più distintive. Se lo sviluppano (più analytics, attribution migliore, payout methods aggiuntivi), diventa un canale di crescita interessante.
+
+### Le domande che ci fanno più spesso
+
+**Lemon Squeezy è davvero merchant of record?**
+Sì, e questo è il valore centrale. Il tuo nome non appare sull'estratto del cliente, e Lemon Squeezy si assume le responsabilità fiscali e di chargeback.
+
+**Quanto costa davvero?**
+5% + 50¢ base, ma con international card fee, PayPal fee, recurring fee, e altri add-on, il costo reale è spesso 6-8% per un SaaS con clienti internazionali. Calcola il tuo caso specifico.
+
+**Funziona per SaaS o solo per prodotti digitali?**
+Funziona per entrambi. Il SaaS è supportato nativamente con subscription, license keys, webhook. I prodotti digitali (ebook, template, corsi) sono il caso d'uso originale.
+
+**Posso migrare a Stripe Managed Payments o Paddle?**
+Migrare è sempre possibile ma doloroso: devi re-emettere license keys, re-importare customers, riconfigurare i webhook. Pianifica bene prima di partire.
+
+**C'è un trial?**
+No trial. Crei un account gratis e testi in modalità test prima di andare live. Non c'è costo fino a quando non vendi.
+
+**Posso vendere in valuta diversa dal dollaro?**
+Sì, supportano USD, EUR, GBP, AUD, CAD e altre. Il cliente paga nella sua valuta, tu ricevi in quella che hai configurato, con conversione automatica.
+
+**Come funziona per le società europee con partita IVA?**
+Lemon Squeezy genera fatture con VAT reverse charge per clienti B2B intra-EU, e con VAT normale per clienti finali. Tu fornisci il tuo VAT number, e le fatture ai clienti lo riflettono.
+
+### Alternative da considerare
+
+- **Paddle.** MoR enterprise-oriented, multi-entity, fee comparabili. Adatto per SaaS più strutturati.
+- **Gumroad.** Più semplice, meno adatto a SaaS. Buono per creatori puri.
+- **Stripe + tax automation.** Più economico sopra certi volumi, richiede più setup. Stripe Tax, Quaderno, TaxJar come tax automation.
+- **Stripe Managed Payments.** In beta, da monitorare per la roadmap.
+- **Pabbly Subscription Billing.** Alternativa con fee più basse ma MoR limitato. Buono per mercati a basso volume dove le fee pesano molto.
+- **Chargebee + payment processor.** Per subscription management serio sopra $50k MRR, Chargebee si integra con Stripe, Adyen, Braintree, e aggiunge layer di subscription logic, dunning, e revenue recognition. Non è MoR, è un tool di subscription management.
 
 ### In sintesi
 
-Lemon Squeezy è un merchant of record eccellente per SaaS e prodotti digitali che vogliono vendere internazionale senza gestire la fiscalità. Il pricing è semplice, il checkout è bello, e la copertura fiscale è il vantaggio competitivo principale.
+Lemon Squeezy è una scelta eccellente per indie SaaS, micro-team, e creator che vendono prodotti digitali a clienti internazionali. Il merchant of record vero è il valore centrale, e giustifica le fee superiori rispetto a Stripe puro. Le fee diventano meno convenienti sopra $50-100k MRR, e a quel punto è ragionevole valutare Paddle, Stripe + tax automation, o soluzioni ibride.
 
-Per indie e piccole software house, è uno degli investimenti con ROI più diretto: paghi una percentuale, risparmi ore di lavoro di compliance fiscale. Per enterprise con bisogni complessi, Paddle o Stripe restano preferibili.
+Non è la scelta giusta per tutti, e non è gratis. Ma per il target giusto — un founder con 100 clienti internazionali che non vuole diventare esperto di sales tax — è probabilmente la scelta migliore sul mercato.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Lemon Squeezy** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri merchant of record** nella raccolta dedicata.
-- **Salva Lemon Squeezy nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di Lemon Squeezy** per confrontare con Paddle, Stripe, e altri payment processor.
+- **Esplora la raccolta su pagamenti e billing** per casi d'uso affini.
+- **Salva Lemon Squeezy nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -1702,186 +1929,213 @@ Per indie e piccole software house, è uno degli investimenti con ROI più diret
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/agentxai",
     featured: false,
-    highlights: [
-      'Canvas visuale per agenti con memory, tool use, e multi-step reasoning',
-      'Integrazioni pronte per CRM, helpdesk, e tool di produttività',
-      'Gestione lead con scoring e handoff a umani',
-      'Buon fit per team marketing, sales ops, e customer success',
-    ],
-    details: [
-      'Modelli di agenti riutilizzabili e condivisibili nel team',
-      'Tracciamento delle conversazioni e analisi',
-      'Esportazione delle conversazioni in CRM, fogli Google, o webhook',
-    ],
-    cautions: [
-      'Gli agenti no-code sono potenti ma opachi: il debug può essere frustrante',
-      "La qualità delle risposte dipende dal prompt e dai tool: serve un'iterazione continua",
-      'Per use case molto specialistici, LangChain o build custom restano preferibili',
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa AgentX, in una frase
 
-AgentX è una piattaforma no-code per costruire agenti AI specializzati: definisci l'obiettivo dell'agente, i tool che può usare, e la knowledge base da cui attingere, e l'agente lavora su task reali (qualificazione lead, supporto, automazioni interne) senza che tu scriva una riga di codice.
+AgentX è una piattaforma no-code per costruire agenti AI specializzati e flussi multi-agent — dove l'utente disegna la logica dell'agente in un canvas visuale, configura i tool che l'agente può chiamare, e mette in produzione senza scrivere codice di orchestrazione.
 
-### A chi serve davvero
+Non è un chatbot builder. È un sistema operativo per agenti che vivono dentro processi di business reali: lead qualification, customer support automation, document processing, internal operations.
 
-AgentX non è per chi vuole un chatbot "FAQ". È per chi vuole agenti che lavorano su processi reali:
+### A chi serve davvero, e a chi no
 
-- **Sales e marketing team** che vogliono automatizzare la qualificazione dei lead.
-- **Customer success** che vogliono un primo livello di supporto automatizzato.
-- **Operazioni** che vogliono agenti che gestiscono task interni (es. smistamento email, drafting documenti).
-- **Founder e PM** che vogliono prototipare workflow AI senza overhead engineering.
-- **Team AI di aziende** che vogliono deployare agenti rapidamente senza (o con poca) engineering.
+AgentX è per:
 
-Non è il tool giusto per chi cerca un chatbot conversazionale semplice (per quello, Tidio, Crisp, o Intercom sono più adatti), né per chi ha bisogno di un modello LLM custom con training su dati proprietari (per quello, servono approcci custom).
+**Team marketing e sales ops che vogliono automatizzare lead qualification.** Un agente che legge le submission form, fa enrichment, qualifica, score, e instrada ai sales rep con il contesto completo.
 
-### Come funziona, passo per passo
+**Team customer support che vogliono automare le richieste di primo livello.** Un agente che risponde a FAQ, gestisce richieste standard, e instrada le questioni complesse a umani con tutto il contesto.
 
-Il flusso operativo ha sei fasi.
+**Team operations che vogliono automatizzare processi ripetitivi.** Un agente che legge email, classifica, estrae dati, e li mette in un sistema downstream.
 
-**1. Definizione dello scope dell'agente.** L'utente definisce:
-- Cosa deve fare l'agente (es. "qualificare lead inbound").
-- Con quali dati può lavorare (CRM, knowledge base, web).
-- Quali azioni può compiere (es. "aggiornare il CRM", "inviare email").
-- Quali limiti ha (es. "non può mandare email a clienti esistenti senza conferma umana").
+**Agenzie che costruiscono agenti per clienti.** Il tier Professional include white-label e client workspaces.
 
-**2. Configurazione dei tool.** L'utente configura i tool che l'agente può usare:
-- Ricerca web (Google Search, Bing, Brave Search).
-- CRM (HubSpot, Salesforce, Pipedrive).
-- Email (Gmail, Outlook).
-- Calendar (Google Calendar, Outlook).
-- HTTP requests generici per API custom.
-- Tool di calcolo e trasformazione dati.
+**Team che hanno già provato LangChain/LlamaIndex e vogliono qualcosa di più visuale.** AgentX è "LangChain con una UI e senza il debito tecnico del custom code".
 
-**3. Knowledge base.** L'utente carica documenti (PDF, pagine web, knowledge base interne) che l'agente può consultare per rispondere a domande specifiche. La knowledge base è indicizzata in un vector store e il retriever pesca i chunk rilevanti.
+Non è per:
 
-**4. Prompt e personalità.** L'utente definisce il system prompt, il tono, le regole di escalation a umani, e gli esempi di comportamento atteso.
+**Sviluppatori che vogliono massimo controllo.** Se preferisci scrivere codice Python, LangGraph e CrewAI ti danno più flessibilità. AgentX è per chi vuole velocità, non per chi vuole controllo.
 
-**5. Test e iterazione.** L'utente testa l'agente in un playground, lo sottopone a scenari tipici, e itera sul prompt e sui tool fino a ottenere il comportamento desiderato.
+**Chatbot semplici.** Se ti serve un FAQ bot, non hai bisogno di un agent platform. Typebot, Botpress, o anche un semplice widget AI sono sufficienti.
 
-**6. Deploy.** L'agente è deployato in produzione, con monitoraggio delle conversazioni, KPI, e capacity di intervento umano.
+**Mission-critical senza engineering di guardia.** Come tutti i tool no-code, debugging in produzione è più limitato. Per applicazioni critiche (financial, medical), serve almeno un dev disponibile per intervenire.
 
-:::tip Cosa distingue AgentX da un "chatbot builder"
+**Voice agents.** AgentX è focalizzato su text agents. Per voice, servono tool diversi (Vapi, Retell, Bland).
 
-- **Gli agenti ragionano e agiscono**, non solo rispondono. Possono fare ricerche, chiamare API, aggiornare dati.
-- **L'orchestrazione multi-tool è nativa.** Un agente può usare 5-10 tool in sequenza per completare un task.
-- **L'escalation a umani è integrata.** L'agente sa quando fermarsi e chiedere conferma.
+### Architettura: come è fatto un agente in AgentX
 
-Queste differenze sono ciò che rende AgentX utile per task reali, non solo per FAQ.
+L'architettura di AgentX ha quattro elementi fondamentali.
 
-:::
+**Agenti.** Un agente è un'unità autonoma con un ruolo definito, un prompt che ne stabilisce personalità e obiettivi, un set di tool che può chiamare, e una memoria opzionale. Esempi:
+- "Sales Qualifier" — agisce come un sales rep, qualifica lead, pone domande, score
+- "Document Processor" — riceve documenti, li estrae, li classifica, li struttura
+- "Customer Support" — risponde a domande, consulta knowledge base, instrada quando serve
 
-### Le metriche chiave di un agente
+**Tools.** I tool sono le "azioni" che l'agente può compiere. Includono:
+- HTTP request (chiamare qualsiasi API)
+- Database query (PostgreSQL, MySQL, MongoDB)
+- CRM integration (HubSpot, Salesforce, Pipedrive)
+- Document processing (PDF, Word, Excel)
+- Email/Slack notification
+- Custom tool (definisci tu cosa l'agente può fare)
 
-Una volta in produzione, AgentX traccia:
+**Memoria.** L'agente può ricordare conversazioni passate (short-term memory, entro una sessione) e informazioni strutturate (long-term memory, su un database). La memoria long-term è utile per agenti che gestiscono lead nel tempo.
 
-- **Tasso di completamento** (task risolti senza escalation).
-- **Tempo medio di risoluzione**.
-- **Tasso di escalation a umani**.
-- **Qualità delle risposte** (via feedback utente o via eval automatiche).
-- **Costo per conversazione** (basato su token LLM consumati).
-- **KPI specifici del task** (es. per lead qualification: "lead qualificati", "conversion rate").
+**Flussi multi-agent.** Più agenti che collaborano. Un "supervisor" instrada richieste a sotto-agenti specializzati. È il pattern adatto per workflow complessi dove un singolo agente non basta.
 
-L'utente può esportare i dati per analisi o creare dashboard custom.
+Il pattern operativo è: l'utente disegna l'agente in canvas, configura tool e memoria, testa con eval, deploya. L'agente gira come servizio, riceve input via API o widget, e restituisce output strutturato.
 
-### Casi d'uso concreti
+### Il sistema di crediti, spiegato onestamente
 
-:::pro Quando AgentX fa la differenza
+AgentX usa un sistema di crediti per l'AI usage. Ogni interazione consuma crediti, e il numero dipende dal modello usato.
 
-- **Qualificazione lead inbound.** L'agente legge le richieste, le analizza contro il CRM, e assegna uno score di qualificazione. I lead qualificati vanno al sales rep, gli altri vanno a nurture.
-- **Customer support di primo livello.** L'agente risponde alle FAQ, risolve i casi semplici, e scala a umani per i casi complessi.
-- **Onboarding clienti.** L'agente invia email di benvenuto, raccoglie informazioni, schedula kickoff call.
-- **Ricerca e sintesi.** L'agente fa ricerche su temi specifici e produce report.
-- **Drafting documenti.** L'agente prepara bozze di email, proposte, report, a partire da template e dati.
-- **Operazioni interne.** Smistamento email, estrazione dati da PDF, aggiornamento CRM, generazione report.
+**Modelli e costi (verificati luglio 2026):**
+- GPT-4o: 10 crediti per interazione
+- Claude Sonnet: 12 crediti per interazione
+- Gemini Pro: 8 crediti per interazione
+- Claude Haiku: 3 crediti per interazione
 
-:::
+**Tier (verificati luglio 2026):**
 
-:::warning Quando AgentX non è la scelta giusta
+- **Free, $0/mese.** Per chi vuole esplorare. Include valutazione base, support community.
+- **Starter, non pubblicato direttamente sul pricing page ufficiale, parte da $99/mese.** Include deploy in produzione, flussi multi-agent, API access.
+- **Professional, $199/mese annuale ($1.490/anno).** Include fino a 25 agenti, 10.000 crediti/mese, white-label deployment, client workspaces, 2 seat inclusi. Adatto a team che costruiscono per clienti.
+- **Business, $299/mese annuale ($2.990/anno).** Unlimited workspaces, unlimited agenti, 20.000 crediti/mese, priority support, priority SLA. Adatto a agency.
+- **Enterprise, custom.** Unlimited tutto, custom credit volume, on-premise option, dedicated infrastructure.
 
-- **Vuoi un chatbot FAQ semplice.** Per quello, Tidio, Crisp, o Intercom bastano.
-- **Hai bisogno di un LLM custom con training su dati proprietari.** Servono approcci custom (fine-tuning, RAG avanzato).
-- **Hai requisiti di compliance stringenti** (HIPAA, GDPR ristretto, ecc.). Verifica le policy di AgentX prima di usarlo per dati sensibili.
-- **Il task è troppo semplice.** Se è una singola domanda-risposta, l'agent framework è overkill.
+**Overages:** $10 per 1.000 crediti extra su Professional e Business. Per agenti in produzione con volumi alti, il costo dei crediti può superare il tier.
 
-:::
+**Costo totale realistico:** un agente in produzione che gestisce 1.000 lead/mese con GPT-4o consuma 10.000 crediti/mese. Su Professional, il tier include quei crediti, ma se l'agente fa tool calls (ognuna potenzialmente un'interazione extra), il consumo sale.
 
-### AgentX vs i concorrenti diretti
+**Regola pratica:** budget realistico per un deployment in produzione è 2-3x il tier base, per coprire overage e modelli più potenti.
 
-**AgentX vs LangChain / Flowise.** LangChain e Flowise sono framework "general purpose" per costruire applicazioni AI. Richiedono competenze tecniche (Python/JS per LangChain, base tecnica per Flowise). AgentX è più "business user friendly", con UI che astrae la complessità dell'orchestrazione. Per developer che vogliono massimo controllo, LangChain. Per business user che vogliono velocità, AgentX.
+### Le feature chiave in profondità
 
-**AgentX vs Voiceflow.** Voiceflow è focalizzato su chatbot conversazionali (con un focus su voice / IVR). AgentX è più orientato ad agenti che eseguono task. Per chatbot conversazionali, Voiceflow. Per agenti task-oriented, AgentX.
+**Canvas visuale.** L'interfaccia per disegnare agenti. Nodi per LLM, tool, memoria, condizioni. Connessioni type-checked. È la feature centrale che differenzia AgentX da soluzioni solo-code.
 
-**AgentX vs Botpress.** Botpress è un competitor diretto, con canvas simile. La differenza è di posizionamento: Botpress è più "chatbot-first", AgentX è più "agent-first". Per chatbot complessi, Botpress. Per agenti task-oriented, AgentX.
+**Model-agnostic.** Supporta OpenAI, Anthropic, Google, e modelli custom via OpenAI-compatible API. Non sei lockato a un vendor.
 
-**AgentX vs Lindy.ai.** Lindy è un competitor recente, con un approccio simile (agenti no-code per task reali). La differenza è di prezzo, di template, e di integrazioni. Confronta per il tuo caso d'uso specifico.
+**Memory strutturata e conversazionale.** Short-term per la sessione corrente, long-term per la conoscenza persistente. La long-term memory è il vantaggio competitivo per agenti che gestiscono relazioni nel tempo (lead, customer success, support tickets).
 
-**AgentX vs Relevance AI.** Relevance AI è un altro competitor, con un focus su "AI workforce" (agenti che lavorano su task di team). Posizionamento simile, target simile. La scelta dipende spesso da test specifici sul tuo caso d'uso.
+**API e widget.** Ogni agente è esposto via API REST. Widget embeddable per siti web. SDK per integrazioni custom.
 
-### Pricing di AgentX
+**Multi-agent workflows.** Più agenti che collaborano, con un agente principale che orchestra. Pattern utile per workflow complessi.
 
-AgentX ha un modello freemium con limiti sulle esecuzioni, e tier a pagamento basati su volumi e funzionalità:
+**Evaluation framework.** Su Business e superiori, valutazione strutturata: agent risk mapping, custom datasets, multi-run testing, performance benchmarks. È la feature che distingue deployment POC da produzione.
 
-- **Free tier**: limitato a poche centinaia di esecuzioni al mese, utile per test.
-- **Pro**: più esecuzioni, più tool, supporto base.
-- **Business**: esecuzioni illimitate (o volumi alti), collaboration, supporto prioritario, SLA.
+**White-label deployment.** Su Professional. Puoi deployare l'agente con il tuo brand, non "Powered by AgentX".
 
-I prezzi pubblicati variano. Indicativamente, il tier Pro parte da 30-50 €/mese, e il tier Business da 200-500 €/mese per uso moderato. Per volumi enterprise, custom pricing.
+**Client workspaces.** Su Professional. Multi-tenant: ogni cliente vede solo i suoi agenti e dati.
 
-### Flusso pratico: un caso reale
+### Quando AgentX ha senso, e quando no
 
-Sofia è head of marketing in una scaleup B2B. Vuole automatizzare la qualificazione dei lead inbound che arrivano via form sul sito e via email.
+**Ha senso:** team non-engineering che vogliono automatizzare processi ripetitivi con AI, agenzie che costruiscono agenti per clienti, team che hanno già provato soluzioni custom e vogliono accelerare.
 
-**Settimana 1:** setup. Sofia definisce l'agente "Lead Qualifier" con scope, tool (CRM HubSpot, Google Search, email), e knowledge base (casi studio, descrizione prodotti, ICP).
+**Non ha senso:** se sei un dev Python e vuoi massimo controllo (LangGraph), se ti serve solo un FAQ bot (Typebot, Botpress), se hai requisiti di voice o vision specializzati, se il tuo budget è <$200/mese.
 
-**Settimana 2:** addestramento. Sofia testa l'agente su 50 lead storici, ne verifica le risposte, e itera sul prompt.
+**Caso borderline:** se il tuo team ha competenza tecnica ma vuole accelerare il time-to-market, AgentX è un buon compromesso. Paghi un premium rispetto al self-hosting open source, ma risparmi settimane di sviluppo.
 
-**Settimana 3:** deploy. L'agente è live: legge le nuove richieste, fa ricerche sul lead, scrive uno score, aggiorna HubSpot, e risponde al lead con un'email personalizzata. Per lead qualificati (score > 70), notifica il sales rep.
+### AgentX vs LangGraph vs CrewAI vs Botpress vs Vapi
 
-**Mese 2:** risultati. Sofia e il sales lead misurano: lead qualificati al mese passati da 30 a 80, tempo di risposta ai lead passato da 24 ore a 2 ore, e il team sales può focalizzarsi sui lead caldi.
+**AgentX vs LangGraph.** LangGraph è un framework Python per agenti. Massimo controllo, massima flessibilità, ma richiede Python expertise e tempo di sviluppo. AgentX è no-code con canvas. Per team con Python, LangGraph è superiore. Per team senza Python, AgentX è l'unica opzione realistica.
 
-ROI: il costo di AgentX (50-100 €/mese) è enormemente inferiore al costo di un SDR part-time.
+**AgentX vs CrewAI.** CrewAI è un framework Python specializzato in multi-agent. Più focalizzato di LangGraph su flussi con ruoli. Buono per il pattern "team di agenti con personalità diverse". AgentX offre lo stesso pattern con canvas visuale.
+
+**AgentX vs Botpress.** Botpress è un chatbot builder con focus su customer support. Meno flessibile per logiche complesse, più semplice per FAQ bot. Se il tuo caso d'uso è solo customer support FAQ, Botpress è più economico. Se devi fare workflow complessi, AgentX è superiore.
+
+**AgentX vs n8n AI.** n8n è un automation tool general-purpose con nodi AI. Più ampio (puoi fare qualsiasi automation), meno specializzato per agenti. Per team che fanno automazioni miste (AI + API + DB), n8n è più versatile. Per agenti puri, AgentX è più focalizzato.
+
+**AgentX vs Flowise.** Flowise è open source, self-hostable, simile per visual agent building. Per team con competenza DevOps, Flowise è significativamente più economico. Per team che vogliono managed hosting, AgentX è più accessibile.
+
+**AgentX vs Vapi / Retell / Bland.** Questi sono voice agent platforms. AgentX non fa voice. Sono mercati diversi.
+
+### Casi d'uso reali
+
+**Lead qualification per SaaS B2B.** Agente che riceve form submissions, fa enrichment via Clearbit o Apollo, qualifica con framework BANT o MEDDIC, score, e instrada a sales rep con il contesto completo. Risparmio: 5-10 ore/settimana per sales rep.
+
+**Customer support tier 1.** Agente che gestisce FAQ, reset password, status ordini, e instrada questioni complesse a umani. Riduzione del 40-60% del volume al support team umano.
+
+**Document processing per finance.** Agente che riceve fatture, le legge, estrae dati strutturati, li mette in un sistema ERP. Sostituisce data entry manuale.
+
+**Internal HR assistant.** Agente che risponde a domande su policy aziendali, leave, benefits, basandosi su documenti HR interni.
+
+**Sales enablement.** Agente che conosce le schede prodotto, casi studio, objection handling. Il sales rep chiede contesto e l'agente fornisce.
+
+**Research automation.** Agente che fa market research, aggrega dati, genera report strutturati.
+
+### Setup pratico: da zero a un agente in produzione in una settimana
+
+**1. Crea l'account.** Su agentx.so, signup. 5 minuti.
+
+**2. Configura il primo agente.** "Agents" → "New". Definisci ruolo, prompt, tool iniziali. 30 minuti.
+
+**3. Testa con eval.** "Evaluations" → "Run". Usa un dataset di 10-20 esempi rappresentativi. Verifica qualità. 30 minuti.
+
+**4. Configura integrazioni.** Collega CRM, database, API esterne che l'agente userà. 1-2 ore.
+
+**5. Deploy.** "Deploy to Production". L'agente è ora accessibile via API o widget. 5 minuti.
+
+**6. Monitoring.** Configura logging, alerting su error rate, dashboard per quality metrics. 1 ora.
+
+**7. Iterazione basata su dati reali.** Dopo 1-2 settimane di produzione, analizza le conversazioni, identifica failure modes, raffina prompt e tool. Continuo.
+
+In una settimana hai un agente POC-ready. In un mese, un agente production-grade. In tre mesi, un agente che evolve con dati reali.
+
+### Errori comuni
+
+**Sottovalutare la qualità del prompt.** Il prompt determina il 70% della qualità. Iterazioni multiple, A/B test, review con eval sono necessari.
+
+**Tool troppi.** Dare all'agente 20 tool aumenta le possibilità di scelte sbagliate. Meglio 5-8 tool focalizzati.
+
+**Nessuna valutazione strutturata.** "Funziona" non è una metrica. Senza eval dataset e metric tracking, stai lavorando al buio.
+
+**Deploy senza monitoring.** In produzione senza logging, il primo bug ti arriva dall'utente. Sempre monitoring e alerting.
+
+**Sottovalutare il costo modello.** Un agente con tool calls e memoria può consumare più crediti del previsto. Modella il costo prima del deploy, non dopo.
 
 ### Le domande che ci fanno più spesso
 
-**AgentX è difficile da configurare?**
-La UI è no-code, ma il setup non è banale: serve definire bene scope, tool, e prompt. Per un task semplice, 1-2 giorni. Per un task complesso, 1-2 settimane.
+**AgentX è meglio di LangGraph?**
+Per chi non è Python developer, sì. Per Python developer, LangGraph è superiore per flessibilità.
 
-**Quanto costa?**
-Il pricing è a tier, a partire da 30-50 €/mese per il Pro, fino a 200-500 €/mese per il Business. Per volumi enterprise, custom pricing.
+**Quanto costa in produzione?**
+Tier Professional a $199/mese + ~$100-200 di overage crediti per agenti in produzione reali. Total: $300-400/mese per un deployment medio.
 
-**AgentX può gestire dati sensibili?**
-Verifica le policy di sicurezza e compliance. Per dati sanitari (HIPAA) o finanziari (PCI), potresti aver bisogno di un piano enterprise o di un tool self-hosted.
+**Posso usarlo per voice agents?**
+No, AgentX è text-only. Per voice, Vapi, Retell, Bland.
 
-**Gli agenti possono fare danni?**
-Sì. Un agente con accesso a un CRM può modificare record, inviare email, cancellare contatti. Servono guardrail: conferma umana per azioni sensibili, audit log, e limiti di azione per agente.
+**Posso deployare on-premise?**
+Solo su Enterprise. Self-hosted open source alternative: Flowise, LangFlow.
 
-**Posso integrare AgentX con il mio stack?**
-Sì, con API e webhook. Per stack complessi, la fase di integrazione è la parte più time-consuming.
+**Supporta MCP?**
+Sì, AgentX supporta Model Context Protocol per collegare tool esterni.
 
-**AgentX è un competitor di ChatGPT Enterprise?**
-No, sono complementari. ChatGPT Enterprise è un'interfaccia AI per uso interno. AgentX è una piattaforma per costruire agenti task-oriented. Si possono usare insieme: ChatGPT per assistenza, AgentX per automazione.
+**Funziona per chatbot customer support semplici?**
+Sì, ma è sovradimensionato. Per solo FAQ, Botpress o Typebot sono più economici.
 
-### Cosa ci aspettiamo da AgentX nei prossimi mesi
+### Alternative da considerare
 
-Le aree da osservare:
-
-- **Migliore debugging degli agenti.** Log più ricchi, replay delle conversazioni, identificazione di failure mode.
-- **Multi-agent orchestration.** Agenti che collaborano tra loro su task complessi.
-- **Migliore supporto per tool complessi.** Integrazioni più profonde con CRM, ERP, e tool di produttività.
-- **Enterprise features.** SSO, audit log, role-based access, on-prem option.
+- **LangGraph / LangChain.** Per Python developer che vogliono massimo controllo.
+- **CrewAI.** Per multi-agent con personalità, Python-first.
+- **Flowise.** Open source, self-hosted, gratuito. Per team con DevOps.
+- **Botpress.** Più semplice, più economico per FAQ bot.
+- **n8n AI.** General automation, versatile ma meno specializzato.
+- **Voiceflow.** Per team con focus su conversational UX.
+- **Build custom con OpenAI Assistants API.** Massimo controllo, massimo sforzo.
 
 ### In sintesi
 
-AgentX è una piattaforma solida per costruire agenti AI no-code, utile per team che vogliono automatizzare task reali senza overhead engineering. Non è per chatbot semplici, e non sostituisce un approccio custom per use case specialistici.
+AgentX è una piattaforma solida per team non-engineering che vogliono costruire agenti AI in produzione. Il pricing è medio-alto ma giustificato per il valore. Il canvas visuale è uno dei migliori sul mercato. Le limitazioni principali sono: lock-in al sistema di crediti, voice non supportato, e complessità che richiede pratica per essere sfruttata appieno.
 
-Per team che vogliono velocità e ROI rapido su task ripetitivi, è uno degli investimenti con ritorno più diretto. Per use case mission-critical, serve un approccio custom.
+Per il target giusto — team che vogliono velocità + qualità senza scrivere codice — è una delle scelte migliori. Per il target sbagliato — Python developer che vuole controllo, o team che vuole solo FAQ bot — ci sono alternative migliori.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di AgentX** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altre piattaforme agenti** nella raccolta dedicata.
-- **Salva AgentX nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di AgentX** per confrontare con LangChain, Flowise, e altri agent builder.
+- **Esplora la raccolta su agenti AI** per casi d'uso affini.
+- **Salva AgentX nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -1900,196 +2154,232 @@ Per team che vogliono velocità e ROI rapido su task ripetitivi, è uno degli in
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/omi-app-ai",
     featured: false,
-    highlights: [
-      'Wearable che trascrive e riassume le conversazioni in tempo reale',
-      'Open source, con app companion e integrazioni (Notion, Apple Notes, Obsidian)',
-      "Memoria ricercabile: chiedi a Omi 'cosa ho detto della conferenza di giovedì'",
-      'Buon fit per executive, freelancer, persone con ADHD o memory challenges',
-    ],
-    details: [
-      'Hardware compatto, aggancio magnetico o clip',
-      'Trascrizione on-device o cloud (configurabile)',
-      'AI assistant conversazionale integrato',
-    ],
-    cautions: [
-      'Registrare conversazioni di terzi senza consenso è illegale in molte giurisdizioni',
-      'La precisione della trascrizione varia con accenti, rumore ambientale, lingue',
-      'La batteria dura un giorno: va ricaricato quotidianamente',
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa Omi, in una frase
 
-Omi è un wearable AI open source che si aggancia al collo o all'orecchio, ascolta le conversazioni, le trascrive, le riassume, e le organizza in una memoria ricercabile a cui puoi chiedere "cosa ho detto della conference X la settimana scorsa?".
+Omi è un dispositivo wearable che ascolta le tue conversazioni, le trascrive in tempo reale, genera riassunti strutturati, e ti permette di cercare nella tua memoria conversazionale — un "secondo cervello" ambient che vive appeso al collo.
 
-### A chi serve davvero
+Non è un registratore vocale. Non è un'app di note con AI. È un dispositivo di memoria personale continua che richiede decisioni consapevoli su privacy, consenso sociale, e data ownership.
 
-Omi non è per chi cerca uno smart speaker o un assistente vocale generico (per quello, Alexa, Google Assistant, Siri). È per chi vuole catturare e ritrovare informazioni dalla vita reale:
+### A chi serve davvero, e a chi no
 
-- **Executive e founder** che hanno decine di conversazioni al giorno e vogliono un "secondo cervello" che le ricorda.
-- **Studenti e ricercatori** che seguono lezioni, seminari, e conversazioni informali che vogliono ritrovare.
-- **Persone con ADHD o memory challenges** che hanno bisogno di un sistema esterno per ricordare commitments, idee, e dettagli.
-- **Giornalisti, autori, content creator** che vogliono catturare conversazioni e idee in mobilità.
-- **Manager e coach** che vogliono riascoltare conversazioni con i collaboratori per individuare pattern.
+Omi è per:
 
-Non è il tool giusto per chi cerca un dispositivo medico, per chi ha bisogno di un assistente vocale "passivo" (Alexa), o per chi vuole registrare conversazioni senza consenso (illegale in molte giurisdizioni).
+**Knowledge worker con molte conversazioni.** Manager, consultant, recruiter, giornalisti, avvocati, medici, accademici. Chi passa la giornata in conversazioni che contengono informazioni utili da ricordare.
 
-### Come funziona, passo per passo
+**Persone con difficoltà di memoria o attenzione.** Chi dimentica commitments presi a voce, chi perde dettagli di conversazioni, chi ha ADHD o altri disturbi dell'attenzione.
 
-Il flusso operativo ha cinque fasi.
+**Developer e tinkerer.** Omi ha un Dev Kit 2 con API, MCP support, custom speech-to-text, e local mode. Per chi vuole costruire integrazioni custom, è una piattaforma, non solo un prodotto.
 
-**1. Aggancio del dispositivo.** Omi si aggancia al collo (con un supporto magnetico) o all'orecchio (con una clip). È un dispositivo piccolo, leggero, con microfoni multipli per catturare l'audio ambientale.
+**Studenti e ricercatori.** Per prendere appunti durante lezioni, seminari, e discussioni. Le note sono strutturate automaticamente e ricercabili.
 
-**2. Connessione all'app companion.** L'utente installa l'app Omi (iOS, Android, e prossimamente desktop), connette il dispositivo via Bluetooth, e configura le preferenze (frequenza di trascrizione, lingue, integrazioni).
+**Pazienti con patologie che compromettono la memoria.** L'uso medico di Omi è documentato per pazienti con trauma cranico, dementia early-stage, e altre condizioni dove la registrazione passiva è utile.
 
-**3. Trascrizione in tempo reale.** Mentre l'utente parla (o ascolta una conversazione), Omi trascrive l'audio in tempo reale, con speaker identification (chi sta parlando). La trascrizione può avvenire:
-- **On-device**: privacy massima, ma qualità inferiore per lingue rare o accenti.
-- **Cloud**: qualità superiore, ma i dati lasciano il dispositivo.
+Non è per:
 
-**4. Riassunto e organizzazione.** L'AI di Omi riassume le conversazioni, estrae i punti chiave, identifica i "to-do" menzionati, e organizza tutto in una timeline ricercabile.
+**Chiunque abbia conversazioni private con partner, amici, o familiari.** Omi registra anche quelle. La questione del consenso è reale, non teorica.
 
-**5. Query conversazionale.** L'utente può chiedere a Omi, in linguaggio naturale, di ritrovare informazioni passate: "Cosa ha detto Marco del pricing?", "Quali sono le scadenze di questa settimana?", "Riassumi la riunione di giovedì".
+**Professioni regolate con segreto professionale.** Medici, avvocati, psicologi: le conversazioni con pazienti/clienti sono confidenziali per legge. Registrarle senza consenso esplicito può violare leggi e codici deontologici.
 
-:::tip Cosa distingue Omi da un "registratore vocale"
+**Chi lavora in ambienti ad alta sicurezza.** Molti uffici governativi, militari, e di ricerca proibiscono dispositivi di registrazione. Omi è esattamente quello.
 
-- **Omi capisce il contesto**, non solo trascrive. Identifica speaker, estrae to-do, organizza per argomento.
-- **Omi ha una memoria ricercabile** con AI conversazionale. Alexa e Siri richiedono query esplicite; Omi capisce domande complesse.
-- **Omi è open source.** Il firmware e l'app possono essere ispezionati, customizzati, e self-hosted. Per chi ha requisiti di privacy, questo è un vantaggio enorme.
-- **Omi si integra con tool di produttività.** Notion, Obsidian, Apple Notes, Google Calendar: le trascrizioni e i riassunti finiscono dove l'utente li usa.
+**Chi ha già un sistema che funziona.** Se sei soddisfatto del tuo Note taker (Notion AI, Reflect, Obsidian con voice), Omi non ti darà un salto di qualità sufficiente per giustificare il costo e le complicazioni.
 
-:::
+### Cosa registra, e cosa no
 
-### Le funzionalità chiave di Omi
+Omi è un microfono ambient, sempre attivo. Registra tutto ciò che sente nel raggio di azione del microfono MEMS, che è progettato per captare voci a distanza di conversazione normale (1-2 metri).
 
-**Trascrizione continua.** Omi può trascrivere per ore senza interruzione, con batteria che dura un giorno intero. La trascrizione è segmentata per conversazione, e identificata per speaker.
+**Registra:** conversazioni con altre persone, riunioni, lezioni, telefonate in vivavoce, conversazioni al ristorante con amici, monologhi in solitudine. Tutto ciò che il microfono capta.
 
-**Speaker identification.** Omi identifica chi sta parlando, e può essere addestrato a riconoscere voci specifiche (utile per executive che hanno conversazioni con collaboratori abituali).
+**NON registra:** telefonate private (Omi non ha sensore di conduzione per le chiamate appoggiate all'orecchio), audio ad alta fedeltà per podcast o musica (la qualità è pensata per trascrizione, non per ascolto), audio sub-vocale o pensieri silenziosi.
 
-**Riassunti automatici.** Per ogni conversazione, Omi genera un riassunto dei punti chiave, delle decisioni prese, e dei to-do menzionati.
+La trascrizione avviene in tempo reale sull'app companion via Bluetooth. Il modello AI che genera i riassunti e le "memories" gira sul cloud Omi (o in locale, in local mode). Ogni "memory" è una porzione di conversazione che Omi ha identificato come significativa.
 
-**Query conversazionale.** "Cosa ho detto ieri sulla strategia di pricing?" — Omi cerca nella memoria, trova la conversazione rilevante, e risponde con un riassunto.
+### La questione del consenso: non aggirabile
 
-**Integrazioni.** Omi si integra con Notion, Obsidian, Apple Notes, Google Calendar, e altri tool. Le trascrizioni e i riassunti possono essere esportati automaticamente.
+Questo è il punto più importante dell'articolo, e la ragione per cui Omi non è per tutti.
 
-**On-device e cloud.** L'utente sceglie dove avviene l'elaborazione. Per dati sensibili, on-device è l'opzione (con limiti di qualità).
+In molte giurisdizioni, registrare una conversazione senza il consenso di tutti i partecipanti è illegale. In Italia, l'articolo 617 del Codice Penale punisce le intercettazioni non autorizzate. In California (two-party consent), serve il consenso di tutte le parti. In altri paesi, le leggi variano.
 
-### Casi d'uso concreti
+Ma la legge è solo una parte del problema. C'è anche la questione del consenso sociale.
 
-:::pro Quando Omi fa la differenza
+Quando un collega, un amico, o un familiare si rende conto che stai registrando la conversazione, la dinamica cambia. Le persone filtrano, diventano più formali, o rifiutano di parlare. L'uso di Omi in contesti sociali è una decisione che ha conseguenze relazionali.
 
-- **Executive che ha 10+ conversazioni significative al giorno** e vuole un sistema per ricordarle.
-- **Studente che segue lezioni universitarie** e vuole trascrizioni e riassunti su cui studiare.
-- **Ricercatore che partecipa a conferenze** e vuole registrare le conversazioni con altri ricercatori.
-- **Manager che vuole riascoltare 1:1** con i collaboratori per individuare pattern (es. "cosa chiede sempre Luca?").
-- **Persona con ADHD che ha bisogno di un "secondo cervello"** esterno.
-- **Content creator che cattura idee in mobilità** e le vuole trasformare in post, articoli, video.
+**Omi ha una funzione "consenso esplicito"** che richiede di dichiarare "Omi sta registrando" prima di iniziare una conversazione registrata. È un'ottima feature. Ma in pratica, la maggior parte degli utenti lo lascia in modalità always-on, e si affida al fatto che il dispositivo è piccolo e spesso non notato.
 
-:::
+**Il mio parere editoriale:** se usi Omi in contesti dove la registrazione è appropriata (riunioni di lavoro con colleghi che sanno che registri, lezioni con professore che acconsente, interviste con consensi firmati), è uno strumento potente. Se lo usi per registrare conversazioni private senza il consenso esplicito di tutti i partecipanti, stai violando la privacy delle persone. Non è una zona grigia.
 
-:::warning Quando Omi non è la scelta giusta
+### Privacy e data ownership: cosa fa Omi, e cosa no
 
-- **Non puoi (o non vuoi) registrare le conversazioni.** In molte giurisdizioni, registrare senza consenso è illegale.
-- **Hai bisogno di un assistente vocale "passivo"** (sveglia, meteo, musica). Per quello, Alexa o Google Assistant.
-- **Hai bisogno di trascrizione medica o legale** con standard di precisione e certificazione specifici. Per quello, servono tool verticali.
-- **Lavori in un ambiente rumoroso.** La precisione di Omi cala significativamente in ambienti con molto rumore di fondo.
-- **Hai bisogno di privacy assoluta.** Anche on-device, Omi cattura audio. Per chi ha bisogno di "no recording", meglio non usarlo.
+Omi ha una narrativa forte su privacy. Verifichiamola onestamente.
 
-:::
+**Cosa Omi fa bene:**
 
-### Omi vs i concorrenti diretti
+- **Encryption AES-256 at rest, TLS in transit.** Standard industriale.
+- **SOC 2 e HIPAA compliance.** Significativo per uso enterprise e medical.
+- **Local/cloud-free mode.** Su Omi Basic, i dati restano locali sul telefono. È la modalità più privacy-friendly.
+- **Delete/export controls.** L'utente può cancellare o esportare tutti i dati in qualsiasi momento.
+- **No training on user data.** Omi dichiara esplicitamente di non usare i dati utente per addestrare modelli.
+- **Open source firmware.** Il firmware è open source, verificabile.
 
-**Omi vs Rewind.ai (ora Limitless).** Limitless è un competitor diretto, con un approccio simile (wearable + AI + memory). La differenza: Limitless è più "consumer-first", Omi è più "open source" e customizzabile. Per developer e maker, Omi è preferibile. Per consumer che vuole "funziona subito", Limitless.
+**Cosa Omi NON fa:**
 
-**Omi vs Plaud Note.** Plaud Note è un dispositivo simile (registratore AI indossabile), con un focus su "registrazione discreta" e trascrizione. Plaud è più "consumer", Omi è più "maker" e open source. La scelta dipende dal profilo tecnico.
+- **Non è veramente "no subscription".** Omi Basic è gratis con 1.200 minuti di cloud listening/mese. Se superi, o vuoi transcription illimitata, ti serve Unlimited ($19/mese o $199/anno). Le transcrizioni in local mode sono illimitate ma locali — non puoi usarle per query semantiche che richiedono cloud.
+- **Non protegge da registrazioni accidentali.** Se dimentichi di disattivare in una conversazione privata, registra.
+- **Non anonimizza automaticamente le voci.** Le registrazioni contengono la voce di chi parla, identificabile.
+- **Non è immune da data breach.** Omi è SOC 2, non è immune da attacchi. I dati sono cifrati at rest, ma se le chiavi sono compromesse, la protezione salta.
 
-**Omi vs Otter.ai.** Otter è focalizzato sulla trascrizione di meeting (Zoom, Google Meet), non sulla vita reale. Omi è per catturare conversazioni di vita reale, Otter è per meeting strutturati. Sono complementari, non concorrenti diretti.
+**Per la maggior parte degli utenti, il setup giusto è:** Omi Basic per uso personale, con consensi espliciti per ogni conversazione registrata, e review periodica delle "memories" per cancellare quelle sensibili.
 
-**Omi vs Heyday (ora chiuso).** Heyday era un'app che faceva memory augmentation catturando lo schermo. È un approccio diverso: cattura digitale, non fisica. Omi è per il mondo fisico.
+### Pricing, spiegato onestamente
 
-**Omi vs Alexa / Google Assistant.** Sono assistenti vocali "passivi" (rispondono a query). Omi è un "proactive memory" (cattura e organizza continuamente). Use case diversi.
+Omi ha un modello ibrido: hardware + subscription.
 
-### Privacy e consenso
+**Hardware.** Omi Dev Kit 2 a $89 (prezzo di pre-order al momento). Include il dispositivo, custodia in silicone, lanyard, caricatore USB-C magnetico. È un prezzo entry-level per un wearable AI — competitivo vs Plaud Note ($179), Limitless Pendant ($99), Friend ($129).
 
-**Omi registra audio**. Questo ha implicazioni serie:
+**Omi Basic (gratis incluso con l'hardware).** 1.200 minuti di cloud listening/mese, transcription illimitata, AI summaries, memories. Le registrazioni locali non contano nei minuti cloud. Quando esaurisci i minuti cloud, le registrazioni continuano locali ma non vengono processate per AI.
 
-- In molte giurisdizioni (EU, alcuni stati US, UK), registrare conversazioni di terzi senza consenso è illegale.
-- Omi ha un LED visibile che segnala la registrazione, ma spetta all'utente informare gli altri.
-- On-device riduce il rischio (i dati non lasciano il dispositivo), ma la registrazione avviene comunque.
+**Omi Unlimited, $19/mese o $199/anno.** Unlimited cloud transcription, advanced AI summaries, custom note templates, priority support. Year-one total: $378 con annual billing, $407 con monthly billing. Annual risparmia $29.
 
-L'utente responsabile:
-- **Informa le persone** che stai registrando (esplicito, non implicito).
-- **Chiede consenso** in contesti sensibili (lavoro, sanitario, legale).
-- **Verifica le leggi locali** prima di usare Omi in un contesto pubblico.
-- **Usa on-device** per dati sensibili.
+**Il modello "BYO API key" è la killer feature per i developer.** In local mode, usi la tua API key (OpenAI, Anthropic) per le transcription e AI summaries. I costi sono i tuoi (pay-per-token al provider), ma il controllo è totale. Per chi ha già un account OpenAI e vuole sperimentare, è la strada più economica in assoluto.
 
-### Pricing di Omi
+### Hardware, in dettaglio
 
-Omi ha un modello ibrido:
+Omi Dev Kit 2 è un piccolo disco (~2.5cm), 10-14 ore di batteria continua, microfono MEMS ad alta sensibilità, connettività Bluetooth Low Energy 5.2, certificato splash-resistant (non waterproof).
 
-- **Hardware**: prezzo una tantum per il dispositivo (indicativamente 50-100 €, da verificare sul sito ufficiale, dato che il prodotto è in fase di lancio/crescita).
-- **Software**: l'app core è open source e gratuita.
-- **Cloud features**: opzionali, a consumo (per chi vuole trascrizione cloud di alta qualità).
-- **Premium tier**: per funzionalità avanzate (speaker identification, integrazioni, memoria illimitata).
+**Form factor:** portato come ciondolo al collo, o clip su maglietta/borsa. La versione "necklace" è la più comune.
 
-I prezzi variano man mano che il prodotto matura. Verifica sul sito ufficiale per le condizioni correnti.
+**Audio capture:** buono per conversazioni normali a 1-2 metri. Sotto una maglietta, la qualità degrada ma resta utilizzabile. In ambienti rumorosi (ristorante affollato, conference hall), la qualità peggiora significativamente.
 
-### Flusso pratico: un caso reale
+**Battery:** 10-14 ore di ascolto continuo. Una giornata lavorativa standard (8 ore) lo gestisce. Ricarica USB-C magnetica, full charge in ~2 ore.
 
-Luca è un product manager in consulenza strategica. Ha 5-7 conversazioni significative al giorno (con clienti, colleghi, mentor) e spesso dimentica commitments o dettagli.
+**Durabilità:** pensato per uso quotidiano, ma non per sport intensi o pioggia forte. Il sudore può danneggiare le porte del microfono.
 
-**Settimana 1:** setup. Luca aggancia Omi al collo, configura l'app, e fa un primo giorno di test. Scopre che Omi trascrive bene in inglese (meeting con clienti internazionali) e accettabilmente in italiano.
+### Use cases che funzionano, e che non funzionano
 
-**Settimane 2-4:** uso quotidiano. Luca indossa Omi durante le giornate di meeting, e la sera interroga l'app: "cosa ho detto ieri sul pricing del progetto X?" Omi restituisce un riassunto e link alla trascrizione completa. Luca recupera dettagli che altrimenti avrebbe perso.
+**Funziona bene:**
 
-**Mese 2:** integrazione. Luca collega Omi a Notion: le trascrizioni vengono esportate come pagine, organizzate per progetto. La memory diventa una vera "knowledge base" delle conversazioni.
+- **Riunioni 1:1 con colleghi che acconsentono.** Ogni conversazione di lavoro diventa ricercabile. Dopo 3 mesi, hai una knowledge base implicita di tutte le tue conversazioni.
+- **Lecture e seminari universitari.** Note strutturate automatiche, ricercabili per argomento.
+- **Interviste con consensi firmati.** Per giornalisti e ricercatori, Omi elimina le note manuali.
+- **Brainstorming con il team.** Cattura idee che altrimenti andrebbero perse.
+- **Sessioni di therapy (con consenso del terapeuta).** Per pazienti che vogliono rivedere le sessioni, o terapeuti che vogliono note migliori. Dipende dalle regole deontologiche locali.
 
-**Mese 4:** review. Luca nota che non perde più dettagli importanti, e che i suoi follow-up sono più precisi. ROI: il costo del dispositivo si è ripagato in 2 settimane.
+**Funziona meno bene:**
+
+- **Conference e convention.** Il rumore di fondo degrada la trascrizione. Le conversazioni sono brevi e frammentate. Le registrazioni diventano inutili o fuorvianti.
+- **Conversazioni in lingua mista.** Il modello gestisce 25+ lingue, ma transizioni frequenti tra lingue diverse degradano la qualità.
+- **Conversazioni telefoniche.** Omi non ha conduction sensor per le chiamate appoggiate. Può registrare in vivavoce, ma è scomodo.
+- **Contesti dove serve silenzio.** Biblioteche, musei, cene eleganti. Anche con Omi disattivato, la consapevolezza di averlo intorno al collo cambia il comfort.
+
+### Limitazioni strutturali, da conoscere prima di comprare
+
+**La qualità della trascrizione non è perfetta.** Anche con microfono MEMS di qualità, errori di trascrizione sono comuni in ambienti rumorosi, con accenti marcati, o con terminologia tecnica. Omi corregge in parte con il modello AI, ma aspettati un 5-10% di errori sistematici.
+
+**Le "memories" sono soggettive.** Omi identifica porzioni significative usando euristiche, non è perfetto. Alcune "memories" sono inutili, altre mancano conversazioni importanti. Serve review periodica per pulire e aggiungere tag.
+
+**Il search semantico richiede cloud.** In local mode, puoi trascrivere e riassumere localmente, ma la ricerca semantica ("dove abbiamo parlato di onboarding l'ultima volta?") richiede che i vettori siano in un database, e quello è cloud. La modalità "tutto locale" è meno potente.
+
+**Non sostituisce un sistema di note strutturato.** Se il tuo lavoro richiede note precise, tag, link interni, e relazioni tra concetti, Omi è un complemento, non un sostituto. Notion, Obsidian, e simili restano superiori per note strutturate.
+
+**La batteria non dura una giornata di lavoro intenso.** 10-14 ore di ascolto continuo è il massimo. Se hai un giorno con 12 ore di meeting back-to-back, ricarica a pranzo.
+
+### Omi vs Plaud vs Limitless vs Friend vs Bee
+
+**Omi vs Plaud Note.** Plaud è un dispositivo "per riunioni" (on-demand recording, non always-on). Più privacy-friendly di default (registra solo quando attivi), ma perde il vantaggio di catturare conversazioni informali. Plaud è $179 con subscription $19.99/mese per transcription. Omi è $89 con subscription $19/mese. Omi vince su prezzo entry, Plaud vince su privacy-by-default.
+
+**Omi vs Limitless Pendant.** Limitless è $99 con subscription $19/mese obbligatoria per le funzioni AI. Più maturo come prodotto, con community più ampia, ma forza la subscription (Omi Basic è gratis). Limitless vince su "polished UX", Omi vince su flessibilità (local mode, API, dev kit).
+
+**Omi vs Friend.** Friend è un dispositivo più "social" (un'amica AI che commenta le tue attività) e un chat online gratis. Il pendant è $129. Posizionamento diverso: Friend è più lifestyle, Omi è più productivity. Se cerchi memoria conversazionale, Omi è superiore.
+
+**Omi vs Bee Pioneer.** Bee è $49.99, no subscription, no premium tier (al momento). Più economico, più semplice, meno features. Bee lavora solo su iPhone, Omi funziona con iOS e Android. Bee è una buona entry-level, Omi è più serio.
+
+### Setup pratico: da zero a un uso produttivo in una settimana
+
+**1. Ordina l'hardware.** Da omiwearable.com, $89 + shipping. 5-10 giorni per la consegna.
+
+**2. Pairing con l'app.** Scarica l'app Omi (iOS o Android), accoppia via Bluetooth, concedi i permessi di microfono e notifica. 5 minuti.
+
+**3. Configura la prima sessione.** Indossa Omi, apri l'app, fai una sessione di test di 10 minuti. Verifica che trascriva correttamente. 15 minuti.
+
+**4. Decidi il tuo protocollo di consenso.** Questo è il passo più importante. Decidi in quali contesti userai Omi, e come gestirai il consenso. Per uso professionale, mandare una mail al team "registro le riunioni con Omi per avere appunti migliori, dimmi se preferisci che disattivi" è appropriato. 30 minuti di decisione.
+
+**5. Prima settimana di uso.** Indossa Omi durante le tue tipiche attività. Ogni sera, rivedi le "memories" generate. Identifica pattern: quali sono utili, quali sono rumore. Aggiusta le euristiche se possibile. Tempo: 10-15 minuti al giorno per la review.
+
+**6. Setup integrazioni (opzionale).** Slack, Notion, Calendar, MCP, API custom. Tempo: 30-60 minuti.
+
+**7. Pulizia periodica.** Ogni settimana, dedichi 30 minuti a pulire le "memories" inutili, aggiungere tag, e organizzare. Senza questa review, Omi diventa un dump inutilizzabile.
+
+In una settimana hai un workflow funzionante. In un mese, hai una base di memoria ricercabile che diventa un asset.
+
+### Errori comuni
+
+**Non stabilire un protocollo di consenso.** Senza regole chiare, finisci per registrare conversazioni inappropriate. Decidi prima.
+
+**Non fare review periodica.** Le "memories" si accumulano velocemente. Senza review, il sistema diventa inutilizzabile in poche settimane.
+
+**Affidarsi solo a Omi per le note.** Per conversazioni critiche (decisioni, accordi, contratti), Omi è un complemento, non un sostituto. Conferma sempre per iscritto.
+
+**Non testare in ambienti diversi.** Omi funziona benissimo nel tuo ufficio silenzioso, malissimo in un coffee shop rumoroso. Testa in tutti i tuoi ambienti tipici.
+
+**Ignorare la durata della batteria.** Se ti dimentichi di ricaricare, Omi si spegne a metà giornata. Metti la ricarica in routine serale.
 
 ### Le domande che ci fanno più spesso
 
-**Omi registra davvero tutto?**
-Sì, se attivo. L'utente può disattivare la registrazione (modalità "privacy"), ma perde la funzionalità di memory.
+**Omi è meglio di Notion AI per prendere appunti?**
+Sono diversi. Notion AI richiede che tu scriva le note. Omi cattura le conversazioni automaticamente. Se le conversazioni sono la tua fonte di informazione, Omi è superiore. Se il tuo lavoro è più lettura/scrittura, Notion AI è sufficiente.
 
-**Posso cancellare le registrazioni?**
-Sì, manualmente o con policy di retention automatiche. Le registrazioni on-device restano sul dispositivo; quelle cloud dipendono dalle policy del servizio.
+**Posso usarlo in terapia?**
+Dipende dalla regolamentazione locale e dal consenso del terapeuta. In molte giurisdizioni, registrare le sessioni di terapia richiede consenso esplicito e sicurezza HIPAA. Omi è HIPAA-compliant, ma il consenso è un passo separato.
 
-**Omi funziona in italiano?**
-Sì, con qualità variabile. La precisione è migliore in inglese, ma l'italiano è supportato.
+**Funziona in italiano?**
+Sì, supporta 25+ lingue tra cui l'italiano. La qualità è migliore in inglese (training set più ampio), ma l'italiano funziona ragionevolmente bene.
 
-**Posso usarlo in meeting senza che gli altri se ne accorgano?**
-Sì, è piccolo e discreto. Ma resta la questione etica e legale: informare i partecipanti è obbligo legale in molte giurisdizioni.
+**Quanto costa davvero in un anno?**
+$89 hardware + $199 (annual Unlimited) = $288 anno uno. Se ti basta Basic, $89 anno uno. Se usi BYO API key, $89 hardware + costo API (variabile, $10-50/mese per uso moderato).
 
-**Omi è open source?**
-Sì, firmware e app. Questo permette a developer e maker di ispezionare, customizzare, e self-hostare.
+**È meglio di un Note taker come Plaud?**
+Per uso always-on con cattura continua, sì. Per uso on-demand (solo quando premi record), Plaud è superiore. La scelta dipende dal tuo workflow.
 
-**Omi supporta le lingue asiatiche?**
-Sì, ma con qualità variabile. Cinese, giapponese, coreano sono supportati con precisione decrescente.
+**Posso esportare i dati?**
+Sì, Omi supporta export in formati standard (testo, JSON). In local mode, hai accesso completo al file system.
 
-**Posso usare Omi offline?**
-Sì, con la modalità on-device. La precisione della trascrizione cala, ma la cattura e l'organizzazione locale funzionano.
+### Alternative da considerare
+
+- **Plaud Note / NotePin.** On-demand recording, no always-on. Più privacy-friendly.
+- **Limitless Pendant.** Più maturo, subscription obbligatoria, UX più rifinita.
+- **Friend.** Più lifestyle/social, meno productivity.
+- **Bee Pioneer.** Budget, iOS only, no subscription.
+- **Reflect / Notion AI / Obsidian + voice.** App di note con AI, no hardware, registri tu quando serve.
+- **Meeting recording tools (Otter, Fireflies, Read AI).** Per sole riunioni, non always-on. Ottima qualità transcription, integrazione con calendar.
 
 ### Cosa ci aspettiamo da Omi nei prossimi mesi
 
-Le aree da osservare:
+**Più integrazioni native.** Slack, Notion, Calendar già supportati. La roadmap è verso più tool (CRM, task manager, project management).
 
-- **Migliore precisione multilingua.** Specialmente per italiano, spagnolo, portoghese.
-- **Più integrazioni.** Omi è ancora giovane; le integrazioni crescono con la community open source.
-- **Modelli locali più piccoli e precisi.** Per chi fa on-device, modelli Whisper-like stanno diventando molto più efficienti.
-- **Funzionalità "proactive" più ricche.** Suggerimenti automatici di follow-up, alert su commitments, ecc.
-- **Hardware di nuova generazione.** Batteria più lunga, design più discreto, supporto per più accessori.
+**Modelli AI migliori per transcription in italiano.** La qualità in lingue non-inglese è ancora inferiore. Miglioramenti attesi.
+
+**Miglioramenti del search semantico.** Attualmente è buono, non eccellente. Con l'evoluzione dei modelli di embedding, può migliorare.
+
+**Compliance enterprise.** Già HIPAA e SOC 2. GDPR explicitness e data residency EU sarebbero i prossimi passi per il mercato europeo.
+
+**Integrazione voice agents.** Omi come interfaccia per agenti AI (parli a Omi, parla con un agente, l'agente esegue task). È il futuro prossimo.
 
 ### In sintesi
 
-Omi è un wearable AI pensato per chi vuole catturare e ritrovare informazioni dalla vita reale. È open source, focalizzato sulla privacy (con on-device option), e integrabile con i tool di produttività.
+Omi è uno strumento potente per un target specifico: knowledge worker con molte conversazioni che vogliono memoria continua, e che sono disposti a gestire la complessità del consenso sociale. Non è per tutti, e non è per chiunque abbia conversazioni private. Il prezzo è entry-level per la categoria, la qualità è buona ma non perfetta, e il valore dipende tutto da quanto sei disciplinato nel review periodica.
 
-Per executive, ricercatori, content creator, e persone con memory challenges, è un tool con potenziale enorme. Per uso consumer "passivo" (musica, meteo, sveglia), non è il tool giusto.
-
-La questione della privacy e del consenso è centrale: registrare conversazioni senza consenso è illegale in molte giurisdizioni, e l'utente responsabile deve informare le persone coinvolte.
+Per il target giusto, è un moltiplicatore di produttività. Per il target sbagliato, è un incubo di privacy. Decidi consapevolmente.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Omi** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri wearable AI** nella raccolta dedicata.
-- **Salva Omi nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di Omi** per confrontare con Plaud, Limitless, e altri wearable AI.
+- **Esplora la raccolta su produttività e AI hardware** per casi d'uso affini.
+- **Salva Omi nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -2107,190 +2397,201 @@ La questione della privacy e del consenso è centrale: registrare conversazioni 
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/wegic",
     featured: true,
-    highlights: [
-      "Interfaccia conversazionale: descrivi il sito, l'AI genera design e contenuti",
-      'Output in HTML/CSS/JS, pubblicabile ovunque',
-      'Buon fit per landing page, micro-siti, portfolio, MVP',
-      'Iterazione veloce: rigenera, modifica, chiedi varianti',
-    ],
-    details: [
-      'Hosting Wegic o export del codice',
-      'Integrazioni con form, analytics, payment',
-      'Temi di partenza per accelerare il primo output',
-    ],
-    cautions: [
-      'Non è un sostituto di un designer per progetti di brand complessi',
-      "Il SEO di base c'è, ma per una strategia organica avanzata serve lavoro extra",
-      "L'AI tende a produrre layout simili: la distintività è limitata",
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa Wegic, in una frase
 
-Wegic è un website team AI conversazionale: descrivi cosa vuoi (un sito, una landing, un micro-sito), l'AI genera design, copy, e codice, e tu iteri in linguaggio naturale finché non sei soddisfatto. Il risultato è un sito web pubblicabile.
+Wegic è un website builder conversazionale: descrivi cosa vuoi, l'AI genera un sito completo in 60 secondi, e iteri con prompt in linguaggio naturale invece di drag-and-drop — pensato per chi vuole un sito credibile rapidamente senza competenze tecniche o di design.
 
-### A chi serve davvero
+### A chi serve davvero, e a chi no
 
-Wegic non è un website builder tradizionale (WordPress, Squarespace, Webflow). È un generatore di siti web tramite AI conversazionale. I profili tipici:
+Wegic è per:
 
-- **Founder e piccole imprese** che vogliono un sito veloce senza dover assumere un designer o un developer.
-- **Marketer e freelance** che vogliono landing page e micro-siti per clienti in tempi rapidi.
-- **Creator e coach** che vogliono un portfolio o un sito vetrina in pochi minuti.
-- **Team di prodotto** che vogliono testare idee con micro-siti prima di investire in un prodotto vero.
-- **Individui** che vogliono un sito personale (matrimonio, evento, progetto) senza dover imparare un CMS.
+**Freelance e piccole attività** che vogliono un sito vetrina o una landing page senza pagare un designer o imparare WordPress. Il workflow conversazionale è più veloce di qualsiasi drag-and-drop builder.
 
-Non è il tool giusto per chi cerca un sito "complesso" (e-commerce, portali, community), per chi vuole massimo controllo sul codice, o per chi ha bisogno di un CMS robusto con molte pagine e utenti.
+**Persone che hanno procrastinato il sito per anni** perché il processo tradizionale è troppo scoraggiante. Wegic abbatte la barriera d'ingresso.
 
-### Come funziona, passo per passo
+**Side project e MVP** che hanno bisogno di una presenza online in pochi minuti. Test di mercato, validazione, early traction.
 
-Il flusso operativo ha cinque fasi.
+**Micro-imprese locali** (ristoranti, studi professionali, artigiani) che vogliono una presenza web basic senza complessità.
 
-**1. Brief iniziale.** L'utente descrive a Wegic cosa vuole, in linguaggio naturale: "Voglio una landing page per il mio studio di yoga a Milano, con sezione orari, lista corsi, e form di contatto". Più il brief è dettagliato, migliore è il primo output.
+**Creator che vogliono un sito portfolio** veloce. Designer, fotografi, scrittori.
 
-**2. Generazione iniziale.** L'AI di Wegic genera una prima bozza:
-- Struttura del sito (homepage + pagine interne).
-- Design (layout, colori, tipografia).
-- Copy (testi descrittivi, headline, CTA).
-- Codice (HTML/CSS/JS, generato automaticamente).
+Non è per:
 
-**3. Iterazione conversazionale.** L'utente continua a chiedere modifiche in linguaggio naturale: "Cambia il colore principale in verde scuro", "Aggiungi una sezione testimonials", "Riscrivi la headline in modo più diretto". L'AI applica le modifiche e rigenera.
+**Aziende con siti complessi.** E-commerce avanzato, multi-language, membership, blog articolato. Per quello, WordPress, Shopify, o soluzioni custom.
 
-**4. Personalizzazione avanzata.** Per chi vuole più controllo, Wegic offre opzioni per modificare direttamente il design (colori, font, layout) o il codice (per chi sa programmare).
+**Designer professionisti.** Se vuoi controllo pixel-perfect sul design, Wegic non è il tool. Figma o Webflow sono superiori.
 
-**5. Pubblicazione.** Una volta soddisfatto, l'utente pubblica il sito. Le opzioni:
-- **Hosting Wegic**: dominio custom o sottodominio Wegic.
-- **Export del codice**: l'utente scarica HTML/CSS/JS e lo pubblica dove vuole (Vercel, Netlify, GitHub Pages, suo server).
+**Siti con contenuti dinamici complessi.** Database-driven, login area, custom forms con logica complessa. Wegic gestisce form base, non applicazioni web.
 
-:::tip Cosa distingue Wegic da Squarespace o Wix
+**E-commerce avanzato.** C'è un'integrazione pagamenti base, ma per shop seri Shopify rimane lo standard.
 
-- **L'interfaccia è conversazionale**, non drag-and-drop. Scrivi cosa vuoi, l'AI esegue.
-- **Il codice è esportabile**, non chiuso in un walled garden. Per chi vuole hosting custom, Wegic lo permette.
-- **L'iterazione è veloce.** Cambiare un layout, un colore, un copy è una frase, non 10 click.
+### Cosa fa, in pratica
 
-Per chi vuole "no-code ma con interfaccia visuale", Squarespace o Wix restano preferibili. Per chi vuole "AI-first con export flessibile", Wegic è un'alternativa interessante.
+Wegic si basa su Kimmy, l'AI assistant, che gestisce l'intero workflow.
 
-:::
+**1. Conversazione iniziale.** Apri Wegic, Kimmy ti chiede: business, target, stile, pagine necessarie, tone. Pochi scambi, ~5 minuti.
 
-### Le funzionalità chiave di Wegic
+**2. Generazione del sito.** In 60-90 secondi, Kimmy genera un sito multi-pagina completo: layout, copy, immagini AI, responsive design. Non un mockup, un sito pronto.
 
-**Generazione di design.** L'AI produce layout, palette colori, tipografia, e struttura del sito. Il design è responsive (mobile, tablet, desktop) e accessibile di default.
+**3. Modifica conversazionale.** Da qui in poi, tutte le modifiche avvengono via chat. "Cambia il colore dell'header", "Aggiungi una sezione servizi", "Il testo è troppo formale". Kimmy interpreta ed esegue.
 
-**Generazione di copy.** L'AI scrive testi descrittivi, headline, CTA, e contenuti per le sezioni del sito. I testi possono essere editabili.
+**4. Voice input.** Per chi pensa meglio parlando, puoi dettare le modifiche invece di digitarle.
 
-**Multi-page.** Wegic genera siti con multiple pagine (home, about, servizi, contatti, blog, ecc.), con navigazione coerente.
+**5. Sketch/circling.** Disegna direttamente sulla pagina per indicare quale elemento modificare. Più preciso del text-only per layout adjustments.
 
-**Form e integrazioni.** L'utente può aggiungere form di contatto, integrazioni con tool di marketing (email, analytics, payment), e componenti interattivi.
+**6. AI visitor assistant.** Sul sito pubblicato, un chatbot AI risponde a domande dei visitatori sulla tua attività. Customer service lightweight incluso.
 
-**Hosting e dominio.** Wegic offre hosting e supporto per domini custom. Per chi vuole hosting proprio, export del codice.
+**7. Multi-language generation.** Genera il sito in più lingue contemporaneamente. Per chi serve audience internazionale.
 
-**Collaborazione.** Per team, Wegic offre funzionalità di collaborazione (multi-edit, commenti, versioning).
+**8. Publishing.** One-click publishing. Hosting incluso, SSL, dominio custom su tier pagati.
 
-### Casi d'uso concreti
+**9. Code export.** Esporta il codice (HTML/CSS/JS) durante la subscription attiva. Per chi vuole migrare altrove o customizzare oltre.
 
-:::pro Quando Wegic fa la differenza
+### Pricing, onestamente
 
-- **Landing page per un lancio di prodotto.** Founder che vuole una landing convincente in 2 ore, non 2 settimane.
-- **Sito portfolio per un freelance.** Designer, fotografo, copywriter che vuole mostrare i lavori senza pagare un designer.
-- **Micro-sito per un evento.** Matrimonio, conferenza, evento aziendale: sito veloce con info, mappa, RSVP.
-- **MVP di un'idea.** Prima di investire in un prodotto vero, un micro-sito per validare l'idea con utenti reali.
-- **Sito vetrina per un'attività locale.** Ristorante, palestra, studio professionale che vuole un sito bello e funzionale.
-- **Landing per una campagna marketing.** ADS, campagne social, o newsletter che richiedono una pagina dedicata.
+I prezzi cambiano frequentemente (verifica su wegic.ai):
 
-:::
+- **Free trial, $2.99 one-time.** Una generazione completa di sito. Pubblicato con branding Wegic.
+- **Free tier.** Limitato: pochi siti, pochi crediti AI, dominio Wegic. I siti pubblicati vanno offline senza subscription attiva.
+- **Starter, ~$11.90-$23.90/mese (varia per billing cycle).** 400-600 crediti/mese (~10-15 generazioni o 40-60 modifiche), 10 pagine per sito, 10.000 visitatori/mese, dominio custom, badge Wegic rimosso, 1 sito pubblicato.
+- **Premium, ~$19.90-$41.90/mese.** 1000+ crediti/mese (25 generazioni o 100+ modifiche), pagine illimitate, dominio custom, visitatori illimitati, Google Analytics, siti illimitati.
+- **Ultra, $2.999/mese.** Managed service, 7-day delivery, design revisions illimitate, advanced integrations. Enterprise.
 
-:::warning Quando Wegic non è la scelta giusta
+**Annual billing** risparmia circa il 40% su Starter e Premium.
 
-- **E-commerce complesso.** Per un negozio online serio, Shopify o WooCommerce sono preferibili.
-- **Community o portale.** Per siti con molti utenti, contenuti generati dagli utenti, e funzionalità social, servono piattaforme dedicate.
-- **Massimo controllo sul codice.** Wegic è AI-first; per chi vuole scrivere ogni riga, un editor di codice è preferibile.
-- **SEO avanzato.** Per una strategia SEO complessa, Wegic è un punto di partenza ma non sostituisce un lavoro tecnico dedicato.
-- **Integrazioni custom profonde.** Se il sito ha bisogno di logica backend complessa, Wegic non è sufficiente.
+**Caveat importante: i crediti non roll-over.** Ogni mese ricominci da zero. Se sprechi crediti in modifiche che non funzionano, li perdi.
 
-:::
+**Caveat più critico: i crediti si consumano anche per modifiche che falliscono.** Se chiedi una modifica che l'AI non riesce a fare bene, i crediti sono comunque spesi. Questo è documentato come il principale complaint.
 
-### Wegic vs i concorrenti diretti
+### Cosa fa bene, e cosa no
 
-**Wegic vs Squarespace / Wix.** Squarespace e Wix sono i leader del website building visuale. La differenza è di paradigma: drag-and-drop vs conversazionale. Per chi è abituato al visuale, Squarespace è più familiare. Per chi preferisce "scrivi cosa vuoi", Wegic è più efficiente.
+**Fa bene:** generazione iniziale del sito, modifiche semplici, design responsive automatico, multi-language, fast iteration. Il punto di forza è la velocità di setup.
 
-**Wegic vs WordPress + Elementor.** WordPress è il CMS più diffuso, con Elementor come page builder visuale. È più flessibile e potente, ma richiede più competenze tecniche. Per un sito "da 1 a 10 pagine", Wegic è più rapido. Per un sito "da 50 a 1000 pagine" con molti autori, WordPress.
+**Fa meno bene:** personalizzazione avanzata del design, ottimizzazione SEO tecnica profonda, integrazioni custom complesse, performance optimization.
 
-**Wegic vs Framer.** Framer è un competitor recente focalizzato su design-driven websites. Wegic è più "AI-first" nella generazione, Framer è più "design-first" nell'editing. Per designer che vogliono controllo, Frayer. Per founder che vogliono velocità, Wegic.
+**Fa male:** siti che richiedono logica di business complessa (booking systems, calcolatori prezzi, aree riservate con permessi granulari).
 
-**Wegic vs Durable.co.** Durable è un competitor AI-first simile. La differenza è sottile: Durable è più "business site" (per piccole imprese), Wegic è più "creator site" (per founder, freelance, content creator). Per piccole imprese locali, Durable. Per creator e startup, Wegic.
+### Quando Wegic ha senso, e quando no
 
-**Wegic vs Webflow.** Webflow è il tool di riferimento per designer che vogliono un sito custom senza codice. È più potente e più complesso di Wegic. Per designer che vogliono controllo totale, Webflow. Per chi vuole velocità e semplicità, Wegic.
+**Ha senso:** sito vetrina per piccola attività, landing page per prodotto/servizio, portfolio personale, sito per side project. Tempo dal brief al live: sotto 1 ora.
 
-### Pricing di Wegic
+**Non ha senso:** e-commerce serio, blog con centinaia di articoli, sito corporate con pagine dinamiche, applicazione web.
 
-Wegic offre:
+**Caso borderline:** se hai bisogno di un sito "credibile" ma non perfetto, e iterare velocemente ti conviene più del controllo assoluto, Wegic è OK. Se vuoi pixel-perfect e customizzazione totale, no.
 
-- **Free tier**: limitato a 1 sito, funzionalità base, sottodominio Wegic.
-- **Pro**: più siti, export del codice, integrazioni, dominio custom.
-- **Business**: collaboration, team, supporto prioritario.
+### Wegic vs Framer vs Wix AI vs Durable vs 10Web
 
-I prezzi pubblicati variano nel tempo. Indicativamente, il tier Pro parte da 15-25 €/mese con fatturazione annuale.
+**Wegic vs Framer.** Framer è più designer-oriented, con più controllo ma learning curve più ripida. Wegic è più conversazionale. Per designer che vogliono customizzazione, Framer. Per non-designer, Wegic.
 
-### Flusso pratico: un caso reale
+**Wegic vs Wix AI.** Wix è il re dei website builder tradizionali, con AI features aggiunte. Wix ha più template, più app, più flessibilità, ma è più complesso. Wegic è più snello. Per chi vuole semplicità estrema, Wegic. Per chi vuole un ecosistema maturo, Wix.
 
-Marco è un consulente di strategia che vuole lanciare un suo sito personale. Ha un CV su LinkedIn, ma vuole un sito dove pubblicare articoli, case study, e raccogliere lead.
+**Wegic vs Durable.** Durable è il competitor più diretto: AI website builder, conversazionale, simile posizionamento. Durable è più economico, Wegic ha più utenti. Differenze minime, prova entrambi.
 
-**Mattina del sabato:** Marco apre Wegic, scrive: "Voglio un sito personale per consulenza strategia. Minimal, professionale, con homepage, pagina about, pagina servizi, pagina case study, blog, e contatti. Colori: blu scuro, grigio, bianco. Tono: serio ma accessibile."
+**Wegic vs 10Web.** 10Web è focalizzato su WordPress + AI, conversion di siti statici a WordPress. Più complesso, più adatto a chi vuole restare in WordPress ecosystem.
 
-**15 minuti dopo:** Wegic genera la prima bozza. Marco la guarda, chiede modifiche ("Aggiungi una sezione 'Parliamone' con CTA in homepage", "Riscrivi la headline principale in modo più diretto", "Cambia la foto placeholder con uno sfondo geometrico").
+**Wegic vs Squarespace AI.** Squarespace è design-first, con template premium. AI features sono basic. Per chi cerca design premium senza AI, Squarespace. Per chi cerca AI + velocità, Wegic.
 
-**1 ora dopo:** il sito è pronto. Marco aggiunge un caso studio (incolla il testo), un articolo del blog (idem), e una foto profilo.
+### Casi d'uso reali
 
-**Publishing:** Marco collega il dominio custom (marco-strategia.it) e pubblica. Tempo totale: 2 ore.
+**Ristorante che vuole un sito vetrina.** Wegic Free trial → Premium. 1 ora dal brief al live. Include menu, orari, location, contatti.
 
-**Senza Wegic:** Marco avrebbe dovuto scegliere un CMS (WordPress, Squarespace, Webflow), impararlo, acquistare hosting, configurare DNS, e dedicare almeno un weekend intero.
+**Freelance designer che vuole un portfolio.** Wegic Starter. Sito con progetti, bio, contatti. Tempo di creazione: 30 minuti.
 
-ROI: Wegic ha restituito a Marco 6-8 ore di lavoro. Il costo dell'abbonamento annuale si ripaga in un singolo uso.
+**SaaS che vuole una landing page per testare un nuovo prodotto.** Wegic Starter. Landing con copy generata, hero section, form di signup. Tempo: 1-2 ore.
+
+**Coach che vuole un sito per vendere servizi.** Wegic Premium con integrazione pagamenti (colleghi il tuo Stripe). Sito + sistema di booking base.
+
+**Artigiano che vuole una presenza online.** Wegic Free o Starter. Sito semplice, portfolio, contatti.
+
+### Setup pratico: da zero al sito live in 1-2 ore
+
+**1. Crea l'account.** Su wegic.ai, signup con Google o email. 3 minuti.
+
+**2. Inizia la conversazione con Kimmy.** Rispondi alle domande su business, target, stile. 5-10 minuti.
+
+**3. Genera il primo draft.** 60-90 secondi di attesa, sito pronto. 2 minuti.
+
+**4. Itera via chat.** 5-10 round di "cambia X", "aggiungi Y", "riformula Z". 30-60 minuti.
+
+**5. Connetti dominio custom (opzionale).** Su Starter o Premium, configura tuodominio.com. 10 minuti.
+
+**6. Configura analytics (opzionale).** Google Analytics su Premium. 10 minuti.
+
+**7. Pubblica.** Click "Publish". Sito live. 5 minuti.
+
+**8. Setup AI visitor assistant (opzionale).** Configura il chatbot per il tuo sito. 15 minuti.
+
+In 1-2 ore hai un sito live, responsive, multi-page, con dominio custom. Per un sito vetrina, è un risultato onesto.
+
+### Errori comuni
+
+**Sprecare crediti su modifiche generiche.** "Migliora il design" è vago e consuma crediti senza risultato. Meglio: "Cambia il colore dell'header da blu a verde scuro".
+
+**Non rivedere il draft iniziale.** Il primo draft è decente ma generico. Senza iterazione, resta generico. La personalizzazione è nel prompt delle iterazioni.
+
+**Aspettarsi controllo totale.** Wegic non è Figma. Se vuoi spostare un singolo pixel, non è il tool. Per quel livello, Framer o Webflow.
+
+**Ignorare le performance.** I siti Wegic sono accettabili ma non ottimizzati per performance. Per Lighthouse score 90+, ti serve un dev che lavori sul codice esportato.
+
+**Pubblicare senza testare mobile.** Il design è responsive, ma la resa su mobile può differire. Testa sempre su 360px e 390px prima di pubblicare.
 
 ### Le domande che ci fanno più spesso
 
-**Wegic è difficile da usare?**
-No, l'interfaccia è conversazionale. Se sai scrivere cosa vuoi, sai usare Wegic. La curva di apprendimento è dolce.
+**Wegic è meglio di Squarespace?**
+Per chi vuole velocità di setup e non ha competenze di design, sì. Per chi vuole template premium e flessibilità di design, Squarespace.
 
 **Posso esportare il codice?**
-Sì, con il tier Pro. Il codice è HTML/CSS/JS standard, pubblicabile ovunque.
+Sì, durante la subscription attiva. Il codice è HTML/CSS/JS standard. Per migrare altrove, contatta il supporto.
 
-**Il codice esportato è personalizzabile?**
-Sì, se sai programmare. Il codice è pulito e strutturato. Puoi modificarlo, aggiungere componenti, o integrarlo in un'app esistente.
+**Quanto costa davvero?**
+Starter ~$11.90-$23.90/mese, Premium ~$19.90-$41.90/mese, con annual saving. Ultra è enterprise.
 
-**Wegic supporta l'italiano?**
-Sì, sia per il copy generato che per l'interfaccia.
+**Wegic fa e-commerce?**
+Funzionalità base (colleghi il tuo Stripe/PayPal), ma non è un e-commerce platform. Per shop seri, Shopify.
 
-**Wegic è SEO-friendly?**
-Di base, sì: HTML semantico, meta tag, performance. Per una strategia SEO avanzata, serve lavoro tecnico aggiuntivo.
+**Funziona per portfolio?**
+Sì, è uno dei suoi use case migliori.
 
-**Posso aggiungere un blog?**
-Sì, Wegic supporta blog con articoli. Per blog con molti articoli, valuta se un CMS dedicato (Ghost, WordPress) è più adatto.
+**I siti Wegic sono SEO-friendly?**
+Base. Puoi configurare meta tags, ma non hai controllo su URL structure, sitemap, o structured data avanzato. Per SEO serio, devi intervenire manualmente.
 
-**Wegic supporta e-commerce?**
-Limitato. Per un piccolo shop con pochi prodotti, sì. Per un e-commerce serio, Shopify o WooCommerce sono preferibili.
+### Alternative da considerare
 
-**Posso usare un dominio custom?**
-Sì, con il tier Pro. La configurazione DNS è guidata.
+- **Durable.** Simile, più economico.
+- **Framer.** Più designer-oriented, più controllo.
+- **Wix AI.** Più maturo, più complesso.
+- **Squarespace.** Design premium, meno AI.
+- **10Web.** WordPress + AI, più complesso.
+- **Carrd.** Ultra-minimalist, per one-page site.
 
 ### Cosa ci aspettiamo da Wegic nei prossimi mesi
 
-Le aree da osservare:
+**Modelli AI migliori per generazione.** Ogni release migliora la qualità del primo draft.
 
-- **Migliore gestione di siti complessi.** Multi-pagina, multi-autore, versioning.
-- **Più integrazioni con tool di marketing.** Email, analytics, payment, CRM.
-- **AI più contestuale.** Generazione che apprende dal feedback dell'utente, con prompt history.
-- **Export più flessibile.** Non solo HTML/CSS/JS, ma anche framework moderni (React, Next.js) per chi vuole.
+**Code export migliore.** Esportazione più pulita, più portabile.
+
+**Analytics integrate.** Oltre Google Analytics, dashboard Wegic.
+
+**Più integrazioni.** CRM, email marketing, payment, automazioni.
+
+**Miglioramento del credit system.** È il principale pain point. Se risolvono il problema dei crediti sprecati su modifiche fallite, diventa molto più user-friendly.
 
 ### In sintesi
 
-Wegic è un website builder AI-first che permette di creare siti web belli e funzionali tramite conversazione. È più veloce di Squarespace, più semplice di Webflow, e più flessibile di Durable.
+Wegic è una delle opzioni più accessibili per chi vuole un sito AI-generated in tempi brevi. Il workflow conversazionale è il suo superpotere, e i 300.000+ siti generati sono una validation del market fit.
 
-Per founder, freelance, creator, e piccole imprese che vogliono un sito in tempi rapidi senza competenze tecniche, è uno strumento con ROI immediato. Per e-commerce, community, o siti complessi, servono piattaforme dedicate.
+Le limitazioni principali sono: credit system che non rolla-over e consuma su errori, mancanza di controllo design pixel-perfect, performance non ottimali, e-commerce limitato. Per il target giusto — non-designer che vogliono un sito vetrina — è una scelta eccellente. Per siti complessi, no.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Wegic** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri website builder** nella raccolta dedicata.
-- **Salva Wegic nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di Wegic** per confrontare con Durable, Framer, e altri AI website builder.
+- **Esplora la raccolta su website builder e no-code** per casi d'uso affini.
+- **Salva Wegic nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
   {
@@ -2309,189 +2610,223 @@ Per founder, freelance, creator, e piccole imprese che vogliono un sito in tempi
     source_label: "Guida TooolVibes",
     source_url: "https://tooolvibes.com/posts/tolt",
     featured: false,
-    highlights: [
-      "Zero commissioni upfront: paghi solo quando l'affiliato genera revenue",
-      'Dashboard self-serve, link tracking, e payouts globali',
-      'Modello di commissioni flessibile: one-time, ricorrente, tiered',
-      'Buon fit per SaaS early-stage che vogliono lanciare un programma senza investimenti iniziali',
-    ],
-    details: [
-      'Anti-frode e quality scoring degli affiliati',
-      'Materiali marketing condivisi (banners, email copy, link generator)',
-      'Integrazioni con Stripe, Paddle, Lemon Squeezy',
-    ],
-    cautions: [
-      'Tolt prende una percentuale del revenue generato dagli affiliati: il costo cresce con la crescita',
-      'Serve traffico per attirare affiliati: senza volume, il programma parte lento',
-      'Verifica i termini sui pagamenti e la gestione fiscale',
-    ],
+    highlights: [],
+    details: [],
+    cautions: [],
       content_markdown: `### Cosa fa Tolt, in una frase
 
-Tolt è una piattaforma self-serve per lanciare e gestire un programma di affiliazione per SaaS, senza fee iniziali e con un modello revenue-share: paghi solo quando gli affiliati generano effettivamente delle conversioni.
+Tolt è una piattaforma di affiliate management pensata per SaaS che vogliono lanciare un programma di affiliazione o referral senza fee iniziali — collega Stripe, Paddle, Chargebee, o Shopify, e in 15 minuti hai un programma funzionante con dashboard per gli affiliati, tracking ricorrente, e payout globali.
 
-### A chi serve davvero
+Non è un "generico" affiliate tracker. È costruito specificamente per SaaS in abbonamento, dove la sfida non è tracciare una vendita singola ma tracciare un customer lifetime value e pagare commissioni che sopravvivono a upgrade, downgrade, refund, e cancellazioni.
 
-Tolt non è per chi ha già un programma di affiliazione enterprise con FirstPromoter o PartnerStack e non ha intenzione di cambiare. È per:
+### A chi serve davvero, e a chi no
 
-- **SaaS early-stage** che vogliono lanciare un programma di affiliazione senza investimenti iniziali e senza team dedicato.
-- **Indie developer e solopreneur** che hanno un prodotto digitale e vogliono un canale di crescita organica.
-- **Bootstrapped startup** che preferiscono un modello pay-for-performance rispetto a un abbonamento fisso mensile.
-- **Prodotti digitali non-SaaS** (corsi, template, ebook) che vogliono un programma referral.
+Tolt funziona bene per:
 
-Non è il tool giusto per chi cerca un programma di affiliazione enterprise con gestione contratti, pagamenti internazionali complessi, e compliance avanzata (per quello, FirstPromoter, PartnerStack, o Impact).
+**SaaS early-stage con Stripe, Paddle, o Chargebee.** Se sei un founder che ha appena lanciato e vuoi un programma di affiliazione subito, Tolt è probabilmente la scelta giusta. Setup in 15 minuti, integrazione nativa, pricing flat.
 
-### Come funziona, passo per passo
+**SaaS mid-stage che vogliono uscire da Rewardful o FirstPromoter.** Se sei cresciuto oltre i limiti di quei tool, Tolt offre un upgrade path naturale con più features e pricing flat (vs commission cut).
 
-Il flusso operativo ha cinque fasi.
+**Indie maker con prodotti su Shopify.** Tolt si integra con Shopify per gestire commissioni su prodotti fisici o ibridi.
 
-**1. Setup del programma.** L'utente configura su Tolt:
-- Nome del programma e descrizione.
-- Commissioni (percentuale, fissa, tiered, ricorrenti).
-- Regole di attribuzione (cookie duration, last click, first click).
-- Materiali marketing per affiliati (banners, email copy, link generator).
+**SaaS B2B dove il customer LTV è alto.** In contesti B2B con LTV $5k-$50k, la capacità di Tolt di tracciare commissioni ricorrenti e gestire upgrade/downgrade diventa cruciale.
 
-**2. Integrazione con il payment processor.** Tolt si integra con Stripe, Paddle, Lemon Squeezy, e altri. Quando un cliente paga, Tolt registra la transazione, attribuisce la commissione all'affiliato, e traccia il payout.
+**Team che vogliono branded affiliate portal.** Tolt ti permette di ospitare il portale affiliati sul tuo dominio (es. affiliates.tuosito.com), che è una leva di trust importante.
 
-**3. Onboarding degli affiliati.** L'utente può:
-- **Invitare affiliati specifici** (es. creator, blogger, consulenti con audience).
-- **Aprire un programma pubblico** dove chiunque può iscriversi e diventare affiliato.
-- **Usare il marketplace Tolt** (se attivo) per essere scoperti da potenziali affiliati.
+Non è per:
 
-**4. Tracking delle conversioni.** Quando un visitatore clicca su un link affiliato, Tolt piazza un cookie (o usa un altro metodo di attribuzione) e traccia se converte. Se converte entro la finestra di attribuzione, la commissione è registrata.
+**E-commerce puramente fisico ad alto volume.** Tolt è ottimizzato per SaaS e Shopify. Per e-commerce puro ad alto volume, tool come Refersion o UpPromote sono più adatti.
 
-**5. Payout.** Tolt gestisce i payout agli affiliati secondo il calendario configurato (mensile, quindicinale, o custom), con supporto per payout internazionali via PayPal o bonifico.
+**Marketplace multi-vendor.** Tolt non è progettato per gestire pagamenti a vendor terzi in marketplace. Per quello, Stripe Connect, Adyen for Platforms.
 
-:::tip Cosa distingue Tolt dai concorrenti
+**Enterprise con requisiti di compliance specifici.** Se hai bisogno di audit log, SSO, e compliance avanzata, Tolt non offre Enterprise plan in quel senso. Valuta FirstPromoter Enterprise o soluzioni custom.
 
-- **Zero commissioni upfront**: paghi solo quando l'affiliato genera conversioni.
-- **Self-serve completo**: setup, monitoring, e payout senza intervento di sales.
-- **Dashboard trasparente**: vedi in tempo reale click, conversioni, e commissioni.
-- **Onboarding di affiliati self-serve**: chiunque può iscriversi senza che tu debba approvare manualmente.
+**SaaS con +$50k MRR generato da affiliati.** A quel punto, il pricing flat di Tolt diventa meno interessante rispetto a soluzioni con commission percentage, e probabilmente hai bisogno di funzionalità enterprise.
 
-Queste caratteristiche lo rendono ideale per SaaS early-stage che vogliono lanciare velocemente.
+### L'economia degli affiliati, spiegata davvero
 
-:::
+Prima di scegliere Tolt (o qualsiasi piattaforma), devi capire l'economia del tuo programma. Tre numeri chiave:
 
-### Le caratteristiche chiave di Tolt
+**Costo per acquisizione (CAC) target.** Quanto sei disposto a pagare per un cliente acquisito via affiliato? Tipicamente, è 10-30% del primo MRR o del primo anno di revenue. Se il tuo ARPU è $50/mese, un CAC di $50-150 è ragionevole.
 
-**Modello revenue-share.** Paghi una percentuale del revenue generato dagli affiliati (indicativamente 20-30% delle commissioni, il dettaglio è sul sito ufficiale). Zero fee fissi mensili, zero fee di setup.
+**Lifetime value (LTV).** Quanto vale un cliente nel tempo. Se il tuo churn è 5%/mese e ARPU è $50, l'LTV è circa $1.000. La regola: pagare fino al 20% dell'LTV come commissione è sostenibile.
 
-**Anti-frode.** Tolt ha sistemi di detection per click fraud, conversion fraud, e self-referral. Le transazioni sospette sono bloccate prima del payout.
+**Commissions ricorrenti vs one-time.** La scelta più strategica. Tolt supporta entrambi:
+- **One-time commission:** una tantum al signup, tipicamente 20-50% del primo pagamento. Cash flow negativo iniziale, ma limitato.
+- **Recurring commission:** percentuale del MRR per la vita del cliente. Tipicamente 10-30% del MRR mensile o annuale. Allinea gli affiliati ai tuoi obiettivi di retention.
+- **Hybrid:** una tantum + recurring ridotto. Esempio: 30% del primo pagamento + 10% recurring per 12 mesi. Bilanciato.
 
-**Materiali marketing.** Banners, email template, link generator, e strumenti per tracking. Gli affiliati hanno accesso a materiali pronti.
+La scelta influenza il tipo di affiliati che attrai. One-time attira affiliati "spray and pray" che cercano il guadagno veloce. Recurring attira affiliati che credono nel prodotto e vogliono costruire un reddito passivo.
 
-**Quality scoring.** Tolt assegna un punteggio di qualità agli affiliati basato su click, conversioni, e retention. Questo aiuta a identificare gli affiliati che portano lead di valore.
+### Architettura tecnica: come funziona il tracking
 
-**Payout internazionali.** Supporto per PayPal e bonifico bancario, con gestione delle valute multiple.
+Il tracking degli affiliati è più complesso di quanto sembri. Tolt risolve il problema con una serie di meccanismi.
 
-**API e webhook.** Per integrazioni custom con il proprio stack.
+**Tracking link.** Ogni affiliato riceve un link unico (es. toolt.com/?aff=ABC123 o tuosito.com/?via=ABC123). Tolt mette un cookie first-party sul browser del visitatore.
 
-### Casi d'uso concreti
+**Durata del cookie.** Configurabile (default 30-60 giorni). Se il visitatore converti entro quel periodo, la commissione va all'affiliato.
 
-:::pro Quando Tolt fa la differenza
+**Subdomain-safe tracking.** Tolt traccia attraverso root domain e subdomini (es. tuosito.com e app.tuosito.com). Importante se il marketing site e il product vivono su domini diversi.
 
-- **SaaS early-stage che vuole lanciare un programma referral** in poche ore, senza investimenti iniziali.
-- **Indie developer con un prodotto digitale** che vuole un canale di crescita organica.
-- **Creator che vendono corsi o template** e vogliono incentivare i loro studenti a promuovere.
-- **Bootstrapped startup** che preferisce un modello pay-for-performance.
-- **Team marketing snelli** che vogliono testare il canale affiliati prima di investire in un programma enterprise.
+**Sub-ID tracking.** Ogni link può avere sub-IDs (es. aff=ABC123&sub=email-campaign) per granular attribution. L'affiliato può segmentare le proprie campagne.
 
-:::
+**Two-way billing sync.** Tolt si sincronizza con Stripe/Paddle/Chargebee in tempo reale: quando un customer subscribe, Tolt registra la commissione; quando upgrade, la commissione si aggiorna; quando cancel, la commissione si ferma; quando refund, la commissione viene dedotta. È la parte più critica e dove Tolt eccelle.
 
-:::warning Quando Tolt non è la scelta giusta
+**Anti-fraud e self-referral prevention.** Tolt blocca self-referral (l'affiliato si registra come customer), detecta pattern sospetti, e permette approval manuale. Non perfetto, ma ragionevole.
 
-- **Hai bisogno di un programma enterprise** con contratti formali, compliance internazionale, e gestione di network di affiliati di alto livello. Per quello, FirstPromoter, PartnerStack, o Impact.
-- **Non hai ancora un prodotto stabile.** Lanciare un programma affiliati prima di avere un prodotto con retention e conversioni funzionanti è prematuro.
-- **Non hai un sistema di tracking affidabile.** Senza analytics chiare, non sai se gli affiliati portano valore.
-- **Hai volumi molto alti.** Il modello revenue-share può diventare costoso su volumi elevati; a quel punto, un programma proprietario con un admin dedicato può essere più efficiente.
+### Pricing, onestamente
 
-:::
+Tolt usa un modello tier basato sul revenue generato dagli affiliati (verificato luglio 2026):
 
-### Tolt vs i concorrenti diretti
+- **Basic, $69/mese.** Fino a $10k/mese di revenue da affiliati. Unlimited affiliati e referrals, custom domain, branded portal, 2 programmi, 3 partner groups, 3 team members, 3 commission flows. Payouts manuali. Adatto a programmi early-stage.
+- **Growth, $99/mese.** Fino a $20k/mese. Aggiunge auto payouts (2% processing fee), tax form collection (W-9/W-8, 1099), invoice generation, customizable email notifications. Adatto a programmi in crescita.
+- **Pro, $199/mese.** Fino a $50k/mese. Unlimited programmi, custom payout methods, dedicated Slack channel, no "powered by Tolt" branding. Adatto a programmi maturi.
+- **Enterprise, custom.** Programmi con +$50k/mese.
 
-**Tolt vs FirstPromoter.** FirstPromoter è un competitor più "enterprise", con pricing a abbonamento mensile (a partire da circa 100-200 €/mese). Tolt ha il modello revenue-share. Per SaaS che fatturano < 50k €/mese, Tolt è più economico. Per SaaS con volumi alti, FirstPromoter può essere preferibile (controllo completo e costi prevedibili).
+**Cosa NON è incluso al livello base che potresti aspettarti:**
+- Auto payouts richiedono Growth.
+- Customizable email notifications richiedono Growth.
+- "No powered by Tolt" richiede Pro.
+- White-label completo richiede Pro.
 
-**Tolt vs PartnerStack.** PartnerStack è focalizzato su programmi B2B e network di affiliati, con pricing enterprise (custom). Tolt è più "self-serve". Per aziende che vogliono un programma strutturato con account manager, PartnerStack. Per chi vuole un programma rapido e self-serve, Tolt.
+**Tolt ha alzato i prezzi 4 volte dal 2023.** Basic era $49, ora è $69 (+40%). Se firmi un budget annuale, tieni un 10-20% di tolleranza per futuri price increase.
 
-**Tolt vs Lemon Squeezy Affiliates.** Lemon Squeezy offre un programma affiliati integrato (per chi usa Lemon Squeezy come MoR). È semplice ma limitato. Tolt è più completo, ma richiede integrazione con il payment processor. Per chi usa già Lemon Squeezy, il loro programma può bastare. Per chi vuole più flessibilità, Tolt.
+**Tolt non prende commission percentage.** È una differenza sostanziale vs FirstPromoter (che prende fino al 5% del revenue generato da affiliati) o Impact (che prende 10-30%). Su programmi grossi, questo risparmio è significativo.
 
-**Tolt vs programma proprietario.** Un programma proprietario (con tracciamento custom, dashboard custom, gestione manuale) è possibile, ma richiede engineering. Tolt lo fornisce out-of-the-box, a un costo che cresce solo quando il programma funziona.
+### Le feature chiave in profondità
 
-**Tolt vs Rewardful.** Rewardful è un competitor diretto di Tolt, focalizzato su SaaS. La differenza è sottile: Rewardful ha un pricing più prevedibile (fee fisso mensile + % delle commissioni), Tolt ha un modello puramente revenue-share. La scelta dipende dalla preferenza per prevedibilità vs pay-for-performance.
+**Branded affiliate portal.** Gli affiliati accedono a un portale ospitato sul tuo dominio (es. affiliates.tuosito.com), con i tuoi colori, il tuo logo, e la tua copy. Vede il loro link personale, click stats, conversion data, payout history, e materiali marketing. Su Basic c'è il "powered by Tolt" che sparisce solo su Pro.
 
-### Pricing di Tolt
+**Recurring commission tracking.** La killer feature per SaaS. Tolt traccia upgrade, downgrade, refund, e cancellation in tempo reale, e aggiusta le commissioni di conseguenza. Se un customer upgrade da $50 a $100/mese, l'affiliato riceve commissione proporzionale. Se refund, la commissione viene dedotta.
 
-Tolt usa un modello revenue-share: paghi una percentuale delle commissioni pagate agli affiliati. I dettagli:
+**Custom commission per partner.** Puoi impostare commissioni diverse per singoli affiliati: 30% per i top performer, 20% per gli altri, 50% per i launch partner. La flessibilità è uno dei motivi per cui Tolt è apprezzato.
 
-- **Zero fee mensili, zero fee di setup.**
-- **Percentuale del revenue generato dagli affiliati** (verifica il sito ufficiale per la cifra esatta, indicativamente 20-30% delle commissioni).
-- **Payout minimi** per gli affiliati (es. $50) per evitare fee di transazione inefficienti.
+**Double-sided rewards (coupons).** L'affiliato può avere un coupon che dà uno sconto al customer E contemporaneamente genera commissione. È il pattern standard per SaaS con sconti di lancio.
 
-Per un SaaS che fattura 10k €/mese da affiliati con commissioni al 30% (cioè 3k €/mese di commissioni), il costo Tolt è circa 600-900 €/mese. Sufficientemente basso da essere giustificato dal ROI solo se il programma affiliati è un canale di crescita profittevole.
+**Global auto payouts.** Su Growth, pagamenti via PayPal, Wise, local bank, crypto, e wire. Con tax form collection (W-9/W-8 per US contractors) e 1099 filing. Per programmi con affiliati internazionali, è una manna.
 
-### Flusso pratico: un caso reale
+**Custom referral link slugs.** L'affiliato può scegliere il suo slug (es. tuosito.com/?via=mario-rossi invece di tuosito.com/?via=ABC123). Migliore brand recognition.
 
-Sofia è founder di un SaaS B2B che fattura 5k €/mese da outbound e content. Vuole lanciare un programma affiliati per avere un canale di crescita organica.
+**Email notifications.** Su Growth, puoi personalizzare le email che Tolt manda (signup, payout, referral, etc.). Su Basic, sono template fissi.
 
-**Giorno 1:** setup. Sofia configura Tolt: commissione 30% ricorrente per il primo anno, cookie 30 giorni, integrazione con Stripe.
+**Fraud detection.** Self-referral blocking, IP analysis, pattern detection. Non perfetto, ma ragionevole. Per frodi sofisticate, devi combinarlo con il tuo monitoring.
 
-**Giorno 2:** materiali. Crea banner, email template, e pagina di onboarding affiliati. Pubblica un post su LinkedIn e Hacker News per invitare i primi affiliati.
+### Casi d'uso reali
 
-**Settimana 2:** primi affiliati. Tre blogger nel settore si iscrivono, due accettano, e iniziano a promuovere.
+**SaaS early-stage con primo programma di affiliazione.** Tolt Basic, custom domain, 1-2 programmi, commissioni 30% recurring. Setup: 1 ora. Primi affiliati via outreach personale. Risultato atteso: 5-15% del MRR da affiliati in 6 mesi.
 
-**Mese 2:** prime conversioni. 4 clienti nuovi arrivano via affiliati, generando 400 € di MRR. Tolt paga 120 € di commissioni ai blogger, e trattiene 36 € (30% di 120) come fee. ROI per Sofia: 400 € MRR in entrata, 156 € in uscita (commissioni + fee Tolt), per un guadagno netto di 244 €/mese.
+**Indie maker su AppSumo o Product Hunt launch.** Tolt Basic, commissioni generose (40% recurring per 12 mesi) per creare buzz al lancio. Tracking del conversion post-launch.
 
-**Mese 6:** scaling. Il programma affiliati porta 30% del nuovo MRR. Sofia ha 15 affiliati attivi, e i payout sono diventati un costo operativo prevedibile.
+**SaaS B2B con partner program.** Tolt Pro, multi-tier (referral partner, integration partner, agency partner), commissioni custom per tier, payout in valuta locale. Per programmi strutturati con relazioni a lungo termine.
 
-Senza Tolt, lanciare un programma simile avrebbe richiesto: sviluppo custom, gestione manuale dei payout, integrazione con Stripe. Tempo stimato: 2-4 settimane. Con Tolt: 1 giorno.
+**E-commerce ibrido su Shopify.** Tolt + Shopify, commissioni su prodotti fisici E digitali. Per brand che hanno sia SaaS sia shop.
+
+**Agency che gestisce programmi per clienti.** Tolt Pro con white-label, branded portal per ogni cliente, gestione multi-tenant.
+
+### Quando Tolt non è la scelta giusta
+
+**Programmi con +$50k/mese di revenue affiliato.** A quel punto, valuta FirstPromoter Enterprise, Impact, o PartnerStack. Hanno funzionalità enterprise che Tolt non ha.
+
+**E-commerce fisico puro.** Per marketplace fisici, Refersion, UpPromote, o soluzioni custom.
+
+**Settori regolamentati con compliance specifica.** Se hai bisogno di audit log, SOC 2, HIPAA, non c'è un tier Enterprise di Tolt che copra questo.
+
+**Integrazioni custom profonde.** Tolt ha webhooks e API, ma se devi fare integrazioni custom complesse, meglio soluzioni con API più mature (Impact, PartnerStack).
+
+### Tolt vs FirstPromoter vs PartnerStack vs Rewardful vs Impact
+
+**Tolt vs FirstPromoter.** FirstPromoter è il concorrente più diretto. Storicamente FirstPromoter prende 5% del revenue affiliato in tier più alti. Tolt ha 0% commission. Su programmi grossi, Tolt risparmia migliaia di dollari/anno. FirstPromoter ha più funzionalità enterprise (audit log, white-label, dedicated support). Per SaaS indie/mid-market, Tolt vince su prezzo. Per enterprise, FirstPromoter vince su features.
+
+**Tolt vs PartnerStack.** PartnerStack è più enterprise-oriented, con focus su partner ecosystem (non solo affiliati ma anche resellers, integrators). Più costoso, più complesso, adatto a aziende con programmi partner strutturati. Tolt è più snello e focalizzato.
+
+**Tolt vs Rewardful.** Rewardful è il tool entry-level per SaaS indie. Più economico (entry-level a $29/mese), meno funzionalità. Per chi parte da zero con budget limitato, Rewardful è OK. Tolt è il passo successivo naturale.
+
+**Tolt vs Impact.** Impact è il leader enterprise. Ha la sua rete di affiliati, software maturo, e pricing enterprise. Per programmi che vogliono attingere alla rete Impact, è l'unica opzione. Tolt non ha una rete di affiliati propria.
+
+**Tolt vs Refersion.** Refersion è più orientato a e-commerce, meno a SaaS. Tolt vince per SaaS.
+
+### Setup pratico: da zero al primo affiliato attivo in un giorno
+
+**1. Crea l'account.** Su tolt.com, signup, 14-day free trial, no credit card. 5 minuti.
+
+**2. Connetti Stripe/Paddle/Chargebee.** Settings → Integrations. OAuth con il tuo account Stripe, autorizza Tolt a leggere customers, subscriptions, invoices. 5 minuti.
+
+**3. Configura il primo programma.** Programs → New. Definisci nome, commissioni (percentage, recurring, duration), cookie duration. 15 minuti.
+
+**4. Configura il branded portal.** Settings → Branding. Dominio personalizzato (es. affiliates.tuosito.com), colori, logo. 15 minuti.
+
+**5. Definisci i materiali marketing.** Resources page con link, banner, email copy. Crea 2-3 asset base. 30 minuti.
+
+**6. Testa con te stesso.** Crea un account affiliato di test, fai una simulazione di referral, verifica che la commissione venga tracciata. 15 minuti.
+
+**7. Recluta i primi affiliati.** Outreach personale ai tuoi primi 10-20 candidati: blogger di nicchia, creator YouTube, podcast host, integration partners. 1-2 ore.
+
+In un giorno hai un programma live. In una settimana, hai i primi affiliati attivi. In un mese, hai conversioni.
+
+### Errori comuni
+
+**Offrire commissioni troppo basse per attrarre affiliati.** Sotto 20% recurring, il programma fatica a competere con alternative. Allinea con i tuoi concorrenti.
+
+**Non curare il branded portal.** Il portale affiliati è la prima impressione per i tuoi partner. Se è generico, la fiducia cala. Investi tempo in branding e copy.
+
+**Ignorare l'onboarding degli affiliati.** Non basta pubblicare il link. Chiama i top affiliati, spiega il prodotto, dai loro accesso a materiali. Senza onboarding, il programma langue.
+
+**Dimenticare di ottimizzare le commissioni.** A 6 mesi, analizza quali affiliati performano e quali no. Aumenta le commissioni per i top, riduci per gli inattivi.
+
+**Sottovalutare l'attrito del payout.** Se i tuoi affiliati sono internazionali e tu non hai auto payouts (Growth), il payout manuale è un incubo. Cresci al tier superiore quando ne hai bisogno.
 
 ### Le domande che ci fanno più spesso
 
-**Tolt è difficile da configurare?**
-No, l'interfaccia è self-serve. Il setup di base richiede 1-2 ore, inclusa l'integrazione con il payment processor.
+**Tolt è meglio di FirstPromoter?**
+Dipende dal tuo programma. Tolt ha pricing flat (0% commission), FirstPromoter prende 5% su tier alti. Tolt ha meno funzionalità enterprise. Per SaaS indie/mid-market, Tolt vince.
 
-**Quanto si paga?**
-Il modello è revenue-share: una percentuale delle commissioni pagate agli affiliati. Zero fee fissi. Verifica il sito ufficiale per la cifra corrente.
+**Quanto costa davvero un programma di affiliazione?**
+Tolt Basic a $69/mese + i costi delle commissioni che paghi agli affiliati. Su un programma con $5k/mese di revenue da affiliati e 30% commission, paghi $1.500/mese agli affiliati + $69 a Tolt = $1.569/mese.
 
-**Posso usare Tolt se non ho Stripe?**
-Sì, Tolt si integra con Stripe, Paddle, Lemon Squeezy, e altri. Verifica la lista corrente sul sito ufficiale.
+**Posso passare da Rewardful a Tolt?**
+Sì, ma con effort. Esporti la lista affiliati, reimporti in Tolt, re-emetti i link, e gestisci il periodo di transizione. Pianifica 1-2 settimane.
 
-**Tolt gestisce i payout internazionali?**
-Sì, con PayPal e bonifico. Le valute supportate dipendono dal payment processor integrato.
+**Funziona con Stripe Atlas?**
+Sì, Tolt funziona con qualsiasi Stripe account. Stripe Atlas è un setup specifico ma l'integrazione è la stessa.
 
-**Come gestisco il quality scoring degli affiliati?**
-Tolt offre un punteggio di qualità automatico basato su click, conversioni, e retention. Puoi usarlo per identificare gli affiliati da premiare (con commissioni più alte) o da bloccare.
+**Quanto devo pagare i miei affiliati?**
+Dipende dal tuo LTV. Regola pratica: 20-30% recurring per SaaS con LTV $1k+. Per prodotti one-time, 20-50% del primo pagamento. Confronta con i concorrenti.
 
-**Tolt ha un marketplace di affiliati?**
-Sì, Tolt ha un marketplace dove i SaaS possono essere scoperti da potenziali affiliati. L'efficacia dipende da quanto è attivo il marketplace.
+**Tolt fa marketing per trovare affiliati?**
+No. Tolt è il software, non la rete. Trovare affiliati è il tuo lavoro (outreach, content marketing, conference, ecc.).
 
-**Posso gestire pagamenti di commissioni in criptovalute?**
-No, Tolt supporta solo metodi di pagamento tradizionali (PayPal, bonifico). Per payout in crypto, servono soluzioni custom.
+### Alternative da considerare
 
-**Tolt è integrato con il mio CRM?**
-Tolt ha integrazioni con i CRM principali via webhook. Per integrazioni custom, l'API è documentata.
+- **FirstPromoter.** Meno economico a programmi grossi, più features enterprise.
+- **PartnerStack.** Enterprise, ecosystem partner, più costoso.
+- **Rewardful.** Entry-level, meno features, più economico.
+- **Impact.** Enterprise leader, con rete di affiliati propria.
+- **Refersion.** E-commerce, meno adatto a SaaS.
+- **Build custom con Stripe + dashboard.** Per team engineering con esigenze molto specifiche.
 
 ### Cosa ci aspettiamo da Tolt nei prossimi mesi
 
-Le aree da osservare:
+**Integrazione con più payment processor.** Shopify già supportato. Possibili espansioni a Lemon Squeezy, Recurly, o Chargebee 2.0.
 
-- **Più integrazioni con CRM e marketing tools.** Per tracciare il lead-to-revenue degli affiliati in modo più granulare.
-- **Modelli di commissione più flessibili.** Performance tiers, bonus, gamification per gli affiliati.
-- **Marketplace più attivo.** Più SaaS e più affiliati significano un ecosistema più vivo.
-- **Compliance internazionale.** Gestione delle tasse sulle commissioni per gli affiliati internazionali.
+**Più funzionalità di analytics.** Attribution migliore, segmentazione per fonte, lifetime value per affiliato. Sono richieste frequenti della community.
+
+**API più matura.** Webhook e API esistenti, ma con limitazioni. Una API più completa aprirebbe use case enterprise.
+
+**Compliance e audit.** W-9/W-8 e 1099 già su Growth. Possibili espansioni a GDPR compliance, audit log, e data residency EU per il mercato europeo.
 
 ### In sintesi
 
-Tolt è una piattaforma solida per lanciare un programma di affiliazione SaaS senza investimenti iniziali. È self-serve, intuitivo, e ha un modello di pricing che si ripaga solo se il programma funziona.
+Tolt è una scelta eccellente per SaaS early e mid-stage che vogliono un programma di affiliazione self-serve, con pricing flat e zero commission cut. Il setup è veloce, l'integrazione con Stripe/Paddle/Chargebee è nativa, e le feature ricorrenti (commission tracking, branded portal) sono ben fatte.
 
-Per SaaS early-stage, indie developer, e creator che vogliono testare il canale affiliati senza rischi, è uno strumento con ROI diretto. Per programmi enterprise con volumi alti, FirstPromoter o PartnerStack restano preferibili.
+Le limitazioni sono: tier alti che diventano costosi, funzionalità enterprise limitate, e prezzi che sono cambiati 4 volte in 3 anni (segnale da monitorare). Per il target giusto — SaaS indie/mid-market con programmi sotto $50k/mese di revenue affiliato — è una delle scelte migliori.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Tolt** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altre piattaforme affiliate** nella raccolta dedicata.
-- **Salva Tolt nei preferiti** se vuoi tornarci dopo.
-- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.`,
+- **Apri la scheda tool di Tolt** per confrontare con FirstPromoter, PartnerStack, e altri affiliate tool.
+- **Esplora la raccolta su SaaS business** per casi d'uso affini.
+- **Salva Tolt nei preferiti** se pensi di usarlo.
+- **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
+`,
   },
 
 ];

@@ -1,158 +1,208 @@
 ### Cosa fa Jenni AI, in una frase
 
-Jenni AI è un editor di scrittura accademica con AI integrata: aiuta a sbloccare la pagina bianca, a citare le fonti, a importare PDF, e a tenere note e bibliografia nello stesso workspace. Non è un "writer automatico": è un assistente pensato per il ricercatore, lo studente, e l'analista che scrive in modo continuativo.
+Jenni è un workspace AI pensato per chi scrive testi accademici: autocomplete, gestione citazioni in 2.600+ stili, chat con PDF, library management, e modalità di revisione specifiche (Proofread, Claim Confidence, Peer Review, Source Quality) — disegnato per ridurre l'attrito tra le note e il draft finito.
 
-### A chi serve davvero
+### A chi serve davvero, e a chi no
 
-Jenni AI non è per chi scrive email o post LinkedIn. È per chi scrive testi lunghi, strutturati, con citazioni:
+Jenni è per:
 
-- **Studenti universitari** che scrivono tesi, tesine, paper per esami.
-- **Dottorandi e ricercatori** che pubblicano paper, review sistematiche, capitoli di tesi.
-- **Analisti e consulenti** che producono report di ricerca basati su letteratura accademica.
-- **Content specialist** che producono long-form per pubblicazioni verticali (es. white paper, e-book specialistici).
+**Studenti universitari e dottorandi** che scrivono tesi, dissertazioni, literature review, paper. L'autocomplete accademico, la generazione automatica di citazioni APA/MLA/Chicago/Harvard/Vancouver, e l'import di PDF per source-grounded writing sono fatti per loro.
 
-Non è il tool adatto a chi cerca un "writer automatico" o un generatore di saggi: le policy accademiche sull'AI sono in evoluzione, e Jenni non è progettato per generare testi "non tracciati" dall'utente.
+**Ricercatori** che passano dalla lettura alla scrittura e vogliono citare correttamente. Source Quality (introdotto a luglio 2026) flagga citazioni ritrattate, outdated, o same-journal-heavy — un layer di verifica che altri tool non hanno.
 
-### Come funziona, passo per passo
+**Autori non madrelingua inglese** che scrivono paper in inglese. Il tone-of-voice AI assistant mantiene il registro accademico.
 
-Il flusso tipico con Jenni AI ha sei fasi.
+**Team accademici e istituti di ricerca** che vogliono standardizzare la qualità di scrittura tra collaboratori. Il Team plan include collaboration e admin dashboard.
 
-**1. Importazione delle fonti.** L'utente carica PDF (paper, articoli, capitoli) o importa riferimenti da DOI, URL, o da un file BibTeX. Jenni indicizza il testo, lo rende citabile, e lo rende disponibile per la ricerca interna.
+Non è per:
 
-**2. Outline e struttura.** L'utente definisce l'outline del paper o della tesi: sezioni, sottosezioni, argomenti. L'outline è il punto di partenza per la scrittura.
+**Content writer e marketer.** Per article SEO, blog post, o marketing copy, tool come Jasper, Copy.ai, o Frase sono più adatti. Jenni è specifico per accademico, e il suo tone è inadatto al marketing.
 
-**3. Autocomplete intelligente.** Mentre l'utente scrive, Jenni suggerisce continuazioni del testo basate sul contesto. Le suggerenze sono in stile accademico, non in stile copy. L'utente accetta, rifiuta, o modifica.
+**Autori di narrativa.** Per fiction, tool come Sudowrite, NovelAI, o il proprio editor sono migliori. Jenni non genera prosa creativa.
 
-**4. Citazioni automatiche.** L'utente inserisce citazioni in stile APA, MLA, Chicago, IEEE, Vancouver, Harvard, o in uno dei 8000+ stili supportati. Le citazioni sono inserite inline e raccolte automaticamente in una bibliografia finale.
+**Studenti che cercano scorciatoie anti-plagiarism.** Jenni include un plagiarism checker, ma usarlo per "pulire" un paper AI-generated è un uso improprio che può portare a problemi accademici. Il tool aiuta chi scrive, non chi vuole evitare di scrivere.
 
-**5. Note e appunti.** L'utente può aggiungere note durante la lettura delle fonti, organizzarle per argomento, e richiamarle nel testo durante la scrittura.
+**Chi cerca un reference manager puro.** Zotero, Mendeley, EndNote sono più maturi per citation management puro. Jenni è un writing environment, non un reference manager.
 
-**6. Antiplagio e revisione.** Jenni integra un controllo antiplagio (in partnership con servizi terzi) e offre strumenti di revisione (riassunti, parafrasi, verifica della coerenza).
+### Architettura: come è fatto
 
-:::tip Cosa distingue Jenni da un editor "normale"
+Jenni è un editor documentale con AI integrata. Le funzionalità si organizzano in cinque aree.
 
-- **L'autocomplete lavora su ciò che hai scritto**, non su prompt generici.
-- **Le citazioni sono contestuali**: inserisci (Smith, 2020) e Jenni espande in (Smith, J. et al., 2020, p. 42).
-- **I PDF diventano citabili**: leggi un paper, evidenzia un passaggio, citato automaticamente.
-- **La bibliografia si aggiorna da sola** se modifichi lo stile di citazione.
+**AI Autocomplete.** Suggerimenti di completamento che apprendono dal tuo stile mentre scrivi. Non sono completamenti generici: si adattano al tono, vocabolario, e struttura del tuo documento. La qualità è significativamente migliore di ChatGPT per scrittura accademica lunga.
 
-Queste sono funzionalità che gli editor "normali" (Word, Google Docs) non hanno di default, e che richiedono plugin complessi per essere emulate.
+**AI Edit.** Strumenti di revisione AI: parafrasi con preservazione della citazione, espansione di paragrafi, raffinamento del tono, sintesi. Parafrasi con source preservation è critico per integrità accademica — non è solo "riformulare", è "riformulare mantenendo l'attribuzione".
 
-:::
+**Citation Management.** 2.600+ stili di citazione (APA 6/7, MLA 8/9, Chicago notes-bibliography, Harvard, Vancouver, e molti altri). Generazione automatica in-text citations da DOI, URL, o import. Bibliography export. Integrazione con Zotero e Mendeley.
 
-### La qualità dell'output, onestamente
+**Library e PDF Chat.** Upload di PDF, chat con i documenti ("riassumi il paper X", "qual è la metodologia usata?"), collections-based chat per interrogare interi folder di fonti. Atlas, il motore di ricerca interno, indicizza tutti i tuoi documenti.
 
-Jenni è utile per **sbloccare la pagina bianca**, non per **scrivere il paper al posto tuo**. Il valore aggiunto è duplice:
+**Review Modes.** Quattro modalità specifiche:
+- **Proofread:** grammar, spelling, style
+- **Claim Confidence:** verifica che le affermazioni nel testo siano supportate dalle fonti citate
+- **Tone of Voice:** assicura coerenza di registro
+- **Peer Review:** simula il feedback di un reviewer accademico
+- **Source Quality:** flagga fonti ritrattate, outdated, o ridondanti
 
-- **Meno attrito nella scrittura.** L'autocomplete riduce il tempo speso a formulare ogni frase.
-- **Più precisione nelle citazioni.** L'inserimento automatico evita gli errori di formattazione che costano punti nella review.
+Queste review modes sono il vantaggio competitivo di Jenni nel 2026. La Source Quality in particolare, introdotta a luglio 2026, è un layer di verifica che non esiste in altri tool.
 
-I limiti:
+### Pricing, onestamente
 
-- **Non sostituisce la lettura critica.** L'AI può proporre citazioni plausibili ma errate. Verifica sempre sull'originale.
-- **Può produrre prosa generica.** L'AI tende a "appiattire" lo stile. La supervisione editoriale resta necessaria.
-- **Le policy universitarie variano.** Verifica con il tuo dipartimento cosa è ammesso.
+Jenni ha tre tier pubblici (verificati luglio 2026 sul sito ufficiale):
 
-### Casi d'uso concreti
+| Tier | Prezzo | Limiti | Note |
+|------|--------|--------|------|
+| Free | $0 | 200 AI words/giorno, 10 AI autocompletes/giorno, 10 PDF uploads, 3 AI edits/mese, 5 AI chat/mese, 2 reviews/mese | Tier reale, non trial |
+| Plus | $12/mese (annuale) o $20/mese (mensile) | 5.000 autocompletes/mese, unlimited PDF uploads, 500 AI edits/mese, 500 AI chat/mese, 10 reviews/mese, latest features | Adatto a studenti attivi |
+| Pro | $29/mese (annuale) o $29/mese (mensile) | Unlimited su tutto, priority support | Adatto a ricercatori intensivi |
 
-:::pro Quando Jenni fa la differenza
+**Annual billing** su Plus fa risparmiare circa il 40% ($144/anno vs $240/anno).
 
-- **Tesi di laurea magistrale o dottorato.** 200 pagine, 150+ fonti, 6 mesi di lavoro. Jenni diventa il workspace unico.
-- **Paper per riviste peer-reviewed.** Cicli di submission multipli, citazioni da riformattare a ogni revisione, bibliografia da gestire.
-- **Report di ricerca interni.** Una società di consulenza che deve produrre 30 report/anno basati su letteratura accademica.
-- **Review sistematiche o meta-analisi.** Lavori che richiedono gestione rigorosa di centinaia di paper.
-- **White paper verticali.** Contenuti lunghi per thought leadership, con citazioni puntuali.
+**Costo realistico per uso accademico serio:** uno studente che scrive una tesi di laurea magistrale in 6 mesi consuma probabilmente 200-500 AI edits, 100-300 chat, e qualche migliaio di autocompletes. Plus a $12/mese × 6 = $72 copre abbondantemente.
 
-:::
+**Per un ricercatore attivo** che pubblica 3-4 paper/anno: Pro è giustificato. $29/mese × 12 = $348/anno.
 
-:::warning Quando Jenni non è la scelta giusta
+**Refunds:** Jenni offre refund entro 7 giorni per il primo acquisto. Per acquisti successivi, la policy è più restrittiva.
 
-- **Scrivi email, articoli blog, o copy.** Lo stile accademico è pesante per quel tipo di contenuti.
-- **Hai policy universitarie che vietano l'AI.** Verifica prima di adottarlo, anche solo per l'autocomplete.
-- **Scrivi narrativa o saggistica creativa.** L'autocomplete è ottimizzato per testi strutturati, non per prosa letteraria.
-- **Il tuo paper è di 5 pagine.** Il setup e l'overhead di gestione fonti non si giustifica per un singolo paper breve.
+### Le feature chiave in profondità
 
-:::
+**AI Autocomplete adattivo.** La differenza tra Jenni e ChatGPT per la scrittura: l'autocomplete di Jenni apprende dal tuo documento. Suggerimenti basati sul tono che stai usando, sul vocabolario che stai impiegando, sulle citazioni che hai già inserito. Non è generico, è contestuale.
 
-### Jenni vs i concorrenti diretti
+**Source-Grounded Autocomplete.** Per chi scrive paper con fonti specifiche, l'autocomplete può essere ancorato alle tue fonti. Carichi i PDF, l'autocomplete cita i tuoi documenti invece di generare dal nulla. È la differenza tra un paper "AI-assisted" e un paper "AI-generated".
 
-**Jenni vs Grammarly.** Grammarly corregge grammatica e stile, Jenni supporta il workflow accademico. Sono complementari: Grammarly per la pulizia del testo, Jenni per la struttura e le citazioni.
+**AI Chat con PDF.** Upload di documenti, poi chatti con loro. "Qual è la metodologia del paper X?", "Riassumi le conclusioni di Smith 2024", "Confronta paper X e paper Y". Il targeting è preciso: con `@filename.pdf` puoi ancorare la chat a un documento specifico. Su Plus, hai 500 chat/mese; su Pro, illimitate.
 
-**Jenni vs Scrivener.** Scrivener è un editor di lungo formato per scrittori (romanzieri, saggisti), senza AI. Jenni ha l'AI ma è focalizzato sull'accademico. Per un dottorando che scrive anche narrativa, sono entrambi utili in fasi diverse.
+**2.600+ Citation Styles.** La libreria di stili è tra le più ampie sul mercato. Include tutti i major (APA, MLA, Chicago, Harvard, Vancouver) e molti specialistici. La generazione automatica da DOI o URL è la parte che fa risparmiare tempo. Non devi più scrivere a mano le citazioni.
 
-**Jenni vs Zotero.** Zotero è un gestore di bibliografia open source, eccellente. Jenni integra gestione bibliografia + scrittura assistita. Per chi vuole solo citazioni, Zotero è sufficiente. Per chi vuole un workflow integrato, Jenni è più efficiente.
+**Integrazione con Zotero e Mendeley.** Sync delle library esterne. Le citazioni e i PDF che hai già in Zotero appaiono in Jenni senza duplicare.
 
-**Jenni vs ChatGPT / Claude.** I tool AI generalisti possono generare testo accademico, ma non hanno accesso diretto alle tue fonti, non gestiscono la bibliografia, e non offrono antiplagio integrato. Jenni è specializzato, ChatGPT/Claude sono generalisti.
+**Multilingual Support.** Scrittura in 30+ lingue, con capacità di "rewrite in English" mantenendo il significato. Utile per ricercatori non madrelingua inglese.
 
-**Jenni vs QuillBot.** QuillBot è focalizzato sulla parafrasi e il riassunto. Jenni è più ampio (scrittura + citazioni + note). Per un uso leggero di parafrasi, QuillBot può bastare. Per il workflow accademico completo, Jenni è più adatto.
+**Outline e Summary Builder.** Da note sparse, genera outline strutturato. Da documenti densi, genera summary. Sono strumenti di scaffolding per chi parte da zero.
 
-### Pricing di Jenni AI
+**Version History.** Track dei cambiamenti e revert a versioni precedenti. Per chi scrive draft lunghi con iterazioni multiple, evita disastri.
 
-Jenni ha un modello freemium con limiti sulla generazione AI, e tier a pagamento che sbloccano:
+**Browser Extension.** Jenni in Google Docs, e in altri web editor. Non tutte le funzionalità sono nell'estensione, ma l'autocomplete base sì.
 
-- Generazione AI illimitata.
-- Citazioni illimitate.
-- Accesso a tutti gli stili di citazione.
-- Antiplagio integrato.
-- Supporto prioritario.
+### Cosa fa bene, e cosa fa meno bene
 
-I piani variano nel tempo. Indicativamente, il tier "Pro" per utente singolo è nella fascia 10-20 €/mese (fatturato annuale). Per studenti con verifica accademica, sono spesso disponibili sconti dedicati.
+**Fa bene:** scrittura accademica con source grounding, citation management, AI chat con PDF, review modes specifiche (Source Quality, Claim Confidence). Sono i suoi superpoteri.
 
-### Flusso pratico: un caso reale
+**Fa meno bene:** prosa creativa, marketing copy, scrittura veloce senza source grounding. Per questi use case, tool diversi sono più adatti.
 
-Giulia è una dottoranda in economia, sta scrivendo il terzo capitolo della sua tesi. Ha 40 articoli da citare, 6 mesi di deadline, e il supervisor chiede revisioni strutturali frequenti.
+**Fa male:** generare paper interi "from scratch" con citazioni inventate. Jenni cita solo fonti reali (DOI, URL, library), ma usato impropriamente può generare paper con citazioni plausibili ma inventate. La qualità dell'output dipende dalla qualità delle tue fonti.
 
-**Settimana 1:** importa i 40 PDF, definisce l'outline (4 sezioni + bibliografia).
+### Limiti strutturali, da conoscere
 
-**Settimane 2-6:** scrive usando l'autocomplete, inserisce citazioni in stile APA, prende appunti per ogni articolo in Jenni.
+**Il plagiarism check è base.** Confronta con web sources, non con paper accademici indicizzati (Turnitin, iThenticate). Per submission a riviste con check serio, ti serve ancora Turnitin.
 
-**Settimana 7:** review con il supervisor. Le revisioni sono tutte strutturali: aggiunge una sezione, sposta paragrafi, aggiorna 12 citazioni. Jenni riformatta automaticamente.
+**L'output AI è rilevabile.** I detection tool (GPTZero, Originality.ai) identificano il testo AI-generated. Jenni non evade la detection. Il pattern corretto: Jenni aiuta a scrivere, tu rivedi e aggiungi il tuo punto di vista.
 
-**Settimana 8-10:** finalizzazione, export in Word per la submission interna al dipartimento.
+**La contestualizzazione è limitata.** Jenni non conosce il paper completo: lavora sul contesto locale del documento. Per review globali ("è il paper coerente con la tesi centrale?"), serve un supervisor umano.
 
-Tempo risparmiato rispetto al workflow manuale (Word + Zotero + Google Drive): circa 30 ore, distribuite sul ciclo. Il valore per Giulia è soprattutto nella riduzione del tempo dedicato alla gestione delle citazioni, non nella generazione del testo.
+**I modelli sottostanti sono GPT-class.** La qualità dipende dal modello, e Jenni non è trasparente su quale usa. In generale, è GPT-4-class con wrapper.
 
-### Le domande che ci fanno più spesso
+### Jenni vs Grammarly vs Sudowrite vs Zotero
 
-**Jenni AI è ammesso dalle università?**
-Dipende dalla policy del tuo corso. Verifica con il supervisor o con il regolamento didattico. Molte università permettono l'uso di AI assistant per bozze e revisione, vietano la generazione di testi finali.
+**Jenni vs Grammarly.** Grammarly è il re della grammar e spelling check. Più maturo, più polished UX, brand riconoscibile. Ma non ha source-grounded writing, citation management specifico per accademico, o PDF chat. Jenni è specializzato per accademico, Grammarly è generalista.
 
-**Le citazioni sono accurate?**
-Le citazioni sono basate sul match tra il tuo testo e le fonti caricate. Se il match è buono, la citazione è accurata. Se il match è debole, Jenni potrebbe proporre citazioni sbagliate. Verifica sempre.
+**Jenni vs Sudowrite.** Sudowrite è per fiction. Completamente diverso. Non c'è overlap reale.
 
-**Funziona in italiano?**
-Sì, con qualità variabile. Per lavori in inglese è ottimizzato. Per lavori in italiano, la precisione dell'autocomplete è buona, ma la gestione di citazioni in stile italiano (UNI, ISO) può richiedere configurazione manuale.
+**Jenni vs ChatGPT con plugin accademici.** ChatGPT può fare cose simili con plugin come ScholarAI o Consensus, ma è più fragile (i plugin cambiano, ChatGPT non è specializzato). Jenni è un environment dedicato.
 
-**Quanto costa?**
-Jenni offre un piano free con limiti mensili sulla generazione AI, e piani a pagamento a partire da circa 10-20 €/mese (fatturato annuale) per uso individuale. Sconti dedicati per studenti con verifica accademica.
+**Jenni vs Zotero + ChatGPT.** Zotero è un reference manager puro. Puoi usarlo con ChatGPT per citare, ma è workflow manuale. Jenni integra la citazione nel flow di scrittura.
 
-**Posso esportare in LaTeX?**
-Sì, l'esportazione in LaTeX è supportata. È uno dei punti di forza per chi scrive paper in ambienti accademici che richiedono LaTeX.
+**Jenni vs Paperpal / Writefull.** Sono competitor diretti nello spazio "AI for academic writing". Paperpal è editoriale-focused (journal targeting, submission prep), Writefull è più accademico-generico. Jenni ha Source Quality che è unique.
 
-**Jenni è meglio di Zotero + Word?**
-Sono approcci diversi. Zotero + Word è una combo tradizionale, gratuita, con setup manuale. Jenni è un workspace integrato, a pagamento, con setup più rapido. Per studenti che vogliono "funziona subito", Jenni è più efficiente. Per chi vuole massimo controllo e open source, Zotero è superiore.
+### Casi d'uso reali
 
-**Posso importare la mia bibliografia Zotero esistente?**
-Sì, è possibile importare da BibTeX, RIS, o DOI. La migrazione da Zotero a Jenni è fattibile, ma non è istantanea: richiede un'ora di setup iniziale.
+**Studente magistrale con tesi di 80 pagine.** Tier Plus, scrittura su 4 mesi, source grounding attivo su 30-40 paper letti, citation management, autocomplete per il tone. Risparmio: 30-40 ore di citation formatting manuale.
+
+**Dottorando con paper per conferenza.** Tier Pro, scrittura intensiva in 2-3 settimane, multiple revisioni con review modes, claim confidence per verificare le affermazioni. Quality check prima della submission.
+
+**Ricercatore con revisione di letteratura.** Tier Plus, PDF chat con 50+ paper, summary builder, outline generator, citation per il draft finale. Velocità di literature review: 2-3x rispetto al manuale.
+
+**Insegnante con preparazione materiale.** Tier Pro, outline delle lezioni, summary dei paper da assegnare, struttura delle slides. Non è lo use case primario ma funziona.
+
+### Setup pratico: da zero a un paper draft in 2 settimane
+
+**1. Crea l'account e importa le fonti.** Su jenni.ai, signup, scegli il tier (Pro se budget lo permette, altrimenti Plus). Importa i PDF delle fonti primarie, sincronizza con Zotero se lo usi. 1-2 ore.
+
+**2. Crea il documento.** New document, scegli citation style. Inizia l'outline. 30 minuti.
+
+**3. Scrivi con autocomplete.** Lascia che Jenni suggerisca. Accetta, modifica, o rifiuta. Il pattern corretto: scrivi tu le idee, lascia che Jenni formatti. 4-8 ore al giorno per 5-7 giorni.
+
+**4. Inserisci citazioni.** Mentre scrivi, usa la citation generation. DOI o URL della fonte, Jenni formatta in-text e bibliography. 30 minuti integrato nel flow.
+
+**5. Review con le modalità.** Proofread per grammar, Claim Confidence per verificare affermazioni, Source Quality per pulizia delle fonti, Tone of Voice per coerenza. 2-3 ore.
+
+**6. Version history.** Salva versioni a milestone (draft 1, draft 2, final). 15 minuti.
+
+**7. Esporta.** Word, LaTeX, o PDF, a seconda del submission target. 5 minuti.
+
+In 2 settimane hai un draft completo con citazioni formattate, review passate, e version history. Per submission, un giro finale di human review è comunque necessario.
+
+### Errori comuni
+
+**Generare paper senza leggere le fonti.** Jenni source-grounded è uno strumento potente, ma se non leggi le fonti, citi senza capire. Il risultato è un paper formalmente corretto ma intellettualmente vuoto. Leggi sempre.
+
+**Affidarsi solo all'AI per le citazioni.** Jenni automatizza la formattazione, ma la scelta delle citazioni è tua. Cita le fonti che hai letto, non quelle che "Jenni suggerisce".
+
+**Non fare Claim Confidence check.** La review mode Claim Confidence verifica che le affermazioni siano supportate. Senza, rischi affermazioni non coperte dalle fonti. Fallo sempre prima della submission.
+
+**Ignorare la Tone of Voice.** La coerenza di registro è importante per journal editor e reviewer. La review mode Tone of Voice è gratis, usala.
+
+**Pagare per Pro quando Plus basta.** Pro è per uso intensivo. Se scrivi 1-2 paper/anno, Plus è sufficiente. Non over-pagare.
+
+### Le domande che ci fanno più sposo
+
+**Jenni è meglio di ChatGPT per scrivere paper?**
+Per paper con citazioni e source grounding, sì. Per brainstorming o scrittura libera, ChatGPT va altrettanto bene.
+
+**Quanto costa in un anno?**
+Studente: Plus annuale $144/anno. Ricercatore: Pro $29/mese = $348/anno.
+
+**Funziona con Zotero?**
+Sì, integrazione nativa. Le library di Zotero si sincronizzano.
+
+**I paper scritti con Jenni superano i plagiarism check?**
+Dipende. Jenni parafrasa le fonti (non copia), ma il plagiarism check serio (Turnitin) può ancora flaggare. Per evitare problemi, usa Jenni come acceleratore di scrittura, non come generatore di paper.
+
+**Jenni è meglio di Grammarly?**
+Per accademico, sì. Per scrittura generale (email, blog, social), Grammarly è sufficiente.
+
+**C'è un trial?**
+Il tier Free è il trial permanente. 200 words/giorno sono sufficienti per testare il workflow.
+
+### Alternative da considerare
+
+- **Grammarly.** Grammar e spelling, generalista, non accademico-specializzato.
+- **Paperpal.** Academic writing con focus journal submission.
+- **Writefull.** Academic writing più generico.
+- **Sudowrite.** Fiction, completamente diverso.
+- **ChatGPT con plugin accademici.** Più fragile, più flessibile.
+- **Zotero + Word.** Workflow tradizionale, manuale, gratuito.
 
 ### Cosa ci aspettiamo da Jenni nei prossimi mesi
 
-Le aree da osservare:
+**Più review modes.** Source Quality è l'inizio. Claim Confidence e Peer Review sono già lì. Possibili estensioni: Replication Check, Funding Compliance.
 
-- **Integrazione con Overleaf e LaTeX.** Se Jenni apre un export più pulito verso Overleaf, diventa ancora più utile per chi scrive in LaTeX.
-- **Antiplagio proprietario.** L'integrazione attuale è con servizi terzi. Se Jenni ne sviluppa uno proprio (o lo integra in modo più stretto), il valore sale.
-- **Collaborazione tra co-autori.** Per paper scritti in team, una vera collaborazione real-time sarebbe un vantaggio.
-- **Supporto per lingue diverse dall'inglese.** L'italiano è supportato, ma l'AI è più forte in inglese. Miglioramenti in questo senso amplierebbero il mercato.
+**Migliore integrazione con reference manager.** Zotero e Mendeley già supportati. Sincronizzazione bidirezionale, gestione di metadata, e PDF management più profondi.
+
+**Migliori capacità multilingual.** Il tone-of-voice per non-madrelingua inglese è buono, non eccellente. Miglioramenti attesi.
+
+**Mobile companion.** L'app mobile è basilare. Un mobile companion più funzionale sarebbe utile per scrivere in mobilità.
 
 ### In sintesi
 
-Jenni AI è uno strumento valido per il workflow accademico, a patto di usarlo come supporto e non come sostituto del lavoro del ricercatore. La gestione delle citazioni e l'integrazione con le fonti sono i vantaggi concreti, non la generazione automatica del testo.
+Jenni è uno dei migliori tool di AI-assisted academic writing nel 2026. La combinazione di source-grounded autocomplete, citation management serio, e review modes specifiche (Source Quality) lo rende particolarmente utile per studenti e ricercatori. Il pricing è accessibile, il tier Free è reale, e il workflow è integrato.
 
-Per chi pubblica regolarmente, il risparmio di tempo (e di frustrazione) giustifica l'abbonamento. Per chi scrive un singolo paper, il free tier basta per provarlo.
+Le limitazioni principali sono: plagiarism check base, AI output rilevabile, e context limitation a livello di documento. Sono limiti strutturali degli LLM attuali, non specifici di Jenni.
+
+Per studenti e ricercatori, è uno dei migliori investimenti. Per content writer, è il tool sbagliato.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Jenni AI** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool di scrittura** nella raccolta dedicata.
-- **Salva Jenni nei preferiti** se vuoi tornarci dopo.
+- **Apri la scheda tool di Jenni AI** per confrontare con Paperpal, Grammarly, e altri writing tool.
+- **Esplora la raccolta su scrittura e produttività** per casi d'uso affini.
+- **Salva Jenni AI nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.

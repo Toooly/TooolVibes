@@ -1,163 +1,199 @@
 ### Cosa fa Windsor AI, in una frase
 
-Windsor AI è una piattaforma di marketing data e attribuzione che connette le tue fonti pubblicitarie (Meta, Google, LinkedIn, TikTok, ecc.), il CRM (HubSpot, Salesforce) e gli analytics in un unico layer, e ti permette di esportare il dato pulito verso BigQuery, Snowflake, Redshift o Looker.
+Windsor AI è una piattaforma no-code di data integration e marketing attribution che collega 325+ fonti di marketing e vendita a destinazioni come BigQuery, Snowflake, Google Sheets, Looker, e Power BI — e che include un modello di attribuzione multi-touch basato su Markov chain per capire quale canale sta davvero portando conversioni.
 
-### A chi serve davvero
+Non è solo un connettore. È un data pipeline + attribution engine per team marketing che non vogliono (o non possono) avere un data engineer a tempo pieno.
 
-Windsor non è per il singolo marketer che fa una campagna su Meta. È per il team marketing che ha bisogno di:
+### A chi serve davvero, e a chi no
 
-- **Attribuzione multi-touch reale**, non solo "ultimo click" di Google Analytics.
-- **Reportistica cross-canale** unificata, senza dover entrare in 6 dashboard diverse.
-- **Ownership del dato**, con export verso il proprio data warehouse.
-- **Performance monitoring di campagne e canali** in tempo reale.
+Windsor AI funziona bene per:
 
-I profili tipici:
+**Team marketing che spendono $20k-$500k/mese in ads su più canali.** Quando hai Meta Ads, Google Ads, TikTok, LinkedIn, e forse Pinterest tutti attivi, e devi capire quale canale sta realmente contribuendo, l'attribuzione last-click di Google Analytics mente. Windsor ti dà la verità multi-touch.
 
-- **Marketing team in scaleup e mid-market** (5-50 persone marketing) che stanno crescendo e hanno bisogno di un'infrastruttura dati seria.
-- **Agenzie media** che gestiscono portfolio di clienti e vogliono reportistica standardizzata.
-- **Data analyst marketing** che costruiscono dashboard e modelli di attribuzione custom.
-- **CFO e finance** che vogliono capire il ROI reale del marketing, canale per canale.
+**Aziende che vogliono centralizzare i dati marketing in un data warehouse.** Senza dover scrivere custom ETL. Colleghi le fonti, scegli la destinazione, e i dati arrivano puliti, normalizzati, e pronti per l'analisi.
 
-Non è il tool adatto a chi cerca un "dashboard facile senza setup": Windsor richiede un minimo di data literacy e di integrazione iniziale.
+**Team che usano BigQuery, Snowflake, o Redshift.** Windsor eccelle in questo caso, perché i dati arrivano in tempo reale e possono essere analizzati con SQL.
 
-### Come funziona, passo per passo
+**Marketing operations specialist che vogliono un'alternativa a Supermetrics.** Windsor ha più connettori, più destinazioni incluse, e pricing flat (vs per-source come Supermetrics).
 
-Il flusso operativo ha cinque fasi.
+**Agenzie media-buying che gestiscono 20+ clienti.** Il pricing flat di Windsor (vs per-utente o per-source) lo rende economicamente interessante per agency.
 
-**1. Connessione delle fonti dati.** Windsor offre connettori nativi per le principali piattaforme pubblicitarie (Meta Ads, Google Ads, LinkedIn Ads, TikTok, Pinterest, Reddit, X), per i CRM (HubSpot, Salesforce, Pipedrive), per i tool di email (Klaviyo, Mailchimp), e per le piattaforme di ecommerce (Shopify, WooCommerce). L'utente autorizza le connessioni via OAuth.
+Non è la scelta giusta per:
 
-**2. Mappatura dei campi.** Windsor normalizza i dati: spese, impression, click, conversioni, revenue, lead, customer id. La mappatura consente di unificare le metriche tra canali (es. "spend" diventa "cost" ovunque).
+**Aziende che spendono meno di $5k/mese in ads.** A volumi bassi, Google Analytics nativo è sufficiente, e Windsor è overkill.
 
-**3. Modelli di attribuzione.** Windsor supporta diversi modelli: last click, first click, linear, time decay, position-based, data-driven (con limiti sui volumi). L'utente sceglie il modello o ne confronta più di uno.
+**Team che hanno già una data infrastructure robusta.** Se hai un data engineer full-time e un Fivetran o Airbyte, Windsor è ridondante.
 
-**4. Dashboard e report.** Windsor offre dashboard pronte (ROAS, CPA, LTV per campagna) e template per report periodici. Gli utenti tecnici possono costruire dashboard custom.
+**Casi d'uso che richiedono server-side tracking.** Windsor è un data integration tool, non un server-side tracking tool. Per server-side CAPI, Enhanced Conversions, o conversion API, ti servono tool diversi (SignalBridge, Stape, o implementazione custom).
 
-**5. Export verso warehouse.** Il valore aggiunto principale di Windsor è l'export del dato normalizzato verso il proprio data warehouse (BigQuery, Snowflake, Redshift, Postgres). Una volta lì, il dato è disponibile per analisi avanzate, modelli di marketing mix, e dashboard BI custom.
+**Realtime decision-making su bid management.** Windsor è analytico, non operativo. Per bidding automatico su Meta o Google, usare le piattaforme native.
 
-:::tip Cosa distingue Windsor da un tool "solo dashboard"
+### Architettura: come funziona davvero
 
-La differenza è l'**ownership del dato**:
+Capire l'architettura è fondamentale per capire quando Windsor ha senso e quando no.
 
-- Un tool come Supermetrics o Funnel ti dà dashboard, ma ti "intrappola" nel loro prodotto.
-- Windsor ti dà il dato normalizzato, e tu lo porti dove vuoi.
-- Questo significa che puoi costruire il tuo modello di attribuzione, fare analisi personalizzate, e non perdere il dato se cambi tool.
+**Fonti (325+ connector).** Ogni connettore è un modulo che parla l'API di una piattaforma specifica: Meta Ads API, Google Ads API, TikTok API, LinkedIn Campaign Manager, HubSpot, Salesforce, Shopify, Klaviyo, Stripe, GA4, e così via. Tutti i connettori sono disponibili su tutti i piani — niente "premium connector" o upsell. È uno dei vantaggi competitivi rispetto a Supermetrics.
 
-Per un team marketing che cresce, questa differenza è significativa.
+**Destinazioni.** Dove vanno i dati. Le destinazioni supportate includono:
+- Data warehouse: BigQuery, Snowflake, Redshift, Databricks
+- Spreadsheet: Google Sheets, Excel
+- BI tool: Looker Studio, Power BI, Tableau, Google Sheets come BI
+- Custom: webhook, API
 
-:::
+Windsor include tutte le destinazioni su tutti i piani — un altro vantaggio su Supermetrics, che fa pagare extra per destinazioni aggiuntive.
 
-### Le metriche chiave che Windsor espone
+**Data transformation.** Quando i dati arrivano, Windsor li normalizza: rinomina i campi in un formato consistente, applica schema matching, gestisce i cambi di schema delle API (Meta cambia la sua API ogni 6 mesi, e i connettori si aggiornano di conseguenza). Per il data warehouse, questo significa tabelle pronte per l'analisi senza ETL custom.
 
-Windsor espone le metriche standard di marketing con normalizzazione cross-canale:
+**Sync schedule.** Puoi schedulare il sync: real-time, hourly, daily. Per la maggior parte dei casi d'uso marketing, daily è sufficiente. Real-time serve per bidding automation, ma Windsor non è progettato per quello.
 
-- **Spese** (cost, spend, budget).
-- **Impression, click, CTR, CPM, CPC.**
-- **Conversioni, CPA, ROAS.**
-- **Revenue, LTV per canale e campagna.**
-- **Attribution-adjusted metrics** (es. "credito" di ogni canale in una conversione multi-touch).
-- **Cross-channel overlap** (es. quante conversioni sono toccate da Meta + Google + email).
+**Attribution engine.** Questo è il valore aggiunto. Windsor include modelli di attribuzione multi-touch: first-touch, last-touch, linear, time-decay, position-based (U-shaped), e — la feature distintiva — Markov chain attribution. Markov calcola il "removal effect" di ogni canale: se togliessi quel canale, quanto calerebbero le conversioni? È il modello più sofisticato e il più onesto, perché non assume pesi uguali tra i canali.
 
-L'utente può combinare queste metriche in dashboard e report, o esportarle per analisi esterne.
+**MCP server.** Windsor offre un server Model Context Protocol che permette a ChatGPT, Claude, e Gemini di interrogare i tuoi dati marketing in linguaggio naturale. "Quanto ho speso su Meta Ads il mese scorso per la campagna X?" diventa una domanda che puoi fare a Claude invece di scrivere SQL.
 
-### Casi d'uso concreti
+### Pricing reale, calcolato onestamente
 
-:::pro Quando Windsor fa la differenza
+Windsor ha sei tier (verificati sul sito ufficiale a luglio 2026):
 
-- **Marketing team di scaleup** che investe 50k+ €/mese su più canali e ha bisogno di capire il ROI.
-- **Agenzie media** che gestiscono 5-20 clienti e vogliono reportistica standardizzata.
-- **Brand ecommerce** che vuole analizzare il customer journey cross-canale.
-- **B2B con sales cycle lungo** che vuole capire l'attribution tra LinkedIn, Google, e attività sales.
-- **Team finance** che ha bisogno di dati di spesa marketing normalizzati per i report CFO.
+**Free, $0/mese per sempre.** 1 utente, 1 fonte, 1 account, 1 destinazione, daily sync. È un tier reale, non un trial. Sufficiente per testare il workflow o per micro-progetti.
 
-:::
+**Basic, $19/mese annuale ($23 mensile).** Utenti illimitati, 3 fonti, 75 account, 5 destination task, daily sync, 5M monthly active rows (MAR) inclusi. Il delta di $4 tra mensile e annuale è piccolo, ma vale la pena l'annuale. Adatto a freelancer e team molto piccoli.
 
-:::warning Quando Windsor non è la scelta giusta
+**Standard, $99/mese annuale ($118 mensile).** 7 fonti, 75 account, 5 destinazioni. È il tier "sweet spot" per team marketing strutturati che hanno 5-7 piattaforme attive. Include Google Sheets, BigQuery, Snowflake, e i principali BI tool come destinazioni.
 
-- **Singolo marketer con una campagna su un canale.** Il setup non si giustifica.
-- **Team senza data analyst.** Windsor è un tool per data-informed team, non per chi vuole "solo un report".
-- **Volumi molto bassi (<10k di spesa mensile).** Il costo del tool potrebbe superare il beneficio.
-- **Budget analytics zero.** Windsor ha un costo di setup (tempo, integrazioni) che va preventivato.
+**Plus, $249/mese annuale ($298 mensile).** 10 fonti, 200 account, 5 destinazioni. Per team più grandi o multi-brand.
 
-:::
+**Professional, $499/mese annuale ($598 mensile).** 14 fonti, 500 account, 5 destinazioni, support prioritario. Per agenzie media-buying con molti clienti.
 
-### Windsor vs i concorrenti diretti
+**Enterprise, custom.** 14-300+ fonti, 50.000+ account, dedicated support, SLA.
 
-**Windsor vs Supermetrics.** Supermetrics è focalizzato sull'export verso Google Sheets, Looker, BigQuery. Windsor ha più connettori nativi e un modello di attribuzione più ricco. Per un uso "leggero" (es. report in Google Sheets), Supermetrics è più semplice. Per un uso enterprise, Windsor è più strutturato.
+**Attribution pricing separato:** questa è la parte che fa storcere il naso. Le funzionalità di attribution avanzate (Markov, multi-touch) sono in un tier separato:
+- Attribution Standard: $549/mese annuale ($658 mensile)
+- Attribution Professional: $699/mese annuale ($838 mensile)
 
-**Windsor vs Funnel.io.** Funnel è il competitor più diretto, con modello simile (connettori + normalizzazione + export). La differenza è sottile: Funnel ha un'UI più moderna, Windsor ha più modelli di attribuzione pronti. Per molti team, la scelta è indifferente — confronta pricing e connettori specifici.
+Quindi, se vuoi data integration + attribution avanzata, paghi due tier: Standard + Attribution Standard = $99 + $549 = $648/mese annuale. È caro. È il prezzo dell'attribution seria.
 
-**Windsor vs Triple Whale.** Triple Whale è focalizzato sull'ecommerce (Shopify, DTC brands). Windsor è più generalista. Per un brand ecommerce puro, Triple Whale è specializzato. Per un team marketing multi-canale generalista, Windsor è più adatto.
+**Overages:** $20 per 1M additional rows su Basic, variabile su altri tier. Per la maggior parte dei team, il MAR incluso è sufficiente.
 
-**Windsor vs Northbeam.** Northbeam è un altro competitor forte sul cross-channel. La differenza: Northbeam è più orientato a "media mix modeling", Windsor è più "attribution + dashboard". Per team che fanno MMM avanzato, Northbeam è preferibile. Per attribution operativa, Windsor è solido.
+### Le feature chiave in profondità
 
-**Windsor vs Google Analytics 4.** GA4 è free e fa attribution di base, ma è limitato a quel che Google vede. Windsor aggiunge Meta, LinkedIn, TikTok, CRM, e ti dà il dato esportabile. Non sostituisce GA4, lo completa.
+**325+ connettori.** La libreria è una delle più ampie del settore. Include tutti i major ad platform (Meta, Google, TikTok, LinkedIn, Pinterest, Reddit, X, Snapchat), i CRM (HubSpot, Salesforce, Pipedrive), e-commerce (Shopify, WooCommerce, BigCommerce), email (Klaviyo, Mailchimp, Sendgrid), analytics (GA4, Mixpanel, Amplitude), e molto altro. Tutti disponibili su tutti i piani.
 
-### Pricing di Windsor
+**Schema matching e incremental loading.** Quando colleghi Meta Ads e Google Ads insieme, i campi sono diversi ("spend" vs "cost", "campaign_name" vs "campaign"). Windsor normalizza in fase di sync, e fa incremental loading (solo i dati nuovi, non tutto ogni volta), che è critico per performance e costi.
 
-Windsor ha un modello di pricing a tier, basato su connettori, fonti dati, e volumi:
+**MCP server per AI interrogation.** Server Model Context Protocol che permette a LLM esterni (Claude, ChatGPT, Gemini) di fare query SQL-like sui tuoi dati. Invece di aprire Looker Studio, chiedi a Claude "qual è il ROAS di Meta Ads vs Google Ads negli ultimi 30 giorni, segmentato per campagna?".
 
-- **Free tier**: limitato a 1-2 connettori, utile per test.
-- **Pro**: 5-10 connettori, attribution di base, dashboard.
-- **Business**: 20+ connettori, attribution avanzata, export warehouse.
-- **Enterprise**: custom.
+**TV Ad Performance e AppsFlyer Master API.** Feature meno conosciute ma potenti: TV Ad Performance usa un algoritmo per collegare le TV ads a traffico web (rilevando spike quando una campagna TV va on air), e AppsFlyer Master API è per mobile attribution.
 
-I prezzi pubblicati sul sito variano nel tempo. Indicativamente, il tier Pro parte da 100-200 €/mese, e il tier Business da 500+ €/mese. Il pricing è spesso negoziato per volumi alti.
+**Budget Optimizer.** Algoritmo che suggerisce riallocazione del budget tra campagne basandosi su ROAS e attribution model. È uno strumento decisionale, non automatizza i cambi di budget.
 
-### Flusso pratico: un caso reale
+**White-label reports.** Su Enterprise. Per agenzie che vogliono presentare report con il proprio brand ai clienti.
 
-Marco è head of growth in una scaleup B2B che spende 60k €/mese tra Google Ads, LinkedIn, e content syndication. Il team finance chiede report di ROI cross-canale, e il CEO vuole capire se sta spendendo bene.
+**Custom domain per le dashboard.** Su Enterprise.
 
-**Settimana 1:** setup. Marco collega Google Ads, LinkedIn, HubSpot, e Google Analytics. Mappa i campi. Imposta i modelli di attribuzione (last click + first click + time decay, in confronto).
+### Quando Windsor ha senso, e quando no
 
-**Settimana 2:** primi report. Marco scopre che LinkedIn, su cui spendeva 30k €/mese, porta il 5% delle conversioni con last click, ma il 25% con time decay. La storia è diversa a seconda del modello.
+**Sì, se:** spendi $20k+/mese in ads, hai 5+ fonti attive, vuoi dati in un warehouse o BI tool, e/o vuoi attribution multi-touch seria. Il ROI è chiaro.
 
-**Settimana 3:** export verso BigQuery. Il team data costruisce una dashboard custom che combina Windsor + dati sales + dati prodotto.
+**No, se:** spendi poco, hai poche fonti, non hai bisogno di attribution (last-click va bene), o hai già un data team che costruisce pipeline custom.
 
-**Mese 2:** decisione. Marco sposta 10k €/mese da LinkedIn a Google Ads (che ha un ROI migliore su first click e contribuisce di più al bottom funnel). Risultato atteso: +15% di MQL senza aumento di spesa.
+**Caso borderline:** se spendi $5-20k/mese e hai 3-4 fonti, Basic o Standard sono sufficienti. L'attribution separata è un costo extra da valutare solo se il last-click davvero non basta.
 
-ROI di Windsor per Marco: un singolo spostamento di budget di 10k/mese ripaga 1000+ volte il costo del tool.
+### Windsor vs Supermetrics vs Fivetran vs Improvado
 
-### Le domande che ci fanno più spesso
+**Windsor vs Supermetrics.** Il confronto più diretto. Supermetrics ha più connettori storici (è nato prima), ma Windsor ha: pricing flat vs per-source, tutte le destinazioni incluse, e attribution built-in. Supermetrics è più caro a parità di volumi, specialmente quando aggiungi più fonti o destinazioni. Per team che vogliono data integration puro senza attribution, sono molto simili. Per team che vogliono anche attribution, Windsor vince.
 
-**Windsor è difficile da configurare?**
-Richiede un setup di 2-5 giorni per un data analyst. Non è un "click and go", ma non è nemmeno un progetto di mesi. La documentazione è buona.
+**Windsor vs Fivetran.** Fivetran è il leader di mercato per data integration enterprise. Ha più connettori, più destination, più robustezza, ma è significativamente più caro (entry-level intorno a $500/mese) e richiede setup più tecnico. Per enterprise con data team, Fivetran è la scelta. Per team marketing che vogliono qualcosa di più accessibile, Windsor è meglio.
 
-**Posso esportare in Google Sheets?**
-Sì, ma il valore principale di Windsor è l'export verso data warehouse (BigQuery, Snowflake, ecc.). Google Sheets è supportato ma è un uso "leggero".
+**Windsor vs Improvado.** Improvado è più enterprise-oriented, con focus su custom data transformation e routing. Pricing enterprise, setup più complesso. Per team marketing mid-size, Windsor è più accessibile.
 
-**Windsor supporta l'italiano?**
-Sì, l'interfaccia è multilingua. I dati elaborati sono naturalmente nella lingua delle fonti.
+**Windsor vs Airbyte (open source).** Airbyte è open source e self-hostable, gratis, ma richiede engineering per setup e manutenzione. Per team con data engineer, Airbyte è più flessibile. Per team marketing senza engineering, Windsor vince per accessibilità.
 
-**Quanto costa?**
-Il pricing è a tier, a partire da circa 100-200 €/mese per il piano Pro. Il piano Business (consigliato per team marketing strutturati) parte da 500+ €/mese. Il pricing è spesso personalizzato.
+**Windsor vs build custom con Python e Airflow.** Per team data maturi, build custom è il massimo della flessibilità. Per team marketing che vogliono "connetti fonti e dammi i dati", Windsor è molto più veloce.
 
-**Windsor è un "media mix modeling" tool?**
-No, è un attribution + dashboard tool. Il media mix modeling è un approccio diverso (statistico, richiede più dati storici) ed è offerto da tool come Northbeam o da data scientist custom.
+### Casi d'uso reali
 
-**Windsor può sostituire Google Analytics?**
-No, si integra. GA4 continua a essere utile per l'analisi del comportamento on-site. Windsor aggiunge il pezzo cross-channel.
+**E-commerce DTC con $100k/mese su Meta + Google.** Tier Standard, connetti Meta Ads, Google Ads, Shopify, Klaviyo. Destinazione: BigQuery. Attribution Standard per capire il ruolo di ogni canale. Risultato: capisci che Meta è per awareness, Google è per conversion, email è per retention, e sposti budget di conseguenza.
 
-**Il dato è in tempo reale?**
-Sì, con un lag di 1-3 ore rispetto alle piattaforme pubblicitarie (dipende dai connettori).
+**B2B SaaS con $50k/mese su LinkedIn + Google + HubSpot.** Tier Standard, connetti LinkedIn Ads, Google Ads, HubSpot. Destinazione: BigQuery. Analisi del full funnel: impression → click → lead → MQL → SQL → closed-won. Capisci che LinkedIn genera lead che si chiudono a $5k ACV, Google genera lead che si chiudono a $1k ACV, e aggiusti il bidding.
+
+**Agenzia media-buying con 15 clienti.** Tier Professional, connetti 15 Meta Ads account e 15 Google Ads account. Destinazione: Looker Studio dashboard per cliente. Report mensili per ogni cliente. Risparmio: 10+ ore a settimana rispetto a dashboard manuali.
+
+**Marketing team senza data engineer.** Tier Standard + Attribution Standard, connetti 5-7 fonti, destinazione Google Sheets. Il team marketing può fare analisi senza dipendere dall'IT.
+
+### Setup pratico: da zero al primo sync in 30 minuti
+
+**1. Crea l'account e scegli le fonti.** Su windsor.ai, signup. Vai su "Sources", seleziona le piattaforme da collegare. Per ogni fonte, autorizza l'accesso OAuth. Tempo: 10 minuti.
+
+**2. Scegli la destinazione.** "Destinations". Le opzioni: Google Sheets (più semplice), BigQuery (richiede setup), Looker Studio (visualizzazione). Per il primo test, Google Sheets. Tempo: 5 minuti.
+
+**3. Configura il primo data flow.** "Data Flows" → "New". Seleziona fonte, destinazione, e campi da sincronizzare. Configura la frequenza (daily per default). Tempo: 10 minuti.
+
+**4. Verifica il primo sync.** Trigger manual sync, verifica che i dati arrivino nella destinazione. Tempo: 5 minuti.
+
+**5. Costruisci la prima dashboard (opzionale).** Se destinazione è Looker Studio o Google Sheets, costruisci una dashboard base. Tempo: 30-60 minuti per una dashboard decente.
+
+In 30 minuti hai dati che fluiscono. In un'ora hai una dashboard funzionante. In un giorno hai insight che prima non avevi.
+
+### Errori comuni
+
+**Sottovalutare il numero di fonti necessarie.** "Useremo Meta e Google, basta quelli" diventa presto "ci serve anche Shopify, Klaviyo, HubSpot". Aggiungere fonti a metà contratto è facile, ma il pricing scala. Meglio fare un inventario realistico prima.
+
+**Confondere data integration con attribution.** Sono due problemi diversi. L'integration ti dà i dati. L'attribution ti dà la storia di quei dati. Se il tuo problema è capire il customer journey, ti serve attribution, e il tier sale.
+
+**Sottovalutare la Markov attribution.** Molti team si accontentano del first/last touch. Markov è il modello più onesto, ma richiede un volume minimo di conversioni per essere statisticamente valido. Sotto 100 conversioni/mese, i risultati sono rumorosi.
+
+**Ignorare la qualità dei dati di partenza.** Se Meta Ads è tracciato male (pixel rotto, conversion API non configurato), Windsor non ti salva. I dati di input devono essere puliti.
+
+**Dimenticare la data governance.** Chi può accedere a quali dati? Windsor ha RBAC, ma configurarlo è noioso. Fallo il primo giorno, non dopo il primo data leak.
 
 ### Cosa ci aspettiamo da Windsor nei prossimi mesi
 
-Le aree da osservare:
+**Più AI agenti nativi.** L'MCP server è l'inizio. L'evoluzione è agenti che fanno analisi autonoma, identificano anomalie, e ti notificano.
 
-- **AI-assisted insights.** Se Windsor introduce alert e insight automatici ("questa campagna ha un CPA anomalo"), il valore sale.
-- **Modelli di attribution più granulari.** Soprattutto per il B2B, dove i sales cycle sono lunghi e multi-stakeholder.
-- **Integrazione con strumenti di marketing mix modeling.** Per chi vuole combinare attribution operativa con MMM strategico.
-- **Predictive analytics.** Previsioni di spesa, di performance, di mix ottimale.
+**Integrazione più profonda con i data warehouse.** Snapshot, change data capture, e sync bidirezionale tra Windsor e warehouse. Per data team che vogliono Windsor come parte di un'architettura più ampia.
+
+**Causal inference più sofisticata.** Markov è buono, ma causal inference con dati osservazionali è il prossimo livello. Se Windsor ci arriva, diventa il leader incontrastato.
+
+**Compliance e data residency.** SOC 2, GDPR, HIPAA per casi d'uso enterprise. Già in roadmap.
+
+### Le domande che ci fanno più spesso
+
+**Windsor è meglio di Supermetrics?**
+Per data integration puro, sono simili. Per pricing, Windsor vince (flat vs per-source). Per attribution built-in, Windsor vince. Per libreria di connettori legacy, Supermetrics ha un piccolo vantaggio.
+
+**Quanto costa davvero?**
+Tier Standard a $99/mese è il sweet spot per team marketing mid-size. Se aggiungi Attribution Standard, arrivi a $648/mese. Per team che spendono $50k+/mese in ads, il ROI è misurabile in settimane.
+
+**Posso usarlo senza data warehouse?**
+Sì, Google Sheets come destinazione funziona. Non è elegante come BigQuery, ma per team senza data engineer, è l'unica opzione realistica.
+
+**Windsor supporta il mio CRM?**
+Probabilmente sì. La libreria copre HubSpot, Salesforce, Pipedrive, Zoho, e altri. Verifica sul sito ufficiale per il tuo caso specifico.
+
+**Funziona per server-side tracking?**
+No. Windsor è per data integration, non per conversion API. Per server-side CAPI, usa Stape, SignalBridge, o implementazione custom con Meta CAPI / Google Enhanced Conversions.
+
+**Quanto è affidabile il sync?**
+Windsor ha SLA del 99.5% su Standard, 99.9% su Plus e superiori. In pratica, i sync daily sono affidabili. Per real-time critico, meglio soluzioni custom.
+
+### Alternative da considerare
+
+- **Supermetrics.** Più connettori legacy, pricing per-source. Buono se hai bisogno di connettori molto specifici.
+- **Fivetran.** Enterprise, più caro, più robusto. Per data team strutturati.
+- **Improvado.** Enterprise, custom transformation. Per agenzie media grandi.
+- **Airbyte.** Open source, gratis, richiede engineering. Per team con data engineer.
+- **Make / n8n.** General automation, possibilità di fare data integration custom, più cheap ma più fragile.
+- **Build custom.** Per data team che vogliono massima flessibilità.
 
 ### In sintesi
 
-Windsor AI è uno strumento solido per team marketing che hanno bisogno di attribution cross-channel, reportistica unificata, e ownership del dato. Non è un tool "per tutti": richiede data literacy e un minimo di investimento iniziale.
+Windsor AI è una scelta eccellente per team marketing che spendono significativamente in ads, hanno multiple fonti attive, e vogliono dati centralizzati senza costruire pipeline custom. Il pricing flat è un vantaggio competitivo vs Supermetrics. L'attribution Markov è unica nel settore. La limitazione principale è l'attribution separata che fa raddoppiare il costo per chi ha bisogno di multi-touch serio.
 
-Per un team marketing in crescita che spende 50k+ €/mese su più canali, è uno degli investimenti con ROI più diretto: un singolo spostamento di budget ben informato ripaga anni di abbonamento.
+Per team piccoli, è overkill. Per team grandi con data engineer, Fivetran è superiore. Per il target giusto — team marketing mid-size senza data engineer dedicato — è probabilmente la scelta migliore.
 
 ### Prossimi passi
 
-- **Apri la scheda tool di Windsor AI** per vedere pricing, integrazioni, e giudizio editoriale completo.
-- **Confronta con altri tool di marketing data** nella raccolta dedicata.
-- **Salva Windsor nei preferiti** se vuoi tornarci dopo.
+- **Apri la scheda tool di Windsor AI** per confrontare con Supermetrics, Fivetran, e altri data integration tool.
+- **Esplora la raccolta su marketing e analytics** per casi d'uso affini.
+- **Salva Windsor AI nei preferiti** se pensi di usarlo.
 - **Ricevi aggiornamenti editoriali** iscrivendoti al feed delle guide TooolVibes.
