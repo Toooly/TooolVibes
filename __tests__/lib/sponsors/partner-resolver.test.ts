@@ -168,3 +168,26 @@ describe("buildPartnerDestinationUrl", () => {
     );
   });
 });
+
+describe("rotational anti-collision", () => {
+  it("home offset 0 and archive offset 1 pick different partners on the same day", () => {
+    const now = new Date("2026-08-08T12:00:00Z");
+    const home = resolvePartnerCampaign({
+      placementKey: "home-featured-tool",
+      route: "home",
+      strategy: "rotation",
+      rotationOffset: 0,
+      now,
+    });
+    const archive = resolvePartnerCampaign({
+      placementKey: "catalog-native-sponsor",
+      route: "archivio",
+      strategy: "rotation",
+      rotationOffset: 1,
+      now,
+    });
+    expect(home).not.toBeNull();
+    expect(archive).not.toBeNull();
+    expect(home?.name).not.toBe(archive?.name);
+  });
+});

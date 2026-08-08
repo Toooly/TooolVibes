@@ -170,7 +170,7 @@ describe("PartnerCreativeRenderer — variant selection", () => {
 });
 
 describe("PartnerEditorialInsert — catalogue feature strip", () => {
-  it("renders the insert shell with the strip-density Taylora brand plate", () => {
+  it("renders the insert shell with the ribbon-density Taylora brand plate", () => {
     const { container } = render(
       <PartnerEditorialInsert
         placementKey="catalog-native-sponsor"
@@ -186,7 +186,7 @@ describe("PartnerEditorialInsert — catalogue feature strip", () => {
 
     const creative = container.querySelector('[data-creative="brand-plate"]');
     expect(creative).not.toBeNull();
-    expect(creative?.getAttribute("data-creative-density")).toBe("strip");
+    expect(creative?.getAttribute("data-creative-density")).toBe("ribbon");
   });
 
   it("keeps disclosure and sponsored rel on the outbound CTA", () => {
