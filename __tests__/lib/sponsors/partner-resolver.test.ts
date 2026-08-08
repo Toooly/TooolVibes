@@ -21,6 +21,7 @@ import {
   ZAPLATER_CAMPAIGN,
   type SponsorCampaign,
 } from "@/lib/sponsors/sponsor-placements";
+import { getDirectoryToolBySlug } from "@/lib/data/tooolvibes-directory";
 
 const NOW = new Date("2026-08-07T12:00:00.000Z");
 
@@ -140,6 +141,34 @@ describe("resolvePartnerCampaign — contextual surfaces", () => {
     expect(strong).toBe(2);
     expect(weak).toBe(1);
     expect(strong).toBeGreaterThan(weak);
+  });
+
+  it.each([
+    ["synthesia-ai", "taylora"],
+    ["weweb", "onweb24"],
+    ["livechat", "zaplater"],
+    ["flowise", null],
+    ["make", null],
+    ["omi", null],
+    ["jenni-ai", null],
+  ] as const)("keeps the semantic anchor %s → %s", (slug, sponsorId) => {
+    const tool = getDirectoryToolBySlug(slug);
+    expect(tool).toBeDefined();
+
+    const pick = contextual(
+      [...(tool?.segments ?? []), ...(tool?.tags ?? [])],
+      `${tool?.name ?? ""} ${tool?.shortDescription ?? ""}`,
+      slug,
+    );
+
+    expect(pick?.sponsorId ?? null).toBe(sponsorId);
+  });
+
+  it("selects only the exact best score, never a near-best campaign", () => {
+    const tags = ["website-builder", "no-code", "customer-support"];
+    expect(scoreCampaignRelevance(ONWEB24_CAMPAIGN, { tags })).toBe(3);
+    expect(scoreCampaignRelevance(ZAPLATER_CAMPAIGN, { tags })).toBe(2);
+    expect(contextual(tags)?.sponsorId).toBe("onweb24");
   });
 });
 

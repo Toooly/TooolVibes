@@ -23,6 +23,7 @@ export type SponsorTransportPayload = {
   route: string;
   destination?: string;
   toolSlug?: string;
+  formatVariant?: "inline" | "rail";
 };
 
 type BrowserTransport = {

@@ -29,6 +29,7 @@ export type SponsorAnalyticsIngestEvent = {
   route?: string;
   destination?: string;
   toolSlug?: string;
+  formatVariant?: "inline" | "rail";
 };
 
 export type SponsorAnalyticsIngestResult =
@@ -69,6 +70,12 @@ function cleanTs(value: unknown): number | undefined {
   return Math.floor(value);
 }
 
+function cleanFormatVariant(
+  value: unknown,
+): SponsorAnalyticsIngestEvent["formatVariant"] {
+  return value === "inline" || value === "rail" ? value : undefined;
+}
+
 export function validateSponsorAnalyticsPayload(
   body: unknown,
 ): SponsorAnalyticsIngestResult {
@@ -104,6 +111,11 @@ export function validateSponsorAnalyticsPayload(
     route,
     toolSlug: cleanString(body["toolSlug"]),
   };
+
+  if (name !== "sponsor_opportunity_click") {
+    const formatVariant = cleanFormatVariant(body["formatVariant"]);
+    if (formatVariant) value.formatVariant = formatVariant;
+  }
 
   const destination = cleanUrl(body["destination"]);
   if (destination) value.destination = destination;

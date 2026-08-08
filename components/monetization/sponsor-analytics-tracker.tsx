@@ -1,11 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  type MutableRefObject,
+  type ReactNode,
+} from "react";
 
 import {
   trackSponsorClick,
   trackSponsorImpression,
   trackSponsorOpportunityClick,
+  type SponsorFormatVariant,
 } from "@/lib/analytics/sponsor-events";
 
 export type SponsorImpressionTrackerProps = {
@@ -14,6 +21,8 @@ export type SponsorImpressionTrackerProps = {
   placementId: string;
   route: string;
   toolSlug?: string;
+  formatVariant?: SponsorFormatVariant;
+  impressionStateRef?: MutableRefObject<boolean>;
   className?: string;
   children: ReactNode;
 };
@@ -24,11 +33,14 @@ export function SponsorImpressionTracker({
   placementId,
   route,
   toolSlug,
+  formatVariant,
+  impressionStateRef,
   className,
   children,
 }: SponsorImpressionTrackerProps) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const firedRef = useRef(false);
+  const localFiredRef = useRef(false);
+  const firedRef = impressionStateRef ?? localFiredRef;
 
   useEffect(() => {
     const node = ref.current;
@@ -49,6 +61,7 @@ export function SponsorImpressionTracker({
               placementId,
               route,
               toolSlug,
+              ...(formatVariant ? { formatVariant } : {}),
             });
           } catch {
             // Analytics failure is non-fatal and never blocks the UI.
@@ -65,7 +78,7 @@ export function SponsorImpressionTracker({
     return () => {
       observer.disconnect();
     };
-  }, [campaignId, sponsorId, placementId, route, toolSlug]);
+  }, [campaignId, sponsorId, placementId, route, toolSlug, formatVariant, firedRef]);
 
   return (
     <div
@@ -75,6 +88,7 @@ export function SponsorImpressionTracker({
       data-campaign-id={campaignId}
       data-sponsor-id={sponsorId}
       data-placement-id={placementId}
+      data-format-variant={formatVariant}
     >
       {children}
     </div>
@@ -87,6 +101,7 @@ export type SponsorClickHandlerProps = {
   placementId: string;
   route: string;
   toolSlug?: string;
+  formatVariant?: SponsorFormatVariant;
   destination: string;
   children: ReactNode;
 };
@@ -97,6 +112,7 @@ export function SponsorClickHandler({
   placementId,
   route,
   toolSlug,
+  formatVariant,
   destination,
   children,
 }: SponsorClickHandlerProps) {
@@ -107,9 +123,10 @@ export function SponsorClickHandler({
       placementId,
       route,
       toolSlug,
+      ...(formatVariant ? { formatVariant } : {}),
       destination,
     });
-  }, [campaignId, sponsorId, placementId, route, toolSlug, destination]);
+  }, [campaignId, sponsorId, placementId, route, toolSlug, formatVariant, destination]);
 
   return (
     <span
@@ -118,6 +135,7 @@ export function SponsorClickHandler({
       data-campaign-id={campaignId}
       data-sponsor-id={sponsorId}
       data-placement-id={placementId}
+      data-format-variant={formatVariant}
     >
       {children}
     </span>

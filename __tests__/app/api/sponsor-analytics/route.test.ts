@@ -30,6 +30,7 @@ describe("sponsor analytics ingest endpoint", () => {
         sponsorId: "taylora",
         placementId: "home-partner-spotlight",
         route: "/",
+        formatVariant: "rail",
       }),
     );
 
@@ -40,6 +41,7 @@ describe("sponsor analytics ingest endpoint", () => {
     const value = log.mock.calls[0]?.[1] as Record<string, unknown>;
     expect(value.name).toBe("sponsor_impression");
     expect(value.placementId).toBe("home-partner-spotlight");
+    expect(value.formatVariant).toBe("rail");
   });
 
   it("strips query-string personal data from the destination", async () => {
@@ -103,6 +105,7 @@ describe("sponsor analytics ingest endpoint", () => {
     expect(response.status).toBe(204);
     const value = log.mock.calls[0]?.[1] as Record<string, unknown>;
     expect(value.name).toBe("sponsor_opportunity_click");
+    expect(value.formatVariant).toBeUndefined();
   });
 
   it("returns 405 for GET", async () => {

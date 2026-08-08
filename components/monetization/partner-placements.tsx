@@ -5,6 +5,7 @@ import {
   ArrowRight,
   ArrowUpRight,
 } from "lucide-react";
+import type { MutableRefObject } from "react";
 
 import {
   OpenSlotPreviewCreative,
@@ -16,7 +17,10 @@ import {
   SponsorClickHandler,
   SponsorImpressionTracker,
 } from "@/components/monetization/sponsor-analytics-tracker";
-import { trackSponsorOpportunityClick } from "@/lib/analytics/sponsor-events";
+import {
+  trackSponsorOpportunityClick,
+  type SponsorFormatVariant,
+} from "@/lib/analytics/sponsor-events";
 import {
   getMonetizationPlacement,
   isPublicMonetizationPlacement,
@@ -40,6 +44,8 @@ type PartnerPlacementProps = {
    * segments/tags, free text). Rotation surfaces ignore it.
    */
   context?: Partial<PartnerResolutionContext>;
+  formatVariant?: SponsorFormatVariant;
+  impressionStateRef?: MutableRefObject<boolean>;
 };
 
 export function resolvePublicPlacement(
@@ -483,6 +489,8 @@ export function ContextualPartnerBlock({
   className,
   trackerRoute = "",
   context,
+  formatVariant,
+  impressionStateRef,
 }: PartnerPlacementProps) {
   const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
 
@@ -504,10 +512,14 @@ export function ContextualPartnerBlock({
     sponsorId: placement.partner.name,
     placementId: placement.placementId ?? placement.key,
     route: trackerRoute,
+    formatVariant,
   };
 
   return (
-    <SponsorImpressionTracker {...trackerProps}>
+    <SponsorImpressionTracker
+      {...trackerProps}
+      impressionStateRef={impressionStateRef}
+    >
       <aside
         {...placementShellProps(
           placement,

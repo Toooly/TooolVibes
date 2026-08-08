@@ -80,6 +80,21 @@ describe("trackSponsorImpression", () => {
     expect(event.toolSlug).toBe("taylora");
   });
 
+  it("emits the optional Guide format variant", () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+
+    trackSponsorImpression({
+      campaignId: "taylora-v1-2026",
+      sponsorId: "taylora",
+      placementId: "article-partner",
+      route: "/posts/synthesia",
+      formatVariant: "rail",
+    });
+
+    const event = logSpy.mock.calls[0]?.[1] as { formatVariant?: string };
+    expect(event.formatVariant).toBe("rail");
+  });
+
   it("emits a new impression for the same key when called again", () => {
     // Semantics change: a remount on a new page view must re-emit.
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
@@ -186,6 +201,7 @@ describe("trackSponsorClick", () => {
       route: "/",
       destination: "https://taylora.com",
       toolSlug: "taylora",
+      formatVariant: "inline",
     });
 
     expect(logSpy).toHaveBeenCalledTimes(1);
@@ -193,10 +209,12 @@ describe("trackSponsorClick", () => {
       kind: string;
       destination: string;
       toolSlug?: string;
+      formatVariant?: string;
     };
     expect(event.kind).toBe("sponsor_click");
     expect(event.destination).toBe("https://taylora.com");
     expect(event.toolSlug).toBe("taylora");
+    expect(event.formatVariant).toBe("inline");
   });
 });
 

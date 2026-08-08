@@ -3432,3 +3432,54 @@
   --partner-plate-max-h: 9rem;
   width: min(100%, calc(9rem * 2));
 }
+
+/* Guide editorial rail — the same contextual placement in a vertical shell. */
+.guide-partner-experience--rail.partner-placement--contextual {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  min-height: 0;
+  max-height: none;
+}
+
+.guide-partner-experience--rail .partner-placement__body,
+.guide-partner-experience--rail .partner-placement__context-visual {
+  grid-column: 1;
+  grid-row: auto;
+}
+
+.guide-partner-experience--rail .partner-placement__body {
+  padding: var(--tv-space-component-sm);
+  gap: var(--tv-space-micro-sm);
+}
+
+.guide-partner-experience--rail .partner-placement__editorial h2 {
+  font-size: 1.05rem;
+  line-height: 1.2;
+  -webkit-line-clamp: 3;
+}
+
+.guide-partner-experience--rail .partner-placement__editorial p {
+  font-size: 0.84rem;
+  line-height: 1.45;
+  -webkit-line-clamp: 3;
+}
+
+.guide-partner-experience--rail .partner-placement__context-visual {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 2 / 1;
+}
+
+.guide-partner-experience--rail .partner-brand-plate--contextual {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  aspect-ratio: 2 / 1;
+}
+
+.guide-partner-experience--rail .partner-placement__action a {
+  width: 100%;
+  min-height: 2.75rem;
+  justify-content: center;
+}

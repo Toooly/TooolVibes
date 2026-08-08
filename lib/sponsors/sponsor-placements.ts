@@ -227,7 +227,7 @@ export const TAYLORA_CAMPAIGN: SponsorCampaign = {
     "audit",
     "certificati",
   ],
-  categoryTags: ["productivity"],
+  categoryTags: [],
   preferredRoutes: ["home", "archivio", "tool-detail", "posts", "collections"],
 };
 
@@ -282,8 +282,9 @@ export const ONWEB24_CAMPAIGN: SponsorCampaign = {
     "web design",
     "web development",
     "business website",
+    "no-code",
   ],
-  categoryTags: ["website-builder", "no-code", "ui-builder", "headless-cms"],
+  categoryTags: ["website-builder", "ui-builder", "headless-cms"],
   preferredRoutes: ["home", "archivio", "tool-detail", "posts", "collections"],
 };
 
@@ -339,11 +340,7 @@ export const ZAPLATER_CAMPAIGN: SponsorCampaign = {
     "chat",
     "messaggi",
   ],
-  categoryTags: [
-    "customer-support",
-    "sales",
-    "ai-agents",
-  ],
+  categoryTags: ["customer-support", "sales"],
   preferredRoutes: ["home", "archivio", "tool-detail", "posts", "collections"],
 };
 

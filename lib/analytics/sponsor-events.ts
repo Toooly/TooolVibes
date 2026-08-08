@@ -13,6 +13,8 @@ import {
   type SponsorTransportPayload,
 } from "@/lib/analytics/sponsor-transport";
 
+export type SponsorFormatVariant = "inline" | "rail";
+
 export type SponsorImpressionEvent = {
   kind: "sponsor_impression";
   campaignId: string;
@@ -20,6 +22,7 @@ export type SponsorImpressionEvent = {
   placementId: string;
   route: string;
   toolSlug?: string;
+  formatVariant?: SponsorFormatVariant;
 };
 
 export type SponsorClickEvent = {
@@ -29,6 +32,7 @@ export type SponsorClickEvent = {
   placementId: string;
   route: string;
   toolSlug?: string;
+  formatVariant?: SponsorFormatVariant;
   destination: string;
 };
 
@@ -103,6 +107,12 @@ function toTransportPayload(
     if (event.sponsorId) base.sponsorId = event.sponsorId;
   }
   if (event.toolSlug) base.toolSlug = event.toolSlug;
+  if (
+    event.kind !== "sponsor_opportunity_click" &&
+    event.formatVariant
+  ) {
+    base.formatVariant = event.formatVariant;
+  }
   if ("destination" in event) base.destination = event.destination;
   return base;
 }

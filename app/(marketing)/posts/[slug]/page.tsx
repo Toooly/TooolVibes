@@ -7,6 +7,7 @@ import { GuideArticleToc } from "@/components/guides/guide-article-toc";
 import { GuideArticleHero } from "@/components/guides/guide-article-hero";
 import { GuideArticleEnd } from "@/components/guides/guide-article-end";
 import { GuideRelatedRail } from "@/components/guides/guide-related";
+import { GuidePartnerExperience } from "@/components/guides/guide-partner-experience";
 import {
   GuideCallout,
   GuideKeyTakeaways,
@@ -32,14 +33,12 @@ import {
   defaultSocialImage,
 } from "@/lib/seo/metadata";
 import { shouldSuppressTinyAdzForPaidPartner } from "@/lib/monetization/commercial-density-policy";
+import { partnerSegmentsForToolSlug } from "@/lib/sponsors/partner-context";
 import {
   getMonetizationPlacement,
   isPublicMonetizationPlacement,
 } from "@/lib/monetization/placements";
-import {
-  ContextualPartnerBlock,
-  SponsorOpportunityLink,
-} from "@/components/monetization/partner-placements";
+import { SponsorOpportunityLink } from "@/components/monetization/partner-placements";
 import type { EditorialPostRecord } from "@/lib/types/article";
 import type { TocItem as TocItemType } from "@/components/guides/guide-article-toc";
 
@@ -104,10 +103,11 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   const partnerContext = {
     toolSlug: subjectDirectoryTool?.slug ?? post.tool_slug ?? undefined,
     tags: subjectDirectoryTool
-      ? [...subjectDirectoryTool.segments]
+      ? partnerSegmentsForToolSlug(subjectDirectoryTool.slug)
       : (post.tags ?? []),
     text: `${post.title} ${post.dek ?? ""}`,
   };
+  const partnerRailHostId = `guide-partner-rail-${post.slug}`;
   const guidePartnerPlacement = getMonetizationPlacement(
     "guide-inline-promo",
     partnerContext,
@@ -265,10 +265,10 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             {/* Partner & sponsor placements are owned by the monetization team.
                 Keep them OUT of the guides-styled content; surface them as
                 a dedicated band that the partner system controls. */}
-            <ContextualPartnerBlock
-              placementKey="guide-inline-promo"
-              className="guides-section"
+            <GuidePartnerExperience
               context={partnerContext}
+              railHostId={partnerRailHostId}
+              trackerRoute={`/posts/${post.slug}`}
             />
 
             {showArticleTinyAdz ? (
@@ -284,6 +284,11 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             <GuideArticleToc
               items={headingsRef.current}
               readingMinutes={readingMinutes}
+            />
+            <div
+              id={partnerRailHostId}
+              className="guides-article__partner-rail"
+              data-guide-partner-rail-host
             />
             <GuideRelatedRail
               post={post}
