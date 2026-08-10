@@ -228,3 +228,111 @@ export function getCollectionVariant(
 ) {
   return collection.stack_variants?.find((variant) => variant.label === label) ?? null;
 }
+
+/** Whether the collection has at least one declared stack variant. */
+export function hasStackVariants(collection: CuratedCollection) {
+  return Boolean(collection.stack_variants && collection.stack_variants.length > 0);
+}
+
+/** Returns ordered CORE tool slugs in the collection. */
+export function getCollectionCoreToolSlugs(collection: CuratedCollection) {
+  return collection.included_tools
+    .filter((slot) => slot.is_core)
+    .sort((a, b) => a.order - b.order)
+    .map((slot) => slot.tool.slug);
+}
+
+/** Returns ordered OPTIONAL tool slugs in the collection. */
+export function getCollectionOptionalToolSlugs(collection: CuratedCollection) {
+  return collection.included_tools
+    .filter((slot) => slot.is_optional)
+    .sort((a, b) => a.order - b.order)
+    .map((slot) => slot.tool.slug);
+}
+
+/** Returns ordered ALTERNATIVE tool slugs in the collection. */
+export function getCollectionAlternativeToolSlugs(collection: CuratedCollection) {
+  return collection.included_tools
+    .filter((slot) => slot.is_alternative)
+    .sort((a, b) => a.order - b.order)
+    .map((slot) => slot.tool.slug);
+}
+
+/** Compact workflow preview as a string: "Jenni → Meku → VibeCode". */
+export function getCollectionWorkflowPreview(collection: CuratedCollection) {
+  return getCollectionCoreToolSlugs(collection)
+    .map((slug) => collection.included_tools.find((slot) => slot.tool.slug === slug)?.tool.name ?? slug);
+}
+
+/** Returns a short, compact, 1-line theme/area label for the collection. */
+export function getCollectionAreaLabel(collection: CuratedCollection) {
+  switch (collection.theme) {
+    case "founder-stack":
+      return "Founder stack";
+    case "design-sprint":
+      return "Design sprint";
+    case "creator-video":
+      return "Creator video";
+    case "research-synthesis":
+      return "Content marketing";
+    case "indie-launch":
+      return "Operations";
+    default:
+      return "Raccolta";
+  }
+}
+
+/** Returns a short, compact, 1-line audience label. */
+export function getCollectionAudienceShort(collection: CuratedCollection) {
+  return collection.audience;
+}
+
+/** Cost band, normalized to a human-readable italian string. */
+export function getCollectionCostLabel(collection: CuratedCollection) {
+  const band = collection.stack_meta?.monthly_cost_band;
+  if (!band) return null;
+  switch (band) {
+    case "€0":
+      return "€0/mese";
+    case "€0-30":
+      return "€0–30/mese";
+    case "€30-100":
+      return "€30–100/mese";
+    case "€100-300":
+      return "€100–300/mese";
+    case "€300+":
+      return "€300+/mese";
+    case "pricing-requires-quote":
+      return "Su preventivo";
+    default:
+      return band;
+  }
+}
+
+/** Returns the difficulty label, falling back to the legacy difficulty field. */
+export function getCollectionDifficultyShort(collection: CuratedCollection) {
+  return (
+    collection.stack_meta?.difficulty_label ??
+    getCollectionDifficultyLabel(collection.difficulty)
+  );
+}
+
+/** Returns a human-readable setup-time string. */
+export function getCollectionSetupLabel(collection: CuratedCollection) {
+  return collection.stack_meta?.setup_time ?? null;
+}
+
+/** Returns the lead tool (first CORE or featured) for visual emphasis. */
+export function getCollectionLeadTool(collection: CuratedCollection) {
+  return (
+    collection.featured_tool_slot?.tool ??
+    collection.included_tools.find((slot) => slot.is_core)?.tool ??
+    collection.included_tools[0]?.tool ??
+    null
+  );
+}
+
+/** Returns the slug of the lead tool. */
+export function getCollectionLeadToolSlug(collection: CuratedCollection) {
+  return getCollectionLeadTool(collection)?.slug ?? null;
+}
