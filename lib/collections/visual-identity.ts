@@ -103,6 +103,34 @@ export function getCollectionVisualIdentity(
   return collectionVisualIdentity[slug] ?? null;
 }
 
+/**
+ * Deterministically pick the lead (featured) Collection.
+ *
+ * Priority:
+ *   1. First Collection whose visual identity has `featured: true`
+ *   2. Fallback: first by editorial_order, then by updated_at (desc)
+ *
+ * Never depends on `collections[0]` being the lead — explicit by
+ * `featured` flag from this same module.
+ */
+export function pickFeaturedCollection<
+  T extends { slug: string; editorial_order?: number | null; updated_at: string },
+>(collections: T[]): T | null {
+  if (collections.length === 0) return null;
+
+  const lead = collections.find(
+    (c) => collectionVisualIdentity[c.slug]?.featured === true,
+  );
+  if (lead) return lead;
+
+  return [...collections].sort((left, right) => {
+    const l = left.editorial_order ?? 999;
+    const r = right.editorial_order ?? 999;
+    if (l !== r) return l - r;
+    return right.updated_at.localeCompare(left.updated_at);
+  })[0];
+}
+
 /** Hard guarantee: a Collection slug always resolves to an identity
  *  (the system never renders a Collections page without one). */
 export function requireCollectionVisualIdentity(slug: string): CxVisualIdentity {

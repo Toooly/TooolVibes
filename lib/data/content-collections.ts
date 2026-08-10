@@ -67,6 +67,8 @@ export const contentCollections: CuratedCollectionRecord[] = [
       related_collection_slugs: [
         "design-sprint-essentials",
         "from-mvp-to-sellable-saas",
+        "agency-operating-stack",
+        "free-budget-ai-stack",
       ],
     },
     stack_variants: [
@@ -315,6 +317,8 @@ export const contentCollections: CuratedCollectionRecord[] = [
       related_collection_slugs: [
         "ai-stack-solo-founders",
         "creator-video-stack",
+        "lead-generation-stack",
+        "free-budget-ai-stack",
       ],
     },
     stack_variants: [
@@ -1105,6 +1109,8 @@ export const contentCollections: CuratedCollectionRecord[] = [
       related_collection_slugs: [
         "ai-stack-solo-founders",
         "ai-customer-support-stack",
+        "lead-generation-stack",
+        "agency-operating-stack",
       ],
     },
     stack_variants: [
@@ -1367,6 +1373,8 @@ export const contentCollections: CuratedCollectionRecord[] = [
       related_collection_slugs: [
         "from-mvp-to-sellable-saas",
         "ai-agents-automation-stack",
+        "agency-operating-stack",
+        "lead-generation-stack",
       ],
     },
     stack_variants: [
@@ -1588,7 +1596,24 @@ export const contentCollections: CuratedCollectionRecord[] = [
       related_collection_slugs: [
         "ai-customer-support-stack",
         "ai-stack-solo-founders",
+        "agency-operating-stack",
       ],
+      // Architectural split: this Collection has two real architectures
+      // (managed no-code vs self-hosted) that share Make as orchestration
+      // but swap the agent runtime. Rendered side-by-side in the
+      // variant section, not as additive tabs.
+      path_split: {
+        a: {
+          label: "Managed (no-code)",
+          tagline: "Parti subito, senza devops, gestito da AgentX.",
+          core_slugs: ["agentx", "make"],
+        },
+        b: {
+          label: "Self-hosted (LangChain)",
+          tagline: "Controllo completo, hosting tuo, richiede engineering.",
+          core_slugs: ["flowise", "make"],
+        },
+      },
     },
     stack_variants: [
       {
@@ -1603,6 +1628,12 @@ export const contentCollections: CuratedCollectionRecord[] = [
         trade_offs: [
           "Capacità limitate: agent semplici, niente orchestrazione estesa",
         ],
+        // Architectural split: this Collection has two real
+        // architectures (managed no-code vs self-hosted) that share
+        // Make as orchestration but swap the agent runtime. The
+        // variant section renders as side-by-side paths instead of
+        // additive tabs.
+        architectural: true,
       },
       {
         label: "balanced",
@@ -1807,6 +1838,7 @@ export const contentCollections: CuratedCollectionRecord[] = [
       related_collection_slugs: [
         "ai-content-marketing-stack",
         "creator-video-stack",
+        "ai-video-training-stack",
       ],
     },
     stack_variants: [
@@ -2031,6 +2063,985 @@ export const contentCollections: CuratedCollectionRecord[] = [
     updated_at: "2026-08-10T09:00:00.000Z",
     first_published_at: "2026-08-10T09:00:00.000Z",
     published_at: "2026-08-10T09:00:00.000Z",
+    source_kind: "content",
+  },
+
+  // ===== Phase 4 — 4 new Collections (Step 5) =====
+  // 9. AI VIDEO TRAINING / COURSE STACK
+  {
+    id: "collection-video-training",
+    slug: "ai-video-training-stack",
+    title: "Stack AI per video-corsi e formazione",
+    description:
+      "Trasformare expertise verticale in un prodotto formativo strutturato: research, script didattici, avatar video, hosting e monetizzazione. Una raccolta operativa per consulenti, formatori e team L&D che vogliono pubblicare un video-corso senza gestire uno studio di produzione.",
+    cover_image_url:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80",
+    cover_kicker: "Formazione strutturata",
+    rationale:
+      "La differenza tra un tutorial YouTube e un video-corso monetizzato è la struttura didattica, la coerenza visiva, e la pipeline di pagamento. Qui trovi una sequenza stretta che copre il ciclo completo: Jenni AI per la scaletta, Synthesia per l'avatar, Vidau per il video editing quando serve, Blogify come piattaforma di pubblicazione, e Lemon Squeezy per i pagamenti. Esplicito su quando NON è lo strumento giusto: contenuto one-off, certificazioni accreditate, o training compliance-driven.",
+    highlights: [
+      "Sequenza completa: ricerca → script → avatar video → hosting → pagamenti",
+      "Avatar AI Synthesia per produzione video scalabile in 50+ lingue",
+      "Lemon Squeezy come merchant of record per gestire VAT internazionale",
+      "Esplicito sui limiti: non sostituisce un LMS vero con quiz e certificati",
+    ],
+    theme: "video-training",
+    audience: "Course creators",
+    difficulty: "growing",
+    tone: "editorial-picks",
+    access: "open",
+    editorial_state: "published",
+    surface: "collection",
+    stack_meta: {
+      concise_promise:
+        "Trasformare conoscenza specifica in un video-corso monetizzabile, con avatar AI, hosting e pagamenti integrati.",
+      job_to_be_done:
+        "Costruire e distribuire un prodotto formativo strutturato (video-corso, training interno, paid community) a partire da expertise personale o di team.",
+      user_stage:
+        "Consulenti, formatori, founder con expertise verticale, team L&D aziendali.",
+      last_verified: "2026-08-10",
+      setup_time: "2-3 settimane per la variante CORE; 1 mese per FULL.",
+      monthly_cost_band: "€30-100",
+      difficulty_label:
+        "Intermedio — richiede capacità di scrittura didattica e produzione contenuti.",
+      related_guide_slugs: ["jenny-ai", "lemon-squeezy"],
+      related_collection_slugs: [
+        "creator-video-stack",
+        "personal-brand-linkedin-stack",
+      ],
+    },
+    stack_variants: [
+      {
+        label: "lean",
+        description:
+          "Tre tool: ricerca/script, video avatar AI, piattaforma blog con embed. Minimo per pubblicare un primo modulo.",
+        core_tool_slugs: ["jenni-ai", "synthesia-ai", "blogify"],
+        gains: [
+          "Time-to-publish rapido (settimane, non mesi)",
+          "Nessuna infrastruttura tecnica da gestire",
+        ],
+        trade_offs: [
+          "Avatar AI limitato in gesti/espressioni rispetto a produzione reale",
+          "Blogify come hosting non ha tutte le feature di una piattaforma LMS dedicata",
+        ],
+      },
+      {
+        label: "balanced",
+        description:
+          "Cinque tool: aggiunge Vidau per video editing e Lemon Squeezy per pagamenti. Corso completo con checkout.",
+        core_tool_slugs: [
+          "jenni-ai",
+          "synthesia-ai",
+          "vidau",
+          "blogify",
+          "lemon-squeezy",
+        ],
+        gains: [
+          "Pagamenti integrati (no Stripe manuale)",
+          "Video editing per moduli misti avatar + screen recording",
+        ],
+        trade_offs: [
+          "Più tool da orchestrare: richiede una pipeline chiara",
+        ],
+      },
+    ],
+    decision_intelligence: {
+      strongest:
+        "Synthesia abbatte la barriera di produzione video: zero camera, zero studio, output coerente in 50+ lingue.",
+      weakest:
+        "Il course delivery via Blogify è funzionale ma non specializzato: mancano quiz, progress tracking, certificazioni.",
+      fragility:
+        "Dipendenza forte dalla qualità dello script iniziale: se Jenni AI non produce una scaletta didattica solida, l'intero corso ne risente.",
+      vendor_lock_in:
+        "Medio: i video Synthesia sono ospitati sui loro server, Blogify ha un lock-in di piattaforma simile.",
+      data_privacy:
+        "I dati degli studenti passano per Blogify e Lemon Squeezy: se il corso è su IP sensibile, considera self-hosting.",
+      scalability:
+        "Fino a qualche centinaio di studenti. Oltre, servono piattaforme LMS vere (Teachable, Thinkific) o self-hosted.",
+    },
+    anti_recommendation: {
+      not_for:
+        "Creator che fanno video tutorial one-off senza struttura di corso (meglio Creator Video Stack). Non adatto a chi ha bisogno di certificazioni accreditate o compliance formativa (LMS dedicato obbligatorio).",
+      look_instead_at: [
+        "creator-video-stack",
+        "ai-content-marketing-stack",
+      ],
+    },
+    scenario: {
+      title: "Consulente marketing che lancia un corso paid per SMB",
+      body:
+        "Un consulente marketing con 10 anni di esperienza decide di monetizzare la propria expertise. Usa Jenni AI per strutturare 8 moduli partendo dai suoi framework interni. Synthesia produce le video-lezioni con avatar AI partendo dagli script Jenni. Vidau assembla moduli misti (avatar + screen recording di tool). Blogify ospita il corso con pagine di vendita e lesson embeds. Lemon Squeezy gestisce i pagamenti una tantum. Tempo totale: 3 settimane. Primo mese: 40 studenti.",
+    },
+    included_tools: [
+      {
+        tool_slug: "jenni-ai",
+        stage: "Ricerca e script",
+        status: "core",
+        role: "Strutturazione didattica e script moduli",
+        note: "Per trasformare expertise sparsa in una scaletta didattica solida, con claim, fonti e struttura per modulo.",
+        why_chosen:
+          "Eccellente su testi lunghi strutturati: produce scalette modulari con citazioni, ideale per course outline.",
+        input: "Tema del corso, expertise esistente, claim chiave.",
+        output: "Scaletta didattica per modulo, claim con fonti, esercizi.",
+        next_handoff: "Lo script passa a Synthesia (avatar video) o Vidau (screen recording).",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Non genera video: solo testi. Serve poi Synthesia o produzione manuale.",
+        when_to_skip:
+          "Se hai già un course outline dettagliato o usi un LMS che genera outline.",
+        replacement_trigger: "Se il corso diventa molto long-form, valuta un editor dedicato come Notion o Google Docs.",
+        alternatives: ["frase-ai"],
+        featured: true,
+        order: 1,
+      },
+      {
+        tool_slug: "synthesia-ai",
+        stage: "Produzione video",
+        status: "core",
+        role: "Avatar AI per video-lezioni",
+        note: "Per produrre video-lezioni con avatar AI in 50+ lingue, senza camera né studio. Il riferimento per course production scalabile.",
+        why_chosen:
+          "Massima qualità avatar AI sul mercato, multi-lingua, lip-sync naturale. Tempi di produzione: ore, non settimane.",
+        input: "Script di modulo, lingua target, avatar scelto.",
+        output: "Video-lezione MP4 pronta per hosting.",
+        next_handoff: "Il video si embedda in Blogify o si carica su YouTube come teaser.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "paid",
+        limitations:
+          "Avatar AI ancora distinguibile da umano in scene emotive. Gesti limitati.",
+        when_to_skip:
+          "Se il corso richiede presenza umana reale (es. terapia, coaching one-to-one).",
+        replacement_trigger:
+          "Se serve editing video avanzato, valuta Vidau per scene ibride avatar + screen recording.",
+        alternatives: ["vidau"],
+        featured: true,
+        order: 2,
+      },
+      {
+        tool_slug: "blogify",
+        stage: "Hosting e delivery",
+        status: "core",
+        role: "Piattaforma di pubblicazione corso",
+        note: "Per ospitare il corso con pagine di vendita, embed video, e un minimo di content management. Alternativa leggera a Teachable/Thinkific.",
+        why_chosen:
+          "Buon rapporto qualità/prezzo per chi parte. Auto-publish, markdown export, multiple connected sites.",
+        input: "Moduli video finiti, copy di vendita, prezzi.",
+        output: "Corso pubblicato con pagine di vendita attive.",
+        next_handoff: "I pagamenti arrivano via Lemon Squeezy, embed nel corso Blogify.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Non è un LMS vero: mancano quiz, progress tracking, certificati, discussioni strutturate.",
+        when_to_skip:
+          "Se ti servono quiz, certificazioni, o compliance formativa aziendale.",
+        replacement_trigger:
+          "Quando il corso supera 100 studenti o servono funzionalità LMS avanzate, valuta Teachable o self-hosted Moodle.",
+        alternatives: ["notionapps"],
+        featured: false,
+        order: 3,
+      },
+      {
+        tool_slug: "vidau",
+        stage: "Editing video (balanced)",
+        status: "optional",
+        role: "Video editing per moduli misti",
+        note: "Per moduli che mescolano avatar Synthesia con screen recording, demo, B-roll. Non serve per la variante LEAN.",
+        why_chosen:
+          "Buon compromesso qualità/prezzo per editor video AI-assisted. Supporta text-to-video e clip generation.",
+        input: "Clip avatar Synthesia, screen recording, asset visivi.",
+        output: "Modulo video finale montato.",
+        next_handoff: "Il modulo montato si carica su Blogify.",
+        manual_handoff: true,
+        learning_curve: "medium",
+        pricing_relevance: "paid",
+        limitations:
+          "Meno potente di editor professionali (Premiere, Final Cut) per course production avanzata.",
+        when_to_skip:
+          "Se tutti i moduli sono solo avatar AI senza scene miste.",
+        replacement_trigger:
+          "Se il corso richiede editing cinematografico, valuta un editor dedicato.",
+        alternatives: ["vibrantsnap"],
+        featured: false,
+        order: 4,
+      },
+      {
+        tool_slug: "lemon-squeezy",
+        stage: "Monetizzazione",
+        status: "optional",
+        role: "Pagamenti e fatturazione del corso",
+        note: "Per gestire i pagamenti del corso (one-time o subscription) senza Stripe manuale. Merchant of record, gestisce la compliance fiscale.",
+        why_chosen:
+          "Merchant of record: meno burocrazia fiscale (VAT, sales tax). Setup in pochi minuti.",
+        input: "Prodotto corso, prezzi, URL Blogify.",
+        output: "Checkout attivo, link di pagamento integrabili.",
+        next_handoff: "I soldi arrivano su Lemon Squeezy, payout periodico.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Commissioni più alte di Stripe puro (sopra soglie di fatturato conviene Stripe).",
+        when_to_skip:
+          "Se la fatturazione è gestita da un commercialista esterno che preferisce Stripe diretto.",
+        replacement_trigger: "Se fatturi > 100k/anno, valuta Stripe diretto per risparmiare fee.",
+        alternatives: ["tolt"],
+        featured: false,
+        order: 5,
+      },
+      {
+        tool_slug: "imagine-art",
+        stage: "Visual course assets",
+        status: "alternative",
+        role: "Generazione immagini per slide e asset corso",
+        note: "Per generare immagini di copertina, slide illustrative, banner promozionali del corso.",
+        why_chosen:
+          "100 free tokens/giorno per test. Buona qualità output. Utile per asset grafici senza graphic designer.",
+        input: "Prompt descrittivo di un asset visivo.",
+        output: "Immagine generata in vari stili.",
+        next_handoff: "Le immagini si integrano in Blogify o nei materiali promozionali.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Free tier limitato a 100 tokens/giorno con watermark. Basic $7-15/mese per uso continuativo.",
+        when_to_skip:
+          "Se hai un graphic designer o stock photo sufficiente.",
+        replacement_trigger:
+          "Se serve generazione video o asset 3D, valuta Muse AI.",
+        alternatives: ["muse-ai"],
+        featured: false,
+        order: 6,
+      },
+    ],
+    created_at: "2026-08-10T18:30:00.000Z",
+    updated_at: "2026-08-10T18:30:00.000Z",
+    first_published_at: "2026-08-10T18:30:00.000Z",
+    published_at: "2026-08-10T18:30:00.000Z",
+    source_kind: "content",
+  },
+
+  // 10. AGENCY OPERATING STACK
+  {
+    id: "collection-agency-operating",
+    slug: "agency-operating-stack",
+    title: "Stack operativo per agenzie digitali 2-8 persone",
+    description:
+      "Gestire il ciclo completo di una micro-agenzia (2-8 persone) senza processi aziendali soffocanti: acquisizione prospect, proposta commerciale, delivery, fatturazione ricorrente, supporto clienti. Una raccolta operativa per founder di agenzie digitali, AI o growth che servono clienti multipli con poco overhead.",
+    cover_image_url:
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1400&q=80",
+    cover_kicker: "Operatività agenzia",
+    rationale:
+      "Una micro-agenzia non ha bisogno di Salesforce, Asana enterprise, o tool di project management complessi. Ha bisogno di outreach che porta appuntamenti, automation che elimina il lavoro ripetitivo, fatturazione che non crea burocrazia, e un helpdesk per non perdere i clienti. Qui trovi ReachifyMe per l'acquisizione, Make per l'automation, Lemon Squeezy per la fatturazione, HelpDesk per il supporto, e tool opzionali per capacity aggiuntiva. Esplicito sui limiti: non scala a 30+ clienti senza strumenti enterprise.",
+    highlights: [
+      "Pipeline outreach → proposta → onboarding completamente automatizzabile",
+      "Lemon Squeezy come merchant of record per fatturazione EU+US",
+      "HelpDesk + ChatBot per triage automatico h24",
+      "Esplicito sui limiti: fino a 15-20 clienti attivi, poi servono tool enterprise",
+    ],
+    theme: "agency-operating",
+    audience: "Agency operators",
+    difficulty: "growing",
+    tone: "focused-bundle",
+    access: "open",
+    editorial_state: "published",
+    surface: "collection",
+    stack_meta: {
+      concise_promise:
+        "Operare una piccola agenzia (2-8 persone) con un minimo di tooling, senza processi aziendali soffocanti.",
+      job_to_be_done:
+        "Gestire contemporaneamente più clienti con ciclo completo: acquisizione, proposta, delivery, fatturazione, supporto.",
+      user_stage:
+        "Founder di agenzie digitali, AI, growth, marketing automation. Team tra 2 e 8 persone.",
+      last_verified: "2026-08-10",
+      setup_time: "1-2 settimane per setup operativo completo.",
+      monthly_cost_band: "€30-100",
+      difficulty_label:
+        "Intermedio — richiede disciplina di processo, ma tooling è no-code-friendly.",
+      related_guide_slugs: ["reachifyme", "lemon-squeezy", "tolt"],
+      related_collection_slugs: [
+        "lead-generation-stack",
+        "ai-customer-support-stack",
+        "ai-stack-solo-founders",
+      ],
+    },
+    stack_variants: [
+      {
+        label: "lean",
+        description:
+          "Quattro tool: outreach, content engine, automation, billing. Il minimo per partire senza caos.",
+        core_tool_slugs: ["reachifyme", "make", "lemon-squeezy", "helpdesk"],
+        gains: [
+          "Setup in 1 settimana",
+          "Costo contenuto per cliente acquisito",
+        ],
+        trade_offs: [
+          "Nessun content engine dedicato: outreach più ripetitivo",
+          "Helpdesk base, no AI chatbot integrato",
+        ],
+      },
+      {
+        label: "balanced",
+        description:
+          "Sei tool: aggiunge Frase AI per content engine e ChatBot per triage automatico. Più capacità per cliente.",
+        core_tool_slugs: [
+          "reachifyme",
+          "frase-ai",
+          "make",
+          "lemon-squeezy",
+          "helpdesk",
+          "chatbot",
+        ],
+        gains: [
+          "Content engine per outreach personalizzato ad alto volume",
+          "Triage automatico richieste clienti via AI chatbot",
+        ],
+        trade_offs: [
+          "Più tool da gestire e integrare tra loro",
+        ],
+      },
+    ],
+    decision_intelligence: {
+      strongest:
+        "ReachifyMe + Make insieme automatizzano l'intero ciclo outreach → proposta → onboarding, eliminando ore di lavoro manuale.",
+      weakest:
+        "Helpdesk è funzionale ma non specializzato per agenzie: manca una visione 'per cliente' con SLA e metriche aggregate.",
+      fragility:
+        "La pipeline Make è il punto critico: se un'azione cambia signature API, l'automazione si rompe silenziosamente.",
+      vendor_lock_in:
+        "Medio: ogni tool è sostituibile, ma le automazioni Make richiedono tempo per essere migrate.",
+      data_privacy:
+        "I dati dei clienti dell'agenzia passano per Helpdesk, ChatBot, Make: serve un DPA chiaro e accessi segregati.",
+      scalability:
+        "Fino a 15-20 clienti attivi. Oltre, servono sistemi con project management dedicato (Notion, Linear, Asana).",
+    },
+    anti_recommendation: {
+      not_for:
+        "Agenzie con 1 sola persona (meglio AI Stack Solo Founders). Non adatto a chi fa solo project-based senza delivery ricorrente (manca la retention).",
+      look_instead_at: [
+        "ai-stack-solo-founders",
+        "lead-generation-stack",
+      ],
+    },
+    scenario: {
+      title: "Agenzia marketing 4 persone che scala da 5 a 12 clienti",
+      body:
+        "Una micro-agenzia di 4 persone ha 5 clienti attivi e vuole arrivare a 12 senza aumentare il team. ReachifyMe identifica 30 nuovi prospect a settimana con criteri specifici. Frase AI genera 4 varianti di outreach personalizzate. Make invia le email, monitora le risposte, e quando un prospect risponde positivamente crea automaticamente un'opportunità su Helpdesk. Lemon Squeezy gestisce fatturazione ricorrente mensile per i retainer. ChatBot risponde alle FAQ iniziali dei nuovi clienti h24. In 3 mesi, 12 clienti attivi con lo stesso team.",
+    },
+    included_tools: [
+      {
+        tool_slug: "reachifyme",
+        stage: "Acquisizione",
+        status: "core",
+        role: "Prospect e outreach automatizzato",
+        note: "Per identificare prospect qualificati e gestire campagne outreach multi-canale. Il motore di acquisizione dell'agenzia.",
+        why_chosen:
+          "Combina lead generation + outreach automation in un'unica piattaforma. Riduce il tempo da prospect a prima risposta del 60%.",
+        input: "Criteri ICP, lista prospect, template messaggi.",
+        output: "Prospect qualificati, conversazioni avviate, appuntamenti.",
+        next_handoff: "I prospect qualificati passano a Helpdesk (CRM) o ChatBot (triage).",
+        manual_handoff: true,
+        learning_curve: "medium",
+        pricing_relevance: "paid",
+        limitations:
+          "Richiede template di outreach di qualità: lo strumento amplifica, non genera copy.",
+        when_to_skip:
+          "Se l'agenzia lavora solo su referral e non ha bisogno di outreach attivo.",
+        replacement_trigger:
+          "Se serve lead generation più profonda (intent data, technographics), valuta Socleads.",
+        alternatives: ["socleads"],
+        featured: true,
+        order: 1,
+      },
+      {
+        tool_slug: "make",
+        stage: "Automation",
+        status: "core",
+        role: "Orchestrazione tra tool e workflow",
+        note: "Per connettere ReachifyMe, Helpdesk, ChatBot, Lemon Squeezy. Il collante operativo dell'agenzia.",
+        why_chosen:
+          "Visuale, flessibile, supporta 1000+ integrazioni. Riferimento per automazioni multi-tool no-code.",
+        input: "Trigger da un tool, condizioni, azioni su altri tool.",
+        output: "Flussi automatizzati che girano h24 senza intervento umano.",
+        next_handoff: "I dati fluiscono al tool successivo nella pipeline.",
+        manual_handoff: true,
+        learning_curve: "high",
+        pricing_relevance: "paid",
+        limitations:
+          "Ha costo per operazione: pipeline inefficienti possono diventare care.",
+        when_to_skip:
+          "Se l'agenzia ha solo 2-3 clienti e i flussi manuali sono gestibili.",
+        replacement_trigger:
+          "Se i flussi superano le decine di migliaia di operazioni/mese, valuta n8n self-hosted.",
+        alternatives: ["n8n"],
+        featured: true,
+        order: 2,
+      },
+      {
+        tool_slug: "lemon-squeezy",
+        stage: "Fatturazione",
+        status: "core",
+        role: "Pagamenti, fatturazione, retention",
+        note: "Per gestire pagamenti ricorrenti (retainer) e one-time con merchant of record. Meno burocrazia fiscale.",
+        why_chosen:
+          "Merchant of record: gestisce VAT, sales tax internazionale, fatturazione. Perfetto per agenzie con clienti EU+US.",
+        input: "Cliente, piano retainer, frequenza fatturazione.",
+        output: "Pagamenti automatici, fatture emesse, payout periodici.",
+        next_handoff: "I dati di pagamento alimentano il reporting dell'agenzia.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Commissioni più alte di Stripe puro. Oltre 100k/anno conviene Stripe diretto.",
+        when_to_skip:
+          "Se l'agenzia ha un commercialista che preferisce Stripe + Fatture in Cloud.",
+        replacement_trigger: "Se fatturi > 100k/anno, valuta Stripe diretto per risparmiare fee.",
+        alternatives: ["tolt"],
+        featured: false,
+        order: 3,
+      },
+      {
+        tool_slug: "helpdesk",
+        stage: "Supporto e CRM",
+        status: "core",
+        role: "Ticketing, knowledge base, gestione richieste clienti",
+        note: "Per gestire tutte le richieste dei clienti in un unico posto, con SLA, priorità, storico conversazioni.",
+        why_chosen:
+          "Buon rapporto funzionalità/prezzo per team piccoli. Supporta multiple mailbox, automazioni di routing, knowledge base interna.",
+        input: "Email clienti, richieste via form, ticket da ChatBot.",
+        output: "Ticket assegnati, risolti, con SLA rispettati.",
+        next_handoff: "I ticket risolti alimentano la knowledge base per il prossimo cliente.",
+        manual_handoff: true,
+        learning_curve: "medium",
+        pricing_relevance: "freemium",
+        limitations:
+          "Non è un CRM vero: per gestione pipeline commerciale serve un tool dedicato o Notion custom.",
+        when_to_skip:
+          "Se i clienti sono < 5 e la comunicazione via email è sufficiente.",
+        replacement_trigger:
+          "Se servono SLA enforcement, metriche di soddisfazione, o integrazione con project management.",
+        alternatives: ["livechat"],
+        featured: false,
+        order: 4,
+      },
+      {
+        tool_slug: "frase-ai",
+        stage: "Content engine (balanced)",
+        status: "optional",
+        role: "Content engine per outreach personalizzato",
+        note: "Per generare varianti di outreach basate su SERP analysis dei prospect, più rilevanti dei template generici.",
+        why_chosen:
+          "Analisi SERP + AI writing: ogni messaggio di outreach può riferirsi a contenuti reali del prospect.",
+        input: "URL prospect, brief del servizio offerto, tono desiderato.",
+        output: "Varianti email/LinkedIn personalizzate.",
+        next_handoff: "Le varianti passano a Make per invio automatizzato via ReachifyMe.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "paid",
+        limitations:
+          "Richiede brief chiari: se la value proposition dell'agenzia non è definita, l'output è generico.",
+        when_to_skip:
+          "Se l'agenzia fa outreach solo su nicchie verticali molto specifiche dove bastano 2-3 template.",
+        replacement_trigger:
+          "Se serve content engine anche per blog/SEO, Frase è già il riferimento.",
+        alternatives: ["jenni-ai"],
+        featured: false,
+        order: 5,
+      },
+      {
+        tool_slug: "chatbot",
+        stage: "Triage clienti (balanced)",
+        status: "optional",
+        role: "AI chatbot per triage iniziale richieste clienti",
+        note: "Per rispondere h24 alle FAQ dei clienti nuovi (onboarding, prezzi, deliverable) e instradare i casi complessi al team.",
+        why_chosen:
+          "Triage automatico riduce del 40% il tempo del team su richieste ripetitive. Integrazione nativa con Helpdesk.",
+        input: "Knowledge base del servizio, FAQ, regole di routing.",
+        output: "Risposte automatiche, ticket instradati al membro del team giusto.",
+        next_handoff: "I ticket complessi vanno a Helpdesk, le risposte semplici chiudono il loop.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Richiede training iniziale su knowledge base reali: con docs vaghi, l'output è frustrante per il cliente.",
+        when_to_skip:
+          "Se l'agenzia fa solo 2-3 clienti grandi con communication manager dedicato.",
+        replacement_trigger:
+          "Se i volumi superano 100 ticket/mese o servono flussi conversazionali complessi.",
+        alternatives: ["livechat"],
+        featured: false,
+        order: 6,
+      },
+    ],
+    created_at: "2026-08-10T18:30:00.000Z",
+    updated_at: "2026-08-10T18:30:00.000Z",
+    first_published_at: "2026-08-10T18:30:00.000Z",
+    published_at: "2026-08-10T18:30:00.000Z",
+    source_kind: "content",
+  },
+
+  // 11. FREE / BUDGET AI STACK
+  {
+    id: "collection-free-budget",
+    slug: "free-budget-ai-stack",
+    title: "Stack AI a basso costo (€0 o quasi)",
+    description:
+      "Costruire un workflow AI produttivo spendendo €0 o sotto €30/mese, combinando open-source e free tier genuine. Una raccolta per indie hacker, founder early stage, studenti e professionisti che vogliono sperimentare AI senza budget per abbonamenti premium.",
+    cover_image_url:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
+    cover_kicker: "AI a basso costo",
+    rationale:
+      "Esistono due percorsi reali: il PATH €0 puro (solo open-source e free tier genuine, accettando limiti di volumi) e il PATH LOW-COST (free tier + entry-level sotto €30/mese totali per capacità più ampia). Qui trovi Flowise come unico tool genuinamente self-hosted del catalogo, Imagine Art per il free tier daily, e tool freemium verificati su pricing 2026. Esplicito sui limiti: i free tier cambiano pricing, i watermark bloccano l'uso commerciale, e i volumi si saturano rapidamente.",
+    highlights: [
+      "Due percorsi distinti: €0 puro (self-hosted) vs LOW-COST (freemium)",
+      "Flowise come unica opzione open-source del catalogo TooolVibes",
+      "Pricing verificato su fonti primarie agosto 2026",
+      "Esplicito sui limiti: non per uso commerciale ad alto volume",
+    ],
+    theme: "free-budget",
+    audience: "Indie hackers",
+    difficulty: "starter",
+    tone: "starter-stack",
+    access: "open",
+    editorial_state: "published",
+    surface: "collection",
+    stack_meta: {
+      concise_promise:
+        "Un workflow AI utile davvero spendendo €0 o sotto €30/mese, con tool open-source e free tier verificati.",
+      job_to_be_done:
+        "Costruire un sistema AI produttivo per task reali (content, immagini, automation) senza pagare abbonamenti premium, partendo da tool con free tier genuine o open-source.",
+      user_stage:
+        "Indie hacker, founder early stage, studenti, professionisti che vogliono sperimentare AI senza budget.",
+      last_verified: "2026-08-10",
+      setup_time:
+        "Mezza giornata per il PATH €0; 1-2 giorni per il PATH LOW-COST con tool freemium.",
+      monthly_cost_band: "€0",
+      difficulty_label:
+        "Starter per il PATH €0 (richiede self-hosting base). Intermedio per il PATH LOW-COST.",
+      related_guide_slugs: ["flowise-ai", "jenny-ai"],
+      related_collection_slugs: [
+        "ai-stack-solo-founders",
+        "ai-content-marketing-stack",
+        "ai-video-training-stack",
+      ],
+    },
+    stack_variants: [
+      {
+        label: "lean",
+        description:
+          "PATH €0 puro: solo open-source e free tier genuine. Richiede self-hosting per Flowise, accetta limiti di volumi.",
+        core_tool_slugs: ["flowise", "imagine-art"],
+        gains: [
+          "Costo mensile €0 effettivo (solo costo hosting per Flowise)",
+          "Nessun lock-in: tutti i tool sono sostituibili",
+        ],
+        trade_offs: [
+          "Self-hosting Flowise richiede competenze Docker/base",
+          "Imagine Art free tier limitato a 100 tokens/giorno con watermark",
+        ],
+      },
+      {
+        label: "balanced",
+        description:
+          "PATH LOW-COST: aggiunge tool freemium sotto €30/mese totale per capacità più ampia.",
+        core_tool_slugs: ["flowise", "imagine-art", "jenni-ai", "frase-ai"],
+        gains: [
+          "Capacità content + immagini + agent AI sotto €30/mese totali",
+          "Workflow completo end-to-end: ricerca → scrittura → visuali → agent",
+        ],
+        trade_offs: [
+          "Limiti di volumi mensili da gestire attentamente",
+          "Alcuni tool hanno watermark o limiti qualità su free tier",
+        ],
+      },
+    ],
+    decision_intelligence: {
+      strongest:
+        "Flowise open-source dà pieno controllo sugli agent AI senza dipendere da piattaforme chiuse. Costo effettivo solo hosting (VPS da €5/mese).",
+      weakest:
+        "I free tier di Imagine Art, Frase, Jenni hanno limiti severi di volumi: per uso continuativo serve almeno un piano entry.",
+      fragility:
+        "I free tier cambiano pricing senza preavviso: questo stack va ri-verificato ogni 3-6 mesi. Non costruire business critici solo su free tier.",
+      vendor_lock_in:
+        "Basso. Flowise è self-hosted, gli altri sono freemium. Tutto sostituibile.",
+      data_privacy:
+        "Ottimo per Flowise (self-hosted = tuo). Attenzione agli altri free tier: i prompt possono essere usati per training.",
+      scalability:
+        "PATH €0 regge uso individuale (1-2 persone). Per team > 3, i free tier si saturano rapidamente.",
+    },
+    anti_recommendation: {
+      not_for:
+        "Team in crescita che hanno bisogno di volumi production (i free tier si saturano in giorni). Non adatto a uso commerciale ad alto volume (i watermark e i limiti sono bloccanti).",
+      look_instead_at: [
+        "ai-stack-solo-founders",
+        "ai-content-marketing-stack",
+      ],
+    },
+    scenario: {
+      title: "Indie hacker che costruisce un SaaS in stealth mode",
+      body:
+        "Un indie hacker in fase stealth vuole costruire una landing, generare contenuti, e prototipare un agent AI per il suo futuro prodotto, tutto a costo zero. Flowise self-hosted su un VPS Hetzner da €5/mese costruisce l'agent che parla con la knowledge base. Imagine Art free tier genera le immagini per la landing. Jenni AI free tier scrive la copy. Frase AI free trial di 7 giorni fa l'analisi SERP. Totale: €5/mese di hosting, 2 weekend di lavoro, MVP validabile con 10 utenti pilota.",
+    },
+    included_tools: [
+      {
+        tool_slug: "flowise",
+        stage: "Agent AI (self-hosted)",
+        status: "core",
+        role: "Agent AI open-source self-hosted",
+        note: "Per costruire agent AI e RAG con LangChain senza dipendere da piattaforme chiuse. Self-hosted su un VPS o in locale.",
+        why_chosen:
+          "Open-source, MIT-like license. Unico tool del catalogo TooolVibes che è genuinamente self-hosted e free.",
+        input: "Knowledge base, LangChain components, documenti da indicizzare.",
+        output: "Agent AI attivi, API esposte, flussi RAG.",
+        next_handoff: "Gli agent si integrano via API in qualsiasi sistema.",
+        manual_handoff: true,
+        learning_curve: "high",
+        pricing_relevance: "free",
+        limitations:
+          "Richiede Docker/VPS e competenze DevOps base. Non è chiavi-in-mano.",
+        when_to_skip:
+          "Se non hai competenze tecniche o tempo per il setup iniziale.",
+        replacement_trigger: "Se serve no-code agent, valuta AgentX (managed, pagato).",
+        alternatives: ["agentx"],
+        featured: true,
+        order: 1,
+      },
+      {
+        tool_slug: "imagine-art",
+        stage: "Generazione immagini (€0)",
+        status: "core",
+        role: "Generazione immagini AI con free tier",
+        note: "Free tier genuine: 100 tokens al giorno, watermark su output. Basic $7-15/mese per uso continuativo.",
+        why_chosen:
+          "Uno dei pochi generatori immagini AI con free tier daily (non solo trial). Buona qualità output per uso non commerciale.",
+        input: "Prompt testuale, stile desiderato.",
+        output: "Immagine AI in vari formati.",
+        next_handoff: "Le immagini si usano in landing, social, blog.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Free tier: 100 tokens/giorno, watermark, no commercial license. Basic $7-15/mese per uso commerciale.",
+        when_to_skip:
+          "Se ti serve uso commerciale o volumi alti (> 50 immagini/mese).",
+        replacement_trigger:
+          "Se serve qualità superiore o specifiche commerciali, valuta Midjourney o DALL-E.",
+        alternatives: ["muse-ai"],
+        featured: false,
+        order: 2,
+      },
+      {
+        tool_slug: "jenni-ai",
+        stage: "Content writing (low-cost)",
+        status: "optional",
+        role: "Content writing AI con free tier",
+        note: "Free tier per uso occasionale. Buon compromesso qualità/prezzo per content marketing early-stage.",
+        why_chosen:
+          "Free tier utilizzabile, non solo trial. Buona qualità su testi strutturati e brief.",
+        input: "Tema, fonti, claim chiave.",
+        output: "Documento strutturato con citazioni.",
+        next_handoff: "Il testo passa a Frase per analisi SERP, o direttamente alla pubblicazione.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Free tier limitato a ~10.000 parole/mese. Oltre serve piano a pagamento.",
+        when_to_skip:
+          "Se il tuo content output supera le 10k parole/mese.",
+        replacement_trigger:
+          "Se serve analisi SERP, valuta Frase AI (free trial 7 giorni).",
+        alternatives: ["frase-ai"],
+        featured: false,
+        order: 3,
+      },
+      {
+        tool_slug: "frase-ai",
+        stage: "SEO content (low-cost)",
+        status: "optional",
+        role: "Analisi SERP e content SEO con free trial",
+        note: "Free trial di 7 giorni, poi piano base $15/mese. Tra i migliori per content SEO-driven.",
+        why_chosen:
+          "Trial utilizzabile per progetti one-off. Dopo, il piano base è tra i più economici per qualità SERP analysis.",
+        input: "Query target, articolo esistente, brief.",
+        output: "Brief SEO-driven, ottimizzazioni suggerite, schema competitor.",
+        next_handoff: "Il brief passa a Jenni AI o a un editor per la scrittura finale.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Free trial solo 7 giorni. Piano base limitato a 1 utente.",
+        when_to_skip:
+          "Se il content SEO non è il tuo focus primario.",
+        replacement_trigger: "Se serve content engine per team, valuta SurferSEO o MarketMuse.",
+        alternatives: ["jenni-ai"],
+        featured: false,
+        order: 4,
+      },
+    ],
+    created_at: "2026-08-10T18:30:00.000Z",
+    updated_at: "2026-08-10T18:30:00.000Z",
+    first_published_at: "2026-08-10T18:30:00.000Z",
+    published_at: "2026-08-10T18:30:00.000Z",
+    source_kind: "content",
+  },
+
+  // 12. LEAD GENERATION STACK
+  {
+    id: "collection-lead-generation",
+    slug: "lead-generation-stack",
+    title: "Stack AI per lead generation e sales",
+    description:
+      "Costruire un funnel di lead generation ripetibile per SaaS B2B e agenzie: identificare prospect con criteri ICP, fare outreach multi-canale personalizzato, qualificare le risposte, passare i lead caldi al sales. Una raccolta operativa per founder B2B, sales lead, growth marketer.",
+    cover_image_url:
+      "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1400&q=80",
+    cover_kicker: "Lead generation B2B",
+    rationale:
+      "Il gap principale nel catalogo TooolVibes è l'assenza di un CRM dedicato: per ora i lead qualificati vanno gestiti in Notion, Sheets, o tool esterni. Qui trovi Socleads per il lead mining, ReachifyMe per l'outreach, Frase AI per il content engine, Make per l'automation, e ChatBot per la qualification h24. Esplicito sui limiti: non sostituisce un SDR team per sales cycle lunghi, e non copre B2C ad alto volume con paid ads.",
+    highlights: [
+      "Pipeline completa: prospect → outreach → qualifica → handoff al sales",
+      "Socleads per lead mining B2B con criteri ICP granulari",
+      "ReachifyMe per outreach multi-canale (email + LinkedIn)",
+      "Esplicito sui gap: nessun CRM integrato nel catalogo, documentato come catalog gap",
+    ],
+    theme: "lead-generation",
+    audience: "Sales and growth teams",
+    difficulty: "growing",
+    tone: "focused-bundle",
+    access: "open",
+    editorial_state: "published",
+    surface: "collection",
+    stack_meta: {
+      concise_promise:
+        "Generare lead qualificati in modo ripetibile, con prospect research, outreach personalizzato, e handoff al sales.",
+      job_to_be_done:
+        "Costruire un funnel di lead generation ripetibile: identificare ICP-fit, fare outreach multi-canale, qualificare le risposte, passare i lead al sales.",
+      user_stage:
+        "Founder B2B, sales lead, growth marketer, agenzie con offerta recurring.",
+      last_verified: "2026-08-10",
+      setup_time:
+        "1-2 settimane per setup pipeline completa. 1 mese per iterazione su messaggi e criteri ICP.",
+      monthly_cost_band: "€30-100",
+      difficulty_label:
+        "Intermedio — richiede chiarezza su ICP e capacità di scrivere copy di outreach efficace.",
+      related_guide_slugs: ["reachifyme", "frase-ai", "windsor-ai"],
+      related_collection_slugs: [
+        "agency-operating-stack",
+        "ai-customer-support-stack",
+        "ai-content-marketing-stack",
+      ],
+    },
+    stack_variants: [
+      {
+        label: "lean",
+        description:
+          "Tre tool: lead mining, outreach, content engine. Minimo per partire senza CRM pesante.",
+        core_tool_slugs: ["socleads", "reachifyme", "frase-ai"],
+        gains: [
+          "Setup in 1 settimana",
+          "Costo contenuto rispetto a tool enterprise",
+        ],
+        trade_offs: [
+          "Nessun CRM integrato: i lead qualificati vanno gestiti in Notion/Sheets",
+          "Nessuna automazione di follow-up multi-step avanzata",
+        ],
+      },
+      {
+        label: "balanced",
+        description:
+          "Cinque tool: aggiunge Make per follow-up automation e ChatBot per qualification h24. Pipeline più robusta.",
+        core_tool_slugs: [
+          "socleads",
+          "reachifyme",
+          "frase-ai",
+          "make",
+          "chatbot",
+        ],
+        gains: [
+          "Follow-up automatico multi-step (no lead dimenticato)",
+          "Qualification 24/7 via chatbot (no lead perso di notte)",
+        ],
+        trade_offs: [
+          "Più tool da orchestrare, richiede una Make pipeline manutenuta",
+        ],
+      },
+    ],
+    decision_intelligence: {
+      strongest:
+        "Socleads + ReachifyMe insieme coprono l'intero ciclo: da lead mining a outreach multi-canale automatizzato.",
+      weakest:
+        "TooolVibes non ha ancora un CRM dedicato: il gap va colmato con Notion, Sheets, o tool esterni. Documentato come catalog gap.",
+      fragility:
+        "I criteri ICP vanno raffinati continuamente: se Socleads pesca lead fuori target, l'intera pipeline è sprecata.",
+      vendor_lock_in:
+        "Medio-basso. Socleads e ReachifyMe hanno lock-in di piattaforma ma i dati sono esportabili.",
+      data_privacy:
+        "I dati prospect passano per Socleads e ReachifyMe: serve conformità GDPR con DPO se market EU.",
+      scalability:
+        "Fino a 500-1000 prospect/mese. Oltre, serve un SDR team o un tool enterprise (Apollo, Lemlist).",
+    },
+    anti_recommendation: {
+      not_for:
+        "B2C ad alto volume con lead generation via paid ads (manca la Meta/Google Ads integration). Non adatto a prodotti con sales cycle > 6 mesi enterprise (serve SDR umano + tool dedicati come Outreach/Salesloft).",
+      look_instead_at: [
+        "agency-operating-stack",
+        "ai-content-marketing-stack",
+      ],
+    },
+    scenario: {
+      title: "SaaS B2B early-stage che passa da 0 a 30 demo/mese",
+      body:
+        "Un SaaS B2B in early stage ha 5 clienti e vuole arrivare a 30 demo qualificate al mese. Socleads identifica 200 prospect/settimana con criteri ICP (settore, dimensione, tech stack). ReachifyMe gestisce outreach multi-canale (email + LinkedIn) con 4 varianti di messaggio. Frase AI genera i messaggi personalizzati basandosi sull'analisi SERP dei prospect. Make automatizza i follow-up: chi non risponde in 5 giorni riceve un reminder; chi apre ma non risponde riceve una variante diversa. ChatBot qualifica i click al sito h24. In 3 mesi: 30 demo/mese, 8 chiusure/mese.",
+    },
+    included_tools: [
+      {
+        tool_slug: "socleads",
+        stage: "Lead mining",
+        status: "core",
+        role: "Identificazione prospect qualificati (lead mining)",
+        note: "Per estrarre prospect con criteri specifici (settore, dimensione, tech stack, seniority) da fonti pubbliche e database B2B.",
+        why_chosen:
+          "Specializzato in B2B lead mining. Filtri granulari, esportazione in CSV, integrazione con i principali outreach tool.",
+        input: "Criteri ICP (industria, ruolo, azienda), paese target.",
+        output: "Lista prospect con email verificate, ruolo, azienda.",
+        next_handoff: "I prospect passano a ReachifyMe per la campagna outreach.",
+        manual_handoff: true,
+        learning_curve: "medium",
+        pricing_relevance: "paid",
+        limitations:
+          "Qualità dei dati variabile per paese/settore: serve validazione e test continui.",
+        when_to_skip:
+          "Se il target è troppo di nicchia (< 1000 aziende totali) o troppo vasto (richiede CRM dedicato).",
+        replacement_trigger:
+          "Se servono enrichment dati più profondi (intent, technographics), valuta Apollo o ZoomInfo.",
+        alternatives: ["reachifyme"],
+        featured: true,
+        order: 1,
+      },
+      {
+        tool_slug: "reachifyme",
+        stage: "Outreach automation",
+        status: "core",
+        role: "Outreach multi-canale automatizzato",
+        note: "Per inviare email + LinkedIn outreach su larga scala, con personalizzazione, follow-up, e tracking risposte.",
+        why_chosen:
+          "Combina email + LinkedIn in un'unica piattaforma. Sequenze multi-step, A/B test messaggi, report su open/click/risposte.",
+        input: "Lista prospect da Socleads, template messaggi, sequenze follow-up.",
+        output: "Risposte, appuntamenti, lead qualificati.",
+        next_handoff: "I lead qualificati passano al sales (o a ChatBot per qualification automatica).",
+        manual_handoff: true,
+        learning_curve: "medium",
+        pricing_relevance: "paid",
+        limitations:
+          "Richiede template di qualità: copy debole = basso response rate. Non è magic.",
+        when_to_skip:
+          "Se il volume è < 100 prospect/mese (overhead non giustificato).",
+        replacement_trigger: "Se serve SDR scale (10k+ prospect/mese), valuta Apollo o Outreach.",
+        alternatives: ["socleads"],
+        featured: true,
+        order: 2,
+      },
+      {
+        tool_slug: "frase-ai",
+        stage: "Content engine",
+        status: "core",
+        role: "Generazione copy outreach personalizzato",
+        note: "Per generare varianti di messaggi outreach basate su analisi SERP e contenuti reali del prospect.",
+        why_chosen:
+          "Analisi SERP + AI: ogni messaggio può riferirsi a contenuti recenti del prospect, alzando il response rate.",
+        input: "URL prospect, brief del servizio, tono desiderato.",
+        output: "Varianti email/LinkedIn personalizzate.",
+        next_handoff: "Le varianti si caricano in ReachifyMe come template della campagna.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "paid",
+        limitations:
+          "Richiede brief chiari: se la value proposition non è definita, l'output è generico.",
+        when_to_skip:
+          "Se fai outreach solo su 1 nicchia verticale con 2-3 template sempre uguali.",
+        replacement_trigger:
+          "Se serve anche content engine per blog/SEO, Frase è già il riferimento.",
+        alternatives: ["jenni-ai"],
+        featured: false,
+        order: 3,
+      },
+      {
+        tool_slug: "make",
+        stage: "Automation (balanced)",
+        status: "optional",
+        role: "Automazione follow-up e routing lead",
+        note: "Per orchestrare i follow-up multi-step, instradare i lead qualificati al sales, e sincronizzare i tool tra loro.",
+        why_chosen:
+          "Flessibilità totale, supporta 1000+ integrazioni, perfetto per pipeline custom B2B.",
+        input: "Eventi da ReachifyMe, trigger da form, condizioni di routing.",
+        output: "Follow-up automatici, lead instradati al sales, dati sincronizzati.",
+        next_handoff: "I lead arrivano al sales team con tutte le info contestualizzate.",
+        manual_handoff: true,
+        learning_curve: "high",
+        pricing_relevance: "paid",
+        limitations:
+          "Ha costo per operazione: pipeline inefficienti diventano care rapidamente.",
+        when_to_skip:
+          "Se il volume è basso e i follow-up manuali sono gestibili.",
+        replacement_trigger:
+          "Se le operazioni superano decine di migliaia/mese, valuta n8n self-hosted.",
+        alternatives: ["n8n"],
+        featured: false,
+        order: 4,
+      },
+      {
+        tool_slug: "chatbot",
+        stage: "Qualification h24 (balanced)",
+        status: "optional",
+        role: "AI chatbot per qualification automatica dei lead",
+        note: "Per qualificare i lead h24 quando arrivano via form o cliccano ads. Riduce il lead response time da ore a secondi.",
+        why_chosen:
+          "Triage automatico con AI: chiede budget, timeline, decision-making power. Passa al sales solo i lead qualificati.",
+        input: "Knowledge base del servizio, criteri di qualifica (BANT-like).",
+        output: "Lead qualificati instradati al sales, lead freddi inseriti in nurturing.",
+        next_handoff: "I lead qualificati vanno al sales, i freddi in nurture sequence via Make.",
+        manual_handoff: true,
+        learning_curve: "low",
+        pricing_relevance: "freemium",
+        limitations:
+          "Richiede training iniziale su criteri di qualifica chiari. Se i criteri sono vaghi, l'output è inutile.",
+        when_to_skip:
+          "Se il lead volume è < 50/mese (un sales rep può gestirli manualmente).",
+        replacement_trigger:
+          "Se i volumi superano 200 lead/mese o servono flussi conversazionali complessi.",
+        alternatives: ["livechat"],
+        featured: false,
+        order: 5,
+      },
+      {
+        tool_slug: "windsor-ai",
+        stage: "Attribution (optional)",
+        status: "alternative",
+        role: "Attribution multi-canale per misurare il ROI della lead gen",
+        note: "Per misurare quali canali portano lead qualificati e chiusure, oltre il last-click di Google Analytics.",
+        why_chosen:
+          "Collega i dati da Meta Ads, Google Ads, LinkedIn Ads, organico in un'unica dashboard. Supporta il calcolo del ROI reale.",
+        input: "Account ads collegati, eventi di conversione, definizione lead qualificato.",
+        output: "Dashboard attribution, ROI per canale, customer journey visualizzato.",
+        next_handoff: "I dati alimentano le decisioni di budget allocation per il mese successivo.",
+        manual_handoff: true,
+        learning_curve: "medium",
+        pricing_relevance: "paid",
+        limitations:
+          "Richiede setup attento dei pixel e conversion event: setup sbagliato = dati sbagliati.",
+        when_to_skip:
+          "Se il budget ads è < €1k/mese (overhead non giustificato).",
+        replacement_trigger: "Se serve attribution cross-device, valuta TripleWhale o Northbeam.",
+        alternatives: [],
+        featured: false,
+        order: 6,
+      },
+    ],
+    created_at: "2026-08-10T18:30:00.000Z",
+    updated_at: "2026-08-10T18:30:00.000Z",
+    first_published_at: "2026-08-10T18:30:00.000Z",
+    published_at: "2026-08-10T18:30:00.000Z",
     source_kind: "content",
   },
 ];

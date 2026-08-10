@@ -63,6 +63,10 @@ describe("collection repository V1 source contract", () => {
       "ai-customer-support-stack",
       "ai-agents-automation-stack",
       "personal-brand-linkedin-stack",
+      "ai-video-training-stack",
+      "agency-operating-stack",
+      "free-budget-ai-stack",
+      "lead-generation-stack",
     ]);
     expect(snapshot.collections.every((collection) => collection.access === "open")).toBe(true);
     expect(snapshot.collections.every((collection) => collection.source_kind === "content")).toBe(

@@ -5,14 +5,22 @@ export type CollectionTheme =
   | "design-sprint"
   | "creator-video"
   | "research-synthesis"
-  | "indie-launch";
+  | "indie-launch"
+  | "video-training"
+  | "agency-operating"
+  | "free-budget"
+  | "lead-generation";
 
 export type CollectionAudience =
   | "Solo founders"
   | "Designer-builders"
   | "Creator teams"
   | "Research-led teams"
-  | "Indie launchers";
+  | "Indie launchers"
+  | "Course creators"
+  | "Agency operators"
+  | "Indie hackers"
+  | "Sales and growth teams";
 
 export type CollectionDifficulty = "starter" | "growing" | "advanced";
 export type CollectionTone =
@@ -154,6 +162,13 @@ export type CollectionStackVariant = {
   gains?: string[];
   /** What the user gives up by moving down from the higher variant. */
   trade_offs?: string[];
+  /**
+   * Explicit path-based architectural split. When `true`, the variant
+   * section renders as side-by-side paths (e.g. agents no-code vs
+   * self-hosted) instead of additive tabs. Backward-compat: not set
+   * for additive-only Collections.
+   */
+  architectural?: boolean;
 };
 
 export type CollectionStackMeta = {
@@ -175,6 +190,17 @@ export type CollectionStackMeta = {
   monthly_cost_band?: "€0" | "€0-30" | "€30-100" | "€100-300" | "€300+" | "pricing-requires-quote";
   /** Indicative difficulty — UI label candidates. */
   difficulty_label?: string;
+  /**
+   * Explicit architectural split for path-based Collections (e.g.
+   * ai-agents-automation-stack with managed vs self-hosted paths).
+   * When present, the variant section renders these two paths
+   * side-by-side with the exact tool compositions. Backward-compat:
+   * not set for additive-only Collections.
+   */
+  path_split?: {
+    a: { label: string; tagline?: string; core_slugs: string[] };
+    b: { label: string; tagline?: string; core_slugs: string[] };
+  };
 };
 
 export type CollectionDecisionIntelligence = {

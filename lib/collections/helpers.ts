@@ -66,6 +66,10 @@ const audienceMeta: Record<CollectionAudience, string> = {
   "Creator teams": "Per creator e team contenuto con flussi visuali",
   "Research-led teams": "Per chi trasforma orientamento e insight in conoscenza riusabile",
   "Indie launchers": "Per lanci piccoli ma molto curati",
+  "Course creators": "Per formatori, consulenti e team L&D che pubblicano prodotti formativi",
+  "Agency operators": "Per founder di agenzie digitali, AI o growth con team 2-8 persone",
+  "Indie hackers": "Per chi sperimenta AI senza budget o è in fase stealth / early stage",
+  "Sales and growth teams": "Per sales lead, growth marketer e founder B2B che generano lead qualificati",
 };
 
 const themeMeta: Record<CollectionTheme, string> = {
@@ -74,6 +78,10 @@ const themeMeta: Record<CollectionTheme, string> = {
   "creator-video": "Creator video",
   "research-synthesis": "Ricerca e sintesi",
   "indie-launch": "Lancio indie",
+  "video-training": "Formazione strutturata",
+  "agency-operating": "Operatività agenzia",
+  "free-budget": "AI a basso costo",
+  "lead-generation": "Lead generation B2B",
 };
 
 export function getCollectionToneMeta(tone: CollectionTone) {

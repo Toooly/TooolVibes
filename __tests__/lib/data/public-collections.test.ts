@@ -19,14 +19,18 @@ describe("public collections", () => {
       "ai-customer-support-stack",
       "ai-agents-automation-stack",
       "personal-brand-linkedin-stack",
+      "ai-video-training-stack",
+      "agency-operating-stack",
+      "free-budget-ai-stack",
+      "lead-generation-stack",
     ]);
     expect(collections.every((collection) => collection.access === "open")).toBe(true);
     expect(collections.every((collection) => collection.tool_count > 0)).toBe(true);
     expect(collections[0]?.featured_tool_slot?.tool.slug).toBe("jenni-ai");
   });
 
-  it("has exactly 8 intended public records with unique slugs", () => {
-    expect(contentCollections).toHaveLength(8);
+  it("has exactly 12 intended public records with unique slugs", () => {
+    expect(contentCollections).toHaveLength(12);
     const slugs = contentCollections.map((collection) => collection.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
   });

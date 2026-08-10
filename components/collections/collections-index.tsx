@@ -1,17 +1,48 @@
 import Link from "next/link";
-import { BookOpenText, GitBranch, ShieldAlert } from "lucide-react";
+import { BookOpenText, GitBranch, ShieldAlert, Wrench, Sparkles, Cog, TrendingUp } from "lucide-react";
 
 import type { CuratedCollection } from "@/lib/types/collection";
 import { getCollectionCoreToolSlugs } from "@/lib/collections/helpers";
+import { collectionVisualIdentity, type CxAccent, cxGroupOrder, pickFeaturedCollection } from "@/lib/collections/visual-identity";
 
 import { CollectionCardV4 } from "./collection-card-v4";
-import { pickFeaturedCollection } from "./collection-card-v3";
-// V3 retained for comparison — not active in the index
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { CollectionCardV3 as _V3 } from "./collection-card-v3";
 
 type CollectionsIndexProps = {
   collections: CuratedCollection[];
+};
+
+type GroupKey = CxVisualIdentity["group"];
+
+import type { CxVisualIdentity } from "@/lib/collections/visual-identity";
+
+const GROUP_LABELS: Record<GroupKey, { label: string; lede: string; icon: React.ReactNode }> = {
+  build: {
+    label: "Costruisci",
+    lede: "Dall'idea al primo MVP, al prodotto vendibile.",
+    icon: <Wrench className="size-3.5" aria-hidden="true" />,
+  },
+  create: {
+    label: "Crea",
+    lede: "Contenuti, formazione, brand. Output ripetibili, non one-off.",
+    icon: <Sparkles className="size-3.5" aria-hidden="true" />,
+  },
+  operate: {
+    label: "Gestisci",
+    lede: "Operazioni, supporto, agenti, agenzie. Mossa che scala.",
+    icon: <Cog className="size-3.5" aria-hidden="true" />,
+  },
+  grow: {
+    label: "Cresci",
+    lede: "Acquisizione, distribuzione, lead qualificati. Il motore.",
+    icon: <TrendingUp className="size-3.5" aria-hidden="true" />,
+  },
+};
+
+const ACCENT_VAR: Record<CxAccent, string> = {
+  indigo: "var(--cx-accent-indigo)",
+  violet: "var(--cx-accent-violet)",
+  teal: "var(--cx-accent-teal)",
+  amber: "var(--cx-accent-amber)",
 };
 
 export function CollectionsIndex({ collections }: CollectionsIndexProps) {
@@ -30,6 +61,19 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
     (acc, c) => acc + getCollectionCoreToolSlugs(c).length,
     0,
   );
+
+  // Group the remaining by visual-identity.group.
+  const groups: Record<GroupKey, CuratedCollection[]> = {
+    build: [],
+    create: [],
+    operate: [],
+    grow: [],
+  };
+  for (const collection of rest) {
+    const identity = collectionVisualIdentity[collection.slug];
+    const group: GroupKey = identity?.group ?? "build";
+    groups[group].push(collection);
+  }
 
   return (
     <div className="cx-index">
@@ -100,38 +144,66 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
           </div>
         </section>
 
-        <section aria-labelledby="cx-raccolte-heading">
-          <div className="cx-index__section-title">
-            <h2 id="cx-raccolte-heading">Le 8 raccolte</h2>
-            <p>Costruisci prima il workflow, poi il tool</p>
-          </div>
-          <div className="cx-index__grid" style={{ marginTop: "1.2rem" }}>
-            {lead && <CollectionCardV4 collection={lead} featured />}
-            {rest.map((collection) => (
-              <CollectionCardV4
-                key={collection.slug}
-                collection={collection}
-              />
-            ))}
-          </div>
-        </section>
+        {lead && (
+          <section
+            aria-labelledby="cx-start-here-heading"
+            className="cx-index__start"
+          >
+            <div className="cx-index__section-title">
+              <h2 id="cx-start-here-heading">In evidenza</h2>
+              <p>La raccolta da cui partire oggi</p>
+            </div>
+            <div className="cx-index__grid cx-index__grid--lead">
+              <CollectionCardV4 collection={lead} featured />
+            </div>
+          </section>
+        )}
+
+        {cxGroupOrder.map((groupKey) => {
+          const items = groups[groupKey];
+          if (items.length === 0) return null;
+          const meta = GROUP_LABELS[groupKey];
+          return (
+            <section
+              key={groupKey}
+              aria-labelledby={`cx-group-${groupKey}-heading`}
+              className="cx-index__group"
+              data-cx-group={groupKey}
+            >
+              <div className="cx-index__section-title">
+                <span
+                  className="cx-index__group-eyebrow"
+                  style={{ color: ACCENT_VAR[groupAccent(groupKey)] }}
+                >
+                  {meta.icon}
+                  {meta.label}
+                </span>
+                <h2 id={`cx-group-${groupKey}-heading`}>
+                  {meta.label}
+                </h2>
+                <p>{meta.lede}</p>
+              </div>
+              <div className="cx-index__grid cx-index__grid--group">
+                {items.map((collection) => (
+                  <CollectionCardV4
+                    key={collection.slug}
+                    collection={collection}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
 
         <section
           aria-labelledby="cx-principles-heading"
-          style={{ marginTop: "1.4rem" }}
+          className="cx-index__principles"
         >
           <div className="cx-index__section-title">
             <h2 id="cx-principles-heading">Come leggere una raccolta</h2>
             <p>Tre cose da cercare sempre</p>
           </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(15rem, 1fr))",
-              gap: "0.7rem",
-              marginTop: "1.1rem",
-            }}
-          >
+          <div className="cx-index__principles-grid">
             <PrincipleCard
               icon={<GitBranch className="size-4" aria-hidden="true" />}
               eyebrow="Il flusso"
@@ -152,6 +224,19 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
       </div>
     </div>
   );
+}
+
+function groupAccent(group: GroupKey): CxAccent {
+  switch (group) {
+    case "build":
+      return "indigo";
+    case "create":
+      return "violet";
+    case "operate":
+      return "teal";
+    case "grow":
+      return "amber";
+  }
 }
 
 function PrincipleCard({

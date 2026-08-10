@@ -7,8 +7,8 @@ const CATALOG_SLUGS = new Set(directoryTools.map((tool) => tool.slug));
 const PUBLIC_SLUGS = contentCollections.map((c) => c.slug);
 
 describe("content-collections editorial baseline (V2)", () => {
-  it("ships exactly the 8 intended public Collections", () => {
-    expect(contentCollections).toHaveLength(8);
+  it("ships exactly the 12 intended public Collections", () => {
+    expect(contentCollections).toHaveLength(12);
     expect(new Set(PUBLIC_SLUGS).size).toBe(PUBLIC_SLUGS.length);
   });
 

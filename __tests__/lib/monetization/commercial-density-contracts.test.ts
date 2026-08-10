@@ -38,7 +38,7 @@ const ROUTE_FILES: Record<string, string> = {
   "tool-detail": "components/tool-detail-final/tool-detail-final-page.tsx",
   posts: "app/(marketing)/posts/[slug]/page.tsx",
   "collections-detail": "app/(marketing)/collections/[slug]/page.tsx",
-  "collections-list": "components/collections/mobile-collections-view.tsx",
+  "collections-list": "components/collections/collections-index.tsx",
   radar: "components/radar/radar-experience.tsx",
   compare: "app/(marketing)/compare/page.tsx",
   account: "app/(marketing)/account/page.tsx",

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { CollectionDetailBody } from "@/components/collections/collection-detail-body";
+import { CollectionDetailBodyV4 } from "@/components/collections/collection-detail-body-v4";
 import { CollectionSignalTracker } from "@/components/collections/collection-signal-tracker";
 import {
   PartnerCollectionModule,
@@ -11,6 +11,7 @@ import { partnerSegmentsForToolSlugs } from "@/lib/sponsors/partner-context";
 import { getCollectionThemeLabel } from "@/lib/collections/helpers";
 import {
   getCollectionBySlug,
+  getCuratedCollections,
   getRelatedCollectionsForSlug,
 } from "@/lib/data/public-collections";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
@@ -45,9 +46,10 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
 
 export default async function CollectionDetailPage({ params }: CollectionPageProps) {
   const { slug } = await params;
-  const [collection, relatedCollections] = await Promise.all([
+  const [collection, relatedCollections, allCollections] = await Promise.all([
     getCollectionBySlug(slug),
     getRelatedCollectionsForSlug(slug),
+    getCuratedCollections(),
   ]);
 
   if (!collection) {
@@ -68,9 +70,10 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
         slug={collection.slug}
         stepCount={collection.included_tools.length}
       />
-      <CollectionDetailBody
+      <CollectionDetailBodyV4
         collection={collection}
         relatedCollections={relatedCollections}
+        allCollections={allCollections}
       />
 
       {/* Collection Partner — ending Partner Experience: appears only after the
