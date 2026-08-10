@@ -1,3 +1,57 @@
+/* =====================================================================
+   PHASE 4 — VISUAL SYSTEM TOKENS
+   =====================================================================
+   4 editorial accents shared by the 12 Collections.
+   Mobile-first: used as subtle typographic signals (kicker stroke,
+   number marker, single-line composite signal). Never as full
+   card backgrounds. Pure typography + spacing carry the composition.
+   --------------------------------------------------------------------- */
+
+:root {
+  /* Editorial accents */
+  --cx-accent-indigo: #7c8cff;   /* Build: solo founder, MVP→SaaS, design sprint */
+  --cx-accent-violet: #a78bfa;   /* Create: creator video, content marketing,
+                                     personal brand, video training */
+  --cx-accent-teal:   #5eead4;   /* Operate: support, agents, agency */
+  --cx-accent-amber:  #fbbf24;   /* Grow: free-budget, lead generation */
+
+  /* Accent on dark surfaces (for dark hero / dark lead card) */
+  --cx-accent-indigo-on-dark: #a8b3ff;
+  --cx-accent-violet-on-dark: #c7b6ff;
+  --cx-accent-teal-on-dark:   #8ef0dd;
+  --cx-accent-amber-on-dark:  #ffd668;
+
+  /* Soft accent tints (used for hairlines, never fills) */
+  --cx-accent-indigo-soft: color-mix(in srgb, var(--cx-accent-indigo) 22%, transparent);
+  --cx-accent-violet-soft: color-mix(in srgb, var(--cx-accent-violet) 22%, transparent);
+  --cx-accent-teal-soft:   color-mix(in srgb, var(--cx-accent-teal)   22%, transparent);
+  --cx-accent-amber-soft:  color-mix(in srgb, var(--cx-accent-amber)  22%, transparent);
+
+  /* Stack diagram primitives (used from Step 3 onward) */
+  --cx-stack-spine:        var(--tv-border-inverted-default);
+  --cx-stack-spine-strong: var(--cx-border-strong, currentColor);
+  --cx-stack-marker-size:  1.75rem;
+  --cx-stack-indent:       2.25rem;
+  --cx-stack-gap-y:        1.5rem;
+
+  /* Composite signal line (one-line stack summary on cards) */
+  --cx-card-signal-fs:     var(--tv-text-sm, 0.875rem);
+  --cx-card-signal-color:  var(--tv-ink-secondary);
+  --cx-card-signal-weight: 480;
+}
+
+/* Accent utilities — used by accent={indigo|violet|teal|amber} data-attr.
+   Mobile-first: thin left rule, small color tint on the kicker text.
+   Never a full card fill. */
+[data-cx-accent="indigo"] { --cx-accent: var(--cx-accent-indigo); --cx-accent-soft: var(--cx-accent-indigo-soft); --cx-accent-on-dark: var(--cx-accent-indigo-on-dark); }
+[data-cx-accent="violet"] { --cx-accent: var(--cx-accent-violet); --cx-accent-soft: var(--cx-accent-violet-soft); --cx-accent-on-dark: var(--cx-accent-violet-on-dark); }
+[data-cx-accent="teal"]   { --cx-accent: var(--cx-accent-teal);   --cx-accent-soft: var(--cx-accent-teal-soft);   --cx-accent-on-dark: var(--cx-accent-teal-on-dark); }
+[data-cx-accent="amber"]  { --cx-accent: var(--cx-accent-amber);  --cx-accent-soft: var(--cx-accent-amber-soft);  --cx-accent-on-dark: var(--cx-accent-amber-on-dark); }
+
+/* =====================================================================
+   END PHASE 4 TOKENS
+   ===================================================================== */
+
 .mobile-collections {
   width: min(100%, var(--tv-container-uw));
   min-height: 0;
