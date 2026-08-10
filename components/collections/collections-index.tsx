@@ -4,7 +4,10 @@ import { BookOpenText, GitBranch, ShieldAlert } from "lucide-react";
 import type { CuratedCollection } from "@/lib/types/collection";
 import { getCollectionCoreToolSlugs } from "@/lib/collections/helpers";
 
-import { CollectionCardV2 } from "./collection-card-v2";
+import {
+  CollectionCardV3,
+  pickFeaturedCollection,
+} from "./collection-card-v3";
 
 type CollectionsIndexProps = {
   collections: CuratedCollection[];
@@ -15,8 +18,12 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
     return null;
   }
 
-  const lead = collections[0];
-  const rest = collections.slice(1);
+  // Lead selection is deterministic and explicit (visual-identity.featured).
+  // Does NOT depend on collections[0].
+  const lead = pickFeaturedCollection(collections);
+  const rest = lead
+    ? collections.filter((c) => c.slug !== lead.slug)
+    : collections;
 
   const totalCore = collections.reduce(
     (acc, c) => acc + getCollectionCoreToolSlugs(c).length,
@@ -98,9 +105,12 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
             <p>Costruisci prima il workflow, poi il tool</p>
           </div>
           <div className="cx-index__grid" style={{ marginTop: "1.2rem" }}>
-            <CollectionCardV2 collection={lead} lead />
+            {lead && <CollectionCardV3 collection={lead} featured />}
             {rest.map((collection) => (
-              <CollectionCardV2 key={collection.slug} collection={collection} />
+              <CollectionCardV3
+                key={collection.slug}
+                collection={collection}
+              />
             ))}
           </div>
         </section>
