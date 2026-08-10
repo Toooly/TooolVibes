@@ -58,6 +58,11 @@ describe("collection repository V1 source contract", () => {
       "ai-stack-solo-founders",
       "design-sprint-essentials",
       "creator-video-stack",
+      "ai-content-marketing-stack",
+      "from-mvp-to-sellable-saas",
+      "ai-customer-support-stack",
+      "ai-agents-automation-stack",
+      "personal-brand-linkedin-stack",
     ]);
     expect(snapshot.collections.every((collection) => collection.access === "open")).toBe(true);
     expect(snapshot.collections.every((collection) => collection.source_kind === "content")).toBe(

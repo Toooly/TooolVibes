@@ -108,11 +108,17 @@ export function resolveCuratedCollection(
         return null;
       }
 
-      return {
+      const status = slot.status ?? "core";
+      const resolved: ResolvedCollectionToolSlot = {
         ...slot,
         order: slot.order ?? index,
         tool,
-      } satisfies ResolvedCollectionToolSlot;
+        is_core: status === "core",
+        is_alternative: status === "alternative",
+        is_optional: status === "optional",
+      };
+
+      return resolved;
     })
     .filter((slot): slot is ResolvedCollectionToolSlot => Boolean(slot))
     .sort((left, right) => left.order - right.order);
@@ -198,4 +204,27 @@ export function getCollectionsForToolSlug(
 
 export function getCollectionPreviewTools(collection: CuratedCollection, limit = 3) {
   return collection.included_tools.slice(0, limit).map((slot) => slot.tool.name);
+}
+
+/** Returns the CORE slots of a Collection in order. */
+export function getCollectionCoreSlots(collection: CuratedCollection) {
+  return collection.included_tools.filter((slot) => slot.is_core);
+}
+
+/** Returns the OPTIONAL slots of a Collection in order. */
+export function getCollectionOptionalSlots(collection: CuratedCollection) {
+  return collection.included_tools.filter((slot) => slot.is_optional);
+}
+
+/** Returns the ALTERNATIVE slots of a Collection in order. */
+export function getCollectionAlternativeSlots(collection: CuratedCollection) {
+  return collection.included_tools.filter((slot) => slot.is_alternative);
+}
+
+/** Resolved variant by label. Returns null when not declared. */
+export function getCollectionVariant(
+  collection: CuratedCollection,
+  label: "lean" | "balanced" | "advanced",
+) {
+  return collection.stack_variants?.find((variant) => variant.label === label) ?? null;
 }

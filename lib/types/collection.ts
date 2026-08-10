@@ -63,12 +63,145 @@ export type CollectionSyncPreviewChangeKind = "safe" | "editorial";
 export type CollectionSyncPreviewTarget = "supabase";
 export type CollectionSafeAlignableField = "editorial_order" | "featured_slot";
 
+/**
+ * Editorial status of a tool inside a Collection.
+ *
+ * - core:        the actual stack. Required for the workflow to make sense.
+ * - optional:    useful only under specific conditions. Add later.
+ * - alternative: replaces a core tool rather than complementing it.
+ *
+ * Rules:
+ *   1. Never present more than one core at the same stage.
+ *   2. Alternatives must not stack on top of cores as paid subscriptions.
+ *   3. Optional tools may appear without their cores being present.
+ */
+export type CollectionToolStatus = "core" | "optional" | "alternative";
+
+export type CollectionToolLearningCurve = "low" | "medium" | "high";
+
+export type CollectionToolPricingRelevance =
+  | "free"
+  | "freemium"
+  | "paid"
+  | "usage"
+  | "quote";
+
 export type CollectionToolSlot = {
   tool_slug: string;
   role: string;
   note?: string;
   featured?: boolean;
   order?: number;
+
+  // ===== Editorial decision intelligence (V2) =====
+  // All fields below are optional and forward-compatible.
+  // Existing V1 records keep working without them.
+
+  /** Optional stage label (e.g. "Ricerca", "Build", "Distribuzione"). */
+  stage?: string;
+
+  /** Stack role: core | optional | alternative. */
+  status?: CollectionToolStatus;
+
+  /** One-sentence deeper "why this tool, here" — beyond the role. */
+  why_chosen?: string;
+
+  /** What enters the tool. */
+  input?: string;
+
+  /** What leaves the tool. */
+  output?: string;
+
+  /** Where the output goes next (manual or direct). */
+  next_handoff?: string;
+
+  /** Approximate learning curve. */
+  learning_curve?: CollectionToolLearningCurve;
+
+  /** Pricing model relevance for this stack role. */
+  pricing_relevance?: CollectionToolPricingRelevance;
+
+  /** Honest limit of the tool in this role. */
+  limitations?: string;
+
+  /** When the user should skip this tool entirely. */
+  when_to_skip?: string;
+
+  /** Signals that the user should replace this tool. */
+  replacement_trigger?: string;
+
+  /** Tool slugs (catalog) that can replace this tool in the same role. */
+  alternatives?: string[];
+
+  /** Guide slug (not tool slug) that provides deeper education for this tool. */
+  relevant_guide_slug?: string;
+
+  /** Direct integration exists with another tool in the same collection. */
+  direct_integration_with?: string[];
+
+  /** Handoff to the next tool is manual (copy-paste / export). */
+  manual_handoff?: boolean;
+};
+
+export type CollectionStackVariant = {
+  /** Variant label: lean | balanced | advanced. */
+  label: "lean" | "balanced" | "advanced";
+  /** Short editorial description of the variant. */
+  description: string;
+  /** Tool slugs that compose this variant. */
+  core_tool_slugs: string[];
+  /** What the user gains by moving up to this variant. */
+  gains?: string[];
+  /** What the user gives up by moving down from the higher variant. */
+  trade_offs?: string[];
+};
+
+export type CollectionStackMeta = {
+  /** Short promise in one line (UI subtitle candidate). */
+  concise_promise?: string;
+  /** Job to be done by this collection. */
+  job_to_be_done?: string;
+  /** Stage of the user/company this collection targets. */
+  user_stage?: string;
+  /** Last verified against public sources (ISO date). */
+  last_verified?: string;
+  /** Related guide slugs (article storage slugs, NOT tool slugs). */
+  related_guide_slugs?: string[];
+  /** Explicit related Collection slugs (graph edges). */
+  related_collection_slugs?: string[];
+  /** Estimated setup time (free-form: "< 1 hour", "Half a day"). */
+  setup_time?: string;
+  /** Indicative recurring cost band: "€0", "€0-30", "€30-100", "€100-300", "€300+" */
+  monthly_cost_band?: "€0" | "€0-30" | "€30-100" | "€100-300" | "€300+" | "pricing-requires-quote";
+  /** Indicative difficulty — UI label candidates. */
+  difficulty_label?: string;
+};
+
+export type CollectionDecisionIntelligence = {
+  /** Strongest component of this stack (tool slug or stage name). */
+  strongest?: string;
+  /** Weakest component of this stack (tool slug or stage name). */
+  weakest?: string;
+  /** Where the stack becomes fragile. */
+  fragility?: string;
+  /** Vendor lock-in or open stack statement. */
+  vendor_lock_in?: string;
+  /** Notes on data/privacy implications. */
+  data_privacy?: string;
+  /** When this stack stops scaling. */
+  scalability?: string;
+};
+
+export type CollectionScenario = {
+  title: string;
+  body: string;
+};
+
+export type CollectionAntiRecommendation = {
+  /** When this Collection is NOT the right answer. */
+  not_for: string;
+  /** What to look at instead (other Collection slugs, or null). */
+  look_instead_at?: string[];
 };
 
 export type AdvancedSpecialIssueToolMoment = {
@@ -194,6 +327,25 @@ export type CuratedCollectionRecord = {
   published_at?: string | null;
   archived_at?: string | null;
   source_kind?: CollectionSourceKind;
+
+  // ===== Editorial decision intelligence (V2) =====
+  // All fields below are optional and forward-compatible.
+  // V1 records without them still work.
+
+  /** Editorial identity, job, audience stage, verification date. */
+  stack_meta?: CollectionStackMeta;
+
+  /** Stack variants — only when the editorial model genuinely supports them. */
+  stack_variants?: CollectionStackVariant[];
+
+  /** Decision intelligence block. */
+  decision_intelligence?: CollectionDecisionIntelligence;
+
+  /** Explicit anti-recommendation: when this Collection is the wrong answer. */
+  anti_recommendation?: CollectionAntiRecommendation;
+
+  /** At least one realistic (hypothetical but credible) workflow example. */
+  scenario?: CollectionScenario;
 };
 
 export type CollectionTool = {
@@ -211,6 +363,10 @@ export type CollectionTool = {
 export type ResolvedCollectionToolSlot = CollectionToolSlot & {
   order: number;
   tool: CollectionTool;
+  // Normalized editorial flags (derived, not stored) — see lib/collections/editorial.ts.
+  is_core: boolean;
+  is_alternative: boolean;
+  is_optional: boolean;
 };
 
 export type CuratedCollection = Omit<CuratedCollectionRecord, "included_tools"> & {

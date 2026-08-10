@@ -14,6 +14,9 @@ const slot: ResolvedCollectionToolSlot = {
   note: "Serve per verificare il fit prima di allargare il confronto.",
   featured: true,
   order: 0,
+  is_core: true,
+  is_optional: false,
+  is_alternative: false,
   tool: {
     id: "test-tool",
     name: "Test Tool",
