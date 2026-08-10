@@ -11,10 +11,23 @@ import {
 } from "@/lib/collections/helpers";
 import { getCollectionRepositorySnapshot } from "@/lib/data/collection-repository";
 import { getPublishedTools } from "@/lib/data/public-tools";
+import { directoryTools } from "@/lib/data/tooolvibes-directory";
 import type { CuratedCollection, CollectionTool } from "@/lib/types/collection";
 import type { ToolPublic } from "@/lib/types/tool-public";
 
+// Phase 4: lookup the canonical directory entry to expose real brand
+// identity (gradient + favicon source) to the collection card glyph.
+// This reuses the SAME brand data already driving tool cards, tool
+// detail, home and guides — no parallel brand system.
+// If the runtime tool source is not the directory (e.g. supabase in
+// staging), the lookup returns undefined and the card falls back to a
+// deterministic gradient (acceptable fallback per Phase 4 spec).
+const directoryBySlug = new Map(
+  directoryTools.map((tool) => [tool.slug, tool]),
+);
+
 function toCollectionTool(tool: ToolPublic): CollectionTool {
+  const brand = directoryBySlug.get(tool.slug);
   return {
     id: tool.provenance.sourceId,
     name: tool.name,
@@ -27,6 +40,11 @@ function toCollectionTool(tool: ToolPublic): CollectionTool {
     why_here:
       tool.editorial.evidence.find((evidence) => evidence.kind === "rationale")
         ?.text,
+    // Phase 4 visual identity (real brand data, additive)
+    accentFrom: brand?.accentFrom,
+    accentTo: brand?.accentTo,
+    domain: brand?.domain,
+    externalUrl: brand?.externalUrl,
   };
 }
 

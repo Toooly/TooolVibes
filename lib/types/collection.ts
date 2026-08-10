@@ -358,6 +358,16 @@ export type CollectionTool = {
   affiliate_url: string | null;
   pricing?: ToolPricing;
   why_here?: string;
+  // ===== Phase 4 visual identity (additive, optional) =====
+  // Populated by toCollectionTool from the canonical directory tool.
+  // Used by CollectionCardV4 to render the tool glyph with the real
+  // brand gradient and favicon source, matching the rest of TooolVibes.
+  // Backward compatible: when source is not directory, these stay
+  // undefined and the card falls back to a deterministic gradient.
+  accentFrom?: string;
+  accentTo?: string;
+  domain?: string;
+  externalUrl?: string;
 };
 
 export type ResolvedCollectionToolSlot = CollectionToolSlot & {

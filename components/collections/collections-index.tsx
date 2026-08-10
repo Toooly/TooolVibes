@@ -4,10 +4,11 @@ import { BookOpenText, GitBranch, ShieldAlert } from "lucide-react";
 import type { CuratedCollection } from "@/lib/types/collection";
 import { getCollectionCoreToolSlugs } from "@/lib/collections/helpers";
 
-import {
-  CollectionCardV3,
-  pickFeaturedCollection,
-} from "./collection-card-v3";
+import { CollectionCardV4 } from "./collection-card-v4";
+import { pickFeaturedCollection } from "./collection-card-v3";
+// V3 retained for comparison — not active in the index
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { CollectionCardV3 as _V3 } from "./collection-card-v3";
 
 type CollectionsIndexProps = {
   collections: CuratedCollection[];
@@ -105,9 +106,9 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
             <p>Costruisci prima il workflow, poi il tool</p>
           </div>
           <div className="cx-index__grid" style={{ marginTop: "1.2rem" }}>
-            {lead && <CollectionCardV3 collection={lead} featured />}
+            {lead && <CollectionCardV4 collection={lead} featured />}
             {rest.map((collection) => (
-              <CollectionCardV3
+              <CollectionCardV4
                 key={collection.slug}
                 collection={collection}
               />
