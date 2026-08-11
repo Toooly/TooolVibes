@@ -1,9 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FileCheck2, Lightbulb, Send, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  FileCheck2,
+  Lightbulb,
+  Mail,
+  Send,
+  Sparkles,
+} from "lucide-react";
 
-import { ResponsiveDisclosureCard } from "@/components/ui/responsive-disclosure-card";
-import { RouteMarker } from "@/components/ui/route-marker";
+import {
+  SecondaryCardGrid,
+  SecondaryClosingCTA,
+  SecondaryHero,
+  SecondaryPageShell,
+  SecondaryPrincipleCard,
+  SecondarySection,
+} from "@/components/secondary";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
@@ -15,108 +28,192 @@ export const metadata: Metadata = createPublicPageMetadata({
     "Un canale editoriale per proporre tool, flussi e correzioni utili.",
 });
 
-const contributionTypes = [
+const CONTRIBUTE_EMAIL_SUBJECT =
+  "mailto:hello@tooolvibes.com?subject=Proposta%20per%20TooolVibes";
+
+const CONTRIBUTION_TYPES = [
   {
     title: "Un tool da valutare",
-    copy: "Indica il link ufficiale, il problema che risolve e per chi può essere utile.",
-    icon: Sparkles,
+    copy: "Indica il link ufficiale, il problema che risolve e per chi può essere utile. La redazione verifica e, se regge, lo inserisce nel Catalogo.",
+    icon: <Sparkles className="size-4" aria-hidden="true" />,
+    bullets: [
+      "Link ufficiale + caso d'uso.",
+      "Una sola mail, senza moduli o account.",
+    ],
   },
   {
     title: "Un flusso che funziona",
-    copy: "Racconta i passaggi essenziali e il contesto: la redazione può trasformarlo in una guida utile.",
-    icon: Lightbulb,
+    copy: "Racconta i passaggi essenziali e il contesto: la redazione può trasformarlo in una guida utile, citandoti se lo desideri.",
+    icon: <Lightbulb className="size-4" aria-hidden="true" />,
+    bullets: [
+      "Passi · tool · contesto.",
+      "Trasparente sui limiti noti.",
+    ],
   },
   {
     title: "Una correzione",
-    copy: "Se una scheda non è più precisa o completa, segnalarlo aiuta a mantenere il Catalogo affidabile.",
-    icon: FileCheck2,
+    copy: "Se una scheda non è più precisa o completa, segnalarlo aiuta a mantenere il Catalogo affidabile. Le correzioni vengono revisionate a vista.",
+    icon: <FileCheck2 className="size-4" aria-hidden="true" />,
+    bullets: [
+      "Link alla scheda + cosa è cambiato.",
+      "Risposta della redazione in tempi chiari.",
+    ],
   },
-];
+] as const;
+
+const TRUST_PROMISES = [
+  {
+    title: "Lettura umana",
+    copy: "Ogni proposta passa dalla redazione: nessuna pubblicazione automatica, nessun ranking gonfiato.",
+  },
+  {
+    title: "Criteri editoriali",
+    copy: "Le valutazioni vivono nel Metodo. Se un tool non regge i criteri, lo diciamo, anche dopo la pubblicazione.",
+  },
+  {
+    title: "Risposta, non silenzio",
+    copy: "Quando una proposta è fuori perimetro, lo spieghiamo. Non è una scatola nera, è una redazione.",
+  },
+] as const;
 
 export default function ContributiPage() {
   return (
-    <div className="page-shell space-y-5 pb-24 pt-4 sm:space-y-7 sm:pb-16 sm:pt-6">
-      <section className="hero-shell motion-reveal bg-[var(--tv-surface-raised)] px-5 py-5 text-white before:!hidden after:!hidden sm:rounded-[38px] sm:px-7 sm:py-8">
-        <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.6fr)] lg:items-end">
-          <div className="max-w-[48rem]">
-            <RouteMarker
-              index="07"
-              label="Contributi"
-              status="Canale editoriale"
-              density="hero"
-              className="mb-5"
-            />
-            <h1 className="max-w-none text-balance text-[clamp(2rem,8vw,3.35rem)] leading-[1.05] text-white sm:max-w-[22ch]">
-              Le scelte migliori <span className="whitespace-nowrap">meritano contesto.</span>
-            </h1>
-            <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-7 text-white/70 sm:mt-5 sm:text-[1rem]">
-              Puoi proporre un tool, raccontare un flusso o correggere una scheda. Ogni invio viene
-              letto dalla redazione: non promettiamo pubblicazioni automatiche.
-            </p>
-          </div>
-
-          <div className="rounded-[24px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] p-4 sm:rounded-[28px] sm:p-5">
-            <Send className="size-5 text-violet-100" aria-hidden="true" />
-            <h2 className="mt-4 text-[1.3rem] leading-tight text-white">
-              Invia una proposta utile.
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-white/70">
-              Bastano un link ufficiale e poche righe sul caso d&apos;uso.
-            </p>
+    <SecondaryPageShell>
+      <SecondaryHero
+        tone="dark"
+        layout="split"
+        routeIndex="07"
+        routeLabel="Contributi"
+        routeStatus="Canale editoriale"
+        emphasis="contesto"
+        title="Le scelte migliori meritano contesto."
+        lede="Puoi proporre un tool, raccontare un flusso o correggere una scheda. Ogni invio viene letto dalla redazione: non promettiamo pubblicazioni automatiche."
+        actions={
+          <>
+            <a
+              href={CONTRIBUTE_EMAIL_SUBJECT}
+              className="secondary-card__cta"
+              aria-label="Scrivi alla redazione TooolVibes per proporre un contributo"
+            >
+              <Mail aria-hidden="true" className="size-4" />
+              <span>Scrivi alla redazione</span>
+            </a>
             <Link
               href="/shortlist#wishlist"
-              className="mt-5 inline-flex min-h-11 items-center justify-center rounded-[var(--tv-radius-control)] bg-white px-4 text-sm font-semibold text-[var(--tv-surface-raised)] transition-colors hover:bg-violet-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="secondary-card__cta secondary-card__cta--ghost"
             >
-              Proponi un tool
+              <span>Aggiungi alla wishlist</span>
             </Link>
-          </div>
-        </div>
-      </section>
-
-      <section aria-labelledby="contribution-types-title">
-        <div className="max-w-[42rem]">
-          <h2 id="contribution-types-title" className="text-[1.6rem] leading-tight text-[var(--tv-ink-primary)] sm:text-[2rem]">
-            Cosa puoi inviare
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--tv-ink-secondary)] sm:text-base">
-            I contributi migliori partono da un bisogno concreto e aiutano altre persone a scegliere.
-          </p>
-        </div>
-        <div className="motion-stagger mt-4 grid gap-2 md:mt-5 md:grid-cols-3 md:gap-5">
-          {contributionTypes.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <ResponsiveDisclosureCard
-                key={item.title}
-                title={item.title}
-                icon={<Icon className="size-4 md:size-5" aria-hidden="true" />}
+          </>
+        }
+        signature={
+          <>
+            <span className="secondary-hero__signature-eyebrow">
+              <Send className="size-4" aria-hidden="true" />
+              <span>Indirizzo della redazione</span>
+            </span>
+            <p
+              style={{
+                margin: 0,
+                color: "var(--tv-ink-primary)",
+                fontFamily: "var(--tv-font-family-ui)",
+                fontSize: "1.4rem",
+                lineHeight: 1.2,
+                letterSpacing: "-0.01em",
+                fontWeight: 600,
+              }}
+            >
+              <a
+                href={CONTRIBUTE_EMAIL_SUBJECT}
+                style={{ color: "inherit", textDecoration: "none" }}
               >
-                <p className="mt-3 text-sm leading-6 text-[var(--tv-ink-secondary)] md:mt-4 md:leading-7">
-                  {item.copy}
-                </p>
-              </ResponsiveDisclosureCard>
-            );
-          })}
-        </div>
-      </section>
+                hello@tooolvibes.com
+              </a>
+            </p>
+            <p
+              style={{
+                margin: 0,
+                color: "var(--tv-ink-secondary)",
+                fontFamily: "var(--tv-font-family-ui)",
+                fontSize: "0.9rem",
+                lineHeight: 1.55,
+              }}
+            >
+              Una sola mail, nessun modulo. Scrivi il tag{" "}
+              <strong style={{ color: "var(--tv-ink-primary)" }}>
+                [tool]
+              </strong>{" "}
+              ·{" "}
+              <strong style={{ color: "var(--tv-ink-primary)" }}>
+                [flusso]
+              </strong>{" "}
+              ·{" "}
+              <strong style={{ color: "var(--tv-ink-primary)" }}>
+                [correzione]
+              </strong>{" "}
+              nella prima riga: aiuta la redazione a instradarla.
+            </p>
+          </>
+        }
+      />
 
-      <section className="grid gap-4 rounded-[24px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:rounded-[30px] sm:p-6">
-        <div className="max-w-[48rem]">
-          <h2 className="text-[1.35rem] leading-tight text-white sm:text-[1.75rem]">
-            Prima di inviare, verifica il Metodo.
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-white/70">
-            Spiega quali fonti e limiti rendono una valutazione editoriale davvero utile.
-          </p>
-        </div>
-        <Link
-          href="/metodo"
-          className="inline-flex min-h-11 items-center justify-center rounded-[var(--tv-radius-control)] border border-white/20 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-        >
-          Leggi il Metodo
-        </Link>
-      </section>
-    </div>
+      <SecondarySection
+        eyebrow="Cosa puoi inviare"
+        title="Tre tipi di contributo, una sola redazione"
+        lede="I contributi migliori partono da un bisogno concreto e aiutano altre persone a scegliere. Sono tre i tagli che vale la pena proporre."
+      >
+        <SecondaryCardGrid columns={3}>
+          {CONTRIBUTION_TYPES.map((type) => (
+            <SecondaryPrincipleCard
+              key={type.title}
+              title={type.title}
+              copy={type.copy}
+              bullets={type.bullets}
+              icon={type.icon}
+            />
+          ))}
+        </SecondaryCardGrid>
+      </SecondarySection>
+
+      <SecondarySection
+        tone="ivory"
+        eyebrow="Come lavoriamo"
+        title="Tre promesse editoriali"
+        lede="TooolVibes è una redazione, non un portale. Ecco cosa significa in pratica per chi contribuisce."
+      >
+        <SecondaryCardGrid columns={3}>
+          {TRUST_PROMISES.map((promise) => (
+            <SecondaryPrincipleCard
+              key={promise.title}
+              title={promise.title}
+              copy={promise.copy}
+              tone="ivory"
+            />
+          ))}
+        </SecondaryCardGrid>
+      </SecondarySection>
+
+      <SecondaryClosingCTA
+        tone="dark"
+        title="Hai qualcosa da proporre?"
+        body="Una mail, un tag, un caso d'uso. La redazione risponde con una prima lettura editoriale, anche quando la proposta è fuori perimetro."
+        actions={
+          <>
+            <a
+              href={CONTRIBUTE_EMAIL_SUBJECT}
+              className="secondary-card__cta"
+              aria-label="Apri la mail per scrivere alla redazione"
+            >
+              <Mail aria-hidden="true" className="size-4" />
+              <span>Scrivi a hello@tooolvibes.com</span>
+            </a>
+            <Link href="/metodo" className="secondary-card__cta secondary-card__cta--ghost">
+              <span>Rileggi il Metodo</span>
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </Link>
+          </>
+        }
+      />
+    </SecondaryPageShell>
   );
 }

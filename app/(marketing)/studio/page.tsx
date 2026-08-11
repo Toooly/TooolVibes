@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, Compass, FileText, Layers3 } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Compass, FileText, Layers3, Mail } from "lucide-react";
 
-import { ResponsiveDisclosureCard } from "@/components/ui/responsive-disclosure-card";
-import { RouteMarker } from "@/components/ui/route-marker";
+import {
+  SecondaryCardGrid,
+  SecondaryClosingCTA,
+  SecondaryHero,
+  SecondaryPageShell,
+  SecondaryPrincipleCard,
+  SecondarySection,
+} from "@/components/secondary";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
@@ -16,106 +22,177 @@ export const metadata: Metadata = createPublicPageMetadata({
     "Ricerca, sistemi decisionali e contenuti editoriali per prodotti e team.",
 });
 
-const services = [
+const STUDIO_EMAIL = "mailto:hello@tooolvibes.com?subject=Studio%20by%20TooolVibes";
+
+const SERVICES = [
   {
     title: "Ricerca e mappatura",
-    copy: "Ricognizioni chiare su strumenti, categorie e opportunità prima di decidere cosa introdurre.",
-    icon: Compass,
+    copy: "Ricognizioni chiare su strumenti, categorie e opportunità prima di decidere cosa introdurre o cosa sostituire.",
+    icon: <Compass className="size-4" aria-hidden="true" />,
+    bullets: [
+      "Mappatura per categoria e per caso d'uso.",
+      "Una sintesi che regge una decisione, non un elenco.",
+    ],
   },
   {
     title: "Sistemi decisionali",
-    copy: "Criteri, confronti e percorsi per aiutare team e clienti a scegliere con più contesto.",
-    icon: Layers3,
+    copy: "Criteri, confronti e percorsi per aiutare team e clienti a scegliere con più contesto e meno opinioni.",
+    icon: <Layers3 className="size-4" aria-hidden="true" />,
+    bullets: [
+      "Criteri dichiarati e verificabili.",
+      "Confronto side-by-side con limiti evidenti.",
+    ],
   },
   {
     title: "Editoriale di prodotto",
     copy: "Guide, pagine e narrative che rendono comprensibili prodotti complessi senza perdere precisione.",
-    icon: FileText,
+    icon: <FileText className="size-4" aria-hidden="true" />,
+    bullets: [
+      "Linguaggio adatto al prodotto, non al marketing.",
+      "Verifica editoriale delle fonti e delle affermazioni.",
+    ],
   },
-];
+] as const;
+
+const PROCESS = [
+  {
+    title: "Prima lettura",
+    copy: "Raccontaci il contesto: arriva una prima lettura editoriale del problema, senza impegno.",
+  },
+  {
+    title: "Piano di lavoro",
+    copy: "Definiamo formato, scadenze e criteri editoriali. Niente promesse di metriche non verificabili.",
+  },
+  {
+    title: "Consegna",
+    copy: "Materiali con revisione interna e approvazione finale. Il documento resta tuo: rilasciato con licenza chiara.",
+  },
+] as const;
 
 export default function StudioPage() {
   return (
-    <div className="page-shell space-y-5 pb-24 pt-4 sm:space-y-7 sm:pb-16 sm:pt-6">
-      <section className="hero-shell motion-reveal bg-[var(--tv-surface-raised)] px-5 py-5 text-white before:!hidden after:!hidden sm:rounded-[38px] sm:px-7 sm:py-8">
-        <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.6fr)] lg:items-end">
-          <div className="max-w-[48rem]">
-            <RouteMarker
-              index="08"
-              label="Studio by TooolVibes"
-              status="Servizi"
-              density="hero"
-              className="mb-5"
-            />
-            <h1 className="max-w-[16ch] text-[clamp(2rem,8vw,3.35rem)] leading-[1.05] text-white sm:max-w-[22ch]">
-              Diamo forma a decisioni più chiare.
-            </h1>
-            <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-7 text-white/70 sm:mt-5 sm:text-[1rem]">
-              Studio by TooolVibes collabora con prodotti e team che hanno bisogno di ricerca,
-              struttura e parole precise per orientare persone reali.
-            </p>
-          </div>
-
-          <div className="rounded-[24px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] p-4 sm:rounded-[28px] sm:p-5">
-            <p className="text-sm leading-6 text-white/70">
-              Raccontaci dove la scelta è diventata difficile: arriveremo con una prima lettura
-              concreta del problema.
-            </p>
+    <SecondaryPageShell>
+      <SecondaryHero
+        tone="dark"
+        layout="split"
+        routeIndex="08"
+        routeLabel="Studio by TooolVibes"
+        routeStatus="Servizi"
+        emphasis="decisioni più chiare"
+        title="Diamo forma a decisioni più chiare."
+        lede="Studio by TooolVibes collabora con prodotti e team che hanno bisogno di ricerca, struttura e parole precise per orientare persone reali."
+        actions={
+          <>
             <a
-              href="mailto:hello@tooolvibes.com?subject=Studio%20by%20TooolVibes"
-              className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-[var(--tv-radius-control)] bg-white px-4 text-sm font-semibold text-[var(--tv-surface-raised)] transition-colors hover:bg-violet-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              href={STUDIO_EMAIL}
+              className="secondary-card__cta"
+              aria-label="Scrivi a TooolVibes per parlare del progetto"
             >
-              Parla del progetto
-              <ArrowUpRight className="size-4" aria-hidden="true" />
+              <Mail aria-hidden="true" className="size-4" />
+              <span>Parla del progetto</span>
+              <ArrowUpRight aria-hidden="true" className="size-4" />
             </a>
-          </div>
-        </div>
-      </section>
+            <Link
+              href="/archivio"
+              className="secondary-card__cta secondary-card__cta--ghost"
+            >
+              <span>Guarda il catalogo</span>
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </Link>
+          </>
+        }
+        signature={
+          <>
+            <span className="secondary-hero__signature-eyebrow">
+              <span>Prima lettura gratuita</span>
+            </span>
+            <p
+              style={{
+                margin: 0,
+                color: "var(--tv-ink-primary)",
+                fontFamily: "var(--tv-font-family-ui)",
+                fontSize: "1.05rem",
+                lineHeight: 1.4,
+                fontWeight: 600,
+              }}
+            >
+              Raccontaci il contesto, non il budget.
+            </p>
+            <p
+              style={{
+                margin: 0,
+                color: "var(--tv-ink-secondary)",
+                fontFamily: "var(--tv-font-family-ui)",
+                fontSize: "0.9rem",
+                lineHeight: 1.55,
+              }}
+            >
+              Ti rispondiamo con una prima lettura editoriale del problema, anche quando la risposta è onesta &quot;non è il nostro perimetro&quot;.
+            </p>
+          </>
+        }
+      />
 
-      <section aria-labelledby="studio-services-title">
-        <div className="max-w-[42rem]">
-          <h2 id="studio-services-title" className="text-[1.6rem] leading-tight text-[var(--tv-ink-primary)] sm:text-[2rem]">
-            Servizi dello Studio
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--tv-ink-secondary)] sm:text-base">
-            Interventi essenziali, costruiti intorno a una domanda decisionale concreta.
-          </p>
-        </div>
-        <div className="motion-stagger mt-4 grid gap-2 md:mt-5 md:grid-cols-3 md:gap-5">
-          {services.map((service) => {
-            const Icon = service.icon;
+      <SecondarySection
+        eyebrow="Servizi"
+        title="Tre servizi, una sola coerenza"
+        lede="Interventi essenziali, costruiti intorno a una domanda decisionale concreta. Ogni servizio può essere breve o continuativo."
+      >
+        <SecondaryCardGrid columns={3}>
+          {SERVICES.map((service) => (
+            <SecondaryPrincipleCard
+              key={service.title}
+              title={service.title}
+              copy={service.copy}
+              bullets={service.bullets}
+              icon={service.icon}
+            />
+          ))}
+        </SecondaryCardGrid>
+      </SecondarySection>
 
-            return (
-              <ResponsiveDisclosureCard
-                key={service.title}
-                title={service.title}
-                icon={<Icon className="size-4 md:size-5" aria-hidden="true" />}
-              >
-                <p className="mt-3 text-sm leading-6 text-[var(--tv-ink-secondary)] md:mt-4 md:leading-7">
-                  {service.copy}
-                </p>
-              </ResponsiveDisclosureCard>
-            );
-          })}
-        </div>
-      </section>
+      <SecondarySection
+        tone="ivory"
+        eyebrow="Processo"
+        title="Come lavoriamo"
+        lede="Un percorso breve, dichiarato e verificabile. Tre passaggi, senza sorprese in fattura."
+      >
+        <SecondaryCardGrid columns={3}>
+          {PROCESS.map((step) => (
+            <SecondaryPrincipleCard
+              key={step.title}
+              title={step.title}
+              copy={step.copy}
+              tone="ivory"
+            />
+          ))}
+        </SecondaryCardGrid>
+      </SecondarySection>
 
-      <section className="grid gap-4 rounded-[24px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:rounded-[30px] sm:p-6">
-        <div className="max-w-[48rem]">
-          <h2 className="text-[1.35rem] leading-tight text-white sm:text-[1.75rem]">
-            Vuoi capire come lavoriamo?
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-white/70">
-            La missione editoriale e il modo in cui manteniamo TooolVibes sono raccontati in Chi siamo.
-          </p>
-        </div>
-        <Link
-          href="/chi-siamo"
-          className="inline-flex min-h-11 items-center justify-center rounded-[var(--tv-radius-control)] border border-white/20 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-        >
-          Vai a Chi siamo
-        </Link>
-      </section>
-    </div>
+      <SecondaryClosingCTA
+        tone="dark"
+        title="Hai una decisione difficile da prendere?"
+        body="Scrivici. Se è un caso che possiamo indirizzare, rispondiamo con una prima lettura; se non lo è, lo diciamo apertamente."
+        actions={
+          <>
+            <a
+              href={STUDIO_EMAIL}
+              className="secondary-card__cta"
+              aria-label="Apri la mail per parlare del progetto"
+            >
+              <Mail aria-hidden="true" className="size-4" />
+              <span>Scrivi a hello@tooolvibes.com</span>
+            </a>
+            <Link
+              href="/archivio"
+              className="secondary-card__cta secondary-card__cta--ghost"
+            >
+              <span>Esplora il catalogo</span>
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </Link>
+          </>
+        }
+      />
+    </SecondaryPageShell>
   );
 }

@@ -152,17 +152,8 @@ export default async function PostsPage() {
           </p>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 16rem), 1fr))",
-            gap: "0.85rem",
-          }}
-        >
-          <div
-            className="guides-article__end-card"
-            style={{ background: "rgba(255, 255, 255, 0.04)" }}
-          >
+        <div className="guides-section__end-grid">
+          <div className="guides-article__end-card">
             <p className="label">01 · Catalogo</p>
             <p className="title">Confronta i tool</p>
             <p className="dek">
@@ -171,10 +162,7 @@ export default async function PostsPage() {
             </p>
             <Link href="/archivio">Apri il catalogo →</Link>
           </div>
-          <div
-            className="guides-article__end-card"
-            style={{ background: "rgba(255, 255, 255, 0.04)" }}
-          >
+          <div className="guides-article__end-card">
             <p className="label">02 · Raccolte</p>
             <p className="title">Tool per obiettivo</p>
             <p className="dek">
@@ -183,10 +171,7 @@ export default async function PostsPage() {
             </p>
             <Link href="/collections">Vai alle raccolte →</Link>
           </div>
-          <div
-            className="guides-article__end-card"
-            style={{ background: "rgba(255, 255, 255, 0.04)" }}
-          >
+          <div className="guides-article__end-card">
             <p className="label">03 · Radar</p>
             <p className="title">Tool appena arrivati</p>
             <p className="dek">
@@ -197,51 +182,21 @@ export default async function PostsPage() {
           </div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.6rem",
-            paddingTop: "0.4rem",
-            marginTop: "0.6rem",
-          }}
-        >
-          <Link
-            href="/metodo"
-            className="guides-section__foot-link"
-            style={{
-              background: "rgba(255, 255, 255, 0.06)",
-              borderColor: "rgba(255, 255, 255, 0.14)",
-              color: "var(--guides-text-on-dark)",
-            }}
-          >
+        <div className="guides-section__foot guides-section__foot--close">
+          <Link href="/metodo" className="guides-section__foot-link guides-section__foot-link--ink">
             Come scriviamo le guide
             <span aria-hidden>→</span>
           </Link>
-          <Link
-            href="/shortlist"
-            className="guides-section__foot-link"
-            style={{
-              background: "rgba(255, 255, 255, 0.06)",
-              borderColor: "rgba(255, 255, 255, 0.14)",
-              color: "var(--guides-text-on-dark)",
-            }}
-          >
+          <Link href="/shortlist" className="guides-section__foot-link guides-section__foot-link--ink">
             Salva i tool che ti interessano
             <span aria-hidden>+</span>
           </Link>
         </div>
 
-        <p
-          style={{
-            color: "var(--guides-text-on-dark-muted)",
-            fontSize: "0.78rem",
-            marginTop: "0.5rem",
-          }}
-        >
-          Lettura media: <strong style={{ color: "var(--guides-text-on-dark)" }}>{readingTime} min</strong>{" "}
+        <p className="guides-section__meta guides-section__meta--ink">
+          Lettura media: <strong>{readingTime} min</strong>{" "}
           per guida · ultimo aggiornamento editoriale:{" "}
-          <strong style={{ color: "var(--guides-text-on-dark)" }}>
+          <strong>
             {new Date().toLocaleDateString("it-IT", { month: "long", year: "numeric" })}
           </strong>
         </p>

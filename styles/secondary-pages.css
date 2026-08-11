@@ -1,0 +1,1246 @@
+/*
+ * Secondary pages — shared design language for company / product / community
+ * secondaries (Metodo, Contributi, Studio, Shop, plus legal documents).
+ *
+ * Scope: components/secondary/* and the four rebuilt routes.
+ * Sponsorizza and Collections own their own CSS — this file deliberately does
+ * not collide with .sponsorizza-* or .mobile-collections-* classes.
+ *
+ * Design contract:
+ *   - Dark command-center surface (var(--tv-surface-raised)) for hero / panels
+ *   - Warm ivory surfaces for readable body sections (var(--tv-surface-inverted))
+ *   - Anton 400 display + Manrope UI, text-wrap: balance on titles
+ *   - Solid violet AA for filled actions (var(--tv-accent-brand-aa))
+ *   - Reduced-motion safe, focus rings preserved, 44px+ targets
+ *   - Token-only palette; no raw hex values
+ *   - Responsive 320px .. 1920px
+ *
+ * This file is imported via styles/release-entry.ts as a public-route-layer
+ * sheet. It must NOT be imported directly by route components.
+ */
+
+/* =====================================================================
+   1. PAGE SHELL — consistent vertical rhythm + bottom-nav clearance
+   ===================================================================== */
+
+.secondary-page {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 3vw, 2.75rem) clamp(4.5rem, 7vw, 6.5rem);
+  padding-inline: clamp(1rem, 3vw, 1.5rem);
+}
+
+.secondary-page--tight {
+  padding-block-end: clamp(3rem, 5vw, 4.5rem);
+}
+
+.secondary-page__stack {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Extra bottom space when the bottom-nav is visible on mobile-first layouts. */
+@media (max-width: 47.99rem) {
+  .secondary-page {
+    padding-block-end: clamp(5rem, 10vw, 6.5rem);
+  }
+}
+
+/* =====================================================================
+   2. SECONDARY HERO — premium route hero with two tones & two layouts
+   ===================================================================== */
+
+.secondary-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: clamp(1.25rem, 2.4vw, 2rem);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  box-shadow: var(--tv-elevation-raised);
+}
+
+.secondary-hero--dark {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--tv-accent-brand) 8%, var(--tv-surface-raised)),
+      var(--tv-surface-raised) 55%,
+      color-mix(in srgb, var(--tv-accent-cyan) 4%, var(--tv-surface-raised))
+    );
+  color: var(--tv-ink-primary);
+}
+
+.secondary-hero--ivory {
+  background: var(--tv-surface-inverted);
+  color: var(--tv-ink-inverted-primary);
+  border-color: var(--tv-border-inverted-subtle);
+}
+
+.secondary-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tv-color-white-pure) 4%, transparent),
+    transparent 35%
+  );
+}
+
+.secondary-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.secondary-hero--split .secondary-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 64rem) {
+  .secondary-hero--split .secondary-hero__inner {
+    grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 1fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
+  }
+}
+
+.secondary-hero__copy {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  max-width: 46rem;
+}
+
+.secondary-hero__title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  text-wrap: balance;
+  text-transform: none;
+}
+
+.secondary-hero__title strong {
+  font-weight: var(--tv-weight-regular);
+  color: var(--tv-accent-violet-on-dark);
+}
+
+.secondary-hero--ivory .secondary-hero__title strong {
+  color: var(--tv-accent-violet-on-ivory);
+}
+
+.secondary-hero__lede {
+  margin: 0;
+  max-width: 42rem;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-body);
+  text-wrap: pretty;
+}
+
+.secondary-hero--ivory .secondary-hero__lede {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.secondary-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.secondary-hero__signature {
+  display: grid;
+  gap: 0.85rem;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+}
+
+.secondary-hero--ivory .secondary-hero__signature {
+  border-color: var(--tv-border-inverted-subtle);
+  background: var(--tv-surface-inverted-raised);
+  color: var(--tv-ink-inverted-primary);
+}
+
+.secondary-hero__signature-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.secondary-hero--ivory .secondary-hero__signature-eyebrow {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.secondary-hero__signature-eyebrow::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-accent-cyan);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent);
+}
+
+.secondary-hero--ivory .secondary-hero__signature-eyebrow::before {
+  background: var(--tv-accent-violet-on-ivory);
+  box-shadow: 0 0 0 4px var(--tv-accent-violet-soft-on-ivory);
+}
+
+/* =====================================================================
+   3. SECONDARY SECTION — wrapper with optional SectionHeader + reveal
+   ===================================================================== */
+
+.secondary-section {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+
+.secondary-section__header {
+  display: grid;
+  gap: 0.65rem;
+  max-width: 40rem;
+}
+
+.secondary-section__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  align-self: start;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-pill);
+  padding: 0.4rem 0.85rem;
+  color: var(--tv-ink-muted-aa);
+  background: var(--tv-surface-elevated);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.secondary-section__eyebrow::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-accent-gold);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-accent-gold) 18%, transparent);
+}
+
+.secondary-section__title {
+  margin: 0;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.secondary-section__lede {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-body);
+  text-wrap: pretty;
+}
+
+/* Ivory-tinted section variant for editorial rhythm. */
+.secondary-section--ivory {
+  background: var(--tv-surface-inverted);
+  border: 1px solid var(--tv-border-inverted-subtle);
+  border-radius: var(--tv-radius-feature);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.secondary-section--ivory .secondary-section__title {
+  color: var(--tv-ink-inverted-primary);
+}
+
+.secondary-section--ivory .secondary-section__lede {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.secondary-section--ivory .secondary-section__eyebrow {
+  background: var(--tv-color-white-pure);
+  border-color: var(--tv-border-inverted-default);
+  color: var(--tv-ink-inverted-secondary);
+}
+
+/* =====================================================================
+   4. SECONDARY CLOSING CTA — intentional closing band
+   ===================================================================== */
+
+.secondary-closing {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: clamp(1.25rem, 2.4vw, 2rem);
+  padding: clamp(1.75rem, 4vw, 3rem);
+  box-shadow: var(--tv-elevation-raised);
+}
+
+.secondary-closing--dark {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--tv-accent-cyan) 6%, var(--tv-surface-raised)),
+      var(--tv-surface-raised) 60%,
+      color-mix(in srgb, var(--tv-accent-brand) 6%, var(--tv-surface-raised))
+    );
+  color: var(--tv-ink-primary);
+}
+
+.secondary-closing--ivory {
+  background: var(--tv-surface-inverted);
+  border-color: var(--tv-border-inverted-subtle);
+  color: var(--tv-ink-inverted-primary);
+}
+
+.secondary-closing__inner {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: center;
+}
+
+@media (min-width: 64rem) {
+  .secondary-closing__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+}
+
+.secondary-closing__title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.secondary-closing__body {
+  margin: 0.5rem 0 0;
+  max-width: 42rem;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-body);
+  text-wrap: pretty;
+}
+
+.secondary-closing--ivory .secondary-closing__body {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.secondary-closing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: flex-start;
+}
+
+@media (min-width: 64rem) {
+  .secondary-closing__actions {
+    justify-content: flex-end;
+  }
+}
+
+/* =====================================================================
+   5. SECONDARY CARD GRID — responsive grid for principle/service cards
+   ===================================================================== */
+
+.secondary-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 40rem) {
+  .secondary-grid--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 48rem) {
+  .secondary-grid--three {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .secondary-grid--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.secondary-card {
+  position: relative;
+  display: grid;
+  gap: 0.85rem;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  transition: border-color var(--tv-duration-fast) var(--tv-easing-standard);
+}
+
+.secondary-card:hover {
+  border-color: var(--tv-border-default);
+}
+
+.secondary-card--ivory {
+  background: var(--tv-surface-inverted);
+  border-color: var(--tv-border-inverted-subtle);
+  color: var(--tv-ink-inverted-primary);
+}
+
+.secondary-card--ivory:hover {
+  border-color: var(--tv-border-inverted-default);
+}
+
+.secondary-card__icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.875rem;
+  background: var(--tv-surface-elevated);
+  color: var(--tv-accent-violet-on-dark);
+  border: 1px solid var(--tv-border-subtle);
+}
+
+.secondary-card--ivory .secondary-card__icon {
+  background: var(--tv-color-white-pure);
+  border-color: var(--tv-border-inverted-default);
+  color: var(--tv-accent-violet-on-ivory);
+}
+
+.secondary-card__index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.35rem;
+  min-height: 2.35rem;
+  padding-inline: 0.5rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-control);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.85rem;
+  font-weight: var(--tv-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.secondary-card--ivory .secondary-card__index {
+  background: var(--tv-color-white-pure);
+  border-color: var(--tv-border-inverted-default);
+  color: var(--tv-ink-inverted-primary);
+}
+
+.secondary-card__title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--tv-font-family-ui);
+  font-size: 1.05rem;
+  font-weight: var(--tv-weight-semibold);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+.secondary-card__copy {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.secondary-card--ivory .secondary-card__copy {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.secondary-card__example {
+  margin-top: 0.25rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--tv-radius-md);
+  border: 1px solid var(--tv-border-subtle);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.secondary-card--ivory .secondary-card__example {
+  background: var(--tv-color-white-pure);
+  border-color: var(--tv-border-inverted-default);
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.secondary-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-accent-brand);
+  color: var(--tv-ink-on-brand);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-label);
+  font-weight: var(--tv-weight-semibold);
+  text-decoration: none;
+  transition:
+    background-color var(--tv-duration-fast) var(--tv-easing-standard),
+    border-color var(--tv-duration-fast) var(--tv-easing-standard);
+}
+
+.secondary-card__cta:hover {
+  background: var(--tv-accent-brand-hover);
+  color: var(--tv-ink-on-brand);
+}
+
+.secondary-card__cta:focus-visible {
+  outline: 2px solid var(--tv-accent-cyan);
+  outline-offset: 3px;
+}
+
+.secondary-card__cta--ghost {
+  background: transparent;
+  color: var(--tv-ink-primary);
+  border: 1px solid var(--tv-border-interactive);
+}
+
+.secondary-card__cta--ghost:hover {
+  background: var(--tv-surface-elevated);
+  border-color: var(--tv-border-strong);
+  color: var(--tv-ink-primary);
+}
+
+.secondary-card--ivory .secondary-card__cta--ghost {
+  color: var(--tv-ink-inverted-primary);
+  border-color: var(--tv-border-inverted-interactive);
+}
+
+.secondary-card--ivory .secondary-card__cta--ghost:hover {
+  background: var(--tv-color-white-pure);
+  border-color: var(--tv-border-inverted-strong);
+  color: var(--tv-ink-inverted-primary);
+}
+
+/* =====================================================================
+   6. METHOD DECISION TRACK — signature visual for /metodo
+   ===================================================================== */
+
+.method-track {
+  position: relative;
+  display: grid;
+  gap: 0;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-raised);
+  isolation: isolate;
+}
+
+.method-track__list {
+  display: grid;
+  gap: clamp(0.6rem, 1.5vw, 0.9rem);
+  position: relative;
+}
+
+.method-track__step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.9rem;
+  padding: clamp(0.85rem, 2vw, 1.15rem);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-card);
+  background: var(--tv-surface-elevated);
+  position: relative;
+  transition: border-color var(--tv-duration-fast) var(--tv-easing-standard);
+}
+
+.method-track__step:hover {
+  border-color: var(--tv-border-default);
+}
+
+.method-track__step + .method-track__step::before {
+  content: "";
+  position: absolute;
+  top: -0.9rem;
+  left: 1.7rem;
+  width: 2px;
+  height: 0.9rem;
+  background: linear-gradient(
+    180deg,
+    var(--tv-border-default),
+    color-mix(in srgb, var(--tv-border-default) 40%, transparent)
+  );
+}
+
+.method-track__step-index {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: var(--tv-radius-control);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.85rem;
+  font-weight: var(--tv-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  position: relative;
+  z-index: 1;
+}
+
+.method-track__step-body {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.method-track__step-label {
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--tv-accent-violet-on-dark);
+}
+
+.method-track__step-title {
+  margin: 0;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 1.05rem;
+  font-weight: var(--tv-weight-semibold);
+  line-height: 1.25;
+}
+
+.method-track__step-copy {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.method-track__step-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--tv-radius-pill);
+  background: transparent;
+  color: var(--tv-ink-primary);
+  border: 1px solid var(--tv-border-interactive);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.85rem;
+  font-weight: var(--tv-weight-semibold);
+  text-decoration: none;
+  width: fit-content;
+  transition:
+    background-color var(--tv-duration-fast) var(--tv-easing-standard),
+    border-color var(--tv-duration-fast) var(--tv-easing-standard);
+}
+
+.method-track__step-cta:hover {
+  background: var(--tv-surface-raised);
+  border-color: var(--tv-border-strong);
+}
+
+.method-track__step-cta:focus-visible {
+  outline: 2px solid var(--tv-accent-cyan);
+  outline-offset: 3px;
+}
+
+/* Connector line art on wide viewports — visual signature. */
+@media (min-width: 64rem) {
+  .method-track__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .method-track__step + .method-track__step::before {
+    top: 50%;
+    left: -1.5rem;
+    width: 1.5rem;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      var(--tv-border-default),
+      color-mix(in srgb, var(--tv-border-default) 40%, transparent)
+    );
+  }
+
+  .method-track__step {
+    padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  }
+}
+
+/* =====================================================================
+   7. PRINCIPLE CARD — shared card body for /method /principles
+   ===================================================================== */
+
+.secondary-principle {
+  position: relative;
+  display: grid;
+  gap: 0.75rem;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  min-height: 100%;
+}
+
+.secondary-principle__head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.secondary-principle__title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--tv-font-family-ui);
+  font-size: 1.05rem;
+  font-weight: var(--tv-weight-semibold);
+  line-height: 1.25;
+}
+
+.secondary-principle__copy {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.secondary-principle__list {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.secondary-principle__list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: start;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.secondary-principle__list li::before {
+  content: "";
+  display: inline-block;
+  width: 0.35rem;
+  height: 0.35rem;
+  margin-top: 0.55rem;
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-accent-violet-on-dark);
+}
+
+/* =====================================================================
+   8. AFFILIATES — recomposed layout (intro panel + application form)
+   ===================================================================== */
+
+.affiliates-layout {
+  display: grid;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .affiliates-layout {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(1.75rem, 4vw, 2.75rem);
+  }
+}
+
+.affiliates-intro {
+  position: relative;
+  display: grid;
+  gap: clamp(0.85rem, 1.6vw, 1.15rem);
+  padding: clamp(1.25rem, 2.5vw, 1.85rem);
+  border: 1px solid var(--tv-border-inverted-subtle);
+  border-radius: clamp(1.25rem, 2.4vw, 2rem);
+  background: var(--tv-surface-inverted);
+  color: var(--tv-ink-inverted);
+  box-shadow: var(--tv-elevation-raised);
+  isolation: isolate;
+}
+
+.affiliates-intro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 60% 60% at 0% 0%,
+      color-mix(in srgb, var(--tv-accent-brand) 14%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 50% 50% at 100% 100%,
+      color-mix(in srgb, var(--tv-accent-cyan) 10%, transparent),
+      transparent 70%
+    );
+  z-index: -1;
+}
+
+.affiliates-intro > * {
+  position: relative;
+  z-index: 1;
+}
+
+.affiliates-intro .secondary-section__eyebrow {
+  background: var(--tv-color-white-pure);
+  border-color: var(--tv-border-inverted-default);
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.affiliates-intro .secondary-section__title {
+  max-width: 16ch;
+  color: var(--tv-ink-inverted);
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.affiliates-intro .secondary-section__lede {
+  max-width: 38rem;
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.affiliates-intro__list {
+  display: grid;
+  gap: clamp(0.5rem, 1.2vw, 0.75rem);
+  margin: clamp(0.6rem, 1.5vw, 1rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.affiliates-intro__item {
+  display: grid;
+  grid-template-columns: minmax(7rem, 1fr) minmax(0, 1.4fr);
+  gap: 0.85rem;
+  align-items: center;
+  padding: clamp(0.65rem, 1.5vw, 0.85rem) clamp(0.8rem, 1.5vw, 1rem);
+  border: 1px solid var(--tv-border-inverted-subtle);
+  border-radius: var(--tv-radius-card);
+  background: var(--tv-color-white-pure);
+}
+
+.affiliates-intro__item dt {
+  color: var(--tv-ink-inverted-muted, var(--tv-ink-inverted-secondary));
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.affiliates-intro__item dd {
+  margin: 0;
+  color: var(--tv-ink-inverted);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.95rem;
+  font-weight: var(--tv-weight-semibold);
+  line-height: 1.3;
+}
+
+.affiliates-intro__contact {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: clamp(0.4rem, 1vw, 0.85rem);
+  padding-top: clamp(0.85rem, 1.5vw, 1.1rem);
+  border-top: 1px solid var(--tv-border-inverted-subtle);
+}
+
+.affiliates-intro__contact-label {
+  margin: 0;
+  color: var(--tv-ink-inverted-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+/* The application form keeps its own dark PremiumPanel; just clip it
+   into the two-column rhythm with a stable min-height so both columns
+   appear visually balanced before hydration. */
+.affiliates-form-wrap {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+}
+
+@media (min-width: 64rem) {
+  .affiliates-form-wrap {
+    position: sticky;
+    top: clamp(1rem, 2vw, 1.5rem);
+  }
+}
+
+/* Dopo l'approvazione — three-step timeline */
+.affiliates-after {
+  display: grid;
+  gap: clamp(0.85rem, 1.6vw, 1.1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: affiliate-after;
+}
+
+@media (min-width: 48rem) {
+  .affiliates-after {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.35rem);
+  }
+}
+
+.affiliates-after__step {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  border: 1px solid var(--tv-border-inverted-default);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-color-white-pure);
+  color: var(--tv-ink-inverted);
+}
+
+.affiliates-after__step + .affiliates-after__step::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -1.25rem;
+  width: 1.25rem;
+  height: 1px;
+  background: var(--tv-border-inverted-default);
+}
+
+@media (max-width: 47.99rem) {
+  .affiliates-after__step + .affiliates-after__step::before {
+    top: -1.25rem;
+    left: 50%;
+    width: 1px;
+    height: 1.25rem;
+  }
+}
+
+.affiliates-after__label {
+  display: inline-flex;
+  align-self: start;
+  align-items: center;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--tv-border-inverted-default);
+  border-radius: var(--tv-radius-pill);
+  color: var(--tv-ink-inverted-secondary);
+  background: transparent;
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.affiliates-after__title {
+  margin: 0;
+  color: var(--tv-ink-inverted);
+  font-family: var(--tv-font-family-ui);
+  font-size: 1.05rem;
+  font-weight: var(--tv-weight-semibold);
+  line-height: 1.25;
+}
+
+.affiliates-after__copy {
+  margin: 0;
+  color: var(--tv-ink-inverted-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* Progressive disclosure inside the application form (dark surface) */
+.affiliate-progressive-disclosure {
+  position: relative;
+  isolation: isolate;
+}
+
+.affiliate-progressive-disclosure > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.affiliate-progressive-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.affiliate-progressive-disclosure > summary::marker {
+  display: none;
+  content: "";
+}
+
+.affiliate-progressive-disclosure[open] > summary {
+  border-bottom: 1px solid var(--tv-border-subtle);
+}
+
+.affiliate-progressive-disclosure[open] > summary .affiliate-disclosure-cue {
+  color: var(--tv-ink-primary);
+}
+
+/* =====================================================================
+   9. LEGAL PAGE — single coherent shell, replaces the duplicated blocks
+   ===================================================================== */
+
+.legal-page {
+  position: relative;
+  display: grid;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  padding-block: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+.legal-page__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: clamp(2rem, 7vw, 7rem);
+  align-items: start;
+  padding-block: clamp(2.25rem, 6vw, 5.5rem);
+}
+
+@media (max-width: 63.99rem) {
+  .legal-page__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+  }
+}
+
+.legal-page__intro {
+  position: sticky;
+  top: 7rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (max-width: 63.99rem) {
+  .legal-page__intro {
+    position: static;
+  }
+}
+
+.legal-page__intro h1 {
+  margin: 0.25rem 0 0;
+  max-width: 9ch;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(3.35rem, 8vw, 7.5rem);
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: -0.035em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.legal-page__intro > p:last-child {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-body);
+  text-wrap: pretty;
+}
+
+.legal-page__body {
+  display: grid;
+  gap: 1.15rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-raised);
+  padding: clamp(1.35rem, 4vw, 2.5rem);
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-loose);
+}
+
+.legal-page__body :where(h2, h3) {
+  margin: 0.5rem 0 0;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-ui);
+  font-size: 1.15rem;
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+}
+
+.legal-page__body :where(h2)::before {
+  content: "";
+  display: block;
+  width: 1.5rem;
+  height: 1px;
+  margin-bottom: 0.85rem;
+  background: var(--tv-accent-violet-on-dark);
+}
+
+.legal-page__body p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.legal-page__body ul {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.legal-page__body strong {
+  color: var(--tv-ink-primary);
+  font-weight: var(--tv-weight-semibold);
+}
+
+.legal-page__body a {
+  color: var(--tv-accent-brand-aa);
+  font-weight: var(--tv-weight-semibold);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 0.28em;
+}
+
+.legal-page__body a:hover {
+  color: var(--tv-accent-brand-hover);
+}
+
+.legal-page__body em {
+  color: var(--tv-ink-muted-aa);
+  font-style: italic;
+}
+
+.legal-page__nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-block: 1px solid var(--tv-border-subtle);
+}
+
+@media (max-width: 47.99rem) {
+  .legal-page__nav {
+    grid-template-columns: 1fr;
+  }
+}
+
+.legal-page__nav a {
+  display: flex;
+  min-height: 3.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding-inline: 0.75rem;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-sm);
+  font-weight: var(--tv-weight-semibold);
+  text-decoration: none;
+  transition:
+    background-color var(--tv-duration-fast) var(--tv-easing-standard),
+    color var(--tv-duration-fast) var(--tv-easing-standard);
+}
+
+.legal-page__nav a + a {
+  border-left: 1px solid var(--tv-border-subtle);
+}
+
+@media (max-width: 47.99rem) {
+  .legal-page__nav a + a {
+    border-left: 0;
+    border-top: 1px solid var(--tv-border-subtle);
+  }
+}
+
+.legal-page__nav a[aria-current="page"] {
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+}
+
+.legal-page__nav a:hover,
+.legal-page__nav a:focus-visible {
+  background: var(--tv-surface-elevated);
+  color: var(--tv-accent-brand-aa);
+}
+
+.legal-page__nav a:focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: -3px;
+}
+
+.legal-page__nav svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* =====================================================================
+   10. ACCESSIBILITY / REDUCED MOTION
+   ===================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .secondary-card,
+  .secondary-card__cta,
+  .secondary-card__cta--ghost,
+  .method-track__step,
+  .method-track__step-cta,
+  .affiliates-after__step,
+  .affiliates-intro__item,
+  .legal-page__nav a {
+    transition: none;
+  }
+
+  .method-track__step + .method-track__step::before,
+  .affiliates-after__step + .affiliates-after__step::before {
+    background: var(--tv-border-default);
+  }
+}

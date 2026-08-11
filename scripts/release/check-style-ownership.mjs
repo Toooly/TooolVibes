@@ -13,6 +13,7 @@ const expectedGlobalImports = [
   "@/styles/radar.css",
   "@/styles/tool-detail-final.css",
   "@/styles/public-routes.css",
+  "@/styles/secondary-pages.css",
   "@/styles/partner-placements.css",
   "@/styles/premium-motion.css",
 ];

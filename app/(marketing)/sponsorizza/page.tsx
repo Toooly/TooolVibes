@@ -511,12 +511,7 @@ export default function SponsorizzaPage() {
             </h2>
             <p className="sponsorizza-final-cta__body">
               Scrivi a{" "}
-              <a
-                href="mailto:hello@tooolvibes.com"
-                style={{ color: "var(--tv-ink-primary)", textDecoration: "underline" }}
-              >
-                hello@tooolvibes.com
-              </a>{" "}
+              <a href="mailto:hello@tooolvibes.com">hello@tooolvibes.com</a>{" "}
               per ricevere il media kit e i dettagli sui formati disponibili.
             </p>
           </div>

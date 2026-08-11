@@ -281,6 +281,61 @@
   padding: 1.5rem;
 }
 
+/* Secondary CTA — used on the services column (dark hero strip) */
+.v-about-secondary-cta {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--tv-radius-md);
+  border: 1px solid var(--tv-border-interactive);
+  background: transparent;
+  padding: 0.75rem 1.25rem;
+  color: var(--tv-ink-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color var(--tv-duration-fast) var(--tv-easing-standard),
+    background var(--tv-duration-fast) var(--tv-easing-standard);
+}
+
+.v-about-secondary-cta:hover,
+.v-about-secondary-cta:focus-visible {
+  border-color: var(--tv-accent-brand-aa);
+  background: var(--tv-surface-elevated);
+  outline: none;
+}
+
+.v-about-secondary-cta__arrow {
+  font-size: 1rem;
+  transition: transform var(--tv-duration-fast) var(--tv-easing-standard);
+}
+
+.v-about-secondary-cta:hover .v-about-secondary-cta__arrow,
+.v-about-secondary-cta:focus-visible .v-about-secondary-cta__arrow {
+  transform: translateX(2px);
+}
+
+/* Identity header on /chi-siamo — server-rendered above the dark hero.
+   H1 is constrained to keep balanced wrapping on the widest viewport. */
+.v-about-identity {
+  padding-inline: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .v-about-identity {
+    padding-inline: 1.75rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .v-about-identity {
+    padding-inline: 2rem;
+  }
+}
+
 /* Mobile about */
 .v-about-mobile {
   position: relative;

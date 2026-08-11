@@ -67,13 +67,6 @@ export default function CookiePage() {
         Per riaprire le preferenze in un secondo momento usa il link{" "}
         <strong>“Gestisci preferenze”</strong> nel footer del sito.
       </p>
-      <p>
-        <em>
-          Nota: questa sezione è da sottoporre a revisione legale prima del
-          rilascio. Le attività tecniche di TinyAdz possono variare con le
-          versioni successive del servizio.
-        </em>
-      </p>
     </LegalPageShell>
   );
 }

@@ -67,12 +67,6 @@ export default function PrivacyPage() {
         Per domande o richieste sui dati personali puoi scrivere a{" "}
         <a href="mailto:hello@tooolvibes.com">hello@tooolvibes.com</a>.
       </p>
-      <p>
-        <em>
-          Nota: questa sezione è da sottoporre a revisione legale prima del
-          rilascio.
-        </em>
-      </p>
     </LegalPageShell>
   );
 }

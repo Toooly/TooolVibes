@@ -1,119 +1,249 @@
 import type { Metadata } from "next";
-import { BadgeCheck, ChartNoAxesCombined, QrCode, ShieldCheck } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BadgeCheck, Mail, QrCode, ShieldCheck } from "lucide-react";
 
 import { AffiliateApplicationForm } from "@/components/affiliates/affiliate-application-form";
-import { PremiumBadge, PremiumPanel } from "@/components/ui/premium";
-import { RouteMarker } from "@/components/ui/route-marker";
+import {
+  SecondaryCardGrid,
+  SecondaryClosingCTA,
+  SecondaryHero,
+  SecondaryPageShell,
+  SecondaryPrincipleCard,
+  SecondarySection,
+} from "@/components/secondary";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Programma affiliati",
   description:
-    "Candidati al programma affiliati TooolVibes e scopri come condividere la piattaforma con la tua community.",
+    "Candidati al programma affiliati TooolVibes e scopri come condividere la piattaforma con la tua community in modo editoriale e indipendente.",
   path: "/affiliati",
 });
 
+const AFFILIATE_EMAIL =
+  "mailto:hello@tooolvibes.com?subject=Programma%20affiliati%20TooolVibes";
+
 const programSteps = [
   {
-    icon: ShieldCheck,
+    icon: <ShieldCheck className="size-4" aria-hidden="true" />,
     title: "Valutazione personale",
-    description:
-      "Leggiamo ogni candidatura per capire pubblico, canali e modo in cui racconteresti TooolVibes.",
+    copy: "Leggiamo ogni candidatura per capire pubblico, canali e modo in cui racconteresti TooolVibes.",
   },
   {
-    icon: BadgeCheck,
+    icon: <BadgeCheck className="size-4" aria-hidden="true" />,
     title: "Conferma dedicata",
-    description:
-      "Se il profilo è in linea, ti inviamo via email il codice e le indicazioni per iniziare.",
+    copy: "Se il profilo è in linea, ti inviamo via email il codice e le indicazioni per iniziare.",
   },
   {
-    icon: QrCode,
+    icon: <QrCode className="size-4" aria-hidden="true" />,
     title: "Link e QR code",
-    description:
-      "Ricevi un link personale e un QR code pronti da usare nei tuoi canali.",
+    copy: "Ricevi un link personale e un QR code pronti da usare nei tuoi canali.",
   },
-];
+] as const;
+
+const afterApprovalSteps = [
+  {
+    label: "01 · Setup",
+    title: "Prepariamo il codice",
+    copy: "Generiamo il codice referral dedicato e lo colleghiamo al profilo della tua candidatura approvata.",
+  },
+  {
+    label: "02 · Materiali",
+    title: "Link e QR code",
+    copy: "Ricevi un link tracciato e un QR code da usare nei tuoi canali, pronti senza interventi tecnici.",
+  },
+  {
+    label: "03 · Cooldown",
+    title: "Se la candidatura non va a buon fine",
+    copy: "Puoi riprovare dopo 30 giorni. Nessuna black list: il motivo è sempre dichiarato in risposta.",
+  },
+] as const;
 
 export default function AffiliatiPage() {
   return (
-    <div className="affiliates-page page-shell py-8 sm:py-12">
-      <section className="affiliates-layout grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(22rem,1.08fr)] xl:items-start">
-        <div className="affiliates-intro brand-panel rounded-[var(--radius-xl)] p-5 sm:p-8 xl:p-10">
-          <RouteMarker
-            index="10"
-            label="Rete partner"
-            status="Candidature aperte"
-            density="hero"
-          />
+    <SecondaryPageShell>
+      <SecondaryHero
+        tone="dark"
+        layout="split"
+        routeIndex="10"
+        routeLabel="Programma affiliati"
+        routeStatus="Candidature aperte"
+        emphasis="community"
+        title="Porta TooolVibes alla tua community."
+        lede="Cerchiamo creator, newsletter, community e professionisti che parlano con persone interessate a tool AI, automazioni e scelte software più lucide. Il programma è su richiesta: ogni candidatura viene letta."
+        actions={
+          <a
+            href="#affiliate-application"
+            className="secondary-card__cta"
+            aria-label="Salta al modulo di candidatura affiliato"
+          >
+            <Mail aria-hidden="true" className="size-4" />
+            <span>Candidati ora</span>
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </a>
+        }
+        signature={
+          <>
+            <span className="secondary-hero__signature-eyebrow">
+              <span>Indipendenza editoriale</span>
+            </span>
+            <p
+              style={{
+                margin: 0,
+                color: "var(--tv-ink-primary)",
+                fontFamily: "var(--tv-font-family-ui)",
+                fontSize: "1.18rem",
+                lineHeight: 1.35,
+                fontWeight: 600,
+              }}
+            >
+              La sponsorship non compra giudizi editoriali.
+            </p>
+            <p
+              style={{
+                margin: 0,
+                color: "var(--tv-ink-secondary)",
+                fontFamily: "var(--tv-font-family-ui)",
+                fontSize: "0.92rem",
+                lineHeight: 1.55,
+              }}
+            >
+              Valutazioni, classifiche e raccomandazioni restano indipendenti da chi promuove TooolVibes. Ogni affiliazione è dichiarata.
+            </p>
+            <ul
+              style={{
+                margin: "0.4rem 0 0",
+                padding: 0,
+                listStyle: "none",
+                display: "grid",
+                gap: "0.4rem",
+                color: "var(--tv-ink-secondary)",
+                fontFamily: "var(--tv-font-family-ui)",
+                fontSize: "0.86rem",
+                lineHeight: 1.5,
+              }}
+            >
+              <li>· Codice referral personale</li>
+              <li>· Link tracciato e QR code</li>
+              <li>· Nuovo invio dopo 30 giorni</li>
+            </ul>
+          </>
+        }
+      />
 
-          <PremiumBadge tone="accent" className="mt-5 after:!hidden sm:mt-6">
-            Programma su richiesta
-          </PremiumBadge>
-          <h1 className="mt-3 max-w-none text-[clamp(2.25rem,4.2vw,2.9rem)] leading-[1.02] sm:mt-4 sm:max-w-[20ch]">
-            Porta TooolVibes alla tua community.
-          </h1>
-          <p className="mt-4 max-w-[44rem] text-[1rem] leading-7 sm:mt-5" style={{ color: "var(--muted)" }}>
-            Cerchiamo creator, newsletter, community e consulenti che parlano con persone
-            interessate a tool AI, automazioni, no-code e scelte software più lucide.
+      <section
+        className="affiliates-layout"
+        aria-label="Modulo e vantaggi del programma"
+      >
+        <aside
+          className="affiliates-intro"
+          aria-label="Per chi è il programma affiliati"
+        >
+          <p className="secondary-section__eyebrow">Per chi è</p>
+          <h2 className="secondary-section__title">
+            Un programma per chi racconta tool con cura.
+          </h2>
+          <p className="secondary-section__lede">
+            Cerchiamo persone che parlano di tool AI, automazioni, no-code e scelte software a una
+            audience che vuole capire prima di installare. Non compri visibilità: costruiamo come
+            TooolVibes entra nelle tue conversazioni.
           </p>
 
-          <div className="mt-5 grid grid-cols-3 gap-2 sm:mt-7 sm:gap-3">
-            {[
-              { label: "Valutazione", value: "Personale" },
-              { label: "Codice", value: "Dedicato" },
-              { label: "Nuovo invio", value: "Dopo 30 giorni" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="rounded-[22px] border px-1.5 py-3 sm:px-4 sm:py-4"
-                style={{ borderColor: "var(--tv-border-inverted)", background: "transparent" }}
-              >
-                <p className="editorial-label break-normal tracking-[0.04em]">
-                  {item.label}
-                </p>
-                <p className="mt-2 text-sm font-semibold">{item.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+          <dl className="affiliates-intro__list" aria-label="Criteri del programma">
+            <div className="affiliates-intro__item">
+              <dt>Valutazione</dt>
+              <dd>Personale, non automatica</dd>
+            </div>
+            <div className="affiliates-intro__item">
+              <dt>Codice</dt>
+              <dd>Dedicato alla tua identità</dd>
+            </div>
+            <div className="affiliates-intro__item">
+              <dt>Nuovo invio</dt>
+              <dd>Dopo 30 giorni se rifiutato</dd>
+            </div>
+          </dl>
 
-        <AffiliateApplicationForm />
-      </section>
-
-      <section className="mt-8 grid gap-4 lg:grid-cols-3">
-        {programSteps.map((step) => {
-          const Icon = step.icon;
-          return (
-            <PremiumPanel key={step.title} className="p-5 before:!hidden after:!hidden sm:p-6">
-              <div className="flex items-center gap-3">
-                <span className="grid size-11 place-items-center rounded-[18px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-[var(--tv-accent-brand-aa)]">
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
-                <h2 className="text-[1.18rem]">{step.title}</h2>
-              </div>
-              <p className="mt-4 text-[0.9375rem] leading-7" style={{ color: "var(--muted)" }}>
-                {step.description}
-              </p>
-            </PremiumPanel>
-          );
-        })}
-      </section>
-
-      <PremiumPanel className="mt-8 p-5 before:!hidden after:!hidden sm:p-7">
-        <div className="grid gap-5 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center">
-          <span className="grid size-14 place-items-center rounded-[22px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-emerald-300">
-            <ChartNoAxesCombined className="size-6" aria-hidden="true" />
-          </span>
-          <div>
-            <p className="editorial-label">Come funziona dopo l&apos;approvazione</p>
-            <p className="mt-2 text-[0.9375rem] leading-7" style={{ color: "var(--muted)" }}>
-              Dopo l’approvazione prepariamo il codice referral, generiamo il link dedicato e
-              il QR code, poi ti inviamo tutto via email. Se la candidatura non è adatta,
-              potrai riprovare dopo 30 giorni.
+          <div className="affiliates-intro__contact">
+            <p className="affiliates-intro__contact-label">
+              Domande prima di candidarti?
             </p>
+            <a
+              href={AFFILIATE_EMAIL}
+              className="secondary-card__cta secondary-card__cta--ghost"
+              aria-label="Scrivi a TooolVibes per chiedere informazioni sul programma affiliati"
+            >
+              <Mail aria-hidden="true" className="size-4" />
+              <span>Scrivi a hello@tooolvibes.com</span>
+              <ArrowUpRight aria-hidden="true" className="size-4" />
+            </a>
           </div>
+        </aside>
+
+        <div id="affiliate-application" className="affiliates-form-wrap">
+          <AffiliateApplicationForm />
         </div>
-      </PremiumPanel>
-    </div>
+      </section>
+
+      <SecondarySection
+        eyebrow="Programma in 3 passi"
+        title="Cosa succede quando ti candidi"
+        lede="Un percorso lineare e trasparente. Nessuna procedura opaca, nessuna risposta automatica."
+      >
+        <SecondaryCardGrid columns={3}>
+          {programSteps.map((step) => (
+            <SecondaryPrincipleCard
+              key={step.title}
+              icon={step.icon}
+              title={step.title}
+              copy={step.copy}
+            />
+          ))}
+        </SecondaryCardGrid>
+      </SecondarySection>
+
+      <SecondarySection
+        tone="ivory"
+        eyebrow="Dopo l'approvazione"
+        title="Come funziona"
+        lede="Una volta confermata la candidatura, il setup è meccanico: noi prepariamo tutto, tu ricevi i materiali."
+      >
+        <ol className="affiliates-after" aria-label="Cosa succede dopo l'approvazione">
+          {afterApprovalSteps.map((step) => (
+            <li key={step.label} className="affiliates-after__step">
+              <span className="affiliates-after__label">{step.label}</span>
+              <h3 className="affiliates-after__title">{step.title}</h3>
+              <p className="affiliates-after__copy">{step.copy}</p>
+            </li>
+          ))}
+        </ol>
+      </SecondarySection>
+
+      <SecondaryClosingCTA
+        tone="dark"
+        title="Hai una community che ascolta i tuoi consigli sui tool?"
+        body="Candidati ora. La valutazione è personale: ti rispondiamo anche quando la risposta è onesta &quot;non è il nostro perimetro&quot;."
+        actions={
+          <>
+            <a
+              href="#affiliate-application"
+              className="secondary-card__cta"
+              aria-label="Salta al modulo di candidatura"
+            >
+              <Mail aria-hidden="true" className="size-4" />
+              <span>Candidati ora</span>
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </a>
+            <a
+              href={AFFILIATE_EMAIL}
+              className="secondary-card__cta secondary-card__cta--ghost"
+              aria-label="Scrivi a TooolVibes per chiedere informazioni"
+            >
+              <span>Scrivi a hello@tooolvibes.com</span>
+              <ArrowUpRight aria-hidden="true" className="size-4" />
+            </a>
+          </>
+        }
+      />
+    </SecondaryPageShell>
   );
 }

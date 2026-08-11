@@ -58,6 +58,32 @@ function isValidUrl(value: string) {
   }
 }
 
+/**
+ * Social fields are optional and accept either a free-form handle
+ * (e.g. @profilo) or an https URL. Empty values are valid; bare
+ * handles are valid; only fully-formed URLs are checked against
+ * the http(s) protocol. Keeps the form tolerant so candidates can
+ * submit even with just a username.
+ */
+function isValidSocialValue(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return true;
+
+  // Bare handle or free-form text — never reject.
+  if (!/^https?:\/\//i.test(trimmed)) return true;
+
+  return isValidUrl(trimmed);
+}
+
+const SOCIAL_FIELD_KEYS = [
+  "instagram",
+  "facebook",
+  "tiktok",
+  "xProfile",
+  "linkedin",
+  "youtube",
+] as const;
+
 function validateForm(form: FormState): FormErrors {
   const errors: FormErrors = {};
 
@@ -69,6 +95,12 @@ function validateForm(form: FormState): FormErrors {
   }
   if (form.message.trim().length < 12) {
     errors.message = "Scrivi almeno 12 caratteri sul perché vuoi diventare affiliato.";
+  }
+
+  for (const key of SOCIAL_FIELD_KEYS) {
+    if (!isValidSocialValue(form[key])) {
+      errors[key] = "Inserisci un link che inizia con https:// oppure lascia vuoto.";
+    }
   }
 
   return errors;
@@ -271,8 +303,6 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             </span>
           </summary>
           <div className="space-y-4 px-4 pb-4 sm:px-5 sm:pb-5">
-            <input type="hidden" name="_form_disclosure_opened" value="" />
-
             <label className="block">
               <span className={labelClass}>Cognome</span>
               <input
@@ -305,18 +335,26 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
                 ["xProfile", "X / Twitter", "@profilo o URL"],
                 ["linkedin", "LinkedIn", "Profilo o pagina"],
                 ["youtube", "YouTube", "Canale o URL"],
-              ].map(([key, label, placeholder]) => (
-                <label key={key} className="block">
-                  <span className={labelClass}>{label}</span>
-                  <input
-                    value={form[key as keyof FormState]}
-                    onChange={(event) => updateField(key as keyof FormState, event.target.value)}
-                    className={cn(inputClass, "mt-2")}
-                    placeholder={placeholder}
-                    disabled={isSubmitting}
-                  />
-                </label>
-              ))}
+              ].map(([key, label, placeholder]) => {
+                const fieldKey = key as keyof FormState;
+                const errorKey = `affiliate-${fieldKey}-error`;
+                const errorMessage = errors[fieldKey];
+                return (
+                  <label key={key} className="block">
+                    <span className={labelClass}>{label}</span>
+                    <input
+                      value={form[fieldKey]}
+                      onChange={(event) => updateField(fieldKey, event.target.value)}
+                      className={cn(inputClass, "mt-2")}
+                      placeholder={placeholder}
+                      disabled={isSubmitting}
+                      aria-invalid={Boolean(errorMessage)}
+                      aria-describedby={errorMessage ? errorKey : undefined}
+                    />
+                    <FieldError id={errorKey} message={errorMessage} />
+                  </label>
+                );
+              })}
             </div>
           </div>
         </details>
