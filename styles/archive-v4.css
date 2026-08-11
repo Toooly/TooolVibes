@@ -763,10 +763,10 @@
 }
 
 .ar4-card__top {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px 12px;
   min-width: 0;
 }
 
@@ -802,7 +802,10 @@
 .ar4-card[data-density="compact"] .ar4-card__avatar img,
 .ar4-card[data-density="compact"] .ar4-card__avatar span { width: 22px; height: 22px; font-size: 12px; }
 
-.ar4-card__identity { min-width: 0; }
+.ar4-card__identity {
+  flex: 1 1 9rem;
+  min-width: 0;
+}
 
 .ar4-card__name {
   font-family: var(--tv-font-family-ui);
@@ -860,7 +863,8 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   white-space: nowrap;
-  flex-shrink: 0;
+  flex: 0 1 auto;
+  max-width: 100%;
 }
 
 .ar4-card__status--primary { background: color-mix(in srgb, var(--tv-accent-primary) 18%, transparent); color: var(--tv-accent-primary); }
@@ -934,9 +938,12 @@
 
 .ar4-card__actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px 12px;
+  margin-top: auto;
+  min-width: 0;
 }
 
 .ar4-card__open {
@@ -953,52 +960,99 @@
   letter-spacing: 0.04em;
   text-transform: none;
   text-decoration: none;
-  min-height: 40px;
+  min-height: 44px;
+  flex: 1 1 auto;
+  min-width: min(100%, 9rem);
+  max-width: 100%;
   -webkit-tap-highlight-color: transparent;
   transition: border-color 200ms ease, color 200ms ease;
 }
 
 .ar4-card__open:hover { border-color: var(--tv-accent-primary); color: var(--tv-accent-primary); }
 
+/* Reserved trailing control rail: state chips + icon toggles stay clear of title/logo */
+.ar4-card__control-rail {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.ar4-card__state-flags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
 .ar4-card__toggles {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  flex-shrink: 0;
+}
+
+.ar4-card__toggles > * {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .ar4-card__rank {
-  position: absolute;
-  top: 12px;
-  left: 12px;
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  min-height: 1.75rem;
   font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
+  line-height: 1;
   color: var(--tv-ink-on-brand);
   background: var(--tv-accent-primary);
-  padding: 4px 8px;
+  padding: 6px 8px;
   border-radius: 8px;
   pointer-events: none;
   box-shadow: 0 4px 12px -4px color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
 }
 
 .ar4-card__saved-flag {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+  position: static;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px;
+  min-height: 1.75rem;
+  padding: 4px 8px;
   background: color-mix(in srgb, var(--tv-accent-cyan) 18%, transparent);
   color: var(--tv-accent-cyan);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 28%, transparent);
   border-radius: 0.375rem;
   font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-xs);
   font-weight: 700;
   text-transform: none;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  line-height: 1;
   pointer-events: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 359px) {
+  .ar4-card__saved-label {
+    /* keep chip readable: icon-only only on extremely narrow cards */
+    position: static;
+  }
+  .ar4-card__actions {
+    gap: 8px;
+  }
 }
 
 .ar4-card__ribbon {
@@ -2479,12 +2533,10 @@ a.archive-v4-card:focus-visible {
   border: 1px solid color-mix(in srgb, var(--tv-accent-violet) 36%, transparent);
 }
 
-/* On mobile (single-column card) the badges wrap to a new line below the top row */
-.ar4-card__top {
-  flex-wrap: wrap;
-  row-gap: 6px;
+/* Status chips share the top flex row and wrap cleanly under identity */
+.ar4-card__top .ar4-card__status {
+  margin-left: 0;
 }
-.ar4-card__top .ar4-card__status { margin-left: 0; }
 
 /* — Card affiliate disclosure — */
 .ar4-card__disclosure {

@@ -164,7 +164,7 @@ function ArchiveV4ToolCard({
         {tool.tldr || tool.shortDescription || "Scheda in preparazione."}
       </p>
 
-      {/* ═══ ACTION RAIL ═══ */}
+      {/* ═══ ACTION RAIL — reserved control cluster (no absolute overlays) ═══ */}
       <div className="ar4-card__actions">
         <Link
           href={`/toools/${tool.slug}`}
@@ -175,36 +175,42 @@ function ArchiveV4ToolCard({
           Apri la scheda
           <span aria-hidden="true">→</span>
         </Link>
-        <div className="ar4-card__toggles">
-          <ShortlistToggle
-            slug={tool.slug}
-            compact
-            mode="icon"
-            toolName={tool.name}
-            onChange={() => {
-              /* re-render via store */
-            }}
-          />
-          <CompareToggle
-            slug={tool.slug}
-            mode="icon"
-            toolName={tool.name}
-            onChange={() => {
-              /* re-render via store */
-            }}
-          />
+        <div className="ar4-card__control-rail" data-has-rank={isSelected && typeof rank === "number" ? "true" : undefined}>
+          {(isSelected && typeof rank === "number") || isSaved ? (
+            <div className="ar4-card__state-flags" aria-live="polite">
+              {isSelected && typeof rank === "number" ? (
+                <span className="ar4-card__rank" aria-label={`Selezionato, posizione ${rank}`}>
+                  #{String(rank).padStart(2, "0")}
+                </span>
+              ) : null}
+              {isSaved ? (
+                <span className="ar4-card__saved-flag" aria-label="Salvato">
+                  <Bookmark size={11} aria-hidden="true" />
+                  <span className="ar4-card__saved-label">Salvato</span>
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+          <div className="ar4-card__toggles">
+            <ShortlistToggle
+              slug={tool.slug}
+              compact
+              mode="icon"
+              toolName={tool.name}
+              onChange={() => {
+                /* re-render via store */
+              }}
+            />
+            <CompareToggle
+              slug={tool.slug}
+              mode="icon"
+              toolName={tool.name}
+              onChange={() => {
+                /* re-render via store */
+              }}
+            />
+          </div>
         </div>
-        {isSelected && typeof rank === "number" ? (
-          <span className="ar4-card__rank" aria-label={`Selezionato, posizione ${rank}`}>
-            #{String(rank).padStart(2, "0")}
-          </span>
-        ) : null}
-        {isSaved ? (
-          <span className="ar4-card__saved-flag" aria-label="Salvato">
-            <Bookmark size={11} aria-hidden="true" />
-            Salvato
-          </span>
-        ) : null}
       </div>
 
       {/* ═══ DISCLOSURE — only when the card carries an affiliate link ═══ */}
