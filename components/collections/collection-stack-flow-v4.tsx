@@ -38,8 +38,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
   return (
     <section
       id="cx-detail-stack"
-      data-cx-accent="indigo"
-      className="cx-stack-flow-v4"
+      className="cx-stack-flow-v4 motion-reveal"
       aria-labelledby="cx-stack-flow-title"
     >
       <header className="cx-stack-flow-v4__head">
@@ -62,7 +61,11 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
           const hasHandoff = Boolean(slot.next_handoff);
 
           return (
-            <li key={slot.tool.slug} className="cx-stack-flow-v4__item">
+            <li
+              key={slot.tool.slug}
+              className="cx-stack-flow-v4__item"
+              data-collection-step={index + 1}
+            >
               <div className="cx-stack-flow-v4__node" aria-hidden="true">
                 <span className="cx-stack-flow-v4__num">
                   {String(index + 1).padStart(2, "0")}

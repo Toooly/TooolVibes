@@ -3,7 +3,7 @@ import { BookOpenText, GitBranch, ShieldAlert, Wrench, Sparkles, Cog, TrendingUp
 
 import type { CuratedCollection } from "@/lib/types/collection";
 import { getCollectionCoreToolSlugs } from "@/lib/collections/helpers";
-import { collectionVisualIdentity, type CxAccent, cxGroupOrder, pickFeaturedCollection } from "@/lib/collections/visual-identity";
+import { collectionVisualIdentity, type CxVisualIdentity, cxGroupOrder, pickFeaturedCollection } from "@/lib/collections/visual-identity";
 
 import { CollectionCardV4 } from "./collection-card-v4";
 
@@ -12,8 +12,6 @@ type CollectionsIndexProps = {
 };
 
 type GroupKey = CxVisualIdentity["group"];
-
-import type { CxVisualIdentity } from "@/lib/collections/visual-identity";
 
 const GROUP_LABELS: Record<GroupKey, { label: string; lede: string; icon: React.ReactNode }> = {
   build: {
@@ -38,12 +36,6 @@ const GROUP_LABELS: Record<GroupKey, { label: string; lede: string; icon: React.
   },
 };
 
-const ACCENT_VAR: Record<CxAccent, string> = {
-  indigo: "var(--cx-accent-indigo)",
-  violet: "var(--cx-accent-violet)",
-  teal: "var(--cx-accent-teal)",
-  amber: "var(--cx-accent-amber)",
-};
 
 export function CollectionsIndex({ collections }: CollectionsIndexProps) {
   if (collections.length === 0) {
@@ -78,7 +70,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
   return (
     <div className="cx-index">
       <div className="cx-index__inner">
-        <header className="cx-index__masthead">
+        <header className="cx-index__masthead motion-reveal">
           <div>
             <span className="cx-index__eyebrow">
               <span className="cx-index__eyebrow-dot" aria-hidden="true" />
@@ -114,7 +106,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
           </div>
         </header>
 
-        <section className="cx-index__discover">
+        <section className="cx-index__discover motion-reveal">
           <div className="cx-index__lede-block">
             <h2>Le raccolte non sono guide né confronti.</h2>
             <p>
@@ -147,7 +139,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
         {lead && (
           <section
             aria-labelledby="cx-start-here-heading"
-            className="cx-index__start"
+            className="cx-index__start motion-reveal"
           >
             <div className="cx-index__section-title">
               <h2 id="cx-start-here-heading">In evidenza</h2>
@@ -170,20 +162,20 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
               className="cx-index__group"
               data-cx-group={groupKey}
             >
-              <div className="cx-index__section-title">
-                <span
-                  className="cx-index__group-eyebrow"
-                  style={{ color: ACCENT_VAR[groupAccent(groupKey)] }}
-                >
+              <div className="cx-index__group-header">
+                <span className="cx-index__group-eyebrow">
                   {meta.icon}
                   {meta.label}
                 </span>
-                <h2 id={`cx-group-${groupKey}-heading`}>
+                <h2
+                  id={`cx-group-${groupKey}-heading`}
+                  className="cx-index__group-title"
+                >
                   {meta.label}
                 </h2>
-                <p>{meta.lede}</p>
+                <p className="cx-index__group-lede">{meta.lede}</p>
               </div>
-              <div className="cx-index__grid cx-index__grid--group">
+              <div className="cx-index__grid cx-index__grid--group motion-stagger">
                 {items.map((collection) => (
                   <CollectionCardV4
                     key={collection.slug}
@@ -197,13 +189,13 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
 
         <section
           aria-labelledby="cx-principles-heading"
-          className="cx-index__principles"
+          className="cx-index__principles motion-reveal"
         >
           <div className="cx-index__section-title">
             <h2 id="cx-principles-heading">Come leggere una raccolta</h2>
             <p>Tre cose da cercare sempre</p>
           </div>
-          <div className="cx-index__principles-grid">
+          <div className="cx-index__principles-grid motion-stagger">
             <PrincipleCard
               icon={<GitBranch className="size-4" aria-hidden="true" />}
               eyebrow="Il flusso"
@@ -226,18 +218,6 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
   );
 }
 
-function groupAccent(group: GroupKey): CxAccent {
-  switch (group) {
-    case "build":
-      return "indigo";
-    case "create":
-      return "violet";
-    case "operate":
-      return "teal";
-    case "grow":
-      return "amber";
-  }
-}
 
 function PrincipleCard({
   icon,

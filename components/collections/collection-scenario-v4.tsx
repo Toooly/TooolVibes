@@ -33,8 +33,7 @@ export function CollectionScenarioV4({ collection }: CollectionScenarioV4Props) 
 
   return (
     <section
-      data-cx-accent="indigo"
-      className="cx-scenario-v4"
+      className="cx-scenario-v4 motion-reveal"
       aria-labelledby="cx-scenario-title"
     >
       <header className="cx-scenario-v4__head">

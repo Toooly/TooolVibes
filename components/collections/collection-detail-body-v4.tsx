@@ -2,6 +2,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 
 import type { CuratedCollection } from "@/lib/types/collection";
 import { siteConfig } from "@/lib/config/site";
+import { getCollectionVisualIdentity } from "@/lib/collections/visual-identity";
 
 import { CollectionDetailHeroV4 } from "./collection-detail-hero-v4";
 import { CollectionStackFlowV4 } from "./collection-stack-flow-v4";
@@ -43,6 +44,12 @@ export function CollectionDetailBodyV4({
 }: CollectionDetailBodyV4Props) {
   const canonicalUrl = `${siteConfig.url}/collections/${collection.slug}`;
 
+  // Resolve identity once — drives the editorial accent for the entire
+  // detail page. Sections inherit --cx-accent via CSS cascade from the
+  // .cx-detail-v4 root.
+  const identity = getCollectionVisualIdentity(collection.slug);
+  const accent = identity?.accent ?? "indigo";
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -77,7 +84,7 @@ export function CollectionDetailBodyV4({
   return (
     <>
       <JsonLd data={structuredData} />
-      <div className="cx-detail-v4">
+      <div className="cx-detail-v4" data-cx-accent={accent}>
         <CollectionDetailHeroV4 collection={collection} />
         <CollectionStackFlowV4 collection={collection} />
         <CollectionVariantPathsV4 collection={collection} />

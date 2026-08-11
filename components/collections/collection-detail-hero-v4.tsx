@@ -66,7 +66,7 @@ export function CollectionDetailHeroV4({
   return (
     <header
       data-cx-accent={accent}
-      className="cx-detail-hero-v4"
+      className="cx-detail-hero-v4 motion-reveal"
     >
       <div className="cx-detail-hero-v4__inner">
         {/* ZONE 1 — IDENTITY */}

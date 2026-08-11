@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { GitBranch } from "lucide-react";
 
@@ -63,10 +63,71 @@ export function CollectionVariantPathsV4({
 }
 
 function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
-  const variants = collection.stack_variants ?? [];
+  // useMemo keeps the reference stable across renders so the
+  // useCallback deps below don't churn on every render.
+  const variants = useMemo(
+    () => collection.stack_variants ?? [],
+    [collection.stack_variants],
+  );
   const [activeLabel, setActiveLabel] = useState<string>(
     variants[0]?.label ?? "lean",
   );
+
+  // All hooks below must run unconditionally (Rules of Hooks), so
+  // they're declared before the early `!active` bail-out.
+  const slug = collection.slug;
+  const tabIdFor = useCallback(
+    (label: string) => `cx-variants-${slug}-${label}-tab`,
+    [slug],
+  );
+  const panelIdFor = useCallback(
+    (label: string) => `cx-variants-${slug}-${label}-panel`,
+    [slug],
+  );
+
+  // Roving tabIndex refs — one ref per tab keyed by label.
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  // Arrow-key navigation. Wraps at both ends. Home/End jump to the
+  // first/last tab. Activation is implicit (focus selects) so the
+  // user sees the new panel immediately on arrow press.
+  const handleTabKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      const labels: string[] = variants.map((v) => v.label);
+      if (labels.length === 0) return;
+      const currentIndex = labels.indexOf(activeLabel);
+      let nextIndex: number | null = null;
+      switch (event.key) {
+        case "ArrowRight":
+        case "ArrowDown":
+          nextIndex = (currentIndex + 1) % labels.length;
+          break;
+        case "ArrowLeft":
+        case "ArrowUp":
+          nextIndex = (currentIndex - 1 + labels.length) % labels.length;
+          break;
+        case "Home":
+          nextIndex = 0;
+          break;
+        case "End":
+          nextIndex = labels.length - 1;
+          break;
+        default:
+          return;
+      }
+      if (nextIndex === null) return;
+      event.preventDefault();
+      const nextLabel = labels[nextIndex];
+      setActiveLabel(nextLabel);
+      const nextTab = tabRefs.current[nextLabel];
+      if (nextTab) {
+        // Defer focus to after React commits the new tabIndex.
+        requestAnimationFrame(() => nextTab.focus());
+      }
+    },
+    [variants, activeLabel],
+  );
+
   const active = variants.find((v) => v.label === activeLabel) ?? variants[0];
   if (!active) return null;
 
@@ -74,8 +135,7 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
 
   return (
     <section
-      data-cx-accent="indigo"
-      className="cx-variant-paths-v4 cx-variant-paths-v4--additive"
+      className="cx-variant-paths-v4 cx-variant-paths-v4--additive motion-reveal"
       aria-labelledby="cx-variants-title"
     >
       <header className="cx-variant-paths-v4__head">
@@ -96,33 +156,48 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
         role="tablist"
         aria-label="Varianti dello stack"
         className="cx-variant-paths-v4__tabs"
+        onKeyDown={handleTabKeyDown}
       >
-        {variants.map((v) => (
-          <button
-            key={v.label}
-            role="tab"
-            type="button"
-            aria-selected={activeLabel === v.label}
-            onClick={() => setActiveLabel(v.label)}
-            className={cx(
-              "cx-variant-paths-v4__tab",
-              activeLabel === v.label && "cx-variant-paths-v4__tab--active",
-            )}
-          >
-            <span className="cx-variant-paths-v4__tab-label">
-              {labelDisplay(v.label)}
-            </span>
-            <span className="cx-variant-paths-v4__tab-count">
-              {v.core_tool_slugs.length}/{totalCount}
-            </span>
-          </button>
-        ))}
+        {variants.map((v) => {
+          const tabId = tabIdFor(v.label);
+          const panelId = panelIdFor(v.label);
+          const isSelected = activeLabel === v.label;
+          return (
+            <button
+              key={v.label}
+              ref={(el) => {
+                tabRefs.current[v.label] = el;
+              }}
+              id={tabId}
+              role="tab"
+              type="button"
+              aria-selected={isSelected}
+              aria-controls={panelId}
+              tabIndex={isSelected ? 0 : -1}
+              onClick={() => setActiveLabel(v.label)}
+              onFocus={() => setActiveLabel(v.label)}
+              className={cx(
+                "cx-variant-paths-v4__tab",
+                isSelected && "cx-variant-paths-v4__tab--active",
+              )}
+            >
+              <span className="cx-variant-paths-v4__tab-label">
+                {labelDisplay(v.label)}
+              </span>
+              <span className="cx-variant-paths-v4__tab-count">
+                {v.core_tool_slugs.length}/{totalCount}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <div
+        key={active.label}
+        id={panelIdFor(active.label)}
         role="tabpanel"
         className="cx-variant-paths-v4__panel"
-        aria-label={`Variante ${labelDisplay(active.label)}`}
+        aria-labelledby={tabIdFor(active.label)}
       >
         <VariantPanel
           variant={active}
@@ -174,8 +249,7 @@ function PathBasedVariants({ collection }: { collection: CuratedCollection }) {
 
   return (
     <section
-      data-cx-accent="indigo"
-      className="cx-variant-paths-v4 cx-variant-paths-v4--path"
+      className="cx-variant-paths-v4 cx-variant-paths-v4--path motion-reveal"
       aria-labelledby="cx-variants-title"
     >
       <header className="cx-variant-paths-v4__head">

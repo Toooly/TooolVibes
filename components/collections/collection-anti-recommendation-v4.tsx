@@ -35,8 +35,7 @@ export async function CollectionAntiRecommendationV4({
 
   return (
     <section
-      data-cx-accent="indigo"
-      className="cx-anti-rec-v4"
+      className="cx-anti-rec-v4 motion-reveal"
       aria-labelledby="cx-anti-rec-title"
     >
       <header className="cx-anti-rec-v4__head">

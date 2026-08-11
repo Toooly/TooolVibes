@@ -78,8 +78,11 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
 
       {/* Collection Partner — ending Partner Experience: appears only after the
           full curated tool list, so the sponsor never precedes or shapes the
-          editorial selection. Resolver-driven; renders null without relevance. */}
-      <div className="collection-detail-partner" style={{ width: "min(100%, var(--tv-container-uw))", marginInline: "auto", padding: "0 clamp(1rem, 4vw, 3rem) 4rem" }}>
+          editorial selection. Resolver-driven; renders null without relevance.
+          Wrapper is a positioning host — vertical padding is gated by
+          `:not(:empty)` in collections.css so a null resolver doesn't
+          reserve blank space. */}
+      <div className="cx-detail-partner">
         <PartnerCollectionModule
           placementKey="collection-native-sponsor"
           context={{
@@ -89,8 +92,14 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
         />
       </div>
 
-      <div style={{ width: "min(100%, var(--tv-container-uw))", marginInline: "auto", padding: "0 clamp(1rem, 4vw, 3rem) 5rem" }}>
-        <SponsorOpportunityLink placementId="collections-sponsor-opportunity" route={`/collections/${collection.slug}`} />
+      {/* Route-scoped modifier swaps the sponsor-opportunity ink tokens
+          to on-dark (light text on the dark collections canvas). Same
+          null-spacing discipline. */}
+      <div className="cx-collection-detail-page cx-detail-sponsor-slot">
+        <SponsorOpportunityLink
+          placementId="collections-sponsor-opportunity"
+          route={`/collections/${collection.slug}`}
+        />
       </div>
     </>
   );

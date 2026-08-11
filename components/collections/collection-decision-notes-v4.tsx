@@ -34,8 +34,7 @@ export function CollectionDecisionNotesV4({
 
   return (
     <section
-      data-cx-accent="indigo"
-      className="cx-decision-notes-v4"
+      className="cx-decision-notes-v4 motion-reveal"
       aria-labelledby="cx-decision-notes-title"
     >
       <header className="cx-decision-notes-v4__head">

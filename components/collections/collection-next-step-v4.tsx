@@ -31,8 +31,7 @@ export function CollectionNextStepV4({
 
   return (
     <section
-      data-cx-accent="indigo"
-      className="cx-next-step-v4"
+      className="cx-next-step-v4 motion-reveal"
       aria-labelledby="cx-next-step-title"
     >
       <header className="cx-next-step-v4__head">
@@ -47,7 +46,7 @@ export function CollectionNextStepV4({
         </p>
       </header>
 
-      <div className="cx-next-step-v4__grid">
+      <div className="cx-next-step-v4__grid motion-stagger">
         {relatedCollections.map((next) => {
           const identity = getCollectionVisualIdentity(next.slug);
           const accent = identity?.accent ?? "indigo";

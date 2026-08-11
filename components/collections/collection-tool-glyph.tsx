@@ -41,9 +41,13 @@ type CollectionToolGlyphProps = {
 import { useState } from "react";
 
 const sizeClasses: Record<NonNullable<CollectionToolGlyphProps["size"]>, string> = {
-  sm: "h-9 w-9 rounded-[10px] text-[0.78rem]",
-  md: "h-11 w-11 rounded-[12px] text-[0.92rem]",
-  lg: "h-14 w-14 rounded-[14px] text-[1.05rem]",
+  /* Radii + sizes aligned with DirectoryToolGlyph so the same tool
+     renders identically across surfaces (cards, strip, detail).
+     The lg radius (18px vs 14px) prevents glyph squish when used
+     inside tight flex rows. */
+  sm: "h-9 w-9 shrink-0 rounded-[11px] text-[0.78rem]",
+  md: "h-11 w-11 shrink-0 rounded-[13px] text-[0.92rem]",
+  lg: "h-14 w-14 shrink-0 rounded-[18px] text-[1.05rem]",
 };
 
 /**
@@ -125,7 +129,7 @@ export function CollectionToolGlyph({
   return (
     <span
       aria-hidden="true"
-      className={`collection-tool-glyph inline-flex items-center justify-center border border-white/10 font-semibold uppercase tracking-[0.04em] text-white shadow-[0_8px_18px_rgba(0,0,0,0.18)] overflow-hidden ${sizeClasses[size]} ${className}`.trim()}
+      className={`collection-tool-glyph inline-flex items-center justify-center border border-[rgba(76,55,166,0.2)] font-semibold uppercase tracking-[0.04em] text-white shadow-[0_8px_18px_rgba(0,0,0,0.18)] overflow-hidden ${sizeClasses[size]} ${className}`.trim()}
       style={{
         background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
       }}

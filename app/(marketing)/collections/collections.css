@@ -577,6 +577,13 @@
    ==================================================================== */
 
 .cx-index {
+  /* Local re-aliases for active index rules (legacy V1/V2/V3 styles
+     still inherit these from `.cx-root` below). Converging on
+     semantic tokens where the variable was purely a re-alias. */
+  --cx-border: var(--tv-border-subtle);
+  --cx-card-radius: 1.75rem;
+  --cx-soft-2: rgba(255, 255, 255, 0.07);
+
   position: relative;
   width: 100%;
   background: var(--tv-bg-base);
@@ -633,8 +640,9 @@
 
 .cx-index__title em {
   font-style: normal;
-  color: var(--tv-accent-violet-on-ivory);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-cyan) 30%, transparent), transparent);
+  /* Index title sits on dark base — use on-dark accent */
+  color: var(--tv-accent-violet-on-dark);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-cyan-on-dark) 28%, transparent), transparent);
   padding: 0 0.1em;
   border-radius: 0.18rem;
 }
@@ -2161,7 +2169,8 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--tv-accent-cyan);
+  /* Principle card sits on ivory surface — use on-ivory accent */
+  color: var(--tv-accent-cyan-on-ivory);
 }
 
 .cx-related-card-eyebrow--collection {
@@ -2446,7 +2455,7 @@
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--tv-bg-base) 94%, var(--cx-accent) 6%),
     var(--tv-bg-base));
-  border: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--tv-border-subtle);
   border-radius: 14px;
   color: var(--tv-ink-primary);
   position: relative;
@@ -2471,7 +2480,16 @@
 .cx-card-v4:hover,
 .cx-card-v4:focus-within {
   border-color: var(--cx-accent-soft);
-  transform: translateY(-1px);
+  /* shell.css canonical :focus-visible outline applies */
+}
+
+/* Hover-only lift — gated behind real hover + no reduced-motion.
+   :focus-within on keyboard already gets the focus ring; the lift is
+   a hover affordance, not a focus cue. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .cx-card-v4:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .cx-card-v4:hover::before,
@@ -2524,33 +2542,38 @@
   border-radius: 999px;
   line-height: 1;
   flex-shrink: 0;
+  /* Filled accent pill — keep brand color, switch text to dark ink for AA */
+  color: var(--tv-ink-inverted-primary);
 }
 
 .cx-card-v4__count-num {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #ffffff;
+  color: inherit;
   font-variant-numeric: tabular-nums;
 }
 
 .cx-card-v4__count-label {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.92);
+  color: inherit;
   text-transform: lowercase;
   letter-spacing: 0.02em;
-  font-weight: 500;
+  font-weight: 600;
+  opacity: 0.78;
 }
 
 .cx-card-v4__title {
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.3rem, 4.2vw, 1.5rem);
   line-height: 1.08;
-  font-weight: 560;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.012em;
   color: var(--tv-ink-primary);
   margin: 0;
   position: relative;
   z-index: 1;
+  text-wrap: balance;
 }
 
 .cx-card-v4__title-link {
@@ -2566,7 +2589,7 @@
 .cx-card-v4__title-link:hover,
 .cx-card-v4__title-link:focus-visible {
   background-size: 100% 1px;
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 .cx-card-v4__promise {
@@ -2652,7 +2675,7 @@
   gap: 0.7rem;
   padding-top: 0.65rem;
   margin-top: 0.4rem;
-  border-top: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border-top: 1px solid var(--tv-border-subtle);
   position: relative;
   z-index: 1;
   flex-wrap: wrap;
@@ -2670,6 +2693,9 @@
 }
 
 .cx-card-v4__cta {
+  /* Touch target: 44px min-height (use min-height, not larger padding,
+     so desktop density doesn't blow out). */
+  min-height: 2.75rem;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -2680,7 +2706,7 @@
   background: color-mix(in srgb, var(--cx-accent) 12%, transparent);
   border: 1px solid var(--cx-accent-soft);
   border-radius: 999px;
-  padding: 0.4rem 0.8rem;
+  padding: 0.5rem 0.9rem;
   transition:
     background 180ms ease,
     border-color 180ms ease,
@@ -2690,19 +2716,21 @@
 
 .cx-card-v4__cta:hover,
 .cx-card-v4__cta:focus-visible {
-  background: var(--cx-accent);
-  border-color: var(--cx-accent);
+  /* AA pair: brand violet fill + white text */
+  background: var(--tv-accent-brand-aa);
+  border-color: var(--tv-accent-brand-aa);
   color: #ffffff;
-  outline: none;
 }
 
 .cx-card-v4__cta-arrow {
   transition: transform 200ms ease;
 }
 
-.cx-card-v4__cta:hover .cx-card-v4__cta-arrow,
-.cx-card-v4__cta:focus-visible .cx-card-v4__cta-arrow {
-  transform: translateX(2px);
+/* Arrow nudge is a hover micro-interaction — gated. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .cx-card-v4__cta:hover .cx-card-v4__cta-arrow {
+    transform: translateX(2px);
+  }
 }
 
 /* =====================================================================
@@ -2764,8 +2792,9 @@
 }
 
 .cx-card-v4--featured .cx-card-v4__cta {
-  background: var(--cx-accent);
-  border-color: var(--cx-accent);
+  /* AA pair: brand violet fill + white text */
+  background: var(--tv-accent-brand-aa);
+  border-color: var(--tv-accent-brand-aa);
   color: #ffffff;
   font-size: 0.9rem;
   padding: 0.55rem 1rem;
@@ -2773,8 +2802,9 @@
 
 .cx-card-v4--featured .cx-card-v4__cta:hover,
 .cx-card-v4--featured .cx-card-v4__cta:focus-visible {
-  background: color-mix(in srgb, var(--cx-accent) 85%, white 15%);
-  border-color: color-mix(in srgb, var(--cx-accent) 85%, white 15%);
+  background: var(--tv-accent-brand-aa);
+  border-color: var(--tv-accent-brand-aa);
+  filter: brightness(1.08);
 }
 
 /* =====================================================================
@@ -2902,7 +2932,7 @@
 .cx-detail-hero-v4__breadcrumb:hover,
 .cx-detail-hero-v4__breadcrumb:focus-visible {
   color: var(--cx-accent);
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 .cx-detail-hero-v4__group {
@@ -2922,11 +2952,13 @@
   font-family: var(--tv-font-family-display);
   font-size: clamp(2rem, 6vw, 3.2rem);
   line-height: 1.0;
-  font-weight: 540;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.02em;
   color: var(--tv-ink-primary);
   margin: 0;
   max-width: 18ch;
+  text-wrap: balance;
 }
 
 .cx-detail-hero-v4__promise {
@@ -3025,7 +3057,7 @@
   gap: 0.55rem;
   padding: 0.4rem 0.85rem 0.4rem 0.4rem;
   background: color-mix(in srgb, var(--tv-bg-base) 80%, transparent);
-  border: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--tv-border-subtle);
   border-radius: 999px;
   text-decoration: none;
   color: var(--tv-ink-primary);
@@ -3035,8 +3067,7 @@
 .cx-detail-hero-v4__strip-link:hover,
 .cx-detail-hero-v4__strip-link:focus-visible {
   border-color: var(--cx-accent-soft);
-  transform: translateY(-1px);
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 .cx-detail-hero-v4__strip-meta {
@@ -3110,30 +3141,30 @@
 }
 
 .cx-detail-hero-v4__cta--primary {
-  background: var(--cx-accent);
+  /* AA pair: brand violet fill + white text */
+  background: var(--tv-accent-brand-aa);
   color: #ffffff;
-  border: 1px solid var(--cx-accent);
+  border: 1px solid var(--tv-accent-brand-aa);
 }
 
 .cx-detail-hero-v4__cta--primary:hover,
 .cx-detail-hero-v4__cta--primary:focus-visible {
-  background: color-mix(in srgb, var(--cx-accent) 85%, white 15%);
-  border-color: color-mix(in srgb, var(--cx-accent) 85%, white 15%);
-  outline: none;
-  transform: translateY(-1px);
+  background: var(--tv-accent-brand-aa);
+  border-color: var(--tv-accent-brand-aa);
+  filter: brightness(1.08);
 }
 
 .cx-detail-hero-v4__cta--secondary {
   background: transparent;
   color: var(--tv-ink-primary);
-  border: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--tv-border-default);
 }
 
 .cx-detail-hero-v4__cta--secondary:hover,
 .cx-detail-hero-v4__cta--secondary:focus-visible {
   border-color: var(--cx-accent);
   color: var(--cx-accent);
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 /* ===== STACK FLOW V4 ===== */
@@ -3164,10 +3195,12 @@
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.5rem, 4.6vw, 2rem);
   line-height: 1.05;
-  font-weight: 540;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
+  text-wrap: balance;
 }
 
 .cx-stack-flow-v4__lede {
@@ -3254,7 +3287,7 @@
 .cx-stack-flow-v4__tool:focus-visible {
   text-decoration: underline;
   text-underline-offset: 3px;
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 .cx-stack-flow-v4__row {
@@ -3332,11 +3365,13 @@
 
 .cx-stack-flow-v4__details {
   margin-top: 0.2rem;
-  border-top: 1px dashed var(--tv-border-inverted-default, rgba(255, 255, 255, 0.1));
+  border-top: 1px dashed var(--tv-border-subtle);
   padding-top: 0.5rem;
 }
 
 .cx-stack-flow-v4__details-summary {
+  /* Touch target: 44px min-height */
+  min-height: 2.75rem;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -3345,7 +3380,7 @@
   color: var(--tv-ink-secondary, rgba(255, 255, 255, 0.72));
   cursor: pointer;
   list-style: none;
-  padding: 0.2rem 0;
+  padding: 0.4rem 0.5rem;
 }
 
 .cx-stack-flow-v4__details-summary::-webkit-details-marker {
@@ -3355,7 +3390,7 @@
 .cx-stack-flow-v4__details-summary:hover,
 .cx-stack-flow-v4__details-summary:focus-visible {
   color: var(--cx-accent);
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 .cx-stack-flow-v4__details-arrow {
@@ -3405,7 +3440,7 @@
 .cx-stack-flow-v4__guide-link:focus-visible {
   text-decoration: underline;
   text-underline-offset: 3px;
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 /* Optional + Alternative inline */
@@ -3415,7 +3450,7 @@
   flex-direction: column;
   gap: 0.8rem;
   padding-top: 1.2rem;
-  border-top: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border-top: 1px solid var(--tv-border-subtle);
 }
 
 .cx-stack-flow-v4__sub-label {
@@ -3533,8 +3568,8 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 1.5rem 0;
-  border-top: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
-  border-bottom: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border-top: 1px solid var(--tv-border-subtle);
+  border-bottom: 1px solid var(--tv-border-subtle);
 }
 
 .cx-variant-paths-v4__head {
@@ -3558,10 +3593,12 @@
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.5rem, 4.6vw, 2rem);
   line-height: 1.05;
-  font-weight: 540;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
+  text-wrap: balance;
 }
 
 .cx-variant-paths-v4__lede {
@@ -3580,12 +3617,14 @@
 }
 
 .cx-variant-paths-v4__tab {
+  /* Touch target: 44px min-height */
+  min-height: 2.75rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.55rem 0.95rem;
+  padding: 0.55rem 1.05rem;
   background: transparent;
-  border: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--tv-border-default);
   border-radius: 999px;
   color: var(--tv-ink-primary);
   font-size: 0.85rem;
@@ -3598,12 +3637,13 @@
 .cx-variant-paths-v4__tab:focus-visible {
   border-color: var(--cx-accent);
   color: var(--cx-accent);
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 .cx-variant-paths-v4__tab--active {
-  background: var(--cx-accent);
-  border-color: var(--cx-accent);
+  /* AA pair: brand violet fill + white text */
+  background: var(--tv-accent-brand-aa);
+  border-color: var(--tv-accent-brand-aa);
   color: #ffffff;
 }
 
@@ -3752,7 +3792,7 @@
   flex-direction: column;
   gap: 0.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--tv-border-subtle);
 }
 
 .cx-decision-notes-v4__eyebrow {
@@ -3767,11 +3807,13 @@
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.5rem, 4.6vw, 2rem);
   line-height: 1.05;
-  font-weight: 540;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
   max-width: 28ch;
+  text-wrap: balance;
 }
 
 .cx-decision-notes-v4__lede {
@@ -3839,8 +3881,8 @@
   flex-direction: column;
   gap: 1.2rem;
   padding: 1.5rem 0;
-  border-top: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
-  border-bottom: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border-top: 1px solid var(--tv-border-subtle);
+  border-bottom: 1px solid var(--tv-border-subtle);
 }
 
 .cx-scenario-v4__head {
@@ -3864,10 +3906,12 @@
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.4rem, 4.2vw, 1.8rem);
   line-height: 1.1;
-  font-weight: 540;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.012em;
   color: var(--tv-ink-primary);
   margin: 0;
+  text-wrap: balance;
 }
 
 .cx-scenario-v4__body {
@@ -3966,11 +4010,13 @@
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.4rem, 4.4vw, 1.85rem);
   line-height: 1.1;
-  font-weight: 540;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
   max-width: 30ch;
+  text-wrap: balance;
 }
 
 .cx-anti-rec-v4__lede {
@@ -3994,7 +4040,7 @@
   flex-direction: column;
   gap: 0.5rem;
   padding-top: 0.7rem;
-  border-top: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border-top: 1px solid var(--tv-border-subtle);
 }
 
 .cx-anti-rec-v4__instead-label {
@@ -4019,12 +4065,14 @@
 }
 
 .cx-anti-rec-v4__instead-link {
+  /* Touch target: 44px min-height */
+  min-height: 2.75rem;
   display: flex;
   align-items: center;
   gap: 0.6rem;
   padding: 0.6rem 0.8rem;
   background: color-mix(in srgb, var(--tv-bg-base) 80%, transparent);
-  border: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--tv-border-subtle);
   border-radius: 10px;
   text-decoration: none;
   color: var(--tv-ink-primary);
@@ -4034,7 +4082,7 @@
 .cx-anti-rec-v4__instead-link:hover,
 .cx-anti-rec-v4__instead-link:focus-visible {
   border-color: var(--cx-accent-soft);
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 .cx-anti-rec-v4__instead-name {
@@ -4061,7 +4109,7 @@
   flex-direction: column;
   gap: 1.2rem;
   padding: 1.5rem 0;
-  border-top: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border-top: 1px solid var(--tv-border-subtle);
 }
 
 .cx-guide-bridge-v4__head {
@@ -4085,11 +4133,13 @@
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.4rem, 4.2vw, 1.8rem);
   line-height: 1.1;
-  font-weight: 540;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.012em;
   color: var(--tv-ink-primary);
   margin: 0;
   max-width: 28ch;
+  text-wrap: balance;
 }
 
 .cx-guide-bridge-v4__lede {
@@ -4110,13 +4160,15 @@
 }
 
 .cx-guide-bridge-v4__link {
+  /* Touch target: 44px min-height */
+  min-height: 2.75rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
   padding: 0.65rem 0.9rem;
   background: color-mix(in srgb, var(--tv-bg-base) 80%, transparent);
-  border: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--tv-border-subtle);
   border-radius: 10px;
   text-decoration: none;
   color: var(--tv-ink-primary);
@@ -4126,7 +4178,7 @@
 .cx-guide-bridge-v4__link:hover,
 .cx-guide-bridge-v4__link:focus-visible {
   border-color: var(--cx-accent-soft);
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 .cx-guide-bridge-v4__slug {
@@ -4169,10 +4221,12 @@
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.5rem, 4.6vw, 2rem);
   line-height: 1.05;
-  font-weight: 540;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
+  text-wrap: balance;
 }
 
 .cx-next-step-v4__lede {
@@ -4190,6 +4244,9 @@
 }
 
 .cx-next-step-v4__card {
+  /* Card-as-touch-target — link wraps the entire card, so padding
+     already exceeds 44px. Add explicit min-height for safety. */
+  min-height: 2.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
@@ -4197,7 +4254,7 @@
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--tv-bg-base) 92%, var(--cx-accent) 8%),
     var(--tv-bg-base));
-  border: 1px solid var(--tv-border-inverted-default, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--tv-border-subtle);
   border-radius: 14px;
   text-decoration: none;
   color: var(--tv-ink-primary);
@@ -4207,8 +4264,7 @@
 .cx-next-step-v4__card:hover,
 .cx-next-step-v4__card:focus-visible {
   border-color: var(--cx-accent-soft);
-  transform: translateY(-1px);
-  outline: none;
+  /* shell.css canonical :focus-visible outline applies */
 }
 
 .cx-next-step-v4__card-eyebrow {
@@ -4223,10 +4279,12 @@
   font-family: var(--tv-font-family-display);
   font-size: 1.2rem;
   line-height: 1.1;
-  font-weight: 540;
+  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
+  font-weight: 400;
   letter-spacing: -0.012em;
   color: var(--tv-ink-primary);
   margin: 0;
+  text-wrap: balance;
 }
 
 .cx-next-step-v4__card-promise {
@@ -4277,9 +4335,11 @@
   transition: transform 200ms ease;
 }
 
-.cx-next-step-v4__card:hover .cx-next-step-v4__card-cta svg,
-.cx-next-step-v4__card:focus-visible .cx-next-step-v4__card-cta svg {
-  transform: translateX(2px);
+/* Arrow nudge is a hover micro-interaction — gated. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .cx-next-step-v4__card:hover .cx-next-step-v4__card-cta svg {
+    transform: translateX(2px);
+  }
 }
 
 /* =====================================================================
@@ -4323,6 +4383,17 @@
   border-top: 1px solid var(--cx-border, rgba(255, 255, 255, 0.08));
 }
 
+/* Group header — eyebrow + h2 + lede stacked.
+   Mobile: pure vertical stack (eyebrow → h2 → lede).
+   Desktop: h2 + lede split across two columns; eyebrow spans full width. */
+.cx-index__group-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
 .cx-index__group-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -4331,9 +4402,31 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  margin-bottom: 0.35rem;
+  /* margin-bottom removed — driven by parent flex gap (was double-spacing with parent flex gap). */
 }
 
+.cx-index__group-title {
+  font-family: var(--tv-font-family-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  color: var(--tv-ink-primary);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.cx-index__group-lede {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--tv-ink-inverted-secondary);
+  margin: 0;
+  max-width: 48ch;
+}
+
+/* Spacing between group-header and group grid — explicit and single-source
+   (was previously margin-top on the grid, which double-counted with any
+   parent gap). */
 .cx-index__grid--group {
   margin-top: 1.1rem;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
@@ -4356,6 +4449,32 @@
   .cx-index__grid--lead {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  /* Group header: split h2 + lede into 2 columns so long ledes don't
+     push the cards below the fold. Eyebrow spans full width. */
+  .cx-index__group-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 2rem;
+    row-gap: 0.6rem;
+    align-items: baseline;
+  }
+
+  .cx-index__group-eyebrow {
+    grid-column: 1 / -1;
+  }
+
+  .cx-index__group-title {
+    grid-column: 1;
+    font-size: clamp(1.55rem, 2.4vw, 2rem);
+  }
+
+  .cx-index__group-lede {
+    grid-column: 2;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: none;
+  }
 }
 
 @media (min-width: 1100px) {
@@ -4372,3 +4491,166 @@
 .cx-index__group[data-cx-group="create"] .cx-index__group-eyebrow { color: var(--cx-accent-violet); }
 .cx-index__group[data-cx-group="operate"] .cx-index__group-eyebrow { color: var(--cx-accent-teal); }
 .cx-index__group[data-cx-group="grow"] .cx-index__group-eyebrow { color: var(--cx-accent-amber); }
+
+
+/* =====================================================================
+   REDUCED MOTION — strip hover/focus geometry from collections
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .cx-index__title em,
+  .cx-card-v4,
+  .cx-card-v4--featured,
+  .cx-card-v4__cta,
+  .cx-card-v4__cta-arrow,
+  .cx-detail-hero-v4__strip-link,
+  .cx-detail-hero-v4__cta--primary,
+  .cx-stack-flow-v4__details-arrow,
+  .cx-stack-flow-v4__node,
+  .cx-variant-paths-v4__tab,
+  .cx-next-step-v4__card,
+  .cx-next-step-v4__card-cta svg {
+    transition: none !important;
+  }
+
+  .cx-card-v4:hover,
+  .cx-card-v4:focus-within,
+  .cx-detail-hero-v4__strip-link:hover,
+  .cx-detail-hero-v4__strip-link:focus-visible,
+  .cx-detail-hero-v4__cta--primary:hover,
+  .cx-detail-hero-v4__cta--primary:focus-visible,
+  .cx-card-v4__cta:hover .cx-card-v4__cta-arrow,
+  .cx-card-v4__cta:focus-visible .cx-card-v4__cta-arrow,
+  .cx-stack-flow-v4__details[open] .cx-stack-flow-v4__details-arrow,
+  .cx-next-step-v4__card:hover,
+  .cx-next-step-v4__card:focus-visible,
+  .cx-next-step-v4__card:hover .cx-next-step-v4__card-cta svg,
+  .cx-next-step-v4__card:focus-visible .cx-next-step-v4__card-cta svg {
+    transform: none !important;
+  }
+}
+
+
+/* =====================================================================
+   LOADING SKELETON — dark-canvas variant
+   ---------------------------------------------------------------------
+   The shared `.skeleton-block` ships ivory (it's the route-agnostic
+   helper). The collections routes sit on `--tv-bg-base` (dark); without
+   a contextual override the placeholders read as washed-out white
+   bars instead of ghosted editorial frames.
+   ===================================================================== */
+
+.skeleton-block--on-dark {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tv-ink-primary, #fff) 8%, transparent),
+    color-mix(in srgb, var(--tv-ink-primary, #fff) 4%, transparent)
+  );
+  border-radius: inherit;
+}
+
+.skeleton-block--on-dark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--tv-ink-primary, #fff) 12%, transparent),
+    transparent
+  );
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+/* Reduced motion: drop the shimmer, keep a steady ghosted block. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block--on-dark::after {
+    animation: none;
+    transform: translateX(0);
+    opacity: 0.45;
+  }
+}
+
+
+/* =====================================================================
+   COLLECTION DETAIL — partner placement wrapper & dark sponsor link
+   ---------------------------------------------------------------------
+   - The PartnerCollectionModule can resolve to `null` (no relevance).
+     Previously the wrapper still reserved vertical space; spacing now
+     moves onto the placement shell so the wrapper is a pure positioning
+     host.
+   - The collections route sits on dark canvas. The shared
+     `partner-placement__opportunity` defaults to on-ivory ink tokens,
+     which collapse contrast on dark. We add a route-scoped modifier
+     `cx-collection-detail-page` that swaps the tokens.
+   ===================================================================== */
+
+.cx-detail-partner {
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+  /* No bottom padding here — reserved only when a placement renders. */
+}
+
+.cx-detail-partner:not(:empty) {
+  padding-bottom: 4rem;
+}
+
+.cx-detail-sponsor-slot {
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+}
+
+.cx-detail-sponsor-slot:not(:empty) {
+  padding-bottom: 5rem;
+}
+
+/* On the dark collections detail route, swap sponsor opportunity ink
+   to dark-canvas tokens (light text on dark). Locality-scoped via the
+   route modifier — doesn't bleed into other placements. */
+.cx-collection-detail-page .partner-placement__opportunity {
+  color: var(--tv-ink-muted-aa);
+}
+
+.cx-collection-detail-page .partner-placement__opportunity:hover {
+  color: var(--tv-accent-violet-on-dark);
+}
+
+
+/* =====================================================================
+   STACK / SCENARIO marker gutter — narrow screens
+   ---------------------------------------------------------------------
+   Both spine lists inset by `margin-left: 0.85rem` (~13.6px) and place
+   absolute markers at `left: -1.85rem` (~ -29.6px). The marker width
+   is ~2.2rem (stack) / 1.6rem (scenario). At <=390px viewport the
+   route wrapper shrinks to 16px padding each side, and 1rem = ~10.5px,
+   so the math gets tight: marker left edge can land at ~8-9px from
+   the route wrapper, leaving ~7-8px of optical gutter — visually
+   crowded.
+
+   We narrow the marker offset slightly below 390px and increase the
+   list inset a touch, so the spine keeps visible breathing room on
+   360px-class devices.
+   ===================================================================== */
+
+@media (max-width: 23.4375rem) {
+  .cx-stack-flow-v4__list,
+  .cx-scenario-v4__steps {
+    margin-left: 1.15rem;
+  }
+
+  .cx-stack-flow-v4__node,
+  .cx-scenario-v4__step-num {
+    left: -2.05rem;
+  }
+
+  /* Item padding-left tightens a hair so the inner column doesn't
+     collapse against the spine at 360px. */
+  .cx-stack-flow-v4__item,
+  .cx-scenario-v4__step {
+    padding-left: 1.35rem;
+  }
+}

@@ -29,8 +29,7 @@ export function CollectionGuideBridgeV4({
 
   return (
     <section
-      data-cx-accent="indigo"
-      className="cx-guide-bridge-v4"
+      className="cx-guide-bridge-v4 motion-reveal"
       aria-labelledby="cx-guide-bridge-title"
     >
       <header className="cx-guide-bridge-v4__head">
@@ -48,7 +47,7 @@ export function CollectionGuideBridgeV4({
         </p>
       </header>
 
-      <ul className="cx-guide-bridge-v4__list">
+      <ul className="cx-guide-bridge-v4__list motion-stagger">
         {allSlugs.map((slug) => (
           <li key={slug} className="cx-guide-bridge-v4__item">
             <Link
