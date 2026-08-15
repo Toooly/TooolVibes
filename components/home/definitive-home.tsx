@@ -30,6 +30,8 @@
  */
 
 import Link from "next/link";
+
+import { DecisionJourney } from "@/components/home/decision-journey";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -49,6 +51,7 @@ import { HomeRadarPreview } from "@/components/radar/radar-experience";
 type DefinitiveHomeProps = {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
+  announcement?: { text: string; href: string; image?: string | null } | null;
 };
 
 const METHOD_STEPS = [
@@ -134,19 +137,19 @@ function Cockpit({ toolCount }: { toolCount: number }) {
           </p>
           <div className="def-cockpit__ctas">
             <Link
-              href="/archivio"
+              href={toolCount > 0 ? "/archivio" : "/metodo"}
               className="def-cockpit__cta def-cockpit__cta--primary"
-              aria-label="Esplora il catalogo dei tool"
+              aria-label={toolCount > 0 ? "Esplora il catalogo dei tool" : "Scopri il metodo TooolVibes"}
             >
-              Esplora il catalogo
+              {toolCount > 0 ? "Esplora il catalogo" : "Scopri il metodo"}
               <ArrowRight size={16} aria-hidden="true" />
             </Link>
             <Link
-              href="/compare"
+              href={toolCount > 0 ? "/compare" : "/collections"}
               className="def-cockpit__cta def-cockpit__cta--secondary"
-              aria-label="Confronta i tool selezionati"
+              aria-label={toolCount > 0 ? "Confronta i tool selezionati" : "Sfoglia le raccolte editoriali"}
             >
-              Confronta i tool
+              {toolCount > 0 ? "Confronta i tool" : "Sfoglia le raccolte"}
             </Link>
             <Link
               href="/radar"
@@ -157,46 +160,17 @@ function Cockpit({ toolCount }: { toolCount: number }) {
             </Link>
           </div>
 
-          {/* Complete decision journey — compact and route-driven */}
-          <nav className="def-cockpit__journey" aria-label="Il tuo percorso">
-            <ol>
-              <li className="is-active">
-                <Link href="/archivio">
-                  <span aria-hidden="true">1</span>
-                  <strong>Esplora</strong>
-                  <em>Catalogo</em>
-                </Link>
-              </li>
-              <li>
-                <Link href="/archivio">
-                  <span aria-hidden="true">2</span>
-                  <strong>Valuta</strong>
-                  <em>Schede</em>
-                </Link>
-              </li>
-              <li>
-                <Link href="/compare">
-                  <span aria-hidden="true">3</span>
-                  <strong>Confronta</strong>
-                  <em>Differenze</em>
-                </Link>
-              </li>
-              <li>
-                <Link href="/shortlist">
-                  <span aria-hidden="true">4</span>
-                  <strong>Salva</strong>
-                  <em>Candidati</em>
-                </Link>
-              </li>
-              <li>
-                <Link href="/shortlist#wishlist">
-                  <span aria-hidden="true">5</span>
-                  <strong>Decidi</strong>
-                  <em>Motivazione</em>
-                </Link>
-              </li>
-            </ol>
-          </nav>
+          <p className="def-cockpit__promise">
+            <span>Scopri</span>
+            <span aria-hidden="true">→</span>
+            <span>Confronta</span>
+            <span aria-hidden="true">→</span>
+            <span>Salva</span>
+            <span aria-hidden="true">→</span>
+            <span>Decidi</span>
+          </p>
+
+          <DecisionJourney />
         </div>
 
         <div className="def-cockpit__radar">
@@ -676,10 +650,21 @@ function Method() {
 // ============================================================
 // ROOT
 // ============================================================
-export function DefinitiveHome({ tools, weeklyTool }: DefinitiveHomeProps) {
+export function DefinitiveHome({ tools, weeklyTool, announcement = null }: DefinitiveHomeProps) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
   return (
     <div className="def-home">
+      {announcement ? (
+        <p className="def-home__announcement">
+          <a href={announcement.href}>
+            {announcement.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={announcement.image} alt="" className="def-home__announcement-media" />
+            ) : null}
+            <span>{announcement.text}</span>
+          </a>
+        </p>
+      ) : null}
       <Cockpit toolCount={tools.length} />
       <IvoryEditorial focusTool={focusTool} tools={tools} />
       <TinyAdzInlineSlot placement="home-editorial" />

@@ -22,6 +22,9 @@ import { getAdminArticlesRuntime } from "@/lib/admin/article-queries";
 import { getAdminCollectionsRuntime } from "@/lib/admin/collection-queries";
 import { getSuggestionsRuntime } from "@/lib/admin/suggestion-queries";
 import { getAdminToolsRuntime, isSupabaseAdminEnabled } from "@/lib/admin/tool-queries";
+import { getAdminActivity } from "@/lib/admin/admin-activity";
+import { campaignBucket } from "@/lib/admin/campaign-schedule";
+import { getManagedCampaigns } from "@/lib/sponsors/commercial-overrides";
 import { getMonetizationPlacementStats } from "@/lib/monetization/placements";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
 
@@ -204,6 +207,8 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
     affiliateRequestsRuntime.pendingCount + affiliateRequestsRuntime.reviewingCount;
   const activeAffiliateLinks = affiliateRuntime.activeCount;
   const monetizationStats = getMonetizationPlacementStats();
+  const activity = getAdminActivity(8);
+  const endingCampaigns = getManagedCampaigns().filter((campaign) => campaignBucket(campaign) === "ending");
   const collectionPublicCount = collectionsRuntime.collections.filter(
     (collection) => collection.editorial_state === "published" || collection.editorial_state === "featured",
   ).length;
@@ -213,11 +218,24 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
     !collectionsRuntime.canWrite ? "Raccolte in sola lettura" : null,
     openSuggestions > 0 ? `${openSuggestions} suggerimenti aperti` : null,
     openAffiliateRequests > 0 ? `${openAffiliateRequests} richieste affiliate aperte` : null,
+    endingCampaigns.length > 0 ? `${endingCampaigns.length} campagne in scadenza` : null,
   ].filter(Boolean);
 
   return (
     <div className="page-shell py-8 sm:py-10">
       <div className="space-y-6">
+        
+        {activity.length > 0 ? (
+          <section className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/45">Attività recente</p>
+            <ul className="mt-3 space-y-2 text-sm text-white/70">
+              {activity.map((event) => (
+                <li key={event.at + event.action}>{event.action} · {event.entity}{event.id ? ` · ${event.id}` : ""}</li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
         <section
           className="relative overflow-hidden rounded-[32px] border p-6 text-white sm:p-8"
           style={{
@@ -229,8 +247,8 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
           <div className="flex flex-wrap items-start justify-between gap-5">
             <SectionHeader
               eyebrow="Back office"
-              title="Centro di controllo TooolVibes"
-              description="Una vista unica per capire cosa funziona, cosa e' in lavorazione e dove serve intervenire: tool, contenuti, utenti, gamification e monetizzazione."
+              title="Cosa richiede attenzione oggi"
+              description="Coda operativa del back office: suggerimenti, bozze, affiliate e stato di scrittura. Solo dati reali del sistema."
               invert
             />
             <div className="flex flex-wrap gap-2">
@@ -256,15 +274,68 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
             <MetricCard label="Utenti gioco" value={gameProfileCount ?? "-"} detail="Profili con progressione XP rilevati" />
           </div>
 
-          <div className="mt-5 rounded-[24px] border border-white/10 bg-white/[0.045] p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">
-              Stato operativo
-            </p>
-            <p className="mt-2 text-sm leading-6 text-white/68">
-              {platformIssues.length > 0
-                ? platformIssues.join(" · ")
-                : "Nessun blocco evidente nelle aree principali."}
-            </p>
+          <div className="mt-5 rounded-[24px] border border-white/10 bg-white/[0.045] p-4 sm:p-5">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">
+                  Cosa richiede attenzione
+                </p>
+                <p className="mt-1 text-sm text-white/58">
+                  Coda operativa derivata dai dati reali del back office.
+                </p>
+              </div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/40">
+                {platformIssues.length > 0
+                  ? `${platformIssues.length} punti aperti`
+                  : "Coda vuota"}
+              </p>
+            </div>
+            {platformIssues.length > 0 ? (
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                {openSuggestions > 0 ? (
+                  <li>
+                    <Link
+                      href="/admin/suggestions"
+                      className="flex min-h-11 items-center justify-between gap-3 rounded-2xl border border-[rgba(57,210,246,0.22)] bg-[rgba(57,210,246,0.08)] px-3.5 py-2.5 text-sm font-semibold text-[#9eefff] transition-colors hover:bg-[rgba(57,210,246,0.14)]"
+                    >
+                      <span>{openSuggestions} suggerimenti aperti</span>
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  </li>
+                ) : null}
+                {openAffiliateRequests > 0 ? (
+                  <li>
+                    <Link
+                      href="/admin/affiliates"
+                      className="flex min-h-11 items-center justify-between gap-3 rounded-2xl border border-[rgba(243,191,76,0.24)] bg-[rgba(243,191,76,0.08)] px-3.5 py-2.5 text-sm font-semibold text-[#f3bf4c] transition-colors hover:bg-[rgba(243,191,76,0.14)]"
+                    >
+                      <span>{openAffiliateRequests} richieste affiliate</span>
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  </li>
+                ) : null}
+                {draftTools > 0 ? (
+                  <li>
+                    <Link
+                      href="/admin/tools"
+                      className="flex min-h-11 items-center justify-between gap-3 rounded-2xl border border-white/12 bg-white/[0.04] px-3.5 py-2.5 text-sm font-semibold text-white/85 transition-colors hover:bg-white/[0.07]"
+                    >
+                      <span>{draftTools} tool in bozza</span>
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  </li>
+                ) : null}
+                {!toolsRuntime.canWrite || !articlesRuntime.canWrite || !collectionsRuntime.canWrite ? (
+                  <li className="rounded-2xl border border-[rgba(255,82,82,0.22)] bg-[rgba(255,82,82,0.08)] px-3.5 py-2.5 text-sm font-semibold text-[#ffb6b6]">
+                    Una o più aree sono in sola lettura
+                  </li>
+                ) : null}
+              </ul>
+            ) : (
+              <p className="mt-3 text-sm leading-6 text-white/68">
+                Nessun blocco operativo evidente. Puoi proseguire con tool, contenuti o monetizzazione.
+              </p>
+            )}
           </div>
         </section>
 

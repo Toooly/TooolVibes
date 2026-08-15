@@ -46,6 +46,15 @@ export function GuideArticleToc({
   const [progress, setProgress] = useState(0);
   const preferReducedMotion = useReducedMotion();
 
+  // Deep-link: honor #hash on first paint before scroll-spy takes over.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash.replace(/^#/, "");
+    if (hash && items.some((item) => item.id === hash)) {
+      setActiveId(hash);
+    }
+  }, [items]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -111,8 +120,9 @@ export function GuideArticleToc({
 
   return (
     <nav
-      className="guides-toc"
+      className={items.length < 3 ? "guides-toc is-compact" : "guides-toc"}
       aria-label={title}
+      data-toc-count={items.length}
     >
       <div className="guides-toc__title">
         {title} <span aria-hidden>· {counter}</span>

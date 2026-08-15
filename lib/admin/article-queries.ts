@@ -21,6 +21,7 @@ import {
   type ArticleWriteTarget,
 } from "@/lib/supabase/article-target";
 import type { BlogArticleRecord, EditorialPostRecord } from "@/lib/types/article";
+import { getQaArticle, getQaEditorialStore } from "@/lib/admin/qa-editorial-store";
 
 export type AdminArticleRecord = BlogArticleRecord & {
   admin_source: "cms" | "seed";
@@ -327,7 +328,7 @@ export const isSupabaseArticlesWriteEnabled = cache(async () => {
 
 export const getAdminArticlesRuntime = cache(async (): Promise<AdminArticlesRuntime> => {
   const seedPosts = await getSeedAdminArticles();
-  const seedArticles = mergeAdminArticles([], seedPosts);
+  const seedArticles = mergeAdminArticles(getQaEditorialStore().articles, seedPosts);
 
   if (!isSupabaseAdminEnabled()) {
     return buildFallbackRuntime({
@@ -479,6 +480,10 @@ export async function getAdminArticles() {
 }
 
 export async function getAdminArticleById(id: string) {
+  const qaArticle = getQaArticle(id);
+  if (qaArticle) {
+    return { ...qaArticle, admin_source: "cms" as const, admin_source_label: "QA locale", admin_can_edit: true, admin_can_mutate: true };
+  }
   const runtime = await getAdminArticlesRuntime();
   const articleFromRuntime =
     runtime.articles.find((article) => article.id === id && article.admin_source === "cms") ?? null;

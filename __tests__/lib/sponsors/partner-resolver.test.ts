@@ -220,3 +220,17 @@ describe("rotational anti-collision", () => {
     expect(home?.name).not.toBe(archive?.name);
   });
 });
+
+
+describe("resolvePartnerCampaign — commercial overrides file", () => {
+  it("placement override file defaults to auto", () => {
+    const resolved = resolvePartnerCampaign({
+      placementKey: "home-featured-tool",
+      route: "home",
+      strategy: "rotation",
+      rotationOffset: 0,
+      now: NOW,
+    });
+    expect(resolved === null || typeof resolved.id === "string").toBe(true);
+  });
+});

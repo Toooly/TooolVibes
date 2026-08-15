@@ -7,38 +7,7 @@
    card backgrounds. Pure typography + spacing carry the composition.
    --------------------------------------------------------------------- */
 
-:root {
-  /* Editorial accents */
-  --cx-accent-indigo: #7c8cff;   /* Build: solo founder, MVP→SaaS, design sprint */
-  --cx-accent-violet: #a78bfa;   /* Create: creator video, content marketing,
-                                     personal brand, video training */
-  --cx-accent-teal:   #5eead4;   /* Operate: support, agents, agency */
-  --cx-accent-amber:  #fbbf24;   /* Grow: free-budget, lead generation */
 
-  /* Accent on dark surfaces (for dark hero / dark lead card) */
-  --cx-accent-indigo-on-dark: #a8b3ff;
-  --cx-accent-violet-on-dark: #c7b6ff;
-  --cx-accent-teal-on-dark:   #8ef0dd;
-  --cx-accent-amber-on-dark:  #ffd668;
-
-  /* Soft accent tints (used for hairlines, never fills) */
-  --cx-accent-indigo-soft: color-mix(in srgb, var(--cx-accent-indigo) 22%, transparent);
-  --cx-accent-violet-soft: color-mix(in srgb, var(--cx-accent-violet) 22%, transparent);
-  --cx-accent-teal-soft:   color-mix(in srgb, var(--cx-accent-teal)   22%, transparent);
-  --cx-accent-amber-soft:  color-mix(in srgb, var(--cx-accent-amber)  22%, transparent);
-
-  /* Stack diagram primitives (used from Step 3 onward) */
-  --cx-stack-spine:        var(--tv-border-inverted-default);
-  --cx-stack-spine-strong: var(--cx-border-strong, currentColor);
-  --cx-stack-marker-size:  1.75rem;
-  --cx-stack-indent:       2.25rem;
-  --cx-stack-gap-y:        1.5rem;
-
-  /* Composite signal line (one-line stack summary on cards) */
-  --cx-card-signal-fs:     var(--tv-text-sm, 0.875rem);
-  --cx-card-signal-color:  var(--tv-ink-secondary);
-  --cx-card-signal-weight: 480;
-}
 
 /* Accent utilities — used by accent={indigo|violet|teal|amber} data-attr.
    Mobile-first: thin left rule, small color tint on the kicker text.
@@ -4653,4 +4622,59 @@
   .cx-scenario-v4__step {
     padding-left: 1.35rem;
   }
+}
+
+/* ── MVP 1.0 — Collection section journey map ── */
+.cx-section-nav {
+  position: sticky;
+  top: 4.5rem;
+  z-index: 20;
+  margin: 0 auto;
+  max-width: var(--cx-detail-max, 72rem);
+  padding: 0.55rem 1rem;
+  background: color-mix(in srgb, var(--tv-bg-base, #0c0d10) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid color-mix(in srgb, var(--cx-accent, #6366f1) 22%, transparent);
+}
+.cx-section-nav ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cx-section-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tv-border-subtle, #333) 90%, transparent);
+  color: var(--tv-ink-secondary, #b8b3a8);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+.cx-section-nav a.is-active,
+.cx-section-nav a[aria-current="true"] {
+  border-color: color-mix(in srgb, var(--cx-accent, #6366f1) 55%, transparent);
+  background: color-mix(in srgb, var(--cx-accent, #6366f1) 16%, transparent);
+  color: var(--tv-ink-primary, #f4f0ea);
+}
+@media (max-width: 639px) {
+  .cx-section-nav {
+    top: 3.5rem;
+    padding-inline: 0.75rem;
+  }
+  .cx-section-nav a {
+    font-size: 0.75rem;
+    padding-inline: 0.55rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-section-nav a { transition: none; }
 }

@@ -56,6 +56,33 @@ function getAllowedAuthOrigins() {
   );
 }
 
+async function deliverLocalAuthEmail(input: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+}) {
+  const supabaseUrl = clean(process.env.NEXT_PUBLIC_SUPABASE_URL) ?? "";
+  const local = supabaseUrl.includes("127.0.0.1") || supabaseUrl.includes("localhost");
+  if (!local) return false;
+  try {
+    const response = await fetch("http://127.0.0.1:54324/api/v1/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        From: { Email: "noreply@localhost", Name: "TooolVibes local" },
+        To: [{ Email: input.to }],
+        Subject: input.subject,
+        HTML: input.html,
+        Text: input.text,
+      }),
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
 function getCallbackOrigin() {
   const origin =
     normalizeOrigin(process.env.NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN) ??
@@ -515,12 +542,19 @@ export async function POST(request: Request) {
   });
 
   if (!result.sent) {
-    const message =
-      result.reason === "disabled"
-        ? "Invio email non disponibile in questo momento."
-        : "Non siamo riusciti a inviare la mail di conferma. Riprova tra poco.";
-
-    return NextResponse.json({ ok: false, message, correlationId }, { status: 503 });
+    const deliveredLocally = await deliverLocalAuthEmail({
+      to: email,
+      subject: "Entra in TooolVibes",
+      html: getSignupHtml(confirmUrl),
+      text: getSignupText(confirmUrl),
+    });
+    if (!deliveredLocally) {
+      const message =
+        result.reason === "disabled"
+          ? "Invio email non disponibile in questo momento."
+          : "Non siamo riusciti a inviare la mail di conferma. Riprova tra poco.";
+      return NextResponse.json({ ok: false, message, correlationId }, { status: 503 });
+    }
   }
 
   return NextResponse.json({

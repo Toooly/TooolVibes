@@ -469,7 +469,13 @@ function RadarStatusRail({ model }: { model: RadarUiModel }) {
             aria-live="polite"
             aria-atomic="true"
           >
-            {hasCount ? model.signalCount : "—"}
+            {hasCount
+              ? model.signalCount
+              : model.state === "error"
+                ? "Non disponibili"
+                : model.state === "loading"
+                  ? "In lettura"
+                  : "Nessun segnale"}
           </span>
         </dd>
       </div>
@@ -505,6 +511,107 @@ function RadarProvenance() {
         Visita Product Hunt
         <ExternalLink size={14} aria-hidden="true" />
       </a>
+    </section>
+  );
+}
+
+
+/** Deterministic relative intensity inside the current result set only. */
+function relativeIntensity(votes: number, maxVotes: number): number {
+  if (maxVotes <= 0) return 0;
+  return Math.round((votes / maxVotes) * 100);
+}
+
+function discussionRatio(votes: number, comments: number): number | null {
+  if (votes <= 0) return null;
+  return Math.round((comments / votes) * 100) / 100;
+}
+
+/**
+ * Signal overview strip — makes /radar feel like an intelligence surface
+ * without inventing trends or AI conclusions.
+ */
+function RadarSignalOverview({ model }: { model: RadarUiModel }) {
+  const items = model.items;
+  if (items.length === 0) return null;
+  const maxVotes = items.reduce((m, i) => Math.max(m, i.votesCount), 0);
+  const totalVotes = items.reduce((s, i) => s + i.votesCount, 0);
+  const totalComments = items.reduce((s, i) => s + i.commentsCount, 0);
+  const top = items.slice(0, 5);
+  const leader = items[0];
+
+  return (
+    <section className="tv-radar-overview" aria-labelledby="tv-radar-overview-title">
+      <header className="tv-radar-overview__head">
+        <div>
+          <p className="tv-radar-overview__eyebrow">Sintesi del periodo</p>
+          <h2 id="tv-radar-overview-title">Cosa merita attenzione ora</h2>
+        </div>
+        <p className="tv-radar-overview__note">
+          Metriche relative al set corrente · non sono trend storici
+        </p>
+      </header>
+
+      <div className="tv-radar-overview__stats">
+        <article>
+          <span>Segnali</span>
+          <strong>{model.signalCount ?? items.length}</strong>
+        </article>
+        <article>
+          <span>Voti totali (set)</span>
+          <strong>{totalVotes}</strong>
+        </article>
+        <article>
+          <span>Commenti totali (set)</span>
+          <strong>{totalComments}</strong>
+        </article>
+        <article>
+          <span>Leader del set</span>
+          <strong title={leader?.name}>{leader?.name ?? "—"}</strong>
+        </article>
+      </div>
+
+      <ol className="tv-radar-overview__top" aria-label="Top segnali del set corrente">
+        {top.map((item, index) => {
+          const intensity = relativeIntensity(item.votesCount, maxVotes);
+          const disc = discussionRatio(item.votesCount, item.commentsCount);
+          return (
+            <li key={item.id}>
+              <a
+                href={item.productHuntUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tv-radar-overview__row"
+              >
+                <span className="tv-radar-overview__rank" aria-hidden="true">
+                  #{String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="tv-radar-overview__identity">
+                  <strong>{item.name}</strong>
+                  <em>{item.tagline || "Lancio Product Hunt"}</em>
+                </span>
+                <span className="tv-radar-overview__meta">
+                  <span>{item.votesCount} voti</span>
+                  <span>{item.commentsCount} commenti</span>
+                  {disc !== null ? (
+                    <span title="Rapporto commenti/voti nel set corrente">
+                      {disc.toFixed(2)} disc/voto
+                    </span>
+                  ) : null}
+                  <span title="Intensità relativa ai voti del set corrente">
+                    {intensity}% rel.
+                  </span>
+                </span>
+                <span
+                  className="tv-radar-overview__bar"
+                  aria-hidden="true"
+                  style={{ ["--intensity" as string]: `${intensity}%` }}
+                />
+              </a>
+            </li>
+          );
+        })}
+      </ol>
     </section>
   );
 }
@@ -552,7 +659,8 @@ export function RadarExperience({
       <section
         className="tv-radar"
         aria-labelledby="tv-radar-title"
-        aria-busy={isLoading || isFetching}
+        aria-busy={isLoading}
+      data-refreshing={isFetching && !isLoading ? "true" : undefined}
       >
         <header className="tv-radar__header">
           <div className="tv-radar__header-copy">
@@ -651,13 +759,17 @@ export function RadarExperience({
           />
         </section>
 
+        {/* ═══ 4b. SIGNAL OVERVIEW ═══ */}
+        {!hasErrorState ? <RadarSignalOverview model={model} /> : null}
+
         {/* ═══ 5. RISULTATI: MAPPA O ELENCO ═══ */}
         <div
           id="tv-radar-results"
           className="tv-radar__results"
           data-view={activeVisual}
           aria-live="polite"
-          aria-busy={isLoading || isFetching}
+          aria-busy={isLoading}
+      data-refreshing={isFetching && !isLoading ? "true" : undefined}
         >
           {hasStaleBanner ? (
             <RadarStatePanel
@@ -703,11 +815,10 @@ export function RadarExperience({
   );
 }
 
+
 // =====================================================================
-// HomeRadarPreview — consumato dalla Home V2. NON modificare qui.
-// Il copy V2 della home è closed; questo componente resta allineato
-// al contratto Home V2 e usa il modello V2 ma con copy coerente alla
-// home (eyebrow "Radar · Dati da Product Hunt", H2 dedicato).
+// HomeRadarPreview — MVP 1.0 glanceable signal snapshot (NOT a mini /radar)
+// Purpose: in ~5 seconds show what is happening now + invite to full Radar.
 // =====================================================================
 export function HomeRadarPreview() {
   const { payload, isLoading, isFetching } = useProductHuntRadar("day");
@@ -716,20 +827,21 @@ export function HomeRadarPreview() {
     [payload],
   );
 
+  const top = model.items.slice(0, 4);
+  const maxVotes = top.reduce((m, i) => Math.max(m, i.votesCount), 0) || 1;
+
   return (
     <div
-      className="tv-home-radar"
+      className="tv-home-radar tv-home-radar--snapshot"
       data-state={model.state}
-      aria-busy={isLoading || isFetching}
+      data-refreshing={isFetching && !isLoading ? "true" : undefined}
+      aria-busy={isLoading}
+      aria-labelledby="tv-home-radar-title"
     >
       <header className="tv-home-radar__header">
-        <div>
-          <p>Radar · Dati da Product Hunt</p>
-          <h2>Segui i nuovi lanci. Valuta quelli che meritano attenzione.</h2>
-          <p className="tv-home-radar__lede">
-            Il Radar raccoglie segnali reali da Product Hunt e li organizza
-            per periodo. Nessun dato simulato.
-          </p>
+        <div className="tv-home-radar__header-main">
+          <p className="tv-home-radar__eyebrow">Radar · ora</p>
+          <h2 id="tv-home-radar-title">Cosa sta emergendo adesso</h2>
         </div>
         <span className="tv-home-radar__status" data-state={model.state}>
           <span aria-hidden="true" />
@@ -737,38 +849,88 @@ export function HomeRadarPreview() {
         </span>
       </header>
 
-      <dl className="tv-home-radar__meta">
+      <div className="tv-home-radar__pulse" aria-label="Sintesi segnali di oggi">
         <div>
-          <dt>Stato</dt>
-          <dd>{model.statusLabel}</dd>
+          <span className="tv-home-radar__pulse-label">Segnali oggi</span>
+          <strong className="tv-home-radar__pulse-value">
+            {model.signalCount ?? (isLoading ? "…" : "—")}
+          </strong>
         </div>
         <div>
-          <dt>Ultimo aggiornamento</dt>
-          <dd>{model.updatedAtLabel}</dd>
+          <span className="tv-home-radar__pulse-label">Aggiornato</span>
+          <strong className="tv-home-radar__pulse-value tv-home-radar__pulse-value--sm">
+            {model.updatedAtLabel}
+          </strong>
         </div>
         <div>
-          <dt>Segnali rilevati</dt>
-          <dd>{model.signalCount ?? "—"}</dd>
+          <span className="tv-home-radar__pulse-label">Fonte</span>
+          <strong className="tv-home-radar__pulse-value tv-home-radar__pulse-value--sm">
+            Product Hunt
+          </strong>
         </div>
-        <div>
-          <dt>Periodo</dt>
-          <dd>{model.rangeLabel}</dd>
-        </div>
-      </dl>
+      </div>
 
-      <RadarInstrument model={model} compact />
-
-      <p className="tv-home-radar__source" role="status" aria-live="polite">
-        <strong>{model.stageTitle}</strong>
-        <span>{model.sourceLabel}</span>
-      </p>
+      {top.length > 0 ? (
+        <ol className="tv-home-radar__launches" aria-label="Top lanci del periodo">
+          {top.map((item, index) => {
+            const intensity = Math.round((item.votesCount / maxVotes) * 100);
+            const talk =
+              item.votesCount > 0
+                ? Math.round((item.commentsCount / item.votesCount) * 100) / 100
+                : null;
+            return (
+              <li key={item.id}>
+                <a
+                  href={item.productHuntUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tv-home-radar__launch"
+                >
+                  <span className="tv-home-radar__launch-rank" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="tv-home-radar__launch-body">
+                    <strong>{item.name}</strong>
+                    <em>{item.tagline || "Lancio su Product Hunt"}</em>
+                  </span>
+                  <span className="tv-home-radar__launch-metrics">
+                    <span>
+                      {item.votesCount > 0
+                        ? `${item.votesCount} voti`
+                        : "voti n/d"}
+                    </span>
+                    {talk !== null ? (
+                      <span title="Commenti per voto (derivato dal set corrente)">
+                        {talk.toFixed(2)} disc.
+                      </span>
+                    ) : null}
+                  </span>
+                  <span
+                    className="tv-home-radar__launch-bar"
+                    aria-hidden="true"
+                    style={{ ["--intensity" as string]: `${intensity}%` }}
+                  />
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      ) : (
+        <p className="tv-home-radar__empty" role="status">
+          {isLoading
+            ? "Lettura segnali in corso…"
+            : model.state === "error" || model.state === "missing-token"
+              ? "Segnali non disponibili in questo momento. Nessun dato simulato."
+              : "Nessun lancio nel periodo. Apri il Radar completo per altri intervalli."}
+        </p>
+      )}
 
       <Link
         href="/radar"
         className="tv-home-radar__cta"
         aria-label="Apri il Radar completo dei nuovi lanci"
       >
-        Esplora il Radar
+        Apri il Radar completo
         <ArrowRight size={16} aria-hidden="true" />
       </Link>
     </div>

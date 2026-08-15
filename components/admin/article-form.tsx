@@ -2,9 +2,10 @@
 
 import type { ReactNode } from "react";
 import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
 
 import { ArticleMarkdownEditor } from "@/components/admin/article-markdown-editor";
+import { MediaLibraryPicker } from "@/components/admin/media-library-picker";
+import { EditorHeader, EditorShell, EditorStickyBar, useEditorDirty } from "@/components/admin/editor-ux";
 import {
   articleKinds,
   articleStatuses,
@@ -19,6 +20,10 @@ type ArticleFormProps = {
   initialValues?: Partial<ArticleFormValues>;
   submitLabel: string;
   disabled?: boolean;
+  backHref?: string;
+  entityTitle?: string;
+  entityStatus?: string;
+  updatedAt?: string | null;
 };
 
 const kindLabels: Record<(typeof articleKinds)[number], string> = {
@@ -31,21 +36,6 @@ const statusLabels: Record<(typeof articleStatuses)[number], string> = {
   draft: "Bozza",
   published: "Pubblicato",
 };
-
-function SubmitButton({ label, disabled = false }: { label: string; disabled?: boolean }) {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      disabled={disabled || pending}
-      className="rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
-      style={{ background: "linear-gradient(135deg, var(--accent-strong), var(--accent))" }}
-    >
-      {pending ? "Salvataggio..." : label}
-    </button>
-  );
-}
 
 function FieldError({ error }: { error?: string }) {
   if (!error) {
@@ -119,8 +109,13 @@ export function ArticleForm({
   initialValues,
   submitLabel,
   disabled = false,
+  backHref = "/admin/articles",
+  entityTitle,
+  entityStatus,
+  updatedAt,
 }: ArticleFormProps) {
   const [state, formAction] = useActionState(action, initialArticleFormState);
+  const { dirty, markDirty } = useEditorDirty(state.status);
   const values = {
     ...getArticleFormValues(),
     ...initialValues,
@@ -128,7 +123,9 @@ export function ArticleForm({
   };
 
   return (
-    <form action={formAction} className="space-y-8">
+    <EditorShell dirty={dirty} onDirty={markDirty}>
+    <form action={formAction} className="space-y-8" onChange={markDirty}>
+      <EditorHeader backHref={backHref} eyebrow="Guida" title={entityTitle || values.title || "Nuova guida"} status={entityStatus} updatedAt={updatedAt} />
       {state.status === "error" && state.message ? (
         <div
           className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
@@ -219,9 +216,10 @@ export function ArticleForm({
             <label className="block lg:col-span-2">
               <FieldLabel label="URL immagine di copertina" />
               <input
-                name="cover_image_url"
                 type="url"
                 defaultValue={values.cover_image_url}
+                readOnly
+                aria-label="URL copertina selezionato"
                 placeholder="https://..."
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
@@ -238,6 +236,10 @@ export function ArticleForm({
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
               />
               <FieldError error={state.fieldErrors?.cover_image_alt} />
+              <div className="mt-4">
+                <FieldLabel label="Scegli dalla media library" />
+                <MediaLibraryPicker fieldName="cover_image_url" defaultValue={values.cover_image_url} />
+              </div>
             </label>
 
             <label className="block">
@@ -321,20 +323,8 @@ export function ArticleForm({
         </FormSection>
       </fieldset>
 
-      <div className="dark-panel rounded-[28px] px-5 py-4.5 text-white sm:px-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/58">
-              Salvataggio articolo
-            </p>
-            <p className="mt-2 text-sm leading-7 text-white/72">
-              Testo, media interni e stato vengono salvati in modo protetto; l&apos;articolo resta
-              modificabile come bozza.
-            </p>
-          </div>
-          <SubmitButton label={submitLabel} disabled={disabled} />
-        </div>
-      </div>
+      <EditorStickyBar dirty={dirty} label={submitLabel} disabled={disabled} error={state.status === "error" ? state.message : undefined} />
     </form>
+    </EditorShell>
   );
 }

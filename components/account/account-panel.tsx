@@ -2,14 +2,15 @@
 
 import { useAccount } from "@/components/account/account-provider";
 
-import { AccountAccessSection } from "./panel/account-access-section";
 import { AccountGamificationSection } from "./panel/account-gamification-section";
 import { AccountSignalProgressSection } from "./panel/account-signal-progress-section";
+import { AccountAccessSection } from "./panel/account-access-section";
 import { AccountHero } from "./panel/account-hero";
+import { AccountRecoverySection } from "./panel/account-recovery-section";
 import { AccountJourneyPanel } from "./panel/account-journey-panel";
 import { AccountPreferencesSection } from "./panel/account-preferences-section";
 import { AccountPremiumSection } from "./panel/account-premium-section";
-import { AccountRecoverySection } from "./panel/account-recovery-section";
+import { DecisionMemorySection } from "./panel/decision-memory-section";
 import { AccountSelectionSection } from "./panel/account-selection-section";
 import { AccountStateBanner } from "./panel/account-state-banner";
 import { isAccountStateMatrixEnabled } from "./panel/account-state-flags";
@@ -68,7 +69,6 @@ export function AccountPanel() {
   const suppressAuthMessage =
     showStateBanner &&
     (stateCell.kind === "attach-retry" || stateCell.kind === "attach-success");
-
   return (
     <>
       <div
@@ -77,6 +77,22 @@ export function AccountPanel() {
       >
         {/* Hero */}
         <AccountHero account={account} workspace={workspace} />
+        <section className="account-continue" aria-label="Continua la tua decisione">
+          <p className="account-label">Continua la tua decisione</p>
+          <p className="account-title mt-2">
+            {workspace.saved > 0 || workspace.compare > 0
+              ? `${workspace.saved} salvati · ${workspace.compare} in confronto`
+              : "Nessuna selezione ancora. Parti dal catalogo."}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a className="account-link" href={workspace.saved > 0 ? "/shortlist" : "/archivio"}>
+              {workspace.saved > 0 ? "Apri la shortlist" : "Esplora il catalogo"}
+            </a>
+            <a className="account-link" href={workspace.compare > 0 ? "/compare" : "/archivio"}>
+              {workspace.compare > 1 ? "Continua il confronto" : workspace.compare > 0 ? "Apri il confronto" : "Aggiungi candidati"}
+            </a>
+          </div>
+        </section>
 
         {/* State matrix (B59): offline / unavailable / link pending / attach */}
         {showStateBanner ? (
@@ -90,42 +106,82 @@ export function AccountPanel() {
           />
         ) : null}
 
-        {/* Editorial grid */}
-        <div className="editorial-grid gap-y-5">
-          {/* Left column */}
-          <section className="col-span-12 space-y-5 lg:col-span-7">
-            <AccountSignalProgressSection />
-            <AccountGamificationSection
-              vibeRushBest={vibeRushBest}
-              submissionsLoading={submissions.isLoading}
-              totalSubmissions={submissions.totalSubmissions}
-            />
-            <AccountStatusSection account={account} />
-            <AccountPremiumSection status={account.status} savedCount={workspace.saved} />
-            <AccountAccessSection account={account} form={signupForm} />
-            <AccountRecoverySection
-              account={account}
-              suppressAuthMessage={suppressAuthMessage}
-            />
+        {/* My TooolVibes — decisions first, bureaucracy later */}
+        <div className="editorial-grid gap-y-5 account-workspace">
+          <section className="col-span-12 space-y-5 lg:col-span-7 lg:order-2">
+            <div className="account-cluster account-cluster--solid">
+              <div className="account-cluster__summary account-cluster__summary--static">
+                <span>Le tue decisioni</span>
+                <em>
+                  {workspace.saved > 0 || workspace.compare > 0
+                    ? `${workspace.saved} salvati · ${workspace.compare} in confronto`
+                    : "Parti dal catalogo per costruire la shortlist"}
+                </em>
+              </div>
+              <div className="account-cluster__body space-y-5">
+                <DecisionMemorySection />
+                <AccountSelectionSection
+                  workspace={workspace}
+                  savedToolCards={savedToolCards}
+                  recommendedTools={recommendedTools}
+                />
+                <AccountJourneyPanel />
+              </div>
+            </div>
+
+            <details className="account-cluster">
+              <summary className="account-cluster__summary">
+                <span>Contributi e preferenze</span>
+                <em>Suggerimenti e impostazioni</em>
+              </summary>
+              <div className="account-cluster__body space-y-5">
+                <AccountSubmissionsSection
+                  status={account.status}
+                  submissions={submissions.submissions}
+                  isLoading={submissions.isLoading}
+                  totalSubmissions={submissions.totalSubmissions}
+                  error={submissions.error}
+                  onRetry={submissions.reload}
+                />
+                <AccountPreferencesSection status={account.status} savedCount={workspace.saved} />
+              </div>
+            </details>
           </section>
 
-          {/* Right column */}
-          <aside className="col-span-12 space-y-5 lg:col-span-5">
-            <AccountSelectionSection
-              workspace={workspace}
-              savedToolCards={savedToolCards}
-              recommendedTools={recommendedTools}
-            />
-            <AccountSubmissionsSection
-              status={account.status}
-              submissions={submissions.submissions}
-              isLoading={submissions.isLoading}
-              totalSubmissions={submissions.totalSubmissions}
-              error={submissions.error}
-              onRetry={submissions.reload}
-            />
-            <AccountPreferencesSection status={account.status} savedCount={workspace.saved} />
-            <AccountJourneyPanel />
+          <aside className="col-span-12 space-y-5 lg:col-span-5 lg:order-1">
+            <details className="account-cluster">
+              <summary className="account-cluster__summary">
+                <span>Progresso e stato</span>
+                <em>Segnale e account</em>
+              </summary>
+              <div className="account-cluster__body space-y-5">
+                <AccountSignalProgressSection />
+                <AccountGamificationSection
+                  vibeRushBest={vibeRushBest}
+                  submissionsLoading={submissions.isLoading}
+                  totalSubmissions={submissions.totalSubmissions}
+                />
+                <AccountStatusSection account={account} />
+                <AccountPremiumSection status={account.status} savedCount={workspace.saved} />
+              </div>
+            </details>
+
+            <p>
+              <a className="account-link" href="/account/settings">Impostazioni account</a>
+            </p>
+            <details className="account-cluster">
+              <summary className="account-cluster__summary">
+                <span>Accesso e sicurezza</span>
+                <em>Credenziali e recupero</em>
+              </summary>
+              <div className="account-cluster__body space-y-5">
+                <AccountAccessSection account={account} form={signupForm} />
+                <AccountRecoverySection
+                  account={account}
+                  suppressAuthMessage={suppressAuthMessage}
+                />
+              </div>
+            </details>
           </aside>
         </div>
       </div>

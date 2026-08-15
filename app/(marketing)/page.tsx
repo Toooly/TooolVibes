@@ -9,6 +9,7 @@ import {
 import { gateCookieName } from "@/lib/gate/constants";
 import { verifyGateToken } from "@/lib/gate/session";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
+import { getHomepageControls } from "@/lib/content/homepage-controls";
 
 export async function generateMetadata() {
   const cookieStore = await cookies();
@@ -51,11 +52,16 @@ export default async function HomePage() {
     getPublicToolViews(),
     getToolSpotlightView(),
   ]);
+  const homepage = getHomepageControls();
+  const featured = homepage.featuredToolSlug
+    ? tools.find((tool) => tool.slug === homepage.featuredToolSlug) ?? spotlightTool
+    : spotlightTool;
 
   return (
     <DefinitiveHome
       tools={tools}
-      weeklyTool={spotlightTool}
+      weeklyTool={featured}
+      announcement={homepage.announcement.enabled ? homepage.announcement : null}
     />
   );
 }

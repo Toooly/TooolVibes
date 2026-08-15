@@ -1756,3 +1756,347 @@
 }
 
 /* Radius owned by .partner-stage (Partner Experience V3 stage token). */
+
+
+/* ── MVP 1.0 definitive — decision journey live state ── */
+.def-cockpit__promise {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.55rem;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tv-ink-on-dark, #f4f0ea) 72%, transparent);
+}
+.def-cockpit__promise span[aria-hidden="true"] {
+  opacity: 0.45;
+  font-weight: 500;
+}
+.def-cockpit__journey-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin: 0 0 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tv-ink-on-dark, #f4f0ea) 58%, transparent);
+}
+.def-cockpit__journey-live {
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 88%, white);
+}
+.def-cockpit__journey-live--idle {
+  color: color-mix(in srgb, var(--tv-ink-on-dark, #f4f0ea) 48%, transparent);
+}
+.def-cockpit__journey li.is-done > a span {
+  background: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 28%, transparent);
+  border-color: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 45%, transparent);
+  color: var(--tv-accent-cyan, #39d2f6);
+}
+.def-cockpit__journey li.is-done > a strong {
+  color: color-mix(in srgb, var(--tv-ink-on-dark, #f4f0ea) 82%, transparent);
+}
+.def-cockpit__journey li.is-active > a {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary, #6a3cff) 45%, transparent);
+}
+@media (max-width: 639px) {
+  .def-cockpit__promise {
+    font-size: 0.75rem;
+    gap: 0.3rem 0.4rem;
+  }
+}
+
+/* ── MVP 1.0 flagship hero elevation ── */
+.def-cockpit {
+  position: relative;
+  isolation: isolate;
+}
+.def-cockpit__inner {
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+}
+.def-cockpit__title {
+  font-size: clamp(2.15rem, 5.2vw, 4.15rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  max-width: 14ch;
+}
+.def-cockpit__lede {
+  max-width: 38rem;
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  line-height: 1.55;
+}
+.def-cockpit__hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: clamp(0px, 18vw, 22rem);
+}
+.def-cockpit__radar {
+  align-self: stretch;
+  display: flex;
+}
+.def-cockpit__radar > * {
+  flex: 1;
+  width: 100%;
+}
+@media (min-width: 1180px) {
+  .def-cockpit__inner {
+    grid-template-columns: minmax(0, 1.12fr) minmax(18rem, 0.88fr);
+    align-items: stretch;
+  }
+}
+@media (max-width: 767px) {
+  .def-cockpit__title {
+    max-width: none;
+    font-size: clamp(1.85rem, 8.5vw, 2.45rem);
+  }
+  .def-cockpit__ctas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+  }
+  .def-cockpit__cta--primary {
+    grid-column: 1 / -1;
+  }
+  .def-cockpit__journey ol {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.35rem;
+  }
+  .def-cockpit__journey li:not(:last-child)::after {
+    display: none;
+  }
+  .def-cockpit__journey li a {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    min-height: 4.25rem;
+    padding: 0.45rem 0.4rem;
+  }
+  .def-cockpit__journey li a em {
+    display: none;
+  }
+}
+
+/* Home Radar snapshot (not a mini full radar) */
+.tv-home-radar--snapshot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  height: 100%;
+  padding: 1rem 1.05rem 1.1rem;
+  border-radius: 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 22%, transparent);
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 14%, transparent), transparent 42%),
+    color-mix(in srgb, #0a0c12 92%, #1a1030);
+}
+.tv-home-radar--snapshot .tv-home-radar__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.tv-home-radar--snapshot .tv-home-radar__eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 85%, white);
+}
+.tv-home-radar--snapshot h2 {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #f4f0ea;
+  max-width: 16ch;
+}
+.tv-home-radar__pulse {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+.tv-home-radar__pulse > div {
+  padding: 0.55rem 0.6rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+.tv-home-radar__pulse-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(244, 240, 234, 0.5);
+}
+.tv-home-radar__pulse-value {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 1.35rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  color: #f4f0ea;
+  line-height: 1.1;
+}
+.tv-home-radar__pulse-value--sm {
+  font-size: 0.82rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+.tv-home-radar__launches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+.tv-home-radar__launch {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.55rem 0.65rem;
+  align-items: center;
+  padding: 0.55rem 0.65rem 0.65rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  min-height: 3.25rem;
+}
+.tv-home-radar__launch:hover {
+  border-color: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 35%, transparent);
+  background: rgba(255, 255, 255, 0.05);
+}
+.tv-home-radar__launch-rank {
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 90%, white);
+}
+.tv-home-radar__launch-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.tv-home-radar__launch-body strong {
+  font-size: 0.92rem;
+  color: #f4f0ea;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tv-home-radar__launch-body em {
+  font-style: normal;
+  font-size: 0.78rem;
+  color: rgba(244, 240, 234, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tv-home-radar__launch-metrics {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  color: rgba(244, 240, 234, 0.62);
+  white-space: nowrap;
+}
+.tv-home-radar__launch-bar {
+  grid-column: 1 / -1;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.tv-home-radar__launch-bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: var(--intensity, 0%);
+  background: linear-gradient(90deg, var(--tv-accent-primary, #6a3cff), var(--tv-accent-cyan, #39d2f6));
+}
+.tv-home-radar__empty {
+  margin: 0;
+  padding: 0.85rem 0.9rem;
+  border-radius: 0.8rem;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  color: rgba(244, 240, 234, 0.62);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  flex: 1;
+}
+.tv-home-radar--snapshot .tv-home-radar__cta {
+  margin-top: auto;
+  justify-content: center;
+  min-height: 44px;
+}
+.tv-home-radar--snapshot[data-refreshing="true"] {
+  opacity: 0.94;
+}
+@media (max-width: 639px) {
+  .tv-home-radar__pulse {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tv-home-radar__pulse > div:last-child {
+    grid-column: 1 / -1;
+  }
+}
+.def-cockpit, .def-cockpit__inner, .def-cockpit__hero, .tv-home-radar--snapshot {
+  max-width: 100%;
+  min-width: 0;
+}
+.def-cockpit__journey ol {
+  max-width: 100%;
+}
+.tv-home-radar__launch-metrics {
+  max-width: 5.5rem;
+}
+
+.def-home__announcement {
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: 0.75rem 1rem 0;
+}
+.def-home__announcement a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 30%, transparent);
+  padding: 0.45rem 0.9rem;
+  color: inherit;
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.def-home__announcement-media {
+  height: 1.5rem;
+  width: auto;
+  margin-right: 0.55rem;
+  object-fit: contain;
+}
+.def-home__announcement a {
+  display: inline-flex;
+  align-items: center;
+}

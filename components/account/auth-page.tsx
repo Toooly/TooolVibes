@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import Link from "next/link";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition } from "@/lib/motion/transitions";
 import { useAccount } from "./account-provider";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { useKeyboardAwareScroll } from "@/lib/hooks/use-keyboard-aware-scroll";
-import { Mail, User, ArrowRight, RotateCcw, Shield, Sparkles } from "lucide-react";
+import { Mail, User, RotateCcw, Sparkles } from "lucide-react";
 import { AccountStateBanner } from "./panel/account-state-banner";
 import { isAccountStateMatrixEnabled } from "./panel/account-state-flags";
 import {
@@ -16,8 +15,9 @@ import {
   shouldRenderAccountStateBanner,
 } from "./panel/account-state-matrix";
 import { useAccountOnlineStatus } from "./panel/use-account-online-status";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
-type AuthTab = "login" | "register" | "admin";
+type AuthTab = "login" | "register" | "recover";
 
 /* B59: ultimo magic link inviato con successo (cella link-pending). */
 type PendingMagicLink = {
@@ -34,7 +34,10 @@ export function AuthPage() {
   const [lastName, setLastName] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [pendingLink, setPendingLink] = useState<PendingMagicLink | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const isOnline = useAccountOnlineStatus();
+  const savedCount = useToolWorkspaceStore((s) => s.savedSlugs.length);
+  const compareCount = useToolWorkspaceStore((s) => s.compareSlugs.length);
 
   /* B39/MOB-703: scroll-to-input con tastiera aperta (iOS non ridimensiona
      il layout viewport); il container e' la card che racchiude i campi. */
@@ -43,7 +46,15 @@ export function AuthPage() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const normalizedEmail = email.trim().toLowerCase();
-    if (!normalizedEmail) return;
+    if (!normalizedEmail) {
+      setEmailError("Inserisci l'email del tuo spazio.");
+      return;
+    }
+    if (!normalizedEmail.includes("@") || !normalizedEmail.includes(".")) {
+      setEmailError("Questa email non sembra valida.");
+      return;
+    }
+    setEmailError(null);
 
     const metadata =
       activeTab === "register" && (firstName || lastName)
@@ -56,8 +67,8 @@ export function AuthPage() {
 
   const tabs: { key: AuthTab; label: string; icon: React.ComponentType<{ size?: number }> }[] = [
     { key: "login", label: "Accedi", icon: Mail },
-    { key: "register", label: "Registrati", icon: User },
-    { key: "admin", label: "Admin", icon: Shield },
+    { key: "register", label: "Crea spazio", icon: User },
+    { key: "recover", label: "Recupera", icon: RotateCcw },
   ];
 
   /* B59: cella state matrix per la superficie auth (offline, auth non
@@ -79,19 +90,26 @@ export function AuthPage() {
     <div id="member-access" className="v-auth-page tv-kbd-page scroll-mt-24">
       <div className="v-auth-container v-auth-container--split">
         <aside className="v-auth-context" aria-labelledby="account-context-title">
-          <p className="v-auth-context__eyebrow">Spazio personale</p>
+          <p className="v-auth-context__eyebrow">Memoria decisionale</p>
           <p id="account-context-title" className="v-auth-context__title">
-            Una memoria operativa per scegliere il tuo stack.
+            Riprendi da dove avevi lasciato.
           </p>
           <p>
-            Salvati, confronto e decisioni restano nello stesso percorso, senza
-            trasformare la selezione in un altro foglio da mantenere.
+            L&apos;account non è un modulo in più: è il posto in cui la tua
+            selezione resta disponibile, anche quando cambi dispositivo.
           </p>
-          <ul>
-            <li>Salva i candidati con il loro contesto.</li>
-            <li>Confronta da due a cinque tool.</li>
-            <li>Riapri note e decisioni quando serve.</li>
-          </ul>
+          {savedCount > 0 || compareCount > 0 ? (
+            <p className="v-auth-context__live">
+              Hai già {savedCount} tool salvati e {compareCount} nel confronto.
+              Entrando li porti nel tuo spazio.
+            </p>
+          ) : (
+            <ul>
+              <li>Salva i candidati con il loro contesto.</li>
+              <li>Confronta da due a cinque tool.</li>
+              <li>Riapri le decisioni quando serve.</li>
+            </ul>
+          )}
         </aside>
         <div
           ref={keyboardScrollRef}
@@ -103,16 +121,18 @@ export function AuthPage() {
               <BrandLogo size={44} priority fallback="png" />
             </div>
             <h1 className="v-auth-title">
-              {activeTab === "admin"
-                ? "Accesso amministratore"
-                : activeTab === "register"
-                  ? "Crea il tuo spazio personale"
-                  : "Accedi al tuo spazio personale"}
+              {activeTab === "register"
+                ? "Crea il tuo TooolVibes"
+                : activeTab === "recover"
+                  ? "Recupera il tuo spazio"
+                  : "Entra nel tuo TooolVibes"}
             </h1>
             <p className="v-auth-subtitle">
-              {activeTab === "admin"
-                ? "Accesso riservato agli amministratori"
-                : "Accedi al tuo workspace decisionale"}
+              {activeTab === "register"
+                ? "Due minuti per non perdere salvati, confronti e motivazioni."
+                : activeTab === "recover"
+                  ? "Stesso link sicuro: riapri salvati e confronti su questo dispositivo."
+                  : "Riprendi salvati e confronti con un link inviato alla tua email."}
             </p>
           </div>
 
@@ -144,26 +164,7 @@ export function AuthPage() {
           </div>
 
           {/* Content */}
-          {activeTab === "admin" ? (
-            <div className="v-auth-admin">
-              <div className="v-auth-admin-icon">
-                <Shield size={28} />
-              </div>
-              <p className="v-auth-admin-title">Accesso amministratore</p>
-              <p className="v-auth-admin-desc">
-                Portale dedicato per la gestione dei contenuti, degli strumenti e delle raccolte.
-              </p>
-              <Link
-                href="/admin/login"
-                className="v-auth-btn-primary v-auth-btn-admin"
-              >
-                <Shield size={16} />
-                Accedi come amministratore
-                <ArrowRight size={14} />
-              </Link>
-            </div>
-          ) : (
-            <div className="v-auth-form-wrapper">
+          <div className="v-auth-form-wrapper">
               <form onSubmit={handleSubmit} className="v-auth-form" noValidate>
                 {/* Register fields */}
                 {activeTab === "register" && (
@@ -217,8 +218,12 @@ export function AuthPage() {
                       spellCheck={false}
                       required
                       className="v-auth-input tv-kbd-input"
+                      aria-invalid={Boolean(emailError)}
                     />
                   </div>
+                  {emailError ? (
+                    <p className="v-auth-message v-auth-message--error" role="alert">{emailError}</p>
+                  ) : null}
                 </div>
 
                 {/* Consent register */}
@@ -248,15 +253,20 @@ export function AuthPage() {
                       <Sparkles size={16} className="v-auth-spin" />
                       Invio in corso...
                     </>
-                  ) : activeTab === "login" ? (
+                  ) : activeTab === "register" ? (
                     <>
-                      <Mail size={16} />
-                      Accedi con email
+                      <User size={16} />
+                      Crea il mio spazio
+                    </>
+                  ) : activeTab === "recover" ? (
+                    <>
+                      <RotateCcw size={16} />
+                      Invia link di recupero
                     </>
                   ) : (
                     <>
-                      <User size={16} />
-                      Registrati
+                      <Mail size={16} />
+                      Entra nel mio TooolVibes
                     </>
                   )}
                 </button>
@@ -265,11 +275,12 @@ export function AuthPage() {
               {/* Info */}
               <p className="v-auth-info">
                 {activeTab === "login"
-                  ? "Inserisci la tua email. Ti invieremo un link sicuro per accedere."
-                  : "Inserisci i tuoi dati. Ti invieremo una mail di conferma per attivare l'account."}
+                  ? "Ti inviamo un link. Nessuna password da ricordare."
+                  : activeTab === "recover"
+                    ? "Se l'email è già nello spazio, ricevi un nuovo link di accesso."
+                    : "Ti inviamo una mail di conferma. I salvati ospiti restano con te."}
               </p>
             </div>
-          )}
 
           {/* State matrix (B59): offline / unavailable / link pending */}
           {showStateBanner ? (
@@ -322,15 +333,15 @@ export function AuthPage() {
           {/* Footer */}
           <div className="v-auth-footer">
             <p>
-              {activeTab === "login"
-                ? "Non hai un account? "
-                : "Hai già un account? "}
+              {activeTab === "register"
+                ? "Hai già uno spazio? "
+                : "Non hai ancora uno spazio? "}
               <button
                 type="button"
                 className="v-auth-link"
-                onClick={() => setActiveTab(activeTab === "login" ? "register" : "login")}
+                onClick={() => setActiveTab(activeTab === "register" ? "login" : "register")}
               >
-                {activeTab === "login" ? "Registrati" : "Accedi"}
+                {activeTab === "register" ? "Accedi" : "Crea spazio"}
               </button>
             </p>
           </div>

@@ -105,7 +105,7 @@
   border-color: var(--tv-border-inverted) !important;
   background: var(--tv-surface-inverted) !important;
   color: var(--tv-ink-inverted) !important;
-  box-shadow: none !important;
+  box-shadow: none;
 }
 
 .marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(h1, h2, h3, h4, strong) {
@@ -159,10 +159,10 @@
   --accent-strong: var(--tv-accent-brand-aa);
   overflow: hidden;
   border: 1px solid var(--tv-border-subtle) !important;
-  border-radius: var(--tv-radius-modal) !important;
+  border-radius: var(--tv-radius-modal);
   background: var(--tv-bg-base) !important;
   color: var(--tv-ink-primary) !important;
-  box-shadow: none !important;
+  box-shadow: none;
 }
 
 .marketing-shell main .hero-shell :where(h1, h2, h3, strong),
@@ -182,10 +182,10 @@
   --muted-strong: var(--tv-ink-secondary);
   --accent-strong: var(--tv-accent-brand-aa);
   border: 1px solid var(--tv-border-subtle) !important;
-  border-radius: var(--tv-radius-feature) !important;
+  border-radius: var(--tv-radius-feature);
   background: var(--tv-surface-raised) !important;
   color: var(--tv-ink-primary) !important;
-  box-shadow: var(--tv-elevation-rest) !important;
+  box-shadow: var(--tv-elevation-rest);
 }
 
 .marketing-shell main .hero-mini-visual,
@@ -194,7 +194,7 @@
   border-color: var(--tv-border-subtle) !important;
   background: var(--tv-surface-elevated) !important;
   color: var(--tv-ink-primary) !important;
-  box-shadow: none !important;
+  box-shadow: none;
 }
 
 .marketing-shell main .hero-shell .hero-mini-visual,
@@ -203,7 +203,7 @@
   border-color: var(--tv-border-subtle) !important;
   background: var(--tv-surface-elevated) !important;
   color: var(--tv-ink-primary) !important;
-  box-shadow: none !important;
+  box-shadow: none;
 }
 
 #main-content :where(.hero-shell, .premium-panel) [class*="bg-white/"]:not(.premium-button):not(.premium-button *) {
@@ -275,7 +275,7 @@
   border-color: var(--tv-border-subtle) !important;
   background: var(--tv-surface-raised) !important;
   color: var(--tv-ink-primary) !important;
-  box-shadow: var(--tv-elevation-rest) !important;
+  box-shadow: var(--tv-elevation-rest);
 }
 
 #main-content .dark-panel :where(h1, h2, h3, h4, strong) {
@@ -431,7 +431,7 @@
 
 /* ────────────────────────────────────────────────────────────────
    Light-bg CTA inside dark hero panels.
-   .hero-shell declares color: var(--tv-ink-primary) !important
+   .hero-shell declares a forced light foreground on descendants
    which forces every descendant to light text. But buttons/cards
    that opt into a light background (bg-white) MUST keep dark text
    to stay visible. Restore the foreground locally.
@@ -495,7 +495,7 @@
    of a non-ivory wrapper inside an ivory parent (e.g. the cards
    inside .brand-panel on affiliati/posts). Force the ivory token
    there. Specificity must match or exceed the .marketing-shell main
-   > .editorial-label override (which is 0,0,3,0 with !important). */
+   > .editorial-label override (specificity 0,0,3,0, forced color). */
 .marketing-shell main .brand-panel .editorial-label,
 .marketing-shell main .light-surface .editorial-label,
 .marketing-shell main .metadata-block .editorial-label,

@@ -54,7 +54,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development" && process.env.TOOOLVIBES_SKIP_OPENNEXT !== "1") {
   void initOpenNextCloudflareForDev();
 }
 

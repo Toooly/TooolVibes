@@ -1052,6 +1052,30 @@
   );
   --tv-kbd-input-min-font-size: 1rem;
 
+
+  /* Collections editorial accents — owned here so feature sheets do not
+     declare :root custom properties. Values unchanged from collections.css. */
+  --cx-accent-indigo: #7c8cff;
+  --cx-accent-violet: #a78bfa;
+  --cx-accent-teal: #5eead4;
+  --cx-accent-amber: #fbbf24;
+  --cx-accent-indigo-on-dark: #a8b3ff;
+  --cx-accent-violet-on-dark: #c7b6ff;
+  --cx-accent-teal-on-dark: #8ef0dd;
+  --cx-accent-amber-on-dark: #ffd668;
+  --cx-accent-indigo-soft: color-mix(in srgb, var(--cx-accent-indigo) 22%, transparent);
+  --cx-accent-violet-soft: color-mix(in srgb, var(--cx-accent-violet) 22%, transparent);
+  --cx-accent-teal-soft: color-mix(in srgb, var(--cx-accent-teal) 22%, transparent);
+  --cx-accent-amber-soft: color-mix(in srgb, var(--cx-accent-amber) 22%, transparent);
+  --cx-stack-spine: var(--tv-border-inverted-default);
+  --cx-stack-spine-strong: var(--cx-border-strong, currentColor);
+  --cx-stack-marker-size: 1.75rem;
+  --cx-stack-indent: 2.25rem;
+  --cx-stack-gap-y: 1.5rem;
+  --cx-card-signal-fs: var(--tv-text-sm, 0.875rem);
+  --cx-card-signal-color: var(--tv-ink-secondary);
+  --cx-card-signal-weight: 480;
+
   /* Runtime-updated tokens. Compatibility defaults live in SECTION 5; */
   /* GlobalExperienceLayer replaces pointer/scroll values at runtime. */
 }

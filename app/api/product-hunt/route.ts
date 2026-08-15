@@ -119,8 +119,8 @@ function getDevelopmentQaFixture(
         tagline: "Segnale deterministico per il QA visuale locale.",
         votesCount: 420,
         commentsCount: 32,
-        productHuntUrl:
-          "https://www.producthunt.com/posts/fixture-canvas",
+        productHuntUrl: "https://www.producthunt.com/posts/fixture-canvas",
+        thumbnailUrl: "https://ph-files.imgix.net/sample.png",
       },
       {
         id: "stable-signal",
@@ -128,8 +128,7 @@ function getDevelopmentQaFixture(
         tagline: "Dato ripetibile per verificare il layout responsive.",
         votesCount: 318,
         commentsCount: 21,
-        productHuntUrl:
-          "https://www.producthunt.com/posts/stable-signal",
+        productHuntUrl: "https://www.producthunt.com/posts/stable-signal",
       },
       {
         id: "release-lens",
@@ -137,8 +136,40 @@ function getDevelopmentQaFixture(
         tagline: "Terzo elemento fisso della classifica di test.",
         votesCount: 207,
         commentsCount: 14,
-        productHuntUrl:
-          "https://www.producthunt.com/posts/release-lens",
+        productHuntUrl: "https://www.producthunt.com/posts/release-lens",
+      },
+      {
+        id: "long-name-orchestrator",
+        name: "Ultra Long Named Decision Orchestrator Platform X",
+        tagline:
+          "Tagline molto lunga per stressare wrapping tipografico su mobile e tablet senza collidere con metriche o rank.",
+        votesCount: 88,
+        commentsCount: 120,
+        productHuntUrl: "https://www.producthunt.com/posts/long-name-orchestrator",
+      },
+      {
+        id: "quiet-launch",
+        name: "Quiet",
+        tagline: "Short.",
+        votesCount: 0,
+        commentsCount: 0,
+        productHuntUrl: "https://www.producthunt.com/posts/quiet-launch",
+      },
+      {
+        id: "talky-beta",
+        name: "Talky Beta",
+        tagline: "Alto rapporto discussione/voto nel set corrente.",
+        votesCount: 12,
+        commentsCount: 96,
+        productHuntUrl: "https://www.producthunt.com/posts/talky-beta",
+      },
+      {
+        id: "no-thumb-signal",
+        name: "NoThumb Signal",
+        tagline: "Senza thumbnail per verificare fallback glyph.",
+        votesCount: 55,
+        commentsCount: 3,
+        productHuntUrl: "https://www.producthunt.com/posts/no-thumb-signal",
       },
     ],
   };

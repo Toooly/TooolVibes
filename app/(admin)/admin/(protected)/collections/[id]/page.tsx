@@ -402,6 +402,9 @@ export default async function AdminCollectionDetailPage({
               />
             </div>
             <CollectionForm
+        entityTitle={collection.title}
+        entityStatus={collection.editorial_state}
+        backHref="/admin/collections"
               action={boundAction}
               initialValues={getCollectionFormValues(collection)}
               submitLabel="Salva raccolta"

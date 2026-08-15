@@ -34,6 +34,7 @@ export function CollectionDecisionNotesV4({
 
   return (
     <section
+      id="cx-detail-decision"
       className="cx-decision-notes-v4 motion-reveal"
       aria-labelledby="cx-decision-notes-title"
     >

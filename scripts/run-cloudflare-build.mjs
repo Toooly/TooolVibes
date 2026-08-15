@@ -76,4 +76,11 @@ const patch = spawnSync("node", ["scripts/patch-opennext-worker.mjs"], {
   env,
   stdio: "inherit",
 });
-process.exit(patch.status ?? 1);
+if (patch.status !== 0) process.exit(patch.status ?? 1);
+
+const restore = spawnSync("node", ["scripts/release/restore-next-after-open-next.mjs"], {
+  cwd: root,
+  env: process.env,
+  stdio: "inherit",
+});
+process.exit(restore.status ?? 1);

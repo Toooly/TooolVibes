@@ -25,10 +25,19 @@
  */
 
 import {
-  ALL_SPONSOR_CAMPAIGNS,
+  getManagedCampaigns,
+  getPlacementOverride,
+  type CommercialOverrides,
+} from "@/lib/sponsors/commercial-overrides";
+import {
   type SponsorCampaign,
   type SponsorRouteKey,
 } from "@/lib/sponsors/sponsor-placements";
+
+export type PartnerResolveOptions = {
+  campaigns?: readonly SponsorCampaign[];
+  overrides?: CommercialOverrides;
+};
 
 export type PartnerResolutionStrategy = "rotation" | "contextual";
 
@@ -163,12 +172,13 @@ function pickDeterministic(
  * Resolve the campaign for a placement, or null when no eligible/relevant
  * campaign exists (the caller then renders the Open Slot or nothing).
  */
-export function resolvePartnerCampaign(
+function resolvePartnerCampaignAuto(
   ctx: PartnerResolutionContext,
+  campaigns: readonly SponsorCampaign[],
 ): SponsorCampaign | null {
   const now = ctx.now ?? new Date();
 
-  let candidates = ALL_SPONSOR_CAMPAIGNS.filter((campaign) =>
+  let candidates = campaigns.filter((campaign) =>
     isCampaignEligible(campaign, ctx.route, now),
   );
 
@@ -240,4 +250,33 @@ export function buildPartnerDestinationUrl(
   } catch {
     return raw;
   }
+}
+
+
+export function resolvePartnerCampaign(
+  ctx: PartnerResolutionContext,
+  options: PartnerResolveOptions = {},
+): SponsorCampaign | null {
+  const now = ctx.now ?? new Date();
+  const campaigns = options.campaigns ?? getManagedCampaigns(options.overrides);
+  const override = getPlacementOverride(ctx.placementKey, options.overrides);
+
+  if (override.mode === "off") {
+    return null;
+  }
+
+  if (override.mode === "pin" && override.campaignId) {
+    const pinned = campaigns.find(
+      (campaign) => campaign.id === override.campaignId,
+    );
+    if (
+      pinned &&
+      isCampaignEligible(pinned, ctx.route, now) &&
+      pinned.toolSlug !== ctx.toolSlug
+    ) {
+      return pinned;
+    }
+  }
+
+  return resolvePartnerCampaignAuto(ctx, campaigns);
 }

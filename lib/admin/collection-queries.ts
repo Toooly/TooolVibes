@@ -12,6 +12,7 @@ import { buildCollectionRepositorySnapshot } from "@/lib/collections/editorial";
 import { contentCollections } from "@/lib/data/content-collections";
 import { getCollectionRepositorySnapshot } from "@/lib/data/collection-repository";
 import { mockCollections } from "@/lib/data/mock-collections";
+import { getQaCollection, getQaEditorialStore } from "@/lib/admin/qa-editorial-store";
 import {
   canAccessSupabaseCollectionsAdmin,
   getAdminCollectionByIdFromSupabase,
@@ -70,7 +71,16 @@ export const isSupabaseCollectionsWriteEnabled = cache(async () => {
   return canAccessSupabaseCollectionsAdmin();
 });
 
-export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectionsRuntime> => {
+function attachQaCollections<T extends { collections: Awaited<ReturnType<typeof getQaEditorialStore>>["collections"] }>(runtime: T): T {
+  const qa = getQaEditorialStore().collections;
+  const ids = new Set(qa.map((item) => item.id));
+  return {
+    ...runtime,
+    collections: [...qa, ...runtime.collections.filter((item) => !ids.has(item.id))],
+  };
+}
+
+const loadAdminCollectionsRuntime = cache(async (): Promise<AdminCollectionsRuntime> => {
   const publicSnapshot = await getCollectionRepositorySnapshot();
   const canWrite = await isSupabaseCollectionsWriteEnabled();
   let canReview = isSupabaseAdminEnabled()
@@ -222,12 +232,20 @@ export const getAdminCollectionsRuntime = cache(async (): Promise<AdminCollectio
   };
 });
 
+export async function getAdminCollectionsRuntime() {
+  return attachQaCollections(await loadAdminCollectionsRuntime());
+}
+
 export async function getAdminCollections() {
   const runtime = await getAdminCollectionsRuntime();
-  return runtime.collections;
+  const qa = getQaEditorialStore().collections;
+  const ids = new Set(qa.map((item) => item.id));
+  return [...qa, ...runtime.collections.filter((item) => !ids.has(item.id))];
 }
 
 export async function getAdminCollectionById(id: string) {
+  const qaCollection = getQaCollection(id);
+  if (qaCollection) return qaCollection;
   const runtime = await getAdminCollectionsRuntime();
 
   if (runtime.canWrite) {

@@ -71,7 +71,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
               title="Catalogo operativo, non solo lista."
               description="Qui gestisci i tool che alimentano homepage, catalogo, raccolte, confronto e schede pubbliche."
             />
-            <div className="flex flex-wrap gap-3">
+            <div className="admin-sticky-actions flex flex-wrap gap-3">
               <Link
                 href="/admin/tools/new"
                 className="button-shell button-primary rounded-full px-5 py-3 text-sm font-semibold text-white"

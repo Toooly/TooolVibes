@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { AdminCommandPalette } from "@/components/admin/admin-command-palette";
 import {
   BadgeDollarSign,
   LayoutGrid,
@@ -33,17 +34,47 @@ type FounderControlCenterV2Props = {
 };
 
 const navItems = [
-  { href: "/admin", label: "Dashboard", icon: Gauge },
-  { href: "/admin/tools", label: "Tool", icon: Wrench },
-  { href: "/admin/tools/new", label: "Nuovo tool", icon: Plus, primary: true },
-  { href: "/admin/articles", label: "Articoli", icon: FileText },
-  { href: "/admin/collections", label: "Raccolte", icon: LayoutGrid },
-  { href: "/admin/monetization", label: "Monetizzazione", icon: BadgeDollarSign },
-  { href: "/admin/affiliates", label: "Affiliati", icon: Sparkles },
-  { href: "/admin/affiliate-links", label: "Link", icon: LayoutGrid },
-  { href: "/admin/suggestions", label: "Suggerimenti", icon: AlertCircle },
-  { href: "/", label: "Sito", icon: Globe },
+  { href: "/admin", label: "Overview", icon: Gauge, group: "Overview" },
+  { href: "/admin/tools", label: "Tool", icon: Wrench, group: "Content" },
+  { href: "/admin/tools/new", label: "Nuovo tool", icon: Plus, primary: true, group: "Content" },
+  { href: "/admin/articles", label: "Guide", icon: FileText, group: "Content" },
+  { href: "/admin/collections", label: "Raccolte", icon: LayoutGrid, group: "Content" },
+  { href: "/admin/composer", label: "Homepage", icon: Sparkles, group: "Composer" },
+  { href: "/admin/media", label: "Media", icon: LayoutGrid, group: "Media" },
+  { href: "/admin/commercial/partners", label: "Partner", icon: BadgeDollarSign, group: "Commercial" },
+  { href: "/admin/commercial/campaigns", label: "Campagne", icon: BadgeDollarSign, group: "Commercial" },
+  { href: "/admin/commercial/placements", label: "Placement", icon: BadgeDollarSign, group: "Commercial" },
+  { href: "/admin/commercial/preview", label: "Preview ads", icon: BadgeDollarSign, group: "Commercial" },
+  { href: "/admin/monetization", label: "Inventario", icon: BadgeDollarSign, group: "Commercial" },
+  { href: "/admin/affiliates", label: "Affiliati", icon: Sparkles, group: "Community" },
+  { href: "/admin/affiliate-links", label: "Link affiliati", icon: LayoutGrid, group: "Community" },
+  { href: "/admin/suggestions", label: "Suggerimenti", icon: AlertCircle, group: "Community" },
+  { href: "/", label: "Sito", icon: Globe, group: "System" },
 ];
+
+
+const desktopNavItems = navItems.filter((item) =>
+  [
+    "/admin",
+    "/admin/tools",
+    "/admin/articles",
+    "/admin/collections",
+    "/admin/composer",
+    "/admin/commercial/partners",
+    "/admin/media",
+    "/",
+  ].includes(item.href),
+);
+
+const navGroups = navItems.reduce<Array<{ label: string; items: typeof navItems }>>((groups, item) => {
+  const last = groups.at(-1);
+  if (!last || last.label !== item.group) {
+    groups.push({ label: item.group, items: [item] });
+    return groups;
+  }
+  last.items.push(item);
+  return groups;
+}, []);
 
 function StatusIndicator({ active, label }: { active: boolean; label: string }) {
   return (
@@ -173,8 +204,8 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden items-center gap-1 md:flex">
-              {navItems.map((item) => {
+            <nav className="hidden items-center gap-1 lg:flex">
+              {desktopNavItems.map((item) => {
                 const isActive =
                   item.href === "/admin"
                     ? pathname === "/admin"
@@ -199,6 +230,11 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
                     <span className="relative z-10 flex items-center gap-2">
                       <item.icon size={14} />
                       <span className="font-medium">{item.label}</span>
+                      {(adminMetrics?.openSuggestions ?? 0) > 0 && item.href === "/admin/suggestions" ? (
+                        <span className="rounded-full bg-[rgba(57,210,246,0.18)] px-1.5 py-0.5 text-xs font-bold tabular-nums text-[rgb(57,210,246)]">
+                          {adminMetrics?.openSuggestions}
+                        </span>
+                      ) : null}
                     </span>
                   </Link>
                 );
@@ -207,23 +243,24 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
 
             {/* Right actions */}
             <div className="flex items-center gap-3">
+              <AdminCommandPalette />
               <StatusIndicator
                 active={articlesRuntime.canWrite}
-                label={articlesRuntime.canWrite ? "Modifica attiva" : "Sola lettura"}
+                label={articlesRuntime.canWrite ? "CMS attivo" : "CMS in lettura"}
               />
               <form action="/api/admin/logout" method="post" className="hidden sm:block">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="submit"
-                  className="flex items-center gap-2 rounded-xl border border-[rgba(255,255,255,0.1)] bg-white/5 px-3 py-2 text-xs font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[rgba(255,255,255,0.1)] bg-white/5 px-3 py-2 text-xs font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
                 >
                   <LogOut size={12} />
                   Esci
                 </motion.button>
               </form>
               <button
-                className="flex rounded-xl p-2 text-white/60 transition-colors hover:bg-white/5 hover:text-white md:hidden"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-xl p-2 text-white/60 transition-colors hover:bg-white/5 hover:text-white lg:hidden"
                 onClick={() => setMenuOpen(!menuOpen)}
               >
                 {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -249,7 +286,7 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-[rgba(5,3,19,0.8)] backdrop-blur-md md:hidden"
+            className="fixed inset-0 z-40 bg-[rgba(5,3,19,0.8)] backdrop-blur-md lg:hidden"
             onClick={() => setMenuOpen(false)}
           >
             <motion.nav
@@ -260,36 +297,39 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
               className="absolute right-0 top-0 h-full w-[280px] border-l border-[rgba(106,60,255,0.15)] bg-[#0d0823] p-6 pt-20"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex flex-col gap-2">
-                {navItems.map((item, i) => {
-                  const isActive =
-                    item.href === "/admin"
-                      ? pathname === "/admin"
-                      : pathname === item.href || pathname?.startsWith(item.href + "/");
-                  return (
-                    <motion.div
-                      key={item.href}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                    >
-                      <Link
-                        href={item.href}
-                        className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm transition-all ${
-                          isActive
-                            ? "bg-gradient-to-r from-[rgba(106,60,255,0.2)] to-transparent text-white border border-[rgba(106,60,255,0.15)]"
-                            : "text-white/60 hover:bg-white/5 hover:text-white"
-                        }`}
-                      >
-                        <span className="flex items-center gap-3">
-                          <item.icon size={16} />
-                          {item.label}
-                        </span>
-                        <ChevronRight size={14} className={isActive ? "opacity-100" : "opacity-0"} />
-                      </Link>
-                    </motion.div>
-                  );
-                })}
+              <div className="flex flex-col gap-5">
+                {navGroups.map((group) => (
+                  <div key={group.label}>
+                    <p className="mb-2 px-4 text-xs font-bold uppercase tracking-[0.16em] text-white/35">
+                      {group.label}
+                    </p>
+                    <div className="flex flex-col gap-1">
+                      {group.items.map((item) => {
+                        const isActive =
+                          item.href === "/admin"
+                            ? pathname === "/admin"
+                            : pathname === item.href || pathname?.startsWith(item.href + "/");
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm transition-all ${
+                              isActive
+                                ? "bg-gradient-to-r from-[rgba(106,60,255,0.2)] to-transparent text-white border border-[rgba(106,60,255,0.15)]"
+                                : "text-white/60 hover:bg-white/5 hover:text-white"
+                            }`}
+                          >
+                            <span className="flex items-center gap-3">
+                              <item.icon size={16} />
+                              {item.label}
+                            </span>
+                            <ChevronRight size={14} className={isActive ? "opacity-100" : "opacity-0"} />
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
               <div className="mt-6 border-t border-white/10 pt-6">
                 <form action="/api/admin/logout" method="post">

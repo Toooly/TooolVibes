@@ -31,6 +31,8 @@ import {
 } from "@/lib/supabase/collection-safe-align-repository";
 import { getAdminTools } from "@/lib/admin/tool-queries";
 import { requireAdminSession } from "@/lib/admin/session";
+import { isQaCollectionId } from "@/lib/admin/qa-editorial-store";
+import { persistQaCollection } from "@/lib/admin/qa-editorial-persist";
 import {
   revalidateCollectionPaths,
   appendStatusParams,
@@ -97,6 +99,22 @@ export async function updateCollectionFormAction(
 
   if (!isValidUuid(id)) {
     return { status: "error", message: "ID raccolta non valido." };
+  }
+
+  if (isQaCollectionId(id)) {
+    const tools = await getAdminTools();
+    const parsed = parseCollectionFormData(formData, new Set(tools.map((tool) => tool.slug)));
+    if (!parsed.ok) return parsed.state;
+    const now = new Date().toISOString();
+    const existing = await getAdminCollectionById(id);
+    await persistQaCollection({
+      ...(existing ?? { id, created_at: now }),
+      ...parsed.data,
+      id,
+      updated_at: now,
+    } as Awaited<ReturnType<typeof getAdminCollectionById>> & { id: string });
+    revalidateCollectionPaths(parsed.data.slug, parsed.data.included_tools.map((slot) => slot.tool_slug));
+    redirect(`/admin/collections/${id}?status=updated`);
   }
 
   if (!(await isSupabaseCollectionsWriteEnabled())) {

@@ -128,7 +128,8 @@ export function slugifyCollectionTitle(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function isValidUrl(value: string) {
+function isValidMediaRef(value: string) {
+  if (value.startsWith("/") && !value.startsWith("//")) return true;
   try {
     new URL(value);
     return true;
@@ -324,7 +325,7 @@ export function parseCollectionFormData(
     fieldErrors.description = "Scrivi una descrizione utile e leggibile.";
   }
 
-  if (!isValidUrl(rawCoverImageUrl)) {
+  if (!isValidMediaRef(rawCoverImageUrl)) {
     fieldErrors.cover_image_url = "Inserisci un URL immagine valido.";
   }
 

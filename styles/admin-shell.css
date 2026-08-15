@@ -1,0 +1,66 @@
+/* Admin operational console — responsive contract (MVP 1.0 closure) */
+[data-admin-shell] {
+  --admin-gutter: clamp(0.75rem, 2vw, 1.25rem);
+}
+[data-admin-shell] .page-shell {
+  padding-inline: var(--admin-gutter);
+  max-width: 100%;
+  min-width: 0;
+}
+[data-admin-shell] main {
+  min-width: 0;
+}
+/* Dense lists: ensure cards never force page overflow */
+[data-admin-shell] .interactive-surface,
+[data-admin-shell] .brand-panel {
+  max-width: 100%;
+  min-width: 0;
+}
+/* Filter chip rails: deliberate scroll with edge fade */
+[data-admin-shell] .tool-rail {
+  scrollbar-width: thin;
+  mask-image: linear-gradient(90deg, #000 92%, transparent);
+}
+[data-admin-shell] .tool-rail::-webkit-scrollbar {
+  height: 6px;
+}
+/* Sticky action clusters on small screens */
+@media (max-width: 767px) {
+  [data-admin-shell] .admin-sticky-actions {
+    position: sticky;
+    bottom: 0.75rem;
+    z-index: 30;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.65rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(10, 10, 18, 0.92);
+    backdrop-filter: blur(12px);
+  }
+  [data-admin-shell] .admin-sticky-actions a,
+  [data-admin-shell] .admin-sticky-actions button {
+    min-height: 44px;
+  }
+  /* Prefer stacked meta grids */
+  [data-admin-shell] .xl\:grid-cols-\[1\.35fr_0\.9fr_auto\] {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* Tablet composition */
+@media (min-width: 768px) and (max-width: 1100px) {
+  [data-admin-shell] main {
+    padding-inline: 1rem;
+  }
+  [data-admin-shell] nav.md\:flex {
+    flex-wrap: wrap;
+    max-width: min(48rem, 100%);
+  }
+}
+/* Desktop console density */
+@media (min-width: 1180px) {
+  [data-admin-shell] main {
+    padding-bottom: 2.5rem;
+  }
+}

@@ -262,8 +262,8 @@ export async function attachCanonicalWorkspace(
     const account = await viewerForUser(userId);
     const current = await viewerFromCookie();
     let viewer: ViewerProfileRow;
-    const input = localState;
     const guestContribution = guestState;
+    const input = account ? createEmptyWorkspaceState() : localState;
     if (account) {
       viewer = account;
       if (current?.kind === "guest" && current.id !== account.id) {

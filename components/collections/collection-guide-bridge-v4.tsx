@@ -29,6 +29,7 @@ export function CollectionGuideBridgeV4({
 
   return (
     <section
+      id="cx-detail-guides"
       className="cx-guide-bridge-v4 motion-reveal"
       aria-labelledby="cx-guide-bridge-title"
     >

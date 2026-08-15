@@ -47,7 +47,7 @@ const CARDS = [
 const INVENTORY = [
   { title: "Prodotti pubblicati", value: "0", caption: "Nessun catalogo finto" },
   { title: "Risorse in lavorazione", value: "0", caption: "Solo se verificabili" },
-  { title: "Periodo di apertura", value: "—", caption: "Da definire" },
+  { title: "Periodo di apertura", value: "Non annunciato", caption: "Nessuna data pubblica" },
 ] as const;
 
 export default function ShopPage() {

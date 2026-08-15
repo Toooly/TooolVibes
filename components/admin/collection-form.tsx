@@ -2,8 +2,9 @@
 
 import type { ReactNode } from "react";
 import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
 
+import { MediaLibraryPicker } from "@/components/admin/media-library-picker";
+import { EditorHeader, EditorShell, EditorStickyBar, useEditorDirty } from "@/components/admin/editor-ux";
 import {
   collectionAccessModes,
   collectionAudiences,
@@ -35,6 +36,10 @@ type CollectionFormProps = {
   initialValues?: Partial<CollectionFormValues>;
   submitLabel: string;
   disabled?: boolean;
+  backHref?: string;
+  entityTitle?: string;
+  entityStatus?: string;
+  updatedAt?: string | null;
   availableTools: Array<{
     slug: string;
     name: string;
@@ -42,20 +47,6 @@ type CollectionFormProps = {
     is_published?: boolean;
   }>;
 };
-
-function SubmitButton({ label, disabled = false }: { label: string; disabled?: boolean }) {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      disabled={disabled || pending}
-      className="button-shell button-primary rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
-    >
-      {pending ? "Salvataggio..." : label}
-    </button>
-  );
-}
 
 function FieldError({ error }: { error?: string }) {
   if (!error) {
@@ -150,9 +141,14 @@ export function CollectionForm({
   initialValues,
   submitLabel,
   disabled = false,
+  backHref = "/admin/collections",
+  entityTitle,
+  entityStatus,
+  updatedAt,
   availableTools,
 }: CollectionFormProps) {
   const [state, formAction] = useActionState(action, initialCollectionFormState);
+  const { dirty, markDirty } = useEditorDirty(state.status);
   const values = {
     ...getCollectionFormValues(),
     ...initialValues,
@@ -171,7 +167,9 @@ export function CollectionForm({
   const editorialStateMeta = getCollectionEditorialStateMeta(values.editorial_state);
 
   return (
-    <form action={formAction} className="space-y-8">
+    <EditorShell dirty={dirty} onDirty={markDirty}>
+    <form action={formAction} className="space-y-8" onChange={markDirty}>
+      <EditorHeader backHref={backHref} eyebrow="Raccolta" title={entityTitle || values.title || "Nuova raccolta"} status={entityStatus} updatedAt={updatedAt} />
       {state.status === "error" && state.message ? (
         <div
           className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
@@ -309,14 +307,18 @@ export function CollectionForm({
             <label className="block">
               <FieldLabel label="URL immagine di copertina" />
               <input
-                name="cover_image_url"
                 type="url"
                 defaultValue={values.cover_image_url}
+                readOnly
+                aria-label="URL copertina selezionato"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
                 style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
-                required
               />
               <FieldError error={state.fieldErrors?.cover_image_url} />
+              <div className="mt-4">
+                <FieldLabel label="Scegli dalla media library" />
+                <MediaLibraryPicker fieldName="cover_image_url" defaultValue={values.cover_image_url} />
+              </div>
             </label>
 
             <label className="block">
@@ -717,13 +719,8 @@ export function CollectionForm({
         </FormSection>
       </fieldset>
 
-      <div className="brand-panel flex flex-col gap-4 rounded-[28px] p-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-[42rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
-          I salvataggi passano da controlli protetti, separati dalla lettura pubblica.
-          Se l’archivio non è davvero attivo, il modulo resta leggibile ma non forza salvataggi ambigui.
-        </p>
-        <SubmitButton label={submitLabel} disabled={disabled} />
-      </div>
+      <EditorStickyBar dirty={dirty} label={submitLabel} disabled={disabled} error={state.status === "error" ? state.message : undefined} />
     </form>
+    </EditorShell>
   );
 }

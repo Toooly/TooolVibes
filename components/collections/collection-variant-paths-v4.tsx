@@ -136,6 +136,7 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
   return (
     <section
       className="cx-variant-paths-v4 cx-variant-paths-v4--additive motion-reveal"
+      id="cx-detail-variants"
       aria-labelledby="cx-variants-title"
     >
       <header className="cx-variant-paths-v4__head">
@@ -250,6 +251,7 @@ function PathBasedVariants({ collection }: { collection: CuratedCollection }) {
   return (
     <section
       className="cx-variant-paths-v4 cx-variant-paths-v4--path motion-reveal"
+      id="cx-detail-variants"
       aria-labelledby="cx-variants-title"
     >
       <header className="cx-variant-paths-v4__head">

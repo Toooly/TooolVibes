@@ -102,7 +102,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
     const email = screen.getByLabelText("Email");
     expect(email.className).toContain("tv-kbd-input");
 
-    const submit = screen.getByRole("button", { name: /Accedi con email/ });
+    const submit = screen.getByRole("button", { name: /Entra nel mio TooolVibes/ });
     expect(submit.className).toContain("tv-kbd-sheet__footer");
 
     vi.spyOn(email, "getBoundingClientRect").mockReturnValue({
@@ -131,14 +131,14 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
   it("register: tutti i campi hanno lo zoom guard e il submit resta sticky", () => {
     render(<AuthPage />);
 
-    fireEvent.click(screen.getByRole("tab", { name: "Registrati" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Crea spazio" }));
 
     for (const label of ["Nome", "Cognome", "Email"]) {
       const field = screen.getByLabelText(label);
       expect(field.className).toContain("tv-kbd-input");
     }
 
-    const submit = screen.getByRole("button", { name: "Registrati" });
+    const submit = screen.getByRole("button", { name: "Crea il mio spazio" });
     expect(submit.className).toContain("tv-kbd-sheet__footer");
   });
 
@@ -168,10 +168,10 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
 
       const email = screen.getByLabelText("Email") as HTMLInputElement;
       expect(email.disabled).toBe(false);
-      const submit = screen.getByRole("button", { name: /Accedi con email/ });
+      const submit = screen.getByRole("button", { name: /Entra nel mio TooolVibes/ });
       expect(submit.className).toContain("tv-kbd-sheet__footer");
       // Recovery: tab switch e link footer restano nel DOM.
-      expect(screen.getByRole("tab", { name: "Registrati" })).toBeTruthy();
+      expect(screen.getByRole("tab", { name: "Crea spazio" })).toBeTruthy();
     }
   });
 
@@ -182,7 +182,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
     expect(email.getAttribute("autocomplete")).toBe("email");
     expect(email.getAttribute("type")).toBe("email");
 
-    fireEvent.click(screen.getByRole("tab", { name: "Registrati" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Crea spazio" }));
 
     expect(screen.getByLabelText("Nome").getAttribute("autocomplete")).toBe(
       "given-name",

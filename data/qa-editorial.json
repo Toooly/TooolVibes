@@ -1,0 +1,80 @@
+{
+  "articles": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111",
+      "slug": "qa-local-guide-stack-decision",
+      "title": "QA Guide: come scegliere uno stack senza perdere il contesto della decisione",
+      "dek": "Guida locale di certificazione.",
+      "summary": "Fixture isolata per certificare l'editor guide. Non \u00e8 contenuto di produzione.",
+      "kind": "guide",
+      "status": "draft",
+      "content_markdown": "# QA Guide\n\nCorpo lungo per certificare l'editor.\n\n## Sezione\n\nTesto sufficiente per sticky bar e dirty state.\n",
+      "cover_image_url": "/partners/taylora/taylora-brand-plate.webp",
+      "cover_image_alt": "Copertina QA",
+      "author_name": "QA Locale",
+      "tags": [
+        "qa",
+        "stack",
+        "decisioni"
+      ],
+      "published_at": "2026-08-15T10:00:00.000Z",
+      "featured": false,
+      "created_at": "2026-08-15T10:00:00.000Z",
+      "updated_at": "2026-08-15T10:00:00.000Z"
+    }
+  ],
+  "collections": [
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "title": "QA Collection: stack decisionale breve",
+      "slug": "qa-local-collection-stack",
+      "description": "Raccolta locale di certificazione per l'editor Admin. Non pubblicare in produzione.",
+      "cover_image_url": "/partners/onweb24/onweb24-brand-plate.webp",
+      "cover_kicker": "QA locale",
+      "rationale": "Serve a certificare CORE / OPTIONAL / ALTERNATIVE e il salvataggio locale senza toccare Supabase.",
+      "highlights": [
+        "Fixture isolata",
+        "Tre ruoli di stack",
+        "Salvataggio locale"
+      ],
+      "premium_teaser": "",
+      "theme": "founder-stack",
+      "audience": "Solo founders",
+      "difficulty": "starter",
+      "tone": "starter-stack",
+      "access": "open",
+      "editorial_state": "draft",
+      "surface": "collection",
+      "featured_slot": "home-secondary",
+      "editorial_order": 99,
+      "included_tools": [
+        {
+          "tool_slug": "meku",
+          "role": "CORE",
+          "note": "Ancora principale.",
+          "featured": true,
+          "order": 1,
+          "status": "core"
+        },
+        {
+          "tool_slug": "v0",
+          "role": "OPTIONAL",
+          "note": "Solo se serve UI extra.",
+          "order": 2,
+          "status": "optional"
+        },
+        {
+          "tool_slug": "vibecode",
+          "role": "ALTERNATIVE",
+          "note": "Sostituisce Meku se cambia il vincolo.",
+          "order": 3,
+          "status": "alternative"
+        }
+      ],
+      "created_at": "2026-08-15T10:00:00.000Z",
+      "updated_at": "2026-08-15T10:00:00.000Z",
+      "first_published_at": null,
+      "published_at": null
+    }
+  ]
+}

@@ -60,6 +60,16 @@ export function slugifyToolName(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+function isValidMediaRef(value: string) {
+  if (value.startsWith("/") && !value.startsWith("//")) return true;
+  try {
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function isValidUrl(value: string) {
   try {
     new URL(value);
@@ -136,7 +146,7 @@ export function parseToolFormData(formData: FormData) {
     fieldErrors.affiliate_url = "Inserisci un URL valido oppure lascia vuoto.";
   }
 
-  if (!isValidUrl(rawCoverImageUrl)) {
+  if (!isValidMediaRef(rawCoverImageUrl)) {
     fieldErrors.cover_image_url = "Inserisci un URL immagine valido.";
   }
 

@@ -98,7 +98,8 @@ export function slugifyArticleTitle(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function isValidUrl(value: string) {
+function isValidMediaRef(value: string) {
+  if (value.startsWith("/") && !value.startsWith("//")) return true;
   try {
     new URL(value);
     return true;
@@ -173,7 +174,7 @@ export function parseArticleFormData(formData: FormData) {
     fieldErrors.content_markdown = "Aggiungi corpo articolo, media o una bozza markdown.";
   }
 
-  if (rawCoverImageUrl && !isValidUrl(rawCoverImageUrl)) {
+  if (rawCoverImageUrl && !isValidMediaRef(rawCoverImageUrl)) {
     fieldErrors.cover_image_url = "Inserisci un URL immagine valido oppure lascia vuoto.";
   }
 

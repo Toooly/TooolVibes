@@ -293,7 +293,7 @@ describe("RadarExperience", () => {
   it("rende eyebrow desktop su desktop e eyebrow mobile su mobile", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
     const { container } = renderRadar();
-    await screen.findByText("Alpha Tool");
+    await screen.findAllByText("Alpha Tool");
 
     // Default = desktop
     const desktopEyebrow = container.querySelector(
@@ -307,7 +307,7 @@ describe("RadarExperience", () => {
   it("espone una sola eyebrow all'accessibility tree (no doppia lettura)", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
     const { container } = renderRadar();
-    await screen.findByText("Alpha Tool");
+    await screen.findAllByText("Alpha Tool");
 
     // Le varianti visuali (desktop + mobile) devono essere
     // marcate aria-hidden per evitare che lo screen reader legga

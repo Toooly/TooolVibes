@@ -2,6 +2,7 @@
 
 import { AnimatePresence } from "motion/react";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 
 import { useRewardRuntime } from "@/components/rewards/reward-provider";
 
@@ -43,8 +44,10 @@ export function RewardHost() {
     dismissActive,
     completeActive,
   } = useRewardRuntime();
+  const pathname = usePathname();
+  const suppressOnAccountAdmin = (pathname ?? "").startsWith("/account/settings");
 
-  if (!runtimeEnabled) {
+  if (!runtimeEnabled || suppressOnAccountAdmin) {
     return null;
   }
 

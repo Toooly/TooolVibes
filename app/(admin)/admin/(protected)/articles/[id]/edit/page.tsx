@@ -90,6 +90,9 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
 
         <div className="mt-8">
           <ArticleForm
+        entityTitle={article.title}
+        entityStatus={article.status}
+        backHref="/admin/articles"
             action={boundAction}
             initialValues={getArticleFormValues(article)}
             submitLabel="Salva articolo"

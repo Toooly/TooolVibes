@@ -84,6 +84,10 @@ export default async function EditToolPage({ params }: EditToolPageProps) {
 
         <div className="mt-8">
           <ToolForm
+        entityTitle={tool.name}
+        entityStatus={tool.is_published ? "Pubblicato" : "Bozza"}
+        updatedAt={tool.updated_at}
+        backHref="/admin/tools"
             action={boundAction}
             initialValues={getToolFormValues(tool)}
             submitLabel="Salva tool"

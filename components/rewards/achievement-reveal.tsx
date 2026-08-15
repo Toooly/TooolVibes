@@ -40,6 +40,22 @@ export function AchievementReveal({
       if (event.key === "Escape") {
         event.preventDefault();
         onDismiss();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const root = closeRef.current?.closest("[role='dialog']")?.parentElement;
+      const focusable = root
+        ? [...root.querySelectorAll<HTMLElement>("button, a[href], [tabindex]:not([tabindex='-1'])")]
+        : [];
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
     document.addEventListener("keydown", onKey);
