@@ -2041,3 +2041,17 @@
     align-self: start;
   }
 }
+
+.guides-article__body img,
+.guides-article__body video,
+.guides-article__body iframe,
+.editorial-markdown img,
+.editorial-markdown video,
+.editorial-markdown iframe {
+  max-width: 100%;
+  height: auto;
+}
+.guides-article,
+.guides-index {
+  overflow-x: clip;
+}

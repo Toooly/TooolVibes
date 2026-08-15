@@ -2687,3 +2687,13 @@ a.archive-v4-card:focus-visible {
     width: min(calc(100% - 3rem), var(--tv-container-uw));
   }
 }
+
+@media (max-width: 47.99rem) {
+  .ar4-card {
+    border-radius: 1rem;
+  }
+  .ar4-ivory,
+  .ar4-grid {
+    overflow-x: clip;
+  }
+}

@@ -4605,22 +4605,57 @@
    360px-class devices.
    ===================================================================== */
 
-@media (max-width: 23.4375rem) {
+@media (max-width: 47.99rem) {
+  .cx-detail-v4 {
+    overflow-x: clip;
+    padding-inline: 1rem;
+    padding-bottom: 5.5rem;
+  }
+
   .cx-stack-flow-v4__list,
   .cx-scenario-v4__steps {
-    margin-left: 1.15rem;
+    margin-left: 0;
+    border-left: none;
+  }
+
+  .cx-stack-flow-v4__item,
+  .cx-scenario-v4__step {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.7rem;
+    padding-left: 0;
   }
 
   .cx-stack-flow-v4__node,
   .cx-scenario-v4__step-num {
-    left: -2.05rem;
+    position: static;
+    left: auto;
+    flex-shrink: 0;
   }
 
-  /* Item padding-left tightens a hair so the inner column doesn't
-     collapse against the spine at 360px. */
-  .cx-stack-flow-v4__item,
-  .cx-scenario-v4__step {
-    padding-left: 1.35rem;
+  .cx-stack-flow-v4__flow {
+    grid-template-columns: 1fr;
+  }
+
+  .cx-section-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cx-section-nav ol {
+    flex-wrap: nowrap;
+    width: max-content;
+    max-width: none;
+  }
+
+  .cx-detail-hero-v4,
+  .cx-stack-flow-v4,
+  .cx-variant-paths-v4,
+  .cx-decision-notes-v4,
+  .cx-scenario-v4,
+  .cx-anti-v4,
+  .cx-guide-bridge-v4,
+  .cx-next-step-v4 {
+    border-radius: 1rem;
   }
 }
 
