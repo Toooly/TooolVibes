@@ -613,3 +613,59 @@
     transform var(--tv-duration-fast) var(--tv-easing-standard),
     border-color var(--tv-duration-fast) var(--tv-easing-standard);
 }
+
+/* Shared premium surfaces — keep every public block inside the viewport
+   and on one radius/border language. */
+.marketing-shell {
+  overflow-x: clip;
+}
+
+.marketing-shell :where(img, video, iframe) {
+  max-width: 100%;
+  height: auto;
+}
+
+.marketing-shell :where(
+  .ar4-card,
+  .guides-card,
+  .cx-card-v4,
+  .def-editorial__exploratory-card,
+  .def-editorial__pod-card,
+  .account-hero,
+  .account-section-panel,
+  .account-stat,
+  .account-action
+) {
+  border-radius: 1rem;
+}
+
+.marketing-shell :where(
+  .ar4-card,
+  .guides-card,
+  .cx-card-v4
+):focus-visible {
+  outline: 2px solid var(--tv-accent-brand-aa, #6a3cff);
+  outline-offset: 3px;
+}
+
+@media (max-width: 47.99rem) {
+  .marketing-shell :where(
+    .ar4-card,
+    .guides-card,
+    .cx-card-v4,
+    .def-editorial__exploratory-card
+  ) {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marketing-shell :where(
+    .ar4-card,
+    .guides-card,
+    .cx-card-v4,
+    .account-action
+  ) {
+    transition: none;
+  }
+}
