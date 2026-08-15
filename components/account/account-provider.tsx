@@ -223,7 +223,7 @@ export function AccountProvider({
         lastAttachedUserIdRef.current = accountUserId;
         workspaceChangeRetryQueuedRef.current = false;
         setWorkspaceAttachPending(false);
-        setAuthMessage("Selezione collegata all'account senza perdere ciò che avevi salvato.");
+        setAuthMessage(null);
         return;
       }
 
@@ -238,14 +238,14 @@ export function AccountProvider({
         return;
       }
       setAuthMessage(
-        "Account collegato, ma il salvataggio online non è disponibile: la selezione resta al sicuro su questo browser.",
+        "Il salvataggio online non è disponibile. Le modifiche restano su questo dispositivo.",
       );
     } catch {
       if (lifecycleVersionRef.current === lifecycleVersion &&
           !signOutInProgressRef.current) {
         scheduleAttachRetry(currentSession, lifecycleVersion);
         setAuthMessage(
-          "Account collegato, ma il salvataggio della selezione è temporaneamente in pausa.",
+          "Sei offline o il salvataggio è in pausa. Le modifiche restano su questo dispositivo e riprenderanno automaticamente.",
         );
       }
     } finally {

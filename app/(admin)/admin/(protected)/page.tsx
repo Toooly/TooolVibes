@@ -246,8 +246,8 @@ export default async function AdminDashboardPage({ searchParams }: AdminDashboar
         >
           <div className="flex flex-wrap items-start justify-between gap-5">
             <SectionHeader
-              eyebrow="Back office"
-              title="Cosa richiede attenzione oggi"
+              eyebrow="Control Center"
+              title="Da gestire oggi"
               description="Coda operativa del back office: suggerimenti, bozze, affiliate e stato di scrittura. Solo dati reali del sistema."
               invert
             />

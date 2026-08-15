@@ -195,7 +195,7 @@ describe("B59 resolveAccountStateCell — matrice stati account", () => {
       matrixInput({ status: "authenticated", workspaceAttachPending: true }),
     );
     expect(cell.kind).toBe("attach-local-pending");
-    expect(cell.body).toContain("non è ancora sincronizzata online");
+    expect(cell.body).toContain("salvataggio online riprenderà automaticamente");
     expect(cell.syncClaim).toBe("local-only");
     expect(shouldRenderAccountStateBanner(cell)).toBe(true);
   });
@@ -683,7 +683,7 @@ describe("B59 AccountPanel — state matrix integration", () => {
     const banner = container.querySelector("[data-account-state='attach-retry']");
     expect(banner).not.toBeNull();
     expect(banner?.getAttribute("data-sync-claim")).toBe("local-only");
-    expect(banner?.textContent).toContain("Salvataggio online in pausa");
+    expect(banner?.textContent).toContain("Salvataggio online non disponibile");
     // Il messaggio compare una sola volta (banner), non duplicato nella recovery.
     const occurrences = screen.getAllByText(message);
     expect(occurrences).toHaveLength(1);

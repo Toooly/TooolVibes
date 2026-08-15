@@ -112,11 +112,7 @@ export function AccountPanel() {
             <div className="account-cluster account-cluster--solid">
               <div className="account-cluster__summary account-cluster__summary--static">
                 <span>Le tue decisioni</span>
-                <em>
-                  {workspace.saved > 0 || workspace.compare > 0
-                    ? `${workspace.saved} salvati · ${workspace.compare} in confronto`
-                    : "Parti dal catalogo per costruire la shortlist"}
-                </em>
+                <em>Note e shortlist nello stesso posto</em>
               </div>
               <div className="account-cluster__body space-y-5">
                 <DecisionMemorySection />

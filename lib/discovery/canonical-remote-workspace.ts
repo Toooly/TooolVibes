@@ -49,8 +49,24 @@ function disabled(error = "workspace-sync-disabled") {
 function schemaUnavailable(error: unknown) {
   if (!(error instanceof Error)) return false;
   const message = error.message.toLowerCase();
-  return ["viewer_profiles", "viewer_workspaces", "workspace_state", "sync_viewer_workspace_v1"]
-    .some((token) => message.includes(token));
+  return (
+    message.includes("does not exist") ||
+    message.includes("could not find the function") ||
+    message.includes("schema cache") ||
+    message.includes("pgrst202") ||
+    message.includes("pgrst205")
+  );
+}
+
+function classifyWorkspaceError(error: unknown) {
+  if (schemaUnavailable(error)) return "workspace-schema-upgrade-required";
+  if (!(error instanceof Error)) return "attach-failed";
+  const message = error.message.toLowerCase();
+  if (message.includes("jwt") || message.includes("invalid api key") || message.includes("not authorized")) {
+    return "workspace-server-configuration";
+  }
+  if (message.includes("timeout") || message.includes("fetch")) return "workspace-network";
+  return "attach-failed";
 }
 
 export function isCanonicalWorkspaceRemoteEnabled() {
@@ -216,7 +232,8 @@ export async function loadCanonicalRemoteWorkspace(token?: string) {
       conflictRetries: 0,
     };
   } catch (error) {
-    if (schemaUnavailable(error)) return disabled("workspace-schema-upgrade-required");
+    const reason = classifyWorkspaceError(error);
+    if (reason !== "attach-failed") return disabled(reason);
     throw error;
   }
 }
@@ -245,7 +262,8 @@ export async function saveCanonicalRemoteWorkspace(
       conflictRetries: result.conflictRetries,
     };
   } catch (error) {
-    if (schemaUnavailable(error)) return disabled("workspace-schema-upgrade-required");
+    const reason = classifyWorkspaceError(error);
+    if (reason !== "attach-failed") return disabled(reason);
     throw error;
   }
 }
@@ -297,7 +315,9 @@ export async function attachCanonicalWorkspace(
       conflictRetries: result.conflictRetries,
     };
   } catch (error) {
-    if (schemaUnavailable(error)) return disabled("workspace-schema-upgrade-required");
+    const reason = classifyWorkspaceError(error);
+    console.error("[workspace.attach]", reason, error instanceof Error ? error.message.slice(0, 180) : "unknown");
+    if (reason !== "attach-failed") return disabled(reason);
     throw error;
   }
 }
@@ -328,7 +348,8 @@ export async function releaseCanonicalWorkspace(
       conflictRetries: 0,
     };
   } catch (error) {
-    if (schemaUnavailable(error)) return disabled("workspace-schema-upgrade-required");
+    const reason = classifyWorkspaceError(error);
+    if (reason !== "attach-failed") return disabled(reason);
     throw error;
   }
 }

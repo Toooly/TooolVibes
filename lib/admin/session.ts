@@ -166,6 +166,6 @@ export async function isAdminSessionUnlocked(): Promise<boolean> {
 
 export async function requireAdminSession() {
   if (!(await isAdminSessionUnlocked())) {
-    redirect("/admin/login");
+    redirect("/admin-login");
   }
 }

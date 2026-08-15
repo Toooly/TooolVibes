@@ -63,13 +63,16 @@ export async function middleware(request: NextRequest) {
   }
 
   // Admin gate (esistente)
-  if (pathname.startsWith("/admin")) {
+  if (pathname === "/admin-login" || pathname === "/admin/login") {
     if (pathname === "/admin/login") {
-      return withTransportSecurity(request, NextResponse.next());
+      return withTransportSecurity(request, NextResponse.redirect(getRedirectUrl(request, "/admin-login")));
     }
+    return withTransportSecurity(request, NextResponse.next());
+  }
+  if (pathname.startsWith("/admin")) {
     const token = request.cookies.get(adminCookieName)?.value;
     if (!token || !(await verifySessionToken(token))) {
-      return withTransportSecurity(request, NextResponse.redirect(getRedirectUrl(request, "/admin/login")));
+      return withTransportSecurity(request, NextResponse.redirect(getRedirectUrl(request, "/admin-login")));
     }
     return withTransportSecurity(request, NextResponse.next());
   }

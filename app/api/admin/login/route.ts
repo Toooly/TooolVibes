@@ -41,7 +41,7 @@ function redirectTo(request: Request, path: string) {
 }
 
 function getLoginErrorPath(code: AdminLoginErrorCode) {
-  return `/admin/login?error=${encodeURIComponent(code)}`;
+  return `/admin-login?error=${encodeURIComponent(code)}`;
 }
 
 function getCredentialErrorCode(reason: AdminCredentialFailureReason): AdminLoginErrorCode {
@@ -185,5 +185,5 @@ export async function POST(request: Request) {
 }
 
 export function GET(request: Request) {
-  return redirectTo(request, "/admin/login");
+  return redirectTo(request, "/admin-login");
 }

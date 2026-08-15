@@ -86,10 +86,10 @@ describe("getPersistenceLabel", () => {
       "Salvataggio in corso",
     );
     expect(getPersistenceLabel({ mode: "remote", phase: "error" })).toBe(
-      "Salvataggio in pausa",
+      "Salvataggio non riuscito",
     );
     expect(getPersistenceLabel({ mode: "remote", phase: "synced" })).toBe(
-      "Selezione sincronizzata",
+      "Salvato online",
     );
     expect(getPersistenceLabel({ mode: "local", phase: "local-only" })).toBe(
       "Salvato su questo dispositivo",
@@ -100,13 +100,13 @@ describe("getPersistenceLabel", () => {
 describe("getAccountStateLabel / getHeroBadgeLabel / getContinuityStatusLabel", () => {
   it("mappa gli stati auth sulle label esistenti", () => {
     expect(getAccountStateLabel(makeAccountState({ status: "authenticated" }))).toBe(
-      "Account attivo",
+      "Il tuo spazio",
     );
     expect(getAccountStateLabel(makeAccountState({ status: "loading" }))).toBe("Caricamento");
     expect(getAccountStateLabel(makeAccountState())).toBe("Accesso attivabile");
     expect(
       getAccountStateLabel(makeAccountState({ authEnabled: false, status: "unavailable" })),
-    ).toBe("Sessione locale");
+    ).toBe("Continua senza account");
   });
 
   it("prioritizza attach e sync pending nel badge hero", () => {
@@ -117,9 +117,9 @@ describe("getAccountStateLabel / getHeroBadgeLabel / getContinuityStatusLabel", 
       getHeroBadgeLabel(
         makeAccountState({ status: "authenticated", workspaceAttachPending: true }),
       ),
-    ).toBe("Sync in attesa");
+    ).toBe("Salvataggio in corso");
     expect(getHeroBadgeLabel(makeAccountState({ status: "authenticated" }))).toBe(
-      "Account attivo",
+      "Il tuo spazio",
     );
   });
 
@@ -128,13 +128,13 @@ describe("getAccountStateLabel / getHeroBadgeLabel / getContinuityStatusLabel", 
       "Collegamento in corso",
     );
     expect(getContinuityStatusLabel(makeAccountState({ workspaceAttachPending: true }))).toBe(
-      "Locale, sync in attesa",
+      "Su questo dispositivo",
     );
     expect(getContinuityStatusLabel(makeAccountState({ status: "authenticated" }))).toBe(
-      "Account agganciato",
+      "Salvato nel tuo spazio",
     );
     expect(getContinuityStatusLabel(makeAccountState())).toBe(
-      "Sessione pronta da collegare",
+      "Continua senza account",
     );
   });
 });

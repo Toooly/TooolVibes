@@ -109,26 +109,26 @@ export function getPersistenceLabel(persistence: AccountPersistenceSlice): strin
     ? persistence.phase === "saving"
       ? "Salvataggio in corso"
       : persistence.phase === "error"
-        ? "Salvataggio in pausa"
-        : "Selezione sincronizzata"
+        ? "Salvataggio non riuscito"
+        : "Salvato online"
     : "Salvato su questo dispositivo";
 }
 
 export function getAccountStateLabel(account: AccountStateInput): string {
   return account.status === "authenticated"
-    ? "Account attivo"
+    ? "Il tuo spazio"
     : account.status === "loading"
       ? "Caricamento"
       : account.authEnabled
         ? "Accesso attivabile"
-        : "Sessione locale";
+        : "Continua senza account";
 }
 
 export function getHeroBadgeLabel(account: AccountStateInput): string {
   return account.isAttaching
     ? "Collegamento in corso"
     : account.workspaceAttachPending
-      ? "Sync in attesa"
+      ? "Salvataggio in corso"
       : getAccountStateLabel(account);
 }
 
@@ -136,10 +136,10 @@ export function getContinuityStatusLabel(account: AccountStateInput): string {
   return account.isAttaching
     ? "Collegamento in corso"
     : account.workspaceAttachPending
-      ? "Locale, sync in attesa"
+      ? "Su questo dispositivo"
       : account.status === "authenticated"
-        ? "Account agganciato"
-        : "Sessione pronta da collegare";
+        ? "Salvato nel tuo spazio"
+        : "Continua senza account";
 }
 
 export function getContinuityCopy(account: AccountStateInput): string {

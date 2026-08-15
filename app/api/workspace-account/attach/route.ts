@@ -85,6 +85,7 @@ export async function POST(request: Request) {
       parsed.data.operation_id,
     );
     if (!result.remoteAvailable) {
+      console.error("[workspace.attach] remote unavailable", result.error ?? "workspace-sync-disabled");
       return NextResponse.json(localOnly(fallback, result.error), {
         status: 202,
       });

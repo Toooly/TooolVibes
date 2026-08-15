@@ -14,7 +14,7 @@ const loginErrorMessages: Record<LoginErrorCode, string> = {
   credentials: "Credenziali non valide.",
   "missing-fields": "Inserisci email e password per accedere.",
   "rate-limited": "Troppi tentativi. Attendi qualche minuto e riprova.",
-  config: "Login admin non configurato correttamente. Controlla le variabili ambiente.",
+  config: "Accesso non disponibile in questo momento. Riprova più tardi.",
 };
 
 function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {

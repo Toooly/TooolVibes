@@ -258,7 +258,7 @@ describe("AccountPanel — stato guest", () => {
     setPanelState({ account });
     const { container } = render(<AccountPanel />);
 
-    expect(heroOf(container).getAllByText("Sessione locale").length).toBeGreaterThan(0);
+    expect(heroOf(container).getAllByText("Continua senza account").length).toBeGreaterThan(0);
     const button = screen.getByRole("button", { name: "Invia link" }) as HTMLButtonElement;
     expect(button.disabled).toBe(true);
     expect(
@@ -332,7 +332,7 @@ describe("AccountPanel — stato authenticated", () => {
     setPanelState({ account });
     const { container } = render(<AccountPanel />);
 
-    expect(heroOf(container).getByText("Salvataggio in pausa")).toBeTruthy();
+    expect(heroOf(container).getByText("Salvataggio non riuscito")).toBeTruthy();
     // Attende la chiusura del fetch submission per un test deterministico.
     await waitFor(() => {
       expect(screen.getByText(/Nessuna submission collegata/)).toBeTruthy();
@@ -352,8 +352,8 @@ describe("AccountPanel — stato authenticated", () => {
     });
     setPanelState({ account: pending });
     const { container: second } = render(<AccountPanel />);
-    expect(heroOf(second).getByText("Sync in attesa")).toBeTruthy();
-    expect(screen.getByText("Locale, sync in attesa")).toBeTruthy();
+    expect(heroOf(second).getByText("Salvataggio in corso")).toBeTruthy();
+    expect(screen.getByText("Su questo dispositivo")).toBeTruthy();
   });
 });
 

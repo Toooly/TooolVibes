@@ -26,6 +26,8 @@ const config = {
       "**/node_modules/**",
       ".codex-tmp",
       ".worktrees",
+      ".slim",
+      ".slim/**",
       ".next",
       ".open-next",
       ".opencode/**",

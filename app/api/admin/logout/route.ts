@@ -10,7 +10,7 @@ import {
 export const dynamic = "force-dynamic";
 
 function redirectToLogin(request: Request) {
-  return NextResponse.redirect(getAdminRouteUrl(request, "/admin/login"), 303);
+  return NextResponse.redirect(getAdminRouteUrl(request, "/admin-login"), 303);
 }
 
 export async function POST(request: NextRequest) {

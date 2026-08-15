@@ -130,7 +130,7 @@ export function resolveAccountStateCell(
       return {
         kind: "attach-retry",
         tone: "warning",
-        title: "Salvataggio online in pausa",
+        title: "Salvataggio online non disponibile",
         body: message,
         syncClaim: "local-only",
         action: null,
@@ -152,8 +152,8 @@ export function resolveAccountStateCell(
       return {
         kind: "attach-local-pending",
         tone: "warning",
-        title: "Sync in attesa",
-        body: "La selezione è al sicuro su questo browser e non è ancora sincronizzata online. Il collegamento riparte in automatico, anche dopo che riduci salvati o note oltre il limite.",
+        title: "Salvataggio in corso",
+        body: "La selezione resta su questo dispositivo. Il salvataggio online riprenderà automaticamente.",
         syncClaim: "local-only",
         action: null,
       };

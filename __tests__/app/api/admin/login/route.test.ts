@@ -58,7 +58,7 @@ describe("POST /api/admin/login rate limiting", () => {
     attempts.peek.mockResolvedValue(denied);
     const response = await POST(loginRequest("text/html,application/xhtml+xml"));
     expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe("https://tooolvibes.eu/admin/login?error=rate-limited");
+    expect(response.headers.get("location")).toBe("https://tooolvibes.eu/admin-login?error=rate-limited");
     expect(response.headers.get("retry-after")).toBe("45");
   });
 
