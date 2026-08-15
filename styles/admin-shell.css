@@ -1,3 +1,23 @@
+/* Admin operational console — readable ink on dark canvas */
+[data-admin-shell] {
+  color: #f4f1ff;
+}
+[data-admin-shell] a {
+  color: inherit;
+}
+[data-admin-shell] .admin-mobile-nav {
+  color: #f4f1ff;
+  background: #120d2e;
+}
+[data-admin-shell] .admin-mobile-nav a {
+  color: #f4f1ff;
+}
+[data-admin-shell] .admin-mobile-nav a:hover,
+[data-admin-shell] .admin-mobile-nav a:focus-visible {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
 /* Admin operational console — responsive contract (MVP 1.0 closure) */
 [data-admin-shell] {
   --admin-gutter: clamp(0.75rem, 2vw, 1.25rem);

@@ -294,13 +294,13 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute right-0 top-0 h-full w-[280px] border-l border-[rgba(106,60,255,0.15)] bg-[#0d0823] p-6 pt-20"
+              className="admin-mobile-nav absolute right-0 top-0 h-full w-[min(20rem,88vw)] border-l border-[rgba(106,60,255,0.2)] bg-[#120d2e] p-6 pt-20 text-[#f4f1ff]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col gap-5">
                 {navGroups.map((group) => (
                   <div key={group.label}>
-                    <p className="mb-2 px-4 text-xs font-bold uppercase tracking-[0.16em] text-white/35">
+                    <p className="mb-2 px-4 text-xs font-bold uppercase tracking-[0.16em] text-white/70">
                       {group.label}
                     </p>
                     <div className="flex flex-col gap-1">
