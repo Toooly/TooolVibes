@@ -1,12 +1,12 @@
 /* Admin operational console — readable ink on dark canvas */
 [data-admin-shell] {
-  --tv-ink-primary: #f4f1ff;
-  --tv-ink-secondary: rgba(244, 241, 255, 0.78);
-  --tv-ink-muted-aa: rgba(244, 241, 255, 0.62);
   --foreground: #f4f1ff;
   --muted: rgba(244, 241, 255, 0.7);
   --line: rgba(255, 255, 255, 0.16);
   color: #f4f1ff;
+}
+[data-admin-shell] :is(h1, h2, h3, h4, p, span, label, legend, dt, dd, li, strong, em) {
+  color: inherit;
 }
 [data-admin-shell] a {
   color: inherit;
