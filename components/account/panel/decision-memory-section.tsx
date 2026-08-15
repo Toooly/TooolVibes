@@ -39,7 +39,7 @@ export function DecisionMemorySection() {
           entries.map(([slug, memory]) => {
             const tool = catalog.find((item) => item.slug === slug);
             return (
-              <article key={slug} className="rounded-2xl border border-white/10 p-4">
+              <article key={slug} className="account-decision-card rounded-2xl p-4">
                 <p className="text-sm font-semibold">Perché {tool?.name ?? slug}</p>
                 <p className="mt-1 text-sm opacity-70">
                   {memory.save_reason || (memory.note ? "Nota personale salvata" : "Appuntato nella memoria.")}
@@ -48,7 +48,7 @@ export function DecisionMemorySection() {
                   <p className="mt-1 text-xs opacity-50">Aggiornata {memory.updated_at.slice(0, 10)}</p>
                 ) : null}
                 {savedSlug === slug ? (
-                  <p className="mt-2 text-sm text-cyan-200" role="status">Nota aggiornata.</p>
+                  <p className="mt-2 text-sm font-semibold text-[var(--account-violet)]" role="status">Nota aggiornata.</p>
                 ) : null}
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Link className="account-link" href={`/toools/${slug}`}>Riapri</Link>

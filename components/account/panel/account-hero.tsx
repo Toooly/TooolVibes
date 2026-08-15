@@ -39,10 +39,10 @@ export function AccountHero({
           ? "Riprendi la tua selezione"
           : "Il tuo spazio decisionale"}
       </h1>
-      <p className="account-subtitle mt-4 max-w-[44rem]">
+      <p className="account-subtitle mt-3">
         {account.status === "authenticated"
-          ? "Qui trovi salvati, confronti aperti e il punto esatto da cui ripartire — senza perdere il lavoro già fatto."
-          : "Salva tool, confronta candidati e chiudi decisioni. Con l'email la selezione ti segue; senza resta in questo browser."}
+          ? "Riprendi da dove hai lasciato."
+          : "Salva, confronta, decidi."}
       </p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">

@@ -31,7 +31,10 @@ export function AccountSettingsPage() {
   return (
     <div id="member-access" className="tone-account relative z-10 space-y-5 px-4 py-6 sm:px-6 sm:py-8">
       <p><Link className="account-link" href="/account">← My TooolVibes</Link></p>
-      <h1 className="account-title">Impostazioni</h1>
+      <header className="account-hero p-5 sm:p-6">
+        <p className="account-label">Account</p>
+        <h1 className="account-title mt-2">Impostazioni</h1>
+      </header>
       <AccountStatusSection account={account} />
       <AccountPreferencesSection status={account.status} savedCount={workspace.saved} />
       <AccountAccessSection account={account} form={signupForm} />

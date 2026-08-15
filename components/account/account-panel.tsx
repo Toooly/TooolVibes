@@ -11,6 +11,7 @@ import { AccountJourneyPanel } from "./panel/account-journey-panel";
 import { AccountPreferencesSection } from "./panel/account-preferences-section";
 import { AccountPremiumSection } from "./panel/account-premium-section";
 import { DecisionMemorySection } from "./panel/decision-memory-section";
+import { AccountWorkspaceBoard } from "./panel/account-workspace-board";
 import { AccountSelectionSection } from "./panel/account-selection-section";
 import { AccountStateBanner } from "./panel/account-state-banner";
 import { isAccountStateMatrixEnabled } from "./panel/account-state-flags";
@@ -77,22 +78,10 @@ export function AccountPanel() {
       >
         {/* Hero */}
         <AccountHero account={account} workspace={workspace} />
-        <section className="account-continue" aria-label="Continua la tua decisione">
-          <p className="account-label">Continua la tua decisione</p>
-          <p className="account-title mt-2">
-            {workspace.saved > 0 || workspace.compare > 0
-              ? `${workspace.saved} salvati · ${workspace.compare} in confronto`
-              : "Nessuna selezione ancora. Parti dal catalogo."}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <a className="account-link" href={workspace.saved > 0 ? "/shortlist" : "/archivio"}>
-              {workspace.saved > 0 ? "Apri la shortlist" : "Esplora il catalogo"}
-            </a>
-            <a className="account-link" href={workspace.compare > 0 ? "/compare" : "/archivio"}>
-              {workspace.compare > 1 ? "Continua il confronto" : workspace.compare > 0 ? "Apri il confronto" : "Aggiungi candidati"}
-            </a>
-          </div>
-        </section>
+        <AccountWorkspaceBoard
+          workspace={workspace}
+          decisionCount={workspace.notes}
+        />
 
         {/* State matrix (B59): offline / unavailable / link pending / attach */}
         {showStateBanner ? (
@@ -121,7 +110,7 @@ export function AccountPanel() {
                   savedToolCards={savedToolCards}
                   recommendedTools={recommendedTools}
                 />
-                <AccountJourneyPanel />
+                {account.status !== "authenticated" ? <AccountJourneyPanel /> : null}
               </div>
             </div>
 

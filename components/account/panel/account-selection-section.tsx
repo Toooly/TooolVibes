@@ -39,11 +39,8 @@ export function AccountSelectionSection({
         <p className="account-label">La tua selezione</p>
       </div>
       <h2 className="account-title mt-3 text-[1.3rem] sm:text-[1.5rem]">
-        La selezione che hai già costruito resta leggibile.
+        La tua selezione
       </h2>
-      <p className="account-subtitle mt-3">
-        La pagina account non serve solo per entrare: rende visibile quanta selezione reale hai già costruito e da dove conviene ripartire adesso.
-      </p>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         {[
