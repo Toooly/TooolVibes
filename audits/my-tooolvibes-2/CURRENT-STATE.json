@@ -1,0 +1,266 @@
+{
+  "startingSha": "b09f4812716144f019820199f21bba96759077b2",
+  "branch": "feature/my-tooolvibes-2",
+  "worktree": ".slim/worktrees/my-tooolvibes-2",
+  "subagentRouting": {
+    "status": "TEMPORARILY_UNAVAILABLE",
+    "configuredFlash": "cline-pass/deepseek-v4-flash",
+    "configuredPro": "cline-pass/deepseek-v4-pro",
+    "idsMatchConfigByteForByte": true,
+    "providerBlockInOpencodeJson": false,
+    "authHasClinePass": true,
+    "projectOverride": false,
+    "rootCause": "Runtime/provider registration: configured IDs are ASCII-correct and match agent files, but this session cannot resolve cline-pass models (Model not found / Did you mean the same ID). No provider.cline-pass.models catalog in opencode.json. kilo cache has no cline-pass provider. Do not retry until registry reload."
+  },
+  "routes": {
+    "/account": {
+      "file": "app/(marketing)/account/page.tsx",
+      "component": "AccountGate",
+      "auth": "gate: loading → skeleton; authenticated → AccountPanel; else → AuthPage",
+      "robots": "noindex"
+    },
+    "/account/settings": {
+      "file": "app/(marketing)/account/settings/page.tsx",
+      "component": "AccountSettingsPage",
+      "auth": "loading copy; unauthenticated → AuthPage; authenticated → thin settings"
+    },
+    "/auth/callback": "app/auth/callback/page.tsx"
+  },
+  "authenticatedIA": [
+    "AccountHero (email, logout, persistence clock)",
+    "AccountStateBanner (flagged)",
+    "AccountRecoverySection",
+    "AccountWorkspaceBoard (3 stat cards + 1-2 CTAs)",
+    "DecisionMemorySection (notes with reason)",
+    "AccountSavedRail (max 4)",
+    "link to /account/settings"
+  ],
+  "deadCodeOnAccountPanelGuestBranch": [
+    "AccountSelectionSection",
+    "AccountJourneyPanel",
+    "AccountSubmissionsSection",
+    "AccountGamificationSection (XP/streak/Vibe Rush)",
+    "AccountSignalProgressSection + BadgeCabinet",
+    "AccountStatusSection",
+    "AccountPremiumSection",
+    "AccountPreferencesSection",
+    "AccountAccessSection"
+  ],
+  "note": "AccountGate never mounts AccountPanel for guests. Signal/preferences/XP therefore do not appear on the live authenticated /account surface. Tests still import AccountPanel directly and cover the dead guest branch.",
+  "features": [
+    {
+      "feature": "Auth / session",
+      "source": "AccountProvider + Supabase magic link",
+      "serverOrLocal": "server session + local attach",
+      "visible": "VISIBLE (AuthPage / gate)",
+      "fate": "KEEP",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Guest → account workspace merge",
+      "source": "workspace-sync-client + mergeWorkspaceStates + /api/workspace-account/attach",
+      "serverOrLocal": "both; CAS remote",
+      "visible": "VISIBLE (attach/recovery)",
+      "fate": "KEEP",
+      "migrationRisk": "high if schema not backward-compatible"
+    },
+    {
+      "feature": "Saved / shortlist",
+      "source": "WorkspaceStateV1.saved + local snapshot.shortlist",
+      "serverOrLocal": "both",
+      "visible": "VISIBLE",
+      "fate": "KEEP",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Compare",
+      "source": "WorkspaceStateV1.compare (max 5)",
+      "serverOrLocal": "both",
+      "visible": "VISIBLE via board CTA",
+      "fate": "KEEP",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Single working stack (stackSlugs)",
+      "source": "WorkspaceStateV1.stack + useToolWorkspaceStore.addToStack",
+      "serverOrLocal": "both",
+      "visible": "DORMANT on account; used by discovery app",
+      "fate": "KEEP as-is; do NOT reuse for named personal stacks",
+      "migrationRisk": "high if overwritten"
+    },
+    {
+      "feature": "Shortlist stages saved/review/top",
+      "source": "toolStates.stage / shortlistStages",
+      "serverOrLocal": "both",
+      "visible": "PARTIAL (labels on saved cards)",
+      "fate": "KEEP storage; MAP to decision pipeline in UI",
+      "migrationRisk": "low"
+    },
+    {
+      "feature": "Decision Memory (note + save_reason + pin)",
+      "source": "toolStates + ToolDecisionMemory local snapshot",
+      "serverOrLocal": "both",
+      "visible": "VISIBLE",
+      "fate": "REBUILD into Decision Journal (progressive disclosure)",
+      "migrationRisk": "medium if fields dropped"
+    },
+    {
+      "feature": "Decision outcomes selected/rejected/deferred",
+      "source": "toolStates.decision",
+      "serverOrLocal": "both",
+      "visible": "DORMANT on account UI",
+      "fate": "KEEP; surface as Scelto/Scartato/Rimandato",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Recommendations",
+      "source": "useAccountWorkspaceSummary: same categoryLabel, first 3 unsaved",
+      "serverOrLocal": "local derived",
+      "visible": "DORMANT (dead guest branch)",
+      "fate": "REBUILD explainable layer",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Signal Progress (SP, levels, missions, achievements)",
+      "source": "lib/signal-progression + RPCs accept_signal_engagement / evaluate_signal_achievements / hub",
+      "serverOrLocal": "server-authoritative",
+      "visible": "DORMANT on live /account (flag default OFF + not mounted for auth users)",
+      "fate": "KEEP backend; REBUILD UI as canonical progression",
+      "migrationRisk": "low for UI; high if dual-granting with XP"
+    },
+    {
+      "feature": "Signal profile context (focus + goal)",
+      "source": "upsert_signal_user_context; PUT /api/signal-progression/profile-context",
+      "serverOrLocal": "server",
+      "visible": "DORMANT; one-shot save disabled after complete",
+      "fate": "KEEP API (already upserts); REBUILD as editable Settings personalization",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Reward preferences / quiet mode",
+      "source": "lib/rewards/preferences + /api/signal-progression/preferences",
+      "serverOrLocal": "local + server",
+      "visible": "DORMANT (dead guest branch)",
+      "fate": "MERGE into Settings → Signal",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Legacy XP / streak / daily missions / badges / leaderboard hooks",
+      "source": "lib/gamification + supabase 20260608 gamification_*",
+      "serverOrLocal": "server when REWARDED; also local XP store",
+      "visible": "DORMANT on live account; Radar/Arena components still exist",
+      "fate": "REMOVE from My TooolVibes UI; do not delete Radar/Arena code in V1",
+      "migrationRisk": "medium if XP still increments and is shown anywhere on account"
+    },
+    {
+      "feature": "Vibe Rush",
+      "source": "vibe-tap-mini-game + local best + GAME_VIBE_RUSH_MODE",
+      "serverOrLocal": "local record; optional rewarded XP",
+      "fate": "CONVERT to optional personal record on Signal if useful; not a currency",
+      "migrationRisk": "low"
+    },
+    {
+      "feature": "Badge cabinet (Lucide-in-circle)",
+      "source": "AccountBadgeCabinetSection + hub.badges",
+      "serverOrLocal": "server read model",
+      "visible": "DORMANT on live /account",
+      "fate": "REBUILD native Signal marks",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Submissions",
+      "source": "/api/account/submissions",
+      "serverOrLocal": "server",
+      "visible": "VISIBLE on settings only",
+      "fate": "KEEP in Settings → Contributions",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Premium / status / journey / access panels",
+      "source": "account panel sections",
+      "serverOrLocal": "derived",
+      "visible": "DORMANT",
+      "fate": "REMOVE from workspace home; useful copy may move to Auth/Settings",
+      "migrationRisk": "none"
+    },
+    {
+      "feature": "Named personal stacks",
+      "source": "none",
+      "serverOrLocal": "n/a",
+      "visible": "MISSING",
+      "fate": "ADD as workspace JSON personalStacks (not the existing stack list)",
+      "migrationRisk": "medium (schema extend + merge + tests)"
+    },
+    {
+      "feature": "Activity / resurfacing",
+      "source": "none dedicated; timestamps exist on lists/toolStates",
+      "serverOrLocal": "derived",
+      "visible": "MISSING",
+      "fate": "ADD derived (do not persist a second activity log)",
+      "migrationRisk": "low"
+    }
+  ],
+  "flags": {
+    "signalAndRewardsDefault": false,
+    "keys": [
+      "TOOOLVIBES_GAMIFICATION_ENABLED",
+      "TOOOLVIBES_GAMIFICATION_PERSISTENCE_ENABLED",
+      "TOOOLVIBES_REWARD_BACKBONE_ENABLED",
+      "TOOOLVIBES_REWARD_RUNTIME_ENABLED",
+      "TOOOLVIBES_SIGNAL_EVENT_WRITES_ENABLED",
+      "TOOOLVIBES_REWARD_DELIVERY_ENABLED",
+      "TOOOLVIBES_SIGNAL_PROGRESS_UI_ENABLED",
+      "TOOOLVIBES_SIGNAL_ACHIEVEMENTS_ENABLED",
+      "TOOOLVIBES_SIGNAL_BADGE_CABINET_ENABLED",
+      "TOOOLVIBES_REWARD_MILESTONES_ENABLED",
+      "TOOOLVIBES_GAME_MISSIONS_MODE",
+      "TOOOLVIBES_GAME_HIDDEN_SIGNAL_MODE",
+      "TOOOLVIBES_GAME_ARENA_MODE",
+      "TOOOLVIBES_GAME_PREDICTION_MODE",
+      "TOOOLVIBES_GAME_LEADERBOARD_MODE",
+      "TOOOLVIBES_GAME_VIBE_RUSH_MODE",
+      "NEXT_PUBLIC_TOOOLVIBES_ACCOUNT_STATE_MATRIX"
+    ],
+    "rolloutStrategy": "Do not add a tenth account flag. Keep Signal write/UI flags. Stop mounting legacy XP on /account regardless of GAME_* modes. Leaderboard stays OFF and must never appear in My TooolVibes."
+  },
+  "css": {
+    "route": "app/(marketing)/account/account.css",
+    "legacySheet": "styles/account.css (important ceiling 0 — do not add !important)",
+    "tokens": "tone-account dark (#120d2e cards). Signal/guest panels still contain ivory leftovers (#fff, rgba(255,255,255,0.66)) in TSX inline styles."
+  },
+  "nav": {
+    "headerCta": "Il tuo account → /account (authenticated)",
+    "bottomNav": "saved/compare counts; do NOT add a second account bottom nav",
+    "authSurfaceHides": "command-bar, site-footer, mobile-bottom-nav, mobile-top-bar"
+  },
+  "qualityGates": [
+    "node 22.23.1",
+    "npm run typecheck",
+    "npm run lint",
+    "npm run lint:ci",
+    "npm test",
+    "runtime-contract via check:runtime / scripts/check-runtime.mjs",
+    "npm run check:styles",
+    "npm run build",
+    "npm run build:cloudflare"
+  ],
+  "certifyingPersistenceTests": [
+    "__tests__/lib/discovery/guest-account-merge-contract.test.ts",
+    "__tests__/lib/discovery/workspace-contract.test.ts",
+    "__tests__/lib/discovery/workspace-storage-migration.test.ts",
+    "__tests__/lib/discovery/workspace-account-isolation.test.ts",
+    "__tests__/lib/discovery/workspace-decision-memory-actions.test.ts",
+    "__tests__/lib/discovery/canonical-remote-workspace-contract.test.ts",
+    "__tests__/components/account/account-provider-hydration.test.tsx",
+    "__tests__/components/account/account-provider.integration.test.tsx"
+  ],
+  "signalIntegrityTests": [
+    "__tests__/lib/signal-progression/validate-event.test.ts",
+    "__tests__/lib/signal-progression/client-idempotency.test.ts",
+    "__tests__/lib/signal-progression/concurrency-proof.test.ts",
+    "__tests__/lib/signal-progression/achievements.test.ts",
+    "__tests__/lib/signal-progression/missions.test.ts",
+    "__tests__/integration/signal-progression-live.test.ts",
+    "__tests__/integration/signal-achievements-live.test.ts"
+  ]
+}
