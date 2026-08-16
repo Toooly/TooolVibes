@@ -303,17 +303,14 @@ describe("AccountPanel — stato authenticated", () => {
     setPanelState({ account });
     render(<AccountPanel />);
 
-    expect(screen.getByText("Account connesso")).toBeTruthy();
-    expect(screen.getByText(/mario@example\.com/)).toBeTruthy();
-    expect(screen.getByText("Il tuo TooolVibes")).toBeTruthy();
+    expect(screen.getByText("Spazio connesso")).toBeTruthy();
+    expect(screen.getByText("Il tuo spazio")).toBeTruthy();
     expect(screen.queryByPlaceholderText("nome@email.com")).toBeNull();
     expect(screen.queryByText("Proposta founder")).toBeNull();
     expect(screen.queryByText("Gamification")).toBeNull();
 
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith("/api/account/submissions", {
-        headers: { Authorization: "Bearer token-a" },
-      });
+    expect(fetch).not.toHaveBeenCalledWith("/api/account/submissions", {
+      headers: { Authorization: "Bearer token-a" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: /Esci dall'account/ }));
@@ -331,9 +328,6 @@ describe("AccountPanel — stato authenticated", () => {
     const { container } = render(<AccountPanel />);
 
     expect(heroOf(container).getByText("Salvataggio non riuscito")).toBeTruthy();
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalled();
-    });
   });
 
   it("riflette attach in corso e sync in attesa su badge e continuità", () => {
@@ -500,7 +494,7 @@ describe("AccountPanel — gamification", () => {
     render(<AccountPanel />);
 
     expect(screen.queryByText("Gamification")).toBeNull();
-    expect(screen.getByText("Il tuo TooolVibes")).toBeTruthy();
+    expect(screen.getByText("Il tuo spazio")).toBeTruthy();
     expect(screen.getByText("Impostazioni")).toBeTruthy();
   });
 });
