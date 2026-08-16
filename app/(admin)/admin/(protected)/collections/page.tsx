@@ -2,7 +2,10 @@ import Link from "next/link";
 
 import { importMockCollectionsAction } from "@/app/(admin)/admin/actions/collections";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
-import { SectionHeader } from "@/components/ui/section-header";
+import {
+  ControlCenterHeader,
+  ControlCenterNotice,
+} from "@/components/admin/control-center-header";
 import {
   getCollectionTransitionReviewMeta,
   getCollectionTransitionReviewState,
@@ -357,83 +360,20 @@ export default async function AdminCollectionsPage({
   });
 
   return (
-    <div className="page-shell py-8 sm:py-10">
+    <div className="page-shell py-6">
       <div className="space-y-6">
-        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader invert
-              eyebrow="Gestione raccolte"
-              title="Un flusso editoriale leggero e operativo."
-              description="Qui leggi sorgente, segnali aperti, stato editoriale e dettaglio interno delle raccolte. La scrittura resta prudente, ma il pannello gestisce già il ciclo editoriale essenziale senza passare dal codice."
-            />
-            <div className="hidden flex-wrap gap-3 sm:flex">
-              {topActions.map((action) => (
-                <Link
-                  key={action.href}
-                  href={action.href}
-                  className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} rounded-full px-4 py-2.5 text-sm font-semibold`}
-                >
-                  {action.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <div className="tool-rail -mx-1 mt-5 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:hidden">
-            {topActions.map((action) => (
-              <Link
-                key={`mobile-${action.href}`}
-                href={action.href}
-                className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold`}
-              >
-                {action.label}
-              </Link>
-            ))}
-          </div>
-
-          {statusMessage ? (
-            <div
-              className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
-              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
-            >
-              {statusMessage}
-            </div>
-          ) : null}
-
-          <div className="tool-rail -mx-1.5 mt-8 flex snap-x gap-3 overflow-x-auto px-1.5 pb-1 sm:hidden">
-            {workspaceMetrics.map((item) => (
-              <article
-                key={item.label}
-                className="admin-stat-tile stat-block w-[12rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-5"
-              >
-                <p
-                  className="text-sm font-semibold uppercase tracking-[0.18em]"
-                  style={{ color: "var(--muted)" }}
-                >
-                  {item.label}
-                </p>
-                <p>{item.value}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-8 hidden gap-4 sm:grid lg:grid-cols-4">
-            {workspaceMetrics.map((item) => (
-              <article
-                key={`desktop-${item.label}`}
-                className="admin-stat-tile stat-block rounded-[var(--radius-lg)] border p-5"
-              >
-                <p
-                  className="text-sm font-semibold uppercase tracking-[0.18em]"
-                  style={{ color: "var(--muted)" }}
-                >
-                  {item.label}
-                </p>
-                <p>{item.value}</p>
-              </article>
-            ))}
-          </div>
-
+        <ControlCenterHeader
+          title="Gestione raccolte"
+          description="Pubblicazione, evidenza e revisione delle collection."
+          primaryHref="/admin/collections/new"
+          primaryLabel="Nuova raccolta"
+          metrics={[
+            { label: "Collection", value: runtime.collections.length },
+            { label: "Pubbliche", value: stateCounts.published + stateCounts.featured },
+            { label: "Segnali", value: workspaceMetrics[2].value },
+          ]}
+        />
+        {statusMessage ? <ControlCenterNotice tone="ok">{statusMessage}</ControlCenterNotice> : null}
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             <div
               className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
@@ -656,7 +596,7 @@ export default async function AdminCollectionsPage({
                                   : "rgba(161,105,47,0.18)",
                               background:
                                 entry.import_status === "conflict"
-                                  ? "rgba(254,242,242,0.96)"
+                                  ? "var(--tv-status-danger-soft-bg-dark)"
                                   : "rgba(243,191,76,0.12)",
                             }}
                           >
@@ -844,7 +784,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(15,118,110,0.18)",
                                 background:
                                   readiness.state === "blocked"
-                                    ? "rgba(254,242,242,0.96)"
+                                    ? "var(--tv-status-danger-soft-bg-dark)"
                                     : readiness.state === "review"
                                       ? "rgba(243,191,76,0.12)"
                                       : "rgba(57,210,246,0.12)",
@@ -866,7 +806,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(15,118,110,0.18)",
                                 background:
                                   transitionSeverity === "critical-conflict"
-                                    ? "rgba(254,242,242,0.96)"
+                                    ? "var(--tv-status-danger-soft-bg-dark)"
                                     : transitionSeverity === "minor-drift" ||
                                         transitionSeverity === "pending"
                                       ? "rgba(243,191,76,0.12)"
@@ -951,7 +891,7 @@ export default async function AdminCollectionsPage({
                                     : "rgba(15,118,110,0.18)",
                               background:
                                 readiness.state === "blocked"
-                                  ? "rgba(254,242,242,0.96)"
+                                  ? "var(--tv-status-danger-soft-bg-dark)"
                                   : readiness.state === "review"
                                     ? "rgba(243,191,76,0.12)"
                                     : "rgba(57,210,246,0.12)",
@@ -973,7 +913,7 @@ export default async function AdminCollectionsPage({
                                     : "rgba(15,118,110,0.18)",
                               background:
                                 syncPreviewPosture.tone === "error"
-                                  ? "rgba(254,242,242,0.96)"
+                                  ? "var(--tv-status-danger-soft-bg-dark)"
                                   : syncPreviewPosture.tone === "warning"
                                     ? "rgba(243,191,76,0.12)"
                                     : "rgba(57,210,246,0.12)",
@@ -1020,7 +960,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(161,105,47,0.18)",
                                   background:
                                     issue.level === "error"
-                                      ? "rgba(254,242,242,0.96)"
+                                      ? "var(--tv-status-danger-soft-bg-dark)"
                                       : "rgba(243,191,76,0.12)",
                                 }}
                               >
@@ -1042,7 +982,7 @@ export default async function AdminCollectionsPage({
                                   : "rgba(161,105,47,0.18)",
                               background:
                                 transitionSeverity === "critical-conflict"
-                                  ? "rgba(254,242,242,0.96)"
+                                  ? "var(--tv-status-danger-soft-bg-dark)"
                                   : "rgba(243,191,76,0.12)",
                             }}
                           >
@@ -1138,7 +1078,6 @@ export default async function AdminCollectionsPage({
               />
             )}
           </div>
-        </div>
       </div>
     </div>
   );
