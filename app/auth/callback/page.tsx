@@ -145,7 +145,7 @@ export default function AuthCallbackPage() {
   return (
     <div className="page-shell flex min-h-dvh items-center justify-center py-10 sm:py-16">
       <PremiumPanel
-        tone="light"
+        tone="dark"
         className="w-full max-w-[42rem] p-5 before:!hidden after:!hidden sm:p-8"
       >
         <RouteMarker

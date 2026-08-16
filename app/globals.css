@@ -57,8 +57,8 @@ body {
   margin: 0;
   font-family: var(--tv-font-family-ui);
   font-weight: 400;
-  background: var(--gradient-shell);
-  color: var(--foreground);
+  background: var(--tv-bg-base);
+  color: var(--tv-ink-primary);
   min-height: 100vh;
   min-height: 100dvh;
   text-rendering: optimizeLegibility;
@@ -805,17 +805,17 @@ img {
     background:
       radial-gradient(circle at 84% 12%, rgba(167, 139, 250, 0.16), transparent 30%),
       radial-gradient(circle at 12% 8%, rgba(57, 210, 246, 0.1), transparent 24%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(240, 235, 255, 0.86));
-    color: var(--foreground);
+      linear-gradient(180deg, var(--tv-surface-elevated), var(--tv-surface-raised));
+    color: var(--tv-ink-primary);
   }
 
   .premium-panel-subtle {
-    border-color: rgba(76, 55, 166, 0.13);
+    border-color: var(--tv-border-default);
     background:
       radial-gradient(circle at 86% 0%, rgba(57, 210, 246, 0.08), transparent 28%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(245, 241, 255, 0.76));
-    box-shadow: var(--shadow-soft);
-    color: var(--foreground);
+      linear-gradient(180deg, var(--tv-surface-elevated), var(--tv-surface-raised));
+    box-shadow: none;
+    color: var(--tv-ink-primary);
   }
 
   .premium-panel-dark {
@@ -828,13 +828,12 @@ img {
   }
 
   .premium-panel-airy {
-    border-color: rgba(76, 55, 166, 0.15);
+    border-color: var(--tv-border-default);
     background:
-      radial-gradient(circle at 12% 0%, rgba(255, 255, 255, 0.82), transparent 28%),
       radial-gradient(circle at 86% 10%, rgba(57, 210, 246, 0.08), transparent 28%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(238, 234, 255, 0.82));
-    box-shadow: var(--shadow-soft);
-    color: var(--foreground);
+      linear-gradient(180deg, var(--tv-surface-elevated), var(--tv-surface-raised));
+    box-shadow: none;
+    color: var(--tv-ink-primary);
   }
 
   .premium-panel-blue {
@@ -2479,18 +2478,18 @@ img {
   }
 
   .brand-panel {
-    background: var(--surface-brand-panel-bg);
-    border: 1px solid var(--surface-panel-border);
-    box-shadow: var(--surface-panel-shadow);
+    background: var(--tv-surface-raised);
+    border: 1px solid var(--tv-border-default);
+    box-shadow: none;
     backdrop-filter: none;
     position: relative;
     isolation: isolate;
   }
 
   .dark-panel {
-    background: var(--surface-dark-panel-bg);
-    border: 1px solid var(--surface-dark-panel-border);
-    box-shadow: var(--surface-dark-panel-shadow);
+    background: var(--tv-surface-elevated);
+    border: 1px solid var(--tv-border-default);
+    box-shadow: none;
     position: relative;
     isolation: isolate;
   }
@@ -6296,9 +6295,8 @@ img {
   }
 
   .discovery-meter {
-    border: 1px solid rgba(112, 82, 255, 0.12);
-    background:
-      linear-gradient(180deg, rgba(252, 249, 255, 0.96), rgba(243, 238, 255, 0.9));
+    border: 1px solid var(--tv-border-default);
+    background: var(--tv-surface-elevated);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.7),
       0 10px 24px rgba(67, 48, 199, 0.05);
@@ -28453,4 +28451,21 @@ img {
   .toggle-chip-glow:active {
     transform: none !important;
   }
+}
+
+
+/* CANONICAL DARK SURFACE CONTRACT
+   Tone classes used to re-skin brand-panel as ivory. The product canvas is
+   dark; these scopes now publish the same raised-surface tokens. */
+:is(.tone-orient, .tone-focus, .tone-screen, .tone-decision, .tone-workspace, .tone-compare, .tone-curate, .tone-issue, .tone-premium, .tone-account) {
+  --surface-brand-panel-bg: var(--tv-surface-raised);
+  --surface-metadata-bg: var(--tv-surface-elevated);
+  --surface-discovery-strip-bg: var(--tv-surface-elevated);
+  --surface-selection-status-bg: var(--tv-surface-elevated);
+  --surface-selection-chip-bg: var(--tv-color-white-08);
+  --surface-selection-chip-color: var(--tv-ink-secondary);
+  --surface-selection-status-border: var(--tv-border-default);
+  --surface-selection-chip-border: var(--tv-border-default);
+  --surface-intro-helper-bg: var(--tv-surface-elevated);
+  --surface-panel-shadow: none;
 }

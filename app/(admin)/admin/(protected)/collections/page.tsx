@@ -412,7 +412,7 @@ export default async function AdminCollectionsPage({
                 >
                   {item.label}
                 </p>
-                <p className="mt-3 text-4xl">{item.value}</p>
+                <p>{item.value}</p>
               </article>
             ))}
           </div>
@@ -429,7 +429,7 @@ export default async function AdminCollectionsPage({
                 >
                   {item.label}
                 </p>
-                <p className="mt-3 text-4xl">{item.value}</p>
+                <p>{item.value}</p>
               </article>
             ))}
           </div>

@@ -7,6 +7,7 @@ type DeleteWithConfirmProps = {
   label: string;
   disabled?: boolean;
   confirmMessage?: string;
+  variant?: "button" | "menu";
 };
 
 export function DeleteWithConfirm({
@@ -14,12 +15,12 @@ export function DeleteWithConfirm({
   label,
   disabled = false,
   confirmMessage = "Sei sicuro di voler eliminare questo elemento? L'azione è irreversibile.",
+  variant = "button",
 }: DeleteWithConfirmProps) {
   const [isPending, startTransition] = useTransition();
 
   function handleClick() {
     if (!window.confirm(confirmMessage)) return;
-
     startTransition(async () => {
       await action();
     });
@@ -30,8 +31,7 @@ export function DeleteWithConfirm({
       type="button"
       disabled={disabled || isPending}
       onClick={handleClick}
-      className="button-shell w-full rounded-full px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
-      style={{ background: "linear-gradient(135deg, #9a4130, #7f2f22)" }}
+      className={variant === "menu" ? undefined : "tv-cc-btn tv-cc-btn--danger"}
     >
       {isPending ? "Eliminazione..." : label}
     </button>

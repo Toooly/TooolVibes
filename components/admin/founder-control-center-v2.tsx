@@ -45,7 +45,7 @@ const navItems = [
   { href: "/admin/commercial/campaigns", label: "Campagne", icon: BadgeDollarSign, group: "Commerciale" },
   { href: "/admin/commercial/placements", label: "Posizionamenti", icon: BadgeDollarSign, group: "Commerciale" },
   { href: "/admin/commercial/preview", label: "Anteprima", icon: BadgeDollarSign, group: "Commerciale" },
-  { href: "/admin/monetization", label: "Inventario", icon: BadgeDollarSign, group: "Commerciale" },
+  { href: "/admin/monetization", label: "Monetizzazione", icon: BadgeDollarSign, group: "Commerciale" },
   { href: "/admin/affiliates", label: "Affiliati", icon: Sparkles, group: "Commerciale" },
   { href: "/admin/affiliate-links", label: "Link affiliati", icon: LayoutGrid, group: "Commerciale" },
   { href: "/admin/suggestions", label: "Suggerimenti", icon: AlertCircle, group: "Community" },
@@ -97,88 +97,9 @@ function StatusIndicator({ active, label }: { active: boolean; label: string }) 
   );
 }
 
-function MetricOrb({
-  label,
-  value,
-  detail,
-  color,
-}: {
-  label: string;
-  value: string;
-  detail: string;
-  color: string;
-}) {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.02, y: -2 }}
-      className="relative overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-4 backdrop-blur-sm"
-    >
-      <div
-        className="absolute -right-4 -top-4 h-16 w-16 rounded-full opacity-20 blur-2xl"
-        style={{ background: color }}
-      />
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/40">
-        {label}
-      </p>
-      <div className="mt-2 flex items-end gap-2">
-        <motion.p
-          className="text-2xl font-bold text-white"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          key={value}
-        >
-          {value}
-        </motion.p>
-        <p className="pb-0.5 text-xs text-white/50">{detail}</p>
-      </div>
-      <div className="mt-2 h-0.5 w-full overflow-hidden rounded-full bg-white/5">
-        <motion.div
-          className="h-full rounded-full"
-          style={{ background: color }}
-          initial={{ width: "0%" }}
-          animate={{ width: `${Math.min(100, parseInt(value) * 5)}%` }}
-          transition={{ duration: 1, delay: 0.3 }}
-        />
-      </div>
-    </motion.div>
-  );
-}
-
 export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: FounderControlCenterV2Props) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const publishedArticles = articlesRuntime.articles.filter(
-    (article) => article.status === "published",
-  ).length;
-  const draftArticles = articlesRuntime.articles.length - publishedArticles;
-  const runtimeWarningCount = articlesRuntime.warnings.length;
-
-  const metrics = [
-    {
-      label: "Tool",
-      value: String(adminMetrics?.tools ?? 0),
-      detail: `${adminMetrics?.publishedTools ?? 0} pubblicati`,
-      color: "#6a3cff",
-    },
-    {
-      label: "Articoli",
-      value: String(articlesRuntime.articles.length),
-      detail: `${draftArticles} bozze`,
-      color: "#39d2f6",
-    },
-    {
-      label: "Submission",
-      value: String(adminMetrics?.openSuggestions ?? 0),
-      detail:
-        runtimeWarningCount > 0
-          ? `${runtimeWarningCount} avvisi`
-          : adminMetrics?.writeReady
-            ? "scrittura attiva"
-            : "verifica salvataggi",
-      color: runtimeWarningCount > 0 || !adminMetrics?.writeReady ? "#f3bf4c" : "#5cbf9c",
-    },
-  ];
 
   return (
     <>
@@ -198,7 +119,7 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
               <div className="hidden sm:block">
                 <span className="text-sm font-bold text-white">TOOOLVIBES</span>
                 <span className="ml-2 text-xs font-semibold uppercase tracking-wider text-white/40">
-                  Area admin
+                  Control Center
                 </span>
               </div>
             </Link>
@@ -269,16 +190,6 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
           </div>
         </motion.div>
       </header>
-
-      {pathname === "/admin" ? (
-        <div className="mx-auto max-w-[1440px] px-4 pt-6">
-          <div className="grid gap-3 sm:grid-cols-3">
-            {metrics.map((metric) => (
-              <MetricOrb key={metric.label} {...metric} />
-            ))}
-          </div>
-        </div>
-      ) : null}
 
       {/* Mobile Menu */}
       <AnimatePresence>
