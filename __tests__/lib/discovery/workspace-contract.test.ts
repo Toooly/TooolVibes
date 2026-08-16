@@ -169,6 +169,9 @@ describe("canonical normalization", () => {
         saveReason: null,
         pinned: false,
         decision: null,
+        useCase: null,
+        alternatives: [],
+        revisitAt: null,
         updatedAt: T0,
       },
     });
@@ -551,6 +554,9 @@ describe("workspace merge", () => {
       saveReason: null,
       pinned: false,
       decision: { outcome: "selected", updatedAt: T2 },
+      useCase: null,
+      alternatives: [],
+      revisitAt: null,
       updatedAt: null,
     });
     expect(mergeWorkspaceStates(cleared, metadataOnly).toolStates.alpha).toEqual({
@@ -559,6 +565,9 @@ describe("workspace merge", () => {
       saveReason: "compare",
       pinned: true,
       decision: null,
+      useCase: null,
+      alternatives: [],
+      revisitAt: null,
       updatedAt: T1_5,
     });
 

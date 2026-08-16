@@ -22,6 +22,9 @@ export type WorkspaceToolState = {
   saveReason: SaveReason | null;
   pinned: boolean;
   decision: WorkspaceDecision | null;
+  useCase: string | null;
+  alternatives: string[];
+  revisitAt: string | null;
   updatedAt: string | null;
 };
 
@@ -30,12 +33,22 @@ export type WorkspaceOrderedList = {
   updatedAt: string | null;
 };
 
+export type PersonalStack = {
+  id: string;
+  name: string;
+  description: string | null;
+  slugs: string[];
+  archivedAt: string | null;
+  updatedAt: string;
+};
+
 export type WorkspaceStateV1 = {
   schemaVersion: 1;
   clearedAt: string | null;
   saved: WorkspaceOrderedList;
   compare: WorkspaceOrderedList;
   stack: WorkspaceOrderedList;
+  personalStacks: PersonalStack[];
   toolStates: Record<string, WorkspaceToolState>;
 };
 
@@ -58,7 +71,28 @@ export type WorkspaceAction =
       slug: string;
       outcome: WorkspaceDecisionOutcome | null;
       at: string;
+      alternatives?: string[];
     }
+  | { type: "tool/use-case"; slug: string; useCase: string | null; at: string }
+  | { type: "tool/revisit"; slug: string; revisitAt: string | null; at: string }
+  | {
+      type: "stacks/create";
+      id: string;
+      name: string;
+      description?: string | null;
+      at: string;
+    }
+  | {
+      type: "stacks/rename";
+      id: string;
+      name: string;
+      description?: string | null;
+      at: string;
+    }
+  | { type: "stacks/archive"; id: string; at: string }
+  | { type: "stacks/add"; id: string; slug: string; at: string }
+  | { type: "stacks/remove"; id: string; slug: string; at: string }
+  | { type: "stacks/reorder"; id: string; slugs: string[]; at: string }
   | { type: "workspace/clear"; at: string };
 
 export type LegacyToolWorkspacePersistedState = {

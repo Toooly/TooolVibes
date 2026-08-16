@@ -1,6 +1,10 @@
 import { z } from "@/lib/validation/zod";
 import {
   MAX_COMPARE_TOOLS,
+  MAX_PERSONAL_STACKS,
+  MAX_STACK_DESCRIPTION_LENGTH,
+  MAX_STACK_NAME_LENGTH,
+  MAX_USE_CASE_LENGTH,
   MAX_WORKSPACE_COLLECTION_TOOLS,
   MAX_WORKSPACE_TOOL_STATES,
   WORKSPACE_SCHEMA_VERSION,
@@ -84,6 +88,22 @@ export const workspaceDecisionSchema = z
   })
   .strict();
 
+export const personalStackSchema = z
+  .object({
+    id: workspaceSlugSchema,
+    name: z.string().trim().min(1).max(MAX_STACK_NAME_LENGTH),
+    description: z
+      .string()
+      .trim()
+      .min(1)
+      .max(MAX_STACK_DESCRIPTION_LENGTH)
+      .nullable(),
+    slugs: uniqueSlugList(),
+    archivedAt: workspaceTimestampSchema.nullable(),
+    updatedAt: workspaceTimestampSchema,
+  })
+  .strict();
+
 export const workspaceToolStateSchema = z
   .object({
     stage: z.enum(["saved", "review", "top"]),
@@ -91,6 +111,9 @@ export const workspaceToolStateSchema = z
     saveReason: saveReasonSchema.nullable(),
     pinned: z.boolean(),
     decision: workspaceDecisionSchema.nullable(),
+    useCase: z.string().trim().min(1).max(MAX_USE_CASE_LENGTH).nullable().default(null),
+    alternatives: uniqueSlugList(MAX_COMPARE_TOOLS).default([]),
+    revisitAt: workspaceTimestampSchema.nullable().default(null),
     updatedAt: workspaceTimestampSchema.nullable(),
   })
   .strict();
@@ -107,6 +130,7 @@ export const workspaceStateV1Schema = z
     saved: workspaceOrderedListSchema,
     compare: workspaceCompareListSchema,
     stack: workspaceOrderedListSchema,
+    personalStacks: z.array(personalStackSchema).max(MAX_PERSONAL_STACKS).default([]),
     toolStates: workspaceToolStatesSchema,
   })
   .strict();
@@ -133,6 +157,15 @@ export const workspaceSyncStateV1Schema = workspaceStateV1Schema.superRefine(
         message: `Workspace toolStates cannot exceed ${MAX_WORKSPACE_TOOL_STATES} entries for remote sync.`,
       });
     }
+    state.personalStacks.forEach((stack, index) => {
+      if (stack.slugs.length > MAX_WORKSPACE_COLLECTION_TOOLS) {
+        context.addIssue({
+          code: "custom",
+          path: ["personalStacks", index, "slugs"],
+          message: `Workspace stack cannot exceed ${MAX_WORKSPACE_COLLECTION_TOOLS} tools for remote sync.`,
+        });
+      }
+    });
   },
 );
 

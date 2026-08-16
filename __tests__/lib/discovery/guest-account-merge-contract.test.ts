@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { mergeGuestWorkspaceContribution } from "@/lib/discovery/workspace-sync";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
+import { reduceWorkspaceState } from "@/lib/discovery/workspace-contract";
 
 function withSaved(slugs: string[]) {
   const empty = createEmptyWorkspaceState();
@@ -60,3 +61,36 @@ describe("guest → account merge contract", () => {
     expect(merged.saved.slugs).toEqual(["meku"]);
   });
 });
+
+  it("unions personal stacks by id and keeps the account stack on collision", () => {
+    const at = "2026-08-15T12:00:00.000Z";
+    const account = reduceWorkspaceState(createEmptyWorkspaceState(), {
+      type: "stacks/create",
+      id: "ai-coding",
+      name: "Account stack",
+      at,
+    });
+    const guest = reduceWorkspaceState(
+      reduceWorkspaceState(createEmptyWorkspaceState(), {
+        type: "stacks/create",
+        id: "ai-coding",
+        name: "Guest stack",
+        at,
+      }),
+      {
+        type: "stacks/create",
+        id: "free-stack",
+        name: "Free stack",
+        at,
+      },
+    );
+
+    const merged = mergeGuestWorkspaceContribution(account, guest);
+    expect(merged.personalStacks.map((stack) => stack.id).sort()).toEqual([
+      "ai-coding",
+      "free-stack",
+    ]);
+    expect(
+      merged.personalStacks.find((stack) => stack.id === "ai-coding")?.name,
+    ).toBe("Account stack");
+  });

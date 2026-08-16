@@ -74,6 +74,9 @@ function adaptLegacyToolState(value: unknown): WorkspaceToolState | null {
     saveReason,
     pinned: state.is_pinned === true,
     decision: null,
+    useCase: null,
+    alternatives: [],
+    revisitAt: null,
     updatedAt: getTimestamp(state.updated_at),
   };
 }
