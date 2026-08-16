@@ -77,7 +77,7 @@ export function AccountPanel() {
     return (
       <div
         id="member-access"
-        className="tone-account relative z-10 space-y-4 scroll-mt-24 px-4 py-6 sm:px-6 sm:py-8"
+        className="tone-account account-workspace-shell relative z-10 space-y-3 scroll-mt-24 px-4 py-6 sm:px-6 sm:py-8"
       >
         <AccountHero account={account} workspace={workspace} />
         {showStateBanner ? (
