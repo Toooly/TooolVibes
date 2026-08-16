@@ -99,19 +99,19 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           perché vale tenerlo d&apos;occhio e quando ha senso confrontarlo.
         </p>
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
+          <div className="rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
             <p className="editorial-label">1. Salva</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
               Parti da un profilo forte o da una raccolta che ha già il taglio giusto.
             </p>
           </div>
-          <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
+          <div className="rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
             <p className="editorial-label">2. Annota</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
               Segna il motivo rapido o una nota breve per non ripartire da zero.
             </p>
           </div>
-          <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
+          <div className="rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
             <p className="editorial-label">3. Confronta</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
               Quando restano 2 o 3 candidati veri, il passaggio naturale è il confronto.
@@ -139,7 +139,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
 
   return (
     <div className="tone-workspace space-y-4">
-      <div className="brand-panel panel-lift rounded-[28px] px-4 py-3.5 sm:px-5">
+      <div className="panel-lift rounded-[28px] border px-4 py-3.5 sm:px-5" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex flex-wrap items-center gap-2">

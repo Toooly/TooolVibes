@@ -29,7 +29,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
       className="min-h-screen px-5 py-10 sm:py-14"
       style={{
         background:
-          "radial-gradient(circle at 14% 8%, rgba(99,50,255,0.18), transparent 24%), radial-gradient(circle at 84% 12%, rgba(68,220,255,0.12), transparent 20%), radial-gradient(circle at 18% 76%, rgba(255,200,61,0.1), transparent 18%), linear-gradient(180deg, #f6f4ff 0%, #eee9ff 46%, #e5ddff 100%)",
+          "radial-gradient(circle at 14% 8%, rgba(99,50,255,0.18), transparent 24%), radial-gradient(circle at 84% 12%, rgba(68,220,255,0.12), transparent 20%), radial-gradient(circle at 18% 76%, rgba(255,200,61,0.1), transparent 18%), var(--tv-color-surface-base)",
       }}
     >
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-md items-start sm:items-center">
