@@ -25,14 +25,14 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
     <div className="page-shell py-8 sm:py-10">
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SectionHeader
+          <SectionHeader invert
             eyebrow="Modifica link affiliato"
             title={link.label}
             description="Aggiorna i parametri del link di affiliazione."
           />
           <Link
             href="/admin/affiliate-links"
-            className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)]"
+            className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff]"
           >
             Torna ai link affiliati
           </Link>
@@ -41,7 +41,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
         <form action={boundAction} className="mt-8 space-y-8">
           <section
             className="rounded-[28px] border p-5 sm:p-6"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
           >
             <div className="border-b pb-4 soft-divider">
               <p className="editorial-label">Link</p>
@@ -56,7 +56,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
                   name="tool_id"
                   defaultValue={link.tool_id}
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                   required
                 >
                   {runtime.tools.map((tool) => (
@@ -73,7 +73,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
                   name="label"
                   defaultValue={link.label}
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                   required
                 />
               </label>
@@ -85,7 +85,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
                   type="url"
                   defaultValue={link.destination_url}
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                   required
                 />
               </label>
@@ -97,7 +97,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
                   type="url"
                   defaultValue={link.tracking_url ?? ""}
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 />
               </label>
             </div>
@@ -105,7 +105,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
 
           <section
             className="rounded-[28px] border p-5 sm:p-6"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
           >
             <div className="border-b pb-4 soft-divider">
               <p className="editorial-label">Parametri UTM</p>
@@ -117,7 +117,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
                   name="campaign"
                   defaultValue={link.campaign ?? ""}
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 />
               </label>
 
@@ -127,7 +127,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
                   name="source"
                   defaultValue={link.source ?? ""}
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 />
               </label>
 
@@ -137,7 +137,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
                   name="medium"
                   defaultValue={link.medium ?? ""}
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 />
               </label>
             </div>
@@ -145,7 +145,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
 
           <section
             className="rounded-[28px] border p-5 sm:p-6"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
           >
             <div className="border-b pb-4 soft-divider">
               <p className="editorial-label">Stato</p>
@@ -153,7 +153,7 @@ export default async function EditAffiliateLinkPage({ params }: EditAffiliateLin
             <div className="mt-5">
               <label
                 className="flex items-center justify-between gap-4 rounded-[24px] border px-4 py-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <div>
                   <p className="text-sm font-semibold">Link attivo</p>

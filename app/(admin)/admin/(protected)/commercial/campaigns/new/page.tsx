@@ -22,7 +22,7 @@ export default function AdminNewCampaignPage() {
   return (
     <div className="space-y-6">
       <CommercialSubnav current="/admin/commercial/campaigns" />
-      <SectionHeader eyebrow="Commercial" title="Nuova campagna" description="Partner, creatività, copy, CTA, destinazione, schedule e placement. Zero codice." />
+      <SectionHeader invert eyebrow="Commercial" title="Nuova campagna" description="Partner, creatività, copy, CTA, destinazione, schedule e placement. Zero codice." />
       <form action={saveManagedCampaignAction} className="space-y-4 rounded-[28px] border border-white/10 bg-white/[0.04] p-5">
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="text-sm text-white/70">

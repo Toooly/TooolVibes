@@ -16,7 +16,7 @@ export default async function AdminEditPartnerPage({
   return (
     <div className="space-y-6">
       <CommercialSubnav current="/admin/commercial/partners" />
-      <SectionHeader eyebrow="Commercial" title={partner.name} description="Modifica identità e asset del partner." />
+      <SectionHeader invert eyebrow="Commercial" title={partner.name} description="Modifica identità e asset del partner." />
       <ManagedPartnerForm partner={partner} />
     </div>
   );

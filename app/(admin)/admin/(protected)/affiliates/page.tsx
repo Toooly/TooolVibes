@@ -90,7 +90,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
       <div className="space-y-6">
         <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader
+            <SectionHeader invert
               eyebrow="Programma affiliati"
               title="Richieste, codici referral e QR code"
               description="Qui arrivano le candidature dalla pagina pubblica affiliati. Puoi approvare manualmente, scrivere il codice referral, generare il link e inviare la risposta via email."
@@ -98,19 +98,19 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/affiliati"
-                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
+                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[#f4f1ff]"
               >
                 Pagina affiliati
               </Link>
               <Link
                 href="/admin/affiliate-links"
-                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
+                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[#f4f1ff]"
               >
                 Link tool
               </Link>
               <Link
                 href="/admin"
-                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
+                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[#f4f1ff]"
               >
                 Dashboard
               </Link>
@@ -127,8 +127,8 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                     : "rgba(15,118,110,0.18)",
                 background:
                   status === "error" || status === "validation" || status === "referral-validation"
-                    ? "rgba(254,242,242,0.95)"
-                    : "rgba(236,253,245,0.95)",
+                    ? "rgba(255,82,82,0.12)"
+                    : "rgba(57,210,246,0.12)",
               }}
             >
               {statusLabels[status]}
@@ -178,7 +178,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
               <article
                 key={item.title}
                 className="rounded-[22px] border px-4 py-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.7)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <p className="text-sm font-semibold">{item.title}</p>
                 <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
@@ -202,7 +202,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                 <Link
                   key={item.value}
                   href={item.href}
-                  className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[var(--muted-strong)]"
+                  className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[#f4f1ff]"
                   style={{
                     background:
                       activeView === item.value ? "rgba(106,60,255,0.12)" : undefined,
@@ -222,7 +222,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                   className="interactive-surface relative overflow-hidden rounded-[var(--radius-xl)] border p-5"
                   style={{
                     borderColor: "var(--line)",
-                    background: "rgba(255,255,255,0.76)",
+                    background: "rgba(255,255,255,0.06)",
                   }}
                 >
                   <div className="card-glow absolute inset-0" />
@@ -273,7 +273,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                           className="rounded-[24px] border p-4"
                           style={{
                             borderColor: "rgba(15,118,110,0.18)",
-                            background: "rgba(240,253,250,0.9)",
+                            background: "rgba(57,210,246,0.10)",
                           }}
                         >
                           <p className="editorial-label">Referral attivo</p>
@@ -310,7 +310,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                             className="w-full rounded-2xl border px-4 py-3 text-sm outline-none"
                             style={{
                               borderColor: "var(--line)",
-                              background: "rgba(255,255,255,0.82)",
+                              background: "rgba(255,255,255,0.06)",
                             }}
                           />
                         </label>
@@ -324,7 +324,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                             className="w-full rounded-2xl border px-4 py-3 text-sm outline-none"
                             style={{
                               borderColor: "var(--line)",
-                              background: "rgba(255,255,255,0.82)",
+                              background: "rgba(255,255,255,0.06)",
                             }}
                           />
                         </label>
@@ -336,7 +336,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                               name="status"
                               value="reviewing"
                               disabled={!runtime.canWrite}
-                              className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                              className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
                             >
                               In revisione
                             </button>

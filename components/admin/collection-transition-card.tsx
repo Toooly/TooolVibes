@@ -38,14 +38,14 @@ function getReadinessMeta(state: CollectionReadinessSummary["state"]) {
       return {
         label: "Da rivedere",
         borderColor: "rgba(161,105,47,0.18)",
-        background: "rgba(255,251,235,0.96)",
+        background: "rgba(243,191,76,0.12)",
       };
     case "ready":
     default:
       return {
         label: "Pronta",
         borderColor: "rgba(15,118,110,0.18)",
-        background: "rgba(236,253,245,0.95)",
+        background: "rgba(57,210,246,0.12)",
       };
   }
 }
@@ -55,18 +55,18 @@ function getReviewMetaStyles(reviewState: ReturnType<typeof getCollectionTransit
     case "reviewed":
       return {
         borderColor: "rgba(15,118,110,0.18)",
-        background: "rgba(236,253,245,0.95)",
+        background: "rgba(57,210,246,0.12)",
       };
     case "dismissed":
       return {
         borderColor: "rgba(112,82,255,0.16)",
-        background: "rgba(245,242,255,0.92)",
+        background: "rgba(106,60,255,0.14)",
       };
     case "unreviewed":
     default:
       return {
         borderColor: "rgba(161,105,47,0.18)",
-        background: "rgba(255,251,235,0.96)",
+        background: "rgba(243,191,76,0.12)",
       };
   }
 }
@@ -140,7 +140,7 @@ export function CollectionTransitionCard({
   return (
     <article
       className="rounded-[var(--radius-lg)] border p-5"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}
+      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-2">
@@ -159,8 +159,8 @@ export function CollectionTransitionCard({
                   severity === "critical-conflict"
                     ? "rgba(254,242,242,0.96)"
                     : severity === "minor-drift" || severity === "pending"
-                      ? "rgba(255,251,235,0.96)"
-                      : "rgba(236,253,245,0.95)",
+                      ? "rgba(243,191,76,0.12)"
+                      : "rgba(57,210,246,0.12)",
               }}
             >
               {severityMeta.label}
@@ -192,8 +192,8 @@ export function CollectionTransitionCard({
                       : "rgba(161,105,47,0.18)",
                   background:
                     hasSafeAlignPreview
-                      ? "rgba(236,253,245,0.95)"
-                      : "rgba(255,251,235,0.96)",
+                      ? "rgba(57,210,246,0.12)"
+                      : "rgba(243,191,76,0.12)",
                 }}
               >
                 {syncPreviewMeta.label}
@@ -258,8 +258,8 @@ export function CollectionTransitionCard({
               syncPreviewPosture.tone === "error"
                 ? "rgba(254,242,242,0.96)"
                 : syncPreviewPosture.tone === "warning"
-                  ? "rgba(255,251,235,0.96)"
-                  : "rgba(236,253,245,0.95)",
+                  ? "rgba(243,191,76,0.12)"
+                  : "rgba(57,210,246,0.12)",
           }}
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -299,7 +299,7 @@ export function CollectionTransitionCard({
                 background:
                   item.severity === "critical"
                     ? "rgba(254,242,242,0.96)"
-                    : "rgba(255,251,235,0.96)",
+                    : "rgba(243,191,76,0.12)",
               }}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -334,7 +334,7 @@ export function CollectionTransitionCard({
       ) : (
         <div
           className="mt-5 rounded-[22px] border px-4 py-4 text-sm"
-          style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(236,253,245,0.95)" }}
+          style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
         >
           Nessuna differenza aperta sui campi chiave di transizione.
         </div>
@@ -346,7 +346,7 @@ export function CollectionTransitionCard({
             <div
               key={`${entry.slug}-${warning}`}
               className="rounded-[18px] border px-4 py-3 text-sm"
-              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
+              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
             >
               {warning}
             </div>
@@ -371,8 +371,8 @@ export function CollectionTransitionCard({
                   check.state === "error"
                     ? "rgba(254,242,242,0.96)"
                     : check.state === "warning"
-                      ? "rgba(255,251,235,0.96)"
-                      : "rgba(236,253,245,0.95)",
+                      ? "rgba(243,191,76,0.12)"
+                      : "rgba(57,210,246,0.12)",
               }}
             >
               <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
@@ -408,10 +408,10 @@ export function CollectionTransitionCard({
               {collectionId ? <input type="hidden" name="collection_id" value={collectionId} /> : null}
               <button
                 type="submit"
-                className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[var(--muted-strong)]"
+                className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[#f4f1ff]"
                 style={{
                   borderColor: "rgba(15,118,110,0.18)",
-                  background: "rgba(236,253,245,0.95)",
+                  background: "rgba(57,210,246,0.12)",
                 }}
               >
                 Segna come rivista
@@ -425,10 +425,10 @@ export function CollectionTransitionCard({
               {collectionId ? <input type="hidden" name="collection_id" value={collectionId} /> : null}
               <button
                 type="submit"
-                className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[var(--muted-strong)]"
+                className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[#f4f1ff]"
                 style={{
                   borderColor: "rgba(112,82,255,0.16)",
-                  background: "rgba(245,242,255,0.92)",
+                  background: "rgba(106,60,255,0.14)",
                 }}
               >
                 Ignora segnale
@@ -443,7 +443,7 @@ export function CollectionTransitionCard({
                 {collectionId ? <input type="hidden" name="collection_id" value={collectionId} /> : null}
                 <button
                   type="submit"
-                  className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[var(--muted-strong)]"
+                  className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[#f4f1ff]"
                 >
                   Riapri revisione
                 </button>

@@ -29,7 +29,7 @@ export default async function AdminCampaignEditorPage({
     <div className="space-y-6">
       <AdminSaveBanner saved={query.saved} />
       <CommercialSubnav current="/admin/commercial/campaigns" />
-      <SectionHeader eyebrow="Campagna" title={campaign.name} description="Generale, creatività, schedule e delivery. Salvataggio esplicito." />
+      <SectionHeader invert eyebrow="Campagna" title={campaign.name} description="Generale, creatività, schedule e delivery. Salvataggio esplicito." />
       <AdminEditorChrome action={action} saveLabel="Salva campagna" backHref="/admin/commercial/campaigns">
         <input type="hidden" name="campaignId" value={campaign.id} />
         <input type="hidden" name="id" value={campaign.id} />

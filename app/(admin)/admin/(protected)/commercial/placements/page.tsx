@@ -19,7 +19,7 @@ export default async function AdminPlacementsPage({ searchParams }: { searchPara
     <div className="space-y-6">
       <AdminSaveBanner saved={params.saved} />
       <CommercialSubnav current="/admin/commercial/placements" />
-      <SectionHeader
+      <SectionHeader invert
         eyebrow="Commercial"
         title="Placement"
         description="Ogni superficie può restare in AUTO, fissare una campagna o spegnersi. TinyAdz non è in questo elenco."

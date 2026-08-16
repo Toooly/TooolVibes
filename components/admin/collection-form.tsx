@@ -74,7 +74,7 @@ function FormSection({
   return (
     <section
       className="rounded-[28px] border p-5 sm:p-6"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       <div className="border-b pb-4 soft-divider">
         <p className="editorial-label">{eyebrow}</p>
@@ -100,7 +100,7 @@ function StatCard({
   return (
     <article
       className="rounded-[22px] border px-4 py-4"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       <p
         className="text-xs font-semibold uppercase tracking-[0.18em]"
@@ -173,7 +173,7 @@ export function CollectionForm({
       {state.status === "error" && state.message ? (
         <div
           className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-          style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(254,242,242,0.95)" }}
+          style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(255,82,82,0.12)" }}
         >
           {state.message}
         </div>
@@ -273,7 +273,7 @@ export function CollectionForm({
                 name="title"
                 defaultValue={values.title}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.title} />
@@ -286,7 +286,7 @@ export function CollectionForm({
                 defaultValue={values.slug}
                 placeholder="lascia vuoto per generarlo dal titolo"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.slug} />
             </label>
@@ -298,7 +298,7 @@ export function CollectionForm({
                 defaultValue={values.description}
                 rows={3}
                 className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.description} />
@@ -312,7 +312,7 @@ export function CollectionForm({
                 readOnly
                 aria-label="URL copertina selezionato"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.cover_image_url} />
               <div className="mt-4">
@@ -327,7 +327,7 @@ export function CollectionForm({
                 name="cover_kicker"
                 defaultValue={values.cover_kicker}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.cover_kicker} />
@@ -348,7 +348,7 @@ export function CollectionForm({
                 defaultValue={values.rationale}
                 rows={5}
                 className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.rationale} />
@@ -362,7 +362,7 @@ export function CollectionForm({
                 rows={4}
                 placeholder="Un highlight per riga"
                 className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.highlights} />
             </label>
@@ -374,7 +374,7 @@ export function CollectionForm({
                 defaultValue={values.premium_teaser}
                 rows={3}
                 className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.premium_teaser} />
             </label>
@@ -393,7 +393,7 @@ export function CollectionForm({
                 name="theme"
                 defaultValue={values.theme}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {collectionThemes.map((theme) => (
                   <option key={theme} value={theme}>
@@ -410,7 +410,7 @@ export function CollectionForm({
                 name="audience"
                 defaultValue={values.audience}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {collectionAudiences.map((audience) => (
                   <option key={audience} value={audience}>
@@ -427,7 +427,7 @@ export function CollectionForm({
                 name="difficulty"
                 defaultValue={values.difficulty}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {collectionDifficulties.map((difficulty) => (
                   <option key={difficulty} value={difficulty}>
@@ -444,7 +444,7 @@ export function CollectionForm({
                 name="tone"
                 defaultValue={values.tone}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {collectionTones.map((tone) => (
                   <option key={tone} value={tone}>
@@ -461,7 +461,7 @@ export function CollectionForm({
                 name="access"
                 defaultValue={values.access}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {collectionAccessModes.map((access) => (
                   <option key={access} value={access}>
@@ -478,7 +478,7 @@ export function CollectionForm({
                 name="surface"
                 defaultValue={values.surface}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {collectionSurfaces.map((surface) => (
                   <option key={surface} value={surface}>
@@ -495,7 +495,7 @@ export function CollectionForm({
                 name="editorial_state"
                 defaultValue={values.editorial_state}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {collectionEditorialStates.map((editorialState) => (
                   <option key={editorialState} value={editorialState}>
@@ -512,7 +512,7 @@ export function CollectionForm({
                 name="featured_slot"
                 defaultValue={values.featured_slot}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {collectionFeaturedSlots.map((slot) => (
                   <option key={slot || "none"} value={slot}>
@@ -530,7 +530,7 @@ export function CollectionForm({
                 type="number"
                 defaultValue={values.editorial_order}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.editorial_order} />
             </label>
@@ -550,7 +550,7 @@ export function CollectionForm({
                 type="datetime-local"
                 defaultValue={values.scheduled_for}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.scheduled_for} />
             </label>
@@ -562,7 +562,7 @@ export function CollectionForm({
                 type="datetime-local"
                 defaultValue={values.first_published_at}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
             </label>
 
@@ -573,7 +573,7 @@ export function CollectionForm({
                 type="datetime-local"
                 defaultValue={values.published_at}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
             </label>
 
@@ -584,7 +584,7 @@ export function CollectionForm({
                 type="datetime-local"
                 defaultValue={values.archived_at}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
             </label>
           </div>
@@ -620,7 +620,7 @@ export function CollectionForm({
                 <div
                   key={`slot-row-${index}`}
                   className="rounded-[24px] border p-4"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3 soft-divider">
                     <div>

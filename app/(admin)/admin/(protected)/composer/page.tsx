@@ -27,7 +27,7 @@ export default async function AdminComposerPage({ searchParams }: { searchParams
   return (
     <div className="space-y-6">
       <AdminSaveBanner saved={params.saved} />
-      <SectionHeader
+      <SectionHeader invert
         eyebrow="Composer"
         title="Controlli homepage"
         description="Il codice tiene il design. Qui decidi solo i contenuti editoriali che la Home consuma davvero: annuncio e tool in evidenza. Le guide e le raccolte restano sulle loro superfici. Il partner è nel motore commercial."

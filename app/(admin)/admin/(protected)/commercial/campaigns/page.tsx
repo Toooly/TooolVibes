@@ -19,7 +19,7 @@ export default async function AdminCampaignsPage({
     <div className="space-y-6">
       <AdminSaveBanner saved={params.saved} />
       <CommercialSubnav current="/admin/commercial/campaigns" />
-      <SectionHeader
+      <SectionHeader invert
         eyebrow="Commercial"
         title="Campagne"
         description="Lista, non un muro di form. Apri una campagna per creatività, targeting e delivery."

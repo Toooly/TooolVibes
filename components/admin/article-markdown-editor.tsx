@@ -53,8 +53,8 @@ function ToolbarButton({
       aria-label={title}
       onClick={onClick}
       disabled={disabled}
-      className="inline-grid h-9 w-9 place-items-center rounded-xl border text-[var(--muted-strong)] transition hover:-translate-y-0.5 hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+      className="inline-grid h-9 w-9 place-items-center rounded-xl border text-[#f4f1ff] transition hover:-translate-y-0.5 hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
+      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       {children}
     </button>
@@ -168,7 +168,7 @@ export function ArticleMarkdownEditor({
   }
 
   return (
-    <div className="overflow-hidden rounded-[28px] border" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}>
+    <div className="overflow-hidden rounded-[28px] border" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}>
       <div className="flex flex-wrap items-center justify-between gap-3 border-b px-3 py-3 soft-divider">
         <div className="flex flex-wrap items-center gap-1.5">
           <ToolbarButton title="Titolo grande" disabled={disabled} onClick={() => replaceSelection((text) => `# ${text}`)}>
@@ -220,7 +220,7 @@ export function ArticleMarkdownEditor({
             aria-label="Grandezza testo"
             disabled={disabled}
             className="h-9 rounded-xl border px-2 text-xs font-semibold outline-none"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
             defaultValue=""
             onChange={(event) => {
               const size = event.target.value;
@@ -240,7 +240,7 @@ export function ArticleMarkdownEditor({
             aria-label="Font"
             disabled={disabled}
             className="h-9 rounded-xl border px-2 text-xs font-semibold outline-none"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
             defaultValue=""
             onChange={(event) => {
               const family = event.target.value;
@@ -280,7 +280,7 @@ export function ArticleMarkdownEditor({
           </ToolbarButton>
         </div>
 
-        <div className="inline-flex rounded-full border p-1" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}>
+        <div className="inline-flex rounded-full border p-1" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}>
           <button
             type="button"
             onClick={() => setMode("write")}

@@ -19,14 +19,14 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
     <div className="page-shell py-8 sm:py-10">
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SectionHeader
+          <SectionHeader invert
             eyebrow="Nuovo link affiliato"
             title="Crea un link di affiliazione"
             description="Associa un link tracciato a un tool del catalogo. I parametri UTM sono opzionali."
           />
           <Link
             href="/admin/affiliate-links"
-            className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)]"
+            className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff]"
           >
             Torna ai link affiliati
           </Link>
@@ -35,7 +35,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
         {status === "error" ? (
           <div
             className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-            style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(254,242,242,0.95)" }}
+            style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(255,82,82,0.12)" }}
           >
             Errore durante la creazione. Verifica i dati e riprova.
           </div>
@@ -44,7 +44,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
         {status === "validation" ? (
           <div
             className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-            style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(254,242,242,0.95)" }}
+            style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(255,82,82,0.12)" }}
           >
             Compila tutti i campi obbligatori.
           </div>
@@ -53,7 +53,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
         <form action={createAffiliateLinkAction} className="mt-8 space-y-8">
           <section
             className="rounded-[28px] border p-5 sm:p-6"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
           >
             <div className="border-b pb-4 soft-divider">
               <p className="editorial-label">Associazione tool</p>
@@ -68,7 +68,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                   name="tool_id"
                   defaultValue={toolId ?? ""}
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                   required
                 >
                   <option value="">Seleziona un tool</option>
@@ -86,7 +86,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                   name="label"
                   placeholder="es. Link homepage o pagina prezzi"
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                   required
                 />
               </label>
@@ -98,7 +98,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                   type="url"
                   placeholder="https://tuodominio.it/prezzi"
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                   required
                 />
               </label>
@@ -110,7 +110,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                   type="url"
                   placeholder="URL tracciato diverso dalla destinazione"
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 />
               </label>
             </div>
@@ -118,7 +118,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
 
           <section
             className="rounded-[28px] border p-5 sm:p-6"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
           >
             <div className="border-b pb-4 soft-divider">
               <p className="editorial-label">Parametri UTM</p>
@@ -137,7 +137,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                   name="campaign"
                   placeholder="es. spring-launch"
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 />
               </label>
 
@@ -147,7 +147,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                   name="source"
                   placeholder="es. tooolvibes"
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 />
               </label>
 
@@ -157,7 +157,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
                   name="medium"
                   placeholder="es. affiliate"
                   className="w-full rounded-2xl border px-4 py-3 outline-none"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 />
               </label>
             </div>
@@ -165,7 +165,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
 
           <section
             className="rounded-[28px] border p-5 sm:p-6"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
           >
             <div className="border-b pb-4 soft-divider">
               <p className="editorial-label">Stato</p>
@@ -173,7 +173,7 @@ export default async function NewAffiliateLinkPage({ searchParams }: NewAffiliat
             <div className="mt-5">
               <label
                 className="flex items-center justify-between gap-4 rounded-[24px] border px-4 py-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <div>
                   <p className="text-sm font-semibold">Link attivo</p>

@@ -107,7 +107,7 @@ export default async function AdminDashboardPage({
       <div className="space-y-5">
         <section className="brand-panel rounded-[var(--radius-xl)] p-5 sm:p-7">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader
+            <SectionHeader invert
               eyebrow="Gestione blog"
               title="Crea, modifica e pubblica articoli"
               description="Un'area dedicata al blog: bozze, contenuti pubblicati, articoli in evidenza e modifica editoriale con media nel corpo articolo."
@@ -125,7 +125,7 @@ export default async function AdminDashboardPage({
               </Link>
               <Link
                 href="/posts"
-                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
+                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[#f4f1ff]"
               >
                 Blog pubblico
               </Link>
@@ -137,7 +137,7 @@ export default async function AdminDashboardPage({
               className="mt-5 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
               style={{
                 borderColor: "rgba(15,118,110,0.18)",
-                background: "rgba(236,253,245,0.95)",
+                background: "rgba(57,210,246,0.12)",
               }}
             >
               {statusMessages[status]}
@@ -209,7 +209,7 @@ export default async function AdminDashboardPage({
                   className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
                   style={{
                     borderColor: "rgba(161,105,47,0.18)",
-                    background: "rgba(255,251,235,0.96)",
+                    background: "rgba(243,191,76,0.12)",
                   }}
                 >
                   {getAdminArticleWarningLabel(warning)}
@@ -235,7 +235,7 @@ export default async function AdminDashboardPage({
                 className="rounded-[20px] border px-4 py-3 text-sm"
                 style={{
                   borderColor: canWrite ? "rgba(15,118,110,0.18)" : "rgba(161,105,47,0.18)",
-                  background: canWrite ? "rgba(240,253,250,0.9)" : "rgba(255,251,235,0.96)",
+                  background: canWrite ? "rgba(57,210,246,0.10)" : "rgba(243,191,76,0.12)",
                 }}
               >
                 {canWrite
@@ -247,7 +247,7 @@ export default async function AdminDashboardPage({
                   <Link
                     key={item.value}
                     href={item.href}
-                    className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[var(--muted-strong)]"
+                    className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[#f4f1ff]"
                     style={{
                       background:
                         activeView === item.value ? "rgba(106,60,255,0.12)" : undefined,
@@ -270,7 +270,7 @@ export default async function AdminDashboardPage({
                     display: "grid",
                     gap: "1.25rem",
                     borderColor: "var(--line)",
-                    background: "rgba(255,255,255,0.76)",
+                    background: "rgba(255,255,255,0.06)",
                   }}
                 >
                   <div className="card-glow absolute inset-0" />
@@ -314,7 +314,7 @@ export default async function AdminDashboardPage({
                           className="selection-chip rounded-full border px-3 py-1 text-xs font-medium"
                           style={{
                             borderColor: "var(--line)",
-                            background: "rgba(255,255,255,0.82)",
+                            background: "rgba(255,255,255,0.06)",
                           }}
                         >
                           #{tag}
@@ -331,7 +331,7 @@ export default async function AdminDashboardPage({
                     {article.status === "published" ? (
                       <Link
                         href={`/posts/${article.slug}`}
-                        className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
+                        className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[#f4f1ff]"
                       >
                         Apri articolo
                       </Link>
@@ -339,14 +339,14 @@ export default async function AdminDashboardPage({
                     {article.admin_can_edit ? (
                       <Link
                         href={`/admin/articles/${article.id}/edit`}
-                        className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
+                        className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[#f4f1ff]"
                       >
                         Modifica
                       </Link>
                     ) : canWrite ? (
                       <Link
                         href={`/admin/articles/new?seed=${article.slug}`}
-                        className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
+                        className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[#f4f1ff]"
                       >
                         Importa e modifica
                       </Link>
@@ -355,7 +355,7 @@ export default async function AdminDashboardPage({
                         className="rounded-full border px-4 py-2 text-center text-sm font-semibold"
                         style={{
                           borderColor: "rgba(161,105,47,0.2)",
-                          background: "rgba(255,251,235,0.96)",
+                          background: "rgba(243,191,76,0.12)",
                           color: "var(--muted-strong)",
                         }}
                       >
@@ -369,7 +369,7 @@ export default async function AdminDashboardPage({
                           <button
                             type="submit"
                             disabled={!canWrite}
-                            className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                            className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
                           >
                             {article.featured ? "Rimuovi da evidenza" : "Metti in evidenza"}
                           </button>
@@ -385,7 +385,7 @@ export default async function AdminDashboardPage({
                           <button
                             type="submit"
                             disabled={!canWrite}
-                            className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                            className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
                           >
                             {article.status === "published" ? "Torna in bozza" : "Pubblica"}
                           </button>
@@ -403,7 +403,7 @@ export default async function AdminDashboardPage({
                         className="rounded-[20px] border px-4 py-3 text-sm leading-6"
                         style={{
                           borderColor: "var(--line)",
-                          background: "rgba(255,255,255,0.72)",
+                          background: "rgba(255,255,255,0.06)",
                           color: "var(--muted)",
                         }}
                       >

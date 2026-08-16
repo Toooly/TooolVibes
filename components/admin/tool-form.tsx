@@ -51,7 +51,7 @@ function FormSection({
   return (
     <section
       className="rounded-[28px] border p-5 sm:p-6"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       <div className="border-b pb-4 soft-divider">
         <p className="editorial-label">{eyebrow}</p>
@@ -79,7 +79,7 @@ function ToggleCard({
   return (
     <label
       className="flex items-center justify-between gap-4 rounded-[24px] border px-4 py-4"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       <div>
         <p className="text-sm font-semibold">{title}</p>
@@ -122,7 +122,7 @@ export function ToolForm({
       {state.status === "error" && state.message ? (
         <div
           className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-          style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(254,242,242,0.95)" }}
+          style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(255,82,82,0.12)" }}
         >
           {state.message}
         </div>
@@ -141,7 +141,7 @@ export function ToolForm({
                 name="name"
                 defaultValue={values.name}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.name} />
@@ -154,7 +154,7 @@ export function ToolForm({
                 defaultValue={values.slug}
                 placeholder="lascia vuoto per generarlo dal nome"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.slug} />
             </label>
@@ -165,7 +165,7 @@ export function ToolForm({
                 name="category"
                 defaultValue={values.category}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {toolCategories.map((category) => (
                   <option key={category} value={category}>
@@ -183,7 +183,7 @@ export function ToolForm({
                 defaultValue={values.tags}
                 placeholder="ai, automazione, scrittura"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.tags} />
             </label>
@@ -194,7 +194,7 @@ export function ToolForm({
                 name="source"
                 defaultValue={values.source}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.source} />
@@ -207,7 +207,7 @@ export function ToolForm({
                 type="date"
                 defaultValue={values.date_discovered}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.date_discovered} />
@@ -228,7 +228,7 @@ export function ToolForm({
                 defaultValue={values.short_description_it}
                 rows={3}
                 className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.short_description_it} />
@@ -241,7 +241,7 @@ export function ToolForm({
                 defaultValue={values.description_it}
                 rows={7}
                 className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.description_it} />
@@ -254,7 +254,7 @@ export function ToolForm({
                 type="url"
                 defaultValue={values.website_url}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.website_url} />
@@ -267,7 +267,7 @@ export function ToolForm({
                 type="url"
                 defaultValue={values.tooolvibes_post_url}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.tooolvibes_post_url} />
@@ -281,7 +281,7 @@ export function ToolForm({
                 defaultValue={values.affiliate_url ?? undefined}
                 placeholder="Se presente, viene usato come link principale nel sito pubblico"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.affiliate_url} />
             </label>
@@ -294,7 +294,7 @@ export function ToolForm({
                 readOnly
                 aria-label="URL copertina selezionato"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.cover_image_url} />
               <div className="mt-4">
@@ -313,7 +313,7 @@ export function ToolForm({
           <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
             <div
               className="rounded-[24px] border px-4 py-4"
-              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
             >
               <p className="text-sm font-semibold">Nota operativa</p>
               <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>

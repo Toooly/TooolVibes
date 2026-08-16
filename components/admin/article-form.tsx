@@ -63,7 +63,7 @@ function FormSection({
   return (
     <section
       className="rounded-[28px] border p-5 sm:p-6"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.72)" }}
+      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       <div className="border-b pb-4 soft-divider">
         <p className="editorial-label">{eyebrow}</p>
@@ -91,7 +91,7 @@ function ToggleCard({
   return (
     <label
       className="flex items-center justify-between gap-4 rounded-[24px] border px-4 py-4"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       <div>
         <p className="text-sm font-semibold">{title}</p>
@@ -129,7 +129,7 @@ export function ArticleForm({
       {state.status === "error" && state.message ? (
         <div
           className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-          style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(254,242,242,0.95)" }}
+          style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(255,82,82,0.12)" }}
         >
           {state.message}
         </div>
@@ -148,7 +148,7 @@ export function ArticleForm({
                 name="title"
                 defaultValue={values.title}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.title} />
@@ -161,7 +161,7 @@ export function ArticleForm({
                 defaultValue={values.slug}
                 placeholder="lascia vuoto per generarlo dal titolo"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.slug} />
             </label>
@@ -173,7 +173,7 @@ export function ArticleForm({
                 defaultValue={values.dek}
                 rows={3}
                 className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.dek} />
@@ -186,7 +186,7 @@ export function ArticleForm({
                 defaultValue={values.summary}
                 rows={3}
                 className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.summary} />
@@ -222,7 +222,7 @@ export function ArticleForm({
                 aria-label="URL copertina selezionato"
                 placeholder="https://..."
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.cover_image_url} />
             </label>
@@ -233,7 +233,7 @@ export function ArticleForm({
                 name="cover_image_alt"
                 defaultValue={values.cover_image_alt}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.cover_image_alt} />
               <div className="mt-4">
@@ -248,7 +248,7 @@ export function ArticleForm({
                 name="author_name"
                 defaultValue={values.author_name}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.author_name} />
@@ -261,7 +261,7 @@ export function ArticleForm({
                 defaultValue={values.tags}
                 placeholder="ai, seo, automazione"
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               />
               <FieldError error={state.fieldErrors?.tags} />
             </label>
@@ -272,7 +272,7 @@ export function ArticleForm({
                 name="kind"
                 defaultValue={values.kind}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {articleKinds.map((kind) => (
                   <option key={kind} value={kind}>
@@ -289,7 +289,7 @@ export function ArticleForm({
                 name="status"
                 defaultValue={values.status}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 {articleStatuses.map((status) => (
                   <option key={status} value={status}>
@@ -307,7 +307,7 @@ export function ArticleForm({
                 type="date"
                 defaultValue={values.published_at}
                 className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 required
               />
               <FieldError error={state.fieldErrors?.published_at} />

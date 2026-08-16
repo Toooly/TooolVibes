@@ -46,7 +46,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
     <div className="page-shell py-8 sm:py-10">
       <div className="brand-panel rounded-[var(--radius-xl)] p-6 sm:p-8 lg:p-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <SectionHeader
+          <SectionHeader invert
             eyebrow={seedPost ? "Importa articolo" : "Nuovo articolo"}
             title={seedPost ? `Importa "${seedPost.title}" nel blog` : "Crea una nuova bozza blog"}
             description={
@@ -57,7 +57,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
           />
           <Link
             href="/admin"
-            className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)]"
+            className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff]"
           >
             Torna a Gestione blog
           </Link>
@@ -68,7 +68,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
             <div
               key={item.label}
               className="rounded-[22px] border px-4 py-4"
-              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}
+              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
             >
               <p className="editorial-label">{item.label}</p>
               <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
@@ -81,7 +81,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
         {!canWrite ? (
           <div
             className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-            style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
+            style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
           >
             {runtime.writeMessage}
           </div>

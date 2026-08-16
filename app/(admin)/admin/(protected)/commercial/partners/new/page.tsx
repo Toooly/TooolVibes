@@ -6,7 +6,7 @@ export default function AdminNewPartnerPage() {
   return (
     <div className="space-y-6">
       <CommercialSubnav current="/admin/commercial/partners" />
-      <SectionHeader
+      <SectionHeader invert
         eyebrow="Commercial"
         title="Nuovo partner"
         description="Identità, logo e brand plate si gestiscono qui. Nessuna modifica al codice per pubblicare un partner."

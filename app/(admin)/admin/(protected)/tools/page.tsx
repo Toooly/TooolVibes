@@ -66,7 +66,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
       <div className="space-y-6">
         <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader
+            <SectionHeader invert
               eyebrow="Gestione tool"
               title="Catalogo operativo, non solo lista."
               description="Qui gestisci i tool che alimentano homepage, catalogo, raccolte, confronto e schede pubbliche."
@@ -84,7 +84,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
               </Link>
               <Link
                 href="/admin"
-                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
+                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[#f4f1ff]"
               >
                 Dashboard
               </Link>
@@ -96,7 +96,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
               style={{
                 borderColor: "rgba(15,118,110,0.18)",
-                background: "rgba(236,253,245,0.95)",
+                background: "rgba(57,210,246,0.12)",
               }}
             >
               {statusMessages[status]}
@@ -127,14 +127,14 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
               className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
               style={{
                 borderColor: runtime.canWrite ? "rgba(15,118,110,0.18)" : "rgba(161,105,47,0.18)",
-                background: runtime.canWrite ? "rgba(240,253,250,0.9)" : "rgba(255,251,235,0.96)",
+                background: runtime.canWrite ? "rgba(57,210,246,0.10)" : "rgba(243,191,76,0.12)",
               }}
             >
               {runtime.writeMessage}
             </div>
             <div
               className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-              style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(245,242,255,0.92)" }}
+              style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(106,60,255,0.14)" }}
             >
               Lettura interna: <strong>{getReadSourceLabel(runtime.adminReadSource)}</strong>.
             </div>
@@ -148,7 +148,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                   className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
                   style={{
                     borderColor: "rgba(161,105,47,0.18)",
-                    background: "rgba(255,251,235,0.96)",
+                    background: "rgba(243,191,76,0.12)",
                   }}
                 >
                   {getAdminToolWarningLabel(warning)}
@@ -171,7 +171,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                 <Link
                   key={item.value}
                   href={item.href}
-                  className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[var(--muted-strong)]"
+                  className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[#f4f1ff]"
                   style={{
                     background: activeView === item.value ? "rgba(106,60,255,0.12)" : undefined,
                   }}
@@ -188,7 +188,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                 <article
                   key={tool.id}
                   className="interactive-surface relative overflow-hidden rounded-[var(--radius-xl)] border p-5"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 >
                   <div className="card-glow absolute inset-0" />
                   <div className="relative grid gap-5 xl:grid-cols-[1.35fr_0.9fr_auto]">
@@ -220,7 +220,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                           <span
                             key={tag}
                             className="selection-chip rounded-full border px-3 py-1 text-xs font-medium"
-                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                           >
                             #{tag}
                           </span>
@@ -237,7 +237,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                         <div
                           key={item.label}
                           className="rounded-[22px] border px-4 py-3"
-                          style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                          style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                         >
                           <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                             {item.label}
@@ -259,7 +259,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                       {tool.is_published ? (
                         <Link
                           href={`/toools/${tool.slug}`}
-                          className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[var(--muted-strong)]"
+                          className="button-shell button-secondary rounded-full px-4 py-2 text-center text-sm font-semibold text-[#f4f1ff]"
                         >
                           Apri scheda
                         </Link>
@@ -268,7 +268,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                         <button
                           type="submit"
                           disabled={!runtime.canWrite}
-                          className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                          className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
                         >
                           {tool.is_featured ? "Rimuovi evidenza" : "Metti in evidenza"}
                         </button>
@@ -277,7 +277,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                         <button
                           type="submit"
                           disabled={!runtime.canWrite}
-                          className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                          className="button-shell button-secondary w-full rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
                         >
                           {tool.is_published ? "Torna in bozza" : "Pubblica"}
                         </button>

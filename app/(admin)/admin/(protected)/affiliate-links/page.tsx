@@ -48,7 +48,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
       <div className="space-y-6">
         <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader
+            <SectionHeader invert
               eyebrow="Link affiliati"
               title="Link affiliati dei tool"
               description="Questa sezione gestisce i link outbound dei tool nel catalogo. Le candidature degli affiliati esterni vivono invece nel programma affiliati."
@@ -56,7 +56,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/admin/affiliates"
-                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
+                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[#f4f1ff]"
               >
                 Programma affiliati
               </Link>
@@ -72,7 +72,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
               </Link>
               <Link
                 href="/admin"
-                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
+                className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[#f4f1ff]"
               >
                 Dashboard
               </Link>
@@ -84,7 +84,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
               style={{
                 borderColor: status === "error" || status === "validation" ? "rgba(185,28,28,0.25)" : "rgba(15,118,110,0.18)",
-                background: status === "error" || status === "validation" ? "rgba(254,242,242,0.95)" : "rgba(236,253,245,0.95)",
+                background: status === "error" || status === "validation" ? "rgba(255,82,82,0.12)" : "rgba(57,210,246,0.12)",
               }}
             >
               {statusLabels[status]}
@@ -129,7 +129,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
                   className="interactive-surface relative overflow-hidden rounded-[var(--radius-xl)] border p-5"
                   style={{
                     borderColor: "var(--line)",
-                    background: "rgba(255,255,255,0.76)",
+                    background: "rgba(255,255,255,0.06)",
                   }}
                 >
                   <div className="card-glow absolute inset-0" />
@@ -181,7 +181,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
                     <div className="flex flex-wrap gap-2">
                       <Link
                         href={`/admin/affiliate-links/${link.id}/edit`}
-                        className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)]"
+                        className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff]"
                       >
                         Modifica
                       </Link>
@@ -196,7 +196,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
                         <button
                           type="submit"
                           disabled={!runtime.canWrite}
-                          className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                          className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
                         >
                           {link.is_active ? "Disattiva" : "Attiva"}
                         </button>

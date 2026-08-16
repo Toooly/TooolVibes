@@ -248,3 +248,23 @@
 [data-admin-shell] .button-primary :is(span, strong) {
   color: #fff !important;
 }
+
+[data-admin-shell] .button-shell,
+[data-admin-shell] .button-secondary {
+  color: #f4f1ff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  background-image: none !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: none !important;
+}
+[data-admin-shell] .button-primary {
+  color: #fff !important;
+  background: #6a3cff !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+[data-admin-shell] .button-shell::before,
+[data-admin-shell] .button-shell::after {
+  display: none !important;
+}

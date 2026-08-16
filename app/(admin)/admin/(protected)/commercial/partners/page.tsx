@@ -12,7 +12,7 @@ export default function AdminPartnersPage() {
   return (
     <div className="space-y-6">
       <CommercialSubnav current="/admin/commercial/partners" />
-      <SectionHeader
+      <SectionHeader invert
         eyebrow="Commercial"
         title="Partner"
         description="I partner first-party del registro restano visibili. I nuovi partner si creano qui, con logo e brand plate dalla Media Library."

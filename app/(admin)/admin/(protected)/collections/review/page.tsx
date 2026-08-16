@@ -227,7 +227,7 @@ export default async function AdminCollectionsReviewPage({
       <div className="space-y-6">
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader
+            <SectionHeader invert
               eyebrow="Revisione conflitti"
               title="Leggi le differenze prima di agire."
               description="Qui trovi conflitti, importazioni in attesa e revisioni nello stesso posto. Nessun riallineamento distruttivo: prima decidiamo cosa va davvero toccato e cosa può restare com'è."
@@ -254,7 +254,7 @@ export default async function AdminCollectionsReviewPage({
           {statusMessage ? (
             <div
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
-              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(236,253,245,0.95)" }}
+              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
             >
               {statusMessage}
             </div>
@@ -265,7 +265,7 @@ export default async function AdminCollectionsReviewPage({
               <article
                 key={item.label}
                 className="stat-block w-[11rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <p
                   className="text-xs font-semibold uppercase tracking-[0.18em]"
@@ -283,7 +283,7 @@ export default async function AdminCollectionsReviewPage({
               <article
                 key={`desktop-${item.label}`}
                 className="stat-block rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <p
                   className="text-xs font-semibold uppercase tracking-[0.18em]"
@@ -310,7 +310,7 @@ export default async function AdminCollectionsReviewPage({
                     background:
                       item.href === selectedViewHref
                         ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
-                        : "rgba(255,255,255,0.82)",
+                        : "rgba(255,255,255,0.06)",
                     color:
                       item.href === selectedViewHref
                         ? "var(--accent-strong)"

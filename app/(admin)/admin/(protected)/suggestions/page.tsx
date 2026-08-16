@@ -92,14 +92,14 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
       <div className="space-y-6">
         <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader
+            <SectionHeader invert
               eyebrow="Suggerimenti"
               title="Richieste e suggerimenti tool dagli utenti"
               description="Gli utenti possono suggerire tool da aggiungere al catalogo. Qui puoi revisionare, approvare o rifiutare ogni suggerimento."
             />
             <Link
               href="/admin"
-              className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[var(--muted-strong)]"
+              className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[#f4f1ff]"
             >
               Torna alla dashboard
             </Link>
@@ -110,7 +110,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
               style={{
                 borderColor: "rgba(15,118,110,0.18)",
-                background: "rgba(236,253,245,0.95)",
+                background: "rgba(57,210,246,0.12)",
               }}
             >
               {statusLabels[status]}
@@ -175,7 +175,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                 <Link
                   key={item.value}
                   href={item.href}
-                  className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[var(--muted-strong)]"
+                  className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[#f4f1ff]"
                   style={{
                     background:
                       activeView === item.value ? "rgba(106,60,255,0.12)" : undefined,
@@ -195,7 +195,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                   className="interactive-surface relative overflow-hidden rounded-[var(--radius-xl)] border p-5"
                   style={{
                     borderColor: "var(--line)",
-                    background: "rgba(255,255,255,0.76)",
+                    background: "rgba(255,255,255,0.06)",
                   }}
                 >
                   <div className="card-glow absolute inset-0" />
@@ -300,7 +300,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                           defaultValue={suggestion.admin_notes ?? ""}
                           placeholder="Aggiungi note interne su questo suggerimento..."
                           className="w-full rounded-2xl border px-4 py-3 text-sm outline-none"
-                          style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                          style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                         />
                       </label>
                       <div className="flex flex-wrap gap-2">
@@ -311,7 +311,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                               name="status"
                               value="reviewing"
                               disabled={!runtime.canWrite}
-                              className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                              className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
                             >
                               In revisione
                             </button>
@@ -347,7 +347,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                             name="status"
                             value={suggestion.status}
                             disabled={!runtime.canWrite}
-                            className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[var(--muted-strong)] disabled:cursor-not-allowed disabled:opacity-55"
+                            className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
                           >
                             Salva note
                           </button>

@@ -25,13 +25,13 @@ function getToneStyles(tone: "pass" | "warning" | "error") {
     case "warning":
       return {
         borderColor: "rgba(161,105,47,0.18)",
-        background: "rgba(255,251,235,0.96)",
+        background: "rgba(243,191,76,0.12)",
       };
     case "pass":
     default:
       return {
         borderColor: "rgba(15,118,110,0.18)",
-        background: "rgba(236,253,245,0.95)",
+        background: "rgba(57,210,246,0.12)",
       };
   }
 }
@@ -46,13 +46,13 @@ function getRiskStyles(risk: CollectionSyncPreview["risk"]) {
     case "medium":
       return {
         borderColor: "rgba(161,105,47,0.18)",
-        background: "rgba(255,251,235,0.96)",
+        background: "rgba(243,191,76,0.12)",
       };
     case "low":
     default:
       return {
         borderColor: "rgba(15,118,110,0.18)",
-        background: "rgba(236,253,245,0.95)",
+        background: "rgba(57,210,246,0.12)",
       };
   }
 }
@@ -61,11 +61,11 @@ function getChangeStyles(kind: "safe" | "editorial") {
   return kind === "safe"
     ? {
         borderColor: "rgba(15,118,110,0.18)",
-        background: "rgba(236,253,245,0.95)",
+        background: "rgba(57,210,246,0.12)",
       }
     : {
         borderColor: "rgba(161,105,47,0.18)",
-        background: "rgba(255,251,235,0.96)",
+        background: "rgba(243,191,76,0.12)",
       };
 }
 
@@ -109,7 +109,7 @@ export function CollectionSyncPreviewPanel({
     return (
       <section
         className="rounded-[var(--radius-xl)] border p-5 sm:p-6"
-        style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}
+        style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
       >
         <div className="space-y-2">
           <p
@@ -127,7 +127,7 @@ export function CollectionSyncPreviewPanel({
         {lastSafeAlign ? (
           <div
             className="mt-5 rounded-[18px] border px-4 py-3 text-sm"
-            style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(245,242,255,0.92)" }}
+            style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(106,60,255,0.14)" }}
           >
             Ultimo riallineamento registrato: {new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")} -{" "}
             {lastSafeAlign.aligned_fields.join(", ")}
@@ -154,10 +154,10 @@ export function CollectionSyncPreviewPanel({
   return (
     <section
       className="rounded-[var(--radius-xl)] border p-5 sm:p-6"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.76)" }}
+      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <SectionHeader
+        <SectionHeader invert
           eyebrow="Anteprima riallineamento"
           title={compact ? "Anteprima del riallineamento" : "Cosa cambierebbe prima di toccare davvero la sorgente reale."}
           description="Questo pannello è solo descrittivo: distingue i cambi candidati a un riallineamento prudente da quelli che restano nel perimetro di una decisione editoriale."
@@ -189,14 +189,14 @@ export function CollectionSyncPreviewPanel({
           className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
           style={{
             borderColor: "rgba(112,82,255,0.16)",
-            background: "rgba(245,242,255,0.92)",
+            background: "rgba(106,60,255,0.14)",
           }}
         >
             Sorgente pubblica -&gt; {getSourceLabel(preview.public_winner)}
         </span>
         <span
           className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
-          style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+          style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
         >
           Destinazione -&gt; {getSourceLabel(preview.target)}
         </span>
@@ -225,7 +225,7 @@ export function CollectionSyncPreviewPanel({
           <article
             key={item.label}
             className="rounded-[20px] border px-4 py-4"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
           >
             <p
               className="text-xs font-semibold uppercase tracking-[0.18em]"
@@ -312,7 +312,7 @@ export function CollectionSyncPreviewPanel({
                   background:
                     change.risk === "high"
                       ? "rgba(254,242,242,0.96)"
-                      : "rgba(255,251,235,0.96)",
+                      : "rgba(243,191,76,0.12)",
                 }}
               >
                 <div className="flex flex-wrap items-center gap-2">
@@ -329,7 +329,7 @@ export function CollectionSyncPreviewPanel({
                       background:
                         change.risk === "high"
                           ? "rgba(254,242,242,0.96)"
-                          : "rgba(255,251,235,0.96)",
+                          : "rgba(243,191,76,0.12)",
                     }}
                   >
                     {change.risk === "high" ? "impatto alto" : "da rivedere"}
@@ -372,7 +372,7 @@ export function CollectionSyncPreviewPanel({
             <div
               key={`${preview.slug}-${note}`}
               className="rounded-[18px] border px-4 py-3 text-sm"
-              style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(245,242,255,0.92)" }}
+              style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(106,60,255,0.14)" }}
             >
               {note}
             </div>
@@ -383,7 +383,7 @@ export function CollectionSyncPreviewPanel({
       {lastSafeAlign ? (
         <div
           className="mt-6 rounded-[18px] border px-4 py-3 text-sm"
-          style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(245,242,255,0.92)" }}
+          style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(106,60,255,0.14)" }}
         >
           Ultimo riallineamento registrato: {new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")} -{" "}
           {lastSafeAlign.aligned_fields.join(", ")}

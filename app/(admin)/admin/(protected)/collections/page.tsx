@@ -90,12 +90,12 @@ const importStatusMeta: Record<
 > = {
   "pending-import": {
     label: "Da importare",
-    background: "rgba(255,251,235,0.96)",
+    background: "rgba(243,191,76,0.12)",
     borderColor: "rgba(161,105,47,0.18)",
   },
   imported: {
     label: "Importata",
-    background: "rgba(236,253,245,0.95)",
+    background: "rgba(57,210,246,0.12)",
     borderColor: "rgba(15,118,110,0.18)",
   },
   conflict: {
@@ -105,7 +105,7 @@ const importStatusMeta: Record<
   },
   "remote-only": {
     label: "Solo archivio reale",
-    background: "rgba(245,242,255,0.92)",
+    background: "rgba(106,60,255,0.14)",
     borderColor: "rgba(112,82,255,0.16)",
   },
   "content-only": {
@@ -361,7 +361,7 @@ export default async function AdminCollectionsPage({
       <div className="space-y-6">
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader
+            <SectionHeader invert
               eyebrow="Gestione raccolte"
               title="Un flusso editoriale leggero e operativo."
               description="Qui leggi sorgente, segnali aperti, stato editoriale e dettaglio interno delle raccolte. La scrittura resta prudente, ma il pannello gestisce già il ciclo editoriale essenziale senza passare dal codice."
@@ -371,7 +371,7 @@ export default async function AdminCollectionsPage({
                 <Link
                   key={action.href}
                   href={action.href}
-                  className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[var(--muted-strong)]"} rounded-full px-4 py-2.5 text-sm font-semibold`}
+                  className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} rounded-full px-4 py-2.5 text-sm font-semibold`}
                 >
                   {action.label}
                 </Link>
@@ -384,7 +384,7 @@ export default async function AdminCollectionsPage({
               <Link
                 key={`mobile-${action.href}`}
                 href={action.href}
-                className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[var(--muted-strong)]"} inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold`}
+                className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold`}
               >
                 {action.label}
               </Link>
@@ -394,7 +394,7 @@ export default async function AdminCollectionsPage({
           {statusMessage ? (
             <div
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
-              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(236,253,245,0.95)" }}
+              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
             >
               {statusMessage}
             </div>
@@ -442,8 +442,8 @@ export default async function AdminCollectionsPage({
                   ? "rgba(15,118,110,0.18)"
                   : "rgba(161,105,47,0.18)",
                 background: runtime.canWrite
-                  ? "rgba(240,253,250,0.9)"
-                  : "rgba(255,251,235,0.96)",
+                  ? "rgba(57,210,246,0.10)"
+                  : "rgba(243,191,76,0.12)",
               }}
             >
               {runtime.writeMessage}
@@ -452,7 +452,7 @@ export default async function AdminCollectionsPage({
               className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
               style={{
                 borderColor: "rgba(112,82,255,0.14)",
-                background: "rgba(245,242,255,0.92)",
+                background: "rgba(106,60,255,0.14)",
               }}
             >
               Lettura interna: <strong>{getSourceLabel(runtime.adminReadSource)}</strong>. Sorgente pubblica:{" "}
@@ -472,7 +472,7 @@ export default async function AdminCollectionsPage({
 
           <div
             className="mt-6 rounded-[var(--radius-xl)] border p-5 sm:p-6"
-            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
           >
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="max-w-[44rem] space-y-2">
@@ -511,7 +511,7 @@ export default async function AdminCollectionsPage({
                   className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
                   style={{
                     borderColor: "rgba(161,105,47,0.18)",
-                    background: "rgba(255,251,235,0.96)",
+                    background: "rgba(243,191,76,0.12)",
                   }}
                 >
                   Attiva il salvataggio per importare dal pannello interno.
@@ -524,7 +524,7 @@ export default async function AdminCollectionsPage({
                 <article
                   key={item.label}
                   className="stat-block w-[10.5rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 >
                   <p
                     className="text-xs font-semibold uppercase tracking-[0.18em]"
@@ -542,7 +542,7 @@ export default async function AdminCollectionsPage({
                 <article
                   key={`desktop-${item.label}`}
                   className="stat-block rounded-[var(--radius-lg)] border p-4"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 >
                   <p
                     className="text-xs font-semibold uppercase tracking-[0.18em]"
@@ -562,7 +562,7 @@ export default async function AdminCollectionsPage({
                 <div
                   key={warning}
                   className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-                  style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
+                  style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
                 >
                   {warning}
                 </div>
@@ -615,7 +615,7 @@ export default async function AdminCollectionsPage({
                           className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                           style={{
                             borderColor: "rgba(112,82,255,0.16)",
-                            background: "rgba(245,242,255,0.92)",
+                            background: "rgba(106,60,255,0.14)",
                           }}
                         >
                           Pubblico -&gt; {getSourceLabel(entry.public_source)}
@@ -657,7 +657,7 @@ export default async function AdminCollectionsPage({
                               background:
                                 entry.import_status === "conflict"
                                   ? "rgba(254,242,242,0.96)"
-                                  : "rgba(255,251,235,0.96)",
+                                  : "rgba(243,191,76,0.12)",
                             }}
                           >
                             {warning}
@@ -691,7 +691,7 @@ export default async function AdminCollectionsPage({
                         className="rounded-[22px] border px-4 py-3"
                         style={{
                           borderColor: "var(--line)",
-                          background: "rgba(255,255,255,0.78)",
+                          background: "rgba(255,255,255,0.06)",
                         }}
                       >
                         <p
@@ -747,7 +747,7 @@ export default async function AdminCollectionsPage({
                     borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
                     background: item.active
                       ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
-                      : "rgba(255,255,255,0.78)",
+                      : "rgba(255,255,255,0.06)",
                     color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
                   }}
                 >
@@ -769,7 +769,7 @@ export default async function AdminCollectionsPage({
                   borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
                   background: item.active
                     ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
-                    : "rgba(255,255,255,0.78)",
+                    : "rgba(255,255,255,0.06)",
                   color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
                 }}
               >
@@ -822,13 +822,13 @@ export default async function AdminCollectionsPage({
                           <h2 className="text-2xl">{collection.title}</h2>
                           <span
                             className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
-                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                           >
                             {stateMeta.label}
                           </span>
                           <span
                             className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
-                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                           >
                             {surfaceMeta.label}
                           </span>
@@ -846,8 +846,8 @@ export default async function AdminCollectionsPage({
                                   readiness.state === "blocked"
                                     ? "rgba(254,242,242,0.96)"
                                     : readiness.state === "review"
-                                      ? "rgba(255,251,235,0.96)"
-                                      : "rgba(236,253,245,0.95)",
+                                      ? "rgba(243,191,76,0.12)"
+                                      : "rgba(57,210,246,0.12)",
                               }}
                             >
                               {readiness.label}
@@ -869,8 +869,8 @@ export default async function AdminCollectionsPage({
                                     ? "rgba(254,242,242,0.96)"
                                     : transitionSeverity === "minor-drift" ||
                                         transitionSeverity === "pending"
-                                      ? "rgba(255,251,235,0.96)"
-                                      : "rgba(236,253,245,0.95)",
+                                      ? "rgba(243,191,76,0.12)"
+                                      : "rgba(57,210,246,0.12)",
                               }}
                             >
                               {transitionSeverityMeta.label}
@@ -888,10 +888,10 @@ export default async function AdminCollectionsPage({
                                       : "rgba(161,105,47,0.18)",
                                 background:
                                   reviewMeta.label === "Reviewed"
-                                    ? "rgba(236,253,245,0.95)"
+                                    ? "rgba(57,210,246,0.12)"
                                     : reviewMeta.label === "Dismissed"
-                                      ? "rgba(245,242,255,0.92)"
-                                      : "rgba(255,251,235,0.96)",
+                                      ? "rgba(106,60,255,0.14)"
+                                      : "rgba(243,191,76,0.12)",
                               }}
                             >
                               {reviewMeta.label}
@@ -907,8 +907,8 @@ export default async function AdminCollectionsPage({
                                     : "rgba(161,105,47,0.18)",
                                 background:
                                   syncPreview?.state === "safe-align-ready"
-                                    ? "rgba(236,253,245,0.95)"
-                                    : "rgba(255,251,235,0.96)",
+                                    ? "rgba(57,210,246,0.12)"
+                                    : "rgba(243,191,76,0.12)",
                               }}
                             >
                               {syncPreviewMeta.label}
@@ -917,7 +917,7 @@ export default async function AdminCollectionsPage({
                           {issues.length > 0 ? (
                             <span
                               className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
-                              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
+                              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
                             >
                               {issues.length} avvisi
                             </span>
@@ -927,7 +927,7 @@ export default async function AdminCollectionsPage({
                               className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                               style={{
                                 borderColor: "rgba(112,82,255,0.16)",
-                                background: "rgba(245,242,255,0.92)",
+                                background: "rgba(106,60,255,0.14)",
                               }}
                             >
                               Riallineata
@@ -953,8 +953,8 @@ export default async function AdminCollectionsPage({
                                 readiness.state === "blocked"
                                   ? "rgba(254,242,242,0.96)"
                                   : readiness.state === "review"
-                                    ? "rgba(255,251,235,0.96)"
-                                    : "rgba(236,253,245,0.95)",
+                                    ? "rgba(243,191,76,0.12)"
+                                    : "rgba(57,210,246,0.12)",
                             }}
                           >
                             {readiness.summary}
@@ -975,8 +975,8 @@ export default async function AdminCollectionsPage({
                                 syncPreviewPosture.tone === "error"
                                   ? "rgba(254,242,242,0.96)"
                                   : syncPreviewPosture.tone === "warning"
-                                    ? "rgba(255,251,235,0.96)"
-                                    : "rgba(236,253,245,0.95)",
+                                    ? "rgba(243,191,76,0.12)"
+                                    : "rgba(57,210,246,0.12)",
                             }}
                           >
                             <strong>{syncPreviewPosture.label}:</strong> {syncPreview.summary}
@@ -986,7 +986,7 @@ export default async function AdminCollectionsPage({
                         {lastSafeAlign ? (
                           <div
                             className="rounded-[20px] border px-4 py-3 text-sm"
-                            style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(245,242,255,0.92)" }}
+                            style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(106,60,255,0.14)" }}
                           >
                             Ultimo riallineamento: {formatItalianDate(lastSafeAlign.applied_at)} -{" "}
                             {lastSafeAlign.aligned_fields.join(", ")}
@@ -1021,7 +1021,7 @@ export default async function AdminCollectionsPage({
                                   background:
                                     issue.level === "error"
                                       ? "rgba(254,242,242,0.96)"
-                                      : "rgba(255,251,235,0.96)",
+                                      : "rgba(243,191,76,0.12)",
                                 }}
                               >
                                 {issue.message}
@@ -1043,7 +1043,7 @@ export default async function AdminCollectionsPage({
                               background:
                                 transitionSeverity === "critical-conflict"
                                   ? "rgba(254,242,242,0.96)"
-                                  : "rgba(255,251,235,0.96)",
+                                  : "rgba(243,191,76,0.12)",
                             }}
                           >
                             <strong>{transitionSeverityMeta.label}:</strong>{" "}
@@ -1074,7 +1074,7 @@ export default async function AdminCollectionsPage({
                           <div
                             key={item.label}
                             className="rounded-[22px] border px-4 py-3"
-                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                            style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                           >
                             <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                               {item.label}

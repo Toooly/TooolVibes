@@ -130,7 +130,7 @@ export default async function AdminCollectionDetailPage({
       <div className="space-y-6">
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader
+            <SectionHeader invert
               eyebrow="Dettaglio raccolta"
               title={collection.title}
               description="Qui puoi leggere i segnali aperti, verificare la continuità con il prodotto pubblico e modificare la raccolta dallo stesso punto di lavoro."
@@ -140,7 +140,7 @@ export default async function AdminCollectionDetailPage({
                 <Link
                   key={action.href}
                   href={action.href}
-                  className={`button-shell ${action.primary ? "button-primary text-white" : "button-secondary text-[var(--muted-strong)]"} rounded-full px-4 py-2.5 text-sm font-semibold`}
+                  className={`button-shell ${action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} rounded-full px-4 py-2.5 text-sm font-semibold`}
                 >
                   {action.label}
                 </Link>
@@ -153,7 +153,7 @@ export default async function AdminCollectionDetailPage({
               <Link
                 key={`mobile-${action.href}`}
                 href={action.href}
-                className={`button-shell ${action.primary ? "button-primary text-white" : "button-secondary text-[var(--muted-strong)]"} inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold`}
+                className={`button-shell ${action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold`}
               >
                 {action.label}
               </Link>
@@ -163,7 +163,7 @@ export default async function AdminCollectionDetailPage({
           {statusMessage ? (
             <div
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
-              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(236,253,245,0.95)" }}
+              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
             >
               {statusMessage}
             </div>
@@ -172,7 +172,7 @@ export default async function AdminCollectionDetailPage({
           {!runtime.canWrite ? (
             <div
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
+              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
             >
               La raccolta è leggibile, ma il salvataggio reale resta disattivato finché l’archivio
               non è pronto.
@@ -184,7 +184,7 @@ export default async function AdminCollectionDetailPage({
               <article
                 key={item.label}
                 className="stat-block w-[12.5rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.label}
@@ -202,7 +202,7 @@ export default async function AdminCollectionDetailPage({
               <article
                 key={`desktop-${item.label}`}
                 className="stat-block rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.label}
@@ -264,7 +264,7 @@ export default async function AdminCollectionDetailPage({
                   <div
                     key={item.label}
                     className="rounded-[22px] border px-4 py-3"
-                    style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                    style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                   >
                     <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                       {item.label}
@@ -295,7 +295,7 @@ export default async function AdminCollectionDetailPage({
                         background:
                           issue.level === "error"
                             ? "rgba(254,242,242,0.96)"
-                            : "rgba(255,251,235,0.96)",
+                            : "rgba(243,191,76,0.12)",
                       }}
                     >
                       <strong>{issue.level === "error" ? "Errore" : "Avviso"}:</strong>{" "}
@@ -305,7 +305,7 @@ export default async function AdminCollectionDetailPage({
                 ) : (
                   <div
                     className="rounded-[20px] border px-4 py-3 text-sm"
-                    style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(236,253,245,0.95)" }}
+                    style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
                   >
                     Nessun segnale aperto su questa raccolta.
                   </div>
@@ -340,7 +340,7 @@ export default async function AdminCollectionDetailPage({
                     <div
                       key={`${collection.id}-${slot.tool_slug}-${index}`}
                       className="rounded-[22px] border px-4 py-4"
-                      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.82)" }}
+                      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="font-semibold">
@@ -382,8 +382,8 @@ export default async function AdminCollectionDetailPage({
                     readiness.state === "blocked"
                       ? "rgba(254,242,242,0.96)"
                       : readiness.state === "review"
-                        ? "rgba(255,251,235,0.96)"
-                        : "rgba(236,253,245,0.95)",
+                        ? "rgba(243,191,76,0.12)"
+                        : "rgba(57,210,246,0.12)",
                 }}
               >
                 <strong>{readiness.label}:</strong> {readiness.summary}

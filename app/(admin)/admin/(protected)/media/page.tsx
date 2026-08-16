@@ -9,7 +9,7 @@ export default function AdminMediaPage() {
 
   return (
     <div className="space-y-6">
-      <SectionHeader
+      <SectionHeader invert
         eyebrow="Media"
         title="Libreria asset di prodotto"
         description="Catalogo first-party già spedito più URL editoriali registrati. Nessun secondo store e nessun upload binario: selezioni, sostituisci o registri un percorso già approvato."

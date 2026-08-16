@@ -25,7 +25,7 @@ export default function AdminCommercialPreviewPage() {
   return (
     <div className="space-y-6">
       <CommercialSubnav current="/admin/commercial/preview" />
-      <SectionHeader
+      <SectionHeader invert
         eyebrow="Commercial"
         title="Preview campagne"
         description="Nessuna pubblicazione richiesta. Ogni placement mostra superficie, partner, campagna, creatività, CTA, destinazione, modalità e stato."

@@ -136,7 +136,7 @@ export function AccountBadgeCabinetSection({
           Caricamento cabinet...
         </p>
       ) : badges.length === 0 ? (
-        <div className="mt-4 rounded-[18px] border px-4 py-4" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.6)" }}>
+        <div className="mt-4 rounded-[18px] border px-4 py-4" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}>
           <p className="text-sm leading-6" style={{ color: "var(--account-ink)" }}>
             Il cabinet raccoglie i segni del tuo percorso: la prima shortlist,
             la prima decisione, i percorsi completati. Ogni segno arriva
@@ -166,8 +166,8 @@ export function AccountBadgeCabinetSection({
                       : "var(--line)",
                   background:
                     badge.visualIntensity === "quiet"
-                      ? "rgba(255,255,255,0.6)"
-                      : "rgba(255,255,255,0.72)",
+                      ? "rgba(255,255,255,0.06)"
+                      : "rgba(255,255,255,0.06)",
                 }}
               >
                 <span
@@ -221,7 +221,7 @@ export function AccountBadgeCabinetSection({
               <li
                 key={item.code}
                 className="flex items-center justify-between gap-3 rounded-[16px] border px-4 py-2.5"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.55)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <span className="text-sm text-[var(--account-ink)]">
                   <span className="font-semibold">{item.title}</span>

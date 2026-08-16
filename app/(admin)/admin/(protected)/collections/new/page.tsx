@@ -52,7 +52,7 @@ export default async function NewCollectionPage() {
       <div className="space-y-6">
         <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader
+            <SectionHeader invert
               eyebrow="Nuova raccolta"
               title="Crea una nuova raccolta curatoriale"
               description="Qui costruisci una raccolta come modulo editoriale del prodotto: taglio, accesso, sequenza dei tool e continuità con la pagina pubblica."
@@ -62,7 +62,7 @@ export default async function NewCollectionPage() {
                 <Link
                   key={action.href}
                   href={action.href}
-                  className="button-shell button-secondary text-[var(--muted-strong)] rounded-full px-4 py-2.5 text-sm font-semibold"
+                  className="button-shell button-secondary text-[#f4f1ff] rounded-full px-4 py-2.5 text-sm font-semibold"
                 >
                   {action.label}
                 </Link>
@@ -75,7 +75,7 @@ export default async function NewCollectionPage() {
               <Link
                 key={`mobile-${action.href}`}
                 href={action.href}
-                className="button-shell button-secondary text-[var(--muted-strong)] inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold"
+                className="button-shell button-secondary text-[#f4f1ff] inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold"
               >
                 {action.label}
               </Link>
@@ -85,7 +85,7 @@ export default async function NewCollectionPage() {
           {!runtime.canWrite ? (
             <div
               className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(255,251,235,0.96)" }}
+              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
             >
               Il salvataggio delle raccolte non è ancora attivo. Questa pagina resta visibile per
               mostrare il modulo, ma le modifiche richiedono l’area admin configurata.
@@ -97,7 +97,7 @@ export default async function NewCollectionPage() {
               <article
                 key={item.label}
                 className="stat-block w-[13rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.label}
@@ -115,7 +115,7 @@ export default async function NewCollectionPage() {
               <article
                 key={`desktop-${item.label}`}
                 className="stat-block rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.78)" }}
+                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.label}

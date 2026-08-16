@@ -35,7 +35,7 @@ const statusTone: Record<MonetizationStatus, { border: string; background: strin
   planned: {
     border: "rgba(255,255,255,0.12)",
     background: "rgba(255,255,255,0.06)",
-    color: "rgba(255,255,255,0.72)",
+    color: "rgba(255,255,255,0.06)",
   },
 };
 
