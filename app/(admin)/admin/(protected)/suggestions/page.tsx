@@ -126,8 +126,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
             ].map((item) => (
               <article
                 key={item.label}
-                className="w-[11rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-5"
-                className="admin-stat-tile rounded-[var(--radius-lg)] border p-5"
+                className="admin-stat-tile w-[11rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-5"
               >
                 <p
                   className="text-sm font-semibold uppercase tracking-[0.18em]"

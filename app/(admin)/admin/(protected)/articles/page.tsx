@@ -148,8 +148,7 @@ export default async function AdminDashboardPage({
             {dashboardMetrics.map((item) => (
               <article
                 key={item.label}
-                className="rounded-[var(--radius-lg)] border p-4"
-                className="admin-stat-tile rounded-[var(--radius-lg)] border p-5"
+                className="admin-stat-tile rounded-[var(--radius-lg)] border p-4"
               >
                 <p
                   className="text-xs font-semibold uppercase tracking-[0.16em]"
