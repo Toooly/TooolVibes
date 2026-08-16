@@ -272,10 +272,10 @@ export function CompareBoard({ tools }: CompareBoardProps) {
   if (compareSlugs.length === 0) {
     return (
       <div
-        className="light-surface rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
+        className="dark-panel rounded-[32px] border border-white/12 px-6 py-8 text-center sm:px-8 sm:py-9"
         style={{
           borderColor: "var(--line)",
-          background: "var(--tv-surface-inverted-raised)",
+          background: "#120d2e",
         }}
       >
         <p className="compare-kicker">Confronto</p>
@@ -295,7 +295,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
             <div
               key={item}
               className="stat-block rounded-[24px] border p-4 text-left"
-              style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}
+              style={{ borderColor: "var(--line)", background: "#120d2e" }}
             >
               <p className="text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
                 {item}
@@ -325,10 +325,10 @@ export function CompareBoard({ tools }: CompareBoardProps) {
   if (comparedTools.length === 1) {
     return (
       <div
-        className="light-surface rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
+        className="dark-panel rounded-[32px] border border-white/12 px-6 py-8 text-center sm:px-8 sm:py-9"
         style={{
           borderColor: "var(--line)",
-          background: "var(--tv-surface-inverted-raised)",
+          background: "#120d2e",
         }}
       >
         <p className="compare-kicker">Confronto parziale</p>
@@ -379,7 +379,7 @@ export function CompareBoard({ tools }: CompareBoardProps) {
               type="button"
               onClick={clearCompare}
               className="selection-chip text-ui-strong rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em]"
-              style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)", color: "var(--muted)" }}
+              style={{ borderColor: "var(--line)", background: "#120d2e", color: "var(--muted)" }}
             >
               Svuota
             </button>

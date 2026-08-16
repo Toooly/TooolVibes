@@ -75,10 +75,8 @@ export function ShortlistToggle({
         } ${isFresh ? "is-fresh" : ""}`}
         style={{
           borderColor: isSaved ? "rgba(112,82,255,0.24)" : "var(--line)",
-          background: isSaved
-            ? "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))"
-            : "linear-gradient(180deg, rgba(252,249,255,0.9), rgba(246,241,255,0.82))",
-          color: isSaved ? "var(--accent-strong)" : "var(--muted-strong)",
+          background: isSaved ? "#6a3cff" : "rgba(18, 13, 46, 0.92)",
+          color: "#f4f1ff",
         }}
         aria-pressed={isSaved}
         aria-label={ariaLabel}
@@ -112,9 +110,9 @@ export function ShortlistToggle({
       style={{
         borderColor: isSaved ? "rgba(112,82,255,0.24)" : "var(--line)",
         background: isSaved
-          ? "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))"
-          : "linear-gradient(180deg, rgba(252,249,255,0.9), rgba(246,241,255,0.82))",
-        color: isSaved ? "var(--accent-strong)" : "var(--muted-strong)",
+          ? "#6a3cff"
+          : "rgba(18, 13, 46, 0.92)",
+        color: "#f4f1ff",
       }}
       aria-pressed={isSaved}
       data-sonic-action="save"

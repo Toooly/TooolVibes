@@ -96,17 +96,17 @@ const decisionOutcomeMeta: Record<
   selected: {
     label: "Scelto",
     tone: "var(--accent-strong)",
-    background: "#efe8ff",
+    background: "rgba(106,60,255,0.22)",
   },
   rejected: {
     label: "Scartato",
     tone: "var(--muted-strong)",
-    background: "#fff2ec",
+    background: "rgba(255,82,82,0.14)",
   },
   deferred: {
     label: "Rimandato",
     tone: "var(--muted-strong)",
-    background: "#fff5df",
+    background: "rgba(243,191,76,0.14)",
   },
 };
 
@@ -115,8 +115,8 @@ const sheetChipClassName =
 
 const sheetChipIdleStyle: CSSProperties = {
   borderColor: "var(--line)",
-  background: "#f7f4ff",
-  color: "var(--muted-strong)",
+  background: "rgba(255,255,255,0.06)",
+  color: "#f4f1ff",
 };
 
 export function MobileShortlistBoard({
@@ -210,7 +210,7 @@ export function MobileShortlistBoard({
                   className="flex flex-wrap items-center gap-2 rounded-[16px] border px-3 py-2"
                   style={{
                     borderColor: "var(--line)",
-                    background: "#ffffff",
+                    background: "rgba(18,13,46,0.92)",
                   }}
                 >
                   <button
@@ -675,7 +675,7 @@ function MobileNoteSheet({
                   memory.is_pinned
                     ? {
                         borderColor: "rgba(112,82,255,0.24)",
-                        background: "#efe8ff",
+                        background: "rgba(106,60,255,0.22)",
                         color: "var(--accent-strong)",
                       }
                     : sheetChipIdleStyle
@@ -786,7 +786,7 @@ function MobileNoteSheet({
                         active
                           ? {
                               borderColor: "rgba(112,82,255,0.24)",
-                              background: "#efe8ff",
+                              background: "rgba(106,60,255,0.22)",
                               color: meta.tone,
                             }
                           : sheetChipIdleStyle
@@ -814,7 +814,7 @@ function MobileNoteSheet({
                 className="filter-control mt-3 w-full rounded-[18px] border px-4 py-3 outline-none"
                 style={{
                   borderColor: "var(--line)",
-                  background: "#ffffff",
+                  background: "rgba(18,13,46,0.92)",
                 }}
               />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
@@ -838,8 +838,8 @@ function MobileNoteSheet({
                       ? "rgba(112,82,255,0.24)"
                       : "var(--line)",
                     background: noteIsDirty
-                      ? "#efe8ff"
-                      : "#f7f4ff",
+                      ? "rgba(106,60,255,0.22)"
+                      : "rgba(255,255,255,0.06)",
                     color: noteIsDirty ? "var(--accent-strong)" : "var(--muted)",
                   }}
                 >

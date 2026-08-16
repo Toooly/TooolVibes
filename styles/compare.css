@@ -805,7 +805,7 @@
   padding: 1.25rem;
   border: 1px dashed color-mix(in srgb, var(--tv-accent-gold) 40%, transparent);
   border-radius: 12px;
-  background: color-mix(in srgb, var(--tv-accent-gold) 6%, var(--tv-surface-inverted));
+  background: color-mix(in srgb, var(--tv-accent-gold) 10%, #120d2e);
   box-shadow: none;
 }
 

@@ -96,10 +96,8 @@ export function CompareToggle({
         } ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
         style={{
           borderColor: isSelected ? "rgba(112,82,255,0.24)" : "var(--line)",
-          background: isSelected
-            ? "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))"
-            : "linear-gradient(180deg, rgba(252,249,255,0.9), rgba(246,241,255,0.82))",
-          color: isSelected ? "var(--accent-strong)" : "var(--muted-strong)",
+          background: isSelected ? "#6a3cff" : "rgba(18, 13, 46, 0.92)",
+          color: "#f4f1ff",
         }}
         aria-pressed={isSelected}
         aria-label={ariaLabel}
@@ -120,9 +118,9 @@ export function CompareToggle({
       style={{
         borderColor: isSelected ? "rgba(112,82,255,0.24)" : "var(--line)",
         background: isSelected
-          ? "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))"
-          : "linear-gradient(180deg, rgba(252,249,255,0.9), rgba(246,241,255,0.82))",
-        color: isSelected ? "var(--accent-strong)" : "var(--muted-strong)",
+          ? "#6a3cff"
+          : "rgba(18, 13, 46, 0.92)",
+        color: "#f4f1ff",
       }}
       aria-pressed={isSelected}
       data-sonic-action="compare"
@@ -136,7 +134,7 @@ export function CompareToggle({
       />
       {compact ? "Confronta" : isSelected ? "Aggiunto al confronto" : "Aggiungi al confronto"}
       <span
-        className={`count-badge-live rounded-full bg-white/76 px-1.5 py-0.5 text-xs ${count > 0 ? "is-active" : ""} ${
+        className={`count-badge-live rounded-full bg-white/10 px-1.5 py-0.5 text-xs ${count > 0 ? "is-active" : ""} ${
           isReady ? "is-ready" : ""
         } ${isFresh ? "is-fresh" : ""}`}
         style={{ color: "var(--muted)" }}
