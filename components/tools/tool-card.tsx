@@ -139,7 +139,7 @@ function ToolCardComponent({
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="selection-status">Prima scelta</span>
-                <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}>
+                <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
                   {formattedIndex}
                 </span>
               </div>
@@ -205,7 +205,7 @@ function ToolCardComponent({
             <div className="flex flex-wrap items-center gap-2">
               <p className="editorial-label">{tool.category}</p>
               {discoverySignal ? (
-                <span className="selection-chip rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)", color: "var(--muted-strong)" }}>
+                <span className="selection-chip rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)", color: "var(--muted-strong)" }}>
                   {discoverySignal}
                 </span>
               ) : null}
@@ -434,7 +434,7 @@ function ToolCardComponent({
           className="rounded-[18px] border px-3.5 py-3"
           style={{
             borderColor: "var(--line)",
-            background: "var(--tv-surface-inverted-raised)",
+            background: "var(--tv-surface-elevated)",
           }}
         >
           <p className="editorial-label">{variant === "compact" ? "Nota" : "Lettura rapida"}</p>
@@ -448,7 +448,7 @@ function ToolCardComponent({
             className="rounded-[18px] border px-3.5 py-3"
             style={{
               borderColor: "var(--line)",
-              background: "var(--tv-surface-inverted-raised)",
+              background: "var(--tv-surface-elevated)",
             }}
           >
             <p className="editorial-label">Ideale per</p>

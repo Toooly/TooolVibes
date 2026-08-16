@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 
 import { CommercialSubnav } from "@/components/admin/commercial-subnav";
+import { ControlCenterHeader } from "@/components/admin/control-center-header";
 import { ManagedPartnerForm } from "@/components/admin/managed-partner-form";
-import { SectionHeader } from "@/components/ui/section-header";
 import { getManagedPartner } from "@/lib/sponsors/managed-commercial";
 
 export default async function AdminEditPartnerPage({
@@ -14,9 +14,15 @@ export default async function AdminEditPartnerPage({
   const partner = getManagedPartner(id);
   if (!partner) notFound();
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <CommercialSubnav current="/admin/commercial/partners" />
-      <SectionHeader invert eyebrow="Commercial" title={partner.name} description="Modifica identità e asset del partner." />
+      <ControlCenterHeader
+        kicker="Commercial"
+        title={partner.name}
+        description="Modifica identità e asset del partner."
+        backHref="/admin/commercial/partners"
+        backLabel="Torna ai partner"
+      />
       <ManagedPartnerForm partner={partner} />
     </div>
   );

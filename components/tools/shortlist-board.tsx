@@ -84,10 +84,10 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
   if (shortlistedTools.length === 0) {
     return (
       <div
-        className="light-surface rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
+        className="rounded-[32px] border px-6 py-8 text-center sm:px-8 sm:py-9"
         style={{
           borderColor: "var(--line)",
-          background: "var(--tv-surface-inverted-raised)",
+          background: "var(--tv-surface-elevated)",
         }}
       >
         <p className="pill mx-auto">Salvati personali</p>
@@ -99,19 +99,19 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
           perché vale tenerlo d&apos;occhio e quando ha senso confrontarlo.
         </p>
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}>
+          <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
             <p className="editorial-label">1. Salva</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
               Parti da un profilo forte o da una raccolta che ha già il taglio giusto.
             </p>
           </div>
-          <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}>
+          <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
             <p className="editorial-label">2. Annota</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
               Segna il motivo rapido o una nota breve per non ripartire da zero.
             </p>
           </div>
-          <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}>
+          <div className="stat-block rounded-[24px] border p-4" style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}>
             <p className="editorial-label">3. Confronta</p>
             <p className="mt-2 text-[0.92rem] leading-6" style={{ color: "var(--muted-strong)" }}>
               Quando restano 2 o 3 candidati veri, il passaggio naturale è il confronto.
@@ -162,7 +162,7 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
                 background:
                   compareCount > 1
                     ? "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))"
-                    : "var(--tv-surface-inverted-raised)",
+                    : "var(--tv-surface-elevated)",
                 color: compareCount > 1 ? "var(--accent-strong)" : "var(--muted-strong)",
               }}
             >
@@ -178,14 +178,14 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
             placeholder="Cerca nei tuoi salvati"
             data-sonic-action="search"
             className="filter-control w-full rounded-[22px] border px-4 py-3 outline-none"
-            style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}
+            style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}
           />
           <select
             value={sortKey}
             onChange={(event) => setSortKey(event.target.value as ShortlistSortKey)}
             data-sonic-action="tab"
             className="filter-control w-full rounded-[22px] border px-4 py-3 outline-none"
-            style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}
+            style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}
           >
             {sortOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -268,8 +268,8 @@ export function ShortlistBoard({ tools }: ShortlistBoardProps) {
         </>
       ) : (
         <div
-          className="light-surface rounded-[32px] border px-6 py-8 text-center sm:py-9"
-          style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}
+          className="rounded-[32px] border px-6 py-8 text-center sm:py-9"
+          style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}
         >
           <p className="pill mx-auto">Salvati filtrati</p>
           <h3 className="text-display-card mt-4 text-[1.8rem]">Nessun tool corrisponde a questa vista personale.</h3>

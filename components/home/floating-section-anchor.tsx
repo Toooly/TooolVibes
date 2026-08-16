@@ -43,7 +43,7 @@ export function FloatingSectionAnchor({
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             transition={{ delay: 0.15, duration: 0.5 }}
-            className="mb-4 inline-flex items-center gap-2 rounded-md border border-black/10 bg-[var(--tv-surface-inverted-raised)] px-3 py-1.5 text-xs font-medium tracking-wide text-[var(--tv-accent-violet-on-ivory)]"
+            className="mb-4 inline-flex items-center gap-2 rounded-md border border-black/10 bg-[var(--tv-surface-elevated)] px-3 py-1.5 text-xs font-medium tracking-wide text-[var(--tv-accent-violet-on-ivory)]"
             data-orbit-shield
           >
             {label}

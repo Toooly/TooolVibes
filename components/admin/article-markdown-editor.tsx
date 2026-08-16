@@ -53,7 +53,7 @@ function ToolbarButton({
       aria-label={title}
       onClick={onClick}
       disabled={disabled}
-      className="inline-grid h-9 w-9 place-items-center rounded-xl border text-[#f4f1ff] transition hover:-translate-y-0.5 hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
+      className="inline-grid h-9 w-9 place-items-center rounded-xl border  transition hover:-translate-y-0.5 hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
       style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       {children}

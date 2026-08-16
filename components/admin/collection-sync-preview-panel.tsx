@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { applyCollectionSafeAlignAction } from "@/app/(admin)/admin/actions/collections";
-import { SectionHeader } from "@/components/ui/section-header";
 import { getCollectionSafeAlignEligibility } from "@/lib/admin/collection-safe-align";
 import {
   getCollectionSyncPreviewMeta,
@@ -20,18 +19,18 @@ function getToneStyles(tone: "pass" | "warning" | "error") {
     case "error":
       return {
         borderColor: "rgba(139,58,43,0.18)",
-        background: "rgba(254,242,242,0.96)",
+        background: "color-mix(in srgb, var(--tv-status-danger) 16%, transparent)",
       };
     case "warning":
       return {
         borderColor: "rgba(161,105,47,0.18)",
-        background: "rgba(243,191,76,0.12)",
+        background: "var(--tv-status-warning-soft-bg-dark)",
       };
     case "pass":
     default:
       return {
         borderColor: "rgba(15,118,110,0.18)",
-        background: "rgba(57,210,246,0.12)",
+        background: "var(--tv-status-success-soft-bg-dark)",
       };
   }
 }
@@ -41,18 +40,18 @@ function getRiskStyles(risk: CollectionSyncPreview["risk"]) {
     case "high":
       return {
         borderColor: "rgba(139,58,43,0.18)",
-        background: "rgba(254,242,242,0.96)",
+        background: "color-mix(in srgb, var(--tv-status-danger) 16%, transparent)",
       };
     case "medium":
       return {
         borderColor: "rgba(161,105,47,0.18)",
-        background: "rgba(243,191,76,0.12)",
+        background: "var(--tv-status-warning-soft-bg-dark)",
       };
     case "low":
     default:
       return {
         borderColor: "rgba(15,118,110,0.18)",
-        background: "rgba(57,210,246,0.12)",
+        background: "var(--tv-status-success-soft-bg-dark)",
       };
   }
 }
@@ -61,11 +60,11 @@ function getChangeStyles(kind: "safe" | "editorial") {
   return kind === "safe"
     ? {
         borderColor: "rgba(15,118,110,0.18)",
-        background: "rgba(57,210,246,0.12)",
+        background: "var(--tv-status-success-soft-bg-dark)",
       }
     : {
         borderColor: "rgba(161,105,47,0.18)",
-        background: "rgba(243,191,76,0.12)",
+        background: "var(--tv-status-warning-soft-bg-dark)",
       };
 }
 
@@ -152,20 +151,17 @@ export function CollectionSyncPreviewPanel({
   const riskStyles = getRiskStyles(preview.risk);
 
   return (
-    <section
-      className="rounded-[var(--radius-xl)] border p-5 sm:p-6"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-    >
+    <section className="tv-cc-panel">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <SectionHeader invert
-          eyebrow="Anteprima riallineamento"
-          title={compact ? "Anteprima del riallineamento" : "Cosa cambierebbe prima di toccare davvero la sorgente reale."}
-          description="Questo pannello è solo descrittivo: distingue i cambi candidati a un riallineamento prudente da quelli che restano nel perimetro di una decisione editoriale."
-        />
+        <div>
+          <p className="tv-cc-panel__kicker">Anteprima riallineamento</p>
+          <h2 className="tv-cc-panel__title">{compact ? "Anteprima del riallineamento" : "Cosa cambierebbe prima di toccare la sorgente reale"}</h2>
+          <p className="tv-cc-panel__desc">Pannello descrittivo: distingue i cambi prudenti da quelli che restano una decisione editoriale.</p>
+        </div>
         {detailHref ? (
           <Link
             href={detailHref}
-            className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-sm font-semibold"
+            className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-sm font-semibold"
           >
             Vedi anteprima
           </Link>
@@ -311,7 +307,7 @@ export function CollectionSyncPreviewPanel({
                       : "rgba(161,105,47,0.18)",
                   background:
                     change.risk === "high"
-                      ? "rgba(254,242,242,0.96)"
+                      ? "color-mix(in srgb, var(--tv-status-danger) 16%, transparent)"
                       : "rgba(243,191,76,0.12)",
                 }}
               >
@@ -328,7 +324,7 @@ export function CollectionSyncPreviewPanel({
                           : "rgba(161,105,47,0.18)",
                       background:
                         change.risk === "high"
-                          ? "rgba(254,242,242,0.96)"
+                          ? "color-mix(in srgb, var(--tv-status-danger) 16%, transparent)"
                           : "rgba(243,191,76,0.12)",
                     }}
                   >
@@ -410,7 +406,7 @@ export function CollectionSyncPreviewPanel({
             <input type="hidden" name="return_to" value={returnTo} />
             <button
               type="submit"
-              className="button-shell button-primary rounded-full px-4 py-2 text-sm font-semibold text-white"
+              className="tv-cc-btn tv-cc-btn--primary rounded-full px-4 py-2 text-sm font-semibold text-white"
             >
               Applica riallineamento sicuro
             </button>

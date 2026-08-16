@@ -203,11 +203,6 @@ export default async function AdminCollectionsPage({
   const transitionEntriesBySlug = new Map(
     runtime.transitionReport.entries.map((entry) => [entry.slug, entry] as const),
   );
-  const topActions = [
-    { href: "/admin", label: "Dashboard" },
-    { href: "/admin/collections/new", label: "Nuova raccolta", primary: true },
-    { href: "/admin/collections/review", label: "Revisione conflitti" },
-  ] as const;
   const workspaceMetrics = [
     { label: "Raccolte nell'area", value: runtime.collections.length },
     {
@@ -441,7 +436,7 @@ export default async function AdminCollectionsPage({
                   <button
                     type="submit"
                     disabled={!hasPendingImports}
-                    className="button-shell button-primary rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
+                    className="tv-cc-btn tv-cc-btn--primary rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
                   >
                     Importa raccolte locali mancanti ({runtime.transitionReport.summary.pending_import})
                   </button>
@@ -463,7 +458,7 @@ export default async function AdminCollectionsPage({
               {transitionMetrics.map((item) => (
                 <article
                   key={item.label}
-                  className="stat-block w-[10.5rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
+                  className="tv-cc-panel w-[10.5rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
                   style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 >
                   <p
@@ -481,7 +476,7 @@ export default async function AdminCollectionsPage({
               {transitionMetrics.map((item) => (
                 <article
                   key={`desktop-${item.label}`}
-                  className="stat-block rounded-[var(--radius-lg)] border p-4"
+                  className="tv-cc-panel rounded-[var(--radius-lg)] border p-4"
                   style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 >
                   <p
@@ -511,7 +506,7 @@ export default async function AdminCollectionsPage({
           ) : null}
         </div>
 
-        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
+        <div className="tv-cc-panel rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4 border-b pb-5">
             <div className="space-y-2">
               <p
@@ -651,7 +646,7 @@ export default async function AdminCollectionsPage({
                     {entry.supabase ? (
                       <Link
                         href={`/admin/collections/${entry.supabase.id}`}
-                        className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                        className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
                       >
                         Apri raccolta
                       </Link>
@@ -661,7 +656,7 @@ export default async function AdminCollectionsPage({
                         <input type="hidden" name="slug" value={entry.slug} />
                         <button
                           type="submit"
-                          className="button-shell button-primary w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
+                          className="tv-cc-btn tv-cc-btn--primary w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
                         >
                           Importa raccolta
                         </button>
@@ -674,7 +669,7 @@ export default async function AdminCollectionsPage({
           </div>
         </div>
 
-        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
+        <div className="tv-cc-panel rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="border-b pb-5">
             <p className="editorial-label">Viste raccolte</p>
             <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
@@ -686,7 +681,7 @@ export default async function AdminCollectionsPage({
                   style={{
                     borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
                     background: item.active
-                      ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
+                      ? "var(--tv-surface-selected)"
                       : "rgba(255,255,255,0.06)",
                     color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
                   }}
@@ -708,7 +703,7 @@ export default async function AdminCollectionsPage({
                 style={{
                   borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
                   background: item.active
-                    ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
+                    ? "var(--tv-surface-selected)"
                     : "rgba(255,255,255,0.06)",
                   color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
                 }}
@@ -1029,7 +1024,7 @@ export default async function AdminCollectionsPage({
                       <div className="flex flex-col gap-3">
                         <Link
                           href={`/admin/collections/${collection.id}`}
-                          className="button-shell button-primary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold text-white"
+                          className="tv-cc-btn tv-cc-btn--primary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold text-white"
                         >
                           Apri dettaglio
                         </Link>
@@ -1037,7 +1032,7 @@ export default async function AdminCollectionsPage({
                           collection.editorial_state === "featured") && (
                           <Link
                             href={`/collections/${collection.slug}`}
-                            className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                            className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
                           >
                             Vedi pagina pubblica
                           </Link>
@@ -1051,7 +1046,7 @@ export default async function AdminCollectionsPage({
                                 ? "/admin/collections/review?view=conflict"
                                   : "/admin/collections/review"
                             }
-                            className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                            className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
                           >
                             Apri revisione
                           </Link>

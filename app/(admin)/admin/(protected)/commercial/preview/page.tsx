@@ -1,5 +1,5 @@
 import { CommercialSubnav } from "@/components/admin/commercial-subnav";
-import { SectionHeader } from "@/components/ui/section-header";
+import { ControlCenterHeader } from "@/components/admin/control-center-header";
 import { getManagedCampaigns, getPlacementOverride } from "@/lib/sponsors/commercial-overrides";
 import { resolvePartnerCampaign } from "@/lib/sponsors/partner-resolver";
 import { type SponsorRouteKey } from "@/lib/sponsors/sponsor-placements";
@@ -23,14 +23,14 @@ export default function AdminCommercialPreviewPage() {
   const campaigns = getManagedCampaigns();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <CommercialSubnav current="/admin/commercial/preview" />
-      <SectionHeader invert
-        eyebrow="Commercial"
+      <ControlCenterHeader
+        kicker="Commercial"
         title="Preview campagne"
-        description="Nessuna pubblicazione richiesta. Ogni placement mostra superficie, partner, campagna, creatività, CTA, destinazione, modalità e stato."
+        description="Ogni placement mostra superficie, campagna, CTA e modalità."
       />
-      <div className="space-y-4">
+      <div className="space-y-3">
         {SURFACES.map((surface) => {
           const override = getPlacementOverride(surface.key);
           const resolved = resolvePartnerCampaign({
@@ -44,16 +44,14 @@ export default function AdminCommercialPreviewPage() {
             : null;
           const shown = resolved ?? pinned ?? null;
           return (
-            <article key={surface.key} className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5">
+            <article key={surface.key} className="tv-cc-panel">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-cyan-200/70">
-                    {override.mode} · {surface.surface}
-                  </p>
-                  <h2 className="mt-1 text-xl font-semibold text-white">{surface.label}</h2>
-                  <p className="text-sm text-white/50">{surface.key}</p>
+                  <p className="tv-cc-panel__kicker">{override.mode} · {surface.surface}</p>
+                  <h2 className="tv-cc-panel__title">{surface.label}</h2>
+                  <p className="tv-cc-card__meta">{surface.key}</p>
                 </div>
-                <p className="text-sm text-white/55">{shown ? shown.status : "vuoto"}</p>
+                <span className="tv-cc-metric">{shown ? shown.status : "vuoto"}</span>
               </div>
               {shown ? (
                 <div className="mt-4 grid gap-4 sm:grid-cols-[auto_1fr]">
@@ -61,20 +59,21 @@ export default function AdminCommercialPreviewPage() {
                   <img
                     src={shown.brandAsset?.src ?? shown.image ?? "/icon.svg"}
                     alt=""
-                    className="h-20 w-32 rounded-2xl bg-black/30 object-contain"
+                    className="h-20 w-32 rounded-2xl object-contain"
+                    style={{ background: "var(--tv-surface-elevated)" }}
                   />
                   <div>
-                    <p className="text-xs uppercase tracking-[0.14em] text-white/40">{shown.sponsorId}</p>
-                    <p className="mt-1 text-lg font-semibold text-white">{shown.headline}</p>
-                    <p className="mt-1 text-sm text-white/65">{shown.description}</p>
-                    <p className="mt-3 text-sm font-semibold text-white">
+                    <p className="tv-cc-card__meta">{shown.sponsorId}</p>
+                    <p className="tv-cc-panel__title">{shown.headline}</p>
+                    <p className="tv-cc-panel__desc">{shown.description}</p>
+                    <p className="mt-3 text-sm font-semibold">
                       {shown.ctaLabel} → {shown.destinationUrl}
                     </p>
-                    <p className="mt-1 text-xs text-white/45">{shown.disclosure}</p>
+                    <p className="tv-cc-card__meta">{shown.disclosure}</p>
                   </div>
                 </div>
               ) : (
-                <p className="mt-4 text-sm text-white/60">Nessuna campagna visibile. La superficie pubblica resta pulita.</p>
+                <p className="tv-cc-panel__desc">Nessuna campagna visibile. La superficie pubblica resta pulita.</p>
               )}
             </article>
           );

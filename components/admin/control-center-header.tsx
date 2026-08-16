@@ -14,6 +14,8 @@ export function ControlCenterHeader({
   description,
   primaryHref,
   primaryLabel,
+  backHref,
+  backLabel,
   metrics,
   className,
 }: {
@@ -22,6 +24,8 @@ export function ControlCenterHeader({
   description?: string;
   primaryHref?: string;
   primaryLabel?: string;
+  backHref?: string;
+  backLabel?: string;
   metrics?: ControlCenterMetric[];
   className?: string;
 }) {
@@ -42,11 +46,18 @@ export function ControlCenterHeader({
           </div>
         ) : null}
       </div>
-      {primaryHref && primaryLabel ? (
+      {backHref || (primaryHref && primaryLabel) ? (
         <div className="admin-sticky-actions">
-          <Link href={primaryHref} className="tv-cc-btn tv-cc-btn--primary">
-            {primaryLabel}
-          </Link>
+          {backHref ? (
+            <Link href={backHref} className="tv-cc-btn tv-cc-btn--ghost">
+              {backLabel ?? "Indietro"}
+            </Link>
+          ) : null}
+          {primaryHref && primaryLabel ? (
+            <Link href={primaryHref} className="tv-cc-btn tv-cc-btn--primary">
+              {primaryLabel}
+            </Link>
+          ) : null}
         </div>
       ) : null}
     </header>

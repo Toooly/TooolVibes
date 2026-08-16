@@ -4,56 +4,57 @@ import type { ManagedPartner } from "@/lib/sponsors/managed-commercial";
 
 export function ManagedPartnerForm({ partner }: { partner?: ManagedPartner }) {
   return (
-    <form action={saveManagedPartnerAction} className="space-y-4 rounded-[28px] border border-white/10 bg-white/[0.04] p-5">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="text-sm text-white/70">
-          ID / slug
-          <input name="id" required defaultValue={partner?.id ?? ""} className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white" />
+    <form action={saveManagedPartnerAction} className="space-y-4">
+      <section className="tv-cc-panel grid gap-4 sm:grid-cols-2">
+        <label>
+          <span className="tv-cc-label">ID / slug</span>
+          <input name="id" required defaultValue={partner?.id ?? ""} className="tv-cc-field" />
         </label>
-        <label className="text-sm text-white/70">
-          Nome
-          <input name="name" required defaultValue={partner?.name ?? ""} className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white" />
+        <label>
+          <span className="tv-cc-label">Nome</span>
+          <input name="name" required defaultValue={partner?.name ?? ""} className="tv-cc-field" />
         </label>
-        <label className="text-sm text-white/70">
-          Stato
-          <select name="status" defaultValue={partner?.status ?? "draft"} className="mt-1 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-white">
+        <label>
+          <span className="tv-cc-label">Stato</span>
+          <select name="status" defaultValue={partner?.status ?? "draft"} className="tv-cc-field">
             <option value="draft">draft</option>
             <option value="active">active</option>
             <option value="archived">archived</option>
           </select>
         </label>
-        <label className="text-sm text-white/70">
-          Sito
-          <input name="website" defaultValue={partner?.website ?? ""} className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white" />
+        <label>
+          <span className="tv-cc-label">Sito</span>
+          <input name="website" defaultValue={partner?.website ?? ""} className="tv-cc-field" />
         </label>
-        <label className="text-sm text-white/70">
-          CTA
-          <input name="defaultCta" defaultValue={partner?.defaultCta ?? "Scopri"} className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white" />
+        <label>
+          <span className="tv-cc-label">CTA</span>
+          <input name="defaultCta" defaultValue={partner?.defaultCta ?? "Scopri"} className="tv-cc-field" />
         </label>
-        <label className="text-sm text-white/70">
-          Destinazione
-          <input name="destinationUrl" defaultValue={partner?.destinationUrl ?? ""} className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white" />
+        <label>
+          <span className="tv-cc-label">Destinazione</span>
+          <input name="destinationUrl" defaultValue={partner?.destinationUrl ?? ""} className="tv-cc-field" />
         </label>
-        <label className="text-sm text-white/70 sm:col-span-2">
-          Segmenti (virgola)
-          <input name="segments" defaultValue={partner?.segments?.join(", ") ?? ""} className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white" />
+        <label className="sm:col-span-2">
+          <span className="tv-cc-label">Segmenti (virgola)</span>
+          <input name="segments" defaultValue={partner?.segments?.join(", ") ?? ""} className="tv-cc-field" />
         </label>
-        <label className="text-sm text-white/70 sm:col-span-2">
-          Note
-          <textarea name="notes" defaultValue={partner?.notes ?? ""} rows={3} className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white" />
+        <label className="sm:col-span-2">
+          <span className="tv-cc-label">Note</span>
+          <textarea name="notes" defaultValue={partner?.notes ?? ""} rows={3} className="tv-cc-field" />
         </label>
-      </div>
-      <div>
-        <p className="mb-2 text-sm text-white/70">Logo</p>
+      </section>
+      <section className="tv-cc-panel">
+        <p className="tv-cc-label">Logo</p>
         <MediaLibraryPicker fieldName="logo" defaultValue={partner?.logo ?? ""} />
-      </div>
-      <div>
-        <p className="mb-2 text-sm text-white/70">Brand plate / creatività</p>
+      </section>
+      <section className="tv-cc-panel">
+        <p className="tv-cc-label">Brand plate / creatività</p>
         <MediaLibraryPicker fieldName="brandPlate" defaultValue={partner?.brandPlate ?? ""} />
+      </section>
+      <div className="tv-cc-savebar">
+        <p className="tv-cc-panel__desc" style={{ margin: 0 }}>Salva partner</p>
+        <button type="submit" className="tv-cc-btn tv-cc-btn--primary">Salva partner</button>
       </div>
-      <button type="submit" className="min-h-11 rounded-full bg-[linear-gradient(135deg,#6a3cff,#39d2f6)] px-5 text-sm font-semibold text-white">
-        Salva partner
-      </button>
     </form>
   );
 }

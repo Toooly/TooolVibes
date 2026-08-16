@@ -206,7 +206,7 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="admin-mobile-nav absolute right-0 top-0 h-full w-[min(20rem,88vw)] border-l border-[rgba(106,60,255,0.2)] bg-[#120d2e] p-6 pt-20 text-[#f4f1ff]"
+              className="admin-mobile-nav absolute right-0 top-0 h-full w-[min(20rem,88vw)] border-l border-[rgba(106,60,255,0.2)] bg-[#120d2e] p-6 pt-20 "
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col gap-5">

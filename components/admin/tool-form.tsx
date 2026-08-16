@@ -30,11 +30,11 @@ function FieldError({ error }: { error?: string }) {
     return null;
   }
 
-  return <p className="mt-2 text-sm font-medium text-red-700">{error}</p>;
+  return <p className="tv-cc-error">{error}</p>;
 }
 
 function FieldLabel({ label }: { label: string }) {
-  return <span className="mb-2 block text-sm font-semibold">{label}</span>;
+  return <span className="tv-cc-label">{label}</span>;
 }
 
 function FormSection({
@@ -49,14 +49,11 @@ function FormSection({
   children: ReactNode;
 }) {
   return (
-    <section
-      className="rounded-[28px] border p-5 sm:p-6"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-    >
+    <section className="tv-cc-panel">
       <div className="border-b pb-4 soft-divider">
-        <p className="editorial-label">{eyebrow}</p>
-        <h2 className="text-display-card mt-2 text-[1.32rem] sm:text-[1.46rem]">{title}</h2>
-        <p className="mt-2 max-w-[40rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
+        <p className="tv-cc-panel__kicker">{eyebrow}</p>
+        <h2 className="tv-cc-panel__title">{title}</h2>
+        <p className="tv-cc-panel__desc">
           {description}
         </p>
       </div>
@@ -77,13 +74,10 @@ function ToggleCard({
   defaultChecked: boolean;
 }) {
   return (
-    <label
-      className="flex items-center justify-between gap-4 rounded-[24px] border px-4 py-4"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-    >
+    <label className="tv-cc-panel flex items-center justify-between gap-4">
       <div>
         <p className="text-sm font-semibold">{title}</p>
-        <p className="mt-1 text-sm leading-6" style={{ color: "var(--muted)" }}>
+        <p className="tv-cc-panel__desc">
           {description}
         </p>
       </div>
@@ -120,10 +114,7 @@ export function ToolForm({
       ) : null}
 
       {state.status === "error" && state.message ? (
-        <div
-          className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-          style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(255,82,82,0.12)" }}
-        >
+        <div className="tv-cc-notice tv-cc-notice--warn">
           {state.message}
         </div>
       ) : null}
@@ -140,8 +131,7 @@ export function ToolForm({
               <input
                 name="name"
                 defaultValue={values.name}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.name} />
@@ -153,8 +143,7 @@ export function ToolForm({
                 name="slug"
                 defaultValue={values.slug}
                 placeholder="lascia vuoto per generarlo dal nome"
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.slug} />
             </label>
@@ -164,8 +153,7 @@ export function ToolForm({
               <select
                 name="category"
                 defaultValue={values.category}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {toolCategories.map((category) => (
                   <option key={category} value={category}>
@@ -182,8 +170,7 @@ export function ToolForm({
                 name="tags"
                 defaultValue={values.tags}
                 placeholder="ai, automazione, scrittura"
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.tags} />
             </label>
@@ -193,8 +180,7 @@ export function ToolForm({
               <input
                 name="source"
                 defaultValue={values.source}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.source} />
@@ -206,8 +192,7 @@ export function ToolForm({
                 name="date_discovered"
                 type="date"
                 defaultValue={values.date_discovered}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.date_discovered} />
@@ -227,8 +212,7 @@ export function ToolForm({
                 name="short_description_it"
                 defaultValue={values.short_description_it}
                 rows={3}
-                className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.short_description_it} />
@@ -240,8 +224,7 @@ export function ToolForm({
                 name="description_it"
                 defaultValue={values.description_it}
                 rows={7}
-                className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.description_it} />
@@ -253,8 +236,7 @@ export function ToolForm({
                 name="website_url"
                 type="url"
                 defaultValue={values.website_url}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.website_url} />
@@ -266,8 +248,7 @@ export function ToolForm({
                 name="tooolvibes_post_url"
                 type="url"
                 defaultValue={values.tooolvibes_post_url}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.tooolvibes_post_url} />
@@ -280,8 +261,7 @@ export function ToolForm({
                 type="url"
                 defaultValue={values.affiliate_url ?? undefined}
                 placeholder="Se presente, viene usato come link principale nel sito pubblico"
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.affiliate_url} />
             </label>
@@ -293,8 +273,7 @@ export function ToolForm({
                 defaultValue={values.cover_image_url}
                 readOnly
                 aria-label="URL copertina selezionato"
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.cover_image_url} />
               <div className="mt-4">
@@ -311,12 +290,9 @@ export function ToolForm({
           description="L'ultima decisione è sempre editoriale: quando il tool è pronto, puoi pubblicarlo nel catalogo o promuoverlo nei punti più forti della selezione."
         >
           <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
-            <div
-              className="rounded-[24px] border px-4 py-4"
-              style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-            >
+            <div className="tv-cc-panel">
               <p className="text-sm font-semibold">Nota operativa</p>
-              <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted)" }}>
+              <p className="tv-cc-panel__desc">
                 Il salvataggio avviene in modo protetto e il form mantiene i dati inseriti anche
                 se manca un campo o il servizio non risponde.
               </p>

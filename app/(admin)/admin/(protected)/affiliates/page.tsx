@@ -115,7 +115,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
           </ControlCenterNotice>
         ) : null}
         <ControlCenterFilters items={viewLinks} active={activeView} />
-        <section className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
+        <section className="tv-cc-panel rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
             <div>
               <p className="editorial-label">Area affiliati</p>
@@ -128,7 +128,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                 <Link
                   key={item.value}
                   href={item.href}
-                  className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[#f4f1ff]"
+                  className="tv-cc-btn tv-cc-btn--secondary rounded-full px-3.5 py-2 text-sm font-semibold "
                   style={{
                     background:
                       activeView === item.value ? "rgba(106,60,255,0.12)" : undefined,
@@ -262,7 +262,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                               name="status"
                               value="reviewing"
                               disabled={!runtime.canWrite}
-                              className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
+                              className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-sm font-semibold  disabled:cursor-not-allowed disabled:opacity-55"
                             >
                               In revisione
                             </button>

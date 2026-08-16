@@ -50,8 +50,8 @@ function ToolMomentCard({
               : "var(--line)",
         background:
           moment.emphasis === "anchor"
-            ? "var(--tv-surface-inverted-accent)"
-            : "var(--tv-surface-inverted-raised)",
+            ? "var(--tv-surface-selected)"
+            : "var(--tv-surface-elevated)",
       }}
     >
       <div className="flex flex-wrap items-center gap-2">
@@ -279,7 +279,7 @@ function renderIssueBlock(
               key={item}
               className="rounded-[24px] border border-[var(--tv-border-default)] px-4 py-4 text-sm leading-6"
               style={{
-                background: "var(--tv-surface-inverted-raised)",
+                background: "var(--tv-surface-elevated)",
               }}
             >
               {item}
@@ -370,7 +370,7 @@ export function AdvancedSpecialIssue({
             <div
               key={item}
               className="rounded-[22px] border px-4 py-4 text-sm leading-6"
-              style={{ borderColor: "var(--line)", background: "var(--tv-surface-inverted-raised)" }}
+              style={{ borderColor: "var(--line)", background: "var(--tv-surface-elevated)" }}
             >
               {item}
             </div>
@@ -393,7 +393,7 @@ export function AdvancedSpecialIssue({
           className="mt-5 rounded-[28px] border px-4.5 py-4.5"
           style={{
             borderColor: "rgba(242, 179, 71, 0.26)",
-            background: "var(--tv-surface-inverted-raised)",
+            background: "var(--tv-surface-elevated)",
           }}
         >
           <div className="flex flex-wrap items-center gap-2">

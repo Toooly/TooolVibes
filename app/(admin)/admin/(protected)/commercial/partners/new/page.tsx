@@ -1,15 +1,17 @@
 import { CommercialSubnav } from "@/components/admin/commercial-subnav";
+import { ControlCenterHeader } from "@/components/admin/control-center-header";
 import { ManagedPartnerForm } from "@/components/admin/managed-partner-form";
-import { SectionHeader } from "@/components/ui/section-header";
 
 export default function AdminNewPartnerPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <CommercialSubnav current="/admin/commercial/partners" />
-      <SectionHeader invert
-        eyebrow="Commercial"
+      <ControlCenterHeader
+        kicker="Commercial"
         title="Nuovo partner"
-        description="Identità, logo e brand plate si gestiscono qui. Nessuna modifica al codice per pubblicare un partner."
+        description="Identità, logo e brand plate."
+        backHref="/admin/commercial/partners"
+        backLabel="Torna ai partner"
       />
       <ManagedPartnerForm />
     </div>

@@ -6,7 +6,7 @@ import { updateCollectionFormAction } from "@/app/(admin)/admin/actions/collecti
 import { CollectionSyncPreviewPanel } from "@/components/admin/collection-sync-preview-panel";
 import { CollectionTransitionCard } from "@/components/admin/collection-transition-card";
 import { CollectionForm } from "@/components/admin/collection-form";
-import { SectionHeader } from "@/components/ui/section-header";
+import { ControlCenterHeader, ControlCenterNotice } from "@/components/admin/control-center-header";
 import { getCollectionFormValues } from "@/lib/admin/collection-form";
 import {
   getAdminCollectionById,
@@ -128,97 +128,35 @@ export default async function AdminCollectionDetailPage({
   return (
     <div className="page-shell py-8 sm:py-10">
       <div className="space-y-6">
-        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader invert
-              eyebrow="Dettaglio raccolta"
-              title={collection.title}
-              description="Qui puoi leggere i segnali aperti, verificare la continuità con il prodotto pubblico e modificare la raccolta dallo stesso punto di lavoro."
-            />
-            <div className="hidden flex-wrap gap-3 sm:flex">
-              {topActions.map((action) => (
-                <Link
-                  key={action.href}
-                  href={action.href}
-                  className={`button-shell ${action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} rounded-full px-4 py-2.5 text-sm font-semibold`}
-                >
-                  {action.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <div className="tool-rail -mx-1 mt-5 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:hidden">
-            {topActions.map((action) => (
-              <Link
-                key={`mobile-${action.href}`}
-                href={action.href}
-                className={`button-shell ${action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold`}
-              >
-                {action.label}
-              </Link>
-            ))}
-          </div>
-
-          {statusMessage ? (
-            <div
-              className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
-              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
+        <ControlCenterHeader
+          kicker="Raccolte"
+          title={collection.title}
+          description="Segnali, continuità pubblica e modifica nello stesso punto."
+          backHref="/admin/collections"
+          backLabel="Torna alle raccolte"
+          metrics={metrics.map((item) => ({ label: item.label, value: item.value }))}
+        />
+        {statusMessage ? <ControlCenterNotice tone="ok">{statusMessage}</ControlCenterNotice> : null}
+        {!runtime.canWrite ? (
+          <ControlCenterNotice tone="warn">
+            La raccolta è leggibile, ma il salvataggio reale resta disattivato.
+          </ControlCenterNotice>
+        ) : null}
+        <div className="mb-4 flex flex-wrap gap-2">
+          {topActions.map((action) => (
+            <Link
+              key={action.href}
+              href={action.href}
+              className={action.primary ? "tv-cc-btn tv-cc-btn--primary" : "tv-cc-btn tv-cc-btn--ghost"}
             >
-              {statusMessage}
-            </div>
-          ) : null}
-
-          {!runtime.canWrite ? (
-            <div
-              className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-              style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
-            >
-              La raccolta è leggibile, ma il salvataggio reale resta disattivato finché l’archivio
-              non è pronto.
-            </div>
-          ) : null}
-
-          <div className="tool-rail -mx-1.5 mt-6 flex snap-x gap-3 overflow-x-auto px-1.5 pb-1 sm:hidden">
-            {metrics.map((item) => (
-              <article
-                key={item.label}
-                className="stat-block w-[12.5rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                  {item.label}
-                </p>
-                <p className="mt-3 text-[1.72rem] leading-none">{item.value}</p>
-                <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
-                  {item.detail}
-                </p>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-6 hidden gap-4 sm:grid lg:grid-cols-4">
-            {metrics.map((item) => (
-              <article
-                key={`desktop-${item.label}`}
-                className="stat-block rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                  {item.label}
-                </p>
-                <p className="mt-3 text-[1.72rem] leading-none">{item.value}</p>
-                <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
-                  {item.detail}
-                </p>
-              </article>
-            ))}
-          </div>
+              {action.label}
+            </Link>
+          ))}
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
           <aside className="space-y-6">
-            <section className="surface-card overflow-hidden rounded-[var(--radius-xl)]">
+            <section className="tv-cc-panel overflow-hidden p-0">
               <div className="relative min-h-[16rem]">
                 <Image
                   src={collection.cover_image_url}
@@ -263,13 +201,12 @@ export default async function AdminCollectionDetailPage({
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-[22px] border px-4 py-3"
-                    style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                    className="tv-cc-panel"
                   >
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em]" >
                       {item.label}
                     </p>
-                    <p className="mt-2 text-sm" style={{ color: "var(--muted-strong)" }}>
+                    <p className="mt-2 text-sm" >
                       {item.value}
                     </p>
                   </div>
@@ -277,8 +214,8 @@ export default async function AdminCollectionDetailPage({
               </div>
             </section>
 
-            <section className="surface-card rounded-[var(--radius-xl)] p-5 sm:p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+            <section className="tv-cc-panel">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em]" >
                 Segnali e controlli
               </p>
               <div className="mt-4 grid gap-3">
@@ -294,7 +231,7 @@ export default async function AdminCollectionDetailPage({
                             : "rgba(161,105,47,0.18)",
                         background:
                           issue.level === "error"
-                            ? "rgba(254,242,242,0.96)"
+                            ? "color-mix(in srgb, var(--tv-status-danger) 16%, transparent)"
                             : "rgba(243,191,76,0.12)",
                       }}
                     >
@@ -328,8 +265,8 @@ export default async function AdminCollectionDetailPage({
               />
             ) : null}
 
-            <section className="surface-card rounded-[var(--radius-xl)] p-5 sm:p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
+            <section className="tv-cc-panel">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em]" >
                 Tool inclusi
               </p>
               <div className="mt-4 grid gap-3">
@@ -339,24 +276,23 @@ export default async function AdminCollectionDetailPage({
                   return (
                     <div
                       key={`${collection.id}-${slot.tool_slug}-${index}`}
-                      className="rounded-[22px] border px-4 py-4"
-                      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                      className="tv-cc-panel"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="font-semibold">
                           {String(index + 1).padStart(2, "0")} - {tool?.name ?? slot.tool_slug}
                         </p>
                         {slot.featured ? (
-                          <span className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]" style={{ borderColor: "var(--line)", background: "rgba(243,237,255,0.92)" }}>
+                          <span className="tv-cc-metric">
                             Tool guida
                           </span>
                         ) : null}
                       </div>
-                      <p className="mt-2 text-sm" style={{ color: "var(--muted-strong)" }}>
+                      <p className="mt-2 text-sm" >
                         {slot.role}
                       </p>
                       {slot.note ? (
-                        <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
+                        <p className="mt-2 text-sm leading-6" >
                           {slot.note}
                         </p>
                       ) : null}
@@ -367,7 +303,7 @@ export default async function AdminCollectionDetailPage({
             </section>
           </aside>
 
-          <section className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
+          <section className="tv-cc-panel">
             {readiness ? (
               <div
                 className="mb-6 rounded-[var(--radius-lg)] border px-4 py-4 text-sm"
@@ -380,7 +316,7 @@ export default async function AdminCollectionDetailPage({
                         : "rgba(15,118,110,0.18)",
                   background:
                     readiness.state === "blocked"
-                      ? "rgba(254,242,242,0.96)"
+                      ? "color-mix(in srgb, var(--tv-status-danger) 16%, transparent)"
                       : readiness.state === "review"
                         ? "rgba(243,191,76,0.12)"
                         : "rgba(57,210,246,0.12)",
