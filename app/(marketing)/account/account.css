@@ -465,3 +465,36 @@ body[data-account-surface="auth"] .mobile-top-bar {
     font-size: 1.4rem;
   }
 }
+
+.account-saved-row {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--account-line);
+  background: #f7f5ff;
+  padding: 0.7rem 0.9rem;
+  color: var(--account-ink);
+  text-decoration: none;
+}
+.account-saved-row em {
+  margin-top: 0.15rem;
+  font-style: normal;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--account-muted);
+}
+
+.account-hero--session {
+  padding-bottom: 1.15rem;
+}
+.account-hero--session .account-title {
+  max-width: 18ch;
+}
+.account-workspace-foot {
+  padding: 0.15rem 0.15rem 0;
+}

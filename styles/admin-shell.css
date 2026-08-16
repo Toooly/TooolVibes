@@ -95,11 +95,111 @@
 [data-admin-shell] .brand-panel :is(h1, h2, h3, p, span, label, strong, em, li, small) {
   color: inherit;
 }
-[data-admin-shell] [style*="255,255,255"],
-[data-admin-shell] [style*="255, 255, 255"],
-[data-admin-shell] [style*="236,253,245"],
-[data-admin-shell] [style*="255,251,235"],
-[data-admin-shell] [style*="245,242,255"],
-[data-admin-shell] [style*="240,253,250"] {
-  color: #1c1633;
+
+.admin-kicker {
+  margin: 0 0 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 255, 0.55);
+}
+.admin-overview,
+.admin-activity {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.15rem;
+  background: rgba(16, 12, 40, 0.88);
+  color: #f4f1ff;
+  padding: 1.25rem 1.2rem;
+  margin-bottom: 1rem;
+}
+.admin-overview__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.admin-overview__title {
+  margin: 0;
+  max-width: 16ch;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+.admin-overview__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.admin-overview__primary,
+.admin-overview__secondary,
+.admin-queue__item,
+.admin-destinations__item {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 0.85rem;
+  padding: 0.65rem 0.95rem;
+  text-decoration: none;
+  font-weight: 700;
+}
+.admin-overview__primary {
+  background: #f4f1ff;
+  color: #160d3d;
+}
+.admin-overview__secondary,
+.admin-destinations__item {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #f4f1ff;
+}
+.admin-overview__empty {
+  margin: 1rem 0 0;
+  color: rgba(244, 241, 255, 0.7);
+}
+.admin-queue {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .admin-queue { grid-template-columns: 1fr 1fr; }
+}
+.admin-queue__item {
+  width: 100%;
+  border: 1px solid rgba(57, 210, 246, 0.22);
+  background: rgba(57, 210, 246, 0.08);
+  color: #9eefff;
+}
+.admin-note {
+  margin: 1rem 0 0;
+  border-radius: 0.85rem;
+  padding: 0.75rem 0.9rem;
+}
+.admin-note--warn {
+  border: 1px solid rgba(255, 82, 82, 0.22);
+  background: rgba(255, 82, 82, 0.08);
+  color: #ffb6b6;
+}
+.admin-activity ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+  color: rgba(244, 241, 255, 0.72);
+}
+.admin-destinations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+[data-admin-shell] .admin-stat-tile {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f4f1ff;
 }

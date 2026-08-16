@@ -544,6 +544,7 @@ vi.mock("@number-flow/react", () => ({
 }));
 
 import { AccountPanel } from "@/components/account/account-panel";
+import { AccountSettingsPage } from "@/components/account/account-settings-page";
 
 function makeAccount(overrides: Record<string, unknown> = {}) {
   return {
@@ -688,7 +689,7 @@ describe("B59 AccountPanel — state matrix integration", () => {
     const occurrences = screen.getAllByText(message);
     expect(occurrences).toHaveLength(1);
     await waitFor(() => {
-      expect(screen.getByText(/Nessuna submission collegata/)).toBeTruthy();
+      expect(screen.getByText("Il tuo TooolVibes")).toBeTruthy();
     });
   });
 
@@ -710,7 +711,7 @@ describe("B59 AccountPanel — state matrix integration", () => {
     expect(banner?.textContent).toContain("Selezione collegata");
     expect(screen.getAllByText(message)).toHaveLength(1);
     await waitFor(() => {
-      expect(screen.getByText(/Nessuna submission collegata/)).toBeTruthy();
+      expect(screen.getByText("Il tuo TooolVibes")).toBeTruthy();
     });
   });
 
@@ -730,7 +731,7 @@ describe("B59 AccountPanel — state matrix integration", () => {
         session: { access_token: "token-a" },
       }),
     );
-    const { container } = render(<AccountPanel />);
+    const { container } = render(<AccountSettingsPage />);
 
     await waitFor(() => {
       expect(container.querySelector("[data-submissions-error='server']")).not.toBeNull();
@@ -763,7 +764,7 @@ describe("B59 AccountPanel — state matrix integration", () => {
         session: { access_token: "token-a" },
       }),
     );
-    const { container } = render(<AccountPanel />);
+    const { container } = render(<AccountSettingsPage />);
 
     await waitFor(() => {
       expect(container.querySelector("[data-submissions-error='rate-limited']")).not.toBeNull();
@@ -785,7 +786,7 @@ describe("B59 AccountPanel — state matrix integration", () => {
         session: { access_token: "token-a" },
       }),
     );
-    const { container } = render(<AccountPanel />);
+    const { container } = render(<AccountSettingsPage />);
 
     await waitFor(() => {
       expect(container.querySelector("[data-submissions-error='unauthorized']")).not.toBeNull();
@@ -808,7 +809,7 @@ describe("B59 AccountPanel — state matrix integration", () => {
         session: { access_token: "token-a" },
       }),
     );
-    const { container } = render(<AccountPanel />);
+    const { container } = render(<AccountSettingsPage />);
 
     expect(container.querySelector("[data-account-state]")).toBeNull();
     await waitFor(() => {

@@ -305,18 +305,16 @@ describe("AccountPanel — stato authenticated", () => {
 
     expect(screen.getByText("Account connesso")).toBeTruthy();
     expect(screen.getByText(/mario@example\.com/)).toBeTruthy();
+    expect(screen.getByText("Il tuo TooolVibes")).toBeTruthy();
     expect(screen.queryByPlaceholderText("nome@email.com")).toBeNull();
+    expect(screen.queryByText("Proposta founder")).toBeNull();
+    expect(screen.queryByText("Gamification")).toBeNull();
 
     await waitFor(() => {
-      expect(screen.getByText("Tool Alpha")).toBeTruthy();
+      expect(fetch).toHaveBeenCalledWith("/api/account/submissions", {
+        headers: { Authorization: "Bearer token-a" },
+      });
     });
-    expect(fetch).toHaveBeenCalledWith("/api/account/submissions", {
-      headers: { Authorization: "Bearer token-a" },
-    });
-    expect(screen.getByText("Proposta founder")).toBeTruthy();
-    expect(screen.getByText("Brand Beta")).toBeTruthy();
-    const referral = screen.getByText("Apri referral").closest("a") as HTMLAnchorElement;
-    expect(referral.href).toBe("https://ref.example.com/");
 
     fireEvent.click(screen.getByRole("button", { name: /Esci dall'account/ }));
     expect(account.signOut).toHaveBeenCalledTimes(1);
@@ -333,9 +331,8 @@ describe("AccountPanel — stato authenticated", () => {
     const { container } = render(<AccountPanel />);
 
     expect(heroOf(container).getByText("Salvataggio non riuscito")).toBeTruthy();
-    // Attende la chiusura del fetch submission per un test deterministico.
     await waitFor(() => {
-      expect(screen.getByText(/Nessuna submission collegata/)).toBeTruthy();
+      expect(fetch).toHaveBeenCalled();
     });
   });
 
@@ -385,9 +382,6 @@ describe("AccountPanel — messaggi auth e recovery", () => {
     const message = container.querySelector(".account-message--success");
     expect(message).not.toBeNull();
     expect(message?.textContent).toContain("Selezione collegata all'account");
-    await waitFor(() => {
-      expect(screen.getByText(/Nessuna submission collegata/)).toBeTruthy();
-    });
   });
 
   it("mostra il backup in quarantena e invoca il ripristino", () => {
@@ -505,16 +499,9 @@ describe("AccountPanel — gamification", () => {
     setPanelState({ account });
     render(<AccountPanel />);
 
-    expect(screen.getByText("Gamification")).toBeTruthy();
-    expect(screen.getByText("Livello")).toBeTruthy();
-    expect(screen.getByText("XP totali")).toBeTruthy();
-    expect(screen.getByText("250")).toBeTruthy();
-    expect(screen.getByText(/Serie attuale: 5 giorni/)).toBeTruthy();
-    expect(screen.getByText("Best Vibe Rush")).toBeTruthy();
-    expect(screen.getByText("42")).toBeTruthy();
-    await waitFor(() => {
-      expect(screen.getByText(/Nessuna submission collegata/)).toBeTruthy();
-    });
+    expect(screen.queryByText("Gamification")).toBeNull();
+    expect(screen.getByText("Il tuo TooolVibes")).toBeTruthy();
+    expect(screen.getByText("Impostazioni")).toBeTruthy();
   });
 });
 

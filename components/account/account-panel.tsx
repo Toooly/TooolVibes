@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useAccount } from "@/components/account/account-provider";
 
 import { AccountGamificationSection } from "./panel/account-gamification-section";
@@ -12,6 +14,7 @@ import { AccountPreferencesSection } from "./panel/account-preferences-section";
 import { AccountPremiumSection } from "./panel/account-premium-section";
 import { DecisionMemorySection } from "./panel/decision-memory-section";
 import { AccountWorkspaceBoard } from "./panel/account-workspace-board";
+import { AccountSavedRail } from "./panel/account-saved-rail";
 import { AccountSelectionSection } from "./panel/account-selection-section";
 import { AccountStateBanner } from "./panel/account-state-banner";
 import { isAccountStateMatrixEnabled } from "./panel/account-state-flags";
@@ -70,13 +73,43 @@ export function AccountPanel() {
   const suppressAuthMessage =
     showStateBanner &&
     (stateCell.kind === "attach-retry" || stateCell.kind === "attach-success");
+  if (account.status === "authenticated") {
+    return (
+      <div
+        id="member-access"
+        className="tone-account relative z-10 space-y-4 scroll-mt-24 px-4 py-6 sm:px-6 sm:py-8"
+      >
+        <AccountHero account={account} workspace={workspace} />
+        {showStateBanner ? (
+          <AccountStateBanner
+            cell={stateCell}
+            onAction={(actionId) => {
+              if (actionId === "resend-link") {
+                void signupForm.resendPendingLink();
+              }
+            }}
+          />
+        ) : null}
+        <AccountRecoverySection
+          account={account}
+          suppressAuthMessage={suppressAuthMessage}
+        />
+        <AccountWorkspaceBoard workspace={workspace} decisionCount={workspace.notes} />
+        <DecisionMemorySection />
+        <AccountSavedRail tools={savedToolCards} />
+        <p className="account-workspace-foot">
+          <Link className="account-link" href="/account/settings">Impostazioni</Link>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div
         id="member-access"
         className="tone-account relative z-10 space-y-5 scroll-mt-24 px-4 py-6 sm:px-6 sm:py-8"
       >
-        {/* Hero */}
         <AccountHero account={account} workspace={workspace} />
         <AccountWorkspaceBoard
           workspace={workspace}
@@ -103,7 +136,7 @@ export function AccountPanel() {
             savedToolCards={savedToolCards}
             recommendedTools={recommendedTools}
           />
-          {account.status !== "authenticated" ? <AccountJourneyPanel /> : null}
+          <AccountJourneyPanel />
           <AccountSubmissionsSection
             status={account.status}
             submissions={submissions.submissions}

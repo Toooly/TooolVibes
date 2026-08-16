@@ -270,14 +270,15 @@ export function FounderControlCenterV2({ articlesRuntime, adminMetrics }: Founde
         </motion.div>
       </header>
 
-      {/* Metrics Bar */}
-      <div className="mx-auto max-w-[1440px] px-4 pt-6">
-        <div className="grid gap-3 sm:grid-cols-3">
-          {metrics.map((metric) => (
-            <MetricOrb key={metric.label} {...metric} />
-          ))}
+      {pathname === "/admin" ? (
+        <div className="mx-auto max-w-[1440px] px-4 pt-6">
+          <div className="grid gap-3 sm:grid-cols-3">
+            {metrics.map((metric) => (
+              <MetricOrb key={metric.label} {...metric} />
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Mobile Menu */}
       <AnimatePresence>

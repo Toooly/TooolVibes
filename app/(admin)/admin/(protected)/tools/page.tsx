@@ -112,8 +112,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
             ].map((item) => (
               <article
                 key={item.label}
-                className="rounded-[var(--radius-lg)] border p-5"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+                className="admin-stat-tile rounded-[var(--radius-lg)] border p-5"
               >
                 <p className="text-sm font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
                   {item.label}

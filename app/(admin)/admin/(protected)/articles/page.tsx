@@ -149,7 +149,7 @@ export default async function AdminDashboardPage({
               <article
                 key={item.label}
                 className="rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+                className="admin-stat-tile rounded-[var(--radius-lg)] border p-5"
               >
                 <p
                   className="text-xs font-semibold uppercase tracking-[0.16em]"
@@ -322,14 +322,7 @@ export default async function AdminDashboardPage({
                         </span>
                       ))
                     ) : (
-                      <div
-                        className="rounded-[22px] border px-4 py-3 text-sm"
-                        style={{
-                          borderColor: "var(--line)",
-                          background: "rgba(255,255,255,0.74)",
-                          color: "var(--muted)",
-                        }}
-                      >
+                      <div className="admin-stat-tile rounded-[22px] border px-4 py-3 text-sm">
                         Nessun tag assegnato.
                       </div>
                     )}

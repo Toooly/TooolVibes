@@ -405,7 +405,7 @@ export default async function AdminCollectionsPage({
               <article
                 key={item.label}
                 className="stat-block w-[12rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-5"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+                className="admin-stat-tile rounded-[var(--radius-lg)] border p-5"
               >
                 <p
                   className="text-sm font-semibold uppercase tracking-[0.18em]"
@@ -423,7 +423,7 @@ export default async function AdminCollectionsPage({
               <article
                 key={`desktop-${item.label}`}
                 className="stat-block rounded-[var(--radius-lg)] border p-5"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+                className="admin-stat-tile rounded-[var(--radius-lg)] border p-5"
               >
                 <p
                   className="text-sm font-semibold uppercase tracking-[0.18em]"
@@ -599,7 +599,7 @@ export default async function AdminCollectionsPage({
                 <article
                   key={entry.slug}
                   className="grid gap-4 rounded-[var(--radius-lg)] border p-5 lg:grid-cols-[1.35fr_1fr_auto]"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+                  className="admin-stat-tile rounded-[var(--radius-lg)] border p-5"
                 >
                   <div className="space-y-3">
                     <div className="flex flex-wrap items-center gap-3">
@@ -819,7 +819,7 @@ export default async function AdminCollectionsPage({
                     <article
                       key={collection.id}
                       className="grid gap-5 rounded-[var(--radius-lg)] border p-5 lg:grid-cols-[1.4fr_1fr_auto]"
-                      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.74)" }}
+                      className="admin-stat-tile rounded-[var(--radius-lg)] border p-5"
                     >
                       <div className="space-y-4">
                         <div className="flex flex-wrap items-center gap-3">
