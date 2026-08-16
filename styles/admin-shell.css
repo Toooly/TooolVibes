@@ -83,3 +83,23 @@
     padding-bottom: 2.5rem;
   }
 }
+
+[data-admin-shell] .brand-panel,
+[data-admin-shell] .interactive-surface {
+  background: rgba(16, 12, 40, 0.88);
+  background-image: none;
+  color: #f4f1ff;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+}
+[data-admin-shell] .brand-panel :is(h1, h2, h3, p, span, label, strong, em, li, small) {
+  color: inherit;
+}
+[data-admin-shell] [style*="255,255,255"],
+[data-admin-shell] [style*="255, 255, 255"],
+[data-admin-shell] [style*="236,253,245"],
+[data-admin-shell] [style*="255,251,235"],
+[data-admin-shell] [style*="245,242,255"],
+[data-admin-shell] [style*="240,253,250"] {
+  color: #1c1633;
+}

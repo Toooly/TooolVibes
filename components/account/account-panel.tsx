@@ -96,78 +96,39 @@ export function AccountPanel() {
         ) : null}
 
         {/* My TooolVibes — decisions first, bureaucracy later */}
-        <div className="editorial-grid gap-y-5 account-workspace">
-          <section className="col-span-12 space-y-5 lg:col-span-7 lg:order-2">
-            <div className="account-cluster account-cluster--solid">
-              <div className="account-cluster__summary account-cluster__summary--static">
-                <span>Le tue decisioni</span>
-                <em>Note e shortlist nello stesso posto</em>
-              </div>
-              <div className="account-cluster__body space-y-5">
-                <DecisionMemorySection />
-                <AccountSelectionSection
-                  workspace={workspace}
-                  savedToolCards={savedToolCards}
-                  recommendedTools={recommendedTools}
-                />
-                {account.status !== "authenticated" ? <AccountJourneyPanel /> : null}
-              </div>
-            </div>
-
-            <details className="account-cluster">
-              <summary className="account-cluster__summary">
-                <span>Contributi e preferenze</span>
-                <em>Suggerimenti e impostazioni</em>
-              </summary>
-              <div className="account-cluster__body space-y-5">
-                <AccountSubmissionsSection
-                  status={account.status}
-                  submissions={submissions.submissions}
-                  isLoading={submissions.isLoading}
-                  totalSubmissions={submissions.totalSubmissions}
-                  error={submissions.error}
-                  onRetry={submissions.reload}
-                />
-                <AccountPreferencesSection status={account.status} savedCount={workspace.saved} />
-              </div>
-            </details>
-          </section>
-
-          <aside className="col-span-12 space-y-5 lg:col-span-5 lg:order-1">
-            <details className="account-cluster">
-              <summary className="account-cluster__summary">
-                <span>Progresso e stato</span>
-                <em>Segnale e account</em>
-              </summary>
-              <div className="account-cluster__body space-y-5">
-                <AccountSignalProgressSection />
-                <AccountGamificationSection
-                  vibeRushBest={vibeRushBest}
-                  submissionsLoading={submissions.isLoading}
-                  totalSubmissions={submissions.totalSubmissions}
-                />
-                <AccountStatusSection account={account} />
-                <AccountPremiumSection status={account.status} savedCount={workspace.saved} />
-              </div>
-            </details>
-
-            <p>
-              <a className="account-link" href="/account/settings">Impostazioni account</a>
-            </p>
-            <details className="account-cluster">
-              <summary className="account-cluster__summary">
-                <span>Accesso e sicurezza</span>
-                <em>Credenziali e recupero</em>
-              </summary>
-              <div className="account-cluster__body space-y-5">
-                <AccountAccessSection account={account} form={signupForm} />
-                <AccountRecoverySection
-                  account={account}
-                  suppressAuthMessage={suppressAuthMessage}
-                />
-              </div>
-            </details>
-          </aside>
+        <div className="account-workspace space-y-4">
+          <DecisionMemorySection />
+          <AccountSelectionSection
+            workspace={workspace}
+            savedToolCards={savedToolCards}
+            recommendedTools={recommendedTools}
+          />
+          {account.status !== "authenticated" ? <AccountJourneyPanel /> : null}
+          <AccountSubmissionsSection
+            status={account.status}
+            submissions={submissions.submissions}
+            isLoading={submissions.isLoading}
+            totalSubmissions={submissions.totalSubmissions}
+            error={submissions.error}
+            onRetry={submissions.reload}
+          />
+          <AccountGamificationSection
+            vibeRushBest={vibeRushBest}
+            submissionsLoading={submissions.isLoading}
+            totalSubmissions={submissions.totalSubmissions}
+          />
+          <AccountSignalProgressSection />
+          <AccountStatusSection account={account} />
+          <AccountPremiumSection status={account.status} savedCount={workspace.saved} />
+          <AccountPreferencesSection status={account.status} savedCount={workspace.saved} />
+          <AccountAccessSection account={account} form={signupForm} />
+          <AccountRecoverySection
+            account={account}
+            suppressAuthMessage={suppressAuthMessage}
+          />
+          <p>
+            <a className="account-link" href="/account/settings">Impostazioni</a>
+          </p>
         </div>
       </div>
     </>

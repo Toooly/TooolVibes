@@ -21,16 +21,8 @@ export function DecisionMemorySection() {
     : undefined;
 
   return (
-    <section className="account-cluster account-cluster--solid">
-      <div className="account-cluster__summary account-cluster__summary--static">
-        <span>Memoria delle decisioni</span>
-        <em>
-          {entries.length > 0
-            ? `${entries.length} decisioni conservate`
-            : "Annota perché stai considerando un tool."}
-        </em>
-      </div>
-      <div className="account-cluster__body space-y-3">
+    <section className="account-section-panel p-5 sm:p-6 space-y-3">
+      <p className="account-label">Decisioni</p>
         {entries.length === 0 ? (
           <Link className="account-link" href="/archivio">
             Annota perché lo stai considerando
@@ -60,7 +52,6 @@ export function DecisionMemorySection() {
             );
           })
         )}
-      </div>
       <DecisionNoteDialog
         open={Boolean(editing)}
         title={editing ? `Nota su ${catalog.find((item) => item.slug === editing)?.name ?? editing}` : "Nota"}
