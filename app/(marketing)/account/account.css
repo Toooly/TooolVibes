@@ -189,32 +189,20 @@
   color: var(--account-ink);
 }
 
-.tone-account :where(
-  .account-section-panel,
-  .account-hero,
-  .account-stat-card,
-  .account-meta-block,
-  .account-game-panel,
-  .account-selection-card,
-  .account-journey-panel,
-  .account-journey-step,
-  .account-message
-) {
-  border-radius: 0.65rem;
+.tone-account .account-section-panel,
+.tone-account .account-hero,
+.tone-account .account-stat-card,
+.tone-account .account-meta-block,
+.tone-account .account-game-panel,
+.tone-account .account-selection-card,
+.tone-account .account-journey-panel,
+.tone-account .account-journey-step,
+.tone-account .account-cluster,
+.tone-account .account-continue {
+  border-radius: 1rem;
+  background: #fff;
   background-image: none;
   box-shadow: none;
-}
-
-.tone-account :where(
-  .account-section-panel,
-  .account-hero,
-  .account-stat-card,
-  .account-meta-block,
-  .account-game-panel,
-  .account-selection-card,
-  .account-journey-panel
-) {
-  background-color: #fff;
   color: var(--account-ink);
   border: 1px solid var(--account-line);
 }
@@ -223,14 +211,12 @@
   border: 1px solid var(--tv-border-subtle);
 }
 
-.tone-account :where(
-  .account-section-panel,
-  .account-hero,
-  .account-stat-card,
-  .account-meta-block,
-  .account-selection-card
-)::before,
-.tone-account .account-hero::after {
+.tone-account .account-section-panel::before,
+.tone-account .account-hero::before,
+.tone-account .account-hero::after,
+.tone-account .account-stat-card::before,
+.tone-account .account-game-panel::before,
+.tone-account .account-selection-card::before {
   display: none;
 }
 

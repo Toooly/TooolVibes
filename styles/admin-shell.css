@@ -1,53 +1,20 @@
-/* Admin operational console — readable ink on dark canvas */
-[data-admin-shell] {
-  --foreground: #f4f1ff;
-  --muted: rgba(244, 241, 255, 0.7);
-  --line: rgba(255, 255, 255, 0.16);
-  color: #f4f1ff;
-}
-[data-admin-shell] :is(h1, h2, h3, h4, p, span, label, legend, dt, dd, li, strong, em) {
-  color: inherit;
-}
-[data-admin-shell] a {
-  color: inherit;
-}
-[data-admin-shell] button {
-  color: inherit;
-}
-[data-admin-shell] input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
-[data-admin-shell] select,
-[data-admin-shell] textarea {
-  color: #1c1633;
-  background-color: #fff;
-}
-[data-admin-shell] input::placeholder,
-[data-admin-shell] textarea::placeholder {
-  color: #6b6580;
-}
-[data-admin-shell] :is(input, select, textarea).text-white,
-[data-admin-shell] :is(input, select, textarea)[class*="bg-black"] {
-  color: #f4f1ff;
-  background-color: rgba(0, 0, 0, 0.28);
-}
-[data-admin-shell] :is(input, select, textarea).text-white::placeholder {
-  color: rgba(244, 241, 255, 0.5);
-}
-[data-admin-shell] option {
-  color: #1c1633;
-  background: #fff;
-}
-
+/* Admin chrome is dark; page content is ivory. Do not inherit one ink everywhere. */
+[data-admin-shell] header,
 [data-admin-shell] .admin-mobile-nav {
   color: #f4f1ff;
-  background: #120d2e;
 }
-[data-admin-shell] .admin-mobile-nav a {
+[data-admin-shell] header a,
+[data-admin-shell] .admin-mobile-nav a,
+[data-admin-shell] .admin-mobile-nav button {
   color: #f4f1ff;
+}
+[data-admin-shell] .admin-mobile-nav {
+  background: #120d2e;
 }
 [data-admin-shell] .admin-mobile-nav a:hover,
 [data-admin-shell] .admin-mobile-nav a:focus-visible {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Admin operational console — responsive contract (MVP 1.0 closure) */
