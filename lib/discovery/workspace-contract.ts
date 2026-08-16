@@ -2,6 +2,7 @@ import type { SaveReason, ShortlistStage } from "@/lib/types/tool";
 import { workspaceStateV1Schema } from "@/lib/discovery/schema";
 import {
   workspaceDecisionOutcomeValues,
+  type PersonalStack,
   type WorkspaceAction,
   type WorkspaceDecision,
   type WorkspaceDecisionOutcome,
@@ -11,6 +12,11 @@ import {
 } from "@/lib/discovery/types";
 import {
   MAX_COMPARE_TOOLS,
+  MAX_PERSONAL_STACKS,
+  MAX_STACK_DESCRIPTION_LENGTH,
+  MAX_STACK_NAME_LENGTH,
+  MAX_USE_CASE_LENGTH,
+  MAX_WORKSPACE_COLLECTION_TOOLS,
   WORKSPACE_SCHEMA_VERSION,
 } from "@/lib/discovery/workspace-constants";
 
@@ -91,6 +97,19 @@ function normalizeNote(value: unknown) {
   return note && note.length <= 2000 ? note : null;
 }
 
+function normalizeBoundedText(value: unknown, maxLength: number) {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const text = value.trim();
+  return text && text.length <= maxLength ? text : null;
+}
+
 function normalizeStage(value: unknown): ShortlistStage {
   return value === "review" || value === "top" ? value : "saved";
 }
@@ -134,7 +153,71 @@ function normalizeToolState(value: unknown): WorkspaceToolState | null {
     saveReason: normalizeSaveReason(value.saveReason),
     pinned: value.pinned === true,
     decision: normalizeDecision(value.decision),
+    useCase: normalizeBoundedText(value.useCase, MAX_USE_CASE_LENGTH),
+    alternatives: normalizeSlugList(value.alternatives, {
+      maxLength: MAX_COMPARE_TOOLS,
+    }),
+    revisitAt: normalizeTimestamp(value.revisitAt),
     updatedAt: normalizeTimestamp(value.updatedAt),
+  };
+}
+
+function normalizePersonalStack(value: unknown): PersonalStack | null {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  const id = normalizeSlug(value.id);
+  const name = normalizeBoundedText(value.name, MAX_STACK_NAME_LENGTH);
+  const updatedAt = normalizeTimestamp(value.updatedAt);
+
+  if (!id || !name || !updatedAt) {
+    return null;
+  }
+
+  return {
+    id,
+    name,
+    description: normalizeBoundedText(
+      value.description,
+      MAX_STACK_DESCRIPTION_LENGTH,
+    ),
+    slugs: normalizeSlugList(value.slugs),
+    archivedAt: normalizeTimestamp(value.archivedAt),
+    updatedAt,
+  };
+}
+
+function normalizePersonalStacks(value: unknown): PersonalStack[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const seen = new Set<string>();
+  const stacks: PersonalStack[] = [];
+
+  for (const item of value) {
+    const stack = normalizePersonalStack(item);
+
+    if (!stack || seen.has(stack.id)) {
+      continue;
+    }
+
+    seen.add(stack.id);
+    stacks.push(stack);
+
+    if (stacks.length >= MAX_PERSONAL_STACKS) {
+      break;
+    }
+  }
+
+  return stacks;
+}
+
+function clonePersonalStack(stack: PersonalStack): PersonalStack {
+  return {
+    ...stack,
+    slugs: [...stack.slugs],
   };
 }
 
@@ -202,6 +285,7 @@ export function createEmptyWorkspaceState(): WorkspaceStateV1 {
     saved: { slugs: [], updatedAt: null },
     compare: { slugs: [], updatedAt: null },
     stack: { slugs: [], updatedAt: null },
+    personalStacks: [],
     toolStates: {},
   };
 }
@@ -243,6 +327,7 @@ export function normalizeWorkspaceState(input: unknown): WorkspaceStateV1 {
       maxLength: MAX_COMPARE_TOOLS,
     }),
     stack: normalizeOrderedList(input.stack),
+    personalStacks: normalizePersonalStacks(input.personalStacks),
     toolStates,
   });
 }
@@ -396,8 +481,62 @@ function mergeToolStates(
     saveReason: chooseConcurrentText(left.saveReason, right.saveReason),
     pinned: left.pinned || right.pinned,
     decision,
+    useCase: chooseConcurrentText(left.useCase, right.useCase),
+    alternatives: chooseConcurrentAlternatives(left.alternatives, right.alternatives),
+    revisitAt: chooseConcurrentText(left.revisitAt, right.revisitAt),
     updatedAt: maxTimestamp(left.updatedAt, right.updatedAt),
   };
+}
+
+function chooseConcurrentAlternatives(left: string[], right: string[]) {
+  const leftKey = JSON.stringify(left);
+  const rightKey = JSON.stringify(right);
+  return leftKey.localeCompare(rightKey) <= 0 ? [...left] : [...right];
+}
+
+function mergePersonalStacks(
+  left: PersonalStack[],
+  right: PersonalStack[],
+): PersonalStack[] {
+  const ids = Array.from(
+    new Set([...left.map((stack) => stack.id), ...right.map((stack) => stack.id)]),
+  );
+  const leftById = new Map(left.map((stack) => [stack.id, stack]));
+  const rightById = new Map(right.map((stack) => [stack.id, stack]));
+  const merged: PersonalStack[] = [];
+
+  for (const id of ids) {
+    const leftStack = leftById.get(id) ?? null;
+    const rightStack = rightById.get(id) ?? null;
+
+    if (!leftStack) {
+      merged.push(clonePersonalStack(rightStack as PersonalStack));
+      continue;
+    }
+
+    if (!rightStack) {
+      merged.push(clonePersonalStack(leftStack));
+      continue;
+    }
+
+    const leftTime = timestampValue(leftStack.updatedAt);
+    const rightTime = timestampValue(rightStack.updatedAt);
+
+    if (leftTime !== null && rightTime !== null && leftTime !== rightTime) {
+      merged.push(
+        clonePersonalStack(leftTime > rightTime ? leftStack : rightStack),
+      );
+      continue;
+    }
+
+    const winner =
+      JSON.stringify(leftStack).localeCompare(JSON.stringify(rightStack)) <= 0
+        ? leftStack
+        : rightStack;
+    merged.push(clonePersonalStack(winner));
+  }
+
+  return merged.slice(0, MAX_PERSONAL_STACKS);
 }
 
 
@@ -453,6 +592,10 @@ function applyClearBoundary(
     saved: retainListAfterBoundary(state.saved),
     compare: retainListAfterBoundary(state.compare),
     stack: retainListAfterBoundary(state.stack),
+    personalStacks: state.personalStacks.filter((stack) => {
+      const stackTime = timestampValue(stack.updatedAt);
+      return stackTime !== null && stackTime > boundaryTime;
+    }),
     toolStates,
   });
 }
@@ -490,6 +633,7 @@ export function mergeWorkspaceStates(
       compare: true,
     }),
     stack: mergeOrderedLists(left.stack, right.stack),
+    personalStacks: mergePersonalStacks(left.personalStacks, right.personalStacks),
     toolStates,
   });
 }
@@ -526,8 +670,28 @@ function defaultToolState(): WorkspaceToolState {
     saveReason: null,
     pinned: false,
     decision: null,
+    useCase: null,
+    alternatives: [],
+    revisitAt: null,
     updatedAt: null,
   };
+}
+
+function replacePersonalStack(
+  state: WorkspaceStateV1,
+  next: PersonalStack,
+): WorkspaceStateV1 {
+  const exists = state.personalStacks.some((stack) => stack.id === next.id);
+  const personalStacks = exists
+    ? state.personalStacks.map((stack) =>
+        stack.id === next.id ? next : stack,
+      )
+    : [...state.personalStacks, next];
+
+  return normalizeWorkspaceState({
+    ...state,
+    personalStacks,
+  });
 }
 
 function updateToolState(
@@ -569,6 +733,7 @@ export function reduceWorkspaceState(
       saved: { slugs: [], updatedAt: at },
       compare: { slugs: [], updatedAt: at },
       stack: { slugs: [], updatedAt: at },
+      personalStacks: [],
       toolStates: {},
     });
   }
@@ -599,6 +764,96 @@ export function reduceWorkspaceState(
         slugs: requestedSlugs,
         updatedAt: at,
       },
+    });
+  }
+
+  if (action.type === "stacks/create") {
+    const id = normalizeSlug(action.id);
+    const name = normalizeBoundedText(action.name, MAX_STACK_NAME_LENGTH);
+    const description = normalizeBoundedText(
+      action.description,
+      MAX_STACK_DESCRIPTION_LENGTH,
+    );
+
+    if (
+      !id ||
+      !name ||
+      state.personalStacks.some((stack) => stack.id === id) ||
+      state.personalStacks.length >= MAX_PERSONAL_STACKS
+    ) {
+      return state;
+    }
+
+    return replacePersonalStack(state, {
+      id,
+      name,
+      description,
+      slugs: [],
+      archivedAt: null,
+      updatedAt: at,
+    });
+  }
+
+  if (action.type === "stacks/rename") {
+    const id = normalizeSlug(action.id);
+    const current = id
+      ? state.personalStacks.find((stack) => stack.id === id)
+      : undefined;
+    const name = normalizeBoundedText(action.name, MAX_STACK_NAME_LENGTH);
+    const description =
+      action.description === undefined
+        ? current?.description ?? null
+        : normalizeBoundedText(action.description, MAX_STACK_DESCRIPTION_LENGTH);
+
+    if (!id || !current || !name) {
+      return state;
+    }
+
+    return replacePersonalStack(state, {
+      ...current,
+      name,
+      description,
+      updatedAt: at,
+    });
+  }
+
+  if (action.type === "stacks/archive") {
+    const id = normalizeSlug(action.id);
+    const current = id
+      ? state.personalStacks.find((stack) => stack.id === id)
+      : undefined;
+
+    if (!id || !current || current.archivedAt) {
+      return state;
+    }
+
+    return replacePersonalStack(state, {
+      ...current,
+      archivedAt: at,
+      updatedAt: at,
+    });
+  }
+
+  if (action.type === "stacks/reorder") {
+    const id = normalizeSlug(action.id);
+    const current = id
+      ? state.personalStacks.find((stack) => stack.id === id)
+      : undefined;
+    const requestedSlugs = normalizeSlugList(action.slugs);
+
+    if (
+      !id ||
+      !current ||
+      requestedSlugs.length !== action.slugs.length ||
+      !sameMembers(requestedSlugs, current.slugs)
+    ) {
+      return state;
+    }
+
+    return replacePersonalStack(state, {
+      ...current,
+      slugs: requestedSlugs,
+      updatedAt: at,
     });
   }
 
@@ -741,7 +996,83 @@ export function reduceWorkspaceState(
           outcome: action.outcome,
           updatedAt: at,
         },
+        alternatives:
+          action.alternatives !== undefined
+            ? normalizeSlugList(action.alternatives, {
+                maxLength: MAX_COMPARE_TOOLS,
+              })
+            : action.outcome === null
+              ? current.alternatives
+              : state.compare.slugs.length > 0
+                ? [...state.compare.slugs]
+                : current.alternatives,
       }));
+
+    case "tool/use-case": {
+      const useCase = normalizeBoundedText(action.useCase, MAX_USE_CASE_LENGTH);
+
+      if (action.useCase && !useCase) {
+        return state;
+      }
+
+      return updateToolState(state, slug, at, (current) => ({
+        ...current,
+        useCase,
+      }));
+    }
+
+    case "tool/revisit": {
+      const revisitAt =
+        action.revisitAt === null ? null : normalizeTimestamp(action.revisitAt);
+
+      if (action.revisitAt !== null && !revisitAt) {
+        return state;
+      }
+
+      return updateToolState(state, slug, at, (current) => ({
+        ...current,
+        revisitAt,
+      }));
+    }
+
+    case "stacks/add": {
+      const id = normalizeSlug(action.id);
+      const current = id
+        ? state.personalStacks.find((stack) => stack.id === id)
+        : undefined;
+
+      if (
+        !id ||
+        !current ||
+        current.slugs.includes(slug) ||
+        current.slugs.length >= MAX_WORKSPACE_COLLECTION_TOOLS
+      ) {
+        return state;
+      }
+
+      return replacePersonalStack(state, {
+        ...current,
+        slugs: [...current.slugs, slug],
+        updatedAt: at,
+      });
+    }
+
+    case "stacks/remove": {
+      const id = normalizeSlug(action.id);
+      const current = id
+        ? state.personalStacks.find((stack) => stack.id === id)
+        : undefined;
+
+      if (!id || !current || !current.slugs.includes(slug)) {
+        return state;
+      }
+
+      return replacePersonalStack(state, {
+        ...current,
+        slugs: current.slugs.filter((item) => item !== slug),
+        updatedAt: at,
+      });
+    }
 
     default:
       return state;
@@ -756,6 +1087,7 @@ export function hasWorkspaceData(input: unknown) {
     state.clearedAt !== null ||
     state.compare.slugs.length > 0 ||
     state.stack.slugs.length > 0 ||
+    state.personalStacks.length > 0 ||
     Object.keys(state.toolStates).length > 0
   );
 }

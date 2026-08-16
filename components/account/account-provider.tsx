@@ -40,7 +40,7 @@ import {
 type AccountStatus = "loading" | "guest" | "authenticated" | "unavailable";
 type AccountMagicLinkMetadata = Record<string, string | number | boolean | null | undefined>;
 
-type AccountContextValue = {
+export type AccountContextValue = {
   authEnabled: boolean;
   status: AccountStatus;
   user: User | null;
@@ -686,4 +686,18 @@ export function AccountProvider({
 
 export function useAccount() {
   return useContext(AccountContext);
+}
+
+
+export function AccountPreviewProvider({
+  children,
+  value,
+}: {
+  children: React.ReactNode;
+  value: AccountContextValue;
+}) {
+  if (process.env.NODE_ENV === "production") {
+    return null;
+  }
+  return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;
 }

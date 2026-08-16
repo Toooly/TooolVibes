@@ -75,6 +75,13 @@ export function mergeGuestWorkspaceContribution(
       slugs: union(account.stack.slugs, guest.stack.slugs),
       updatedAt: latestTimestamp(account.stack.updatedAt, guest.stack.updatedAt),
     },
+    personalStacks: [
+      ...account.personalStacks,
+      ...guest.personalStacks.filter(
+        (stack) =>
+          !account.personalStacks.some((item) => item.id === stack.id),
+      ),
+    ],
     toolStates: {
       ...guest.toolStates,
       ...account.toolStates,

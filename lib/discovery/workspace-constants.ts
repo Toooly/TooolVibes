@@ -25,3 +25,8 @@ export const MAX_COMPARE_TOOLS = 5;
 
 export const MAX_WORKSPACE_COLLECTION_TOOLS = 500;
 export const MAX_WORKSPACE_TOOL_STATES = 500;
+
+export const MAX_PERSONAL_STACKS = 30;
+export const MAX_STACK_NAME_LENGTH = 80;
+export const MAX_STACK_DESCRIPTION_LENGTH = 280;
+export const MAX_USE_CASE_LENGTH = 200;

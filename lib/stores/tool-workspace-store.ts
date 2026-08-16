@@ -220,6 +220,9 @@ export function rebaseWorkspaceIntent(
       saveReason: null,
       pinned: false,
       decision: null,
+      useCase: null,
+      alternatives: [],
+      revisitAt: null,
       updatedAt: null,
     };
     const baseline = baseState ?? defaultState;
@@ -236,9 +239,71 @@ export function rebaseWorkspaceIntent(
       decision: changed("decision")
         ? desiredState.decision
         : remote.decision,
+      useCase: changed("useCase") ? desiredState.useCase : remote.useCase,
+      alternatives: changed("alternatives")
+        ? desiredState.alternatives
+        : remote.alternatives,
+      revisitAt: changed("revisitAt")
+        ? desiredState.revisitAt
+        : remote.revisitAt,
       updatedAt: latestTimestamp(desiredState.updatedAt, remote.updatedAt),
     };
   }
+
+  const rebaseStacks = () => {
+    if (JSON.stringify(base.personalStacks) === JSON.stringify(desired.personalStacks)) {
+      return durable.personalStacks;
+    }
+
+    const byId = new Map(
+      durable.personalStacks.map((stack) => [stack.id, stack]),
+    );
+    const baseIds = new Set(base.personalStacks.map((stack) => stack.id));
+    const desiredIds = new Set(desired.personalStacks.map((stack) => stack.id));
+
+    for (const id of baseIds) {
+      if (desiredIds.has(id)) {
+        continue;
+      }
+
+      const durableStack = byId.get(id);
+      const durableTime = timestamp(durableStack?.updatedAt ?? null);
+      if (localClearTime === null || durableTime === null || durableTime <= localClearTime) {
+        byId.delete(id);
+      }
+    }
+
+    for (const stack of desired.personalStacks) {
+      const baseline = base.personalStacks.find((item) => item.id === stack.id);
+      if (JSON.stringify(baseline) === JSON.stringify(stack)) {
+        continue;
+      }
+
+      const desiredTime = timestamp(stack.updatedAt);
+      if (remoteClearTime !== null && (desiredTime === null || desiredTime <= remoteClearTime)) {
+        continue;
+      }
+
+      const durableStack = byId.get(stack.id);
+      const durableTime = timestamp(durableStack?.updatedAt ?? null);
+      if (durableStack && durableTime !== null && desiredTime !== null && durableTime > desiredTime) {
+        continue;
+      }
+
+      byId.set(stack.id, stack);
+    }
+
+    const ordered: typeof durable.personalStacks = [];
+    for (const stack of desired.personalStacks) {
+      const next = byId.get(stack.id);
+      if (next) {
+        ordered.push(next);
+        byId.delete(stack.id);
+      }
+    }
+    ordered.push(...byId.values());
+    return ordered;
+  };
 
   return normalizeWorkspaceState({
     ...durable,
@@ -248,6 +313,7 @@ export function rebaseWorkspaceIntent(
     saved: rebaseList(base.saved, desired.saved, durable.saved),
     compare: rebaseList(base.compare, desired.compare, durable.compare),
     stack: rebaseList(base.stack, desired.stack, durable.stack, true),
+    personalStacks: rebaseStacks(),
     toolStates,
   });
 }

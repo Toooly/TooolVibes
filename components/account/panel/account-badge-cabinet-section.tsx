@@ -1,18 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  BadgeCheck,
-  Bookmark,
-  Compass,
-  Layers,
-  Map,
-  PenTool,
-  Radar,
-  Scale,
-  UserCheck,
-  type LucideIcon,
-} from "lucide-react";
+import { SignalMark } from "@/components/signal/marks/signal-mark";
 
 import type {
   SignalHubAchievementProgress,
@@ -20,18 +9,6 @@ import type {
   SignalProgressHub,
 } from "@/lib/signal-progression/hub-contracts";
 import { useSignalAchievementFlags } from "@/lib/signal-progression/release-context";
-
-const BADGE_ICONS: Record<string, LucideIcon> = {
-  Bookmark,
-  UserCheck,
-  Scale,
-  Compass,
-  Layers,
-  Radar,
-  PenTool,
-  BadgeCheck,
-  Map,
-};
 
 const RARITY_LABELS: Record<SignalHubBadge["rarity"], string> = {
   common: "Comune",
@@ -153,7 +130,7 @@ export function AccountBadgeCabinetSection({
       ) : (
         <ul className="mt-4 grid gap-3" aria-label="Segni guadagnati">
           {badges.map((badge) => {
-            const Icon = BADGE_ICONS[badge.iconId] ?? Bookmark;
+            const markState = "earned" as const;
             const earnedDate = formatEarnedDate(badge.earnedAt);
             return (
               <li
@@ -178,7 +155,7 @@ export function AccountBadgeCabinetSection({
                   }}
                   aria-hidden
                 >
-                  <Icon size={16} />
+                  <SignalMark code={badge.code} state={markState} width={20} height={20} />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-baseline justify-between gap-2">
