@@ -187,15 +187,15 @@
   width: min(100%, 40rem);
   margin-inline: auto;
   padding-bottom: 7rem !important;
-  color: #f0efff;
+  color: #ffffff;
 }
 
 .tone-account :is(h1, h2, h3, p, span, strong, em, small, li, label, dt, dd) {
-  color: #f0efff;
+  color: #ffffff;
 }
 
 .tone-account :is(.account-subtitle, .account-label, .account-stat__label, .account-saved-row em) {
-  color: rgba(240, 239, 255, 0.64);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .tone-account .account-section-panel,
@@ -213,10 +213,10 @@
 .tone-account .account-decision-card,
 .tone-account .account-saved-row {
   border-radius: 1.15rem;
-  background: rgba(16, 12, 40, 0.88);
+  background: #120d2e;
   background-image: none;
   box-shadow: none;
-  color: #f0efff;
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -234,7 +234,7 @@
 }
 
 .tone-account .account-btn-secondary {
-  color: #f0efff;
+  color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
   background: rgba(255, 255, 255, 0.06);
 }
@@ -376,7 +376,7 @@ body[data-account-surface="auth"] .mobile-top-bar {
   font-size: 1.7rem;
   line-height: 1;
   letter-spacing: -0.04em;
-  color: #f0efff;
+  color: #ffffff;
 }
 .account-board__actions {
   display: grid;

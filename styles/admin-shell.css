@@ -203,3 +203,48 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #f4f1ff;
 }
+
+[data-admin-shell] .brand-panel,
+[data-admin-shell] .interactive-surface {
+  background: #120d2e !important;
+  background-image: none !important;
+  color: #f4f1ff !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-admin-shell] [style*="255,255,255"],
+[data-admin-shell] [style*="255, 255, 255"],
+[data-admin-shell] [style*="236,253,245"],
+[data-admin-shell] [style*="255,251,235"],
+[data-admin-shell] [style*="245,242,255"],
+[data-admin-shell] [style*="240,253,250"],
+[data-admin-shell] [style*="254,242,242"] {
+  background: rgba(255, 255, 255, 0.06) !important;
+  background-image: none !important;
+  color: #f4f1ff !important;
+}
+
+[data-admin-shell] :is(h1, h2, h3, h4) {
+  color: #f4f1ff !important;
+}
+
+[data-admin-shell] .brand-panel :is(p, span, label, strong, em, li, small, dt, dd),
+[data-admin-shell] .page-shell :is(p, span, label, strong, em, li, small, dt, dd) {
+  color: #f4f1ff !important;
+}
+
+[data-admin-shell] :is(input, textarea, select) {
+  background: rgba(8, 6, 20, 0.72) !important;
+  color: #f4f1ff !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+[data-admin-shell] .admin-overview__primary,
+[data-admin-shell] .admin-overview__primary :is(span, strong) {
+  color: #160d3d !important;
+}
+
+[data-admin-shell] .button-primary,
+[data-admin-shell] .button-primary :is(span, strong) {
+  color: #fff !important;
+}
