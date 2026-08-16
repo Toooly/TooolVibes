@@ -48,27 +48,53 @@ export const workspaceTestFixtures = {
     { type: "stacks/add", id: "ai-coding", slug: "cursor", at: T1 },
   ]),
   mature: apply(createEmptyWorkspaceState(), [
-    ...["cursor", "v0", "meku", "blink", "linear"].flatMap((slug, index) => [
-      {
+    ...Array.from({ length: 52 }, (_, index) => {
+      const slug = index < 5
+        ? (["cursor", "v0", "meku", "blink", "linear"] as const)[index]
+        : `qa-tool-${String(index + 1).padStart(2, "0")}`;
+      return {
         type: "saved/set" as const,
         slug,
         saved: true,
-        at: index === 0 ? T_OLD : T0,
-      },
-    ]),
+        at: index < 8 ? T_OLD : T0,
+      };
+    }),
     { type: "tool/stage", slug: "cursor", stage: "top", at: T0 },
+    { type: "tool/stage", slug: "blink", stage: "review", at: T0 },
+    { type: "tool/note", slug: "cursor", note: "Scelto per il daily coding.", at: T2 },
+    { type: "tool/pin", slug: "cursor", pinned: true, at: T2 },
+    { type: "tool/decision", slug: "cursor", outcome: "selected", at: T2 },
     { type: "tool/decision", slug: "v0", outcome: "rejected", at: T1 },
     { type: "tool/decision", slug: "meku", outcome: "deferred", at: T_OLD },
     { type: "tool/revisit", slug: "meku", revisitAt: T_OLD, at: T_OLD },
+    { type: "tool/use-case", slug: "cursor", useCase: "pair programming", at: T2 },
     {
       type: "stacks/create",
       id: "client-stack",
       name: "Client stack",
+      description: "Consegne clienti",
       at: T1,
     },
     { type: "stacks/add", id: "client-stack", slug: "linear", at: T1 },
+    {
+      type: "stacks/create",
+      id: "ai-coding",
+      name: "AI Coding",
+      description: "Editor e agenti",
+      at: T1,
+    },
+    { type: "stacks/add", id: "ai-coding", slug: "cursor", at: T1 },
+    { type: "stacks/add", id: "ai-coding", slug: "v0", at: T1 },
+    {
+      type: "stacks/create",
+      id: "free-stack",
+      name: "Free stack",
+      at: T2,
+    },
+    { type: "stacks/add", id: "free-stack", slug: "blink", at: T2 },
     { type: "compare/toggle", slug: "cursor", at: T2 },
     { type: "compare/toggle", slug: "blink", at: T2 },
+    { type: "compare/toggle", slug: "linear", at: T2 },
   ]),
   degraded: createEmptyWorkspaceState(),
 };

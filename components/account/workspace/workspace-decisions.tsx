@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   setWorkspaceDecision,
@@ -18,13 +18,20 @@ import { toolName } from "./workspace-tool-name";
 
 export function WorkspaceDecisions({ state }: { state: WorkspaceStateV1 }) {
   const catalog = usePublicToolCatalog();
-  const slugs = Array.from(
-    new Set([
-      ...state.saved.slugs,
-      ...Object.keys(state.toolStates).filter((slug) => state.toolStates[slug]?.decision),
-    ]),
-  );
+  const slugs = Object.keys(state.toolStates).filter((slug) => {
+    const tool = state.toolStates[slug];
+    return Boolean(
+      tool?.decision?.outcome ||
+        tool?.note ||
+        tool?.useCase ||
+        (tool?.alternatives && tool.alternatives.length > 0) ||
+        tool?.pinned,
+    );
+  });
   const [open, setOpen] = useState<string | null>(slugs[0] ?? null);
+  useEffect(() => {
+    if (!open && slugs[0]) setOpen(slugs[0]);
+  }, [open, slugs]);
 
   if (slugs.length === 0) {
     return (

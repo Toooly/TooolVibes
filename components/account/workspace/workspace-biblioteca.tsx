@@ -7,7 +7,6 @@ import { listPipelineItems, type PipelineColumn } from "@/lib/account/workspace-
 import { setWorkspaceDecision, setWorkspaceStage } from "@/lib/account/workspace-actions";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
-import type { ShortlistStage } from "@/lib/types/tool";
 
 import { PIPELINE_LABELS } from "./workspace-model";
 import { toolName } from "./workspace-tool-name";
@@ -26,6 +25,7 @@ export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
   const catalog = usePublicToolCatalog();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["id"]>("tutti");
+  const [expanded, setExpanded] = useState(false);
   const items = listPipelineItems(state);
 
   const visible = useMemo(() => {
@@ -37,6 +37,7 @@ export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
       return name.includes(needle) || item.slug.includes(needle);
     });
   }, [catalog, filter, items, query]);
+  const shown = expanded ? visible : visible.slice(0, 20);
 
   if (state.saved.slugs.length === 0) {
     return (
@@ -79,51 +80,48 @@ export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
           ))}
         </div>
       </div>
-      <ul className="tv-space-list tv-space-list--cards">
-        {visible.map((item) => (
-          <li key={item.slug} className="tv-space-card tv-space-card--tool">
-            <div className="tv-space-card__head">
-              <Link href={`/tools/${item.slug}`} className="tv-space-card__title">
-                {toolName(catalog, item.slug)}
-              </Link>
-              <span className="tv-space-chip">{PIPELINE_LABELS[item.column]}</span>
-            </div>
-            <div className="tv-space-actions tv-space-actions--compact">
-              {(["saved", "review", "top"] as ShortlistStage[]).map((stage) => (
-                <button
-                  key={stage}
-                  type="button"
-                  className="account-btn-secondary"
-                  onClick={() => setWorkspaceStage(item.slug, stage)}
-                >
-                  {stage === "saved" ? "Salvato" : stage === "review" ? "Valuta" : "Candidato"}
-                </button>
-              ))}
-              <button
-                type="button"
-                className="account-btn-secondary"
-                onClick={() => setWorkspaceDecision(item.slug, "selected")}
+      <ul className="tv-space-list">
+        {shown.map((item) => (
+          <li key={item.slug} className="tv-space-row tv-space-row--library">
+            <Link href={`/toools/${item.slug}`}>{toolName(catalog, item.slug)}</Link>
+            <label className="tv-space-row__move">
+              <span className="sr-only">Stato di {toolName(catalog, item.slug)}</span>
+              <select
+                value={item.column}
+                onChange={(event) => {
+                  const next = event.target.value as PipelineColumn;
+                  if (next === "salvato") {
+                    setWorkspaceDecision(item.slug, null);
+                    setWorkspaceStage(item.slug, "saved");
+                  }
+                  if (next === "da_valutare") {
+                    setWorkspaceDecision(item.slug, null);
+                    setWorkspaceStage(item.slug, "review");
+                  }
+                  if (next === "candidato") {
+                    setWorkspaceDecision(item.slug, null);
+                    setWorkspaceStage(item.slug, "top");
+                  }
+                  if (next === "scelto") setWorkspaceDecision(item.slug, "selected");
+                  if (next === "scartato") setWorkspaceDecision(item.slug, "rejected");
+                  if (next === "rimandato") setWorkspaceDecision(item.slug, "deferred");
+                }}
               >
-                Scelto
-              </button>
-              <button
-                type="button"
-                className="account-btn-secondary"
-                onClick={() => setWorkspaceDecision(item.slug, "rejected")}
-              >
-                Scartato
-              </button>
-              <button
-                type="button"
-                className="account-btn-secondary"
-                onClick={() => setWorkspaceDecision(item.slug, "deferred")}
-              >
-                Rimanda
-              </button>
-            </div>
+                {FILTERS.filter((entry) => entry.id !== "tutti").map((entry) => (
+                  <option key={entry.id} value={entry.id}>
+                    {entry.label}
+                  </option>
+                ))}
+              </select>
+            </label>
           </li>
         ))}
       </ul>
+      {visible.length > 20 && !expanded ? (
+        <button type="button" className="account-btn-secondary" onClick={() => setExpanded(true)}>
+          Mostra tutti ({visible.length})
+        </button>
+      ) : null}
     </div>
   );
 }

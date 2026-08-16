@@ -122,7 +122,7 @@ function StackDetail({
       <ul className="tv-space-list">
         {stack.slugs.map((slug) => (
           <li key={slug} className="tv-space-row">
-            <Link href={`/tools/${slug}`}>{toolName(catalog, slug)}</Link>
+            <Link href={`/toools/${slug}`}>{toolName(catalog, slug)}</Link>
             <button
               type="button"
               className="account-btn-secondary"

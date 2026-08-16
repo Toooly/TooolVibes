@@ -28,10 +28,14 @@ import { WorkspaceSignal } from "./workspace-signal";
 import { WorkspaceStacks } from "./workspace-stacks";
 import { WorkspaceHero } from "./workspace-hero";
 
-export function WorkspaceShell() {
+export function WorkspaceShell({
+  initialView = "riprendi",
+}: {
+  initialView?: WorkspaceView;
+} = {}) {
   const account = useAccount();
   const state = useCanonicalWorkspace();
-  const [view, setView] = useState<WorkspaceView>("riprendi");
+  const [view, setView] = useState<WorkspaceView>(initialView);
   const isOnline = useAccountOnlineStatus();
   const stateCell = isAccountStateMatrixEnabled()
     ? resolveAccountStateCell({

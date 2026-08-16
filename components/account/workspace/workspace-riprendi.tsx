@@ -17,7 +17,7 @@ const RESUME_COPY = {
   continue_compare: {
     title: "Continua il confronto",
     body: "Hai un confronto aperto. Chiudilo quando hai abbastanza evidenza.",
-    href: "/confronti",
+    href: "/compare",
   },
   review_decision: {
     title: "Rivedi questa decisione",
@@ -108,7 +108,7 @@ export function WorkspaceRiprendi({
           <ul className="tv-space-list">
             {recs.map((item) => (
               <li key={item.slug}>
-                <Link className="tv-space-row" href={`/tools/${item.slug}`}>
+                <Link className="tv-space-row" href={`/toools/${item.slug}`}>
                   <span>{item.name}</span>
                   <span className="tv-space-row__meta">{item.detail}</span>
                 </Link>

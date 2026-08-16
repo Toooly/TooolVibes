@@ -732,3 +732,13 @@ body[data-account-surface="auth"] .mobile-top-bar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.tv-space-row--library {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(8.5rem, 11rem);
+  align-items: center;
+  gap: 0.65rem;
+}
+.tv-space-row__move select {
+  min-height: 44px;
+}
