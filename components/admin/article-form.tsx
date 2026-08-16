@@ -42,11 +42,11 @@ function FieldError({ error }: { error?: string }) {
     return null;
   }
 
-  return <p className="mt-2 text-sm font-medium text-red-700">{error}</p>;
+  return <p className="tv-cc-error">{error}</p>;
 }
 
 function FieldLabel({ label }: { label: string }) {
-  return <span className="mb-2 block text-sm font-semibold">{label}</span>;
+  return <span className="tv-cc-label">{label}</span>;
 }
 
 function FormSection({
@@ -61,14 +61,11 @@ function FormSection({
   children: ReactNode;
 }) {
   return (
-    <section
-      className="rounded-[28px] border p-5 sm:p-6"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-    >
+    <section className="tv-cc-panel">
       <div className="border-b pb-4 soft-divider">
-        <p className="editorial-label">{eyebrow}</p>
-        <h2 className="text-display-card mt-2 text-[1.32rem] sm:text-[1.46rem]">{title}</h2>
-        <p className="mt-2 max-w-[44rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
+        <p className="tv-cc-panel__kicker">{eyebrow}</p>
+        <h2 className="tv-cc-panel__title">{title}</h2>
+        <p className="tv-cc-panel__desc">
           {description}
         </p>
       </div>
@@ -89,13 +86,10 @@ function ToggleCard({
   defaultChecked: boolean;
 }) {
   return (
-    <label
-      className="flex items-center justify-between gap-4 rounded-[24px] border px-4 py-4"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-    >
+    <label className="tv-cc-panel flex items-center justify-between gap-4">
       <div>
         <p className="text-sm font-semibold">{title}</p>
-        <p className="mt-1 text-sm leading-6" style={{ color: "var(--muted)" }}>
+        <p className="tv-cc-panel__desc">
           {description}
         </p>
       </div>
@@ -127,10 +121,7 @@ export function ArticleForm({
     <form action={formAction} className="space-y-8" onChange={markDirty}>
       <EditorHeader backHref={backHref} eyebrow="Guida" title={entityTitle || values.title || "Nuova guida"} status={entityStatus} updatedAt={updatedAt} />
       {state.status === "error" && state.message ? (
-        <div
-          className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-          style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(255,82,82,0.12)" }}
-        >
+        <div className="tv-cc-notice tv-cc-notice--warn">
           {state.message}
         </div>
       ) : null}
@@ -147,8 +138,7 @@ export function ArticleForm({
               <input
                 name="title"
                 defaultValue={values.title}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.title} />
@@ -160,8 +150,7 @@ export function ArticleForm({
                 name="slug"
                 defaultValue={values.slug}
                 placeholder="lascia vuoto per generarlo dal titolo"
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.slug} />
             </label>
@@ -172,8 +161,7 @@ export function ArticleForm({
                 name="dek"
                 defaultValue={values.dek}
                 rows={3}
-                className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.dek} />
@@ -185,8 +173,7 @@ export function ArticleForm({
                 name="summary"
                 defaultValue={values.summary}
                 rows={3}
-                className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.summary} />
@@ -221,8 +208,7 @@ export function ArticleForm({
                 readOnly
                 aria-label="URL copertina selezionato"
                 placeholder="https://..."
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.cover_image_url} />
             </label>
@@ -232,8 +218,7 @@ export function ArticleForm({
               <input
                 name="cover_image_alt"
                 defaultValue={values.cover_image_alt}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.cover_image_alt} />
               <div className="mt-4">
@@ -247,8 +232,7 @@ export function ArticleForm({
               <input
                 name="author_name"
                 defaultValue={values.author_name}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.author_name} />
@@ -260,8 +244,7 @@ export function ArticleForm({
                 name="tags"
                 defaultValue={values.tags}
                 placeholder="ai, seo, automazione"
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.tags} />
             </label>
@@ -271,8 +254,7 @@ export function ArticleForm({
               <select
                 name="kind"
                 defaultValue={values.kind}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {articleKinds.map((kind) => (
                   <option key={kind} value={kind}>
@@ -288,8 +270,7 @@ export function ArticleForm({
               <select
                 name="status"
                 defaultValue={values.status}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {articleStatuses.map((status) => (
                   <option key={status} value={status}>
@@ -306,8 +287,7 @@ export function ArticleForm({
                 name="published_at"
                 type="date"
                 defaultValue={values.published_at}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.published_at} />

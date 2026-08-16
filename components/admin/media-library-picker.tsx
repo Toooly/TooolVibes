@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { getMediaCatalog, type MediaAsset } from "@/lib/admin/media-catalog";
+import { cn } from "@/lib/utils";
 
 export function MediaLibraryPicker({
   fieldName,
@@ -58,12 +59,12 @@ export function MediaLibraryPicker({
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Cerca asset"
-          className="min-h-11 rounded-xl border border-white/10 bg-black/20 px-3 text-white"
+          className="tv-cc-field"
         />
         <select
           value={kind}
           onChange={(event) => setKind(event.target.value)}
-          className="min-h-11 rounded-xl border border-white/10 bg-black/30 px-3 text-white"
+          className="tv-cc-field"
         >
           <option value="all">Tutti</option>
           <option value="partner">Partner</option>
@@ -83,7 +84,7 @@ export function MediaLibraryPicker({
       </div>
       {error ? <p className="text-sm text-amber-200">{error}</p> : null}
       {filtered.length === 0 ? (
-        <p className="rounded-2xl border border-white/10 p-4 text-sm text-white/60">Nessun asset. Carica un’immagine o registra un URL.</p>
+        <p className="tv-cc-notice">Nessun asset. Carica un’immagine o registra un URL.</p>
       ) : (
         <div className="grid max-h-80 gap-2 overflow-auto sm:grid-cols-2">
           {filtered.map((asset) => (
@@ -91,48 +92,44 @@ export function MediaLibraryPicker({
               key={asset.id}
               type="button"
               onClick={() => setValue(asset.src)}
-              className="flex min-h-16 items-center gap-3 rounded-2xl border px-3 py-2 text-left"
-              style={{
-                borderColor: selected?.id === asset.id ? "rgba(57,210,246,0.45)" : "rgba(255,255,255,0.12)",
-                background: selected?.id === asset.id ? "rgba(57,210,246,0.1)" : "rgba(255,255,255,0.04)",
-              }}
+              className={cn("tv-cc-panel flex min-h-16 items-center gap-3 text-left", selected?.id === asset.id && "outline outline-1 outline-[var(--tv-border-brand)]")}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={asset.src} alt="" className="h-10 w-16 rounded-lg bg-black/30 object-contain" />
               <span>
-                <strong className="block text-sm text-white">{asset.label}</strong>
-                <em className="text-xs not-italic text-white/50">{asset.usedIn}</em>
+                <strong className="block text-sm">{asset.label}</strong>
+                <em className="tv-cc-card__meta not-italic">{asset.usedIn}</em>
               </span>
             </button>
           ))}
         </div>
       )}
       {selected ? (
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 p-3">
+        <div className="tv-cc-panel flex flex-wrap items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={selected.src} alt="" className="h-16 w-24 rounded-lg bg-black/30 object-contain" />
           <div className="min-w-0 flex-1">
-            <p className="text-sm text-white">{selected.label}</p>
-            <p className="break-all text-xs text-white/45">{selected.src}</p>
+            <p className="text-sm">{selected.label}</p>
+            <p className="break-all text-xs tv-cc-card__meta">{selected.src}</p>
           </div>
           <button
             type="button"
-            className="min-h-11 rounded-full border border-white/15 px-3 text-sm text-white"
+            className="tv-cc-btn tv-cc-btn--ghost"
             onClick={() => void navigator.clipboard.writeText(selected.src)}
           >
             Copia URL
           </button>
-          <button type="button" className="min-h-11 rounded-full border border-white/15 px-3 text-sm text-white" onClick={() => setValue("")}>
+          <button type="button" className="tv-cc-btn tv-cc-btn--ghost" onClick={() => setValue("")}>
             Rimuovi
           </button>
         </div>
       ) : null}
-      <label className="block text-sm text-white/70">
+      <label className="block">
         URL avanzato
         <input
           value={value}
           onChange={(event) => setValue(event.target.value)}
-          className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white"
+          className="tv-cc-field"
           placeholder="https:// o /percorso-locale"
         />
       </label>
@@ -142,15 +139,15 @@ export function MediaLibraryPicker({
 
 export function MediaAssetCard({ asset }: { asset: MediaAsset }) {
   return (
-    <article className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4">
+    <article className="tv-cc-panel">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={asset.src} alt={asset.alt} className="mb-3 h-28 w-full rounded-2xl bg-black/30 object-contain" />
-      <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/45">{asset.kind}</p>
+      <p className="text-xs font-bold uppercase tracking-[0.14em] tv-cc-card__meta">{asset.kind}</p>
       <h2 className="mt-1 text-lg font-semibold text-white">{asset.label}</h2>
-      <p className="mt-1 text-sm text-white/60">{asset.usedIn}</p>
-      <p className="mt-3 break-all text-xs text-white/45">{asset.src}</p>
+      <p className="tv-cc-panel__desc">{asset.usedIn}</p>
+      <p className="mt-3 break-all text-xs tv-cc-card__meta">{asset.src}</p>
       {asset.mimeType ? (
-        <p className="mt-1 text-xs text-white/40">
+        <p className="mt-1 text-xs tv-cc-card__meta">
           {asset.mimeType}
           {asset.fileSize ? ` · ${Math.round(asset.fileSize / 1024)} KB` : ""}
           {asset.width && asset.height ? ` · ${asset.width}×${asset.height}` : ""}

@@ -63,7 +63,7 @@ export function ShortlistLink({
         borderColor: "var(--line)",
         background:
           active
-            ? "linear-gradient(180deg, rgba(247,242,255,0.98), rgba(237,230,255,0.92))"
+            ? "var(--tv-surface-selected)"
             : count > 0
             ? "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))"
             : "linear-gradient(180deg, rgba(252,249,255,0.9), rgba(246,241,255,0.82))",
@@ -78,7 +78,7 @@ export function ShortlistLink({
           isFresh && "is-fresh",
         )}
         style={{
-          background: "var(--tv-surface-inverted-raised)",
+          background: "var(--tv-surface-elevated)",
           color: count > 0 ? "var(--accent-strong)" : "var(--muted)",
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.58)",
         }}

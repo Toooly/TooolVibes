@@ -1,0 +1,15 @@
+{
+  "rootCause": "Legacy primitives (.brand-panel, .stat-block, --surface-brand-panel-bg, --ink, --accent-strong) were still light-native while the product canvas is dark. Recent commits papered this with !important admin-shell interception.",
+  "removed": [
+    "admin-shell [style*=] interception",
+    "admin-shell descendant color !important",
+    "Tools/Guides ivory hero + giant stat tiles + stacked action columns",
+    "Founder MetricOrb decorative dashboard",
+    "Auth ivory inverted card"
+  ],
+  "remaining": [
+    "Some admin editors still use button-shell/brand-panel classes (now dark via source tokens)",
+    "globals.css still contains historical ivory tone declarations (overridden by canonical dark contract)",
+    "collections admin page still large but surfaces remapped"
+  ]
+}

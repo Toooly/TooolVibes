@@ -53,11 +53,11 @@ function FieldError({ error }: { error?: string }) {
     return null;
   }
 
-  return <p className="mt-2 text-sm font-medium text-red-700">{error}</p>;
+  return <p className="tv-cc-error">{error}</p>;
 }
 
 function FieldLabel({ label }: { label: string }) {
-  return <span className="mb-2 block text-sm font-semibold">{label}</span>;
+  return <span className="tv-cc-label">{label}</span>;
 }
 
 function FormSection({
@@ -72,14 +72,11 @@ function FormSection({
   children: ReactNode;
 }) {
   return (
-    <section
-      className="rounded-[28px] border p-5 sm:p-6"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-    >
+    <section className="tv-cc-panel">
       <div className="border-b pb-4 soft-divider">
-        <p className="editorial-label">{eyebrow}</p>
-        <h2 className="text-display-card mt-2 text-[1.32rem] sm:text-[1.46rem]">{title}</h2>
-        <p className="mt-2 max-w-[40rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
+        <p className="tv-cc-panel__kicker">{eyebrow}</p>
+        <h2 className="tv-cc-panel__title">{title}</h2>
+        <p className="tv-cc-panel__desc">
           {description}
         </p>
       </div>
@@ -99,17 +96,17 @@ function StatCard({
 }) {
   return (
     <article
-      className="rounded-[22px] border px-4 py-4"
-      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+      className="tv-cc-panel"
+      
     >
       <p
         className="text-xs font-semibold uppercase tracking-[0.18em]"
-        style={{ color: "var(--muted)" }}
+        
       >
         {label}
       </p>
       <p className="mt-3 text-[1.8rem] leading-none">{value}</p>
-      <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
+      <p className="mt-2 text-sm leading-6" >
         {detail}
       </p>
     </article>
@@ -171,10 +168,7 @@ export function CollectionForm({
     <form action={formAction} className="space-y-8" onChange={markDirty}>
       <EditorHeader backHref={backHref} eyebrow="Raccolta" title={entityTitle || values.title || "Nuova raccolta"} status={entityStatus} updatedAt={updatedAt} />
       {state.status === "error" && state.message ? (
-        <div
-          className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
-          style={{ borderColor: "rgba(185,28,28,0.25)", background: "rgba(255,82,82,0.12)" }}
-        >
+        <div className="tv-cc-notice tv-cc-notice--warn">
           {state.message}
         </div>
       ) : null}
@@ -183,12 +177,12 @@ export function CollectionForm({
 
       <fieldset disabled={disabled} className="space-y-8 disabled:opacity-60">
         <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-          <article className="brand-panel rounded-[28px] p-5">
+          <article className="tv-cc-panel">
             <p className="editorial-label">Postura della raccolta</p>
-            <h2 className="text-display-card mt-2 text-[1.42rem] sm:text-[1.56rem]">
+            <h2 className="tv-cc-panel__title">
               Taglio, accesso e densità della selezione nello stesso colpo d&apos;occhio
             </h2>
-            <p className="mt-3 text-sm leading-7" style={{ color: "var(--muted)" }}>
+            <p className="tv-cc-panel__desc">
               Questa sintesi ti aiuta a capire subito se la raccolta è leggera, densa, pubblica
               o ancora in costruzione prima di entrare nei dettagli del modulo.
             </p>
@@ -226,35 +220,23 @@ export function CollectionForm({
             </div>
           </article>
 
-          <article className="dark-panel rounded-[28px] p-5 text-white">
-            <p className="editorial-label !text-white/60">Guida editoriale</p>
-            <h2 className="text-display-card mt-2 text-[1.42rem] text-white sm:text-[1.56rem]">
+          <article className="tv-cc-panel">
+            <p className="tv-cc-panel__kicker">Guida editoriale</p>
+            <h2 className="tv-cc-panel__title">
               Una raccolta forte deve restare leggibile anche quando la rivedi più tardi
             </h2>
-            <p className="mt-3 text-sm leading-7 text-white/72">
+            <p className="tv-cc-panel__desc">
               Usa la tesi per spiegare la logica della selezione, non per ripetere i campi di base.
               Nei tool inclusi, ogni ruolo dovrebbe raccontare il perché del tool nel percorso.
             </p>
             <div className="mt-4 grid gap-3">
-              <div
-                className="rounded-[20px] border px-4 py-3 text-sm"
-                style={{
-                  borderColor: "rgba(255,255,255,0.12)",
-                  background: "rgba(255,255,255,0.08)",
-                }}
-              >
+              <div className="tv-cc-panel text-sm">
                 Ordine editoriale corrente: <strong>{values.editorial_order || "999"}</strong>.
                 {values.featured_slot
                   ? ` Spazio in evidenza impostato su ${values.featured_slot}.`
                   : " Nessuno spazio in evidenza attivo."}
               </div>
-              <div
-                className="rounded-[20px] border px-4 py-3 text-sm"
-                style={{
-                  borderColor: "rgba(68,220,255,0.18)",
-                  background: "rgba(68,220,255,0.12)",
-                }}
-              >
+              <div className="tv-cc-notice tv-cc-notice--ok">
                 Accesso impostato su <strong>{accessMeta.label}</strong>: {accessMeta.description}
               </div>
             </div>
@@ -272,8 +254,7 @@ export function CollectionForm({
               <input
                 name="title"
                 defaultValue={values.title}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.title} />
@@ -285,8 +266,7 @@ export function CollectionForm({
                 name="slug"
                 defaultValue={values.slug}
                 placeholder="lascia vuoto per generarlo dal titolo"
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.slug} />
             </label>
@@ -297,8 +277,7 @@ export function CollectionForm({
                 name="description"
                 defaultValue={values.description}
                 rows={3}
-                className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.description} />
@@ -311,8 +290,7 @@ export function CollectionForm({
                 defaultValue={values.cover_image_url}
                 readOnly
                 aria-label="URL copertina selezionato"
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.cover_image_url} />
               <div className="mt-4">
@@ -326,8 +304,7 @@ export function CollectionForm({
               <input
                 name="cover_kicker"
                 defaultValue={values.cover_kicker}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.cover_kicker} />
@@ -347,8 +324,7 @@ export function CollectionForm({
                 name="rationale"
                 defaultValue={values.rationale}
                 rows={5}
-                className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
                 required
               />
               <FieldError error={state.fieldErrors?.rationale} />
@@ -361,8 +337,7 @@ export function CollectionForm({
                 defaultValue={values.highlights}
                 rows={4}
                 placeholder="Un highlight per riga"
-                className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.highlights} />
             </label>
@@ -373,8 +348,7 @@ export function CollectionForm({
                 name="premium_teaser"
                 defaultValue={values.premium_teaser}
                 rows={3}
-                className="w-full rounded-3xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.premium_teaser} />
             </label>
@@ -392,8 +366,7 @@ export function CollectionForm({
               <select
                 name="theme"
                 defaultValue={values.theme}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {collectionThemes.map((theme) => (
                   <option key={theme} value={theme}>
@@ -409,8 +382,7 @@ export function CollectionForm({
               <select
                 name="audience"
                 defaultValue={values.audience}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {collectionAudiences.map((audience) => (
                   <option key={audience} value={audience}>
@@ -426,8 +398,7 @@ export function CollectionForm({
               <select
                 name="difficulty"
                 defaultValue={values.difficulty}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {collectionDifficulties.map((difficulty) => (
                   <option key={difficulty} value={difficulty}>
@@ -443,8 +414,7 @@ export function CollectionForm({
               <select
                 name="tone"
                 defaultValue={values.tone}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {collectionTones.map((tone) => (
                   <option key={tone} value={tone}>
@@ -460,8 +430,7 @@ export function CollectionForm({
               <select
                 name="access"
                 defaultValue={values.access}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {collectionAccessModes.map((access) => (
                   <option key={access} value={access}>
@@ -477,8 +446,7 @@ export function CollectionForm({
               <select
                 name="surface"
                 defaultValue={values.surface}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {collectionSurfaces.map((surface) => (
                   <option key={surface} value={surface}>
@@ -494,8 +462,7 @@ export function CollectionForm({
               <select
                 name="editorial_state"
                 defaultValue={values.editorial_state}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {collectionEditorialStates.map((editorialState) => (
                   <option key={editorialState} value={editorialState}>
@@ -511,8 +478,7 @@ export function CollectionForm({
               <select
                 name="featured_slot"
                 defaultValue={values.featured_slot}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               >
                 {collectionFeaturedSlots.map((slot) => (
                   <option key={slot || "none"} value={slot}>
@@ -529,8 +495,7 @@ export function CollectionForm({
                 name="editorial_order"
                 type="number"
                 defaultValue={values.editorial_order}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.editorial_order} />
             </label>
@@ -549,8 +514,7 @@ export function CollectionForm({
                 name="scheduled_for"
                 type="datetime-local"
                 defaultValue={values.scheduled_for}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.scheduled_for} />
             </label>
@@ -561,8 +525,7 @@ export function CollectionForm({
                 name="first_published_at"
                 type="datetime-local"
                 defaultValue={values.first_published_at}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
             </label>
 
@@ -572,8 +535,7 @@ export function CollectionForm({
                 name="published_at"
                 type="datetime-local"
                 defaultValue={values.published_at}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
             </label>
 
@@ -583,8 +545,7 @@ export function CollectionForm({
                 name="archived_at"
                 type="datetime-local"
                 defaultValue={values.archived_at}
-                className="w-full rounded-2xl border px-4 py-3 outline-none"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-cc-field"
               />
             </label>
           </div>
@@ -607,7 +568,7 @@ export function CollectionForm({
                 {publishedFilledSlots} pubblicati
               </span>
             </div>
-            <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
+            <p className="text-sm leading-6" >
               Un solo tool guida rende la lettura più chiara anche nelle card e nei teaser.
             </p>
           </div>
@@ -619,13 +580,13 @@ export function CollectionForm({
               return (
                 <div
                   key={`slot-row-${index}`}
-                  className="rounded-[24px] border p-4"
-                  style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                  className="tv-cc-panel"
+                  
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3 soft-divider">
                     <div>
                       <p className="editorial-label">Slot {String(index + 1).padStart(2, "0")}</p>
-                      <p className="mt-1 text-sm font-semibold" style={{ color: "var(--muted-strong)" }}>
+                      <p className="mt-1 text-sm font-semibold" >
                         {selectedTool ? selectedTool.name : "Nessun tool selezionato"}
                       </p>
                     </div>
@@ -654,8 +615,8 @@ export function CollectionForm({
                       <select
                         name={`tool_slug_${index}`}
                         defaultValue={slot.tool_slug}
-                        className="w-full rounded-2xl border px-4 py-3 outline-none"
-                        style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.92)" }}
+                        className="tv-cc-field"
+                        
                       >
                         <option value="">Seleziona un tool</option>
                         {availableTools.map((tool) => (
@@ -672,8 +633,8 @@ export function CollectionForm({
                       <input
                         name={`tool_role_${index}`}
                         defaultValue={slot.role}
-                        className="w-full rounded-2xl border px-4 py-3 outline-none"
-                        style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.92)" }}
+                        className="tv-cc-field"
+                        
                       />
                     </label>
 
@@ -682,8 +643,8 @@ export function CollectionForm({
                       <input
                         name={`tool_note_${index}`}
                         defaultValue={slot.note}
-                        className="w-full rounded-2xl border px-4 py-3 outline-none"
-                        style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.92)" }}
+                        className="tv-cc-field"
+                        
                       />
                     </label>
 
@@ -693,14 +654,14 @@ export function CollectionForm({
                         name={`tool_order_${index}`}
                         type="number"
                         defaultValue={slot.order}
-                        className="w-full rounded-2xl border px-4 py-3 outline-none"
-                        style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.92)" }}
+                        className="tv-cc-field"
+                        
                       />
                     </label>
 
                     <label
-                      className="flex items-center justify-between rounded-[20px] border px-4 py-3 xl:mt-7"
-                      style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.92)" }}
+                      className="tv-cc-panel flex items-center justify-between xl:mt-7"
+                      
                     >
                       <span className="text-sm font-semibold">Tool guida</span>
                       <input

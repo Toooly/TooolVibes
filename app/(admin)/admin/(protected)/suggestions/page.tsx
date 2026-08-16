@@ -6,8 +6,12 @@ import {
 } from "@/app/(admin)/admin/actions/suggestions";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusPill } from "@/components/admin/admin-status-pill";
+import {
+  ControlCenterFilters,
+  ControlCenterHeader,
+  ControlCenterNotice,
+} from "@/components/admin/control-center-header";
 import { DeleteWithConfirm } from "@/components/admin/delete-with-confirm";
-import { SectionHeader } from "@/components/ui/section-header";
 import { getSuggestionsRuntime } from "@/lib/admin/suggestion-queries";
 import { formatItalianDate } from "@/lib/utils";
 import type { ToolRequestStatus } from "@/lib/types/tool-request";
@@ -19,7 +23,7 @@ type SuggestionsPageProps = {
 const statusLabels: Record<string, string> = {
   created: "Suggerimento creato.",
   deleted: "Suggerimento eliminato.",
-  error: "Operazione non riuscita. Controlla lo stato dell'area admin e riprova.",
+  error: "Operazione non riuscita. Controlla lo stato e riprova.",
 };
 
 const suggestionStatusConfig: Record<
@@ -40,23 +44,6 @@ function StatusBadge({ status }: { status: ToolRequestStatus }) {
   return <AdminStatusPill active={false} activeLabel="" inactiveLabel={config.inactiveLabel} />;
 }
 
-function RequestTypeBadge({ type }: { type?: string | null }) {
-  const isFounder = type === "founder";
-
-  return (
-    <span
-      className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
-      style={{
-        borderColor: isFounder ? "rgba(243,191,76,0.28)" : "rgba(57,210,246,0.22)",
-        background: isFounder ? "rgba(243,191,76,0.1)" : "rgba(57,210,246,0.08)",
-        color: isFounder ? "#9a6a12" : "var(--accent-strong)",
-      }}
-    >
-      {isFounder ? "Founder" : "Community"}
-    </span>
-  );
-}
-
 export default async function SuggestionsPage({ searchParams }: SuggestionsPageProps) {
   const [{ status, view }, runtime] = await Promise.all([searchParams, getSuggestionsRuntime()]);
   const suggestions = runtime.suggestions;
@@ -70,322 +57,106 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
   });
   const viewLinks = [
     { href: "/admin/suggestions", label: "Aperti", count: runtime.pendingCount, value: "open" },
-    {
-      href: "/admin/suggestions?view=approved",
-      label: "Approvati",
-      count: runtime.approvedCount,
-      value: "approved",
-    },
-    {
-      href: "/admin/suggestions?view=rejected",
-      label: "Rifiutati",
-      count: runtime.rejectedCount,
-      value: "rejected",
-    },
+    { href: "/admin/suggestions?view=approved", label: "Approvati", count: runtime.approvedCount, value: "approved" },
+    { href: "/admin/suggestions?view=rejected", label: "Rifiutati", count: runtime.rejectedCount, value: "rejected" },
     { href: "/admin/suggestions?view=all", label: "Tutti", count: suggestions.length, value: "all" },
   ];
-  const founderCount = suggestions.filter((suggestion) => suggestion.submitter_type === "founder").length;
-  const communityCount = suggestions.length - founderCount;
 
   return (
-    <div className="page-shell py-8 sm:py-10">
-      <div className="space-y-6">
-        <section className="brand-panel brand-aura rounded-[var(--radius-xl)] p-6 sm:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader invert
-              eyebrow="Suggerimenti"
-              title="Richieste e suggerimenti tool dagli utenti"
-              description="Gli utenti possono suggerire tool da aggiungere al catalogo. Qui puoi revisionare, approvare o rifiutare ogni suggerimento."
-            />
-            <Link
-              href="/admin"
-              className="button-shell button-secondary rounded-full px-4 py-3 text-sm font-semibold text-[#f4f1ff]"
-            >
-              Torna alla dashboard
-            </Link>
-          </div>
+    <div className="page-shell py-6">
+      <ControlCenterHeader
+        title="Suggerimenti"
+        description="Revisiona, approva o rifiuta le richieste tool della community."
+        metrics={[
+          { label: "Aperti", value: runtime.pendingCount },
+          { label: "Approvati", value: runtime.approvedCount },
+          { label: "Totali", value: suggestions.length },
+        ]}
+      />
 
-          {status && statusLabels[status] ? (
-            <div
-              className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
-              style={{
-                borderColor: "rgba(15,118,110,0.18)",
-                background: "rgba(57,210,246,0.12)",
-              }}
-            >
-              {statusLabels[status]}
-            </div>
-          ) : null}
+      {status && statusLabels[status] ? (
+        <ControlCenterNotice tone={status === "error" ? "warn" : "ok"}>
+          {statusLabels[status]}
+        </ControlCenterNotice>
+      ) : null}
 
-          <div className="tool-rail -mx-1.5 mt-8 flex snap-x gap-3 overflow-x-auto px-1.5 pb-1 sm:hidden">
-            {[
-              { label: "Totali", value: suggestions.length },
-              { label: "In attesa", value: runtime.pendingCount },
-              { label: "Founder", value: founderCount },
-              { label: "Community", value: communityCount },
-            ].map((item) => (
-              <article
-                key={item.label}
-                className="admin-stat-tile w-[11rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-5"
-              >
-                <p
-                  className="text-sm font-semibold uppercase tracking-[0.18em]"
-                  style={{ color: "var(--muted)" }}
-                >
-                  {item.label}
+      <ControlCenterFilters items={viewLinks} active={activeView} />
+
+      {filteredSuggestions.length > 0 ? (
+        <div>
+          {filteredSuggestions.map((suggestion) => (
+            <article key={suggestion.id} className="tv-cc-card">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="tv-cc-card__title">{suggestion.tool_name}</h2>
+                  <AdminStatusPill
+                    active={suggestion.submitter_type === "founder"}
+                    activeLabel="Founder"
+                    inactiveLabel="Community"
+                  />
+                  <StatusBadge status={suggestion.status} />
+                </div>
+                <p className="tv-cc-card__meta">
+                  {suggestion.category ? <span>{suggestion.category}</span> : null}
+                  {suggestion.email ? <span>{suggestion.email}</span> : null}
+                  <span>{formatItalianDate(suggestion.created_at)}</span>
                 </p>
-                <p className="mt-3 text-4xl">{item.value}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-8 hidden gap-4 sm:grid lg:grid-cols-2 xl:grid-cols-4">
-            {[
-              { label: "Totali", value: suggestions.length },
-              { label: "In attesa", value: runtime.pendingCount },
-              { label: "Founder", value: founderCount },
-              { label: "Community", value: communityCount },
-            ].map((item) => (
-              <article
-                key={item.label}
-                className="admin-stat-tile rounded-[var(--radius-lg)] border p-5"
-              >
-                <p
-                  className="text-sm font-semibold uppercase tracking-[0.18em]"
-                  style={{ color: "var(--muted)" }}
-                >
-                  {item.label}
-                </p>
-                <p className="mt-3 text-4xl">{item.value}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
-            <div>
-              <p className="editorial-label">Area suggerimenti</p>
-              <h2 className="text-display-card mt-2 text-[1.58rem] sm:text-[1.82rem]">
-                Tutte le richieste tool
-              </h2>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {viewLinks.map((item) => (
-                <Link
-                  key={item.value}
-                  href={item.href}
-                  className="button-shell button-secondary rounded-full px-3.5 py-2 text-sm font-semibold text-[#f4f1ff]"
-                  style={{
-                    background:
-                      activeView === item.value ? "rgba(106,60,255,0.12)" : undefined,
-                  }}
-                >
-                  {item.label} ({item.count})
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {filteredSuggestions.length > 0 ? (
-            <div className="mt-6 space-y-4">
-              {filteredSuggestions.map((suggestion) => (
-                <article
-                  key={suggestion.id}
-                  className="interactive-surface relative overflow-hidden rounded-[var(--radius-xl)] border p-5"
-                  style={{
-                    borderColor: "var(--line)",
-                    background: "rgba(255,255,255,0.06)",
-                  }}
-                >
-                  <div className="card-glow absolute inset-0" />
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <h2 className="text-2xl">{suggestion.tool_name}</h2>
-                      <RequestTypeBadge type={suggestion.submitter_type} />
-                      <StatusBadge status={suggestion.status} />
-                    </div>
-
-                    <div className="grid gap-3 text-sm" style={{ color: "var(--muted)" }}>
-                      {suggestion.tool_url ? (
-                        <p>
-                          URL:{" "}
-                          <a
-                            href={suggestion.tool_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline hover:no-underline"
-                            style={{ color: "var(--accent-strong)" }}
-                          >
-                            {suggestion.tool_url}
-                          </a>
-                        </p>
-                      ) : null}
-                      {suggestion.category ? <p>Categoria: {suggestion.category}</p> : null}
-                      {suggestion.level ? <p>Livello: {suggestion.level}</p> : null}
-                      {suggestion.email ? <p>Email: {suggestion.email}</p> : null}
-                      {suggestion.message ? (
-                        <p>Messaggio: {suggestion.message}</p>
-                      ) : null}
-                      {suggestion.use_case ? <p>Use case: {suggestion.use_case}</p> : null}
-                      {suggestion.referral_url ? (
-                        <p>
-                          Referral personale:{" "}
-                          <a
-                            href={suggestion.referral_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline hover:no-underline"
-                            style={{ color: "var(--accent-strong)" }}
-                          >
-                            {suggestion.referral_url}
-                          </a>
-                        </p>
-                      ) : null}
-                      {suggestion.media_url ? (
-                        <p>
-                          Screenshot/video:{" "}
-                          <a
-                            href={suggestion.media_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline hover:no-underline"
-                            style={{ color: "var(--accent-strong)" }}
-                          >
-                            {suggestion.media_url}
-                          </a>
-                        </p>
-                      ) : null}
-                      {suggestion.personal_notes ? <p>Note personali: {suggestion.personal_notes}</p> : null}
-                      {suggestion.submitter_type === "founder" ? (
-                        <div
-                          className="rounded-[22px] border px-4 py-3"
-                          style={{
-                            borderColor: "rgba(243,191,76,0.24)",
-                            background: "rgba(255,249,240,0.72)",
-                          }}
-                        >
-                          <p className="font-semibold" style={{ color: "var(--foreground)" }}>
-                            Dettagli founder
-                          </p>
-                          <div className="mt-2 grid gap-2">
-                            {suggestion.founder_name ? <p>Founder: {suggestion.founder_name}</p> : null}
-                            {suggestion.company_role ? <p>Ruolo/team: {suggestion.company_role}</p> : null}
-                            {suggestion.launch_stage ? <p>Fase: {suggestion.launch_stage}</p> : null}
-                            {suggestion.budget_range ? <p>Budget: {suggestion.budget_range}</p> : null}
-                            {suggestion.requested_services?.length ? (
-                              <p>Servizi: {suggestion.requested_services.join(", ")}</p>
-                            ) : null}
-                          </div>
-                        </div>
-                      ) : null}
-                      {suggestion.admin_notes ? (
-                        <p>
-                          Note interne:{" "}
-                          <span style={{ color: "var(--muted-strong)" }}>
-                            {suggestion.admin_notes}
-                          </span>
-                        </p>
-                      ) : null}
-                      <p>Ricevuto: {formatItalianDate(suggestion.created_at)}</p>
-                    </div>
-
-                    <form action={updateSuggestionStatusAction} className="space-y-3">
-                      <input type="hidden" name="id" value={suggestion.id} />
-                      <label className="block">
-                        <span className="mb-2 block text-sm font-semibold">Note interne</span>
-                        <textarea
-                          name="admin_notes"
-                          rows={2}
-                          defaultValue={suggestion.admin_notes ?? ""}
-                          placeholder="Aggiungi note interne su questo suggerimento..."
-                          className="w-full rounded-2xl border px-4 py-3 text-sm outline-none"
-                          style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-                        />
-                      </label>
-                      <div className="flex flex-wrap gap-2">
-                        {(suggestion.status === "received" || suggestion.status === "reviewing") ? (
-                          <>
-                            <button
-                              type="submit"
-                              name="status"
-                              value="reviewing"
-                              disabled={!runtime.canWrite}
-                              className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
-                            >
-                              In revisione
-                            </button>
-                            <button
-                              type="submit"
-                              name="status"
-                              value="approved"
-                              disabled={!runtime.canWrite}
-                              className="button-shell rounded-full px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
-                              style={{
-                                background:
-                                  "linear-gradient(135deg, var(--accent-strong), var(--accent))",
-                              }}
-                            >
-                              Approva
-                            </button>
-                            <button
-                              type="submit"
-                              name="status"
-                              value="rejected"
-                              disabled={!runtime.canWrite}
-                              className="button-shell rounded-full px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
-                              style={{
-                                background: "linear-gradient(135deg, #9a4130, #7f2f22)",
-                              }}
-                            >
-                              Rifiuta
-                            </button>
-                          </>
-                        ) : (
-                          <button
-                            type="submit"
-                            name="status"
-                            value={suggestion.status}
-                            disabled={!runtime.canWrite}
-                            className="button-shell button-secondary rounded-full px-4 py-2 text-sm font-semibold text-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-55"
-                          >
-                            Salva note
-                          </button>
-                        )}
-                      </div>
-                    </form>
-                    <div className="flex flex-wrap gap-2">
-                      {suggestion.status === "approved" ? (
-                        <Link
-                          href={`/admin/tools/new?suggestion=${suggestion.id}`}
-                          className="button-shell rounded-full px-4 py-2 text-sm font-semibold text-white"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, var(--accent-strong), var(--accent))",
-                          }}
-                        >
-                          Crea tool da suggerimento
-                        </Link>
-                      ) : null}
-                      <DeleteWithConfirm
-                        action={deleteSuggestionAction.bind(null, suggestion.id)}
-                        label="Elimina"
-                        disabled={!runtime.canWrite}
-                        confirmMessage="Sei sicuro di voler eliminare questo suggerimento?"
-                      />
-                    </div>
+                {suggestion.message ? (
+                  <p className="tv-cc-card__meta">{suggestion.message}</p>
+                ) : null}
+                <form action={updateSuggestionStatusAction} className="mt-3 space-y-2">
+                  <input type="hidden" name="id" value={suggestion.id} />
+                  <label className="block">
+                    <span className="tv-cc-kicker">Note interne</span>
+                    <textarea
+                      name="admin_notes"
+                      rows={2}
+                      defaultValue={suggestion.admin_notes ?? ""}
+                      className="mt-1 w-full rounded-[var(--tv-radius-card)] border border-[var(--tv-border-default)] bg-[var(--tv-input-bg)] px-3 py-2 text-sm text-[var(--tv-input-text)]"
+                    />
+                  </label>
+                  <div className="tv-cc-card__actions">
+                    {(suggestion.status === "received" || suggestion.status === "reviewing") ? (
+                      <>
+                        <button type="submit" name="status" value="reviewing" disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--ghost">
+                          In revisione
+                        </button>
+                        <button type="submit" name="status" value="approved" disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--primary">
+                          Approva
+                        </button>
+                        <button type="submit" name="status" value="rejected" disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--danger">
+                          Rifiuta
+                        </button>
+                      </>
+                    ) : (
+                      <button type="submit" name="status" value={suggestion.status} disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--secondary">
+                        Salva note
+                      </button>
+                    )}
+                    {suggestion.status === "approved" ? (
+                      <Link href={`/admin/tools/new?suggestion=${suggestion.id}`} className="tv-cc-btn tv-cc-btn--primary">
+                        Crea tool
+                      </Link>
+                    ) : null}
+                    <DeleteWithConfirm
+                      action={deleteSuggestionAction.bind(null, suggestion.id)}
+                      label="Elimina"
+                      disabled={!runtime.canWrite}
+                      confirmMessage="Sei sicuro di voler eliminare questo suggerimento?"
+                      variant="menu"
+                    />
                   </div>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <AdminEmptyState
-              title="Nessun suggerimento"
-              description="Non ci sono ancora richieste tool dagli utenti. Quando arriveranno, le troverai qui."
-            />
-          )}
-        </section>
-      </div>
+                </form>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <AdminEmptyState
+          title="Nessun suggerimento"
+          description="Quando arrivano richieste dalla community, le trovi qui."
+        />
+      )}
     </div>
   );
 }

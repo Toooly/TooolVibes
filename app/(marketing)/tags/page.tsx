@@ -27,7 +27,7 @@ export default async function TagsPage() {
 
   return (
     <div className="page-shell tags-route space-y-5 pb-28 pt-4 sm:space-y-8 sm:pb-20 sm:pt-6">
-      <section className="light-surface overflow-hidden rounded-[30px] border border-[var(--tv-border-inverted)] bg-[var(--tv-surface-inverted)] px-5 py-5 sm:rounded-[38px] sm:px-7 sm:py-8">
+      <section className="overflow-hidden rounded-[30px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-raised)] px-5 py-5 sm:rounded-[38px] sm:px-7 sm:py-8">
         <div className="max-w-[44rem]">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
             Categorie e tag
@@ -42,7 +42,7 @@ export default async function TagsPage() {
         </div>
       </section>
 
-      <section className="light-surface rounded-[28px] border border-[var(--tv-border-inverted)] bg-[var(--tv-surface-inverted)] p-5 sm:rounded-[34px] sm:p-7">
+      <section className="rounded-[28px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-raised)] p-5 sm:rounded-[34px] sm:p-7">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-[40rem]">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
@@ -52,7 +52,7 @@ export default async function TagsPage() {
               Le famiglie più utili per leggere il catalogo.
             </h2>
           </div>
-          <span className="rounded-full border border-[var(--tv-border-inverted)] bg-transparent px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--tv-ink-inverted-secondary)]">
+          <span className="rounded-full border border-[var(--tv-border-default)] bg-transparent px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--tv-ink-secondary)]">
             {filterGroups.length - 1} categorie attive
           </span>
         </div>
@@ -69,7 +69,7 @@ export default async function TagsPage() {
                 <Link
                   key={group.key}
                   href={`/archivio?group=${group.key}`}
-                  className="light-surface group rounded-[24px] border border-[var(--tv-border-inverted)] bg-[var(--tv-surface-inverted)] p-4 transition-colors duration-200 hover:!border-[var(--tv-accent-brand)] focus-visible:!border-[var(--tv-accent-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tv-accent-brand)] sm:rounded-[28px] sm:p-5"
+                  className="group rounded-[24px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-raised)] p-4 transition-colors duration-200 hover:!border-[var(--tv-accent-brand)] focus-visible:!border-[var(--tv-accent-brand)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tv-accent-brand)] sm:rounded-[28px] sm:p-5"
                 >
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
                     Categoria
@@ -87,7 +87,7 @@ export default async function TagsPage() {
         </div>
       </section>
 
-      <section className="light-surface rounded-[28px] border border-[var(--tv-border-inverted)] bg-[var(--tv-surface-inverted)] p-5 sm:rounded-[34px] sm:p-7">
+      <section className="rounded-[28px] border border-[var(--tv-border-default)] bg-[var(--tv-surface-raised)] p-5 sm:rounded-[34px] sm:p-7">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-[40rem]">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
@@ -97,7 +97,7 @@ export default async function TagsPage() {
               Una mappa rapida per muoverti tra tool, risultati e casi d&apos;uso.
             </h2>
           </div>
-          <span className="rounded-full border border-[var(--tv-border-inverted)] bg-transparent px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--tv-ink-inverted-secondary)]">
+          <span className="rounded-full border border-[var(--tv-border-default)] bg-transparent px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--tv-ink-secondary)]">
             {tagCounts.length} tag disponibili
           </span>
         </div>
@@ -107,7 +107,7 @@ export default async function TagsPage() {
             <Link
               key={tag}
               href={`/archivio?tag=${encodeURIComponent(tag)}`}
-              className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[var(--tv-border-inverted)] bg-transparent px-3 py-2 text-[0.82rem] font-semibold text-[var(--tv-ink-inverted)] transition-colors duration-200 hover:border-[var(--tv-accent-brand)] hover:bg-[var(--tv-ink-inverted)] hover:text-[var(--tv-ink-on-brand)] focus-visible:border-[var(--tv-accent-brand)] focus-visible:bg-[var(--tv-ink-inverted)] focus-visible:text-[var(--tv-ink-on-brand)] sm:gap-3 sm:px-4 sm:py-3 sm:text-sm"
+              className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[var(--tv-border-default)] bg-transparent px-3 py-2 text-[0.82rem] font-semibold text-[var(--tv-ink-primary)] transition-colors duration-200 hover:border-[var(--tv-accent-brand)] hover:bg-[var(--tv-surface-selected)] hover:text-[var(--tv-ink-on-brand)] focus-visible:border-[var(--tv-accent-brand)] focus-visible:bg-[var(--tv-surface-selected)] focus-visible:text-[var(--tv-ink-on-brand)] sm:gap-3 sm:px-4 sm:py-3 sm:text-sm"
             >
               <span>{tag}</span>
               <span className="border-l border-current/20 pl-2 text-xs">

@@ -9,10 +9,15 @@ export function AdminStatusPill({
 }) {
   return (
     <span
-      className="inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]"
+      className="tv-cc-metric"
       style={{
-        background: active ? "var(--cyan-soft)" : "var(--gold-soft)",
-        color: active ? "var(--accent-strong)" : "var(--muted-strong)",
+        background: active
+          ? "color-mix(in srgb, var(--tv-accent-cyan) 16%, transparent)"
+          : "var(--tv-surface-interactive)",
+        color: active ? "var(--tv-accent-cyan-on-dark)" : "var(--tv-ink-secondary)",
+        borderColor: active
+          ? "color-mix(in srgb, var(--tv-accent-cyan) 32%, transparent)"
+          : "var(--tv-border-default)",
       }}
     >
       {active ? activeLabel : inactiveLabel}

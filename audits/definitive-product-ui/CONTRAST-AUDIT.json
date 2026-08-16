@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-08-16T17:05:00+00:00",
+  "sha": "pending-leftover-surface-commit",
+  "method": "pixel sample of local standalone screenshots at 390/768/1440 plus token-pair review",
+  "p0": [],
+  "p1_fixed": [
+    "Admin login lavender page wash #f6f4ff/#eee9ff/#e5ddff",
+    "Public SiteUniverseBackground light canvas #f7f5ff leaking on sparse routes",
+    "Shortlist empty/wishlist/dialog --tv-surface-inverted !important island",
+    "Compare empty/onboarding inverted island",
+    "shortlist-board/compare-board brand-panel/stat-block hit by public-routes ivory force"
+  ],
+  "measured": {
+    "admin-login": {"ivory": "0%", "dark": "52-84%", "note": "Control Center card on dark canvas"},
+    "shortlist-empty": {"ivory": "0-0.1%", "dark": "86-90%", "note": "was ~60% ivory"},
+    "compare-empty": {"ivory": "2-6%", "dark": "84-86%", "note": "was ~20% ivory"},
+    "account-auth": {"ivory": "0-0.1%", "dark": "84-95%"},
+    "home": {"ivory": "0.1-3.4%", "dark": "81-91%", "note": "dark cockpit preserved"},
+    "archivio": {"ivory": "18-37%", "dark": "50-72%", "note": "accepted Decision Desk"},
+    "collections": {"ivory": "21-30%", "note": "accepted public ivory desk"}
+  },
+  "accepted_public_ivory": [
+    "styles/definitive-home.css editorial desk",
+    "styles/archive-v4.css .ar4-ivory",
+    "styles/public-routes.css .ivory-surface",
+    "styles/guides.css ivory editorial cards",
+    "Partner placements on inverted canvas",
+    "Cookie consent first-paint strip (dismissed for product measurement)"
+  ],
+  "not_locally_authenticated": [
+    "Control Center tools/editors/commercial require TOOOLVIBES_ADMIN_* worker secrets; not present in local .env.local. Visual migration already landed in 23805a3. Production smoke after deploy."
+  ],
+  "token_pairs_dark": {
+    "canvas": "#08080a / --tv-color-surface-base",
+    "raised": "#111114",
+    "elevated": "#18181d",
+    "ink_primary": "--tv-color-ink-200",
+    "ink_secondary": "--tv-color-ink-400"
+  }
+}

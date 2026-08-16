@@ -1,0 +1,13 @@
+{
+  "before": "Dual system: canonical dark tv-* tokens + light compatibility aliases (:root --background #f7f5ff, ivory brand-panel, --accent-strong #3a2397). globals.css 28456 lines / 1732 !important. admin-shell style-string interception.",
+  "after": "Compatibility aliases remapped to dark semantic tokens. brand-panel/dark-panel/premium-panel-* source surfaces are raised dark. Auth card migrated off inverted ivory. Control Center primitives added. admin-shell interception removed.",
+  "tokensFile": "styles/tokens.css",
+  "primitives": [
+    "ControlCenterHeader",
+    "ControlCenterFilters",
+    "AdminActionMenu",
+    "AdminStatusPill",
+    "AdminEmptyState",
+    "tv-cc-*"
+  ]
+}

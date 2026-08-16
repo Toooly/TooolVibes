@@ -36,11 +36,11 @@
 }
 
 .v-auth-card {
-  border: 1px solid var(--tv-border-inverted-default);
+  border: 1px solid var(--tv-border-default);
   border-radius: 0.75rem;
-  background: var(--tv-surface-inverted);
+  background: var(--tv-surface-raised);
   padding: clamp(1.5rem, 3vw, 2.5rem);
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   box-shadow: none;
 }
 
@@ -56,7 +56,7 @@
 
 .v-auth-title,
 .v-auth-admin-title {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
 }
 
 .v-auth-subtitle,
@@ -66,7 +66,7 @@
 .v-auth-footer p,
 .v-auth-admin-desc,
 .v-auth-loading-text {
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
 }
 
 /* Tabs integrated directly into card surface — no separate strip */
@@ -92,13 +92,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 180ms ease, color 180ms ease;
-  color: var(--tv-ink-inverted-muted);
+  color: var(--tv-ink-muted-aa);
   background: transparent;
 }
 
 .v-auth-tab:hover {
-  background: var(--tv-interactive-inverted-bg-hover);
-  color: var(--tv-ink-inverted-primary);
+  background: var(--tv-surface-interactive);
+  color: var(--tv-ink-primary);
 }
 
 .v-auth-tab.is-active {
@@ -116,20 +116,20 @@
 }
 
 .v-auth-input {
-  border-color: var(--tv-input-inverted-border);
+  border-color: var(--tv-input-border);
   border-radius: 0.4rem;
-  background: var(--tv-input-inverted-bg);
-  color: var(--tv-input-inverted-text);
+  background: var(--tv-input-bg);
+  color: var(--tv-input-text);
 }
 
 .v-auth-input::placeholder {
-  color: var(--tv-input-inverted-placeholder);
+  color: var(--tv-input-placeholder);
 }
 
 .v-auth-input:focus {
-  border-color: var(--tv-accent-brand);
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(106, 60, 255, 0.12);
+  border-color: var(--tv-input-border-focus);
+  background: var(--tv-surface-elevated);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-accent-brand) 28%, transparent);
 }
 
 .v-auth-btn-primary,
@@ -153,21 +153,21 @@
 }
 
 .v-auth-footer {
-  border-top-color: var(--tv-border-inverted-subtle);
+  border-top-color: var(--tv-border-subtle);
 }
 
 .v-auth-link {
-  color: var(--tv-accent-brand-pressed);
+  color: var(--tv-accent-violet-on-dark);
 }
 
 .account-loading-state.v-auth-loading {
   border-radius: 0.75rem;
-  background: var(--tv-surface-inverted);
+  background: var(--tv-surface-raised);
   box-shadow: none;
 }
 
 .account-loading-state h1 {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
 }
 
 
@@ -321,7 +321,7 @@
   height: 0.65rem;
   width: 100%;
   border-radius: 999px;
-  background: var(--tv-border-inverted-default);
+  background: var(--tv-border-default);
   opacity: 0.55;
 }
 
@@ -356,7 +356,7 @@ body[data-account-surface="auth"] .mobile-top-bar {
 }
 .account-stat {
   display: flex;
-  min-height: 6.25rem;
+  min-height: 4.25rem;
   flex-direction: column;
   justify-content: space-between;
   padding: 0.85rem 0.9rem;
@@ -410,7 +410,7 @@ body[data-account-surface="auth"] .mobile-top-bar {
     gap: 0.45rem;
   }
   .account-stat {
-    min-height: 5.6rem;
+    min-height: 3.75rem;
     padding: 0.7rem;
   }
   .account-stat__value {

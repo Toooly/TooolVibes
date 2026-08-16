@@ -133,7 +133,7 @@ export function PremiumBadge({
 export function PremiumPanel({
   as: Component = "div",
   children,
-  tone = "light",
+  tone = "dark",
   className,
   ...props
 }: React.HTMLAttributes<HTMLElement> & {

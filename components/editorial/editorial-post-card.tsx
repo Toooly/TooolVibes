@@ -94,7 +94,7 @@ export function EditorialPostCard({ post, variant = "card", className }: Editori
             className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
             style={{
               borderColor: "var(--line)",
-              background: "var(--tv-surface-inverted-raised)",
+              background: "var(--tv-surface-elevated)",
               color: "var(--muted-strong)",
             }}
           >

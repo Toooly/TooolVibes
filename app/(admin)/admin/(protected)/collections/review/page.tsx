@@ -1,8 +1,6 @@
-import Link from "next/link";
-
 import { CollectionTransitionCard } from "@/components/admin/collection-transition-card";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
-import { SectionHeader } from "@/components/ui/section-header";
+import { ControlCenterFilters, ControlCenterHeader, ControlCenterNotice } from "@/components/admin/control-center-header";
 import {
   getCollectionTransitionReviewState,
   getCollectionTransitionSeverity,
@@ -210,9 +208,6 @@ export default async function AdminCollectionsReviewPage({
     },
     { href: "/admin/collections/review?view=all", label: "Tutte", count: reviewViewCounts.all },
   ] as const;
-  const selectedViewHref = params.view
-    ? `/admin/collections/review?view=${params.view}`
-    : "/admin/collections/review";
   const entries = reviewItems.filter((item) =>
     matchesView(params.view, {
       readiness: item.readiness,
@@ -225,104 +220,24 @@ export default async function AdminCollectionsReviewPage({
   return (
     <div className="page-shell py-8 sm:py-10">
       <div className="space-y-6">
-        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader invert
-              eyebrow="Revisione conflitti"
-              title="Leggi le differenze prima di agire."
-              description="Qui trovi conflitti, importazioni in attesa e revisioni nello stesso posto. Nessun riallineamento distruttivo: prima decidiamo cosa va davvero toccato e cosa può restare com'è."
-            />
-            <div className="hidden flex-wrap gap-3 sm:flex">
-              <Link
-                href="/admin/collections"
-                className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2.5 text-sm font-semibold"
-              >
-                Torna alle raccolte
-              </Link>
-            </div>
-          </div>
-
-          <div className="tool-rail -mx-1 mt-5 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:hidden">
-            <Link
-              href="/admin/collections"
-              className="button-shell button-secondary text-ui-strong inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold"
-            >
-              Torna alle raccolte
-            </Link>
-          </div>
-
-          {statusMessage ? (
-            <div
-              className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
-              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
-            >
-              {statusMessage}
-            </div>
-          ) : null}
-
-          <div className="tool-rail -mx-1.5 mt-6 flex snap-x gap-3 overflow-x-auto px-1.5 pb-1 sm:hidden">
-            {reviewMetrics.map((item) => (
-              <article
-                key={item.label}
-                className="stat-block w-[11rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-              >
-                <p
-                  className="text-xs font-semibold uppercase tracking-[0.18em]"
-                  style={{ color: "var(--muted)" }}
-                >
-                  {item.label}
-                </p>
-                <p className="mt-3 text-3xl">{item.value}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-6 hidden gap-4 sm:grid lg:grid-cols-4">
-            {reviewMetrics.map((item) => (
-              <article
-                key={`desktop-${item.label}`}
-                className="stat-block rounded-[var(--radius-lg)] border p-4"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-              >
-                <p
-                  className="text-xs font-semibold uppercase tracking-[0.18em]"
-                  style={{ color: "var(--muted)" }}
-                >
-                  {item.label}
-                </p>
-                <p className="mt-3 text-3xl">{item.value}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-6 border-b pb-5">
-            <p className="editorial-label">Filtri revisione</p>
-            <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
-              {reviewViewOptions.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.16em]"
-                  style={{
-                    borderColor:
-                      item.href === selectedViewHref ? "rgba(112,82,255,0.24)" : "var(--line)",
-                    background:
-                      item.href === selectedViewHref
-                        ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
-                        : "rgba(255,255,255,0.06)",
-                    color:
-                      item.href === selectedViewHref
-                        ? "var(--accent-strong)"
-                        : "var(--muted-strong)",
-                  }}
-                >
-                  {item.label} ({item.count})
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
+        <ControlCenterHeader
+          kicker="Raccolte"
+          title="Revisione conflitti"
+          description="Conflitti, importazioni in attesa e revisioni. Nessun riallineamento distruttivo."
+          backHref="/admin/collections"
+          backLabel="Torna alle raccolte"
+          metrics={reviewMetrics.map((item) => ({ label: item.label, value: item.value }))}
+        />
+        {statusMessage ? <ControlCenterNotice tone="ok">{statusMessage}</ControlCenterNotice> : null}
+        <ControlCenterFilters
+          active={params.view ?? "open"}
+          items={reviewViewOptions.map((item) => ({
+            href: item.href,
+            label: item.label,
+            value: item.href.includes("view=") ? item.href.split("view=")[-1] : "open",
+            count: item.count,
+          }))}
+        />
 
         {entries.length > 0 ? (
           <div className="space-y-5">

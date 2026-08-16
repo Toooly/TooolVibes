@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { cn } from "@/lib/utils";
+
 const LINKS = [
   { href: "/admin/commercial/partners", label: "Partner" },
   { href: "/admin/commercial/campaigns", label: "Campagne" },
@@ -10,24 +12,16 @@ const LINKS = [
 
 export function CommercialSubnav({ current }: { current: string }) {
   return (
-    <nav aria-label="Commercial" className="flex flex-wrap gap-2">
-      {LINKS.map((link) => {
-        const active = current === link.href;
-        return (
-          <Link
-            key={link.href}
-            href={link.href}
-            className="rounded-full border px-3 py-2 text-sm font-semibold"
-            style={{
-              borderColor: active ? "rgba(57,210,246,0.4)" : "rgba(255,255,255,0.12)",
-              background: active ? "rgba(57,210,246,0.12)" : "transparent",
-              color: "white",
-            }}
-          >
-            {link.label}
-          </Link>
-        );
-      })}
+    <nav aria-label="Commercial" className="tv-cc-filters">
+      {LINKS.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className={cn("tv-cc-filter", current === link.href && "is-active")}
+        >
+          {link.label}
+        </Link>
+      ))}
     </nav>
   );
 }

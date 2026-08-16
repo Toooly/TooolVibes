@@ -218,14 +218,14 @@ export function CollectionTransitionCard({
           {entry.supabase ? (
             <Link
               href={`/admin/collections/${entry.supabase.id}`}
-              className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+              className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
             >
               Apri dettaglio
             </Link>
           ) : null}
           <Link
             href={returnTo}
-            className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+            className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
           >
             Ricarica confronto
           </Link>
@@ -276,7 +276,7 @@ export function CollectionTransitionCard({
             {collectionId ? (
               <Link
                 href={`/admin/collections/${collectionId}#sync-preview`}
-                className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
               >
                 Vedi anteprima
               </Link>
@@ -392,7 +392,7 @@ export function CollectionTransitionCard({
             <input type="hidden" name="return_to" value={returnTo} />
             <button
               type="submit"
-              className="button-shell button-primary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white"
+              className="tv-cc-btn tv-cc-btn--primary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white"
             >
               Applica riallineamento sicuro
             </button>
@@ -408,7 +408,7 @@ export function CollectionTransitionCard({
               {collectionId ? <input type="hidden" name="collection_id" value={collectionId} /> : null}
               <button
                 type="submit"
-                className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[#f4f1ff]"
+                className="tv-cc-btn tv-cc-btn--secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold "
                 style={{
                   borderColor: "rgba(15,118,110,0.18)",
                   background: "rgba(57,210,246,0.12)",
@@ -425,7 +425,7 @@ export function CollectionTransitionCard({
               {collectionId ? <input type="hidden" name="collection_id" value={collectionId} /> : null}
               <button
                 type="submit"
-                className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[#f4f1ff]"
+                className="tv-cc-btn tv-cc-btn--secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold "
                 style={{
                   borderColor: "rgba(112,82,255,0.16)",
                   background: "rgba(106,60,255,0.14)",
@@ -443,7 +443,7 @@ export function CollectionTransitionCard({
                 {collectionId ? <input type="hidden" name="collection_id" value={collectionId} /> : null}
                 <button
                   type="submit"
-                  className="button-shell button-secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-[#f4f1ff]"
+                  className="tv-cc-btn tv-cc-btn--secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold "
                 >
                   Riapri revisione
                 </button>
@@ -457,7 +457,7 @@ export function CollectionTransitionCard({
             <input type="hidden" name="slug" value={entry.slug} />
             <button
               type="submit"
-              className="button-shell button-primary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white"
+              className="tv-cc-btn tv-cc-btn--primary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white"
             >
               Importa slug
             </button>

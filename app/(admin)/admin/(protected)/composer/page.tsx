@@ -4,7 +4,7 @@ import { getPublicToolViews, getToolSpotlightView } from "@/lib/data/public-tool
 import { resolvePartnerCampaign } from "@/lib/sponsors/partner-resolver";
 import { MediaLibraryPicker } from "@/components/admin/media-library-picker";
 import { AdminSaveBanner } from "@/components/admin/admin-save-banner";
-import { SectionHeader } from "@/components/ui/section-header";
+import { ControlCenterHeader } from "@/components/admin/control-center-header";
 
 export default async function AdminComposerPage({ searchParams }: { searchParams: Promise<{ saved?: string }> }) {
   const params = await searchParams;
@@ -25,85 +25,72 @@ export default async function AdminComposerPage({ searchParams }: { searchParams
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <AdminSaveBanner saved={params.saved} />
-      <SectionHeader invert
-        eyebrow="Composer"
+      <ControlCenterHeader
+        kicker="Composer"
         title="Controlli homepage"
-        description="Il codice tiene il design. Qui decidi solo i contenuti editoriali che la Home consuma davvero: annuncio e tool in evidenza. Le guide e le raccolte restano sulle loro superfici. Il partner è nel motore commercial."
+        description="Annuncio e tool in evidenza. Il partner resta nel motore commercial."
       />
 
-      <section className="rounded-[28px] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/45">Preview Home</p>
+      <section className="tv-cc-panel">
+        <p className="tv-cc-panel__kicker">Preview Home</p>
         <dl className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
-            <dt className="text-xs uppercase tracking-[0.14em] text-white/40">Annuncio</dt>
-            <dd className="mt-1 text-sm text-white">
+            <dt className="tv-cc-card__meta">Annuncio</dt>
+            <dd className="mt-1 text-sm">
               {controls.announcement.enabled && controls.announcement.text
                 ? `${controls.announcement.text} → ${controls.announcement.href}`
-                : "Nascosto (stato vuoto sicuro)"}
+                : "Nascosto"}
             </dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-[0.14em] text-white/40">Tool in evidenza</dt>
-            <dd className="mt-1 text-sm text-white">
-              {featured ? `${featured.name} · ${featured.slug}` : "Nessun tool pubblico — Home nasconde lo spotlight"}
+            <dt className="tv-cc-card__meta">Tool in evidenza</dt>
+            <dd className="mt-1 text-sm">
+              {featured ? `${featured.name} · ${featured.slug}` : "Nessun tool pubblico"}
             </dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-[0.14em] text-white/40">Partner spotlight</dt>
-            <dd className="mt-1 text-sm text-white">
-              {partner ? `${partner.name} · ${partner.status}` : "Nessuna campagna eleggibile — sezione nascosta"}
+            <dt className="tv-cc-card__meta">Partner spotlight</dt>
+            <dd className="mt-1 text-sm">
+              {partner ? `${partner.name} · ${partner.status}` : "Nessuna campagna eleggibile"}
             </dd>
           </div>
         </dl>
       </section>
 
-      <form action={saveHomepageControlsAction} className="space-y-5 rounded-[28px] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-        <label className="flex min-h-11 items-center gap-3 text-sm text-white">
-          <input type="checkbox" name="announcementEnabled" defaultChecked={controls.announcement.enabled} />
-          Mostra annuncio in homepage
-        </label>
-        <label className="block text-sm text-white/70">
-          Testo annuncio
-          <input
-            name="announcementText"
-            defaultValue={controls.announcement.text}
-            className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white"
-            placeholder="Vuoto = annuncio nascosto"
-          />
-        </label>
-        <label className="block text-sm text-white/70">
-          Destinazione interna
-          <input
-            name="announcementHref"
-            defaultValue={controls.announcement.href}
-            className="mt-1 w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-white"
-            placeholder="/radar"
-          />
-        </label>
-        <div>
-          <p className="mb-2 text-sm text-white/70">Creatività annuncio (opzionale)</p>
-          <MediaLibraryPicker fieldName="announcementImage" defaultValue={controls.announcement.image ?? ""} />
+      <form action={saveHomepageControlsAction} className="space-y-4">
+        <section className="tv-cc-panel space-y-4">
+          <label className="flex min-h-11 items-center gap-3 text-sm">
+            <input type="checkbox" name="announcementEnabled" defaultChecked={controls.announcement.enabled} />
+            Mostra annuncio in homepage
+          </label>
+          <label>
+            <span className="tv-cc-label">Testo annuncio</span>
+            <input name="announcementText" defaultValue={controls.announcement.text} className="tv-cc-field" placeholder="Vuoto = nascosto" />
+          </label>
+          <label>
+            <span className="tv-cc-label">Destinazione interna</span>
+            <input name="announcementHref" defaultValue={controls.announcement.href} className="tv-cc-field" placeholder="/radar" />
+          </label>
+          <div>
+            <p className="tv-cc-label">Creatività annuncio</p>
+            <MediaLibraryPicker fieldName="announcementImage" defaultValue={controls.announcement.image ?? ""} />
+          </div>
+          <label>
+            <span className="tv-cc-label">Tool in evidenza</span>
+            <select name="featuredToolSlug" defaultValue={controls.featuredToolSlug ?? ""} className="tv-cc-field">
+              <option value="">Selezione automatica</option>
+              {tools.map((tool) => (
+                <option key={tool.slug} value={tool.slug}>{tool.name}</option>
+              ))}
+            </select>
+          </label>
+        </section>
+        <div className="tv-cc-savebar">
+          <p className="tv-cc-panel__desc" style={{ margin: 0 }}>Salva i controlli homepage</p>
+          <button type="submit" className="tv-cc-btn tv-cc-btn--primary">Salva controlli</button>
         </div>
-        <label className="block text-sm text-white/70">
-          Tool in evidenza
-          <select
-            name="featuredToolSlug"
-            defaultValue={controls.featuredToolSlug ?? ""}
-            className="mt-1 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-white"
-          >
-            <option value="">Selezione automatica</option>
-            {tools.map((tool) => (
-              <option key={tool.slug} value={tool.slug}>
-                {tool.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button type="submit" className="min-h-11 rounded-full bg-[linear-gradient(135deg,#6a3cff,#39d2f6)] px-5 text-sm font-semibold text-white">
-          Salva controlli
-        </button>
       </form>
     </div>
   );

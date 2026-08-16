@@ -245,9 +245,7 @@ export function SiteUniverseBackground() {
 
   useScrollTracker(!isAdmin && profile.enabled && !profile.reduced);
 
-  const bgStyle = isAdmin
-    ? "radial-gradient(circle at 50% 50%, #0d0823 0%, #050313 100%)"
-    : "radial-gradient(circle at 50% 45%, #ede9fe 0%, #f7f5ff 55%, #f7f5ff 100%)";
+  const bgStyle = "radial-gradient(circle at 50% 50%, #111114 0%, var(--tv-color-surface-base) 100%)";
 
   if (!profile.enabled || !mounted) {
     return (
@@ -283,9 +281,8 @@ export function SiteUniverseBackground() {
       <div
         className="absolute inset-0"
         style={{
-          background: isAdmin
-            ? "linear-gradient(180deg, transparent 0%, transparent 60%, rgba(5,3,19,0.7) 100%)"
-            : "linear-gradient(180deg, transparent 0%, transparent 50%, rgba(247,245,255,0.6) 90%, rgba(247,245,255,0.95) 100%)",
+          background:
+            "linear-gradient(180deg, transparent 0%, transparent 60%, color-mix(in srgb, var(--tv-color-surface-base) 72%, transparent) 100%)",
           pointerEvents: "none",
         }}
       />

@@ -2,7 +2,10 @@ import Link from "next/link";
 
 import { importMockCollectionsAction } from "@/app/(admin)/admin/actions/collections";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
-import { SectionHeader } from "@/components/ui/section-header";
+import {
+  ControlCenterHeader,
+  ControlCenterNotice,
+} from "@/components/admin/control-center-header";
 import {
   getCollectionTransitionReviewMeta,
   getCollectionTransitionReviewState,
@@ -200,11 +203,6 @@ export default async function AdminCollectionsPage({
   const transitionEntriesBySlug = new Map(
     runtime.transitionReport.entries.map((entry) => [entry.slug, entry] as const),
   );
-  const topActions = [
-    { href: "/admin", label: "Dashboard" },
-    { href: "/admin/collections/new", label: "Nuova raccolta", primary: true },
-    { href: "/admin/collections/review", label: "Revisione conflitti" },
-  ] as const;
   const workspaceMetrics = [
     { label: "Raccolte nell'area", value: runtime.collections.length },
     {
@@ -357,83 +355,20 @@ export default async function AdminCollectionsPage({
   });
 
   return (
-    <div className="page-shell py-8 sm:py-10">
+    <div className="page-shell py-6">
       <div className="space-y-6">
-        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <SectionHeader invert
-              eyebrow="Gestione raccolte"
-              title="Un flusso editoriale leggero e operativo."
-              description="Qui leggi sorgente, segnali aperti, stato editoriale e dettaglio interno delle raccolte. La scrittura resta prudente, ma il pannello gestisce già il ciclo editoriale essenziale senza passare dal codice."
-            />
-            <div className="hidden flex-wrap gap-3 sm:flex">
-              {topActions.map((action) => (
-                <Link
-                  key={action.href}
-                  href={action.href}
-                  className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} rounded-full px-4 py-2.5 text-sm font-semibold`}
-                >
-                  {action.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <div className="tool-rail -mx-1 mt-5 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:hidden">
-            {topActions.map((action) => (
-              <Link
-                key={`mobile-${action.href}`}
-                href={action.href}
-                className={`button-shell ${"primary" in action && action.primary ? "button-primary text-white" : "button-secondary text-[#f4f1ff]"} inline-flex shrink-0 rounded-full px-4 py-2 text-[0.78rem] font-semibold`}
-              >
-                {action.label}
-              </Link>
-            ))}
-          </div>
-
-          {statusMessage ? (
-            <div
-              className="mt-6 rounded-[var(--radius-lg)] border px-4 py-3 text-sm font-medium"
-              style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
-            >
-              {statusMessage}
-            </div>
-          ) : null}
-
-          <div className="tool-rail -mx-1.5 mt-8 flex snap-x gap-3 overflow-x-auto px-1.5 pb-1 sm:hidden">
-            {workspaceMetrics.map((item) => (
-              <article
-                key={item.label}
-                className="admin-stat-tile stat-block w-[12rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-5"
-              >
-                <p
-                  className="text-sm font-semibold uppercase tracking-[0.18em]"
-                  style={{ color: "var(--muted)" }}
-                >
-                  {item.label}
-                </p>
-                <p className="mt-3 text-4xl">{item.value}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-8 hidden gap-4 sm:grid lg:grid-cols-4">
-            {workspaceMetrics.map((item) => (
-              <article
-                key={`desktop-${item.label}`}
-                className="admin-stat-tile stat-block rounded-[var(--radius-lg)] border p-5"
-              >
-                <p
-                  className="text-sm font-semibold uppercase tracking-[0.18em]"
-                  style={{ color: "var(--muted)" }}
-                >
-                  {item.label}
-                </p>
-                <p className="mt-3 text-4xl">{item.value}</p>
-              </article>
-            ))}
-          </div>
-
+        <ControlCenterHeader
+          title="Gestione raccolte"
+          description="Pubblicazione, evidenza e revisione delle collection."
+          primaryHref="/admin/collections/new"
+          primaryLabel="Nuova raccolta"
+          metrics={[
+            { label: "Collection", value: runtime.collections.length },
+            { label: "Pubbliche", value: stateCounts.published + stateCounts.featured },
+            { label: "Segnali", value: workspaceMetrics[2].value },
+          ]}
+        />
+        {statusMessage ? <ControlCenterNotice tone="ok">{statusMessage}</ControlCenterNotice> : null}
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             <div
               className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
@@ -501,7 +436,7 @@ export default async function AdminCollectionsPage({
                   <button
                     type="submit"
                     disabled={!hasPendingImports}
-                    className="button-shell button-primary rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
+                    className="tv-cc-btn tv-cc-btn--primary rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
                   >
                     Importa raccolte locali mancanti ({runtime.transitionReport.summary.pending_import})
                   </button>
@@ -523,7 +458,7 @@ export default async function AdminCollectionsPage({
               {transitionMetrics.map((item) => (
                 <article
                   key={item.label}
-                  className="stat-block w-[10.5rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
+                  className="tv-cc-panel w-[10.5rem] shrink-0 snap-start rounded-[var(--radius-lg)] border p-4"
                   style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 >
                   <p
@@ -541,7 +476,7 @@ export default async function AdminCollectionsPage({
               {transitionMetrics.map((item) => (
                 <article
                   key={`desktop-${item.label}`}
-                  className="stat-block rounded-[var(--radius-lg)] border p-4"
+                  className="tv-cc-panel rounded-[var(--radius-lg)] border p-4"
                   style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                 >
                   <p
@@ -571,7 +506,7 @@ export default async function AdminCollectionsPage({
           ) : null}
         </div>
 
-        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
+        <div className="tv-cc-panel rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-4 border-b pb-5">
             <div className="space-y-2">
               <p
@@ -656,7 +591,7 @@ export default async function AdminCollectionsPage({
                                   : "rgba(161,105,47,0.18)",
                               background:
                                 entry.import_status === "conflict"
-                                  ? "rgba(254,242,242,0.96)"
+                                  ? "var(--tv-status-danger-soft-bg-dark)"
                                   : "rgba(243,191,76,0.12)",
                             }}
                           >
@@ -711,7 +646,7 @@ export default async function AdminCollectionsPage({
                     {entry.supabase ? (
                       <Link
                         href={`/admin/collections/${entry.supabase.id}`}
-                        className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                        className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
                       >
                         Apri raccolta
                       </Link>
@@ -721,7 +656,7 @@ export default async function AdminCollectionsPage({
                         <input type="hidden" name="slug" value={entry.slug} />
                         <button
                           type="submit"
-                          className="button-shell button-primary w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
+                          className="tv-cc-btn tv-cc-btn--primary w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
                         >
                           Importa raccolta
                         </button>
@@ -734,7 +669,7 @@ export default async function AdminCollectionsPage({
           </div>
         </div>
 
-        <div className="surface-card rounded-[var(--radius-xl)] p-6 sm:p-8">
+        <div className="tv-cc-panel rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="border-b pb-5">
             <p className="editorial-label">Viste raccolte</p>
             <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
@@ -746,7 +681,7 @@ export default async function AdminCollectionsPage({
                   style={{
                     borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
                     background: item.active
-                      ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
+                      ? "var(--tv-surface-selected)"
                       : "rgba(255,255,255,0.06)",
                     color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
                   }}
@@ -768,7 +703,7 @@ export default async function AdminCollectionsPage({
                 style={{
                   borderColor: item.active ? "rgba(112,82,255,0.24)" : "var(--line)",
                   background: item.active
-                    ? "linear-gradient(180deg, rgba(255,255,255,0.98), rgba(243,237,255,0.92))"
+                    ? "var(--tv-surface-selected)"
                     : "rgba(255,255,255,0.06)",
                   color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
                 }}
@@ -844,7 +779,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(15,118,110,0.18)",
                                 background:
                                   readiness.state === "blocked"
-                                    ? "rgba(254,242,242,0.96)"
+                                    ? "var(--tv-status-danger-soft-bg-dark)"
                                     : readiness.state === "review"
                                       ? "rgba(243,191,76,0.12)"
                                       : "rgba(57,210,246,0.12)",
@@ -866,7 +801,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(15,118,110,0.18)",
                                 background:
                                   transitionSeverity === "critical-conflict"
-                                    ? "rgba(254,242,242,0.96)"
+                                    ? "var(--tv-status-danger-soft-bg-dark)"
                                     : transitionSeverity === "minor-drift" ||
                                         transitionSeverity === "pending"
                                       ? "rgba(243,191,76,0.12)"
@@ -951,7 +886,7 @@ export default async function AdminCollectionsPage({
                                     : "rgba(15,118,110,0.18)",
                               background:
                                 readiness.state === "blocked"
-                                  ? "rgba(254,242,242,0.96)"
+                                  ? "var(--tv-status-danger-soft-bg-dark)"
                                   : readiness.state === "review"
                                     ? "rgba(243,191,76,0.12)"
                                     : "rgba(57,210,246,0.12)",
@@ -973,7 +908,7 @@ export default async function AdminCollectionsPage({
                                     : "rgba(15,118,110,0.18)",
                               background:
                                 syncPreviewPosture.tone === "error"
-                                  ? "rgba(254,242,242,0.96)"
+                                  ? "var(--tv-status-danger-soft-bg-dark)"
                                   : syncPreviewPosture.tone === "warning"
                                     ? "rgba(243,191,76,0.12)"
                                     : "rgba(57,210,246,0.12)",
@@ -1020,7 +955,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(161,105,47,0.18)",
                                   background:
                                     issue.level === "error"
-                                      ? "rgba(254,242,242,0.96)"
+                                      ? "var(--tv-status-danger-soft-bg-dark)"
                                       : "rgba(243,191,76,0.12)",
                                 }}
                               >
@@ -1042,7 +977,7 @@ export default async function AdminCollectionsPage({
                                   : "rgba(161,105,47,0.18)",
                               background:
                                 transitionSeverity === "critical-conflict"
-                                  ? "rgba(254,242,242,0.96)"
+                                  ? "var(--tv-status-danger-soft-bg-dark)"
                                   : "rgba(243,191,76,0.12)",
                             }}
                           >
@@ -1089,7 +1024,7 @@ export default async function AdminCollectionsPage({
                       <div className="flex flex-col gap-3">
                         <Link
                           href={`/admin/collections/${collection.id}`}
-                          className="button-shell button-primary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold text-white"
+                          className="tv-cc-btn tv-cc-btn--primary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold text-white"
                         >
                           Apri dettaglio
                         </Link>
@@ -1097,7 +1032,7 @@ export default async function AdminCollectionsPage({
                           collection.editorial_state === "featured") && (
                           <Link
                             href={`/collections/${collection.slug}`}
-                            className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                            className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
                           >
                             Vedi pagina pubblica
                           </Link>
@@ -1111,7 +1046,7 @@ export default async function AdminCollectionsPage({
                                 ? "/admin/collections/review?view=conflict"
                                   : "/admin/collections/review"
                             }
-                            className="button-shell button-secondary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold"
+                            className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
                           >
                             Apri revisione
                           </Link>
@@ -1138,7 +1073,6 @@ export default async function AdminCollectionsPage({
               />
             )}
           </div>
-        </div>
       </div>
     </div>
   );
