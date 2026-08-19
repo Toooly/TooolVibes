@@ -230,7 +230,8 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
 
     expect(screen.getByText("Biblioteca")).toBeTruthy();
     expect(screen.getByText("Decisioni")).toBeTruthy();
-    expect(screen.getByText("Recenti")).toBeTruthy();
+    expect(screen.queryByText("Recenti")).toBeNull();
+    expect(screen.queryByText("Segnale")).toBeNull();
     fireEvent.click(screen.getByText("Home"));
 
     expect(pushMock).toHaveBeenCalledWith("/account");

@@ -30,7 +30,10 @@ import {
 } from "lucide-react";
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
+import { RevisitWhenChips } from "@/components/account/workspace/revisit-when-chips";
+import { formatRevisitLine, outcomeActionLabel, outcomeStateLabel } from "@/lib/account/workspace-lifecycle";
 import {
+  deferToolDecision,
   reopenToolDecision,
   setToolDecisionOutcome,
   updateToolDecisionMemory,
@@ -76,22 +79,22 @@ const decisionOutcomeMeta: Record<
   }
 > = {
   selected: {
-    actionLabel: "Scegli",
-    stateLabel: "Scelto",
+    actionLabel: outcomeActionLabel("selected"),
+    stateLabel: outcomeStateLabel("selected"),
     tone: "var(--tv-ink-primary)",
     background: "rgba(112,82,255,0.15)",
     icon: Check,
   },
   rejected: {
-    actionLabel: "Scarta",
-    stateLabel: "Scartato",
+    actionLabel: outcomeActionLabel("rejected"),
+    stateLabel: outcomeStateLabel("rejected"),
     tone: "var(--tv-ink-primary)",
     background: "rgba(255,200,180,0.12)",
     icon: Ban,
   },
   deferred: {
-    actionLabel: "Rimanda",
-    stateLabel: "Rimandato",
+    actionLabel: outcomeActionLabel("deferred"),
+    stateLabel: outcomeStateLabel("deferred"),
     tone: "var(--tv-ink-primary)",
     background: "rgba(255,220,150,0.12)",
     icon: Clock,
@@ -116,10 +119,12 @@ export function CompareDecisionPanel({
   const discovery = useDiscoverySnapshot();
   const decisionOutcomes = discovery.decisionOutcomes ?? {};
   const decisionUpdatedAts = discovery.decisionUpdatedAts ?? {};
+  const decisionRevisitAts = discovery.decisionRevisitAts ?? {};
   const decisionMemories = discovery.decisionMemories;
 
   const [focusSlug, setFocusSlug] = useState<string | null>(null);
   const [noteDraft, setNoteDraft] = useState("");
+  const [pendingDeferSlug, setPendingDeferSlug] = useState<string | null>(null);
 
   // Il motivo si annota sul candidato "a fuoco": l'ultimo su cui si è agito,
   // altrimenti il primo con decisione registrata, altrimenti il vincitore.
@@ -156,11 +161,20 @@ export function CompareDecisionPanel({
   ) {
     if (active) return;
     setFocusSlug(slug);
-    setToolDecisionOutcome(slug, outcome);
-    // Meaningful completion: explicit decision on a compare set (not page view).
-    if (outcome === "selected" || outcome === "rejected" || outcome === "deferred") {
-      emitComparisonCompleted(tools.map((tool) => tool.slug));
+    if (outcome === "deferred") {
+      setPendingDeferSlug(slug);
+      return;
     }
+    setPendingDeferSlug(null);
+    setToolDecisionOutcome(slug, outcome);
+    emitComparisonCompleted(tools.map((tool) => tool.slug));
+  }
+
+  function handleDefer(slug: string, revisitAt: string) {
+    setFocusSlug(slug);
+    setPendingDeferSlug(null);
+    deferToolDecision(slug, revisitAt);
+    emitComparisonCompleted(tools.map((tool) => tool.slug));
   }
 
   return (
@@ -185,7 +199,15 @@ export function CompareDecisionPanel({
         <Link
           href="/shortlist"
           className={decisionChipClassName}
-          style={decisionChipIdleStyle}
+          style={
+            firstDecidedSlug
+              ? {
+                  borderColor: "rgba(112,82,255,0.24)",
+                  background: "rgba(112,82,255,0.2)",
+                  color: "var(--tv-ink-primary)",
+                }
+              : decisionChipIdleStyle
+          }
         >
           Vai ai Salvati
           <ArrowRight size={12} />
@@ -296,18 +318,35 @@ export function CompareDecisionPanel({
                 })}
               </div>
 
+              {pendingDeferSlug === tool.slug || outcome === "deferred" ? (
+                <div className="mt-2">
+                  <p
+                    className="text-xs uppercase tracking-[0.16em]"
+                    style={{ color: "var(--tv-ink-secondary)" }}
+                  >
+                    Quando rivedere
+                  </p>
+                  <RevisitWhenChips onSelect={(revisitAt) => handleDefer(tool.slug, revisitAt)} />
+                </div>
+              ) : null}
+
               {outcome ? (
                 <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                   <p
                     className="text-xs uppercase tracking-[0.16em]"
                     style={{ color: "var(--tv-ink-secondary)" }}
                   >
-                    {decisionOutcomeMeta[outcome].stateLabel} · Registrata{" "}
-                    {formatDecisionTimestamp(recordedAt)}
+                    {decisionOutcomeMeta[outcome].stateLabel}
+                    {outcome === "deferred"
+                      ? ` · ${formatRevisitLine(decisionRevisitAts[tool.slug]) ?? "Rivedi: data da impostare"}`
+                      : ` · Registrata ${formatDecisionTimestamp(recordedAt)}`}
                   </p>
                   <button
                     type="button"
-                    onClick={() => reopenToolDecision(tool.slug)}
+                    onClick={() => {
+                      setPendingDeferSlug(null);
+                      reopenToolDecision(tool.slug);
+                    }}
                     aria-label={`Riapri decisione per ${tool.name}`}
                     data-sonic-action="update"
                     className={decisionChipClassName}

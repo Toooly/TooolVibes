@@ -645,7 +645,7 @@ export function ToolDiscoveryApp({
   const searchInputRef = useRef<HTMLInputElement>(null);
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
-  const stackSlugs = useToolWorkspaceStore((state) => state.stackSlugs);
+  const stackSlugs = useToolWorkspaceStore((state) => state.workingStackSlugs);
   const selectedSlug = useToolWorkspaceStore((state) => state.selectedSlug);
   const setSelectedSlug = useToolWorkspaceStore((state) => state.setSelectedSlug);
   const toggleSaved = useToolWorkspaceStore((state) => state.toggleSaved);
@@ -935,7 +935,7 @@ export function ToolDiscoveryApp({
   function handleStack(slug: string) {
     const tool = getToolBySlug(tools, slug);
     const added = addToStack(slug);
-    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto alla lista` : "Tool già nella lista");
+    toast.success(added ? `${tool?.name ?? "Tool"} aggiunto allo stack` : "Tool già nello stack");
     playTooolvibesSound(added ? "success" : "update");
   }
 
@@ -1006,7 +1006,7 @@ export function ToolDiscoveryApp({
                 ["all", "Tutti", tools.length],
                 ["saved", "Salvati", savedSlugs.length],
                 ["compare", "Confronta", compareSlugs.length],
-                ["stack", "Lista", stackSlugs.length],
+                ["stack", "Stack", stackSlugs.length],
               ].map(([key, label, count]) => (
                 <button
                   key={key}
@@ -1227,7 +1227,7 @@ export function ToolDiscoveryApp({
               {[
                 { label: "Salvati", count: savedSlugs.length, tab: "saved" as const },
                 { label: "Confronta", count: compareSlugs.length, tab: "compare" as const },
-                { label: "Lista", count: stackSlugs.length, tab: "stack" as const },
+                { label: "Stack", count: stackSlugs.length, tab: "stack" as const },
               ].map((item) => (
                 <button
                   key={item.label}
@@ -1343,10 +1343,10 @@ export function ToolDiscoveryApp({
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/56">
-                  La tua lista
+                  Il tuo stack
                 </p>
                 <h3 className="mt-2 text-display-card text-[1.32rem] leading-tight text-white sm:text-[1.55rem]">
-                  {stackTools.length} tool nella lista
+                  {stackTools.length} tool nello stack
                 </h3>
               </div>
               <Layers3 className="size-5 text-white/72" />
@@ -1371,7 +1371,7 @@ export function ToolDiscoveryApp({
               ) : (
                 <EmptyState
                   icon={Layers3}
-                  title="Lista ancora vuota."
+                  title="Stack ancora vuoto."
                   description="Aggiungi tool dalla griglia e riordinali per costruire un percorso operativo: idea, build, automazione, vendita."
                   className="p-4"
                   dark

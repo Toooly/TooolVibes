@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 
 import {
   addToolToPersonalStack,
+  deferWorkspaceTool,
   setWorkspaceDecision,
   setWorkspaceNote,
   setWorkspacePinned,
@@ -12,6 +13,7 @@ import {
   toggleWorkspaceCompare,
   toggleWorkspaceSaved,
 } from "@/lib/account/workspace-actions";
+import { formatRevisitLine, revisitAtFromPreset } from "@/lib/account/workspace-lifecycle";
 import {
   PIPELINE_COLUMNS,
   activePersonalStacks,
@@ -24,6 +26,7 @@ import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 
+import { RevisitWhenChips } from "./revisit-when-chips";
 import { PIPELINE_LABELS } from "./workspace-model";
 import { toolName } from "./workspace-tool-name";
 
@@ -75,7 +78,9 @@ function applyPipelineColumn(slug: string, next: PipelineColumn) {
   }
   if (next === "scelto") setWorkspaceDecision(slug, "selected");
   if (next === "scartato") setWorkspaceDecision(slug, "rejected");
-  if (next === "rimandato") setWorkspaceDecision(slug, "deferred");
+  if (next === "rimandato") {
+    deferWorkspaceTool(slug, revisitAtFromPreset("1w"));
+  }
 }
 
 function compareLibraryItems(
@@ -148,7 +153,7 @@ export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
         <p className="tv-lib-kicker">Biblioteca</p>
         <h2 className="tv-lib-title">Nessun tool salvato ancora</h2>
         <p className="tv-lib-copy">
-          Salva un candidato dal catalogo. Poi spostalo: da valutare, candidato, deciso.
+          I Salvati vivono qui: stesso inventario, con stati e verdetti. Salva dal catalogo, poi valuta.
         </p>
         <Link className="account-btn-primary" href="/archivio">
           Inizia dal catalogo
@@ -293,6 +298,12 @@ function LibraryRow({
           <span>{category || "Senza categoria"}</span>
           <span aria-hidden="true"> · </span>
           <span>{PIPELINE_LABELS[item.column]}</span>
+          {item.column === "rimandato" && formatRevisitLine(item.revisitAt) ? (
+            <>
+              <span aria-hidden="true"> · </span>
+              <span>{formatRevisitLine(item.revisitAt)}</span>
+            </>
+          ) : null}
           {item.stackNames.length > 0 ? (
             <>
               <span aria-hidden="true"> · </span>
@@ -350,6 +361,14 @@ function LibraryRow({
               ))}
             </select>
           </label>
+          {item.column === "rimandato" ? (
+            <div className="tv-lib-action tv-lib-action--field">
+              <span>Quando rivedere</span>
+              <RevisitWhenChips
+                onSelect={(revisitAt) => deferWorkspaceTool(item.slug, revisitAt)}
+              />
+            </div>
+          ) : null}
           {availableStacks.length > 0 ? (
             <label className="tv-lib-action tv-lib-action--field">
               <span>Aggiungi a uno stack</span>

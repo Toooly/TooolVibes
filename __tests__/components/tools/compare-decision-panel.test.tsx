@@ -530,4 +530,21 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     vi.useRealTimers();
     await expectNoAxeViolations(container);
   });
+
+  it("writes Rimandato with a chosen revisitAt and keeps the Salvati CTA", () => {
+    render(<MobileCompareView tools={VIEWS} />);
+    revealMobileResult();
+
+    const group = decisionGroupFor("Atlas AI");
+    fireEvent.click(within(group).getByRole("button", { name: "Rimanda" }));
+    fireEvent.click(screen.getByRole("button", { name: "1 settimana" }));
+
+    const persisted = readPersistedWorkspace();
+    expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe("deferred");
+    expect(persisted.toolStates["atlas-ai"].revisitAt).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: /Vai ai Salvati/ }).getAttribute("href"),
+    ).toBe("/shortlist");
+    expect(screen.getByText(/Rivedi:/)).toBeTruthy();
+  });
 });

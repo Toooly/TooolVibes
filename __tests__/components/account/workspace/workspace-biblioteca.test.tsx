@@ -18,6 +18,7 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 
 vi.mock("@/lib/account/workspace-actions", () => ({
   addToolToPersonalStack: vi.fn(),
+  deferWorkspaceTool: vi.fn(),
   setWorkspaceDecision: vi.fn(),
   setWorkspaceNote: vi.fn(),
   setWorkspacePinned: vi.fn(),

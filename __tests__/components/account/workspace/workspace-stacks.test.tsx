@@ -27,6 +27,8 @@ const actionsRuntime = vi.hoisted(() => ({
   })),
   renamePersonalStack: vi.fn(),
   archivePersonalStack: vi.fn(),
+  restorePersonalStack: vi.fn(),
+  adoptLegacyListaStack: vi.fn(),
   addToolToPersonalStack: vi.fn(),
   removeToolFromPersonalStack: vi.fn(),
 }));
@@ -42,6 +44,10 @@ vi.mock("@/lib/account/workspace-actions", () => ({
     actionsRuntime.renamePersonalStack(...args),
   archivePersonalStack: (...args: unknown[]) =>
     actionsRuntime.archivePersonalStack(...args),
+  restorePersonalStack: (...args: unknown[]) =>
+    actionsRuntime.restorePersonalStack(...args),
+  adoptLegacyListaStack: (...args: unknown[]) =>
+    actionsRuntime.adoptLegacyListaStack(...args),
   addToolToPersonalStack: (...args: unknown[]) =>
     actionsRuntime.addToolToPersonalStack(...args),
   removeToolFromPersonalStack: (...args: unknown[]) =>
@@ -69,6 +75,8 @@ describe("WorkspaceStacks", () => {
     actionsRuntime.createPersonalStack.mockClear();
     actionsRuntime.renamePersonalStack.mockClear();
     actionsRuntime.archivePersonalStack.mockClear();
+    actionsRuntime.restorePersonalStack.mockClear();
+    actionsRuntime.adoptLegacyListaStack.mockClear();
     actionsRuntime.addToolToPersonalStack.mockClear();
     actionsRuntime.removeToolFromPersonalStack.mockClear();
   });
@@ -102,5 +110,21 @@ describe("WorkspaceStacks", () => {
     expect(screen.getAllByText("Agenti e editor").length).toBeGreaterThan(0);
     expect(screen.getByText("1 tool")).toBeTruthy();
     expect(screen.getAllByText("Cursor").length).toBeGreaterThan(0);
+  });
+
+  it("restores an archived stack", () => {
+    const archived = {
+      ...workspaceTestFixtures.withStacks,
+      personalStacks: workspaceTestFixtures.withStacks.personalStacks.map((stack, index) =>
+        index === 0
+          ? { ...stack, archivedAt: "2026-07-01T00:00:00.000Z" }
+          : stack,
+      ),
+    };
+    catalogRuntime.value = catalogFor(archived);
+    render(createElement(WorkspaceStacks, { state: archived }));
+
+    fireEvent.click(screen.getByRole("button", { name: "Ripristina" }));
+    expect(actionsRuntime.restorePersonalStack).toHaveBeenCalled();
   });
 });

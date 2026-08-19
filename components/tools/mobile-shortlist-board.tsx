@@ -24,11 +24,18 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { RevisitWhenChips } from "@/components/account/workspace/revisit-when-chips";
+import {
+  formatRevisitLine,
+  OUTCOME_STATE_LABELS,
+  STAGE_LABELS,
+} from "@/lib/account/workspace-lifecycle";
 import { RequestToolForm } from "@/components/wishlist/request-tool-form";
 import { ShortlistStageToggle } from "@/components/tools/shortlist-stage-toggle";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import {
   reopenToolDecision,
+  deferToolDecision,
   setToolDecisionOutcome,
   toggleToolPin,
   updateToolDecisionMemory,
@@ -74,13 +81,7 @@ function extractDomain(url: string): string | undefined {
 }
 
 function getStageLabel(stage: ShortlistStage): string {
-  const labels: Record<ShortlistStage, string> = {
-    saved: "Da provare",
-    review: "In valutazione",
-    top: "Preferito",
-  };
-
-  return labels[stage];
+  return STAGE_LABELS[stage];
 }
 
 const decisionOutcomeOptions: WorkspaceDecisionOutcome[] = [
@@ -94,17 +95,17 @@ const decisionOutcomeMeta: Record<
   { label: string; tone: string; background: string }
 > = {
   selected: {
-    label: "Scelto",
+    label: OUTCOME_STATE_LABELS.selected,
     tone: "var(--accent-strong)",
     background: "rgba(106,60,255,0.22)",
   },
   rejected: {
-    label: "Scartato",
+    label: OUTCOME_STATE_LABELS.rejected,
     tone: "var(--muted-strong)",
     background: "rgba(255,82,82,0.14)",
   },
   deferred: {
-    label: "Rimandato",
+    label: OUTCOME_STATE_LABELS.deferred,
     tone: "var(--muted-strong)",
     background: "rgba(243,191,76,0.14)",
   },
@@ -130,6 +131,7 @@ export function MobileShortlistBoard({
   const decisionMemories = discovery.decisionMemories;
   const decisionOutcomes = discovery.decisionOutcomes ?? {};
   const decisionUpdatedAts = discovery.decisionUpdatedAts ?? {};
+  const decisionRevisitAts = discovery.decisionRevisitAts ?? {};
 
   const [noteSlug, setNoteSlug] = useState<string | null>(null);
 
@@ -235,8 +237,9 @@ export function MobileShortlistBoard({
                     className="text-xs uppercase tracking-[0.14em]"
                     style={{ color: "var(--muted)" }}
                   >
-                    Registrata{" "}
-                    {formatDecisionTimestamp(decisionUpdatedAts[tool.slug])}
+                    {outcome === "deferred"
+                      ? (formatRevisitLine(decisionRevisitAts[tool.slug]) ?? "Rivedi: data da impostare")
+                      : `Registrata ${formatDecisionTimestamp(decisionUpdatedAts[tool.slug])}`}
                   </span>
                   <button
                     type="button"
@@ -295,6 +298,7 @@ export function MobileShortlistBoard({
         color="#f3bf4c"
         emptyText="I tool che ami di più appariranno qui"
         decisionOutcomes={decisionOutcomes}
+        decisionRevisitAts={decisionRevisitAts}
         onOpenMemory={setNoteSlug}
       />
 
@@ -305,6 +309,7 @@ export function MobileShortlistBoard({
         color="#9be8ff"
         emptyText="Tool salvati da esplorare"
         decisionOutcomes={decisionOutcomes}
+        decisionRevisitAts={decisionRevisitAts}
         onOpenMemory={setNoteSlug}
       />
 
@@ -315,6 +320,7 @@ export function MobileShortlistBoard({
         color="#ff8ecb"
         emptyText="Gli ultimi tool aggiunti"
         decisionOutcomes={decisionOutcomes}
+        decisionRevisitAts={decisionRevisitAts}
         onOpenMemory={setNoteSlug}
       />
 
@@ -330,6 +336,7 @@ export function MobileShortlistBoard({
             memory={decisionMemories[noteSlug] ?? {}}
             decisionOutcome={decisionOutcomes[noteSlug] ?? null}
             decisionUpdatedAt={decisionUpdatedAts[noteSlug] ?? null}
+            decisionRevisitAt={decisionRevisitAts[noteSlug] ?? null}
             editable={decisionMemoryEnabled}
             onClose={() => setNoteSlug(null)}
           />
@@ -403,12 +410,12 @@ function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; c
           <Library size={22} />
         </div>
         <div>
-          <span className="mobile-library-hero__eyebrow">Shortlist operativa</span>
-          <h1 id="mobile-library-title">La tua shortlist</h1>
+          <span className="mobile-library-hero__eyebrow">Salvati</span>
+          <h1 id="mobile-library-title">I tuoi Salvati</h1>
           <p>
             {totalCount > 0
-              ? `${totalCount} tool ${totalCount === 1 ? "salvato, ordinato" : "salvati, ordinati"} per tornare subito alla scelta giusta.`
-              : "Uno spazio vivo per tool salvati, segnalazioni e prossime scoperte."}
+              ? `${totalCount} tool ${totalCount === 1 ? "salvato" : "salvati"}: inventario, stati e verdetti.`
+              : "Qui restano i tool salvati e i verdetti. Stesso inventario della Biblioteca."}
           </p>
         </div>
       </div>
@@ -436,6 +443,7 @@ function MobileLibraryShelf({
   color,
   emptyText,
   decisionOutcomes,
+  decisionRevisitAts,
   onOpenMemory,
 }: {
   title: string;
@@ -444,6 +452,7 @@ function MobileLibraryShelf({
   color: string;
   emptyText: string;
   decisionOutcomes: Record<string, WorkspaceDecisionOutcome>;
+  decisionRevisitAts: Record<string, string>;
   onOpenMemory: (slug: string) => void;
 }) {
   return (
@@ -462,6 +471,7 @@ function MobileLibraryShelf({
               tool={tool}
               index={index}
               decisionOutcome={decisionOutcomes[tool.slug] ?? null}
+              decisionRevisitAt={decisionRevisitAts[tool.slug] ?? null}
               onOpenMemory={() => onOpenMemory(tool.slug)}
             />
           ))}
@@ -490,11 +500,13 @@ function LibraryBook({
   tool,
   index,
   decisionOutcome,
+  decisionRevisitAt = null,
   onOpenMemory,
 }: {
   tool: ToolWithMeta;
   index: number;
   decisionOutcome: WorkspaceDecisionOutcome | null;
+  decisionRevisitAt?: string | null;
   onOpenMemory: () => void;
 }) {
   const color = getToolColor(tool);
@@ -531,7 +543,12 @@ function LibraryBook({
         <strong>{tool.name}</strong>
         <span>{getStageLabel(tool.stage)}</span>
         {decisionOutcome ? (
-          <span>{decisionOutcomeMeta[decisionOutcome].label}</span>
+          <span>
+            {decisionOutcomeMeta[decisionOutcome].label}
+            {decisionOutcome === "deferred" && formatRevisitLine(decisionRevisitAt)
+              ? ` · ${formatRevisitLine(decisionRevisitAt)}`
+              : ""}
+          </span>
         ) : null}
       </div>
       <div className="mobile-library-book__remove-wrap">
@@ -570,6 +587,7 @@ function MobileNoteSheet({
   memory,
   decisionOutcome,
   decisionUpdatedAt = null,
+  decisionRevisitAt = null,
   editable,
   onClose,
 }: {
@@ -583,11 +601,13 @@ function MobileNoteSheet({
    * record esiste — prima il "Registrata" cadeva su "Nessun aggiornamento".
    */
   decisionUpdatedAt?: string | null;
+  decisionRevisitAt?: string | null;
   editable: boolean;
   onClose: () => void;
 }) {
   const preferReducedMotion = useReducedMotion();
   const [noteDraft, setNoteDraft] = useState(memory.note ?? "");
+  const [pendingDefer, setPendingDefer] = useState(false);
 
   useEffect(() => {
     setNoteDraft(memory.note ?? "");
@@ -711,7 +731,13 @@ function MobileNoteSheet({
                       disabled={active}
                       aria-pressed={active}
                       onClick={() => {
-                        if (!active) setToolDecisionOutcome(slug, option);
+                        if (active) return;
+                        if (option === "deferred") {
+                          setPendingDefer(true);
+                          return;
+                        }
+                        setPendingDefer(false);
+                        setToolDecisionOutcome(slug, option);
                       }}
                       data-sonic-action="tab"
                       className={`${sheetChipClassName} ${
@@ -732,20 +758,36 @@ function MobileNoteSheet({
                   );
                 })}
               </div>
+              {pendingDefer || decisionOutcome === "deferred" ? (
+                <div className="mt-3">
+                  <p className="editorial-label">Quando rivedere</p>
+                  <RevisitWhenChips
+                    tone="light"
+                    onSelect={(revisitAt) => {
+                      setPendingDefer(false);
+                      deferToolDecision(slug, revisitAt);
+                    }}
+                  />
+                </div>
+              ) : null}
               {decisionOutcome ? (
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                   <p
                     className="text-xs uppercase tracking-[0.16em]"
                     style={{ color: "var(--muted)" }}
                   >
-                    Registrata{" "}
-                    {formatDecisionTimestamp(
-                      decisionUpdatedAt ?? memory.updated_at,
-                    )}
+                    {decisionOutcome === "deferred"
+                      ? (formatRevisitLine(decisionRevisitAt) ?? "Rivedi: data da impostare")
+                      : `Registrata ${formatDecisionTimestamp(
+                          decisionUpdatedAt ?? memory.updated_at,
+                        )}`}
                   </p>
                   <button
                     type="button"
-                    onClick={() => reopenToolDecision(slug)}
+                    onClick={() => {
+                      setPendingDefer(false);
+                      reopenToolDecision(slug);
+                    }}
                     data-sonic-action="update"
                     className={`${sheetChipClassName} gap-2`}
                     style={sheetChipIdleStyle}

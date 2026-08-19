@@ -60,7 +60,7 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 import { WorkspaceShell } from "@/components/account/workspace/workspace-shell";
 
 function hrefsNamed(name: string) {
-  return screen.getAllByRole("link", { name }).map((link) => link.getAttribute("href"));
+  return screen.queryAllByRole("link", { name }).map((link) => link.getAttribute("href"));
 }
 
 function currentNamed(name: string) {
@@ -98,7 +98,7 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     expect(currentNamed("Biblioteca").every((value) => value !== "page")).toBe(true);
   });
 
-  it("builds real workspace view links, including Recenti", () => {
+  it("builds real workspace view links and keeps Recenti and Segnale out of chrome", () => {
     render(createElement(WorkspaceShell));
 
     expect(hrefsNamed("Home").every((href) => href === "/account")).toBe(true);
@@ -109,7 +109,7 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     expect(hrefsNamed("Decisioni").every((href) => href === "/account?view=decisioni")).toBe(
       true,
     );
-    expect(hrefsNamed("Recenti").every((href) => href === "/account?view=recenti")).toBe(true);
-    expect(hrefsNamed("Segnale").every((href) => href === "/account?view=segnale")).toBe(true);
+    expect(hrefsNamed("Recenti")).toEqual([]);
+    expect(hrefsNamed("Segnale")).toEqual([]);
   });
 });

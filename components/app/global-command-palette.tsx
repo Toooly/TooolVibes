@@ -6,8 +6,6 @@ import {
   ArrowRight,
   BookOpen,
   Bookmark,
-  Clock3,
-  Compass,
   House,
   Layers,
   Search,
@@ -66,8 +64,6 @@ const WORKSPACE_DESTINATIONS: Array<{
   { href: workspaceViewHref("biblioteca"), label: WORKSPACE_VIEW_LABELS.biblioteca, icon: Bookmark },
   { href: workspaceViewHref("stack"), label: WORKSPACE_VIEW_LABELS.stack, icon: Layers },
   { href: workspaceViewHref("decisioni"), label: WORKSPACE_VIEW_LABELS.decisioni, icon: BookOpen },
-  { href: workspaceViewHref("recenti"), label: WORKSPACE_VIEW_LABELS.recenti, icon: Clock3 },
-  { href: workspaceViewHref("segnale"), label: WORKSPACE_VIEW_LABELS.segnale, icon: Compass },
   { href: "/account/settings", label: "Impostazioni", icon: Settings },
 ];
 
@@ -280,11 +276,11 @@ export function GlobalCommandPalette({
               </CommandItem>
               <CommandItem
                 onSelect={() => {
-                  openPath("/archivio#stack-builder");
+                  openPath(workspaceViewHref("stack"));
                 }}
               >
                 <Workflow className="size-4" />
-                Apri la tua lista
+                Apri i tuoi stack
               </CommandItem>
               {WORKSPACE_DESTINATIONS.map((item) => {
                 const Icon = item.icon;
@@ -361,12 +357,12 @@ export function GlobalCommandPalette({
                   value={`lista ${tool.name}`}
                   onSelect={() => {
                     const added = addToStack(tool.slug);
-                    toast.success(added ? `${tool.name} aggiunto alla lista` : "Già nella lista");
+                    toast.success(added ? `${tool.name} aggiunto allo stack` : "Già nello stack");
                     playTooolvibesSound(added ? "success" : "update");
                     close();
                   }}
                 >
-                  Inserisci {tool.name} nella lista
+                  Inserisci {tool.name} nello stack
                 </CommandItem>
               ))}
             </CommandGroup>

@@ -200,17 +200,19 @@ export function AccountWorkspaceFrame({
             <p className="tv-app__nav-label">Scopri</p>
             <DiscoverLinks />
           </div>
-          <div className="tv-app__nav-group">
-            {WORKSPACE_SECONDARY_VIEWS.map((item) => (
-              <WorkspaceNavLink
-                key={item}
-                view={item}
-                currentView={view}
-                surface={resolvedSurface}
-                variant="secondary"
-              />
-            ))}
-          </div>
+          {WORKSPACE_SECONDARY_VIEWS.length > 0 ? (
+            <div className="tv-app__nav-group">
+              {WORKSPACE_SECONDARY_VIEWS.map((item) => (
+                <WorkspaceNavLink
+                  key={item}
+                  view={item}
+                  currentView={view}
+                  surface={resolvedSurface}
+                  variant="secondary"
+                />
+              ))}
+            </div>
+          ) : null}
         </nav>
         <div className="tv-app__aside-foot">
           <Link
@@ -258,13 +260,15 @@ export function AccountWorkspaceFrame({
                 </option>
               ))}
             </optgroup>
-            <optgroup label="Altro">
-              {WORKSPACE_SECONDARY_VIEWS.map((item) => (
-                <option key={item} value={workspaceViewHref(item)}>
-                  {WORKSPACE_VIEW_LABELS[item]}
-                </option>
-              ))}
-            </optgroup>
+            {WORKSPACE_SECONDARY_VIEWS.length > 0 ? (
+              <optgroup label="Altro">
+                {WORKSPACE_SECONDARY_VIEWS.map((item) => (
+                  <option key={item} value={workspaceViewHref(item)}>
+                    {WORKSPACE_VIEW_LABELS[item]}
+                  </option>
+                ))}
+              </optgroup>
+            ) : null}
             <optgroup label="Scopri">
               {WORKSPACE_DISCOVER_LINKS.map((item) => (
                 <option key={item.href} value={item.href}>

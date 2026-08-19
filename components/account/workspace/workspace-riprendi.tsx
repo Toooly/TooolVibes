@@ -1,30 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
 import { useAccount } from "@/components/account/account-provider";
-import { recommendWorkspaceTools } from "@/lib/account/personalization";
 import { setWorkspaceRevisit } from "@/lib/account/workspace-actions";
+import { formatRevisitLine } from "@/lib/account/workspace-lifecycle";
 import {
   activePersonalStacks,
   chooseResumeAction,
   deriveResurfaceSignals,
-  deriveWorkspaceActivity,
-  type DerivedActivityItem,
   type ResumeKind,
   type ResurfaceKind,
 } from "@/lib/account/workspace-pipeline";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
-import { fetchSignalHub } from "@/lib/signal-progression/client";
-import type { SignalProgressHub } from "@/lib/signal-progression/hub-contracts";
-import {
-  FOCUS_AREA_LABELS,
-  PRIMARY_GOAL_LABELS,
-} from "@/lib/signal-progression/profile-context";
-import { useSignalProgressUiEnabled } from "@/lib/signal-progression/release-context";
 
+import { RevisitWhenChips } from "./revisit-when-chips";
 import {
   emailLocalPart,
   initialsFromEmail,
@@ -44,21 +34,21 @@ const RESUME_COPY: Record<
   },
   review_decision: {
     title: "Rivedi questa decisione",
-    body: "L’avevi rimandata. Vale la pena riprenderla ora.",
-    href: workspaceViewHref("decisioni"),
-    action: "Apri le decisioni",
+    body: "L’avevi rimandata. È il momento di riprenderla.",
+    href: workspaceViewHref("biblioteca"),
+    action: "Apri i salvati",
   },
   close_decision: {
     title: "Chiudi la decisione",
-    body: "È tra i candidati ma non ha ancora un verdetto.",
-    href: workspaceViewHref("decisioni"),
-    action: "Chiudi la decisione",
+    body: "È candidato, ancora senza verdetto.",
+    href: workspaceViewHref("biblioteca"),
+    action: "Apri i salvati",
   },
   evaluate_saved: {
-    title: "Valuta questo candidato",
-    body: "Salvato, ancora da passare in rassegna.",
+    title: "Continua la valutazione",
+    body: "Salvato, ancora aperto.",
     href: workspaceViewHref("biblioteca"),
-    action: "Apri la biblioteca",
+    action: "Apri i salvati",
   },
 };
 
@@ -67,36 +57,7 @@ const RESURFACE_COPY: Record<Extract<ResurfaceKind, "top_without_verdict" | "def
   deferred_due: "Rimandata, da riprendere",
 };
 
-const ACTIVITY_COPY: Record<DerivedActivityItem["kind"], string> = {
-  saved: "Salvataggio",
-  compared: "Confronto",
-  decision: "Decisione",
-  stack: "Stack",
-  journal: "Nota",
-};
 
-function useSignalHubPreview() {
-  const enabled = useSignalProgressUiEnabled();
-  const [hub, setHub] = useState<SignalProgressHub | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    void fetchSignalHub().then((next) => {
-      if (!cancelled) setHub(next);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const focusArea = hub?.profileContext?.focusArea ?? null;
-  const primaryGoal = hub?.profileContext?.primaryGoal ?? null;
-  const focusLabel = focusArea ? FOCUS_AREA_LABELS[focusArea] : null;
-  const goalLabel = primaryGoal ? PRIMARY_GOAL_LABELS[primaryGoal] : null;
-  const showSignal = enabled && hub !== null && Boolean(hub.levelTitle || focusLabel);
-
-  return { hub, focusLabel, goalLabel, showSignal };
-}
 
 function isBlankWorkspace(state: WorkspaceStateV1) {
   const hasDecision = Object.values(state.toolStates).some((tool) =>
@@ -110,18 +71,7 @@ function isBlankWorkspace(state: WorkspaceStateV1) {
   );
 }
 
-function snoozeRevisit(slug: string) {
-  const next = new Date();
-  next.setTime(next.getTime() + 7 * 24 * 60 * 60 * 1000);
-  setWorkspaceRevisit(slug, next.toISOString());
-}
 
-function activityHref(item: DerivedActivityItem) {
-  if (item.kind === "compared") return "/compare";
-  if (item.kind === "saved") return workspaceViewHref("biblioteca");
-  if (item.kind === "stack") return workspaceViewHref("stack");
-  return workspaceViewHref("decisioni");
-}
 
 export function WorkspaceRiprendi({
   state,
@@ -130,17 +80,8 @@ export function WorkspaceRiprendi({
 }) {
   const account = useAccount();
   const catalog = usePublicToolCatalog();
-  const { hub, focusLabel, goalLabel, showSignal } = useSignalHubPreview();
   const resume = chooseResumeAction(state);
   const resurface = deriveResurfaceSignals(state);
-  const recs = recommendWorkspaceTools({
-    catalog,
-    workspace: state,
-    focusArea: hub?.profileContext?.focusArea ?? null,
-    primaryGoal: hub?.profileContext?.primaryGoal ?? null,
-    limit: 3,
-  });
-  const activity = deriveWorkspaceActivity(state).slice(0, 5);
   const stacks = activePersonalStacks(state);
   const email = account.user?.email ?? null;
   const localPart = emailLocalPart(email);
@@ -155,9 +96,11 @@ export function WorkspaceRiprendi({
   const showResume = resume.kind !== "empty";
   const showCompare = state.compare.slugs.length >= 2 && resume.kind !== "continue_compare";
   const showPending = pending.length > 0;
-  const showActivity = activity.length > 0;
   const showStacks = stacks.length > 0;
-  const showRecs = recs.length > 0;
+  const resumeRevisit =
+    resume.kind === "review_decision" && resume.slug
+      ? formatRevisitLine(state.toolStates[resume.slug]?.revisitAt ?? null)
+      : null;
 
   return (
     <div className="tv-home">
@@ -195,7 +138,7 @@ export function WorkspaceRiprendi({
           </h2>
           <p className="tv-home-copy">
             {resume.slug
-              ? `${RESUME_COPY[resume.kind].body} ${toolName(catalog, resume.slug)}.`
+              ? `${RESUME_COPY[resume.kind].body} ${toolName(catalog, resume.slug)}${resumeRevisit ? ` · ${resumeRevisit}` : ""}.`
               : RESUME_COPY[resume.kind].body}
           </p>
           <div className="tv-home-actions">
@@ -203,20 +146,16 @@ export function WorkspaceRiprendi({
               {RESUME_COPY[resume.kind].action}
             </Link>
             {resume.kind === "review_decision" && resume.slug ? (
-              <>
-                <button
-                  type="button"
-                  className="tv-home-textbtn"
-                  onClick={() => snoozeRevisit(resume.slug as string)}
-                >
-                  Posticipa
-                </button>
-                <Link className="tv-home-textbtn" href={workspaceViewHref("decisioni")}>
-                  Cambia esito
-                </Link>
-              </>
+              <Link className="tv-home-textbtn" href={workspaceViewHref("decisioni")}>
+                Cambia esito
+              </Link>
             ) : null}
           </div>
+          {resume.kind === "review_decision" && resume.slug ? (
+            <RevisitWhenChips
+              onSelect={(revisitAt) => setWorkspaceRevisit(resume.slug as string, revisitAt)}
+            />
+          ) : null}
         </section>
       ) : null}
 
@@ -228,7 +167,7 @@ export function WorkspaceRiprendi({
           <ul className="tv-home-list">
             {pending.map((item) => (
               <li key={`${item.kind}-${item.slug}`}>
-                <Link className="tv-home-row" href={workspaceViewHref("decisioni")}>
+                <Link className="tv-home-row" href={workspaceViewHref("biblioteca")}>
                   <span>{toolName(catalog, item.slug)}</span>
                   <span className="tv-home-row__meta">{RESURFACE_COPY[item.kind]}</span>
                 </Link>
@@ -256,27 +195,6 @@ export function WorkspaceRiprendi({
         </section>
       ) : null}
 
-      {!blank && showActivity ? (
-        <section className="tv-home-section" aria-labelledby="tv-home-activity-title">
-          <h2 id="tv-home-activity-title" className="tv-home-kicker">
-            Recenti
-          </h2>
-          <ul className="tv-home-list">
-            {activity.map((item) => (
-              <li key={`${item.kind}-${item.slug ?? item.stackId ?? item.at}`}>
-                <Link className="tv-home-row" href={activityHref(item)}>
-                  <span>
-                    {ACTIVITY_COPY[item.kind]}
-                    {item.slug ? ` · ${toolName(catalog, item.slug)}` : ""}
-                  </span>
-                  <span className="tv-home-row__meta">{item.at.slice(0, 10)}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
       {!blank && showStacks ? (
         <section className="tv-home-section" aria-labelledby="tv-home-stacks-title">
           <h2 id="tv-home-stacks-title" className="tv-home-kicker">
@@ -295,45 +213,6 @@ export function WorkspaceRiprendi({
         </section>
       ) : null}
 
-      {!blank && showRecs ? (
-        <section className="tv-home-section" aria-labelledby="tv-home-recs-title">
-          <h2 id="tv-home-recs-title" className="tv-home-kicker">
-            Per te
-          </h2>
-          <ul className="tv-home-list">
-            {recs.map((item) => (
-              <li key={item.slug}>
-                <Link className="tv-home-row" href={`/toools/${item.slug}`}>
-                  <span>{item.name}</span>
-                  <span className="tv-home-row__meta">{item.detail}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      {!blank && showSignal && hub ? (
-        <section className="tv-home-section" aria-labelledby="tv-home-signal-title">
-          <h2 id="tv-home-signal-title" className="tv-home-kicker">
-            Segnale
-          </h2>
-          <p className="tv-home-title">{hub.levelTitle}</p>
-          <p className="tv-home-copy">
-            {[
-              focusLabel ? `Focus: ${focusLabel}` : null,
-              goalLabel ? `Obiettivo: ${goalLabel}` : null,
-            ]
-              .filter(Boolean)
-              .join(" · ") || hub.explanation}
-          </p>
-          <div className="tv-home-actions">
-            <Link className="account-btn-secondary" href={workspaceViewHref("segnale")}>
-              Apri il segnale
-            </Link>
-          </div>
-        </section>
-      ) : null}
     </div>
   );
 }

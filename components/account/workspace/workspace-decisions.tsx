@@ -4,12 +4,14 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import {
+  deferWorkspaceTool,
   setWorkspaceDecision,
   setWorkspaceNote,
   setWorkspacePinned,
   setWorkspaceRevisit,
   setWorkspaceUseCase,
 } from "@/lib/account/workspace-actions";
+import { OUTCOME_STATE_LABELS, formatRevisitLine } from "@/lib/account/workspace-lifecycle";
 import {
   deriveResurfaceSignals,
   pipelineColumnForTool,
@@ -21,6 +23,7 @@ import type {
   WorkspaceToolState,
 } from "@/lib/discovery/types";
 
+import { RevisitWhenChips } from "./revisit-when-chips";
 import { PIPELINE_LABELS, formatWorkspaceDate } from "./workspace-model";
 import { toolName } from "./workspace-tool-name";
 
@@ -28,9 +31,9 @@ const OUTCOME_ACTIONS: Array<{
   outcome: WorkspaceDecisionOutcome | null;
   label: string;
 }> = [
-  { outcome: "selected", label: "Scelto" },
-  { outcome: "rejected", label: "Scartato" },
-  { outcome: "deferred", label: "Rimandato" },
+  { outcome: "selected", label: OUTCOME_STATE_LABELS.selected },
+  { outcome: "rejected", label: OUTCOME_STATE_LABELS.rejected },
+  { outcome: "deferred", label: OUTCOME_STATE_LABELS.deferred },
   { outcome: null, label: "Riapri" },
 ];
 
@@ -76,7 +79,7 @@ export function WorkspaceDecisions({ state }: { state: WorkspaceStateV1 }) {
           Ancora nessuna traccia
         </h2>
         <p className="tv-journal-empty__copy">
-          Quando scegli, scarti o rimandi, qui resta il perché.
+          Decisioni è il diario dei Salvati: stesso inventario, solo i verdetti e il perché.
         </p>
         <Link className="account-btn-primary" href="/archivio">
           Salva il primo tool
@@ -116,7 +119,7 @@ export function WorkspaceDecisions({ state }: { state: WorkspaceStateV1 }) {
                   {outcomeLabel ? <span>{outcomeLabel}</span> : null}
                   {tool?.useCase ? <span>{tool.useCase}</span> : null}
                   {tool?.pinned ? <span>Fissato</span> : null}
-                  {revisit ? <span>Rivedi {revisit}</span> : null}
+                  {revisit ? <span>Rivedi: {revisit}</span> : null}
                   {dueSlugs.has(slug) ? (
                     <span className="tv-journal-mark">Da riprendere</span>
                   ) : null}
@@ -154,7 +157,14 @@ function DecisionEditor({
   const alternatives = tool?.alternatives ?? [];
   const currentOutcome = tool?.decision?.outcome ?? null;
 
+  const [pendingDefer, setPendingDefer] = useState(currentOutcome === "deferred");
+
   const record = (outcome: WorkspaceDecisionOutcome | null) => {
+    if (outcome === "deferred") {
+      setPendingDefer(true);
+      return;
+    }
+    setPendingDefer(false);
     setWorkspaceDecision(slug, outcome);
   };
 
@@ -192,6 +202,21 @@ function DecisionEditor({
             </button>
           ))}
         </div>
+        {pendingDefer || currentOutcome === "deferred" ? (
+          <div className="mt-3">
+            <p className="tv-journal-block__label">Quando rivedere</p>
+            <RevisitWhenChips
+              onSelect={(revisitAt) => {
+                setPendingDefer(false);
+                deferWorkspaceTool(slug, revisitAt);
+                setRevisit(revisitAt.slice(0, 10));
+              }}
+            />
+            {formatRevisitLine(tool?.revisitAt) ? (
+              <p className="tv-journal-sheet__alts">{formatRevisitLine(tool?.revisitAt)}</p>
+            ) : null}
+          </div>
+        ) : null}
       </section>
 
       <form

@@ -178,7 +178,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
       screen.getByRole("group", { name: "Motivo del salvataggio" }),
     ).toBeTruthy();
     expect(
-      screen.getByRole("button", { name: "Prima scelta" }),
+      screen.getByRole("button", { name: "Candidato" }),
     ).toBeTruthy();
   });
 
@@ -280,10 +280,10 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     render(<MobileShortlistBoard tools={TOOLS} />);
     openSheetFor("Alpha");
 
-    fireEvent.click(screen.getByRole("button", { name: "Prima scelta" }));
+    fireEvent.click(screen.getByRole("button", { name: "Candidato" }));
 
     expect(readPersistedWorkspace().toolStates.alpha.stage).toBe("top");
-    expect(screen.getAllByText("Preferito").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Candidato").length).toBeGreaterThan(0);
   });
 
   it("records a decision outcome and reopens it", () => {

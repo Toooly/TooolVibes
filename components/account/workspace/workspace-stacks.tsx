@@ -5,11 +5,14 @@ import { useMemo, useState } from "react";
 
 import {
   addToolToPersonalStack,
+  adoptLegacyListaStack,
   archivePersonalStack,
   createPersonalStack,
   removeToolFromPersonalStack,
   renamePersonalStack,
+  restorePersonalStack,
 } from "@/lib/account/workspace-actions";
+import { leftoverLegacyStackSlugs } from "@/lib/account/workspace-stack-target";
 import { activePersonalStacks } from "@/lib/account/workspace-pipeline";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
@@ -41,6 +44,8 @@ function countLabel(count: number) {
 export function WorkspaceStacks({ state }: { state: WorkspaceStateV1 }) {
   const catalog = usePublicToolCatalog();
   const stacks = activePersonalStacks(state);
+  const archived = state.personalStacks.filter((stack) => Boolean(stack.archivedAt));
+  const leftover = leftoverLegacyStackSlugs(state);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [openId, setOpenId] = useState<string | null>(stacks[0]?.id ?? null);
@@ -90,9 +95,46 @@ export function WorkspaceStacks({ state }: { state: WorkspaceStateV1 }) {
         </button>
       </form>
 
+      {leftover.length > 0 ? (
+        <section className="tv-stacks-empty">
+          <h2 className="tv-stacks-empty__title">Lista precedente</h2>
+          <p className="tv-stacks-empty__copy">
+            Hai {leftover.length === 1 ? "1 tool" : `${leftover.length} tool`} nella vecchia lista.
+            Portali nello stack personale.
+          </p>
+          <button type="button" className="account-btn-secondary" onClick={() => adoptLegacyListaStack()}>
+            Porta nello stack
+          </button>
+        </section>
+      ) : null}
+
+      {archived.length > 0 ? (
+        <section className="tv-stacks-empty" aria-labelledby="tv-stacks-archived">
+          <h2 id="tv-stacks-archived" className="tv-stacks-empty__title">
+            Stack archiviati
+          </h2>
+          <ul className="tv-stacks-tool-list">
+            {archived.map((stack) => (
+              <li key={stack.id} className="tv-stacks-tool">
+                <span>{stack.name}</span>
+                <button
+                  type="button"
+                  className="tv-stacks-textbtn"
+                  onClick={() => restorePersonalStack(stack.id)}
+                >
+                  Ripristina
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {stacks.length === 0 ? (
         <section className="tv-stacks-empty">
-          <h2 className="tv-stacks-empty__title">Nessuno stack ancora</h2>
+          <h2 className="tv-stacks-empty__title">
+            {archived.length > 0 ? "Nessuno stack attivo" : "Nessuno stack ancora"}
+          </h2>
           <p className="tv-stacks-empty__copy">
             Uno stack raggruppa i tool salvati per un lavoro reale. Non è una
             raccolta da mostrare: è un banco di lavoro.

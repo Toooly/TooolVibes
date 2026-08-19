@@ -25,7 +25,7 @@ export const WORKSPACE_PRIMARY_VIEWS = [
   "decisioni",
 ] as const;
 
-export const WORKSPACE_SECONDARY_VIEWS = ["recenti", "segnale"] as const;
+export const WORKSPACE_SECONDARY_VIEWS = [] as const;
 
 export const WORKSPACE_DISCOVER_LINKS = [
   { href: "/archivio", label: "Catalogo" },
@@ -41,6 +41,13 @@ export const PIPELINE_LABELS = {
   scartato: "Scartato",
   rimandato: "Rimandato",
 } as const;
+
+export {
+  OUTCOME_ACTION_LABELS,
+  OUTCOME_STATE_LABELS,
+  STAGE_LABELS,
+  formatRevisitLine,
+} from "@/lib/account/workspace-lifecycle";
 
 const LEGACY_WORKSPACE_VIEWS: Record<string, WorkspaceView> = {
   attivita: "recenti",

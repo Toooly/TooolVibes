@@ -17,6 +17,7 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 }));
 
 vi.mock("@/lib/account/workspace-actions", () => ({
+  deferWorkspaceTool: vi.fn(),
   setWorkspaceDecision: vi.fn(),
   setWorkspaceNote: vi.fn(),
   setWorkspacePinned: vi.fn(),
