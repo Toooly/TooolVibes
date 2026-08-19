@@ -90,6 +90,7 @@ export type WorkspaceAction =
       at: string;
     }
   | { type: "stacks/archive"; id: string; at: string }
+  | { type: "stacks/unarchive"; id: string; at: string }
   | { type: "stacks/add"; id: string; slug: string; at: string }
   | { type: "stacks/remove"; id: string; slug: string; at: string }
   | { type: "stacks/reorder"; id: string; slugs: string[]; at: string }

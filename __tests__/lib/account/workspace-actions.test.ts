@@ -2,10 +2,14 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import {
   createPersonalStackId,
+  deferWorkspaceTool,
+  restorePersonalStack,
+  setWorkspaceDecision,
   setWorkspacePinned,
   toggleWorkspaceCompare,
   toggleWorkspaceSaved,
 } from "@/lib/account/workspace-actions";
+import { archivePersonalStack, createPersonalStack } from "@/lib/account/workspace-actions";
 import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
@@ -51,5 +55,29 @@ describe("workspace action helpers", () => {
 
     toggleWorkspaceCompare("cursor");
     expect(getCanonicalToolWorkspaceState().compare.slugs).not.toContain("cursor");
+  });
+
+  it("defers a tool with revisitAt and clears it when the outcome changes", () => {
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.withSaved);
+    deferWorkspaceTool("cursor", "2026-08-08T00:00:00.000Z");
+    const deferred = getCanonicalToolWorkspaceState().toolStates.cursor;
+    expect(deferred?.decision?.outcome).toBe("deferred");
+    expect(deferred?.revisitAt).toBe("2026-08-08T00:00:00.000Z");
+
+    setWorkspaceDecision("cursor", "selected");
+    const selected = getCanonicalToolWorkspaceState().toolStates.cursor;
+    expect(selected?.decision?.outcome).toBe("selected");
+    expect(selected?.revisitAt).toBeNull();
+  });
+
+  it("restores an archived personal stack", () => {
+    activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
+    createPersonalStack("AI Coding");
+    const id = getCanonicalToolWorkspaceState().personalStacks[0]?.id;
+    expect(id).toBeTruthy();
+    archivePersonalStack(id as string);
+    expect(getCanonicalToolWorkspaceState().personalStacks[0]?.archivedAt).toBeTruthy();
+    restorePersonalStack(id as string);
+    expect(getCanonicalToolWorkspaceState().personalStacks[0]?.archivedAt).toBeNull();
   });
 });

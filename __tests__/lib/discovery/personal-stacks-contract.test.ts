@@ -106,3 +106,29 @@ describe("personal stacks contract", () => {
     });
   });
 });
+
+describe("personal stacks unarchive", () => {
+  it("unarchives a stack by clearing archivedAt", () => {
+    let state = reduceWorkspaceState(createEmptyWorkspaceState(), {
+      type: "stacks/create",
+      id: "ai-coding",
+      name: "AI Coding",
+      at: T0,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "stacks/archive",
+      id: "ai-coding",
+      at: T1,
+    });
+    expect(state.personalStacks[0]?.archivedAt).toBe(T1);
+
+    state = reduceWorkspaceState(state, {
+      type: "stacks/unarchive",
+      id: "ai-coding",
+      at: T1,
+    });
+    expect(state.personalStacks[0]?.archivedAt).toBeNull();
+    expect(state.personalStacks[0]?.updatedAt).toBe(T1);
+    expect(workspaceStateV1Schema.safeParse(state).success).toBe(true);
+  });
+});

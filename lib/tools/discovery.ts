@@ -183,7 +183,7 @@ export function getToolCautions(tool: ToolRecord) {
 export function getShortlistStageMeta(stage: ShortlistStage) {
   if (stage === "top") {
     return {
-      label: "Prima scelta",
+      label: "Candidato",
       tone: "var(--accent-strong)",
       background: "linear-gradient(180deg, rgba(239,232,255,0.96), rgba(230,221,255,0.88))",
     };
@@ -191,7 +191,7 @@ export function getShortlistStageMeta(stage: ShortlistStage) {
 
   if (stage === "review") {
     return {
-      label: "Da rivedere",
+      label: "Da valutare",
       tone: "var(--muted-strong)",
       background: "linear-gradient(180deg, rgba(255,248,239,0.96), rgba(249,239,212,0.9))",
     };

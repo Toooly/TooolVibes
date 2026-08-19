@@ -25,6 +25,7 @@ export type PipelineItem = {
   pinned: boolean;
   updatedAt: string | null;
   note: string | null;
+  revisitAt: string | null;
   stackNames: string[];
 };
 
@@ -32,6 +33,7 @@ export type ResurfaceKind =
   | "stale_saved"
   | "open_compare"
   | "top_without_verdict"
+  | "review_without_verdict"
   | "deferred_due";
 
 export type ResurfaceSignal = {
@@ -102,6 +104,7 @@ export function listPipelineItems(state: WorkspaceStateV1): PipelineItem[] {
       pinned: tool?.pinned === true,
       updatedAt: tool?.updatedAt ?? tool?.decision?.updatedAt ?? state.saved.updatedAt,
       note,
+      revisitAt: tool?.revisitAt ?? null,
       stackNames: stacks
         .filter((stack) => stack.slugs.includes(slug))
         .map((stack) => stack.name),
@@ -148,6 +151,14 @@ export function deriveResurfaceSignals(
       });
     }
 
+    if (tool?.stage === "review" && !outcome) {
+      signals.push({
+        kind: "review_without_verdict",
+        slug,
+        at: updatedAt,
+      });
+    }
+
     if (outcome === "deferred") {
       const revisitMs = timestampMs(tool?.revisitAt);
       const decidedMs = timestampMs(tool?.decision?.updatedAt ?? null);
@@ -168,11 +179,16 @@ export function deriveResurfaceSignals(
   return signals;
 }
 
+function compareStillOpen(state: WorkspaceStateV1) {
+  if (state.compare.slugs.length < 2) return false;
+  return state.compare.slugs.some((slug) => outcomeOf(state.toolStates[slug]) === null);
+}
+
 export function chooseResumeAction(
   state: WorkspaceStateV1,
   nowIso = new Date().toISOString(),
 ): ResumeAction {
-  if (state.compare.slugs.length >= 2) {
+  if (compareStillOpen(state)) {
     return { kind: "continue_compare", slug: state.compare.slugs[0] ?? null };
   }
 
@@ -187,13 +203,22 @@ export function chooseResumeAction(
     return { kind: "close_decision", slug: top.slug };
   }
 
+  const reviewing = resurface.find((item) => item.kind === "review_without_verdict");
+  if (reviewing) {
+    return { kind: "evaluate_saved", slug: reviewing.slug };
+  }
+
   const stale = resurface.find((item) => item.kind === "stale_saved");
   if (stale) {
     return { kind: "evaluate_saved", slug: stale.slug };
   }
 
-  if (state.saved.slugs.length > 0) {
-    return { kind: "evaluate_saved", slug: state.saved.slugs[0] ?? null };
+  const unfinished = state.saved.slugs.find((slug) => {
+    const outcome = outcomeOf(state.toolStates[slug]);
+    return outcome === null;
+  });
+  if (unfinished) {
+    return { kind: "evaluate_saved", slug: unfinished };
   }
 
   return { kind: "empty", slug: null };

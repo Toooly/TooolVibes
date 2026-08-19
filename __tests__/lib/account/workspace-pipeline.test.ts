@@ -183,3 +183,110 @@ describe("derivePersonalRecords", () => {
     expect(derivePersonalRecords(createEmptyWorkspaceState()).map((item) => item.id)).toEqual([]);
   });
 });
+
+describe("decision loop resume", () => {
+  it("prefers an open compare before deferred or candidate work", () => {
+    expect(chooseResumeAction(workspaceTestFixtures.withCompare, NOW)).toEqual({
+      kind: "continue_compare",
+      slug: "cursor",
+    });
+  });
+
+  it("resurfaces a due deferred decision after compare is clear", () => {
+    const state = reduceWorkspaceState(
+      reduceWorkspaceState(createEmptyWorkspaceState(), {
+        type: "saved/set",
+        slug: "v0",
+        saved: true,
+        at: "2026-04-01T00:00:00.000Z",
+      }),
+      {
+        type: "tool/decision",
+        slug: "v0",
+        outcome: "deferred",
+        at: "2026-04-01T00:00:00.000Z",
+      },
+    );
+    const withRevisit = reduceWorkspaceState(state, {
+      type: "tool/revisit",
+      slug: "v0",
+      revisitAt: "2026-07-01T00:00:00.000Z",
+      at: "2026-04-01T00:00:00.000Z",
+    });
+    expect(chooseResumeAction(withRevisit, NOW)).toEqual({
+      kind: "review_decision",
+      slug: "v0",
+    });
+  });
+
+  it("exposes revisitAt on pipeline items", () => {
+    const state = reduceWorkspaceState(
+      reduceWorkspaceState(createEmptyWorkspaceState(), {
+        type: "saved/set",
+        slug: "cursor",
+        saved: true,
+        at: NOW,
+      }),
+      {
+        type: "tool/revisit",
+        slug: "cursor",
+        revisitAt: "2026-08-08T00:00:00.000Z",
+        at: NOW,
+      },
+    );
+    expect(listPipelineItems(state)[0]?.revisitAt).toBe("2026-08-08T00:00:00.000Z");
+  });
+
+  it("does not use a decided first save as fallback", () => {
+    let state = reduceWorkspaceState(createEmptyWorkspaceState(), {
+      type: "saved/set",
+      slug: "cursor",
+      saved: true,
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "saved/set",
+      slug: "v0",
+      saved: true,
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "tool/decision",
+      slug: "cursor",
+      outcome: "selected",
+      at: NOW,
+    });
+    expect(chooseResumeAction(state, NOW)).toEqual({
+      kind: "evaluate_saved",
+      slug: "v0",
+    });
+  });
+
+  it("treats review without verdict as unfinished evaluation", () => {
+    let state = reduceWorkspaceState(createEmptyWorkspaceState(), {
+      type: "saved/set",
+      slug: "cursor",
+      saved: true,
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "tool/stage",
+      slug: "cursor",
+      stage: "review",
+      at: NOW,
+    });
+    expect(deriveResurfaceSignals(state, NOW).some((item) => item.kind === "review_without_verdict")).toBe(true);
+    expect(chooseResumeAction(state, NOW)).toEqual({
+      kind: "evaluate_saved",
+      slug: "cursor",
+    });
+  });
+});
+
+describe("finished compare resume", () => {
+  it("does not keep a finished compare as the resume action", () => {
+    expect(chooseResumeAction(workspaceTestFixtures.withDecisions, NOW).kind).not.toBe(
+      "continue_compare",
+    );
+  });
+});

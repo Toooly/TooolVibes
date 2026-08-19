@@ -27,6 +27,12 @@ import type {
   WorkspaceStateV1,
   WorkspaceToolState,
 } from "@/lib/discovery/types";
+import {
+  reduceAddToWorkingPersonalStack,
+  reduceRemoveFromWorkingPersonalStack,
+  reduceReorderWorkingPersonalStack,
+  workingPersonalStackSlugs,
+} from "@/lib/account/workspace-stack-target";
 
 export { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 export { MIN_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
@@ -35,6 +41,7 @@ export type ToolWorkspaceState = {
   savedSlugs: string[];
   compareSlugs: string[];
   stackSlugs: string[];
+  workingStackSlugs: string[];
   selectedSlug: string | null;
   isCommandOpen: boolean;
   setSelectedSlug: (slug: string | null) => void;
@@ -107,10 +114,17 @@ function canonicalStatesMatch(
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
+function projectWorkingStackView(state: WorkspaceStateV1) {
+  return {
+    ...projectWorkspaceCollections(state),
+    workingStackSlugs: workingPersonalStackSlugs(state),
+  };
+}
+
 function renderWorkspaceStateWithoutPersist(state: WorkspaceStateV1) {
   suppressPersistWrite = true;
   try {
-    useToolWorkspaceStore.setState(projectWorkspaceCollections(state));
+    useToolWorkspaceStore.setState(projectWorkingStackView(state));
   } finally {
     suppressPersistWrite = false;
   }
@@ -447,6 +461,7 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
       savedSlugs: [],
       compareSlugs: [],
       stackSlugs: [],
+      workingStackSlugs: [],
       selectedSlug: null,
       isCommandOpen: false,
       setSelectedSlug: (slug) => set({ selectedSlug: slug }),
@@ -478,40 +493,35 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
       },
       addToStack: (slug) => {
         const current = resolveCanonicalWorkspaceState(get());
-
-        if (current.stack.slugs.includes(slug)) {
+        if (workingPersonalStackSlugs(current).includes(slug)) {
           return false;
         }
 
-        const next = reduceCollections(get(), {
-          type: "stack/add",
-          slug,
-          at: nowIso(),
-        });
-        set(projectWorkspaceCollections(next));
-        return next.stack.slugs.includes(slug);
+        const next = reduceAddToWorkingPersonalStack(current, slug, nowIso());
+        if (!canonicalStatesMatch(current, next)) {
+          persistCanonicalWorkspaceState(next);
+          dispatchWorkspaceChange({ source: "local", scope: "workspace" });
+        }
+        set(projectWorkingStackView(next));
+        return workingPersonalStackSlugs(next).includes(slug);
       },
       removeFromStack: (slug) => {
-        set(
-          projectWorkspaceCollections(
-            reduceCollections(get(), {
-              type: "stack/remove",
-              slug,
-              at: nowIso(),
-            }),
-          ),
-        );
+        const current = resolveCanonicalWorkspaceState(get());
+        const next = reduceRemoveFromWorkingPersonalStack(current, slug, nowIso());
+        if (!canonicalStatesMatch(current, next)) {
+          persistCanonicalWorkspaceState(next);
+          dispatchWorkspaceChange({ source: "local", scope: "workspace" });
+        }
+        set(projectWorkingStackView(next));
       },
       reorderStack: (slugs) => {
-        set(
-          projectWorkspaceCollections(
-            reduceCollections(get(), {
-              type: "stack/reorder",
-              slugs,
-              at: nowIso(),
-            }),
-          ),
-        );
+        const current = resolveCanonicalWorkspaceState(get());
+        const next = reduceReorderWorkingPersonalStack(current, slugs, nowIso());
+        if (!canonicalStatesMatch(current, next)) {
+          persistCanonicalWorkspaceState(next);
+          dispatchWorkspaceChange({ source: "local", scope: "workspace" });
+        }
+        set(projectWorkingStackView(next));
       },
       clearCompare: () => {
         set(

@@ -52,6 +52,7 @@ export type DiscoveryLocalSnapshot = {
    * timestamp kept so the reopen stays versioned across devices).
    */
   decisionUpdatedAts?: Record<string, string>;
+  decisionRevisitAts?: Record<string, string>;
   toolStateMeta: Record<string, string>;
   compareMeta: CompareMeta;
 };
@@ -209,6 +210,11 @@ export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
       state.decision ? [[slug, state.decision.updatedAt] as const] : [],
     ),
   );
+  const decisionRevisitAts = Object.fromEntries(
+    Object.entries(workspace.toolStates).flatMap(([slug, state]) =>
+      state.revisitAt ? [[slug, state.revisitAt] as const] : [],
+    ),
+  );
 
   return {
     visitedTools: getVisitedTools(),
@@ -219,6 +225,7 @@ export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
     decisionMemories,
     decisionOutcomes,
     decisionUpdatedAts,
+    decisionRevisitAts,
     toolStateMeta,
     compareMeta: { updated_at: workspace.compare.updatedAt },
   };
@@ -329,7 +336,18 @@ export function setToolDecisionOutcome(
   slug: string,
   outcome: WorkspaceDecisionOutcome,
 ) {
-  commitAction({ type: "tool/decision", slug, outcome, at: nowIso() });
+  const at = nowIso();
+  commitAction({ type: "tool/decision", slug, outcome, at });
+  if (outcome !== "deferred") {
+    commitAction({ type: "tool/revisit", slug, revisitAt: null, at });
+  }
+  return getToolDecisionOutcome(slug);
+}
+
+export function deferToolDecision(slug: string, revisitAt: string) {
+  const at = nowIso();
+  commitAction({ type: "tool/decision", slug, outcome: "deferred", at });
+  commitAction({ type: "tool/revisit", slug, revisitAt, at });
   return getToolDecisionOutcome(slug);
 }
 
@@ -338,7 +356,9 @@ export function setToolDecisionOutcome(
  * decision record, so sync merges honour the reopen across devices.
  */
 export function reopenToolDecision(slug: string) {
-  commitAction({ type: "tool/decision", slug, outcome: null, at: nowIso() });
+  const at = nowIso();
+  commitAction({ type: "tool/decision", slug, outcome: null, at });
+  commitAction({ type: "tool/revisit", slug, revisitAt: null, at });
   return getToolDecisionOutcome(slug);
 }
 

@@ -7,6 +7,11 @@ import {
 } from "@/lib/stores/tool-workspace-store";
 import type { SaveReason, ShortlistStage } from "@/lib/types/tool";
 
+import {
+  reduceAddToWorkingPersonalStack,
+  reduceAdoptLegacyListaStack,
+} from "./workspace-stack-target";
+
 function nowIso() {
   return new Date().toISOString();
 }
@@ -68,6 +73,30 @@ export function archivePersonalStack(id: string) {
   return applyWorkspaceAction({ type: "stacks/archive", id, at: nowIso() });
 }
 
+export function restorePersonalStack(id: string) {
+  return applyWorkspaceAction({ type: "stacks/unarchive", id, at: nowIso() });
+}
+
+export function adoptLegacyListaStack() {
+  const current = getCanonicalToolWorkspaceState();
+  const next = reduceAdoptLegacyListaStack(current, nowIso());
+  if (JSON.stringify(current) !== JSON.stringify(next)) {
+    commitCanonicalToolWorkspaceState(next);
+    dispatchWorkspaceChange({ source: "local", scope: "workspace" });
+  }
+  return next;
+}
+
+export function addToolToWorkingPersonalStack(slug: string) {
+  const current = getCanonicalToolWorkspaceState();
+  const next = reduceAddToWorkingPersonalStack(current, slug, nowIso());
+  if (JSON.stringify(current) !== JSON.stringify(next)) {
+    commitCanonicalToolWorkspaceState(next);
+    dispatchWorkspaceChange({ source: "local", scope: "workspace" });
+  }
+  return next;
+}
+
 export function addToolToPersonalStack(id: string, slug: string) {
   return applyWorkspaceAction({ type: "stacks/add", id, slug, at: nowIso() });
 }
@@ -83,8 +112,36 @@ export function setWorkspaceStage(slug: string, stage: ShortlistStage) {
 export function setWorkspaceDecision(
   slug: string,
   outcome: WorkspaceDecisionOutcome | null,
+  alternatives?: string[],
 ) {
-  return applyWorkspaceAction({ type: "tool/decision", slug, outcome, at: nowIso() });
+  const at = nowIso();
+  const next = applyWorkspaceAction({
+    type: "tool/decision",
+    slug,
+    outcome,
+    at,
+    ...(alternatives !== undefined ? { alternatives } : {}),
+  });
+  if (outcome !== "deferred") {
+    return applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt: null, at });
+  }
+  return next;
+}
+
+export function deferWorkspaceTool(
+  slug: string,
+  revisitAt: string,
+  alternatives?: string[],
+) {
+  const at = nowIso();
+  applyWorkspaceAction({
+    type: "tool/decision",
+    slug,
+    outcome: "deferred",
+    at,
+    ...(alternatives !== undefined ? { alternatives } : {}),
+  });
+  return applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt, at });
 }
 
 export function setWorkspaceUseCase(slug: string, useCase: string | null) {

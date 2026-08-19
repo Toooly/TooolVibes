@@ -834,6 +834,23 @@ export function reduceWorkspaceState(
     });
   }
 
+  if (action.type === "stacks/unarchive") {
+    const id = normalizeSlug(action.id);
+    const current = id
+      ? state.personalStacks.find((stack) => stack.id === id)
+      : undefined;
+
+    if (!id || !current || !current.archivedAt) {
+      return state;
+    }
+
+    return replacePersonalStack(state, {
+      ...current,
+      archivedAt: null,
+      updatedAt: at,
+    });
+  }
+
   if (action.type === "stacks/reorder") {
     const id = normalizeSlug(action.id);
     const current = id
