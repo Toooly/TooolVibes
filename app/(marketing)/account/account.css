@@ -779,7 +779,7 @@ body[data-account-surface] .mobile-top-bar {
   display: inline-flex;
   align-items: center;
   font-family: var(--tv-font-display);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 650;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -805,7 +805,7 @@ body[data-account-surface] .mobile-top-bar {
 
 .tv-app__nav-label {
   margin: 0 0 0.4rem;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 650;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -876,7 +876,7 @@ body[data-account-surface] .mobile-top-bar {
   justify-content: center;
   border: 1px solid var(--tv-border-default);
   border-radius: 999px;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--tv-ink-primary);
@@ -884,7 +884,7 @@ body[data-account-surface] .mobile-top-bar {
 
 .tv-app__sync {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   line-height: 1.4;
   color: var(--tv-ink-muted-aa);
 }
@@ -1085,7 +1085,7 @@ body[data-account-surface] .mobile-top-bar {
   border: 1px solid var(--tv-border-default);
   border-radius: 999px;
   color: var(--tv-ink-primary);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -1125,7 +1125,7 @@ body[data-account-surface] .mobile-top-bar {
 .tv-lib-kicker {
   margin: 0;
   color: var(--tv-ink-muted-aa);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 650;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1558,7 +1558,7 @@ body[data-account-surface] .mobile-top-bar {
 }
 
 .tv-journal-mark {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -1573,7 +1573,7 @@ body[data-account-surface] .mobile-top-bar {
 .tv-journal-block__label,
 .tv-settings-kicker {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--tv-ink-secondary);
