@@ -42,26 +42,78 @@ export function AccountSettingsPage() {
     return <AuthPage />;
   }
 
+  const email = account.user?.email ?? null;
+  const showRecovery =
+    account.hasQuarantinedWorkspace || Boolean(account.authMessage);
+
   return (
     <AccountWorkspaceFrame surface="settings">
-      <div className="tv-space">
+      <div className="tv-settings">
         <header className="tv-app__pagehead">
           <h1 className="tv-app__page-title">Impostazioni</h1>
           <p className="tv-app__page-copy">
             Preferenze e contesto del tuo spazio. Il volume del segnale si regola qui.
           </p>
         </header>
-        <PersonalizationSettings />
-        <SignalSettings />
-        <AccountRecoverySection account={account} />
-        <AccountSubmissionsSection
-          status={account.status}
-          submissions={submissions.submissions}
-          isLoading={submissions.isLoading}
-          totalSubmissions={submissions.totalSubmissions}
-          error={submissions.error}
-          onRetry={submissions.reload}
-        />
+
+        <section className="tv-settings-section" aria-labelledby="settings-profile">
+          <h2 id="settings-profile" className="tv-settings-heading">
+            Profilo
+          </h2>
+          {email ? (
+            <p className="tv-settings-email">
+              <span className="tv-settings-kicker">Email</span>
+              <span>{email}</span>
+            </p>
+          ) : null}
+          <PersonalizationSettings />
+        </section>
+
+        <section className="tv-settings-section" aria-labelledby="settings-signal">
+          <h2 id="settings-signal" className="tv-settings-heading">
+            Segnale
+          </h2>
+          <SignalSettings />
+        </section>
+
+        {showRecovery ? (
+          <section className="tv-settings-section" aria-labelledby="settings-recovery">
+            <h2 id="settings-recovery" className="tv-settings-heading">
+              Recovery
+            </h2>
+            <AccountRecoverySection account={account} />
+          </section>
+        ) : (
+          <AccountRecoverySection account={account} />
+        )}
+
+        <section className="tv-settings-section" aria-labelledby="settings-contrib">
+          <h2 id="settings-contrib" className="tv-settings-heading">
+            Contributi
+          </h2>
+          <AccountSubmissionsSection
+            status={account.status}
+            submissions={submissions.submissions}
+            isLoading={submissions.isLoading}
+            totalSubmissions={submissions.totalSubmissions}
+            error={submissions.error}
+            onRetry={submissions.reload}
+          />
+        </section>
+
+        <section className="tv-settings-section" aria-labelledby="settings-account">
+          <h2 id="settings-account" className="tv-settings-heading">
+            Account
+          </h2>
+          <button
+            type="button"
+            className="account-btn-secondary"
+            onClick={() => void account.signOut()}
+            aria-label="Esci dall'account"
+          >
+            Esci dall&apos;account
+          </button>
+        </section>
       </div>
     </AccountWorkspaceFrame>
   );
@@ -84,54 +136,50 @@ function PersonalizationSettings() {
   }, []);
 
   return (
-    <section className="tv-space-card">
-      <p className="account-label">Personalizzazione</p>
-      <h2 className="tv-space-card__title">Focus attuale</h2>
-      <p className="tv-space-card__body">
+    <form
+      className="tv-settings-form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setStatus("Salvataggio…");
+        void saveSignalProfileContext({ focusArea, primaryGoal }).then((result) => {
+          setStatus(result.ok ? "Contesto aggiornato." : "Non salvato. Riprova più tardi.");
+        });
+      }}
+    >
+      <p className="tv-settings-copy">
         Si può cambiare quando cambia il lavoro. Non è un onboarding da chiudere.
       </p>
-      <form
-        className="tv-space-stack"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setStatus("Salvataggio…");
-          void saveSignalProfileContext({ focusArea, primaryGoal }).then((result) => {
-            setStatus(result.ok ? "Contesto aggiornato." : "Non salvato. Riprova più tardi.");
-          });
-        }}
-      >
-        <label className="tv-space-search">
-          <span>Focus</span>
-          <select
-            value={focusArea}
-            onChange={(event) => setFocusArea(event.target.value as SignalFocusArea)}
-          >
-            {SIGNAL_FOCUS_AREAS.map((item) => (
-              <option key={item} value={item}>
-                {FOCUS_AREA_LABELS[item]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="tv-space-search">
-          <span>Obiettivo</span>
-          <select
-            value={primaryGoal}
-            onChange={(event) => setPrimaryGoal(event.target.value as SignalPrimaryGoal)}
-          >
-            {SIGNAL_PRIMARY_GOALS.map((item) => (
-              <option key={item} value={item}>
-                {PRIMARY_GOAL_LABELS[item]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button type="submit" className="account-btn-primary">
-          Aggiorna contesto
-        </button>
-        {status ? <p role="status">{status}</p> : null}
-      </form>
-    </section>
+      <label className="tv-space-search">
+        <span>Focus</span>
+        <select
+          value={focusArea}
+          onChange={(event) => setFocusArea(event.target.value as SignalFocusArea)}
+        >
+          {SIGNAL_FOCUS_AREAS.map((item) => (
+            <option key={item} value={item}>
+              {FOCUS_AREA_LABELS[item]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="tv-space-search">
+        <span>Obiettivo</span>
+        <select
+          value={primaryGoal}
+          onChange={(event) => setPrimaryGoal(event.target.value as SignalPrimaryGoal)}
+        >
+          {SIGNAL_PRIMARY_GOALS.map((item) => (
+            <option key={item} value={item}>
+              {PRIMARY_GOAL_LABELS[item]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button type="submit" className="account-btn-primary">
+        Aggiorna contesto
+      </button>
+      {status ? <p role="status">{status}</p> : null}
+    </form>
   );
 }
 
@@ -153,10 +201,8 @@ function SignalSettings() {
   };
 
   return (
-    <section className="tv-space-card">
-      <p className="account-label">Segnale</p>
-      <h2 className="tv-space-card__title">Quanto deve farsi sentire</h2>
-      <p className="tv-space-card__body">
+    <div className="tv-settings-form">
+      <p className="tv-settings-copy">
         Lo spazio resta utile anche a volume zero. Nessuna penalità per le pause.
       </p>
       <label className="tv-space-check">
@@ -184,6 +230,6 @@ function SignalSettings() {
         Niente celebrazioni
       </label>
       {status ? <p role="status">{status}</p> : null}
-    </section>
+    </div>
   );
 }

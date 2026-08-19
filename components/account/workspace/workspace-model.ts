@@ -60,6 +60,13 @@ export function workspaceViewHref(view: WorkspaceView): string {
   return view === "riprendi" ? "/account" : `/account?view=${view}`;
 }
 
+export function formatWorkspaceDate(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return null;
+  return date.toLocaleDateString("it-IT", { day: "numeric", month: "short" });
+}
+
 export function emailLocalPart(email: string | null | undefined): string {
   const local = email?.split("@")[0]?.trim();
   return local || "account";

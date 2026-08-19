@@ -213,4 +213,26 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
     expect(reopened.value).toBe("");
     expect(screen.getByText("Apri catalogo tool")).toBeTruthy();
   });
+
+  it("sends salvati to the workspace library, not /shortlist", () => {
+    renderPalette();
+    openPalette();
+
+    fireEvent.click(screen.getByText("Vai ai tool salvati"));
+
+    expect(pushMock).toHaveBeenCalledWith("/account?view=biblioteca");
+    expect(pushMock).not.toHaveBeenCalledWith("/shortlist");
+  });
+
+  it("lists workspace destinations in empty-query navigation", () => {
+    renderPalette();
+    openPalette();
+
+    expect(screen.getByText("Biblioteca")).toBeTruthy();
+    expect(screen.getByText("Decisioni")).toBeTruthy();
+    expect(screen.getByText("Recenti")).toBeTruthy();
+    fireEvent.click(screen.getByText("Home"));
+
+    expect(pushMock).toHaveBeenCalledWith("/account");
+  });
 });

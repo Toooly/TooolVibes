@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   WORKSPACE_VIEWS,
+  formatWorkspaceDate,
   parseWorkspaceView,
   workspaceViewHref,
 } from "@/components/account/workspace/workspace-model";
@@ -36,5 +37,11 @@ describe("workspace-model", () => {
     expect(workspaceViewHref("biblioteca")).toBe("/account?view=biblioteca");
     expect(workspaceViewHref("recenti")).toBe("/account?view=recenti");
     expect(workspaceViewHref("segnale")).toBe("/account?view=segnale");
+  });
+
+  it("formats workspace dates in Italian when the value is valid", () => {
+    expect(formatWorkspaceDate(null)).toBeNull();
+    expect(formatWorkspaceDate("nope")).toBeNull();
+    expect(formatWorkspaceDate("2026-06-03T10:00:00.000Z")).toMatch(/giu/i);
   });
 });

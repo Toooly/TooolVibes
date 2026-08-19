@@ -2,7 +2,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Search, Sparkles, Star, Table2, Workflow } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Bookmark,
+  Clock3,
+  Compass,
+  House,
+  Layers,
+  Search,
+  Settings,
+  Sparkles,
+  Star,
+  Table2,
+  Workflow,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -15,13 +29,22 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { serializeCatalogUrl } from "@/components/directory/catalog/catalog-controller";
+import {
+  WORKSPACE_VIEW_LABELS,
+  workspaceViewHref,
+} from "@/components/account/workspace/workspace-model";
 import { playTooolvibesSound } from "@/lib/config/sound";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
+import { activePersonalStacks } from "@/lib/account/workspace-pipeline";
 import {
   resolveToolSearchEngine,
   searchToolsWithEngine,
 } from "@/lib/search/tool-search-adapter";
-import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import {
+  MAX_COMPARE_TOOLS,
+  getCanonicalToolWorkspaceState,
+  useToolWorkspaceStore,
+} from "@/lib/stores/tool-workspace-store";
 
 /* ═══════════════════════════════════════════════════════════════
    GlobalCommandPalette (B31 / IA-504) — la ricerca tool usa lo
@@ -34,6 +57,24 @@ import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-work
 
 const SEARCH_RESULTS_LIMIT = 8;
 
+const WORKSPACE_DESTINATIONS: Array<{
+  href: string;
+  label: string;
+  icon: typeof House;
+}> = [
+  { href: workspaceViewHref("riprendi"), label: WORKSPACE_VIEW_LABELS.riprendi, icon: House },
+  { href: workspaceViewHref("biblioteca"), label: WORKSPACE_VIEW_LABELS.biblioteca, icon: Bookmark },
+  { href: workspaceViewHref("stack"), label: WORKSPACE_VIEW_LABELS.stack, icon: Layers },
+  { href: workspaceViewHref("decisioni"), label: WORKSPACE_VIEW_LABELS.decisioni, icon: BookOpen },
+  { href: workspaceViewHref("recenti"), label: WORKSPACE_VIEW_LABELS.recenti, icon: Clock3 },
+  { href: workspaceViewHref("segnale"), label: WORKSPACE_VIEW_LABELS.segnale, icon: Compass },
+  { href: "/account/settings", label: "Impostazioni", icon: Settings },
+];
+
+function matchesQuery(value: string, query: string) {
+  return value.toLowerCase().includes(query.toLowerCase());
+}
+
 export function GlobalCommandPalette({
   unifiedSearchEnabled = true,
 }: {
@@ -44,10 +85,12 @@ export function GlobalCommandPalette({
   const [mounted, setMounted] = useState(false);
   const [query, setQuery] = useState("");
   const isOpen = useToolWorkspaceStore((state) => state.isCommandOpen);
+  const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
   const toggleSaved = useToolWorkspaceStore((state) => state.toggleSaved);
   const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
   const addToStack = useToolWorkspaceStore((state) => state.addToStack);
+  const workspace = getCanonicalToolWorkspaceState();
 
   const trimmedQuery = query.trim();
   const searchEngine = resolveToolSearchEngine(unifiedSearchEnabled);
@@ -63,6 +106,33 @@ export function GlobalCommandPalette({
     () => tools.filter((tool) => tool.featured || tool.toolOfWeek).slice(0, 8),
     [tools],
   );
+
+  const savedMatches = useMemo(() => {
+    if (!trimmedQuery) return [];
+    const bySlug = new Map(tools.map((tool) => [tool.slug, tool]));
+    return savedSlugs
+      .map((slug) => {
+        const tool = bySlug.get(slug);
+        return {
+          slug,
+          name: tool?.name ?? slug,
+          levelLabel: tool?.levelLabel ?? null,
+        };
+      })
+      .filter(
+        (item) =>
+          matchesQuery(item.name, trimmedQuery) ||
+          matchesQuery(item.slug, trimmedQuery),
+      )
+      .slice(0, SEARCH_RESULTS_LIMIT);
+  }, [savedSlugs, tools, trimmedQuery]);
+
+  const stackMatches = useMemo(() => {
+    if (!trimmedQuery) return [];
+    return activePersonalStacks(workspace)
+      .filter((stack) => matchesQuery(stack.name, trimmedQuery))
+      .slice(0, SEARCH_RESULTS_LIMIT);
+  }, [trimmedQuery, workspace]);
 
   useEffect(() => setMounted(true), []);
 
@@ -93,17 +163,24 @@ export function GlobalCommandPalette({
     setCommandOpen(false);
   }
 
-  function openTool(slug: string) {
-    playTooolvibesSound("detail");
-    router.push(`/toools/${slug}`);
+  function openPath(href: string, sound: "nav" | "detail" = "nav") {
+    playTooolvibesSound(sound);
+    router.push(href);
     close();
   }
 
-  function openArchiveSearch() {
-    playTooolvibesSound("nav");
-    router.push(serializeCatalogUrl({ query: trimmedQuery }));
-    close();
+  function openTool(slug: string) {
+    openPath(`/toools/${slug}`, "detail");
   }
+
+  function openArchiveSearch() {
+    openPath(serializeCatalogUrl({ query: trimmedQuery }));
+  }
+
+  const hasQueryResults =
+    savedMatches.length > 0 ||
+    stackMatches.length > 0 ||
+    searchResults.length > 0;
 
   return (
     <CommandDialog open={isOpen} onOpenChange={setCommandOpen} shouldFilter={false}>
@@ -115,36 +192,71 @@ export function GlobalCommandPalette({
       <CommandList>
         <CommandEmpty>Nessun risultato. Prova con categoria, nome o caso d’uso.</CommandEmpty>
         {trimmedQuery ? (
-          searchResults.length > 0 ? (
-            <CommandGroup heading={`Tool per “${trimmedQuery}”`}>
-              {searchResults.map((tool) => (
-                <CommandItem
-                  key={tool.slug}
-                  value={`tool:${tool.slug}`}
-                  onSelect={() => openTool(tool.slug)}
-                >
-                  <Sparkles className="size-4" />
-                  <span>{tool.name}</span>
-                  <span className="ml-auto text-xs text-[var(--muted)]">
-                    {tool.levelLabel}
-                  </span>
-                </CommandItem>
-              ))}
-              <CommandItem value="archive:query" onSelect={openArchiveSearch}>
-                <Search className="size-4" />
-                <span>Cerca “{trimmedQuery}” nell’archivio</span>
-                <ArrowRight className="ml-auto size-3.5 text-[var(--muted)]" />
-              </CommandItem>
-            </CommandGroup>
+          hasQueryResults ? (
+            <>
+              {savedMatches.length > 0 ? (
+                <CommandGroup heading="Salvati">
+                  {savedMatches.map((tool) => (
+                    <CommandItem
+                      key={`saved:${tool.slug}`}
+                      value={`saved:${tool.slug}`}
+                      onSelect={() => openTool(tool.slug)}
+                    >
+                      <Star className="size-4" />
+                      <span>{tool.name}</span>
+                      {tool.levelLabel ? (
+                        <span className="ml-auto text-xs text-[var(--muted)]">
+                          {tool.levelLabel}
+                        </span>
+                      ) : null}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              ) : null}
+              {stackMatches.length > 0 ? (
+                <CommandGroup heading="Stack">
+                  {stackMatches.map((stack) => (
+                    <CommandItem
+                      key={`stack:${stack.id}`}
+                      value={`stack:${stack.id}`}
+                      onSelect={() => openPath(workspaceViewHref("stack"))}
+                    >
+                      <Layers className="size-4" />
+                      <span>{stack.name}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              ) : null}
+              {searchResults.length > 0 ? (
+                <CommandGroup heading={`Tool per “${trimmedQuery}”`}>
+                  {searchResults.map((tool) => (
+                    <CommandItem
+                      key={tool.slug}
+                      value={`tool:${tool.slug}`}
+                      onSelect={() => openTool(tool.slug)}
+                    >
+                      <Sparkles className="size-4" />
+                      <span>{tool.name}</span>
+                      <span className="ml-auto text-xs text-[var(--muted)]">
+                        {tool.levelLabel}
+                      </span>
+                    </CommandItem>
+                  ))}
+                  <CommandItem value="archive:query" onSelect={openArchiveSearch}>
+                    <Search className="size-4" />
+                    <span>Cerca “{trimmedQuery}” nell’archivio</span>
+                    <ArrowRight className="ml-auto size-3.5 text-[var(--muted)]" />
+                  </CommandItem>
+                </CommandGroup>
+              ) : null}
+            </>
           ) : null
         ) : (
           <>
             <CommandGroup heading="Navigazione">
               <CommandItem
                 onSelect={() => {
-                  playTooolvibesSound("nav");
-                  router.push("/archivio");
-                  close();
+                  openPath("/archivio");
                 }}
               >
                 <Search className="size-4" />
@@ -152,9 +264,7 @@ export function GlobalCommandPalette({
               </CommandItem>
               <CommandItem
                 onSelect={() => {
-                  playTooolvibesSound("nav");
-                  router.push("/shortlist");
-                  close();
+                  openPath(workspaceViewHref("biblioteca"));
                 }}
               >
                 <Star className="size-4" />
@@ -162,9 +272,7 @@ export function GlobalCommandPalette({
               </CommandItem>
               <CommandItem
                 onSelect={() => {
-                  playTooolvibesSound("nav");
-                  router.push("/compare");
-                  close();
+                  openPath("/compare");
                 }}
               >
                 <Table2 className="size-4" />
@@ -172,14 +280,25 @@ export function GlobalCommandPalette({
               </CommandItem>
               <CommandItem
                 onSelect={() => {
-                  playTooolvibesSound("nav");
-                  router.push("/archivio#stack-builder");
-                  close();
+                  openPath("/archivio#stack-builder");
                 }}
               >
                 <Workflow className="size-4" />
                 Apri la tua lista
               </CommandItem>
+              {WORKSPACE_DESTINATIONS.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <CommandItem
+                    key={item.href}
+                    value={`workspace:${item.href}`}
+                    onSelect={() => openPath(item.href)}
+                  >
+                    <Icon className="size-4" />
+                    {item.label}
+                  </CommandItem>
+                );
+              })}
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup heading="Tool">

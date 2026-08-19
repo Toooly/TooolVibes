@@ -9,7 +9,7 @@ const LEVEL_CODES = [
   "cartographer",
 ] as const;
 
-export function SignalMapRail({ currentLevel = 1 }: { currentLevel?: number }) {
+export function SignalMapRail({ currentLevel = 0 }: { currentLevel?: number }) {
   return (
     <ol className="tv-signal-map" aria-label="Mappa del segnale">
       {SIGNAL_LEVEL_THRESHOLDS.map((row, index) => {

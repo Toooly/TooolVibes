@@ -1,33 +1,68 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   setWorkspaceDecision,
   setWorkspaceNote,
+  setWorkspacePinned,
   setWorkspaceRevisit,
   setWorkspaceUseCase,
 } from "@/lib/account/workspace-actions";
+import {
+  deriveResurfaceSignals,
+  pipelineColumnForTool,
+} from "@/lib/account/workspace-pipeline";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
-import type { WorkspaceDecisionOutcome, WorkspaceStateV1 } from "@/lib/discovery/types";
+import type {
+  WorkspaceDecisionOutcome,
+  WorkspaceStateV1,
+  WorkspaceToolState,
+} from "@/lib/discovery/types";
 
-import { PIPELINE_LABELS } from "./workspace-model";
-import { pipelineColumnForTool } from "@/lib/account/workspace-pipeline";
+import { PIPELINE_LABELS, formatWorkspaceDate } from "./workspace-model";
 import { toolName } from "./workspace-tool-name";
+
+const OUTCOME_ACTIONS: Array<{
+  outcome: WorkspaceDecisionOutcome | null;
+  label: string;
+}> = [
+  { outcome: "selected", label: "Scelto" },
+  { outcome: "rejected", label: "Scartato" },
+  { outcome: "deferred", label: "Rimandato" },
+  { outcome: null, label: "Riapri" },
+];
+
+function hasJournalTrace(tool: WorkspaceToolState | undefined) {
+  return Boolean(
+    tool?.decision?.outcome ||
+      tool?.note ||
+      tool?.useCase ||
+      (tool?.alternatives && tool.alternatives.length > 0) ||
+      tool?.pinned,
+  );
+}
+
+function noteSnippet(note: string | null | undefined) {
+  const value = note?.trim();
+  if (!value) return null;
+  if (value.length <= 140) return value;
+  return `${value.slice(0, 137).trimEnd()}…`;
+}
 
 export function WorkspaceDecisions({ state }: { state: WorkspaceStateV1 }) {
   const catalog = usePublicToolCatalog();
-  const slugs = Object.keys(state.toolStates).filter((slug) => {
-    const tool = state.toolStates[slug];
-    return Boolean(
-      tool?.decision?.outcome ||
-        tool?.note ||
-        tool?.useCase ||
-        (tool?.alternatives && tool.alternatives.length > 0) ||
-        tool?.pinned,
+  const slugs = Object.keys(state.toolStates).filter((slug) =>
+    hasJournalTrace(state.toolStates[slug]),
+  );
+  const dueSlugs = useMemo(() => {
+    return new Set(
+      deriveResurfaceSignals(state)
+        .filter((item) => item.kind === "deferred_due" && item.slug)
+        .map((item) => item.slug as string),
     );
-  });
+  }, [state]);
   const [open, setOpen] = useState<string | null>(slugs[0] ?? null);
   useEffect(() => {
     if (!open && slugs[0]) setOpen(slugs[0]);
@@ -35,10 +70,12 @@ export function WorkspaceDecisions({ state }: { state: WorkspaceStateV1 }) {
 
   if (slugs.length === 0) {
     return (
-      <section className="tv-space-card">
+      <section className="tv-journal" aria-labelledby="tv-journal-empty">
         <p className="account-label">Decisioni</p>
-        <h2 className="tv-space-card__title">Ancora nessuna traccia</h2>
-        <p className="tv-space-card__body">
+        <h2 id="tv-journal-empty" className="tv-journal-empty__title">
+          Ancora nessuna traccia
+        </h2>
+        <p className="tv-journal-empty__copy">
           Quando scegli, scarti o rimandi, qui resta il perché.
         </p>
         <Link className="account-btn-primary" href="/archivio">
@@ -49,25 +86,53 @@ export function WorkspaceDecisions({ state }: { state: WorkspaceStateV1 }) {
   }
 
   return (
-    <div className="tv-space-stack">
-      <ul className="tv-space-list tv-space-list--cards">
+    <div className="tv-journal">
+      <ul className="tv-journal-list">
         {slugs.map((slug) => {
           const tool = state.toolStates[slug];
           const column = pipelineColumnForTool({
             stage: tool?.stage ?? "saved",
             outcome: tool?.decision?.outcome ?? null,
           });
+          const outcomeLabel = tool?.decision?.outcome
+            ? PIPELINE_LABELS[column]
+            : null;
+          const why = noteSnippet(tool?.note);
+          const alternatives = (tool?.alternatives ?? []).map((item) =>
+            toolName(catalog, item),
+          );
+          const revisit = formatWorkspaceDate(tool?.revisitAt ?? null);
+          const selected = slug === open;
           return (
             <li key={slug}>
-              <button type="button" className="tv-space-row" onClick={() => setOpen(slug)}>
-                <span>{toolName(catalog, slug)}</span>
-                <span className="tv-space-row__meta">{PIPELINE_LABELS[column]}</span>
+              <button
+                type="button"
+                className={selected ? "tv-journal-entry is-open" : "tv-journal-entry"}
+                onClick={() => setOpen(slug)}
+                aria-current={selected ? "true" : undefined}
+              >
+                <span className="tv-journal-entry__tool">{toolName(catalog, slug)}</span>
+                <span className="tv-journal-entry__facts">
+                  {outcomeLabel ? <span>{outcomeLabel}</span> : null}
+                  {tool?.useCase ? <span>{tool.useCase}</span> : null}
+                  {tool?.pinned ? <span>Fissato</span> : null}
+                  {revisit ? <span>Rivedi {revisit}</span> : null}
+                  {dueSlugs.has(slug) ? (
+                    <span className="tv-journal-mark">Da riprendere</span>
+                  ) : null}
+                </span>
+                {why ? <span className="tv-journal-entry__why">{why}</span> : null}
+                {alternatives.length > 0 ? (
+                  <span className="tv-journal-entry__alts">
+                    Alternative: {alternatives.join(", ")}
+                  </span>
+                ) : null}
               </button>
             </li>
           );
         })}
       </ul>
-      {open ? <DecisionEditor slug={open} state={state} /> : null}
+      {open ? <DecisionEditor key={open} slug={open} state={state} /> : null}
     </div>
   );
 }
@@ -83,61 +148,114 @@ function DecisionEditor({
   const tool = state.toolStates[slug];
   const [note, setNote] = useState(tool?.note ?? "");
   const [useCase, setUseCase] = useState(tool?.useCase ?? "");
-  const [revisit, setRevisit] = useState(tool?.revisitAt ? tool.revisitAt.slice(0, 10) : "");
+  const [revisit, setRevisit] = useState(
+    tool?.revisitAt ? tool.revisitAt.slice(0, 10) : "",
+  );
+  const alternatives = tool?.alternatives ?? [];
+  const currentOutcome = tool?.decision?.outcome ?? null;
 
   const record = (outcome: WorkspaceDecisionOutcome | null) => {
     setWorkspaceDecision(slug, outcome);
   };
 
   return (
-    <section className="tv-space-card" aria-labelledby={`decision-${slug}`}>
-      <h2 id={`decision-${slug}`} className="tv-space-card__title">
-        {toolName(catalog, slug)}
-      </h2>
-      {tool?.alternatives && tool.alternatives.length > 0 ? (
-        <p className="tv-space-card__body">
-          Traccia del confronto: {tool.alternatives.map((item) => toolName(catalog, item)).join(", ")}
-        </p>
-      ) : null}
-      <div className="tv-space-actions tv-space-actions--compact">
-        <button type="button" className="account-btn-secondary" onClick={() => record("selected")}>
-          Scelto
+    <article className="tv-journal-sheet" aria-labelledby={`decision-${slug}`}>
+      <header className="tv-journal-sheet__head">
+        <h2 id={`decision-${slug}`} className="tv-journal-sheet__title">
+          {toolName(catalog, slug)}
+        </h2>
+        <button
+          type="button"
+          className="tv-journal-pin"
+          onClick={() => setWorkspacePinned(slug, !tool?.pinned)}
+        >
+          {tool?.pinned ? "Togli fissato" : "Fissa"}
         </button>
-        <button type="button" className="account-btn-secondary" onClick={() => record("rejected")}>
-          Scartato
-        </button>
-        <button type="button" className="account-btn-secondary" onClick={() => record("deferred")}>
-          Rimandato
-        </button>
-        <button type="button" className="account-btn-secondary" onClick={() => record(null)}>
-          Riapri
-        </button>
-      </div>
+      </header>
+
+      <section className="tv-journal-block">
+        <h3 className="tv-journal-block__label">Decisione</h3>
+        <div className="tv-journal-outcomes">
+          {OUTCOME_ACTIONS.map((action) => (
+            <button
+              key={action.label}
+              type="button"
+              className={
+                action.outcome === currentOutcome
+                  ? "account-btn-secondary is-current"
+                  : "account-btn-secondary"
+              }
+              aria-pressed={action.outcome === currentOutcome}
+              onClick={() => record(action.outcome)}
+            >
+              {action.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
       <form
-        className="tv-space-stack"
+        className="tv-journal-sheet__form"
         onSubmit={(event) => {
           event.preventDefault();
           setWorkspaceNote(slug, note.trim() || null);
           setWorkspaceUseCase(slug, useCase.trim() || null);
-          setWorkspaceRevisit(slug, revisit ? new Date(`${revisit}T00:00:00.000Z`).toISOString() : null);
+          setWorkspaceRevisit(
+            slug,
+            revisit ? new Date(`${revisit}T00:00:00.000Z`).toISOString() : null,
+          );
         }}
       >
-        <label className="tv-space-search">
-          <span>Perché</span>
-          <textarea value={note} onChange={(event) => setNote(event.target.value)} maxLength={2000} rows={3} />
-        </label>
-        <label className="tv-space-search">
-          <span>Caso d’uso</span>
-          <input value={useCase} onChange={(event) => setUseCase(event.target.value)} maxLength={200} />
-        </label>
-        <label className="tv-space-search">
-          <span>Rivedi il</span>
-          <input type="date" value={revisit} onChange={(event) => setRevisit(event.target.value)} />
-        </label>
+        <section className="tv-journal-block">
+          <h3 className="tv-journal-block__label">Caso d’uso</h3>
+          <label>
+            <span className="sr-only">Caso d’uso</span>
+            <input
+              value={useCase}
+              onChange={(event) => setUseCase(event.target.value)}
+              maxLength={200}
+            />
+          </label>
+        </section>
+
+        <section className="tv-journal-block">
+          <h3 className="tv-journal-block__label">Perché</h3>
+          <label>
+            <span className="sr-only">Perché</span>
+            <textarea
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+              maxLength={2000}
+              rows={4}
+            />
+          </label>
+        </section>
+
+        {alternatives.length > 0 ? (
+          <section className="tv-journal-block">
+            <h3 className="tv-journal-block__label">Alternative</h3>
+            <p className="tv-journal-sheet__alts">
+              {alternatives.map((item) => toolName(catalog, item)).join(", ")}
+            </p>
+          </section>
+        ) : null}
+
+        <section className="tv-journal-block">
+          <h3 className="tv-journal-block__label">Rivedi</h3>
+          <label>
+            <span className="sr-only">Rivedi il</span>
+            <input
+              type="date"
+              value={revisit}
+              onChange={(event) => setRevisit(event.target.value)}
+            />
+          </label>
+        </section>
+
         <button type="submit" className="account-btn-primary">
-          Salva nota
+          Salva
         </button>
       </form>
-    </section>
+    </article>
   );
 }
