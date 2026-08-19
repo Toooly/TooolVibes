@@ -24,6 +24,8 @@ export type PipelineItem = {
   outcome: WorkspaceDecisionOutcome | null;
   pinned: boolean;
   updatedAt: string | null;
+  note: string | null;
+  stackNames: string[];
 };
 
 export type ResurfaceKind =
@@ -85,10 +87,12 @@ export function pipelineColumnForTool(input: {
 }
 
 export function listPipelineItems(state: WorkspaceStateV1): PipelineItem[] {
+  const stacks = activePersonalStacks(state);
   return state.saved.slugs.map((slug) => {
     const tool = state.toolStates[slug];
     const stage = tool?.stage ?? "saved";
     const outcome = outcomeOf(tool);
+    const note = tool?.note?.trim() ? tool.note : null;
 
     return {
       slug,
@@ -97,6 +101,10 @@ export function listPipelineItems(state: WorkspaceStateV1): PipelineItem[] {
       outcome,
       pinned: tool?.pinned === true,
       updatedAt: tool?.updatedAt ?? tool?.decision?.updatedAt ?? state.saved.updatedAt,
+      note,
+      stackNames: stacks
+        .filter((stack) => stack.slugs.includes(slug))
+        .map((stack) => stack.name),
     };
   });
 }

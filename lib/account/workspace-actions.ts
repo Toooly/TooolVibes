@@ -107,3 +107,16 @@ export function setWorkspaceSaveReason(slug: string, saveReason: SaveReason | nu
     at: nowIso(),
   });
 }
+
+export function setWorkspacePinned(slug: string, pinned: boolean) {
+  return applyWorkspaceAction({ type: "tool/pin", slug, pinned, at: nowIso() });
+}
+
+export function toggleWorkspaceSaved(slug: string) {
+  return applyWorkspaceAction({ type: "saved/toggle", slug, at: nowIso() });
+}
+
+export function toggleWorkspaceCompare(slug: string) {
+  return applyWorkspaceAction({ type: "compare/toggle", slug, at: nowIso() });
+}
+

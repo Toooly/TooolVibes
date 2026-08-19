@@ -63,6 +63,17 @@ describe("workspace pipeline", () => {
     expect(items.find((item) => item.slug === "cursor")?.column).toBe("scelto");
     expect(items.find((item) => item.slug === "v0")?.column).toBe("scartato");
   });
+
+  it("includes note and active stack names on pipeline items", () => {
+    const items = listPipelineItems(workspaceTestFixtures.mature);
+    const cursor = items.find((item) => item.slug === "cursor");
+    expect(cursor?.note).toBe("Scelto per il daily coding.");
+    expect(cursor?.stackNames).toContain("AI Coding");
+    expect(cursor?.pinned).toBe(true);
+    const linear = items.find((item) => item.slug === "linear");
+    expect(linear?.stackNames).toContain("Client stack");
+    expect(linear?.note).toBeNull();
+  });
 });
 
 describe("workspace personalization", () => {
@@ -80,6 +91,61 @@ describe("workspace personalization", () => {
       slug: "windsurf",
       reason: "open_compare_category",
     });
+  });
+
+  it("matches engineering focus against real Italian catalog labels", () => {
+    const recs = recommendWorkspaceTools({
+      workspace: createEmptyWorkspaceState(),
+      catalog: [
+        { slug: "cursor", name: "Cursor", categoryLabel: "Coding AI / builder UI" },
+        { slug: "jasper", name: "Jasper", categoryLabel: "Scrittura AI / ricerca" },
+      ],
+      focusArea: "engineering",
+    });
+
+    expect(recs[0]).toMatchObject({
+      slug: "cursor",
+      reason: "declared_focus",
+    });
+    expect(recs[0]?.detail).toContain("Engineering");
+    expect(recs.map((item) => item.slug)).not.toContain("jasper");
+  });
+
+  it("uses primaryGoal as its own reason when focus does not fill the list", () => {
+    const recs = recommendWorkspaceTools({
+      workspace: createEmptyWorkspaceState(),
+      catalog: [
+        { slug: "jasper", name: "Jasper", categoryLabel: "Scrittura AI / ricerca" },
+        { slug: "cursor", name: "Cursor", categoryLabel: "Coding AI / builder UI" },
+      ],
+      primaryGoal: "learn",
+    });
+
+    expect(recs[0]).toMatchObject({
+      slug: "jasper",
+      reason: "declared_goal",
+      detail: "Per il tuo obiettivo: Capire il panorama",
+    });
+  });
+
+  it("skips rejected slugs even when they are not saved", () => {
+    const rejected = reduceWorkspaceState(createEmptyWorkspaceState(), {
+      type: "tool/decision",
+      slug: "v0",
+      outcome: "rejected",
+      at: NOW,
+    });
+    const recs = recommendWorkspaceTools({
+      workspace: rejected,
+      catalog: [
+        { slug: "v0", name: "v0", categoryLabel: "Coding AI / builder UI" },
+        { slug: "windsurf", name: "Windsurf", categoryLabel: "Coding AI / builder UI" },
+      ],
+      focusArea: "engineering",
+    });
+
+    expect(recs.map((item) => item.slug)).toEqual(["windsurf"]);
+    expect(recs.every((item) => item.slug !== "v0")).toBe(true);
   });
 });
 
