@@ -22,7 +22,7 @@ import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
  * Vibe Rush non è globale al launch: il launcher appare solo quando la
  * surface vibeRush è REWARDED (gate invariato, deciso in app/layout.tsx).
  */
-const EXCLUDED_ROUTE_PREFIXES = ["/admin", "/auth", "/api", "/_next"];
+const EXCLUDED_ROUTE_PREFIXES = ["/admin", "/auth", "/api", "/_next", "/account"];
 
 export function GamificationShell({
   missionsEnabled,

@@ -110,7 +110,7 @@ describe("B37 GamificationShell — slot floating unico (MOB-701)", () => {
     expect(screen.queryByTestId("shell-floating-dock")).toBeNull();
   });
 
-  it.each(["/admin", "/admin/login", "/admin-login", "/auth", "/auth/callback"])(
+  it.each(["/admin", "/admin/login", "/admin-login", "/auth", "/auth/callback", "/account", "/account/settings"])(
     "route esclusa %s: il dock non renderizza nulla",
     (pathname) => {
       pathnameState.current = pathname;

@@ -49,6 +49,19 @@ const gamificationRuntime = vi.hoisted(() => ({
   localXp: 0,
 }));
 
+
+const navigationRuntime = vi.hoisted(() => ({
+  pathname: "/account",
+  search: "",
+  push: vi.fn(),
+}));
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => navigationRuntime.pathname,
+  useSearchParams: () => new URLSearchParams(navigationRuntime.search),
+  useRouter: () => ({ push: navigationRuntime.push }),
+}));
+
 vi.mock("@/components/account/account-provider", () => ({
   useAccount: () => accountRuntime.value,
 }));
@@ -174,6 +187,9 @@ function heroOf(container: HTMLElement) {
 }
 
 beforeEach(() => {
+  navigationRuntime.pathname = "/account";
+  navigationRuntime.search = "";
+  navigationRuntime.push.mockReset();
   window.history.replaceState({}, "", "/");
   persistenceRuntime.value = { mode: "local", phase: "local-only" };
   gamificationRuntime.summary = { hasRewardedSurface: false, firstRewardedSurface: null };
@@ -303,8 +319,10 @@ describe("AccountPanel — stato authenticated", () => {
     setPanelState({ account });
     render(<AccountPanel />);
 
-    expect(screen.getByText("Spazio connesso")).toBeTruthy();
-    expect(screen.getByText("Il tuo spazio")).toBeTruthy();
+    expect(screen.getAllByText("TOOOLVIBES").length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Home" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Biblioteca" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Impostazioni" }).length).toBeGreaterThan(0);
     expect(screen.queryByPlaceholderText("nome@email.com")).toBeNull();
     expect(screen.queryByText("Proposta founder")).toBeNull();
     expect(screen.queryByText("Gamification")).toBeNull();
@@ -313,7 +331,7 @@ describe("AccountPanel — stato authenticated", () => {
       headers: { Authorization: "Bearer token-a" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /Esci dall'account/ }));
+    fireEvent.click(screen.getAllByRole("button", { name: /Esci dall'account/ })[0]);
     expect(account.signOut).toHaveBeenCalledTimes(1);
   });
 
@@ -325,16 +343,16 @@ describe("AccountPanel — stato authenticated", () => {
       session: { access_token: "token-a" },
     });
     setPanelState({ account });
-    const { container } = render(<AccountPanel />);
+    render(<AccountPanel />);
 
-    expect(heroOf(container).getByText("Salvataggio non riuscito")).toBeTruthy();
+    expect(screen.getAllByText("Salvataggio non riuscito").length).toBeGreaterThan(0);
   });
 
   it("riflette attach in corso e sync in attesa su badge e continuità", () => {
     const attaching = makeAccount({ status: "authenticated", isAttaching: true });
     setPanelState({ account: attaching });
-    const { container, unmount } = render(<AccountPanel />);
-    expect(heroOf(container).getByText("Collegamento in corso")).toBeTruthy();
+    const { unmount } = render(<AccountPanel />);
+    expect(screen.getAllByText("Collegamento in corso").length).toBeGreaterThan(0);
     unmount();
 
     const pending = makeAccount({
@@ -342,9 +360,9 @@ describe("AccountPanel — stato authenticated", () => {
       workspaceAttachPending: true,
     });
     setPanelState({ account: pending });
-    const { container: second } = render(<AccountPanel />);
-    expect(heroOf(second).getByText("Salvataggio in corso")).toBeTruthy();
-    expect(screen.getByText("Su questo dispositivo")).toBeTruthy();
+    render(<AccountPanel />);
+    expect(screen.getAllByText("Salvataggio in corso").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Su questo dispositivo").length).toBeGreaterThan(0);
   });
 });
 
@@ -494,8 +512,8 @@ describe("AccountPanel — gamification", () => {
     render(<AccountPanel />);
 
     expect(screen.queryByText("Gamification")).toBeNull();
-    expect(screen.getByText("Il tuo spazio")).toBeTruthy();
-    expect(screen.getByText("Impostazioni")).toBeTruthy();
+    expect(screen.getAllByText("TOOOLVIBES").length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Impostazioni" }).length).toBeGreaterThan(0);
   });
 });
 

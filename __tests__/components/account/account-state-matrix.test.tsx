@@ -689,7 +689,7 @@ describe("B59 AccountPanel — state matrix integration", () => {
     const occurrences = screen.getAllByText(message);
     expect(occurrences).toHaveLength(1);
     await waitFor(() => {
-      expect(screen.getByText("Il tuo spazio")).toBeTruthy();
+      expect(screen.getAllByText("TOOOLVIBES").length).toBeGreaterThan(0);
     });
   });
 
@@ -711,7 +711,7 @@ describe("B59 AccountPanel — state matrix integration", () => {
     expect(banner?.textContent).toContain("Selezione collegata");
     expect(screen.getAllByText(message)).toHaveLength(1);
     await waitFor(() => {
-      expect(screen.getByText("Il tuo spazio")).toBeTruthy();
+      expect(screen.getAllByText("TOOOLVIBES").length).toBeGreaterThan(0);
     });
   });
 
@@ -950,7 +950,9 @@ const callbackRuntime = vi.hoisted(() => ({
 }));
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ replace: callbackRuntime.replace }),
+  useRouter: () => ({ replace: callbackRuntime.replace, push: vi.fn() }),
+  usePathname: () => "/account",
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock("@/lib/supabase/browser-client", () => ({

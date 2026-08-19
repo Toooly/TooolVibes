@@ -1,0 +1,48 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
+import { TinyAdzLoader } from "@/components/ads/tinyadz-loader";
+import { PageTransition } from "@/components/app/page-transition";
+import { CommandBar } from "@/components/layout/command-bar";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
+import { MobileTopBar } from "@/components/layout/mobile-top-bar";
+import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
+
+export function isAccountAppPath(pathname: string | null | undefined): boolean {
+  return pathname === "/account" || Boolean(pathname?.startsWith("/account/"));
+}
+
+export function MarketingChrome({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+  const isAccountApp = isAccountAppPath(pathname);
+
+  if (isAccountApp) {
+    return (
+      <main id="main-content" tabIndex={-1} className="relative z-10">
+        <PageTransition>{children}</PageTransition>
+      </main>
+    );
+  }
+
+  return (
+    <>
+      <CommandBar />
+      <MobileTopBar />
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="relative z-10 pb-mobile-nav xl:pb-0"
+      >
+        <PageTransition>{children}</PageTransition>
+      </main>
+      <SiteFooterV2 />
+      <MobileBottomNav />
+      <TinyAdzLoader />
+    </>
+  );
+}

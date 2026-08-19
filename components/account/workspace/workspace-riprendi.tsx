@@ -10,7 +10,7 @@ import {
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 
-import type { WorkspaceView } from "./workspace-model";
+import { workspaceViewHref } from "./workspace-model";
 import { toolName } from "./workspace-tool-name";
 
 const RESUME_COPY = {
@@ -47,10 +47,8 @@ const RESURFACE_COPY = {
 
 export function WorkspaceRiprendi({
   state,
-  onOpen,
 }: {
   state: WorkspaceStateV1;
-  onOpen: (view: WorkspaceView) => void;
 }) {
   const catalog = usePublicToolCatalog();
   const resume = chooseResumeAction(state);
@@ -72,17 +70,16 @@ export function WorkspaceRiprendi({
               {resume.kind === "empty" ? "Apri l’archivio" : "Apri il confronto"}
             </Link>
           ) : (
-            <button
-              type="button"
+            <Link
               className="account-btn-primary"
-              onClick={() => onOpen(resume.kind === "evaluate_saved" ? "biblioteca" : "decisioni")}
+              href={workspaceViewHref(resume.kind === "evaluate_saved" ? "biblioteca" : "decisioni")}
             >
               Continua
-            </button>
+            </Link>
           )}
-          <button type="button" className="account-btn-secondary" onClick={() => onOpen("biblioteca")}>
+          <Link className="account-btn-secondary" href={workspaceViewHref("biblioteca")}>
             Biblioteca
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -92,10 +89,10 @@ export function WorkspaceRiprendi({
           <ul className="tv-space-list">
             {resurface.map((item) => (
               <li key={`${item.kind}-${item.slug ?? "none"}`}>
-                <button type="button" className="tv-space-row" onClick={() => onOpen("decisioni")}>
+                <Link className="tv-space-row" href={workspaceViewHref("decisioni")}>
                   <span>{item.slug ? toolName(catalog, item.slug) : "Spazio"}</span>
                   <span className="tv-space-row__meta">{RESURFACE_COPY[item.kind]}</span>
-                </button>
+                </Link>
               </li>
             ))}
           </ul>

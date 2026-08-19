@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { WorkspaceQaHarness } from "@/components/account/workspace/workspace-qa-harness";
-import type { WorkspaceView } from "@/components/account/workspace/workspace-model";
+import { parseWorkspaceView } from "@/components/account/workspace/workspace-model";
 import "@/app/(marketing)/account/account.css";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default async function WorkspaceQaPage({
 
   const params = await searchParams;
   const fixture = params.state === "new" ? "new" : "mature";
-  const view = (params.view ?? "riprendi") as WorkspaceView;
+  const view = parseWorkspaceView(params.view);
   const surface = params.surface === "settings" ? "settings" : "workspace";
 
   return (

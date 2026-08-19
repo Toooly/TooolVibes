@@ -9,16 +9,11 @@ import {
   SignalProgressUiProvider,
 } from "@/lib/signal-progression/release-context";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
-import { PageTransition } from "@/components/app/page-transition";
-import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
-import { MobileTopBar } from "@/components/layout/mobile-top-bar";
-import { TinyAdzLoader } from "@/components/ads/tinyadz-loader";
 import { TinyAdzLifecycle } from "@/components/ads/tinyadz-lifecycle";
 import { AdvertisingConsentProvider } from "@/components/ads/advertising-consent-provider";
 import { ConsentBanner } from "@/components/ads/consent-banner";
 import { ConsentSettingsDialog } from "@/components/ads/consent-settings-dialog";
-import { CommandBar } from "@/components/layout/command-bar";
-import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
+import { MarketingChrome } from "@/components/layout/marketing-chrome";
 import { OrbitalProvider } from "@/components/app/orbital-system";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { buildSignalClientFlagSnapshot } from "@/lib/signal-progression/client-flags";
@@ -76,20 +71,7 @@ export default async function MarketingLayout({
           <SignalDeliveryBridge enabled={signalDeliveryEnabled} />
           <SignalProductBridge flags={signalClientFlags} />
           <DiscoveryPersistenceProvider>
-            {/* Definitive shell (2026-07-24): CommandBar (xl+), MobileTopBar (<xl),
-                MobileBottomNav (<xl). The previous SiteHeaderV2 is removed. */}
-            <CommandBar />
-            <MobileTopBar />
-            <main
-              id="main-content"
-              tabIndex={-1}
-              className="relative z-10 pb-mobile-nav xl:pb-0"
-            >
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <SiteFooterV2 />
-            <MobileBottomNav />
-            <TinyAdzLoader />
+            <MarketingChrome>{children}</MarketingChrome>
           </DiscoveryPersistenceProvider>
           <TinyAdzLifecycle />
           <ConsentBanner />
