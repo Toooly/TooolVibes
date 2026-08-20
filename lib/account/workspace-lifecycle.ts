@@ -1,4 +1,4 @@
-import type { WorkspaceDecisionOutcome } from "@/lib/discovery/types";
+import type { WorkspaceDecisionOutcome, WorkspaceUsage } from "@/lib/discovery/types";
 import type { ShortlistStage } from "@/lib/types/tool";
 
 export const STAGE_LABELS = {
@@ -18,6 +18,18 @@ export const OUTCOME_ACTION_LABELS = {
   rejected: "Scarta",
   deferred: "Rimanda",
 } as const satisfies Record<WorkspaceDecisionOutcome, string>;
+
+export const USAGE_STATE_LABELS = {
+  using: "In uso",
+  stopped: "Non lo uso più",
+  replaced: "Sostituito",
+} as const satisfies Record<WorkspaceUsage, string>;
+
+export const USAGE_ACTION_LABELS = {
+  using: "Lo sto usando",
+  stopped: "Non lo uso più",
+  replaced: "Sostituito",
+} as const satisfies Record<WorkspaceUsage, string>;
 
 export const REVISIT_PRESET_IDS = ["1w", "1m", "3m"] as const;
 
@@ -66,4 +78,26 @@ export function outcomeStateLabel(outcome: WorkspaceDecisionOutcome): string {
 
 export function outcomeActionLabel(outcome: WorkspaceDecisionOutcome): string {
   return OUTCOME_ACTION_LABELS[outcome];
+}
+
+export function usageStateLabel(usage: WorkspaceUsage): string {
+  return USAGE_STATE_LABELS[usage];
+}
+
+export function usageActionLabel(usage: WorkspaceUsage): string {
+  return USAGE_ACTION_LABELS[usage];
+}
+
+export function compactPersonalStatus(input: {
+  usage: WorkspaceUsage | null | undefined;
+  outcome: WorkspaceDecisionOutcome | null | undefined;
+  stage: ShortlistStage;
+}): { key: string; label: string } {
+  if (input.usage) {
+    return { key: input.usage, label: USAGE_STATE_LABELS[input.usage] };
+  }
+  if (input.outcome) {
+    return { key: input.outcome, label: OUTCOME_STATE_LABELS[input.outcome] };
+  }
+  return { key: input.stage, label: STAGE_LABELS[input.stage] };
 }

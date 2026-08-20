@@ -1,7 +1,10 @@
 import type { SaveReason, ShortlistStage } from "@/lib/types/tool";
 import { workspaceStateV1Schema } from "@/lib/discovery/schema";
 import {
+  compareObjectiveValues,
   workspaceDecisionOutcomeValues,
+  workspaceUsageValues,
+  type CompareObjective,
   type PersonalStack,
   type WorkspaceAction,
   type WorkspaceDecision,
@@ -9,6 +12,7 @@ import {
   type WorkspaceOrderedList,
   type WorkspaceStateV1,
   type WorkspaceToolState,
+  type WorkspaceUsage,
 } from "@/lib/discovery/types";
 import {
   MAX_COMPARE_TOOLS,
@@ -41,6 +45,12 @@ const saveReasonValues = new Set<SaveReason>([
 
 const decisionOutcomeValues = new Set<WorkspaceDecisionOutcome>(
   workspaceDecisionOutcomeValues,
+);
+
+const usageValues = new Set<WorkspaceUsage>(workspaceUsageValues);
+
+const compareObjectiveValueSet = new Set<CompareObjective>(
+  compareObjectiveValues,
 );
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -118,6 +128,18 @@ function normalizeSaveReason(value: unknown): SaveReason | null {
   return saveReasonValues.has(value as SaveReason) ? (value as SaveReason) : null;
 }
 
+function normalizeUsage(value: unknown): WorkspaceUsage | null {
+  return usageValues.has(value as WorkspaceUsage)
+    ? (value as WorkspaceUsage)
+    : null;
+}
+
+function normalizeCompareObjective(value: unknown): CompareObjective | null {
+  return compareObjectiveValueSet.has(value as CompareObjective)
+    ? (value as CompareObjective)
+    : null;
+}
+
 function normalizeDecision(value: unknown): WorkspaceDecision | null {
   if (!isRecord(value)) {
     return null;
@@ -158,6 +180,9 @@ function normalizeToolState(value: unknown): WorkspaceToolState | null {
       maxLength: MAX_COMPARE_TOOLS,
     }),
     revisitAt: normalizeTimestamp(value.revisitAt),
+    usage: normalizeUsage(value.usage),
+    replacedBy: normalizeSlug(value.replacedBy),
+    compareObjective: normalizeCompareObjective(value.compareObjective),
     updatedAt: normalizeTimestamp(value.updatedAt),
   };
 }
@@ -484,6 +509,12 @@ function mergeToolStates(
     useCase: chooseConcurrentText(left.useCase, right.useCase),
     alternatives: chooseConcurrentAlternatives(left.alternatives, right.alternatives),
     revisitAt: chooseConcurrentText(left.revisitAt, right.revisitAt),
+    usage: chooseConcurrentText(left.usage, right.usage),
+    replacedBy: chooseConcurrentText(left.replacedBy, right.replacedBy),
+    compareObjective: chooseConcurrentText(
+      left.compareObjective,
+      right.compareObjective,
+    ),
     updatedAt: maxTimestamp(left.updatedAt, right.updatedAt),
   };
 }
@@ -673,6 +704,9 @@ function defaultToolState(): WorkspaceToolState {
     useCase: null,
     alternatives: [],
     revisitAt: null,
+    usage: null,
+    replacedBy: null,
+    compareObjective: null,
     updatedAt: null,
   };
 }
@@ -1023,6 +1057,16 @@ export function reduceWorkspaceState(
               : state.compare.slugs.length > 0
                 ? [...state.compare.slugs]
                 : current.alternatives,
+        ...("compareObjective" in action
+          ? {
+              compareObjective: normalizeCompareObjective(
+                action.compareObjective,
+              ),
+            }
+          : {}),
+        ...(action.outcome === "rejected"
+          ? { usage: null, replacedBy: null }
+          : {}),
       }));
 
     case "tool/use-case": {
@@ -1049,6 +1093,70 @@ export function reduceWorkspaceState(
       return updateToolState(state, slug, at, (current) => ({
         ...current,
         revisitAt,
+      }));
+    }
+
+    case "tool/usage": {
+      if (action.usage !== null && !usageValues.has(action.usage)) {
+        return state;
+      }
+
+      if (action.usage === "replaced") {
+        const replacedBy = normalizeSlug(action.replacedBy);
+
+        if (!replacedBy || replacedBy === slug) {
+          return state;
+        }
+
+        return updateToolState(state, slug, at, (current) => ({
+          ...current,
+          usage: "replaced",
+          replacedBy,
+          decision:
+            current.decision?.outcome === "selected"
+              ? current.decision
+              : { outcome: "selected", updatedAt: at },
+        }));
+      }
+
+      if (action.usage === "using") {
+        return updateToolState(state, slug, at, (current) => ({
+          ...current,
+          usage: "using",
+          replacedBy: null,
+          decision:
+            current.decision?.outcome === "selected"
+              ? current.decision
+              : { outcome: "selected", updatedAt: at },
+        }));
+      }
+
+      if (action.usage === "stopped") {
+        return updateToolState(state, slug, at, (current) => ({
+          ...current,
+          usage: "stopped",
+          replacedBy: null,
+        }));
+      }
+
+      return updateToolState(state, slug, at, (current) => ({
+        ...current,
+        usage: null,
+        replacedBy: null,
+      }));
+    }
+
+    case "tool/compare-objective": {
+      if (
+        action.compareObjective !== null &&
+        !compareObjectiveValueSet.has(action.compareObjective)
+      ) {
+        return state;
+      }
+
+      return updateToolState(state, slug, at, (current) => ({
+        ...current,
+        compareObjective: action.compareObjective,
       }));
     }
 

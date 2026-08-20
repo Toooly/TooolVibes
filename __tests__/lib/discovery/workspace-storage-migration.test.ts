@@ -229,6 +229,9 @@ describe("WorkspaceStateV1 localStorage migration", () => {
       useCase: null,
       alternatives: [],
       revisitAt: null,
+      usage: null,
+      replacedBy: null,
+      compareObjective: null,
       updatedAt: T1,
     });
     expect(storage.getItem(DISCOVERY_STORAGE_KEYS.visitedTools)).toBe(

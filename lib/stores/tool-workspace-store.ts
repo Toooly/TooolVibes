@@ -237,6 +237,9 @@ export function rebaseWorkspaceIntent(
       useCase: null,
       alternatives: [],
       revisitAt: null,
+      usage: null,
+      replacedBy: null,
+      compareObjective: null,
       updatedAt: null,
     };
     const baseline = baseState ?? defaultState;
@@ -260,6 +263,13 @@ export function rebaseWorkspaceIntent(
       revisitAt: changed("revisitAt")
         ? desiredState.revisitAt
         : remote.revisitAt,
+      usage: changed("usage") ? desiredState.usage : remote.usage,
+      replacedBy: changed("replacedBy")
+        ? desiredState.replacedBy
+        : remote.replacedBy,
+      compareObjective: changed("compareObjective")
+        ? desiredState.compareObjective
+        : remote.compareObjective,
       updatedAt: latestTimestamp(desiredState.updatedAt, remote.updatedAt),
     };
   }

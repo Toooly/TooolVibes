@@ -1,4 +1,9 @@
-import type { WorkspaceAction, WorkspaceDecisionOutcome } from "@/lib/discovery/types";
+import type {
+  CompareObjective,
+  WorkspaceAction,
+  WorkspaceDecisionOutcome,
+  WorkspaceUsage,
+} from "@/lib/discovery/types";
 import { reduceWorkspaceState } from "@/lib/discovery/workspace-contract";
 import { dispatchWorkspaceChange } from "@/lib/discovery/workspace-events";
 import {
@@ -113,6 +118,7 @@ export function setWorkspaceDecision(
   slug: string,
   outcome: WorkspaceDecisionOutcome | null,
   alternatives?: string[],
+  compareObjective?: CompareObjective | null,
 ) {
   const at = nowIso();
   const next = applyWorkspaceAction({
@@ -121,6 +127,7 @@ export function setWorkspaceDecision(
     outcome,
     at,
     ...(alternatives !== undefined ? { alternatives } : {}),
+    ...(compareObjective !== undefined ? { compareObjective } : {}),
   });
   if (outcome !== "deferred") {
     return applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt: null, at });
@@ -175,5 +182,43 @@ export function toggleWorkspaceSaved(slug: string) {
 
 export function toggleWorkspaceCompare(slug: string) {
   return applyWorkspaceAction({ type: "compare/toggle", slug, at: nowIso() });
+}
+
+export function setWorkspaceUsage(
+  slug: string,
+  usage: WorkspaceUsage | null,
+  replacedBy?: string | null,
+) {
+  return applyWorkspaceAction({
+    type: "tool/usage",
+    slug,
+    usage,
+    at: nowIso(),
+    ...(replacedBy !== undefined ? { replacedBy } : {}),
+  });
+}
+
+export function setWorkspaceCompareObjective(
+  slug: string,
+  objective: CompareObjective | null,
+) {
+  return applyWorkspaceAction({
+    type: "tool/compare-objective",
+    slug,
+    compareObjective: objective,
+    at: nowIso(),
+  });
+}
+
+export function markWorkspaceToolUsing(slug: string) {
+  return setWorkspaceUsage(slug, "using");
+}
+
+export function markWorkspaceToolStopped(slug: string) {
+  return setWorkspaceUsage(slug, "stopped");
+}
+
+export function markWorkspaceToolReplaced(slug: string, replacedBy: string) {
+  return setWorkspaceUsage(slug, "replaced", replacedBy);
 }
 

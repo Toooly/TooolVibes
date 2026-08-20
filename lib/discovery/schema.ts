@@ -9,7 +9,11 @@ import {
   MAX_WORKSPACE_TOOL_STATES,
   WORKSPACE_SCHEMA_VERSION,
 } from "@/lib/discovery/workspace-constants";
-import { workspaceDecisionOutcomeValues } from "@/lib/discovery/types";
+import {
+  compareObjectiveValues,
+  workspaceDecisionOutcomeValues,
+  workspaceUsageValues,
+} from "@/lib/discovery/types";
 
 const saveReasonSchema = z.enum([
   "test",
@@ -114,6 +118,9 @@ export const workspaceToolStateSchema = z
     useCase: z.string().trim().min(1).max(MAX_USE_CASE_LENGTH).nullable().default(null),
     alternatives: uniqueSlugList(MAX_COMPARE_TOOLS).default([]),
     revisitAt: workspaceTimestampSchema.nullable().default(null),
+    usage: z.enum(workspaceUsageValues).nullable().default(null),
+    replacedBy: workspaceSlugSchema.nullable().default(null),
+    compareObjective: z.enum(compareObjectiveValues).nullable().default(null),
     updatedAt: workspaceTimestampSchema.nullable(),
   })
   .strict();

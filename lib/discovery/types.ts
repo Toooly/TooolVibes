@@ -16,6 +16,26 @@ export type WorkspaceDecision = {
   updatedAt: string;
 };
 
+export const workspaceUsageValues = [
+  "using",
+  "stopped",
+  "replaced",
+] as const;
+
+export type WorkspaceUsage = (typeof workspaceUsageValues)[number];
+
+export const compareObjectiveValues = [
+  "save-time",
+  "quality",
+  "save-money",
+  "learn-fast",
+  "collaborate",
+  "scale",
+  "experiment",
+] as const;
+
+export type CompareObjective = (typeof compareObjectiveValues)[number];
+
 export type WorkspaceToolState = {
   stage: ShortlistStage;
   note: string | null;
@@ -25,6 +45,9 @@ export type WorkspaceToolState = {
   useCase: string | null;
   alternatives: string[];
   revisitAt: string | null;
+  usage: WorkspaceUsage | null;
+  replacedBy: string | null;
+  compareObjective: CompareObjective | null;
   updatedAt: string | null;
 };
 
@@ -72,9 +95,23 @@ export type WorkspaceAction =
       outcome: WorkspaceDecisionOutcome | null;
       at: string;
       alternatives?: string[];
+      compareObjective?: CompareObjective | null;
     }
   | { type: "tool/use-case"; slug: string; useCase: string | null; at: string }
   | { type: "tool/revisit"; slug: string; revisitAt: string | null; at: string }
+  | {
+      type: "tool/usage";
+      slug: string;
+      usage: WorkspaceUsage | null;
+      at: string;
+      replacedBy?: string | null;
+    }
+  | {
+      type: "tool/compare-objective";
+      slug: string;
+      compareObjective: CompareObjective | null;
+      at: string;
+    }
   | {
       type: "stacks/create";
       id: string;

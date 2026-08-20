@@ -50,6 +50,12 @@ const RESUME_COPY: Record<
     href: workspaceViewHref("biblioteca"),
     action: "Apri i salvati",
   },
+  confirm_usage: {
+    title: "Conferma se lo usi",
+    body: "L’hai scelto. Manca solo se lo stai usando.",
+    href: workspaceViewHref("biblioteca"),
+    action: "Apri i salvati",
+  },
 };
 
 const RESURFACE_COPY: Record<Extract<ResurfaceKind, "top_without_verdict" | "deferred_due">, string> = {

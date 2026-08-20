@@ -172,6 +172,9 @@ describe("canonical normalization", () => {
         useCase: null,
         alternatives: [],
         revisitAt: null,
+        usage: null,
+        replacedBy: null,
+        compareObjective: null,
         updatedAt: T0,
       },
     });
@@ -557,6 +560,9 @@ describe("workspace merge", () => {
       useCase: null,
       alternatives: [],
       revisitAt: null,
+      usage: null,
+      replacedBy: null,
+      compareObjective: null,
       updatedAt: null,
     });
     expect(mergeWorkspaceStates(cleared, metadataOnly).toolStates.alpha).toEqual({
@@ -568,6 +574,9 @@ describe("workspace merge", () => {
       useCase: null,
       alternatives: [],
       revisitAt: null,
+      usage: null,
+      replacedBy: null,
+      compareObjective: null,
       updatedAt: T1_5,
     });
 

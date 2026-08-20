@@ -77,6 +77,9 @@ function adaptLegacyToolState(value: unknown): WorkspaceToolState | null {
     useCase: null,
     alternatives: [],
     revisitAt: null,
+    usage: null,
+    replacedBy: null,
+    compareObjective: null,
     updatedAt: getTimestamp(state.updated_at),
   };
 }

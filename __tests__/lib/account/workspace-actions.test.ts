@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   createPersonalStackId,
   deferWorkspaceTool,
+  markWorkspaceToolReplaced,
+  markWorkspaceToolUsing,
   restorePersonalStack,
   setWorkspaceDecision,
   setWorkspacePinned,
@@ -68,6 +70,32 @@ describe("workspace action helpers", () => {
     const selected = getCanonicalToolWorkspaceState().toolStates.cursor;
     expect(selected?.decision?.outcome).toBe("selected");
     expect(selected?.revisitAt).toBeNull();
+  });
+
+  it("marks a tool as using and auto-selects it", () => {
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.withSaved);
+    markWorkspaceToolUsing("cursor");
+    const using = getCanonicalToolWorkspaceState().toolStates.cursor;
+    expect(using?.usage).toBe("using");
+    expect(using?.replacedBy).toBeNull();
+    expect(using?.decision?.outcome).toBe("selected");
+  });
+
+  it("marks a tool as replaced by another slug", () => {
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.withSaved);
+    markWorkspaceToolReplaced("cursor", "linear");
+    const replaced = getCanonicalToolWorkspaceState().toolStates.cursor;
+    expect(replaced?.usage).toBe("replaced");
+    expect(replaced?.replacedBy).toBe("linear");
+    expect(replaced?.decision?.outcome).toBe("selected");
+  });
+
+  it("ignores replaced without a distinct valid slug", () => {
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.withSaved);
+    const before = getCanonicalToolWorkspaceState();
+    markWorkspaceToolReplaced("cursor", "cursor");
+    markWorkspaceToolReplaced("cursor", "Bad Slug");
+    expect(getCanonicalToolWorkspaceState()).toEqual(before);
   });
 
   it("restores an archived personal stack", () => {

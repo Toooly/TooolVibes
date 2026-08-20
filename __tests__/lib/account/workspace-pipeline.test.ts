@@ -70,9 +70,13 @@ describe("workspace pipeline", () => {
     expect(cursor?.note).toBe("Scelto per il daily coding.");
     expect(cursor?.stackNames).toContain("AI Coding");
     expect(cursor?.pinned).toBe(true);
+    expect(cursor?.usage).toBe("using");
+    expect(cursor?.compareObjective).toBe("save-time");
     const linear = items.find((item) => item.slug === "linear");
     expect(linear?.stackNames).toContain("Client stack");
     expect(linear?.note).toBeNull();
+    expect(linear?.usage).toBe("replaced");
+    expect(linear?.replacedBy).toBe("cursor");
   });
 });
 
@@ -174,6 +178,9 @@ describe("backward compatible workspace payloads", () => {
       useCase: null,
       alternatives: [],
       revisitAt: null,
+      usage: null,
+      replacedBy: null,
+      compareObjective: null,
     });
   });
 });
@@ -256,6 +263,12 @@ describe("decision loop resume", () => {
       outcome: "selected",
       at: NOW,
     });
+    state = reduceWorkspaceState(state, {
+      type: "tool/usage",
+      slug: "cursor",
+      usage: "using",
+      at: NOW,
+    });
     expect(chooseResumeAction(state, NOW)).toEqual({
       kind: "evaluate_saved",
       slug: "v0",
@@ -288,5 +301,69 @@ describe("finished compare resume", () => {
     expect(chooseResumeAction(workspaceTestFixtures.withDecisions, NOW).kind).not.toBe(
       "continue_compare",
     );
+  });
+});
+
+describe("software memory resume", () => {
+  it("asks to confirm usage after a selected tool with no open candidate", () => {
+    let state = reduceWorkspaceState(createEmptyWorkspaceState(), {
+      type: "saved/set",
+      slug: "cursor",
+      saved: true,
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "tool/decision",
+      slug: "cursor",
+      outcome: "selected",
+      at: NOW,
+    });
+    expect(deriveResurfaceSignals(state, NOW).some((item) => item.kind === "selected_follow_up")).toBe(true);
+    expect(chooseResumeAction(state, NOW)).toEqual({
+      kind: "confirm_usage",
+      slug: "cursor",
+    });
+  });
+
+  it("prefers a candidate without verdict over usage confirmation", () => {
+    let state = reduceWorkspaceState(createEmptyWorkspaceState(), {
+      type: "saved/set",
+      slug: "cursor",
+      saved: true,
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "saved/set",
+      slug: "v0",
+      saved: true,
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "tool/decision",
+      slug: "cursor",
+      outcome: "selected",
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "tool/stage",
+      slug: "v0",
+      stage: "top",
+      at: NOW,
+    });
+    expect(chooseResumeAction(state, NOW)).toEqual({
+      kind: "close_decision",
+      slug: "v0",
+    });
+  });
+
+  it("keeps unfinished compare ahead of usage confirmation", () => {
+    expect(chooseResumeAction(workspaceTestFixtures.mature, NOW)).toEqual({
+      kind: "continue_compare",
+      slug: "cursor",
+    });
+    expect(chooseResumeAction(workspaceTestFixtures.withCompare, NOW)).toEqual({
+      kind: "continue_compare",
+      slug: "cursor",
+    });
   });
 });

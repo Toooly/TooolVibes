@@ -1,8 +1,10 @@
 import type {
+  CompareObjective,
   PersonalStack,
   WorkspaceDecisionOutcome,
   WorkspaceStateV1,
   WorkspaceToolState,
+  WorkspaceUsage,
 } from "@/lib/discovery/types";
 import type { ShortlistStage } from "@/lib/types/tool";
 
@@ -26,6 +28,9 @@ export type PipelineItem = {
   updatedAt: string | null;
   note: string | null;
   revisitAt: string | null;
+  usage: WorkspaceUsage | null;
+  replacedBy: string | null;
+  compareObjective: CompareObjective | null;
   stackNames: string[];
 };
 
@@ -34,7 +39,8 @@ export type ResurfaceKind =
   | "open_compare"
   | "top_without_verdict"
   | "review_without_verdict"
-  | "deferred_due";
+  | "deferred_due"
+  | "selected_follow_up";
 
 export type ResurfaceSignal = {
   kind: ResurfaceKind;
@@ -46,6 +52,7 @@ export type ResumeKind =
   | "continue_compare"
   | "review_decision"
   | "close_decision"
+  | "confirm_usage"
   | "evaluate_saved"
   | "empty";
 
@@ -105,6 +112,9 @@ export function listPipelineItems(state: WorkspaceStateV1): PipelineItem[] {
       updatedAt: tool?.updatedAt ?? tool?.decision?.updatedAt ?? state.saved.updatedAt,
       note,
       revisitAt: tool?.revisitAt ?? null,
+      usage: tool?.usage ?? null,
+      replacedBy: tool?.replacedBy ?? null,
+      compareObjective: tool?.compareObjective ?? null,
       stackNames: stacks
         .filter((stack) => stack.slugs.includes(slug))
         .map((stack) => stack.name),
@@ -174,6 +184,14 @@ export function deriveResurfaceSignals(
         });
       }
     }
+
+    if (outcome === "selected" && (tool?.usage ?? null) === null) {
+      signals.push({
+        kind: "selected_follow_up",
+        slug,
+        at: updatedAt,
+      });
+    }
   }
 
   return signals;
@@ -201,6 +219,11 @@ export function chooseResumeAction(
   const top = resurface.find((item) => item.kind === "top_without_verdict");
   if (top) {
     return { kind: "close_decision", slug: top.slug };
+  }
+
+  const followUp = resurface.find((item) => item.kind === "selected_follow_up");
+  if (followUp) {
+    return { kind: "confirm_usage", slug: followUp.slug };
   }
 
   const reviewing = resurface.find((item) => item.kind === "review_without_verdict");

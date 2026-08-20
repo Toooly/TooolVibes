@@ -95,6 +95,21 @@ export const workspaceTestFixtures = {
     { type: "compare/toggle", slug: "cursor", at: T2 },
     { type: "compare/toggle", slug: "blink", at: T2 },
     { type: "compare/toggle", slug: "linear", at: T2 },
+    { type: "tool/usage", slug: "cursor", usage: "using", at: T2 },
+    { type: "tool/decision", slug: "linear", outcome: "selected", at: T2 },
+    {
+      type: "tool/usage",
+      slug: "linear",
+      usage: "replaced",
+      replacedBy: "cursor",
+      at: T2,
+    },
+    {
+      type: "tool/compare-objective",
+      slug: "cursor",
+      compareObjective: "save-time",
+      at: T2,
+    },
   ]),
   degraded: createEmptyWorkspaceState(),
 };

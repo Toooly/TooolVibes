@@ -4,6 +4,7 @@ import {
   addToolToWorkingPersonalStack,
   archivePersonalStack,
   deferWorkspaceTool,
+  markWorkspaceToolUsing,
   restorePersonalStack,
   setWorkspaceDecision,
   setWorkspaceStage,
@@ -57,6 +58,20 @@ describe("decision loop 1.0", () => {
     setWorkspaceDecision("v0", null);
     expect(getCanonicalToolWorkspaceState().toolStates.v0?.decision?.outcome).toBeNull();
     expect(getCanonicalToolWorkspaceState().toolStates.v0?.revisitAt).toBeNull();
+  });
+
+  it("marks using and persists after reload", () => {
+    activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
+    toggleWorkspaceSaved("cursor");
+    markWorkspaceToolUsing("cursor");
+
+    const state = getCanonicalToolWorkspaceState();
+    expect(state.toolStates.cursor?.usage).toBe("using");
+    expect(state.toolStates.cursor?.decision?.outcome).toBe("selected");
+
+    const reloaded = activateToolWorkspaceOwner({ kind: "guest" }).state;
+    expect(reloaded.toolStates.cursor?.usage).toBe("using");
+    expect(reloaded.toolStates.cursor?.decision?.outcome).toBe("selected");
   });
 
   it("adds, archives and restores a personal stack without writing legacy stack", () => {

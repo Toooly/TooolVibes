@@ -1,8 +1,10 @@
 import type { ShortlistStage, ToolDecisionMemory } from "@/lib/types/tool";
 import type {
+  CompareObjective,
   DiscoveryWorkspaceState,
   ToolUserState,
   WorkspaceDecisionOutcome,
+  WorkspaceUsage,
 } from "@/lib/discovery/types";
 import {
   normalizeDiscoveryWorkspaceState,
@@ -53,6 +55,9 @@ export type DiscoveryLocalSnapshot = {
    */
   decisionUpdatedAts?: Record<string, string>;
   decisionRevisitAts?: Record<string, string>;
+  toolUsages?: Record<string, WorkspaceUsage>;
+  toolReplacedBy?: Record<string, string>;
+  toolCompareObjectives?: Record<string, CompareObjective>;
   toolStateMeta: Record<string, string>;
   compareMeta: CompareMeta;
 };
@@ -215,6 +220,23 @@ export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
       state.revisitAt ? [[slug, state.revisitAt] as const] : [],
     ),
   );
+  const toolUsages = Object.fromEntries(
+    Object.entries(workspace.toolStates).flatMap(([slug, state]) =>
+      state.usage ? [[slug, state.usage] as const] : [],
+    ),
+  );
+  const toolReplacedBy = Object.fromEntries(
+    Object.entries(workspace.toolStates).flatMap(([slug, state]) =>
+      state.replacedBy ? [[slug, state.replacedBy] as const] : [],
+    ),
+  );
+  const toolCompareObjectives = Object.fromEntries(
+    Object.entries(workspace.toolStates).flatMap(([slug, state]) =>
+      state.compareObjective
+        ? [[slug, state.compareObjective] as const]
+        : [],
+    ),
+  );
 
   return {
     visitedTools: getVisitedTools(),
@@ -226,6 +248,9 @@ export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
     decisionOutcomes,
     decisionUpdatedAts,
     decisionRevisitAts,
+    toolUsages,
+    toolReplacedBy,
+    toolCompareObjectives,
     toolStateMeta,
     compareMeta: { updated_at: workspace.compare.updatedAt },
   };
@@ -335,13 +360,46 @@ export function getToolDecisionOutcome(
 export function setToolDecisionOutcome(
   slug: string,
   outcome: WorkspaceDecisionOutcome,
+  compareObjective?: CompareObjective | null,
 ) {
   const at = nowIso();
-  commitAction({ type: "tool/decision", slug, outcome, at });
+  commitAction({
+    type: "tool/decision",
+    slug,
+    outcome,
+    at,
+    ...(compareObjective !== undefined ? { compareObjective } : {}),
+  });
   if (outcome !== "deferred") {
     commitAction({ type: "tool/revisit", slug, revisitAt: null, at });
   }
   return getToolDecisionOutcome(slug);
+}
+
+export function setToolUsage(
+  slug: string,
+  usage: WorkspaceUsage | null,
+  replacedBy?: string | null,
+) {
+  commitAction({
+    type: "tool/usage",
+    slug,
+    usage,
+    at: nowIso(),
+    ...(replacedBy !== undefined ? { replacedBy } : {}),
+  });
+}
+
+export function setToolCompareObjective(
+  slug: string,
+  objective: CompareObjective | null,
+) {
+  commitAction({
+    type: "tool/compare-objective",
+    slug,
+    compareObjective: objective,
+    at: nowIso(),
+  });
 }
 
 export function deferToolDecision(slug: string, revisitAt: string) {
