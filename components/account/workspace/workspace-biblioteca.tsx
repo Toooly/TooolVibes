@@ -369,7 +369,7 @@ function LibraryRow({
   const [draft, setDraft] = useState(item.note ?? "");
   const rejected = item.outcome === "rejected";
   const showMarkUsing =
-    !rejected && item.usage !== "using" && (item.outcome === "selected" || item.usage == null);
+    !rejected && item.usage !== "using" && item.outcome === "selected";
   const showMarkStopped = item.usage === "using";
   const showMarkReplaced =
     item.outcome === "selected" || item.usage === "using" || item.usage === "stopped";

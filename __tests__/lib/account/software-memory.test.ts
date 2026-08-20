@@ -13,6 +13,7 @@ import {
   mergeWorkspaceStates,
   normalizeWorkspaceState,
   reduceWorkspaceState,
+  stripUnsetSoftwareMemory,
 } from "@/lib/discovery/workspace-contract";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
@@ -219,5 +220,17 @@ describe("software memory persistence", () => {
 
     expect(mergeWorkspaceStates(left, right).toolStates.cursor.usage).toBe("stopped");
     expect(mergeWorkspaceStates(right, left).toolStates.cursor.usage).toBe("stopped");
+  });
+
+  it("omits unset software memory keys from the remote payload", () => {
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.withSaved);
+    const stripped = stripUnsetSoftwareMemory(getCanonicalToolWorkspaceState());
+    expect(stripped.toolStates.cursor).not.toHaveProperty("usage");
+    expect(stripped.toolStates.cursor).not.toHaveProperty("replacedBy");
+    expect(stripped.toolStates.cursor).not.toHaveProperty("compareObjective");
+
+    markWorkspaceToolUsing("cursor");
+    const using = stripUnsetSoftwareMemory(getCanonicalToolWorkspaceState());
+    expect(using.toolStates.cursor?.usage).toBe("using");
   });
 });

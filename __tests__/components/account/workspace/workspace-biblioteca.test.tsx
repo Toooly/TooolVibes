@@ -144,14 +144,14 @@ describe("WorkspaceBiblioteca", () => {
   });
 
   it("calls markWorkspaceToolUsing from Lo sto usando", () => {
-    render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.mature }));
+    render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.withDecisions }));
 
-    const row = document.querySelector('[data-slug="blink"]');
+    const row = document.querySelector('[data-slug="cursor"]');
     expect(row).toBeInstanceOf(HTMLElement);
     fireEvent.click(
       within(row as HTMLElement).getByRole("button", { name: "Lo sto usando" }),
     );
 
-    expect(markWorkspaceToolUsing).toHaveBeenCalledWith("blink");
+    expect(markWorkspaceToolUsing).toHaveBeenCalledWith("cursor");
   });
 });

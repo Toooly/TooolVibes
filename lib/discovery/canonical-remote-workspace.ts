@@ -3,6 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
 import { workspaceSyncStateV1Schema } from "@/lib/discovery/schema";
+import { stripUnsetSoftwareMemory } from "@/lib/discovery/workspace-contract";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
   synchronizeWorkspace,
@@ -188,7 +189,7 @@ function repository(viewerId: string): WorkspaceSyncRepository {
       const { data, error } = await createAdminSupabaseClient()
         .rpc("sync_viewer_workspace_v1", {
           p_viewer_id: viewerId,
-          p_state: input.state,
+          p_state: stripUnsetSoftwareMemory(input.state),
           p_expected_revision: revisionInput(input.expectedRevision),
           p_operation_id: input.operationId,
         }).single();

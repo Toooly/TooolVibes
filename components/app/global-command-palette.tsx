@@ -33,6 +33,7 @@ import {
   workspaceViewHref,
 } from "@/components/account/workspace/workspace-model";
 import { playTooolvibesSound } from "@/lib/config/sound";
+import { useSignalProgressUiEnabled } from "@/lib/signal-progression/release-context";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import {
   activePersonalStacks,
@@ -139,6 +140,14 @@ export function GlobalCommandPalette({
   const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
   const addToStack = useToolWorkspaceStore((state) => state.addToStack);
   const workspace = getCanonicalToolWorkspaceState();
+  const signalUi = useSignalProgressUiEnabled();
+  const workspaceDestinations = useMemo(
+    () =>
+      WORKSPACE_DESTINATIONS.filter(
+        (item) => item.href !== workspaceViewHref("segnale") || signalUi,
+      ),
+    [signalUi],
+  );
 
   const trimmedQuery = query.trim();
   const searchEngine = resolveToolSearchEngine(unifiedSearchEnabled);
@@ -447,7 +456,7 @@ export function GlobalCommandPalette({
                 <Workflow className="size-4" />
                 Apri i tuoi stack
               </CommandItem>
-              {WORKSPACE_DESTINATIONS.map((item) => {
+              {workspaceDestinations.map((item) => {
                 const Icon = item.icon;
                 return (
                   <CommandItem

@@ -357,6 +357,21 @@ export function normalizeWorkspaceState(input: unknown): WorkspaceStateV1 {
   });
 }
 
+export function stripUnsetSoftwareMemory(state: WorkspaceStateV1): WorkspaceStateV1 {
+  return {
+    ...state,
+    toolStates: Object.fromEntries(
+      Object.entries(state.toolStates).map(([slug, tool]) => {
+        const next: Record<string, unknown> = { ...tool };
+        if (next.usage == null) delete next.usage;
+        if (next.replacedBy == null) delete next.replacedBy;
+        if (next.compareObjective == null) delete next.compareObjective;
+        return [slug, next];
+      }),
+    ) as WorkspaceStateV1["toolStates"],
+  };
+}
+
 function cloneOrderedList(list: WorkspaceOrderedList): WorkspaceOrderedList {
   return {
     slugs: [...list.slugs],

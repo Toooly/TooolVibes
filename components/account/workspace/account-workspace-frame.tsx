@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
 import { useDiscoveryPersistence } from "@/components/discovery/canonical-discovery-persistence-provider";
+import { useSignalProgressUiEnabled } from "@/lib/signal-progression/release-context";
 import {
   getHeroBadgeLabel,
   getPersistenceLabel,
@@ -164,6 +165,14 @@ export function AccountWorkspaceFrame({
 
   const selectValue =
     resolvedSurface === "settings" ? "" : workspaceViewHref(view);
+  const signalUi = useSignalProgressUiEnabled();
+  const secondaryViews = useMemo(
+    () =>
+      WORKSPACE_SECONDARY_VIEWS.filter(
+        (item) => item !== "segnale" || signalUi,
+      ),
+    [signalUi],
+  );
 
   return (
     <div
@@ -200,9 +209,9 @@ export function AccountWorkspaceFrame({
             <p className="tv-app__nav-label">Scopri</p>
             <DiscoverLinks />
           </div>
-          {WORKSPACE_SECONDARY_VIEWS.length > 0 ? (
+          {secondaryViews.length > 0 ? (
             <div className="tv-app__nav-group">
-              {WORKSPACE_SECONDARY_VIEWS.map((item) => (
+              {secondaryViews.map((item) => (
                 <WorkspaceNavLink
                   key={item}
                   view={item}
@@ -260,9 +269,9 @@ export function AccountWorkspaceFrame({
                 </option>
               ))}
             </optgroup>
-            {WORKSPACE_SECONDARY_VIEWS.length > 0 ? (
+            {secondaryViews.length > 0 ? (
               <optgroup label="Altro">
-                {WORKSPACE_SECONDARY_VIEWS.map((item) => (
+                {secondaryViews.map((item) => (
                   <option key={item} value={workspaceViewHref(item)}>
                     {WORKSPACE_VIEW_LABELS[item]}
                   </option>
@@ -319,7 +328,7 @@ export function AccountWorkspaceFrame({
           ))}
         </nav>
         <nav className="tv-app__tablet-secondary" aria-label="Altre destinazioni">
-          {WORKSPACE_SECONDARY_VIEWS.map((item) => (
+          {secondaryViews.map((item) => (
             <WorkspaceNavLink
               key={item}
               view={item}
