@@ -9,6 +9,12 @@ import { AccountSubmissionsSection } from "./panel/account-submissions-section";
 import { useAccountSubmissions } from "./panel/use-account-submissions";
 import { AuthPage } from "./auth-page";
 import {
+  buildWorkspaceExportPayload,
+  downloadWorkspaceExportJson,
+  isWorkspaceResetConfirmed,
+  workspaceExportFilename,
+} from "@/lib/account/workspace-export";
+import {
   DEFAULT_REWARD_PREFERENCES,
   readRewardPreferences,
   writeRewardPreferences,
@@ -27,6 +33,10 @@ import {
   type SignalFocusArea,
   type SignalPrimaryGoal,
 } from "@/lib/signal-progression/profile-context";
+import {
+  getCanonicalToolWorkspaceState,
+  useToolWorkspaceStore,
+} from "@/lib/stores/tool-workspace-store";
 
 export function AccountSettingsPage() {
   const account = useAccount();
@@ -86,6 +96,25 @@ export function AccountSettingsPage() {
         ) : (
           <AccountRecoverySection account={account} />
         )}
+
+        <section className="tv-settings-section" aria-labelledby="settings-workspace">
+          <h2 id="settings-workspace" className="tv-settings-heading">
+            Workspace
+          </h2>
+          <WorkspaceSettings />
+        </section>
+
+        <section className="tv-settings-section" aria-labelledby="settings-privacy">
+          <h2 id="settings-privacy" className="tv-settings-heading">
+            Privacy e dati
+          </h2>
+          <p className="tv-settings-copy">
+            I dati del toolbox restano nel workspace personale. Puoi esportarli dalla sezione Workspace.
+          </p>
+          <p className="tv-settings-copy">
+            Eliminazione account: non disponibile in questo ciclo.
+          </p>
+        </section>
 
         <section className="tv-settings-section" aria-labelledby="settings-contrib">
           <h2 id="settings-contrib" className="tv-settings-heading">
@@ -230,6 +259,65 @@ function SignalSettings() {
         Niente celebrazioni
       </label>
       {status ? <p role="status">{status}</p> : null}
+    </div>
+  );
+}
+
+function WorkspaceSettings() {
+  const clearWorkspace = useToolWorkspaceStore((state) => state.clearWorkspace);
+  const [resetConfirm, setResetConfirm] = useState("");
+  const [exportStatus, setExportStatus] = useState<string | null>(null);
+  const [resetStatus, setResetStatus] = useState<string | null>(null);
+  const canReset = isWorkspaceResetConfirmed(resetConfirm);
+
+  return (
+    <div className="tv-settings-form">
+      <p className="tv-settings-copy">
+        Esporta o svuota salvati, stack e decisioni di questo workspace. Il catalogo e il ledger del segnale restano intatti.
+      </p>
+      <button
+        type="button"
+        className="account-btn-secondary"
+        onClick={() => {
+          const now = new Date();
+          downloadWorkspaceExportJson(
+            buildWorkspaceExportPayload(getCanonicalToolWorkspaceState(), now),
+            workspaceExportFilename(now),
+          );
+          setExportStatus("Esportazione avviata.");
+        }}
+      >
+        Esporta i tuoi dati
+      </button>
+      {exportStatus ? <p role="status">{exportStatus}</p> : null}
+
+      <label className="tv-space-search">
+        <span>Scrivi RESET per confermare</span>
+        <input
+          value={resetConfirm}
+          onChange={(event) => setResetConfirm(event.target.value)}
+          autoComplete="off"
+          spellCheck={false}
+          aria-describedby="settings-reset-help"
+        />
+      </label>
+      <p id="settings-reset-help" className="tv-settings-copy">
+        Svuota salvati, stack e decisioni su questo workspace. Non tocca il catalogo né il ledger del segnale.
+      </p>
+      <button
+        type="button"
+        className="account-btn-secondary"
+        disabled={!canReset}
+        onClick={() => {
+          if (!isWorkspaceResetConfirmed(resetConfirm)) return;
+          clearWorkspace();
+          setResetConfirm("");
+          setResetStatus("Spazio svuotato.");
+        }}
+      >
+        Svuota lo spazio
+      </button>
+      {resetStatus ? <p role="status">{resetStatus}</p> : null}
     </div>
   );
 }
