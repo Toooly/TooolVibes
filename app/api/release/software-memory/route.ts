@@ -112,26 +112,49 @@ export async function POST(request: Request) {
 
   const before = await probe();
   const { url, serviceRoleKey } = getSupabaseAdminEnv();
-  const pgQuery = await fetch(`${url}/pg/query`, {
-    method: "POST",
-    headers: {
-      apikey: serviceRoleKey ?? "",
-      Authorization: `Bearer ${serviceRoleKey}`,
-      "Content-Type": "application/json",
+  const attempts = [];
+  const ref = new URL(url ?? "").hostname.split(".")[0];
+  const headers = {
+    apikey: serviceRoleKey ?? "",
+    Authorization: `Bearer ${serviceRoleKey}`,
+    "Content-Type": "application/json",
+  };
+
+  for (const attempt of [
+    {
+      transport: "pg-meta",
+      href: `${url}/pg-meta/default/query`,
+      body: { query: SOFTWARE_MEMORY_VALIDATOR_SQL },
     },
-    body: JSON.stringify({ query: SOFTWARE_MEMORY_VALIDATOR_SQL }),
-  });
-  const pgText = await pgQuery.text();
+    {
+      transport: "management-query",
+      href: `https://api.supabase.com/v1/projects/${ref}/database/query`,
+      body: { query: SOFTWARE_MEMORY_VALIDATOR_SQL },
+    },
+    {
+      transport: "management-migration",
+      href: `https://api.supabase.com/v1/projects/${ref}/database/migrations`,
+      body: {
+        name: "workspace_state_v1_software_memory",
+        query: SOFTWARE_MEMORY_VALIDATOR_SQL,
+      },
+    },
+  ]) {
+    const response = await fetch(attempt.href, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(attempt.body),
+    });
+    const text = await response.text();
+    attempts.push({
+      transport: attempt.transport,
+      status: response.status,
+      ok: response.ok,
+      body: text.slice(0, 240),
+    });
+    if (response.ok) break;
+  }
 
   const after = await probe();
-  return NextResponse.json({
-    before,
-    apply: {
-      transport: "pg/query",
-      status: pgQuery.status,
-      ok: pgQuery.ok,
-      body: pgText.slice(0, 400),
-    },
-    after,
-  });
+  return NextResponse.json({ before, apply: attempts, after });
 }
