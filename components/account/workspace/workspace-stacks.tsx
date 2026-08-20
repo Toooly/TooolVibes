@@ -8,15 +8,19 @@ import {
   adoptLegacyListaStack,
   archivePersonalStack,
   createPersonalStack,
+  markWorkspaceToolUsing,
   removeToolFromPersonalStack,
   renamePersonalStack,
   restorePersonalStack,
+  toggleWorkspaceCompare,
 } from "@/lib/account/workspace-actions";
+import { compactPersonalStatus } from "@/lib/account/workspace-lifecycle";
 import { leftoverLegacyStackSlugs } from "@/lib/account/workspace-stack-target";
 import { activePersonalStacks } from "@/lib/account/workspace-pipeline";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import {
+  MAX_COMPARE_TOOLS,
   MAX_STACK_DESCRIPTION_LENGTH,
   MAX_STACK_NAME_LENGTH,
 } from "@/lib/discovery/workspace-constants";
@@ -41,15 +45,89 @@ function countLabel(count: number) {
   return count === 1 ? "1 tool" : `${count} tool`;
 }
 
-export function WorkspaceStacks({ state }: { state: WorkspaceStateV1 }) {
+function stackById(state: WorkspaceStateV1, id: string | null | undefined) {
+  if (!id) return null;
+  return state.personalStacks.find((stack) => stack.id === id) ?? null;
+}
+
+/** Honest member buckets from toolStates — no scores, no percentages. */
+function stackMemberCounts(
+  state: WorkspaceStateV1,
+  slugs: readonly string[],
+) {
+  let evaluating = 0;
+  let selected = 0;
+  let using = 0;
+  for (const slug of slugs) {
+    const tool = state.toolStates[slug];
+    const outcome = tool?.decision?.outcome ?? null;
+    const usage = tool?.usage ?? null;
+    if (outcome == null) evaluating += 1;
+    if (outcome === "selected" && usage !== "using" && usage !== "replaced") {
+      selected += 1;
+    }
+    if (usage === "using") using += 1;
+  }
+  return { evaluating, selected, using };
+}
+
+function formatStackMemberCounts(counts: {
+  evaluating: number;
+  selected: number;
+  using: number;
+}) {
+  const parts: string[] = [];
+  if (counts.evaluating > 0) parts.push(`${counts.evaluating} in valutazione`);
+  if (counts.selected > 0) {
+    parts.push(counts.selected === 1 ? "1 scelto" : `${counts.selected} scelti`);
+  }
+  if (counts.using > 0) parts.push(`${counts.using} in uso`);
+  return parts.join(" · ");
+}
+
+function queueStackCompare(
+  memberSlugs: readonly string[],
+  compareSlugs: readonly string[],
+) {
+  const room = Math.max(0, MAX_COMPARE_TOOLS - compareSlugs.length);
+  if (room === 0) return;
+  const toAdd: string[] = [];
+  for (const slug of memberSlugs) {
+    if (toAdd.length >= room) break;
+    if (compareSlugs.includes(slug)) continue;
+    toAdd.push(slug);
+  }
+  for (const slug of toAdd) toggleWorkspaceCompare(slug);
+}
+
+export function WorkspaceStacks({
+  state,
+  stackId = null,
+}: {
+  state: WorkspaceStateV1;
+  stackId?: string | null;
+}) {
   const catalog = usePublicToolCatalog();
   const stacks = activePersonalStacks(state);
   const archived = state.personalStacks.filter((stack) => Boolean(stack.archivedAt));
   const leftover = leftoverLegacyStackSlugs(state);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [openId, setOpenId] = useState<string | null>(stacks[0]?.id ?? null);
-  const open = stacks.find((stack) => stack.id === openId) ?? stacks[0] ?? null;
+  const [openId, setOpenId] = useState<string | null>(() => {
+    if (stackId && stackById(state, stackId)) return stackId;
+    return stacks[0]?.id ?? null;
+  });
+  const [seenStackId, setSeenStackId] = useState(stackId);
+  if (stackId !== seenStackId) {
+    setSeenStackId(stackId);
+    if (stackId && stackById(state, stackId)) setOpenId(stackId);
+  }
+
+  const selected = stackById(state, openId);
+  const open =
+    selected && (!selected.archivedAt || selected.id === stackId)
+      ? selected
+      : stacks[0] ?? (stackId ? stackById(state, stackId) : null);
 
   return (
     <div className="tv-stacks">
@@ -130,7 +208,7 @@ export function WorkspaceStacks({ state }: { state: WorkspaceStateV1 }) {
         </section>
       ) : null}
 
-      {stacks.length === 0 ? (
+      {stacks.length === 0 && !open ? (
         <section className="tv-stacks-empty">
           <h2 className="tv-stacks-empty__title">
             {archived.length > 0 ? "Nessuno stack attivo" : "Nessuno stack ancora"}
@@ -140,20 +218,25 @@ export function WorkspaceStacks({ state }: { state: WorkspaceStateV1 }) {
             raccolta da mostrare: è un banco di lavoro.
           </p>
         </section>
+      ) : stacks.length === 0 && open ? (
+        <StackDetail key={open.id} state={state} stack={open} catalog={catalog} />
       ) : (
         <div className="tv-stacks-split">
           <ul className="tv-stacks-overview">
             {stacks.map((stack) => {
               const previews = previewNames(catalog, stack.slugs);
               const updated = formatWorkspaceDate(stack.updatedAt);
-              const selected = stack.id === open?.id;
+              const isOpen = stack.id === open?.id;
+              const memberCounts = formatStackMemberCounts(
+                stackMemberCounts(state, stack.slugs),
+              );
               return (
                 <li key={stack.id}>
                   <button
                     type="button"
-                    className={selected ? "tv-stacks-item is-active" : "tv-stacks-item"}
+                    className={isOpen ? "tv-stacks-item is-active" : "tv-stacks-item"}
                     onClick={() => setOpenId(stack.id)}
-                    aria-current={selected ? "true" : undefined}
+                    aria-current={isOpen ? "true" : undefined}
                   >
                     <span className="tv-stacks-item__name">{stack.name}</span>
                     {stack.description ? (
@@ -168,6 +251,9 @@ export function WorkspaceStacks({ state }: { state: WorkspaceStateV1 }) {
                       <span>{countLabel(stack.slugs.length)}</span>
                       {updated ? <span> · {updated}</span> : null}
                     </span>
+                    {memberCounts ? (
+                      <span className="tv-stacks-item__meta">{memberCounts}</span>
+                    ) : null}
                   </button>
                 </li>
               );
@@ -194,6 +280,7 @@ function StackDetail({
   const [draftName, setDraftName] = useState(stack.name);
   const [draftDescription, setDraftDescription] = useState(stack.description ?? "");
   const [pickerQuery, setPickerQuery] = useState("");
+  const archived = Boolean(stack.archivedAt);
 
   const available = useMemo(() => {
     const query = pickerQuery.trim().toLowerCase();
@@ -250,18 +337,48 @@ function StackDetail({
           <p className="tv-stacks-detail__copy">Nessun tool in questo stack.</p>
         ) : (
           <ul className="tv-stacks-tool-list">
-            {stack.slugs.map((slug) => (
-              <li key={slug} className="tv-stacks-tool">
-                <Link href={`/toools/${slug}`}>{toolName(catalog, slug)}</Link>
-                <button
-                  type="button"
-                  className="tv-stacks-textbtn"
-                  onClick={() => removeToolFromPersonalStack(stack.id, slug)}
-                >
-                  Togli
-                </button>
-              </li>
-            ))}
+            {stack.slugs.map((slug) => {
+              const tool = state.toolStates[slug];
+              const usage = tool?.usage ?? null;
+              const outcome = tool?.decision?.outcome ?? null;
+              const stage = tool?.stage ?? "saved";
+              const status = compactPersonalStatus({ usage, outcome, stage });
+              const replacedName =
+                usage === "replaced" && tool?.replacedBy
+                  ? toolName(catalog, tool.replacedBy)
+                  : null;
+              const canMarkUsing = outcome === "selected" && !usage;
+              return (
+                <li key={slug} className="tv-stacks-tool">
+                  <span>
+                    <Link href={`/toools/${slug}`}>{toolName(catalog, slug)}</Link>
+                    <span className="tv-stacks-item__meta"> {status.label}</span>
+                    {replacedName ? (
+                      <span className="tv-stacks-item__meta"> → {replacedName}</span>
+                    ) : null}
+                  </span>
+                  <span>
+                    {canMarkUsing ? (
+                      <button
+                        type="button"
+                        className="tv-stacks-textbtn"
+                        onClick={() => markWorkspaceToolUsing(slug)}
+                      >
+                        Lo sto usando
+                      </button>
+                    ) : null}
+                    {canMarkUsing ? " " : null}
+                    <button
+                      type="button"
+                      className="tv-stacks-textbtn"
+                      onClick={() => removeToolFromPersonalStack(stack.id, slug)}
+                    >
+                      Togli
+                    </button>
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
@@ -308,13 +425,33 @@ function StackDetail({
         )}
       </div>
 
-      <button
-        type="button"
-        className="account-btn-secondary"
-        onClick={() => archivePersonalStack(stack.id)}
-      >
-        Archivia stack
-      </button>
+      {stack.slugs.length >= 2 ? (
+        <Link
+          href="/compare"
+          className="account-btn-secondary"
+          onClick={() => queueStackCompare(stack.slugs, state.compare.slugs)}
+        >
+          Confronta questi tool
+        </Link>
+      ) : null}
+
+      {archived ? (
+        <button
+          type="button"
+          className="account-btn-secondary"
+          onClick={() => restorePersonalStack(stack.id)}
+        >
+          Ripristina
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="account-btn-secondary"
+          onClick={() => archivePersonalStack(stack.id)}
+        >
+          Archivia stack
+        </button>
+      )}
     </section>
   );
 }

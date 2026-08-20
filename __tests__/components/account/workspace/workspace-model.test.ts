@@ -4,6 +4,7 @@ import {
   WORKSPACE_VIEWS,
   formatWorkspaceDate,
   parseWorkspaceView,
+  workspaceFocusHref,
   workspaceViewHref,
 } from "@/components/account/workspace/workspace-model";
 
@@ -37,6 +38,21 @@ describe("workspace-model", () => {
     expect(workspaceViewHref("biblioteca")).toBe("/account?view=biblioteca");
     expect(workspaceViewHref("recenti")).toBe("/account?view=recenti");
     expect(workspaceViewHref("segnale")).toBe("/account?view=segnale");
+  });
+
+  it("workspaceViewHref appends optional focus and stack query params", () => {
+    expect(workspaceViewHref("riprendi", { focus: "cursor" })).toBe(
+      "/account?view=riprendi&focus=cursor",
+    );
+    expect(workspaceViewHref("biblioteca", { focus: "cursor" })).toBe(
+      "/account?view=biblioteca&focus=cursor",
+    );
+    expect(workspaceViewHref("stack", { stack: "ai-coding" })).toBe(
+      "/account?view=stack&stack=ai-coding",
+    );
+    expect(workspaceFocusHref("decisioni", "cursor")).toBe(
+      "/account?view=decisioni&focus=cursor",
+    );
   });
 
   it("formats workspace dates in Italian when the value is valid", () => {

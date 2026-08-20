@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { createElement } from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
@@ -19,6 +19,9 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 vi.mock("@/lib/account/workspace-actions", () => ({
   addToolToPersonalStack: vi.fn(),
   deferWorkspaceTool: vi.fn(),
+  markWorkspaceToolReplaced: vi.fn(),
+  markWorkspaceToolStopped: vi.fn(),
+  markWorkspaceToolUsing: vi.fn(),
   setWorkspaceDecision: vi.fn(),
   setWorkspaceNote: vi.fn(),
   setWorkspacePinned: vi.fn(),
@@ -28,6 +31,7 @@ vi.mock("@/lib/account/workspace-actions", () => ({
 }));
 
 import { WorkspaceBiblioteca } from "@/components/account/workspace/workspace-biblioteca";
+import { markWorkspaceToolUsing } from "@/lib/account/workspace-actions";
 
 function catalogFor(state: WorkspaceStateV1): PublicToolCatalogItem[] {
   return state.saved.slugs.map((slug) => {
@@ -64,6 +68,7 @@ function rowSlugs() {
 describe("WorkspaceBiblioteca", () => {
   beforeEach(() => {
     catalogRuntime.value = catalogFor(workspaceTestFixtures.mature);
+    vi.mocked(markWorkspaceToolUsing).mockClear();
   });
 
   afterEach(() => {
@@ -126,5 +131,27 @@ describe("WorkspaceBiblioteca", () => {
       "href",
       expect.stringContaining("/archivio"),
     );
+  });
+
+  it("hides tools that are not in use when the usage filter is In uso", () => {
+    render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.mature }));
+
+    fireEvent.change(screen.getByLabelText("Uso"), {
+      target: { value: "using" },
+    });
+
+    expect(rowSlugs()).toEqual(["cursor"]);
+  });
+
+  it("calls markWorkspaceToolUsing from Lo sto usando", () => {
+    render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.mature }));
+
+    const row = document.querySelector('[data-slug="blink"]');
+    expect(row).toBeInstanceOf(HTMLElement);
+    fireEvent.click(
+      within(row as HTMLElement).getByRole("button", { name: "Lo sto usando" }),
+    );
+
+    expect(markWorkspaceToolUsing).toHaveBeenCalledWith("blink");
   });
 });

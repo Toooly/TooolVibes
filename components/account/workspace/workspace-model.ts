@@ -63,8 +63,24 @@ export function parseWorkspaceView(value: string | null | undefined): WorkspaceV
   return LEGACY_WORKSPACE_VIEWS[value] ?? "riprendi";
 }
 
-export function workspaceViewHref(view: WorkspaceView): string {
-  return view === "riprendi" ? "/account" : `/account?view=${view}`;
+export function workspaceViewHref(
+  view: WorkspaceView,
+  extras?: { focus?: string; stack?: string },
+): string {
+  const focus = extras?.focus?.trim() ?? "";
+  const stack = extras?.stack?.trim() ?? "";
+  const hasExtras = Boolean(focus || stack);
+  if (view === "riprendi" && !hasExtras) return "/account";
+
+  const params = new URLSearchParams();
+  params.set("view", view);
+  if (focus) params.set("focus", focus);
+  if (stack) params.set("stack", stack);
+  return `/account?${params.toString()}`;
+}
+
+export function workspaceFocusHref(view: WorkspaceView, slug: string) {
+  return workspaceViewHref(view, { focus: slug });
 }
 
 export function formatWorkspaceDate(value: string | null | undefined): string | null {

@@ -290,13 +290,13 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     render(<MobileShortlistBoard tools={TOOLS} />);
     openSheetFor("Alpha");
 
-    fireEvent.click(screen.getByRole("button", { name: "Scelto" }));
+    fireEvent.click(screen.getByRole("button", { name: "Scegli" }));
 
     expect(readPersistedWorkspace().toolStates.alpha.decision?.outcome).toBe(
       "selected",
     );
     expect(
-      screen.getByRole("button", { name: "Scelto" }).getAttribute(
+      screen.getByRole("button", { name: "Scegli" }).getAttribute(
         "aria-pressed",
       ),
     ).toBe("true");
@@ -312,7 +312,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
       screen.queryByRole("button", { name: "Riapri decisione" }),
     ).toBeNull();
     expect(
-      screen.getByRole("button", { name: "Scelto" }).getAttribute(
+      screen.getByRole("button", { name: "Scegli" }).getAttribute(
         "aria-pressed",
       ),
     ).toBe("false");
@@ -467,9 +467,10 @@ describe("MobileShortlistBoard — B35 decision view (FLOW-604)", () => {
     // La riga della decisione dichiara un timestamp reale (non il fallback
     // "Nessun aggiornamento locale", che resta legittimo per la nota mai salvata).
     expect(dialog.textContent).toMatch(/Registrata \d/);
+    expect(dialog.textContent).toContain("Scartato");
     expect(
       within(dialog)
-        .getByRole("button", { name: "Scartato" })
+        .getByRole("button", { name: "Scarta" })
         .getAttribute("aria-pressed"),
     ).toBe("true");
   });
@@ -490,5 +491,38 @@ describe("MobileShortlistBoard — B35 decision view (FLOW-604)", () => {
     expect(
       screen.queryByRole("region", { name: "Decisioni registrate" }),
     ).toBeNull();
+  });
+
+  it("mostra In uso after marking Lo sto usando from the sheet", () => {
+    seedWorkspace(
+      reduceWorkspaceState(savedState("alpha", "beta"), {
+        type: "tool/decision",
+        slug: "alpha",
+        outcome: "selected",
+        at: "2026-07-18T09:00:00.000Z",
+      }),
+    );
+    render(<MobileShortlistBoard tools={TOOLS} />);
+
+    const section = screen.getByRole("region", {
+      name: "Decisioni registrate",
+    });
+    expect(section.textContent).toContain("Scelto");
+    expect(section.textContent).not.toContain("In uso");
+
+    fireEvent.click(
+      within(section).getByRole("button", { name: "Apri decisione di Alpha" }),
+    );
+    const dialog = screen.getByRole("dialog", {
+      name: "Memoria decisionale di Alpha",
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Lo sto usando" }));
+
+    expect(readPersistedWorkspace().toolStates.alpha.usage).toBe("using");
+    expect(readPersistedWorkspace().toolStates.alpha.decision?.outcome).toBe(
+      "selected",
+    );
+    expect(section.textContent).toContain("In uso");
+    expect(dialog.textContent).toContain("In uso");
   });
 });

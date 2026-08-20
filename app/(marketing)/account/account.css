@@ -1238,9 +1238,28 @@ body[data-account-surface] .mobile-top-bar {
 }
 
 .tv-lib-count {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
   margin: 0;
   color: var(--tv-ink-muted-aa);
   font-size: 0.78rem;
+}
+
+.tv-lib-clear {
+  min-height: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tv-ink-secondary);
+  font: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.tv-lib-clear:hover {
+  color: var(--tv-ink-primary);
 }
 
 .tv-lib-row {
@@ -1250,6 +1269,15 @@ body[data-account-surface] .mobile-top-bar {
   align-items: start;
   padding: 0.7rem 0;
   border-bottom: 1px solid var(--tv-border-subtle);
+}
+
+.tv-lib-row[data-focus="true"] {
+  background: color-mix(in srgb, var(--tv-accent-violet, #b388ff) 10%, transparent);
+  border-radius: 0.45rem;
+  padding-left: 0.55rem;
+  padding-right: 0.55rem;
+  margin-left: -0.55rem;
+  margin-right: -0.55rem;
 }
 
 .tv-lib-row__main {

@@ -27,8 +27,11 @@ import Link from "next/link";
 import { RevisitWhenChips } from "@/components/account/workspace/revisit-when-chips";
 import {
   formatRevisitLine,
+  OUTCOME_ACTION_LABELS,
   OUTCOME_STATE_LABELS,
   STAGE_LABELS,
+  usageActionLabel,
+  usageStateLabel,
 } from "@/lib/account/workspace-lifecycle";
 import { RequestToolForm } from "@/components/wishlist/request-tool-form";
 import { ShortlistStageToggle } from "@/components/tools/shortlist-stage-toggle";
@@ -37,10 +40,11 @@ import {
   reopenToolDecision,
   deferToolDecision,
   setToolDecisionOutcome,
+  setToolUsage,
   toggleToolPin,
   updateToolDecisionMemory,
 } from "@/lib/discovery/local-storage";
-import type { WorkspaceDecisionOutcome } from "@/lib/discovery/types";
+import type { WorkspaceDecisionOutcome, WorkspaceUsage } from "@/lib/discovery/types";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import {
   formatDecisionTimestamp,
@@ -84,6 +88,20 @@ function getStageLabel(stage: ShortlistStage): string {
   return STAGE_LABELS[stage];
 }
 
+function resolveToolName(tools: ToolPublic[], slug: string | null | undefined): string | null {
+  if (!slug) return null;
+  return tools.find((tool) => tool.slug === slug)?.name ?? null;
+}
+
+function formatUsageLine(
+  usage: WorkspaceUsage | null | undefined,
+  replacedByName: string | null,
+): string | null {
+  if (!usage) return null;
+  const label = usageStateLabel(usage);
+  return usage === "replaced" && replacedByName ? `${label} → ${replacedByName}` : label;
+}
+
 const decisionOutcomeOptions: WorkspaceDecisionOutcome[] = [
   "selected",
   "rejected",
@@ -92,20 +110,23 @@ const decisionOutcomeOptions: WorkspaceDecisionOutcome[] = [
 
 const decisionOutcomeMeta: Record<
   WorkspaceDecisionOutcome,
-  { label: string; tone: string; background: string }
+  { actionLabel: string; stateLabel: string; tone: string; background: string }
 > = {
   selected: {
-    label: OUTCOME_STATE_LABELS.selected,
+    actionLabel: OUTCOME_ACTION_LABELS.selected,
+    stateLabel: OUTCOME_STATE_LABELS.selected,
     tone: "var(--accent-strong)",
     background: "rgba(106,60,255,0.22)",
   },
   rejected: {
-    label: OUTCOME_STATE_LABELS.rejected,
+    actionLabel: OUTCOME_ACTION_LABELS.rejected,
+    stateLabel: OUTCOME_STATE_LABELS.rejected,
     tone: "var(--muted-strong)",
     background: "rgba(255,82,82,0.14)",
   },
   deferred: {
-    label: OUTCOME_STATE_LABELS.deferred,
+    actionLabel: OUTCOME_ACTION_LABELS.deferred,
+    stateLabel: OUTCOME_STATE_LABELS.deferred,
     tone: "var(--muted-strong)",
     background: "rgba(243,191,76,0.14)",
   },
@@ -132,6 +153,8 @@ export function MobileShortlistBoard({
   const decisionOutcomes = discovery.decisionOutcomes ?? {};
   const decisionUpdatedAts = discovery.decisionUpdatedAts ?? {};
   const decisionRevisitAts = discovery.decisionRevisitAts ?? {};
+  const toolUsages = discovery.toolUsages ?? {};
+  const toolReplacedBy = discovery.toolReplacedBy ?? {};
 
   const [noteSlug, setNoteSlug] = useState<string | null>(null);
 
@@ -205,6 +228,11 @@ export function MobileShortlistBoard({
               const outcome = decisionOutcomes[tool.slug];
               if (!outcome) return null;
               const meta = decisionOutcomeMeta[outcome];
+              const usage = toolUsages[tool.slug] ?? null;
+              const usageLine = formatUsageLine(
+                usage,
+                resolveToolName(tools, toolReplacedBy[tool.slug]),
+              );
 
               return (
                 <li
@@ -231,8 +259,20 @@ export function MobileShortlistBoard({
                       color: meta.tone,
                     }}
                   >
-                    {meta.label}
+                    {meta.stateLabel}
                   </span>
+                  {usageLine ? (
+                    <span
+                      className={sheetChipClassName}
+                      style={{
+                        borderColor: "rgba(112,82,255,0.24)",
+                        background: "rgba(106,60,255,0.18)",
+                        color: "var(--accent-strong)",
+                      }}
+                    >
+                      {usageLine}
+                    </span>
+                  ) : null}
                   <span
                     className="text-xs uppercase tracking-[0.14em]"
                     style={{ color: "var(--muted)" }}
@@ -295,10 +335,13 @@ export function MobileShortlistBoard({
         title="Preferiti"
         icon={Heart}
         tools={favoriteTools}
+        catalogTools={tools}
         color="#f3bf4c"
         emptyText="I tool che ami di più appariranno qui"
         decisionOutcomes={decisionOutcomes}
         decisionRevisitAts={decisionRevisitAts}
+        toolUsages={toolUsages}
+        toolReplacedBy={toolReplacedBy}
         onOpenMemory={setNoteSlug}
       />
 
@@ -306,10 +349,13 @@ export function MobileShortlistBoard({
         title="Da provare"
         icon={Bookmark}
         tools={toTryTools}
+        catalogTools={tools}
         color="#9be8ff"
         emptyText="Tool salvati da esplorare"
         decisionOutcomes={decisionOutcomes}
         decisionRevisitAts={decisionRevisitAts}
+        toolUsages={toolUsages}
+        toolReplacedBy={toolReplacedBy}
         onOpenMemory={setNoteSlug}
       />
 
@@ -317,10 +363,13 @@ export function MobileShortlistBoard({
         title="Recenti"
         icon={Clock}
         tools={recentTools}
+        catalogTools={tools}
         color="#ff8ecb"
         emptyText="Gli ultimi tool aggiunti"
         decisionOutcomes={decisionOutcomes}
         decisionRevisitAts={decisionRevisitAts}
+        toolUsages={toolUsages}
+        toolReplacedBy={toolReplacedBy}
         onOpenMemory={setNoteSlug}
       />
 
@@ -337,6 +386,12 @@ export function MobileShortlistBoard({
             decisionOutcome={decisionOutcomes[noteSlug] ?? null}
             decisionUpdatedAt={decisionUpdatedAts[noteSlug] ?? null}
             decisionRevisitAt={decisionRevisitAts[noteSlug] ?? null}
+            usage={toolUsages[noteSlug] ?? null}
+            replacedBySlug={toolReplacedBy[noteSlug] ?? null}
+            replacedByName={resolveToolName(tools, toolReplacedBy[noteSlug])}
+            replacementCandidates={baseTools
+              .filter((tool) => tool.slug !== noteSlug)
+              .map((tool) => ({ slug: tool.slug, name: tool.name }))}
             editable={decisionMemoryEnabled}
             onClose={() => setNoteSlug(null)}
           />
@@ -440,19 +495,25 @@ function MobileLibraryShelf({
   title,
   icon: Icon,
   tools,
+  catalogTools,
   color,
   emptyText,
   decisionOutcomes,
   decisionRevisitAts,
+  toolUsages,
+  toolReplacedBy,
   onOpenMemory,
 }: {
   title: string;
   icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>;
   tools: ToolWithMeta[];
+  catalogTools: ToolPublic[];
   color: string;
   emptyText: string;
   decisionOutcomes: Record<string, WorkspaceDecisionOutcome>;
   decisionRevisitAts: Record<string, string>;
+  toolUsages: Record<string, WorkspaceUsage>;
+  toolReplacedBy: Record<string, string>;
   onOpenMemory: (slug: string) => void;
 }) {
   return (
@@ -472,6 +533,8 @@ function MobileLibraryShelf({
               index={index}
               decisionOutcome={decisionOutcomes[tool.slug] ?? null}
               decisionRevisitAt={decisionRevisitAts[tool.slug] ?? null}
+              usage={toolUsages[tool.slug] ?? null}
+              replacedByName={resolveToolName(catalogTools, toolReplacedBy[tool.slug])}
               onOpenMemory={() => onOpenMemory(tool.slug)}
             />
           ))}
@@ -501,12 +564,16 @@ function LibraryBook({
   index,
   decisionOutcome,
   decisionRevisitAt = null,
+  usage = null,
+  replacedByName = null,
   onOpenMemory,
 }: {
   tool: ToolWithMeta;
   index: number;
   decisionOutcome: WorkspaceDecisionOutcome | null;
   decisionRevisitAt?: string | null;
+  usage?: WorkspaceUsage | null;
+  replacedByName?: string | null;
   onOpenMemory: () => void;
 }) {
   const color = getToolColor(tool);
@@ -544,11 +611,14 @@ function LibraryBook({
         <span>{getStageLabel(tool.stage)}</span>
         {decisionOutcome ? (
           <span>
-            {decisionOutcomeMeta[decisionOutcome].label}
+            {decisionOutcomeMeta[decisionOutcome].stateLabel}
             {decisionOutcome === "deferred" && formatRevisitLine(decisionRevisitAt)
               ? ` · ${formatRevisitLine(decisionRevisitAt)}`
               : ""}
           </span>
+        ) : null}
+        {formatUsageLine(usage, replacedByName) ? (
+          <span>{formatUsageLine(usage, replacedByName)}</span>
         ) : null}
       </div>
       <div className="mobile-library-book__remove-wrap">
@@ -588,6 +658,10 @@ function MobileNoteSheet({
   decisionOutcome,
   decisionUpdatedAt = null,
   decisionRevisitAt = null,
+  usage = null,
+  replacedBySlug = null,
+  replacedByName = null,
+  replacementCandidates = [],
   editable,
   onClose,
 }: {
@@ -602,15 +676,21 @@ function MobileNoteSheet({
    */
   decisionUpdatedAt?: string | null;
   decisionRevisitAt?: string | null;
+  usage?: WorkspaceUsage | null;
+  replacedBySlug?: string | null;
+  replacedByName?: string | null;
+  replacementCandidates?: Array<{ slug: string; name: string }>;
   editable: boolean;
   onClose: () => void;
 }) {
   const preferReducedMotion = useReducedMotion();
   const [noteDraft, setNoteDraft] = useState(memory.note ?? "");
   const [pendingDefer, setPendingDefer] = useState(false);
+  const [pendingReplace, setPendingReplace] = useState(false);
 
   useEffect(() => {
     setNoteDraft(memory.note ?? "");
+    setPendingReplace(false);
   }, [memory.note, slug]);
 
   useEffect(() => {
@@ -753,7 +833,7 @@ function MobileNoteSheet({
                           : sheetChipIdleStyle
                       }
                     >
-                      {meta.label}
+                      {meta.actionLabel}
                     </button>
                   );
                 })}
@@ -776,9 +856,13 @@ function MobileNoteSheet({
                     className="text-xs uppercase tracking-[0.16em]"
                     style={{ color: "var(--muted)" }}
                   >
+                    {decisionOutcomeMeta[decisionOutcome].stateLabel}
+                    {formatUsageLine(usage, replacedByName)
+                      ? ` · ${formatUsageLine(usage, replacedByName)}`
+                      : ""}
                     {decisionOutcome === "deferred"
-                      ? (formatRevisitLine(decisionRevisitAt) ?? "Rivedi: data da impostare")
-                      : `Registrata ${formatDecisionTimestamp(
+                      ? ` · ${formatRevisitLine(decisionRevisitAt) ?? "Rivedi: data da impostare"}`
+                      : ` · Registrata ${formatDecisionTimestamp(
                           decisionUpdatedAt ?? memory.updated_at,
                         )}`}
                   </p>
@@ -786,6 +870,7 @@ function MobileNoteSheet({
                     type="button"
                     onClick={() => {
                       setPendingDefer(false);
+                      setPendingReplace(false);
                       reopenToolDecision(slug);
                     }}
                     data-sonic-action="update"
@@ -795,6 +880,99 @@ function MobileNoteSheet({
                     <RotateCcw size={12} />
                     Riapri decisione
                   </button>
+                </div>
+              ) : null}
+              {decisionOutcome === "selected" && !usage ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setToolUsage(slug, "using")}
+                    data-sonic-action="update"
+                    className={sheetChipClassName}
+                    style={{
+                      borderColor: "rgba(112,82,255,0.24)",
+                      background: "rgba(106,60,255,0.22)",
+                      color: "var(--accent-strong)",
+                    }}
+                  >
+                    {usageActionLabel("using")}
+                  </button>
+                </div>
+              ) : null}
+              {usage === "using" ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPendingReplace(false);
+                      setToolUsage(slug, "stopped");
+                    }}
+                    data-sonic-action="update"
+                    className={sheetChipClassName}
+                    style={sheetChipIdleStyle}
+                  >
+                    {usageActionLabel("stopped")}
+                  </button>
+                  {replacementCandidates.length > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => setPendingReplace(true)}
+                      aria-pressed={pendingReplace}
+                      data-sonic-action="tab"
+                      className={`${sheetChipClassName} ${
+                        pendingReplace ? "quick-filter-chip is-active" : ""
+                      }`}
+                      style={
+                        pendingReplace
+                          ? {
+                              borderColor: "rgba(112,82,255,0.24)",
+                              background: "rgba(106,60,255,0.22)",
+                              color: "var(--accent-strong)",
+                            }
+                          : sheetChipIdleStyle
+                      }
+                    >
+                      {usageActionLabel("replaced")}
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
+              {(pendingReplace || usage === "replaced") &&
+              replacementCandidates.length > 0 ? (
+                <div
+                  className="tool-rail mt-3 -mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1"
+                  role="group"
+                  aria-label="Sostituito con"
+                >
+                  {replacementCandidates.map((candidate) => {
+                    const active = replacedBySlug === candidate.slug;
+                    return (
+                      <button
+                        key={candidate.slug}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => {
+                          setToolUsage(slug, "replaced", candidate.slug);
+                          setPendingReplace(false);
+                        }}
+                        data-sonic-action="tab"
+                        className={`${sheetChipClassName} ${
+                          active ? "quick-filter-chip is-active" : ""
+                        }`}
+                        style={
+                          active
+                            ? {
+                                borderColor: "rgba(112,82,255,0.24)",
+                                background: "rgba(106,60,255,0.22)",
+                                color: "var(--accent-strong)",
+                              }
+                            : sheetChipIdleStyle
+                        }
+                      >
+                        {candidate.name}
+                      </button>
+                    );
+                  })}
                 </div>
               ) : null}
             </div>

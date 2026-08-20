@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   addToolToPersonalStack,
   deferWorkspaceTool,
+  markWorkspaceToolReplaced,
+  markWorkspaceToolStopped,
+  markWorkspaceToolUsing,
   setWorkspaceDecision,
   setWorkspaceNote,
   setWorkspacePinned,
@@ -13,7 +16,13 @@ import {
   toggleWorkspaceCompare,
   toggleWorkspaceSaved,
 } from "@/lib/account/workspace-actions";
-import { formatRevisitLine, revisitAtFromPreset } from "@/lib/account/workspace-lifecycle";
+import {
+  compactPersonalStatus,
+  formatRevisitLine,
+  revisitAtFromPreset,
+  USAGE_STATE_LABELS,
+  usageActionLabel,
+} from "@/lib/account/workspace-lifecycle";
 import {
   PIPELINE_COLUMNS,
   activePersonalStacks,
@@ -24,7 +33,7 @@ import {
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
-import type { WorkspaceStateV1 } from "@/lib/discovery/types";
+import type { WorkspaceStateV1, WorkspaceUsage } from "@/lib/discovery/types";
 
 import { RevisitWhenChips } from "./revisit-when-chips";
 import { PIPELINE_LABELS } from "./workspace-model";
@@ -38,6 +47,15 @@ const STATUS_FILTERS: Array<{ id: "tutti" | PipelineColumn; label: string }> = [
   { id: "scelto", label: PIPELINE_LABELS.scelto },
   { id: "scartato", label: PIPELINE_LABELS.scartato },
   { id: "rimandato", label: PIPELINE_LABELS.rimandato },
+];
+
+type UsageFilter = "tutti" | WorkspaceUsage;
+
+const USAGE_FILTERS: Array<{ id: UsageFilter; label: string }> = [
+  { id: "tutti", label: "Tutti gli usi" },
+  { id: "using", label: USAGE_STATE_LABELS.using },
+  { id: "stopped", label: USAGE_STATE_LABELS.stopped },
+  { id: "replaced", label: USAGE_STATE_LABELS.replaced },
 ];
 
 type LibrarySort = "recent" | "oldest" | "alpha" | "status";
@@ -54,13 +72,6 @@ function categoryOf(
   slug: string,
 ) {
   return catalogBySlug.get(slug)?.categoryLabel ?? "";
-}
-
-function formatUpdated(value: string | null) {
-  if (!value) return null;
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return null;
-  return date.toLocaleDateString("it-IT", { day: "numeric", month: "short" });
 }
 
 function applyPipelineColumn(slug: string, next: PipelineColumn) {
@@ -105,10 +116,28 @@ function compareLibraryItems(
   return byDate !== 0 ? -byDate : byName;
 }
 
-export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
+function personalStatusLabel(item: PipelineItem) {
+  if (item.usage) {
+    return compactPersonalStatus({
+      usage: item.usage,
+      outcome: item.outcome,
+      stage: item.stage,
+    }).label;
+  }
+  return PIPELINE_LABELS[item.column];
+}
+
+export function WorkspaceBiblioteca({
+  state,
+  focusSlug = null,
+}: {
+  state: WorkspaceStateV1;
+  focusSlug?: string | null;
+}) {
   const catalog = usePublicToolCatalog();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof STATUS_FILTERS)[number]["id"]>("tutti");
+  const [usageFilter, setUsageFilter] = useState<UsageFilter>("tutti");
   const [category, setCategory] = useState("tutte");
   const [sort, setSort] = useState<LibrarySort>("recent");
   const [openNote, setOpenNote] = useState<string | null>(null);
@@ -118,6 +147,7 @@ export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
     () => new Map(catalog.map((tool) => [tool.slug, tool])),
     [catalog],
   );
+  const hasUsageData = items.some((item) => item.usage != null);
 
   const categories = useMemo(() => {
     const labels = new Set<string>();
@@ -132,6 +162,7 @@ export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
     const needle = query.trim().toLowerCase();
     const filtered = items.filter((item) => {
       if (filter !== "tutti" && item.column !== filter) return false;
+      if (usageFilter !== "tutti" && item.usage !== usageFilter) return false;
       const label = categoryOf(catalogBySlug, item.slug);
       if (category !== "tutte" && label !== category) return false;
       if (!needle) return true;
@@ -145,7 +176,20 @@ export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
     return [...filtered].sort((left, right) =>
       compareLibraryItems(left, right, sort, catalogBySlug),
     );
-  }, [catalog, catalogBySlug, category, filter, items, query, sort]);
+  }, [catalog, catalogBySlug, category, filter, items, query, sort, usageFilter]);
+
+  const filtersActive =
+    query.trim() !== "" ||
+    filter !== "tutti" ||
+    category !== "tutte" ||
+    usageFilter !== "tutti";
+
+  useEffect(() => {
+    if (!focusSlug) return;
+    document
+      .querySelector(`[data-slug="${focusSlug}"]`)
+      ?.scrollIntoView({ block: "center" });
+  }, [focusSlug, visible]);
 
   if (state.saved.slugs.length === 0) {
     return (
@@ -233,11 +277,45 @@ export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
             </button>
           ))}
         </div>
-        <p className="tv-lib-count">
-          {visible.length === items.length
-            ? `${items.length} salvati`
-            : `${visible.length} di ${items.length}`}
-        </p>
+        {hasUsageData ? (
+          <label className="tv-lib-select">
+            <span className="sr-only">Uso</span>
+            <select
+              aria-label="Uso"
+              value={usageFilter}
+              onChange={(event) =>
+                setUsageFilter(event.target.value as UsageFilter)
+              }
+            >
+              {USAGE_FILTERS.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
+        <div className="tv-lib-count">
+          <span>
+            {visible.length === items.length
+              ? `${items.length} salvati`
+              : `${visible.length} di ${items.length}`}
+          </span>
+          {filtersActive ? (
+            <button
+              type="button"
+              className="tv-lib-clear"
+              onClick={() => {
+                setQuery("");
+                setFilter("tutti");
+                setCategory("tutte");
+                setUsageFilter("tutti");
+              }}
+            >
+              Azzera filtri
+            </button>
+          ) : null}
+        </div>
       </div>
 
       {visible.length === 0 ? (
@@ -252,6 +330,7 @@ export function WorkspaceBiblioteca({ state }: { state: WorkspaceStateV1 }) {
               catalog={catalog}
               stacks={stacks}
               category={categoryOf(catalogBySlug, item.slug)}
+              focused={focusSlug === item.slug}
               noteOpen={openNote === item.slug}
               onToggleNote={() =>
                 setOpenNote((current) => (current === item.slug ? null : item.slug))
@@ -270,6 +349,7 @@ function LibraryRow({
   catalog,
   stacks,
   category,
+  focused,
   noteOpen,
   onToggleNote,
 }: {
@@ -278,6 +358,7 @@ function LibraryRow({
   catalog: readonly PublicToolCatalogItem[];
   stacks: ReturnType<typeof activePersonalStacks>;
   category: string;
+  focused: boolean;
   noteOpen: boolean;
   onToggleNote: () => void;
 }) {
@@ -285,11 +366,24 @@ function LibraryRow({
   const inCompare = state.compare.slugs.includes(item.slug);
   const compareFull = !inCompare && state.compare.slugs.length >= MAX_COMPARE_TOOLS;
   const availableStacks = stacks.filter((stack) => !stack.slugs.includes(item.slug));
-  const updated = formatUpdated(item.updatedAt);
   const [draft, setDraft] = useState(item.note ?? "");
+  const rejected = item.outcome === "rejected";
+  const showMarkUsing =
+    !rejected && item.usage !== "using" && (item.outcome === "selected" || item.usage == null);
+  const showMarkStopped = item.usage === "using";
+  const showMarkReplaced =
+    item.outcome === "selected" || item.usage === "using" || item.usage === "stopped";
+  const otherSaved = state.saved.slugs.filter((slug) => slug !== item.slug);
+  const replacedName = item.replacedBy ? toolName(catalog, item.replacedBy) : null;
+  const revisitLine =
+    item.column === "rimandato" ? formatRevisitLine(item.revisitAt) : null;
 
   return (
-    <li className="tv-lib-row" data-slug={item.slug}>
+    <li
+      className="tv-lib-row"
+      data-slug={item.slug}
+      data-focus={focused ? "true" : undefined}
+    >
       <div className="tv-lib-row__main">
         <Link className="tv-lib-name" href={`/toools/${item.slug}`}>
           {name}
@@ -297,11 +391,11 @@ function LibraryRow({
         <p className="tv-lib-meta">
           <span>{category || "Senza categoria"}</span>
           <span aria-hidden="true"> · </span>
-          <span>{PIPELINE_LABELS[item.column]}</span>
-          {item.column === "rimandato" && formatRevisitLine(item.revisitAt) ? (
+          <span>{personalStatusLabel(item)}</span>
+          {replacedName ? (
             <>
               <span aria-hidden="true"> · </span>
-              <span>{formatRevisitLine(item.revisitAt)}</span>
+              <span>→ {replacedName}</span>
             </>
           ) : null}
           {item.stackNames.length > 0 ? (
@@ -310,10 +404,10 @@ function LibraryRow({
               <span>{item.stackNames.join(", ")}</span>
             </>
           ) : null}
-          {updated ? (
+          {revisitLine ? (
             <>
               <span aria-hidden="true"> · </span>
-              <span>{updated}</span>
+              <span>{revisitLine}</span>
             </>
           ) : null}
         </p>
@@ -361,6 +455,46 @@ function LibraryRow({
               ))}
             </select>
           </label>
+          {showMarkUsing ? (
+            <button
+              type="button"
+              className="tv-lib-action"
+              onClick={() => markWorkspaceToolUsing(item.slug)}
+            >
+              {usageActionLabel("using")}
+            </button>
+          ) : null}
+          {showMarkStopped ? (
+            <button
+              type="button"
+              className="tv-lib-action"
+              onClick={() => markWorkspaceToolStopped(item.slug)}
+            >
+              {usageActionLabel("stopped")}
+            </button>
+          ) : null}
+          {showMarkReplaced && otherSaved.length > 0 ? (
+            <label className="tv-lib-action tv-lib-action--field">
+              <span>{usageActionLabel("replaced")}</span>
+              <select
+                aria-label={usageActionLabel("replaced")}
+                defaultValue=""
+                onChange={(event) => {
+                  if (event.target.value) {
+                    markWorkspaceToolReplaced(item.slug, event.target.value);
+                  }
+                  event.target.value = "";
+                }}
+              >
+                <option value="">Sostituisci con</option>
+                {otherSaved.map((slug) => (
+                  <option key={slug} value={slug}>
+                    {toolName(catalog, slug)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
           {item.column === "rimandato" ? (
             <div className="tv-lib-action tv-lib-action--field">
               <span>Quando rivedere</span>

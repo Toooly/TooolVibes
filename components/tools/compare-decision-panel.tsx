@@ -31,11 +31,18 @@ import {
 
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { RevisitWhenChips } from "@/components/account/workspace/revisit-when-chips";
-import { formatRevisitLine, outcomeActionLabel, outcomeStateLabel } from "@/lib/account/workspace-lifecycle";
+import {
+  formatRevisitLine,
+  outcomeActionLabel,
+  outcomeStateLabel,
+  usageActionLabel,
+  usageStateLabel,
+} from "@/lib/account/workspace-lifecycle";
 import {
   deferToolDecision,
   reopenToolDecision,
   setToolDecisionOutcome,
+  setToolUsage,
   updateToolDecisionMemory,
 } from "@/lib/discovery/local-storage";
 import { MIN_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
@@ -120,6 +127,7 @@ export function CompareDecisionPanel({
   const decisionOutcomes = discovery.decisionOutcomes ?? {};
   const decisionUpdatedAts = discovery.decisionUpdatedAts ?? {};
   const decisionRevisitAts = discovery.decisionRevisitAts ?? {};
+  const toolUsages = discovery.toolUsages ?? {};
   const decisionMemories = discovery.decisionMemories;
 
   const [focusSlug, setFocusSlug] = useState<string | null>(null);
@@ -166,7 +174,7 @@ export function CompareDecisionPanel({
       return;
     }
     setPendingDeferSlug(null);
-    setToolDecisionOutcome(slug, outcome);
+    setToolDecisionOutcome(slug, outcome, objective);
     emitComparisonCompleted(tools.map((tool) => tool.slug));
   }
 
@@ -174,7 +182,6 @@ export function CompareDecisionPanel({
     setFocusSlug(slug);
     setPendingDeferSlug(null);
     deferToolDecision(slug, revisitAt);
-    emitComparisonCompleted(tools.map((tool) => tool.slug));
   }
 
   return (
@@ -218,6 +225,7 @@ export function CompareDecisionPanel({
         {tools.map((tool) => {
           const outcome = decisionOutcomes[tool.slug] ?? null;
           const recordedAt = decisionUpdatedAts[tool.slug] ?? null;
+          const usage = toolUsages[tool.slug] ?? null;
           const isFocused = tool.slug === focusTool.slug;
 
           return (
@@ -337,24 +345,45 @@ export function CompareDecisionPanel({
                     style={{ color: "var(--tv-ink-secondary)" }}
                   >
                     {decisionOutcomeMeta[outcome].stateLabel}
+                    {isFocused && usage
+                      ? ` · ${usageStateLabel(usage)}`
+                      : ""}
                     {outcome === "deferred"
                       ? ` · ${formatRevisitLine(decisionRevisitAts[tool.slug]) ?? "Rivedi: data da impostare"}`
                       : ` · Registrata ${formatDecisionTimestamp(recordedAt)}`}
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPendingDeferSlug(null);
-                      reopenToolDecision(tool.slug);
-                    }}
-                    aria-label={`Riapri decisione per ${tool.name}`}
-                    data-sonic-action="update"
-                    className={decisionChipClassName}
-                    style={decisionChipIdleStyle}
-                  >
-                    <RotateCcw size={12} />
-                    Riapri
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {outcome === "selected" && !usage ? (
+                      <button
+                        type="button"
+                        onClick={() => setToolUsage(tool.slug, "using")}
+                        aria-label={`Segna ${tool.name} come in uso`}
+                        data-sonic-action="update"
+                        className={decisionChipClassName}
+                        style={{
+                          borderColor: "rgba(112,82,255,0.24)",
+                          background: "rgba(112,82,255,0.2)",
+                          color: "var(--tv-ink-primary)",
+                        }}
+                      >
+                        {usageActionLabel("using")}
+                      </button>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPendingDeferSlug(null);
+                        reopenToolDecision(tool.slug);
+                      }}
+                      aria-label={`Riapri decisione per ${tool.name}`}
+                      data-sonic-action="update"
+                      className={decisionChipClassName}
+                      style={decisionChipIdleStyle}
+                    >
+                      <RotateCcw size={12} />
+                      Riapri
+                    </button>
+                  </div>
                 </div>
               ) : null}
             </li>

@@ -18,10 +18,12 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 
 vi.mock("@/lib/account/workspace-actions", () => ({
   deferWorkspaceTool: vi.fn(),
+  markWorkspaceToolReplaced: vi.fn(),
+  markWorkspaceToolStopped: vi.fn(),
+  markWorkspaceToolUsing: vi.fn(),
   setWorkspaceDecision: vi.fn(),
   setWorkspaceNote: vi.fn(),
   setWorkspacePinned: vi.fn(),
-  setWorkspaceRevisit: vi.fn(),
   setWorkspaceUseCase: vi.fn(),
 }));
 
@@ -75,5 +77,25 @@ describe("WorkspaceDecisions", () => {
     const nextUseCase = screen.getByLabelText("Caso d’uso") as HTMLInputElement;
     expect(nextUseCase.value).toBe("");
     expect(screen.getByRole("heading", { name: "v0" })).toBeTruthy();
+  });
+
+  it("shows In uso and Sostituito da in the journal", () => {
+    render(createElement(WorkspaceDecisions, { state: workspaceTestFixtures.mature }));
+
+    expect(screen.getAllByText("In uso").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Sostituito da Cursor").length).toBeGreaterThan(0);
+  });
+
+  it("opens the matching tool when focusSlug is in the journal", () => {
+    render(
+      createElement(WorkspaceDecisions, {
+        state: workspaceTestFixtures.mature,
+        focusSlug: "v0",
+      }),
+    );
+
+    expect(screen.getByRole("heading", { name: "v0" })).toBeTruthy();
+    const useCase = screen.getByLabelText("Caso d’uso") as HTMLInputElement;
+    expect(useCase.value).toBe("");
   });
 });

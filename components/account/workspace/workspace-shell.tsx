@@ -43,6 +43,8 @@ function WorkspaceShellView({
   const state = useCanonicalWorkspace();
   const searchParams = useSearchParams();
   const view = resolveViewFromSearch(searchParams, initialView);
+  const focusSlug = searchParams?.get("focus") ?? null;
+  const stackId = searchParams?.get("stack") ?? null;
   const isOnline = useAccountOnlineStatus();
   const stateCell = isAccountStateMatrixEnabled()
     ? resolveAccountStateCell({
@@ -63,9 +65,13 @@ function WorkspaceShellView({
       <AccountRecoverySection account={account} suppressAuthMessage={showStateBanner} />
       <div className="tv-space-main">
         {view === "riprendi" ? <WorkspaceRiprendi state={state} /> : null}
-        {view === "biblioteca" ? <WorkspaceBiblioteca state={state} /> : null}
-        {view === "stack" ? <WorkspaceStacks state={state} /> : null}
-        {view === "decisioni" ? <WorkspaceDecisions state={state} /> : null}
+        {view === "biblioteca" ? (
+          <WorkspaceBiblioteca state={state} focusSlug={focusSlug} />
+        ) : null}
+        {view === "stack" ? <WorkspaceStacks state={state} stackId={stackId} /> : null}
+        {view === "decisioni" ? (
+          <WorkspaceDecisions state={state} focusSlug={focusSlug} />
+        ) : null}
         {view === "segnale" ? <WorkspaceSignal /> : null}
         {view === "recenti" ? <WorkspaceActivity state={state} /> : null}
       </div>

@@ -27,6 +27,7 @@ import {
 } from "@/lib/discovery/workspace-state";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 import { activateToolWorkspaceOwner } from "@/lib/stores/tool-workspace-store";
+import { COMPARE_OBJECTIVE_STORAGE_KEY } from "@/lib/compare/compare-objective";
 import { completeToolPublicFixture } from "@/__tests__/fixtures/tool-public";
 import type { ToolPublic } from "@/lib/types/tool-public";
 
@@ -474,9 +475,11 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
       name: "Decisione per Gamma",
     });
     fireEvent.click(within(group).getByRole("button", { name: "Scegli" }));
-    expect(readPersistedWorkspace().toolStates["gamma-app"].decision?.outcome).toBe(
+    const persisted = readPersistedWorkspace();
+    expect(persisted.toolStates["gamma-app"].decision?.outcome).toBe(
       "selected",
     );
+    expect(persisted.toolStates["gamma-app"].compareObjective).toBe("save-time");
   });
 
   it("flag OFF: nessun pannello decisione, il flow termina al verdetto (contratto B34)", () => {
@@ -546,5 +549,22 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
       screen.getByRole("link", { name: /Vai ai Salvati/ }).getAttribute("href"),
     ).toBe("/shortlist");
     expect(screen.getByText(/Rivedi:/)).toBeTruthy();
+  });
+
+  it("persists the stored compare objective on Scegli and keeps the Salvati CTA", () => {
+    window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
+    render(<ToolBattleView tools={VIEWS} />);
+    revealMobileResult();
+
+    fireEvent.click(
+      within(decisionGroupFor("Atlas AI")).getByRole("button", { name: "Scegli" }),
+    );
+
+    const persisted = readPersistedWorkspace();
+    expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe("selected");
+    expect(persisted.toolStates["atlas-ai"].compareObjective).toBe("save-time");
+    expect(
+      screen.getByRole("link", { name: /Vai ai Salvati/ }).getAttribute("href"),
+    ).toBe("/shortlist");
   });
 });
