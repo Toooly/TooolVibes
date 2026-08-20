@@ -402,16 +402,14 @@ function LibraryRow({
           <p className="tv-lib-desc">{catalogItem.shortDescription}</p>
         ) : null}
         <p className="tv-lib-meta">
-          <WorkspaceChip tone="stack">{category || "Senza categoria"}</WorkspaceChip>
           <WorkspaceChip tone={pipelineTone(item.column)}>
             {personalStatusLabel(item)}
           </WorkspaceChip>
-          {item.stackNames.length > 0 ? (
-            <WorkspaceChip tone="stack">{item.stackNames.join(", ")}</WorkspaceChip>
-          ) : null}
-          {revisitLine ? <WorkspaceChip tone="revisit">{revisitLine}</WorkspaceChip> : null}
+          <span>{category || "Senza categoria"}</span>
+          {item.stackNames.length > 0 ? <span>{item.stackNames.join(", ")}</span> : null}
+          {revisitLine ? <span>{revisitLine}</span> : null}
           {formatWorkspaceDate(item.updatedAt) ? (
-            <WorkspaceChip tone="note">{formatWorkspaceDate(item.updatedAt)}</WorkspaceChip>
+            <span>{formatWorkspaceDate(item.updatedAt)}</span>
           ) : null}
         </p>
         {replacedName && item.replacedBy ? (

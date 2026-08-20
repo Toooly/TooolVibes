@@ -15,6 +15,11 @@ import {
   activateVolatileToolWorkspaceOwnerWithoutStorage,
 } from "@/lib/stores/tool-workspace-store";
 
+import {
+  SignalAchievementFlagsProvider,
+  SignalProgressUiProvider,
+} from "@/lib/signal-progression/release-context";
+
 import { WorkspaceShell } from "./workspace-shell";
 import { WORKSPACE_VIEWS, type WorkspaceView } from "./workspace-model";
 
@@ -79,14 +84,24 @@ export function WorkspaceQaHarness({
   }, []);
 
   return (
-    <DiscoveryPersistenceProvider>
-      <AccountPreviewProvider value={previewAccount}>
-        {surface === "settings" ? (
-          <AccountSettingsPage />
-        ) : (
-          <WorkspaceShell initialView={initialView} />
-        )}
-      </AccountPreviewProvider>
-    </DiscoveryPersistenceProvider>
+    <SignalProgressUiProvider enabled>
+      <SignalAchievementFlagsProvider
+        flags={{
+          achievementsEnabled: true,
+          badgeCabinetEnabled: true,
+          milestonesEnabled: true,
+        }}
+      >
+        <DiscoveryPersistenceProvider>
+          <AccountPreviewProvider value={previewAccount}>
+            {surface === "settings" ? (
+              <AccountSettingsPage />
+            ) : (
+              <WorkspaceShell initialView={initialView} />
+            )}
+          </AccountPreviewProvider>
+        </DiscoveryPersistenceProvider>
+      </SignalAchievementFlagsProvider>
+    </SignalProgressUiProvider>
   );
 }

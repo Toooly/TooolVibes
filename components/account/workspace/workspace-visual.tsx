@@ -13,6 +13,7 @@ import {
   STAGE_LABELS,
   USAGE_STATE_LABELS,
 } from "@/lib/account/workspace-lifecycle";
+import { getCompareObjectiveLabel } from "@/lib/compare/compare-objective";
 import type { ShortlistStage } from "@/lib/types/tool";
 
 import { formatWorkspaceDate } from "./workspace-model";
@@ -48,19 +49,13 @@ export function WorkspaceChip({
   );
 }
 
-export function pipelineTone(
-  column: string,
-): StatusTone {
+export function pipelineTone(column: string): StatusTone {
   if (column === "scelto") return "selected";
   if (column === "scartato") return "rejected";
   if (column === "rimandato") return "deferred";
   if (column === "da_valutare") return "review";
   if (column === "candidato") return "top";
   return "saved";
-}
-
-export function usageTone(usage: WorkspaceUsage): StatusTone {
-  return usage;
 }
 
 export function WorkspaceEmptyMotif({
@@ -99,84 +94,23 @@ export function WorkspaceCompositionBar({
       title={`${evaluating} in valutazione · ${selected} scelti · ${using} in uso`}
     >
       {evaluating > 0 ? (
-        <span
-          className="tv-compose__seg"
-          data-tone="review"
-          style={{ flex: evaluating }}
-        />
+        <span className="tv-compose__seg" data-tone="review" style={{ flex: evaluating }} />
       ) : null}
       {selected > 0 ? (
-        <span
-          className="tv-compose__seg"
-          data-tone="selected"
-          style={{ flex: selected }}
-        />
+        <span className="tv-compose__seg" data-tone="selected" style={{ flex: selected }} />
       ) : null}
       {using > 0 ? (
-        <span
-          className="tv-compose__seg"
-          data-tone="using"
-          style={{ flex: using }}
-        />
+        <span className="tv-compose__seg" data-tone="using" style={{ flex: using }} />
       ) : null}
     </span>
   );
 }
 
-type TraceStep = {
-  key: string;
-  label: string;
-  tone: StatusTone;
-  detail?: string | null;
-};
-
-export function buildDecisionTrace(input: {
-  catalog: readonly PublicToolCatalogItem[];
-  slug: string;
-  tool: WorkspaceToolState | undefined;
-}): TraceStep[] {
-  const tool = input.tool;
-  if (!tool) return [];
-  const steps: TraceStep[] = [];
-  const alternatives = tool.alternatives ?? [];
-  if (alternatives.length > 0) {
-    steps.push({
-      key: "alts",
-      label: "Confronto",
-      tone: "review",
-      detail: [toolName(input.catalog, input.slug), ...alternatives.map((slug) => toolName(input.catalog, slug))].join(" · "),
-    });
-  }
-  if (tool.decision?.outcome) {
-    steps.push({
-      key: "outcome",
-      label: OUTCOME_STATE_LABELS[tool.decision.outcome],
-      tone: tool.decision.outcome,
-      detail: formatWorkspaceDate(tool.decision.updatedAt),
-    });
-  } else {
-    steps.push({
-      key: "stage",
-      label: STAGE_LABELS[(tool.stage ?? "saved") as ShortlistStage],
-      tone: (tool.stage ?? "saved") as StatusTone,
-    });
-  }
-  if (tool.usage && tool.usage !== "replaced") {
-    steps.push({
-      key: "usage",
-      label: USAGE_STATE_LABELS[tool.usage],
-      tone: tool.usage,
-      detail: formatWorkspaceDate(tool.updatedAt),
-    });
-  }
-  if (tool.usage === "replaced" && tool.replacedBy) {
-    steps.push({
-      key: "replaced",
-      label: `Sostituito da ${toolName(input.catalog, tool.replacedBy)}`,
-      tone: "replaced",
-    });
-  }
-  return steps;
+function noteSnippet(note: string | null | undefined) {
+  const value = note?.trim();
+  if (!value) return null;
+  if (value.length <= 160) return value;
+  return `${value.slice(0, 157).trimEnd()}…`;
 }
 
 export function WorkspaceDecisionTrace({
@@ -188,19 +122,82 @@ export function WorkspaceDecisionTrace({
   slug: string;
   tool: WorkspaceToolState | undefined;
 }) {
-  const steps = buildDecisionTrace({ catalog, slug, tool });
-  if (steps.length === 0) return null;
+  if (!tool) return null;
+  const alternatives = tool.alternatives ?? [];
+  const cast = Array.from(new Set([slug, ...alternatives]));
+  const outcome = tool.decision?.outcome ?? null;
+  const outcomeDate = formatWorkspaceDate(tool.decision?.updatedAt);
+  const why = noteSnippet(tool.note);
+  const objective = tool.compareObjective
+    ? getCompareObjectiveLabel(tool.compareObjective)
+    : null;
+  const usage = tool.usage ?? null;
+  const hasStory =
+    alternatives.length > 0 ||
+    Boolean(outcome) ||
+    Boolean(usage) ||
+    Boolean(tool.replacedBy) ||
+    Boolean(why) ||
+    Boolean(tool.useCase);
+
+  if (!hasStory) return null;
+
   return (
-    <ol className="tv-trace">
-      {steps.map((step, index) => (
-        <li key={step.key} className="tv-trace__step">
-          {index > 0 ? <span className="tv-trace__arrow" aria-hidden="true" /> : null}
-          <span className="tv-chip" data-tone={step.tone}>
-            {step.label}
-          </span>
-          {step.detail ? <span className="tv-trace__detail">{step.detail}</span> : null}
+    <ol className="tv-story">
+      {cast.length > 1 ? (
+        <li className="tv-story__act" data-act="compare">
+          <p className="tv-story__kicker">Confronto</p>
+          <ul className="tv-story__cast">
+            {cast.map((item) => (
+              <li key={item} className="tv-story__cast-item">
+                <WorkspaceCatalogMark catalog={catalog} slug={item} size="sm" />
+                <span>{toolName(catalog, item)}</span>
+              </li>
+            ))}
+          </ul>
         </li>
-      ))}
+      ) : null}
+
+      <li className="tv-story__act" data-act={outcome ?? tool.stage ?? "saved"}>
+        <p className="tv-story__kicker">
+          {outcome ? OUTCOME_STATE_LABELS[outcome] : STAGE_LABELS[(tool.stage ?? "saved") as ShortlistStage]}
+        </p>
+        <div className="tv-story__hero">
+          <WorkspaceCatalogMark catalog={catalog} slug={slug} size="md" />
+          <span>
+            <strong>{toolName(catalog, slug)}</strong>
+            {outcomeDate ? <span className="tv-story__when">{outcomeDate}</span> : null}
+          </span>
+        </div>
+        {tool.useCase ? <p className="tv-story__context">{tool.useCase}</p> : null}
+        {objective ? <p className="tv-story__context">{objective}</p> : null}
+        {why ? <p className="tv-story__why">{why}</p> : null}
+      </li>
+
+      {usage && usage !== "replaced" ? (
+        <li className="tv-story__act" data-act={usage}>
+          <p className="tv-story__kicker">{USAGE_STATE_LABELS[usage]}</p>
+          <div className="tv-story__hero">
+            <WorkspaceCatalogMark catalog={catalog} slug={slug} size="sm" />
+            <span>{toolName(catalog, slug)}</span>
+            {formatWorkspaceDate(tool.updatedAt) ? (
+              <span className="tv-story__when">{formatWorkspaceDate(tool.updatedAt)}</span>
+            ) : null}
+          </div>
+        </li>
+      ) : null}
+
+      {usage === "replaced" && tool.replacedBy ? (
+        <li className="tv-story__act" data-act="replaced">
+          <p className="tv-story__kicker">Sostituito da</p>
+          <WorkspaceReplacement
+            catalog={catalog}
+            fromSlug={slug}
+            toSlug={tool.replacedBy}
+            at={tool.updatedAt}
+          />
+        </li>
+      ) : null}
     </ol>
   );
 }
@@ -219,12 +216,12 @@ export function WorkspaceReplacement({
   const when = formatWorkspaceDate(at);
   return (
     <p className="tv-replace">
-      <WorkspaceCatalogMark catalog={catalog} slug={fromSlug} size="xs" />
+      <WorkspaceCatalogMark catalog={catalog} slug={fromSlug} size="sm" />
       <span>{toolName(catalog, fromSlug)}</span>
       <span className="tv-replace__arrow" aria-hidden="true">
         →
       </span>
-      <WorkspaceCatalogMark catalog={catalog} slug={toSlug} size="xs" />
+      <WorkspaceCatalogMark catalog={catalog} slug={toSlug} size="sm" />
       <span>{toolName(catalog, toSlug)}</span>
       {when ? <span className="tv-trace__detail">{when}</span> : null}
     </p>
@@ -239,4 +236,8 @@ export function stageChip(
     return { tone: outcome as StatusTone, label: OUTCOME_STATE_LABELS[outcome] };
   }
   return { tone: stage as StatusTone, label: STAGE_LABELS[stage] };
+}
+
+export function usageTone(usage: WorkspaceUsage): StatusTone {
+  return usage;
 }

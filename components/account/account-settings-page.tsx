@@ -37,6 +37,10 @@ import {
   getCanonicalToolWorkspaceState,
   useToolWorkspaceStore,
 } from "@/lib/stores/tool-workspace-store";
+import {
+  emailLocalPart,
+  initialsFromEmail,
+} from "@/components/account/workspace/workspace-model";
 
 export function AccountSettingsPage() {
   const account = useAccount();
@@ -59,11 +63,15 @@ export function AccountSettingsPage() {
   return (
     <AccountWorkspaceFrame surface="settings">
       <div className="tv-settings">
-        <header className="tv-app__pagehead">
-          <h1 className="tv-app__page-title">Impostazioni</h1>
-          <p className="tv-app__page-copy">
-            Preferenze e contesto del tuo spazio. Il volume del segnale si regola qui.
-          </p>
+        <header className="tv-id">
+          <span className="tv-home-hello__initials" aria-hidden="true">
+            {initialsFromEmail(email)}
+          </span>
+          <div className="tv-id__copy">
+            <p className="tv-id__name">{emailLocalPart(email)}</p>
+            {email ? <p className="tv-id__meta">{email}</p> : null}
+            <h1 className="sr-only">Impostazioni</h1>
+          </div>
         </header>
 
         <section className="tv-settings-section" aria-labelledby="settings-profile">
@@ -71,12 +79,6 @@ export function AccountSettingsPage() {
             Profilo
           </h2>
           <p className="tv-settings-lead">Chi sei in questo workspace, e su cosa stai lavorando.</p>
-          {email ? (
-            <p className="tv-settings-email">
-              <span className="tv-settings-kicker">Email</span>
-              <span>{email}</span>
-            </p>
-          ) : null}
           <PersonalizationSettings />
         </section>
 
@@ -183,32 +185,32 @@ function PersonalizationSettings() {
       <p className="tv-settings-copy">
         Si può cambiare quando cambia il lavoro. Non è un onboarding da chiudere.
       </p>
-      <label className="tv-space-search">
-        <span>Focus</span>
-        <select
-          value={focusArea}
-          onChange={(event) => setFocusArea(event.target.value as SignalFocusArea)}
-        >
-          {SIGNAL_FOCUS_AREAS.map((item) => (
-            <option key={item} value={item}>
-              {FOCUS_AREA_LABELS[item]}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="tv-space-search">
-        <span>Obiettivo</span>
-        <select
-          value={primaryGoal}
-          onChange={(event) => setPrimaryGoal(event.target.value as SignalPrimaryGoal)}
-        >
-          {SIGNAL_PRIMARY_GOALS.map((item) => (
-            <option key={item} value={item}>
-              {PRIMARY_GOAL_LABELS[item]}
-            </option>
-          ))}
-        </select>
-      </label>
+      <fieldset className="tv-choice">
+        <legend>Focus</legend>
+        {SIGNAL_FOCUS_AREAS.map((item) => (
+          <button
+            key={item}
+            type="button"
+            aria-pressed={focusArea === item}
+            onClick={() => setFocusArea(item)}
+          >
+            {FOCUS_AREA_LABELS[item]}
+          </button>
+        ))}
+      </fieldset>
+      <fieldset className="tv-choice">
+        <legend>Obiettivo</legend>
+        {SIGNAL_PRIMARY_GOALS.map((item) => (
+          <button
+            key={item}
+            type="button"
+            aria-pressed={primaryGoal === item}
+            onClick={() => setPrimaryGoal(item)}
+          >
+            {PRIMARY_GOAL_LABELS[item]}
+          </button>
+        ))}
+      </fieldset>
       <button type="submit" className="account-btn-primary">
         Aggiorna contesto
       </button>
@@ -239,7 +241,7 @@ function SignalSettings() {
       <p className="tv-settings-copy">
         Lo spazio resta utile anche a volume zero. Nessuna penalità per le pause.
       </p>
-      <label className="tv-space-check">
+      <label className="tv-switch">
         <input
           type="checkbox"
           checked={prefs.quietMode}
@@ -247,7 +249,7 @@ function SignalSettings() {
         />
         Modalità silenziosa
       </label>
-      <label className="tv-space-check">
+      <label className="tv-switch">
         <input
           type="checkbox"
           checked={prefs.reduceRewardAnimations}
@@ -255,7 +257,7 @@ function SignalSettings() {
         />
         Riduci animazioni
       </label>
-      <label className="tv-space-check">
+      <label className="tv-switch">
         <input
           type="checkbox"
           checked={prefs.suppressMajorCelebrations}
@@ -296,6 +298,7 @@ function WorkspaceSettings() {
       </button>
       {exportStatus ? <p role="status">{exportStatus}</p> : null}
 
+      <div className="tv-danger">
       <label className="tv-space-search">
         <span>Scrivi RESET per confermare</span>
         <input
@@ -323,6 +326,7 @@ function WorkspaceSettings() {
         Svuota lo spazio
       </button>
       {resetStatus ? <p role="status">{resetStatus}</p> : null}
+      </div>
     </div>
   );
 }

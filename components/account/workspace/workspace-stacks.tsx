@@ -120,6 +120,7 @@ export function WorkspaceStacks({
   const leftover = leftoverLegacyStackSlugs(state);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [creating, setCreating] = useState(() => stacks.length === 0);
   const [openId, setOpenId] = useState<string | null>(() => {
     if (stackId && stackById(state, stackId)) return stackId;
     return stacks[0]?.id ?? null;
@@ -138,47 +139,81 @@ export function WorkspaceStacks({
 
   return (
     <div className="tv-stacks">
-      <form
-        className="tv-stacks-create"
-        onSubmit={(event) => {
-          event.preventDefault();
-          const nextName = name.trim();
-          if (!nextName) return;
-          const nextDescription = description.trim();
-          const after = createPersonalStack(
-            nextName,
-            nextDescription ? nextDescription : null,
-          );
-          const created = after.personalStacks.find((stack) => stack.name === nextName);
-          setOpenId(created?.id ?? openId);
-          setName("");
-          setDescription("");
-        }}
-      >
-        <p className="account-label">Nuovo stack</p>
-        <label>
-          <span>Nome</span>
-          <input
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="Es. AI Coding"
-            maxLength={MAX_STACK_NAME_LENGTH}
-          />
-        </label>
-        <label>
-          <span>Descrizione (opzionale)</span>
-          <textarea
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder="A cosa serve questo gruppo"
-            maxLength={MAX_STACK_DESCRIPTION_LENGTH}
-            rows={2}
-          />
-        </label>
-        <button type="submit" className="account-btn-primary">
-          Crea
+      <div className={stacks.length === 0 ? "tv-stacks-birth" : undefined}>
+      {stacks.length > 0 && !creating ? (
+        <button
+          type="button"
+          className="account-btn-secondary"
+          onClick={() => setCreating(true)}
+        >
+          Nuovo stack
         </button>
-      </form>
+      ) : (
+        <form
+          className="tv-compose-stack"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const nextName = name.trim();
+            if (!nextName) return;
+            const nextDescription = description.trim();
+            const after = createPersonalStack(
+              nextName,
+              nextDescription ? nextDescription : null,
+            );
+            const created = after.personalStacks.find((stack) => stack.name === nextName);
+            setOpenId(created?.id ?? openId);
+            setName("");
+            setDescription("");
+            setCreating(false);
+          }}
+        >
+          <div className="tv-compose-stack__preview" aria-hidden="true">
+            <span className="tv-compose-stack__mark">
+              {(name.trim().slice(0, 2) || "+").toUpperCase()}
+            </span>
+            <span>
+              <p className="tv-compose-stack__name">{name.trim() || "Nuovo stack"}</p>
+              <p className="tv-compose-stack__desc">
+                {description.trim() || "Un banco di lavoro per i tool che usi insieme."}
+              </p>
+            </span>
+          </div>
+          <p className="account-label">Nuovo stack</p>
+          <label>
+            <span>Nome</span>
+            <input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Es. AI Coding"
+              maxLength={MAX_STACK_NAME_LENGTH}
+            />
+          </label>
+          <label>
+            <span>Descrizione (opzionale)</span>
+            <textarea
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder="A cosa serve questo gruppo"
+              maxLength={MAX_STACK_DESCRIPTION_LENGTH}
+              rows={2}
+            />
+          </label>
+          <div className="tv-home-actions">
+            <button type="submit" className="account-btn-primary">
+              Crea
+            </button>
+            {stacks.length > 0 ? (
+              <button
+                type="button"
+                className="tv-home-textbtn"
+                onClick={() => setCreating(false)}
+              >
+                Annulla
+              </button>
+            ) : null}
+          </div>
+        </form>
+      )}
 
       {leftover.length > 0 ? (
         <section className="tv-stacks-empty">
@@ -226,9 +261,11 @@ export function WorkspaceStacks({
             raccolta da mostrare: è un banco di lavoro.
           </p>
         </section>
-      ) : stacks.length === 0 && open ? (
+      ) : null}
+      </div>
+      {stacks.length === 0 && open ? (
         <StackDetail key={open.id} state={state} stack={open} catalog={catalog} />
-      ) : (
+      ) : stacks.length > 0 ? (
         <div className="tv-stacks-split">
           <ul className="tv-stacks-overview">
             {stacks.map((stack) => {
@@ -276,7 +313,7 @@ export function WorkspaceStacks({
             <StackDetail key={open.id} state={state} stack={open} catalog={catalog} />
           ) : null}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -312,7 +349,11 @@ function StackDetail({
       <h2 id={`stack-${stack.id}`} className="tv-stacks-detail__title">
         {stack.name}
       </h2>
-      <WorkspaceMarkStrip catalog={catalog} slugs={stack.slugs} size="md" />
+      <div className="tv-stacks-detail__hero">
+        <WorkspaceMarkStrip catalog={catalog} slugs={stack.slugs} size="md" />
+      </div>
+      <details className="tv-lib-menu">
+        <summary>Modifica stack</summary>
       <form
         className="tv-stacks-edit"
         onSubmit={(event) => {
@@ -344,6 +385,7 @@ function StackDetail({
           Aggiorna
         </button>
       </form>
+      </details>
 
       <div className="tv-stacks-tools">
         <p className="tv-stacks-kicker">Tool nello stack</p>
@@ -471,6 +513,7 @@ function StackDetail({
                         setPickerQuery("");
                       }}
                     >
+                      <WorkspaceCatalogMark catalog={catalog} slug={slug} size="xs" />
                       {toolName(catalog, slug)}
                     </button>
                   </li>

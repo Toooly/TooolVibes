@@ -166,6 +166,18 @@ export function WorkspaceDecisions({
                   <WorkspaceCatalogMark catalog={catalog} slug={slug} size="sm" />
                   <span className="tv-journal-entry__tool">{toolName(catalog, slug)}</span>
                 </span>
+                {alternatives.length > 0 ? (
+                  <span className="tv-journal-entry__fight">
+                    <WorkspaceMarkStrip
+                      catalog={catalog}
+                      slugs={Array.from(new Set([slug, ...(tool?.alternatives ?? [])]))}
+                      size="xs"
+                    />
+                    <span className="tv-journal-entry__alts">
+                      Alternative: {alternatives.join(", ")}
+                    </span>
+                  </span>
+                ) : null}
                 <span className="tv-journal-entry__facts">
                   {outcomeLabel ? (
                     <WorkspaceChip tone={pipelineTone(column)}>{outcomeLabel}</WorkspaceChip>
@@ -179,11 +191,6 @@ export function WorkspaceDecisions({
                   ) : null}
                 </span>
                 {why ? <span className="tv-journal-entry__why">{why}</span> : null}
-                {alternatives.length > 0 ? (
-                  <span className="tv-journal-entry__alts">
-                    Alternative: {alternatives.join(", ")}
-                  </span>
-                ) : null}
               </button>
             </li>
           );

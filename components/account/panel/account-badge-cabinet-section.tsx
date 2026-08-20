@@ -128,53 +128,23 @@ export function AccountBadgeCabinetSection({
           </p>
         </div>
       ) : (
-        <ul className="mt-4 grid gap-3" aria-label="Segni guadagnati">
+        <ul className="tv-mark-cabinet mt-4" aria-label="Segni guadagnati">
           {badges.map((badge) => {
             const markState = "earned" as const;
             const earnedDate = formatEarnedDate(badge.earnedAt);
             return (
               <li
                 key={badge.code}
-                className="tv-mission flex items-start gap-3"
+                className="tv-mark-tile"
                 data-status="completed"
               >
-                <span
-                  className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-                  style={{
-                    background: "var(--tv-surface-elevated)",
-                    color: "var(--tv-ink-primary)",
-                  }}
-                  aria-hidden
-                >
-                  <SignalMark code={badge.code} state={markState} width={20} height={20} />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="text-sm font-semibold text-[var(--account-ink)]">
-                      {badge.title}
-                    </span>
-                    <span
-                      className="text-xs font-semibold uppercase tracking-[0.12em]"
-                      style={{ color: "var(--muted)" }}
-                    >
-                      {RARITY_LABELS[badge.rarity]}
-                    </span>
-                  </span>
-                  <span
-                    className="mt-1 block text-sm leading-6"
-                    style={{ color: "var(--muted)" }}
-                  >
-                    {badge.description}
-                  </span>
-                  {earnedDate ? (
-                    <span
-                      className="mt-1 block text-xs"
-                      style={{ color: "var(--muted)" }}
-                    >
-                      Guadagnato il {earnedDate}
-                    </span>
-                  ) : null}
-                </span>
+                <SignalMark code={badge.code} state={markState} width={36} height={36} />
+                <span className="tv-mark-tile__name">{badge.title}</span>
+                <span className="tv-mark-tile__copy">{badge.description}</span>
+                <span className="tv-mark-tile__copy">{RARITY_LABELS[badge.rarity]}</span>
+                {earnedDate ? (
+                  <span className="tv-mark-tile__copy">Guadagnato il {earnedDate}</span>
+                ) : null}
               </li>
             );
           })}

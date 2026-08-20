@@ -157,34 +157,32 @@ export function AccountSignalProgressSection() {
 
       <div className="tv-settings-form">
         <p className="account-label">Contesto profilo</p>
-        <label className="grid gap-1 text-sm" htmlFor="signal-focus-select">
-          <span>Focus</span>
-          <select
-            id="signal-focus-select"
-            value={focusArea}
-            onChange={(e) => setFocusArea(e.target.value as SignalFocusArea)}
-          >
-            {SIGNAL_FOCUS_AREAS.map((value) => (
-              <option key={value} value={value}>
-                {FOCUS_AREA_LABELS[value]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="grid gap-1 text-sm" htmlFor="signal-goal-select">
-          <span>Obiettivo</span>
-          <select
-            id="signal-goal-select"
-            value={primaryGoal}
-            onChange={(e) => setPrimaryGoal(e.target.value as SignalPrimaryGoal)}
-          >
-            {SIGNAL_PRIMARY_GOALS.map((value) => (
-              <option key={value} value={value}>
-                {PRIMARY_GOAL_LABELS[value]}
-              </option>
-            ))}
-          </select>
-        </label>
+        <fieldset className="tv-choice">
+          <legend>Focus</legend>
+          {SIGNAL_FOCUS_AREAS.map((value) => (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={focusArea === value}
+              onClick={() => setFocusArea(value)}
+            >
+              {FOCUS_AREA_LABELS[value]}
+            </button>
+          ))}
+        </fieldset>
+        <fieldset className="tv-choice">
+          <legend>Obiettivo</legend>
+          {SIGNAL_PRIMARY_GOALS.map((value) => (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={primaryGoal === value}
+              onClick={() => setPrimaryGoal(value)}
+            >
+              {PRIMARY_GOAL_LABELS[value]}
+            </button>
+          ))}
+        </fieldset>
         <button
           type="button"
           className="account-btn-secondary"
