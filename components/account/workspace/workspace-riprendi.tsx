@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useAccount } from "@/components/account/account-provider";
 import { markWorkspaceToolUsing, setWorkspaceRevisit } from "@/lib/account/workspace-actions";
 import { USAGE_ACTION_LABELS, USAGE_STATE_LABELS, formatRevisitLine } from "@/lib/account/workspace-lifecycle";
@@ -12,6 +13,9 @@ import {
   type ResurfaceKind,
 } from "@/lib/account/workspace-pipeline";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
+import { fetchSignalHub } from "@/lib/signal-progression/client";
+import type { SignalProgressHub } from "@/lib/signal-progression/hub-contracts";
+import { useSignalProgressUiEnabled } from "@/lib/signal-progression/release-context";
 import type { PersonalStack, WorkspaceStateV1 } from "@/lib/discovery/types";
 
 import { RevisitWhenChips } from "./revisit-when-chips";
@@ -126,6 +130,21 @@ export function WorkspaceRiprendi({
 }) {
   const account = useAccount();
   const catalog = usePublicToolCatalog();
+  const signalUi = useSignalProgressUiEnabled();
+  const [signalHub, setSignalHub] = useState<SignalProgressHub | null>(null);
+  useEffect(() => {
+    if (!signalUi) {
+      setSignalHub(null);
+      return;
+    }
+    let cancelled = false;
+    void fetchSignalHub().then((next) => {
+      if (!cancelled) setSignalHub(next);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [signalUi]);
   const resume = chooseResumeAction(state);
   const resurface = deriveResurfaceSignals(state);
   const stacks = activePersonalStacks(state);
@@ -259,6 +278,21 @@ export function WorkspaceRiprendi({
               </li>
             ))}
           </ul>
+        </section>
+      ) : null}
+
+      {!blank && signalUi && signalHub ? (
+        <section className="tv-home-section" aria-labelledby="tv-home-signal-title">
+          <h2 id="tv-home-signal-title" className="tv-home-kicker">
+            Segnale
+          </h2>
+          <Link className="tv-home-row" href={workspaceViewHref("segnale")}>
+            <span>
+              {signalHub.levelTitle || "Esploratore"}
+              {typeof signalHub.balance === "number" ? ` · ${signalHub.balance} SP` : ""}
+            </span>
+            <span className="tv-home-row__meta">Progresso</span>
+          </Link>
         </section>
       ) : null}
 

@@ -21,6 +21,13 @@ import {
   dispatchWorkspaceChange,
   type WorkspaceChangeSource,
 } from "@/lib/discovery/workspace-events";
+import {
+  emitDecisionRecorded,
+  emitDecisionRevisited,
+  emitDeferWithRevisit,
+  emitToolReplaced,
+  emitUsageConfirmed,
+} from "@/lib/signal-progression/client";
 
 export { DISCOVERY_STORAGE_KEYS } from "@/lib/discovery/workspace-storage-keys";
 export { DISCOVERY_SYNC_EVENT } from "@/lib/discovery/workspace-events";
@@ -362,6 +369,8 @@ export function setToolDecisionOutcome(
   outcome: WorkspaceDecisionOutcome,
   compareObjective?: CompareObjective | null,
 ) {
+  const previous =
+    getCanonicalToolWorkspaceState().toolStates[slug]?.decision?.outcome ?? null;
   const at = nowIso();
   commitAction({
     type: "tool/decision",
@@ -372,6 +381,12 @@ export function setToolDecisionOutcome(
   });
   if (outcome !== "deferred") {
     commitAction({ type: "tool/revisit", slug, revisitAt: null, at });
+  }
+  if (outcome === "selected" || outcome === "rejected") {
+    emitDecisionRecorded(slug);
+    if (previous === "deferred") {
+      emitDecisionRevisited(slug);
+    }
   }
   return getToolDecisionOutcome(slug);
 }
@@ -388,6 +403,11 @@ export function setToolUsage(
     at: nowIso(),
     ...(replacedBy !== undefined ? { replacedBy } : {}),
   });
+  if (usage === "using") {
+    emitUsageConfirmed(slug);
+  } else if (usage === "replaced") {
+    emitToolReplaced(slug);
+  }
 }
 
 export function setToolCompareObjective(
@@ -406,6 +426,7 @@ export function deferToolDecision(slug: string, revisitAt: string) {
   const at = nowIso();
   commitAction({ type: "tool/decision", slug, outcome: "deferred", at });
   commitAction({ type: "tool/revisit", slug, revisitAt, at });
+  emitDeferWithRevisit(slug);
   return getToolDecisionOutcome(slug);
 }
 

@@ -25,7 +25,7 @@ export const WORKSPACE_PRIMARY_VIEWS = [
   "decisioni",
 ] as const;
 
-export const WORKSPACE_SECONDARY_VIEWS = [] as const;
+export const WORKSPACE_SECONDARY_VIEWS = ["segnale"] as const;
 
 export const WORKSPACE_DISCOVER_LINKS = [
   { href: "/archivio", label: "Catalogo" },

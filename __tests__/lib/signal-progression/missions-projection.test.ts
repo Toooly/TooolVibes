@@ -9,14 +9,15 @@ import {
 } from "@/lib/signal-progression/missions";
 
 describe("signal mission projection", () => {
-  it("defines five onboarding missions", () => {
-    expect(SIGNAL_ONBOARDING_MISSIONS).toHaveLength(5);
+  it("defines six foundation missions", () => {
+    expect(SIGNAL_ONBOARDING_MISSIONS).toHaveLength(6);
     expect(SIGNAL_ONBOARDING_MISSIONS.map((m) => m.id)).toEqual([
       "save_first_tool",
       "complete_first_comparison",
-      "explore_first_collection",
-      "return_to_radar",
-      "complete_profile_context",
+      "record_first_decision",
+      "create_useful_stack",
+      "defer_with_date",
+      "revisit_due_decision",
     ]);
   });
 
@@ -31,6 +32,9 @@ describe("signal mission projection", () => {
   });
 
   it("maps engagement events to missions", () => {
-    expect(missionsCompletedByEvent("radar_returned")[0]?.id).toBe("return_to_radar");
+    expect(missionsCompletedByEvent("decision_recorded")[0]?.id).toBe(
+      "record_first_decision",
+    );
+    expect(missionsCompletedByEvent("useful_stack")[0]?.id).toBe("create_useful_stack");
   });
 });

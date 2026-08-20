@@ -24,8 +24,20 @@ describe("signal mission catalog", () => {
     expect(missionsCompletedByEvent("comparison_completed").map((m) => m.id)).toEqual([
       "complete_first_comparison",
     ]);
-    expect(missionsCompletedByEvent("collection_progressed").map((m) => m.id)).toEqual([
-      "explore_first_collection",
+    expect(missionsCompletedByEvent("decision_recorded").map((m) => m.id)).toEqual([
+      "record_first_decision",
     ]);
+    expect(missionsCompletedByEvent("useful_stack").map((m) => m.id)).toEqual([
+      "create_useful_stack",
+    ]);
+    expect(missionsCompletedByEvent("defer_with_revisit").map((m) => m.id)).toEqual([
+      "defer_with_date",
+    ]);
+    expect(missionsCompletedByEvent("decision_revisited").map((m) => m.id)).toEqual([
+      "revisit_due_decision",
+    ]);
+    expect(missionsCompletedByEvent("collection_progressed")).toEqual([]);
+    expect(missionsCompletedByEvent("radar_returned")).toEqual([]);
+    expect(missionsCompletedByEvent("profile_completed")).toEqual([]);
   });
 });

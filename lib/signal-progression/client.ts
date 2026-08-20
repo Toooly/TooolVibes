@@ -190,6 +190,54 @@ function normalizeLen(slugs: readonly string[]) {
   return new Set(slugs.map((s) => s.trim()).filter(Boolean)).size;
 }
 
+export function emitDecisionRecorded(slug?: string): void {
+  const trimmed = slug?.trim();
+  void emitEvent({
+    eventType: "decision_recorded",
+    context: trimmed ? { slug: trimmed } : {},
+    clientIdempotencyKey: "decision_first",
+  });
+}
+
+export function emitDeferWithRevisit(slug: string): void {
+  void emitEvent({
+    eventType: "defer_with_revisit",
+    context: { slug },
+    clientIdempotencyKey: `defer:${slug}`,
+  });
+}
+
+export function emitDecisionRevisited(slug: string): void {
+  void emitEvent({
+    eventType: "decision_revisited",
+    context: { slug },
+    clientIdempotencyKey: `revisit:${slug}`,
+  });
+}
+
+export function emitUsageConfirmed(slug: string): void {
+  void emitEvent({
+    eventType: "usage_confirmed",
+    context: { slug },
+    clientIdempotencyKey: `use:${slug}`,
+  });
+}
+
+export function emitToolReplaced(slug: string): void {
+  void emitEvent({
+    eventType: "tool_replaced",
+    context: { slug },
+    clientIdempotencyKey: `replace:${slug}`,
+  });
+}
+
+export function emitUsefulStack(): void {
+  void emitEvent({
+    eventType: "useful_stack",
+    clientIdempotencyKey: "stack3:once",
+  });
+}
+
 export function emitCollectionOpened(slug: string): void {
   void emitEvent({
     eventType: "collection_opened",

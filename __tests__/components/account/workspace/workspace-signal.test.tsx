@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 
 import { createElement } from "react";
-import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { emptySignalHub, workspaceTestFixtures } from "@/lib/account/test-fixtures";
+import { emptySignalHub } from "@/lib/account/test-fixtures";
 
 const fetchSignalHub = vi.hoisted(() => vi.fn());
 const signalUiRuntime = vi.hoisted(() => ({ enabled: false }));
@@ -17,12 +17,9 @@ vi.mock("@/lib/signal-progression/release-context", () => ({
   useSignalProgressUiEnabled: () => signalUiRuntime.enabled,
 }));
 
-vi.mock("@/components/account/workspace/use-canonical-workspace", () => ({
-  useCanonicalWorkspace: () => workspaceTestFixtures.mature,
-}));
-
 vi.mock("@/components/account/panel/account-signal-progress-section", () => ({
-  AccountSignalProgressSection: () => null,
+  AccountSignalProgressSection: () =>
+    createElement("div", { "data-testid": "signal-progress-section" }),
 }));
 
 import { WorkspaceSignal } from "@/components/account/workspace/workspace-signal";
@@ -37,7 +34,7 @@ describe("WorkspaceSignal", () => {
     cleanup();
   });
 
-  it("does not force the map to level 1 when the hub is level 3", async () => {
+  it("shows the verified level title without map theatre", async () => {
     fetchSignalHub.mockResolvedValue({
       ...emptySignalHub(),
       level: 3,
@@ -50,12 +47,9 @@ describe("WorkspaceSignal", () => {
       expect(screen.getByText("Livello 3 · Builder")).toBeTruthy();
     });
 
-    const map = screen.getByRole("list", { name: "Mappa del segnale" });
-    const nodes = within(map).getAllByRole("listitem");
-    expect(nodes[0]?.className).toContain("is-earned");
-    expect(nodes[0]?.className).not.toContain("is-nearby");
-    expect(nodes[2]?.className).toContain("is-nearby");
-    expect(nodes[2]?.textContent).toContain("Builder");
+    expect(screen.queryByRole("list", { name: "Mappa del segnale" })).toBeNull();
+    expect(screen.queryByLabelText("Record personali")).toBeNull();
+    expect(screen.queryByText(/Cinque territori/)).toBeNull();
   });
 
   it("does not claim Esploratore when the hub is missing", async () => {
@@ -68,9 +62,23 @@ describe("WorkspaceSignal", () => {
     });
 
     expect(screen.queryByText(/Livello 1/)).toBeNull();
-    const map = screen.getByRole("list", { name: "Mappa del segnale" });
-    const nodes = within(map).getAllByRole("listitem");
-    expect(nodes.every((node) => node.className.includes("is-locked"))).toBe(true);
+    expect(screen.queryByText("Esploratore")).toBeNull();
     expect(screen.getByText(/non ci sono XP/)).toBeTruthy();
+  });
+
+  it("keeps the progress section when flags are on", async () => {
+    signalUiRuntime.enabled = true;
+    fetchSignalHub.mockResolvedValue({
+      ...emptySignalHub(),
+      level: 2,
+      levelTitle: "Selezionatore",
+    });
+
+    render(createElement(WorkspaceSignal));
+
+    await waitFor(() => {
+      expect(screen.getByText("Livello 2 · Selezionatore")).toBeTruthy();
+    });
+    expect(screen.getByTestId("signal-progress-section")).toBeTruthy();
   });
 });

@@ -47,9 +47,7 @@ describe("signal achievements registry", () => {
     ).map((d) => d.code);
     expect(merged).toEqual([
       "first_signal",
-      "profile_set",
       "first_verdict",
-      "pathfinder",
     ]);
   });
 
@@ -72,8 +70,6 @@ describe("signal achievements registry", () => {
     expect(withBadge.map((m) => m.badgeId)).toEqual([
       "first_signal",
       "first_verdict",
-      "pathfinder",
-      "profile_set",
     ]);
   });
 });

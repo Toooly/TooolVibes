@@ -55,7 +55,7 @@ export const SIGNAL_ACHIEVEMENT_DEFINITIONS: readonly SignalAchievementDefinitio
       publicName: "Contesto pronto",
       rarity: "common",
       presentationTier: "achievement",
-      mergedIntoMission: "complete_profile_context",
+      mergedIntoMission: null,
     },
     {
       code: "first_verdict",
@@ -69,7 +69,7 @@ export const SIGNAL_ACHIEVEMENT_DEFINITIONS: readonly SignalAchievementDefinitio
       publicName: "Apri pista",
       rarity: "uncommon",
       presentationTier: "achievement",
-      mergedIntoMission: "explore_first_collection",
+      mergedIntoMission: null,
     },
     {
       code: "stack_builder",

@@ -16,7 +16,7 @@ import { SIGNAL_RULES_VERSION } from "@/lib/signal-progression/rules";
 import type { SignalFocusArea, SignalPrimaryGoal } from "@/lib/signal-progression/profile-context";
 
 const EXPLANATION =
-  "I Signal Points riconoscono azioni utili completate: salvare, confrontare, esplorare raccolte, leggere il Radar e definire il contesto. Non premiano click casuali o tempo passato.";
+  "I Signal Points riconoscono lavoro utile nello spazio: salvare, confrontare, decidere, costruire uno stack, rimandare con una data e riprendere. Non premiano click casuali.";
 
 function buildMissions(
   completed: Array<{ missionId: string; completedAt: string }>,

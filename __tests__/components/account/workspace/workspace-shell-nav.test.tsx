@@ -98,7 +98,7 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     expect(currentNamed("Biblioteca").every((value) => value !== "page")).toBe(true);
   });
 
-  it("builds real workspace view links and keeps Recenti and Segnale out of chrome", () => {
+  it("builds real workspace view links, keeps Recenti out of chrome, and puts Segnale in secondary chrome", () => {
     render(createElement(WorkspaceShell));
 
     expect(hrefsNamed("Home").every((href) => href === "/account")).toBe(true);
@@ -110,6 +110,7 @@ describe("WorkspaceShell — URL-driven navigation", () => {
       true,
     );
     expect(hrefsNamed("Recenti")).toEqual([]);
-    expect(hrefsNamed("Segnale")).toEqual([]);
+    expect(hrefsNamed("Segnale").length).toBeGreaterThan(0);
+    expect(hrefsNamed("Segnale").every((href) => href === "/account?view=segnale")).toBe(true);
   });
 });

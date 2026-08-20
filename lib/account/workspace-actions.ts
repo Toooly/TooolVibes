@@ -13,6 +13,16 @@ import {
 import type { SaveReason, ShortlistStage } from "@/lib/types/tool";
 
 import {
+  emitDecisionRecorded,
+  emitDecisionRevisited,
+  emitDeferWithRevisit,
+  emitToolReplaced,
+  emitUsageConfirmed,
+  emitUsefulStack,
+} from "@/lib/signal-progression/client";
+
+import { activePersonalStacks } from "./workspace-pipeline";
+import {
   reduceAddToWorkingPersonalStack,
   reduceAdoptLegacyListaStack,
 } from "./workspace-stack-target";
@@ -92,6 +102,12 @@ export function adoptLegacyListaStack() {
   return next;
 }
 
+function maybeEmitUsefulStack(state: ReturnType<typeof getCanonicalToolWorkspaceState>) {
+  if (activePersonalStacks(state).some((stack) => stack.slugs.length >= 3)) {
+    emitUsefulStack();
+  }
+}
+
 export function addToolToWorkingPersonalStack(slug: string) {
   const current = getCanonicalToolWorkspaceState();
   const next = reduceAddToWorkingPersonalStack(current, slug, nowIso());
@@ -99,11 +115,14 @@ export function addToolToWorkingPersonalStack(slug: string) {
     commitCanonicalToolWorkspaceState(next);
     dispatchWorkspaceChange({ source: "local", scope: "workspace" });
   }
+  maybeEmitUsefulStack(next);
   return next;
 }
 
 export function addToolToPersonalStack(id: string, slug: string) {
-  return applyWorkspaceAction({ type: "stacks/add", id, slug, at: nowIso() });
+  const next = applyWorkspaceAction({ type: "stacks/add", id, slug, at: nowIso() });
+  maybeEmitUsefulStack(next);
+  return next;
 }
 
 export function removeToolFromPersonalStack(id: string, slug: string) {
@@ -120,6 +139,8 @@ export function setWorkspaceDecision(
   alternatives?: string[],
   compareObjective?: CompareObjective | null,
 ) {
+  const previous =
+    getCanonicalToolWorkspaceState().toolStates[slug]?.decision?.outcome ?? null;
   const at = nowIso();
   const next = applyWorkspaceAction({
     type: "tool/decision",
@@ -129,6 +150,12 @@ export function setWorkspaceDecision(
     ...(alternatives !== undefined ? { alternatives } : {}),
     ...(compareObjective !== undefined ? { compareObjective } : {}),
   });
+  if (outcome === "selected" || outcome === "rejected") {
+    emitDecisionRecorded(slug);
+    if (previous === "deferred") {
+      emitDecisionRevisited(slug);
+    }
+  }
   if (outcome !== "deferred") {
     return applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt: null, at });
   }
@@ -148,7 +175,9 @@ export function deferWorkspaceTool(
     at,
     ...(alternatives !== undefined ? { alternatives } : {}),
   });
-  return applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt, at });
+  const next = applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt, at });
+  emitDeferWithRevisit(slug);
+  return next;
 }
 
 export function setWorkspaceUseCase(slug: string, useCase: string | null) {
@@ -211,7 +240,11 @@ export function setWorkspaceCompareObjective(
 }
 
 export function markWorkspaceToolUsing(slug: string) {
-  return setWorkspaceUsage(slug, "using");
+  const next = setWorkspaceUsage(slug, "using");
+  if (next.toolStates[slug]?.usage === "using") {
+    emitUsageConfirmed(slug);
+  }
+  return next;
 }
 
 export function markWorkspaceToolStopped(slug: string) {
@@ -219,6 +252,10 @@ export function markWorkspaceToolStopped(slug: string) {
 }
 
 export function markWorkspaceToolReplaced(slug: string, replacedBy: string) {
-  return setWorkspaceUsage(slug, "replaced", replacedBy);
+  const next = setWorkspaceUsage(slug, "replaced", replacedBy);
+  if (next.toolStates[slug]?.usage === "replaced") {
+    emitToolReplaced(slug);
+  }
+  return next;
 }
 
