@@ -27,7 +27,14 @@ import {
 import type { PersonalStack, WorkspaceStateV1 } from "@/lib/discovery/types";
 
 import { formatWorkspaceDate } from "./workspace-model";
+import { WorkspaceCatalogMark, WorkspaceMarkStrip } from "./workspace-tool-mark";
 import { toolName } from "./workspace-tool-name";
+import {
+  WorkspaceChip,
+  WorkspaceCompositionBar,
+  WorkspaceEmptyMotif,
+  WorkspaceReplacement,
+} from "./workspace-visual";
 
 const PREVIEW_LIMIT = 3;
 
@@ -210,6 +217,7 @@ export function WorkspaceStacks({
 
       {stacks.length === 0 && !open ? (
         <section className="tv-stacks-empty">
+          <WorkspaceEmptyMotif variant="stacks" />
           <h2 className="tv-stacks-empty__title">
             {archived.length > 0 ? "Nessuno stack attivo" : "Nessuno stack ancora"}
           </h2>
@@ -227,9 +235,8 @@ export function WorkspaceStacks({
               const previews = previewNames(catalog, stack.slugs);
               const updated = formatWorkspaceDate(stack.updatedAt);
               const isOpen = stack.id === open?.id;
-              const memberCounts = formatStackMemberCounts(
-                stackMemberCounts(state, stack.slugs),
-              );
+              const composition = stackMemberCounts(state, stack.slugs);
+              const memberCounts = formatStackMemberCounts(composition);
               return (
                 <li key={stack.id}>
                   <button
@@ -242,6 +249,7 @@ export function WorkspaceStacks({
                     {stack.description ? (
                       <span className="tv-stacks-item__desc">{stack.description}</span>
                     ) : null}
+                    <WorkspaceMarkStrip catalog={catalog} slugs={stack.slugs} />
                     {previews.length > 0 ? (
                       <span className="tv-stacks-item__previews">{previews.join(" · ")}</span>
                     ) : (
@@ -254,6 +262,11 @@ export function WorkspaceStacks({
                     {memberCounts ? (
                       <span className="tv-stacks-item__meta">{memberCounts}</span>
                     ) : null}
+                    <WorkspaceCompositionBar
+                      evaluating={composition.evaluating}
+                      selected={composition.selected}
+                      using={composition.using}
+                    />
                   </button>
                 </li>
               );
@@ -299,6 +312,7 @@ function StackDetail({
       <h2 id={`stack-${stack.id}`} className="tv-stacks-detail__title">
         {stack.name}
       </h2>
+      <WorkspaceMarkStrip catalog={catalog} slugs={stack.slugs} size="md" />
       <form
         className="tv-stacks-edit"
         onSubmit={(event) => {
@@ -337,45 +351,87 @@ function StackDetail({
           <p className="tv-stacks-detail__copy">Nessun tool in questo stack.</p>
         ) : (
           <ul className="tv-stacks-tool-list">
-            {stack.slugs.map((slug) => {
-              const tool = state.toolStates[slug];
-              const usage = tool?.usage ?? null;
-              const outcome = tool?.decision?.outcome ?? null;
-              const stage = tool?.stage ?? "saved";
-              const status = compactPersonalStatus({ usage, outcome, stage });
-              const replacedName =
-                usage === "replaced" && tool?.replacedBy
-                  ? toolName(catalog, tool.replacedBy)
-                  : null;
-              const canMarkUsing = outcome === "selected" && !usage;
+            {(["using", "evaluating", "selected", "deferred", "other"] as const).map((group) => {
+              const grouped = stack.slugs.filter((slug) => {
+                const tool = state.toolStates[slug];
+                const usage = tool?.usage ?? null;
+                const outcome = tool?.decision?.outcome ?? null;
+                if (group === "using") return usage === "using";
+                if (group === "evaluating") return !outcome && usage !== "using";
+                if (group === "selected")
+                  return outcome === "selected" && usage !== "using" && usage !== "replaced";
+                if (group === "deferred") return outcome === "deferred";
+                return (
+                  usage === "replaced" ||
+                  usage === "stopped" ||
+                  outcome === "rejected"
+                );
+              });
+              if (grouped.length === 0) return null;
+              const titles = {
+                using: "In uso",
+                evaluating: "In valutazione",
+                selected: "Scelti",
+                deferred: "Rimandati",
+                other: "Altri",
+              };
               return (
-                <li key={slug} className="tv-stacks-tool">
-                  <span>
-                    <Link href={`/toools/${slug}`}>{toolName(catalog, slug)}</Link>
-                    <span className="tv-stacks-item__meta"> {status.label}</span>
-                    {replacedName ? (
-                      <span className="tv-stacks-item__meta"> → {replacedName}</span>
-                    ) : null}
-                  </span>
-                  <span>
-                    {canMarkUsing ? (
-                      <button
-                        type="button"
-                        className="tv-stacks-textbtn"
-                        onClick={() => markWorkspaceToolUsing(slug)}
-                      >
-                        Lo sto usando
-                      </button>
-                    ) : null}
-                    {canMarkUsing ? " " : null}
-                    <button
-                      type="button"
-                      className="tv-stacks-textbtn"
-                      onClick={() => removeToolFromPersonalStack(stack.id, slug)}
-                    >
-                      Togli
-                    </button>
-                  </span>
+                <li key={group} className="tv-stacks-group">
+                  <p className="tv-stacks-group__title">{titles[group]}</p>
+                  <ul className="tv-stacks-tool-list">
+                    {grouped.map((slug) => {
+                      const tool = state.toolStates[slug];
+                      const usage = tool?.usage ?? null;
+                      const outcome = tool?.decision?.outcome ?? null;
+                      const stage = tool?.stage ?? "saved";
+                      const status = compactPersonalStatus({ usage, outcome, stage });
+                      const replacedName =
+                        usage === "replaced" && tool?.replacedBy
+                          ? toolName(catalog, tool.replacedBy)
+                          : null;
+                      const canMarkUsing = outcome === "selected" && !usage;
+                      return (
+                        <li key={slug} className="tv-stacks-tool">
+                          <span className="tv-stacks-tool__id">
+                            <WorkspaceCatalogMark catalog={catalog} slug={slug} size="sm" />
+                            <span>
+                              <Link href={`/toools/${slug}`}>{toolName(catalog, slug)}</Link>
+                              <WorkspaceChip tone={(usage ?? outcome ?? "saved") as "saved"}>
+                                {" "}
+                                {status.label}
+                              </WorkspaceChip>
+                              {replacedName && tool?.replacedBy ? (
+                                <WorkspaceReplacement
+                                  catalog={catalog}
+                                  fromSlug={slug}
+                                  toSlug={tool.replacedBy}
+                                />
+                              ) : null}
+                            </span>
+                          </span>
+                          <span>
+                            {canMarkUsing ? (
+                              <button
+                                type="button"
+                                className="tv-stacks-textbtn"
+                                onClick={() => markWorkspaceToolUsing(slug)}
+                              >
+                                Lo sto usando
+                              </button>
+                            ) : null}
+                            {canMarkUsing ? " " : null}
+                            <button
+                              type="button"
+                              className="tv-stacks-textbtn"
+                              onClick={() => removeToolFromPersonalStack(stack.id, slug)}
+                            >
+                              Togli
+                            </button>
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </li>
               );
             })}

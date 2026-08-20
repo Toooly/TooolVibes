@@ -7,6 +7,7 @@ import { useEffect, useMemo } from "react";
 import { useAccount } from "@/components/account/account-provider";
 import { useDiscoveryPersistence } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { useSignalProgressUiEnabled } from "@/lib/signal-progression/release-context";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import {
   getHeroBadgeLabel,
   getPersistenceLabel,
@@ -119,6 +120,21 @@ function AccountSyncLine({
   );
 }
 
+function SearchControl() {
+  const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
+  return (
+    <button
+      type="button"
+      className="tv-app__search"
+      onClick={() => setCommandOpen(true)}
+      aria-label="Cerca nel toolbox"
+    >
+      Cerca
+      <kbd className="tv-app__search-kbd">⌘K</kbd>
+    </button>
+  );
+}
+
 function SignOutControl({ onSignOut }: { onSignOut: () => void }) {
   return (
     <button
@@ -127,7 +143,7 @@ function SignOutControl({ onSignOut }: { onSignOut: () => void }) {
       onClick={onSignOut}
       aria-label="Esci dall'account"
     >
-      Esci dall&apos;account
+      Esci
     </button>
   );
 }
@@ -224,6 +240,7 @@ export function AccountWorkspaceFrame({
           ) : null}
         </nav>
         <div className="tv-app__aside-foot">
+          <SearchControl />
           <Link
             href="/account/settings"
             className="tv-app__nav-link"
@@ -247,6 +264,7 @@ export function AccountWorkspaceFrame({
             TOOOLVIBES
           </Link>
           <div className="tv-app__mobile-tools">
+            <SearchControl />
             <AccountIdentity email={email} compact />
             <Link
               href="/account/settings"
@@ -258,6 +276,27 @@ export function AccountWorkspaceFrame({
             <SignOutControl onSignOut={() => void account.signOut()} />
           </div>
         </div>
+        <nav className="tv-app__mobile-chips" aria-label="Spazio personale">
+          {WORKSPACE_PRIMARY_VIEWS.map((item) => (
+            <WorkspaceNavLink
+              key={item}
+              view={item}
+              currentView={view}
+              surface={resolvedSurface}
+              variant="primary"
+            />
+          ))}
+          {secondaryViews.map((item) => (
+            <WorkspaceNavLink
+              key={item}
+              view={item}
+              currentView={view}
+              surface={resolvedSurface}
+              variant="secondary"
+            />
+          ))}
+          <DiscoverLinks />
+        </nav>
         <label className="tv-app__mobile-select">
           <span className="sr-only">Vai a</span>
           <select
@@ -303,6 +342,7 @@ export function AccountWorkspaceFrame({
             TOOOLVIBES
           </Link>
           <div className="tv-app__tablet-tools">
+            <SearchControl />
             <Link
               href="/account/settings"
               className="tv-app__settings-link"

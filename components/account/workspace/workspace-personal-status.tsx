@@ -39,10 +39,8 @@ export function WorkspacePersonalStatusBadge({
   return (
     <span
       data-slot="personal-status"
-      className={cn(
-        "tv-personal-status text-[length:var(--tv-text-xs)] font-semibold tracking-[0.02em] text-[var(--tv-ink-muted-aa)]",
-        className,
-      )}
+      data-tone={status.key}
+      className={cn("tv-personal-status", className)}
     >
       {status.label}
     </span>

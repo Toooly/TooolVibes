@@ -7,4 +7,7 @@ export type PublicToolCatalogItem = {
   toolOfWeek: boolean;
   tags: string[];
   levelLabel: string | null;
+  domain?: string;
+  accentFrom?: string;
+  accentTo?: string;
 };

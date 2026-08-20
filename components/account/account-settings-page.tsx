@@ -70,6 +70,7 @@ export function AccountSettingsPage() {
           <h2 id="settings-profile" className="tv-settings-heading">
             Profilo
           </h2>
+          <p className="tv-settings-lead">Chi sei in questo workspace, e su cosa stai lavorando.</p>
           {email ? (
             <p className="tv-settings-email">
               <span className="tv-settings-kicker">Email</span>
@@ -83,6 +84,7 @@ export function AccountSettingsPage() {
           <h2 id="settings-signal" className="tv-settings-heading">
             Segnale
           </h2>
+          <p className="tv-settings-lead">Volume, animazioni e celebrazioni. Lo spazio resta utile anche in silenzio.</p>
           <SignalSettings />
         </section>
 
@@ -101,6 +103,7 @@ export function AccountSettingsPage() {
           <h2 id="settings-workspace" className="tv-settings-heading">
             Workspace
           </h2>
+          <p className="tv-settings-lead">Esporta o svuota salvati, stack e decisioni di questo spazio.</p>
           <WorkspaceSettings />
         </section>
 
@@ -120,6 +123,7 @@ export function AccountSettingsPage() {
           <h2 id="settings-contrib" className="tv-settings-heading">
             Contributi
           </h2>
+          <p className="tv-settings-lead">Tool e segnalazioni che hai inviato.</p>
           <AccountSubmissionsSection
             status={account.status}
             submissions={submissions.submissions}
@@ -134,6 +138,7 @@ export function AccountSettingsPage() {
           <h2 id="settings-account" className="tv-settings-heading">
             Account
           </h2>
+          <p className="tv-settings-lead">Sessione e uscita. Nessun profilo sociale.</p>
           <button
             type="button"
             className="account-btn-secondary"

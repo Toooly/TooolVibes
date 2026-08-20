@@ -33,7 +33,14 @@ import type {
 
 import { RevisitWhenChips } from "./revisit-when-chips";
 import { PIPELINE_LABELS, formatWorkspaceDate } from "./workspace-model";
+import { WorkspaceCatalogMark, WorkspaceMarkStrip } from "./workspace-tool-mark";
 import { toolName } from "./workspace-tool-name";
+import {
+  WorkspaceChip,
+  WorkspaceDecisionTrace,
+  WorkspaceEmptyMotif,
+  pipelineTone,
+} from "./workspace-visual";
 
 const OUTCOME_ACTIONS: Array<{
   outcome: WorkspaceDecisionOutcome | null;
@@ -109,6 +116,7 @@ export function WorkspaceDecisions({
   if (slugs.length === 0) {
     return (
       <section className="tv-journal" aria-labelledby="tv-journal-empty">
+        <WorkspaceEmptyMotif variant="journal" />
         <p className="account-label">Decisioni</p>
         <h2 id="tv-journal-empty" className="tv-journal-empty__title">
           Ancora nessuna traccia
@@ -154,9 +162,14 @@ export function WorkspaceDecisions({
                 onClick={() => setOpen(slug)}
                 aria-current={selected ? "true" : undefined}
               >
-                <span className="tv-journal-entry__tool">{toolName(catalog, slug)}</span>
+                <span className="tv-journal-entry__head">
+                  <WorkspaceCatalogMark catalog={catalog} slug={slug} size="sm" />
+                  <span className="tv-journal-entry__tool">{toolName(catalog, slug)}</span>
+                </span>
                 <span className="tv-journal-entry__facts">
-                  {outcomeLabel ? <span>{outcomeLabel}</span> : null}
+                  {outcomeLabel ? (
+                    <WorkspaceChip tone={pipelineTone(column)}>{outcomeLabel}</WorkspaceChip>
+                  ) : null}
                   {usageLabel ? <span>{usageLabel}</span> : null}
                   {tool?.useCase ? <span>{tool.useCase}</span> : null}
                   {tool?.pinned ? <span>Fissato</span> : null}
@@ -235,6 +248,7 @@ function DecisionEditor({
   return (
     <article className="tv-journal-sheet" aria-labelledby={`decision-${slug}`}>
       <header className="tv-journal-sheet__head">
+        <WorkspaceCatalogMark catalog={catalog} slug={slug} size="md" />
         <h2 id={`decision-${slug}`} className="tv-journal-sheet__title">
           {toolName(catalog, slug)}
         </h2>
@@ -255,6 +269,10 @@ function DecisionEditor({
           Sostituito da{" "}
           <Link href={`/toools/${replacedBy}`}>{toolName(catalog, replacedBy)}</Link>
         </p>
+      ) : null}
+      <WorkspaceDecisionTrace catalog={catalog} slug={slug} tool={tool} />
+      {alternatives.length > 0 ? (
+        <WorkspaceMarkStrip catalog={catalog} slugs={[slug, ...alternatives]} size="sm" />
       ) : null}
 
       <section className="tv-journal-block">

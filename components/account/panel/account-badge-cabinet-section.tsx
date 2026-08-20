@@ -113,7 +113,7 @@ export function AccountBadgeCabinetSection({
           Caricamento cabinet...
         </p>
       ) : badges.length === 0 ? (
-        <div className="mt-4 rounded-[18px] border px-4 py-4" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}>
+        <div className="tv-mission mt-4">
           <p className="text-sm leading-6" style={{ color: "var(--account-ink)" }}>
             Il cabinet raccoglie i segni del tuo percorso: la prima shortlist,
             la prima decisione, i percorsi completati. Ogni segno arriva
@@ -135,17 +135,8 @@ export function AccountBadgeCabinetSection({
             return (
               <li
                 key={badge.code}
-                className="flex items-start gap-3 rounded-[18px] border px-4 py-3"
-                style={{
-                  borderColor:
-                    badge.visualIntensity === "elevated"
-                      ? "color-mix(in srgb, var(--tv-accent-gold) 45%, transparent)"
-                      : "var(--line)",
-                  background:
-                    badge.visualIntensity === "quiet"
-                      ? "rgba(255,255,255,0.06)"
-                      : "rgba(255,255,255,0.06)",
-                }}
+                className="tv-mission flex items-start gap-3"
+                data-status="completed"
               >
                 <span
                   className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
@@ -197,8 +188,7 @@ export function AccountBadgeCabinetSection({
             {trajectory.map((item) => (
               <li
                 key={item.code}
-                className="flex items-center justify-between gap-3 rounded-[16px] border px-4 py-2.5"
-                style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
+                className="tv-mission flex items-center justify-between gap-3"
               >
                 <span className="text-sm text-[var(--account-ink)]">
                   <span className="font-semibold">{item.title}</span>

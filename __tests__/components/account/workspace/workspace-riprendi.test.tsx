@@ -94,8 +94,11 @@ describe("WorkspaceRiprendi", () => {
     render(createElement(WorkspaceRiprendi, { state: workspaceTestFixtures.mature }));
 
     expect(screen.getByRole("heading", { name: "In uso" })).toBeTruthy();
-    const usingRow = screen.getByRole("link", { name: /Cursor/i });
-    expect(usingRow.getAttribute("href")).toBe("/toools/cursor");
+    const usingRow = screen
+      .getAllByRole("link")
+      .find((link) => link.getAttribute("href") === "/toools/cursor");
+    expect(usingRow).toBeTruthy();
+    expect(usingRow?.textContent).toMatch(/Cursor/i);
     expect(screen.getByRole("heading", { name: "Stack attivi" })).toBeTruthy();
     expect(screen.getByText("1 in uso")).toBeTruthy();
     expect(screen.getByText("1 in valutazione")).toBeTruthy();

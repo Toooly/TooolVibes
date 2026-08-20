@@ -36,8 +36,10 @@ import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 import type { WorkspaceStateV1, WorkspaceUsage } from "@/lib/discovery/types";
 
 import { RevisitWhenChips } from "./revisit-when-chips";
-import { PIPELINE_LABELS } from "./workspace-model";
+import { PIPELINE_LABELS, formatWorkspaceDate } from "./workspace-model";
+import { WorkspaceCatalogMark } from "./workspace-tool-mark";
 import { toolName } from "./workspace-tool-name";
+import { WorkspaceChip, WorkspaceEmptyMotif, WorkspaceReplacement, pipelineTone } from "./workspace-visual";
 
 const STATUS_FILTERS: Array<{ id: "tutti" | PipelineColumn; label: string }> = [
   { id: "tutti", label: "Tutti" },
@@ -188,12 +190,18 @@ export function WorkspaceBiblioteca({
     if (!focusSlug) return;
     document
       .querySelector(`[data-slug="${focusSlug}"]`)
-      ?.scrollIntoView({ block: "center" });
+      ?.scrollIntoView({
+        block: "center",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+      });
   }, [focusSlug, visible]);
 
   if (state.saved.slugs.length === 0) {
     return (
       <section className="tv-lib tv-lib--empty">
+        <WorkspaceEmptyMotif variant="library" />
         <p className="tv-lib-kicker">Biblioteca</p>
         <h2 className="tv-lib-title">Nessun tool salvato ancora</h2>
         <p className="tv-lib-copy">
@@ -363,6 +371,7 @@ function LibraryRow({
   onToggleNote: () => void;
 }) {
   const name = toolName(catalog, item.slug);
+  const catalogItem = catalog.find((tool) => tool.slug === item.slug);
   const inCompare = state.compare.slugs.includes(item.slug);
   const compareFull = !inCompare && state.compare.slugs.length >= MAX_COMPARE_TOOLS;
   const availableStacks = stacks.filter((stack) => !stack.slugs.includes(item.slug));
@@ -384,37 +393,34 @@ function LibraryRow({
       data-slug={item.slug}
       data-focus={focused ? "true" : undefined}
     >
+      <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="md" />
       <div className="tv-lib-row__main">
         <Link className="tv-lib-name" href={`/toools/${item.slug}`}>
           {name}
         </Link>
+        {catalogItem?.shortDescription ? (
+          <p className="tv-lib-desc">{catalogItem.shortDescription}</p>
+        ) : null}
         <p className="tv-lib-meta">
-          <span>{category || "Senza categoria"}</span>
-          <span aria-hidden="true"> · </span>
-          <span>{personalStatusLabel(item)}</span>
-          {replacedName ? (
-            <>
-              <span aria-hidden="true"> · </span>
-              <span>→ {replacedName}</span>
-            </>
-          ) : null}
+          <WorkspaceChip tone="stack">{category || "Senza categoria"}</WorkspaceChip>
+          <WorkspaceChip tone={pipelineTone(item.column)}>
+            {personalStatusLabel(item)}
+          </WorkspaceChip>
           {item.stackNames.length > 0 ? (
-            <>
-              <span aria-hidden="true"> · </span>
-              <span>{item.stackNames.join(", ")}</span>
-            </>
+            <WorkspaceChip tone="stack">{item.stackNames.join(", ")}</WorkspaceChip>
           ) : null}
-          {revisitLine ? (
-            <>
-              <span aria-hidden="true"> · </span>
-              <span>{revisitLine}</span>
-            </>
+          {revisitLine ? <WorkspaceChip tone="revisit">{revisitLine}</WorkspaceChip> : null}
+          {formatWorkspaceDate(item.updatedAt) ? (
+            <WorkspaceChip tone="note">{formatWorkspaceDate(item.updatedAt)}</WorkspaceChip>
           ) : null}
         </p>
+        {replacedName && item.replacedBy ? (
+          <WorkspaceReplacement catalog={catalog} fromSlug={item.slug} toSlug={item.replacedBy} />
+        ) : null}
         {item.pinned || item.note ? (
           <p className="tv-lib-marks">
-            {item.pinned ? <span>Fisso</span> : null}
-            {item.note ? <span>Nota</span> : null}
+            {item.pinned ? <WorkspaceChip tone="pin">Fisso</WorkspaceChip> : null}
+            {item.note ? <WorkspaceChip tone="note">Nota</WorkspaceChip> : null}
           </p>
         ) : null}
       </div>

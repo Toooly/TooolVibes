@@ -15,7 +15,6 @@ import {
   Table2,
   Workflow,
 } from "lucide-react";
-import { toast } from "sonner";
 
 import {
   CommandDialog,
@@ -27,6 +26,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { serializeCatalogUrl } from "@/components/directory/catalog/catalog-controller";
+import { WorkspaceCatalogMark } from "@/components/account/workspace/workspace-tool-mark";
 import {
   WORKSPACE_VIEW_LABELS,
   workspaceFocusHref,
@@ -45,7 +45,6 @@ import {
   searchToolsWithEngine,
 } from "@/lib/search/tool-search-adapter";
 import {
-  MAX_COMPARE_TOOLS,
   getCanonicalToolWorkspaceState,
   useToolWorkspaceStore,
 } from "@/lib/stores/tool-workspace-store";
@@ -136,9 +135,6 @@ export function GlobalCommandPalette({
   const isOpen = useToolWorkspaceStore((state) => state.isCommandOpen);
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
-  const toggleSaved = useToolWorkspaceStore((state) => state.toggleSaved);
-  const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
-  const addToStack = useToolWorkspaceStore((state) => state.addToStack);
   const workspace = getCanonicalToolWorkspaceState();
   const signalUi = useSignalProgressUiEnabled();
   const workspaceDestinations = useMemo(
@@ -372,7 +368,7 @@ export function GlobalCommandPalette({
                       value={`saved:${tool.slug}`}
                       onSelect={() => openTool(tool.slug)}
                     >
-                      <Star className="size-4" />
+                      <WorkspaceCatalogMark catalog={tools} slug={tool.slug} size="xs" />
                       <span>{tool.name}</span>
                       {tool.levelLabel ? (
                         <span className="ml-auto text-xs text-[var(--muted)]">
@@ -398,14 +394,14 @@ export function GlobalCommandPalette({
                 </CommandGroup>
               ) : null}
               {searchResults.length > 0 ? (
-                <CommandGroup heading={`Tool per “${trimmedQuery}”`}>
+                <CommandGroup heading="Catalogo">
                   {searchResults.map((tool) => (
                     <CommandItem
                       key={tool.slug}
                       value={`tool:${tool.slug}`}
                       onSelect={() => openTool(tool.slug)}
                     >
-                      <Sparkles className="size-4" />
+                      <WorkspaceCatalogMark catalog={tools} slug={tool.slug} size="xs" />
                       <span>{tool.name}</span>
                       <span className="ml-auto text-xs text-[var(--muted)]">
                         {tool.levelLabel}
@@ -423,7 +419,7 @@ export function GlobalCommandPalette({
           ) : null
         ) : (
           <>
-            <CommandGroup heading="Navigazione">
+            <CommandGroup heading="Il tuo Tooolbox">
               <CommandItem
                 onSelect={() => {
                   openPath("/archivio");
@@ -473,7 +469,7 @@ export function GlobalCommandPalette({
             {emptyPersonalItems.length > 0 ? (
               <>
                 <CommandSeparator />
-                <CommandGroup heading="Il tuo spazio">
+                <CommandGroup heading="Decisioni / Da riprendere">
                   {emptyPersonalItems.map((item) => (
                     <CommandItem
                       key={item.key}
@@ -491,72 +487,18 @@ export function GlobalCommandPalette({
               </>
             ) : null}
             <CommandSeparator />
-            <CommandGroup heading="Tool">
+            <CommandGroup heading="Catalogo">
               {featuredTools.map((tool) => (
                 <CommandItem
                   key={tool.slug}
                   value={`featured:${tool.slug}`}
                   onSelect={() => openTool(tool.slug)}
                 >
-                  <Sparkles className="size-4" />
+                  <WorkspaceCatalogMark catalog={tools} slug={tool.slug} size="xs" />
                   <span>{tool.name}</span>
                   <span className="ml-auto text-xs text-[var(--muted)]">
                     {tool.levelLabel}
                   </span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-            <CommandSeparator />
-            <CommandGroup heading="Azioni rapide">
-              {tools.slice(0, 6).map((tool) => (
-                <CommandItem
-                  key={`save-${tool.slug}`}
-                  value={`salva ${tool.name}`}
-                  onSelect={() => {
-                    const saved = toggleSaved(tool.slug);
-                    toast.success(saved ? `${tool.name} salvato` : `${tool.name} rimosso`);
-                    playTooolvibesSound(saved ? "success" : "update");
-                    close();
-                  }}
-                >
-                  Salva {tool.name}
-                </CommandItem>
-              ))}
-              {tools.slice(0, 4).map((tool) => (
-                <CommandItem
-                  key={`compare-${tool.slug}`}
-                  value={`compare ${tool.name}`}
-                  onSelect={() => {
-                    const result = toggleCompare(tool.slug);
-                    if (result.limited) {
-                      toast.warning(`Puoi confrontare fino a ${MAX_COMPARE_TOOLS} tool alla volta.`);
-                      playTooolvibesSound("warning");
-                    } else {
-                      toast.success(
-                        result.added
-                          ? `${tool.name} aggiunto al confronto`
-                          : `${tool.name} rimosso dal confronto`,
-                      );
-                      playTooolvibesSound(result.added ? "success" : "update");
-                    }
-                    close();
-                  }}
-                >
-                  Aggiungi {tool.name} al confronto
-                </CommandItem>
-              ))}
-              {tools.slice(0, 4).map((tool) => (
-                <CommandItem
-                  key={`stack-${tool.slug}`}
-                  value={`lista ${tool.name}`}
-                  onSelect={() => {
-                    const added = addToStack(tool.slug);
-                    toast.success(added ? `${tool.name} aggiunto allo stack` : "Già nello stack");
-                    playTooolvibesSound(added ? "success" : "update");
-                    close();
-                  }}
-                >
-                  Inserisci {tool.name} nello stack
                 </CommandItem>
               ))}
             </CommandGroup>

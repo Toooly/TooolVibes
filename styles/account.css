@@ -779,3 +779,27 @@
     transform: none;
   }
 }
+
+
+.tv-personal-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.3rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tv-personal-status[data-tone="using"] { color: #5ee0c8; }
+.tv-personal-status[data-tone="selected"] { color: #e4c36a; }
+.tv-personal-status[data-tone="replaced"],
+.tv-personal-status[data-tone="stopped"] { color: #9aa3b5; }
+.tv-personal-status[data-tone="rejected"] { color: #c98989; }
+.tv-personal-status[data-tone="deferred"] { color: #d7b07a; }
+.tv-personal-status[data-tone="saved"],
+.tv-personal-status[data-tone="review"],
+.tv-personal-status[data-tone="top"] { color: #b9a4ff; }

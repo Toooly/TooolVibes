@@ -17,7 +17,7 @@ import {
   addToolToPersonalStack,
   markWorkspaceToolUsing,
 } from "@/lib/account/workspace-actions";
-import { usageActionLabel } from "@/lib/account/workspace-lifecycle";
+import { formatRevisitLine, usageActionLabel } from "@/lib/account/workspace-lifecycle";
 import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 import {
   MAX_COMPARE_TOOLS,
@@ -78,6 +78,20 @@ export function ToolDetailActionSurface({
   return (
     <div className="td-final-actions" role="group" aria-label="Azioni scheda">
       <WorkspacePersonalStatusBadge slug={slug} />
+
+      {status && (containingStacks.length > 0 || workspace.toolStates[slug]?.revisitAt) ? (
+        <div className="td-final-personal">
+          <p className="td-final-personal__label">Il tuo stato</p>
+          <p className="td-final-personal__facts">
+            {containingStacks.length > 0 ? (
+              <span>Stack: {containingStacks.map((stack) => stack.name).join(", ")}</span>
+            ) : null}
+            {formatRevisitLine(workspace.toolStates[slug]?.revisitAt) ? (
+              <span>{formatRevisitLine(workspace.toolStates[slug]?.revisitAt)}</span>
+            ) : null}
+          </p>
+        </div>
+      ) : null}
 
       <button
         type="button"
