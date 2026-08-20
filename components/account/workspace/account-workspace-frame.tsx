@@ -164,7 +164,7 @@ export function AccountWorkspaceFrame({
   }, [resolvedSurface]);
 
   const selectValue =
-    resolvedSurface === "settings" ? "" : workspaceViewHref(view);
+    resolvedSurface === "settings" ? "/account/settings" : workspaceViewHref(view);
   const signalUi = useSignalProgressUiEnabled();
   const secondaryViews = useMemo(
     () =>
@@ -246,7 +246,17 @@ export function AccountWorkspaceFrame({
           <Link href={workspaceViewHref("riprendi")} className="tv-app__brand">
             TOOOLVIBES
           </Link>
-          <AccountIdentity email={email} compact />
+          <div className="tv-app__mobile-tools">
+            <AccountIdentity email={email} compact />
+            <Link
+              href="/account/settings"
+              className="tv-app__settings-link"
+              aria-current={resolvedSurface === "settings" ? "page" : undefined}
+            >
+              Impostazioni
+            </Link>
+            <SignOutControl onSignOut={() => void account.signOut()} />
+          </div>
         </div>
         <label className="tv-app__mobile-select">
           <span className="sr-only">Vai a</span>
@@ -257,11 +267,6 @@ export function AccountWorkspaceFrame({
               if (next) router.push(next);
             }}
           >
-            {resolvedSurface === "settings" ? (
-              <option value="" disabled>
-                Vai a…
-              </option>
-            ) : null}
             <optgroup label="Il tuo lavoro">
               {WORKSPACE_PRIMARY_VIEWS.map((item) => (
                 <option key={item} value={workspaceViewHref(item)}>
@@ -285,18 +290,11 @@ export function AccountWorkspaceFrame({
                 </option>
               ))}
             </optgroup>
+            <optgroup label="Account">
+              <option value="/account/settings">Impostazioni</option>
+            </optgroup>
           </select>
         </label>
-        <div className="tv-app__mobile-meta">
-          <Link
-            href="/account/settings"
-            className="tv-app__settings-link"
-            aria-current={resolvedSurface === "settings" ? "page" : undefined}
-          >
-            Impostazioni
-          </Link>
-          <SignOutControl onSignOut={() => void account.signOut()} />
-        </div>
       </div>
 
       <div className="tv-app__tablet">
