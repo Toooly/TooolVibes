@@ -10,15 +10,26 @@
  * Namespace: .td-final-*
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Bookmark, Columns3, ExternalLink } from "lucide-react";
 
 import {
+  addToolToPersonalStack,
+  markWorkspaceToolUsing,
+} from "@/lib/account/workspace-actions";
+import { usageActionLabel } from "@/lib/account/workspace-lifecycle";
+import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
+import {
   MAX_COMPARE_TOOLS,
   MIN_COMPARE_TOOLS,
+  getCanonicalToolWorkspaceState,
   useToolWorkspaceStore,
 } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
+import {
+  WorkspacePersonalStatusBadge,
+  usePersonalToolStatus,
+} from "@/components/account/workspace/workspace-personal-status";
 
 type ToolDetailActionSurfaceProps = {
   slug: string;
@@ -39,6 +50,12 @@ export function ToolDetailActionSurface({
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleSaved = useToolWorkspaceStore((s) => s.toggleSaved);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
+  const status = usePersonalToolStatus(slug);
+  const [stackUiReady, setStackUiReady] = useState(false);
+  useEffect(() => {
+    setStackUiReady(true);
+  }, []);
+  const workspace = getCanonicalToolWorkspaceState();
 
   const isSaved = savedSlugs.includes(slug);
   const compareRank = useMemo(
@@ -47,9 +64,21 @@ export function ToolDetailActionSurface({
   );
   const compareCount = compareSlugs.length;
   const isAtMax = compareCount >= MAX_COMPARE_TOOLS;
+  const canMarkUsing = status?.key === "selected";
+  const activeStacks = stackUiReady
+    ? workspace.personalStacks.filter((stack) => !stack.archivedAt)
+    : [];
+  const containingStacks = activeStacks.filter((stack) => stack.slugs.includes(slug));
+  const availableStacks = activeStacks.filter((stack) => !stack.slugs.includes(slug));
+  const isAccountWorkspace =
+    stackUiReady && getActiveWorkspaceOwner().kind === "account";
+  const showStackSelect = availableStacks.length > 0;
+  const showStackLink = activeStacks.length === 0 && isAccountWorkspace;
 
   return (
     <div className="td-final-actions" role="group" aria-label="Azioni scheda">
+      <WorkspacePersonalStatusBadge slug={slug} />
+
       <button
         type="button"
         onClick={() => toggleCompare(slug)}
@@ -89,6 +118,54 @@ export function ToolDetailActionSurface({
         />
         <span>{isSaved ? "Salvato" : "Salva"}</span>
       </button>
+
+      {canMarkUsing ? (
+        <button
+          type="button"
+          className="td-final-cta--secondary"
+          onClick={() => markWorkspaceToolUsing(slug)}
+        >
+          {usageActionLabel("using")}
+        </button>
+      ) : null}
+
+      {showStackSelect ? (
+        <label className="inline-flex min-h-11 items-center gap-2 text-[length:var(--tv-text-xs)] text-[var(--tv-ink-secondary)]">
+          <span>Aggiungi allo stack</span>
+          <select
+            aria-label="Aggiungi allo stack"
+            defaultValue=""
+            onChange={(event) => {
+              if (event.target.value) {
+                addToolToPersonalStack(event.target.value, slug);
+              }
+              event.target.value = "";
+            }}
+          >
+            <option value="">Scegli stack</option>
+            {availableStacks.map((stack) => (
+              <option key={stack.id} value={stack.id}>
+                {stack.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
+
+      {showStackLink ? (
+        <a
+          href="/account?view=stack"
+          className="text-[length:var(--tv-text-xs)] font-medium text-[var(--tv-ink-muted-aa)] underline-offset-2 hover:underline"
+        >
+          Aggiungi allo stack
+        </a>
+      ) : null}
+
+      {containingStacks.length > 0 ? (
+        <span className="text-[length:var(--tv-text-xs)] text-[var(--tv-ink-muted-aa)]">
+          Nello stack: {containingStacks.map((stack) => stack.name).join(", ")}
+        </span>
+      ) : null}
 
       <a
         href={externalUrl}

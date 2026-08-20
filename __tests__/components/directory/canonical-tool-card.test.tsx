@@ -182,6 +182,7 @@ describe("CanonicalToolCard — density grid", () => {
     expect(
       screen.getByRole("button", { name: /Confronta/ }).getAttribute("aria-pressed"),
     ).toBe("false");
+    expect(container.querySelector("[data-slot='personal-status']")).toBeNull();
   });
 
   it("mappa livello e toolOfWeek sulle varianti canoniche di Badge", () => {

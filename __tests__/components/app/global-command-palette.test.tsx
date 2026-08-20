@@ -10,9 +10,15 @@ import {
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GlobalCommandPalette } from "@/components/app/global-command-palette";
+import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
 import { PublicToolCatalogProvider } from "@/lib/data/public-tool-catalog-context";
+import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
+import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import { searchTools } from "@/lib/search/tool-search";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import {
+  activateToolWorkspaceOwner,
+  useToolWorkspaceStore,
+} from "@/lib/stores/tool-workspace-store";
 
 const { pushMock } = vi.hoisted(() => ({ pushMock: vi.fn() }));
 vi.mock("next/navigation", () => ({
@@ -96,12 +102,65 @@ const CATALOG = [
   },
 ];
 
-function renderPalette() {
+const WORKSPACE_CATALOG = [
+  ...CATALOG,
+  {
+    slug: "cursor",
+    name: "Cursor",
+    categoryLabel: "Coding",
+    shortDescription: "Editor AI.",
+    featured: false,
+    toolOfWeek: false,
+    tags: [],
+    levelLabel: "Segnalato",
+  },
+  {
+    slug: "v0",
+    name: "v0",
+    categoryLabel: "Coding",
+    shortDescription: "Generatore UI.",
+    featured: false,
+    toolOfWeek: false,
+    tags: [],
+    levelLabel: "Segnalato",
+  },
+  {
+    slug: "meku",
+    name: "Meku",
+    categoryLabel: "Coding",
+    shortDescription: "Builder.",
+    featured: false,
+    toolOfWeek: false,
+    tags: [],
+    levelLabel: "Segnalato",
+  },
+  {
+    slug: "linear",
+    name: "Linear",
+    categoryLabel: "Product",
+    shortDescription: "Issue tracking.",
+    featured: false,
+    toolOfWeek: false,
+    tags: [],
+    levelLabel: "Segnalato",
+  },
+];
+
+function renderPalette(tools: PublicToolCatalogItem[] = CATALOG) {
   return render(
-    <PublicToolCatalogProvider tools={CATALOG}>
+    <PublicToolCatalogProvider tools={tools}>
       <GlobalCommandPalette />
     </PublicToolCatalogProvider>,
   );
+}
+
+function renderWorkspacePalette(
+  state = workspaceTestFixtures.mature,
+) {
+  act(() => {
+    activateToolWorkspaceOwner({ kind: "account", userId: "qa-user" }, state);
+  });
+  return renderPalette(WORKSPACE_CATALOG);
 }
 
 function openPalette() {
@@ -113,12 +172,16 @@ function openPalette() {
 beforeEach(() => {
   pushMock.mockClear();
   act(() => {
+    activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
     useToolWorkspaceStore.setState({ isCommandOpen: false, selectedSlug: null });
   });
 });
 
 afterEach(() => {
   cleanup();
+  act(() => {
+    activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
+  });
 });
 
 describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
@@ -231,9 +294,32 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
     expect(screen.getByText("Biblioteca")).toBeTruthy();
     expect(screen.getByText("Decisioni")).toBeTruthy();
     expect(screen.queryByText("Recenti")).toBeNull();
-    expect(screen.queryByText("Segnale")).toBeNull();
+    expect(screen.getByText("Segnale")).toBeTruthy();
     fireEvent.click(screen.getByText("Home"));
 
     expect(pushMock).toHaveBeenCalledWith("/account");
+  });
+
+  it("lists a deferred tool for the rimandati alias", () => {
+    renderWorkspacePalette(workspaceTestFixtures.mature);
+    openPalette();
+
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "rimandati" } });
+
+    expect(screen.getByText("Rimandati")).toBeTruthy();
+    expect(screen.getByText("Meku")).toBeTruthy();
+    expect(screen.queryByText("Tool per “rimandati”")).toBeNull();
+  });
+
+  it("opens a named stack with the stack id in the href", () => {
+    renderWorkspacePalette(workspaceTestFixtures.withStacks);
+    openPalette();
+
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "AI Coding" } });
+    fireEvent.click(screen.getByText("AI Coding"));
+
+    expect(pushMock).toHaveBeenCalledWith("/account?view=stack&stack=ai-coding");
   });
 });

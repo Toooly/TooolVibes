@@ -17,8 +17,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Bookmark, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
+import { WorkspacePersonalStatusBadge } from "@/components/account/workspace/workspace-personal-status";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { cn } from "@/lib/utils";
@@ -176,21 +177,22 @@ function ArchiveV4ToolCard({
           <span aria-hidden="true">→</span>
         </Link>
         <div className="ar4-card__control-rail" data-has-rank={isSelected && typeof rank === "number" ? "true" : undefined}>
-          {(isSelected && typeof rank === "number") || isSaved ? (
+          {isSelected && typeof rank === "number" ? (
             <div className="ar4-card__state-flags" aria-live="polite">
-              {isSelected && typeof rank === "number" ? (
-                <span className="ar4-card__rank" aria-label={`Selezionato, posizione ${rank}`}>
-                  #{String(rank).padStart(2, "0")}
-                </span>
-              ) : null}
-              {isSaved ? (
-                <span className="ar4-card__saved-flag" aria-label="Salvato">
-                  <Bookmark size={11} aria-hidden="true" />
-                  <span className="ar4-card__saved-label">Salvato</span>
-                </span>
-              ) : null}
+              <span className="ar4-card__rank" aria-label={`Selezionato, posizione ${rank}`}>
+                #{String(rank).padStart(2, "0")}
+              </span>
+              <WorkspacePersonalStatusBadge
+                slug={tool.slug}
+                className="ar4-card__saved-label"
+              />
             </div>
-          ) : null}
+          ) : (
+            <WorkspacePersonalStatusBadge
+              slug={tool.slug}
+              className="ar4-card__saved-label"
+            />
+          )}
           <div className="ar4-card__toggles">
             <ShortlistToggle
               slug={tool.slug}

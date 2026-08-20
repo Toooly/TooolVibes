@@ -1712,3 +1712,15 @@ body[data-account-surface] .mobile-top-bar {
     grid-column: 1 / -1;
   }
 }
+
+.tv-personal-status {
+  display: inline;
+  margin: 0;
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-ui, inherit);
+  font-size: var(--tv-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: none;
+}

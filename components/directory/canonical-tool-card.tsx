@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { WorkspacePersonalStatusBadge } from "@/components/account/workspace/workspace-personal-status";
 import { DirectoryToolGlyph } from "@/components/directory/directory-tool-glyph";
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
@@ -113,6 +114,7 @@ export function CanonicalToolCard({
       <CompareToggle slug={tool.slug} compact />
     </>
   );
+  const personalStatus = <WorkspacePersonalStatusBadge slug={tool.slug} />;
 
   const badges = (
     <>
@@ -296,6 +298,7 @@ export function CanonicalToolCard({
                 ) : (
                   badges
                 )}
+                {personalStatus}
               </div>
               <div className="mt-2 min-h-[3.8rem] sm:mt-3 sm:min-h-[4.7rem]">
                 <h3
@@ -366,6 +369,7 @@ export function CanonicalToolCard({
                 className="flex flex-wrap items-center gap-1.5 sm:gap-2"
               >
                 {badges}
+                {personalStatus}
               </div>
               <h3
                 data-slot="tool-card-title"
@@ -462,6 +466,7 @@ export function CanonicalToolCard({
                 {tool.name}
               </Link>
             </h3>
+            {personalStatus}
             {description ? (
               <p
                 data-slot="tool-card-description"
@@ -526,6 +531,7 @@ export function CanonicalToolCard({
               {tool.name}
             </Link>
           </h3>
+          {personalStatus}
           {description ? (
             <p
               data-slot="tool-card-description"
