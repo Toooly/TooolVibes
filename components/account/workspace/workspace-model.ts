@@ -18,6 +18,16 @@ export const WORKSPACE_VIEW_LABELS: Record<WorkspaceView, string> = {
   segnale: "Segnale",
 };
 
+
+export const WORKSPACE_VIEW_KICKERS: Record<WorkspaceView, string> = {
+  riprendi: "Riprendi",
+  biblioteca: "Inventario",
+  stack: "Banco",
+  decisioni: "Diario",
+  recenti: "Filo",
+  segnale: "Progressione",
+};
+
 export const WORKSPACE_PRIMARY_VIEWS = [
   "riprendi",
   "biblioteca",
@@ -25,7 +35,7 @@ export const WORKSPACE_PRIMARY_VIEWS = [
   "decisioni",
 ] as const;
 
-export const WORKSPACE_SECONDARY_VIEWS = ["segnale"] as const;
+export const WORKSPACE_SECONDARY_VIEWS = ["recenti", "segnale"] as const;
 
 export const WORKSPACE_DISCOVER_LINKS = [
   { href: "/archivio", label: "Catalogo" },

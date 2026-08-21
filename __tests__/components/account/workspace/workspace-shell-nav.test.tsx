@@ -98,7 +98,7 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     expect(currentNamed("Biblioteca").every((value) => value !== "page")).toBe(true);
   });
 
-  it("builds real workspace view links and keeps Recenti and Segnale out of chrome while Signal flags are off", () => {
+  it("builds real workspace view links, shows Recenti, and keeps Segnale out of chrome while Signal flags are off", () => {
     render(createElement(WorkspaceShell));
 
     expect(hrefsNamed("Home").every((href) => href === "/account")).toBe(true);
@@ -109,7 +109,9 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     expect(hrefsNamed("Decisioni").every((href) => href === "/account?view=decisioni")).toBe(
       true,
     );
-    expect(hrefsNamed("Recenti")).toEqual([]);
+    expect(hrefsNamed("Recenti").every((href) => href === "/account?view=recenti")).toBe(true);
+    expect(hrefsNamed("Recenti").length).toBeGreaterThan(0);
     expect(hrefsNamed("Segnale")).toEqual([]);
+    expect(screen.getByLabelText("Stato del toolbox")).toBeTruthy();
   });
 });

@@ -145,6 +145,14 @@ export function WorkspaceBiblioteca({
   const [openNote, setOpenNote] = useState<string | null>(null);
   const items = listPipelineItems(state);
   const stacks = activePersonalStacks(state);
+  const columnCounts = useMemo(() => {
+    const counts = Object.fromEntries(PIPELINE_COLUMNS.map((column) => [column, 0])) as Record<
+      (typeof PIPELINE_COLUMNS)[number],
+      number
+    >;
+    for (const item of items) counts[item.column] += 1;
+    return counts;
+  }, [items]);
   const catalogBySlug = useMemo(
     () => new Map(catalog.map((tool) => [tool.slug, tool])),
     [catalog],
@@ -250,7 +258,9 @@ export function WorkspaceBiblioteca({
           >
             {STATUS_FILTERS.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.label}
+                {item.id === "tutti"
+                  ? `${item.label} (${items.length})`
+                  : `${item.label} (${columnCounts[item.id]})`}
               </option>
             ))}
           </select>
@@ -273,17 +283,21 @@ export function WorkspaceBiblioteca({
           </label>
         ) : null}
         <div className="tv-lib-filters" role="group" aria-label="Stato decisione">
-          {STATUS_FILTERS.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              aria-pressed={filter === item.id}
-              className={filter === item.id ? "is-active" : undefined}
-              onClick={() => setFilter(item.id)}
-            >
-              {item.label}
-            </button>
-          ))}
+          {STATUS_FILTERS.map((item) => {
+            const count = item.id === "tutti" ? items.length : columnCounts[item.id];
+            return (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={filter === item.id}
+                className={filter === item.id ? "is-active" : undefined}
+                onClick={() => setFilter(item.id)}
+              >
+                {item.label}
+                <span className="tv-lib-filter-n">{count}</span>
+              </button>
+            );
+          })}
         </div>
         {hasUsageData ? (
           <label className="tv-lib-select">
@@ -423,6 +437,38 @@ function LibraryRow({
         ) : null}
       </div>
 
+      <div className="tv-lib-quick">
+        {compareFull ? (
+          <span className="tv-lib-textbtn tv-lib-textbtn--status">
+            Confronto pieno
+          </span>
+        ) : (
+          <button
+            type="button"
+            className="tv-lib-textbtn"
+            onClick={() => toggleWorkspaceCompare(item.slug)}
+          >
+            {inCompare ? "In confronto" : "Confronta"}
+          </button>
+        )}
+        {showMarkUsing ? (
+          <button
+            type="button"
+            className="tv-lib-textbtn"
+            onClick={() => markWorkspaceToolUsing(item.slug)}
+          >
+            {usageActionLabel("using")}
+          </button>
+        ) : null}
+        {showMarkStopped ? (
+          <button
+            type="button"
+            className="tv-lib-textbtn"
+            onClick={() => markWorkspaceToolStopped(item.slug)}
+          >
+            {usageActionLabel("stopped")}
+          </button>
+        ) : null}
       <details className="tv-lib-menu">
         <summary aria-label={`Azioni per ${name}`}>
           Azioni
@@ -431,19 +477,6 @@ function LibraryRow({
           <Link className="tv-lib-action" href={`/toools/${item.slug}`}>
             Apri
           </Link>
-          {compareFull ? (
-            <p className="tv-lib-action tv-lib-action--status">
-              Confronto pieno ({MAX_COMPARE_TOOLS})
-            </p>
-          ) : (
-            <button
-              type="button"
-              className="tv-lib-action"
-              onClick={() => toggleWorkspaceCompare(item.slug)}
-            >
-              {inCompare ? "Togli dal confronto" : "Aggiungi al confronto"}
-            </button>
-          )}
           <label className="tv-lib-action tv-lib-action--field">
             <span>Sposta</span>
             <select
@@ -459,24 +492,6 @@ function LibraryRow({
               ))}
             </select>
           </label>
-          {showMarkUsing ? (
-            <button
-              type="button"
-              className="tv-lib-action"
-              onClick={() => markWorkspaceToolUsing(item.slug)}
-            >
-              {usageActionLabel("using")}
-            </button>
-          ) : null}
-          {showMarkStopped ? (
-            <button
-              type="button"
-              className="tv-lib-action"
-              onClick={() => markWorkspaceToolStopped(item.slug)}
-            >
-              {usageActionLabel("stopped")}
-            </button>
-          ) : null}
           {showMarkReplaced && otherSaved.length > 0 ? (
             <label className="tv-lib-action tv-lib-action--field">
               <span>{usageActionLabel("replaced")}</span>
@@ -553,6 +568,7 @@ function LibraryRow({
           </button>
         </div>
       </details>
+      </div>
 
       {noteOpen ? (
         <form

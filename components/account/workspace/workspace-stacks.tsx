@@ -21,6 +21,7 @@ import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import {
   MAX_COMPARE_TOOLS,
+  MAX_PERSONAL_STACKS,
   MAX_STACK_DESCRIPTION_LENGTH,
   MAX_STACK_NAME_LENGTH,
 } from "@/lib/discovery/workspace-constants";
@@ -139,6 +140,11 @@ export function WorkspaceStacks({
 
   return (
     <div className="tv-stacks">
+      {stacks.length > 0 ? (
+        <p className="tv-stacks-kicker">
+          {stacks.length} di {MAX_PERSONAL_STACKS} stack
+        </p>
+      ) : null}
       <div className={stacks.length === 0 ? "tv-stacks-birth" : undefined}>
       {stacks.length > 0 && !creating ? (
         <button

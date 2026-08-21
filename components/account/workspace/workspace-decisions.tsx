@@ -104,6 +104,13 @@ export function WorkspaceDecisions({
     if (focusSlug && slugs.includes(focusSlug)) return focusSlug;
     return slugs[0] ?? null;
   });
+  const [journalFilter, setJournalFilter] = useState<"tutti" | "due" | "using">("tutti");
+  const usingCount = slugs.filter((slug) => state.toolStates[slug]?.usage === "using").length;
+  const visibleSlugs = slugs.filter((slug) => {
+    if (journalFilter === "due") return dueSlugs.has(slug);
+    if (journalFilter === "using") return state.toolStates[slug]?.usage === "using";
+    return true;
+  });
 
   useEffect(() => {
     if (focusSlug && slugs.includes(focusSlug)) {
@@ -133,8 +140,40 @@ export function WorkspaceDecisions({
 
   return (
     <div className="tv-journal">
+      <div className="tv-journal-hud">
+        <p className="tv-journal-kicker">
+          {slugs.length} {slugs.length === 1 ? "traccia" : "tracce"}
+          {dueSlugs.size > 0 ? ` · ${dueSlugs.size} da riprendere` : ""}
+        </p>
+        <div className="tv-choice tv-choice--compact" role="group" aria-label="Filtra il diario">
+          <button
+            type="button"
+            aria-pressed={journalFilter === "tutti"}
+            onClick={() => setJournalFilter("tutti")}
+          >
+            Tutti
+            <span className="tv-lib-filter-n">{slugs.length}</span>
+          </button>
+          <button
+            type="button"
+            aria-pressed={journalFilter === "due"}
+            onClick={() => setJournalFilter("due")}
+          >
+            Da riprendere
+            <span className="tv-lib-filter-n">{dueSlugs.size}</span>
+          </button>
+          <button
+            type="button"
+            aria-pressed={journalFilter === "using"}
+            onClick={() => setJournalFilter("using")}
+          >
+            In uso
+            <span className="tv-lib-filter-n">{usingCount}</span>
+          </button>
+        </div>
+      </div>
       <ul className="tv-journal-list">
-        {slugs.map((slug) => {
+        {visibleSlugs.map((slug) => {
           const tool = state.toolStates[slug];
           const column = pipelineColumnForTool({
             stage: tool?.stage ?? "saved",

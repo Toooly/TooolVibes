@@ -10,6 +10,7 @@ import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 
 import { formatWorkspaceDate, workspaceViewHref } from "./workspace-model";
+import { WorkspaceCatalogMark } from "./workspace-tool-mark";
 import { toolName } from "./workspace-tool-name";
 
 const KIND_LABEL = {
@@ -57,6 +58,9 @@ export function WorkspaceActivity({ state }: { state: WorkspaceStateV1 }) {
           return (
             <li key={`${item.kind}-${item.slug ?? item.stackId ?? item.at}`}>
               <Link className="tv-recenti-row" href={activityHref(item)}>
+                {item.slug ? (
+                  <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="xs" />
+                ) : null}
                 <span>
                   {KIND_LABEL[item.kind]}
                   {item.slug ? ` · ${toolName(catalog, item.slug)}` : ""}

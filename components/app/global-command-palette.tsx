@@ -6,8 +6,10 @@ import {
   ArrowRight,
   BookOpen,
   Bookmark,
+  History,
   House,
   Layers,
+  Radar,
   Search,
   Settings,
   Sparkles,
@@ -69,7 +71,9 @@ const WORKSPACE_DESTINATIONS: Array<{
   { href: workspaceViewHref("biblioteca"), label: WORKSPACE_VIEW_LABELS.biblioteca, icon: Bookmark },
   { href: workspaceViewHref("stack"), label: WORKSPACE_VIEW_LABELS.stack, icon: Layers },
   { href: workspaceViewHref("decisioni"), label: WORKSPACE_VIEW_LABELS.decisioni, icon: BookOpen },
+  { href: workspaceViewHref("recenti"), label: WORKSPACE_VIEW_LABELS.recenti, icon: History },
   { href: workspaceViewHref("segnale"), label: WORKSPACE_VIEW_LABELS.segnale, icon: Sparkles },
+  { href: "/radar", label: "Radar", icon: Radar },
   { href: "/account/settings", label: "Impostazioni", icon: Settings },
 ];
 

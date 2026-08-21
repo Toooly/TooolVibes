@@ -6,6 +6,10 @@ import { useEffect, useMemo } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
 import { useDiscoveryPersistence } from "@/components/discovery/canonical-discovery-persistence-provider";
+import {
+  readWorkspaceHud,
+  workspaceHudInstruments,
+} from "@/lib/account/workspace-hud";
 import { useSignalProgressUiEnabled } from "@/lib/signal-progression/release-context";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import {
@@ -13,10 +17,12 @@ import {
   getPersistenceLabel,
 } from "@/components/account/panel/account-panel-model";
 
+import { useCanonicalWorkspace } from "./use-canonical-workspace";
 import {
   WORKSPACE_DISCOVER_LINKS,
   WORKSPACE_PRIMARY_VIEWS,
   WORKSPACE_SECONDARY_VIEWS,
+  WORKSPACE_VIEW_KICKERS,
   WORKSPACE_VIEW_LABELS,
   emailLocalPart,
   initialsFromEmail,
@@ -39,30 +45,49 @@ function WorkspaceNavLink({
   currentView,
   surface,
   variant,
+  count,
 }: {
   view: WorkspaceView;
   currentView: WorkspaceView;
   surface: AccountWorkspaceSurface;
   variant: "primary" | "secondary";
+  count?: number;
 }) {
   const current = isViewCurrent(view, currentView, surface);
+  const label = WORKSPACE_VIEW_LABELS[view];
   return (
     <Link
       href={workspaceViewHref(view)}
       className={`tv-app__nav-link tv-app__nav-link--${variant}`}
       aria-current={current ? "page" : undefined}
+      aria-label={label}
     >
-      {WORKSPACE_VIEW_LABELS[view]}
+      {label}
+      {count != null && count > 0 ? (
+        <span className="tv-app__nav-count" aria-hidden="true">
+          {count}
+        </span>
+      ) : null}
     </Link>
   );
 }
 
-function DiscoverLinks() {
+function DiscoverLinks({ compareCount }: { compareCount: number }) {
   return (
     <>
       {WORKSPACE_DISCOVER_LINKS.map((item) => (
-        <Link key={item.href} href={item.href} className="tv-app__nav-link tv-app__nav-link--secondary">
+        <Link
+          key={item.href}
+          href={item.href}
+          className="tv-app__nav-link tv-app__nav-link--secondary"
+          aria-label={item.label}
+        >
           {item.label}
+          {item.href === "/compare" && compareCount > 0 ? (
+            <span className="tv-app__nav-count" aria-hidden="true">
+              {compareCount}
+            </span>
+          ) : null}
         </Link>
       ))}
     </>
@@ -148,6 +173,42 @@ function SignOutControl({ onSignOut }: { onSignOut: () => void }) {
   );
 }
 
+function WorkspaceHudBar() {
+  const state = useCanonicalWorkspace();
+  const instruments = workspaceHudInstruments(readWorkspaceHud(state));
+  return (
+    <nav className="tv-hud" aria-label="Stato del toolbox">
+      {instruments.map((item) => (
+        <Link
+          key={item.id}
+          href={item.href}
+          className={item.active ? "tv-hud__item is-active" : "tv-hud__item"}
+        >
+          <span className="tv-hud__value">{item.value}</span>
+          <span className="tv-hud__label">{item.label}</span>
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+function WorkspacePageHead({
+  surface,
+  view,
+}: {
+  surface: AccountWorkspaceSurface;
+  view: WorkspaceView;
+}) {
+  if (surface === "settings") return null;
+  if (view === "riprendi") return null;
+  return (
+    <header className="tv-app__pagehead">
+      <p className="tv-app__page-kicker">{WORKSPACE_VIEW_KICKERS[view]}</p>
+      <h1 className="tv-app__page-title">{WORKSPACE_VIEW_LABELS[view]}</h1>
+    </header>
+  );
+}
+
 export function AccountWorkspaceFrame({
   children,
   surface = "workspace",
@@ -171,6 +232,7 @@ export function AccountWorkspaceFrame({
     surface === "settings" || pathname === "/account/settings" || pathname.startsWith("/account/settings/")
       ? "settings"
       : "workspace";
+  const hud = readWorkspaceHud(useCanonicalWorkspace());
 
   useEffect(() => {
     document.body.dataset.accountSurface = resolvedSurface;
@@ -189,6 +251,11 @@ export function AccountWorkspaceFrame({
       ),
     [signalUi],
   );
+  const workCounts: Partial<Record<WorkspaceView, number>> = {
+    biblioteca: hud.saved,
+    stack: hud.stacks,
+    decisioni: hud.traces,
+  };
 
   return (
     <div
@@ -218,15 +285,13 @@ export function AccountWorkspaceFrame({
                 currentView={view}
                 surface={resolvedSurface}
                 variant="primary"
+                count={workCounts[item]}
               />
             ))}
           </div>
-          <div className="tv-app__nav-group">
-            <p className="tv-app__nav-label">Scopri</p>
-            <DiscoverLinks />
-          </div>
           {secondaryViews.length > 0 ? (
             <div className="tv-app__nav-group">
+              <p className="tv-app__nav-label">Memoria</p>
               {secondaryViews.map((item) => (
                 <WorkspaceNavLink
                   key={item}
@@ -238,6 +303,10 @@ export function AccountWorkspaceFrame({
               ))}
             </div>
           ) : null}
+          <div className="tv-app__nav-group">
+            <p className="tv-app__nav-label">Scopri</p>
+            <DiscoverLinks compareCount={hud.compare} />
+          </div>
         </nav>
         <div className="tv-app__aside-foot">
           <SearchControl />
@@ -284,6 +353,7 @@ export function AccountWorkspaceFrame({
               currentView={view}
               surface={resolvedSurface}
               variant="primary"
+              count={workCounts[item]}
             />
           ))}
           {secondaryViews.map((item) => (
@@ -295,8 +365,15 @@ export function AccountWorkspaceFrame({
               variant="secondary"
             />
           ))}
-          <DiscoverLinks />
+          <DiscoverLinks compareCount={hud.compare} />
         </nav>
+        <div className="tv-app__mobile-meta">
+          <AccountSyncLine
+            persistenceLabel={persistenceLabel}
+            attachLabel={attachLabel}
+            showLocalHint={account.workspaceAttachPending}
+          />
+        </div>
         <label className="tv-app__mobile-select">
           <span className="sr-only">Vai a</span>
           <select
@@ -314,7 +391,7 @@ export function AccountWorkspaceFrame({
               ))}
             </optgroup>
             {secondaryViews.length > 0 ? (
-              <optgroup label="Altro">
+              <optgroup label="Memoria">
                 {secondaryViews.map((item) => (
                   <option key={item} value={workspaceViewHref(item)}>
                     {WORKSPACE_VIEW_LABELS[item]}
@@ -362,6 +439,7 @@ export function AccountWorkspaceFrame({
               currentView={view}
               surface={resolvedSurface}
               variant="primary"
+              count={workCounts[item]}
             />
           ))}
         </nav>
@@ -375,7 +453,7 @@ export function AccountWorkspaceFrame({
               variant="secondary"
             />
           ))}
-          <DiscoverLinks />
+          <DiscoverLinks compareCount={hud.compare} />
         </nav>
         <AccountSyncLine
           persistenceLabel={persistenceLabel}
@@ -385,7 +463,11 @@ export function AccountWorkspaceFrame({
       </div>
 
       <div className="tv-app__main">
-        <div className="tv-app__canvas">{children}</div>
+        <div className="tv-app__canvas">
+          <WorkspaceHudBar />
+          <WorkspacePageHead surface={resolvedSurface} view={view} />
+          {children}
+        </div>
       </div>
     </div>
   );
