@@ -1480,11 +1480,12 @@ body[data-account-surface] .mobile-top-bar {
 .tv-journal-block textarea {
   width: 100%;
   min-height: 44px;
-  border: 1px solid var(--tv-border-default);
-  border-radius: 0.6rem;
-  background: var(--tv-surface-raised);
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
+  background: transparent;
   color: var(--tv-ink-primary);
-  padding: 0.65rem 0.8rem;
+  padding: 0.45rem 0;
 }
 
 .tv-stacks-create textarea,
@@ -2191,6 +2192,7 @@ body[data-account-surface] .mobile-top-bar {
   gap: 0.35rem;
   width: 100%;
   padding: 0.85rem 0.2rem 0.9rem;
+  overflow: visible;
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   background: transparent;
@@ -2264,6 +2266,7 @@ body[data-account-surface] .mobile-top-bar {
   gap: 0.3rem;
   width: 100%;
   padding: 0.85rem 0.15rem;
+  overflow: visible;
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   background: transparent;
@@ -3003,8 +3006,7 @@ body[data-account-surface] .mobile-top-bar {
 @media (min-width: 1280px) {
   .tv-lib-list {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 1.15rem;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -3085,34 +3087,16 @@ body[data-account-surface] .mobile-top-bar {
   font-variant-numeric: tabular-nums;
 }
 
-.tv-hud {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.45rem;
-  margin: 0 0 1.1rem;
-}
-
 .tv-hud__item {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 3.4rem;
-  padding: 0.45rem 0.55rem 0.5rem;
-  border-radius: 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: var(--tv-surface-raised);
   color: var(--tv-ink-secondary);
   text-decoration: none;
 }
 
-.tv-hud__item.is-active {
-  border-color: rgba(180, 150, 255, 0.28);
-  color: var(--tv-ink-primary);
-}
-
 .tv-hud__value {
   font-family: var(--tv-font-display);
-  font-size: 1.15rem;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
@@ -3227,28 +3211,6 @@ body[data-account-surface] .mobile-top-bar {
   margin: 0;
 }
 
-@media (max-width: 47.99rem) {
-  .tv-hud {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 768px) {
-  .tv-hud__item {
-    min-height: 3.75rem;
-    padding: 0.65rem 0.75rem;
-  }
-  .tv-hud__value {
-    font-size: 1.35rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .tv-hud {
-    gap: 0.65rem;
-    margin-bottom: 1.35rem;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .tv-hud__item,
@@ -3543,18 +3505,56 @@ body[data-account-surface] .mobile-top-bar {
     height: 2.5rem;
     border-radius: 0.7rem;
   }
-  .tv-lib-quick .tv-lib-textbtn {
-    display: none;
-  }
   .tv-lib-filters button {
-    min-height: 2.15rem;
+    min-height: 2.75rem;
   }
   .tv-hud {
     padding: 0;
   }
 }
 
-@media (prefers-reduced-motion: reduce),
+@media (prefers-reduced-motion: reduce) {
+  .tv-app--atelier::after,
+  .tv-tool-mark,
+  .tv-mark-strip .tv-tool-mark,
+  .tv-lib-row,
+  .tv-stacks-item,
+  .tv-journal-entry,
+  .tv-recenti-row,
+  .tv-hud__item,
+  .account-btn-primary,
+  .tv-lib-textbtn,
+  .tv-app__search,
+  .tv-app__nav-link,
+  .tv-story__cast-item {
+    transition: none;
+  }
+  .tv-mod--resume::before,
+  .tv-empty-motif__ring,
+  .tv-empty-motif__ring--2,
+  .tv-replace__arrow {
+    animation: none;
+  }
+  .tv-lib-row:hover,
+  .tv-stacks-item:hover,
+  .tv-journal-entry:hover,
+  .tv-recenti-row:hover,
+  .tv-hud__item:hover,
+  .tv-hud__item:focus-visible,
+  .tv-hud__item:active,
+  .tv-mark-strip:hover .tv-tool-mark,
+  .tv-mark-strip:focus-within .tv-tool-mark,
+  .tv-mark-strip:hover .tv-tool-mark:nth-child(1),
+  .tv-mark-strip:hover .tv-tool-mark:nth-child(2),
+  .tv-mark-strip:hover .tv-tool-mark:nth-child(3),
+  .tv-mark-strip:hover .tv-tool-mark:nth-child(4),
+  .tv-mark-strip:hover .tv-tool-mark:nth-child(5),
+  .tv-lib-row:hover .tv-tool-mark,
+  .tv-mod--resume:hover .tv-tool-mark,
+  .tv-story__cast:hover .tv-story__cast-item:nth-child(odd) {
+    transform: none;
+  }
+}
 html[data-tv-reduce-motion="true"] {
   .tv-app--atelier::after,
   .tv-tool-mark,
@@ -3598,6 +3598,23 @@ html[data-tv-reduce-motion="true"] {
   }
 }
 
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-stacks-item:hover .tv-tool-mark,
+  .tv-journal-entry:hover .tv-tool-mark,
+  .tv-tool-mark::after {
+    transform: none;
+    animation: none;
+  }
+}
+html[data-tv-reduce-motion="true"] .tv-stacks-item:hover .tv-tool-mark,
+html[data-tv-reduce-motion="true"] .tv-journal-entry:hover .tv-tool-mark,
+html[data-tv-reduce-motion="true"] .tv-tool-mark::after {
+  transform: none;
+  animation: none;
+}
 
 /* Wave 7b — finish the grammar */
 .tv-tool-mark__jewel {

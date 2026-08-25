@@ -252,7 +252,6 @@ function DecisionEditor({
   const [note, setNote] = useState(tool?.note ?? "");
   const [useCase, setUseCase] = useState(tool?.useCase ?? "");
   const [pickingReplacement, setPickingReplacement] = useState(false);
-  const alternatives = tool?.alternatives ?? [];
   const currentOutcome = tool?.decision?.outcome ?? null;
   const usage = tool?.usage ?? null;
   const replacedBy = tool?.replacedBy ?? null;
@@ -317,9 +316,6 @@ function DecisionEditor({
         </p>
       ) : null}
       <WorkspaceDecisionTrace catalog={catalog} slug={slug} tool={tool} />
-      {alternatives.length > 0 ? (
-        <WorkspaceMarkStrip catalog={catalog} slugs={[slug, ...alternatives]} size="sm" />
-      ) : null}
 
       <section className="tv-journal-block">
         <h3 className="tv-journal-block__label">Decisione</h3>
@@ -460,15 +456,6 @@ function DecisionEditor({
             />
           </label>
         </section>
-
-        {alternatives.length > 0 ? (
-          <section className="tv-journal-block">
-            <h3 className="tv-journal-block__label">Alternative</h3>
-            <p className="tv-journal-sheet__alts">
-              {alternatives.map((item) => toolName(catalog, item)).join(", ")}
-            </p>
-          </section>
-        ) : null}
 
         {revisitLine && currentOutcome !== "deferred" ? (
           <p className="tv-journal-sheet__alts">{revisitLine}</p>
