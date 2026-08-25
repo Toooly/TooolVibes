@@ -24,7 +24,7 @@
     "build": "next build",
     "build:cloudflare": "node scripts/run-cloudflare-build.mjs",
     "cloudflare:build": "node scripts/run-cloudflare-build.mjs",
-    "cloudflare:deploy": "opennextjs-cloudflare deploy",
+    "cloudflare:deploy": "node scripts/run-cloudflare-deploy.mjs",
     "cloudflare:upload": "opennextjs-cloudflare upload",
     "start": "node scripts/release/start-standalone.mjs",
     "lint": "eslint .",
