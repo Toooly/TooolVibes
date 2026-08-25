@@ -407,7 +407,7 @@ function LibraryRow({
       data-slug={item.slug}
       data-focus={focused ? "true" : undefined}
     >
-      <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="md" />
+      <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="lg" />
       <div className="tv-lib-row__main">
         <Link className="tv-lib-name" href={`/toools/${item.slug}`}>
           {name}
@@ -439,9 +439,7 @@ function LibraryRow({
 
       <div className="tv-lib-quick">
         {compareFull ? (
-          <span className="tv-lib-textbtn tv-lib-textbtn--status">
-            Confronto pieno
-          </span>
+          <WorkspaceChip tone="review">Confronto pieno</WorkspaceChip>
         ) : (
           <button
             type="button"

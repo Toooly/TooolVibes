@@ -186,7 +186,7 @@ export function WorkspaceStacks({
           </div>
           <p className="account-label">Nuovo stack</p>
           <label>
-            <span>Nome</span>
+            <span className="sr-only">Nome</span>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
@@ -195,7 +195,7 @@ export function WorkspaceStacks({
             />
           </label>
           <label>
-            <span>Descrizione (opzionale)</span>
+            <span className="sr-only">Descrizione (opzionale)</span>
             <textarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
@@ -356,7 +356,7 @@ function StackDetail({
         {stack.name}
       </h2>
       <div className="tv-stacks-detail__hero">
-        <WorkspaceMarkStrip catalog={catalog} slugs={stack.slugs} size="md" />
+        <WorkspaceMarkStrip catalog={catalog} slugs={stack.slugs} size="lg" />
       </div>
       <details className="tv-lib-menu">
         <summary>Modifica stack</summary>
@@ -371,7 +371,7 @@ function StackDetail({
         }}
       >
         <label>
-          <span>Nome</span>
+          <span className="sr-only">Nome</span>
           <input
             value={draftName}
             onChange={(event) => setDraftName(event.target.value)}

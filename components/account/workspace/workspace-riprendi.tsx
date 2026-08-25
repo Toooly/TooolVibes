@@ -260,9 +260,9 @@ export function WorkspaceRiprendi({
           <p className="tv-home-kicker">Continua da qui</p>
           <div className="tv-resume__hero">
             {resume.kind === "continue_compare" ? (
-              <WorkspaceMarkStrip catalog={catalog} slugs={state.compare.slugs} size="md" />
+              <WorkspaceMarkStrip catalog={catalog} slugs={state.compare.slugs} size="lg" />
             ) : resume.slug ? (
-              <WorkspaceCatalogMark catalog={catalog} slug={resume.slug} size="lg" />
+              <WorkspaceCatalogMark catalog={catalog} slug={resume.slug} size="xl" />
             ) : null}
             <div className="tv-resume__body">
               <h2 id="tv-home-resume-title" className="tv-resume__title">

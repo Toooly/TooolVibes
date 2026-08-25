@@ -13,6 +13,9 @@ const publicToolCatalogSnapshot: readonly PublicToolCatalogItem[] =
     toolOfWeek: tool.toolOfWeek === true,
     tags: tool.tags,
     levelLabel: tool.levelLabel,
+    domain: tool.domain,
+    accentFrom: tool.accentFrom,
+    accentTo: tool.accentTo,
   }));
 
 export function getPublicToolCatalogSnapshot(): readonly PublicToolCatalogItem[] {

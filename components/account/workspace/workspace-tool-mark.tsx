@@ -38,13 +38,14 @@ export function markColors(item: PublicToolCatalogItem | null, slug: string) {
   return PALETTE[hashSlug(slug) % PALETTE.length];
 }
 
-type Size = "xs" | "sm" | "md" | "lg";
+type Size = "xs" | "sm" | "md" | "lg" | "xl";
 
 const SIZE_CLASS: Record<Size, string> = {
   xs: "tv-tool-mark tv-tool-mark--xs",
   sm: "tv-tool-mark tv-tool-mark--sm",
   md: "tv-tool-mark tv-tool-mark--md",
   lg: "tv-tool-mark tv-tool-mark--lg",
+  xl: "tv-tool-mark tv-tool-mark--xl",
 };
 
 export function WorkspaceToolMark({
@@ -71,8 +72,13 @@ export function WorkspaceToolMark({
     <span
       aria-hidden="true"
       className={SIZE_CLASS[size]}
-      style={{ background: `linear-gradient(135deg, ${colors[0]}, ${colors[1]})` }}
+      style={{
+        background: `linear-gradient(145deg, ${colors[0]}, ${colors[1]})`,
+        ["--mark-a" as string]: colors[0],
+        ["--mark-b" as string]: colors[1],
+      }}
     >
+      <span className="tv-tool-mark__jewel" />
       <span className="tv-tool-mark__fallback">{label}</span>
     </span>
   );

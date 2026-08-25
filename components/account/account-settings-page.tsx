@@ -64,7 +64,7 @@ export function AccountSettingsPage() {
     <AccountWorkspaceFrame surface="settings">
       <div className="tv-settings">
         <header className="tv-id">
-          <span className="tv-home-hello__initials" aria-hidden="true">
+          <span className="tv-app__initials" aria-hidden="true">
             {initialsFromEmail(email)}
           </span>
           <div className="tv-id__copy">
@@ -232,6 +232,13 @@ function SignalSettings() {
     const next = { ...prefs, [key]: !prefs[key] };
     setPrefs(next);
     writeRewardPreferences(next);
+    if (key === "reduceRewardAnimations") {
+      if (next.reduceRewardAnimations) {
+        document.documentElement.dataset.tvReduceMotion = "true";
+      } else {
+        delete document.documentElement.dataset.tvReduceMotion;
+      }
+    }
     setStatus("Preferenze locali aggiornate.");
     void saveSignalPreferences(next);
   };

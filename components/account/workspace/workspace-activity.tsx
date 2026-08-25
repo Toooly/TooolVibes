@@ -11,6 +11,7 @@ import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 
 import { formatWorkspaceDate, workspaceViewHref } from "./workspace-model";
 import { WorkspaceCatalogMark } from "./workspace-tool-mark";
+import { WorkspaceEmptyMotif } from "./workspace-visual";
 import { toolName } from "./workspace-tool-name";
 
 const KIND_LABEL = {
@@ -35,6 +36,7 @@ export function WorkspaceActivity({ state }: { state: WorkspaceStateV1 }) {
   if (items.length === 0) {
     return (
       <section className="tv-recenti" aria-labelledby="tv-recenti-title">
+        <WorkspaceEmptyMotif variant="journal" />
         <p className="account-label">Recenti</p>
         <h2 id="tv-recenti-title" className="tv-recenti__title">
           Ancora niente di recente
@@ -59,8 +61,10 @@ export function WorkspaceActivity({ state }: { state: WorkspaceStateV1 }) {
             <li key={`${item.kind}-${item.slug ?? item.stackId ?? item.at}`}>
               <Link className="tv-recenti-row" href={activityHref(item)}>
                 {item.slug ? (
-                  <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="xs" />
-                ) : null}
+                  <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="sm" />
+                ) : (
+                  <span className="tv-tool-mark tv-tool-mark--sm" aria-hidden="true" />
+                )}
                 <span>
                   {KIND_LABEL[item.kind]}
                   {item.slug ? ` · ${toolName(catalog, item.slug)}` : ""}

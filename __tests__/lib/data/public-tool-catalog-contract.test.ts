@@ -22,7 +22,7 @@ describe("getPublicToolCatalogSnapshot", () => {
     expect(catalogSlugs).toEqual(directorySlugs);
   });
 
-  it("each element contains only the 8 expected fields", () => {
+  it("each element contains only the catalog fields", () => {
     const catalog = getPublicToolCatalogSnapshot();
     const allowedKeys = new Set([
       "slug",
@@ -33,6 +33,9 @@ describe("getPublicToolCatalogSnapshot", () => {
       "toolOfWeek",
       "tags",
       "levelLabel",
+      "domain",
+      "accentFrom",
+      "accentTo",
     ]);
 
     for (const item of catalog) {
@@ -73,7 +76,11 @@ describe("getPublicToolCatalogSnapshot", () => {
 
     expect(canonical).toHaveLength(EXPECTED_COUNT);
     for (let i = 0; i < EXPECTED_COUNT; i++) {
-      expect(catalog[i]).toEqual(canonical[i]);
+      const item = catalog[i];
+      expect(item).toMatchObject(canonical[i]);
+      expect(item?.domain).toBe(directoryTools[i]?.domain);
+      expect(item?.accentFrom).toBe(directoryTools[i]?.accentFrom);
+      expect(item?.accentTo).toBe(directoryTools[i]?.accentTo);
     }
   });
 

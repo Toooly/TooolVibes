@@ -11,6 +11,7 @@ import {
   workspaceHudInstruments,
 } from "@/lib/account/workspace-hud";
 import { useSignalProgressUiEnabled } from "@/lib/signal-progression/release-context";
+import { readRewardPreferences } from "@/lib/rewards/preferences";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import {
   getHeroBadgeLabel,
@@ -173,6 +174,23 @@ function SignOutControl({ onSignOut }: { onSignOut: () => void }) {
   );
 }
 
+
+function AccountMotionSync() {
+  useEffect(() => {
+    const apply = () => {
+      if (readRewardPreferences().reduceRewardAnimations) {
+        document.documentElement.dataset.tvReduceMotion = "true";
+      } else {
+        delete document.documentElement.dataset.tvReduceMotion;
+      }
+    };
+    apply();
+    window.addEventListener("storage", apply);
+    return () => window.removeEventListener("storage", apply);
+  }, []);
+  return null;
+}
+
 function WorkspaceHudBar() {
   const state = useCanonicalWorkspace();
   const instruments = workspaceHudInstruments(readWorkspaceHud(state));
@@ -260,9 +278,10 @@ export function AccountWorkspaceFrame({
   return (
     <div
       id="member-access"
-      className="tv-app"
+      className="tv-app tv-app--atelier"
       data-account-surface={resolvedSurface}
     >
+      <AccountMotionSync />
       <aside className="tv-app__sidebar">
         <Link href={workspaceViewHref("riprendi")} className="tv-app__brand">
           TOOOLVIBES
