@@ -16,6 +16,15 @@ const env = {
     process.env.TOOOLVIBES_BUILD_TIMESTAMP ?? new Date().toISOString(),
 };
 
+console.log(`[cloudflare-deploy] TOOOLVIBES_RELEASE_SHA=${sha}`);
+
+const build = spawnSync("npm", ["run", "build:cloudflare"], {
+  cwd: root,
+  env,
+  stdio: "inherit",
+});
+if (build.status !== 0) process.exit(build.status ?? 1);
+
 const deploy = spawnSync("npx", ["opennextjs-cloudflare", "deploy"], {
   cwd: root,
   env,
