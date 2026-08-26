@@ -6,10 +6,7 @@ import { useEffect, useMemo } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
 import { useDiscoveryPersistence } from "@/components/discovery/canonical-discovery-persistence-provider";
-import {
-  readWorkspaceHud,
-  workspaceHudInstruments,
-} from "@/lib/account/workspace-hud";
+import { readWorkspaceHud } from "@/lib/account/workspace-hud";
 import { useSignalProgressUiEnabled } from "@/lib/signal-progression/release-context";
 import { readRewardPreferences } from "@/lib/rewards/preferences";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
@@ -191,25 +188,6 @@ function AccountMotionSync() {
     return () => window.removeEventListener("storage", apply);
   }, []);
   return null;
-}
-
-function WorkspaceHudBar() {
-  const state = useCanonicalWorkspace();
-  const instruments = workspaceHudInstruments(readWorkspaceHud(state));
-  return (
-    <nav className="tv-hud" aria-label="Stato del toolbox">
-      {instruments.map((item) => (
-        <Link
-          key={item.id}
-          href={item.href}
-          className={item.active ? "tv-hud__item is-active" : "tv-hud__item"}
-        >
-          <span className="tv-hud__value">{item.value}</span>
-          <span className="tv-hud__label">{item.label}</span>
-        </Link>
-      ))}
-    </nav>
-  );
 }
 
 function WorkspacePageHead({
@@ -490,7 +468,6 @@ export function AccountWorkspaceFrame({
 
       <div className="tv-app__main">
         <div className="tv-app__canvas">
-          <WorkspaceHudBar />
           <WorkspacePageHead surface={resolvedSurface} view={view} />
           {children}
         </div>

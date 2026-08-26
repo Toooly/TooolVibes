@@ -3700,3 +3700,49 @@ html[data-tv-reduce-motion="true"] .tv-tool-mark::after {
     font-size: 1.25rem;
   }
 }
+
+
+/* Wave 5 — Home subtraction. Do not restyle Banco. */
+.tv-home {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+@media (min-width: 1024px) {
+  .tv-home {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+  }
+  .tv-home-hello,
+  .tv-mod--resume,
+  .tv-mod--compare,
+  .tv-mod--pending,
+  .tv-mod--using,
+  .tv-mod--stacks,
+  .tv-mod--memory,
+  .tv-mod--signal {
+    grid-column: auto;
+  }
+}
+.tv-home .tv-mod--resume {
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.tv-home-whisper {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-size: 1rem;
+}
+.tv-home-using-line {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-size: 0.9rem;
+}
+
+@media (min-width: 1024px) {
+  .tv-app.tv-app--loop {
+    display: block;
+    grid-template-columns: none;
+  }
+}

@@ -24,7 +24,13 @@ export default async function WorkspaceQaPage({
   }
 
   const params = await searchParams;
-  const fixture = params.state === "new" ? "new" : "mature";
+  const fixture =
+    params.state === "new" ||
+    params.state === "quiet" ||
+    params.state === "review" ||
+    params.state === "compare"
+      ? params.state
+      : "mature";
   const view = parseWorkspaceView(params.view);
   const surface = params.surface === "settings" ? "settings" : "workspace";
 

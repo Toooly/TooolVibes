@@ -6,6 +6,7 @@ import {
   chooseResumeAction,
   derivePersonalRecords,
   deriveResurfaceSignals,
+  listHomeReviewQueue,
   listPipelineItems,
   pipelineColumnForTool,
 } from "@/lib/account/workspace-pipeline";
@@ -365,5 +366,35 @@ describe("software memory resume", () => {
       kind: "continue_compare",
       slug: "cursor",
     });
+  });
+});
+
+describe("listHomeReviewQueue", () => {
+  it("does not include a future revisit", () => {
+    const queue = listHomeReviewQueue(workspaceTestFixtures.reviewFuture, { nowIso: NOW });
+    expect(queue.some((item) => item.slug === "meku")).toBe(false);
+  });
+
+  it("includes a past revisit", () => {
+    const queue = listHomeReviewQueue(workspaceTestFixtures.reviewDue, { nowIso: NOW });
+    expect(queue.some((item) => item.kind === "deferred_due" && item.slug === "meku")).toBe(true);
+  });
+
+  it("caps the queue at 3", () => {
+    const queue = listHomeReviewQueue(workspaceTestFixtures.reviewManyDue, {
+      nowIso: NOW,
+      cap: 3,
+    });
+    expect(queue).toHaveLength(3);
+  });
+
+  it("excludes a slug from the queue", () => {
+    const queue = listHomeReviewQueue(workspaceTestFixtures.reviewManyDue, {
+      nowIso: NOW,
+      excludeSlug: "meku",
+      cap: 3,
+    });
+    expect(queue.every((item) => item.slug !== "meku")).toBe(true);
+    expect(queue).toHaveLength(3);
   });
 });

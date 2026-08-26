@@ -112,6 +112,36 @@ export const workspaceTestFixtures = {
     },
   ]),
   degraded: createEmptyWorkspaceState(),
+  quietReturning: apply(createEmptyWorkspaceState(), [
+    { type: "saved/set", slug: "cursor", saved: true, at: T0 },
+    { type: "saved/set", slug: "v0", saved: true, at: T0 },
+    { type: "tool/decision", slug: "cursor", outcome: "selected", at: T2 },
+    { type: "tool/decision", slug: "v0", outcome: "selected", at: T2 },
+    { type: "tool/usage", slug: "cursor", usage: "using", at: T2 },
+    { type: "tool/usage", slug: "v0", usage: "using", at: T2 },
+  ]),
+  reviewDue: apply(createEmptyWorkspaceState(), [
+    { type: "saved/set", slug: "meku", saved: true, at: T0 },
+    { type: "tool/decision", slug: "meku", outcome: "deferred", at: T0 },
+    { type: "tool/revisit", slug: "meku", revisitAt: "2020-01-01T00:00:00.000Z", at: T0 },
+  ]),
+  reviewFuture: apply(createEmptyWorkspaceState(), [
+    { type: "saved/set", slug: "meku", saved: true, at: T0 },
+    { type: "tool/decision", slug: "meku", outcome: "deferred", at: T0 },
+    { type: "tool/revisit", slug: "meku", revisitAt: "2099-01-01T00:00:00.000Z", at: T0 },
+  ]),
+  reviewManyDue: apply(createEmptyWorkspaceState(), [
+    ...(["meku", "blink", "linear", "v0", "cursor"] as const).flatMap((slug) => [
+      { type: "saved/set" as const, slug, saved: true, at: T0 },
+      { type: "tool/decision" as const, slug, outcome: "deferred" as const, at: T0 },
+      {
+        type: "tool/revisit" as const,
+        slug,
+        revisitAt: "2020-01-01T00:00:00.000Z",
+        at: T0,
+      },
+    ]),
+  ]),
 };
 
 export function emptySignalHub(): SignalProgressHub {

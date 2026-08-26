@@ -120,7 +120,7 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     expect(hrefsNamed("Recenti").every((href) => href === "/account?view=recenti")).toBe(true);
     expect(hrefsNamed("Recenti").length).toBeGreaterThan(0);
     expect(hrefsNamed("Segnale")).toEqual([]);
-    expect(screen.getByLabelText("Stato del toolbox")).toBeTruthy();
+    expect(screen.queryByLabelText("Stato del toolbox")).toBeNull();
   });
 
   it("drops atelier primary chrome when rendered inside LoopShell", () => {
@@ -130,6 +130,6 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     expect(screen.queryByLabelText("Altre destinazioni")).toBeNull();
     expect(hrefsNamed("Decisioni")).toEqual([]);
     expect(hrefsNamed("Recenti")).toEqual([]);
-    expect(screen.getByLabelText("Stato del toolbox")).toBeTruthy();
+    expect(screen.queryByLabelText("Stato del toolbox")).toBeNull();
   });
 });
