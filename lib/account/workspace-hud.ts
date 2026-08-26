@@ -1,3 +1,4 @@
+import { workspaceViewHref } from "@/components/account/workspace/workspace-model";
 import {
   activePersonalStacks,
   deriveResurfaceSignals,
@@ -70,7 +71,7 @@ export function workspaceHudInstruments(hud: WorkspaceHud): WorkspaceHudInstrume
       id: "saved",
       label: "Salvati",
       value: String(hud.saved),
-      href: "/account?view=biblioteca",
+      href: workspaceViewHref("salvati"),
       active: hud.saved > 0,
     },
     {
@@ -91,7 +92,7 @@ export function workspaceHudInstruments(hud: WorkspaceHud): WorkspaceHudInstrume
       id: "using",
       label: "In uso",
       value: String(hud.using),
-      href: "/account?view=biblioteca",
+      href: workspaceViewHref("salvati"),
       active: hud.using > 0,
     },
     {

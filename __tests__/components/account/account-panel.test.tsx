@@ -321,7 +321,7 @@ describe("AccountPanel — stato authenticated", () => {
 
     expect(screen.getAllByText("TOOOLVIBES").length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: "Home" }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "Biblioteca" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Salvati" }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: "Impostazioni" }).length).toBeGreaterThan(0);
     expect(screen.queryByPlaceholderText("nome@email.com")).toBeNull();
     expect(screen.queryByText("Proposta founder")).toBeNull();

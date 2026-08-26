@@ -29,6 +29,8 @@ import {
   RotateCcw,
 } from "lucide-react";
 
+import { useAccount } from "@/components/account/account-provider";
+import { salvatiHref } from "@/components/account/workspace/workspace-model";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { RevisitWhenChips } from "@/components/account/workspace/revisit-when-chips";
 import {
@@ -148,6 +150,7 @@ export function CompareDecisionPanel({
     ? decisionMemories[resolvedFocusSlug]?.note ?? ""
     : "";
 
+  const account = useAccount();
   useEffect(() => {
     setNoteDraft(focusNote);
   }, [focusNote, resolvedFocusSlug]);
@@ -204,7 +207,7 @@ export function CompareDecisionPanel({
           </p>
         </div>
         <Link
-          href="/shortlist"
+          href={salvatiHref(account.status === "authenticated")}
           className={decisionChipClassName}
           style={
             firstDecidedSlug

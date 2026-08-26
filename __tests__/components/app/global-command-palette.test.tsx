@@ -283,7 +283,7 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
 
     fireEvent.click(screen.getByText("Vai ai tool salvati"));
 
-    expect(pushMock).toHaveBeenCalledWith("/account?view=biblioteca");
+    expect(pushMock).toHaveBeenCalledWith("/account?view=salvati");
     expect(pushMock).not.toHaveBeenCalledWith("/shortlist");
   });
 
@@ -291,7 +291,7 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
     renderPalette();
     openPalette();
 
-    expect(screen.getByText("Biblioteca")).toBeTruthy();
+    expect(screen.getByText("Salvati")).toBeTruthy();
     expect(screen.getByText("Decisioni")).toBeTruthy();
     expect(screen.getByText("Recenti")).toBeTruthy();
     expect(screen.getByText("Radar")).toBeTruthy();

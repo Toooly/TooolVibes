@@ -80,14 +80,21 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     cleanup();
   });
 
-  it("marks Biblioteca as the current page when ?view=biblioteca", () => {
-    navRuntime.search = "view=biblioteca";
+  it("marks Salvati as the current page when ?view=salvati", () => {
+    navRuntime.search = "view=salvati";
     render(createElement(WorkspaceShell));
 
-    expect(currentNamed("Biblioteca").every((value) => value === "page")).toBe(true);
+    expect(currentNamed("Salvati").every((value) => value === "page")).toBe(true);
     expect(currentNamed("Home").every((value) => value !== "page")).toBe(true);
     expect(screen.queryByRole("tablist")).toBeNull();
     expect(screen.queryByRole("tab")).toBeNull();
+  });
+
+  it("maps legacy ?view=biblioteca onto canonical Salvati", () => {
+    navRuntime.search = "view=biblioteca";
+    render(createElement(WorkspaceShell));
+
+    expect(currentNamed("Salvati").every((value) => value === "page")).toBe(true);
   });
 
   it("falls back to Home for an invalid view", () => {
@@ -95,14 +102,14 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     render(createElement(WorkspaceShell));
 
     expect(currentNamed("Home").every((value) => value === "page")).toBe(true);
-    expect(currentNamed("Biblioteca").every((value) => value !== "page")).toBe(true);
+    expect(currentNamed("Salvati").every((value) => value !== "page")).toBe(true);
   });
 
   it("builds real workspace view links, shows Recenti, and keeps Segnale out of chrome while Signal flags are off", () => {
     render(createElement(WorkspaceShell));
 
     expect(hrefsNamed("Home").every((href) => href === "/account")).toBe(true);
-    expect(hrefsNamed("Biblioteca").every((href) => href === "/account?view=biblioteca")).toBe(
+    expect(hrefsNamed("Salvati").every((href) => href === "/account?view=salvati")).toBe(
       true,
     );
     expect(hrefsNamed("Stack").every((href) => href === "/account?view=stack")).toBe(true);

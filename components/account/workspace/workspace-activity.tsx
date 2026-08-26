@@ -24,7 +24,7 @@ const KIND_LABEL = {
 
 function activityHref(item: DerivedActivityItem) {
   if (item.kind === "compared") return "/compare";
-  if (item.kind === "saved") return workspaceViewHref("biblioteca");
+  if (item.kind === "saved") return workspaceViewHref("salvati");
   if (item.kind === "stack") return workspaceViewHref("stack");
   return workspaceViewHref("decisioni");
 }

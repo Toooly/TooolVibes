@@ -65,7 +65,7 @@ function WorkspaceShellView({
       <AccountRecoverySection account={account} suppressAuthMessage={showStateBanner} />
       <div className="tv-space-main">
         {view === "riprendi" ? <WorkspaceRiprendi state={state} /> : null}
-        {view === "biblioteca" ? (
+        {view === "salvati" ? (
           <WorkspaceBiblioteca state={state} focusSlug={focusSlug} />
         ) : null}
         {view === "stack" ? <WorkspaceStacks state={state} stackId={stackId} /> : null}

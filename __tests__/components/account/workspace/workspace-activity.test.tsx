@@ -52,7 +52,7 @@ describe("WorkspaceActivity", () => {
     expect(screen.queryByText("Attività")).toBeNull();
 
     const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
-    expect(hrefs).toContain("/account?view=biblioteca");
+    expect(hrefs).toContain("/account?view=salvati");
     expect(hrefs).toContain("/compare");
     expect(hrefs).toContain("/account?view=decisioni");
     expect(hrefs).toContain("/account?view=stack");

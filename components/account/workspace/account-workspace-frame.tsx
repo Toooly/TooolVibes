@@ -270,7 +270,7 @@ export function AccountWorkspaceFrame({
     [signalUi],
   );
   const workCounts: Partial<Record<WorkspaceView, number>> = {
-    biblioteca: hud.saved,
+    salvati: hud.saved,
     stack: hud.stacks,
     decisioni: hud.traces,
   };

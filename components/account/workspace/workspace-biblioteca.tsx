@@ -210,7 +210,7 @@ export function WorkspaceBiblioteca({
     return (
       <section className="tv-lib tv-lib--empty">
         <WorkspaceEmptyMotif variant="library" />
-        <p className="tv-lib-kicker">Biblioteca</p>
+        <p className="tv-lib-kicker">Salvati</p>
         <h2 className="tv-lib-title">Nessun tool salvato ancora</h2>
         <p className="tv-lib-copy">
           I Salvati vivono qui: stesso inventario, con stati e verdetti. Salva dal catalogo, poi valuta.
@@ -226,7 +226,7 @@ export function WorkspaceBiblioteca({
     <div className="tv-lib">
       <div className="tv-lib-toolbar">
         <label className="tv-lib-search">
-          <span className="sr-only">Cerca nella biblioteca</span>
+          <span className="sr-only">Cerca in Salvati</span>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}

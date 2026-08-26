@@ -4,6 +4,7 @@ import {
   WORKSPACE_VIEWS,
   formatWorkspaceDate,
   parseWorkspaceView,
+  salvatiHref,
   workspaceFocusHref,
   workspaceViewHref,
 } from "@/components/account/workspace/workspace-model";
@@ -12,7 +13,7 @@ describe("workspace-model", () => {
   it("keeps the canonical view set without attivita", () => {
     expect([...WORKSPACE_VIEWS]).toEqual([
       "riprendi",
-      "biblioteca",
+      "salvati",
       "stack",
       "decisioni",
       "recenti",
@@ -27,15 +28,21 @@ describe("workspace-model", () => {
     expect(parseWorkspaceView("nope")).toBe("riprendi");
   });
 
-  it("parseWorkspaceView accepts canonical views and maps legacy attivita to recenti", () => {
-    expect(parseWorkspaceView("biblioteca")).toBe("biblioteca");
+  it("parseWorkspaceView accepts canonical views and maps legacy aliases", () => {
+    expect(parseWorkspaceView("salvati")).toBe("salvati");
+    expect(parseWorkspaceView("biblioteca")).toBe("salvati");
     expect(parseWorkspaceView("recenti")).toBe("recenti");
     expect(parseWorkspaceView("attivita")).toBe("recenti");
   });
 
+  it("salvatiHref is guest /shortlist and auth canonical Salvati", () => {
+    expect(salvatiHref(false)).toBe("/shortlist");
+    expect(salvatiHref(true)).toBe("/account?view=salvati");
+  });
+
   it("workspaceViewHref is the only view-link builder", () => {
     expect(workspaceViewHref("riprendi")).toBe("/account");
-    expect(workspaceViewHref("biblioteca")).toBe("/account?view=biblioteca");
+    expect(workspaceViewHref("salvati")).toBe("/account?view=salvati");
     expect(workspaceViewHref("recenti")).toBe("/account?view=recenti");
     expect(workspaceViewHref("segnale")).toBe("/account?view=segnale");
   });
@@ -44,8 +51,8 @@ describe("workspace-model", () => {
     expect(workspaceViewHref("riprendi", { focus: "cursor" })).toBe(
       "/account?view=riprendi&focus=cursor",
     );
-    expect(workspaceViewHref("biblioteca", { focus: "cursor" })).toBe(
-      "/account?view=biblioteca&focus=cursor",
+    expect(workspaceViewHref("salvati", { focus: "cursor" })).toBe(
+      "/account?view=salvati&focus=cursor",
     );
     expect(workspaceViewHref("stack", { stack: "ai-coding" })).toBe(
       "/account?view=stack&stack=ai-coding",

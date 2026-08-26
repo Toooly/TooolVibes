@@ -95,12 +95,12 @@ function resumeHref(kind: Exclude<ResumeKind, "empty">, slug: string | null) {
   if (kind === "review_decision" || kind === "confirm_usage") {
     return workspaceViewHref("decisioni", focus);
   }
-  return workspaceViewHref("biblioteca", focus);
+  return workspaceViewHref("salvati", focus);
 }
 
 function pendingHref(kind: "deferred_due" | "top_without_verdict", slug: string) {
   if (kind === "deferred_due") return workspaceFocusHref("decisioni", slug);
-  return workspaceFocusHref("biblioteca", slug);
+  return workspaceFocusHref("salvati", slug);
 }
 
 function usingSlugs(state: WorkspaceStateV1) {

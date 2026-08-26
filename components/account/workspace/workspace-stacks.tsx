@@ -488,11 +488,11 @@ function StackDetail({
       </div>
 
       <div className="tv-stacks-picker">
-        <p className="tv-stacks-kicker">Aggiungi dalla biblioteca</p>
+        <p className="tv-stacks-kicker">Aggiungi da Salvati</p>
         {savedOutside.length === 0 ? (
           <p className="tv-stacks-detail__copy">
             {state.saved.slugs.length === 0
-              ? "Salva un tool in biblioteca per poterlo mettere qui."
+              ? "Salva un tool in Salvati per poterlo mettere qui."
               : "Tutti i tool salvati sono già in questo stack."}
           </p>
         ) : (

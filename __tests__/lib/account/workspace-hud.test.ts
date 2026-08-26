@@ -35,6 +35,6 @@ describe("workspace HUD", () => {
       "using",
       "deciding",
     ]);
-    expect(instruments[0]?.href).toBe("/account?view=biblioteca");
+    expect(instruments[0]?.href).toBe("/account?view=salvati");
   });
 });

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
+import { useAccount } from "@/components/account/account-provider";
+import { salvatiHref } from "@/components/account/workspace/workspace-model";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +21,7 @@ export function ShortlistLink({
   active = false,
   label = "Salvati",
 }: ShortlistLinkProps) {
+  const account = useAccount();
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const count = savedSlugs.length;
   const [isFresh, setIsFresh] = useState(false);
@@ -49,7 +52,7 @@ export function ShortlistLink({
 
   return (
     <Link
-      href="/shortlist"
+      href={salvatiHref(account.status === "authenticated")}
       className={cn(
         "selection-chip text-ui-strong inline-flex items-center gap-2 rounded-full border transition-all duration-200",
         count > 0 && "is-live",

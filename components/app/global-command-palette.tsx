@@ -68,7 +68,7 @@ const WORKSPACE_DESTINATIONS: Array<{
   icon: typeof House;
 }> = [
   { href: workspaceViewHref("riprendi"), label: WORKSPACE_VIEW_LABELS.riprendi, icon: House },
-  { href: workspaceViewHref("biblioteca"), label: WORKSPACE_VIEW_LABELS.biblioteca, icon: Bookmark },
+  { href: workspaceViewHref("salvati"), label: WORKSPACE_VIEW_LABELS.salvati, icon: Bookmark },
   { href: workspaceViewHref("stack"), label: WORKSPACE_VIEW_LABELS.stack, icon: Layers },
   { href: workspaceViewHref("decisioni"), label: WORKSPACE_VIEW_LABELS.decisioni, icon: BookOpen },
   { href: workspaceViewHref("recenti"), label: WORKSPACE_VIEW_LABELS.recenti, icon: History },
@@ -434,7 +434,7 @@ export function GlobalCommandPalette({
               </CommandItem>
               <CommandItem
                 onSelect={() => {
-                  openPath(workspaceViewHref("biblioteca"));
+                  openPath(workspaceViewHref("salvati"));
                 }}
               >
                 <Star className="size-4" />

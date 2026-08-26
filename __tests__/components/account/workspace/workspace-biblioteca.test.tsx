@@ -88,7 +88,7 @@ describe("WorkspaceBiblioteca", () => {
   it("filters rows by name, slug, or category", () => {
     render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.mature }));
 
-    const search = screen.getByLabelText("Cerca nella biblioteca");
+    const search = screen.getByLabelText("Cerca in Salvati");
     fireEvent.change(search, { target: { value: "Cursor" } });
     expect(rowSlugs()).toEqual(["cursor"]);
 

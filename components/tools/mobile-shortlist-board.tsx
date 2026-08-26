@@ -473,7 +473,7 @@ function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; c
           <p>
             {totalCount > 0
               ? `${totalCount} tool ${totalCount === 1 ? "salvato" : "salvati"}: inventario, stati e verdetti.`
-              : "Qui restano i tool salvati e i verdetti. Stesso inventario della Biblioteca."}
+              : "Qui restano i tool salvati e i verdetti. Stesso inventario di Salvati."}
           </p>
         </div>
       </div>
