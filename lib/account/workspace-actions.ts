@@ -133,6 +133,10 @@ export function setWorkspaceStage(slug: string, stage: ShortlistStage) {
   return applyWorkspaceAction({ type: "tool/stage", slug, stage, at: nowIso() });
 }
 
+function newRelationshipEventId() {
+  return crypto.randomUUID();
+}
+
 export function setWorkspaceDecision(
   slug: string,
   outcome: WorkspaceDecisionOutcome | null,
@@ -142,22 +146,34 @@ export function setWorkspaceDecision(
   const previous =
     getCanonicalToolWorkspaceState().toolStates[slug]?.decision?.outcome ?? null;
   const at = nowIso();
+
+  if (outcome === null) {
+    applyWorkspaceAction({
+      type: "tool/decision",
+      slug,
+      outcome: null,
+      at,
+      ...(alternatives !== undefined ? { alternatives } : {}),
+      ...(compareObjective !== undefined ? { compareObjective } : {}),
+    });
+    return applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt: null, at });
+  }
+
   const next = applyWorkspaceAction({
-    type: "tool/decision",
+    type: "workspace/decide",
     slug,
     outcome,
     at,
+    eventId: newRelationshipEventId(),
     ...(alternatives !== undefined ? { alternatives } : {}),
     ...(compareObjective !== undefined ? { compareObjective } : {}),
+    ...(outcome !== "deferred" ? { revisitAt: null } : {}),
   });
   if (outcome === "selected" || outcome === "rejected") {
     emitDecisionRecorded(slug);
     if (previous === "deferred") {
       emitDecisionRevisited(slug);
     }
-  }
-  if (outcome !== "deferred") {
-    return applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt: null, at });
   }
   return next;
 }
@@ -167,17 +183,21 @@ export function deferWorkspaceTool(
   revisitAt: string,
   alternatives?: string[],
 ) {
-  const at = nowIso();
-  applyWorkspaceAction({
-    type: "tool/decision",
+  const next = applyWorkspaceAction({
+    type: "workspace/decide",
     slug,
     outcome: "deferred",
-    at,
+    at: nowIso(),
+    eventId: newRelationshipEventId(),
+    revisitAt,
     ...(alternatives !== undefined ? { alternatives } : {}),
   });
-  const next = applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt, at });
   emitDeferWithRevisit(slug);
   return next;
+}
+
+export function reopenWorkspaceDecision(slug: string) {
+  return setWorkspaceDecision(slug, null);
 }
 
 export function setWorkspaceUseCase(slug: string, useCase: string | null) {

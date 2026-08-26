@@ -37,13 +37,16 @@ import { RequestToolForm } from "@/components/wishlist/request-tool-form";
 import { ShortlistStageToggle } from "@/components/tools/shortlist-stage-toggle";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import {
-  reopenToolDecision,
-  deferToolDecision,
-  setToolDecisionOutcome,
-  setToolUsage,
-  toggleToolPin,
-  updateToolDecisionMemory,
-} from "@/lib/discovery/local-storage";
+  deferWorkspaceTool,
+  markWorkspaceToolReplaced,
+  markWorkspaceToolStopped,
+  markWorkspaceToolUsing,
+  reopenWorkspaceDecision,
+  setWorkspaceDecision,
+  setWorkspaceNote,
+  setWorkspacePinned,
+  setWorkspaceSaveReason,
+} from "@/lib/account/workspace-actions";
 import type { WorkspaceDecisionOutcome, WorkspaceUsage } from "@/lib/discovery/types";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import {
@@ -283,7 +286,7 @@ export function MobileShortlistBoard({
                   </span>
                   <button
                     type="button"
-                    onClick={() => reopenToolDecision(tool.slug)}
+                    onClick={() => reopenWorkspaceDecision(tool.slug)}
                     aria-label={`Riapri decisione di ${tool.name}`}
                     data-sonic-action="update"
                     className={`${sheetChipClassName} gap-2`}
@@ -765,7 +768,7 @@ function MobileNoteSheet({
               </div>
               <button
                 type="button"
-                onClick={() => toggleToolPin(slug)}
+                onClick={() => setWorkspacePinned(slug, !memory.is_pinned)}
                 data-sonic-action="update"
                 aria-pressed={Boolean(memory.is_pinned)}
                 className={`${sheetChipClassName} gap-2 ${
@@ -817,7 +820,7 @@ function MobileNoteSheet({
                           return;
                         }
                         setPendingDefer(false);
-                        setToolDecisionOutcome(slug, option);
+                        setWorkspaceDecision(slug, option);
                       }}
                       data-sonic-action="tab"
                       className={`${sheetChipClassName} ${
@@ -845,7 +848,7 @@ function MobileNoteSheet({
                     tone="light"
                     onSelect={(revisitAt) => {
                       setPendingDefer(false);
-                      deferToolDecision(slug, revisitAt);
+                      deferWorkspaceTool(slug, revisitAt);
                     }}
                   />
                 </div>
@@ -871,7 +874,7 @@ function MobileNoteSheet({
                     onClick={() => {
                       setPendingDefer(false);
                       setPendingReplace(false);
-                      reopenToolDecision(slug);
+                      reopenWorkspaceDecision(slug);
                     }}
                     data-sonic-action="update"
                     className={`${sheetChipClassName} gap-2`}
@@ -886,7 +889,7 @@ function MobileNoteSheet({
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => setToolUsage(slug, "using")}
+                    onClick={() => markWorkspaceToolUsing(slug)}
                     data-sonic-action="update"
                     className={sheetChipClassName}
                     style={{
@@ -905,7 +908,7 @@ function MobileNoteSheet({
                     type="button"
                     onClick={() => {
                       setPendingReplace(false);
-                      setToolUsage(slug, "stopped");
+                      markWorkspaceToolStopped(slug);
                     }}
                     data-sonic-action="update"
                     className={sheetChipClassName}
@@ -952,7 +955,7 @@ function MobileNoteSheet({
                         type="button"
                         aria-pressed={active}
                         onClick={() => {
-                          setToolUsage(slug, "replaced", candidate.slug);
+                          markWorkspaceToolReplaced(slug, candidate.slug);
                           setPendingReplace(false);
                         }}
                         data-sonic-action="tab"
@@ -994,9 +997,7 @@ function MobileNoteSheet({
                       type="button"
                       aria-pressed={active}
                       onClick={() =>
-                        updateToolDecisionMemory(slug, {
-                          save_reason: active ? undefined : option,
-                        })
+                        setWorkspaceSaveReason(slug, active ? null : option)
                       }
                       data-sonic-action="tab"
                       className={`${sheetChipClassName} ${
@@ -1048,7 +1049,7 @@ function MobileNoteSheet({
                 <button
                   type="button"
                   onClick={() =>
-                    updateToolDecisionMemory(slug, { note: noteDraft })
+                    setWorkspaceNote(slug, noteDraft.trim() || null)
                   }
                   disabled={!noteIsDirty}
                   data-sonic-action="save"

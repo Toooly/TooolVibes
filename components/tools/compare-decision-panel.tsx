@@ -8,7 +8,7 @@
  * - azione esplicita per ogni candidato: Scegli / Scarta / Rimanda, con
  *   motivazione annotabile e timestamp versionato;
  * - scrittura additiva e versionata: riusa le action B32
- *   `setToolDecisionOutcome` / `reopenToolDecision` / `updateToolDecisionMemory`
+ *   `setWorkspaceDecision` / `reopenWorkspaceDecision` / `setWorkspaceNote`
  *   sul contract B16 (nessuna action duplicata, nessun campo nuovo persistito);
  * - ritorno a Salvati: la decisione resta visibile in shortlist dopo reload
  *   e login (owner scope guest/account gestito dallo store canonico B16–B19).
@@ -39,12 +39,12 @@ import {
   usageStateLabel,
 } from "@/lib/account/workspace-lifecycle";
 import {
-  deferToolDecision,
-  reopenToolDecision,
-  setToolDecisionOutcome,
-  setToolUsage,
-  updateToolDecisionMemory,
-} from "@/lib/discovery/local-storage";
+  deferWorkspaceTool,
+  markWorkspaceToolUsing,
+  reopenWorkspaceDecision,
+  setWorkspaceDecision,
+  setWorkspaceNote,
+} from "@/lib/account/workspace-actions";
 import { MIN_COMPARE_TOOLS } from "@/lib/stores/tool-workspace-store";
 import type { WorkspaceDecisionOutcome } from "@/lib/discovery/types";
 import {
@@ -174,14 +174,14 @@ export function CompareDecisionPanel({
       return;
     }
     setPendingDeferSlug(null);
-    setToolDecisionOutcome(slug, outcome, objective);
+    setWorkspaceDecision(slug, outcome, undefined, objective);
     emitComparisonCompleted(tools.map((tool) => tool.slug));
   }
 
   function handleDefer(slug: string, revisitAt: string) {
     setFocusSlug(slug);
     setPendingDeferSlug(null);
-    deferToolDecision(slug, revisitAt);
+    deferWorkspaceTool(slug, revisitAt);
   }
 
   return (
@@ -356,7 +356,7 @@ export function CompareDecisionPanel({
                     {outcome === "selected" && !usage ? (
                       <button
                         type="button"
-                        onClick={() => setToolUsage(tool.slug, "using")}
+                        onClick={() => markWorkspaceToolUsing(tool.slug)}
                         aria-label={`Segna ${tool.name} come in uso`}
                         data-sonic-action="update"
                         className={decisionChipClassName}
@@ -373,7 +373,7 @@ export function CompareDecisionPanel({
                       type="button"
                       onClick={() => {
                         setPendingDeferSlug(null);
-                        reopenToolDecision(tool.slug);
+                        reopenWorkspaceDecision(tool.slug);
                       }}
                       aria-label={`Riapri decisione per ${tool.name}`}
                       data-sonic-action="update"
@@ -420,7 +420,7 @@ export function CompareDecisionPanel({
           <button
             type="button"
             onClick={() =>
-              updateToolDecisionMemory(focusTool.slug, { note: noteDraft })
+              setWorkspaceNote(focusTool.slug, noteDraft.trim() || null)
             }
             disabled={!noteIsDirty}
             data-sonic-action="save"

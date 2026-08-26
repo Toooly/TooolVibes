@@ -22,12 +22,19 @@ import {
   type WorkspaceChangeSource,
 } from "@/lib/discovery/workspace-events";
 import {
-  emitDecisionRecorded,
-  emitDecisionRevisited,
-  emitDeferWithRevisit,
-  emitToolReplaced,
-  emitUsageConfirmed,
-} from "@/lib/signal-progression/client";
+  deferWorkspaceTool,
+  markWorkspaceToolReplaced,
+  markWorkspaceToolStopped,
+  markWorkspaceToolUsing,
+  reopenWorkspaceDecision,
+  setWorkspaceDecision,
+  setWorkspaceNote,
+  setWorkspacePinned,
+  setWorkspaceSaveReason,
+  setWorkspaceStage,
+  setWorkspaceCompareObjective,
+  setWorkspaceUsage,
+} from "@/lib/account/workspace-actions";
 
 export { DISCOVERY_STORAGE_KEYS } from "@/lib/discovery/workspace-storage-keys";
 export { DISCOVERY_SYNC_EVENT } from "@/lib/discovery/workspace-events";
@@ -312,46 +319,28 @@ export function toggleShortlistItem(slug: string) {
 }
 
 export function setShortlistStage(slug: string, stage: ShortlistStage) {
-  commitAction({ type: "tool/stage", slug, stage, at: nowIso() });
+  setWorkspaceStage(slug, stage);
 }
 
 export function updateToolDecisionMemory(
   slug: string,
   patch: Partial<ToolDecisionMemory>,
 ) {
-  const timestamp = nowIso();
-  const current = getCanonicalToolWorkspaceState();
-  let state = current;
   if ("note" in patch) {
-    state = reduceWorkspaceState(state, { type: "tool/note", slug, note: patch.note ?? null, at: timestamp });
+    setWorkspaceNote(slug, patch.note ?? null);
   }
   if ("save_reason" in patch) {
-    state = reduceWorkspaceState(state, {
-      type: "tool/save-reason",
-      slug,
-      saveReason: patch.save_reason ?? null,
-      at: timestamp,
-    });
+    setWorkspaceSaveReason(slug, patch.save_reason ?? null);
   }
   if ("is_pinned" in patch) {
-    state = reduceWorkspaceState(state, {
-      type: "tool/pin",
-      slug,
-      pinned: Boolean(patch.is_pinned),
-      at: timestamp,
-    });
-  }
-  if (JSON.stringify(current) !== JSON.stringify(state)) {
-    commitCanonicalToolWorkspaceState(state);
-    dispatchWorkspaceChange({ source: "local", scope: "workspace" });
+    setWorkspacePinned(slug, Boolean(patch.is_pinned));
   }
   return getToolDecisionMemory(slug);
 }
 
 export function toggleToolPin(slug: string) {
   const current = getCanonicalToolWorkspaceState();
-  const pinned = !current.toolStates[slug]?.pinned;
-  commitAction({ type: "tool/pin", slug, pinned, at: nowIso() });
+  setWorkspacePinned(slug, !current.toolStates[slug]?.pinned);
   return getToolDecisionMemory(slug);
 }
 
@@ -369,25 +358,7 @@ export function setToolDecisionOutcome(
   outcome: WorkspaceDecisionOutcome,
   compareObjective?: CompareObjective | null,
 ) {
-  const previous =
-    getCanonicalToolWorkspaceState().toolStates[slug]?.decision?.outcome ?? null;
-  const at = nowIso();
-  commitAction({
-    type: "tool/decision",
-    slug,
-    outcome,
-    at,
-    ...(compareObjective !== undefined ? { compareObjective } : {}),
-  });
-  if (outcome !== "deferred") {
-    commitAction({ type: "tool/revisit", slug, revisitAt: null, at });
-  }
-  if (outcome === "selected" || outcome === "rejected") {
-    emitDecisionRecorded(slug);
-    if (previous === "deferred") {
-      emitDecisionRevisited(slug);
-    }
-  }
+  setWorkspaceDecision(slug, outcome, undefined, compareObjective);
   return getToolDecisionOutcome(slug);
 }
 
@@ -396,17 +367,14 @@ export function setToolUsage(
   usage: WorkspaceUsage | null,
   replacedBy?: string | null,
 ) {
-  commitAction({
-    type: "tool/usage",
-    slug,
-    usage,
-    at: nowIso(),
-    ...(replacedBy !== undefined ? { replacedBy } : {}),
-  });
   if (usage === "using") {
-    emitUsageConfirmed(slug);
+    markWorkspaceToolUsing(slug);
   } else if (usage === "replaced") {
-    emitToolReplaced(slug);
+    markWorkspaceToolReplaced(slug, replacedBy ?? "");
+  } else if (usage === "stopped") {
+    markWorkspaceToolStopped(slug);
+  } else {
+    setWorkspaceUsage(slug, usage, replacedBy);
   }
 }
 
@@ -414,19 +382,11 @@ export function setToolCompareObjective(
   slug: string,
   objective: CompareObjective | null,
 ) {
-  commitAction({
-    type: "tool/compare-objective",
-    slug,
-    compareObjective: objective,
-    at: nowIso(),
-  });
+  setWorkspaceCompareObjective(slug, objective);
 }
 
 export function deferToolDecision(slug: string, revisitAt: string) {
-  const at = nowIso();
-  commitAction({ type: "tool/decision", slug, outcome: "deferred", at });
-  commitAction({ type: "tool/revisit", slug, revisitAt, at });
-  emitDeferWithRevisit(slug);
+  deferWorkspaceTool(slug, revisitAt);
   return getToolDecisionOutcome(slug);
 }
 
@@ -435,9 +395,7 @@ export function deferToolDecision(slug: string, revisitAt: string) {
  * decision record, so sync merges honour the reopen across devices.
  */
 export function reopenToolDecision(slug: string) {
-  const at = nowIso();
-  commitAction({ type: "tool/decision", slug, outcome: null, at });
-  commitAction({ type: "tool/revisit", slug, revisitAt: null, at });
+  reopenWorkspaceDecision(slug);
   return getToolDecisionOutcome(slug);
 }
 
