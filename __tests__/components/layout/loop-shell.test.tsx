@@ -186,6 +186,17 @@ describe("LoopShell — Wave 4", () => {
     expect(tabNav()?.querySelector("[aria-current='page']")).toBeNull();
   });
 
+  it("W7 chip on /compare is current without becoming a tab", () => {
+    navRuntime.pathname = "/compare";
+    compareCountState.current = 2;
+    renderShell();
+    const chip = document.querySelector("[data-compare-live-chip]");
+    expect(chip?.getAttribute("aria-current")).toBe("page");
+    expect(chip?.getAttribute("data-active")).toBe("true");
+    expect(destIds(tabNav())).not.toContain("compare");
+    expect(tabNav()?.querySelector("[aria-current='page']")).toBeNull();
+  });
+
   it("W4-T13 CompareLiveChip hidden at 0", () => {
     renderShell();
     expect(document.querySelector("[data-compare-live-chip]")).toBeNull();

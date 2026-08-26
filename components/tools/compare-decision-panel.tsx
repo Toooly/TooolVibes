@@ -29,8 +29,6 @@ import {
   RotateCcw,
 } from "lucide-react";
 
-import { useAccount } from "@/components/account/account-provider";
-import { salvatiHref } from "@/components/account/workspace/workspace-model";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { RevisitWhenChips } from "@/components/account/workspace/revisit-when-chips";
 import {
@@ -57,6 +55,7 @@ import { formatDecisionTimestamp } from "@/lib/tools/discovery";
 import { cn } from "@/lib/utils";
 import { emitComparisonCompleted } from "@/lib/signal-progression/client";
 import type { NormalisedTool } from "./tool-battle-shared";
+import { noteCompareDecision } from "./compare-workbench-ephemeral";
 
 export type CompareDecisionPanelProps = {
   /** Candidati nell'ordine del verdetto canonico (rank 1..n). */
@@ -150,7 +149,6 @@ export function CompareDecisionPanel({
     ? decisionMemories[resolvedFocusSlug]?.note ?? ""
     : "";
 
-  const account = useAccount();
   useEffect(() => {
     setNoteDraft(focusNote);
   }, [focusNote, resolvedFocusSlug]);
@@ -177,6 +175,10 @@ export function CompareDecisionPanel({
       return;
     }
     setPendingDeferSlug(null);
+    const decided = tools.find((tool) => tool.slug === slug);
+    if (decided) {
+      noteCompareDecision({ slug: decided.slug, name: decided.name });
+    }
     setWorkspaceDecision(slug, outcome, undefined, objective);
     emitComparisonCompleted(tools.map((tool) => tool.slug));
   }
@@ -184,11 +186,16 @@ export function CompareDecisionPanel({
   function handleDefer(slug: string, revisitAt: string) {
     setFocusSlug(slug);
     setPendingDeferSlug(null);
+    const deferred = tools.find((tool) => tool.slug === slug);
+    if (deferred) {
+      noteCompareDecision({ slug: deferred.slug, name: deferred.name });
+    }
     deferWorkspaceTool(slug, revisitAt);
   }
 
   return (
     <section
+      id="compare-decide"
       className="compare-decision-panel mt-6 rounded-[24px] border p-5"
       style={{
         borderColor: "var(--line)",
@@ -207,7 +214,7 @@ export function CompareDecisionPanel({
           </p>
         </div>
         <Link
-          href={salvatiHref(account.status === "authenticated")}
+          href={`/toools/${focusTool.slug}`}
           className={decisionChipClassName}
           style={
             firstDecidedSlug
@@ -219,7 +226,7 @@ export function CompareDecisionPanel({
               : decisionChipIdleStyle
           }
         >
-          Vai ai Salvati
+          {`Vedi ${focusTool.name}`}
           <ArrowRight size={12} />
         </Link>
       </div>

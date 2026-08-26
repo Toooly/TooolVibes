@@ -6,10 +6,10 @@
  *     "Apri confronto" CTA and produce a real comparison)
  *   - MAX_COMPARE_TOOLS = 5  (the hard cap; adding a 6th candidate is blocked)
  *
- * If either value changes, the helper copy, tray visibility, and CTA state
+ * If either value changes, the chip label, workbench capacity, and add gate
  * all change. They MUST stay in lockstep across:
- *   - tray copy ("Aggiungi N tool" / "Pronto" / "Limite raggiunto")
- *   - bottom-nav badge
+ *   - CompareLiveChip ("Confronta n/MAX")
+ *   - workbench sticky identity
  *   - CompareToggle button (each tool card)
  *   - Compare page
  *   - tests
@@ -53,55 +53,63 @@ describe("Compare contract — canonical MIN/MAX", () => {
     expect(MAX_COMPARE_TOOLS).toBeLessThanOrEqual(6);
   });
 
-  // The exact derivation logic for the tray helper copy and CTA state.
-  // Keep this in sync with components/archive/archive-v4-compare-tray.tsx
-  describe("tray state derivation", () => {
+  // Wave 7 collector is CompareLiveChip, not the archive tray.
+  // At cap: OPEN stays enabled (chip still links to /compare); add is blocked.
+  describe("collector state derivation", () => {
     function deriveState(count: number) {
-      if (count === 0) return { phase: "hidden" as const, ctaEnabled: false };
+      if (count === 0) {
+        return { phase: "hidden" as const, openEnabled: false, addEnabled: true };
+      }
       if (count >= MAX_COMPARE_TOOLS) {
-        return { phase: "at-max" as const, ctaEnabled: false };
+        return { phase: "at-max" as const, openEnabled: true, addEnabled: false };
       }
       if (count >= MIN_COMPARE_TOOLS) {
-        return { phase: "ready" as const, ctaEnabled: true };
+        return { phase: "ready" as const, openEnabled: true, addEnabled: true };
       }
-      return { phase: "needs-more" as const, ctaEnabled: false };
+      return { phase: "needs-more" as const, openEnabled: true, addEnabled: true };
     }
 
-    it("count = 0 → tray hidden", () => {
-      expect(deriveState(0)).toEqual({ phase: "hidden", ctaEnabled: false });
+    it("count = 0 → chip hidden", () => {
+      expect(deriveState(0)).toEqual({
+        phase: "hidden",
+        openEnabled: false,
+        addEnabled: true,
+      });
     });
 
-    it("count = 1 → needs-more, CTA disabled, helper says 'Aggiungi 1 tool'", () => {
+    it("count = 1 → chip visible, open enabled, add enabled", () => {
       const s = deriveState(1);
       expect(s.phase).toBe("needs-more");
-      expect(s.ctaEnabled).toBe(false);
+      expect(s.openEnabled).toBe(true);
+      expect(s.addEnabled).toBe(true);
     });
 
-    it("count = MIN (2) → ready, CTA active", () => {
+    it("count = MIN (2) → ready, open enabled", () => {
       const s = deriveState(MIN_COMPARE_TOOLS);
       expect(s.phase).toBe("ready");
-      expect(s.ctaEnabled).toBe(true);
+      expect(s.openEnabled).toBe(true);
+      expect(s.addEnabled).toBe(true);
     });
 
-    it("count between MIN and MAX-1 → ready, CTA active", () => {
+    it("count between MIN and MAX-1 → ready, open enabled", () => {
       for (let n = MIN_COMPARE_TOOLS; n < MAX_COMPARE_TOOLS; n++) {
         expect(deriveState(n).phase).toBe("ready");
-        expect(deriveState(n).ctaEnabled).toBe(true);
+        expect(deriveState(n).openEnabled).toBe(true);
+        expect(deriveState(n).addEnabled).toBe(true);
       }
     });
 
-    it("count = MAX (5) → at-max, CTA disabled, helper says 'Hai raggiunto il limite'", () => {
+    it("count = MAX (5) → at-max, OPEN still enabled, add blocked", () => {
       const s = deriveState(MAX_COMPARE_TOOLS);
       expect(s.phase).toBe("at-max");
-      expect(s.ctaEnabled).toBe(false);
+      expect(s.openEnabled).toBe(true);
+      expect(s.addEnabled).toBe(false);
     });
 
     it("never: count > MAX (overflow impossible — store caps at MAX)", () => {
-      // The store rejects additions when count >= MAX_COMPARE_TOOLS, so
-      // we never observe a count > MAX in the UI. The derivation is
-      // therefore undefined for those values, but we sanity-check that
-      // the comparison logic still classifies them as at-max.
       expect(deriveState(MAX_COMPARE_TOOLS + 1).phase).toBe("at-max");
+      expect(deriveState(MAX_COMPARE_TOOLS + 1).openEnabled).toBe(true);
+      expect(deriveState(MAX_COMPARE_TOOLS + 1).addEnabled).toBe(false);
     });
   });
 

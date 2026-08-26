@@ -1,13 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import { ArrowRight, Columns3 } from "lucide-react";
 
-import {
-  MIN_COMPARE_TOOLS,
-  useToolWorkspaceStore,
-} from "@/lib/stores/tool-workspace-store";
+import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import {
   getCompareObjectiveLabel,
@@ -30,6 +25,11 @@ import { CompareRanking } from "./compare-ranking";
 import { CompareFactorMatrix } from "./compare-factor-matrix";
 import { CompareEditorialDetails } from "./compare-editorial-details";
 import { CompareTrendList } from "./compare-trend-list";
+import {
+  CompareWorkbenchEmpty,
+  CompareWorkbenchIdentity,
+  CompareWorkbenchPrep,
+} from "./compare-workbench-chrome";
 
 /**
  * Backwards-compatible re-export. Existing imports from
@@ -60,6 +60,7 @@ export function MobileCompareView({
 }: MobileCompareViewProps) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
+  const clearCompare = useToolWorkspaceStore((s) => s.clearCompare);
   const [battleState, setBattleState] = useState<BattleState>("idle");
   const reducedMotion = useReducedMotion();
   const fightTimerRefs = useRef<number[]>([]);
@@ -112,20 +113,7 @@ export function MobileCompareView({
   if (tools.length === 0) {
     return (
       <div className="mobile-compare-arena mobile-compare-arena--onboarding">
-        <div className="mobile-compare-arena__empty">
-          <div className="mobile-compare-arena__empty-icon">
-            <Columns3 className="size-10" />
-          </div>
-          <h2>Nessun candidato nel confronto.</h2>
-          <p>
-            Aggiungi {MIN_COMPARE_TOOLS} o pi&ugrave; tool dal catalogo per far
-            emergere le differenze vere.
-          </p>
-          <Link href="/archivio" className="mobile-compare-arena__cta">
-            Scegli i tool
-            <ArrowRight className="size-4" />
-          </Link>
-        </div>
+        <CompareWorkbenchEmpty />
       </div>
     );
   }
@@ -133,17 +121,11 @@ export function MobileCompareView({
   if (tools.length === 1) {
     return (
       <div className="mobile-compare-arena mobile-compare-arena--onboarding">
-        <div className="mobile-compare-arena__partial">
-          <p className="mobile-compare-arena__partial-label">Confronto parziale</p>
-          <p>
-            {tools[0].name} è già nel confronto. Aggiungi un altro profilo per
-            vedere le differenze.
-          </p>
-          <Link href="/archivio" className="mobile-compare-arena__cta">
-            Aggiungi candidato
-            <ArrowRight className="size-4" />
-          </Link>
-        </div>
+        <CompareWorkbenchPrep
+          tool={tools[0]}
+          onRemove={toggleCompare}
+          onClear={clearCompare}
+        />
       </div>
     );
   }
@@ -177,6 +159,14 @@ export function MobileCompareView({
 
   return (
     <div className="mobile-compare-arena">
+      <CompareWorkbenchIdentity
+        tools={sorted}
+        onRemove={toggleCompare}
+        onClear={clearCompare}
+        decisionEnabled={decisionEnabled}
+        layoutMode="mobile"
+      />
+
       {objectiveEnabled && onObjectiveChange ? (
         <CompareObjectiveSelector
           objective={activeObjective}
@@ -219,14 +209,12 @@ export function MobileCompareView({
 
       <CompareEditorialDetails tools={sorted} layoutMode="mobile" />
 
-      {isRevealed ? (
-        <CompareDecisionPanel
-          tools={sorted}
-          objective={activeObjective}
-          enabled={decisionEnabled}
-          idPrefix="mobile"
-        />
-      ) : null}
+      <CompareDecisionPanel
+        tools={sorted}
+        objective={activeObjective}
+        enabled={decisionEnabled}
+        idPrefix="mobile"
+      />
 
       <div className="mobile-compare-arena__trend">
         <CompareTrendList />

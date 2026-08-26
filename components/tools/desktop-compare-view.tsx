@@ -1,8 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import { ArrowRight, Columns3 } from "lucide-react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import {
@@ -25,6 +23,11 @@ import { CompareVerdictCard } from "./compare-verdict-card";
 import { CompareRanking } from "./compare-ranking";
 import { CompareFactorMatrix } from "./compare-factor-matrix";
 import { CompareEditorialDetails } from "./compare-editorial-details";
+import {
+  CompareWorkbenchEmpty,
+  CompareWorkbenchIdentity,
+  CompareWorkbenchPrep,
+} from "./compare-workbench-chrome";
 
 export function DesktopCompareView({
   tools: catalogTools,
@@ -44,6 +47,7 @@ export function DesktopCompareView({
 }) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
+  const clearCompare = useToolWorkspaceStore((s) => s.clearCompare);
   const [battleState, setBattleState] = useState<"idle" | "fighting" | "result">(
     "idle",
   );
@@ -89,49 +93,22 @@ export function DesktopCompareView({
     }, 900);
   }
 
-  if (tools.length < MIN_COMPARE_TOOLS) {
-    const hasCandidate = tools.length === 1;
+  if (tools.length === 0) {
     return (
       <div className="compare-onboarding-shell">
-        <section
-          className="compare-onboarding"
-          aria-labelledby="compare-onboarding-title"
-        >
-          <span className="compare-onboarding__icon" aria-hidden="true">
-            <Columns3 />
-          </span>
-          <p className="compare-onboarding__eyebrow">
-            {hasCandidate ? "Primo candidato pronto" : "La matrice è vuota"}
-          </p>
-          <h2 id="compare-onboarding-title">
-            {hasCandidate
-              ? "Serve ancora un candidato."
-              : "Costruisci un confronto che porti a una scelta."}
-          </h2>
-          <p className="compare-onboarding__lede">
-            {hasCandidate
-              ? `${tools[0].name} è già nel confronto. Aggiungi un altro tool per leggere differenze, punti forti e compromessi.`
-              : "Seleziona da due a cinque tool dal catalogo: confronterai evidenze, casi d’uso e limiti verificabili."}
-          </p>
-          <Link href="/archivio" className="compare-onboarding__cta">
-            {hasCandidate ? "Aggiungi un candidato" : "Scegli i tool"}
-            <ArrowRight size={17} aria-hidden="true" />
-          </Link>
-          <div
-            className="compare-onboarding__signals"
-            aria-label="Cosa otterrai"
-          >
-            <span>
-              <strong>Confronto</strong> fianco a fianco
-            </span>
-            <span>
-              <strong>Esito</strong> spiegato
-            </span>
-            <span>
-              <strong>Decisione</strong> salvabile
-            </span>
-          </div>
-        </section>
+        <CompareWorkbenchEmpty />
+      </div>
+    );
+  }
+
+  if (tools.length === 1) {
+    return (
+      <div className="compare-onboarding-shell">
+        <CompareWorkbenchPrep
+          tool={tools[0]}
+          onRemove={toggleCompare}
+          onClear={clearCompare}
+        />
       </div>
     );
   }
@@ -141,6 +118,14 @@ export function DesktopCompareView({
 
   return (
     <section className="desktop-compare" aria-label="Confronto desktop">
+      <CompareWorkbenchIdentity
+        tools={sorted}
+        onRemove={toggleCompare}
+        onClear={clearCompare}
+        decisionEnabled={decisionEnabled}
+        layoutMode="desktop"
+      />
+
       {objectiveEnabled && onObjectiveChange ? (
         <CompareObjectiveSelector
           objective={activeObjective}
@@ -183,14 +168,12 @@ export function DesktopCompareView({
 
       <CompareEditorialDetails tools={sorted} layoutMode="desktop" />
 
-      {isRevealed ? (
-        <CompareDecisionPanel
-          tools={sorted}
-          objective={activeObjective}
-          enabled={decisionEnabled}
-          idPrefix="desktop"
-        />
-      ) : null}
+      <CompareDecisionPanel
+        tools={sorted}
+        objective={activeObjective}
+        enabled={decisionEnabled}
+        idPrefix="desktop"
+      />
     </section>
   );
 }

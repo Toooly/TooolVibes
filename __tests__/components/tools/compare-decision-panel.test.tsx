@@ -266,11 +266,12 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(region.textContent).toContain("Atlas AI");
     expect(region.textContent).toContain("Gamma");
 
-    // Ritorno a Shortlist: il link ai Salvati è parte dell'azione.
-    const backLink = within(region).getByRole("link", {
-      name: /Vai ai Salvati/,
+    // Wave 7: relationship CTA, not Salvati trophy.
+    const seeLink = within(region).getByRole("link", {
+      name: /Vedi /,
     });
-    expect(backLink.getAttribute("href")).toBe("/shortlist");
+    expect(seeLink.getAttribute("href")).toMatch(/^\/toools\//);
+    expect(seeLink.getAttribute("href")).not.toContain("shortlist");
 
     // Choose: azione esplicita "Scegli" sul candidato.
     const group = decisionGroupFor("Atlas AI");
@@ -294,7 +295,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(
       screen.queryByRole("region", { name: "Registra decisione" }),
     ).toBeNull();
-    expect(screen.getByText("Nessun candidato nel confronto.")).toBeTruthy();
+    expect(screen.getByText("Confronto chiuso.")).toBeTruthy();
   });
 
   it("Wave 2 TARGET: Scegli then Scarta cannot continue on a dead battle", () => {
@@ -332,7 +333,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(
       screen.queryByRole("region", { name: "Registra decisione" }),
     ).toBeNull();
-    expect(screen.getByText("Nessun candidato nel confronto.")).toBeTruthy();
+    expect(screen.getByText("Confronto chiuso.")).toBeTruthy();
     expect(readPersistedWorkspace().compare.slugs).toEqual([]);
     expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
@@ -501,5 +502,6 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(
       screen.queryByRole("link", { name: /Vai ai Salvati/ }),
     ).toBeNull();
+    expect(screen.queryByRole("link", { name: /Vedi / })?.getAttribute("href") ?? "").not.toContain("shortlist");
   });
 });

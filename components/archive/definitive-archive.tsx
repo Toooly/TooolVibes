@@ -34,7 +34,6 @@ import { cn } from "@/lib/utils";
 import type { CatalogLevelFilter } from "@/components/directory/catalog/catalog-controller";
 import type { ToolFilterGroup, ToolPublicView } from "@/lib/data/tool-public-view";
 import { ArchiveV4ToolCard } from "./archive-v4-tool-card";
-import { ArchiveV4CompareTray } from "./archive-v4-compare-tray";
 
 type DefinitiveArchiveProps = {
   tools: ToolPublicView[];
@@ -579,8 +578,9 @@ export function DefinitiveArchive({
         />
       ) : null}
 
-      {/* ═══ 6. PERSISTENT COMPARISON TRAY ═══ */}
-      <ArchiveV4CompareTray tools={tools} />
+      {/* Wave 7: live compare tray unmounted. Collector is CompareLiveChip.
+          Tray source kept on disk for Wave 15 DELETE-LATER.
+          .ar4-shell:not(:has(.ar4-tray)) already shrinks catalog padding. */}
     </div>
   );
 }
