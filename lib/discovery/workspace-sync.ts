@@ -86,6 +86,7 @@ export function mergeGuestWorkspaceContribution(
       ...guest.toolStates,
       ...account.toolStates,
     },
+    events: [...account.events, ...guest.events],
   });
 }
 

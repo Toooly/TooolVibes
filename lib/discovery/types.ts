@@ -65,6 +65,31 @@ export type PersonalStack = {
   updatedAt: string;
 };
 
+export const relationshipEventTypeValues = [
+  "decided",
+  "reopened",
+  "started_using",
+  "stopped_using",
+  "replaced",
+  "revisit_set",
+  "revisited",
+] as const;
+
+export type RelationshipEventType = (typeof relationshipEventTypeValues)[number];
+
+export type WorkspaceRelationshipEvent = {
+  id: string;
+  type: RelationshipEventType;
+  slug: string;
+  at: string;
+  outcome?: WorkspaceDecisionOutcome | null;
+  reason?: string | null;
+  useCase?: string | null;
+  alternatives?: string[];
+  replacementSlug?: string | null;
+  revisitAt?: string | null;
+};
+
 export type WorkspaceStateV1 = {
   schemaVersion: 1;
   clearedAt: string | null;
@@ -73,6 +98,7 @@ export type WorkspaceStateV1 = {
   stack: WorkspaceOrderedList;
   personalStacks: PersonalStack[];
   toolStates: Record<string, WorkspaceToolState>;
+  events: WorkspaceRelationshipEvent[];
 };
 
 export type WorkspaceState = WorkspaceStateV1;
@@ -131,7 +157,26 @@ export type WorkspaceAction =
   | { type: "stacks/add"; id: string; slug: string; at: string }
   | { type: "stacks/remove"; id: string; slug: string; at: string }
   | { type: "stacks/reorder"; id: string; slugs: string[]; at: string }
-  | { type: "workspace/clear"; at: string };
+  | { type: "workspace/clear"; at: string }
+  | {
+      type: "workspace/decide";
+      slug: string;
+      outcome: WorkspaceDecisionOutcome;
+      at: string;
+      eventId?: string;
+      alternatives?: string[];
+      compareObjective?: CompareObjective | null;
+      useCase?: string | null;
+      reason?: string | null;
+      revisitAt?: string | null;
+    }
+  | {
+      type: "workspace/revisited";
+      slug: string;
+      at: string;
+      eventId?: string;
+      revisitAt?: string | null;
+    };
 
 export type LegacyToolWorkspacePersistedState = {
   savedSlugs?: string[];

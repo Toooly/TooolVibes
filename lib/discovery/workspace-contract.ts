@@ -4,12 +4,15 @@ import {
   compareObjectiveValues,
   workspaceDecisionOutcomeValues,
   workspaceUsageValues,
+  relationshipEventTypeValues,
   type CompareObjective,
   type PersonalStack,
+  type RelationshipEventType,
   type WorkspaceAction,
   type WorkspaceDecision,
   type WorkspaceDecisionOutcome,
   type WorkspaceOrderedList,
+  type WorkspaceRelationshipEvent,
   type WorkspaceStateV1,
   type WorkspaceToolState,
   type WorkspaceUsage,
@@ -17,6 +20,8 @@ import {
 import {
   MAX_COMPARE_TOOLS,
   MAX_PERSONAL_STACKS,
+  MAX_RELATIONSHIP_EVENT_ID_LENGTH,
+  MAX_RELATIONSHIP_EVENTS,
   MAX_STACK_DESCRIPTION_LENGTH,
   MAX_STACK_NAME_LENGTH,
   MAX_USE_CASE_LENGTH,
@@ -51,6 +56,10 @@ const usageValues = new Set<WorkspaceUsage>(workspaceUsageValues);
 
 const compareObjectiveValueSet = new Set<CompareObjective>(
   compareObjectiveValues,
+);
+
+const relationshipEventTypeSet = new Set<RelationshipEventType>(
+  relationshipEventTypeValues,
 );
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -239,6 +248,207 @@ function normalizePersonalStacks(value: unknown): PersonalStack[] {
   return stacks;
 }
 
+function normalizeEventId(value: unknown) {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const id = value.trim();
+  if (!id || id.length > MAX_RELATIONSHIP_EVENT_ID_LENGTH) {
+    return null;
+  }
+
+  return id;
+}
+
+function normalizeRelationshipEvent(
+  value: unknown,
+): WorkspaceRelationshipEvent | null {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  const id = normalizeEventId(value.id);
+  const type =
+    typeof value.type === "string" && relationshipEventTypeSet.has(value.type as RelationshipEventType)
+      ? (value.type as RelationshipEventType)
+      : null;
+  const slug = normalizeSlug(value.slug);
+  const at = normalizeTimestamp(value.at);
+
+  if (!id || !type || !slug || !at) {
+    return null;
+  }
+
+  const event: WorkspaceRelationshipEvent = { id, type, slug, at };
+
+  if ("outcome" in value) {
+    if (value.outcome === null) {
+      event.outcome = null;
+    } else if (
+      typeof value.outcome === "string" &&
+      decisionOutcomeValues.has(value.outcome as WorkspaceDecisionOutcome)
+    ) {
+      event.outcome = value.outcome as WorkspaceDecisionOutcome;
+    } else {
+      return null;
+    }
+  }
+
+  if ("reason" in value) {
+    event.reason = value.reason === null ? null : normalizeNote(value.reason);
+    if (value.reason && !event.reason) {
+      return null;
+    }
+  }
+
+  if ("useCase" in value) {
+    event.useCase =
+      value.useCase === null
+        ? null
+        : normalizeBoundedText(value.useCase, MAX_USE_CASE_LENGTH);
+    if (value.useCase && !event.useCase) {
+      return null;
+    }
+  }
+
+  if ("alternatives" in value) {
+    event.alternatives = normalizeSlugList(value.alternatives, {
+      maxLength: MAX_COMPARE_TOOLS,
+    });
+  }
+
+  if ("replacementSlug" in value) {
+    if (value.replacementSlug === null) {
+      event.replacementSlug = null;
+    } else {
+      const replacementSlug = normalizeSlug(value.replacementSlug);
+      if (!replacementSlug) {
+        return null;
+      }
+      event.replacementSlug = replacementSlug;
+    }
+  }
+
+  if ("revisitAt" in value) {
+    if (value.revisitAt === null) {
+      event.revisitAt = null;
+    } else {
+      const revisitAt = normalizeTimestamp(value.revisitAt);
+      if (!revisitAt) {
+        return null;
+      }
+      event.revisitAt = revisitAt;
+    }
+  }
+
+  return event;
+}
+
+function sortRelationshipEvents(events: WorkspaceRelationshipEvent[]) {
+  return [...events].sort((left, right) => {
+    if (left.at !== right.at) {
+      return left.at < right.at ? -1 : 1;
+    }
+    return left.id.localeCompare(right.id);
+  });
+}
+
+function evictRelationshipEvents(events: WorkspaceRelationshipEvent[]) {
+  if (events.length <= MAX_RELATIONSHIP_EVENTS) {
+    return events;
+  }
+
+  const latestDecidedId = new Map<string, string>();
+  for (const event of events) {
+    if (event.type === "decided") {
+      latestDecidedId.set(event.slug, event.id);
+    }
+  }
+
+  const next = [...events];
+  while (next.length > MAX_RELATIONSHIP_EVENTS) {
+    const dropIndex = next.findIndex((event) => {
+      if (event.type !== "decided" && event.type !== "replaced") {
+        return true;
+      }
+      if (event.type === "decided" && latestDecidedId.get(event.slug) === event.id) {
+        return false;
+      }
+      return event.type !== "decided";
+    });
+    next.splice(dropIndex === -1 ? 0 : dropIndex, 1);
+  }
+
+  return next;
+}
+
+function normalizeRelationshipEvents(value: unknown): WorkspaceRelationshipEvent[] {
+  if (value === undefined || value === null) {
+    return [];
+  }
+
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const seen = new Set<string>();
+  const events: WorkspaceRelationshipEvent[] = [];
+  for (const item of value) {
+    const event = normalizeRelationshipEvent(item);
+    if (!event || seen.has(event.id)) {
+      continue;
+    }
+    seen.add(event.id);
+    events.push(event);
+  }
+
+  return evictRelationshipEvents(sortRelationshipEvents(events));
+}
+
+function mergeRelationshipEvents(
+  left: WorkspaceRelationshipEvent[],
+  right: WorkspaceRelationshipEvent[],
+) {
+  const byId = new Map<string, WorkspaceRelationshipEvent>();
+  for (const event of left) {
+    byId.set(event.id, event);
+  }
+  for (const event of right) {
+    if (!byId.has(event.id)) {
+      byId.set(event.id, event);
+    }
+  }
+  return evictRelationshipEvents(sortRelationshipEvents([...byId.values()]));
+}
+
+function derivedEventId(type: RelationshipEventType, slug: string, at: string) {
+  const id = `${type}:${slug}:${at}`;
+  return id.length > MAX_RELATIONSHIP_EVENT_ID_LENGTH
+    ? id.slice(0, MAX_RELATIONSHIP_EVENT_ID_LENGTH)
+    : id;
+}
+
+function appendRelationshipEvent(
+  events: WorkspaceRelationshipEvent[],
+  event: WorkspaceRelationshipEvent,
+) {
+  if (events.some((item) => item.id === event.id)) {
+    return events;
+  }
+  return evictRelationshipEvents(sortRelationshipEvents([...events, event]));
+}
+
+function withAppendedEvent(
+  state: WorkspaceStateV1,
+  event: WorkspaceRelationshipEvent,
+): WorkspaceStateV1 {
+  return normalizeWorkspaceState({
+    ...state,
+    events: appendRelationshipEvent(state.events, event),
+  });
+}
+
 function clonePersonalStack(stack: PersonalStack): PersonalStack {
   return {
     ...stack,
@@ -312,6 +522,7 @@ export function createEmptyWorkspaceState(): WorkspaceStateV1 {
     stack: { slugs: [], updatedAt: null },
     personalStacks: [],
     toolStates: {},
+    events: [],
   };
 }
 
@@ -354,6 +565,7 @@ export function normalizeWorkspaceState(input: unknown): WorkspaceStateV1 {
     stack: normalizeOrderedList(input.stack),
     personalStacks: normalizePersonalStacks(input.personalStacks),
     toolStates,
+    events: normalizeRelationshipEvents(input.events),
   });
 }
 
@@ -643,6 +855,10 @@ function applyClearBoundary(
       return stackTime !== null && stackTime > boundaryTime;
     }),
     toolStates,
+    events: state.events.filter((event) => {
+      const eventTime = timestampValue(event.at);
+      return eventTime !== null && eventTime > boundaryTime;
+    }),
   });
 }
 
@@ -681,6 +897,7 @@ export function mergeWorkspaceStates(
     stack: mergeOrderedLists(left.stack, right.stack),
     personalStacks: mergePersonalStacks(left.personalStacks, right.personalStacks),
     toolStates,
+    events: mergeRelationshipEvents(left.events, right.events),
   });
 }
 
@@ -784,6 +1001,123 @@ export function reduceWorkspaceState(
       stack: { slugs: [], updatedAt: at },
       personalStacks: [],
       toolStates: {},
+      events: [],
+    });
+  }
+
+  if (action.type === "workspace/decide") {
+    if (!decisionOutcomeValues.has(action.outcome)) {
+      return state;
+    }
+
+    const slug = normalizeSlug(action.slug);
+    if (!slug) {
+      return state;
+    }
+
+    const eventId = normalizeEventId(action.eventId) ?? derivedEventId("decided", slug, at);
+    const reason =
+      action.reason === undefined
+        ? undefined
+        : action.reason === null
+          ? null
+          : normalizeNote(action.reason);
+    if (action.reason && reason === null) {
+      return state;
+    }
+    const useCase =
+      action.useCase === undefined
+        ? undefined
+        : action.useCase === null
+          ? null
+          : normalizeBoundedText(action.useCase, MAX_USE_CASE_LENGTH);
+    if (action.useCase && useCase === null) {
+      return state;
+    }
+    const revisitAt =
+      action.revisitAt === undefined
+        ? undefined
+        : action.revisitAt === null
+          ? null
+          : normalizeTimestamp(action.revisitAt);
+    if (action.revisitAt && revisitAt === null) {
+      return state;
+    }
+
+    const alternatives =
+      action.alternatives !== undefined
+        ? normalizeSlugList(action.alternatives, { maxLength: MAX_COMPARE_TOOLS })
+        : state.compare.slugs.length > 0
+          ? [...state.compare.slugs]
+          : (state.toolStates[slug]?.alternatives ?? []);
+
+    const decided = updateToolState(state, slug, at, (current) => ({
+      ...current,
+      decision: {
+        outcome: action.outcome,
+        updatedAt: at,
+      },
+      alternatives,
+      ...(action.useCase !== undefined ? { useCase: useCase ?? null } : {}),
+      ...(action.reason !== undefined ? { note: reason ?? null } : {}),
+      ...(action.revisitAt !== undefined ? { revisitAt: revisitAt ?? null } : {}),
+      ...("compareObjective" in action
+        ? {
+            compareObjective: normalizeCompareObjective(action.compareObjective),
+          }
+        : {}),
+      ...(action.outcome === "rejected" ? { usage: null, replacedBy: null } : {}),
+    }));
+
+    const event: WorkspaceRelationshipEvent = {
+      id: eventId,
+      type: "decided",
+      slug,
+      at,
+      outcome: action.outcome,
+      alternatives,
+    };
+    if (reason !== undefined) event.reason = reason;
+    if (useCase !== undefined) event.useCase = useCase;
+    if (revisitAt !== undefined) event.revisitAt = revisitAt;
+
+    return normalizeWorkspaceState({
+      ...decided,
+      compare: { slugs: [], updatedAt: at },
+      events: appendRelationshipEvent(decided.events, event),
+    });
+  }
+
+  if (action.type === "workspace/revisited") {
+    const slug = normalizeSlug(action.slug);
+    if (!slug) {
+      return state;
+    }
+
+    const revisitAt =
+      action.revisitAt === undefined
+        ? undefined
+        : action.revisitAt === null
+          ? null
+          : normalizeTimestamp(action.revisitAt);
+    if (action.revisitAt && revisitAt === null) {
+      return state;
+    }
+
+    const next =
+      action.revisitAt === undefined
+        ? state
+        : updateToolState(state, slug, at, (current) => ({
+            ...current,
+            revisitAt: revisitAt ?? null,
+          }));
+
+    return withAppendedEvent(next, {
+      id: normalizeEventId(action.eventId) ?? derivedEventId("revisited", slug, at),
+      type: "revisited",
+      slug,
+      at,
+      ...(action.revisitAt !== undefined ? { revisitAt: revisitAt ?? null } : {}),
     });
   }
 
@@ -1056,33 +1390,47 @@ export function reduceWorkspaceState(
         return state;
       }
 
-      return updateToolState(state, slug, at, (current) => ({
-        ...current,
-        decision: {
-          outcome: action.outcome,
-          updatedAt: at,
-        },
-        alternatives:
-          action.alternatives !== undefined
-            ? normalizeSlugList(action.alternatives, {
-                maxLength: MAX_COMPARE_TOOLS,
-              })
-            : action.outcome === null
-              ? current.alternatives
-              : state.compare.slugs.length > 0
-                ? [...state.compare.slugs]
-                : current.alternatives,
-        ...("compareObjective" in action
-          ? {
-              compareObjective: normalizeCompareObjective(
-                action.compareObjective,
-              ),
-            }
-          : {}),
-        ...(action.outcome === "rejected"
-          ? { usage: null, replacedBy: null }
-          : {}),
-      }));
+      {
+        const next = updateToolState(state, slug, at, (current) => ({
+          ...current,
+          decision: {
+            outcome: action.outcome,
+            updatedAt: at,
+          },
+          alternatives:
+            action.alternatives !== undefined
+              ? normalizeSlugList(action.alternatives, {
+                  maxLength: MAX_COMPARE_TOOLS,
+                })
+              : action.outcome === null
+                ? current.alternatives
+                : state.compare.slugs.length > 0
+                  ? [...state.compare.slugs]
+                  : current.alternatives,
+          ...("compareObjective" in action
+            ? {
+                compareObjective: normalizeCompareObjective(
+                  action.compareObjective,
+                ),
+              }
+            : {}),
+          ...(action.outcome === "rejected"
+            ? { usage: null, replacedBy: null }
+            : {}),
+        }));
+
+        if (action.outcome !== null) {
+          return next;
+        }
+
+        return withAppendedEvent(next, {
+          id: derivedEventId("reopened", slug, at),
+          type: "reopened",
+          slug,
+          at,
+          outcome: null,
+        });
+      }
 
     case "tool/use-case": {
       const useCase = normalizeBoundedText(action.useCase, MAX_USE_CASE_LENGTH);
@@ -1105,10 +1453,17 @@ export function reduceWorkspaceState(
         return state;
       }
 
-      return updateToolState(state, slug, at, (current) => ({
+      const next = updateToolState(state, slug, at, (current) => ({
         ...current,
         revisitAt,
       }));
+      return withAppendedEvent(next, {
+        id: derivedEventId("revisit_set", slug, at),
+        type: "revisit_set",
+        slug,
+        at,
+        revisitAt,
+      });
     }
 
     case "tool/usage": {
@@ -1123,7 +1478,7 @@ export function reduceWorkspaceState(
           return state;
         }
 
-        return updateToolState(state, slug, at, (current) => ({
+        const next = updateToolState(state, slug, at, (current) => ({
           ...current,
           usage: "replaced",
           replacedBy,
@@ -1132,10 +1487,17 @@ export function reduceWorkspaceState(
               ? current.decision
               : { outcome: "selected", updatedAt: at },
         }));
+        return withAppendedEvent(next, {
+          id: derivedEventId("replaced", slug, at),
+          type: "replaced",
+          slug,
+          at,
+          replacementSlug: replacedBy,
+        });
       }
 
       if (action.usage === "using") {
-        return updateToolState(state, slug, at, (current) => ({
+        const next = updateToolState(state, slug, at, (current) => ({
           ...current,
           usage: "using",
           replacedBy: null,
@@ -1144,14 +1506,26 @@ export function reduceWorkspaceState(
               ? current.decision
               : { outcome: "selected", updatedAt: at },
         }));
+        return withAppendedEvent(next, {
+          id: derivedEventId("started_using", slug, at),
+          type: "started_using",
+          slug,
+          at,
+        });
       }
 
       if (action.usage === "stopped") {
-        return updateToolState(state, slug, at, (current) => ({
+        const next = updateToolState(state, slug, at, (current) => ({
           ...current,
           usage: "stopped",
           replacedBy: null,
         }));
+        return withAppendedEvent(next, {
+          id: derivedEventId("stopped_using", slug, at),
+          type: "stopped_using",
+          slug,
+          at,
+        });
       }
 
       return updateToolState(state, slug, at, (current) => ({
@@ -1228,6 +1602,7 @@ export function hasWorkspaceData(input: unknown) {
     state.compare.slugs.length > 0 ||
     state.stack.slugs.length > 0 ||
     state.personalStacks.length > 0 ||
-    Object.keys(state.toolStates).length > 0
+    Object.keys(state.toolStates).length > 0 ||
+    state.events.length > 0
   );
 }

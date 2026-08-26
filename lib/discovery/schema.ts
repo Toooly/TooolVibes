@@ -2,6 +2,8 @@ import { z } from "@/lib/validation/zod";
 import {
   MAX_COMPARE_TOOLS,
   MAX_PERSONAL_STACKS,
+  MAX_RELATIONSHIP_EVENT_ID_LENGTH,
+  MAX_RELATIONSHIP_EVENTS,
   MAX_STACK_DESCRIPTION_LENGTH,
   MAX_STACK_NAME_LENGTH,
   MAX_USE_CASE_LENGTH,
@@ -11,6 +13,7 @@ import {
 } from "@/lib/discovery/workspace-constants";
 import {
   compareObjectiveValues,
+  relationshipEventTypeValues,
   workspaceDecisionOutcomeValues,
   workspaceUsageValues,
 } from "@/lib/discovery/types";
@@ -130,6 +133,28 @@ const workspaceToolStatesSchema = z.record(
   workspaceToolStateSchema,
 );
 
+
+export const workspaceRelationshipEventSchema = z
+  .object({
+    id: z.string().trim().min(1).max(MAX_RELATIONSHIP_EVENT_ID_LENGTH),
+    type: z.enum(relationshipEventTypeValues),
+    slug: workspaceSlugSchema,
+    at: workspaceTimestampSchema,
+    outcome: z.enum(workspaceDecisionOutcomeValues).nullable().optional(),
+    reason: z.string().trim().min(1).max(2000).nullable().optional(),
+    useCase: z
+      .string()
+      .trim()
+      .min(1)
+      .max(MAX_USE_CASE_LENGTH)
+      .nullable()
+      .optional(),
+    alternatives: uniqueSlugList(MAX_COMPARE_TOOLS).optional(),
+    replacementSlug: workspaceSlugSchema.nullable().optional(),
+    revisitAt: workspaceTimestampSchema.nullable().optional(),
+  })
+  .strict();
+
 export const workspaceStateV1Schema = z
   .object({
     schemaVersion: z.literal(WORKSPACE_SCHEMA_VERSION),
@@ -139,6 +164,10 @@ export const workspaceStateV1Schema = z
     stack: workspaceOrderedListSchema,
     personalStacks: z.array(personalStackSchema).max(MAX_PERSONAL_STACKS).default([]),
     toolStates: workspaceToolStatesSchema,
+    events: z
+      .array(workspaceRelationshipEventSchema)
+      .max(MAX_RELATIONSHIP_EVENTS)
+      .default([]),
   })
   .strict();
 
@@ -173,6 +202,13 @@ export const workspaceSyncStateV1Schema = workspaceStateV1Schema.superRefine(
         });
       }
     });
+    if (state.events.length > MAX_RELATIONSHIP_EVENTS) {
+      context.addIssue({
+        code: "custom",
+        path: ["events"],
+        message: `Workspace events cannot exceed ${MAX_RELATIONSHIP_EVENTS} entries for remote sync.`,
+      });
+    }
   },
 );
 
