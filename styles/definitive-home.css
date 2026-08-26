@@ -464,7 +464,7 @@
   letter-spacing: -0.025em;
   color: var(--tv-ink-inverted-primary);
   margin: 0;
-  max-width: 24ch;
+  max-width: min(100%, 42ch);
 }
 
 @media (max-width: 767px) {
@@ -1828,7 +1828,7 @@
   font-size: clamp(2.15rem, 5.2vw, 4.15rem);
   line-height: 0.98;
   letter-spacing: -0.035em;
-  max-width: 14ch;
+  max-width: none;
 }
 .def-cockpit__lede {
   max-width: 38rem;
@@ -1921,7 +1921,7 @@
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: #f4f0ea;
-  max-width: 16ch;
+  max-width: none;
 }
 .tv-home-radar__pulse {
   display: grid;

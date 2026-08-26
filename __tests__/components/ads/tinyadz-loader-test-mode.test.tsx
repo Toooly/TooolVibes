@@ -41,10 +41,8 @@ describe("TinyAdzLoader test mode", () => {
   it("serializes test mode false as the string 'false'", () => {
     render(<TinyAdzLoader />);
 
-    expect(
-      document
-        .getElementById("tinyadz-v2")
-        ?.getAttribute("data-test-mode"),
-    ).toBe("false");
+    const script = document.getElementById("tinyadz-v2");
+    expect(script?.getAttribute("data-test-mode")).toBe("false");
+    expect(script?.getAttribute("test-mode")).toBe("false");
   });
 });

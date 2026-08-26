@@ -976,7 +976,7 @@
 
 .partner-stage__headline {
   margin: var(--tv-space-component-lg) 0 0;
-  max-width: 19ch;
+  max-width: min(100%, 36ch);
   color: var(--tv-ink-inverted-primary);
   font-family: var(--tv-font-family-display);
   font-size: var(--tv-partner-headline-size);
@@ -1019,7 +1019,7 @@
   }
 
   .partner-stage__visual {
-    min-height: 22rem;
+    min-height: 12rem;
     border-radius: 0 var(--tv-partner-stage-radius) var(--tv-partner-stage-radius) 0;
   }
 }
@@ -3056,17 +3056,18 @@
 }
 
 .partner-pe--hero .partner-stage__headline {
-  font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.85rem);
-  line-height: 1.15;
-  max-width: 22ch;
+  font-size: clamp(1.2rem, 1.05rem + 0.7vw, 1.55rem);
+  line-height: 1.18;
+  max-width: min(100%, 38ch);
+  text-wrap: pretty;
 }
 
 .partner-pe--hero .partner-stage__lede {
   font-size: 0.95rem;
   line-height: 1.45;
-  max-width: 42ch;
+  max-width: min(100%, 52ch);
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -3081,8 +3082,8 @@
 }
 
 .partner-pe--hero .partner-brand-plate--stage {
-  --partner-plate-max-h: 14rem;
-  width: min(100%, calc(14rem * 2));
+  --partner-plate-max-h: 10rem;
+  width: min(100%, calc(10rem * 2));
 }
 
 @media (min-width: 768px) {
@@ -3092,8 +3093,8 @@
 
   .partner-pe--hero .partner-stage__visual {
     height: 100%;
-    min-height: 14rem;
-    max-height: 18rem; /* ~380px desktop budget with editorial */
+    min-height: 9.5rem;
+    max-height: 12.5rem;
   }
 
   .partner-pe--hero .partner-brand-plate--stage {

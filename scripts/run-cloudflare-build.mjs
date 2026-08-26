@@ -22,6 +22,34 @@ function loadWranglerVars() {
 }
 
 const vars = loadWranglerVars();
+
+function applyTinyAdzDotenv(fileName) {
+  const file = path.join(root, fileName);
+  try {
+    const text = readFileSync(file, "utf8");
+    for (const raw of text.split("\n")) {
+      const line = raw.trim();
+      if (!line || line.startsWith("#")) continue;
+      const eq = line.indexOf("=");
+      if (eq < 1) continue;
+      const key = line.slice(0, eq).trim();
+      if (!key.startsWith("NEXT_PUBLIC_TINYADZ_")) continue;
+      let value = line.slice(eq + 1).trim();
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      if (!process.env[key]) process.env[key] = value;
+    }
+  } catch {
+    // optional local/prod dotenv
+  }
+}
+applyTinyAdzDotenv(".env.production");
+applyTinyAdzDotenv(".env.local");
+
 const required = [
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_ANON_KEY",
@@ -52,6 +80,9 @@ const env = {
     process.env.TOOOLVIBES_RELEASE_NAME ?? "TooolVibes V1.0 MVP GM Release",
   TOOOLVIBES_BUILD_TIMESTAMP:
     process.env.TOOOLVIBES_BUILD_TIMESTAMP ?? new Date().toISOString(),
+  NEXT_PUBLIC_TINYADZ_ENABLED: process.env.NEXT_PUBLIC_TINYADZ_ENABLED,
+  NEXT_PUBLIC_TINYADZ_SITE_ID: process.env.NEXT_PUBLIC_TINYADZ_SITE_ID,
+  NEXT_PUBLIC_TINYADZ_TEST_MODE: process.env.NEXT_PUBLIC_TINYADZ_TEST_MODE,
 };
 
 delete env.SUPABASE_SERVICE_ROLE_KEY;

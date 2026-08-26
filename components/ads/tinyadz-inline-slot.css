@@ -22,12 +22,12 @@
 .tinyadz-inline-slot [ta-ad-container],
 .tinyadz-inline-slot *[ta-ad-container] {
   width: 100%;
-  min-height: 0;
+  min-height: 5.625rem;
 }
 
-/* The TinyAdz inline iframe (when populated) fills the container width. We do
-   NOT force dimensions TinyAdz does not support, and we never reserve a blank
-   area: an empty container collapses to zero height. */
+/* TinyAdz IntersectionObserver uses threshold 0.1. A 0-height container never
+   intersects, so inlined ads never paint. Reserve a short banner strip only
+   after consent (this node is not mounted otherwise). */
 .tinyadz-inline-slot iframe.inlined-ta-ad {
   margin-inline: auto;
 }

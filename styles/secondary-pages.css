@@ -841,7 +841,7 @@
 }
 
 .affiliates-intro .secondary-section__title {
-  max-width: 16ch;
+  max-width: min(100%, 36ch);
   color: var(--tv-ink-inverted);
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.7rem, 3vw, 2.3rem);

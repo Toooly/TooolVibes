@@ -1,6 +1,6 @@
 "use client";
 
-import Script from "next/script";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import {
@@ -17,21 +17,10 @@ import { useAdvertisingConsent } from "@/components/ads/advertising-consent-prov
 /**
  * TinyAdz publisher loader.
  *
- * Mounted once inside the public marketing layout. It renders the TinyAdz
- * script only when ALL of the following hold:
- *
- *  1. the feature flag is enabled (defaults OFF);
- *  2. a site id is configured (defaults none);
- *  3. advertising consent is explicitly `granted` via the canonical
- *     AdvertisingConsentProvider (never `unknown` nor `denied`);
- *  4. the current pathname is an eligible public discovery route.
- *
- * The gate is evaluated on every render, so the script is never mounted on
- * excluded routes. Because the loader lives in the shared marketing layout it
- * is not mounted on admin, auth or dev routes at all.
- *
- * `next/script` with a stable `id` deduplicates the script node across
- * client-side navigations, guaranteeing a single `<script id="tinyadz-v2">`.
+ * TinyAdz v2 reads `document.currentScript`, then falls back to a script whose
+ * `src` contains main.js AND a `site-id` attribute (not only data-site-id).
+ * next/script leaves currentScript null, so we inject a real script node with
+ * both `site-id` and `data-site-id` after consent is granted.
  */
 export function TinyAdzLoader() {
   const pathname = usePathname();
@@ -42,22 +31,26 @@ export function TinyAdzLoader() {
     [TINYADZ_TEST_MODE_ENV]: process.env.NEXT_PUBLIC_TINYADZ_TEST_MODE,
   });
 
-  if (
-    !config.enabled ||
-    !config.siteId ||
-    consent !== "granted" ||
-    !isTinyAdzEligiblePath(pathname)
-  ) {
-    return null;
-  }
+  const shouldLoad =
+    config.enabled &&
+    Boolean(config.siteId) &&
+    consent === "granted" &&
+    isTinyAdzEligiblePath(pathname);
 
-  return (
-    <Script
-      id={TINYADZ_SCRIPT_ID}
-      src={TINYADZ_SCRIPT_URL}
-      strategy="afterInteractive"
-      data-site-id={config.siteId}
-      data-test-mode={config.testMode}
-    />
-  );
+  useEffect(() => {
+    if (!shouldLoad || !config.siteId) return;
+    if (document.getElementById(TINYADZ_SCRIPT_ID)) return;
+
+    const script = document.createElement("script");
+    script.id = TINYADZ_SCRIPT_ID;
+    script.src = TINYADZ_SCRIPT_URL;
+    script.async = true;
+    script.setAttribute("site-id", config.siteId);
+    script.setAttribute("data-site-id", config.siteId);
+    script.setAttribute("test-mode", config.testMode);
+    script.setAttribute("data-test-mode", config.testMode);
+    document.body.appendChild(script);
+  }, [shouldLoad, config.siteId, config.testMode]);
+
+  return null;
 }

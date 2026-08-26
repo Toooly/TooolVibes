@@ -3,7 +3,7 @@
 .marketing-shell :where(h1, h2, h3) {
   hyphens: none;
   overflow-wrap: normal;
-  text-wrap: balance;
+  text-wrap: pretty;
   word-break: normal;
 }
 
