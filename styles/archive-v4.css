@@ -2697,3 +2697,23 @@ a.archive-v4-card:focus-visible {
     overflow-x: clip;
   }
 }
+
+
+/* Wave 6 — compact save overflow trigger + sheet dock offset */
+.ar4-card__save-more {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  background: rgba(18, 13, 46, 0.92);
+  color: #f4f1ff;
+}
+
+.ar4-save-overflow-sheet {
+  padding-bottom: calc(var(--tv-bottom-nav-total, 62px) + env(safe-area-inset-bottom));
+}
+
+.ar4-save-overflow-sheet[data-compare-live="true"] {
+  padding-bottom: calc(var(--tv-bottom-nav-total, 62px) + 2.75rem + env(safe-area-inset-bottom));
+}

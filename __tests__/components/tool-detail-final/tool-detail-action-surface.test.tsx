@@ -1,14 +1,24 @@
 // @vitest-environment jsdom
 
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/account/workspace-actions", () => ({
-  addToolToPersonalStack: vi.fn(),
-  markWorkspaceToolUsing: vi.fn(),
-}));
+vi.mock("@/lib/account/workspace-actions", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/account/workspace-actions")>(
+    "@/lib/account/workspace-actions",
+  );
+  return {
+    ...actual,
+    addToolToPersonalStack: vi.fn((id: string, slug: string) =>
+      actual.addToolToPersonalStack(id, slug),
+    ),
+    markWorkspaceToolUsing: vi.fn(),
+  };
+});
 
 import { ToolDetailActionSurface } from "@/components/tool-detail-final/tool-detail-action-surface";
+import { OverlayProvider } from "@/components/ui/overlay-provider";
+import { closeSaveOverflow } from "@/components/tools/save-overflow-state";
 import {
   addToolToPersonalStack,
   markWorkspaceToolUsing,
@@ -37,24 +47,60 @@ function seedWorkspace(actions: WorkspaceAction[] = []) {
 
 function renderSurface() {
   return render(
-    <ToolDetailActionSurface
-      slug="cursor"
-      name="Cursor"
-      externalUrl="https://cursor.com"
-      primaryLabel="Apri"
-    />,
+    <OverlayProvider>
+      <ToolDetailActionSurface
+        slug="cursor"
+        name="Cursor"
+        externalUrl="https://cursor.com"
+        primaryLabel="Apri"
+      />
+    </OverlayProvider>,
   );
 }
+
+async function openOverflow() {
+  fireEvent.click(screen.getByRole("button", { name: "Altre azioni per Cursor" }));
+  await waitFor(() => {
+    expect(document.querySelector("[data-save-overflow-title]")).toBeTruthy();
+  });
+}
+
+beforeAll(() => {
+  vi.stubGlobal(
+    "ResizeObserver",
+    class ResizeObserver {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    },
+  );
+  vi.stubGlobal("matchMedia", (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+  HTMLElement.prototype.scrollIntoView = vi.fn();
+  HTMLElement.prototype.hasPointerCapture = () => false;
+  HTMLElement.prototype.setPointerCapture = () => undefined;
+  HTMLElement.prototype.releasePointerCapture = () => undefined;
+});
 
 beforeEach(() => {
   window.localStorage.clear();
   seedWorkspace();
+  closeSaveOverflow();
   vi.mocked(markWorkspaceToolUsing).mockClear();
   vi.mocked(addToolToPersonalStack).mockClear();
 });
 
 afterEach(() => {
   cleanup();
+  closeSaveOverflow();
 });
 
 describe("ToolDetailActionSurface personal workspace", () => {
@@ -66,7 +112,7 @@ describe("ToolDetailActionSurface personal workspace", () => {
     expect(screen.queryByRole("button", { name: "Lo sto usando" })).toBeNull();
     expect(screen.queryByLabelText("Aggiungi allo stack")).toBeNull();
     expect(screen.queryByRole("link", { name: "Aggiungi allo stack" })).toBeNull();
-    expect(screen.getByRole("button", { name: "Salva" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Salva Cursor" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Aggiungi al confronto" })).toBeTruthy();
   });
 
@@ -95,11 +141,11 @@ describe("ToolDetailActionSurface personal workspace", () => {
 
     expect(screen.getByText("In uso")).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Lo sto usando" })).toBeNull();
-    expect(screen.getByRole("button", { name: "Rimuovi dai salvati" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Rimuovi Cursor dai Salvati" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Aggiungi al confronto" })).toBeTruthy();
   });
 
-  it("offers Aggiungi allo stack for stacks that do not already include the tool", () => {
+  it("offers Aggiungi allo stack from Speed 2 overflow", async () => {
     seedWorkspace([
       { type: "saved/set", slug: "cursor", saved: true, at: T0 },
       {
@@ -113,12 +159,13 @@ describe("ToolDetailActionSurface personal workspace", () => {
 
     renderSurface();
 
-    const select = screen.getByLabelText("Aggiungi allo stack");
-    fireEvent.change(select, { target: { value: "ai-coding" } });
+    expect(screen.queryByLabelText("Aggiungi allo stack")).toBeNull();
+    await openOverflow();
+    fireEvent.click(screen.getByRole("button", { name: "Aggiungi a AI Coding" }));
     expect(addToolToPersonalStack).toHaveBeenCalledWith("ai-coding", "cursor");
   });
 
-  it("does not offer the stack select when the tool is already in every stack", () => {
+  it("does not offer a stack select when the tool is already in every stack", async () => {
     seedWorkspace([
       { type: "saved/set", slug: "cursor", saved: true, at: T0 },
       {
@@ -135,5 +182,8 @@ describe("ToolDetailActionSurface personal workspace", () => {
 
     expect(screen.queryByLabelText("Aggiungi allo stack")).toBeNull();
     expect(screen.getByText("Nello stack: AI Coding")).toBeTruthy();
+    await openOverflow();
+    expect(screen.getByRole("button", { name: /Nello stack/ })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Aggiungi a AI Coding" })).toBeNull();
   });
 });

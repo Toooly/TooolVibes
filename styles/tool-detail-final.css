@@ -1233,3 +1233,34 @@
   margin: 0;
   font-size: 0.82rem;
 }
+
+
+/* Wave 6 — two-speed save cluster + overflow sheet dock offset */
+.td-final-save-cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.td-final-save-more {
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tv-surface-elevated) 88%, transparent);
+  color: var(--tv-ink-secondary);
+}
+
+.td-final-save-more:focus-visible {
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 3px;
+}
+
+.td-final-save-overflow-sheet {
+  padding-bottom: calc(var(--tv-bottom-nav-total, 62px) + env(safe-area-inset-bottom));
+}
+
+.td-final-save-overflow-sheet[data-compare-live="true"] {
+  padding-bottom: calc(var(--tv-bottom-nav-total, 62px) + 2.75rem + env(safe-area-inset-bottom));
+}

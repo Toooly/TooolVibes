@@ -24,6 +24,8 @@ import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { cn } from "@/lib/utils";
 import { CompareToggle } from "@/components/tools/compare-toggle";
+import { SaveOverflow } from "@/components/tools/save-overflow";
+import { openSaveOverflow } from "@/components/tools/save-overflow-state";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 
 type ArchiveV4ToolCardProps = {
@@ -199,9 +201,15 @@ function ArchiveV4ToolCard({
               compact
               mode="icon"
               toolName={tool.name}
+              onSpeed2Open={() => openSaveOverflow(tool.slug)}
               onChange={() => {
                 /* re-render via store */
               }}
+            />
+            <SaveOverflow
+              slug={tool.slug}
+              toolName={tool.name}
+              triggerClassName="ar4-card__save-more"
             />
             <CompareToggle
               slug={tool.slug}
