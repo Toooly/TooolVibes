@@ -37,6 +37,13 @@ vi.mock("@/components/app/page-transition", () => ({
     createElement("div", { "data-testid": "page-transition" }, children),
 }));
 
+vi.mock("@/components/layout/loop-shell", () => ({
+  LoopShell: ({ children }: { children: ReactNode }) =>
+    createElement("div", { "data-testid": "loop-shell" }, children),
+  LoopShellFallback: ({ children }: { children: ReactNode }) =>
+    createElement("div", { "data-testid": "loop-shell-fallback" }, children),
+}));
+
 import { MarketingChrome } from "@/components/layout/marketing-chrome";
 
 function renderChrome() {
@@ -54,8 +61,8 @@ describe("MarketingChrome — public vs account app", () => {
     cleanup();
   });
 
-  it.each(["/", "/archivio", "/radar", "/compare"])(
-    "public pathname %s keeps marketing chrome",
+  it.each(["/", "/posts", "/collections", "/chi-siamo"])(
+    "magazine pathname %s keeps marketing chrome",
     (pathname) => {
       pathnameState.current = pathname;
       renderChrome();
@@ -67,24 +74,27 @@ describe("MarketingChrome — public vs account app", () => {
       expect(screen.getByTestId("tinyadz-loader")).toBeTruthy();
       expect(screen.getByTestId("page-transition")).toBeTruthy();
       expect(screen.getByText("page-body")).toBeTruthy();
+      expect(screen.queryByTestId("loop-shell")).toBeNull();
       expect(document.getElementById("main-content")?.className).toContain("pb-mobile-nav");
     },
   );
 
-  it.each(["/account", "/account/settings"])(
-    "account pathname %s drops marketing chrome",
-    (pathname) => {
-      pathnameState.current = pathname;
-      renderChrome();
+  it.each([
+    "/archivio",
+    "/radar",
+    "/compare",
+    "/shortlist",
+    "/toools/linear",
+    "/account",
+    "/account/settings",
+  ])("loop pathname %s uses LoopShell instead of marketing chrome", (pathname) => {
+    pathnameState.current = pathname;
+    renderChrome();
 
-      expect(screen.queryByTestId("command-bar")).toBeNull();
-      expect(screen.queryByTestId("mobile-top-bar")).toBeNull();
-      expect(screen.queryByTestId("site-footer-v2")).toBeNull();
-      expect(screen.queryByTestId("mobile-bottom-nav")).toBeNull();
-      expect(screen.queryByTestId("tinyadz-loader")).toBeNull();
-      expect(screen.getByTestId("page-transition")).toBeTruthy();
-      expect(screen.getByText("page-body")).toBeTruthy();
-      expect(document.getElementById("main-content")?.className).not.toContain("pb-mobile-nav");
-    },
-  );
+    expect(screen.getByTestId("loop-shell")).toBeTruthy();
+    expect(screen.getByText("page-body")).toBeTruthy();
+    expect(screen.queryByTestId("command-bar")).toBeNull();
+    expect(screen.queryByTestId("mobile-top-bar")).toBeNull();
+    expect(screen.queryByTestId("mobile-bottom-nav")).toBeNull();
+  });
 });

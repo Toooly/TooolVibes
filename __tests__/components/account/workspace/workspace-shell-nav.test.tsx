@@ -57,6 +57,7 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
   usePublicToolCatalog: () => [],
 }));
 
+import { LoopShellProvider } from "@/components/layout/loop-shell-context";
 import { WorkspaceShell } from "@/components/account/workspace/workspace-shell";
 
 function hrefsNamed(name: string) {
@@ -119,6 +120,16 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     expect(hrefsNamed("Recenti").every((href) => href === "/account?view=recenti")).toBe(true);
     expect(hrefsNamed("Recenti").length).toBeGreaterThan(0);
     expect(hrefsNamed("Segnale")).toEqual([]);
+    expect(screen.getByLabelText("Stato del toolbox")).toBeTruthy();
+  });
+
+  it("drops atelier primary chrome when rendered inside LoopShell", () => {
+    render(createElement(LoopShellProvider, null, createElement(WorkspaceShell)));
+
+    expect(screen.queryByLabelText("Spazio personale")).toBeNull();
+    expect(screen.queryByLabelText("Altre destinazioni")).toBeNull();
+    expect(hrefsNamed("Decisioni")).toEqual([]);
+    expect(hrefsNamed("Recenti")).toEqual([]);
     expect(screen.getByLabelText("Stato del toolbox")).toBeTruthy();
   });
 });

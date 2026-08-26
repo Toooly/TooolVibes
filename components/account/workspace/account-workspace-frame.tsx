@@ -18,6 +18,8 @@ import {
   getPersistenceLabel,
 } from "@/components/account/panel/account-panel-model";
 
+import { useLoopShell } from "@/components/layout/loop-shell-context";
+
 import { useCanonicalWorkspace } from "./use-canonical-workspace";
 import {
   WORKSPACE_DISCOVER_LINKS,
@@ -237,6 +239,7 @@ export function AccountWorkspaceFrame({
   view?: WorkspaceView;
 }) {
   const account = useAccount();
+  const inLoopShell = useLoopShell();
   const persistence = useDiscoveryPersistence();
   const pathname = usePathname() ?? "/account";
   const router = useRouter();
@@ -278,10 +281,12 @@ export function AccountWorkspaceFrame({
   return (
     <div
       id="member-access"
-      className="tv-app tv-app--atelier"
+      className={inLoopShell ? "tv-app tv-app--atelier tv-app--loop" : "tv-app tv-app--atelier"}
       data-account-surface={resolvedSurface}
     >
       <AccountMotionSync />
+      {inLoopShell ? null : (
+      <>
       <aside className="tv-app__sidebar">
         <Link href={workspaceViewHref("riprendi")} className="tv-app__brand">
           TOOOLVIBES
@@ -480,6 +485,8 @@ export function AccountWorkspaceFrame({
           showLocalHint={account.workspaceAttachPending}
         />
       </div>
+      </>
+      )}
 
       <div className="tv-app__main">
         <div className="tv-app__canvas">

@@ -357,6 +357,24 @@ body[data-account-surface] .mobile-top-bar {
   display: none;
 }
 
+.tv-app--loop {
+  display: block;
+  min-height: 0;
+}
+
+.tv-app--loop .tv-app__sidebar,
+.tv-app--loop .tv-app__mobile,
+.tv-app--loop .tv-app__tablet {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .tv-app--loop {
+    display: block;
+    grid-template-columns: none;
+  }
+}
+
 .marketing-shell main:has(.tv-app),
 .marketing-shell main:has(.v-auth-page) {
   padding-bottom: 0;
