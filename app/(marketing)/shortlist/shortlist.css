@@ -582,3 +582,27 @@
   position: relative;
   z-index: 1;
 }
+
+/* Wave 14 — guest board hit targets. Auth Salvati is rows; do not restyle it. */
+.shortlist-final-surface .mobile-library-book__remove-wrap {
+  z-index: 12 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  pointer-events: auto;
+}
+
+.shortlist-final-surface .mobile-library-book__spine {
+  pointer-events: none;
+}
+
+.shortlist-final-surface .mobile-library-book__remove {
+  width: 2.75rem !important;
+  height: 2.75rem !important;
+  min-width: 44px;
+  min-height: 44px;
+  opacity: 1 !important;
+  flex: none;
+}
+

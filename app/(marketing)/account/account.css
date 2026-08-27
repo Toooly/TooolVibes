@@ -3675,11 +3675,21 @@ html[data-tv-reduce-motion="true"] .tv-tool-mark::after {
 
 .tv-compose-stack input,
 .tv-compose-stack textarea {
+  min-height: 2.75rem;
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0;
   background: transparent;
   padding-left: 0;
+}
+
+.tv-compose-stack textarea {
+  min-height: 4.5rem;
+}
+
+.tv-stack-pick--compact input,
+.tv-stack-pick--compact button {
+  min-height: 2.75rem;
 }
 
 .tv-id .tv-app__initials {

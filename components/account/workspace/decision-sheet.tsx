@@ -27,7 +27,7 @@ import { WorkspaceToolMark } from "./workspace-tool-mark";
 
 import "./decision-sheet.css";
 
-const DESKTOP_SHEET_QUERY = "(min-width: 768px)";
+export const DESKTOP_SHEET_QUERY = "(min-width: 1024px)";
 const OUTCOMES: WorkspaceDecisionOutcome[] = ["selected", "rejected", "deferred"];
 
 export type DecisionSheetSource = "compare" | "salvati" | "home" | "shortlist";

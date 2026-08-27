@@ -852,6 +852,7 @@
 .compare-objective {
   position: relative;
   z-index: 2;
+  min-width: 0;
   margin: 0 0 0.75rem;
   padding: 0.9rem 1rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1028,19 +1029,16 @@
   .compare-objective {
     min-width: 0;
     max-width: 100%;
+    overflow-x: visible;
     border-radius: 0.6rem;
     padding: 0.75rem;
   }
 
   .compare-objective__options {
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    flex-wrap: wrap;
+    min-width: 0;
+    overflow: visible;
     padding-bottom: 0.25rem;
-    scrollbar-width: none;
-  }
-
-  .compare-objective__options::-webkit-scrollbar {
-    display: none;
   }
 
   .compare-objective__chip-label {
@@ -1636,8 +1634,8 @@
 
 .compare-workbench-decide-jump {
   position: sticky;
-  bottom: calc(var(--tv-bottom-nav-total, 62px) + 2.75rem);
-  z-index: 20;
+  bottom: calc(var(--tv-bottom-nav-total, 62px) + 2.75rem + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
   width: max-content;
   margin: 0.75rem auto 0.25rem;
 }

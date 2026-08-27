@@ -434,6 +434,15 @@ describe("DecisionSheet — Wave 8", () => {
     }
   });
 
+  it("W14 DecisionSheet desktop query is 1024 not 768", () => {
+    const sheet = readFileSync(
+      join(process.cwd(), "components/account/workspace/decision-sheet.tsx"),
+      "utf8",
+    );
+    expect(sheet).toContain('export const DESKTOP_SHEET_QUERY = "(min-width: 1024px)"');
+    expect(sheet).not.toContain('(min-width: 768px)');
+  });
+
   it("W8-T30 decide does not change schemaVersion", () => {
     seed(workspaceTestFixtures.withSaved);
     expect(getCanonicalToolWorkspaceState().schemaVersion).toBe(1);
