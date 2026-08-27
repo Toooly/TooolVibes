@@ -163,6 +163,16 @@ function renderWorkspacePalette(
   return renderPalette(WORKSPACE_CATALOG);
 }
 
+function renderAuthenticatedPalette(
+  state = createEmptyWorkspaceState(),
+  tools: PublicToolCatalogItem[] = CATALOG,
+) {
+  act(() => {
+    activateToolWorkspaceOwner({ kind: "account", userId: "qa-user" }, state);
+  });
+  return renderPalette(tools);
+}
+
 function openPalette() {
   act(() => {
     fireEvent.keyDown(window, { key: "k", ctrlKey: true });
@@ -190,7 +200,11 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
     openPalette();
 
     expect(screen.getByPlaceholderText("Cerca tool, azioni o sezioni...")).toBeTruthy();
-    expect(screen.getByText("Apri catalogo tool")).toBeTruthy();
+    expect(screen.getByText("Trova")).toBeTruthy();
+    expect(screen.getByText("Vai")).toBeTruthy();
+    expect(screen.getByText("Catalogo")).toBeTruthy();
+    expect(screen.queryByText("Fai")).toBeNull();
+    expect(screen.queryByText("Apri catalogo tool")).toBeNull();
   });
 
   it("returns the same tools as the canonical search service for the same query", () => {
@@ -253,6 +267,9 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
     expect(
       screen.getByText("Nessun risultato. Prova con categoria, nome o caso d’uso."),
     ).toBeTruthy();
+    expect(screen.queryByText("Trova")).toBeNull();
+    expect(screen.queryByText("Vai")).toBeNull();
+    expect(screen.queryByText("Fai")).toBeNull();
   });
 
   it("resets the query when the palette is closed and reopened", () => {
@@ -274,28 +291,35 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
       "Cerca tool, azioni o sezioni...",
     ) as HTMLInputElement;
     expect(reopened.value).toBe("");
-    expect(screen.getByText("Apri catalogo tool")).toBeTruthy();
+    expect(screen.getByText("Catalogo")).toBeTruthy();
   });
 
   it("sends salvati to the workspace library, not /shortlist", () => {
-    renderPalette();
+    renderAuthenticatedPalette();
     openPalette();
 
-    fireEvent.click(screen.getByText("Vai ai tool salvati"));
+    fireEvent.click(screen.getByText("Salvati"));
 
     expect(pushMock).toHaveBeenCalledWith("/account?view=salvati");
     expect(pushMock).not.toHaveBeenCalledWith("/shortlist");
   });
 
   it("lists workspace destinations in empty-query navigation", () => {
-    renderPalette();
+    renderAuthenticatedPalette();
     openPalette();
 
+    expect(screen.getByText("Vai")).toBeTruthy();
+    expect(screen.getByText("Home")).toBeTruthy();
     expect(screen.getByText("Salvati")).toBeTruthy();
-    expect(screen.getByText("Decisioni")).toBeTruthy();
-    expect(screen.getByText("Recenti")).toBeTruthy();
-    expect(screen.getByText("Radar")).toBeTruthy();
+    expect(screen.getByText("Stack")).toBeTruthy();
+    expect(screen.getByText("Catalogo")).toBeTruthy();
+    expect(screen.getByText("Catalogo · Radar")).toBeTruthy();
+    expect(screen.getByText("Impostazioni")).toBeTruthy();
+    expect(screen.queryByText("Decisioni")).toBeNull();
+    expect(screen.queryByText("Recenti")).toBeNull();
     expect(screen.queryByText("Segnale")).toBeNull();
+    expect(screen.queryByText("Biblioteca")).toBeNull();
+    expect(screen.queryByText("Radar")).toBeNull();
     fireEvent.click(screen.getByText("Home"));
 
     expect(pushMock).toHaveBeenCalledWith("/account");
@@ -322,5 +346,106 @@ describe("GlobalCommandPalette — unified search (B31 / IA-504)", () => {
     fireEvent.click(screen.getByText("AI Coding"));
 
     expect(pushMock).toHaveBeenCalledWith("/account?view=stack&stack=ai-coding");
+  });
+});
+
+describe("GlobalCommandPalette — WAVE 12 Trova / Vai / Fai", () => {
+  it("labels populated groups Trova / Vai / Fai", () => {
+    renderWorkspacePalette(workspaceTestFixtures.withCompare);
+    openPalette();
+
+    expect(screen.getByText("Trova")).toBeTruthy();
+    expect(screen.getByText("Vai")).toBeTruthy();
+    expect(screen.getByText("Fai")).toBeTruthy();
+  });
+
+  it("labels Radar as Catalogo · Radar, not a peer dest", () => {
+    renderAuthenticatedPalette();
+    openPalette();
+
+    expect(screen.getByText("Catalogo · Radar")).toBeTruthy();
+    expect(screen.queryByText("Radar")).toBeNull();
+    fireEvent.click(screen.getByText("Catalogo · Radar"));
+    expect(pushMock).toHaveBeenCalledWith("/radar");
+  });
+
+  it("hides Decisioni, Recenti, Segnale and Biblioteca from Vai", () => {
+    renderAuthenticatedPalette();
+    openPalette();
+
+    expect(screen.queryByText("Decisioni")).toBeNull();
+    expect(screen.queryByText("Recenti")).toBeNull();
+    expect(screen.queryByText("Segnale")).toBeNull();
+    expect(screen.queryByText("Biblioteca")).toBeNull();
+    expect(screen.queryByText("Decisioni / Da riprendere")).toBeNull();
+    expect(screen.queryByText("Vai ai tool salvati")).toBeNull();
+    expect(screen.queryByText("Apri i tuoi stack")).toBeNull();
+  });
+
+  it("hides Confronta when compare is empty", () => {
+    renderPalette();
+    openPalette();
+    expect(screen.queryByText("Apri confronto")).toBeNull();
+    expect(screen.queryByText("Fai")).toBeNull();
+  });
+
+  it("shows Confronta in Fai only when compare is live", () => {
+    renderWorkspacePalette(workspaceTestFixtures.withCompare);
+    openPalette();
+    expect(screen.getByText("Fai")).toBeTruthy();
+    expect(screen.getByText("Apri confronto")).toBeTruthy();
+    fireEvent.click(screen.getByText("Apri confronto"));
+    expect(pushMock).toHaveBeenCalledWith("/compare");
+  });
+
+  it("routes a salvati query to the Salvati dest, not /shortlist", () => {
+    renderAuthenticatedPalette();
+    openPalette();
+
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "salvati" } });
+
+    expect(screen.getByText("Vai")).toBeTruthy();
+    expect(screen.getByText("Salvati")).toBeTruthy();
+    expect(screen.queryByText("Trova")).toBeNull();
+    expect(screen.queryByText("Fai")).toBeNull();
+    fireEvent.click(screen.getByText("Salvati"));
+
+    expect(pushMock).toHaveBeenCalledWith("/account?view=salvati");
+    expect(pushMock).not.toHaveBeenCalledWith("/shortlist");
+  });
+
+  it("matches home, catalogo, stack and radar queries to Vai rows", () => {
+    renderAuthenticatedPalette();
+    openPalette();
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+
+    fireEvent.change(input, { target: { value: "home" } });
+    expect(screen.getByText("Home")).toBeTruthy();
+    expect(screen.getByText("Vai")).toBeTruthy();
+
+    fireEvent.change(input, { target: { value: "catalogo" } });
+    expect(screen.getByText("Catalogo")).toBeTruthy();
+    expect(screen.queryByText("Catalogo · Radar")).toBeNull();
+
+    fireEvent.change(input, { target: { value: "stack" } });
+    expect(screen.getByText("Stack")).toBeTruthy();
+
+    fireEvent.change(input, { target: { value: "radar" } });
+    expect(screen.getByText("Catalogo · Radar")).toBeTruthy();
+    expect(screen.queryByText("Radar")).toBeNull();
+  });
+
+  it("hides empty groups", () => {
+    renderPalette();
+    openPalette();
+
+    expect(screen.queryByText("Fai")).toBeNull();
+
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "blink" } });
+    expect(screen.getByText("Trova")).toBeTruthy();
+    expect(screen.queryByText("Vai")).toBeNull();
+    expect(screen.queryByText("Fai")).toBeNull();
   });
 });

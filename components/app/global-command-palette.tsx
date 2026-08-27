@@ -1,21 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
-  BookOpen,
   Bookmark,
-  History,
   House,
   Layers,
   Radar,
   Search,
   Settings,
-  Sparkles,
-  Star,
   Table2,
-  Workflow,
 } from "lucide-react";
 
 import {
@@ -25,22 +20,21 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 import { serializeCatalogUrl } from "@/components/directory/catalog/catalog-controller";
 import { WorkspaceCatalogMark } from "@/components/account/workspace/workspace-tool-mark";
 import {
-  WORKSPACE_VIEW_LABELS,
+  salvatiHref,
   workspaceFocusHref,
   workspaceViewHref,
 } from "@/components/account/workspace/workspace-model";
 import { playTooolvibesSound } from "@/lib/config/sound";
-import { useSignalProgressUiEnabled } from "@/lib/signal-progression/release-context";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import {
   activePersonalStacks,
   deriveResurfaceSignals,
 } from "@/lib/account/workspace-pipeline";
+import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 import {
   resolveToolSearchEngine,
@@ -52,33 +46,31 @@ import {
 } from "@/lib/stores/tool-workspace-store";
 
 /* ═══════════════════════════════════════════════════════════════
-   GlobalCommandPalette (B31 / IA-504) — la ricerca tool usa lo
-   stesso search service canonico dell'archivio: stessa query →
-   stessi tool, e ogni query è raggiungibile anche come URL
-   (/archivio?q=...) condivisibile e ripristinabile.
+   GlobalCommandPalette (B31 / IA-504 / WAVE 12) — Trova / Vai / Fai.
+   La ricerca tool usa lo stesso search service canonico dell'archivio:
+   stessa query → stessi tool, e ogni query è raggiungibile anche come
+   URL (/archivio?q=...) condivisibile e ripristinabile.
    Reversibilità: unifiedSearchEnabled=false riporta i risultati al
    motore legacy Fuse pre-B31 (adapter lib/search/tool-search-adapter).
    ═══════════════════════════════════════════════════════════════ */
 
 const SEARCH_RESULTS_LIMIT = 8;
-
-const WORKSPACE_DESTINATIONS: Array<{
-  href: string;
-  label: string;
-  icon: typeof House;
-}> = [
-  { href: workspaceViewHref("riprendi"), label: WORKSPACE_VIEW_LABELS.riprendi, icon: House },
-  { href: workspaceViewHref("salvati"), label: WORKSPACE_VIEW_LABELS.salvati, icon: Bookmark },
-  { href: workspaceViewHref("stack"), label: WORKSPACE_VIEW_LABELS.stack, icon: Layers },
-  { href: workspaceViewHref("decisioni"), label: WORKSPACE_VIEW_LABELS.decisioni, icon: BookOpen },
-  { href: workspaceViewHref("recenti"), label: WORKSPACE_VIEW_LABELS.recenti, icon: History },
-  { href: workspaceViewHref("segnale"), label: WORKSPACE_VIEW_LABELS.segnale, icon: Sparkles },
-  { href: "/radar", label: "Radar", icon: Radar },
-  { href: "/account/settings", label: "Impostazioni", icon: Settings },
-];
-
 const EMPTY_PERSONAL_LIMIT = 3;
 const QUERY_PERSONAL_LIMIT = 6;
+
+type LucideIcon = ComponentType<{ className?: string }>;
+
+type PaletteItem = {
+  key: string;
+  value: string;
+  label: string;
+  href: string;
+  sound: "nav" | "detail";
+  icon?: LucideIcon;
+  markSlug?: string;
+  meta?: string;
+  trailingArrow?: boolean;
+};
 
 function matchesQuery(value: string, query: string) {
   return value.toLowerCase().includes(query.toLowerCase());
@@ -87,6 +79,10 @@ function matchesQuery(value: string, query: string) {
 function matchesKeyword(query: string, keywords: readonly string[]) {
   const normalized = query.toLowerCase();
   return keywords.some((keyword) => normalized.includes(keyword));
+}
+
+function matchesDestQuery(query: string, matchValues: readonly string[]) {
+  return matchValues.some((value) => matchesQuery(value, query));
 }
 
 function catalogToolName(
@@ -127,6 +123,59 @@ function usingSlugs(state: WorkspaceStateV1) {
     .map(([slug]) => slug);
 }
 
+function vaiDestinations(authenticated: boolean) {
+  return [
+    {
+      id: "home",
+      label: "Home",
+      href: workspaceViewHref("riprendi"),
+      icon: House,
+      matchValues: ["home", "riprendi"],
+      authOnly: true,
+    },
+    {
+      id: "salvati",
+      label: "Salvati",
+      href: salvatiHref(authenticated),
+      icon: Bookmark,
+      matchValues: ["salvati"],
+      authOnly: false,
+    },
+    {
+      id: "stack",
+      label: "Stack",
+      href: workspaceViewHref("stack"),
+      icon: Layers,
+      matchValues: ["stack"],
+      authOnly: true,
+    },
+    {
+      id: "catalogo",
+      label: "Catalogo",
+      href: "/archivio",
+      icon: Search,
+      matchValues: ["catalogo", "archivio"],
+      authOnly: false,
+    },
+    {
+      id: "radar",
+      label: "Catalogo · Radar",
+      href: "/radar",
+      icon: Radar,
+      matchValues: ["radar"],
+      authOnly: false,
+    },
+    {
+      id: "impostazioni",
+      label: "Impostazioni",
+      href: "/account/settings",
+      icon: Settings,
+      matchValues: ["impostazioni", "settings"],
+      authOnly: true,
+    },
+  ].filter((dest) => authenticated || !dest.authOnly);
+}
+
 export function GlobalCommandPalette({
   unifiedSearchEnabled = true,
 }: {
@@ -138,16 +187,10 @@ export function GlobalCommandPalette({
   const [query, setQuery] = useState("");
   const isOpen = useToolWorkspaceStore((state) => state.isCommandOpen);
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
+  const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
   const workspace = getCanonicalToolWorkspaceState();
-  const signalUi = useSignalProgressUiEnabled();
-  const workspaceDestinations = useMemo(
-    () =>
-      WORKSPACE_DESTINATIONS.filter(
-        (item) => item.href !== workspaceViewHref("segnale") || signalUi,
-      ),
-    [signalUi],
-  );
+  const authenticated = getActiveWorkspaceOwner().kind === "account";
 
   const trimmedQuery = query.trim();
   const searchEngine = resolveToolSearchEngine(unifiedSearchEnabled);
@@ -191,14 +234,11 @@ export function GlobalCommandPalette({
       .slice(0, SEARCH_RESULTS_LIMIT);
   }, [trimmedQuery, workspace]);
 
-  const personalAliasGroups = useMemo(() => {
+  const personalAliasItems = useMemo(() => {
     if (!trimmedQuery) return [];
 
-    const groups: Array<{
-      id: string;
-      heading: string;
-      items: Array<{ slug: string; name: string; href: string }>;
-    }> = [];
+    const items: PaletteItem[] = [];
+    const seen = new Set<string>();
 
     const pushGroup = (
       id: string,
@@ -206,13 +246,21 @@ export function GlobalCommandPalette({
       slugs: string[],
       hrefFor: (slug: string) => string,
     ) => {
-      const items = slugs.slice(0, QUERY_PERSONAL_LIMIT).map((slug) => ({
-        slug,
-        name: catalogToolName(tools, slug),
-        href: hrefFor(slug),
-      }));
-      if (items.length === 0) return;
-      groups.push({ id, heading, items });
+      for (const slug of slugs.slice(0, QUERY_PERSONAL_LIMIT)) {
+        const key = `personal:${id}:${slug}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const href = hrefFor(slug);
+        items.push({
+          key,
+          value: key,
+          label: catalogToolName(tools, slug),
+          href,
+          sound: href.startsWith("/toools/") ? "detail" : "nav",
+          icon: Bookmark,
+          meta: heading,
+        });
+      }
     };
 
     if (matchesKeyword(trimmedQuery, ["da riprendere", "riprendi"])) {
@@ -220,7 +268,7 @@ export function GlobalCommandPalette({
         "deferred_due",
         "Da riprendere",
         deferredDueSlugs(workspace),
-        (slug) => workspaceFocusHref("decisioni", slug),
+        (slug) => workspaceFocusHref("salvati", slug),
       );
     }
     if (matchesKeyword(trimmedQuery, ["rimandati", "rimanda"])) {
@@ -228,7 +276,7 @@ export function GlobalCommandPalette({
         "deferred",
         "Rimandati",
         outcomeSlugs(workspace, "deferred"),
-        (slug) => workspaceFocusHref("decisioni", slug),
+        (slug) => workspaceFocusHref("salvati", slug),
       );
     }
     if (matchesKeyword(trimmedQuery, ["scartati", "scarto"])) {
@@ -236,53 +284,162 @@ export function GlobalCommandPalette({
         "rejected",
         "Scartati",
         outcomeSlugs(workspace, "rejected"),
-        (slug) => workspaceFocusHref("decisioni", slug),
+        (slug) => workspaceFocusHref("salvati", slug),
       );
     }
     if (matchesKeyword(trimmedQuery, ["in uso", "usando"])) {
-      pushGroup(
-        "using",
-        "In uso",
-        usingSlugs(workspace),
-        (slug) => `/toools/${slug}`,
-      );
+      pushGroup("using", "In uso", usingSlugs(workspace), (slug) => `/toools/${slug}`);
     }
     if (matchesKeyword(trimmedQuery, ["scelti"])) {
       pushGroup(
         "selected",
         "Scelti",
         outcomeSlugs(workspace, "selected"),
-        (slug) => workspaceFocusHref("decisioni", slug),
+        (slug) => workspaceFocusHref("salvati", slug),
       );
     }
 
-    return groups;
+    return items;
   }, [tools, trimmedQuery, workspace]);
 
-  const emptyPersonalItems = useMemo(() => {
+  const emptyTrovaItems = useMemo(() => {
     if (trimmedQuery) return [];
-    const due = deferredDueSlugs(workspace)
-      .slice(0, EMPTY_PERSONAL_LIMIT)
-      .map((slug) => ({
+    const seen = new Set<string>();
+    const items: PaletteItem[] = [];
+
+    const push = (item: PaletteItem) => {
+      const slug = item.markSlug ?? item.key;
+      if (seen.has(slug)) return;
+      seen.add(slug);
+      items.push(item);
+    };
+
+    for (const slug of deferredDueSlugs(workspace).slice(0, EMPTY_PERSONAL_LIMIT)) {
+      push({
         key: `empty:due:${slug}`,
-        slug,
-        name: catalogToolName(tools, slug),
-        href: workspaceFocusHref("decisioni", slug),
+        value: `empty:due:${slug}`,
+        label: catalogToolName(tools, slug),
+        href: workspaceFocusHref("salvati", slug),
+        sound: "nav",
+        icon: Bookmark,
+        markSlug: slug,
         meta: "Da riprendere",
-        sound: "nav" as const,
-      }));
-    const using = usingSlugs(workspace)
-      .slice(0, EMPTY_PERSONAL_LIMIT)
-      .map((slug) => ({
+      });
+    }
+    for (const slug of usingSlugs(workspace).slice(0, EMPTY_PERSONAL_LIMIT)) {
+      push({
         key: `empty:using:${slug}`,
-        slug,
-        name: catalogToolName(tools, slug),
+        value: `empty:using:${slug}`,
+        label: catalogToolName(tools, slug),
         href: `/toools/${slug}`,
+        sound: "detail",
+        icon: Bookmark,
+        markSlug: slug,
         meta: "In uso",
-        sound: "detail" as const,
-      }));
-    return [...due, ...using];
-  }, [tools, trimmedQuery, workspace]);
+      });
+    }
+    for (const tool of featuredTools) {
+      push({
+        key: `featured:${tool.slug}`,
+        value: `featured:${tool.slug}`,
+        label: tool.name,
+        href: `/toools/${tool.slug}`,
+        sound: "detail",
+        markSlug: tool.slug,
+        meta: tool.levelLabel ?? undefined,
+      });
+    }
+    return items;
+  }, [featuredTools, tools, trimmedQuery, workspace]);
+
+  const vaiItems = useMemo(() => {
+    const dests = vaiDestinations(authenticated);
+    const visible = trimmedQuery
+      ? dests.filter((dest) => matchesDestQuery(trimmedQuery, dest.matchValues))
+      : dests;
+    return visible.map((dest) => ({
+      key: `vai:${dest.id}`,
+      value: `vai:${dest.id}`,
+      label: dest.label,
+      href: dest.href,
+      sound: "nav" as const,
+      icon: dest.icon,
+    }));
+  }, [authenticated, trimmedQuery]);
+
+  const faiItems = useMemo(() => {
+    if (compareSlugs.length < 1) return [];
+    const item: PaletteItem = {
+      key: "fai:confronta",
+      value: "fai:confronta",
+      label: "Apri confronto",
+      href: "/compare",
+      sound: "nav",
+      icon: Table2,
+    };
+    if (!trimmedQuery) return [item];
+    return matchesDestQuery(trimmedQuery, ["confronto", "confronta", "compare"])
+      ? [item]
+      : [];
+  }, [compareSlugs.length, trimmedQuery]);
+
+  const queryTrovaItems = useMemo(() => {
+    if (!trimmedQuery) return [];
+    const items: PaletteItem[] = [...personalAliasItems];
+
+    for (const tool of savedMatches) {
+      items.push({
+        key: `saved:${tool.slug}`,
+        value: `saved:${tool.slug}`,
+        label: tool.name,
+        href: `/toools/${tool.slug}`,
+        sound: "detail",
+        markSlug: tool.slug,
+        meta: tool.levelLabel ?? undefined,
+      });
+    }
+    for (const stack of stackMatches) {
+      items.push({
+        key: `stack:${stack.id}`,
+        value: `stack:${stack.id}`,
+        label: stack.name,
+        href: workspaceViewHref("stack", { stack: stack.id }),
+        sound: "nav",
+        icon: Layers,
+      });
+    }
+    for (const tool of searchResults) {
+      items.push({
+        key: `tool:${tool.slug}`,
+        value: `tool:${tool.slug}`,
+        label: tool.name,
+        href: `/toools/${tool.slug}`,
+        sound: "detail",
+        markSlug: tool.slug,
+        meta: tool.levelLabel ?? undefined,
+      });
+    }
+    if (searchResults.length > 0) {
+      items.push({
+        key: "archive:query",
+        value: "archive:query",
+        label: `Cerca “${trimmedQuery}” nell’archivio`,
+        href: serializeCatalogUrl({ query: trimmedQuery }),
+        sound: "nav",
+        icon: Search,
+        trailingArrow: true,
+      });
+    }
+    return items;
+  }, [
+    personalAliasItems,
+    savedMatches,
+    searchResults,
+    stackMatches,
+    trimmedQuery,
+  ]);
+
+  const trovaItems = trimmedQuery ? queryTrovaItems : emptyTrovaItems;
 
   useEffect(() => setMounted(true), []);
 
@@ -319,19 +476,30 @@ export function GlobalCommandPalette({
     close();
   }
 
-  function openTool(slug: string) {
-    openPath(`/toools/${slug}`, "detail");
+  function renderItems(items: PaletteItem[]) {
+    return items.map((item) => {
+      const Icon = item.icon;
+      return (
+        <CommandItem
+          key={item.key}
+          value={item.value}
+          onSelect={() => openPath(item.href, item.sound)}
+        >
+          {item.markSlug ? (
+            <WorkspaceCatalogMark catalog={tools} slug={item.markSlug} size="xs" />
+          ) : Icon ? (
+            <Icon className="size-4" />
+          ) : null}
+          <span>{item.label}</span>
+          {item.meta ? (
+            <span className="ml-auto text-xs text-[var(--muted)]">{item.meta}</span>
+          ) : item.trailingArrow ? (
+            <ArrowRight className="ml-auto size-3.5 text-[var(--muted)]" />
+          ) : null}
+        </CommandItem>
+      );
+    });
   }
-
-  function openArchiveSearch() {
-    openPath(serializeCatalogUrl({ query: trimmedQuery }));
-  }
-
-  const hasQueryResults =
-    savedMatches.length > 0 ||
-    stackMatches.length > 0 ||
-    personalAliasGroups.length > 0 ||
-    searchResults.length > 0;
 
   return (
     <CommandDialog open={isOpen} onOpenChange={setCommandOpen} shouldFilter={false}>
@@ -342,172 +510,15 @@ export function GlobalCommandPalette({
       />
       <CommandList>
         <CommandEmpty>Nessun risultato. Prova con categoria, nome o caso d’uso.</CommandEmpty>
-        {trimmedQuery ? (
-          hasQueryResults ? (
-            <>
-              {personalAliasGroups.map((group) => (
-                <CommandGroup key={`personal:${group.id}`} heading={group.heading}>
-                  {group.items.map((item) => (
-                    <CommandItem
-                      key={`${group.id}:${item.slug}`}
-                      value={`personal:${group.id}:${item.slug}`}
-                      onSelect={() =>
-                        openPath(
-                          item.href,
-                          item.href.startsWith("/toools/") ? "detail" : "nav",
-                        )
-                      }
-                    >
-                      <Bookmark className="size-4" />
-                      <span>{item.name}</span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ))}
-              {savedMatches.length > 0 ? (
-                <CommandGroup heading="Salvati">
-                  {savedMatches.map((tool) => (
-                    <CommandItem
-                      key={`saved:${tool.slug}`}
-                      value={`saved:${tool.slug}`}
-                      onSelect={() => openTool(tool.slug)}
-                    >
-                      <WorkspaceCatalogMark catalog={tools} slug={tool.slug} size="xs" />
-                      <span>{tool.name}</span>
-                      {tool.levelLabel ? (
-                        <span className="ml-auto text-xs text-[var(--muted)]">
-                          {tool.levelLabel}
-                        </span>
-                      ) : null}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ) : null}
-              {stackMatches.length > 0 ? (
-                <CommandGroup heading="Stack">
-                  {stackMatches.map((stack) => (
-                    <CommandItem
-                      key={`stack:${stack.id}`}
-                      value={`stack:${stack.id}`}
-                      onSelect={() => openPath(workspaceViewHref("stack", { stack: stack.id }))}
-                    >
-                      <Layers className="size-4" />
-                      <span>{stack.name}</span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ) : null}
-              {searchResults.length > 0 ? (
-                <CommandGroup heading="Catalogo">
-                  {searchResults.map((tool) => (
-                    <CommandItem
-                      key={tool.slug}
-                      value={`tool:${tool.slug}`}
-                      onSelect={() => openTool(tool.slug)}
-                    >
-                      <WorkspaceCatalogMark catalog={tools} slug={tool.slug} size="xs" />
-                      <span>{tool.name}</span>
-                      <span className="ml-auto text-xs text-[var(--muted)]">
-                        {tool.levelLabel}
-                      </span>
-                    </CommandItem>
-                  ))}
-                  <CommandItem value="archive:query" onSelect={openArchiveSearch}>
-                    <Search className="size-4" />
-                    <span>Cerca “{trimmedQuery}” nell’archivio</span>
-                    <ArrowRight className="ml-auto size-3.5 text-[var(--muted)]" />
-                  </CommandItem>
-                </CommandGroup>
-              ) : null}
-            </>
-          ) : null
-        ) : (
-          <>
-            <CommandGroup heading="Il tuo Tooolbox">
-              <CommandItem
-                onSelect={() => {
-                  openPath("/archivio");
-                }}
-              >
-                <Search className="size-4" />
-                Apri catalogo tool
-              </CommandItem>
-              <CommandItem
-                onSelect={() => {
-                  openPath(workspaceViewHref("salvati"));
-                }}
-              >
-                <Star className="size-4" />
-                Vai ai tool salvati
-              </CommandItem>
-              <CommandItem
-                onSelect={() => {
-                  openPath("/compare");
-                }}
-              >
-                <Table2 className="size-4" />
-                Apri confronto
-              </CommandItem>
-              <CommandItem
-                onSelect={() => {
-                  openPath(workspaceViewHref("stack"));
-                }}
-              >
-                <Workflow className="size-4" />
-                Apri i tuoi stack
-              </CommandItem>
-              {workspaceDestinations.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <CommandItem
-                    key={item.href}
-                    value={`workspace:${item.href}`}
-                    onSelect={() => openPath(item.href)}
-                  >
-                    <Icon className="size-4" />
-                    {item.label}
-                  </CommandItem>
-                );
-              })}
-            </CommandGroup>
-            {emptyPersonalItems.length > 0 ? (
-              <>
-                <CommandSeparator />
-                <CommandGroup heading="Decisioni / Da riprendere">
-                  {emptyPersonalItems.map((item) => (
-                    <CommandItem
-                      key={item.key}
-                      value={item.key}
-                      onSelect={() => openPath(item.href, item.sound)}
-                    >
-                      <Bookmark className="size-4" />
-                      <span>{item.name}</span>
-                      <span className="ml-auto text-xs text-[var(--muted)]">
-                        {item.meta}
-                      </span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </>
-            ) : null}
-            <CommandSeparator />
-            <CommandGroup heading="Catalogo">
-              {featuredTools.map((tool) => (
-                <CommandItem
-                  key={tool.slug}
-                  value={`featured:${tool.slug}`}
-                  onSelect={() => openTool(tool.slug)}
-                >
-                  <WorkspaceCatalogMark catalog={tools} slug={tool.slug} size="xs" />
-                  <span>{tool.name}</span>
-                  <span className="ml-auto text-xs text-[var(--muted)]">
-                    {tool.levelLabel}
-                  </span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </>
-        )}
+        {trovaItems.length > 0 ? (
+          <CommandGroup heading="Trova">{renderItems(trovaItems)}</CommandGroup>
+        ) : null}
+        {vaiItems.length > 0 ? (
+          <CommandGroup heading="Vai">{renderItems(vaiItems)}</CommandGroup>
+        ) : null}
+        {faiItems.length > 0 ? (
+          <CommandGroup heading="Fai">{renderItems(faiItems)}</CommandGroup>
+        ) : null}
       </CommandList>
     </CommandDialog>
   );
