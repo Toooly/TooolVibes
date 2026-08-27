@@ -66,7 +66,6 @@ vi.mock("@/lib/discovery/client-store", () => ({
   }),
 }));
 
-import { WorkspaceDecisions } from "@/components/account/workspace/workspace-decisions";
 import { WorkspaceShell } from "@/components/account/workspace/workspace-shell";
 
 function catalogFor(slugs: string[]): PublicToolCatalogItem[] {
@@ -130,10 +129,4 @@ describe("WorkspaceDecisions dest — Wave 8 redirect", () => {
     expect(screen.getByRole("dialog", { name: "Meku" })).toBeTruthy();
   });
 
-  it("DELETE-LATER journal still renders traces if mounted directly", () => {
-    catalogRuntime.value = catalogFor(Object.keys(workspaceTestFixtures.mature.toolStates));
-    render(createElement(WorkspaceDecisions, { state: workspaceTestFixtures.mature }));
-    expect(screen.getAllByText("Cursor").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Scelto").length).toBeGreaterThan(0);
-  });
 });

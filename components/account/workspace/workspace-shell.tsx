@@ -15,11 +15,9 @@ import { useAccount } from "@/components/account/account-provider";
 
 import { AccountWorkspaceFrame } from "./account-workspace-frame";
 import { useCanonicalWorkspace } from "./use-canonical-workspace";
-import { WorkspaceActivity } from "./workspace-activity";
 import { WorkspaceBiblioteca } from "./workspace-biblioteca";
 import { parseWorkspaceView, type WorkspaceView } from "./workspace-model";
 import { WorkspaceRiprendi } from "./workspace-riprendi";
-import { WorkspaceSignal } from "./workspace-signal";
 import { WorkspaceStacks } from "./workspace-stacks";
 
 function resolveViewFromSearch(
@@ -42,7 +40,12 @@ function WorkspaceShellView({
   const state = useCanonicalWorkspace();
   const searchParams = useSearchParams();
   const requestedView = resolveViewFromSearch(searchParams, initialView);
-  const view = requestedView === "decisioni" ? "riprendi" : requestedView;
+  const view =
+    requestedView === "decisioni" ||
+    requestedView === "recenti" ||
+    requestedView === "segnale"
+      ? "riprendi"
+      : requestedView;
   const focusSlug = searchParams?.get("focus") ?? null;
   const stackId = searchParams?.get("stack") ?? null;
   const isOnline = useAccountOnlineStatus();
@@ -75,8 +78,6 @@ function WorkspaceShellView({
           <WorkspaceBiblioteca state={state} focusSlug={focusSlug} />
         ) : null}
         {view === "stack" ? <WorkspaceStacks state={state} stackId={stackId} /> : null}
-        {view === "segnale" ? <WorkspaceSignal /> : null}
-        {view === "recenti" ? <WorkspaceActivity state={state} /> : null}
       </div>
     </AccountWorkspaceFrame>
   );

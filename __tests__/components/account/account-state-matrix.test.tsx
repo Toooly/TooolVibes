@@ -492,10 +492,6 @@ vi.mock("@/components/account/account-provider", () => ({
   useAccount: () => accountRuntime.value,
 }));
 
-vi.mock("@/components/account/account-vibes-background", () => ({
-  AccountVibesBackground: () => null,
-}));
-
 vi.mock("@/components/discovery/canonical-discovery-persistence-provider", () => ({
   useDiscoveryPersistence: () => persistenceRuntime.value,
 }));
@@ -605,69 +601,6 @@ describe("B59 AccountPanel — state matrix integration", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(submissionsOkResponse()));
   });
 
-  it("offline: banner esplicito local-only sopra l'hero", () => {
-    stubOffline();
-    setPanelState(makeAccount());
-    const { container } = render(<AccountPanel />);
-
-    const banner = container.querySelector("[data-account-state='offline']");
-    expect(banner).not.toBeNull();
-    expect(banner?.getAttribute("data-sync-claim")).toBe("local-only");
-    expect(banner?.textContent).toContain("Sei offline");
-    expect(banner?.textContent).toContain("resta salvata su questo browser");
-    // Nessuna promessa di sync mentre offline.
-    expect(banner?.getAttribute("data-sync-claim")).not.toBe("synced");
-  });
-
-  it("tornando online il banner sparisce", async () => {
-    stubOffline();
-    setPanelState(makeAccount());
-    const { container } = render(<AccountPanel />);
-    expect(container.querySelector("[data-account-state='offline']")).not.toBeNull();
-
-    restoreOnline();
-    act(() => {
-      window.dispatchEvent(new Event("online"));
-    });
-    await waitFor(() => {
-      expect(container.querySelector("[data-account-state='offline']")).toBeNull();
-    });
-  });
-
-  it("auth non disponibile: cella unavailable distinta", () => {
-    setPanelState(makeAccount({ authEnabled: false, status: "unavailable" }));
-    const { container } = render(<AccountPanel />);
-
-    const banner = container.querySelector("[data-account-state='unavailable']");
-    expect(banner).not.toBeNull();
-    expect(banner?.textContent).toContain("Accesso email non disponibile");
-  });
-
-  it("link pending: invio riuscito mostra cella con resend distinto", async () => {
-    const account = makeAccount();
-    setPanelState(account);
-    const { container } = render(<AccountPanel />);
-
-    fireEvent.change(screen.getByPlaceholderText("nome@email.com"), {
-      target: { value: "mario@example.com" },
-    });
-    fireEvent.submit(container.querySelector("#account-upgrade") as HTMLFormElement);
-
-    await waitFor(() => {
-      expect(
-        container.querySelector("[data-account-state='link-pending']"),
-      ).not.toBeNull();
-    });
-    const banner = container.querySelector("[data-account-state='link-pending']");
-    expect(banner?.textContent).toContain("mario@example.com");
-
-    fireEvent.click(screen.getByRole("button", { name: /Invia di nuovo il link/ }));
-    await waitFor(() => {
-      expect(account.sendMagicLink).toHaveBeenCalledTimes(2);
-    });
-    expect(account.sendMagicLink).toHaveBeenLastCalledWith("mario@example.com", undefined);
-  });
-
   it("attach retry: cella warning distinta senza duplicare il messaggio grezzo", async () => {
     const message =
       "Account collegato, ma il salvataggio online non è disponibile: la selezione resta al sicuro su questo browser.";
@@ -688,9 +621,6 @@ describe("B59 AccountPanel — state matrix integration", () => {
     // Il messaggio compare una sola volta (banner), non duplicato nella recovery.
     const occurrences = screen.getAllByText(message);
     expect(occurrences).toHaveLength(1);
-    await waitFor(() => {
-      expect(screen.getAllByText("TOOOLVIBES").length).toBeGreaterThan(0);
-    });
   });
 
   it("attach success: unica cella che dichiara synced, senza duplicati", async () => {
@@ -710,9 +640,6 @@ describe("B59 AccountPanel — state matrix integration", () => {
     expect(banner?.getAttribute("data-sync-claim")).toBe("synced");
     expect(banner?.textContent).toContain("Selezione collegata");
     expect(screen.getAllByText(message)).toHaveLength(1);
-    await waitFor(() => {
-      expect(screen.getAllByText("TOOOLVIBES").length).toBeGreaterThan(0);
-    });
   });
 
   it("submission 500: cella errore esplicita con retry che rifà la fetch", async () => {

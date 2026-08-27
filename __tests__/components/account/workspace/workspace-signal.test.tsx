@@ -1,84 +1,104 @@
 // @vitest-environment jsdom
 
 import { createElement } from "react";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { emptySignalHub } from "@/lib/account/test-fixtures";
+import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
+import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
+import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
+import { activateToolWorkspaceOwner } from "@/lib/stores/tool-workspace-store";
 
-const fetchSignalHub = vi.hoisted(() => vi.fn());
-const signalUiRuntime = vi.hoisted(() => ({ enabled: false }));
-
-vi.mock("@/lib/signal-progression/client", () => ({
-  fetchSignalHub: (...args: unknown[]) => fetchSignalHub(...args),
+const catalogRuntime = vi.hoisted(() => ({
+  value: [] as PublicToolCatalogItem[],
 }));
 
-vi.mock("@/lib/signal-progression/release-context", () => ({
-  useSignalProgressUiEnabled: () => signalUiRuntime.enabled,
+const { navRuntime } = vi.hoisted(() => ({
+  navRuntime: {
+    pathname: "/account",
+    search: "",
+    push: vi.fn(),
+  },
 }));
 
-vi.mock("@/components/account/panel/account-signal-progress-section", () => ({
-  AccountSignalProgressSection: () =>
-    createElement("div", { "data-testid": "signal-progress-section" }),
+vi.mock("next/navigation", () => ({
+  usePathname: () => navRuntime.pathname,
+  useSearchParams: () => new URLSearchParams(navRuntime.search),
+  useRouter: () => ({ push: navRuntime.push }),
 }));
 
-import { WorkspaceSignal } from "@/components/account/workspace/workspace-signal";
+vi.mock("@/lib/data/public-tool-catalog-context", () => ({
+  usePublicToolCatalog: () => catalogRuntime.value,
+}));
 
-describe("WorkspaceSignal", () => {
+vi.mock("@/components/account/account-provider", () => ({
+  useAccount: () => ({
+    authEnabled: true,
+    status: "authenticated",
+    user: { email: "mario@example.com" },
+    session: { access_token: "token-a" },
+    isSendingLink: false,
+    isAttaching: false,
+    workspaceAttachPending: false,
+    hasQuarantinedWorkspace: false,
+    isRestoringQuarantinedWorkspace: false,
+    authMessage: null,
+    sendMagicLink: vi.fn(),
+    restoreQuarantinedWorkspace: vi.fn(),
+    signOut: vi.fn(),
+  }),
+}));
+
+vi.mock("@/components/discovery/canonical-discovery-persistence-provider", () => ({
+  useDiscoveryPersistence: () => ({ mode: "local", phase: "local-only" }),
+}));
+
+vi.mock("@/lib/discovery/client-store", () => ({
+  useDiscoverySnapshot: () => ({
+    visitedTools: [],
+    exploredCategories: [],
+    shortlist: [],
+    compare: [],
+    shortlistStages: {},
+    decisionMemories: {},
+    toolStateMeta: {},
+    compareMeta: {},
+  }),
+}));
+
+import { WorkspaceShell } from "@/components/account/workspace/workspace-shell";
+
+describe("WorkspaceSignal dest — Wave 15 alias", () => {
+  beforeAll(() => {
+    vi.stubGlobal(
+      "ResizeObserver",
+      class ResizeObserver {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    );
+  });
+
   beforeEach(() => {
-    signalUiRuntime.enabled = false;
-    fetchSignalHub.mockReset();
+    catalogRuntime.value = [];
+    navRuntime.pathname = "/account";
+    navRuntime.search = "";
+    navRuntime.push.mockReset();
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.guestEmpty);
   });
 
   afterEach(() => {
     cleanup();
+    activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
   });
 
-  it("shows the verified level title without map theatre", async () => {
-    fetchSignalHub.mockResolvedValue({
-      ...emptySignalHub(),
-      level: 3,
-      levelTitle: "Builder",
-    });
-
-    render(createElement(WorkspaceSignal));
-
-    await waitFor(() => {
-      expect(screen.getByText("Livello 3 · Builder")).toBeTruthy();
-    });
-
-    expect(screen.queryByRole("list", { name: "Mappa del segnale" })).toBeNull();
-    expect(screen.queryByLabelText("Record personali")).toBeNull();
-    expect(screen.queryByText(/Cinque territori/)).toBeNull();
-  });
-
-  it("does not claim Esploratore when the hub is missing", async () => {
-    fetchSignalHub.mockResolvedValue(null);
-
-    render(createElement(WorkspaceSignal));
-
-    await waitFor(() => {
-      expect(fetchSignalHub).toHaveBeenCalled();
-    });
-
-    expect(screen.queryByText(/Livello 1/)).toBeNull();
-    expect(screen.queryByText("Esploratore")).toBeNull();
-    expect(screen.getByText(/non ci sono XP/)).toBeTruthy();
-  });
-
-  it("keeps the progress section when flags are on", async () => {
-    signalUiRuntime.enabled = true;
-    fetchSignalHub.mockResolvedValue({
-      ...emptySignalHub(),
-      level: 2,
-      levelTitle: "Selezionatore",
-    });
-
-    render(createElement(WorkspaceSignal));
-
-    await waitFor(() => {
-      expect(screen.getByText("Livello 2 · Selezionatore")).toBeTruthy();
-    });
-    expect(screen.getByTestId("signal-progress-section")).toBeTruthy();
+  it("view=segnale renders Home instead of Segnale", () => {
+    navRuntime.search = "view=segnale";
+    render(createElement(WorkspaceShell));
+    expect(screen.queryByText(/Livello /)).toBeNull();
+    expect(screen.queryByText(/non ci sono XP/)).toBeNull();
+    expect(screen.queryByTestId("signal-progress-section")).toBeNull();
+    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
   });
 });

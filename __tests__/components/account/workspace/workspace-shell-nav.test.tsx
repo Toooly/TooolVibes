@@ -60,16 +60,6 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 import { LoopShellProvider } from "@/components/layout/loop-shell-context";
 import { WorkspaceShell } from "@/components/account/workspace/workspace-shell";
 
-function hrefsNamed(name: string) {
-  return screen.queryAllByRole("link", { name }).map((link) => link.getAttribute("href"));
-}
-
-function currentNamed(name: string) {
-  return screen
-    .getAllByRole("link", { name })
-    .map((link) => link.getAttribute("aria-current"));
-}
-
 describe("WorkspaceShell — URL-driven navigation", () => {
   beforeEach(() => {
     navRuntime.pathname = "/account";
@@ -85,8 +75,9 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     navRuntime.search = "view=salvati";
     render(createElement(WorkspaceShell));
 
-    expect(currentNamed("Salvati").every((value) => value === "page")).toBe(true);
-    expect(currentNamed("Home").every((value) => value !== "page")).toBe(true);
+    expect(screen.getByRole("heading", { name: "Salvati" })).toBeTruthy();
+    expect(screen.getByText("Nessun tool salvato ancora")).toBeTruthy();
+    expect(screen.queryByText("Ancora niente da riprendere")).toBeNull();
     expect(screen.queryByRole("tablist")).toBeNull();
     expect(screen.queryByRole("tab")).toBeNull();
   });
@@ -95,32 +86,29 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     navRuntime.search = "view=biblioteca";
     render(createElement(WorkspaceShell));
 
-    expect(currentNamed("Salvati").every((value) => value === "page")).toBe(true);
+    expect(screen.getByRole("heading", { name: "Salvati" })).toBeTruthy();
+    expect(screen.getByText("Nessun tool salvato ancora")).toBeTruthy();
   });
 
   it("falls back to Home for an invalid view", () => {
     navRuntime.search = "view=nope";
     render(createElement(WorkspaceShell));
 
-    expect(currentNamed("Home").every((value) => value === "page")).toBe(true);
-    expect(currentNamed("Salvati").every((value) => value !== "page")).toBe(true);
+    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Salvati" })).toBeNull();
   });
 
-  it("builds real workspace view links, shows Recenti, and keeps Segnale out of chrome while Signal flags are off", () => {
+  it("does not mount atelier sidebar/chips chrome or Decisioni/Recenti/Segnale dests", () => {
     render(createElement(WorkspaceShell));
 
-    expect(hrefsNamed("Home").every((href) => href === "/account")).toBe(true);
-    expect(hrefsNamed("Salvati").every((href) => href === "/account?view=salvati")).toBe(
-      true,
-    );
-    expect(hrefsNamed("Stack").every((href) => href === "/account?view=stack")).toBe(true);
-    expect(hrefsNamed("Decisioni").every((href) => href === "/account?view=decisioni")).toBe(
-      true,
-    );
-    expect(hrefsNamed("Recenti").every((href) => href === "/account?view=recenti")).toBe(true);
-    expect(hrefsNamed("Recenti").length).toBeGreaterThan(0);
-    expect(hrefsNamed("Segnale")).toEqual([]);
+    expect(screen.queryByLabelText("Spazio personale")).toBeNull();
+    expect(screen.queryByLabelText("Altre destinazioni")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Decisioni" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Recenti" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Segnale" })).toBeNull();
     expect(screen.queryByLabelText("Stato del toolbox")).toBeNull();
+    expect(document.querySelector(".tv-app__sidebar")).toBeNull();
+    expect(document.querySelector(".tv-hud")).toBeNull();
   });
 
   it("drops atelier primary chrome when rendered inside LoopShell", () => {
@@ -128,8 +116,8 @@ describe("WorkspaceShell — URL-driven navigation", () => {
 
     expect(screen.queryByLabelText("Spazio personale")).toBeNull();
     expect(screen.queryByLabelText("Altre destinazioni")).toBeNull();
-    expect(hrefsNamed("Decisioni")).toEqual([]);
-    expect(hrefsNamed("Recenti")).toEqual([]);
+    expect(screen.queryByRole("link", { name: "Decisioni" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Recenti" })).toBeNull();
     expect(screen.queryByLabelText("Stato del toolbox")).toBeNull();
   });
 });

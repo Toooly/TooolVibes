@@ -18,7 +18,6 @@ export const WORKSPACE_VIEW_LABELS: Record<WorkspaceView, string> = {
   segnale: "Segnale",
 };
 
-
 export const WORKSPACE_VIEW_KICKERS: Record<WorkspaceView, string> = {
   riprendi: "Riprendi",
   salvati: "Inventario",
@@ -27,21 +26,6 @@ export const WORKSPACE_VIEW_KICKERS: Record<WorkspaceView, string> = {
   recenti: "Filo",
   segnale: "Progressione",
 };
-
-export const WORKSPACE_PRIMARY_VIEWS = [
-  "riprendi",
-  "salvati",
-  "stack",
-  "decisioni",
-] as const;
-
-export const WORKSPACE_SECONDARY_VIEWS = ["recenti", "segnale"] as const;
-
-export const WORKSPACE_DISCOVER_LINKS = [
-  { href: "/archivio", label: "Catalogo" },
-  { href: "/radar", label: "Radar" },
-  { href: "/compare", label: "Confronto" },
-] as const;
 
 export const PIPELINE_LABELS = {
   salvato: "Salvato",

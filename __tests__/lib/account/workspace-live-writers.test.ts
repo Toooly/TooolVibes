@@ -150,9 +150,9 @@ describe("W2-T15 live production callers of tool/decision", () => {
     const panel = read("components/tools/compare-decision-panel.tsx");
     const shortlist = read("components/tools/mobile-shortlist-board.tsx");
     const biblioteca = read("components/account/workspace/workspace-biblioteca.tsx");
-    const decisions = read("components/account/workspace/workspace-decisions.tsx");
+    const sheet = read("components/account/workspace/decision-sheet.tsx");
 
-    for (const source of [panel, shortlist, biblioteca, decisions]) {
+    for (const source of [panel, shortlist, biblioteca, sheet]) {
       expect(source).not.toContain("@/lib/discovery/local-storage");
       expect(source).not.toContain('type: "tool/decision"');
       expect(source).not.toContain("setToolDecisionOutcome");
