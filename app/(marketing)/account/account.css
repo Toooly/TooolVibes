@@ -3375,7 +3375,7 @@ html[data-tv-reduce-motion="true"] .tv-tool-mark::after {
 
 .tv-filo-event__date {
   color: var(--tv-ink-muted-aa);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
 }
 
 .tv-filo-event__line {
