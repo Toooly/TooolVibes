@@ -96,6 +96,17 @@ describe("WorkspacePersonalStatusBadge", () => {
     expect(screen.queryByText("Salvato")).toBeNull();
     expect(screen.queryByText("In uso")).toBeNull();
   });
+
+  it("hides Salvato by default because the heart already communicates it", () => {
+    seedWorkspace([{ type: "saved/set", slug: "cursor", saved: true, at: T0 }]);
+
+    const { container } = render(
+      <WorkspacePersonalStatusBadge slug="cursor" />,
+    );
+
+    expect(container.querySelector("[data-slot='personal-status']")).toBeNull();
+    expect(screen.queryByText("Salvato")).toBeNull();
+  });
 });
 
 describe("ArchiveV4ToolCard personal status", () => {
@@ -106,6 +117,22 @@ describe("ArchiveV4ToolCard personal status", () => {
 
     expect(container.querySelector("[data-slot='personal-status']")).toBeNull();
     expect(container.querySelector(".ar4-card__saved-flag")).toBeNull();
+    expect(screen.queryByText("Salvato")).toBeNull();
+  });
+
+  it("W11-T9 saved fills the heart without a Salvato badge", () => {
+    seedWorkspace([{ type: "saved/set", slug: "cursor", saved: true, at: T0 }]);
+
+    const { container } = render(
+      <ArchiveV4ToolCard tool={makeCatalogTool({ slug: "cursor", name: "Cursor" })} />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "Rimuovi Cursor dai salvati" }).getAttribute(
+        "aria-pressed",
+      ),
+    ).toBe("true");
+    expect(container.querySelector("[data-slot='personal-status']")).toBeNull();
     expect(screen.queryByText("Salvato")).toBeNull();
   });
 
@@ -122,6 +149,21 @@ describe("ArchiveV4ToolCard personal status", () => {
 
     expect(screen.getByText("In uso")).toBeTruthy();
     expect(container.querySelector(".ar4-card__saved-flag")).toBeNull();
+    expect(screen.queryByText("Salvato")).toBeNull();
+  });
+
+  it("W11-T11 Scelto may show when the tool is not just Salvato", () => {
+    seedWorkspace([
+      { type: "saved/set", slug: "cursor", saved: true, at: T0 },
+      { type: "tool/decision", slug: "cursor", outcome: "selected", at: T0 },
+    ]);
+
+    render(
+      <ArchiveV4ToolCard tool={makeCatalogTool({ slug: "cursor", name: "Cursor" })} />,
+    );
+
+    expect(screen.getByText("Scelto")).toBeTruthy();
+    expect(screen.queryByText("Salvato")).toBeNull();
   });
 });
 

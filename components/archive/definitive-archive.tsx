@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 import type { CatalogLevelFilter } from "@/components/directory/catalog/catalog-controller";
 import type { ToolFilterGroup, ToolPublicView } from "@/lib/data/tool-public-view";
 import { ArchiveV4ToolCard } from "./archive-v4-tool-card";
+import { CatalogoFacetHead } from "./catalogo-facet-head";
 
 type DefinitiveArchiveProps = {
   tools: ToolPublicView[];
@@ -230,6 +231,7 @@ export function DefinitiveArchive({
             <h1 id="ar4-intro-title" className="ar4-intro__title">
               Riduci le alternative. Trova i tool da valutare.
             </h1>
+            <CatalogoFacetHead active="tutti" />
             <p className="ar4-intro__lede">
               Cerca per nome o categoria, applica i filtri e restringi la selezione.
               Apri le schede, salva i candidati e confronta quelli più adatti al tuo

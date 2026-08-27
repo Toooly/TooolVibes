@@ -290,4 +290,29 @@ describe("LoopShell — Wave 4", () => {
     render(createElement(LoopShellProvider, null, createElement(Probe)));
     expect(seen).toBe(true);
   });
+
+  it("W11-T3 /radar marks Catalogo current and does not add a Radar tab", () => {
+    navRuntime.pathname = "/radar";
+    renderShell();
+    expect(
+      tabNav()?.querySelector('[data-loop-dest="catalogo"]')?.getAttribute("aria-current"),
+    ).toBe("page");
+    expect(destIds(tabNav())).toEqual(["home", "salvati", "stack", "catalogo"]);
+    expect(destLabels(tabNav())).not.toContain("Radar");
+    expect(destLabels(tabNav())).not.toContain("Segnale");
+  });
+
+  it("W11-T2 W11-T26 Radar is not a loop destination", () => {
+    renderShell();
+    expect(destIds(tabNav())).toHaveLength(4);
+    expect(destIds(tabNav())).not.toContain("radar");
+    cleanup();
+    accountRuntime.status = "guest";
+    navRuntime.pathname = "/radar";
+    renderShell();
+    expect(destIds(tabNav())).toEqual(["salvati", "catalogo"]);
+    expect(
+      tabNav()?.querySelector('[data-loop-dest="catalogo"]')?.getAttribute("aria-current"),
+    ).toBe("page");
+  });
 });

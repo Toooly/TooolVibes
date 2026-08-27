@@ -112,4 +112,37 @@ describe("loop routes — Wave 4", () => {
     expect(loopWordmarkHref("guest")).toBe("/archivio");
     expect(loopWordmarkHref("loading")).toBe("/archivio");
   });
+
+  it("W11-T1 Catalogo remains a primary loop destination", () => {
+    expect(loopPrimaryDestinations("authenticated").map((item) => item.id)).toContain(
+      "catalogo",
+    );
+    expect(loopPrimaryDestinations("guest").map((item) => item.id)).toContain(
+      "catalogo",
+    );
+  });
+
+  it("W11-T2 Radar is not a loop tab", () => {
+    const ids = [
+      ...loopPrimaryDestinations("authenticated"),
+      ...loopPrimaryDestinations("guest"),
+    ].map((item) => item.id);
+    const labels = [
+      ...loopPrimaryDestinations("authenticated"),
+      ...loopPrimaryDestinations("guest"),
+    ].map((item) => item.label);
+    expect(ids).not.toContain("radar");
+    expect(labels).not.toContain("Radar");
+    expect(labels).not.toContain("Segnale");
+  });
+
+  it("W11-T3 /radar active destination is Catalogo", () => {
+    expect(resolveLoopActiveDestination("/radar", "")).toBe("catalogo");
+    expect(resolveLoopActiveDestination("/radar/week", "")).toBe("catalogo");
+  });
+
+  it("W11-T26 dest count stays 4 auth / 2 guest", () => {
+    expect(loopPrimaryDestinations("authenticated")).toHaveLength(4);
+    expect(loopPrimaryDestinations("guest")).toHaveLength(2);
+  });
 });

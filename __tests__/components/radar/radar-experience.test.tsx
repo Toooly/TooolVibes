@@ -304,6 +304,26 @@ describe("RadarExperience", () => {
     expect(mobileEyebrow?.textContent).toContain("Product Hunt · dati reali");
   });
 
+  it("W11-T6 T7 T20 Catalogo facet Tutti | Radar is present and is not Segnale", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
+    renderRadar();
+    await screen.findAllByText("Alpha Tool");
+
+    const tutti = screen.getByRole("link", { name: "Tutti" });
+    const radar = screen.getByRole("link", { name: "Radar" });
+    expect(tutti.getAttribute("href")).toBe("/archivio");
+    expect(radar.getAttribute("href")).toBe("/radar");
+    expect(radar.getAttribute("aria-current")).toBe("page");
+    expect(tutti.getAttribute("aria-current")).toBeNull();
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Segui i lanci. Individua i segnali da approfondire.",
+      }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Segnale" })).toBeNull();
+  });
+
   it("espone una sola eyebrow all'accessibility tree (no doppia lettura)", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
     const { container } = renderRadar();
