@@ -17,6 +17,8 @@ const catalogRuntime = vi.hoisted(() => ({
 const actions = vi.hoisted(() => ({
   markWorkspaceToolUsing: vi.fn(),
   setWorkspaceRevisit: vi.fn(),
+  markWorkspaceRevisited: vi.fn(),
+  reopenWorkspaceDecision: vi.fn(),
 }));
 
 const { navRuntime } = vi.hoisted(() => ({
@@ -40,8 +42,9 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 vi.mock("@/lib/account/workspace-actions", () => ({
   markWorkspaceToolUsing: actions.markWorkspaceToolUsing,
   setWorkspaceRevisit: actions.setWorkspaceRevisit,
+  markWorkspaceRevisited: actions.markWorkspaceRevisited,
   commitWorkspaceDecision: vi.fn(),
-  reopenWorkspaceDecision: vi.fn(),
+  reopenWorkspaceDecision: actions.reopenWorkspaceDecision,
 }));
 
 vi.mock("@/components/account/account-provider", () => ({
@@ -121,6 +124,8 @@ describe("Workspace Home — Wave 5", () => {
     catalogRuntime.value = [];
     actions.markWorkspaceToolUsing.mockReset();
     actions.setWorkspaceRevisit.mockReset();
+    actions.markWorkspaceRevisited.mockReset();
+    actions.reopenWorkspaceDecision.mockReset();
     navRuntime.pathname = "/account";
     navRuntime.search = "";
     navRuntime.push.mockReset();
@@ -196,9 +201,11 @@ describe("Workspace Home — Wave 5", () => {
   it("W5-T8 surfaces a due deferred decision", () => {
     renderHome(workspaceTestFixtures.reviewDue);
     expect(screen.getByText("Meku")).toBeTruthy();
-    expect(
-      screen.queryByText("Rivedi questa decisione") || screen.queryByText("Da riprendere"),
-    ).toBeTruthy();
+    expect(screen.getByText("Rivedi questa decisione")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Ancora vero" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Non più" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Rimanda" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Decidi" })).toBeNull();
   });
 
   it("W5-T9 stays quiet when the revisit is still in the future", () => {
@@ -222,6 +229,8 @@ describe("Workspace Home — Wave 5", () => {
     expect(screen.queryByText("Continua il confronto")).toBeNull();
     expect(screen.queryByText("Rivedi questa decisione")).toBeNull();
     expect(screen.queryByText("Chiudi la decisione")).toBeNull();
+    expect(pageText()).not.toMatch(/0 da rivedere/);
+    expect(pageText()).not.toMatch(/0 recensioni/);
   });
 
   it("W5-T12 orients a new user without KPI zeros", () => {

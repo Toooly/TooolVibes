@@ -3765,3 +3765,93 @@ html[data-tv-reduce-motion="true"] .tv-tool-mark::after {
     grid-template-columns: none;
   }
 }
+
+
+/* Wave 10 — Filo disclosure + Home review. Do not restyle Banco/Salvati/Stack/Catalogo/LoopShell. */
+.tv-filo {
+  margin: 0.35rem 0 0;
+}
+
+.tv-filo__summary {
+  list-style: none;
+  cursor: pointer;
+  color: var(--tv-ink-secondary);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  min-height: 1.75rem;
+}
+
+.tv-filo__summary::-webkit-details-marker {
+  display: none;
+}
+
+.tv-filo-l2 {
+  margin: 0.35rem 0 0;
+  color: var(--tv-ink-secondary);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.tv-filo-events {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.5rem 0 0;
+}
+
+.tv-filo-event {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.tv-filo-event__date {
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.72rem;
+}
+
+.tv-filo-event__line {
+  color: var(--tv-ink-secondary);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.tv-review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.tv-home-review {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.tv-home-review-item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tv-home-review-item .tv-home-row {
+  padding: 0;
+  min-height: 0;
+  border-bottom: 0;
+}
+
+.tv-filo__summary:focus-visible,
+.tv-review-actions button:focus-visible {
+  outline: 2px solid var(--tv-focus-ring, #b9a4ff);
+  outline-offset: 3px;
+}
+
+@media (max-width: 24.375rem) {
+  .tv-review-actions {
+    gap: 0.4rem;
+  }
+
+  .tv-filo {
+    margin-top: 0.25rem;
+  }
+}

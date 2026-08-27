@@ -232,6 +232,16 @@ export function reopenWorkspaceDecision(slug: string) {
   return setWorkspaceDecision(slug, null);
 }
 
+export function markWorkspaceRevisited(slug: string, revisitAt?: string | null) {
+  return applyWorkspaceAction({
+    type: "workspace/revisited",
+    slug,
+    at: nowIso(),
+    eventId: newRelationshipEventId(),
+    ...(revisitAt !== undefined ? { revisitAt } : {}),
+  });
+}
+
 export function setWorkspaceUseCase(slug: string, useCase: string | null) {
   return applyWorkspaceAction({ type: "tool/use-case", slug, useCase, at: nowIso() });
 }

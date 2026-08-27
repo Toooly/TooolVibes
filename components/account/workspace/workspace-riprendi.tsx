@@ -2,8 +2,17 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { markWorkspaceToolUsing, setWorkspaceRevisit } from "@/lib/account/workspace-actions";
-import { USAGE_ACTION_LABELS, formatRevisitLine } from "@/lib/account/workspace-lifecycle";
+import {
+  markWorkspaceRevisited,
+  markWorkspaceToolUsing,
+  reopenWorkspaceDecision,
+  setWorkspaceRevisit,
+} from "@/lib/account/workspace-actions";
+import {
+  USAGE_ACTION_LABELS,
+  formatRevisitLine,
+  revisitAtFromPreset,
+} from "@/lib/account/workspace-lifecycle";
 import {
   HOME_REVIEW_CAP,
   chooseResumeAction,
@@ -15,11 +24,11 @@ import {
   type ResumeKind,
 } from "@/lib/account/workspace-pipeline";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
-import type { WorkspaceStateV1 } from "@/lib/discovery/types";
+import type { WorkspaceStateV1, WorkspaceToolState } from "@/lib/discovery/types";
 
 import { DecisionSheet } from "./decision-sheet";
 import { RevisitWhenChips } from "./revisit-when-chips";
-import { PIPELINE_LABELS, workspaceViewHref } from "./workspace-model";
+import { PIPELINE_LABELS, formatWorkspaceDate, workspaceViewHref } from "./workspace-model";
 import { WorkspaceCatalogMark, WorkspaceMarkStrip } from "./workspace-tool-mark";
 import { toolName } from "./workspace-tool-name";
 import { WorkspaceChip, pipelineTone } from "./workspace-visual";
@@ -36,7 +45,7 @@ const RESUME_COPY: Record<
   review_decision: {
     title: "Rivedi questa decisione",
     body: "L’avevi rimandata. È il momento di riprenderla.",
-    action: "Decidi",
+    action: "Ancora vero",
   },
   close_decision: {
     title: "Chiudi la decisione",
@@ -61,15 +70,69 @@ function resumeHref(kind: Exclude<ResumeKind, "empty">, slug: string | null) {
   return workspaceViewHref("salvati", focus);
 }
 
+function reviewWhy(tool: WorkspaceToolState | undefined) {
+  const useCase = tool?.useCase?.trim();
+  if (useCase) return useCase;
+  const note = tool?.note?.trim();
+  if (!note) return null;
+  if (note.length <= 140) return note;
+  return `${note.slice(0, 137).trimEnd()}…`;
+}
+
+function WorkspaceReviewActions({
+  primary = false,
+  snoozeOpen,
+  onStillTrue,
+  onNoLonger,
+  onRimanda,
+  onSnooze,
+}: {
+  primary?: boolean;
+  snoozeOpen: boolean;
+  onStillTrue: () => void;
+  onNoLonger: () => void;
+  onRimanda: () => void;
+  onSnooze: (revisitAt: string) => void;
+}) {
+  return (
+    <div className="tv-review-actions">
+      <button
+        type="button"
+        className={primary ? "account-btn-primary" : "tv-home-textbtn"}
+        onClick={onStillTrue}
+      >
+        Ancora vero
+      </button>
+      <button type="button" className="tv-home-textbtn" onClick={onNoLonger}>
+        Non più
+      </button>
+      <button
+        type="button"
+        className="tv-home-textbtn"
+        aria-expanded={snoozeOpen}
+        onClick={onRimanda}
+      >
+        Rimanda
+      </button>
+      {snoozeOpen ? <RevisitWhenChips onSelect={onSnooze} /> : null}
+    </div>
+  );
+}
+
 export function WorkspaceRiprendi({
   state,
   focusSlug = null,
+  autoOpenDecide = false,
 }: {
   state: WorkspaceStateV1;
   focusSlug?: string | null;
+  autoOpenDecide?: boolean;
 }) {
   const catalog = usePublicToolCatalog();
-  const [decideSlug, setDecideSlug] = useState<string | null>(focusSlug);
+  const [decideSlug, setDecideSlug] = useState<string | null>(
+    autoOpenDecide ? focusSlug : null,
+  );
+  const [snoozeSlug, setSnoozeSlug] = useState<string | null>(null);
   const resume = chooseResumeAction(state);
   const reviewCap = resume.kind === "review_decision" ? HOME_REVIEW_CAP - 1 : HOME_REVIEW_CAP;
   const reviewQueue = listHomeReviewQueue(state, {
@@ -83,12 +146,17 @@ export function WorkspaceRiprendi({
     resume.kind === "review_decision" && resume.slug
       ? formatRevisitLine(resumeTool?.revisitAt ?? null)
       : null;
+  const resumeWhy = resume.kind === "review_decision" ? reviewWhy(resumeTool) : null;
+  const resumeDecidedAt =
+    resume.kind === "review_decision"
+      ? formatWorkspaceDate(resumeTool?.decision?.updatedAt ?? null)
+      : null;
   const copy = resume.kind !== "empty" ? RESUME_COPY[resume.kind] : null;
   const href = resume.kind !== "empty" ? resumeHref(resume.kind, resume.slug) : null;
 
   useEffect(() => {
-    setDecideSlug(focusSlug);
-  }, [focusSlug]);
+    if (autoOpenDecide) setDecideSlug(focusSlug);
+  }, [autoOpenDecide, focusSlug]);
 
   const decideName = decideSlug ? toolName(catalog, decideSlug) : "";
   const resumeColumn = resume.slug
@@ -98,6 +166,17 @@ export function WorkspaceRiprendi({
       })
     : null;
   const stackName = stackNameForSlug(state, resume.slug);
+
+  function stillTrue(slug: string) {
+    setSnoozeSlug(null);
+    markWorkspaceRevisited(slug, revisitAtFromPreset("3m"));
+  }
+
+  function noLonger(slug: string) {
+    setSnoozeSlug(null);
+    reopenWorkspaceDecision(slug);
+    setDecideSlug(slug);
+  }
 
   return (
     <div className="tv-home">
@@ -145,6 +224,10 @@ export function WorkspaceRiprendi({
                 {copy.body}
                 {resumeRevisit ? ` ${resumeRevisit}.` : null}
               </p>
+              {resumeDecidedAt ? (
+                <p className="tv-home-whisper">{resumeDecidedAt}</p>
+              ) : null}
+              {resumeWhy ? <p className="tv-home-whisper">{resumeWhy}</p> : null}
               {resumeColumn ? (
                 <div className="tv-resume__meta">
                   <WorkspaceChip tone={pipelineTone(resumeColumn)}>
@@ -155,39 +238,42 @@ export function WorkspaceRiprendi({
               {stackName ? <p className="tv-home-whisper">{stackName}</p> : null}
             </div>
           </div>
-          <div className="tv-home-actions">
-            {resume.kind === "confirm_usage" && resume.slug ? (
-              <>
-                <button
-                  type="button"
-                  className="account-btn-primary"
-                  onClick={() => markWorkspaceToolUsing(resume.slug as string)}
-                >
-                  {USAGE_ACTION_LABELS.using}
-                </button>
-                <Link className="tv-home-textbtn" href={href}>
-                  Apri
-                </Link>
-              </>
-            ) : resume.kind === "review_decision" && resume.slug ? (
-              <button
-                type="button"
-                className="account-btn-primary"
-                onClick={() => setDecideSlug(resume.slug)}
-              >
-                {copy.action}
-              </button>
-            ) : (
-              <Link className="account-btn-primary" href={href}>
-                {copy.action}
-              </Link>
-            )}
-          </div>
           {resume.kind === "review_decision" && resume.slug ? (
-            <RevisitWhenChips
-              onSelect={(revisitAt) => setWorkspaceRevisit(resume.slug as string, revisitAt)}
+            <WorkspaceReviewActions
+              primary
+              snoozeOpen={snoozeSlug === resume.slug}
+              onStillTrue={() => stillTrue(resume.slug as string)}
+              onNoLonger={() => noLonger(resume.slug as string)}
+              onRimanda={() =>
+                setSnoozeSlug((current) => (current === resume.slug ? null : resume.slug))
+              }
+              onSnooze={(revisitAt) => {
+                setWorkspaceRevisit(resume.slug as string, revisitAt);
+                setSnoozeSlug(null);
+              }}
             />
-          ) : null}
+          ) : (
+            <div className="tv-home-actions">
+              {resume.kind === "confirm_usage" && resume.slug ? (
+                <>
+                  <button
+                    type="button"
+                    className="account-btn-primary"
+                    onClick={() => markWorkspaceToolUsing(resume.slug as string)}
+                  >
+                    {USAGE_ACTION_LABELS.using}
+                  </button>
+                  <Link className="tv-home-textbtn" href={href}>
+                    Apri
+                  </Link>
+                </>
+              ) : (
+                <Link className="account-btn-primary" href={href}>
+                  {copy.action}
+                </Link>
+              )}
+            </div>
+          )}
         </section>
       ) : null}
 
@@ -198,27 +284,31 @@ export function WorkspaceRiprendi({
           </h2>
           <ul className="tv-home-list">
             {reviewQueue.map((item) => {
-              const revisit = formatRevisitLine(state.toolStates[item.slug]?.revisitAt ?? null);
+              const tool = state.toolStates[item.slug];
+              const revisit = formatRevisitLine(tool?.revisitAt ?? null);
+              const why = reviewWhy(tool);
+              const decidedAt = formatWorkspaceDate(tool?.decision?.updatedAt ?? null);
               return (
-                <li key={item.slug}>
-                  <button
-                    type="button"
-                    className="tv-home-row"
-                    style={{
-                      width: "100%",
-                      border: 0,
-                      background: "transparent",
-                      font: "inherit",
-                      textAlign: "left",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => setDecideSlug(item.slug)}
-                  >
+                <li key={item.slug} className="tv-home-review-item">
+                  <div className="tv-home-row">
                     <span className="tv-home-row__text">{toolName(catalog, item.slug)}</span>
                     <span className="tv-home-row__meta">
-                      {revisit ?? "Rimandata, da riprendere"}
+                      {revisit ?? decidedAt ?? "Rimandata, da riprendere"}
                     </span>
-                  </button>
+                  </div>
+                  {why ? <p className="tv-home-whisper">{why}</p> : null}
+                  <WorkspaceReviewActions
+                    snoozeOpen={snoozeSlug === item.slug}
+                    onStillTrue={() => stillTrue(item.slug)}
+                    onNoLonger={() => noLonger(item.slug)}
+                    onRimanda={() =>
+                      setSnoozeSlug((current) => (current === item.slug ? null : item.slug))
+                    }
+                    onSnooze={(revisitAt) => {
+                      setWorkspaceRevisit(item.slug, revisitAt);
+                      setSnoozeSlug(null);
+                    }}
+                  />
                 </li>
               );
             })}

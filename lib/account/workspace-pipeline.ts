@@ -173,8 +173,9 @@ export function deriveResurfaceSignals(
       const revisitMs = timestampMs(tool?.revisitAt);
       const decidedMs = timestampMs(tool?.decision?.updatedAt ?? null);
       const due =
-        (revisitMs !== null && revisitMs <= now) ||
-        (decidedMs !== null && now - decidedMs >= DEFERRED_STALE_MS);
+        revisitMs !== null
+          ? revisitMs <= now
+          : decidedMs !== null && now - decidedMs >= DEFERRED_STALE_MS;
 
       if (due) {
         signals.push({
@@ -281,6 +282,7 @@ export function listHomeReviewQueue(
         item.kind === "deferred_due" && Boolean(item.slug),
     )
     .filter((item) => !excludeSlug || item.slug !== excludeSlug)
+    .sort((left, right) => (left.at ?? "").localeCompare(right.at ?? ""))
     .slice(0, cap);
 }
 

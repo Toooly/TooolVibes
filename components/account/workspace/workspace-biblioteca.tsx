@@ -35,6 +35,7 @@ import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage
 import { StackPickOrCreate } from "@/components/tools/stack-pick-or-create";
 
 import { DecisionSheet } from "./decision-sheet";
+import { WorkspaceFilo } from "./filo";
 import { RevisitWhenChips } from "./revisit-when-chips";
 import { PIPELINE_LABELS, formatWorkspaceDate } from "./workspace-model";
 import { WorkspaceCatalogMark } from "./workspace-tool-mark";
@@ -451,6 +452,12 @@ function LibraryRow({
             <span>{formatWorkspaceDate(item.updatedAt)}</span>
           ) : null}
         </p>
+        <WorkspaceFilo
+          state={state}
+          slug={item.slug}
+          catalog={catalog}
+          defaultOpen={focused}
+        />
         {replacedName && item.replacedBy ? (
           <WorkspaceReplacement catalog={catalog} fromSlug={item.slug} toSlug={item.replacedBy} />
         ) : null}
