@@ -1,21 +1,17 @@
 "use client";
 
 /**
- * Wave 6 two-speed Save overflow.
+ * Wave 6 two-speed Save overflow + Wave 9 create/add stack from Speed 2.
  * Speed 2 = hold 400ms or ⋯. Desktop ≥1024 popover; below that a bottom sheet.
  * Intent / use-case: deferred — do not call setWorkspaceUseCase / setWorkspaceSaveReason from Save.
  * Analytics: deferred — no save_completed / save_speed2_* events in this wave.
  */
 
 import { useEffect, useState } from "react";
-import { Check, MoreHorizontal } from "lucide-react";
-import { toast } from "sonner";
+import { MoreHorizontal } from "lucide-react";
 
-import {
-  addToolToPersonalStack,
-  removeToolFromPersonalStack,
-  toggleWorkspaceSaved,
-} from "@/lib/account/workspace-actions";
+import { toggleWorkspaceSaved } from "@/lib/account/workspace-actions";
+import { StackPickOrCreate } from "@/components/tools/stack-pick-or-create";
 import { DISCOVERY_SYNC_EVENT } from "@/lib/discovery/workspace-events";
 import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 import {
@@ -40,16 +36,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  openSaveOverflow,
-  useSaveOverflowOpen,
-} from "@/components/tools/save-overflow-state";
+import { useSaveOverflowOpen } from "@/components/tools/save-overflow-state";
 
 export { SAVE_HOLD_MS, SAVE_HOLD_MOVE_CANCEL_PX, useSaveHold } from "@/components/tools/save-hold";
 
 const DESKTOP_OVERFLOW_QUERY = "(min-width: 1024px)";
-const STACK_TOAST_MS = 5000;
-
 
 function useDesktopSaveOverflow() {
   // Always start false so SSR and the first client paint match (sheet trigger).
@@ -96,7 +87,6 @@ function SaveOverflowPanel({
   const inCompare = compareSlugs.includes(slug);
   const compareCount = compareSlugs.length;
   const compareFull = !inCompare && compareCount >= MAX_COMPARE_TOOLS;
-  const activeStacks = workspace.personalStacks.filter((stack) => !stack.archivedAt);
   const isAccount = getActiveWorkspaceOwner().kind === "account";
 
   const handleConfronta = () => {
@@ -105,36 +95,6 @@ function SaveOverflowPanel({
       toggleWorkspaceSaved(slug);
     }
     toggleCompare(slug);
-    onClose();
-  };
-
-  const handleAddToStack = (stackId: string, stackName: string) => {
-    if (getCanonicalToolWorkspaceState().personalStacks.some(
-      (stack) => stack.id === stackId && stack.slugs.includes(slug),
-    )) {
-      return;
-    }
-    if (!getCanonicalToolWorkspaceState().saved.slugs.includes(slug)) {
-      toggleWorkspaceSaved(slug);
-    }
-    addToolToPersonalStack(stackId, slug);
-    if (activeStacks.length >= 2) {
-      toast(`Salvato in ${stackName}`, {
-        duration: STACK_TOAST_MS,
-        action: {
-          label: "Annulla",
-          onClick: () => {
-            removeToolFromPersonalStack(stackId, slug);
-          },
-        },
-        cancel: {
-          label: "Cambia",
-          onClick: () => {
-            openSaveOverflow(slug);
-          },
-        },
-      });
-    }
     onClose();
   };
 
@@ -180,36 +140,11 @@ function SaveOverflowPanel({
         )}
       </div>
 
-      {activeStacks.length > 0 ? (
-        <div className="flex flex-col gap-1">
-          {activeStacks.map((stack) => {
-            const member = stack.slugs.includes(slug);
-            return (
-              <button
-                key={stack.id}
-                type="button"
-                disabled={member}
-                onClick={() => handleAddToStack(stack.id, stack.name)}
-                className="inline-flex min-h-11 items-center justify-between gap-2 rounded-lg px-3 text-left text-sm text-[var(--tv-ink-primary)] hover:bg-[var(--tv-surface-elevated)] disabled:opacity-80"
-              >
-                <span>{member ? `Nello stack · ${stack.name}` : `Aggiungi a ${stack.name}`}</span>
-                {member ? <Check className="h-4 w-4" aria-hidden="true" /> : null}
-              </button>
-            );
-          })}
-        </div>
-      ) : isAccount ? (
-        <a
-          href="/account?view=stack"
-          className="min-h-11 px-3 text-[length:var(--tv-text-xs)] text-[var(--tv-ink-muted-aa)] underline-offset-2 hover:underline"
-        >
-          I tuoi stack
-        </a>
-      ) : (
-        /* Soft login (S22) is deferred: guests with 0 stacks omit the stack
-           section instead of prompting Accedi. Named-stack create-from-save is Wave 9. */
-        null
-      )}
+      <StackPickOrCreate
+        slug={slug}
+        onDone={onClose}
+        allowCreate={isAccount}
+      />
     </div>
   );
 }

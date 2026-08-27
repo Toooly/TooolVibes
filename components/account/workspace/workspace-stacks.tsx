@@ -531,13 +531,22 @@ function StackDetail({
       </div>
 
       {stack.slugs.length >= 2 ? (
-        <Link
-          href="/compare"
-          className="account-btn-secondary"
-          onClick={() => queueStackCompare(stack.slugs, state.compare.slugs)}
-        >
-          Confronta questi tool
-        </Link>
+        <div className="tv-stacks-compare">
+          {stack.slugs.length >
+          Math.max(0, MAX_COMPARE_TOOLS - state.compare.slugs.length) ? (
+            <p className="tv-stacks-compare-hint">
+              Il confronto tiene al massimo {MAX_COMPARE_TOOLS}. Verranno
+              aggiunti i primi posti liberi.
+            </p>
+          ) : null}
+          <Link
+            href="/compare"
+            className="account-btn-secondary"
+            onClick={() => queueStackCompare(stack.slugs, state.compare.slugs)}
+          >
+            Confronta questi tool
+          </Link>
+        </div>
       ) : null}
 
       {archived ? (

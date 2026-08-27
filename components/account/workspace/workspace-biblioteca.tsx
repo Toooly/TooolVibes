@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import {
-  addToolToPersonalStack,
   deferWorkspaceTool,
   markWorkspaceToolReplaced,
   markWorkspaceToolStopped,
@@ -24,7 +23,6 @@ import {
 } from "@/lib/account/workspace-lifecycle";
 import {
   PIPELINE_COLUMNS,
-  activePersonalStacks,
   listPipelineItems,
   type PipelineColumn,
   type PipelineItem,
@@ -33,6 +31,8 @@ import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 import type { WorkspaceDecisionOutcome, WorkspaceStateV1, WorkspaceUsage } from "@/lib/discovery/types";
+import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
+import { StackPickOrCreate } from "@/components/tools/stack-pick-or-create";
 
 import { DecisionSheet } from "./decision-sheet";
 import { RevisitWhenChips } from "./revisit-when-chips";
@@ -151,7 +151,6 @@ export function WorkspaceBiblioteca({
     defaultOutcome: WorkspaceDecisionOutcome;
   } | null>(null);
   const items = listPipelineItems(state);
-  const stacks = activePersonalStacks(state);
   const columnCounts = useMemo(() => {
     const counts = Object.fromEntries(PIPELINE_COLUMNS.map((column) => [column, 0])) as Record<
       (typeof PIPELINE_COLUMNS)[number],
@@ -357,7 +356,6 @@ export function WorkspaceBiblioteca({
               item={item}
               state={state}
               catalog={catalog}
-              stacks={stacks}
               category={categoryOf(catalogBySlug, item.slug)}
               focused={focusSlug === item.slug}
               noteOpen={openNote === item.slug}
@@ -397,7 +395,6 @@ function LibraryRow({
   item,
   state,
   catalog,
-  stacks,
   category,
   focused,
   noteOpen,
@@ -407,7 +404,6 @@ function LibraryRow({
   item: PipelineItem;
   state: WorkspaceStateV1;
   catalog: readonly PublicToolCatalogItem[];
-  stacks: ReturnType<typeof activePersonalStacks>;
   category: string;
   focused: boolean;
   noteOpen: boolean;
@@ -418,7 +414,6 @@ function LibraryRow({
   const catalogItem = catalog.find((tool) => tool.slug === item.slug);
   const inCompare = state.compare.slugs.includes(item.slug);
   const compareFull = !inCompare && state.compare.slugs.length >= MAX_COMPARE_TOOLS;
-  const availableStacks = stacks.filter((stack) => !stack.slugs.includes(item.slug));
   const [draft, setDraft] = useState(item.note ?? "");
   const rejected = item.outcome === "rejected";
   const showMarkUsing =
@@ -563,33 +558,11 @@ function LibraryRow({
               />
             </div>
           ) : null}
-          {availableStacks.length > 0 ? (
-            <label className="tv-lib-action tv-lib-action--field">
-              <span>Aggiungi a uno stack</span>
-              <select
-                defaultValue=""
-                onChange={(event) => {
-                  if (event.target.value) {
-                    addToolToPersonalStack(event.target.value, item.slug);
-                  }
-                  event.target.value = "";
-                }}
-              >
-                <option value="">Scegli stack</option>
-                {availableStacks.map((stack) => (
-                  <option key={stack.id} value={stack.id}>
-                    {stack.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : stacks.length === 0 ? (
-            <Link className="tv-lib-action" href="/account?view=stack">
-              Nessuno stack attivo
-            </Link>
-          ) : (
-            <p className="tv-lib-action tv-lib-action--status">Già in tutti gli stack</p>
-          )}
+          <StackPickOrCreate
+            slug={item.slug}
+            allowCreate={getActiveWorkspaceOwner().kind === "account"}
+            compact
+          />
           <button type="button" className="tv-lib-action" onClick={onToggleNote}>
             {noteOpen ? "Chiudi nota" : item.note ? "Modifica nota" : "Aggiungi nota"}
           </button>

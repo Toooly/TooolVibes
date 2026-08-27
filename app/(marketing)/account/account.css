@@ -1536,6 +1536,25 @@ body[data-account-surface] .mobile-top-bar {
   line-height: 1.5;
 }
 
+.tv-stacks-compare-hint {
+  margin: 0 0 0.45rem;
+  color: var(--tv-ink-secondary);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.tv-lib-menu__panel:has([data-stack-pick]) {
+  min-width: min(18.5rem, calc(100vw - 1.5rem));
+  max-height: min(70vh, 28rem);
+  overflow: auto;
+}
+
+.tv-lib-menu__panel [data-stack-pick] input:focus-visible,
+.tv-lib-menu__panel [data-stack-pick] button:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--tv-accent-violet, #b388ff) 70%, transparent);
+  outline-offset: 2px;
+}
+
 .tv-stacks-split {
   display: grid;
   gap: 1.1rem;
