@@ -1,20 +1,15 @@
 // @vitest-environment jsdom
 
-import { createElement } from "react";
 import {
   cleanup,
   fireEvent,
   render,
   screen,
-  waitFor,
-  within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { DiscoveryLocalSnapshot } from "@/lib/discovery/local-storage";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-context";
-
-/* ── Runtime mock controllabili dai singoli test ───────────────── */
 
 const accountRuntime = vi.hoisted(() => ({
   value: null as unknown,
@@ -32,24 +27,6 @@ const catalogRuntime = vi.hoisted(() => ({
   value: [] as unknown[],
 }));
 
-const gamificationRuntime = vi.hoisted(() => ({
-  summary: {
-    hasRewardedSurface: false,
-    firstRewardedSurface: null as string | null,
-  },
-  surfaces: {
-    missions: { mode: "OFF", surfaceEnabled: false, persistentRewardsEnabled: false },
-    vibeRush: { mode: "OFF", surfaceEnabled: false, persistentRewardsEnabled: false },
-  },
-  gameProfile: {
-    profile: null as null | { xp: number; level: number; streak_days: number },
-    isLoading: false,
-  },
-  badges: [] as Array<Record<string, never>>,
-  localXp: 0,
-}));
-
-
 const navigationRuntime = vi.hoisted(() => ({
   pathname: "/account",
   search: "",
@@ -66,10 +43,6 @@ vi.mock("@/components/account/account-provider", () => ({
   useAccount: () => accountRuntime.value,
 }));
 
-vi.mock("@/components/account/account-vibes-background", () => ({
-  AccountVibesBackground: () => null,
-}));
-
 vi.mock("@/components/discovery/canonical-discovery-persistence-provider", () => ({
   useDiscoveryPersistence: () => persistenceRuntime.value,
 }));
@@ -82,47 +55,10 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
   usePublicToolCatalog: () => catalogRuntime.value,
 }));
 
-vi.mock("@/lib/gamification/release-context", () => ({
-  useGamificationReleaseSummary: () => gamificationRuntime.summary,
-  useGamificationSurface: (key: "missions" | "vibeRush") =>
-    gamificationRuntime.surfaces[key],
-}));
-
-vi.mock("@/lib/gamification/hooks/use-game-profile", () => ({
-  useGameProfile: () => gamificationRuntime.gameProfile,
-}));
-
-vi.mock("@/lib/gamification/hooks/use-badges", () => ({
-  useBadges: () => ({ badges: gamificationRuntime.badges }),
-}));
-
-vi.mock("@/lib/gamification/game-progress-store", () => ({
-  useGameProgressStore: (selector: (state: { totalXp: number }) => unknown) =>
-    selector({ totalXp: gamificationRuntime.localXp }),
-}));
-
-vi.mock("@/components/gamification/game-mission-panel", () => ({
-  GameMissionPanel: () => null,
-}));
-
-vi.mock("@/components/gamification/game-profile-bar", () => ({
-  GameProfileBar: () => null,
-}));
-
-vi.mock("@/components/gamification/vibe-tap-mini-game", () => ({
-  VibeTapMiniGame: () => null,
-}));
-
-vi.mock("@number-flow/react", () => ({
-  default: ({ value }: { value: number }) => createElement("span", null, String(value)),
-}));
-
 import { AccountPanel } from "@/components/account/account-panel";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean })
   .IS_REACT_ACT_ENVIRONMENT = true;
-
-/* ── Builder fixture ───────────────────────────────────────────── */
 
 function makeAccount(overrides: Record<string, unknown> = {}) {
   return {
@@ -159,15 +95,6 @@ function makeDiscovery(
   };
 }
 
-function makeTool(slug: string, name: string, categoryLabel: string) {
-  return {
-    slug,
-    name,
-    categoryLabel,
-    shortDescription: `${name} in breve.`,
-  } as unknown as PublicToolCatalogItem;
-}
-
 function setPanelState({
   account,
   discovery = makeDiscovery(),
@@ -182,24 +109,12 @@ function setPanelState({
   catalogRuntime.value = catalog;
 }
 
-function heroOf(container: HTMLElement) {
-  return within(container.querySelector(".account-hero") as HTMLElement);
-}
-
 beforeEach(() => {
   navigationRuntime.pathname = "/account";
   navigationRuntime.search = "";
   navigationRuntime.push.mockReset();
   window.history.replaceState({}, "", "/");
   persistenceRuntime.value = { mode: "local", phase: "local-only" };
-  gamificationRuntime.summary = { hasRewardedSurface: false, firstRewardedSurface: null };
-  gamificationRuntime.surfaces = {
-    missions: { mode: "OFF", surfaceEnabled: false, persistentRewardsEnabled: false },
-    vibeRush: { mode: "OFF", surfaceEnabled: false, persistentRewardsEnabled: false },
-  };
-  gamificationRuntime.gameProfile = { profile: null, isLoading: false };
-  gamificationRuntime.badges = [];
-  gamificationRuntime.localXp = 0;
   vi.stubGlobal(
     "fetch",
     vi.fn().mockResolvedValue({
@@ -215,146 +130,45 @@ afterEach(() => {
   window.history.replaceState({}, "", "/");
 });
 
-/* ── Guest ─────────────────────────────────────────────────────── */
-
 describe("AccountPanel — stato guest", () => {
-  it("mostra form magic link, badge e messaggi guest senza fetchare submission", () => {
+  it("does not mount the retired guest workspace panel", () => {
     const account = makeAccount();
     setPanelState({ account });
     const { container } = render(<AccountPanel />);
 
-    const hero = heroOf(container);
-    expect(hero.getByText("Accesso attivabile")).toBeTruthy();
-    expect(hero.getByText("Continua con email")).toBeTruthy();
-    expect(hero.getByText("Salvato su questo dispositivo")).toBeTruthy();
-
-    expect(screen.getByPlaceholderText("nome@email.com")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Invia link" })).toBeTruthy();
-    expect(
-      screen.getByText(
-        "Accedi per vedere lo stato delle submission associate alla tua email.",
-      ),
-    ).toBeTruthy();
-    expect(screen.queryByText("Account connesso")).toBeNull();
+    expect(container.querySelector(".account-hero")).toBeNull();
+    expect(screen.queryByPlaceholderText("nome@email.com")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Invia link" })).toBeNull();
     expect(fetch).not.toHaveBeenCalled();
-  });
-
-  it("invia la richiesta magic link e resetta i campi su esito positivo", async () => {
-    const account = makeAccount();
-    setPanelState({ account });
-    const { container } = render(<AccountPanel />);
-
-    fireEvent.change(screen.getByPlaceholderText("nome@email.com"), {
-      target: { value: "mario@example.com" },
-    });
-    fireEvent.submit(container.querySelector("#account-upgrade") as HTMLFormElement);
-
-    await waitFor(() => {
-      expect(account.sendMagicLink).toHaveBeenCalledWith("mario@example.com", undefined);
-    });
-    await waitFor(() => {
-      expect(
-        (screen.getByPlaceholderText("nome@email.com") as HTMLInputElement).value,
-      ).toBe("");
-    });
-  });
-
-  it("mostra lo stato di invio in corso con pulsante disabilitato", () => {
-    const account = makeAccount({ isSendingLink: true });
-    setPanelState({ account });
-    render(<AccountPanel />);
-
-    const button = screen.getByRole("button", { name: /Invio/ }) as HTMLButtonElement;
-    expect(button.disabled).toBe(true);
-    expect(screen.getByText("Invio...")).toBeTruthy();
-  });
-
-  it("senza auth disabilita il form e dichiara la sessione locale", () => {
-    const account = makeAccount({ authEnabled: false, status: "unavailable" });
-    setPanelState({ account });
-    const { container } = render(<AccountPanel />);
-
-    expect(heroOf(container).getAllByText("Continua senza account").length).toBeGreaterThan(0);
-    const button = screen.getByRole("button", { name: "Invia link" }) as HTMLButtonElement;
-    expect(button.disabled).toBe(true);
-    expect(
-      screen.getByText("Accesso email non disponibile in questo momento."),
-    ).toBeTruthy();
   });
 });
 
-/* ── Authenticated ─────────────────────────────────────────────── */
-
 describe("AccountPanel — stato authenticated", () => {
-  it("mostra account connesso, fetcha le submission e permette il sign out", async () => {
+  it("mostra lo spazio autenticato senza chrome Decisioni/Recenti/Segnale", async () => {
     const account = makeAccount({
       status: "authenticated",
       user: { email: "mario@example.com" },
       session: { access_token: "token-a" },
     });
-    vi.mocked(fetch).mockResolvedValue({
-      json: async () => ({
-        toolRequests: [
-          {
-            id: "t1",
-            tool_name: "Tool Alpha",
-            tool_url: "https://alpha.dev",
-            submitter_type: "founder",
-            status: "pending",
-            created_at: "2026-07-01T10:00:00Z",
-          },
-        ],
-        affiliateRequests: [
-          {
-            id: "a1",
-            brand_name: "Brand Beta",
-            status: "approved",
-            referral_url: "https://ref.example.com",
-            created_at: "2026-07-02T10:00:00Z",
-          },
-        ],
-        remoteAvailable: true,
-      }),
-    } as Response);
     setPanelState({ account });
     render(<AccountPanel />);
 
-    expect(screen.getAllByText("TOOOLVIBES").length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "Home" }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "Biblioteca" }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "Impostazioni" }).length).toBeGreaterThan(0);
+    expect(document.querySelector(".tv-app")).toBeTruthy();
+    expect(document.querySelector(".tv-app--loop")).toBeTruthy();
+    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
     expect(screen.queryByPlaceholderText("nome@email.com")).toBeNull();
-    expect(screen.queryByText("Proposta founder")).toBeNull();
     expect(screen.queryByText("Gamification")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Decisioni" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Recenti" })).toBeNull();
+    expect(screen.queryByLabelText("Stato del toolbox")).toBeNull();
+    expect(document.querySelector(".tv-app__sidebar")).toBeNull();
 
     expect(fetch).not.toHaveBeenCalledWith("/api/account/submissions", {
       headers: { Authorization: "Bearer token-a" },
     });
-
-    fireEvent.click(screen.getAllByRole("button", { name: /Esci dall'account/ })[0]);
-    expect(account.signOut).toHaveBeenCalledTimes(1);
   });
 
-  it("segnala la pausa sync quando la persistenza remota è in errore", async () => {
-    persistenceRuntime.value = { mode: "remote", phase: "error" };
-    const account = makeAccount({
-      status: "authenticated",
-      user: { email: "mario@example.com" },
-      session: { access_token: "token-a" },
-    });
-    setPanelState({ account });
-    render(<AccountPanel />);
-
-    expect(screen.getAllByText("Salvataggio non riuscito").length).toBeGreaterThan(0);
-  });
-
-  it("riflette attach in corso e sync in attesa su badge e continuità", () => {
-    const attaching = makeAccount({ status: "authenticated", isAttaching: true });
-    setPanelState({ account: attaching });
-    const { unmount } = render(<AccountPanel />);
-    expect(screen.getAllByText("Collegamento in corso").length).toBeGreaterThan(0);
-    unmount();
-
+  it("riflette attach in corso sul banner, non sul HUD", () => {
     const pending = makeAccount({
       status: "authenticated",
       workspaceAttachPending: true,
@@ -362,26 +176,12 @@ describe("AccountPanel — stato authenticated", () => {
     setPanelState({ account: pending });
     render(<AccountPanel />);
     expect(screen.getAllByText("Salvataggio in corso").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Su questo dispositivo").length).toBeGreaterThan(0);
+    expect(screen.queryByLabelText("Stato del toolbox")).toBeNull();
   });
 });
 
-/* ── Messaggi auth e recovery ──────────────────────────────────── */
-
 describe("AccountPanel — messaggi auth e recovery", () => {
-  it("mostra il messaggio di errore con classe warning", () => {
-    const account = makeAccount({
-      authMessage: "Accesso email non disponibile in questo momento.",
-    });
-    setPanelState({ account });
-    const { container } = render(<AccountPanel />);
-
-    const message = container.querySelector(".account-message--warning");
-    expect(message).not.toBeNull();
-    expect(message?.textContent).toContain("Accesso email non disponibile");
-  });
-
-  it("mostra il messaggio positivo con classe success", async () => {
+  it("mostra il messaggio positivo nella cella attach-success", () => {
     const account = makeAccount({
       status: "authenticated",
       user: { email: "mario@example.com" },
@@ -391,13 +191,18 @@ describe("AccountPanel — messaggi auth e recovery", () => {
     setPanelState({ account });
     const { container } = render(<AccountPanel />);
 
-    const message = container.querySelector(".account-message--success");
-    expect(message).not.toBeNull();
-    expect(message?.textContent).toContain("Selezione collegata all'account");
+    const banner = container.querySelector("[data-account-state='attach-success']");
+    expect(banner).not.toBeNull();
+    expect(banner?.textContent).toContain("Selezione collegata all'account");
   });
 
   it("mostra il backup in quarantena e invoca il ripristino", () => {
-    const account = makeAccount({ hasQuarantinedWorkspace: true });
+    const account = makeAccount({
+      status: "authenticated",
+      user: { email: "mario@example.com" },
+      session: { access_token: "token-a" },
+      hasQuarantinedWorkspace: true,
+    });
     setPanelState({ account });
     render(<AccountPanel />);
 
@@ -412,6 +217,9 @@ describe("AccountPanel — messaggi auth e recovery", () => {
 
   it("disabilita il ripristino mentre è in corso", () => {
     const account = makeAccount({
+      status: "authenticated",
+      user: { email: "mario@example.com" },
+      session: { access_token: "token-a" },
       hasQuarantinedWorkspace: true,
       isRestoringQuarantinedWorkspace: true,
     });
@@ -422,140 +230,5 @@ describe("AccountPanel — messaggi auth e recovery", () => {
       name: /Ripristino in corso/,
     }) as HTMLButtonElement;
     expect(button.disabled).toBe(true);
-  });
-});
-
-/* ── Riepilogo workspace e sezioni ─────────────────────────────── */
-
-describe("AccountPanel — riepilogo workspace e sezioni", () => {
-  it("deriva conteggi, card salvati e consigliati da discovery snapshot e catalogo", () => {
-    const account = makeAccount();
-    setPanelState({
-      account,
-      discovery: makeDiscovery({
-        shortlist: ["alpha"],
-        compare: ["alpha", "beta"],
-        shortlistStages: { alpha: "top" },
-        decisionMemories: { alpha: { is_pinned: true, note: "nota alpha" } },
-      }),
-      catalog: [
-        makeTool("alpha", "Alpha", "Vibe coding"),
-        makeTool("beta", "Beta", "Vibe coding"),
-        makeTool("gamma", "Gamma", "Design"),
-      ],
-    });
-    const { container } = render(<AccountPanel />);
-
-    const hero = heroOf(container);
-    expect(hero.getByText(/tool salvati/).textContent).toContain("1");
-    expect(hero.getByText(/nel confronto/).textContent).toContain("2");
-
-    // Card salvata con dati dal catalogo e stage/pin dalla memoria.
-    expect(screen.getByText("Alpha")).toBeTruthy();
-    expect(screen.getByText(/Priorita alta/)).toBeTruthy();
-    expect(screen.getByText("nota alpha")).toBeTruthy();
-
-    // Consigliati: stessa categoria dei salvati, esclusi quelli già in shortlist.
-    expect(screen.getByText("Beta")).toBeTruthy();
-    expect(screen.queryByText("Gamma")).toBeNull();
-
-    // CTA e preferenze riflettono i conteggi reali.
-    expect(screen.getByText("Apri salvati (1)")).toBeTruthy();
-    expect(screen.getByText("1 segnali dai tool salvati")).toBeTruthy();
-    expect(screen.getByText("Richiede login")).toBeTruthy();
-  });
-
-  it("mostra lo stato vuoto della selezione senza tool salvati", () => {
-    const account = makeAccount();
-    setPanelState({ account });
-    render(<AccountPanel />);
-
-    expect(
-      screen.getByText(/Nessun tool salvato ancora/),
-    ).toBeTruthy();
-    expect(screen.getByText("Inizia dal catalogo")).toBeTruthy();
-    expect(screen.getByText("Da costruire")).toBeTruthy();
-  });
-});
-
-/* ── Gamification ──────────────────────────────────────────────── */
-
-describe("AccountPanel — gamification", () => {
-  it("non renderizza il blocco quando nessuna surface è rewarded", () => {
-    const account = makeAccount();
-    setPanelState({ account });
-    render(<AccountPanel />);
-
-    expect(screen.queryByText("Gamification")).toBeNull();
-    expect(screen.queryByText("Progressi e attivita")).toBeNull();
-  });
-
-  it("renderizza statistiche di gioco e best locale quando rewarded", async () => {
-    window.localStorage.setItem("tooolvibes:vibe-rush-best", "42");
-    gamificationRuntime.summary = {
-      hasRewardedSurface: true,
-      firstRewardedSurface: "missions",
-    };
-    gamificationRuntime.gameProfile = {
-      profile: { xp: 250, level: 3, streak_days: 5 },
-      isLoading: false,
-    };
-    gamificationRuntime.badges = [{}, {}];
-    gamificationRuntime.localXp = 100;
-
-    const account = makeAccount({
-      status: "authenticated",
-      user: { email: "mario@example.com" },
-      session: { access_token: "token-a" },
-    });
-    setPanelState({ account });
-    render(<AccountPanel />);
-
-    expect(screen.queryByText("Gamification")).toBeNull();
-    expect(screen.getAllByText("TOOOLVIBES").length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "Impostazioni" }).length).toBeGreaterThan(0);
-  });
-});
-
-/* ── Vibe Rush signup ──────────────────────────────────────────── */
-
-describe("AccountPanel — signup Vibe Rush", () => {
-  it("legge il contesto URL, precompila la mail e invia i metadata della partita", async () => {
-    window.history.replaceState(
-      {},
-      "",
-      "/account?source=vibe-rush&email=mario%40example.com&vibes=12&xp=340",
-    );
-    const account = makeAccount();
-    setPanelState({ account });
-    const { container } = render(<AccountPanel />);
-
-    expect(screen.getByText("Salva Vibe Rush")).toBeTruthy();
-    // Sottotitolo e riepilogo partita riportano entrambi il punteggio.
-    expect(screen.getAllByText(/12 vibe raccolti, 340 XP/).length).toBe(2);
-
-    const emailInput = (await waitFor(() => {
-      const input = screen.getByPlaceholderText("nome@email.com") as HTMLInputElement;
-      expect(input.value).toBe("mario@example.com");
-      return input;
-    })) as HTMLInputElement;
-
-    fireEvent.change(screen.getByPlaceholderText("Nome"), { target: { value: "Mario" } });
-    fireEvent.change(screen.getByPlaceholderText("Cognome"), { target: { value: "Rossi" } });
-    fireEvent.submit(container.querySelector("#account-upgrade") as HTMLFormElement);
-
-    await waitFor(() => {
-      expect(account.sendMagicLink).toHaveBeenCalledWith("mario@example.com", {
-        source: "vibe-rush",
-        first_name: "Mario",
-        last_name: "Rossi",
-        phone: null,
-        vibe_score: 12,
-        vibe_xp: 340,
-      });
-    });
-    await waitFor(() => {
-      expect(emailInput.value).toBe("");
-    });
   });
 });

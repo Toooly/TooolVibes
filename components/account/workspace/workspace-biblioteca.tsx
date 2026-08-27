@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import {
-  addToolToPersonalStack,
   deferWorkspaceTool,
   markWorkspaceToolReplaced,
   markWorkspaceToolStopped,
@@ -19,13 +18,11 @@ import {
 import {
   compactPersonalStatus,
   formatRevisitLine,
-  revisitAtFromPreset,
   USAGE_STATE_LABELS,
   usageActionLabel,
 } from "@/lib/account/workspace-lifecycle";
 import {
   PIPELINE_COLUMNS,
-  activePersonalStacks,
   listPipelineItems,
   type PipelineColumn,
   type PipelineItem,
@@ -33,8 +30,12 @@ import {
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
-import type { WorkspaceStateV1, WorkspaceUsage } from "@/lib/discovery/types";
+import type { WorkspaceDecisionOutcome, WorkspaceStateV1, WorkspaceUsage } from "@/lib/discovery/types";
+import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
+import { StackPickOrCreate } from "@/components/tools/stack-pick-or-create";
 
+import { DecisionSheet } from "./decision-sheet";
+import { WorkspaceFilo } from "./filo";
 import { RevisitWhenChips } from "./revisit-when-chips";
 import { PIPELINE_LABELS, formatWorkspaceDate } from "./workspace-model";
 import { WorkspaceCatalogMark } from "./workspace-tool-mark";
@@ -89,11 +90,13 @@ function applyPipelineColumn(slug: string, next: PipelineColumn) {
     setWorkspaceDecision(slug, null);
     setWorkspaceStage(slug, "top");
   }
-  if (next === "scelto") setWorkspaceDecision(slug, "selected");
-  if (next === "scartato") setWorkspaceDecision(slug, "rejected");
-  if (next === "rimandato") {
-    deferWorkspaceTool(slug, revisitAtFromPreset("1w"));
-  }
+}
+
+function outcomeFromColumn(column: PipelineColumn): WorkspaceDecisionOutcome | null {
+  if (column === "scelto") return "selected";
+  if (column === "scartato") return "rejected";
+  if (column === "rimandato") return "deferred";
+  return null;
 }
 
 function compareLibraryItems(
@@ -143,8 +146,12 @@ export function WorkspaceBiblioteca({
   const [category, setCategory] = useState("tutte");
   const [sort, setSort] = useState<LibrarySort>("recent");
   const [openNote, setOpenNote] = useState<string | null>(null);
+  const [decide, setDecide] = useState<{
+    slug: string;
+    name: string;
+    defaultOutcome: WorkspaceDecisionOutcome;
+  } | null>(null);
   const items = listPipelineItems(state);
-  const stacks = activePersonalStacks(state);
   const columnCounts = useMemo(() => {
     const counts = Object.fromEntries(PIPELINE_COLUMNS.map((column) => [column, 0])) as Record<
       (typeof PIPELINE_COLUMNS)[number],
@@ -210,7 +217,7 @@ export function WorkspaceBiblioteca({
     return (
       <section className="tv-lib tv-lib--empty">
         <WorkspaceEmptyMotif variant="library" />
-        <p className="tv-lib-kicker">Biblioteca</p>
+        <p className="tv-lib-kicker">Salvati</p>
         <h2 className="tv-lib-title">Nessun tool salvato ancora</h2>
         <p className="tv-lib-copy">
           I Salvati vivono qui: stesso inventario, con stati e verdetti. Salva dal catalogo, poi valuta.
@@ -226,7 +233,7 @@ export function WorkspaceBiblioteca({
     <div className="tv-lib">
       <div className="tv-lib-toolbar">
         <label className="tv-lib-search">
-          <span className="sr-only">Cerca nella biblioteca</span>
+          <span className="sr-only">Cerca in Salvati</span>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -350,17 +357,37 @@ export function WorkspaceBiblioteca({
               item={item}
               state={state}
               catalog={catalog}
-              stacks={stacks}
               category={categoryOf(catalogBySlug, item.slug)}
               focused={focusSlug === item.slug}
               noteOpen={openNote === item.slug}
               onToggleNote={() =>
                 setOpenNote((current) => (current === item.slug ? null : item.slug))
               }
+              onDecidi={(defaultOutcome) =>
+                setDecide({
+                  slug: item.slug,
+                  name: toolName(catalog, item.slug),
+                  defaultOutcome,
+                })
+              }
             />
           ))}
         </ul>
       )}
+
+      {decide ? (
+        <DecisionSheet
+          open
+          onOpenChange={(open) => {
+            if (!open) setDecide(null);
+          }}
+          slug={decide.slug}
+          toolName={decide.name}
+          alternatives={[]}
+          source="salvati"
+          defaultOutcome={decide.defaultOutcome}
+        />
+      ) : null}
     </div>
   );
 }
@@ -369,26 +396,25 @@ function LibraryRow({
   item,
   state,
   catalog,
-  stacks,
   category,
   focused,
   noteOpen,
   onToggleNote,
+  onDecidi,
 }: {
   item: PipelineItem;
   state: WorkspaceStateV1;
   catalog: readonly PublicToolCatalogItem[];
-  stacks: ReturnType<typeof activePersonalStacks>;
   category: string;
   focused: boolean;
   noteOpen: boolean;
   onToggleNote: () => void;
+  onDecidi: (outcome: WorkspaceDecisionOutcome) => void;
 }) {
   const name = toolName(catalog, item.slug);
   const catalogItem = catalog.find((tool) => tool.slug === item.slug);
   const inCompare = state.compare.slugs.includes(item.slug);
   const compareFull = !inCompare && state.compare.slugs.length >= MAX_COMPARE_TOOLS;
-  const availableStacks = stacks.filter((stack) => !stack.slugs.includes(item.slug));
   const [draft, setDraft] = useState(item.note ?? "");
   const rejected = item.outcome === "rejected";
   const showMarkUsing =
@@ -426,6 +452,12 @@ function LibraryRow({
             <span>{formatWorkspaceDate(item.updatedAt)}</span>
           ) : null}
         </p>
+        <WorkspaceFilo
+          state={state}
+          slug={item.slug}
+          catalog={catalog}
+          defaultOpen={focused}
+        />
         {replacedName && item.replacedBy ? (
           <WorkspaceReplacement catalog={catalog} fromSlug={item.slug} toSlug={item.replacedBy} />
         ) : null}
@@ -475,13 +507,26 @@ function LibraryRow({
           <Link className="tv-lib-action" href={`/toools/${item.slug}`}>
             Apri
           </Link>
+          <button
+            type="button"
+            className="tv-lib-action"
+            onClick={() => onDecidi(item.outcome ?? "selected")}
+          >
+            Decidi
+          </button>
           <label className="tv-lib-action tv-lib-action--field">
             <span>Sposta</span>
             <select
               value={item.column}
-              onChange={(event) =>
-                applyPipelineColumn(item.slug, event.target.value as PipelineColumn)
-              }
+              onChange={(event) => {
+                const next = event.target.value as PipelineColumn;
+                const outcome = outcomeFromColumn(next);
+                if (outcome) {
+                  onDecidi(outcome);
+                  return;
+                }
+                applyPipelineColumn(item.slug, next);
+              }}
             >
               {STATUS_FILTERS.filter((entry) => entry.id !== "tutti").map((entry) => (
                 <option key={entry.id} value={entry.id}>
@@ -520,33 +565,11 @@ function LibraryRow({
               />
             </div>
           ) : null}
-          {availableStacks.length > 0 ? (
-            <label className="tv-lib-action tv-lib-action--field">
-              <span>Aggiungi a uno stack</span>
-              <select
-                defaultValue=""
-                onChange={(event) => {
-                  if (event.target.value) {
-                    addToolToPersonalStack(event.target.value, item.slug);
-                  }
-                  event.target.value = "";
-                }}
-              >
-                <option value="">Scegli stack</option>
-                {availableStacks.map((stack) => (
-                  <option key={stack.id} value={stack.id}>
-                    {stack.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : stacks.length === 0 ? (
-            <Link className="tv-lib-action" href="/account?view=stack">
-              Nessuno stack attivo
-            </Link>
-          ) : (
-            <p className="tv-lib-action tv-lib-action--status">Già in tutti gli stack</p>
-          )}
+          <StackPickOrCreate
+            slug={item.slug}
+            allowCreate={getActiveWorkspaceOwner().kind === "account"}
+            compact
+          />
           <button type="button" className="tv-lib-action" onClick={onToggleNote}>
             {noteOpen ? "Chiudi nota" : item.note ? "Modifica nota" : "Aggiungi nota"}
           </button>

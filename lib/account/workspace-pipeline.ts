@@ -173,8 +173,9 @@ export function deriveResurfaceSignals(
       const revisitMs = timestampMs(tool?.revisitAt);
       const decidedMs = timestampMs(tool?.decision?.updatedAt ?? null);
       const due =
-        (revisitMs !== null && revisitMs <= now) ||
-        (decidedMs !== null && now - decidedMs >= DEFERRED_STALE_MS);
+        revisitMs !== null
+          ? revisitMs <= now
+          : decidedMs !== null && now - decidedMs >= DEFERRED_STALE_MS;
 
       if (due) {
         signals.push({
@@ -245,6 +246,58 @@ export function chooseResumeAction(
   }
 
   return { kind: "empty", slug: null };
+}
+
+
+export const HOME_REVIEW_CAP = 3;
+export const HOME_USING_CAP = 6;
+
+export function isBlankWorkspace(state: WorkspaceStateV1) {
+  const hasDecision = Object.values(state.toolStates).some((tool) =>
+    Boolean(tool.decision?.outcome),
+  );
+  return (
+    state.saved.slugs.length === 0 &&
+    state.compare.slugs.length === 0 &&
+    !hasDecision &&
+    activePersonalStacks(state).length === 0
+  );
+}
+
+export function listHomeReviewQueue(
+  state: WorkspaceStateV1,
+  {
+    nowIso,
+    excludeSlug,
+    cap = HOME_REVIEW_CAP,
+  }: {
+    nowIso?: string;
+    excludeSlug?: string | null;
+    cap?: number;
+  } = {},
+) {
+  return deriveResurfaceSignals(state, nowIso)
+    .filter(
+      (item): item is typeof item & { kind: "deferred_due"; slug: string } =>
+        item.kind === "deferred_due" && Boolean(item.slug),
+    )
+    .filter((item) => !excludeSlug || item.slug !== excludeSlug)
+    .sort((left, right) => (left.at ?? "").localeCompare(right.at ?? ""))
+    .slice(0, cap);
+}
+
+export function listHomeUsingSlugs(state: WorkspaceStateV1, cap = HOME_USING_CAP) {
+  return Object.entries(state.toolStates)
+    .filter(([, tool]) => tool.usage === "using")
+    .sort((left, right) => (right[1].updatedAt ?? "").localeCompare(left[1].updatedAt ?? ""))
+    .map(([slug]) => slug)
+    .slice(0, cap);
+}
+
+export function stackNameForSlug(state: WorkspaceStateV1, slug: string | null | undefined) {
+  if (!slug) return null;
+  const stack = activePersonalStacks(state).find((item) => item.slugs.includes(slug));
+  return stack?.name ?? null;
 }
 
 function pushActivity(

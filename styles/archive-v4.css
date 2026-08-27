@@ -1072,235 +1072,11 @@
   box-shadow: 0 6px 12px -4px color-mix(in srgb, var(--tv-accent-gold) 60%, transparent);
 }
 
-/* ============================================================
-   6. COMPARISON TRAY (sticky bottom)
-   ============================================================ */
-.ar4-tray {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 41; /* above mobile bottom nav (z-index 40) */
-  background: var(--tv-bg-base);
-  border-top: 1px solid var(--tv-accent-primary);
-  box-shadow: 0 -16px 40px -16px rgba(0,0,0,0.6);
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-}
-
-/* On mobile + tablet (< xl), the bottom nav is also position: fixed bottom: 0.
-   Push the tray ABOVE the bottom nav to prevent overlap. The bottom nav is
-   ~56px tall + 6px padding + safe-area-inset-bottom. */
-@media (max-width: 1279px) {
-  .ar4-tray {
-    bottom: calc(4.75rem + env(safe-area-inset-bottom));
-  }
-}
-
-@media (min-width: 1280px) {
-  .ar4-tray.is-desktop {
-    left: auto;
-    right: 24px;
-    bottom: 24px;
-    width: 420px;
-    border-radius: 16px;
-    border: 1px solid var(--tv-accent-primary);
-    box-shadow: 0 24px 60px -20px rgba(0,0,0,0.7);
-    padding: 14px 16px;
-  }
-}
-
-.ar4-tray__inner {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 12px;
-  max-width: 1560px;
-  margin: 0 auto;
-}
-
-@media (max-width: 1279px) {
-  .ar4-tray__inner { grid-template-columns: 1fr; gap: 10px; }
-}
-
-.ar4-tray.is-desktop .ar4-tray__inner { grid-template-columns: 1fr; }
-
-.ar4-tray__head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
-.ar4-tray__icon {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  background: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
-  border-radius: 8px;
-  flex-shrink: 0;
-}
-
-.ar4-tray__title {
-  font-family: var(--tv-font-family-ui);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: 0.01em;
-  color: var(--tv-ink-primary);
-  margin: 0;
-  line-height: 1.1;
-}
-
-.ar4-tray__sub {
-  font-size: 12px;
-  color: var(--tv-ink-muted-aa);
-  margin: 2px 0 0;
-  line-height: 1.2;
-}
-
-.ar4-tray__chips {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.ar4-tray__chips::-webkit-scrollbar { display: none; }
-
-.ar4-tray__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 6px 4px 4px;
-  background: var(--tv-surface-elevated);
-  border: 1px solid var(--tv-accent-primary);
-  border-radius: 999px;
-  font-size: 12px;
-  color: var(--tv-ink-primary);
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.ar4-tray__chip-avatar {
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-}
-
-.ar4-tray__chip-avatar img,
-.ar4-tray__chip-avatar span {
-  width: 14px;
-  height: 14px;
-  display: grid;
-  place-items: center;
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-size: var(--tv-text-xs);
-  color: var(--tv-accent-primary);
-  text-transform: uppercase;
-}
-
-.ar4-tray__chip-name { white-space: nowrap; }
-
-.ar4-tray__chip-remove {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  background: transparent;
-  border: 0;
-  border-radius: 999px;
-  color: var(--tv-ink-muted-aa);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: color 150ms ease, background 150ms ease;
-}
-
-.ar4-tray__chip-remove:hover { color: var(--tv-ink-primary); background: color-mix(in srgb, var(--tv-accent-primary) 12%, transparent); }
-
-.ar4-tray__actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.ar4-tray__clear {
-  padding: 10px 14px;
-  background: transparent;
-  border: 1px solid var(--tv-border-interactive);
-  border-radius: 10px;
-  color: var(--tv-ink-primary);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: none;
-  cursor: pointer;
-  min-height: 40px;
-  -webkit-tap-highlight-color: transparent;
-  transition: border-color 200ms ease, color 200ms ease;
-}
-
-.ar4-tray__clear:hover { border-color: var(--tv-accent-primary); color: var(--tv-accent-primary); }
-
-.ar4-tray__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 18px;
-  background: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
-  border: 0;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: none;
-  text-decoration: none;
-  min-height: 40px;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 200ms ease, transform 200ms ease;
-}
-
-.ar4-tray__cta:hover { background: color-mix(in srgb, var(--tv-accent-primary) 88%, white 12%); }
-
-.ar4-tray__cta.is-disabled,
-.ar4-tray__cta[aria-disabled="true"] {
-  background: var(--tv-surface-elevated);
-  color: var(--tv-ink-muted-aa);
-  border: 1px solid var(--tv-border-subtle);
-  pointer-events: none;
-}
-
-/* Limit-reached variant: distinct from "needs more" — uses gold tint
-   to signal the cap has been hit, not "you have less than minimum". */
-.ar4-tray.is-at-max {
-  border-top-color: var(--tv-accent-gold);
-}
-
-.ar4-tray.is-at-max .ar4-tray__cta {
-  background: color-mix(in srgb, var(--tv-accent-gold) 14%, var(--tv-bg-base));
-  color: var(--tv-accent-gold);
-  border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 40%, transparent);
-}
-
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .ar4-card,
   .ar4-card__open,
-  .ar4-chip,
-  .ar4-tray__cta,
-  .ar4-tray__clear {
+  .ar4-chip {
     transition: none;
   }
 }
@@ -2696,4 +2472,24 @@ a.archive-v4-card:focus-visible {
   .ar4-grid {
     overflow-x: clip;
   }
+}
+
+
+/* Wave 6 — compact save overflow trigger + sheet dock offset */
+.ar4-card__save-more {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  background: rgba(18, 13, 46, 0.92);
+  color: #f4f1ff;
+}
+
+.ar4-save-overflow-sheet {
+  padding-bottom: calc(var(--tv-bottom-nav-total, 62px) + env(safe-area-inset-bottom));
+}
+
+.ar4-save-overflow-sheet[data-compare-live="true"] {
+  padding-bottom: calc(var(--tv-bottom-nav-total, 62px) + 2.75rem + env(safe-area-inset-bottom));
 }

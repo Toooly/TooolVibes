@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 import type { CatalogLevelFilter } from "@/components/directory/catalog/catalog-controller";
 import type { ToolFilterGroup, ToolPublicView } from "@/lib/data/tool-public-view";
 import { ArchiveV4ToolCard } from "./archive-v4-tool-card";
-import { ArchiveV4CompareTray } from "./archive-v4-compare-tray";
+import { CatalogoFacetHead } from "./catalogo-facet-head";
 
 type DefinitiveArchiveProps = {
   tools: ToolPublicView[];
@@ -231,6 +231,7 @@ export function DefinitiveArchive({
             <h1 id="ar4-intro-title" className="ar4-intro__title">
               Riduci le alternative. Trova i tool da valutare.
             </h1>
+            <CatalogoFacetHead active="tutti" />
             <p className="ar4-intro__lede">
               Cerca per nome o categoria, applica i filtri e restringi la selezione.
               Apri le schede, salva i candidati e confronta quelli più adatti al tuo
@@ -579,8 +580,9 @@ export function DefinitiveArchive({
         />
       ) : null}
 
-      {/* ═══ 6. PERSISTENT COMPARISON TRAY ═══ */}
-      <ArchiveV4CompareTray tools={tools} />
+      {/* Wave 7: live compare tray unmounted. Collector is CompareLiveChip.
+          Tray source kept on disk for Wave 15 DELETE-LATER.
+          .ar4-shell:not(:has(.ar4-tray)) already shrinks catalog padding. */}
     </div>
   );
 }

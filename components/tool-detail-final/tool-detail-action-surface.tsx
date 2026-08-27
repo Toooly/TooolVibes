@@ -7,18 +7,15 @@
  * Reads / writes the canonical tool workspace store.
  * Respects MIN_COMPARE_TOOLS=2 / MAX_COMPARE_TOOLS=5.
  *
+ * Wave 6: bookmark is Speed 1; ⋯ / hold opens SaveOverflow (stack + Confronta).
  * Namespace: .td-final-*
  */
 
 import { useEffect, useMemo, useState } from "react";
 import { Bookmark, Columns3, ExternalLink } from "lucide-react";
 
-import {
-  addToolToPersonalStack,
-  markWorkspaceToolUsing,
-} from "@/lib/account/workspace-actions";
+import { markWorkspaceToolUsing } from "@/lib/account/workspace-actions";
 import { formatRevisitLine, usageActionLabel } from "@/lib/account/workspace-lifecycle";
-import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 import {
   MAX_COMPARE_TOOLS,
   MIN_COMPARE_TOOLS,
@@ -30,6 +27,9 @@ import {
   WorkspacePersonalStatusBadge,
   usePersonalToolStatus,
 } from "@/components/account/workspace/workspace-personal-status";
+import { SaveOverflow } from "@/components/tools/save-overflow";
+import { useSaveHold } from "@/components/tools/save-hold";
+import { openSaveOverflow } from "@/components/tools/save-overflow-state";
 
 type ToolDetailActionSurfaceProps = {
   slug: string;
@@ -69,11 +69,15 @@ export function ToolDetailActionSurface({
     ? workspace.personalStacks.filter((stack) => !stack.archivedAt)
     : [];
   const containingStacks = activeStacks.filter((stack) => stack.slugs.includes(slug));
-  const availableStacks = activeStacks.filter((stack) => !stack.slugs.includes(slug));
-  const isAccountWorkspace =
-    stackUiReady && getActiveWorkspaceOwner().kind === "account";
-  const showStackSelect = availableStacks.length > 0;
-  const showStackLink = activeStacks.length === 0 && isAccountWorkspace;
+
+  const saveHold = useSaveHold({
+    isSaved,
+    onToggle: () => {
+      toggleSaved(slug);
+    },
+    onSpeed2Open: () => openSaveOverflow(slug),
+    slug,
+  });
 
   return (
     <div className="td-final-actions" role="group" aria-label="Azioni scheda">
@@ -117,21 +121,28 @@ export function ToolDetailActionSurface({
         <span>{compareRank > 0 ? "Rimuovi dal confronto" : "Aggiungi al confronto"}</span>
       </button>
 
-      <button
-        type="button"
-        onClick={() => toggleSaved(slug)}
-        className={cn("td-final-cta--save", isSaved && "is-saved")}
-        aria-pressed={isSaved}
-        aria-label={isSaved ? "Rimuovi dai salvati" : "Salva"}
-        title={isSaved ? "Salvato" : "Salva"}
-      >
-        <Bookmark
-          size={17}
-          aria-hidden="true"
-          fill={isSaved ? "currentColor" : "none"}
+      <div className="td-final-save-cluster">
+        <button
+          type="button"
+          {...saveHold}
+          className={cn("td-final-cta--save", isSaved && "is-saved")}
+          aria-pressed={isSaved}
+          aria-label={isSaved ? `Rimuovi ${name} dai Salvati` : `Salva ${name}`}
+          title={isSaved ? "Salvato" : "Salva"}
+        >
+          <Bookmark
+            size={17}
+            aria-hidden="true"
+            fill={isSaved ? "currentColor" : "none"}
+          />
+          <span>{isSaved ? "Salvato" : "Salva"}</span>
+        </button>
+        <SaveOverflow
+          slug={slug}
+          toolName={name}
+          triggerClassName="td-final-save-more"
         />
-        <span>{isSaved ? "Salvato" : "Salva"}</span>
-      </button>
+      </div>
 
       {canMarkUsing ? (
         <button
@@ -141,38 +152,6 @@ export function ToolDetailActionSurface({
         >
           {usageActionLabel("using")}
         </button>
-      ) : null}
-
-      {showStackSelect ? (
-        <label className="inline-flex min-h-11 items-center gap-2 text-[length:var(--tv-text-xs)] text-[var(--tv-ink-secondary)]">
-          <span>Aggiungi allo stack</span>
-          <select
-            aria-label="Aggiungi allo stack"
-            defaultValue=""
-            onChange={(event) => {
-              if (event.target.value) {
-                addToolToPersonalStack(event.target.value, slug);
-              }
-              event.target.value = "";
-            }}
-          >
-            <option value="">Scegli stack</option>
-            {availableStacks.map((stack) => (
-              <option key={stack.id} value={stack.id}>
-                {stack.name}
-              </option>
-            ))}
-          </select>
-        </label>
-      ) : null}
-
-      {showStackLink ? (
-        <a
-          href="/account?view=stack"
-          className="text-[length:var(--tv-text-xs)] font-medium text-[var(--tv-ink-muted-aa)] underline-offset-2 hover:underline"
-        >
-          Aggiungi allo stack
-        </a>
       ) : null}
 
       {containingStacks.length > 0 ? (

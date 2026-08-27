@@ -1,41 +1,80 @@
 // @vitest-environment jsdom
 
 import { createElement } from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
-import type { WorkspaceStateV1 } from "@/lib/discovery/types";
+import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
+import { activateToolWorkspaceOwner } from "@/lib/stores/tool-workspace-store";
 
 const catalogRuntime = vi.hoisted(() => ({
   value: [] as PublicToolCatalogItem[],
+}));
+
+const { navRuntime } = vi.hoisted(() => ({
+  navRuntime: {
+    pathname: "/account",
+    search: "",
+    push: vi.fn(),
+  },
+}));
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => navRuntime.pathname,
+  useSearchParams: () => new URLSearchParams(navRuntime.search),
+  useRouter: () => ({ push: navRuntime.push }),
 }));
 
 vi.mock("@/lib/data/public-tool-catalog-context", () => ({
   usePublicToolCatalog: () => catalogRuntime.value,
 }));
 
-vi.mock("@/lib/account/workspace-actions", () => ({
-  deferWorkspaceTool: vi.fn(),
-  markWorkspaceToolReplaced: vi.fn(),
-  markWorkspaceToolStopped: vi.fn(),
-  markWorkspaceToolUsing: vi.fn(),
-  setWorkspaceDecision: vi.fn(),
-  setWorkspaceNote: vi.fn(),
-  setWorkspacePinned: vi.fn(),
-  setWorkspaceUseCase: vi.fn(),
+vi.mock("@/components/account/account-provider", () => ({
+  useAccount: () => ({
+    authEnabled: true,
+    status: "authenticated",
+    user: { email: "mario@example.com" },
+    session: { access_token: "token-a" },
+    isSendingLink: false,
+    isAttaching: false,
+    workspaceAttachPending: false,
+    hasQuarantinedWorkspace: false,
+    isRestoringQuarantinedWorkspace: false,
+    authMessage: null,
+    sendMagicLink: vi.fn(),
+    restoreQuarantinedWorkspace: vi.fn(),
+    signOut: vi.fn(),
+  }),
 }));
 
-import { WorkspaceDecisions } from "@/components/account/workspace/workspace-decisions";
+vi.mock("@/components/discovery/canonical-discovery-persistence-provider", () => ({
+  useDiscoveryPersistence: () => ({ mode: "local", phase: "local-only" }),
+}));
 
-function catalogFor(state: WorkspaceStateV1): PublicToolCatalogItem[] {
+vi.mock("@/lib/discovery/client-store", () => ({
+  useDiscoverySnapshot: () => ({
+    visitedTools: [],
+    exploredCategories: [],
+    shortlist: [],
+    compare: [],
+    shortlistStages: {},
+    decisionMemories: {},
+    toolStateMeta: {},
+    compareMeta: {},
+  }),
+}));
+
+import { WorkspaceShell } from "@/components/account/workspace/workspace-shell";
+
+function catalogFor(slugs: string[]): PublicToolCatalogItem[] {
   const named: Record<string, string> = {
     cursor: "Cursor",
     v0: "v0",
     meku: "Meku",
   };
-  return Object.keys(state.toolStates).map((slug) => ({
+  return slugs.map((slug) => ({
     slug,
     name: named[slug] ?? slug,
     categoryLabel: "Coding",
@@ -47,55 +86,47 @@ function catalogFor(state: WorkspaceStateV1): PublicToolCatalogItem[] {
   }));
 }
 
-describe("WorkspaceDecisions", () => {
+describe("WorkspaceDecisions dest — Wave 8 redirect", () => {
+  beforeAll(() => {
+    vi.stubGlobal(
+      "ResizeObserver",
+      class ResizeObserver {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    );
+    HTMLElement.prototype.hasPointerCapture = () => false;
+    HTMLElement.prototype.setPointerCapture = () => undefined;
+    HTMLElement.prototype.releasePointerCapture = () => undefined;
+  });
+
   beforeEach(() => {
-    catalogRuntime.value = catalogFor(workspaceTestFixtures.mature);
+    catalogRuntime.value = catalogFor(["cursor", "v0", "meku"]);
+    navRuntime.pathname = "/account";
+    navRuntime.search = "";
+    navRuntime.push.mockReset();
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.reviewDue);
   });
 
   afterEach(() => {
     cleanup();
+    activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
   });
 
-  it("shows outcome and use case in the overview when they exist", () => {
-    render(createElement(WorkspaceDecisions, { state: workspaceTestFixtures.mature }));
-
-    expect(screen.getAllByText("Cursor").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Scelto").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("pair programming").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Scelto per il daily coding.").length).toBeGreaterThan(0);
-    expect(screen.getByText("Fissato")).toBeTruthy();
+  it("view=decisioni renders Home instead of the journal editor", () => {
+    navRuntime.search = "view=decisioni";
+    render(createElement(WorkspaceShell));
+    expect(screen.queryByLabelText("Caso d’uso")).toBeNull();
+    expect(screen.queryByLabelText("Perché")).toBeNull();
+    expect(screen.getByText("Rivedi questa decisione")).toBeTruthy();
   });
 
-  it("resets the journal sheet when switching entries", () => {
-    render(createElement(WorkspaceDecisions, { state: workspaceTestFixtures.mature }));
-
-    const useCase = screen.getByLabelText("Caso d’uso") as HTMLInputElement;
-    expect(useCase.value).toBe("pair programming");
-
-    fireEvent.click(screen.getAllByRole("button", { name: /v0/i })[0]);
-
-    const nextUseCase = screen.getByLabelText("Caso d’uso") as HTMLInputElement;
-    expect(nextUseCase.value).toBe("");
-    expect(screen.getByRole("heading", { name: "v0" })).toBeTruthy();
+  it("view=decisioni&focus opens DecisionSheet from Home", () => {
+    navRuntime.search = "view=decisioni&focus=meku";
+    render(createElement(WorkspaceShell));
+    expect(document.querySelector("[data-decision-sheet]")).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Meku" })).toBeTruthy();
   });
 
-  it("shows In uso and Sostituito da in the journal", () => {
-    render(createElement(WorkspaceDecisions, { state: workspaceTestFixtures.mature }));
-
-    expect(screen.getAllByText("In uso").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Sostituito da Cursor").length).toBeGreaterThan(0);
-  });
-
-  it("opens the matching tool when focusSlug is in the journal", () => {
-    render(
-      createElement(WorkspaceDecisions, {
-        state: workspaceTestFixtures.mature,
-        focusSlug: "v0",
-      }),
-    );
-
-    expect(screen.getByRole("heading", { name: "v0" })).toBeTruthy();
-    const useCase = screen.getByLabelText("Caso d’uso") as HTMLInputElement;
-    expect(useCase.value).toBe("");
-  });
 });

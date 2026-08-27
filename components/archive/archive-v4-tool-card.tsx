@@ -19,11 +19,17 @@ import Link from "next/link";
 import { useState } from "react";
 import { Star } from "lucide-react";
 
-import { WorkspacePersonalStatusBadge } from "@/components/account/workspace/workspace-personal-status";
+import {
+  WorkspacePersonalStatusBadge,
+  isHeartRedundantPersonalStatus,
+  usePersonalToolStatus,
+} from "@/components/account/workspace/workspace-personal-status";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { cn } from "@/lib/utils";
 import { CompareToggle } from "@/components/tools/compare-toggle";
+import { SaveOverflow } from "@/components/tools/save-overflow";
+import { openSaveOverflow } from "@/components/tools/save-overflow-state";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 
 type ArchiveV4ToolCardProps = {
@@ -63,6 +69,12 @@ function ArchiveV4ToolCard({
   const savedSlugs = useToolWorkspaceStore((s) => s.savedSlugs);
   const isSelected = compareSlugs.includes(tool.slug);
   const isSaved = savedSlugs.includes(tool.slug);
+  const personalStatus = usePersonalToolStatus(tool.slug);
+  const personalWord =
+    personalStatus && !isHeartRedundantPersonalStatus(personalStatus.key)
+      ? personalStatus
+      : null;
+  const showRank = isSelected && typeof rank === "number" && !personalWord;
   const [hover, setHover] = useState(false);
 
   // Avatar fallback (icon URL via Google s2)
@@ -176,16 +188,12 @@ function ArchiveV4ToolCard({
           Apri la scheda
           <span aria-hidden="true">→</span>
         </Link>
-        <div className="ar4-card__control-rail" data-has-rank={isSelected && typeof rank === "number" ? "true" : undefined}>
-          {isSelected && typeof rank === "number" ? (
+        <div className="ar4-card__control-rail" data-has-rank={showRank ? "true" : undefined}>
+          {showRank ? (
             <div className="ar4-card__state-flags" aria-live="polite">
               <span className="ar4-card__rank" aria-label={`Selezionato, posizione ${rank}`}>
                 #{String(rank).padStart(2, "0")}
               </span>
-              <WorkspacePersonalStatusBadge
-                slug={tool.slug}
-                className="ar4-card__saved-label"
-              />
             </div>
           ) : (
             <WorkspacePersonalStatusBadge
@@ -199,9 +207,15 @@ function ArchiveV4ToolCard({
               compact
               mode="icon"
               toolName={tool.name}
+              onSpeed2Open={() => openSaveOverflow(tool.slug)}
               onChange={() => {
                 /* re-render via store */
               }}
+            />
+            <SaveOverflow
+              slug={tool.slug}
+              toolName={tool.name}
+              triggerClassName="ar4-card__save-more"
             />
             <CompareToggle
               slug={tool.slug}

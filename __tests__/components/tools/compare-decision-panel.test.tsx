@@ -180,21 +180,23 @@ function revealMobileResult() {
   });
 }
 
-function revealDesktopResult() {
-  fireEvent.click(screen.getByRole("button", { name: "Analizza il confronto" }));
-  act(() => {
-    vi.advanceTimersByTime(2000);
-  });
-}
-
 function decisionRegion() {
   return screen.getByRole("region", { name: "Registra decisione" });
 }
 
-function decisionGroupFor(name: string) {
-  return within(decisionRegion()).getByRole("group", {
-    name: `Decisione per ${name}`,
-  });
+function openDecisionSheet() {
+  fireEvent.click(screen.getAllByRole("button", { name: "Decidi" })[0]);
+  const node = document.querySelector("[data-decision-sheet]");
+  expect(node).toBeInstanceOf(HTMLElement);
+  return node as HTMLElement;
+}
+
+function confirmDecision(outcome?: "Scelto" | "Scartato" | "Rimandato") {
+  const sheet = openDecisionSheet();
+  if (outcome) {
+    fireEvent.click(within(sheet).getByRole("radio", { name: outcome }));
+  }
+  fireEvent.click(within(sheet).getByRole("button", { name: "Conferma" }));
 }
 
 let desktopViewport = false;
@@ -227,6 +229,18 @@ async function expectNoAxeViolations(container: HTMLElement) {
 }
 
 beforeAll(() => {
+  vi.stubGlobal(
+    "ResizeObserver",
+    class ResizeObserver {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    },
+  );
+  HTMLElement.prototype.scrollIntoView = vi.fn();
+  HTMLElement.prototype.hasPointerCapture = () => false;
+  HTMLElement.prototype.setPointerCapture = () => undefined;
+  HTMLElement.prototype.releasePointerCapture = () => undefined;
   vi.stubGlobal(
     "matchMedia",
     (query: string) => ({
@@ -273,17 +287,16 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(region.textContent).toContain("Atlas AI");
     expect(region.textContent).toContain("Gamma");
 
-    // Ritorno a Shortlist: il link ai Salvati è parte dell'azione.
-    const backLink = within(region).getByRole("link", {
-      name: /Vai ai Salvati/,
+    // Wave 7: relationship CTA, not Salvati trophy.
+    const seeLink = within(region).getByRole("link", {
+      name: /Vedi /,
     });
-    expect(backLink.getAttribute("href")).toBe("/shortlist");
+    expect(seeLink.getAttribute("href")).toMatch(/^\/toools\//);
+    expect(seeLink.getAttribute("href")).not.toContain("shortlist");
 
-    // Choose: azione esplicita "Scegli" sul candidato.
-    const group = decisionGroupFor("Atlas AI");
-    fireEvent.click(within(group).getByRole("button", { name: "Scegli" }));
+    confirmDecision("Scelto");
 
-    let persisted = readPersistedWorkspace();
+    const persisted = readPersistedWorkspace();
     expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
@@ -292,173 +305,97 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     ).toBeTruthy();
     // Contract B16: la decisione aggiunge il tool ai salvati (scrittura additiva).
     expect(persisted.saved.slugs).toContain("atlas-ai");
-    expect(
-      within(group)
-        .getByRole("button", { name: "Scegli" })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
-    expect(region.textContent).toContain("Scelto");
-    expect(region.textContent).toContain("Registrata");
-
-    // Motivazione: il focus si è spostato sul tool appena scelto.
-    const textarea = screen.getByRole("textbox", {
-      name: "Motivo della decisione per Atlas AI",
-    }) as HTMLTextAreaElement;
-    fireEvent.change(textarea, {
-      target: { value: "Copre meglio i casi d'uso del team" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: "Salva motivo" }));
-
-    persisted = readPersistedWorkspace();
-    expect(persisted.toolStates["atlas-ai"].note).toBe(
-      "Copre meglio i casi d'uso del team",
+    // Wave 2 TARGET: live Decide clears the battle. The compare surface
+    // unmounts the decision panel instead of leaving a zombie tray.
+    expect(persisted.compare.slugs).toEqual([]);
+    expect(persisted.events.some((event) => event.type === "decided")).toBe(
+      true,
     );
     expect(
-      screen.getByRole("button", { name: "Motivo salvato" }),
-    ).toBeTruthy();
+      screen.queryByRole("region", { name: "Registra decisione" }),
+    ).toBeNull();
+    expect(screen.getByText("Confronto chiuso.")).toBeTruthy();
   });
 
-  it("cambia esito e riapre la decisione (change/undo) lasciando il record versionato", () => {
+  it("Wave 2 TARGET: Scegli then Scarta cannot continue on a dead battle", () => {
     render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
 
-    const group = decisionGroupFor("Gamma");
-    fireEvent.click(within(group).getByRole("button", { name: "Scegli" }));
-    expect(readPersistedWorkspace().toolStates["gamma-app"].decision?.outcome).toBe(
+    confirmDecision("Scelto");
+    expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
-
-    // Change: stessa riga, nuovo esito.
-    fireEvent.click(within(group).getByRole("button", { name: "Scarta" }));
-    const changed = readPersistedWorkspace();
-    expect(changed.toolStates["gamma-app"].decision?.outcome).toBe("rejected");
+    expect(readPersistedWorkspace().compare.slugs).toEqual([]);
     expect(
-      within(group)
-        .getByRole("button", { name: "Scarta" })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
-    expect(
-      within(group)
-        .getByRole("button", { name: "Scegli" })
-        .getAttribute("aria-pressed"),
-    ).toBe("false");
-
-    // Undo: reopen mantiene il record con timestamp (merge cross-device B32).
-    fireEvent.click(
-      screen.getByRole("button", { name: "Riapri decisione per Gamma" }),
-    );
-    const reopened = readPersistedWorkspace();
-    expect(reopened.toolStates["gamma-app"].decision?.outcome).toBeNull();
-    expect(
-      reopened.toolStates["gamma-app"].decision?.updatedAt,
-    ).toBeTruthy();
-    for (const name of ["Scegli", "Scarta", "Rimanda"]) {
-      expect(
-        within(group).getByRole("button", { name }).getAttribute("aria-pressed"),
-      ).toBe("false");
-    }
-    expect(
-      screen.queryByRole("button", { name: "Riapri decisione per Gamma" }),
+      screen.queryByRole("region", { name: "Registra decisione" }),
     ).toBeNull();
+    expect(screen.queryByRole("button", { name: "Scarta" })).toBeNull();
   });
 
-  it("riapre il confronto dopo reload ritrovando decisione e motivo (riapribile con contesto)", () => {
+  it("Wave 2 TARGET: reload after Decide does not resurrect the battle", () => {
     render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
 
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", {
-        name: "Scegli",
-      }),
+    confirmDecision("Scelto");
+    expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
+      "selected",
     );
-    fireEvent.change(
-      screen.getByRole("textbox", {
-        name: "Motivo della decisione per Atlas AI",
-      }),
-      { target: { value: "Vince sul dettaglio" } },
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Salva motivo" }));
+    expect(readPersistedWorkspace().compare.slugs).toEqual([]);
 
-    // Reload: nuovo mount, stesso storage durevole; il reveal va rifatto
-    // perché lo stato teatrale dell'arena non è persistito (per design B33).
     cleanup();
     render(<MobileCompareView tools={VIEWS} />);
     expect(
       screen.queryByRole("region", { name: "Registra decisione" }),
     ).toBeNull();
-    revealMobileResult();
-
-    const group = decisionGroupFor("Atlas AI");
-    expect(
-      within(group)
-        .getByRole("button", { name: "Scegli" })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
-    expect(decisionRegion().textContent).toContain("Scelto");
-
-    // Il motivo salvato è precaricato sul tool deciso (focus automatico).
-    const textarea = screen.getByRole("textbox", {
-      name: "Motivo della decisione per Atlas AI",
-    }) as HTMLTextAreaElement;
-    expect(textarea.value).toBe("Vince sul dettaglio");
+    expect(screen.getByText("Confronto chiuso.")).toBeTruthy();
+    expect(readPersistedWorkspace().compare.slugs).toEqual([]);
+    expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
+      "selected",
+    );
   });
 
   it("isola la decisione per owner: guest e account non si contaminano", () => {
     render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
 
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", {
-        name: "Scegli",
-      }),
-    );
+    confirmDecision("Scelto");
     expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
+    expect(readPersistedWorkspace().compare.slugs).toEqual([]);
 
-    // Login: stesso confronto seedato per l'account, nessuna decisione ereditata.
-    // Lo switch owner è fuori da un evento DOM: act() flusha il re-render
-    // dello snapshot (useSyncExternalStore) prima delle asserzioni.
+    // Login: same compare seeded for the account, no inherited decision.
     const account = { kind: "account" as const, userId: "user-b35" };
     act(() => {
       activateToolWorkspaceOwner(account, compareState("atlas-ai", "gamma-app"));
       dispatchWorkspaceChange({ source: "local", scope: "workspace" });
     });
+    revealMobileResult();
 
-    expect(
-      within(decisionGroupFor("Atlas AI"))
-        .getByRole("button", { name: "Scegli" })
-        .getAttribute("aria-pressed"),
-    ).toBe("false");
-
-    fireEvent.click(
-      within(decisionGroupFor("Gamma")).getByRole("button", {
-        name: "Scarta",
-      }),
-    );
+    confirmDecision("Scartato");
     const accountState = readPersistedWorkspace(
       workspaceStorageKeyForOwner(account),
     );
-    expect(accountState.toolStates["gamma-app"].decision?.outcome).toBe(
+    expect(accountState.toolStates["atlas-ai"].decision?.outcome).toBe(
       "rejected",
     );
+    expect(accountState.compare.slugs).toEqual([]);
     expect(
-      accountState.toolStates["atlas-ai"]?.decision ?? null,
+      accountState.toolStates["gamma-app"]?.decision ?? null,
     ).toBeNull();
 
-    // Logout verso guest: la decisione guest è intatta e riappare.
+    // Logout: guest decision remains; guest battle stays dead.
     act(() => {
       activateToolWorkspaceOwner({ kind: "guest" });
       dispatchWorkspaceChange({ source: "local", scope: "workspace" });
     });
-    expect(
-      within(decisionGroupFor("Atlas AI"))
-        .getByRole("button", { name: "Scegli" })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
     expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
+    expect(readPersistedWorkspace().compare.slugs).toEqual([]);
+    expect(
+      screen.queryByRole("region", { name: "Registra decisione" }),
+    ).toBeNull();
   });
 
   it("deep link: il contesto della decisione dichiara l'obiettivo attivo", () => {
@@ -471,15 +408,12 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(region.textContent).toContain("Confronto orientato a Risparmiare tempo");
 
     // La decisione registrata dal deep link persiste come qualsiasi altra.
-    const group = within(region).getByRole("group", {
-      name: "Decisione per Gamma",
-    });
-    fireEvent.click(within(group).getByRole("button", { name: "Scegli" }));
+    confirmDecision("Scelto");
     const persisted = readPersistedWorkspace();
-    expect(persisted.toolStates["gamma-app"].decision?.outcome).toBe(
+    expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
-    expect(persisted.toolStates["gamma-app"].compareObjective).toBe("save-time");
+    expect(persisted.toolStates["atlas-ai"].compareObjective).toBe("save-time");
   });
 
   it("flag OFF: nessun pannello decisione, il flow termina al verdetto (contratto B34)", () => {
@@ -501,34 +435,23 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(container.querySelectorAll(".desktop-compare")).toHaveLength(0);
 
     revealMobileResult();
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", { name: "Scegli" }),
-    );
+    confirmDecision("Scelto");
+    expect(readPersistedWorkspace().compare.slugs).toEqual([]);
 
     setDesktopViewport(true);
-    expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(0);
-    expect(container.querySelectorAll(".desktop-compare")).toHaveLength(1);
-
-    revealDesktopResult();
-    expect(screen.getAllByRole("region", { name: "Registra decisione" })).toHaveLength(1);
-    expect(
-      within(decisionGroupFor("Atlas AI"))
-        .getByRole("button", { name: "Scegli" })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
     expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
+    expect(readPersistedWorkspace().compare.slugs).toEqual([]);
+    expect(
+      screen.queryByRole("region", { name: "Registra decisione" }),
+    ).toBeNull();
   });
 
   it("nessuna violazione axe sul confronto con pannello decisione", async () => {
     const { container } = render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", {
-        name: "Scegli",
-      }),
-    );
+    confirmDecision("Scelto");
 
     vi.useRealTimers();
     await expectNoAxeViolations(container);
@@ -538,17 +461,18 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
 
-    const group = decisionGroupFor("Atlas AI");
-    fireEvent.click(within(group).getByRole("button", { name: "Rimanda" }));
-    fireEvent.click(screen.getByRole("button", { name: "1 settimana" }));
+    confirmDecision("Rimandato");
 
     const persisted = readPersistedWorkspace();
     expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe("deferred");
     expect(persisted.toolStates["atlas-ai"].revisitAt).toBeTruthy();
+    expect(persisted.compare.slugs).toEqual([]);
+    expect(persisted.events.some((event) => event.outcome === "deferred")).toBe(
+      true,
+    );
     expect(
-      screen.getByRole("link", { name: /Vai ai Salvati/ }).getAttribute("href"),
-    ).toBe("/shortlist");
-    expect(screen.getByText(/Rivedi:/)).toBeTruthy();
+      screen.queryByRole("region", { name: "Registra decisione" }),
+    ).toBeNull();
   });
 
   it("persists the stored compare objective on Scegli and keeps the Salvati CTA", () => {
@@ -556,15 +480,15 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     render(<ToolBattleView tools={VIEWS} />);
     revealMobileResult();
 
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", { name: "Scegli" }),
-    );
+    confirmDecision("Scelto");
 
     const persisted = readPersistedWorkspace();
     expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe("selected");
     expect(persisted.toolStates["atlas-ai"].compareObjective).toBe("save-time");
+    expect(persisted.compare.slugs).toEqual([]);
     expect(
-      screen.getByRole("link", { name: /Vai ai Salvati/ }).getAttribute("href"),
-    ).toBe("/shortlist");
+      screen.queryByRole("link", { name: /Vai ai Salvati/ }),
+    ).toBeNull();
+    expect(screen.queryByRole("link", { name: /Vedi / })?.getAttribute("href") ?? "").not.toContain("shortlist");
   });
 });

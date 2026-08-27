@@ -24,17 +24,29 @@ export function usePersonalToolStatus(slug: string) {
   };
 }
 
+/**
+ * Heart fill already means saved. Catalogo (and other quiet surfaces)
+ * must not add a second "Salvato" word beside it.
+ */
+export function isHeartRedundantPersonalStatus(key: string | null | undefined) {
+  return key === "saved";
+}
+
 type WorkspacePersonalStatusBadgeProps = {
   slug: string;
   className?: string;
+  /** Default true: skip "Salvato" when the heart already communicates it. */
+  hideSaved?: boolean;
 };
 
 export function WorkspacePersonalStatusBadge({
   slug,
   className,
+  hideSaved = true,
 }: WorkspacePersonalStatusBadgeProps) {
   const status = usePersonalToolStatus(slug);
   if (!status) return null;
+  if (hideSaved && isHeartRedundantPersonalStatus(status.key)) return null;
 
   return (
     <span

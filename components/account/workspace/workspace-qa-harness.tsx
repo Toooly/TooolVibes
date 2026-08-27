@@ -20,6 +20,7 @@ import {
   SignalProgressUiProvider,
 } from "@/lib/signal-progression/release-context";
 
+import { LoopShellProvider } from "@/components/layout/loop-shell-context";
 import { WorkspaceShell } from "./workspace-shell";
 import { WORKSPACE_VIEWS, type WorkspaceView } from "./workspace-model";
 
@@ -56,17 +57,17 @@ export function WorkspaceQaHarness({
   view = "riprendi",
   surface = "workspace",
 }: {
-  fixture?: "new" | "mature";
+  fixture?: "new" | "mature" | "quiet" | "review" | "compare";
   view?: WorkspaceView;
   surface?: "workspace" | "settings";
 }) {
-  const state = useMemo(
-    () =>
-      fixture === "new"
-        ? workspaceTestFixtures.newAuthenticated
-        : workspaceTestFixtures.mature,
-    [fixture],
-  );
+  const state = useMemo(() => {
+    if (fixture === "new") return workspaceTestFixtures.newAuthenticated;
+    if (fixture === "quiet") return workspaceTestFixtures.quietReturning;
+    if (fixture === "review") return workspaceTestFixtures.reviewDue;
+    if (fixture === "compare") return workspaceTestFixtures.withCompare;
+    return workspaceTestFixtures.mature;
+  }, [fixture]);
   const initialView = WORKSPACE_VIEWS.includes(view) ? view : "riprendi";
 
   const previousOwner = useRef<ReturnType<typeof getActiveWorkspaceOwner> | null>(null);
@@ -97,7 +98,9 @@ export function WorkspaceQaHarness({
             {surface === "settings" ? (
               <AccountSettingsPage />
             ) : (
-              <WorkspaceShell initialView={initialView} />
+              <LoopShellProvider>
+                <WorkspaceShell initialView={initialView} />
+              </LoopShellProvider>
             )}
           </AccountPreviewProvider>
         </DiscoveryPersistenceProvider>

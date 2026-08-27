@@ -6,6 +6,8 @@ import {
   chooseResumeAction,
   derivePersonalRecords,
   deriveResurfaceSignals,
+  HOME_REVIEW_CAP,
+  listHomeReviewQueue,
   listPipelineItems,
   pipelineColumnForTool,
 } from "@/lib/account/workspace-pipeline";
@@ -365,5 +367,56 @@ describe("software memory resume", () => {
       kind: "continue_compare",
       slug: "cursor",
     });
+  });
+});
+
+describe("listHomeReviewQueue", () => {
+  it("does not include a future revisit", () => {
+    const queue = listHomeReviewQueue(workspaceTestFixtures.reviewFuture, { nowIso: NOW });
+    expect(queue.some((item) => item.slug === "meku")).toBe(false);
+  });
+
+  it("includes a past revisit", () => {
+    const queue = listHomeReviewQueue(workspaceTestFixtures.reviewDue, { nowIso: NOW });
+    expect(queue.some((item) => item.kind === "deferred_due" && item.slug === "meku")).toBe(true);
+  });
+
+  it("caps the queue at 3", () => {
+    const queue = listHomeReviewQueue(workspaceTestFixtures.reviewManyDue, {
+      nowIso: NOW,
+      cap: 3,
+    });
+    expect(queue).toHaveLength(3);
+  });
+
+  it("excludes a slug from the queue", () => {
+    const queue = listHomeReviewQueue(workspaceTestFixtures.reviewManyDue, {
+      nowIso: NOW,
+      excludeSlug: "meku",
+      cap: 3,
+    });
+    expect(queue.every((item) => item.slug !== "meku")).toBe(true);
+    expect(queue).toHaveLength(3);
+  });
+
+  it("W10-T16 future revisitAt after revisited drops a 90d-old deferred item", () => {
+    const future = "2099-01-01T00:00:00.000Z";
+    const next = reduceWorkspaceState(workspaceTestFixtures.reviewDue, {
+      type: "workspace/revisited",
+      slug: "meku",
+      at: NOW,
+      eventId: "still-true",
+      revisitAt: future,
+    });
+    expect(listHomeReviewQueue(next, { nowIso: NOW }).some((item) => item.slug === "meku")).toBe(
+      false,
+    );
+  });
+
+  it("W10-T18 preserves HOME_REVIEW_CAP of 3", () => {
+    expect(HOME_REVIEW_CAP).toBe(3);
+    expect(
+      listHomeReviewQueue(workspaceTestFixtures.reviewManyDue, { nowIso: NOW, cap: HOME_REVIEW_CAP }),
+    ).toHaveLength(3);
   });
 });

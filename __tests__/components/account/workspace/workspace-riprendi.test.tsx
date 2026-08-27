@@ -24,6 +24,8 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 vi.mock("@/lib/account/workspace-actions", () => ({
   markWorkspaceToolUsing: actions.markWorkspaceToolUsing,
   setWorkspaceRevisit: actions.setWorkspaceRevisit,
+  commitWorkspaceDecision: vi.fn(),
+  reopenWorkspaceDecision: vi.fn(),
 }));
 
 vi.mock("@/components/account/account-provider", () => ({
@@ -78,7 +80,7 @@ describe("WorkspaceRiprendi", () => {
     expect(actions.markWorkspaceToolUsing).toHaveBeenCalledWith("cursor");
 
     const open = screen.getByRole("link", { name: "Apri" });
-    expect(open.getAttribute("href")).toBe("/account?view=decisioni&focus=cursor");
+    expect(open.getAttribute("href")).toBe("/account?view=salvati&focus=cursor");
   });
 
   it("hides In uso and Stack attivi when they are empty", () => {
@@ -87,20 +89,19 @@ describe("WorkspaceRiprendi", () => {
     expect(screen.queryByRole("heading", { name: "In uso" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "Stack attivi" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "Confronto attivo" })).toBeNull();
+    expect(screen.queryByText(/Ciao/)).toBeNull();
   });
 
-  it("lists tools in use and stack counts when present", () => {
+  it("shows compare resume and a muted using line on mature home", () => {
     catalogRuntime.value = catalogFor(workspaceTestFixtures.mature);
     render(createElement(WorkspaceRiprendi, { state: workspaceTestFixtures.mature }));
 
-    expect(screen.getByRole("heading", { name: "In uso" })).toBeTruthy();
-    const usingRow = screen
-      .getAllByRole("link")
-      .find((link) => link.getAttribute("href") === "/toools/cursor");
-    expect(usingRow).toBeTruthy();
-    expect(usingRow?.textContent).toMatch(/Cursor/i);
-    expect(screen.getByRole("heading", { name: "Stack attivi" })).toBeTruthy();
-    expect(screen.getByText("1 in uso")).toBeTruthy();
-    expect(screen.getByText("1 in valutazione")).toBeTruthy();
+    const compare = screen.getByRole("link", { name: "Riprendi il confronto" });
+    expect(compare.getAttribute("href")).toBe("/compare");
+    expect(screen.getByText(/In uso:/)).toBeTruthy();
+    expect(screen.getByText(/In uso:/).textContent).toMatch(/Cursor/);
+    expect(screen.queryByRole("heading", { name: "Stack attivi" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Memoria software" })).toBeNull();
+    expect(screen.queryByText("Segnale")).toBeNull();
   });
 });

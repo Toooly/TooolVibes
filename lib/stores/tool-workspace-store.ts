@@ -329,6 +329,19 @@ export function rebaseWorkspaceIntent(
     return ordered;
   };
 
+  const rebaseEvents = () => {
+    if (JSON.stringify(base.events) === JSON.stringify(desired.events)) {
+      return durable.events;
+    }
+    const byId = new Map(durable.events.map((event) => [event.id, event]));
+    for (const event of desired.events) {
+      if (!byId.has(event.id)) {
+        byId.set(event.id, event);
+      }
+    }
+    return [...byId.values()];
+  };
+
   return normalizeWorkspaceState({
     ...durable,
     clearedAt: localClearChanged
@@ -339,6 +352,7 @@ export function rebaseWorkspaceIntent(
     stack: rebaseList(base.stack, desired.stack, durable.stack, true),
     personalStacks: rebaseStacks(),
     toolStates,
+    events: rebaseEvents(),
   });
 }
 

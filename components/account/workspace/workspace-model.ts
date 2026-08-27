@@ -1,6 +1,6 @@
 export const WORKSPACE_VIEWS = [
   "riprendi",
-  "biblioteca",
+  "salvati",
   "stack",
   "decisioni",
   "recenti",
@@ -11,37 +11,21 @@ export type WorkspaceView = (typeof WORKSPACE_VIEWS)[number];
 
 export const WORKSPACE_VIEW_LABELS: Record<WorkspaceView, string> = {
   riprendi: "Home",
-  biblioteca: "Biblioteca",
+  salvati: "Salvati",
   stack: "Stack",
   decisioni: "Decisioni",
   recenti: "Recenti",
   segnale: "Segnale",
 };
 
-
 export const WORKSPACE_VIEW_KICKERS: Record<WorkspaceView, string> = {
   riprendi: "Riprendi",
-  biblioteca: "Inventario",
+  salvati: "Inventario",
   stack: "Banco",
   decisioni: "Diario",
   recenti: "Filo",
   segnale: "Progressione",
 };
-
-export const WORKSPACE_PRIMARY_VIEWS = [
-  "riprendi",
-  "biblioteca",
-  "stack",
-  "decisioni",
-] as const;
-
-export const WORKSPACE_SECONDARY_VIEWS = ["recenti", "segnale"] as const;
-
-export const WORKSPACE_DISCOVER_LINKS = [
-  { href: "/archivio", label: "Catalogo" },
-  { href: "/radar", label: "Radar" },
-  { href: "/compare", label: "Confronto" },
-] as const;
 
 export const PIPELINE_LABELS = {
   salvato: "Salvato",
@@ -59,8 +43,11 @@ export {
   formatRevisitLine,
 } from "@/lib/account/workspace-lifecycle";
 
+export const GUEST_SALVATI_HREF = "/shortlist";
+
 const LEGACY_WORKSPACE_VIEWS: Record<string, WorkspaceView> = {
   attivita: "recenti",
+  biblioteca: "salvati",
 };
 
 export function isWorkspaceView(value: string | null): value is WorkspaceView {
@@ -91,6 +78,10 @@ export function workspaceViewHref(
 
 export function workspaceFocusHref(view: WorkspaceView, slug: string) {
   return workspaceViewHref(view, { focus: slug });
+}
+
+export function salvatiHref(authenticated: boolean) {
+  return authenticated ? workspaceViewHref("salvati") : GUEST_SALVATI_HREF;
 }
 
 export function formatWorkspaceDate(value: string | null | undefined): string | null {

@@ -1,0 +1,51 @@
+/**
+ * Wave 11 — Catalogo facet chip row (Tutti | Radar).
+ * Local lens chrome only. No HUD, no extra filters, no Segnale title.
+ */
+
+.catalogo-facet {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.catalogo-facet__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: transparent;
+  color: inherit;
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.875rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.catalogo-facet__link:hover {
+  border-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.catalogo-facet__link:focus-visible {
+  outline: 2px solid var(--tv-focus-ring);
+  outline-offset: 2px;
+}
+
+.catalogo-facet__link.is-active,
+.catalogo-facet__link[aria-current="page"] {
+  border-color: var(--tv-accent-brand);
+  background: var(--tv-surface-selected);
+  color: var(--tv-ink-primary);
+}
+
+.tv-radar .catalogo-facet {
+  margin: 12px 0 0;
+}

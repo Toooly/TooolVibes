@@ -2,59 +2,109 @@
 
 import { createElement } from "react";
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
+import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
+import { activateToolWorkspaceOwner } from "@/lib/stores/tool-workspace-store";
 
 const catalogRuntime = vi.hoisted(() => ({
   value: [] as PublicToolCatalogItem[],
+}));
+
+const { navRuntime } = vi.hoisted(() => ({
+  navRuntime: {
+    pathname: "/account",
+    search: "",
+    push: vi.fn(),
+  },
+}));
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => navRuntime.pathname,
+  useSearchParams: () => new URLSearchParams(navRuntime.search),
+  useRouter: () => ({ push: navRuntime.push }),
 }));
 
 vi.mock("@/lib/data/public-tool-catalog-context", () => ({
   usePublicToolCatalog: () => catalogRuntime.value,
 }));
 
-import { WorkspaceActivity } from "@/components/account/workspace/workspace-activity";
+vi.mock("@/components/account/account-provider", () => ({
+  useAccount: () => ({
+    authEnabled: true,
+    status: "authenticated",
+    user: { email: "mario@example.com" },
+    session: { access_token: "token-a" },
+    isSendingLink: false,
+    isAttaching: false,
+    workspaceAttachPending: false,
+    hasQuarantinedWorkspace: false,
+    isRestoringQuarantinedWorkspace: false,
+    authMessage: null,
+    sendMagicLink: vi.fn(),
+    restoreQuarantinedWorkspace: vi.fn(),
+    signOut: vi.fn(),
+  }),
+}));
 
-describe("WorkspaceActivity", () => {
-  beforeEach(() => {
-    catalogRuntime.value = [
-      {
-        slug: "cursor",
-        name: "Cursor",
-        categoryLabel: "Coding",
-        shortDescription: "",
-        featured: false,
-        toolOfWeek: false,
-        tags: [],
-        levelLabel: null,
+vi.mock("@/components/discovery/canonical-discovery-persistence-provider", () => ({
+  useDiscoveryPersistence: () => ({ mode: "local", phase: "local-only" }),
+}));
+
+vi.mock("@/lib/discovery/client-store", () => ({
+  useDiscoverySnapshot: () => ({
+    visitedTools: [],
+    exploredCategories: [],
+    shortlist: [],
+    compare: [],
+    shortlistStages: {},
+    decisionMemories: {},
+    toolStateMeta: {},
+    compareMeta: {},
+  }),
+}));
+
+import { WorkspaceShell } from "@/components/account/workspace/workspace-shell";
+
+describe("WorkspaceActivity dest — Wave 15 alias", () => {
+  beforeAll(() => {
+    vi.stubGlobal(
+      "ResizeObserver",
+      class ResizeObserver {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
       },
-    ];
+    );
+  });
+
+  beforeEach(() => {
+    catalogRuntime.value = [];
+    navRuntime.pathname = "/account";
+    navRuntime.search = "";
+    navRuntime.push.mockReset();
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.guestEmpty);
   });
 
   afterEach(() => {
     cleanup();
+    activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
   });
 
-  it("labels the view Recenti and keeps empty copy calm", () => {
-    render(createElement(WorkspaceActivity, { state: workspaceTestFixtures.guestEmpty }));
-
-    expect(screen.getAllByText("Recenti").length).toBeGreaterThan(0);
-    expect(screen.queryByText("Attività")).toBeNull();
-    expect(screen.getByText("Ancora niente di recente")).toBeTruthy();
+  it("view=recenti renders Home instead of Recenti", () => {
+    navRuntime.search = "view=recenti";
+    render(createElement(WorkspaceShell));
+    expect(screen.queryByText("Ancora niente di recente")).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Recenti" })).toBeNull();
+    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
   });
 
-  it("turns recent rows into destination links", () => {
-    render(createElement(WorkspaceActivity, { state: workspaceTestFixtures.mature }));
-
-    expect(screen.getAllByText("Recenti").length).toBeGreaterThan(0);
-    expect(screen.queryByText("Attività")).toBeNull();
-
-    const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
-    expect(hrefs).toContain("/account?view=biblioteca");
-    expect(hrefs).toContain("/compare");
-    expect(hrefs).toContain("/account?view=decisioni");
-    expect(hrefs).toContain("/account?view=stack");
+  it("legacy view=attivita maps through Recenti onto Home", () => {
+    navRuntime.search = "view=attivita";
+    render(createElement(WorkspaceShell));
+    expect(screen.queryByText("Ancora niente di recente")).toBeNull();
+    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
   });
 });

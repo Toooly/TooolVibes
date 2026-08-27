@@ -47,6 +47,8 @@ describe("decision loop 1.0", () => {
     expect(state.toolStates.v0?.decision?.outcome).toBe("deferred");
     expect(state.toolStates.v0?.revisitAt).toBe("2026-07-01T00:00:00.000Z");
     expect(state.toolStates.cursor?.alternatives).toEqual(["cursor", "v0"]);
+    expect(state.compare.slugs).toEqual([]);
+    expect(state.events.some((event) => event.type === "decided" && event.slug === "cursor")).toBe(true);
 
     const reloaded = activateToolWorkspaceOwner({ kind: "guest" }).state;
     expect(reloaded.toolStates.v0?.revisitAt).toBe("2026-07-01T00:00:00.000Z");

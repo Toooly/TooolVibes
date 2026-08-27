@@ -131,37 +131,73 @@ function DesktopEditorialTabs({ tools }: { tools: NormalisedTool[] }) {
 
 /* ---------- mobile: accordion ---------- */
 
+function criterionSections(tools: NormalisedTool[]) {
+  const labels: string[] = [];
+  const seen = new Set<string>();
+
+  for (const tool of tools) {
+    for (const row of buildDetailRows(tool)) {
+      if (seen.has(row.label)) continue;
+      seen.add(row.label);
+      labels.push(row.label);
+    }
+  }
+
+  return labels.map((label) => ({
+    label,
+    rows: tools.map((tool) => {
+      const match = buildDetailRows(tool).find((row) => row.label === label);
+      return {
+        slug: tool.slug,
+        name: tool.name,
+        value: match?.value ?? "",
+      };
+    }),
+  }));
+}
+
+function criterionKey(label: string) {
+  return label
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 function MobileEditorialAccordion({ tools }: { tools: NormalisedTool[] }) {
-  const [openSlug, setOpenSlug] = useState<string | null>(
-    tools[0]?.slug ?? null,
+  const sections = criterionSections(tools);
+  const [openLabel, setOpenLabel] = useState<string | null>(
+    sections[0]?.label ?? null,
   );
 
-  if (tools.length === 0) return null;
+  if (tools.length === 0 || sections.length === 0) return null;
 
   return (
     <div
       className="compare-editorial-details compare-editorial-details--mobile"
       data-layout="mobile"
+      data-accordion="criterion"
       role="region"
-      aria-label="Dettaglio editoriale per tool"
+      aria-label="Dettaglio editoriale per criterio"
     >
-      {tools.map((tool) => {
-        const isOpen = tool.slug === openSlug;
-        const contentId = `compare-editorial-details-mobile-${tool.slug}`;
-        const rows = buildDetailRows(tool);
+      {sections.map((section) => {
+        const isOpen = section.label === openLabel;
+        const key = criterionKey(section.label);
+        const contentId = `compare-editorial-details-mobile-${key}`;
         return (
           <section
-            key={tool.slug}
+            key={section.label}
             className="compare-editorial-details__accordion"
           >
             <button
               type="button"
               className="compare-editorial-details__accordion-summary"
-              onClick={() => setOpenSlug(isOpen ? null : tool.slug)}
+              onClick={() => setOpenLabel(isOpen ? null : section.label)}
               aria-expanded={isOpen}
               aria-controls={contentId}
             >
-              <span>{tool.name}</span>
+              <span>{section.label}</span>
               <span aria-hidden="true">{isOpen ? "−" : "+"}</span>
             </button>
             {isOpen ? (
@@ -169,19 +205,21 @@ function MobileEditorialAccordion({ tools }: { tools: NormalisedTool[] }) {
                 id={contentId}
                 className="compare-editorial-details__accordion-content"
               >
-                {rows.map((row) => (
-                  <div
-                    key={row.label}
-                    className="compare-editorial-details__row"
-                  >
-                    <span className="compare-editorial-details__label">
-                      {row.label}
-                    </span>
-                    <span className="compare-editorial-details__value">
-                      {row.value}
-                    </span>
-                  </div>
-                ))}
+                {section.rows.map((row) =>
+                  row.value ? (
+                    <div
+                      key={row.slug}
+                      className="compare-editorial-details__row compare-editorial-details__row--tool"
+                    >
+                      <span className="compare-editorial-details__label">
+                        {row.name}
+                      </span>
+                      <span className="compare-editorial-details__value">
+                        {row.value}
+                      </span>
+                    </div>
+                  ) : null,
+                )}
               </div>
             ) : null}
           </section>

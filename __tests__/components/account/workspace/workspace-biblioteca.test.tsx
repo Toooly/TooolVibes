@@ -18,10 +18,15 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 
 vi.mock("@/lib/account/workspace-actions", () => ({
   addToolToPersonalStack: vi.fn(),
+  createPersonalStack: vi.fn(),
+  createPersonalStackId: vi.fn((name: string) => name),
   deferWorkspaceTool: vi.fn(),
   markWorkspaceToolReplaced: vi.fn(),
   markWorkspaceToolStopped: vi.fn(),
   markWorkspaceToolUsing: vi.fn(),
+  commitWorkspaceDecision: vi.fn(),
+  reopenWorkspaceDecision: vi.fn(),
+  removeToolFromPersonalStack: vi.fn(),
   setWorkspaceDecision: vi.fn(),
   setWorkspaceNote: vi.fn(),
   setWorkspacePinned: vi.fn(),
@@ -88,7 +93,7 @@ describe("WorkspaceBiblioteca", () => {
   it("filters rows by name, slug, or category", () => {
     render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.mature }));
 
-    const search = screen.getByLabelText("Cerca nella biblioteca");
+    const search = screen.getByLabelText("Cerca in Salvati");
     fireEvent.change(search, { target: { value: "Cursor" } });
     expect(rowSlugs()).toEqual(["cursor"]);
 

@@ -44,6 +44,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
+import { CatalogoFacetHead } from "@/components/archive/catalogo-facet-head";
 import type {
   ProductHuntItem,
   ProductHuntRange,
@@ -689,6 +690,7 @@ export function RadarExperience({
             <h1 id="tv-radar-title" className="tv-radar__title">
               Segui i lanci. Individua i segnali da approfondire.
             </h1>
+            <CatalogoFacetHead active="radar" />
             <p className="tv-radar__lede">
               Il Radar raccoglie i lanci di Product Hunt, li organizza per
               periodo e ti aiuta a individuare quelli da approfondire. Nessun

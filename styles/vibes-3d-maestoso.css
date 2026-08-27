@@ -768,8 +768,7 @@
 
 /* Gamification dark */
 .gamification-shell,
-.game-effects-layer,
-.gamer-hud {
+.game-effects-layer {
   background: transparent !important;
 }
 .game-profile-bar,

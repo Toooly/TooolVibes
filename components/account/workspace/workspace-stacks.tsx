@@ -488,11 +488,11 @@ function StackDetail({
       </div>
 
       <div className="tv-stacks-picker">
-        <p className="tv-stacks-kicker">Aggiungi dalla biblioteca</p>
+        <p className="tv-stacks-kicker">Aggiungi da Salvati</p>
         {savedOutside.length === 0 ? (
           <p className="tv-stacks-detail__copy">
             {state.saved.slugs.length === 0
-              ? "Salva un tool in biblioteca per poterlo mettere qui."
+              ? "Salva un tool in Salvati per poterlo mettere qui."
               : "Tutti i tool salvati sono già in questo stack."}
           </p>
         ) : (
@@ -531,13 +531,22 @@ function StackDetail({
       </div>
 
       {stack.slugs.length >= 2 ? (
-        <Link
-          href="/compare"
-          className="account-btn-secondary"
-          onClick={() => queueStackCompare(stack.slugs, state.compare.slugs)}
-        >
-          Confronta questi tool
-        </Link>
+        <div className="tv-stacks-compare">
+          {stack.slugs.length >
+          Math.max(0, MAX_COMPARE_TOOLS - state.compare.slugs.length) ? (
+            <p className="tv-stacks-compare-hint">
+              Il confronto tiene al massimo {MAX_COMPARE_TOOLS}. Verranno
+              aggiunti i primi posti liberi.
+            </p>
+          ) : null}
+          <Link
+            href="/compare"
+            className="account-btn-secondary"
+            onClick={() => queueStackCompare(stack.slugs, state.compare.slugs)}
+          >
+            Confronta questi tool
+          </Link>
+        </div>
       ) : null}
 
       {archived ? (

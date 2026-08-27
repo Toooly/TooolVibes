@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { MobileShortlistBoard } from "@/components/tools/mobile-shortlist-board";
+import { ShortlistRouteGate } from "@/components/tools/shortlist-route-gate";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { getPublishedTools } from "@/lib/data/public-tools";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
@@ -14,11 +15,13 @@ export const metadata: Metadata = createPublicPageMetadata({
 
 export default async function ShortlistPage() {
   return (
-    <div className="shortlist-final-surface">
-      <MobileShortlistBoard
-        tools={await getPublishedTools()}
-        decisionMemoryEnabled={releaseFeatures.decisionMemoryBoard.enabled}
-      />
-    </div>
+    <ShortlistRouteGate>
+      <div className="shortlist-final-surface">
+        <MobileShortlistBoard
+          tools={await getPublishedTools()}
+          decisionMemoryEnabled={releaseFeatures.decisionMemoryBoard.enabled}
+        />
+      </div>
+    </ShortlistRouteGate>
   );
 }
