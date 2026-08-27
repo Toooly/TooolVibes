@@ -208,6 +208,7 @@
   --tv-surface-floating: var(--tv-color-surface-floating);
   --tv-surface-soft: var(--tv-color-surface-elevated);
   --tv-surface-interactive: var(--tv-color-white-08);
+  /* Banco selection wash — violet on raised cloth. Law 6: brand = selection, not a second palette. */
   --tv-surface-selected: color-mix(in srgb, var(--tv-accent-brand) 18%, var(--tv-color-surface-raised));
   --tv-text-primary: var(--tv-ink-primary);
   --tv-text-secondary: var(--tv-ink-secondary);
@@ -1073,6 +1074,33 @@
   --cx-card-signal-fs: var(--tv-text-sm, 0.875rem);
   --cx-card-signal-color: var(--tv-ink-secondary);
   --cx-card-signal-weight: 480;
+
+  /* ============================================================== */
+  /* === WAVE 13 BANCO ALIASES (additive) ======================== */
+  /* Do not redefine locked --tv-space-* / --tv-radius-sm.         */
+  /* Do not change --tv-color-surface-base / --tv-accent-brand.    */
+  /* ============================================================== */
+
+  /* One kicker voice. Existing --tv-tracking-eyebrow stays 0.14em. */
+  --tv-kicker-tracking: 0.12em;
+
+  /* Due review is a 6px amber dot, never a chrome number. */
+  --tv-due-dot: var(--tv-status-warning);
+  --tv-due-dot-size: 6px;
+
+  /* Confronta n/5 live chip: violet hairline role. */
+  --tv-compare-live: var(--tv-accent-brand);
+
+  /* Grain is optional atmosphere, desktop-only, <=3%. */
+  --tv-grain-opacity: 0.03;
+
+  /* Selection wash alias for Banco chips, dests, and rows. */
+  --tv-selection-wash: var(--tv-surface-selected);
+
+  /* Surface rungs so .tv-app locals can die. 1 raised / 2 elevated / 3 floating. */
+  --tv-surface-1: var(--tv-surface-raised);
+  --tv-surface-2: var(--tv-surface-elevated);
+  --tv-surface-3: var(--tv-surface-floating);
 
   /* Runtime-updated tokens. Compatibility defaults live in SECTION 5; */
   /* GlobalExperienceLayer replaces pointer/scroll values at runtime. */

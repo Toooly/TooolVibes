@@ -31,7 +31,7 @@
 
 .tv-decision-sheet__kicker {
   margin: 0;
-  color: var(--tv-ink-secondary, #b7b3c7);
+  color: var(--tv-ink-secondary);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -41,7 +41,7 @@
 .tv-decision-sheet__title {
   margin: 0;
   overflow: hidden;
-  color: var(--tv-ink-primary, #f4f1ff);
+  color: var(--tv-ink-primary);
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.25;
@@ -70,10 +70,10 @@
   align-items: center;
   justify-content: center;
   padding: 0 0.95rem;
-  border: 1px solid var(--tv-border-subtle, rgba(255, 255, 255, 0.14));
+  border: 1px solid var(--tv-border-subtle);
   border-radius: 999px;
   background: transparent;
-  color: var(--tv-ink-primary, #f4f1ff);
+  color: var(--tv-ink-primary);
   font: inherit;
   font-size: 0.875rem;
   font-weight: 650;
@@ -81,8 +81,8 @@
 }
 
 .tv-decision-sheet__outcome[data-active="true"] {
-  border-color: color-mix(in srgb, var(--tv-accent-brand, #7052ff) 46%, var(--tv-border-subtle, rgba(255, 255, 255, 0.14)));
-  background: color-mix(in srgb, var(--tv-accent-brand, #7052ff) 18%, transparent);
+  border-color: color-mix(in srgb, var(--tv-accent-brand) 46%, var(--tv-border-subtle));
+  background: color-mix(in srgb, var(--tv-accent-brand) 18%, transparent);
 }
 
 .tv-decision-sheet__outcome:focus-visible,
@@ -90,7 +90,7 @@
 .tv-decision-sheet__confirm:focus-visible,
 .tv-decision-sheet__reopen:focus-visible,
 .tv-decision-sheet__chip:focus-visible {
-  outline: 2px solid var(--tv-focus-ring, #7052ff);
+  outline: 2px solid var(--tv-focus-ring);
   outline-offset: 2px;
 }
 
@@ -106,12 +106,12 @@
 .tv-decision-sheet__error,
 .tv-decision-sheet__field-label {
   margin: 0;
-  color: var(--tv-ink-secondary, #b7b3c7);
+  color: var(--tv-ink-secondary);
   font-size: 0.78rem;
 }
 
 .tv-decision-sheet__error {
-  color: #ffb4a8;
+  color: var(--tv-status-danger);
 }
 
 .tv-decision-sheet__deep-toggle,
@@ -122,7 +122,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--tv-ink-secondary, #b7b3c7);
+  color: var(--tv-ink-secondary);
   font: inherit;
   font-size: 0.875rem;
   text-decoration: underline;
@@ -151,27 +151,27 @@
   min-height: 2.25rem;
   align-items: center;
   padding: 0 0.75rem;
-  border: 1px solid var(--tv-border-subtle, rgba(255, 255, 255, 0.14));
+  border: 1px solid var(--tv-border-subtle);
   border-radius: 999px;
   background: transparent;
-  color: var(--tv-ink-primary, #f4f1ff);
+  color: var(--tv-ink-primary);
   font: inherit;
   font-size: 0.8rem;
   cursor: pointer;
 }
 
 .tv-decision-sheet__chip[data-active="true"] {
-  border-color: color-mix(in srgb, var(--tv-accent-brand, #7052ff) 46%, var(--tv-border-subtle, rgba(255, 255, 255, 0.14)));
-  background: color-mix(in srgb, var(--tv-accent-brand, #7052ff) 16%, transparent);
+  border-color: color-mix(in srgb, var(--tv-accent-brand) 46%, var(--tv-border-subtle));
+  background: color-mix(in srgb, var(--tv-accent-brand) 16%, transparent);
 }
 
 .tv-decision-sheet__input,
 .tv-decision-sheet__textarea {
   width: 100%;
-  border: 1px solid var(--tv-border-subtle, rgba(255, 255, 255, 0.14));
-  border-radius: 14px;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-lg);
   background: rgba(255, 255, 255, 0.04);
-  color: var(--tv-ink-primary, #f4f1ff);
+  color: var(--tv-ink-primary);
   font: inherit;
   font-size: 0.95rem;
 }
@@ -204,8 +204,8 @@
   justify-content: center;
   border: 0;
   border-radius: 999px;
-  background: var(--tv-accent-brand, #7052ff);
-  color: #fff;
+  background: var(--tv-accent-brand);
+  color: var(--tv-ink-on-brand);
   font: inherit;
   font-size: 0.95rem;
   font-weight: 700;
@@ -215,4 +215,21 @@
 .tv-decision-sheet__confirm:disabled {
   cursor: wait;
   opacity: 0.7;
+}
+
+/* Wave 13 — Fast stays primary; Deep fields look secondary. */
+.tv-decision-sheet__deep {
+  color: var(--tv-ink-secondary);
+}
+
+.tv-decision-sheet__deep .tv-decision-sheet__field-label,
+.tv-decision-sheet__deep .tv-decision-sheet__hint {
+  color: var(--tv-ink-muted-aa);
+}
+
+.tv-decision-sheet__deep .tv-decision-sheet__input,
+.tv-decision-sheet__deep .tv-decision-sheet__textarea,
+.tv-decision-sheet__deep .tv-decision-sheet__chip {
+  color: var(--tv-ink-secondary);
+  background: transparent;
 }

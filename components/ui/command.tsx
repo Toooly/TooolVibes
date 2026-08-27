@@ -25,7 +25,7 @@ function Command({
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        "flex size-full flex-col overflow-hidden rounded-[var(--tv-radius-modal)]! border border-white/14 bg-[linear-gradient(145deg,#17142f,#222a48)] p-2 text-white shadow-[0_28px_90px_rgba(8,14,38,0.32)]",
+        "flex size-full flex-col overflow-hidden rounded-[var(--tv-radius-modal)]! border border-[color:var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] p-2 text-[var(--tv-ink-primary)] shadow-[var(--tv-elevation-floating)]",
         className
       )}
       {...props}
@@ -54,7 +54,7 @@ function CommandDialog({
     <Dialog {...props}>
       <DialogContent
         className={cn(
-          "top-1/3 max-w-[42rem] translate-y-0 overflow-hidden rounded-[30px]! border border-white/10 bg-transparent p-0 shadow-none ring-0 duration-[var(--tv-duration-base)] ease-[var(--tv-easing-standard)] data-open:fade-in-0 data-open:slide-in-from-top-2 data-closed:fade-out-0 data-closed:slide-out-to-top-2 data-open:zoom-in-100 data-closed:zoom-out-100",
+          "top-1/3 max-w-[42rem] translate-y-0 overflow-hidden rounded-[var(--tv-radius-modal)]! border border-[color:var(--tv-border-subtle)] bg-transparent p-0 shadow-none ring-0 duration-[var(--tv-duration-base)] ease-[var(--tv-easing-standard)] data-open:fade-in-0 data-open:slide-in-from-top-2 data-closed:fade-out-0 data-closed:slide-out-to-top-2 data-open:zoom-in-100 data-closed:zoom-out-100",
           className
         )}
         showCloseButton={showCloseButton}
@@ -81,7 +81,7 @@ function CommandInput({
         <CommandPrimitive.Input
           data-slot="command-input"
           className={cn(
-            "w-full text-sm text-white outline-hidden placeholder:text-white/42 disabled:cursor-not-allowed disabled:opacity-50",
+            "w-full text-sm text-[var(--tv-ink-primary)] outline-hidden placeholder:text-[var(--tv-ink-muted-aa)] disabled:cursor-not-allowed disabled:opacity-50",
             className
           )}
           {...props}
@@ -117,7 +117,7 @@ function CommandEmpty({
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
-      className={cn("py-8 text-center text-sm text-white/62", className)}
+      className={cn("py-8 text-center text-sm text-[var(--tv-ink-secondary)]", className)}
       {...props}
     />
   )
@@ -131,7 +131,7 @@ function CommandGroup({
     <CommandPrimitive.Group
       data-slot="command-group"
       className={cn(
-        "overflow-hidden p-1 text-white **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-semibold **:[[cmdk-group-heading]]:uppercase **:[[cmdk-group-heading]]:tracking-[0.16em] **:[[cmdk-group-heading]]:text-white/46",
+        "overflow-hidden p-1 text-[var(--tv-ink-primary)] **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-semibold **:[[cmdk-group-heading]]:uppercase **:[[cmdk-group-heading]]:tracking-[var(--tv-kicker-tracking)] **:[[cmdk-group-heading]]:text-[var(--tv-ink-muted-aa)]",
         className
       )}
       {...props}
@@ -161,7 +161,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "group/command-item relative flex cursor-default items-center gap-2 rounded-[var(--tv-radius-lg)] px-3 py-2.5 text-sm text-white/76 outline-hidden select-none in-data-[slot=dialog-content]:rounded-[var(--tv-radius-lg)]! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-white/10 data-selected:text-white [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-selected:*:[svg]:text-white",
+        "group/command-item relative flex min-h-11 cursor-default items-center gap-2 rounded-[var(--tv-radius-md)] px-3 py-2 text-sm text-[var(--tv-ink-secondary)] outline-hidden select-none in-data-[slot=dialog-content]:rounded-[var(--tv-radius-md)]! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-[var(--tv-surface-selected)] data-selected:text-[var(--tv-ink-primary)] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-selected:*:[svg]:text-[var(--tv-ink-primary)]",
         className
       )}
       {...props}
