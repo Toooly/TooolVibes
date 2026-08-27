@@ -94,7 +94,8 @@ describe("W3-T15 no live authenticated second saved corpus", () => {
 
     expect(model).toContain('salvati: "Salvati"');
     expect(model).toContain('biblioteca: "salvati"');
-    expect(panel).toContain("salvatiHref");
+    expect(panel).not.toContain('href="/shortlist"');
+    expect(panel).toContain("/toools/");
     expect(link).toContain("salvatiHref");
     expect(gate).toContain('workspaceViewHref("salvati")');
     expect(biblioteca).toContain(">Salvati<");

@@ -453,9 +453,11 @@ describe("Wave 10 boundaries", () => {
   });
 
   it("W10-T29 view=decisioni still aliases Home", () => {
-    expect(source("components/account/workspace/workspace-shell.tsx")).toContain(
-      'requestedView === "decisioni" ? "riprendi"',
-    );
+    const shell = source("components/account/workspace/workspace-shell.tsx");
+    expect(shell).toContain('requestedView === "decisioni"');
+    expect(shell).toContain('requestedView === "recenti"');
+    expect(shell).toContain('requestedView === "segnale"');
+    expect(shell).toContain('? "riprendi"');
   });
 
   it("W10-T30 review eligibility is not from Signal", () => {
